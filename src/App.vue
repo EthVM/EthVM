@@ -4,16 +4,17 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue'
+export default Vue.extend({
   name: 'app'
-}
+})
 </script>
 
-
 <style lang="less">
-@import "css/less/global.less";
+@import "~lessPath/global.less";
 </style>
+
 <style scoped lang="less">
-@import "css/less/app.less";
-</style>
+@import "~lessPath/app.less";
+</style

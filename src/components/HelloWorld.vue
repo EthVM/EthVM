@@ -21,17 +21,18 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue'
+export default Vue.extend({
   name: 'HelloWorld',
   data () {
     return {
       msg: 'Welcome to Your Vue.js App'
     }
   }
-}
+})
 </script>
 
 <style scoped lang="less">
-@import "../css/less/helloWorld.less";
+@import "~lessPath/helloWorld.less";
 </style>

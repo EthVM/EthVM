@@ -10,7 +10,8 @@ const sourceMapEnabled = isProduction
 module.exports = {
   loaders: utils.cssLoaders({
     sourceMap: sourceMapEnabled,
-    extract: isProduction
+    extract: isProduction,
+    js: 'vue-ts-loader'
   }),
   cssSourceMap: sourceMapEnabled,
   transformToRequire: {
