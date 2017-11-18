@@ -18,16 +18,25 @@
       <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
       <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
     </ul>
+    <button v-on:click="increment">Test</button>
+    <h2>{{store.getters.getCount}}</h2>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+import store from '../states'
 export default Vue.extend({
   name: 'HelloWorld',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App',
+      store: store
+    }
+  },
+  methods: {
+    increment: () => {
+      store.commit('incrementCount')
     }
   }
 })

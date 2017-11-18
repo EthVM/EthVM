@@ -1,9 +1,14 @@
 import Vue from 'vue'
 
-export interface stateLayout {
+interface stateLayout {
 	count: number;
 }
-export var State: stateLayout = {
+let State: stateLayout = {
 	count: 0
+}
+
+export {
+	State,
+	stateLayout
 }
 

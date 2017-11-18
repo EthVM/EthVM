@@ -1,6 +1,6 @@
 import { stateLayout } from './state'
 
-function incrementCount(state: stateLayout) {
+let incrementCount = (state: stateLayout) => {
 	state.count++
 }
 
