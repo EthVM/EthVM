@@ -35,8 +35,9 @@ export default Vue.extend({
     }
   },
   methods: {
-    increment: () => {
+    increment () {
       store.commit('incrementCount')
+      this.$toasted.show(store.getters.getCount)
     }
   }
 })

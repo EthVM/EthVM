@@ -1,6 +1,6 @@
 # vue-bootstrap
 
-> vue.js bootstrap code
+> vue.js boilerplate code
 
 ## Build Setup
 

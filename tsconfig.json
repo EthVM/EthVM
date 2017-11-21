@@ -1,10 +1,12 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "strict": true,
+    "strict": false,
     "module": "es2015",
     "moduleResolution": "node",
     "sourceMap": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": false,
+    "noImplicitThis": false
   }
 }

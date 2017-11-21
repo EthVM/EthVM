@@ -1,7 +1,7 @@
 {
   "name": "vue-bootstrap",
   "version": "1.0.0",
-  "description": "vue.js bootstrap code",
+  "description": "vue.js boilerplate code",
   "author": "kvhnuke",
   "private": true,
   "scripts": {
@@ -46,6 +46,7 @@
     "vue-loader": "^12.2.2",
     "vue-style-loader": "^3.0.3",
     "vue-template-compiler": "^2.5.4",
+    "vue-toasted": "^1.1.23",
     "vue-ts-loader": "^0.0.3",
     "webpack": "^3.6.0",
     "webpack-dev-server": "^2.9.4"
