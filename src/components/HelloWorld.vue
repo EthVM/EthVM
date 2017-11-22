@@ -20,6 +20,7 @@
     </ul>
     <button v-on:click="increment">Test</button>
     <h2>{{store.getters.getCount}}</h2>
+    <h2 v-html="$t('hello')"></h2>
   </div>
 </template>
 

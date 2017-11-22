@@ -43,6 +43,7 @@
     "tslint": "^5.1.0",
     "typescript": "^2.3.4",
     "url-loader": "^0.6.2",
+    "vue-i18n": "^7.3.2",
     "vue-loader": "^12.2.2",
     "vue-style-loader": "^3.0.3",
     "vue-template-compiler": "^2.5.4",
