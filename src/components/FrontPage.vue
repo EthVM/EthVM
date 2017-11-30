@@ -6,7 +6,7 @@
         <div class="three-block">
           <div class="col-md-4">
             <div class="block">
-              <p class="block-title">Latest Transaction</p>
+              <p class="block-title">Latest Transaction<icon name='language' scale='1'></icon></p>
               <p class="block-data">Hash number: 83402435203952130</p>
             </div>
           </div>

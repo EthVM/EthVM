@@ -3,6 +3,7 @@ var webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
+const GoogleFontsPlugin = require("google-fonts-webpack-plugin")
 
 function resolve(dir) {
     return path.join(__dirname, '..', dir)
@@ -25,6 +26,10 @@ module.exports = {
                 formatter: require('eslint-friendly-formatter'),
                 emitWarning: false
             }
+        }, {
+            test: /\.css$/,
+            loader: 'css-loader',
+            options: {}
         }, {
             test: /\.vue$/,
             loader: 'vue-loader',
@@ -97,7 +102,9 @@ module.exports = {
     },
     devtool: '#source-map',
     plugins: [
-        new CleanWebpackPlugin(['../dist/*.*'], {allowExternal: true}),
+        new CleanWebpackPlugin(['../dist/*.*'], {
+            allowExternal: true
+        }),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NamedModulesPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
@@ -106,6 +113,15 @@ module.exports = {
             template: 'index.html',
             inject: true
         }),
-        new FriendlyErrorsPlugin()
+        new FriendlyErrorsPlugin(),
+        new GoogleFontsPlugin({
+            fonts: [{
+                family: "Roboto Condensed",
+                variants: ['300', '400', '700']
+            }, {
+                family: "Roboto",
+                variants: ['100', '300', '400', '500', '700', '900']
+            }]
+        })
     ]
 }
