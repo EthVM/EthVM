@@ -6,12 +6,16 @@ import Vuex from 'vuex'
 import store from './states'
 import Toasted from 'vue-toasted'
 
+import Header from '@/components/Header.vue'
+import BlockContainer from '@/components/BlockContainer.vue'
+
 Vue.config.productionTip = false
 Vue.use(Toasted, {
 	router
 })
 /* eslint-disable no-new */
-
+Vue.component('Header', Header)
+Vue.component('block-container', BlockContainer)
 new Vue({
 	el: '#app',
 	store,
