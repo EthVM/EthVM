@@ -9,7 +9,7 @@ import 'vue-awesome/icons'
 
 
 import Header from '@/components/Header'
-import BlockContainer from '@/components/BlockContainer'
+import HpTxContainer from '@/components/HomePage/TxContainer'
 import * as Icon from 'vue-awesome'
 
 Vue.config.productionTip = false
@@ -19,7 +19,7 @@ Vue.use(Toasted, {
 /* eslint-disable no-new */
 Vue.component('icon', Icon)
 Vue.component('Header', Header)
-Vue.component('block-container', BlockContainer)
+Vue.component('hp-tx-container', HpTxContainer)
 new Vue({
 	el: '#app',
 	store,

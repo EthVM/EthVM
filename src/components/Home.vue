@@ -24,7 +24,7 @@
           </div>
         </div>
       </div>
-      <block-container></block-container>
+      <hp-tx-container></hp-tx-container>
       <div class="block-container row">
         <div class="single-block">
           <div class="col-md-12">
@@ -178,7 +178,7 @@
 </template>
 <script lang="ts">
   import Vue from 'vue'
-  import store from '../states'
+  import store from '@/states'
   export default Vue.extend({
     name: 'FrontPage',
     data () {

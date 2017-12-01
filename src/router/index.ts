@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import FrontPage from '@/components/FrontPage.vue'
+import HomePage from '@/components/Home.vue'
 
 
 Vue.use(Router)
@@ -8,7 +8,7 @@ Vue.use(Router)
 export default new Router({
 	routes: [{
 		path: '/',
-		name: 'FrontPage',
-		component: FrontPage
+		name: 'HomePage',
+		component: HomePage
 	}]
 })
