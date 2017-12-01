@@ -6,11 +6,10 @@
         <div class="block">
           <p class="block-title">Latest Transaction</p>
           <div class="block-table">
-            <table>
+            <table class="latest-transection-table">
               <thead>
                 <tr>
                   <td>Hash</td>
-                  <td>Block</td>
                   <td>Age</td>
                   <td>From</td>
                   <td>To</td>
@@ -21,7 +20,6 @@
               <tbody>
                 <tr v-for="tx in transactions">
                   <td>{{tx.hash}}</td>
-                  <td>{{tx.block}}</td>
                   <td>{{tx.age}}</td>
                   <td>{{tx.from}}</td>
                   <td>{{tx.to}}</td>
@@ -64,4 +62,5 @@ export default Vue.extend({
 
 <style lang='less'>
 @import "~lessPath/frontpage.less";
+@import "~lessPath/latest-transection-table.less";
 </style>

@@ -1,7 +1,9 @@
 <template>
   <div class="nav-bar">
     <div class="container">
-      <div class="site-brand">enKrypt</div>
+      <div class="site-brand">
+        <img class="top-logo" src="/img/logo.png">
+      </div>
       <nav>
         <ul>
           <li>About</li>

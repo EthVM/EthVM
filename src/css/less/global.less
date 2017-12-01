@@ -1,1 +1,201 @@
 @import '~bootstrap/less/bootstrap';
+
+@block-data-font-size: 15px;
+@block-title-font: 'Roboto Condensed', sans-serif;
+@light-background-color: #f3f3f3;
+@button-background-color: #10ADE4;
+
+.frontpage{
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+}
+
+.nav-bar{
+    
+    margin-bottom: 40px;
+    background-color: #3b5c88;
+    color: white;
+
+    .site-brand{
+        font-weight: 900;
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 35px;
+        margin-right: 30px;
+        color: #ff9d00;
+
+        .top-logo{
+
+            height: 50px;
+
+        }
+    }
+
+    nav{
+        display: inline-block;
+        vertical-align: middle;
+
+        ul{
+            padding: 0;
+            margin: 0;
+
+            li{
+                font-weight: 500;
+                font-size: 13px;
+                text-transform: uppercase;
+                padding: 30px 0;
+                display: inline-block;
+                margin-right: 20px;
+            }
+        }
+
+    }
+
+    .nav-bar-search{
+        display: inline-block;
+        width: 400px;
+        float: right;
+        margin-top: 20px;
+        input.form-control{
+            border-radius: 0;
+        }
+    }
+
+
+}
+
+.section{
+    margin-bottom: 40px;
+}
+
+.block-title{
+    font-family: @block-title-font;
+    font-size: 28px;
+    font-weight: 300;
+    margin-bottom: 0;
+    text-transform: uppercase;
+
+    span{
+        margin-left: 10px;
+    }
+}
+
+
+
+.block-container{
+    margin-bottom: 40px;
+
+    .chart-container{
+        margin-bottom: 40px;
+
+        img{
+            width: 100%;
+        }
+    }
+}
+
+
+.three-block{
+    .block{
+        
+        
+    }
+}
+
+
+.block{
+    .block-data{
+        font-size: @block-data-font-size;
+    }
+
+    .block-data-b{
+        font-size: 15px;
+        
+        margin-bottom: 10px;
+    }
+
+    .block-table{
+        table{
+            width: 100%;
+
+            tr{
+                td{
+                    font-size: 14px;
+                    padding: 10px;
+                }
+            }
+
+            thead{
+                font-weight: 400;
+                tr:nth-child(odd){
+                    background-color: @light-background-color;
+                }
+            }
+            tbody{
+                
+                tr:nth-child(even){
+                    background-color: @light-background-color;
+                }
+                
+            }
+        }
+        
+    }
+}
+
+
+.graph-data{
+
+    .block-title-s{
+        font-family: @block-title-font;
+        font-size: 18px;
+        font-weight: 300;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+
+        span{
+            color: blue;
+            margin-left: 20px;
+        }
+    }
+
+}
+
+.user-note-block{
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+
+.search-block{
+    background-color: @light-background-color;
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+
+    .search-text{
+        font-size: 12px;
+    }
+
+
+    input.form-control{
+        border-radius: 0;
+        padding: 20px;
+        display: inline-block;
+        width: 60%;
+        vertical-align: top;
+    }
+
+    button{
+        display: inline-block;
+        border-radius: 0;
+        padding: 11px;
+        vertical-align: top;
+        background-color: @button-background-color;
+        width: 20%;
+        border: 0;
+    }
+    
+}
+
+

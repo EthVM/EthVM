@@ -6,7 +6,7 @@
         <div class="three-block">
           <div class="col-md-4">
             <div class="block">
-              <p class="block-title">Latest Transaction<icon name='language' scale='1'></icon></p>
+              <p class="block-title">Latest Transaction</p>
               <p class="block-data">Hash number: 83402435203952130</p>
             </div>
           </div>
@@ -31,13 +31,13 @@
             <div class="block">
               <p class="block-title">Latest Blocks</p>
               <div class="block-table">
-                <table>
+                <table class="latest-blocks-table">
                   <thead>
                     <tr>
                       <td>Height</td>
                       <td>Age</td>
                       <td>Transactions</td>
-                      <td>Total Sents</td>
+                      <td>Block Reward</td>
                       <td>Size</td>
                       <td>Weight</td>
                       <td>Relayed by</td>
@@ -100,8 +100,10 @@
       </div>
       <!-- .block-container -->
     </div>
+
+
     <!-- .container -->
-    <div class="section container">
+    <div class="section container hidden">
       <div class="block-container row">
         <div class="two-block">
           <div class="user-note-block col-md-6">
@@ -128,10 +130,10 @@
     <div class="section container">
       <div class="block-container row">
         <div class="two-block">
-          <div class="col-md-6">
+          <div class="chart-container col-md-6">
             <div class="block">
-              <p class="block-title">1 BTC = $9225.34</p>
-              <p class="block-data">Interactive Chart <i class="fa fa-arrow-right" aria-hidden="true"></i></p>
+              <p class="block-title">Interactive Chart</p>
+              <img class="" src="/img/graph.png">
             </div>
             <!-- .block -->
           </div>
@@ -150,30 +152,9 @@
         <!-- .two-block -->
       </div>
     </div>
-    <!--
-      <img src="../assets/logo.png">
-      <h1>{{ msg }}</h1>
-      <h2>Essential Links</h2>
-      <ul>
-        <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-        <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-        <li><a href="https://chat.vuejs.org" target="_blank">Community Chat</a></li>
-        <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-        <br>
-        <li><a href="http://vuejs-templates.github.io/webpack/" target="_blank">Docs for This Template</a></li>
-      </ul>
-      <h2>Ecosystem</h2>
-      <ul>
-        <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-        <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-        <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
-        <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-      </ul>
-      <button v-on:click="increment">Test</button>
-      <h2>{{store.getters.getCount}}</h2>
-      <h2 v-html="$t('hello')"></h2>
-      <h3>Test</h3>
-      -->
+
+    <Footer></Footer>
+
   </div>
 </template>
 <script lang="ts">
@@ -201,4 +182,6 @@
 </script>
 <style scoped lang="less">
   @import "~lessPath/frontpage.less";
+  @import "~lessPath/latest-blocks-table";
+  
 </style>
