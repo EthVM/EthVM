@@ -8,6 +8,7 @@
         <ul>
           <li>About</li>
           <li>Contact</li>
+          <li>FAQ</li>
         </ul>
       </nav>
       <div class="nav-bar-search">
@@ -16,6 +17,7 @@
     </div>
   </div>
 </template>
+
 
 <script lang="ts">
 import Vue from 'vue'

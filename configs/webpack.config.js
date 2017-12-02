@@ -3,7 +3,6 @@ var webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
-const GoogleFontsPlugin = require("google-fonts-webpack-plugin")
 
 function resolve(dir) {
     return path.join(__dirname, '..', dir)
@@ -24,7 +23,8 @@ module.exports = {
             include: [resolve('src')],
             options: {
                 formatter: require('eslint-friendly-formatter'),
-                emitWarning: false
+                emitWarning: false,
+                fix: true
             }
         }, {
             test: /\.css$/,
@@ -114,14 +114,5 @@ module.exports = {
             inject: true
         }),
         new FriendlyErrorsPlugin(),
-        new GoogleFontsPlugin({
-            fonts: [{
-                family: "Roboto Condensed",
-                variants: ['300', '400', '700']
-            }, {
-                family: "Roboto",
-                variants: ['100', '300', '400', '500', '700', '900']
-            }]
-        })
     ]
 }

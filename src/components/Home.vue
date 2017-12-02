@@ -24,73 +24,29 @@
           </div>
         </div>
       </div>
-      <hp-tx-container></hp-tx-container>
+      <!-- .block-container -->
+      <div class="block-container row">
+        <div class="single-block">
+          <div class="col-md-12">
+            <div class="block">
+              <p class="block-title">Latest Transaction</p>
+              <div class="block-table">
+                <hp-tx-container></hp-tx-container>
+              </div>
+            </div>
+            <!-- .block -->
+          </div>
+        </div>
+        <!-- .single-block -->
+      </div>
+      <!-- .block-container -->
       <div class="block-container row">
         <div class="single-block">
           <div class="col-md-12">
             <div class="block">
               <p class="block-title">Latest Blocks</p>
               <div class="block-table">
-                <table class="latest-blocks-table">
-                  <thead>
-                    <tr>
-                      <td>Height</td>
-                      <td>Age</td>
-                      <td>Transactions</td>
-                      <td>Block Reward</td>
-                      <td>Size</td>
-                      <td>Weight</td>
-                      <td>Relayed by</td>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>9821749182749128</td>
-                      <td>12</td>
-                      <td>12</td>
-                      <td>$5555</td>
-                      <td>41324</td>
-                      <td>$3000</td>
-                      <td>David</td>
-                    </tr>
-                    <tr>
-                      <td>9821749182749128</td>
-                      <td>12</td>
-                      <td>12</td>
-                      <td>$5555</td>
-                      <td>41324</td>
-                      <td>$3000</td>
-                      <td>David</td>
-                    </tr>
-                    <tr>
-                      <td>9821749182749128</td>
-                      <td>12</td>
-                      <td>12</td>
-                      <td>$5555</td>
-                      <td>41324</td>
-                      <td>$3000</td>
-                      <td>David</td>
-                    </tr>
-                    <tr>
-                      <td>9821749182749128</td>
-                      <td>12</td>
-                      <td>12</td>
-                      <td>$5555</td>
-                      <td>41324</td>
-                      <td>$3000</td>
-                      <td>David</td>
-                    </tr>
-                    <tr>
-                      <td>9821749182749128</td>
-                      <td>12</td>
-                      <td>12</td>
-                      <td>$5555</td>
-                      <td>41324</td>
-                      <td>$3000</td>
-                      <td>David</td>
-                    </tr>
-                  </tbody>
-                </table>
+                <hp-block-container></hp-block-container>
               </div>
             </div>
             <!-- .block -->
@@ -132,8 +88,7 @@
         <div class="two-block">
           <div class="chart-container col-md-6">
             <div class="block">
-              <p class="block-title">Interactive Chart</p>
-              <img class="" src="/img/graph.png">
+              <highcharts :options="options" ref="datachart"></highcharts>
             </div>
             <!-- .block -->
           </div>
@@ -158,30 +113,31 @@
   </div>
 </template>
 <script lang="ts">
-  import Vue from 'vue'
-  import store from '@/states'
-  export default Vue.extend({
-    name: 'FrontPage',
-    data () {
-      return {
-        msg: 'Welcome to Your Vue.js App',
-        store: store
-      }
-    },
-    methods: {
-      increment () {
-        store.commit('incrementCount')
-        this.$toasted.show(store.getters.getCount)
-      }
-    },
-    mounted: function () {
-      console.log('Page is fully loaded!!!')
+import Vue from 'vue'
+import store from '@/states'
+import chartOptions from '@/sampleData/chartData.json'
+export default Vue.extend({
+  name: 'FrontPage',
+  data () {
+    return {
+      msg: 'Welcome to Your Vue.js App',
+      store: store,
+      options: chartOptions
     }
+  },
+  methods: {
+    increment () {
+      store.commit('incrementCount')
+      this.$toasted.show(store.getters.getCount)
+    }
+  },
+  mounted: function () {
+    console.log('Page is fully loaded!!!')
+  }
 
-  })
+})
 </script>
 <style scoped lang="less">
-  @import "~lessPath/frontpage.less";
-  @import "~lessPath/latest-blocks-table";
-  
+@import "~lessPath/frontpage.less";
+@import "~lessPath/latest-blocks-table";
 </style>

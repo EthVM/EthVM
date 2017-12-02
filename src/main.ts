@@ -5,23 +5,16 @@ import i18n from './translations'
 import Vuex from 'vuex'
 import store from './states'
 import Toasted from 'vue-toasted'
-import 'vue-awesome/icons'
+import VueHighcharts from 'vue-highcharts';
 
-
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import HpTxContainer from '@/components/HomePage/TxContainer'
-import * as Icon from 'vue-awesome'
+import '@/components'
 
 Vue.config.productionTip = false
 Vue.use(Toasted, {
 	router
 })
-/* eslint-disable no-new */
-Vue.component('icon', Icon)
-Vue.component('Header', Header)
-Vue.component('Footer', Footer)
-Vue.component('hp-tx-container', HpTxContainer)
+Vue.use(VueHighcharts);
+
 new Vue({
 	el: '#app',
 	store,

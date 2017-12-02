@@ -1,41 +1,28 @@
 <template>
-  <!-- .block-container -->
-  <div class="block-container row">
-    <div class="single-block">
-      <div class="col-md-12">
-        <div class="block">
-          <p class="block-title">Latest Transaction</p>
-          <div class="block-table">
-            <table class="latest-transection-table">
-              <thead>
-                <tr>
-                  <td>Hash</td>
-                  <td>Age</td>
-                  <td>From</td>
-                  <td>To</td>
-                  <td>Value</td>
-                  <td>Fee</td>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="tx in transactions">
-                  <td>{{tx.hash}}</td>
-                  <td>{{tx.age}}</td>
-                  <td>{{tx.from}}</td>
-                  <td>{{tx.to}}</td>
-                  <td>{{tx.value}}</td>
-                  <td>{{tx.fee}}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <!-- .block -->
-      </div>
-    </div>
-    <!-- .single-block -->
-  </div>
-  <!-- .block-container -->
+
+  <table class="latest-transection-table">
+    <thead>
+      <tr>
+        <td>Hash</td>
+        <td>Age</td>
+        <td>From</td>
+        <td>To</td>
+        <td>Value</td>
+        <td>Fee</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="tx in transactions">
+        <td>{{tx.hash}}</td>
+        <td>{{tx.age}}</td>
+        <td>{{tx.from}}</td>
+        <td>{{tx.to}}</td>
+        <td>{{tx.value}}</td>
+        <td>{{tx.fee}}</td>
+      </tr>
+    </tbody>
+  </table>
+
 </template>
 
 <script lang="ts">
