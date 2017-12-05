@@ -99,20 +99,30 @@
     </div>
     <div class="section container">
       <div class="block-container row">
-        <div class="two-block">
+        <div class="two-block height-400-px">
           <div class="chart-container col-md-6">
-            <div class="block">
-              <highcharts :options="options" ref="datachart"></highcharts>
-              <p class="block-title-link">Interactive Chart</p>
-            </div>
+            <highcharts :options="options" ref="datachart"></highcharts>
             <!-- .block -->
           </div>
-          <div class="col-md-6">
-            <div class="block-title">
-              <img class="icon" src="/img/blockicon.png">
-              <p class="block-title-link">Latest Blocks</p>
-            </div>
+          <div class="col-md-6 height-100-per"> 
             <!-- .block -->
+            <table class="table dark-block height-100-per">
+              <tbody>
+                <tr class="transactions">
+                  <td><p class="dark-block-data  " style="padding-top: 10px"> Transactions Per Day: </p></td>
+                  <td><p class="block-title-link "> 3,874,038 </p></td>
+                </tr>
+                <tr class="marketcap">
+                  <td><p class="dark-block-data " style="padding-top: 10px"> Market Cap: </p></td>
+                  <td><p class="block-title-link"> $632,930,874,038 </p></td>
+                </tr>
+                <tr class="hashrate">
+                  <td><p class="dark-block-data " style="padding-top: 10px" > Hash Rate </p></td>
+                  <td><p class="block-title-link"> 20,874,038  TH/s</p></td>
+                </tr>
+                    
+              </tbody>
+              </table>
           </div>
         </div>
         <!-- .two-block -->
