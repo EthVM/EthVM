@@ -6,7 +6,7 @@
         <div class="three-block">
           <div class="col-md-4">
             <div class="block">
-              <p class="block-title">Latest Transaction</p>
+              <p class="block-title" v-on:click="toggleMenu();">Latest Transaction</p>
               <p class="block-data">Hash number: 83402435203952130</p>
             </div>
           </div>
@@ -134,7 +134,6 @@ export default Vue.extend({
   mounted: function () {
     console.log('Page is fully loaded!!!')
   }
-
 })
 </script>
 <style scoped lang="less">
