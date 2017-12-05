@@ -1,19 +1,57 @@
 @import '~bootstrap/less/bootstrap';
 
 @block-data-font-size: 15px;
-@block-title-font: 'Roboto Condensed', sans-serif;
+//@block-title-font: 'Roboto Condensed', sans-serif;
+@block-title-font: 'Roboto', sans-serif;
 @light-background-color: #f3f3f3;
 @button-background-color: #10ADE4;
+@dark-blue-color: #3b5c88;
+@light-blue-color: #27dce1;
+@main-font: 'Roboto', sans-serif;
+
+
+
+
+@media (min-width: 992px){
+
+    .full-width-row{
+         margin: 0;
+
+        .top-data-block{
+            padding: 0 1px;
+        }
+
+    }
+
+}
+
+.block-title-link{
+
+        font-size: 18px;
+        font-weight: 500; 
+        color: @light-blue-color;
+        text-align: center;
+        text-transform: uppercase;
+        padding-bottom: 1px;
+        background-color: @dark-blue-color
+    }
+
+
+.style-link{
+    font-family: @main-font;
+    font-size: 15px;
+
+}
 
 .frontpage{
-    font-family: 'Roboto', sans-serif;
+    font-family: @main-font;
     font-weight: 300;
 }
 
 .nav-bar{
     
     margin-bottom: 40px;
-    background-color: #3b5c88;
+    background-color: @dark-blue-color;
     color: white;
 
     .site-brand{
@@ -69,11 +107,17 @@
 }
 
 .block-title{
-    font-family: @block-title-font;
-    font-size: 28px;
-    font-weight: 300;
-    margin-bottom: 0;
-    text-transform: uppercase;
+
+    background-color: @dark-blue-color;
+    display: inline-flex;
+    width: 100%;
+    padding-top: 5px;
+
+    .icon{
+        padding-right: 15px;
+        padding-left: 10px;
+        height: 30px;
+    }
 
     span{
         margin-left: 10px;
@@ -96,11 +140,32 @@
 
 
 .three-block{
-    .block{
-        
-        
-    }
+    //.dark-block
+   
+
 }
+
+
+
+.dark-block{
+    
+    font-family: @main-font;
+    background-color: @dark-blue-color;
+    padding-top: 8px;
+    padding-bottom: 8px;
+
+    
+    
+    .dark-block-data{
+        
+        font-size: 15px;
+        font-weight: 400;
+        color: white;
+        text-align:center;
+    }
+
+}
+
 
 
 .block{
@@ -197,5 +262,3 @@
     }
     
 }
-
-

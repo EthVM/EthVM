@@ -4,7 +4,10 @@
     <div class="single-block">
       <div class="col-md-12">
         <div class="block">
-          <p class="block-title">Latest Transaction</p>
+          <div class="block-title">
+                <img class="icon" src="/img/transicon.png">
+                <p class= "block-title-link">Latest Transactions</p>
+              </div>
           <div class="block-table">
             <table class="latest-transection-table">
               <thead>
