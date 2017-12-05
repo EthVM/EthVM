@@ -2,34 +2,45 @@
   <div class="frontpage">
     <Header></Header>
     <div class="section container">
-      <div class="block-container row">
-        <div class="three-block">
-          <div class="col-md-4">
-            <div class="block">
-              <p class="block-title" v-on:click="toggleMenu();">Latest Transaction</p>
-              <p class="block-data">Hash number: 83402435203952130</p>
+      <div class="block-container row full-width-row ">
+        
+        <div class="three-block ">
+           
+          <div class="col-md-4 top-data-block">
+            <div class="dark-block ">
+              <p class="block-title-link">Last Transaction</p>
+              <p class="dark-block-data">Hash number: 83402435..</p>
+            
             </div>
           </div>
-          <div class="col-md-4">
-            <div class="block">
-              <p class="block-title">Latest Block</p>
-              <p class="block-data">Height: 20</p>
+          <div class="col-md-4 top-data-block">
+             
+            <div class="dark-block ">
+              <p class="block-title-link">Last Block</p>
+              <p class="dark-block-data">Height: 238530</p>
             </div>
+           
           </div>
-          <div class="col-md-4">
-            <div class="block">
-              <p class="block-title">Hash Rate</p>
-              <p class="block-data">Rate: 20%</p>
+          <div class="col-md-4 top-data-block">
+             
+            <div class="dark-block ">
+              <p class="block-title-link">Hash Rate</p>
+              <p class="dark-block-data">11,539,384 THs </p>
             </div>
+
           </div>
         </div>
+
       </div>
       <!-- .block-container -->
       <div class="block-container row">
         <div class="single-block">
           <div class="col-md-12">
             <div class="block">
-              <p class="block-title">Latest Transaction</p>
+              <div class="block-title">
+                <img class="icon" src="/img/transicon.png">
+                <p class= "block-title-link">Latest Transactions</p>
+              </div>
               <div class="block-table">
                 <hp-tx-container></hp-tx-container>
               </div>
@@ -44,7 +55,10 @@
         <div class="single-block">
           <div class="col-md-12">
             <div class="block">
-              <p class="block-title">Latest Blocks</p>
+              <div class="block-title">
+                <img class="icon" src="/img/blockicon.png">
+                <p class="block-title-link">Latest Blocks</p>
+              </div>
               <div class="block-table">
                 <hp-block-container></hp-block-container>
               </div>
@@ -89,17 +103,14 @@
           <div class="chart-container col-md-6">
             <div class="block">
               <highcharts :options="options" ref="datachart"></highcharts>
+              <p class="block-title-link">Interactive Chart</p>
             </div>
             <!-- .block -->
           </div>
           <div class="col-md-6">
-            <div class="block">
-              <p class="block-title">TRANSACTIONS PER DAY</p>
-              <p class="block-data-b">3,437,345,992</p>
-              <p class="block-title">MARKET CAP</p>
-              <p class="block-data-b">$9,437,345,992</p>
-              <p class="block-title">HASH RATE</p>
-              <p class="block-data-b">30,437,345 TH/s</p>
+            <div class="block-title">
+              <img class="icon" src="/img/blockicon.png">
+              <p class="block-title-link">Latest Blocks</p>
             </div>
             <!-- .block -->
           </div>

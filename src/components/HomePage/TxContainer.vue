@@ -1,5 +1,4 @@
 <template>
-
   <table class="latest-transection-table">
     <thead>
       <tr>
@@ -22,7 +21,6 @@
       </tr>
     </tbody>
   </table>
-
 </template>
 
 <script lang="ts">

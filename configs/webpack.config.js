@@ -113,6 +113,6 @@ module.exports = {
             template: 'index.html',
             inject: true
         }),
-        new FriendlyErrorsPlugin(),
+        new FriendlyErrorsPlugin()
     ]
 }
