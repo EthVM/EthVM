@@ -7,10 +7,11 @@ import store from './states'
 import Toasted from 'vue-toasted'
 import 'vue-awesome/icons'
 
-
 import Header from '@/components/Header'
-import Footer from '@/components/Footer'
+import TopNav from '@/components/TopNav'
 import HpTxContainer from '@/components/HomePage/TxContainer'
+import Footer from '@/components/Footer'
+
 import * as Icon from 'vue-awesome'
 
 Vue.config.productionTip = false
@@ -20,8 +21,10 @@ Vue.use(Toasted, {
 /* eslint-disable no-new */
 Vue.component('icon', Icon)
 Vue.component('Header', Header)
-Vue.component('Footer', Footer)
+Vue.component('topnav', TopNav)
 Vue.component('hp-tx-container', HpTxContainer)
+Vue.component('Footer', Footer)
+
 new Vue({
 	el: '#app',
 	store,

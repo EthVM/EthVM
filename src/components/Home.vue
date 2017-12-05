@@ -6,7 +6,7 @@
         <div class="three-block">
           <div class="col-md-4">
             <div class="block">
-              <p class="block-title">Latest Transaction</p>
+              <p class="block-title" v-on:click="toggleMenu();">Latest Transaction</p>
               <p class="block-data">Hash number: 83402435203952130</p>
             </div>
           </div>
@@ -169,9 +169,8 @@
       }
     },
     methods: {
-      increment () {
-        store.commit('incrementCount')
-        this.$toasted.show(store.getters.getCount)
+      toggleMenu: function () {
+        console.log('Worked')
       }
     },
     mounted: function () {

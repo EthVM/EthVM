@@ -1,8 +1,25 @@
 <template>
+
   <div class="topnav">
 
-    <h1>Navigati</h1>
+
+    <div ref="mobileMenuOpen" v-on:click="toggleMenu();" class="mobile-menu">
+      <icon class="mobile-menu-open" name='bars' scale='1.7'></icon>
+    </div>
+
+    <div ref="mobileMenuClose" v-on:click="toggleMenu();" class="mobile-menu hidden">
+      <icon class="mobile-menu-open" name='times' scale='1.7'></icon>
+    </div>
+
+    <nav ref="topNav">
+      <ul>
+        <li>About</li>
+        <li>Contact</li>
+        <li>FAQ</li>
+      </ul>
+    </nav>
     
+
   </div>
 </template>
 
@@ -18,14 +35,16 @@ export default Vue.extend({
     }
   },
   methods: {
-    increment () {
-      store.commit('incrementCount')
-      this.$toasted.show(store.getters.getCount)
+    toggleMenu: function () {
+      this.$refs.topNav.className = this.$refs.topNav.classList.contains('nav-show') ? '' : 'nav-show'
+      this.$refs.mobileMenuOpen.classList.toggle('hidden')
+      this.$refs.mobileMenuClose.classList.toggle('hidden')
     }
   }
+
 })
 </script>
 
 <style scoped lang="less">
-@import "~lessPath/frontpage.less";
+@import "~lessPath/topnav.less";
 </style>
