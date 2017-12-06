@@ -18,3 +18,5 @@ export default Vue.extend({
 <style scoped lang="less">
 @import "~lessPath/app.less";
 </style>
+
+
