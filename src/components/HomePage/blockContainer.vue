@@ -47,5 +47,5 @@ export default Vue.extend({
 
 <style lang='less'>
 @import "~lessPath/frontpage.less";
-@import "~lessPath/latest-transection-table.less";
+@import "~lessPath/latest-blocks-table";
 </style>

@@ -149,5 +149,5 @@ export default Vue.extend({
 </script>
 <style scoped lang="less">
 @import "~lessPath/frontpage.less";
-@import "~lessPath/latest-blocks-table";
+
 </style>
