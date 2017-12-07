@@ -36,7 +36,7 @@
           <div class="col-md-12">
             <div class="block">
               <div class="block-title">
-                <img class="icon" src="/img/transicon.png">
+                 <icon name='refresh' scale='1.3'></icon>
                 <p class= "title">Latest Transactions</p>
               </div>
               <div class="block-table">
