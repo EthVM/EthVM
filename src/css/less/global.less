@@ -1,36 +1,14 @@
 @import (css) url(https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900);
 @import (css) url(https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700);
 @import '~bootstrap/less/bootstrap';
-
-@block-data-font-size: 15px;
-//@block-title-font: 'Roboto Condensed', sans-serif;
-@block-title-font: 'Roboto', sans-serif;
-@light-background-color: #f3f3f3;
-@button-background-color: #10ADE4;
-@dark-blue-color: #3b5c88;
-@light-blue-color: #27dce1;
-@main-font: 'Roboto', sans-serif;
+@import '~lessPath/globalVars';
 
 
-
-
-@media (min-width: 992px){
-
-    .full-width-row{
-         margin: 0;
-
-        .top-data-block{
-            padding: 0 1px;
-        }
-
-    }
-
-}
 
 
 .block-title-link{
 
-        font-size: 18px;
+        font-size: @text-size-1;
         font-weight: 500; 
         color: @light-blue-color;
         text-align: center;
@@ -39,21 +17,11 @@
         background-color: @dark-blue-color
     }
 
-
-.style-link{
-    font-family: @main-font;
-    font-size: 15px;
-
-}
-
 .hidden{
     display: none;
 }
 
-.frontpage{
-    font-family: @main-font;
-    font-weight: 300;
-}
+
 
 .divider{
     position:absolute;
@@ -65,7 +33,7 @@
 
 .nav-bar{
     
-    margin-bottom: 40px;
+    margin-bottom: @margin-1;
     background-color: @dark-blue-color;
     color: white;
     padding-top: 20px;
@@ -150,7 +118,7 @@
 
 
 .section{
-    margin-bottom: 40px;
+    margin-bottom: @margin-1;
 }
 
 .block-title{
@@ -159,11 +127,16 @@
     display: inline-flex;
     width: 100%;
     padding-top: 5px;
+    font-size: @text-size-2;
+    font-weight: 400; 
+    color: white;
+    
+    
 
     .icon{
-        padding-right: 15px;
-        padding-left: 10px;
-        height: 30px;
+        padding-right: 20px;
+        padding-left: 16px;
+        height: 25px;
     }
 
     span{
@@ -174,10 +147,10 @@
 
 
 .block-container{
-    margin-bottom: 40px;
+    margin-bottom: @margin-1;
 
     .chart-container{
-        margin-bottom: 40px;
+        margin-bottom: @margin-1;
 
         img{
             width: 100%;
@@ -205,10 +178,11 @@
     
     .dark-block-data{
         
-        font-size: 15px;
+        font-size: @text-size-2;
         font-weight: 400;
         color: white;
         text-align:center;
+
     }
 
 }
@@ -221,7 +195,7 @@
     }
 
     .block-data-b{
-        font-size: 15px;
+        font-size: @text-size-2;
         
         margin-bottom: 10px;
     }
@@ -232,7 +206,7 @@
 
             tr{
                 td{
-                    font-size: 14px;
+                    font-size: @text-size-3;
                     padding: 10px;
                 }
             }
@@ -255,23 +229,6 @@
     }
 }
 
-
-.graph-data{
-
-    .block-title-s{
-        font-family: @block-title-font;
-        font-size: 18px;
-        font-weight: 300;
-        margin-bottom: 5px;
-        text-transform: uppercase;
-
-        span{
-            color: blue;
-            margin-left: 20px;
-        }
-    }
-
-}
 
 .user-note-block{
     padding-top: 20px;
@@ -313,7 +270,7 @@
 
     .nav-bar{
         
-        margin-bottom: 40px;
+        margin-bottom: @margin-1;
         background-color: #3b5c88;
         color: white;
         padding-top: 20px;
