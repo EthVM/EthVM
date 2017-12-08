@@ -7,13 +7,13 @@
 
 
       <div v-on:click="toggleSearch();" class="search-button">
-        <icon class="mobile-search-open" name='search' scale='1.7'></icon>
+        <icon class="mobile-search-open" name='search' scale='1.5'></icon>
       </div>
       
       <div ref="topSearchInput" class="nav-bar-search">
 
-        <input class="form-control" type="search" placeholder="Search block height, address, block hash, transaction hash" id="example-search-input">
-        <icon class="mobile-search-click-button" name='search' scale='1.2'></icon>
+        <input class="form-control pull-right" type="search" placeholder="Search ..." id="example-search-input">
+        
       </div>
       
       <topnav></topnav>

@@ -1,45 +1,43 @@
 <template>
   <div class="frontpage">
     <Header></Header>
+
+    <!-- contaner for front page sections -->
     <div class="section container">
+
+      <!-- .container for three block on top -->
       <div class="block-container row full-width-row ">
-        
         <div class="three-block ">
-           
           <div class="col-md-4 top-data-block">
             <div class="dark-block ">
               <p class="block-title-link">Last Transaction</p>
-              <p class="dark-block-data">Hash number: 83402435..</p>
-            
+              <p class="dark-block-data">Hash number: 83402435..</p>           
             </div>
           </div>
-          <div class="col-md-4 top-data-block">
-             
+          <div class="col-md-4 top-data-block">             
             <div class="dark-block ">
               <p class="block-title-link">Last Block</p>
               <p class="dark-block-data">Height: 238530</p>
-            </div>
-           
+            </div>      
           </div>
-          <div class="col-md-4 top-data-block">
-             
+          <div class="col-md-4 top-data-block">       
             <div class="dark-block ">
               <p class="block-title-link">Hash Rate</p>
               <p class="dark-block-data">11,539,384 THs </p>
             </div>
-
           </div>
         </div>
-
       </div>
-      <!-- .block-container -->
+      <!-- end.container for three block on top -->
+
+      <!-- .block-container Transactions-->
       <div class="block-container row">
         <div class="single-block">
           <div class="col-md-12">
             <div class="block">
               <div class="block-title">
-                <img class="icon" src="/img/transicon.png">
-                <p class= "block-title-link">Latest Transactions</p>
+                 <icon name='refresh' scale='1.3'></icon>
+                <p class= "title">Latest Transactions</p>
               </div>
               <div class="block-table">
                 <hp-tx-container></hp-tx-container>
@@ -50,14 +48,16 @@
         </div>
         <!-- .single-block -->
       </div>
-      <!-- .block-container -->
+      <!-- end.block-container Transactions-->
+
+      <!-- .block-container Blocks-->
       <div class="block-container row">
         <div class="single-block">
           <div class="col-md-12">
             <div class="block">
               <div class="block-title">
                 <img class="icon" src="/img/blockicon.png">
-                <p class="block-title-link">Latest Blocks</p>
+                <p class="title">Latest Blocks</p>
               </div>
               <div class="block-table">
                 <hp-block-container></hp-block-container>
@@ -68,60 +68,49 @@
         </div>
         <!-- .single-block -->
       </div>
-      <!-- .block-container -->
-    </div>
+      <!-- end.block-container Blocks-->
 
-
-    <!-- .container -->
-    <div class="section container hidden">
-      <div class="block-container row">
-        <div class="two-block">
-          <div class="user-note-block col-md-6">
-            <div class="block">
-              <p class="block-title">NEW TO DIGITAL CURRENCIES?</p>
-              <p class="block-data">
-                Like paper money and gold before it, bitcoin and ether allow parties to exchange value. Unlike their predecessors, they are digital and decentralized. For the first time in history, people can exchange value without intermediaries which translates to greater control of funds and lower fees.
-              </p>
-            </div>
-            <!-- .block -->
-          </div>
-          <div class="search-block col-md-6">
-            <div class="block">
-              <p class="block-title">Search</p>
-              <p class="search-text">You may enter a block height, address, block hash, transaction hash, hash160, or ipv4 address...</p>
-              <input class="form-control" type="search" value="Search" id="example-search-input">
-              <button type="button" class="btn btn-primary">Search</button>
-            </div>
-          </div>
-        </div>
-        <!-- .two-block -->
-      </div>
-    </div>
+      <!-- .container for the chart and stats -->
     <div class="section container">
-      <div class="block-container row">
-        <div class="two-block">
+      <div class="block-container full-width-row">
+        <!-- .two-block -->
+        <div class="two-block height-400-px">
           <div class="chart-container col-md-6">
-            <div class="block">
-              <highcharts :options="options" ref="datachart"></highcharts>
-              <p class="block-title-link">Interactive Chart</p>
-            </div>
-            <!-- .block -->
+          <highcharts :options="options" ref="datachart"></highcharts>
           </div>
-          <div class="col-md-6">
-            <div class="block-title">
-              <img class="icon" src="/img/blockicon.png">
-              <p class="block-title-link">Latest Blocks</p>
-            </div>
-            <!-- .block -->
+          <div class="col-md-6 height-100-per"> 
+            <table class="table dark-block height-100-per vertical-middle-alignment">
+              <tbody>
+                <tr class="transactions ">
+                  <td><p class="dark-block-data " > Transactions Per Day: </p></td>
+                  <td><p class="block-title-link "> 3,874,038 </p></td>
+                </tr>
+                <tr class="marketcap">
+                  <td><p class="dark-block-data " style="padding-top: 10px"> Market Cap: </p></td>
+                  <td><p class="block-title-link"> $632,930,874,038 </p></td>
+                </tr>
+                <tr class="hashrate">
+                  <td><p class="dark-block-data " style="padding-top: 10px" > Hash Rate </p></td>
+                  <td><p class="block-title-link"> 20,874,038  TH/s</p></td>
+                </tr>       
+               </tbody>
+              </table>
           </div>
         </div>
-        <!-- .two-block -->
+        <!-- end.two-block -->
+
       </div>
     </div>
+      <!-- .container for the chart and stats -->
 
-    <Footer></Footer>
+    </div>
+    <!-- end.contaner for front page sections -->
+
+
+   <Footer></Footer> 
 
   </div>
+
 </template>
 <script lang="ts">
 import Vue from 'vue'
