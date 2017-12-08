@@ -13,9 +13,9 @@
     <tbody>
       <tr v-for="block in blocks">
         <td>{{block.hash}}</td>
-        <td>{{block.age}}</td>
-        <td>{{block.numTransactions}}</td>
-        <td>{{block.rewards}}</td>
+        <td>{{block.timestamp}}</td>
+        <td>{{block.transactions.length}}</td>
+        <td>{{block.blockReward}}</td>
         <td>{{block.miner}}</td>
         <td>{{block.gasLimit}}</td>
       </tr>
@@ -25,7 +25,6 @@
 
 <script lang="ts">
 import Vue from 'vue'
-// import Blocks from '@/sampleData/blocks.json'
 import store from '@/states'
 export default Vue.extend({
   name: 'block-container',
@@ -35,7 +34,7 @@ export default Vue.extend({
     }
   },
   mounted: function () {
-    // store.commit('setBlocks', Blocks)
+
   },
   computed: {
     blocks () {
