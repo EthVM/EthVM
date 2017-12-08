@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import Txs from '@/sampleData/transactions.json'
+// import Txs from '@/sampleData/transactions.json'
 import store from '@/states'
 export default Vue.extend({
   name: 'block-container',
@@ -35,7 +35,7 @@ export default Vue.extend({
     }
   },
   mounted: function () {
-    store.commit('setTxs', Txs)
+    // store.commit('setTxs', Txs)
   },
   computed: {
     transactions () {

@@ -1,11 +1,7 @@
-import { stateLayout, txLayout, blockLayout } from './state'
+import { stateLayout, txLayout, blockLayout } from '@/typeLayouts'
 
 let all = (state: stateLayout): stateLayout => {
 	return state
-}
-
-let getCount = (state: stateLayout): number => {
-	return state.count
 }
 
 let getTxs = (state: stateLayout): Array<txLayout> => {
@@ -18,7 +14,6 @@ let getBlocks = (state: stateLayout): Array<blockLayout> => {
 
 export default {
 	all,
-	getCount,
 	getTxs,
 	getBlocks
 }

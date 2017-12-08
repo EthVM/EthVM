@@ -11,8 +11,10 @@
     "build": "webpack --config configs/webpack.config.js"
   },
   "dependencies": {
+    "@types/socket.io-client": "^1.4.32",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
+    "vue-socket.io": "^2.1.1-a",
     "vuex": "^3.0.1"
   },
   "devDependencies": {

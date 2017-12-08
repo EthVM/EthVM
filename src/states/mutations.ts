@@ -1,19 +1,24 @@
-import { stateLayout, txLayout, blockLayout } from './state'
+import { stateLayout, txLayout, blockLayout } from '@/typeLayouts'
+import defaultRooms from '@/configs/defaultRooms.json'
+import sEvents from '@/configs/socketEvents.json'
 
-let incrementCount = (state: stateLayout) => {
-	state.count++
+let SOCKET_CONNECT = function(state: stateLayout, _msg: string) {
+	defaultRooms.forEach((_room) => {
+		this._vm.$socket.emit(sEvents.join, _room)
+	})
 }
 
-let setTxs = (state: stateLayout, _txs: Array<txLayout>) => {
-	state.txs = _txs
+let NEW_BLOCK = function(state: stateLayout, block: blockLayout) {
+	console.log(block)
+	state.blocks.push(block)
 }
 
-let setBlocks = (state: stateLayout, _blocks: Array<blockLayout>) => {
-	state.blocks = _blocks
+let NEW_TX = function(state: stateLayout, tx: txLayout) {
+	state.txs.push(tx)
 }
 
 export default {
-	incrementCount,
-	setTxs,
-	setBlocks
+	SOCKET_CONNECT,
+	NEW_BLOCK,
+	NEW_TX
 }

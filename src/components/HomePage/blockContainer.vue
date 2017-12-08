@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import Blocks from '@/sampleData/blocks.json'
+// import Blocks from '@/sampleData/blocks.json'
 import store from '@/states'
 export default Vue.extend({
   name: 'block-container',
@@ -35,7 +35,7 @@ export default Vue.extend({
     }
   },
   mounted: function () {
-    store.commit('setBlocks', Blocks)
+    // store.commit('setBlocks', Blocks)
   },
   computed: {
     blocks () {
