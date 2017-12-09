@@ -10,11 +10,12 @@ let SOCKET_CONNECT = function(state: stateLayout, _msg: string) {
 
 let NEW_BLOCK = function(state: stateLayout, block: blockLayout) {
 	console.log(block)
-	state.blocks.push(block)
+	state.blocks.unshift(block)
 }
 
 let NEW_TX = function(state: stateLayout, tx: txLayout) {
-	state.txs.push(tx)
+	state.txs.unshift(tx)
+	if(state.txs.length > 100) state.txs = state.txs.slice(0,100)
 }
 
 export default {
