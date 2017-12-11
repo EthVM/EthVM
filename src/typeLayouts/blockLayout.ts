@@ -3,6 +3,7 @@ export default interface blockLayout {
 	id: string;
 	number: string;
 	intNumber: number;
+	hash: string,
 	parentHash: string;
 	nonce: string;
 	mixHash: string;

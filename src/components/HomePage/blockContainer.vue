@@ -3,21 +3,21 @@
     <thead>
       <tr>
         <td>Hash</td>
-        <td>Age</td>
+        <td>Uncle</td>
         <td>Transactions</td>
         <td>Block Reward</td>
+        <td>Tx Fees</td>
         <td>Miner</td>
-        <td>Gas Limit</td>
       </tr>
     </thead>
     <tbody>
       <tr v-for="block in blocks">
-        <td>{{block.hash}}</td>
-        <td>{{block.timestamp}}</td>
-        <td>{{block.transactions.length}}</td>
-        <td>{{block.blockReward}}</td>
-        <td>{{block.miner}}</td>
-        <td>{{block.gasLimit}}</td>
+        <td>{{block.getHash()}}</td>
+        <td>{{block.getIsUncle()}}</td>
+        <td>{{block.getTransactions().length}}</td>
+        <td>{{block.getBlockReward.toEth()}} ETH</td>
+        <td>{{block.getTxFees.toEth()}} ETH</td>
+        <td>{{block.getMiner()}}</td>
       </tr>
     </tbody>
   </table>

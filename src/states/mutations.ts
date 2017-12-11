@@ -1,6 +1,7 @@
 import { stateLayout, txLayout, blockLayout } from '@/typeLayouts'
 import defaultRooms from '@/configs/defaultRooms.json'
 import sEvents from '@/configs/socketEvents.json'
+import {Block} from '@/libs'
 
 let SOCKET_CONNECT = function(state: stateLayout, _msg: string) {
 	defaultRooms.forEach((_room) => {
@@ -10,7 +11,7 @@ let SOCKET_CONNECT = function(state: stateLayout, _msg: string) {
 
 let NEW_BLOCK = function(state: stateLayout, block: blockLayout) {
 	console.log(block)
-	state.blocks.unshift(block)
+	state.blocks.unshift(new Block(block))
 }
 
 let NEW_TX = function(state: stateLayout, tx: txLayout) {
