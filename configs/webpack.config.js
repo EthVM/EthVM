@@ -10,6 +10,9 @@ function resolve(dir) {
 module.exports = {
     context: path.resolve(__dirname, '../'),
     entry: './src/main.ts',
+    node: {
+        fs: 'empty'
+    },
     output: {
         path: path.resolve(__dirname, '../dist/'),
         publicPath: '',
