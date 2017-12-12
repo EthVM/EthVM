@@ -1,0 +1,4 @@
+{
+    "maxBlocksInMemory": 100,
+    "maxTxsInMemory": 100
+}

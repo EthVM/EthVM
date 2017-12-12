@@ -50,6 +50,7 @@
     "less": "^2.7.3",
     "less-loader": "^4.0.5",
     "lodash": "^4.17.4",
+    "lru": "^3.1.0",
     "postcss": "^6.0.14",
     "postcss-loader": "^2.0.8",
     "style-loader": "^0.19.0",

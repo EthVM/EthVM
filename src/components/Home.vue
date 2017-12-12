@@ -11,13 +11,13 @@
           <div class="col-md-4 top-data-block">
             <div class="dark-block ">
               <p class="block-title-link">Last Transaction</p>
-              <p class="dark-block-data">Hash number: 83402435..</p>           
+              <p class="dark-block-data">Hash: {{latestTxHash}}</p>           
             </div>
           </div>
           <div class="col-md-4 top-data-block">             
             <div class="dark-block ">
               <p class="block-title-link">Last Block</p>
-              <p class="dark-block-data">Height: 238530</p>
+              <p class="dark-block-data">Height: {{latestBlockNumber}}</p>
             </div>      
           </div>
           <div class="col-md-4 top-data-block">       
@@ -40,7 +40,7 @@
                 <p class= "title">Latest Transactions</p>
               </div>
               <div class="block-table">
-                <hp-tx-container></hp-tx-container>
+                <hp-tx-container max-items="20"></hp-tx-container>
               </div>
             </div>
             <!-- .block -->
@@ -60,7 +60,7 @@
                 <p class="title">Latest Blocks</p>
               </div>
               <div class="block-table">
-                <hp-block-container></hp-block-container>
+                <hp-block-container max-items="20"></hp-block-container>
               </div>
             </div>
             <!-- .block -->
@@ -120,19 +120,24 @@ export default Vue.extend({
   name: 'FrontPage',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App',
       store: store,
       options: chartOptions
     }
   },
   methods: {
-    increment () {
-      store.commit('incrementCount')
-      this.$toasted.show(store.getters.getCount)
-    }
   },
   mounted: function () {
     console.log('Page is fully loaded!!!')
+  },
+  computed: {
+    latestTxHash () {
+      if (!store.getters.getTxs.length) return 'loading'
+      return store.getters.getTxs[0].getHash().substr(0, 10) + '...'
+    },
+    latestBlockNumber () {
+      if (!store.getters.getBlocks.length) return 'loading'
+      return store.getters.getBlocks[0].getIntNumber()
+    }
   }
 })
 </script>

@@ -1,7 +1,6 @@
-import { txLayout, blockLayout } from '@/typeLayouts'
-import { Block } from '@/libs/'
+import { Block, Tx, FIFO } from '@/libs/'
 
 export default interface stateLayout {
-	txs: Array<txLayout>;
-	blocks: Array<Block>;
+	txs: FIFO<Tx>;
+	blocks: FIFO<Block>;
 }
