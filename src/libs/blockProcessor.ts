@@ -22,5 +22,18 @@ let setUnclesToUncles = (block: Block, pastBlocks: FIFO<Block>): FIFO<Block> => 
 	}
 	return newfifo
 }
-
-export default setUnclesToUncles
+let dedup = (pastBlocks: FIFO<Block>): FIFO<Block> =>{
+	let items = pastBlocks.items()
+	for (let i = 0; i < items.length; i++){
+		for (let j = 0; j < items.length; j++) {
+			if (i != j && items[i].getHash() == items[j].getHash()) pastBlocks.remove(j);
+		}
+	}
+	return pastBlocks
+}
+let processBlocks = (block: Block, pastBlocks: FIFO<Block>): FIFO<Block> =>{
+	pastBlocks = setUnclesToUncles(block, pastBlocks)
+	pastBlocks = dedup(pastBlocks)
+	return pastBlocks
+}
+export default processBlocks

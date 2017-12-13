@@ -16,5 +16,8 @@ class FIFO<T>{
 	top(): T {
 		return this.arr[0]
 	}
+	remove(index: number) {
+		this.arr.splice(index,1)
+	}
 }
 export default FIFO
