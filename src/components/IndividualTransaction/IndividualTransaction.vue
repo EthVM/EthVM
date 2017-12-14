@@ -8,48 +8,74 @@
           
           <div class="table-fields">
             <p class="title">Block Height 123123</p>
-            <table>
+            
+            <div class="data-block">
               
+              <div class="data-top">
+                <div>Hash <span>8723461243</span></div>
+                <div>Gas <span>872HEUD</span></div>
+                <div>Gas Price <span>231.99</span></div>
+                <div>Block <span>823199</span></div>
+              </div>
               
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>4</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-              </tbody>
+              <div class="data-mid">
+          
+                <div>
+                  <p>From</p>
+                  <p>12371248</p>
+                </div>
 
-            </table>
+                <div>
+                  <p class="data-icon-container"><icon name='long-arrow-right' scale='1.2'></icon></p>
+                  <p>23412.23</p>
+                </div>
 
+                <div>
+                  <p>To</p>
+                  <p>82437123</p>
+                </div>
+
+              </div>
+              <!-- .data-mid -->
+
+            </div>
+            <!-- .data-block -->
+
+
+
+            <div class="data-block">
+              
+              <div class="data-top">
+                <div>Hash <span>8723461243</span></div>
+                <div>Gas <span>872HEUD</span></div>
+                <div>Gas Price <span>231.99</span></div>
+                <div>Block <span>823199</span></div>
+              </div>
+              
+              <div class="data-mid">
+          
+                <div>
+                  <p>From</p>
+                  <p>12371248</p>
+                </div>
+
+                <div>
+                  <p class="data-icon-container"><icon name='long-arrow-right' scale='1.2'></icon></p>
+                  <p>23412.23</p>
+                </div>
+
+                <div>
+                  <p>To</p>
+                  <p>82437123</p>
+                </div>
+
+              </div>
+              <!-- .data-mid -->
+                            
+            </div>
+            <!-- .data-block -->
           </div>
-
+          <!-- .table-fields -->
 
         </div>
       </div>  

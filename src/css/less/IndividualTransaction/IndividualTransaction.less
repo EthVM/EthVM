@@ -1,5 +1,9 @@
 @table-row-background: #f3f3f3;
 
+@data-block-title-color: rgba(0,0,0,.54);
+@data-block-data-color: rgb(183, 183, 183);
+
+
 .individualtransaction-container{    
 
     margin-bottom: 40px;
@@ -26,43 +30,78 @@
             }
         }
 
-        table{
+
+        div.data-block{
+            position: relative;
             width: 100%;
+            padding: 5px 0;
+            border-bottom: 1px solid #f3f3f3;
 
-            thead, tbody{
-                tr{
-                    td{
-                        padding: 10px;
+
+            .data-top{
+                margin: 0 0 -2px 0;
+                font-size: 9px;
+
+                >div{
+                    display: inline-block;
+                    margin-right: 10px;
+                    
+                    font-weight: 700;
+                    color: @data-block-title-color;
+                    text-transform: uppercase;
+
+                    span{
+                       font-weight: 700;
+                
+                       color: @data-block-data-color;
+                    }
+                }
+            }
+
+            .data-mid{
+                
+                margin: 0 0 -5px 0;
+                width: 100%;                
+                
+                >div{
+                    
+                    display: inline-block;
+                    font-weight: 700;
+                    width: 30%;
+
+
+
+                    p:nth-child(1){
                         font-size: 12px;
+                        text-transform: uppercase;
+                        margin: 0 0 -5px 0;
+                        color: @data-block-title-color;
+
                     }
+                    
+                    p:nth-child(2){
+
+                        font-size: 15px;
+                        text-transform: uppercase;
+                        margin: 0;
+                        color: @data-block-data-color;
+                    }
+
+                    .data-icon-container{
+                        position: relative;
+
+                        svg{
+                            position: absolute;
+                            top: -19px;
+                            color: @data-block-title-color;
+                        }
+                    }
+
                 }
             }
 
-
-            thead{
-                tr{
-                    background-color: @table-row-background;
-
-                    td{
-                        color: black;
-                        font-weight: 500;
-                    }
-                }
-            }
-
-            tbody{
-                tr{
-                    td{
-
-                    }
-                }
-
-                tr:nth-child(odd){
-                    background-color: @table-row-background;
-                }
-            }
-            
         }
+
     }
 }
 
