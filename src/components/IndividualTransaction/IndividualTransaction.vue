@@ -26,7 +26,7 @@
                 </div>
 
                 <div>
-                  <p class="data-icon-container"><icon name='long-arrow-right' scale='1.2'></icon></p>
+                  <p class="data-icon-container"><icon name='long-arrow-right' scale='1'></icon></p>
                   <p>23412.23</p>
                 </div>
 
@@ -60,7 +60,7 @@
                 </div>
 
                 <div>
-                  <p class="data-icon-container"><icon name='long-arrow-right' scale='1.2'></icon></p>
+                  <p class="data-icon-container"><icon name='long-arrow-right' scale='1'></icon></p>
                   <p>23412.23</p>
                 </div>
 

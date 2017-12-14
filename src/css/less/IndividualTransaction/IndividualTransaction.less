@@ -4,6 +4,7 @@
 @data-block-data-color: rgb(183, 183, 183);
 
 
+
 .individualtransaction-container{    
 
     margin-bottom: 40px;
@@ -23,24 +24,21 @@
             text-transform: uppercase;
             background-color: #3b5c88;
 
-            svg{
-                margin-top: 2px;
-                margin-right: 10px;
-                vertical-align: top;
-            }
         }
 
 
         div.data-block{
             position: relative;
             width: 100%;
-            padding: 5px 0;
-            border-bottom: 1px solid #f3f3f3;
+            padding: 0 0 5px 0;
+            border-bottom: 1px solid #efefef;
 
 
             .data-top{
-                margin: 0 0 -2px 0;
-                font-size: 9px;
+                background-color: whitesmoke;
+                margin: 0 0 0px 0;
+                font-size: 11px;
+                padding: 1px 0;
 
                 >div{
                     display: inline-block;
@@ -52,7 +50,6 @@
 
                     span{
                        font-weight: 700;
-                
                        color: @data-block-data-color;
                     }
                 }
@@ -72,11 +69,11 @@
 
 
                     p:nth-child(1){
-                        font-size: 12px;
+                        font-size: 15px;
                         text-transform: uppercase;
                         margin: 0 0 -5px 0;
                         color: @data-block-title-color;
-
+                        display: inline-block;
                     }
                     
                     p:nth-child(2){
@@ -85,14 +82,14 @@
                         text-transform: uppercase;
                         margin: 0;
                         color: @data-block-data-color;
+                        display: inline-block;
                     }
 
                     .data-icon-container{
                         position: relative;
+                        vertical-align: sub;
 
                         svg{
-                            position: absolute;
-                            top: -19px;
                             color: @data-block-title-color;
                         }
                     }
@@ -106,5 +103,122 @@
 }
 
 
+
+
+
+
+
+@media (max-width: 1199px){
+
+
+
+
+    .individualtransaction-container{    
+
+        margin-bottom: 40px;
+
+        .table-fields{
+
+            font-family: 'Roboto', sans-serif;
+
+            .title{
+                padding: 10px;
+                margin: 0;
+
+                font-size: 18px;
+                font-weight: 500;
+                color: #27dce1;
+                text-align: left;
+                text-transform: uppercase;
+                background-color: #3b5c88;
+
+                svg{
+                    margin-top: 2px;
+                    margin-right: 10px;
+                    vertical-align: top;
+                }
+            }
+
+
+            div.data-block{
+                position: relative;
+                width: 100%;
+                padding: 0 0 5px 0;
+                border-bottom: 1px solid #efefef;
+
+
+                .data-top{
+                    background-color: whitesmoke;
+                    margin: 0 0 0px 0;
+                    font-size: 9px;
+                    padding: 0;
+
+                    >div{
+                        display: inline-block;
+                        margin-right: 10px;
+                        
+                        font-weight: 700;
+                        color: @data-block-title-color;
+                        text-transform: uppercase;
+
+                        span{
+                           font-weight: 700;
+                    
+                           color: @data-block-data-color;
+                        }
+                    }
+                }
+
+                .data-mid{
+                    
+                    margin: 0 0 -5px 0;
+                    width: 100%;                
+                    
+                    >div{
+                        
+                        display: inline-block;
+                        font-weight: 700;
+                        width: 30%;
+
+
+
+                        p:nth-child(1){
+                            font-size: 12px;
+                            text-transform: uppercase;
+                            margin: 0 0 -5px 0;
+                            color: @data-block-title-color;
+                            display: block;
+                        }
+                        
+                        p:nth-child(2){
+
+                            font-size: 15px;
+                            text-transform: uppercase;
+                            margin: 0;
+                            color: @data-block-data-color;
+                            display: block;
+                        }
+
+                        .data-icon-container{
+                            position: relative;
+
+                            svg{
+                                position: absolute;
+                                top: -18px;
+                                color: @data-block-title-color;
+                            }
+                        }
+
+                    }
+                }
+
+            }
+
+        }
+    }
+
+
+
+}
 
 
