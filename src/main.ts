@@ -6,6 +6,7 @@ import Vuex from 'vuex'
 import store from './states'
 import Toasted from 'vue-toasted'
 import VueHighcharts from 'vue-highcharts'
+import io from 'socket.io-client';
 
 import socketConfig from '@/configs/socket.json'
 import VueSocketio from 'vue-socket.io'
@@ -17,7 +18,7 @@ Vue.use(Toasted, {
 	router
 })
 Vue.use(VueHighcharts);
-Vue.use(VueSocketio, socketConfig.url+":"+socketConfig.port, store);
+Vue.use(VueSocketio, io(socketConfig.url+":"+socketConfig.port), store);
 
 new Vue({
 	el: '#app',
