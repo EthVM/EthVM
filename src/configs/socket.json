@@ -1,6 +1,6 @@
 {
     "purl": "http://localhost",
-    "url": "http://evening-woodland-79727.herokuapp.com",
+    "url": "https://ws.ethvm.com",
     "pport": "3000",
-    "port": "80"
+    "port": "443"
 }
