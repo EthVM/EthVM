@@ -8,7 +8,7 @@
         <div class="data-block-1">
           <div>Hash <span>{{tx.getHash()}}</span></div>
           <div>Gas <span>{{tx.getGasUsed.toNumber().toString()}}</span></div>
-          <div>Gas Price <span>{{tx.getGasPrice.toEth()}} ETH</span></div>
+          <div>Gas Price(Eth) <span>{{tx.getGasPrice.toEth()}}</span></div>
           <div>Block <span>{{tx.getBlockNumber.toNumber().toString()}}</span></div>
         </div><!-- .data-block-1 -->
 
@@ -19,9 +19,9 @@
           </div>
           <div>
             <div class="data-icon-container">
-              <icon name='long-arrow-right' scale='1'></icon>
+              <icon name='long-arrow-right' scale='1'></icon> <span>(ETH)</span>
             </div>
-            <p class="amount">{{tx.getValue.toEth()}} ETH</p>
+            <p class="amount">{{tx.getValue.toEth()}}</p>
           </div>
           <div>
             <h1>To</h1>
