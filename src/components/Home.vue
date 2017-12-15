@@ -47,7 +47,7 @@
       <!-- end.block-container Transactions-->
 
       <!-- .block-container Blocks-->
-      <div class="block-container row">
+      <div class="block-container row hidden">
         <div class="single-block">
           <div class="col-md-12">
             <div class="block">
