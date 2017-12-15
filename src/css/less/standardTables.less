@@ -1,0 +1,232 @@
+/***********************************************************************
+ Standard tables for all pages
+***********************************************************************/
+
+
+@stable-background-color-1: #f5f5f5;
+@stable-border-color-1: #d2d2d2;
+@stable-font-color-1: black;
+@stable-font-weight-bold: 400;
+@stable-font-weight-normal: 300;
+@stable-font-family: 'Roboto', sans-serif;
+
+
+.standard-table-1{
+
+    font-weight: @stable-font-weight-normal;
+    font-family: @stable-font-family;
+    font-size: 11px;
+    color: @stable-font-color-1;
+
+    .table-title{
+        font-family: @stable-font-family;
+        text-transform: uppercase;
+        font-size: 20px;
+        font-weight: @stable-font-weight-normal;
+        margin: 0;
+        border-bottom: 4px solid @stable-border-color-1;
+    }
+
+    .data-block-loop{
+        &:nth-child(odd){
+            background-color: @stable-background-color-1;
+        }        
+
+        border-bottom: 1px solid @stable-border-color-1;
+        padding: 5px 10px;
+        
+
+        .data-block-1{
+            display: block;
+            position: relative;
+            padding: 2px 0;
+            >div{
+                display: inline-block;
+                position: relative;
+                
+                font-size: 10px;
+                margin-right: 10px;
+                font-weight: @stable-font-weight-bold;
+                text-transform: uppercase;
+                span{
+                    font-weight: @stable-font-weight-normal;    
+                }
+            }
+        }
+
+        .data-block-2{
+            display: block;
+            position: relative;
+            >div{
+                display: inline-block;
+                margin-right: 30px;
+                h1{
+                    display: inline-block;
+                    font-size: 14px;
+                    font-family: @stable-font-family;
+                    vertical-align: middle;
+                    margin: 0;
+                    padding: 0;
+                    font-weight: @stable-font-weight-bold;
+                    text-transform: uppercase;
+                }
+
+                p{
+                    display: inline-block;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    width: 350px;
+                    font-size: 14px;
+                    vertical-align: middle;
+                    margin: 0;
+                    padding: 0;
+                }
+
+                div.data-icon-container{
+                    display: inline-block;
+                    vertical-align: middle;
+                    margin: 0;
+                    padding: 0;
+                    svg{
+                        color: @stable-font-color-1;
+                    }
+                }
+
+                p.amount{
+                    width: 200px;
+                }
+            }
+        }
+    }/* .data-block-loop */
+
+}/* .standard-table-1 */
+
+
+
+
+
+/***********************
+ Mobile Responsive
+***********************/
+@media screen and (max-width: 1199px){
+
+
+    .standard-table-1{
+
+        font-weight: @stable-font-weight-normal;
+        font-family: @stable-font-family;
+        font-size: 11px;
+        color: @stable-font-color-1;
+
+        .table-title{
+            font-family: @stable-font-family;
+            text-transform: uppercase;
+            font-size: 20px;
+            font-weight: @stable-font-weight-normal;
+            margin: 0;
+            border-bottom: 4px solid @stable-border-color-1;
+        }
+
+        .data-block-loop{
+            &:nth-child(odd){
+                background-color: @stable-background-color-1;
+            }        
+
+            border-bottom: 1px solid @stable-border-color-1;
+            padding: 5px 10px;
+            
+
+            .data-block-1{
+                display: block;
+                position: relative;
+                padding: 0;
+                >div{
+                    display: inline-block;
+                    position: relative;
+                    
+                    font-size: 10px;
+                    margin-right: 5px;
+                    font-weight: @stable-font-weight-bold;
+                    text-transform: uppercase;
+                    vertical-align: middle;
+                    span{
+                        font-weight: @stable-font-weight-normal;    
+                        display: inline-block;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        max-width: 50px;
+                        vertical-align: middle;
+                    }
+                }
+            }
+
+            .data-block-2{
+                margin-top: -6px;
+                display: block;
+                position: relative;
+                width: 100%;
+                >div{
+                    width: 32%;
+                    display: inline-block;
+                    margin-right: 0px;
+                    h1{
+                        display: block;
+                        font-size: 12px;
+                        font-family: @stable-font-family;
+                        vertical-align: middle;
+                        margin: 0;
+                        padding: 0;
+                        font-weight: @stable-font-weight-bold;
+                        text-transform: uppercase;
+                    }
+
+                    p{
+                        display: block;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        width: 100%;
+                        font-size: 11px;
+                        vertical-align: middle;
+                        margin: 0;
+                        padding: 0;
+                    }
+
+                    div.data-icon-container{
+                        display: block;
+                        vertical-align: bottom;
+                        margin: 0;
+                        padding: 0;
+                        svg{
+                            vertical-align: bottom;
+                            color: @stable-font-color-1;
+                        }
+                    }
+
+                    p.amount{
+                        display: block;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        width: 100%;
+                        font-size: 11px;
+                        vertical-align: middle;
+                        
+                    }
+                }
+            }
+        }/* .data-block-loop */
+
+    }/* .standard-table-1 */
+
+
+
+}
+
+
+
+
+
+
+
+
+
+

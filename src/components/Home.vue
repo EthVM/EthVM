@@ -35,13 +35,9 @@
         <div class="single-block">
           <div class="col-md-12">
             <div class="block">
-              <div class="block-title">
-                 <icon name='refresh' scale='1.3'></icon>
-                <p class= "title">Latest Transactions</p>
-              </div>
-              <div class="block-table">
+
                 <hp-tx-container max-items="20"></hp-tx-container>
-              </div>
+
             </div>
             <!-- .block -->
           </div>
