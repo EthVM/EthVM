@@ -1,38 +1,37 @@
-import { Block, FIFO } from '@/libs'
+import { Block } from '@/libs'
 import globConfigs from '@/configs/global.json'
 
-let setUncles = (hash: string, blocks: Array<Block>): Array<Block> => {
+let setUncles = (block: Block, hash: string, blocks: Array<Block>): Array<Block> => {
 	for (let i = 0; i < blocks.length; i++) {
 		if (blocks[i].getHash() == hash) {
-			blocks[i].setTransactions([])
 			blocks[i].setIsUncle(true)
+			block.addUncle(blocks[i])
 		}
 	}
 	return blocks;
 }
-let setUnclesToUncles = (block: Block, pastBlocks: FIFO<Block>): FIFO<Block> => {
-	let tPastBlocks = pastBlocks.items()
-	for (let i = 0; i < block.getUncles().length; i++) {
-		tPastBlocks = setUncles(block.getUncles()[i], tPastBlocks)
+let setUnclesToUnclesAndAdd = (block: Block, pastBlocks: Array<Block>): Array<Block> => {
+	let uncleHashes = block.getUncleHashes()
+	for (let i = 0; i < uncleHashes.length; i++) {
+		pastBlocks = setUncles(block, uncleHashes[i], pastBlocks)
 	}
-	tPastBlocks.sort(function(a, b) { return a.getIntNumber() - b.getIntNumber() })
-	let newfifo = new FIFO<Block>(globConfigs.maxBlocksInMemory)
-	for (let i = 0; i < tPastBlocks.length; i++) {
-		newfifo.add(tPastBlocks[i])
-	}
-	return newfifo
-}
-let dedup = (pastBlocks: FIFO<Block>): FIFO<Block> =>{
-	let items = pastBlocks.items()
-	for (let i = 0; i < items.length; i++){
-		for (let j = 0; j < items.length; j++) {
-			if (i != j && items[i].getHash() == items[j].getHash()) pastBlocks.remove(j);
-		}
-	}
+	pastBlocks.unshift(block)
 	return pastBlocks
 }
-let processBlocks = (block: Block, pastBlocks: FIFO<Block>): FIFO<Block> =>{
-	pastBlocks = setUnclesToUncles(block, pastBlocks)
+let dedup = (pastBlocks: Array<Block>): Array<Block> => {
+	for (let i = 0; i < pastBlocks.length; i++) {
+		for (let j = 0; j < pastBlocks.length; j++) {
+			if (i != j && pastBlocks[i].getHash() == pastBlocks[j].getHash()) pastBlocks.splice(j, 1)
+		}
+		return pastBlocks
+	}
+}
+let sortDescending = (pastBlocks: Array<Block>): Array<Block> => {
+	pastBlocks.sort(function(a, b) { return a.getIntNumber() - b.getIntNumber() })
+	return pastBlocks
+}
+let processBlocks = (block: Block, pastBlocks: Array<Block>): Array<Block> => {
+	pastBlocks = setUnclesToUnclesAndAdd(block, pastBlocks)
 	pastBlocks = dedup(pastBlocks)
 	return pastBlocks
 }

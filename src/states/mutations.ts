@@ -14,11 +14,9 @@ let SOCKET_CONNECT = function(state: stateLayout, _msg: string) {
 let addNewBlock = function(state: stateLayout, block: blockLayout) {
 	console.log(block.intNumber, block)
 	state.blocks.add(new Block(block))
-	state.blocks = processBlocks(new Block(block), state.blocks)
 }
 let addNewTx = function(state: stateLayout, tx: txLayout) {
 	state.txs.add(new Tx(tx))
-	state.txs = processTxs(new Tx(tx), state.txs)
 }
 let NEW_BLOCK = function(state: stateLayout, block: blockLayout) {
 	if (Array.isArray(block)) {

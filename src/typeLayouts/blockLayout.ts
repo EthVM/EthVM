@@ -1,4 +1,5 @@
 import { txLayout } from '@/typeLayouts'
+import { Block } from '@/libs'
 export default interface blockLayout {
 	id: string;
 	number: string;
@@ -22,7 +23,8 @@ export default interface blockLayout {
 	transactionsRoot: string;
 	receiptsRoot: string;
 	transactions: Array<txLayout>;
-	uncles: Array<string>;
+	uncleHashes: Array<string>;
+	uncles: Array<Block>;
 	isUncle: boolean;
 	txFees: string;
 	blockReward: string;

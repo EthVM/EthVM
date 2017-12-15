@@ -1,4 +1,4 @@
-import { txLogLayout } from '@/typeLayouts'
+import { txLogLayout, traceLayout } from '@/typeLayouts'
 export default interface txLayout {
 	root: string;
 	blockHash: string;
@@ -23,4 +23,5 @@ export default interface txLayout {
 	r: string;
 	s: string;
 	status: boolean;
+	trace: traceLayout;
 }

@@ -1,16 +1,16 @@
-import { Tx, FIFO } from '@/libs'
+import { Tx } from '@/libs'
 
-let dedup = (pastTxs: FIFO<Tx>): FIFO<Tx> => {
-	let items = pastTxs.items()
-	for (let i = 0; i < items.length; i++) {
-		for (let j = 0; j < items.length; j++) {
-			if (i != j && items[i].getHash() == items[j].getHash()) pastTxs.remove(j);
+let dedup = (pastTxs: Array<Tx>): Array<Tx> => {
+	for (let i = 0; i < pastTxs.length; i++) {
+		for (let j = 0; j < pastTxs.length; j++) {
+			if (i != j && pastTxs[i].getHash() == pastTxs[j].getHash()) pastTxs.splice(j,1)
 		}
 	}
 	return pastTxs
 }
-let processTxs = (tx: Tx, pastTxs: FIFO<Tx>): FIFO<Tx> => {
+let processTxs = (tx: Tx, pastTxs: Array<Tx>): Array<Tx> => {
 	pastTxs = dedup(pastTxs)
+	pastTxs.unshift(tx)
 	return pastTxs
 }
 export default processTxs

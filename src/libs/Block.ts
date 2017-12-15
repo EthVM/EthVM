@@ -23,14 +23,31 @@ class Block {
 			}
 		})
 	}
-	setTransactions(txs: Array<txLayout>) {
+	setTransactions(txs: Array<txLayout>): void {
 		this.block.transactions = txs
 	}
-	setIsUncle(isUncle: boolean) {
+	setIsUncle(isUncle: boolean): void {
+		if(isUncle){
+			this.setTransactions([])
+			this.setUncles([])
+			this.setUncleHashes([])
+		}
 		this.block.isUncle = isUncle
 	}
-	getUncles(): Array<string> {
+	setUncles(uncles: Array<Block>): void{
+		this.block.uncles = uncles
+	}
+	getUncles(): Array<Block> {
 		return this.block.uncles
+	}
+	addUncle(uncle: Block):void {
+		this.block.uncles.push(uncle)
+	}
+	getUncleHashes(): Array<string> {
+		return this.block.uncleHashes
+	}
+	setUncleHashes(hashes: Array<string>):void {
+		this.block.uncleHashes = hashes
 	}
 	getHash(): string {
 		return this.block.hash
