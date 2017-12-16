@@ -10,7 +10,7 @@
               <img class="footer-logo" src="/img/logo.png">
               <div class="footer-text">
                 <p>Free, open-source, client-side interface for exploring blocks and transactions for Ethereum and more.</p>
-                <p>© 2017 EVM Inc. ALL RIGHTS RESERVED.</p>
+                <p>© 2017 enKrypt LLC. ALL RIGHTS RESERVED.</p>
               </div>
             </div>
           </div>

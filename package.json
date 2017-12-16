@@ -5,20 +5,22 @@
   "author": "kvhnuke",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config configs/webpack.config.js",
+    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
     "lint": "eslint --ext .js,.vue src test/unit/specs",
-    "build": "webpack --config configs/webpack.config.js"
+    "build": "node build/build.js"
   },
   "dependencies": {
     "@types/socket.io-client": "^1.4.32",
     "ethereumjs-units": "^0.2.0",
     "lodash.debounce": "^4.0.8",
+    "node-notifier": "^5.1.2",
     "save-dev": "^2.0.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vue-socket.io": "^2.1.1-a",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "webpack-merge": "^4.1.1"
   },
   "devDependencies": {
     "@types/node": "^8.0.57",
