@@ -1,4 +1,4 @@
-import { txLayout } from '@/typeLayouts'
+import { txLayout, traceLayout } from '@/typeLayouts'
 import ethUnits from 'ethereumjs-units'
 import bn from 'bignumber.js'
 import _ from 'lodash'
@@ -25,6 +25,9 @@ class Tx {
 	}
 	getHash(): string {
 		return this.tx.hash
+	}
+	getTrace(): traceLayout {
+		return this.tx.trace
 	}
 }
 export default Tx
