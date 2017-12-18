@@ -12,7 +12,7 @@ let SOCKET_CONNECT = function(state: stateLayout, _msg: string) {
 }
 
 let addNewBlock = function(state: stateLayout, block: blockLayout) {
-	//console.log(block.intNumber, block)
+	//console.log(block)
 	state.blocks.add(new Block(block))
 }
 let addNewTx = function(state: stateLayout, tx: txLayout) {
@@ -23,14 +23,16 @@ let NEW_BLOCK = function(state: stateLayout, block: blockLayout) {
 	if (Array.isArray(block)) {
 		block.forEach((_block: blockLayout, idx: number) => {
 			addNewBlock(state, _block)
+			NEW_TX(state, _block.transactions)
 		})
 	} else {
 		addNewBlock(state, block)
+		NEW_TX(state, block.transactions)
 	}
 
 }
 
-let NEW_TX = function(state: stateLayout, tx: txLayout) {
+let NEW_TX = function(state: stateLayout, tx: txLayout | Array<txLayout>) {
 	if (Array.isArray(tx)) {
 		tx.forEach((_tx: txLayout, idx: number) => {
 			addNewTx(state, _tx)
