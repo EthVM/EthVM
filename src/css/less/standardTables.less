@@ -182,80 +182,7 @@
 }/* .standard-table-1 */
 
 
-
-
-
-.standard-table-2{
-
-    .table-title{
-        font-family: @stable-font-family;
-        text-transform: uppercase;
-        font-size: 20px;
-        font-weight: @stable-font-weight-normal;
-        margin: 0;
-        border-bottom: 4px solid @stable-border-color-1;
-    }
-
-
-    table{
-        thead,
-        tbody{
-            tr{
-                border-bottom: 1px solid @stable-border-color-1;
-                
-                td{
-                    display: inline-block;
-                    text-overflow: ellipsis;
-                    padding: 5px;
-
-                    font-weight: @stable-font-weight-normal;
-                    font-family: @stable-font-family;
-                    font-size: 14px;
-
-                    div{
-
-                        font-weight: @stable-font-weight-normal;
-                        font-family: @stable-font-family;
-                        font-size: 14px;
-                        color: @stable-font-color-1;
-
-                        text-overflow: ellipsis;
-                        overflow: hidden;
-                        display: block;
-                    }
-                }                
-            }
-        }
-
-        thead{
-            background-color: @stable-background-color-1;
-            tr{
-                td{
-
-                }
-            }
-        }
-
-        tbody{
-            tr{
-                &:nth-child(even){
-                    background-color: @stable-background-color-1;
-                }
-            }
-        }
-    }
-
-
-}/* .standard-table-2 */
-
-
-
-
-
-/***********************
- Mobile Responsive
-***********************/
-@media screen and (max-width: 1199px){
+@media screen and (min-width: 400px) and (max-width: 1199px){
 
 
     .standard-table-1{
@@ -442,9 +369,277 @@
         }/* .data-block-loop */
 
     }/* .standard-table-1 */
+}
 
 
 
+@media screen and (max-width: 399px){
+
+    .standard-table-1{
+
+        font-weight: @stable-font-weight-normal;
+        font-family: @stable-font-family;
+        font-size: 11px;
+        color: @stable-font-color-1;
+
+        .table-title{
+            font-family: @stable-font-family;
+            text-transform: uppercase;
+            font-size: 20px;
+            font-weight: @stable-font-weight-normal;
+            margin: 0;
+            border-bottom: 4px solid @stable-border-color-1;
+        }
+
+        .data-block-loop{
+            &:nth-child(odd){
+                background-color: @stable-background-color-1;
+            }        
+
+            border-bottom: 1px solid @stable-border-color-1;
+            padding: 3px 5px;
+            
+
+            .data-block-1{
+                display: block;
+                position: relative;
+                padding: 0;
+                >div{
+                    display: inline-block;
+                    position: relative;
+                    
+                    font-size: 9px;
+                    margin-right: 2px;
+                    font-weight: @stable-font-weight-bold;
+                    text-transform: uppercase;
+                    vertical-align: middle;
+                    span{
+                        font-weight: @stable-font-weight-normal;    
+                        display: inline-block;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        max-width: 30px;
+                        vertical-align: middle;
+                    }
+                }
+            }
+
+            .data-block-2{
+                margin-top: -4px;
+                display: block;
+                position: relative;
+                width: 100%;
+                >div{
+                    width: 32%;
+                    display: inline-block;
+                    margin-right: 0px;
+                    h1{
+                        display: block;
+                        font-size: 12px;
+                        font-family: @stable-font-family;
+                        vertical-align: middle;
+                        margin: 0;
+                        padding: 0;
+                        font-weight: @stable-font-weight-bold;
+                        text-transform: uppercase;
+                    }
+
+                    p{
+                        display: block;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        width: 100%;
+                        font-size: 11px;
+                        vertical-align: middle;
+                        margin: 0;
+                        padding: 0;
+                    }
+
+                    div.data-icon-container{
+                        display: block;
+                        vertical-align: bottom;
+                        margin: 0;
+                        padding: 0;
+                        svg{
+                            vertical-align: bottom;
+                            color: @stable-font-color-1;
+                        }
+
+                        span{
+                            font-size: 9px;
+                            font-weight: 400;
+                            vertical-align: bottom;
+                        }
+                    }
+
+                    p.amount{
+                        display: block;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        width: 100%;
+                        font-size: 11px;
+                        vertical-align: middle;
+                        
+                    }
+                }
+            }
+
+
+            .data-block-sub{
+                margin-top: 0px;
+                display: block;
+                position: relative;
+
+                
+                >div{
+                    
+                    padding: 0px 0 0 0px;
+                    margin-left: 20px;
+
+
+                    >div{
+                                                
+                        display: inline-block;
+                        margin-right: 0px;
+                        h1{
+                            display: block;
+                            font-size: 9px;
+                            font-family: @stable-font-family;
+                            vertical-align: middle;
+                            margin: 0;
+                            padding: 0;
+                            font-weight: @stable-font-weight-bold;
+                            text-transform: uppercase;
+                        }
+
+                        p{
+                            display: block;
+                            text-overflow: ellipsis;
+                            overflow: hidden;
+                            width: 100%;
+                            font-size: 9px;
+                            vertical-align: middle;
+                            margin: 0;
+                            padding: 0;
+                        }
+
+                        div.data-icon-container{
+                            display: block;
+                            vertical-align: bottom;
+                            margin: 0;
+                            padding: 0;
+                            svg{
+                                vertical-align: bottom;
+                                color: @stable-font-color-1;
+                            }
+
+                            span{
+                                font-size: 9px;
+                                font-weight: 400;
+                                vertical-align: bottom;
+                            }
+                        }
+
+                        p.amount{
+                            display: block;
+                            text-overflow: ellipsis;
+                            overflow: hidden;
+                            width: 100%;
+                            font-size: 11px;
+                            vertical-align: middle;
+                            
+                        }
+                    }
+                }
+               
+            }
+
+        }/* .data-block-loop */
+    }/* .standard-table-1 */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.standard-table-2{
+
+    .table-title{
+        font-family: @stable-font-family;
+        text-transform: uppercase;
+        font-size: 20px;
+        font-weight: @stable-font-weight-normal;
+        margin: 0;
+        border-bottom: 4px solid @stable-border-color-1;
+    }
+
+
+    table{
+        thead,
+        tbody{
+            tr{
+                border-bottom: 1px solid @stable-border-color-1;
+                
+                td{
+                    display: inline-block;
+                    text-overflow: ellipsis;
+                    padding: 5px;
+
+                    font-weight: @stable-font-weight-normal;
+                    font-family: @stable-font-family;
+                    font-size: 14px;
+
+                    div{
+
+                        font-weight: @stable-font-weight-normal;
+                        font-family: @stable-font-family;
+                        font-size: 14px;
+                        color: @stable-font-color-1;
+
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        display: block;
+                    }
+                }                
+            }
+        }
+
+        thead{
+            background-color: @stable-background-color-1;
+            tr{
+                td{
+
+                }
+            }
+        }
+
+        tbody{
+            tr{
+                &:nth-child(even){
+                    background-color: @stable-background-color-1;
+                }
+            }
+        }
+    }
+
+
+}/* .standard-table-2 */
+
+
+
+
+
+/***********************
+ Mobile Responsive
+***********************/
+@media screen and (max-width: 1199px){
 
     .standard-table-2{
 
@@ -519,6 +714,638 @@
 
 
 
+
+
+
+
+.standard-table-3{
+
+    font-weight: @stable-font-weight-normal;
+    font-family: @stable-font-family;
+    font-size: 11px;
+    color: @stable-font-color-1;
+
+    .table-title{
+        font-family: @stable-font-family;
+        text-transform: uppercase;
+        font-size: 20px;
+        font-weight: @stable-font-weight-normal;
+        margin: 0;
+        border-bottom: 4px solid @stable-border-color-1;
+    }
+
+    .data-block-loop{
+        &:nth-child(even){
+            background-color: @stable-background-color-1;
+        }        
+
+        border-bottom: 1px solid @stable-border-color-1;
+        padding: 5px 10px;
+        
+
+        .data-block-1{
+            display: block;
+            position: relative;
+            padding: 2px 0;
+            >div{
+                display: inline-block;
+                position: relative;
+                
+                font-size: 10px;
+                margin-right: 10px;
+                font-weight: @stable-font-weight-bold;
+                text-transform: uppercase;
+                span{
+                    font-weight: @stable-font-weight-normal;    
+                }
+            }
+        }
+
+        .data-block-2{
+            display: block;
+            position: relative;
+            >div{
+                display: inline-block;
+                margin-right: 0px;
+                h1{
+                    display: inline-block;
+                    font-size: 14px;
+                    font-family: @stable-font-family;
+                    vertical-align: middle;
+                    margin: 0;
+                    padding: 0;
+                    font-weight: @stable-font-weight-bold;
+                    text-transform: uppercase;
+                    span{
+                        font-size:8px;
+                        font-weight: normal;
+                        vertical-align: middle;
+                    }
+                }
+
+                p{
+                    display: inline-block;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    font-size: 14px;
+                    vertical-align: middle;
+                    margin: 0;
+                    padding: 0;
+                }
+
+                div.data-icon-container{
+                    display: inline-block;
+                    vertical-align: middle;
+                    margin: 0;
+                    padding: 0;
+                    svg{
+                        color: @stable-font-color-1;
+                    }
+
+                    span{
+                        font-size: 14px;
+                        vertical-align: top;
+                    }
+                }
+
+                p.amount{
+                    width: 200px;
+                }
+            }
+        }
+
+
+        
+
+        .data-block-sub{
+            margin-top: 0px;
+            display: block;
+            position: relative;
+
+            
+            >div{
+                
+                padding: 0px 0 0 0px;
+                margin-left: 20px;
+                margin-top: 3px;
+                margin-bottom: -3px;
+
+                .sub-icon{
+                    display: inline-block;
+                    margin-right: 0px;
+                }
+
+                .sub-data{
+                    display: inline-block;
+                    width: 90%;
+
+                    .sub-hash-block{
+                        display: block;
+                        height:10px;
+                        h1{
+                            font-size: 10px;
+                            margin: 0;
+                            padding: 0;
+                            text-transform: uppercase;
+                            display: inline;
+                            vertical-align: top;
+                        }
+                        p{
+                            display: inline;
+                            font-size: 10px;
+                            margin: 0;
+                            padding: 0;
+                            vertical-align: top;
+                        }
+                    }
+
+                    .sub-data-block{
+
+                        display: inline-block;
+                        margin-right: 20px;
+                        h1{
+                            display: inline;
+                            font-size: 12px;
+                            font-family: @stable-font-family;
+                            vertical-align: middle;
+                            margin: 0;
+                            padding: 0;
+                            font-weight: @stable-font-weight-bold;
+                            text-transform: uppercase;
+
+                        }
+
+                        p{
+                            display: inline;
+                            text-overflow: ellipsis;
+                            overflow: hidden;
+                            width: 100%;
+                            font-size: 12px;
+                            vertical-align: middle;
+                            margin: 0;
+                            padding: 0;
+                        }
+
+                        div.data-icon-container{
+                            display: block;
+                            vertical-align: bottom;
+                            margin: 0;
+                            padding: 0;
+                            svg{
+                                vertical-align: bottom;
+                                color: @stable-font-color-1;
+                            }
+
+                            span{
+                                font-size: 9px;
+                                font-weight: 400;
+                                vertical-align: bottom;
+                            }
+                        }
+
+                        p.amount{
+                            display: block;
+                            text-overflow: ellipsis;
+                            overflow: hidden;
+                            width: 100%;
+                            font-size: 11px;
+                            vertical-align: middle;
+                            
+                        }
+                    }
+                }
+            }
+        }
+
+
+    }/* .data-block-loop */
+
+}/* .standard-table-3 */
+
+
+@media screen and (min-width: 500px) and (max-width: 1199px){
+
+
+    .standard-table-3{
+
+        font-weight: @stable-font-weight-normal;
+        font-family: @stable-font-family;
+        font-size: 11px;
+        color: @stable-font-color-1;
+
+
+        .data-block-loop{
+
+
+            border-bottom: 1px solid @stable-border-color-1;
+            padding: 3px 5px;
+            
+
+            .data-block-1{
+                display: block;
+                position: relative;
+                padding: 0;
+                >div{
+                    display: inline-block;
+                    position: relative;
+                    
+                    font-size: 9px;
+                    margin-right: 2px;
+                    font-weight: @stable-font-weight-bold;
+                    text-transform: uppercase;
+                    vertical-align: middle;
+                    span{
+                        font-weight: @stable-font-weight-normal;    
+                        display: inline-block;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        
+                        vertical-align: middle;
+                    }
+                }
+            }
+
+            .data-block-2{
+                margin-top: 0px;
+                display: block;
+                position: relative;
+                width: 100%;
+                >div{
+                    
+                    display: inline-block;
+                    margin-right: 0px;
+                    h1{
+                        display: block;
+                        font-size: 12px;
+                        font-family: @stable-font-family;
+                        vertical-align: middle;
+                        margin: 0;
+                        padding: 0;
+                        font-weight: @stable-font-weight-bold;
+                        text-transform: uppercase;
+                    }
+
+                    p{
+                        display: block;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        width: 100%;
+                        font-size: 11px;
+                        vertical-align: middle;
+                        margin: 0;
+                        padding: 0;
+                    }
+
+                    div.data-icon-container{
+                        display: block;
+                        vertical-align: bottom;
+                        margin: 0;
+                        padding: 0;
+                        svg{
+                            vertical-align: bottom;
+                            color: @stable-font-color-1;
+                        }
+
+                        span{
+                            font-size: 9px;
+                            font-weight: 400;
+                            vertical-align: bottom;
+                        }
+                    }
+
+                    p.amount{
+                        display: block;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        width: 100%;
+                        font-size: 11px;
+                        vertical-align: middle;
+                        
+                    }
+                }
+            }
+
+
+
+            .data-block-sub{
+                margin-top: 0px;
+                display: block;
+                position: relative;
+
+                
+                >div{
+                    
+                    padding: 0px 0 0 0px;
+                    margin-left: 20px;
+                    margin-top: 3px;
+                    margin-bottom: -3px;
+
+                    .sub-icon{
+                        display: inline-block;
+                        margin-right: 0px;
+                    }
+
+                    .sub-data{
+                        display: inline-block;
+                        width: 90%;
+
+                        .sub-hash-block{
+                            display: block;
+                            height:13px;
+                            h1{
+                                font-size: 10px;
+                                margin: 0;
+                                padding: 0;
+                                text-transform: uppercase;
+                                display: inline;
+                                vertical-align: top;
+
+                            }
+                            p{
+                                display: inline;
+                                font-size: 10px;
+                                margin: 0;
+                                padding: 0;
+                                vertical-align: top;
+                            }
+                        }
+
+                        .sub-data-block{
+
+                            display: inline-block;
+                            margin-right: 20px;
+                            h1{
+                                display: block;
+                                font-size: 11px;
+                                font-family: @stable-font-family;
+                                vertical-align: middle;
+                                margin: 0;
+                                padding: 0;
+                                font-weight: @stable-font-weight-bold;
+                                text-transform: uppercase;
+                                line-height: 8px;
+
+                            }
+
+                            p{
+                                display: block;
+                                text-overflow: ellipsis;
+                                overflow: hidden;
+                                width: 100%;
+                                font-size: 11px;
+                                vertical-align: middle;
+                                margin: 0;
+                                padding: 0;
+                            }
+
+                            div.data-icon-container{
+                                display: block;
+                                vertical-align: bottom;
+                                margin: 0;
+                                padding: 0;
+                                svg{
+                                    vertical-align: bottom;
+                                    color: @stable-font-color-1;
+                                }
+
+                                span{
+                                    font-size: 9px;
+                                    font-weight: 400;
+                                    vertical-align: bottom;
+                                }
+                            }
+
+                            p.amount{
+                                display: block;
+                                text-overflow: ellipsis;
+                                overflow: hidden;
+                                width: 100%;
+                                font-size: 11px;
+                                vertical-align: middle;
+                                
+                            }
+                        }
+                    }
+                }
+            }
+
+
+
+        }/* .data-block-loop */
+
+    }/* .standard-table-3 */
+}
+
+
+
+@media screen and (max-width: 499px){
+
+    .standard-table-3{
+
+        font-weight: @stable-font-weight-normal;
+        font-family: @stable-font-family;
+        font-size: 11px;
+        color: @stable-font-color-1;
+
+
+        .data-block-loop{
+
+
+            border-bottom: 1px solid @stable-border-color-1;
+            padding: 3px 5px;
+            
+
+            .data-block-1{
+                display: block;
+                position: relative;
+                padding: 0;
+                >div{
+                    display: inline-block;
+                    position: relative;
+                    
+                    font-size: 9px;
+                    margin-right: 2px;
+                    font-weight: @stable-font-weight-bold;
+                    text-transform: uppercase;
+                    vertical-align: middle;
+                    span{
+                        font-weight: @stable-font-weight-normal;    
+                        display: inline-block;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        max-width: 220px;
+                        vertical-align: middle;
+                    }
+                }
+            }
+
+            .data-block-2{
+                margin-top: 0px;
+                display: block;
+                position: relative;
+                width: 100%;
+                >div{
+                    
+                    display: inline-block;
+                    margin-right: 0px;
+                    h1{
+                        display: block;
+                        font-size: 12px;
+                        font-family: @stable-font-family;
+                        vertical-align: middle;
+                        margin: 0;
+                        padding: 0;
+                        font-weight: @stable-font-weight-bold;
+                        text-transform: uppercase;
+                    }
+
+                    p{
+                        display: block;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        width: 100%;
+                        font-size: 11px;
+                        vertical-align: middle;
+                        margin: 0;
+                        padding: 0;
+                    }
+
+                    div.data-icon-container{
+                        display: block;
+                        vertical-align: bottom;
+                        margin: 0;
+                        padding: 0;
+                        svg{
+                            vertical-align: bottom;
+                            color: @stable-font-color-1;
+                        }
+
+                        span{
+                            font-size: 9px;
+                            font-weight: 400;
+                            vertical-align: bottom;
+                        }
+                    }
+
+                    p.amount{
+                        display: block;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        width: 100%;
+                        font-size: 11px;
+                        vertical-align: middle;
+                        
+                    }
+                }
+            }
+
+
+            .data-block-sub{
+                margin-top: 0px;
+                display: block;
+                position: relative;
+
+                
+                >div{
+                    
+                    padding: 0px 0 0 0px;
+                    margin-left: 20px;
+                    margin-top: 3px;
+                    margin-bottom: -3px;
+
+                    .sub-icon{
+                        display: inline-block;
+                        margin-right: 0px;
+                    }
+
+                    .sub-data{
+                        display: inline-block;
+                        width: 90%;
+
+                        .sub-hash-block{
+                            display: block;
+                            height:13px;
+                            h1{
+                                font-size: 10px;
+                                margin: 0;
+                                padding: 0;
+                                text-transform: uppercase;
+                                display: inline;
+                                vertical-align: top;
+
+                            }
+                            p{
+                                display: inline;
+                                font-size: 10px;
+                                margin: 0;
+                                padding: 0;
+                                vertical-align: top;
+                            }
+                        }
+
+                        .sub-data-block{
+
+                            display: inline-block;
+                            margin-right: 20px;
+                            h1{
+                                display: block;
+                                font-size: 11px;
+                                font-family: @stable-font-family;
+                                vertical-align: middle;
+                                margin: 0;
+                                padding: 0;
+                                font-weight: @stable-font-weight-bold;
+                                text-transform: uppercase;
+                                line-height: 8px;
+
+                            }
+
+                            p{
+                                display: block;
+                                text-overflow: ellipsis;
+                                overflow: hidden;
+                                width: 100%;
+                                font-size: 11px;
+                                vertical-align: middle;
+                                margin: 0;
+                                padding: 0;
+                            }
+
+                            div.data-icon-container{
+                                display: block;
+                                vertical-align: bottom;
+                                margin: 0;
+                                padding: 0;
+                                svg{
+                                    vertical-align: bottom;
+                                    color: @stable-font-color-1;
+                                }
+
+                                span{
+                                    font-size: 9px;
+                                    font-weight: 400;
+                                    vertical-align: bottom;
+                                }
+                            }
+
+                            p.amount{
+                                display: block;
+                                text-overflow: ellipsis;
+                                overflow: hidden;
+                                width: 100%;
+                                font-size: 11px;
+                                vertical-align: middle;
+                                
+                            }
+                        }
+                    }
+                }
+            }
+
+
+        }/* .data-block-loop */
+    }/* .standard-table-3 */
+}
 
 
 

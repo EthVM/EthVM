@@ -84,6 +84,5 @@ export default Vue.extend({
 })
 </script>
 <style scoped lang="less">
-@import "~lessPath/global.less";
-@import "~lessPath/block/block.less";
+
 </style>

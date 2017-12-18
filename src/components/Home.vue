@@ -97,7 +97,7 @@
     <!-- end.contaner for front page sections -->
 
 
-   <Footer></Footer> 
+   <Footer></Footer>
 
   </div>
 
@@ -132,6 +132,7 @@ export default Vue.extend({
 })
 </script>
 <style scoped lang="less">
+@import '~lessPath/global.less';
 @import "~lessPath/frontpage.less";
 
 </style>
