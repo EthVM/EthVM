@@ -1,24 +1,9 @@
 <template>
+  <div>
 
-              <div class="data-mid">
-          
-                <div>
-                  <p>From</p>
-                  <p>12371248</p>
-                </div>
 
-                <div>
-                  <p class="data-icon-container"><icon name='long-arrow-right' scale='1'></icon></p>
-                  <p>23412.23</p>
-                </div>
 
-                <div>
-                  <p>To</p>
-                  <p>82437123</p>
-                </div>
-
-              </div>
-              <!-- .data-mid -->
+  </div>
 </template>
 <script lang="ts">
 import Vue from 'vue'
@@ -45,6 +30,6 @@ export default Vue.extend({
 })
 </script>
 <style scoped lang="less">
-@import "~lessPath/global.less";
-@import "~lessPath/IndividualTransaction/IndividualTransaction.less";
+@import '~lessPath/standardTables';
+
 </style>

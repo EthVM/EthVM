@@ -51,13 +51,7 @@
         <div class="single-block">
           <div class="col-md-12">
             <div class="block">
-              <div class="block-title">
-                <img class="icon" src="/img/blockicon.png">
-                <p class="title">Latest Blocks</p>
-              </div>
-              <div class="block-table">
-                <hp-block-container max-items="20"></hp-block-container>
-              </div>
+              <hp-block-container max-items="20"></hp-block-container>
             </div>
             <!-- .block -->
           </div>
@@ -103,7 +97,7 @@
     <!-- end.contaner for front page sections -->
 
 
-   <Footer></Footer> 
+   <Footer></Footer>
 
   </div>
 
@@ -138,6 +132,7 @@ export default Vue.extend({
 })
 </script>
 <style scoped lang="less">
+@import '~lessPath/global.less';
 @import "~lessPath/frontpage.less";
 
 </style>
