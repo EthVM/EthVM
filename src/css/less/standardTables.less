@@ -102,9 +102,151 @@
                 }
             }
         }
+
+
+        
+
+        .data-block-sub{
+            margin-top: 0px;
+            display: block;
+            position: relative;
+
+            
+            >div{
+                
+                padding: 0px 0 0 0px;
+                margin-left: 20px;
+                margin-top: 3px;
+                margin-bottom: -3px;
+
+
+                >div{
+                                            
+                    display: inline-block;
+                    margin-right: 0px;
+                    h1{
+                        display: block;
+                        font-size: 12px;
+                        font-family: @stable-font-family;
+                        vertical-align: middle;
+                        margin: 0;
+                        padding: 0;
+                        font-weight: @stable-font-weight-bold;
+                        text-transform: uppercase;
+                    }
+
+                    p{
+                        display: block;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        width: 100%;
+                        font-size: 12px;
+                        vertical-align: middle;
+                        margin: 0;
+                        padding: 0;
+                    }
+
+                    div.data-icon-container{
+                        display: block;
+                        vertical-align: bottom;
+                        margin: 0;
+                        padding: 0;
+                        svg{
+                            vertical-align: bottom;
+                            color: @stable-font-color-1;
+                        }
+
+                        span{
+                            font-size: 9px;
+                            font-weight: 400;
+                            vertical-align: bottom;
+                        }
+                    }
+
+                    p.amount{
+                        display: block;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        width: 100%;
+                        font-size: 11px;
+                        vertical-align: middle;
+                        
+                    }
+                }
+            }
+        }
+
+
     }/* .data-block-loop */
 
 }/* .standard-table-1 */
+
+
+
+
+
+.standard-table-2{
+
+    .table-title{
+        font-family: @stable-font-family;
+        text-transform: uppercase;
+        font-size: 20px;
+        font-weight: @stable-font-weight-normal;
+        margin: 0;
+        border-bottom: 4px solid @stable-border-color-1;
+    }
+
+
+    table{
+        thead,
+        tbody{
+            tr{
+                border-bottom: 1px solid @stable-border-color-1;
+                
+                td{
+                    display: inline-block;
+                    text-overflow: ellipsis;
+                    padding: 5px;
+
+                    font-weight: @stable-font-weight-normal;
+                    font-family: @stable-font-family;
+                    font-size: 14px;
+
+                    div{
+
+                        font-weight: @stable-font-weight-normal;
+                        font-family: @stable-font-family;
+                        font-size: 14px;
+                        color: @stable-font-color-1;
+
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        display: block;
+                    }
+                }                
+            }
+        }
+
+        thead{
+            background-color: @stable-background-color-1;
+            tr{
+                td{
+
+                }
+            }
+        }
+
+        tbody{
+            tr{
+                &:nth-child(even){
+                    background-color: @stable-background-color-1;
+                }
+            }
+        }
+    }
+
+
+}/* .standard-table-2 */
 
 
 
@@ -138,7 +280,7 @@
             }        
 
             border-bottom: 1px solid @stable-border-color-1;
-            padding: 3px 10px;
+            padding: 3px 5px;
             
 
             .data-block-1{
@@ -224,9 +366,148 @@
                     }
                 }
             }
+
+
+            .data-block-sub{
+                margin-top: 0px;
+                display: block;
+                position: relative;
+
+                
+                >div{
+                    
+                    padding: 0px 0 0 0px;
+                    margin-left: 20px;
+
+
+                    >div{
+                                                
+                        display: inline-block;
+                        margin-right: 0px;
+                        h1{
+                            display: block;
+                            font-size: 9px;
+                            font-family: @stable-font-family;
+                            vertical-align: middle;
+                            margin: 0;
+                            padding: 0;
+                            font-weight: @stable-font-weight-bold;
+                            text-transform: uppercase;
+                        }
+
+                        p{
+                            display: block;
+                            text-overflow: ellipsis;
+                            overflow: hidden;
+                            width: 100%;
+                            font-size: 9px;
+                            vertical-align: middle;
+                            margin: 0;
+                            padding: 0;
+                        }
+
+                        div.data-icon-container{
+                            display: block;
+                            vertical-align: bottom;
+                            margin: 0;
+                            padding: 0;
+                            svg{
+                                vertical-align: bottom;
+                                color: @stable-font-color-1;
+                            }
+
+                            span{
+                                font-size: 9px;
+                                font-weight: 400;
+                                vertical-align: bottom;
+                            }
+                        }
+
+                        p.amount{
+                            display: block;
+                            text-overflow: ellipsis;
+                            overflow: hidden;
+                            width: 100%;
+                            font-size: 11px;
+                            vertical-align: middle;
+                            
+                        }
+                    }
+                }
+               
+            }
+
+
+
         }/* .data-block-loop */
 
     }/* .standard-table-1 */
+
+
+
+
+    .standard-table-2{
+
+        .table-title{
+            font-family: @stable-font-family;
+            text-transform: uppercase;
+            font-size: 20px;
+            font-weight: @stable-font-weight-normal;
+            margin: 0;
+            border-bottom: 4px solid @stable-border-color-1;
+        }
+
+
+        table{
+            thead,
+            tbody{
+                tr{
+                    border-bottom: 1px solid @stable-border-color-1;
+                    
+                    td{
+                        display: inline-block;
+                        text-overflow: ellipsis;
+                        padding: 5px;
+
+                        font-weight: @stable-font-weight-normal;
+                        font-family: @stable-font-family;
+                        font-size: 14px;
+
+                        div{
+
+                            font-weight: @stable-font-weight-normal;
+                            font-family: @stable-font-family;
+                            font-size: 11px;
+                            color: @stable-font-color-1;
+
+                            text-overflow: ellipsis;
+                            overflow: hidden;
+                            display: block;
+                        }
+                    }                
+                }
+            }
+
+            thead{
+                background-color: @stable-background-color-1;
+                tr{
+                    td{
+
+                    }
+                }
+            }
+
+            tbody{
+                tr{
+                    &:nth-child(even){
+                        background-color: @stable-background-color-1;
+                    }
+                }
+            }
+        }
+
+
+    }/* .standard-table-2 */
 
 
 

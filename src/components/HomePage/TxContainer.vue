@@ -7,6 +7,8 @@
     <div class="data-block-loop"
          v-for="tx in txSplice"
          v-bind:key="tx.getHash()">
+      
+      <!-- .data-block-1 -->
       <div class="data-block-1">
         <div>Hash <span>{{tx.getHash()}}</span></div>
         <div>Gas <span>{{tx.getGasUsed.toNumber().toString()}}</span></div>
@@ -14,6 +16,8 @@
         <div>Block <span>{{tx.getBlockNumber.toNumber().toString()}}</span></div>
       </div>
       <!-- .data-block-1 -->
+      
+      <!-- .data-block-2 -->
       <div class="data-block-2">
         <div>
           <h1>From</h1>
@@ -32,20 +36,33 @@
         </div>
       </div>
       <!-- .data-block-2 -->
-      <div>
-        <!--sub txs -->
+
+      <!--sub txs -->
+      <div class="data-block-sub">
         <div v-for="transfer in tx.getTrace().transfers">
-          <h1>From</h1>
-          <p>{{transfer.from}}</p>
-          <h1>To</h1>
-          <p>{{transfer.to}}</p>
-          <h1>Value</h1>
-          <p>{{transfer.value}}</p>
-          <h1>Type</h1>
-          <p>{{transfer.op}}</p>
+            <div class="sub-icon">
+                <icon name='code-fork' scale='1'></icon>
+            </div>
+            <div>
+              <h1>From</h1>
+              <p>{{transfer.from}}</p>
+            </div>
+            <div>
+              <h1>To</h1>
+              <p>{{transfer.to}}</p>
+            </div>
+            <div>
+              <h1>Value</h1>
+              <p>{{transfer.value}}</p>
+            </div>
+            <div>
+              <h1>Type</h1>
+              <p>{{transfer.op}}</p>
+            </div>
         </div>
       </div>
       <!--sub txs -->
+
     </div>
     <!-- .data-block-loop -->
   </transition-group>
@@ -91,4 +108,168 @@ export default Vue.extend({
 @import "~lessPath/frontpage.less";
 @import "~lessPath/latest-transection-table.less";
 @import "~lessPath/animations.less";
+
+
+.data-block-sub{
+
+    >div{
+
+        .sub-icon{
+            vertical-align: top;
+
+            svg{
+                padding: 2px;
+                width: 17px;
+                height: 17px;
+                border-radius: 20px;
+                border: 1px solid black;
+            }
+        }
+
+
+        >div:nth-child(1){
+            width: 22px;
+            
+            
+        }
+
+        >div:nth-child(2){
+            width: 30%;
+            
+        }
+
+
+        >div:nth-child(3){
+            width: 30%;
+            
+        }
+
+
+        >div:nth-child(4){
+            width: 20%;
+            
+        }
+
+        >div:nth-child(5){
+            width: 10%;
+            
+        }
+
+    }
+   
+}
+
+
+
+/***********************
+ Mobile Responsive
+***********************/
+@media screen and (min-width: 700px) and (max-width: 1199px){
+
+
+    .data-block-sub{
+
+        >div{
+
+            .sub-icon{
+                vertical-align: top;
+
+                svg{
+                    padding: 2px;
+                    width: 17px;
+                    height: 17px;
+                    border-radius: 20px;
+                    border: 1px solid black;
+                }
+            }
+
+
+            >div:nth-child(1){
+                width: 22px;
+                
+                
+            }
+
+            >div:nth-child(2){
+                width: 30%;
+                
+            }
+
+
+            >div:nth-child(3){
+                width: 30%;
+                
+            }
+
+
+            >div:nth-child(4){
+                width: 20%;
+                
+            }
+
+            >div:nth-child(5){
+                width: 10%;
+                
+            }
+
+        }
+       
+    }
+
+}
+
+@media screen and (max-width: 699px){
+
+
+    .data-block-sub{
+
+        >div{
+
+            .sub-icon{
+                vertical-align: top;
+
+                svg{
+                    padding: 2px;
+                    width: 17px;
+                    height: 17px;
+                    border-radius: 20px;
+                    border: 1px solid black;
+                }
+            }
+
+
+            >div:nth-child(1){
+                width: 22px;
+                
+                
+            }
+
+            >div:nth-child(2){
+                width: 20%;
+                
+            }
+
+
+            >div:nth-child(3){
+                width: 20%;
+                
+            }
+
+
+            >div:nth-child(4){
+                width: 20%;
+                
+            }
+
+            >div:nth-child(5){
+                width: 20%;
+                
+            }
+
+        }
+       
+    }
+
+}
+
 </style>
