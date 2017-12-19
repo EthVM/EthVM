@@ -7,68 +7,81 @@
     
       <div class="data-block-loop" v-for="block in blocks" v-if="!block.getIsUncle()">
         
-        <!-- .data-block-1 -->
+
+
+        <!-- .data-block-1 111111111111111111111111111111111111111111111111 -->
         <div class="data-block-1">
-          <div>Hash <span><a :href="'/block/'+block.getHash()">{{block.getHash()}}</a></span></div>
+          <div class="hash-block">Hash <span><a :href="'/block/'+block.getHash()">{{block.getHash()}}</a></span></div>
         </div>
-        <!-- .data-block-1 -->
+        <!-- .data-block-1 111111111111111111111111111111111111111111111111 -->
         
-        <!-- .data-block-2 -->
+
+
+
+        <!-- .data-block-2 222222222222222222222222222222222222222222222222 -->
         <div class="data-block-2">
-          <div>
+          <div class="each-block">
             <h1>Height</h1>
             <p>{{common.HexNumber(block.getNumber()).toNumber()}}</p>
           </div>
           
-          <div>
+          <div class="each-block">
             <h1>TXs</h1>
             <p>{{block.getTransactionCount()}}</p>
           </div>
 
-          <div>
+          <div class="each-block">
             <h1>Reward<span></span></h1>
-            <p>{{common.EthValue(block.getTotalBlockReward()).toEth()}} ETH</p>
+            <p>{{common.EthValue(block.getTotalBlockReward()).toEth()}}&nbsp;ETH</p>
           </div>
 
-          <div>
+          <div class="each-block">
             <h1>Miner</h1>
             <p>{{block.getMiner()}}</p>
           </div>
         </div>
-        <!-- .data-block-2 -->
+        <!-- .data-block-2 222222222222222222222222222222222222222222222222 -->
 
-        <!--sub txs -->
+
+
+        <!-- .data-block-sub 3333333333333333333333333333333333333333333333 -->
         <div class="data-block-sub">
-          <div v-for="uncle in block.getUncles()">
+          <div class="loop-point" v-for="uncle in block.getUncles()">
 
-              <div class="sub-icon">
-                  <icon name='code-fork' scale='1'></icon>
+            <div class="sub-icon">
+                <icon name='code-fork' scale='1'></icon>
+            </div>
+
+            <div class="sub-data">
+
+              <div class="sub-hash-block">
+                <h1>Hash</h1>
+                <p>{{uncle.getHash()}}</p>
               </div>
-              
-              <div class="sub-data">
-                <div class="sub-hash-block">
-                  <h1>Hash</h1>
-                  <p>{{uncle.getHash()}}</p>
-                </div>
+
+              <div class="sub-data-block-container">
                 <div class="sub-data-block">
                   <h1>Height</h1>
                   <p>{{uncle.getIntNumber()}}</p>
                 </div>
                 <div class="sub-data-block">
                   <h1>Reward</h1>
-                  <p>{{common.EthValue(uncle.getTotalBlockReward()).toEth()}}</p>
+                  <p>{{common.EthValue(uncle.getTotalBlockReward()).toEth()}}&nbsp;ETH</p>
                 </div>
                 <div class="sub-data-block">
                   <h1>Miner</h1>
                   <p>{{uncle.getMiner()}}</p>
                 </div>
-
               </div>
 
-              
+            </div>
+
           </div>
         </div>
-        <!--sub txs -->
+        <!-- .data-block-sub 3333333333333333333333333333333333333333333333 -->
+
+
+
 
       </div>
       <!-- .data-block-loop -->
@@ -104,239 +117,5 @@ export default Vue.extend({
 
 <style scoped lang='less'>
 @import '~lessPath/standardTables';
-
-.data-block-2{
-    display: block;
-    position: relative;
-    
-    >div:nth-child(1){
-      width: 15%;
-    }
-
-    >div:nth-child(2){
-      width: 15%;
-    }
-
-    >div:nth-child(3){
-      width: 20%;
-    }
-
-    >div:nth-child(4){
-      width: 40%;
-    }
-
-
-    >div{
-        display: inline;
-        margin-right: 0px;
-        
-        h1{
-            display: inline;
-            font-size: 14px;
-            font-family: @stable-font-family;
-            vertical-align: middle;
-            margin: 0;
-            padding: 0;
-            font-weight: @stable-font-weight-bold;
-            text-transform: uppercase;
-        }
-
-        p{
-            display: inline;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            
-            font-size: 14px;
-            vertical-align: middle;
-            margin: 0;
-            padding: 0;
-        }
-
-    }
-}
-
-
-.data-block-sub{
-
-    >div{
-
-        .sub-icon{
-            vertical-align: top;
-
-            svg{
-                padding: 2px;
-                width: 17px;
-                height: 17px;
-                border-radius: 20px;
-                border: 1px solid black;
-            }
-        }
-
-
-        >div:nth-child(1){
-            width: 22px;
-            
-            
-        }
-
-        >div:nth-child(2){
-            width: 20%;
-            
-        }
-
-
-        >div:nth-child(3){
-            width: 20%;
-            
-        }
-
-
-        >div:nth-child(4){
-            width: 20%;
-            
-        }
-
-        >div:nth-child(5){
-            width: 20%;
-            
-        }
-
-    }
-   
-}
-
-
-
-/***********************
- Mobile Responsive
-***********************/
-@media screen and (min-width: 700px) and (max-width: 1199px){
-
-  .data-block-sub{
-
-      >div{
-
-          .sub-icon{
-              vertical-align: top;
-
-              svg{
-                  padding: 2px;
-                  width: 17px;
-                  height: 17px;
-                  border-radius: 20px;
-                  border: 1px solid black;
-              }
-          }
-
-
-          >div:nth-child(1){
-              width: 22px;
-              
-              
-          }
-
-          >div:nth-child(2){
-              width: 25%;
-              
-          }
-
-
-          >div:nth-child(3){
-              width: 25%;
-              
-          }
-
-
-          >div:nth-child(4){
-              width: 20%;
-              
-          }
-
-          >div:nth-child(5){
-              width: 40%;
-              
-          }
-
-      }
-     
-  }
-}
-
-@media screen and (max-width: 699px){
-
-  .data-block-2{
-      display: block;
-      position: relative;
-      
-      >div:nth-child(1){
-        width: 20%;
-      }
-
-      >div:nth-child(2){
-        width: 15%;
-      }
-
-      >div:nth-child(3){
-        width: 25%;
-      }
-
-      >div:nth-child(4){
-        width: 30%;
-      }
-
-
-  }
-
-    .data-block-sub{
-
-        >div{
-
-            .sub-icon{
-                vertical-align: top;
-
-                svg{
-                    padding: 2px;
-                    width: 17px;
-                    height: 17px;
-                    border-radius: 20px;
-                    border: 1px solid black;
-                }
-            }
-
-
-            >div:nth-child(1){
-                width: 22px;
-                
-                
-            }
-
-            >div:nth-child(2){
-                width: 15%;
-                
-            }
-
-
-            >div:nth-child(3){
-                width: 15%;
-                
-            }
-
-
-            >div:nth-child(4){
-                width: 10%;
-                
-            }
-
-            >div:nth-child(5){
-                width: 30%;
-                
-            }
-
-        }
-       
-    }
-
-}
-
 
 </style>
