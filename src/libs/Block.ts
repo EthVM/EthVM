@@ -41,6 +41,7 @@ class Block {
 		return this.block.uncles
 	}
 	addUncle(uncle: Block):void {
+		if(!this.block.uncles) this.block.uncles = []
 		this.block.uncles.push(uncle)
 	}
 	getUncleHashes(): Array<string> {

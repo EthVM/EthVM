@@ -7,8 +7,7 @@ let SOCKET_CONNECT = function(state: stateLayout, _msg: string) {
 	defaultRooms.forEach((_room) => {
 		this._vm.$socket.emit(sEvents.join, _room)
 	})
-	this._vm.$socket.emit('pastBlocks', '')
-	this._vm.$socket.emit('pastTxs', '')
+	this._vm.$socket.emit('pastData', '')
 }
 
 let addNewBlock = function(state: stateLayout, block: blockLayout) {
@@ -21,9 +20,10 @@ let addNewTx = function(state: stateLayout, tx: txLayout) {
 }
 let NEW_BLOCK = function(state: stateLayout, block: blockLayout) {
 	if (Array.isArray(block)) {
+		block.sort(function(a, b) { return a.intNumber - b.intNumber })
 		block.forEach((_block: blockLayout, idx: number) => {
 			addNewBlock(state, _block)
-			NEW_TX(state, _block.transactions)
+			//NEW_TX(state, _block.transactions)
 		})
 	} else {
 		addNewBlock(state, block)

@@ -39,7 +39,7 @@
 
         <!--sub txs -->
         <div class="data-block-sub">
-          <div>
+          <div v-for="uncle in block.getUncles()">
 
               <div class="sub-icon">
                   <icon name='code-fork' scale='1'></icon>
@@ -48,19 +48,19 @@
               <div class="sub-data">
                 <div class="sub-hash-block">
                   <h1>Hash</h1>
-                  <p>987h34f38h39489459752907592735927384982</p>
+                  <p>{{uncle.getHash()}}</p>
                 </div>
                 <div class="sub-data-block">
                   <h1>Height</h1>
-                  <p>qwr23r23r23r</p>
+                  <p>{{uncle.getIntNumber()}}</p>
                 </div>
                 <div class="sub-data-block">
                   <h1>Reward</h1>
-                  <p>124124124124</p>
+                  <p>{{uncle.getBlockReward.toEth()}}</p>
                 </div>
                 <div class="sub-data-block">
                   <h1>Miner</h1>
-                  <p>2324r23r</p>
+                  <p>{{uncle.getMiner()}}</p>
                 </div>
 
               </div>
