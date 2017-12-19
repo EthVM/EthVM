@@ -26,7 +26,7 @@
             <icon name='long-arrow-right'
                   scale='1'></icon> <span></span>
           </div>
-          <p class="amount">{{common.EthValue(tx.getValue()).toEth()}} ETH</p>
+          <p class="amount">{{common.EthValue(tx.getValue()).toEth()}}&nbsp;ETH</p>
         </div>
         <div>
           <h1>To</h1>
@@ -52,7 +52,7 @@
           </div>
           <div>
             <h1>Value</h1>
-            <p>{{common.EthValue(transfer.value).toEth()}} ETH</p>
+            <p>{{common.EthValue(transfer.value).toEth()}}&nbsp;ETH</p>
           </div>
           <div>
             <h1>Type</h1>
