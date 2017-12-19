@@ -9,7 +9,7 @@
         
         <!-- .data-block-1 -->
         <div class="data-block-1">
-          <div>Hash <span>{{block.getHash()}}</span></div>
+          <div>Hash <span><a :href="'/block/'+block.getHash()">{{block.getHash()}}</a></span></div>
         </div>
         <!-- .data-block-1 -->
         
@@ -17,17 +17,17 @@
         <div class="data-block-2">
           <div>
             <h1>Height</h1>
-            <p>{{block.getIntNumber()}}</p>
+            <p>{{common.HexNumber(block.getNumber()).toNumber()}}</p>
           </div>
           
           <div>
             <h1>TXs</h1>
-            <p>{{block.getTransactions().length}}</p>
+            <p>{{block.getTransactionCount()}}</p>
           </div>
 
           <div>
-            <h1>Reward<span>(ETH)</span></h1>
-            <p>{{block.getBlockReward.toEth()}}</p>
+            <h1>Reward<span></span></h1>
+            <p>{{common.EthValue(block.getTotalBlockReward()).toEth()}} ETH</p>
           </div>
 
           <div>
@@ -39,7 +39,7 @@
 
         <!--sub txs -->
         <div class="data-block-sub">
-          <div>
+          <div v-for="uncle in block.getUncles()">
 
               <div class="sub-icon">
                   <icon name='code-fork' scale='1'></icon>
@@ -48,19 +48,19 @@
               <div class="sub-data">
                 <div class="sub-hash-block">
                   <h1>Hash</h1>
-                  <p>987h34f38h39489459752907592735927384982</p>
+                  <p>{{uncle.getHash()}}</p>
                 </div>
                 <div class="sub-data-block">
                   <h1>Height</h1>
-                  <p>qwr23r23r23r</p>
+                  <p>{{uncle.getIntNumber()}}</p>
                 </div>
                 <div class="sub-data-block">
                   <h1>Reward</h1>
-                  <p>124124124124</p>
+                  <p>{{common.EthValue(uncle.getTotalBlockReward()).toEth()}}</p>
                 </div>
                 <div class="sub-data-block">
                   <h1>Miner</h1>
-                  <p>2324r23r</p>
+                  <p>{{uncle.getMiner()}}</p>
                 </div>
 
               </div>
@@ -81,12 +81,14 @@
 <script lang="ts">
 import Vue from 'vue'
 import store from '@/states'
+import {common} from '@/libs'
 export default Vue.extend({
   name: 'block-container',
   props: ['maxItems'],
   data () {
     return {
-      store: store
+      store: store,
+      common: common
     }
   },
   mounted: function () {

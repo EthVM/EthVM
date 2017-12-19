@@ -26,10 +26,6 @@ let dedup = (pastBlocks: Array<Block>): Array<Block> => {
 		return pastBlocks
 	}
 }
-let sortDescending = (pastBlocks: Array<Block>): Array<Block> => {
-	pastBlocks.sort(function(a, b) { return a.getIntNumber() - b.getIntNumber() })
-	return pastBlocks
-}
 let processBlocks = (block: Block, pastBlocks: Array<Block>): Array<Block> => {
 	pastBlocks = setUnclesToUnclesAndAdd(block, pastBlocks)
 	pastBlocks = dedup(pastBlocks)
