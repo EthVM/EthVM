@@ -1,0 +1,570 @@
+
+
+
+
+@stable-background-color-1: #f5f5f5;
+@stable-border-color-1: #d2d2d2;
+@stable-font-color-1: black;
+@stable-font-weight-bold: 400;
+@stable-font-weight-normal: 300;
+@stable-font-family: 'Roboto', sans-serif;
+
+
+
+
+
+
+
+/*========================================================================================================================================*/
+/*========================================================================================================================================*/
+/*========================================================================================================================================*/
+.table-1{
+
+    font-weight: @stable-font-weight-normal;
+    font-family: @stable-font-family;
+    font-size: 11px;
+    color: @stable-font-color-1;
+
+    .table-title{
+        font-family: @stable-font-family;
+        text-transform: uppercase;
+        font-size: 20px;
+        font-weight: @stable-font-weight-normal;
+        margin: 0;
+        border-bottom: 4px solid @stable-border-color-1;
+    }
+
+
+
+
+
+    .data-block-loop{
+        &:nth-child(odd){
+            background-color: @stable-background-color-1;
+        }        
+
+        border-bottom: 1px solid @stable-border-color-1;
+        padding: 5px 10px;
+        
+
+        .data-block-1{
+            display: block;
+            position: relative;
+            padding: 2px 0;
+            >div{
+                display: inline-block;
+                position: relative;
+                
+                font-size: 10px;
+                margin-right: 10px;
+                font-weight: @stable-font-weight-bold;
+                text-transform: uppercase;
+                span{
+                    font-weight: @stable-font-weight-normal;    
+                }
+            }
+        }
+
+        .data-block-2{
+            display: block;
+            position: relative;
+            >div{
+                display: inline-block;
+                margin-right: 30px;
+                h1{
+                    display: inline-block;
+                    font-size: 14px;
+                    font-family: @stable-font-family;
+                    vertical-align: middle;
+                    margin: 0;
+                    padding: 0;
+                    font-weight: @stable-font-weight-bold;
+                    text-transform: uppercase;
+                }
+
+                p{
+                    display: inline-block;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    width: 350px;
+                    font-size: 14px;
+                    vertical-align: middle;
+                    margin: 0;
+                    padding: 0;
+                }
+
+                div.data-icon-container{
+                    display: inline-block;
+                    vertical-align: middle;
+                    margin: 0;
+                    padding: 0;
+                    svg{
+                        color: @stable-font-color-1;
+                    }
+
+                    span{
+                        font-size: 14px;
+                        vertical-align: top;
+                    }
+                }
+
+                p.amount{
+                    width: 200px;
+                }
+            }
+        }
+
+
+        
+        /*===== SUB ============================================================================================================*/
+        .data-block-sub{
+            margin-top: 0px;
+            display: block;
+            position: relative;
+
+            
+            .sub-loop-point{
+                
+                padding: 0px 0 0 0px;
+                margin-left: 20px;
+                margin-top: 3px;
+                margin-bottom: -3px;
+
+
+                .sub-icon{
+                    display: inline-block;
+                    vertical-align: top;
+                    margin-right: 5px;
+
+                    svg{
+                        padding: 2px;
+                        width: 17px;
+                        height: 17px;
+                        border-radius: 20px;
+                        border: 1px solid black;
+                    }
+                }
+
+                .sub-data-container{
+                    display: inline-block;
+                    width: 90%;
+                    .sub-data-block{
+                                                
+                        display: inline-block;
+                        margin-right: 0px;
+
+                        &:nth-child(1){
+                            width: 25%;
+                        }
+
+                        &:nth-child(2){
+                            width: 25%;
+                        }
+
+                        &:nth-child(3){
+                            width: 20%;
+                            p{
+                                width: 70%;
+                            }
+                        }
+
+                        &:nth-child(4){
+                            width: 20%;
+                            p{
+                                width: 50px;
+                            }
+                        }
+
+
+                        h1{
+                            display: inline-block;
+                            font-size: 12px;
+                            font-family: @stable-font-family;
+                            vertical-align: middle;
+                            margin: 0;
+                            padding: 0;
+                            font-weight: @stable-font-weight-bold;
+                            text-transform: uppercase;
+                        }
+
+                        p{
+                            display: inline-block;
+                            text-overflow: ellipsis;
+                            overflow: hidden;
+                            width: 80%;
+                            font-size: 12px;
+                            vertical-align: middle;
+                            margin: 0;
+                            padding: 0;
+                        }
+
+
+                    }/* .sub-data-block */
+                }/* .sub-data-container */
+            }/* .sub-loop-point */
+        }
+        /*===== SUB ============================================================================================================*/
+
+
+
+
+    }/* .data-block-loop */
+}/* .table-1 */
+
+
+
+
+
+
+
+
+
+
+
+
+/*========================================================================================================================================*/
+/*========================================================================================================================================*/
+/*========================================================================================================================================*/
+@media screen and (min-width: 700px) and (max-width: 1199px){
+
+    .table-1{
+        .data-block-loop{
+
+
+
+            .data-block-1{
+                display: block;
+                position: relative;
+                padding: 2px 0;
+                >div{
+                    display: inline-block;
+                    position: relative;
+                    
+                    font-size: 10px;
+                    margin-right: 10px;
+                    font-weight: @stable-font-weight-bold;
+                    text-transform: uppercase;
+
+                    &:nth-child(1){
+                        span{
+                            width: 300px !important;
+                            text-overflow: ellipsis;
+                            overflow: hidden;
+                            display: inline-block;
+                            vertical-align: middle;
+                        }
+                    }
+
+                    span{
+                        font-weight: @stable-font-weight-normal;    
+                    }
+                }
+            }
+
+            .data-block-2{
+                display: block;
+                position: relative;
+                >div{
+                    display: inline-block;
+                    margin-right: 30px;
+                    h1{
+                        display: block;
+                        font-size: 14px;
+                        font-family: @stable-font-family;
+                        vertical-align: middle;
+                        margin: 0;
+                        padding: 0;
+                        font-weight: @stable-font-weight-bold;
+                        text-transform: uppercase;
+                    }
+
+                    p{
+                        display: block;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        width: 150px;
+                        font-size: 14px;
+                        vertical-align: middle;
+                        margin: 0;
+                        padding: 0;
+                    }
+
+                    div.data-icon-container{
+                        display: block;
+                        vertical-align: middle;
+                        margin: 0;
+                        padding: 0;
+                        svg{
+                            color: @stable-font-color-1;
+                        }
+
+                        span{
+                            font-size: 14px;
+                            vertical-align: top;
+                        }
+                    }
+
+                    p.amount{
+                        width: 130px;
+                    }
+                }
+            }
+
+
+
+
+            .data-block-sub{
+                .sub-data-container{
+                    display: inline-block;
+                    width: 90%;
+                    .sub-data-block{
+                                                
+                        display: inline-block;
+                        margin-right: 0px;
+
+                        &:nth-child(1){
+                            width: 25%;
+                        }
+
+                        &:nth-child(2){
+                            width: 25%;
+                        }
+
+                        &:nth-child(3){
+                            width: 20%;
+                            p{
+                                width: 70%;
+                            }
+                        }
+
+                        &:nth-child(4){
+                            width: 20%;
+                            p{
+                                width: 50px;
+                            }
+                        }
+
+
+                        h1{
+                            display: block !important;
+                            font-size: 10px !important;
+                            font-family: @stable-font-family;
+                            vertical-align: middle;
+                            margin: 0;
+                            padding: 0;
+                            font-weight: @stable-font-weight-bold;
+                            text-transform: uppercase;
+                        }
+
+                        p{
+                            display: block !important;
+                            text-overflow: ellipsis;
+                            overflow: hidden;
+                            width: 80%;
+                            font-size: 10px !important;
+                            vertical-align: middle;
+                            margin: 0;
+                            padding: 0;
+                        }
+
+
+                    }/* .sub-data-block */
+                }/* .sub-data-container */
+            }/* .data-block-sub */
+        }/* .data-block-loop */
+    }
+}
+
+
+
+
+
+
+
+
+
+/*========================================================================================================================================*/
+/*========================================================================================================================================*/
+/*========================================================================================================================================*/
+@media screen and (max-width: 699px){
+
+    
+    .table-1{
+        .data-block-loop{
+
+
+
+            .data-block-1{
+                display: block;
+                position: relative;
+                padding: 0;
+                width: 100%;
+                >div{
+
+                    position: relative;
+                    
+                    font-size: 9px;
+                    margin-right: 2px;
+                    font-weight: @stable-font-weight-bold;
+                    text-transform: uppercase;
+                    width: 23%;
+
+                    
+                    &:nth-child(1){
+                        width: 30%;
+                    }
+
+                    &:nth-child(2){
+                        width: 15%;
+                    }
+
+                    &:nth-child(3){
+                        width: 30%;
+                    }
+
+                    &:nth-child(4){
+                        width: 15%;
+                    }
+
+                    span{
+                        
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        display: block;
+                        vertical-align: middle;
+                        font-weight: @stable-font-weight-normal;
+                    }
+                    
+
+
+                }
+            }
+
+            .data-block-2{
+                margin-top: -5px;
+                display: block;
+                position: relative;
+                width: 100%;
+                
+                >div{
+                    display: inline-block;
+                    margin-right: 0px;
+                    width: 30%;
+                    h1{
+                        display: block;
+                        font-size: 12px;
+                        font-family: @stable-font-family;
+                        vertical-align: middle;
+                        margin: 0;
+                        padding: 0;
+                        font-weight: @stable-font-weight-bold;
+                        text-transform: uppercase;
+                    }
+
+                    p{
+                        display: block;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        width: 90%;
+                        font-size: 12px;
+                        vertical-align: middle;
+                        margin: 0;
+                        padding: 0;
+                    }
+
+                    div.data-icon-container{
+                        display: block;
+                        vertical-align: bottom;
+                        margin: 0;
+                        padding: 0;
+                        svg{
+                            color: @stable-font-color-1;
+                            vertical-align: bottom;
+                        }
+
+                        span{
+                            font-size: 9px;
+                            vertical-align: bottom;
+                        }
+                    }
+
+                    p.amount{
+                        width: 90%;
+                    }
+                }
+            }
+
+
+
+
+            .data-block-sub{
+                .sub-data-container{
+                    display: inline-block;
+                    width: 90%;
+                    .sub-data-block{
+                                                
+                        display: inline-block;
+                        margin-right: 0px;
+
+                        &:nth-child(1){
+                            width: 25%;
+                        }
+
+                        &:nth-child(2){
+                            width: 25%;
+                        }
+
+                        &:nth-child(3){
+                            width: 20%;
+                            p{
+                                width: 70%;
+                            }
+                        }
+
+                        &:nth-child(4){
+                            width: 20%;
+                            p{
+                                width: 50px;
+                            }
+                        }
+
+
+                        h1{
+                            display: block !important;
+                            font-size: 10px !important;
+                            font-family: @stable-font-family;
+                            vertical-align: middle;
+                            margin: 0;
+                            padding: 0;
+                            font-weight: @stable-font-weight-bold;
+                            text-transform: uppercase;
+                        }
+
+                        p{
+                            display: block !important;
+                            text-overflow: ellipsis;
+                            overflow: hidden;
+                            width: 80%;
+                            font-size: 10px !important;
+                            vertical-align: middle;
+                            margin: 0;
+                            padding: 0;
+                        }
+
+
+                    }/* .sub-data-block */
+                }/* .sub-data-container */
+            }/* .data-block-sub */
+        }/* .data-block-loop */
+    }
+
+
+}
+
+
+
+
+
+
+
+
