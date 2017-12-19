@@ -12,15 +12,6 @@ class Tx {
 			parent[_.camelCase('get ' + key)] = () => {
 				return parent.tx[key]
 			}
-			parent[_.camelCase('get ' + key)].toBuffer = (): Buffer => {
-				return Buffer.from(parent.tx[key].toLowerCase().replace('0x', ''), 'hex')
-			}
-			parent[_.camelCase('get ' + key)].toEth = (): number => {
-				return ethUnits.convert(new bn(parent.tx[key]).toFixed(), 'wei', 'eth')
-			}
-			parent[_.camelCase('get ' + key)].toNumber = (): bn => {
-				return new bn(parent.tx[key])
-			}
 		})
 	}
 	getHash(): string {

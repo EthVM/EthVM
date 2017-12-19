@@ -28,4 +28,6 @@ export default interface blockLayout {
 	isUncle: boolean;
 	txFees: string;
 	blockReward: string;
+	totalBlockReward: string;
+	transactionCount: number;
 }

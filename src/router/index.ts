@@ -22,7 +22,7 @@ export default new Router({
         component: LatestBlocks
     },
     {
-        path: '/block',
+        path: '/block/:hash',
         name: 'Block',
         component: Block
     },
@@ -40,5 +40,6 @@ export default new Router({
         path: '/singleaccount',
         name: 'SingleAccount',
         component: SingleAccount
-    }]
+    }],
+    mode: 'history'
 })

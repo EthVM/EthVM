@@ -7,7 +7,6 @@ let SOCKET_CONNECT = function(state: stateLayout, _msg: string) {
 	defaultRooms.forEach((_room) => {
 		this._vm.$socket.emit(sEvents.join, _room)
 	})
-	this._vm.$socket.emit('pastData', '')
 }
 
 let addNewBlock = function(state: stateLayout, block: blockLayout) {
