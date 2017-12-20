@@ -1,6 +1,6 @@
 {
-    "url": "http://192.168.1.13",
-    "purl": "https://ws.ethvm.com",
-    "port": "3000",
-    "pport": "443"
+    "purl": "http://192.168.1.13",
+    "url": "https://ws.ethvm.com",
+    "pport": "3000",
+    "port": "443"
 }

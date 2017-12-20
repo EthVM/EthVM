@@ -56,7 +56,7 @@
 
               <div class="sub-hash-block">
                 <h1>Hash</h1>
-                <p>{{uncle.getHash()}}</p>
+                <p><a :href="'/block/'+uncle.getHash()">{{uncle.getHash()}}</a></p>
               </div>
 
               <div class="sub-data-block-container">
