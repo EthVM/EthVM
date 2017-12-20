@@ -34,7 +34,7 @@
       <div class="block-container row">
         <div class="single-block">
           <div class="col-md-12">
-            <div class="block">
+            <div class="block-section">
 
                 <hp-tx-container max-items="20"></hp-tx-container>
 
@@ -50,7 +50,7 @@
       <div class="block-container row">
         <div class="single-block">
           <div class="col-md-12">
-            <div class="block">
+            <div class="block-section">
               <hp-block-container max-items="20"></hp-block-container>
             </div>
             <!-- .block -->

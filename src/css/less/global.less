@@ -133,9 +133,9 @@ body{
     font-weight: 400; 
     color: white;
     
-    
 
     .icon{
+        
         padding-right: 20px;
         padding-left: 16px;
         height: 25px;
@@ -158,6 +158,16 @@ body{
 .block-container{
     margin-bottom: @margin-1;
 
+    .single-block{
+        .block-section{
+            background-color: white;
+            padding: 30px;
+            box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.15);
+
+        }
+    }
+
+
     .chart-container{
         margin-bottom: @margin-1;
 
@@ -166,6 +176,20 @@ body{
         }
     }
 }
+
+
+@media screen and (max-width: 599px){
+    .block-container{
+        .single-block{
+            .block-section{
+                padding: 0px;
+                padding-top: 10px;
+
+            }
+        }
+    }
+}
+
 
 
 .three-block{

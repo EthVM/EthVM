@@ -118,16 +118,16 @@ export default Vue.extend({
       width: 22px;
     }
     >div:nth-child(2) {
-      width: 30%;
+      width: 25%;
     }
     >div:nth-child(3) {
-      width: 30%;
+      width: 25%;
     }
     >div:nth-child(4) {
       width: 20%;
     }
     >div:nth-child(5) {
-      width: 10%;
+      width: 20%;
     }
   }
 }

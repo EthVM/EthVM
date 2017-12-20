@@ -19,12 +19,17 @@
     color: @stable-font-color-1;
 
     .table-title{
-        font-family: @stable-font-family;
-        text-transform: uppercase;
-        font-size: 20px;
-        font-weight: @stable-font-weight-normal;
-        margin: 0;
-        border-bottom: 4px solid @stable-border-color-1;
+            font-size: 14px;
+            color: rgba(0,0,0,.6);
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            padding: 10px;
+
+        svg{
+            display: none;
+        }
+
     }
 
     .data-block-loop{
@@ -57,6 +62,31 @@
         .data-block-2{
             display: block;
             position: relative;
+            
+            >div:nth-child(1){
+                width: 30%;
+                p{
+                    width: 80%;
+                }
+            }
+
+            >div:nth-child(2){
+                width: 25%;
+                p{
+                    width: 80%;
+                }
+            }
+
+            >div:nth-child(3){
+                width: 30%;
+                p{
+                    width: 90%;
+                }
+            }
+
+
+
+
             >div{
                 display: inline-block;
                 margin-right: 30px;
@@ -119,13 +149,12 @@
                 margin-top: 3px;
                 margin-bottom: -3px;
 
-
                 >div{
                                             
                     display: inline-block;
                     margin-right: 0px;
                     h1{
-                        display: block;
+                        display: inline-block;
                         font-size: 12px;
                         font-family: @stable-font-family;
                         vertical-align: middle;
@@ -136,10 +165,10 @@
                     }
 
                     p{
-                        display: block;
+                        display: inline-block;
                         text-overflow: ellipsis;
                         overflow: hidden;
-                        width: 100%;
+                        width: 80%;
                         font-size: 12px;
                         vertical-align: middle;
                         margin: 0;
@@ -192,14 +221,6 @@
         font-size: 11px;
         color: @stable-font-color-1;
 
-        .table-title{
-            font-family: @stable-font-family;
-            text-transform: uppercase;
-            font-size: 20px;
-            font-weight: @stable-font-weight-normal;
-            margin: 0;
-            border-bottom: 4px solid @stable-border-color-1;
-        }
 
         .data-block-loop{
             &:nth-child(odd){
@@ -239,8 +260,31 @@
                 display: block;
                 position: relative;
                 width: 100%;
+
+
+                >div:nth-child(1){
+                    width: 35% !important;
+                    p{
+                        width: 90%;
+                    }
+                }
+
+                >div:nth-child(2){
+                    width: 25%;
+                    p{
+                        width: 80%;
+                    }
+                }
+
+                >div:nth-child(3){
+                    width: 35% !important;
+                    p{
+                        width: 90%;
+                    }
+                }
+
                 >div{
-                    width: 32%;
+                    
                     display: inline-block;
                     margin-right: 0px;
                     h1{
@@ -382,15 +426,6 @@
         font-size: 11px;
         color: @stable-font-color-1;
 
-        .table-title{
-            font-family: @stable-font-family;
-            text-transform: uppercase;
-            font-size: 20px;
-            font-weight: @stable-font-weight-normal;
-            margin: 0;
-            border-bottom: 4px solid @stable-border-color-1;
-        }
-
         .data-block-loop{
             &:nth-child(odd){
                 background-color: @stable-background-color-1;
@@ -429,10 +464,34 @@
                 display: block;
                 position: relative;
                 width: 100%;
+
+
+                >div:nth-child(1){
+                    width: 40% !important;
+                    p{
+                        width: 90%;
+                    }
+                }
+
+                >div:nth-child(2){
+                    width: 25%;
+                    p{
+                        width: 80%;
+                    }
+                }
+
+                >div:nth-child(3){
+                    width: 35% !important;
+                    p{
+                        width: 90%;
+                    }
+                }
+
+
                 >div{
                     width: 32%;
                     display: inline-block;
-                    margin-right: 0px;
+                    margin-right: 0px !important;
                     h1{
                         display: block;
                         font-size: 12px;
@@ -725,13 +784,19 @@
     font-size: 11px;
     color: @stable-font-color-1;
 
+
     .table-title{
-        font-family: @stable-font-family;
-        text-transform: uppercase;
-        font-size: 20px;
-        font-weight: @stable-font-weight-normal;
-        margin: 0;
-        border-bottom: 4px solid @stable-border-color-1;
+            font-size: 14px;
+            color: rgba(0,0,0,.6);
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            padding: 10px;
+
+        svg{
+            display: none;
+        }
+
     }
 
     .data-block-loop{
@@ -788,7 +853,10 @@
             }
 
             .each-block:nth-child(4){
-                width: 35%;
+                width: 40%;
+                p{
+                    
+                }
             }
 
             .each-block{
