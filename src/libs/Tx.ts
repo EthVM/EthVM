@@ -6,9 +6,14 @@ import bn from 'bignumber.js'
 import _ from 'lodash'
 class Tx {
 	private readonly tx: txLayout
-	public readonly type: string
+	public readonly id: string
+
 	constructor(tx: txLayout) {
 		this.tx = tx
+		this.id = common.Hash(this.tx.hash).toString()
+	}
+	getId(): string {
+		return this.id
 	}
 	getHash(): Hash {
 		return common.Hash(this.tx.hash)

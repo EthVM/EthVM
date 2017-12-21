@@ -35,7 +35,7 @@
       </div>
       <!-- .data-block-2 -->
       <!--sub txs -->
-     <!--  <div class="data-block-sub" hidden>
+      <!--  <div class="data-block-sub" hidden>
         <div v-for="transfer in tx.getTrace().transfers"
              v-if="tx.getTrace() && transfer.value != '0x'">
           <div class="sub-icon">
@@ -86,8 +86,10 @@ export default Vue.extend({
     }
   },
   mounted () {
+    // let _this = this
     this.$nextTick(function () {
-      this.$socket.emit('pastData', '')
+      this.$socket.emit('pastData', ''
+      )
     }
     )
   },

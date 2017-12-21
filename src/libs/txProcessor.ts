@@ -3,7 +3,7 @@ import { Tx } from '@/libs'
 let dedup = (pastTxs: Array<Tx>): Array<Tx> => {
 	for (let i = 0; i < pastTxs.length; i++) {
 		for (let j = 0; j < pastTxs.length; j++) {
-			if (i != j && pastTxs[i].getHash() == pastTxs[j].getHash()) pastTxs.splice(j,1)
+			if (i != j && pastTxs[i].getId() == pastTxs[j].getId()) pastTxs.splice(j,1)
 		}
 	}
 	return pastTxs

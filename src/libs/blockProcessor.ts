@@ -21,7 +21,7 @@ let setUnclesToUnclesAndAdd = (block: Block, pastBlocks: Array<Block>): Array<Bl
 let dedup = (pastBlocks: Array<Block>): Array<Block> => {
 	for (let i = 0; i < pastBlocks.length; i++) {
 		for (let j = 0; j < pastBlocks.length; j++) {
-			if (i != j && pastBlocks[i].getHash() == pastBlocks[j].getHash()) pastBlocks.splice(j, 1)
+			if (i != j && pastBlocks[i].getId() == pastBlocks[j].getId()) pastBlocks.splice(j, 1)
 		}
 		return pastBlocks
 	}

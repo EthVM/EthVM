@@ -7,12 +7,16 @@ import bn from 'bignumber.js'
 import _ from 'lodash'
 class Block {
 	private readonly block: blockLayout
-	public readonly type: string
+	public readonly id: string
 	constructor(block: blockLayout) {
 		this.block = block
 		this.block.uncleHashes = this.block.uncleHashes.map((_uncle) => {
 			return common.Hash(_uncle)
 		})
+		this.id = common.Hash(this.block.hash).toString()
+	}
+	getId():string{
+		return this.id
 	}
 	setTransactions(txs: Array<Tx>): void {
 		this.block.transactions = txs
