@@ -3,7 +3,7 @@ import globConfigs from '@/configs/global.json'
 
 let setUncles = (block: Block, hash: string, blocks: Array<Block>): Array<Block> => {
 	for (let i = 0; i < blocks.length; i++) {
-		if (blocks[i].getHash() == hash) {
+		if (blocks[i].getHash().toString() == hash) {
 			blocks[i].setIsUncle(true)
 			block.addUncle(blocks[i])
 		}
@@ -13,7 +13,7 @@ let setUncles = (block: Block, hash: string, blocks: Array<Block>): Array<Block>
 let setUnclesToUnclesAndAdd = (block: Block, pastBlocks: Array<Block>): Array<Block> => {
 	let uncleHashes = block.getUncleHashes()
 	for (let i = 0; i < uncleHashes.length; i++) {
-		pastBlocks = setUncles(block, uncleHashes[i], pastBlocks)
+		pastBlocks = setUncles(block, uncleHashes[i].toString(), pastBlocks)
 	}
 	pastBlocks.unshift(block)
 	return pastBlocks

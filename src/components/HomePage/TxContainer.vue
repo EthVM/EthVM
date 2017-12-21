@@ -6,38 +6,38 @@
   <transition-group name="list">
     <div class="data-block-loop"
          v-for="tx in transactions"
-         v-bind:key="tx.getHash()">
+         v-bind:key="tx.getHash().toString()">
       <!-- .data-block-1 -->
       <div class="data-block-1">
-        <div>Hash <span>{{tx.getHash()}}</span></div>
-        <div>Gas <span>{{common.HexNumber(tx.getGasUsed()).toNumber()}}</span></div>
-        <div>Gas Price <span>{{common.EthValue(tx.getGasPrice()).toGWei()}} gwei</span></div>
-        <div>Block <span>{{common.HexNumber(tx.getBlockNumber()).toNumber()}}</span></div>
+        <div>Hash <span>{{tx.getHash().toString()}}</span></div>
+        <div>Gas <span>{{tx.getGasUsed().toNumber()}}</span></div>
+        <div>Gas Price <span>{{tx.getGasPrice().toGWei()}} gwei</span></div>
+        <div>Block <span>{{tx.getBlockNumber().toNumber()}}</span></div>
       </div>
       <!-- .data-block-1 -->
       <!-- .data-block-2 -->
       <div class="data-block-2">
         <div>
           <h1>From</h1>
-          <p>{{tx.getFrom()}}</p>
+          <p>{{tx.getFrom().toString()}}</p>
         </div>
         <div>
           <div class="data-icon-container">
             <icon name='long-arrow-right'
                   scale='1'></icon> <span></span>
           </div>
-          <p class="amount">{{common.EthValue(tx.getValue()).toEth()}}&nbsp;ETH</p>
+          <p class="amount">{{tx.getValue().toEth()}}&nbsp;ETH</p>
         </div>
         <div>
           <h1>To</h1>
-          <p>{{tx.getTo()}}</p>
+          <p>{{tx.getTo().toString()}}</p>
         </div>
       </div>
       <!-- .data-block-2 -->
       <!--sub txs -->
-      <div class="data-block-sub">
+     <!--  <div class="data-block-sub" hidden>
         <div v-for="transfer in tx.getTrace().transfers"
-             v-if="transfer.value != '0x'">
+             v-if="tx.getTrace() && transfer.value != '0x'">
           <div class="sub-icon">
             <icon name='code-fork'
                   scale='1'></icon>
@@ -59,7 +59,7 @@
             <p>{{transfer.op}}</p>
           </div>
         </div>
-      </div>
+      </div> -->
       <!--sub txs -->
     </div>
     <!-- .data-block-loop -->

@@ -18,6 +18,7 @@ let addNewTx = function(state: stateLayout, tx: txLayout) {
    //console.log(new Tx(tx).getTrace())
 }
 let NEW_BLOCK = function(state: stateLayout, block: blockLayout) {
+	console.log("block")
 	if (Array.isArray(block)) {
 		block.sort(function(a, b) { return a.intNumber - b.intNumber })
 		block.forEach((_block: blockLayout, idx: number) => {
@@ -26,7 +27,7 @@ let NEW_BLOCK = function(state: stateLayout, block: blockLayout) {
 		})
 	} else {
 		addNewBlock(state, block)
-		NEW_TX(state, block.transactions)
+		//NEW_TX(state, block.transactions)
 	}
 
 }

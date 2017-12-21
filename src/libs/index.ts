@@ -4,7 +4,7 @@ import Tx from '@/libs/Tx'
 import FIFO from '@/libs/FIFO'
 import processBlocks from '@/libs/blockProcessor'
 import processTxs from '@/libs/txProcessor'
-import common from '@/libs/common'
+import { common } from '@/libs/common'
 export {
 	ethUnits,
 	Block,
@@ -12,5 +12,5 @@ export {
 	FIFO,
 	processBlocks,
 	processTxs,
-	common
+	common,
 }

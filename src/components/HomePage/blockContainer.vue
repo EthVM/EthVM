@@ -11,7 +11,7 @@
 
         <!-- .data-block-1 111111111111111111111111111111111111111111111111 -->
         <div class="data-block-1">
-          <div class="hash-block">Hash <span><a :href="'/block/'+block.getHash()">{{block.getHash()}}</a></span></div>
+          <div class="hash-block">Hash <span><a :href="'/block/'+block.getHash().toString()">{{block.getHash().toString()}}</a></span></div>
         </div>
         <!-- .data-block-1 111111111111111111111111111111111111111111111111 -->
         
@@ -22,7 +22,7 @@
         <div class="data-block-2">
           <div class="each-block">
             <h1>Height</h1>
-            <p>{{common.HexNumber(block.getNumber()).toNumber()}}</p>
+            <p>{{block.getNumber().toNumber()}}</p>
           </div>
           
           <div class="each-block">
@@ -32,12 +32,12 @@
 
           <div class="each-block">
             <h1>Reward<span></span></h1>
-            <p>{{common.EthValue(block.getTotalBlockReward()).toEth()}}&nbsp;ETH</p>
+            <p>{{block.getTotalBlockReward().toEth()}}&nbsp;ETH</p>
           </div>
 
           <div class="each-block">
             <h1>Miner</h1>
-            <p>{{block.getMiner()}}</p>
+            <p>{{block.getMiner().toString()}}</p>
           </div>
         </div>
         <!-- .data-block-2 222222222222222222222222222222222222222222222222 -->
@@ -56,21 +56,21 @@
 
               <div class="sub-hash-block">
                 <h1>Hash</h1>
-                <p><a :href="'/block/'+uncle.getHash()">{{uncle.getHash()}}</a></p>
+                <p><a :href="'/block/'+uncle.getHash().toString()">{{uncle.getHash().toString()}}</a></p>
               </div>
 
               <div class="sub-data-block-container">
                 <div class="sub-data-block">
                   <h1>Height</h1>
-                  <p>{{uncle.getIntNumber()}}</p>
+                  <p>{{uncle.getNumber().toNumber()}}</p>
                 </div>
                 <div class="sub-data-block">
                   <h1>Reward</h1>
-                  <p>{{common.EthValue(uncle.getTotalBlockReward()).toEth()}}&nbsp;ETH</p>
+                  <p>{{uncle.getTotalBlockReward().toEth()}}&nbsp;ETH</p>
                 </div>
                 <div class="sub-data-block">
                   <h1>Miner</h1>
-                  <p>{{uncle.getMiner()}}</p>
+                  <p>{{uncle.getMiner().toString()}}</p>
                 </div>
               </div>
 

@@ -122,7 +122,7 @@ export default Vue.extend({
   computed: {
     latestTxHash () {
       if (!store.getters.getTxs.length) return 'loading'
-      return store.getters.getTxs[0].getHash().substr(0, 10) + '...'
+      return store.getters.getTxs[0].getHash().toString().substr(0, 10) + '...'
     },
     latestBlockNumber () {
       if (!store.getters.getBlocks.length) return 'loading'
