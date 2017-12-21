@@ -10,7 +10,7 @@ class Hex {
 		return this.hexString
 	}
 	toBuffer(): Buffer {
-		return new Buffer(this.hexString, 'hex')
+		return new Buffer(this.hexString.substring(2), 'hex')
 	}
 }
 class HexTime {
@@ -22,7 +22,10 @@ class HexTime {
 		return this.time
 	}
 	toBuffer(): Buffer {
-		return new Buffer(this.time, 'hex')
+		return new Buffer(this.time.substring(2), 'hex')
+	}
+	toDate(): Date {
+		return new Date(new bn(this.time).toNumber() * 1000)
 	}
 }
 class Address {
@@ -35,7 +38,7 @@ class Address {
 		return this.address
 	}
 	toBuffer(): Buffer {
-		return new Buffer(this.address, 'hex')
+		return new Buffer(this.address.substring(2), 'hex')
 	}
 }
 class Hash {
@@ -48,7 +51,7 @@ class Hash {
 		return this.hash
 	}
 	toBuffer(): Buffer {
-		return new Buffer(this.hash, 'hex')
+		return new Buffer(this.hash.substring(2), 'hex')
 	}
 }
 

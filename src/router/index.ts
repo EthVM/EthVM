@@ -27,7 +27,7 @@ export default new Router({
         component: Block
     },
     {
-        path: '/tx',
+        path: '/tx/:hash',
         name: 'IndividualTransaction',
         component: IndividualTransaction
     },

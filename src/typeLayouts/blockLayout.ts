@@ -25,7 +25,7 @@ export default interface blockLayout {
 	transactions: Array<Tx>;
 	transactionHashes: Array<Buffer>
 	transactionCount: number;
-	uncleHashes: Array<Hash>;
+	uncleHashes: any;
 	uncles: Array<Block>;
 	isUncle: boolean;
 	txFees: Buffer;

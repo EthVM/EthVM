@@ -10,6 +10,9 @@ class Block {
 	public readonly type: string
 	constructor(block: blockLayout) {
 		this.block = block
+		this.block.uncleHashes = this.block.uncleHashes.map((_uncle) => {
+			return common.Hash(_uncle)
+		})
 	}
 	setTransactions(txs: Array<Tx>): void {
 		this.block.transactions = txs

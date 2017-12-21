@@ -1,35 +1,71 @@
 <template>
-  <div>
+  <div class="block">
+    <Header></Header>
+    <div class="block-container container" v-if="tx">
+      <div class="row">
+        
+        <div class="col-md-12">
+          <div class="section-block-1">
+            
+            <div class="section-block-title">
+              <p>Transaction Detail Information</p>
+            </div>
 
+            <table>
+              
+              <tbody>                
+                <tr>
+                  <td>Hash</td>
+                  <td>{{tx.getHash().toString()}}</td>
+                </tr>                
+                <tr>
+                  <td>From</td>
+                  <td>{{tx.getFrom().toString()}}</td>
+                </tr>
+                <tr>
+                  <td>To</td>
+                  <td>{{tx.getTo().toString()}}</td>
+                </tr>
+                  <tr>
+                  <td>Value</td>
+                  <td>{{tx.getValue().toEth()}} ETH</td>
+                </tr>
+              </tbody>
 
-
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <Footer></Footer>
   </div>
 </template>
+
 <script lang="ts">
 import Vue from 'vue'
 import store from '@/states'
-import chartOptions from '@/sampleData/chartData.json'
+import {Tx, common} from '@/libs'
 export default Vue.extend({
-  name: 'Block',
+  name: 'Tx',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App',
       store: store,
-      options: chartOptions
+      tx: null,
+      common: common
     }
   },
-  methods: {
-    increment () {
-      store.commit('incrementCount')
-      this.$toasted.show(store.getters.getCount)
-    }
-  },
+  methods: {},
   mounted: function () {
+    let _this = this
+    this.$socket.emit('getTx', Buffer.from(this.$route.params.hash.substring(2), 'hex'), (data) => {
+      if (data) _this.tx = new Tx(data)
+    })
     console.log('Page is fully loaded!!!')
   }
 })
 </script>
-<style scoped lang="less">
-@import '~lessPath/standardTables';
+
+<style scoped="" lang="less">
+  @import '~lessPath/Block/Block';
 
 </style>
