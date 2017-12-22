@@ -8,7 +8,9 @@ import _ from 'lodash'
 class Block {
 	private readonly block: blockLayout
 	public readonly id: string
+	private cache: any
 	constructor(block: blockLayout) {
+		this.cache = {}
 		this.block = block
 		this.block.uncleHashes = this.block.uncleHashes.map((_uncle) => {
 			return common.Hash(_uncle)
@@ -37,7 +39,8 @@ class Block {
 		this.block.uncles.push(uncle)
 	}
 	getIsUncle(): boolean {
-		return this.block.isUncle
+		if(!this.cache.isUncle) this.cache.isUncle = this.block.isUncle
+			return this.cache.isUncle
 	}
 	getUncles(): Array<Block> {
 		return this.block.uncles
@@ -49,88 +52,113 @@ class Block {
 		this.block.uncleHashes = hashes
 	}
 	getHash(): Hash {
-		return common.Hash(this.block.hash)
+		if(!this.cache.hash) this.cache.hash = common.Hash(this.block.hash)
+		return this.cache.hash
+
 	}
 	getIntNumber(): number {
 		return this.block.intNumber
 	}
 	getNumber(): HexNumber {
-		return common.HexNumber(this.block.number)
+		if(!this.cache.number) this.cache.number = common.HexNumber(this.block.number)
+		return this.cache.number
 	}
 	getTransactionCount(): number {
 		return this.block.transactionCount ? this.block.transactionCount : this.block.transactionHashes.length
 	}
 	getTotalBlockReward(): EthValue {
-		return this.block.totalBlockReward ? common.EthValue(this.block.totalBlockReward) : common.EthValue(Buffer.from(new bn(common.HexNumber(this.block.blockReward).toString()).plus(new bn(common.HexNumber(this.block.txFees).toString())).toString(16), 'hex'))
+		if(!this.cache.totalBlockReward) this.cache.totalBlockReward = this.block.totalBlockReward ? common.EthValue(this.block.totalBlockReward) : common.EthValue(Buffer.from(new bn(common.HexNumber(this.block.blockReward).toString()).plus(new bn(common.HexNumber(this.block.txFees).toString())).toString(16), 'hex'))
+
+		return this.cache.totalBlockReward
 	}
 	getParentHash(): Hash {
-		return common.Hash(this.block.parentHash)
+		if(!this.cache.parentHash) this.cache.getParentHash = common.Hash(this.block.parentHash)
+		return this.cache.parentHash
 	}
 	getNonce(): Hex {
-		return common.Hex(this.block.nonce)
+		if(!this.cache.nonce) this.cache.nonce = common.Hex(this.block.nonce)
+		return this.cache.nonce
 	}
 	getMixHash(): Hash {
-		return common.Hash(this.block.mixHash)
+		if(!this.cache.mixHash) this.cache.mixHash = common.Hash(this.block.mixHash)
+		return this.cache.mixHash
 	}
 	getSha3Uncles(): Hash {
-		return common.Hash(this.block.sha3Uncles)
+		if(!this.cache.sha3Uncles) this.cache.sha3Uncles = common.Hash(this.block.sha3Uncles)
+		return this.cache.sha3Uncles
 	}
 	getLogsBloom(): Hex {
-		return common.Hex(this.block.logsBloom)
+		if(!this.cache.logsBloom) this.cache.logsBloom = common.Hex(this.block.logsBloom)
+		return this.cache.logsBloom
 	}
 
 	getStateRoot(): Hash {
-		return common.Hash(this.block.stateRoot)
+		if(!this.cache.stateRoot) this.cache.stateRoot = common.Hash(this.block.stateRoot)
+		return this.cache.stateRoot
 	}
 	getMiner(): Address {
-		return common.Address(this.block.miner)
+		if(!this.cache.miner) this.cache.miner = common.Address(this.block.miner)
+		return this.cache.miner
 
 	}
 	getMinerBalance(): EthValue {
-		return common.EthValue(this.block.minerBalance)
-
+		if(!this.cache.minerBalance) this.cache.minerBalance = common.EthValue(this.block.minerBalance)
+		return this.cache.minerBalance 
 	}
 	getDifficulty(): HexNumber {
-		return common.HexNumber(this.block.difficulty)
+		if(!this.cache.difficulty) this.cache.difficulty = common.HexNumber(this.block.difficulty)
+		return this.cache.difficulty
+	
 	}
 
 	getTotalDifficulty(): HexNumber {
-		return common.HexNumber(this.block.totalDifficulty)
+		if(!this.cache.totalDifficulty) this.cache.totalDifficulty = common.HexNumber(this.block.totalDifficulty)
+		return this.cache.totalDifficulty 
 	}
 	getExtraData(): Hex {
-		return common.Hex(this.block.extraData)
+		if(this.cache.extraData) this.cache.extraData = common.Hex(this.block.extraData)
+		return this.cache.extraData
 	}
 	getSize(): HexNumber {
-		return common.HexNumber(this.block.size)
+		if(!this.cache.size) this.cache.size = common.HexNumber(this.block.size)
+		return this.cache.size
 	}
 	getGasLimit(): HexNumber {
-		return common.HexNumber(this.block.gasLimit)
+		if(!this.cache.gasLimit) this.cache.garLimit = common.HexNumber(this.block.gasLimit)
+		return this.cache.garLimit
 	}
 	getGasUsed(): HexNumber {
-		return common.HexNumber(this.block.gasUsed)
+		if(!this.cache.gasUsed) this.cache.gasUsed = common.HexNumber(this.block.gasUsed)
+		return this.cache.gasUsed
 	}
 	getTimestamp(): HexTime {
-		return common.HexTime(this.block.timestamp)
+		if(!this.cache.timestamp) this.cache.timestamp = common.HexTime(this.block.timestamp)
+		return this.cache.timestamp 
 	}
-	getTransactionsRoot(): Hash {
-		return common.Hash(this.block.transactionsRoot)
+	getTransactionsRoot(): Hash { 
+		if(!this.cache.transactionsRoot) this.cache.transactionsRoot = common.Hash(this.block.transactionsRoot)
+		return this.cache.transactionsRoot
 	}
 	getReceiptsRoot(): Hash {
-		return common.Hash(this.block.receiptsRoot)
+		if(!this.cache.receiptsRoot) this.cache.receiptsRoot = common.Hash(this.block.receiptsRoot)
+		return this.cache.receiptsRoot
 	}
 	getTransactions(): Array<Tx> {
 		return this.block.transactions
 	}
 	geTransactionHashes(): Array<Hash> {
-		return this.block.transactionHashes.map((_hash, idx) => {
+		if(!this.cache.transactionHashes) this.cache.transactionHashes = this.block.transactionHashes.map((_hash, idx) => {
 			return common.Hash(_hash)
 		})
+		return this.cache.transactionHashes
 	}
 	getTxFees(): EthValue {
-		return common.EthValue(this.block.txFees)
+		if(!this.cache.txFees) this.cache.txFees = common.EthValue(this.block.txFees)
+		return this.cache.txFees
 	}
 	getBlockReward(): EthValue {
-		return common.EthValue(this.block.blockReward)
+		if(!this.cache.blockReward) this.cache.blockReward = common.EthValue(this.block.blockReward)
+		return this.cache.blockReward
 	}
 }
 export default Block

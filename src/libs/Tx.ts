@@ -7,8 +7,10 @@ import _ from 'lodash'
 class Tx {
 	private readonly tx: txLayout
 	public readonly id: string
+	private cache: any
 
 	constructor(tx: txLayout) {
+		this.cache = {}
 		this.tx = tx
 		this.id = common.Hash(this.tx.hash).toString()
 	}
@@ -16,67 +18,88 @@ class Tx {
 		return this.id
 	}
 	getHash(): Hash {
-		return common.Hash(this.tx.hash)
+		if(!this.cache.hash) this.cache.hash = common.Hash(this.tx.hash)
+		return this.cache.hash
 	}
 	getTo(): Address {
-		return common.Address(this.tx.to)
+		if(!this.cache.to) this.cache.to = common.Address(this.tx.to)
+		return this.cache.to
 	}
 	getFrom(): Address {
-		return common.Address(this.tx.from)
+		if(!this.cache.from) this.cache.from = common.Address(this.tx.from)
+		return this.cache.from
 	}
 	getGasUsed(): HexNumber {
-		return common.HexNumber(this.tx.gasUsed)
+		if(!this.cache.gasUsed) this.cache.gasUsed = common.HexNumber(this.tx.gasUsed)
+		return this.cache.gasUsed
 	}
 	getBlockHash(): Hash {
-		return common.Hash(this.tx.blockHash)
+		if(!this.cache.blcokHash) this.cache.blcokHash = common.Hash(this.tx.blockHash)
+		return this.cache.blcokHash
 	}
 	getBlockNumber(): HexNumber {
-		return common.HexNumber(this.tx.blockNumber)
+		if(!this.cache.blockNumber) this.cache.blockNumber = common.HexNumber(this.tx.blockNumber)
+		return this.cache.blockNumber
 	}
 	geTransactionIndex(): HexNumber {
-		return common.HexNumber(this.tx.transactionIndex)
+		if(!this.cache.transactionIndex) this.cache.transactionIndex = common.HexNumber(this.tx.transactionIndex)
+		return this.cache.transactionIndex 
 	}
 	getFromBalance(): EthValue {
-		return common.EthValue(this.tx.fromBalance)
+		if(!this.cache.fromBalance) this.cache.fromBalance = common.EthValue(this.tx.fromBalance)
+		return this.cache.fromBalance 
 	}
 	getToBalance(): EthValue {
-		return common.EthValue(this.tx.toBalance)
+		if(!this.cache.ethValue) this.cache.ethValue = common.EthValue(this.tx.toBalance)
+		return this.cache.ethValue 
 	}
 
 	getCumulativeGasUsed(): HexNumber {
-		return common.HexNumber(this.tx.cumulativeGasUsed)
+		if(!this.cache.cumulativeGasUsed) this.cache.cumulativeGasUsed = common.HexNumber(this.tx.cumulativeGasUsed)
+		return this.cache.cumulativeGasUsed
+
 	}
 	getContractAddress(): Address {
-		return common.Address(this.tx.contractAddress)
+		if(!this.cache.contractAddress) this.cache.contractAddress = common.Address(this.tx.contractAddress)
+		return this.cache.contractAddress 
 	}
 	getLogsBloom(): Hex {
-		return common.Hex(this.tx.logsBloom)
+		if(!this.cache.logsBloom) this.cache.logsBloom = common.Hex(this.tx.logsBloom)
+		return this.cache.logsBloom 
 	}
 	getGas(): HexNumber {
-		return common.HexNumber(this.tx.gas)
+		if(!this.cache.gas) this.cache.gas = common.HexNumber(this.tx.gas)
+		return this.cache.gas 
 	}
 	getGasPrice(): EthValue {
-		return common.EthValue(this.tx.gasPrice)
+		if(!this.cache.gasPrice) this.cache.gasPrice = common.EthValue(this.tx.gasPrice)
+		return this.cache.gasPrice 
 	}
 
 	getInput(): Hex {
-		return common.Hex(this.tx.input)
+		if(!this.cache.input) this.cache.input = common.Hex(this.tx.input)
+		return this.cache.input 
 
 	}
 	getNonce(): HexNumber {
-		return common.HexNumber(this.tx.nonce)
+		if(!this.cache.hexNumber) this.cache.hexNumber = common.HexNumber(this.tx.nonce)
+		return this.cache.hexNumber 
 	}
 	getValue(): EthValue {
-		return common.EthValue(this.tx.value)
+		if(!this.cache.ethValue) this.cache.ethValue = common.EthValue(this.tx.value)
+		return this.cache.ethValue
 	}
 	getV(): Hex {
-		return common.Hex(this.tx.v)
+		if(!this.cache.v) this.cache.v = common.Hex(this.tx.v)
+		return this.cache.v 
 	}
 	getR(): Hex {
-		return common.Hex(this.tx.r)
+		if(!this.cache.r) this.cache.r = common.Hex(this.tx.r)
+		return this.cache.r
 	}
 	getS(): Hex {
-		return common.Hex(this.tx.s)
+		if(!this.cache.s) this.cache.s = common.Hex(this.tx.s)
+		return this.cache.s
 	}
 	getSatus(): boolean {
 		return this.tx.status
