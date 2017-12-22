@@ -1,44 +1,55 @@
 <template>
   <div class="block">
     <Header></Header>
-    <div class="block-container container" v-if="tx">
-      <div class="row">
-        
-        <div class="col-md-12">
-          <div class="section-block-1">
-            
-            <div class="section-block-title">
-              <p>Transaction Detail Information</p>
-            </div>
 
+    <div class="block-container container"
+       v-if="tx">
+      <div class="row">
+        <div class="col-md-12 tx-section-block-1">
+          <div class="section-block-title">
+            <p>Transaction Detail Information</p>
+          </div>
+          <div class="section-block-container">
             <table>
-              
-              <tbody>                
+              <tbody>
                 <tr>
                   <td>Hash</td>
-                  <td>{{tx.getHash().toString()}}</td>
-                </tr>                
+                  <td>
+                    <p>{{tx.getHash().toString()}}</p>
+                  </td>
+                </tr>
                 <tr>
                   <td>From</td>
-                  <td>{{tx.getFrom().toString()}}</td>
+                  <td>
+                    <p>{{tx.getFrom().toString()}}</p>
+                  </td>
                 </tr>
                 <tr>
                   <td>To</td>
-                  <td>{{tx.getTo().toString()}}</td>
+                  <td>
+                    <p>{{tx.getTo().toString()}}</p>
+                  </td>
                 </tr>
-                  <tr>
+                <tr>
                   <td>Value</td>
-                  <td>{{tx.getValue().toEth()}} ETH</td>
+                  <td>
+                    <p>{{tx.getValue().toEth()}}&nbsp;ETH</p>
+                  </td>
                 </tr>
               </tbody>
-
             </table>
           </div>
         </div>
+        <!-- .section-block-1 -->
       </div>
+      <!-- .row -->
+
     </div>
+    <!-- .container -->
     <Footer></Footer>
   </div>
+
+
 </template>
 
 <script lang="ts">
@@ -66,6 +77,6 @@ export default Vue.extend({
 </script>
 
 <style scoped="" lang="less">
-  @import '~lessPath/Block/Block';
+  @import '~lessPath/IndividualTransaction/IndividualTransaction';
 
 </style>

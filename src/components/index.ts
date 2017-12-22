@@ -8,6 +8,8 @@ import LatestBlocks from '@/components/LatestBlocks/LatestBlocks'
 import Block from '@/components/Block/Block'
 
 import LatestTransaction from '@/components/LatestTransaction/LatestTransaction'
+import TxPagination from '@/components/LatestTransaction/TxPagination'
+
 import IndividualTransaction from '@/components/IndividualTransaction/IndividualTransaction'
 import SingleAccount from '@/components/SingleAccount/SingleAccount'
 
@@ -26,6 +28,8 @@ Vue.component('LatestBlocks', LatestBlocks)
 Vue.component('Block', Block)
 
 Vue.component('LatestTransaction', LatestTransaction)
+Vue.component('TxPagination', TxPagination)
+
 Vue.component('IndividualTransaction', IndividualTransaction)
 Vue.component('SingleAccount', SingleAccount)
 
