@@ -72,7 +72,7 @@ class Block {
 		return this.cache.totalBlockReward
 	}
 	getParentHash(): Hash {
-		if(!this.cache.parentHash) this.cache.getParentHash = common.Hash(this.block.parentHash)
+		if (!this.cache.parentHash) this.cache.parentHash = common.Hash(this.block.parentHash)
 		return this.cache.parentHash
 	}
 	getNonce(): Hex {
@@ -116,7 +116,7 @@ class Block {
 		return this.cache.totalDifficulty 
 	}
 	getExtraData(): Hex {
-		if(this.cache.extraData) this.cache.extraData = common.Hex(this.block.extraData)
+		if (!this.cache.extraData) this.cache.extraData = common.Hex(this.block.extraData)
 		return this.cache.extraData
 	}
 	getSize(): HexNumber {
