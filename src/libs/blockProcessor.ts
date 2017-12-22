@@ -18,17 +18,15 @@ let setUnclesToUnclesAndAdd = (block: Block, pastBlocks: Array<Block>): Array<Bl
 	pastBlocks.unshift(block)
 	return pastBlocks
 }
-let dedup = (pastBlocks: Array<Block>): Array<Block> => {
+let dedup = (block: Block, pastBlocks: Array<Block>): Array<Block> => {
 	for (let i = 0; i < pastBlocks.length; i++) {
-		for (let j = 0; j < pastBlocks.length; j++) {
-			if (i != j && pastBlocks[i].getId() == pastBlocks[j].getId()) pastBlocks.splice(j, 1)
-		}
-		return pastBlocks
+		if (block.getId() == pastBlocks[i].getId()) pastBlocks.splice(i, 1)
 	}
+	return pastBlocks
 }
 let processBlocks = (block: Block, pastBlocks: Array<Block>): Array<Block> => {
+	pastBlocks = dedup(block, pastBlocks)
 	pastBlocks = setUnclesToUnclesAndAdd(block, pastBlocks)
-	pastBlocks = dedup(pastBlocks)
 	return pastBlocks
 }
 export default processBlocks

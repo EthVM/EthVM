@@ -1,15 +1,13 @@
 import { Tx } from '@/libs'
 
-let dedup = (pastTxs: Array<Tx>): Array<Tx> => {
+let dedup = (tx:Tx, pastTxs: Array<Tx>): Array<Tx> => {
 	for (let i = 0; i < pastTxs.length; i++) {
-		for (let j = 0; j < pastTxs.length; j++) {
-			if (i != j && pastTxs[i].getId() == pastTxs[j].getId()) pastTxs.splice(j,1)
-		}
+		if (tx.getId() == pastTxs[i].getId()) pastTxs.splice(i, 1)
 	}
 	return pastTxs
 }
 let processTxs = (tx: Tx, pastTxs: Array<Tx>): Array<Tx> => {
-	pastTxs = dedup(pastTxs)
+	pastTxs = dedup(tx, pastTxs)
 	pastTxs.unshift(tx)
 	return pastTxs
 }
