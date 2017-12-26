@@ -158,7 +158,7 @@
         <div class="section-block-title">
           <p>Uncle</p>
         </div>
-        <div class="section-block-container">
+        <div class="section-block-container uncle-block">
           <table>
             <tbody>
               <tr>
