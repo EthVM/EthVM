@@ -67,6 +67,7 @@
     "vue-highcharts": "0.0.10",
     "vue-i18n": "^7.3.2",
     "vue-loader": "^12.2.2",
+    "vue-paginate": "^3.5.1",
     "vue-style-loader": "^3.0.3",
     "vue-template-compiler": "^2.5.4",
     "vue-toasted": "^1.1.23",
