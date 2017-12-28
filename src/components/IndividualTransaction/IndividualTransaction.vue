@@ -36,6 +36,136 @@
                     <p>{{tx.getValue().toEth()}}&nbsp;ETH</p>
                   </td>
                 </tr>
+
+
+
+                <tr>
+                  <td>Gas Used</td>
+                  <td>
+                    <p>{{tx.getGasUsed().toString()}}</p>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Block Hash</td>
+                  <td>
+                    <p>{{tx.getBlockHash().toString()}}</p>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Block Number</td>
+                  <td>
+                    <p>{{tx.getBlockNumber().toString()}}</p>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Transaction Index</td>
+                  <td>
+                    <p>{{tx.geTransactionIndex().toString()}}</p>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>From Balance</td>
+                  <td>
+                    <p>{{tx.getFromBalance().toEth()}}</p>
+                  </td>
+                </tr>
+
+
+                <tr>
+                  <td>getToBalance</td>
+                  <td>
+                    <p>{{tx.getToBalance().toEth()}}</p>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Cumulative Gas Used</td>
+                  <td>
+                    <p>{{tx.getCumulativeGasUsed().toNumber()}}</p>
+                  </td>
+                </tr>
+     
+
+                <tr>
+                  <td>Gas</td>
+                  <td>
+                    <p>{{tx.getGas().toNumber()}}</p>
+                  </td>
+                </tr>
+
+
+
+                <tr>
+                  <td>Gas Price</td>
+                  <td>
+                    <p>{{tx.getGasPrice().toEth()}}&nbsp;Eth</p>
+                  </td>
+                </tr>
+
+
+
+                <tr>
+                  <td>Input</td>
+                  <td>
+                    <p>{{tx.getInput().toString()}}</p>
+                  </td>
+                </tr>
+
+           
+
+                <tr>
+                  <td>Nonce</td>
+                  <td>
+                    <p>{{tx.getNonce().toString()}}</p>
+                  </td>
+                </tr>
+
+
+
+                <tr>
+                  <td>Value</td>
+                  <td>
+                    <p>{{tx.getValue().toEth()}}&nbsp;Eth</p>
+                  </td>
+                </tr>
+
+
+                <tr>
+                  <td>V</td>
+                  <td>
+                    <p>{{tx.getV().toString()}}</p>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>R</td>
+                  <td>
+                    <p>{{tx.getR().toString()}}</p>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>S</td>
+                  <td>
+                    <p>{{tx.getS().toString()}}</p>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Satus</td>
+                  <td>
+                    <p>{{tx.getSatus().toString()}}</p>
+                  </td>
+                </tr>
+
+     
+
+
+
               </tbody>
             </table>
           </div>
