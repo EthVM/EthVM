@@ -12,7 +12,7 @@ import socketConfig from '@/configs/socket.json'
 import VueSocketio from 'vue-socket.io'
 
 import '@/components'
-
+Vue.prototype.$eventHub = new Vue();
 Vue.config.productionTip = false
 Vue.use(Toasted, {
 	router

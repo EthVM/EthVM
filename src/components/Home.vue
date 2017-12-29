@@ -36,7 +36,7 @@
           <div class="col-md-12">
             <div class="block-section">
 
-                <hp-tx-container max-items="20"></hp-tx-container>
+                <hp-tx-container :max-items="20"></hp-tx-container>
 
             </div>
             <!-- .block -->
@@ -51,7 +51,7 @@
         <div class="single-block">
           <div class="col-md-12">
             <div class="block-section">
-              <hp-block-container max-items="20"></hp-block-container>
+              <hp-block-container :max-items="20"></hp-block-container>
             </div>
             <!-- .block -->
           </div>
@@ -121,12 +121,12 @@ export default Vue.extend({
   },
   computed: {
     latestTxHash () {
-      if (!store.getters.getTxs.length) return 'loading'
-      return store.getters.getTxs[0].getHash().toString().substr(0, 10) + '...'
+      if (!store.getters.getLatestTransaction) return 'loading'
+      return store.getters.getLatestTransaction.getHash().toString().substr(0, 10) + '...'
     },
     latestBlockNumber () {
-      if (!store.getters.getBlocks.length) return 'loading'
-      return store.getters.getBlocks[0].getIntNumber()
+      if (!store.getters.getLatestBlock) return 'loading'
+      return store.getters.getLatestBlock.getIntNumber()
     }
   }
 })

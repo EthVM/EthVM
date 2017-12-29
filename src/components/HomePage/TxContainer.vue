@@ -71,31 +71,42 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import store from '@/states'
-import { common } from '@/libs'
+import { FIFO, Tx, processTxs } from '@/libs'
+import globConfigs from '@/configs/global.json'
+import sEvents from '@/configs/socketEvents.json'
+import Visibility from 'visibilityjs'
 export default Vue.extend({
-  name: 'block-container',
-  props: [
-    'maxItems'
-  ],
+  name: 'tx-container',
+  props: {
+    maxItems: Number
+  },
   data () {
     return {
-      store: store,
-      txSplice: [],
-      common: common
+      txs: new FIFO < Tx >(globConfigs.maxTxsInMemory, processTxs)
     }
   },
-  mounted () {
-    // let _this = this
-    this.$nextTick(function () {
-      this.$socket.emit('pastData', ''
-      )
-    }
-    )
+  beforeMount () {
+    let _this = this
+    _this.$socket.emit(sEvents.pastTxs, '', (_txs) => {
+      _txs.forEach((_tx) => {
+        _this.txs.add(new Tx(_tx))
+      })
+    })
+  },
+  created () {
+    let _this = this
+    _this.$eventHub.$on(sEvents.newTx, (_tx) => {
+      if (Visibility.state() === 'visible') {
+        _this.txs.add(_tx)
+      }
+    })
+  },
+  beforeDestroy () {
+    this.$eventHub.$off(sEvents.newTx)
   },
   computed: {
     transactions () {
-      return store.getters.getTxs.slice(0, this.maxItems)
+      return this.txs.items().slice(0, this.maxItems)
     }
   }
 })
