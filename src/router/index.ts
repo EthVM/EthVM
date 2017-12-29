@@ -32,7 +32,7 @@ export default new Router({
         component: IndividualTransaction
     },
     {
-        path: '/latesttransaction',
+        path: '/transactions',
         name: 'LatestTransaction',
         component: LatestTransaction
     },
