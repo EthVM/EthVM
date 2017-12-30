@@ -71,6 +71,7 @@
         "vue-paginate": "^3.5.1",
         "vue-style-loader": "^3.0.3",
         "vue-template-compiler": "^2.5.4",
+        "vue-timeago": "^3.4.2",
         "vue-toasted": "^1.1.23",
         "vue-ts-loader": "^0.0.3",
         "webpack": "^3.6.0",
