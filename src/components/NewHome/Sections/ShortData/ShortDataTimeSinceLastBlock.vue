@@ -1,9 +1,13 @@
 <template>
   <div id="ShortDataTimeSinceLastBlock" class="time-since-last-block">
 
-    <p>Time Since Last Block</p>
-    <p class="block-value">20 Sec</p>
+    <p class="block-title">Time Since Last Block</p>
 
+    <div class="bottom-block">
+      <div class="icon-block"><icon name='clock-o' scale='1'></icon></div>
+      <p class="block-value">20 Sec</p>
+    </div>
+    
   </div>
 </template>
 

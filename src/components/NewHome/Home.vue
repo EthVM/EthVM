@@ -17,7 +17,7 @@
 </script>
 
 
-<style scoped lang="less">
+<style lang="less">
 
 </style>
 

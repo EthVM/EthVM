@@ -1,9 +1,13 @@
 <template>
   <div id="ShortDataHashRate" class="hash-rate">
 
-    <p>Hasg Rate</p>
-    <p class="block-value">11,345,345 THs</p>
-
+    <p class="block-title">Hasg Rate</p>
+    
+    <div class="bottom-block">
+      <div class="icon-block"><icon name='hashtag' scale='1'></icon></div>
+      <p class="block-value">11,345,345 THs</p>
+    </div>
+    
   </div>
 </template>
 

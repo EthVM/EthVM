@@ -1,9 +1,13 @@
 <template>
   <div id="ShortDataLastBlock" class="last-block">
 
-    <p>Last Block</p>
-    <p class="block-value">16280901</p>
-
+    <p class="block-title">Last Block</p>
+    
+    <div class="bottom-block">
+      <div class="icon-block"><icon name='cube' scale='1'></icon></div>
+      <p class="block-value">16280901</p>
+    </div>
+    
   </div>
 </template>
 

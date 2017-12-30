@@ -1,8 +1,10 @@
 <template>
   <div id="GraphsLineChart" class="line-chart">
 
-    <p>Line Chart</p>
-    <p class="block-value">20 Sec</p>
+    <p class="block-title">Line Chart</p>
+    <div class="graphs">
+      <img src="/img/graph.png">
+    </div>
 
   </div>
 </template>

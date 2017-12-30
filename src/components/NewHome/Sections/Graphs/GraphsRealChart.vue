@@ -1,8 +1,10 @@
 <template>
   <div id="GraphsRealChart" class="real-chart">
 
-    <p>Real Chart</p>
-    <p class="block-value">20 Sec</p>
+    <p class="block-title">Real Chart</p>
+    <div class="graphs">
+      <img src="/img/graph.png">
+    </div>
 
   </div>
 </template>

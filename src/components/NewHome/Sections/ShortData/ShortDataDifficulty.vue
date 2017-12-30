@@ -1,9 +1,13 @@
 <template>
   <div id="ShortDataHashRate" class="difficulty">
 
-    <p>Difficulty</p>
-    <p class="block-value">2.17 H</p>
-
+    <p class="block-title">Difficulty</p>
+    
+    <div class="bottom-block">
+      <div class="icon-block"><icon name='tachometer' scale='1'></icon></div>
+      <p class="block-value">2.17 H</p>
+    </div>
+    
   </div>
 </template>
 

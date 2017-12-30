@@ -10,10 +10,10 @@
           </div>
 
           <div class="sections col-md-9 col-lg-10">
-
-            <FramesAbout v-if="pageName == 'about'"></FramesAbout>
-            <FramesHome v-else></FramesHome>
-
+            <div class="section-padding">
+              <FramesAbout v-if="pageName == 'about'"></FramesAbout>
+              <FramesHome v-else></FramesHome>
+            </div>
           </div>
         </div>
       </div><!-- .container-fluid -->
