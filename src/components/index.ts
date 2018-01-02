@@ -17,6 +17,8 @@ import TopNav from "@/components/TopNav"
 import * as Icon from 'vue-awesome'
 import 'vue-awesome/icons'
 
+import BarChart from '@/components/Chart/BarChart'
+
 /* eslint-disable no-new */
 Vue.component('icon', Icon)
 Vue.component('Header', Header)
@@ -32,6 +34,7 @@ Vue.component('TxPagination', TxPagination)
 
 Vue.component('IndividualTransaction', IndividualTransaction)
 Vue.component('SingleAccount', SingleAccount)
+Vue.component('BarChart', BarChart)
 
 
 

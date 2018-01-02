@@ -30,6 +30,12 @@
       </div>
       <!-- end.container for three block on top -->
 
+      <BarChart>
+        <div class ="Chart-title">
+          <p> New Title</p>
+        </div>
+      </BarChart>
+
       <!-- .block-container Transactions-->
       <div class="block-container row">
         <div class="single-block">
