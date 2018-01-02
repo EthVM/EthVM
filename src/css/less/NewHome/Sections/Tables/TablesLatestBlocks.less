@@ -6,7 +6,7 @@
 
     .block-title{
         margin: 0px;
-        font-size: @text-size-3;
+        font-size: @font-size-3;
         text-transform: @text-transform-1;
         margin: @shortdata-margin-1;
     }
@@ -14,25 +14,202 @@
     .table-container{
         
 
-        table{
-            font-size: 14px;
+        table.table-header{
 
-            thead{
-                tr{
-                    td{
-                        
+            width: 100%;
+            border-bottom: @table-border-bottom-1;
+
+            thead > tr > td{
+                padding: 5px 0px;
+                font-size: @table-font-size-1;
+                font-weight: @table-font-weight-2;
+                width: 50%;
+            }
+        }
+
+
+        .table-content{
+            padding: 5px 0px;
+            width: 100%;
+            border-bottom: @table-border-bottom-1;
+
+
+            &:last-child{
+                border-bottom: none;
+            }
+
+
+            table.top-table-content{
+
+                width: 100%;
+                tbody{
+                    tr{
+                        td{
+                            width: 50%;
+                            font-size: @table-font-size-1;
+                        }
                     }
                 }
             }
-            tbody{
-                tr{
-                    td{
-                        
+
+
+            table.mid-table-content{
+                margin-bottom: 5px;
+                width: 100%;
+                tbody{
+                    tr{
+                        td{
+                            width: 25%;
+                            font-size: @table-font-size-1;
+                            p{
+                                svg{
+                                    vertical-align: middle;
+                                    
+                                }
+                            }
+                        }
                     }
                 }
             }
-        }   
+
+
+            .sub-contents:last-child{
+                border-bottom: @table-border-bottom-1;
+            }            
+
+            .sub-contents{
+                width: 100%;
+                margin-left: auto;
+                background-color: #f7f7f7;
+                padding: 2px 7px;
+                border-top: @table-border-bottom-1;
+
+
+
+                table{
+                    width: 100%;
+                    tbody{
+                        tr{
+
+                            .sub-height{
+                                width: 30%;
+                            }
+
+                            .sub-miner{
+                                width: 40%;
+                                p{
+                                    
+                                    span{
+                                        width: 150px;
+                                    }
+                                }
+                                
+                            }
+
+                            .sub-reward{
+                                width: 30%;
+                            }
+
+                            td{
+                                p{
+                                    font-size: @table-font-size-3;
+                                    font-weight: @table-font-weight-3;
+
+                                    span{
+                                        text-overflow: ellipsis;
+                                        overflow: hidden;    
+                                        font-weight: @table-font-weight-1;
+                                        display: inline-block;
+                                        vertical-align: top;
+
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+
     }
 
 }
+
+
+
+
+
+@media screen and (max-width: 1599px){
+
+
+    .top-hash p{
+        width: 140px;
+        text-overflow: ellipsis;
+        overflow: hidden;    
+    }
+
+
+    .top-miner p{
+        width: 140px;
+        text-overflow: ellipsis;
+        overflow: hidden;    
+    }
+
+
+
+    .sub-height{
+        width: 33% !important;
+        p{
+            
+            span{
+                width: 50px !important;
+            }
+        }
+    }
+
+    .sub-miner{
+        width: 33% !important;
+        p{
+            
+            span{
+                width: 50px !important;
+            }
+        }
+        
+    }
+
+    .sub-reward{
+        width: 33% !important;
+        p{
+            
+            span{
+                width: 50px !important;
+            }
+        }
+    }
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
