@@ -29,12 +29,9 @@
         </div>
       </div>
       <!-- end.container for three block on top -->
-
       <BarChart>
-        <div class ="Chart-title">
-          <p> New Title</p>
-        </div>
       </BarChart>
+
 
       <!-- .block-container Transactions-->
       <div class="block-container row">
@@ -53,7 +50,7 @@
       <!-- end.block-container Transactions-->
 
       <!-- .block-container Blocks-->
-      <div class="block-container row">
+      <div class="block-container row"> 
         <div class="single-block">
           <div class="col-md-12">
             <div class="block-section">
@@ -72,7 +69,7 @@
         <!-- .two-block -->
         <div class="two-block height-400-px">
           <div class="chart-container col-md-6">
-          <highcharts :options="options" ref="datachart"></highcharts>
+          <highcharts :options="options" ref="chartOptions"></highcharts>
           </div>
           <div class="col-md-6 height-100-per"> 
             <table class="table dark-block height-100-per vertical-middle-alignment">
@@ -94,11 +91,9 @@
           </div>
         </div>
         <!-- end.two-block -->
-
       </div>
     </div>
       <!-- .container for the chart and stats -->
-
     </div>
     <!-- end.contaner for front page sections -->
 
@@ -112,6 +107,7 @@
 import Vue from 'vue'
 import store from '@/states'
 import chartOptions from '@/sampleData/chartData.json'
+
 export default Vue.extend({
   name: 'FrontPage',
   data () {

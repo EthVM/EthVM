@@ -1,0 +1,16 @@
+{
+  "title": {
+    "display": true,
+    "text": "Transactions from the last 10 blocks"
+  },
+  "responsive": true,
+  "scales": {
+    "yAxes": [{ 
+      "stacked": true,
+      "ticks": {
+        "beginAtZero": true
+      }
+    }],
+    "xAxes": [{"stacked": true}]
+  }
+}
