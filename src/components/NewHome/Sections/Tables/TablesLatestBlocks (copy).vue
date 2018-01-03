@@ -119,3 +119,6 @@ export default Vue.extend({
 @import '~lessPath/standardTables';
 
 </style>
+
+
+

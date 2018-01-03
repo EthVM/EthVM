@@ -14,12 +14,12 @@
       </table>
 
       <!-- MAIN LOOP START ########################################## -->
-      <div class="table-content">
+      <div class="table-content" v-for="block in blocks" v-if="!block.getIsUncle()">
         <table class="top-table-content">
           <tbody>
             <tr>
-              <td class="top-hash"><p>324f0j9g0453g9h3g9h34f340g3j04gf9j34</p></td>
-              <td class="top-miner"><p>23jkrf2kjf43423</p></td>
+              <td class="top-hash"><p>{{block.getHash().toString()}}</p></td>
+              <td class="top-miner"><p>{{block.getMiner().toString()}}</p></td>
             </tr>
           </tbody>
         </table>
@@ -27,140 +27,50 @@
         <table class="mid-table-content">
           <tbody>
             <tr>
-              <td><p><icon name='plus-square-o' scale='1'></icon>&nbsp;0&nbsp;Uncles</p></td>
-              <td><p><icon name='cubes' scale='1'></icon>&nbsp;2938476</p></td>
-              <td><p><icon name='exchange' scale='1'></icon>&nbsp;123</p></td>
-              <td><p><icon name='credit-card-alt' scale='1'></icon>&nbsp;5.2341&nbsp;ETH</p></td>
+              <td><p><icon name='plus-square-o' scale='1'></icon>&nbsp;{{uncleCount(block.getUncles())}}&nbsp;Uncles</p></td>
+              <td><p><icon name='cubes' scale='1'></icon>&nbsp;{{block.getNumber().toNumber()}}</p></td>
+              <td><p><icon name='exchange' scale='1'></icon>&nbsp;{{block.getTransactionCount()}}</p></td>
+              <td><p><icon name='credit-card-alt' scale='1'></icon>&nbsp;<span>{{block.getTotalBlockReward().toEth()}}</span>&nbsp;ETH</p></td>
             </tr>
           </tbody>
         </table>
 
         <!-- SUB LOOP START ############## -->
-        <div class="sub-contents">
-          <table>
-            <tbody>
-              <tr>
-                <td class="sub-height"><p>Height:&nbsp;<span>237534</span></p></td>
-                <td class="sub-miner"><p>Miner:&nbsp;<span>2iu3498gg9ngn3eg934gun389g37534</span></p></td>
-                <td class="sub-reward"><p>Reward:&nbsp;<span>237534</span></p></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>        
-        <div class="sub-contents">
-          <table>
-            <tbody>
-              <tr>
-                <td class="sub-height"><p>Height:&nbsp;<span>237534</span></p></td>
-                <td class="sub-miner"><p>Miner:&nbsp;<span>2iu3498gg9ngn3eg934gun389g37534</span></p></td>
-                <td class="sub-reward"><p>Reward:&nbsp;<span>237534</span></p></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <!-- SUB LOOP END ############## -->
+        <div v-if="uncleCount(block.getUncles()) != 0">
+          <div class="sub-contents">
+            <table>
+              <tbody>
+                <tr>
+                  <td class="sub-height"><p>Height:&nbsp;<span>237534</span></p></td>
+                  <td class="sub-miner"><p>Miner:&nbsp;<span>2iu3498gg9ngn3eg934gun389g37534</span></p></td>
+                  <td class="sub-reward"><p>Reward:&nbsp;<span>237534</span></p></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="sub-contents">
+            <table>
+              <tbody>
+                <tr>
+                  <td class="sub-height"><p>Height:&nbsp;<span>237534</span></p></td>
+                  <td class="sub-miner"><p>Miner:&nbsp;<span>2iu3498gg9ngn3eg934gun389g37534</span></p></td>
+                  <td class="sub-reward"><p>Reward:&nbsp;<span>237534</span></p></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
-      </div>
-      <!-- MAIN LOOP END ########################################## -->
-
-
-
-      <!-- MAIN LOOP START ########################################## -->
-      <div class="table-content">
-        <table class="top-table-content">
-          <tbody>
-            <tr>
-              <td class="top-hash"><p>324f0j9g0453g9h3g9h34f340g3j04gf9j34</p></td>
-              <td class="top-miner"><p>23jkrf2kjf43423</p></td>
-            </tr>
-          </tbody>
-        </table>
-        
-        <table class="mid-table-content">
-          <tbody>
-            <tr>
-              <td><p><icon name='plus-square-o' scale='1'></icon>&nbsp;0&nbsp;Uncles</p></td>
-              <td><p><icon name='cubes' scale='1'></icon>&nbsp;2938476</p></td>
-              <td><p><icon name='exchange' scale='1'></icon>&nbsp;123</p></td>
-              <td><p><icon name='credit-card-alt' scale='1'></icon>&nbsp;5.2341&nbsp;ETH</p></td>
-            </tr>
-          </tbody>
-        </table>
-
-        <!-- SUB LOOP START ############## -->
-        <div class="sub-contents">
-          <table>
-            <tbody>
-              <tr>
-                <td class="sub-height"><p>Height:&nbsp;<span>237534</span></p></td>
-                <td class="sub-miner"><p>Miner:&nbsp;<span>2iu3498gg9ngn3eg934gun389g37534</span></p></td>
-                <td class="sub-reward"><p>Reward:&nbsp;<span>237534</span></p></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>        
-        <div class="sub-contents">
-          <table>
-            <tbody>
-              <tr>
-                <td class="sub-height"><p>Height:&nbsp;<span>237534</span></p></td>
-                <td class="sub-miner"><p>Miner:&nbsp;<span>2iu3498gg9ngn3eg934gun389g37534</span></p></td>
-                <td class="sub-reward"><p>Reward:&nbsp;<span>237534</span></p></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <!-- SUB LOOP END ############## -->
-
-      </div>
-      <!-- MAIN LOOP END ########################################## -->
-
-
-
-      <!-- MAIN LOOP START ########################################## -->
-      <div class="table-content">
-        <table class="top-table-content">
-          <tbody>
-            <tr>
-              <td class="top-hash"><p>324f0j9g0453g9h3g9h34f340g3j04gf9j34</p></td>
-              <td class="top-miner"><p>23jkrf2kjf43423</p></td>
-            </tr>
-          </tbody>
-        </table>
-        
-        <table class="mid-table-content">
-          <tbody>
-            <tr>
-              <td><p><icon name='plus-square-o' scale='1'></icon>&nbsp;0&nbsp;Uncles</p></td>
-              <td><p><icon name='cubes' scale='1'></icon>&nbsp;2938476</p></td>
-              <td><p><icon name='exchange' scale='1'></icon>&nbsp;123</p></td>
-              <td><p><icon name='credit-card-alt' scale='1'></icon>&nbsp;5.2341&nbsp;ETH</p></td>
-            </tr>
-          </tbody>
-        </table>
-
-        <!-- SUB LOOP START ############## -->
-        <div class="sub-contents">
-          <table>
-            <tbody>
-              <tr>
-                <td class="sub-height"><p>Height:&nbsp;<span>237534</span></p></td>
-                <td class="sub-miner"><p>Miner:&nbsp;<span>2iu3498gg9ngn3eg934gun389g37534</span></p></td>
-                <td class="sub-reward"><p>Reward:&nbsp;<span>237534</span></p></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>        
-        <div class="sub-contents">
-          <table>
-            <tbody>
-              <tr>
-                <td class="sub-height"><p>Height:&nbsp;<span>237534</span></p></td>
-                <td class="sub-miner"><p>Miner:&nbsp;<span>2iu3498gg9ngn3eg934gun389g37534</span></p></td>
-                <td class="sub-reward"><p>Reward:&nbsp;<span>237534</span></p></td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="sub-contents">
+            <table>
+              <tbody>
+                <tr>
+                  <td class="sub-height"><p>Height:&nbsp;<span>237534</span></p></td>
+                  <td class="sub-miner"><p>Miner:&nbsp;<span>2iu3498gg9ngn3eg934gun389g37534</span></p></td>
+                  <td class="sub-reward"><p>Reward:&nbsp;<span>237534</span></p></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
         <!-- SUB LOOP END ############## -->
 
@@ -173,11 +83,28 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import store from '@/states'
+import {common} from '@/libs'
+
 export default Vue.extend({
-  name: 'block-container',
+  name: 'TablesLatestBlocks',
   data () {
     return {
-
+      store: store,
+      common: common
+    }
+  },
+  computed: {
+    blocks () {
+      return store.getters.getBlocks.slice(0, 50)
+    }
+  },
+  methods: {
+    uncleCount (data) {
+      // Returns uncle count
+      if (data) {
+        return Object.keys(data).length
+      } else { return 0 }
     }
   }
 })
