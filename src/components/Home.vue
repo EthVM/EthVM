@@ -29,6 +29,10 @@
         </div>
       </div>
       <!-- end.container for three block on top -->
+      <ScatterChart>
+      </ScatterChart>
+      <LineChart>
+      </LineChart>
       <BarChart>
       </BarChart>
 
@@ -107,7 +111,6 @@
 import Vue from 'vue'
 import store from '@/states'
 import chartOptions from '@/sampleData/chartData.json'
-
 export default Vue.extend({
   name: 'FrontPage',
   data () {

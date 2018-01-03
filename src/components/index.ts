@@ -18,8 +18,8 @@ import * as Icon from 'vue-awesome'
 import 'vue-awesome/icons'
 
 import BarChart from '@/components/Chart/BarChart'
-
-
+import LineChart from '@/components/Chart/LineChart'
+import ScatterChart from '@/components/Chart/ScatterChart'
 /* eslint-disable no-new */
 Vue.component('icon', Icon)
 Vue.component('Header', Header)
@@ -37,6 +37,8 @@ Vue.component('IndividualTransaction', IndividualTransaction)
 Vue.component('SingleAccount', SingleAccount)
 
 Vue.component('BarChart', BarChart)
+Vue.component('LineChart', LineChart)
+Vue.component('ScatterChart', ScatterChart)
 
 
 
