@@ -27,7 +27,7 @@
         <table class="mid-table-content">
           <tbody>
             <tr>
-              <td><p><icon name='plus-square-o' scale='1'></icon>&nbsp;{{uncleCount(block.getUncles())}}&nbsp;Uncles</p></td>
+              <td><p><icon v-show="uncleCount(block.getUncles()) != 0" name='plus-square-o' scale='1'></icon>&nbsp;{{uncleCount(block.getUncles())}}&nbsp;Uncles</p></td>
               <td><p><icon name='cubes' scale='1'></icon>&nbsp;{{block.getNumber().toNumber()}}</p></td>
               <td><p><icon name='exchange' scale='1'></icon>&nbsp;{{block.getTransactionCount()}}</p></td>
               <td><p><icon name='credit-card-alt' scale='1'></icon>&nbsp;<span>{{block.getTotalBlockReward().toEth()}}</span>&nbsp;ETH</p></td>
