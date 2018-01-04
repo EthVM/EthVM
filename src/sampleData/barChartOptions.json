@@ -12,5 +12,10 @@
       }
     }],
     "xAxes": [{"stacked": true}]
+  },
+  "tooltips": {
+    "backgroundColor": "#686868",
+    "titleFontColor": "white",
+    "bodyFontColor": "white"
   }
 }

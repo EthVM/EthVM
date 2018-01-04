@@ -10,16 +10,27 @@
   "responsive": true,
   "scales": {
     "yAxes": [{ 
-      "stacked": true,
       "ticks": {
         "beginAtZero": true
       }
-    }],
-    "xAxes": [{"stacked": true}]
+    }]
   },
   "tooltips": {
-    "backgroundColor": "white",
-    "titleFontColor": "#686868",
-    "bodyFontColor": "#686868"
-  }
+    "backgroundColor": "#686868",
+    "titleFontColor": "white",
+    "bodyFontColor": "white"
+  },
+  "elements": {
+      "line":{
+        "borderColor": "#FBA893"         
+      },
+      "point": {
+        "backgroundColor": "#FBA893",
+          "hoverRadius": 8, 
+          "borderColor": "#FBA893",
+          "borderWidth": 5 
+        }     
+               
+    }
+  
 }

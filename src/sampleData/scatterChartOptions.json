@@ -1,0 +1,44 @@
+{
+	"title": {
+   		"display": true,
+    	"padding": 15,
+    	"text": "Pending Tx"
+  	},
+	"legend": {
+      "display":false
+  	},
+  "responsive": true,
+	"scales": {
+    	"xAxes": [{
+            "type": "linear",
+            "position": "bottom",
+            "title": "Tx Number"
+        }],
+        "yAxes": [{ 
+
+    	}]
+    },
+    "tooltips": {
+    	"backgroundColor": "#686868",
+    	"titleFontColor": "white",
+    	"bodyFontColor": "white"
+  	},
+  	"layout": {
+    	"padding": {
+      		"top": 5
+    	}
+  	},
+  	"elements": {
+  		"line":{
+  			"fill":false,
+  			"borderColor": "purple"        	
+  		},
+  		"point": {
+  			"backgroundColor": "purple",
+        	"hoverRadius": 8, 
+        	"borderColor": "purple",
+        	"borderWidth": 5 
+        } 		
+          		 
+  	}
+}
