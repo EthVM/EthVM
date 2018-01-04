@@ -1,7 +1,11 @@
 {
   "title": {
     "display": true,
+    "padding": 15,
     "text": "Average Tx Fees"
+  },
+  "legend": {
+      "display":false
   },
   "responsive": true,
   "scales": {
@@ -12,5 +16,10 @@
       }
     }],
     "xAxes": [{"stacked": true}]
+  },
+  "tooltips": {
+    "backgroundColor": "white",
+    "titleFontColor": "#686868",
+    "bodyFontColor": "#686868"
   }
 }
