@@ -1,0 +1,16 @@
+{
+  "title": {
+    "display": true,
+    "text": "Average Tx Fees"
+  },
+  "responsive": true,
+  "scales": {
+    "yAxes": [{ 
+      "stacked": true,
+      "ticks": {
+        "beginAtZero": true
+      }
+    }],
+    "xAxes": [{"stacked": true}]
+  }
+}

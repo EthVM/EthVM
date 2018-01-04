@@ -3,7 +3,7 @@
     "datasets": [
     {
       "label": "Sucessfull",
-      "backgroundColor": "#13A9EF",
+      "backgroundColor": "#6dcff6",
       "data": [420, 300, 400, 201, 100, 112, 300, 233, 430, 620]
     },
     {
