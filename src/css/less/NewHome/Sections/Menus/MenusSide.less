@@ -1,0 +1,130 @@
+@import '~lessPath/NewHome/globalVars';
+
+
+.menus-side{
+
+    width: 200px;
+    padding: 40px;
+
+    ul{
+        list-style-type: none;
+        margin: 0px;
+        padding: 0px; 
+
+
+
+        li{
+            >:nth-child(1) p{
+                padding-top: 0px;
+            }
+
+            &.selected p{
+                color: @menu-side-font-color-selected;
+            }
+
+            p{
+                margin: 0px;
+                padding: 15px 0px 5px 0px;
+                font-weight: @menu-side-font-weight;
+                cursor: pointer;
+
+                &:hover{
+                    color: @menu-side-font-color-hover;
+                }
+                            
+            }
+
+            ul{
+                li p{
+                    font-size: @menu-side-sub-font-size;
+                    margin: 0px;
+                    padding: 5px 0px 5px 15px;
+
+                }
+            }
+
+
+
+        }
+
+
+    }
+
+}
+
+
+
+
+@media screen and (max-width: 1199px){
+
+
+    a,
+    a:hover,
+    a:visited,
+    a:active,
+    a:focus {
+        text-decoration: none;
+        color: white !important;
+        
+        &:hover{
+            
+        }
+    }
+
+    .menus-side{
+        user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -o-user-select: none;
+
+        width: 100% !important;
+        text-align: right;
+        text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.10);;
+
+        ul{
+
+            li{
+                >:nth-child(1) p{
+                    padding-top: 10px;
+                }
+
+                &.selected p{
+                    color: yellow;
+                    border: 1px solid rgba(255, 255, 255, 1);
+                    border-radius: 3px;
+                    
+                    //background-color: rgba(255, 255, 255, 0.11);
+                }
+
+                p{
+                    margin: 0px;
+                    padding: 10px 20px 10px 0px;
+                    font-weight: @menu-side-font-weight;
+                    cursor: pointer;
+                    font-size: 20px;
+                    &:hover{
+                        color: @menu-side-font-color-hover;
+                    }
+
+                }
+
+                ul{
+                    li p{
+                        font-size: @menu-side-sub-font-size;
+                        margin: 0px;
+                        padding: 10px 20px;
+
+
+                    }
+                }
+
+            }/* li */
+        }/* ul */
+
+
+    }/* .menus-side */
+}
+
+
+
