@@ -51,6 +51,13 @@ Vue.component('icon', Icon)
     import FramesAbout from "@/components/NewHome/Frames/FramesAbout"
     Vue.component('FramesAbout', FramesAbout)
 
+    import FramesFAQ from "@/components/NewHome/Frames/FramesFAQ"
+    Vue.component('FramesFAQ', FramesFAQ)
+
+    import FramesContact from "@/components/NewHome/Frames/FramesContact"
+    Vue.component('FramesContact', FramesContact)
+
+
 
 
     /* Menu ---------------------- */
@@ -103,6 +110,19 @@ Vue.component('icon', Icon)
     /* Footers ---------------------- */
     import FootersBottom from "@/components/NewHome/Sections/Footers/FootersBottom"
     Vue.component('FootersBottom', FootersBottom)
+
+
+
+
+    /* Info  ---------------------- */
+    import FAQ from "@/components/NewHome/Sections/Info/FAQ"
+    Vue.component('FAQ', FAQ)
+    
+    import About from "@/components/NewHome/Sections/Info/About"
+    Vue.component('About', About)
+    
+    import Contact from "@/components/NewHome/Sections/Info/Contact"
+    Vue.component('Contact', Contact)
 
 
 

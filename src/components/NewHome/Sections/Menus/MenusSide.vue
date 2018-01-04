@@ -11,9 +11,9 @@
             <li><p>Transactions</p></li>
           </ul>
         </li>
-        <li><p>About</p></li>
-        <li><p>Contact</p></li>
-        <li><p>FAQ</p></li>
+        <li><p><a href="/about">About</a></p></li>
+        <li><p><a href="/contact">Contact</a></p></li>
+        <li><p><a href="/faq">FAQ</a></p></li>
     </ul>
   </div>
 </template>

@@ -1,19 +1,19 @@
 <template>
-  <div class="about">
-
+  <div class="faq">
+    
     <div class="row">
       <div class="col-md-12">
-        about
+        FAQ
       </div>
     </div>
 
-  </div>
+  </div><!-- .faq -->
 </template>
 
 <script lang="ts">
   import Vue from 'vue'
   export default Vue.extend({
-    name: 'FramesAbout',
+    name: 'FramesFAQ',
     data () {
       return {
 
@@ -23,5 +23,5 @@
 </script>
 
 <style scoped lang="less">
-  @import "~lessPath/NewHome/Sections/Info/InfoAbout.less";
+  @import "~lessPath/NewHome/Sections/Info/InfoFAQ.less";
 </style>

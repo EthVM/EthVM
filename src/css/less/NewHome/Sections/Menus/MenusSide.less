@@ -56,7 +56,28 @@
 
 
 @media screen and (max-width: 1199px){
+
+
+    a,
+    a:hover,
+    a:visited,
+    a:active,
+    a:focus {
+        text-decoration: none;
+        color: white !important;
+        
+        &:hover{
+            
+        }
+    }
+
     .menus-side{
+        user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -o-user-select: none;
+
         width: 100% !important;
         text-align: right;
         text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.10);;
@@ -94,21 +115,15 @@
                         margin: 0px;
                         padding: 10px 20px;
 
+
                     }
                 }
 
+            }/* li */
+        }/* ul */
 
 
-            }
-
-
-        }
-
-
-    }
-
-
-
+    }/* .menus-side */
 }
 
 
