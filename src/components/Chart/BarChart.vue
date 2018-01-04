@@ -1,7 +1,7 @@
 <template>
   <div class="chart-area">
         <div class="chart-content">
-          <vue-chart type="bar" :data="chartData"></vue-chart>
+          <vue-chart type="bar" :data="chartData" :options="chartOptions"></vue-chart>
         </div>
   </div>
 </template>
@@ -10,8 +10,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import VueChart from 'vue-chart-js'
-import newData from '@/sampleData/databarchart.json'
-import newOptions from '@/sampleData/dataBarChartOptions.json'
+import newData from '@/sampleData/barChartData.json'
+import newOptions from '@/sampleData/barChartOptions.json'
 export default Vue.extend({
   name: 'BarChart',
   components: {
@@ -19,7 +19,7 @@ export default Vue.extend({
   },
   data: () => ({
     chartData: newData,
-    options: newOptions
+    chartOptions: newOptions
   })
 
 })

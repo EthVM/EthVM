@@ -2,13 +2,13 @@
   "labels": ["Block 1", "Block 2", "Block 3","Block 4","Block 5","Block 6","Block 7","Block 8","Block 9","Block 10"],
     "datasets": [
     {
-      "label": "Failed",
-      "backgroundColor": "#FBA893",
-      "data": [10, 32, 56, 84, 34, 11, 49, 65, 20, 30]
-    },
-    {
       "label": "Sucessfull",
       "backgroundColor": "#13A9EF",
       "data": [420, 300, 400, 201, 100, 112, 300, 233, 430, 620]
+    },
+    {
+      "label": "Failed",
+      "backgroundColor": "#FBA893",
+      "data": [10, 32, 56, 84, 34, 11, 49, 65, 20, 30]
     }]
 }
