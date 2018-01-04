@@ -1,13 +1,19 @@
 <template>
   <div id="MenusSide" class="menus-side">
     <ul>
-        <li>Home</li>
-        <li>Blocks</li>
-        <li>Transactions</li>
-        <li>Charts & Stats</li>
-        <li>About</li>
-        <li>Contact</li>
-        <li>FAQ</li>
+        <li class="selected"><a href="/"><p>Home</p></a></li>
+        <li><p>Blocks</p></li>
+        <li><p>Transactions</p></li>
+        <li>
+          <p>Charts & Stats</p>
+          <ul>
+            <li><p>Blocks</p></li>
+            <li><p>Transactions</p></li>
+          </ul>
+        </li>
+        <li><p>About</p></li>
+        <li><p>Contact</p></li>
+        <li><p>FAQ</p></li>
     </ul>
   </div>
 </template>

@@ -7,7 +7,7 @@
       <table class="table-header">
         <thead>
           <tr>
-            <td></td>
+            <td>Status</td>
             <td>From</td>
             <td>Amount</td>
             <td>To</td>
@@ -16,12 +16,12 @@
       </table>
 
       <!-- MAIN LOOP START ########################################## -->
-      <div class="table-content">
+      <div class="table-content" v-for="tx in transactions" v-bind:key="tx.getHash().toString()">
         <table class="top-table-content">
           <tbody>
             <tr>
               <td><p>Fail</p></td>
-              <td class="top-hash"><p>324f0j9g0453g9h3g9h34f340g3j04gf9j34</p></td>
+              <td class="top-hash"><p>{{tx.getHash().toString()}}</p></td>
               <td class="top-miner"><p>0.234&nbsp;ETH</p></td>
               <td class="top-hash"><p>324f0j9g0453g9h3g9h34f340g3j04gf9j34</p></td>
             </tr>
@@ -31,10 +31,10 @@
         <table class="mid-table-content">
           <tbody>
             <tr>
-              <td><p><icon name='plus-square-o' scale='1'></icon>&nbsp;0&nbsp;Uncles</p></td>
-              <td><p><icon name='cubes' scale='1'></icon>&nbsp;2938476</p></td>
-              <td><p><icon name='exchange' scale='1'></icon>&nbsp;123</p></td>
-              <td><p><icon name='credit-card-alt' scale='1'></icon>&nbsp;5.2341&nbsp;ETH</p></td>
+              <td><icon name='plus-square-o' scale='1'></icon>&nbsp;<p>0&nbsp;Sub</p></td>
+              <td class="mid-hash-value"><icon name='hashtag' scale='1'></icon>&nbsp;<p>2ljknruegn897h43938476</p></td>
+              <td><icon name='tint' scale='1'></icon>&nbsp;<p>4523123&nbsp;Gas</p></td>
+              <td><icon name='database' scale='1'></icon>&nbsp;<p>55&nbsp;GWEI</p></td>
             </tr>
           </tbody>
         </table>
@@ -74,11 +74,28 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import store from '@/states'
+import { common } from '@/libs'
 export default Vue.extend({
-  name: 'block-container',
+  name: 'TablesLastTransactions',
   data () {
     return {
-
+      store: store,
+      txSplice: [],
+      common: common
+    }
+  },
+  mounted () {
+    // let _this = this
+    this.$nextTick(function () {
+      this.$socket.emit('pastData', ''
+      )
+    }
+    )
+  },
+  computed: {
+    transactions () {
+      return store.getters.getTxs.slice(0, 50)
     }
   }
 })

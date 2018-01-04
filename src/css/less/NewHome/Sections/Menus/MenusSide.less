@@ -1,3 +1,4 @@
+@import '~lessPath/NewHome/globalVars';
 
 
 .menus-side{
@@ -10,15 +11,43 @@
         margin: 0px;
         padding: 0px; 
 
+
         li{
-            margin: 0px;
-            padding: 0px 0px 20px 0px;
-            font-weight: 600;
+            >&:nth-child(1) p{
+                padding-top: 0px;
+            }
+
+            &.selected p{
+                color: @menu-side-font-color-selected;
+            }
+
+            p{
+                margin: 0px;
+                padding: 15px 0px 5px 0px;
+                font-weight: @menu-side-font-weight;
+                cursor: pointer;
+
+                &:hover{
+                    color: @menu-side-font-color-hover;
+                }
+                            
+            }
+
+            ul{
+                li p{
+                    font-size: @menu-side-sub-font-size;
+                    margin: 0px;
+                    padding: 5px 0px 5px 15px;
+
+                }
+            }
+
+
+
         }
+
+
     }
 
 }
-
-
-
 

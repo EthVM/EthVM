@@ -9,7 +9,7 @@
             <MenusSide></MenusSide>
           </div>
 
-          <div class="sections col-md-9 col-lg-10">
+          <div class="sections col-md-12 col-lg-10">
             <div class="section-padding">
               <FramesAbout v-if="pageName == 'about'"></FramesAbout>
               <FramesHome v-else></FramesHome>

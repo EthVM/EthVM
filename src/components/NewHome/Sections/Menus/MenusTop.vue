@@ -1,6 +1,9 @@
 <template>
   <div id="MenusTop" class="menus-top">
-    <p>Menus Top</p>
+    
+    <dir>
+      <MenusSide></MenusSide>
+    </dir>
     <div class="search-block">
       <input type="text" class="form-control">
     </div>
