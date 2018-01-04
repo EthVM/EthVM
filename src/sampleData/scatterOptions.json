@@ -1,0 +1,8 @@
+{
+	"scales": {
+    	"xAxes": [{
+            "type": "linear",
+            "position": "bottom"
+        }]
+    }
+}
