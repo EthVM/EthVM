@@ -1,12 +1,26 @@
 <template>
   <div id="MenusTop" class="menus-top">
-    
-    <dir>
-      <MenusSide></MenusSide>
-    </dir>
-    <div class="search-block">
-      <input type="text" class="form-control">
+    <div class="top-block">
+      <div class="logo-block">
+        <img src="/img/logo.png">
+      </div>
+
+      <div class="menu-icon-container">
+        <div class="show-icon-block" v-if="menuShow == false" v-on:click="menuShow = true">
+          <icon name='bars' scale='1'></icon>
+        </div>
+        <div class="hide-icon-block" v-if="menuShow" v-on:click="menuShow = false">
+          <icon name='times' scale='1'></icon>
+        </div>
+      </div>
     </div>
+
+    <div v-if="menuShow" class="menu-side">
+      <MenusSide></MenusSide>
+    </div>
+
+
+
   </div>
 </template>
 
@@ -16,7 +30,7 @@
     name: 'MenusTop',
     data () {
       return {
-
+        menuShow: false
       }
     }
   })
