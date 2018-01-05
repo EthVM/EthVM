@@ -101,7 +101,7 @@ class Tx {
 		if(!this.cache.s) this.cache.s = common.Hex(this.tx.s)
 		return this.cache.s
 	}
-	getSatus(): boolean {
+	getStatus(): boolean {
 		return this.tx.status
 	}
 }

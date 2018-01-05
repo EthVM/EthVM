@@ -5,18 +5,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-export default Vue.extend({
-  name: 'app'
-})
+  import Vue from 'vue'
+  export default Vue.extend({
+    name: 'app'
+  })
 </script>
 
 <style lang="less">
-@import "~lessPath/global.less";
-</style>
-
-<style scoped lang="less">
-@import "~lessPath/app.less";
+  @import "~lessPath/NewHome/global.less";
 </style>
 
 

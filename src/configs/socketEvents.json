@@ -1,3 +1,9 @@
 {
-    "join": "join"
+    "join": "join",
+    "newTx": "NEW_TX",
+    "newBlock": "NEW_BLOCK",
+    "pastTxs": "pastTxs",
+    "pastBlocks": "pastBlocks",
+    "setLatestTx": "SET_LATEST_TX",
+    "setLatestBlock": "SET_LATEST_BLOCK"
 }

@@ -26,7 +26,7 @@
               <tr>
                 <td>Timestamp</td>
                 <td>
-                  <p>{{block.getTimestamp().toDate().toString()}}</p>
+                  <p>{{block.getTimestamp().toDate().toString()}} (<timeago :since="block.getTimestamp().toDate()" :auto-update="10"></timeago>)</p>
                 </td>
               </tr>
               <tr>

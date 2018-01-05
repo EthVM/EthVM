@@ -3,85 +3,45 @@
   <p class="table-title">
     <icon name='refresh'
           scale='1'></icon> Latest Transactions</p>
-
-
-    <paginate name="txs" :list="tableData" :per="100">
-      <!-- FOR LOOP -->
-      <div class="data-block-loop"
-           v-for="tx in paginated('txs')"
-           v-bind:key="tx.getHash().toString()">
-
-
-        <!-- .data-block-1 -->
-        <div class="data-block-1">
-          <div>Hash <span><a :href="'/tx/'+tx.getHash().toString()">{{tx.getHash().toString()}}</a></span></div>
-          <div>Gas <span>{{tx.getGasUsed().toNumber()}}</span></div>
-          <div>Gas Price <span>{{tx.getGasPrice().toGWei()}} gwei</span></div>
-          <div>Block <span>{{tx.getBlockNumber().toNumber()}}</span></div>
-        </div>
-        <!-- .data-block-1 -->
-        <!-- .data-block-2 -->
-        <div class="data-block-2">
-          <div>
-            <h1>From</h1>
-            <p>{{tx.getFrom().toString()}}</p>
-          </div>
-          <div>
-            <div class="data-icon-container">
-              <icon name='long-arrow-right'
-                    scale='1'></icon> <span></span>
-            </div>
-            <p class="amount">{{tx.getValue().toEth()}}&nbsp;ETH</p>
-          </div>
-          <div>
-            <h1>To</h1>
-            <p>{{tx.getTo().toString()}}</p>
-          </div>
-        </div>
-
-
-
-        <!-- .data-block-2 -->
-        <!--sub txs -->
-        <!--  <div class="data-block-sub" hidden>
-          <div v-for="transfer in tx.getTrace().transfers"
-               v-if="tx.getTrace() && transfer.value != '0x'">
-            <div class="sub-icon">
-              <icon name='code-fork'
-                    scale='1'></icon>
-            </div>
-            <div>
-              <h1>From</h1>
-              <p>{{transfer.from}}</p>
-            </div>
-            <div>
-              <h1>To</h1>
-              <p>{{transfer.to}}</p>
-            </div>
-            <div>
-              <h1>Value</h1>
-              <p>{{common.EthValue(transfer.value).toEth()}}&nbsp;ETH</p>
-            </div>
-            <div>
-              <h1>Type</h1>
-              <p>{{transfer.op}}</p>
-            </div>
-          </div>
-        </div> -->
-        <!--sub txs -->
-
-
-
-
-
+  <paginate name="pTxs"
+            :list="txs"
+            :per=per>
+    <!-- FOR LOOP -->
+    <div class="data-block-loop"
+         v-for="tx in paginated('pTxs')"
+         v-bind:key="tx.getHash().toString()">
+      <!-- .data-block-1 -->
+      <div class="data-block-1">
+        <div>Hash <span><a :href="'/tx/'+tx.getHash().toString()">{{tx.getHash().toString()}}</a></span></div>
+        <div>Gas <span>{{tx.getGasUsed().toNumber()}}</span></div>
+        <div>Gas Price <span>{{tx.getGasPrice().toGWei()}} gwei</span></div>
+        <div>Block <span>{{tx.getBlockNumber().toNumber()}}</span></div>
       </div>
-      <!-- .data-block-loop -->
-    </paginate>
-
-    <div class="paginate-container">
-      <paginate-links for="txs"></paginate-links>
+      <!-- .data-block-1 -->
+      <!-- .data-block-2 -->
+      <div class="data-block-2">
+        <div>
+          <h1>From</h1>
+          <p>{{tx.getFrom().toString()}}</p>
+        </div>
+        <div>
+          <div class="data-icon-container">
+            <icon name='long-arrow-right'
+                  scale='1'></icon> <span></span>
+          </div>
+          <p class="amount">{{tx.getValue().toEth()}}&nbsp;ETH</p>
+        </div>
+        <div>
+          <h1>To</h1>
+          <p>{{tx.getTo().toString()}}</p>
+        </div>
+      </div>
     </div>
-
+    <!-- .data-block-loop -->
+  </paginate>
+  <div class="paginate-container">
+    <paginate-links for="pTxs"></paginate-links>
+  </div>
 </div>
 <!-- .standard-table-1 -->
 
@@ -89,59 +49,54 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import store from '@/states'
-import { common, Tx } from '@/libs'
-
+import { Tx } from '@/libs'
+import { txLayout } from '@/typeLayouts'
+import sEvents from '@/configs/socketEvents.json'
+import Visibility from 'visibilityjs'
 import VuePaginate from 'vue-paginate'
 Vue.use(VuePaginate)
 
 export default Vue.extend({
-  name: 'block-container',
-  props: [
-    'maxItems'
-  ],
+  name: 'tx-pagination',
+  props: {
+    maxItems: Number,
+    per: Number
+  },
   data () {
     return {
-      store: store,
-      txSplice: [],
-      common: common,
-      txs: null,
-      tableData: [],
-      paginate: ['txs']
+      txs: [] as Array<txLayout>,
+      paginate: ['pTxs']
     }
   },
-  mounted () {
+  beforeMount () {
     let _this = this
-
-    this.$store.subscribe((mutation, state) => {
-      console.log(mutation)
-      if (mutation.type === 'NEW_TX') {
-        if (Array.isArray(mutation.payload)) {
-          mutation.payload.forEach((_tx) => {
-            _this.tableData.push(new Tx(_tx))
-          })
-        } else {
-          _this.tableData.push(new Tx(mutation.payload))
-        }
+    _this.$socket.emit(sEvents.pastTxs, '', (_txs) => {
+      _txs.forEach((_tx) => {
+        _this.txs.push(new Tx(_tx))
+      })
+    })
+  },
+  created () {
+    let _this = this
+    _this.$eventHub.$on(sEvents.newTx, (_tx) => {
+      if (Visibility.state() === 'visible') {
+        _this.txs.push(_tx)
       }
     })
-
-    this.$nextTick(function () {
-      this.$socket.emit('pastData', '')
-    }
-    )
+  },
+  beforeDestroy () {
+    this.$eventHub.$off(sEvents.newTx)
   },
   computed: {
     transactions () {
-      console.log('=====> Running')
-      return store.getters.getTxs.slice(0, this.maxItems)
+      if (this.txs.length > this.maxItems) this.txs = this.txs.slice(0, this.maxItems)
+      return this.txs
     }
   }
-
 })
 </script>
 
-<style lang="less" scoped>
+<style lang="less" scoped="">
 @import "~lessPath/animations.less";
 @import '~lessPath/standardTables';
 .data-block-sub {
@@ -241,7 +196,4 @@ export default Vue.extend({
     }
   }
 }
-
-
-
 </style>

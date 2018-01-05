@@ -158,7 +158,7 @@
                 <tr>
                   <td>Satus</td>
                   <td>
-                    <p>{{tx.getSatus().toString()}}</p>
+                    <p>{{tx.getStatus().toString()}}</p>
                   </td>
                 </tr>
 
