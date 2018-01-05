@@ -37,7 +37,15 @@
         }     
                
     },
-    "scaleShowLabels": false
-
-  
+    "scaleShowLabels": false,
+    
+    "layout": {
+    	"padding": {  
+        	"left": 5,
+       		"right": 5,
+        	"top": 5,            
+        	"bottom": 0
+    	}
+  	}
+ 
 }

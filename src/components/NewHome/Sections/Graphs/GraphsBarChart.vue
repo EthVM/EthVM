@@ -12,6 +12,7 @@ import Vue from 'vue'
 import VueChart from 'vue-chart-js'
 import newData from '@/sampleData/barChartData.json'
 import newOptions from '@/sampleData/barChartOptions.json'
+
 export default Vue.extend({
   name: 'BarChart',
   components: {

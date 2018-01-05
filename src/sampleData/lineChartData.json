@@ -4,7 +4,7 @@
     {
     	"label": "Av. Fees",
         "backgroundColor": "#acedf0",
-        "pointBackgroundColor": "#FBA893",
+        "pointBackgroundColor": "#49e3ea",
         "data": [10, 32, 56, 84, 420, 300, 233, 430, 620, 34, 11, 49, 65, 20, 301,400, 201, 100, 112, 300]
     }]
 }

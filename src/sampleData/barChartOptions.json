@@ -19,6 +19,19 @@
     "titleFontColor": "white",
     "bodyFontColor": "white"
   },
-  "barShowLabels": true
+  "barShowLabels": true,
+  "legend": {
+      "display":false
+
+  },
+  "layout": {
+      "padding": {  
+          "left": 5,
+          "right": 5,
+          "top": 5,            
+          "bottom": 0
+      }
+  }
+
   
 }

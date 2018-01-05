@@ -2,7 +2,8 @@
   "title": {
     "display": true,
     "padding": 5,
-    "text": "Average Tx Fees"
+    "text": "Average Tx Fees",
+    "lineHeight": 1
   },
   "legend": {
       "display":false
@@ -26,17 +27,23 @@
   },
   "elements": {
       "line":{
-        "borderColor": "#FBA893"         
+        "borderColor": "#49e3ea"         
       },
       "point": {
-        "backgroundColor": "#FBA893",
+        "backgroundColor": "#49e3ea",
           "hoverRadius": 6, 
-          "borderColor": "#FBA893",
+          "borderColor": "#49e3ea",
           "borderWidth": 2 
         }     
                
-    },
-    "scaleShowLabels": false
-
-  
+  },
+  "scaleShowLabels": false,
+  "layout": {
+    "padding": {  
+        "left": 5,
+        "right": 5,
+        "top": 5,            
+        "bottom": 0
+    }
+  }
 }
