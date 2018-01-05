@@ -129,9 +129,16 @@ Vue.component('icon', Icon)
 
 
 
+<<<<<<< HEAD
+
+
+
+
+=======
     /* SinglePages  ---------------------- */
     import SinglePagesIndividualTransaction from "@/components/NewHome/Sections/SinglePages/SinglePagesIndividualTransaction"
     Vue.component('SinglePagesIndividualTransaction', SinglePagesIndividualTransaction)
     
+>>>>>>> singlepages
 
 

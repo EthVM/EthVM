@@ -14,15 +14,17 @@
 
 
         li{
-            >:nth-child(1) p{
+            >:nth-child(1) a p{
                 padding-top: 0px;
             }
 
-            &.selected p{
-                color: @menu-side-font-color-selected;
+            &.selected a p{
+                //color: @menu-side-font-color-selected;
+                color: #008ab7;
             }
 
-            p{
+            a p{
+                font-size: 17px;
                 margin: 0px;
                 padding: 15px 0px 5px 0px;
                 font-weight: @menu-side-font-weight;
@@ -39,6 +41,7 @@
                     font-size: @menu-side-sub-font-size;
                     margin: 0px;
                     padding: 5px 0px 5px 15px;
+                    font-size: 14px;
 
                 }
             }
@@ -53,6 +56,21 @@
 }
 
 
+@media screen and (min-width: 1200px){
+
+
+    a,
+    a:hover,
+    a:visited,
+    a:active,
+    a:focus {
+        text-decoration: none;
+        color: @menu-side-font-color-selected;
+        
+    }
+
+
+}
 
 
 @media screen and (max-width: 1199px){
@@ -67,7 +85,7 @@
         color: white !important;
         
         &:hover{
-            
+            color: white !important;
         }
     }
 
@@ -85,19 +103,19 @@
         ul{
 
             li{
-                >:nth-child(1) p{
+                >:nth-child(1) a p{
                     padding-top: 10px;
                 }
 
-                &.selected p{
+                &.selected a p{
                     color: yellow;
                     border: 1px solid rgba(255, 255, 255, 1);
-                    border-radius: 3px;
+                    border-radius: 10px;
                     
                     //background-color: rgba(255, 255, 255, 0.11);
                 }
 
-                p{
+                a p{
                     margin: 0px;
                     padding: 10px 20px 10px 0px;
                     font-weight: @menu-side-font-weight;
@@ -110,7 +128,7 @@
                 }
 
                 ul{
-                    li p{
+                    li a p{
                         font-size: @menu-side-sub-font-size;
                         margin: 0px;
                         padding: 10px 20px;
