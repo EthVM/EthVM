@@ -30,5 +30,6 @@ export default interface blockLayout {
 	isUncle: boolean;
 	txFees: Buffer;
 	blockReward: Buffer;
+	uncleReward: Buffer;
 	totalBlockReward: Buffer;
 }

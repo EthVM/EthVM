@@ -160,5 +160,9 @@ class Block {
 		if(!this.cache.blockReward) this.cache.blockReward = common.EthValue(this.block.blockReward)
 		return this.cache.blockReward
 	}
+	getUncleReward(): EthValue {
+		if (!this.cache.uncleReward) this.cache.uncleReward = common.EthValue(this.block.uncleReward)
+		return this.cache.uncleReward
+	}
 }
 export default Block
