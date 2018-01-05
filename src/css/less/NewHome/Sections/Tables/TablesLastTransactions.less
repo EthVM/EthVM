@@ -43,12 +43,24 @@
                         td{
                             width: 25%;
                             font-size: @table-font-size-1;
-                            p{
-                                width: 140px;
+                            p span{
+                                display: inline-block;
+                                max-width: 130px;
                                 text-overflow: ellipsis;
-                                overflow: hidden;   
-
+                                overflow: hidden;
+                                vertical-align: top;
                             }
+                        }
+
+                        td.top-hash p span{
+                            max-width: 130px;
+
+                        }
+
+                        td.top-miner p span{
+                            max-width: 90px;
+
+
                         }
                     }
                 }
@@ -65,10 +77,10 @@
                         }
 
                         td{
-                            width: 25%;
+                            width: 33%;
                             font-size: @table-font-size-1;
                             p{
-                                width: 110px;
+                                max-width: 130px;
                                 text-overflow: ellipsis;
                                 overflow: hidden;
                                 display: inline-block;

@@ -14,6 +14,7 @@
               <FramesAbout    v-if="pageName == 'about'"></FramesAbout>
               <FramesFAQ      v-else-if="pageName == 'faq'"></FramesFAQ>
               <FramesContact  v-else-if="pageName == 'contact'"></FramesContact>
+              <FrameIndividualTransaction  v-else-if="pageName == 'tx' && param"></FrameIndividualTransaction>
               <FramesHome     v-else></FramesHome>
             </div>
           </div>
@@ -21,11 +22,10 @@
       </div><!-- .container-fluid -->
     </div><!-- .section-container -->
 
-    
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
-          
+
         </div>
       </div>
     </div>
@@ -45,7 +45,13 @@
     computed: {
       pageName: function () {
         return this.$route.params.pageName
+      },
+      param: function () {
+        return this.$route.params.param
       }
+    },
+    mounted: function () {
+      console.log(this.param)
     }
   })
 </script>
@@ -53,3 +59,5 @@
 <style scoped lang="less">
   @import "~lessPath/NewHome/Frames/FramesMainFrame.less";
 </style>
+
+

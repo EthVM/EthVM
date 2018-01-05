@@ -57,6 +57,9 @@ Vue.component('icon', Icon)
     import FramesContact from "@/components/NewHome/Frames/FramesContact"
     Vue.component('FramesContact', FramesContact)
 
+    import FrameIndividualTransaction from "@/components/NewHome/Frames/FrameIndividualTransaction"
+    Vue.component('FrameIndividualTransaction', FrameIndividualTransaction)
+
 
 
 
@@ -124,5 +127,11 @@ Vue.component('icon', Icon)
     import Contact from "@/components/NewHome/Sections/Info/Contact"
     Vue.component('Contact', Contact)
 
+
+
+    /* SinglePages  ---------------------- */
+    import SinglePagesIndividualTransaction from "@/components/NewHome/Sections/SinglePages/SinglePagesIndividualTransaction"
+    Vue.component('SinglePagesIndividualTransaction', SinglePagesIndividualTransaction)
+    
 
 

@@ -2,18 +2,18 @@
   <div id="MenusSide" class="menus-side">
     <ul>
         <li class="selected"><a href="/"><p>Home</p></a></li>
-        <li><p>Blocks</p></li>
-        <li><p>Transactions</p></li>
+        <li><a href="/"><p>Blocks</p></a></li>
+        <li><a href="/"><p>Transactions</p></a></li>
         <li>
-          <p>Charts & Stats</p>
+          <a href="/"><p>Charts & Stats</p></a>
           <ul>
-            <li><p>Blocks</p></li>
-            <li><p>Transactions</p></li>
+            <li><a href="/"><p>Blocks</p></a></li>
+            <li><a href="/"><p>Transactions</p></a></li>
           </ul>
         </li>
-        <li><p><a href="/about">About</a></p></li>
-        <li><p><a href="/contact">Contact</a></p></li>
-        <li><p><a href="/faq">FAQ</a></p></li>
+        <li><a href="/about"><p>About</p></a></li>
+        <li class="hidden"><a href="/contact"><p>Contact</p></a></li>
+        <li class="hidden"><a href="/faq"><p>FAQ</p></a></li>
     </ul>
   </div>
 </template>

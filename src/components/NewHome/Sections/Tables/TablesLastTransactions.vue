@@ -20,10 +20,10 @@
         <table class="top-table-content">
           <tbody>
             <tr>
-              <td><p v-if="!tx.getStatus()">Fail</p><p v-if="tx.getStatus()">Success</p></td>
-              <td class="top-hash"><p>{{tx.getFrom().toString()}}</p></td>
-              <td class="top-miner"><p>{{tx.getValue().toEth()}} ETH</p></td>
-              <td class="top-hash"><p>{{tx.getTo().toString()}}</p></td>
+              <td><p v-if="!tx.getStatus()"><span>Fail</span></p><p v-if="tx.getStatus()"><span>Success</span></p></td>
+              <td class="top-hash"><p><span>{{tx.getFrom().toString()}}</span></p></td>
+              <td class="top-miner"><p><span>{{tx.getValue().toEth()}}</span>&nbsp;ETH</p></td>
+              <td class="top-hash"><p><span>{{tx.getTo().toString()}}</span></p></td>
             </tr>
           </tbody>
         </table>
@@ -31,7 +31,6 @@
         <table class="mid-table-content">
           <tbody>
             <tr>
-              <td></td>
               <td class="mid-hash-value"><icon name='hashtag' scale='1'></icon>&nbsp;<p><a :href="'/tx/'+tx.getHash().toString()">{{tx.getHash().toString()}}</a></p></td>
               <td><icon name='tint' scale='1'></icon>&nbsp;<p>{{tx.getGasUsed().toNumber()}}&nbsp;Gas</p></td>
               <td><icon name='database' scale='1'></icon>&nbsp;<p>{{tx.getGasPrice().toGWei()}}&nbsp;GWEI</p></td>

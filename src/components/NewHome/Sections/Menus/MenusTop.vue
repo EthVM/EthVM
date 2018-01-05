@@ -2,7 +2,7 @@
   <div id="MenusTop" class="menus-top">
     <div class="top-block">
       <div class="logo-block">
-        <img src="/img/logo.png">
+        <a href="/"><img src="/img/logo.png"></a>
       </div>
 
       <div class="menu-icon-container">
