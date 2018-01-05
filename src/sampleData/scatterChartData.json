@@ -1,59 +1,9 @@
 {
+    "labels": ["15 Min ago", "14 Min ago", "13 Min ago","12 Min ago","11 Min ago","10 Min ago","9 Min ago","8 Min ago","7 Min ago","6 Min ago","5 Min ago","4 Min ago","3 Min ago","2 Min ago","1 Min ago"],
 	"datasets": [{
-        "type": "line",
-        "spanGaps":true,
-        "showLine":true,
         "pointHoverBackgroundColor": "pink",
         "pointHoverBorderColor": "pink",
-    	"data": [{
-                "x": 0,
-                "y": 20
-            }, {
-                "x": 10,
-                "y": 37
-            }, {
-                "x": 15,
-                "y": 50
-            }, {
-                "x": 20,
-                "y": 37
-            }, {
-                "x": 25,
-                "y": 17
-            }, {
-                "x": 30,
-                "y": 50.1
-            }, {
-                "x": 35,
-                "y": 33
-            }, {
-                "x": 40,
-                "y": 27
-            }, {
-                "x": 45,
-                "y": 47
-            }, {
-                "x": 50,
-                "y": 73
-            }, {
-                "x": 55,
-                "y": 11
-            }, {
-                "x": 60,
-                "y": 150
-            }, {
-                "x": 65,
-                "y": 23
-            }, {
-                "x": 70,
-                "y": 74
-            }, {
-                "x": 75,
-                "y": 27
-            }, {
-                "x": 80,
-                "y": 66
-     	}]
+    	"data": [ 20, 37, 50, 37, 17, 51, 33, 25, 47, 73, 12 , 89, 23, 74, 27]
      }]
 
 }

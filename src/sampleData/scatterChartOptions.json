@@ -1,60 +1,43 @@
 {
-	"title": {
-   		"display": true,
-    	"padding": 15,
-    	"text": "Pending Tx",
-    	"horizontalAlign": "right"
-  	},
-	"legend": {
+  "title": {
+    "display": true,
+    "padding": 5,
+    "text": "Pending Tx"
+  },
+  "legend": {
       "display":false
-  	},
+
+  },
   "responsive": true,
-	"scales": {
-    	"xAxes": [{
-            "type": "linear",
-            "position": "bottom",
-            "title": "Tx Number",
-            "ticks":{
-            	"beginAtZero": false
-            },
-            "scaleLabel": {
-        		"display": true,
-        		"labelString": "Time",
-        		"fontColor": "grey"
-      		}
-        }],
-        "yAxes": [{ 
-        	"ticks":{
-            	"beginAtZero": false
-            },
-            "scaleLabel": {
-        		"display": true,
-        		"labelString": "Transactions",
-        		"fontColor": "grey"
-      		}
-    	}]
+  "scales": {
+    "yAxes": [{ 
+      "ticks": {
+        "beginAtZero": true
+      }
+    }],
+    "xAxes": [{
+      "display": false
+    }]
+  },
+  "tooltips": {
+    "backgroundColor": "#686868",
+    "titleFontColor": "white",
+    "bodyFontColor": "white"
+  },
+  "elements": {
+      "line":{
+        "borderColor": "purple",
+        "fill": false        
+      },
+      "point": {
+        "backgroundColor": "purple",
+          "hoverRadius": 6, 
+          "borderColor": "purple",
+          "borderWidth": 2 
+        }     
+               
     },
-    "tooltips": {
-    	"backgroundColor": "#686868",
-    	"titleFontColor": "white",
-    	"bodyFontColor": "white"
-  	},
-  	"layout": {
-    	"padding": {
-      		"top": 5
-    	}
-  	},
-  	"elements": {
-  		"line":{
-  			"fill":false,
-  			"borderColor": "purple"        	
-  		},
-  		"point": {
-  			"backgroundColor": "purple",
-        	"hoverRadius": 8, 
-        	"borderColor": "purple",
-        	"borderWidth": 5 
-        } 		
-          		 
-  	}
+    "scaleShowLabels": false
+
+  
 }

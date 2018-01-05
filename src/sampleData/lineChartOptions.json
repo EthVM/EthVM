@@ -1,11 +1,12 @@
 {
   "title": {
     "display": true,
-    "padding": 15,
+    "padding": 5,
     "text": "Average Tx Fees"
   },
   "legend": {
       "display":false
+
   },
   "responsive": true,
   "scales": {
@@ -13,6 +14,9 @@
       "ticks": {
         "beginAtZero": true
       }
+    }],
+    "xAxes": [{
+      "display": false
     }]
   },
   "tooltips": {
@@ -26,11 +30,13 @@
       },
       "point": {
         "backgroundColor": "#FBA893",
-          "hoverRadius": 8, 
+          "hoverRadius": 6, 
           "borderColor": "#FBA893",
-          "borderWidth": 5 
+          "borderWidth": 2 
         }     
                
-    }
+    },
+    "scaleShowLabels": false
+
   
 }
