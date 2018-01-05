@@ -11,11 +11,16 @@
 
           <div class="sections col-md-12 col-lg-10">
             <div class="section-padding">
-              <FramesAbout    v-if="pageName == 'about'"></FramesAbout>
-              <FramesFAQ      v-else-if="pageName == 'faq'"></FramesFAQ>
-              <FramesContact  v-else-if="pageName == 'contact'"></FramesContact>
-              <FrameIndividualTransaction  v-else-if="pageName == 'tx' && param"></FrameIndividualTransaction>
-              <FramesHome     v-else></FramesHome>
+              <FramesAbout                  v-if="pageName == 'about'">                   </FramesAbout>
+              <FramesFAQ                    v-else-if="pageName == 'faq'">                </FramesFAQ>
+              <FramesContact                v-else-if="pageName == 'contact'">            </FramesContact>
+              
+              <FramesLastTransactions       v-else-if="pageName == 'lasttransactions'">   </FramesLastTransactions>
+              <FramesLatestBlocks           v-else-if="pageName == 'latestblocks'">       </FramesLatestBlocks>
+              
+              <FramesIndividualTransaction  v-else-if="pageName == 'tx' && param">        </FramesIndividualTransaction>
+              
+              <FramesHome                   v-else>                                       </FramesHome>
             </div>
           </div>
         </div>

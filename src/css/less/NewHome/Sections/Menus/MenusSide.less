@@ -11,17 +11,12 @@
         margin: 0px;
         padding: 0px; 
 
-
-
         li{
             >:nth-child(1) a p{
                 padding-top: 0px;
             }
 
-            &.selected a p{
-                //color: @menu-side-font-color-selected;
-                color: #008ab7;
-            }
+            
 
             a p{
                 font-size: 17px;
@@ -33,6 +28,11 @@
                 &:hover{
                     color: @menu-side-font-color-hover;
                 }
+
+                &.selected{
+                //color: @menu-side-font-color-selected;
+                color: #008ab7;
+            }
                             
             }
 
@@ -90,6 +90,8 @@
     }
 
     .menus-side{
+        border-top: 1px solid rgba(255, 255, 255, 0.4);
+
         user-select: none;
         -moz-user-select: none;
         -khtml-user-select: none;
@@ -107,29 +109,26 @@
                     padding-top: 10px;
                 }
 
-                &.selected a p{
-                    color: yellow;
-                    border: 1px solid rgba(255, 255, 255, 1);
-                    border-radius: 10px;
-                    
-                    //background-color: rgba(255, 255, 255, 0.11);
-                }
 
                 a p{
                     margin: 0px;
                     padding: 10px 20px 10px 0px;
                     font-weight: @menu-side-font-weight;
                     cursor: pointer;
-                    font-size: 20px;
+                    font-size: 30px;
                     &:hover{
                         color: @menu-side-font-color-hover;
+                    }
+
+                    &.selected{
+                        color: yellow;
                     }
 
                 }
 
                 ul{
                     li a p{
-                        font-size: @menu-side-sub-font-size;
+                        font-size: 17px;
                         margin: 0px;
                         padding: 10px 20px;
 
