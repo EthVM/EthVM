@@ -2,7 +2,8 @@
 	"title": {
    		"display": true,
     	"padding": 15,
-    	"text": "Pending Tx"
+    	"text": "Pending Tx",
+    	"horizontalAlign": "right"
   	},
 	"legend": {
       "display":false
@@ -12,10 +13,25 @@
     	"xAxes": [{
             "type": "linear",
             "position": "bottom",
-            "title": "Tx Number"
+            "title": "Tx Number",
+            "ticks":{
+            	"beginAtZero": false
+            },
+            "scaleLabel": {
+        		"display": true,
+        		"labelString": "Time",
+        		"fontColor": "grey"
+      		}
         }],
         "yAxes": [{ 
-
+        	"ticks":{
+            	"beginAtZero": false
+            },
+            "scaleLabel": {
+        		"display": true,
+        		"labelString": "Transactions",
+        		"fontColor": "grey"
+      		}
     	}]
     },
     "tooltips": {

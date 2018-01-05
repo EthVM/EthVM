@@ -6,8 +6,8 @@
         "pointHoverBackgroundColor": "pink",
         "pointHoverBorderColor": "pink",
     	"data": [{
-                "x": 5,
-                "y": 21
+                "x": 0,
+                "y": 20
             }, {
                 "x": 10,
                 "y": 37
