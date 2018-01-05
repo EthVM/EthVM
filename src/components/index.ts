@@ -124,16 +124,6 @@ Vue.component('icon', Icon)
     import Contact from "@/components/NewHome/Sections/Info/Contact"
     Vue.component('Contact', Contact)
 
-    /* Charts ---------------------- */
-    import BarChart from '@/components/Chart/BarChart'
-    Vue.component('BarChart', BarChart)
-
-    import LineChart from '@/components/Chart/LineChart'
-    Vue.component('LineChart', LineChart)
-
-    import ScatterChart from '@/components/Chart/ScatterChart'
-    Vue.component('ScatterChart', ScatterChart)
-
 
 
 
