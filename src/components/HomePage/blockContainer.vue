@@ -81,7 +81,7 @@ export default Vue.extend({
   },
   data () {
     return {
-      blocks: new FIFO < Block >(globConfigs.maxTxsInMemory, processBlocks)
+      blocks: new FIFO< Block >(globConfigs.maxTxsInMemory, processBlocks)
     }
   },
   beforeMount () {

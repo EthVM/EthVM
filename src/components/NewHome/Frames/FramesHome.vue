@@ -31,10 +31,10 @@
     <div class="row">
       <div class="col-md-4 block-container">
         <div class="block">
-          <GraphsRealChart></GraphsRealChart>
+         <GraphsRealChart></GraphsRealChart>
         </div>
       </div>
-
+        
       <div class="col-md-4 block-container">
         <div class="block">
           <GraphsBarChart></GraphsBarChart>
