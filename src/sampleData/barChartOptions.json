@@ -11,12 +11,14 @@
         "beginAtZero": true
       }
     }],
-    "xAxes": [{"stacked": true}]
+    "xAxes": [{"stacked": true,
+      "display": false}]
   },
   "tooltips": {
     "backgroundColor": "#686868",
     "titleFontColor": "white",
     "bodyFontColor": "white"
-  }
+  },
+  "barShowLabels": true
   
 }

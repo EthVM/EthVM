@@ -2,7 +2,7 @@
   <div id="GraphsRealChart" class="real-chart">
 
     <div class="graphs">
-      <vue-chart type="scatter" :data="chartData" :options="chartOptions"></vue-chart>
+      <vue-chart type="line" :data="chartData" :options="chartOptions"></vue-chart>
     </div>
 
   </div>
