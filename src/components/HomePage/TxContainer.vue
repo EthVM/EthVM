@@ -82,7 +82,7 @@ export default Vue.extend({
   },
   data () {
     return {
-      txs: new FIFO() < Tx > (globConfigs.maxTxsInMemory, processTxs)
+      txs: new FIFO< Tx >(globConfigs.maxTxsInMemory, processTxs)
     }
   },
   beforeMount () {

@@ -1,24 +1,28 @@
 <template>
   <div id="GraphsLineChart" class="line-chart">
-
-    <p class="block-title">Line Chart</p>
     <div class="graphs">
-      <img src="/img/graph.png">
+      <vue-chart type="line" :data="chartData" :options="newOptions"></vue-chart>
     </div>
 
   </div>
 </template>
 
 <script lang="ts">
-  import Vue from 'vue'
-  export default Vue.extend({
-    name: 'GraphsLineChart',
-    data () {
-      return {
-
-      }
-    }
+import Vue from 'vue'
+import VueChart from 'vue-chart-js'
+import newData from '@/sampleData/lineChartData.json'
+import newOptions from '@/sampleData/lineChartOptions.json'
+export default Vue.extend({
+  name: 'BarChart',
+  components: {
+    VueChart
+  },
+  data: () => ({
+    chartData: newData,
+    newOptions: newOptions
   })
+
+})
 </script>
 
 <style scoped lang="less">

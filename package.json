@@ -18,6 +18,7 @@
         "save-dev": "^2.0.0",
         "visibilityjs": "^1.2.6",
         "vue": "^2.5.2",
+        "vue-chart-js": "^1.4.1",
         "vue-router": "^3.0.1",
         "vue-socket.io": "^2.1.1-a",
         "vuex": "^3.0.1",
