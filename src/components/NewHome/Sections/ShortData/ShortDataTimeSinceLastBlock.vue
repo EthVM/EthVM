@@ -5,7 +5,7 @@
 
     <div class="bottom-block">
       <div class="icon-block"><icon name='clock-o' scale='1'></icon></div>
-      <p class="block-value">20 Sec</p>
+      <p class="block-value">{{seconds}} Sec</p>
     </div>
     
   </div>
@@ -17,9 +17,20 @@
     name: 'ShortDataLastBlock',
     data () {
       return {
-
+        seconds: 0
       }
-    }
+    },
+    mounted () {
+      let parent = this
+      setInterval(() => {
+        if (!this.$store.getters.getLatestBlock) {
+          parent.seconds = 'loading'
+          return
+        }
+        parent.seconds = new Date().getTime() - this.$store.getters.getLatestBlock.getTimestamp().toDate()
+      }, 1000)
+    },
+    computed: {}
   })
 </script>
 
