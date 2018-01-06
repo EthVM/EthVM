@@ -200,6 +200,6 @@ export default Vue.extend({
 </script>
 
 <style scoped="" lang="less">
-  @import '~lessPath/NewHome/Sections/SinglePages/IndividualTransaction';
+  @import '~lessPath/NewHome/Sections/SinglePages/SinglePagesIndividualTransaction';
 
 </style>

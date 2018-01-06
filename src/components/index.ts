@@ -57,8 +57,14 @@ Vue.component('icon', Icon)
     import FramesContact from "@/components/NewHome/Frames/FramesContact"
     Vue.component('FramesContact', FramesContact)
 
-    import FrameIndividualTransaction from "@/components/NewHome/Frames/FrameIndividualTransaction"
-    Vue.component('FrameIndividualTransaction', FrameIndividualTransaction)
+    import FramesIndividualTransaction from "@/components/NewHome/Frames/FramesIndividualTransaction"
+    Vue.component('FramesIndividualTransaction', FramesIndividualTransaction)
+
+    import FramesLastTransactions from "@/components/NewHome/Frames/FramesLastTransactions"
+    Vue.component('FramesLastTransactions', FramesLastTransactions)
+
+    import FramesLatestBlocks from "@/components/NewHome/Frames/FramesLatestBlocks"
+    Vue.component('FramesLatestBlocks', FramesLatestBlocks)
 
 
 
@@ -118,20 +124,28 @@ Vue.component('icon', Icon)
 
 
     /* Info  ---------------------- */
-    import FAQ from "@/components/NewHome/Sections/Info/FAQ"
-    Vue.component('FAQ', FAQ)
+    import InfoFAQ from "@/components/NewHome/Sections/Info/InfoFAQ"
+    Vue.component('InfoFAQ', InfoFAQ)
     
-    import About from "@/components/NewHome/Sections/Info/About"
-    Vue.component('About', About)
+    import InfoAbout from "@/components/NewHome/Sections/Info/InfoAbout"
+    Vue.component('InfoAbout', InfoAbout)
     
-    import Contact from "@/components/NewHome/Sections/Info/Contact"
-    Vue.component('Contact', Contact)
+    import InfoContact from "@/components/NewHome/Sections/Info/InfoContact"
+    Vue.component('InfoContact', InfoContact)
+
 
 
 
     /* SinglePages  ---------------------- */
     import SinglePagesIndividualTransaction from "@/components/NewHome/Sections/SinglePages/SinglePagesIndividualTransaction"
     Vue.component('SinglePagesIndividualTransaction', SinglePagesIndividualTransaction)
+    
+    import SinglePagesLastTransactions from "@/components/NewHome/Sections/SinglePages/SinglePagesLastTransactions"
+    Vue.component('SinglePagesLastTransactions', SinglePagesLastTransactions)
+    
+    import SinglePagesLatestBlocks from "@/components/NewHome/Sections/SinglePages/SinglePagesLatestBlocks"
+    Vue.component('SinglePagesLatestBlocks', SinglePagesLatestBlocks)
+    
     
 
 
