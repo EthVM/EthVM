@@ -1,8 +1,10 @@
 <template>
   <div class="last-transactions">
-
-    <SinglePagesLastTransactions></SinglePagesLastTransactions>
-
+    <div class="block-container">
+      <div class="block">
+        <SinglePagesLastTransactions></SinglePagesLastTransactions>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -19,5 +21,5 @@
 </script>
 
 <style scoped lang="less">
-  
+    @import "~lessPath/NewHome/Frames/FramesLastTransactions.less";
 </style>

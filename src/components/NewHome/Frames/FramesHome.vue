@@ -52,13 +52,13 @@
 
     <div class="row">
       <div class="col-md-6 block-container">
-        <div class="block">
+        <div class="block table-block">
           <TablesLatestBlocks></TablesLatestBlocks>
         </div>
       </div>
 
       <div class="col-md-6 block-container">
-        <div class="block">
+        <div class="block table-block">
           <TablesLastTransactions></TablesLastTransactions>
         </div>
       </div>
