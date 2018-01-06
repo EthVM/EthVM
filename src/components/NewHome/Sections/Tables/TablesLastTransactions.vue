@@ -47,8 +47,6 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { FIFO, Tx, processTxs } from '@/libs'
-import globConfigs from '@/configs/global.json'
 import sEvents from '@/configs/socketEvents.json'
 import Visibility from 'visibilityjs'
 export default Vue.extend({
@@ -58,22 +56,15 @@ export default Vue.extend({
   },
   data () {
     return {
-      txs: new FIFO< Tx >(globConfigs.maxTxsInMemory, processTxs)
+      txs: []
     }
   },
-  beforeMount () {
-    let _this = this
-    _this.$socket.emit(sEvents.pastTxs, '', (_txs) => {
-      _txs.forEach((_tx) => {
-        _this.txs.add(new Tx(_tx))
-      })
-    })
-  },
+  beforeMount () {},
   created () {
     let _this = this
     _this.$eventHub.$on(sEvents.newTx, (_tx) => {
       if (Visibility.state() === 'visible') {
-        _this.txs.add(_tx)
+        _this.txs = _this.$store.getters.getTxs
       }
     })
   },
@@ -82,7 +73,7 @@ export default Vue.extend({
   },
   computed: {
     transactions () {
-      return this.txs.items().slice(0, this.maxItems)
+      return this.txs.slice(0, this.maxItems)
     }
   }
 })

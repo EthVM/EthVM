@@ -3,7 +3,9 @@
     "newTx": "NEW_TX",
     "newBlock": "NEW_BLOCK",
     "pastTxs": "pastTxs",
+    "pastTxsR": "PAST_TXS_RECEIVED",
     "pastBlocks": "pastBlocks",
+    "pastBlocksR": "PAST_BLOCKS_RECEIVED",
     "setLatestTx": "SET_LATEST_TX",
     "setLatestBlock": "SET_LATEST_BLOCK"
 }

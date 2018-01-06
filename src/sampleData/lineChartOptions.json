@@ -1,49 +1,63 @@
 {
-  "title": {
-    "display": true,
-    "padding": 5,
-    "text": "Average Tx Fees",
-    "lineHeight": 1
-  },
-  "legend": {
-      "display":false
+    "title": {
+        "display": true,
+        "padding": 5,
+        "text": "Average Tx Fees",
+        "lineHeight": 1
+    },
+    "legend": {
+        "display": false
 
-  },
-  "responsive": true,
-  "scales": {
-    "yAxes": [{ 
-      "ticks": {
-        "beginAtZero": true
-      }
-    }],
-    "xAxes": [{
-      "display": false
-    }]
-  },
-  "tooltips": {
-    "backgroundColor": "#686868",
-    "titleFontColor": "white",
-    "bodyFontColor": "white"
-  },
-  "elements": {
-      "line":{
-        "borderColor": "#49e3ea"         
-      },
-      "point": {
-        "backgroundColor": "#49e3ea",
-          "hoverRadius": 6, 
-          "borderColor": "#49e3ea",
-          "borderWidth": 2 
-        }     
-               
-  },
-  "scaleShowLabels": false,
-  "layout": {
-    "padding": {  
-        "left": 5,
-        "right": 5,
-        "top": 5,            
-        "bottom": 0
+    },
+    "responsive": true,
+    "scales": {
+        "yAxes": [{
+            "position": "left",
+            "id": "y-axis-1",
+            "ticks": {
+                "beginAtZero": true
+            },
+            "gridLines": {
+                "color": "rgba(0, 0, 0, 0)"
+            }
+        }, {
+            "id": "y-axis-2",
+            "position": "right",
+            "ticks": {
+                "beginAtZero": true
+            },
+            "gridLines": {
+                "color": "rgba(0, 0, 0, 0)"
+            }
+        }],
+        "xAxes": [{
+            "display": false
+        }]
+    },
+    "tooltips": {
+        "backgroundColor": "#686868",
+        "titleFontColor": "white",
+        "bodyFontColor": "white"
+    },
+    "elements": {
+        "line": {
+            "borderColor": "#49e3ea"
+        },
+        "point": {
+            "backgroundColor": "#49e3ea",
+            "hoverRadius": 6,
+            "borderColor": "#49e3ea",
+            "borderWidth": 2
+        }
+
+    },
+    "scaleShowLabels": false,
+    "layout": {
+        "padding": {
+            "left": 5,
+            "right": 5,
+            "top": 5,
+            "bottom": 0
+        }
     }
-  }
 }

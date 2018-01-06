@@ -12,9 +12,6 @@ class Block {
 	constructor(block: blockLayout) {
 		this.cache = {}
 		this.block = block
-		this.block.uncleHashes = this.block.uncleHashes.map((_uncle) => {
-			return common.Hash(_uncle)
-		})
 		this.id = common.Hash(this.block.hash).toString()
 	}
 	getId():string{
@@ -46,7 +43,9 @@ class Block {
 		return this.block.uncles
 	}
 	getUncleHashes(): Array<Hash> {
-		return this.block.uncleHashes
+		return this.block.uncleHashes.map((_uncle)=>{
+			return common.Hash(_uncle)
+		})
 	}
 	setUncleHashes(hashes: Array<Hash>): void {
 		this.block.uncleHashes = hashes
@@ -163,6 +162,9 @@ class Block {
 	getUncleReward(): EthValue {
 		if (!this.cache.uncleReward) this.cache.uncleReward = common.EthValue(this.block.uncleReward)
 		return this.cache.uncleReward
+	}
+	getStats(): blockLayout['blockStats'] {
+		return this.block.blockStats
 	}
 }
 export default Block

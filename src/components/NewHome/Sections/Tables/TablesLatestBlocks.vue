@@ -33,7 +33,7 @@
             <td>
               <p>
                 <div v-show="block.getUncleHashes().length"
-                     @click="showUncles[block.getHash().toString()]=!showUncles[block.getHash().toString()]">
+                     @click="showHideUncle(block.getHash().toString())">
                   <icon :name="!showUncles[block.getHash().toString()] ? 'plus-square-o' : 'minus-square-o'"
                         scale='1'></icon>
                 </div>&nbsp;{{block.getUncleHashes().length}}&nbsp;Uncles</p>
@@ -89,9 +89,8 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { FIFO, Block, processBlocks } from '@/libs'
-import globConfigs from '@/configs/global.json'
 import sEvents from '@/configs/socketEvents.json'
+import Visibility from 'visibilityjs'
 export default Vue.extend({
   name: 'TablesLatestBlocks',
   props: {
@@ -99,25 +98,25 @@ export default Vue.extend({
   },
   data () {
     return {
-      blocks: new FIFO < Block >(globConfigs.maxTxsInMemory, processBlocks),
+      blocks: [],
       showUncles: {}
     }
   },
-  beforeMount () {
-    let parent = this
-    this.$socket.emit(sEvents.pastBlocks, '', (_blocks) => {
-      _blocks.forEach((_block) => {
-        let tempBlock = new Block(_block)
-        parent.$set(parent.showUncles, tempBlock.getHash().toString(), false)
-        parent.blocks.add(tempBlock)
-      })
-    })
+  methods: {
+    showHideUncle (_hash:string) {
+      this.$set(this.showUncles, _hash, !this.isUncleShown(_hash))
+    },
+    isUncleShown (_hash:string) {
+      return this.showUncles[_hash] ? this.showUncles[_hash] : false
+    }
   },
+  beforeMount () {},
   created () {
     let parent = this
     parent.$eventHub.$on(sEvents.newBlock, (_block) => {
-      parent.$set(parent.showUncles, _block.getHash().toString(), false)
-      parent.blocks.add(_block)
+      if (Visibility.state() === 'visible') {
+        parent.blocks = parent.$store.getters.getBlocks
+      }
     })
   },
   beforeDestroy () {
@@ -125,10 +124,8 @@ export default Vue.extend({
   },
   computed: {
     getBlocks () {
-      return this.blocks.items().slice(0, this.maxItems)
+      return this.blocks.slice(0, this.maxItems)
     }
-  },
-  methods: {
   }
 })
 </script>

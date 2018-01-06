@@ -1,37 +1,42 @@
 {
-  "title": {
-    "display": true,
-    "text": "Transactions from the last 10 blocks"
-  },
-  "responsive": true,
-  "scales": {
-    "yAxes": [{ 
-      "stacked": true,
-      "ticks": {
-        "beginAtZero": true
-      }
-    }],
-    "xAxes": [{"stacked": true,
-      "display": false}]
-  },
-  "tooltips": {
-    "backgroundColor": "#686868",
-    "titleFontColor": "white",
-    "bodyFontColor": "white"
-  },
-  "barShowLabels": true,
-  "legend": {
-      "display":false
+    "title": {
+        "display": true,
+        "text": "Transactions from the last 10 blocks"
+    },
+    "responsive": true,
+    "scales": {
+        "yAxes": [{
+            "stacked": true,
+            "ticks": {
+                "beginAtZero": true
+            },
+            "gridLines": {
+                "color": "rgba(0, 0, 0, 0)"
+            }
+        }],
+        "xAxes": [{
+            "stacked": true,
+            "display": false
+        }]
+    },
+    "tooltips": {
+        "backgroundColor": "#686868",
+        "titleFontColor": "white",
+        "bodyFontColor": "white"
+    },
+    "barShowLabels": true,
+    "legend": {
+        "display": false
 
-  },
-  "layout": {
-      "padding": {  
-          "left": 5,
-          "right": 5,
-          "top": 5,            
-          "bottom": 0
-      }
-  }
+    },
+    "layout": {
+        "padding": {
+            "left": 5,
+            "right": 5,
+            "top": 5,
+            "bottom": 0
+        }
+    }
 
-  
+
 }

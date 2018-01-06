@@ -53,13 +53,13 @@
     <div class="row">
       <div class="col-md-6 block-container">
         <div class="block">
-          <TablesLatestBlocks></TablesLatestBlocks>
+          <TablesLatestBlocks :max-items="20"></TablesLatestBlocks>
         </div>
       </div>
 
       <div class="col-md-6 block-container">
         <div class="block">
-          <TablesLastTransactions></TablesLastTransactions>
+          <TablesLastTransactions :max-items="20"></TablesLastTransactions>
         </div>
       </div>
     </div>

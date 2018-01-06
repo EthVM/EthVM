@@ -27,7 +27,7 @@
           parent.seconds = 'loading'
           return
         }
-        parent.seconds = new Date().getTime() - this.$store.getters.getLatestBlock.getTimestamp().toDate()
+        parent.seconds = Math.ceil((new Date().getTime() - this.$store.getters.getLatestBlock.getTimestamp().toDate()) / 1000)
       }, 1000)
     },
     computed: {}

@@ -94,6 +94,9 @@ Vue.component('icon', Icon)
 
 
     /* Graphs ---------------------- */
+    import VueChart from "@/components/NewHome/Sections/Graphs/VueChart"
+    Vue.component('VueChart', VueChart)
+
     import GraphsRealChart from "@/components/NewHome/Sections/Graphs/GraphsRealChart"
     Vue.component('GraphsRealChart', GraphsRealChart)
 

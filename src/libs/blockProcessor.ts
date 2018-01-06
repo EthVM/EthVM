@@ -6,6 +6,7 @@ let setUncles = (block: Block, hash: string, blocks: Array<Block>): Array<Block>
 		if (blocks[i].getHash().toString() == hash) {
 			blocks[i].setIsUncle(true)
 			block.addUncle(blocks[i])
+			blocks.splice(i, 1)
 		}
 	}
 	return blocks;
