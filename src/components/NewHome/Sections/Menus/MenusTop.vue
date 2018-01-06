@@ -5,6 +5,15 @@
         <a href="/"><img src="/img/logo.png"></a>
       </div>
 
+      <div class="search-container">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" placeholder="Type to search hash, miner, from" aria-label="Recipient's username" aria-describedby="basic-addon2">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button">Search</button>
+          </div>
+        </div>
+      </div>
+
       <div class="menu-icon-container">
         <div class="show-icon-block" v-if="menuShow == false" v-on:click="menuShow = true">
           <icon name='bars' scale='1'></icon>
@@ -16,6 +25,16 @@
     </div>
 
     <div v-if="menuShow" class="menu-side">
+      
+      <div class="mobile-search-container">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" placeholder="Type to search hash, miner, from" aria-label="Recipient's username" aria-describedby="basic-addon2">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button">Search</button>
+          </div>
+        </div>
+      </div>
+
       <MenusSide></MenusSide>
     </div>
 
