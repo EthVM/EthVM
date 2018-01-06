@@ -1,11 +1,12 @@
 <template>
   <div class="about">
 
-    <div class="row">
-      <div class="col-md-12">
-        about
+    <div class="block-container">
+      <div class="block">
+        <InfoAbout></InfoAbout>
       </div>
-    </div>
+    </div>        
+    
 
   </div>
 </template>
@@ -23,5 +24,6 @@
 </script>
 
 <style scoped lang="less">
-  @import "~lessPath/NewHome/Sections/Info/InfoAbout.less";
+  @import "~lessPath/NewHome/Frames/FramesAbout.less";
+
 </style>

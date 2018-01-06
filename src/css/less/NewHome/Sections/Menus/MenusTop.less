@@ -17,6 +17,31 @@
             
         }
 
+        .search-container{
+            display: flex;
+            padding: 12px 10px 0px 0px;
+            .input-group{
+                input{
+                    
+                    border-radius: 5px 0px 0px 5px;
+                    border: none;
+                    width: 300px;
+                }
+                .input-group-append{
+                    display: table-cell;
+                    vertical-align: top;
+                    button{
+                        border-radius: 0px 5px 5px 0px;
+                        background-color: #e4e4e4;
+                        color: #7b7b7b;
+                        border-left: 1px solid #dadada;
+                    }
+                }
+            }
+            
+        }
+
+
         .menu-icon-container{
             display: none;
 
@@ -50,6 +75,10 @@
         margin: 0;
         padding: 0;
         background-color: #62c5f7;
+
+        .mobile-search-container{
+            display: none;
+        }
     }
 
 }
@@ -64,6 +93,40 @@
         .top-block{
             .menu-icon-container{
                 display: flex;
+            }
+            .search-container{
+                display: none;
+            }
+        }
+
+
+
+       .menu-side{
+            padding: 20px;
+            text-align: center;
+            .mobile-search-container{
+                
+                display: inline-block;
+                
+
+                .input-group{
+                    input{
+                        
+                        border-radius: 5px 0px 0px 5px;
+                        border: none;
+                        width: 100%;
+                    }
+                    .input-group-append{
+                        display: table-cell;
+                        vertical-align: top;
+                        button{
+                            border-radius: 0px 5px 5px 0px;
+                            background-color: #e4e4e4;
+                            color: #7b7b7b;
+                            border-left: 1px solid #dadada;
+                        }
+                    }
+                }
             }
         }
         

@@ -1,7 +1,11 @@
 <template>
   <div class="latest-blocks">
-
-    <SinglePagesLatestBlocks></SinglePagesLatestBlocks>
+    <div class="block-container">
+      <div class="block">
+        <SinglePagesLatestBlocks></SinglePagesLatestBlocks>
+      </div>
+    </div>
+    
 
   </div>
 </template>
@@ -19,5 +23,5 @@
 </script>
 
 <style scoped lang="less">
-  
+  @import "~lessPath/NewHome/Frames/FramesLatestBlocks.less";
 </style>
