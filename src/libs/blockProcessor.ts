@@ -28,6 +28,7 @@ let dedup = (block: Block, pastBlocks: Array<Block>): Array<Block> => {
 let processBlocks = (block: Block, pastBlocks: Array<Block>): Array<Block> => {
 	pastBlocks = dedup(block, pastBlocks)
 	pastBlocks = setUnclesToUnclesAndAdd(block, pastBlocks)
+	pastBlocks.sort(function(a, b) { return b.getIntNumber() - a.getIntNumber() });
 	return pastBlocks
 }
 export default processBlocks

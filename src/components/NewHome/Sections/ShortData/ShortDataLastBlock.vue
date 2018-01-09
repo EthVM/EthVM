@@ -22,10 +22,10 @@ export default Vue.extend({
   },
   computed: {
     latestBlockNumber () {
-      if (!this.$store.getters.getLatestBlock) {
+      if (!this.$store.getters.getBlocks[0]) {
         return 'loading'
       }
-      return this.$store.getters.getLatestBlock.getIntNumber()
+      return this.$store.getters.getBlocks[0].getIntNumber()
     }
   }
 })
