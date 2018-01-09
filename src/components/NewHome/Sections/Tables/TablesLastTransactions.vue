@@ -1,5 +1,5 @@
 <template>
-  <div id="TablesLastTransactions" class="last-transactions">
+  <div id="TablesLastTransactions" class="last-transactions" :class="frompage">
 
     <p class="block-title">Last Transactions</p>
 
@@ -20,10 +20,10 @@
         <table class="top-table-content">
           <tbody>
             <tr>
-              <td><p v-if="!tx.getStatus()"><span>Fail</span></p><p v-if="tx.getStatus()"><span>Success</span></p></td>
-              <td class="top-hash"><p><span>{{tx.getFrom().toString()}}</span></p></td>
-              <td class="top-miner"><p><span>{{tx.getValue().toEth()}}</span>&nbsp;ETH</p></td>
-              <td class="top-hash"><p><span>{{tx.getTo().toString()}}</span></p></td>
+              <td class="top-status"><p v-if="!tx.getStatus()"><span>Fail</span></p><p v-if="tx.getStatus()"><span>Success</span></p></td>
+              <td class="top-from"><p><span>{{tx.getFrom().toString()}}</span></p></td>
+              <td class="top-amount"><p><span>{{tx.getValue().toEth()}}</span>&nbsp;ETH</p></td>
+              <td class="top-to"><p><span>{{tx.getTo().toString()}}</span></p></td>
             </tr>
           </tbody>
         </table>
@@ -32,8 +32,8 @@
           <tbody>
             <tr>
               <td class="mid-hash-value"><icon name='hashtag' scale='1'></icon>&nbsp;<p><a :href="'/tx/'+tx.getHash().toString()">{{tx.getHash().toString()}}</a></p></td>
-              <td><icon name='tint' scale='1'></icon>&nbsp;<p>{{tx.getGasUsed().toNumber()}}&nbsp;Gas</p></td>
-              <td><icon name='database' scale='1'></icon>&nbsp;<p>{{tx.getGasPrice().toGWei()}}&nbsp;GWEI</p></td>
+              <td class="mid-gas"><icon name='tint' scale='1'></icon>&nbsp;<p>{{tx.getGasUsed().toNumber()}}&nbsp;Gas</p></td>
+              <td class="mid-gwei"><icon name='database' scale='1'></icon>&nbsp;<p>{{tx.getGasPrice().toGWei()}}&nbsp;GWEI</p></td>
             </tr>
           </tbody>
         </table>
@@ -51,9 +51,7 @@ import sEvents from '@/configs/socketEvents.json'
 import Visibility from 'visibilityjs'
 export default Vue.extend({
   name: 'TablesLastTransactions',
-  props: {
-    maxItems: Number
-  },
+  props: ['frompage', 'maxItems'],
   data () {
     return {
       txs: []
@@ -75,6 +73,9 @@ export default Vue.extend({
     transactions () {
       return this.txs.slice(0, this.maxItems)
     }
+  },
+  mounted () {
+
   }
 })
 </script>

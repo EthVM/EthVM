@@ -43,6 +43,144 @@
                         td{
                             width: 25%;
                             font-size: @table-font-size-1;
+                            font-weight: 900;
+                            p span{
+                                display: inline-block;
+                                
+                                text-overflow: ellipsis;
+                                overflow: hidden;
+                                vertical-align: top;
+
+                            }
+                        }
+
+                        td.top-hash p span{
+                            
+
+                        }
+
+                        td.top-miner p span{
+                            max-width: 90px;
+
+
+                        }
+                    }
+                }
+            }
+
+
+            table.mid-table-content{
+                margin-bottom: 5px;
+                width: 100%;
+                tbody{
+                    tr{
+                        td.mid-hash-value p{
+ 
+                        }
+
+                        td{
+                            width: 33%;
+                            font-size: @table-font-size-1;
+                            p{
+                                max-width: 300px;
+                                text-overflow: ellipsis;
+                                overflow: hidden;
+                                display: inline-block;
+
+                                svg{
+                                    vertical-align: middle;                                    
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            .sub-contents:last-child{
+                border-bottom: @table-border-bottom-1;
+            }            
+
+            .sub-contents{
+                width: 100%;
+                margin-left: auto;
+                background-color: #f7f7f7;
+                padding: 2px 7px;
+                border-top: @table-border-bottom-1;
+
+                table{
+                    width: 100%;
+                    tbody{
+                        tr{
+                            .sub-height{
+                                width: 25%;
+                            }
+                            .sub-miner{
+                                width: 50%;
+                            }
+                            .sub-reward{
+                                width: 25%;
+                            }
+
+                            td{
+                                p{
+                                    font-size: @table-font-size-3;
+                                    font-weight: @table-font-weight-3;
+
+                                    span{
+                                        text-overflow: ellipsis;
+                                        overflow: hidden;    
+                                        font-weight: @table-font-weight-1;
+                                        display: inline-block;
+                                        vertical-align: top;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }/* table */
+            }/* .sub-contents */
+        }/* .table-content */
+    }/* .table-container */
+}/* .latest-blocks */
+
+
+
+
+
+
+.from-home{
+
+    .table-container{
+        table.table-header{
+
+            width: 100%;
+            border-bottom: @table-border-bottom-1;
+
+            thead > tr > td{
+                padding: 5px 0px;
+                font-size: @table-font-size-1;
+                font-weight: @table-font-weight-2;
+                width: 25%;
+            }
+        }
+
+        .table-content{
+            padding: 5px 0px;
+            width: 100%;
+            border-bottom: @table-border-bottom-1;
+
+            &:last-child{
+                border-bottom: none;
+            }
+
+            table.top-table-content{
+                width: 100%;
+                tbody{
+                    tr{
+                        td{
+                            width: 25%;
+                            font-size: @table-font-size-1;
                             p span{
                                 display: inline-block;
                                 max-width: 130px;
@@ -77,10 +215,17 @@
                         }
 
                         td{
-                            width: 33%;
+                            
                             font-size: @table-font-size-1;
+
+                            &:nth-child(1){
+                                p{
+                                    max-width: 130px;
+                                }
+                            }
+
                             p{
-                                max-width: 130px;
+                                
                                 text-overflow: ellipsis;
                                 overflow: hidden;
                                 display: inline-block;
@@ -148,44 +293,76 @@
 
 @media screen and (max-width: 1599px){
 
-    .top-hash p{
-        width: 140px;
-        text-overflow: ellipsis;
-        overflow: hidden;
+    .top-table-content{
+        font-weight: 900 !important;
+        td{
+            ;
+            p{
+                font-size: 11px;
+            }
+        }  
+    }
+    
+    .top-status{
+
+        width: 20% !important;
+        p{
+            max-width: 60px !important;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
     }
 
-    .top-miner p{
-        width: 140px;
+    .top-from{
+
+        p{
+            max-width: 70px !important;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+    }
+
+    .top-amount p span{
+        max-width: 50px !important;
         text-overflow: ellipsis;
         overflow: hidden;    
     }
 
-    .sub-height{
-        width: 33% !important;
-        p{            
-            span{
-                width: 50px !important;
-            }
-        }
+    .top-to p{
+        max-width: 60px !important;
+        text-overflow: ellipsis;
+        overflow: hidden;    
     }
 
-    .sub-miner{
-        width: 33% !important;
-        p{            
-            span{
-                width: 50px !important;
-            }
-        }        
-    }
 
-    .sub-reward{
-        width: 33% !important;
-        p{            
-            span{
-                width: 50px !important;
+    .mid-table-content{
+        td{
+            font-size: 10px !important;
+            svg{
+                width: 10px;
+                height: 10px;
+                vertical-align: top;
             }
         }
+
+        .mid-hash-value{
+            width: 40% !important;
+            p{
+                max-width: 110px !important;
+            }
+        }
+
+        .mid-gas{
+            width: 30% !important;
+        }
+
+        .mid-gwei{
+            width: 30% !important;
+        }
+
     }
+
+
 
 }
 

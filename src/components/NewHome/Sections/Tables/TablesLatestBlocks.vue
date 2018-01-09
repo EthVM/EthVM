@@ -1,6 +1,6 @@
 <template>
 <div id="TablesLatestBlocks"
-     class="latest-blocks">
+     class="latest-blocks" :class="frompage">
   <p class="block-title">Latest Blocks</p>
   <div class="table-container">
     <table class="table-header">
@@ -32,11 +32,11 @@
           <tr>
             <td>
               <p>
-                <div v-show="block.getUncleHashes().length"
+                <span class="" v-show="block.getUncleHashes().length"
                      @click="showHideUncle(block.getHash().toString())">
                   <icon :name="!showUncles[block.getHash().toString()] ? 'plus-square-o' : 'minus-square-o'"
                         scale='1'></icon>
-                </div>&nbsp;{{block.getUncleHashes().length}}&nbsp;Uncles</p>
+                </span>&nbsp;{{block.getUncleHashes().length}}&nbsp;Uncles</p>
             </td>
             <td>
               <p>
@@ -48,7 +48,7 @@
                 <icon name='exchange'
                       scale='1'></icon>&nbsp;{{block.getTransactionCount()}}</p>
             </td>
-            <td>
+            <td class="block-reward">
               <p>
                 <icon name='credit-card-alt'
                       scale='1'></icon>&nbsp;<span>{{block.getTotalBlockReward().toEth()}}</span>&nbsp;ETH</p>
@@ -62,7 +62,7 @@
           <table>
             <tbody>
               <tr>
-                 <td class="sub-height">
+                 <td class="sub-hash">
                   <p>Hash:&nbsp;<span><a :href="'/block/'+block.getHash().toString()">{{uncle.getHash().toString()}}</a></span></p>
                 </td>
                 <td class="sub-height">
@@ -93,9 +93,7 @@ import sEvents from '@/configs/socketEvents.json'
 import Visibility from 'visibilityjs'
 export default Vue.extend({
   name: 'TablesLatestBlocks',
-  props: {
-    maxItems: Number
-  },
+  props: ['frompage', 'maxItems'],
   data () {
     return {
       blocks: [],
@@ -126,6 +124,9 @@ export default Vue.extend({
     getBlocks () {
       return this.blocks.slice(0, this.maxItems)
     }
+  },
+  mounted () {
+
   }
 })
 </script>

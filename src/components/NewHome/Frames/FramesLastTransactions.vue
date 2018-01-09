@@ -1,10 +1,48 @@
 <template>
   <div class="last-transactions">
-    <div class="block-container">
-      <div class="block">
-        <SinglePagesLastTransactions></SinglePagesLastTransactions>
+
+
+
+    <div class="row">
+      <div class="col-md-3 col-sm-3 col-xs-6 block-container">
+        <div class="block">
+          <ShortDataLastBlock></ShortDataLastBlock>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-3 col-xs-6 block-container">
+        <div class="block">
+          <ShortDataTimeSinceLastBlock></ShortDataTimeSinceLastBlock>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-3 col-xs-6 block-container">
+        <div class="block">
+          <ShortDataHashRate></ShortDataHashRate>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-3 col-xs-6 block-container">
+        <div class="block">
+          <ShortDataDifficulty></ShortDataDifficulty>
+        </div>
       </div>
     </div>
+
+
+    <div class="row">
+      <div class="col-md-9 block-container">
+        <div class="block">
+          <SinglePagesLastTransactions></SinglePagesLastTransactions>
+        </div>
+      </div>  
+
+      <div class="col-md-3 block-container">
+        <div class="block">
+          <TablesTop10Senders></TablesTop10Senders>
+        </div>
+      </div>  
+
+    </div>
+
+
   </div>
 </template>
 
