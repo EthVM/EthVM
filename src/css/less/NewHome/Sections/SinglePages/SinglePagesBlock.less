@@ -1,6 +1,6 @@
 
 
-.tx-section-block-1{
+.section-block-1{
   
     margin-bottom: 50px;
 
@@ -48,7 +48,7 @@
                             white-space: nowrap;
                             text-overflow: ellipsis;
                             overflow: hidden;
-                            
+                            width: 700px;
                             padding: 0px;
                             margin: 0px;
                         }
@@ -71,17 +71,73 @@
                 }
             }
         }
-    }
+    }/* .section-block-container */
+
+
+    .uncle-block{
+
+        table{
+            tbody{
+                tr{
+
+                    td:nth-child(2){
+                        width: 70%;   
+                        p{
+                            white-space: nowrap;
+                            text-overflow: ellipsis;
+                            overflow: hidden;
+                            width: 400px;
+                            padding: 0px;
+                            margin: 0px;
+                        }
+                    }
+                }
+            }
+        }
+
+    }/* .uncle-block */
+
 
 }
 
 
 
+@media screen and (min-width: 1000px){
 
-@media screen and (max-width: 899px){
+    .section-block-1{
+
+        .uncle-block{
+
+            table{
+                tbody{
+                    tr{
+
+                        td:nth-child(2){
+                            width: 70%;   
+                            p{
+                                white-space: nowrap;
+                                text-overflow: ellipsis;
+                                overflow: hidden;
+                                width: 250px;
+                                padding: 0px;
+                                margin: 0px;
+                            }
+                        }
+                    }
+                }
+            }
+
+        }/* .uncle-block */
+
+    }
+}
 
 
-    .tx-section-block-1{
+
+@media screen and (max-width: 999px){
+
+
+    .section-block-1{
       
         .section-block-title{
             p{
@@ -106,7 +162,7 @@
                         td:nth-child(2){
                             width: 70%;
                             p{
-                                width: 300px;
+                                width: 400px;
                             }
                             
                         }
@@ -135,7 +191,7 @@
 @media screen and (max-width: 599px){
 
 
-    .tx-section-block-1{
+    .section-block-1{
       
         .section-block-title{
             p{
@@ -154,11 +210,11 @@
                     tr{
                         
                         td:first-child{
-                            width: 30%;
+                            width: 40%;
                         }
 
                         td:nth-child(2){
-                            width: 70%;
+                            width: 60%;
                             p{
                                 width: 200px;
                             }
@@ -173,6 +229,8 @@
                 }
             }
         }
+
+
 
     }
 
@@ -189,7 +247,7 @@
 @media screen and (max-width: 399px){
 
 
-    .tx-section-block-1{
+    .section-block-1{
       
         .section-block-title{
             p{

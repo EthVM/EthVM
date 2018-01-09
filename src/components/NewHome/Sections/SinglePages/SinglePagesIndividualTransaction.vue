@@ -1,13 +1,15 @@
 <template>
-  <div class="block">
+  <div class="indivisual-tx">
 
-    <div class="block-container container" v-if="tx">
-      <div class="row">
-        <div class="col-md-12 tx-section-block-1">
-          <div class="section-block-title">
-            <p>Transaction Detail Information</p>
-          </div>
+
+
+    <div class="block-container" v-if="tx">
+
+        <div class="tx-section-block-1">
+          
           <div class="section-block-container">
+            <p class="block-title">Indivisual Transaction</p>
+
             <table>
               <tbody>
                 <tr>
@@ -109,7 +111,7 @@
                 <tr>
                   <td>Input</td>
                   <td>
-                    <p>{{tx.getInput().toString()}}</p>
+                    <p class="input">{{tx.getInput().toString()}}</p>
                   </td>
                 </tr>
 
@@ -165,11 +167,9 @@
           </div>
         </div>
         <!-- .section-block-1 -->
-      </div>
-      <!-- .row -->
-
+      
     </div>
-    <!-- .container -->
+    <!-- .block-container -->
     
   </div>
 

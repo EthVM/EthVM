@@ -60,6 +60,9 @@ Vue.component('icon', Icon)
     import FramesIndividualTransaction from "@/components/NewHome/Frames/FramesIndividualTransaction"
     Vue.component('FramesIndividualTransaction', FramesIndividualTransaction)
 
+    import FramesBlock from "@/components/NewHome/Frames/FramesBlock"
+    Vue.component('FramesBlock', FramesBlock)
+
     import FramesLastTransactions from "@/components/NewHome/Frames/FramesLastTransactions"
     Vue.component('FramesLastTransactions', FramesLastTransactions)
 
@@ -163,12 +166,12 @@ Vue.component('icon', Icon)
     import SinglePagesIndividualTransaction from "@/components/NewHome/Sections/SinglePages/SinglePagesIndividualTransaction"
     Vue.component('SinglePagesIndividualTransaction', SinglePagesIndividualTransaction)
     
+    import SinglePagesBlock from "@/components/NewHome/Sections/SinglePages/SinglePagesBlock"
+    Vue.component('SinglePagesBlock', SinglePagesBlock)
+    
     import SinglePagesLastTransactions from "@/components/NewHome/Sections/SinglePages/SinglePagesLastTransactions"
     Vue.component('SinglePagesLastTransactions', SinglePagesLastTransactions)
     
-    import SinglePagesLatestBlocks from "@/components/NewHome/Sections/SinglePages/SinglePagesLatestBlocks"
-    Vue.component('SinglePagesLatestBlocks', SinglePagesLatestBlocks)
-    
-    
+        
 
 

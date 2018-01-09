@@ -1,14 +1,12 @@
 <template>
-  <div class="individual-transaction">
+  <div class="block">
 
     <div class="row">
-
-      <div class="col-md-12">
+      <div class="col-md-3 col-sm-3 col-xs-6">
         <div class="block">
-          <SinglePagesIndividualTransaction></SinglePagesIndividualTransaction>
+          <SinglePagesBlock></SinglePagesBlock>
         </div>
       </div>
-
     </div>
 
   </div>
@@ -17,7 +15,7 @@
 <script lang="ts">
   import Vue from 'vue'
   export default Vue.extend({
-    name: 'FramesIndivisualTransaction',
+    name: 'FramesContact',
     data () {
       return {
 
@@ -27,5 +25,5 @@
 </script>
 
 <style scoped lang="less">
-  @import "~lessPath/NewHome/Frames/FramesIndivisualTransaction.less";
+  
 </style>

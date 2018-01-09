@@ -6,7 +6,7 @@
 
       <div class="col-md-9">
         <div class="block">
-          <SinglePagesLatestBlocks></SinglePagesLatestBlocks>
+          <TablesLatestBlocks></TablesLatestBlocks>
         </div>
       </div>
 
@@ -52,7 +52,7 @@
 <script lang="ts">
   import Vue from 'vue'
   export default Vue.extend({
-    name: 'FramesContact',
+    name: 'FramesLatestBlocks',
     data () {
       return {
 
