@@ -6,22 +6,22 @@
     <div class="row">
       <div class="col-md-3 col-sm-3 col-xs-6 block-container">
         <div class="block">
-          <ShortDataLastBlock></ShortDataLastBlock>
+          <ShortDataAverageGasPrice></ShortDataAverageGasPrice>
         </div>
       </div>
       <div class="col-md-3 col-sm-3 col-xs-6 block-container">
         <div class="block">
-          <ShortDataTimeSinceLastBlock></ShortDataTimeSinceLastBlock>
+          <ShortDataAverageValueTransfered></ShortDataAverageValueTransfered>
         </div>
       </div>
       <div class="col-md-3 col-sm-3 col-xs-6 block-container">
         <div class="block">
-          <ShortDataHashRate></ShortDataHashRate>
+          <ShortDataViewingLastTransactions></ShortDataViewingLastTransactions>
         </div>
       </div>
       <div class="col-md-3 col-sm-3 col-xs-6 block-container">
         <div class="block">
-          <ShortDataDifficulty></ShortDataDifficulty>
+          <ShortDataTotalFees></ShortDataTotalFees>
         </div>
       </div>
     </div>

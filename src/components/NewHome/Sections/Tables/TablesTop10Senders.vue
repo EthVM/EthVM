@@ -1,11 +1,52 @@
 <template>
 <div class="top-10-senders" :class="frompage">
   
-
-
   <p class="block-title">Top 10 Senders</p>
-  
+
+  <div class="people-list-table">
+    
+    <table>
+      <tbody>
+        <tr>
+          <td>1.</td>
+          <td>
+            <p>0x829bd824b016326a401d083b33d092293333a830</p>
+            <h5>Sent: <span>16.7</span></h5>
+          </td>
+        </tr>
+        <tr>
+          <td>10.</td>
+          <td>
+            <p>0x829bd824b016326a401d083b33d092293333a830</p>
+            <h5>Sent: <span>16.7</span></h5>
+          </td>
+        </tr>
+        <tr>
+          <td>10.</td>
+          <td>
+            <p>0x829bd824b016326a401d083b33d092293333a830</p>
+            <h5>Sent: <span>16.7</span></h5>
+          </td>
+        </tr>
+        <tr>
+          <td>10.</td>
+          <td>
+            <p>0x829bd824b016326a401d083b33d092293333a830</p>
+            <h5>Sent: <span>16.7</span></h5>
+          </td>
+        </tr>
+        <tr>
+          <td>10.</td>
+          <td>
+            <p>0x829bd824b016326a401d083b33d092293333a830</p>
+            <h5>Sent: <span>16.7</span></h5>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
   </div>
+  
 </div>
 
 </template>
