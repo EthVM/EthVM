@@ -14,15 +14,73 @@
 <script lang="ts">
 import Vue from 'vue'
 import sEvents from '@/configs/socketEvents.json'
-// import newData from '@/sampleData/barChartData.json'
-import newOptions from '@/sampleData/barChartOptions.json'
 import BN from 'bignumber.js'
 
+let MAX_ITEMS = 10
+let barOptions = {
+  'title': {
+    'display': true,
+    'text': 'Transactions from the last 10 blocks'
+  },
+  'responsive': true,
+  'scales': {
+    'yAxes': [
+      {
+        'stacked': true,
+        'ticks': {
+          'beginAtZero': true
+        },
+        'gridLines': {
+          'color': 'rgba(0, 0, 0, 0)'
+        }
+      }
+    ],
+    'xAxes': [
+      {
+        'stacked': true,
+        'display': false
+      }
+    ]
+  },
+  'tooltips': {
+    'backgroundColor': '#686868',
+    'titleFontColor': 'white',
+    'bodyFontColor': 'white'
+  },
+  'barShowLabels': true,
+  'legend': {
+    'display': false
+
+  },
+  'layout': {
+    'padding': {
+      'left': 5,
+      'right': 5,
+      'top': 5,
+      'bottom': 0
+    }
+  }
+
+}
+let getChartData = (_blocks) => {
+  let data = {
+    labels: [],
+    sData: [],
+    fData: []
+  }
+  _blocks.forEach((_block) => {
+    let _tempD = _block.getStats()
+    data.labels.unshift(_block.getNumber().toNumber())
+    data.sData.unshift(new BN(_tempD.success).toNumber())
+    data.fData.unshift(new BN(_tempD.failed).toNumber())
+  })
+  return data
+}
 export default Vue.extend({
   name: 'BarChart',
   data: () => ({
     chartData: {},
-    chartOptions: newOptions,
+    chartOptions: barOptions,
     redraw: false
   }),
   mounted () {},
@@ -32,20 +90,18 @@ export default Vue.extend({
       this.redraw = true
     })
     this.$eventHub.$on(sEvents.newBlock, (_block) => {
-      let _tempD = _block.getStats()
-      if (this.chartData.datasets[0] && (_tempD.success !== '0x0' || _tempD.failed !== '0x0')) {
+      if (this.chartData.datasets[0]) {
         this.redraw = false
-        this.chartData.labels.push(_block.getNumber().toNumber())
-        this.chartData.labels.shift()
-        this.chartData.datasets[0].data.push(new BN(_tempD.success).toNumber())
-        this.chartData.datasets[0].data.shift()
-        this.chartData.datasets[1].data.push(new BN(_tempD.failed).toNumber())
-        this.chartData.datasets[1].data.shift()
+        let data = getChartData(this.$store.getters.getBlocks.slice(0, MAX_ITEMS))
+        this.chartData.labels = data.labels
+        this.chartData.datasets[0].data = data.sData
+        this.chartData.datasets[1].data = data.fData
       }
     })
   },
   beforeDestroy () {
     this.$eventHub.$off(sEvents.pastBlocksR)
+    this.$eventHub.$off(sEvents.newBlock)
   },
   computed: {
     initData () {
@@ -54,7 +110,7 @@ export default Vue.extend({
         sData: [],
         fData: []
       }
-      let latestBlocks = this.$store.getters.getBlocks.slice(0, 10)
+      let latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
       latestBlocks.forEach((_block) => {
         data.labels.push(_block.getNumber().toNumber())
         let _tempD = _block.getStats()

@@ -10,16 +10,91 @@
 <script lang="ts">
 import Vue from 'vue'
 import sEvents from '@/configs/socketEvents.json'
-// import newData from '@/sampleData/lineChartData.json'
-import newOptions from '@/sampleData/lineChartOptions.json'
 import BN from 'bignumber.js'
 import ethUnits from 'ethereumjs-units'
+let MAX_ITEMS = 10
+let lineOptions = {
+  'title': {
+    'display': true,
+    'padding': 5,
+    'text': 'Average Tx Fees',
+    'lineHeight': 1
+  },
+  'legend': {
+    'display': false
 
+  },
+  'responsive': true,
+  'scales': {
+    'yAxes': [{
+      'position': 'left',
+      'id': 'y-axis-1',
+      'ticks': {
+        'beginAtZero': true
+      },
+      'gridLines': {
+        'color': 'rgba(0, 0, 0, 0)'
+      }
+    }, {
+      'id': 'y-axis-2',
+      'position': 'right',
+      'ticks': {
+        'beginAtZero': true
+      },
+      'gridLines': {
+        'color': 'rgba(0, 0, 0, 0)'
+      }
+    }],
+    'xAxes': [{
+      'display': false
+    }]
+  },
+  'tooltips': {
+    'backgroundColor': '#686868',
+    'titleFontColor': 'white',
+    'bodyFontColor': 'white'
+  },
+  'elements': {
+    'line': {
+      'borderColor': '#49e3ea'
+    },
+    'point': {
+      'backgroundColor': '#49e3ea',
+      'hoverRadius': 6,
+      'borderColor': '#49e3ea',
+      'borderWidth': 2
+    }
+
+  },
+  'scaleShowLabels': false,
+  'layout': {
+    'padding': {
+      'left': 5,
+      'right': 5,
+      'top': 5,
+      'bottom': 0
+    }
+  }
+}
+let getChartData = (_blocks) => {
+  let data = {
+    labels: [],
+    txFees: [],
+    gasPrice: []
+  }
+  _blocks.forEach((_block) => {
+    let _tempD = _block.getStats()
+    data.labels.unshift(_block.getNumber().toNumber())
+    data.txFees.unshift(ethUnits.convert(new BN(_tempD.avgTxFees).toFixed(), 'wei', 'eth'))
+    data.gasPrice.unshift(ethUnits.convert(new BN(_tempD.avgGasPrice).toFixed(), 'wei', 'gwei'))
+  })
+  return data
+}
 export default Vue.extend({
   name: 'BarChart',
   data: () => ({
     chartData: {},
-    chartOptions: newOptions,
+    chartOptions: lineOptions,
     redraw: false
   }),
   mounted () {},
@@ -29,20 +104,18 @@ export default Vue.extend({
       this.redraw = true
     })
     this.$eventHub.$on(sEvents.newBlock, (_block) => {
-      let _tempD = _block.getStats()
-      if (this.chartData.datasets[0] && (_tempD.success !== '0x0' || _tempD.failed !== '0x0')) {
+      if (this.chartData.datasets[0]) {
+        let data = getChartData(this.$store.getters.getBlocks.slice(0, MAX_ITEMS))
         this.redraw = false
-        this.chartData.labels.push(_block.getNumber().toNumber())
-        this.chartData.labels.shift()
-        this.chartData.datasets[0].data.push(ethUnits.convert(new BN(_tempD.avgTxFees).toFixed(), 'wei', 'eth'))
-        this.chartData.datasets[0].data.shift()
-        this.chartData.datasets[1].data.push(ethUnits.convert(new BN(_tempD.avgGasPrice).toFixed(), 'wei', 'gwei'))
-        this.chartData.datasets[1].data.shift()
+        this.chartData.labels = data.labels
+        this.chartData.datasets[0].data = data.txFees
+        this.chartData.datasets[1].data = data.gasPrice
       }
     })
   },
   beforeDestroy () {
     this.$eventHub.$off(sEvents.pastBlocksR)
+    this.$eventHub.$off(sEvents.newBlock)
   },
   computed: {
     initData () {
@@ -51,7 +124,7 @@ export default Vue.extend({
         avgFees: [],
         avgPrice: []
       }
-      let latestBlocks = this.$store.getters.getBlocks.slice(0, 10)
+      let latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
       latestBlocks.forEach((_block) => {
         data.labels.push(_block.getNumber().toNumber())
         let _tempD = _block.getStats()

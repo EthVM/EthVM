@@ -12,7 +12,6 @@ let socket_newTx = function({ commit, state: stateLayout }, tx: txLayout) {
 }
 
 let socket_latestTx = function({commit, state: stateLayout}, tx: txLayout) {
-	console.log(tx)
 	commit(sEvents.setLatestTx, tx)
 	this._vm.$eventHub.$emit(sEvents.newTx, new Tx(tx))
 }
