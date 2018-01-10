@@ -60,6 +60,9 @@ Vue.component('icon', Icon)
     import FramesIndividualTransaction from "@/components/NewHome/Frames/FramesIndividualTransaction"
     Vue.component('FramesIndividualTransaction', FramesIndividualTransaction)
 
+    import FramesBlock from "@/components/NewHome/Frames/FramesBlock"
+    Vue.component('FramesBlock', FramesBlock)
+
     import FramesLastTransactions from "@/components/NewHome/Frames/FramesLastTransactions"
     Vue.component('FramesLastTransactions', FramesLastTransactions)
 
@@ -93,6 +96,23 @@ Vue.component('icon', Icon)
 
 
 
+
+    import ShortDataAverageGasPrice from "@/components/NewHome/Sections/ShortData/ShortDataAverageGasPrice"
+    Vue.component('ShortDataAverageGasPrice', ShortDataAverageGasPrice)
+
+    import ShortDataAverageValueTransfered from "@/components/NewHome/Sections/ShortData/ShortDataAverageValueTransfered"
+    Vue.component('ShortDataAverageValueTransfered', ShortDataAverageValueTransfered)
+
+    import ShortDataViewingLastTransactions from "@/components/NewHome/Sections/ShortData/ShortDataViewingLastTransactions"
+    Vue.component('ShortDataViewingLastTransactions', ShortDataViewingLastTransactions)
+
+    import ShortDataTotalFees from "@/components/NewHome/Sections/ShortData/ShortDataTotalFees"
+    Vue.component('ShortDataTotalFees', ShortDataTotalFees)
+
+
+
+
+
     /* Graphs ---------------------- */
     import VueChart from "@/components/NewHome/Sections/Graphs/VueChart"
     Vue.component('VueChart', VueChart)
@@ -115,6 +135,9 @@ Vue.component('icon', Icon)
 
     import TablesLatestBlocks from "@/components/NewHome/Sections/Tables/TablesLatestBlocks"
     Vue.component('TablesLatestBlocks', TablesLatestBlocks)
+
+    import TablesTop10Senders from "@/components/NewHome/Sections/Tables/TablesTop10Senders"
+    Vue.component('TablesTop10Senders', TablesTop10Senders)
 
 
 
@@ -143,12 +166,12 @@ Vue.component('icon', Icon)
     import SinglePagesIndividualTransaction from "@/components/NewHome/Sections/SinglePages/SinglePagesIndividualTransaction"
     Vue.component('SinglePagesIndividualTransaction', SinglePagesIndividualTransaction)
     
+    import SinglePagesBlock from "@/components/NewHome/Sections/SinglePages/SinglePagesBlock"
+    Vue.component('SinglePagesBlock', SinglePagesBlock)
+    
     import SinglePagesLastTransactions from "@/components/NewHome/Sections/SinglePages/SinglePagesLastTransactions"
     Vue.component('SinglePagesLastTransactions', SinglePagesLastTransactions)
     
-    import SinglePagesLatestBlocks from "@/components/NewHome/Sections/SinglePages/SinglePagesLatestBlocks"
-    Vue.component('SinglePagesLatestBlocks', SinglePagesLatestBlocks)
-    
-    
+        
 
 

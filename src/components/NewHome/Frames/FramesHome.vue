@@ -50,16 +50,16 @@
 
 
 
-    <div class="row">
+    <div class="row table-block">
       <div class="col-md-6 block-container">
         <div class="block">
-          <TablesLatestBlocks :max-items="20"></TablesLatestBlocks>
+          <TablesLatestBlocks frompage="from-home" :max-items="20"></TablesLatestBlocks>
         </div>
       </div>
 
       <div class="col-md-6 block-container">
         <div class="block">
-          <TablesLastTransactions :max-items="20"></TablesLastTransactions>
+          <TablesLastTransactions frompage="from-home" :max-items="20"></TablesLastTransactions>
         </div>
       </div>
     </div>
@@ -83,6 +83,11 @@
 
 <style scoped lang="less">
   @import "~lessPath/NewHome/Frames/FramesHome.less";
+
+
+
+
+
 </style>
 
 

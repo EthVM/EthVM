@@ -1,9 +1,48 @@
 <template>
+
   <div class="latest-blocks">
-    <div class="block-container">
-      <div class="block">
-        <SinglePagesLatestBlocks></SinglePagesLatestBlocks>
+
+    <div class="row">
+
+      <div class="col-md-9">
+        <div class="block">
+          <TablesLatestBlocks></TablesLatestBlocks>
+        </div>
       </div>
+
+      <div class="col-md-3">
+        
+
+        <div class="row">
+          <div class="col-md-12 block-container">
+            <div class="block">
+             <GraphsRealChart></GraphsRealChart>
+            </div>
+          </div>
+            
+          <div class="col-md-12 block-container">
+            <div class="block">
+              <GraphsBarChart></GraphsBarChart>
+            </div>
+          </div>
+
+          <div class="col-md-12 block-container">
+            <div class="block">
+              <GraphsLineChart></GraphsLineChart>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+      
+      
+
+    </div>
+
+
+    <div class="block-container">
+      
     </div>
     
 
@@ -13,7 +52,7 @@
 <script lang="ts">
   import Vue from 'vue'
   export default Vue.extend({
-    name: 'FramesContact',
+    name: 'FramesLatestBlocks',
     data () {
       return {
 

@@ -1,0 +1,28 @@
+<template>
+  <div class="average-gas-price">
+
+    <p class="block-title">Average Gas Price</p>
+    
+    <div class="bottom-block">
+      <div class="icon-block"><icon name='tachometer' scale='1'></icon></div>
+      <p class="block-value">2.17 H</p>
+    </div>
+    
+  </div>
+</template>
+
+<script lang="ts">
+  import Vue from 'vue'
+  export default Vue.extend({
+    name: 'ShortDataAverageGasPrice',
+    data () {
+      return {
+
+      }
+    }
+  })
+</script>
+
+<style scoped lang="less">
+  @import "~lessPath/NewHome/Sections/ShortData/ShortDataAverageGasPrice.less";
+</style>

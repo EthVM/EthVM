@@ -51,15 +51,17 @@
                         }
 
                         .top-hash p{
-                            width: 300px;
+                            width: 500px;
                             text-overflow: ellipsis;
-                            overflow: hidden;  
+                            overflow: hidden;
+                            font-weight: 700;
                         }
 
                         .top-miner p{
-                            width: 300px;
+                            width: 500px;
                             text-overflow: ellipsis;
                             overflow: hidden;
+                            font-weight: 700;
                         }
                     }
                 }
@@ -76,7 +78,7 @@
                             font-size: @table-font-size-1;
                             p{
                                 span{
-                                    width: 80px;
+                                    //width: 80px;
                                     text-overflow: ellipsis;
                                     overflow: hidden;
                                     display: inline-block;
@@ -107,14 +109,205 @@
                     width: 100%;
                     tbody{
                         tr{
+
+
+                            .sub-uncles{
+                                width: 30%;
+                                vertical-align: middle;
+                                p{
+                                    span{
+                                        a{
+                                            text-overflow: ellipsis;
+                                            overflow: hidden;
+                                            width: 250px;
+                                            display: inline-block;
+                                        }
+                                    }
+                                }
+                                
+                            }
+
+
                             .sub-height{
-                                width: 25%;
+                                width: 20%;
+                                
                             }
                             .sub-miner{
-                                width: 50%;
+                                width: 30%;
                             }
                             .sub-reward{
-                                width: 25%;
+                                width: 20%;
+                            }
+
+                            td{
+                                p{
+                                    font-size: @table-font-size-3;
+                                    font-weight: @table-font-weight-3;
+
+                                    span{
+                                        text-overflow: ellipsis;
+                                        overflow: hidden;    
+                                        font-weight: @table-font-weight-1;
+                                        display: inline-block;
+                                        vertical-align: top;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }/* table */
+            }/* .sub-contents */
+        }/* .table-content */
+    }/* .table-container */
+}/* .latest-blocks */
+
+
+/* If this page is part of Home page. */
+.from-home{
+
+    .table-container{
+        table.table-header{
+            width: 100%;
+            border-bottom: @table-border-bottom-1;
+
+            thead > tr > td{
+                padding: 5px 0px;
+                font-size: @table-font-size-1;
+                font-weight: @table-font-weight-2;
+                width: 50%;
+            }
+        }
+
+        .table-content{
+            padding: 5px 0px;
+            width: 100%;
+            border-bottom: @table-border-bottom-1;
+
+            &:last-child{
+                border-bottom: none;
+            }
+
+            table.top-table-content{
+                width: 100%;
+                tbody{
+                    tr{
+                        td{
+                            width: 50%;
+                            font-size: @table-font-size-1;
+                        }
+
+                        .top-hash p{
+                            width: 300px;
+                            text-overflow: ellipsis;
+                            overflow: hidden;
+                            font-weight: 700;
+                        }
+
+                        .top-miner p{
+                            width: 300px;
+                            text-overflow: ellipsis;
+                            overflow: hidden;
+                            font-weight: 700;
+                        }
+                    }
+                }
+            }
+
+
+            table.mid-table-content{
+                margin-bottom: 5px;
+                width: 100%;
+                tbody{
+                    tr{
+                        td{
+
+                            font-size: @table-font-size-1;
+                            
+                            &:nth-child(1){
+                                width: 20%;
+                            }
+
+                            &:nth-child(2){
+                                width: 20%;
+                            }
+
+                            &:nth-child(3){
+                                width: 20%;
+                            }
+
+                            &:nth-child(4){
+                                width: 40%;
+                            }
+
+                            p{
+                                span{
+                                    //width: 80px;
+                                    text-overflow: ellipsis;
+                                    overflow: hidden;
+                                    display: inline-block;
+                                    vertical-align: top;
+                                }
+                                svg{
+                                    vertical-align: middle;                                    
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            .sub-contents:last-child{
+                border-bottom: @table-border-bottom-1;
+            }            
+
+            .sub-contents{
+                width: 100%;
+                margin-left: auto;
+                background-color: #f7f7f7;
+                padding: 2px 7px;
+                border-top: @table-border-bottom-1;
+
+                table{
+                    width: 100%;
+                    tbody{
+                        tr{
+
+
+                            .sub-hash{
+                                width: 30%;
+                                
+                                p{
+                                    span{
+                                        a{
+                                            text-overflow: ellipsis;
+                                            overflow: hidden;
+                                            width: 150px;
+                                            display: inline-block;
+                                            vertical-align: top;
+                                        }
+                                    }
+                                }
+                                
+                            }
+
+
+                            .sub-height{
+                                width: 20%;
+                                
+                            }
+                            .sub-miner{
+                                width: 30%;
+                                p{
+                                    span{
+                                            text-overflow: ellipsis;
+                                            overflow: hidden;
+                                            width: 150px;
+                                    }
+                                }
+                            }
+                            .sub-reward{
+                                width: 20%;
                             }
 
                             td{
@@ -142,47 +335,89 @@
 
 
 
-
 @media screen and (max-width: 1599px){
 
-    .top-hash p{
-        width: 140px;
-        text-overflow: ellipsis;
-        overflow: hidden;
+
+
+
+    .table-content{
+        p, span, a{
+            font-size: 11px !important;
+        }
     }
 
-    .top-miner p{
-        width: 140px;
-        text-overflow: ellipsis;
-        overflow: hidden;    
-    }
 
-    .sub-height{
-        width: 33% !important;
-        p{            
-            span{
-                width: 50px !important;
+    .mid-table-content{
+        .block-reward{
+            p{
+                span{
+                    max-width: 100px;
+                }
             }
         }
     }
 
-    .sub-miner{
-        width: 33% !important;
-        p{            
-            span{
-                width: 50px !important;
-            }
-        }        
-    }
 
-    .sub-reward{
-        width: 33% !important;
-        p{            
-            span{
-                width: 50px !important;
+
+
+    .latest-blocks{
+
+
+        .top-hash p{
+            width: 140px !important;
+            text-overflow: ellipsis;
+            overflow: hidden;
+
+        }
+
+        .top-miner p{
+            width: 140px !important;
+            text-overflow: ellipsis;
+            overflow: hidden;    
+        }
+
+
+        .sub-hash{
+            p{            
+                span{
+                    width: 80px !important;
+                }
             }
         }
+
+
+        .sub-height{
+            width: 20% !important;
+            p{            
+                span{
+                    width: 50px !important;
+                }
+            }
+        }
+
+        .sub-miner{
+            width: 20% !important;
+            p{            
+                span{
+                    width: 50px !important;
+                }
+            }        
+        }
+
+        .sub-reward{
+            width: 20% !important;
+            p{            
+                span{
+                    width: 50px !important;
+                }
+            }
+        }
+
     }
+
+
+
+
 
 }
 

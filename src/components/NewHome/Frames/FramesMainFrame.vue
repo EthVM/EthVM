@@ -19,6 +19,7 @@
               <FramesLatestBlocks           v-else-if="pageName == 'latestblocks'">       </FramesLatestBlocks>
               
               <FramesIndividualTransaction  v-else-if="pageName == 'tx' && param">        </FramesIndividualTransaction>
+              <FramesBlock                  v-else-if="pageName == 'block' && param">     </FramesBlock>
               
               <FramesHome                   v-else>                                       </FramesHome>
             </div>
