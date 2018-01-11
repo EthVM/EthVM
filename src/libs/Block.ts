@@ -66,7 +66,7 @@ class Block {
 		return this.block.transactionCount ? this.block.transactionCount : this.block.transactionHashes.length
 	}
 	getTotalBlockReward(): EthValue {
-		if(!this.cache.totalBlockReward) this.cache.totalBlockReward = this.block.totalBlockReward ? common.EthValue(this.block.totalBlockReward) : common.EthValue(Buffer.from(new bn(common.HexNumber(this.block.blockReward).toString()).plus(new bn(common.HexNumber(this.block.txFees).toString())).toString(16), 'hex'))
+		if (!this.cache.totalBlockReward) this.cache.totalBlockReward = this.block.totalBlockReward ? common.EthValue(this.block.totalBlockReward) : common.EthValue(Buffer.from(new bn(common.HexNumber(this.block.blockReward).toString()).plus(new bn(common.HexNumber(this.block.uncleReward).toString())).plus(new bn(common.HexNumber(this.block.txFees).toString())).toString(16), 'hex'))
 
 		return this.cache.totalBlockReward
 	}

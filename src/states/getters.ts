@@ -9,7 +9,12 @@ let getTxs = (state: stateLayout): Array<Tx> => {
 }
 
 let getBlocks = (state: stateLayout): Array<Block> => {
-	return state.blocks.items()
+	let blocks = []
+	state.blocks.items().forEach((block)=>{
+		if(!block.getIsUncle()) blocks.push(block)
+	})
+	return blocks
+
 }
 let getLatestTransaction = (state: stateLayout): any =>{
 	return state.data.latest.tx

@@ -121,6 +121,12 @@
                   <p>{{block.getBlockReward().toEth()}}&nbsp;ETH</p>
                 </td>
               </tr>
+              <tr v-if="uncles.length">
+                <td>Uncle Reward</td>
+                <td>
+                  <p>{{block.getUncleReward().toEth()}}&nbsp;ETH</p>
+                </td>
+              </tr>
               <tr>
                 <td>Total BlockReward</td>
                 <td>
@@ -202,7 +208,7 @@ import chartOptions from '@/sampleData/chartData.json'
 import { Block, common } from '@/libs'
 export default Vue.extend({
   name: 'Block',
-  props: ['frompage', 'param'],
+  props: ['frompage', 'blockHash'],
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
@@ -218,7 +224,7 @@ export default Vue.extend({
   methods: {},
   mounted: function () {
     let _this = this
-    this.$socket.emit('getBlock', Buffer.from(this.param.substring(2), 'hex'), (data) => {
+    this.$socket.emit('getBlock', Buffer.from(this.blockHash.substring(2), 'hex'), (data) => {
       if (data) {
         _this.block = new Block(data)
         let uncleHashes = _this.block.getUncleHashes()
@@ -228,11 +234,7 @@ export default Vue.extend({
           })
         })
       }
-
-      // Get time stamp for this block and convert it to date format string.
     })
-
-    console.log(this.param)
   }
 
 })

@@ -18,8 +18,8 @@
               <FramesLastTransactions       v-else-if="pageName == 'lasttransactions'">   </FramesLastTransactions>
               <FramesLatestBlocks           v-else-if="pageName == 'latestblocks'">       </FramesLatestBlocks>
               
-              <FramesIndividualTransaction  v-else-if="pageName == 'tx' && param">        </FramesIndividualTransaction>
-              <FramesBlock                  v-else-if="pageName == 'block' && param">     </FramesBlock>
+              <FramesIndividualTransaction  v-else-if="pageName == 'tx' && param" :param="param">        </FramesIndividualTransaction>
+              <FramesBlock                  v-else-if="pageName == 'block' && param" :blockHash="param">     </FramesBlock>
               
               <FramesHome                   v-else>                                       </FramesHome>
             </div>

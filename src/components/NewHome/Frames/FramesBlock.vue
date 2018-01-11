@@ -4,7 +4,7 @@
     <div class="row">
       <div class="col-md-3 col-sm-3 col-xs-6">
         <div class="block">
-          <SinglePagesBlock></SinglePagesBlock>
+          <SinglePagesBlock :blockHash="blockHash"></SinglePagesBlock>
         </div>
       </div>
     </div>
@@ -16,10 +16,9 @@
   import Vue from 'vue'
   export default Vue.extend({
     name: 'FramesContact',
+    props: ['blockHash'],
     data () {
-      return {
-
-      }
+      return {}
     }
   })
 </script>
