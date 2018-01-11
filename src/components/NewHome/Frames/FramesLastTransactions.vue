@@ -29,7 +29,7 @@
 
     <div class="row">
       <div class="col-md-9 block-container">
-        <div class="block">
+        <div class="block the-table">
           <SinglePagesLastTransactions></SinglePagesLastTransactions>
         </div>
       </div>  
