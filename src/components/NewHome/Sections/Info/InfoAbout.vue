@@ -4,32 +4,53 @@
     <div class="row">
       <div class="col-md-12">
         
-        <div>
-          <h4>EthVM</h4>
-          <h1>Our Services</h1>
+        <div class="top">
+          <h4>About EthVM</h4>
           <p>Lorem Ipsum is simply dummy text of the printing and typesetting</p>
         </div>
 
       </div>      
     </div>
 
-    <div class="row">
+    <div class="row middle">
       <div class="col-md-6">
-        <img src="/img/blockchain.png">
+        <img class="left-image" src="/img/blockchain.png">
       </div>
 
       <div class="col-md-6">
-        <div class="features-container">
-          <div class="icon">
-            <icon name='hashtag' scale='1'></icon>
-          </div>
-          <div class="features">
-            <h5>Feature 1</h5>
-            <h2>Online Live Support</h2>
-            <p>Lorem ipsum is simply dummy text of the printing and typesetting. Lorem Ipsum has been the industry’s standard dummy.</p>  
-          </div>
-          
-        </div>  
+        
+        <div class="features">
+          <ul>
+            <li>Modern, Flexible, Multi-purpose!</li>
+            <li>We do this</li>
+            <li>We do this</li>
+            <li>We do this</li>
+            <li>We do this</li>
+            <li>We do this</li>
+            <li>We do this</li>
+            <li>We do this</li>
+            <li>Modern, Flexible, Multi-purpose!</li>
+            <li>Modern, Flexible, Multi-purpose!</li>
+            <li>Modern, Flexible, Multi-purpose!</li>
+            <li>Modern, Flexible, Multi-purpose!</li>
+            <li>Modern, Flexible, Multi-purpose!</li>
+            <li>Modern, Flexible, Multi-purpose!</li>
+            <li>Modern, Flexible, Multi-purpose!</li>
+            <li>Modern, Flexible, Multi-purpose!</li>
+            <li>Modern, Flexible, Multi-purpose!</li>
+            <li>Modern, Flexible, Multi-purpose!</li>
+            <li>Modern, Flexible, Multi-purpose!</li>
+            <li>Modern, Flexible, Multi-purpose!</li>
+            <li>Modern, Flexible, Multi-purpose!</li>
+            <li>Modern, Flexible, Multi-purpose!</li>
+            <li>Modern, Flexible, Multi-purpose!</li>
+            <li>Modern, Flexible, Multi-purpose!</li>
+            <li>Modern, Flexible, Multi-purpose!</li>
+            <li>Modern, Flexible, Multi-purpose!</li>
+
+          </ul>
+        </div>
+
       </div>
     </div>
 
@@ -51,3 +72,6 @@
 <style scoped lang="less">
   @import "~lessPath/NewHome/Sections/Info/InfoAbout.less";
 </style>
+
+
+
