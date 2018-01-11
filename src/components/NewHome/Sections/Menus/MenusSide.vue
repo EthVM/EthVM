@@ -1,7 +1,7 @@
 <template>
   <div id="MenusSide" class="menus-side">
 
-    <ul>
+    <ul v-on:click="$emit('mobileMenuClicked')">
         <li><router-link to="/"><p v-bind:class="isActive('home')">Home</p></router-link></li>
         <li><router-link to="/latestblocks"><p v-bind:class="isActive('latestblocks')">Blocks</p></router-link></li>
         <li><router-link to="/lasttransactions"><p v-bind:class="isActive('lasttransactions')">Transactions</p></router-link></li>
@@ -25,6 +25,7 @@ import Vue from 'vue'
 
 export default Vue.extend({
   name: 'MenusSide',
+
   data () {
     return {
 
@@ -40,6 +41,7 @@ export default Vue.extend({
       if (!this.pageName && param === 'home') { return 'selected' }
       if (this.pageName === param) { return 'selected' }
     }
+
   }
 })
 </script>

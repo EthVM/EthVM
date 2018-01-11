@@ -35,7 +35,7 @@
         </div>
       </div>
 
-      <MenusSide></MenusSide>
+      <MenusSide v-on:mobileMenuClicked="hideMobileMenu"></MenusSide>
     </div>
 
 
@@ -49,7 +49,13 @@
     name: 'MenusTop',
     data () {
       return {
-        menuShow: false
+        menuShow: false,
+        mobileClicked: false
+      }
+    },
+    methods: {
+      hideMobileMenu: function () {
+        this.menuShow = false
       }
     }
   })
