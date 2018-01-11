@@ -31,7 +31,7 @@
         <table class="mid-table-content">
           <tbody>
             <tr>
-              <td class="mid-hash-value"><icon name='hashtag' scale='1'></icon>&nbsp;<p><a :href="'/tx/'+tx.getHash().toString()">{{tx.getHash().toString()}}</a></p></td>
+              <td class="mid-hash-value"><icon name='hashtag' scale='1'></icon>&nbsp;<p> <router-link :to="'/tx/'+tx.getHash().toString()">{{tx.getHash().toString()}}</router-link></p></td>
               <td class="mid-gas"><icon name='tint' scale='1'></icon>&nbsp;<p>{{tx.getGasUsed().toNumber()}}&nbsp;Gas</p></td>
               <td class="mid-gwei"><icon name='database' scale='1'></icon>&nbsp;<p>{{tx.getGasPrice().toGWei()}}&nbsp;GWEI</p></td>
             </tr>
@@ -60,6 +60,7 @@ export default Vue.extend({
   beforeMount () {},
   created () {
     let _this = this
+    _this.txs = _this.$store.getters.getTxs
     _this.$eventHub.$on(sEvents.newTx, (_tx) => {
       if (Visibility.state() === 'visible') {
         _this.txs = _this.$store.getters.getTxs

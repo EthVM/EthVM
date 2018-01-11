@@ -19,7 +19,7 @@
         <tbody>
           <tr>
             <td class="top-hash">
-              <p><a :href="'/block/'+block.getHash().toString()">{{block.getHash().toString()}}</a></p>
+              <p><router-link :to="'/block/'+block.getHash().toString()">{{block.getHash().toString()}}</router-link></p>
             </td>
             <td class="top-miner">
               <p>{{block.getMiner().toString()}}</p>
@@ -63,7 +63,7 @@
             <tbody>
               <tr>
                  <td class="sub-hash">
-                  <p>Hash:&nbsp;<span><a :href="'/block/'+block.getHash().toString()">{{uncle.getHash().toString()}}</a></span></p>
+                  <p>Hash:&nbsp;<span><router-link :to="'/block/'+block.getHash().toString()">{{uncle.getHash().toString()}}</router-link></span></p>
                 </td>
                 <td class="sub-height">
                   <p>Height:&nbsp;<span>{{uncle.getNumber().toNumber()}}</span></p>
@@ -111,6 +111,7 @@ export default Vue.extend({
   beforeMount () {},
   created () {
     let parent = this
+    parent.blocks = parent.$store.getters.getBlocks
     parent.$eventHub.$on(sEvents.newBlock, (_block) => {
       if (Visibility.state() === 'visible') {
         parent.blocks = parent.$store.getters.getBlocks

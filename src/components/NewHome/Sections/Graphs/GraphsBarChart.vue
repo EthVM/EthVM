@@ -85,6 +85,7 @@ export default Vue.extend({
   }),
   mounted () {},
   created () {
+    this.chartData = this.initData
     this.$eventHub.$on(sEvents.pastBlocksR, () => {
       this.chartData = this.initData
       this.redraw = true

@@ -2,19 +2,19 @@
   <div id="MenusSide" class="menus-side">
 
     <ul>
-        <li><a href="/"><p v-bind:class="isActive('home')">Home</p></a></li>
-        <li><a href="/latestblocks"><p v-bind:class="isActive('latestblocks')">Blocks</p></a></li>
-        <li><a href="/lasttransactions"><p v-bind:class="isActive('lasttransactions')">Transactions</p></a></li>
+        <li><router-link to="/"><p v-bind:class="isActive('home')">Home</p></router-link></li>
+        <li><router-link to="/latestblocks"><p v-bind:class="isActive('latestblocks')">Blocks</p></router-link></li>
+        <li><router-link to="/lasttransactions"><p v-bind:class="isActive('lasttransactions')">Transactions</p></router-link></li>
         <li>
-          <a href="/charts"><p v-bind:class="isActive('charts')">Charts & Stats</p></a>
+          <router-link to="/charts"><p v-bind:class="isActive('charts')">Charts & Stats</p></router-link>
           <ul>
-            <li><a href="/chartsblocks"><p v-bind:class="isActive('chartsblocks')">Blocks</p></a></li>
-            <li><a href="/chartstransactions"><p v-bind:class="isActive('chartstransactions')">Transactions</p></a></li>
+            <li><router-link to="/chartsblocks"><p v-bind:class="isActive('chartsblocks')">Blocks</p></router-link></li>
+            <li><router-link to="/chartstransactions"><p v-bind:class="isActive('chartstransactions')">Transactions</p></router-link></li>
           </ul>
         </li>
-        <li><a href="/about"><p v-bind:class="isActive('about')">About</p></a></li>
-        <li class="hidden"><a href="/contact"><p v-bind:class="isActive('contact')">Contact</p></a></li>
-        <li class="hidden"><a href="/faq"><p v-bind:class="isActive('faq')">FAQ</p></a></li>
+        <li><router-link to="/about"><p v-bind:class="isActive('about')">About</p></router-link></li>
+        <li class="hidden"><router-link to="/contact"><p v-bind:class="isActive('contact')">Contact</p></router-link></li>
+        <li class="hidden"><router-link to="/faq"><p v-bind:class="isActive('faq')">FAQ</p></router-link></li>
     </ul>
   </div>
 </template>

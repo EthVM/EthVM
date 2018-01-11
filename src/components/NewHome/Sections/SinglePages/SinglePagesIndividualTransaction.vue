@@ -49,7 +49,7 @@
                 <tr>
                   <td>Block Hash</td>
                   <td>
-                    <p>{{tx.getBlockHash().toString()}}</p>
+                    <p> <a v-bind:href="'/block/' + tx.getBlockHash().toString()">{{tx.getBlockHash().toString()}}</a></p>
                   </td>
                 </tr>
 
@@ -63,22 +63,22 @@
                 <tr>
                   <td>Transaction Index</td>
                   <td>
-                    <p>{{tx.geTransactionIndex().toString()}}</p>
+                    <p>{{tx.geTransactionIndex().toNumber()}}</p>
                   </td>
                 </tr>
 
                 <tr>
-                  <td>From Balance</td>
+                  <td>From Account Balance</td>
                   <td>
-                    <p>{{tx.getFromBalance().toEth()}}</p>
+                    <p>{{tx.getFromBalance().toEth()}} &nbsp;ETH</p>
                   </td>
                 </tr>
 
 
                 <tr>
-                  <td>getToBalance</td>
+                  <td>To Account Balance</td>
                   <td>
-                    <p>{{tx.getToBalance().toEth()}}</p>
+                    <p>{{tx.getToBalance().toEth()}} &nbsp;ETH</p>
                   </td>
                 </tr>
 
@@ -102,7 +102,7 @@
                 <tr>
                   <td>Gas Price</td>
                   <td>
-                    <p>{{tx.getGasPrice().toEth()}}&nbsp;Eth</p>
+                    <p>{{tx.getGasPrice().toEth()}}&nbsp;ETH</p>
                   </td>
                 </tr>
 
@@ -120,7 +120,7 @@
                 <tr>
                   <td>Nonce</td>
                   <td>
-                    <p>{{tx.getNonce().toString()}}</p>
+                    <p>{{tx.getNonce().toNumber()}}</p>
                   </td>
                 </tr>
 
@@ -129,7 +129,7 @@
                 <tr>
                   <td>Value</td>
                   <td>
-                    <p>{{tx.getValue().toEth()}}&nbsp;Eth</p>
+                    <p>{{tx.getValue().toEth()}}&nbsp;ETH</p>
                   </td>
                 </tr>
 
@@ -156,7 +156,7 @@
                 </tr>
 
                 <tr>
-                  <td>Satus</td>
+                  <td>Status</td>
                   <td>
                     <p>{{tx.getStatus().toString()}}</p>
                   </td>
