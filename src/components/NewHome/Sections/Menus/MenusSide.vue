@@ -5,6 +5,7 @@
         <li><router-link to="/"><p v-bind:class="isActive('home')">Home</p></router-link></li>
         <li><router-link to="/latestblocks"><p v-bind:class="isActive('latestblocks')">Blocks</p></router-link></li>
         <li><router-link to="/lasttransactions"><p v-bind:class="isActive('lasttransactions')">Transactions</p></router-link></li>
+        <li><router-link to="/pendingTransactions"><p v-bind:class="isActive('pendingTransactions')">Pending Transactions</p></router-link></li>
         <li>
           <router-link to="/charts"><p v-bind:class="isActive('charts')">Charts & Stats</p></router-link>
           <ul>

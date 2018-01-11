@@ -6,7 +6,4 @@ interface latest {
 export default interface stateLayout {
 	txs: FIFO<Tx>;
 	blocks: FIFO<Block>;
-	data?: {
-		latest?: latest;
-	}
 }

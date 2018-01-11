@@ -104,5 +104,8 @@ class Tx {
 	getStatus(): boolean {
 		return this.tx.status
 	}
+	isPending(): boolean {
+		return this.tx.pending
+	}
 }
 export default Tx

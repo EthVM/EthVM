@@ -172,6 +172,8 @@ Vue.component('icon', Icon)
     import SinglePagesLastTransactions from "@/components/NewHome/Sections/SinglePages/SinglePagesLastTransactions"
     Vue.component('SinglePagesLastTransactions', SinglePagesLastTransactions)
     
+    import LatestPendingTransactions from "@/components/NewHome/Sections/SinglePages/LatestPendingTransactions"
+    Vue.component("LatestPendingTransactions", LatestPendingTransactions)
         
 
 

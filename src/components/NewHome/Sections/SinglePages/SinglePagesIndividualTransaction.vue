@@ -8,7 +8,7 @@
         <div class="tx-section-block-1">
           
           <div class="section-block-container">
-            <p class="block-title">Indivisual Transaction</p>
+            <p class="block-title">Individual Transaction</p>
 
             <table>
               <tbody>
@@ -38,36 +38,35 @@
                 </tr>
 
 
-
                 <tr>
-                  <td>Gas Used</td>
+                  <td>Gas</td>
                   <td>
-                    <p>{{tx.getGasUsed().toString()}}</p>
+                    <p>{{tx.getGasUsed().toNumber()}} / {{tx.getGas().toNumber()}} (Gas used / Gas Limit)</p>
                   </td>
                 </tr>
 
-                <tr>
+                <tr v-show="!isPending">
                   <td>Block Hash</td>
                   <td>
                     <p> <a v-bind:href="'/block/' + tx.getBlockHash().toString()">{{tx.getBlockHash().toString()}}</a></p>
                   </td>
                 </tr>
 
-                <tr>
+                <tr v-show="!isPending">
                   <td>Block Number</td>
                   <td>
-                    <p>{{tx.getBlockNumber().toString()}}</p>
+                    <p>{{tx.getBlockNumber().toNumber()}}</p>
                   </td>
                 </tr>
 
-                <tr>
+                <tr v-show="!isPending">
                   <td>Transaction Index</td>
                   <td>
                     <p>{{tx.geTransactionIndex().toNumber()}}</p>
                   </td>
                 </tr>
 
-                <tr>
+                <tr v-show="!isPending">
                   <td>From Account Balance</td>
                   <td>
                     <p>{{tx.getFromBalance().toEth()}} &nbsp;ETH</p>
@@ -75,29 +74,20 @@
                 </tr>
 
 
-                <tr>
+                <tr v-show="!isPending">
                   <td>To Account Balance</td>
                   <td>
                     <p>{{tx.getToBalance().toEth()}} &nbsp;ETH</p>
                   </td>
                 </tr>
 
-                <tr>
+                <tr v-show="!isPending">
                   <td>Cumulative Gas Used</td>
                   <td>
                     <p>{{tx.getCumulativeGasUsed().toNumber()}}</p>
                   </td>
                 </tr>
-     
-
-                <tr>
-                  <td>Gas</td>
-                  <td>
-                    <p>{{tx.getGas().toNumber()}}</p>
-                  </td>
-                </tr>
-
-
+    
 
                 <tr>
                   <td>Gas Price</td>
@@ -121,15 +111,6 @@
                   <td>Nonce</td>
                   <td>
                     <p>{{tx.getNonce().toNumber()}}</p>
-                  </td>
-                </tr>
-
-
-
-                <tr>
-                  <td>Value</td>
-                  <td>
-                    <p>{{tx.getValue().toEth()}}&nbsp;ETH</p>
                   </td>
                 </tr>
 
@@ -162,6 +143,13 @@
                   </td>
                 </tr>
 
+                <tr>
+                  <td>Pending</td>
+                  <td>
+                    <p>{{tx.isPending().toString()}}</p>
+                  </td>
+                </tr>
+
               </tbody>
             </table>
           </div>
@@ -178,23 +166,34 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import store from '@/states'
-import {Tx, common} from '@/libs'
+import {Tx} from '@/libs'
+import sEvents from '@/configs/socketEvents.json'
 export default Vue.extend({
   name: 'Tx',
+  props: ['txHash'],
   data () {
     return {
-      store: store,
       tx: null,
-      common: common
+      isPending: false
     }
   },
   methods: {},
-  mounted: function () {
+  created: function () {
     let _this = this
-    this.$socket.emit('getTx', Buffer.from(this.$route.params.param.substring(2), 'hex'), (data) => {
-      if (data) _this.tx = new Tx(data)
+    this.$socket.emit(sEvents.join, _this.txHash)
+    this.$options.sockets[_this.txHash + '_update'] = (_tx) => {
+      _this.tx = new Tx(_tx)
+      _this.isPending = _this.tx.isPending()
+    }
+    this.$socket.emit('getTx', Buffer.from(this.txHash.substring(2), 'hex'), (_tx) => {
+      if (_tx) {
+        _this.tx = new Tx(_tx)
+        _this.isPending = _this.tx.isPending()
+      }
     })
+  },
+  beforeDestroy () {
+    this.$socket.emit(sEvents.leave, this.txHash)
   }
 })
 </script>

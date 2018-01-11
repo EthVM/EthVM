@@ -15,10 +15,10 @@
               <FramesFAQ                    v-else-if="pageName == 'faq'">                </FramesFAQ>
               <FramesContact                v-else-if="pageName == 'contact'">            </FramesContact>
               
-              <FramesLastTransactions       v-else-if="pageName == 'lasttransactions'">   </FramesLastTransactions>
+              <FramesLastTransactions       v-else-if="pageName == 'lasttransactions' || pageName == 'pendingTransactions'" :type="pageName">   </FramesLastTransactions>
               <FramesLatestBlocks           v-else-if="pageName == 'latestblocks'">       </FramesLatestBlocks>
               
-              <FramesIndividualTransaction  v-else-if="pageName == 'tx' && param" :param="param">        </FramesIndividualTransaction>
+              <FramesIndividualTransaction  v-else-if="pageName == 'tx' && param" :txHash="param">        </FramesIndividualTransaction>
               <FramesBlock                  v-else-if="pageName == 'block' && param" :blockHash="param">     </FramesBlock>
               
               <FramesHome                   v-else>                                       </FramesHome>
