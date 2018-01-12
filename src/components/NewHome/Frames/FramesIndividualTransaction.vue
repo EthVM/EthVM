@@ -5,7 +5,7 @@
 
       <div class="col-md-12">
         <div class="block">
-          <SinglePagesIndividualTransaction></SinglePagesIndividualTransaction>
+          <SinglePagesIndividualTransaction :txHash="txHash"></SinglePagesIndividualTransaction>
         </div>
       </div>
 
@@ -18,6 +18,7 @@
   import Vue from 'vue'
   export default Vue.extend({
     name: 'FramesIndivisualTransaction',
+    props: ['txHash'],
     data () {
       return {
 

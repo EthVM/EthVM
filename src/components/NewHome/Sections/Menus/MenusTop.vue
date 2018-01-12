@@ -2,7 +2,7 @@
   <div id="MenusTop" class="menus-top">
     <div class="top-block">
       <div class="logo-block">
-        <a href="/"><img src="/img/logo.png"></a>
+        <router-link to="/"><img src="/img/logo.png"></router-link>
       </div>
 
       <div class="search-container">
@@ -35,7 +35,7 @@
         </div>
       </div>
 
-      <MenusSide></MenusSide>
+      <MenusSide v-on:mobileMenuClicked="hideMobileMenu"></MenusSide>
     </div>
 
 
@@ -49,7 +49,13 @@
     name: 'MenusTop',
     data () {
       return {
-        menuShow: false
+        menuShow: false,
+        mobileClicked: false
+      }
+    },
+    methods: {
+      hideMobileMenu: function () {
+        this.menuShow = false
       }
     }
   })

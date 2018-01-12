@@ -12,7 +12,7 @@
          v-bind:key="tx.getHash().toString()">
       <!-- .data-block-1 -->
       <div class="data-block-1">
-        <div>Hash <span><a :href="'/tx/'+tx.getHash().toString()">{{tx.getHash().toString()}}</a></span></div>
+        <div>Hash <span><router-link :to="'/tx/'+tx.getHash().toString()">{{tx.getHash().toString()}}</router-link></span></div>
         <div>Gas <span>{{tx.getGasUsed().toNumber()}}</span></div>
         <div>Gas Price <span>{{tx.getGasPrice().toGWei()}} gwei</span></div>
         <div>Block <span>{{tx.getBlockNumber().toNumber()}}</span></div>

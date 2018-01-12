@@ -25,21 +25,18 @@ export default Vue.extend({
     }
   },
   created () {
-    this.$eventHub.$on(sEvents.pastBlocksR, () => {
-      this.lastBlockTime = this.$store.getters.getLatestBlock.getTimestamp().toDate()
-    })
-    this.$eventHub.$on(sEvents.newBlock, (_block) => {
-      this.lastBlockTime = new Date()
+    if (this.$store.getters.getBlocks.length) this.lastBlockTime = this.$store.getters.getBlocks[0].getTimestamp().toDate()
+    this.$eventHub.$on([sEvents.pastBlocksR, sEvents.newBlock], () => {
+      this.lastBlockTime = this.$store.getters.getBlocks[0].getTimestamp().toDate()
     })
   },
   beforeDestroy () {
-    this.$eventHub.$off(sEvents.pastBlocksR)
-    this.$eventHub.$off(sEvents.newBlock)
+    this.$eventHub.$off([sEvents.pastBlocksR, sEvents.newBlock])
   },
   mounted () {
     let parent = this
     setInterval(() => {
-      if (!this.$store.getters.getLatestBlock) {
+      if (!this.$store.getters.getBlocks.length) {
         parent.seconds = 'loading'
         return
       }

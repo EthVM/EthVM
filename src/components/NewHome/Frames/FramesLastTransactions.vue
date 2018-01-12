@@ -30,7 +30,8 @@
     <div class="row">
       <div class="col-md-9 block-container">
         <div class="block the-table">
-          <SinglePagesLastTransactions></SinglePagesLastTransactions>
+         <latest-transactions v-if="type=='lasttransactions'"></latest-transactions>
+         <latest-pending-transactions v-if="type=='pendingTransactions'"></latest-pending-transactions>
         </div>
       </div>  
 
@@ -50,6 +51,7 @@
   import Vue from 'vue'
   export default Vue.extend({
     name: 'FramesContact',
+    props: ['type'],
     data () {
       return {
 

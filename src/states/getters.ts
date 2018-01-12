@@ -16,17 +16,9 @@ let getBlocks = (state: stateLayout): Array<Block> => {
 	return blocks
 
 }
-let getLatestTransaction = (state: stateLayout): any =>{
-	return state.data.latest.tx
-}
-let getLatestBlock = (state: stateLayout): Block => {
-	return state.data.latest.block
-}
 
 export default {
 	all,
 	getTxs,
-	getBlocks,
-	getLatestTransaction,
-	getLatestBlock
+	getBlocks
 }

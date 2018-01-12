@@ -17,17 +17,8 @@ let NEW_TX = function(state: stateLayout, tx: txLayout | Array<txLayout>) {
 	else state.txs.add(new Tx(tx))
 }
 
-let SET_LATEST_TX = function(state: stateLayout, tx: txLayout) {
-	state.data.latest.tx = new Tx(tx)
-}
-
-let SET_LATEST_BLOCK = function(state: stateLayout, block: blockLayout) {
-	state.data.latest.block = new Block(block)
-}
 export default {
 	SOCKET_CONNECT,
 	NEW_BLOCK,
-	NEW_TX,
-	SET_LATEST_TX,
-	SET_LATEST_BLOCK
+	NEW_TX
 }

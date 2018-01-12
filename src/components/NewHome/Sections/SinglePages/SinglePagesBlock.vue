@@ -194,6 +194,7 @@
       <!-- .section-block-1 -->
     </div>
     <!-- .row -->
+    <table-transactions :transactions="transactions"></table-transactions>
   </div>
   <!-- .container -->
   
@@ -205,10 +206,10 @@
 import Vue from 'vue'
 import store from '@/states'
 import chartOptions from '@/sampleData/chartData.json'
-import { Block, common } from '@/libs'
+import { Block, common, Tx } from '@/libs'
 export default Vue.extend({
   name: 'Block',
-  props: ['frompage', 'blockHash'],
+  props: ['blockHash'],
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
@@ -218,7 +219,8 @@ export default Vue.extend({
       common: common,
       uncles: [],
       unixtimestamp: null,
-      timestamp: null
+      timestamp: null,
+      transactions: []
     }
   },
   methods: {},
@@ -228,6 +230,12 @@ export default Vue.extend({
       if (data) {
         _this.block = new Block(data)
         let uncleHashes = _this.block.getUncleHashes()
+        _this.$socket.emit('getBlockTransactions', _this.block.getHash().toBuffer(), (data) => {
+          _this.transactions = data.map((_tx) => {
+            return new Tx(_tx)
+          })
+          console.log(_this.transactions)
+        })
         uncleHashes.forEach((_hash: any, idx: number) => {
           _this.$socket.emit('getBlock', _hash.toBuffer(), (data) => {
             _this.uncles.push(new Block(data))

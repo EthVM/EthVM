@@ -11,17 +11,14 @@
 
           <div class="sections col-md-12 col-lg-10">
             <div class="section-padding">
-              <FramesAbout                  v-if="pageName == 'about'">                   </FramesAbout>
-              <FramesFAQ                    v-else-if="pageName == 'faq'">                </FramesFAQ>
-              <FramesContact                v-else-if="pageName == 'contact'">            </FramesContact>
-              
-              <FramesLastTransactions       v-else-if="pageName == 'lasttransactions'">   </FramesLastTransactions>
-              <FramesLatestBlocks           v-else-if="pageName == 'latestblocks'">       </FramesLatestBlocks>
-              
-              <FramesIndividualTransaction  v-else-if="pageName == 'tx' && param" :param="param">        </FramesIndividualTransaction>
-              <FramesBlock                  v-else-if="pageName == 'block' && param" :blockHash="param">     </FramesBlock>
-              
-              <FramesHome                   v-else>                                       </FramesHome>
+              <FramesAbout v-if="pageName == 'about'"></FramesAbout>
+              <FramesFAQ v-else-if="pageName == 'faq'"></FramesFAQ>
+              <FramesContact v-else-if="pageName == 'contact'"></FramesContact>
+              <FramesLastTransactions v-else-if="pageName == 'lasttransactions' || pageName == 'pendingTransactions'" :type="pageName"></FramesLastTransactions>
+              <FramesLatestBlocks v-else-if="pageName == 'latestblocks'"></FramesLatestBlocks>
+              <FramesIndividualTransaction v-else-if="pageName == 'tx' && param" :txHash="param"></FramesIndividualTransaction>
+              <FramesBlock v-else-if="pageName == 'block' && param" :blockHash="param"></FramesBlock>
+              <FramesHome v-else></FramesHome>
             </div>
           </div>
         </div>
@@ -56,9 +53,7 @@
         return this.$route.params.param
       }
     },
-    mounted: function () {
-      console.log(this.param)
-    }
+    mounted: function () {}
   })
 </script>
 

@@ -36,14 +36,13 @@ export default Vue.extend({
     'data.labels' () {
       this.chart.update()
     },
-    'redraw' () {
+    'data.datasets' () {
       if (this.redraw) {
         this.chart.destroy()
         this.createChart()
+      } else {
+        this.chart.update()
       }
-    },
-    'data.datasets' () {
-      this.chart.update()
     }
   },
   methods: {
