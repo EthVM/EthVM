@@ -171,6 +171,10 @@ Vue.component('icon', Icon)
     
     import SinglePagesLastTransactions from "@/components/NewHome/Sections/SinglePages/SinglePagesLastTransactions"
     Vue.component('SinglePagesLastTransactions', SinglePagesLastTransactions)
+
+
+    import SmallBlockComponent from "@/components/NewHome/Sections/SmallBlockComponent"
+    Vue.component('SmallBlockComponent', SmallBlockComponent)
     
         
 
