@@ -59,7 +59,7 @@
 
       <div class="col-md-6 block-container">
         <div class="block">
-          <TablesLastTransactions frompage="from-home" :max-items="20"></TablesLastTransactions>
+          <latest-transactions frompage="from-home" :max-items="20"></latest-transactions>
         </div>
       </div>
     </div>

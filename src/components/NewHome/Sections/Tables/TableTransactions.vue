@@ -1,7 +1,7 @@
 <template>
-  <div id="TablesLastTransactions" class="last-transactions" :class="frompage">
+  <div id="TableTransactions" class="last-transactions">
 
-    <p class="block-title">Last Transactions</p>
+    <p class="block-title">Transactions</p>
 
     <div class="table-container">
       <table class="table-header">
@@ -16,7 +16,7 @@
       </table>
 
       <!-- MAIN LOOP START ########################################## -->
-      <div class="table-content" v-for="tx in transactions" v-bind:key="tx.getHash().toString()">
+      <div class="table-content" v-for="tx in getTransactions" v-bind:key="tx.getHash().toString()">
         <table class="top-table-content">
           <tbody>
             <tr>
@@ -47,40 +47,17 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import sEvents from '@/configs/socketEvents.json'
-import Visibility from 'visibilityjs'
 export default Vue.extend({
-  name: 'TablesLastTransactions',
-  props: ['frompage', 'maxItems'],
-  data () {
-    return {
-      txs: []
-    }
-  },
-  beforeMount () {},
-  created () {
-    let _this = this
-    _this.txs = _this.$store.getters.getTxs
-    _this.$eventHub.$on(sEvents.newTx, (_tx) => {
-      if (Visibility.state() === 'visible') {
-        _this.txs = _this.$store.getters.getTxs
-      }
-    })
-  },
-  beforeDestroy () {
-    this.$eventHub.$off(sEvents.newTx)
-  },
+  name: 'TableTransactions',
+  props: ['transactions'],
   computed: {
-    transactions () {
-      return this.txs.slice(0, this.maxItems)
+    getTransactions () {
+      return this.transactions
     }
-  },
-  mounted () {
-
   }
 })
 </script>
 
 <style scoped lang="less">
-  @import "~lessPath/NewHome/Sections/Tables/TablesLastTransactions.less";
+  @import "~lessPath/NewHome/Sections/Tables/TableTransactions.less";
 </style>

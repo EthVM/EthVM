@@ -53,9 +53,7 @@
         return this.$route.params.param
       }
     },
-    mounted: function () {
-      console.log(this.param)
-    }
+    mounted: function () {}
   })
 </script>
 

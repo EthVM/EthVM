@@ -130,8 +130,8 @@ Vue.component('icon', Icon)
 
 
     /* Tables ---------------------- */
-    import TablesLastTransactions from "@/components/NewHome/Sections/Tables/TablesLastTransactions"
-    Vue.component('TablesLastTransactions', TablesLastTransactions)
+    import TableTransactions from "@/components/NewHome/Sections/Tables/TableTransactions"
+    Vue.component('TableTransactions', TableTransactions)
 
     import TablesLatestBlocks from "@/components/NewHome/Sections/Tables/TablesLatestBlocks"
     Vue.component('TablesLatestBlocks', TablesLatestBlocks)
@@ -169,8 +169,8 @@ Vue.component('icon', Icon)
     import SinglePagesBlock from "@/components/NewHome/Sections/SinglePages/SinglePagesBlock"
     Vue.component('SinglePagesBlock', SinglePagesBlock)
     
-    import SinglePagesLastTransactions from "@/components/NewHome/Sections/SinglePages/SinglePagesLastTransactions"
-    Vue.component('SinglePagesLastTransactions', SinglePagesLastTransactions)
+    import latestTransactions from "@/components/NewHome/Sections/SinglePages/latestTransactions"
+    Vue.component('latestTransactions', latestTransactions)
     
     import LatestPendingTransactions from "@/components/NewHome/Sections/SinglePages/LatestPendingTransactions"
     Vue.component("LatestPendingTransactions", LatestPendingTransactions)
