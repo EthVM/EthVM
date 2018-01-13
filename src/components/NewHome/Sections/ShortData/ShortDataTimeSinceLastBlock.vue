@@ -1,15 +1,6 @@
 <template>
-<div id="ShortDataTimeSinceLastBlock"
-     class="time-since-last-block">
-  <p class="block-title">Time Since Last Block</p>
-  <div class="bottom-block">
-    <div class="icon-block">
-      <icon name='clock-o'
-            scale='1'></icon>
-    </div>
-    <p class="block-value">{{seconds}} Sec</p>
-  </div>
-</div>
+  <small-block-component :title="blockTitle" :value="seconds" :icon-name="blockIconType" :icon-color="blockIconColor"></small-block-component>
+
 
 </template>
 
@@ -20,6 +11,9 @@ export default Vue.extend({
   name: 'ShortDataLastBlock',
   data () {
     return {
+      blockTitle: 'Time Since Last Block',
+      blockIconType: 'clock-o',
+      blockIconColor: 'red',
       lastBlockTime: 0,
       seconds: 0
     }

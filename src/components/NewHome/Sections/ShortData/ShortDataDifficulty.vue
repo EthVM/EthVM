@@ -1,14 +1,5 @@
 <template>
-  <div id="ShortDataHashRate" class="difficulty">
-
-    <p class="block-title">Difficulty</p>
-    
-    <div class="bottom-block">
-      <div class="icon-block"><icon name='tachometer' scale='1'></icon></div>
-      <p class="block-value">2.17 H</p>
-    </div>
-    
-  </div>
+    <small-block-component :title="blockTitle" :value="hashRate" :icon-name="blockIconType" :icon-color="blockIconColor"></small-block-component>
 </template>
 
 <script lang="ts">
@@ -17,7 +8,10 @@
     name: 'ShortDataLastBlock',
     data () {
       return {
-
+        blockTitle: 'Difficulty',
+        blockIconType: 'asterisk',
+        blockIconColor: 'green',
+        hashRate: '5,100.00 THs'
       }
     }
   })

@@ -3,17 +3,17 @@
         <div class="row">
             <div class="col-md-3 col-sm-3 col-xs-6 block-container">
                 <div class="block">
-                    <small-block-component :title="firstTitle" :value="latestBlockNumber" :icon-name="firstIconType"></small-block-component>
+                    <short-data-last-block></short-data-last-block>
                 </div>
             </div>
             <div class="col-md-3 col-sm-3 col-xs-6 block-container">
                 <div class="block">
-                    <ShortDataTimeSinceLastBlock></ShortDataTimeSinceLastBlock>
+                    <short-data-time-since-last-block></short-data-time-since-last-block>
                 </div>
             </div>
             <div class="col-md-3 col-sm-3 col-xs-6 block-container">
                 <div class="block">
-                    <ShortDataHashRate></ShortDataHashRate>
+                    <short-data-hash-rate></short-data-hash-rate>
                 </div>
             </div>
             <div class="col-md-3 col-sm-3 col-xs-6 block-container">
@@ -47,7 +47,9 @@
             </div>
             <div class="col-md-6 block-container">
                 <div class="block">
-                    <TablesLastTransactions frompage="from-home" :max-items="20"></TablesLastTransactions>
+                  <!--
+                    <TablesLastTransactions frompage="from-home" :max-items="20"></TablesLastTransactions> 
+                     -->
                 </div>
             </div>
         </div>
@@ -60,16 +62,7 @@ export default Vue.extend({
   name: 'FramesHome',
   data () {
     return {
-      firstTitle: 'Last Block',
-      firstIconType: 'tachometer'
-    }
-  },
-  computed: {
-    latestBlockNumber: function () {
-      if (!this.$store.getters.getBlocks[0]) {
-        return 'loading'
-      }
-      return this.$store.getters.getBlocks[0].getIntNumber()
+
     }
   }
 })

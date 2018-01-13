@@ -1,24 +1,17 @@
 <template>
-<div id="ShortDataLastBlock"
-     class="last-block">
-  <p class="block-title">Last Block</p>
-  <div class="bottom-block">
-    <div class="icon-block">
-      <icon name='cube'
-            scale='1'></icon>
-    </div>
-    <p class="block-value">{{latestBlockNumber}}</p>
-  </div>
-</div>
-
+<small-block-component :title="blockTitle" :value="latestBlockNumber" :icon-name="blockIconType" :icon-color="blockIconColor"></small-block-component>
 </template>
-
 <script lang="ts">
 import Vue from 'vue'
 export default Vue.extend({
   name: 'ShortDataLastBlock',
   data () {
-    return {}
+    return {
+      blockTitle: 'Last Block',
+      blockIconType: 'tachometer',
+      blockIconColor: 'blue'
+
+    }
   },
   computed: {
     latestBlockNumber () {
