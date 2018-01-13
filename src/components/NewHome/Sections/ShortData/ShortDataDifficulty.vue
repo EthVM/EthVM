@@ -8,10 +8,10 @@
     name: 'ShortDataLastBlock',
     data () {
       return {
-        blockTitle: 'Difficulty',
+        blockTitle: 'Difficulty TH/s',
         blockIconType: 'asterisk',
         blockIconColor: 'green',
-        hashRate: '5,100.00 THs'
+        hashRate: '5,100.00'
       }
     }
   })

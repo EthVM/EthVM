@@ -2,10 +2,10 @@
     <div class="small-block">
         <p class="small-block-title">{{title}}</p>
         <div class="small-bottom-block ">
-            <div class="col-md-3 small-block-icon">
+            <div class="small-block-icon">
                 <icon :name="iconName" scale='1.3' :color="iconColor"></icon>
             </div>
-            <p class="col-md-9 small-block-value">{{value}}</p>
+            <p class="small-block-value">{{value}}</p>
         </div>
     </div>
 </template>
