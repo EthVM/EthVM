@@ -30,7 +30,7 @@ let lineOptions = {
       'position': 'left',
       'id': 'y-axis-1',
       'ticks': {
-        'beginAtZero': false
+        'beginAtZero': true
       },
       'gridLines': {
         'color': 'rgba(0, 0, 0, 0)'
@@ -39,7 +39,7 @@ let lineOptions = {
       'id': 'y-axis-2',
       'position': 'right',
       'ticks': {
-        'beginAtZero': false
+        'beginAtZero': true
       },
       'gridLines': {
         'color': 'rgba(0, 0, 0, 0)'
@@ -76,6 +76,20 @@ let lineOptions = {
     }
   }
 }
+let getChartData = (_blocks) => {
+  let data = {
+    labels: [],
+    txFees: [],
+    gasPrice: []
+  }
+  _blocks.forEach((_block) => {
+    let _tempD = _block.getStats()
+    data.labels.unshift(_block.getNumber().toNumber())
+    data.txFees.unshift(ethUnits.convert(new BN(_tempD.avgTxFees).toFixed(), 'wei', 'eth'))
+    data.gasPrice.unshift(ethUnits.convert(new BN(_tempD.avgGasPrice).toFixed(), 'wei', 'gwei'))
+  })
+  return data
+}
 export default Vue.extend({
   name: 'BarChart',
   data: () => ({
@@ -92,16 +106,11 @@ export default Vue.extend({
     })
     this.$eventHub.$on(sEvents.newBlock, (_block) => {
       if (this.chartData.datasets[0]) {
+        let data = getChartData(this.$store.getters.getBlocks.slice(0, MAX_ITEMS))
         this.redraw = false
-        if (!_block.getIsUncle()) {
-          let _tempD = _block.getStats()
-          this.chartData.labels.push(_block.getNumber().toNumber())
-          this.chartData.labels.shift()
-          this.chartData.datasets[0].data.push(ethUnits.convert(new BN(_tempD.avgTxFees).toFixed(), 'wei', 'eth').substr(0, 5))
-          this.chartData.datasets[0].data.shift()
-          this.chartData.datasets[1].data.push(ethUnits.convert(new BN(_tempD.avgGasPrice).toFixed(), 'wei', 'gwei').substr(0, 5))
-          this.chartData.datasets[1].data.shift()
-        }
+        this.chartData.labels = data.labels
+        this.chartData.datasets[0].data = data.txFees
+        this.chartData.datasets[1].data = data.gasPrice
       }
     })
   },
@@ -120,8 +129,8 @@ export default Vue.extend({
       latestBlocks.forEach((_block) => {
         data.labels.push(_block.getNumber().toNumber())
         let _tempD = _block.getStats()
-        data.avgFees.push(ethUnits.convert(new BN(_tempD.avgTxFees).toFixed(), 'wei', 'eth').substr(0, 8))
-        data.avgPrice.push(ethUnits.convert(new BN(_tempD.avgGasPrice).toFixed(), 'wei', 'gwei').substr(0, 5))
+        data.avgFees.push(ethUnits.convert(new BN(_tempD.avgTxFees).toFixed(), 'wei', 'eth'))
+        data.avgPrice.push(ethUnits.convert(new BN(_tempD.avgGasPrice).toFixed(), 'wei', 'gwei'))
       })
       return {
         'labels': data.labels,

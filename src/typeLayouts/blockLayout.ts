@@ -5,8 +5,7 @@ interface IblockStats {
 	failed: string,
 	success: string,
 	avgGasPrice: string,
-	avgTxFees: string,
-	pendingTxs: number
+	avgTxFees: string
 }
 export default interface blockLayout {
 	number: Buffer;
