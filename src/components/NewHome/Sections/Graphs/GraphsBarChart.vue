@@ -28,7 +28,7 @@ let barOptions = {
       {
         'stacked': true,
         'ticks': {
-          'beginAtZero': true
+          'beginAtZero': false
         },
         'gridLines': {
           'color': 'rgba(0, 0, 0, 0)'
@@ -62,20 +62,6 @@ let barOptions = {
   }
 
 }
-let getChartData = (_blocks) => {
-  let data = {
-    labels: [],
-    sData: [],
-    fData: []
-  }
-  _blocks.forEach((_block) => {
-    let _tempD = _block.getStats()
-    data.labels.unshift(_block.getNumber().toNumber())
-    data.sData.unshift(new BN(_tempD.success).toNumber())
-    data.fData.unshift(new BN(_tempD.failed).toNumber())
-  })
-  return data
-}
 export default Vue.extend({
   name: 'BarChart',
   data: () => ({
@@ -88,14 +74,20 @@ export default Vue.extend({
     this.chartData = this.initData
     this.$eventHub.$on(sEvents.pastBlocksR, () => {
       this.chartData = this.initData
+      this.redraw = true
     })
     this.$eventHub.$on(sEvents.newBlock, (_block) => {
       if (this.chartData.datasets[0]) {
         this.redraw = false
-        let data = getChartData(this.$store.getters.getBlocks.slice(0, MAX_ITEMS))
-        this.chartData.labels = data.labels
-        this.chartData.datasets[0].data = data.sData
-        this.chartData.datasets[1].data = data.fData
+        if (!_block.getIsUncle()) {
+          let _tempD = _block.getStats()
+          this.chartData.labels.push(_block.getNumber().toNumber())
+          this.chartData.labels.shift()
+          this.chartData.datasets[0].data.push(_tempD.success)
+          this.chartData.datasets[0].data.shift()
+          this.chartData.datasets[1].data.push(_tempD.failed)
+          this.chartData.datasets[1].data.shift()
+        }
       }
     })
   },
