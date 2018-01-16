@@ -1,7 +1,7 @@
 <template>
 <div class="address-block">
-<div class="address">{{address}}</div>
-<div style=""></div>
+<div class="address" @mouseover="showIdenticon = true" @mouseleave="showIdenticon = false">{{address}}</div>
+<div v-show="showIdenticon" style="">identicon will be here</div>
 </div>
 </template>
 
@@ -11,7 +11,9 @@ export default Vue.extend({
   name: 'ethAddress',
   props: ['address'],
   data () {
-    return {}
+    return {
+      showIdenticon: false
+    }
   },
   computed: {}
 })
