@@ -24,5 +24,5 @@
 </script>
 
 <style scoped lang="less">
-  @import "~lessPath/NewHome/Sections/ShortData/ShortDataTotalFees.less";
+  @import '~lessPath/NewHome/globalVars.less';
 </style>

@@ -9,6 +9,15 @@
 <script lang="ts">
 import Chart from 'chart.js'
 import Vue from 'vue'
+Chart.defaults.global.title.fontFamily = "'Poppins', 'sans-serif'"
+Chart.defaults.global.title.fontStyle = '400'
+Chart.defaults.global.tooltips.titleFontFamily = "'Poppins', 'sans-serif'"
+Chart.defaults.global.tooltips.titleFontStyle = '400'
+Chart.defaults.global.tooltips.bodyFontFamily = "'Poppins', 'sans-serif'"
+Chart.defaults.global.tooltips.bodyFontStyle = '200'
+Chart.defaults.global.legend.fontFamily = "'Poppins', 'sans-serif'"
+Chart.defaults.global.legend.fontStyle = '200'
+
 export default Vue.extend({
   name: 'vue-chart',
   props: {
@@ -62,3 +71,6 @@ export default Vue.extend({
   }
 })
 </script>
+<style scoped lang="less">
+  @import "~lessPath/NewHome/globalVars.less";
+</style>

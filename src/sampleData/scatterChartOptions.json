@@ -26,13 +26,13 @@
   },
   "elements": {
       "line":{
-        "borderColor": "purple",
+        "borderColor": "#c271f5",
         "fill": false        
       },
       "point": {
-        "backgroundColor": "purple",
+        "backgroundColor": "#c271f5",
           "hoverRadius": 6, 
-          "borderColor": "purple",
+          "borderColor": "#c271f5",
           "borderWidth": 2 
         }     
                

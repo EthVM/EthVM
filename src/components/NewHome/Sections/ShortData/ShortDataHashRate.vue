@@ -10,7 +10,7 @@
       return {
         blockTitle: 'Hash Rate TH/s',
         blockIconType: 'hashtag',
-        blockIconColor: 'orange',
+        blockIconColor: '#fba893',
         hashRate: '2,103.79'
 
       }

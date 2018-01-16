@@ -56,12 +56,12 @@ let lineOptions = {
   },
   'elements': {
     'line': {
-      'borderColor': '#49e3ea'
+      'borderColor': '#c271f5'
     },
     'point': {
-      'backgroundColor': '#49e3ea',
+      'backgroundColor': '#c271f5',
       'hoverRadius': 6,
-      'borderColor': '#49e3ea',
+      'borderColor': '#c271f5',
       'borderWidth': 2
     }
 
@@ -138,7 +138,6 @@ export default Vue.extend({
           {
             'label': 'avg Tx Fees (ETH)',
             'backgroundColor': 'rgba(196, 93, 105, 0.3)',
-            'pointBackgroundColor': '#49e3ea',
             'data': data.avgFees,
             'yAxisID': 'y-axis-1'
           },

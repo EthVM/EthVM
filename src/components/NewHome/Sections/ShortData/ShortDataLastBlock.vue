@@ -9,7 +9,7 @@ export default Vue.extend({
     return {
       blockTitle: 'Last Block',
       blockIconType: 'tachometer',
-      blockIconColor: 'blue'
+      blockIconColor: '#c271f5'
 
     }
   },

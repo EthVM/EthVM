@@ -17,10 +17,12 @@ import sEvents from '@/configs/socketEvents.json'
 import BN from 'bignumber.js'
 
 let MAX_ITEMS = 10
+
 let barOptions = {
   'title': {
     'display': true,
     'text': 'Transactions from the last 10 blocks'
+
   },
   'responsive': true,
   'scales': {
@@ -43,14 +45,11 @@ let barOptions = {
     ]
   },
   'tooltips': {
-    'backgroundColor': '#686868',
-    'titleFontColor': 'white',
-    'bodyFontColor': 'white'
+    'backgroundColor': '#686868'
   },
   'barShowLabels': true,
   'legend': {
     'display': false
-
   },
   'layout': {
     'padding': {
@@ -77,6 +76,7 @@ let getChartData = (_blocks) => {
   return data
 }
 export default Vue.extend({
+
   name: 'BarChart',
   data: () => ({
     chartData: {},

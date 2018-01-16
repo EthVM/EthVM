@@ -3,8 +3,8 @@
     "datasets": [
     {
     	"label": "Av. Fees",
-        "backgroundColor": "#acedf0",
-        "pointBackgroundColor": "#49e3ea",
+        "backgroundColor": "#c271f5",
+        "pointBackgroundColor": "#c271f5",
         "data": [10, 32, 56, 84, 420, 300, 233, 430, 620, 34, 11, 49, 65, 20, 301,400, 201, 100, 112, 300]
     }]
 }

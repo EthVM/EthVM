@@ -10,13 +10,10 @@
       return {
         blockTitle: 'Difficulty TH/s',
         blockIconType: 'asterisk',
-        blockIconColor: 'green',
+        blockIconColor: '#6bee69',
         hashRate: '5,100.00'
       }
     }
   })
 </script>
 
-<style scoped lang="less">
-  @import "~lessPath/NewHome/Sections/ShortData/ShortDataDifficulty.less";
-</style>

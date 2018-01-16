@@ -1,5 +1,5 @@
 <template>
-  <small-block-component :title="blockTitle" :value="seconds" :icon-name="blockIconType" :icon-color="blockIconColor"></small-block-component>
+  <small-block-component :title="blockTitle" :value="seconds+ ' sec'" :icon-name="blockIconType" :icon-color="blockIconColor"></small-block-component>
 
 
 </template>
@@ -11,9 +11,9 @@ export default Vue.extend({
   name: 'ShortDataLastBlock',
   data () {
     return {
-      blockTitle: 'Time Since Last Block',
+      blockTitle: 'Since Last Block',
       blockIconType: 'clock-o',
-      blockIconColor: 'red',
+      blockIconColor: '#ffd800',
       lastBlockTime: 0,
       seconds: 0
     }
