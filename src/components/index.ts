@@ -177,3 +177,8 @@ Vue.component('icon', Icon)
         
 
 
+     /* Generic components ---------*/
+    import usageBar from "@/components/NewHome/Sections/Generic/usageBar"
+    Vue.component('usage-bar', usageBar)
+    import ethAddress from "@/components/NewHome/Sections/Generic/ethAddress"
+    Vue.component('eth-address', ethAddress)
