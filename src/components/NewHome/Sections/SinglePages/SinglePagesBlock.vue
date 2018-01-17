@@ -1,6 +1,5 @@
 <template>
 <div class="block">
-
   <div class="block-container container"
        v-if="block">
     <div class="row">
@@ -197,20 +196,21 @@
     <table-transactions :transactions="transactions"></table-transactions>
   </div>
   <!-- .container -->
-  
 </div>
 
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import store from '@/states'
-import chartOptions from '@/sampleData/chartData.json'
-import { Block, common, Tx } from '@/libs'
+import Vue from 'vue';
+import store from '@/states';
+import chartOptions from '@/sampleData/chartData.json';
+import { Block, common, Tx } from '@/libs';
 export default Vue.extend({
   name: 'Block',
-  props: ['blockHash'],
-  data () {
+  props: [
+    'blockHash'
+  ],
+  data() {
     return {
       msg: 'Welcome to Your Vue.js App',
       store: store,
@@ -224,7 +224,7 @@ export default Vue.extend({
     }
   },
   methods: {},
-  mounted: function () {
+  mounted: function() {
     let _this = this
     this.$socket.emit('getBlock', Buffer.from(this.blockHash.substring(2), 'hex'), (data) => {
       if (data) {
@@ -234,7 +234,6 @@ export default Vue.extend({
           _this.transactions = data.map((_tx) => {
             return new Tx(_tx)
           })
-          console.log(_this.transactions)
         })
         uncleHashes.forEach((_hash: any, idx: number) => {
           _this.$socket.emit('getBlock', _hash.toBuffer(), (data) => {
@@ -246,11 +245,9 @@ export default Vue.extend({
   }
 
 })
+
 </script>
 
 <style scoped="" lang="less">
-  @import "~lessPath/NewHome/Sections/SinglePages/SinglePagesBlock.less";
+@import "~lessPath/NewHome/Sections/SinglePages/SinglePagesBlock.less";
 </style>
-
-
-

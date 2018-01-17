@@ -15,16 +15,6 @@ let socket_connect = function({ commit, state: stateLayout }, tx: txLayout) {
 	defaultRooms.forEach((_room) => {
 		this._vm.$socket.emit(sEvents.join, _room)
 	})
-	this._vm.$socket.emit(sEvents.pastTxs, '', (_txs) => {
-		commit('NEW_TX', _txs)
-		this._vm.$eventHub.$emit(sEvents.pastTxsR)
-		this._vm.$eventHub.$emit(sEvents.newTx, new Tx(_txs[0]))
-	})
-	this._vm.$socket.emit(sEvents.pastBlocks, '', (_blocks) => {
-		commit('NEW_BLOCK', _blocks)
-		this._vm.$eventHub.$emit(sEvents.newBlock, new Block(_blocks[0]))
-		this._vm.$eventHub.$emit(sEvents.pastBlocksR)
-	})
 }
 export default {
 	socket_newBlock,
