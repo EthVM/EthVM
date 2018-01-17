@@ -58,10 +58,9 @@ import Vue from 'vue'
 export default Vue.extend({
   name: 'FramesHome',
   data () {
-    return {
-
-    }
-  }
+    return {}
+  },
+  created (){}
 })
 </script>
 <style scoped lang="less">

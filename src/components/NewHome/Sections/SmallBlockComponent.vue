@@ -1,5 +1,5 @@
 <template>
-    <div class="small-block">
+    <div class="small-block component-shadow">
         <p class="small-block-title">{{title}}</p>
         <div class="small-bottom-block ">
             <div class="small-block-icon">

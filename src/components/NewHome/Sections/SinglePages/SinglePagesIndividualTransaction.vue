@@ -34,7 +34,8 @@
             <tr>
               <td>Gas</td>
               <td>
-                <usage-bar :value="tx.getGasUsed().toNumber()" :max-value="tx.getGas().toNumber()"></usage-bar>
+                <usage-bar :value="tx.getGasUsed().toNumber()"
+                           :max-value="tx.getGas().toNumber()"></usage-bar>
                 <p>{{tx.getGasUsed().toNumber()}} / {{tx.getGas().toNumber()}} (Gas used / Gas Limit)</p>
               </td>
             </tr>
@@ -134,39 +135,42 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Tx } from '@/libs'
-import sEvents from '@/configs/socketEvents.json'
+import Vue from 'vue';
+import { Tx } from '@/libs';
+import sEvents from '@/configs/socketEvents.json';
 export default Vue.extend({
   name: 'Tx',
   props: [
     'txHash'
   ],
-  data () {
+  data() {
     return {
       tx: null,
       isPending: false
     }
   },
   methods: {},
-  created: function () {
+  beforeCreate() {},
+  created() {
     let _this = this
-    this.$socket.emit(sEvents.join, _this.txHash)
-    this.$options.sockets[_this.txHash + '_update'] = (_tx) => {
-      _this.tx = new Tx(_tx)
-      _this.isPending = _this.tx.isPending()
-    }
     this.$socket.emit('getTx', Buffer.from(this.txHash.substring(2), 'hex'), (_tx) => {
       if (_tx) {
         _this.tx = new Tx(_tx)
         _this.isPending = _this.tx.isPending()
       }
     })
+
+    this.$socket.emit(sEvents.join, _this.txHash)
+    this.$options.sockets[_this.txHash + '_update'] = (_tx) => {
+      _this.tx = new Tx(_tx)
+      _this.isPending = _this.tx.isPending()
+    }
   },
-  beforeDestroy () {
+  beforeDestroy() {
     this.$socket.emit(sEvents.leave, this.txHash)
   }
 })
+
 </script>
 
 <style scoped="" lang="less">

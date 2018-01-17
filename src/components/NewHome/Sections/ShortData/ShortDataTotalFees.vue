@@ -1,14 +1,5 @@
 <template>
-  <div class="total-fees">
-
-    <p class="block-title">Total Fees</p>
-    
-    <div class="bottom-block">
-      <div class="icon-block"><icon name='tachometer' scale='1'></icon></div>
-      <p class="block-value">2.17 H</p>
-    </div>
-    
-  </div>
+  <small-block-component :title="blockTitle" :value="totalFees" :icon-name="blockIconType" :icon-color="blockIconColor"></small-block-component>
 </template>
 
 <script lang="ts">
@@ -17,7 +8,10 @@
     name: 'ShortDataTotalFees',
     data () {
       return {
-
+        blockTitle: 'Total Fees',
+        blockIconType: 'tachometer',
+        blockIconColor: '#6bee69',
+        totalFees: '100.00'
       }
     }
   })

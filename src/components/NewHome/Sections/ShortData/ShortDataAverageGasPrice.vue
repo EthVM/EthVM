@@ -1,14 +1,5 @@
 <template>
-  <div class="average-gas-price">
-
-    <p class="block-title">Average Gas Price</p>
-    
-    <div class="bottom-block">
-      <div class="icon-block"><icon name='tachometer' scale='1'></icon></div>
-      <p class="block-value">2.17 H</p>
-    </div>
-    
-  </div>
+  <small-block-component :title="blockTitle" :value="averageGasPrice" :icon-name="blockIconType" :icon-color="blockIconColor"></small-block-component>
 </template>
 
 <script lang="ts">
@@ -17,7 +8,10 @@
     name: 'ShortDataAverageGasPrice',
     data () {
       return {
-
+      blockTitle: 'Average Gas Price',
+      blockIconType: 'tachometer',
+      blockIconColor: '#c271f5',
+      averageGasPrice: ' 0.0004'
       }
     }
   })
