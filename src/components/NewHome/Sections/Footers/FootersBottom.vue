@@ -20,5 +20,5 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="less">
-@import "~lessPath/topnav.less";
+//@import "~lessPath/topnav.less";
 </style>
