@@ -1,22 +1,38 @@
 <template>
-<canvas ref="chart"
-        :width="width"
-        :height="height">
-</canvas>
-
+    <canvas ref="chart" :width="width" :height="height">
+    </canvas>
 </template>
-
 <script lang="ts">
 import Chart from 'chart.js'
 import Vue from 'vue'
-Chart.defaults.global.title.fontFamily = "'Poppins', 'sans-serif'"
-Chart.defaults.global.title.fontStyle = '400'
-Chart.defaults.global.tooltips.titleFontFamily = "'Poppins', 'sans-serif'"
-Chart.defaults.global.tooltips.titleFontStyle = '400'
-Chart.defaults.global.tooltips.bodyFontFamily = "'Poppins', 'sans-serif'"
-Chart.defaults.global.tooltips.bodyFontStyle = '200'
-Chart.defaults.global.legend.fontFamily = "'Poppins', 'sans-serif'"
-Chart.defaults.global.legend.fontStyle = '200'
+Chart.defaults.global = Object.assign(Chart.defaults.global, {
+  defaultFontFamily: "'Poppins', 'sans-serif'",
+  defaultFontStyle: '200'
+})
+Chart.defaults.global.title = Object.assign(Chart.defaults.global.title, {
+  fontStyle: '400',
+  display: true,
+  padding: 10
+})
+Chart.defaults.global.tooltips = Object.assign(Chart.defaults.global.tooltips, {
+  titleFontStyle: '400',
+  backgroundColor: '#686868'
+})
+Chart.defaults.global.legend = Object.assign(Chart.defaults.global.legend, {
+  display: false
+})
+Chart.defaults.global.layout = Object.assign(Chart.defaults.global.layout, {
+  padding: {
+    left: 5,
+    right: 5,
+    top: 5,
+    bottom: 15
+  }
+})
+Chart.defaults.global.elements.point = Object.assign(Chart.defaults.global.elements.point, {
+  hoverRadius: 6,
+  borderWidth: 2
+})
 
 export default Vue.extend({
   name: 'vue-chart',
@@ -36,6 +52,7 @@ export default Vue.extend({
     options: Object,
     width: Number,
     height: Number
+
   },
   data: () => ({
     chart: ''
@@ -60,6 +77,7 @@ export default Vue.extend({
         type: this.type,
         data: this.data,
         options: this.options
+
       })
     }
   },
@@ -72,5 +90,5 @@ export default Vue.extend({
 })
 </script>
 <style scoped lang="less">
-  @import "~lessPath/NewHome/globalVars.less";
+@import "~lessPath/NewHome/globalVars.less";
 </style>

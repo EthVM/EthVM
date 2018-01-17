@@ -1,0 +1,167 @@
+@import '~lessPath/NewHome/globalVars';
+
+
+
+.last-transactions{
+
+   padding: 10px;
+
+   .data-container{
+      font-family: 'Roboto Mono', monospace;
+      
+      .data-block{
+         position: relative;
+         display: block;
+         border-top: 1px dotted #dedede;
+         padding: 10px 0px;
+
+         .absolute-top-right-block{
+            position: absolute;
+            top: 0;
+            right: 0;
+            display: block;
+
+            & > div{
+
+               display: block;
+               text-align: right;
+
+               p{
+                  vertical-align: top;
+                  display: inline-block;
+                  font-size: 9px;
+                  border: 1px solid #dedede;
+                  border-top: none;
+                  
+                  padding: 3px 8px;
+                  border-radius: 0 0 0 8px;
+                  span{
+                     margin-right: 3px;
+                     font-size: 12px;
+                  }
+               }
+
+               .tx-status{
+                  background-color: #62c5f7;
+                  color: white;
+                  font-size: 10px;
+                  font-weight: 900;
+                  text-transform: uppercase;
+                  border: none;
+                  padding: 3px 8px;
+                  text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5);
+               }
+
+            }
+
+         }
+
+         .relative-block{
+            position: relative;
+            display: block;
+
+            .tx-block{
+               margin-bottom: 0px;
+               p{
+                  font-size: 14px;
+                  width: 400px;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+               }
+
+            }
+
+            .transaction-block{
+               width: 100%;
+               
+               .transaction-info{
+                  display: inline-block;
+                  width: 20%;
+                  vertical-align: middle;
+
+                  .address{
+                     font-size: 13px;
+                  }
+
+                  .address, .value{
+                     max-width: 100px;
+                     overflow: hidden;
+                     text-overflow: ellipsis;
+
+                  }
+
+                  .value{
+                     font-size: 14px;
+                     line-height: initial;
+                     display: inline-block;
+                     margin-right: 4px;
+
+                     overflow: hidden;
+                     text-overflow: ellipsis;
+                     vertical-align: middle;
+                  }
+
+                  .value-label{
+                     font-size: 9px;
+                     line-height: initial;
+                     display: inline-block;
+                     vertical-align: middle;
+                     margin-top: 5px;
+                     
+                  }
+
+                  .block-label{
+                     
+                     font-size: 11px;
+                  }
+
+               }
+               
+            }
+         }
+
+      }
+   }
+
+}
+
+
+
+.arrow_box {
+  color: white;
+  padding: 1px 5px;
+  position: relative;
+  background: #62c6f7;
+  margin-right: 30px;
+  
+   text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5);
+   font-weight: 600;
+
+   background: #62c6f7; /* Old browsers */
+   background: -moz-linear-gradient(left, #62c6f7 0%, #87e0fd 99%); /* FF3.6-15 */
+   background: -webkit-linear-gradient(left, #62c6f7 0%,#87e0fd 99%); /* Chrome10-25,Safari5.1-6 */
+   background: linear-gradient(to right, #62c6f7 0%,#87e0fd 99%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#62c6f7', endColorstr='#87e0fd',GradientType=1 ); /* IE6-9 */
+
+
+
+}
+
+
+.arrow_box:after, .arrow_box:before {
+  left: 100%;
+  top: 50%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.arrow_box:after {
+  border-color: rgba(136, 183, 213, 0);
+  border-left-color: #87E0FD;
+  border-width: 17px;
+  margin-top: -17px;
+}

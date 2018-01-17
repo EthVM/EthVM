@@ -15,14 +15,8 @@ import ethUnits from 'ethereumjs-units'
 let MAX_ITEMS = 10
 let lineOptions = {
   'title': {
-    'display': true,
-    'padding': 5,
     'text': 'Average Tx Fees',
     'lineHeight': 1
-  },
-  'legend': {
-    'display': false
-
   },
   'responsive': true,
   'scales': {
@@ -30,7 +24,7 @@ let lineOptions = {
       'position': 'left',
       'id': 'y-axis-1',
       'ticks': {
-        'beginAtZero': false
+        'beginAtZero': true
       },
       'gridLines': {
         'color': 'rgba(0, 0, 0, 0)'
@@ -39,7 +33,7 @@ let lineOptions = {
       'id': 'y-axis-2',
       'position': 'right',
       'ticks': {
-        'beginAtZero': false
+        'beginAtZero': true
       },
       'gridLines': {
         'color': 'rgba(0, 0, 0, 0)'
@@ -49,32 +43,19 @@ let lineOptions = {
       'display': false
     }]
   },
-  'tooltips': {
-    'backgroundColor': '#686868',
-    'titleFontColor': 'white',
-    'bodyFontColor': 'white'
-  },
+
   'elements': {
     'line': {
       'borderColor': '#c271f5'
     },
     'point': {
       'backgroundColor': '#c271f5',
-      'hoverRadius': 6,
-      'borderColor': '#c271f5',
-      'borderWidth': 2
+      'borderColor': '#c271f5'
     }
 
   },
-  'scaleShowLabels': false,
-  'layout': {
-    'padding': {
-      'left': 5,
-      'right': 5,
-      'top': 5,
-      'bottom': 0
-    }
-  }
+  'scaleShowLabels': false
+
 }
 export default Vue.extend({
   name: 'BarChart',

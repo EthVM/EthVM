@@ -25,17 +25,17 @@
         <div class="row">
             <div class="col-md-4 block-container">
                 <div class="block">
-                    <GraphsRealChart></GraphsRealChart>
+                    <line-chart-pending-tx></line-chart-pending-tx>
                 </div>
             </div>
             <div class="col-md-4 block-container">
                 <div class="block">
-                    <GraphsBarChart></GraphsBarChart>
+                    <bar-chart-last-ten-blocks-tx></bar-chart-last-ten-blocks-tx>
                 </div>
             </div>
             <div class="col-md-4 block-container">
                 <div class="block">
-                    <GraphsLineChart></GraphsLineChart>
+                    <line-chart-ave-tx-fees></line-chart-ave-tx-fees>
                 </div>
             </div>
         </div>

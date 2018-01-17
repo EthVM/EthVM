@@ -1,8 +1,8 @@
 <template>
-<div id="GraphsBarChart"
-     class="bar-chart">
+<div id="GraphsRealChart"
+     class="real-chart">
   <div class="graphs">
-    <vue-chart type="bar"
+    <vue-chart type="line"
                :data="chartData"
                :options="chartOptions"
                :redraw="redraw"></vue-chart>
@@ -12,61 +12,51 @@
 </template>
 
 <script lang="ts">
+/* To use a scatter chart, data must be passed as objects containing X and Y properties */
+
 import Vue from 'vue'
 import sEvents from '@/configs/socketEvents.json'
-import BN from 'bignumber.js'
-
-let MAX_ITEMS = 10
-
-let barOptions = {
+let newOptions = {
   'title': {
-    'display': true,
-    'text': 'Transactions from the last 10 blocks'
-
+    'text': 'Pending Tx'
   },
+
   'responsive': true,
   'scales': {
     'yAxes': [
       {
-        'stacked': true,
         'ticks': {
           'beginAtZero': false
-        },
-        'gridLines': {
-          'color': 'rgba(0, 0, 0, 0)'
         }
       }
     ],
     'xAxes': [
       {
-        'stacked': true,
         'display': false
       }
     ]
   },
-  'tooltips': {
-    'backgroundColor': '#686868'
-  },
-  'barShowLabels': true,
-  'legend': {
-    'display': false
-  },
-  'layout': {
-    'padding': {
-      'left': 5,
-      'right': 5,
-      'top': 5,
-      'bottom': 0
+
+  'elements': {
+    'line': {
+      'borderColor': 'purple',
+      'fill': false
+    },
+    'point': {
+      'backgroundColor': 'purple',
+      'borderColor': 'purple'
     }
-  }
+
+  },
+  'scaleShowLabels': false
 
 }
+let MAX_ITEMS = 10
 export default Vue.extend({
-
-  name: 'BarChart',
+  name: 'pendingTxsChart',
   data: () => ({
     chartData: {},
-    chartOptions: barOptions,
+    chartOptions: newOptions,
     redraw: false
   }),
   mounted () {},
@@ -80,13 +70,16 @@ export default Vue.extend({
       if (this.chartData.datasets[0]) {
         this.redraw = false
         if (!_block.getIsUncle()) {
+          this.chartData.labels = this.chartData.labels.map((item, idx) => {
+            return Math.ceil((new Date().getTime() - this.chartData.datasets[0].blockTimes[idx]) / 1000) + ' secs ago'
+          })
           let _tempD = _block.getStats()
-          this.chartData.labels.push(_block.getNumber().toNumber())
+          this.chartData.labels.push(Math.ceil((new Date().getTime() - _block.getTimestamp().toDate()) / 1000) + ' secs ago')
           this.chartData.labels.shift()
-          this.chartData.datasets[0].data.push(_tempD.success)
+          this.chartData.datasets[0].data.push(_tempD.pendingTxs)
+          this.chartData.datasets[0].blockTimes.push(_block.getTimestamp().toDate())
           this.chartData.datasets[0].data.shift()
-          this.chartData.datasets[1].data.push(_tempD.failed)
-          this.chartData.datasets[1].data.shift()
+          this.chartData.datasets[0].blockTimes.shift()
         }
       }
     })
@@ -99,28 +92,24 @@ export default Vue.extend({
     initData () {
       let data = {
         labels: [],
-        sData: [],
-        fData: []
+        txCount: [],
+        blockTimes: []
       }
       let latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
       latestBlocks.forEach((_block) => {
-        data.labels.push(_block.getNumber().toNumber())
+        data.labels.unshift(Math.ceil((new Date().getTime() - _block.getTimestamp().toDate()) / 1000) + ' secs ago')
+        data.blockTimes.unshift(_block.getTimestamp().toDate())
         let _tempD = _block.getStats()
-        data.sData.push(new BN(_tempD.success).toNumber())
-        data.fData.push(new BN(_tempD.failed).toNumber())
+        data.txCount.unshift(_tempD.pendingTxs)
       })
       return {
         'labels': data.labels,
         'datasets': [
           {
-            'label': 'Sucessfull',
-            'backgroundColor': '#6dcff6',
-            'data': data.sData
-          },
-          {
-            'label': 'Failed',
-            'backgroundColor': '#FBA893',
-            'data': data.fData
+            'pointHoverBackgroundColor': 'pink',
+            'pointHoverBorderColor': 'pink',
+            'data': data.txCount,
+            'blockTimes': data.blockTimes
           }
         ]
       }
@@ -131,5 +120,5 @@ export default Vue.extend({
 </script>
 
 <style scoped="" lang="less">
-@import "~lessPath/NewHome/Sections/Graphs/GraphsBarChart.less";
+@import "~lessPath/NewHome/Sections/Graphs/GraphsRealChart.less";
 </style>
