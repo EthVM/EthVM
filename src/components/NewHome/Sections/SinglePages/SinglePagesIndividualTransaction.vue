@@ -156,7 +156,9 @@ export default Vue.extend({
       _this.tx = new Tx(_tx)
       _this.isPending = _this.tx.isPending()
     }
+    console.log('sent')
     this.$socket.emit('getTx', Buffer.from(this.txHash.substring(2), 'hex'), (_tx) => {
+      console.log('received')
       if (_tx) {
         _this.tx = new Tx(_tx)
         _this.isPending = _this.tx.isPending()

@@ -2,15 +2,16 @@
 
 module.exports = {
     root: true,
-    parser: 'typescript-eslint-parser',
+    parser: 'vue-eslint-parser',
     parserOptions: {
+        parser: 'typescript-eslint-parser',
         sourceType: 'module'
     },
     env: {
         browser: true,
     },
     // https://github.com/standard/standard/blob/master/docs/RULES-en.md
-    extends: 'standard',
+    extends: 'plugin:vue/recommended',
     // required to lint *.vue files
     plugins: [
         'html'
