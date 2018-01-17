@@ -2,13 +2,14 @@
 <div id="FramesMainFrame"
      class="main-frame">
   <MenusTop></MenusTop>
-  <div class="block-menu-left ">
-    <MenusSide></MenusSide>
-  </div>
+  
   <div class="section-container ">
     <div class="container-fluid">
+      <div class="block-menu-left col-md-2 col-lg-2">
+        <MenusSide></MenusSide>
+      </div>
       <div class="row">
-        <div class="sections col-md-12 col-lg-12">
+        <div class="sections col-md-10 col-lg-10">
           <div class="section-padding">
             <FramesAbout v-if="pageName == 'about'"></FramesAbout>
             <FramesFAQ v-else-if="pageName == 'faq'"></FramesFAQ>
