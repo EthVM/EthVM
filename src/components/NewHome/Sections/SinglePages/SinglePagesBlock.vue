@@ -193,7 +193,13 @@
       <!-- .section-block-1 -->
     </div>
     <!-- .row -->
-    <table-transactions :transactions="transactions"></table-transactions>
+    <div class="row">
+      <div class="col-md-12 section-block-1">
+        <div class="section-block-container">
+          <table-transactions-new :transactions="transactions"></table-transactions-new>
+        </div>
+      </div>
+    </div>
   </div>
   <!-- .container -->
 </div>
