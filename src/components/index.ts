@@ -100,6 +100,11 @@ Vue.component('icon', Icon)
     import TableTransactions from "@/components/NewHome/Sections/Tables/TableTransactions"
     Vue.component('TableTransactions', TableTransactions)
 
+
+    import TableTransactionsNew from "@/components/NewHome/Sections/Tables/TableTransactionsNew"
+    Vue.component('TableTransactionsNew', TableTransactionsNew)
+
+
     import TablesLatestBlocks from "@/components/NewHome/Sections/Tables/TablesLatestBlocks"
     Vue.component('TablesLatestBlocks', TablesLatestBlocks)
 
