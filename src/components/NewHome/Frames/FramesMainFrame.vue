@@ -10,9 +10,12 @@
         </div>
         <div class="sections col-md-12 col-lg-10">
           <div class="section-padding">
+            
+
             <FramesAbout v-if="pageName == 'about'"></FramesAbout>
             <FramesFAQ v-else-if="pageName == 'faq'"></FramesFAQ>
             <FramesContact v-else-if="pageName == 'contact'"></FramesContact>
+            <frames-overview v-if="pageName == 'overview'"></frames-overview>
             <FramesLastTransactions v-else-if="pageName == 'transactions' || pageName == 'pendingTransactions'"
                                     :type="pageName"></FramesLastTransactions>
             <FramesLatestBlocks v-else-if="pageName == 'blocks'"></FramesLatestBlocks>

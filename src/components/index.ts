@@ -36,6 +36,8 @@ Vue.component('icon', Icon)
     import FramesLatestBlocks from "@/components/NewHome/Frames/FramesLatestBlocks"
     Vue.component('FramesLatestBlocks', FramesLatestBlocks)
 
+    import FramesOverview from "@/components/NewHome/Frames/FramesOverview"
+    Vue.component('FramesOverview', FramesOverview)
 
 
 
@@ -149,10 +151,12 @@ Vue.component('icon', Icon)
 
     import SmallBlockComponent from "@/components/NewHome/Sections/SmallBlockComponent"
     Vue.component('SmallBlockComponent', SmallBlockComponent)
-
     
     import LatestPendingTransactions from "@/components/NewHome/Sections/SinglePages/LatestPendingTransactions"
     Vue.component("LatestPendingTransactions", LatestPendingTransactions)
+
+    import overview from "@/components/NewHome/Sections/SinglePages/overview"
+    Vue.component("overview", overview)
         
 
 

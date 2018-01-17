@@ -1,26 +1,25 @@
 @import '~lessPath/NewHome/globalVars';
 
-
 .latest-blocks{
-
    padding: 10px;
 
    .block-title2{
       font-size: 18px;
       margin: 0;
-      //font-family: Arial, Helvetica, sans-serif;
    }
 
    .block-title3{
       font-size: 14px;
       margin: 0;
       margin-bottom: 20px;
-      //font-family: Arial, Helvetica, sans-serif;
    }
 
    .data-container{
-      font-family: 'Roboto Mono', monospace;
-      
+      font-family: monospace !important;
+      a, p, span{
+         //font-family: monospace !important;
+      }
+
       .data-block{
          position: relative;
          display: block;
@@ -33,13 +32,12 @@
             right: 0;
             display: block;
             z-index: 99999;
-            & > div{
 
+            & > div{
                display: block;
                text-align: right;
                
                p{
-                
                   display: inline-block;
                   font-size: 10px;
                   //border: 1px solid #dedede;
@@ -49,7 +47,6 @@
                   padding: 2px 7px;
                   border-radius: 0 0 0 10px;
                   font-weight: 400;
-
                   vertical-align: top;
                   text-transform: uppercase;
                   span{
@@ -68,7 +65,6 @@
                   background-color: #e8e8e8;
                   span{
                      margin-right: 3px;
-                    
                   }
                }
 
@@ -85,10 +81,8 @@
 
                   }
                }
-
             }
-
-         }
+         }//.absolute-top-right-block
 
          .relative-block{
             color: #1c73ab;
@@ -124,38 +118,27 @@
                   &.uncle-counter{
                      .glyphicon{
                         line-height: 11px;
+                        vertical-align: middle;
+                        opacity: 0.7;
                      }
                   }
                }
-            }
-
-
+            }//.hash-block
 
             .uncles-block{
-               
-
-               .uncle-title{
-                  font-size: 9px;
-                  
-                  text-transform: uppercase;
-                  font-weight: 900;
-                  display: inline-block;
-                  //border: 1px solid red;
-                  padding: 2px 4px;
-                  border-radius: 3px;
-                  color: white;
-                  background-color: rgba(28, 115, 171, 0.5);
-               }
-
+               margin-top: 3px;
+               border-left: 7px solid rgba(28, 115, 171, 0.3);
+               padding-left: 0px;
                table{
                   tbody{
                      tr{
                         //border-top: 1px solid black;
                         td{
+                           border-right: 1px solid rgba(28, 115, 171, 0.7);
+                           padding: 0 5px;
                            p{
                               font-size: 11px;
-                           }
-                           
+                           }                           
                         }
 
                         .divider{
@@ -167,24 +150,13 @@
                         .sub-miner p{
                            width: 120px;
                            overflow: hidden;
-                           text-overflow: ellipsis;
-                           
-                        }
-
-                        
-                     }
-                     
+                           text-overflow: ellipsis;                           
+                        }                        
+                     }                     
                   }
-                  
                }
-
-               
-            }
-
-
-         }
-
-      }
-   }
-
-}
+            }//.uncles-block
+         }//.relative-block
+      }//.data-block
+   }//.data-container
+}//.latest-blocks
