@@ -42,7 +42,7 @@
         <div class="row table-block">
             <div class="col-md-6 block-container">
                 <div class="block">
-                    <TablesLatestBlocks frompage="from-home" :max-items="20"></TablesLatestBlocks>
+                    <tables-latest-blocks-new frompage="from-home" :max-items="20"></tables-latest-blocks-new>
                 </div>
             </div>
             <div class="col-md-6 block-container">

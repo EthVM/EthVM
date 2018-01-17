@@ -108,10 +108,13 @@ Vue.component('icon', Icon)
     import TablesLatestBlocks from "@/components/NewHome/Sections/Tables/TablesLatestBlocks"
     Vue.component('TablesLatestBlocks', TablesLatestBlocks)
 
+
+    import TablesLatestBlocksNew from "@/components/NewHome/Sections/Tables/TablesLatestBlocksNew"
+    Vue.component('TablesLatestBlocksNew', TablesLatestBlocksNew)
+
+
     import TablesTop10Senders from "@/components/NewHome/Sections/Tables/TablesTop10Senders"
     Vue.component('TablesTop10Senders', TablesTop10Senders)
-
-
 
 
     /* Footers ---------------------- */

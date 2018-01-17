@@ -9,7 +9,7 @@
                </div>
                <div v-if="!tx.getStatus()">
                   <p class="tx-status">Unsuccessful</p>
-               </div>               
+               </div>
             </div>
             <div class="relative-block">
                <div class="tx-block">
@@ -21,7 +21,8 @@
                      <p class="block-label">from</p>
                   </div>
                   <div class="transaction-info arrow_box">
-                     <p class="value">{{tx.getValue().toEth()}}</p><p class="value-label">ETH</p>
+                     <p class="value">{{tx.getValue().toEth()}}</p>
+                     <p class="value-label">ETH</p>
                   </div>
                   <div class="transaction-info">
                      <p class="address">{{tx.getTo().toString()}}...</p>
