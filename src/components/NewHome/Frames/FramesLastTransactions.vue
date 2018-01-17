@@ -30,7 +30,7 @@
     <div class="row">
       <div class="col-md-9 block-container">
         <div class="block the-table">
-         <latest-transactions v-if="type=='lasttransactions'"></latest-transactions>
+         <latest-transactions v-if="type=='transactions'"></latest-transactions>
          <latest-pending-transactions v-if="type=='pendingTransactions'"></latest-pending-transactions>
         </div>
       </div>  

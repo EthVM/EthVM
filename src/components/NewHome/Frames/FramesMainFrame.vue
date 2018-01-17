@@ -13,9 +13,9 @@
             <FramesAbout v-if="pageName == 'about'"></FramesAbout>
             <FramesFAQ v-else-if="pageName == 'faq'"></FramesFAQ>
             <FramesContact v-else-if="pageName == 'contact'"></FramesContact>
-            <FramesLastTransactions v-else-if="pageName == 'lasttransactions' || pageName == 'pendingTransactions'"
+            <FramesLastTransactions v-else-if="pageName == 'transactions' || pageName == 'pendingTransactions'"
                                     :type="pageName"></FramesLastTransactions>
-            <FramesLatestBlocks v-else-if="pageName == 'latestblocks'"></FramesLatestBlocks>
+            <FramesLatestBlocks v-else-if="pageName == 'blocks'"></FramesLatestBlocks>
             <FramesIndividualTransaction v-else-if="pageName == 'tx' && param"
                                          :txHash="param"></FramesIndividualTransaction>
             <FramesBlock v-else-if="pageName == 'block' && param"
@@ -50,11 +50,12 @@ export default Vue.extend({
   created() {
     this.$options.sockets.connect = () => {
       let _this = this
-      if (!this.pageName) this.setPastData()
-      else {
-        setTimeout(()=>{
+      if (!this.pageName || this.pageName === 'blocks' || this.pageName === 'transactions') {
+        this.setPastData()
+      } else {
+        setTimeout(() => {
           _this.setPastData()
-        },1000)
+        }, 1000)
       }
     }
   },
