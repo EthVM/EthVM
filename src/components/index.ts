@@ -1,38 +1,5 @@
 import Vue from 'vue'
 
-import Header from '@/components/Header'
-Vue.component('Header', Header)
-
-import Footer from '@/components/Footer'
-Vue.component('Footer', Footer)
-
-import HpTxContainer from '@/components/HomePage/TxContainer'
-Vue.component('hp-tx-container', HpTxContainer)
-
-import HpBlockContainer from '@/components/HomePage/blockContainer'
-Vue.component('hp-block-container', HpBlockContainer)
-
-import LatestBlocks from '@/components/LatestBlocks/LatestBlocks'
-Vue.component('LatestBlocks', LatestBlocks)
-
-import Block from '@/components/Block/Block'
-Vue.component('Block', Block)
-
-import LatestTransaction from '@/components/LatestTransaction/LatestTransaction'
-Vue.component('LatestTransaction', LatestTransaction)
-
-import TxPagination from '@/components/LatestTransaction/TxPagination'
-Vue.component('TxPagination', TxPagination)
-
-import IndividualTransaction from '@/components/IndividualTransaction/IndividualTransaction'
-Vue.component('IndividualTransaction', IndividualTransaction)
-
-import SingleAccount from '@/components/SingleAccount/SingleAccount'
-Vue.component('SingleAccount', SingleAccount)
-
-import TopNav from "@/components/TopNav"
-Vue.component('topnav', TopNav)
-
 import * as Icon from 'vue-awesome'
 import 'vue-awesome/icons'
 Vue.component('icon', Icon)
@@ -117,14 +84,14 @@ Vue.component('icon', Icon)
     import VueChart from "@/components/NewHome/Sections/Graphs/VueChart"
     Vue.component('VueChart', VueChart)
 
-    import GraphsRealChart from "@/components/NewHome/Sections/Graphs/GraphsRealChart"
-    Vue.component('GraphsRealChart', GraphsRealChart)
+    import LineChartPendingTx from "@/components/NewHome/Sections/Graphs/LineChartPendingTx"
+    Vue.component('LineChartPendingTx', LineChartPendingTx)
 
-    import GraphsBarChart from "@/components/NewHome/Sections/Graphs/GraphsBarChart"
-    Vue.component('GraphsBarChart', GraphsBarChart)
+    import BarChartLastTenBlocksTx from "@/components/NewHome/Sections/Graphs/BarChartLast10BlocksTx"
+    Vue.component('BarChartLastTenBlocksTx', BarChartLastTenBlocksTx)
 
-    import GraphsLineChart from "@/components/NewHome/Sections/Graphs/GraphsLineChart"
-    Vue.component('GraphsLineChart', GraphsLineChart)
+    import LineChartAveTxFees from "@/components/NewHome/Sections/Graphs/LineChartAveTxFees"
+    Vue.component('LineChartAveTxFees', LineChartAveTxFees)
 
 
 
@@ -175,7 +142,7 @@ Vue.component('icon', Icon)
     Vue.component('SinglePagesBlock', SinglePagesBlock)
 
     import latestTransactions from "@/components/NewHome/Sections/SinglePages/latestTransactions"
-    Vue.component('latestTransactions', latestTransactions)
+    Vue.component('LatestTransactions', latestTransactions)
 
     import SmallBlockComponent from "@/components/NewHome/Sections/SmallBlockComponent"
     Vue.component('SmallBlockComponent', SmallBlockComponent)
@@ -188,6 +155,6 @@ Vue.component('icon', Icon)
 
      /* Generic components ---------*/
     import usageBar from "@/components/NewHome/Sections/Generic/usageBar"
-    Vue.component('usage-bar', usageBar)
+    Vue.component('UsageBar', usageBar)
     import ethAddress from "@/components/NewHome/Sections/Generic/ethAddress"
-    Vue.component('eth-address', ethAddress)
+    Vue.component('EthAddress', ethAddress)
