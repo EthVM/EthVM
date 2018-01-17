@@ -15,11 +15,44 @@
             </div>
             <div class="relative-block">
                <div class="hash-block">
-                  <p>HASH#&nbsp;&nbsp;<router-link :to="'/block/'+block.getHash().toString()">{{block.getHash().toString()}}</router-link></p>
-                  <p>MINER#&nbsp;<router-link :to="'/block/'+block.getHash().toString()">{{block.getMiner().toString()}}</router-link></p>
+                  <p>HASH&nbsp;&nbsp;<router-link :to="'/block/'+block.getHash().toString()">{{block.getHash().toString()}}</router-link></p>
+                  <p>MINER&nbsp;<router-link :to="'/block/'+block.getHash().toString()">{{block.getMiner().toString()}}</router-link></p>
+               </div>
+               <div class="uncles-block" v-if="block.getUncleHashes().length != 0">
+                  
+
+                  <!-- SUB LOOP START ############## -->
+                     <p class="uncle-title">Uncles >>></p>
+                    
+                      <table>
+                        <tbody>
+                          <tr v-for="uncle in block.getUncles()">
+                             <td class="sub-hash">
+                              <p>Hash&nbsp;<span><router-link :to="'/block/'+block.getHash().toString()">{{uncle.getHash().toString()}}</router-link></span></p>
+                            </td>
+                            <td class="divider">|</td>
+                            <td class="sub-height">
+                              <p>Height&nbsp;<span>{{uncle.getNumber().toNumber()}}</span></p>
+                            </td>
+                            <td class="divider">|</td>
+                            <td class="sub-miner">
+                              <p>Miner&nbsp;<span>{{uncle.getMiner().toString()}}</span></p>
+                            </td>
+                            <td class="divider">|</td>
+                            <td class="sub-reward">
+                              <p>Reward&nbsp;<span>{{uncle.getTotalBlockReward().toEth()}}</span></p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    
+                  
+                  <!-- SUB LOOP END ############## -->
+
+
                </div>
 
-            </div>
+            </div>            
          </div><!-- .data-block -->
       </div><!-- .data-container -->
    </div>

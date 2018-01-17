@@ -86,55 +86,57 @@
 
             }
 
-            .transaction-block{
-               width: 100%;
+            .uncles-block{
                
-               .transaction-info{
+
+               .uncle-title{
+                  font-size: 9px;
+                  
+                  text-transform: uppercase;
+                  font-weight: 900;
                   display: inline-block;
-                  width: 20%;
-                  vertical-align: middle;
-
-                  .address{
-                     font-size: 13px;
-                  }
-
-                  .address, .value{
-                     max-width: 90px;
-                     overflow: hidden;
-                     text-overflow: ellipsis;
-
-                  }
-
-                  .value{
-                     font-size: 12px;
-                     line-height: initial;
-                     display: inline-block;
-                     
-
-                     overflow: hidden;
-                     text-overflow: ellipsis;
-                     vertical-align: middle;
-                  }
-
-                  .value-label{
-                     font-size: 8px;
-                     line-height: initial;
-                     display: inline-block;
-                     vertical-align: middle;
-                     margin-top: 4px;
-                     margin-left: -5px;
-                     
-                     
-                  }
-
-                  .block-label{
-                     
-                     font-size: 11px;
-                  }
-
+                  //border: 1px solid red;
+                  padding: 2px 4px;
+                  border-radius: 3px;
+                  color: white;
+                  background-color: rgba(28, 115, 171, 0.5);
                }
+
+               table{
+                  tbody{
+                     tr{
+                        //border-top: 1px solid black;
+                        td{
+                           p{
+                              font-size: 11px;
+                           }
+                           
+                        }
+
+                        .divider{
+                           font-size: 10px;
+                           padding: 0 5px;
+                        }
+
+                        .sub-hash p,
+                        .sub-miner p{
+                           width: 120px;
+                           overflow: hidden;
+                           text-overflow: ellipsis;
+                           
+                        }
+
+                        
+                     }
+                     
+                  }
+                  
+               }
+
                
             }
+
+
          }
 
       }
