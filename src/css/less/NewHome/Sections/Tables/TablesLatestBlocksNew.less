@@ -1,0 +1,190 @@
+@import '~lessPath/NewHome/globalVars';
+
+
+.latest-blocks{
+
+   padding: 10px;
+
+   .block-title2{
+      font-size: 18px;
+      margin: 0;
+      //font-family: Arial, Helvetica, sans-serif;
+   }
+
+   .block-title3{
+      font-size: 14px;
+      margin: 0;
+      margin-bottom: 20px;
+      //font-family: Arial, Helvetica, sans-serif;
+   }
+
+   .data-container{
+      font-family: 'Roboto Mono', monospace;
+      
+      .data-block{
+         position: relative;
+         display: block;
+         border-top: 1px dotted #dedede;
+         padding: 10px 0px;
+
+         .absolute-top-right-block{
+            position: absolute;
+            top: 0;
+            right: 0;
+            display: block;
+            z-index: 99999;
+            & > div{
+
+               display: block;
+               text-align: right;
+               
+               p{
+                
+                  display: inline-block;
+                  font-size: 10px;
+                  //border: 1px solid #dedede;
+                  border-top: none;
+                  border-right: none;
+                  color: #404040;
+                  padding: 2px 7px;
+                  border-radius: 0 0 0 10px;
+                  font-weight: 400;
+
+                  vertical-align: top;
+                  text-transform: uppercase;
+                  span{
+                     font-weight: 900;
+                     vertical-align: bottom;
+                     margin-right: 3px;
+                     font-size: 11px;
+                     max-width: 60px;
+                     overflow: hidden;
+                     text-overflow: ellipsis;
+                     display: inline-block;
+                  }
+               }
+
+               .other-info{
+                  background-color: #e8e8e8;
+                  span{
+                     margin-right: 3px;
+                    
+                  }
+               }
+
+               .block-number{
+                  background-color: #1c72ab;
+                  span{
+
+                  }
+               }
+
+               .uncle-number{
+                  background-color: #30bd7d;
+                  span{
+
+                  }
+               }
+
+            }
+
+         }
+
+         .relative-block{
+            color: #1c73ab;
+            position: relative;
+            display: block;
+
+            .hash-block{
+               margin-bottom: 0px;
+               p{
+                  font-size: 14px;
+                  
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  margin: 0;
+
+               }
+
+               h4{
+                  font-size: 12px;
+                  line-height: 14px;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  margin: 0;
+
+                  &.hash{
+                     max-width: 400px;
+                  }
+
+                  &.miner{
+                     max-width: 300px;
+                  }
+                 
+                  &.uncle-counter{
+                     .glyphicon{
+                        line-height: 11px;
+                     }
+                  }
+               }
+            }
+
+
+
+            .uncles-block{
+               
+
+               .uncle-title{
+                  font-size: 9px;
+                  
+                  text-transform: uppercase;
+                  font-weight: 900;
+                  display: inline-block;
+                  //border: 1px solid red;
+                  padding: 2px 4px;
+                  border-radius: 3px;
+                  color: white;
+                  background-color: rgba(28, 115, 171, 0.5);
+               }
+
+               table{
+                  tbody{
+                     tr{
+                        //border-top: 1px solid black;
+                        td{
+                           p{
+                              font-size: 11px;
+                           }
+                           
+                        }
+
+                        .divider{
+                           font-size: 10px;
+                           padding: 0 5px;
+                        }
+
+                        .sub-hash p,
+                        .sub-miner p{
+                           width: 120px;
+                           overflow: hidden;
+                           text-overflow: ellipsis;
+                           
+                        }
+
+                        
+                     }
+                     
+                  }
+                  
+               }
+
+               
+            }
+
+
+         }
+
+      }
+   }
+
+}
