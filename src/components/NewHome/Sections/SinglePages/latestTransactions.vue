@@ -1,5 +1,6 @@
 <template>
-  <table-transactions :transactions="transactions"></table-transactions>
+  
+  <table-transactions-new :transactions="transactions"></table-transactions-new>
 </template>
 
 <script lang="ts">
