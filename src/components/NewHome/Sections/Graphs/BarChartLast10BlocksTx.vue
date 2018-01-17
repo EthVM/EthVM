@@ -1,6 +1,6 @@
 <template>
 <div id="GraphsBarChart"
-     class="bar-chart">
+     class="bar-chart component-shadow">
   <div class="graphs">
     <vue-chart type="bar"
                :data="chartData"

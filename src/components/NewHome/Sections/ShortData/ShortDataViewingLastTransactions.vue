@@ -1,14 +1,5 @@
 <template>
-  <div class="viewing-last-transactions">
-
-    <p class="block-title">Viewing Last Transactions</p>
-    
-    <div class="bottom-block">
-      <div class="icon-block"><icon name='tachometer' scale='1'></icon></div>
-      <p class="block-value">2.17 H</p>
-    </div>
-    
-  </div>
+    <small-block-component :title="blockTitle" :value="txNumber" :icon-name="blockIconType" :icon-color="blockIconColor"></small-block-component>
 </template>
 
 <script lang="ts">
@@ -17,7 +8,10 @@
     name: 'ShortDataViewingLastTransactions',
     data () {
       return {
-
+        blockTitle: 'Viewing Last Transactions',
+        blockIconType: 'tachometer',
+        blockIconColor: '#fba893',
+        txNumber: '1000'
       }
     }
   })

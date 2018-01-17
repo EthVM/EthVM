@@ -1,5 +1,5 @@
 <template>
-  <div id="GraphsLineChart" class="line-chart">
+  <div id="GraphsLineChart" class="line-chart component-shadow">
     <div class="graphs">
      <vue-chart type="line" :data="chartData" :options="chartOptions" :redraw="redraw"></vue-chart>
     </div>

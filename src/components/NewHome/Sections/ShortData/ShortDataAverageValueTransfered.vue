@@ -1,14 +1,5 @@
 <template>
-  <div class="average-value-transfered">
-
-    <p class="block-title">Average Value Transfered</p>
-    
-    <div class="bottom-block">
-      <div class="icon-block"><icon name='tachometer' scale='1'></icon></div>
-      <p class="block-value">2.17 H</p>
-    </div>
-    
-  </div>
+    <small-block-component :title="blockTitle" :value="averageValueTransfered" :icon-name="blockIconType" :icon-color="blockIconColor"></small-block-component>
 </template>
 
 <script lang="ts">
@@ -17,7 +8,10 @@
     name: 'ShortDataAverageValueTransfered',
     data () {
       return {
-
+      blockTitle: 'Average Value Transfered',
+      blockIconType: 'tachometer',
+      blockIconColor: '#ffd800',
+      averageValueTransfered: '2.17'
       }
     }
   })

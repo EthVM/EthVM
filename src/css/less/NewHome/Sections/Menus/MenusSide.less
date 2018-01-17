@@ -4,8 +4,8 @@
 .menus-side{
 
     width: 200px;
-    padding: 40px;
-
+    padding: 20px;
+    top-padding: 25px;
     ul{
         list-style-type: none;
         margin: 0px;
@@ -19,10 +19,11 @@
             
 
             a p{
-                font-size: 17px;
+                font-size: @font-size-5;
                 margin: 0px;
-                padding: 15px 0px 5px 0px;
-                font-weight: @menu-side-font-weight;
+                padding: 15px 0px 0px 0px;
+                font-weight: @font-weight-5;
+                color: @text-color-grey1;
                 cursor: pointer;
 
                 &:hover{
@@ -37,11 +38,13 @@
             }
 
             ul{
+                padding-top: ;
                 li p{
                     font-size: @menu-side-sub-font-size;
                     margin: 0px;
-                    padding: 5px 0px 5px 15px;
-                    font-size: 14px;
+                    padding: 8px 0px 5px 20px;
+                    font-size: 11px;
+                    font-weight: @font-weight-2
 
                 }
             }
@@ -113,6 +116,7 @@
 
 
                 a p{
+                    font-family: @body-font;
                     margin: 0px;
                     padding: 10px 20px 10px 0px;
                     font-weight: @menu-side-font-weight;
@@ -134,7 +138,7 @@
                         font-size: 17px;
                         margin: 0px;
                         padding: 10px 20px;
-
+                        font-family: @main-font;
 
                     }
                 }

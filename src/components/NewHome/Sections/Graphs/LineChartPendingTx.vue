@@ -1,6 +1,6 @@
 <template>
 <div id="GraphsRealChart"
-     class="real-chart">
+     class="real-chart component-shadow">
   <div class="graphs">
     <vue-chart type="line"
                :data="chartData"
