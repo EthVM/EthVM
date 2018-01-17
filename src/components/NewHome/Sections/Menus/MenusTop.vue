@@ -23,7 +23,7 @@
         </div>
       </div>
     </div>
-
+    
     <div v-if="menuShow" class="menu-side">
       
       <div class="mobile-search-container">
