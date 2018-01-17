@@ -19,24 +19,28 @@
             top: 0;
             right: 0;
             display: block;
-            z-index: 999;
+            z-index: 99999;
             & > div{
 
                display: block;
                text-align: right;
-
+               
                p{
-                  vertical-align: bottom;
+                
                   display: inline-block;
-                  font-size: 8px;
-                  border: 1px solid #dedede;
+                  font-size: 10px;
+                  //border: 1px solid #dedede;
                   border-top: none;
-                  color: black;
+                  border-right: none;
+                  color: #404040;
                   padding: 2px 7px;
-                  border-radius: 0 0 0 8px;
-                  font-weight: 900;
+                  border-radius: 0 0 0 10px;
+                  font-weight: 400;
 
+                  vertical-align: top;
+                  text-transform: uppercase;
                   span{
+                     font-weight: 900;
                      vertical-align: bottom;
                      margin-right: 3px;
                      font-size: 11px;
@@ -47,21 +51,24 @@
                   }
                }
 
-               .tx-status{
-                  background-color: #1c73ab;
-                  color: white;
-                  font-size: 10px;
-                  font-weight: 900;
-                  border: none;
-                  padding: 3px 8px;
-                  text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5);
-                  vertical-align: top;
+               .other-info{
+                  background-color: #e8e8e8;
                   span{
-                     margin-left: 5px;
-                     background-color: #52bdff;
-                     padding: 0 4px;
-                     border-radius: 3px;
-                     margin-right: 0;
+                     margin-right: 3px;
+                    
+                  }
+               }
+
+               .block-number{
+                  background-color: #1c72ab;
+                  span{
+
+                  }
+               }
+
+               .uncle-number{
+                  background-color: #30bd7d;
+                  span{
 
                   }
                }
@@ -79,12 +86,37 @@
                margin-bottom: 0px;
                p{
                   font-size: 14px;
-                  width: 400px;
+                  
                   overflow: hidden;
                   text-overflow: ellipsis;
+                  margin: 0;
+
                }
 
+               h4{
+                  font-size: 12px;
+                  line-height: 14px;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  margin: 0;
+
+                  &.hash{
+                     max-width: 400px;
+                  }
+
+                  &.miner{
+                     max-width: 300px;
+                  }
+                 
+                  &.uncle-counter{
+                     .glyphicon{
+                        line-height: 11px;
+                     }
+                  }
+               }
             }
+
+
 
             .uncles-block{
                

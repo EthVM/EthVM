@@ -7,40 +7,49 @@
          <div class="data-block" v-for="block in getBlocks" v-if="!block.getIsUncle()">
             <div class="absolute-top-right-block">
                <div>
-                  <p><span>{{block.getNumber().toNumber()}}</span>Block / <span>{{block.getTransactionCount()}}</span>TXs / <span>{{block.getTotalBlockReward().toEth()}}</span>Reward</p>   
+                  <p class="other-info">TXs <span>{{block.getTransactionCount()}}</span>&nbsp;/&nbsp;Reward(ETH) <span>{{block.getTotalBlockReward().toEth()}}</span></p>
                </div>
-               <div>
-                  <p class="tx-status" v-if="block.getUncleHashes().length != 0">{{block.getUncleHashes().length}}&nbsp;uncles<span>OPEN</span></p>
-               </div>               
+               <div class="hidden">
+                  <p class="block-number">BLOCK#&nbsp;<span>{{block.getNumber().toNumber()}}</span></p>
+               </div>
+               <div class="hidden">
+                  <p class="uncle-number" v-if="block.getUncleHashes().length != 0">uncles&nbsp;<span>{{block.getUncleHashes().length}}</span></p>
+               </div>
             </div>
             <div class="relative-block">
                <div class="hash-block">
-                  <p>HASH&nbsp;&nbsp;<router-link :to="'/block/'+block.getHash().toString()">{{block.getHash().toString()}}</router-link></p>
-                  <p>MINER&nbsp;<router-link :to="'/block/'+block.getHash().toString()">{{block.getMiner().toString()}}</router-link></p>
+                  <p>BLOCK#&nbsp;<span>{{block.getNumber().toNumber()}}</span></p>
+                  <h4 class="hash">HASH&nbsp;&nbsp;&nbsp;&nbsp;<router-link :to="'/block/'+block.getHash().toString()">{{block.getHash().toString()}}</router-link></h4>
+                  <h4 class="miner">MINER&nbsp;&nbsp;&nbsp;{{block.getMiner().toString()}}</h4>
+                  <h4 class="uncle-counter" v-if="block.getUncleHashes().length != 0">UNCLES&nbsp;&nbsp;<span>{{block.getUncleHashes().length}}</span>&nbsp;<span class="glyphicon glyphicon-chevron-down"></span></h4>
                </div>
+
+               
+               
                <div class="uncles-block" v-if="block.getUncleHashes().length != 0">
                   
 
+
                   <!-- SUB LOOP START ############## -->
-                     <p class="uncle-title">Uncles >>></p>
+                     
                     
                       <table>
                         <tbody>
                           <tr v-for="uncle in block.getUncles()">
                              <td class="sub-hash">
-                              <p>Hash&nbsp;<span><router-link :to="'/block/'+block.getHash().toString()">{{uncle.getHash().toString()}}</router-link></span></p>
+                              <p>HASH&nbsp;<span><router-link :to="'/block/'+block.getHash().toString()">{{uncle.getHash().toString()}}</router-link></span></p>
                             </td>
                             <td class="divider">|</td>
                             <td class="sub-height">
-                              <p>Height&nbsp;<span>{{uncle.getNumber().toNumber()}}</span></p>
+                              <p>HEIGHT&nbsp;<span>{{uncle.getNumber().toNumber()}}</span></p>
                             </td>
                             <td class="divider">|</td>
                             <td class="sub-miner">
-                              <p>Miner&nbsp;<span>{{uncle.getMiner().toString()}}</span></p>
+                              <p>MINER&nbsp;<span>{{uncle.getMiner().toString()}}</span></p>
                             </td>
                             <td class="divider">|</td>
                             <td class="sub-reward">
-                              <p>Reward&nbsp;<span>{{uncle.getTotalBlockReward().toEth()}}</span></p>
+                              <p>REWARD(ETH)&nbsp;<span>{{uncle.getTotalBlockReward().toEth()}}</span></p>
                             </td>
                           </tr>
                         </tbody>
