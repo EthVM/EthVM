@@ -49,12 +49,12 @@ export default Vue.extend({
   },
   created() {
     this.$options.sockets.connect = () => {
-      let _this = this
+      let parent = this
       if (!this.pageName || this.pageName === 'blocks' || this.pageName === 'transactions') {
         this.setPastData()
       } else {
         setTimeout(() => {
-          _this.setPastData()
+          parent.setPastData()
         }, 1000)
       }
     }
