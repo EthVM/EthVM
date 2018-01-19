@@ -38,7 +38,7 @@
                         <tbody>
                           <tr v-for="uncle in block.getUncles()">
                              <td class="sub-hash">
-                              <p>HASH&nbsp;<span><router-link :to="'/block/'+block.getHash().toString()">{{uncle.getHash().toString()}}</router-link></span></p>
+                              <p>HASH&nbsp;<span><router-link :to="'/block/'+uncle.getHash().toString()">{{uncle.getHash().toString()}}</router-link></span></p>
                             </td>
 
                             <td class="sub-height">

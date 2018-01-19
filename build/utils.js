@@ -64,8 +64,7 @@ exports.cssLoaders = function(options) {
         }),
         scss: generateLoaders('sass'),
         stylus: generateLoaders('stylus'),
-        styl: generateLoaders('stylus'),
-        ts: 'ts-loader'
+        styl: generateLoaders('stylus')
     }
 }
 
@@ -81,7 +80,6 @@ exports.styleLoaders = function(options) {
             use: loader
         })
     }
-
     return output
 }
 

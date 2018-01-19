@@ -2,7 +2,7 @@
   <div id="MenusTop" class="menus-top">
     <div class="top-block">
       <div class="logo-block">
-        <router-link to="/"><img src="/img/logo.png"></router-link>
+        <router-link to="/"><img src="~@/static/img/logo.png"></router-link>
       </div>
 
       <div class="search-container">
@@ -23,7 +23,7 @@
         </div>
       </div>
     </div>
-
+    
     <div v-if="menuShow" class="menu-side">
       
       <div class="mobile-search-container">

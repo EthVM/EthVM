@@ -3,40 +3,52 @@
 
 .main-frame{
 padding-top: 50px;
+
     .section-container{
         background-color: @main-block-background-color;
         width: 100%;
         position: relative;
-
-        .block-menu-left{
-            
-            
-        }
+        padding-left:200px;
+        right:0;
 
         .sections{
 
             background-color: #efefef;
+
             .section-padding{
                 padding-bottom: 10px;
                 padding-right: 10px;
+
             }
         }
     }
-
-}
-
-
-
-
-@media screen and (max-width: 1199px){
-
     .block-menu-left{
+            position: fixed;
+            left: 0;
+            z-index: 1;
+            background-color: white;
+            width: 200px;
+            height: 100% !important;
+            margin-right: 10px;
+            
+        }
 
-        display: none;
-        
-    }
+    @media screen and (max-width: 1199px){
+
+        .block-menu-left{
+            display: none;
+        }
+        .section-container{
+            padding-left: 0px;
+        }
 
 }
+
+}
+
+
+
+
 
 
 

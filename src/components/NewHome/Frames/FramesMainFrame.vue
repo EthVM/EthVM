@@ -2,13 +2,13 @@
 <div id="FramesMainFrame"
      class="main-frame">
   <MenusTop></MenusTop>
-  <div class="section-container">
+  <div class="block-menu-left ">
+    <MenusSide></MenusSide>
+  </div>
+  <div class="section-container ">
     <div class="container-fluid">
       <div class="row">
-        <div class="block-menu-left col-md-3 col-lg-2">
-          <MenusSide></MenusSide>
-        </div>
-        <div class="sections col-md-12 col-lg-10">
+        <div class="sections col-md-12 col-lg-12">
           <div class="section-padding">
             
 
@@ -52,24 +52,24 @@ export default Vue.extend({
   },
   created() {
     this.$options.sockets.connect = () => {
-      let _this = this
+      let parent = this
       if (!this.pageName || this.pageName === 'blocks' || this.pageName === 'transactions') {
         this.setPastData()
       } else {
         setTimeout(() => {
-          _this.setPastData()
+          parent.setPastData()
         }, 1000)
       }
     }
   },
   methods: {
     setPastData() {
-      this.$socket.emit(sEvents.pastTxs, '', (_txs) => {
+      this.$socket.emit(sEvents.pastTxs, '', (_err, _txs) => {
         this.$store.commit('NEW_TX', _txs)
         this.$eventHub.$emit(sEvents.pastTxsR)
         this.$eventHub.$emit(sEvents.newTx, new Tx(_txs[0]))
       })
-      this.$socket.emit(sEvents.pastBlocks, '', (_blocks) => {
+      this.$socket.emit(sEvents.pastBlocks, '', (_err, _blocks) => {
         this.$store.commit('NEW_BLOCK', _blocks)
         this.$eventHub.$emit(sEvents.newBlock, new Block(_blocks[0]))
         this.$eventHub.$emit(sEvents.pastBlocksR)
