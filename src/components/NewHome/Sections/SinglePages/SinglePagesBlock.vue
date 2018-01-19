@@ -193,7 +193,7 @@
       <!-- .section-block-1 -->
     </div>
     <!-- .row -->
-    <div class="row">
+    <div class="row" v-show="!block.getIsUncle()">
       <div class="col-md-12 section-block-1">
         <div class="section-block-container">
           <table-transactions-new :transactions="transactions"></table-transactions-new>
@@ -232,17 +232,17 @@ export default Vue.extend({
   methods: {},
   mounted: function() {
     let _this = this
-    this.$socket.emit('getBlock', Buffer.from(this.blockHash.substring(2), 'hex'), (data) => {
+    this.$socket.emit('getBlock', Buffer.from(this.blockHash.substring(2), 'hex'), (err, data) => {
       if (data) {
         _this.block = new Block(data)
         let uncleHashes = _this.block.getUncleHashes()
-        _this.$socket.emit('getBlockTransactions', _this.block.getHash().toBuffer(), (data) => {
+        _this.$socket.emit('getBlockTransactions', _this.block.getHash().toBuffer(), (err, data) => {
           _this.transactions = data.map((_tx) => {
             return new Tx(_tx)
           })
         })
         uncleHashes.forEach((_hash: any, idx: number) => {
-          _this.$socket.emit('getBlock', _hash.toBuffer(), (data) => {
+          _this.$socket.emit('getBlock', _hash.toBuffer(), (err, data) => {
             _this.uncles.push(new Block(data))
           })
         })

@@ -152,8 +152,17 @@ export default Vue.extend({
   methods: {},
   beforeCreate() {},
   created() {
+
+      /*this.$socket.emit('getAccount', '0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8', (err, result)=>{
+        console.log(err, result)
+      })*/
+      /*this.$socket.emit('ethCall', {to:"0xd26114cd6EE289AccF82350c8d8487fedB8A0C07", data:"0x70a082310000000000000000000000007cb57b5a97eabe94205c07890be4c1ad31e486a8"}, (err, result)=>{
+        console.log(err, result)
+      })*/
+
+
     let _this = this
-    this.$socket.emit('getTx', Buffer.from(this.txHash.substring(2), 'hex'), (_tx) => {
+    this.$socket.emit('getTx', Buffer.from(this.txHash.substring(2), 'hex'), (_err, _tx) => {
       if (_tx) {
         _this.tx = new Tx(_tx)
         _this.isPending = _this.tx.isPending()
