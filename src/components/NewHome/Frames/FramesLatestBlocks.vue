@@ -4,13 +4,13 @@
 
     <div class="row">
 
-      <div class="col-md-9">
+      <div class="col-md-6">
         <div class="block the-table">
-          <TablesLatestBlocks></TablesLatestBlocks>
+          <tables-latest-blocks-new></tables-latest-blocks-new>
         </div>
       </div>
 
-      <div class="col-md-3">
+      <div class="col-md-6">
         
 
         <div class="row">
