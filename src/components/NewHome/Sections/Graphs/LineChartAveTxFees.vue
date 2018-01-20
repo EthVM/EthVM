@@ -99,10 +99,10 @@ export default Vue.extend({
       }
       let latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
       latestBlocks.forEach((_block) => {
-        data.labels.push(_block.getNumber().toNumber())
+        data.labels.unshift(_block.getNumber().toNumber())
         let _tempD = _block.getStats()
-        data.avgFees.push(ethUnits.convert(new BN(_tempD.avgTxFees).toFixed(), 'wei', 'eth').substr(0, 8))
-        data.avgPrice.push(ethUnits.convert(new BN(_tempD.avgGasPrice).toFixed(), 'wei', 'gwei').substr(0, 5))
+        data.avgFees.unshift(ethUnits.convert(new BN(_tempD.avgTxFees).toFixed(), 'wei', 'eth').substr(0, 8))
+        data.avgPrice.unshift(ethUnits.convert(new BN(_tempD.avgGasPrice).toFixed(), 'wei', 'gwei').substr(0, 5))
       })
       return {
         'labels': data.labels,
