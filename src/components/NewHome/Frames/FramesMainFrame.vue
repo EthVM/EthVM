@@ -1,23 +1,21 @@
 <template>
-    <div>        
-        <!-- Navigatin Bar -->
-        <nav class="fixed-top">
-          <div class="mobile-menu">
-            <MenusTop></MenusTop>
-          </div>
+<div id="FramesMainFrame"
+     class="main-frame">
+  <MenusTop></MenusTop>
+  <div class="block-menu-left ">
+    <MenusSide></MenusSide>
+  </div>
+  <div class="section-container ">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="sections col-md-12 col-lg-12">
+          <div class="section-padding">
             
-        </nav>
-        <!-- End Navigation Bar -->
-        <!-- Side Menu -->
-        <div class="side-menu">
-            <MenusSide></MenusSide>
-        </div>
-        <!-- Side Menu -->
-        <!-- DashBoard Content: -->
-        <div class="main-content" id="main">
+
             <FramesAbout v-if="pageName == 'about'"></FramesAbout>
             <FramesFAQ v-else-if="pageName == 'faq'"></FramesFAQ>
             <FramesContact v-else-if="pageName == 'contact'"></FramesContact>
+            <frames-overview pagetype="singlepage" v-if="pageName == 'overview'"></frames-overview>
             <FramesLastTransactions v-else-if="pageName == 'transactions' || pageName == 'pendingTransactions'"
                                     :type="pageName"></FramesLastTransactions>
             <FramesLatestBlocks v-else-if="pageName == 'blocks'"></FramesLatestBlocks>
@@ -28,23 +26,68 @@
             <FramesHome v-else></FramesHome>
           </div>
         </div>
-
+      </div>
     </div>
+    <!-- .container-fluid -->
+  </div>
+  <!-- .section-container -->
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+      </div>
+    </div>
+  </div>
+</div>
+
 </template>
 
-setPastData() {
-      this.$socket.emit(sEvents.pastTxs, '', (err, _txs) => {
+<script lang="ts">
+import Vue from 'vue';
+import sEvents from '@/configs/socketEvents.json';
+import { Tx, Block } from '@/libs';
+export default Vue.extend({
+  name: 'FramesMainFrame',
+  data() {
+    return {}
+  },
+  created() {
+    this.$options.sockets.connect = () => {
+      let parent = this
+      if (!this.pageName || this.pageName === 'blocks' || this.pageName === 'transactions') {
+        this.setPastData()
+      } else {
+        setTimeout(() => {
+          parent.setPastData()
+        }, 1000)
+      }
+    }
+  },
+  methods: {
+    setPastData() {
+      this.$socket.emit(sEvents.pastTxs, '', (_err, _txs) => {
         this.$store.commit('NEW_TX', _txs)
         this.$eventHub.$emit(sEvents.pastTxsR)
         this.$eventHub.$emit(sEvents.newTx, new Tx(_txs[0]))
       })
-      this.$socket.emit(sEvents.pastBlocks, '', (err, _blocks) => {
+      this.$socket.emit(sEvents.pastBlocks, '', (_err, _blocks) => {
         this.$store.commit('NEW_BLOCK', _blocks)
         this.$eventHub.$emit(sEvents.newBlock, new Block(_blocks[0]))
         this.$eventHub.$emit(sEvents.pastBlocksR)
       })
     }
   },
+  computed: {
+    pageName: function() {
+      return this.$route.params.pageName
+    },
+    param: function() {
+      return this.$route.params.param
+    }
+  },
+  mounted: function() {}
+})
+
+</script>
 
 <style scoped="" lang="less">
 @import "~lessPath/NewHome/Frames/FramesMainFrame.less";

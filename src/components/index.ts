@@ -38,8 +38,7 @@ Vue.component('icon', Icon)
 
     import MainFrameComponent from "@/components/NewHome/Frames/MainFrameComponent"
     Vue.component('MainFrameComponent', MainFrameComponent)
-    import FrameComponent from "@/components/NewHome/Frames/FrameComponent"
-    Vue.component('FrameComponent', FrameComponent)
+
 
 
     /* Menu ---------------------- */

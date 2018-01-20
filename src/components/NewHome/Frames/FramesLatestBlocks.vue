@@ -31,6 +31,11 @@
               <line-chart-pending-tx></line-chart-pending-tx>
             </div>
           </div>
+          <div class="col-md-12 block-container">
+            <div class="block">
+              <line-chart-pending-tx></line-chart-pending-tx>
+            </div>
+          </div>
         </div>
 
 
