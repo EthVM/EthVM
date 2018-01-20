@@ -3,7 +3,7 @@
 .menus-top{
 
     .top-block{
-        height: 50px;
+        height: 60px;
         padding: 0px;
         width: 100%;
         position: fixed;
@@ -96,6 +96,7 @@
 
     .menus-top{
         .top-block{
+            z-index: 999999;
             .menu-icon-container{
                 display: flex;
             }
@@ -107,8 +108,15 @@
 
 
        .menu-side{
+            position: fixed;
+            top: 53px;
+            left: 0;
+            z-index: 999999;
             padding: 20px;
             text-align: center;
+            height: 100%;
+
+
             .mobile-search-container{
                 
                 display: inline-block;
