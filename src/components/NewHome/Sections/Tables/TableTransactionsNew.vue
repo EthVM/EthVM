@@ -1,9 +1,9 @@
 <template>
-   <div class="last-transactions" v-if="pagetype == 'singlepage'">
+   <div class="last-transactions">
       <p class="block-title2">Transactions</p>
       <p class="block-title3">Transactions users made on etherium newtwork</p>
       <div class="data-container">
-         <div class="data-block" v-for="tx in getTransactions" v-bind:key="tx.getHash().toString()">
+         <div class="data-block" v-for="tx in transactions" v-bind:key="tx.getHash().toString()">
             <div class="absolute-top-right-block">
                <div>
                   <p>GAS <span>{{tx.getGasUsed().toNumber()}}</span> / WEI <span>{{tx.getGasPrice().toGWei()}}</span></p>
@@ -43,15 +43,8 @@
 import Vue from 'vue'
 export default Vue.extend({
   name: 'TableTransactions',
-  props: ['transactions', 'pagetype'],
-  computed: {
-    getTransactions () {
-      return this.transactions
-    }
-  },
-  created (){
-   
-  }
+  props: ['transactions'],
+  created (){}
 })
 </script>
 

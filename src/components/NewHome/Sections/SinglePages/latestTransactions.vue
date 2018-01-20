@@ -1,5 +1,4 @@
 <template>
-  
   <table-transactions-new :transactions="transactions"></table-transactions-new>
 </template>
 

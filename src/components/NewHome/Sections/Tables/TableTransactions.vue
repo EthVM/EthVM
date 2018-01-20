@@ -16,7 +16,7 @@
       </table>
 
       <!-- MAIN LOOP START ########################################## -->
-      <div class="table-content" v-for="tx in getTransactions" v-bind:key="tx.getHash().toString()">
+      <div class="table-content" v-for="tx in transactions" v-bind:key="tx.getHash().toString()">
         <table class="top-table-content">
           <tbody>
             <tr>
@@ -49,12 +49,7 @@
 import Vue from 'vue'
 export default Vue.extend({
   name: 'TableTransactions',
-  props: ['transactions'],
-  computed: {
-    getTransactions () {
-      return this.transactions
-    }
-  }
+  props: ['transactions']
 })
 </script>
 
