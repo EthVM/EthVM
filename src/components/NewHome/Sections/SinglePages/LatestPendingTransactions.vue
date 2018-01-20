@@ -1,5 +1,5 @@
 <template>
-  <table-transactions :transactions="pendingTxs"></table-transactions>
+  <table-transactions-new :transactions="pendingTxs"></table-transactions-new>
 </template>
 
 

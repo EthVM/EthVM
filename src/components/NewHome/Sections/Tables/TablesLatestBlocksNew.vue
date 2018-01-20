@@ -38,17 +38,17 @@
                         <tbody>
                           <tr v-for="uncle in block.getUncles()">
                              <td class="sub-hash">
-                              <p>HASH&nbsp;<span><router-link :to="'/block/'+block.getHash().toString()">{{uncle.getHash().toString()}}</router-link></span></p>
+                              <p>HASH&nbsp;<span><router-link :to="'/block/'+uncle.getHash().toString()">{{uncle.getHash().toString()}}</router-link></span></p>
                             </td>
-                            <td class="divider">|</td>
+
                             <td class="sub-height">
                               <p>HEIGHT&nbsp;<span>{{uncle.getNumber().toNumber()}}</span></p>
                             </td>
-                            <td class="divider">|</td>
+
                             <td class="sub-miner">
                               <p>MINER&nbsp;<span>{{uncle.getMiner().toString()}}</span></p>
                             </td>
-                            <td class="divider">|</td>
+
                             <td class="sub-reward">
                               <p>REWARD(ETH)&nbsp;<span>{{uncle.getTotalBlockReward().toEth()}}</span></p>
                             </td>

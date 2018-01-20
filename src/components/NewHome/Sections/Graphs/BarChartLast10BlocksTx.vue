@@ -88,10 +88,10 @@ export default Vue.extend({
       }
       let latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
       latestBlocks.forEach((_block) => {
-        data.labels.push(_block.getNumber().toNumber())
+        data.labels.unshift(_block.getNumber().toNumber())
         let _tempD = _block.getStats()
-        data.sData.push(new BN(_tempD.success).toNumber())
-        data.fData.push(new BN(_tempD.failed).toNumber())
+        data.sData.unshift(new BN(_tempD.success).toNumber())
+        data.fData.unshift(new BN(_tempD.failed).toNumber())
       })
       return {
         'labels': data.labels,

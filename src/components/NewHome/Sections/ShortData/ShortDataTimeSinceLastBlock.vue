@@ -1,15 +1,18 @@
 <template>
-  <small-block-component :title="blockTitle" :value="seconds+ ' sec'" :icon-name="blockIconType" :icon-color="blockIconColor"></small-block-component>
-
+<small-block-component :title="blockTitle"
+                       :value="seconds+ ' sec'"
+                       :icon-name="blockIconType"
+                       :icon-color="blockIconColor">
+</small-block-component>
 
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import sEvents from '@/configs/socketEvents.json'
+import Vue from 'vue';
+import sEvents from '@/configs/socketEvents.json';
 export default Vue.extend({
   name: 'ShortDataLastBlock',
-  data () {
+  data() {
     return {
       blockTitle: 'Since Last Block',
       blockIconType: 'clock-o',
@@ -18,16 +21,24 @@ export default Vue.extend({
       seconds: 0
     }
   },
-  created () {
-    if (this.$store.getters.getBlocks.length) this.lastBlockTime = this.$store.getters.getBlocks[0].getTimestamp().toDate()
-    this.$eventHub.$on([sEvents.pastBlocksR, sEvents.newBlock], () => {
+  created() {
+    if (this.$store.getters.getBlocks.length) {
+      this.lastBlockTime = this.$store.getters.getBlocks[0].getTimestamp().toDate()
+    }
+    this.$eventHub.$on(sEvents.pastBlocksR, () => {
       this.lastBlockTime = this.$store.getters.getBlocks[0].getTimestamp().toDate()
     })
+    this.$eventHub.$on(sEvents.newBlock, (_block) => {
+      this.lastBlockTime = new Date().getTime()
+    })
   },
-  beforeDestroy () {
-    this.$eventHub.$off([sEvents.pastBlocksR, sEvents.newBlock])
+  beforeDestroy() {
+    this.$eventHub.$off([
+      sEvents.pastBlocksR,
+      sEvents.newBlock
+    ])
   },
-  mounted () {
+  mounted() {
     let parent = this
     setInterval(() => {
       if (!this.$store.getters.getBlocks.length) {
@@ -39,6 +50,7 @@ export default Vue.extend({
   },
   computed: {}
 })
+
 </script>
 
 <style scoped="" lang="less">

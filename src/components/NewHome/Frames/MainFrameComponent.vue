@@ -42,24 +42,24 @@ export default Vue.extend({
   },
   created() {
     this.$options.sockets.connect = () => {
-      let _this = this
+      let parent = this
       if (!this.pageName || this.pageName === 'blocks' || this.pageName === 'transactions') {
         this.setPastData()
       } else {
         setTimeout(() => {
-          _this.setPastData()
+          parent.setPastData()
         }, 1000)
       }
     }
   },
   methods: {
     setPastData() {
-      this.$socket.emit(sEvents.pastTxs, '', (err, _txs) => {
+      this.$socket.emit(sEvents.pastTxs, '', (_err, _txs) => {
         this.$store.commit('NEW_TX', _txs)
         this.$eventHub.$emit(sEvents.pastTxsR)
         this.$eventHub.$emit(sEvents.newTx, new Tx(_txs[0]))
       })
-      this.$socket.emit(sEvents.pastBlocks, '', (err, _blocks) => {
+      this.$socket.emit(sEvents.pastBlocks, '', (_err, _blocks) => {
         this.$store.commit('NEW_BLOCK', _blocks)
         this.$eventHub.$emit(sEvents.newBlock, new Block(_blocks[0]))
         this.$eventHub.$emit(sEvents.pastBlocksR)
