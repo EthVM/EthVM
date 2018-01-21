@@ -39,8 +39,8 @@ Vue.component('icon', Icon)
     import MainFrameComponent from "@/components/NewHome/Frames/MainFrameComponent"
     Vue.component('MainFrameComponent', MainFrameComponent)
 
-    import FramesOverview from "@/components/NewHome/Frames/FramesOverview"
-    Vue.component('FramesOverview', FramesOverview)
+    import FrameAccount from "@/components/NewHome/Frames/FrameAccount"
+    Vue.component('FrameAccount', FrameAccount)
 
 
 

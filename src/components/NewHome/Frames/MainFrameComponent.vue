@@ -1,36 +1,41 @@
 <template>
-    <div>        
-        <!-- Navigatin Bar -->
-        <nav class="fixed-top">
-        	<div class="mobile-menu">
-        		<MenusTop></MenusTop>
-        	</div>
-            
-        </nav>
-        <!-- End Navigation Bar -->
-        <!-- Side Menu -->
-        <div class="side-menu">
-            <MenusSide></MenusSide>
-        </div>
-        <!-- Side Menu -->
-        <!-- DashBoard Content: -->
-        <div class="main-content" id="main">
-            <FramesAbout v-if="pageName == 'about'"></FramesAbout>
-            <FramesFAQ v-else-if="pageName == 'faq'"></FramesFAQ>
-            <FramesContact v-else-if="pageName == 'contact'"></FramesContact>
-            <FramesLastTransactions v-else-if="pageName == 'transactions' || pageName == 'pendingTransactions'"
-                                    :type="pageName"></FramesLastTransactions>
-            <FramesLatestBlocks v-else-if="pageName == 'blocks'"></FramesLatestBlocks>
-            <FramesIndividualTransaction v-else-if="pageName == 'tx' && param"
-                                         :txHash="param"></FramesIndividualTransaction>
-            <FramesBlock v-else-if="pageName == 'block' && param"
-                         :blockHash="param"></FramesBlock>
-            <FramesHome v-else></FramesHome>
-          </div>
-        </div>
-
+<div>
+  <!-- Navigatin Bar -->
+  <nav class="fixed-top">
+    <div class="mobile-menu">
+      <MenusTop></MenusTop>
     </div>
+  </nav>
+  <!-- End Navigation Bar -->
+  <!-- Side Menu -->
+  <div class="side-menu">
+    <MenusSide></MenusSide>
+  </div>
+  <!-- Side Menu -->
+  <!-- DashBoard Content: -->
+  <div class="main-content"
+       id="main">
+    <FramesAbout v-if="pageName == 'about'"></FramesAbout>
+    <FramesFAQ v-else-if="pageName == 'faq'"></FramesFAQ>
+    <FramesContact v-else-if="pageName == 'contact'"></FramesContact>
+    <FramesLastTransactions v-else-if="pageName == 'transactions' || pageName == 'pendingTransactions'"
+                            :type="pageName"></FramesLastTransactions>
+    <FramesLatestBlocks v-else-if="pageName == 'blocks'"></FramesLatestBlocks>
+    <FramesIndividualTransaction v-else-if="pageName == 'tx' && param"
+                                 :txHash="param"></FramesIndividualTransaction>
+    <FramesBlock v-else-if="pageName == 'block' && param"
+                 :blockHash="param"></FramesBlock>
+    <FramesBlock v-else-if="pageName == 'block' && param"
+                 :address="param"></FramesBlock>
+    <frame-account v-else-if="pageName == 'account' && param"
+                   :blockHash="param"></frame-account>
+      <FramesHome v-else></FramesHome>
+  </div>
+</div>
+</div>
+
 </template>
+
 <script lang="ts">
 import Vue from 'vue';
 import sEvents from '@/configs/socketEvents.json';
@@ -78,6 +83,7 @@ export default Vue.extend({
 })
 
 </script>
+
 <style scoped="" lang="less">
 @import "~lessPath/NewHome/Frames/MainFrameComponent.less";
 </style>

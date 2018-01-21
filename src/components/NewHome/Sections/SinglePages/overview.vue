@@ -20,9 +20,7 @@ import Vue from 'vue';
 
 export default Vue.extend({
   name: 'Overview',
-  props: [
-
-  ],
+  props: ['account'],
   data() {
     return {
 

@@ -3,12 +3,12 @@
         <div class="row table-block">
             <div class="col-md-6 block-container">
                 <div class="block">
-                    <overview frompage="from-home" :max-items="20"></overview>
+                    <overview :address="address"></overview>
                 </div>
             </div>
             <div class="col-md-6 block-container">
                 <div class="block">
-                    <latest-transactions frompage="from-home" :max-items="20"></latest-transactions>
+                    
                 </div>
             </div>
         </div>
@@ -18,6 +18,7 @@
 import Vue from 'vue'
 export default Vue.extend({
   name: 'FramesHome',
+  props: ['address'],
   data () {
     return {}
   },
