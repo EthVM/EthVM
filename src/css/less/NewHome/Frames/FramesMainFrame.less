@@ -1,72 +1,54 @@
 @import '~lessPath/NewHome/globalVars';
-/* Canvas Container */
-.container-fluid{
-  background-color: green;
-  position:fixed;
-  top: 0;
-  bottom: 0;
-  right:0 ;
-  left: 0;
+
+
+.main-frame{
+padding-top: 60px;
+
+    .section-container{
+        background-color: @main-block-background-color;
+        width: 100%;
+        position: relative;
+        padding-left:200px;
+        right:0;
+
+        .sections{
+
+            background-color: #efefef;
+
+            .section-padding{
+                padding-bottom: 10px;
+                padding-right: 10px;
+
+            }
+        }
+    }
+    .block-menu-left{
+            position: fixed;
+            left: 0;
+            top: 60px;
+            z-index: 999;
+            background-color: white;
+            width: 200px;
+            height: 100% !important;
+            margin-right: 10px;
+            
+        }
+
+    @media screen and (max-width: 1199px){
+
+        .block-menu-left{
+            display: none;
+        }
+        .section-container{
+            padding-left: 0px;
+        }
+
 }
 
-  /* Navigation Bar Styles */
-.fixed-top{
-  background-color: white;
-  width: 100%;
-  z-index: 101;
-  height: 60px;
-  padding: 0;
 }
 
-/*Left Menu: */
-.side-menu {
-    background-color: white;
-    position: fixed;
-    top: 60px; /* Height of navbar */
-    bottom: 0;
-    left:0;
-    z-index: 100; /* Behind the navbar */
-    padding: 0;
-    overflow-x: hidden;
-    overflow-y: auto;
-    width:10%
-}
-.search-form{
-  position:relative
-}
-/* DashBoard Content */
-.main-content{    
-  float:right;
-  padding-top: 1em; /* Height of navbar */   
-  bottom: 0;
-  right: 0;   
-  right: 0;
-  background-color: @body-background-color;
-  overflow-x: hidden;
-  overflow-y: auto;
-  padding-left: 15px;
-  padding-right: 25px;
-  padding-bottom: 10px;
-  padding-top: 70px;
-  width:90%
-}
 
-@media screen and (max-width: 1199px) {
-     /* start of large tablet styles */
-     .side-menu{
-      display: none;
 
-     }
 
-     .main-content {
-      width:100%;
-      padding-left: 13px;
-     }
-     .mobile-menu{
-      overflow-x: hidden;
-      overflow-y: auto;
-      z-index: 999;
-     }
 
-     
-}
+

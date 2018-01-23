@@ -1,12 +1,14 @@
 
 
 .menus-top{
-    height: 100%;
-    width: 100%;
-    display:block;
+
     .top-block{
-        height: 100%;
+        height: 60px;
+        padding: 0px;
         width: 100%;
+        position: fixed;
+        top: 0;
+        z-index: 1;
         display: flex;
         background-color: #62c5f7;
         color: white;
@@ -94,6 +96,7 @@
 
     .menus-top{
         .top-block{
+            z-index: 999999;
             .menu-icon-container{
                 display: flex;
             }
@@ -105,9 +108,15 @@
 
 
        .menu-side{
+            position: fixed;
+            top: 53px;
+            left: 0;
+            z-index: 999999;
             padding: 20px;
             text-align: center;
-            z-index: 999;
+            height: 100%;
+
+
             .mobile-search-container{
                 
                 display: inline-block;

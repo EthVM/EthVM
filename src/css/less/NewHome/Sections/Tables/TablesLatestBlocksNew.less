@@ -2,7 +2,7 @@
 
 .latest-blocks{
    padding: 10px;
-
+   //display: none;
 
    .block-title2{
       font-size: 18px;
@@ -41,13 +41,13 @@
                
                p{
                   display: inline-block;
-                  font-size: 10px;
+                  font-size: 8px;
                   //border: 1px solid #dedede;
                   border-top: none;
                   border-right: none;
                   color: #404040;
-                  padding: 2px 7px;
-                  border-radius: 0 0 0 10px;
+                  padding: 1px 7px;
+                  border-radius: 0 0 0 7px;
                   font-weight: 400;
                   vertical-align: top;
                   text-transform: uppercase;
@@ -55,7 +55,7 @@
                      font-weight: 900;
                      vertical-align: bottom;
                      margin-right: 3px;
-                     font-size: 11px;
+                     font-size: 9px;
                      max-width: 60px;
                      overflow: hidden;
                      text-overflow: ellipsis;
@@ -64,7 +64,7 @@
                }
 
                .other-info{
-                  background-color: #e8e8e8;
+                  background-color: #efefef;
                   span{
                      margin-right: 3px;
                   }
@@ -92,73 +92,221 @@
             display: block;
 
             .hash-block{
+               display: grid;
+               grid-template-columns: 1fr;
                margin-bottom: 0px;
-               p{
-                  font-size: 14px;
-                  
+               li{
+                  list-style-type: none;
                   overflow: hidden;
                   text-overflow: ellipsis;
-                  margin: 0;
 
-               }
+                  p{
+                     font-size: 14px;
+                     
+                     overflow: hidden;
+                     text-overflow: ellipsis;
+                     margin: 0;
 
-               h4{
-                  font-size: 12px;
-                  line-height: 14px;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                  margin: 0;
-
-                  &.hash{
-                     max-width: 400px;
                   }
 
-                  &.miner{
-                     max-width: 300px;
-                  }
-                 
-                  &.uncle-counter{
-                     .glyphicon{
-                        line-height: 11px;
-                        vertical-align: middle;
-                        opacity: 1;
+                  h4{
+                     font-size: 12px;
+                     line-height: 14px;
+                     overflow: hidden;
+                     text-overflow: ellipsis;
+                     margin: 0;
+
+                     &.hash{
+                        max-width: 100%;
+                     }
+
+                     &.miner{
+                        max-width: 80%;
+                     }
+                    
+                     &.uncle-counter{
+                        .glyphicon{
+                           line-height: 11px;
+                           vertical-align: middle;
+                           opacity: 1;
+                        }
                      }
                   }
-               }
+               }// li
             }//.hash-block
 
             .uncles-block{
                margin-top: 3px;
                border-left: 2px solid #404040;
                padding-left: 0px;
-               table{
-                  tbody{
-                     tr{
-                        //border-top: 1px solid black;
-                        td{
-                           border-right: 1px solid #404040;
-                           padding: 0 5px;
-                           p{
-                              font-size: 11px;
-                           }                           
-                        }
-
-                        .divider{
-                           font-size: 10px;
-                           padding: 0 5px;
-                        }
-
-                        .sub-hash p,
-                        .sub-miner p{
-                           width: 120px;
+               max-width: 500px;
+               div{
+                  
+                  display: grid;
+                  grid-template-columns: 1fr 1fr 1fr 1fr;
+                     
+                  li{
+                     list-style-type: none;
+                     overflow: hidden;
+                     text-overflow: ellipsis;
+                     
+                     border-right: 1px solid #404040;
+                     padding: 0 5px;
+                     p{
+                        font-size: 11px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        span{
                            overflow: hidden;
-                           text-overflow: ellipsis;                           
-                        }                        
-                     }                     
-                  }
+                           text-overflow: ellipsis;   
+                        }
+                     }
+
+                  }                     
+                  
                }
             }//.uncles-block
          }//.relative-block
       }//.data-block
    }//.data-container
 }//.latest-blocks
+
+
+
+
+@media screen and (max-width: 599px){
+
+   .uncles-block{      
+      div{         
+         li{            
+            padding: 0 3px !important;
+            p{
+               font-size: 8px !important;
+               overflow: hidden;
+               text-overflow: ellipsis;
+               span{
+                  overflow: hidden;
+                  text-overflow: ellipsis;   
+               }
+            }
+         }         
+      }
+   }//.uncles-block
+
+
+   .hash-block{
+      display: grid;
+      grid-template-columns: 1fr;
+      margin-bottom: 0px;
+      li{
+         list-style-type: none;
+         overflow: hidden;
+         text-overflow: ellipsis;
+
+         p{
+            font-size: 10px !important;
+            
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0;
+
+         }
+
+         h4{
+            font-size: 9px !important;
+            line-height: 9px !important;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0;
+
+            &.hash{
+               max-width: 100%;
+            }
+
+            &.miner{
+               max-width: 80%;
+            }
+           
+            &.uncle-counter{
+               font-size: 9px !important;
+               line-height: 9px !important;
+               .glyphicon{
+                  line-height: 9px !important;
+                  vertical-align: middle;
+                  opacity: 1;
+               }
+            }
+         }
+      }// li
+   }//.hash-block
+
+
+
+   .absolute-top-right-block{
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: block;
+      z-index: 99999;
+
+      & > div{
+         display: block;
+         text-align: right;
+         
+         p{
+            display: inline-block;
+            font-size: 7px !important;
+            //border: 1px solid #dedede;
+            border-top: none;
+            border-right: none;
+            color: #404040;
+            padding: 1px 5px !important;
+            border-radius: 0 0 0 6px !important;
+            font-weight: 400;
+            vertical-align: top;
+            text-transform: uppercase;
+            span{
+               font-weight: 900;
+               vertical-align: bottom;
+               margin-right: 3px;
+               font-size: 8px !important;
+               max-width: 60px;
+               overflow: hidden;
+               text-overflow: ellipsis;
+               display: inline-block;
+            }
+         }
+
+         .other-info{
+            background-color: #efefef !important;
+            //border: 1px dotted #e8e8e8;
+
+            span{
+               margin-right: 0px !important;
+            }
+
+         }
+
+         .block-number{
+            background-color: #1c72ab;
+            span{
+
+            }
+         }
+
+         .uncle-number{
+            background-color: #30bd7d;
+            span{
+
+            }
+         }
+      }
+   }//.absolute-top-right-block
+
+
+}
+
+
+
+
+

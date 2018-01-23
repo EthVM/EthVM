@@ -26,7 +26,8 @@ let newOptions = {
     'yAxes': [
       {
         'ticks': {
-          'beginAtZero': false
+          'beginAtZero': false,
+          'callback': function(value) {if (value % 1 === 0) {return value;}}
         }
       }
     ],

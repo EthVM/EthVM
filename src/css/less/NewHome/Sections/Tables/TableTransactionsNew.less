@@ -34,7 +34,7 @@
          position: relative;
          display: block;
          border-top: 1px dotted #dedede;
-         padding: 10px 0px;
+         padding: 15px 0px 5px 0;
 
          .absolute-top-right-block{
             position: absolute;
@@ -46,25 +46,25 @@
 
                display: block;
                text-align: right;
-               line-height: 15px;
+               //line-height: 15px;
                p{
                   
                   display: inline-block;
-                  font-size: 10px;
+                  font-size: 8px;
                   //border: 1px solid #dedede;
                   border-top: none;
                   border-right: none;
                   color: #404040;
-                  padding: 2px 7px;
-                  border-radius: 0 0 0 10px;
+                  padding: 1px 7px;
+                  border-radius: 0 0 0 7px;
                   font-weight: 400;
-                  background-color: #e8e8e8;
+                  background-color: #efefef;
                   vertical-align: top;
                   span{
                      font-weight: 900;
                      vertical-align: bottom;
                      margin-right: 3px;
-                     font-size: 11px;
+                     font-size: 9px;
                      max-width: 60px;
                      overflow: hidden;
                      text-overflow: ellipsis;
@@ -73,12 +73,12 @@
                }
 
                .tx-status{
-                  background-color: #cecece;
+                  background-color: transparent;
                   color: #404040;
                   font-size: 10px;
                   font-weight: 400;
                   border: none;
-                  padding: 1px 8px;
+                  padding: 1px 0px;
                   //text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5);
                   vertical-align: top;
                   text-transform: uppercase;
@@ -92,7 +92,7 @@
 
             }
 
-         }
+         }//.absolute-top-right-block
 
          .relative-block{
             color: #1c73ab;
@@ -101,26 +101,41 @@
 
             .tx-block{
                margin-bottom: 0px;
-               p{
-                  margin: 0px;
-                  font-size: 14px;
-                  width: 400px;
+               display: grid;
+               grid-template-columns: 1fr;
+
+               li{
                   overflow: hidden;
                   text-overflow: ellipsis;
+                  list-style-type: none;
+                  p{
+                     margin: 0px;
+                     font-size: 14px;
+                     overflow: hidden;
+                     text-overflow: ellipsis; 
+                  }   
                }
+               
 
             }
 
+
             .transaction-block{
+               max-width: 600px;
+               display: grid;
+               grid-template-columns: 1fr 1fr 1fr;
 
                .transaction-info{
-                  display: inline-block;
-                  width: 90px;
+                  list-style-type: none;
                   vertical-align: middle;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
 
                   p{
                      margin: 0px;
                      line-height: 13px;
+                     overflow: hidden;
+                     text-overflow: ellipsis;
                   }
 
                   .address{
@@ -128,7 +143,7 @@
                   }
 
                   .address, .value{
-                     max-width: 90px;
+                     
                      overflow: hidden;
                      text-overflow: ellipsis;
 
@@ -138,191 +153,7 @@
                      font-size: 11px;
                      line-height: initial;
                      display: inline-block;
-                     
-
-                     overflow: hidden;
-                     text-overflow: ellipsis;
-                     vertical-align: middle;
-                  }
-
-                  .value-label{
-                     font-size: 11px;
-                     line-height: initial;
-                     display: inline-block;
-                     //vertical-align: middle;
-                     //margin-top: 4px;
-                     margin-left: -5px;
-                     font-weight: 400;
-                     
-                     
-                  }
-
-
-                  .block-label{
-                     margin: 0px;
-                     font-size: 12px;
-                  }
-
-               }
-
-
-               .arrow_box{
-                  width: 135px;
-               }
-               
-               
-            }
-         }
-
-      }
-   }
-
-}
-
-
-
-
-
-
-
-
-.last-transactions-page-style-1{
-
-
-
-   padding: 10px;
-
-
-   .block-title2{
-      font-size: 18px;
-      margin: 0;
-      //font-family: Arial, Helvetica, sans-serif;
-   }
-
-   .block-title3{
-      font-size: 14px;
-      margin: 0;
-      margin-bottom: 20px;
-      //font-family: Arial, Helvetica, sans-serif;
-   }
-
-   .data-container{
-      font-family: monospace !important;
-      
-      p, span, h4{
-         //font-family: monospace !important;
-         color: #404040;
-      }
-
-      .data-block{
-         position: relative;
-         display: block;
-         border-top: 1px dotted #dedede;
-         padding: 10px 0px;
-
-         .absolute-top-right-block{
-            position: absolute;
-            top: 0;
-            right: 0;
-            display: block;
-            z-index: 999;
-            & > div{
-
-               display: block;
-               text-align: right;
-               line-height: 15px;
-               p{
-                  
-                  display: inline-block;
-                  font-size: 10px;
-                  //border: 1px solid #dedede;
-                  border-top: none;
-                  border-right: none;
-                  color: #404040;
-                  padding: 2px 7px;
-                  border-radius: 0 0 0 10px;
-                  font-weight: 400;
-                  background-color: #e8e8e8;
-                  vertical-align: top;
-                  span{
-                     font-weight: 900;
-                     vertical-align: bottom;
-                     margin-right: 3px;
-                     font-size: 11px;
                      max-width: 60px;
-                     overflow: hidden;
-                     text-overflow: ellipsis;
-                     display: inline-block;
-                  }
-               }
-
-               .tx-status{
-                  background-color: #cecece;
-                  color: #404040;
-                  font-size: 10px;
-                  font-weight: 400;
-                  border: none;
-                  padding: 1px 8px;
-                  //text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5);
-                  vertical-align: top;
-                  text-transform: uppercase;
-                  border-radius: 0px 0 0 10px;
-                  .glyphicon{
-                     vertical-align: top;
-                     line-height: 13px;
-
-                  }
-               }
-
-            }
-
-         }
-
-         .relative-block{
-            color: #1c73ab;
-            position: relative;
-            display: block;
-
-            .tx-block{
-               margin-bottom: 0px;
-               p{
-                  margin: 0px;
-                  font-size: 14px;
-                  width: 400px;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-               }
-
-            }
-
-            .transaction-block{
-
-               .transaction-info{
-                  display: inline-block;
-                  width: 90px;
-                  vertical-align: middle;
-
-                  p{
-                     margin: 0px;
-                     line-height: 13px;
-                  }
-
-                  .address{
-                     font-size: 12px;
-                  }
-
-                  .address, .value{
-                     max-width: 90px;
-                     overflow: hidden;
-                     text-overflow: ellipsis;
-
-                  }
-
-                  .value{
-                     font-size: 11px;
-                     line-height: initial;
-                     display: inline-block;
-                     
 
                      overflow: hidden;
                      text-overflow: ellipsis;
@@ -332,13 +163,11 @@
                   .value-label{
                      font-size: 11px;
                      line-height: initial;
-                     display: inline-block;
-                     //vertical-align: middle;
                      //margin-top: 4px;
                      margin-left: -5px;
                      font-weight: 400;
-                     
-                     
+                     display: inline-block;
+                     vertical-align: middle;
                   }
 
 
@@ -350,22 +179,25 @@
                }
 
 
-               .arrow_box{
-                  width: 135px;
+               .arrow_container{
+                  //width: 135px;
+                  //display: inline-block;
+                  padding: 4px 0;
                }
                
                
             }
-         }
+
+
+         }//.relative-block
+
+
+
 
       }
    }
 
 }
-
-
-
-
 
 
 
@@ -375,7 +207,8 @@
   color: #404040;
   padding: 0px 6px;
   position: relative;
-  margin-right: 12px;
+   margin-right: 18px;
+   //line-height: 19px !important;
   
    //text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.6);
    font-weight: 600;
@@ -402,4 +235,109 @@
   border-left-color: #e8e8e8;
   border-width: 15px;
   margin-top: -15px;
+}
+
+
+
+
+
+@media screen and (max-width: 599px){
+
+
+
+   .transaction-block{
+
+
+      .transaction-info{
+
+         p{
+            line-height: 10px !important;
+         }
+
+         .address{
+            font-size: 9px !important;
+         }
+
+         .address, .value{
+
+         }
+
+         .value{
+            font-size: 9px !important;
+            max-width: 70% !important;
+         }
+
+         .value-label{
+            font-size: 7px !important;
+            margin-top: 1px !important;
+            margin-left: -7px !important;
+         }
+
+
+         .block-label{
+            font-size: 9px !important;
+         }
+
+      }
+
+      
+   }
+
+
+   .absolute-top-right-block{
+      
+      & > div{
+
+         line-height: 11px !important;
+         p{
+            font-size: 7px !important;
+            padding: 1px 5px !important;
+            border-radius: 0 0 0 6px !important;
+            span{
+               margin-right: 0px !important;
+               font-size: 8px !important;
+            }
+         }
+
+         .tx-status{
+            background-color: black !important;
+            color: white !important;
+            font-size: 7px !important;
+            font-weight: 900 !important;
+            border: none !important;
+            padding: 0px 5px !important;
+            line-height: 16px !important;
+            border-radius: 0px 0 0 0px !important;
+            span{
+               display: none !important;
+               vertical-align: top !important;
+               line-height: 9px !important;
+
+
+            }
+         }
+
+      }
+
+   }//.absolute-top-right-block
+
+
+   .tx-block{
+      
+      li{
+         p{
+            font-size: 10px !important;
+         }   
+      }              
+
+   }
+
+
+   .tx-status{
+      background-color: white !important;
+      border: 1px solid black !important;
+   }
+
+
+
 }

@@ -78,7 +78,7 @@ export default Vue.extend({
           let _tempD = _block.getStats()
           this.chartData.labels.push(_block.getNumber().toNumber())
           this.chartData.labels.shift()
-          this.chartData.datasets[0].data.push(ethUnits.convert(new BN(_tempD.avgTxFees).toFixed(), 'wei', 'eth').substr(0, 5))
+          this.chartData.datasets[0].data.push(ethUnits.convert(new BN(_tempD.avgTxFees).toFixed(), 'wei', 'eth').substr(0, 8))
           this.chartData.datasets[0].data.shift()
           this.chartData.datasets[1].data.push(ethUnits.convert(new BN(_tempD.avgGasPrice).toFixed(), 'wei', 'gwei').substr(0, 5))
           this.chartData.datasets[1].data.shift()
