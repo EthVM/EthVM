@@ -18,6 +18,6 @@
 
 
 <style lang="less">
-
+  @import "~lessPath/NewHome/global.less";
 </style>
 
