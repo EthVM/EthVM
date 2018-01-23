@@ -43,10 +43,13 @@
                      
                   </li>
 
-                  <li class="transaction-info">
+                  <li class="transaction-info" v-if="!tx.getContractAddress().toString()">
                      <p class="block-label">TO</p>
                      <p class="address">{{tx.getTo().toString()}}</p>
-                     
+                  </li>
+                  <li class="transaction-info" v-if="tx.getContractAddress().toString()">
+                     <p class="block-label">CONTRACT</p>
+                     <p class="address">{{tx.getContractAddress().toString()}}</p>
                   </li>
                </div>
 

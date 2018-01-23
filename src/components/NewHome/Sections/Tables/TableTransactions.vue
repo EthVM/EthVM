@@ -10,7 +10,8 @@
             <td>Status</td>
             <td>From</td>
             <td>Amount</td>
-            <td>To</td>
+             <td v-if="tx.getContractAddress().toString()">Contract</td>
+            <td v-if="!tx.getContractAddress().toString()">Tolkl;lk;</td>
           </tr>
         </thead>
       </table>
@@ -23,7 +24,8 @@
               <td class="top-status"><p v-if="!tx.getStatus()"><span>Fail</span></p><p v-if="tx.getStatus()"><span>Success</span></p></td>
               <td class="top-from"><p><span>{{tx.getFrom().toString()}}</span></p></td>
               <td class="top-amount"><p><span>{{tx.getValue().toEth()}}</span>&nbsp;ETH</p></td>
-              <td class="top-to"><p><span>{{tx.getTo().toString()}}</span></p></td>
+              <td class="top-to" v-if="!tx.getContractAddress().toString()"><p><span>{{tx.getTo().toString()}}</span></p></td>
+              <td class="top-to" v-if="tx.getContractAddress().toString()"><p><span>{{tx.getContractAddress().toString()}}</span></p></td>
             </tr>
           </tbody>
         </table>

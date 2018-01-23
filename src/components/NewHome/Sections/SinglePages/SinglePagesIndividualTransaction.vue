@@ -19,7 +19,13 @@
                 <eth-address :address="tx.getFrom().toString()"></eth-address>
               </td>
             </tr>
-            <tr>
+            <tr v-if="tx.getContractAddress().toString()">
+              <td>Contract Address</td>
+              <td>
+                <eth-address :address="tx.getContractAddress().toString()"></eth-address>
+              </td>
+            </tr>
+            <tr v-if="!tx.getContractAddress().toString()">
               <td>To</td>
               <td>
                 <eth-address :address="tx.getTo().toString()"></eth-address>

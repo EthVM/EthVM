@@ -31,8 +31,10 @@ class HexTime {
 class Address {
 	address: string;
 	constructor(_add: Buffer) {
-		this.address = '0x' + new Buffer(_add).toString('hex')
-		this.address = this.address == '0x' ? '0x0000000000000000000000000000000000000000' : this.address
+		if (_add) {
+			this.address = '0x' + new Buffer(_add).toString('hex')
+			this.address = this.address == '0x' ? '0x0000000000000000000000000000000000000000' : this.address
+		} else this.address = null
 	}
 	toString(): string {
 		return this.address
