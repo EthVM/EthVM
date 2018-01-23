@@ -40,7 +40,7 @@
         "babel-preset-env": "^1.6.1",
         "babel-preset-stage-2": "^6.24.1",
         "bignumber.js": "^5.0.0",
-        "bootstrap": "^4.0.0",
+        "bootstrap": "^3.3.7",
         "chart.js": "^2.7.1",
         "clean-webpack-plugin": "^0.1.17",
         "css-loader": "^0.28.7",

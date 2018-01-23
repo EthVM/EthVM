@@ -2,11 +2,12 @@ import { txLayout } from '@/typeLayouts'
 import { Block, Tx } from '@/libs'
 import { Hash } from '@/libs/common'
 interface IblockStats {
-	failed: string,
-	success: string,
-	avgGasPrice: string,
-	avgTxFees: string,
-	pendingTxs: number
+	blockTime: string;
+	failed: string;
+	success: string;
+	avgGasPrice: string;
+	avgTxFees: string;
+	pendingTxs: number;
 }
 export default interface blockLayout {
 	number: Buffer;
