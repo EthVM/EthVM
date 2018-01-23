@@ -9,30 +9,56 @@
                   <p>GAS <span>{{tx.getGasUsed().toNumber()}}</span> / WEI <span>{{tx.getGasPrice().toGWei()}}</span></p>
                </div>
                <div v-if="!tx.getStatus()">
-                  <p class="tx-status"><span class="glyphicon glyphicon-remove"></span>Unsuccessful</p>
+                  <p class="tx-status"><span class="glyphicon glyphicon-remove"></span> Unsuccessful</p>
                </div>
             </div>
+
+
+
+
+
             <div class="relative-block">
+               
+
                <div class="tx-block">
-                  <p>TX#&nbsp;<router-link :to="'/tx/'+tx.getHash().toString()">{{tx.getHash().toString()}}</router-link></p>
+                  <li>
+                    <p>TX#&nbsp;<router-link :to="'/tx/'+tx.getHash().toString()">{{tx.getHash().toString()}}</router-link></p>
+                  </li>
                </div>
+
+
+
+
                <div class="transaction-block">
-                  <div class="transaction-info">
+                  <li class="transaction-info">
                      <p class="block-label label-from">FROM</p>
                      <p class="address">{{tx.getFrom().toString()}}</p>
+                  </li>
+
+                  <li class="transaction-info arrow_container">
+                     <div class="arrow_box">
+                      <p class="value">{{tx.getValue().toEth()}}</p>
+                      <p class="value-label">ETH</p>  
+                     </div>
                      
-                  </div>
-                  <div class="transaction-info arrow_box">
-                     <p class="value">{{tx.getValue().toEth()}}</p>
-                     <p class="value-label">ETH</p>
-                  </div>
-                  <div class="transaction-info">
+                  </li>
+
+                  <li class="transaction-info">
                      <p class="block-label">TO</p>
                      <p class="address">{{tx.getTo().toString()}}</p>
                      
-                  </div>
+                  </li>
                </div>
+
+
+
+
+
             </div>
+
+
+
+
          </div><!-- .data-block -->
       </div><!-- .data-container -->
    </div>
