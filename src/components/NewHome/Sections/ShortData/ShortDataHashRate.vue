@@ -16,7 +16,7 @@ let getAvgHashRate = (_blocks: Array<Block>): number => {
   let avgTime = new bn(0)
   _blocks.forEach((_block)=>{
     let _tempD = _block.getStats()
-    avgTime = avgTime.add(_tempD.blockTime)
+    avgTime = avgTime.add(new bn(_tempD.blockTime))
   })
   avgTime = avgTime.div(_blocks.length)
   return new bn(_blocks[0].getDifficulty().toNumber()).div(avgTime).div('1e12').round(2).toNumber()
