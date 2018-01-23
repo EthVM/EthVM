@@ -1,209 +1,125 @@
 <template>
-<div class="block">
-  <div class="block-container container"
-       v-if="block">
-    <div class="row">
-      <div class="col-md-12 section-block-1">
-        <div class="section-block-title">
-          <p>Block Detail Information</p>
-        </div>
-        <div class="section-block-container">
-          <table>
-            <tbody>
-              <tr>
-                <td>Height</td>
-                <td>
-                  <p>{{block.getNumber().toNumber()}}</p>
-                </td>
-              </tr>
-              <tr>
-                <td>Logs</td>
-                <td>
-                  <p>{{block.getLogsBloom().toString()}}</p>
-                </td>
-              </tr>
-              <tr>
-                <td>Timestamp</td>
-                <td>
-                  <p>{{block.getTimestamp().toDate().toString()}}</p>
-                </td>
-              </tr>
-              <tr>
-                <td>Transactions</td>
-                <td>
-                  <p>{{block.getTransactionCount()}}</p>
-                </td>
-              </tr>
-              <tr>
-                <td>Hash</td>
-                <td>
-                  <p>{{block.getHash().toString()}}</p>
-                </td>
-              </tr>
-              <tr>
-                <td>Parent Hash</td>
-                <td>
-                  <a v-bind:href="'/block/' + block.getParentHash().toString()">
-                    <p>{{block.getParentHash().toString()}}</p>
-                  </a>
-                </td>
-              </tr>
-              <tr>
-                <td>Uncles Hash</td>
-                <td>
-                  <p>{{block.getSha3Uncles().toString()}}</p>
-                </td>
-              </tr>
-              <tr>
-                <td>Miner</td>
-                <td>
-                  <p>{{block.getMiner().toString()}}</p>
-                </td>
-              </tr>
-              <tr>
-                <td>Nonce</td>
-                <td>
-                  <p>{{block.getNonce().toString()}}</p>
-                </td>
-              </tr>
-              <tr>
-                <td>State Root</td>
-                <td>
-                  <p>{{block.getStateRoot().toString()}}</p>
-                </td>
-              </tr>
-              <tr>
-                <td>Extra Data</td>
-                <td>
-                  <p>{{block.getExtraData().toString()}}</p>
-                </td>
-              </tr>
-              <tr>
-                <td>Size</td>
-                <td>
-                  <p>{{block.getSize().toNumber()}}</p>
-                </td>
-              </tr>
-              <tr>
-                <td>Gas Limit</td>
-                <td>
-                  <p>{{block.getGasLimit().toNumber()}}</p>
-                </td>
-              </tr>
-              <tr>
-                <td>Gas Used</td>
-                <td>
-                  <p>{{block.getGasUsed().toNumber()}}</p>
-                </td>
-              </tr>
-              <tr>
-                <td>Transactions Root</td>
-                <td>
-                  <p>{{block.getTransactionsRoot().toString()}}</p>
-                </td>
-              </tr>
-              <tr>
-                <td>Receipts Root</td>
-                <td>
-                  <p>{{block.getReceiptsRoot().toString()}}</p>
-                </td>
-              </tr>
-              <tr>
-                <td>TX Fees</td>
-                <td>
-                  <p>{{block.getTxFees().toEth()}}&nbsp;ETH</p>
-                </td>
-              </tr>
-              <tr>
-                <td>Block Reward</td>
-                <td>
-                  <p>{{block.getBlockReward().toEth()}}&nbsp;ETH</p>
-                </td>
-              </tr>
-              <tr v-if="uncles.length">
-                <td>Uncle Reward</td>
-                <td>
-                  <p>{{block.getUncleReward().toEth()}}&nbsp;ETH</p>
-                </td>
-              </tr>
-              <tr>
-                <td>Total BlockReward</td>
-                <td>
-                  <p>{{block.getTotalBlockReward().toEth()}}&nbsp;ETH</p>
-                </td>
-              </tr>
-              <tr>
-                <td>SHA3 Uncles</td>
-                <td>
-                  <p>{{block.getSha3Uncles().toString()}}</p>
-                </td>
-              </tr>
-              <tr>
-                <td>Difficulty</td>
-                <td>
-                  <p>{{block.getDifficulty().toNumber()}}</p>
-                </td>
-              </tr>
-              <tr>
-                <td>Total Difficulty</td>
-                <td>
-                  <p>{{block.getTotalDifficulty().toNumber()}}</p>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <!-- .section-block-1 -->
-    </div>
-    <!-- .row -->
-    <div class="row"
-         v-for="uncle in uncles">
-      <div class="col-md-6 section-block-1">
-        <div class="section-block-title">
-          <p>Uncle</p>
-        </div>
-        <div class="section-block-container uncle-block">
-          <table>
-            <tbody>
-              <tr>
-                <td>Height</td>
-                <td>
-                  <p>{{uncle.getNumber().toNumber()}}</p>
-                </td>
-              </tr>
-              <tr>
-                <td>Hash</td>
-                <td>
-                  <a v-bind:href="'/block/' + uncle.getHash().toString()">
-                    <p class="short-data">{{uncle.getHash().toString()}}</p>
-                  </a>
-                </td>
-              </tr>
-              <tr>
-                <td>Block Reward</td>
-                <td>
-                  <p>{{uncle.getBlockReward().toEth()}}&nbsp;ETH</p>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <!-- .section-block-1 -->
-    </div>
-    <!-- .row -->
-    <div class="row" v-show="!block.getIsUncle()">
-      <div class="col-md-12 section-block-1">
-        <div class="section-block-container">
-          <table-transactions-new :transactions="transactions"></table-transactions-new>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- .container -->
-</div>
+  <div>
+    <div class="block-detail-container" v-if="block">
+      <p class="block-title">Block Detail Information</p>
 
+      <div class="details">
+        <li>Height</li>
+        <li>{{block.getNumber().toNumber()}}</li>
+      </div>
+      <div class="details">
+        <li>Logs</li>
+        <li>{{block.getLogsBloom().toString()}}</li>
+      </div>
+      <div class="details">
+        <li>Timestamp</li>
+        <li>{{block.getTimestamp().toDate().toString()}}</li>
+      </div>
+      <div class="details">
+        <li>Transactions</li>
+        <li>{{block.getTransactionCount()}}</li>
+      </div>
+      <div class="details">
+        <li>Hash</li>
+        <li>{{block.getHash().toString()}}</li>
+      </div>
+      <div class="details">
+        <li>Parent Hash</li>
+        <li><a v-bind:href="'/block/' + block.getParentHash().toString()">{{block.getParentHash().toString()}}</a></li>
+      </div>
+      <div class="details">
+        <li>Uncles Hash</li>
+        <li>{{block.getSha3Uncles().toString()}}</li>
+      </div>
+      <div class="details">
+        <li>Miner</li>
+        <li>{{block.getMiner().toString()}}</li>
+      </div>
+      <div class="details">
+        <li>Nonce</li>
+        <li>{{block.getNonce().toString()}}</li>
+      </div>
+      <div class="details">
+        <li>State Root</li>
+        <li>{{block.getStateRoot().toString()}}</li>
+      </div>
+      <div class="details">
+        <li>Extra Data</li>
+        <li>{{block.getExtraData().toString()}}</li>
+      </div>
+      <div class="details">
+        <li>Size</li>
+        <li>{{block.getSize().toNumber()}}</li>
+      </div>
+      <div class="details">
+        <li>Gas Limit</li>
+        <li>{{block.getGasLimit().toNumber()}}</li>
+      </div>
+      <div class="details">
+        <li>Gas Used</li>
+        <li>{{block.getGasUsed().toNumber()}}</li>
+      </div>
+      <div class="details">
+        <li>Transactions Root</li>
+        <li>{{block.getTransactionsRoot().toString()}}</li>
+      </div>
+      <div class="details">
+        <li>Receipts Root</li>
+        <li>{{block.getReceiptsRoot().toString()}}</li>
+      </div>
+      <div class="details">
+        <li>TX Fees</li>
+        <li>{{block.getTxFees().toEth()}}&nbsp;ETH</li>
+      </div>
+      <div class="details">
+        <li>Block Reward</li>
+        <li>{{block.getBlockReward().toEth()}}&nbsp;ETH</li>
+      </div>
+      <div class="details">
+        <li>Uncle Reward</li>
+        <li>{{block.getUncleReward().toEth()}}&nbsp;ETH</li>
+      </div>
+      <div class="details">
+        <li>Total BlockReward</li>
+        <li>{{block.getTotalBlockReward().toEth()}}&nbsp;ETH</li>
+      </div>
+      <div class="details">
+        <li>SHA3 Uncles</li>
+        <li>{{block.getSha3Uncles().toString()}}</li>
+      </div>
+      <div class="details">
+        <li>Difficulty</li>
+        <li>{{block.getDifficulty().toNumber()}}</li>
+      </div>
+      <div class="details">
+        <li>Total Difficulty</li>
+        <li>{{block.getTotalDifficulty().toNumber()}}</li>
+      </div>
+     
+    </div><!-- .block-detail-container -->
+
+
+
+    <div class="uncles-container">
+      
+      <div class="uncles-detail" v-for="uncle in uncles">
+        <p class="block-title">Uncle</p>
+        <div class="details">
+          <li>Height</li>
+          <li>{{uncle.getNumber().toNumber()}}</li>
+        </div>
+        <div class="details">
+          <li>Hash</li>
+          <li><a v-bind:href="'/block/' + uncle.getHash().toString()">{{uncle.getHash().toString()}}</a></li>
+        </div>
+        <div class="details">
+          <li>Block Reward</li>
+          <li>{{uncle.getBlockReward().toEth()}}&nbsp;ETH</li>
+        </div>
+      </div>
+    </div><!-- .uncles-container -->
+
+  </div>
 </template>
 
 <script lang="ts">
@@ -212,48 +128,20 @@ import store from '@/states';
 import chartOptions from '@/sampleData/chartData.json';
 import { Block, common, Tx } from '@/libs';
 export default Vue.extend({
-  name: 'Block',
+  name: 'BlockView',
   props: [
-    'blockHash'
+    'block',
+    'uncles'
   ],
   data() {
-    return {
-      msg: 'Welcome to Your Vue.js App',
-      store: store,
-      options: chartOptions,
-      block: null,
-      common: common,
-      uncles: [],
-      unixtimestamp: null,
-      timestamp: null,
-      transactions: []
-    }
+    return {}
   },
   methods: {},
-  mounted: function() {
-    let _this = this
-    this.$socket.emit('getBlock', Buffer.from(this.blockHash.substring(2), 'hex'), (err, data) => {
-      if (data) {
-        _this.block = new Block(data)
-        let uncleHashes = _this.block.getUncleHashes()
-        _this.$socket.emit('getBlockTransactions', _this.block.getHash().toBuffer(), (err, data) => {
-          _this.transactions = data.map((_tx) => {
-            return new Tx(_tx)
-          })
-        })
-        uncleHashes.forEach((_hash: any, idx: number) => {
-          _this.$socket.emit('getBlock', _hash.toBuffer(), (err, data) => {
-            _this.uncles.push(new Block(data))
-          })
-        })
-      }
-    })
-  }
-
+  mounted: function() {}
 })
 
 </script>
 
 <style scoped="" lang="less">
-@import "~lessPath/NewHome/Sections/SinglePages/SinglePagesBlock.less";
+  @import "~lessPath/NewHome/Sections/SinglePages/SinglePagesBlock.less";
 </style>

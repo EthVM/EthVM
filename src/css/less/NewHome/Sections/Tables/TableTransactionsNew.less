@@ -34,7 +34,7 @@
          position: relative;
          display: block;
          border-top: 1px dotted #dedede;
-         padding: 15px 0px 5px 0;
+         padding: 10px 0px 10px 0;
 
          .absolute-top-right-block{
             position: absolute;
@@ -105,10 +105,12 @@
                grid-template-columns: 1fr;
 
                li{
+
                   overflow: hidden;
                   text-overflow: ellipsis;
                   list-style-type: none;
                   p{
+                    max-width: 60%;
                      margin: 0px;
                      font-size: 14px;
                      overflow: hidden;
@@ -124,6 +126,7 @@
                max-width: 600px;
                display: grid;
                grid-template-columns: 1fr 1fr 1fr;
+               grid-gap: 1px;
 
                .transaction-info{
                   list-style-type: none;
@@ -182,7 +185,7 @@
                .arrow_container{
                   //width: 135px;
                   //display: inline-block;
-                  padding: 4px 0;
+                  padding: 7px 0;
                }
                
                
@@ -208,7 +211,7 @@
   padding: 0px 6px;
   position: relative;
    margin-right: 18px;
-   //line-height: 19px !important;
+   line-height: 15px !important;
   
    //text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.6);
    font-weight: 600;

@@ -14,24 +14,24 @@
         
 
         <div class="row">
-          <div class="col-md-12 block-container">
+          <div class="col-md-6 block-container">
             <div class="block">
              <line-chart-ave-tx-fees></line-chart-ave-tx-fees>
             </div>
           </div>
             
-          <div class="col-md-12 block-container">
+          <div class="col-md-6 block-container">
             <div class="block">
                <bar-chart-last-ten-blocks-tx></bar-chart-last-ten-blocks-tx>
             </div>
           </div>
 
-          <div class="col-md-12 block-container">
+          <div class="col-md-6 block-container">
             <div class="block">
               <line-chart-pending-tx></line-chart-pending-tx>
             </div>
           </div>
-          <div class="col-md-12 block-container">
+          <div class="col-md-6 block-container">
             <div class="block">
               <line-chart-pending-tx></line-chart-pending-tx>
             </div>

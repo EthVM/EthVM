@@ -1,46 +1,48 @@
 @import '~lessPath/NewHome/globalVars';
 
+p{
+  margin: 0;
+}
 
 .top-10-senders{
 
 
-    padding: 10px; 
+  padding: 10px; 
 
-    .people-list-table{
-        table{
-            tbody{
-                tr{
 
-                    td{
-                        padding: 5px;
-                        font-size: 20px;
-                        font-weight: 700;
-                    }
 
-                    td:nth-child(1){
-                        text-align: center;
-                        vertical-align: top;
+  .people-list-table{
+    
+    display: grid;
+    grid-template-columns: 1fr 15fr;
+    grid-gap: 1px;
+    border-top: 1px dotted #dedede;
+    padding: 10px 0;
 
-                    }
-
-                    td:nth-child(2){
-                         p{
-                            width: 250px;
-                            white-space: nowrap; 
-                            text-overflow: ellipsis;
-                            overflow: hidden;
-                            display: block;
-                            margin: 0;
-                         }
-
-                         h5{
-                            margin: 0;
-                         }
-                    }
-                }
-            }
-        }
+    .ranking{
+      display: inline-block;
+      vertical-align: top;
+      //text-align: center;
+      font-size: 18px;
+      
     }
+
+    .info{
+      font-family: monospace;
+      display: inline-block;
+      vertical-align: top;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      
+      .address{
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+      .sent{
+
+      }
+    }
+  }
 
 }
 
