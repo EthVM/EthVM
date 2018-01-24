@@ -17,9 +17,7 @@
       <div class="relative-block">
         <div class="tx-block">
           <li>
-            <p>TX#&nbsp;
-              <router-link :to="'/tx/'+tx.getHash().toString()">{{tx.getHash().toString()}}</router-link>
-            </p>
+            <p>TX#&nbsp;<router-link :to="'/tx/'+tx.getHash().toString()">{{tx.getHash().toString()}}</router-link></p>
           </li>
         </div>
         <div class="transaction-block">
