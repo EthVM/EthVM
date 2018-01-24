@@ -3,10 +3,10 @@
     <div class="row">
       <div class="col-md-6 col-sm-12 col-xs-12 block-container">
         <div class="block">
-          <SinglePagesBlock :block="block" :uncles="uncles"></SinglePagesBlock>
+          <SinglePagesBlock :block="block" :uncles="uncles" :notuncle="NotUncle"></SinglePagesBlock>
         </div>
       </div>
-      <div class="col-md-6 col-sm-12 col-xs-12 block-container">
+      <div class="col-md-6 col-sm-12 col-xs-12 block-container" v-if="NotUncle">
         <div class="block">
           <table-transactions-new :transactions="transactions"></table-transactions-new>
         </div>
@@ -40,16 +40,28 @@ export default Vue.extend({
     }
   },
   methods: {},
-  created: function() {
+  computed:{
+    NotUncle(){
+      if(this.block && !this.block.getIsUncle()){
+        return true;
+      }
+      else{
+        return false;
+      }
+      
+    }
+  },
+  mounted: function() {
+
     let _this = this
-    this.$socket.emit('getBlock', new Buffer(this.blockHash.substring(2),'hex'), (err, data) => {
+    this.$socket.emit('getBlock', Buffer.from(this.blockHash.substring(2), 'hex'), (err, data) => {
       if (data) {
         _this.block = new Block(data)
+            
         let uncleHashes = _this.block.getUncleHashes()
         _this.$socket.emit('getBlockTransactions', _this.block.getHash().toBuffer(), (err, data) => {
           _this.transactions = data.map((_tx) => {
             return new Tx(_tx)
-
           })
         })
         uncleHashes.forEach((_hash: any, idx: number) => {
@@ -59,6 +71,8 @@ export default Vue.extend({
         })
       }
     })
+  
+
   }
 
 })

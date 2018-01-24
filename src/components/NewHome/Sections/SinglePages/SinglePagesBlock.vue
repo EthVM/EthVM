@@ -1,7 +1,8 @@
 <template>
   <div>
     <div class="block-detail-container" v-if="block">
-      <p class="block-title">Block Detail Information</p>
+      <p v-if="notuncle" class="block-title">Block Detail Information</p>
+      <p v-else="notuncle" class="block-title">Block Detail Information (Uncle)</p>
 
       <div class="details">
         <li>Height</li>
@@ -131,7 +132,8 @@ export default Vue.extend({
   name: 'BlockView',
   props: [
     'block',
-    'uncles'
+    'uncles',
+    'notuncle'
   ],
   data() {
     return {}

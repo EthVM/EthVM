@@ -48,7 +48,7 @@
             <tr v-show="!isPending">
               <td>Block Hash</td>
               <td>
-                <p> <a v-bind:href="'/block/' + tx.getBlockHash().toString()">{{tx.getBlockHash().toString()}}</a></p>
+                <p><router-link :to="'/block/'+tx.getBlockHash().toString()">{{tx.getBlockHash().toString()}}</router-link></p>
               </td>
             </tr>
             <tr v-show="!isPending">
