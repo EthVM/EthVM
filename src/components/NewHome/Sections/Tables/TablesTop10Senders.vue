@@ -1,32 +1,11 @@
 <template>
-  <div class="top-10-senders" :class="frompage">  
-    <p class="block-title">Top 10 Senders</p>
-    <div class="people-list-table">
-      <li class="ranking">1</li>
+  <div class="top-10-senders">  
+    <p class="block-title">Top Senders</p>
+    <div class="people-list-table" v-for="(sender, index) in senders">
+      <li class="ranking">{{index+1}}</li>
       <li class="info">
-        <p class="address">0x829bd824b01630x829bd824b016326a401d083b33d092293333a83026a401d083b33d092293333a830</p>
-        <p class="sent">Sent: <span>16.7</span></p>
-      </li>
-    </div>
-    <div class="people-list-table">
-      <li class="ranking">2</li>
-      <li class="info">
-        <p class="address">0x829bd824b01630x829bd824b016326a401d083b33d092293333a83026a401d083b33d092293333a830</p>
-        <p class="sent">Sent: <span>16.7</span></p>
-      </li>
-    </div>
-    <div class="people-list-table">
-      <li class="ranking">3</li>
-      <li class="info">
-        <p class="address">0x829bd824b01630x829bd824b016326a401d083b33d092293333a83026a401d083b33d092293333a830</p>
-        <p class="sent">Sent: <span>16.7</span></p>
-      </li>
-    </div>
-    <div class="people-list-table">
-      <li class="ranking">4</li>
-      <li class="info">
-        <p class="address">0x829bd824b01630x829bd824b016326a401d083b33d092293333a83026a401d083b33d092293333a830</p>
-        <p class="sent">Sent: <span>16.7</span></p>
+        <p class="address">{{sender.address}}</p>
+        <p class="sent">Sent: <span>{{convertBNtoEth(sender.value)}} ETH</span></p>
       </li>
     </div>
   </div>
@@ -34,32 +13,19 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import ethUnits from 'ethereumjs-units'
 export default Vue.extend({
   name: 'Top10Senders',
-  props: ['frompage'],
+  props: ['senders'],
   data () {
-    return {
-      blocks: [],
-      showUncles: {}
-    }
+    return {}
   },
   methods: {
-
-  },
-  beforeMount () {},
-  created () {
-
-  },
-  beforeDestroy () {
-
-  },
-  computed: {
-
-  },
-  mounted () {
-
+    convertBNtoEth: (_bn) => {
+      return ethUnits.convert(_bn.toFixed(),'wei', 'eth')
+    }
   }
-})
+  })
 </script>
 
 <style scoped="" lang="less">

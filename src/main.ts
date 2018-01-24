@@ -10,6 +10,8 @@ import io from 'socket.io-client';
 import socketConfig from '@/configs/socket.json'
 import VueSocketio from 'vue-socket.io'
 import VueTimeago from 'vue-timeago'
+import infiniteScroll from 'vue-infinite-scroll'
+import round from 'vue-round-filter';
 
 import '@/components'
 Vue.prototype.$eventHub = new Vue();
@@ -25,6 +27,7 @@ Vue.use(VueTimeago, {
 		'en-US': require('vue-timeago/locales/en-US.json')
 	}
 })
+Vue.use(infiniteScroll)
 new Vue({
 	el: '#app',
 	store,
@@ -34,5 +37,8 @@ new Vue({
 	data: {},
 	components: {
 		App
+	},
+	filters: {
+		round: round
 	}
 })

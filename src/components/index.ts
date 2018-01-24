@@ -70,21 +70,6 @@ Vue.component('icon', Icon)
 
 
 
-    import ShortDataAverageGasPrice from "@/components/NewHome/Sections/ShortData/ShortDataAverageGasPrice"
-    Vue.component('ShortDataAverageGasPrice', ShortDataAverageGasPrice)
-
-    import ShortDataAverageValueTransfered from "@/components/NewHome/Sections/ShortData/ShortDataAverageValueTransfered"
-    Vue.component('ShortDataAverageValueTransfered', ShortDataAverageValueTransfered)
-
-    import ShortDataViewingLastTransactions from "@/components/NewHome/Sections/ShortData/ShortDataViewingLastTransactions"
-    Vue.component('ShortDataViewingLastTransactions', ShortDataViewingLastTransactions)
-
-    import ShortDataTotalFees from "@/components/NewHome/Sections/ShortData/ShortDataTotalFees"
-    Vue.component('ShortDataTotalFees', ShortDataTotalFees)
-
-
-
-
 
     /* Graphs ---------------------- */
     import VueChart from "@/components/NewHome/Sections/Graphs/VueChart"

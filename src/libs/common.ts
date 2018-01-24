@@ -85,6 +85,9 @@ class HexNumber {
 	toNumber(): string {
 		return new bn(this.value).toFixed()
 	}
+	toIntNumber(): number {
+		return new bn(this.value).toNumber()
+	}
 	toString(): string {
 		return this.value
 	}

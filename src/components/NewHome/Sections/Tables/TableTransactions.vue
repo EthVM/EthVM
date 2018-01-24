@@ -11,7 +11,7 @@
             <td>From</td>
             <td>Amount</td>
              <td v-if="tx.getContractAddress().toString()">Contract</td>
-            <td v-if="!tx.getContractAddress().toString()">Tolkl;lk;</td>
+            <td v-if="!tx.getContractAddress().toString()">To</td>
           </tr>
         </thead>
       </table>

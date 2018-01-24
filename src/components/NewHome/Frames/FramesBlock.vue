@@ -40,9 +40,9 @@ export default Vue.extend({
     }
   },
   methods: {},
-  mounted: function() {
+  created: function() {
     let _this = this
-    this.$socket.emit('getBlock', Buffer.from(this.blockHash.substring(2), 'hex'), (err, data) => {
+    this.$socket.emit('getBlock', new Buffer(this.blockHash.substring(2),'hex'), (err, data) => {
       if (data) {
         _this.block = new Block(data)
         let uncleHashes = _this.block.getUncleHashes()
