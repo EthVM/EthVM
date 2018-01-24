@@ -1,6 +1,8 @@
 <template>
+  <div class="chart component-shadow">
     <canvas ref="chart" :width="width" :height="height">
     </canvas>
+  </div>
 </template>
 <script lang="ts">
 import Chart from 'chart.js'
@@ -90,5 +92,5 @@ export default Vue.extend({
 })
 </script>
 <style scoped lang="less">
-@import "~lessPath/NewHome/globalVars.less";
+@import "~lessPath/NewHome/Sections/Graphs/Chart.less";
 </style>

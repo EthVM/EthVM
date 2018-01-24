@@ -1,48 +1,42 @@
 <template>
 <div class="last-transactions">
   <div class="row">
-    <div class="col-md-3 col-sm-3 col-xs-6 block-container">
-      <div class="block">
+    <div class="col-md-3 col-sm-3 col-xs-6 short-data">
+     
         <small-block-component title='Average Gas Price (GWEI)'
                                :value="overview.avgGasPrice"
                                icon-name='tachometer'
                                icon-color='#c271f5'></small-block-component>
-      </div>
+      
     </div>
-    <div class="col-md-3 col-sm-3 col-xs-6 block-container">
-      <div class="block">
+    <div class="col-md-3 col-sm-3 col-xs-6 short-data">     
         <small-block-component title='Average Value Transfered (ETH)'
                                :value="overview.avgValue"
                                icon-name='tachometer'
                                icon-color='#ffd800'></small-block-component>
-      </div>
     </div>
-    <div class="col-md-3 col-sm-3 col-xs-6 block-container">
-      <div class="block">
+    <div class="col-md-3 col-sm-3 col-xs-6 short-data">
         <small-block-component title='Viewing Last Transactions'
                                :value="overview.totalValues"
                                icon-name='tachometer'
                                icon-color='#fba893'></small-block-component>
-      </div>
     </div>
-    <div class="col-md-3 col-sm-3 col-xs-6 block-container">
-      <div class="block">
+    <div class="col-md-3 col-sm-3 col-xs-6 short-data">
         <small-block-component title='Total Fees (ETH)'
                                :value="overview.totalFees"
                                icon-name='tachometer'
                                icon-color='#6bee69'></small-block-component>
-      </div>
     </div>
   </div>
   <div class="row">
-    <div class="col-md-6 block-container">
+    <div class="col-md-9 table-data">
       <div class="block the-table">
         <latest-transactions v-if="type=='transactions'"
                              @updated="overviewReceived"></latest-transactions>
         <latest-pending-transactions v-if="type=='pendingTransactions'" @updated="overviewReceived"></latest-pending-transactions>
       </div>
     </div>
-    <div class="col-md-6 block-container">
+    <div class="col-md-3 short-data">
       <div class="block">
         <TablesTop10Senders :senders="overview.senders"></TablesTop10Senders>
       </div>

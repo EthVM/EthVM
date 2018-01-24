@@ -1,7 +1,6 @@
 <template>
 <div class="last-transactions">
   <p class="block-title2">Transactions</p>
-  <p class="block-title3">Transactions users made on etherium newtwork</p>
   <div class="data-container">
     <div class="data-block"
          v-for="tx in transactions"

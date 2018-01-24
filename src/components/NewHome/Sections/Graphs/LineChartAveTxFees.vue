@@ -1,8 +1,7 @@
 <template>
-  <div id="GraphsLineChart" class="line-chart component-shadow">
-    <div class="graphs">
+  <div id="GraphsLineChart" class="line-chart">
+
      <vue-chart type="line" :data="chartData" :options="chartOptions" :redraw="redraw"></vue-chart>
-    </div>
 
   </div>
 </template>
@@ -126,6 +125,4 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped lang="less">
-  @import "~lessPath/NewHome/Sections/Graphs/GraphsLineChart.less";
-</style>
+

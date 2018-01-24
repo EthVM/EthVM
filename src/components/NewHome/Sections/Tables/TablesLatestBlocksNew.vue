@@ -2,7 +2,6 @@
 
    <div class="latest-blocks" :class="frompage">
       <p class="block-title2">Latest Blocks</p>
-      <p class="block-title3">Latest blocks mined by miners</p>
 
       <div class="data-container">
          <div class="data-block" v-for="block in getBlocks" v-if="!block.getIsUncle()">

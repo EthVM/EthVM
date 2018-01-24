@@ -1,71 +1,34 @@
 <template>
-
-  <div class="latest-blocks">
-
-    <div class="row">
-
-      <div class="col-md-6">
-        <div class="block the-table">
-          <tables-latest-blocks-new></tables-latest-blocks-new>
-        </div>
-      </div>
-
-      <div class="col-md-6">
-        
-
+    <div class="latest-blocks">
         <div class="row">
-          <div class="col-md-6 block-container">
-            <div class="block">
-             <line-chart-ave-tx-fees></line-chart-ave-tx-fees>
+            <div class="col-md-4 chart-data">
+                <line-chart-pending-tx></line-chart-pending-tx>
             </div>
-          </div>
-            
-          <div class="col-md-6 block-container">
-            <div class="block">
-               <bar-chart-last-ten-blocks-tx></bar-chart-last-ten-blocks-tx>
+            <div class="col-md-4 chart-data">
+                <bar-chart-last-ten-blocks-tx></bar-chart-last-ten-blocks-tx>
             </div>
-          </div>
-
-          <div class="col-md-6 block-container">
-            <div class="block">
-              <line-chart-pending-tx></line-chart-pending-tx>
+            <div class="col-md-4 chart-data">
+                <line-chart-ave-tx-fees></line-chart-ave-tx-fees>
             </div>
-          </div>
-          <div class="col-md-6 block-container">
-            <div class="block">
-              <line-chart-pending-tx></line-chart-pending-tx>
-            </div>
-          </div>
         </div>
-
-
-      </div>
-      
-      
-
+        <div class="row ">
+            <div class="table-data">
+                <tables-latest-blocks-new></tables-latest-blocks-new>
+            </div>
+        </div>
     </div>
-
-
-    <div class="block-container">
-      
-    </div>
-    
-
-  </div>
 </template>
-
 <script lang="ts">
-  import Vue from 'vue'
-  export default Vue.extend({
+import Vue from 'vue'
+export default Vue.extend({
     name: 'FramesLatestBlocks',
-    data () {
-      return {
+    data() {
+        return {
 
-      }
+        }
     }
-  })
+})
 </script>
-
 <style scoped lang="less">
-  @import "~lessPath/NewHome/Frames/FramesLatestBlocks.less";
+@import "~lessPath/NewHome/Frames/FramesLatestBlocks.less";
 </style>

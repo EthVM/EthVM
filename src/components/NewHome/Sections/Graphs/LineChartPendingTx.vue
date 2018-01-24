@@ -120,6 +120,3 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped="" lang="less">
-@import "~lessPath/NewHome/Sections/Graphs/GraphsRealChart.less";
-</style>

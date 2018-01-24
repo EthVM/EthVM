@@ -1,54 +1,37 @@
 <template>
     <div id="FramesHome" class="frames-home">
         <div class="row">
-            <div class="col-md-3 col-sm-3 col-xs-6 block-container">
-                <div class="block">
-                    <short-data-last-block></short-data-last-block>
-                </div>
+            <div class="col-md-3 col-sm-3 col-xs-6 short-data">         
+                <short-data-last-block></short-data-last-block>       
             </div>
-            <div class="col-md-3 col-sm-3 col-xs-6 block-container">
-                <div class="block">
-                    <short-data-time-since-last-block></short-data-time-since-last-block>
-                </div>
+            <div class="col-md-3 col-sm-3 col-xs-6 short-data">
+                <short-data-time-since-last-block></short-data-time-since-last-block>    
             </div>
-            <div class="col-md-3 col-sm-3 col-xs-6 block-container">
-                <div class="block">
-                    <short-data-hash-rate></short-data-hash-rate>
-                </div>
+            <div class="col-md-3 col-sm-3 col-xs-6 short-data"> 
+                <short-data-hash-rate></short-data-hash-rate>
             </div>
-            <div class="col-md-3 col-sm-3 col-xs-6 block-container">
-                <div class="block">
-                    <ShortDataDifficulty></ShortDataDifficulty>
-                </div>
+            <div class="col-md-3 col-sm-3 col-xs-6 short-data">
+                    <short-data-difficulty></short-data-difficulty>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-4 block-container">
-                <div class="block">
-                    <line-chart-pending-tx></line-chart-pending-tx>
-                </div>
+            <div class="col-md-4 chart-data">               
+                    <line-chart-pending-tx></line-chart-pending-tx>     
             </div>
-            <div class="col-md-4 block-container">
-                <div class="block">
-                    <bar-chart-last-ten-blocks-tx></bar-chart-last-ten-blocks-tx>
-                </div>
+            <div class="col-md-4 chart-data">           
+                   <bar-chart-last-ten-blocks-tx></bar-chart-last-ten-blocks-tx>
+                
             </div>
-            <div class="col-md-4 block-container">
-                <div class="block">
+            <div class="col-md-4 chart-data">   
                     <line-chart-ave-tx-fees></line-chart-ave-tx-fees>
-                </div>
             </div>
         </div>
-        <div class="row table-block">
-            <div class="col-md-6 block-container">
-                <div class="block">
-                    <tables-latest-blocks-new frompage="from-home" :max-items="20"></tables-latest-blocks-new>
-                </div>
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-6 table-data ">     
+                    <tables-latest-blocks-new :max-items="20"></tables-latest-blocks-new>
             </div>
-            <div class="col-md-6 block-container">
-                <div class="block">
-                    <latest-transactions frompage="from-home" :max-items="20"></latest-transactions>
-                </div>
+            <div class="col-md-6 table-data">          
+                   <tables-latest-blocks-new :max-items="20"></tables-latest-blocks-new>
             </div>
         </div>
     </div>

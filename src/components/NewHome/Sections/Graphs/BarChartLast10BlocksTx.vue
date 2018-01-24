@@ -114,6 +114,3 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped="" lang="less">
-@import "~lessPath/NewHome/Sections/Graphs/GraphsBarChart.less";
-</style>
