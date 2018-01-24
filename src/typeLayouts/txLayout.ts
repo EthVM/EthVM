@@ -22,4 +22,5 @@ export default interface txLayout {
 	s: Buffer;
 	status: boolean;
 	pending: boolean;
+	timestamp: Buffer;
 }

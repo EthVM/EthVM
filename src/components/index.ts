@@ -9,35 +9,32 @@ Vue.component('icon', Icon)
 
 
     /* Frames ---------------------- */
-    import FramesMainFrame from "@/components/NewHome/Frames/FramesMainFrame"
-    Vue.component('FramesMainFrame', FramesMainFrame)
+    import FrameHome from "@/components/NewHome/Frames/FrameHome"
+    Vue.component('FrameHome', FrameHome)
 
-    import FramesHome from "@/components/NewHome/Frames/FramesHome"
-    Vue.component('FramesHome', FramesHome)
+    import FrameAbout from "@/components/NewHome/Frames/FrameAbout"
+    Vue.component('FrameAbout', FrameAbout)
 
-    import FramesAbout from "@/components/NewHome/Frames/FramesAbout"
-    Vue.component('FramesAbout', FramesAbout)
+    import FrameFAQ from "@/components/NewHome/Frames/FrameFAQ"
+    Vue.component('FrameFAQ', FrameFAQ)
 
-    import FramesFAQ from "@/components/NewHome/Frames/FramesFAQ"
-    Vue.component('FramesFAQ', FramesFAQ)
+    import FrameContact from "@/components/NewHome/Frames/FrameContact"
+    Vue.component('FrameContact', FrameContact)
 
-    import FramesContact from "@/components/NewHome/Frames/FramesContact"
-    Vue.component('FramesContact', FramesContact)
+    import FrameTransaction from "@/components/NewHome/Frames/FrameTransaction"
+    Vue.component('FrameTransaction', FrameTransaction)
 
-    import FramesIndividualTransaction from "@/components/NewHome/Frames/FramesIndividualTransaction"
-    Vue.component('FramesIndividualTransaction', FramesIndividualTransaction)
+    import FrameBlock from "@/components/NewHome/Frames/FrameBlock"
+    Vue.component('FrameBlock', FrameBlock)
 
-    import FramesBlock from "@/components/NewHome/Frames/FramesBlock"
-    Vue.component('FramesBlock', FramesBlock)
+    import FrameTransactions from "@/components/NewHome/Frames/FrameTransactions"
+    Vue.component('FrameTransactions', FrameTransactions)
 
-    import FramesLastTransactions from "@/components/NewHome/Frames/FramesLastTransactions"
-    Vue.component('FramesLastTransactions', FramesLastTransactions)
+    import FrameBlocks from "@/components/NewHome/Frames/FrameBlocks"
+    Vue.component('FrameBlocks', FrameBlocks)
 
-    import FramesLatestBlocks from "@/components/NewHome/Frames/FramesLatestBlocks"
-    Vue.component('FramesLatestBlocks', FramesLatestBlocks)
-
-    import MainFrameComponent from "@/components/NewHome/Frames/MainFrameComponent"
-    Vue.component('MainFrameComponent', MainFrameComponent)
+    import FrameIndex from "@/components/NewHome/Frames/FrameIndex"
+    Vue.component('FrameIndex', FrameIndex)
 
     import FrameAccount from "@/components/NewHome/Frames/FrameAccount"
     Vue.component('FrameAccount', FrameAccount)

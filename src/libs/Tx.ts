@@ -1,6 +1,6 @@
 import { txLayout, traceLayout } from '@/typeLayouts'
 import { common } from '@/libs'
-import { Hash, Address, HexNumber, Hex, EthValue} from '@/libs/common'
+import { Hash, Address, HexNumber, Hex, EthValue, HexTime} from '@/libs/common'
 import ethUnits from 'ethereumjs-units'
 import bn from 'bignumber.js'
 import _ from 'lodash'
@@ -106,6 +106,10 @@ class Tx {
 	}
 	isPending(): boolean {
 		return this.tx.pending
+	}
+	getTimestamp(): HexTime {
+		if (!this.cache.timestamp) this.cache.timestamp = common.HexTime(this.tx.timestamp)
+		return this.cache.timestamp
 	}
 }
 export default Tx

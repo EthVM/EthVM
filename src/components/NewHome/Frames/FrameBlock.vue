@@ -1,21 +1,22 @@
 <template>
-  <div class="block last-transactions">
-    <div class="row">
-      <div class="col-md-6 col-sm-12 col-xs-12 block-container">
-        <div class="block">
-          <SinglePagesBlock :block="block" :uncles="uncles" :notuncle="NotUncle"></SinglePagesBlock>
-        </div>
+<div class="block last-transactions">
+  <div class="row">
+    <div class="col-md-6 col-sm-12 col-xs-12 block-container">
+      <div class="block">
+        <SinglePagesBlock :block="block"
+                          :uncles="uncles"></SinglePagesBlock>
       </div>
-      <div class="col-md-6 col-sm-12 col-xs-12 block-container" v-if="NotUncle">
-        <div class="block">
-          <table-transactions-new :transactions="transactions"></table-transactions-new>
-        </div>
+    </div>
+    <div class="col-md-6 col-sm-12 col-xs-12 block-container"
+         v-if="!isUncle">
+      <div class="block">
+        <table-transactions-new :transactions="transactions"></table-transactions-new>
       </div>
-
     </div>
   </div>
-</template>
+</div>
 
+</template>
 
 <script lang="ts">
 import Vue from 'vue';
@@ -40,24 +41,21 @@ export default Vue.extend({
     }
   },
   methods: {},
-  computed:{
-    NotUncle(){
-      if(this.block && !this.block.getIsUncle()){
-        return true;
+  computed: {
+    isUncle() {
+      if (this.block && this.block.getIsUncle()) {
+        return true
+      } else {
+        return false
       }
-      else{
-        return false;
-      }
-      
     }
   },
   mounted: function() {
-
     let _this = this
     this.$socket.emit('getBlock', Buffer.from(this.blockHash.substring(2), 'hex'), (err, data) => {
       if (data) {
         _this.block = new Block(data)
-            
+
         let uncleHashes = _this.block.getUncleHashes()
         _this.$socket.emit('getBlockTransactions', _this.block.getHash().toBuffer(), (err, data) => {
           _this.transactions = data.map((_tx) => {
@@ -71,13 +69,13 @@ export default Vue.extend({
         })
       }
     })
-  
 
   }
 
 })
 
 </script>
-<style scoped lang="less">
-  @import "~lessPath/NewHome/Frames/FramesLastTransactions.less";
+
+<style scoped="" lang="less">
+@import "~lessPath/NewHome/Frames/FramesLastTransactions.less";
 </style>

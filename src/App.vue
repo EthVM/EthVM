@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view/>
+    <router-view :key="$route.fullPath"/>
   </div>
 </template>
 
@@ -11,8 +11,6 @@
   })
 </script>
 
-<style lang="less">
-  //@import "~lessPath/NewHome/global.less";
-</style>
+<style lang="less"></style>
 
 

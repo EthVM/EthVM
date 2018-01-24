@@ -15,21 +15,19 @@
   <!-- DashBoard Content: -->
   <div class="main-content"
        id="main">
-    <FramesAbout v-if="pageName == 'about'"></FramesAbout>
-    <FramesFAQ v-else-if="pageName == 'faq'"></FramesFAQ>
-    <FramesContact v-else-if="pageName == 'contact'"></FramesContact>
-    <FramesLastTransactions v-else-if="pageName == 'transactions' || pageName == 'pendingTransactions'"
-                            :type="pageName"></FramesLastTransactions>
-    <FramesLatestBlocks v-else-if="pageName == 'blocks'"></FramesLatestBlocks>
-    <FramesIndividualTransaction v-else-if="pageName == 'tx' && param"
-                                 :txHash="param"></FramesIndividualTransaction>
-    <FramesBlock v-else-if="pageName == 'block' && param"
-                 :blockHash="param"></FramesBlock>
-    <FramesBlock v-else-if="pageName == 'block' && param"
-                 :address="param"></FramesBlock>
+    <frame-about v-if="pageName == 'about'"></frame-about>
+    <framefaq v-else-if="pageName == 'faq'"></framefaq>
+    <frame-contact v-else-if="pageName == 'contact'"></frame-contact>
+    <frame-transactions v-else-if="pageName == 'transactions' || pageName == 'pendingTransactions'"
+                            :type="pageName"></frame-transactions>
+    <frame-blocks v-else-if="pageName == 'blocks'"></frame-blocks>
+    <frame-transaction v-else-if="pageName == 'tx' && param"
+                                 :txHash="param"></frame-transaction>
+    <frame-block v-else-if="pageName == 'block' && param"
+                 :blockHash="param"></frame-block>
     <frame-account v-else-if="pageName == 'account' && param"
                    :blockHash="param"></frame-account>
-      <FramesHome v-else></FramesHome>
+    <frame-home v-else></frame-home>
   </div>
 </div>
 </div>

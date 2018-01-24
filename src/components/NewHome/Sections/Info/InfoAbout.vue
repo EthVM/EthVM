@@ -14,7 +14,7 @@
 
     <div class="row middle">
       <div class="col-md-6">
-        <img class="left-image" src="/img/blockchain.png">
+        <img class="left-image" src="~@/static/img/blockchain.png">
       </div>
 
       <div class="col-md-6">

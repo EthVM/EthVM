@@ -14,6 +14,12 @@
               </td>
             </tr>
             <tr>
+              <td>Timestamp</td>
+              <td>
+                <p>{{tx.getTimestamp().toDate().toString()}} (<timeago :since="tx.getTimestamp().toDate()" :auto-update="10"></timeago>)</p>
+              </td>
+            </tr>
+            <tr>
               <td>From</td>
               <td>
                 <eth-address :address="tx.getFrom().toString()"></eth-address>

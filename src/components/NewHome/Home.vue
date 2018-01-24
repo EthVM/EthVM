@@ -1,6 +1,6 @@
 <template>
   <div id="home">
-    <main-frame-component pageName="home"></main-frame-component>
+    <frame-index pageName="home"></frame-index>
   </div>
 </template>
 
