@@ -39,7 +39,7 @@
       <div class="block the-table">
         <latest-transactions v-if="type=='transactions'"
                              @updated="overviewReceived"></latest-transactions>
-        <latest-pending-transactions v-if="type=='pendingTransactions'"></latest-pending-transactions>
+        <latest-pending-transactions v-if="type=='pendingTransactions'" @updated="overviewReceived"></latest-pending-transactions>
       </div>
     </div>
     <div class="col-md-6 block-container">
@@ -55,6 +55,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import ethUnits from 'ethereumjs-units'
+import bn from 'bignumber.js'
 export default Vue.extend({
   name: 'FramesContact',
   props: [
@@ -73,10 +74,10 @@ export default Vue.extend({
   },
   methods: {
     overviewReceived(valObj) {
-      this.overview.avgGasPrice = ethUnits.convert(valObj.totalGasPrice.div(valObj.length).toFixed(),'wei', 'gwei')
-      this.overview.avgValue = ethUnits.convert(valObj.totalValue.div(valObj.length).toFixed(),'wei','eth')
+      this.overview.avgGasPrice = new bn(ethUnits.convert(valObj.totalGasPrice.div(valObj.length).toFixed(),'wei', 'gwei')).round(2).toString()
+      this.overview.avgValue = new bn(ethUnits.convert(valObj.totalValue.div(valObj.length).toFixed(),'wei','eth')).round(2).toString()
       this.overview.totalValues = valObj.length
-      this.overview.totalFees = ethUnits.convert(valObj.totalFees.toFixed(),'wei','eth')
+      this.overview.totalFees = new bn(ethUnits.convert(valObj.totalFees.toFixed(),'wei','eth')).round(2).toString()
       this.overview.senders = valObj.topSenders
     }
   }

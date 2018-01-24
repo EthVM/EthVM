@@ -26,7 +26,6 @@
         "visibilityjs": "^1.2.6",
         "vue": "^2.5.2",
         "vue-infinite-scroll": "^2.0.2",
-        "vue-round-filter": "^1.1.2",
         "vue-router": "^3.0.1",
         "vue-socket.io": "^2.1.1-a",
         "vuex": "^3.0.1",
