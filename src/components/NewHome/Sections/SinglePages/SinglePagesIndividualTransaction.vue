@@ -1,147 +1,102 @@
 <template>
 <div class="indivisual-tx">
-  <div class="block-container"
-       v-if="tx">
-    <div class="tx-section-block-1">
-      <div class="section-block-container">
-        <p class="block-title">Individual Transaction</p>
-        <table>
-          <tbody>
-            <tr>
-              <td>Hash</td>
-              <td>
-                <p>{{tx.getHash().toString()}}</p>
-              </td>
-            </tr>
-            <tr>
-              <td>Timestamp</td>
-              <td>
-                <p>{{tx.getTimestamp().toDate().toString()}} (<timeago :since="tx.getTimestamp().toDate()" :auto-update="10"></timeago>)</p>
-              </td>
-            </tr>
-            <tr>
-              <td>From</td>
-              <td>
-                <eth-address :address="tx.getFrom().toString()"></eth-address>
-              </td>
-            </tr>
-            <tr v-if="tx.getContractAddress().toString()">
-              <td>Contract Address</td>
-              <td>
-                <eth-address :address="tx.getContractAddress().toString()"></eth-address>
-              </td>
-            </tr>
-            <tr v-if="!tx.getContractAddress().toString()">
-              <td>To</td>
-              <td>
-                <eth-address :address="tx.getTo().toString()"></eth-address>
-              </td>
-            </tr>
-            <tr>
-              <td>Value</td>
-              <td>
-                <p>{{tx.getValue().toEth()}}&nbsp;ETH</p>
-              </td>
-            </tr>
-            <tr>
-              <td>Gas</td>
-              <td>
-                <usage-bar :value="tx.getGasUsed().toNumber()"
+
+  <div class="tx-detail-container" v-if="tx">
+    <p class="block-title">Individual Transaction</p>
+
+    <div class="tx-detail-table">
+      <div class="table-row">
+        <li>Hash</li>
+        <li>{{tx.getHash().toString()}}</li>
+      </div>
+      <div class="table-row">
+        <li>Timestamp</li>
+        <li>{{tx.getTimestamp().toDate().toString()}} (<timeago :since="tx.getTimestamp().toDate()" :auto-update="10"></timeago>)</li>
+      </div>
+      <div class="table-row">
+        <li>From</li>
+        <li><eth-address :address="tx.getFrom().toString()"></eth-address></li>
+      </div>
+      <div class="table-row">
+        <li>Contract Address</li>
+        <li><eth-address :address="tx.getContractAddress().toString()"></eth-address></li>
+      </div>
+      <div class="table-row">
+        <li>To</li>
+        <li><eth-address :address="tx.getTo().toString()"></eth-address></li>
+      </div>
+      <div class="table-row">
+        <li>Value</li>
+        <li>{{tx.getValue().toEth()}}&nbsp;ETH</li>
+      </div>
+      <div class="table-row">
+        <li>Gas</li>
+        <li><usage-bar :value="tx.getGasUsed().toNumber()"
                            :max-value="tx.getGas().toNumber()"></usage-bar>
                 <p>{{tx.getGasUsed().toNumber()}} / {{tx.getGas().toNumber()}} (Gas used / Gas Limit)</p>
-              </td>
-            </tr>
-            <tr v-show="!isPending">
-              <td>Block Hash</td>
-              <td>
-                <p><router-link :to="'/block/'+tx.getBlockHash().toString()">{{tx.getBlockHash().toString()}}</router-link></p>
-              </td>
-            </tr>
-            <tr v-show="!isPending">
-              <td>Block Number</td>
-              <td>
-                <p>{{tx.getBlockNumber().toNumber()}}</p>
-              </td>
-            </tr>
-            <tr v-show="!isPending">
-              <td>Transaction Index</td>
-              <td>
-                <p>{{tx.geTransactionIndex().toNumber()}}</p>
-              </td>
-            </tr>
-            <tr v-show="!isPending">
-              <td>From Account Balance</td>
-              <td>
-                <p>{{tx.getFromBalance().toEth()}} &nbsp;ETH</p>
-              </td>
-            </tr>
-            <tr v-show="!isPending">
-              <td>To Account Balance</td>
-              <td>
-                <p>{{tx.getToBalance().toEth()}} &nbsp;ETH</p>
-              </td>
-            </tr>
-            <tr v-show="!isPending">
-              <td>Cumulative Gas Used</td>
-              <td>
-                <p>{{tx.getCumulativeGasUsed().toNumber()}}</p>
-              </td>
-            </tr>
-            <tr>
-              <td>Gas Price</td>
-              <td>
-                <p>{{tx.getGasPrice().toEth()}}&nbsp;ETH</p>
-              </td>
-            </tr>
-            <tr>
-              <td>Input</td>
-              <td>
-                <p class="input">{{tx.getInput().toString()}}</p>
-              </td>
-            </tr>
-            <tr>
-              <td>Nonce</td>
-              <td>
-                <p>{{tx.getNonce().toNumber()}}</p>
-              </td>
-            </tr>
-            <tr>
-              <td>V</td>
-              <td>
-                <p>{{tx.getV().toString()}}</p>
-              </td>
-            </tr>
-            <tr>
-              <td>R</td>
-              <td>
-                <p>{{tx.getR().toString()}}</p>
-              </td>
-            </tr>
-            <tr>
-              <td>S</td>
-              <td>
-                <p>{{tx.getS().toString()}}</p>
-              </td>
-            </tr>
-            <tr>
-              <td>Status</td>
-              <td>
-                <p>{{tx.getStatus().toString()}}</p>
-              </td>
-            </tr>
-            <tr>
-              <td>Pending</td>
-              <td>
-                <p>{{tx.isPending().toString()}}</p>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        </li>
       </div>
+      <div class="table-row">
+        <li>Block Hash</li>
+        <li><router-link :to="'/block/'+tx.getBlockHash().toString()">{{tx.getBlockHash().toString()}}</router-link></li>
+      </div>
+      <div class="table-row">
+        <li>Block Number</li>
+        <li>{{tx.getBlockNumber().toNumber()}}</li>
+      </div>
+      <div class="table-row">
+        <li>Transaction Index</li>
+        <li>{{tx.geTransactionIndex().toNumber()}}</li>
+      </div>
+      <div class="table-row">
+        <li>From Account Balance</li>
+        <li>{{tx.getFromBalance().toEth()}} &nbsp;ETH</li>
+      </div>
+      <div class="table-row">
+        <li>To Account Balance</li>
+        <li>{{tx.getToBalance().toEth()}} &nbsp;ETH</li>
+      </div>
+      <div class="table-row">
+        <li>Cumulative Gas Used</li>
+        <li>{{tx.getCumulativeGasUsed().toNumber()}}</li>
+      </div>
+      <div class="table-row">
+        <li>Gas Price</li>
+        <li>{{tx.getGasPrice().toEth()}}&nbsp;ETH</li>
+      </div>
+      <div class="table-row">
+        <li>Input</li>
+        <li>{{tx.getInput().toString()}}</li>
+      </div>
+      <div class="table-row">
+        <li>Nonce</li>
+        <li>{{tx.getNonce().toNumber()}}</li>
+      </div>
+      <div class="table-row">
+        <li>V</li>
+        <li>{{tx.getV().toString()}}</li>
+      </div>
+      <div class="table-row">
+        <li>R</li>
+        <li>{{tx.getR().toString()}}</li>
+      </div>
+      <div class="table-row">
+        <li>S</li>
+        <li>{{tx.getS().toString()}}</li>
+      </div>
+      <div class="table-row">
+        <li>Status</li>
+        <li>{{tx.getStatus().toString()}}</li>
+      </div>
+      <div class="table-row">
+        <li>Pending</li>
+        <li>{{tx.isPending().toString()}}</li>
+      </div>
+            
     </div>
-    <!-- .section-block-1 -->
+
   </div>
-  <!-- .block-container -->
+
 </div>
 
 </template>
