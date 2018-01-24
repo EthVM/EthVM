@@ -31,7 +31,7 @@
                     <tables-latest-blocks-new :max-items="20"></tables-latest-blocks-new>
             </div>
             <div class="col-md-6 table-data">          
-                   <tables-latest-blocks-new :max-items="20"></tables-latest-blocks-new>
+                   <latest-transactions frompage="from-home" :max-items="20"></latest-transactions>
             </div>
         </div>
     </div>
