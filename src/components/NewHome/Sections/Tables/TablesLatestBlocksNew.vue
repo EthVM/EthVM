@@ -20,7 +20,7 @@
                <div class="hash-block">
                   <li><p>BLOCK#&nbsp;<span>{{block.getNumber().toNumber()}}</span></p></li>
                   <li><h4 class="hash">HASH&nbsp;&nbsp;&nbsp;&nbsp;<router-link :to="'/block/'+block.getHash().toString()">{{block.getHash().toString()}}</router-link></h4></li>
-                  <li><h4 class="miner">MINER&nbsp;&nbsp;&nbsp;{{block.getMiner().toString()}}</h4></li>
+                  <li><h4 class="miner">MINER&nbsp;&nbsp;&nbsp;<router-link :to="'/address/'+block.getMiner().toString()">{{block.getMiner().toString()}}</router-link></h4></li>
                   <li><h4 class="uncle-counter" v-if="block.getUncleHashes().length != 0">UNCLES&nbsp;&nbsp;<span>{{block.getUncleHashes().length}}</span>&nbsp;<span class="glyphicon glyphicon-chevron-down"></span></h4></li>
                </div>
 
@@ -38,7 +38,7 @@
                     </li>
 
                     <li class="sub-miner">
-                      <p>MINER&nbsp;<span>{{uncle.getMiner().toString()}}</span></p>
+                      <p>MINER&nbsp;<span><router-link :to="'/address/'+uncle.getMiner().toString()">{{uncle.getMiner().toString()}}</router-link></span></p>
                     </li>
 
                     <li class="sub-reward">

@@ -22,7 +22,7 @@
         <div class="transaction-block">
           <li class="transaction-info">
             <p class="block-label label-from">FROM</p>
-            <p class="address">{{tx.getFrom().toString()}}</p>
+            <p class="address"><router-link :to="'/address/'+tx.getFrom().toString()">{{tx.getFrom().toString()}}</router-link></p>
           </li>
           <li class="transaction-info arrow_container">
             <div class="arrow_box">
@@ -33,12 +33,12 @@
           <li class="transaction-info"
               v-if="!tx.getContractAddress().toString()">
             <p class="block-label">TO</p>
-            <p class="address">{{tx.getTo().toString()}}</p>
+            <p class="address"><router-link :to="'/address/'+tx.getTo().toString()">{{tx.getTo().toString()}}</router-link></p>
           </li>
           <li class="transaction-info"
               v-if="tx.getContractAddress().toString()">
             <p class="block-label">CONTRACT</p>
-            <p class="address">{{tx.getContractAddress().toString()}}</p>
+            <p class="address"><router-link :to="'/address/'+tx.getContractAddress().toString()">{{tx.getContractAddress().toString()}}</router-link></p>
           </li>
         </div>
       </div>
