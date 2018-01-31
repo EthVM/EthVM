@@ -9,12 +9,15 @@
         "start": "npm run dev",
         "dist": "history-server dist",
         "lint": "eslint --ext .js,.vue src test/unit/specs",
+        "external": "node /external/index.js",
         "build": "node build/build.js"
     },
     "dependencies": {
         "@types/socket.io-client": "^1.4.32",
+        "axios": "^0.17.1",
         "chalk": "^2.3.0",
         "copy-webpack-plugin": "^4.3.1",
+        "ethereumjs-account": "^2.0.4",
         "ethereumjs-units": "^0.2.0",
         "lodash.debounce": "^4.0.8",
         "node-notifier": "^5.1.2",
@@ -59,6 +62,7 @@
         "eslint-plugin-vue": "^4.2.0",
         "extract-text-webpack-plugin": "^3.0.2",
         "file-loader": "^1.1.5",
+        "filedownloader": "^1.2.7",
         "friendly-errors-webpack-plugin": "^1.6.1",
         "highcharts": "^6.0.3",
         "history-server": "^1.2.0",

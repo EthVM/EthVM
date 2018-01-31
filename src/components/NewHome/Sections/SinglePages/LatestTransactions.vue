@@ -2,8 +2,7 @@
 <div v-infinite-scroll="loadMore"
      infinite-scroll-disabled="busy"
      infinite-scroll-distance="100">
-  <table-transactions-new :transactions="txs">
-  </table-transactions-new>
+  <table-transactions-new :transactions="txs"></table-transactions-new>
 </div>
 
 </template>

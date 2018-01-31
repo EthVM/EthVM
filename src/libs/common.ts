@@ -42,6 +42,9 @@ class Address {
 	toBuffer(): Buffer {
 		return new Buffer(this.address.substring(2), 'hex')
 	}
+	toNakedAddress(): string {
+		return this.address.toLowerCase().replace('0x', '')
+	}
 }
 class Hash {
 	hash: string;
@@ -105,6 +108,9 @@ let common = {
 	},
 	Address: (_add: Buffer): Address => {
 		return new Address(_add)
+	},
+	AddressFromHex: (_add: string) : Address => {
+		return new Address(new Buffer(_add.toLowerCase().replace('0x', ''),'hex'))
 	},
 	Hex: (_hex: Buffer): Hex => {
 		return new Hex(_hex)

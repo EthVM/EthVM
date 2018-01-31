@@ -54,6 +54,7 @@ export default Vue.extend({
   },
   created () {
     let _this = this
+    _this.$emit('updated', getOverview(_this.pendingTxs))
     this.$socket.emit(sEvents.join, 'pendingTxs')
     this.$options.sockets.newPendingTx = (data) => {
       if (Visibility.state() === 'visible') {

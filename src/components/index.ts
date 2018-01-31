@@ -132,8 +132,8 @@ Vue.component('icon', Icon)
     import SinglePagesBlock from "@/components/NewHome/Sections/SinglePages/SinglePagesBlock"
     Vue.component('SinglePagesBlock', SinglePagesBlock)
 
-    import latestTransactions from "@/components/NewHome/Sections/SinglePages/latestTransactions"
-    Vue.component('LatestTransactions', latestTransactions)
+    import LatestTransactions from "@/components/NewHome/Sections/SinglePages/LatestTransactions"
+    Vue.component('LatestTransactions', LatestTransactions)
 
     import SmallBlockComponent from "@/components/NewHome/Sections/SmallBlockComponent"
     Vue.component('SmallBlockComponent', SmallBlockComponent)
@@ -141,13 +141,13 @@ Vue.component('icon', Icon)
     import LatestPendingTransactions from "@/components/NewHome/Sections/SinglePages/LatestPendingTransactions"
     Vue.component("LatestPendingTransactions", LatestPendingTransactions)
 
-    import overview from "@/components/NewHome/Sections/SinglePages/overview"
-    Vue.component("overview", overview)
+    import Overview from "@/components/NewHome/Sections/SinglePages/Overview"
+    Vue.component("Overview", Overview)
         
 
 
      /* Generic components ---------*/
-    import usageBar from "@/components/NewHome/Sections/Generic/usageBar"
-    Vue.component('UsageBar', usageBar)
-    import ethAddress from "@/components/NewHome/Sections/Generic/ethAddress"
-    Vue.component('EthAddress', ethAddress)
+    import UsageBar from "@/components/NewHome/Sections/Generic/UsageBar"
+    Vue.component('UsageBar', UsageBar)
+    import EthAddress from "@/components/NewHome/Sections/Generic/EthAddress"
+    Vue.component('EthAddress', EthAddress)

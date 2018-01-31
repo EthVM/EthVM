@@ -1,6 +1,6 @@
 <template>
 
-   <div class="latest-blocks" :class="frompage">
+   <div class="latest-blocks">
       <p class="block-title2">Latest Blocks</p>
 
       <div class="data-container">
@@ -63,7 +63,7 @@ import sEvents from '@/configs/socketEvents.json'
 import Visibility from 'visibilityjs'
 export default Vue.extend({
   name: 'TablesLatestBlocks',
-  props: ['frompage', 'maxItems'],
+  props: [],
   data () {
     return {
       blocks: [],
