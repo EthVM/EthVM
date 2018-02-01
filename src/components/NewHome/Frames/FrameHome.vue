@@ -20,7 +20,6 @@
             </div>
             <div class="col-md-4 chart-data">           
                    <bar-chart-last-ten-blocks-tx></bar-chart-last-ten-blocks-tx>
-                
             </div>
             <div class="col-md-4 chart-data">   
                     <line-chart-ave-tx-fees></line-chart-ave-tx-fees>

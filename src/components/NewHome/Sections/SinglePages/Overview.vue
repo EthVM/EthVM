@@ -1,18 +1,22 @@
 <template>
 <div class="overview">
   <div class="block-container">
-    <div class="tx-section-block-1">
-      <div class="section-block-container">
-        <p class="block-title">Overview</p>
-        <p> Address {{address}}</p>
-        <p> Balance {{account.balance.toEth()}}</p>
+    <div class="section-block-container">
+      <p class="block-title">Overview</p>
+      <div class="section-block">        
+          <li>Address</li>
+          <li>{{address}}</li>
+          <li>Balance</li>
+          <li>{{account.balance.toEth()}}</li>
       </div>
-      <div v-for="token in account.tokens">
-        <p> Symbol {{token.symbol}}</p>
-        <p> Balance {{token.balance.toFixed()}}</p>
+      <div class="section-block" v-for="token in account.tokens">
+        <li>Symbol</li>
+        <li>{{token.symbol}}</li>
+        <li>Balance</li>
+        <li>{{token.balance.toFixed()}}</li>
       </div>
     </div>
-    <!-- .section-block-1 -->
+    <!-- .section-block-container -->
   </div>
   <!-- .block-container -->
 </div>

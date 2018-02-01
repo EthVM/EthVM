@@ -144,6 +144,9 @@ Vue.component('icon', Icon)
     import Overview from "@/components/NewHome/Sections/SinglePages/Overview"
     Vue.component("Overview", Overview)
         
+    import TokenTracker from "@/components/NewHome/Sections/SinglePages/TokenTracker"
+    Vue.component("TokenTracker", TokenTracker)
+        
 
 
      /* Generic components ---------*/
