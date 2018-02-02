@@ -12,5 +12,5 @@ export {
 	FIFO,
 	processBlocks,
 	processTxs,
-	common,
+	common
 }

@@ -13,6 +13,7 @@ import VueTimeago from 'vue-timeago'
 import infiniteScroll from 'vue-infinite-scroll'
 
 import '@/components'
+
 Vue.prototype.$eventHub = new Vue();
 Vue.config.productionTip = false
 Vue.use(Toasted, {
