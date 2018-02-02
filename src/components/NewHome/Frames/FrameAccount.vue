@@ -11,7 +11,11 @@
     </div>
     <div class="col-md-6 block-container">
       <div class="block">
-        <table-transactions-new transactions=""></table-transactions-new>
+        <div v-infinite-scroll="loadMore"
+             infinite-scroll-disabled="busy"
+             infinite-scroll-distance="100">
+          <table-transactions-new :transactions="txs"></table-transactions-new>
+        </div>
       </div>
     </div>
   </div>
@@ -23,11 +27,12 @@
 import Vue from 'vue';
 import series from 'async/series';
 import bn from 'bignumber.js';
-import { common } from '@/libs';
+import { common, Tx } from '@/libs';
 import axios from 'axios';
-import lists from '@/lists'; 
+import lists from '@/lists';
 let Account = require('ethereumjs-account')
 let balanceHex = '0x70a08231'
+import { txLayout } from '@/typeLayouts';
 let padLeft = (n, width, z) => {
   z = z || '0'
   n = n + ''
@@ -54,11 +59,23 @@ export default Vue.extend({
         address: this.address,
         balance: common.EthValue(new Buffer(0)),
         tokens: []
-      }
+      },
+      txs: []
     }
   },
   created() {
     let _this = this
+    this.$socket.emit('getAddressTransactionPages', {
+      address: new Buffer(_this.address.substring(2), 'hex')
+    }, (err: Error, data: Array<txLayout>) => {
+      if (err) {
+        _this.$toasted.error(err.message)
+      } else {
+        _this.txs = data.map((_tx) => {
+          return new Tx(_tx)
+        })
+      }
+    }) *
     _this.$socket.emit('getAccount', _this.address, (err, result) => {
       if (!err && result) {
         let acc = new Account(new Buffer(result))
@@ -75,14 +92,12 @@ export default Vue.extend({
       ])
       reqArr.push(data)
     })
-    let sTime = new Date().getTime()
     _this.$socket.emit('ethCall', reqArr, (err, result) => {
       if (!err && result) {
-        console.log(new Date().getTime() - sTime)
         result.forEach((result, idx) => {
           if (!result.error) {
             let res = new Buffer(result.result)
-            if (res.length == 32  && new bn('0x' + res.toString('hex')).gt(0)) {
+            if (res.length === 32 && new bn('0x' + res.toString('hex')).gt(0)) {
               tokens[idx].balance = new bn('0x' + new Buffer(res).toString('hex')).div(new bn(10).pow(tokens[idx].decimals))
               _this.account.tokens.push(tokens[idx])
             }
@@ -91,7 +106,28 @@ export default Vue.extend({
       }
     })
   },
-  methods: { }
+  methods: {
+    loadMore() {
+      let _this = this
+      if (_this.txs.length) {
+        this.busy = true
+        this.$socket.emit('getAddressTransactionPages', {
+          address: new Buffer(_this.address.substring(2), 'hex'),
+          hash: _this.txs[_this.txs.length - 1].getHash().toBuffer(),
+          number: _this.txs[_this.txs.length - 1].getBlockNumber().toIntNumber()
+        }, (err: Error, data: Array<txLayout>) => {
+          if (err) {
+            _this.$toasted.error(err.message)
+          } else {
+            data.forEach((_tx) => {
+              _this.txs.push(new Tx(_tx))
+            })
+          }
+          _this.busy = false
+        })
+      }
+    }
+  }
 
 })
 

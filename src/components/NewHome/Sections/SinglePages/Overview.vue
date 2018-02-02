@@ -20,9 +20,6 @@
 <script lang="ts">
 import Vue from 'vue'
 const MAX_ITEMS = 20
-var LRU = require('lru')
-var cache = new LRU(2)
-console.log(cache.get('foo3'))
 export default Vue.extend({
   name: 'AccountOverview',
   props: ['account'],
