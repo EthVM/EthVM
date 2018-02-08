@@ -83,7 +83,6 @@
         "typescript": "^2.3.4",
         "typescript-eslint-parser": "^11.0.0",
         "url-loader": "^0.6.2",
-        "vue-awesome": "^2.3.4",
         "vue-eslint-parser": "^2.0.2",
         "vue-i18n": "^7.3.2",
         "vue-loader": "^12.2.2",

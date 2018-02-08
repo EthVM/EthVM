@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import HomeRouter from '@/components/NewHome/Home.vue'
+import HomeRouter from '@/components/sunil/index.vue'
 
 Vue.use(Router)
 
