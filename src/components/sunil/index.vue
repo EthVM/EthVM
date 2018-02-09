@@ -18,7 +18,7 @@
     
 
     <!-- FOOTER -->
-
+    <block-footer></block-footer>
     
 
   </div>

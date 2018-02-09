@@ -30,6 +30,10 @@ import Vue from 'vue'
 
 
 
+  /* Footer ---------------------- */
+  import blockFooter from "@/components/sunil/blocks/footer/footer"
+  Vue.component('blockFooter', blockFooter)
+
 
 
 
