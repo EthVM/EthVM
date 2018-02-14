@@ -1,0 +1,49 @@
+li{
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+#latest-blocks{
+  position: relative;
+  padding-top: 30px;
+  overflow-y: scroll;
+  max-height: 500px;
+
+  .block-header{
+    /*
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    */
+
+    display: grid;
+    grid-template-columns: 150px 1fr 150px 150px;
+    grid-column-gap: 10px;
+  }
+  
+  .block-body{
+    
+    display: grid;
+    grid-template-columns: 150px 1fr 150px 150px;
+    grid-column-gap: 10px;
+
+
+    li{
+      .block{
+        color: #465a6e;
+        font-weight: 600;
+      }  
+    }
+    
+  }
+
+
+}
+
+
+
+
+
+

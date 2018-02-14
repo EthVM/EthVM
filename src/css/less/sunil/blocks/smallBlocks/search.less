@@ -1,0 +1,46 @@
+
+@placeholder-color: #8896a3;
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: @placeholder-color;
+  opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: @placeholder-color;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+  color: @placeholder-color;
+}
+
+
+#search{
+  position: relative;
+  input{
+    padding: 7px 0px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid #ced4da;
+    width: 350px;
+    transition: all 0.3s ease;
+    outline: none;
+  }
+
+  input:focus{
+    border-bottom: 2px solid #2779ff;
+  }
+
+  button{
+    background-color: transparent;
+    border: none;
+    position: absolute;
+    right: 0px;
+    top: 5px;
+    outline: none;
+  }
+
+}
+
+
+

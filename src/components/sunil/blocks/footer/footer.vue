@@ -9,11 +9,11 @@
 
           <div class="social-buttons">
 
-            <i class="fab fa-quora"></i>
-            <i class="fab fa-google-plus-g"></i>
-            <i class="fab fa-twitter"></i>
-            <i class="fab fa-facebook-f"></i>
-            <i class="fab fa-tumblr"></i>
+            <i class="fa fa-quora"></i>
+            <i class="fa fa-google-plus"></i>
+            <i class="fa fa-twitter"></i>
+            <i class="fa fa-facebook-f"></i>
+            <i class="fa fa-tumblr"></i>
 
           </div>
         </div>

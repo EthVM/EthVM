@@ -2,27 +2,56 @@
   <div id="home">
     <div class="container">
       
-      <div class="page-title">
-        <h3>Home</h3>
-        <h6 class="text-muted">Welcome to Ethereum Virtual Machine</h6>
+      <div class="page-title-container">
+        <div class="page-title">
+          <h3>Home</h3>
+          <h6 class="text-muted">Welcome to Ethereum Virtual Machine</h6>
+        </div>
+
+        <div class="search-block">
+          <block-search></block-search>
+        </div>
       </div>
 
       <div class="row">
         <div class="col-md-3"><block-last-block></block-last-block></div>
-        <div class="col-md-3"><short-data-time-since-last-block></short-data-time-since-last-block></div>
-        <div class="col-md-3"><short-data-hash-rate></short-data-hash-rate></div>
-        <div class="col-md-3"><short-data-difficulty></short-data-difficulty></div>
+        <div class="col-md-3"><block-time-since-last-block></block-time-since-last-block></div>
+        <div class="col-md-3"><block-hash-rate></block-hash-rate></div>
+        <div class="col-md-3"><block-difficulty></block-difficulty></div>
       </div>
 
       <div class="row">
-        <div class="col-md-4"><line-chart-pending-tx></line-chart-pending-tx></div>
-        <div class="col-md-4"><bar-chart-last-ten-blocks-tx></bar-chart-last-ten-blocks-tx></div>
-        <div class="col-md-4"><line-chart-ave-tx-fees></line-chart-ave-tx-fees></div>
+        <div class="col-md-6"><bar-chart-last-ten-blocks-tx></bar-chart-last-ten-blocks-tx></div>
+        <div class="col-md-6"><line-chart-ave-tx-fees></line-chart-ave-tx-fees></div>
       </div>
 
       <div class="row">
-        <div class="col-md-6 table-data "><tables-latest-blocks-new :max-items="20"></tables-latest-blocks-new></div>
-        <div class="col-md-6 table-data"><table-transactions-new :transactions="txs"></table-transactions-new></div>
+        <div class="col-md-12 table-data ">
+          <div class="block-title-container">
+            <h3>Latest Blocks</h3>
+            <button>View All</button>
+          </div>
+          <latest-blocks :max-items="20"></latest-blocks>
+          <div class="footnote">
+            <ul>
+              <li><i class="fa fa-circle success" aria-hidden="true"></i> Success</li>
+              <li><i class="fa fa-circle failed" aria-hidden="true"></i> Failed</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-12 table-data">
+          <div class="block-title-container">
+            <h3>Latest Blocks</h3>
+            <button>View All</button>
+          </div>
+          <table-transactions-new :transactions="txs"></table-transactions-new>
+          <div class="footnote">
+            <ul>
+              <li><i class="fa fa-check success" aria-hidden="true"></i> Success</li>
+              <li><i class="fa fa-times failed" aria-hidden="true"></i> Failed</li>
+            </ul>
+          </div>
+        </div>
       </div>
 
     </div>

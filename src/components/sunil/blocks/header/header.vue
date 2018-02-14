@@ -1,5 +1,5 @@
 <template>
-  <div id="menu-top">
+  <div id="menu-top" class="navbar navbar-default navbar-fixed-top">
     <div class="container menu-container">
       <div class="logo">
         <router-link to="/"><img src="~@/assets/logo.png"></router-link>

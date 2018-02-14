@@ -21,18 +21,43 @@ import Vue from 'vue'
 
 
 
-  /* ShortData ---------------------- */
+  /* SmallBlocks ---------------------- */
+
+  import blockComponent from "@/components/sunil/blocks/smallBlocks/component"
+  Vue.component('blockComponent', blockComponent)
+
   import blockLastBlock from "@/components/sunil/blocks/smallBlocks/lastBlock"
   Vue.component('blockLastBlock', blockLastBlock)
 
-  import smallBlockComponent from "@/components/sunil/blocks/smallBlocks/smallBlockComponent"
-  Vue.component('smallBlockComponent', smallBlockComponent)
+  import blockDifficulty from "@/components/sunil/blocks/smallBlocks/difficulty"
+  Vue.component('blockDifficulty', blockDifficulty)
+
+  import blockHashRate from "@/components/sunil/blocks/smallBlocks/hashRate"
+  Vue.component('blockHashRate', blockHashRate)
+
+  import blockTimeSinceLastBlock from "@/components/sunil/blocks/smallBlocks/timeSinceLastBlock"
+  Vue.component('blockTimeSinceLastBlock', blockTimeSinceLastBlock)
+
+  import blockSearch from "@/components/sunil/blocks/smallBlocks/search"
+  Vue.component('blockSearch', blockSearch)
+
+
+  /* LargePages ---------------------- */
+  import latestBlocks from "@/components/sunil/blocks/largeBlocks/latestBlocks"
+  Vue.component('latestBlocks', latestBlocks)
 
 
 
   /* Footer ---------------------- */
   import blockFooter from "@/components/sunil/blocks/footer/footer"
   Vue.component('blockFooter', blockFooter)
+
+
+
+
+
+
+
 
 
 
