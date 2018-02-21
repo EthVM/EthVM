@@ -1,14 +1,6 @@
 <template>
   <div id="latest-blocks">
 
-    <div class="block-header hidden">
-      <li>Block#</li>
-      <li></li>
-      <li>TXs</li>
-      <li>Reward</li>
-    </div>
-
-
     <div class="block-body">
       <div class="block" v-for="block in getBlocks" v-if="!block.getIsUncle()">
         <div class="block-data">

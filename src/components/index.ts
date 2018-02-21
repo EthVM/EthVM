@@ -22,7 +22,6 @@ import Vue from 'vue'
 
 
   /* SmallBlocks ---------------------- */
-
   import blockComponent from "@/components/sunil/blocks/smallBlocks/component"
   Vue.component('blockComponent', blockComponent)
 
@@ -42,9 +41,13 @@ import Vue from 'vue'
   Vue.component('blockSearch', blockSearch)
 
 
-  /* LargePages ---------------------- */
+
+  /* LargeBlocks ---------------------- */
   import latestBlocks from "@/components/sunil/blocks/largeBlocks/latestBlocks"
   Vue.component('latestBlocks', latestBlocks)
+
+  import lastTransactions from "@/components/sunil/blocks/largeBlocks/lastTransactions"
+  Vue.component('lastTransactions', lastTransactions)
 
 
 

@@ -51,10 +51,20 @@
         </div>
         <div class="col-md-12 table-data">
           <div class="block-title-container">
-            <h3>Latest Blocks</h3>
+            <h3>Last Transactions</h3>
             <button>View All</button>
           </div>
-          <table-transactions-new :transactions="txs"></table-transactions-new>
+          <div class="last-transactions-header">
+            <li>TXn#</li>
+            <li>ETH</li>
+            <li>GAS</li>
+            <li>WEI</li>
+          </div>
+          
+          <div class="last-transactions-data">
+            <last-transactions :transactions="txs"></last-transactions>
+          </div>
+
           <div class="footnote">
             <ul>
               <li><i class="fa fa-check success" aria-hidden="true"></i> Success</li>
