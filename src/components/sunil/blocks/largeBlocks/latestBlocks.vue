@@ -1,7 +1,7 @@
 <template>
   <div id="latest-blocks">
 
-    <div class="block-header">
+    <div class="block-header hidden">
       <li>Block#</li>
       <li></li>
       <li>TXs</li>
@@ -11,23 +11,80 @@
 
     <div class="block-body">
       <div class="block" v-for="block in getBlocks" v-if="!block.getIsUncle()">
-        <li>
-          <p class="block-number"><span>{{block.getNumber().toNumber()}}</span></p>
-        </li>
-        <li>
-          <p>Hash</p>
-          <p>Miner</p>
-        </li>
-        <li></li>
-        <li></li>
+        <div class="block-data">
+                  
+          <li>
+            <p class="block-number"><span>{{block.getNumber().toNumber()}}</span></p>
+          </li>
+          <li class="hash">
+            <div>
+              <p>Hash</p>
+              <p><router-link :to="'/block/'+block.getHash().toString()">{{block.getHash().toString()}}</router-link></p>
+            </div>
+            <div>
+              <p>Miner</p>
+              <p><router-link :to="'/address/'+block.getMiner().toString()">{{block.getMiner().toString()}}</router-link></p>
+            </div>
+          </li>
+          <li class="txs">
+            <div class="success">
+              {{block.getTransactionCount()}}
+            </div>
+            <div class="failed">
+              5
+            </div>
+          </li>
+          <li>
+            <div class="reward">
+              {{block.getTotalBlockReward().toEth()}}
+            </div>
+          </li>
 
-      </div>
+        </div><!--.block-data-->
+
+
+        <div class="uncles-block" v-if="block.getUncleHashes().length != 0">
+         
+          <div class="uncles-line"></div>
+
+          <div class="uncles-title">Uncles</div>
+          <!-- SUB LOOP START ############## -->
+          <div class="uncles-data" v-for="uncle in block.getUncles()">
+          
+            <li class="sub-hash">
+              <p>Hash</p>
+              <p><router-link :to="'/block/'+uncle.getHash().toString()">{{uncle.getHash().toString()}}</router-link></p>
+            </li>
+
+            <li class="sub-miner">
+              <p>Miner</p>
+              <p><router-link :to="'/address/'+uncle.getMiner().toString()">{{uncle.getMiner().toString()}}</router-link></p>
+            </li>
+
+            <li class="sub-height">
+              <p>Height</p>
+              <p>{{uncle.getNumber().toNumber()}}</p>
+            </li>
+
+            <li class="sub-reward">
+              <p>Reward(ETH)</p>
+              <p>{{uncle.getTotalBlockReward().toEth()}}</p>
+            </li>
+            
+          </div>
+          <!-- SUB LOOP END ############## -->
+
+        </div>
+
+        
+      </div><!--.block-->
+      
     </div>
 
 
 
 
-    <div class="data-container block-body">
+    <div class="data-container block-body hidden">
       <div class="data-block" v-for="block in getBlocks" v-if="!block.getIsUncle()">
         <div class="absolute-top-right-block">
           <div>

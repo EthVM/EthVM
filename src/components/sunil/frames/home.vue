@@ -31,7 +31,17 @@
             <h3>Latest Blocks</h3>
             <button>View All</button>
           </div>
-          <latest-blocks :max-items="20"></latest-blocks>
+          <div class="latest-blocks-header">
+            <li>Block#</li>
+            <li></li>
+            <li>TXs</li>
+            <li>Reward</li>
+          </div>
+          
+          <div class="latest-blocks-data">
+            <latest-blocks :max-items="20"></latest-blocks>
+          </div>
+
           <div class="footnote">
             <ul>
               <li><i class="fa fa-circle success" aria-hidden="true"></i> Success</li>

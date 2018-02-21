@@ -1,3 +1,6 @@
+
+
+
 li{
   list-style-type: none;
   margin: 0;
@@ -5,10 +8,11 @@ li{
 }
 
 #latest-blocks{
+  
   position: relative;
-  padding-top: 30px;
+  
   overflow-y: scroll;
-  max-height: 500px;
+  //max-height: 500px;
 
   .block-header{
     /*
@@ -25,22 +29,126 @@ li{
   
   .block-body{
     
-    display: grid;
-    grid-template-columns: 150px 1fr 150px 150px;
-    grid-column-gap: 10px;
+    .block{
+      margin-bottom: 5px;
+      background-color: white;
+
+      .block-data{
+        display: grid;
+        grid-template-columns: 100px 1fr 150px 150px;
+        grid-column-gap: 0px;
+        
+        
+
+        .block-number{
+          text-align: center;
+          font-weight: 600;
+          color: #465a6e;
+        }
+
+        li{
+          //border: 1px solid black;
+          padding: 15px 15px;
+
+          div:first-child{
+            margin-bottom: 5px;
+          }
+
+          .block{
+            color: #465a6e;
+            font-weight: 600;
+          }  
+        }
+
+        .reward{
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+        }
+
+        .txs{
+          .success{
+            color: #20c0c7;
+          }
+
+          .failed{
+            color: #f9967b;
+          }
+        }
+
+        .hash > div{
+          p:first-child{
+            min-width: 45px;
+            font-weight: 600;
+            color: #465a6e;
+          }
+
+          p{
+            margin: 0;
+            display: inline-block;
+          }
+        }
+
+      }//.block-data
+
+      .uncles-block{
+        position: relative;
+        padding-left: 115px;
+        padding-bottom: 10px;
+
+        .uncles-line{
+          border-radius: 0 0 0 0px;
+          position: absolute;
+          height: 45px;
+          width: 50px;
+          border-bottom: 1px dotted black;
+          border-left: 1px dotted black;
+          top: -35px;
+          left: 50px;
+
+        }
+
+        .uncles-title{
+          font-weight: 600;
+          //color: #465a6e;
+          padding-bottom: 5px;
+        }
+
+        .uncles-data{
+
+          display: grid;
+          grid-template-columns: 25% 25% 15% 25%;
+          grid-column-gap: 0px;
+
+          li{
+
+            padding: 0;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            margin-right: 20px;
+            p{
+              text-overflow: ellipsis;
+              overflow: hidden;
+              white-space: nowrap;
+              display: inline-block;
+
+            }
+
+            p:first-child{
+              padding-right: 15px;
+              font-weight: 600;
+              color: #465a6e;
+            }
+          }
+        }//.uncles-data
+
+      }//.uncles-block
+    }//.block
+  }//.block-body
+}//#latest-blocks
 
 
-    li{
-      .block{
-        color: #465a6e;
-        font-weight: 600;
-      }  
-    }
-    
-  }
-
-
-}
 
 
 

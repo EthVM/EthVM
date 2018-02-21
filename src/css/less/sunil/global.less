@@ -22,13 +22,47 @@ a:visited,
 a:hover,
 a:active {
     text-decoration: none;
-    color: #8896a3;
+    //color: #8896a3;
 }
+
+
+/* width */
+::-webkit-scrollbar {
+    width: 3px;
+}
+
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+}
+
+
+
 
 .text-muted {
     color: #8896a3 !important;
 }
 
+a{
+    color: #2779ff;
+    text-decoration: none;
+    background-color: transparent;
+}
+
+p{
+  margin: 0;
+}
 
 
 .page-title-container{
@@ -60,7 +94,7 @@ a:active {
 
 .block-title-container{
   display: flex;
-  padding: 60px 0 30px 0;
+  padding: 60px 0 10px 0;
   h3{
     font-weight: 600;
     color: #465a6e;

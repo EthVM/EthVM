@@ -1,9 +1,38 @@
 
+li{
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
 
 #home{
   .row{
     margin-bottom: 20px;
   }
+
+
+  .latest-blocks-header{
+
+    font-weight: 600;
+    color: #465a6e;
+    display: grid;
+    grid-template-columns: 150px 1fr 150px 150px;
+    grid-column-gap: 0px;
+    padding-right: 5px;
+    li{
+        padding: 15px;
+    }
+  }
+
+  .latest-blocks-data{
+
+    max-height: 800px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+
+
 }
 
 
