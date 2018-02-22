@@ -4,7 +4,6 @@
     <div class="block-body">
       <div class="block" v-for="block in getBlocks" v-if="!block.getIsUncle()">
         <div class="block-data">
-                  
           <li>
             <p class="block-number"><span>{{block.getNumber().toNumber()}}</span></p>
           </li>
@@ -67,7 +66,6 @@
           <!-- SUB LOOP END ############## -->
 
         </div>
-
         
       </div><!--.block-->
       
@@ -75,59 +73,9 @@
 
 
 
-
-    <div class="data-container block-body hidden">
-      <div class="data-block" v-for="block in getBlocks" v-if="!block.getIsUncle()">
-        <div class="absolute-top-right-block">
-          <div>
-            <p class="other-info">TXs <span>{{block.getTransactionCount()}}</span>&nbsp;/&nbsp;Reward(ETH) <span>{{block.getTotalBlockReward().toEth()}}</span></p>
-          </div>
-          <div class="hidden">
-            <p class="block-number">BLOCK#&nbsp;<span>{{block.getNumber().toNumber()}}</span></p>
-          </div>
-          <div class="hidden">
-            <p class="uncle-number" v-if="block.getUncleHashes().length != 0">uncles&nbsp;<span>{{block.getUncleHashes().length}}</span></p>
-          </div>
-        </div>
-        <div class="relative-block">
-          <div class="hash-block">
-            <li><p>BLOCK#&nbsp;<span>{{block.getNumber().toNumber()}}</span></p></li>
-            <li><h4 class="hash">HASH&nbsp;&nbsp;&nbsp;&nbsp;<router-link :to="'/block/'+block.getHash().toString()">{{block.getHash().toString()}}</router-link></h4></li>
-            <li><h4 class="miner">MINER&nbsp;&nbsp;&nbsp;<router-link :to="'/address/'+block.getMiner().toString()">{{block.getMiner().toString()}}</router-link></h4></li>
-            <li><h4 class="uncle-counter" v-if="block.getUncleHashes().length != 0">UNCLES&nbsp;&nbsp;<span>{{block.getUncleHashes().length}}</span>&nbsp;<span class="glyphicon glyphicon-chevron-down"></span></h4></li>
-          </div>
-
-          <div class="uncles-block" v-if="block.getUncleHashes().length != 0">
-           
-            <!-- SUB LOOP START ############## -->
-            <div v-for="uncle in block.getUncles()">
-            
-              <li class="sub-hash">
-                <p>HASH&nbsp;<span><router-link :to="'/block/'+uncle.getHash().toString()">{{uncle.getHash().toString()}}</router-link></span></p>
-              </li>
-
-              <li class="sub-height">
-                <p>HEIGHT&nbsp;<span>{{uncle.getNumber().toNumber()}}</span></p>
-              </li>
-
-              <li class="sub-miner">
-                <p>MINER&nbsp;<span><router-link :to="'/address/'+uncle.getMiner().toString()">{{uncle.getMiner().toString()}}</router-link></span></p>
-              </li>
-
-              <li class="sub-reward">
-                <p>REWARD(ETH)&nbsp;<span>{{uncle.getTotalBlockReward().toEth()}}</span></p>
-              </li>
-              
-            </div>
-            <!-- SUB LOOP END ############## -->
-
-          </div>
-
-        </div>
-      </div><!-- .data-block -->
-    </div><!-- .data-container -->
   </div>
 </template>
+
 <script lang="ts">
   import Vue from 'vue'
   import sEvents from '@/configs/socketEvents.json'
@@ -172,6 +120,9 @@
     }
   })
 </script>
+
 <style scoped="" lang="less">
   @import "~lessPath/sunil/blocks/largeBlocks/latestBlocks.less";
 </style>
+
+

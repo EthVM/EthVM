@@ -105,3 +105,5 @@ export default Vue.extend({
 <style scoped="" lang="less">
 @import "~lessPath/NewHome/Sections/Tables/TablesLatestBlocksNew.less";
 </style>
+
+

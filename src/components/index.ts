@@ -14,6 +14,13 @@ import Vue from 'vue'
   import frameHome from "@/components/sunil/frames/home"
   Vue.component('frameHome', frameHome)
 
+  import frameBlocks from "@/components/sunil/frames/blocks"
+  Vue.component('frameBlocks', frameBlocks)
+
+  import frameTxs from "@/components/sunil/frames/transactions"
+  Vue.component('frameTxs', frameTxs)
+
+
 
   /* Header ---------------------- */
   import blockHeader from "@/components/sunil/blocks/header/header"
@@ -42,12 +49,23 @@ import Vue from 'vue'
 
 
 
-  /* LargeBlocks ---------------------- */
-  import latestBlocks from "@/components/sunil/blocks/largeBlocks/latestBlocks"
-  Vue.component('latestBlocks', latestBlocks)
 
-  import lastTransactions from "@/components/sunil/blocks/largeBlocks/lastTransactions"
-  Vue.component('lastTransactions', lastTransactions)
+  import blockLastTenBlocksTx from "@/components/sunil/blocks/smallBlocks/charts/lastTenBlocksTx"
+  Vue.component('blockLastTenBlocksTx', blockLastTenBlocksTx)
+
+  import blockAveTxFees from "@/components/sunil/blocks/smallBlocks/charts/aveTxFees"
+  Vue.component('blockAveTxFees', blockAveTxFees)
+
+
+
+
+
+  /* LargeBlocks ---------------------- */
+  import blockLatestBlocks from "@/components/sunil/blocks/largeBlocks/latestBlocks"
+  Vue.component('blockLatestBlocks', blockLatestBlocks)
+
+  import blockLastTransactions from "@/components/sunil/blocks/largeBlocks/lastTransactions"
+  Vue.component('blockLastTransactions', blockLastTransactions)
 
 
 
@@ -71,7 +89,7 @@ import Vue from 'vue'
   /* Frames ---------------------- */
   //import FrameHome from "@/components/NewHome/Frames/FrameHome"
   //Vue.component('FrameHome', FrameHome)
-
+/*
   import FrameAbout from "@/components/NewHome/Frames/FrameAbout"
   Vue.component('FrameAbout', FrameAbout)
 
@@ -98,7 +116,7 @@ import Vue from 'vue'
 
   import FrameAccount from "@/components/NewHome/Frames/FrameAccount"
   Vue.component('FrameAccount', FrameAccount)
-
+*/
 
 
 

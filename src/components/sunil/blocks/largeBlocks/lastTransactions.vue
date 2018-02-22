@@ -14,10 +14,10 @@
             <p class=""><router-link :to="'/address/'+tx.getTo().toString()">{{tx.getTo().toString()}}</router-link></p>
           </div>
         </li>
-        <li>{{tx.getValue().toEth()}}</li>
-        <li>{{tx.getGasUsed().toNumber()}}</li>
-        <li>{{tx.getGasPrice().toGWei()}}</li>
-        <li>
+        <li class="vertical-middle">{{tx.getValue().toEth()}}</li>
+        <li class="vertical-middle">{{tx.getGasUsed().toNumber()}}</li>
+        <li class="vertical-middle">{{tx.getGasPrice().toGWei()}}</li>
+        <li class="vertical-middle">
           <div v-if="!tx.getStatus()">
             <span class="glyphicon glyphicon-remove failed"></span>
           </div>

@@ -39,7 +39,7 @@
           </div>
           
           <div class="latest-blocks-data">
-            <latest-blocks :max-items="20"></latest-blocks>
+            <block-latest-blocks :max-items="20"></block-latest-blocks>
           </div>
 
           <div class="footnote">
@@ -62,7 +62,7 @@
           </div>
           
           <div class="last-transactions-data">
-            <last-transactions :transactions="txs"></last-transactions>
+            <block-last-transactions :transactions="txs"></block-last-transactions>
           </div>
 
           <div class="footnote">

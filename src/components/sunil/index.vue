@@ -2,15 +2,19 @@
   <div id="base-container">
     
     <!-- HEADER -->
-    <block-header></block-header>
+    <block-header :pagename="pageName"></block-header>
     
 
     <!-- BODY -->
     <frame-about v-if="pageName == 'about'"></frame-about>
     <framefaq v-else-if="pageName == 'faq'"></framefaq>
     <frame-contact v-else-if="pageName == 'contact'"></frame-contact>
-    <frame-transactions v-else-if="pageName == 'transactions' || pageName == 'pendingTransactions'" :type="pageName"></frame-transactions>
+    <frame-txs v-else-if="pageName == 'transactions' || pageName == 'pendingTransactions'" :type="pageName"></frame-txs>
+    
+
     <frame-blocks v-else-if="pageName == 'blocks'"></frame-blocks>
+
+
     <frame-transaction v-else-if="pageName == 'tx' && param" :txHash="param"></frame-transaction>
     <frame-block v-else-if="pageName == 'block' && param" :blockHash="param"></frame-block>
     <frame-account v-else-if="pageName == 'address' && param" :address="param"></frame-account>
@@ -70,7 +74,9 @@
               return this.$route.params.param
           }
       },
-      mounted: function() {}
+      mounted: function() {
+        //console.log(this.pageName)
+      }
   })
 </script>
 
