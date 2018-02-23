@@ -1,5 +1,5 @@
 <template>
-  <block-component :title="blockTitle" backgroundColor="color3" :value="hashRate" :icon-name="blockIconType" :icon-color="blockIconColor"></block-component>
+  <block-component :title="blockTitle" backgroundColor="color7" :value="hashRate" :icon-name="blockIconType" :icon-color="blockIconColor"></block-component>
 </template>
 <script lang="ts">
   import Vue from 'vue';
@@ -19,7 +19,7 @@
     name: 'ShortDataLastBlock',
     data() {
       return {
-        blockTitle: 'Hash Rate TH/s',
+        blockTitle: 'Viewing Last Transactions',
         blockIconType: 'hashtag',
         blockIconColor: '#fba893',
         hashRate: '0.0'

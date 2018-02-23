@@ -1,5 +1,5 @@
 <template>
-  <div id="component" v-bind:class="blockname">
+  <div id="component" v-bind:class="backgroundColor">
     <p class="block-title">{{title}}</p>
     <div class="small-bottom-block">
         <p class="small-block-value">{{value}}</p>
@@ -10,7 +10,7 @@
   import Vue from 'vue'
   export default Vue.extend({
     name: 'BlockComponent',
-    props: ['title', 'value', 'iconName', 'iconColor'],
+    props: ['title', 'value', 'iconName', 'iconColor', 'backgroundColor'],
     data: function () {
       return {
       }

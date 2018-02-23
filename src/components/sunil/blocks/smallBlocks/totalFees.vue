@@ -1,5 +1,5 @@
 <template>
-  <block-component :title="blockTitle" backgroundColor="color4" :value="difficulty" :icon-name="blockIconType" :icon-color="blockIconColor"></block-component>
+  <block-component :title="blockTitle" backgroundColor="color8" :value="difficulty" :icon-name="blockIconType" :icon-color="blockIconColor"></block-component>
 </template>
 <script lang="ts">
   import Vue from 'vue';
@@ -12,7 +12,7 @@
     name: 'ShortDataLastBlock',
     data() {
       return {
-        blockTitle: 'Difficulty TH',
+        blockTitle: 'Total Fees (ETH)',
         blockIconType: 'asterisk',
         blockIconColor: '#6bee69',
         difficulty: '0.0'

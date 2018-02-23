@@ -47,14 +47,30 @@ import Vue from 'vue'
   import blockSearch from "@/components/sunil/blocks/smallBlocks/search"
   Vue.component('blockSearch', blockSearch)
 
-
-
-
   import blockLastTenBlocksTx from "@/components/sunil/blocks/smallBlocks/charts/lastTenBlocksTx"
   Vue.component('blockLastTenBlocksTx', blockLastTenBlocksTx)
 
   import blockAveTxFees from "@/components/sunil/blocks/smallBlocks/charts/aveTxFees"
   Vue.component('blockAveTxFees', blockAveTxFees)
+
+
+
+
+
+  import blockAvgGasPrice from "@/components/sunil/blocks/smallBlocks/avgGasPrice"
+  Vue.component('blockAvgGasPrice', blockAvgGasPrice)
+
+  import blockAvgValueTransfered from "@/components/sunil/blocks/smallBlocks/avgValueTransfered"
+  Vue.component('blockAvgValueTransfered', blockAvgValueTransfered)
+
+  import blockViewLastTransactions from "@/components/sunil/blocks/smallBlocks/viewLastTransactions"
+  Vue.component('blockViewLastTransactions', blockViewLastTransactions)
+
+  import blockTotalFees from "@/components/sunil/blocks/smallBlocks/totalFees"
+  Vue.component('blockTotalFees', blockTotalFees)
+
+
+
 
 
 
@@ -66,6 +82,7 @@ import Vue from 'vue'
 
   import blockLastTransactions from "@/components/sunil/blocks/largeBlocks/lastTransactions"
   Vue.component('blockLastTransactions', blockLastTransactions)
+
 
 
 

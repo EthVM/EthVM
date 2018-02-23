@@ -4,7 +4,7 @@
       
       <div class="page-title-container">
         <div class="page-title">
-          <h3>Blocks</h3>
+          <h3>Last Transactions</h3>
           <h6 class="text-muted">Latest blocks of all time</h6>
         </div>
 
@@ -15,14 +15,16 @@
 
 
       <div class="row">
-        <div class="col-md-6"><block-last-ten-blocks-tx></block-last-ten-blocks-tx></div>
-        <div class="col-md-6"><block-ave-tx-fees></block-ave-tx-fees></div>
+        <div class="col-md-3"><block-avg-gas-price></block-avg-gas-price></div>
+        <div class="col-md-3"><block-avg-value-transfered></block-avg-value-transfered></div>
+        <div class="col-md-3"><block-view-last-transactions></block-view-last-transactions></div>
+        <div class="col-md-3"><block-total-fees></block-total-fees></div>
       </div>
 
       <div class="row">
         <div class="col-md-12 table-data ">
           <div class="block-title-container">
-            <h3>Latest Blocks</h3>
+            <h3>Transactions</h3>
             
           </div>
           <div class="latest-blocks-header">
@@ -33,7 +35,7 @@
           </div>
           
           <div class="latest-blocks-data">
-            <block-latest-blocks :max-items="20"></block-latest-blocks>
+            <block-last-transactions :transactions="txs"></block-last-transactions>
           </div>
 
           <div class="footnote">

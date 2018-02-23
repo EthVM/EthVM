@@ -1,5 +1,5 @@
 <template>
-  <block-component :title="blockTitle" backgroundColor="color2" :value="seconds+ ' sec'" :icon-name="blockIconType" :icon-color="blockIconColor"></block-component>
+  <block-component :title="blockTitle" backgroundColor="color6" :value="seconds+ ' sec'" :icon-name="blockIconType" :icon-color="blockIconColor"></block-component>
 </template>
 <script lang="ts">
   import Vue from 'vue';
@@ -8,7 +8,7 @@
     name: 'ShortDataLastBlock',
     data() {
       return {
-        blockTitle: 'Since Last Block',
+        blockTitle: 'Avg Value Transfered',
         blockIconType: 'clock-o',
         blockIconColor: '#ffd800',
         lastBlockTime: 0,

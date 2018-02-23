@@ -1,5 +1,5 @@
 <template>
-  <block-component :title="blockTitle" backgroundColor="color1" :value="latestBlockNumber" :icon-name="blockIconType" :icon-color="blockIconColor"></block-component>
+  <block-component :title="blockTitle" backgroundColor="color5" :value="latestBlockNumber" :icon-name="blockIconType" :icon-color="blockIconColor"></block-component>
 </template>
 <script lang="ts">
   import Vue from 'vue'
@@ -7,9 +7,10 @@
     name: 'ShortDataLastBlock',
     data () {
       return {
-        blockTitle: 'Last Block',
+        blockTitle: 'Average Gas Price (GWEI)',
         blockIconType: 'tachometer',
-        blockIconColor: '#c271f5'
+        blockIconColor: '#c271f5',
+        blockBackgroundColor: '#c271f5'
 
       }
     },
