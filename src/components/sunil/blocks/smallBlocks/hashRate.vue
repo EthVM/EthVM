@@ -46,5 +46,5 @@
   })
 </script>
 <style scoped="" lang="less">
-  //@import "~lessPath/NewHome/Sections/ShortData/ShortDataHashRate.less";
+  
 </style>

@@ -20,6 +20,9 @@ import Vue from 'vue'
   import frameTxs from "@/components/sunil/frames/transactions"
   Vue.component('frameTxs', frameTxs)
 
+  import frameAbout from "@/components/sunil/frames/about"
+  Vue.component('frameAbout', frameAbout)
+
 
 
   /* Header ---------------------- */
@@ -82,6 +85,9 @@ import Vue from 'vue'
 
   import blockLastTransactions from "@/components/sunil/blocks/largeBlocks/lastTransactions"
   Vue.component('blockLastTransactions', blockLastTransactions)
+
+  import blockAbout from "@/components/sunil/blocks/largeBlocks/about"
+  Vue.component('blockAbout', blockAbout)
 
 
 
