@@ -1,7 +1,7 @@
 <template>
   <div id="GraphsLineChart" class="line-chart">
 
-     <vue-chart type="line" :data="chartData" :options="chartOptions" :redraw="redraw"></vue-chart>
+     <vue-chart type="line" :data="chartData" :options="chartOptions" :redraw="redraw" unfilled="true"></vue-chart>
 
   </div>
 </template>
@@ -11,7 +11,8 @@ import Vue from 'vue'
 import sEvents from '@/configs/socketEvents.json'
 import BN from 'bignumber.js'
 import ethUnits from 'ethereumjs-units'
-let MAX_ITEMS = 10
+
+let MAX_ITEMS = 100
 let lineOptions = {
   'title': {
     'text': 'Average Tx Fees',
@@ -63,7 +64,6 @@ export default Vue.extend({
     chartOptions: lineOptions,
     redraw: false
   }),
-  mounted () {},
   created () {
     this.chartData = this.initData
     this.$eventHub.$on(sEvents.pastBlocksR, () => {
@@ -84,6 +84,7 @@ export default Vue.extend({
         }
       }
     })
+
   },
   beforeDestroy () {
     this.$eventHub.$off(sEvents.pastBlocksR)
@@ -120,9 +121,17 @@ export default Vue.extend({
           }]
       }
     }
+  },
+  mounted: function(){
+
   }
 
 })
+
+
+
+
+
 </script>
 
 

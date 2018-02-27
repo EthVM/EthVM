@@ -4,7 +4,34 @@
       <div class="logo">
         <router-link to="/"><img src="~@/assets/logo.png"></router-link>
       </div>
-      <nav class="main-menu">
+
+      <div class="mobile-menu-show-button">
+
+        <div class="show-button" v-on:click="mobileShowMenuClick">
+          <div class="line1"></div>
+          <div class="line2"></div>
+          <div class="line3"></div>
+
+        </div>
+              
+      </div>
+
+      <nav class="main-menu mobile-menu-hidden" id="main-menu">
+
+        <div class="mobile-menu-hide-button">
+
+          <div class="hide-button" v-on:click="mobileHideMenuClick">
+            <div class="line1"></div>
+            <div class="line2"></div>
+          </div>
+          
+        </div>
+
+
+        <div class="mobile-search-block">
+          <block-search></block-search>
+        </div>
+
         <ul>
           <li v-bind:class="{ 'selected' : pagename == undefined }"><a href="/"><div class="icon"></div><span>Home</span></a></li>
           <li v-bind:class="{ 'selected' : pagename == 'blocks' }"><a href="/blocks"><div class="icon"></div><span>Blocks</span></a></li>
@@ -22,13 +49,29 @@
   import Vue from 'vue'
   export default Vue.extend({
     data () {
-      return {        
+      return {
+        isHidden : true
       }
     },
     props: ['pagename'],
     mounted: function() {
       console.log(this.pagename)
+    },
+    methods: {
+      mobileShowMenuClick: function(){
+          var el = document.getElementById('main-menu');
+          el.classList.remove("mobile-menu-hidden");
+
+      },
+      mobileHideMenuClick: function(){
+          //this.isHidden = !this.isHidden;
+          
+          var el = document.getElementById('main-menu');
+          el.classList.add("mobile-menu-hidden");
+        
+      }
     }
+
   })
 
 </script>

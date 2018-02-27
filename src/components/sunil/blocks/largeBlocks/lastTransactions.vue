@@ -4,20 +4,21 @@
     <div class="block-body">
       <div class="block" v-for="tx in transactions" v-bind:key="tx.getHash().toString()">
         <li>
-          <p class="hash"><router-link :to="'/tx/'+tx.getHash().toString()">{{tx.getHash().toString()}}</router-link></p>
-          <div class="from">
+          <div class="hash-block">
+            <p class="hash"><router-link :to="'/tx/'+tx.getHash().toString()">{{tx.getHash().toString()}}</router-link></p>
+          </div>
+          <div class="fromto">
             <p class="title">From</p>
             <p class=""><router-link :to="'/address/'+tx.getFrom().toString()">{{tx.getFrom().toString()}}</router-link></p>
-          </div>
-          <div class="to">
+                    
             <p class="title">To</p>
             <p class=""><router-link :to="'/address/'+tx.getTo().toString()">{{tx.getTo().toString()}}</router-link></p>
           </div>
         </li>
-        <li class="vertical-middle">{{tx.getValue().toEth()}}</li>
-        <li class="vertical-middle">{{tx.getGasUsed().toNumber()}}</li>
-        <li class="vertical-middle">{{tx.getGasPrice().toGWei()}}</li>
-        <li class="vertical-middle">
+        <li class="vertical-middle eth">{{tx.getValue().toEth()}}</li>
+        <li class="vertical-middle gas">{{tx.getGasUsed().toNumber()}}</li>
+        <li class="vertical-middle"><p>{{tx.getGasPrice().toGWei()}}</p></li>
+        <li class="vertical-middle status">
           <div v-if="!tx.getStatus()">
             <span class="glyphicon glyphicon-remove failed"></span>
           </div>

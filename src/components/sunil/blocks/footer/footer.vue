@@ -48,7 +48,7 @@
         </div>
       </div>
 
-      <p class="copy-right">All rights reserved by <a href="#" class="text-white">Ethereum Virtual Machine</a>.</p>
+      <p class="copy-right">©Copyright 2018 All rights reserved by <a href="#" class="text-white">Ethereum Virtual Machine</a>.</p>
 
     </div>
   </div>

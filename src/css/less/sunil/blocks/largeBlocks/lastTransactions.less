@@ -32,26 +32,45 @@ li{
         flex-direction: column;
       }
 
+      .status{
+        //text-align: center;
+      }
+
       li{
         padding: 15px 15px;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
+        
 
 
-
-        .hash{
-          margin-bottom: 5px;
-        }
-
-        .from,
-        .to{
+        p{
           text-overflow: ellipsis;
           overflow: hidden;
           white-space: nowrap;
-          width: 45%;
-          display: inline-block;
+        }
+
+
+        .hash-block{
+          display: grid;
+          grid-template-columns: 1fr;
+          .hash{
+            margin-bottom: 5px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+
+          }  
+        }
+
+        
+        .fromto{
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+
           margin-right: 10px;
+
+          display: grid;
+          grid-template-columns: repeat(2, 50px auto);
+
 
           .title{
             font-weight: 600;
@@ -77,6 +96,49 @@ li{
   }
 
 }
+
+
+
+
+
+
+@media all and (max-width: 799px){
+  .last-transactions .block-body .block li .hash{
+    margin-bottom: 0px;
+  }
+
+  .block-body{
+
+    .fromto{
+      grid-template-columns: 50px auto !important;
+    }
+
+
+    p{
+      //line-height: 12px !important;
+    }
+
+    .hash{
+      margin-bottom: 0px !important;
+    }
+
+    li{
+      padding: 5px !important;
+    }
+
+    .eth, .gas{
+      display: none !important;
+    }
+
+    .block{
+      grid-template-columns: auto 60px 30px !important;
+      font-size: 10px !important;
+    }
+
+  }
+
+}
+
 
 
 

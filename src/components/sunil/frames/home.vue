@@ -56,9 +56,10 @@
           </div>
           <div class="last-transactions-header">
             <li>TXn#</li>
-            <li>ETH</li>
-            <li>GAS</li>
+            <li class="eth">ETH</li>
+            <li class="gas">GAS</li>
             <li>WEI</li>
+            <li></li>
           </div>
           
           <div class="last-transactions-data">

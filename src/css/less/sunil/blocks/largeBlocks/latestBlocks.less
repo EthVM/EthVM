@@ -28,7 +28,7 @@ li{
 
       .block-data{
         display: grid;
-        grid-template-columns: 100px 1fr 150px 150px;
+        grid-template-columns: 100px auto 150px 150px;
         grid-column-gap: 0px;
         
         
@@ -71,6 +71,11 @@ li{
         }
 
         .hash > div{
+
+          display: grid;
+          grid-template-columns: 50px auto;
+          grid-column-gap: 0px;
+
           p:first-child{
             min-width: 45px;
             font-weight: 600;
@@ -80,6 +85,9 @@ li{
           p{
             margin: 0;
             display: inline-block;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
           }
         }
 
@@ -95,8 +103,8 @@ li{
           position: absolute;
           height: 45px;
           width: 60px;
-          border-bottom: 1px dotted black;
-          border-left: 1px dotted black;
+          border-bottom: 1px solid black;
+          border-left: 1px solid black;
           top: -35px;
           left: 40px;
 
@@ -141,6 +149,80 @@ li{
     }//.block
   }//.block-body
 }//#latest-blocks
+
+
+
+
+
+@media all and (max-width: 799px){
+
+
+  .block-data{
+    grid-template-columns: 60px auto 50px 70px !important;
+    font-size: 10px !important;
+
+    li{
+      padding: 5px !important;
+
+ 
+
+      div:first-child{
+        margin-bottom: 0px !important;
+      }
+    }
+
+
+    .hash > div{
+      grid-template-columns: 40px auto !important;
+
+    }        
+  }
+
+
+
+  .uncles-line{
+
+    height: 25px !important;
+    width: 30px !important;
+    top: -17px !important;
+    left: 25px !important;
+
+  }
+
+  .uncles-block{
+    padding-left: 66px !important;
+
+    font-size: 10px !important;
+
+    .uncles-data{
+      grid-template-columns: 1fr 1fr !important;
+
+      p:first-child{
+        padding-right: 12px !important;
+      }
+    }
+
+    li{
+      line-height: 12px !important;
+    }
+
+    .sub-miner,
+    .sub-height{
+      display: none;
+    }
+
+  }
+
+  .uncles-title{
+    padding-bottom: 0px !important;
+    line-height: 14px !important;
+  }
+
+}
+
+
+
+
 
 
 
