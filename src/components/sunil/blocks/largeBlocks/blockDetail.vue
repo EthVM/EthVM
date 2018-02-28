@@ -100,7 +100,7 @@
 
 
 
-    <div class="uncles-container">
+    <div class="uncles-container" v-if="uncles.length > 0">
       
       <div class="uncles-detail" v-for="uncle in uncles">
         <p class="block-title">Uncle</p>
@@ -139,7 +139,11 @@ export default Vue.extend({
     return {}
   },
   methods: {},
-  mounted: function() {},
+  mounted: function() {
+
+    //console.log(this.uncles)
+
+  },
   computed: {
     isUncle(){
       return this.block.getIsUncle()
