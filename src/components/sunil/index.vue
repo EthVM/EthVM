@@ -17,7 +17,11 @@
 
     <frame-transaction v-else-if="pageName == 'tx' && param" :txHash="param"></frame-transaction>
     
-    <frame-block v-else-if="pageName == 'block' && param" :blockHash="param"></frame-block>
+    
+    <frame-block-detail v-else-if="pageName == 'block' && param" :blockHash="param"></frame-block-detail>
+    
+
+
     <frame-account v-else-if="pageName == 'address' && param" :address="param"></frame-account>
     <frame-home v-else></frame-home>
     

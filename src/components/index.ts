@@ -23,6 +23,10 @@ import Vue from 'vue'
   import frameAbout from "@/components/sunil/frames/about"
   Vue.component('frameAbout', frameAbout)
 
+  import frameBlockDetail from "@/components/sunil/frames/blockDetail"
+  Vue.component('frameBlockDetail', frameBlockDetail)
+
+
 
 
   /* Header ---------------------- */
@@ -88,6 +92,9 @@ import Vue from 'vue'
 
   import blockAbout from "@/components/sunil/blocks/largeBlocks/about"
   Vue.component('blockAbout', blockAbout)
+
+  import blockBlockDetail from "@/components/sunil/blocks/largeBlocks/blockDetail"
+  Vue.component('blockBlockDetail', blockBlockDetail)
 
 
 

@@ -90,15 +90,29 @@ p{
 
   .search-block{
     margin-left: auto;
-
+    width: 380px;
   }
 }
 
 
 
+@media all and (max-width: 799px){
+
+  .page-title-container{
+    display: block !important;
+
+    .search-block{
+      margin-top: 10px;
+      width: 100% !important;
+    }
+  }
+
+}
+
+
 .block-title-container{
   display: flex;
-  padding: 60px 0 10px 0;
+  padding: 0px 0 10px 0;
   h3{
     font-weight: 600;
     color: #465a6e;

@@ -13,7 +13,7 @@
         </div>
       </div>
 
-      <div class="row">
+      <div class="row small-blocks">
         <div class="col-md-3"><block-last-block></block-last-block></div>
         <div class="col-md-3"><block-time-since-last-block></block-time-since-last-block></div>
         <div class="col-md-3"><block-hash-rate></block-hash-rate></div>
@@ -26,7 +26,7 @@
       </div>
 
       <div class="row">
-        <div class="col-md-12 table-data ">
+        <div class="col-md-12 table-data">
           <div class="block-title-container">
             <h3>Latest Blocks</h3>
             <button>View All</button>
