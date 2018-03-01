@@ -26,12 +26,16 @@ import Vue from 'vue'
   import frameBlockDetail from "@/components/sunil/frames/blockDetail"
   Vue.component('frameBlockDetail', frameBlockDetail)
 
+  import frameAccount from "@/components/sunil/frames/account"
+  Vue.component('frameAccount', frameAccount)
+
 
 
 
   /* Header ---------------------- */
   import blockHeader from "@/components/sunil/blocks/header/header"
   Vue.component('blockHeader', blockHeader)
+
 
 
 
@@ -62,8 +66,6 @@ import Vue from 'vue'
 
 
 
-
-
   import blockAvgGasPrice from "@/components/sunil/blocks/smallBlocks/avgGasPrice"
   Vue.component('blockAvgGasPrice', blockAvgGasPrice)
 
@@ -75,8 +77,6 @@ import Vue from 'vue'
 
   import blockTotalFees from "@/components/sunil/blocks/smallBlocks/totalFees"
   Vue.component('blockTotalFees', blockTotalFees)
-
-
 
 
 
@@ -95,6 +95,10 @@ import Vue from 'vue'
 
   import blockBlockDetail from "@/components/sunil/blocks/largeBlocks/blockDetail"
   Vue.component('blockBlockDetail', blockBlockDetail)
+
+  import blockTokenTracker from "@/components/sunil/blocks/largeBlocks/tokenTracker"
+  Vue.component('blockTokenTracker', blockTokenTracker)
+
 
 
 
