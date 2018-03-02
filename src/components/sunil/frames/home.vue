@@ -22,7 +22,7 @@
 
       <div class="row">
         <div class="col-md-6">
-          <div class="block-title-container">
+          <div class="block-title-container-desc">
             <h3>NVM tx summary</h3>
             <h6 class="text-muted">Number of successful, failed, and pending transactions that have occured in the last 10 blocks.</h6>
           </div>
@@ -36,7 +36,7 @@
           </div>
         </div>
         <div class="col-md-6">
-          <div class="block-title-container">
+          <div class="block-title-container-desc">
             <h3>Average Tx Costs</h3>
             <h6>Average transaction fees and average gas price in the last 10 blocks.</h6>
           </div>
