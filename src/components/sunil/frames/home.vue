@@ -23,7 +23,7 @@
       <div class="row">
         <div class="col-md-6">
           <div class="block-title-container-desc">
-            <h3>NVM tx summary</h3>
+            <h3>TX summary</h3>
             <h6 class="text-muted">Number of successful, failed, and pending transactions that have occured in the last 10 blocks.</h6>
           </div>
           <bar-chart-last-ten-blocks-tx></bar-chart-last-ten-blocks-tx>
