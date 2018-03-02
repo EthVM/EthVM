@@ -21,10 +21,32 @@
       </div>
 
       <div class="row">
-        <div class="col-md-6"><bar-chart-last-ten-blocks-tx></bar-chart-last-ten-blocks-tx></div>
-        <div class="col-md-6"><line-chart-ave-tx-fees></line-chart-ave-tx-fees></div>
+        <div class="col-md-6">
+          <div class="block-title-container">
+            <h3>Last 10 blocks' tx</h3>
+          </div>
+          <bar-chart-last-ten-blocks-tx></bar-chart-last-ten-blocks-tx>
+          <div class="footnote">
+            <ul>
+              <li><i class="fa fa-circle success" aria-hidden="true"></i> Success</li>
+              <li><i class="fa fa-circle failed" aria-hidden="true"></i> Failed</li>
+              <li><i class="fa fa-circle pending" aria-hidden="true"></i> Pending</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="block-title-container">
+            <h3>Average Tx Fees</h3>
+          </div>
+          <line-chart-ave-tx-fees></line-chart-ave-tx-fees>
+          <div class="footnote">
+            <ul>
+              <li><i class="fa fa-circle tx-fees" aria-hidden="true"></i> avg Tx Fees (ETH)</li>
+              <li><i class="fa fa-circle failed" aria-hidden="true"></i> avg Gas Price (GWEI)</li>
+            </ul>
+          </div>
+        </div>  
       </div>
-
       <div class="row">
         <div class="col-md-12 table-data">
           <div class="block-title-container">

@@ -12,7 +12,7 @@ import sEvents from '@/configs/socketEvents.json'
 import BN from 'bignumber.js'
 import ethUnits from 'ethereumjs-units'
 
-let MAX_ITEMS = 100
+let MAX_ITEMS = 10
 let lineOptions = {
   'title': {
     'text': 'Average Tx Fees',
@@ -28,6 +28,10 @@ let lineOptions = {
       },
       'gridLines': {
         'color': 'rgba(0, 0, 0, 0)'
+      },
+      'scaleLabel': {
+        'display': true,
+        'labelString': 'Tx Fees ETH'
       }
     }, {
       'id': 'y-axis-2',
@@ -37,6 +41,10 @@ let lineOptions = {
       },
       'gridLines': {
         'color': 'rgba(0, 0, 0, 0)'
+      },
+      'scaleLabel': {
+        'display': true,
+        'labelString': ' Gas Price GWEI'
       }
     }],
     'xAxes': [{
@@ -44,16 +52,7 @@ let lineOptions = {
     }]
   },
 
-  'elements': {
-    'line': {
-      'borderColor': '#c271f5'
-    },
-    'point': {
-      'backgroundColor': '#c271f5',
-      'borderColor': '#c271f5'
-    }
 
-  },
   'scaleShowLabels': false
 
 }
@@ -109,15 +108,19 @@ export default Vue.extend({
         'datasets': [
           {
             'label': 'avg Tx Fees (ETH)',
-            'backgroundColor': 'rgba(196, 93, 105, 0.3)',
+            'borderColor': '#2779ff',
+            'backgroundColor': '#2779ff',
             'data': data.avgFees,
-            'yAxisID': 'y-axis-1'
+            'yAxisID': 'y-axis-1',
+            'fill': false
           },
           {
             'label': 'avg Gas Price (GWEI)',
-            'backgroundColor': 'rgba(32, 162, 219, 0.3)',
+            'borderColor': '#f9967b',
+            'backgroundColor': '#f9967b',
             'data': data.avgPrice,
-            'yAxisID': 'y-axis-2'
+            'yAxisID': 'y-axis-2',
+            'fill': false
           }]
       }
     }

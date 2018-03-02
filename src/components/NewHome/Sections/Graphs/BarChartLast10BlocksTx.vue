@@ -20,30 +20,36 @@ let MAX_ITEMS = 10
 
 let barOptions = {
   'title': {
-    'text': 'Transactions from the last 10 blocks'
+    'text': 'Transactions (Last 10 blocks)'
   },
   'responsive': true,
   'scales': {
     'yAxes': [
       {
-        'stacked': true,
+        'stacked': false,
         'ticks': {
           'beginAtZero': false
         },
         'gridLines': {
           'color': 'rgba(0, 0, 0, 0)'
-        }
+        },
+        'scaleLabel': {
+        'display': true,
+        'labelString': 'Tx Number'
+      }
       }
     ],
     'xAxes': [
       {
-        'stacked': true,
-        'display': false
+        'stacked': false,
+        'display': false,
+        'categoryPercentage': 0.7
       }
     ]
   },
 
-  'barShowLabels': true
+  'barShowLabels': true,
+
 }
 export default Vue.extend({
 
@@ -69,8 +75,10 @@ export default Vue.extend({
           this.chartData.labels.shift()
           this.chartData.datasets[0].data.push(_tempD.success)
           this.chartData.datasets[0].data.shift()
-          this.chartData.datasets[1].data.push(_tempD.failed)
+          this.chartData.datasets[1].data.push(_tempD.pendingTxs)
           this.chartData.datasets[1].data.shift()
+          this.chartData.datasets[2].data.push(_tempD.failed)
+          this.chartData.datasets[2].data.shift()
         }
       }
     })
@@ -84,7 +92,8 @@ export default Vue.extend({
       let data = {
         labels: [],
         sData: [],
-        fData: []
+        fData: [],
+        pData:[]
       }
       let latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
       latestBlocks.forEach((_block) => {
@@ -92,19 +101,25 @@ export default Vue.extend({
         let _tempD = _block.getStats()
         data.sData.unshift(new BN(_tempD.success).toNumber())
         data.fData.unshift(new BN(_tempD.failed).toNumber())
+        data.pData.unshift(new BN(_tempD.pendingTxs).toNumber())
       })
       return {
         'labels': data.labels,
         'datasets': [
           {
             'label': 'Sucessfull',
-            'backgroundColor': '#6dcff6',
-            'data': data.sData
+            'backgroundColor': '#20c0c7',
+            'data': data.sData,
+          },
+          {
+            'label': 'Pending',
+            'backgroundColor': '#7c76fc',
+            'data': data.pData,
           },
           {
             'label': 'Failed',
-            'backgroundColor': '#FBA893',
-            'data': data.fData
+            'backgroundColor': '#f9967b',
+            'data': data.fData,
           }
         ]
       }

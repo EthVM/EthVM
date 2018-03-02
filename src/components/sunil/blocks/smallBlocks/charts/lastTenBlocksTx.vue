@@ -98,12 +98,12 @@ export default Vue.extend({
         'datasets': [
           {
             'label': 'Sucessfull',
-            'backgroundColor': '#6dcff6',
+            'backgroundColor': '#2779ff',
             'data': data.sData
           },
           {
             'label': 'Failed',
-            'backgroundColor': '#FBA893',
+            'backgroundColor': '#f9967b',
             'data': data.fData
           }
         ]

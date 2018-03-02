@@ -1,4 +1,5 @@
 <template>
+  
   <div class="chart component-shadow">
     <canvas ref="chart" :width="width" :height="height">
     </canvas>
@@ -9,14 +10,12 @@ import Chart from 'chart.js'
 import Vue from 'vue'
 
 Chart.defaults.global = Object.assign(Chart.defaults.global, {
-  defaultFontFamily: "'Poppins', 'sans-serif'",
-  defaultFontStyle: '200'
+  defaultFontFamily: "'Open Sans', 'sans-serif'",
+  defaultFontStyle: '200',
 })
 
 Chart.defaults.global.title = Object.assign(Chart.defaults.global.title, {
-  fontStyle: '400',
-  display: true,
-  padding: 10
+  display: false,
 })
 
 Chart.defaults.global.tooltips = Object.assign(Chart.defaults.global.tooltips, {
@@ -25,16 +24,17 @@ Chart.defaults.global.tooltips = Object.assign(Chart.defaults.global.tooltips, {
 })
 
 Chart.defaults.global.legend = Object.assign(Chart.defaults.global.legend, {
-  display: false
+  display: false,
 })
 
 Chart.defaults.global.layout = Object.assign(Chart.defaults.global.layout, {
   padding: {
     left: 5,
     right: 5,
-    top: 5,
-    bottom: 15
+    top: 20,
+    bottom: 20
   }
+
 })
 
 Chart.defaults.global.elements.point = Object.assign(Chart.defaults.global.elements.point, {
