@@ -29,6 +29,8 @@ import Vue from 'vue'
   import frameAccount from "@/components/sunil/frames/account"
   Vue.component('frameAccount', frameAccount)
 
+  import frameCharts from "@/components/sunil/frames/charts"
+  Vue.component('frameCharts', frameCharts)
 
 
 

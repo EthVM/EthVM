@@ -13,7 +13,7 @@
     
 
     <frame-blocks v-else-if="pageName == 'blocks'"></frame-blocks>
-
+    <frame-charts v-else-if="pageName == 'charts'"></frame-charts>
 
     <frame-transaction v-else-if="pageName == 'tx' && param" :txHash="param"></frame-transaction>
     
