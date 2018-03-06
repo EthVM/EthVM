@@ -26,6 +26,7 @@ let barOptions = {
   'scales': {
     'yAxes': [
       {
+        'id': 'y-axis-1',
         'stacked': false,
         'ticks': {
           'beginAtZero': false
@@ -35,8 +36,23 @@ let barOptions = {
         },
         'scaleLabel': {
         'display': true,
-        'labelString': 'Tx Number'
-      }
+        'labelString': 'Sucessfull and Failed Tx '
+        }
+      },
+      {
+        'id': 'y-axis-2',
+        'position': 'right',
+        'stacked': false,
+        'ticks': {
+          'beginAtZero': false
+        },
+        'gridLines': {
+          'color': 'rgba(0, 0, 0, 0)'
+        },
+        'scaleLabel': {
+        'display': true,
+        'labelString': 'Pending Tx'
+        }
       }
     ],
     'xAxes': [
@@ -107,19 +123,25 @@ export default Vue.extend({
         'labels': data.labels,
         'datasets': [
           {
+            'label': 'Pending',
+            'backgroundColor': '#7c76fc',
+            'borderColor': '#7c76fc',
+            'data': data.pData,
+            'type': 'line',
+            'fill': false,
+            'yAxisID': 'y-axis-2',
+          },
+          {
             'label': 'Sucessfull',
             'backgroundColor': '#20c0c7',
             'data': data.sData,
-          },
-          {
-            'label': 'Pending',
-            'backgroundColor': '#7c76fc',
-            'data': data.pData,
+            'yAxisID': 'y-axis-1',
           },
           {
             'label': 'Failed',
             'backgroundColor': '#f9967b',
             'data': data.fData,
+            'yAxisID': 'y-axis-1',
           }
         ]
       }
