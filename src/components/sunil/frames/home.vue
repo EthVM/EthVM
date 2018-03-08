@@ -22,10 +22,6 @@
 
       <div class="row">
         <div class="col-md-6">
-          <div class="block-title-container-desc">
-            <h3>TX summary</h3>
-            <h6 class="text-muted">Number of successful, failed, and pending transactions that have occured in the last 10 blocks.</h6>
-          </div>
           <bar-chart-last-ten-blocks-tx></bar-chart-last-ten-blocks-tx>
           <div class="footnote">
             <ul>
@@ -36,10 +32,6 @@
           </div>
         </div>
         <div class="col-md-6">
-          <div class="block-title-container-desc">
-            <h3>Average Tx Costs</h3>
-            <h6>Average transaction fees and average gas price in the last 10 blocks.</h6>
-          </div>
           <line-chart-ave-tx-fees></line-chart-ave-tx-fees>
           <div class="footnote">
             <ul>
@@ -53,7 +45,7 @@
         <div class="col-md-12 table-data">
           <div class="block-title-container">
             <h3>Latest Blocks</h3>
-            <button>View All</button>
+            <button  v-on:click ="">View All</button>
           </div>
           <div class="latest-blocks-header">
             <li>Block#</li>

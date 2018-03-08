@@ -1,5 +1,5 @@
 <template>
-  <div id="home">
+  <div id="charts">
     <div class="container">
       
       <div class="page-title-container">
@@ -160,7 +160,7 @@
   import Vue from 'vue'
   const MAX_ITEMS = 20
   export default Vue.extend({
-    name: 'FramesHome',
+    name: 'FramesCharts',
     data () {
       return {}
     },

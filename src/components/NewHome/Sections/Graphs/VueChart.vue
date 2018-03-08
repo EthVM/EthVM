@@ -1,8 +1,13 @@
 <template>
-  
-  <div class="chart component-shadow">
-    <canvas ref="chart" :width="width" :height="height">
-    </canvas>
+  <div class="chart-container">
+    <div class="chart-title-1">
+      <p>{{chartTitle}}<tooltip :textToolTip ="chartDescription"></tooltip></p>
+    </div>
+
+    <div class="chart">
+      <canvas ref="chart" :width="width" :height="height"></canvas>
+    </div>
+    
   </div>
 </template>
 <script lang="ts">
@@ -54,13 +59,14 @@ export default Vue.extend({
       type: [
         Object,
         Array
-      ]
+      ],
     },
     redraw: Boolean,
     options: Object,
     width: Number,
-    height: Number
-
+    height: Number,
+    chartTitle: String,
+    chartDescription: String,
   },
   data: () => ({
     chart: ''
@@ -80,7 +86,7 @@ export default Vue.extend({
     }
   },
   methods: {
-    createChart () {
+    createChart() {
       this.chart = new Chart(this.$refs.chart, {
         type: this.type,
         data: this.data,
@@ -89,7 +95,7 @@ export default Vue.extend({
       })
     }
   },
-  mounted () {
+  mounted() {
     this.createChart()
   },
   beforeDestroy () {

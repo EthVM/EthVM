@@ -1,0 +1,38 @@
+.tooltip-container{
+	float: right;
+	z-index: 100;
+	padding-left: 5x;
+	i{ 
+		color:  grey;
+    font-size: 16px;
+   	margin-left: 5px;
+    cursor: pointer;
+    transition: all .15s ease;
+
+    &:hover {
+      color: #20c0c7;
+      font-size: 18px;
+    }
+  }
+
+  	.tooltip-text{
+  		position: absolute;
+  		border-radius: 4px;
+    	z-index: 1;
+    	width: 250px;
+  		padding: 10px 10px 10px 10px;
+  		background-color: grey;
+      font-family: 'Open Sans', sans-serif;
+  		font-size: 15px;
+  		color: white;
+
+  	}
+}
+
+/* Transitions for the tooltip: */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.6s
+}
+.fade-enter, .fade-leave-to  {
+  opacity: 0
+}    

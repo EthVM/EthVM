@@ -1,10 +1,10 @@
 <template>
-<div id="GraphsBarChart"
-     class="bar-chart component-shadow">
-  <div class="graphs">
-    <vue-chart type="bar"
+<div id="GraphsBarChart">
+      <vue-chart type="bar"
                :data="chartData"
                :options="chartOptions"
+               :chartTitle="newTitle"
+               :chartDescription="newDescription"
                :redraw="redraw"></vue-chart>
   </div>
 </div>
@@ -16,11 +16,12 @@ import Vue from 'vue'
 import sEvents from '@/configs/socketEvents.json'
 import BN from 'bignumber.js'
 
-let MAX_ITEMS = 10
-
+let MAX_ITEMS = 10;
+let title = 'Tx Summary';
+let description ="Number of successful, failed, and pending transactions that have occured in the last 10 blocks"
 let barOptions = {
   'title': {
-    'text': 'Transactions (Last 10 blocks)'
+    'text': 'Transactions (Last 10 blocks)',
   },
   'responsive': true,
   'scales': {
@@ -73,7 +74,11 @@ export default Vue.extend({
   data: () => ({
     chartData: {},
     chartOptions: barOptions,
-    redraw: false
+    redraw: false,
+    newTitle: title,
+    newDescription: description,
+
+
   }),
   mounted () {},
   created () {

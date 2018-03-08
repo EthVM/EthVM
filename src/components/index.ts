@@ -102,7 +102,9 @@ import Vue from 'vue'
   Vue.component('blockTokenTracker', blockTokenTracker)
 
 
-
+  /*Tooltip ---------------------- */
+  import tooltip from "@/components/sunil/tooltip/tooltip"
+  Vue.component('tooltip', tooltip)
 
 
   /* Footer ---------------------- */
