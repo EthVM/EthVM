@@ -14,6 +14,12 @@
       </div>
 
       <!-- Section: General -->
+
+      <div class="row">
+         <div class="col-md-12">
+          <top-miners-chart></top-miners-chart>
+        </div>
+      </div>
       <div class="row">
         <div class="col-md-12">
           <div class="block-title-container-desc">

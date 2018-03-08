@@ -25,19 +25,19 @@ import ethUnits from 'ethereumjs-units'
     DAY: 'day'
   };
   const DES = {
-    BEGIN: 'Average transaction fees in Ethereum blockchain since the ',
-    OTHER: 'Average transaction fees in Ethereum blockchain in last '
+    BEGIN: 'Average gas price in Ethereum blockchain since the ',
+    OTHER: 'Average gas price in Ethereum blockchain in last '
   }
   let currentState = STATES.DAY;
   let stateChanged = false;
 
   /* Chart Details: */ 
-  let title = 'Tx Fees'
+  let title = 'Gas Price'
   let description = DES.OTHER + currentState;
   let MAX_ITEMS = 10
 let lineOptions = {
   'title': {
-    'text': 'Transaction Fees',
+    'text': 'Gas Price',
     'lineHeight': 1
   },
   'responsive': true,
@@ -52,7 +52,7 @@ let lineOptions = {
       },
       'scaleLabel': {
         'display': true,
-        'labelString': 'Transaction Fees (ETH)',
+        'labelString': 'Gas Price (GWEI)',
       }
     }],
     'xAxes': [{
@@ -102,7 +102,31 @@ export default Vue.extend({
     this.$eventHub.$off(sEvents.newBlock)
   },
   computed: {
-    },
+    initData () {
+      let data = {
+        labels: [],
+        avgFees: [],
+        avgPrice: []
+      }
+      let latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
+      latestBlocks.forEach((_block) => {
+        data.labels.unshift(_block.getNumber().toNumber())
+        let _tempD = _block.getStats()
+        data.avgFees.unshift(ethUnits.convert(new BN(_tempD.avgTxFees).toFixed(), 'wei', 'eth').substr(0, 8))
+        data.avgPrice.unshift(ethUnits.convert(new BN(_tempD.avgGasPrice).toFixed(), 'wei', 'gwei').substr(0, 5))
+      })
+      return {
+        'labels': data.labels,
+        'datasets': [
+          {
+            'label': 'Gas Price (GWEI)',
+            'backgroundColor': '#20c0c7',
+            'data': data.sData,
+            'borderColor': '#20c0c7',
+            'fill': false
+          }]
+      }
+    }
 
     /*Method to change description string: */
     changeDescription() {

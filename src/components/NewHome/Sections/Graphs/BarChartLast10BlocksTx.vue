@@ -19,6 +19,7 @@ import BN from 'bignumber.js'
 let MAX_ITEMS = 10;
 let title = 'Tx Summary';
 let description ="Number of successful, failed, and pending transactions that have occured in the last 10 blocks"
+
 let barOptions = {
   'title': {
     'text': 'Transactions (Last 10 blocks)',
@@ -77,8 +78,6 @@ export default Vue.extend({
     redraw: false,
     newTitle: title,
     newDescription: description,
-
-
   }),
   mounted () {},
   created () {

@@ -29,10 +29,6 @@ import Vue from 'vue'
   import frameAccount from "@/components/sunil/frames/account"
   Vue.component('frameAccount', frameAccount)
 
-  import frameCharts from "@/components/sunil/frames/charts"
-  Vue.component('frameCharts', frameCharts)
-
-
 
   /* Header ---------------------- */
   import blockHeader from "@/components/sunil/blocks/header/header"
@@ -60,14 +56,7 @@ import Vue from 'vue'
   import blockSearch from "@/components/sunil/blocks/smallBlocks/search"
   Vue.component('blockSearch', blockSearch)
 
-  import blockLastTenBlocksTx from "@/components/sunil/blocks/smallBlocks/charts/lastTenBlocksTx"
-  Vue.component('blockLastTenBlocksTx', blockLastTenBlocksTx)
-
-  import blockAveTxFees from "@/components/sunil/blocks/smallBlocks/charts/aveTxFees"
-  Vue.component('blockAveTxFees', blockAveTxFees)
-
-
-
+  
   import blockAvgGasPrice from "@/components/sunil/blocks/smallBlocks/avgGasPrice"
   Vue.component('blockAvgGasPrice', blockAvgGasPrice)
 
@@ -184,7 +173,7 @@ import Vue from 'vue'
 
 
 
-  /* Graphs ---------------------- */
+  /* Charts ---------------------- */
   import VueChart from "@/components/NewHome/Sections/Graphs/VueChart"
   Vue.component('VueChart', VueChart)
 
@@ -197,6 +186,15 @@ import Vue from 'vue'
   import LineChartAveTxFees from "@/components/NewHome/Sections/Graphs/LineChartAveTxFees"
   Vue.component('LineChartAveTxFees', LineChartAveTxFees)
 
+
+  import frameCharts from "@/components/sunil/frames/charts"
+  Vue.component('frameCharts', frameCharts)
+
+  import blockLastTenBlocksTx from "@/components/sunil/blocks/smallBlocks/charts/lastTenBlocksTx"
+  Vue.component('blockLastTenBlocksTx', blockLastTenBlocksTx)
+
+  import topMinersChart from "@/components/sunil/blocks/smallBlocks/charts/topMiners"
+  Vue.component('topMinersChart', topMinersChart)
 
 
 

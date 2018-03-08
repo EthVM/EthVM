@@ -47,6 +47,10 @@ Chart.defaults.global.elements.point = Object.assign(Chart.defaults.global.eleme
   borderWidth: 2
 })
 
+Chart.defaults.doughnut.animation = Object.assign(Chart.defaults.doughnut.animation, {
+  animateRotate: true,
+})
+
 export default Vue.extend({
   name: 'vue-chart',
   props: {
