@@ -36,6 +36,12 @@ import Vue from 'vue'
 
 
 
+  /* Modal ---------------------- */
+  import blockModal from "@/components/sunil/blocks/modal/modal"
+  Vue.component('blockModal', blockModal)
+
+
+
 
   /* SmallBlocks ---------------------- */
   import blockComponent from "@/components/sunil/blocks/smallBlocks/component"
