@@ -44,8 +44,8 @@
       <div class="row">
         <div class="col-md-12 table-data">
           <div class="block-title-container">
-            <h3>Latest Blocks</h3>
-            <button  v-on:click ="">View All</button>
+            <h3>Blocks</h3>
+            <a class="button-right" href="/blocks">View All</a>
           </div>
           <div class="latest-blocks-header">
             <li>Block#</li>
@@ -67,8 +67,8 @@
         </div>
         <div class="col-md-12 table-data">
           <div class="block-title-container">
-            <h3>Last Transactions</h3>
-            <button>View All</button>
+            <h3>Transactions</h3>
+            <a class="button-right" href="/transactions">View All</a>
           </div>
           <div class="last-transactions-header">
             <li>TXn#</li>

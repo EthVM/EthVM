@@ -18,10 +18,10 @@
         <div class="col-md-2">
           <h5>Quick Links</h5>
           <ul>
-            <li><a href="#">Last Blocks</a></li>
-            <li><a href="#">Latest Transactions</a></li>
-            <li><a href="#">Pending Transactions</a></li>
-            <li><a href="#">Charts</a></li>
+            <li><a href="/blocks">Blocks</a></li>
+            <li><a href="/transactions">Transactions</a></li>
+            <li><a href="/pending">Pending Transactions</a></li>
+            <li><a href="/charts">Charts</a></li>
           </ul>
         </div>
         <div class="col-md-2">

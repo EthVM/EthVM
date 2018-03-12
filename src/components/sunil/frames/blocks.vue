@@ -15,9 +15,12 @@
 
 
       <div class="row">
-        <div class="col-md-6"><block-last-ten-blocks-tx></block-last-ten-blocks-tx></div>
-        <div class="col-md-6"><block-ave-tx-fees></block-ave-tx-fees></div>
+        <div class="col-md-3"><block-avg-gas-price></block-avg-gas-price></div>
+        <div class="col-md-3"><block-avg-value-transfered></block-avg-value-transfered></div>
+        <div class="col-md-3"><block-view-last-transactions></block-view-last-transactions></div>
+        <div class="col-md-3"><block-total-fees></block-total-fees></div>
       </div>
+
 
       <div class="row">
         <div class="col-md-12 table-data ">
