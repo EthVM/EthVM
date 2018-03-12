@@ -3,7 +3,7 @@
 
     <block-modal :modal-status="signup" @modalDisabled="signup = $event"></block-modal>
 
-    <div class="container">      
+    <div class="container">
       <div class="row">
         <div class="col-md-2">
           <h5>About Us</h5>

@@ -1,7 +1,9 @@
 <template>
-    
+  
+  
     <!-- Signup Modal -->
     <div v-if="modalStatus == true" class="alert-modal" id="signup-modal">
+      <div @click="changeView" class="modal-container"></div>
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="logo-box">
@@ -19,7 +21,7 @@
         </div>
       </div>
     </div>
-
+  
 
 </template>
 
