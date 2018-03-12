@@ -11,6 +11,8 @@
     <frame-contact v-else-if="pageName == 'contact'"></frame-contact>
     <frame-txs v-else-if="pageName == 'transactions' || pageName == 'pendingTransactions'" :type="pageName"></frame-txs>
     
+    <frame-pending v-else-if="pageName == 'pending'" :type="pageName"></frame-pending>
+
 
     <frame-blocks v-else-if="pageName == 'blocks'"></frame-blocks>
     <frame-charts v-else-if="pageName == 'charts'"></frame-charts>

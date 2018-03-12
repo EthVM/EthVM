@@ -29,6 +29,10 @@ import Vue from 'vue'
   import frameAccount from "@/components/sunil/frames/account"
   Vue.component('frameAccount', frameAccount)
 
+  import framePending from "@/components/sunil/frames/pendingTxs"
+  Vue.component('framePending', framePending)
+
+
 
   /* Header ---------------------- */
   import blockHeader from "@/components/sunil/blocks/header/header"
@@ -95,6 +99,12 @@ import Vue from 'vue'
 
   import blockTokenTracker from "@/components/sunil/blocks/largeBlocks/tokenTracker"
   Vue.component('blockTokenTracker', blockTokenTracker)
+
+  import blockPendingTxs from "@/components/sunil/blocks/largeBlocks/pendingTxs"
+  Vue.component('blockPendingTxs', blockPendingTxs)
+
+
+
 
 
   /*Tooltip ---------------------- */
