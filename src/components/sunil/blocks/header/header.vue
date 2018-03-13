@@ -35,9 +35,9 @@
         <ul>
           <li v-bind:class="{ 'selected' : pagename == undefined }"><a href="/"><div class="icon"></div><span>Home</span></a></li>
           <li v-bind:class="{ 'selected' : pagename == 'blocks' }"><a href="/blocks"><div class="icon"></div><span>Blocks</span></a></li>
-          <li v-bind:class="{ 'selected' : pagename == 'charts' }"><a href="/charts"><div class="icon"></div><span>Charts</span></a></li>
           <li v-bind:class="{ 'selected' : pagename == 'transactions' }"><a href="/transactions"><div class="icon"></div><span>Transactions</span></a></li>
           <li v-bind:class="{ 'selected' : pagename == 'pending' }"><a href="/pending"><div class="icon"></div><span>Pending Transactions</span></a></li>
+          <li v-bind:class="{ 'selected' : pagename == 'charts' }"><a href="/charts"><div class="icon"></div><span>Charts</span></a></li>
           <li v-bind:class="{ 'selected' : pagename == 'about' }"><a href="/about"><div class="icon"></div><span>About</span></a></li>
         </ul>
       </nav>

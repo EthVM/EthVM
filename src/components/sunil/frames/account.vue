@@ -1,25 +1,26 @@
 <template>
-<div class="frames-overview">
-  <div class="row table-block">
-    <div class="col-md-6 block-container">
-      <div class="block">
-        <overview :account="account"></overview>
+  
+  <div class="frames-overview container">
+    <div class="row table-block">
+      <div class="col-md-6 block-container">
+        <div class="block">
+          <overview :account="account"></overview>
+        </div>
+        <div class="block">
+          <block-token-tracker :account="account"></block-token-tracker>
+        </div>
       </div>
-      <div class="block">
-        <block-token-tracker :account="account"></block-token-tracker>
-      </div>
-    </div>
-    <div class="col-md-6 block-container">
-      <div class="block">
-        <div v-infinite-scroll="loadMore"
-             infinite-scroll-disabled="busy"
-             infinite-scroll-distance="100">
-          <table-transactions-new :transactions="txs"></table-transactions-new>
+      <div class="col-md-6 block-container">
+        <div class="block">
+          <div v-infinite-scroll="loadMore"
+               infinite-scroll-disabled="busy"
+               infinite-scroll-distance="100">
+            <table-transactions-new :transactions="txs"></table-transactions-new>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
 </template>
 

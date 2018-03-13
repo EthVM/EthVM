@@ -20,6 +20,7 @@
         <div class="col-md-3"><block-difficulty></block-difficulty></div>
       </div>
 
+
       <div class="row">
         <div class="col-md-12 table-data ">
           <div class="latest-blocks-header">

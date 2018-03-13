@@ -1,7 +1,7 @@
 <template>
 <div class="address-block">
-<div class="address" @mouseover="showIdenticon = true" @mouseleave="showIdenticon = false">{{address}}</div>
-<div v-show="showIdenticon" style="">identicon will be here</div>
+    <div class="address" @mouseover="showIdenticon = true" @mouseleave="showIdenticon = false">{{address}}</div>
+    <div v-show="showIdenticon" style="">identicon will be here</div>
 </div>
 </template>
 

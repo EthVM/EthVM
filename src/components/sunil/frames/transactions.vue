@@ -4,8 +4,8 @@
       
       <div class="page-title-container">
         <div class="page-title">
-          <h3>Transactions</h3>
-          <h6 class="text-muted">Latest blocks of all time</h6>
+          <h3>Transactions</h3
+          <h6 class="text-muted">Last transactions of all time</h6>
         </div>
 
         <div class="search-block">
@@ -23,11 +23,12 @@
 
       <div class="row">
         <div class="col-md-12 table-data ">
+        
           <div class="latest-blocks-header">
-            <li>Block#</li>
-            <li></li>
-            <li>TXs</li>
-            <li>Reward</li>
+            <li>Txn#</li>
+            <li>ETH</li>
+            <li>GAS</li>
+            <li>WEI</li>
           </div>
           
           <div class="latest-blocks-data">

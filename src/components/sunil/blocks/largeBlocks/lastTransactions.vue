@@ -15,7 +15,7 @@
             <p class=""><router-link :to="'/address/'+tx.getTo().toString()">{{tx.getTo().toString()}}</router-link></p>
           </div>
         </li>
-        <li class="vertical-middle eth">{{tx.getValue().toEth()}}</li>
+        <li class="vertical-middle eth">10</li>
         <li class="vertical-middle gas">{{tx.getGasUsed().toNumber()}}</li>
         <li class="vertical-middle"><p>{{tx.getGasPrice().toGWei()}}</p></li>
         <li class="vertical-middle status">
