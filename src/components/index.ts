@@ -37,10 +37,19 @@ import Vue from 'vue'
 
 
 
-  /* SmallBlocks ---------------------- */
+  /* SMALL BLOCKS ---------------------- */
+
+  /* Parent Small Block Component: */
   import blockComponent from "@/components/sunil/blocks/smallBlocks/component"
   Vue.component('blockComponent', blockComponent)
 
+
+  /* Search Block: */
+  import blockSearch from "@/components/sunil/blocks/smallBlocks/search"
+  Vue.component('blockSearch', blockSearch)
+
+
+  /* Home Page Small Blocks: */
   import blockLastBlock from "@/components/sunil/blocks/smallBlocks/lastBlock"
   Vue.component('blockLastBlock', blockLastBlock)
 
@@ -53,25 +62,16 @@ import Vue from 'vue'
   import blockTimeSinceLastBlock from "@/components/sunil/blocks/smallBlocks/timeSinceLastBlock"
   Vue.component('blockTimeSinceLastBlock', blockTimeSinceLastBlock)
 
-  import blockSearch from "@/components/sunil/blocks/smallBlocks/search"
-  Vue.component('blockSearch', blockSearch)
 
-  
-  import blockAvgGasPrice from "@/components/sunil/blocks/smallBlocks/avgGasPrice"
-  Vue.component('blockAvgGasPrice', blockAvgGasPrice)
+  /* Transactions Page Small Blocks: */
+  import successfulTxSmallBlock from "@/components/sunil/blocks/smallBlocks/successfulTxSmallBlock"
+  Vue.component('successfulTxSmallBlock', successfulTxSmallBlock)
 
-  import blockAvgValueTransfered from "@/components/sunil/blocks/smallBlocks/avgValueTransfered"
-  Vue.component('blockAvgValueTransfered', blockAvgValueTransfered)
+  import failedTxSmallBlock from "@/components/sunil/blocks/smallBlocks/failedTxSmallBlock"
+  Vue.component('failedTxSmallBlock', failedTxSmallBlock)
 
-  import blockViewLastTransactions from "@/components/sunil/blocks/smallBlocks/viewLastTransactions"
-  Vue.component('blockViewLastTransactions', blockViewLastTransactions)
-
-  import blockTotalFees from "@/components/sunil/blocks/smallBlocks/totalFees"
-  Vue.component('blockTotalFees', blockTotalFees)
-
-
-
-
+  import pendingTxSmallBlock from "@/components/sunil/blocks/smallBlocks/pendingTxSmallBlock"
+  Vue.component('pendingTxSmallBlock', pendingTxSmallBlock)
 
 
   /* LargeBlocks ---------------------- */
@@ -168,6 +168,7 @@ import Vue from 'vue'
 
   import ShortDataDifficulty from "@/components/NewHome/Sections/ShortData/ShortDataDifficulty"
   Vue.component('ShortDataDifficulty', ShortDataDifficulty)
+
 
 
 

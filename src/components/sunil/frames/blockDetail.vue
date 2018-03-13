@@ -25,7 +25,7 @@
         </div>
         <div class="col-md-12 col-sm-12 col-xs-12" v-if="!isUncle">
           <div class="block-title-container">
-            <h3>Transections</h3>
+            <h3>Transactions</h3>
           </div>
           <div class="block">
             <block-last-transactions :transactions="transactions"></block-last-transactions>

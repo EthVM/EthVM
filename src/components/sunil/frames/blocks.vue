@@ -13,18 +13,15 @@
         </div>
       </div>
 
-
-      <div class="row">
-        <div class="col-md-6"><block-last-ten-blocks-tx></block-last-ten-blocks-tx></div>
-        <div class="col-md-6"><block-ave-tx-fees></block-ave-tx-fees></div>
+      <div class="row small-blocks">
+        <div class="col-md-3"><block-last-block></block-last-block></div>
+        <div class="col-md-3"><block-time-since-last-block></block-time-since-last-block></div>
+        <div class="col-md-3"><block-hash-rate></block-hash-rate></div>
+        <div class="col-md-3"><block-difficulty></block-difficulty></div>
       </div>
 
       <div class="row">
         <div class="col-md-12 table-data ">
-          <div class="block-title-container">
-            <h3>Latest Blocks</h3>
-            
-          </div>
           <div class="latest-blocks-header">
             <li>Block#</li>
             <li></li>
