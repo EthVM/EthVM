@@ -73,6 +73,8 @@ import Vue from 'vue'
   Vue.component('blockTimeSinceLastBlock', blockTimeSinceLastBlock)
 
 
+
+
   /* Transactions Page Small Blocks: */
   import successfulTxSmallBlock from "@/components/sunil/blocks/smallBlocks/successfulTxSmallBlock"
   Vue.component('successfulTxSmallBlock', successfulTxSmallBlock)
@@ -84,12 +86,18 @@ import Vue from 'vue'
   Vue.component('pendingTxSmallBlock', pendingTxSmallBlock)
 
 
+
+
   /* LargeBlocks ---------------------- */
   import blockLatestBlocks from "@/components/sunil/blocks/largeBlocks/latestBlocks"
   Vue.component('blockLatestBlocks', blockLatestBlocks)
 
   import blockLastTransactions from "@/components/sunil/blocks/largeBlocks/lastTransactions"
   Vue.component('blockLastTransactions', blockLastTransactions)
+
+  import blockLastTransactions2 from "@/components/sunil/blocks/largeBlocks/lastTransactions2"
+  Vue.component('blockLastTransactions2', blockLastTransactions2)
+
 
   import blockAbout from "@/components/sunil/blocks/largeBlocks/about"
   Vue.component('blockAbout', blockAbout)

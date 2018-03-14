@@ -1,5 +1,5 @@
 <template>
-  <div id="search">
+  <div class="search">
     <input type="text" name="search" placeholder="Search Hash / Miner / From">
     <button><i class="fa fa-search"></i></button>
   </div>
