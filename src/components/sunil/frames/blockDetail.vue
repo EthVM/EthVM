@@ -17,7 +17,7 @@
       <div class="row">
         <div class="col-md-12 col-sm-12 col-xs-12">
           <div class="block-title-container">
-            <h3>Block Information</h3>
+            <h3 class="hidden">Block Information</h3>
           </div>
           <div class="block">
             <block-block-detail :block="block" :uncles="uncles"></block-block-detail>
@@ -98,5 +98,5 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="less">
-  //@import "~lessPath/sunil/frames/blocks.less";
+  @import "~lessPath/sunil/frames/blockDetail.less";
 </style>
