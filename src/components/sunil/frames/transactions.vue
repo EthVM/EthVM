@@ -2,7 +2,7 @@
   <div id="home">
     <div class="container">
       
-      <div class="page-title-container-new">
+      <div class="page-title-container-new hidden">
         <div class="page-title">
           <h3>Transactions</h3>
         </div>
@@ -13,12 +13,22 @@
       </div>
 
 
+      <div class="page-title-container">
+        <div class="page-title">
+          <h3>Transactions</h3
+          <h6 class="text-muted">Last transactions of all time</h6>
+        </div>
+        <div class="search-block">
+          <block-search></block-search>
+        </div>
+      </div>
+
 
       <div class="row">
         <div class="col-md-12 table-data ">
         
           <div class="latest-blocks-data">
-            <block-last-transactions2 :transactions="txs"></block-last-transactions2>
+            <block-last-transactions :transactions="txs"></block-last-transactions>
           </div>
 
    
