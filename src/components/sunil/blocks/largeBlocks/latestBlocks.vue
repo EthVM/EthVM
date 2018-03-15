@@ -34,7 +34,7 @@
         </div><!--.block-data-->
 
 
-        <div class="uncles-block" v-if="false">
+        <div class="uncles-block" v-if="block.getUncles()">
          
           <div class="uncles-line"></div>
 

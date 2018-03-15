@@ -26,9 +26,7 @@
         </div>
         <div class="col-md-2">
           <h5>Find Us</h5>
-          <p>Los Angeles, CA, USA</p>
-          <p>Ph. 213-123-4567</p>
-          <p>E: <a href="mailto:support@ethvm.com">support@ethvm.com</a></p>
+          <p><a href="mailto:support@ethvm.com">support@ethvm.com</a></p>
         </div>
         <div class="col-md-6">
           <div class="input-block hidden">
