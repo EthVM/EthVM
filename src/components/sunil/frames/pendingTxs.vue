@@ -8,8 +8,8 @@
 
       <div class="page-title-container">
         <div class="page-title">
-          <h3>Transactions</h3>
-          <h6 class="text-muted">Last transactions of all time</h6>
+          <h3>Pending Transactions</h3>
+          <h6 class="text-muted">Transactions haven't been included into the Ethereum network</h6>
         </div>
         <div class="search-block">
           <block-search></block-search>
@@ -115,5 +115,5 @@ export default Vue.extend({
 </script>
 
 <style scoped="" lang="less">
-  @import "~lessPath/sunil/frames/home.less";
+  @import "~lessPath/sunil/frames/pendingTxs.less";
 </style>

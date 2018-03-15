@@ -9,11 +9,6 @@
           <h5>About Us</h5>
           <p>EthVM project is brought to you by kvhnuke, founder of MyEtherWallet and enKrypt. EthVM is a free and open source  interface for exploring and evaluating real time Ethereum blocks, transactions and more.</p>
 
-          <div class="social-buttons">
-            <a href="https://www.facebook.com/enKryptIO/" target="_blank"><i class="fa fa-facebook-f"></i></a>
-            <a href="https://twitter.com/enkryptio" target="_blank"><i class="fa fa-twitter"></i></a>
-            <a href="https://github.com/enKryptIO" target="_blank"><i class="fa fa-github"></i></a>
-          </div>
         </div>
         <div class="col-md-2">
           <h5>Quick Links</h5>
@@ -27,15 +22,21 @@
         <div class="col-md-2">
           <h5>Find Us</h5>
           <p><a href="mailto:support@ethvm.com">support@ethvm.com</a></p>
+
+          <div class="social-buttons">
+            <a href="https://www.facebook.com/enKryptIO/" target="_blank"><i class="fa fa-facebook-f"></i></a>
+            <a href="https://twitter.com/enkryptio" target="_blank"><i class="fa fa-twitter"></i></a>
+            <a href="https://github.com/enKryptIO" target="_blank"><i class="fa fa-github"></i></a>
+          </div>
         </div>
         <div class="col-md-6">
           <div class="input-block hidden">
             <h5>Connect With Us</h5>
             <input type="text" name="email" placeholder="Your email address">
-            <button v-on:click="signupButton">Sign Up</button>
+            <button>Sign Up</button>
           </div>
 
-          <div class="input-block">
+          <div class="input-block hidden">
             
             <h5>Connect With Us</h5>
 
@@ -61,10 +62,10 @@
             
           </div>
 
-          <div class="input-block">
+          <div class="input-block donate">
             <h5>Donate <span>Etherium Wallet</span></h5>
-            <input type="text" name="email" placeholder="0x829bd824b016326a401d083b33d092293333a830">
-            <button v-on:click="donateButton">Donate</button>
+            <p><span>ETH:</span> <span>mewtopia.eth</span> <a href="https://etherscan.io/address/0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D">0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D</a></p>
+            <p><span>BTC:</span> <a href="https://blockchain.info/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9">1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9</a></p>
           </div>
         </div>
       </div>
@@ -85,16 +86,7 @@
       }
     },
     methods: {
-      donateButton: function(){
-        console.log('Donation to ethvm')
 
-      },
-      signupButton: function(){
-        //console.log('Email signup')
-        this.signup = true;
-        console.log('Email signup: ' + this.signup)
-
-      }
     }
   })
 </script>
