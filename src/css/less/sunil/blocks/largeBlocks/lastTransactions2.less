@@ -14,9 +14,79 @@ li{
 }
 
 
+
+
+
 .last-transactions{
 
   .block-body{
+    
+    padding: 20px 40px;
+    background-color: white;
+
+    .labels{
+      display: grid;
+      grid-template-columns: 3fr 3fr 1fr 3fr 2fr 2fr 2fr 1fr;
+      margin-bottom: 20px;
+      
+      div{
+        font-weight: 500;
+        font-size: 14px;
+      }
+
+    }
+
+
+
+    .table-block{
+      display: grid;
+      grid-template-columns: 3fr 3fr 1fr 3fr 2fr 2fr 2fr 1fr;
+      grid-column-gap: 30px;
+      
+      .hash-block{
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        font-size: 13px;
+        padding: 15px 0;
+        
+
+        .in-out{
+          background-color: #12d4a0;
+          color: white;
+          padding: 3px;
+          font-size: 12px;
+          font-weight: 600;
+          text-align: center;
+          border-radius: 2px;
+          margin-top: -2px;
+        }
+      }//.hash-block
+
+      .status{
+        div{
+          color: white;
+          span{
+            margin-top: -3px;
+            padding: 5px;
+            display: inline-block;
+            border-radius: 20px;
+            font-size: 13px;
+          }
+          .success{
+            background-color: #12d4a0;
+          }
+          .failed{
+            background-color: red;
+          }
+          
+        }
+      }
+
+    }
+
+
+
     .block{
 
       background-color: white;
@@ -48,9 +118,7 @@ li{
         }
 
 
-
-        .hash-block,
-        .width-limit{
+        .hash-block{
           display: grid;
           grid-template-columns: 1fr;
           .hash{

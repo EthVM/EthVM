@@ -15,32 +15,54 @@
 }
 
 
-#search{
+.search{
   position: relative;
+  display: grid;
+  grid-template-columns: 400px 65px;
+  
   input{
-    padding: 7px 0px;
-    background: transparent;
+    padding: 16px 25px;
     border: none;
-    border-bottom: 2px solid #ced4da;
-    width: 100%;
     transition: all 0.3s ease;
     outline: none;
   }
 
   input:focus{
-    border-bottom: 2px solid #2779ff;
+    
   }
 
   button{
-    background-color: transparent;
+    background-color: #2779ff;
     border: none;
-    position: absolute;
-    right: 0px;
-    top: 5px;
     outline: none;
+    color: white;
+    font-size: 25px;
+  }
+
+
+  .search-result{
+    background-color: white;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    padding: 10px 20px;
+    position: absolute;
+    top: 60px;
+    left: 0px;
+    z-index: 9999;
+    p{
+      line-height: 40px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    } 
   }
 
 }
+
+
+
+
+
 
 
 

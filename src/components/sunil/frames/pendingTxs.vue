@@ -1,11 +1,51 @@
 <template>
-  <div class="container">
-    <div class="row">
-      <div class="col-md-12">
-        <block-pending-txs :transactions="pendingTxs"></block-pending-txs>
+
+  <div>
+    <div class="container">
+
+
+
+
+      <div class="page-title-container">
+        <div class="page-title">
+          <h3>Pending Transactions</h3>
+          <h6 class="text-muted">Transactions haven't been included into the Ethereum network</h6>
+        </div>
+        <div class="search-block">
+          <block-search></block-search>
+        </div>
       </div>
-    </div>
+
+
+
+
+      <div class="row">
+        <div class="col-md-12 table-data">
+
+          <div class="last-transactions-header">
+            <li>TXn#</li>
+            <li class="eth">ETH</li>
+            <li class="gas">GAS</li>
+            <li>WEI</li>
+            <li></li>
+          </div>
+          
+          <div class="last-transactions-data">
+            <block-pending-txs :transactions="pendingTxs"></block-pending-txs>
+          </div>
+
+          <div class="footnote">
+            <ul>
+              <li><i class="fa fa-check success" aria-hidden="true"></i> Success</li>
+              <li><i class="fa fa-times failed" aria-hidden="true"></i> Failed</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- .container -->
   </div>
+
 </template>
 
 <script lang="ts">
@@ -75,5 +115,5 @@ export default Vue.extend({
 </script>
 
 <style scoped="" lang="less">
-  @import "~lessPath/NewHome/Sections/Tables/TableTransactions.less";
+  @import "~lessPath/sunil/frames/pendingTxs.less";
 </style>
