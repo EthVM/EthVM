@@ -15,7 +15,7 @@
             <p class=""><router-link :to="'/address/'+tx.getTo().toString()">{{tx.getTo().toString()}}</router-link></p>
           </div>
         </li>
-        <li class="vertical-middle eth">{{getShortEthValue(tx.getValue())}}</li>
+        <li class="vertical-middle eth">{{getShortEthValue(tx.getValue().toEth().toString(), false)}}<div v-if="getShortEthValue(tx.getValue().toEth().toString(), true)"><tooltip :textToolTip ="tx.getValue().toEth()"></tooltip></div></li>
         <li class="vertical-middle gas">{{tx.getGasUsed().toNumber()}}</li>
         <li class="vertical-middle"><p>{{tx.getGasPrice().toGWei()}}</p></li>
         <li class="vertical-middle status">
@@ -55,7 +55,7 @@
             </li>
             <li class="transaction-info arrow_container">
               <div class="arrow_box">
-                <p class="value">{{tx.getValue().toEth()}}</p>
+                <p class="value">{{getShortEthValue(tx.getValue().toEth().toString(), false)}}</p>
                 <p class="value-label">ETH</p>
               </div>
             </li>
@@ -89,23 +89,27 @@ export default Vue.extend({
   props: [
     'transactions',
   ],
+  data() {
+    return{}
+  },
   created() {
-
+  
   },
   methods: {
-    getShortEthValue (ethValue) {
-      let newEthValue = new BN(ethValue);
-      let decimals = newEthValue.dp();
-      let x = newEthValue.precision(6);
-      return x
-      //if(decimals > 5){
-        //let newValue = newEthValue.decimalPlaces(5);
-        //newEthValue = newEthValue.toString()+'...'
-        //return newValue;
-      //}
-      //return newEthValue;
+    getShortEthValue (newEthValue, isBool) {
+      let length = newEthValue.length;
+      let isShort = false;
+      if(length > 6) {
+        newEthValue = newEthValue.slice(0,6) + "...";
+        isShort = true;
+      }
+      if(!isBool)
+        return newEthValue;
+      else
+        return isShort;
 
     }
+   
   }  
 
 })
