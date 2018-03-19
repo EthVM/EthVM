@@ -15,7 +15,14 @@
             <p class=""><router-link :to="'/address/'+tx.getTo().toString()">{{tx.getTo().toString()}}</router-link></p>
           </div>
         </li>
-        <li class="vertical-middle eth">{{getShortEthValue(tx.getValue().toEth().toString(), false)}}<div v-if="getShortEthValue(tx.getValue().toEth().toString(), true)"><tooltip :textToolTip ="tx.getValue().toEth()"></tooltip></div></li>
+
+        <li class="vertical-middle eth">
+          <div class="">{{getShortEthValue(tx.getValue().toEth().toString(), false)}}</div>
+          <div class="tooltip-container" v-if="getShortEthValue(tx.getValue().toEth().toString(), true)">
+            <tooltip :textToolTip ="tx.getValue().toEth()"></tooltip>
+          </div>
+        </li>
+
         <li class="vertical-middle gas">{{tx.getGasUsed().toNumber()}}</li>
         <li class="vertical-middle"><p>{{tx.getGasPrice().toGWei()}}</p></li>
         <li class="vertical-middle status">
