@@ -3,37 +3,49 @@
     <div class="block-detail-container" v-if="block">
       <p v-show="!isUncle" class="block-title">Block Detail Information</p>
       <p v-show="isUncle" class="block-title">Block Detail Information (Uncle)</p>
+      <div class="show-more btn btn-primary" v-on:click="showMore = !showMore" v-if="showMore === false">Show more</div>
+      <div class="show-less btn btn-warning" v-on:click="showMore = !showMore" v-if="showMore === true">Show less</div>
 
-      <div class="details">
+      <div class="details" v-bind:class="{ 'show-more-info': showMore }">
 
         <div>
           <li>Height</li>
           <li>{{block.getNumber().toNumber()}}</li>
         </div>
-        <div v-show="!isUncle">
-          <li>Logs</li>
-          <li>{{block.getLogsBloom().toString()}}</li>
-        </div>
         <div>
           <li>Timestamp</li>
           <li>{{block.getTimestamp().toDate().toString()}} (<timeago :since="block.getTimestamp().toDate()" :auto-update="10"></timeago>)</li>
         </div>
+
         <div v-show="!isUncle">
           <li>Transactions</li>
           <li>{{block.getTransactionCount()}}</li>
         </div>
+
         <div>
           <li>Hash</li>
           <li>{{block.getHash().toString()}}</li>
         </div>
         <div>
-          <li>Parent Hash</li>
-          <li><router-link :to="'/block/'+block.getParentHash().toString()">{{block.getParentHash().toString()}}</router-link></li>
-        </div>
-        <div>
           <li>Miner</li>
           <li>{{block.getMiner().toString()}}</li>
         </div>
+        
+        <div>
+          <li>Block Reward</li>
+          <li>{{block.getBlockReward().toEth()}}&nbsp;ETH</li>
+        </div>
+
+        <div v-show="!isUncle">
+          <li>Logs</li>
+          <li>{{block.getLogsBloom().toString()}}</li>
+        </div>
+
+        <div>
+          <li>Parent Hash</li>
+          <li><router-link :to="'/block/'+block.getParentHash().toString()">{{block.getParentHash().toString()}}</router-link></li>
+        </div>
+
         <div>
           <li>Nonce</li>
           <li>{{block.getNonce().toString()}}</li>
@@ -70,10 +82,7 @@
           <li>TX Fees</li>
           <li>{{block.getTxFees().toEth()}}&nbsp;ETH</li>
         </div>
-        <div>
-          <li>Block Reward</li>
-          <li>{{block.getBlockReward().toEth()}}&nbsp;ETH</li>
-        </div>
+
         <div v-show="!isUncle">
           <li>Uncle Reward</li>
           <li>{{block.getUncleReward().toEth()}}&nbsp;ETH</li>
@@ -136,7 +145,9 @@ export default Vue.extend({
     'uncles'
   ],
   data() {
-    return {}
+    return {
+        showMore: false
+    }
   },
   methods: {},
   mounted: function() {
