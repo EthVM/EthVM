@@ -7,7 +7,7 @@
       <div class="row">
         <div class="col-md-2">
           <h5>About Us</h5>
-          <p>EthVM project is brought to you by kvhnuke, founder of MyEtherWallet and enKrypt. EthVM is a free and open source  interface for exploring and evaluating real time Ethereum blocks, transactions and more.</p>
+          <p>EthVM is a free and open source interface for exploring and evaluating real time Ethereum blocks, transactions and more.</p>
 
         </div>
         <div class="col-md-2">
@@ -63,7 +63,7 @@
           </div>
 
           <div class="input-block donate">
-            <h5>Donate <span>Etherium Wallet</span></h5>
+            <h5>Donate</h5>
             <p><span>ETH:</span> <span>mewtopia.eth</span> <a href="https://etherscan.io/address/0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D">0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D</a></p>
             <p><span>BTC:</span> <a href="https://blockchain.info/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9">1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9</a></p>
           </div>
