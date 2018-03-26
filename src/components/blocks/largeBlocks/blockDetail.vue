@@ -3,8 +3,8 @@
     <div class="block-detail-container" v-if="block">
       <p v-show="!isUncle" class="block-title">Block Detail Information</p>
       <p v-show="isUncle" class="block-title">Block Detail Information (Uncle)</p>
-      <div class="show-more btn btn-primary" v-on:click="showMore = !showMore" v-if="showMore === false">Show more</div>
-      <div class="show-less btn btn-warning" v-on:click="showMore = !showMore" v-if="showMore === true">Show less</div>
+      <div class="show-more btn btn-primary" v-on:click="showMore = !showMore" v-if="showMore === false">More</div>
+      <div class="show-less btn btn-warning" v-on:click="showMore = !showMore" v-if="showMore === true">Less</div>
 
       <div class="details" v-bind:class="{ 'show-more-info': showMore }">
 
