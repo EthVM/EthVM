@@ -99,8 +99,10 @@ import Vue from 'vue'
   import vueChart from "@/components/blocks/smallBlocks/charts/vuechart"
   Vue.component('vue-chart', vueChart)
 
+/*
   import lineChartPendingTx from "@/components/blocks/smallBlocks/charts/linechartpendingtx"
   Vue.component('line-chart-pending-tx', lineChartPendingTx)
+*/
 
   import barChartLastTenBlocksTx from "@/components/blocks/smallBlocks/charts/barchartlast10blockstx"
   Vue.component('bar-chart-last-ten-blocks-tx', barChartLastTenBlocksTx)
@@ -129,7 +131,11 @@ import Vue from 'vue'
 
 
    /* Generic components ---------*/
+  
+  /*
   import usageBar from "@/components/NewHome/Sections/Generic/UsageBar"
   Vue.component('usage-bar', usageBar)
   import ethAddress from "@/components/NewHome/Sections/Generic/EthAddress"
   Vue.component('eth-address', ethAddress)
+
+  */
