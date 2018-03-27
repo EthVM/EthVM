@@ -74,5 +74,5 @@
 </script>
 
 <style scoped lang="less">
-  @import "~lessPath/sunil/frames/blocks.less";
+  @import "~lessPath/sunil/frames/transactions.less";
 </style>

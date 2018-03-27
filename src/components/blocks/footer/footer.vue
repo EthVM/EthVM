@@ -23,11 +23,6 @@
           <h5>Find Us</h5>
           <p><a href="mailto:support@ethvm.com">support@ethvm.com</a></p>
 
-          <div class="social-buttons">
-            <a href="https://www.facebook.com/enKryptIO/" target="_blank"><i class="fa fa-facebook-f"></i></a>
-            <a href="https://twitter.com/enkryptio" target="_blank"><i class="fa fa-twitter"></i></a>
-            <a href="https://github.com/enKryptIO" target="_blank"><i class="fa fa-github"></i></a>
-          </div>
         </div>
         <div class="col-md-6">
           <div class="input-block hidden">
@@ -69,7 +64,22 @@
           </div>
         </div>
       </div>
-      <p class="copy-right">©Copyright 2018 All rights reserved by <a href="/about" class="text-white">Ethereum Virtual Machine</a>.</p>
+
+
+
+      <div class="copy-right-container">
+        <div class="copy-right">
+          <p>©Copyright 2018 All rights reserved by <a href="/about" class="text-white">Ethereum Virtual Machine</a>.</p>
+        </div>
+
+        <div class="social-buttons">
+          <a href="https://www.facebook.com/enKryptIO/" target="_blank"><i class="fa fa-facebook-f"></i></a>
+          <a href="https://twitter.com/enkryptio" target="_blank"><i class="fa fa-twitter"></i></a>
+          <a href="https://github.com/enKryptIO" target="_blank"><i class="fa fa-github"></i></a>
+        </div>
+
+      </div>
+
     </div>
   </div>
 </template>

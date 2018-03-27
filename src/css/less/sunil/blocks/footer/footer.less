@@ -83,6 +83,10 @@
 
   .donate{
     p{
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
       span{
         //color: white;
       }
@@ -90,25 +94,28 @@
   }
 
 
-  .social-buttons{
-    padding-top: 10px;
-    i{
-      margin-right: 17px;
-      color: white;
-      font-size: 24px;
-    }
-
-  }
 
 }
 
 
 
-.copy-right{
+.copy-right-container{
   border-top: 1px solid #394959;
   margin: 50px 0 0 0;
   padding: 30px 0 0 0;
-  text-align: center;
+  //text-align: center;
+  display: flex;
+
+
+  .social-buttons{
+    margin-left: auto;
+    //padding-top: 10px;
+    i{
+      margin-right: 17px;
+      color: #ababab;
+      font-size: 24px;
+    }
+  }
 }
 
 
@@ -129,11 +136,34 @@
     margin-bottom: 40px !important;
   }
 
-  .copy-right{
-    
-    padding-left: 30px;
-    padding-right: 30px;
+
+
+
+  .copy-right-container{
+    border-top: 1px solid #394959;
+    margin: 50px 0 0 0;
+    padding: 30px 0 0 0;
+    text-align: center;
+    display: block;
+
+    .copy-right{
+      font-size: 10px;
+    }
+
+
+    .social-buttons{
+
+      padding-top: 10px;
+      i{
+        margin-right: 10px;
+        margin-left: 10px;
+        color: #ababab;
+        font-size: 24px;
+      }
+    }
   }
+
+
 
 }
 
