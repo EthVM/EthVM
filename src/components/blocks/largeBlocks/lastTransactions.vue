@@ -1,5 +1,5 @@
 <template>
-  <div class="pending-transactions">   
+  <div class="last-transactions">
     <div class="block-body">
       <div class="block" v-for="tx in transactions" v-bind:key="tx.getHash().toString()">
         <li>
