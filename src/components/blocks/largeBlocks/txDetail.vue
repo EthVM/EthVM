@@ -95,5 +95,5 @@ export default Vue.extend({
 })
 </script>
 <style scoped="" lang="less">
-@import "~lessPath/sunil/blocks/largeBlocks/blockDetail.less";
+@import "~lessPath/sunil/blocks/largeBlocks/txDetail.less";
 </style>
