@@ -10,8 +10,10 @@
             <p class="title">From</p>
             <p class=""><router-link :to="'/address/'+tx.getFrom().toString()">{{tx.getFrom().toString()}}</router-link></p>
                     
-            <p class="title">To</p>
-            <p class=""><router-link :to="'/address/'+tx.getTo().toString()">{{tx.getTo().toString()}}</router-link></p>
+            <p class="title" v-if="tx.getContractAddress().toString()">Contract</p>
+            <p class="title" v-else>To</p>
+            <p class="" v-if="tx.getContractAddress().toString()"><router-link :to="'/address/'+tx.getContractAddress().toString()">{{tx.getContractAddress().toString()}}</router-link></p>
+            <p class ="" v-else><router-link :to="'/address/'+tx.getTo().toString()">{{tx.getTo().toString()}}</router-link></p>
           </div>
         </li>
         <li class="vertical-middle eth">

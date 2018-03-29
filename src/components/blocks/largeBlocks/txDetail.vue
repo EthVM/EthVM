@@ -22,7 +22,7 @@
                 
                     <div v-if="tx.getContractAddress().toString()">
                         <li>Contract</li>
-                        <li class= "link"><router-link :to="'/address/'+tx.getTo().toString()">{{tx.getContractAddress().toString()}}</router-link></li>
+                        <li class= "link"><router-link :to="'/address/'+tx.getContractAddress().toString()">{{tx.getContractAddress().toString()}}</router-link></li>
                     </div>
                     <div v-else>
                         <li>To</li>
