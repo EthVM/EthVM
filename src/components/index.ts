@@ -1,6 +1,7 @@
 import Vue from 'vue'
 
-  /* Frames ---------------------- */
+/* FRAMES---------------------- */
+  /* Main ----*/
   import frameHome from "@/components/frames/home"
   Vue.component('frame-home', frameHome)
 
@@ -10,31 +11,38 @@ import Vue from 'vue'
   import frameTxs from "@/components/frames/transactions"
   Vue.component('frame-txs', frameTxs)
 
+  import framePending from "@/components/frames/pendingTxs"
+  Vue.component('frame-pending', framePending)
+
   import frameAbout from "@/components/frames/about"
   Vue.component('frame-about', frameAbout)
+
+  /*Detail Frames ----- */
 
   import frameBlockDetail from "@/components/frames/blockDetail"
   Vue.component('frame-block-detail', frameBlockDetail)
 
+  import frameTxDetail from "@/components/frames/txDetail"
+  Vue.component('frame-tx-detail', frameTxDetail)
+
   import frameAccount from "@/components/frames/account"
   Vue.component('frame-account', frameAccount)
 
-  import framePending from "@/components/frames/pendingTxs"
-  Vue.component('frame-pending', framePending)
+ 
 
-  /* Header ---------------------- */
+/* Header ---------------------- */
   import blockHeader from "@/components/blocks/header/header"
   Vue.component('block-header', blockHeader)
 
 
 
-  /* Modal ---------------------- */
+/* Modal ---------------------- */
   import blockModal from "@/components/blocks/modal/modal"
   Vue.component('block-modal', blockModal)
 
 
 
-  /* SMALL BLOCKS ---------------------- */
+/* SMALL BLOCKS ---------------------- */
 
   /* Parent Small Block Component: */
   import blockComponent from "@/components/blocks/smallBlocks/component"
@@ -72,7 +80,7 @@ import Vue from 'vue'
 
 
 
-  /* LARGE BLOCKS ---------------------- */
+/* LARGE BLOCKS ---------------------- */
   import blockLatestBlocks from "@/components/blocks/largeBlocks/latestBlocks"
   Vue.component('block-latest-blocks', blockLatestBlocks)
 
@@ -87,6 +95,10 @@ import Vue from 'vue'
 
   import blockBlockDetail from "@/components/blocks/largeBlocks/blockDetail"
   Vue.component('block-block-detail', blockBlockDetail)
+
+  import blockTxDetail from "@/components/blocks/largeBlocks/txDetail"
+  Vue.component('block-tx-detail', blockTxDetail)
+
 
   import blockTokenTracker from "@/components/blocks/largeBlocks/tokenTracker"
   Vue.component('block-token-tracker', blockTokenTracker)
@@ -120,12 +132,12 @@ import Vue from 'vue'
   Vue.component('top-miners-chart', topMinersChart)
 
 
-  /*Tooltip ---------------------- */
+/*Tooltip ---------------------- */
   import tooltip from "@/components/tooltip/tooltip"
   Vue.component('tooltip', tooltip)
 
 
-  /* Footer ---------------------- */
+/* Footer ---------------------- */
   import blockFooter from "@/components/blocks/footer/footer"
   Vue.component('block-footer', blockFooter)
 

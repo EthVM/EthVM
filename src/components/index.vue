@@ -6,32 +6,26 @@
     
 
     <!-- BODY -->
-    <frame-about v-if="pageName == 'about'"></frame-about>
-    <framefaq v-else-if="pageName == 'faq'"></framefaq>
-    <frame-contact v-else-if="pageName == 'contact'"></frame-contact>
+
+    <!-- Main Pages -->
+    <frame-blocks v-if="pageName == 'blocks'"></frame-blocks>
     <frame-txs v-else-if="pageName == 'transactions' || pageName == 'pendingTransactions'" :type="pageName"></frame-txs>
-    
     <frame-pending v-else-if="pageName == 'pending'" :type="pageName"></frame-pending>
-
-
-    <frame-blocks v-else-if="pageName == 'blocks'"></frame-blocks>
     <frame-charts v-else-if="pageName == 'charts'"></frame-charts>
-
-    <frame-transaction v-else-if="pageName == 'tx' && param" :txHash="param"></frame-transaction>
+    <frame-about v-else-if="pageName == 'about'"></frame-about>
     
-    
+    <!--Detail Pages -->
     <frame-block-detail v-else-if="pageName == 'block' && param" :blockHash="param"></frame-block-detail>
-    
-
-
     <frame-account v-else-if="pageName == 'address' && param" :address="param"></frame-account>
+    <frame-tx-detail v-else-if="pageName == 'tx' && param" :txHash="param"></frame-tx-detail>
+    
+    <!-- Hope Page -->
     <frame-home v-else></frame-home>
     
 
     <!-- FOOTER -->
     <block-footer></block-footer>
     
-
   </div>
 </template>
 
