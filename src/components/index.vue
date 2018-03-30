@@ -1,6 +1,7 @@
 <template>
   <div id="base-container">
     
+    
     <!-- HEADER -->
     <block-header :pagename="pageName"></block-header>
     

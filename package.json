@@ -28,6 +28,7 @@
         "rimraf": "^2.6.2",
         "save-dev": "^2.0.0",
         "shelljs": "^0.8.0",
+        "v-tooltip": "^2.0.0-rc.31",
         "visibilityjs": "^1.2.6",
         "vue": "^2.5.2",
         "vue-infinite-scroll": "^2.0.2",

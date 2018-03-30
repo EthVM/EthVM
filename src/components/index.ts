@@ -133,8 +133,8 @@ import Vue from 'vue'
 
 
 /*Tooltip ---------------------- */
-  import tooltip from "@/components/tooltip/tooltip"
-  Vue.component('tooltip', tooltip)
+  //import tooltip from "@/components/tooltip/tooltip"
+  //Vue.component('tooltip', tooltip)
 
 
 /* Footer ---------------------- */

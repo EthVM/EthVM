@@ -18,9 +18,9 @@
         </li>
         <li class="vertical-middle eth">
           <div class="">{{getShortEthValue(tx.getValue().toEth().toString(), false)}}</div>
-          <div class="tooltip-container" v-if="getShortEthValue(tx.getValue().toEth().toString(), true)">
-            <tooltip :textToolTip ="tx.getValue().toEth()"></tooltip>
-          </div>
+
+          <div v-if="getShortEthValue(tx.getValue().toEth().toString(), true)" class="tooltip-button" v-tooltip="tx.getValue().toEth()"></div>
+
         </li>
         <li class="vertical-middle gas"><div><p>{{tx.getGasUsed().toNumber()}}</p></div></li>
         <li class="vertical-middle"><div><p>{{tx.getGasPrice().toGWei()}}</p></div></li>

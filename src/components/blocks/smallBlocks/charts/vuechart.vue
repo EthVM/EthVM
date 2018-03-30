@@ -1,7 +1,7 @@
 <template>
   <div class="chart-container">
     <div class="chart-title-1">
-      <p>{{chartTitle}}<tooltip :textToolTip ="chartDescription"></tooltip></p>
+      <p>{{chartTitle}}<div class="tooltip-button" v-tooltip="chartDescription"></div></p>
     </div>
 
     <div class="chart">
@@ -110,7 +110,7 @@ export default Vue.extend({
 
 
 <style scoped lang="less">
-  @import "~lessPath/NewHome/Sections/Graphs/Chart.less";
+  @import "~lessPath/sunil/blocks/smallBlocks/chart.less";
 </style>
 
 

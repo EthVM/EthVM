@@ -1,5 +1,8 @@
 <template>
     <div id="latest-blocks">
+
+        
+        
         <div class="block-body">
             <div class="block" v-for="block in getBlocks" v-if="!block.getIsUncle()">
                 <div class="block-data">
@@ -31,9 +34,7 @@
                     <li>
                         <div class="reward">
                             <div class="">{{getShortRewardValue(block.getTotalBlockReward().toEth().toString(), false)}}</div>
-                            <div class="tooltip-container" v-if="getShortRewardValue(block.getTotalBlockReward().toEth().toString(), true)">
-                                <tooltip :textToolTip="block.getTotalBlockReward().toEth()"></tooltip>
-                            </div>
+                            <div class="tooltip-button" v-tooltip="block.getTotalBlockReward().toEth()" v-if="getShortRewardValue(block.getTotalBlockReward().toEth().toString(), true)"></div>
                         </div>
                       </li>
                 </div>

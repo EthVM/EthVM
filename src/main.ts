@@ -12,8 +12,11 @@ import VueSocketio from 'vue-socket.io'
 import VueTimeago from 'vue-timeago'
 import infiniteScroll from 'vue-infinite-scroll'
 
+import VTooltip from 'v-tooltip'
+
 import '@/components'
 
+Vue.use(VTooltip)
 Vue.prototype.$eventHub = new Vue();
 Vue.config.productionTip = false
 Vue.use(Toasted, {
