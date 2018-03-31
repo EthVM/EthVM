@@ -96,10 +96,8 @@ export default Vue.extend({
       }
     }) 
     _this.$socket.emit('getAccount', _this.address, (err, result) => {
-      console.log(result, _this.address, err)
       if (!err && result) {
         let acc = new Account(new Buffer(result))
-         console.log("balance "+acc.balance)
         _this.account.balance = common.EthValue(acc.balance)
     
       }

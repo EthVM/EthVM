@@ -53,10 +53,7 @@ export default Vue.extend({
   },
   created (){},
   computed:{},
-  methods: {
-    getBalance(balance){;
-    }
-  }
+  methods: {}
 })
 </script>
 
