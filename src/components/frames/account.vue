@@ -1,24 +1,42 @@
 <template>
-  
-  <div class="frames-overview container">
-    <div class="row table-block">
-      <div class="col-md-6 block-container">
-        <div class="block">
-          <overview :account="account"></overview>
+  <div id="tx-detail">
+    <div class="container">
+      
+      <!-- Title and Search Bar -->
+      <div class="page-title-container">
+        <div class="page-title">
+          <h3>Address Details</h3>
         </div>
-        <div class="block">
-          <block-token-tracker :account="account"></block-token-tracker>
+
+        <div class="search-block">
+          <block-search></block-search>
         </div>
       </div>
+
+      <!-- Address Deatails -->
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="block-title-container">
+            <h3 class="hidden">Address Information</h3>
+          </div>
+          <div class="block">
+            <account-detail :account="account" ></account-detail>
+          </div>
+        </div>
+      </div>
+      <!-- Account Transactions -->
       <div class="col-md-6 block-container">
         <div class="block">
+          <!--
           <div v-infinite-scroll="loadMore"
                infinite-scroll-disabled="busy"
                infinite-scroll-distance="100">
             <table-transactions-new :transactions="txs"></table-transactions-new>
           </div>
+           -->
         </div>
       </div>
+
     </div>
   </div>
 
@@ -76,11 +94,14 @@ export default Vue.extend({
           return new Tx(_tx)
         })
       }
-    }) *
+    }) 
     _this.$socket.emit('getAccount', _this.address, (err, result) => {
+      console.log(result, _this.address, err)
       if (!err && result) {
         let acc = new Account(new Buffer(result))
+         console.log("balance "+acc.balance)
         _this.account.balance = common.EthValue(acc.balance)
+    
       }
     })
     let tokens = lists.tokens.ETH
@@ -137,3 +158,4 @@ export default Vue.extend({
 <style scoped="" lang="less">
 @import "~lessPath/NewHome/Frames/FramesOverview.less";
 </style>
+

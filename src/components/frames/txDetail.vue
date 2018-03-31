@@ -57,10 +57,8 @@ export default Vue.extend({
       store: store,
       transaction: null,
       common: common,
-      uncles: [],
       unixtimestamp: null,
       timestamp: null,
-      transactions: []
     }
   },
   methods: {},
@@ -73,17 +71,6 @@ export default Vue.extend({
         _this.transaction = new Tx(data)
 
         /* Method to get Subtransactions: */
-        /*let uncleHashes = _this.block.getUncleHashes()
-        _this.$socket.emit('getBlockTransactions', _this.block.getHash().toBuffer(), (err, data) => {
-          _this.transactions = data.map((_tx) => {
-            return new Tx(_tx)
-          })
-        })
-        uncleHashes.forEach((_hash: any, idx: number) => {
-          _this.$socket.emit('getBlock', _hash.toBuffer(), (err, data) => {
-            _this.uncles.push(new Block(data))
-          })
-        }) */
       }
     })
 
