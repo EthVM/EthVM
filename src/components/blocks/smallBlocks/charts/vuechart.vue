@@ -1,7 +1,7 @@
 <template>
   <div class="chart-container">
     <div class="chart-title-1">
-      <p>{{chartTitle}}<div class="tooltip-button" v-tooltip="chartDescription"></div></p>
+      <p>{{chartTitle}}<div class="tooltip-button" v-tooltip="chartDescription"><i class="fa fa-question-circle-o" aria-hidden="true"></i></div></p>
     </div>
 
     <div class="chart">

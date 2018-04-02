@@ -26,7 +26,7 @@
         <li class="vertical-middle eth">
           <div class="">{{getShortEthValue(tx.getValue().toEth().toString(), false)}}</div>
 
-          <div v-if="getShortEthValue(tx.getValue().toEth().toString(), true)" class="tooltip-button" v-tooltip="tx.getValue().toEth()"></div>
+          <div v-if="getShortEthValue(tx.getValue().toEth().toString(), true)" class="tooltip-button" v-tooltip="tx.getValue().toEth()"><i class="fa fa-question-circle-o" aria-hidden="true"></i></div>
 
         </li>
         <li class="vertical-middle gas"><div><p>{{tx.getGasUsed().toNumber()}}</p></div></li>

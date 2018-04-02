@@ -34,7 +34,7 @@
                     <li>
                         <div class="reward">
                             <div class="">{{getShortRewardValue(block.getTotalBlockReward().toEth().toString(), false)}}</div>
-                            <div class="tooltip-button" v-tooltip="block.getTotalBlockReward().toEth()" v-if="getShortRewardValue(block.getTotalBlockReward().toEth().toString(), true)"></div>
+                            <div class="tooltip-button" v-tooltip="block.getTotalBlockReward().toEth()" v-if="getShortRewardValue(block.getTotalBlockReward().toEth().toString(), true)"><i class="fa fa-question-circle-o" aria-hidden="true"></i></div>
                         </div>
                       </li>
                 </div>
