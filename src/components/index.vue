@@ -17,7 +17,7 @@
     
     <!--Detail Pages -->
     <frame-block-detail v-else-if="pageName == 'block' && param" :blockHash="param"></frame-block-detail>
-    <frame-account v-else-if="pageName == 'address' && param" :address="param"></frame-account>
+    <frame-address v-else-if="pageName == 'address' && param" :address="param"></frame-address>
     <frame-tx-detail v-else-if="pageName == 'tx' && param" :txHash="param"></frame-tx-detail>
     
     <!-- Hope Page -->
@@ -77,7 +77,7 @@
           }
       },
       mounted: function() {
-        //console.log(this.pageName)
+        
       }
   })
 </script>

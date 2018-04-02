@@ -55,7 +55,7 @@
     },
     props: ['pagename'],
     mounted: function() {
-      console.log(this.pagename)
+      
     },
     methods: {
       mobileShowMenuClick: function(){

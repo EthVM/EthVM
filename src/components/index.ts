@@ -28,6 +28,10 @@ import Vue from 'vue'
   import frameAccount from "@/components/frames/account"
   Vue.component('frame-account', frameAccount)
 
+  import frameAddress from "@/components/frames/address"
+  Vue.component('frame-address', frameAddress)
+
+
  
 
 /* Header ---------------------- */

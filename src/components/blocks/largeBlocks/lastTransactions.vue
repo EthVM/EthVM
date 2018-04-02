@@ -1,6 +1,13 @@
 <template>
   <div class="last-transactions">
     <div class="block-body">
+      <div class="block-header" v-if="showheader === true">
+        <li>TXn#</li>
+        <li class="eth">ETH</li>
+        <li class="gas">GAS</li>
+        <li>WEI</li>
+        <li></li>
+      </div>
       <div class="block" v-for="tx in transactions" v-bind:key="tx.getHash().toString()">
         <li>
           <div class="hash-block">
@@ -43,7 +50,8 @@
   export default Vue.extend({
     name: 'TableTransactions',
     props: [
-      'transactions'
+      'transactions',
+      'showheader'
     ],
     created() {
       

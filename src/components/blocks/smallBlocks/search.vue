@@ -26,7 +26,7 @@
       }
     },
     mounted(){
-        console.log(this.searchFocus)
+        
     }
 
   })
