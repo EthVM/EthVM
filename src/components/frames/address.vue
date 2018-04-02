@@ -81,14 +81,34 @@
               </ul>
             </div>
           </div>
-          <div v-if="nav3 === true" class="">            
+          <div v-if="nav3 === true" class="">
+            <button class="top-right-button-common">More</button>
             <div class="sub-tab net-history-container">
-
+              <ul>
+                <li>Name:</li>
+                <li>TWN</li>
+                <li>Balance:</li>
+                <li>20,930 TWN</li>
+                <li>Value:</li>
+                <li>$0.00</li>
+                <li>ERC 20 Contract:</li>
+                <li>0x045619099665fc6f661b1745e5350290ceb933f</li>
+              </ul>
             </div>
           </div>
-          <div v-if="nav4 === true" class="">            
+          <div v-if="nav4 === true" class="">
+            <button class="top-right-button-common">More</button>
             <div class="sub-tab mining-history-container">
-              
+              <ul>
+                <li>Name:</li>
+                <li>TWN</li>
+                <li>Balance:</li>
+                <li>20,930 TWN</li>
+                <li>Value:</li>
+                <li>$0.00</li>
+                <li>ERC 20 Contract:</li>
+                <li>0x045619099665fc6f661b1745e5350290ceb933f</li>
+              </ul>
             </div>
           </div>
         </div>
