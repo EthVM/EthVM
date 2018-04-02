@@ -65,6 +65,15 @@
           <div v-if="nav1 === true" class="">            
             <block-last-transactions :transactions="txs" :showheader="true"></block-last-transactions>
           </div>
+          <div v-if="nav2 === true" class="">            
+            <block-last-transactions :transactions="txs" :showheader="true"></block-last-transactions>
+          </div>
+          <div v-if="nav3 === true" class="">            
+            <block-last-transactions :transactions="txs" :showheader="true"></block-last-transactions>
+          </div>
+          <div v-if="nav4 === true" class="">            
+            <block-last-transactions :transactions="txs" :showheader="true"></block-last-transactions>
+          </div>
         </div>
       </div>
 
