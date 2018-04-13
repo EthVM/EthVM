@@ -55,7 +55,7 @@ rethinkdb
 ```
 Start geth
 ```
-go-ethereum/build/bin/geth --ethvm --rpc
+go-ethereum/build/bin/geth --ethvm --rpc --gcmode archive
 ```
 Set following environmental variables
 ```

@@ -136,7 +136,11 @@ export default Vue.extend({
       nav4 : false
     }
   },
-  
+  created(){
+    this.$socket.emit('getAccount', "0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D", (err, result) => {
+      console.log(err, result)
+    })
+  },
   methods: {
     alloff(){
       this.nav1 = false
