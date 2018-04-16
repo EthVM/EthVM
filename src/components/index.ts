@@ -101,6 +101,9 @@ import Vue from 'vue'
   import blockBlockDetail from "@/components/blocks/largeBlocks/blockDetail"
   Vue.component('block-block-detail', blockBlockDetail)
 
+  import addressDetail from "@/components/blocks/largeBlocks/addressDetail"
+  Vue.component('address-detail', addressDetail)
+
   import blockTxDetail from "@/components/blocks/largeBlocks/txDetail"
   Vue.component('block-tx-detail', blockTxDetail)
 
