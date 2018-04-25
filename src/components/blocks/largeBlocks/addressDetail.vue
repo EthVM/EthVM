@@ -13,7 +13,7 @@
               <li>{{account.address}}</li>
               
               <li>Ether Balance</li>
-              <li>{{account.balance.toEth()}}</li>
+              <li>{{account.balance}}</li>
               
               <li>USD Value</li>
               <li>$677.02 (@ $386.04/ETH)</li>
@@ -37,6 +37,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+
  export default Vue.extend({
   name: 'Address',
   props: [

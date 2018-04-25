@@ -27,6 +27,8 @@
           <li v-on:click="nav2on" v-bind:class="{ active: nav2 }">Transaction History</li>
           <li v-on:click="nav3on" v-bind:class="{ active: nav3 }">Network History</li>
           <li v-on:click="nav4on" v-bind:class="{ active: nav4 }">Mining History</li>
+          <li v-on:click="nav5on" v-bind:class="{ active: nav5 }">Tokens</li>
+
         </ul>      
 
         <div class="tab-content">
@@ -78,6 +80,15 @@
               </ul>
             </div>
           </div>
+          <div v-if="nav5 === true" class="" :tokens="tokens">
+            <button class="top-right-button-common">More</button>
+            <div class="sub-tab mining-history-container">
+              <ul>
+                <li>Token:</li>
+                
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -93,6 +104,8 @@
 import Vue from 'vue';
 import bn from 'bignumber.js';
 import { common } from '@/libs';
+import ethUnits from 'ethereumjs-units'
+
 
 let Account = require('ethereumjs-account')
 
@@ -100,7 +113,9 @@ const MAX_ITEMS = 20
 export default Vue.extend({
   name: 'FrameAccount',
   props: [
-    'address'
+    'address',
+        'tokens'
+
   ],
   
   data() {
@@ -113,18 +128,26 @@ export default Vue.extend({
       nav1 : true,
       nav2 : false,
       nav3 : false,
-      nav4 : false
+      nav4 : false,     
+      nav5 : false
+
     }
   },
   created(){
     var _this = this;
-    console.log(this.address)
-    this.$socket.emit('getAccount', this.address, (err, result) => {
+     this.$socket.emit('getBalance', this.address, (err, result) => {
       console.log(err, result)
       if (!err && result) {
-        let acc = new Account(new Buffer(result))
-         _this.account.balance = common.EthValue(acc.balance)
-      }
+         _this.account.balance =   ethUnits.convert(new bn(parseInt(result.result,16) ).toFixed(), 'wei', 'eth')
+
+         
+         
+       }
+    })
+
+    this.$socket.emit('getTokenBalance', this.address, (err, result) => {
+      console.log(err, result)
+      
     })
   },
   methods: {
@@ -133,6 +156,7 @@ export default Vue.extend({
       this.nav2 = false
       this.nav3 = false
       this.nav4 = false
+      this.nav5 = false
     },
 
     nav1on(){
@@ -153,6 +177,11 @@ export default Vue.extend({
     nav4on(){
       this.alloff()
       this.nav4 = true
+    },
+
+    nav5on(){
+      this.alloff()
+      this.nav5 = true
     }
   },
   computed:{
