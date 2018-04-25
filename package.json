@@ -18,6 +18,7 @@
         "axios": "^0.17.1",
         "chalk": "^2.3.0",
         "copy-webpack-plugin": "^4.3.1",
+        "ethereumjs-abi": "^0.6.5",
         "ethereumjs-units": "^0.2.0",
         "lodash.debounce": "^4.0.8",
         "node-notifier": "^5.1.2",
@@ -35,6 +36,7 @@
         "vue-router": "^3.0.1",
         "vue-socket.io": "^2.1.1-a",
         "vuex": "^3.0.1",
+        "web3": "^1.0.0-beta.34",
         "webpack-merge": "^4.1.1"
     },
     "devDependencies": {

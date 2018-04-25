@@ -80,11 +80,15 @@
               </ul>
             </div>
           </div>
-          <div v-if="nav5 === true" class="" :tokens="tokens">
+          <div v-if="nav5 === true" class="" :account="account">
             <button class="top-right-button-common">More</button>
             <div class="sub-tab mining-history-container">
               <ul>
-                <li>Token:</li>
+                <li>Token :</li>
+                
+                <li v-for="token in account.tokens">
+                    {{ token }}
+                 </li>
                 
               </ul>
             </div>
@@ -105,6 +109,9 @@ import Vue from 'vue';
 import bn from 'bignumber.js';
 import { common } from '@/libs';
 import ethUnits from 'ethereumjs-units'
+ var utils =  require("../../libs/utils.js")
+
+
 
 
 let Account = require('ethereumjs-account')
@@ -114,17 +121,17 @@ export default Vue.extend({
   name: 'FrameAccount',
   props: [
     'address',
-        'tokens'
-
+    'tokens'
   ],
-  
   data() {
     return {
       account: {
         address: this.address,
         balance: common.EthValue(new Buffer(0)),
-        tokens: []
+        tokens: this.tokens
+
       },
+
       nav1 : true,
       nav2 : false,
       nav3 : false,
@@ -139,15 +146,12 @@ export default Vue.extend({
       console.log(err, result)
       if (!err && result) {
          _this.account.balance =   ethUnits.convert(new bn(parseInt(result.result,16) ).toFixed(), 'wei', 'eth')
-
-         
-         
        }
     })
 
     this.$socket.emit('getTokenBalance', this.address, (err, result) => {
       console.log(err, result)
-      
+       _this.account.tokens = utils.decode(result.result)
     })
   },
   methods: {
