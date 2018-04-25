@@ -83,14 +83,17 @@
           <div v-if="nav5 === true" class="" :account="account">
             <button class="top-right-button-common">More</button>
             <div class="sub-tab mining-history-container">
-              <ul>
-                <li>Token :</li>
+              
+                <ul v-for="token in account.tokens">
+                   <li>{{token.name}} : {{token.symbol}}</li>
+                  <li>Balance: {{token.balance}}</li>
+                  <!-- <li>{{token.email}}</li> -->
+
+
+
+                  </ul>
                 
-                <li v-for="token in account.tokens">
-                    {{ token }}
-                 </li>
-                
-              </ul>
+              
             </div>
           </div>
         </div>
