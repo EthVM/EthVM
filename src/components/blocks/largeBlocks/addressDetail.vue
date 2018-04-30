@@ -22,7 +22,7 @@
               <li>23,534 Blocks and 239 Uncles</li>
               
               <li>Number of TXs</li>
-              <li>231,743,553</li>
+              <li>{{account.totalTxs}}</li>
               
               <li>Contract Creator</li>
               <li>0x272f022a374fC7E9213B35952e167ea217303E18</li>

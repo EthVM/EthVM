@@ -124,6 +124,7 @@ export default Vue.extend({
   name: 'FrameAccount',
   props: [
     'address',
+    'totalTxs',
     'tokens'
   ],
   data() {
@@ -131,6 +132,7 @@ export default Vue.extend({
       account: {
         address: this.address,
         balance: common.EthValue(new Buffer(0)),
+        totalTxs: this.totalTxs,
         tokens: this.tokens
 
       },
@@ -148,7 +150,8 @@ export default Vue.extend({
      this.$socket.emit('getBalance', this.address, (err, result) => {
       console.log(err, result)
       if (!err && result) {
-         _this.account.balance =   ethUnits.convert(new bn(parseInt(result.result,16) ).toFixed(), 'wei', 'eth')
+         console.log("parseInt(result.result,16)",parseInt(result.result,16))
+         _this.account.balance =   ethUnits.convert(parseInt(result.result,16) , 'wei', 'eth')
        }
     })
 
@@ -156,6 +159,13 @@ export default Vue.extend({
       console.log(err, result)
        _this.account.tokens = utils.decode(result.result)
     })
+
+    this.$socket.emit('getTotalTxs', this.address, (err, result) => {
+      console.log(err, result)
+      _this.account.totalTxs = result;
+       
+    })
+
   },
   methods: {
     alloff(){
