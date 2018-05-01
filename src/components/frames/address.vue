@@ -27,27 +27,22 @@
           <li v-on:click="nav2on" v-bind:class="{ active: nav2 }">Tokens</li>
           <li v-on:click="nav3on" v-bind:class="{ active: nav3 }">Network History</li>
           <li v-on:click="nav4on" v-bind:class="{ active: nav4 }">Mining History</li>
-          <li v-on:click="nav5on" v-bind:class="{ active: nav5 }">Tokens</li>
-
+ 
         </ul>      
 
         <div class="tab-content">
           <div v-if="nav1 === true" class="">            
             <block-last-transactions2 :transactions="account.txs" :showheader="true"></block-last-transactions2>
           </div>
-          <div v-if="nav2 === true" class="">
+            <div v-if="nav2 === true" class="" :account="account">
             <button class="top-right-button-common">More</button>
             <div class="sub-tab tx-history-container">
-              <ul>
-                <li>Name:</li>
-                <li>TWN</li>
-                <li>Balance:</li>
-                <li>20,930 TWN</li>
-                <li>Value:</li>
-                <li>$0.00</li>
-                <li>ERC 20 Contract:</li>
-                <li>0x045619099665fc6f661b1745e5350290ceb933f</li>
-              </ul>
+              
+                <ul v-for="token in account.tokens">
+                   <li>{{token.name}} : {{token.symbol}}</li>
+                  <li>Balance: {{token.balance}}</li>
+                  <!-- <li>{{token.email}}</li> -->
+                  </ul> 
             </div>
           </div>
           <div v-if="nav3 === true" class="">
@@ -80,22 +75,7 @@
               </ul>
             </div>
           </div>
-          <div v-if="nav5 === true" class="" :account="account">
-            <button class="top-right-button-common">More</button>
-            <div class="sub-tab mining-history-container">
-              
-                <ul v-for="token in account.tokens">
-                   <li>{{token.name}} : {{token.symbol}}</li>
-                  <li>Balance: {{token.balance}}</li>
-                  <!-- <li>{{token.email}}</li> -->
-
-
-
-                  </ul>
-                
-              
-            </div>
-          </div>
+        
         </div>
       </div>
 
