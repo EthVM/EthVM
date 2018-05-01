@@ -3,7 +3,7 @@
 
     <div class="global-block-title">
       <div class="block-title">All Transactions</div>
-      <div class="block-info">Total of 123,125 transactions</div>
+      <div class="block-info">Total of {{transactions.length}} transactions</div>
     </div>
 
     <div class="block-body">
@@ -26,7 +26,7 @@
         <div class="hash-block"><router-link :to="'/address/'+tx.getFrom().toString()">{{tx.getFrom().toString()}}</router-link></div>
         <div class="hash-block"><div class="in-out">IN</div></div>
         <div class="hash-block"><router-link :to="'/address/'+tx.getTo().toString()">{{tx.getTo().toString()}}</router-link></div>
-        <div class="hash-block">100</div>
+        <div class="hash-block">{{tx.getValue().toEth()}}</div>
         <div class="hash-block">{{tx.getGasUsed().toNumber()}}</div>
         <div class="hash-block">{{tx.getGasPrice().toGWei()}}</div>
         <div class="hash-block status">
