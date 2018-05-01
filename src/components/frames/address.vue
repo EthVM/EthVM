@@ -33,7 +33,7 @@
 
         <div class="tab-content">
           <div v-if="nav1 === true" class="">            
-            <block-last-transactions :transactions="txs" :showheader="true"></block-last-transactions>
+            <block-last-transactions2 :transactions="account.txs" :showheader="true"></block-last-transactions2>
           </div>
           <div v-if="nav2 === true" class="">
             <button class="top-right-button-common">More</button>
@@ -110,7 +110,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import bn from 'bignumber.js';
-import { common } from '@/libs';
+import { common ,Tx } from '@/libs';
+ 
 import ethUnits from 'ethereumjs-units'
  var utils =  require("../../libs/utils.js")
 
@@ -125,7 +126,8 @@ export default Vue.extend({
   props: [
     'address',
     'totalTxs',
-    'tokens'
+    'tokens',
+    'txs'
   ],
   data() {
     return {
@@ -133,8 +135,8 @@ export default Vue.extend({
         address: this.address,
         balance: common.EthValue(new Buffer(0)),
         totalTxs: this.totalTxs,
-        tokens: this.tokens
-
+        tokens: this.tokens,
+        txs:this.txs
       },
 
       nav1 : true,
@@ -165,6 +167,16 @@ export default Vue.extend({
       _this.account.totalTxs = result;
        
     })
+
+    this.$socket.emit('getTxs', this.address, (err, result) => {
+      var txs = [];
+       result.forEach(element => {
+          txs.push(new Tx(element))
+       });
+      _this.account.txs = txs;
+    })
+
+    
 
   },
   methods: {
@@ -202,10 +214,10 @@ export default Vue.extend({
     }
   },
   computed:{
-    txs(){
-        if(this.$store.getters.getTxs.length) return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
-        else return []
-    }
+    // txs(){
+    //     if(this.$store.getters.getTxs.length) return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
+    //     else return []
+    // }
   }
 
 })
