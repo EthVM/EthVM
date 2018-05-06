@@ -39,9 +39,12 @@
             <div class="sub-tab tx-history-container">
               
                 <ul v-for="token in account.tokens">
+                  <template v-if="token.balance!=0">
                    <li>{{token.name}} : {{token.symbol}}</li>
                   <li>Balance: {{token.balance}}</li>
-                  <!-- <li>{{token.email}}</li> -->
+                  </template>
+
+                   <!-- <li>{{token.email}}</li> -->
                   </ul> 
             </div>
           </div>
