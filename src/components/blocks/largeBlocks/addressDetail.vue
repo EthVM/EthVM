@@ -16,7 +16,7 @@
               <li>{{account.balance}}</li>
               
               <li>USD Value</li>
-              <li>$677.02 (@ $386.04/ETH)</li>
+              <li>${{account.balance * account.ethusd}} (@ ${{account.ethusd}}/ETH)</li>
               
               <li>Mined</li>
               <li>23,534 Blocks and 239 Uncles</li>

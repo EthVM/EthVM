@@ -113,7 +113,9 @@ export default Vue.extend({
     return {
       account: {
         address: this.address,
-        balance: common.EthValue(new Buffer(0)),
+        balance: 0,
+        balanceUSD: 0,
+
         totalTxs: this.totalTxs,
         tokens: this.tokens,
         txs:this.txs
@@ -134,6 +136,15 @@ export default Vue.extend({
       if (!err && result) {
          console.log("parseInt(result.result,16)",parseInt(result.result,16))
          _this.account.balance =   ethUnits.convert(parseInt(result.result,16) , 'wei', 'eth')
+
+  
+      ethtousd().then(function(resp){
+        console.log(resp[0].price_usd)
+        _this.account.ethusd = resp[0].price_usd
+      })
+
+  
+ 
        }
     })
 
@@ -145,6 +156,8 @@ export default Vue.extend({
     this.$socket.emit('getTotalTxs', this.address, (err, result) => {
       console.log(err, result)
       _this.account.totalTxs = result;
+
+    
        
     })
 
@@ -201,6 +214,21 @@ export default Vue.extend({
   }
 
 })
+
+async function ethtousd(){
+ const response =  await fetch("https://api.coinmarketcap.com/v1/ticker/ethereum/", {
+ 	// mode: 'cors', 
+ 	// headers: new Headers({
+	// 	'Content-Type': 'text/plain'
+  // })
+  }) 
+  const parsedResponse = await response.json()
+  return  parsedResponse
+}
+
+ 
+
+
 
 </script>
 

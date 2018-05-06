@@ -3,7 +3,9 @@
 
     <div class="global-block-title">
       <div class="block-title">All Transactions</div>
-      <div class="block-info">Total of {{transactions.length}} transactions</div>
+
+      
+      <div class="block-info" v-show="transactions && transactions.length">Total of {{transactions.length}} transactions</div>
     </div>
 
     <div class="block-body">
