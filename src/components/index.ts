@@ -142,6 +142,9 @@ import Vue from 'vue'
   import topMinersChart from "@/components/blocks/smallBlocks/charts/topMiners"
   Vue.component('top-miners-chart', topMinersChart)
 
+  import accountsCreated from "@/components/blocks/smallBlocks/charts/accountsCreated"
+  Vue.component('account-created-chart', accountsCreated)
+
 
 /*Tooltip ---------------------- */
   //import tooltip from "@/components/tooltip/tooltip"

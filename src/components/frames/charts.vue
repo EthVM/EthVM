@@ -37,17 +37,17 @@
             </div>
 
             <div class="row">
-              <div class="col-md-6">
+               <div class="col-md-6">
                 <div class="block-title-container-desc">
                   <h4>Block Time</h4>
                 </div>
-                <bar-chart-last-ten-blocks-tx></bar-chart-last-ten-blocks-tx>
+                 <account-created-chart></account-created-chart>  
               </div>
               <div class="col-md-6">
                 <div class="block-title-container-desc">
                   <h4>Block Size</h4>
                 </div>
-                <line-chart-ave-tx-fees></line-chart-ave-tx-fees>
+                <!-- <line-chart-ave-tx-fees></line-chart-ave-tx-fees> -->
               </div>
             </div>
 
@@ -56,13 +56,13 @@
                 <div class="block-title-container-desc">
                   <h4>Total Accounts</h4>
                 </div>
-                <line-chart-ave-tx-fees></line-chart-ave-tx-fees>
+                <!-- <line-chart-ave-tx-fees></line-chart-ave-tx-fees> -->
               </div>
               <div class="col-md-6">
                 <div class="block-title-container-desc">
                   <h4>Total Transactions</h4>
                 </div>
-                <line-chart-ave-tx-fees></line-chart-ave-tx-fees>
+                <!-- <line-chart-ave-tx-fees></line-chart-ave-tx-fees> -->
               </div>
             </div>
 
