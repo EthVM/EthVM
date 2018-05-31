@@ -69,7 +69,7 @@ export RPC_PORT="8545"
 Start ethvm-socket-server
 ```
 cd ethvm-socket-server
-npm run compose
+npm start
 ```
 Start ethvm
 ```
