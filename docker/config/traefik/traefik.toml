@@ -1,14 +1,12 @@
 debug = true
 logLevel = "ERROR"
 
-[api]
-entryPoint = "traefik"
-dashboard = true
-
 defaultEntryPoints = ["http"]
 [entryPoints]
   [entryPoints.http]
   address = ":80"
+  [entryPoints.traefik]
+  address = ":8080"
 
 [retry]
 
@@ -17,3 +15,8 @@ endpoint = "unix:///var/run/docker.sock"
 watch = true
 exposedByDefault = false
 swarmMode = false
+
+[api]
+entryPoint = "traefik"
+dashboard = true
+debug = true

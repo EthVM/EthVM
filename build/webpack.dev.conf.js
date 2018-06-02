@@ -20,6 +20,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     devServer: {
         clientLogLevel: 'warning',
         historyApiFallback: true,
+        disableHostCheck: process.env.ETVHM_DOCKER === 'true' || false,
         hot: true,
         compress: true,
         host: HOST || config.dev.host,
@@ -59,14 +60,14 @@ module.exports = new Promise((resolve, reject) => {
             reject(err)
         } else {
             // publish the new Port, necessary for e2e tests
-            process.env.PORT = port
+            process.env.ETHVM_PORT = port
                 // add port to devServer config
             devWebpackConfig.devServer.port = port
 
             // Add FriendlyErrorsPlugin
             devWebpackConfig.plugins.push(new FriendlyErrorsPlugin({
                 compilationSuccessInfo: {
-                    messages: [`Your application is running here: http://${devWebpackConfig.devServer.host}:${port}`],
+                    messages: [`Your application is running here: ${devWebpackConfig.devServer.host}:${port}`],
                 },
                 onErrors: config.dev.notifyOnErrors ?
                     utils.createNotifierCallback() : undefined

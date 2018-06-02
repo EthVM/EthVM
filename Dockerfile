@@ -10,13 +10,14 @@ WORKDIR /var/ethvm
 # Copy
 COPY . .
 
-# Install
+# Install & Build
 RUN npm install
+RUN npm build
 
 # ENV Variables
-ENV ETHVM_HOST='localhost'
-ENV ETHVM_PORT='3000'
+ENV ETHVM_HOST='0.0.0.0'
+ENV ETHVM_PORT='8080'
 
 # Expose
-EXPOSE 3000
+EXPOSE 8080
 ENTRYPOINT ["npm", "start"]
