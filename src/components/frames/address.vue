@@ -94,7 +94,6 @@
 import Vue from 'vue';
 import bn from 'bignumber.js';
 import { common ,Tx } from '@/libs';
- 
 import ethUnits from 'ethereumjs-units'
  var utils =  require("../../libs/utils.js")
 
@@ -118,7 +117,6 @@ export default Vue.extend({
         address: this.address,
         balance: 0,
         balanceUSD: 0,
-
         totalTxs: this.totalTxs,
         tokens: this.tokens,
         txs:this.txs
@@ -137,12 +135,13 @@ export default Vue.extend({
      this.$socket.emit('getBalance', this.address, (err, result) => {
       console.log(err, result)
       if (!err && result) {
-         console.log("parseInt(result.result,16)",parseInt(result.result,16))
-         _this.account.balance =   ethUnits.convert(parseInt(result.result,16) , 'wei', 'eth')
-
+          let balance = common.EthValue(common.HexToBuffer(result.result))
+          console.log(balance)
+         _this.account.balance =   balance.toEth()
+         console.log("account balance in eth: " + _this.account.balance)
   
       ethtousd().then(function(resp){
-        console.log(resp[0].price_usd)
+        console.log("price: " +resp[0].price_usd)
         _this.account.ethusd = resp[0].price_usd
       })
 

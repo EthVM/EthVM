@@ -117,6 +117,11 @@ let common = {
 	},
 	HexTime: (_time: Buffer): HexTime => {
 		return new HexTime(_time)
+	},
+	HexToBuffer: (_hex: string): Buffer => {
+		_hex = _hex.substr(0,2) == '0x' ? _hex.substr(2) : _hex
+		_hex = _hex.length % 2  ? '0' + _hex : _hex
+		return new Buffer(_hex,'hex')
 	}
 
 }
