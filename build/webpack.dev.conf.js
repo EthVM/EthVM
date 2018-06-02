@@ -8,8 +8,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
 
-const HOST = process.env.HOST
-const PORT = process.env.PORT && Number(process.env.PORT)
+const HOST = process.env.ETHVM_HOST
+const PORT = process.env.ETHVM_PORT && Number(process.env.ETHVM_PORT)
 
 const devWebpackConfig = merge(baseWebpackConfig, {
     module: {},
