@@ -10,7 +10,8 @@
         "dist": "history-server dist",
         "lint": "eslint --ext .js,.vue src test/unit/specs",
         "external": "node /external/index.js",
-        "build": "node build/build.js"
+        "build": "node build/build.js",
+        "docker-dev": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --progress --config build/webpack.dev.conf.js"
     },
     "dependencies": {
         "@types/socket.io-client": "^1.4.32",

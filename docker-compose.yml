@@ -10,6 +10,7 @@ services:
 
   traefik:
     image: traefik:1.6.2-alpine
+    restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./docker/config/traefik/traefik.toml:/etc/traefik/traefik.toml
@@ -21,8 +22,12 @@ services:
       - "8080:8080"
 
   ethvm:
-    build: ./
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
     restart: unless-stopped
+    volumes:
+      - ".:/var/ethvm"
     networks:
       - back
     labels:
@@ -52,10 +57,12 @@ services:
       - "traefik.port=8080"
       - "traefik.backend=ethvm_socket_server"
     environment:
-      - ETHVM_RETHINKDB_URL="rethinkdb://rethinkdb:29015"
-      - ETHVM_REDIS_URL="redis:6379"
-      - ETHVM_RPC_HOST="geth"
-      - ETHVM_RPC_PORT="8545"
+      - ETHVM_RETHINKDB_HOST=rethinkdb
+      - ETVHM_RETHINKDB_PORT=28015
+      - ETHVM_REDIS_URL=redis://redis:6379/0
+      - ETHVM_RPC_HOST=geth
+      - ETHVM_RPC_PORT=8545
+    entrypoint: npm run start:prod2
 
   redis:
     image: redis:4.0.9-alpine
@@ -74,13 +81,11 @@ services:
   geth:
     image: enkryptio/go-ethereum:latest
     restart: unless-stopped
-    depends_on:
-      - rethinkdb
     volumes:
       - ./docker/volumes/geth/:/geth
     networks:
       - back
-    entrypoint: geth --testnet --datadir /geth/ --syncmode full --ethvm --ethvm.remote --rpc --rpcaddr "0.0.0.0" --rpcport 9545 --gcmode archive
+    entrypoint: geth --testnet --datadir /geth/ --syncmode full --ethvm --ethvm.remote --rpc --rpcaddr "0.0.0.0" --rpcport 9545 --gcmode archive --bootnodes "enode://20c9ad97c081d63397d7b685a412227a40e23c8bdc6688c6f37e97cfbc22d2b4d1db1510d8f61e6a8866ad7f0e17c02b14182d37ea7c3c8b9c2683aeb6b733a1@52.169.14.227:30303,enode://6ce05930c72abc632c58e2e4324f7c7ea478cec0ed4fa2528982cf34483094e9cbc9216e7aa349691242576d552a2a56aaeae426c5303ded677ce455ba1acd9d@13.84.180.240:30303"
     environment:
       - RETHINKDB_URL="rethinkdb://admin:1234@rethinkdb:29015"
 
