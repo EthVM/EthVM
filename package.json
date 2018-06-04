@@ -23,6 +23,7 @@
         "lodash.debounce": "^4.0.8",
         "node-notifier": "^5.2.1",
         "npm": "^6.1.0",
+        "number-formatter": "^1.2.0",
         "optimize-css-assets-webpack-plugin": "^3.2.0",
         "ora": "^1.4.0",
         "path": "^0.12.7",

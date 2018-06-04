@@ -98,8 +98,6 @@ import ethUnits from 'ethereumjs-units'
  var utils =  require("../../libs/utils.js")
 
 
-
-
 let Account = require('ethereumjs-account')
 
 const MAX_ITEMS = 20
@@ -117,6 +115,7 @@ export default Vue.extend({
         address: this.address,
         balance: 0,
         balanceUSD: 0,
+        ethusd: 0,
         totalTxs: this.totalTxs,
         tokens: this.tokens,
         txs:this.txs
@@ -135,9 +134,8 @@ export default Vue.extend({
      this.$socket.emit('getBalance', this.address, (err, result) => {
       console.log(err, result)
       if (!err && result) {
-          let balance = common.EthValue(common.HexToBuffer(result.result))
-          console.log(balance)
-         _this.account.balance =   balance.toEth()
+          let balance = common.EthValue(common.HexToBuffer(result.result)).toEth()
+         _this.account.balance = balance
          console.log("account balance in eth: " + _this.account.balance)
   
       ethtousd().then(function(resp){

@@ -13,10 +13,10 @@
               <li>{{account.address}}</li>
               
               <li>Ether Balance</li>
-              <li>{{account.balance}}</li>
+              <li>{{formatEthBalance}} ETH</li>
               
               <li>USD Value</li>
-              <li>${{account.balance * account.ethusd}} (@ ${{account.ethusd}}/ETH)</li>
+              <li>$ {{formatUSDBalance}}  (@ $ {{formatEthUSD}} per ETH)</li>
               
               <li>Mined</li>
               <li>23,534 Blocks and 239 Uncles</li>
@@ -36,8 +36,9 @@
 
 
 <script lang="ts">
-import Vue from 'vue';
-
+import Vue from 'vue'
+import { common } from '@/libs';
+import NumberFormatter from 'number-formatter'
  export default Vue.extend({
   name: 'Address',
   props: [
@@ -48,7 +49,20 @@ import Vue from 'vue';
     }
   },
   methods: {},
-  computed: {}
+  computed: {
+    formatEthBalance() {
+      let _this = this
+      return NumberFormatter("#,##0.#####",_this.account.balance)      
+    },
+    formatUSDBalance() {
+      let _this = this
+      return NumberFormatter("#,##0.##", (_this.account.balance * _this.account.ethusd))
+    },
+    formatEthUSD() {
+      let _this = this
+      return NumberFormatter("#,##0.#####",_this.account.ethusd)  
+    }
+  }
 })
 
 </script>
