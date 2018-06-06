@@ -4,8 +4,8 @@
       <div class="block-header" v-if="showheader === true">
         <li>TXn#</li>
         <li class="eth">ETH</li>
-        <li class="gas">GAS</li>
-        <li>WEI</li>
+        <li class="limit">Gas Limit</li>
+        <li class="gas">GWEI</li>
         <li></li>
       </div>
       <div class="block" v-for="tx in transactions" v-bind:key="tx.getHash().toString()">
@@ -29,8 +29,8 @@
           <div v-if="getShortEthValue(tx.getValue().toEth().toString(), true)" class="tooltip-button" v-tooltip="tx.getValue().toEth()"><i class="fa fa-question-circle-o" aria-hidden="true"></i></div>
 
         </li>
-        <li class="vertical-middle gas"><div><p>{{tx.getGasUsed().toNumber()}}</p></div></li>
-        <li class="vertical-middle"><div><p>{{tx.getGasPrice().toGWei()}}</p></div></li>
+        <li class="vertical-middle limit"><div><p>{{tx.getGasUsed().toNumber()}}</p></div></li>
+        <li class="vertical-middle gas"><div><p>{{tx.getGasPrice().toGWei()}}</p></div></li>
         <li class="vertical-middle status">
           <div v-if="!tx.getStatus()">
             <span class="glyphicon glyphicon-remove failed"></span>

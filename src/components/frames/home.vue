@@ -73,8 +73,8 @@
           <div class="last-transactions-header">
             <li>TXn#</li>
             <li class="eth">ETH</li>
-            <li class="gas">GAS</li>
-            <li>WEI</li>
+            <li class="limit">Gas Limit</li>
+            <li class="gas">GWEI</li>
             <li></li>
           </div>
           

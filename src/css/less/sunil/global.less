@@ -464,6 +464,38 @@ p{
 }
 
 
+/* Transactions Header: */
+.last-transactions-header{
+    font-weight: 600;
+    color: black;
+    display: grid;
+    grid-template-columns: 1fr 100px 100px 100px 50px;
+    grid-column-gap: 0px;
+    padding-right: 10px;
+    li{
+        padding: 15px;
+        list-style-type: none;
+    }
+  }
+  
+@media all and (max-width: 799px){
+
+  .limit, .gas{
+    display: none !important;
+  }
+
+  li{
+    padding: 5px !important;
+    font-size: 12px !important;
+  }
+
+  .last-transactions-header{
+    grid-template-columns: auto 60px 30px !important;
+    padding-right: 5px !important;
+
+  }
+
+}
 
 
 

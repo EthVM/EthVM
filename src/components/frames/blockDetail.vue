@@ -27,6 +27,13 @@
           <div class="block-title-container">
             <h3>Transactions</h3>
           </div>
+          <div class="last-transactions-header">
+            <li>TXn#</li>
+            <li class="eth">ETH</li>
+            <li class="limit">Gas Limit</li>
+            <li class="gas">GWEI</li>
+            <li></li>
+          </div>
           <div class="block">
             <block-last-transactions :transactions="transactions"></block-last-transactions>
           </div>
