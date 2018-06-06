@@ -3,8 +3,6 @@ version: '3.6'
 networks:
   web:
     external: true
-  back:
-    external: false
 
 services:
 
@@ -16,10 +14,9 @@ services:
       - ./docker/config/traefik/traefik.toml:/etc/traefik/traefik.toml
     networks:
       - web
-      - back
     ports:
       - "80:80"
-      - "8080:8080"
+      - "81:81"
 
   ethvm:
     build:
@@ -29,7 +26,7 @@ services:
     volumes:
       - ".:/var/ethvm"
     networks:
-      - back
+      - web
     labels:
       - "traefik.enable=true"
       - "traefik.default.protocol=http"
@@ -49,7 +46,7 @@ services:
       - redis
       - rethinkdb
     networks:
-      - back
+      - web
     labels:
       - "traefik.enable=true"
       - "traefik.default.protocol=http"
@@ -68,25 +65,58 @@ services:
     image: redis:4.0.9-alpine
     restart: unless-stopped
     networks:
-      - back
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.frontend.rule=Host:redis.ethvm.lan"
+      - "traefik.port=6379"
+      - "traefik.backend=redis"
 
   rethinkdb:
     image: enkryptio/rethinkdb:latest
     restart: unless-stopped
     networks:
-      - back
+      - web
     ports:
-      - "29015:29015"
+      - "28015:28015"
+      - "8080:8080"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.frontend.rule=Host:rethink.ethvm.lan"
+      - "traefik.port=28015"
+      - "traefik.backend=rethinkdb"
+
+      - "traefik.dashboard.frontend.rule=Host:rethink.dashboard.ethvm.lan"
+      - "traefik.dashboard.protocol=http"
+      - "traefik.dashboard.backend=ethvm_socket_server"
+      - "traefik.dashboard.port=8080"
 
   geth:
     image: enkryptio/go-ethereum:latest
     restart: unless-stopped
+    depends_on:
+      - rethinkdb
     volumes:
       - ./docker/volumes/geth/:/geth
+      - ./docker/config/geth/genesis.json:/genesis.json
     networks:
-      - back
-    entrypoint: geth --testnet --datadir /geth/ --syncmode full --ethvm --ethvm.remote --rpc --rpcaddr "0.0.0.0" --rpcport 9545 --gcmode archive --bootnodes "enode://20c9ad97c081d63397d7b685a412227a40e23c8bdc6688c6f37e97cfbc22d2b4d1db1510d8f61e6a8866ad7f0e17c02b14182d37ea7c3c8b9c2683aeb6b733a1@52.169.14.227:30303,enode://6ce05930c72abc632c58e2e4324f7c7ea478cec0ed4fa2528982cf34483094e9cbc9216e7aa349691242576d552a2a56aaeae426c5303ded677ce455ba1acd9d@13.84.180.240:30303"
+      - web
+    ports:
+      - "9545:9545"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.frontend.rule=Host:geth.ethvm.lan"
+      - "traefik.port=9545"
+      - "traefik.backend=geth"
     environment:
-      - RETHINKDB_URL="rethinkdb://admin:1234@rethinkdb:29015"
-
-
+      - RETHINKDB_USE_URL_FORMAT=true
+      - RETHINKDB_URL=http://admin:1234@rethinkdb:28015
+    command:
+      - /bin/sh
+      - -c
+      - |
+        geth --networkid="1114" --datadir="/geth/" --ethvm --ethvm.remote init /genesis.json
+        geth --networkid="1114" --datadir="/geth/" --syncmode full --mine --etherbase '0xaD4A113E28C7857dB9f24336e4ED83F6dd883DF7' --ethvm --ethvm.remote --rpc --rpcaddr "0.0.0.0" --rpcport 9545 --gcmode archive

@@ -6,7 +6,7 @@ defaultEntryPoints = ["http"]
   [entryPoints.http]
   address = ":80"
   [entryPoints.traefik]
-  address = ":8080"
+  address = ":81"
 
 [retry]
 
