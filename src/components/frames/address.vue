@@ -86,7 +86,10 @@
 <script lang="ts">
 import Vue from "vue";
 import bn from "bignumber.js";
-import { common, Tx } from "@/libs";
+import {
+  common,
+  Tx
+} from "@/libs";
 import ethUnits from "ethereumjs-units";
 var utils = require("../../libs/utils.js");
 
@@ -131,13 +134,7 @@ export default Vue.extend({
       }
     });
 
-<<<<<<< HEAD
-    this.$socket.emit('getTokenBalance', this.address, (err, result) => {
-      console.log(err, result)
-      if (result.result !="0x") {
-        _this.account.tokens = utils.decode(result.result)
         _this.tokensLoaded = true
-=======
     this.$socket.emit("getTokenBalance", this.address, (err, result) => {
       console.log(err, result);
       //_this.account.tokens = utils.decode(result.result)
@@ -147,7 +144,6 @@ export default Vue.extend({
         _this.tokensLoaded = true;
       } else {
         _this.tokenError = true;
->>>>>>> d50c7daa5c180c75b98475557e324e04df759dbb
       }
     });
 
@@ -156,7 +152,7 @@ export default Vue.extend({
       _this.account.totalTxs = result;
     });
 
-    this.$socket.emit("getEthToUSD","", (err, result) => {
+    this.$socket.emit("getEthToUSD", "", (err, result) => {
       console.log(err, result, "getEthToUSD");
 
       _this.account.ethusd = result;

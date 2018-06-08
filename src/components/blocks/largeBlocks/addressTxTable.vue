@@ -9,6 +9,7 @@
         <li class="gas">GWEI</li>
         <li class="status"></li>
       </div>
+
       <div class="block" v-for="tx in transactions" v-bind:key="tx.getHash().toString()">
         <li>
           <div class="hash-block">
@@ -31,14 +32,16 @@
             </p>
           </div>
         </li>
+
         <li class="vertical-middle type">
-          <div v-if="getType(tx.getFrom().toString())">
+          <div v-if="tx.type == 'out'">
             <span class="failed">Out</span>
           </div>
           <div v-else>
             <span class="successful">In</span>
           </div>
         </li>
+
         <li class="vertical-middle eth">
           <div class="">{{getShortEthValue(tx.getValue().toEth().toString(), false)}}</div>
           <div v-if="getShortEthValue(tx.getValue().toEth().toString(), true)" class="tooltip-button" v-tooltip="tx.getValue().toEth()"><i class="fa fa-question-circle-o" aria-hidden="true"></i></div>
@@ -72,7 +75,7 @@ export default Vue.extend({
   props: [
     'transactions',
     'showheader',
-    'account'
+    'account',
   ],
   created() {
 
