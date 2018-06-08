@@ -26,7 +26,7 @@
               <p> There are no transactions </p>
             </div>
             <div v-else>
-              <block-last-transactions2 :transactions="account.txs" :showheader="true"></block-last-transactions2>
+              <block-address-tx :address='account' :transactions='account.txs'></block-address-tx>
             </div>
             <!-- End Transactions -->
           </div>
@@ -149,8 +149,6 @@ export default Vue.extend({
 
     this.$socket.emit('getTokenBalance', this.address, (err, result) => {
       console.log(err, result)
-      //_this.account.tokens = utils.decode(result.result)
-      console.log(_this.account.tokens)
       if (result.result !="0x") {
         _this.account.tokens = utils.decode(result.result)
         _this.tokensLoaded = true

@@ -1,5 +1,4 @@
 
-
 a{
     color: #2779ff;
     text-decoration: none;
@@ -14,78 +13,13 @@ li{
 }
 
 
-
-
-
 .last-transactions{
 
   .block-body{
-    
-    padding: 20px 40px;
-    background-color: white;
-
-    .labels{
-      display: grid;
-      grid-template-columns: 3fr 3fr 1fr 3fr 2fr 2fr 2fr 1fr;
-      margin-bottom: 20px;
-      
-      div{
-        font-weight: 500;
-        font-size: 14px;
-      }
-
+    padding-left: 10px;
+    .block:last-child{
+      margin-bottom: 0px;
     }
-
-
-
-    .table-block{
-      display: grid;
-      grid-template-columns: 3fr 3fr 1fr 3fr 2fr 2fr 2fr 1fr;
-      grid-column-gap: 30px;
-      
-      .hash-block{
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-        font-size: 13px;
-        padding: 15px 0;
-        
-
-        .in-out{
-          background-color: #12d4a0;
-          color: white;
-          padding: 3px;
-          font-size: 12px;
-          font-weight: 600;
-          text-align: center;
-          border-radius: 2px;
-          margin-top: -2px;
-        }
-      }//.hash-block
-
-      .status{
-        div{
-          color: white;
-          span{
-            margin-top: -3px;
-            padding: 5px;
-            display: inline-block;
-            border-radius: 20px;
-            font-size: 13px;
-          }
-          .success{
-            background-color: #12d4a0;
-          }
-          .failed{
-            background-color: red;
-          }
-          
-        }
-      }
-
-    }
-
-
 
     .block{
 
@@ -93,14 +27,22 @@ li{
       margin-bottom: 5px;
 
       display: grid;
-      grid-template-columns: 1fr 100px 100px 100px 50px;
+      grid-template-columns: 1fr 100px 100px 100px 100px 50px;
       grid-column-gap: 0px;
 
-      .vertical-middle{
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
+      position: relative;
+
+      .vertical-middle>div{
+        display: inline-block;
+        vertical-align: top;
       }
+
+      .vertical-middle .tooltip-container{
+        position: absolute;
+
+      }
+
+
 
       .status{
         //text-align: center;
@@ -118,7 +60,9 @@ li{
         }
 
 
-        .hash-block{
+
+        .hash-block,
+        .width-limit{
           display: grid;
           grid-template-columns: 1fr;
           .hash{
@@ -144,7 +88,7 @@ li{
 
           .title{
             font-weight: 600;
-            color: #465a6e;
+            color: black;
           }
           p{
             display: inline-block;
@@ -168,6 +112,20 @@ li{
 }
 
 
+
+
+.block-header{
+  font-weight: 600;
+  color: black;
+  display: grid;
+  grid-template-columns: 1fr 100px 100px 100px 100px 50px;
+  grid-column-gap: 0px;
+  padding-right: 10px;
+  margin-bottom: 5px;
+  li{
+      padding: 15px;
+  }
+}
 
 
 
@@ -194,9 +152,10 @@ li{
 
     li{
       padding: 5px !important;
+      font-size: 12px;
     }
 
-    .eth, .gas{
+    .limit, .gas, .status{
       display: none !important;
     }
 
@@ -206,8 +165,15 @@ li{
     }
 
   }
+  .block-header{
+     grid-template-columns: auto 60px 30px !important;
+    .limit, .gas, .status{
+      display: none !important;
+    }
+  }
 
 }
+
 
 
 

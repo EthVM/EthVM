@@ -1,0 +1,56 @@
+@import '~lessPath/sunil/global';
+
+.address-tx-header{
+	display: grid;
+    grid-template-columns: 1fr  1fr;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    padding-left: 10px;
+    .filter-tx{
+    	justify-self: start;
+    	display: grid;
+    	grid-gap: 10px;
+    	width:100%;
+        grid-template-rows: 1fr 1fr;
+
+        .tx-tabs{
+        	display: grid;
+        	grid-template-columns:  0.1fr 0.6fr 1fr 1fr;
+        	justify-self: start;
+        	
+        }
+        .tx-tabs button {
+        	border: none;
+        	background-color: #f3f6f9;
+        }
+    	.active{
+    		font-weight: 600;
+    		color: black;
+    	}
+    	.tx-tabs button:hover {
+    		color:  #2779ff;
+		}
+    	span{
+    		justify-self: start;
+    		padding-left: 15px;
+    		color: black;
+    		font-weight: 600;
+    	}
+
+    }
+    .search-block{
+    	justify-self: end;
+    }
+}
+
+@media all and (max-width: 400px){
+    .address-tx-header{
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+          .search-block{
+            justify-self: start;
+        }
+    }
+
+}

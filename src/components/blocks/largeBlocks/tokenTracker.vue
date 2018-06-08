@@ -1,7 +1,7 @@
 <template>
   <div class="token-tracker">
     <div class="block-container">
-      <div v-if="!tokens">
+      <div v-if="getTotalTokens == 0">
         <div class="info">
           <p> Address does not hold any common tokens </p>
         </div>
@@ -10,7 +10,7 @@
       <div v-else>
         <!-- Header -->
         <div class="tokens-header">
-          <p> Total Number of Tokens: {{getTotalTokens}} </p>
+          <p> Total Number of Tokens: {{totalTokens}} </p>
           <p> Total Value: $100</p>
           <div class="search-block">
             <block-search :phText="placeholder"></block-search>

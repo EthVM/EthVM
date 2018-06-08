@@ -92,8 +92,8 @@ import Vue from 'vue'
   import blockLastTransactions from "@/components/blocks/largeBlocks/lastTransactions"
   Vue.component('block-last-transactions', blockLastTransactions)
 
-  import blockLastTransactions2 from "@/components/blocks/largeBlocks/lastTransactions2"
-  Vue.component('block-last-transactions2', blockLastTransactions2)
+  import blockAddressTxTable from "@/components/blocks/largeBlocks/addressTxTable"
+  Vue.component('block-address-tx-table', blockAddressTxTable)
 
   import blockAbout from "@/components/blocks/largeBlocks/about"
   Vue.component('block-about', blockAbout)
@@ -103,6 +103,9 @@ import Vue from 'vue'
 
   import addressDetail from "@/components/blocks/largeBlocks/addressDetail"
   Vue.component('address-detail', addressDetail)
+
+  import blockaddressTx from "@/components/blocks/largeBlocks/addressTx"
+  Vue.component('block-address-tx', blockaddressTx)
 
   import blockTxDetail from "@/components/blocks/largeBlocks/txDetail"
   Vue.component('block-tx-detail', blockTxDetail)
