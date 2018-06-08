@@ -1,6 +1,10 @@
 <template>
   <div class="last-transactions">
-    <div class="block-body">
+    <!-- If no Transactions: -->
+    <div v-if="total == 0" class="info">
+      <p>{{getText}}</p>
+    </div>
+    <div v-else class="block-body">
       <div class="block-header" v-if="showheader === true">
         <li>TXn#</li>
         <li class="type"></li>
@@ -38,7 +42,7 @@
             <span class="failed">Out</span>
           </div>
           <div v-else>
-            <span class="successful">In</span>
+            <span class="success">In</span>
           </div>
         </li>
 
@@ -76,6 +80,8 @@ export default Vue.extend({
     'transactions',
     'showheader',
     'account',
+    'filter',
+    'total'
   ],
   created() {
 
@@ -97,9 +103,17 @@ export default Vue.extend({
         return newEthValue;
       else
         return isShort;
-
     }
-
+  },
+  computed: {
+    getText(){
+      let _this = this
+      if (_this.filter == 'all') return "This address does not have any transaction history"
+      else if(_this.filter == 'in') return "This address does not have incoming transactions"
+      else {
+        return "This address does not have outgoing transactions"
+     } 
+   }
   }
 })
 </script>

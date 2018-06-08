@@ -22,10 +22,7 @@
         <div class="tab-content">
           <!-- Transactions -->
           <div v-if="nav1 === true" class="">
-            <div class="content" v-if="account.totalTxs === 0">
-              <p> There are no transactions </p>
-            </div>
-            <div v-else>
+            <div>
               <block-address-tx :address='account' :transactions='account.txs'></block-address-tx>
             </div>
             <!-- End Transactions -->

@@ -6,7 +6,6 @@
     margin-top: 15px;
     margin-bottom: 15px;
     font-size: 14px;
-    padding-left: 10px;
     .filter-tx{
     	justify-self: start;
     	display: grid;
@@ -45,9 +44,18 @@
 }
 
 
-@media all and (max-width: 600px){
+@media all and (max-width: 799px){
   .address-tx-header{
     display: block;
+    padding-left: 10px !important;
+
+    .filter-tx{
+        padding-left: !important;
+
+        span{
+            padding-left: 0px !important;
+        }
+    }
 
   }
 

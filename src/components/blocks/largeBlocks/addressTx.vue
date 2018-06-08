@@ -9,7 +9,7 @@
             {{option.text}}
           </button>
         </div>
-        <span>Selected: {{ filter }} transactions</span>
+        <span>Selected: {{ getTotal }} transactions</span>
       </div>
       <div class="search-block">
         <block-search :phText="placeholder"></block-search>
@@ -17,7 +17,7 @@
       <!-- End Tx Header -->
     </div>
     <!-- Tx Table Header -->
-    <block-address-tx-table :transactions='transactions' :showheader='true' :account='address.address'>
+    <block-address-tx-table :transactions=' filteredTxs' :showheader='true' :account='address.address' :filter="filter" :total="getTotal">
     </block-address-tx-table>
     <!-- End Tx Table Header -->
   </div>
@@ -28,7 +28,8 @@ import Vue from 'vue';
 export default Vue.extend({
   name: 'TableTransactions',
   props: [
-    'address'
+    'address',
+    'transactions',
   ],
   data() {
     return {
@@ -47,47 +48,56 @@ export default Vue.extend({
         isActive: false
       }],
       filter: 'all',
-      inTx: {},
-      outTx: {},
+      inTx: [],
+      outTx: [],
+      recievedTx: false,
     }
   },
-  created() {
-    let _this = this
-    _this.getTxsType(_this.address.txs)
-  },
+  created() {},
+  mounted() {},
   methods: {
     setFilter(option) {
       let _this = this
       _this.filter = option
-      console.log(_this.address.txs)
     },
     isActive(value) {
       let _this = this
       if (value == _this.filter) return true
       return false
     },
-    getTxsType(address) {
-        console.log(address.txs)
-        /*let inTxs = {}
-        let outTxs = {}
-        let x = {}
-        address.txs.forEach(x) {
-            if(x.from == address.address) {
-                outTxs.push(x)
-            }
-            else{
-                inTxs.push(x)
-            }
-        } */
-    }
+    getTxsType() {
+      let _this = this
+      var i
+      for (i = 0; i < _this.transactions.length; i++) {
+        if (_this.transactions[i].from == _this.address) {
+          _this.outTx.push(_this.transactions[i])
+        } else {
+          _this.inTx.push(_this.transactions[i])
+        }
+      }
+      _this.recievedTx = true
 
+    }
   },
   computed: {
-    transactions () {
-        let _this = this
+    filteredTxs() {
+      let _this = this
+      if (_this.filter == 'all') return _this.transactions
+      if (_this.transactions) {
+        if (!_this.recievedTx) _this.getTxsType()
         if (_this.filter == 'out') return _this.outTx
         if (_this.filter == 'in') return _this.inTx
-        return _this.address.txs
+        
+      }
+    },
+    getTotal(){
+      let _this = this
+      if(_this.transactions) {
+        if (_this.filter == 'all') return _this.transactions.length
+        if(_this.filter == 'in') return _this.inTx.length
+        else return _this.outTx.length
+      }
+      return 0
     }
   }
 })
