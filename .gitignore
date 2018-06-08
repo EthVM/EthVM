@@ -1,4 +1,7 @@
+# OSX
 .DS_Store
+
+# Package managers
 node_modules/
 npm-debug.log*
 yarn-debug.log*
@@ -12,3 +15,6 @@ yarn-error.log*
 *.ntvs*
 *.njsproj
 *.sln
+
+# Project
+docker/volumes/
