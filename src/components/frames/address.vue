@@ -134,7 +134,6 @@ export default Vue.extend({
       }
     });
 
-        _this.tokensLoaded = true
     this.$socket.emit("getTokenBalance", this.address, (err, result) => {
       console.log(err, result);
       //_this.account.tokens = utils.decode(result.result)
