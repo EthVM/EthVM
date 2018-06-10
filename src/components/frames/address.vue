@@ -148,10 +148,8 @@ export default Vue.extend({
       _this.account.totalTxs = result;
     });
 
-    this.$socket.emit("getEthToUSD", "", (err, result) => {
-      console.log(err, result, "getEthToUSD");
-
-      _this.account.ethusd = result;
+    this.$socket.emit("getTokenToUSD", [], (err, result) => {
+        _this.account.ethusd = result[0][1];
     });
 
     this.$socket.emit("getTxs", this.address, (err, result) => {
