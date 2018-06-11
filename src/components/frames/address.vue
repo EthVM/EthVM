@@ -22,7 +22,7 @@
         <div class="tab-content">
           <!-- Transactions -->
           <div v-if="nav1 === true" class="">
-            <div>
+            <div v-if="account.txs">
               <block-address-tx :address='account' :transactions='account.txs'></block-address-tx>
             </div>
             <!-- End Transactions -->
@@ -132,7 +132,7 @@ export default Vue.extend({
     });
 
     this.$socket.emit("getTokenBalance", this.address, (err, result) => {
-      console.log(err, result);
+      console.log("tokens: " + err, result);
       //_this.account.tokens = utils.decode(result.result)
       console.log(_this.account.tokens);
       if (result.result != "0x") {

@@ -1,5 +1,5 @@
 <template>
-  <div class="address-tx">
+  <div v-if="transactions" class="address-tx">
     <!-- Tx Header -->
     <div class="address-tx-header">
       <div class="filter-tx">
@@ -21,7 +21,6 @@
     </block-address-tx-table>
     <!-- End Tx Table Header -->
   </div>
-  </div>
 </template>
 <script lang="ts">
 import Vue from 'vue';
@@ -36,16 +35,13 @@ export default Vue.extend({
       placeholder: 'Search Address/Tx Hash',
       options: [{
         text: 'All',
-        value: 'all',
-        isActive: true
+        value: 'all'
       }, {
         text: 'Incoming',
-        value: 'in',
-        isActive: false
+        value: 'in'
       }, {
         text: 'Outgoing',
-        value: 'out',
-        isActive: false
+        value: 'out'
       }],
       filter: 'all',
       inTx: [],
@@ -87,14 +83,14 @@ export default Vue.extend({
         if (!_this.recievedTx) _this.getTxsType()
         if (_this.filter == 'out') return _this.outTx
         if (_this.filter == 'in') return _this.inTx
-        
+
       }
     },
-    getTotal(){
+    getTotal() {
       let _this = this
-      if(_this.transactions) {
+      if (_this.transactions) {
         if (_this.filter == 'all') return _this.transactions.length
-        if(_this.filter == 'in') return _this.inTx.length
+        if (_this.filter == 'in') return _this.inTx.length
         else return _this.outTx.length
       }
       return 0

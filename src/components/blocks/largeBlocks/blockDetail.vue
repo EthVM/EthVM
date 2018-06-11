@@ -1,10 +1,10 @@
 <template>
   <div class="block-detail">
     <div class="block-detail-container" v-if="block">
-      <p v-show="!isUncle" class="block-title">Block Detail Information</p>
-      <p v-show="isUncle" class="block-title">Block Detail Information (Uncle)</p>
-      <div class="show-more btn btn-primary" v-on:click="showMore = !showMore" v-if="showMore === false">More</div>
-      <div class="show-less btn btn-warning" v-on:click="showMore = !showMore" v-if="showMore === true">Less</div>
+      <p v-show="!isUncle" class="block-title">Overview</p>
+      <p v-show="isUncle" class="block-title">Overview (Uncle)</p>
+      <button class="top-right-button-common" v-on:click="showMore = !showMore" v-if="showMore === false">More</button>
+      <button class="top-right-button-common" v-on:click="showMore = !showMore" v-if="showMore === true">Less</button>
 
       <div class="details" v-bind:class="{ 'show-more-info': showMore }">
 
@@ -28,7 +28,7 @@
         </div>
         <div>
           <li>Miner</li>
-          <li>{{block.getMiner().toString()}}</li>
+          <li><router-link :to="'/address/'+block.getMiner().toString()">{{block.getMiner().toString()}}</router-link></li>
         </div>
         
         <div>
