@@ -28,7 +28,6 @@ import Vue from 'vue'
   import frameAccount from "@/components/frames/account"
   Vue.component('frame-account', frameAccount)
 
-
   import frameAddress from "@/components/frames/address"
   Vue.component('frame-address', frameAddress)
 
@@ -58,6 +57,8 @@ import Vue from 'vue'
   import blockSearch from "@/components/blocks/smallBlocks/search"
   Vue.component('block-search', blockSearch)
 
+  import tabComponent from "@/components/blocks/smallBlocks/tabComponent"
+  Vue.component('tab-component', tabComponent)
 
   /* Home Page Small Blocks: */
   import blockLastBlock from "@/components/blocks/smallBlocks/lastBlock"
@@ -112,7 +113,6 @@ import Vue from 'vue'
 
   import accountDetail from "@/components/blocks/largeBlocks/accountDetail"
   Vue.component('account-detail', accountDetail)
-
 
   import blockTokenTracker from "@/components/blocks/largeBlocks/tokenTracker"
   Vue.component('block-token-tracker', blockTokenTracker)

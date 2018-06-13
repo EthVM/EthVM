@@ -11,24 +11,19 @@
         </div>
       </div>
       <address-detail :account="account"></address-detail>
+       <tab-component :tabs="addressTabs"></tab-component>
       <!-- Tab Menu -->
       <div class="tab-menu-container">
-        <ul class="tabs">
-          <li v-on:click="nav1on" v-bind:class="{ active: nav1 }">Transactions</li>
-          <li v-on:click="nav2on" v-bind:class="{ active: nav2 }">Tokens</li>
-          <li v-on:click="nav3on" v-bind:class="{ active: nav3 }">Network History</li>
-          <li v-on:click="nav4on" v-bind:class="{ active: nav4 }">Mining History</li>
-        </ul>
         <div class="tab-content">
           <!-- Transactions -->
-          <div v-if="nav1 === true" class="">
+          <div v-if="addressTabs[0].isActive">
             <div v-if="account.txs">
               <block-address-tx :address='account' :transactions='account.txs'></block-address-tx>
             </div>
             <!-- End Transactions -->
           </div>
           <!-- Tokens -->
-          <div v-if="nav2 === true" class="" :account="account">
+          <div v-if="addressTabs[1].isActive" class="" :account="account">
             <div v-if="!tokenError">
               <div v-if="tokensLoaded">
                 <block-token-tracker :tokens="account.tokens"></block-token-tracker>
@@ -43,7 +38,8 @@
             </div>
             <!-- End Tokens -->
           </div>
-          <div v-if="nav3 === true" class="">
+          <!-- Pending Transactions -->
+          <div v-if="addressTabs[2].isActive" class="">
             <button class="top-right-button-common">More</button>
             <div class="sub-tab net-history-container">
               <ul>
@@ -57,10 +53,11 @@
                 <li>0x045619099665fc6f661b1745e5350290ceb933f</li>
               </ul>
             </div>
+            <!-- End Pending Transactions -->
           </div>
-          <div v-if="nav4 === true" class="">
-            <button class="top-right-button-common">More</button>
-            <div class="sub-tab mining-history-container">
+          <div v-if="account.isMiner">
+            <div v-if="addressTabs[3].isActive">
+              <div class="sub-tab mining-history-container">
               <ul>
                 <li>Name:</li>
                 <li>TWN</li>
@@ -71,6 +68,7 @@
                 <li>ERC 20 Contract:</li>
                 <li>0x045619099665fc6f661b1745e5350290ceb933f</li>
               </ul>
+            </div>
             </div>
           </div>
         </div>
@@ -105,15 +103,26 @@ export default Vue.extend({
         ethusd: 0,
         totalTxs: this.totalTxs,
         tokens: this.tokens,
-        txs: this.txs
+        txs: this.txs,
+        isMiner: false
       },
-
-      nav1: true,
-      nav2: false,
-      nav3: false,
-      nav4: false,
-      nav5: false,
-
+      addressTabs: [
+        {
+          id: 0,
+          title: 'Transactions',
+          isActive: true,
+        },
+        {
+          id: 1,
+          title: 'Tokens',
+          isActive: false,
+        },
+        {
+          id: 2,
+          title: 'Pending Transactions',
+          isActive: false,
+        }
+      ],
       tokensLoaded: false,
       tokenError: false
     };
@@ -134,7 +143,6 @@ export default Vue.extend({
     this.$socket.emit("getTokenBalance", this.address, (err, result) => {
       console.log("tokens: " + err, result);
       //_this.account.tokens = utils.decode(result.result)
-      console.log(_this.account.tokens);
       if (result.result != "0x") {
         _this.account.tokens = utils.decode(result.result);
         _this.tokensLoaded = true;
@@ -148,7 +156,8 @@ export default Vue.extend({
       _this.account.totalTxs = result;
     });
 
-    this.$socket.emit("getTokenToUSD", [], (err, result) => {
+    this.$socket.emit("getTokenToUSD", [ 'BTC', 'LTC'],  (err, result) => {
+          console.log("results",result)
         _this.account.ethusd = result[0][1];
     });
 
@@ -159,42 +168,22 @@ export default Vue.extend({
       });
       _this.account.txs = txs;
     });
+    _this.setTabs();
   },
   methods: {
-    alloff() {
-      this.nav1 = false;
-      this.nav2 = false;
-      this.nav3 = false;
-      this.nav4 = false;
-      this.nav5 = false;
-    },
-
-    nav1on() {
-      this.alloff();
-      this.nav1 = true;
-    },
-
-    nav2on() {
-      this.alloff();
-      this.nav2 = true;
-    },
-
-    nav3on() {
-      this.alloff();
-      this.nav3 = true;
-    },
-
-    nav4on() {
-      this.alloff();
-      this.nav4 = true;
-    },
-
-    nav5on() {
-      this.alloff();
-      this.nav5 = true;
+    setTabs () {
+      let _this = this
+      if(_this.account.isMiner){
+        let newTab = {
+          id: 3,
+          title: 'Mining History',
+          isActive: false,
+        }
+        this.addressTabs.push(newTab)
+      }
     }
   },
-  computed: {
+  computed: {   
     // txs(){
     //     if(this.$store.getters.getTxs.length) return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
     //     else return []
