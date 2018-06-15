@@ -17,12 +17,25 @@ import Vue from 'vue'
 import sEvents from '@/configs/socketEvents.json'
 import BN from 'bignumber.js'
 import ethUnits from 'ethereumjs-units'
-let title = 'Accounts Growth'
-let description =''
+/* Time Variables: */
+  const STATES ={
+    BEGIN: 'beginning',
+    YEAR: 'year',
+    MONTH: 'month',
+    DAY: 'day'
+  };
+const DES = {
+    BEGIN: 'Average Block Size in Ethereum blockchain since the ',
+    OTHER: 'Average Block Size in Ethereum blockchain in last '
+  }
+  let currentState = STATES.DAY;
+  let stateChanged = false;
+ let title = 'Block Size'
+ let description =''
 let MAX_ITEMS = 10
 let lineOptions = {
   'title': {
-    'text': 'Accounts Growth',
+    'text': 'Average Block Size',
     'lineHeight': 1
   },
   'responsive': true,
@@ -38,7 +51,7 @@ let lineOptions = {
       },
       'scaleLabel': {
         'display': true,
-        'labelString': 'Accounts Created'
+        'labelString': 'Average Size (Bytes)'
       }
     }],
     'xAxes': [{
@@ -91,9 +104,9 @@ export default Vue.extend({
         'labels': data.labels,
         'datasets': [
           {
-            'label': 'Accounts Created',
-            'borderColor': '#2779ff',
-            'backgroundColor': '#2779ff',
+            'label': 'Average Size',
+            'borderColor': '#20c0c7',
+            'backgroundColor': '#20c0c7',
             'data': data.points,
             'yAxisID': 'y-axis-1',
             'fill': false
