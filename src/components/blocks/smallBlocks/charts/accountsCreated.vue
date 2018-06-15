@@ -76,7 +76,7 @@ export default Vue.extend({
         points: []
        }
 
-    this.$socket.emit('getChartsData', (err, result) => {
+    this.$socket.emit('getChartAccountsGrowth',"LAST_7_DAYS", (err, result) => {
       if (!err && result) {
         console.log("result",result)
         result.forEach( function(block) {

@@ -1,3 +1,4 @@
+
 import Vue from 'vue'
 
 /* FRAMES---------------------- */
@@ -147,6 +148,10 @@ import Vue from 'vue'
 
   import accountsCreated from "@/components/blocks/smallBlocks/charts/accountsCreated"
   Vue.component('account-created-chart', accountsCreated)
+
+  
+  import avgBlockSize from "@/components/blocks/smallBlocks/charts/aveBlockSize"
+  Vue.component('block-size-chart', avgBlockSize)
 
 
 /*Tooltip ---------------------- */

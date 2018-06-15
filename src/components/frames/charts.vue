@@ -1,3 +1,4 @@
+
 <template>
   <div id="charts">
     <div class="container">
@@ -47,7 +48,7 @@
                 <div class="block-title-container-desc">
                   <h4>Block Size</h4>
                 </div>
-                <!-- <line-chart-ave-tx-fees></line-chart-ave-tx-fees> -->
+                <block-size-chart></block-size-chart>
               </div>
             </div>
 
