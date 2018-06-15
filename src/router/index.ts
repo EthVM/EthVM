@@ -18,7 +18,13 @@ export default new Router({
         {
             path: '/:pageName/:param',
             component: HomeRouter
+        },
+        {
+            path: '/:pageName/:param/holder=:holder',
+            name:'token',
+            component: HomeRouter
         }
+
     ],
     mode: 'history'
 })

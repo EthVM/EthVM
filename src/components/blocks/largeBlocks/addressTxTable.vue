@@ -13,7 +13,6 @@
         <li class="gas">GWEI</li>
         <li class="status"></li>
       </div>
-
       <div class="block" v-for="tx in transactions" v-bind:key="tx.getHash().toString()">
         <li>
           <div class="hash-block">
@@ -36,7 +35,6 @@
             </p>
           </div>
         </li>
-
         <li class="vertical-middle type">
           <div v-if="tx.type == 'out'">
             <span class="failed">Out</span>
@@ -45,7 +43,6 @@
             <span class="success">In</span>
           </div>
         </li>
-
         <li class="vertical-middle eth">
           <div class="">{{getShortEthValue(tx.getValue().toEth().toString(), false)}}</div>
           <div v-if="getShortEthValue(tx.getValue().toEth().toString(), true)" class="tooltip-button" v-tooltip="tx.getValue().toEth()"><i class="fa fa-question-circle-o" aria-hidden="true"></i></div>
@@ -81,16 +78,17 @@ export default Vue.extend({
     'showheader',
     'account',
     'filter',
-    'total'
+    'total',
+    'isPending'
   ],
   created() {
 
   },
   methods: {
-    getType(address){
-        let _this = this
-        if(address == _this.account) return true
-            return false
+    getType(address) {
+      let _this = this
+      if (address == _this.account) return true
+      return false
     },
     getShortEthValue(newEthValue, isBool) {
       let length = newEthValue.length;
@@ -106,14 +104,23 @@ export default Vue.extend({
     }
   },
   computed: {
-    getText(){
+    getText() {
       let _this = this
-      if (_this.filter == 'all') return "This address does not have any transaction history"
-      else if(_this.filter == 'in') return "This address does not have incoming transactions"
-      else {
-        return "This address does not have outgoing transactions"
-     } 
-   }
+      console.log(_this.isPending)
+      if (!_this.isPending) {
+        if (_this.filter == 'all') return "This address does not have any transaction history"
+        else if (_this.filter == 'in') return "This address does not have incoming transactions"
+        else {
+          return "This address does not have outgoing transactions"
+        }
+      } else {
+        if (_this.filter == 'all') return "This address does not have any pending transactions"
+        else if (_this.filter == 'in') return "This address does not have any pending incoming transactions"
+        else {
+          return "This address does not have any pending outgoing transactions"
+        }
+      }
+    }
   }
 })
 </script>

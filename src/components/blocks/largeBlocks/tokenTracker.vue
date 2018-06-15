@@ -31,9 +31,9 @@
         </div>
         <!-- Tokens List -->
         <div class="tokens-list" v-for="token in tokens">
-          <router-link :to="'/'" v-if="token.balance != 0" class="tokens-data">
+          <router-link :to="'/token/' +  token.addr.toString() + '/holder=' + holder" v-if="token.balance != 0" class="tokens-data">
             <p>{{token.symbol}}</p>
-            <p>{{token.name}}</p>
+            <p class="token-name">{{token.name}}</p>
             <div class="token-balance">
               <div class="">{{checkValue(getBalance(token.balance, token.decimals), false)}}</div>
               <div v-if="checkValue(getBalance(token.balance, token.decimals), true)" class="tooltip-button token-tooltip" v-tooltip="getBalance(token.balance, token.decimals)">
@@ -57,7 +57,7 @@ export default Vue.extend({
   name: 'TokenTracker',
   props: [
     'tokens',
-    'account'
+    'holder'
   ],
   data() {
     return {

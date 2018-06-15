@@ -1,0 +1,53 @@
+@import '~lessPath/sunil/global';
+
+
+
+.token-overview-container{
+  position: relative;
+  margin-bottom: 40px;
+  background-color: white;
+  padding: 20px 30px;
+
+   h2{
+    display: inline-block;
+    vertical-align: middle;
+    color: black;
+    padding-right: 40px;
+  }
+
+  .grid-block{
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+
+    li{
+      padding: 5px 0;
+      font-size: 14px;
+    }
+
+    li:nth-child(odd){
+      font-weight: 600;
+      color: black;
+    }
+  }
+}
+
+@media all and (max-width: 799px){
+  .token-overview-container{
+    h2{
+      font-size: 16px;
+      padding-left: 5px;
+    }
+
+    .grid-block{
+      li{
+        font-size: 11px !important; 
+      }
+      li:nth-child(even){
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+    }
+  }
+}
+

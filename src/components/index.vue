@@ -19,6 +19,8 @@
     <frame-block-detail v-else-if="pageName == 'block' && param" :blockHash="param"></frame-block-detail>
     <frame-address v-else-if="pageName == 'address' && param" :address="param"></frame-address>
     <frame-tx-detail v-else-if="pageName == 'tx' && param" :txHash="param"></frame-tx-detail>
+    <frame-token-detail v-else-if="pageName == 'token' && !holder" :tokenAddr="param"></frame-token-detail>
+    <frame-token-detail v-else-if="pageName == 'token' && holder" :tokenAddr="param" :holderAddr="holder"></frame-token-detail>
     
     <!-- Hope Page -->
     <frame-home v-else></frame-home>
@@ -74,7 +76,11 @@
           },
           param: function() {
               return this.$route.params.param
+          },
+          holder:function() {
+            return this.$route.params.holder
           }
+
       },
       mounted: function() {
         

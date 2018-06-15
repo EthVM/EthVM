@@ -18,6 +18,7 @@
     li:nth-child(odd){
       font-weight: 600;
       color: black;
+
     }
   }
 }
@@ -55,6 +56,7 @@
 
     li:nth-child(odd){
       font-weight: 600;
+      
     }
   }
 
@@ -74,6 +76,33 @@
 .loading-tokens{
   text-align: center;
   padding-top: 50px;
+}
+
+
+@media all and (max-width: 799px){
+
+  .address-top-info{
+    .address-identicon{
+      border-radius: 500px;
+    }
+
+  h2{
+    font-size: 16px;
+  }
+}
+
+  .address-overview-container{
+    .grid-block{
+      li{
+        font-size: 11px !important;         
+      }
+      li:nth-child(even){
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+    }
+  }
 }
 
 

@@ -11,7 +11,7 @@
         </div>
       </div>
       <address-detail :account="account"></address-detail>
-       <tab-component :tabs="addressTabs"></tab-component>
+      <tab-component :tabs="addressTabs"></tab-component>
       <!-- Tab Menu -->
       <div class="tab-menu-container">
         <div class="tab-content">
@@ -26,7 +26,7 @@
           <div v-if="addressTabs[1].isActive" class="" :account="account">
             <div v-if="!tokenError">
               <div v-if="tokensLoaded">
-                <block-token-tracker :tokens="account.tokens"></block-token-tracker>
+                <block-token-tracker :tokens="account.tokens" :holder="account.address"></block-token-tracker>
               </div>
               <div v-else class="loading-tokens">
                 <i class="fa fa-spinner fa-pulse fa-4x fa-fw"></i>
@@ -40,35 +40,23 @@
           </div>
           <!-- Pending Transactions -->
           <div v-if="addressTabs[2].isActive" class="">
-            <button class="top-right-button-common">More</button>
-            <div class="sub-tab net-history-container">
-              <ul>
-                <li>Name:</li>
-                <li>TWN</li>
-                <li>Balance:</li>
-                <li>20,930 TWN</li>
-                <li>Value:</li>
-                <li>$0.00</li>
-                <li>ERC 20 Contract:</li>
-                <li>0x045619099665fc6f661b1745e5350290ceb933f</li>
-              </ul>
-            </div>
+            <block-address-tx :address='account' :transactions='account.txs' :isPending=true></block-address-tx>
             <!-- End Pending Transactions -->
           </div>
           <div v-if="account.isMiner">
             <div v-if="addressTabs[3].isActive">
               <div class="sub-tab mining-history-container">
-              <ul>
-                <li>Name:</li>
-                <li>TWN</li>
-                <li>Balance:</li>
-                <li>20,930 TWN</li>
-                <li>Value:</li>
-                <li>$0.00</li>
-                <li>ERC 20 Contract:</li>
-                <li>0x045619099665fc6f661b1745e5350290ceb933f</li>
-              </ul>
-            </div>
+                <ul>
+                  <li>Name:</li>
+                  <li>TWN</li>
+                  <li>Balance:</li>
+                  <li>20,930 TWN</li>
+                  <li>Value:</li>
+                  <li>$0.00</li>
+                  <li>ERC 20 Contract:</li>
+                  <li>0x045619099665fc6f661b1745e5350290ceb933f</li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -87,9 +75,6 @@ import {
 } from "@/libs";
 import ethUnits from "ethereumjs-units";
 var utils = require("../../libs/utils.js");
-
-let Account = require("ethereumjs-account");
-
 const MAX_ITEMS = 20;
 export default Vue.extend({
   name: "FrameAccount",
@@ -106,29 +91,31 @@ export default Vue.extend({
         txs: this.txs,
         isMiner: false
       },
-      addressTabs: [
-        {
-          id: 0,
-          title: 'Transactions',
-          isActive: true,
-        },
-        {
-          id: 1,
-          title: 'Tokens',
-          isActive: false,
-        },
-        {
-          id: 2,
-          title: 'Pending Transactions',
-          isActive: false,
-        }
-      ],
+      addressTabs: [{
+        id: 0,
+        title: 'Transactions',
+        isActive: true,
+      }, {
+        id: 1,
+        title: 'Tokens',
+        isActive: false,
+      }, {
+        id: 2,
+        title: 'Pending Transactions',
+        isActive: false,
+      }],
       tokensLoaded: false,
-      tokenError: false
+      tokenError: false,
+      usdValue: {
+        ETH: {
+          value: 0
+        }
+      }
     };
   },
   created() {
     var _this = this;
+    /* Geting Address Balance: */
     this.$socket.emit("getBalance", this.address, (err, result) => {
       console.log(err, result);
       if (!err && result) {
@@ -139,28 +126,26 @@ export default Vue.extend({
         console.log("account balance in eth: " + _this.account.balance);
       }
     });
-
+    /* Getting Token Balances: */
     this.$socket.emit("getTokenBalance", this.address, (err, result) => {
-      console.log("tokens: " + err, result);
-      //_this.account.tokens = utils.decode(result.result)
       if (result.result != "0x") {
         _this.account.tokens = utils.decode(result.result);
         _this.tokensLoaded = true;
+        console.log(_this.account.tokens)
       } else {
         _this.tokenError = true;
       }
     });
-
+    /* Getting Total Number of Tx: */
     this.$socket.emit("getTotalTxs", this.address, (err, result) => {
-      console.log(err, result);
       _this.account.totalTxs = result;
     });
-
-    this.$socket.emit("getTokenToUSD", [ 'BTC', 'LTC'],  (err, result) => {
-          console.log("results",result)
-        _this.account.ethusd = result[0][1];
+    /*Getting USD Values: */
+    this.$socket.emit("getTokenToUSD", [], (err, result) => {
+      _this.account.ethusd = result[0][1];
+      _this.usdValue.ETH.value = result[0][1];
     });
-
+    /*Getting Address Transactions: */
     this.$socket.emit("getTxs", this.address, (err, result) => {
       var txs = [];
       result.forEach(element => {
@@ -169,11 +154,14 @@ export default Vue.extend({
       _this.account.txs = txs;
     });
     _this.setTabs();
+    /*Getting Address Pending Transactions: */
+    // Method here: 
   },
   methods: {
-    setTabs () {
+    /*Checking of address is Miner? --> add new tab for the manu*/
+    setTabs() {
       let _this = this
-      if(_this.account.isMiner){
+      if (_this.account.isMiner) {
         let newTab = {
           id: 3,
           title: 'Mining History',
@@ -183,12 +171,7 @@ export default Vue.extend({
       }
     }
   },
-  computed: {   
-    // txs(){
-    //     if(this.$store.getters.getTxs.length) return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
-    //     else return []
-    // }
-  }
+  computed: {}
 });
 </script>
 <style scoped="" lang="less">

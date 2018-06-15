@@ -28,6 +28,9 @@ import Vue from 'vue'
   import frameAccount from "@/components/frames/account"
   Vue.component('frame-account', frameAccount)
 
+  import frameTokenDetail from "@/components/frames/tokenDetail"
+   Vue.component('frame-token-detail', frameTokenDetail)
+
   import frameAddress from "@/components/frames/address"
   Vue.component('frame-address', frameAddress)
 
@@ -116,6 +119,9 @@ import Vue from 'vue'
 
   import blockTokenTracker from "@/components/blocks/largeBlocks/tokenTracker"
   Vue.component('block-token-tracker', blockTokenTracker)
+
+  import blockTokenDetail from "@/components/blocks/largeBlocks/blockTokenDetail"
+   Vue.component('block-token-detail', blockTokenDetail)
 
   import blockPendingTxs from "@/components/blocks/largeBlocks/pendingTxs"
   Vue.component('block-pending-txs', blockPendingTxs)
