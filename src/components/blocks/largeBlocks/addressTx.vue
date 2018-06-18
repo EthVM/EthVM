@@ -17,7 +17,7 @@
       <!-- End Tx Header -->
     </div>
     <!-- Tx Table Header -->
-    <block-address-tx-table :transactions=' filteredTxs' :showheader='true' :account='address.address' :filter="filter" :total="getTotal">
+    <block-address-tx-table :transactions=' filteredTxs' :showheader='true' :account='address.address' :filter="filter" :total="getTotal" >
     </block-address-tx-table>
     <!-- End Tx Table Header -->
   </div>
@@ -29,6 +29,7 @@ export default Vue.extend({
   props: [
     'address',
     'transactions',
+    'isPending'
   ],
   data() {
     return {

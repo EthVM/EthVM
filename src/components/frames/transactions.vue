@@ -1,78 +1,58 @@
 <template>
-  <div>
+  <div id="tx-frame">
     <div class="container">
-      
-      <div class="page-title-container-new hidden">
-        <div class="page-title">
-          <h3>Transactions</h3>
-        </div>
-
-        <div class="search-block">
-          <block-search></block-search>
-        </div>
-      </div>
-
-
+      <!-- Page Title -->
       <div class="page-title-container">
         <div class="page-title">
           <h3>Transactions</h3>
-          <h6 class="text-muted">Last transactions of all time</h6>
+          <h6 class="text-muted">Transactions, most recent first</h6>
         </div>
-
         <div class="search-block">
           <block-search></block-search>
         </div>
+        <!-- End Page Title -->
       </div>
-
-      <div class="row small-blocks">
-        <div class="col-md-3"><block-last-block></block-last-block></div>
-        <div class="col-md-3"><successful-tx-small-block></successful-tx-small-block></div>
-        <div class="col-md-3"><failed-tx-small-block></failed-tx-small-block></div>
-        <div class="col-md-3"><pending-tx-small-block></pending-tx-small-block></div>
+      <!-- 4 Top Blocks -->
+      <div class="small-blocks-row">
+        <block-last-block></block-last-block>
+        <successful-tx-small-block></successful-tx-small-block>
+        <failed-tx-small-block></failed-tx-small-block>
+        <pending-tx-small-block></pending-tx-small-block>
+        <!-- End 4 Top Blocks -->
       </div>
-        
-      <div class="last-transactions-header">
-        <li>TXn#</li>
-        <li class="eth">ETH</li>
-        <li class="gas">GAS</li>
-        <li>WEI</li>
-        <li></li>
-      </div>
-
+      <!-- Tx Table -->
       <div class="row">
-        <div class="col-md-12 table-data ">
-        
-          <div class="latest-blocks-data">
-            <block-last-transactions :transactions="txs"></block-last-transactions>
-          </div>
-
-   
+        <div class="col-md-12">
+          <block-last-transactions :transactions="txs" :showHeader="true"></block-last-transactions>
         </div>
-        
+        <div class="col-md-12 footnote">
+          <ul>
+            <li><i class="fa fa-check success" aria-hidden="true"></i> Success</li>
+            <li><i class="fa fa-times failed" aria-hidden="true"></i> Failed</li>
+          </ul>
+        </div>
+        <!-- End Tx Table -->
       </div>
-
     </div>
   </div>
 </template>
-
 <script lang="ts">
-  import Vue from 'vue'
-  const MAX_ITEMS = 20
-  export default Vue.extend({
-    name: 'FramesHome',
-    data () {
-      return {}
-    },
-    created (){},
-    computed:{
-      txs(){
-           if(this.$store.getters.getTxs.length) return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
-          else return []
-      }
+import Vue from 'vue'
+const MAX_ITEMS = 20
+export default Vue.extend({
+  name: 'FramesHome',
+  data() {
+    return {}
+  },
+  created() {},
+  computed: {
+    txs() {
+      if (this.$store.getters.getTxs.length) return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
+      else return []
     }
-  })
+  }
+})
 </script>
-
 <style scoped lang="less">
-  @import "~lessPath/sunil/frames/transactions.less";
+@import "~lessPath/sunil/global.less";
 </style>

@@ -1,39 +1,29 @@
 <template>
-  <div id="home">
+  <div id="blocks-frame">
     <div class="container">
-      
+      <!-- Page Title -->
       <div class="page-title-container">
         <div class="page-title">
           <h3>Blocks</h3>
-          <h6 class="text-muted">Latest blocks of all time</h6>
+          <h6 class="text-muted">Blocks, most recent first</h6>
         </div>
-
         <div class="search-block">
           <block-search></block-search>
         </div>
+      <!-- End Page Title -->
       </div>
-
-      <div class="row small-blocks">
-        <div class="col-md-3"><block-last-block></block-last-block></div>
-        <div class="col-md-3"><block-time-since-last-block></block-time-since-last-block></div>
-        <div class="col-md-3"><block-hash-rate></block-hash-rate></div>
-        <div class="col-md-3"><block-difficulty></block-difficulty></div>
+      <!-- 4 Top Blocks -->
+      <div class="small-blocks-row">
+        <block-last-block></block-last-block>
+        <block-time-since-last-block></block-time-since-last-block>
+        <block-hash-rate></block-hash-rate>
+        <block-difficulty></block-difficulty>
+       <!-- End 4 Top Blocks -->
       </div>
-
-
+      <!-- Blocks Table -->
       <div class="row">
-        <div class="col-md-12 table-data ">
-          <div class="latest-blocks-header">
-            <li>Block#</li>
-            <li></li>
-            <li>TXs</li>
-            <li>Reward</li>
-          </div>
-          
-          <div class="latest-blocks-data">
-            <block-latest-blocks :max-items="20"></block-latest-blocks>
-          </div>
-
+        <div class="col-md-12">
+          <block-latest-blocks :max-items="20" v-bind:showHeader="true"></block-latest-blocks>
           <div class="footnote">
             <ul>
               <li><i class="fa fa-circle success" aria-hidden="true"></i> Success</li>
@@ -41,9 +31,8 @@
             </ul>
           </div>
         </div>
-        
+      <!-- EndBlocks Table -->
       </div>
-
     </div>
   </div>
 </template>
@@ -67,5 +56,5 @@
 </script>
 
 <style scoped lang="less">
-  @import "~lessPath/sunil/frames/blocks.less";
+  @import "~lessPath/sunil/global";
 </style>

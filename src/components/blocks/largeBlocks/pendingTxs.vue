@@ -53,7 +53,7 @@
 </script>
 
 <style scoped lang="less">
-  @import "~lessPath/sunil/blocks/largeBlocks/lastTransactions.less";
+  @import "~lessPath/sunil/blocks/largeBlocks/transactionsTable.less";
 </style>
 
 

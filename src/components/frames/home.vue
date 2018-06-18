@@ -1,25 +1,26 @@
 <template>
   <div id="home">
     <div class="container">
-      
+      <!-- Page Title -->
       <div class="page-title-container">
         <div class="page-title">
           <h3>Home</h3>
           <h6 class="text-muted">Welcome to Ethereum Virtual Machine</h6>
         </div>
-
         <div class="search-block">
           <block-search></block-search>
         </div>
+        <!-- End Page Title -->
       </div>
-
-      <div class="row small-blocks">
-        <div class="col-md-3"><block-last-block></block-last-block></div>
-        <div class="col-md-3"><block-time-since-last-block></block-time-since-last-block></div>
-        <div class="col-md-3"><block-hash-rate></block-hash-rate></div>
-        <div class="col-md-3"><block-difficulty></block-difficulty></div>
+      <!-- 4 Top Blocks -->
+      <div class="small-blocks-row">
+        <block-last-block></block-last-block>
+        <block-time-since-last-block></block-time-since-last-block>
+        <block-hash-rate></block-hash-rate>
+        <block-difficulty></block-difficulty>
+        <!-- End 4 Top Blocks -->
       </div>
-
+      <!-- 2 Top Charts -->
       <div class="row">
         <div class="col-md-6">
           <bar-chart-last-ten-blocks-tx></bar-chart-last-ten-blocks-tx>
@@ -39,80 +40,78 @@
               <li><i class="fa fa-circle failed" aria-hidden="true"></i> avg Gas Price (GWEI)</li>
             </ul>
           </div>
-        </div>  
+        </div>
+        <!-- End 2 Top Charts -->
       </div>
       <div class="row">
-        <div class="col-md-12 table-data">
+        <!-- Last 20 Blocks -->
+        <div class="col-md-12">
           <div class="block-title-container">
-            <h3>Blocks</h3>
-            <a class="button-right" href="/blocks">View All</a>
+            <h3>Last Blocks</h3>
+            <router-link to="/blocks" tag="button" class="button-common">View All</router-link>
           </div>
-          <div class="latest-blocks-header">
-            <li>Block#</li>
+          <div class="block-table-header latest-data-header">
+            <li>Block #</li>
             <li></li>
-            <li>TXs</li>
+            <li>Txs</li>
             <li>Reward</li>
           </div>
-          
-          <div class="latest-blocks-data">
+          <div class="latest-data">
             <block-latest-blocks :max-items="20"></block-latest-blocks>
           </div>
-
           <div class="footnote">
             <ul>
               <li><i class="fa fa-circle success" aria-hidden="true"></i> Success</li>
               <li><i class="fa fa-circle failed" aria-hidden="true"></i> Failed</li>
             </ul>
           </div>
+           <!-- End Last 20 Blocks -->
         </div>
-        <div class="col-md-12 table-data">
+         <!-- Last Block Transactions -->
+        <div class="col-md-12">
           <div class="block-title-container">
-            <h3>Transactions</h3>
-            <a class="button-right" href="/transactions">View All</a>
+            <h3>Last Transactions</h3>
+            <router-link to="/transactions" tag="button" class="button-common">View All</router-link>
           </div>
-          <div class="last-transactions-header">
-            <li>TXn#</li>
+          <div class="tx-table-header latest-data-header">
+            <li>Tx #</li>
             <li class="eth">ETH</li>
             <li class="limit">Gas Limit</li>
             <li class="gas">GWEI</li>
             <li></li>
           </div>
-          
-          <div class="last-transactions-data">
+          <div class="latest-data">
             <block-last-transactions :transactions="txs"></block-last-transactions>
           </div>
-
           <div class="footnote">
             <ul>
               <li><i class="fa fa-check success" aria-hidden="true"></i> Success</li>
               <li><i class="fa fa-times failed" aria-hidden="true"></i> Failed</li>
             </ul>
           </div>
+           <!-- End Last Block Transactions -->
         </div>
       </div>
-
     </div>
   </div>
 </template>
-
 <script lang="ts">
-  import Vue from 'vue'
-  const MAX_ITEMS = 20
-  export default Vue.extend({
-    name: 'FramesHome',
-    data () {
-      return {}
-    },
-    created (){},
-    computed:{
-      txs(){
-          if(this.$store.getters.getTxs.length) return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
-          else return []
-      }
+import Vue from 'vue'
+const MAX_ITEMS = 20
+export default Vue.extend({
+  name: 'FramesHome',
+  data() {
+    return {}
+  },
+  created() {},
+  computed: {
+    txs() {
+      if (this.$store.getters.getTxs.length) return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
+      else return []
     }
-  })
+  }
+})
 </script>
-
 <style scoped lang="less">
-  @import "~lessPath/sunil/frames/home.less";
+@import "~lessPath/sunil/frames/home.less";
 </style>

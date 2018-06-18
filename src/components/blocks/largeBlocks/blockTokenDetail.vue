@@ -1,12 +1,12 @@
 <template>
   <div class="token-overview-container">
-    <button class="top-right-button-common" v-on:click="showMore = !showMore" v-if="showMore === false">More</button>
-    <button class="top-right-button-common" v-on:click="showMore = !showMore" v-if="showMore === true">Less</button>
+    <button class="button-common" v-on:click="showMore = !showMore" v-if="showMore === false">More</button>
+    <button class="button-common" v-on:click="showMore = !showMore" v-if="showMore === true">Less</button>
     <h2>{{token.name}}</h2>
     <div class="detail">
       <ul v-if="isHolder" class="grid-block">
         <li>Holder</li>
-        <li>{{token.holder}}</li>
+        <li><router-link :to="'/address/'+token.holder">{{token.holder}}</router-link></li>
         <li>Balance</li>
         <li>{{token.balance}} {{token.symbol}} </li>
       </ul>

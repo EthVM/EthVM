@@ -1,59 +1,55 @@
-
-
+@import '~lessPath/sunil/globalVars';
 
 #component{
-  
   padding: 30px;
   color: white;
-  border-radius: 0px;
+  border-radius: 2px;
   background-repeat: no-repeat;
   background-size: 95px;
   background-position: right -10px bottom -15px;
+  box-shadow: 1px 0px 20px rgba(0, 0, 0, 0.2);
+  min-width: 100px;
 
   .block-title{
     font-size: 16px;
-    font-weight: 600;
+    font-weight: @main-fw-bold;
     margin: 0;
-    .chart-title{
-      margin-top: 10px;
-    }
-
+    min-width: 100px;
+    
   }
 
   .small-bottom-block{
     .small-block-value{
-
-      font-size: 24px;
+      font-size: 20px;
       margin: 0;
       line-height: 24px;
-      font-weight: 600;
+      font-weight: @main-fw-bold;
     }
   }
-
 }
 
 
 
 .color1{
-  background-color: #2779ff;
+  background-color: @main-color-blue;
   background-image: url("~@/assets/icon1.png");
 }
 
 
 .color2{
-  background-color: #7c76fc;
+  background-color: @color-purple;
   background-image: url("~@/assets/icon2.png");
 }
 
 
 .color3{
- background-color: #f9967b; 
+ background-color: @color-orange; 
  background-image: url("~@/assets/s-info-blocks/failed.png");
 }
 
 
 .color4{
-  background-color: #20c0c7;
+  background-color: @color-green;
   background-image: url("~@/assets/s-info-blocks/success.png");
   background-position: right -20px bottom -20px !important;
   background-size: 110px !important;
@@ -61,25 +57,25 @@
 
 
 .color5{
-  background-color: #f9967b; 
+  background-color: @color-orange; 
   background-image: url("~@/assets/s-info-blocks/hash.png");
 }
 
 
 .color6{
-  background-color: #7c76fc;
+  background-color: @color-purple;
   background-image: url("~@/assets/icon6.png");
 }
 
 
 .color7{
- background-color: #f9967b; 
+ background-color: @color-orange; 
  background-image: url("~@/assets/icon7.png");
 }
 
 
 .color8{
-  background-color: #20c0c7;
+  background-color: @color-green;
   background-image: url("~@/assets/icon8.png");
   background-position: right -10px bottom -5px !important;
 }

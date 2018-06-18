@@ -1,11 +1,4 @@
-
-
-a{
-    color: #2779ff;
-    text-decoration: none;
-    background-color: transparent;
-}
-
+@import '~lessPath/sunil/global';
 
 li{
   list-style-type: none;
@@ -13,55 +6,35 @@ li{
   padding: 0;
 }
 
-
 .last-transactions{
-
   .block-body{
-    
     .block:last-child{
       margin-bottom: 0px;
     }
-
     .block{
-
       background-color: white;
       margin-bottom: 5px;
-
       display: grid;
       grid-template-columns: 1fr 100px 100px 100px 50px;
       grid-column-gap: 0px;
-
       position: relative;
-
+      border: 2px;
+      border-radius: @main-radius;
       .vertical-middle>div{
         display: inline-block;
         vertical-align: top;
       }
-
       .vertical-middle .tooltip-container{
         position: absolute;
-
       }
-
-
-
-      .status{
-        //text-align: center;
-      }
-
+      /* li: */
       li{
         padding: 15px 15px;
-        
-
-
         p{
           text-overflow: ellipsis;
           overflow: hidden;
           white-space: nowrap;
         }
-
-
-
         .hash-block,
         .width-limit{
           display: grid;
@@ -71,103 +44,58 @@ li{
             text-overflow: ellipsis;
             overflow: hidden;
             white-space: nowrap;
-
           }  
         }
-
-        
         .fromto{
           text-overflow: ellipsis;
           overflow: hidden;
           white-space: nowrap;
-
           margin-right: 10px;
-
           display: grid;
           grid-template-columns: repeat(2, 50px auto);
-
-
           .title{
-            font-weight: 600;
+            font-weight: @main-fw-bold;
             color: black;
           }
           p{
             display: inline-block;
           }
         }
-
-        
         .failed{
-          color: #f9967b;
+          color: @color-orange;
         }
         .success{
-          color: #20c0c7;
+          color: @color-green;
         }
-      
-
-      }//li
-
+      } /* End li */
     }
   }
-
 }
 
-
-
-
-.block-header{
-  font-weight: 600;
-  color: black;
-  display: grid;
-  grid-template-columns: 1fr 100px 100px 100px 50px;
-  grid-column-gap: 0px;
-  padding-right: 10px;
-  background-color: white;
-  margin-bottom: 5px;
-  li{
-      padding: 15px;
-  }
-}
-
-
-
-
-@media all and (max-width: 799px){
+/* Small to edium Screen Queries: */
+@media all and (max-width: @bp-medium){
   .last-transactions .block-body .block li .hash{
     margin-bottom: 0px;
   }
-
   .block-body{
-
     .fromto{
       grid-template-columns: 50px auto !important;
     }
-
-
-    p{
-      //line-height: 12px !important;
-    }
-
     .hash{
       margin-bottom: 0px !important;
     }
-
     li{
       padding: 5px !important;
       font-size: 12px;
     }
-
-    .limit, .gas{
-      display: none !important;
-    }
-
-    .block{
-      grid-template-columns: auto 60px 30px !important;
-      font-size: 10px !important;
-    }
-
   }
-
+  .limit, .gas{
+    display: none !important;
+  }
+  .block{
+    grid-template-columns: auto 60px 30px !important;
+    font-size: 10px !important;
+  }
 }
 
 

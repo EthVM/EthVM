@@ -115,9 +115,6 @@ import Vue from 'vue'
   import blockTxDetail from "@/components/blocks/largeBlocks/txDetail"
   Vue.component('block-tx-detail', blockTxDetail)
 
-  import accountDetail from "@/components/blocks/largeBlocks/accountDetail"
-  Vue.component('account-detail', accountDetail)
-
   import blockTokenTracker from "@/components/blocks/largeBlocks/tokenTracker"
   Vue.component('block-token-tracker', blockTokenTracker)
 
