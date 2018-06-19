@@ -128,8 +128,9 @@ export default Vue.extend({
     });
     /* Getting Token Balances: */
     this.$socket.emit("getTokenBalance", this.address, (err, result) => {
-      if (result.result != "0x") {
-        _this.account.tokens = utils.decode(result.result);
+      // console.log("result",result)
+      if (result != null) {
+        _this.account.tokens = result;
         _this.tokensLoaded = true;
         console.log(_this.account.tokens)
       } else {
@@ -155,7 +156,7 @@ export default Vue.extend({
     });
     _this.setTabs();
     /*Getting Address Pending Transactions: */
-    // Method here: 
+    // Method here:
   },
   methods: {
     /*Checking of address is Miner? --> add new tab for the manu*/

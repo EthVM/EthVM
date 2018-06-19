@@ -39,7 +39,7 @@
               <div v-if="checkValue(getBalance(token.balance, token.decimals), true)" class="tooltip-button token-tooltip" v-tooltip="getBalance(token.balance, token.decimals)">
                 <i class="fa fa-question-circle-o" aria-hidden="true"></i></div>
             </div>
-            <p>{{token.balance}}</p>
+            <p>{{token.USDValue}}</p>
           </router-link>
           <!-- End Tokens List -->
         </div>
