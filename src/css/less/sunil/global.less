@@ -88,7 +88,7 @@ ul{
     h3{
       font-weight: @main-fw-bold;
       color: black;
-      font-size: 24px;
+      font-size: @font-h3-web;
       margin: 0px 0 6px 0;
     }
     h6{    
@@ -299,6 +299,12 @@ ul{
   }
 }
 
+/*Class for copy icon: */
+.copy{
+   visibility: hidden;
+   color: @color-purple;
+}
+
 
 /* Small-Large Screen Size: */
 @media all and (max-width: @bp-large){
@@ -323,7 +329,6 @@ ul{
   .button-common{
     padding: 4px 10px;
     right: 20px;
-    top: 0px;
     min-width: 50px;
     font-size: 12px;
   }
@@ -360,7 +365,17 @@ ul{
   .limit, .gas{
     display: none !important;
   }
-  
+  .page-title-container{
+    h3{
+      font-size: @font-h3-mobile;
+    }
+  }
+
+  .block-title-container{
+    h3{
+      font-size: @font-h3-mobile;
+    }
+  }  
 }
 
 

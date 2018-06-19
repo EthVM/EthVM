@@ -1,24 +1,19 @@
 <template>
   <div id="block">
     <div class="container">
-      
+      <!-- Page Title -->
       <div class="page-title-container">
         <div class="page-title">
           <h3>Block Detail</h3>
           <h6 class="text-muted">Block's Detail Information</h6>
         </div>
-
         <div class="search-block">
           <block-search></block-search>
         </div>
+        <!-- End Page Title -->
       </div>
-
-      
       <div class="row">
         <div class="col-md-12 col-sm-12 col-xs-12">
-          <div class="block-title-container">
-            <h3 class="hidden">Block Information</h3>
-          </div>
           <div class="block">
             <block-block-detail :block="block" :uncles="uncles"></block-block-detail>
           </div>
@@ -27,15 +22,8 @@
           <div class="block-title-container">
             <h3>Transactions</h3>
           </div>
-          <div class="last-transactions-header">
-            <li>TXn#</li>
-            <li class="eth">ETH</li>
-            <li class="limit">Gas Limit</li>
-            <li class="gas">GWEI</li>
-            <li></li>
-          </div>
           <div class="block">
-            <block-last-transactions :transactions="transactions"></block-last-transactions>
+            <block-last-transactions :transactions="transactions" :showHeader="true"></block-last-transactions>
           </div>
         </div>
       </div>

@@ -64,6 +64,8 @@ import Vue from 'vue'
   import tabComponent from "@/components/blocks/smallBlocks/tabComponent"
   Vue.component('tab-component', tabComponent)
 
+  import copyToClipComponent from "@/components/blocks/smallBlocks/copyToClipComponent"
+   Vue.component('copy-to-clip-component', copyToClipComponent)
   /* Home Page Small Blocks: */
   import blockLastBlock from "@/components/blocks/smallBlocks/lastBlock"
   Vue.component('block-last-block', blockLastBlock)
@@ -87,6 +89,8 @@ import Vue from 'vue'
 
   import pendingTxSmallBlock from "@/components/blocks/smallBlocks/pendingTxSmallBlock"
   Vue.component('pending-tx-small-block', pendingTxSmallBlock)
+
+
 
 
 

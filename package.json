@@ -18,6 +18,7 @@
         "async": "^2.6.0",
         "axios": "^0.17.1",
         "chalk": "^2.4.1",
+        "clipboard-copy": "^2.0.0",
         "copy-webpack-plugin": "^4.5.1",
         "ethereumjs-abi": "^0.6.5",
         "ethereumjs-units": "^0.2.0",
