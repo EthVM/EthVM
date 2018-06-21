@@ -146,7 +146,7 @@ export default Vue.extend({
       return this.block.getIsUncle()
     }
   }
-})
+});
 </script>
 <style scoped="" lang="less">
 @import "~lessPath/sunil/blocks/largeBlocks/detailComponent.less";

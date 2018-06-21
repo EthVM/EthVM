@@ -20,7 +20,7 @@
         </div>
         <div class="col-md-12 col-sm-12 col-xs-12" v-if="!isUncle">
           <div class="block-title-container">
-            <h3>Transactions</h3>
+            <h3>Block Transactions</h3>
           </div>
           <div class="block">
             <block-last-transactions :transactions="transactions" :showHeader="true"></block-last-transactions>
@@ -68,16 +68,17 @@ export default Vue.extend({
   },
   mounted: function() {
     let _this = this
+    /* Get Block Data: */
     this.$socket.emit('getBlock', Buffer.from(this.blockHash.substring(2), 'hex'), (err, data) => {
       if (data) {
         _this.block = new Block(data)
-
         let uncleHashes = _this.block.getUncleHashes()
+        /*Get Transactions for the block: */
         _this.$socket.emit('getBlockTransactions', _this.block.getHash().toBuffer(), (err, data) => {
           _this.transactions = data.map((_tx) => {
             return new Tx(_tx)
           })
-        })
+        });
         uncleHashes.forEach((_hash: any, idx: number) => {
           _this.$socket.emit('getBlock', _hash.toBuffer(), (err, data) => {
             _this.uncles.push(new Block(data))
@@ -86,8 +87,8 @@ export default Vue.extend({
       }
     })
   }
-})
+});
 </script>
 <style scoped lang="less">
-@import "~lessPath/sunil/frames/blockDetail.less";
+@import "~lessPath/sunil/global.less";
 </style>

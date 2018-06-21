@@ -12,7 +12,11 @@
         </div>
         <!-- End Top Container -->
       </div>
-      <block-token-detail :token="token" :isHolder="holderPresent"></block-token-detail>
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <block-token-detail :token="token" :isHolder="holderPresent"></block-token-detail>
+        </div>
+      </div>
       <!-- Tab Menu -->
       <tab-component :tabs="tokenTabs"></tab-component>
       <div class="tab-menu-container">
@@ -22,12 +26,12 @@
             <div v-if="account.txs">
             </div>
             <!End Transfers -->
-          </div>
         </div>
-        <!-- End Tab Menu -->
       </div>
+      <!-- End Tab Menu -->
     </div>
-    <!-- container -->
+  </div>
+  <!-- container -->
   </div>
 </template>
 <script lang="ts">
@@ -71,22 +75,20 @@ export default Vue.extend({
   },
   created() {
     var _this = this
-    /* Get Transfers History: */
+      /* Get Transfers History: */
 
     /* If (holderPresent) 
       Get Total Holders:
       Get Total Supply: */
 
-   if(!_this.holderPresent) {
+    if (!_this.holderPresent) {
       var newTab = {
         id: 1,
         title: 'Holders List',
         isActive: false
       }
       _this.tokenTabs.push(newTab)
-   }
-
-
+    }
   },
   methods: {},
   computed: {
@@ -95,10 +97,9 @@ export default Vue.extend({
       if (_this.holderAddr) return true
       return false
     },
-
   }
 });
 </script>
 <style scoped="" lang="less">
-@import "~lessPath/sunil/frames/tokenDetail.less";
+@import "~lessPath/sunil/global.less";
 </style>

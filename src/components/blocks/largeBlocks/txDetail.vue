@@ -7,8 +7,11 @@
     </div>
     <div class="detail-container">
       <!-- Tx Info -->
-      <div class="detail-row">
+      <div class="detail-row-copy">
         <li>Hash</li>
+        <div class="copy">
+          <copy-to-clip-component :valueToCopy="tx.getHash().toString()"></copy-to-clip-component>
+        </div>
         <li>{{tx.getHash().toString()}}</li>
       </div>
       <div class="detail-row">
@@ -20,20 +23,29 @@
         <li>{{tx.getTimestamp().toDate().toString()}} (
           <timeago :since="tx.getTimestamp().toDate()" :auto-update="10"></timeago>)</li>
       </div>
-      <div class="detail-row">
+      <div class="detail-row-copy">
         <li>From</li>
+        <div class="copy">
+          <copy-to-clip-component :valueToCopy="tx.getFrom().toString()"></copy-to-clip-component>
+        </div>
         <li class="address-link">
           <router-link :to="'/address/'+tx.getFrom().toString()">{{tx.getFrom().toString()}}</router-link>
         </li>
       </div>
-      <div v-if="tx.getContractAddress().toString()" class="detail-row">
+      <div v-if="tx.getContractAddress().toString()" class="detail-row-copy">
         <li>Contract</li>
+        <div class="copy">
+          <copy-to-clip-component :valueToCopy="tx.getContractAddress().toString()"></copy-to-clip-component>
+        </div>
         <li class="link">
           <router-link :to="'/address/'+tx.getContractAddress().toString()">{{tx.getContractAddress().toString()}}</router-link>
         </li>
       </div>
-      <div v-else class="detail-row">
+      <div v-else class="detail-row-copy">
         <li>To</li>
+        <div class="copy">
+          <copy-to-clip-component :valueToCopy="tx.getTo().toString()"></copy-to-clip-component>
+        </div>
         <li class="link">
           <router-link :to="'/address/'+tx.getTo().toString()">{{tx.getTo().toString()}}</router-link>
         </li>
@@ -42,8 +54,11 @@
         <li>Amount</li>
         <li>{{tx.getValue().toEth().toString()}}&nbsp;ETH</li>
       </div>
-      <div class="detail-row">
+      <div class="detail-row-copy">
         <li>Block</li>
+        <div class="copy">
+          <copy-to-clip-component :valueToCopy="tx.getBlockNumber().toNumber()"></copy-to-clip-component>
+        </div>
         <li class="link">
           <router-link :to="'/block/'+tx.getBlockHash().toString()">{{tx.getBlockNumber().toNumber()}}</router-link>
         </li>
@@ -97,12 +112,10 @@ export default Vue.extend({
     }
   },
   mounted: function() {
-
   },
   computed: {
-
   }
-})
+});
 </script>
 <style scoped="" lang="less">
 @import "~lessPath/sunil/blocks/largeBlocks/detailComponent.less";

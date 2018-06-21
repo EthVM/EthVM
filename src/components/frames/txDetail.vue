@@ -69,8 +69,8 @@ export default Vue.extend({
       }
     })
   }
-})
+});
 </script>
 <style scoped lang="less">
-@import "~lessPath/sunil/frames/blockDetail.less";
+@import "~lessPath/sunil/global.less";
 </style>
