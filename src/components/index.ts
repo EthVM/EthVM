@@ -36,7 +36,7 @@ import Vue from 'vue'
   Vue.component('frame-address', frameAddress)
 
 
- 
+
 
 /* Header ---------------------- */
   import blockHeader from "@/components/blocks/header/header"
@@ -156,9 +156,13 @@ import Vue from 'vue'
   import accountsCreated from "@/components/blocks/smallBlocks/charts/accountsCreated"
   Vue.component('account-created-chart', accountsCreated)
 
-  
+
   import avgBlockSize from "@/components/blocks/smallBlocks/charts/aveBlockSize"
   Vue.component('block-size-chart', avgBlockSize)
+
+
+  import avgGasLimit from "@/components/blocks/smallBlocks/charts/aveGasLimit"
+  Vue.component('gas-limit-chart', avgGasLimit)
 
 
 /*Tooltip ---------------------- */
@@ -172,7 +176,7 @@ import Vue from 'vue'
 
 
    /* Generic components ---------*/
-  
+
   /*
   import usageBar from "@/components/NewHome/Sections/Generic/UsageBar"
   Vue.component('usage-bar', usageBar)
