@@ -1,18 +1,28 @@
 <template>
   <div class="">
     <div class="container">
+      <!-- Page Title -->
       <div class="page-title-container">
         <div class="page-title">
-          <h3>Address Overview</h3>
+          <h3>Address </h3>
           <h6 class="text-muted">Ethereum wallet address overview / Transactions information</h6>
         </div>
         <div class="search-block">
           <block-search></block-search>
         </div>
+        <!-- End Page Title -->
       </div>
-      <address-detail :account="account"></address-detail>
-      <tab-component :tabs="addressTabs"></tab-component>
+      <!-- Address Details -->
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <address-detail :account="account"></address-detail>
+        </div>
+        <!-- End Address Details -->
+      </div>
       <!-- Tab Menu -->
+      <tab-component :tabs="addressTabs"></tab-component>
+      <!-- End Tab Menu -->
+      <!--Tab Content -->
       <div class="tab-menu-container">
         <div class="tab-content">
           <!-- Transactions -->
@@ -43,6 +53,7 @@
             <block-address-tx :address='account' :transactions='account.txs' :isPending=true></block-address-tx>
             <!-- End Pending Transactions -->
           </div>
+          <!--Mining History -->
           <div v-if="account.isMiner">
             <div v-if="addressTabs[3].isActive">
               <div class="sub-tab mining-history-container">
@@ -58,9 +69,10 @@
                 </ul>
               </div>
             </div>
+            <!--End Mining History -->
           </div>
         </div>
-        <!-- End Tab Menu -->
+        <!-- End Tab Content -->
       </div>
     </div>
     <!-- container -->

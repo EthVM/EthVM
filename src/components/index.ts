@@ -26,11 +26,8 @@ import Vue from 'vue'
   import frameTxDetail from "@/components/frames/txDetail"
   Vue.component('frame-tx-detail', frameTxDetail)
 
-  import frameAccount from "@/components/frames/account"
-  Vue.component('frame-account', frameAccount)
-
   import frameTokenDetail from "@/components/frames/tokenDetail"
-   Vue.component('frame-token-detail', frameTokenDetail)
+  Vue.component('frame-token-detail', frameTokenDetail)
 
   import frameAddress from "@/components/frames/address"
   Vue.component('frame-address', frameAddress)
@@ -65,7 +62,8 @@ import Vue from 'vue'
   Vue.component('tab-component', tabComponent)
 
   import copyToClipComponent from "@/components/blocks/smallBlocks/copyToClipComponent"
-   Vue.component('copy-to-clip-component', copyToClipComponent)
+  Vue.component('copy-to-clip-component', copyToClipComponent)
+
   /* Home Page Small Blocks: */
   import blockLastBlock from "@/components/blocks/smallBlocks/lastBlock"
   Vue.component('block-last-block', blockLastBlock)

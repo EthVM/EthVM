@@ -27,18 +27,18 @@
           </div>
         </div>
       </div>
-      
-
     </div>
   </div>
 </template>
-
-
 <script lang="ts">
 import Vue from 'vue';
 import store from '@/states';
 import chartOptions from '@/sampleData/chartData.json';
-import { Block, common, Tx } from '@/libs';
+import {
+  Block,
+  common,
+  Tx
+} from '@/libs';
 export default Vue.extend({
   name: 'Block',
   props: [
@@ -85,13 +85,9 @@ export default Vue.extend({
         })
       }
     })
-
   }
-
 })
-
 </script>
-
 <style scoped lang="less">
-  @import "~lessPath/sunil/frames/blockDetail.less";
+@import "~lessPath/sunil/frames/blockDetail.less";
 </style>

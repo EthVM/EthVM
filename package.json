@@ -20,6 +20,7 @@
         "chalk": "^2.4.1",
         "clipboard-copy": "^2.0.0",
         "copy-webpack-plugin": "^4.5.1",
+        "ethereum-blockies": "^0.1.1",
         "ethereumjs-abi": "^0.6.5",
         "ethereumjs-units": "^0.2.0",
         "lodash.debounce": "^4.0.8",

@@ -22,7 +22,7 @@ export default Vue.extend({
       }
     }
   }
-})
+});
 </script>
 <style scoped lang="less">
 @import "~lessPath/sunil/blocks/smallBlocks/component.less";

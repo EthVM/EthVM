@@ -59,7 +59,7 @@
         <!-- End Main Info -->
         <!-- Show More Details -->
         <transition name="fade">
-          <div class="detail-more" v-if="showMore" v-bind:class="{ 'active': showMore }">
+          <div class="detail-more" v-if="showMore">
             <div class="detail-row" v-if="!isUncle">
               <li>Gas Limit</li>
               <li>{{block.getGasLimit().toNumber()}}</li>
