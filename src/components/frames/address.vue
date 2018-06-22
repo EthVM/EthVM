@@ -24,53 +24,51 @@
       <!-- End Tab Menu -->
       <!--Tab Content -->
       <div class="tab-menu-container">
-        <div class="tab-content">
-          <!-- Transactions -->
-          <div v-if="addressTabs[0].isActive">
-            <div v-if="account.txs">
-              <block-address-tx :address='account' :transactions='account.txs'></block-address-tx>
-            </div>
-            <!-- End Transactions -->
+        <!-- Transactions -->
+        <div v-if="addressTabs[0].isActive">
+          <div v-if="account.txs">
+            <block-address-tx :address='account' :transactions='account.txs'></block-address-tx>
           </div>
-          <!-- Tokens -->
-          <div v-if="addressTabs[1].isActive" class="" :account="account">
-            <div v-if="!tokenError">
-              <div v-if="tokensLoaded">
-                <block-token-tracker :tokens="account.tokens" :holder="account.address"></block-token-tracker>
-              </div>
-              <div v-else class="loading-tokens">
-                <i class="fa fa-spinner fa-pulse fa-4x fa-fw"></i>
-                <span class="sr-only">Loading...</span>
-              </div>
+          <!-- End Transactions -->
+        </div>
+        <!-- Tokens -->
+        <div v-if="addressTabs[1].isActive">
+          <div v-if="!tokenError">
+            <div v-if="tokensLoaded">
+              <block-token-tracker :tokens="account.tokens" :holder="account.address"></block-token-tracker>
             </div>
-            <div v-else class="info">
-              <p> Oops Something Went Wrong :( </p>
+            <div v-else class="loading-tokens">
+              <i class="fa fa-spinner fa-pulse fa-4x fa-fw"></i>
+              <span class="sr-only">Loading...</span>
             </div>
-            <!-- End Tokens -->
           </div>
-          <!-- Pending Transactions -->
-          <div v-if="addressTabs[2].isActive" class="">
-            <block-address-tx :address='account' :transactions='account.txs' :isPending=true></block-address-tx>
-            <!-- End Pending Transactions -->
+          <div v-else class="info">
+            <p> Oops Something Went Wrong :( </p>
           </div>
-          <!--Mining History -->
-          <div v-if="account.isMiner">
-            <div v-if="addressTabs[3].isActive">
-              <div class="sub-tab mining-history-container">
-                <ul>
-                  <li>Name:</li>
-                  <li>TWN</li>
-                  <li>Balance:</li>
-                  <li>20,930 TWN</li>
-                  <li>Value:</li>
-                  <li>$0.00</li>
-                  <li>ERC 20 Contract:</li>
-                  <li>0x045619099665fc6f661b1745e5350290ceb933f</li>
-                </ul>
-              </div>
+          <!-- End Tokens -->
+        </div>
+        <!-- Pending Transactions -->
+        <div v-if="addressTabs[2].isActive" class="">
+          <block-address-tx :address='account' :transactions='account.txs' :isPending=true></block-address-tx>
+          <!-- End Pending Transactions -->
+        </div>
+        <!--Mining History -->
+        <div v-if="account.isMiner">
+          <div v-if="addressTabs[3].isActive">
+            <div>
+              <ul>
+                <li>Name:</li>
+                <li>TWN</li>
+                <li>Balance:</li>
+                <li>20,930 TWN</li>
+                <li>Value:</li>
+                <li>$0.00</li>
+                <li>ERC 20 Contract:</li>
+                <li>0x045619099665fc6f661b1745e5350290ceb933f</li>
+              </ul>
             </div>
-            <!--End Mining History -->
           </div>
+          <!--End Mining History -->
         </div>
         <!-- End Tab Content -->
       </div>
@@ -129,22 +127,19 @@ export default Vue.extend({
     var _this = this;
     /* Geting Address Balance: */
     this.$socket.emit("getBalance", this.address, (err, result) => {
-      console.log(err, result);
       if (!err && result) {
         let balance = common
           .EthValue(common.HexToBuffer(result.result))
           .toEth();
         _this.account.balance = balance;
-        console.log("account balance in eth: " + _this.account.balance);
       }
     });
     /* Getting Token Balances: */
     this.$socket.emit("getTokenBalance", this.address, (err, result) => {
-      // console.log("result",result)
       if (result != null) {
-        _this.account.tokens = result;
+        _this.account.tokens = result
         _this.tokensLoaded = true;
-        console.log(_this.account.tokens)
+        console.log("tokens", _this.account.tokens)
       } else {
         _this.tokenError = true;
       }

@@ -110,7 +110,7 @@ export default Vue.extend({
       else return []
     }
   }
-})
+});
 </script>
 <style scoped lang="less">
 @import "~lessPath/sunil/frames/home.less";

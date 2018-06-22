@@ -1,18 +1,40 @@
+@import '~lessPath/sunil/global';
 
-
-
-.about{
-  
-
-
-  .row{
-    margin-bottom: 30px;
+.about{  
+  .about-content{
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-row-gap: 30px;
   }
 
-
   .content{
-    padding: 40px 120px;
+    justify-items: center;
+    padding: 20px 120px;
     background-color: white;
+    font-size: @font-web;
+    display: grid;
+  }
+
+  .content-links{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 30px;
+
+    .content{
+      padding: 20px 30px;
+    }
+  }
+
+  .logo{
+    color: black;
+    font-size: 40px;
+  }
+
+}
+
+
+
+.old{
 
     img{
       display: block;
@@ -77,11 +99,3 @@
     }
 
   }
-
-}
-
-
-
-
-
-
