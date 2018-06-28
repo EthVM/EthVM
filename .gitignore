@@ -18,3 +18,4 @@ yarn-error.log*
 
 # Project
 docker/volumes/
+dist/
