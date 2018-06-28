@@ -6,12 +6,13 @@
     "private": true,
     "scripts": {
         "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+        "dev:docker": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --progress --config build/webpack.dev.conf.js",
         "start": "npm run dev",
         "dist": "history-server dist",
+        "dist:docker": "history-server dist -p 80",
         "lint": "eslint --ext .js,.vue src test/unit/specs",
         "external": "node /external/index.js",
-        "build": "node build/build.js",
-        "docker-dev": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --progress --config build/webpack.dev.conf.js"
+        "build": "node build/build.js"
     },
     "dependencies": {
         "@types/socket.io-client": "^1.4.32",

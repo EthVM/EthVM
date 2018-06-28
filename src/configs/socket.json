@@ -1,6 +1,4 @@
 {
-    "purl": "http://localhost",
-    "url": "http://localhost",
-    "pport": "3000",
-    "port": "3000"
+  "url": "http://localhost",
+  "port": "3000"
 }

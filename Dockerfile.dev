@@ -10,10 +10,6 @@ WORKDIR /var/ethvm
 # Copy
 COPY . .
 
-# ENV Variables
-ENV ETHVM_HOST='0.0.0.0'
-ENV ETHVM_PORT='8080'
-
 # Expose
-EXPOSE 8080
-ENTRYPOINT npm install --unsafe-perm && npm run docker-dev
+EXPOSE 80
+ENTRYPOINT npm install --unsafe-perm && npm run dev:docker

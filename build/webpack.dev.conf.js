@@ -54,7 +54,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 })
 
 module.exports = new Promise((resolve, reject) => {
-    portfinder.basePort = process.env.PORT || config.dev.port
+    portfinder.basePort = process.env.ETHVM_PORT || config.dev.port
     portfinder.getPort((err, port) => {
         if (err) {
             reject(err)

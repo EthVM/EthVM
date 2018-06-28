@@ -12,12 +12,8 @@ COPY . .
 
 # Install & Build
 RUN npm install
-RUN npm build
-
-# ENV Variables
-ENV ETHVM_HOST='0.0.0.0'
-ENV ETHVM_PORT='8080'
+RUN npm run build
 
 # Expose
-EXPOSE 8080
-ENTRYPOINT ["npm", "run", "dist"]
+EXPOSE 80
+ENTRYPOINT ["npm", "run", "dist:docker"]
