@@ -1,101 +1,78 @@
 @import '~lessPath/sunil/global';
 
-.about{  
-  .about-content{
-    display: grid;
-    grid-template-rows: 1fr;
-    grid-row-gap: 30px;
+.wrap {
+  i {
+    font-size: 80px;
   }
 
-  .content{
-    justify-items: center;
-    padding: 20px 120px;
-    background-color: white;
-    font-size: @font-web;
-    display: grid;
+  p {
+    // text-align: left;
   }
 
-  .content-links{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-column-gap: 30px;
+  h2 {
+    margin-top: 0;
+  }
 
-    .content{
-      padding: 20px 30px;
+  .grid-container {
+    @media all and (max-width: @bp-medium) {
+      display: block;
+      padding: 20px 0;
+    }
+    padding: 100px 0;
+    background-color: @color-white;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    grid-column-gap: 0px;
+    grid-row-gap: 80px;
+    grid-template-areas: 
+      "whatis whatis"
+      "github medium"
+      "social social"
+      "disclaimer disclaimer";
+
+    >div {
+      @media all and (max-width: @bp-medium) {
+        padding: 30px 30px;
+      }
+      @media all and (max-width: @bp-small) {
+        padding: 30px 20px;
+      }
+      text-align: center;
+      padding: 0 130px;
+    }
+
+    .what-is-ethvm {
+      grid-area: whatis;
+      .logo-image {
+        height: 80px;
+        margin-bottom: 70px;
+      }
+    }
+
+    .github {
+      grid-area: github;
+    }
+
+    .medium {
+      grid-area: medium;
+    }
+
+    .social {
+      grid-area: social;
+      p {
+        text-align: center;
+      }
+      i {
+        font-size: 30px;
+        padding: 0 5px;
+        color: @text-color-grey;
+      }
+    }
+
+    .disclaimer {
+      grid-area: disclaimer;
     }
   }
-
-  .logo{
-    color: black;
-    font-size: 40px;
-  }
-
 }
 
-
-
-.old{
-
-    img{
-      display: block;
-      margin: 0 auto;
-    }
-
-    h2{
-      margin-top: 20px;
-      margin-bottom: 25px;
-      font-size: 23px;
-      color: black;
-      font-weight: 600;
-      text-align: center;
-    }
-    p{
-      text-align: center;
-      line-height: 1.5;
-      color: #8896a3;
-
-    }
-
-    .disclaimer{
-      margin-top: 10px;
-      //font-size: 10px;
-    }
-
-    .link{
-
-      margin-top: 15px;
-      text-transform: uppercase;
-      font-size: 12px;
-      font-weight: 900;
-      a{
-        color: #2779ff;
-      }
-    }
-
-    .social-box{
-      display: flex;
-
-      ul{
-        margin: 0 auto;
-        margin-top: 20px;
-        li{
-          display: inline-block;
-          padding: 20px;
-          i{
-            font-size: 30px;
-          }
-        }
-      }
-    }
-
-    .icon{
-      display: block;
-      text-align: center;
-
-      i{
-        font-size: 80px;
-        
-      }
-    }
-
-  }

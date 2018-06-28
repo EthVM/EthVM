@@ -14,7 +14,6 @@
       </div>
 
       <block-about></block-about>
-      
 
     </div>
   </div>
