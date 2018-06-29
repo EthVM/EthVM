@@ -1,8 +1,7 @@
 <template>
   <div class="token-tracker">
-    <div class="block-container">
-      <div v-if="getTotalTokens == 0">
-        <div class="info">
+      <div v-if="!tokens">
+        <div class="info-common">
           <p> Address does not hold any common tokens </p>
         </div>
       </div>
@@ -10,21 +9,21 @@
       <div v-else>
         <!-- Header -->
         <div class="tokens-header">
-          <p> Total Number of Tokens: {{totalTokens}} </p>
-          <p> Total Value: $100</p>
+          <p> Total Number of Tokens: {{getTotalTokens}} </p>
+          <p> Total Value: ${{getTotalUSDValue}}</p>
           <div class="search-block">
             <block-search :phText="placeholder"></block-search>
           </div>
           <!-- End Header -->
         </div>
         <!-- Table Header -->
-        <div class="col-md-12 table-data">
+        <div class="table-data">
           <div class="row">
             <div class="tokens-data-header">
               <p>Symbol</p>
-              <p>Name</p>
+              <p class="token-name">Name</p>
               <p>Amount</p>
-              <p>USD Value</p>
+              <p class="token-usd">USD Value</p>
             </div>
           </div>
           <!-- End Table Header -->
@@ -32,19 +31,22 @@
         <!-- Tokens List -->
         <div class="tokens-list" v-for="token in tokens">
           <router-link :to="'/token/' +  token.addr.toString() + '/holder=' + holder" v-if="token.balance != 0" class="tokens-data">
-            <p>{{token.symbol}}</p>
+            <p class="token-symbol">{{token.symbol}}</p>
             <p class="token-name">{{token.name}}</p>
             <div class="token-balance">
               <div class="">{{checkValue(getBalance(token.balance, token.decimals), false)}}</div>
               <div v-if="checkValue(getBalance(token.balance, token.decimals), true)" class="tooltip-button token-tooltip" v-tooltip="getBalance(token.balance, token.decimals)">
                 <i class="fa fa-question-circle-o" aria-hidden="true"></i></div>
             </div>
-            <p>{{token.USDValue}}</p>
+            <div v-if="token.USDValue > 0" class="token-usd">
+              <p>${{formatUSDBalance(getBalance(token.balance, token.decimals)*token.USDValue)}} (@ ${{formatUSDBalance(token.USDValue)}} per {{token.symbol}})</p>
+            </div>
+            <div v-else class="token-usd">
+              <p> $0.00</p>
+            </div>
           </router-link>
           <!-- End Tokens List -->
         </div>
-      </div>
-      <!-- .section-block-container -->
     </div>
     <!-- .block-container -->
   </div>
@@ -62,6 +64,7 @@ export default Vue.extend({
   data() {
     return {
       totalTokens: 0,
+      totalUSDValue: 0,
       placeholder: 'Search Tokens Symbol/Name'
     }
   },
@@ -74,6 +77,15 @@ export default Vue.extend({
         if (_this.checkBalance(token.balance)) _this.totalTokens++
       })
       return _this.totalTokens
+    },
+    /*Calculates total usd token value: */
+    getTotalUSDValue() {
+      let _this = this
+      let usd = 0
+      _this.tokens.forEach((token) => {
+        _this.totalUSDValue += _this.getBalance(token.balance, token.decimals) * token.USDValue
+      })
+      return _this.formatUSDBalance(_this.totalUSDValue)
     }
   },
   methods: {
@@ -93,18 +105,21 @@ export default Vue.extend({
       let length = amount.toString().length;
       let isShort = false;
       if (length > 6) {
-        amount = NumberFormatter("#,##0.##", amount)
+        amount = NumberFormatter("#,##0.###", amount)
         isShort = true;
       }
       if (!isBool)
         return amount;
       else
         return isShort;
-
+    },
+    /* Format Usd Balance */
+    formatUSDBalance(value) {
+      let _this = this
+      return NumberFormatter("#,##0.##", (value))
     }
   }
-
-})
+});
 </script>
 <style scoped="" lang="less">
 @import '~lessPath/sunil/blocks/largeBlocks/tokenTracker';

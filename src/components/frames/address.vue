@@ -42,7 +42,7 @@
               <span class="sr-only">Loading...</span>
             </div>
           </div>
-          <div v-else class="info">
+          <div v-else class="info-common">
             <p> Oops Something Went Wrong :( </p>
           </div>
           <!-- End Tokens -->
@@ -103,7 +103,7 @@ export default Vue.extend({
       },
       addressTabs: [{
         id: 0,
-        title: 'Transactions',
+        title: 'Txs History',
         isActive: true,
       }, {
         id: 1,
@@ -111,7 +111,7 @@ export default Vue.extend({
         isActive: false,
       }, {
         id: 2,
-        title: 'Pending Transactions',
+        title: 'Pending Txs',
         isActive: false,
       }],
       tokensLoaded: false,
@@ -136,7 +136,7 @@ export default Vue.extend({
     });
     /* Getting Token Balances: */
     this.$socket.emit("getTokenBalance", this.address, (err, result) => {
-      if (result != null) {
+      if (result != null && result.result != "0x") {
         _this.account.tokens = result
         _this.tokensLoaded = true;
         console.log("tokens", _this.account.tokens)

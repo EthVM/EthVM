@@ -5,36 +5,34 @@
     grid-template-columns: 1fr  1fr;
     margin-top: 15px;
     margin-bottom: 15px;
-    font-size: 14px;
+    font-size: @font-web;
     .filter-tx{
     	justify-self: start;
     	display: grid;
-    	grid-gap: 10px;
+    	grid-row-gap: 10px;
     	width:100%;
         grid-template-rows: 1fr 1fr;
-
         .tx-tabs{
         	display: grid;
         	grid-template-columns:  0.1fr 0.6fr 1fr 1fr;
         	justify-self: start;
-
         }
         .tx-tabs button {
         	border: none;
-        	background-color: #f3f6f9;
+        	background-color: @main-color-grey-light;
         }
     	.active{
-    		font-weight: 600;
+    		font-weight: @main-fw-bold;
     		color: black;
     	}
     	.tx-tabs button:hover {
-    		color:  #2779ff;
+    		color:  @main-color-blue;
 		}
     	span{
     		justify-self: start;
     		padding-left: 15px;
     		color: black;
-    		font-weight: 600;
+    		font-weight: @main-fw-bold;
     	}
 
     }
@@ -44,13 +42,13 @@
 }
 
 
-@media all and (max-width: 799px){
+@media all and (max-width: @bp-large){
   .address-tx-header{
     display: block;
-    padding-left: 10px !important;
 
     .filter-tx{
-        padding-left: !important;
+        padding-left: 5px !important;
+        font-size: @font-mobile;
 
         span{
             padding-left: 0px !important;
@@ -59,7 +57,9 @@
 
   }
 
-  .search-block {
-      margin-top: 10px;
-  }
+    .search-block {
+        margin-top: 10px;
+        font-size: @font-mobile;
+    }
+
 }

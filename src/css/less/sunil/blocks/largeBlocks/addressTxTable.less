@@ -1,6 +1,6 @@
-
+@import '~lessPath/sunil/global';
 a{
-    color: #2779ff;
+    color: @main-color-blue;
     text-decoration: none;
     background-color: transparent;
 }
@@ -40,7 +40,6 @@ li{
         position: absolute;
 
       }
-
       .status{
         //text-align: center;
       }
@@ -80,7 +79,7 @@ li{
 
 
           .title{
-            font-weight: 600;
+            font-weight: @main-fw-bold;
             color: black;
           }
           p{
@@ -90,12 +89,12 @@ li{
 
         
         .failed{
-          color: #f9967b;
-          font-weight: 600;
+          color: @color-orange;
+          font-weight: @main-fw-bold;
         }
         .success{
-          color: #20c0c7;
-          font-weight: 600;
+          color: @color-green;
+          font-weight: @main-fw-bold;
         }
       }//li
     }
@@ -103,7 +102,7 @@ li{
 }
 
 .block-header{
-  font-weight: 600;
+  font-weight: @main-fw-bold;
   color: black;
   display: grid;
   grid-template-columns: 1fr 100px 100px 100px 100px 50px;
@@ -114,7 +113,7 @@ li{
   }
 }
 
-@media all and (max-width: 799px){
+@media all and (max-width: @bp-large){
   .last-transactions .block-body .block li .hash{
     margin-bottom: 0px;
   }
@@ -136,7 +135,7 @@ li{
 
     li{
       padding: 5px !important;
-      font-size: 12px;
+      font-size: @font-mobile;
     }
 
     .limit, .gas, .status{
