@@ -12,7 +12,8 @@
         "dist:docker": "history-server dist -p 80",
         "lint": "eslint --ext .js,.vue src test/unit/specs",
         "external": "node /external/index.js",
-        "build": "node build/build.js"
+        "build": "node build/build.js",
+        "prettier": "prettier --write src/**/*.ts"
     },
     "dependencies": {
         "@types/socket.io-client": "^1.4.32",
@@ -85,6 +86,7 @@
         "merkle-patricia-tree": "^2.3.1",
         "postcss": "^6.0.22",
         "postcss-loader": "^2.1.5",
+        "prettier": "1.13.7",
         "socket.io-client": "^2.1.0",
         "style-loader": "^0.19.1",
         "ts-loader": "^3.5.0",

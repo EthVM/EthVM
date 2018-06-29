@@ -8,9 +8,9 @@ import Actions from './actions'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-	state: State,
-	mutations: Mutations,
-	getters: Getters,
-	actions: Actions,
-	strict: false
+  state: State,
+  mutations: Mutations,
+  getters: Getters,
+  actions: Actions,
+  strict: false
 })
