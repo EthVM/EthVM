@@ -127,6 +127,8 @@ Vue.component('bar-chart-last-ten-blocks-tx', barChartLastTenBlocksTx)
 import lineChartAveTxFees from '@/components/blocks/smallBlocks/charts/linechartavetxfees'
 Vue.component('line-chart-ave-tx-fees', lineChartAveTxFees)
 
+
+
 import frameCharts from '@/components/frames/charts'
 Vue.component('frame-charts', frameCharts)
 
@@ -144,6 +146,9 @@ Vue.component('block-size-chart', avgBlockSize)
 
 import avgGasLimit from '@/components/blocks/smallBlocks/charts/aveGasLimit'
 Vue.component('gas-limit-chart', avgGasLimit)
+
+import avgTxFee from '@/components/blocks/smallBlocks/charts/aveTxFees'
+Vue.component('tx-fee-chart', avgTxFee)
 
 /*Tooltip ---------------------- */
 //import tooltip from "@/components/tooltip/tooltip"

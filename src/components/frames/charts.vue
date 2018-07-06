@@ -58,6 +58,13 @@
                 <gas-limit-chart></gas-limit-chart>
               </div>
 
+              <div class="col-md-6">
+                <div class="block-title-container-desc">
+                  <h4>Avg Tx Fee</h4>
+                </div>
+                <tx-fee-chart></tx-fee-chart>
+              </div>
+
             </div>
 
             <div class="row">
