@@ -66,7 +66,7 @@ export default Vue.extend({
       let _this = this
       var i
       for (i = 0; i < _this.transactions.length; i++) {
-        if (_this.transactions[i].getFrom().toString() == _this.address.address) {
+        if (_this.transactions[i].getFrom().toString().toLowerCase() == _this.address.address.toLowerCase()) {
           _this.outTx.push(_this.transactions[i])
         } else {
           _this.inTx.push(_this.transactions[i])
