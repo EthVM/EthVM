@@ -1,8 +1,10 @@
 <template>
   <div class="last-transactions">
     <!-- If no Transactions: -->
-    <div v-if="account.totalTxs == 0" class="info">
-      <p>{{getText}}</p>
+    <div v-if="total == 0" class="info">
+      <div class="info-common">
+        <p>{{getText}}</p>
+      </div>
     </div>
     <div v-else class="block-body">
       <div class="block-header" v-if="showheader === true">
@@ -78,6 +80,7 @@ export default Vue.extend({
     'showheader',
     'account',
     'filter',
+    'total',
     'isPending'
   ],
   created() {

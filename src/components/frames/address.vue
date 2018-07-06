@@ -88,7 +88,7 @@ var utils = require("../../libs/utils.js");
 const MAX_ITEMS = 20;
 export default Vue.extend({
   name: "FrameAccount",
-  props: ["address", "totalTxs", "tokens", "txs"],
+  props: ["address", "tokens", "txs"],
   data() {
     return {
       account: {
@@ -96,7 +96,7 @@ export default Vue.extend({
         balance: 0,
         balanceUSD: 0,
         ethusd: 0,
-        totalTxs: this.totalTxs,
+        totalTxs: 0,
         tokens: this.tokens,
         txs: this.txs,
         isMiner: false

@@ -17,7 +17,7 @@
       <!-- End Tx Header -->
     </div>
     <!-- Tx Table Header -->
-    <block-address-tx-table :transactions=' filteredTxs' :showheader='true' :account='address.address' :filter="filter" :total="getTotal" :isPending="false" >
+    <block-address-tx-table :transactions=' filteredTxs' :showheader='true' :account='address.address' :filter="filter" :total="getTotal" :isPending="false">
     </block-address-tx-table>
     <!-- End Tx Table Header -->
   </div>
