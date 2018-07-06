@@ -1,7 +1,7 @@
 <template>
   <div class="last-transactions">
     <!-- If no Transactions: -->
-    <div v-if="total == 0" class="info">
+    <div v-if="account.totalTxs == 0" class="info">
       <p>{{getText}}</p>
     </div>
     <div v-else class="block-body">
@@ -78,7 +78,6 @@ export default Vue.extend({
     'showheader',
     'account',
     'filter',
-    'total',
     'isPending'
   ],
   created() {
@@ -122,7 +121,7 @@ export default Vue.extend({
       }
     }
   }
-})
+});
 </script>
 <style scoped lang="less">
 @import "~lessPath/sunil/blocks/largeBlocks/addressTxTable.less";

@@ -136,12 +136,13 @@ export default Vue.extend({
     });
     /* Getting Token Balances: */
     this.$socket.emit("getTokenBalance", this.address, (err, result) => {
-      if (result != null && result.result != "0x") {
+      if (result != "0x") {
+        console.log("tokens recieved", result )
         _this.account.tokens = result
         _this.tokensLoaded = true;
         console.log("tokens", _this.account.tokens)
       } else {
-        _this.tokenError = true;
+         _this.tokenError = true;
       }
     });
     /* Getting Total Number of Tx: */
@@ -166,7 +167,7 @@ export default Vue.extend({
     // Method here:
   },
   methods: {
-    /*Checking of address is Miner? --> add new tab for the manu*/
+    /*Checking of address is Miner? --> add new tab for the menu*/
     setTabs() {
       let _this = this
       if (_this.account.isMiner) {

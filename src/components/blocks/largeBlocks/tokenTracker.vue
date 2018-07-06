@@ -1,54 +1,51 @@
 <template>
   <div class="token-tracker">
-      <div v-if="!tokens">
-        <div class="info-common">
-          <p> Address does not hold any common tokens </p>
-        </div>
+    <div v-if="!tokens">
+      <div class="info-common">
+        <p> Address does not hold any common tokens </p>
       </div>
-      <!-- Show Token List -->
-      <div v-else>
-        <!-- Header -->
-        <div class="tokens-header">
-          <p> Total Number of Tokens: {{getTotalTokens}} </p>
-          <p> Total Value: ${{getTotalUSDValue}}</p>
-          <div class="search-block">
-            <block-search :phText="placeholder"></block-search>
-          </div>
-          <!-- End Header -->
-        </div>
-        <!-- Table Header -->
-        <div class="table-data">
-          <div class="row">
-            <div class="tokens-data-header">
-              <p>Symbol</p>
-              <p class="token-name">Name</p>
-              <p>Amount</p>
-              <p class="token-usd">USD Value</p>
-            </div>
-          </div>
-          <!-- End Table Header -->
-        </div>
-        <!-- Tokens List -->
-        <div class="tokens-list" v-for="token in tokens">
-          <router-link :to="'/token/' +  token.addr.toString() + '/holder=' + holder" v-if="token.balance != 0" class="tokens-data">
-            <p class="token-symbol">{{token.symbol}}</p>
-            <p class="token-name">{{token.name}}</p>
-            <div class="token-balance">
-              <div class="">{{checkValue(getBalance(token.balance, token.decimals), false)}}</div>
-              <div v-if="checkValue(getBalance(token.balance, token.decimals), true)" class="tooltip-button token-tooltip" v-tooltip="getBalance(token.balance, token.decimals)">
-                <i class="fa fa-question-circle-o" aria-hidden="true"></i></div>
-            </div>
-            <div v-if="token.USDValue > 0" class="token-usd">
-              <p>${{formatUSDBalance(getBalance(token.balance, token.decimals)*token.USDValue)}} (@ ${{formatUSDBalance(token.USDValue)}} per {{token.symbol}})</p>
-            </div>
-            <div v-else class="token-usd">
-              <p> $0.00</p>
-            </div>
-          </router-link>
-          <!-- End Tokens List -->
-        </div>
     </div>
-    <!-- .block-container -->
+    <!-- Show Token List -->
+    <div v-else>
+      <!-- Header -->
+      <div class="tokens-header">
+        <p> Total Number of Tokens: {{getTotalTokens}} </p>
+        <p> Total Value: ${{getTotalUSDValue}}</p>
+        <div class="search-block">
+          <block-search :phText="placeholder"></block-search>
+        </div>
+        <!-- End Header -->
+      </div>
+      <!-- Table Header -->
+      <div class="tokens-data-header">
+        <p>Symbol</p>
+        <p class="token-name">Name</p>
+        <p>Amount</p>
+        <p class="token-usd">USD Value</p>
+      </div>
+      <!-- End Table Header -->
+    </div>
+    <!-- Tokens List -->
+    <div class="tokens-list" v-for="token in tokens">
+      <router-link :to="'/token/' +  token.addr.toString() + '/holder=' + holder" v-if="token.balance != 0" class="tokens-data">
+        <p class="token-symbol">{{token.symbol}}</p>
+        <p class="token-name">{{token.name}}</p>
+        <div class="token-balance">
+          <div class="">{{checkValue(getBalance(token.balance, token.decimals), false)}}</div>
+          <div v-if="checkValue(getBalance(token.balance, token.decimals), true)" class="tooltip-button token-tooltip" v-tooltip="getBalance(token.balance, token.decimals)">
+            <i class="fa fa-question-circle-o" aria-hidden="true"></i></div>
+        </div>
+        <div v-if="token.USDValue > 0" class="token-usd">
+          <p>${{formatUSDBalance(getBalance(token.balance, token.decimals)*token.USDValue)}} (@ ${{formatUSDBalance(token.USDValue)}} per {{token.symbol}})</p>
+        </div>
+        <div v-else class="token-usd">
+          <p> $0.00</p>
+        </div>
+      </router-link>
+      <!-- End Tokens List -->
+    </div>
+  </div>
+  <!-- .block-container -->
   </div>
 </template>
 <script lang="ts">
