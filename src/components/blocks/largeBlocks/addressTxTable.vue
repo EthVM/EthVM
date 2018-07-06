@@ -38,7 +38,7 @@
           </div>
         </li>
         <li class="vertical-middle type">
-          <div v-if="tx.type == 'out'">
+          <div v-if="getType(tx)">
             <span class="failed">Out</span>
           </div>
           <div v-else>
@@ -87,9 +87,9 @@ export default Vue.extend({
 
   },
   methods: {
-    getType(address) {
+    getType(tx) {
       let _this = this
-      if (address == _this.account) return true
+      if (tx.getFrom().toString() == _this.account) return true
       return false
     },
     getShortEthValue(newEthValue, isBool) {
