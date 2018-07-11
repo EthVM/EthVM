@@ -1,4 +1,4 @@
 {
-  "url": "http://localhost",
-  "port": "3000"
+  "url": "http://ws.ethvm.lan",
+  "port": "80"
 }

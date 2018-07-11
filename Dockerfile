@@ -10,10 +10,10 @@ WORKDIR /var/ethvm
 # Copy
 COPY . .
 
-# Install & Build
-RUN npm install
-RUN npm run build
+# Instal & build
+RUN yarn install
+RUN yarn build
 
 # Expose
-EXPOSE 80
-ENTRYPOINT ["npm", "run", "dist:docker"]
+EXPOSE 8080
+CMD ["yarn start"]
