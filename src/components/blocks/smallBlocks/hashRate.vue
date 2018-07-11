@@ -1,11 +1,13 @@
 <template>
   <block-component :title="blockTitle" backgroundColor="color5" :value="hashRate" :icon-name="blockIconType" :icon-color="blockIconColor"></block-component>
 </template>
+
 <script lang="ts">
   import Vue from 'vue';
   import { Block } from '@/libs';
   import sEvents from '@/configs/socketEvents.json';
   import bn from 'bignumber.js'
+
   let getAvgHashRate = (_blocks: Array<Block>): number => {
     let avgTime = new bn(0)
     _blocks.forEach((_block)=>{
@@ -15,6 +17,7 @@
     avgTime = avgTime.div(_blocks.length)
     return new bn(_blocks[0].getDifficulty().toNumber()).div(avgTime).div('1e12').round(2).toNumber()
   }
+
   export default Vue.extend({
     name: 'ShortDataLastBlock',
     data() {
@@ -45,6 +48,6 @@
     }
   })
 </script>
+
 <style scoped="" lang="less">
-  
 </style>

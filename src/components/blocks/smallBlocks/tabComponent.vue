@@ -5,8 +5,10 @@
     </ul>
   </div>
 </template>
+
 <script lang="ts">
 import Vue from 'vue'
+
 export default Vue.extend({
   name: 'tabComponent',
   /* Tabs Object Array Example:
@@ -20,7 +22,7 @@ export default Vue.extend({
         id: '1'
         title: 'title2',
         isActive: false
-      } .. 
+      } ..
     ]
    End Example */
   props: ['tabs'],
@@ -39,6 +41,7 @@ export default Vue.extend({
   }
 })
 </script>
+
 <style scoped lang="less">
-@import "~lessPath/sunil/blocks/smallBlocks/tabComponent.less";
+@import '~lessPath/sunil/blocks/smallBlocks/tabComponent.less';
 </style>

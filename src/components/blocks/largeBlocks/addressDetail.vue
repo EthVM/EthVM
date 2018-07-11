@@ -51,18 +51,16 @@
     <!-- End Details-->
   </div>
 </template>
+
 <script lang="ts">
 import Vue from 'vue'
-import {
-  common
-} from '@/libs';
-import NumberFormatter from 'number-formatter';
-import blockies from 'ethereum-blockies';
+import { common } from '@/libs'
+import NumberFormatter from 'number-formatter'
+import blockies from 'ethereum-blockies'
+
 export default Vue.extend({
   name: 'Address',
-  props: [
-    'account'
-  ],
+  props: ['account'],
   data() {
     return {
       showMore: false,
@@ -72,35 +70,41 @@ export default Vue.extend({
   },
   mounted() {
     let _this = this
-    _this.getIdenticon();
+    _this.getIdenticon()
   },
   methods: {
     getIdenticon() {
       let _this = this
-      _this.identicon = document.getElementById('icon');
-      _this.identicon.style.backgroundImage = 'url(' + blockies.create({
-        seed: _this.account.address,
-        size: 5,
-        scale: 3
-      }).toDataURL() + ')'
+      _this.identicon = document.getElementById('icon')
+      _this.identicon.style.backgroundImage =
+        'url(' +
+        blockies
+          .create({
+            seed: _this.account.address,
+            size: 5,
+            scale: 3
+          })
+          .toDataURL() +
+        ')'
     }
   },
   computed: {
     formatEthBalance() {
       let _this = this
-      return NumberFormatter("#,##0.#####", _this.account.balance)
+      return NumberFormatter('#,##0.#####', _this.account.balance)
     },
     formatUSDBalance() {
       let _this = this
-      return NumberFormatter("#,##0.##", (_this.account.balance * _this.account.ethusd))
+      return NumberFormatter('#,##0.##', _this.account.balance * _this.account.ethusd)
     },
     formatEthUSD() {
       let _this = this
-      return NumberFormatter("#,##0.#####", _this.account.ethusd)
+      return NumberFormatter('#,##0.#####', _this.account.ethusd)
     }
   }
-});
+})
 </script>
+
 <style scoped="" lang="less">
-@import "~lessPath/sunil/blocks/largeBlocks/detailComponent.less";
+@import '~lessPath/sunil/blocks/largeBlocks/detailComponent.less';
 </style>

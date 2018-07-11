@@ -1,9 +1,8 @@
-import { blockLayout, txLayout } from '@/typeLayouts'
+import { blockLayout } from '@/typeLayouts'
 import { common, Tx } from '@/libs'
 import { Hash, EthValue, HexNumber, Address, Hex, HexTime } from '@/libs/common'
-import ethUnits from 'ethereumjs-units'
 import bn from 'bignumber.js'
-import _ from 'lodash'
+
 class Block {
   private readonly block: blockLayout
   public readonly id: string
@@ -175,4 +174,5 @@ class Block {
     return this.block.blockStats
   }
 }
+
 export default Block

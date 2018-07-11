@@ -72,20 +72,18 @@
     <!--End details -->
   </div>
 </template>
+
 <script lang="ts">
 import Vue from 'vue'
-import {
-  common
-} from '@/libs';
+import { common } from '@/libs'
 import NumberFormatter from 'number-formatter'
+
 export default Vue.extend({
   name: 'Address',
-  props: [
-    'token', 'isHolder'
-  ],
+  props: ['token', 'isHolder'],
   data() {
     return {
-      showMore: false,
+      showMore: false
     }
   },
   mounted() {
@@ -94,19 +92,19 @@ export default Vue.extend({
   },
   methods: {},
   computed: {
-
     formatUSDBalance() {
       let _this = this
-      return NumberFormatter("#,##0.##", (_this.token.balance * _this.token.valueUSD))
+      return NumberFormatter('#,##0.##', _this.token.balance * _this.token.valueUSD)
     },
 
     formatTotalTransf() {
       let _this = this
-      return NumberFormatter("#,##0.", (_this.token.trasfers))
+      return NumberFormatter('#,##0.', _this.token.trasfers)
     }
   }
-});
+})
 </script>
+
 <style scoped="" lang="less">
-@import "~lessPath/sunil/blocks/largeBlocks/detailComponent.less";
+@import '~lessPath/sunil/blocks/largeBlocks/detailComponent.less';
 </style>

@@ -5,12 +5,10 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue'
-  export default Vue.extend({
-    name: 'app'
-  })
+import Vue from 'vue'
+export default Vue.extend({
+  name: 'app'
+})
 </script>
 
 <style lang="less"></style>
-
-

@@ -65,9 +65,9 @@
               <li><i class="fa fa-circle failed" aria-hidden="true"></i> Failed</li>
             </ul>
           </div>
-           <!-- End Last 20 Blocks -->
+          <!-- End Last 20 Blocks -->
         </div>
-         <!-- Last Block Transactions -->
+        <!-- Last Block Transactions -->
         <div class="col-md-12">
           <div class="block-title-container">
             <h3>Last Transactions</h3>
@@ -89,15 +89,17 @@
               <li><i class="fa fa-times failed" aria-hidden="true"></i> Failed</li>
             </ul>
           </div>
-           <!-- End Last Block Transactions -->
+          <!-- End Last Block Transactions -->
         </div>
       </div>
     </div>
   </div>
 </template>
+
 <script lang="ts">
 import Vue from 'vue'
 const MAX_ITEMS = 20
+
 export default Vue.extend({
   name: 'FramesHome',
   data() {
@@ -110,8 +112,9 @@ export default Vue.extend({
       else return []
     }
   }
-});
+})
 </script>
+
 <style scoped lang="less">
-@import "~lessPath/sunil/frames/home.less";
+@import '~lessPath/sunil/frames/home.less';
 </style>

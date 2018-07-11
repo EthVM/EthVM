@@ -1,12 +1,5 @@
-
-
-
-
 <template>
-
   <div class="last-transactions">
-    
-    
     <div class="block-body">
       <div class="block" v-for="tx in transactions" v-bind:key="tx.getHash().toString()">
         <li>
@@ -16,7 +9,7 @@
           <div class="fromto">
             <p class="title">From</p>
             <p class=""><router-link :to="'/address/'+tx.getFrom().toString()">{{tx.getFrom().toString()}}</router-link></p>
-                    
+
             <p class="title">To</p>
             <p class=""><router-link :to="'/address/'+tx.getTo().toString()">{{tx.getTo().toString()}}</router-link></p>
           </div>
@@ -32,28 +25,25 @@
             <span class="glyphicon glyphicon-ok success"></span>
           </div>
         </li>
-      </div>      
+      </div>
     </div>
 
   </div>
 
 </template>
 
-
 <script lang="ts">
-  import Vue from 'vue';
-  export default Vue.extend({
-    name: 'TableTransactions',
-    props: [
-      'transactions'
-    ],
-    created() {}
-  })
+import Vue from 'vue'
 
+export default Vue.extend({
+  name: 'TableTransactions',
+  props: ['transactions'],
+  created() {}
+})
 </script>
 
 <style scoped lang="less">
-  @import "~lessPath/sunil/blocks/largeBlocks/transactionsTable.less";
+@import '~lessPath/sunil/blocks/largeBlocks/transactionsTable.less';
 </style>
 
 

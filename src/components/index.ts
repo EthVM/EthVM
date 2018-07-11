@@ -127,8 +127,6 @@ Vue.component('bar-chart-last-ten-blocks-tx', barChartLastTenBlocksTx)
 import lineChartAveTxFees from '@/components/blocks/smallBlocks/charts/linechartavetxfees'
 Vue.component('line-chart-ave-tx-fees', lineChartAveTxFees)
 
-
-
 import frameCharts from '@/components/frames/charts'
 Vue.component('frame-charts', frameCharts)
 

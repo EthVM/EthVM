@@ -21,7 +21,7 @@
       <tab-component :tabs="tokenTabs"></tab-component>
       <div class="tab-menu-container">
         <div class="tab-content">
-          <!-- Transfers 
+          <!-- Transfers
           <div v-if="tokenTabs[0].isActive">
             <div v-if="account.txs">
             </div>
@@ -34,29 +34,31 @@
   <!-- container -->
   </div>
 </template>
+
 <script lang="ts">
-import Vue from "vue";
-import bn from "bignumber.js";
-import {
-  common,
-  Tx
-} from "@/libs";
-import ethUnits from "ethereumjs-units";
-var utils = require("../../libs/utils.js");
+import Vue from 'vue'
+import bn from 'bignumber.js'
+import { common, Tx } from '@/libs'
+import ethUnits from 'ethereumjs-units'
 
-let Account = require("ethereumjs-account");
+var utils = require('../../libs/utils.js')
 
-const MAX_ITEMS = 20;
+let Account = require('ethereumjs-account')
+
+const MAX_ITEMS = 20
+
 export default Vue.extend({
-  name: "FrameAccount",
+  name: 'FrameAccount',
   props: ['tokenAddr', 'holderAddr'],
   data() {
     return {
-      tokenTabs: [{
-        id: 0,
-        title: 'Transfers',
-        isActive: true,
-      }],
+      tokenTabs: [
+        {
+          id: 0,
+          title: 'Transfers',
+          isActive: true
+        }
+      ],
       /*Dummy Data: */
       token: {
         name: 'newName',
@@ -69,15 +71,15 @@ export default Vue.extend({
         contract: this.tokenAddr,
         decimals: 27,
         totalSupply: 1234324,
-        totalHolders: 2434,
-      },
-    };
+        totalHolders: 2434
+      }
+    }
   },
   created() {
     var _this = this
-      /* Get Transfers History: */
+    /* Get Transfers History: */
 
-    /* If (holderPresent) 
+    /* If (holderPresent)
       Get Total Holders:
       Get Total Supply: */
 
@@ -96,10 +98,11 @@ export default Vue.extend({
       let _this = this
       if (_this.holderAddr) return true
       return false
-    },
+    }
   }
-});
+})
 </script>
+
 <style scoped="" lang="less">
-@import "~lessPath/sunil/global.less";
+@import '~lessPath/sunil/global.less';
 </style>

@@ -6,9 +6,11 @@ let dedup = (tx: Tx, pastTxs: Array<Tx>): Array<Tx> => {
   }
   return pastTxs
 }
+
 let processTxs = (tx: Tx, pastTxs: Array<Tx>): Array<Tx> => {
   pastTxs = dedup(tx, pastTxs)
   pastTxs.unshift(tx)
   return pastTxs
 }
+
 export default processTxs

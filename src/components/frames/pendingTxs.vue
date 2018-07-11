@@ -1,11 +1,6 @@
 <template>
-
   <div>
     <div class="container">
-
-
-
-
       <div class="page-title-container">
         <div class="page-title">
           <h3>Pending Transactions</h3>
@@ -15,9 +10,6 @@
           <block-search></block-search>
         </div>
       </div>
-
-
-
 
       <div class="row">
         <div class="col-md-12 table-data">
@@ -29,7 +21,7 @@
             <li>WEI</li>
             <li></li>
           </div>
-          
+
           <div class="last-transactions-data">
             <block-pending-txs :transactions="pendingTxs"></block-pending-txs>
           </div>
@@ -45,7 +37,6 @@
 
     </div><!-- .container -->
   </div>
-
 </template>
 
 <script lang="ts">
@@ -53,7 +44,8 @@ import Vue from 'vue'
 import sEvents from '@/configs/socketEvents.json'
 import { Tx } from '@/libs'
 import Visibility from 'visibilityjs'
-import bn from 'bignumber.js';
+import bn from 'bignumber.js'
+
 let getOverview = (arr: Array<Tx>) => {
   let overview = {
     totalGasPrice: new bn(0),
@@ -87,33 +79,33 @@ let getOverview = (arr: Array<Tx>) => {
     else return 1
   })
   overview.length = arr.length
-  overview.topSenders = tempArr.slice(0,10)
+  overview.topSenders = tempArr.slice(0, 10)
   return overview
 }
+
 export default Vue.extend({
   name: 'LatestPendingTransactions',
-  data () {
+  data() {
     return {
       pendingTxs: []
     }
   },
-  created () {
-    let _this = this
-    _this.$emit('updated', getOverview(_this.pendingTxs))
+  created() {
+    this.$emit('updated', getOverview(this.pendingTxs))
     this.$socket.emit(sEvents.join, 'pendingTxs')
-    this.$options.sockets.newPendingTx = (data) => {
+    this.$options.sockets.newPendingTx = data => {
       if (Visibility.state() === 'visible') {
-        _this.pendingTxs.unshift(new Tx(data))
-        _this.$emit('updated', getOverview(_this.pendingTxs))
+        this.pendingTxs.unshift(new Tx(data))
+        this.$emit('updated', getOverview(this.pendingTxs))
       }
     }
   },
-  beforeDestroy () {
+  beforeDestroy() {
     this.$socket.emit(sEvents.leave, 'pendingTxs')
   }
 })
 </script>
 
 <style scoped="" lang="less">
-  @import "~lessPath/sunil/frames/pendingTxs.less";
+@import '~lessPath/sunil/frames/pendingTxs.less';
 </style>

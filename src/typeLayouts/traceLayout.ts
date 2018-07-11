@@ -7,6 +7,7 @@ interface transfer {
   toBalance: Buffer
   input: Buffer
 }
+
 export default interface traceLayout {
   hash: Buffer
   trace: {

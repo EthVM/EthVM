@@ -13,6 +13,7 @@ class Hex {
     return new Buffer(this.hexString.substring(2), 'hex')
   }
 }
+
 class HexTime {
   time: string
   constructor(_time: Buffer) {
@@ -28,6 +29,7 @@ class HexTime {
     return new Date(new bn(this.time).toNumber() * 1000)
   }
 }
+
 class Address {
   address: string
   constructor(_add: Buffer) {
@@ -46,6 +48,7 @@ class Address {
     return this.address.toLowerCase().replace('0x', '')
   }
 }
+
 class Hash {
   hash: string
   constructor(_hash: Buffer) {
@@ -79,6 +82,7 @@ class EthValue {
     return this.value
   }
 }
+
 class HexNumber {
   value: string
   constructor(_value: Buffer) {
@@ -124,4 +128,5 @@ let common = {
     return new Buffer(_hex, 'hex')
   }
 }
+
 export { common, Hash, EthValue, HexNumber, Address, Hex, HexTime }

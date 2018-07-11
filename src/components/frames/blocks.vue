@@ -18,7 +18,7 @@
         <block-time-since-last-block></block-time-since-last-block>
         <block-hash-rate></block-hash-rate>
         <block-difficulty></block-difficulty>
-       <!-- End 4 Top Blocks -->
+      <!-- End 4 Top Blocks -->
       </div>
       <!-- Blocks Table -->
       <div class="row">
@@ -38,23 +38,24 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue'
-  const MAX_ITEMS = 20
-  export default Vue.extend({
-    name: 'FramesHome',
-    data () {
-      return {}
-    },
-    created (){},
-    computed:{
-      txs(){
-          if(this.$store.getters.getTxs.length) return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
-          else return []
-      }
+import Vue from 'vue'
+
+const MAX_ITEMS = 20
+export default Vue.extend({
+  name: 'FramesHome',
+  data() {
+    return {}
+  },
+  created() {},
+  computed: {
+    txs() {
+      if (this.$store.getters.getTxs.length) return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
+      else return []
     }
-  })
+  }
+})
 </script>
 
 <style scoped lang="less">
-  @import "~lessPath/sunil/global";
+@import '~lessPath/sunil/global';
 </style>

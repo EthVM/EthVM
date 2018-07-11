@@ -120,20 +120,15 @@
     </div>
   </div>
 </template>
+
 <script lang="ts">
-import Vue from 'vue';
-import store from '@/states';
-import {
-  Block,
-  common,
-  Tx
-} from '@/libs';
+import Vue from 'vue'
+import store from '@/states'
+import { Block, common, Tx } from '@/libs'
+
 export default Vue.extend({
   name: 'BlockView',
-  props: [
-    'block',
-    'uncles'
-  ],
+  props: ['block', 'uncles'],
   data() {
     return {
       showMore: false
@@ -146,8 +141,9 @@ export default Vue.extend({
       return this.block.getIsUncle()
     }
   }
-});
+})
 </script>
+
 <style scoped="" lang="less">
-@import "~lessPath/sunil/blocks/largeBlocks/detailComponent.less";
+@import '~lessPath/sunil/blocks/largeBlocks/detailComponent.less';
 </style>

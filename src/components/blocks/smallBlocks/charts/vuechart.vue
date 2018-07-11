@@ -7,20 +7,21 @@
     <div class="chart">
       <canvas ref="chart" :width="width" :height="height"></canvas>
     </div>
-    
+
   </div>
 </template>
+
 <script lang="ts">
 import Chart from 'chart.js'
 import Vue from 'vue'
 
 Chart.defaults.global = Object.assign(Chart.defaults.global, {
   defaultFontFamily: "'Open Sans', 'sans-serif'",
-  defaultFontStyle: '200',
+  defaultFontStyle: '200'
 })
 
 Chart.defaults.global.title = Object.assign(Chart.defaults.global.title, {
-  display: false,
+  display: false
 })
 
 Chart.defaults.global.tooltips = Object.assign(Chart.defaults.global.tooltips, {
@@ -29,7 +30,7 @@ Chart.defaults.global.tooltips = Object.assign(Chart.defaults.global.tooltips, {
 })
 
 Chart.defaults.global.legend = Object.assign(Chart.defaults.global.legend, {
-  display: false,
+  display: false
 })
 
 Chart.defaults.global.layout = Object.assign(Chart.defaults.global.layout, {
@@ -39,7 +40,6 @@ Chart.defaults.global.layout = Object.assign(Chart.defaults.global.layout, {
     top: 20,
     bottom: 20
   }
-
 })
 
 Chart.defaults.global.elements.point = Object.assign(Chart.defaults.global.elements.point, {
@@ -48,7 +48,7 @@ Chart.defaults.global.elements.point = Object.assign(Chart.defaults.global.eleme
 })
 
 Chart.defaults.doughnut.animation = Object.assign(Chart.defaults.doughnut.animation, {
-  animateRotate: true,
+  animateRotate: true
 })
 
 export default Vue.extend({
@@ -60,27 +60,24 @@ export default Vue.extend({
     },
     data: {
       required: true,
-      type: [
-        Object,
-        Array
-      ],
+      type: [Object, Array]
     },
     redraw: Boolean,
     options: Object,
     width: Number,
     height: Number,
     chartTitle: String,
-    chartDescription: String,
+    chartDescription: String
   },
   data: () => ({
     chart: ''
   }),
 
   watch: {
-    'data.labels' () {
+    'data.labels'() {
       this.chart.update()
     },
-    'data.datasets' () {
+    'data.datasets'() {
       if (this.redraw) {
         this.chart.destroy()
         this.createChart()
@@ -95,22 +92,18 @@ export default Vue.extend({
         type: this.type,
         data: this.data,
         options: this.options
-
       })
     }
   },
   mounted() {
     this.createChart()
   },
-  beforeDestroy () {
+  beforeDestroy() {
     this.chart.destroy()
   }
 })
 </script>
 
-
 <style scoped lang="less">
-  @import "~lessPath/sunil/blocks/smallBlocks/chart.less";
+@import '~lessPath/sunil/blocks/smallBlocks/chart.less';
 </style>
-
-

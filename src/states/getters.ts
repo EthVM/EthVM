@@ -1,5 +1,6 @@
 import { stateLayout, txLayout } from '@/typeLayouts'
 import { Block, Tx } from '@/libs'
+
 let all = (state: stateLayout): stateLayout => {
   return state
 }

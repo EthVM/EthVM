@@ -2,10 +2,9 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import i18n from './translations'
-import Vuex from 'vuex'
 import store from './states'
 import Toasted from 'vue-toasted'
-import io from 'socket.io-client';
+import io from 'socket.io-client'
 
 import socketConfig from '@/configs/socket.json'
 import VueSocketio from 'vue-socket.io'
@@ -17,28 +16,28 @@ import VTooltip from 'v-tooltip'
 import '@/components'
 
 Vue.use(VTooltip)
-Vue.prototype.$eventHub = new Vue();
+Vue.prototype.$eventHub = new Vue()
 Vue.config.productionTip = false
 Vue.use(Toasted, {
-	router
+  router
 })
-Vue.use(VueSocketio, io(socketConfig.url+":"+socketConfig.port), store);
+Vue.use(VueSocketio, io(socketConfig.url + ':' + socketConfig.port), store)
 Vue.use(VueTimeago, {
-	name: 'timeago',
-	locale: 'en-US',
-	locales: {
-		'en-US': require('vue-timeago/locales/en-US.json')
-	}
+  name: 'timeago',
+  locale: 'en-US',
+  locales: {
+    'en-US': require('vue-timeago/locales/en-US.json')
+  }
 })
 Vue.use(infiniteScroll)
 new Vue({
-	el: '#app',
-	store,
-	router,
-	i18n,
-	template: '<App/>',
-	data: {},
-	components: {
-		App
-	}
+  el: '#app',
+  store,
+  router,
+  i18n,
+  template: '<App/>',
+  data: {},
+  components: {
+    App
+  }
 })

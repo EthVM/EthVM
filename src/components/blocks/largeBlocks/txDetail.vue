@@ -84,39 +84,32 @@
     <!-- End details -->
   </div>
 </template>
+
 <script lang="ts">
-import Vue from 'vue';
-import store from '@/states';
-import {
-  Block,
-  common,
-  Tx
-} from '@/libs';
+import Vue from 'vue'
+import store from '@/states'
+import { Block, common, Tx } from '@/libs'
+
 export default Vue.extend({
   name: 'TxView',
-  props: [
-    'tx'
-  ],
+  props: ['tx'],
   data() {
     return {}
   },
   methods: {
     getStringStatus(isBool) {
-      if (isBool)
-        return 'Successful';
-      else
-        return 'Failed';
+      if (isBool) return 'Successful'
+      else return 'Failed'
     },
     getTxCost(price, used) {
-      return (price * used)
+      return price * used
     }
   },
-  mounted: function() {
-  },
-  computed: {
-  }
-});
+  mounted: function() {},
+  computed: {}
+})
 </script>
+
 <style scoped="" lang="less">
-@import "~lessPath/sunil/blocks/largeBlocks/detailComponent.less";
+@import '~lessPath/sunil/blocks/largeBlocks/detailComponent.less';
 </style>

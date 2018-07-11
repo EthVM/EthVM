@@ -19,7 +19,7 @@
         </div>
         <!-- End Tx Details -->
       </div>
-      <!-- Fix this - get sub tx 
+      <!-- Fix this - get sub tx
         <div class="col-md-12 col-sm-12 col-xs-12" >
           <div class="block-title-container">
             <h3>Sub Transactions</h3>
@@ -34,27 +34,23 @@
   </div>
   </div>
 </template>
+
 <script lang="ts">
-import Vue from 'vue';
-import store from '@/states';
-import chartOptions from '@/sampleData/chartData.json';
-import {
-  Block,
-  common,
-  Tx
-} from '@/libs';
+import Vue from 'vue'
+import store from '@/states'
+import chartOptions from '@/sampleData/chartData.json'
+import { Block, common, Tx } from '@/libs'
+
 export default Vue.extend({
   name: 'tx-Detail',
-  props: [
-    'txHash'
-  ],
+  props: ['txHash'],
   data() {
     return {
       store: store,
       transaction: null,
       common: common,
       unixtimestamp: null,
-      timestamp: null,
+      timestamp: null
     }
   },
   methods: {},
@@ -69,8 +65,9 @@ export default Vue.extend({
       }
     })
   }
-});
+})
 </script>
+
 <style scoped lang="less">
-@import "~lessPath/sunil/global.less";
+@import '~lessPath/sunil/global.less';
 </style>

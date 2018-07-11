@@ -1,14 +1,12 @@
 <template>
-<div id="GraphsRealChart"
-     class="real-chart component-shadow">
+<div id="GraphsRealChart" class="real-chart component-shadow">
   <div class="graphs">
     <vue-chart type="line"
-               :data="chartData"
-               :options="chartOptions"
-               :redraw="redraw"></vue-chart>
+      :data="chartData"
+      :options="chartOptions"
+      :redraw="redraw"></vue-chart>
   </div>
 </div>
-
 </template>
 
 <script lang="ts">
@@ -17,40 +15,42 @@
 import Vue from 'vue'
 import sEvents from '@/configs/socketEvents.json'
 let newOptions = {
-  'title': {
-    'text': 'Pending Tx'
+  title: {
+    text: 'Pending Tx'
   },
 
-  'responsive': true,
-  'scales': {
-    'yAxes': [
+  responsive: true,
+  scales: {
+    yAxes: [
       {
-        'ticks': {
-          'beginAtZero': false,
-          'callback': function(value) {if (value % 1 === 0) {return value;}}
+        ticks: {
+          beginAtZero: false,
+          callback: function(value) {
+            if (value % 1 === 0) {
+              return value
+            }
+          }
         }
       }
     ],
-    'xAxes': [
+    xAxes: [
       {
-        'display': false
+        display: false
       }
     ]
   },
 
-  'elements': {
-    'line': {
-      'borderColor': 'purple',
-      'fill': false
+  elements: {
+    line: {
+      borderColor: 'purple',
+      fill: false
     },
-    'point': {
-      'backgroundColor': 'purple',
-      'borderColor': 'purple'
+    point: {
+      backgroundColor: 'purple',
+      borderColor: 'purple'
     }
-
   },
-  'scaleShowLabels': false
-
+  scaleShowLabels: false
 }
 let MAX_ITEMS = 10
 export default Vue.extend({
@@ -60,14 +60,14 @@ export default Vue.extend({
     chartOptions: newOptions,
     redraw: false
   }),
-  mounted () {},
-  created () {
+  mounted() {},
+  created() {
     this.chartData = this.initData
     this.$eventHub.$on(sEvents.pastBlocksR, () => {
       this.chartData = this.initData
       this.redraw = true
     })
-    this.$eventHub.$on(sEvents.newBlock, (_block) => {
+    this.$eventHub.$on(sEvents.newBlock, _block => {
       if (this.chartData.datasets[0]) {
         this.redraw = false
         if (!_block.getIsUncle()) {
@@ -85,38 +85,36 @@ export default Vue.extend({
       }
     })
   },
-  beforeDestroy () {
+  beforeDestroy() {
     this.$eventHub.$off(sEvents.pastBlocksR)
     this.$eventHub.$off(sEvents.newBlock)
   },
   computed: {
-    initData () {
+    initData() {
       let data = {
         labels: [],
         txCount: [],
         blockTimes: []
       }
       let latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
-      latestBlocks.forEach((_block) => {
+      latestBlocks.forEach(_block => {
         data.labels.unshift(Math.ceil((new Date().getTime() - _block.getTimestamp().toDate()) / 1000) + ' secs ago')
         data.blockTimes.unshift(_block.getTimestamp().toDate())
         let _tempD = _block.getStats()
         data.txCount.unshift(_tempD.pendingTxs)
       })
       return {
-        'labels': data.labels,
-        'datasets': [
+        labels: data.labels,
+        datasets: [
           {
-            'pointHoverBackgroundColor': 'pink',
-            'pointHoverBorderColor': 'pink',
-            'data': data.txCount,
-            'blockTimes': data.blockTimes
+            pointHoverBackgroundColor: 'pink',
+            pointHoverBorderColor: 'pink',
+            data: data.txCount,
+            blockTimes: data.blockTimes
           }
         ]
       }
     }
   }
-
 })
 </script>
-

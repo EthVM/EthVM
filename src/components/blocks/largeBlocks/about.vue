@@ -74,16 +74,16 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
-  export default Vue.extend({
-    name: 'ShortDataLastBlock',
-    data() {
-      return {
-      }
-    }
-  })
+import Vue from 'vue'
+
+export default Vue.extend({
+  name: 'ShortDataLastBlock',
+  data() {
+    return {}
+  }
+})
 </script>
 
 <style scoped lang="less">
-  @import "~lessPath/sunil/blocks/largeBlocks/about.less";
+@import '~lessPath/sunil/blocks/largeBlocks/about.less';
 </style>

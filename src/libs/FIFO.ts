@@ -1,4 +1,5 @@
 type itemProcessor<T> = (item: T, items: Array<T>) => Array<T>
+
 class FIFO<T> {
   private arr: Array<T>
   private limit: number
@@ -22,4 +23,5 @@ class FIFO<T> {
     this.arr.splice(index, 1)
   }
 }
+
 export default FIFO

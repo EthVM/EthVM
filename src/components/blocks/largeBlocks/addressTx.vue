@@ -22,32 +22,34 @@
     <!-- End Tx Table Header -->
   </div>
 </template>
+
 <script lang="ts">
-import Vue from 'vue';
+import Vue from 'vue'
+
 export default Vue.extend({
   name: 'TableTransactions',
-  props: [
-    'address',
-    'transactions',
-    'isPending'
-  ],
+  props: ['address', 'transactions', 'isPending'],
   data() {
     return {
       placeholder: 'Search Address/Tx Hash',
-      options: [{
-        text: 'All',
-        value: 'all'
-      }, {
-        text: 'Incoming',
-        value: 'in'
-      }, {
-        text: 'Outgoing',
-        value: 'out'
-      }],
+      options: [
+        {
+          text: 'All',
+          value: 'all'
+        },
+        {
+          text: 'Incoming',
+          value: 'in'
+        },
+        {
+          text: 'Outgoing',
+          value: 'out'
+        }
+      ],
       filter: 'all',
       inTx: [],
       outTx: [],
-      recievedTx: false,
+      recievedTx: false
     }
   },
   created() {},
@@ -66,14 +68,18 @@ export default Vue.extend({
       let _this = this
       var i
       for (i = 0; i < _this.transactions.length; i++) {
-        if (_this.transactions[i].getFrom().toString().toLowerCase() == _this.address.address.toLowerCase()) {
+        if (
+          _this.transactions[i]
+            .getFrom()
+            .toString()
+            .toLowerCase() == _this.address.address.toLowerCase()
+        ) {
           _this.outTx.push(_this.transactions[i])
         } else {
           _this.inTx.push(_this.transactions[i])
         }
       }
       _this.recievedTx = true
-
     }
   },
   computed: {
@@ -84,7 +90,6 @@ export default Vue.extend({
         if (!_this.recievedTx) _this.getTxsType()
         if (_this.filter == 'out') return _this.outTx
         if (_this.filter == 'in') return _this.inTx
-
       }
     },
     getTotal() {
@@ -97,8 +102,9 @@ export default Vue.extend({
       return 0
     }
   }
-});
+})
 </script>
+
 <style scoped="" lang="less">
-@import "~lessPath/sunil/blocks/largeBlocks/addressTx.less";
+@import '~lessPath/sunil/blocks/largeBlocks/addressTx.less';
 </style>

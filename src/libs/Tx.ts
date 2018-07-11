@@ -1,9 +1,7 @@
-import { txLayout, traceLayout } from '@/typeLayouts'
+import { txLayout } from '@/typeLayouts'
 import { common } from '@/libs'
 import { Hash, Address, HexNumber, Hex, EthValue, HexTime } from '@/libs/common'
-import ethUnits from 'ethereumjs-units'
-import bn from 'bignumber.js'
-import _ from 'lodash'
+
 class Tx {
   private readonly tx: txLayout
   public readonly id: string
@@ -110,4 +108,5 @@ class Tx {
     return this.cache.timestamp
   }
 }
+
 export default Tx

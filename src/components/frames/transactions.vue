@@ -36,9 +36,12 @@
     </div>
   </div>
 </template>
+
 <script lang="ts">
 import Vue from 'vue'
+
 const MAX_ITEMS = 20
+
 export default Vue.extend({
   name: 'FramesHome',
   data() {
@@ -53,6 +56,7 @@ export default Vue.extend({
   }
 })
 </script>
+
 <style scoped lang="less">
-@import "~lessPath/sunil/global.less";
+@import '~lessPath/sunil/global.less';
 </style>

@@ -13,27 +13,27 @@
     </div>
   </div>
 </template>
+
 <script lang="ts">
-import Vue from 'vue';
+import Vue from 'vue'
+
 export default Vue.extend({
   name: 'Search',
   props: {
     phText: {
       type: String,
       default: 'Search Hash / Miner / From'
-    },
+    }
   },
   data() {
     return {
       searchFocus: false
     }
   },
-  mounted() {
-
-  }
-
+  mounted() {}
 })
 </script>
+
 <style scoped lang="less">
-@import "~lessPath/sunil/blocks/smallBlocks/search.less";
+@import '~lessPath/sunil/blocks/smallBlocks/search.less';
 </style>

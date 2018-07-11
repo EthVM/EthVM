@@ -76,19 +76,19 @@
     <!-- container -->
   </div>
 </template>
+
 <script lang="ts">
-import Vue from "vue";
-import bn from "bignumber.js";
-import {
-  common,
-  Tx
-} from "@/libs";
-import ethUnits from "ethereumjs-units";
-var utils = require("../../libs/utils.js");
-const MAX_ITEMS = 20;
+import Vue from 'vue'
+import bn from 'bignumber.js'
+import { common, Tx } from '@/libs'
+import ethUnits from 'ethereumjs-units'
+
+var utils = require('../../libs/utils.js')
+const MAX_ITEMS = 20
+
 export default Vue.extend({
-  name: "FrameAccount",
-  props: ["address", "tokens", "txs"],
+  name: 'FrameAccount',
+  props: ['address', 'tokens', 'txs'],
   data() {
     return {
       account: {
@@ -101,19 +101,23 @@ export default Vue.extend({
         txs: this.txs,
         isMiner: false
       },
-      addressTabs: [{
-        id: 0,
-        title: 'Txs History',
-        isActive: true,
-      }, {
-        id: 1,
-        title: 'Tokens',
-        isActive: false,
-      }, {
-        id: 2,
-        title: 'Pending Txs',
-        isActive: false,
-      }],
+      addressTabs: [
+        {
+          id: 0,
+          title: 'Txs History',
+          isActive: true
+        },
+        {
+          id: 1,
+          title: 'Tokens',
+          isActive: false
+        },
+        {
+          id: 2,
+          title: 'Pending Txs',
+          isActive: false
+        }
+      ],
       tokensLoaded: false,
       tokenError: false,
       usdValue: {
@@ -121,48 +125,46 @@ export default Vue.extend({
           value: 0
         }
       }
-    };
+    }
   },
   created() {
-    var _this = this;
+    var _this = this
     /* Geting Address Balance: */
-    this.$socket.emit("getBalance", this.address, (err, result) => {
+    this.$socket.emit('getBalance', this.address, (err, result) => {
       if (!err && result) {
-        let balance = common
-          .EthValue(common.HexToBuffer(result.result))
-          .toEth();
-        _this.account.balance = balance;
+        let balance = common.EthValue(common.HexToBuffer(result.result)).toEth()
+        _this.account.balance = balance
       }
-    });
+    })
     /* Getting Token Balances: */
-    this.$socket.emit("getTokenBalance", this.address, (err, result) => {
-      if (result != "0x") {
-        console.log("tokens recieved", result )
+    this.$socket.emit('getTokenBalance', this.address, (err, result) => {
+      if (result != '0x') {
+        console.log('tokens recieved', result)
         _this.account.tokens = result
-        _this.tokensLoaded = true;
-        console.log("tokens", _this.account.tokens)
+        _this.tokensLoaded = true
+        console.log('tokens', _this.account.tokens)
       } else {
-         _this.tokenError = true;
+        _this.tokenError = true
       }
-    });
+    })
     /* Getting Total Number of Tx: */
-    this.$socket.emit("getTotalTxs", this.address, (err, result) => {
-      _this.account.totalTxs = result;
-    });
+    this.$socket.emit('getTotalTxs', this.address, (err, result) => {
+      _this.account.totalTxs = result
+    })
     /*Getting USD Values: */
-    this.$socket.emit("getTokenToUSD", [], (err, result) => {
-      _this.account.ethusd = result[0][1];
-      _this.usdValue.ETH.value = result[0][1];
-    });
+    this.$socket.emit('getTokenToUSD', [], (err, result) => {
+      _this.account.ethusd = result[0][1]
+      _this.usdValue.ETH.value = result[0][1]
+    })
     /*Getting Address Transactions: */
-    this.$socket.emit("getTxs", this.address, (err, result) => {
-      var txs = [];
+    this.$socket.emit('getTxs', this.address, (err, result) => {
+      var txs = []
       result.forEach(element => {
-        txs.push(new Tx(element));
-      });
-      _this.account.txs = txs;
-    });
-    _this.setTabs();
+        txs.push(new Tx(element))
+      })
+      _this.account.txs = txs
+    })
+    _this.setTabs()
     /*Getting Address Pending Transactions: */
     // Method here:
   },
@@ -174,15 +176,16 @@ export default Vue.extend({
         let newTab = {
           id: 3,
           title: 'Mining History',
-          isActive: false,
+          isActive: false
         }
         this.addressTabs.push(newTab)
       }
     }
   },
   computed: {}
-});
+})
 </script>
+
 <style scoped="" lang="less">
-@import "~lessPath/sunil/frames/address.less";
+@import '~lessPath/sunil/frames/address.less';
 </style>

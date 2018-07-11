@@ -17,56 +17,62 @@ import Vue from 'vue'
 import sEvents from '@/configs/socketEvents.json'
 import BN from 'bignumber.js'
 import ethUnits from 'ethereumjs-units'
+
 /* Time Variables: */
-  const STATES ={
-    BEGIN: 'beginning',
-    YEAR: 'year',
-    MONTH: 'month',
-    DAY: 'day'
-  };
+const STATES = {
+  BEGIN: 'beginning',
+  YEAR: 'year',
+  MONTH: 'month',
+  DAY: 'day'
+}
+
 const DES = {
-    BEGIN: 'Average Block Size in Ethereum blockchain since the ',
-    OTHER: 'Average Block Size in Ethereum blockchain in last '
-  }
-  let currentState = STATES.DAY;
-  let stateChanged = false;
- let title = 'Block Size'
- let description =''
+  BEGIN: 'Average Block Size in Ethereum blockchain since the ',
+  OTHER: 'Average Block Size in Ethereum blockchain in last '
+}
+
+let currentState = STATES.DAY
+let stateChanged = false
+let title = 'Block Size'
+let description = ''
 let MAX_ITEMS = 10
 let lineOptions = {
-  'title': {
-    'text': 'Average Block Size',
-    'lineHeight': 1
+  title: {
+    text: 'Average Block Size',
+    lineHeight: 1
   },
-  'responsive': true,
-  'scales': {
-    'yAxes': [{
-      'position': 'left',
-      'id': 'y-axis-1',
-      'ticks': {
-        'beginAtZero': true
-      },
-      'gridLines': {
-        'color': 'rgba(0, 0, 0, 0)'
-      },
-      'scaleLabel': {
-        'display': true,
-        'labelString': 'Average Size (Bytes)'
-      }
-    }],
-    'xAxes': [{
-        type: "time",
-        distribution: "series",
+  responsive: true,
+  scales: {
+    yAxes: [
+      {
+        position: 'left',
+        id: 'y-axis-1',
         ticks: {
-          source: "labels"
+          beginAtZero: true
+        },
+        gridLines: {
+          color: 'rgba(0, 0, 0, 0)'
+        },
+        scaleLabel: {
+          display: true,
+          labelString: 'Average Size (Bytes)'
         }
-      }]
+      }
+    ],
+    xAxes: [
+      {
+        type: 'time',
+        distribution: 'series',
+        ticks: {
+          source: 'labels'
+        }
+      }
+    ]
   },
 
-
-  'scaleShowLabels': false
-
+  scaleShowLabels: false
 }
+
 export default Vue.extend({
   name: 'BarChart',
   data: () => ({
@@ -74,56 +80,43 @@ export default Vue.extend({
     chartOptions: lineOptions,
     redraw: false,
     newTitle: title,
-    newDescription: description,
+    newDescription: description
   }),
-  created () {
+  created() {
     this.chartData = this.initData
-
   },
-  beforeDestroy () {
-
-  },
+  beforeDestroy() {},
   computed: {
-    initData () {
+    initData() {
       let data = {
         labels: [],
         points: []
-       }
-
-    this.$socket.emit('getChartBlockSize',"LAST_7_DAYS", (err, result) => {
-      if (!err && result) {
-        console.log("result getChartBlockSize",result)
-        result.forEach( function(block) {
-          data.points.push(block.reduction)
-          data.labels.push(block.group)
-        } );
       }
 
-    });
+      this.$socket.emit('getChartBlockSize', 'LAST_7_DAYS', (err, result) => {
+        if (!err && result) {
+          console.log('result getChartBlockSize', result)
+          result.forEach(function(block) {
+            data.points.push(block.reduction)
+            data.labels.push(block.group)
+          })
+        }
+      })
       return {
-        'labels': data.labels,
-        'datasets': [
+        labels: data.labels,
+        datasets: [
           {
-            'label': 'Average Size',
-            'borderColor': '#20c0c7',
-            'backgroundColor': '#20c0c7',
-            'data': data.points,
-            'yAxisID': 'y-axis-1',
-            'fill': false
-          }]
+            label: 'Average Size',
+            borderColor: '#20c0c7',
+            backgroundColor: '#20c0c7',
+            data: data.points,
+            yAxisID: 'y-axis-1',
+            fill: false
+          }
+        ]
       }
     }
   },
-  mounted: function(){
-
-  }
-
+  mounted: function() {}
 })
-
-
-
-
-
 </script>
-
-

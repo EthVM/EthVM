@@ -30,20 +30,16 @@
     </div>
   </div>
 </template>
+
 <script lang="ts">
-import Vue from 'vue';
-import store from '@/states';
-import chartOptions from '@/sampleData/chartData.json';
-import {
-  Block,
-  common,
-  Tx
-} from '@/libs';
+import Vue from 'vue'
+import store from '@/states'
+import chartOptions from '@/sampleData/chartData.json'
+import { Block, common, Tx } from '@/libs'
+
 export default Vue.extend({
   name: 'Block',
-  props: [
-    'blockHash'
-  ],
+  props: ['blockHash'],
   data() {
     return {
       store: store,
@@ -75,10 +71,10 @@ export default Vue.extend({
         let uncleHashes = _this.block.getUncleHashes()
         /*Get Transactions for the block: */
         _this.$socket.emit('getBlockTransactions', _this.block.getHash().toBuffer(), (err, data) => {
-          _this.transactions = data.map((_tx) => {
+          _this.transactions = data.map(_tx => {
             return new Tx(_tx)
           })
-        });
+        })
         uncleHashes.forEach((_hash: any, idx: number) => {
           _this.$socket.emit('getBlock', _hash.toBuffer(), (err, data) => {
             _this.uncles.push(new Block(data))
@@ -87,8 +83,9 @@ export default Vue.extend({
       }
     })
   }
-});
+})
 </script>
+
 <style scoped lang="less">
-@import "~lessPath/sunil/global.less";
+@import '~lessPath/sunil/global.less';
 </style>

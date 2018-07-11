@@ -89,10 +89,12 @@
     </div>
   </div>
 </template>
+
 <script lang="ts">
 import Vue from 'vue'
 import sEvents from '@/configs/socketEvents.json'
 import Visibility from 'visibilityjs'
+
 export default Vue.extend({
   name: 'TablesLatestBlocks',
   props: {
@@ -117,22 +119,20 @@ export default Vue.extend({
     },
     /* Method to reduce reward string: */
     getShortRewardValue(newRewardValue, isBool) {
-      let length = newRewardValue.length;
-      let isShort = false;
+      let length = newRewardValue.length
+      let isShort = false
       if (length > 8) {
-        newRewardValue = newRewardValue.slice(0, 8) + "...";
-        isShort = true;
+        newRewardValue = newRewardValue.slice(0, 8) + '...'
+        isShort = true
       }
-      if (!isBool)
-        return newRewardValue;
-      else
-        return isShort;
+      if (!isBool) return newRewardValue
+      else return isShort
     }
   },
   created() {
     let parent = this
     parent.blocks = parent.$store.getters.getBlocks
-    parent.$eventHub.$on(sEvents.newBlock, (_block) => {
+    parent.$eventHub.$on(sEvents.newBlock, _block => {
       if (Visibility.state() === 'visible') {
         parent.blocks = parent.$store.getters.getBlocks
       }
@@ -148,6 +148,7 @@ export default Vue.extend({
   }
 })
 </script>
+
 <style scoped="" lang="less">
-@import "~lessPath/sunil/blocks/largeBlocks/blocksTable.less";
+@import '~lessPath/sunil/blocks/largeBlocks/blocksTable.less';
 </style>
