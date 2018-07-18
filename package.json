@@ -1,13 +1,14 @@
 {
   "name": "ethvm-blockchain-explorer",
   "version": "1.0.0",
-  "description": "Ethereum Blockchain explorer",
-  "author": "kvhnuke",
+  "description": "EthVM: Ethereum Blockchain Explorer",
+  "author": "EnKryptIO Team",
   "private": true,
   "scripts": {
     "start": "history-server dist",
     "start:dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
-    "lint": "eslint --ext .js,.vue src test/unit/specs",
+    "lint": "tslint -c tslint.json --project .",
+    "lint:fix": "tslint -c tslint.json --project . --fix",
     "external": "node /external/index.js",
     "build": "node build/build.js",
     "prettier": "prettier --write src/**/*.ts"
