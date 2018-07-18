@@ -1,13 +1,27 @@
 {
-    "compilerOptions": {
-        "lib": ["dom", "es5", "es2015"],
-        "target": "es5",
-        "strict": false,
-        "module": "es2015",
-        "moduleResolution": "node",
-        "sourceMap": true,
-        "allowSyntheticDefaultImports": true,
-        "noImplicitAny": false,
-        "noImplicitThis": false
+  "compilerOptions": {
+    "lib": ["es2018"],
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "typeRoots": ["node_modules/@types", "typings"],
+    "outDir": "dist",
+    "baseUrl": "src",
+    "strict": true,
+    "noImplicitAny": false,
+    "removeComments": true,
+    "allowSyntheticDefaultImports": true,
+    "inlineSourceMap": true,
+    "allowJs": true,
+    "paths": {
+      "@app/*": ["*"]
     }
+  },
+  "include": [
+    "src/**/*",
+    "types/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
