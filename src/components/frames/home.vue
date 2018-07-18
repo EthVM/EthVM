@@ -4,7 +4,7 @@
       <!-- Page Title -->
       <div class="page-title-container">
         <div class="page-title">
-          <h3>Home</h3>
+          <h3>Home Testing First oush with docker</h3>
           <h6 class="text-muted">Welcome to Ethereum Virtual Machine</h6>
         </div>
         <div class="search-block">
