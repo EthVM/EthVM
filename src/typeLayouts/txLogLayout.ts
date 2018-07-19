@@ -1,6 +1,6 @@
 interface LogLayout {
   address: Buffer
-  topics: Array<Buffer>
+  topics: Buffer[]
   data: Buffer
   blockNumber: Buffer
   txHash: Buffer
@@ -12,5 +12,5 @@ interface LogLayout {
 
 export default interface txLogLayout {
   hash: Buffer
-  logs: Array<LogLayout>
+  logs: LogLayout[]
 }

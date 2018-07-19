@@ -1,15 +1,15 @@
+import io from 'socket.io-client'
 import Vue from 'vue'
+import Toasted from 'vue-toasted'
 import App from './App.vue'
 import router from './router'
-import i18n from './translations'
 import store from './states'
-import Toasted from 'vue-toasted'
-import io from 'socket.io-client'
+import i18n from './translations'
 
 import socketConfig from '@/configs/socket.json'
+import infiniteScroll from 'vue-infinite-scroll'
 import VueSocketio from 'vue-socket.io'
 import VueTimeago from 'vue-timeago'
-import infiniteScroll from 'vue-infinite-scroll'
 
 import VTooltip from 'v-tooltip'
 

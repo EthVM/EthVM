@@ -1,4 +1,4 @@
-import { Block, Tx, FIFO } from '@/libs/'
+import { Block, FIFO, Tx } from '@/libs/'
 
 interface latest {
   block?: Block

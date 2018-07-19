@@ -30,11 +30,11 @@ export default interface blockLayout {
   timestamp: Buffer
   transactionsRoot: Buffer
   receiptsRoot: Buffer
-  transactions: Array<Tx>
-  transactionHashes: Array<Buffer>
+  transactions: Tx[]
+  transactionHashes: Buffer[]
   transactionCount: number
   uncleHashes: any
-  uncles: Array<Block>
+  uncles: Block[]
   isUncle: boolean
   txFees: Buffer
   blockReward: Buffer

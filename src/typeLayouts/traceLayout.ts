@@ -13,6 +13,6 @@ export default interface traceLayout {
   trace: {
     isError: boolean
     msg: string
-    transfers: Array<transfer>
+    transfers: transfer[]
   }
 }

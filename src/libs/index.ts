@@ -1,9 +1,9 @@
-import ethUnits from 'ethereumjs-units'
 import Block from '@/libs/Block'
-import Tx from '@/libs/Tx'
-import FIFO from '@/libs/FIFO'
 import processBlocks from '@/libs/blockProcessor'
-import processTxs from '@/libs/txProcessor'
 import { common } from '@/libs/common'
+import FIFO from '@/libs/FIFO'
+import Tx from '@/libs/Tx'
+import processTxs from '@/libs/txProcessor'
+import ethUnits from 'ethereumjs-units'
 
 export { ethUnits, Block, Tx, FIFO, processBlocks, processTxs, common }

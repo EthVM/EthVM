@@ -149,8 +149,8 @@ import avgTxFee from '@/components/blocks/smallBlocks/charts/aveTxFees'
 Vue.component('tx-fee-chart', avgTxFee)
 
 /*Tooltip ---------------------- */
-//import tooltip from "@/components/tooltip/tooltip"
-//Vue.component('tooltip', tooltip)
+// import tooltip from "@/components/tooltip/tooltip"
+// Vue.component('tooltip', tooltip)
 
 /* Footer ---------------------- */
 import blockFooter from '@/components/blocks/footer/footer'

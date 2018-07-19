@@ -1,6 +1,6 @@
 import { Block } from '@/libs'
 
-let setUncles = (block: Block, hash: string, blocks: Array<Block>): Array<Block> => {
+const setUncles = (block: Block, hash: string, blocks: Block[]): Block[] => {
   for (let i = 0; i < blocks.length; i++) {
     if (blocks[i].getHash().toString() == hash) {
       blocks[i].setIsUncle(true)
@@ -11,8 +11,8 @@ let setUncles = (block: Block, hash: string, blocks: Array<Block>): Array<Block>
   return blocks
 }
 
-let setUnclesToUnclesAndAdd = (block: Block, pastBlocks: Array<Block>): Array<Block> => {
-  let uncleHashes = block.getUncleHashes()
+const setUnclesToUnclesAndAdd = (block: Block, pastBlocks: Block[]): Block[] => {
+  const uncleHashes = block.getUncleHashes()
   for (let i = 0; i < uncleHashes.length; i++) {
     pastBlocks = setUncles(block, uncleHashes[i].toString(), pastBlocks)
   }
@@ -20,14 +20,14 @@ let setUnclesToUnclesAndAdd = (block: Block, pastBlocks: Array<Block>): Array<Bl
   return pastBlocks
 }
 
-let dedup = (block: Block, pastBlocks: Array<Block>): Array<Block> => {
+const dedup = (block: Block, pastBlocks: Block[]): Block[] => {
   for (let i = 0; i < pastBlocks.length; i++) {
-    if (block.getId() == pastBlocks[i].getId()) pastBlocks.splice(i, 1)
+    if (block.getId() == pastBlocks[i].getId()) { pastBlocks.splice(i, 1) }
   }
   return pastBlocks
 }
 
-let processBlocks = (block: Block, pastBlocks: Array<Block>): Array<Block> => {
+const processBlocks = (block: Block, pastBlocks: Block[]): Block[] => {
   pastBlocks = dedup(block, pastBlocks)
   pastBlocks = setUnclesToUnclesAndAdd(block, pastBlocks)
   pastBlocks.sort(function(a, b) {
