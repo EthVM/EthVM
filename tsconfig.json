@@ -9,6 +9,9 @@
       "allowSyntheticDefaultImports": true,
       "noImplicitAny": false,
       "noImplicitThis": false,
-      "allowJs": false
+      "allowJs": false,
+      "paths": {
+	      "@/*": ["*"]
+	    }
   }
 }
