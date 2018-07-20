@@ -1,11 +1,11 @@
-import { Block, FIFO, Tx } from '@/libs/'
+import { Block, FIFO, Tx } from '../libs/'
 
-interface latest {
+interface Latest {
   block?: Block
   tx?: Tx
 }
 
-export default interface stateLayout {
+export default interface StateLayout {
   txs: FIFO<Tx>
   blocks: FIFO<Block>
 }

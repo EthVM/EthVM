@@ -19,6 +19,8 @@
       "allowElseIf": true
     }],
     "radix": false,
-    "no-unused-expression": false
+    "no-unused-expression": false,
+    "no-submodule-imports": [false, "@"]
+
   }
 }

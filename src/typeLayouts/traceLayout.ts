@@ -1,4 +1,4 @@
-interface transfer {
+interface Transfer {
   op: string
   value: Buffer
   from: Buffer
@@ -8,11 +8,11 @@ interface transfer {
   input: Buffer
 }
 
-export default interface traceLayout {
+export default interface TraceLayout {
   hash: Buffer
   trace: {
     isError: boolean
     msg: string
-    transfers: transfer[]
+    transfers: Transfer[]
   }
 }

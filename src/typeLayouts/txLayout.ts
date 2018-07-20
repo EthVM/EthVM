@@ -1,4 +1,4 @@
-export default interface txLayout {
+export default interface TxLayout {
   root: Buffer
   blockHash: Buffer
   blockNumber: Buffer
