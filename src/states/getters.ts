@@ -1,15 +1,15 @@
 import { Block, Tx } from '@/libs'
-import { stateLayout, txLayout } from '@/typeLayouts'
+import { StateLayout, TxLayout } from '@/typeLayouts'
 
-const all = (state: stateLayout): stateLayout => {
+const all = (state: StateLayout): StateLayout => {
   return state
 }
 
-const getTxs = (state: stateLayout): Tx[] => {
+const getTxs = (state: StateLayout): Tx[] => {
   return state.txs.items()
 }
 
-const getBlocks = (state: stateLayout): Block[] => {
+const getBlocks = (state: StateLayout): Block[] => {
   const blocks = []
   state.blocks.items().forEach(block => {
     if (!block.getIsUncle()) { blocks.push(block) }

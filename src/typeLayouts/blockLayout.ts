@@ -9,7 +9,7 @@ interface IblockStats {
   pendingTxs: number
 }
 
-export default interface blockLayout {
+export default interface BlockLayout {
   number: Buffer
   intNumber: number
   hash: Buffer
