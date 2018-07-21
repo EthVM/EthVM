@@ -1,4 +1,4 @@
-class Hex {
+export default class Hex {
   public hexString: string
   constructor(_hex: Buffer) {
     this.hexString = '0x' + new Buffer(_hex).toString('hex')

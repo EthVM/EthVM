@@ -1,13 +1,12 @@
-import { common, Tx } from '@/libs'
-import { Address, EthValue, Hash, Hex, HexNumber, HexTime } from '@/libs/common'
-import { blockLayout } from '@/typeLayouts'
+import { common, Tx, Address, EthValue, Hash, Hex, HexNumber, HexTime } from '@/libs'
+import { BlockLayout } from '@/typeLayouts'
 import bn from 'bignumber.js'
 
 class Block {
   public readonly id: string
-  private readonly block: blockLayout
+  private readonly block: BlockLayout
   private cache: any
-  constructor(block: blockLayout) {
+  constructor(block: BlockLayout) {
     this.cache = {}
     this.block = block
     this.id = common.Hash(this.block.hash).toString()
@@ -172,7 +171,7 @@ class Block {
     if (!this.cache.uncleReward) { this.cache.uncleReward = common.EthValue(this.block.uncleReward) }
     return this.cache.uncleReward
   }
-  public getStats(): blockLayout['blockStats'] {
+  public getStats(): BlockLayout['blockStats'] {
     return this.block.blockStats
   }
 }

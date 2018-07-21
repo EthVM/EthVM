@@ -1,13 +1,12 @@
-import { common } from '@/libs'
-import { Address, EthValue, Hash, Hex, HexNumber, HexTime } from '@/libs/common'
-import { txLayout } from '@/typeLayouts'
+import { common, Address, EthValue, Hash, Hex, HexNumber, HexTime } from '@/libs'
+import { TxLayout } from '@/typeLayouts'
 
 class Tx {
   public readonly id: string
-  private readonly tx: txLayout
+  private readonly tx: TxLayout
   private cache: any
 
-  constructor(tx: txLayout) {
+  constructor(tx: TxLayout) {
     this.cache = {}
     this.tx = tx
     this.id = common.Hash(this.tx.hash).toString()

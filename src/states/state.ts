@@ -1,9 +1,9 @@
 import globConfigs from '@/configs/global.json'
 import { Block, FIFO, processBlocks, processTxs, Tx } from '@/libs'
-import { stateLayout } from '@/typeLayouts'
+import { StateLayout } from '@/typeLayouts'
 import Vue from 'vue'
 
-const State: stateLayout = {
+const State: StateLayout = {
   txs: new FIFO<Tx>(globConfigs.maxTxsInMemory, processTxs),
   blocks: new FIFO<Block>(globConfigs.maxBlocksInMemory, processBlocks)
 }

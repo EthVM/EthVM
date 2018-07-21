@@ -1,4 +1,4 @@
-class Hash {
+export default class Hash {
   public hash: string
   constructor(_hash: Buffer) {
     this.hash = '0x' + new Buffer(_hash).toString('hex')

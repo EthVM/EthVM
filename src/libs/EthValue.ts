@@ -1,7 +1,7 @@
 import Bn from 'bignumber.js'
 import ethUnits from 'ethereumjs-units'
 
-class EthValue {
+export default class EthValue {
   public value: string
   constructor(_value: Buffer) {
     this.value = '0x' + new Buffer(_value).toString('hex')
