@@ -1,4 +1,4 @@
-import { common, Address, EthValue, Hash, Hex, HexNumber, HexTime } from '@/libs'
+import { Address, common, EthValue, Hash, Hex, HexNumber, HexTime } from '@/libs'
 import { TxLayout } from '@/typeLayouts'
 
 class Tx {

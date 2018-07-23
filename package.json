@@ -89,6 +89,8 @@
     "style-loader": "^0.19.1",
     "ts-loader": "^3.5.0",
     "tslint": "^5.10.0",
+    "tslint-config-prettier": "^1.14.0",
+    "tslint-consistent-codestyle": "^1.13.2",
     "typescript": "^2.8.3",
     "typescript-eslint-parser": "^11.0.0",
     "url-loader": "^0.6.2",
