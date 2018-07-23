@@ -1,8 +1,8 @@
 {
-  "name": "ethvm-blockchain-explorer",
+  "name": "ethvm-frontend",
   "version": "1.0.0",
-  "description": "Ethereum Blockchain explorer",
-  "author": "kvhnuke",
+  "description": "EthVM: Ethereum (and more networks) Blockchain explorer",
+  "author": "enKryptIO Team",
   "private": true,
   "scripts": {
     "start": "history-server dist",
