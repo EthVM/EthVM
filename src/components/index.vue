@@ -88,4 +88,3 @@ export default Vue.extend({
 <style scoped lang="less">
 @import '~lessPath/sunil/index.less';
 </style>
-

@@ -4,7 +4,9 @@ export default class Address {
     if (_add) {
       this.address = '0x' + new Buffer(_add).toString('hex')
       this.address = this.address === '0x' ? '0x0000000000000000000000000000000000000000' : this.address
-    } else { this.address = null }
+    } else {
+      this.address = null
+    }
   }
   public toString(): string {
     return this.address

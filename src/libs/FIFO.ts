@@ -14,7 +14,9 @@ class FIFO<T> {
   }
   public add(item: T) {
     this.arr = this.processor(item, this.arr)
-    if (this.arr.length > this.limit) { this.arr = this.arr.slice(0, this.arr.length - 1) }
+    if (this.arr.length > this.limit) {
+      this.arr = this.arr.slice(0, this.arr.length - 1)
+    }
   }
   public top(): T {
     return this.arr[0]

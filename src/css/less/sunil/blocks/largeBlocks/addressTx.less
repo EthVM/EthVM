@@ -1,65 +1,61 @@
 @import '~lessPath/sunil/global';
 
-.address-tx-header{
-	display: grid;
-    grid-template-columns: 1fr  1fr;
-    margin-top: 15px;
-    margin-bottom: 15px;
-    font-size: @font-web;
-    .filter-tx{
-    	justify-self: start;
-    	display: grid;
-    	grid-row-gap: 10px;
-    	width:100%;
-        grid-template-rows: 1fr 1fr;
-        .tx-tabs{
-        	display: grid;
-        	grid-template-columns:  0.1fr 0.6fr 1fr 1fr;
-        	justify-self: start;
-        }
-        .tx-tabs button {
-        	border: none;
-        	background-color: @main-color-grey-light;
-        }
-    	.active{
-    		font-weight: @main-fw-bold;
-    		color: black;
-    	}
-    	.tx-tabs button:hover {
-    		color:  @main-color-blue;
-		}
-    	span{
-    		justify-self: start;
-    		padding-left: 15px;
-    		color: black;
-    		font-weight: @main-fw-bold;
-    	}
-
+.address-tx-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  font-size: @font-web;
+  .filter-tx {
+    justify-self: start;
+    display: grid;
+    grid-row-gap: 10px;
+    width: 100%;
+    grid-template-rows: 1fr 1fr;
+    .tx-tabs {
+      display: grid;
+      grid-template-columns: 0.1fr 0.6fr 1fr 1fr;
+      justify-self: start;
     }
-    .search-block{
-    	justify-self: end;
+    .tx-tabs button {
+      border: none;
+      background-color: @main-color-grey-light;
     }
+    .active {
+      font-weight: @main-fw-bold;
+      color: black;
+    }
+    .tx-tabs button:hover {
+      color: @main-color-blue;
+    }
+    span {
+      justify-self: start;
+      padding-left: 15px;
+      color: black;
+      font-weight: @main-fw-bold;
+    }
+  }
+  .search-block {
+    justify-self: end;
+  }
 }
 
-
-@media all and (max-width: @bp-large){
-  .address-tx-header{
+@media all and (max-width: @bp-large) {
+  .address-tx-header {
     display: block;
 
-    .filter-tx{
-        padding-left: 5px !important;
-        font-size: @font-mobile;
+    .filter-tx {
+      padding-left: 5px !important;
+      font-size: @font-mobile;
 
-        span{
-            padding-left: 0px !important;
-        }
+      span {
+        padding-left: 0px !important;
+      }
     }
-
   }
 
-    .search-block {
-        margin-top: 10px;
-        font-size: @font-mobile;
-    }
-
+  .search-block {
+    margin-top: 10px;
+    font-size: @font-mobile;
+  }
 }

@@ -1,5 +1,1 @@
-[
-	"blocks",
-	"txs",
-	"uncles"
-]
+["blocks", "txs", "uncles"]

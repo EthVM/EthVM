@@ -1,29 +1,37 @@
-[{
+[
+  {
     "name": "tokens-eth.json",
     "url": "https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/tokens/tokens-eth.json",
     "path": "src/lists/files/"
-}, {
+  },
+  {
     "name": "tokens-etc.json",
     "url": "https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/tokens/tokens-etc.json",
     "path": "src/lists/files/"
-}, {
+  },
+  {
     "name": "tokens-kov.json",
     "url": "https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/tokens/tokens-kov.json",
     "path": "src/lists/files/"
-}, {
+  },
+  {
     "name": "tokens-rin.json",
     "url": "https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/tokens/tokens-rin.json",
     "path": "src/lists/files/"
-}, {
+  },
+  {
     "name": "tokens-rop.json",
     "url": "https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/tokens/tokens-rop.json",
     "path": "src/lists/files/"
-}, {
+  },
+  {
     "name": "tokens-rsk.json",
     "url": "https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/tokens/tokens-rsk.json",
     "path": "src/lists/files/"
-}, {
+  },
+  {
     "name": "tokens-ubq.json",
     "url": "https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/tokens/tokens-ubq.json",
     "path": "src/lists/files/"
-}]
+  }
+]

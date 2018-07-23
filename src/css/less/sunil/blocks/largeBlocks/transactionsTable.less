@@ -1,17 +1,17 @@
 @import '~lessPath/sunil/global';
 
-li{
+li {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
 
-.last-transactions{
-  .block-body{
-    .block:last-child{
+.last-transactions {
+  .block-body {
+    .block:last-child {
       margin-bottom: 0px;
     }
-    .block{
+    .block {
       background-color: white;
       margin-bottom: 5px;
       display: grid;
@@ -20,51 +20,51 @@ li{
       position: relative;
       border: 2px;
       border-radius: @main-radius;
-      .vertical-middle>div{
+      .vertical-middle > div {
         display: inline-block;
         vertical-align: top;
       }
-      .vertical-middle .tooltip-container{
+      .vertical-middle .tooltip-container {
         position: absolute;
       }
       /* li: */
-      li{
+      li {
         padding: 15px 15px;
-        p{
+        p {
           text-overflow: ellipsis;
           overflow: hidden;
           white-space: nowrap;
         }
         .hash-block,
-        .width-limit{
+        .width-limit {
           display: grid;
           grid-template-columns: 1fr;
-          .hash{
+          .hash {
             margin-bottom: 5px;
             text-overflow: ellipsis;
             overflow: hidden;
             white-space: nowrap;
-          }  
+          }
         }
-        .fromto{
+        .fromto {
           text-overflow: ellipsis;
           overflow: hidden;
           white-space: nowrap;
           margin-right: 10px;
           display: grid;
           grid-template-columns: repeat(2, 50px auto);
-          .title{
+          .title {
             font-weight: @main-fw-bold;
             color: black;
           }
-          p{
+          p {
             display: inline-block;
           }
         }
-        .failed{
+        .failed {
           color: @color-orange;
         }
-        .success{
+        .success {
           color: @color-green;
         }
       } /* End li */
@@ -73,31 +73,28 @@ li{
 }
 
 /* Small to edium Screen Queries: */
-@media all and (max-width: @bp-medium){
-  .last-transactions .block-body .block li .hash{
+@media all and (max-width: @bp-medium) {
+  .last-transactions .block-body .block li .hash {
     margin-bottom: 0px;
   }
-  .block-body{
-    .fromto{
+  .block-body {
+    .fromto {
       grid-template-columns: 50px auto !important;
     }
-    .hash{
+    .hash {
       margin-bottom: 0px !important;
     }
-    li{
+    li {
       padding: 5px !important;
       font-size: 12px;
     }
   }
-  .limit, .gas{
+  .limit,
+  .gas {
     display: none !important;
   }
-  .block{
+  .block {
     grid-template-columns: auto 60px 30px !important;
     font-size: 10px !important;
   }
 }
-
-
-
-

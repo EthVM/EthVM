@@ -5,19 +5,22 @@
     "text": "Pending Tx"
   },
   "legend": {
-      "display":false
-
+    "display": false
   },
   "responsive": true,
   "scales": {
-    "yAxes": [{ 
-      "ticks": {
-        "beginAtZero": true
+    "yAxes": [
+      {
+        "ticks": {
+          "beginAtZero": true
+        }
       }
-    }],
-    "xAxes": [{
-      "display": false
-    }]
+    ],
+    "xAxes": [
+      {
+        "display": false
+      }
+    ]
   },
   "tooltips": {
     "backgroundColor": "#686868",
@@ -25,27 +28,25 @@
     "bodyFontColor": "white"
   },
   "elements": {
-      "line":{
-        "borderColor": "#c271f5",
-        "fill": false        
-      },
-      "point": {
-        "backgroundColor": "#c271f5",
-          "hoverRadius": 6, 
-          "borderColor": "#c271f5",
-          "borderWidth": 2 
-        }     
-               
+    "line": {
+      "borderColor": "#c271f5",
+      "fill": false
     },
-    "scaleShowLabels": false,
-    
-    "layout": {
-    	"padding": {  
-        	"left": 5,
-       		"right": 5,
-        	"top": 5,            
-        	"bottom": 0
-    	}
-  	}
- 
+    "point": {
+      "backgroundColor": "#c271f5",
+      "hoverRadius": 6,
+      "borderColor": "#c271f5",
+      "borderWidth": 2
+    }
+  },
+  "scaleShowLabels": false,
+
+  "layout": {
+    "padding": {
+      "left": 5,
+      "right": 5,
+      "top": 5,
+      "bottom": 0
+    }
+  }
 }

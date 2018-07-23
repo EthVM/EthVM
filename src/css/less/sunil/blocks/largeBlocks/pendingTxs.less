@@ -1,24 +1,18 @@
-
-
-a{
-    color: #2779ff;
-    text-decoration: none;
-    background-color: transparent;
+a {
+  color: #2779ff;
+  text-decoration: none;
+  background-color: transparent;
 }
 
-
-li{
+li {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
 
-
-.last-transactions{
-
-  .block-body{
-    .block{
-
+.last-transactions {
+  .block-body {
+    .block {
       background-color: white;
       margin-bottom: 5px;
 
@@ -26,44 +20,38 @@ li{
       grid-template-columns: 1fr 100px 100px 100px 50px;
       grid-column-gap: 0px;
 
-      .vertical-middle{
+      .vertical-middle {
         display: flex;
         justify-content: center;
         flex-direction: column;
       }
 
-      .status{
+      .status {
         //text-align: center;
       }
 
-      li{
+      li {
         padding: 15px 15px;
-        
 
-
-        p{
+        p {
           text-overflow: ellipsis;
           overflow: hidden;
           white-space: nowrap;
         }
 
-
-
         .hash-block,
-        .width-limit{
+        .width-limit {
           display: grid;
           grid-template-columns: 1fr;
-          .hash{
+          .hash {
             margin-bottom: 5px;
             text-overflow: ellipsis;
             overflow: hidden;
             white-space: nowrap;
-
-          }  
+          }
         }
 
-        
-        .fromto{
+        .fromto {
           text-overflow: ellipsis;
           overflow: hidden;
           white-space: nowrap;
@@ -73,74 +61,56 @@ li{
           display: grid;
           grid-template-columns: repeat(2, 50px auto);
 
-
-          .title{
+          .title {
             font-weight: 600;
             color: #465a6e;
           }
-          p{
+          p {
             display: inline-block;
           }
         }
 
-        
-        .failed{
+        .failed {
           color: #f9967b;
         }
-        .success{
+        .success {
           color: #20c0c7;
         }
-      
-
-      }//li
-
+      } //li
     }
   }
-
 }
 
-
-
-
-
-
-@media all and (max-width: 799px){
-  .last-transactions .block-body .block li .hash{
+@media all and (max-width: 799px) {
+  .last-transactions .block-body .block li .hash {
     margin-bottom: 0px;
   }
 
-  .block-body{
-
-    .fromto{
+  .block-body {
+    .fromto {
       grid-template-columns: 50px auto !important;
     }
 
-
-    p{
+    p {
       //line-height: 12px !important;
     }
 
-    .hash{
+    .hash {
       margin-bottom: 0px !important;
     }
 
-    li{
+    li {
       padding: 5px !important;
     }
 
-    .eth, .gas{
+    .eth,
+    .gas {
       display: none !important;
     }
 
-    .block{
+    .block {
       grid-template-columns: auto 60px 30px !important;
       font-size: 10px !important;
     }
-
   }
-
 }
-
-
-
-

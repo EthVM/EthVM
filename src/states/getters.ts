@@ -12,7 +12,9 @@ const getTxs = (state: StateLayout): Tx[] => {
 const getBlocks = (state: StateLayout): Block[] => {
   const blocks = []
   state.blocks.items().forEach(block => {
-    if (!block.getIsUncle()) { blocks.push(block) }
+    if (!block.getIsUncle()) {
+      blocks.push(block)
+    }
   })
   return blocks
 }

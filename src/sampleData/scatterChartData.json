@@ -1,11 +1,26 @@
 {
-    "labels": ["15 Min ago", "14 Min ago", "13 Min ago","12 Min ago","11 Min ago","10 Min ago","9 Min ago","8 Min ago","7 Min ago","6 Min ago","5 Min ago","4 Min ago","3 Min ago","2 Min ago","1 Min ago"],
-	"datasets": [{
-        "pointHoverBackgroundColor": "#fba893",
-        "pointHoverBorderColor": "fba893",
-    	"data": [ 20, 37, 50, 37, 17, 51, 33, 25, 47, 73, 12 , 89, 23, 74, 27]
-     }]
-
+  "labels": [
+    "15 Min ago",
+    "14 Min ago",
+    "13 Min ago",
+    "12 Min ago",
+    "11 Min ago",
+    "10 Min ago",
+    "9 Min ago",
+    "8 Min ago",
+    "7 Min ago",
+    "6 Min ago",
+    "5 Min ago",
+    "4 Min ago",
+    "3 Min ago",
+    "2 Min ago",
+    "1 Min ago"
+  ],
+  "datasets": [
+    {
+      "pointHoverBackgroundColor": "#fba893",
+      "pointHoverBorderColor": "fba893",
+      "data": [20, 37, 50, 37, 17, 51, 33, 25, 47, 73, 12, 89, 23, 74, 27]
+    }
+  ]
 }
-
-

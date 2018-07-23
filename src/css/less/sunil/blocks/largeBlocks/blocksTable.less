@@ -1,65 +1,65 @@
 @import '~lessPath/sunil/global';
 
-li{
+li {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
 
-#latest-blocks{  
+#latest-blocks {
   position: relative;
   overflow-y: auto;
-  .block-body{
-    .block{
+  .block-body {
+    .block {
       margin-bottom: 5px;
       background-color: white;
-      .block-data{
+      .block-data {
         display: grid;
         grid-template-columns: 100px auto 150px 150px;
         grid-column-gap: 0px;
-        .block-number{
+        .block-number {
           font-weight: @main-fw-bold;
           color: black;
         }
-        li{
+        li {
           padding: 15px 15px;
-          div:first-child{
+          div:first-child {
             margin-bottom: 5px;
           }
-          .block{
+          .block {
             color: black;
             font-weight: @main-fw-bold;
-          }  
+          }
         }
-        .reward{
+        .reward {
           text-overflow: ellipsis;
           overflow: hidden;
           white-space: nowrap;
-          &>div{
+          & > div {
             display: inline-block;
             vertical-align: top;
           }
         }
 
-        .txs{
-          .success{
+        .txs {
+          .success {
             color: @color-green;
           }
 
-          .failed{
+          .failed {
             color: @color-orange;
           }
         }
-        .hash > div{
+        .hash > div {
           display: grid;
           grid-template-columns: 50px auto;
           grid-column-gap: 0px;
-          p:first-child{
+          p:first-child {
             min-width: 45px;
             font-weight: @main-fw-bold;
             color: black;
           }
-          p{
+          p {
             margin: 0;
             display: inline-block;
             text-overflow: ellipsis;
@@ -67,14 +67,13 @@ li{
             white-space: nowrap;
           }
         }
+      } //.block-data
 
-      }//.block-data
-
-      .uncles-block{
+      .uncles-block {
         position: relative;
         padding-left: 115px;
         padding-bottom: 10px;
-        .uncles-line{
+        .uncles-line {
           border-radius: 0 0 0 0px;
           position: absolute;
           height: 45px;
@@ -85,93 +84,80 @@ li{
           left: 40px;
         }
 
-        .uncles-title{
+        .uncles-title {
           font-weight: @main-fw-bold;
           color: black;
           padding-bottom: 5px;
         }
 
-        .uncles-data{
+        .uncles-data {
           display: grid;
           grid-template-columns: 25% 25% 15% 25%;
           grid-column-gap: 0px;
-          li{
+          li {
             padding: 0;
             text-overflow: ellipsis;
             overflow: hidden;
             white-space: nowrap;
             margin-right: 20px;
-            p{
+            p {
               text-overflow: ellipsis;
               overflow: hidden;
               white-space: nowrap;
               display: inline-block;
             }
-            p:first-child{
+            p:first-child {
               padding-right: 15px;
               font-weight: @main-fw-bold;
               color: black;
             }
           }
-        }//.uncles-data
-      }//.uncles-block
-    }//.block
-  }//.block-body
-}//#latest-blocks
+        } //.uncles-data
+      } //.uncles-block
+    } //.block
+  } //.block-body
+} //#latest-blocks
 
 /* Small to Medium Size Queries: */
-@media all and (max-width: @bp-medium){
-
-  .block-data{
+@media all and (max-width: @bp-medium) {
+  .block-data {
     grid-template-columns: 60px auto 50px 70px !important;
     font-size: 12px !important;
-    li{
+    li {
       padding: 5px !important;
-      div:first-child{
+      div:first-child {
         margin-bottom: 0px !important;
       }
     }
-    .hash > div{
+    .hash > div {
       grid-template-columns: 40px auto !important;
-    }        
+    }
   }
-  .uncles-line{
+  .uncles-line {
     height: 25px !important;
     width: 30px !important;
     top: -17px !important;
     left: 25px !important;
   }
-  .uncles-block{
+  .uncles-block {
     padding-left: 66px !important;
     font-size: 12px !important;
-    .uncles-data{
+    .uncles-data {
       grid-template-columns: 1fr 1fr !important;
-      p:first-child{
+      p:first-child {
         padding-right: 12px !important;
       }
     }
-    li{
+    li {
       line-height: 12px !important;
     }
     .sub-miner,
-    .sub-height{
+    .sub-height {
       display: none;
     }
   }
-  .uncles-title{
+  .uncles-title {
     padding-bottom: 0px !important;
     line-height: 14px !important;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-

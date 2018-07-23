@@ -22,7 +22,9 @@ const setUnclesToUnclesAndAdd = (block: Block, pastBlocks: Block[]): Block[] => 
 
 const dedup = (block: Block, pastBlocks: Block[]): Block[] => {
   for (let i = 0; i < pastBlocks.length; i++) {
-    if (block.getId() === pastBlocks[i].getId()) { pastBlocks.splice(i, 1) }
+    if (block.getId() === pastBlocks[i].getId()) {
+      pastBlocks.splice(i, 1)
+    }
   }
   return pastBlocks
 }

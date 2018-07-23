@@ -1,10 +1,10 @@
 {
-    "join": "join",
-    "leave": "leave",
-    "newTx": "NEW_TX",
-    "newBlock": "NEW_BLOCK",
-    "pastTxs": "pastTxs",
-    "pastTxsR": "PAST_TXS_RECEIVED",
-    "pastBlocks": "pastBlocks",
-    "pastBlocksR": "PAST_BLOCKS_RECEIVED"
+  "join": "join",
+  "leave": "leave",
+  "newTx": "NEW_TX",
+  "newBlock": "NEW_BLOCK",
+  "pastTxs": "pastTxs",
+  "pastTxsR": "PAST_TXS_RECEIVED",
+  "pastBlocks": "pastBlocks",
+  "pastBlocksR": "PAST_BLOCKS_RECEIVED"
 }

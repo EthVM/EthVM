@@ -1,12 +1,11 @@
-
 @import (css) '~bootstrap/dist/css/bootstrap.css';
 @import '~lessPath/sunil/globalVars';
 
-*{
+* {
   outline: none;
 }
 
-body{
+body {
   margin: 0;
   font-family: 'Roboto', sans-serif;
   line-height: 1.5;
@@ -22,50 +21,47 @@ a:link {
 }
 a:visited,
 a:active {
-    text-decoration: none;
-    color: @main-color-blue;
+  text-decoration: none;
+  color: @main-color-blue;
 }
 a:hover {
   color: @main-color-grey-dark;
 }
 
-
-ul{
+ul {
   margin: 0;
   padding: 0;
   list-style-type: none;
-  li{
+  li {
     margin: 0;
     padding: 0;
   }
 }
 
-
 /*Scroll Bar */
 
 /* width */
 ::-webkit-scrollbar {
-    width: 7px;
+  width: 7px;
 }
 /* Track */
 ::-webkit-scrollbar-track {
-    background: @main-color-grey-light; 
+  background: @main-color-grey-light;
 }
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: @color-grey;
-    border-radius: 2px; 
+  background: @color-grey;
+  border-radius: 2px;
 }
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background: @main-color-grey-dark; 
+  background: @main-color-grey-dark;
 }
 /* End Scroll Bar */
 
-
 /* Class for common button:
     Frames using it: Home, Address Info, Token Info, Block Info; */
-.button-common{
+.button-common {
   position: absolute;
   color: white;
   background-color: @main-color-blue;
@@ -81,41 +77,41 @@ ul{
 }
 
 /* Top Title + Search Container. Is used on every single frame: */
-.page-title-container{
+.page-title-container {
   display: flex;
   padding: 30px 0px 40px 0px;
-  .page-title{   
-    h3{
+  .page-title {
+    h3 {
       font-weight: @main-fw-bold;
       color: black;
       font-size: @font-h3-web;
       margin: 0px 0 6px 0;
     }
-    h6{    
+    h6 {
       font-weight: @main-fw-normal;
       margin: 0;
       font-size: 13px;
     }
   }
-  .search-block{
+  .search-block {
     margin-left: auto;
   }
 }
 
 /* Block title container used on Home and Block Frames. */
-.block-title-container{
+.block-title-container {
   display: flex;
   padding: 0px 0 10px 0;
-  height: 50px; 
-  h3{
+  height: 50px;
+  h3 {
     font-weight: @main-fw-bold;
     color: black;
     font-size: 24px;
     margin: 0px 0 6px 0;
     padding-right: 5px;
-    padding-top: 10px
+    padding-top: 10px;
   }
-  h6{
+  h6 {
     font-weight: @main-fw-bold;
     max-width: 350px;
     line-height: 16px;
@@ -124,44 +120,44 @@ ul{
 
 /* Footnote class is used to display footnotes under charts and tables.
     Used on Home Frame, Transactions, Blocks, etc. */
-.footnote{
+.footnote {
   display: flex;
-  ul{
+  ul {
     margin: 20px auto;
     padding: 0;
-    li{
+    li {
       display: inline-block;
       list-style-type: none;
       margin: 0;
       padding: 0;
       margin-right: 10px;
-      
-      i.success{
+
+      i.success {
         color: @color-green;
       }
-      i.failed{
+      i.failed {
         color: @color-orange;
       }
-      i.pending{
+      i.pending {
         color: @color-purple;
       }
-      i.tx-fees{
+      i.tx-fees {
         color: @main-color-blue;
-      }      
+      }
     }
   }
 }
 
 /*Common Info: 
-  Used by About, Address and Token Frames*/;
-.info-common{
+  Used by About, Address and Token Frames*/
+.info-common {
   margin-top: 20px;
   padding: 40px 100px;
   background-color: white;
   box-shadow: @box-shadow-light;
   border-radius: @main-radius;
-  p{
-    text-align: center;    
+  p {
+    text-align: center;
     line-height: 1.5;
     color: @text-color-grey;
   }
@@ -169,7 +165,7 @@ ul{
 
 /* Small Blocks Row
   Us ed on Home, Transactions and Blocks Page: */
-.small-blocks-row{
+.small-blocks-row {
   display: grid;
   grid-column-gap: 10px;
   grid-row-gap: 10px;
@@ -178,7 +174,7 @@ ul{
 }
 
 /* Tooltip: */
-.tooltip-button{
+.tooltip-button {
   cursor: pointer;
   font-size: 14px;
 }
@@ -201,10 +197,10 @@ ul{
   border-color: black;
   z-index: 1;
 }
-.tooltip[x-placement^="top"] {
+.tooltip[x-placement^='top'] {
   margin-bottom: 5px;
 }
-.tooltip[x-placement^="top"] .tooltip-arrow {
+.tooltip[x-placement^='top'] .tooltip-arrow {
   border-width: 5px 5px 0 5px;
   border-left-color: transparent !important;
   border-right-color: transparent !important;
@@ -214,10 +210,10 @@ ul{
   margin-top: 0;
   margin-bottom: 0;
 }
-.tooltip[x-placement^="bottom"] {
+.tooltip[x-placement^='bottom'] {
   margin-top: 5px;
 }
-.tooltip[x-placement^="bottom"] .tooltip-arrow {
+.tooltip[x-placement^='bottom'] .tooltip-arrow {
   border-width: 0 5px 5px 5px;
   border-left-color: transparent !important;
   border-right-color: transparent !important;
@@ -227,10 +223,10 @@ ul{
   margin-top: 0;
   margin-bottom: 0;
 }
-.tooltip[x-placement^="right"] {
+.tooltip[x-placement^='right'] {
   margin-left: 5px;
 }
-.tooltip[x-placement^="right"] .tooltip-arrow {
+.tooltip[x-placement^='right'] .tooltip-arrow {
   border-width: 5px 5px 5px 0;
   border-left-color: transparent !important;
   border-top-color: transparent !important;
@@ -240,10 +236,10 @@ ul{
   margin-left: 0;
   margin-right: 0;
 }
-.tooltip[x-placement^="left"] {
+.tooltip[x-placement^='left'] {
   margin-right: 5px;
 }
-.tooltip[x-placement^="left"] .tooltip-arrow {
+.tooltip[x-placement^='left'] .tooltip-arrow {
   border-width: 5px 0 5px 5px;
   border-top-color: transparent !important;
   border-right-color: transparent !important;
@@ -266,16 +262,16 @@ ul{
 .tooltip[aria-hidden='true'] {
   visibility: hidden;
   opacity: 0;
-  transition: opacity .15s, visibility .15s;
+  transition: opacity 0.15s, visibility 0.15s;
 }
 .tooltip[aria-hidden='false'] {
   visibility: visible;
   opacity: 1;
-  transition: opacity .15s;
+  transition: opacity 0.15s;
 }
 /* End Tooltip */
 
-/* Table Header for Blocks Table: */;
+/* Table Header for Blocks Table: */
 .block-table-header {
   font-weight: @main-fw-bold;
   color: black;
@@ -283,32 +279,32 @@ ul{
   grid-template-columns: 100px auto 150px 150px;
   grid-column-gap: 0px;
   margin-bottom: 10px;
-  li{
+  li {
     padding: 15px;
   }
 }
 
-/*Table Header for Transactions Table: */;
-.tx-table-header{
+/*Table Header for Transactions Table: */
+.tx-table-header {
   font-weight: @main-fw-bold;
   color: black;
   display: grid;
-  grid-template-columns: 1fr 100px 100px 100px 50px; 
+  grid-template-columns: 1fr 100px 100px 100px 50px;
   grid-column-gap: 0px;
   margin-bottom: 10px;
-  li{
+  li {
     padding: 15px;
   }
 }
 
 /*Class for copy icon: */
-.copy{
-   visibility: hidden;
-   color: @color-purple;
+.copy {
+  visibility: hidden;
+  color: @color-purple;
 }
 
 /* Itenticon: */
-.identicon{
+.identicon {
   margin-left: 5px;
   margin-right: 10px;
   width: 50px;
@@ -318,106 +314,81 @@ ul{
 }
 
 /* Small-Large Screen Size: */
-@media all and (max-width: @bp-large){
-  .page-title-container{
+@media all and (max-width: @bp-large) {
+  .page-title-container {
     display: block !important;
-    h3{
+    h3 {
       font-size: 20px;
     }
-    .search-block{
+    .search-block {
       margin-top: 20px;
       width: 100% !important;
     }
   }
 
-  .block-title-container{
-    h3{
+  .block-title-container {
+    h3 {
       font-size: 20px;
     }
   }
 
   /*Common Button: */
-  .button-common{
+  .button-common {
     padding: 4px 10px;
     right: 20px;
     min-width: 50px;
     font-size: 12px;
   }
 
-  .small-blocks-row{
+  .small-blocks-row {
     grid-template-columns: 1fr 1fr !important;
     grid-template-rows: 1fr 1fr !important;
   }
-  .identicon{
+  .identicon {
     width: 45px;
     height: 45px;
   }
 }
 
-
-
-/* Small-Medium screen Query: */;
-@media all and (max-width: @bp-medium){
-  .small-blocks-row{
+/* Small-Medium screen Query: */
+@media all and (max-width: @bp-medium) {
+  .small-blocks-row {
     grid-template-columns: 1fr !important;
     grid-template-rows: 1fr 1fr 1fr 1fr !important;
   }
   .block-table-header {
     grid-template-columns: 60px auto 50px 70px !important;
     font-size: 12px !important;
-    li{
+    li {
       padding: 5px !important;
     }
   }
-  .tx-table-header{
+  .tx-table-header {
     grid-template-columns: auto 60px 30px !important;
     font-size: 12px !important;
     padding-right: 5px !important;
-    li{
+    li {
       padding: 5px !important;
     }
   }
-  .limit, .gas{
+  .limit,
+  .gas {
     display: none !important;
   }
-  .page-title-container{
-    h3{
+  .page-title-container {
+    h3 {
       font-size: @font-h3-mobile;
     }
   }
 
-  .block-title-container{
-    h3{
+  .block-title-container {
+    h3 {
       font-size: @font-h3-mobile;
     }
   }
 
-  .identicon{
+  .identicon {
     width: 40px;
     height: 40px;
-  }  
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
