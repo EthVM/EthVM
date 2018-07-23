@@ -1,8 +1,8 @@
 {
-  "name": "ethvm-blockchain-explorer",
+  "name": "ethvm-frontend",
   "version": "1.0.0",
-  "description": "EthVM: Ethereum Blockchain Explorer",
-  "author": "EnKryptIO Team",
+  "description": "EthVM: Ethereum (and more networks) Blockchain explorer",
+  "author": "enKryptIO Team",
   "private": true,
   "scripts": {
     "start": "history-server dist",
@@ -11,7 +11,7 @@
     "lint:fix": "tslint -c tslint.json --project . --fix",
     "external": "node /external/index.js",
     "build": "node build/build.js",
-    "prettier": "prettier --write src/**/*.ts"
+    "prettier": "prettier --write {src,build,config,external}/**/*.{js,ts,vue,less,json}"
   },
   "dependencies": {
     "@types/socket.io-client": "^1.4.32",
@@ -88,9 +88,7 @@
     "socket.io-client": "^2.1.0",
     "style-loader": "^0.19.1",
     "ts-loader": "^3.5.0",
-    "tslint": "^5.11.0",
-    "tslint-config-prettier": "^1.13.0",
-    "tslint-consistent-codestyle": "^1.13.2",
+    "tslint": "^5.10.0",
     "typescript": "^2.8.3",
     "typescript-eslint-parser": "^11.0.0",
     "url-loader": "^0.6.2",
