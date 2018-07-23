@@ -17,5 +17,4 @@ yarn-error.log*
 *.sln
 
 # Project
-docker/volumes/
 dist/
