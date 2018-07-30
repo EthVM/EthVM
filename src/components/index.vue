@@ -4,7 +4,6 @@
     <block-header :pagename="pageName"></block-header>
 
     <!-- BODY -->
-
     <!-- Main Pages -->
     <frame-blocks v-if="pageName == 'blocks'"></frame-blocks>
     <frame-txs v-else-if="pageName == 'transactions' || pageName == 'pendingTransactions'" :type="pageName"></frame-txs>
@@ -50,19 +49,19 @@ export default Vue.extend({
   },
   methods: {
     setPastData() {
-      this.$socket.emit(sEvents.pastTxs, '', (_err, _txs) => {
-        console.log('Past TX: ', _txs)
-
-        this.$store.commit('NEW_TX', _txs)
-        this.$eventHub.$emit(sEvents.pastTxsR)
-        this.$eventHub.$emit(sEvents.newTx, new Tx(_txs[0]))
+      this.$socket.emit(sEvents.pastTxs, '', (err, txs) => {
+        this.$store.commit(sEvents.newTx, txs)
+        if (txs && txs.length > 0) {
+          this.$eventHub.$emit(sEvents.pastTxsR)
+          this.$eventHub.$emit(sEvents.newTx, new Tx(txs[0]))
+        }
       })
-      this.$socket.emit(sEvents.pastBlocks, '', (_err, _blocks) => {
-        console.log('Past Blocks: ', _blocks)
-
-        this.$store.commit('NEW_BLOCK', _blocks)
-        this.$eventHub.$emit(sEvents.newBlock, new Block(_blocks[0]))
-        this.$eventHub.$emit(sEvents.pastBlocksR)
+      this.$socket.emit(sEvents.pastBlocks, '', (err, blocks) => {
+        this.$store.commit(sEvents.newBlock, blocks)
+        if (blocks && blocks.lenght > 0) {
+          this.$eventHub.$emit(sEvents.newBlock, new Block(blocks[0]))
+          this.$eventHub.$emit(sEvents.pastBlocksR)
+        }
       })
     }
   },
