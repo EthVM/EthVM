@@ -22,12 +22,6 @@
   </a>
 </div>
 
-<div align="center">
-  <h1>
-    <img src="https://raw.githubusercontent.com/enKryptIO/ethvm/master/assets/logo.png" alt="ethvm-logo">
-  </h1>
-</div>
-
 # EthVM - Ethereum Blockchain Explorer
 
 ## Getting Started
