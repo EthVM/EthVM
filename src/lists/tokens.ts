@@ -5,6 +5,7 @@ import RIN from './files/tokens-rin.json'
 import ROP from './files/tokens-rop.json'
 import RSK from './files/tokens-rsk.json'
 import UBQ from './files/tokens-ubq.json'
+
 export default {
   ETH,
   ETC,
