@@ -9,7 +9,7 @@
     "start:dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "lint": "tslint -c tslint.json --project .",
     "lint:fix": "tslint -c tslint.json --project . --fix",
-    "external": "node /external/index.js",
+    "external": "ts-node --compilerOptions '{\"module\":\"commonjs\"}' ./external",
     "build": "node build/build.js",
     "prettier": "prettier --write {src,build,config,external}/**/*.{js,ts,vue,less,json}"
   },
@@ -87,6 +87,7 @@
     "shelljs": "^0.8.2",
     "style-loader": "^0.19.1",
     "ts-loader": "^3.5.0",
+    "ts-node": "^7.0.0",
     "tslint": "^5.10.0",
     "tslint-config-prettier": "^1.14.0",
     "tslint-consistent-codestyle": "^1.13.2",
