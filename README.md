@@ -5,9 +5,6 @@
 </div>
 
 <div align="center">
-  <a href="https://raw.githubusercontent.com/enKryptIO/ethvm/master/LICENSE.md">
-    <img alt="License" src="https://img.shields.io/dub/l/vibe-d.svg">
-  </a>
   <a href="https://travis-ci.org/enKryptIO/ethvm" target="_blank">
     <img alt="Travis" src="https://travis-ci.org/enKryptIO/ethvm.svg?branch=master" />
   </a>
