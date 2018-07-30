@@ -18,3 +18,4 @@ yarn-error.log*
 
 # Project
 dist/
+package-lock.json
