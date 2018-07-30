@@ -38,10 +38,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import bn from 'bignumber.js'
-import { common, Tx } from '@/libs'
 import ethUnits from 'ethereumjs-units'
-
-var utils = require('../../libs/utils.js')
 
 let Account = require('ethereumjs-account')
 

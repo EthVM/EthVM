@@ -4,6 +4,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import sEvents from '@/configs/socketEvents.json'
 
 export default Vue.extend({
   name: 'ShortDataLastBlock',
@@ -16,9 +17,13 @@ export default Vue.extend({
   },
   computed: {
     latestBlockNumber() {
+      console.log('Me ejecuto')
       if (!this.$store.getters.getBlocks[0]) {
-        return 'loading'
+        return 'Loading'
       }
+      this.$eventHub.$on(sEvents.newBlock, _block => {
+        return this.$store.getters.getBlocks[0].getIntNumber()
+      })
       return this.$store.getters.getBlocks[0].getIntNumber()
     }
   }

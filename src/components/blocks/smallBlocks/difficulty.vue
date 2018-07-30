@@ -20,7 +20,7 @@ export default Vue.extend({
       blockTitle: 'Difficulty TH',
       blockIconType: 'asterisk',
       blockIconColor: '#6bee69',
-      difficulty: '0.0'
+      difficulty: 'Loading'
     }
   },
   created() {

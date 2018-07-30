@@ -35,7 +35,7 @@ export default Vue.extend({
     let parent = this
     setInterval(() => {
       if (!this.$store.getters.getBlocks.length) {
-        parent.seconds = 'loading'
+        parent.seconds = 'Loading'
         return
       }
       parent.seconds = Math.ceil((new Date().getTime() - parent.lastBlockTime) / 1000)

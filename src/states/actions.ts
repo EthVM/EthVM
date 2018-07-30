@@ -4,12 +4,12 @@ import { Block, Tx } from '../libs'
 import { BlockLayout, TxLayout } from '../typeLayouts'
 
 const socket_newBlock = ({ commit }, block: BlockLayout | BlockLayout[]) => {
-  commit('NEW_BLOCK', block)
+  commit(sEvents.newBlock, block)
   this._vm.$eventHub.$emit(sEvents.newBlock, Array.isArray(block) ? new Block(block[0]) : new Block(block))
 }
 
 const socket_newTx = function({ commit }, tx: TxLayout | TxLayout[]) {
-  commit('NEW_TX', tx)
+  commit(sEvents.newTx, tx)
   this._vm.$eventHub.$emit(sEvents.newTx, Array.isArray(tx) ? new Tx(tx[0]) : new Tx(tx))
 }
 

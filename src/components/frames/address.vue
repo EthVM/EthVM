@@ -83,7 +83,6 @@ import bn from 'bignumber.js'
 import { common, Tx } from '@/libs'
 import ethUnits from 'ethereumjs-units'
 
-var utils = require('../../libs/utils.js')
 const MAX_ITEMS = 20
 
 export default Vue.extend({
