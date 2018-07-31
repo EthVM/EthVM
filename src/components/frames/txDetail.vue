@@ -20,54 +20,53 @@
         <!-- End Tx Details -->
       </div>
       <!-- Fix this - get sub tx
-        <div class="col-md-12 col-sm-12 col-xs-12" >
-          <div class="block-title-container">
-            <h3>Sub Transactions</h3>
+          <div class="col-md-12 col-sm-12 col-xs-12" >
+            <div class="block-title-container">
+              <h3>Sub Transactions</h3>
+            </div>
+            <div class="block">
+              <block-last-transactions :tx="transactions"></block-last-transactions>
+            </div>
           </div>
-          <div class="block">
-            <block-last-transactions :tx="transactions"></block-last-transactions>
-          </div>
-        </div>
-      -->
+        -->
     </div>
-  </div>
-  </div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import store from '@/states'
-import chartOptions from '@/sampleData/chartData.json'
-import { Block, common, Tx } from '@/libs'
+  import {
+    Block,
+    common,
+    Tx
+  } from '@/libs'
+  import chartOptions from '@/sampleData/chartData.json'
+  import store from '@/states'
+  import Vue from 'vue'
 
-export default Vue.extend({
-  name: 'tx-Detail',
-  props: ['txHash'],
-  data() {
-    return {
-      store: store,
-      transaction: null,
-      common: common,
-      unixtimestamp: null,
-      timestamp: null
-    }
-  },
-  methods: {},
-  computed: {},
-  mounted: function() {
-    /* Get Tx Info */
-    let _this = this
-    this.$socket.emit('getTx', Buffer.from(this.txHash.substring(2), 'hex'), (err, data) => {
-      if (data) {
-        _this.transaction = new Tx(data)
-        /* Method to get Subtransactions: */
+  export default Vue.extend({
+    name: 'tx-Detail',
+    props: ['txHash'],
+    data() {
+      return {
+        store,
+        common,
+        transaction: null,
+        unixtimestamp: null,
+        timestamp: null
       }
-    })
-  }
-})
+    },
+    mounted() {
+      /* Get Tx Info */
+      this.$socket.emit('getTx', Buffer.from(this.txHash.substring(2), 'hex'), (err, data) => {
+        if (data) {
+          this.transaction = new Tx(data)
+          /* Method to get Subtransactions: */
+        }
+      })
+    }
+  })
 </script>
 
 <style scoped lang="less">
-@import '~lessPath/sunil/global.less';
+  @import '~lessPath/sunil/global.less';
 </style>
