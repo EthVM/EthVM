@@ -38,25 +38,26 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+  import Vue from 'vue'
+  const MAX_ITEMS = 20
 
-const MAX_ITEMS = 20
-
-export default Vue.extend({
-  name: 'FramesHome',
-  data() {
-    return {}
-  },
-  created() {},
-  computed: {
-    txs() {
-      if (this.$store.getters.getTxs.length) return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
-      else return []
+  export default Vue.extend({
+    name: 'FramesHome',
+    data() {
+      return {}
+    },
+    computed: {
+      txs() {
+        if (this.$store.getters.getTxs.length) {
+          return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
+        } else {
+          return []
+        }
+      }
     }
-  }
-})
+  })
 </script>
 
 <style scoped lang="less">
-@import '~lessPath/sunil/global.less';
+  @import '~lessPath/sunil/global.less';
 </style>
