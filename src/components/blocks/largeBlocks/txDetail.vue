@@ -110,6 +110,6 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped="" lang="less">
+<style scoped lang="less">
 @import '~lessPath/sunil/blocks/largeBlocks/detailComponent.less';
 </style>

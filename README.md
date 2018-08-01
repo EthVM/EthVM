@@ -1,16 +1,10 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/enKryptIO/ethvm/master/assets/logo.png" alt="ethvm-logo">
+  <img src="https://raw.githubusercontent.com/enKryptIO/ethvm/master/.github/assets/logo.png" alt="ethvm-logo">
   <p>:zap::zap::zap: EthVM Project: An open source blockchain explorer for Ethereum (and related networks) :zap::zap::zap:</p>
   <p>Powered by <a href="https://www.typescriptlang.org/">TypeScript</a> / <a href="https://github.com/socketio/socket.io">Socket.io</a> / <a href="https://github.com/ethereum/go-ethereum">go-ethereum</a> / <a href="https://github.com/rethinkdb/rethinkdb">RethinkDB</a> / <a href="https://redis.io/topics/quickstart">Redis</a></p>
 </div>
 
 <div align="center">
-  <a href="https://travis-ci.org/enKryptIO/ethvm" target="_blank">
-    <img alt="Travis" src="https://travis-ci.org/enKryptIO/ethvm.svg?branch=master" />
-  </a>
-  <a href="https://codecov.io/gh/enKryptIO/ethvm" target="_blank">
-    <img alt="codecov" src="https://codecov.io/gh/enKryptIO/ethvm/branch/master/graph/badge.svg" />
-  </a>
   <a href="https://david-dm.org/enKryptIO/ethvm" target="_blank">
     <img alt="Dependency Status" src="https://david-dm.org/enKryptIO/ethvm.svg" />
   </a>

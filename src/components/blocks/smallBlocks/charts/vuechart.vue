@@ -7,7 +7,6 @@
     <div class="chart">
       <canvas ref="chart" :width="width" :height="height"></canvas>
     </div>
-
   </div>
 </template>
 

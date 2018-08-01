@@ -49,15 +49,12 @@
   </div>
 </template>
 <script lang="ts">
-import Vue from 'vue';
+import Vue from 'vue'
 import bn from 'bignumber.js'
-import NumberFormatter from 'number-formatter'
+import NumberFormatter from 'number-format.js'
 export default Vue.extend({
   name: 'TokenTracker',
-  props: [
-    'tokens',
-    'holder'
-  ],
+  props: ['tokens', 'holder'],
   data() {
     return {
       totalTokens: 0,
@@ -70,7 +67,7 @@ export default Vue.extend({
     /*Calculates total number of tokens: */
     getTotalTokens() {
       let _this = this
-      _this.tokens.forEach((token) => {
+      _this.tokens.forEach(token => {
         if (_this.checkBalance(token.balance)) _this.totalTokens++
       })
       return _this.totalTokens
@@ -79,7 +76,7 @@ export default Vue.extend({
     getTotalUSDValue() {
       let _this = this
       let usd = 0
-      _this.tokens.forEach((token) => {
+      _this.tokens.forEach(token => {
         _this.totalUSDValue += _this.getBalance(token.balance, token.decimals) * token.USDValue
       })
       return _this.formatUSDBalance(_this.totalUSDValue)
@@ -99,25 +96,23 @@ export default Vue.extend({
     },
     /* Check string length for the amounts */
     checkValue(amount, isBool) {
-      let length = amount.toString().length;
-      let isShort = false;
+      let length = amount.toString().length
+      let isShort = false
       if (length > 6) {
-        amount = NumberFormatter("#,##0.###", amount)
-        isShort = true;
+        amount = NumberFormatter('#,##0.###', amount)
+        isShort = true
       }
-      if (!isBool)
-        return amount;
-      else
-        return isShort;
+      if (!isBool) return amount
+      else return isShort
     },
     /* Format Usd Balance */
     formatUSDBalance(value) {
       let _this = this
-      return NumberFormatter("#,##0.##", (value))
+      return NumberFormatter('#,##0.##', value)
     }
   }
-});
+})
 </script>
-<style scoped="" lang="less">
+<style scoped lang="less">
 @import '~lessPath/sunil/blocks/largeBlocks/tokenTracker';
 </style>

@@ -6,9 +6,11 @@
 
 <script lang="ts">
 import Vue from 'vue'
+
 export default Vue.extend({
   name: 'app'
 })
 </script>
 
-<style lang="less"></style>
+<style lang="less">
+</style>

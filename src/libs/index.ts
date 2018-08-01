@@ -12,6 +12,6 @@ import HexTime from '@/libs/HexTime'
 import FIFO from '@/libs/FIFO'
 import Tx from '@/libs/Tx'
 import processTxs from '@/libs/txProcessor'
-import ethUnits from 'ethereumjs-units'
+import Units from 'ethereumjs-units'
 
-export { ethUnits, Block, Tx, FIFO, processBlocks, processTxs, common, Address, EthValue, Hash, Hex, HexNumber, HexTime }
+export { Units, Block, Tx, FIFO, processBlocks, processTxs, common, Address, EthValue, Hash, Hex, HexNumber, HexTime }

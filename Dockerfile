@@ -16,4 +16,4 @@ RUN yarn build
 
 # Expose
 EXPOSE 8080
-CMD ["yarn start"]
+CMD ["yarn start:prod"]

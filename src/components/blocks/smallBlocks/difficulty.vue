@@ -40,5 +40,5 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped="" lang="less">
+<style scoped lang="less">
 </style>

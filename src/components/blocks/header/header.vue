@@ -51,13 +51,12 @@ export default Vue.extend({
   mounted: function() {},
   methods: {
     mobileShowMenuClick: function() {
-      var el = document.getElementById('main-menu')
+      const el = document.getElementById('main-menu')
       el.classList.remove('mobile-menu-hidden')
     },
     mobileHideMenuClick: function() {
       //this.isHidden = !this.isHidden;
-
-      var el = document.getElementById('main-menu')
+      const el = document.getElementById('main-menu')
       el.classList.add('mobile-menu-hidden')
     }
   }

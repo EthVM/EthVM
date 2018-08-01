@@ -5,8 +5,8 @@
     :options="chartOptions"
     :chartTitle="newTitle"
     :chartDescription="newDescription"
-    :redraw="redraw"></vue-chart>
-  </div>
+    :redraw="redraw">
+  </vue-chart>
 </div>
 </template>
 

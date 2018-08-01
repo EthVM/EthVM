@@ -33,7 +33,7 @@ export default interface BlockLayout {
   transactions: Tx[]
   transactionHashes: Buffer[]
   transactionCount: number
-  uncleHashes: any
+  uncleHashes: any[]
   uncles: Block[]
   isUncle: boolean
   txFees: Buffer

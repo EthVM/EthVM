@@ -31,8 +31,6 @@
       -->
     </div>
   </div>
-  </div>
-  </div>
 </template>
 
 <script lang="ts">
@@ -57,10 +55,9 @@ export default Vue.extend({
   computed: {},
   mounted: function() {
     /* Get Tx Info */
-    let _this = this
     this.$socket.emit('getTx', Buffer.from(this.txHash.substring(2), 'hex'), (err, data) => {
       if (data) {
-        _this.transaction = new Tx(data)
+        this.transaction = new Tx(data)
         /* Method to get Subtransactions: */
       }
     })

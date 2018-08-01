@@ -30,7 +30,6 @@
       </div>
       <!-- End Tab Menu -->
     </div>
-  </div>
   <!-- container -->
   </div>
 </template>

@@ -30,7 +30,7 @@ export default Vue.extend({
   },
   created() {},
   computed: {
-    txs() {
+    txs(): any[] {
       if (this.$store.getters.getTxs.length) return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
       else return []
     }

@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
-import * as en_US from './en_US.json'
-import * as ja_JP from './ja_JP.json'
+
+import en_US from '@/translations/en_US.json'
+import ja_JP from '@/translations/ja_JP.json'
 
 const defaultLocale: string = 'en_US'
 const messages: any = {

@@ -55,7 +55,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { common } from '@/libs'
-import NumberFormatter from 'number-formatter'
+import NumberFormatter from 'number-format.js'
 import blockies from 'ethereum-blockies'
 
 export default Vue.extend({
@@ -105,6 +105,6 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped="" lang="less">
+<style scoped lang="less">
 @import '~lessPath/sunil/blocks/largeBlocks/detailComponent.less';
 </style>

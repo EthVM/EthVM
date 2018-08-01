@@ -17,7 +17,6 @@ export default Vue.extend({
   },
   computed: {
     latestBlockNumber() {
-      console.log('Me ejecuto')
       if (!this.$store.getters.getBlocks[0]) {
         return 'Loading'
       }
@@ -30,5 +29,5 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped="" lang="less">
+<style scoped lang="less">
 </style>

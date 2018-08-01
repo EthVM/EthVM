@@ -106,7 +106,8 @@ export default Vue.extend({
       let data = {
         labels: [],
         avgFees: [],
-        avgPrice: []
+        avgPrice: [],
+        sData: null
       }
       let latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
       latestBlocks.forEach(_block => {
