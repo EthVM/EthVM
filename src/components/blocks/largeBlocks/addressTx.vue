@@ -56,17 +56,19 @@ export default Vue.extend({
   mounted() {},
   methods: {
     setFilter(option) {
-      let _this = this
+      const _this = this
       _this.filter = option
     },
     isActive(value) {
-      let _this = this
-      if (value == _this.filter) return true
+      const _this = this
+      if (value == _this.filter) {
+        return true
+      }
       return false
     },
     getTxsType() {
-      let _this = this
-      var i
+      const _this = this
+      let i
       for (i = 0; i < _this.transactions.length; i++) {
         if (
           _this.transactions[i]
@@ -84,20 +86,32 @@ export default Vue.extend({
   },
   computed: {
     filteredTxs() {
-      let _this = this
-      if (_this.filter == 'all') return _this.transactions
+      const _this = this
+      if (_this.filter == 'all') {
+        return _this.transactions
+      }
       if (_this.transactions) {
-        if (!_this.recievedTx) _this.getTxsType()
-        if (_this.filter == 'out') return _this.outTx
-        if (_this.filter == 'in') return _this.inTx
+        if (!_this.recievedTx) {
+          _this.getTxsType()
+        }
+        if (_this.filter == 'out') {
+          return _this.outTx
+        }
+        if (_this.filter == 'in') {
+          return _this.inTx
+        }
       }
     },
     getTotal() {
-      let _this = this
+      const _this = this
       if (_this.transactions) {
-        if (_this.filter == 'all') return _this.transactions.length
-        if (_this.filter == 'in') return _this.inTx.length
-        else return _this.outTx.length
+        if (_this.filter == 'all') {
+          return _this.transactions.length
+        }
+        if (_this.filter == 'in') {
+          return _this.inTx.length
+        }
+        return _this.outTx.length
       }
       return 0
     }

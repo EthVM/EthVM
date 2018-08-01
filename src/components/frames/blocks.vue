@@ -51,9 +51,8 @@ export default Vue.extend({
     txs() {
       if (this.$store.getters.getBlocks.length) {
         return this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
-      } else {
-        return []
       }
+      return []
     }
   }
 })

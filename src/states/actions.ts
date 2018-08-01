@@ -14,7 +14,7 @@ const socket_newTx = function({ commit }, tx: TxLayout | TxLayout[]) {
   this._vm.$eventHub.$emit(sEvents.newTx, Array.isArray(tx) ? new Tx(tx[0]) : new Tx(tx))
 }
 
-const socket_connect = ({}, tx: TxLayout) => {
+const socket_connect = (tx: TxLayout) => {
   defaultRooms.forEach(_room => {
     this._vm.$socket.emit(sEvents.join, _room)
   })

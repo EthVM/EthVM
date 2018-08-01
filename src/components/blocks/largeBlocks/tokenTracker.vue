@@ -26,7 +26,7 @@
       <!-- End Table Header -->
     </div>
     <!-- Tokens List -->
-    <div class="tokens-list" v-for="token in tokens">
+    <div class="tokens-list" v-for="token in tokens" :key="token.symbol">
       <router-link :to="'/token/' +  token.addr.toString() + '/holder=' + holder" v-if="token.balance != 0" class="tokens-data">
         <p class="token-symbol">{{token.symbol}}</p>
         <p class="token-name">{{token.name}}</p>
@@ -46,12 +46,13 @@
     </div>
   </div>
   <!-- .block-container -->
-  </div>
 </template>
+
 <script lang="ts">
 import Vue from 'vue'
 import bn from 'bignumber.js'
 import NumberFormatter from 'number-format.js'
+
 export default Vue.extend({
   name: 'TokenTracker',
   props: ['tokens', 'holder'],
@@ -66,16 +67,17 @@ export default Vue.extend({
   computed: {
     /*Calculates total number of tokens: */
     getTotalTokens() {
-      let _this = this
-      _this.tokens.forEach(token => {
-        if (_this.checkBalance(token.balance)) _this.totalTokens++
+      this.tokens.forEach(token => {
+        if (this.checkBalance(token.balance)) {
+          this.totalTokens++
+        }
       })
-      return _this.totalTokens
+      return this.totalTokens
     },
     /*Calculates total usd token value: */
     getTotalUSDValue() {
-      let _this = this
-      let usd = 0
+      const _this = this
+      const usd = 0
       _this.tokens.forEach(token => {
         _this.totalUSDValue += _this.getBalance(token.balance, token.decimals) * token.USDValue
       })
@@ -85,29 +87,33 @@ export default Vue.extend({
   methods: {
     /* Using big number library to cast string to number: */
     checkBalance(value) {
-      let n = new bn(value)
-      if (n.gt(0)) return true
-      else return false
+      const n = new bn(value)
+      if (n.gt(0)) {
+        return true
+      }
+      return false
     },
     /* Getting correct Balances for the tokens -> devide by the number of decimals in the Token Contract: */
     getBalance(value, decimals) {
-      let n = new bn(value)
+      const n = new bn(value)
       return n.div(new bn(10).pow(decimals)).toFixed()
     },
     /* Check string length for the amounts */
     checkValue(amount, isBool) {
-      let length = amount.toString().length
+      const length = amount.toString().length
       let isShort = false
       if (length > 6) {
         amount = NumberFormatter('#,##0.###', amount)
         isShort = true
       }
-      if (!isBool) return amount
-      else return isShort
+      if (!isBool) {
+        return amount
+      }
+      return isShort
     },
     /* Format Usd Balance */
     formatUSDBalance(value) {
-      let _this = this
+      const _this = this
       return NumberFormatter('#,##0.##', value)
     }
   }

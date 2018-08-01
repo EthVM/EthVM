@@ -39,7 +39,7 @@ import Vue from 'vue'
 import bn from 'bignumber.js'
 import ethUnits from 'ethereumjs-units'
 
-let Account = require('ethereumjs-account')
+const Account = require('ethereumjs-account')
 
 const MAX_ITEMS = 20
 
@@ -72,7 +72,7 @@ export default Vue.extend({
     }
   },
   created() {
-    var _this = this
+    const _this = this
     /* Get Transfers History: */
 
     /* If (holderPresent)
@@ -80,7 +80,7 @@ export default Vue.extend({
       Get Total Supply: */
 
     if (!_this.holderPresent) {
-      var newTab = {
+      const newTab = {
         id: 1,
         title: 'Holders List',
         isActive: false
@@ -91,8 +91,10 @@ export default Vue.extend({
   methods: {},
   computed: {
     holderPresent() {
-      let _this = this
-      if (_this.holderAddr) return true
+      const _this = this
+      if (_this.holderAddr) {
+        return true
+      }
       return false
     }
   }

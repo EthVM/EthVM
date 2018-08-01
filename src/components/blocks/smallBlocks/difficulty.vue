@@ -6,7 +6,7 @@
 import Vue from 'vue'
 import sEvents from '@/configs/socketEvents.json'
 import bn from 'bignumber.js'
-let getTHs = (_num: string): number => {
+const getTHs = (_num: string): number => {
   return new bn(_num)
     .div('1e12')
     .round(2)

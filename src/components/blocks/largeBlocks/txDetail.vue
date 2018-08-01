@@ -98,8 +98,10 @@ export default Vue.extend({
   },
   methods: {
     getStringStatus(isBool) {
-      if (isBool) return 'Successful'
-      else return 'Failed'
+      if (isBool) {
+        return 'Successful'
+      }
+      return 'Failed'
     },
     getTxCost(price, used) {
       return price * used

@@ -20,11 +20,10 @@ export default Vue.extend({
     getFailedTx() {
       if (!this.$store.getters.getBlocks[0]) {
         return 'Loading'
-      } else {
-        let newBlockStat = this.$store.getters.getBlocks[0].getStats()
-        let failed = new BN(newBlockStat.failed).toNumber()
-        return failed
       }
+      const newBlockStat = this.$store.getters.getBlocks[0].getStats()
+      const failed = new BN(newBlockStat.failed).toNumber()
+      return failed
     }
   }
 })

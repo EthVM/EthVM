@@ -9,6 +9,7 @@
     "clean": "rm -rf dist/",
     "lint": "vue-cli-service lint",
     "prettier": "prettier --write src/**/*.{js,ts,vue,less,json}",
+    "format": "yarn lint && yarn prettier",
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
@@ -57,6 +58,7 @@
     "lint-staged": "^7.2.0",
     "prettier": "1.13.7",
     "ts-jest": "^23.0.0",
+    "tslint-config-prettier": "^1.14.0",
     "typescript": "^3.0.0",
     "vue-template-compiler": "^2.5.16"
   },
@@ -65,9 +67,6 @@
     "last 2 versions",
     "not ie <= 8"
   ],
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
   "lint-staged": {
     "*.js": [
       "vue-cli-service lint",

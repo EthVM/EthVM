@@ -46,15 +46,15 @@ import { Tx } from '@/libs'
 import Visibility from 'visibilityjs'
 import bn from 'bignumber.js'
 
-let getOverview = (arr: Array<Tx>) => {
-  let overview = {
+const getOverview = (arr: Array<Tx>) => {
+  const overview = {
     totalGasPrice: new bn(0),
     totalValue: new bn(0),
     length: 0,
     totalFees: new bn(0),
     topSenders: []
   }
-  let senders = {}
+  const senders = {}
   arr.forEach((_tx: Tx) => {
     overview.totalGasPrice = overview.totalGasPrice.add(_tx.getGasPrice().toWei())
     overview.totalValue = overview.totalValue.add(_tx.getValue().toWei())
@@ -65,8 +65,8 @@ let getOverview = (arr: Array<Tx>) => {
       senders[_tx.getFrom().toString()] = new bn(_tx.getValue().toWei())
     }
   })
-  let tempArr = []
-  for (var add in senders) {
+  const tempArr = []
+  for (const add in senders) {
     if (senders.hasOwnProperty(add)) {
       tempArr.push({
         address: add,
@@ -75,8 +75,10 @@ let getOverview = (arr: Array<Tx>) => {
     }
   }
   tempArr.sort(function(a, b) {
-    if (a.value.gt(b.value)) return -1
-    else return 1
+    if (a.value.gt(b.value)) {
+      return -1
+    }
+    return 1
   })
   overview.length = arr.length
   overview.topSenders = tempArr.slice(0, 10)

@@ -14,9 +14,9 @@ import Vue from 'vue'
 import sEvents from '@/configs/socketEvents.json'
 import BN from 'bignumber.js'
 
-let MAX_ITEMS = 10
+const MAX_ITEMS = 10
 
-let barOptions = {
+const barOptions = {
   title: {
     text: 'Transactions from the last 10 blocks'
   },
@@ -62,7 +62,7 @@ export default Vue.extend({
       if (this.chartData.datasets[0]) {
         this.redraw = false
         if (!_block.getIsUncle()) {
-          let _tempD = _block.getStats()
+          const _tempD = _block.getStats()
           this.chartData.labels.push(_block.getNumber().toNumber())
           this.chartData.labels.shift()
           this.chartData.datasets[0].data.push(_tempD.success)
@@ -79,15 +79,15 @@ export default Vue.extend({
   },
   computed: {
     initData() {
-      let data = {
+      const data = {
         labels: [],
         sData: [],
         fData: []
       }
-      let latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
+      const latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
       latestBlocks.forEach(_block => {
         data.labels.unshift(_block.getNumber().toNumber())
-        let _tempD = _block.getStats()
+        const _tempD = _block.getStats()
         data.sData.unshift(new BN(_tempD.success).toNumber())
         data.fData.unshift(new BN(_tempD.failed).toNumber())
       })

@@ -87,18 +87,18 @@ export default Vue.extend({
     }
   },
   mounted() {
-    let _this = this
+    const _this = this
     console.log(_this.token)
   },
   methods: {},
   computed: {
     formatUSDBalance() {
-      let _this = this
+      const _this = this
       return NumberFormatter('#,##0.##', _this.token.balance * _this.token.valueUSD)
     },
 
     formatTotalTransf() {
-      let _this = this
+      const _this = this
       return NumberFormatter('#,##0.', _this.token.trasfers)
     }
   }

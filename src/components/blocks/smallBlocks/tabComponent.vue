@@ -31,8 +31,8 @@ export default Vue.extend({
   },
   methods: {
     setActive(tab) {
-      var _this = this
-      var i
+      const _this = this
+      let i
       for (i = 0; i < _this.tabs.length; i++) {
         _this.tabs[i].isActive = false
       }

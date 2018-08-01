@@ -32,7 +32,7 @@ export default Vue.extend({
     this.$eventHub.$off([sEvents.pastBlocksR, sEvents.newBlock])
   },
   mounted() {
-    let parent = this
+    const parent = this
     setInterval(() => {
       if (!this.$store.getters.getBlocks.length) {
         parent.seconds = 'Loading'

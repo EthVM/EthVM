@@ -20,11 +20,10 @@ export default Vue.extend({
     getPendingTx() {
       if (!this.$store.getters.getBlocks[0]) {
         return 'Loading'
-      } else {
-        let newBlockStat = this.$store.getters.getBlocks[0].getStats()
-        let pending = new BN(newBlockStat.pendingTxs).toNumber()
-        return pending
       }
+      const newBlockStat = this.$store.getters.getBlocks[0].getStats()
+      const pending = new BN(newBlockStat.pendingTxs).toNumber()
+      return pending
     }
   }
 })

@@ -69,12 +69,12 @@ export default Vue.extend({
     }
   },
   mounted() {
-    let _this = this
+    const _this = this
     _this.getIdenticon()
   },
   methods: {
     getIdenticon() {
-      let _this = this
+      const _this = this
       _this.identicon = document.getElementById('icon')
       _this.identicon.style.backgroundImage =
         'url(' +
@@ -90,15 +90,15 @@ export default Vue.extend({
   },
   computed: {
     formatEthBalance() {
-      let _this = this
+      const _this = this
       return NumberFormatter('#,##0.#####', _this.account.balance)
     },
     formatUSDBalance() {
-      let _this = this
+      const _this = this
       return NumberFormatter('#,##0.##', _this.account.balance * _this.account.ethusd)
     },
     formatEthUSD() {
-      let _this = this
+      const _this = this
       return NumberFormatter('#,##0.#####', _this.account.ethusd)
     }
   }

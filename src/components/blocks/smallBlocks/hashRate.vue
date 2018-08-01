@@ -11,7 +11,7 @@ import bn from 'bignumber.js'
 const getAvgHashRate = (blocks: Array<Block>): number => {
   let avgTime = new bn(0)
   blocks.forEach(block => {
-    let stats = block.getStats()
+    const stats = block.getStats()
     avgTime = avgTime.add(new bn(stats.blockTime))
   })
   avgTime = avgTime.div(blocks.length)

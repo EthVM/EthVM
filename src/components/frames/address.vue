@@ -127,11 +127,11 @@ export default Vue.extend({
     }
   },
   created() {
-    var _this = this
+    const _this = this
     /* Geting Address Balance: */
     this.$socket.emit('getBalance', this.address, (err, result) => {
       if (!err && result) {
-        let balance = common.EthValue(common.HexToBuffer(result.result)).toEth()
+        const balance = common.EthValue(common.HexToBuffer(result.result)).toEth()
         _this.account.balance = balance
       }
     })
@@ -157,7 +157,7 @@ export default Vue.extend({
     })
     /*Getting Address Transactions: */
     this.$socket.emit('getTxs', this.address, (err, result) => {
-      var txs = []
+      const txs = []
       result.forEach(element => {
         txs.push(new Tx(element))
       })
@@ -170,9 +170,9 @@ export default Vue.extend({
   methods: {
     /*Checking of address is Miner? --> add new tab for the menu*/
     setTabs() {
-      let _this = this
+      const _this = this
       if (_this.account.isMiner) {
-        let newTab = {
+        const newTab = {
           id: 3,
           title: 'Mining History',
           isActive: false

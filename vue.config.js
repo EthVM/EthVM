@@ -9,5 +9,8 @@ module.exports = {
         lessPath: path.join(__dirname, '/src/css/less')
       }
     }
+  },
+  devServer: {
+    disableHostCheck: true
   }
 }

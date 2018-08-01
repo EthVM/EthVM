@@ -57,18 +57,17 @@ export default Vue.extend({
     isUncle() {
       if (this.block && this.block.getIsUncle()) {
         return true
-      } else {
-        return false
       }
+      return false
     }
   },
   mounted: function() {
-    let _this = this
+    const _this = this
     /* Get Block Data: */
     this.$socket.emit('getBlock', Buffer.from(this.blockHash.substring(2), 'hex'), (err, data) => {
       if (data) {
         _this.block = new Block(data)
-        let uncleHashes = _this.block.getUncleHashes()
+        const uncleHashes = _this.block.getUncleHashes()
         /*Get Transactions for the block: */
         _this.$socket.emit('getBlockTransactions', _this.block.getHash().toBuffer(), (err, data) => {
           _this.transactions = data.map(_tx => {

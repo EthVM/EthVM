@@ -15,7 +15,7 @@ export default Vue.extend({
   },
   methods: {
     copyToClip(newVar) {
-      var status = copyClip(newVar)
+      const status = copyClip(newVar)
       if (status) {
         console.log('Copied: ' + newVar)
       } else {

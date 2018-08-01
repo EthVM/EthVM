@@ -81,7 +81,7 @@ export default Vue.extend({
   created() {},
   methods: {
     getType(tx) {
-      let _this = this
+      const _this = this
       console.log()
       if (
         tx
@@ -90,38 +90,40 @@ export default Vue.extend({
           .toLowerCase() == _this.account.toString().toLowerCase()
       ) {
         return true
-      } else {
-        return false
       }
+      return false
     },
     getShortEthValue(newEthValue, isBool) {
-      let length = newEthValue.length
+      const length = newEthValue.length
       let isShort = false
       if (length > 6) {
         newEthValue = newEthValue.slice(0, 6) + '...'
         isShort = true
       }
-      if (!isBool) return newEthValue
-      else return isShort
+      if (!isBool) {
+        return newEthValue
+      }
+      return isShort
     }
   },
   computed: {
     getText() {
-      let _this = this
+      const _this = this
       console.log(_this.isPending)
       if (!_this.isPending) {
-        if (_this.filter == 'all') return 'This address does not have any transaction history'
-        else if (_this.filter == 'in') return 'This address does not have incoming transactions'
-        else {
-          return 'This address does not have outgoing transactions'
+        if (_this.filter == 'all') {
+          return 'This address does not have any transaction history'
+        } else if (_this.filter == 'in') {
+          return 'This address does not have incoming transactions'
         }
-      } else {
-        if (_this.filter == 'all') return 'This address does not have any pending transactions'
-        else if (_this.filter == 'in') return 'This address does not have any pending incoming transactions'
-        else {
-          return 'This address does not have any pending outgoing transactions'
-        }
+        return 'This address does not have outgoing transactions'
       }
+      if (_this.filter == 'all') {
+        return 'This address does not have any pending transactions'
+      } else if (_this.filter == 'in') {
+        return 'This address does not have any pending incoming transactions'
+      }
+      return 'This address does not have any pending outgoing transactions'
     }
   }
 })

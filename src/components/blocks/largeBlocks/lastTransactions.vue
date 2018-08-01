@@ -79,14 +79,16 @@ export default Vue.extend({
   methods: {
     /* Method to reduce Strig length : */
     getShortEthValue(newEthValue, isBool) {
-      let length = newEthValue.length
+      const length = newEthValue.length
       let isShort = false
       if (length > 6) {
         newEthValue = newEthValue.slice(0, 6) + '...'
         isShort = true
       }
-      if (!isBool) return newEthValue
-      else return isShort
+      if (!isBool) {
+        return newEthValue
+      }
+      return isShort
     }
   }
 })

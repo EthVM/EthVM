@@ -119,18 +119,20 @@ export default Vue.extend({
     },
     /* Method to reduce reward string: */
     getShortRewardValue(newRewardValue, isBool) {
-      let length = newRewardValue.length
+      const length = newRewardValue.length
       let isShort = false
       if (length > 8) {
         newRewardValue = newRewardValue.slice(0, 8) + '...'
         isShort = true
       }
-      if (!isBool) return newRewardValue
-      else return isShort
+      if (!isBool) {
+        return newRewardValue
+      }
+      return isShort
     }
   },
   created() {
-    let parent = this
+    const parent = this
     parent.blocks = parent.$store.getters.getBlocks
     parent.$eventHub.$on(sEvents.newBlock, _block => {
       if (Visibility.state() === 'visible') {

@@ -14,7 +14,7 @@
 
 import Vue from 'vue'
 import sEvents from '@/configs/socketEvents.json'
-let newOptions = {
+const newOptions = {
   title: {
     text: 'Pending Tx'
   },
@@ -52,7 +52,7 @@ let newOptions = {
   },
   scaleShowLabels: false
 }
-let MAX_ITEMS = 10
+const MAX_ITEMS = 10
 export default Vue.extend({
   name: 'pendingTxsChart',
   data: () => ({
@@ -74,7 +74,7 @@ export default Vue.extend({
           this.chartData.labels = this.chartData.labels.map((item, idx) => {
             return Math.ceil((new Date().getTime() - this.chartData.datasets[0].blockTimes[idx]) / 1000) + ' secs ago'
           })
-          let _tempD = _block.getStats()
+          const _tempD = _block.getStats()
           this.chartData.labels.push(Math.ceil((new Date().getTime() - _block.getTimestamp().toDate()) / 1000) + ' secs ago')
           this.chartData.labels.shift()
           this.chartData.datasets[0].data.push(_tempD.pendingTxs)
@@ -91,16 +91,16 @@ export default Vue.extend({
   },
   computed: {
     initData() {
-      let data = {
+      const data = {
         labels: [],
         txCount: [],
         blockTimes: []
       }
-      let latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
+      const latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
       latestBlocks.forEach(_block => {
         data.labels.unshift(Math.ceil((new Date().getTime() - _block.getTimestamp().toDate()) / 1000) + ' secs ago')
         data.blockTimes.unshift(_block.getTimestamp().toDate())
-        let _tempD = _block.getStats()
+        const _tempD = _block.getStats()
         data.txCount.unshift(_tempD.pendingTxs)
       })
       return {
