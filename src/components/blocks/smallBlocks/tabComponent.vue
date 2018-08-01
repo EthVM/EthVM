@@ -26,15 +26,14 @@ export default Vue.extend({
     ]
    End Example */
   props: ['tabs'],
-  data: function() {
+  data() {
     return {}
   },
   methods: {
     setActive(tab) {
-      var _this = this
-      var i
-      for (i = 0; i < _this.tabs.length; i++) {
-        _this.tabs[i].isActive = false
+      let i
+      for (i = 0; i < this.tabs.length; i++) {
+        this.tabs[i].isActive = false
       }
       tab.isActive = true
     }
