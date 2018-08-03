@@ -141,8 +141,8 @@
       /* Getting Token Balances: */
       this.$socket.emit('getTokenBalance', this.address, (err, result) => {
         if (result.result !== '0x') {
-          // console.log('tokens recieved', result)
-          this.account.tokens = result
+          console.log('tokens recieved', result)
+          this.account.tokens = result.result
           this.tokensLoaded = true
           // console.log('tokens', _this.account.tokens)
         } else {
