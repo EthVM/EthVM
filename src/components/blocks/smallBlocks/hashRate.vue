@@ -1,21 +1,22 @@
 <template>
-  <block-component :title="blockTitle" backgroundColor="color5" :value="hashRate" :icon-name="blockIconType" :icon-color="blockIconColor"></block-component>
+  <block-component :title="blockTitle" backgroundColor="color5" :value="hashRate" :icon-name="blockIconType" :icon-color="blockIconColor">
+  </block-component>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Block } from '@/libs'
 import sEvents from '@/configs/socketEvents.json'
+import { Block } from '@/libs'
 import bn from 'bignumber.js'
+import Vue from 'vue'
 
-const getAvgHashRate = (blocks: Array<Block>): number => {
+const getAvgHashRate = (_blocks: Block[]): number => {
   let avgTime = new bn(0)
-  blocks.forEach(block => {
-    let stats = block.getStats()
-    avgTime = avgTime.add(new bn(stats.blockTime))
+  _blocks.forEach(_block => {
+    const _tempD = _block.getStats()
+    avgTime = avgTime.add(new bn(_tempD.blockTime))
   })
-  avgTime = avgTime.div(blocks.length)
-  return new bn(blocks[0].getDifficulty().toNumber())
+  avgTime = avgTime.div(_blocks.length)
+  return new bn(_blocks[0].getDifficulty().toNumber())
     .div(avgTime)
     .div('1e12')
     .round(2)
@@ -29,7 +30,7 @@ export default Vue.extend({
       blockTitle: 'Hash Rate TH/s',
       blockIconType: 'hashtag',
       blockIconColor: '#fba893',
-      hashRate: 'Loading'
+      hashRate: '0.0'
     }
   },
   created() {

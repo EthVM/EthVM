@@ -27,9 +27,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
 import sEvents from '@/configs/socketEvents.json'
-import { Tx, Block } from '@/libs'
+import { Block, Tx } from '@/libs'
+import Vue from 'vue'
 
 export default Vue.extend({
   name: 'FramesMainFrame',
@@ -58,7 +58,7 @@ export default Vue.extend({
       })
       this.$socket.emit(sEvents.pastBlocks, '', (err, blocks) => {
         this.$store.commit(sEvents.newBlock, blocks)
-        if (blocks && blocks.lenght > 0) {
+        if (blocks && blocks.length > 0) {
           this.$eventHub.$emit(sEvents.newBlock, new Block(blocks[0]))
           this.$eventHub.$emit(sEvents.pastBlocksR)
         }
@@ -66,17 +66,16 @@ export default Vue.extend({
     }
   },
   computed: {
-    pageName: function() {
+    pageName() {
       return this.$route.params.pageName
     },
-    param: function() {
+    param() {
       return this.$route.params.param
     },
-    holder: function() {
+    holder() {
       return this.$route.params.holder
     }
-  },
-  mounted: function() {}
+  }
 })
 </script>
 

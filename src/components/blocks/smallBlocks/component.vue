@@ -13,16 +13,8 @@ import Vue from 'vue'
 export default Vue.extend({
   name: 'BlockComponent',
   props: ['title', 'value', 'iconName', 'iconColor', 'backgroundColor'],
-  data: function() {
+  data() {
     return {}
-  },
-  computed: {
-    blockname() {
-      return this.title
-        .toLowerCase()
-        .replace(/\s/g, '')
-        .replace('/', '')
-    }
   }
 })
 </script>

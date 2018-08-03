@@ -1,20 +1,16 @@
 <template>
   <div>
     <div class="container">
-
       <div class="page-title-container">
         <div class="page-title">
           <h3>About</h3>
           <h6 class="text-muted">Welcome to Ethereum Virtual Machine</h6>
         </div>
-
         <div class="search-block">
           <block-search></block-search>
         </div>
       </div>
-
       <block-about></block-about>
-
     </div>
   </div>
 </template>
@@ -28,11 +24,14 @@ export default Vue.extend({
   data() {
     return {}
   },
-  created() {},
   computed: {
     txs() {
-      if (this.$store.getters.getTxs.length) return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
-      else return []
+      if (this.$store.getters.getTxs.length) {
+        return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
+      }
+      else {
+        return []
+      }
     }
   }
 })

@@ -73,60 +73,67 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+  import Vue from 'vue'
 
-export default Vue.extend({
-  name: 'TableTransactions',
-  props: ['transactions', 'showheader', 'account', 'filter', 'total', 'isPending'],
-  created() {},
-  methods: {
-    getType(tx) {
-      let _this = this
-      console.log()
-      if (
-        tx
+  export default Vue.extend({
+    name: 'TableTransactions',
+    props: ['transactions', 'showheader', 'account', 'filter', 'total', 'isPending'],
+    methods: {
+      getType(tx) {
+        if (
+          tx
           .getFrom()
           .toString()
-          .toLowerCase() == _this.account.toString().toLowerCase()
-      ) {
-        return true
-      } else {
-        return false
+          .toLowerCase() === this.account.toString().toLowerCase()
+        ) {
+          return true
+        } else {
+          return false
+        }
+      },
+      getShortEthValue(newEthValue, isBool) {
+        const length = newEthValue.length
+        let isShort = false
+        if (length > 6) {
+          newEthValue = newEthValue.slice(0, 6) + '...'
+          isShort = true
+        }
+        if (!isBool) {
+          return newEthValue
+        }
+        else {
+          return isShort
+        }
       }
     },
-    getShortEthValue(newEthValue, isBool) {
-      let length = newEthValue.length
-      let isShort = false
-      if (length > 6) {
-        newEthValue = newEthValue.slice(0, 6) + '...'
-        isShort = true
-      }
-      if (!isBool) return newEthValue
-      else return isShort
-    }
-  },
-  computed: {
-    getText() {
-      let _this = this
-      console.log(_this.isPending)
-      if (!_this.isPending) {
-        if (_this.filter == 'all') return 'This address does not have any transaction history'
-        else if (_this.filter == 'in') return 'This address does not have incoming transactions'
-        else {
-          return 'This address does not have outgoing transactions'
-        }
-      } else {
-        if (_this.filter == 'all') return 'This address does not have any pending transactions'
-        else if (_this.filter == 'in') return 'This address does not have any pending incoming transactions'
-        else {
-          return 'This address does not have any pending outgoing transactions'
+    computed: {
+      getText() {
+        if (!this.isPending) {
+          if (this.filter === 'all') {
+            return 'This address does not have any transaction history'
+          }
+          else if (this.filter === 'in') {
+            return 'This address does not have incoming transactions'
+          }
+          else {
+            return 'This address does not have outgoing transactions'
+          }
+        } else {
+          if (this.filter === 'all') {
+            return 'This address does not have any pending transactions'
+          }
+          else if (this.filter === 'in') {
+            return 'This address does not have any pending incoming transactions'
+          }
+          else {
+            return 'This address does not have any pending outgoing transactions'
+          }
         }
       }
     }
-  }
-})
+  })
 </script>
 
 <style scoped lang="less">
-@import '~lessPath/sunil/blocks/largeBlocks/addressTxTable.less';
+  @import '~lessPath/sunil/blocks/largeBlocks/addressTxTable.less';
 </style>

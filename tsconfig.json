@@ -1,20 +1,25 @@
 {
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.vue"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
   "compilerOptions": {
-    "allowJs": false,
-    "allowSyntheticDefaultImports": true,
-    "baseUrl": ".",
-    "esModuleInterop": true,
-    "lib": ["dom", "es2015", "es5"],
+    "lib": ["dom", "es5", "es2015"],
+    "target": "es5",
+    "strict": false,
     "module": "es2015",
     "moduleResolution": "node",
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
     "noImplicitAny": false,
     "noImplicitThis": false,
+    "allowJs": false,
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["*"]
-    },
-    "resolveJsonModule": true,
-    "sourceMap": true,
-    "strict": false,
-    "target": "es5"
+	    "@/*": ["src/*"]
+	  }
   }
 }

@@ -5,9 +5,9 @@
       <div class="filter-tx">
         <div class="tx-tabs">
           <span> View: </span>
-          <button v-for="option in options" v-bind:class="{ active: isActive(option.value)}" v-on:click="setFilter(option.value)">
-            {{option.text}}
-          </button>
+          <button v-for="option in options" v-bind:key="option.text" v-bind:class="{ active: isActive(option.value)}" v-on:click="setFilter(option.value)">
+              {{option.text}}
+            </button>
         </div>
         <span>Selected: {{ getTotal }} transactions</span>
       </div>
@@ -24,87 +24,95 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+  import Vue from 'vue'
 
-export default Vue.extend({
-  name: 'TableTransactions',
-  props: ['address', 'transactions', 'isPending'],
-  data() {
-    return {
-      placeholder: 'Search Address/Tx Hash',
-      options: [
-        {
-          text: 'All',
-          value: 'all'
-        },
-        {
-          text: 'Incoming',
-          value: 'in'
-        },
-        {
-          text: 'Outgoing',
-          value: 'out'
+  export default Vue.extend({
+    name: 'TableTransactions',
+    props: ['address', 'transactions', 'isPending'],
+    data() {
+      return {
+        placeholder: 'Search Address/Tx Hash',
+        options: [{
+            text: 'All',
+            value: 'all'
+          },
+          {
+            text: 'Incoming',
+            value: 'in'
+          },
+          {
+            text: 'Outgoing',
+            value: 'out'
+          }
+        ],
+        filter: 'all',
+        inTx: [],
+        outTx: [],
+        recievedTx: false
+      }
+    },
+    methods: {
+      setFilter(option) {
+        this.filter = option
+      },
+      isActive(value) {
+        if (value === this.filter) {
+          return true
         }
-      ],
-      filter: 'all',
-      inTx: [],
-      outTx: [],
-      recievedTx: false
-    }
-  },
-  created() {},
-  mounted() {},
-  methods: {
-    setFilter(option) {
-      let _this = this
-      _this.filter = option
-    },
-    isActive(value) {
-      let _this = this
-      if (value == _this.filter) return true
-      return false
-    },
-    getTxsType() {
-      let _this = this
-      var i
-      for (i = 0; i < _this.transactions.length; i++) {
-        if (
-          _this.transactions[i]
+        return false
+      },
+      getTxsType() {
+        let i
+        for (i = 0; i < this.transactions.length; i++) {
+          if (
+            this.transactions[i]
             .getFrom()
             .toString()
-            .toLowerCase() == _this.address.address.toLowerCase()
-        ) {
-          _this.outTx.push(_this.transactions[i])
-        } else {
-          _this.inTx.push(_this.transactions[i])
+            .toLowerCase() === this.address.address.toLowerCase()
+          ) {
+            this.outTx.push(this.transactions[i])
+          } else {
+            this.inTx.push(this.transactions[i])
+          }
         }
-      }
-      _this.recievedTx = true
-    }
-  },
-  computed: {
-    filteredTxs() {
-      let _this = this
-      if (_this.filter == 'all') return _this.transactions
-      if (_this.transactions) {
-        if (!_this.recievedTx) _this.getTxsType()
-        if (_this.filter == 'out') return _this.outTx
-        if (_this.filter == 'in') return _this.inTx
+        this.recievedTx = true
       }
     },
-    getTotal() {
-      let _this = this
-      if (_this.transactions) {
-        if (_this.filter == 'all') return _this.transactions.length
-        if (_this.filter == 'in') return _this.inTx.length
-        else return _this.outTx.length
+    computed: {
+      filteredTxs() {
+        if (this.filter === 'all') {
+          return this.transactions
+        }
+        if (this.transactions) {
+          if (!this.recievedTx) {
+            this.getTxsType()
+          }
+          if (this.filter === 'out') {
+            return this.outTx
+          }
+          if (this.filter === 'in') {
+            return this.inTx
+          }
+        }
+      },
+      getTotal() {
+        if (this.transactions) {
+          if (this.filter === 'all') {
+            return this.transactions.length
+          }
+          if (this.filter === 'in') {
+            return this.inTx.length
+          }
+          else {
+            return this.outTx.length
+          }
+        }
+        return 0
       }
-      return 0
     }
-  }
-})
+  })
 </script>
 
 <style scoped="" lang="less">
-@import '~lessPath/sunil/blocks/largeBlocks/addressTx.less';
+  @import '~lessPath/sunil/blocks/largeBlocks/addressTx.less';
 </style>

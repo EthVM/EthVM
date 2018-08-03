@@ -3,9 +3,8 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
 import sEvents from '@/configs/socketEvents.json'
-
+import Vue from 'vue'
 export default Vue.extend({
   name: 'ShortDataLastBlock',
   data() {
@@ -32,16 +31,14 @@ export default Vue.extend({
     this.$eventHub.$off([sEvents.pastBlocksR, sEvents.newBlock])
   },
   mounted() {
-    let parent = this
     setInterval(() => {
       if (!this.$store.getters.getBlocks.length) {
-        parent.seconds = 'Loading'
+        this.seconds = 'loading'
         return
       }
-      parent.seconds = Math.ceil((new Date().getTime() - parent.lastBlockTime) / 1000)
+      this.seconds = Math.ceil((new Date().getTime() - this.lastBlockTime) / 1000)
     }, 1000)
-  },
-  computed: {}
+  }
 })
 </script>
 

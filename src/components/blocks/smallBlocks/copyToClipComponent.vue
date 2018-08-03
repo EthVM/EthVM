@@ -3,24 +3,19 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
 import copyClip from 'clipboard-copy'
+import Vue from 'vue'
 
 export default Vue.extend({
   props: {
     valueToCopy: String
   },
-  data: function() {
+  data() {
     return {}
   },
   methods: {
     copyToClip(newVar) {
-      var status = copyClip(newVar)
-      if (status) {
-        console.log('Copied: ' + newVar)
-      } else {
-        console.log('Could not copy')
-      }
+      const status = copyClip(newVar)
     }
   }
 })

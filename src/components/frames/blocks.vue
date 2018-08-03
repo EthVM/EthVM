@@ -46,11 +46,10 @@ export default Vue.extend({
   data() {
     return {}
   },
-  created() {},
   computed: {
     txs() {
-      if (this.$store.getters.getBlocks.length) {
-        return this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
+      if (this.$store.getters.getTxs.length) {
+        return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
       } else {
         return []
       }
