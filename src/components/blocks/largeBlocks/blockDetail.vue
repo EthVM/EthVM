@@ -18,13 +18,19 @@
         </div>
         <div class="detail-row-copy">
           <li>Hash</li>
-          <div class="copy"><copy-to-clip-component :valueToCopy="block.getHash().toString()"></copy-to-clip-component></div>
+          <div class="copy">
+            <copy-to-clip-component :valueToCopy="block.getHash().toString()"></copy-to-clip-component>
+          </div>
           <li>{{block.getHash().toString()}}</li>
         </div>
         <div class="detail-row-copy">
           <li>Miner</li>
-          <div class="copy"><copy-to-clip-component :valueToCopy="block.getMiner().toString()"></copy-to-clip-component></div>
-          <li><router-link :to="'/address/'+block.getMiner().toString()">{{block.getMiner().toString()}}</router-link></li>
+          <div class="copy">
+            <copy-to-clip-component :valueToCopy="block.getMiner().toString()"></copy-to-clip-component>
+          </div>
+          <li>
+            <router-link :to="'/address/'+block.getMiner().toString()">{{block.getMiner().toString()}}</router-link>
+          </li>
         </div>
         <div class="detail-row">
           <li>Block Reward</li>
@@ -45,8 +51,12 @@
         </div>
         <div class="detail-row-copy">
           <li>Parent Hash</li>
-          <div class="copy"><copy-to-clip-component :valueToCopy="block.getParentHash().toString()"></copy-to-clip-component></div>
-          <li><router-link :to="'/block/'+block.getParentHash().toString()">{{block.getParentHash().toString()}}</router-link></li>
+          <div class="copy">
+            <copy-to-clip-component :valueToCopy="block.getParentHash().toString()"></copy-to-clip-component>
+          </div>
+          <li>
+            <router-link :to="'/block/'+block.getParentHash().toString()">{{block.getParentHash().toString()}}</router-link>
+          </li>
         </div>
         <div class="detail-row">
           <li>Size</li>
@@ -122,28 +132,30 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import store from '@/states'
-import { Block, common, Tx } from '@/libs'
+  import {
+    Block,
+    common,
+    Tx
+  } from '@/libs'
+  import store from '@/states'
+  import Vue from 'vue'
 
-export default Vue.extend({
-  name: 'BlockView',
-  props: ['block', 'uncles'],
-  data() {
-    return {
-      showMore: false
+  export default Vue.extend({
+    name: 'BlockView',
+    props: ['block', 'uncles'],
+    data() {
+      return {
+        showMore: false
+      }
+    },
+    computed: {
+      isUncle() {
+        return this.block.getIsUncle()
+      }
     }
-  },
-  methods: {},
-  mounted: function() {},
-  computed: {
-    isUncle() {
-      return this.block.getIsUncle()
-    }
-  }
-})
+  })
 </script>
 
 <style scoped="" lang="less">
-@import '~lessPath/sunil/blocks/largeBlocks/detailComponent.less';
+  @import '~lessPath/sunil/blocks/largeBlocks/detailComponent.less';
 </style>

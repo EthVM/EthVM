@@ -38,7 +38,6 @@ import Vue from 'vue'
 export default Vue.extend({
   name: 'TableTransactions',
   props: ['transactions'],
-  created() {}
 })
 </script>
 
