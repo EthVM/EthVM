@@ -5,12 +5,6 @@
 </div>
 
 <div align="center">
-  <a href="https://travis-ci.org/enKryptIO/ethvm" target="_blank">
-    <img alt="Travis" src="https://travis-ci.org/enKryptIO/ethvm.svg?branch=master" />
-  </a>
-  <a href="https://codecov.io/gh/enKryptIO/ethvm" target="_blank">
-    <img alt="codecov" src="https://codecov.io/gh/enKryptIO/ethvm/branch/master/graph/badge.svg" />
-  </a>
   <a href="https://david-dm.org/enKryptIO/ethvm" target="_blank">
     <img alt="Dependency Status" src="https://david-dm.org/enKryptIO/ethvm.svg" />
   </a>
