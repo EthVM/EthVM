@@ -78,116 +78,111 @@
 </template>
 
 <script lang="ts">
-  import {
-    common,
-    Tx
-  } from '@/libs'
-  import bn from 'bignumber.js'
-  import ethUnits from 'ethereumjs-units'
-  import sEvents from '../../configs/socketEvents.json'
-  import Vue from 'vue'
+import { common, Tx } from '@/libs'
+import bn from 'bignumber.js'
+import ethUnits from 'ethereumjs-units'
+import sEvents from '../../configs/socketEvents.json'
+import Vue from 'vue'
 
+const MAX_ITEMS = 20
 
-
-  const MAX_ITEMS = 20
-
-  export default Vue.extend({
-    name: 'FrameAccount',
-    props: ['address', 'tokens', 'txs'],
-    data() {
-      return {
-        account: {
-          address: this.address,
-          balance: 0,
-          balanceUSD: 0,
-          ethusd: 0,
-          totalTxs: 0,
-          tokens: this.tokens,
-          txs: this.txs,
-          isMiner: false
+export default Vue.extend({
+  name: 'FrameAccount',
+  props: ['address', 'tokens', 'txs'],
+  data() {
+    return {
+      account: {
+        address: this.address,
+        balance: 0,
+        balanceUSD: 0,
+        ethusd: 0,
+        totalTxs: 0,
+        tokens: this.tokens,
+        txs: this.txs,
+        isMiner: false
+      },
+      addressTabs: [
+        {
+          id: 0,
+          title: 'Txs History',
+          isActive: true
         },
-        addressTabs: [{
-            id: 0,
-            title: 'Txs History',
-            isActive: true
-          },
-          {
-            id: 1,
-            title: 'Tokens',
-            isActive: false
-          },
-          {
-            id: 2,
-            title: 'Pending Txs',
-            isActive: false
-          }
-        ],
-        tokensLoaded: false,
-        tokenError: false,
-        usdValue: {
-          ETH: {
-            value: 0
-          }
+        {
+          id: 1,
+          title: 'Tokens',
+          isActive: false
+        },
+        {
+          id: 2,
+          title: 'Pending Txs',
+          isActive: false
+        }
+      ],
+      tokensLoaded: false,
+      tokenError: false,
+      usdValue: {
+        ETH: {
+          value: 0
         }
       }
-    },
-    created() {
-
-      /* Geting Address Balance: */
-      this.$socket.emit(sEvents.getBalance, {"address": this.address}, (err, result) => {
-        if (!err && result) {
-          const balance = common.EthValue(common.HexToBuffer(result.result)).toEth()
-          this.account.balance = balance
-        }
-      })
-      /* Getting Token Balances: */
-      this.$socket.emit(sEvents.getTokenBalance, {"address": this.address}, (err, result) => {
-        if (result !== '0x') {
-          this.account.tokens = result
-          this.tokensLoaded = true
-          // console.log('tokens', _this.account.tokens)
-        } else {
-          this.tokenError = true
-        }
-      })
-      /* Getting Total Number of Tx: */
-      this.$socket.emit(sEvents.getTotalTxs, {"address": this.address}, (err, result) => {
-        this.account.totalTxs = result
-      })
-      /*Getting USD Values: */
-      this.$socket.emit(sEvents.getTokenToUSD, [], (err, result) => {
-        //TODO getTokenToUSD
-        //this.account.ethusd = result[0][1]
-        //this.usdValue.ETH.value = result[0][1]
-      })
-      /*Getting Address Transactions: */
-      this.$socket.emit(sEvents.getTxs, { "address":this.address, "limit":10, "page":0 }, (err, result) => {
-        const txs = []
-        result.forEach(element => {
-          txs.push(new Tx(element))
-        })
-        this.account.txs = txs
-      })
-      this.setTabs()
-      /*Getting Address Pending Transactions: */
-      // Method here:
-    },
-    methods: {
-      /*Checking of address is Miner? --> add new tab for the menu*/
-      setTabs() {
-        if (this.account.isMiner) {
-          const newTab = {
-            id: 3,
-            title: 'Mining History',
-            isActive: false
-          }
-          this.addressTabs.push(newTab)
-        }
+    }
+  },
+  created() {
+    /* Geting Address Balance: */
+    this.$socket.emit(sEvents.getBalance, { address: this.address }, (err, result) => {
+      if (!err && result) {
+        const balance = common.EthValue(common.HexToBuffer(result.result)).toEth()
+        this.account.balance = balance
       }
-    },
-  })
+    })
+    /* Getting Token Balances: */
+    this.$socket.emit(sEvents.getTokenBalance, { address: this.address }, (err, result) => {
+      if (result !== '0x') {
+        this.account.tokens = result
+        this.tokensLoaded = true
+        // console.log('tokens', _this.account.tokens)
+      } else {
+        this.tokenError = true
+      }
+    })
+    /* Getting Total Number of Tx: */
+    this.$socket.emit(sEvents.getTotalTxs, { address: this.address }, (err, result) => {
+      this.account.totalTxs = result
+    })
+    /*Getting USD Values: */
+    this.$socket.emit(sEvents.getTokenToUSD, [], (err, result) => {
+      //TODO getTokenToUSD
+      //this.account.ethusd = result[0][1]
+      //this.usdValue.ETH.value = result[0][1]
+    })
+    /*Getting Address Transactions: */
+    this.$socket.emit(sEvents.getTxs, { address: this.address, limit: 10, page: 0 }, (err, result) => {
+      const txs = []
+      result.forEach(element => {
+        txs.push(new Tx(element))
+      })
+      this.account.txs = txs
+    })
+    this.setTabs()
+    /*Getting Address Pending Transactions: */
+    // Method here:
+  },
+  methods: {
+    /*Checking of address is Miner? --> add new tab for the menu*/
+    setTabs() {
+      if (this.account.isMiner) {
+        const newTab = {
+          id: 3,
+          title: 'Mining History',
+          isActive: false
+        }
+        this.addressTabs.push(newTab)
+      }
+    }
+  }
+})
 </script>
 
 <style scoped="" lang="less">
-  @import '~lessPath/sunil/frames/address.less';
+@import '~lessPath/sunil/frames/address.less';
 </style>

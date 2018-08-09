@@ -6,14 +6,13 @@
   "pastTxs": "pastTxs",
   "pastTxsR": "PAST_TXS_RECEIVED",
   "pastBlocks": "pastBlocks",
-  "getBalance":"getBalance",
-  "getTokenBalance":"getTokenBalance",
-  "getTotalTxs":"getTotalTxs",
-  "getTokenToUSD":"getTokenToUSD",
-  "getTxs":"getTxs",
-  "getTx":"getTx",
-  "getBlock":"getBlock",
-  "getBlockTransactions":"getBlockTransactions",
+  "getBalance": "getBalance",
+  "getTokenBalance": "getTokenBalance",
+  "getTotalTxs": "getTotalTxs",
+  "getTokenToUSD": "getTokenToUSD",
+  "getTxs": "getTxs",
+  "getTx": "getTx",
+  "getBlock": "getBlock",
+  "getBlockTransactions": "getBlockTransactions",
   "pastBlocksR": "PAST_BLOCKS_RECEIVED"
-
 }

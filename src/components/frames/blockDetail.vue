@@ -64,20 +64,19 @@ export default Vue.extend({
     }
   },
   mounted() {
-
     /* Get Block Data: */
-    this.$socket.emit(sEvents.getBlock, {"hash":Buffer.from(this.blockHash.substring(2), 'hex')}, (error, result) => {
+    this.$socket.emit(sEvents.getBlock, { hash: Buffer.from(this.blockHash.substring(2), 'hex') }, (error, result) => {
       if (result) {
         this.block = new Block(result)
         const uncleHashes = this.block.getUncleHashes()
         /*Get Transactions for the block: */
-        this.$socket.emit(sEvents.getBlockTransactions, {"hash":this.block.getHash().toBuffer()}, (err, data) => {
+        this.$socket.emit(sEvents.getBlockTransactions, { hash: this.block.getHash().toBuffer() }, (err, data) => {
           this.transactions = data.map(_tx => {
             return new Tx(_tx)
           })
         })
         uncleHashes.forEach((_hash: any, idx: number) => {
-          this.$socket.emit(sEvents.getBlock, {"hash":_hash.toBuffer()}, (err, data) => {
+          this.$socket.emit(sEvents.getBlock, { hash: _hash.toBuffer() }, (err, data) => {
             this.uncles.push(new Block(data))
           })
         })
