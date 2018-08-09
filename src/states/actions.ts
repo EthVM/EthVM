@@ -14,9 +14,7 @@ const socket_newTx = function({ commit }, tx: TxLayout | TxLayout[]) {
 }
 
 const socket_connect = ({}, tx: TxLayout) => {
-  defaultRooms.forEach(_room => {
-    this._vm.$socket.emit(sEvents.join, _room)
-  })
+  this._vm.$socket.emit(sEvents.join, {"rooms":defaultRooms})
 }
 
 export default {

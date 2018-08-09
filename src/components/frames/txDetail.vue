@@ -34,39 +34,36 @@
 </template>
 
 <script lang="ts">
-  import {
-    Block,
-    common,
-    Tx
-  } from '@/libs'
-  import chartOptions from '@/sampleData/chartData.json'
-  import store from '@/states'
-  import Vue from 'vue'
+import { Block, common, Tx } from '@/libs'
+import chartOptions from '@/sampleData/chartData.json'
+import store from '@/states'
+import Vue from 'vue'
+import sEvents from '../../configs/socketEvents.json'
 
-  export default Vue.extend({
-    name: 'tx-Detail',
-    props: ['txHash'],
-    data() {
-      return {
-        store,
-        common,
-        transaction: null,
-        unixtimestamp: null,
-        timestamp: null
-      }
-    },
-    mounted() {
-      /* Get Tx Info */
-      this.$socket.emit('getTx', Buffer.from(this.txHash.substring(2), 'hex'), (err, data) => {
-        if (data) {
-          this.transaction = new Tx(data)
-          /* Method to get Subtransactions: */
-        }
-      })
+export default Vue.extend({
+  name: 'tx-Detail',
+  props: ['txHash'],
+  data() {
+    return {
+      store,
+      common,
+      transaction: null,
+      unixtimestamp: null,
+      timestamp: null
     }
-  })
+  },
+  mounted() {
+    /* Get Tx Info */
+    this.$socket.emit(sEvents.getTx, { hash: Buffer.from(this.txHash.substring(2), 'hex') }, (err, data) => {
+      if (data) {
+        this.transaction = new Tx(data)
+        /* Method to get Subtransactions: */
+      }
+    })
+  }
+})
 </script>
 
 <style scoped lang="less">
-  @import '~lessPath/sunil/global.less';
+@import '~lessPath/sunil/global.less';
 </style>
