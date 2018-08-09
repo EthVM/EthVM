@@ -11,6 +11,9 @@
   "getTotalTxs":"getTotalTxs",
   "getTokenToUSD":"getTokenToUSD",
   "getTxs":"getTxs",
+  "getTx":"getTx",
+  "getBlock":"getBlock",
+  "getBlockTransactions":"getBlockTransactions",
   "pastBlocksR": "PAST_BLOCKS_RECEIVED"
 
 }

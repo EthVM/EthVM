@@ -87,6 +87,8 @@
   import sEvents from '../../configs/socketEvents.json'
   import Vue from 'vue'
 
+
+
   const MAX_ITEMS = 20
 
   export default Vue.extend({
@@ -132,17 +134,16 @@
     created() {
 
       /* Geting Address Balance: */
-      this.$socket.emit(sEvents.getBalance, this.address, (err, result) => {
+      this.$socket.emit(sEvents.getBalance, {"address": this.address}, (err, result) => {
         if (!err && result) {
           const balance = common.EthValue(common.HexToBuffer(result.result)).toEth()
           this.account.balance = balance
         }
       })
       /* Getting Token Balances: */
-      this.$socket.emit(sEvents.getTokenBalance, this.address, (err, result) => {
-        if (result.result !== '0x') {
-          console.log('tokens recieved', result)
-          this.account.tokens = result.result
+      this.$socket.emit(sEvents.getTokenBalance, {"address": this.address}, (err, result) => {
+        if (result !== '0x') {
+          this.account.tokens = result
           this.tokensLoaded = true
           // console.log('tokens', _this.account.tokens)
         } else {
@@ -150,17 +151,17 @@
         }
       })
       /* Getting Total Number of Tx: */
-      this.$socket.emit(sEvents.getTotalTxs, this.address, (err, result) => {
+      this.$socket.emit(sEvents.getTotalTxs, {"address": this.address}, (err, result) => {
         this.account.totalTxs = result
       })
       /*Getting USD Values: */
       this.$socket.emit(sEvents.getTokenToUSD, [], (err, result) => {
-        this.account.ethusd = result[0][1]
-        console.log(" balance recieved: ", this.account.ethusd )
-        this.usdValue.ETH.value = result[0][1]
+        //TODO getTokenToUSD
+        //this.account.ethusd = result[0][1]
+        //this.usdValue.ETH.value = result[0][1]
       })
       /*Getting Address Transactions: */
-      this.$socket.emit(sEvents.getTxs, this.address, (err, result) => {
+      this.$socket.emit(sEvents.getTxs, { "address":this.address, "limit":10, "page":0 }, (err, result) => {
         const txs = []
         result.forEach(element => {
           txs.push(new Tx(element))
