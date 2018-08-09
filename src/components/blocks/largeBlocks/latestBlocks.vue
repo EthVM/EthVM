@@ -10,7 +10,7 @@
     </div>
     <div class="block-body">
       <!-- Table Row -->
-      <div class="block" v-for="block in getBlocks" v-if="!block.getIsUncle()" v-bind:key="block">
+      <div class="block" v-for="block in getBlocks" v-if="!block.getIsUncle()" v-bind:key="block.hash">
         <!-- Block Info -->
         <div class="block-data">
           <!-- Col1: Block Number -->
@@ -59,7 +59,7 @@
           <div class="uncles-line"></div>
           <div class="uncles-title">Uncles:</div>
           <!-- SUB LOOP START-->
-          <div class="uncles-data" v-for="uncle in block.getUncles()" v-bind:key="uncle">
+          <div class="uncles-data" v-for="uncle in block.getUncles()" v-bind:key="uncle.hash">
             <li class="sub-hash">
               <p>Hash</p>
               <p>
