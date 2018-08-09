@@ -84,6 +84,7 @@
   } from '@/libs'
   import bn from 'bignumber.js'
   import ethUnits from 'ethereumjs-units'
+  import sEvents from '../../configs/socketEvents.json'
   import Vue from 'vue'
 
   const MAX_ITEMS = 20
@@ -131,14 +132,14 @@
     created() {
 
       /* Geting Address Balance: */
-      this.$socket.emit('getBalance', this.address, (err, result) => {
+      this.$socket.emit(sEvents.getBalance, this.address, (err, result) => {
         if (!err && result) {
           const balance = common.EthValue(common.HexToBuffer(result.result)).toEth()
           this.account.balance = balance
         }
       })
       /* Getting Token Balances: */
-      this.$socket.emit('getTokenBalance', this.address, (err, result) => {
+      this.$socket.emit(sEvents.getTokenBalance, this.address, (err, result) => {
         if (result.result !== '0x') {
           console.log('tokens recieved', result)
           this.account.tokens = result.result
@@ -149,17 +150,17 @@
         }
       })
       /* Getting Total Number of Tx: */
-      this.$socket.emit('getTotalTxs', this.address, (err, result) => {
+      this.$socket.emit(sEvents.getTotalTxs, this.address, (err, result) => {
         this.account.totalTxs = result
       })
       /*Getting USD Values: */
-      this.$socket.emit('getTokenToUSD', [], (err, result) => {
+      this.$socket.emit(sEvents.getTokenToUSD, [], (err, result) => {
         this.account.ethusd = result[0][1]
         console.log(" balance recieved: ", this.account.ethusd )
         this.usdValue.ETH.value = result[0][1]
       })
       /*Getting Address Transactions: */
-      this.$socket.emit('getTxs', this.address, (err, result) => {
+      this.$socket.emit(sEvents.getTxs, this.address, (err, result) => {
         const txs = []
         result.forEach(element => {
           txs.push(new Tx(element))

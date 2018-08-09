@@ -6,5 +6,11 @@
   "pastTxs": "pastTxs",
   "pastTxsR": "PAST_TXS_RECEIVED",
   "pastBlocks": "pastBlocks",
+  "getBalance":"getBalance",
+  "getTokenBalance":"getTokenBalance",
+  "getTotalTxs":"getTotalTxs",
+  "getTokenToUSD":"getTokenToUSD",
+  "getTxs":"getTxs",
   "pastBlocksR": "PAST_BLOCKS_RECEIVED"
+
 }
