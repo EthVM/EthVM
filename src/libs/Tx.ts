@@ -46,7 +46,7 @@ class Tx {
   }
   public getBlockNumber(): HexNumber {
     if (!this.cache.blockNumber) {
-      this.cache.blockNumber = common.HexNumber(this.tx.blockNumber)
+      this.cache.blockNumber = common.HexNumber(new Buffer(this.tx.blockNumber))
     }
     return this.cache.blockNumber
   }

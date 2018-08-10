@@ -58,11 +58,11 @@ class Block {
     return this.cache.hash
   }
   public getIntNumber(): number {
-    return this.block.intNumber
+    return this.block.number
   }
   public getNumber(): HexNumber {
     if (!this.cache.number) {
-      this.cache.number = common.HexNumber(this.block.number)
+      this.cache.number = common.HexNumber(new Buffer(this.block.number))
     }
     return this.cache.number
   }
