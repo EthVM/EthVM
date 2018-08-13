@@ -60,11 +60,8 @@ class Block {
   public getIntNumber(): number {
     return this.block.number
   }
-  public getNumber(): HexNumber {
-    if (!this.cache.number) {
-      this.cache.number = common.HexNumber(new Buffer(this.block.number))
-    }
-    return this.cache.number
+  public getNumber(): number {
+    return this.block.number
   }
   public getTransactionCount(): number {
     return typeof this.block.transactionCount !== 'undefined' ? this.block.transactionCount : this.block.transactionHashes.length

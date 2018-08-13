@@ -15,7 +15,7 @@
         <div class="block-data">
           <!-- Col1: Block Number -->
           <li>
-            <p class="block-number"><span>{{block.getNumber().toNumber()}}</span></p>
+            <p class="block-number"><span>{{block.getNumber()}}</span></p>
             <!-- End Col1 -->
           </li>
           <!-- Col2: Block Hash and Miner -->
@@ -74,7 +74,7 @@
             </li>
             <li class="sub-height">
               <p>Height</p>
-              <p>{{uncle.getNumber().toNumber()}}</p>
+              <p>{{uncle.getNumber()}}</p>
             </li>
             <li class="sub-reward">
               <p>Reward(ETH)</p>
