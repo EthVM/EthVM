@@ -73,22 +73,21 @@
             <h3>Last Transactions</h3>
             <router-link to="/transactions" tag="button" class="button-common">View All</router-link>
           </div>
-          <div class="tx-table-header latest-data-header">
-            <li>Tx #</li>
-            <li class="eth">ETH</li>
-            <li class="limit">Gas Limit</li>
-            <li class="gas">GWEI</li>
-            <li></li>
+          <div v-if="txs.length>0">
+            <div class="latest-data">
+              <block-last-transactions :transactions="txs" :showHeader="true"></block-last-transactions>
+            </div>
+            <div class="footnote">
+              <ul>
+                <li><i class="fa fa-check success" aria-hidden="true"></i> Success</li>
+                <li><i class="fa fa-times failed" aria-hidden="true"></i> Failed</li>
+              </ul>
+            </div>
           </div>
-          <div class="latest-data">
-            <block-last-transactions :transactions="txs"></block-last-transactions>
+          <div v-else class="info-common">
+            <p> There Is No Transactions History </p>
           </div>
-          <div class="footnote">
-            <ul>
-              <li><i class="fa fa-check success" aria-hidden="true"></i> Success</li>
-              <li><i class="fa fa-times failed" aria-hidden="true"></i> Failed</li>
-            </ul>
-          </div>
+
           <!-- End Last Block Transactions -->
         </div>
       </div>
@@ -97,27 +96,27 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-const MAX_ITEMS = 20
+  import Vue from 'vue'
+  const MAX_ITEMS = 20
 
-export default Vue.extend({
-  name: 'FramesHome',
-  data() {
-    return {}
-  },
-  computed: {
-    txs() {
-      if (this.$store.getters.getTxs.length){
-        return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
-      }
-      else {
-        return []
+  export default Vue.extend({
+    name: 'FramesHome',
+    data() {
+      return {}
+    },
+    computed: {
+      txs() {
+        if (this.$store.getters.getTxs.length) {
+          return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
+
+        } else {
+          return []
+        }
       }
     }
-  }
-})
+  })
 </script>
 
 <style scoped lang="less">
-@import '~lessPath/sunil/frames/home.less';
+  @import '~lessPath/sunil/frames/home.less';
 </style>

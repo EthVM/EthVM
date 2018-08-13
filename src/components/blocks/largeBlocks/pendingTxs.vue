@@ -1,6 +1,15 @@
 <template>
   <div class="last-transactions">
     <div class="block-body">
+      <!-- Table Header -->
+      <div class="tx-table-header" v-if="showHeader === true">
+        <li>TXn#</li>
+        <li class="eth">ETH</li>
+        <li class="limit">Gas Limit</li>
+        <li class="gas">GWEI</li>
+        <li></li>
+        <!-- End Table Header -->
+      </div>
       <div class="block" v-for="tx in transactions" v-bind:key="tx.getHash().toString()">
         <li>
           <div class="hash-block">
@@ -37,7 +46,24 @@ import Vue from 'vue'
 
 export default Vue.extend({
   name: 'TableTransactions',
-  props: ['transactions'],
+ props: ['transactions', 'showHeader'],
+  methods: {
+    /* Method to reduce Strig length : */
+    getShortEthValue(newEthValue, isBool) {
+      const length = newEthValue.length
+      let isShort = false
+      if (length > 6) {
+        newEthValue = newEthValue.slice(0, 6) + '...'
+        isShort = true
+      }
+      if (!isBool) {
+        return newEthValue
+      }
+      else {
+        return isShort
+      }
+    }
+  }
 })
 </script>
 

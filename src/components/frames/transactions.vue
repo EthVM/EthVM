@@ -21,7 +21,7 @@
         <!-- End 4 Top Blocks -->
       </div>
       <!-- Tx Table -->
-      <div class="row">
+      <div v-if="txs.length > 0" class="row">
         <div class="col-md-12">
           <block-last-transactions :transactions="txs" :showHeader="true"></block-last-transactions>
         </div>
@@ -32,6 +32,9 @@
           </ul>
         </div>
         <!-- End Tx Table -->
+      </div>
+      <div v-else class="info-common">
+        <p> There Is No Transactions History </p>
       </div>
     </div>
   </div>

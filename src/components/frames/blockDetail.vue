@@ -22,8 +22,11 @@
           <div class="block-title-container">
             <h3>Block Transactions</h3>
           </div>
-          <div class="block">
+          <div v-if="transactions.length > 0" class="block">
             <block-last-transactions :transactions="transactions" :showHeader="true"></block-last-transactions>
+          </div>
+          <div v-else class="info-common">
+            <p> This Block Does Not Have Any Transactions </p>
           </div>
         </div>
       </div>
