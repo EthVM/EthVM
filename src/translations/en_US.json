@@ -23,5 +23,9 @@
     "blockDetail": "Block overview / transactions info",
     "tokenDetail": "Token overview / transfers history",
     "txDetail": "Ethereum transaction overview"
+  },
+  "search": {
+    "default": "Search Hash / Miner / From",
+    "addressTx": "Search tx hash/address"
   }
 }

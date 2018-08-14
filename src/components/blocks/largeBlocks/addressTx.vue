@@ -31,7 +31,7 @@
     props: ['address', 'transactions', 'isPending'],
     data() {
       return {
-        placeholder: 'Search Address/Tx Hash',
+        placeholder: 'addressTxSearch',
         options: [{
             text: 'All',
             value: 'all'
