@@ -87,7 +87,7 @@ export default Vue.extend({
         this.redraw = false
         if (!_block.getIsUncle()) {
           let _tempD = _block.getStats()
-          this.chartData.labels.push(_block.getNumber().toNumber())
+          this.chartData.labels.push(_block.getNumber())
           this.chartData.labels.shift()
           this.chartData.datasets[0].data.push(ethUnits.convert(new BN(_tempD.avgTxFees).toFixed(), 'wei', 'eth').substr(0, 8))
           this.chartData.datasets[0].data.shift()
@@ -110,7 +110,7 @@ export default Vue.extend({
       }
       let latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
       latestBlocks.forEach(_block => {
-        data.labels.unshift(_block.getNumber().toNumber())
+        data.labels.unshift(_block.getNumber())
         let _tempD = _block.getStats()
         data.avgFees.unshift(ethUnits.convert(new BN(_tempD.avgTxFees).toFixed(), 'wei', 'eth').substr(0, 8))
         data.avgPrice.unshift(ethUnits.convert(new BN(_tempD.avgGasPrice).toFixed(), 'wei', 'gwei').substr(0, 5))
