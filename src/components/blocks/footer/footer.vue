@@ -13,10 +13,10 @@
         <div class="col-md-2">
           <h5>Quick Links</h5>
           <ul>
-            <li><a href="/blocks">Blocks</a></li>
-            <li><a href="/transactions">Transactions</a></li>
-            <li><a href="/pending">Pending Transactions</a></li>
-            <li><a href="/charts">Charts</a></li>
+            <li><a href="/blocks">{{ $t('title.blocks') }}</a></li>
+            <li><a href="/transactions">{{ $t('title.tx') }}</a></li>
+            <li><a href="/pending">{{ $t('title.pending') }}</a></li>
+            <li><a href="/charts">{{ $t('title.charts') }}</a></li>
           </ul>
         </div>
         <div class="col-md-2">

@@ -1,3 +1,27 @@
 {
-  "hello": "hello world"
+  "hello": "hello world",
+  "title": {
+    "home": "Home",
+    "blocks": "Blocks",
+    "tx": "Transactions",
+    "pending": "Pending Transactions",
+    "charts": "Charts",
+    "about": "About",
+    "address": "Address",
+    "blockDetail": "Block Detail",
+    "tokenDetail": "Token Detail",
+    "txDetail": "Transaction Info"
+  },
+  "subTitle": {
+    "home": "Welcome to Ethereum Virtual Machine",
+    "blocks": "Blocks, most recent first",
+    "tx": "Transactions, most recent first",
+    "pending": "Transactions that haven't been mined on Ethereum network",
+    "charts": "Ethereum network charts and stats",
+    "about": "EthVM General Information",
+    "address": "Ethereum wallet address overview / transactions info",
+    "blockDetail": "Block overview / transactions info",
+    "tokenDetail": "Token overview / transfers history",
+    "txDetail": "Ethereum transaction overview"
+  }
 }

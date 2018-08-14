@@ -4,8 +4,8 @@
       <!-- Page Title -->
       <div class="page-title-container">
         <div class="page-title">
-          <h3>Block Detail</h3>
-          <h6 class="text-muted">Block's Detail Information</h6>
+          <h3>{{ $t('title.blockDetail') }}</h3>
+          <h6 class="text-muted">{{ $t('subTitle.blockDetail') }}</h6>
         </div>
         <div class="search-block">
           <block-search></block-search>

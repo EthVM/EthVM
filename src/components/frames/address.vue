@@ -4,8 +4,8 @@
       <!-- Page Title -->
       <div class="page-title-container">
         <div class="page-title">
-          <h3>Address </h3>
-          <h6 class="text-muted">Ethereum wallet address overview / Transactions information</h6>
+          <h3>{{ $t('title.address') }}</h3>
+          <h6 class="text-muted">{{ $t('subTitle.address') }}</h6>
         </div>
         <div class="search-block">
           <block-search></block-search>

@@ -4,8 +4,8 @@
     <div class="container">
       <div class="page-title-container">
         <div class="page-title">
-          <h3>Charts</h3>
-          <h6 class="text-muted">Ethereum Charts And Stats</h6>
+          <h3>{{ $t('title.charts') }}</h3>
+          <h6 class="text-muted">{{ $t('subTitle.charts') }}</h6>
         </div>
         <div class="search-block">
           <block-search></block-search>

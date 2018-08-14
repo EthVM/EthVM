@@ -3,8 +3,8 @@
     <div class="container">
       <div class="page-title-container">
         <div class="page-title">
-          <h3>Pending Transactions</h3>
-          <h6 class="text-muted">Transactions haven't been included into the Ethereum network</h6>
+          <h3>{{ $t('title.pending') }}</h3>
+          <h6 class="text-muted">{{ $t('subTitle.pending') }}</h6>
         </div>
         <div class="search-block">
           <block-search></block-search>

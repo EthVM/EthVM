@@ -4,8 +4,8 @@
       <!-- Page Title -->
       <div class="page-title-container">
         <div class="page-title">
-          <h3>Blocks</h3>
-          <h6 class="text-muted">Blocks, most recent first</h6>
+          <h3>{{ $t('title.blocks') }}</h3>
+          <h6 class="text-muted">{{ $t('subTitle.blocks') }}</h6>
         </div>
         <div class="search-block">
           <block-search></block-search>
