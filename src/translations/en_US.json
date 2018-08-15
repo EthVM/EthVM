@@ -10,7 +10,17 @@
     "address": "Address",
     "blockDetail": "Block Detail",
     "tokenDetail": "Token Detail",
-    "txDetail": "Transaction Info"
+    "txDetail": "Transaction Info",
+    "overview": "Overview",
+    "blockTx": "Block Transactions"
+  },
+  "common": {
+    "address": "Address",
+    "hash": "Hash",
+    "eth": "ETH",
+    "status": "Status",
+    "timestmp": "Timestamp",
+    "gwei": "GWEI"
   },
   "subTitle": {
     "home": "Welcome to Ethereum Virtual Machine",
@@ -27,5 +37,113 @@
   "search": {
     "default": "Search Hash / Miner / From",
     "addressTx": "Search tx hash/address"
+  },
+  "tableHeader": {
+    "blockN": "Block #",
+    "txs": "Txs",
+    "reward": "Reward",
+    "txN": "Tx #",
+    "limit": "Limit",
+    "gas": "Gas"
+  },
+
+  "filter": {
+    "view": "View",
+    "all": "All",
+    "out": "Outgoing",
+    "in": "Incoming"
+  },
+
+  "message": {
+    "error": "Oops something went wrong :(",
+    "txAll": "This address does not have any transaction history",
+    "txIn": "This address does not have incoming transactions",
+    "txOut": "This address does not have outgoing transactions",
+    "txPending":  "This address does not have pending transactions",
+    "noTokens": "Address does not hold any common tokens",
+    "noTxHistory": "There is no transaction history",
+    "noTxInBlock": "This block does not have any transactions"
+  },
+
+  "block": {
+    "height": "Height",
+    "miner": "Miner",
+    "reward": "Miner Reward",
+    "totalReward": "Total Block Reward",
+    "fees": "Tx Fees",
+    "pHash": "Parent Hash",
+    "size": "Size",
+    "tx": "Transactions",
+    "diff": "Difficulty",
+    "totalDiff": "Total Difficulty",
+    "logs": "Logs",
+    "nonce": "Nonce",
+    "root": "State Root",
+    "data": "Extra Data",
+    "txRoot": "Transactions Data",
+    "recRoot": "Receipts Root",
+    "uncReward": "Uncle Reward",
+    "sha": "SHA3 Uncles"
+  },
+
+  "addrOverview": {
+    "balance": "Ether Balance",
+    "usd": "USD Value",
+    "txN": "Number of Txs",
+    "mined": "Mined",
+    "creator": "Contract Creator",
+    "forTx": "For Tx",
+    "per": "per",
+    "blocks": "Blocks",
+    "uncles": "Uncles",
+    "and": "and"
+  },
+
+  "tx": {
+    "from": "From",
+    "to" : "To",
+    "contract": "Contract",
+    "amount": "Amount",
+    "block": "Block #",
+    "cost": "Tx Cost"
+  },
+
+  "gas": {
+    "limit": "Gas Limit",
+    "used": "Gas Used",
+    "price": "Gas Price"
+  },
+
+  "smlBlock": {
+    "last": "Last Block #",
+    "time": "Since Last Block",
+    "hashR": "Hash Rate TH/s",
+    "diff": "Difficulty TH",
+    "success": "Successful Tx",
+    "failed": "Failed Tx",
+    "pending": "Pending Tx"
+  },
+
+  "tabs": {
+    "txH": "Txs History",
+    "tokens": "Tokens",
+    "pending": "Pending Txs",
+    "miningH": "Mining History"
+  },
+
+  "bttn": {
+    "more": "More",
+    "viewAll": "View All"
+  },
+
+  "footer": {
+    "about": "About US",
+    "links": "Quick Links",
+    "find": "Find Us",
+    "donate": "Donate",
+    "btc": "BTC",
+    "ens": "mewtopia.eth",
+    "copy": "Copyright 2018 All rights reserved by enKrypt LLC"
   }
+
 }

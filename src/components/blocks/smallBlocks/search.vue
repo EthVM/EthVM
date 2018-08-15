@@ -1,6 +1,5 @@
 <template>
   <div class="search">
-
     <input v-if="phText === 'default'" v-on:focus="searchFocus = true" v-on:blur="searchFocus = false" type="text" name="search" v-bind:placeholder="$t( 'search.default' )">
     <input v-if="phText === 'addressTxSearch'" v-on:focus="searchFocus = true" v-on:blur="searchFocus = false" type="text" name="search" v-bind:placeholder="$t( 'search.addressTx' )">
     <button><i class="fa fa-search"></i></button>
