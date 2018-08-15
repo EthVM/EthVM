@@ -35,7 +35,7 @@
     "txDetail": "Ethereum transaction overview"
   },
   "search": {
-    "default": "Search Hash / Miner / From",
+    "default": "Search Block Hash / Address / Tx Hash",
     "addressTx": "Search tx hash/address"
   },
   "tableHeader": {
@@ -94,7 +94,6 @@
     "creator": "Contract Creator",
     "forTx": "For Tx",
     "per": "per",
-    "blocks": "Blocks",
     "uncles": "Uncles",
     "and": "and"
   },
@@ -133,6 +132,7 @@
 
   "bttn": {
     "more": "More",
+    "less": "Less",
     "viewAll": "View All"
   },
 
