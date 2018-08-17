@@ -59,7 +59,9 @@
     "txAll": "This address does not have any transaction history",
     "txIn": "This address does not have incoming transactions",
     "txOut": "This address does not have outgoing transactions",
-    "txPending":  "This address does not have pending transactions",
+    "txPen":  "This address does not have pending transactions",
+    "txPenIn": "This address does not have any pending incoming transactions",
+    "txPenOut": "This address does not have any pending outgoing transactions",
     "noTokens": "Address does not hold any common tokens",
     "noTxHistory": "There is no transaction history",
     "noTxInBlock": "This block does not have any transactions"
@@ -134,6 +136,11 @@
     "more": "More",
     "less": "Less",
     "viewAll": "View All"
+  },
+
+  "type": {
+    "in": "In",
+    "out": "Out"
   },
 
   "footer": {

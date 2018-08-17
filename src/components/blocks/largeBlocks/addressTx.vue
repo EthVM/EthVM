@@ -4,11 +4,12 @@
     <div class="address-tx-header">
       <div class="filter-tx">
         <div class="tx-tabs">
-          <span> View: </span>
+          <span> {{ $t( 'filter.view')}}: </span>
           <button v-for="option in options" v-bind:key="option.text" v-bind:class="{ active: isActive(option.value)}" v-on:click="setFilter(option.value)">
               {{option.text}}
             </button>
         </div>
+        <!-- This will be removed to pagination -->
         <span>Selected: {{ getTotal }} transactions</span>
       </div>
       <div class="search-block">
@@ -17,7 +18,7 @@
       <!-- End Tx Header -->
     </div>
     <!-- Tx Table Header -->
-    <block-address-tx-table :transactions=' filteredTxs' :showheader='true' :account='address.address' :filter="filter" :total="getTotal" :isPending="false">
+    <block-address-tx-table :transactions=' filteredTxs' :showheader='true' :account='address.address' :filter="filter" :total="getTotal" :isPending="isPending">
     </block-address-tx-table>
     <!-- End Tx Table Header -->
   </div>
@@ -33,15 +34,15 @@
       return {
         placeholder: 'addressTxSearch',
         options: [{
-            text: 'All',
+            text: this.$i18n.t( 'filter.all'),
             value: 'all'
           },
           {
-            text: 'Incoming',
+            text: this.$i18n.t( 'filter.in'),
             value: 'in'
           },
           {
-            text: 'Outgoing',
+            text: this.$i18n.t( 'filter.out'),
             value: 'out'
           }
         ],

@@ -27,7 +27,7 @@
         <!-- Transactions -->
         <div v-if="addressTabs[0].isActive">
           <div v-if="account.txs">
-            <block-address-tx :address='account' :transactions='account.txs'></block-address-tx>
+            <block-address-tx :address='account' :transactions='account.txs' :isPending='false'></block-address-tx>
           </div>
           <!-- End Transactions -->
         </div>
@@ -49,7 +49,7 @@
         </div>
         <!-- Pending Transactions -->
         <div v-if="addressTabs[2].isActive" class="">
-          <block-address-tx :address='account' :transactions='account.txs' :isPending=true></block-address-tx>
+          <block-address-tx :address='account' :transactions='account.txs' :isPending='true'></block-address-tx>
           <!-- End Pending Transactions -->
         </div>
         <!--Mining History -->
