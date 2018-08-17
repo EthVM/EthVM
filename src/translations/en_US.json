@@ -64,7 +64,8 @@
     "txPenOut": "This address does not have any pending outgoing transactions",
     "noTokens": "Address does not hold any common tokens",
     "noTxHistory": "There is no transaction history",
-    "noTxInBlock": "This block does not have any transactions"
+    "noTxInBlock": "This block does not have any transactions",
+    "load": "Loading ..."
   },
 
   "block": {

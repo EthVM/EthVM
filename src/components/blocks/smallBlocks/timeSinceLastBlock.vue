@@ -9,7 +9,7 @@ export default Vue.extend({
   name: 'ShortDataLastBlock',
   data() {
     return {
-      blockTitle: 'Since Last Block',
+      blockTitle: this.$i18n.t('smlBlock.time'),
       blockIconType: 'clock-o',
       blockIconColor: '#ffd800',
       lastBlockTime: 0,
@@ -33,7 +33,7 @@ export default Vue.extend({
   mounted() {
     setInterval(() => {
       if (!this.$store.getters.getBlocks.length) {
-        this.seconds = 'loading'
+        this.seconds = this.$i18n.t('message.load')
         return
       }
       this.seconds = Math.ceil((new Date().getTime() - this.lastBlockTime) / 1000)

@@ -12,7 +12,7 @@
     name: 'ShortDataLastBlock',
     data() {
       return {
-        blockTitle: 'Successful Tx',
+        blockTitle: this.$i18n.t('smlBlock.success'),
         blockIconType: 'asterisk',
         blockIconColor: '#6bee69'
       }
@@ -20,7 +20,7 @@
     computed: {
       getSuccessfulTx() {
         if (!this.$store.getters.getBlocks[0]) {
-          return 'Loading'
+          return this.$i18n.t('message.load')
         } else {
           const newBlockStat = this.$store.getters.getBlocks[0].getStats()
           const successfull = new BN(newBlockStat.success).toNumber()
