@@ -25,7 +25,7 @@
         </div>
       </div>
       <div v-else class="info-common">
-        <p> {{ $t('massage.noPending') }}  </p>
+        <p> {{ $t('message.noPending') }}  </p>
       </div>
 
     </div>
