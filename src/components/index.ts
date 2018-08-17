@@ -35,10 +35,6 @@ Vue.component('frame-address', frameAddress)
 import blockHeader from '@/components/blocks/header/header'
 Vue.component('block-header', blockHeader)
 
-/* Modal ---------------------- */
-import blockModal from '@/components/blocks/modal/modal'
-Vue.component('block-modal', blockModal)
-
 /* SMALL BLOCKS ---------------------- */
 
 /* Parent Small Block Component: */
