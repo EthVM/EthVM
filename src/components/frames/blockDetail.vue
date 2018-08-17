@@ -20,13 +20,13 @@
         </div>
         <div class="col-md-12 col-sm-12 col-xs-12" v-if="!isUncle">
           <div class="block-title-container">
-            <h3>Block Transactions</h3>
+            <h3>{{ $t('title.blockTx') }}</h3>
           </div>
           <div v-if="transactions.length > 0" class="block">
             <block-last-transactions :transactions="transactions" :showHeader="true"></block-last-transactions>
           </div>
           <div v-else class="info-common">
-            <p> This Block Does Not Have Any Transactions </p>
+            <p>{{ $t( 'message.noTxInBlock' ) }} </p>
           </div>
         </div>
       </div>

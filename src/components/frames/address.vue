@@ -39,11 +39,11 @@
             </div>
             <div v-else class="loading-tokens">
               <i class="fa fa-spinner fa-pulse fa-4x fa-fw"></i>
-              <span class="sr-only">Loading...</span>
+              <span class="sr-only">{{ $t('message.load') }}</span>
             </div>
           </div>
           <div v-else class="info-common">
-            <p> Oops Something Went Wrong :( </p>
+            <p> {{ $t('message.error') }}</p>
           </div>
           <!-- End Tokens -->
         </div>
@@ -52,7 +52,7 @@
           <block-address-tx :address='account' :transactions='account.txs' :isPending='true'></block-address-tx>
           <!-- End Pending Transactions -->
         </div>
-        <!--Mining History -->
+        <!--Mining History This are temp strings (no need to implement yet)  -->
         <div v-if="account.isMiner">
           <div v-if="addressTabs[3].isActive">
             <div>
@@ -104,17 +104,17 @@ export default Vue.extend({
       addressTabs: [
         {
           id: 0,
-          title: 'Txs History',
+          title: this.$i18n.t('tabs.txH'),
           isActive: true
         },
         {
           id: 1,
-          title: 'Tokens',
+          title: this.$i18n.t('tabs.tokens'),
           isActive: false
         },
         {
           id: 2,
-          title: 'Pending Txs',
+          title: this.$i18n.t('tabs.pending'),
           isActive: false
         }
       ],
@@ -173,7 +173,7 @@ export default Vue.extend({
       if (this.account.isMiner) {
         const newTab = {
           id: 3,
-          title: 'Mining History',
+          title: this.$i18n.t('tabs.miningH'),
           isActive: false
         }
         this.addressTabs.push(newTab)

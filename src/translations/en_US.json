@@ -12,7 +12,9 @@
     "tokenDetail": "Token Detail",
     "txDetail": "Transaction Info",
     "overview": "Overview",
-    "blockTx": "Block Transactions"
+    "blockTx": "Block Transactions",
+    "lastBlock": "Last Blocks",
+    "lastTxs": "Last Transactions"
   },
   "common": {
     "address": "Address",
@@ -65,6 +67,7 @@
     "noTokens": "Address does not hold any common tokens",
     "noTxHistory": "There is no transaction history",
     "noTxInBlock": "This block does not have any transactions",
+    "noPending": "There Are No Pending Transactions",
     "load": "Loading ..."
   },
 
@@ -169,6 +172,13 @@
     "email": "support@ethvm.com",
     "kb": "Knowledge Base",
     "aboutPar": "EthVM is a free and open source interface for exploring and evaluating real time Ethereum blocks, transactions and more."
-  }
+  },
 
+  "footnote": {
+    "success": "Success",
+    "failed": "Failed",
+    "pending": "Pending",
+    "aveTxFees": "avg Tx Fees (ETH)",
+    "aveGasPrice": "avg Gas Price (GWEI)"
+  }
 }
