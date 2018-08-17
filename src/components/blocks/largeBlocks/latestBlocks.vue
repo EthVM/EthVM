@@ -2,10 +2,10 @@
   <div id="latest-blocks">
     <!-- Table Header -->
     <div v-if="showHeader" class="block-table-header">
-      <li>Block #</li>
+      <li>{{ $t( 'tableHeader.blockN' ) }}</li>
       <li></li>
-      <li>Txs</li>
-      <li>Reward</li>
+      <li>{{ $t( 'tableHeader.txs' ) }}</li>
+      <li>{{ $t( 'tableHeader.reward' ) }}</li>
       <!-- End Table Header -->
     </div>
     <div class="block-body">
@@ -15,19 +15,19 @@
         <div class="block-data">
           <!-- Col1: Block Number -->
           <li>
-            <p class="block-number"><span>{{block.getNumber().toNumber()}}</span></p>
+            <p class="block-number"><router-link :to="'/block/'+block.getHash().toString()">{{block.getNumber().toNumber()}}</router-link></p>
             <!-- End Col1 -->
           </li>
           <!-- Col2: Block Hash and Miner -->
           <li class="hash">
             <div>
-              <p>Hash</p>
+              <p>{{ $t( 'common.hash' ) }}</p>
               <p>
                 <router-link :to="'/block/'+block.getHash().toString()">{{block.getHash().toString()}}</router-link>
               </p>
             </div>
             <div>
-              <p>Miner</p>
+              <p>{{ $t( 'block.miner' ) }}</p>
               <p>
                 <router-link :to="'/address/'+block.getMiner().toString()">{{block.getMiner().toString()}}</router-link>
               </p>
@@ -57,27 +57,27 @@
         <!-- If Block has Uncles -->
         <div class="uncles-block" v-if="block.getUncles()">
           <div class="uncles-line"></div>
-          <div class="uncles-title">Uncles:</div>
+          <div class="uncles-title">{{ $t( 'block.uncle', 1 ) }}:</div>
           <!-- SUB LOOP START-->
           <div class="uncles-data" v-for="uncle in block.getUncles()" v-bind:key="uncle.hash">
             <li class="sub-hash">
-              <p>Hash</p>
+              <p>{{ $t( 'common.hash') }}</p>
               <p>
                 <router-link :to="'/block/'+uncle.getHash().toString()">{{uncle.getHash().toString()}}</router-link>
               </p>
             </li>
             <li class="sub-miner">
-              <p>Miner</p>
+              <p>{{ $t( 'block.miner' ) }}</p>
               <p>
                 <router-link :to="'/address/'+uncle.getMiner().toString()">{{uncle.getMiner().toString()}}</router-link>
               </p>
             </li>
             <li class="sub-height">
-              <p>Height</p>
+              <p>{{ $t( 'block.height' ) }}</p>
               <p>{{uncle.getNumber().toNumber()}}</p>
             </li>
             <li class="sub-reward">
-              <p>Reward(ETH)</p>
+              <p>{{ $t( 'block.reward' ) }}</p>
               <p>{{uncle.getTotalBlockReward().toEth()}}</p>
             </li>
             <!-- SUB LOOP END -->

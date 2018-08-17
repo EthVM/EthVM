@@ -83,9 +83,9 @@
     "data": "Extra Data",
     "txRoot": "Transactions Root",
     "recRoot": "Receipts Root",
-    "uncReward": "Uncle Reward",
-    "sha": "SHA3 Uncles",
-    "uncle": "Uncle"
+    "uncReward": "Reward",
+    "sha": "SHA3",
+    "uncle": "Uncle | Uncles"
   },
 
   "addrOverview": {

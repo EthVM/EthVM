@@ -111,11 +111,11 @@
               <li>{{block.getReceiptsRoot().toString()}}</li>
             </div>
             <div class="detail-row" v-if="!isUncle">
-              <li>{{ $t( 'block.uncReward' ) }}</li>
+              <li>{{ $t( 'block.uncle', 1 ) }} {{ $t( 'block.uncReward' ) }}</li>
               <li>{{block.getUncleReward().toEth()}}&nbsp;{{ $t( 'common.eth' ) }}</li>
             </div>
             <div class="detail-row" v-if="!isUncle">
-              <li>{{ $t( 'block.sha' ) }}</li>
+              <li>{{ $t( 'block.uncle', 2 ) }} {{ $t( 'block.sha' ) }}</li>
               <li>{{block.getSha3Uncles().toString()}}</li>
             </div>
             <!-- End Show More Details -->
