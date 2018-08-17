@@ -3,10 +3,10 @@
     <div class="block-body">
       <!-- Table Header -->
       <div class="tx-table-header" v-if="showHeader === true">
-        <li>TXn#</li>
-        <li class="eth">ETH</li>
-        <li class="limit">Gas Limit</li>
-        <li class="gas">GWEI</li>
+        <li>{{ $t('tableHeader.txN') }} </li>
+        <li class="eth">{{ $t('common.eth') }}</li>
+        <li class="limit">{{ $t( 'gas.limit' ) }}</li>
+        <li class="gas">{{ $t( 'common.gwei' ) }}</li>
         <li></li>
         <!-- End Table Header -->
       </div>
