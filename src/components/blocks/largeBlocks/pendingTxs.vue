@@ -16,10 +16,10 @@
             <p class="hash"><router-link :to="'/tx/'+tx.getHash().toString()">{{tx.getHash().toString()}}</router-link></p>
           </div>
           <div class="fromto">
-            <p class="title">From</p>
+            <p class="title">{{ $t( 'tx.from' ) }}</p>
             <p class=""><router-link :to="'/address/'+tx.getFrom().toString()">{{tx.getFrom().toString()}}</router-link></p>
 
-            <p class="title">To</p>
+            <p class="title">{{ $t( 'tx.to' ) }}</p>
             <p class=""><router-link :to="'/address/'+tx.getTo().toString()">{{tx.getTo().toString()}}</router-link></p>
           </div>
         </li>

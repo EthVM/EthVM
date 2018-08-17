@@ -117,7 +117,9 @@
     "symbol": "Symbol",
     "transfers": "Total Transfers",
     "value": "Value",
-    "decimal": "Decimals"
+    "decimal": "Decimals",
+    "number": "Total Number of Tokens",
+    "totalUSD": "Total USD Value"
   },
 
   "gas": {

@@ -2,15 +2,15 @@
   <div class="token-tracker">
     <div v-if="!tokens">
       <div class="info-common">
-        <p> Address does not hold any common tokens </p>
+        <p> {{ $t( 'message.noTokens' ) }} </p>
       </div>
     </div>
     <!-- Show Token List -->
     <div v-else>
       <!-- Header -->
       <div class="tokens-header">
-        <p> Total Number of Tokens: {{getTotalTokens}} </p>
-        <p> Total Value: ${{getTotalUSDValue}}</p>
+        <p> {{ $t( 'token.number' ) }} </p>
+        <p> {{ $t( 'token.totalUSD' ) }} ${{getTotalUSDValue}}</p>
         <div class="search-block">
           <block-search :phText="placeholder"></block-search>
         </div>
