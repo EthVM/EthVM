@@ -109,6 +109,17 @@
     "cost": "Tx Cost"
   },
 
+  "token": {
+    "holder": "Holder",
+    "balance": "Balance",
+    "supply": "Total Supply",
+    "totalHold": "Total Holders",
+    "symbol": "Symbol",
+    "transfers": "Total Transfers",
+    "value": "Value",
+    "decimal": "Decimals"
+  },
+
   "gas": {
     "limit": "Gas Limit",
     "used": "Gas Used",
