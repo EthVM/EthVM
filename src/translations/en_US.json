@@ -75,17 +75,17 @@
     "fees": "Tx Fees",
     "pHash": "Parent Hash",
     "size": "Size",
-    "tx": "Transactions",
     "diff": "Difficulty",
     "totalDiff": "Total Difficulty",
     "logs": "Logs",
     "nonce": "Nonce",
     "root": "State Root",
     "data": "Extra Data",
-    "txRoot": "Transactions Data",
+    "txRoot": "Transactions Root",
     "recRoot": "Receipts Root",
     "uncReward": "Uncle Reward",
-    "sha": "SHA3 Uncles"
+    "sha": "SHA3 Uncles",
+    "uncle": "Uncle"
   },
 
   "addrOverview": {
