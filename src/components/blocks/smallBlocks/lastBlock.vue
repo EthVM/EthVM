@@ -10,7 +10,7 @@ export default Vue.extend({
   name: 'ShortDataLastBlock',
   data() {
     return {
-      blockTitle: 'Last Block',
+      blockTitle: this.$i18n.t('smlBlock.last'),
       blockIconType: 'tachometer',
       blockIconColor: '#c271f5'
     }
@@ -18,7 +18,7 @@ export default Vue.extend({
   computed: {
     latestBlockNumber() {
       if (!this.$store.getters.getBlocks[0]) {
-        return 'Loading'
+        return this.$i18n.t('message.load')
       }
       this.$eventHub.$on(sEvents.newBlock, _block => {
         return this.$store.getters.getBlocks[0].getIntNumber()

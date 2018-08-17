@@ -3,10 +3,10 @@
     <div class="block-body">
       <!-- Table Header -->
       <div class="tx-table-header" v-if="showHeader === true">
-        <li>TXn#</li>
-        <li class="eth">ETH</li>
-        <li class="limit">Gas Limit</li>
-        <li class="gas">GWEI</li>
+        <li>{{ $t('tableHeader.txN') }} </li>
+        <li class="eth">{{ $t('common.eth') }}</li>
+        <li class="limit">{{ $t( 'gas.limit' ) }}</li>
+        <li class="gas">{{ $t( 'common.gwei' ) }}</li>
         <li></li>
         <!-- End Table Header -->
       </div>
@@ -22,12 +22,12 @@
           </div>
           <!-- Tx Addresses -->
           <div class="fromto">
-            <p class="title">From</p>
+            <p class="title">{{ $t( 'tx.from' ) }}</p>
             <p class="">
               <router-link :to="'/address/'+tx.getFrom().toString()">{{tx.getFrom().toString()}}</router-link>
             </p>
-            <p class="title" v-if="tx.getContractAddress().toString()">Contract</p>
-            <p class="title" v-else>To</p>
+            <p class="title" v-if="tx.getContractAddress().toString()">{{ $t( 'tx.contract' ) }}</p>
+            <p class="title" v-else>{{ $t( 'tx.to' ) }}</p>
             <p class="" v-if="tx.getContractAddress().toString()">
               <router-link :to="'/address/'+tx.getContractAddress().toString()">{{tx.getContractAddress().toString()}}</router-link>
             </p>

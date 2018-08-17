@@ -2,29 +2,29 @@
   <div class="details" v-if="tx">
     <!-- Header -->
     <div class="block-title-container">
-      <h3 class="block-title">Overview</h3>
+      <h3 class="block-title">{{ $t( 'title.overview' ) }}</h3>
       <!-- End Header -->
     </div>
     <div class="detail-container">
       <!-- Tx Info -->
       <div class="detail-row-copy">
-        <li>Hash</li>
+        <li>{{ $t( 'common.hash' ) }}</li>
         <div class="copy">
           <copy-to-clip-component :valueToCopy="tx.getHash().toString()"></copy-to-clip-component>
         </div>
         <li>{{tx.getHash().toString()}}</li>
       </div>
       <div class="detail-row">
-        <li>Status</li>
+        <li>{{ $t( 'common.status' ) }}</li>
         <li>{{getStringStatus(tx.getStatus())}}</li>
       </div>
       <div class="detail-row">
-        <li>Time Stamp</li>
+        <li>{{ $t( 'common.timestmp' ) }}</li>
         <li>{{tx.getTimestamp().toDate().toString()}} (
           <timeago :since="tx.getTimestamp().toDate()" :auto-update="10"></timeago>)</li>
       </div>
       <div class="detail-row-copy">
-        <li>From</li>
+        <li>{{ $t( 'tx.from' ) }}</li>
         <div class="copy">
           <copy-to-clip-component :valueToCopy="tx.getFrom().toString()"></copy-to-clip-component>
         </div>
@@ -33,7 +33,7 @@
         </li>
       </div>
       <div v-if="tx.getContractAddress().toString()" class="detail-row-copy">
-        <li>Contract</li>
+        <li>{{ $t( 'tx.contract' ) }}</li>
         <div class="copy">
           <copy-to-clip-component :valueToCopy="tx.getContractAddress().toString()"></copy-to-clip-component>
         </div>
@@ -42,7 +42,7 @@
         </li>
       </div>
       <div v-else class="detail-row-copy">
-        <li>To</li>
+        <li>{{ $t( 'tx.to' ) }}</li>
         <div class="copy">
           <copy-to-clip-component :valueToCopy="tx.getTo().toString()"></copy-to-clip-component>
         </div>
@@ -51,11 +51,11 @@
         </li>
       </div>
       <div class="detail-row">
-        <li>Amount</li>
+        <li>{{ $t( 'tx.amount' ) }}</li>
         <li>{{tx.getValue().toEth().toString()}}&nbsp;ETH</li>
       </div>
       <div class="detail-row-copy">
-        <li>Block</li>
+        <li>{{ $t( 'tableHeader.blockN' ) }}</li>
         <div class="copy">
           <copy-to-clip-component :valueToCopy="tx.getBlockNumber().toNumber()"></copy-to-clip-component>
         </div>
@@ -64,20 +64,20 @@
         </li>
       </div>
       <div class="detail-row">
-        <li>Gas Limit</li>
+        <li>{{ $t( 'gas.limit' ) }}</li>
         <li>{{tx.getGas().toNumber()}}</li>
       </div>
       <div class="detail-row">
-        <li>Gas Used</li>
+        <li>{{ $t( 'gas.used' ) }}</li>
         <li>{{tx.getGasUsed().toNumber()}}</li>
       </div>
       <div class="detail-row">
-        <li>Gas Price</li>
+        <li>{{ $t( 'gas.price' ) }}</li>
         <li>{{tx.getGasPrice().toGWei()}}</li>
       </div>
       <div class="detail-row">
-        <li>Tx Cost</li>
-        <li>{{getTxCost(tx.getGasPrice().toEth(), tx.getGasUsed().toNumber())}} &nbsp;ETH</li>
+        <li>{{ $t( 'tx.cost' ) }}</li>
+        <li>{{getTxCost(tx.getGasPrice().toEth(), tx.getGasUsed().toNumber())}} &nbsp;{{ $t( 'common.eth' ) }}</li>
       </div>
       <!--End Tx Info -->
     </div>
@@ -93,7 +93,7 @@
   } from '@/libs'
   import store from '@/states'
   import Vue from 'vue'
-  
+
   export default Vue.extend({
     name: 'TxView',
     props: ['tx'],

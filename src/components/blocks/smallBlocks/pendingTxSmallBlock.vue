@@ -10,7 +10,7 @@ export default Vue.extend({
   name: 'PendingTxSmallBlock',
   data() {
     return {
-      blockTitle: 'Pending Tx',
+      blockTitle: this.$i18n.t('smlBlock.pending'),
       blockIconType: 'asterisk',
       blockIconColor: '#7c76fc'
     }
@@ -18,7 +18,7 @@ export default Vue.extend({
   computed: {
     getPendingTx() {
       if (!this.$store.getters.getBlocks[0]) {
-        return 'Loading'
+        return this.$i18n.t('message.load')
       } else {
         const newBlockStat = this.$store.getters.getBlocks[0].getStats()
         const pending = new BN(newBlockStat.pendingTxs).toNumber()

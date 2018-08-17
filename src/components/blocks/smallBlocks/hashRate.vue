@@ -27,10 +27,10 @@ export default Vue.extend({
   name: 'ShortDataLastBlock',
   data() {
     return {
-      blockTitle: 'Hash Rate TH/s',
+      blockTitle: this.$i18n.t('smlBlock.hashR'),
       blockIconType: 'hashtag',
       blockIconColor: '#fba893',
-      hashRate: '0.0'
+      hashRate: this.$i18n.t('message.load')
     }
   },
   created() {

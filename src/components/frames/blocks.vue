@@ -4,8 +4,8 @@
       <!-- Page Title -->
       <div class="page-title-container">
         <div class="page-title">
-          <h3>Blocks</h3>
-          <h6 class="text-muted">Blocks, most recent first</h6>
+          <h3>{{ $t('title.blocks') }}</h3>
+          <h6 class="text-muted">{{ $t('subTitle.blocks') }}</h6>
         </div>
         <div class="search-block">
           <block-search></block-search>
@@ -26,8 +26,8 @@
           <block-latest-blocks :max-items="20" v-bind:showHeader="true"></block-latest-blocks>
           <div class="footnote">
             <ul>
-              <li><i class="fa fa-circle success" aria-hidden="true"></i> Success</li>
-              <li><i class="fa fa-circle failed" aria-hidden="true"></i> Failed</li>
+              <li><i class="fa fa-circle success" aria-hidden="true"></i>{{ $t('footnote.success') }}</li>
+              <li><i class="fa fa-circle failed" aria-hidden="true"></i>{{ $t('footnote.failed') }}</li>
             </ul>
           </div>
         </div>

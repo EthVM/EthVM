@@ -3,8 +3,8 @@
     <div class="container">
       <div class="page-title-container">
         <div class="page-title">
-          <h3>Pending Transactions</h3>
-          <h6 class="text-muted">Transactions haven't been included into the Ethereum network</h6>
+          <h3>{{ $t('title.pending') }}</h3>
+          <h6 class="text-muted">{{ $t('subTitle.pending') }}</h6>
         </div>
         <div class="search-block">
           <block-search></block-search>
@@ -18,14 +18,14 @@
           </div>
           <div class="footnote">
             <ul>
-              <li><i class="fa fa-check success" aria-hidden="true"></i> Success</li>
-              <li><i class="fa fa-times failed" aria-hidden="true"></i> Failed</li>
+              <li><i class="fa fa-check success" aria-hidden="true"></i> {{ $t('footnote.success') }}</li>
+              <li><i class="fa fa-times failed" aria-hidden="true"></i> {{ $t('footnote.failed') }}</li>
             </ul>
           </div>
         </div>
       </div>
       <div v-else class="info-common">
-        <p> There Are No Pending Transactions </p>
+        <p> {{ $t('message.noPending') }}  </p>
       </div>
 
     </div>

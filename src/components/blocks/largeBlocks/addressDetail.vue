@@ -4,44 +4,44 @@
     <div class="block-title-container">
       <div id="icon" class="identicon">
       </div>
-      <h3 class="block-title">Overview {{domainName}}</h3>
-      <button class="button-common" v-on:click="showMore = !showMore" v-if="showMore === false">More</button>
-      <button class="button-common" v-on:click="showMore = !showMore" v-if="showMore === true">Less</button>
+      <h3 class="block-title">{{ $t( 'title.overview')}} {{domainName}}</h3>
+      <button class="button-common" v-on:click="showMore = !showMore" v-if="showMore === false">{{ $t( 'bttn.more')}}</button>
+      <button class="button-common" v-on:click="showMore = !showMore" v-if="showMore === true">{{ $t( 'bttn.less')}}</button>
       <!-- End Header -->
     </div>
     <!-- Adress Details -->
     <div class="detail-container">
       <!-- Main Info -->
       <div class="detail-row">
-        <li>Address</li>
+        <li>{{ $t( 'title.address' ) }}</li>
         <li>{{account.address}}</li>
       </div>
       <div class="detail-row">
-        <li>Ether Balance</li>
-        <li>{{formatEthBalance}} ETH</li>
+        <li>{{ $t( 'addrOverview.balance' ) }}</li>
+        <li>{{formatEthBalance}} {{ $t( 'common.eth')}}</li>
       </div>
       <div class="detail-row">
-        <li>USD Value</li>
-        <li>$ {{formatUSDBalance}} (@ $ {{formatEthUSD}} per ETH)</li>
+        <li>{{ $t( 'addrOverview.usd')}}</li>
+        <li>$ {{formatUSDBalance}} (@ $ {{formatEthUSD}} {{ $t( 'addrOverview.per')}} {{ $t( 'common.eth')}})</li>
       </div>
       <!-- End Main Info -->
       <transition name="fade">
         <!-- More details: -->
         <div class="detail-more" v-if="showMore">
           <div class="detail-row">
-            <li>Number of TXs</li>
+            <li>{{ $t( 'addrOverview.txN')}}</li>
             <li>{{account.totalTxs}}</li>
           </div>
           <div class="detail-row">
-            <li>Mined</li>
-            <li>23,534 Blocks and 239 Uncles</li>
+            <li>{{ $t( 'addrOverview.mined')}}</li>
+            <li>23,534 {{ $t( 'title.blocks')}} {{ $t( 'addrOverview.and')}} 239 {{ $t( 'addrOverview.uncles')}}</li>
           </div>
           <div class="detail-row">
-            <li>Contract Creator</li>
+            <li>{{ $t( 'addrOverview.creator')}}</li>
             <li>0x272f022a374fC7E9213B35952e167ea217303E18</li>
           </div>
           <div class="detail-row">
-            <li>for TX</li>
+            <li>{{ $t( 'addrOverview.forTx')}}</li>
             <li>0x272f022a374fC7E9213B35952e167ea217303E18</li>
           </div>
           <!-- End Detail More -->

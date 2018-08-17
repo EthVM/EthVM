@@ -8,11 +8,11 @@
     </div>
     <div v-else class="block-body">
       <div class="block-header" v-if="showheader === true">
-        <li>TXn#</li>
+        <li>{{ $t( 'tableHeader.txn' )}}</li>
         <li class="type"></li>
-        <li class="eth">ETH</li>
-        <li class="limit">Gas Limit</li>
-        <li class="gas">GWEI</li>
+        <li class="eth">{{ $t( 'common.eth' )}}</li>
+        <li class="limit">{{ $t( 'gas.limit' )}}</li>
+        <li class="gas">{{ $t( 'common.gwei' )}}</li>
         <li class="status"></li>
       </div>
       <div class="block" v-for="tx in transactions" v-bind:key="tx.getHash().toString()">
@@ -23,12 +23,12 @@
             </p>
           </div>
           <div class="fromto">
-            <p class="title">From</p>
+            <p class="title">{{ $t( 'tx.from' )}}</p>
             <p class="">
               <router-link :to="'/address/'+tx.getFrom().toString()">{{tx.getFrom().toString()}}</router-link>
             </p>
-            <p class="title" v-if="tx.getContractAddress().toString()">Contract</p>
-            <p class="title" v-else>To</p>
+            <p class="title" v-if="tx.getContractAddress().toString()">{{ $t( 'tx.contract' )}}</p>
+            <p class="title" v-else>{{ $t( 'tx.to' )}}</p>
             <p class="" v-if="tx.getContractAddress().toString()">
               <router-link :to="'/address/'+tx.getContractAddress().toString()">{{tx.getContractAddress().toString()}}</router-link>
             </p>
@@ -39,10 +39,10 @@
         </li>
         <li class="vertical-middle type">
           <div v-if="getType(tx)">
-            <span class="failed">Out</span>
+            <span class="failed">{{ $t( 'type.out' )}}</span>
           </div>
           <div v-else>
-            <span class="success">In</span>
+            <span class="success">{{ $t( 'type.in' )}}</span>
           </div>
         </li>
         <li class="vertical-middle eth">
@@ -110,23 +110,23 @@
       getText() {
         if (!this.isPending) {
           if (this.filter === 'all') {
-            return 'This address does not have any transaction history'
+            return this.$i18n.t( 'message.txAll')
           }
           else if (this.filter === 'in') {
-            return 'This address does not have incoming transactions'
+            return this.$i18n.t( 'message.txIn')
           }
           else {
-            return 'This address does not have outgoing transactions'
+            return this.$i18n.t( 'message.txOut')
           }
         } else {
           if (this.filter === 'all') {
-            return 'This address does not have any pending transactions'
+            return this.$i18n.t( 'message.txPen')
           }
           else if (this.filter === 'in') {
-            return 'This address does not have any pending incoming transactions'
+            return this.$i18n.t( 'message.txPenIn')
           }
           else {
-            return 'This address does not have any pending outgoing transactions'
+            return this.$i18n.t( 'message.txPenOut')
           }
         }
       }

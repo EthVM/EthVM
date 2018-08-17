@@ -4,8 +4,8 @@
       <!-- Page Title -->
       <div class="page-title-container">
         <div class="page-title">
-          <h3>Home</h3>
-          <h6 class="text-muted">Welcome to Ethereum Virtual Machine</h6>
+          <h3>{{ $t('title.home') }}</h3>
+          <h6 class="text-muted">{{ $t('subTitle.home') }}</h6>
         </div>
         <div class="search-block">
           <block-search></block-search>
@@ -26,9 +26,9 @@
           <bar-chart-last-ten-blocks-tx></bar-chart-last-ten-blocks-tx>
           <div class="footnote">
             <ul>
-              <li><i class="fa fa-circle success" aria-hidden="true"></i> Success</li>
-              <li><i class="fa fa-circle failed" aria-hidden="true"></i> Failed</li>
-              <li><i class="fa fa-circle pending" aria-hidden="true"></i> Pending</li>
+              <li><i class="fa fa-circle success" aria-hidden="true"></i> {{ $t('footnote.success') }}</li>
+              <li><i class="fa fa-circle failed" aria-hidden="true"></i> {{ $t('footnote.failed') }}</li>
+              <li><i class="fa fa-circle pending" aria-hidden="true"></i> {{ $t('footnote.pending') }}</li>
             </ul>
           </div>
         </div>
@@ -36,8 +36,8 @@
           <line-chart-ave-tx-fees></line-chart-ave-tx-fees>
           <div class="footnote">
             <ul>
-              <li><i class="fa fa-circle tx-fees" aria-hidden="true"></i> avg Tx Fees (ETH)</li>
-              <li><i class="fa fa-circle failed" aria-hidden="true"></i> avg Gas Price (GWEI)</li>
+              <li><i class="fa fa-circle tx-fees" aria-hidden="true"></i> {{ $t('footnote.aveTxFees') }}</li>
+              <li><i class="fa fa-circle failed" aria-hidden="true"></i> {{ $t('footnote.aveGasPrice') }}</li>
             </ul>
           </div>
         </div>
@@ -47,22 +47,22 @@
         <!-- Last 20 Blocks -->
         <div class="col-md-12">
           <div class="block-title-container">
-            <h3>Last Blocks</h3>
-            <router-link to="/blocks" tag="button" class="button-common">View All</router-link>
+            <h3>{{ $t('title.lastBlock') }}</h3>
+            <router-link to="/blocks" tag="button" class="button-common">{{ $t('bttn.viewAll') }}</router-link>
           </div>
           <div class="block-table-header latest-data-header">
-            <li>Block #</li>
+            <li>{{ $t( 'tableHeader.blockN' ) }}</li>
             <li></li>
-            <li>Txs</li>
-            <li>Reward</li>
+            <li>{{ $t( 'tableHeader.txs' ) }}</li>
+            <li>{{ $t( 'tableHeader.reward' ) }}</li>
           </div>
           <div class="latest-data">
-            <block-latest-blocks :max-items="20"></block-latest-blocks>
+            <block-latest-blocks :max-items="20" :showHeader="false"></block-latest-blocks>
           </div>
           <div class="footnote">
             <ul>
-              <li><i class="fa fa-circle success" aria-hidden="true"></i> Success</li>
-              <li><i class="fa fa-circle failed" aria-hidden="true"></i> Failed</li>
+              <li><i class="fa fa-circle success" aria-hidden="true"></i> {{ $t('footnote.success') }}</li>
+              <li><i class="fa fa-circle failed" aria-hidden="true"></i> {{ $t('footnote.failed') }}</li>
             </ul>
           </div>
           <!-- End Last 20 Blocks -->
@@ -70,22 +70,29 @@
         <!-- Last Block Transactions -->
         <div class="col-md-12">
           <div class="block-title-container">
-            <h3>Last Transactions</h3>
-            <router-link to="/transactions" tag="button" class="button-common">View All</router-link>
+            <h3>{{ $t('title.lastTxs') }}</h3>
+            <router-link to="/transactions" tag="button" class="button-common">{{ $t('bttn.viewAll') }}</router-link>
           </div>
           <div v-if="txs.length>0">
+            <div class="block-table-header latest-data-header">
+              <li>{{ $t('tableHeader.txN') }} </li>
+              <li class="eth">{{ $t('common.eth') }}</li>
+              <li class="limit">{{ $t( 'gas.limit' ) }}</li>
+              <li class="gas">{{ $t( 'common.gwei' ) }}</li>
+              <li></li>
+            </div>
             <div class="latest-data">
-              <block-last-transactions :transactions="txs" :showHeader="true"></block-last-transactions>
+              <block-last-transactions :transactions="txs" :showHeader="false"></block-last-transactions>
             </div>
             <div class="footnote">
               <ul>
-                <li><i class="fa fa-check success" aria-hidden="true"></i> Success</li>
-                <li><i class="fa fa-times failed" aria-hidden="true"></i> Failed</li>
+                <li><i class="fa fa-check success" aria-hidden="true"></i> {{ $t('footnote.success') }}</li>
+                <li><i class="fa fa-times failed" aria-hidden="true"></i> {{ $t('footnote.failed') }}</li>
               </ul>
             </div>
           </div>
           <div v-else class="info-common">
-            <p> There Is No Transactions History </p>
+            <p>{{ $t('message.noTxHistory') }}</p>
           </div>
 
           <!-- End Last Block Transactions -->

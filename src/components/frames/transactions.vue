@@ -4,8 +4,8 @@
       <!-- Page Title -->
       <div class="page-title-container">
         <div class="page-title">
-          <h3>Transactions</h3>
-          <h6 class="text-muted">Transactions, most recent first</h6>
+          <h3>{{ $t('title.tx') }}</h3>
+          <h6 class="text-muted">{{ $t('subTitle.tx') }}</h6>
         </div>
         <div class="search-block">
           <block-search></block-search>
@@ -27,14 +27,14 @@
         </div>
         <div class="col-md-12 footnote">
           <ul>
-            <li><i class="fa fa-check success" aria-hidden="true"></i> Success</li>
-            <li><i class="fa fa-times failed" aria-hidden="true"></i> Failed</li>
+            <li><i class="fa fa-check success" aria-hidden="true"></i> {{ $t('footnote.success') }}</li>
+            <li><i class="fa fa-times failed" aria-hidden="true"></i> {{ $t('footnote.failed') }}</li>
           </ul>
         </div>
         <!-- End Tx Table -->
       </div>
       <div v-else class="info-common">
-        <p> There Is No Transactions History </p>
+        <p>{{ $t('message.noTxHistory') }}</p>
       </div>
     </div>
   </div>

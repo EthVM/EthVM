@@ -3,10 +3,10 @@
     <div class="block-body">
       <!-- Table Header -->
       <div class="tx-table-header" v-if="showHeader === true">
-        <li>TXn#</li>
-        <li class="eth">ETH</li>
-        <li class="limit">Gas Limit</li>
-        <li class="gas">GWEI</li>
+        <li>{{ $t('tableHeader.txN') }} </li>
+        <li class="eth">{{ $t('common.eth') }}</li>
+        <li class="limit">{{ $t( 'gas.limit' ) }}</li>
+        <li class="gas">{{ $t( 'common.gwei' ) }}</li>
         <li></li>
         <!-- End Table Header -->
       </div>
@@ -16,10 +16,10 @@
             <p class="hash"><router-link :to="'/tx/'+tx.getHash().toString()">{{tx.getHash().toString()}}</router-link></p>
           </div>
           <div class="fromto">
-            <p class="title">From</p>
+            <p class="title">{{ $t( 'tx.from' ) }}</p>
             <p class=""><router-link :to="'/address/'+tx.getFrom().toString()">{{tx.getFrom().toString()}}</router-link></p>
 
-            <p class="title">To</p>
+            <p class="title">{{ $t( 'tx.to' ) }}</p>
             <p class=""><router-link :to="'/address/'+tx.getTo().toString()">{{tx.getTo().toString()}}</router-link></p>
           </div>
         </li>

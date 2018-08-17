@@ -3,8 +3,8 @@
     <!-- Top Container -->
     <div class="page-title-container">
       <div class="page-title">
-        <h3>Token</h3>
-        <h6 class="text-muted">Overview/Transfers history</h6>
+        <h3>{{ $t('title.tokenDetail') }}</h3>
+        <h6 class="text-muted">{{ $t('subTitle.tokenDetail') }}</h6>
       </div>
       <div class="search-block">
         <block-search></block-search>

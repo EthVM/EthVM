@@ -12,7 +12,7 @@
     name: 'ShortDataLastBlock',
     data() {
       return {
-        blockTitle: 'Failed Tx',
+        blockTitle: this.$i18n.t('smlBlock.failed'),
         blockIconType: 'asterisk',
         blockIconColor: '#f9967b'
       }

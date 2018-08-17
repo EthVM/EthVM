@@ -2,16 +2,16 @@
   <div class="details" v-if="token">
     <!-- Header -->
     <div class="block-title-container">
-      <h3 class="block-title">Overview {{token.name}}</h3>
-      <button class="button-common" v-on:click="showMore = !showMore" v-if="showMore === false">More</button>
-      <button class="button-common" v-on:click="showMore = !showMore" v-if="showMore === true">Less</button>
+      <h3 class="block-title">{{ $t( 'title.overview' ) }} {{token.name}}</h3>
+      <button class="button-common" v-on:click="showMore = !showMore" v-if="showMore === false">{{ $t( 'bttn.more' ) }}</button>
+      <button class="button-common" v-on:click="showMore = !showMore" v-if="showMore === true">{{ $t( 'bttn.less' ) }}</button>
       <!-- End Header -->
     </div>
     <!-- Token Details -->
     <div class="detail-container">
       <!-- Main Info -->
       <div v-if="isHolder" class="detail-row-copy">
-        <li>Holder</li>
+        <li>{{ $t( 'token.holder' ) }}</li>
         <div class="copy">
           <copy-to-clip-component :valueToCopy="token.holder"></copy-to-clip-component>
         </div>
@@ -20,23 +20,23 @@
         </li>
       </div>
       <div v-if="isHolder" class="detail-row">
-        <li>Balance</li>
+        <li>{{ $t( 'token.balance' ) }}</li>
         <li>{{token.balance}} {{token.symbol}} </li>
       </div>
       <div v-if="!isHolder" class="detail-row">
-        <li>Total Supply</li>
+        <li>{{ $t( 'token.supply' ) }}</li>
         <li>{{token.totalSupply}}</li>
       </div>
       <div v-if="!isHolder" class="detail-row">
-        <li>Total Holders</li>
+        <li>{{ $t( 'token.totalHold' ) }}</li>
         <li>{{token.totalHolders}}</li>
       </div>
       <div class="detail-row">
-        <li>USD Value</li>
+        <li>{{ $t( 'addrOverview.usd' ) }}</li>
         <li>{{formatUSDBalance}}</li>
       </div>
       <div class="detail-row">
-        <li>Symbol</li>
+        <li>{{ $t( 'token.sumbol' ) }}</li>
         <li>{{token.symbol}}</li>
       </div>
       <!-- End Main Info -->
@@ -44,15 +44,15 @@
         <!-- More Info -->
         <div class="detail-more" v-if="showMore">
           <div class="detail-row">
-            <li>Total Trasfers</li>
+            <li>{{ $t( 'token.transfers' ) }}</li>
             <li>{{token.transfers}}</li>
           </div>
           <div class="detail-row">
-            <li>ETH Value</li>
+            <li>{{ $t( 'common.eth' ) }} {{ $t( 'token.value' ) }}</li>
             <li>{{token.valueETH}}</li>
           </div>
           <div class="detail-row-copy">
-            <li>Contract</li>
+            <li>{{ $t( 'tx.contract' ) }}</li>
             <div class="copy">
               <copy-to-clip-component :valueToCopy="token.contract"></copy-to-clip-component>
             </div>
@@ -61,7 +61,7 @@
             </li>
           </div>
           <div class="detail-row">
-            <li>Decimals</li>
+            <li>{{ $t( 'token.decimal' ) }}</li>
             <li>{{token.decimals}}</li>
           </div>
           <!-- More Info -->

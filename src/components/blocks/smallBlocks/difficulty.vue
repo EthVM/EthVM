@@ -19,10 +19,10 @@
     name: 'ShortDataLastBlock',
     data() {
       return {
-        blockTitle: 'Difficulty TH',
+        blockTitle: this.$i18n.t('smlBlock.diff'),
         blockIconType: 'asterisk',
         blockIconColor: '#6bee69',
-        difficulty: '0.0'
+        difficulty: 0
       }
     },
     created() {
