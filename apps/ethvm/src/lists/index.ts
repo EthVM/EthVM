@@ -1,5 +1,3 @@
-import tokens from './tokens'
+import tokens from '@app/lists/tokens'
 
-export default {
-  tokens
-}
+export default { tokens }

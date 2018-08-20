@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import sEvents from '@/configs/socketEvents.json'
+import sEvents from '@app/configs/socketEvents.json'
 import BN from 'bignumber.js'
 import ethUnits from 'ethereumjs-units'
 
@@ -106,7 +106,8 @@ export default Vue.extend({
       let data = {
         labels: [],
         avgFees: [],
-        avgPrice: []
+        avgPrice: [],
+        sData: null
       }
       let latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
       latestBlocks.forEach(_block => {

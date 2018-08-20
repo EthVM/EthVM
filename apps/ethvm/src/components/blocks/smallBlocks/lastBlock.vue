@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import sEvents from '@/configs/socketEvents.json'
+import sEvents from '@app/configs/socketEvents.json'
 
 export default Vue.extend({
   name: 'ShortDataLastBlock',
@@ -29,5 +29,5 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped="" lang="less">
+<style scoped lang="less">
 </style>

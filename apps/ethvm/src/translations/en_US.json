@@ -60,7 +60,7 @@
     "txAll": "This address does not have any transaction history",
     "txIn": "This address does not have incoming transactions",
     "txOut": "This address does not have outgoing transactions",
-    "txPen":  "This address does not have pending transactions",
+    "txPen": "This address does not have pending transactions",
     "txPenIn": "This address does not have any pending incoming transactions",
     "txPenOut": "This address does not have any pending outgoing transactions",
     "noTokens": "Address does not hold any common tokens",
@@ -105,7 +105,7 @@
 
   "tx": {
     "from": "From",
-    "to" : "To",
+    "to": "To",
     "contract": "Contract",
     "amount": "Amount",
     "block": "Block #",

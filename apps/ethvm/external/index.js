@@ -1,6 +1,5 @@
-import Downloader from 'filedownloader'
-
-import tokens from './file_list.json'
+const Downloader = require('filedownloader')
+const tokens = require('./file_list.json')
 
 tokens.forEach(token => {
   new Downloader({
