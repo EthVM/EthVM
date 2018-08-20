@@ -8,14 +8,5 @@ yarn-debug.log*
 yarn-error.log*
 /test/unit/coverage/
 
-# Editor directories and files
-.idea
-.vscode
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-
-# Project
-dist/
+# npm
 package-lock.json

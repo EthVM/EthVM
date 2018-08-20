@@ -1,25 +1,23 @@
 {
+  "compilerOptions": {
+    "lib": ["es2018"],
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "typeRoots": ["node_modules/@types", "typings"],
+    "strict": true,
+    "noImplicitAny": false,
+    "removeComments": true,
+    "allowSyntheticDefaultImports": true,
+    "inlineSourceMap": true,
+    "resolveJsonModule":true,
+    "esModuleInterop":true,
+    "allowJs": false
+  },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.vue"
+    "bin/**/*",
   ],
   "exclude": [
     "node_modules"
-  ],
-  "compilerOptions": {
-    "lib": ["dom", "es5", "es2015"],
-    "target": "es5",
-    "strict": false,
-    "module": "es2015",
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "allowSyntheticDefaultImports": true,
-    "noImplicitAny": false,
-    "noImplicitThis": false,
-    "allowJs": false,
-    "baseUrl": ".",
-    "paths": {
-	    "@/*": ["src/*"]
-	  }
-  }
+  ]
 }

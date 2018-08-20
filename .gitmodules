@@ -1,0 +1,4 @@
+[submodule "apps/eth"]
+	path = apps/eth
+	url = https://github.com/enKryptIO/go-ethereum.git
+	branch = master

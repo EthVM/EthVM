@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "src",
+    "inlineSourceMap": true,
+    "lib": ["es2018"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noImplicitAny": false,
+    "outDir": "dist",
+    "paths": {
+        "@app/*": ["*"]
+    },
+    "removeComments": true,
+    "strict": true,
+    "target": "es6",
+    "typeRoots": [
+      "node_modules/@types",
+      "src/@types"
+    ]
+  },
+  "exclude": ["node_modules"],
+  "include": [
+      ".",
+      "src/**/*"
+  ]
+}

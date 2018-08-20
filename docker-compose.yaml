@@ -1,0 +1,158 @@
+version: '3.6'
+
+networks:
+  web:
+    external: true
+  back:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 172.25.0.0/24
+
+services:
+
+  traefik:
+    image: traefik:1.6.2-alpine
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./provisioners/docker/config/traefik/traefik.dev.toml:/etc/traefik/traefik.toml
+    networks:
+      - web
+      - back
+    ports:
+      - 80:80
+      - 81:81
+
+  ethvm:
+    build:
+      context: ./apps/ethvm
+      dockerfile: ../../provisioners/docker/images/dev/ethvm/Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ./apps/ethvm:/var/ethvm
+    networks:
+      - back
+    labels:
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.frontend.rule=Host:ethvm.lan"
+      - "traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:*||Access-Control-Allow-Credentials:true"
+      - "traefik.frontend.passHostHeader=true"
+      - "traefik.backend=ethvm"
+    environment:
+      - ETHVM_HOST=0.0.0.0
+      - ETHVM_PORT=80
+      - ETVHM_DOCKER=true
+
+  ethvm_socket_server:
+    build:
+      context: ./apps/server
+      dockerfile: ../../provisioners/docker/images/dev/server/Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ./apps/server:/var/ethvm-server
+    depends_on:
+      - geth
+      - redis
+      - rethinkdb
+    networks:
+      - back
+    labels:
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.frontend.rule=Host:ws.ethvm.lan"
+      - "traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://ethvm.lan||Access-Control-Allow-Credentials:true"
+      - "traefik.frontend.passHostHeader=true"
+      - "traefik.backend=ethvm_socket_server"
+    environment:
+      - ETHVM_DATA_STORE_REDIS_HOST=redis
+      - ETHVM_ETH_TRIE_DB_REDIS_HOST=redis
+      - ETHVM_RETHINK_DB_HOST=rethinkdb
+
+  redis:
+    image: redis:4.0.9-alpine
+    restart: unless-stopped
+    networks:
+      - back
+    labels:
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.frontend.rule=Host:redis.ethvm.lan"
+      - "traefik.port=6379"
+      - "traefik.backend=redis"
+    command: >
+      sh -c "redis-server && redis-cli flushall"
+
+  rethinkdb:
+    image: rethinkdb:2.3.6
+    restart: unless-stopped
+    networks:
+      - back
+    labels:
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.frontend.rule=Host:rethink.ethvm.lan"
+      - "traefik.port=28015"
+      - "traefik.backend=rethinkdb"
+      - "traefik.dashboard.frontend.rule=Host:rethink.dashboard.ethvm.lan"
+      - "traefik.dashboard.protocol=http"
+      - "traefik.dashboard.backend=ethvm_socket_server"
+      - "traefik.dashboard.port=8080"
+    command: >
+      bash -c "rm -rf /data/* && rethinkdb --bind all"
+
+  geth_miner:
+    build:
+      context: ./apps/eth
+      dockerfile: ../../provisioners/docker/images/dev/eth/Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ./provisioners/docker/config/geth/genesis.json:/genesis.json
+      - ./provisioners/docker/config/geth/keystore/:/keystore/
+    networks:
+      back:
+        ipv4_address: 172.25.0.101
+    command:
+      - /bin/zsh
+      - -c
+      - |
+        rm -rf /geth && mkdir -p /geth/keystore
+        cp -a /keystore/. /geth/keystore/
+        geth --datadir '/geth' init /genesis.json
+        geth --datadir '/geth' --networkid 1234 --identity geth_miner --mine --minerthreads 1 --nousb --unlock '84baabad835e6ca9252658cd6eae0152f6330c09' --rpc --rpcaddr '0.0.0.0' --password =(echo '123456789') --nodiscover --maxpeers 2 --nodekeyhex '08f0e1dee5c1b4645f3331a566009e41a4514b6cd28656d63d0449ecf812812b'
+
+  geth:
+    build:
+      context: ./apps/eth
+      dockerfile: ../../provisioners/docker/images/dev/eth/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - geth_miner
+      - rethinkdb
+    volumes:
+      - ./provisioners/docker/config/geth/genesis.json:/genesis.json
+      - ./provisioners/docker/config/geth/keystore/:/keystore/
+      - ./provisioners/docker/config/geth/static-nodes.json:/static-nodes.json
+    networks:
+      back:
+        ipv4_address: 172.25.0.102
+    ports:
+      - 8545:8545
+    labels:
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.frontend.rule=Host:geth.ethvm.lan"
+      - "traefik.port=9545"
+      - "traefik.backend=geth"
+    environment:
+      - RETHINKDB_URL=http://rethinkdb:28015
+    command:
+      - /bin/zsh
+      - -c
+      - |
+        rm -rf /geth && mkdir -p /geth/keystore
+        cp -a /keystore/. /geth/keystore/
+        cp /static-nodes.json /geth/
+        geth --datadir '/geth' --ethvm init /genesis.json
+        geth --datadir '/geth' --verbosity 6 --networkid 1234 --identity geth --ethvm --gcmode archive --rpc --rpcaddr '0.0.0.0' --rpccorsdomain '*' --rpcapi 'admin,personal,db,eth,net,web3,txpool,miner' --syncmode full --nat 'extip:172.25.0.102' --nousb --nodiscover --maxpeers 2

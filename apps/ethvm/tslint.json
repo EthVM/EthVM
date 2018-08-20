@@ -1,0 +1,26 @@
+{
+  "extends": [
+    "tslint:latest",
+    "tslint-config-prettier"
+  ],
+  "rulesDirectory": ["tslint-consistent-codestyle"],
+  "rules": {
+    "no-console": [true, "log"],
+    "no-duplicate-imports": true,
+    "no-duplicate-variable": true,
+    "no-var-keyword": true,
+    "prefer-const": true,
+    "semicolon": [false],
+    "variable-name": [true, "ban-keywords"],
+    "interface-name": [true, "never-prefix"],
+    "object-literal-sort-keys": false,
+    "no-implicit-dependencies": [false, "optional"],
+    "no-unnecessary-else": ["error", {
+      "allowElseIf": true
+    }],
+    "radix": false,
+    "no-unused-expression": false,
+    "no-submodule-imports": [false, "@"]
+
+  }
+}
