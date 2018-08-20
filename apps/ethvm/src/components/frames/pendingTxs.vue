@@ -34,10 +34,10 @@
 </template>
 
 <script lang="ts">
-  import sEvents from '@/configs/socketEvents.json'
+  import sEvents from '@app/configs/socketEvents.json'
   import {
     Tx
-  } from '@/libs'
+  } from '@app/libs'
   import bn from 'bignumber.js'
   import Visibility from 'visibilityjs'
   import Vue from 'vue'
@@ -107,6 +107,6 @@
   })
 </script>
 
-<style scoped="" lang="less">
+<style scoped lang="less">
   @import '~lessPath/sunil/frames/pendingTxs.less';
 </style>

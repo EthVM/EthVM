@@ -4,7 +4,7 @@
 </template>
 
 <script lang="ts">
-  import sEvents from '@/configs/socketEvents.json'
+  import sEvents from '@app/configs/socketEvents.json'
   import bn from 'bignumber.js'
   import Vue from 'vue'
 
@@ -42,6 +42,6 @@
   })
 </script>
 
-<style scoped="" lang="less">
+<style scoped lang="less">
 
 </style>

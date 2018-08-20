@@ -36,7 +36,7 @@
   import {
     common,
     Tx
-  } from '@/libs'
+  } from '@app/libs'
   import bn from 'bignumber.js'
   import Account from 'ethereumjs-account'
   import ethUnits from 'ethereumjs-units'
@@ -97,6 +97,6 @@
   })
 </script>
 
-<style scoped="" lang="less">
+<style scoped lang="less">
   @import '~lessPath/sunil/global.less';
 </style>

@@ -45,7 +45,7 @@ services:
       - ETHVM_PORT=80
       - ETVHM_DOCKER=true
 
-  ethvm_socket_server:
+  server:
     build:
       context: ./apps/server
       dockerfile: ../../provisioners/docker/images/dev/server/Dockerfile
@@ -64,7 +64,7 @@ services:
       - "traefik.frontend.rule=Host:ws.ethvm.lan"
       - "traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://ethvm.lan||Access-Control-Allow-Credentials:true"
       - "traefik.frontend.passHostHeader=true"
-      - "traefik.backend=ethvm_socket_server"
+      - "traefik.backend=server"
     environment:
       - ETHVM_DATA_STORE_REDIS_HOST=redis
       - ETHVM_ETH_TRIE_DB_REDIS_HOST=redis

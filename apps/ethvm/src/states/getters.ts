@@ -1,5 +1,5 @@
-import { Block, Tx } from '@/libs'
-import { StateLayout, TxLayout } from '@/typeLayouts'
+import { Block, Tx } from '@app/libs'
+import { StateLayout } from '@app/typeLayouts'
 
 const all = (state: StateLayout): StateLayout => {
   return state

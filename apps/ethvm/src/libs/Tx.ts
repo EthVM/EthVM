@@ -1,5 +1,5 @@
-import { Address, common, EthValue, Hash, Hex, HexNumber, HexTime } from '@/libs'
-import { TxLayout } from '@/typeLayouts'
+import { Address, common, EthValue, Hash, Hex, HexNumber, HexTime } from '@app/libs'
+import { TxLayout } from '@app/typeLayouts'
 
 class Tx {
   public readonly id: string

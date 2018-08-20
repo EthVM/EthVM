@@ -90,8 +90,8 @@
     Block,
     common,
     Tx
-  } from '@/libs'
-  import store from '@/states'
+  } from '@app/libs'
+  import store from '@app/states'
   import Vue from 'vue'
 
   export default Vue.extend({
@@ -115,6 +115,6 @@
   })
 </script>
 
-<style scoped="" lang="less">
+<style scoped lang="less">
   @import '~lessPath/sunil/blocks/largeBlocks/detailComponent.less';
 </style>

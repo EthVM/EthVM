@@ -1,9 +1,10 @@
+import Actions from '@app/states/actions'
+import Getters from '@app/states/getters'
+import Mutations from '@app/states/mutations'
+import State from '@app/states/state'
+
 import Vue from 'vue'
 import Vuex from 'vuex'
-import Actions from './actions'
-import Getters from './getters'
-import Mutations from './mutations'
-import State from './state'
 
 Vue.use(Vuex)
 

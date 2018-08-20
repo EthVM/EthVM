@@ -1,4 +1,4 @@
-import { Tx } from '@/libs'
+import { Tx } from '@app/libs'
 
 const dedup = (tx: Tx, pastTxs: Tx[]): Tx[] => {
   for (let i = 0; i < pastTxs.length; i++) {
