@@ -1,0 +1,248 @@
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: rethinkdb-secrets
+  namespace: ethvm
+  labels:
+    app: rethinkdb-cluster
+type: Opaque
+data:
+  rethinkdb-password: ZXR2bQ==
+
+---
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: rethinkdb-storage
+  namespace: ethvm
+  labels:
+    app: rethinkdb-cluster
+# parameters:
+#   type: pd-ssd
+# provisioner: kubernetes.io/gce-pd
+provisioner: standard # minikube
+reclaimPolicy: Retain
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: rethinkdb-admin
+  namespace: ethvm
+  labels:
+    app: rethinkdb-admin
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - port: 8080
+      targetPort: admin
+  selector:
+    app: rethinkdb-proxy
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: rethinkdb-proxy
+  namespace: ethvm
+  labels:
+    app: rethinkdb-proxy
+spec:
+  type: ClusterIP
+  ports:
+    - port: 28015
+      targetPort: driver
+  selector:
+    app: rethinkdb-proxy
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: rethinkdb-cluster
+  namespace: ethvm
+  labels:
+    app: rethinkdb-cluster
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - port: 29015
+      targetPort: cluster
+  selector:
+    app: rethinkdb-cluster
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rethinkdb-cluster
+  namespace: ethvm
+  labels:
+    app: rethinkdb-cluster
+spec:
+  selector:
+    matchLabels:
+      app: rethinkdb-cluster
+  serviceName: rethinkdb-cluster
+  replicas: 1
+  template:
+    metadata:
+      name: rethinkdb-cluster
+      labels:
+        app: rethinkdb-cluster
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - rethinkdb-cluster
+              topologyKey: kubernetes.io/hostname
+      containers:
+        - name: rethinkdb-cluster
+          image: enkryptio/rethinkdb-cluster:2.3.6
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: cluster
+              containerPort: 29015
+          args:
+            - --directory
+            - /data/db
+            - --bind
+            - all
+            - --no-http-admin
+            - --cache-size
+            - "100"
+          volumeMounts:
+            - name: "datadir"
+              mountPath: "/data"
+          env:
+            - name: RETHINK_CLUSTER_SERVICE
+              value: rethinkdb-cluster
+            - name: RETHINKDB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rethinkdb
+                  key: rethinkdb-password
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.podIP
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          livenessProbe:
+            exec:
+              command:
+                - rethink-probe
+            failureThreshold: 3
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          readinessProbe:
+            exec:
+              command:
+                - rethink-probe
+            failureThreshold: 3
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+  volumeClaimTemplates:
+  - metadata:
+      name: datadir
+      annotations:
+        volume.beta.kubernetes.io/storage-class: rethinkdb-storage
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 1Gi
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rethinkdb-proxy
+  namespace: ethvm
+  labels:
+    app: rethinkdb-proxy
+spec:
+  selector:
+    matchLabels:
+      app: rethinkdb-proxy
+  replicas: 1
+  template:
+    metadata:
+      name: rethinkdb-proxy
+      labels:
+        app: rethinkdb-proxy
+    spec:
+      containers:
+        - name: rethinkdb-proxy
+          image: enkryptio/rethinkdb-cluster:2.3.6
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: cluster
+              containerPort: 29015
+            - name: driver
+              containerPort: 28015
+            - name: admin
+              containerPort: 8080
+          args:
+            - --bind
+            - all
+          volumeMounts:
+            - name: "secrets"
+              mountPath: "/secrets"
+          env:
+            - name: PROXY
+              value: "true"
+            - name: RETHINK_CLUSTER_SERVICE
+              value: rethinkdb-cluster
+            - name: RETHINKDB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rethinkdb-secrets
+                  key: rethinkdb-password
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.podIP
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+      volumes:
+        - name: secrets
+          projected:
+            sources:
+            - secret:
+                name: rethinkdb-secrets

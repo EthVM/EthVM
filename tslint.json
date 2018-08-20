@@ -1,9 +1,9 @@
 {
   "extends": [
     "tslint:latest",
-    "tslint-config-prettier"
+    "tslint-config-prettier",
+    "tslint-consistent-codestyle"
   ],
-  "rulesDirectory": ["tslint-consistent-codestyle"],
   "rules": {
     "no-console": [true, "log"],
     "no-duplicate-imports": true,
@@ -20,7 +20,6 @@
     }],
     "radix": false,
     "no-unused-expression": false,
-    "no-submodule-imports": [false, "@"]
-
+    "quotemark": [true, "single"]
   }
 }
