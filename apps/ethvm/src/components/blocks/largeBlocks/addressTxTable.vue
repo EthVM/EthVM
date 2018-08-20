@@ -8,7 +8,7 @@
     </div>
     <div v-else class="block-body">
       <div class="block-header" v-if="showheader === true">
-        <li>{{ $t( 'tableHeader.txn' )}}</li>
+        <li>{{ $t( 'tableHeader.txN' )}}</li>
         <li class="type"></li>
         <li class="eth">{{ $t( 'common.eth' )}}</li>
         <li class="limit">{{ $t( 'gas.limit' )}}</li>
@@ -68,6 +68,12 @@
           </div>
         </li>
       </div>
+      <div class="footnote">
+        <ul>
+          <li><i class="fa fa-check success" aria-hidden="true"></i> {{ $t('footnote.success') }}</li>
+          <li><i class="fa fa-times failed" aria-hidden="true"></i> {{ $t('footnote.failed') }}</li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -100,8 +106,7 @@
         }
         if (!isBool) {
           return newEthValue
-        }
-        else {
+        } else {
           return isShort
         }
       }
@@ -110,23 +115,19 @@
       getText() {
         if (!this.isPending) {
           if (this.filter === 'all') {
-            return this.$i18n.t( 'message.txAll')
-          }
-          else if (this.filter === 'in') {
-            return this.$i18n.t( 'message.txIn')
-          }
-          else {
-            return this.$i18n.t( 'message.txOut')
+            return this.$i18n.t('message.txAll')
+          } else if (this.filter === 'in') {
+            return this.$i18n.t('message.txIn')
+          } else {
+            return this.$i18n.t('message.txOut')
           }
         } else {
           if (this.filter === 'all') {
-            return this.$i18n.t( 'message.txPen')
-          }
-          else if (this.filter === 'in') {
-            return this.$i18n.t( 'message.txPenIn')
-          }
-          else {
-            return this.$i18n.t( 'message.txPenOut')
+            return this.$i18n.t('message.txPen')
+          } else if (this.filter === 'in') {
+            return this.$i18n.t('message.txPenIn')
+          } else {
+            return this.$i18n.t('message.txPenOut')
           }
         }
       }
