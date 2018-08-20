@@ -13,7 +13,7 @@
 /* To use a scatter chart, data must be passed as objects containing X and Y properties */
 
 import Vue from 'vue'
-import sEvents from '@/configs/socketEvents.json'
+import sEvents from '@app/configs/socketEvents.json'
 let newOptions = {
   title: {
     text: 'Pending Tx'

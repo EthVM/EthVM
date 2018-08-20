@@ -46,7 +46,7 @@ import Vue from 'vue'
 
 export default Vue.extend({
   name: 'TableTransactions',
- props: ['transactions', 'showHeader'],
+  props: ['transactions', 'showHeader'],
   methods: {
     /* Method to reduce Strig length : */
     getShortEthValue(newEthValue, isBool) {

@@ -1,7 +1,7 @@
-import defaultRooms from '../configs/defaultRooms.json'
-import sEvents from '../configs/socketEvents.json'
-import { Block, Tx } from '../libs'
-import { BlockLayout, TxLayout } from '../typeLayouts'
+import defaultRooms from '@app/configs/defaultRooms.json'
+import sEvents from '@app/configs/socketEvents.json'
+import { Block, Tx } from '@app/libs'
+import { BlockLayout, TxLayout } from '@app/typeLayouts'
 
 const socket_newBlock = ({ commit }, block: BlockLayout | BlockLayout[]) => {
   commit(sEvents.newBlock, block)
@@ -14,7 +14,7 @@ const socket_newTx = function({ commit }, tx: TxLayout | TxLayout[]) {
 }
 
 const socket_connect = ({}, tx: TxLayout) => {
-  this._vm.$socket.emit(sEvents.join, {"rooms":defaultRooms})
+  this._vm.$socket.emit(sEvents.join, { rooms: defaultRooms })
 }
 
 export default {

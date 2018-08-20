@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import sEvents from '@/configs/socketEvents.json'
+import sEvents from '@app/configs/socketEvents.json'
 import BN from 'bignumber.js'
 import Vue from 'vue'
 export default Vue.extend({
@@ -29,5 +29,5 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped="" lang="less">
+<style scoped lang="less">
 </style>

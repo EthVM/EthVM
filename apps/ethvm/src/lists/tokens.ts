@@ -1,10 +1,10 @@
-import ETH from './files/tokens-eth.json'
-import ETC from './files/tokens-etc.json'
-import KOV from './files/tokens-kov.json'
-import RIN from './files/tokens-rin.json'
-import ROP from './files/tokens-rop.json'
-import RSK from './files/tokens-rsk.json'
-import UBQ from './files/tokens-ubq.json'
+import ETC from '@app/lists/files/tokens-etc.json'
+import ETH from '@app/lists/files/tokens-eth.json'
+import KOV from '@app/lists/files/tokens-kov.json'
+import RIN from '@app/lists/files/tokens-rin.json'
+import ROP from '@app/lists/files/tokens-rop.json'
+import RSK from '@app/lists/files/tokens-rsk.json'
+import UBQ from '@app/lists/files/tokens-ubq.json'
 
 export default {
   ETH,
