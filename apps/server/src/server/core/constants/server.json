@@ -1,31 +1,38 @@
 {
-  "events": {
-    "address_transaction_pages": "getAddressTransactionPages",
-    "address_txs": "getTxs",
-    "balance": "getBalance",
-    "block": "getBlock",
-    "block_txs": "getBlockTransactions",
-    "chart_accounts_growth": "getChartAccountsGrowth",
-    "chart_block_size": "getChartBlockSize",
-    "chart_gas_limit": "getChartGasLimit",
-    "chart_tx_fee": "getChartAvTxFee",
-    "current_state_root": "getCurrentStateRoot",
-    "eth_call": "ethCall",
-    "exchange_rate": "getTokenToUSD",
-    "join": "join",
-    "leave": "leave",
-    "past_blocks": "pastBlocks",
-    "past_txs": "pastTxs",
-    "tokens_balance": "getTokenBalance",
-    "total_txs": "getTotalTxs",
-    "tx": "getTx",
-    "txs_pages": "getTransactionPages"
-  },
-  "rooms": {
-    "default": ["blocks", "txs", "uncles"],
-    "blocks": "blocks",
-    "pendingTxs": "pendingTxs",
-    "txs": "txs",
-    "uncles": "uncles"
+  "server": {
+    "ethvm_events": {
+      "address_transaction_pages": "getAddressTransactionPages",
+      "address_txs": "getTxs",
+      "balance": "getBalance",
+      "block": "getBlock",
+      "block_txs": "getBlockTransactions",
+      "chart_accounts_growth": "getChartAccountsGrowth",
+      "chart_block_size": "getChartBlockSize",
+      "chart_gas_limit": "getChartGasLimit",
+      "chart_tx_fee": "getChartAvTxFee",
+      "current_state_root": "getCurrentStateRoot",
+      "eth_call": "ethCall",
+      "exchange_rate": "getTokenToUSD",
+      "join": "join",
+      "leave": "leave",
+      "past_blocks": "pastBlocks",
+      "past_txs": "pastTxs",
+      "tokens_balance": "getTokenBalance",
+      "total_txs": "getTotalTxs",
+      "tx": "getTx",
+      "txs_pages": "getTransactionPages"
+    },
+    "rooms": {
+      "default": ["blocks", "txs", "uncles"],
+      "blocks": "blocks",
+      "pending_txs": "pendingTxs",
+      "txs": "txs",
+      "uncles": "uncles"
+    },
+    "events": {
+      "new_block": "newBlock",
+      "new_tx": "newTx",
+      "new_pending_tx": "newPendingTx"
+    }
   }
 }

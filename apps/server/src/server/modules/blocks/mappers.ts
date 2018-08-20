@@ -30,7 +30,7 @@ const toSmallBlock = (block: Block): SmallBlock => {
   }
 }
 
-const toBlockStats = (txs: Tx[] = [], blockTime: BigNumber): BlockStats => {
+const toBlockStats = (txs: Tx[] = []): BlockStats => {
   if (txs.length === 0) {
     const zero = utils.toHex(0)
     return {
@@ -60,7 +60,7 @@ const toBlockStats = (txs: Tx[] = [], blockTime: BigNumber): BlockStats => {
   })
 
   return {
-    blockTime: utils.toHex(blockTime),
+    blockTime: utils.toHex(0),
     failed: utils.toHex(txStatus.failed),
     success: utils.toHex(txStatus.success),
     avgGasPrice: utils.toHex(txStatus.totGasPrice.div(txs.length).integerValue(BigNumber.ROUND_CEIL)),

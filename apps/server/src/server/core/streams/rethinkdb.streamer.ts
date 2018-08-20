@@ -2,12 +2,13 @@ import { logger } from '@app/logger'
 import { Streamer, StreamerEvents } from '@app/server/core/streams'
 import { Block } from '@app/server/modules/blocks'
 import { Tx } from '@app/server/modules/txs'
+import { VmService } from '@app/server/modules/vm'
 import { RethinkEthVM } from '@app/server/repositories'
 import EventEmitter, { ListenerFn } from 'eventemitter3'
 import * as r from 'rethinkdb'
 
 export class RethinkDbStreamer implements Streamer {
-  constructor(private readonly conn: any, private readonly emitter: EventEmitter) {}
+  constructor(private readonly conn: any, private readonly emitter: EventEmitter, private readonly vmService: VmService) {}
 
   public async initialize(): Promise<boolean> {
     try {
@@ -30,15 +31,20 @@ export class RethinkDbStreamer implements Streamer {
   }
 
   public onNewBlock(block: Block) {
+    if (block.stateRoot) {
+      this.vmService.setStateRoot(block.stateRoot)
+    }
     this.emitter.emit(StreamerEvents.newBlock, block)
   }
 
-  public onNewTx(tx: Tx) {
-    // Fill with content and logic
+  public onNewTxs(txs: Tx[]) {
+    txs.forEach(tx => {
+      this.emitter.emit(StreamerEvents.newTx, tx)
+    })
   }
 
-  public onNewPendingTx(tx: Tx) {
-    this.emitter.emit(StreamerEvents.pendingTx, tx)
+  public onNewPendingTx(tx: Tx | Tx[]) {
+    this.emitter.emit(StreamerEvents.newPendingTx, tx)
   }
 
   private registerEventListener(): Promise<any[]> {
@@ -68,14 +74,17 @@ export class RethinkDbStreamer implements Streamer {
           }
 
           cursor.each(
-            (err: Error | null | undefined, res: Block): void => {
+            (err: Error | null | undefined, b: Block): void => {
               if (err) {
                 logger.error(`RethinkDbStreamer - onNewblock / Error: ${err}`)
                 return
               }
 
               logger.info('RethinkDbStreamer - onNewBlock / Emitting new block!')
-              this.onNewBlock(res)
+              this.onNewBlock(b)
+              if (b.transactions && b.transactions.length > 0) {
+                this.onNewTxs(b.transactions)
+              }
             }
           )
         }
