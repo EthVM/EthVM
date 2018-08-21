@@ -87,9 +87,7 @@ export default Vue.extend({
       if (!isBool) {
         return newEthValue
       }
-      else {
-        return isShort
-      }
+      return isShort
     }
   }
 })

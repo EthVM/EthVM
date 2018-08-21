@@ -61,9 +61,8 @@ export default Vue.extend({
     isUncle() {
       if (this.block && this.block.getIsUncle()) {
         return true
-      } else {
-        return false
       }
+      return false
     }
   },
   mounted() {

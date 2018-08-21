@@ -16,24 +16,24 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue'
+import Vue from 'vue'
 
-  export default Vue.extend({
-    name: 'Search',
-    props: {
-      phText: {
-        type: String,
-        default: 'default'
-      }
-    },
-    data() {
-      return {
-        searchFocus: false,
-      }
-    },
-  })
+export default Vue.extend({
+  name: 'Search',
+  props: {
+    phText: {
+      type: String,
+      default: 'default'
+    }
+  },
+  data() {
+    return {
+      searchFocus: false
+    }
+  }
+})
 </script>
 
 <style scoped lang="less">
-  @import '~lessPath/sunil/blocks/smallBlocks/search.less';
+@import '~lessPath/sunil/blocks/smallBlocks/search.less';
 </style>

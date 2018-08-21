@@ -15,11 +15,11 @@ import Vue from 'vue'
 import sEvents from '@app/configs/socketEvents.json'
 import BN from 'bignumber.js'
 
-let MAX_ITEMS = 10
-let title = 'Tx Summary'
-let description = 'Number of successful, failed, and pending transactions that have occured in the last 10 blocks'
+const MAX_ITEMS = 10
+const title = 'Tx Summary'
+const description = 'Number of successful, failed, and pending transactions that have occured in the last 10 blocks'
 
-let barOptions = {
+const barOptions = {
   title: {
     text: 'Transactions (Last 10 blocks)'
   },
@@ -87,7 +87,7 @@ export default Vue.extend({
       if (this.chartData.datasets[0]) {
         this.redraw = false
         if (!_block.getIsUncle()) {
-          let _tempD = _block.getStats()
+          const _tempD = _block.getStats()
           this.chartData.labels.push(_block.getNumber().toNumber())
           this.chartData.labels.shift()
           this.chartData.datasets[0].data.push(_tempD.pendingTxs)
@@ -106,16 +106,16 @@ export default Vue.extend({
   },
   computed: {
     initData() {
-      let data = {
+      const data = {
         labels: [],
         sData: [],
         fData: [],
         pData: []
       }
-      let latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
+      const latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
       latestBlocks.forEach(_block => {
         data.labels.unshift(_block.getNumber().toNumber())
-        let _tempD = _block.getStats()
+        const _tempD = _block.getStats()
         data.sData.unshift(new BN(_tempD.success).toNumber())
         data.fData.unshift(new BN(_tempD.failed).toNumber())
         data.pData.unshift(new BN(_tempD.pendingTxs).toNumber())

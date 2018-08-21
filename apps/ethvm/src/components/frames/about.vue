@@ -17,6 +17,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
+
 const MAX_ITEMS = 20
 
 export default Vue.extend({
@@ -29,9 +30,7 @@ export default Vue.extend({
       if (this.$store.getters.getTxs.length) {
         return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
       }
-      else {
-        return []
-      }
+      return []
     }
   }
 })
