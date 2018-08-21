@@ -28,7 +28,7 @@
 
 <script lang="ts">
 import sEvents from '@app/configs/socketEvents.json'
-import { Block, Tx } from '@app/libs'
+import { Block, Tx } from '@app/models'
 import Vue from 'vue'
 
 export default Vue.extend({

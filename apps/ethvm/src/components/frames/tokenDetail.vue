@@ -33,70 +33,70 @@
 </template>
 
 <script lang="ts">
-  import {
-    common,
-    Tx
-  } from '@app/libs'
-  import bn from 'bignumber.js'
-  import Account from 'ethereumjs-account'
-  import ethUnits from 'ethereumjs-units'
-  import Vue from 'vue'
+import { common } from '@app/helpers'
+import { Tx } from '@app/models'
+import bn from 'bignumber.js'
+import Account from 'ethereumjs-account'
+import ethUnits from 'ethereumjs-units'
+import Vue from 'vue'
 
-  const MAX_ITEMS = 20
+const MAX_ITEMS = 20
 
-  export default Vue.extend({
-    name: 'FrameAccount',
-    props: ['tokenAddr', 'holderAddr'],
-    data() {
-      return {
-        tokenTabs: [{
+export default Vue.extend({
+  name: 'FrameAccount',
+  props: ['tokenAddr', 'holderAddr'],
+  data() {
+    return {
+      tokenTabs: [
+        {
           id: 0,
           title: 'Transfers',
           isActive: true
-        }],
-        /*Dummy Data: */
-        token: {
-          name: 'newName',
-          holder: this.holderAddr,
-          balance: 12,
-          valueUSD: 249,
-          symbol: 'SNM',
-          transfers: 4280,
-          valueETH: 234,
-          contract: this.tokenAddr,
-          decimals: 27,
-          totalSupply: 1234324,
-          totalHolders: 2434
         }
+      ],
+      /*Dummy Data: */
+      token: {
+        name: 'newName',
+        holder: this.holderAddr,
+        balance: 12,
+        valueUSD: 249,
+        symbol: 'SNM',
+        transfers: 4280,
+        valueETH: 234,
+        contract: this.tokenAddr,
+        decimals: 27,
+        totalSupply: 1234324,
+        totalHolders: 2434
       }
-    },
-    created() {
-      /* Get Transfers History: */
+    }
+  },
+  created() {
+    /* Get Transfers History: */
 
-      /* If (holderPresent)
+    /* If (holderPresent)
         Get Total Holders:
         Get Total Supply: */
 
-      if (!this.holderPresent) {
-        const newTab = {
-          id: 1,
-          title: 'Holders List',
-          isActive: false
-        }
-        this.tokenTabs.push(newTab)
+    if (!this.holderPresent) {
+      const newTab = {
+        id: 1,
+        title: 'Holders List',
+        isActive: false
       }
-    },
-    computed: {
-      holderPresent() {
-        if (this.holderAddr) {
-          return true
-        }
-        return false
-      }
+      this.tokenTabs.push(newTab)
     }
-  })
+  },
+  computed: {
+    holderPresent() {
+      if (this.holderAddr) {
+        return true
+      }
+      return false
+    }
+  }
+})
 </script>
 
 <style scoped lang="less">
-  @import '~lessPath/sunil/global.less';
+@import '~lessPath/sunil/global.less';
 </style>

@@ -1,5 +1,6 @@
-import { Block, Tx } from '@app/libs'
-import { BlockLayout, StateLayout, TxLayout } from '@app/typeLayouts'
+import { Block, StateLayout, Tx } from '@app/models'
+import { Block as BlockLayout } from '@shared/server/modules/blocks/block.entities'
+import { Tx as TxLayout } from '@shared/server/modules/txs/txs.entities'
 
 const NEW_BLOCK = (state: StateLayout, block: BlockLayout | BlockLayout[]) => {
   if (Array.isArray(block)) {

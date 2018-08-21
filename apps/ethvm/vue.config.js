@@ -6,7 +6,8 @@ module.exports = {
       extensions: ['.ts', '.vue', '.json'],
       alias: {
         '@app': path.join(__dirname, '/src/'),
-        lessPath: path.join(__dirname, '/src/css/less'),
+        '@shared': path.join(__dirname, '../server/src/'),
+        lessPath: path.join(__dirname, '/src/css/less/'),
         vue$: 'vue/dist/vue.esm.js'
       }
     }

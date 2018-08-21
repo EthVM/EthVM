@@ -11,7 +11,8 @@
     "moduleResolution": "node",
     "noImplicitAny": false,
     "paths": {
-      "@app/*": ["src/*"]
+      "@app/*": ["src/*"],
+      "@shared/*": ["./../server/src/*"]
     },
     "resolveJsonModule": false,
     "sourceMap": true,
