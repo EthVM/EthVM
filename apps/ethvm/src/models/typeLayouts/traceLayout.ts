@@ -8,7 +8,7 @@ interface Transfer {
   input: Buffer
 }
 
-export default interface TraceLayout {
+export interface TraceLayout {
   hash: Buffer
   trace: {
     isError: boolean

@@ -78,7 +78,8 @@
 </template>
 
 <script lang="ts">
-import { common, Tx } from '@app/libs'
+import { common } from '@app/helpers'
+import { Tx } from '@app/models'
 import bn from 'bignumber.js'
 import ethUnits from 'ethereumjs-units'
 import sEvents from '@app/configs/socketEvents.json'

@@ -59,9 +59,7 @@ export default Vue.extend({
       if (!isBool) {
         return newEthValue
       }
-      else {
-        return isShort
-      }
+      return isShort
     }
   }
 })
@@ -70,10 +68,3 @@ export default Vue.extend({
 <style scoped lang="less">
 @import '~lessPath/sunil/blocks/largeBlocks/transactionsTable.less';
 </style>
-
-
-
-
-
-
-

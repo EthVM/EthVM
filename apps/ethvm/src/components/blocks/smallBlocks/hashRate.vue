@@ -5,7 +5,7 @@
 
 <script lang="ts">
 import sEvents from '@app/configs/socketEvents.json'
-import { Block } from '@app/libs'
+import { Block } from '@app/models'
 import bn from 'bignumber.js'
 import Vue from 'vue'
 

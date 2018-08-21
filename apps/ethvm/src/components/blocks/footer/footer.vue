@@ -43,22 +43,22 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue'
+import Vue from 'vue'
 
-  Vue.component('modal', {
-    template: '#modal-template'
-  })
+Vue.component('modal', {
+  template: '#modal-template'
+})
 
-  export default Vue.extend({
-    data() {
-      return {
-        signup: false
-      }
-    },
-    methods: {}
-  })
+export default Vue.extend({
+  data() {
+    return {
+      signup: false
+    }
+  },
+  methods: {}
+})
 </script>
 
 <style scoped lang="less">
-  @import '~lessPath/sunil/blocks/footer/footer.less';
+@import '~lessPath/sunil/blocks/footer/footer.less';
 </style>

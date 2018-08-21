@@ -17,10 +17,10 @@ import sEvents from '@app/configs/socketEvents.json'
 import BN from 'bignumber.js'
 import ethUnits from 'ethereumjs-units'
 
-let title = 'Accounts Growth'
-let description = ''
-let MAX_ITEMS = 10
-let lineOptions = {
+const title = 'Accounts Growth'
+const description = ''
+const MAX_ITEMS = 10
+const lineOptions = {
   title: {
     text: 'Accounts Growth',
     lineHeight: 1
@@ -72,7 +72,7 @@ export default Vue.extend({
   beforeDestroy() {},
   computed: {
     initData() {
-      let data = {
+      const data = {
         labels: [],
         points: []
       }
