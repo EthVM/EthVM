@@ -25,7 +25,7 @@
     "ethereumjs-account": "^2.0.5",
     "ethereumjs-units": "^0.2.0",
     "number-formatter": "^1.2.0",
-    "socket.io-client": "^2.1.0",
+    "socket.io-client": "^2.1.1",
     "v-tooltip": "^2.0.0-rc.32",
     "visibilityjs": "^1.2.7",
     "vue": "^2.5.17",
@@ -42,7 +42,7 @@
     "web3": "^1.0.0-beta.35"
   },
   "devDependencies": {
-    "@types/jest": "^23.1.4",
+    "@types/jest": "^23.3.1",
     "@types/socket.io": "^1.4.36",
     "@types/socket.io-client": "^1.4.32",
     "@vue/cli-plugin-babel": "^3.0.1",
