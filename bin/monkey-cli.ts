@@ -59,6 +59,7 @@ function send(txP: Txp, privateKey: Buffer): Promise<Result> {
         const tx = new EthereumTx(txP)
         tx.sign(privateKey)
         const serializedTx = '0x' + tx.serialize().toString('hex')
+        ora.info(`Sending: ${txP.value} wei to ${txP.to} gas  ${txP.gas}  nonce  ${txP.nonce} `)
         r.call(
           'eth_sendRawTransaction',
           [serializedTx],
@@ -92,8 +93,45 @@ function estimategas(txParams: Txp): Promise<any> {
   })
 }
 
+function txpoolStatus(): Promise<any> {
+  return new Promise((resolve, reject) => {
+    r.call(
+      'txpool_status',
+      ['pending'],
+      (e: Error, res: any): void => {
+        if (e) {
+          reject(e)
+          return
+        }
+        resolve({ res })
+      }
+    )
+  })
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
 async function keepfilling(txParams: Txp, count: number) {
+  let res
   while (count > 0) {
+    try {
+      res = await txpoolStatus()
+      ora.warn(`txpool: ${JSON.stringify(utils.hexToNumber(res.res.pending))}`)
+      // Max txpool pending is 223
+      if (utils.hexToNumber(res.res.pending) >= 223) {
+        ora.info('Txpool is full wait ')
+        try {
+          await sleep(3000)
+        } catch (s) {
+          ora.warn(`Error while sleeping: ${JSON.stringify(s)}`)
+        }
+      }
+    } catch (e) {
+      ora.warn(`Error while getting txpool status: ${JSON.stringify(e)}`)
+    }
+
     await fillAccountsWithEther(txParams)
     count--
   }
@@ -114,7 +152,6 @@ async function fillAccountsWithEther(txParams: Txp): Promise<any> {
     }
     txParams.gas = gp
     try {
-      ora.info(`Sending: ${txParams.value} wei to ${txParams.to} gas  ${txParams.gas} `)
       const done = await send(txParams, privateKey)
       ora.info(`Tx hash: ${JSON.stringify(done.res)}`)
     } catch (error) {
