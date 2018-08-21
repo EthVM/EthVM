@@ -8,6 +8,7 @@ import { bufferToHex, generateAddress, toBuffer } from 'ethereumjs-util'
 import Ora from 'ora'
 import * as utils from 'web3-utils'
 
+import { resolve } from 'dns'
 import data from './accounts.json'
 
 const { accounts, tokencontract, from } = data
@@ -50,7 +51,7 @@ function send(txP: Txp, privateKey: Buffer): Promise<Result> {
   return new Promise((resolve, reject) => {
     r.call(
       'eth_getTransactionCount',
-      [txP.from, 'latest'],
+      [txP.from, 'pending'],
       (e: Error, res: any): void => {
         const nonce = parseInt(res)
         txP.nonce = '0x' + nonce.toString(16)
@@ -74,12 +75,12 @@ function send(txP: Txp, privateKey: Buffer): Promise<Result> {
   })
 }
 
-function ethcall(txParams: Txp): Promise<any> {
+function estimategas(txParams: Txp): Promise<any> {
   txParams.nonce = ''
   return new Promise((resolve, reject) => {
     r.call(
-      'eth_call',
-      [txParams, 'latest'],
+      'eth_estimateGas',
+      [{ txParams }],
       (e: Error, res: any): void => {
         if (e) {
           reject(e)
@@ -91,13 +92,29 @@ function ethcall(txParams: Txp): Promise<any> {
   })
 }
 
+async function keepfilling(txParams: Txp, count: number) {
+  while (count > 0) {
+    await fillAccountsWithEther(txParams)
+    count--
+  }
+}
+
 async function fillAccountsWithEther(txParams: Txp): Promise<any> {
+  let gp = '0x7B0C'
   for (const account of accounts) {
     txParams.to = account.address
     txParams.value = '0x2000000000000000'
     const privateKey = Buffer.from(from.key, 'hex')
     try {
-      ora.info(`Sending: ${txParams.value} wei to ${txParams.to}`)
+      const r = await estimategas(txParams)
+      gp = r.res
+    } catch (e) {
+      gp = '0x7B0C'
+      ora.warn(`Error getting gas: ${JSON.stringify(e)} `)
+    }
+    txParams.gas = gp
+    try {
+      ora.info(`Sending: ${txParams.value} wei to ${txParams.to} gas  ${txParams.gas} `)
       const done = await send(txParams, privateKey)
       ora.info(`Tx hash: ${JSON.stringify(done.res)}`)
     } catch (error) {
@@ -235,11 +252,11 @@ commander
   })
 
 commander
-  .command('fill')
+  .command('fill <count>')
   .alias('f')
-  .action(() => {
+  .action(count => {
     ora.info('Filling accounts with ether...').start()
-    fillAccountsWithEther(txParams)
+    keepfilling(txParams, count)
   })
 
 commander
