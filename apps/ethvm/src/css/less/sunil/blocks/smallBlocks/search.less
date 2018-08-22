@@ -1,3 +1,4 @@
+@import '~lessPath/sunil/globalVars';
 @placeholder-color: #8896a3;
 
 ::placeholder {
@@ -60,7 +61,7 @@
   }
 }
 
-@media all and (max-width: 799px) {
+@media all and (max-width: @bp-large) {
   .search {
     grid-template-columns: 5fr 1fr;
   }
