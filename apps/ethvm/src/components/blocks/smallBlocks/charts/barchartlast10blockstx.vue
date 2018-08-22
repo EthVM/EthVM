@@ -6,7 +6,6 @@
     :chartTitle="newTitle"
     :chartDescription="newDescription"
     :redraw="redraw"></vue-chart>
-  </div>
 </div>
 </template>
 
@@ -14,6 +13,7 @@
 import Vue from 'vue'
 import sEvents from '@app/configs/socketEvents.json'
 import BN from 'bignumber.js'
+import { Block } from '@app/libs'
 
 const MAX_ITEMS = 10
 const title = 'Tx Summary'
@@ -83,18 +83,18 @@ export default Vue.extend({
       this.chartData = this.initData
       this.redraw = true
     })
-    this.$eventHub.$on(sEvents.newBlock, _block => {
+    this.$eventHub.$on(sEvents.newBlock, block => {
       if (this.chartData.datasets[0]) {
         this.redraw = false
-        if (!_block.getIsUncle()) {
-          const _tempD = _block.getStats()
-          this.chartData.labels.push(_block.getNumber().toNumber())
+        if (!block.getIsUncle()) {
+          const stats = block.getStats()
+          this.chartData.labels.push(block.getNumber().toNumber())
           this.chartData.labels.shift()
-          this.chartData.datasets[0].data.push(_tempD.pendingTxs)
+          this.chartData.datasets[0].data.push(stats.pendingTxs)
           this.chartData.datasets[0].data.shift()
-          this.chartData.datasets[1].data.push(_tempD.success)
+          this.chartData.datasets[1].data.push(stats.success)
           this.chartData.datasets[1].data.shift()
-          this.chartData.datasets[2].data.push(_tempD.failed)
+          this.chartData.datasets[2].data.push(stats.failed)
           this.chartData.datasets[2].data.shift()
         }
       }
@@ -106,19 +106,24 @@ export default Vue.extend({
   },
   computed: {
     initData() {
-      const data = {
+      const data: {
+        labels: Array<string>
+        sData: Array<BN>
+        fData: Array<BN>
+        pData: Array<BN>
+      } = {
         labels: [],
         sData: [],
         fData: [],
         pData: []
       }
-      const latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
-      latestBlocks.forEach(_block => {
-        data.labels.unshift(_block.getNumber().toNumber())
-        const _tempD = _block.getStats()
-        data.sData.unshift(new BN(_tempD.success).toNumber())
-        data.fData.unshift(new BN(_tempD.failed).toNumber())
-        data.pData.unshift(new BN(_tempD.pendingTxs).toNumber())
+      const latestBlocks: Array<Block> = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
+      latestBlocks.forEach((block: Block) => {
+        data.labels.unshift(block.getNumber().toNumber())
+        const stats = block.getStats()
+        data.sData.unshift(new BN(stats.successfulTxs))
+        data.fData.unshift(new BN(stats.failedTxs))
+        data.pData.unshift(new BN(stats.pendingTxs))
       })
       return {
         labels: data.labels,

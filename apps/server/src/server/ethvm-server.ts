@@ -15,7 +15,7 @@ import {
   TxsPayload
 } from '@app/server/core/payloads'
 import { Streamer, StreamerEvents } from '@app/server/core/streams'
-import { Block, BlocksService, mappers } from '@app/server/modules/blocks'
+import { Block, BlocksService, mappers, SmallBlock } from '@app/server/modules/blocks'
 import { ChartService } from '@app/server/modules/charts'
 import { ExchangeService } from '@app/server/modules/exchanges'
 import { Tx, TxsService } from '@app/server/modules/txs'
@@ -154,7 +154,7 @@ export class EthVMServer {
     return SocketIO(server)
   }
 
-  private onNewBlockEvent = (block: Block): void => {
+  private onNewBlockEvent = (block: SmallBlock): void => {
     logger.info(`EthVMServer - onNewBlockEvent / Block: ${bufferToHex(block.hash)}`)
     const blockHash = bufferToHex(block.hash)
     this.io.to(blockHash).emit(`${blockHash}_update`, block)

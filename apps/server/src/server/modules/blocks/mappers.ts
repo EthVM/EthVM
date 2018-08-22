@@ -35,8 +35,8 @@ const toBlockStats = (txs: Tx[] = []): BlockStats => {
     const zero = utils.toHex(0)
     return {
       blockTime: zero,
-      failed: zero,
-      success: zero,
+      failedTxs: zero,
+      successfulTxs: zero,
       avgGasPrice: zero,
       avgTxFees: zero
     }
@@ -60,9 +60,9 @@ const toBlockStats = (txs: Tx[] = []): BlockStats => {
   })
 
   return {
-    blockTime: utils.toHex(0),
-    failed: utils.toHex(txStatus.failed),
-    success: utils.toHex(txStatus.success),
+    blockTime: utils.toHex(0), // We don't need this information, so we harcoded this value
+    successfulTxs: utils.toHex(txStatus.success),
+    failedTxs: utils.toHex(txStatus.failed),
     avgGasPrice: utils.toHex(txStatus.totGasPrice.div(txs.length).integerValue(BigNumber.ROUND_CEIL)),
     avgTxFees: utils.toHex(txStatus.totTxFees.div(txs.length).integerValue(BigNumber.ROUND_CEIL))
   }

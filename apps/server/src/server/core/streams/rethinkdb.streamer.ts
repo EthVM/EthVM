@@ -4,6 +4,7 @@ import { Block } from '@app/server/modules/blocks'
 import { Tx } from '@app/server/modules/txs'
 import { VmService } from '@app/server/modules/vm'
 import { RethinkEthVM } from '@app/server/repositories'
+import { mappers } from '@app/server/modules/blocks'
 import EventEmitter, { ListenerFn } from 'eventemitter3'
 import * as r from 'rethinkdb'
 
@@ -34,9 +35,13 @@ export class RethinkDbStreamer implements Streamer {
     if (block.stateRoot) {
       this.vmService.setStateRoot(block.stateRoot)
     }
-    // Clear txs as those are being transmitted by its own channel
-    block.transactions = []
-    this.emitter.emit(StreamerEvents.newBlock, block)
+
+    // TODO: This calculation should be removed from here as we are storing this data inside block_metrics
+    const bs = mappers.toBlockStats(block.transactions || [])
+    block.blockStats = bs
+    const sb = mappers.toSmallBlock(block)
+
+    this.emitter.emit(StreamerEvents.newBlock, sb)
   }
 
   public onNewTxs(txs: Tx[]) {
@@ -54,18 +59,13 @@ export class RethinkDbStreamer implements Streamer {
       .table(RethinkEthVM.tables.blocks)
       .changes()
       .map(change => change('new_val'))
-      .merge(block => {
+      .merge(b => {
         return {
           transactions: r
             .table(RethinkEthVM.tables.txs)
-            .getAll(r.args(block('transactionHashes')))
+            .getAll(r.args(b('transactionHashes')))
             .coerceTo('array'),
-          blockStats: {
-            pendingTxs: r
-              .table('data')
-              .get('cached')
-              .getField('pendingTxs')
-          }
+          blockStats: r.table(RethinkEthVM.tables.blocks_metrics).get(b('hash'))
         }
       })
       .run(this.conn)

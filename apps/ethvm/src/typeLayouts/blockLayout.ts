@@ -2,8 +2,8 @@ import { Block, Tx } from '@app/libs'
 
 interface IblockStats {
   blockTime: string
-  failed: string
-  success: string
+  failedTxs: string
+  successfulTxs: string
   avgGasPrice: string
   avgTxFees: string
   pendingTxs: number

@@ -1,13 +1,14 @@
 <template>
   <div id="GraphsLineChart" class="line-chart">
-
-     <vue-chart type="line" :data="chartData"
-                            :options="chartOptions"
-                            :redraw="redraw"
-                            :chartTitle="newTitle"
-                            :chartDescription="newDescription"
-                            unfilled="true"></vue-chart>
-
+    <vue-chart
+      type="line"
+      :data="chartData"
+      :options="chartOptions"
+      :redraw="redraw"
+      :chartTitle="newTitle"
+      :chartDescription="newDescription"
+      unfilled="true">
+    </vue-chart>
   </div>
 </template>
 
@@ -16,6 +17,7 @@ import Vue from 'vue'
 import sEvents from '@app/configs/socketEvents.json'
 import BN from 'bignumber.js'
 import ethUnits from 'ethereumjs-units'
+import { Block } from '@app/libs'
 
 const title = 'Average Tx Costs'
 const description = 'Average transaction fees and average gas price in the last 10 blocks'
@@ -82,16 +84,16 @@ export default Vue.extend({
       this.chartData = this.initData
       this.redraw = true
     })
-    this.$eventHub.$on(sEvents.newBlock, _block => {
+    this.$eventHub.$on(sEvents.newBlock, block => {
       if (this.chartData.datasets[0]) {
         this.redraw = false
-        if (!_block.getIsUncle()) {
-          const _tempD = _block.getStats()
-          this.chartData.labels.push(_block.getNumber().toNumber())
+        if (!block.getIsUncle()) {
+          const stats = block.getStats()
+          this.chartData.labels.push(block.getNumber().toNumber())
           this.chartData.labels.shift()
-          this.chartData.datasets[0].data.push(ethUnits.convert(new BN(_tempD.avgTxFees).toFixed(), 'wei', 'eth').substr(0, 8))
+          this.chartData.datasets[0].data.push(ethUnits.convert(new BN(stats.avgTxFees).toFixed(), 'wei', 'eth').substr(0, 8))
           this.chartData.datasets[0].data.shift()
-          this.chartData.datasets[1].data.push(ethUnits.convert(new BN(_tempD.avgGasPrice).toFixed(), 'wei', 'gwei').substr(0, 5))
+          this.chartData.datasets[1].data.push(ethUnits.convert(new BN(stats.avgGasPrice).toFixed(), 'wei', 'gwei').substr(0, 5))
           this.chartData.datasets[1].data.shift()
         }
       }
@@ -103,17 +105,21 @@ export default Vue.extend({
   },
   computed: {
     initData() {
-      const data = {
+      const data: {
+        labels: Array<string>
+        avgFees: Array<BN>
+        avgPrice: Array<BN>
+      } = {
         labels: [],
         avgFees: [],
         avgPrice: []
       }
       const latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
-      latestBlocks.forEach(_block => {
-        data.labels.unshift(_block.getNumber().toNumber())
-        const _tempD = _block.getStats()
-        data.avgFees.unshift(ethUnits.convert(new BN(_tempD.avgTxFees).toFixed(), 'wei', 'eth').substr(0, 8))
-        data.avgPrice.unshift(ethUnits.convert(new BN(_tempD.avgGasPrice).toFixed(), 'wei', 'gwei').substr(0, 5))
+      latestBlocks.forEach((block: Block) => {
+        data.labels.unshift(block.getNumber().toNumber())
+        const stats = block.getStats()
+        data.avgFees.unshift(ethUnits.convert(new BN(stats.avgTxFees).toFixed(), 'wei', 'eth').substr(0, 8))
+        data.avgPrice.unshift(ethUnits.convert(new BN(stats.avgGasPrice).toFixed(), 'wei', 'gwei').substr(0, 5))
       })
       return {
         labels: data.labels,
