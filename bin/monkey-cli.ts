@@ -326,8 +326,8 @@ commander
     ora.info('Deploying token contract and sending tokens to all accounts...').start()
     deployContract(txParams).then(
       (value: Result): void => {
-        ora.info(`Deploying Contract, TX hash :, ${JSON.stringify(value.res)}`)
-        ora.info(`npm run monkey txdetail <txhash>`)
+        ora.info(`Deploying contract... tx hash: ${JSON.stringify(value.res)}`)
+        ora.info(`yarn monkey txdetail <txhash>`)
       }
     )
   })
@@ -343,8 +343,8 @@ commander
           ora.info(`Wait let contract TX is get confirmed `)
         } else {
           const ca = generateAddress(toBuffer(detail.from), toBuffer(detail.nonce))
-          ora.info(`Contract is deployed, Address is  ${JSON.stringify(bufferToHex(ca))}`)
-          ora.info(`npm run monkey start  ${JSON.stringify(bufferToHex(ca))}`)
+          ora.info(`Contract deployed, address is: ${JSON.stringify(bufferToHex(ca))}`)
+          ora.info(`yarn monkey start  ${JSON.stringify(bufferToHex(ca))}`)
         }
       }
     )
