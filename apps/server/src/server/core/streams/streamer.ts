@@ -5,7 +5,7 @@ import { ListenerFn } from 'eventemitter3'
 export const StreamerEvents = {
   newBlock: 'onNewBlock',
   newTx: 'onNewTx',
-  pendingTx: 'onNewPendingTx'
+  newPendingTx: 'onNewPendingTx'
 }
 
 export interface Streamer {
@@ -13,6 +13,6 @@ export interface Streamer {
   removeListener(eventName: string, fn?: ListenerFn)
 
   onNewBlock(block: Block)
-  onNewTx(tx: Tx)
+  onNewTxs(txs: Tx[])
   onNewPendingTx(tx: Tx)
 }

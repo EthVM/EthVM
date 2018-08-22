@@ -1,6 +1,7 @@
 import config from '@app/config'
 import { Callback } from '@app/interfaces'
 import { logger } from '@app/logger'
+import * as c from '@app/server/core/constants/server.json'
 import { errors } from '@app/server/core/exceptions'
 import {
   AddressTxsPagesPayload,
@@ -13,19 +14,17 @@ import {
   TokensBalancePayload,
   TxsPayload
 } from '@app/server/core/payloads'
-import { Block, BlocksService, mappers } from '@app/server/modules/blocks'
+import { Streamer, StreamerEvents } from '@app/server/core/streams'
+import { Block, BlocksService, mappers, SmallBlock } from '@app/server/modules/blocks'
+import { ChartService } from '@app/server/modules/charts'
+import { ExchangeService } from '@app/server/modules/exchanges'
 import { Tx, TxsService } from '@app/server/modules/txs'
 import { VmService } from '@app/server/modules/vm'
 import { CacheRepository } from '@app/server/repositories'
-import BigNumber from 'bignumber.js'
 import { bufferToHex } from 'ethereumjs-util'
 import * as fs from 'fs'
 import * as http from 'http'
 import * as SocketIO from 'socket.io'
-import * as utils from 'web3-utils'
-import { Streamer, StreamerEvents } from './core/streams'
-import { ChartService } from './modules/charts'
-import { ExchangeService } from './modules/exchanges'
 
 export type SocketEventPayload =
   | AddressTxsPagesPayload
@@ -57,7 +56,6 @@ export class EthVMServer {
   public readonly io: SocketIO.Server
 
   private readonly events: Map<string, SocketEvent>
-  private previousBlockTime = new BigNumber(0)
 
   constructor(
     public readonly blockService: BlocksService,
@@ -66,8 +64,7 @@ export class EthVMServer {
     public readonly exchangesService: ExchangeService,
     public readonly vmService: VmService,
     private readonly streamer: Streamer,
-    private readonly ds: CacheRepository,
-    private readonly blockTime: number
+    private readonly ds: CacheRepository
   ) {
     this.io = this.createWSServer()
     this.events = new Map()
@@ -76,7 +73,8 @@ export class EthVMServer {
   public async start() {
     logger.debug('EthVMServer - start() / Registering for streamer events')
     this.streamer.addListener(StreamerEvents.newBlock, this.onNewBlockEvent)
-    this.streamer.addListener(StreamerEvents.pendingTx, this.onNewPendingTxsEvent)
+    this.streamer.addListener(StreamerEvents.newTx, this.onNewTxEvent)
+    this.streamer.addListener(StreamerEvents.newPendingTx, this.onNewPendingTxsEvent)
 
     logger.debug('EthVMServer - start() / Loading socket evens...')
     const events = fs.readdirSync(`${__dirname}/events/`)
@@ -113,6 +111,8 @@ export class EthVMServer {
               }
               return
             }
+
+            logger.info(`event -> ${event.id} / New event received!`)
 
             event
               .onEvent(this, socket, payload)
@@ -154,56 +154,24 @@ export class EthVMServer {
     return SocketIO(server)
   }
 
-  // TODO: This method should only receive the block and emit it directly
-  // This logic should not be here
-  private onNewBlockEvent = (block: Block): void => {
+  private onNewBlockEvent = (block: SmallBlock): void => {
     logger.info(`EthVMServer - onNewBlockEvent / Block: ${bufferToHex(block.hash)}`)
-
-    // Save state root if defined
-    if (block.stateRoot) {
-      this.vmService.setStateRoot(block.stateRoot)
-    }
-
-    // TODO: Remove this calculation from here, should be done while inserting the new block
-    // Calculate previous block time
-    const ts = new BigNumber(utils.toHex(block.timestamp))
-    if (!this.previousBlockTime) {
-      this.previousBlockTime = ts.minus(this.blockTime)
-    }
-
-    const currentBlockTime = ts.minus(this.previousBlockTime).abs()
-    if (!block.isUncle) {
-      this.previousBlockTime = new BigNumber(utils.toHex(block.timestamp))
-    }
-
-    // Generate block stats
-    const bstats = mappers.toBlockStats(block.transactions, currentBlockTime)
-    block.blockStats = { ...bstats, ...block.blockStats }
-
     const blockHash = bufferToHex(block.hash)
-    const smallBlock = mappers.toSmallBlock(block)
+    this.io.to(blockHash).emit(`${blockHash}_update`, block)
+    this.io.to(c.server.rooms.blocks).emit(c.server.events.new_block, block)
+  }
 
-    // Send to client
-    this.io.to(blockHash).emit(blockHash + '_update', smallBlock)
-    this.io.to('blocks').emit('newBlock', smallBlock)
-
-    this.ds.putBlock(block)
-
-    const txs = block.transactions || []
-    if (txs.length > 0) {
-      txs.forEach(tx => {
-        const txHash = bufferToHex(tx.hash)
-        this.io.to(txHash).emit(txHash + '_update', tx)
-      })
-      this.io.to('txs').emit('newTx', txs)
-      this.ds.putTransactions(txs)
-    }
+  private onNewTxEvent = (tx: Tx): void => {
+    logger.info(`EthVMServer - onNewTxEvent / Tx: ${tx}`)
+    const txHash = bufferToHex(tx.hash)
+    this.io.to(txHash).emit(`${txHash}_update`, tx)
+    this.io.to(c.server.rooms.txs).emit(c.server.events.new_tx, [tx])
   }
 
   private onNewPendingTxsEvent = (tx: Tx): void => {
     logger.info(`EthVMServer - onNewPendingTxsEvent / Tx: ${tx}`)
     const txHash = bufferToHex(tx.hash)
     this.io.to(txHash).emit(`${txHash}_update`, tx)
-    this.io.to('pendingTxs').emit('newPendingTx', tx)
+    this.io.to(c.server.rooms.pending_txs).emit(c.server.events.new_pending_tx, tx)
   }
 }

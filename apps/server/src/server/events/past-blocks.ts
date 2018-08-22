@@ -10,19 +10,8 @@ const pastBlocksEvent: SocketEvent = {
     }
   },
 
-  // TODO: Remove fliping blocks from here (blocks should be ordered properly from db)
-  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Block[]> =>
-    server.blockService.getBlocks().then(
-      (_blocks: Block[]): Block[] => {
-        const blocks: Block[] = []
-        _blocks.forEach(
-          (block: Block): void => {
-            blocks.unshift(block)
-          }
-        )
-        return blocks
-      }
-    )
+  // TODO: Remove hardcoded 64 value
+  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Block[]> => server.blockService.getBlocks(64, 0)
 }
 
 export default pastBlocksEvent

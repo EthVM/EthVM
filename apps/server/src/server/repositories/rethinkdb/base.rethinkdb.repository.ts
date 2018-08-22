@@ -3,8 +3,9 @@ import { Repository } from '@app/server/repositories'
 export const RethinkEthVM = {
   tables: {
     blocks: 'blocks',
+    data: 'data',
     txs: 'transactions',
-    blocks_metrics: 'blocks_metrics'
+    blocks_metrics: 'block_stats'
   },
   indexes: {}
 }

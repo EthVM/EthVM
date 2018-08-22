@@ -103,13 +103,12 @@ async function bootstrapServer() {
   // Create streamer
   // ---------------
   logger.debug('bootstrapper -> Initializing streamer')
-  const streamer = new RethinkDbStreamer(rConn, emitter)
+  const streamer = new RethinkDbStreamer(rConn, emitter, vmService)
   await streamer.initialize()
 
   // Create server
   logger.debug('bootstrapper -> Initializing server')
-  const blockTime: number = config.get('eth.block_time')
-  const server = new EthVMServer(blockService, txsService, chartsService, exchangeService, vmService, streamer, ds, blockTime)
+  const server = new EthVMServer(blockService, txsService, chartsService, exchangeService, vmService, streamer, ds)
   await server.start()
 }
 

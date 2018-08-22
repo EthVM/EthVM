@@ -1,22 +1,31 @@
 <template>
-  <block-component :title="blockTitle" backgroundColor="color5" :value="hashRate" :icon-name="blockIconType" :icon-color="blockIconColor">
+  <block-component
+    :title="blockTitle"
+    backgroundColor="color5"
+    :value="hashRate"
+    :icon-name="blockIconType"
+    :icon-color="blockIconColor">
   </block-component>
 </template>
 
 <script lang="ts">
 import sEvents from '@app/configs/socketEvents.json'
 import { Block } from '@app/libs'
-import bn from 'bignumber.js'
+import BN from 'bignumber.js'
 import Vue from 'vue'
 
-const getAvgHashRate = (_blocks: Block[]): number => {
-  let avgTime = new bn(0)
-  _blocks.forEach(_block => {
-    const _tempD = _block.getStats()
-    avgTime = avgTime.add(new bn(_tempD.blockTime))
+const getAvgHashRate = (blocks: Block[]): number => {
+  if (blocks.length === 0) {
+    return new BN(0).toNumber()
+  }
+
+  let avgTime = new BN(0)
+  blocks.forEach(block => {
+    const stats = block.getStats()
+    avgTime = avgTime.add(new BN(stats.blockTime))
   })
-  avgTime = avgTime.div(_blocks.length)
-  return new bn(_blocks[0].getDifficulty().toNumber())
+  avgTime = avgTime.div(blocks.length)
+  return new BN(blocks[0].getDifficulty().toNumber())
     .div(avgTime)
     .div('1e12')
     .round(2)

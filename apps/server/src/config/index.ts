@@ -123,11 +123,6 @@ const config = convict({
         env: 'ETHVM_RPC_ETH_PORT'
       }
     },
-    block_time: {
-      default: '14 seconds',
-      format: 'duration',
-      env: 'ETHVM_ETH_BLOCK_TIME'
-    },
     state_root: {
       default: 'd7f8974fb5ac78d9ac099b9ad5018bedc2ce0a72dad1827a1709da30580f0544',
       format: String,

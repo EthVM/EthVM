@@ -7,7 +7,7 @@ export interface SmallBlock {
   hash: Buffer
   miner: Buffer
   timestamp: Buffer
-  transactionCount: number
+  transactionCount?: number
   uncleHashes?: Buffer[]
   isUncle: boolean
   totalBlockReward?: Buffer
@@ -19,7 +19,7 @@ export interface SmallBlock {
   blockStats?: BlockStats
 }
 
-export interface Block {
+export interface Block extends SmallBlock {
   number: Buffer
   intNumber: number
   hash: Buffer
