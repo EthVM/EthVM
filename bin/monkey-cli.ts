@@ -13,6 +13,9 @@ import data from './accounts.json'
 
 const { accounts, tokencontract, from } = data
 
+let contractAddress: string = ''
+let contractTx: string = ''
+
 const version = '1.0.0'
 
 const ora = new Ora({
@@ -59,7 +62,7 @@ function send(txP: Txp, privateKey: Buffer): Promise<Result> {
         const tx = new EthereumTx(txP)
         tx.sign(privateKey)
         const serializedTx = '0x' + tx.serialize().toString('hex')
-        ora.info(`Sending: ${txP.value} wei to ${txP.to} gas  ${txP.gas}  nonce  ${txP.nonce} `)
+        ora.info(`Tx:  Value: ${txP.value}  To: ${txP.to} From: ${txP.from} GAS: ${txP.gas}  Nonce:  ${txP.nonce} `)
         r.call(
           'eth_sendRawTransaction',
           [serializedTx],
@@ -114,6 +117,10 @@ function sleep(ms) {
 }
 
 async function keepfilling(txParams: Txp, count: number) {
+  // const done = await deployContract(txParams)
+  // contractTx = done.res
+  // contractAddress = done.contractAddress
+
   let res
   while (count > 0) {
     try {
@@ -131,8 +138,21 @@ async function keepfilling(txParams: Txp, count: number) {
     } catch (e) {
       ora.warn(`Error while getting txpool status: ${JSON.stringify(e)}`)
     }
+try{
 
-    await fillAccountsWithEther(txParams)
+      const txDetail = await txDetails(contractTx)
+      ora.info(txDetail)
+
+
+
+}catch(e){
+   ora.info(e)
+
+}
+   await fillAccountsWithEther(txParams)
+   txParams.from = from.address
+    await contractTxs(txParams,'0xe737a1424cd3e2d9a0729a3855e74ab4da516107')
+
     count--
   }
 }
@@ -178,7 +198,6 @@ async function sendRandomTX(txParams: Txp, iter: number = 10): Promise<any> {
     }
 
     const privateKey = Buffer.from(accounts[from].key, 'hex')
-
     txParams.to = accounts[to].address
     txParams.from = accounts[from].address
 
@@ -213,28 +232,45 @@ async function fillAndSend(txParams: Txp): Promise<any> {
   return Promise.resolve()
 }
 
-async function contractTxs(txParams: Txp): Promise<any> {
-  const privateKey = Buffer.from(from.key, 'hex')
-
-  let contractAddress: string = ''
-  try {
-    ora.info('Deploying contract...')
-    const done = await send(txParams, privateKey)
-    ora.info(`Contract address: ${done.contractAddress}`)
-    contractAddress = done.contractAddress
-  } catch (error) {
-    ora.fail(JSON.stringify(error))
-  }
-
+async function deployContract(txParams: Txp): Promise<Result> {
+  // change from of deploy and sendcontractTx
+  const privateKey = Buffer.from('d069c15e0df2e63ee62342c5c1983cb0c4ea50a915fceeaaeacf0865f63424be', 'hex')
   txParams.to = ''
   txParams.value = ''
+  txParams.from = '0x9319b0835c2DB1a31E067b5667B1e9b0AD278215'
   txParams.data = tokencontract.data
   txParams.gas = '0x47B760'
-  txParams.to = contractAddress
+  return send(txParams, privateKey)
+}
+
+async function contractTxs(txParams: Txp,address: string): Promise<any> {
+  const privateKey = Buffer.from('d069c15e0df2e63ee62342c5c1983cb0c4ea50a915fceeaaeacf0865f63424be', 'hex')
+  txParams.to = ''
+  txParams.value = ''
+  txParams.from = '0x9319b0835c2DB1a31E067b5667B1e9b0AD278215'
+  txParams.data = tokencontract.data
+  txParams.gas = '0x47B760'
+  txParams.to = address
+  try {
+    await sleep(3000)
+  } catch (s) {
+    ora.warn(`Error while sleeping: ${JSON.stringify(s)}`)
+  }
 
   // send token to all accounts
   for (const account of accounts) {
+    let gas: string = ''
+
     txParams.data = bufferToHex(simpleEncode('transfer(address,uint256):(bool)', account.address, 6000))
+
+    try {
+      const r = await estimategas(txParams)
+      gas = r.res
+    } catch (e) {
+      gas = '0x7B0C'
+      ora.warn(`Error getting gas: ${JSON.stringify(e)} `)
+    }
+    txParams.gas = gas
     try {
       ora.info(`Calling transfer of contract address: ${JSON.stringify(txParams.to)}`)
       const done = await send(txParams, privateKey)
@@ -280,6 +316,15 @@ async function txDetails(txhash): Promise<any> {
   })
 }
 
+
+function contractdeploy(txParams: Txp): Promise<any> {
+  return new Promise(async (resolve, reject) => {
+    deployContract(txParams).then((value: Result) => {
+      ora.info(`Tx Hash ${JSON.stringify(value.res)}` )
+    })
+  })
+}
+
 commander
   .command('random')
   .alias('r')
@@ -301,8 +346,23 @@ commander
   .alias('d')
   .action(() => {
     ora.info('Deploying token contract and sending tokens to all accounts...').start()
-    contractTxs(txParams)
+    contractdeploy(txParams)
   })
+
+commander
+  .command('txdetail')
+  .alias('tx')
+  .action((tx) => {
+    ora.info('Deploying token contract and sending tokens to all accounts...').start()
+    txDetails(tx).then((detail):void =>{
+      if( detail.blockNumber == null){
+        ora.info(`Wait let contract TX is get confirmed `)
+      }else{
+        const ca = generateAddress(toBuffer(detail.from), toBuffer(detail.nonce))
+        ora.info(`Contract Address  ${JSON.stringify(bufferToHex(ca))}`)
+      }
+    })
+   })
 
 commander
   .command('balance')
