@@ -34,6 +34,8 @@ export class RethinkDbStreamer implements Streamer {
     if (block.stateRoot) {
       this.vmService.setStateRoot(block.stateRoot)
     }
+    // Clear txs as those are being transmitted by its own channel
+    block.transactions = []
     this.emitter.emit(StreamerEvents.newBlock, block)
   }
 
