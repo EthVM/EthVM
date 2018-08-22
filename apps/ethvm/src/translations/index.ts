@@ -1,10 +1,10 @@
+import en_US from '@app/translations/en_US.json'
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
-import * as en_US from './en_US.json'
 
 const defaultLocale: string = 'en_US'
 const messages: any = {
-  en_US,
+  en_US
 }
 
 Vue.use(VueI18n)

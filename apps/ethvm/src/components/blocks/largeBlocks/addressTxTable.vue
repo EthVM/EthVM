@@ -8,7 +8,7 @@
     </div>
     <div v-else class="block-body">
       <div class="block-header" v-if="showheader === true">
-        <li>{{ $t( 'tableHeader.txn' )}}</li>
+        <li>{{ $t( 'tableHeader.txN' )}}</li>
         <li class="type"></li>
         <li class="eth">{{ $t( 'common.eth' )}}</li>
         <li class="limit">{{ $t( 'gas.limit' )}}</li>
@@ -68,72 +68,68 @@
           </div>
         </li>
       </div>
+      <div class="footnote">
+        <ul>
+          <li><i class="fa fa-check success" aria-hidden="true"></i> {{ $t('footnote.success') }}</li>
+          <li><i class="fa fa-times failed" aria-hidden="true"></i> {{ $t('footnote.failed') }}</li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-  import Vue from 'vue'
+import Vue from 'vue'
 
-  export default Vue.extend({
-    name: 'TableTransactions',
-    props: ['transactions', 'showheader', 'account', 'filter', 'total', 'isPending'],
-    methods: {
-      getType(tx) {
-        if (
-          tx
+export default Vue.extend({
+  name: 'TableTransactions',
+  props: ['transactions', 'showheader', 'account', 'filter', 'total', 'isPending'],
+  methods: {
+    getType(tx) {
+      if (
+        tx
           .getFrom()
           .toString()
           .toLowerCase() === this.account.toString().toLowerCase()
-        ) {
-          return true
-        } else {
-          return false
-        }
-      },
-      getShortEthValue(newEthValue, isBool) {
-        const length = newEthValue.length
-        let isShort = false
-        if (length > 6) {
-          newEthValue = newEthValue.slice(0, 6) + '...'
-          isShort = true
-        }
-        if (!isBool) {
-          return newEthValue
-        }
-        else {
-          return isShort
-        }
+      ) {
+        return true
       }
+      return false
     },
-    computed: {
-      getText() {
-        if (!this.isPending) {
-          if (this.filter === 'all') {
-            return this.$i18n.t( 'message.txAll')
-          }
-          else if (this.filter === 'in') {
-            return this.$i18n.t( 'message.txIn')
-          }
-          else {
-            return this.$i18n.t( 'message.txOut')
-          }
-        } else {
-          if (this.filter === 'all') {
-            return this.$i18n.t( 'message.txPen')
-          }
-          else if (this.filter === 'in') {
-            return this.$i18n.t( 'message.txPenIn')
-          }
-          else {
-            return this.$i18n.t( 'message.txPenOut')
-          }
-        }
+    getShortEthValue(newEthValue, isBool) {
+      const length = newEthValue.length
+      let isShort = false
+      if (length > 6) {
+        newEthValue = newEthValue.slice(0, 6) + '...'
+        isShort = true
       }
+      if (!isBool) {
+        return newEthValue
+      }
+      return isShort
     }
-  })
+  },
+  computed: {
+    getText() {
+      if (!this.isPending) {
+        if (this.filter === 'all') {
+          return this.$i18n.t('message.txAll')
+        } else if (this.filter === 'in') {
+          return this.$i18n.t('message.txIn')
+        }
+        return this.$i18n.t('message.txOut')
+      }
+      if (this.filter === 'all') {
+        return this.$i18n.t('message.txPen')
+      } else if (this.filter === 'in') {
+        return this.$i18n.t('message.txPenIn')
+      }
+      return this.$i18n.t('message.txPenOut')
+    }
+  }
+})
 </script>
 
 <style scoped lang="less">
-  @import '~lessPath/sunil/blocks/largeBlocks/addressTxTable.less';
+@import '~lessPath/sunil/blocks/largeBlocks/addressTxTable.less';
 </style>

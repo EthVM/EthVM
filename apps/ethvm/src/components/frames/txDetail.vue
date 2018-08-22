@@ -34,11 +34,11 @@
 </template>
 
 <script lang="ts">
-import { Block, common, Tx } from '@/libs'
-import chartOptions from '@/sampleData/chartData.json'
-import store from '@/states'
+import { Block, common, Tx } from '@app/libs'
+import chartOptions from '@app/sampleData/chartData.json'
+import store from '@app/states'
 import Vue from 'vue'
-import sEvents from '../../configs/socketEvents.json'
+import sEvents from '@app/configs/socketEvents.json'
 
 export default Vue.extend({
   name: 'tx-Detail',

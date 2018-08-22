@@ -78,10 +78,10 @@
 </template>
 
 <script lang="ts">
-import { common, Tx } from '@/libs'
+import { common, Tx } from '@app/libs'
 import bn from 'bignumber.js'
 import ethUnits from 'ethereumjs-units'
-import sEvents from '../../configs/socketEvents.json'
+import sEvents from '@app/configs/socketEvents.json'
 import Vue from 'vue'
 
 const MAX_ITEMS = 20
@@ -183,6 +183,6 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped="" lang="less">
+<style scoped lang="less">
 @import '~lessPath/sunil/frames/address.less';
 </style>

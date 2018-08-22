@@ -53,56 +53,53 @@
 </template>
 
 <script lang="ts">
-  import {
-    common
-  } from '@/libs'
-  import blockies from 'ethereum-blockies'
-  import NumberFormatter from 'number-formatter'
-  import Vue from 'vue'
+import { common } from '@app/libs'
+import blockies from 'ethereum-blockies'
+import NumberFormatter from 'number-formatter'
+import Vue from 'vue'
 
-  export default Vue.extend({
-    name: 'Address',
-    props: ['account'],
-    data() {
-      return {
-        showMore: false,
-        identicon: null,
-        domainName: ''
-      }
-    },
-    mounted() {
-      this.getIdenticon()
-    },
-    methods: {
-      getIdenticon() {
-        this.identicon = document.getElementById('icon')
-        this.identicon.style.backgroundImage =
-          'url(' +
-          blockies
+export default Vue.extend({
+  name: 'Address',
+  props: ['account'],
+  data() {
+    return {
+      showMore: false,
+      identicon: null,
+      domainName: ''
+    }
+  },
+  mounted() {
+    this.getIdenticon()
+  },
+  methods: {
+    getIdenticon() {
+      this.identicon = document.getElementById('icon')
+      this.identicon.style.backgroundImage =
+        'url(' +
+        blockies
           .create({
             seed: this.account.address,
             size: 5,
             scale: 3
           })
           .toDataURL() +
-          ')'
-      }
-    },
-    computed: {
-      formatEthBalance() {
-        return NumberFormatter('#,##0.#####', this.account.balance)
-      },
-      formatUSDBalance() {
-
-        return NumberFormatter('#,##0.##', this.account.balance * this.account.ethusd)
-      },
-      formatEthUSD() {
-        return NumberFormatter('#,##0.#####', this.account.ethusd)
-      }
+        ')'
     }
-  })
+  },
+  computed: {
+    formatEthBalance() {
+      return NumberFormatter('#,##0.#####', this.account.balance)
+    },
+    formatUSDBalance() {
+      return NumberFormatter('#,##0.##', this.account.balance * this.account.ethusd)
+    },
+    formatEthUSD() {
+      return NumberFormatter('#,##0.#####', this.account.ethusd)
+    }
+  }
+})
 </script>
 
-<style scoped="" lang="less">
-  @import '~lessPath/sunil/blocks/largeBlocks/detailComponent.less';
+<style scoped lang="less">
+@import '~lessPath/sunil/blocks/largeBlocks/detailComponent.less';
 </style>

@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import sEvents from '@/configs/socketEvents.json'
+import sEvents from '@app/configs/socketEvents.json'
 import BN from 'bignumber.js'
 import ethUnits from 'ethereumjs-units'
 
@@ -30,12 +30,12 @@ const DES = {
   OTHER: 'Average gas limit history in Ethereum blockchain in last '
 }
 
-let currentState = STATES.DAY
-let stateChanged = false
-let title = 'Gas Limit'
-let description = ''
-let MAX_ITEMS = 10
-let lineOptions = {
+const currentState = STATES.DAY
+const stateChanged = false
+const title = 'Gas Limit'
+const description = ''
+const MAX_ITEMS = 10
+const lineOptions = {
   title: {
     text: 'Average Gas Limit',
     lineHeight: 1
@@ -87,7 +87,7 @@ export default Vue.extend({
   beforeDestroy() {},
   computed: {
     initData() {
-      let data = {
+      const data = {
         labels: [],
         points: []
       }

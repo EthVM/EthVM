@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import sEvents from '@/configs/socketEvents.json'
+import sEvents from '@app/configs/socketEvents.json'
 import BN from 'bignumber.js'
 import Vue from 'vue'
 export default Vue.extend({
@@ -19,15 +19,14 @@ export default Vue.extend({
     getPendingTx() {
       if (!this.$store.getters.getBlocks[0]) {
         return this.$i18n.t('message.load')
-      } else {
-        const newBlockStat = this.$store.getters.getBlocks[0].getStats()
-        const pending = new BN(newBlockStat.pendingTxs).toNumber()
-        return pending
       }
+      const newBlockStat = this.$store.getters.getBlocks[0].getStats()
+      const pending = new BN(newBlockStat.pendingTxs).toNumber()
+      return pending
     }
   }
 })
 </script>
 
-<style scoped="" lang="less">
+<style scoped lang="less">
 </style>

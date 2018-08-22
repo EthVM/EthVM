@@ -86,35 +86,30 @@
 </template>
 
 <script lang="ts">
-  import {
-    Block,
-    common,
-    Tx
-  } from '@/libs'
-  import store from '@/states'
-  import Vue from 'vue'
+import { Block, common, Tx } from '@app/libs'
+import store from '@app/states'
+import Vue from 'vue'
 
-  export default Vue.extend({
-    name: 'TxView',
-    props: ['tx'],
-    data() {
-      return {}
-    },
-    methods: {
-      getStringStatus(isBool) {
-        if (isBool) {
-          return 'Successful'
-        } else {
-          return 'Failed'
-        }
-      },
-      getTxCost(price, used) {
-        return price * used
+export default Vue.extend({
+  name: 'TxView',
+  props: ['tx'],
+  data() {
+    return {}
+  },
+  methods: {
+    getStringStatus(isBool) {
+      if (isBool) {
+        return 'Successful'
       }
+      return 'Failed'
+    },
+    getTxCost(price, used) {
+      return price * used
     }
-  })
+  }
+})
 </script>
 
-<style scoped="" lang="less">
-  @import '~lessPath/sunil/blocks/largeBlocks/detailComponent.less';
+<style scoped lang="less">
+@import '~lessPath/sunil/blocks/largeBlocks/detailComponent.less';
 </style>

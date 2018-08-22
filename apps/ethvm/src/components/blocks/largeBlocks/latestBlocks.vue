@@ -91,67 +91,65 @@
 </template>
 
 <script lang="ts">
-  import sEvents from '@/configs/socketEvents.json'
-  import Visibility from 'visibilityjs'
-  import Vue from 'vue'
+import sEvents from '@app/configs/socketEvents.json'
+import Visibility from 'visibilityjs'
+import Vue from 'vue'
 
-  export default Vue.extend({
-    name: 'TablesLatestBlocks',
-    props: {
-      showHeader: {
-        type: Boolean,
-        default: false
-      }
-    },
-    data() {
-      return {
-        blocks: [],
-        showUncles: {}
-      }
-    },
-    methods: {
-      /* Uncles Methods: */
-      showHideUncle(_hash: string) {
-        this.$set(this.showUncles, _hash, !this.isUncleShown(_hash))
-      },
-      isUncleShown(_hash: string) {
-        return this.showUncles[_hash] ? this.showUncles[_hash] : false
-      },
-      /* Method to reduce reward string: */
-      getShortRewardValue(newRewardValue, isBool) {
-        const length = newRewardValue.length
-        let isShort = false
-        if (length > 8) {
-          newRewardValue = newRewardValue.slice(0, 8) + '...'
-          isShort = true
-        }
-        if (!isBool) {
-          return newRewardValue
-        }
-        else {
-          return isShort
-        }
-      }
-    },
-    created() {
-      this.blocks = this.$store.getters.getBlocks
-      this.$eventHub.$on(sEvents.newBlock, _block => {
-        if (Visibility.state() === 'visible') {
-          this.blocks = this.$store.getters.getBlocks
-        }
-      })
-    },
-    beforeDestroy() {
-      this.$eventHub.$off(sEvents.newBlock)
-    },
-    computed: {
-      getBlocks() {
-        return this.blocks.slice(0, this.maxItems)
-      }
+export default Vue.extend({
+  name: 'TablesLatestBlocks',
+  props: {
+    showHeader: {
+      type: Boolean,
+      default: false
     }
-  })
+  },
+  data() {
+    return {
+      blocks: [],
+      showUncles: {}
+    }
+  },
+  methods: {
+    /* Uncles Methods: */
+    showHideUncle(_hash: string) {
+      this.$set(this.showUncles, _hash, !this.isUncleShown(_hash))
+    },
+    isUncleShown(_hash: string) {
+      return this.showUncles[_hash] ? this.showUncles[_hash] : false
+    },
+    /* Method to reduce reward string: */
+    getShortRewardValue(newRewardValue, isBool) {
+      const length = newRewardValue.length
+      let isShort = false
+      if (length > 8) {
+        newRewardValue = newRewardValue.slice(0, 8) + '...'
+        isShort = true
+      }
+      if (!isBool) {
+        return newRewardValue
+      }
+      return isShort
+    }
+  },
+  created() {
+    this.blocks = this.$store.getters.getBlocks
+    this.$eventHub.$on(sEvents.newBlock, _block => {
+      if (Visibility.state() === 'visible') {
+        this.blocks = this.$store.getters.getBlocks
+      }
+    })
+  },
+  beforeDestroy() {
+    this.$eventHub.$off(sEvents.newBlock)
+  },
+  computed: {
+    getBlocks() {
+      return this.blocks.slice(0, this.maxItems)
+    }
+  }
+})
 </script>
 
-<style scoped="" lang="less">
-  @import '~lessPath/sunil/blocks/largeBlocks/blocksTable.less';
+<style scoped lang="less">
+@import '~lessPath/sunil/blocks/largeBlocks/blocksTable.less';
 </style>

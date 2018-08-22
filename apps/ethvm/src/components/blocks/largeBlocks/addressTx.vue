@@ -25,95 +25,94 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue'
+import Vue from 'vue'
 
-  export default Vue.extend({
-    name: 'TableTransactions',
-    props: ['address', 'transactions', 'isPending'],
-    data() {
-      return {
-        placeholder: 'addressTxSearch',
-        options: [{
-            text: this.$i18n.t( 'filter.all'),
-            value: 'all'
-          },
-          {
-            text: this.$i18n.t( 'filter.in'),
-            value: 'in'
-          },
-          {
-            text: this.$i18n.t( 'filter.out'),
-            value: 'out'
-          }
-        ],
-        filter: 'all',
-        inTx: [],
-        outTx: [],
-        recievedTx: false
-      }
-    },
-    methods: {
-      setFilter(option) {
-        this.filter = option
-      },
-      isActive(value) {
-        if (value === this.filter) {
-          return true
+export default Vue.extend({
+  name: 'TableTransactions',
+  props: ['address', 'transactions', 'isPending'],
+  data() {
+    return {
+      placeholder: 'addressTxSearch',
+      options: [
+        {
+          text: this.$i18n.t('filter.all'),
+          value: 'all'
+        },
+        {
+          text: this.$i18n.t('filter.in'),
+          value: 'in'
+        },
+        {
+          text: this.$i18n.t('filter.out'),
+          value: 'out'
         }
-        return false
-      },
-      getTxsType() {
-        let i
-        for (i = 0; i < this.transactions.length; i++) {
-          if (
-            this.transactions[i]
+      ],
+      filter: 'all',
+      inTx: [],
+      outTx: [],
+      recievedTx: false
+    }
+  },
+  methods: {
+    setFilter(option) {
+      this.filter = option
+    },
+    isActive(value) {
+      if (value === this.filter) {
+        return true
+      }
+      return false
+    },
+    getTxsType() {
+      let i
+      for (i = 0; i < this.transactions.length; i++) {
+        if (
+          this.transactions[i]
             .getFrom()
             .toString()
             .toLowerCase() === this.address.address.toLowerCase()
-          ) {
-            this.outTx.push(this.transactions[i])
-          } else {
-            this.inTx.push(this.transactions[i])
-          }
+        ) {
+          this.outTx.push(this.transactions[i])
+        } else {
+          this.inTx.push(this.transactions[i])
         }
-        this.recievedTx = true
+      }
+      this.recievedTx = true
+    }
+  },
+  computed: {
+    filteredTxs() {
+      if (this.filter === 'all') {
+        return this.transactions
+      }
+      if (this.transactions) {
+        if (!this.recievedTx) {
+          this.getTxsType()
+        }
+        if (this.filter === 'out') {
+          return this.outTx
+        }
+        if (this.filter === 'in') {
+          return this.inTx
+        }
       }
     },
-    computed: {
-      filteredTxs() {
+    getTotal() {
+      if (this.transactions) {
         if (this.filter === 'all') {
-          return this.transactions
+          return this.transactions.length
         }
-        if (this.transactions) {
-          if (!this.recievedTx) {
-            this.getTxsType()
-          }
-          if (this.filter === 'out') {
-            return this.outTx
-          }
-          if (this.filter === 'in') {
-            return this.inTx
-          }
+        if (this.filter === 'in') {
+          return this.inTx.length
         }
-      },
-      getTotal() {
-        if (this.transactions) {
-          if (this.filter === 'all') {
-            return this.transactions.length
-          }
-          if (this.filter === 'in') {
-            return this.inTx.length
-          }
-          else {
-            return this.outTx.length
-          }
-        }
-        return 0
+        return this.outTx.length
       }
+      return 0
     }
-  })
+  }
+})
 </script>
 
-<style scoped="" lang="less">
-  @import '~lessPath/sunil/blocks/largeBlocks/addressTx.less';
+<style scoped lang="less">
+@import '~lessPath/sunil/blocks/largeBlocks/addressTx.less';
 </style>

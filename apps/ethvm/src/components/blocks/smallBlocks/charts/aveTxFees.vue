@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import sEvents from '@/configs/socketEvents.json'
+import sEvents from '@app/configs/socketEvents.json'
 import BN from 'bignumber.js'
 import ethUnits from 'ethereumjs-units'
 
@@ -29,12 +29,12 @@ const DES = {
   BEGIN: 'Average transaction fees in Ethereum blockchain since the ',
   OTHER: 'Average transaction fees in Ethereum blockchain in last '
 }
-let currentState = STATES.DAY
-let stateChanged = false
-let title = 'Tx Fees'
-let description = ''
-let MAX_ITEMS = 10
-let lineOptions = {
+const currentState = STATES.DAY
+const stateChanged = false
+const title = 'Tx Fees'
+const description = ''
+const MAX_ITEMS = 10
+const lineOptions = {
   title: {
     text: 'Transaction Fees',
     lineHeight: 1
@@ -86,7 +86,7 @@ export default Vue.extend({
   beforeDestroy() {},
   computed: {
     initData() {
-      let data = {
+      const data = {
         labels: [],
         points: []
       }

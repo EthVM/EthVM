@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import sEvents from '@/configs/socketEvents.json'
+import sEvents from '@app/configs/socketEvents.json'
 import BN from 'bignumber.js'
 import ethUnits from 'ethereumjs-units'
 
@@ -21,13 +21,13 @@ const DES = {
   BEGIN: 'Top 5 Miners in Ethereum blockchain since the ',
   OTHER: 'Top 5 Miners in Ethereum blockchain in last '
 }
-let currentState = STATES.DAY
-let stateChanged = false
+const currentState = STATES.DAY
+const stateChanged = false
 
 /* Chart Details: */
-let title = 'Top Miners'
+const title = 'Top Miners'
 let description = DES.OTHER + currentState
-let newData = {
+const newData = {
   datasets: [
     {
       label: 'Top Miners',
@@ -38,7 +38,7 @@ let newData = {
   labels: ['Miner1', 'Miner2', 'Miner3', 'Miner4', 'Miner5']
 }
 
-let pieOptions = {
+const pieOptions = {
   title: {
     text: 'Top Miners',
     lineHeight: 1

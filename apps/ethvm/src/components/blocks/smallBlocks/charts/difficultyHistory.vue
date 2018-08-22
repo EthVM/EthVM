@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import sEvents from '@/configs/socketEvents.json'
+import sEvents from '@app/configs/socketEvents.json'
 import BN from 'bignumber.js'
 import ethUnits from 'ethereumjs-units'
 
@@ -28,15 +28,15 @@ const DES = {
   BEGIN: 'Difficulty history in Ethereum blockchain since the ',
   OTHER: 'Difficulty history in Ethereum blockchain in last '
 }
-let currentState = STATES.DAY
-let stateChanged = false
+const currentState = STATES.DAY
+const stateChanged = false
 
 /* Chart Details: */
 
-let title = 'Difficulty'
+const title = 'Difficulty'
 let description = DES.OTHER + currentState
-let MAX_ITEMS = 10
-let lineOptions = {
+const MAX_ITEMS = 10
+const lineOptions = {
   title: {
     text: 'Difficulty (TH)',
     lineHeight: 1
@@ -86,7 +86,7 @@ export default Vue.extend({
       if (this.chartData.datasets[0]) {
         this.redraw = false
         if (!_block.getIsUncle()) {
-          let _tempD = _block.getStats()
+          const _tempD = _block.getStats()
           this.chartData.labels.push(_block.getNumber().toNumber())
           this.chartData.labels.shift()
           this.chartData.datasets[0].data.push(ethUnits.convert(new BN(_tempD.avgTxFees).toFixed(), 'wei', 'eth').substr(0, 8))
@@ -103,15 +103,16 @@ export default Vue.extend({
   },
   computed: {
     initData() {
-      let data = {
+      const data = {
         labels: [],
         avgFees: [],
-        avgPrice: []
+        avgPrice: [],
+        sData: null
       }
-      let latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
+      const latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
       latestBlocks.forEach(_block => {
         data.labels.unshift(_block.getNumber().toNumber())
-        let _tempD = _block.getStats()
+        const _tempD = _block.getStats()
         data.avgFees.unshift(ethUnits.convert(new BN(_tempD.avgTxFees).toFixed(), 'wei', 'eth').substr(0, 8))
         data.avgPrice.unshift(ethUnits.convert(new BN(_tempD.avgGasPrice).toFixed(), 'wei', 'gwei').substr(0, 5))
       })

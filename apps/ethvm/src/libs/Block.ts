@@ -1,5 +1,5 @@
-import { Address, common, EthValue, Hash, Hex, HexNumber, HexTime, Tx } from '@/libs'
-import { BlockLayout } from '@/typeLayouts'
+import { Address, common, EthValue, Hash, Hex, HexNumber, HexTime, Tx } from '@app/libs'
+import { BlockLayout } from '@app/typeLayouts'
 import bn from 'bignumber.js'
 
 class Block {

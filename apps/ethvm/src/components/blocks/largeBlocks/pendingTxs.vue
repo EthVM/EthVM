@@ -46,7 +46,7 @@ import Vue from 'vue'
 
 export default Vue.extend({
   name: 'TableTransactions',
- props: ['transactions', 'showHeader'],
+  props: ['transactions', 'showHeader'],
   methods: {
     /* Method to reduce Strig length : */
     getShortEthValue(newEthValue, isBool) {
@@ -59,9 +59,7 @@ export default Vue.extend({
       if (!isBool) {
         return newEthValue
       }
-      else {
-        return isShort
-      }
+      return isShort
     }
   }
 })
@@ -70,10 +68,3 @@ export default Vue.extend({
 <style scoped lang="less">
 @import '~lessPath/sunil/blocks/largeBlocks/transactionsTable.less';
 </style>
-
-
-
-
-
-
-
