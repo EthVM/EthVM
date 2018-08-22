@@ -50,13 +50,10 @@
 <script lang="ts">
 import bn from 'bignumber.js'
 import NumberFormatter from 'number-formatter'
-import Vue from 'vue';
+import Vue from 'vue'
 export default Vue.extend({
   name: 'TokenTracker',
-  props: [
-    'tokens',
-    'holder'
-  ],
+  props: ['tokens', 'holder'],
   data() {
     return {
       totalTokens: 0,
@@ -67,7 +64,7 @@ export default Vue.extend({
   computed: {
     /*Calculates total number of tokens: */
     getTotalTokens() {
-      this.tokens.forEach((token) => {
+      this.tokens.forEach(token => {
         if (this.checkBalance(token.balance)) {
           this.totalTokens++
         }
@@ -77,7 +74,7 @@ export default Vue.extend({
     /*Calculates total usd token value: */
     getTotalUSDValue() {
       const usd = 0
-      this.tokens.forEach((token) => {
+      this.tokens.forEach(token => {
         this.totalUSDValue += this.getBalance(token.balance, token.decimals) * token.USDValue
       })
       return this.formatUSDBalance(this.totalUSDValue)
@@ -90,9 +87,7 @@ export default Vue.extend({
       if (n.gt(0)) {
         return true
       }
-      else {
-        return false
-      }
+      return false
     },
     /* Getting correct Balances for the tokens -> devide by the number of decimals in the Token Contract: */
     getBalance(value, decimals) {
@@ -101,25 +96,23 @@ export default Vue.extend({
     },
     /* Check string length for the amounts */
     checkValue(amount, isBool) {
-      const length = amount.toString().length;
-      let isShort = false;
+      const length = amount.toString().length
+      let isShort = false
       if (length > 6) {
-        amount = NumberFormatter("#,##0.###", amount)
-        isShort = true;
+        amount = NumberFormatter('#,##0.###', amount)
+        isShort = true
       }
       if (!isBool) {
         return amount
       }
-      else {
-        return isShort
-      }
+      return isShort
     },
     /* Format Usd Balance */
     formatUSDBalance(value) {
-      return NumberFormatter("#,##0.##", (value))
+      return NumberFormatter('#,##0.##', value)
     }
   }
-});
+})
 </script>
 <style scoped lang="less">
 @import '~lessPath/sunil/blocks/largeBlocks/tokenTracker';
