@@ -118,7 +118,7 @@ async function keepfilling(txParams: Txp, contractAddress: string) {
   while (true) {
     try {
       res = await txpoolStatus()
-      ora.warn(`txpool: ${JSON.stringify(utils.hexToNumber(res.res.pending))}`)
+      ora.warn(`Pending transactions in txpool: ${JSON.stringify(utils.hexToNumber(res.res.pending))}`)
       // Max txpool pending is 223
       if (utils.hexToNumber(res.res.pending) >= 223) {
         ora.info('Txpool is full wait ')
@@ -131,12 +131,7 @@ async function keepfilling(txParams: Txp, contractAddress: string) {
     } catch (e) {
       ora.warn(`Error while getting txpool status: ${JSON.stringify(e)}`)
     }
-    try {
-      const txDetail = await txDetails(contractTx)
-      ora.info(txDetail)
-    } catch (e) {
-      ora.info(e)
-    }
+
     txParams.from = from.address
 
     await fillAccountsWithEther(txParams)
@@ -315,6 +310,10 @@ commander
   .command('start')
   .alias('f')
   .action(contractAddress => {
+    if(!utils.isAddress(contractAddress)){
+      ora.fail(`${JSON.stringify(contractAddress)} is not a valid address`)
+      return
+    }
     ora.info('Filling accounts with ether...').start()
     keepfilling(txParams, contractAddress)
   })
@@ -343,11 +342,13 @@ commander
           ora.info(`Wait let contract TX is get confirmed `)
         } else {
           const ca = generateAddress(toBuffer(detail.from), toBuffer(detail.nonce))
-          ora.info(`Contract deployed, address is: ${JSON.stringify(bufferToHex(ca))}`)
+          ora.succeed(`Contract deployed, address is: ${JSON.stringify(bufferToHex(ca))}`)
           ora.info(`yarn monkey start  ${JSON.stringify(bufferToHex(ca))}`)
         }
       }
-    )
+    ).catch((err)=>{
+      ora.fail(`Error while getting txdetail: ${JSON.stringify(err)}`)
+    })
   })
 
 commander
