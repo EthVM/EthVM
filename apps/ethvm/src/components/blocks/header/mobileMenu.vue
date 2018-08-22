@@ -54,12 +54,10 @@
     methods: {
       setActive() {
         this.active = (!this.active) ? true : false
-        console.log(this.active)
       },
      },
      computed: {
         getActive(): boolean {
-          console.log(this.active)
           return this.active
       }
     }
