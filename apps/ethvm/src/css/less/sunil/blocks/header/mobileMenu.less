@@ -1,7 +1,7 @@
 @import '~lessPath/sunil/global';
 
 .mobile-menu {
-  visibility: hidden;
+  display: none;
   i {
     font-size: 40px;
     color: black;
@@ -11,7 +11,7 @@
 @media all and (max-width: @bp-large) {
 
   .mobile-menu{
-    visibility: visible;
+   display: block;
     .show-menu{
       background-image: url(~@/assets/mobile-menu.jpg);
       background-size: cover;
