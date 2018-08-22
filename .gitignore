@@ -18,3 +18,7 @@ package-lock.json
 *.ntvs*
 *.njsproj
 *.sln
+
+# Project
+dist/
+rethinkdb_data/
