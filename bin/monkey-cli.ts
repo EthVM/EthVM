@@ -7,13 +7,10 @@ import EthereumTx from 'ethereumjs-tx'
 import { bufferToHex, generateAddress, toBuffer } from 'ethereumjs-util'
 import Ora from 'ora'
 import * as utils from 'web3-utils'
-
-import { resolve } from 'dns'
 import data from './accounts.json'
 
 const { accounts, tokencontract, from } = data
 
-const contractAddress: string = ''
 const contractTx: string = ''
 
 const version = '1.0.0'
@@ -79,7 +76,7 @@ function send(txP: Txp, privateKey: Buffer): Promise<Result> {
   })
 }
 
-function estimategas(txParams: Txp): Promise<any> {
+function estimateGas(txParams: Txp): Promise<any> {
   txParams.nonce = ''
   return new Promise((resolve, reject) => {
     r.call(
@@ -154,7 +151,7 @@ async function fillAccountsWithEther(txParams: Txp): Promise<any> {
     txParams.value = '0x2000000000000000'
     const privateKey = Buffer.from(from.key, 'hex')
     try {
-      const r = await estimategas(txParams)
+      const r = await estimateGas(txParams)
       gp = r.res
     } catch (e) {
       gp = '0x7B0C'
@@ -254,7 +251,7 @@ async function contractTxs(txParams: Txp, address: string): Promise<any> {
     txParams.data = bufferToHex(simpleEncode('transfer(address,uint256):(bool)', account.address, 6000))
 
     try {
-      const r = await estimategas(txParams)
+      const r = await estimateGas(txParams)
       gas = r.res
     } catch (e) {
       gas = '0x7B0C'
