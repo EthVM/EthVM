@@ -13,8 +13,8 @@ import data from './accounts.json'
 
 const { accounts, tokencontract, from } = data
 
-let contractAddress: string = ''
-let contractTx: string = ''
+const contractAddress: string = ''
+const contractTx: string = ''
 
 const version = '1.0.0'
 
@@ -116,13 +116,9 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-async function keepfilling(txParams: Txp, count: number) {
-  // const done = await deployContract(txParams)
-  // contractTx = done.res
-  // contractAddress = done.contractAddress
-
-  let res
-  while (count > 0) {
+async function keepfilling(txParams: Txp, contractAddress: string) {
+  let res: any
+  while (true) {
     try {
       res = await txpoolStatus()
       ora.warn(`txpool: ${JSON.stringify(utils.hexToNumber(res.res.pending))}`)
@@ -138,22 +134,16 @@ async function keepfilling(txParams: Txp, count: number) {
     } catch (e) {
       ora.warn(`Error while getting txpool status: ${JSON.stringify(e)}`)
     }
-try{
-
+    try {
       const txDetail = await txDetails(contractTx)
       ora.info(txDetail)
+    } catch (e) {
+      ora.info(e)
+    }
+    txParams.from = from.address
 
-
-
-}catch(e){
-   ora.info(e)
-
-}
-   await fillAccountsWithEther(txParams)
-   txParams.from = from.address
-    await contractTxs(txParams,'0xe737a1424cd3e2d9a0729a3855e74ab4da516107')
-
-    count--
+    await fillAccountsWithEther(txParams)
+    await contractTxs(txParams, contractAddress)
   }
 }
 
@@ -179,7 +169,7 @@ async function fillAccountsWithEther(txParams: Txp): Promise<any> {
     }
   }
 
-  ora.succeed('Filled all accounts with ether')
+  ora.succeed('Filled accounts with ether')
   ora.stopAndPersist()
 
   return Promise.resolve()
@@ -243,7 +233,7 @@ async function deployContract(txParams: Txp): Promise<Result> {
   return send(txParams, privateKey)
 }
 
-async function contractTxs(txParams: Txp,address: string): Promise<any> {
+async function contractTxs(txParams: Txp, address: string): Promise<any> {
   const privateKey = Buffer.from('d069c15e0df2e63ee62342c5c1983cb0c4ea50a915fceeaaeacf0865f63424be', 'hex')
   txParams.to = ''
   txParams.value = ''
@@ -316,15 +306,6 @@ async function txDetails(txhash): Promise<any> {
   })
 }
 
-
-function contractdeploy(txParams: Txp): Promise<any> {
-  return new Promise(async (resolve, reject) => {
-    deployContract(txParams).then((value: Result) => {
-      ora.info(`Tx Hash ${JSON.stringify(value.res)}` )
-    })
-  })
-}
-
 commander
   .command('random')
   .alias('r')
@@ -334,11 +315,11 @@ commander
   })
 
 commander
-  .command('fill <count>')
+  .command('start')
   .alias('f')
-  .action(count => {
+  .action(contractAddress => {
     ora.info('Filling accounts with ether...').start()
-    keepfilling(txParams, count)
+    keepfilling(txParams, contractAddress)
   })
 
 commander
@@ -346,23 +327,31 @@ commander
   .alias('d')
   .action(() => {
     ora.info('Deploying token contract and sending tokens to all accounts...').start()
-    contractdeploy(txParams)
+    deployContract(txParams).then(
+      (value: Result): void => {
+        ora.info(`Deploying Contract, TX hash :, ${JSON.stringify(value.res)}`)
+        ora.info(`npm run monkey txdetail <txhash>`)
+      }
+    )
   })
 
 commander
   .command('txdetail')
   .alias('tx')
-  .action((tx) => {
-    ora.info('Deploying token contract and sending tokens to all accounts...').start()
-    txDetails(tx).then((detail):void =>{
-      if( detail.blockNumber == null){
-        ora.info(`Wait let contract TX is get confirmed `)
-      }else{
-        const ca = generateAddress(toBuffer(detail.from), toBuffer(detail.nonce))
-        ora.info(`Contract Address  ${JSON.stringify(bufferToHex(ca))}`)
+  .action(tx => {
+    ora.info('Getting TX details...').start()
+    txDetails(tx).then(
+      (detail): void => {
+        if (detail.blockNumber == null) {
+          ora.info(`Wait let contract TX is get confirmed `)
+        } else {
+          const ca = generateAddress(toBuffer(detail.from), toBuffer(detail.nonce))
+          ora.info(`Contract is deployed, Address is  ${JSON.stringify(bufferToHex(ca))}`)
+          ora.info(`npm run monkey start  ${JSON.stringify(bufferToHex(ca))}`)
+        }
       }
-    })
-   })
+    )
+  })
 
 commander
   .command('balance')
@@ -379,7 +368,6 @@ commander
           ora.stopAndPersist()
           return
         }
-
         ora.clear()
         ora.succeed(`Current balance: ${utils.fromWei(res, 'ether')} ether`)
         ora.stopAndPersist()
