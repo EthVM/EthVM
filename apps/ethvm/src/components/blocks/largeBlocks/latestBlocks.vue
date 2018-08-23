@@ -37,10 +37,10 @@
           <!-- Col3: Transactions Info -->
           <li class="txs">
             <div class="success">
-              {{block.getTransactionCount()}}
+              {{getNumber(block.getStats().success)}}
             </div>
             <div class="failed">
-              5
+              {{getNumber(block.getStats().failed)}}
             </div>
             <!-- End Col3 -->
           </li>
@@ -94,6 +94,7 @@
 import sEvents from '@app/configs/socketEvents.json'
 import Visibility from 'visibilityjs'
 import Vue from 'vue'
+import BN from 'bignumber.js'
 
 export default Vue.extend({
   name: 'TablesLatestBlocks',
@@ -129,6 +130,9 @@ export default Vue.extend({
         return newRewardValue
       }
       return isShort
+    },
+    getNumber(raw: string) {
+      return new BN(raw).toNumber()
     }
   },
   created() {
