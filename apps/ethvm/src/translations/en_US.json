@@ -30,7 +30,7 @@
     "pending": "Transactions that haven't been mined on Ethereum network",
     "charts": "Ethereum network charts and stats",
     "about": "EthVM General Information",
-    "address": "Ethereum wallet address overview / transactions info",
+    "address":  "overview / transactions info",
     "blockDetail": "Block overview / transactions info",
     "tokenDetail": "Token overview / transfers history",
     "txDetail": "Ethereum transaction overview"
@@ -145,7 +145,8 @@
     "txH": "Txs History",
     "tokens": "Tokens",
     "pending": "Pending Txs",
-    "miningH": "Mining History"
+    "miningH": "Mining History",
+    "contracts": "Contracts"
   },
 
   "bttn": {

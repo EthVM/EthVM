@@ -1,0 +1,49 @@
+@import '~lessPath/sunil/global';
+
+.detail-container {
+  background-color: white;
+  padding: 15px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  position: relative;
+  box-shadow: @box-shadow-light;
+  border-radius: @main-radius;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  grid-column-gap: 1px;
+  li {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    list-style: none;
+    font-size: @font-web;
+    color: black;
+    font-weight: @main-fw-bold;
+  }
+  .qr-container{
+    display: block;
+  }
+  .info-container{
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    grid-column-gap: 1px;
+    align-items: center;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    .detail-row{
+      display: grid;
+      grid-template-columns: 120px 1fr;
+    }
+    .detail-row-copy {
+      display: grid;
+      grid-template-columns: 120px min-content 60px;
+      color: @main-color-blue;
+      align-items: center;
+      .copy {
+        visibility: visible;
+        font-size: 20px;
+        padding-left: 10px;
+      }
+    }
+  }
+}
