@@ -12,7 +12,7 @@ const pastBlocksEvent: SocketEvent = {
 
   // TODO: Remove fliping blocks from here (blocks should be ordered properly from db)
   onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Block[]> =>
-    server.blockService.getBlocks().then(
+    server.blockService.getBlocks(payload.limit, payload.page).then(
       (_blocks: Block[]): Block[] => {
         const blocks: Block[] = []
         _blocks.forEach(
