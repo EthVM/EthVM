@@ -7,7 +7,6 @@ import EthereumTx from 'ethereumjs-tx'
 import { bufferToHex, generateAddress, toBuffer } from 'ethereumjs-util'
 import Ora from 'ora'
 import * as utils from 'web3-utils'
-
 import data from './accounts.json'
 
 const { accounts, tokencontract, from } = data
@@ -50,7 +49,7 @@ function send(txP: Txp, privateKey: Buffer): Promise<Result> {
   return new Promise((resolve, reject) => {
     r.call(
       'eth_getTransactionCount',
-      [txP.from, 'latest'],
+      [txP.from, 'pending'],
       (e: Error, res: any): void => {
         const nonce = parseInt(res)
         txP.nonce = '0x' + nonce.toString(16)
@@ -58,6 +57,7 @@ function send(txP: Txp, privateKey: Buffer): Promise<Result> {
         const tx = new EthereumTx(txP)
         tx.sign(privateKey)
         const serializedTx = '0x' + tx.serialize().toString('hex')
+        ora.info(`Tx:  Value: ${txP.value}  To: ${txP.to} From: ${txP.from} GAS: ${txP.gas}  Nonce:  ${txP.nonce} `)
         r.call(
           'eth_sendRawTransaction',
           [serializedTx],
@@ -74,12 +74,12 @@ function send(txP: Txp, privateKey: Buffer): Promise<Result> {
   })
 }
 
-function ethcall(txParams: Txp): Promise<any> {
+function estimateGas(txParams: Txp): Promise<any> {
   txParams.nonce = ''
   return new Promise((resolve, reject) => {
     r.call(
-      'eth_call',
-      [txParams, 'latest'],
+      'eth_estimateGas',
+      [{ txParams }],
       (e: Error, res: any): void => {
         if (e) {
           reject(e)
@@ -91,13 +91,69 @@ function ethcall(txParams: Txp): Promise<any> {
   })
 }
 
+function txpoolStatus(): Promise<any> {
+  return new Promise((resolve, reject) => {
+    r.call(
+      'txpool_status',
+      ['pending'],
+      (e: Error, res: any): void => {
+        if (e) {
+          reject(e)
+          return
+        }
+        resolve({ res })
+      }
+    )
+  })
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+async function keepfilling(txParams: Txp, contractAddress: string, runcontractTxs: boolean) {
+  let res: any
+  while (true) {
+    try {
+      res = await txpoolStatus()
+      ora.warn(`Pending transactions in txpool: ${JSON.stringify(utils.hexToNumber(res.res.pending))}`)
+      // Max txpool pending is 223
+      if (utils.hexToNumber(res.res.pending) >= 223) {
+        ora.info('Txpool is full wait ')
+        try {
+          await sleep(3000)
+        } catch (s) {
+          ora.warn(`Error while sleeping: ${JSON.stringify(s)}`)
+        }
+      }
+    } catch (e) {
+      ora.warn(`Error while getting txpool status: ${JSON.stringify(e)}`)
+    }
+
+    txParams.from = from.address
+
+    await fillAccountsWithEther(txParams)
+    if (runcontractTxs) {
+      await contractTxs(txParams, contractAddress)
+    }
+  }
+}
+
 async function fillAccountsWithEther(txParams: Txp): Promise<any> {
+  let gp = '0x7B0C'
   for (const account of accounts) {
     txParams.to = account.address
     txParams.value = '0x2000000000000000'
     const privateKey = Buffer.from(from.key, 'hex')
     try {
-      ora.info(`Sending: ${txParams.value} wei to ${txParams.to}`)
+      const r = await estimateGas(txParams)
+      gp = r.res
+    } catch (e) {
+      gp = '0x7B0C'
+      ora.warn(`Error getting gas: ${JSON.stringify(e)} `)
+    }
+    txParams.gas = gp
+    try {
       const done = await send(txParams, privateKey)
       ora.info(`Tx hash: ${JSON.stringify(done.res)}`)
     } catch (error) {
@@ -105,7 +161,7 @@ async function fillAccountsWithEther(txParams: Txp): Promise<any> {
     }
   }
 
-  ora.succeed('Filled all accounts with ether')
+  ora.succeed('Filled accounts with ether')
   ora.stopAndPersist()
 
   return Promise.resolve()
@@ -124,7 +180,6 @@ async function sendRandomTX(txParams: Txp, iter: number = 10): Promise<any> {
     }
 
     const privateKey = Buffer.from(accounts[from].key, 'hex')
-
     txParams.to = accounts[to].address
     txParams.from = accounts[from].address
 
@@ -159,28 +214,45 @@ async function fillAndSend(txParams: Txp): Promise<any> {
   return Promise.resolve()
 }
 
-async function contractTxs(txParams: Txp): Promise<any> {
-  const privateKey = Buffer.from(from.key, 'hex')
-
-  let contractAddress: string = ''
-  try {
-    ora.info('Deploying contract...')
-    const done = await send(txParams, privateKey)
-    ora.info(`Contract address: ${done.contractAddress}`)
-    contractAddress = done.contractAddress
-  } catch (error) {
-    ora.fail(JSON.stringify(error))
-  }
-
+async function deployContract(txParams: Txp): Promise<Result> {
+  // change from of deploy and sendcontractTx
+  const privateKey = Buffer.from('d069c15e0df2e63ee62342c5c1983cb0c4ea50a915fceeaaeacf0865f63424be', 'hex')
   txParams.to = ''
   txParams.value = ''
+  txParams.from = '0x9319b0835c2DB1a31E067b5667B1e9b0AD278215'
   txParams.data = tokencontract.data
   txParams.gas = '0x47B760'
-  txParams.to = contractAddress
+  return send(txParams, privateKey)
+}
+
+async function contractTxs(txParams: Txp, address: string): Promise<any> {
+  const privateKey = Buffer.from('d069c15e0df2e63ee62342c5c1983cb0c4ea50a915fceeaaeacf0865f63424be', 'hex')
+  txParams.to = ''
+  txParams.value = ''
+  txParams.from = '0x9319b0835c2DB1a31E067b5667B1e9b0AD278215'
+  txParams.data = tokencontract.data
+  txParams.gas = '0x47B760'
+  txParams.to = address
+  try {
+    await sleep(3000)
+  } catch (s) {
+    ora.warn(`Error while sleeping: ${JSON.stringify(s)}`)
+  }
 
   // send token to all accounts
   for (const account of accounts) {
+    let gas: string = ''
+
     txParams.data = bufferToHex(simpleEncode('transfer(address,uint256):(bool)', account.address, 6000))
+
+    try {
+      const r = await estimateGas(txParams)
+      gas = r.res
+    } catch (e) {
+      gas = '0x7B0C'
+      ora.warn(`Error getting gas: ${JSON.stringify(e)} `)
+    }
+    txParams.gas = gas
     try {
       ora.info(`Calling transfer of contract address: ${JSON.stringify(txParams.to)}`)
       const done = await send(txParams, privateKey)
@@ -235,19 +307,62 @@ commander
   })
 
 commander
-  .command('fill')
+  .command('start')
+  .option('-a, --address <contract address>', 'contract address')
   .alias('f')
-  .action(() => {
+  .action(options => {
+
+    let contractAddress: string = ''
+    let runcontractTxs: boolean = false
+
+    if (options.address) {
+      runcontractTxs = true
+      contractAddress = options.address || false
+      if (contractAddress) {
+        if (!utils.isAddress(contractAddress)) {
+          ora.fail(`${JSON.stringify(contractAddress)} is not a valid address`)
+          return
+        }
+      }
+    }
+
     ora.info('Filling accounts with ether...').start()
-    fillAccountsWithEther(txParams)
+    keepfilling(txParams, contractAddress, runcontractTxs)
   })
 
 commander
   .command('deploy')
   .alias('d')
   .action(() => {
-    ora.info('Deploying token contract and sending tokens to all accounts...').start()
-    contractTxs(txParams)
+    ora.info('Deploying token contract...').start()
+    deployContract(txParams).then(
+      (value: Result): void => {
+        ora.info(`Deploying contract... tx hash: ${JSON.stringify(value.res)}`)
+        ora.info(`yarn monkey txdetail <txhash>`)
+      }
+    )
+  })
+
+commander
+  .command('txdetail')
+  .alias('tx')
+  .action(tx => {
+    ora.info('Getting TX details...').start()
+    txDetails(tx)
+      .then(
+        (detail): void => {
+          if (detail.blockNumber == null) {
+            ora.info(`Wait let contract TX is get confirmed `)
+          } else {
+            const ca = generateAddress(toBuffer(detail.from), toBuffer(detail.nonce))
+            ora.succeed(`Contract deployed, address is: ${JSON.stringify(bufferToHex(ca))}`)
+            ora.info(`yarn monkey start  ${JSON.stringify(bufferToHex(ca))}`)
+          }
+        }
+      )
+      .catch(err => {
+        ora.fail(`Error while getting txdetail: ${JSON.stringify(err)}`)
+      })
   })
 
 commander
@@ -265,7 +380,6 @@ commander
           ora.stopAndPersist()
           return
         }
-
         ora.clear()
         ora.succeed(`Current balance: ${utils.fromWei(res, 'ether')} ether`)
         ora.stopAndPersist()
