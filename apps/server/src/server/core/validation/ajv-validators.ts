@@ -64,7 +64,6 @@ const pageSchema = {
   default: 0
 }
 
-
 // Schemas definitions
 
 const JoinLeavePayloadSchema = {

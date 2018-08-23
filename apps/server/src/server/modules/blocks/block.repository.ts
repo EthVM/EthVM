@@ -20,7 +20,6 @@ export class RethinkBlockRepository extends BaseRethinkDbRepository implements B
       .slice(start, end)
       .run(this.conn)
       .then(cursor => cursor.toArray())
-
   }
 
   public getBlock(hash: Buffer): Promise<Block | null> {
