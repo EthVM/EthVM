@@ -1,6 +1,7 @@
 import { pastTxsPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
 import { Tx } from '@app/server/modules/txs'
+import { logger } from 'logger';
 
 const pastTxsEvent: SocketEvent = {
   id: 'pastTxs', // new_name: past_txs
@@ -15,16 +16,7 @@ const pastTxsEvent: SocketEvent = {
 
   // TODO: Remove fliping txs from here (txs should be ordered properly from db)
   onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Tx[]> =>
-    server.txsService.getTxs(payload.limit, payload.page).then(
-      (_txs: Tx[]): Tx[] => {
-        const txs: Tx[] = []
-        _txs.forEach((t: Tx) => {
-          txs.unshift(t)
-        })
-
-        return txs
-      }
-    )
+    server.txsService.getTxs(payload.limit, payload.page)
 }
 
 export default pastTxsEvent

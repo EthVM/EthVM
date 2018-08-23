@@ -13,7 +13,7 @@ export class TxsServiceImpl implements TxsService {
   constructor(private readonly txsRepository: TxsRepository, private readonly cacheRepository: CacheRepository) {}
 
   public getTxs(limit: number, page: number): Promise<Tx[]> {
-    return this.cacheRepository.getTransactions(limit, page)
+    return this.txsRepository.getTxs(limit, page)
   }
 
   public getTx(hash: string): Promise<Tx | null> {

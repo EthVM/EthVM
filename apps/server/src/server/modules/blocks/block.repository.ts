@@ -13,10 +13,14 @@ export class RethinkBlockRepository extends BaseRethinkDbRepository implements B
   public getBlocks(limit: number, page: number): Promise<Block[]> {
     const start = page * limit
     const end = start + limit
+
     return r
       .table(RethinkEthVM.tables.blocks)
+      .orderBy({ index: r.desc('number') })
       .slice(start, end)
       .run(this.conn)
+      .then(cursor => cursor.toArray())
+
   }
 
   public getBlock(hash: Buffer): Promise<Block | null> {

@@ -3,8 +3,7 @@ import * as Ajv from 'ajv'
 import { isValidAddress } from 'ethereumjs-util'
 
 // Define some constants
-const PAGINATION_SIZE = 25
-const PAST_PAGINATION_SIZE = 100
+const PAGINATION_SIZE = 100
 
 const ROOMS = ['blocks', 'txs', 'pendingTxs', 'uncles']
 const PERIODS = ['ALL', 'YEAR', 'MONTH', 'DAY']
@@ -65,11 +64,6 @@ const pageSchema = {
   default: 0
 }
 
-const pastlimitSchema = {
-  $id: '/properties/limit',
-  type: 'number',
-  default: PAST_PAGINATION_SIZE
-}
 
 // Schemas definitions
 
@@ -213,7 +207,7 @@ const PastTxsSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   type: 'object',
   properties: {
-    limit: pastlimitSchema,
+    limit: limitSchema,
     page: pageSchema
   },
   additionalProperties: false
@@ -224,7 +218,7 @@ const PastBlocksSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   type: 'object',
   properties: {
-    limit: pastlimitSchema,
+    limit: limitSchema,
     page: pageSchema
   },
   additionalProperties: false

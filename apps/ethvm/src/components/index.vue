@@ -56,7 +56,7 @@ export default Vue.extend({
           this.$eventHub.$emit(sEvents.newTx, new Tx(txs[0]))
         }
       })
-      this.$socket.emit(sEvents.pastBlocks, { limit: 10, page: 0 }, (err, blocks) => {
+      this.$socket.emit(sEvents.pastBlocks, { limit: 100, page: 0 }, (err, blocks) => {
         this.$store.commit(sEvents.newBlock, blocks)
         if (blocks && blocks.length > 0) {
           this.$eventHub.$emit(sEvents.newBlock, new Block(blocks[0]))
