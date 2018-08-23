@@ -1,6 +1,6 @@
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
 import { Block,mappers} from '@app/server/modules/blocks'
-import BigNumber from 'bignumber.js';
+import BigNumber from 'bignumber.js'
 
 const pastBlocksEvent: SocketEvent = {
   id: 'pastBlocks', // new_name: past_blocks
