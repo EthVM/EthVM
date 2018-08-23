@@ -10,8 +10,7 @@ interface IblockStats {
 }
 
 export default interface BlockLayout {
-  number: Buffer
-  intNumber: number
+  number: number
   hash: Buffer
   parentHash: Buffer
   nonce: Buffer

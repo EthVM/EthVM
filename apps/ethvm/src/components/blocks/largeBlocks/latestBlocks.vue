@@ -15,7 +15,7 @@
         <div class="block-data">
           <!-- Col1: Block Number -->
           <li>
-            <p class="block-number"><router-link :to="'/block/'+block.getHash().toString()">{{block.getNumber().toNumber()}}</router-link></p>
+            <p class="block-number"><router-link :to="'/block/'+block.getHash().toString()">{{block.getNumber()}}</router-link></p>
             <!-- End Col1 -->
           </li>
           <!-- Col2: Block Hash and Miner -->
@@ -74,7 +74,7 @@
             </li>
             <li class="sub-height">
               <p>{{ $t( 'block.height' ) }}</p>
-              <p>{{uncle.getNumber().toNumber()}}</p>
+              <p>{{uncle.getNumber()}}</p>
             </li>
             <li class="sub-reward">
               <p>{{ $t( 'block.reward' ) }}</p>
