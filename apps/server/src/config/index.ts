@@ -178,6 +178,13 @@ const config = convict({
         }
       }
     }
+  },
+
+  streaming: {
+    kafka: {
+      group_id: {},
+      brokers: {}
+    }
   }
 })
 

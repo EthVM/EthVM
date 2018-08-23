@@ -24,6 +24,7 @@
     "ethereumjs-abi": "^0.6.5",
     "ethereumjs-account": "^2.0.5",
     "ethereumjs-units": "^0.2.0",
+    "node-rdkafka": "^2.4.1",
     "number-formatter": "^1.2.0",
     "socket.io-client": "^2.1.1",
     "v-tooltip": "^2.0.0-rc.32",

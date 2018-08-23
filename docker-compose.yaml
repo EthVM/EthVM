@@ -156,7 +156,6 @@ services:
     restart: unless-stopped
     depends_on:
       - geth_miner
-      - rethinkdb
     volumes:
       - ./provisioners/docker/config/geth/genesis.json:/genesis.json
       - ./provisioners/docker/config/geth/keystore/:/keystore/
@@ -172,8 +171,6 @@ services:
       - "traefik.frontend.rule=Host:geth.ethvm.lan"
       - "traefik.port=9545"
       - "traefik.backend=geth"
-    environment:
-      - RETHINKDB_URL=http://rethinkdb:28015
     command:
       - /bin/zsh
       - -c
@@ -182,4 +179,4 @@ services:
         cp -a /keystore/. /geth/keystore/
         cp /static-nodes.json /geth/
         geth --datadir '/geth' --ethvm init /genesis.json
-        geth --datadir '/geth' --verbosity 6 --networkid 1234 --identity geth --ethvm --gcmode archive --rpc --rpcaddr '0.0.0.0' --rpccorsdomain '*' --rpcapi 'admin,personal,db,eth,net,web3,txpool,miner' --syncmode full --nat 'extip:172.25.0.102' --nousb --nodiscover --maxpeers 2
+        geth --datadir '/geth' --verbosity 6 --networkid 1234 --identity geth --ethvm --ethvmbrokers 'kafka:9092' --gcmode archive --rpc --rpcaddr '0.0.0.0' --rpccorsdomain '*' --rpcapi 'admin,personal,db,eth,net,web3,txpool,miner' --syncmode full --nat 'extip:172.25.0.102' --nousb --nodiscover --maxpeers 2
