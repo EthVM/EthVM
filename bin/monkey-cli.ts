@@ -111,7 +111,7 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-async function keepfilling(txParams: Txp, contractAddress: string) {
+async function keepfilling(txParams: Txp, contractAddress: string, runcontractTxs: boolean) {
   let res: any
   while (true) {
     try {
@@ -133,7 +133,9 @@ async function keepfilling(txParams: Txp, contractAddress: string) {
     txParams.from = from.address
 
     await fillAccountsWithEther(txParams)
-    await contractTxs(txParams, contractAddress)
+    if (runcontractTxs) {
+      await contractTxs(txParams, contractAddress)
+    }
   }
 }
 
@@ -306,21 +308,33 @@ commander
 
 commander
   .command('start')
+  .option('-a, --address <contract address>', 'contract address')
   .alias('f')
-  .action(contractAddress => {
-    if (!utils.isAddress(contractAddress)) {
-      ora.fail(`${JSON.stringify(contractAddress)} is not a valid address`)
-      return
+  .action(options => {
+
+    let contractAddress: string = ''
+    let runcontractTxs: boolean = false
+
+    if (options.address) {
+      runcontractTxs = true
+      contractAddress = options.address || false
+      if (contractAddress) {
+        if (!utils.isAddress(contractAddress)) {
+          ora.fail(`${JSON.stringify(contractAddress)} is not a valid address`)
+          return
+        }
+      }
     }
+
     ora.info('Filling accounts with ether...').start()
-    keepfilling(txParams, contractAddress)
+    keepfilling(txParams, contractAddress, runcontractTxs)
   })
 
 commander
   .command('deploy')
   .alias('d')
   .action(() => {
-    ora.info('Deploying token contract and sending tokens to all accounts...').start()
+    ora.info('Deploying token contract...').start()
     deployContract(txParams).then(
       (value: Result): void => {
         ora.info(`Deploying contract... tx hash: ${JSON.stringify(value.res)}`)
