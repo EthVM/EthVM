@@ -30,7 +30,7 @@ const barOptions = {
         id: 'y-axis-1',
         stacked: false,
         ticks: {
-          beginAtZero: false
+          beginAtZero: true
         },
         gridLines: {
           color: 'rgba(0, 0, 0, 0)'
@@ -45,7 +45,7 @@ const barOptions = {
         position: 'right',
         stacked: false,
         ticks: {
-          beginAtZero: false
+          beginAtZero: true
         },
         gridLines: {
           color: 'rgba(0, 0, 0, 0)'
