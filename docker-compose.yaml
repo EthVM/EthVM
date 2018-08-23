@@ -102,6 +102,33 @@ services:
     command: >
       bash -c "rm -rf /data/* && rethinkdb --bind all"
 
+  zookeeper:
+    image: confluentinc/cp-zookeeper:5.0.0
+    networks:
+      back:
+        ipv4_address: 172.25.0.103
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_SERVERS: "server.1=zookeeper:2888:3888"
+      ZOOKEEPER_CLIENT_PORT: 2181
+
+  kafka:
+    image: confluentinc/cp-kafka:5.0.0
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
+    networks:
+      back:
+        ipv4_address: 172.25.0.104
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_ADVERTISED_LISTENERS: "LISTENER_DOCKER_INTERNAL://kafka:9092"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "LISTENER_DOCKER_INTERNAL:PLAINTEXT"
+      KAFKA_INTER_BROKER_LISTENER_NAME: "LISTENER_DOCKER_INTERNAL"
+      KAFKA_BROKER_ID: 1
+      KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
   geth_miner:
     build:
       context: ./apps/eth
