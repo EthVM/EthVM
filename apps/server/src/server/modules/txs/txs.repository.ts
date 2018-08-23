@@ -3,8 +3,6 @@ import { Tx } from '@app/server/modules/txs'
 import { BaseRethinkDbRepository, RethinkEthVM } from '@app/server/repositories'
 import * as r from 'rethinkdb'
 
-const PAGINATION_SIZE = 25
-
 export interface TxsRepository {
   getTx(hash: string): Promise<Tx | null>
   getTxs(limit: number, page: number): Promise<Tx[]>
