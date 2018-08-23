@@ -31,12 +31,12 @@ const DES = {
   OTHER: 'Average Block Size in Ethereum blockchain in last '
 }
 
-let currentState = STATES.DAY
-let stateChanged = false
-let title = 'Block Size'
-let description = ''
-let MAX_ITEMS = 10
-let lineOptions = {
+const currentState = STATES.DAY
+const stateChanged = false
+const title = 'Block Size'
+const description = ''
+const MAX_ITEMS = 10
+const lineOptions = {
   title: {
     text: 'Average Block Size',
     lineHeight: 1
@@ -88,7 +88,7 @@ export default Vue.extend({
   beforeDestroy() {},
   computed: {
     initData() {
-      let data = {
+      const data = {
         labels: [],
         points: []
       }

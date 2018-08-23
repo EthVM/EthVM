@@ -4,44 +4,43 @@
 </template>
 
 <script lang="ts">
-  import sEvents from '@app/configs/socketEvents.json'
-  import bn from 'bignumber.js'
-  import Vue from 'vue'
+import sEvents from '@app/configs/socketEvents.json'
+import bn from 'bignumber.js'
+import Vue from 'vue'
 
-  const getTHs = (_num: string): number => {
-    return new bn(_num)
-      .div('1e12')
-      .round(2)
-      .toNumber()
-  }
+const getTHs = (_num: string): number => {
+  return new bn(_num)
+    .div('1e12')
+    .round(2)
+    .toNumber()
+}
 
-  export default Vue.extend({
-    name: 'ShortDataLastBlock',
-    data() {
-      return {
-        blockTitle: this.$i18n.t('smlBlock.diff'),
-        blockIconType: 'asterisk',
-        blockIconColor: '#6bee69',
-        difficulty: 0
-      }
-    },
-    created() {
-      if (this.$store.getters.getBlocks.length) {
-        this.difficulty = getTHs(this.$store.getters.getBlocks[0].getDifficulty().toNumber())
-      }
-      this.$eventHub.$on(sEvents.pastBlocksR, () => {
-        this.difficulty = getTHs(this.$store.getters.getBlocks[0].getDifficulty().toNumber())
-      })
-      this.$eventHub.$on(sEvents.newBlock, _block => {
-        this.difficulty = getTHs(_block.getDifficulty().toNumber())
-      })
-    },
-    beforeDestroy() {
-      this.$eventHub.$off([sEvents.pastBlocksR, sEvents.newBlock])
+export default Vue.extend({
+  name: 'ShortDataLastBlock',
+  data() {
+    return {
+      blockTitle: this.$i18n.t('smlBlock.diff'),
+      blockIconType: 'asterisk',
+      blockIconColor: '#6bee69',
+      difficulty: 0
     }
-  })
+  },
+  created() {
+    if (this.$store.getters.getBlocks.length) {
+      this.difficulty = getTHs(this.$store.getters.getBlocks[0].getDifficulty().toNumber())
+    }
+    this.$eventHub.$on(sEvents.pastBlocksR, () => {
+      this.difficulty = getTHs(this.$store.getters.getBlocks[0].getDifficulty().toNumber())
+    })
+    this.$eventHub.$on(sEvents.newBlock, _block => {
+      this.difficulty = getTHs(_block.getDifficulty().toNumber())
+    })
+  },
+  beforeDestroy() {
+    this.$eventHub.$off([sEvents.pastBlocksR, sEvents.newBlock])
+  }
+})
 </script>
 
 <style scoped lang="less">
-
 </style>

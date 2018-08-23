@@ -74,35 +74,33 @@
 </template>
 
 <script lang="ts">
-  import {
-    common
-  } from '@app/libs'
-  import NumberFormatter from 'number-formatter'
-  import Vue from 'vue'
+import { common } from '@app/libs'
+import NumberFormatter from 'number-formatter'
+import Vue from 'vue'
 
-  export default Vue.extend({
-    name: 'Address',
-    props: ['token', 'isHolder'],
-    data() {
-      return {
-        showMore: false
-      }
-    },
-    mounted() {
-      // console.log(_this.token)
-    },
-    computed: {
-      formatUSDBalance() {
-        return NumberFormatter('#,##0.##', this.token.balance * this.token.valueUSD)
-      },
-
-      formatTotalTransf() {
-        return NumberFormatter('#,##0.', this.token.trasfers)
-      }
+export default Vue.extend({
+  name: 'Address',
+  props: ['token', 'isHolder'],
+  data() {
+    return {
+      showMore: false
     }
-  })
+  },
+  mounted() {
+    // console.log(_this.token)
+  },
+  computed: {
+    formatUSDBalance() {
+      return NumberFormatter('#,##0.##', this.token.balance * this.token.valueUSD)
+    },
+
+    formatTotalTransf() {
+      return NumberFormatter('#,##0.', this.token.trasfers)
+    }
+  }
+})
 </script>
 
 <style scoped lang="less">
-  @import '~lessPath/sunil/blocks/largeBlocks/detailComponent.less';
+@import '~lessPath/sunil/blocks/largeBlocks/detailComponent.less';
 </style>

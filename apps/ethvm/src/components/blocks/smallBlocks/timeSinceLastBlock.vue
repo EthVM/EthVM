@@ -17,13 +17,14 @@ export default Vue.extend({
     }
   },
   created() {
-    if (this.$store.getters.getBlocks.length) {
+    if (this.$store.getters.getBlocks && this.$store.getters.getBlocks.length > 0) {
       this.lastBlockTime = this.$store.getters.getBlocks[0].getTimestamp().toDate()
     }
     this.$eventHub.$on(sEvents.pastBlocksR, () => {
-      this.lastBlockTime = this.$store.getters.getBlocks[0].getTimestamp().toDate()
+      const blocks = this.$store.getters.getBlocks
+      this.lastBlockTime = blocks.length > 0 ? blocks[0].getTimestamp().toDate() : 0
     })
-    this.$eventHub.$on(sEvents.newBlock, _block => {
+    this.$eventHub.$on(sEvents.newBlock, block => {
       this.lastBlockTime = new Date().getTime()
     })
   },
