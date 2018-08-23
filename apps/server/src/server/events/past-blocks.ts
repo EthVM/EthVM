@@ -16,7 +16,6 @@ const pastBlocksEvent: SocketEvent = {
     server.blockService.getBlocks(payload.limit, payload.page).then(
       (_blocks: Block[]): SmallBlock[] => {
         const blocks: SmallBlock[] = []
-
         _blocks.forEach(
           (block: Block): void => {
             // TODO: Remove harcoded time from zero
@@ -25,7 +24,6 @@ const pastBlocksEvent: SocketEvent = {
             blocks.unshift(mappers.toSmallBlock(block))
           }
         )
-
         return blocks
       }
     )
