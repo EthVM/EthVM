@@ -2,8 +2,6 @@ import { Block } from '@app/server/modules/blocks'
 import { BaseRethinkDbRepository, RethinkEthVM } from '@app/server/repositories'
 import * as r from 'rethinkdb'
 
-const PAGINATION_SIZE = 25
-
 export interface BlocksRepository {
   getBlocks(limit: number, page: number): Promise<Block[]>
   getBlock(hash: Buffer): Promise<Block | null>
@@ -20,7 +18,6 @@ export class RethinkBlockRepository extends BaseRethinkDbRepository implements B
       .slice(start, end)
       .run(this.conn)
       .then(cursor => cursor.toArray())
-
   }
 
   public getBlock(hash: Buffer): Promise<Block | null> {

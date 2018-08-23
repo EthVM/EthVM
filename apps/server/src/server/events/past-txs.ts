@@ -14,8 +14,7 @@ const pastTxsEvent: SocketEvent = {
   },
 
   // TODO: Remove fliping txs from here (txs should be ordered properly from db)
-  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Tx[]> =>
-    server.txsService.getTxs(payload.limit, payload.page)
+  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Tx[]> => server.txsService.getTxs(payload.limit, payload.page)
 }
 
 export default pastTxsEvent

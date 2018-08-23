@@ -1,5 +1,5 @@
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
-import { Block,mappers} from '@app/server/modules/blocks'
+import { Block, mappers, SmallBlock } from '@app/server/modules/blocks'
 import BigNumber from 'bignumber.js'
 
 const pastBlocksEvent: SocketEvent = {
@@ -11,14 +11,15 @@ const pastBlocksEvent: SocketEvent = {
     }
   },
 
-  // TODO: Remove fliping blocks from here (blocks should be ordered properly from db)
-  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Block[]> =>
+  // TODO: Remove calculation of stats
+  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<SmallBlock[]> =>
+    server.blockService.getBlocks(payload.limit, payload.page).then(
+      (_blocks: Block[]): SmallBlock[] => {
+        const blocks: SmallBlock[] = []
 
-      server.blockService.getBlocks(payload.limit, payload.page).then(
-      (_blocks: Block[]): Block[] => {
-        const blocks: Block[] = []
         _blocks.forEach(
           (block: Block): void => {
+            // TODO: Remove harcoded time from zero
             const bstats = mappers.toBlockStats(block.transactions, new BigNumber(0))
             block.blockStats = { ...bstats, ...block.blockStats }
             blocks.unshift(mappers.toSmallBlock(block))
@@ -28,7 +29,6 @@ const pastBlocksEvent: SocketEvent = {
         return blocks
       }
     )
-
 }
 
 export default pastBlocksEvent
