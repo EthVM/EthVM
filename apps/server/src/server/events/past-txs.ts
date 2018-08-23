@@ -1,7 +1,6 @@
 import { pastTxsPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
 import { Tx } from '@app/server/modules/txs'
-import { logger } from 'logger';
 
 const pastTxsEvent: SocketEvent = {
   id: 'pastTxs', // new_name: past_txs
