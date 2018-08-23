@@ -49,14 +49,14 @@ export default Vue.extend({
   },
   methods: {
     setPastData() {
-      this.$socket.emit(sEvents.pastTxs, '', (err, txs) => {
+      this.$socket.emit(sEvents.pastTxs, { limit: 100, page: 0 }, (err, txs) => {
         this.$store.commit(sEvents.newTx, txs)
         if (txs && txs.length > 0) {
           this.$eventHub.$emit(sEvents.pastTxsR)
           this.$eventHub.$emit(sEvents.newTx, new Tx(txs[0]))
         }
       })
-      this.$socket.emit(sEvents.pastBlocks, '', (err, blocks) => {
+      this.$socket.emit(sEvents.pastBlocks, { limit: 10, page: 0 }, (err, blocks) => {
         this.$store.commit(sEvents.newBlock, blocks)
         if (blocks && blocks.length > 0) {
           this.$eventHub.$emit(sEvents.newBlock, new Block(blocks[0]))

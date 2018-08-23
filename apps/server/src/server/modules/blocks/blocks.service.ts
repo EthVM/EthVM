@@ -10,7 +10,7 @@ export class BlocksServiceImpl implements BlocksService {
   constructor(private readonly blocksRepository: BlocksRepository, private readonly cacheRepository: CacheRepository) {}
 
   public getBlocks(limit: number, page: number): Promise<Block[]> {
-    return this.cacheRepository.getBlocks(limit, page)
+    return this.blocksRepository.getBlocks(limit, page)
   }
 
   public getBlock(hash: Buffer): Promise<Block | null> {

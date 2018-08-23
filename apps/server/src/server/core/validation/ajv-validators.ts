@@ -209,7 +209,7 @@ const TxsPayloadSchema = {
 }
 
 const PastTxsSchema = {
-  $id: 'https://ethvm.com/txs.payload.schema.json',
+  $id: 'https://ethvm.com/pasttxs.payload.schema.json',
   $schema: 'http://json-schema.org/draft-07/schema#',
   type: 'object',
   properties: {
@@ -220,7 +220,7 @@ const PastTxsSchema = {
 }
 
 const PastBlocksSchema = {
-  $id: 'https://ethvm.com/txs.payload.schema.json',
+  $id: 'https://ethvm.com/pastblock.payload.schema.json',
   $schema: 'http://json-schema.org/draft-07/schema#',
   type: 'object',
   properties: {
