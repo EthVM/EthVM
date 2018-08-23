@@ -11,8 +11,6 @@ import data from './accounts.json'
 
 const { accounts, tokencontract, from } = data
 
-const contractTx: string = ''
-
 const version = '1.0.0'
 
 const ora = new Ora({
@@ -310,7 +308,7 @@ commander
   .command('start')
   .alias('f')
   .action(contractAddress => {
-    if(!utils.isAddress(contractAddress)){
+    if (!utils.isAddress(contractAddress)) {
       ora.fail(`${JSON.stringify(contractAddress)} is not a valid address`)
       return
     }
@@ -336,19 +334,21 @@ commander
   .alias('tx')
   .action(tx => {
     ora.info('Getting TX details...').start()
-    txDetails(tx).then(
-      (detail): void => {
-        if (detail.blockNumber == null) {
-          ora.info(`Wait let contract TX is get confirmed `)
-        } else {
-          const ca = generateAddress(toBuffer(detail.from), toBuffer(detail.nonce))
-          ora.succeed(`Contract deployed, address is: ${JSON.stringify(bufferToHex(ca))}`)
-          ora.info(`yarn monkey start  ${JSON.stringify(bufferToHex(ca))}`)
+    txDetails(tx)
+      .then(
+        (detail): void => {
+          if (detail.blockNumber == null) {
+            ora.info(`Wait let contract TX is get confirmed `)
+          } else {
+            const ca = generateAddress(toBuffer(detail.from), toBuffer(detail.nonce))
+            ora.succeed(`Contract deployed, address is: ${JSON.stringify(bufferToHex(ca))}`)
+            ora.info(`yarn monkey start  ${JSON.stringify(bufferToHex(ca))}`)
+          }
         }
-      }
-    ).catch((err)=>{
-      ora.fail(`Error while getting txdetail: ${JSON.stringify(err)}`)
-    })
+      )
+      .catch(err => {
+        ora.fail(`Error while getting txdetail: ${JSON.stringify(err)}`)
+      })
   })
 
 commander

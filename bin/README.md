@@ -6,7 +6,7 @@ Ethereum utility to generate random transactions that aids in testing.
 
 ### Step 1
 
-Deploy ERC20 token contract
+Deploy ERC20 sample token contract
 
 ```sh
 $ yarn monkey deploy
