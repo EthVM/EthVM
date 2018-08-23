@@ -9,15 +9,26 @@ import { Block } from '@app/libs'
 import bn from 'bignumber.js'
 import Vue from 'vue'
 
-const getAvgHashRate = (_blocks: Block[]): number => {
-  let avgTime = new bn(0)
-  _blocks.forEach(_block => {
-    const _tempD = _block.getStats()
-    avgTime = avgTime.add(new bn(_tempD.blockTime))
+const getAvgHashRate = (blocks: Block[]): number => {
+  let avg = new bn(0)
+
+  if (!blocks || blocks.length == 0) {
+    return avg.toNumber()
+  }
+
+  blocks.forEach(block => {
+    const stats = block.getStats()
+    const blockTime = stats.blockTime
+    avg = avg.add(new bn(blockTime))
   })
-  avgTime = avgTime.div(_blocks.length)
-  return new bn(_blocks[0].getDifficulty().toNumber())
-    .div(avgTime)
+  avg = avg.div(blocks.length)
+  if (avg.isZero) {
+    return avg.toNumber()
+  }
+
+  const difficulty = blocks[0].getDifficulty().toNumber()
+  return new bn(difficulty)
+    .div(avg)
     .div('1e12')
     .round(2)
     .toNumber()
