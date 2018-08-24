@@ -45,7 +45,7 @@ class Cli : CliktCommand() {
 
         // Assemble a streams builder
         val builder = StreamsBuilder()
-        val stream: KStream<String, JsonNode> = builder.stream(streamTopic, Consumed.with(Serdes.String(), jsonSerde))
+        val stream: KStream<String, String> = builder.stream(streamTopic, Consumed.with(Serdes.String(), Serdes.String()))
         stream.mapValues { _, value ->
             println("VALUE: $value")
         }
@@ -64,7 +64,7 @@ class Cli : CliktCommand() {
 
     companion object {
         const val DEFAULT_APPLICATION_ID = "bolt"
-        const val DEFAULT_BOOTSTRAP_SERVERS = "127.0.0.1:9092"
+        const val DEFAULT_BOOTSTRAP_SERVERS = "kafka:9092"
         const val DEFAULT_STREAM_TOPIC = "blocks"
         const val DEFAULT_AUTO_OFFSET = "earliest"
     }
