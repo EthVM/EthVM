@@ -10,10 +10,10 @@
         <li></li>
         <!-- End Table Header -->
       </div>
-      <div class="block" v-for="tx in transactions" v-bind:key="tx.getHash().toString()">
+      <div class="block" v-for="tx in transactions" v-bind:key="tx.getHash()">
         <li>
           <div class="hash-block">
-            <p class="hash"><router-link :to="'/tx/'+tx.getHash().toString()">{{tx.getHash().toString()}}</router-link></p>
+            <p class="hash"><router-link :to="'/tx/'+tx.getHash()">{{tx.getHash()}}</router-link></p>
           </div>
           <div class="fromto">
             <p class="title">{{ $t( 'tx.from' ) }}</p>

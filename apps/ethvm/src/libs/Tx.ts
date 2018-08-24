@@ -16,11 +16,8 @@ class Tx {
     return this.id
   }
 
-  public getHash(): Hash {
-    if (!this.cache.hash) {
-      this.cache.hash = common.Hash(this.tx.hash)
-    }
-    return this.cache.hash
+  public getHash(): string {
+    return this.tx.hash
   }
 
   public getTo(): Address {

@@ -10,9 +10,9 @@
       <div class="detail-row-copy">
         <li>{{ $t( 'common.hash' ) }}</li>
         <div class="copy">
-          <copy-to-clip-component :valueToCopy="tx.getHash().toString()"></copy-to-clip-component>
+          <copy-to-clip-component :valueToCopy="tx.getHash()"></copy-to-clip-component>
         </div>
-        <li>{{tx.getHash().toString()}}</li>
+        <li>{{tx.getHash()}}</li>
       </div>
       <div class="detail-row">
         <li>{{ $t( 'common.status' ) }}</li>

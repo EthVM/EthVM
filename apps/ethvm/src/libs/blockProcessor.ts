@@ -2,7 +2,7 @@ import { Block } from '@app/libs'
 
 const setUncles = (block: Block, hash: string, blocks: Block[]): Block[] => {
   for (let i = 0; i < blocks.length; i++) {
-    if (blocks[i].getHash().toString() === hash) {
+    if (blocks[i].getHash() === hash) {
       blocks[i].setIsUncle(true)
       block.addUncle(blocks[i])
       blocks.splice(i, 1)

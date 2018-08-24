@@ -15,7 +15,7 @@
         <div class="block-data">
           <!-- Col1: Block Number -->
           <li>
-            <p class="block-number"><router-link :to="'/block/'+block.getHash().toString()">{{block.getNumber()}}</router-link></p>
+            <p class="block-number"><router-link :to="'/block/'+block.getHash()">{{block.getNumber()}}</router-link></p>
             <!-- End Col1 -->
           </li>
           <!-- Col2: Block Hash and Miner -->
@@ -23,7 +23,7 @@
             <div>
               <p>{{ $t( 'common.hash' ) }}</p>
               <p>
-                <router-link :to="'/block/'+block.getHash().toString()">{{block.getHash().toString()}}</router-link>
+                <router-link :to="'/block/'+block.getHash()">{{block.getHash()}}</router-link>
               </p>
             </div>
             <div>
@@ -63,7 +63,7 @@
             <li class="sub-hash">
               <p>{{ $t( 'common.hash') }}</p>
               <p>
-                <router-link :to="'/block/'+uncle.getHash().toString()">{{uncle.getHash().toString()}}</router-link>
+                <router-link :to="'/block/'+uncle.getHash()">{{uncle.getHash()}}</router-link>
               </p>
             </li>
             <li class="sub-miner">

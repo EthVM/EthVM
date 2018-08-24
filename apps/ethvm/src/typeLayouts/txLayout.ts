@@ -13,7 +13,7 @@ export default interface TxLayout {
   logsBloom: Buffer
   gas: Buffer
   gasPrice: Buffer
-  hash: Buffer
+  hash: string
   input: Buffer
   nonce: Buffer
   value: Buffer

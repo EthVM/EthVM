@@ -15,11 +15,11 @@
         <li class="gas">{{ $t( 'common.gwei' )}}</li>
         <li class="status"></li>
       </div>
-      <div class="block" v-for="tx in transactions" v-bind:key="tx.getHash().toString()">
+      <div class="block" v-for="tx in transactions" v-bind:key="tx.getHash()">
         <li>
           <div class="hash-block">
             <p class="hash">
-              <router-link :to="'/tx/'+tx.getHash().toString()">{{tx.getHash().toString()}}</router-link>
+              <router-link :to="'/tx/'+tx.getHash()">{{tx.getHash()}}</router-link>
             </p>
           </div>
           <div class="fromto">
