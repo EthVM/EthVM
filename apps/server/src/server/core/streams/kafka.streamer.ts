@@ -1,19 +1,22 @@
-import * as Kafka from 'node-rdkafka'
+import Kafka from 'node-rdkafka'
 import { Streamer } from '@app/server/core/streams'
 import { Block } from '@app/server/modules/blocks'
 import { Tx } from '@app/server/modules/txs'
 import EventEmitter, { ListenerFn } from 'eventemitter3'
 
-export interface KafkaStreamerOpts {}
+export interface KafkaStreamerOpts {
+  groupId: string
+  brokers: string
+}
 
 export class KafkaStreamer implements Streamer {
-  private readonly consumer: any
+  private readonly consumer: Kafka.KafkaConsumer
 
-  constructor(private readonly emitter: EventEmitter) {
+  constructor(private readonly emitter: EventEmitter, private readonly opts: KafkaStreamerOpts) {
     this.consumer = new Kafka.KafkaConsumer(
       {
-        'group.id': 'kafka',
-        'metadata.broker.list': 'localhost:9092'
+        'group.id': this.opts.groupId,
+        'metadata.broker.list': this.opts.brokers
       },
       {}
     )
