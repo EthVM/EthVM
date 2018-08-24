@@ -6,7 +6,7 @@ const PAGINATION_SIZE = 25
 
 export interface BlocksRepository {
   getBlocks(): Promise<Block[]>
-  getBlock(hash: Buffer): Promise<Block | null>
+  getBlock(hash: string): Promise<Block | null>
 }
 
 export class RethinkBlockRepository extends BaseRethinkDbRepository implements BlocksRepository {
@@ -17,7 +17,7 @@ export class RethinkBlockRepository extends BaseRethinkDbRepository implements B
       .run(this.conn)
   }
 
-  public getBlock(hash: Buffer): Promise<Block | null> {
+  public getBlock(hash: string): Promise<Block | null> {
     return r
       .table(RethinkEthVM.tables.blocks)
       .get(r.args([hash]))

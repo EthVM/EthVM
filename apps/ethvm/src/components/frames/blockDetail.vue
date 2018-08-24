@@ -67,7 +67,7 @@ export default Vue.extend({
   },
   mounted() {
     /* Get Block Data: */
-    this.$socket.emit(sEvents.getBlock, { hash: Buffer.from(this.blockHash.substring(2), 'hex') }, (error, result) => {
+    this.$socket.emit(sEvents.getBlock, { hash: this.blockHash }, (error, result) => {
       if (result) {
         this.block = new Block(result)
         const uncleHashes = this.block.getUncleHashes()

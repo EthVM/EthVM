@@ -11,7 +11,7 @@ interface IblockStats {
 
 export default interface BlockLayout {
   number: number
-  hash: Buffer
+  hash: string
   parentHash: Buffer
   nonce: Buffer
   mixHash: Buffer

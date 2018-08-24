@@ -62,11 +62,8 @@ class Block {
     this.block.uncleHashes = hashes
   }
 
-  public getHash(): Hash {
-    if (!this.cache.hash) {
-      this.cache.hash = common.Hash(this.block.hash)
-    }
-    return this.cache.hash
+  public getHash(): string {
+    return this.block.hash
   }
 
   public getIntNumber(): number {
