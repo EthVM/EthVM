@@ -14,7 +14,7 @@
         <!-- Main Info -->
         <div class="detail-row">
           <li>{{ $t( 'block.height' ) }}</li>
-          <li>{{block.getNumber().toNumber()}}</li>
+          <li>{{block.getNumber()}}</li>
         </div>
         <div class="detail-row-copy">
           <li>{{ $t( 'common.hash' ) }}</li>

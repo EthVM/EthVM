@@ -21,9 +21,9 @@ export default Vue.extend({
         return this.$i18n.t('message.load')
       }
       this.$eventHub.$on(sEvents.newBlock, _block => {
-        return this.$store.getters.getBlocks[0].getIntNumber()
+        return this.$store.getters.getBlocks[0]
       })
-      return this.$store.getters.getBlocks[0].getIntNumber()
+      return this.$store.getters.getBlocks[0]
     }
   }
 })

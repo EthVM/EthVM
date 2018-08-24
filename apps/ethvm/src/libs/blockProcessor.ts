@@ -33,7 +33,7 @@ const processBlocks = (block: Block, pastBlocks: Block[]): Block[] => {
   pastBlocks = dedup(block, pastBlocks)
   pastBlocks = setUnclesToUnclesAndAdd(block, pastBlocks)
   pastBlocks.sort((a, b) => {
-    return b.getIntNumber() - a.getIntNumber()
+    return b.getNumber() - a.getNumber()
   })
   return pastBlocks
 }
