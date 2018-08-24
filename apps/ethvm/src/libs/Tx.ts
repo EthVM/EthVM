@@ -51,11 +51,8 @@ class Tx {
     return this.cache.blcokHash
   }
 
-  public getBlockNumber(): HexNumber {
-    if (!this.cache.blockNumber) {
-      this.cache.blockNumber = common.HexNumber(this.tx.blockNumber)
-    }
-    return this.cache.blockNumber
+  public getBlockNumber(): number {
+    return this.tx.blockNumber
   }
 
   public geTransactionIndex(): HexNumber {
