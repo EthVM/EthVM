@@ -3,7 +3,8 @@ import * as Ajv from 'ajv'
 import { isValidAddress } from 'ethereumjs-util'
 
 // Define some constants
-const PAGINATION_SIZE = 25
+const PAGINATION_SIZE = 100
+
 const ROOMS = ['blocks', 'txs', 'pendingTxs', 'uncles']
 const PERIODS = ['ALL', 'YEAR', 'MONTH', 'DAY']
 
@@ -204,6 +205,28 @@ const TxsPayloadSchema = {
   additionalProperties: false
 }
 
+const PastTxsSchema = {
+  $id: 'https://ethvm.com/pasttxs.payload.schema.json',
+  $schema: 'http://json-schema.org/draft-07/schema#',
+  type: 'object',
+  properties: {
+    limit: limitSchema,
+    page: pageSchema
+  },
+  additionalProperties: false
+}
+
+const PastBlocksSchema = {
+  $id: 'https://ethvm.com/pastblock.payload.schema.json',
+  $schema: 'http://json-schema.org/draft-07/schema#',
+  type: 'object',
+  properties: {
+    limit: limitSchema,
+    page: pageSchema
+  },
+  additionalProperties: false
+}
+
 // Compile schemas
 const balancePayloadValidator = ajv.compile(BalancePayloadSchema)
 const blockTxsPayloadValidator = ajv.compile(BlockTxsPayloadSchema)
@@ -216,6 +239,8 @@ const tokensBalancePayloadValidator = ajv.compile(TokensBalancePayloadSchema)
 const txPayloadValidator = ajv.compile(TxPayloadSchema)
 const txsPayloadValidator = ajv.compile(TxsPayloadSchema)
 const totalTxsPayloadValidator = ajv.compile(TotalTxsPayloadSchema)
+const pastTxsPayloadValidator = ajv.compile(PastTxsSchema)
+const pastBlockPayloadValidator = ajv.compile(PastBlocksSchema)
 
 export {
   balancePayloadValidator,
@@ -228,5 +253,7 @@ export {
   tokensBalancePayloadValidator,
   txPayloadValidator,
   txsPayloadValidator,
-  totalTxsPayloadValidator
+  totalTxsPayloadValidator,
+  pastTxsPayloadValidator,
+  pastBlockPayloadValidator
 }
