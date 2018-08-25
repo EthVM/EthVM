@@ -5,7 +5,7 @@ import { Repository } from '@app/server/repositories'
 export interface CacheRepository extends Repository {
   initialize(): Promise<boolean>
   putBlock(block: Block): Promise<boolean>
-  getBlocks(): Promise<Block[]>
+  getBlocks(limit: number, page: number): Promise<Block[]>
   putTransactions(txs: Tx[]): Promise<boolean>
-  getTransactions(): Promise<Tx[]>
+  getTransactions(limit: number, page: number): Promise<Tx[]>
 }
