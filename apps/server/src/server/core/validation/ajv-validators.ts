@@ -104,7 +104,7 @@ const BlockTxsPayloadSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   type: 'object',
   properties: {
-    hash: hashBufferSchema
+    hash: hashSchema
   },
   required: ['hash'],
   additionalProperties: false

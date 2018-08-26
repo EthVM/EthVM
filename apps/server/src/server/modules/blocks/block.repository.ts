@@ -14,7 +14,7 @@ export class RethinkBlockRepository extends BaseRethinkDbRepository implements B
 
     return r
       .table(RethinkEthVM.tables.blocks)
-      .orderBy({ index: r.desc('intNumber') })
+      .orderBy({ index: r.desc('number') })
       .slice(start, end)
       .run(this.conn)
       .then(cursor => cursor.toArray())

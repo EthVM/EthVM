@@ -7,7 +7,6 @@ import * as utils from 'web3-utils'
 const toSmallBlock = (block: Block): SmallBlock => {
   return {
     number: block.number,
-    intNumber: block.intNumber,
     hash: block.hash,
     miner: block.miner,
     timestamp: block.timestamp,

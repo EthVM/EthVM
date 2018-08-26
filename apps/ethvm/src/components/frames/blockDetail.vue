@@ -72,7 +72,7 @@ export default Vue.extend({
         this.block = new Block(result)
         const uncleHashes = this.block.getUncleHashes()
         /*Get Transactions for the block: */
-        this.$socket.emit(sEvents.getBlockTransactions, { hash: this.block.getHash().toBuffer() }, (err, data) => {
+        this.$socket.emit(sEvents.getBlockTransactions, { hash: this.blockHash }, (err, data) => {
           this.transactions = data.map(_tx => {
             return new Tx(_tx)
           })
