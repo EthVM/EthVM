@@ -11,12 +11,12 @@
         <!-- End Table Header -->
       </div>
       <!-- Transactions Table -->
-      <div class="block" v-for="tx in transactions" v-bind:key="tx.getHash().toString()">
+      <div class="block" v-for="tx in transactions" v-bind:key="tx.getHash()">
         <li>
           <!-- Tx Hash Number -->
           <div class="hash-block">
             <p class="hash">
-              <router-link :to="'/tx/'+tx.getHash().toString()">{{tx.getHash().toString()}}</router-link>
+              <router-link :to="'/tx/'+tx.getHash()">{{tx.getHash()}}</router-link>
             </p>
             <!-- End Tx Hash Number -->
           </div>

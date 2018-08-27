@@ -3,25 +3,27 @@ import { Tx } from '@app/server/modules/txs'
 import { BaseRethinkDbRepository, RethinkEthVM } from '@app/server/repositories'
 import * as r from 'rethinkdb'
 
-const PAGINATION_SIZE = 25
-
 export interface TxsRepository {
   getTx(hash: string): Promise<Tx | null>
-  getTxs(): Promise<Tx[]>
-  getBlockTxs(hash: Buffer): Promise<Tx[]>
+  getTxs(limit: number, page: number): Promise<Tx[]>
+  getBlockTxs(hash: string): Promise<Tx[]>
   getTxsOfAddress(hash: string, limit: number, page: number): Promise<Tx[]>
   getTotalTxs(hash: string): Promise<number>
 }
 
 export class RethinkTxsRepository extends BaseRethinkDbRepository implements TxsRepository {
-  public getTxs(): Promise<Tx[]> {
+  public getTxs(limit: number, page: number): Promise<Tx[]> {
+    const start = page * limit
+    const end = start + limit
+
     return r
       .table(RethinkEthVM.tables.txs)
-      .limit(PAGINATION_SIZE)
+      .slice(start, end)
       .run(this.conn)
+      .then(cursor => cursor.toArray())
   }
 
-  public getBlockTxs(hash: Buffer): Promise<Tx[]> {
+  public getBlockTxs(hash: string): Promise<Tx[]> {
     return r
       .table(RethinkEthVM.tables.blocks)
       .get(r.args([hash]))
@@ -37,7 +39,7 @@ export class RethinkTxsRepository extends BaseRethinkDbRepository implements Txs
   public getTx(hash: string): Promise<Tx | null> {
     return r
       .table(RethinkEthVM.tables.txs)
-      .get(r.args([new Buffer(hash)]))
+      .get(r.args([hash]))
       .merge(tx => {
         return {
           trace: r.table('traces').get(tx('hash')),
