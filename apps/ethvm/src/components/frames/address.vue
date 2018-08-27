@@ -3,15 +3,18 @@
     <div class="container">
       <!-- Page Title -->
       <div class="page-title-container">
-        <div>
-          <div id="icon" class="identicon"></div>
-        </div>
-        <div class="page-title">
-          <div class="address">
-            <h3>{{ $t('title.address') }}</h3>
-            <h3 class="address-string">{{address}}</h3>
+        <div class="title-box">
+          <div class="ident">
+            <div id="icon" class="identicon"></div>
           </div>
-          <h6 class="text-muted">{{ $t('subTitle.address') }}</h6>
+
+            <h3 class="address-string">{{ $t('title.address') }}</h3>
+
+            <h3 class="address-hash">{{address}}</h3>
+
+          <h6 class="text">{{ $t('subTitle.address') }}</h6>
+
+
         </div>
         <div class="search-block">
           <block-search></block-search>
@@ -167,9 +170,9 @@
       })
       /*Getting USD Values: */
       this.$socket.emit(sEvents.getTokenToUSD, [], (err, result) => {
-        //TODO getTokenToUSD
-        //this.account.ethusd = result[0][1]
-        //this.usdValue.ETH.value = result[0][1]
+        // TODO getTokenToUSD
+        // this.account.ethusd = result[0][1]
+        // this.usdValue.ETH.value = result[0][1]
       })
       /*Getting Address Transactions: */
       this.$socket.emit(sEvents.getTxs, {

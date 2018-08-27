@@ -78,6 +78,7 @@ ul {
 
 /* Top Title + Search Container. Is used on every single frame: */
 .page-title-container {
+  margin-top: 1px;
   display: flex;
   padding: 30px 0px 40px 0px;
   .page-title {
@@ -301,13 +302,12 @@ ul {
 .copy {
   visibility: hidden;
   color: @color-purple;
+  font-size: 16px;
 }
 
 /* Itenticon: */
 .identicon {
   display: float;
-  right: 0px;
-  bottom: 0px;
   width: 60px;
   height: 60px;
   background-size: cover;
@@ -318,6 +318,7 @@ ul {
 @media all and (max-width: @bp-large) {
   .page-title-container {
     display: block !important;
+    padding: 30px 0px 20px 0px;
     h3 {
       font-size: 20px;
     }
