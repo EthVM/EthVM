@@ -14,14 +14,14 @@
         <!-- Main Info -->
         <div class="detail-row">
           <li>{{ $t( 'block.height' ) }}</li>
-          <li>{{block.getNumber().toNumber()}}</li>
+          <li>{{block.getNumber()}}</li>
         </div>
         <div class="detail-row-copy">
           <li>{{ $t( 'common.hash' ) }}</li>
           <div class="copy">
-            <copy-to-clip-component :valueToCopy="block.getHash().toString()"></copy-to-clip-component>
+            <copy-to-clip-component :valueToCopy="block.getHash()"></copy-to-clip-component>
           </div>
-          <li>{{block.getHash().toString()}}</li>
+          <li>{{block.getHash()}}</li>
         </div>
         <div class="detail-row-copy">
           <li>{{ $t( 'block.miner' ) }}</li>

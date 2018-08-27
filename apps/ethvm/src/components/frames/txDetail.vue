@@ -54,7 +54,7 @@ export default Vue.extend({
   },
   mounted() {
     /* Get Tx Info */
-    this.$socket.emit(sEvents.getTx, { hash: Buffer.from(this.txHash.substring(2), 'hex') }, (err, data) => {
+    this.$socket.emit(sEvents.getTx, { hash: this.txHash }, (err, data) => {
       if (data) {
         this.transaction = new Tx(data)
         /* Method to get Subtransactions: */

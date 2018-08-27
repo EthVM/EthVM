@@ -4,7 +4,7 @@ import * as r from 'rethinkdb'
 
 export interface BlocksRepository {
   getBlocks(limit: number, page: number): Promise<Block[]>
-  getBlock(hash: Buffer): Promise<Block | null>
+  getBlock(hash: string): Promise<Block | null>
 }
 
 export class RethinkBlockRepository extends BaseRethinkDbRepository implements BlocksRepository {
@@ -14,13 +14,13 @@ export class RethinkBlockRepository extends BaseRethinkDbRepository implements B
 
     return r
       .table(RethinkEthVM.tables.blocks)
-      .orderBy({ index: r.desc('intNumber') })
+      .orderBy({ index: r.desc('number') })
       .slice(start, end)
       .run(this.conn)
       .then(cursor => cursor.toArray())
   }
 
-  public getBlock(hash: Buffer): Promise<Block | null> {
+  public getBlock(hash: string): Promise<Block | null> {
     return r
       .table(RethinkEthVM.tables.blocks)
       .get(r.args([hash]))

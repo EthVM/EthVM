@@ -62,22 +62,16 @@ class Block {
     this.block.uncleHashes = hashes
   }
 
-  public getHash(): Hash {
-    if (!this.cache.hash) {
-      this.cache.hash = common.Hash(this.block.hash)
-    }
-    return this.cache.hash
+  public getHash(): string {
+    return this.block.hash
   }
 
   public getIntNumber(): number {
-    return this.block.intNumber
+    return this.block.number
   }
 
-  public getNumber(): HexNumber {
-    if (!this.cache.number) {
-      this.cache.number = common.HexNumber(this.block.number)
-    }
-    return this.cache.number
+  public getNumber(): number {
+    return this.block.number
   }
 
   public getTransactionCount(): number {

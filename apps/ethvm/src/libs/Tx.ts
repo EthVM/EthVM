@@ -16,11 +16,8 @@ class Tx {
     return this.id
   }
 
-  public getHash(): Hash {
-    if (!this.cache.hash) {
-      this.cache.hash = common.Hash(this.tx.hash)
-    }
-    return this.cache.hash
+  public getHash(): string {
+    return this.tx.hash
   }
 
   public getTo(): Address {
@@ -51,11 +48,8 @@ class Tx {
     return this.cache.blcokHash
   }
 
-  public getBlockNumber(): HexNumber {
-    if (!this.cache.blockNumber) {
-      this.cache.blockNumber = common.HexNumber(this.tx.blockNumber)
-    }
-    return this.cache.blockNumber
+  public getBlockNumber(): number {
+    return this.tx.blockNumber
   }
 
   public geTransactionIndex(): HexNumber {

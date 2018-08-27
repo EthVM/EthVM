@@ -3,7 +3,7 @@ import { CacheRepository } from '@app/server/repositories'
 
 export interface BlocksService {
   getBlocks(limit: number, page: number): Promise<Block[]>
-  getBlock(hash: Buffer): Promise<Block | null>
+  getBlock(hash: string): Promise<Block | null>
 }
 
 export class BlocksServiceImpl implements BlocksService {
@@ -13,7 +13,7 @@ export class BlocksServiceImpl implements BlocksService {
     return this.blocksRepository.getBlocks(limit, page)
   }
 
-  public getBlock(hash: Buffer): Promise<Block | null> {
+  public getBlock(hash: string): Promise<Block | null> {
     return this.blocksRepository.getBlock(hash)
   }
 }

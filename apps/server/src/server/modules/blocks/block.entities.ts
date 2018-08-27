@@ -2,9 +2,8 @@ import { BlockStats } from '@app/server/modules/stats'
 import { Tx } from '@app/server/modules/txs'
 
 export interface SmallBlock {
-  number: Buffer
-  intNumber: number
-  hash: Buffer
+  number: number
+  hash: string
   miner: Buffer
   timestamp: Buffer
   transactionCount: number
@@ -20,9 +19,8 @@ export interface SmallBlock {
 }
 
 export interface Block {
-  number: Buffer
-  intNumber: number
-  hash: Buffer
+  number: number
+  hash: string
   parentHash?: Buffer
   nonce?: Buffer
   mixHash?: Buffer
