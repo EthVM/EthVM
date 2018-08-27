@@ -180,14 +180,12 @@ export class EthVMServer {
     const bstats = mappers.toBlockStats(block.transactions, currentBlockTime)
     block.blockStats = { ...bstats, ...block.blockStats }
 
-    const blockHash = bufferToHex(block.hash)
+    const blockHash = bufferToHex(new Buffer(block.hash))
     const smallBlock = mappers.toSmallBlock(block)
 
     // Send to client
     this.io.to(blockHash).emit(blockHash + '_update', smallBlock)
     this.io.to('blocks').emit('newBlock', smallBlock)
-
-    this.ds.putBlock(block)
 
     const txs = block.transactions || []
     if (txs.length > 0) {
