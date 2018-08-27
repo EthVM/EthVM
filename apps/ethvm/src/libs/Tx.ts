@@ -9,7 +9,7 @@ class Tx {
   constructor(tx: TxLayout) {
     this.cache = {}
     this.tx = tx
-    this.id = common.Hash(this.tx.hash).toString()
+    this.id = common.Hash(new Buffer(this.tx.hash)).toString()
   }
 
   public getId(): string {
