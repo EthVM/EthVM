@@ -219,7 +219,7 @@ class Block {
     return this.block.transactions
   }
 
-  public geTransactionHashes(): Hash[] {
+  public geTransactionHashes(): string[] {
     if (!this.cache.transactionHashes) {
       this.cache.transactionHashes = this.block.transactionHashes.map((_hash, idx) => {
         return common.Hash(_hash)

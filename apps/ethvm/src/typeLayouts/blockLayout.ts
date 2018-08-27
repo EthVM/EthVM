@@ -30,7 +30,7 @@ export default interface BlockLayout {
   transactionsRoot: Buffer
   receiptsRoot: Buffer
   transactions: Tx[]
-  transactionHashes: Buffer[]
+  transactionHashes: string[]
   transactionCount: number
   uncleHashes: any
   uncles: Block[]
