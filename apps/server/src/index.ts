@@ -1,6 +1,6 @@
 import config from '@app/config'
 import { logger } from '@app/logger'
-import { RethinkDbStreamer } from '@app/server/core/streams'
+import { KafkaStreamer, KafkaStreamerOpts } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
 import { BlocksServiceImpl, RethinkBlockRepository } from '@app/server/modules/blocks'
 import { ChartsServiceImpl, RethinkChartsRepository } from '@app/server/modules/charts'
@@ -103,7 +103,13 @@ async function bootstrapServer() {
   // Create streamer
   // ---------------
   logger.debug('bootstrapper -> Initializing streamer')
-  const streamer = new RethinkDbStreamer(rConn, emitter)
+  const kafkaStreamerOpts: KafkaStreamerOpts = {
+    groupId: config.get('streamer.kafka.group_id'),
+    brokers: config.get('streamer.kafka.brokers'),
+    blocksTopic: config.get('streamer.kafka.topics.blocks'),
+    pendingTxsTopic: config.get('streamer.kafka.topics.pending_txs')
+  }
+  const streamer = new KafkaStreamer(kafkaStreamerOpts, emitter)
   await streamer.initialize()
 
   // Create server

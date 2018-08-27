@@ -9,6 +9,8 @@ export const StreamerEvents = {
 }
 
 export interface Streamer {
+  initialize(): Promise<boolean>
+
   addListener(eventName: string, fn: ListenerFn)
   removeListener(eventName: string, fn?: ListenerFn)
 

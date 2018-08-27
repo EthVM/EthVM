@@ -179,4 +179,4 @@ services:
         cp -a /keystore/. /geth/keystore/
         cp /static-nodes.json /geth/
         geth --datadir '/geth' --ethvm init /genesis.json
-        geth --datadir '/geth' --verbosity 6 --networkid 1234 --identity geth --ethvm --ethvmbrokers 'kafka:9092' --gcmode archive --rpc --rpcaddr '0.0.0.0' --rpccorsdomain '*' --rpcapi 'admin,personal,db,eth,net,web3,txpool,miner' --syncmode full --nat 'extip:172.25.0.102' --nousb --nodiscover --maxpeers 2
+        geth --datadir '/geth' --verbosity 6 --networkid 1234 --identity geth --ethvm --ethvm.brokers 'kafka:9092' --gcmode archive --rpc --rpcaddr '0.0.0.0' --rpccorsdomain '*' --rpcapi 'admin,personal,db,eth,net,web3,txpool,miner' --syncmode full --nat 'extip:172.25.0.102' --nousb --nodiscover --maxpeers 2

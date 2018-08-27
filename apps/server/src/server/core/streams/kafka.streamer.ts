@@ -8,19 +8,42 @@ import { logger } from '@app/logger'
 export interface KafkaStreamerOpts {
   groupId: string
   brokers: string
+  blocksTopic: string
+  pendingTxsTopic: string
 }
 
 export class KafkaStreamer implements Streamer {
-  private readonly consumer: Kafka.KafkaConsumer
+  private blocksStream: Kafka.ConsumerStream
 
-  constructor(private readonly emitter: EventEmitter, private readonly opts: KafkaStreamerOpts) {
-    this.consumer = new Kafka.KafkaConsumer(
-      {
-        'group.id': this.opts.groupId,
-        'metadata.broker.list': this.opts.brokers
-      },
-      {}
-    )
+  constructor(private readonly opts: KafkaStreamerOpts, private readonly emitter: EventEmitter) {}
+
+  public initialize(): Promise<boolean> {
+    try {
+      this.blocksStream = Kafka.createReadStream(
+        {
+          'group.id': this.opts.groupId,
+          'metadata.broker.list': this.opts.brokers,
+          'socket.keepalive.enable': true,
+          'enable.auto.commit': true
+        },
+        {},
+        {
+          topics: [this.opts.blocksTopic]
+        }
+      )
+
+      this.blocksStream.on('data', raw => {
+        this.onNewBlock(raw)
+      })
+
+      this.blocksStream.on('error', err => {
+        logger.error(`KafkaStreamer - onError: ${err}`)
+      })
+
+      return Promise.resolve(true)
+    } catch (err) {
+      return Promise.reject(err)
+    }
   }
 
   public addListener(eventName: string, fn: ListenerFn) {
@@ -36,7 +59,7 @@ export class KafkaStreamer implements Streamer {
   }
 
   public onNewTx(tx: Tx) {
-    logger.d(`KafkaStreamer - onTx: ${tx}`)
+    logger.d(`KafkaStreamer - onNewTx: ${tx}`)
   }
 
   public onNewPendingTx(tx: Tx) {

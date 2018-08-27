@@ -184,12 +184,12 @@ const config = convict({
       },
       topics: {
         blocks: {
-          default: 'raw_blocks',
+          default: 'raw-blocks',
           format: String,
           env: 'ETHVM_STREAMER_KAFKA_TOPICS_BLOCKS'
         },
         pending_txs: {
-          default: 'raw_pTxs',
+          default: 'raw-pending-txs',
           format: String,
           env: 'ETHVM_STREAMER_KAFKA_TOPICS_PENDING_TXS'
         }
