@@ -40,10 +40,7 @@ services:
       - "traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:*||Access-Control-Allow-Credentials:true"
       - "traefik.frontend.passHostHeader=true"
       - "traefik.backend=ethvm"
-    environment:
-      - ETHVM_HOST=0.0.0.0
-      - ETHVM_PORT=80
-      - ETVHM_DOCKER=true
+      - "traefik.port=8080"
 
   server:
     build:

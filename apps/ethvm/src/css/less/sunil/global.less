@@ -78,6 +78,7 @@ ul {
 
 /* Top Title + Search Container. Is used on every single frame: */
 .page-title-container {
+  margin-top: 1px;
   display: flex;
   padding: 30px 0px 40px 0px;
   .page-title {
@@ -301,14 +302,14 @@ ul {
 .copy {
   visibility: hidden;
   color: @color-purple;
+  font-size: 16px;
 }
 
 /* Itenticon: */
 .identicon {
-  margin-left: 5px;
-  margin-right: 10px;
-  width: 50px;
-  height: 50px;
+  display: float;
+  width: 60px;
+  height: 60px;
   background-size: cover;
   border-radius: 50%;
 }
@@ -317,12 +318,12 @@ ul {
 @media all and (max-width: @bp-large) {
   .page-title-container {
     display: block !important;
+    padding: 30px 0px 20px 0px;
     h3 {
       font-size: 20px;
     }
     .search-block {
-      margin-top: 20px;
-      width: 100% !important;
+      display: none;
     }
   }
 
