@@ -3,6 +3,7 @@ import { Streamer } from '@app/server/core/streams'
 import { Block } from '@app/server/modules/blocks'
 import { Tx } from '@app/server/modules/txs'
 import EventEmitter, { ListenerFn } from 'eventemitter3'
+import { logger } from '@app/logger'
 
 export interface KafkaStreamerOpts {
   groupId: string
@@ -30,9 +31,15 @@ export class KafkaStreamer implements Streamer {
     this.emitter.removeListener(eventName, fn)
   }
 
-  public onNewBlock(block: Block) {}
+  public onNewBlock(block: Block) {
+    logger.d(`KafkaStreamer - onNewBlock: ${block}`)
+  }
 
-  public onNewTx(tx: Tx) {}
+  public onNewTx(tx: Tx) {
+    logger.d(`KafkaStreamer - onTx: ${tx}`)
+  }
 
-  public onNewPendingTx(tx: Tx) {}
+  public onNewPendingTx(tx: Tx) {
+    logger.d(`KafkaStreamer - onNewPendingTx: ${tx}`)
+  }
 }
