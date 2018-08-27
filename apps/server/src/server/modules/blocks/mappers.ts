@@ -38,6 +38,7 @@ const toBlockStats = (txs: Tx[] = [], blockTime: BigNumber): BlockStats => {
       failed: zero,
       success: zero,
       avgGasPrice: zero,
+      pendingTxs:zero,
       avgTxFees: zero
     }
   }
@@ -63,6 +64,8 @@ const toBlockStats = (txs: Tx[] = [], blockTime: BigNumber): BlockStats => {
     blockTime: utils.toHex(blockTime),
     failed: utils.toHex(txStatus.failed),
     success: utils.toHex(txStatus.success),
+    // TODO calc pending tx
+    pendingTxs:utils.toHex(0),
     avgGasPrice: utils.toHex(txStatus.totGasPrice.div(txs.length).integerValue(BigNumber.ROUND_CEIL)),
     avgTxFees: utils.toHex(txStatus.totTxFees.div(txs.length).integerValue(BigNumber.ROUND_CEIL))
   }
