@@ -88,7 +88,7 @@ export default Vue.extend({
         this.redraw = false
         if (!_block.getIsUncle()) {
           const _tempD = _block.getStats()
-          this.chartData.labels.push(_block.getNumber().toNumber())
+          this.chartData.labels.push(_block.getNumber())
           this.chartData.labels.shift()
           this.chartData.datasets[0].data.push(_tempD.pendingTxs)
           this.chartData.datasets[0].data.shift()
