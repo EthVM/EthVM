@@ -37,16 +37,6 @@ const config = convict({
       default: 3000,
       format: 'port',
       env: 'ETHVM_SERVER_PORT'
-    },
-    ping_interval: {
-      default: 10000,
-      format: 'duration',
-      env: 'ETHVM_SERVER_PING_INTERVAL'
-    },
-    ping_timeout: {
-      default: 5000,
-      format: 'duration',
-      env: 'ETHVM_PING_TIMEOUT'
     }
   },
 
@@ -180,10 +170,30 @@ const config = convict({
     }
   },
 
-  streaming: {
+  streamer: {
     kafka: {
-      group_id: {},
-      brokers: {}
+      group_id: {
+        default: 'server-consumer',
+        format: String,
+        env: 'ETHVM_STREAMER_KAFKA_GROUP_ID'
+      },
+      brokers: {
+        default: 'kafka:9092',
+        format: String,
+        env: 'ETHVM_STREAMER_KAFKA_BROKERS'
+      },
+      topics: {
+        blocks: {
+          default: 'raw_blocks',
+          format: String,
+          env: 'ETHVM_STREAMER_KAFKA_TOPICS_BLOCKS'
+        },
+        pending_txs: {
+          default: 'raw_pTxs',
+          format: String,
+          env: 'ETHVM_STREAMER_KAFKA_TOPICS_PENDING_TXS'
+        }
+      }
     }
   }
 })
