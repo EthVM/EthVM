@@ -1,4 +1,4 @@
-import Kafka from 'node-rdkafka'
+import Kafka, { createReadStream } from 'node-rdkafka'
 import { Streamer } from '@app/server/core/streams'
 import { Block } from '@app/server/modules/blocks'
 import { Tx } from '@app/server/modules/txs'
@@ -19,7 +19,7 @@ export class KafkaStreamer implements Streamer {
 
   public initialize(): Promise<boolean> {
     try {
-      this.blocksStream = Kafka.createReadStream(
+      this.blocksStream = createReadStream(
         {
           'group.id': this.opts.groupId,
           'metadata.broker.list': this.opts.brokers,
@@ -54,15 +54,16 @@ export class KafkaStreamer implements Streamer {
     this.emitter.removeListener(eventName, fn)
   }
 
-  public onNewBlock(block: Block) {
-    logger.d(`KafkaStreamer - onNewBlock: ${block}`)
+  public onNewBlock(block: any) {
+    const m = Buffer.from(block.value)
+    logger.debug(`KafkaStreamer - onNewBlock: ${m}`)
   }
 
-  public onNewTx(tx: Tx) {
-    logger.d(`KafkaStreamer - onNewTx: ${tx}`)
+  public onNewTx(tx: any) {
+    logger.debug(`KafkaStreamer - onNewTx: ${JSON.stringify(tx)}`)
   }
 
-  public onNewPendingTx(tx: Tx) {
-    logger.d(`KafkaStreamer - onNewPendingTx: ${tx}`)
+  public onNewPendingTx(tx: any) {
+    logger.debug(`KafkaStreamer - onNewPendingTx: ${JSON.stringify(tx)}`)
   }
 }
