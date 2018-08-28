@@ -34,23 +34,12 @@ ajv.addKeyword('hashBuffer', {
 })
 
 // Mini schemas definitions
-const addressBufferSchema = {
-  $id: '/properties/address',
-  instanceof: 'Buffer',
-  addresBuffer: true
-}
-
 const addressSchema = {
   $id: '/properties/address',
   type: 'string',
   address: true
 }
 
-const hashBufferSchema = {
-  $id: '/properties/hash',
-  instanceof: 'Buffer',
-  hashBuffer: true
-}
 const hashSchema = {
   $id: '/properties/hashstring',
   type: 'string',
