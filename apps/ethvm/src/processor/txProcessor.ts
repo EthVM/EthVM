@@ -9,10 +9,8 @@ const dedup = (tx: Tx, pastTxs: Tx[]): Tx[] => {
   return pastTxs
 }
 
-const processTxs = (tx: Tx, pastTxs: Tx[]): Tx[] => {
+export const processTxs = (tx: Tx, pastTxs: Tx[]): Tx[] => {
   pastTxs = dedup(tx, pastTxs)
   pastTxs.unshift(tx)
   return pastTxs
 }
-
-export default processTxs

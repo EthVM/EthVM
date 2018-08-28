@@ -1,9 +1,9 @@
-import { common, EthValue, Hash, Hex, HexNumber, HexTime } from '@app/libs'
-import { Address, Tx } from '@app/models'
+import { common, Hash, Hex, HexNumber, HexTime } from '@app/libs'
+import { Address, Tx, EthValue } from '@app/models'
 import { BlockLayout } from '@app/models/server'
 import bn from 'bignumber.js'
 
-class Block {
+export class Block {
   public readonly id: string
   private readonly block: BlockLayout
   private cache: any
@@ -254,5 +254,3 @@ class Block {
     return this.block.blockStats
   }
 }
-
-export default Block

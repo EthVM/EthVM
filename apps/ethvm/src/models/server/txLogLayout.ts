@@ -10,7 +10,7 @@ interface LogLayout {
   removed: boolean
 }
 
-export default interface TxLogLayout {
+export interface TxLogLayout {
   hash: Buffer
   logs: LogLayout[]
 }

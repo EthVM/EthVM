@@ -1,4 +1,4 @@
-export default class Address {
+export class Address {
   public address: string
 
   constructor(_add: Buffer) {

@@ -1,9 +1,9 @@
-import { common, EthValue, Hash, Hex, HexNumber, HexTime } from '@app/libs'
-import { Address } from '@app/models'
+import { common,  Hash, Hex, HexNumber, HexTime } from '@app/libs'
+import { Address, EthValue } from '@app/models'
 
 import { TxLayout } from '@app/models/server'
 
-class Tx {
+export class Tx {
   public readonly id: string
   private readonly tx: TxLayout
   private cache: any
@@ -168,4 +168,3 @@ class Tx {
   }
 }
 
-export default Tx

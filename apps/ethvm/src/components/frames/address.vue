@@ -88,7 +88,7 @@
 
 <script lang="ts">
   import { common } from '@app/libs'
-  import { Tx } from '@app/models'
+  import { Tx, EthValue } from '@app/models'
   import bn from 'bignumber.js'
   import blockies from 'ethereum-blockies'
   import ethUnits from 'ethereumjs-units'
@@ -144,7 +144,7 @@
         address: this.address
       }, (err, result) => {
         if (!err && result) {
-          const balance = common.EthValue(common.HexToBuffer(result.result)).toEth()
+          const balance = EthValue(common.HexToBuffer(result.result)).toEth()
           this.account.balance = balance
         }
       })

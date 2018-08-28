@@ -1,5 +1,5 @@
-import { EthValue, Hash, Hex, HexNumber, HexTime } from '@app/libs'
-import { Address } from '@app/models'
+import { Hash, Hex, HexNumber, HexTime } from '@app/libs'
+import { Address, EthValue } from '@app/models'
 
 const common = {
   Hash: (_hash: Buffer): Hash => {

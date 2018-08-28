@@ -6,7 +6,7 @@ interface Latest {
   tx?: Tx
 }
 
-export default interface StateLayout {
+export interface StateLayout {
   txs: FIFO<Tx>
   blocks: FIFO<Block>
 }

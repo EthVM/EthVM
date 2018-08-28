@@ -1,7 +1,7 @@
 import Bn from 'bignumber.js'
 import ethUnits from 'ethereumjs-units'
 
-export default class EthValue {
+export class EthValue {
   public value: string
 
   constructor(_value: Buffer) {

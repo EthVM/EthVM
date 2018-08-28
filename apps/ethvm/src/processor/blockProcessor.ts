@@ -29,7 +29,7 @@ const dedup = (block: Block, pastBlocks: Block[]): Block[] => {
   return pastBlocks
 }
 
-const processBlocks = (block: Block, pastBlocks: Block[]): Block[] => {
+export const processBlocks = (block: Block, pastBlocks: Block[]): Block[] => {
   pastBlocks = dedup(block, pastBlocks)
   pastBlocks = setUnclesToUnclesAndAdd(block, pastBlocks)
   pastBlocks.sort((a, b) => {
@@ -38,4 +38,3 @@ const processBlocks = (block: Block, pastBlocks: Block[]): Block[] => {
   return pastBlocks
 }
 
-export default processBlocks
