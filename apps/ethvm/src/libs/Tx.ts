@@ -124,7 +124,6 @@ class Tx {
 
   public getValue(): EthValue {
     if (!this.cache.ethValue) {
-      console.log(this.tx)
       this.cache.ethValue = common.EthValue(this.tx.value)
     }
     return this.cache.ethValue
