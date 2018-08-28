@@ -79,7 +79,7 @@ export class VmRunner {
               this.codeCache.set(tx.to, code)
 
               const to = hexToBuffer(tx.to)
-              code = code ? code : new Buffer('00', 'hex')
+              code = code ? code : Buffer.from('00', 'hex')
               const data = hexToBuffer(tx.data)
               runOnVM(trie, to, code, this.gasLimit, data)
                 .then(r => res(r))

@@ -10,7 +10,7 @@ describe('helpers.eth', () => {
           length: 0
         },
         {
-          buffer: new Buffer(''),
+          buffer: Buffer.from(''),
           length: 0
         },
         {
@@ -35,7 +35,7 @@ describe('helpers.eth', () => {
           length: 1
         },
         {
-          buffer: new Buffer('cheese'),
+          buffer: Buffer.from('cheese'),
           length: 0
         },
         {

@@ -31,7 +31,7 @@ export const b64Reviver = (key: any, val: any) => {
     switch (type) {
       case 'base64': // only support base64 for now
       default:
-        return new Buffer(val.data.slice(pos + 1), 'base64')
+        return Buffer.from(val.data.slice(pos + 1), 'base64')
     }
   }
 

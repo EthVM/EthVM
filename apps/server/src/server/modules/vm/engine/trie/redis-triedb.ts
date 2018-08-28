@@ -31,13 +31,13 @@ export class RedisTrieDb implements TrieDB {
     const keyStr = key.toString()
     this.redis.get(keyStr, (err: Error, result: string) => {
       if (!err && result) {
-        cb(null, new Buffer(result, 'hex'))
+        cb(null, Buffer.from(result, 'hex'))
         return
       }
       // Otherwise retrieve from RPC
       try {
         const res = this.rpc.request('eth_getKeyValue', ['0x' + key.toString('hex')])
-        const buffer: Buffer = new Buffer(res.substring(2), 'hex')
+        const buffer: Buffer = Buffer.from(res.substring(2), 'hex')
         this.redis.set(keyStr, buffer.toString('hex'))
         cb(null, buffer)
       } catch (e) {
@@ -50,7 +50,7 @@ export class RedisTrieDb implements TrieDB {
     const keyStr = key.toString()
     this.redis.set(keyStr, val, (err: Error, result: string) => {
       if (!err && result) {
-        cb(null, new Buffer(result, 'hex'))
+        cb(null, Buffer.from(result, 'hex'))
         return
       }
 

@@ -157,7 +157,7 @@ export class EthVMServer {
   // TODO: This method should only receive the block and emit it directly
   // This logic should not be here
   private onNewBlockEvent = (block: Block): void => {
-    logger.info(`EthVMServer - onNewBlockEvent / Block: ${bufferToHex(block.hash)}`)
+    logger.info(`EthVMServer - onNewBlockEvent / Block: ${block.hash}`)
 
     // Save state root if defined
     if (block.stateRoot) {
@@ -180,7 +180,7 @@ export class EthVMServer {
     const bstats = mappers.toBlockStats(block.transactions, currentBlockTime)
     block.blockStats = { ...bstats, ...block.blockStats }
 
-    const blockHash = bufferToHex(new Buffer(block.hash))
+    const blockHash = bufferToHex(Buffer.from(block.hash))
     const smallBlock = mappers.toSmallBlock(block)
 
     // Send to client
