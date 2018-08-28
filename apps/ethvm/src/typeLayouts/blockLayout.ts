@@ -1,4 +1,4 @@
-import { Block, Tx } from '@app/libs'
+import { Block, Tx } from '@app/models'
 
 interface IblockStats {
   blockTime: string

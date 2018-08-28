@@ -1,4 +1,5 @@
-import { Block, FIFO, Tx } from '@app/libs'
+import { FIFO } from '@app/libs'
+import { Block, Tx } from '@app/models'
 
 interface Latest {
   block?: Block

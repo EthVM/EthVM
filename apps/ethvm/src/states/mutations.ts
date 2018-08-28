@@ -1,4 +1,4 @@
-import { Block, Tx } from '@app/libs'
+import { Block, Tx } from '@app/models'
 import { BlockLayout, StateLayout, TxLayout } from '@app/typeLayouts'
 
 const NEW_BLOCK = (state: StateLayout, block: BlockLayout | BlockLayout[]) => {

@@ -1,4 +1,5 @@
-import { Address, common, EthValue, Hash, Hex, HexNumber, HexTime, Tx } from '@app/libs'
+import { common, EthValue, Hash, Hex, HexNumber, HexTime } from '@app/libs'
+import { Address, Tx } from '@app/models'
 import { BlockLayout } from '@app/typeLayouts'
 import bn from 'bignumber.js'
 

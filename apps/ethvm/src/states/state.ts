@@ -1,5 +1,6 @@
 import globConfigs from '@/configs/global.json'
-import { Block, FIFO, processBlocks, processTxs, Tx } from '@app/libs'
+import { FIFO, processBlocks, processTxs } from '@app/libs'
+import { Block, Tx } from '@app/models'
 import { StateLayout } from '@app/typeLayouts'
 
 const State: StateLayout = {

@@ -1,4 +1,4 @@
-import { Block, Tx } from '@app/libs'
+import { Block, Tx } from '@app/models'
 import { StateLayout } from '@app/typeLayouts'
 
 const all = (state: StateLayout): StateLayout => {

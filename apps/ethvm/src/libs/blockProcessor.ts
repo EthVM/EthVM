@@ -1,4 +1,4 @@
-import { Block } from '@app/libs'
+import { Block } from '@app/models'
 
 const setUncles = (block: Block, hash: string, blocks: Block[]): Block[] => {
   for (let i = 0; i < blocks.length; i++) {

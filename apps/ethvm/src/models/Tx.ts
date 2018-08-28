@@ -1,4 +1,6 @@
-import { Address, common, EthValue, Hash, Hex, HexNumber, HexTime } from '@app/libs'
+import { common, EthValue, Hash, Hex, HexNumber, HexTime } from '@app/libs'
+import { Address } from '@app/models'
+
 import { TxLayout } from '@app/typeLayouts'
 
 class Tx {

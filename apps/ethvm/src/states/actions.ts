@@ -1,6 +1,6 @@
 import defaultRooms from '@app/configs/defaultRooms.json'
 import sEvents from '@app/configs/socketEvents.json'
-import { Block, Tx } from '@app/libs'
+import { Block, Tx } from '@app/models'
 import { BlockLayout, TxLayout } from '@app/typeLayouts'
 
 const socket_socketNewblock = function({ commit }, block: BlockLayout | BlockLayout[]) {
