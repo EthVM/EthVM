@@ -10,9 +10,9 @@
       <div class="detail-row-copy">
         <li>{{ $t( 'common.hash' ) }}</li>
         <div class="copy">
-          <copy-to-clip-component :valueToCopy="tx.getHash().toString()"></copy-to-clip-component>
+          <copy-to-clip-component :valueToCopy="tx.getHash()"></copy-to-clip-component>
         </div>
-        <li>{{tx.getHash().toString()}}</li>
+        <li>{{tx.getHash()}}</li>
       </div>
       <div class="detail-row">
         <li>{{ $t( 'common.status' ) }}</li>
@@ -57,10 +57,10 @@
       <div class="detail-row-copy">
         <li>{{ $t( 'tableHeader.blockN' ) }}</li>
         <div class="copy">
-          <copy-to-clip-component :valueToCopy="tx.getBlockNumber().toNumber()"></copy-to-clip-component>
+          <copy-to-clip-component :valueToCopy="tx.getBlockNumber()"></copy-to-clip-component>
         </div>
         <li class="link">
-          <router-link :to="'/block/'+tx.getBlockHash().toString()">{{tx.getBlockNumber().toNumber()}}</router-link>
+          <router-link :to="'/block/'+tx.getBlockHash().toString()">{{tx.getBlockNumber()}}</router-link>
         </li>
       </div>
       <div class="detail-row">

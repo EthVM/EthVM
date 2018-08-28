@@ -1,7 +1,7 @@
 export default interface TxLayout {
   root: Buffer
   blockHash: Buffer
-  blockNumber: Buffer
+  blockNumber: number
   transactionIndex: Buffer
   from: Buffer
   fromBalance: Buffer
@@ -13,7 +13,7 @@ export default interface TxLayout {
   logsBloom: Buffer
   gas: Buffer
   gasPrice: Buffer
-  hash: Buffer
+  hash: string
   input: Buffer
   nonce: Buffer
   value: Buffer

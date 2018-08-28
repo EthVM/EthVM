@@ -13,7 +13,10 @@ import {
   TokensBalancePayload,
   TxsPayload
 } from '@app/server/core/payloads'
+import { Streamer, StreamerEvents } from '@app/server/core/streams'
 import { Block, BlocksService, mappers } from '@app/server/modules/blocks'
+import { ChartService } from '@app/server/modules/charts'
+import { ExchangeService } from '@app/server/modules/exchanges'
 import { Tx, TxsService } from '@app/server/modules/txs'
 import { VmService } from '@app/server/modules/vm'
 import { CacheRepository } from '@app/server/repositories'
@@ -23,9 +26,6 @@ import * as fs from 'fs'
 import * as http from 'http'
 import * as SocketIO from 'socket.io'
 import * as utils from 'web3-utils'
-import { Streamer, StreamerEvents } from './core/streams'
-import { ChartService } from './modules/charts'
-import { ExchangeService } from './modules/exchanges'
 
 export type SocketEventPayload =
   | AddressTxsPagesPayload
@@ -157,7 +157,7 @@ export class EthVMServer {
   // TODO: This method should only receive the block and emit it directly
   // This logic should not be here
   private onNewBlockEvent = (block: Block): void => {
-    logger.info(`EthVMServer - onNewBlockEvent / Block: ${bufferToHex(block.hash)}`)
+    logger.info(`EthVMServer - onNewBlockEvent / Block: ${block.hash}`)
 
     // Save state root if defined
     if (block.stateRoot) {
@@ -180,14 +180,12 @@ export class EthVMServer {
     const bstats = mappers.toBlockStats(block.transactions, currentBlockTime)
     block.blockStats = { ...bstats, ...block.blockStats }
 
-    const blockHash = bufferToHex(block.hash)
+    const blockHash = bufferToHex(Buffer.from(block.hash))
     const smallBlock = mappers.toSmallBlock(block)
 
     // Send to client
     this.io.to(blockHash).emit(blockHash + '_update', smallBlock)
     this.io.to('blocks').emit('newBlock', smallBlock)
-
-    this.ds.putBlock(block)
 
     const txs = block.transactions || []
     if (txs.length > 0) {

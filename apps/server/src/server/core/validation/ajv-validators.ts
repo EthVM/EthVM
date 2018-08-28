@@ -34,24 +34,17 @@ ajv.addKeyword('hashBuffer', {
 })
 
 // Mini schemas definitions
-const addressBufferSchema = {
-  $id: '/properties/address',
-  instanceof: 'Buffer',
-  addresBuffer: true
-}
-
 const addressSchema = {
   $id: '/properties/address',
   type: 'string',
   address: true
 }
 
-const hashBufferSchema = {
-  $id: '/properties/hash',
-  instanceof: 'Buffer',
-  hashBuffer: true
+const hashSchema = {
+  $id: '/properties/hashstring',
+  type: 'string',
+  hash: true
 }
-
 const limitSchema = {
   $id: '/properties/limit',
   type: 'number',
@@ -100,7 +93,7 @@ const BlockTxsPayloadSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   type: 'object',
   properties: {
-    hash: hashBufferSchema
+    hash: hashSchema
   },
   required: ['hash'],
   additionalProperties: false
@@ -111,7 +104,7 @@ const BlockPayloadSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   type: 'object',
   properties: {
-    hash: hashBufferSchema
+    hash: hashSchema
   },
   required: ['hash'],
   additionalProperties: false
@@ -182,7 +175,7 @@ const TxPayloadSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   type: 'object',
   properties: {
-    hash: hashBufferSchema
+    hash: hashSchema
   },
   required: ['hash'],
   additionalProperties: false

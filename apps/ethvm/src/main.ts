@@ -27,6 +27,7 @@ import frameAddress from '@app/components/frames/address.vue'
 
 // Header ----------------------
 import blockHeader from '@app/components/blocks/header/header.vue'
+import mobileMenu from '@app/components/blocks/header/mobileMenu.vue'
 
 // SMALL BLOCKS ----------------------
 // Parent Small Block Component:
@@ -92,7 +93,7 @@ Vue.component('frame-address', frameAddress)
 
 // Header ----------------------
 Vue.component('block-header', blockHeader)
-
+Vue.component('mobile-menu', mobileMenu)
 // SMALL BLOCKS ----------------------
 // Parent Small Block Component:
 Vue.component('block-component', blockComponent)

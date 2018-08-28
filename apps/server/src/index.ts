@@ -54,7 +54,7 @@ async function bootstrapServer() {
   const blocks = await ds.getBlocks()
   const configStateRoot = config.get('eth.state_root')
   const hasStateRoot = blocks && blocks[0] && blocks[0].stateRoot
-  const stateRoot = hasStateRoot ? new Buffer(blocks[0].stateRoot!!) : new Buffer(configStateRoot, 'hex')
+  const stateRoot = hasStateRoot ? Buffer.from(blocks[0].stateRoot!!) : Buffer.from(configStateRoot, 'hex')
   vmr.setStateRoot(stateRoot)
 
   // Create block event emmiter

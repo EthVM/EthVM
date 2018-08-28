@@ -10,7 +10,7 @@ class Block {
   constructor(block: BlockLayout) {
     this.cache = {}
     this.block = block
-    this.id = common.Hash(this.block.hash).toString()
+    this.id = this.block.hash
   }
 
   public getId(): string {
@@ -62,22 +62,16 @@ class Block {
     this.block.uncleHashes = hashes
   }
 
-  public getHash(): Hash {
-    if (!this.cache.hash) {
-      this.cache.hash = common.Hash(this.block.hash)
-    }
-    return this.cache.hash
+  public getHash(): string {
+    return this.block.hash
   }
 
   public getIntNumber(): number {
-    return this.block.intNumber
+    return this.block.number
   }
 
-  public getNumber(): HexNumber {
-    if (!this.cache.number) {
-      this.cache.number = common.HexNumber(this.block.number)
-    }
-    return this.cache.number
+  public getNumber(): number {
+    return this.block.number
   }
 
   public getTransactionCount(): number {
@@ -225,7 +219,7 @@ class Block {
     return this.block.transactions
   }
 
-  public geTransactionHashes(): Hash[] {
+  public geTransactionHashes(): string[] {
     if (!this.cache.transactionHashes) {
       this.cache.transactionHashes = this.block.transactionHashes.map((_hash, idx) => {
         return common.Hash(_hash)

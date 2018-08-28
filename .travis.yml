@@ -1,9 +1,28 @@
-language: generic
 sudo: false
-
+language: generic
 matrix:
   include:
-    - env: PROJECT=apps/ethvm
-    - env: PROJECT=apps/server
+    -
+      env: PROJECT=apps/ethvm
+      language: node_js
+      node_js:
+        - "10"
+    -
+      env: PROJECT=apps/server
+      language: node_js
+      node_js:
+        - "10"
 
-script: if .travis/build-condition.sh $TRAVIS_COMMIT_RANGE $PROJECT; then echo "$PROJECT is being built"; else echo "$PROJECT is NOT being built"; fi
+before_install:
+  - 'if [ $PROJECT = "apps/ethvm" ]; then cd $TRAVIS_BUILD_DIR/apps/ethvm; fi'
+  - 'if [ $PROJECT = "apps/server" ]; then cd $TRAVIS_BUILD_DIR/apps/server; fi'
+
+install:
+  - yarn install
+
+before_script:
+  - 'if [ $PROJECT = "apps/ethvm" ]; then cd $TRAVIS_BUILD_DIR/apps/ethvm; fi'
+  - 'if [ $PROJECT = "apps/server" ]; then cd $TRAVIS_BUILD_DIR/apps/server; fi'
+
+script:
+  - 'if [ $PROJECT = "apps/server" ]; then yarn lint; yarn test:unit; fi'

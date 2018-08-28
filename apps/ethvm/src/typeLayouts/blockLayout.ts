@@ -10,9 +10,8 @@ interface IblockStats {
 }
 
 export default interface BlockLayout {
-  number: Buffer
-  intNumber: number
-  hash: Buffer
+  number: number
+  hash: string
   parentHash: Buffer
   nonce: Buffer
   mixHash: Buffer
@@ -31,7 +30,7 @@ export default interface BlockLayout {
   transactionsRoot: Buffer
   receiptsRoot: Buffer
   transactions: Tx[]
-  transactionHashes: Buffer[]
+  transactionHashes: string[]
   transactionCount: number
   uncleHashes: any
   uncles: Block[]

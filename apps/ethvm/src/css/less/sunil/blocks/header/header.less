@@ -1,3 +1,4 @@
+@import '~lessPath/sunil/global';
 #menu-top {
   background-color: white;
   padding: 20px 0px;
@@ -12,22 +13,15 @@
     vertical-align: top;
 
     img {
-      height: 41px;
+      height: 40px;
     }
   }
 
-  .mobile-menu-buttons {
-    display: none;
-  }
 
   .main-menu {
     display: inline-block;
     vertical-align: top;
     margin-left: auto;
-
-    .mobile-search-block {
-      display: none;
-    }
 
     ul {
       padding: 0;
@@ -163,115 +157,14 @@
   } //.main-menu
 } //.menu-container
 
-@media all and (max-width: 1099px) {
+@media all and (max-width: @bp-large) {
   .menu-container {
-    display: block;
+    display: grid;
+    grid-template-columns: 0px auto 40px;
     .logo {
       display: block;
     }
-
-    .mobile-menu-show-button {
-      display: block;
-      position: fixed;
-      right: 30px;
-      top: 28px;
-      padding: 23px;
-      width: 60px;
-      height: 60px;
-
-      .show-button {
-        div {
-          width: 30px;
-          border-top: 3px solid black;
-          position: absolute;
-        }
-
-        .line1 {
-          right: 0;
-          top: 0;
-        }
-
-        .line2 {
-          right: 0;
-          top: 10px;
-        }
-
-        .line3 {
-          right: 0;
-          top: 20px;
-        }
-      }
-    }
-
     .main-menu {
-      background-image: url(~@/assets/mobile-menu.jpg);
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: left bottom;
-
-      width: 100%;
-      height: 110%;
-
-      display: block;
-
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 999;
-      background-color: white;
-
-      padding-top: 70px;
-
-      .mobile-search-block {
-        display: block;
-        max-width: 500px;
-        padding: 10px 20px 30px 20px;
-      }
-
-      .mobile-menu-hide-button {
-        display: block;
-        position: fixed;
-        right: 0px;
-        top: 0px;
-        width: 60px;
-        height: 60px;
-        z-index: 9999;
-
-        .hide-button {
-          position: relative;
-          div {
-            width: 30px;
-            border-top: 3px solid white;
-            position: absolute;
-            top: 38px;
-            right: 30px;
-          }
-
-          .line1 {
-            transform: rotate(45deg);
-          }
-
-          .line2 {
-            transform: rotate(135deg);
-          }
-        }
-      }
-
-      ul {
-        li {
-          display: block;
-          padding: 15px 20px !important;
-          span {
-            color: white !important;
-            font-size: 18px;
-            font-weight: 400;
-            padding-left: 10px;
-          }
-        }
-      }
-    }
-
-    .mobile-menu-hidden {
       display: none;
     }
   }

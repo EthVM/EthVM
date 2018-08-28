@@ -88,7 +88,7 @@ export default Vue.extend({
         this.redraw = false
         if (!_block.getIsUncle()) {
           const _tempD = _block.getStats()
-          this.chartData.labels.push(_block.getNumber().toNumber())
+          this.chartData.labels.push(_block.getNumber())
           this.chartData.labels.shift()
           this.chartData.datasets[0].data.push(_tempD.pendingTxs)
           this.chartData.datasets[0].data.shift()
@@ -114,7 +114,7 @@ export default Vue.extend({
       }
       const latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
       latestBlocks.forEach(_block => {
-        data.labels.unshift(_block.getNumber().toNumber())
+        data.labels.unshift(_block.getNumber())
         const _tempD = _block.getStats()
         data.sData.unshift(new BN(_tempD.success).toNumber())
         data.fData.unshift(new BN(_tempD.failed).toNumber())

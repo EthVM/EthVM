@@ -4,27 +4,7 @@
       <div class="logo">
         <router-link to="/"><img src="~@/assets/logo.png"></router-link>
       </div>
-
-      <div class="mobile-menu-show-button">
-        <div class="show-button" v-on:click="mobileShowMenuClick">
-          <div class="line1"></div>
-          <div class="line2"></div>
-          <div class="line3"></div>
-        </div>
-      </div>
-
-      <nav class="main-menu mobile-menu-hidden" id="main-menu">
-        <div class="mobile-menu-hide-button">
-          <div class="hide-button" v-on:click="mobileHideMenuClick">
-            <div class="line1"></div>
-            <div class="line2"></div>
-          </div>
-        </div>
-
-        <div class="mobile-search-block">
-          <block-search></block-search>
-        </div>
-
+      <nav class="main-menu">
         <ul>
           <li v-bind:class="{ 'selected' : pagename == undefined }"><a href="/"><div class="icon"></div><span>{{ $t('title.home') }}</span></a></li>
           <li v-bind:class="{ 'selected' : pagename == 'blocks' }"><a href="/blocks"><div class="icon"></div><span>{{ $t('title.blocks') }}</span></a></li>
@@ -34,6 +14,8 @@
           <li v-bind:class="{ 'selected' : pagename == 'about' }"><a href="/about"><div class="icon"></div><span>{{ $t('title.about') }}</span></a></li>
         </ul>
       </nav>
+      <mobile-menu></mobile-menu>
+      <!-- Select language will go here-->
     </div>
   </div>
 </template>
