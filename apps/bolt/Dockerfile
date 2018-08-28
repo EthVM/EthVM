@@ -7,14 +7,29 @@ WORKDIR /var/bolt
 # Copy
 COPY . .
 
+# Give execution perms
+RUN chmod +x ./gradlew
+
 # Create jar
-RUN kotlinc /var/bolt/src/main/kotlin/io/enkrypt/bolt/Main.kt -include-runtime -d bolt.jar
+RUN ./gradlew build
 
 FROM zenika/alpine-kotlin:1.2.40-jdk8
 
-COPY --from=builder /var/bolt/bolt.jar /usr/local/bin/
+# Copy to a new machine
+COPY --from=builder /var/bolt/build/distributions/bolt.tar /
 
-RUN chmod +x /usr/local/bin/bolt.jar
+# Extract
+RUN tar -xvf /bolt.tar
+
+# Move resulting folder to execution
+RUN mv /bolt/bin/bolt /usr/local/bin
+RUN mv /bolt/lib /usr/local/bin
+
+# Give execution permission
+RUN chmod +x /usr/local/bin/bolt
+
+# Clean leftovers
+RUN rm -rf bolt bolt.tar
 
 # Expose
-CMD ["java -jar bolt.jar"]
+CMD ["bolt"]
