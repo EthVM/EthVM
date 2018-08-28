@@ -9,7 +9,7 @@ class Tx {
   constructor(tx: TxLayout) {
     this.cache = {}
     this.tx = tx
-    this.id = common.Hash(new Buffer(this.tx.hash)).toString()
+    this.id = this.tx.hash
   }
 
   public getId(): string {
@@ -124,6 +124,7 @@ class Tx {
 
   public getValue(): EthValue {
     if (!this.cache.ethValue) {
+      console.log(this.tx)
       this.cache.ethValue = common.EthValue(this.tx.value)
     }
     return this.cache.ethValue

@@ -10,7 +10,7 @@ class Block {
   constructor(block: BlockLayout) {
     this.cache = {}
     this.block = block
-    this.id = common.Hash(new Buffer(this.block.hash)).toString()
+    this.id = this.block.hash
   }
 
   public getId(): string {
