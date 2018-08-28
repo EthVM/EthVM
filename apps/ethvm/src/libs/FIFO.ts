@@ -1,6 +1,6 @@
 type itemProcessor<T> = (item: T, items: T[]) => T[]
 
-class FIFO<T> {
+export class FIFO<T> {
   private arr: T[]
   private limit: number
   private readonly processor: itemProcessor<T>
@@ -31,4 +31,3 @@ class FIFO<T> {
   }
 }
 
-export default FIFO
