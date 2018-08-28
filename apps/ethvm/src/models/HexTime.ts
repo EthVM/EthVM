@@ -1,6 +1,6 @@
 import Bn from 'bignumber.js'
 
-export default class HexTime {
+export class HexTime {
   public time: string
 
   constructor(_time: Buffer) {

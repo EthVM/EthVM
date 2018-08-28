@@ -32,39 +32,37 @@
 </template>
 
 <script lang="ts">
-  import {
-    common
-  } from '@app/libs'
-  import NumberFormatter from 'number-formatter'
-  import Vue from 'vue'
-  import VueQr from 'vue-qr'
+import { common } from '@app/helpers'
+import NumberFormatter from 'number-formatter'
+import Vue from 'vue'
+import VueQr from 'vue-qr'
 
-  export default Vue.extend({
-    components: {
-      VueQr
-    },
-    name: 'Address',
-    props: ['account'],
-    data() {
-      return {
-        showMore: false,
-        domainName: ''
-      }
-    },
-    computed: {
-      formatEthBalance() {
-        return NumberFormatter('#,##0.#####', this.account.balance)
-      },
-      formatUSDBalance() {
-        return NumberFormatter('#,##0.##', this.account.balance * this.account.ethusd)
-      },
-      formatEthUSD() {
-        return NumberFormatter('#,##0.#####', this.account.ethusd)
-      }
+export default Vue.extend({
+  components: {
+    VueQr
+  },
+  name: 'Address',
+  props: ['account'],
+  data() {
+    return {
+      showMore: false,
+      domainName: ''
     }
-  })
+  },
+  computed: {
+    formatEthBalance() {
+      return NumberFormatter('#,##0.#####', this.account.balance)
+    },
+    formatUSDBalance() {
+      return NumberFormatter('#,##0.##', this.account.balance * this.account.ethusd)
+    },
+    formatEthUSD() {
+      return NumberFormatter('#,##0.#####', this.account.ethusd)
+    }
+  }
+})
 </script>
 
 <style scoped lang="less">
-  @import '~lessPath/sunil/blocks/largeBlocks/addressDetail.less';
+@import '~lessPath/sunil/blocks/largeBlocks/addressDetail.less';
 </style>

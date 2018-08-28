@@ -74,7 +74,7 @@
 </template>
 
 <script lang="ts">
-import { common } from '@app/libs'
+import { common } from '@app/helpers'
 import NumberFormatter from 'number-formatter'
 import Vue from 'vue'
 

@@ -1,6 +1,6 @@
 import Bn from 'bignumber.js'
 
-export default class HexNumber {
+export class HexNumber {
   public value: string
 
   constructor(_value: Buffer) {

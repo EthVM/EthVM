@@ -1,4 +1,4 @@
-import { Block } from '@app/libs'
+import { Block } from '@app/models'
 
 const setUncles = (block: Block, hash: string, blocks: Block[]): Block[] => {
   for (let i = 0; i < blocks.length; i++) {
@@ -29,7 +29,7 @@ const dedup = (block: Block, pastBlocks: Block[]): Block[] => {
   return pastBlocks
 }
 
-const processBlocks = (block: Block, pastBlocks: Block[]): Block[] => {
+export const processBlocks = (block: Block, pastBlocks: Block[]): Block[] => {
   pastBlocks = dedup(block, pastBlocks)
   pastBlocks = setUnclesToUnclesAndAdd(block, pastBlocks)
   pastBlocks.sort((a, b) => {
@@ -37,5 +37,3 @@ const processBlocks = (block: Block, pastBlocks: Block[]): Block[] => {
   })
   return pastBlocks
 }
-
-export default processBlocks
