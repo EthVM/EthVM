@@ -34,7 +34,7 @@
 <script lang="ts">
   import {
     common
-  } from '@app/libs'
+  } from '@app/helpers'
   import NumberFormatter from 'number-formatter'
   import Vue from 'vue'
   import VueQr from 'vue-qr'

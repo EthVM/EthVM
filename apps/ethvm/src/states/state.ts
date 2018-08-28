@@ -1,5 +1,5 @@
 import globConfigs from '@/configs/global.json'
-import { FIFO } from '@app/libs'
+import { FIFO } from '@app/helpers'
 import { Block, Tx } from '@app/models'
 import { processBlocks, processTxs } from '@app/processor'
 import { StateLayout } from '@app/models/server'
