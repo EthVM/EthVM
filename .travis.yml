@@ -1,3 +1,4 @@
+sudo: false
 language: generic
 matrix:
   include:
@@ -5,17 +6,12 @@ matrix:
       env: PROJECT=apps/ethvm
       language: node_js
       node_js:
-        - "9"
         - "10"
     -
       env: PROJECT=apps/server
       language: node_js
       node_js:
-        - "9"
         - "10"
-        -
-
-sudo: false
 
 before_install:
   - 'if [ $PROJECT = "apps/ethvm" ]; then cd $TRAVIS_BUILD_DIR/apps/ethvm; fi'
@@ -29,5 +25,4 @@ before_script:
   - 'if [ $PROJECT = "apps/server" ]; then cd $TRAVIS_BUILD_DIR/apps/server; fi'
 
 script:
-  - 'if [ $PROJECT = "apps/server" ]; then yarn lint; fi'
-  - 'if [ $PROJECT = "apps/server" ]; then yarn test:unit; fi'
+  - 'if [ $PROJECT = "apps/server" ]; then yarn lint; yarn test:unit; fi'
