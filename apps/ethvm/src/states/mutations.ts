@@ -1,5 +1,5 @@
 import { Block, Tx } from '@app/models'
-import { BlockLayout, StateLayout, TxLayout } from '@app/typeLayouts'
+import { BlockLayout, StateLayout, TxLayout } from '@app/models/server'
 
 const NEW_BLOCK = (state: StateLayout, block: BlockLayout | BlockLayout[]) => {
   if (Array.isArray(block)) {

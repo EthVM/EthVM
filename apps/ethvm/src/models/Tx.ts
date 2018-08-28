@@ -1,7 +1,7 @@
 import { common, EthValue, Hash, Hex, HexNumber, HexTime } from '@app/libs'
 import { Address } from '@app/models'
 
-import { TxLayout } from '@app/typeLayouts'
+import { TxLayout } from '@app/models/server'
 
 class Tx {
   public readonly id: string

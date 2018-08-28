@@ -1,5 +1,5 @@
 import { Block, Tx } from '@app/models'
-import { StateLayout } from '@app/typeLayouts'
+import { StateLayout } from '@app/models/server'
 
 const all = (state: StateLayout): StateLayout => {
   return state
