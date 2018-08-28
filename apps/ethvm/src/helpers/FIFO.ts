@@ -30,4 +30,3 @@ export class FIFO<T> {
     this.arr.splice(index, 1)
   }
 }
-

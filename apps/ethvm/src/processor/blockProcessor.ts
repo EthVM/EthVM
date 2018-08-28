@@ -37,4 +37,3 @@ export const processBlocks = (block: Block, pastBlocks: Block[]): Block[] => {
   })
   return pastBlocks
 }
-

@@ -30,7 +30,7 @@
     "pending": "Transactions that haven't been mined on Ethereum network",
     "charts": "Ethereum network charts and stats",
     "about": "EthVM General Information",
-    "address":  "Overview / transactions info",
+    "address": "Overview / transactions info",
     "blockDetail": "Block overview / transactions info",
     "tokenDetail": "Token overview / transfers history",
     "txDetail": "Ethereum transaction overview"
