@@ -166,4 +166,3 @@ export class Tx {
     return this.cache.timestamp
   }
 }
-
