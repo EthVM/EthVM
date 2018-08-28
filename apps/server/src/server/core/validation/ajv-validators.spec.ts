@@ -257,7 +257,7 @@ describe('ajv-validators', () => {
   describe('txPayloadValidator', () => {
     it('should validate a correct tx payload', () => {
       const payload = {
-        hash: hexToBuffer('0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238')
+        hash: '0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238'
       }
       const isvalid = txPayloadValidator(payload)
       expect(isvalid).to.be.true
@@ -271,7 +271,7 @@ describe('ajv-validators', () => {
         10,
         {},
         {
-          hash: '0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238'
+          hash: hexToBuffer('0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238')
         },
         {
           hash: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
