@@ -13,7 +13,10 @@ import {
   TokensBalancePayload,
   TxsPayload
 } from '@app/server/core/payloads'
+import { Streamer, StreamerEvents } from '@app/server/core/streams'
 import { Block, BlocksService, mappers } from '@app/server/modules/blocks'
+import { ChartService } from '@app/server/modules/charts'
+import { ExchangeService } from '@app/server/modules/exchanges'
 import { Tx, TxsService } from '@app/server/modules/txs'
 import { VmService } from '@app/server/modules/vm'
 import { CacheRepository } from '@app/server/repositories'
@@ -23,9 +26,6 @@ import * as fs from 'fs'
 import * as http from 'http'
 import * as SocketIO from 'socket.io'
 import * as utils from 'web3-utils'
-import { Streamer, StreamerEvents } from './core/streams'
-import { ChartService } from './modules/charts'
-import { ExchangeService } from './modules/exchanges'
 
 export type SocketEventPayload =
   | AddressTxsPagesPayload
