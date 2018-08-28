@@ -14,13 +14,10 @@ matrix:
         - "9"
         - "10"
         -
-      env: PROJECT=apps/eth
 
 sudo: false
 
 before_install:
-  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.7.0
-  - export PATH=$HOME/.yarn/bin:$PATH
   - 'if [ $PROJECT = "apps/ethvm" ]; then cd $TRAVIS_BUILD_DIR/apps/ethvm; fi'
   - 'if [ $PROJECT = "apps/server" ]; then cd $TRAVIS_BUILD_DIR/apps/server; fi'
 
@@ -32,5 +29,5 @@ before_script:
   - 'if [ $PROJECT = "apps/server" ]; then cd $TRAVIS_BUILD_DIR/apps/server; fi'
 
 script:
-  - 'if [ $PROJECT = "apps/ethvm" ]; then yarn format; fi'
+  - 'if [ $PROJECT = "apps/server" ]; then yarn lint; fi'
   - 'if [ $PROJECT = "apps/server" ]; then yarn test:unit; fi'
