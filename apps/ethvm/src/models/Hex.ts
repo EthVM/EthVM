@@ -1,4 +1,4 @@
-export default class Hex {
+export class Hex {
   public hexString: string
 
   constructor(_hex: Buffer) {

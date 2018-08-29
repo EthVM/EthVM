@@ -1,4 +1,4 @@
-export default class Hash {
+export class Hash {
   public hash: string
 
   constructor(_hash: Buffer) {

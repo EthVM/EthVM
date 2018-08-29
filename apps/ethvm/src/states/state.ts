@@ -1,6 +1,8 @@
 import globConfigs from '@/configs/global.json'
-import { Block, FIFO, processBlocks, processTxs, Tx } from '@app/libs'
-import { StateLayout } from '@app/typeLayouts'
+import { FIFO } from '@app/helpers'
+import { Block, Tx } from '@app/models'
+import { processBlocks, processTxs } from '@app/processor'
+import { StateLayout } from '@app/models/server'
 
 const State: StateLayout = {
   txs: new FIFO<Tx>(globConfigs.maxTxsInMemory, processTxs),

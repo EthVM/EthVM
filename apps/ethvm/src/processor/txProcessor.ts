@@ -1,4 +1,4 @@
-import { Tx } from '@app/libs'
+import { Tx } from '@app/models'
 
 const dedup = (tx: Tx, pastTxs: Tx[]): Tx[] => {
   for (let i = 0; i < pastTxs.length; i++) {
@@ -9,10 +9,8 @@ const dedup = (tx: Tx, pastTxs: Tx[]): Tx[] => {
   return pastTxs
 }
 
-const processTxs = (tx: Tx, pastTxs: Tx[]): Tx[] => {
+export const processTxs = (tx: Tx, pastTxs: Tx[]): Tx[] => {
   pastTxs = dedup(tx, pastTxs)
   pastTxs.unshift(tx)
   return pastTxs
 }
-
-export default processTxs

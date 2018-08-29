@@ -201,7 +201,7 @@ async function sendRandomTX(txParams: Txp, iter: number = 10): Promise<any> {
   return Promise.resolve()
 }
 
-async function fillAndSend(txParams: Txp): Promise<any> {
+async function fillAndSend(txParams: Txp, amount: number = 10): Promise<any> {
   const balance = await checkBalance(txParams.from)
   ora.info(`Balance ${utils.fromWei(balance)}`)
 
@@ -210,7 +210,7 @@ async function fillAndSend(txParams: Txp): Promise<any> {
     return Promise.reject()
   }
 
-  await sendRandomTX(txParams)
+  await sendRandomTX(txParams, amount)
   return Promise.resolve()
 }
 
@@ -301,17 +301,17 @@ async function txDetails(txhash): Promise<any> {
 commander
   .command('random')
   .alias('r')
-  .action(() => {
+  .option('-n, --number <amount>', 'amount of random txs')
+  .action(options => {
     ora.info('Randomizing txs...').start()
-    fillAndSend(txParams)
+    fillAndSend(txParams, options.number || 10)
   })
 
 commander
   .command('start')
   .option('-a, --address <contract address>', 'contract address')
-  .alias('f')
+  .alias('s')
   .action(options => {
-
     let contractAddress: string = ''
     let runcontractTxs: boolean = false
 

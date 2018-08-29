@@ -127,9 +127,10 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
   geth_miner:
-    build:
-      context: ./apps/eth
-      dockerfile: ../../provisioners/docker/images/dev/eth/Dockerfile
+    image: enkryptio/go-ethereum:latest
+    # Uncomment this if you want to compile directly geth
+    # build:
+    #   context: ./apps/eth
     restart: unless-stopped
     volumes:
       - ./provisioners/docker/config/geth/genesis.json:/genesis.json
@@ -147,9 +148,10 @@ services:
         geth --datadir '/geth' --networkid 1234 --identity geth_miner --mine --minerthreads 1 --nousb --unlock '84baabad835e6ca9252658cd6eae0152f6330c09' --rpc --rpcaddr '0.0.0.0' --password =(echo '123456789') --nodiscover --maxpeers 2 --nodekeyhex '08f0e1dee5c1b4645f3331a566009e41a4514b6cd28656d63d0449ecf812812b'
 
   geth:
-    build:
-      context: ./apps/eth
-      dockerfile: ../../provisioners/docker/images/dev/eth/Dockerfile
+    image: enkryptio/go-ethereum:latest
+    # Uncomment this if you want to compile directly geth
+    # build:
+    #   context: ./apps/eth
     restart: unless-stopped
     depends_on:
       - geth_miner

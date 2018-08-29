@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import sEvents from '@app/configs/socketEvents.json'
-import { Tx } from '@app/libs'
+import { Tx } from '@app/models'
 import bn from 'bignumber.js'
 import Visibility from 'visibilityjs'
 import Vue from 'vue'

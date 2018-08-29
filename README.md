@@ -42,15 +42,17 @@ Also, there are a couple of different directories, not related itself to any con
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing puposes.
 
-### Cloning
+### Prerequisites
 
-As this project uses submodules, more concrete `go-ethereum` project, we recommend you to clone it like this:
+#### Develop with Go-Ethereum enabled
+
+This step is optional, as everything is self contained properly in our `docker-compose.yml` file but, If you're planning to work on our [`go-ethereum`](https://github.com/enKryptIO/go-ethereum) fork during development then, we recommend you to clone the project like below (we are using git submodules for `go-ethereum`):
 
 ```sh
 $ git clone --recursive https://github.com/enKryptIO/ethvm.git
 ```
 
-Otherwise, if you have already cloned it without specifying --recursive flag, just issue the following in the terminal:
+Otherwise, if you have already cloned it without specifying --recursive flag, just issue the following command in the terminal (it will fetch everything):
 
 ```sh
 # in parent ethvm folder
@@ -58,15 +60,31 @@ $ git submodule init
 $ git submodule update
 ```
 
-### Prerequisites
+After everything is cloned, just double check and be sure that `go-ethereum` submodule is tracking properly `master` branch (or whatever one you want to work with).
+
+The last part, is to enable proper building of `geth` image in `docker`. So, comment / uncomment these lines in `docker-compose.yml` file:
+
+```yaml
+
+geth_miner:
+    # image: enkryptio/go-ethereum:latest
+    build:
+      context: ./apps/eth
+
+geth:
+    # image: enkryptio/go-ethereum:latest
+    build:
+      context: ./apps/eth
+
+```
 
 #### Setup a local DNS (or edit /etch/hosts file)
 
 Internally, this `docker-compose.yaml` uses the great and the mighty [`traefik`](https://traefik.io/) as a frontend proxy. By default and for convenience, all of the services are exposed under the fake local domain `.lan`.
 
-So, we recommend you to have a local DNS service like `DNSmasq` (instructions for [OSX](https://gist.github.com/ogrrd/5831371), [Linux](https://wiki.archlinux.org/index.php/dnsmasq) or [Windows](http://www.orbitale.io/2017/12/05/setup-a-dnsmasq-equivalent-on-windows-with-acrylic.html)) to resolve custom domains and to have access directly to exposed services with `lan` domain.
+So, we recommend you to have a local DNS service like `DNSmasq` (instructions for [OSX](https://gist.github.com/ogrrd/5831371), [Linux](https://wiki.archlinux.org/index.php/dnsmasq) or [Windows](http://www.orbitale.io/2017/12/05/setup-a-dnsmasq-equivalent-on-windows-with-acrylic.html)) to resolve custom domains and to have access directly to exposed services with `.lan` domain.
 
-Another different and classical approach is to edit and add these entries in `/etc/hosts` file, just like this (if you're using Windows 10, adapt accordingly):
+Another different and classical approach is to edit and add these entries to `/etc/hosts` file, just like this (if you're using Windows 10, adapt accordingly):
 
 ```sh
 127.0.0.1       geth.ethvm.lan
@@ -79,7 +97,7 @@ Another different and classical approach is to edit and add these entries in `/e
 
 ### Windows 10 support
 
-We're working hard to have support to other operating systems besides the usual suspects as `Linux` and `Mac OS`, so `Windows 10` is not an exception.
+We're working hard to have support to other operating systems besides the usual suspects like `Linux` and `Mac OS`, so `Windows 10` is not an exception.
 
 Although, there are some caveats you need to know in order to have a working environment, for now, we have detected the following issues (if you find another one, create an issue and we will try to help you):
 
@@ -88,17 +106,17 @@ Although, there are some caveats you need to know in order to have a working env
 
 ## Developing
 
-Now that you have done sucessfully the prerequisites steps (yay!), it's time to get your hands dirty. Just make sure you have installed `docker` and `docker-compose` (the more recent, the better).
+Now that you have done sucessfully the prerequisites steps (yay!), it's time to get your hands dirty. Just make sure you have installed [`docker`](https://docs.docker.com/install/) and [`docker-compose`](https://docs.docker.com/compose/install/) (we are using `18.06.1-ce` and `1.22.0` versions, respectively).
 
-In order to bring up the project you can issue the following command in the terminal:
+In order to bring up the project, issue the following command in the terminal:
 
 ```sh
 $ docker-compose up -d
 ```
 
-The very first time you fire this command, it will start building the whole docker images (so the boot time will take several minutes and CPU will start doing heavy work!).
+The very first time you fire this command, it will start building the whole docker images for `ethvm`, `server` and optionally `go-ethereum` (so the boot time will take several minutes and the CPU will start doing heavy work!).
 
-To stop:
+If you want to finish your development session, just write the following:
 
 ```sh
 $ docker-compose stop
@@ -110,14 +128,26 @@ To delete built docker images:
 $ docker-compose rm -s
 ```
 
-And to check the logs:
+To delete everything:
 
 ```sh
-$ docker-compose logs -f
-$ docker-compose logs -f ethvm # (you can specify the service name to gather specific logs also)
+$ docker-compose down -v --remove-orphans --rmi all
 ```
 
-As you can see, these are just regular `docker-compose` commands, so if you have any related questions, navigate to the [official documentation](https://docs.docker.com/compose/) as it will cover basic and more advanced stuff.
+And to check logs:
+
+```sh
+# this is for all services
+$ docker-compose logs -f 
+
+# or you can specify the service name defined in docker-compose to read specific logs
+$ docker-compose logs -f ethvm 
+$ docker-compose logs -f server
+$ docker-compose logs -f geth
+# ... 
+```
+
+As you can see, these are just regular `docker-compose` commands, so, if you have any related questions to this, navigate to the [official documentation](https://docs.docker.com/compose/) as it will cover basic and advanced stuff.
 
 ## Contributing
 

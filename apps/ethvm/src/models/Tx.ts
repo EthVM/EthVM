@@ -1,7 +1,8 @@
-import { Address, common, EthValue, Hash, Hex, HexNumber, HexTime } from '@app/libs'
-import { TxLayout } from '@app/typeLayouts'
+import { common } from '@app/helpers'
+import { Address, EthValue, Hash, Hex, HexNumber, HexTime } from '@app/models'
+import { TxLayout } from '@app/models/server'
 
-class Tx {
+export class Tx {
   public readonly id: string
   private readonly tx: TxLayout
   private cache: any
@@ -165,5 +166,3 @@ class Tx {
     return this.cache.timestamp
   }
 }
-
-export default Tx

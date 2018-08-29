@@ -35,7 +35,8 @@
 </template>
 
 <script lang="ts">
-import { Block, common, Tx } from '@app/libs'
+import { common } from '@app/helpers'
+import { Block, Tx } from '@app/models'
 import chartOptions from '@app/sampleData/chartData.json'
 import sEvents from '@app/configs/socketEvents.json'
 import store from '@app/states'

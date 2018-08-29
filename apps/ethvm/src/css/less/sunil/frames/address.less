@@ -19,7 +19,7 @@
   grid-template-columns: 1fr 465px;
   align-items: center;
   width: 1fr;
-  .title-box{
+  .title-box {
     display: grid;
     grid-template-rows: repeat(3, auto);
     grid-template-columns: 60px 1fr;
@@ -27,28 +27,28 @@
     grid-column-gap: 10px;
     grid-row-gap: 5px;
 
-    .address-string{
+    .address-string {
       grid-column-start: 2;
       grid-column-end: 2;
-      color:black;
+      color: black;
       margin: 0px;
     }
 
-    .address-hash{
+    .address-hash {
       grid-column-start: 2;
       grid-row-start: 2;
       color: @main-color-blue;
-      font-size:16px;
+      font-size: 16px;
       font-weight: @main-fw-normal;
       margin: 0px;
       text-overflow: ellipsis;
       overflow: hidden;
     }
-    .text{
+    .text {
       margin: 0px;
       font-weight: @main-fw-normal;
     }
-    .ident{
+    .ident {
       grid-row-start: 1;
       grid-row-end: span 3;
     }
@@ -56,16 +56,15 @@
 }
 
 @media all and (max-width: @bp-large) {
-
   .title-box {
-    grid-template-columns: 40px 1fr  !important ;
-    .ident{
+    grid-template-columns: 40px 1fr !important ;
+    .ident {
       grid-row-start: 1;
       grid-row-end: span 2 !important;
       grid-column-start: 1;
       grid-column-end: 1;
     }
-    .address-hash{
+    .address-hash {
       grid-column-start: 1 !important;
       grid-column-end: span 2;
       grid-row-start: 3 !important;
@@ -73,18 +72,15 @@
       font-size: 100% !important;
       padding-top: 5px;
     }
-    .text{
+    .text {
       grid-row-start: 2;
       grid-column-start: 2;
       grid-column-end: span 2;
     }
 
-    .address-string{
+    .address-string {
       grid-row-start: 1;
       grid-row-end: 1;
     }
   }
-
 }
-
-
