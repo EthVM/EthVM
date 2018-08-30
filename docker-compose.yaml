@@ -7,10 +7,9 @@ networks:
     driver: bridge
     ipam:
       config:
-      - subnet: 172.25.0.0/24
+        - subnet: 172.25.0.0/24
 
 services:
-
   traefik:
     image: traefik:1.6.2-alpine
     restart: unless-stopped
@@ -34,13 +33,13 @@ services:
     networks:
       - back
     labels:
-      - "traefik.enable=true"
-      - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:ethvm.lan"
-      - "traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:*||Access-Control-Allow-Credentials:true"
-      - "traefik.frontend.passHostHeader=true"
-      - "traefik.backend=ethvm"
-      - "traefik.port=8080"
+      - 'traefik.enable=true'
+      - 'traefik.default.protocol=http'
+      - 'traefik.frontend.rule=Host:ethvm.lan'
+      - 'traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:*||Access-Control-Allow-Credentials:true'
+      - 'traefik.frontend.passHostHeader=true'
+      - 'traefik.backend=ethvm'
+      - 'traefik.port=8080'
 
   server:
     build:
@@ -56,12 +55,12 @@ services:
     networks:
       - back
     labels:
-      - "traefik.enable=true"
-      - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:ws.ethvm.lan"
-      - "traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://ethvm.lan||Access-Control-Allow-Credentials:true"
-      - "traefik.frontend.passHostHeader=true"
-      - "traefik.backend=server"
+      - 'traefik.enable=true'
+      - 'traefik.default.protocol=http'
+      - 'traefik.frontend.rule=Host:ws.ethvm.lan'
+      - 'traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://ethvm.lan||Access-Control-Allow-Credentials:true'
+      - 'traefik.frontend.passHostHeader=true'
+      - 'traefik.backend=server'
     environment:
       - ETHVM_DATA_STORE_REDIS_HOST=redis
       - ETHVM_ETH_TRIE_DB_REDIS_HOST=redis
@@ -73,11 +72,11 @@ services:
     networks:
       - back
     labels:
-      - "traefik.enable=true"
-      - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:redis.ethvm.lan"
-      - "traefik.port=6379"
-      - "traefik.backend=redis"
+      - 'traefik.enable=true'
+      - 'traefik.default.protocol=http'
+      - 'traefik.frontend.rule=Host:redis.ethvm.lan'
+      - 'traefik.port=6379'
+      - 'traefik.backend=redis'
     command: >
       sh -c "redis-server && redis-cli flushall"
 
@@ -87,17 +86,23 @@ services:
     networks:
       - back
     labels:
-      - "traefik.enable=true"
-      - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:rethink.ethvm.lan"
-      - "traefik.port=28015"
-      - "traefik.backend=rethinkdb"
-      - "traefik.dashboard.frontend.rule=Host:rethink.dashboard.ethvm.lan"
-      - "traefik.dashboard.protocol=http"
-      - "traefik.dashboard.backend=ethvm_socket_server"
-      - "traefik.dashboard.port=8080"
+      - 'traefik.enable=true'
+      - 'traefik.default.protocol=http'
+      - 'traefik.frontend.rule=Host:rethink.ethvm.lan'
+      - 'traefik.port=28015'
+      - 'traefik.backend=rethinkdb'
+      - 'traefik.dashboard.frontend.rule=Host:rethink.dashboard.ethvm.lan'
+      - 'traefik.dashboard.protocol=http'
+      - 'traefik.dashboard.backend=ethvm_socket_server'
+      - 'traefik.dashboard.port=8080'
     command: >
       bash -c "rm -rf /data/* && rethinkdb --bind all"
+
+  mongodb:
+    image: mvertes/alpine-mongo:4.0.1-0
+    restart: unless-stopped
+    networks:
+      - back
 
   zookeeper:
     image: confluentinc/cp-zookeeper:5.0.0
@@ -106,7 +111,7 @@ services:
         ipv4_address: 172.25.0.103
     environment:
       ZOOKEEPER_SERVER_ID: 1
-      ZOOKEEPER_SERVERS: "server.1=zookeeper:2888:3888"
+      ZOOKEEPER_SERVERS: 'server.1=zookeeper:2888:3888'
       ZOOKEEPER_CLIENT_PORT: 2181
 
   kafka:
@@ -118,13 +123,51 @@ services:
       back:
         ipv4_address: 172.25.0.104
     environment:
-      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
-      KAFKA_ADVERTISED_LISTENERS: "LISTENER_DOCKER_INTERNAL://kafka:9092"
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "LISTENER_DOCKER_INTERNAL:PLAINTEXT"
-      KAFKA_INTER_BROKER_LISTENER_NAME: "LISTENER_DOCKER_INTERNAL"
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_ADVERTISED_LISTENERS: 'LISTENER_DOCKER_INTERNAL://kafka:9092'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'LISTENER_DOCKER_INTERNAL:PLAINTEXT'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'LISTENER_DOCKER_INTERNAL'
       KAFKA_BROKER_ID: 1
-      KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
+      KAFKA_LOG4J_LOGGERS: 'kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO'
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      CONFLUENT_SUPPORT_METRICS_ENABLE: 'false'
+
+  kafka_connect:
+    image: enkryptio/kafka-connect:latest
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
+      - kafka
+    networks:
+      - back
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.default.protocol=http'
+      - 'traefik.frontend.rule=Host:kafka-connect.ethvm.lan'
+      - 'traefik.port=8888'
+      - 'traefik.backend=kafka_connect'
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: 'PLAINTEXT://kafka:9092'
+      CONNECT_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      CONNECT_REST_PORT: 8888
+      CONNECT_GROUP_ID: 'ethvm-mongo-sink'
+      CONNECT_CONFIG_STORAGE_TOPIC: 'ethvm-mongo-sink.config'
+      CONNECT_OFFSET_STORAGE_TOPIC: 'ethvm-mongo-sink.offsets'
+      CONNECT_STATUS_STORAGE_TOPIC: 'ethvm-mongo-sink.status'
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_KEY_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
+      CONNECT_VALUE_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: 'http://localhost:8081'
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: 'http://localhost:8081'
+      CONNECT_INTERNAL_KEY_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
+      CONNECT_INTERNAL_VALUE_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
+      CONNECT_REST_ADVERTISED_HOST_NAME: 'kafka-connect'
+      CONNECT_LOG4J_ROOT_LOGLEVEL: 'INFO'
+      CONNECT_CONNECTOR_CLASS: 'at.grahsl.kafka.connect.mongodb.MongoDbSinkConnector'
+      CONNECT_MONGODB_CONNECTION_URI: 'mongodb://mongodb:27017/ethvm?w=1&journal=true'
+      CONNECT_MONGODB_COLLECTION: 'eth'
 
   geth_miner:
     image: enkryptio/go-ethereum:latest
@@ -165,11 +208,11 @@ services:
     ports:
       - 8545:8545
     labels:
-      - "traefik.enable=true"
-      - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:geth.ethvm.lan"
-      - "traefik.port=9545"
-      - "traefik.backend=geth"
+      - 'traefik.enable=true'
+      - 'traefik.default.protocol=http'
+      - 'traefik.frontend.rule=Host:geth.ethvm.lan'
+      - 'traefik.port=9545'
+      - 'traefik.backend=geth'
     command:
       - /bin/zsh
       - -c
