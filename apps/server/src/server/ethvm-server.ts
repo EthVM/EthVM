@@ -54,9 +54,10 @@ export interface SocketEvent {
 }
 
 export class EthVMServer {
-  public readonly io: SocketIO.Server
+  public io: SocketIO.Server
 
-  private readonly events: Map<string, SocketEvent>
+  private server
+  private readonly events: Map<string, SocketEvent> = new Map()
   private previousBlockTime = new BigNumber(0)
 
   constructor(
@@ -68,17 +69,25 @@ export class EthVMServer {
     private readonly streamer: Streamer,
     private readonly ds: CacheRepository,
     private readonly blockTime: number
-  ) {
-    this.io = this.createWSServer()
-    this.events = new Map()
-  }
+  ) {}
 
   public async start() {
-    logger.debug('EthVMServer - start() / Registering for streamer events')
-    this.streamer.addListener(StreamerEvents.newBlock, this.onNewBlockEvent)
-    this.streamer.addListener(StreamerEvents.pendingTx, this.onNewPendingTxsEvent)
+    logger.debug('EthVMServer - createWSServer() / Creating http server')
+    this.server = http.createServer()
+    const opts = {
+      host: config.get('server.host'),
+      port: config.get('server.port')
+    }
 
-    logger.debug('EthVMServer - start() / Loading socket evens...')
+    logger.debug('EthVMServer - createWSServer() / Starting listening on http server')
+    this.server.listen(opts, () => {
+      logger.debug(`EthVMServer - createWSServer() / Http server listening on ${opts.host}:${opts.port}`)
+    })
+
+    logger.debug('EthVMServer - createWSServer() / Creating SocketIO server')
+    this.io = SocketIO(this.server)
+
+    logger.debug('EthVMServer - start() / Loading socket events...')
     const events = fs.readdirSync(`${__dirname}/events/`)
     events.forEach(async ev => {
       if (ev.match(/.*\.spec\.ts/)) {
@@ -90,6 +99,10 @@ export class EthVMServer {
       this.events.set(event.default.id, event.default)
     })
 
+    logger.debug('EthVMServer - start() / Registering streamer events')
+    this.streamer.addListener(StreamerEvents.newBlock, this.onNewBlockEvent)
+    this.streamer.addListener(StreamerEvents.pendingTx, this.onNewPendingTxsEvent)
+
     logger.debug('EthVMServer - start() / Starting to listen socket events on SocketIO')
     this.io.on(
       'connection',
@@ -97,6 +110,12 @@ export class EthVMServer {
         this.registerSocketEventsOnConnection(socket)
       }
     )
+  }
+
+  public async stop() {
+    const socketPromise = new Promise(resolve => this.io.close(() => resolve(true)))
+    const serverPromise = new Promise(resolve => this.server.close(() => resolve(true)))
+    return Promise.all([socketPromise, serverPromise])
   }
 
   private registerSocketEventsOnConnection(socket: SocketIO.Socket): void {
@@ -138,20 +157,6 @@ export class EthVMServer {
         )
       }
     )
-  }
-
-  private createWSServer(): SocketIO.Server {
-    logger.debug('EthVMServer - createWSServer() / Creating SocketIO server')
-    const server = http.createServer()
-    const opts = {
-      host: config.get('server.host'),
-      port: config.get('server.port')
-    }
-    server.listen(opts, () => {
-      logger.debug(`EthVMServer - createWSServer() / Web server listening on ${opts.host}:${opts.port}`)
-    })
-
-    return SocketIO(server)
   }
 
   // TODO: This method should only receive the block and emit it directly
