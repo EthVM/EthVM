@@ -4,11 +4,10 @@ import { EthVMServer } from '@app/server/ethvm-server'
 import { BlocksService, BlocksServiceImpl } from '@app/server/modules/blocks'
 import { ChartService, ChartsServiceImpl } from '@app/server/modules/charts'
 import { ExchangeService, MockExchangeServiceImpl } from '@app/server/modules/exchanges'
-import { Tx, TxsService, TxsServiceImpl } from '@app/server/modules/txs'
+import { Tx, TxsRepository, TxsService, TxsServiceImpl } from '@app/server/modules/txs'
 import { VmService, VmServiceImpl } from '@app/server/modules/vm'
 import { RedisCacheRepository } from '@app/server/repositories'
 import { expect } from 'chai'
-import { RethinkTxsTestRepository } from 'helper'
 import * as io from 'socket.io-client'
 import { mock, when } from 'ts-mockito'
 
@@ -17,15 +16,15 @@ jest.setTimeout(10000)
 
 class RethinkTxsTestRepository implements TxsRepository {
   public getTxs(limit: number, page: number): Promise<Tx[]> {
-    return Promise.resolve([{} as Tx])
+    return Promise.resolve([tx1,tx2])
   }
 
   public getBlockTxs(hash: string): Promise<Tx[]> {
-    return Promise.resolve([txs])
+    return Promise.resolve([tx1])
   }
 
   public getTx(hash: string): Promise<Tx | null> {
-    return Promise.resolve(mock(Tx))
+    return Promise.resolve(tx1)
   }
 
   public getTxsOfAddress(hash: string, limit: number, page: number): Promise<Tx[]> {
