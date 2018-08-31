@@ -51,7 +51,7 @@ services:
     depends_on:
       - geth
       - redis
-      - rethinkdb
+      - mongodb
     networks:
       - back
     labels:
@@ -61,6 +61,7 @@ services:
       - 'traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://ethvm.lan||Access-Control-Allow-Credentials:true'
       - 'traefik.frontend.passHostHeader=true'
       - 'traefik.backend=server'
+      - 'traefik.port=3000'
     environment:
       - ETHVM_DATA_STORE_REDIS_HOST=redis
       - ETHVM_ETH_TRIE_DB_REDIS_HOST=redis
@@ -79,24 +80,6 @@ services:
       - 'traefik.backend=redis'
     command: >
       sh -c "redis-server && redis-cli flushall"
-
-  rethinkdb:
-    image: rethinkdb:2.3.6
-    restart: unless-stopped
-    networks:
-      - back
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:rethink.ethvm.lan'
-      - 'traefik.port=28015'
-      - 'traefik.backend=rethinkdb'
-      - 'traefik.dashboard.frontend.rule=Host:rethink.dashboard.ethvm.lan'
-      - 'traefik.dashboard.protocol=http'
-      - 'traefik.dashboard.backend=ethvm_socket_server'
-      - 'traefik.dashboard.port=8080'
-    command: >
-      bash -c "rm -rf /data/* && rethinkdb --bind all"
 
   mongodb:
     image: mvertes/alpine-mongo:4.0.1-0
@@ -146,6 +129,7 @@ services:
     depends_on:
       - zookeeper
       - kafka
+      - mongodb
     networks:
       - back
     labels:
@@ -161,7 +145,9 @@ services:
       CONNECT_LOG4J_ROOT_LOGLEVEL: 'INFO'
       CONNECT_GROUP_ID: 'ethvm-mongo-sink'
       CONNECT_KEY_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
+      CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: 'false'
       CONNECT_VALUE_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
+      CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: 'false'
       CONNECT_OFFSET_STORAGE_FILE_FILENAME: 'ethvm'
       CONNECT_PLUGIN_PATH: '/usr/share/java,/usr/share/confluent-hub-components'
 
