@@ -26,11 +26,11 @@ export interface Tx {
   toBalance?: Buffer
   gasUsed: Buffer
   cumulativeGasUsed?: Buffer
-  contractAddress: Buffer
-  logsBloom?: Buffer
+  contractAddress: Buffer | null
+  logsBloom?: Buffer | null
   gas: Buffer
   gasPrice: Buffer
-  hash: Buffer
+  hash: string
   input: Buffer
   nonce?: Buffer
   value: Buffer
