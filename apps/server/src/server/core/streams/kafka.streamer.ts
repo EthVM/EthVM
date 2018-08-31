@@ -1,7 +1,5 @@
 import { logger } from '@app/logger'
 import { Streamer } from '@app/server/core/streams'
-import { Block } from '@app/server/modules/blocks'
-import { Tx } from '@app/server/modules/txs'
 import EventEmitter, { ListenerFn } from 'eventemitter3'
 import Kafka, { createReadStream } from 'node-rdkafka'
 

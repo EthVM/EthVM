@@ -2,14 +2,13 @@ import config from '@app/config'
 import { logger } from '@app/logger'
 import { KafkaStreamer, KafkaStreamerOpts } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
-import { BlocksServiceImpl, RethinkBlockRepository } from '@app/server/modules/blocks'
-import { ChartsServiceImpl, RethinkChartsRepository } from '@app/server/modules/charts'
+import { BlocksServiceImpl, MockBlockRepository } from '@app/server/modules/blocks'
+import { ChartsServiceImpl, MockChartsRepository } from '@app/server/modules/charts'
 import { MockExchangeServiceImpl } from '@app/server/modules/exchanges'
-import { RethinkTxsRepository, TxsServiceImpl } from '@app/server/modules/txs'
+import { MockTxsRepository, TxsServiceImpl } from '@app/server/modules/txs'
 import { RedisTrieDb, VmEngine, VmRunner, VmServiceImpl } from '@app/server/modules/vm'
 import { RedisCacheRepository } from '@app/server/repositories'
 import * as EventEmitter from 'eventemitter3'
-import * as r from 'rethinkdb'
 
 async function bootstrapServer() {
   logger.debug('bootstrapper -> Bootstraping ethvm-socket-server!')
@@ -61,37 +60,19 @@ async function bootstrapServer() {
   logger.debug('bootstrapper -> Initializing event emitter')
   const emitter = new EventEmitter()
 
-  // Create Blockchain data store
-  logger.debug('bootstrapper -> Initializing RethinkDBDataStore')
-  const rethinkOpts = {
-    host: config.get('rethink_db.host'),
-    port: config.get('rethink_db.port'),
-    db: config.get('rethink_db.db_name'),
-    user: config.get('rethink_db.user'),
-    password: config.get('rethink_db.password'),
-    ssl: {
-      cert: config.get('rethink_db.cert_raw')
-    }
-  }
-
-  if (!rethinkOpts.ssl.cert) {
-    delete rethinkOpts.ssl
-  }
-  const rConn = await r.connect(rethinkOpts)
-
   // Create services
   // ---------------
 
   // Blocks
-  const blocksRepository = new RethinkBlockRepository(rConn, rethinkOpts)
+  const blocksRepository = new MockBlockRepository()
   const blockService = new BlocksServiceImpl(blocksRepository, ds)
 
   // Txs
-  const txsRepository = new RethinkTxsRepository(rConn, rethinkOpts)
+  const txsRepository = new MockTxsRepository()
   const txsService = new TxsServiceImpl(txsRepository, ds)
 
   // Charts
-  const chartsRepository = new RethinkChartsRepository(rConn, rethinkOpts)
+  const chartsRepository = new MockChartsRepository()
   const chartsService = new ChartsServiceImpl(chartsRepository)
 
   // Exchanges

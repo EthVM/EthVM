@@ -1,5 +1,0 @@
-{
-  "dependencies": {
-    "rethinkdb": "registry:npm/rethinkdb#2.3.0+20170413185348"
-  }
-}
