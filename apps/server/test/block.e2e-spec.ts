@@ -59,8 +59,8 @@ describe('ethvm-server-events', () => {
     client.stop()
   })
 
-  describe('getBalance', () => {
-    it('should return Promise<string>', async () => {
+  describe('getBlock', () => {
+    it('should return Promise<Block>', async () => {
       const inputs = [
         {
           hash: '0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238'
