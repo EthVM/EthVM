@@ -1,0 +1,14 @@
+{
+  "name": "tracers",
+  "version": "1.0.0",
+  "description": "Tracers used by Go-Ethereum client to trace transactions",
+  "main": "tracer.js",
+  "author": "enKryptIO Team",
+  "license": "MIT",
+  "scripts": {
+    "build": "rm -rf out && mkdir out && uglifyjs --compress --mangle --output out/tracer.js -- tracer.js"
+  },
+  "dependencies": {
+    "uglify-js": "^3.4.9"
+  }
+}
