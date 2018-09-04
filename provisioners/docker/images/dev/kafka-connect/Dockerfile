@@ -10,7 +10,10 @@ RUN confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:5
 RUN confluent-hub install --no-prompt hpgrahsl/kafka-connect-mongodb:1.1.0
 
 # Copy MongoDB sink properties
-COPY mongodb.properties /etc/"${COMPONENT}"/"${MONGODB_COMPONENT}".properties
+#COPY mongodb.properties /etc/"${COMPONENT}"/"${MONGODB_COMPONENT}".properties
+
+# Compy MongoDB sink properties template
+COPY mongodb.properties.template /etc/confluent/docker/"${MONGODB_COMPONENT}".properties.template
 
 # Replace configure script
 COPY configure /etc/confluent/docker/configure

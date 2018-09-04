@@ -1,0 +1,4 @@
+{% set connector_props = env_to_props('CONNECTOR_', '') -%}
+{% for name, value in connector_props.iteritems() -%}
+{{name}}={{value}}
+{% endfor -%}

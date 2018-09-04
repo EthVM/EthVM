@@ -18,6 +18,8 @@ fi
 export CONNECT_INTERNAL_KEY_CONVERTER_SCHEMAS_ENABLE=false
 export CONNECT_INTERNAL_VALUE_CONVERTER_SCHEMAS_ENABLE=false
 
+# Write templates
 dub path /etc/"${COMPONENT}"/ writable
 dub template "/etc/confluent/docker/${COMPONENT}.properties.template" "/etc/${COMPONENT}/${COMPONENT}.properties"
 dub template "/etc/confluent/docker/log4j.properties.template" "/etc/kafka/connect-log4j.properties"
+dub template "/etc/confluent/docker/${MONGODB_COMPONENT}.properties.template" "/etc/${COMPONENT}/${MONGODB_COMPONENT}.properties"
