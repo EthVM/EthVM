@@ -1,22 +1,20 @@
 import config from '@app/config'
 import { RethinkDbStreamer, Streamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
-import { BlocksService, Block,BlocksServiceImpl, RethinkBlockRepository } from '@app/server/modules/blocks'
+import { Block, BlocksService,BlocksServiceImpl, RethinkBlockRepository } from '@app/server/modules/blocks'
 import { ChartService, ChartsServiceImpl } from '@app/server/modules/charts'
 import { ExchangeService, MockExchangeServiceImpl } from '@app/server/modules/exchanges'
-import { Tx, TxsRepository, TxsService, TxsServiceImpl, RethinkTxsRepository } from '@app/server/modules/txs'
+import { RethinkTxsRepository, Tx, TxsRepository, TxsService, TxsServiceImpl } from '@app/server/modules/txs'
 import { VmService } from '@app/server/modules/vm'
 import { RedisCacheRepository } from '@app/server/repositories'
 import { expect } from 'chai'
+import * as r from 'rethinkdb'
 import * as io from 'socket.io-client'
 import { mock, when } from 'ts-mockito'
-import * as r from 'rethinkdb'
 
 
 // Increase Jest timeout for safety
-jest.setTimeout(10000)
-
-
+jest.setTimeout(30000)
 
 class VmServiceImpl implements VmService {
   public setStateRoot(hash: Buffer): Promise<boolean> {
@@ -77,15 +75,11 @@ describe('ethvm-server-events', () => {
     }
     const rConn = await r.connect(rethinkOpts)
 
-    // Blocks
-  const blocksRepository = new RethinkBlockRepository(rConn, rethinkOpts)
-  const blockService = new BlocksServiceImpl(blocksRepository, ds)
+    const blocksRepository = new RethinkBlockRepository(rConn, rethinkOpts)
+    const blockService = new BlocksServiceImpl(blocksRepository, ds)
 
-  // Txs
-  const txsRepository = new RethinkTxsRepository(rConn, rethinkOpts)
-  const txsService = new TxsServiceImpl(txsRepository, ds)
-
-
+    const txsRepository = new RethinkTxsRepository(rConn, rethinkOpts)
+    const txsService = new TxsServiceImpl(txsRepository, ds)
 
     const chartsService: ChartService = mock(ChartsServiceImpl)
     const exchangeService: ExchangeService = new MockExchangeServiceImpl()
@@ -237,6 +231,185 @@ describe('ethvm-server-events', () => {
   //     }
   //   })
   // })
+
+
+  describe('getTx Event', () => {
+    it('should return Promise<Tx>', async () => {
+      const inputs = [
+        {
+          hash: '0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238'
+        }
+      ]
+
+      for (const input of inputs) {
+        const data = await callEvent('getTx', input, client)
+        expect(data).to.not.be.undefined
+      }
+    })
+
+    it('should return err ', async () => {
+      const inputs = [
+        '',
+        '0x',
+        '0x0',
+        10,
+        {},
+        {
+          address: '0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238'
+        },
+        {
+          address: '0xd9ea042ad059033ba3c3be79f4081244f183bf03',
+          limit: '1',
+          page: 1
+        },
+        {
+          number: 1
+        }
+      ]
+
+      for (const  input of  inputs) {
+        try {
+          const data = await callEvent('getTx', input, client)
+        } catch (e) {
+          expect(e).to.not.be.undefined
+        }
+      }
+    })
+  })
+
+
+  describe('getTotalTxs Event', () => {
+    it('should return Promise<number>', async () => {
+      const inputs = [
+        {
+          address: '0xd9ea042ad059033ba3c3be79f4081244f183bf03'
+        }
+      ]
+
+      for (const input of inputs) {
+        const data = await callEvent('getTotalTxs', input, client)
+        expect(data).to.equal(9)
+      }
+    })
+
+    it('should return err ', async () => {
+      const inputs = [
+        '',
+        '0x',
+        '0x0',
+        10,
+        {},
+        {
+          address: '0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238'
+        },
+        {
+          address: '0xd9ea042ad059033ba3c3be79f4081244f183bf03',
+          limit: '1',
+          page: 1
+        },
+        {
+          number: 1
+        }
+      ]
+
+      for (const  input of  inputs) {
+        try {
+          const data = await callEvent('getTotalTxs', input, client)
+        } catch (e) {
+          expect(e).to.not.be.undefined
+        }
+      }
+    })
+  })
+
+  describe('getTokenBalance', () => {
+    it('should return Promise<any>', async () => {
+      const inputs = [
+        {
+          address: '0xd9ea042ad059033ba3c3be79f4081244f183bf03'
+        }
+      ]
+
+      for (const input of inputs) {
+        const data = await callEvent('getTokenBalance', input, client)
+        expect(data).to.not.be.undefined
+      }
+    })
+
+    it('should return err ', async () => {
+      const inputs = [
+        '',
+        '0x',
+        '0x0',
+        10,
+        {},
+        {
+          address: '0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238'
+        },
+        {
+          address: '0xd9ea042ad059033ba3c3be79f4081244f183bf03',
+          limit: '1',
+          page: 1
+        },
+        {
+          number: 1
+        }
+      ]
+
+      for (  const input of inputs ) {
+        try {
+          const data = await callEvent('getTokenBalance', input, client)
+        } catch (e) {
+          expect(e).to.not.be.undefined
+        }
+      }
+    })
+  })
+
+  describe('pastTxs', () => {
+    it('should return Promise<Tx[]>', async () => {
+      const inputs = [
+        {
+          limit: 1,
+          page: 1
+        }
+      ]
+
+      for (const input of inputs) {
+        const data = await callEvent('pastTxs', input, client)
+        expect(data).to.have.lengthOf(2)
+      }
+    })
+
+    it('should return err ', async () => {
+      const inputs = [
+        '',
+        '0x',
+        '0x0',
+        {},
+        {
+          address: '0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238'
+        },
+        {
+          address: '0xd9ea042ad059033ba3c3be79f4081244f183bf03',
+          limit: '1',
+          page: 1
+        },
+        {
+          number: 1
+        }
+      ]
+
+      for (const  input of  inputs) {
+        try {
+          const data = await callEvent('pastTxs', input, client)
+        } catch (e) {
+          expect(e).to.not.be.undefined
+        }
+      }
+    })
+  })
+
   describe('getBlock', () => {
     it('should return Promise<Block>', async () => {
       const inputs = [
