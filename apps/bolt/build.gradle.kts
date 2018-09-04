@@ -18,6 +18,7 @@ dependencies {
 
   // Kafka
   compile("org.apache.kafka:kafka-streams:2.0.0")
+  compile("io.confluent:kafka-streams-avro-serde:5.0.0")
   compile("org.apache.avro:avro:1.8.2")
 
   // Utils

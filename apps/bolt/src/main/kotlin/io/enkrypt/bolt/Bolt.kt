@@ -40,6 +40,7 @@ class Bolt(
     val props = Properties().apply {
       put(StreamsConfig.APPLICATION_ID_CONFIG, applicationId)
       put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
+      put(SCHEMA_REGISTRY_URL, schemaRegistryUrl)
 
       put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().javaClass.name)
       put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().javaClass.name)
@@ -50,14 +51,18 @@ class Bolt(
     // Initialize JSON Serdes for raw-blocks
     val jsonSerializer = JsonSerializer()
     val jsonDeserializer = JsonDeserializer()
-    val rawBlocksSerdes = Serdes.serdeFrom<JsonNode>(jsonSerializer, jsonDeserializer)
+    val jsonSerdes = Serdes.serdeFrom<JsonNode>(jsonSerializer, jsonDeserializer)
 
     // Create stream builder
     val builder = StreamsBuilder()
 
     // Consume directly raw-blocks
-    val blocksStream: KStream<String, JsonNode> = builder.stream(rawBlocksTopic, Consumed.with(Serdes.String(), rawBlocksSerdes))
-    blocksStream.foreach { key, value -> logger.debug { "Key: $key | Value: $value" } }
+    val rawBlocksStream: KStream<String, JsonNode> = builder.stream(rawBlocksTopic, Consumed.with(Serdes.String(), jsonSerdes))
+    rawBlocksStream.foreach { key, value -> logger.debug { "RawBlocksStream - Key: $key | Value: $value" } }
+
+    // Consume directly raw-pending-txs
+    val rawPendingTxsStream: KStream<String, JsonNode> = builder.stream(rawPendingTxsTopic, Consumed.with(Serdes.String(), jsonSerdes))
+    rawPendingTxsStream.foreach { key, value -> logger.debug { "RawPendingTxsStream - Key: $key | Value: $value" } }
 
     // Generate the topology
     val topology = builder.build()
@@ -67,16 +72,18 @@ class Bolt(
   }
 
   fun start() {
-    logger.info { "Starting BOLT" }
+    logger.info { "Starting BOLT..." }
 
     streams.apply {
       cleanUp()
       start()
-      localThreadsMetadata().forEach { data -> logger.debug { data } }
     }
 
     // Add shutdown hook to respond to SIGTERM and gracefully close Kafka Streams
     Runtime.getRuntime().addShutdownHook(Thread(streams::close))
   }
 
+  companion object {
+    const val SCHEMA_REGISTRY_URL = "schema.registry.url"
+  }
 }

@@ -31,11 +31,9 @@
     <content url="file://$MODULE_DIR$/../../src/test" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="bolt_main" />
-    <orderEntry type="library" name="Gradle: com.github.ajalt:clikt:1.4.0" level="project" />
-    <orderEntry type="library" name="Gradle: io.github.microutils:kotlin-logging:1.5.9" level="project" />
+    <orderEntry type="library" name="Gradle: io.confluent:kafka-streams-avro-serde:5.0.0" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.2.60" level="project" />
-    <orderEntry type="library" name="Gradle: org.apache.kafka:kafka-streams:2.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.codehaus.jackson:jackson-core-asl:1.9.13" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.avro:avro:1.8.2" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:slf4j-log4j12:1.7.25" level="project" />
     <orderEntry type="library" name="Gradle: io.github.microutils:kotlin-logging-common:1.5.9" level="project" />
@@ -47,7 +45,7 @@
     <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.25" level="project" />
     <orderEntry type="library" name="Gradle: org.rocksdb:rocksdbjni:5.7.3" level="project" />
     <orderEntry type="library" name="Gradle: org.codehaus.jackson:jackson-mapper-asl:1.9.13" level="project" />
-    <orderEntry type="library" name="Gradle: org.codehaus.jackson:jackson-core-asl:1.9.13" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.kafka:kafka-streams:2.0.0" level="project" />
     <orderEntry type="library" name="Gradle: com.thoughtworks.paranamer:paranamer:2.7" level="project" />
     <orderEntry type="library" name="Gradle: org.xerial.snappy:snappy-java:1.1.7.1" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-compress:1.8.1" level="project" />
@@ -57,6 +55,8 @@
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.9.6" level="project" />
     <orderEntry type="library" name="Gradle: javax.ws.rs:javax.ws.rs-api:2.1" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-annotations:2.9.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.ajalt:clikt:1.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: io.github.microutils:kotlin-logging:1.5.9" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.9.6" level="project" />
   </component>
   <component name="TestModuleProperties" production-module="bolt_main" />
