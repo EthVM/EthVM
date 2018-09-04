@@ -114,16 +114,34 @@ services:
       back:
         ipv4_address: 172.25.0.104
     environment:
+      KAFKA_ADVERTISED_HOST_NAME: 'kafka'
+      KAFKA_ADVERTISED_LISTENERS: 'DOCKER://kafka:9092'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'DOCKER:PLAINTEXT'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'DOCKER'
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      KAFKA_ADVERTISED_LISTENERS: 'LISTENER_DOCKER_INTERNAL://kafka:9092'
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'LISTENER_DOCKER_INTERNAL:PLAINTEXT'
-      KAFKA_INTER_BROKER_LISTENER_NAME: 'LISTENER_DOCKER_INTERNAL'
       KAFKA_BROKER_ID: 1
       KAFKA_LOG4J_LOGGERS: 'kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO'
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       CONFLUENT_SUPPORT_METRICS_ENABLE: 'false'
 
-  kafka_connect:
+  kafka-schema-registry:
+    image: confluentinc/cp-schema-registry:5.0.0
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
+      - kafka
+    networks:
+      - back
+    volumes:
+      - ./apps/avro-schemas/:/avro-schemas/
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'PLAINTEXT://kafka:9092'
+      SCHEMA_REGISTRY_HOST_NAME: kafka-schema-registry
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+      SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: 'INFO'
+      SCHEMA_REGISTRY_LOG4J_LOGGERS: 'org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR'
+
+  kafka-connect:
     image: enkryptio/kafka-connect:latest
     restart: unless-stopped
     depends_on:
@@ -137,12 +155,13 @@ services:
       - 'traefik.default.protocol=http'
       - 'traefik.frontend.rule=Host:kafka-connect.ethvm.lan'
       - 'traefik.port=8083'
-      - 'traefik.backend=kafka_connect'
+      - 'traefik.backend=kafka-connect'
     environment:
-      CONNECT_BOOTSTRAP_SERVERS: 'PLAINTEXT://kafka:9092'
+      CONNECT_BOOTSTRAP_SERVERS: 'PLAINTEXT://172.25.0.104:9092'
       CONNECT_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       CONNECT_REST_ADVERTISED_HOST_NAME: 'kafka-connect'
       CONNECT_LOG4J_ROOT_LOGLEVEL: 'INFO'
+      CONNECT_LOG4J_LOGGERS: 'org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR'
       CONNECT_GROUP_ID: 'ethvm-mongo-sink'
       CONNECT_KEY_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
       CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: 'false'
@@ -150,12 +169,18 @@ services:
       CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: 'false'
       CONNECT_OFFSET_STORAGE_FILE_FILENAME: 'ethvm'
       CONNECT_PLUGIN_PATH: '/usr/share/java,/usr/share/confluent-hub-components'
+      CONNECTOR_NAME: 'mongodb-blocks-sink'
+      CONNECTOR_CONNECTOR_CLASS: 'at.grahsl.kafka.connect.mongodb.MongoDbSinkConnector'
+      CONNECTOR_TOPICS: 'blocks'
+      CONNECTOR_TASKS_MAX: 1
+      CONNECTOR_MONGODB_CONNECTION_URI: 'mongodb://mongodb:27017/ethvm?w=1&journal=true'
+      CONNECTOR_MONGODB_COLLECTION: 'blocks'
 
-  geth_miner:
-    image: enkryptio/go-ethereum:latest
+  geth-miner:
+    # image: enkryptio/go-ethereum:latest
     # Uncomment this if you want to compile directly geth
-    # build:
-    #   context: ./apps/eth
+    build:
+      context: ./apps/eth
     restart: unless-stopped
     volumes:
       - ./provisioners/docker/config/geth/genesis.json:/genesis.json
@@ -170,16 +195,16 @@ services:
         rm -rf /geth && mkdir -p /geth/keystore
         cp -a /keystore/. /geth/keystore/
         geth --datadir '/geth' init /genesis.json
-        geth --datadir '/geth' --networkid 1234 --identity geth_miner --mine --minerthreads 1 --nousb --unlock '84baabad835e6ca9252658cd6eae0152f6330c09' --rpc --rpcaddr '0.0.0.0' --password =(echo '123456789') --nodiscover --maxpeers 2 --nodekeyhex '08f0e1dee5c1b4645f3331a566009e41a4514b6cd28656d63d0449ecf812812b'
+        geth --datadir '/geth' --networkid 1234 --identity geth-miner --mine --minerthreads 1 --nousb --unlock '84baabad835e6ca9252658cd6eae0152f6330c09' --rpc --rpcaddr '0.0.0.0' --password =(echo '123456789') --nodiscover --maxpeers 2 --nodekeyhex '08f0e1dee5c1b4645f3331a566009e41a4514b6cd28656d63d0449ecf812812b'
 
   geth:
-    image: enkryptio/go-ethereum:latest
+    # image: enkryptio/go-ethereum:latest
     # Uncomment this if you want to compile directly geth
-    # build:
-    #   context: ./apps/eth
+    build:
+      context: ./apps/eth
     restart: unless-stopped
     depends_on:
-      - geth_miner
+      - geth-miner
     volumes:
       - ./provisioners/docker/config/geth/genesis.json:/genesis.json
       - ./provisioners/docker/config/geth/keystore/:/keystore/
@@ -203,4 +228,4 @@ services:
         cp -a /keystore/. /geth/keystore/
         cp /static-nodes.json /geth/
         geth --datadir '/geth' --ethvm init /genesis.json
-        geth --datadir '/geth' --verbosity 6 --networkid 1234 --identity geth --ethvm --ethvm-brokers 'kafka:9092' --gcmode archive --rpc --rpcaddr '0.0.0.0' --rpccorsdomain '*' --rpcapi 'admin,personal,db,eth,net,web3,txpool,miner' --syncmode full --nat 'extip:172.25.0.102' --nousb --nodiscover --maxpeers 2
+        geth --datadir '/geth' --verbosity 5 --networkid 1234 --identity geth --ethvm --ethvm-brokers 'kafka:9092' --gcmode archive --rpc --rpcaddr '0.0.0.0' --rpccorsdomain '*' --rpcapi 'admin,personal,db,eth,net,web3,txpool,miner' --syncmode full --nat 'extip:172.25.0.102' --nousb --nodiscover --maxpeers 2
