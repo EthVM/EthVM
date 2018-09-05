@@ -1,5 +1,7 @@
 <template>
   <div id="base-container">
+    <v-btn :absolute="true" :color="purple">Button</v-btn>
+
     <!-- HEADER -->
     <block-header :pagename="pageName"></block-header>
 

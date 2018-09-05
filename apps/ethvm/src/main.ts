@@ -1,3 +1,4 @@
+
 import App from '@app/App.vue'
 import socketConfig from '@app/configs/socket.json'
 import router from '@app/router'
@@ -9,7 +10,11 @@ import Vue from 'vue'
 import infiniteScroll from 'vue-infinite-scroll'
 import VueSocketio from 'vue-socket.io'
 import VueTimeago from 'vue-timeago'
+import Vuetify from 'vuetify'
+import 'vuetify/dist/vuetify.min.css'
 import Toasted from 'vue-toasted'
+import theme from './css/theme'
+
 
 // EthVM Frames
 // Main ----
@@ -158,6 +163,7 @@ Vue.use(VueTimeago, {
   }
 })
 Vue.use(infiniteScroll)
+Vue.use(Vuetify)
 new Vue({
   el: '#app',
   store,
