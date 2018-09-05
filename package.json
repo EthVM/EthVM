@@ -18,7 +18,7 @@
     }
   },
   "scripts": {
-    "testdata": "ts-node bin/testdata.ts",
+    "testprovider": "ts-node bin/e2e-provider-cli.ts",
     "monkey": "ts-node bin/monkey-cli.ts",
     "format": "yarn lint:fix && yarn prettier",
     "lint": "tslint -c tslint.json --project .",

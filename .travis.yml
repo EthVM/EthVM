@@ -18,7 +18,6 @@ matrix:
       language: node_js
       node_js:
         - "10"
-
     -
       env: PROJECT=apps/serverunittest
       language: node_js
@@ -33,7 +32,7 @@ matrix:
 before_install:
   - 'if [ $PROJECT = "apps/ethvm" ]; then cd $TRAVIS_BUILD_DIR/apps/ethvm; fi'
   - 'if [ $PROJECT = "apps/server" ]; then cd $TRAVIS_BUILD_DIR/apps/server; fi'
-  - 'if [ $PROJECT = "apps/ethvm-e2etest" ]; then yarn install; yarn testdata d; cd $TRAVIS_BUILD_DIR/apps/server; ls; pwd; fi'
+  - 'if [ $PROJECT = "apps/ethvm-e2etest" ]; then yarn install; yarn testprovider generate; cd $TRAVIS_BUILD_DIR/apps/server; ls; pwd; fi'
   - 'if [ $PROJECT = "apps/serverunittest" ]; then cd $TRAVIS_BUILD_DIR/apps/server; fi'
 
 install:

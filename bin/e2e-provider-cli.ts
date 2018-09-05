@@ -34,7 +34,7 @@ const tx1 = {
   timestamp: Buffer.from('')
 }
 
-const tx2 = {
+const tx2  = {
   blockHash: Buffer.from('0x983e535f45911199e74bec284b258b643392855eeb27e812aae902d149061dd7'),
   blockNumber: 3,
   contractAddress: null,
@@ -98,8 +98,8 @@ const block2 = {
 }
 
 commander
-  .command('data')
-  .alias('d')
+  .command('generate')
+  .alias('g')
   .action(() => {
     r.connect(
       { host: 'localhost', port: 28015 },
