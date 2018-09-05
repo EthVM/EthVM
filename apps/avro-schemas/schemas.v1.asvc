@@ -118,6 +118,14 @@
         "doc": "Total current uncle reward"
       },
       {
+        "name": "transactions",
+        "type": {
+          "type": "array",
+          "items": "io.enkrypt.bolt.avro.Transaction"
+        },
+        "doc": "Array of transactions"
+      },
+      {
         "name": "uncles",
         "type": { "type": "array", "items": "string" },
         "doc": "Array of uncle hashes"
@@ -180,7 +188,7 @@
       },
       {
         "name": "toBalance",
-        "type": ["null", "string"],
+        "type": ["null", "long"],
         "doc": "Balance of the receiver (or null when contract creation)"
       },
       {
@@ -252,12 +260,9 @@
         "doc": ""
       },
       {
-        "name": "traces",
-        "type": {
-          "type": "array",
-          "items": "io.enkrypt.bolt.avro.Trace"
-        },
-        "doc": "An array of traces describing the transaction"
+        "name": "trace",
+        "type": "io.enkrypt.bolt.avro.Trace",
+        "doc": "Trace that describes contract creation, destruction or intenal transactions"
       }
     ]
   },
@@ -270,22 +275,27 @@
       {
         "name": "address",
         "type": "string",
-        "desc": ""
+        "desc": "Address of the contract that generated the event"
       },
       {
         "name": "topics",
-        "type": { "type": "array", "items": "bytes" },
-        "desc": ""
+        "type": { "type": "array", "items": "string" },
+        "desc": "List of topics provided by the contract"
       },
       {
         "name": "data",
         "type": "bytes",
-        "desc": ""
+        "desc": "Supplied by the contract, usually ABI-encoded"
+      },
+      {
+        "name": "index",
+        "type": "int",
+        "desc": "Index of the log in the receipt"
       },
       {
         "name": "removed",
         "type": "boolean",
-        "desc": ""
+        "desc": "True if this log was reverted due to a chain reorganisation"
       }
     ]
   },
@@ -298,12 +308,12 @@
       {
         "name": "isError",
         "type": "boolean",
-        "desc": ""
+        "desc": "Signals if an error happened during execution"
       },
       {
         "name": "msg",
         "type": "string",
-        "desc": ""
+        "desc": "Stores the error message"
       },
       {
         "name": "transfers",
@@ -311,7 +321,7 @@
           "type": "array",
           "items": "io.enkrypt.bolt.avro.Transfer"
         },
-        "desc": ""
+        "desc": "An array describing transfers"
       }
     ]
   },
