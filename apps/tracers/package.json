@@ -6,7 +6,7 @@
   "author": "enKryptIO Team",
   "license": "MIT",
   "scripts": {
-    "build": "rm -rf out && mkdir out && uglifyjs --compress --mangle --output out/tracer.js -- tracer.js"
+    "build": "rm -rf out && mkdir out && uglifyjs --compress --mangle -b beautify=false -b quote_style=1 --output out/tracer.js -- tracer.js"
   },
   "dependencies": {
     "uglify-js": "^3.4.9"
