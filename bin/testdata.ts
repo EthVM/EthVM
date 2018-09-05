@@ -1,6 +1,6 @@
-import * as r from 'rethinkdb'
 import commander from 'commander'
 import Ora from 'ora'
+import * as r from 'rethinkdb'
 
 const version = '1.0.0'
 
@@ -10,7 +10,7 @@ const ora = new Ora({
 
 const tx1 = {
   blockHash: Buffer.from(''),
-  cofrom: [Buffer.from('0x8b2a6d0b4183b5db91bb901eefdd0d0ba06ef125'),Buffer.from('0xbe1c42bed6b0d9b8811c744e831f1bf14abc7d66')],
+  cofrom: [Buffer.from('0x8b2a6d0b4183b5db91bb901eefdd0d0ba06ef125'), Buffer.from('0xbe1c42bed6b0d9b8811c744e831f1bf14abc7d66')],
   blockNumber: 2,
   contractAddress: null,
   cumulativeGasUsed: Buffer.from(''),
@@ -39,13 +39,13 @@ const tx2 = {
   blockNumber: 3,
   contractAddress: null,
   cumulativeGasUsed: Buffer.from(''),
-  cofrom: [Buffer.from('0x8a9ac2ce73b37d1719989a854f83d456762ea303'),Buffer.from('0xf57556eb4f8df2ae8e070edc38728eb9c17378b5')],
+  cofrom: [Buffer.from('0x8a9ac2ce73b37d1719989a854f83d456762ea303'), Buffer.from('0xf57556eb4f8df2ae8e070edc38728eb9c17378b5')],
   from: Buffer.from('0xf57556eb4f8df2ae8e070edc38728eb9c17378b5'),
   fromBalance: Buffer.from(''),
   gas: Buffer.from(''),
   gasPrice: Buffer.from(''),
   gasUsed: Buffer.from(''),
-  hash: '0xff7ac9e368c483f73d34595780cdee65e8d44c40c26ff8bd3ce53c48035a863e',
+  hash: '0xb371a109b3ac732765fc3daa64db4bec96075048e359e003b68ba9a8f16ec6d6',
   input: Buffer.from(''),
   logsBloom: null,
   nonce: Buffer.from(''),
@@ -71,13 +71,13 @@ const blockStat = {
 
 const block1 = {
   number: 2,
-  hash: '0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238',
+  hash: '0x0041061b4de06bb3243312dc0795f8b2ee6a40611d86f401a9679fb0c0bee1bf',
   parentHash: Buffer.from('0xb903239f8543d04b5dc1ba6519132b143087c68db1b2168786408fcbce568238'),
   miner: Buffer.from('0xd9ea042ad059033ba3c3be79f4081244f183bf03'),
   timestamp: Buffer.from(''),
   transactionHashes: [
     '0xff7ac9e368c483f73d34595780cdee65e8d44c40c26ff8bd3ce53c48035a863e',
-    '0xff7ac9e368c483f73d34595780cdee65e8d44c40c26ff8bd3ce53c48035a863e'
+    '0xb371a109b3ac732765fc3daa64db4bec96075048e359e003b68ba9a8f16ec6d6'
   ],
   transactionCount: 2,
   isUncle: false
@@ -85,13 +85,13 @@ const block1 = {
 
 const block2 = {
   number: 2,
-  hash: '0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238',
+  hash: '0xb003239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238',
   parentHash: Buffer.from('0xb903239f8543d04b5dc1ba6519132b143087c68db1b2168786408fcbce568238'),
   miner: Buffer.from('0xd9ea042ad059033ba3c3be79f4081244f183bf03'),
   timestamp: Buffer.from(''),
   transactionHashes: [
     '0xff7ac9e368c483f73d34595780cdee65e8d44c40c26ff8bd3ce53c48035a863e',
-    '0xff7ac9e368c483f73d34595780cdee65e8d44c40c26ff8bd3ce53c48035a863e'
+    '0xb371a109b3ac732765fc3daa64db4bec96075048e359e003b68ba9a8f16ec6d6'
   ],
   transactionCount: 2,
   isUncle: false
@@ -123,7 +123,27 @@ commander
                         .table('blocks')
                         .insert([block1, block2])
                         .run(conn, function(err, cursor) {
-                          process.exit(0)
+                          r.db('eth_mainnet')
+                            .table('transactions')
+                            .indexCreate('cofrom', { multi: true })
+                            .run(conn, function(err, cursor) {
+                              r.db('eth_mainnet')
+                                .table('transactions')
+                                .indexCreate('to')
+                                .run(conn, function(err, cursor) {
+                                  r.db('eth_mainnet')
+                                    .table('transactions')
+                                    .indexCreate('from')
+                                    .run(conn, function(err, cursor) {
+                                      r.db('eth_mainnet')
+                                        .table('blocks')
+                                        .indexCreate('hash')
+                                        .run(conn, function(err, cursor) {
+                                          process.exit(0)
+                                        })
+                                    })
+                                })
+                            })
                         })
                     })
                 })
