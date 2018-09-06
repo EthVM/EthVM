@@ -119,8 +119,8 @@ describe('ethvm-server-events', () => {
         try {
           const data = await callEvent('getTxs', input, client)
         } catch (e) {
-          expect(e).to.not.be.undefined
-          expect(e).to.not.be.equal(errors.serverError)
+          expect(e).to.be.eql(errors.BAD_REQUEST)
+          expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
         }
       }
     })
@@ -164,8 +164,8 @@ describe('ethvm-server-events', () => {
         try {
           const data = await callEvent('getBalance', input, client)
         } catch (e) {
-          expect(e).to.not.be.undefined
-          expect(e).to.not.be.equal(errors.serverError)
+          expect(e).to.be.eql(errors.BAD_REQUEST)
+          expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
         }
       }
     })
@@ -208,8 +208,8 @@ describe('ethvm-server-events', () => {
         try {
           const data = await callEvent('getBlockTransactions', input, client)
         } catch (e) {
-          expect(e).to.not.be.undefined
-          expect(e).to.not.be.equal(errors.serverError)
+          expect(e).to.be.eql(errors.BAD_REQUEST)
+          expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
         }
       }
     })
@@ -255,8 +255,8 @@ describe('ethvm-server-events', () => {
         try {
           const data = await callEvent('getTx', input, client)
         } catch (e) {
-          expect(e).to.not.be.undefined
-          expect(e).to.not.be.equal(errors.serverError)
+          expect(e).to.be.eql(errors.BAD_REQUEST)
+          expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
         }
       }
     })
@@ -301,8 +301,8 @@ describe('ethvm-server-events', () => {
         try {
           const data = await callEvent('getTotalTxs', input, client)
         } catch (e) {
-          expect(e).to.not.be.undefined
-          expect(e).to.not.be.equal(errors.serverError)
+          expect(e).to.be.eql(errors.BAD_REQUEST)
+          expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
         }
       }
     })
@@ -319,8 +319,7 @@ describe('ethvm-server-events', () => {
       for (const input of inputs) {
         const data = await callEvent('getTokenBalance', input, client)
         expect(data).to.not.be.undefined
-        expect(e).to.not.be.equal(errors.serverError)
-      }
+       }
     })
 
     it('should return err ', async () => {
@@ -347,8 +346,8 @@ describe('ethvm-server-events', () => {
         try {
           const data = await callEvent('getTokenBalance', input, client)
         } catch (e) {
-          expect(e).to.not.be.undefined
-          expect(e).to.not.be.equal(errors.serverError)
+          expect(e).to.be.eql(errors.BAD_REQUEST)
+          expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
         }
       }
     })
@@ -375,7 +374,6 @@ describe('ethvm-server-events', () => {
         '',
         '0x',
         '0x0',
-        {},
         {
           address: '0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238'
         },
@@ -393,8 +391,8 @@ describe('ethvm-server-events', () => {
         try {
           const data = await callEvent('pastTxs', input, client)
         } catch (e) {
-          expect(e).to.not.be.undefined
-          expect(e).to.not.be.equal(errors.serverError)
+          expect(e).to.be.eql(errors.BAD_REQUEST)
+          expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
         }
       }
     })
@@ -420,7 +418,6 @@ describe('ethvm-server-events', () => {
         '',
         '0x',
         '0x0',
-        {},
         {
           address: '0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238'
         },
@@ -438,8 +435,8 @@ describe('ethvm-server-events', () => {
         try {
           const data = await callEvent('pastBlocks', input, client)
         } catch (e) {
-          expect(e).to.not.be.undefined
-          expect(e).to.not.be.equal(errors.serverError)
+          expect(e).to.be.eql(errors.BAD_REQUEST)
+          expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
         }
       }
     })
@@ -480,8 +477,8 @@ describe('ethvm-server-events', () => {
         try {
           const data = await callEvent('getBlock', input, client)
         } catch (e) {
-          expect(e).to.not.be.undefined
-          expect(e).to.not.be.equal(errors.serverError)
+          expect(e).to.be.eql(errors.BAD_REQUEST)
+          expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
         }
       }
     })
@@ -544,8 +541,8 @@ describe('ethvm-server-events', () => {
         try {
           const data = await callEvent('getChartAccountsGrowth', input, client)
         } catch (e) {
-          expect(e).to.not.be.undefined
-          expect(e).to.not.be.equal(errors.serverError)
+          expect(e).to.be.eql(errors.BAD_REQUEST)
+          expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
         }
       }
     })
@@ -607,8 +604,8 @@ describe('ethvm-server-events', () => {
         try {
           const data = await callEvent('getChartBlockSize', input, client)
         } catch (e) {
-          expect(e).to.not.be.undefined
-          expect(e).to.not.be.equal(errors.serverError)
+          expect(e).to.be.eql(errors.BAD_REQUEST)
+          expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
         }
       }
     })
@@ -670,8 +667,8 @@ describe('ethvm-server-events', () => {
         try {
           const data = await callEvent('getChartGasLimit', input, client)
         } catch (e) {
-          expect(e).to.not.be.undefined
-          expect(e).to.not.be.equal(errors.serverError)
+          expect(e).to.be.eql(errors.BAD_REQUEST)
+          expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
         }
       }
     })
@@ -733,8 +730,8 @@ describe('ethvm-server-events', () => {
         try {
           const data = await callEvent('getChartAvTxFee', input, client)
         } catch (e) {
-          expect(e).to.not.be.undefined
-          expect(e).to.not.be.equal(errors.serverError)
+          expect(e).to.be.eql(errors.BAD_REQUEST)
+          expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
         }
       }
     })

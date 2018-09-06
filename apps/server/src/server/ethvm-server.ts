@@ -128,7 +128,7 @@ export class EthVMServer {
             if (!validationResult.valid) {
               logger.error(`event -> ${event.id} / Invalid payload: ${JSON.stringify(payload)}`)
               if (cb) {
-                cb(validationResult.errors, null)
+                cb(errors.BAD_REQUEST, null)
               }
               return
             }
@@ -150,7 +150,7 @@ export class EthVMServer {
 
                 // TODO: Until we have defined which errors are we going to return, we use a generic one
                 if (cb) {
-                  cb(errors.serverError, null)
+                  cb(errors.INTERNAL_SERVER_ERROR, null)
                 }
               })
           }
