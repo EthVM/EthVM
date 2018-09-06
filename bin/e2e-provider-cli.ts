@@ -4,17 +4,18 @@ import * as r from 'rethinkdb'
 
 const version = '1.0.0'
 
+export const hexToBuffer = (hex: string): Buffer => Buffer.from(hex.toLowerCase().replace('0x', ''), 'hex')
 const ora = new Ora({
   color: 'yellow'
 })
 
 const tx1 = {
-  blockHash: Buffer.from(''),
-  cofrom: [Buffer.from('0x8b2a6d0b4183b5db91bb901eefdd0d0ba06ef125'), Buffer.from('0xbe1c42bed6b0d9b8811c744e831f1bf14abc7d66')],
+  blockHash: hexToBuffer(''),
+  cofrom: [hexToBuffer('0x8b2a6d0b4183b5db91bb901eefdd0d0ba06ef125'), hexToBuffer('0xbe1c42bed6b0d9b8811c744e831f1bf14abc7d66')],
   blockNumber: 2,
   contractAddress: null,
   cumulativeGasUsed: Buffer.from(''),
-  from: Buffer.from('0xbe1c42bed6b0d9b8811c744e831f1bf14abc7d66'),
+  from: hexToBuffer('0xbe1c42bed6b0d9b8811c744e831f1bf14abc7d66'),
   fromBalance: Buffer.from('78'),
   gas: Buffer.from('78'),
   gasPrice: Buffer.from('7'),
@@ -25,7 +26,7 @@ const tx1 = {
   nonce: Buffer.from(''),
   pending: false,
   r: Buffer.from(''),
-  to: Buffer.from('0x8b2a6d0b4183b5db91bb901eefdd0d0ba06ef125'),
+  to: hexToBuffer('0x8b2a6d0b4183b5db91bb901eefdd0d0ba06ef125'),
   toBalance: Buffer.from(''),
   transactionIndex: Buffer.from(''),
   v: Buffer.from(''),
@@ -35,12 +36,12 @@ const tx1 = {
 }
 
 const tx2  = {
-  blockHash: Buffer.from('0x983e535f45911199e74bec284b258b643392855eeb27e812aae902d149061dd7'),
+  blockHash: hexToBuffer('0x983e535f45911199e74bec284b258b643392855eeb27e812aae902d149061dd7'),
   blockNumber: 3,
   contractAddress: null,
   cumulativeGasUsed: Buffer.from(''),
-  cofrom: [Buffer.from('0x8a9ac2ce73b37d1719989a854f83d456762ea303'), Buffer.from('0xf57556eb4f8df2ae8e070edc38728eb9c17378b5')],
-  from: Buffer.from('0xf57556eb4f8df2ae8e070edc38728eb9c17378b5'),
+  cofrom: [hexToBuffer('0x8a9ac2ce73b37d1719989a854f83d456762ea303'), hexToBuffer('0xf57556eb4f8df2ae8e070edc38728eb9c17378b5')],
+  from: hexToBuffer('0xf57556eb4f8df2ae8e070edc38728eb9c17378b5'),
   fromBalance: Buffer.from(''),
   gas: Buffer.from(''),
   gasPrice: Buffer.from(''),
@@ -51,7 +52,7 @@ const tx2  = {
   nonce: Buffer.from(''),
   pending: false,
   r: Buffer.from(''),
-  to: Buffer.from('0x8a9ac2ce73b37d1719989a854f83d456762ea303'),
+  to: hexToBuffer('0x8a9ac2ce73b37d1719989a854f83d456762ea303'),
   toBalance: Buffer.from(''),
   transactionIndex: Buffer.from(''),
   v: Buffer.from(''),
@@ -72,8 +73,8 @@ const blockStat = {
 const block1 = {
   number: 2,
   hash: '0x0041061b4de06bb3243312dc0795f8b2ee6a40611d86f401a9679fb0c0bee1bf',
-  parentHash: Buffer.from('0xb903239f8543d04b5dc1ba6519132b143087c68db1b2168786408fcbce568238'),
-  miner: Buffer.from('0xd9ea042ad059033ba3c3be79f4081244f183bf03'),
+  parentHash: hexToBuffer('0xb903239f8543d04b5dc1ba6519132b143087c68db1b2168786408fcbce568238'),
+  miner: hexToBuffer('0xd9ea042ad059033ba3c3be79f4081244f183bf03'),
   timestamp: Buffer.from(''),
   transactionHashes: [
     '0xff7ac9e368c483f73d34595780cdee65e8d44c40c26ff8bd3ce53c48035a863e',
@@ -86,8 +87,8 @@ const block1 = {
 const block2 = {
   number: 2,
   hash: '0xb003239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238',
-  parentHash: Buffer.from('0xb903239f8543d04b5dc1ba6519132b143087c68db1b2168786408fcbce568238'),
-  miner: Buffer.from('0xd9ea042ad059033ba3c3be79f4081244f183bf03'),
+  parentHash: hexToBuffer('0xb903239f8543d04b5dc1ba6519132b143087c68db1b2168786408fcbce568238'),
+  miner: hexToBuffer('0xd9ea042ad059033ba3c3be79f4081244f183bf03'),
   timestamp: Buffer.from(''),
   transactionHashes: [
     '0xff7ac9e368c483f73d34595780cdee65e8d44c40c26ff8bd3ce53c48035a863e',
