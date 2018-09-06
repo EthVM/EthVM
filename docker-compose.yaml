@@ -65,7 +65,6 @@ services:
     environment:
       - ETHVM_DATA_STORE_REDIS_HOST=redis
       - ETHVM_ETH_TRIE_DB_REDIS_HOST=redis
-      - ETHVM_RETHINK_DB_HOST=rethinkdb
 
   redis:
     image: redis:4.0.9-alpine
