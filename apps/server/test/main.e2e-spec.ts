@@ -1,16 +1,17 @@
 import config from '@app/config'
+import { errors } from  '@app/server/core/exceptions'
 import { RethinkDbStreamer, Streamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
-import { Block, BlocksService,BlocksServiceImpl, RethinkBlockRepository } from '@app/server/modules/blocks'
-import {  RethinkChartsRepository } from '@app/server/modules/charts'
+import { BlocksServiceImpl, RethinkBlockRepository } from '@app/server/modules/blocks'
+import { RethinkChartsRepository } from '@app/server/modules/charts'
 import { ExchangeService, MockExchangeServiceImpl } from '@app/server/modules/exchanges'
-import { RethinkTxsRepository, Tx, TxsRepository, TxsService, TxsServiceImpl } from '@app/server/modules/txs'
+import { RethinkTxsRepository, TxsService, TxsServiceImpl } from '@app/server/modules/txs'
 import { VmService } from '@app/server/modules/vm'
 import { RedisCacheRepository } from '@app/server/repositories'
 import { expect } from 'chai'
 import * as r from 'rethinkdb'
 import * as io from 'socket.io-client'
-import { mock, when } from 'ts-mockito'
+import { mock } from 'ts-mockito'
 import { ChartsServiceImpl,VmServiceImpl } from './mocks'
 
 
@@ -119,6 +120,7 @@ describe('ethvm-server-events', () => {
           const data = await callEvent('getTxs', input, client)
         } catch (e) {
           expect(e).to.not.be.undefined
+          expect(e).to.not.be.equal(errors.serverError)
         }
       }
     })
@@ -163,6 +165,7 @@ describe('ethvm-server-events', () => {
           const data = await callEvent('getBalance', input, client)
         } catch (e) {
           expect(e).to.not.be.undefined
+          expect(e).to.not.be.equal(errors.serverError)
         }
       }
     })
@@ -206,6 +209,7 @@ describe('ethvm-server-events', () => {
           const data = await callEvent('getBlockTransactions', input, client)
         } catch (e) {
           expect(e).to.not.be.undefined
+          expect(e).to.not.be.equal(errors.serverError)
         }
       }
     })
@@ -252,6 +256,7 @@ describe('ethvm-server-events', () => {
           const data = await callEvent('getTx', input, client)
         } catch (e) {
           expect(e).to.not.be.undefined
+          expect(e).to.not.be.equal(errors.serverError)
         }
       }
     })
@@ -297,6 +302,7 @@ describe('ethvm-server-events', () => {
           const data = await callEvent('getTotalTxs', input, client)
         } catch (e) {
           expect(e).to.not.be.undefined
+          expect(e).to.not.be.equal(errors.serverError)
         }
       }
     })
@@ -313,6 +319,7 @@ describe('ethvm-server-events', () => {
       for (const input of inputs) {
         const data = await callEvent('getTokenBalance', input, client)
         expect(data).to.not.be.undefined
+        expect(e).to.not.be.equal(errors.serverError)
       }
     })
 
@@ -341,6 +348,7 @@ describe('ethvm-server-events', () => {
           const data = await callEvent('getTokenBalance', input, client)
         } catch (e) {
           expect(e).to.not.be.undefined
+          expect(e).to.not.be.equal(errors.serverError)
         }
       }
     })
@@ -386,6 +394,7 @@ describe('ethvm-server-events', () => {
           const data = await callEvent('pastTxs', input, client)
         } catch (e) {
           expect(e).to.not.be.undefined
+          expect(e).to.not.be.equal(errors.serverError)
         }
       }
     })
@@ -430,6 +439,7 @@ describe('ethvm-server-events', () => {
           const data = await callEvent('pastBlocks', input, client)
         } catch (e) {
           expect(e).to.not.be.undefined
+          expect(e).to.not.be.equal(errors.serverError)
         }
       }
     })
@@ -471,6 +481,7 @@ describe('ethvm-server-events', () => {
           const data = await callEvent('getBlock', input, client)
         } catch (e) {
           expect(e).to.not.be.undefined
+          expect(e).to.not.be.equal(errors.serverError)
         }
       }
     })
@@ -534,6 +545,7 @@ describe('ethvm-server-events', () => {
           const data = await callEvent('getChartAccountsGrowth', input, client)
         } catch (e) {
           expect(e).to.not.be.undefined
+          expect(e).to.not.be.equal(errors.serverError)
         }
       }
     })
@@ -596,6 +608,7 @@ describe('ethvm-server-events', () => {
           const data = await callEvent('getChartBlockSize', input, client)
         } catch (e) {
           expect(e).to.not.be.undefined
+          expect(e).to.not.be.equal(errors.serverError)
         }
       }
     })
@@ -658,6 +671,7 @@ describe('ethvm-server-events', () => {
           const data = await callEvent('getChartGasLimit', input, client)
         } catch (e) {
           expect(e).to.not.be.undefined
+          expect(e).to.not.be.equal(errors.serverError)
         }
       }
     })
@@ -720,6 +734,7 @@ describe('ethvm-server-events', () => {
           const data = await callEvent('getChartAvTxFee', input, client)
         } catch (e) {
           expect(e).to.not.be.undefined
+          expect(e).to.not.be.equal(errors.serverError)
         }
       }
     })
