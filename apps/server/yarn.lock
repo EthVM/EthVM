@@ -3795,7 +3795,7 @@ lodash.values@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/lodash.values/-/lodash.values-4.3.0.tgz#a3a6c2b0ebecc5c2cba1c17e6e620fe81b53d347"
 
-lodash@^4.13.1, lodash@^4.17.10, lodash@^4.17.4:
+lodash@^4.13.1, lodash@^4.17.10, lodash@^4.17.4, lodash@^4.17.5:
   version "4.17.10"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
 
@@ -5263,7 +5263,7 @@ socket.io-adapter@~1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/socket.io-adapter/-/socket.io-adapter-1.1.1.tgz#2a805e8a14d6372124dd9159ad4502f8cb07f06b"
 
-socket.io-client@2.1.1:
+socket.io-client@2.1.1, socket.io-client@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/socket.io-client/-/socket.io-client-2.1.1.tgz#dcb38103436ab4578ddb026638ae2f21b623671f"
   dependencies:
@@ -5683,6 +5683,12 @@ ts-jest@^23.1.3:
     closest-file-data "^0.1.4"
     fs-extra "6.0.1"
     lodash "^4.17.10"
+
+ts-mockito@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/ts-mockito/-/ts-mockito-2.3.1.tgz#4c3467a2ddeb207966000a740a0826c970125ed1"
+  dependencies:
+    lodash "^4.17.5"
 
 ts-node@^7.0.1:
   version "7.0.1"

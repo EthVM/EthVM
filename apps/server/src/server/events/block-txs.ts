@@ -11,7 +11,7 @@ const getBlockTxsEvent: SocketEvent = {
 
     return {
       valid,
-      errors: [] // TODO: Map properly the error
+      errors: [valid] // TODO: Map properly the error
     }
   },
 

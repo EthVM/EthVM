@@ -18,7 +18,7 @@ export interface TxLog {
 export interface Tx {
   root?: Buffer
   blockHash: Buffer
-  blockNumber?: Buffer
+  blockNumber?: number
   transactionIndex?: Buffer
   from: Buffer
   fromBalance?: Buffer
@@ -26,11 +26,11 @@ export interface Tx {
   toBalance?: Buffer
   gasUsed: Buffer
   cumulativeGasUsed?: Buffer
-  contractAddress: Buffer
-  logsBloom?: Buffer
+  contractAddress: Buffer | null
+  logsBloom?: Buffer | null
   gas: Buffer
   gasPrice: Buffer
-  hash: Buffer
+  hash: string
   input: Buffer
   nonce?: Buffer
   value: Buffer
