@@ -1,7 +1,7 @@
 <div align="center">
   <img src="https://raw.githubusercontent.com/enKryptIO/ethvm/master/.github/assets/logo.png" alt="ethvm-logo">
   <p>:zap::zap::zap: EthVM Project: An open source blockchain explorer for Ethereum networks :zap::zap::zap:</p>
-  <p>Powered by <a href="https://www.typescriptlang.org/">TypeScript</a> / <a href="https://github.com/socketio/socket.io">Socket.io</a> / <a href="https://github.com/ethereum/go-ethereum">go-ethereum</a> / <a href="https://github.com/mongodb/mongo">MongoDB</a> / <a href="https://redis.io/topics/quickstart">Redis</a></p>
+  <p>Powered by <a href="https://www.typescriptlang.org/">TypeScript</a> / <a href="https://github.com/socketio/socket.io">Socket.io</a> / <a href="https://github.com/ethereum/go-ethereum">go-ethereum</a> / <a href="https://kafka.apache.org/">Kafka</a> / <a href="https://github.com/mongodb/mongo">MongoDB</a> / <a href="https://redis.io/topics/quickstart">Redis</a></p>
 </div>
 
 # EthVM: Ethereum Blockchain Explorer
@@ -87,11 +87,12 @@ So, we recommend you to have a local DNS service like `DNSmasq` (instructions fo
 Another different and classical approach is to edit and add these entries to `/etc/hosts` file, just like this (if you're using Windows 10, adapt accordingly):
 
 ```sh
+127.0.0.1       ethvm.lan
 127.0.0.1       geth.ethvm.lan
 127.0.0.1       mongo.ethvm.lan
 127.0.0.1       ws.ethvm.lan
 127.0.0.1       redis.ethvm.lan
-127.0.0.1       ethvm.lan
+127.0.0.01      kafka-schema-registry.ethvm.lan
 ```
 
 ### Windows 10 support

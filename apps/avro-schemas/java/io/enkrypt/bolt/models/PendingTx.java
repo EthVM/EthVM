@@ -12,23 +12,23 @@ import org.apache.avro.message.SchemaStore;
 
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
-public class Transaction extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = -1945191510621541357L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Transaction\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"hash\",\"type\":\"string\",\"doc\":\"Hash of the transaction\"},{\"name\":\"root\",\"type\":\"string\",\"doc\":\"Root of the parent block\"},{\"name\":\"index\",\"type\":\"int\",\"doc\":\"Integer of the transactions index position in the block\"},{\"name\":\"timestamp\",\"type\":{\"type\":\"long\",\"logicalType\":\"timestamp-millis\"},\"doc\":\"Unix timestamp for when the transaction was collated\"},{\"name\":\"nonce\",\"type\":\"long\",\"doc\":\"Number of transactions sent from a given address\"},{\"name\":\"nonceHash\",\"type\":\"string\",\"doc\":\"SHA3 of the transaction nonce\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"long\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":[\"null\",\"string\"],\"doc\":\"Address of the recipient (or null when contract creation)\"},{\"name\":\"toBalance\",\"type\":[\"null\",\"long\"],\"doc\":\"Balance of the receiver (or null when contract creation)\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"The data send along with the transaction\"},{\"name\":\"contractAddress\",\"type\":[\"null\",\"string\"],\"doc\":\"If a contract is created, the address of it (or null if is just a regular transaction)\"},{\"name\":\"value\",\"type\":\"long\",\"doc\":\"Amount of value transferred in Wei\"},{\"name\":\"gas\",\"type\":\"long\",\"doc\":\"Amount of gas provided by the sender\"},{\"name\":\"gasPrice\",\"type\":\"long\",\"doc\":\"Amount of gas price provided by the sender in Wei\"},{\"name\":\"gasUsed\",\"type\":\"long\",\"doc\":\"Amount of gas used consumed by the transaction\"},{\"name\":\"cumulativeGasUsed\",\"type\":\"long\",\"doc\":\"Cumulative gas used by the transaction\"},{\"name\":\"v\",\"type\":\"string\",\"doc\":\"Transaction signature v\"},{\"name\":\"r\",\"type\":\"string\",\"doc\":\"Transaction signature r\"},{\"name\":\"s\",\"type\":\"string\",\"doc\":\"Transaction signature s\"},{\"name\":\"status\",\"type\":\"long\",\"doc\":\"Transaction result status\"},{\"name\":\"logsBloom\",\"type\":\"bytes\",\"doc\":\"Generated and encoded logs by the transaction\"},{\"name\":\"logs\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Log\",\"fields\":[{\"name\":\"address\",\"type\":\"string\",\"desc\":\"Address of the contract that generated the event\"},{\"name\":\"topics\",\"type\":{\"type\":\"array\",\"items\":\"string\"},\"desc\":\"List of topics provided by the contract\"},{\"name\":\"data\",\"type\":\"bytes\",\"desc\":\"Supplied by the contract, usually ABI-encoded\"},{\"name\":\"index\",\"type\":\"int\",\"desc\":\"Index of the log in the receipt\"},{\"name\":\"removed\",\"type\":\"boolean\",\"desc\":\"True if this log was reverted due to a chain reorganisation\"}]}},\"doc\":\"\"},{\"name\":\"trace\",\"type\":{\"type\":\"record\",\"name\":\"Trace\",\"fields\":[{\"name\":\"isError\",\"type\":\"boolean\",\"desc\":\"Signals if an error happened during execution\"},{\"name\":\"msg\",\"type\":\"string\",\"desc\":\"Stores the error message\"},{\"name\":\"transfers\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Transfer\",\"fields\":[{\"name\":\"op\",\"type\":\"string\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"\"},{\"name\":\"to\",\"type\":\"string\",\"doc\":\"\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"\"}]}},\"desc\":\"An array describing transfers\"}]},\"doc\":\"Trace that describes contract creation, destruction or intenal transactions\"}]}");
+public class PendingTx extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
+  private static final long serialVersionUID = 1381707432279065321L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"PendingTx\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"hash\",\"type\":\"string\",\"doc\":\"Hash of the transaction\"},{\"name\":\"nonce\",\"type\":\"long\",\"doc\":\"Number of transactions sent from a given address\"},{\"name\":\"nonceHash\",\"type\":\"string\",\"doc\":\"SHA3 of the transaction nonce\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"long\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":[\"null\",\"string\"],\"doc\":\"Address of the recipient (or null when contract creation)\"},{\"name\":\"toBalance\",\"type\":[\"null\",\"long\"],\"doc\":\"Balance of the receiver (or null when contract creation)\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"The data send along with the transaction\"},{\"name\":\"contractAddress\",\"type\":[\"null\",\"string\"],\"doc\":\"If a contract is created, the address of it (or null if is just a regular transaction)\"},{\"name\":\"value\",\"type\":\"long\",\"doc\":\"Amount of value transferred in Wei\"},{\"name\":\"gas\",\"type\":\"long\",\"doc\":\"Amount of gas provided by the sender\"},{\"name\":\"gasPrice\",\"type\":\"long\",\"doc\":\"Amount of gas price provided by the sender in Wei\"},{\"name\":\"gasUsed\",\"type\":\"long\",\"doc\":\"Amount of gas used consumed by the transaction\"},{\"name\":\"cumulativeGasUsed\",\"type\":\"long\",\"doc\":\"Cumulative gas used by the transaction\"},{\"name\":\"v\",\"type\":\"string\",\"doc\":\"Transaction signature v\"},{\"name\":\"r\",\"type\":\"string\",\"doc\":\"Transaction signature r\"},{\"name\":\"s\",\"type\":\"string\",\"doc\":\"Transaction signature s\"},{\"name\":\"status\",\"type\":\"long\",\"doc\":\"Transaction result status\"},{\"name\":\"logsBloom\",\"type\":\"bytes\",\"doc\":\"Generated and encoded logs by the transaction\"},{\"name\":\"logs\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Log\",\"fields\":[{\"name\":\"address\",\"type\":\"string\",\"desc\":\"Address of the contract that generated the event\"},{\"name\":\"topics\",\"type\":{\"type\":\"array\",\"items\":\"string\"},\"desc\":\"List of topics provided by the contract\"},{\"name\":\"data\",\"type\":\"bytes\",\"desc\":\"Supplied by the contract, usually ABI-encoded\"},{\"name\":\"index\",\"type\":\"int\",\"desc\":\"Index of the log in the receipt\"},{\"name\":\"removed\",\"type\":\"boolean\",\"desc\":\"True if this log was reverted due to a chain reorganisation\"}]}},\"doc\":\"\"},{\"name\":\"trace\",\"type\":{\"type\":\"record\",\"name\":\"Trace\",\"fields\":[{\"name\":\"isError\",\"type\":\"boolean\",\"desc\":\"Signals if an error happened during execution\"},{\"name\":\"msg\",\"type\":\"string\",\"desc\":\"Stores the error message\"},{\"name\":\"transfers\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Transfer\",\"fields\":[{\"name\":\"op\",\"type\":\"string\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"\"},{\"name\":\"to\",\"type\":\"string\",\"doc\":\"\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"\"}]}},\"desc\":\"An array describing transfers\"}]},\"doc\":\"Trace that describes contract creation, destruction or intenal transactions\"},{\"name\":\"txStatus\",\"type\":{\"type\":\"enum\",\"name\":\"action\",\"symbols\":[\"ADD\",\"UNPAYABLE\",\"LOW_NONCE\",\"CAP_EXCEEDING\"]},\"doc\":\"Spceficies the status of this pending transaction\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
 
-  private static final BinaryMessageEncoder<Transaction> ENCODER =
-      new BinaryMessageEncoder<Transaction>(MODEL$, SCHEMA$);
+  private static final BinaryMessageEncoder<PendingTx> ENCODER =
+      new BinaryMessageEncoder<PendingTx>(MODEL$, SCHEMA$);
 
-  private static final BinaryMessageDecoder<Transaction> DECODER =
-      new BinaryMessageDecoder<Transaction>(MODEL$, SCHEMA$);
+  private static final BinaryMessageDecoder<PendingTx> DECODER =
+      new BinaryMessageDecoder<PendingTx>(MODEL$, SCHEMA$);
 
   /**
    * Return the BinaryMessageDecoder instance used by this class.
    */
-  public static BinaryMessageDecoder<Transaction> getDecoder() {
+  public static BinaryMessageDecoder<PendingTx> getDecoder() {
     return DECODER;
   }
 
@@ -36,29 +36,23 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Create a new BinaryMessageDecoder instance for this class that uses the specified {@link SchemaStore}.
    * @param resolver a {@link SchemaStore} used to find schemas by fingerprint
    */
-  public static BinaryMessageDecoder<Transaction> createDecoder(SchemaStore resolver) {
-    return new BinaryMessageDecoder<Transaction>(MODEL$, SCHEMA$, resolver);
+  public static BinaryMessageDecoder<PendingTx> createDecoder(SchemaStore resolver) {
+    return new BinaryMessageDecoder<PendingTx>(MODEL$, SCHEMA$, resolver);
   }
 
-  /** Serializes this Transaction to a ByteBuffer. */
+  /** Serializes this PendingTx to a ByteBuffer. */
   public java.nio.ByteBuffer toByteBuffer() throws java.io.IOException {
     return ENCODER.encode(this);
   }
 
-  /** Deserializes a Transaction from a ByteBuffer. */
-  public static Transaction fromByteBuffer(
+  /** Deserializes a PendingTx from a ByteBuffer. */
+  public static PendingTx fromByteBuffer(
       java.nio.ByteBuffer b) throws java.io.IOException {
     return DECODER.decode(b);
   }
 
   /** Hash of the transaction */
   @Deprecated public java.lang.CharSequence hash;
-  /** Root of the parent block */
-  @Deprecated public java.lang.CharSequence root;
-  /** Integer of the transactions index position in the block */
-  @Deprecated public int index;
-  /** Unix timestamp for when the transaction was collated */
-  @Deprecated public org.joda.time.DateTime timestamp;
   /** Number of transactions sent from a given address */
   @Deprecated public long nonce;
   /** SHA3 of the transaction nonce */
@@ -99,20 +93,19 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
   @Deprecated public java.util.List<io.enkrypt.bolt.models.Log> logs;
   /** Trace that describes contract creation, destruction or intenal transactions */
   @Deprecated public io.enkrypt.bolt.models.Trace trace;
+  /** Spceficies the status of this pending transaction */
+  @Deprecated public io.enkrypt.bolt.models.action txStatus;
 
   /**
    * Default constructor.  Note that this does not initialize fields
    * to their default values from the schema.  If that is desired then
    * one should use <code>newBuilder()</code>.
    */
-  public Transaction() {}
+  public PendingTx() {}
 
   /**
    * All-args constructor.
    * @param hash Hash of the transaction
-   * @param root Root of the parent block
-   * @param index Integer of the transactions index position in the block
-   * @param timestamp Unix timestamp for when the transaction was collated
    * @param nonce Number of transactions sent from a given address
    * @param nonceHash SHA3 of the transaction nonce
    * @param from Address of the sender
@@ -133,12 +126,10 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * @param logsBloom Generated and encoded logs by the transaction
    * @param logs 
    * @param trace Trace that describes contract creation, destruction or intenal transactions
+   * @param txStatus Spceficies the status of this pending transaction
    */
-  public Transaction(java.lang.CharSequence hash, java.lang.CharSequence root, java.lang.Integer index, org.joda.time.DateTime timestamp, java.lang.Long nonce, java.lang.CharSequence nonceHash, java.lang.CharSequence from, java.lang.Long fromBalance, java.lang.CharSequence to, java.lang.Long toBalance, java.nio.ByteBuffer input, java.lang.CharSequence contractAddress, java.lang.Long value, java.lang.Long gas, java.lang.Long gasPrice, java.lang.Long gasUsed, java.lang.Long cumulativeGasUsed, java.lang.CharSequence v, java.lang.CharSequence r, java.lang.CharSequence s, java.lang.Long status, java.nio.ByteBuffer logsBloom, java.util.List<io.enkrypt.bolt.models.Log> logs, io.enkrypt.bolt.models.Trace trace) {
+  public PendingTx(java.lang.CharSequence hash, java.lang.Long nonce, java.lang.CharSequence nonceHash, java.lang.CharSequence from, java.lang.Long fromBalance, java.lang.CharSequence to, java.lang.Long toBalance, java.nio.ByteBuffer input, java.lang.CharSequence contractAddress, java.lang.Long value, java.lang.Long gas, java.lang.Long gasPrice, java.lang.Long gasUsed, java.lang.Long cumulativeGasUsed, java.lang.CharSequence v, java.lang.CharSequence r, java.lang.CharSequence s, java.lang.Long status, java.nio.ByteBuffer logsBloom, java.util.List<io.enkrypt.bolt.models.Log> logs, io.enkrypt.bolt.models.Trace trace, io.enkrypt.bolt.models.action txStatus) {
     this.hash = hash;
-    this.root = root;
-    this.index = index;
-    this.timestamp = timestamp;
     this.nonce = nonce;
     this.nonceHash = nonceHash;
     this.from = from;
@@ -159,6 +150,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
     this.logsBloom = logsBloom;
     this.logs = logs;
     this.trace = trace;
+    this.txStatus = txStatus;
   }
 
   public org.apache.avro.Schema getSchema() { return SCHEMA$; }
@@ -166,70 +158,29 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
   public java.lang.Object get(int field$) {
     switch (field$) {
     case 0: return hash;
-    case 1: return root;
-    case 2: return index;
-    case 3: return timestamp;
-    case 4: return nonce;
-    case 5: return nonceHash;
-    case 6: return from;
-    case 7: return fromBalance;
-    case 8: return to;
-    case 9: return toBalance;
-    case 10: return input;
-    case 11: return contractAddress;
-    case 12: return value;
-    case 13: return gas;
-    case 14: return gasPrice;
-    case 15: return gasUsed;
-    case 16: return cumulativeGasUsed;
-    case 17: return v;
-    case 18: return r;
-    case 19: return s;
-    case 20: return status;
-    case 21: return logsBloom;
-    case 22: return logs;
-    case 23: return trace;
+    case 1: return nonce;
+    case 2: return nonceHash;
+    case 3: return from;
+    case 4: return fromBalance;
+    case 5: return to;
+    case 6: return toBalance;
+    case 7: return input;
+    case 8: return contractAddress;
+    case 9: return value;
+    case 10: return gas;
+    case 11: return gasPrice;
+    case 12: return gasUsed;
+    case 13: return cumulativeGasUsed;
+    case 14: return v;
+    case 15: return r;
+    case 16: return s;
+    case 17: return status;
+    case 18: return logsBloom;
+    case 19: return logs;
+    case 20: return trace;
+    case 21: return txStatus;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
-  }
-
-  protected static final org.apache.avro.data.TimeConversions.DateConversion DATE_CONVERSION = new org.apache.avro.data.TimeConversions.DateConversion();
-  protected static final org.apache.avro.data.TimeConversions.TimeConversion TIME_CONVERSION = new org.apache.avro.data.TimeConversions.TimeConversion();
-  protected static final org.apache.avro.data.TimeConversions.TimestampConversion TIMESTAMP_CONVERSION = new org.apache.avro.data.TimeConversions.TimestampConversion();
-  protected static final org.apache.avro.Conversions.DecimalConversion DECIMAL_CONVERSION = new org.apache.avro.Conversions.DecimalConversion();
-
-  private static final org.apache.avro.Conversion<?>[] conversions =
-      new org.apache.avro.Conversion<?>[] {
-      null,
-      null,
-      null,
-      TIMESTAMP_CONVERSION,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null
-  };
-
-  @Override
-  public org.apache.avro.Conversion<?> getConversion(int field) {
-    return conversions[field];
   }
 
   // Used by DatumReader.  Applications should not call.
@@ -237,29 +188,27 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
   public void put(int field$, java.lang.Object value$) {
     switch (field$) {
     case 0: hash = (java.lang.CharSequence)value$; break;
-    case 1: root = (java.lang.CharSequence)value$; break;
-    case 2: index = (java.lang.Integer)value$; break;
-    case 3: timestamp = (org.joda.time.DateTime)value$; break;
-    case 4: nonce = (java.lang.Long)value$; break;
-    case 5: nonceHash = (java.lang.CharSequence)value$; break;
-    case 6: from = (java.lang.CharSequence)value$; break;
-    case 7: fromBalance = (java.lang.Long)value$; break;
-    case 8: to = (java.lang.CharSequence)value$; break;
-    case 9: toBalance = (java.lang.Long)value$; break;
-    case 10: input = (java.nio.ByteBuffer)value$; break;
-    case 11: contractAddress = (java.lang.CharSequence)value$; break;
-    case 12: value = (java.lang.Long)value$; break;
-    case 13: gas = (java.lang.Long)value$; break;
-    case 14: gasPrice = (java.lang.Long)value$; break;
-    case 15: gasUsed = (java.lang.Long)value$; break;
-    case 16: cumulativeGasUsed = (java.lang.Long)value$; break;
-    case 17: v = (java.lang.CharSequence)value$; break;
-    case 18: r = (java.lang.CharSequence)value$; break;
-    case 19: s = (java.lang.CharSequence)value$; break;
-    case 20: status = (java.lang.Long)value$; break;
-    case 21: logsBloom = (java.nio.ByteBuffer)value$; break;
-    case 22: logs = (java.util.List<io.enkrypt.bolt.models.Log>)value$; break;
-    case 23: trace = (io.enkrypt.bolt.models.Trace)value$; break;
+    case 1: nonce = (java.lang.Long)value$; break;
+    case 2: nonceHash = (java.lang.CharSequence)value$; break;
+    case 3: from = (java.lang.CharSequence)value$; break;
+    case 4: fromBalance = (java.lang.Long)value$; break;
+    case 5: to = (java.lang.CharSequence)value$; break;
+    case 6: toBalance = (java.lang.Long)value$; break;
+    case 7: input = (java.nio.ByteBuffer)value$; break;
+    case 8: contractAddress = (java.lang.CharSequence)value$; break;
+    case 9: value = (java.lang.Long)value$; break;
+    case 10: gas = (java.lang.Long)value$; break;
+    case 11: gasPrice = (java.lang.Long)value$; break;
+    case 12: gasUsed = (java.lang.Long)value$; break;
+    case 13: cumulativeGasUsed = (java.lang.Long)value$; break;
+    case 14: v = (java.lang.CharSequence)value$; break;
+    case 15: r = (java.lang.CharSequence)value$; break;
+    case 16: s = (java.lang.CharSequence)value$; break;
+    case 17: status = (java.lang.Long)value$; break;
+    case 18: logsBloom = (java.nio.ByteBuffer)value$; break;
+    case 19: logs = (java.util.List<io.enkrypt.bolt.models.Log>)value$; break;
+    case 20: trace = (io.enkrypt.bolt.models.Trace)value$; break;
+    case 21: txStatus = (io.enkrypt.bolt.models.action)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -279,57 +228,6 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    */
   public void setHash(java.lang.CharSequence value) {
     this.hash = value;
-  }
-
-  /**
-   * Gets the value of the 'root' field.
-   * @return Root of the parent block
-   */
-  public java.lang.CharSequence getRoot() {
-    return root;
-  }
-
-  /**
-   * Sets the value of the 'root' field.
-   * Root of the parent block
-   * @param value the value to set.
-   */
-  public void setRoot(java.lang.CharSequence value) {
-    this.root = value;
-  }
-
-  /**
-   * Gets the value of the 'index' field.
-   * @return Integer of the transactions index position in the block
-   */
-  public java.lang.Integer getIndex() {
-    return index;
-  }
-
-  /**
-   * Sets the value of the 'index' field.
-   * Integer of the transactions index position in the block
-   * @param value the value to set.
-   */
-  public void setIndex(java.lang.Integer value) {
-    this.index = value;
-  }
-
-  /**
-   * Gets the value of the 'timestamp' field.
-   * @return Unix timestamp for when the transaction was collated
-   */
-  public org.joda.time.DateTime getTimestamp() {
-    return timestamp;
-  }
-
-  /**
-   * Sets the value of the 'timestamp' field.
-   * Unix timestamp for when the transaction was collated
-   * @param value the value to set.
-   */
-  public void setTimestamp(org.joda.time.DateTime value) {
-    this.timestamp = value;
   }
 
   /**
@@ -673,45 +571,56 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
   }
 
   /**
-   * Creates a new Transaction RecordBuilder.
-   * @return A new Transaction RecordBuilder
+   * Gets the value of the 'txStatus' field.
+   * @return Spceficies the status of this pending transaction
    */
-  public static io.enkrypt.bolt.models.Transaction.Builder newBuilder() {
-    return new io.enkrypt.bolt.models.Transaction.Builder();
+  public io.enkrypt.bolt.models.action getTxStatus() {
+    return txStatus;
   }
 
   /**
-   * Creates a new Transaction RecordBuilder by copying an existing Builder.
+   * Sets the value of the 'txStatus' field.
+   * Spceficies the status of this pending transaction
+   * @param value the value to set.
+   */
+  public void setTxStatus(io.enkrypt.bolt.models.action value) {
+    this.txStatus = value;
+  }
+
+  /**
+   * Creates a new PendingTx RecordBuilder.
+   * @return A new PendingTx RecordBuilder
+   */
+  public static io.enkrypt.bolt.models.PendingTx.Builder newBuilder() {
+    return new io.enkrypt.bolt.models.PendingTx.Builder();
+  }
+
+  /**
+   * Creates a new PendingTx RecordBuilder by copying an existing Builder.
    * @param other The existing builder to copy.
-   * @return A new Transaction RecordBuilder
+   * @return A new PendingTx RecordBuilder
    */
-  public static io.enkrypt.bolt.models.Transaction.Builder newBuilder(io.enkrypt.bolt.models.Transaction.Builder other) {
-    return new io.enkrypt.bolt.models.Transaction.Builder(other);
+  public static io.enkrypt.bolt.models.PendingTx.Builder newBuilder(io.enkrypt.bolt.models.PendingTx.Builder other) {
+    return new io.enkrypt.bolt.models.PendingTx.Builder(other);
   }
 
   /**
-   * Creates a new Transaction RecordBuilder by copying an existing Transaction instance.
+   * Creates a new PendingTx RecordBuilder by copying an existing PendingTx instance.
    * @param other The existing instance to copy.
-   * @return A new Transaction RecordBuilder
+   * @return A new PendingTx RecordBuilder
    */
-  public static io.enkrypt.bolt.models.Transaction.Builder newBuilder(io.enkrypt.bolt.models.Transaction other) {
-    return new io.enkrypt.bolt.models.Transaction.Builder(other);
+  public static io.enkrypt.bolt.models.PendingTx.Builder newBuilder(io.enkrypt.bolt.models.PendingTx other) {
+    return new io.enkrypt.bolt.models.PendingTx.Builder(other);
   }
 
   /**
-   * RecordBuilder for Transaction instances.
+   * RecordBuilder for PendingTx instances.
    */
-  public static class Builder extends org.apache.avro.specific.SpecificRecordBuilderBase<Transaction>
-    implements org.apache.avro.data.RecordBuilder<Transaction> {
+  public static class Builder extends org.apache.avro.specific.SpecificRecordBuilderBase<PendingTx>
+    implements org.apache.avro.data.RecordBuilder<PendingTx> {
 
     /** Hash of the transaction */
     private java.lang.CharSequence hash;
-    /** Root of the parent block */
-    private java.lang.CharSequence root;
-    /** Integer of the transactions index position in the block */
-    private int index;
-    /** Unix timestamp for when the transaction was collated */
-    private org.joda.time.DateTime timestamp;
     /** Number of transactions sent from a given address */
     private long nonce;
     /** SHA3 of the transaction nonce */
@@ -753,6 +662,8 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
     /** Trace that describes contract creation, destruction or intenal transactions */
     private io.enkrypt.bolt.models.Trace trace;
     private io.enkrypt.bolt.models.Trace.Builder traceBuilder;
+    /** Spceficies the status of this pending transaction */
+    private io.enkrypt.bolt.models.action txStatus;
 
     /** Creates a new Builder */
     private Builder() {
@@ -763,212 +674,196 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
      * Creates a Builder by copying an existing Builder.
      * @param other The existing Builder to copy.
      */
-    private Builder(io.enkrypt.bolt.models.Transaction.Builder other) {
+    private Builder(io.enkrypt.bolt.models.PendingTx.Builder other) {
       super(other);
       if (isValidValue(fields()[0], other.hash)) {
         this.hash = data().deepCopy(fields()[0].schema(), other.hash);
         fieldSetFlags()[0] = true;
       }
-      if (isValidValue(fields()[1], other.root)) {
-        this.root = data().deepCopy(fields()[1].schema(), other.root);
+      if (isValidValue(fields()[1], other.nonce)) {
+        this.nonce = data().deepCopy(fields()[1].schema(), other.nonce);
         fieldSetFlags()[1] = true;
       }
-      if (isValidValue(fields()[2], other.index)) {
-        this.index = data().deepCopy(fields()[2].schema(), other.index);
+      if (isValidValue(fields()[2], other.nonceHash)) {
+        this.nonceHash = data().deepCopy(fields()[2].schema(), other.nonceHash);
         fieldSetFlags()[2] = true;
       }
-      if (isValidValue(fields()[3], other.timestamp)) {
-        this.timestamp = data().deepCopy(fields()[3].schema(), other.timestamp);
+      if (isValidValue(fields()[3], other.from)) {
+        this.from = data().deepCopy(fields()[3].schema(), other.from);
         fieldSetFlags()[3] = true;
       }
-      if (isValidValue(fields()[4], other.nonce)) {
-        this.nonce = data().deepCopy(fields()[4].schema(), other.nonce);
+      if (isValidValue(fields()[4], other.fromBalance)) {
+        this.fromBalance = data().deepCopy(fields()[4].schema(), other.fromBalance);
         fieldSetFlags()[4] = true;
       }
-      if (isValidValue(fields()[5], other.nonceHash)) {
-        this.nonceHash = data().deepCopy(fields()[5].schema(), other.nonceHash);
+      if (isValidValue(fields()[5], other.to)) {
+        this.to = data().deepCopy(fields()[5].schema(), other.to);
         fieldSetFlags()[5] = true;
       }
-      if (isValidValue(fields()[6], other.from)) {
-        this.from = data().deepCopy(fields()[6].schema(), other.from);
+      if (isValidValue(fields()[6], other.toBalance)) {
+        this.toBalance = data().deepCopy(fields()[6].schema(), other.toBalance);
         fieldSetFlags()[6] = true;
       }
-      if (isValidValue(fields()[7], other.fromBalance)) {
-        this.fromBalance = data().deepCopy(fields()[7].schema(), other.fromBalance);
+      if (isValidValue(fields()[7], other.input)) {
+        this.input = data().deepCopy(fields()[7].schema(), other.input);
         fieldSetFlags()[7] = true;
       }
-      if (isValidValue(fields()[8], other.to)) {
-        this.to = data().deepCopy(fields()[8].schema(), other.to);
+      if (isValidValue(fields()[8], other.contractAddress)) {
+        this.contractAddress = data().deepCopy(fields()[8].schema(), other.contractAddress);
         fieldSetFlags()[8] = true;
       }
-      if (isValidValue(fields()[9], other.toBalance)) {
-        this.toBalance = data().deepCopy(fields()[9].schema(), other.toBalance);
+      if (isValidValue(fields()[9], other.value)) {
+        this.value = data().deepCopy(fields()[9].schema(), other.value);
         fieldSetFlags()[9] = true;
       }
-      if (isValidValue(fields()[10], other.input)) {
-        this.input = data().deepCopy(fields()[10].schema(), other.input);
+      if (isValidValue(fields()[10], other.gas)) {
+        this.gas = data().deepCopy(fields()[10].schema(), other.gas);
         fieldSetFlags()[10] = true;
       }
-      if (isValidValue(fields()[11], other.contractAddress)) {
-        this.contractAddress = data().deepCopy(fields()[11].schema(), other.contractAddress);
+      if (isValidValue(fields()[11], other.gasPrice)) {
+        this.gasPrice = data().deepCopy(fields()[11].schema(), other.gasPrice);
         fieldSetFlags()[11] = true;
       }
-      if (isValidValue(fields()[12], other.value)) {
-        this.value = data().deepCopy(fields()[12].schema(), other.value);
+      if (isValidValue(fields()[12], other.gasUsed)) {
+        this.gasUsed = data().deepCopy(fields()[12].schema(), other.gasUsed);
         fieldSetFlags()[12] = true;
       }
-      if (isValidValue(fields()[13], other.gas)) {
-        this.gas = data().deepCopy(fields()[13].schema(), other.gas);
+      if (isValidValue(fields()[13], other.cumulativeGasUsed)) {
+        this.cumulativeGasUsed = data().deepCopy(fields()[13].schema(), other.cumulativeGasUsed);
         fieldSetFlags()[13] = true;
       }
-      if (isValidValue(fields()[14], other.gasPrice)) {
-        this.gasPrice = data().deepCopy(fields()[14].schema(), other.gasPrice);
+      if (isValidValue(fields()[14], other.v)) {
+        this.v = data().deepCopy(fields()[14].schema(), other.v);
         fieldSetFlags()[14] = true;
       }
-      if (isValidValue(fields()[15], other.gasUsed)) {
-        this.gasUsed = data().deepCopy(fields()[15].schema(), other.gasUsed);
+      if (isValidValue(fields()[15], other.r)) {
+        this.r = data().deepCopy(fields()[15].schema(), other.r);
         fieldSetFlags()[15] = true;
       }
-      if (isValidValue(fields()[16], other.cumulativeGasUsed)) {
-        this.cumulativeGasUsed = data().deepCopy(fields()[16].schema(), other.cumulativeGasUsed);
+      if (isValidValue(fields()[16], other.s)) {
+        this.s = data().deepCopy(fields()[16].schema(), other.s);
         fieldSetFlags()[16] = true;
       }
-      if (isValidValue(fields()[17], other.v)) {
-        this.v = data().deepCopy(fields()[17].schema(), other.v);
+      if (isValidValue(fields()[17], other.status)) {
+        this.status = data().deepCopy(fields()[17].schema(), other.status);
         fieldSetFlags()[17] = true;
       }
-      if (isValidValue(fields()[18], other.r)) {
-        this.r = data().deepCopy(fields()[18].schema(), other.r);
+      if (isValidValue(fields()[18], other.logsBloom)) {
+        this.logsBloom = data().deepCopy(fields()[18].schema(), other.logsBloom);
         fieldSetFlags()[18] = true;
       }
-      if (isValidValue(fields()[19], other.s)) {
-        this.s = data().deepCopy(fields()[19].schema(), other.s);
+      if (isValidValue(fields()[19], other.logs)) {
+        this.logs = data().deepCopy(fields()[19].schema(), other.logs);
         fieldSetFlags()[19] = true;
       }
-      if (isValidValue(fields()[20], other.status)) {
-        this.status = data().deepCopy(fields()[20].schema(), other.status);
+      if (isValidValue(fields()[20], other.trace)) {
+        this.trace = data().deepCopy(fields()[20].schema(), other.trace);
         fieldSetFlags()[20] = true;
-      }
-      if (isValidValue(fields()[21], other.logsBloom)) {
-        this.logsBloom = data().deepCopy(fields()[21].schema(), other.logsBloom);
-        fieldSetFlags()[21] = true;
-      }
-      if (isValidValue(fields()[22], other.logs)) {
-        this.logs = data().deepCopy(fields()[22].schema(), other.logs);
-        fieldSetFlags()[22] = true;
-      }
-      if (isValidValue(fields()[23], other.trace)) {
-        this.trace = data().deepCopy(fields()[23].schema(), other.trace);
-        fieldSetFlags()[23] = true;
       }
       if (other.hasTraceBuilder()) {
         this.traceBuilder = io.enkrypt.bolt.models.Trace.newBuilder(other.getTraceBuilder());
       }
+      if (isValidValue(fields()[21], other.txStatus)) {
+        this.txStatus = data().deepCopy(fields()[21].schema(), other.txStatus);
+        fieldSetFlags()[21] = true;
+      }
     }
 
     /**
-     * Creates a Builder by copying an existing Transaction instance
+     * Creates a Builder by copying an existing PendingTx instance
      * @param other The existing instance to copy.
      */
-    private Builder(io.enkrypt.bolt.models.Transaction other) {
+    private Builder(io.enkrypt.bolt.models.PendingTx other) {
             super(SCHEMA$);
       if (isValidValue(fields()[0], other.hash)) {
         this.hash = data().deepCopy(fields()[0].schema(), other.hash);
         fieldSetFlags()[0] = true;
       }
-      if (isValidValue(fields()[1], other.root)) {
-        this.root = data().deepCopy(fields()[1].schema(), other.root);
+      if (isValidValue(fields()[1], other.nonce)) {
+        this.nonce = data().deepCopy(fields()[1].schema(), other.nonce);
         fieldSetFlags()[1] = true;
       }
-      if (isValidValue(fields()[2], other.index)) {
-        this.index = data().deepCopy(fields()[2].schema(), other.index);
+      if (isValidValue(fields()[2], other.nonceHash)) {
+        this.nonceHash = data().deepCopy(fields()[2].schema(), other.nonceHash);
         fieldSetFlags()[2] = true;
       }
-      if (isValidValue(fields()[3], other.timestamp)) {
-        this.timestamp = data().deepCopy(fields()[3].schema(), other.timestamp);
+      if (isValidValue(fields()[3], other.from)) {
+        this.from = data().deepCopy(fields()[3].schema(), other.from);
         fieldSetFlags()[3] = true;
       }
-      if (isValidValue(fields()[4], other.nonce)) {
-        this.nonce = data().deepCopy(fields()[4].schema(), other.nonce);
+      if (isValidValue(fields()[4], other.fromBalance)) {
+        this.fromBalance = data().deepCopy(fields()[4].schema(), other.fromBalance);
         fieldSetFlags()[4] = true;
       }
-      if (isValidValue(fields()[5], other.nonceHash)) {
-        this.nonceHash = data().deepCopy(fields()[5].schema(), other.nonceHash);
+      if (isValidValue(fields()[5], other.to)) {
+        this.to = data().deepCopy(fields()[5].schema(), other.to);
         fieldSetFlags()[5] = true;
       }
-      if (isValidValue(fields()[6], other.from)) {
-        this.from = data().deepCopy(fields()[6].schema(), other.from);
+      if (isValidValue(fields()[6], other.toBalance)) {
+        this.toBalance = data().deepCopy(fields()[6].schema(), other.toBalance);
         fieldSetFlags()[6] = true;
       }
-      if (isValidValue(fields()[7], other.fromBalance)) {
-        this.fromBalance = data().deepCopy(fields()[7].schema(), other.fromBalance);
+      if (isValidValue(fields()[7], other.input)) {
+        this.input = data().deepCopy(fields()[7].schema(), other.input);
         fieldSetFlags()[7] = true;
       }
-      if (isValidValue(fields()[8], other.to)) {
-        this.to = data().deepCopy(fields()[8].schema(), other.to);
+      if (isValidValue(fields()[8], other.contractAddress)) {
+        this.contractAddress = data().deepCopy(fields()[8].schema(), other.contractAddress);
         fieldSetFlags()[8] = true;
       }
-      if (isValidValue(fields()[9], other.toBalance)) {
-        this.toBalance = data().deepCopy(fields()[9].schema(), other.toBalance);
+      if (isValidValue(fields()[9], other.value)) {
+        this.value = data().deepCopy(fields()[9].schema(), other.value);
         fieldSetFlags()[9] = true;
       }
-      if (isValidValue(fields()[10], other.input)) {
-        this.input = data().deepCopy(fields()[10].schema(), other.input);
+      if (isValidValue(fields()[10], other.gas)) {
+        this.gas = data().deepCopy(fields()[10].schema(), other.gas);
         fieldSetFlags()[10] = true;
       }
-      if (isValidValue(fields()[11], other.contractAddress)) {
-        this.contractAddress = data().deepCopy(fields()[11].schema(), other.contractAddress);
+      if (isValidValue(fields()[11], other.gasPrice)) {
+        this.gasPrice = data().deepCopy(fields()[11].schema(), other.gasPrice);
         fieldSetFlags()[11] = true;
       }
-      if (isValidValue(fields()[12], other.value)) {
-        this.value = data().deepCopy(fields()[12].schema(), other.value);
+      if (isValidValue(fields()[12], other.gasUsed)) {
+        this.gasUsed = data().deepCopy(fields()[12].schema(), other.gasUsed);
         fieldSetFlags()[12] = true;
       }
-      if (isValidValue(fields()[13], other.gas)) {
-        this.gas = data().deepCopy(fields()[13].schema(), other.gas);
+      if (isValidValue(fields()[13], other.cumulativeGasUsed)) {
+        this.cumulativeGasUsed = data().deepCopy(fields()[13].schema(), other.cumulativeGasUsed);
         fieldSetFlags()[13] = true;
       }
-      if (isValidValue(fields()[14], other.gasPrice)) {
-        this.gasPrice = data().deepCopy(fields()[14].schema(), other.gasPrice);
+      if (isValidValue(fields()[14], other.v)) {
+        this.v = data().deepCopy(fields()[14].schema(), other.v);
         fieldSetFlags()[14] = true;
       }
-      if (isValidValue(fields()[15], other.gasUsed)) {
-        this.gasUsed = data().deepCopy(fields()[15].schema(), other.gasUsed);
+      if (isValidValue(fields()[15], other.r)) {
+        this.r = data().deepCopy(fields()[15].schema(), other.r);
         fieldSetFlags()[15] = true;
       }
-      if (isValidValue(fields()[16], other.cumulativeGasUsed)) {
-        this.cumulativeGasUsed = data().deepCopy(fields()[16].schema(), other.cumulativeGasUsed);
+      if (isValidValue(fields()[16], other.s)) {
+        this.s = data().deepCopy(fields()[16].schema(), other.s);
         fieldSetFlags()[16] = true;
       }
-      if (isValidValue(fields()[17], other.v)) {
-        this.v = data().deepCopy(fields()[17].schema(), other.v);
+      if (isValidValue(fields()[17], other.status)) {
+        this.status = data().deepCopy(fields()[17].schema(), other.status);
         fieldSetFlags()[17] = true;
       }
-      if (isValidValue(fields()[18], other.r)) {
-        this.r = data().deepCopy(fields()[18].schema(), other.r);
+      if (isValidValue(fields()[18], other.logsBloom)) {
+        this.logsBloom = data().deepCopy(fields()[18].schema(), other.logsBloom);
         fieldSetFlags()[18] = true;
       }
-      if (isValidValue(fields()[19], other.s)) {
-        this.s = data().deepCopy(fields()[19].schema(), other.s);
+      if (isValidValue(fields()[19], other.logs)) {
+        this.logs = data().deepCopy(fields()[19].schema(), other.logs);
         fieldSetFlags()[19] = true;
       }
-      if (isValidValue(fields()[20], other.status)) {
-        this.status = data().deepCopy(fields()[20].schema(), other.status);
+      if (isValidValue(fields()[20], other.trace)) {
+        this.trace = data().deepCopy(fields()[20].schema(), other.trace);
         fieldSetFlags()[20] = true;
       }
-      if (isValidValue(fields()[21], other.logsBloom)) {
-        this.logsBloom = data().deepCopy(fields()[21].schema(), other.logsBloom);
+      this.traceBuilder = null;
+      if (isValidValue(fields()[21], other.txStatus)) {
+        this.txStatus = data().deepCopy(fields()[21].schema(), other.txStatus);
         fieldSetFlags()[21] = true;
       }
-      if (isValidValue(fields()[22], other.logs)) {
-        this.logs = data().deepCopy(fields()[22].schema(), other.logs);
-        fieldSetFlags()[22] = true;
-      }
-      if (isValidValue(fields()[23], other.trace)) {
-        this.trace = data().deepCopy(fields()[23].schema(), other.trace);
-        fieldSetFlags()[23] = true;
-      }
-      this.traceBuilder = null;
     }
 
     /**
@@ -986,7 +881,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'hash'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setHash(java.lang.CharSequence value) {
+    public io.enkrypt.bolt.models.PendingTx.Builder setHash(java.lang.CharSequence value) {
       validate(fields()[0], value);
       this.hash = value;
       fieldSetFlags()[0] = true;
@@ -1008,136 +903,9 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Hash of the transaction
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder clearHash() {
+    public io.enkrypt.bolt.models.PendingTx.Builder clearHash() {
       hash = null;
       fieldSetFlags()[0] = false;
-      return this;
-    }
-
-    /**
-      * Gets the value of the 'root' field.
-      * Root of the parent block
-      * @return The value.
-      */
-    public java.lang.CharSequence getRoot() {
-      return root;
-    }
-
-    /**
-      * Sets the value of the 'root' field.
-      * Root of the parent block
-      * @param value The value of 'root'.
-      * @return This builder.
-      */
-    public io.enkrypt.bolt.models.Transaction.Builder setRoot(java.lang.CharSequence value) {
-      validate(fields()[1], value);
-      this.root = value;
-      fieldSetFlags()[1] = true;
-      return this;
-    }
-
-    /**
-      * Checks whether the 'root' field has been set.
-      * Root of the parent block
-      * @return True if the 'root' field has been set, false otherwise.
-      */
-    public boolean hasRoot() {
-      return fieldSetFlags()[1];
-    }
-
-
-    /**
-      * Clears the value of the 'root' field.
-      * Root of the parent block
-      * @return This builder.
-      */
-    public io.enkrypt.bolt.models.Transaction.Builder clearRoot() {
-      root = null;
-      fieldSetFlags()[1] = false;
-      return this;
-    }
-
-    /**
-      * Gets the value of the 'index' field.
-      * Integer of the transactions index position in the block
-      * @return The value.
-      */
-    public java.lang.Integer getIndex() {
-      return index;
-    }
-
-    /**
-      * Sets the value of the 'index' field.
-      * Integer of the transactions index position in the block
-      * @param value The value of 'index'.
-      * @return This builder.
-      */
-    public io.enkrypt.bolt.models.Transaction.Builder setIndex(int value) {
-      validate(fields()[2], value);
-      this.index = value;
-      fieldSetFlags()[2] = true;
-      return this;
-    }
-
-    /**
-      * Checks whether the 'index' field has been set.
-      * Integer of the transactions index position in the block
-      * @return True if the 'index' field has been set, false otherwise.
-      */
-    public boolean hasIndex() {
-      return fieldSetFlags()[2];
-    }
-
-
-    /**
-      * Clears the value of the 'index' field.
-      * Integer of the transactions index position in the block
-      * @return This builder.
-      */
-    public io.enkrypt.bolt.models.Transaction.Builder clearIndex() {
-      fieldSetFlags()[2] = false;
-      return this;
-    }
-
-    /**
-      * Gets the value of the 'timestamp' field.
-      * Unix timestamp for when the transaction was collated
-      * @return The value.
-      */
-    public org.joda.time.DateTime getTimestamp() {
-      return timestamp;
-    }
-
-    /**
-      * Sets the value of the 'timestamp' field.
-      * Unix timestamp for when the transaction was collated
-      * @param value The value of 'timestamp'.
-      * @return This builder.
-      */
-    public io.enkrypt.bolt.models.Transaction.Builder setTimestamp(org.joda.time.DateTime value) {
-      validate(fields()[3], value);
-      this.timestamp = value;
-      fieldSetFlags()[3] = true;
-      return this;
-    }
-
-    /**
-      * Checks whether the 'timestamp' field has been set.
-      * Unix timestamp for when the transaction was collated
-      * @return True if the 'timestamp' field has been set, false otherwise.
-      */
-    public boolean hasTimestamp() {
-      return fieldSetFlags()[3];
-    }
-
-
-    /**
-      * Clears the value of the 'timestamp' field.
-      * Unix timestamp for when the transaction was collated
-      * @return This builder.
-      */
-    public io.enkrypt.bolt.models.Transaction.Builder clearTimestamp() {
-      fieldSetFlags()[3] = false;
       return this;
     }
 
@@ -1156,10 +924,10 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'nonce'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setNonce(long value) {
-      validate(fields()[4], value);
+    public io.enkrypt.bolt.models.PendingTx.Builder setNonce(long value) {
+      validate(fields()[1], value);
       this.nonce = value;
-      fieldSetFlags()[4] = true;
+      fieldSetFlags()[1] = true;
       return this;
     }
 
@@ -1169,7 +937,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return True if the 'nonce' field has been set, false otherwise.
       */
     public boolean hasNonce() {
-      return fieldSetFlags()[4];
+      return fieldSetFlags()[1];
     }
 
 
@@ -1178,8 +946,8 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Number of transactions sent from a given address
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder clearNonce() {
-      fieldSetFlags()[4] = false;
+    public io.enkrypt.bolt.models.PendingTx.Builder clearNonce() {
+      fieldSetFlags()[1] = false;
       return this;
     }
 
@@ -1198,10 +966,10 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'nonceHash'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setNonceHash(java.lang.CharSequence value) {
-      validate(fields()[5], value);
+    public io.enkrypt.bolt.models.PendingTx.Builder setNonceHash(java.lang.CharSequence value) {
+      validate(fields()[2], value);
       this.nonceHash = value;
-      fieldSetFlags()[5] = true;
+      fieldSetFlags()[2] = true;
       return this;
     }
 
@@ -1211,7 +979,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return True if the 'nonceHash' field has been set, false otherwise.
       */
     public boolean hasNonceHash() {
-      return fieldSetFlags()[5];
+      return fieldSetFlags()[2];
     }
 
 
@@ -1220,9 +988,9 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * SHA3 of the transaction nonce
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder clearNonceHash() {
+    public io.enkrypt.bolt.models.PendingTx.Builder clearNonceHash() {
       nonceHash = null;
-      fieldSetFlags()[5] = false;
+      fieldSetFlags()[2] = false;
       return this;
     }
 
@@ -1241,10 +1009,10 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'from'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setFrom(java.lang.CharSequence value) {
-      validate(fields()[6], value);
+    public io.enkrypt.bolt.models.PendingTx.Builder setFrom(java.lang.CharSequence value) {
+      validate(fields()[3], value);
       this.from = value;
-      fieldSetFlags()[6] = true;
+      fieldSetFlags()[3] = true;
       return this;
     }
 
@@ -1254,7 +1022,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return True if the 'from' field has been set, false otherwise.
       */
     public boolean hasFrom() {
-      return fieldSetFlags()[6];
+      return fieldSetFlags()[3];
     }
 
 
@@ -1263,9 +1031,9 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Address of the sender
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder clearFrom() {
+    public io.enkrypt.bolt.models.PendingTx.Builder clearFrom() {
       from = null;
-      fieldSetFlags()[6] = false;
+      fieldSetFlags()[3] = false;
       return this;
     }
 
@@ -1284,10 +1052,10 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'fromBalance'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setFromBalance(long value) {
-      validate(fields()[7], value);
+    public io.enkrypt.bolt.models.PendingTx.Builder setFromBalance(long value) {
+      validate(fields()[4], value);
       this.fromBalance = value;
-      fieldSetFlags()[7] = true;
+      fieldSetFlags()[4] = true;
       return this;
     }
 
@@ -1297,7 +1065,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return True if the 'fromBalance' field has been set, false otherwise.
       */
     public boolean hasFromBalance() {
-      return fieldSetFlags()[7];
+      return fieldSetFlags()[4];
     }
 
 
@@ -1306,8 +1074,8 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Balance of the sender
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder clearFromBalance() {
-      fieldSetFlags()[7] = false;
+    public io.enkrypt.bolt.models.PendingTx.Builder clearFromBalance() {
+      fieldSetFlags()[4] = false;
       return this;
     }
 
@@ -1326,10 +1094,10 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'to'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setTo(java.lang.CharSequence value) {
-      validate(fields()[8], value);
+    public io.enkrypt.bolt.models.PendingTx.Builder setTo(java.lang.CharSequence value) {
+      validate(fields()[5], value);
       this.to = value;
-      fieldSetFlags()[8] = true;
+      fieldSetFlags()[5] = true;
       return this;
     }
 
@@ -1339,7 +1107,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return True if the 'to' field has been set, false otherwise.
       */
     public boolean hasTo() {
-      return fieldSetFlags()[8];
+      return fieldSetFlags()[5];
     }
 
 
@@ -1348,9 +1116,9 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Address of the recipient (or null when contract creation)
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder clearTo() {
+    public io.enkrypt.bolt.models.PendingTx.Builder clearTo() {
       to = null;
-      fieldSetFlags()[8] = false;
+      fieldSetFlags()[5] = false;
       return this;
     }
 
@@ -1369,10 +1137,10 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'toBalance'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setToBalance(java.lang.Long value) {
-      validate(fields()[9], value);
+    public io.enkrypt.bolt.models.PendingTx.Builder setToBalance(java.lang.Long value) {
+      validate(fields()[6], value);
       this.toBalance = value;
-      fieldSetFlags()[9] = true;
+      fieldSetFlags()[6] = true;
       return this;
     }
 
@@ -1382,7 +1150,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return True if the 'toBalance' field has been set, false otherwise.
       */
     public boolean hasToBalance() {
-      return fieldSetFlags()[9];
+      return fieldSetFlags()[6];
     }
 
 
@@ -1391,9 +1159,9 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Balance of the receiver (or null when contract creation)
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder clearToBalance() {
+    public io.enkrypt.bolt.models.PendingTx.Builder clearToBalance() {
       toBalance = null;
-      fieldSetFlags()[9] = false;
+      fieldSetFlags()[6] = false;
       return this;
     }
 
@@ -1412,10 +1180,10 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'input'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setInput(java.nio.ByteBuffer value) {
-      validate(fields()[10], value);
+    public io.enkrypt.bolt.models.PendingTx.Builder setInput(java.nio.ByteBuffer value) {
+      validate(fields()[7], value);
       this.input = value;
-      fieldSetFlags()[10] = true;
+      fieldSetFlags()[7] = true;
       return this;
     }
 
@@ -1425,7 +1193,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return True if the 'input' field has been set, false otherwise.
       */
     public boolean hasInput() {
-      return fieldSetFlags()[10];
+      return fieldSetFlags()[7];
     }
 
 
@@ -1434,9 +1202,9 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * The data send along with the transaction
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder clearInput() {
+    public io.enkrypt.bolt.models.PendingTx.Builder clearInput() {
       input = null;
-      fieldSetFlags()[10] = false;
+      fieldSetFlags()[7] = false;
       return this;
     }
 
@@ -1455,10 +1223,10 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'contractAddress'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setContractAddress(java.lang.CharSequence value) {
-      validate(fields()[11], value);
+    public io.enkrypt.bolt.models.PendingTx.Builder setContractAddress(java.lang.CharSequence value) {
+      validate(fields()[8], value);
       this.contractAddress = value;
-      fieldSetFlags()[11] = true;
+      fieldSetFlags()[8] = true;
       return this;
     }
 
@@ -1468,7 +1236,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return True if the 'contractAddress' field has been set, false otherwise.
       */
     public boolean hasContractAddress() {
-      return fieldSetFlags()[11];
+      return fieldSetFlags()[8];
     }
 
 
@@ -1477,9 +1245,9 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * If a contract is created, the address of it (or null if is just a regular transaction)
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder clearContractAddress() {
+    public io.enkrypt.bolt.models.PendingTx.Builder clearContractAddress() {
       contractAddress = null;
-      fieldSetFlags()[11] = false;
+      fieldSetFlags()[8] = false;
       return this;
     }
 
@@ -1498,10 +1266,10 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'value'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setValue(long value) {
-      validate(fields()[12], value);
+    public io.enkrypt.bolt.models.PendingTx.Builder setValue(long value) {
+      validate(fields()[9], value);
       this.value = value;
-      fieldSetFlags()[12] = true;
+      fieldSetFlags()[9] = true;
       return this;
     }
 
@@ -1511,7 +1279,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return True if the 'value' field has been set, false otherwise.
       */
     public boolean hasValue() {
-      return fieldSetFlags()[12];
+      return fieldSetFlags()[9];
     }
 
 
@@ -1520,8 +1288,8 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Amount of value transferred in Wei
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder clearValue() {
-      fieldSetFlags()[12] = false;
+    public io.enkrypt.bolt.models.PendingTx.Builder clearValue() {
+      fieldSetFlags()[9] = false;
       return this;
     }
 
@@ -1540,10 +1308,10 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'gas'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setGas(long value) {
-      validate(fields()[13], value);
+    public io.enkrypt.bolt.models.PendingTx.Builder setGas(long value) {
+      validate(fields()[10], value);
       this.gas = value;
-      fieldSetFlags()[13] = true;
+      fieldSetFlags()[10] = true;
       return this;
     }
 
@@ -1553,7 +1321,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return True if the 'gas' field has been set, false otherwise.
       */
     public boolean hasGas() {
-      return fieldSetFlags()[13];
+      return fieldSetFlags()[10];
     }
 
 
@@ -1562,8 +1330,8 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Amount of gas provided by the sender
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder clearGas() {
-      fieldSetFlags()[13] = false;
+    public io.enkrypt.bolt.models.PendingTx.Builder clearGas() {
+      fieldSetFlags()[10] = false;
       return this;
     }
 
@@ -1582,10 +1350,10 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'gasPrice'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setGasPrice(long value) {
-      validate(fields()[14], value);
+    public io.enkrypt.bolt.models.PendingTx.Builder setGasPrice(long value) {
+      validate(fields()[11], value);
       this.gasPrice = value;
-      fieldSetFlags()[14] = true;
+      fieldSetFlags()[11] = true;
       return this;
     }
 
@@ -1595,7 +1363,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return True if the 'gasPrice' field has been set, false otherwise.
       */
     public boolean hasGasPrice() {
-      return fieldSetFlags()[14];
+      return fieldSetFlags()[11];
     }
 
 
@@ -1604,8 +1372,8 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Amount of gas price provided by the sender in Wei
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder clearGasPrice() {
-      fieldSetFlags()[14] = false;
+    public io.enkrypt.bolt.models.PendingTx.Builder clearGasPrice() {
+      fieldSetFlags()[11] = false;
       return this;
     }
 
@@ -1624,10 +1392,10 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'gasUsed'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setGasUsed(long value) {
-      validate(fields()[15], value);
+    public io.enkrypt.bolt.models.PendingTx.Builder setGasUsed(long value) {
+      validate(fields()[12], value);
       this.gasUsed = value;
-      fieldSetFlags()[15] = true;
+      fieldSetFlags()[12] = true;
       return this;
     }
 
@@ -1637,7 +1405,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return True if the 'gasUsed' field has been set, false otherwise.
       */
     public boolean hasGasUsed() {
-      return fieldSetFlags()[15];
+      return fieldSetFlags()[12];
     }
 
 
@@ -1646,8 +1414,8 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Amount of gas used consumed by the transaction
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder clearGasUsed() {
-      fieldSetFlags()[15] = false;
+    public io.enkrypt.bolt.models.PendingTx.Builder clearGasUsed() {
+      fieldSetFlags()[12] = false;
       return this;
     }
 
@@ -1666,10 +1434,10 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'cumulativeGasUsed'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setCumulativeGasUsed(long value) {
-      validate(fields()[16], value);
+    public io.enkrypt.bolt.models.PendingTx.Builder setCumulativeGasUsed(long value) {
+      validate(fields()[13], value);
       this.cumulativeGasUsed = value;
-      fieldSetFlags()[16] = true;
+      fieldSetFlags()[13] = true;
       return this;
     }
 
@@ -1679,7 +1447,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return True if the 'cumulativeGasUsed' field has been set, false otherwise.
       */
     public boolean hasCumulativeGasUsed() {
-      return fieldSetFlags()[16];
+      return fieldSetFlags()[13];
     }
 
 
@@ -1688,8 +1456,8 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Cumulative gas used by the transaction
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder clearCumulativeGasUsed() {
-      fieldSetFlags()[16] = false;
+    public io.enkrypt.bolt.models.PendingTx.Builder clearCumulativeGasUsed() {
+      fieldSetFlags()[13] = false;
       return this;
     }
 
@@ -1708,10 +1476,10 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'v'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setV(java.lang.CharSequence value) {
-      validate(fields()[17], value);
+    public io.enkrypt.bolt.models.PendingTx.Builder setV(java.lang.CharSequence value) {
+      validate(fields()[14], value);
       this.v = value;
-      fieldSetFlags()[17] = true;
+      fieldSetFlags()[14] = true;
       return this;
     }
 
@@ -1721,7 +1489,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return True if the 'v' field has been set, false otherwise.
       */
     public boolean hasV() {
-      return fieldSetFlags()[17];
+      return fieldSetFlags()[14];
     }
 
 
@@ -1730,9 +1498,9 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Transaction signature v
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder clearV() {
+    public io.enkrypt.bolt.models.PendingTx.Builder clearV() {
       v = null;
-      fieldSetFlags()[17] = false;
+      fieldSetFlags()[14] = false;
       return this;
     }
 
@@ -1751,10 +1519,10 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'r'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setR(java.lang.CharSequence value) {
-      validate(fields()[18], value);
+    public io.enkrypt.bolt.models.PendingTx.Builder setR(java.lang.CharSequence value) {
+      validate(fields()[15], value);
       this.r = value;
-      fieldSetFlags()[18] = true;
+      fieldSetFlags()[15] = true;
       return this;
     }
 
@@ -1764,7 +1532,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return True if the 'r' field has been set, false otherwise.
       */
     public boolean hasR() {
-      return fieldSetFlags()[18];
+      return fieldSetFlags()[15];
     }
 
 
@@ -1773,9 +1541,9 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Transaction signature r
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder clearR() {
+    public io.enkrypt.bolt.models.PendingTx.Builder clearR() {
       r = null;
-      fieldSetFlags()[18] = false;
+      fieldSetFlags()[15] = false;
       return this;
     }
 
@@ -1794,10 +1562,10 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 's'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setS(java.lang.CharSequence value) {
-      validate(fields()[19], value);
+    public io.enkrypt.bolt.models.PendingTx.Builder setS(java.lang.CharSequence value) {
+      validate(fields()[16], value);
       this.s = value;
-      fieldSetFlags()[19] = true;
+      fieldSetFlags()[16] = true;
       return this;
     }
 
@@ -1807,7 +1575,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return True if the 's' field has been set, false otherwise.
       */
     public boolean hasS() {
-      return fieldSetFlags()[19];
+      return fieldSetFlags()[16];
     }
 
 
@@ -1816,9 +1584,9 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Transaction signature s
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder clearS() {
+    public io.enkrypt.bolt.models.PendingTx.Builder clearS() {
       s = null;
-      fieldSetFlags()[19] = false;
+      fieldSetFlags()[16] = false;
       return this;
     }
 
@@ -1837,10 +1605,10 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'status'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setStatus(long value) {
-      validate(fields()[20], value);
+    public io.enkrypt.bolt.models.PendingTx.Builder setStatus(long value) {
+      validate(fields()[17], value);
       this.status = value;
-      fieldSetFlags()[20] = true;
+      fieldSetFlags()[17] = true;
       return this;
     }
 
@@ -1850,7 +1618,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return True if the 'status' field has been set, false otherwise.
       */
     public boolean hasStatus() {
-      return fieldSetFlags()[20];
+      return fieldSetFlags()[17];
     }
 
 
@@ -1859,8 +1627,8 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Transaction result status
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder clearStatus() {
-      fieldSetFlags()[20] = false;
+    public io.enkrypt.bolt.models.PendingTx.Builder clearStatus() {
+      fieldSetFlags()[17] = false;
       return this;
     }
 
@@ -1879,10 +1647,10 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'logsBloom'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setLogsBloom(java.nio.ByteBuffer value) {
-      validate(fields()[21], value);
+    public io.enkrypt.bolt.models.PendingTx.Builder setLogsBloom(java.nio.ByteBuffer value) {
+      validate(fields()[18], value);
       this.logsBloom = value;
-      fieldSetFlags()[21] = true;
+      fieldSetFlags()[18] = true;
       return this;
     }
 
@@ -1892,7 +1660,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return True if the 'logsBloom' field has been set, false otherwise.
       */
     public boolean hasLogsBloom() {
-      return fieldSetFlags()[21];
+      return fieldSetFlags()[18];
     }
 
 
@@ -1901,9 +1669,9 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Generated and encoded logs by the transaction
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder clearLogsBloom() {
+    public io.enkrypt.bolt.models.PendingTx.Builder clearLogsBloom() {
       logsBloom = null;
-      fieldSetFlags()[21] = false;
+      fieldSetFlags()[18] = false;
       return this;
     }
 
@@ -1922,10 +1690,10 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'logs'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setLogs(java.util.List<io.enkrypt.bolt.models.Log> value) {
-      validate(fields()[22], value);
+    public io.enkrypt.bolt.models.PendingTx.Builder setLogs(java.util.List<io.enkrypt.bolt.models.Log> value) {
+      validate(fields()[19], value);
       this.logs = value;
-      fieldSetFlags()[22] = true;
+      fieldSetFlags()[19] = true;
       return this;
     }
 
@@ -1935,7 +1703,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return True if the 'logs' field has been set, false otherwise.
       */
     public boolean hasLogs() {
-      return fieldSetFlags()[22];
+      return fieldSetFlags()[19];
     }
 
 
@@ -1944,9 +1712,9 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * 
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder clearLogs() {
+    public io.enkrypt.bolt.models.PendingTx.Builder clearLogs() {
       logs = null;
-      fieldSetFlags()[22] = false;
+      fieldSetFlags()[19] = false;
       return this;
     }
 
@@ -1965,11 +1733,11 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'trace'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setTrace(io.enkrypt.bolt.models.Trace value) {
-      validate(fields()[23], value);
+    public io.enkrypt.bolt.models.PendingTx.Builder setTrace(io.enkrypt.bolt.models.Trace value) {
+      validate(fields()[20], value);
       this.traceBuilder = null;
       this.trace = value;
-      fieldSetFlags()[23] = true;
+      fieldSetFlags()[20] = true;
       return this;
     }
 
@@ -1979,7 +1747,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return True if the 'trace' field has been set, false otherwise.
       */
     public boolean hasTrace() {
-      return fieldSetFlags()[23];
+      return fieldSetFlags()[20];
     }
 
     /**
@@ -2004,7 +1772,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
      * @param value The builder instance that must be set.
      * @return This builder.
      */
-    public io.enkrypt.bolt.models.Transaction.Builder setTraceBuilder(io.enkrypt.bolt.models.Trace.Builder value) {
+    public io.enkrypt.bolt.models.PendingTx.Builder setTraceBuilder(io.enkrypt.bolt.models.Trace.Builder value) {
       clearTrace();
       traceBuilder = value;
       return this;
@@ -2024,46 +1792,87 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Trace that describes contract creation, destruction or intenal transactions
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder clearTrace() {
+    public io.enkrypt.bolt.models.PendingTx.Builder clearTrace() {
       trace = null;
       traceBuilder = null;
-      fieldSetFlags()[23] = false;
+      fieldSetFlags()[20] = false;
+      return this;
+    }
+
+    /**
+      * Gets the value of the 'txStatus' field.
+      * Spceficies the status of this pending transaction
+      * @return The value.
+      */
+    public io.enkrypt.bolt.models.action getTxStatus() {
+      return txStatus;
+    }
+
+    /**
+      * Sets the value of the 'txStatus' field.
+      * Spceficies the status of this pending transaction
+      * @param value The value of 'txStatus'.
+      * @return This builder.
+      */
+    public io.enkrypt.bolt.models.PendingTx.Builder setTxStatus(io.enkrypt.bolt.models.action value) {
+      validate(fields()[21], value);
+      this.txStatus = value;
+      fieldSetFlags()[21] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'txStatus' field has been set.
+      * Spceficies the status of this pending transaction
+      * @return True if the 'txStatus' field has been set, false otherwise.
+      */
+    public boolean hasTxStatus() {
+      return fieldSetFlags()[21];
+    }
+
+
+    /**
+      * Clears the value of the 'txStatus' field.
+      * Spceficies the status of this pending transaction
+      * @return This builder.
+      */
+    public io.enkrypt.bolt.models.PendingTx.Builder clearTxStatus() {
+      txStatus = null;
+      fieldSetFlags()[21] = false;
       return this;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public Transaction build() {
+    public PendingTx build() {
       try {
-        Transaction record = new Transaction();
-        record.hash = fieldSetFlags()[0] ? this.hash : (java.lang.CharSequence) defaultValue(fields()[0], record.getConversion(0));
-        record.root = fieldSetFlags()[1] ? this.root : (java.lang.CharSequence) defaultValue(fields()[1], record.getConversion(1));
-        record.index = fieldSetFlags()[2] ? this.index : (java.lang.Integer) defaultValue(fields()[2], record.getConversion(2));
-        record.timestamp = fieldSetFlags()[3] ? this.timestamp : (org.joda.time.DateTime) defaultValue(fields()[3], record.getConversion(3));
-        record.nonce = fieldSetFlags()[4] ? this.nonce : (java.lang.Long) defaultValue(fields()[4], record.getConversion(4));
-        record.nonceHash = fieldSetFlags()[5] ? this.nonceHash : (java.lang.CharSequence) defaultValue(fields()[5], record.getConversion(5));
-        record.from = fieldSetFlags()[6] ? this.from : (java.lang.CharSequence) defaultValue(fields()[6], record.getConversion(6));
-        record.fromBalance = fieldSetFlags()[7] ? this.fromBalance : (java.lang.Long) defaultValue(fields()[7], record.getConversion(7));
-        record.to = fieldSetFlags()[8] ? this.to : (java.lang.CharSequence) defaultValue(fields()[8], record.getConversion(8));
-        record.toBalance = fieldSetFlags()[9] ? this.toBalance : (java.lang.Long) defaultValue(fields()[9], record.getConversion(9));
-        record.input = fieldSetFlags()[10] ? this.input : (java.nio.ByteBuffer) defaultValue(fields()[10], record.getConversion(10));
-        record.contractAddress = fieldSetFlags()[11] ? this.contractAddress : (java.lang.CharSequence) defaultValue(fields()[11], record.getConversion(11));
-        record.value = fieldSetFlags()[12] ? this.value : (java.lang.Long) defaultValue(fields()[12], record.getConversion(12));
-        record.gas = fieldSetFlags()[13] ? this.gas : (java.lang.Long) defaultValue(fields()[13], record.getConversion(13));
-        record.gasPrice = fieldSetFlags()[14] ? this.gasPrice : (java.lang.Long) defaultValue(fields()[14], record.getConversion(14));
-        record.gasUsed = fieldSetFlags()[15] ? this.gasUsed : (java.lang.Long) defaultValue(fields()[15], record.getConversion(15));
-        record.cumulativeGasUsed = fieldSetFlags()[16] ? this.cumulativeGasUsed : (java.lang.Long) defaultValue(fields()[16], record.getConversion(16));
-        record.v = fieldSetFlags()[17] ? this.v : (java.lang.CharSequence) defaultValue(fields()[17], record.getConversion(17));
-        record.r = fieldSetFlags()[18] ? this.r : (java.lang.CharSequence) defaultValue(fields()[18], record.getConversion(18));
-        record.s = fieldSetFlags()[19] ? this.s : (java.lang.CharSequence) defaultValue(fields()[19], record.getConversion(19));
-        record.status = fieldSetFlags()[20] ? this.status : (java.lang.Long) defaultValue(fields()[20], record.getConversion(20));
-        record.logsBloom = fieldSetFlags()[21] ? this.logsBloom : (java.nio.ByteBuffer) defaultValue(fields()[21], record.getConversion(21));
-        record.logs = fieldSetFlags()[22] ? this.logs : (java.util.List<io.enkrypt.bolt.models.Log>) defaultValue(fields()[22], record.getConversion(22));
+        PendingTx record = new PendingTx();
+        record.hash = fieldSetFlags()[0] ? this.hash : (java.lang.CharSequence) defaultValue(fields()[0]);
+        record.nonce = fieldSetFlags()[1] ? this.nonce : (java.lang.Long) defaultValue(fields()[1]);
+        record.nonceHash = fieldSetFlags()[2] ? this.nonceHash : (java.lang.CharSequence) defaultValue(fields()[2]);
+        record.from = fieldSetFlags()[3] ? this.from : (java.lang.CharSequence) defaultValue(fields()[3]);
+        record.fromBalance = fieldSetFlags()[4] ? this.fromBalance : (java.lang.Long) defaultValue(fields()[4]);
+        record.to = fieldSetFlags()[5] ? this.to : (java.lang.CharSequence) defaultValue(fields()[5]);
+        record.toBalance = fieldSetFlags()[6] ? this.toBalance : (java.lang.Long) defaultValue(fields()[6]);
+        record.input = fieldSetFlags()[7] ? this.input : (java.nio.ByteBuffer) defaultValue(fields()[7]);
+        record.contractAddress = fieldSetFlags()[8] ? this.contractAddress : (java.lang.CharSequence) defaultValue(fields()[8]);
+        record.value = fieldSetFlags()[9] ? this.value : (java.lang.Long) defaultValue(fields()[9]);
+        record.gas = fieldSetFlags()[10] ? this.gas : (java.lang.Long) defaultValue(fields()[10]);
+        record.gasPrice = fieldSetFlags()[11] ? this.gasPrice : (java.lang.Long) defaultValue(fields()[11]);
+        record.gasUsed = fieldSetFlags()[12] ? this.gasUsed : (java.lang.Long) defaultValue(fields()[12]);
+        record.cumulativeGasUsed = fieldSetFlags()[13] ? this.cumulativeGasUsed : (java.lang.Long) defaultValue(fields()[13]);
+        record.v = fieldSetFlags()[14] ? this.v : (java.lang.CharSequence) defaultValue(fields()[14]);
+        record.r = fieldSetFlags()[15] ? this.r : (java.lang.CharSequence) defaultValue(fields()[15]);
+        record.s = fieldSetFlags()[16] ? this.s : (java.lang.CharSequence) defaultValue(fields()[16]);
+        record.status = fieldSetFlags()[17] ? this.status : (java.lang.Long) defaultValue(fields()[17]);
+        record.logsBloom = fieldSetFlags()[18] ? this.logsBloom : (java.nio.ByteBuffer) defaultValue(fields()[18]);
+        record.logs = fieldSetFlags()[19] ? this.logs : (java.util.List<io.enkrypt.bolt.models.Log>) defaultValue(fields()[19]);
         if (traceBuilder != null) {
           record.trace = this.traceBuilder.build();
         } else {
-          record.trace = fieldSetFlags()[23] ? this.trace : (io.enkrypt.bolt.models.Trace) defaultValue(fields()[23], record.getConversion(23));
+          record.trace = fieldSetFlags()[20] ? this.trace : (io.enkrypt.bolt.models.Trace) defaultValue(fields()[20]);
         }
+        record.txStatus = fieldSetFlags()[21] ? this.txStatus : (io.enkrypt.bolt.models.action) defaultValue(fields()[21]);
         return record;
       } catch (java.lang.Exception e) {
         throw new org.apache.avro.AvroRuntimeException(e);
@@ -2072,8 +1881,8 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
   }
 
   @SuppressWarnings("unchecked")
-  private static final org.apache.avro.io.DatumWriter<Transaction>
-    WRITER$ = (org.apache.avro.io.DatumWriter<Transaction>)MODEL$.createDatumWriter(SCHEMA$);
+  private static final org.apache.avro.io.DatumWriter<PendingTx>
+    WRITER$ = (org.apache.avro.io.DatumWriter<PendingTx>)MODEL$.createDatumWriter(SCHEMA$);
 
   @Override public void writeExternal(java.io.ObjectOutput out)
     throws java.io.IOException {
@@ -2081,8 +1890,8 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
   }
 
   @SuppressWarnings("unchecked")
-  private static final org.apache.avro.io.DatumReader<Transaction>
-    READER$ = (org.apache.avro.io.DatumReader<Transaction>)MODEL$.createDatumReader(SCHEMA$);
+  private static final org.apache.avro.io.DatumReader<PendingTx>
+    READER$ = (org.apache.avro.io.DatumReader<PendingTx>)MODEL$.createDatumReader(SCHEMA$);
 
   @Override public void readExternal(java.io.ObjectInput in)
     throws java.io.IOException {
