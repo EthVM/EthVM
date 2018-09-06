@@ -7,6 +7,7 @@ repositories {
   jcenter()
   mavenCentral()
   maven("https://jitpack.io")
+  maven("https://packages.confluent.io/maven/")
 }
 
 application {
@@ -25,4 +26,5 @@ dependencies {
   compile("com.github.ajalt:clikt:1.4.0")
   compile("org.slf4j:slf4j-log4j12:1.7.25")
   compile("io.github.microutils:kotlin-logging:1.5.9")
+  compile("joda-time:joda-time:2.10")
 }

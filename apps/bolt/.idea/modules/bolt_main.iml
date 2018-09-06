@@ -34,18 +34,30 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Gradle: com.github.ajalt:clikt:1.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: io.github.microutils:kotlin-logging:1.5.9" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.2.60" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.kafka:kafka-streams:2.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: io.confluent:kafka-streams-avro-serde:5.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: io.confluent:kafka-avro-serializer:5.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: io.confluent:kafka-schema-registry-client:5.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.avro:avro:1.8.2" level="project" />
+    <orderEntry type="library" name="Gradle: io.confluent:common-config:5.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: io.confluent:common-utils:5.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.101tec:zkclient:0.10" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.zookeeper:zookeeper:3.4.13" level="project" />
+    <orderEntry type="library" name="Gradle: org.slf4j:slf4j-log4j12:1.7.25" level="project" />
     <orderEntry type="module-library">
-      <library name="Gradle: io.confluent:kafka-streams-avro-serde:5.0.0">
+      <library name="Gradle: joda-time:joda-time:2.10">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../Could not find io.confluent:kafka-streams-avro-serde:5.0.0.&#10;Searched in the following locations:&#10;  - https:/jcenter.bintray.com/io/confluent/kafka-streams-avro-serde/5.0.0/kafka-streams-avro-serde-5.0.0.pom&#10;  - https:/jcenter.bintray.com/io/confluent/kafka-streams-avro-serde/5.0.0/kafka-streams-avro-serde-5.0.0.jar&#10;  - https:/repo.maven.apache.org/maven2/io/confluent/kafka-streams-avro-serde/5.0.0/kafka-streams-avro-serde-5.0.0.pom&#10;  - https:/repo.maven.apache.org/maven2/io/confluent/kafka-streams-avro-serde/5.0.0/kafka-streams-avro-serde-5.0.0.jar&#10;  - https:/jitpack.io/io/confluent/kafka-streams-avro-serde/5.0.0/kafka-streams-avro-serde-5.0.0.pom&#10;  - https:/jitpack.io/io/confluent/kafka-streams-avro-serde/5.0.0/kafka-streams-avro-serde-5.0.0.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/joda-time/joda-time/2.10/f66c8125d1057ffce6c4e29e624cac863e110e2b/joda-time-2.10.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/joda-time/joda-time/2.10/b2d6ec41ce1a888a630ad990793cb84a59f17209/joda-time-2.10-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.2.60" level="project" />
-    <orderEntry type="library" name="Gradle: com.thoughtworks.paranamer:paranamer:2.7" level="project" />
-    <orderEntry type="library" name="Gradle: org.apache.avro:avro:1.8.2" level="project" />
     <orderEntry type="library" name="Gradle: io.github.microutils:kotlin-logging-common:1.5.9" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.2.60" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
@@ -56,18 +68,18 @@
     <orderEntry type="library" name="Gradle: org.rocksdb:rocksdbjni:5.7.3" level="project" />
     <orderEntry type="library" name="Gradle: org.codehaus.jackson:jackson-mapper-asl:1.9.13" level="project" />
     <orderEntry type="library" name="Gradle: org.codehaus.jackson:jackson-core-asl:1.9.13" level="project" />
-    <orderEntry type="library" name="Gradle: org.apache.kafka:kafka-streams:2.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.thoughtworks.paranamer:paranamer:2.7" level="project" />
     <orderEntry type="library" name="Gradle: org.xerial.snappy:snappy-java:1.1.7.1" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-compress:1.8.1" level="project" />
     <orderEntry type="library" name="Gradle: org.tukaani:xz:1.5" level="project" />
+    <orderEntry type="library" name="Gradle: log4j:log4j:1.2.17" level="project" />
     <orderEntry type="library" name="Gradle: org.lz4:lz4-java:1.4.1" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.9.6" level="project" />
     <orderEntry type="library" name="Gradle: javax.ws.rs:javax.ws.rs-api:2.1" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-annotations:2.9.0" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.9.6" level="project" />
-    <orderEntry type="library" name="Gradle: io.github.microutils:kotlin-logging:1.5.9" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.ajalt:clikt:1.4.0" level="project" />
-    <orderEntry type="library" name="Gradle: log4j:log4j:1.2.17" level="project" />
-    <orderEntry type="library" name="Gradle: org.slf4j:slf4j-log4j12:1.7.25" level="project" />
+    <orderEntry type="library" name="Gradle: jline:jline:0.9.94" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.yetus:audience-annotations:0.5.0" level="project" />
+    <orderEntry type="library" name="Gradle: io.netty:netty:3.10.6.Final" level="project" />
   </component>
 </module>
