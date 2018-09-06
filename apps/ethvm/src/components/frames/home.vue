@@ -7,9 +7,6 @@
           <h3>{{ $t('title.home') }}</h3>
           <h6 class="text-muted">{{ $t('subTitle.home') }}</h6>
         </div>
-        <div class="search-block">
-          <block-search></block-search>
-        </div>
         <!-- End Page Title -->
       </div>
       <!-- 4 Top Blocks -->
@@ -123,5 +120,4 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="less">
-@import '~lessPath/sunil/frames/home.less';
 </style>

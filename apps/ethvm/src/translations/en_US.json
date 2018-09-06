@@ -2,10 +2,17 @@
   "title": {
     "home": "Home",
     "blocks": "Blocks",
+    "viewAll": "View All",
+    "uncles": "Uncles",
     "tx": "Transactions",
     "pending": "Pending Transactions",
+    "mined": "Mined Transactions",
+    "tokens": "Tokens",
+    "tokenCntrc": "Contracts",
+    "tokenPrice20": "ERC20 Prices",
+    "tokenPrice721": "ERC721 Prices",
     "charts": "Charts",
-    "about": "About",
+    "about": "About Us",
     "address": "Address",
     "blockDetail": "Block Detail",
     "tokenDetail": "Token Detail",
@@ -13,7 +20,8 @@
     "overview": "Overview",
     "blockTx": "Block Transactions",
     "lastBlock": "Last Blocks",
-    "lastTxs": "Last Transactions"
+    "lastTxs": "Last Transactions",
+    "kb": "Knowledge Base"
   },
   "common": {
     "address": "Address",
@@ -21,7 +29,8 @@
     "eth": "ETH",
     "status": "Status",
     "timestmp": "Timestamp",
-    "gwei": "GWEI"
+    "gwei": "GWEI",
+    "more": "More"
   },
   "subTitle": {
     "home": "Welcome to Ethereum Virtual Machine",
@@ -161,7 +170,6 @@
   },
 
   "footer": {
-    "about": "About Us",
     "links": "Quick Links",
     "find": "Help",
     "donate": "Donate",
@@ -170,7 +178,7 @@
     "copy": "Copyright 2018 All rights reserved by ",
     "enkrypt": "enKrypt LLC",
     "email": "support@ethvm.com",
-    "kb": "Knowledge Base",
+
     "aboutPar": "EthVM is a free and open source interface for exploring and evaluating real time Ethereum blocks, transactions and more."
   },
 

@@ -18,6 +18,7 @@ import theme from './css/theme'
 
 // EthVM Frames
 // Main ----
+import navigation from '@app/components/blocks/navigationDrawer/nav.vue'
 import frameHome from '@app/components/frames/home.vue'
 import frameBlocks from '@app/components/frames/blocks.vue'
 import frameTxs from '@app/components/frames/transactions.vue'
@@ -84,6 +85,7 @@ import blockFooter from '@app/components/blocks/footer/footer.vue'
 
 // Vue
 // Main ----
+Vue.component('navigation', navigation)
 Vue.component('frame-home', frameHome)
 Vue.component('frame-blocks', frameBlocks)
 Vue.component('frame-txs', frameTxs)
