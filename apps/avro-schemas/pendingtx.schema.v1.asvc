@@ -1,152 +1,22 @@
 {
   "namespace": "io.enkrypt.bolt.models",
-  "name": "Block",
+  "name": "PendingTxs",
   "type": "record",
   "fields": [
     {
-      "name": "number",
-      "type": "long",
-      "doc": "The block number"
-    },
-    {
-      "name": "hash",
-      "type": "string",
-      "doc": "Hash of the block"
-    },
-    {
-      "name": "parentHash",
-      "type": "string",
-      "doc": "Hash of the parent block"
-    },
-    {
-      "name": "isUncle",
-      "type": "boolean",
-      "doc": "Determines if the block is an uncle or not"
-    },
-    {
-      "name": "isCanonical",
-      "type": "boolean",
-      "doc": "Determines if the block is canonical one or is a fork"
-    },
-    {
-      "name": "timestamp",
-      "type": {
-        "type": "long",
-        "logicalType": "timestamp-millis"
-      },
-      "doc": "Unix timestamp for when the block was collated"
-    },
-    {
-      "name": "nonce",
-      "type": "long",
-      "doc": "Hash of the generated proof-of-work"
-    },
-    {
-      "name": "mixDigest",
-      "type": "string",
-      "doc": "Block header mix digest"
-    },
-    {
-      "name": "sha3Uncles",
-      "type": "string",
-      "doc": "SHA3 of the uncles data in the block"
-    },
-    {
-      "name": "logsBloom",
-      "type": "string",
-      "doc": "Bloom filter for the logs of the block"
-    },
-    {
-      "name": "stateRoot",
-      "type": "string",
-      "doc": "Root of the final state trie of the block"
-    },
-    {
-      "name": "transactionsRoot",
-      "type": "string",
-      "doc": "Root of the final transactions trie of the block"
-    },
-    {
-      "name": "miner",
-      "type": "string",
-      "doc": "The address of the beneficiary to whom the mining rewards were given"
-    },
-    {
-      "name": "difficulty",
-      "type": "long",
-      "doc": "Current difficulty for this block"
-    },
-    {
-      "name": "totalDifficulty",
-      "type": "long",
-      "doc": "Current total difficulty of the chain until this block"
-    },
-    {
-      "name": "extraData",
-      "type": "bytes",
-      "doc": "The extra data field of this block"
-    },
-    {
-      "name": "size",
-      "type": "long",
-      "doc": "Integer the size of this block in bytes"
-    },
-    {
-      "name": "gasLimit",
-      "type": "long",
-      "doc": "The maximum gas allowed in this block"
-    },
-    {
-      "name": "gasUsed",
-      "type": "long",
-      "doc": "The total used gas by all transactions in this block"
-    },
-    {
-      "name": "txsFees",
-      "type": "long",
-      "doc": "Total transaction fees for this block"
-    },
-    {
-      "name": "blockReward",
-      "type": "long",
-      "doc": "Total current block reward"
-    },
-    {
-      "name": "uncleReward",
-      "type": "long",
-      "doc": "Total current uncle reward"
-    },
-    {
       "name": "transactions",
+      "doc": "Array of transactions",
       "type": {
         "type": "array",
         "items": {
           "namespace": "io.enkrypt.bolt.models",
-          "name": "Transaction",
+          "name": "PendingTx",
           "type": "record",
           "fields": [
             {
               "name": "hash",
               "type": "string",
               "doc": "Hash of the transaction"
-            },
-            {
-              "name": "root",
-              "type": "string",
-              "doc": "Root of the parent block"
-            },
-            {
-              "name": "index",
-              "type": "int",
-              "doc": "Integer of the transactions index position in the block"
-            },
-            {
-              "name": "timestamp",
-              "type": {
-                "type": "long",
-                "logicalType": "timestamp-millis"
-              },
-              "doc": "Unix timestamp for when the transaction was collated"
             },
             {
               "name": "nonce",
@@ -331,16 +201,19 @@
                 ]
               },
               "doc": "Trace that describes contract creation, destruction or intenal transactions"
+            },
+            {
+              "name": "txStatus",
+              "doc": "Spceficies the status of this pending transaction",
+              "type": {
+                "name": "action",
+                "type": "enum",
+                "symbols": ["ADD", "UNPAYABLE", "LOW_NONCE", "CAP_EXCEEDING", "EXPIRED", "PROMOTED"]
+              }
             }
           ]
         }
-      },
-      "doc": "Array of transactions"
-    },
-    {
-      "name": "uncles",
-      "type": { "type": "array", "items": "string" },
-      "doc": "Array of uncle hashes"
+      }
     }
   ]
 }
