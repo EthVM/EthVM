@@ -134,6 +134,12 @@ services:
       - back
     volumes:
       - ./apps/avro-schemas/:/avro-schemas/
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.default.protocol=http'
+      - 'traefik.frontend.rule=Host:kafka-schema-registry.ethvm.lan'
+      - 'traefik.port=8081'
+      - 'traefik.backend=kafka-schema-registry'
     environment:
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'PLAINTEXT://kafka:9092'
       SCHEMA_REGISTRY_HOST_NAME: kafka-schema-registry
