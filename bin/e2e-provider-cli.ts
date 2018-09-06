@@ -85,8 +85,8 @@ const block1 = {
 }
 
 const block2 = {
-  number: 2,
-  hash: '0xb003239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238',
+  number: 3,
+  hash: '0x0bab0be1b0c5de7b875dfdbc50ada20f82036c33cbc6fe9e2f62ed742ff82c18',
   parentHash: hexToBuffer('0xb903239f8543d04b5dc1ba6519132b143087c68db1b2168786408fcbce568238'),
   miner: hexToBuffer('0xd9ea042ad059033ba3c3be79f4081244f183bf03'),
   timestamp: Buffer.from(''),
@@ -118,7 +118,7 @@ commander
                 .insert([tx1, tx2])
                 .run(conn, function(err, cursor) {
                   r.db('eth_mainnet')
-                    .tableCreate('blocks')
+                    .tableCreate('blocks',{primaryKey: 'hash'})
                     .run(conn, function(err, cursor) {
                       r.db('eth_mainnet')
                         .table('blocks')
@@ -138,7 +138,7 @@ commander
                                     .run(conn, function(err, cursor) {
                                       r.db('eth_mainnet')
                                         .table('blocks')
-                                        .indexCreate('hash')
+                                        .indexCreate('number')
                                         .run(conn, function(err, cursor) {
                                           process.exit(0)
                                         })
