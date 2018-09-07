@@ -10,22 +10,20 @@ COPY . .
 # Give execution perms
 RUN chmod +x ./gradlew
 
-# Create jar
+# Create binary
 RUN ./gradlew --no-daemon build
 
-FROM zenika/alpine-kotlin:1.2.40-jdk8
+# Extract & clean
+RUN tar -xvf build/distributions/bolt.tar
 
-# Copy to a new machine
-COPY --from=builder /var/bolt/build/distributions/bolt.tar /
+# Move to parent
+RUN mv bolt /bolt
 
-# Extract
-RUN tar -xvf /bolt.tar
-
-# Clean leftovers
-RUN rm -rf bolt.tar
-
-# Give execution permission
+# Add execution permission
 RUN chmod +x /bolt/bin/bolt
 
-# Expose
+# Clean leftovers
+RUN ./gradlew --no-daemon clean
+
+# # Expose
 CMD ["/bolt/bin/bolt"]
