@@ -1,5 +1,6 @@
 export interface ExchangeRate {
   base: string
+  symbol: string
   quote: string
   price: string
   open_24h: string

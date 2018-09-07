@@ -5,6 +5,7 @@ import { Tx } from '@app/server/modules/txs'
 import { CacheRepository } from '@app/server/repositories'
 import { bufferToHex } from 'ethereumjs-util'
 import * as Redis from 'ioredis'
+import { ExchangeRate } from '../../modules/exchanges'
 
 export interface RedisCacheRepositoryOpts {
   host: string
@@ -99,6 +100,40 @@ export class RedisCacheRepository implements CacheRepository {
 
   public getTransactions(): Promise<Tx[]> {
     return this.getArray<Tx>('transactions')
+  }
+
+  public putExchangeRate(exchangerate: ExchangeRate): Promise<boolean> {
+    return new Promise(resolve => {
+      this.redis
+        .set(exchangerate.base, exchangerate)
+        .then(result => {
+          if (!result) {
+            resolve(false)
+          }
+          resolve(true)
+        })
+        .catch(error => {
+          resolve(false)
+        })
+    })
+  }
+
+  public getExchangeRate(token: string): Promise<ExchangeRate> {
+    return new Promise((resolve, reject) => {
+      this.redis
+        .get(token)
+        .then(result => {
+          if (!result) {
+            reject()
+          } else {
+            const val = JSON.parse(result) as ExchangeRate
+            resolve(val)
+          }
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
   }
 
   private getArray<T extends Tx | Block>(key: string): Promise<T[]> {
