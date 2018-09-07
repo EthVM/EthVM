@@ -5,7 +5,7 @@
  *     pendingtx.schema.v1.asvc
  */
 
-package ethvm
+package models
 
 type UnionNullLong struct {
 	Null      interface{}

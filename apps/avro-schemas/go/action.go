@@ -5,25 +5,43 @@
  *     pendingtx.schema.v1.asvc
  */
 
-package ethvm
+package models
 
 type Action int32
 
 const (
-	ActionADD           Action = 0
-	ActionUNPAYABLE     Action = 1
-	ActionLOW_NONCE     Action = 2
-	ActionCAP_EXCEEDING Action = 3
+	ActionQUEUED             Action = 0
+	ActionMINED              Action = 1
+	ActionEXPIRED            Action = 2
+	ActionREPLACED           Action = 3
+	ActionUNPAYABLE          Action = 4
+	ActionINVALID_SENDER     Action = 5
+	ActionLOW_NONCE          Action = 6
+	ActionUNDERPRICED        Action = 7
+	ActionINSUFFICIENT_FUNDS Action = 8
+	ActionCAP_EXCEEDING      Action = 9
 )
 
 func (e Action) String() string {
 	switch e {
-	case ActionADD:
-		return "ADD"
+	case ActionQUEUED:
+		return "QUEUED"
+	case ActionMINED:
+		return "MINED"
+	case ActionEXPIRED:
+		return "EXPIRED"
+	case ActionREPLACED:
+		return "REPLACED"
 	case ActionUNPAYABLE:
 		return "UNPAYABLE"
+	case ActionINVALID_SENDER:
+		return "INVALID_SENDER"
 	case ActionLOW_NONCE:
 		return "LOW_NONCE"
+	case ActionUNDERPRICED:
+		return "UNDERPRICED"
+	case ActionINSUFFICIENT_FUNDS:
+		return "INSUFFICIENT_FUNDS"
 	case ActionCAP_EXCEEDING:
 		return "CAP_EXCEEDING"
 

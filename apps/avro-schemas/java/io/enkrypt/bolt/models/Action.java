@@ -6,8 +6,8 @@
 package io.enkrypt.bolt.models;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
-public enum action {
-  ADD, UNPAYABLE, LOW_NONCE, CAP_EXCEEDING  ;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"enum\",\"name\":\"action\",\"namespace\":\"io.enkrypt.bolt.models\",\"symbols\":[\"ADD\",\"UNPAYABLE\",\"LOW_NONCE\",\"CAP_EXCEEDING\"]}");
+public enum Action {
+  QUEUED, MINED, EXPIRED, REPLACED, UNPAYABLE, INVALID_SENDER, LOW_NONCE, UNDERPRICED, INSUFFICIENT_FUNDS, CAP_EXCEEDING  ;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"enum\",\"name\":\"Action\",\"namespace\":\"io.enkrypt.bolt.models\",\"symbols\":[\"QUEUED\",\"MINED\",\"EXPIRED\",\"REPLACED\",\"UNPAYABLE\",\"INVALID_SENDER\",\"LOW_NONCE\",\"UNDERPRICED\",\"INSUFFICIENT_FUNDS\",\"CAP_EXCEEDING\"]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 }

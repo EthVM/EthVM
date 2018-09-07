@@ -206,9 +206,9 @@
               "name": "txStatus",
               "doc": "Spceficies the status of this pending transaction",
               "type": {
-                "name": "action",
+                "name": "Action",
                 "type": "enum",
-                "symbols": ["ADD", "UNPAYABLE", "LOW_NONCE", "CAP_EXCEEDING", "EXPIRED", "PROMOTED"]
+                "symbols": ["QUEUED", "MINED", "EXPIRED", "REPLACED", "UNPAYABLE", "INVALID_SENDER", "LOW_NONCE", "UNDERPRICED", "INSUFFICIENT_FUNDS", "CAP_EXCEEDING"]
               }
             }
           ]
