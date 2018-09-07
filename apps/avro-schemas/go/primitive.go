@@ -107,36 +107,6 @@ func readArrayLog(r io.Reader) ([]*Log, error) {
 	return arr, nil
 }
 
-func readArrayPendingTx(r io.Reader) ([]*PendingTx, error) {
-	var err error
-	var blkSize int64
-	var arr = make([]*PendingTx, 0)
-	for {
-		blkSize, err = readLong(r)
-		if err != nil {
-			return nil, err
-		}
-		if blkSize == 0 {
-			break
-		}
-		if blkSize < 0 {
-			blkSize = -blkSize
-			_, err = readLong(r)
-			if err != nil {
-				return nil, err
-			}
-		}
-		for i := int64(0); i < blkSize; i++ {
-			elem, err := readPendingTx(r)
-			if err != nil {
-				return nil, err
-			}
-			arr = append(arr, elem)
-		}
-	}
-	return arr, nil
-}
-
 func readArrayString(r io.Reader) ([]string, error) {
 	var err error
 	var blkSize int64
@@ -516,17 +486,6 @@ func readPendingTx(r io.Reader) (*PendingTx, error) {
 	return str, nil
 }
 
-func readPendingTxs(r io.Reader) (*PendingTxs, error) {
-	var str = &PendingTxs{}
-	var err error
-	str.Transactions, err = readArrayPendingTx(r)
-	if err != nil {
-		return nil, err
-	}
-
-	return str, nil
-}
-
 func readString(r io.Reader) (string, error) {
 	len, err := readLong(r)
 	if err != nil {
@@ -757,20 +716,6 @@ func writeArrayLog(r []*Log, w io.Writer) error {
 	}
 	for _, e := range r {
 		err = writeLog(e, w)
-		if err != nil {
-			return err
-		}
-	}
-	return writeLong(0, w)
-}
-
-func writeArrayPendingTx(r []*PendingTx, w io.Writer) error {
-	err := writeLong(int64(len(r)), w)
-	if err != nil || len(r) == 0 {
-		return err
-	}
-	for _, e := range r {
-		err = writePendingTx(e, w)
 		if err != nil {
 			return err
 		}
@@ -1082,15 +1027,6 @@ func writePendingTx(r *PendingTx, w io.Writer) error {
 		return err
 	}
 	err = writeAction(r.TxStatus, w)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-func writePendingTxs(r *PendingTxs, w io.Writer) error {
-	var err error
-	err = writeArrayPendingTx(r.Transactions, w)
 	if err != nil {
 		return err
 	}
