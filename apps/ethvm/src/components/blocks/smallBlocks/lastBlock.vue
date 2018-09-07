@@ -1,5 +1,5 @@
 <template>
-  <block-component :title="blockTitle" backgroundColor="color1" :value="latestBlockNumber" :icon-name="blockIconType" :icon-color="blockIconColor"></block-component>
+  <block-component :title="blockTitle" backgroundColor="colordock" :value="latestBlockNumber" :icon="blockIconType"></block-component>
 </template>
 
 <script lang="ts">
@@ -11,8 +11,8 @@ export default Vue.extend({
   data() {
     return {
       blockTitle: this.$i18n.t('smlBlock.last'),
-      blockIconType: 'tachometer',
-      blockIconColor: '#c271f5'
+      blockIconType: 'fa fa-cube black--text',
+      color: '#c271f5'
     }
   },
   computed: {
