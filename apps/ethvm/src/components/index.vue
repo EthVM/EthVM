@@ -2,7 +2,7 @@
   <v-app>
     <navigation></navigation>
     <v-content>
-      <v-container class="grey lighten-4">
+      <v-container>
         <!-- BODY -->
         <!-- Main Pages -->
         <frame-blocks v-if="pageName == 'blocks'"></frame-blocks>
@@ -30,6 +30,7 @@
 </template>
 
 <script lang="ts">
+import 'vuetify/dist/vuetify.min.css'
 import sEvents from '@app/configs/socketEvents.json'
 import { Block, Tx } from '@app/models'
 import Vue from 'vue'
@@ -95,4 +96,3 @@ export default Vue.extend({
   }
 })
 </script>
-

@@ -14,30 +14,35 @@
           <v-list-tile v-else v-model="item.routerLink">
             <v-btn flat block depressed light :to="item.routerLink">
               <v-list-tile-action>
-                <v-icon color="blue darken-4">{{ item.icon }}</v-icon>
+                <v-icon color="primary">{{ item.icon }}</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
                 <span class="black--text text-capitalize font-weight-light">
-                    {{ item.text }}
-                  </span>
+                      {{ item.text }}
+                    </span>
               </v-list-tile-content>
             </v-btn>
           </v-list-tile>
         </div>
       </v-list>
     </v-navigation-drawer>
-    <v-toolbar color="blue darken-4" app fixed clipped-left>
-      <v-flex sm4 md5>
+    <v-toolbar color="primary" app fixed clipped-left height="48px">
+      <v-layout align-center row fill-height>
+      <v-flex sm4 >
         <v-layout row>
           <v-btn icon @click.native="drawer = !drawer">
             <v-icon class="fa fa-bars white--text"></v-icon>
           </v-btn>
-          <v-img src="~@/assets/logo-white.png">LOGO HERE</v-img>
+          <v-btn color="transparent" flat  to="/" class="pa-0 ml-0">
+          <v-img :src="require('@/assets/logo-white.png')"  height="38px" contain></v-img>
+          </v-btn>
         </v-layout>
       </v-flex>
-      <v-flex sm8 md7>
+      <v-spacer></v-spacer>
+      <v-flex sm3>
         <block-search></block-search>
       </v-flex>
+      </v-layout>
     </v-toolbar>
 
   </div>
@@ -135,7 +140,3 @@ export default Vue.extend({
   }
 })
 </script>
-
-<style scoped lang="less">
-@import '~lessPath/sunil/blocks/largeBlocks/addressTxTable.less';
-</style>

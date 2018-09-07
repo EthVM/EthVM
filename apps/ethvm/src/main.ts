@@ -1,5 +1,6 @@
-
 import App from '@app/App.vue'
+import colors from 'vuetify/es5/util/colors'
+
 import socketConfig from '@app/configs/socket.json'
 import router from '@app/router'
 import store from '@app/states'
@@ -14,7 +15,6 @@ import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import Toasted from 'vue-toasted'
 import theme from './css/theme'
-
 
 // EthVM Frames
 // Main ----
@@ -165,7 +165,20 @@ Vue.use(VueTimeago, {
   }
 })
 Vue.use(infiniteScroll)
-Vue.use(Vuetify)
+Vue.use(Vuetify, {
+  theme: {
+    // used -->
+    primary: String(colors.blue.darken4),
+    secondary: String(colors.grey.darken1),
+    accent: String(colors.purple),
+    error: String(colors.red.accent),
+    info: String(colors.grey),
+    success: String(colors.yellow),
+    warning: String(colors.black),
+    // used -->
+    background: String(colors.grey.darken3)
+  }
+})
 new Vue({
   el: '#app',
   store,

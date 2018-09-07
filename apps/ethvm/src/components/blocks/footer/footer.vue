@@ -1,7 +1,7 @@
 <template>
   <v-footer height="auto">
     <v-card class="flex blue-grey darken-4" flat tile>
-      <v-card class="text-xs-center justify-content white--text blue darken-4" flat tile>
+      <v-card class="text-xs-center justify-content white--text primary" flat tile>
         <v-btn href="https://www.facebook.com/enKryptIO/" icon>
           <v-icon class="fa fa-facebook-f white--text"></v-icon>
         </v-btn>

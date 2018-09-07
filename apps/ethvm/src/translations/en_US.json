@@ -45,7 +45,7 @@
     "txDetail": "Ethereum transaction overview"
   },
   "search": {
-    "default": "Search Block Hash / Address / Tx Hash",
+    "default": "Search Block / Address / Tx",
     "addressTx": "Search tx hash/address"
   },
   "tableHeader": {
