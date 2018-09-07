@@ -204,4 +204,4 @@ services:
       - 'traefik.frontend.rule=Host:geth.ethvm.lan'
       - 'traefik.port=9545'
       - 'traefik.backend=geth'
-    command: geth --datadir '/geth' --testnet --verbosity 5 --identity geth --gcmode archive --rpc --rpcaddr '0.0.0.0' --rpccorsdomain '*' --rpcapi 'admin,personal,db,eth,net,web3,txpool,miner' --syncmode full --nat 'extip:172.25.0.102' --nousb --nodiscover --maxpeers 2
+    command: geth --datadir '/geth' --testnet --verbosity 5 --identity geth --ethvm --ethvm-brokers 'kafka:9092' --gcmode archive --rpc --rpcaddr '0.0.0.0' --rpccorsdomain '*' --rpcapi 'admin,personal,db,eth,net,web3,txpool,miner' --syncmode full --nat 'extip:172.25.0.102' --nousb --nodiscover --maxpeers 2
