@@ -1,9 +1,10 @@
 <template>
-  <block-component :title="blockTitle" backgroundColor="colordock" :value="latestBlockNumber" :icon="blockIconType"></block-component>
+  <block-component primary :title="blockTitle" backgroundColor="color" :value="latestBlockNumber" :icon="iconType"></block-component>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+import colors from 'vuetify/es5/util/colors'
 import sEvents from '@app/configs/socketEvents.json'
 
 export default Vue.extend({
@@ -11,8 +12,8 @@ export default Vue.extend({
   data() {
     return {
       blockTitle: this.$i18n.t('smlBlock.last'),
-      blockIconType: 'fa fa-cube black--text',
-      color: '#c271f5'
+      iconType: 'fa fa-cube blue--text text--darken-3',
+      color: String(colors.blue.darken4)
     }
   },
   computed: {
@@ -28,6 +29,3 @@ export default Vue.extend({
   }
 })
 </script>
-
-<style scoped lang="less">
-</style>

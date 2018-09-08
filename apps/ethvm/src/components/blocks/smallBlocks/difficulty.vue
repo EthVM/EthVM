@@ -1,5 +1,5 @@
 <template>
-  <block-component :title="blockTitle" backgroundColor="color4" :value="difficulty" :icon-name="blockIconType" :icon-color="blockIconColor">
+  <block-component  :title="blockTitle" backgroundColor="color4" :value="difficulty" :icon="iconType" :icon-color="blockIconColor">
   </block-component>
 </template>
 
@@ -20,8 +20,8 @@ export default Vue.extend({
   data() {
     return {
       blockTitle: this.$i18n.t('smlBlock.diff'),
-      blockIconType: 'asterisk',
-      blockIconColor: '#6bee69',
+      iconType: 'fa fa-tachometer black--text',
+      blockIconColor: 'error',
       difficulty: 0
     }
   },

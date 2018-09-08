@@ -1,5 +1,5 @@
 <template>
-  <block-component :title="blockTitle" backgroundColor="color5" :value="hashRate" :icon="blockIconType" :icon-color="blockIconColor">
+  <block-component :title="blockTitle" backgroundColor="color5" :value="hashRate" :icon="iconType" :icon-color="blockIconColor">
   </block-component>
 </template>
 
@@ -39,7 +39,7 @@ export default Vue.extend({
   data() {
     return {
       blockTitle: this.$i18n.t('smlBlock.hashR'),
-      blockIconType: 'fa fa-hash black--text',
+      iconType: 'fa fa-hashtag black--text',
       blockIconColor: '#fba893',
       hashRate: this.$i18n.t('message.load')
     }

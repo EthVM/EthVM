@@ -14,7 +14,6 @@ import VueTimeago from 'vue-timeago'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import Toasted from 'vue-toasted'
-import theme from './css/theme'
 
 // EthVM Frames
 // Main ----

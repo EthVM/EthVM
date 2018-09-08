@@ -2,8 +2,8 @@
   <div>
     <h4>{{ $t('subTitle.home') }}</h4>
     <h6 class="text-muted">{{ $t('title.home') }}</h6>
-    <v-container grid-list>
-      <v-layout>
+    <v-container v-container fluid grid-list-xl class="pr-0 pl-0">
+      <v-layout justify-space-between >
         <v-flex sm12 md6 lg3>
           <block-last-block></block-last-block>
         </v-flex>
