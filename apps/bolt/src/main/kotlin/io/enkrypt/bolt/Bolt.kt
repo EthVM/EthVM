@@ -7,6 +7,7 @@ import mu.KotlinLogging
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
+import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.kstream.Consumed
@@ -50,18 +51,41 @@ class Bolt(
 
       // Serdes
       put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().javaClass.name)
-      put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, SpecificAvroSerde::class.java.name)
+      put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, SpecificAvroSerde::class.java)
     }
 
     // Avro Serdes
     val blockSerde = SpecificAvroSerde<Block>()
+    val blockSerdeProps = mapOf(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG to schemaRegistryUrl)
+    blockSerde.configure(blockSerdeProps, false)
 
     // Create stream builder
     val builder = StreamsBuilder()
 
     // Consume directly raw-blocks
-    val rawBlocksStream: KStream<String, Block> = builder.stream(rawBlocksTopic, Consumed.with(Serdes.String(), blockSerde))
-    rawBlocksStream.foreach { key, value -> logger.debug { "RawBlocksStream - Key: $key | Value: $value" } }
+//    val rawBlocksStream: KStream<String, Block> = builder.stream(rawBlocksTopic, Consumed.with(Serdes.String(), blockSerde))
+//    rawBlocksStream.foreach { key, value -> logger.info { "RawBlocksStream - Key: $key | Value: $value" } }
+
+    val blocks = builder.stream(rawBlocksTopic, Consumed.with(Serdes.String(), blockSerde))
+
+    val contractsStream = blocks
+      .filter { key, value -> value.getTransactions()
+          .map{ t ->
+            t.getContractAddress() != null
+          }.fold(false) { memo, next -> memo || next }
+      }
+      .foreach{ key, value -> logger.info { "Block that creates a contract - Key: $key | Value: $value" }}
+
+    val addressStream = blocks
+      .flatMap { key, value ->
+        value.getTransactions()
+          .filter{ t -> !(t.getFrom() == null && t.getTo() == null) }
+          .map { t -> listOf(
+            KeyValue(t.getFrom(), t.getFromBalance()),
+            KeyValue(t.getTo(), t.getToBalance())
+          ) }.flatten()
+      }.foreach{ address, balance -> logger.info { "Balance update - Address: $address | Balance: $balance"}}
+
 
     // Consume directly raw-pending-txs
 //    val rawPendingTxsStream: KStream<String, JsonNode> = builder.stream(rawPendingTxsTopic, Consumed.with(Serdes.String(), jsonSerdes))
