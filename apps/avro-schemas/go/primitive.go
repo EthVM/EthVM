@@ -635,7 +635,15 @@ func readTransfer(r io.Reader) (*Transfer, error) {
 	if err != nil {
 		return nil, err
 	}
+	str.Value, err = readString(r)
+	if err != nil {
+		return nil, err
+	}
 	str.From, err = readString(r)
+	if err != nil {
+		return nil, err
+	}
+	str.FromBalance, err = readString(r)
 	if err != nil {
 		return nil, err
 	}
@@ -643,7 +651,11 @@ func readTransfer(r io.Reader) (*Transfer, error) {
 	if err != nil {
 		return nil, err
 	}
-	str.Input, err = readBytes(r)
+	str.ToBalance, err = readString(r)
+	if err != nil {
+		return nil, err
+	}
+	str.Input, err = readString(r)
 	if err != nil {
 		return nil, err
 	}
@@ -1171,7 +1183,15 @@ func writeTransfer(r *Transfer, w io.Writer) error {
 	if err != nil {
 		return err
 	}
+	err = writeString(r.Value, w)
+	if err != nil {
+		return err
+	}
 	err = writeString(r.From, w)
+	if err != nil {
+		return err
+	}
+	err = writeString(r.FromBalance, w)
 	if err != nil {
 		return err
 	}
@@ -1179,7 +1199,11 @@ func writeTransfer(r *Transfer, w io.Writer) error {
 	if err != nil {
 		return err
 	}
-	err = writeBytes(r.Input, w)
+	err = writeString(r.ToBalance, w)
+	if err != nil {
+		return err
+	}
+	err = writeString(r.Input, w)
 	if err != nil {
 		return err
 	}

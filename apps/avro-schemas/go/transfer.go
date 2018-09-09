@@ -12,10 +12,13 @@ import (
 )
 
 type Transfer struct {
-	Op    string
-	From  string
-	To    string
-	Input []byte
+	Op          string
+	Value       string
+	From        string
+	FromBalance string
+	To          string
+	ToBalance   string
+	Input       string
 }
 
 func DeserializeTransfer(r io.Reader) (*Transfer, error) {
@@ -29,7 +32,7 @@ func NewTransfer() *Transfer {
 }
 
 func (r *Transfer) Schema() string {
-	return "{\"fields\":[{\"doc\":\"Type of op executed inside the transaction\",\"name\":\"op\",\"type\":\"string\"},{\"doc\":\"\",\"name\":\"from\",\"type\":\"string\"},{\"doc\":\"\",\"name\":\"to\",\"type\":\"string\"},{\"doc\":\"\",\"name\":\"input\",\"type\":\"bytes\"}],\"name\":\"Transfer\",\"namespace\":\"io.enkrypt.bolt.models\",\"type\":\"record\"}"
+	return "{\"fields\":[{\"doc\":\"Type of op executed inside the transaction\",\"name\":\"op\",\"type\":\"string\"},{\"doc\":\"Raw value of the transaction\",\"name\":\"value\",\"type\":\"string\"},{\"doc\":\"Address of the sender\",\"name\":\"from\",\"type\":\"string\"},{\"doc\":\"Balance of the sender\",\"name\":\"fromBalance\",\"type\":\"string\"},{\"doc\":\"Address of the receiver\",\"name\":\"to\",\"type\":\"string\"},{\"doc\":\"Balance of the receiver\",\"name\":\"toBalance\",\"type\":\"string\"},{\"doc\":\"Raw input data\",\"name\":\"input\",\"type\":\"string\"}],\"name\":\"Transfer\",\"namespace\":\"io.enkrypt.bolt.models\",\"type\":\"record\"}"
 }
 
 func (r *Transfer) Serialize(w io.Writer) error {
