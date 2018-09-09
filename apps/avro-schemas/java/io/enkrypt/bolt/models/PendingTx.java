@@ -13,8 +13,8 @@ import org.apache.avro.message.SchemaStore;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class PendingTx extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = -3542812451433394301L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"PendingTx\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"hash\",\"type\":\"string\",\"doc\":\"Hash of the transaction\"},{\"name\":\"nonce\",\"type\":\"long\",\"doc\":\"Number of transactions sent from a given address\"},{\"name\":\"nonceHash\",\"type\":\"string\",\"doc\":\"SHA3 of the transaction nonce\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"long\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":[\"null\",\"string\"],\"doc\":\"Address of the recipient (or null when contract creation)\"},{\"name\":\"toBalance\",\"type\":[\"null\",\"long\"],\"doc\":\"Balance of the receiver (or null when contract creation)\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"The data send along with the transaction\"},{\"name\":\"contractAddress\",\"type\":[\"null\",\"string\"],\"doc\":\"If a contract is created, the address of it (or null if is just a regular transaction)\"},{\"name\":\"value\",\"type\":\"long\",\"doc\":\"Amount of value transferred in Wei\"},{\"name\":\"gas\",\"type\":\"long\",\"doc\":\"Amount of gas provided by the sender\"},{\"name\":\"gasPrice\",\"type\":\"long\",\"doc\":\"Amount of gas price provided by the sender in Wei\"},{\"name\":\"gasUsed\",\"type\":\"long\",\"doc\":\"Amount of gas used consumed by the transaction\"},{\"name\":\"cumulativeGasUsed\",\"type\":\"long\",\"doc\":\"Cumulative gas used by the transaction\"},{\"name\":\"v\",\"type\":\"string\",\"doc\":\"Transaction signature v\"},{\"name\":\"r\",\"type\":\"string\",\"doc\":\"Transaction signature r\"},{\"name\":\"s\",\"type\":\"string\",\"doc\":\"Transaction signature s\"},{\"name\":\"status\",\"type\":\"long\",\"doc\":\"Transaction result status\"},{\"name\":\"logsBloom\",\"type\":\"bytes\",\"doc\":\"Generated and encoded logs by the transaction\"},{\"name\":\"logs\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Log\",\"fields\":[{\"name\":\"address\",\"type\":\"string\",\"desc\":\"Address of the contract that generated the event\"},{\"name\":\"topics\",\"type\":{\"type\":\"array\",\"items\":\"string\"},\"desc\":\"List of topics provided by the contract\"},{\"name\":\"data\",\"type\":\"bytes\",\"desc\":\"Supplied by the contract, usually ABI-encoded\"},{\"name\":\"index\",\"type\":\"int\",\"desc\":\"Index of the log in the receipt\"},{\"name\":\"removed\",\"type\":\"boolean\",\"desc\":\"True if this log was reverted due to a chain reorganisation\"}]}},\"doc\":\"\"},{\"name\":\"trace\",\"type\":{\"type\":\"record\",\"name\":\"Trace\",\"fields\":[{\"name\":\"isError\",\"type\":\"boolean\",\"desc\":\"Signals if an error happened during execution\"},{\"name\":\"msg\",\"type\":\"string\",\"desc\":\"Stores the error message\"},{\"name\":\"transfers\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Transfer\",\"fields\":[{\"name\":\"op\",\"type\":\"string\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"value\",\"type\":\"string\",\"doc\":\"Raw value of the transaction\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"string\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":\"string\",\"doc\":\"Address of the receiver\"},{\"name\":\"toBalance\",\"type\":\"string\",\"doc\":\"Balance of the receiver\"},{\"name\":\"input\",\"type\":\"string\",\"doc\":\"Raw input data\"}]}},\"desc\":\"An array describing transfers\"}]},\"doc\":\"Trace that describes contract creation, destruction or intenal transactions\"},{\"name\":\"txStatus\",\"type\":{\"type\":\"enum\",\"name\":\"Action\",\"symbols\":[\"QUEUED\",\"MINED\",\"EXPIRED\",\"REPLACED\",\"UNPAYABLE\",\"INVALID_SENDER\",\"LOW_NONCE\",\"UNDERPRICED\",\"INSUFFICIENT_FUNDS\",\"CAP_EXCEEDING\"]},\"doc\":\"Spceficies the status of this pending transaction\"}]}");
+  private static final long serialVersionUID = 9017539364152413925L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"PendingTx\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"hash\",\"type\":\"string\",\"doc\":\"Hash of the transaction\"},{\"name\":\"nonce\",\"type\":[\"null\",\"long\"],\"doc\":\"Number of transactions sent from a given address\"},{\"name\":\"nonceHash\",\"type\":[\"null\",\"string\"],\"doc\":\"SHA3 of the transaction nonce\"},{\"name\":\"from\",\"type\":[\"null\",\"string\"],\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":[\"null\",\"long\"],\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":[\"null\",\"string\"],\"doc\":\"Address of the recipient (or null when contract creation)\"},{\"name\":\"toBalance\",\"type\":[\"null\",\"long\"],\"doc\":\"Balance of the receiver (or null when contract creation)\"},{\"name\":\"input\",\"type\":[\"null\",\"bytes\"],\"doc\":\"The data send along with the transaction\"},{\"name\":\"contractAddress\",\"type\":[\"null\",\"string\"],\"doc\":\"If a contract is created, the address of it (or null if is just a regular transaction)\"},{\"name\":\"value\",\"type\":[\"null\",\"long\"],\"doc\":\"Amount of value transferred in Wei\"},{\"name\":\"gas\",\"type\":[\"null\",\"long\"],\"doc\":\"Amount of gas provided by the sender\"},{\"name\":\"gasPrice\",\"type\":[\"null\",\"long\"],\"doc\":\"Amount of gas price provided by the sender in Wei\"},{\"name\":\"gasUsed\",\"type\":[\"null\",\"long\"],\"doc\":\"Amount of gas used consumed by the transaction\"},{\"name\":\"cumulativeGasUsed\",\"type\":[\"null\",\"long\"],\"doc\":\"Cumulative gas used by the transaction\"},{\"name\":\"v\",\"type\":[\"null\",\"string\"],\"doc\":\"Transaction signature v\"},{\"name\":\"r\",\"type\":[\"null\",\"string\"],\"doc\":\"Transaction signature r\"},{\"name\":\"s\",\"type\":[\"null\",\"string\"],\"doc\":\"Transaction signature s\"},{\"name\":\"status\",\"type\":[\"null\",\"long\"],\"doc\":\"Transaction result status\"},{\"name\":\"logsBloom\",\"type\":[\"null\",\"bytes\"],\"doc\":\"Generated and encoded logs by the transaction\"},{\"name\":\"logs\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Log\",\"fields\":[{\"name\":\"address\",\"type\":\"string\",\"desc\":\"Address of the contract that generated the event\"},{\"name\":\"topics\",\"type\":{\"type\":\"array\",\"items\":\"string\"},\"desc\":\"List of topics provided by the contract\"},{\"name\":\"data\",\"type\":\"bytes\",\"desc\":\"Supplied by the contract, usually ABI-encoded\"},{\"name\":\"index\",\"type\":\"int\",\"desc\":\"Index of the log in the receipt\"},{\"name\":\"removed\",\"type\":\"boolean\",\"desc\":\"True if this log was reverted due to a chain reorganisation\"}]}},\"doc\":\"\"},{\"name\":\"trace\",\"type\":{\"type\":\"record\",\"name\":\"Trace\",\"fields\":[{\"name\":\"isError\",\"type\":\"boolean\",\"desc\":\"Signals if an error happened during execution\"},{\"name\":\"msg\",\"type\":\"string\",\"desc\":\"Stores the error message\"},{\"name\":\"transfers\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Transfer\",\"fields\":[{\"name\":\"op\",\"type\":\"string\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"value\",\"type\":\"string\",\"doc\":\"Raw value of the transaction\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"string\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":\"string\",\"doc\":\"Address of the receiver\"},{\"name\":\"toBalance\",\"type\":\"string\",\"doc\":\"Balance of the receiver\"},{\"name\":\"input\",\"type\":\"string\",\"doc\":\"Raw input data\"}]}},\"desc\":\"An array describing transfers\"}]},\"doc\":\"Trace that describes contract creation, destruction or intenal transactions\"},{\"name\":\"txStatus\",\"type\":{\"type\":\"enum\",\"name\":\"Action\",\"symbols\":[\"QUEUED\",\"MINED\",\"EXPIRED\",\"REPLACED\",\"UNPAYABLE\",\"INVALID_SENDER\",\"LOW_NONCE\",\"UNDERPRICED\",\"INSUFFICIENT_FUNDS\",\"CAP_EXCEEDING\"]},\"doc\":\"Spceficies the status of this pending transaction\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -54,13 +54,13 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
   /** Hash of the transaction */
   @Deprecated public java.lang.CharSequence hash;
   /** Number of transactions sent from a given address */
-  @Deprecated public long nonce;
+  @Deprecated public java.lang.Long nonce;
   /** SHA3 of the transaction nonce */
   @Deprecated public java.lang.CharSequence nonceHash;
   /** Address of the sender */
   @Deprecated public java.lang.CharSequence from;
   /** Balance of the sender */
-  @Deprecated public long fromBalance;
+  @Deprecated public java.lang.Long fromBalance;
   /** Address of the recipient (or null when contract creation) */
   @Deprecated public java.lang.CharSequence to;
   /** Balance of the receiver (or null when contract creation) */
@@ -70,15 +70,15 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
   /** If a contract is created, the address of it (or null if is just a regular transaction) */
   @Deprecated public java.lang.CharSequence contractAddress;
   /** Amount of value transferred in Wei */
-  @Deprecated public long value;
+  @Deprecated public java.lang.Long value;
   /** Amount of gas provided by the sender */
-  @Deprecated public long gas;
+  @Deprecated public java.lang.Long gas;
   /** Amount of gas price provided by the sender in Wei */
-  @Deprecated public long gasPrice;
+  @Deprecated public java.lang.Long gasPrice;
   /** Amount of gas used consumed by the transaction */
-  @Deprecated public long gasUsed;
+  @Deprecated public java.lang.Long gasUsed;
   /** Cumulative gas used by the transaction */
-  @Deprecated public long cumulativeGasUsed;
+  @Deprecated public java.lang.Long cumulativeGasUsed;
   /** Transaction signature v */
   @Deprecated public java.lang.CharSequence v;
   /** Transaction signature r */
@@ -86,7 +86,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
   /** Transaction signature s */
   @Deprecated public java.lang.CharSequence s;
   /** Transaction result status */
-  @Deprecated public long status;
+  @Deprecated public java.lang.Long status;
   /** Generated and encoded logs by the transaction */
   @Deprecated public java.nio.ByteBuffer logsBloom;
   /**  */
@@ -622,13 +622,13 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
     /** Hash of the transaction */
     private java.lang.CharSequence hash;
     /** Number of transactions sent from a given address */
-    private long nonce;
+    private java.lang.Long nonce;
     /** SHA3 of the transaction nonce */
     private java.lang.CharSequence nonceHash;
     /** Address of the sender */
     private java.lang.CharSequence from;
     /** Balance of the sender */
-    private long fromBalance;
+    private java.lang.Long fromBalance;
     /** Address of the recipient (or null when contract creation) */
     private java.lang.CharSequence to;
     /** Balance of the receiver (or null when contract creation) */
@@ -638,15 +638,15 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
     /** If a contract is created, the address of it (or null if is just a regular transaction) */
     private java.lang.CharSequence contractAddress;
     /** Amount of value transferred in Wei */
-    private long value;
+    private java.lang.Long value;
     /** Amount of gas provided by the sender */
-    private long gas;
+    private java.lang.Long gas;
     /** Amount of gas price provided by the sender in Wei */
-    private long gasPrice;
+    private java.lang.Long gasPrice;
     /** Amount of gas used consumed by the transaction */
-    private long gasUsed;
+    private java.lang.Long gasUsed;
     /** Cumulative gas used by the transaction */
-    private long cumulativeGasUsed;
+    private java.lang.Long cumulativeGasUsed;
     /** Transaction signature v */
     private java.lang.CharSequence v;
     /** Transaction signature r */
@@ -654,7 +654,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
     /** Transaction signature s */
     private java.lang.CharSequence s;
     /** Transaction result status */
-    private long status;
+    private java.lang.Long status;
     /** Generated and encoded logs by the transaction */
     private java.nio.ByteBuffer logsBloom;
     /**  */
@@ -924,7 +924,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @param value The value of 'nonce'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.PendingTx.Builder setNonce(long value) {
+    public io.enkrypt.bolt.models.PendingTx.Builder setNonce(java.lang.Long value) {
       validate(fields()[1], value);
       this.nonce = value;
       fieldSetFlags()[1] = true;
@@ -947,6 +947,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @return This builder.
       */
     public io.enkrypt.bolt.models.PendingTx.Builder clearNonce() {
+      nonce = null;
       fieldSetFlags()[1] = false;
       return this;
     }
@@ -1052,7 +1053,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @param value The value of 'fromBalance'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.PendingTx.Builder setFromBalance(long value) {
+    public io.enkrypt.bolt.models.PendingTx.Builder setFromBalance(java.lang.Long value) {
       validate(fields()[4], value);
       this.fromBalance = value;
       fieldSetFlags()[4] = true;
@@ -1075,6 +1076,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @return This builder.
       */
     public io.enkrypt.bolt.models.PendingTx.Builder clearFromBalance() {
+      fromBalance = null;
       fieldSetFlags()[4] = false;
       return this;
     }
@@ -1266,7 +1268,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @param value The value of 'value'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.PendingTx.Builder setValue(long value) {
+    public io.enkrypt.bolt.models.PendingTx.Builder setValue(java.lang.Long value) {
       validate(fields()[9], value);
       this.value = value;
       fieldSetFlags()[9] = true;
@@ -1289,6 +1291,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @return This builder.
       */
     public io.enkrypt.bolt.models.PendingTx.Builder clearValue() {
+      value = null;
       fieldSetFlags()[9] = false;
       return this;
     }
@@ -1308,7 +1311,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @param value The value of 'gas'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.PendingTx.Builder setGas(long value) {
+    public io.enkrypt.bolt.models.PendingTx.Builder setGas(java.lang.Long value) {
       validate(fields()[10], value);
       this.gas = value;
       fieldSetFlags()[10] = true;
@@ -1331,6 +1334,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @return This builder.
       */
     public io.enkrypt.bolt.models.PendingTx.Builder clearGas() {
+      gas = null;
       fieldSetFlags()[10] = false;
       return this;
     }
@@ -1350,7 +1354,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @param value The value of 'gasPrice'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.PendingTx.Builder setGasPrice(long value) {
+    public io.enkrypt.bolt.models.PendingTx.Builder setGasPrice(java.lang.Long value) {
       validate(fields()[11], value);
       this.gasPrice = value;
       fieldSetFlags()[11] = true;
@@ -1373,6 +1377,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @return This builder.
       */
     public io.enkrypt.bolt.models.PendingTx.Builder clearGasPrice() {
+      gasPrice = null;
       fieldSetFlags()[11] = false;
       return this;
     }
@@ -1392,7 +1397,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @param value The value of 'gasUsed'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.PendingTx.Builder setGasUsed(long value) {
+    public io.enkrypt.bolt.models.PendingTx.Builder setGasUsed(java.lang.Long value) {
       validate(fields()[12], value);
       this.gasUsed = value;
       fieldSetFlags()[12] = true;
@@ -1415,6 +1420,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @return This builder.
       */
     public io.enkrypt.bolt.models.PendingTx.Builder clearGasUsed() {
+      gasUsed = null;
       fieldSetFlags()[12] = false;
       return this;
     }
@@ -1434,7 +1440,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @param value The value of 'cumulativeGasUsed'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.PendingTx.Builder setCumulativeGasUsed(long value) {
+    public io.enkrypt.bolt.models.PendingTx.Builder setCumulativeGasUsed(java.lang.Long value) {
       validate(fields()[13], value);
       this.cumulativeGasUsed = value;
       fieldSetFlags()[13] = true;
@@ -1457,6 +1463,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @return This builder.
       */
     public io.enkrypt.bolt.models.PendingTx.Builder clearCumulativeGasUsed() {
+      cumulativeGasUsed = null;
       fieldSetFlags()[13] = false;
       return this;
     }
@@ -1605,7 +1612,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @param value The value of 'status'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.PendingTx.Builder setStatus(long value) {
+    public io.enkrypt.bolt.models.PendingTx.Builder setStatus(java.lang.Long value) {
       validate(fields()[17], value);
       this.status = value;
       fieldSetFlags()[17] = true;
@@ -1628,6 +1635,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @return This builder.
       */
     public io.enkrypt.bolt.models.PendingTx.Builder clearStatus() {
+      status = null;
       fieldSetFlags()[17] = false;
       return this;
     }

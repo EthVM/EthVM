@@ -10,22 +10,22 @@
     },
     {
       "name": "nonce",
-      "type": "long",
+      "type": ["null", "long"],
       "doc": "Number of transactions sent from a given address"
     },
     {
       "name": "nonceHash",
-      "type": "string",
+      "type": ["null", "string"],
       "doc": "SHA3 of the transaction nonce"
     },
     {
       "name": "from",
-      "type": "string",
+      "type": ["null", "string"],
       "doc": "Address of the sender"
     },
     {
       "name": "fromBalance",
-      "type": "long",
+      "type": ["null", "long"],
       "doc": "Balance of the sender"
     },
     {
@@ -40,7 +40,7 @@
     },
     {
       "name": "input",
-      "type": "bytes",
+      "type": ["null", "bytes"],
       "doc": "The data send along with the transaction"
     },
     {
@@ -50,52 +50,52 @@
     },
     {
       "name": "value",
-      "type": "long",
+      "type": ["null", "long"],
       "doc": "Amount of value transferred in Wei"
     },
     {
       "name": "gas",
-      "type": "long",
+      "type": ["null", "long"],
       "doc": "Amount of gas provided by the sender"
     },
     {
       "name": "gasPrice",
-      "type": "long",
+      "type": ["null", "long"],
       "doc": "Amount of gas price provided by the sender in Wei"
     },
     {
       "name": "gasUsed",
-      "type": "long",
+      "type": ["null", "long"],
       "doc": "Amount of gas used consumed by the transaction"
     },
     {
       "name": "cumulativeGasUsed",
-      "type": "long",
+      "type": ["null", "long"],
       "doc": "Cumulative gas used by the transaction"
     },
     {
       "name": "v",
-      "type": "string",
+      "type": ["null", "string"],
       "doc": "Transaction signature v"
     },
     {
       "name": "r",
-      "type": "string",
+      "type": ["null", "string"],
       "doc": "Transaction signature r"
     },
     {
       "name": "s",
-      "type": "string",
+      "type": ["null", "string"],
       "doc": "Transaction signature s"
     },
     {
       "name": "status",
-      "type": "long",
+      "type": ["null", "long"],
       "doc": "Transaction result status"
     },
     {
       "name": "logsBloom",
-      "type": "bytes",
+      "type": ["null", "bytes"],
       "doc": "Generated and encoded logs by the transaction"
     },
     {

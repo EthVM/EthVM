@@ -398,19 +398,19 @@ func readPendingTx(r io.Reader) (*PendingTx, error) {
 	if err != nil {
 		return nil, err
 	}
-	str.Nonce, err = readLong(r)
+	str.Nonce, err = readUnionNullLong(r)
 	if err != nil {
 		return nil, err
 	}
-	str.NonceHash, err = readString(r)
+	str.NonceHash, err = readUnionNullString(r)
 	if err != nil {
 		return nil, err
 	}
-	str.From, err = readString(r)
+	str.From, err = readUnionNullString(r)
 	if err != nil {
 		return nil, err
 	}
-	str.FromBalance, err = readLong(r)
+	str.FromBalance, err = readUnionNullLong(r)
 	if err != nil {
 		return nil, err
 	}
@@ -422,7 +422,7 @@ func readPendingTx(r io.Reader) (*PendingTx, error) {
 	if err != nil {
 		return nil, err
 	}
-	str.Input, err = readBytes(r)
+	str.Input, err = readUnionNullBytes(r)
 	if err != nil {
 		return nil, err
 	}
@@ -430,43 +430,43 @@ func readPendingTx(r io.Reader) (*PendingTx, error) {
 	if err != nil {
 		return nil, err
 	}
-	str.Value, err = readLong(r)
+	str.Value, err = readUnionNullLong(r)
 	if err != nil {
 		return nil, err
 	}
-	str.Gas, err = readLong(r)
+	str.Gas, err = readUnionNullLong(r)
 	if err != nil {
 		return nil, err
 	}
-	str.GasPrice, err = readLong(r)
+	str.GasPrice, err = readUnionNullLong(r)
 	if err != nil {
 		return nil, err
 	}
-	str.GasUsed, err = readLong(r)
+	str.GasUsed, err = readUnionNullLong(r)
 	if err != nil {
 		return nil, err
 	}
-	str.CumulativeGasUsed, err = readLong(r)
+	str.CumulativeGasUsed, err = readUnionNullLong(r)
 	if err != nil {
 		return nil, err
 	}
-	str.V, err = readString(r)
+	str.V, err = readUnionNullString(r)
 	if err != nil {
 		return nil, err
 	}
-	str.R, err = readString(r)
+	str.R, err = readUnionNullString(r)
 	if err != nil {
 		return nil, err
 	}
-	str.S, err = readString(r)
+	str.S, err = readUnionNullString(r)
 	if err != nil {
 		return nil, err
 	}
-	str.Status, err = readLong(r)
+	str.Status, err = readUnionNullLong(r)
 	if err != nil {
 		return nil, err
 	}
-	str.LogsBloom, err = readBytes(r)
+	str.LogsBloom, err = readUnionNullBytes(r)
 	if err != nil {
 		return nil, err
 	}
@@ -661,6 +661,33 @@ func readTransfer(r io.Reader) (*Transfer, error) {
 	}
 
 	return str, nil
+}
+
+func readUnionNullBytes(r io.Reader) (UnionNullBytes, error) {
+	field, err := readLong(r)
+	var unionStr UnionNullBytes
+	if err != nil {
+		return unionStr, err
+	}
+	unionStr.UnionType = UnionNullBytesTypeEnum(field)
+	switch unionStr.UnionType {
+	case UnionNullBytesTypeEnumNull:
+		val, err := readNull(r)
+		if err != nil {
+			return unionStr, err
+		}
+		unionStr.Null = val
+	case UnionNullBytesTypeEnumBytes:
+		val, err := readBytes(r)
+		if err != nil {
+			return unionStr, err
+		}
+		unionStr.Bytes = val
+
+	default:
+		return unionStr, fmt.Errorf("Invalid value for UnionNullBytes")
+	}
+	return unionStr, nil
 }
 
 func readUnionNullLong(r io.Reader) (UnionNullLong, error) {
@@ -958,19 +985,19 @@ func writePendingTx(r *PendingTx, w io.Writer) error {
 	if err != nil {
 		return err
 	}
-	err = writeLong(r.Nonce, w)
+	err = writeUnionNullLong(r.Nonce, w)
 	if err != nil {
 		return err
 	}
-	err = writeString(r.NonceHash, w)
+	err = writeUnionNullString(r.NonceHash, w)
 	if err != nil {
 		return err
 	}
-	err = writeString(r.From, w)
+	err = writeUnionNullString(r.From, w)
 	if err != nil {
 		return err
 	}
-	err = writeLong(r.FromBalance, w)
+	err = writeUnionNullLong(r.FromBalance, w)
 	if err != nil {
 		return err
 	}
@@ -982,7 +1009,7 @@ func writePendingTx(r *PendingTx, w io.Writer) error {
 	if err != nil {
 		return err
 	}
-	err = writeBytes(r.Input, w)
+	err = writeUnionNullBytes(r.Input, w)
 	if err != nil {
 		return err
 	}
@@ -990,43 +1017,43 @@ func writePendingTx(r *PendingTx, w io.Writer) error {
 	if err != nil {
 		return err
 	}
-	err = writeLong(r.Value, w)
+	err = writeUnionNullLong(r.Value, w)
 	if err != nil {
 		return err
 	}
-	err = writeLong(r.Gas, w)
+	err = writeUnionNullLong(r.Gas, w)
 	if err != nil {
 		return err
 	}
-	err = writeLong(r.GasPrice, w)
+	err = writeUnionNullLong(r.GasPrice, w)
 	if err != nil {
 		return err
 	}
-	err = writeLong(r.GasUsed, w)
+	err = writeUnionNullLong(r.GasUsed, w)
 	if err != nil {
 		return err
 	}
-	err = writeLong(r.CumulativeGasUsed, w)
+	err = writeUnionNullLong(r.CumulativeGasUsed, w)
 	if err != nil {
 		return err
 	}
-	err = writeString(r.V, w)
+	err = writeUnionNullString(r.V, w)
 	if err != nil {
 		return err
 	}
-	err = writeString(r.R, w)
+	err = writeUnionNullString(r.R, w)
 	if err != nil {
 		return err
 	}
-	err = writeString(r.S, w)
+	err = writeUnionNullString(r.S, w)
 	if err != nil {
 		return err
 	}
-	err = writeLong(r.Status, w)
+	err = writeUnionNullLong(r.Status, w)
 	if err != nil {
 		return err
 	}
-	err = writeBytes(r.LogsBloom, w)
+	err = writeUnionNullBytes(r.LogsBloom, w)
 	if err != nil {
 		return err
 	}
@@ -1209,6 +1236,21 @@ func writeTransfer(r *Transfer, w io.Writer) error {
 	}
 
 	return nil
+}
+
+func writeUnionNullBytes(r UnionNullBytes, w io.Writer) error {
+	err := writeLong(int64(r.UnionType), w)
+	if err != nil {
+		return err
+	}
+	switch r.UnionType {
+	case UnionNullBytesTypeEnumNull:
+		return writeNull(r.Null, w)
+	case UnionNullBytesTypeEnumBytes:
+		return writeBytes(r.Bytes, w)
+
+	}
+	return fmt.Errorf("Invalid value for UnionNullBytes")
 }
 
 func writeUnionNullLong(r UnionNullLong, w io.Writer) error {
