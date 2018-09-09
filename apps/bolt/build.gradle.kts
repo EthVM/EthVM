@@ -27,4 +27,5 @@ dependencies {
   compile("org.slf4j:slf4j-log4j12:1.7.25")
   compile("io.github.microutils:kotlin-logging:1.5.9")
   compile("joda-time:joda-time:2.10")
+  compile("org.web3j:utils:3.5.0")
 }
