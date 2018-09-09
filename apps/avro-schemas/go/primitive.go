@@ -8,6 +8,7 @@
 package models
 
 import (
+	"encoding/binary"
 	"fmt"
 	"io"
 	"math"
@@ -24,6 +25,33 @@ type ByteWriter interface {
 
 type StringWriter interface {
 	WriteString(string) (int, error)
+}
+
+func encodeFloat(w io.Writer, byteCount int, bits uint64) error {
+	var err error
+	var bb []byte
+	bw, ok := w.(ByteWriter)
+	if ok {
+		bw.Grow(byteCount)
+	} else {
+		bb = make([]byte, 0, byteCount)
+	}
+	for i := 0; i < byteCount; i++ {
+		if bw != nil {
+			err = bw.WriteByte(byte(bits & 255))
+			if err != nil {
+				return err
+			}
+		} else {
+			bb = append(bb, byte(bits&255))
+		}
+		bits = bits >> 8
+	}
+	if bw == nil {
+		_, err = w.Write(bb)
+		return err
+	}
+	return nil
 }
 
 func encodeInt(w io.Writer, byteCount int, encoded uint64) error {
@@ -288,11 +316,46 @@ func readBlock(r io.Reader) (*Block, error) {
 	if err != nil {
 		return nil, err
 	}
+	str.Stats, err = readBlockStats(r)
+	if err != nil {
+		return nil, err
+	}
 	str.Transactions, err = readArrayTransaction(r)
 	if err != nil {
 		return nil, err
 	}
 	str.Uncles, err = readArrayString(r)
+	if err != nil {
+		return nil, err
+	}
+
+	return str, nil
+}
+
+func readBlockStats(r io.Reader) (*BlockStats, error) {
+	var str = &BlockStats{}
+	var err error
+	str.BlockTime, err = readLong(r)
+	if err != nil {
+		return nil, err
+	}
+	str.NumFailedTxs, err = readLong(r)
+	if err != nil {
+		return nil, err
+	}
+	str.NumSuccessfulTxs, err = readLong(r)
+	if err != nil {
+		return nil, err
+	}
+	str.AvgGasPrice, err = readFloat(r)
+	if err != nil {
+		return nil, err
+	}
+	str.TotalGasPrice, err = readLong(r)
+	if err != nil {
+		return nil, err
+	}
+	str.TotalTxFees, err = readLong(r)
 	if err != nil {
 		return nil, err
 	}
@@ -324,6 +387,18 @@ func readBytes(r io.Reader) ([]byte, error) {
 	bb := make([]byte, size)
 	_, err = io.ReadFull(r, bb)
 	return bb, err
+}
+
+func readFloat(r io.Reader) (float32, error) {
+	buf := make([]byte, 4)
+	_, err := io.ReadFull(r, buf)
+	if err != nil {
+		return 0, err
+	}
+	bits := binary.LittleEndian.Uint32(buf)
+	val := math.Float32frombits(bits)
+	return val, nil
+
 }
 
 func readInt(r io.Reader) (int32, error) {
@@ -855,11 +930,44 @@ func writeBlock(r *Block, w io.Writer) error {
 	if err != nil {
 		return err
 	}
+	err = writeBlockStats(r.Stats, w)
+	if err != nil {
+		return err
+	}
 	err = writeArrayTransaction(r.Transactions, w)
 	if err != nil {
 		return err
 	}
 	err = writeArrayString(r.Uncles, w)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+func writeBlockStats(r *BlockStats, w io.Writer) error {
+	var err error
+	err = writeLong(r.BlockTime, w)
+	if err != nil {
+		return err
+	}
+	err = writeLong(r.NumFailedTxs, w)
+	if err != nil {
+		return err
+	}
+	err = writeLong(r.NumSuccessfulTxs, w)
+	if err != nil {
+		return err
+	}
+	err = writeFloat(r.AvgGasPrice, w)
+	if err != nil {
+		return err
+	}
+	err = writeLong(r.TotalGasPrice, w)
+	if err != nil {
+		return err
+	}
+	err = writeLong(r.TotalTxFees, w)
 	if err != nil {
 		return err
 	}
@@ -894,6 +1002,12 @@ func writeBytes(r []byte, w io.Writer) error {
 	}
 	_, err = w.Write(r)
 	return err
+}
+
+func writeFloat(r float32, w io.Writer) error {
+	bits := uint64(math.Float32bits(r))
+	const byteCount = 4
+	return encodeFloat(w, byteCount, bits)
 }
 
 func writeInt(r int32, w io.Writer) error {

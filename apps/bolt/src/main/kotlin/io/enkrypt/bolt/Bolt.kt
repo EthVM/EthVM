@@ -27,11 +27,10 @@ class Bolt : KoinComponent {
 
     // Avro Serdes
 
-    val (schemaRegistryUrl) = appConfig
     val (rawBlocksTopic) = appConfig.topicsConfig
 
     val blockSerde = SpecificAvroSerde<Block>()
-    val blockSerdeProps = mapOf(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG to schemaRegistryUrl)
+    val blockSerdeProps = mapOf(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG to appConfig.schemaRegistryUrl)
     blockSerde.configure(blockSerdeProps, false)
 
     // Create stream builder
@@ -50,14 +49,10 @@ class Bolt : KoinComponent {
 
     blocks
       .flatMap { key, value ->
+
         value.getTransactions()
-          .filter { t -> !(t.getFrom() == null && t.getTo() == null) }
-          .map { t ->
-            listOf(
-              KeyValue(t.getFrom(), t.getFromBalance()),
-              KeyValue(t.getTo(), t.getToBalance())
-            )
-          }.flatten()
+
+
       }.foreach { address, balance -> logger.info { "Balance update - Address: $address | Balance: $balance" } }
 
     // Generate the topology

@@ -117,6 +117,46 @@
       "doc": "Total current uncle reward"
     },
     {
+      "name": "stats",
+      "type": {
+         "namespace": "io.enkrypt.bolt.models",
+         "name": "BlockStats",
+         "type": "record",
+         "fields": [
+          {
+            "name": "blockTime",
+            "type": "long",
+            "doc": "Time taken to find the block"
+          },
+          {
+            "name": "numFailedTxs",
+            "type": "long",
+            "doc": "Number of failed transactions"
+          },
+          {
+            "name": "numSuccessfulTxs",
+            "type": "long",
+            "doc": "Number of successful transactions"
+          },
+          {
+            "name": "avgGasPrice",
+            "type": "float",
+            "doc": "Average gas price"
+          },
+          {
+            "name": "totalGasPrice",
+            "type": "long",
+            "doc": "Total gas price"
+          },
+          {
+            "name": "totalTxFees",
+            "type": "long",
+            "doc": "Total txn fees"
+          }
+         ]
+      }
+    },
+    {
       "name": "transactions",
       "type": {
         "type": "array",
