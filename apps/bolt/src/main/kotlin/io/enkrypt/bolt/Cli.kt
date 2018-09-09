@@ -3,6 +3,16 @@ package io.enkrypt.bolt
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
+import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig
+import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
+import io.enkrypt.bolt.config.AppConfig
+import io.enkrypt.bolt.config.TopicsConfig
+import org.apache.kafka.clients.consumer.ConsumerConfig
+import org.apache.kafka.common.serialization.Serdes
+import org.apache.kafka.streams.StreamsConfig
+import org.koin.dsl.module.module
+import org.koin.standalone.StandAloneContext.startKoin
+import java.util.*
 
 class Cli : CliktCommand() {
 
@@ -16,30 +26,39 @@ class Cli : CliktCommand() {
   private val rawBlocksTopic: String by option(help = "Name of the raw blocks stream topic on which Bolt will listen", envvar = "BOLT_RAW_BLOCKS_TOPIC").default(DEFAULT_RAW_BLOCK_TOPIC)
   private val rawPendingTxsTopic: String by option(help = "Name of the raw blocks stream topic on which Bolt will listen", envvar = "BOLT_PENDING_TXS_TOPIC").default(DEFAULT_RAW_PENDING_TXS_TOPIC)
 
-  // Output Topics
-  private val processedBlocksTopic: String by option(help = "Name of the processed blocks topic on which Bolt will write", envvar = "BOLT_PROCESSED_BLOCKS_TOPIC").default(DEFAULT_PROCESSED_BLOCKS_TOPIC)
-  private val processedBlockStatsTopic: String by option(help = "Name of the processed block stats topic on which Bolt will write", envvar = "BOLT_PROCESSED_BLOCK_STATS").default(DEFAULT_PROCESSED_BLOCK_STATS_TOPIC)
-  private val processedTxsTopic: String by option(help = "Name of the processed pending txs topic on which Bolt will write", envvar = "BOLT_PROCESSED_TXS_TOPIC").default(DEFAULT_PROCESSED_TXS_TOPIC)
-  private val processedAccountsTopic: String by option(help = "Name of the processed accounts topic on which Bolt will write", envvar = "BOLT_PROCESSED_ACCOUNTS_TOPIC").default(DEFAULT_PROCESSED_ACCOUNTS_TOPIC)
+  private val boltModule = module {
+
+    single { TopicsConfig(rawBlocksTopic, rawPendingTxsTopic) }
+    single { AppConfig(applicationId, bootstrapServers, startingOffset, schemaRegistryUrl, get()) }
+
+    module("kafka") {
+      single {
+        Properties().apply {
+          // App
+          put(StreamsConfig.APPLICATION_ID_CONFIG, applicationId)
+          put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
+          put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl)
+
+          // Processing
+          put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, StreamsConfig.AT_LEAST_ONCE)
+          put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, startingOffset)
+
+          // Serdes
+          put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().javaClass.name)
+          put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, SpecificAvroSerde::class.java)
+        }
+      }
+    }
+
+    single{ Bolt() }
+
+  }
 
   override fun run() {
-    Bolt(
-      // General
-      applicationId,
-      bootstrapServers,
-      startingOffset,
-      schemaRegistryUrl,
 
-      // Input Topics
-      rawBlocksTopic,
-      rawPendingTxsTopic,
+    startKoin(listOf(boltModule))
+    Bolt().start()
 
-      // Output Topics
-      processedBlocksTopic,
-      processedBlockStatsTopic,
-      processedTxsTopic,
-      processedAccountsTopic
-    ).start()
   }
 
   companion object {
