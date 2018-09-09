@@ -9,6 +9,12 @@ networks:
       config:
         - subnet: 172.25.0.0/24
 
+volumes:
+  redis-volume:
+  mongodb-volume:
+  geth-volume:
+  geth-miner-volume:
+
 services:
   traefik:
     image: traefik:1.6.2-alpine
@@ -69,6 +75,8 @@ services:
   redis:
     image: redis:4.0.9-alpine
     restart: unless-stopped
+    volumes:
+      - redis-volume:/data
     networks:
       - back
     labels:
@@ -77,12 +85,12 @@ services:
       - 'traefik.frontend.rule=Host:redis.ethvm.lan'
       - 'traefik.port=6379'
       - 'traefik.backend=redis'
-    command: >
-      sh -c "redis-server && redis-cli flushall"
 
   mongodb:
     image: mvertes/alpine-mongo:4.0.1-0
     restart: unless-stopped
+    volumes:
+      - mongodb-volume:/data/db
     networks:
       - back
     ports:
@@ -188,8 +196,9 @@ services:
       context: ./apps/eth
     restart: unless-stopped
     volumes:
+      - geth-miner-volume:/geth
       - ./provisioners/docker/config/geth/genesis.json:/genesis.json
-      - ./provisioners/docker/config/geth/keystore/:/keystore/
+      - ./provisioners/docker/config/geth/keystore/:/geth/keystore/
     networks:
       back:
         ipv4_address: 172.25.0.101
@@ -197,8 +206,7 @@ services:
       - /bin/zsh
       - -c
       - |
-        rm -rf /geth && mkdir -p /geth/keystore
-        cp -a /keystore/. /geth/keystore/
+        #echo "y" | geth removedb --datadir '/geth'
         geth --datadir '/geth' init /genesis.json
         geth --datadir '/geth' --networkid 1234 --identity geth-miner --mine --minerthreads 1 --nousb --unlock '84baabad835e6ca9252658cd6eae0152f6330c09' --rpc --rpcaddr '0.0.0.0' --password =(echo '123456789') --nodiscover --maxpeers 2 --nodekeyhex '08f0e1dee5c1b4645f3331a566009e41a4514b6cd28656d63d0449ecf812812b'
 
@@ -211,9 +219,11 @@ services:
     depends_on:
       - geth-miner
     volumes:
+      - geth-volume:/geth
       - ./provisioners/docker/config/geth/genesis.json:/genesis.json
-      - ./provisioners/docker/config/geth/keystore/:/keystore/
-      - ./provisioners/docker/config/geth/static-nodes.json:/static-nodes.json
+      - ./provisioners/docker/config/geth/keystore/:/geth/keystore/
+      - ./provisioners/docker/config/geth/static-nodes.json:/geth/static-nodes.json
+      - ./provisioners/docker/config/geth/tracer.js:/geth/tracer.js
     networks:
       back:
         ipv4_address: 172.25.0.102
@@ -223,14 +233,12 @@ services:
       - 'traefik.enable=true'
       - 'traefik.default.protocol=http'
       - 'traefik.frontend.rule=Host:geth.ethvm.lan'
-      - 'traefik.port=9545'
+      - 'traefik.port=8545'
       - 'traefik.backend=geth'
     command:
       - /bin/zsh
       - -c
       - |
-        rm -rf /geth && mkdir -p /geth/keystore
-        cp -a /keystore/. /geth/keystore/
-        cp /static-nodes.json /geth/
+        #echo "y" | geth removedb --datadir '/geth'
         geth --datadir '/geth' --ethvm init /genesis.json
-        geth --datadir '/geth' --verbosity 5 --networkid 1234 --identity geth --ethvm --ethvm-brokers 'kafka:9092' --ethvm-kafka-schema-registry-url 'http://kafka-schema-registry:8081' --gcmode archive --rpc --rpcaddr '0.0.0.0' --rpccorsdomain '*' --rpcapi 'admin,personal,db,eth,net,web3,txpool,miner' --syncmode full --nat 'extip:172.25.0.102' --nousb --nodiscover --maxpeers 2
+        geth --datadir '/geth' --verbosity 5 --networkid 1234 --identity geth --ethvm --ethvm-brokers 'kafka:9092' --ethvm-kafka-schema-registry-url 'http://kafka-schema-registry:8081' --ethvm-tracer-file '/geth/tracer.js' --gcmode archive --rpc --rpcaddr '0.0.0.0' --rpccorsdomain '*' --rpcapi 'admin,personal,db,eth,net,web3,txpool,miner' --syncmode full --nat 'extip:172.25.0.102' --nousb --nodiscover --maxpeers 2
