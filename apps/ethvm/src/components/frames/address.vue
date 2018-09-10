@@ -180,7 +180,7 @@ export default Vue.extend({
       }
     )
     /*Getting USD Values: */
-    this.$socket.emit(sEvents.getTokenToUSD, { symbol: 'ETH', to: 'USD' }, (err, result) => {
+    this.$socket.emit(sEvents.getTicker, { symbol: 'ETH', to: 'USD' }, (err, result) => {
       this.account.ethusd = result.price
     })
     /*Getting Address Transactions: */

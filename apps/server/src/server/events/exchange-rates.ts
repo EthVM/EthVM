@@ -6,7 +6,7 @@ import fetch from 'node-fetch'
 // API URL: https://www.cryptocompare.com/api/data/coinlist/
 // API Doc: https://www.cryptocompare.com/api/#-api-data-coinlist
 const getExchangeRatesEvent: SocketEvent = {
-  id: 'getTokenToUSD', // new_name: exchange_rate
+  id: 'getTicker', // new_name: exchange_rate
 
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     return {
