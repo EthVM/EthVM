@@ -52,8 +52,8 @@ public class Trace extends org.apache.avro.specific.SpecificRecordBase implement
   }
 
   @Deprecated public boolean isError;
-  @Deprecated public CharSequence msg;
-  @Deprecated public java.util.List<Transfer> transfers;
+  @Deprecated public java.lang.CharSequence msg;
+  @Deprecated public java.util.List<io.enkrypt.bolt.models.Transfer> transfers;
 
   /**
    * Default constructor.  Note that this does not initialize fields
@@ -68,7 +68,7 @@ public class Trace extends org.apache.avro.specific.SpecificRecordBase implement
    * @param msg The new value for msg
    * @param transfers The new value for transfers
    */
-  public Trace(Boolean isError, CharSequence msg, java.util.List<Transfer> transfers) {
+  public Trace(java.lang.Boolean isError, java.lang.CharSequence msg, java.util.List<io.enkrypt.bolt.models.Transfer> transfers) {
     this.isError = isError;
     this.msg = msg;
     this.transfers = transfers;
@@ -76,7 +76,7 @@ public class Trace extends org.apache.avro.specific.SpecificRecordBase implement
 
   public org.apache.avro.Schema getSchema() { return SCHEMA$; }
   // Used by DatumWriter.  Applications should not call.
-  public Object get(int field$) {
+  public java.lang.Object get(int field$) {
     switch (field$) {
     case 0: return isError;
     case 1: return msg;
@@ -87,11 +87,11 @@ public class Trace extends org.apache.avro.specific.SpecificRecordBase implement
 
   // Used by DatumReader.  Applications should not call.
   @SuppressWarnings(value="unchecked")
-  public void put(int field$, Object value$) {
+  public void put(int field$, java.lang.Object value$) {
     switch (field$) {
-    case 0: isError = (Boolean)value$; break;
-    case 1: msg = (CharSequence)value$; break;
-    case 2: transfers = (java.util.List<Transfer>)value$; break;
+    case 0: isError = (java.lang.Boolean)value$; break;
+    case 1: msg = (java.lang.CharSequence)value$; break;
+    case 2: transfers = (java.util.List<io.enkrypt.bolt.models.Transfer>)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -100,7 +100,7 @@ public class Trace extends org.apache.avro.specific.SpecificRecordBase implement
    * Gets the value of the 'isError' field.
    * @return The value of the 'isError' field.
    */
-  public Boolean getIsError() {
+  public java.lang.Boolean getIsError() {
     return isError;
   }
 
@@ -108,7 +108,7 @@ public class Trace extends org.apache.avro.specific.SpecificRecordBase implement
    * Sets the value of the 'isError' field.
    * @param value the value to set.
    */
-  public void setIsError(Boolean value) {
+  public void setIsError(java.lang.Boolean value) {
     this.isError = value;
   }
 
@@ -116,7 +116,7 @@ public class Trace extends org.apache.avro.specific.SpecificRecordBase implement
    * Gets the value of the 'msg' field.
    * @return The value of the 'msg' field.
    */
-  public CharSequence getMsg() {
+  public java.lang.CharSequence getMsg() {
     return msg;
   }
 
@@ -124,7 +124,7 @@ public class Trace extends org.apache.avro.specific.SpecificRecordBase implement
    * Sets the value of the 'msg' field.
    * @param value the value to set.
    */
-  public void setMsg(CharSequence value) {
+  public void setMsg(java.lang.CharSequence value) {
     this.msg = value;
   }
 
@@ -132,7 +132,7 @@ public class Trace extends org.apache.avro.specific.SpecificRecordBase implement
    * Gets the value of the 'transfers' field.
    * @return The value of the 'transfers' field.
    */
-  public java.util.List<Transfer> getTransfers() {
+  public java.util.List<io.enkrypt.bolt.models.Transfer> getTransfers() {
     return transfers;
   }
 
@@ -140,7 +140,7 @@ public class Trace extends org.apache.avro.specific.SpecificRecordBase implement
    * Sets the value of the 'transfers' field.
    * @param value the value to set.
    */
-  public void setTransfers(java.util.List<Transfer> value) {
+  public void setTransfers(java.util.List<io.enkrypt.bolt.models.Transfer> value) {
     this.transfers = value;
   }
 
@@ -148,8 +148,8 @@ public class Trace extends org.apache.avro.specific.SpecificRecordBase implement
    * Creates a new Trace RecordBuilder.
    * @return A new Trace RecordBuilder
    */
-  public static Builder newBuilder() {
-    return new Builder();
+  public static io.enkrypt.bolt.models.Trace.Builder newBuilder() {
+    return new io.enkrypt.bolt.models.Trace.Builder();
   }
 
   /**
@@ -157,8 +157,8 @@ public class Trace extends org.apache.avro.specific.SpecificRecordBase implement
    * @param other The existing builder to copy.
    * @return A new Trace RecordBuilder
    */
-  public static Builder newBuilder(Builder other) {
-    return new Builder(other);
+  public static io.enkrypt.bolt.models.Trace.Builder newBuilder(io.enkrypt.bolt.models.Trace.Builder other) {
+    return new io.enkrypt.bolt.models.Trace.Builder(other);
   }
 
   /**
@@ -166,8 +166,8 @@ public class Trace extends org.apache.avro.specific.SpecificRecordBase implement
    * @param other The existing instance to copy.
    * @return A new Trace RecordBuilder
    */
-  public static Builder newBuilder(Trace other) {
-    return new Builder(other);
+  public static io.enkrypt.bolt.models.Trace.Builder newBuilder(io.enkrypt.bolt.models.Trace other) {
+    return new io.enkrypt.bolt.models.Trace.Builder(other);
   }
 
   /**
@@ -177,8 +177,8 @@ public class Trace extends org.apache.avro.specific.SpecificRecordBase implement
     implements org.apache.avro.data.RecordBuilder<Trace> {
 
     private boolean isError;
-    private CharSequence msg;
-    private java.util.List<Transfer> transfers;
+    private java.lang.CharSequence msg;
+    private java.util.List<io.enkrypt.bolt.models.Transfer> transfers;
 
     /** Creates a new Builder */
     private Builder() {
@@ -189,7 +189,7 @@ public class Trace extends org.apache.avro.specific.SpecificRecordBase implement
      * Creates a Builder by copying an existing Builder.
      * @param other The existing Builder to copy.
      */
-    private Builder(Builder other) {
+    private Builder(io.enkrypt.bolt.models.Trace.Builder other) {
       super(other);
       if (isValidValue(fields()[0], other.isError)) {
         this.isError = data().deepCopy(fields()[0].schema(), other.isError);
@@ -209,7 +209,7 @@ public class Trace extends org.apache.avro.specific.SpecificRecordBase implement
      * Creates a Builder by copying an existing Trace instance
      * @param other The existing instance to copy.
      */
-    private Builder(Trace other) {
+    private Builder(io.enkrypt.bolt.models.Trace other) {
             super(SCHEMA$);
       if (isValidValue(fields()[0], other.isError)) {
         this.isError = data().deepCopy(fields()[0].schema(), other.isError);
@@ -229,7 +229,7 @@ public class Trace extends org.apache.avro.specific.SpecificRecordBase implement
       * Gets the value of the 'isError' field.
       * @return The value.
       */
-    public Boolean getIsError() {
+    public java.lang.Boolean getIsError() {
       return isError;
     }
 
@@ -238,7 +238,7 @@ public class Trace extends org.apache.avro.specific.SpecificRecordBase implement
       * @param value The value of 'isError'.
       * @return This builder.
       */
-    public Builder setIsError(boolean value) {
+    public io.enkrypt.bolt.models.Trace.Builder setIsError(boolean value) {
       validate(fields()[0], value);
       this.isError = value;
       fieldSetFlags()[0] = true;
@@ -258,7 +258,7 @@ public class Trace extends org.apache.avro.specific.SpecificRecordBase implement
       * Clears the value of the 'isError' field.
       * @return This builder.
       */
-    public Builder clearIsError() {
+    public io.enkrypt.bolt.models.Trace.Builder clearIsError() {
       fieldSetFlags()[0] = false;
       return this;
     }
@@ -267,7 +267,7 @@ public class Trace extends org.apache.avro.specific.SpecificRecordBase implement
       * Gets the value of the 'msg' field.
       * @return The value.
       */
-    public CharSequence getMsg() {
+    public java.lang.CharSequence getMsg() {
       return msg;
     }
 
@@ -276,7 +276,7 @@ public class Trace extends org.apache.avro.specific.SpecificRecordBase implement
       * @param value The value of 'msg'.
       * @return This builder.
       */
-    public Builder setMsg(CharSequence value) {
+    public io.enkrypt.bolt.models.Trace.Builder setMsg(java.lang.CharSequence value) {
       validate(fields()[1], value);
       this.msg = value;
       fieldSetFlags()[1] = true;
@@ -296,7 +296,7 @@ public class Trace extends org.apache.avro.specific.SpecificRecordBase implement
       * Clears the value of the 'msg' field.
       * @return This builder.
       */
-    public Builder clearMsg() {
+    public io.enkrypt.bolt.models.Trace.Builder clearMsg() {
       msg = null;
       fieldSetFlags()[1] = false;
       return this;
@@ -306,7 +306,7 @@ public class Trace extends org.apache.avro.specific.SpecificRecordBase implement
       * Gets the value of the 'transfers' field.
       * @return The value.
       */
-    public java.util.List<Transfer> getTransfers() {
+    public java.util.List<io.enkrypt.bolt.models.Transfer> getTransfers() {
       return transfers;
     }
 
@@ -315,7 +315,7 @@ public class Trace extends org.apache.avro.specific.SpecificRecordBase implement
       * @param value The value of 'transfers'.
       * @return This builder.
       */
-    public Builder setTransfers(java.util.List<Transfer> value) {
+    public io.enkrypt.bolt.models.Trace.Builder setTransfers(java.util.List<io.enkrypt.bolt.models.Transfer> value) {
       validate(fields()[2], value);
       this.transfers = value;
       fieldSetFlags()[2] = true;
@@ -335,7 +335,7 @@ public class Trace extends org.apache.avro.specific.SpecificRecordBase implement
       * Clears the value of the 'transfers' field.
       * @return This builder.
       */
-    public Builder clearTransfers() {
+    public io.enkrypt.bolt.models.Trace.Builder clearTransfers() {
       transfers = null;
       fieldSetFlags()[2] = false;
       return this;
@@ -346,11 +346,11 @@ public class Trace extends org.apache.avro.specific.SpecificRecordBase implement
     public Trace build() {
       try {
         Trace record = new Trace();
-        record.isError = fieldSetFlags()[0] ? this.isError : (Boolean) defaultValue(fields()[0]);
-        record.msg = fieldSetFlags()[1] ? this.msg : (CharSequence) defaultValue(fields()[1]);
-        record.transfers = fieldSetFlags()[2] ? this.transfers : (java.util.List<Transfer>) defaultValue(fields()[2]);
+        record.isError = fieldSetFlags()[0] ? this.isError : (java.lang.Boolean) defaultValue(fields()[0]);
+        record.msg = fieldSetFlags()[1] ? this.msg : (java.lang.CharSequence) defaultValue(fields()[1]);
+        record.transfers = fieldSetFlags()[2] ? this.transfers : (java.util.List<io.enkrypt.bolt.models.Transfer>) defaultValue(fields()[2]);
         return record;
-      } catch (Exception e) {
+      } catch (java.lang.Exception e) {
         throw new org.apache.avro.AvroRuntimeException(e);
       }
     }

@@ -77,7 +77,7 @@ class BlocksProcessor : KoinComponent {
 
         KeyValue(key, Pair(block, balances))
       }
-      .foreach { key, value -> logger.info { "Block - Key: $key | Number: ${value.first.getNumber()} | Canonical: ${value.first.getIsCanonical()}" } }
+      .foreach { key, value -> logger.info { "Block - Key: $key | Number: ${value.first.getNumber()} | Canonical: ${value.first.getStatus()}" } }
 
     // Generate the topology
     val topology = builder.build()

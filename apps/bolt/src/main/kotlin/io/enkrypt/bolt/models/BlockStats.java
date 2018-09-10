@@ -77,7 +77,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
    * @param avgGasPrice Average gas price
    * @param avgTxsFees Total gas price
    */
-  public BlockStats(Integer blockTimeMs, Integer numFailedTxs, Integer numSuccessfulTxs, Long avgGasPrice, Long avgTxsFees) {
+  public BlockStats(java.lang.Integer blockTimeMs, java.lang.Integer numFailedTxs, java.lang.Integer numSuccessfulTxs, java.lang.Long avgGasPrice, java.lang.Long avgTxsFees) {
     this.blockTimeMs = blockTimeMs;
     this.numFailedTxs = numFailedTxs;
     this.numSuccessfulTxs = numSuccessfulTxs;
@@ -87,7 +87,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
 
   public org.apache.avro.Schema getSchema() { return SCHEMA$; }
   // Used by DatumWriter.  Applications should not call.
-  public Object get(int field$) {
+  public java.lang.Object get(int field$) {
     switch (field$) {
     case 0: return blockTimeMs;
     case 1: return numFailedTxs;
@@ -100,13 +100,13 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
 
   // Used by DatumReader.  Applications should not call.
   @SuppressWarnings(value="unchecked")
-  public void put(int field$, Object value$) {
+  public void put(int field$, java.lang.Object value$) {
     switch (field$) {
-    case 0: blockTimeMs = (Integer)value$; break;
-    case 1: numFailedTxs = (Integer)value$; break;
-    case 2: numSuccessfulTxs = (Integer)value$; break;
-    case 3: avgGasPrice = (Long)value$; break;
-    case 4: avgTxsFees = (Long)value$; break;
+    case 0: blockTimeMs = (java.lang.Integer)value$; break;
+    case 1: numFailedTxs = (java.lang.Integer)value$; break;
+    case 2: numSuccessfulTxs = (java.lang.Integer)value$; break;
+    case 3: avgGasPrice = (java.lang.Long)value$; break;
+    case 4: avgTxsFees = (java.lang.Long)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -115,7 +115,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
    * Gets the value of the 'blockTimeMs' field.
    * @return Time taken to find the block in milliseconds
    */
-  public Integer getBlockTimeMs() {
+  public java.lang.Integer getBlockTimeMs() {
     return blockTimeMs;
   }
 
@@ -124,7 +124,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
    * Time taken to find the block in milliseconds
    * @param value the value to set.
    */
-  public void setBlockTimeMs(Integer value) {
+  public void setBlockTimeMs(java.lang.Integer value) {
     this.blockTimeMs = value;
   }
 
@@ -132,7 +132,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
    * Gets the value of the 'numFailedTxs' field.
    * @return Number of failed transactions
    */
-  public Integer getNumFailedTxs() {
+  public java.lang.Integer getNumFailedTxs() {
     return numFailedTxs;
   }
 
@@ -141,7 +141,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
    * Number of failed transactions
    * @param value the value to set.
    */
-  public void setNumFailedTxs(Integer value) {
+  public void setNumFailedTxs(java.lang.Integer value) {
     this.numFailedTxs = value;
   }
 
@@ -149,7 +149,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
    * Gets the value of the 'numSuccessfulTxs' field.
    * @return Number of successful transactions
    */
-  public Integer getNumSuccessfulTxs() {
+  public java.lang.Integer getNumSuccessfulTxs() {
     return numSuccessfulTxs;
   }
 
@@ -158,7 +158,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
    * Number of successful transactions
    * @param value the value to set.
    */
-  public void setNumSuccessfulTxs(Integer value) {
+  public void setNumSuccessfulTxs(java.lang.Integer value) {
     this.numSuccessfulTxs = value;
   }
 
@@ -166,7 +166,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
    * Gets the value of the 'avgGasPrice' field.
    * @return Average gas price
    */
-  public Long getAvgGasPrice() {
+  public java.lang.Long getAvgGasPrice() {
     return avgGasPrice;
   }
 
@@ -175,7 +175,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
    * Average gas price
    * @param value the value to set.
    */
-  public void setAvgGasPrice(Long value) {
+  public void setAvgGasPrice(java.lang.Long value) {
     this.avgGasPrice = value;
   }
 
@@ -183,7 +183,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
    * Gets the value of the 'avgTxsFees' field.
    * @return Total gas price
    */
-  public Long getAvgTxsFees() {
+  public java.lang.Long getAvgTxsFees() {
     return avgTxsFees;
   }
 
@@ -192,7 +192,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
    * Total gas price
    * @param value the value to set.
    */
-  public void setAvgTxsFees(Long value) {
+  public void setAvgTxsFees(java.lang.Long value) {
     this.avgTxsFees = value;
   }
 
@@ -200,8 +200,8 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
    * Creates a new BlockStats RecordBuilder.
    * @return A new BlockStats RecordBuilder
    */
-  public static Builder newBuilder() {
-    return new Builder();
+  public static io.enkrypt.bolt.models.BlockStats.Builder newBuilder() {
+    return new io.enkrypt.bolt.models.BlockStats.Builder();
   }
 
   /**
@@ -209,8 +209,8 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
    * @param other The existing builder to copy.
    * @return A new BlockStats RecordBuilder
    */
-  public static Builder newBuilder(Builder other) {
-    return new Builder(other);
+  public static io.enkrypt.bolt.models.BlockStats.Builder newBuilder(io.enkrypt.bolt.models.BlockStats.Builder other) {
+    return new io.enkrypt.bolt.models.BlockStats.Builder(other);
   }
 
   /**
@@ -218,8 +218,8 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
    * @param other The existing instance to copy.
    * @return A new BlockStats RecordBuilder
    */
-  public static Builder newBuilder(BlockStats other) {
-    return new Builder(other);
+  public static io.enkrypt.bolt.models.BlockStats.Builder newBuilder(io.enkrypt.bolt.models.BlockStats other) {
+    return new io.enkrypt.bolt.models.BlockStats.Builder(other);
   }
 
   /**
@@ -248,7 +248,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
      * Creates a Builder by copying an existing Builder.
      * @param other The existing Builder to copy.
      */
-    private Builder(Builder other) {
+    private Builder(io.enkrypt.bolt.models.BlockStats.Builder other) {
       super(other);
       if (isValidValue(fields()[0], other.blockTimeMs)) {
         this.blockTimeMs = data().deepCopy(fields()[0].schema(), other.blockTimeMs);
@@ -276,7 +276,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
      * Creates a Builder by copying an existing BlockStats instance
      * @param other The existing instance to copy.
      */
-    private Builder(BlockStats other) {
+    private Builder(io.enkrypt.bolt.models.BlockStats other) {
             super(SCHEMA$);
       if (isValidValue(fields()[0], other.blockTimeMs)) {
         this.blockTimeMs = data().deepCopy(fields()[0].schema(), other.blockTimeMs);
@@ -305,7 +305,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * Time taken to find the block in milliseconds
       * @return The value.
       */
-    public Integer getBlockTimeMs() {
+    public java.lang.Integer getBlockTimeMs() {
       return blockTimeMs;
     }
 
@@ -315,7 +315,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * @param value The value of 'blockTimeMs'.
       * @return This builder.
       */
-    public Builder setBlockTimeMs(int value) {
+    public io.enkrypt.bolt.models.BlockStats.Builder setBlockTimeMs(int value) {
       validate(fields()[0], value);
       this.blockTimeMs = value;
       fieldSetFlags()[0] = true;
@@ -337,7 +337,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * Time taken to find the block in milliseconds
       * @return This builder.
       */
-    public Builder clearBlockTimeMs() {
+    public io.enkrypt.bolt.models.BlockStats.Builder clearBlockTimeMs() {
       fieldSetFlags()[0] = false;
       return this;
     }
@@ -347,7 +347,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * Number of failed transactions
       * @return The value.
       */
-    public Integer getNumFailedTxs() {
+    public java.lang.Integer getNumFailedTxs() {
       return numFailedTxs;
     }
 
@@ -357,7 +357,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * @param value The value of 'numFailedTxs'.
       * @return This builder.
       */
-    public Builder setNumFailedTxs(int value) {
+    public io.enkrypt.bolt.models.BlockStats.Builder setNumFailedTxs(int value) {
       validate(fields()[1], value);
       this.numFailedTxs = value;
       fieldSetFlags()[1] = true;
@@ -379,7 +379,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * Number of failed transactions
       * @return This builder.
       */
-    public Builder clearNumFailedTxs() {
+    public io.enkrypt.bolt.models.BlockStats.Builder clearNumFailedTxs() {
       fieldSetFlags()[1] = false;
       return this;
     }
@@ -389,7 +389,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * Number of successful transactions
       * @return The value.
       */
-    public Integer getNumSuccessfulTxs() {
+    public java.lang.Integer getNumSuccessfulTxs() {
       return numSuccessfulTxs;
     }
 
@@ -399,7 +399,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * @param value The value of 'numSuccessfulTxs'.
       * @return This builder.
       */
-    public Builder setNumSuccessfulTxs(int value) {
+    public io.enkrypt.bolt.models.BlockStats.Builder setNumSuccessfulTxs(int value) {
       validate(fields()[2], value);
       this.numSuccessfulTxs = value;
       fieldSetFlags()[2] = true;
@@ -421,7 +421,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * Number of successful transactions
       * @return This builder.
       */
-    public Builder clearNumSuccessfulTxs() {
+    public io.enkrypt.bolt.models.BlockStats.Builder clearNumSuccessfulTxs() {
       fieldSetFlags()[2] = false;
       return this;
     }
@@ -431,7 +431,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * Average gas price
       * @return The value.
       */
-    public Long getAvgGasPrice() {
+    public java.lang.Long getAvgGasPrice() {
       return avgGasPrice;
     }
 
@@ -441,7 +441,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * @param value The value of 'avgGasPrice'.
       * @return This builder.
       */
-    public Builder setAvgGasPrice(long value) {
+    public io.enkrypt.bolt.models.BlockStats.Builder setAvgGasPrice(long value) {
       validate(fields()[3], value);
       this.avgGasPrice = value;
       fieldSetFlags()[3] = true;
@@ -463,7 +463,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * Average gas price
       * @return This builder.
       */
-    public Builder clearAvgGasPrice() {
+    public io.enkrypt.bolt.models.BlockStats.Builder clearAvgGasPrice() {
       fieldSetFlags()[3] = false;
       return this;
     }
@@ -473,7 +473,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * Total gas price
       * @return The value.
       */
-    public Long getAvgTxsFees() {
+    public java.lang.Long getAvgTxsFees() {
       return avgTxsFees;
     }
 
@@ -483,7 +483,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * @param value The value of 'avgTxsFees'.
       * @return This builder.
       */
-    public Builder setAvgTxsFees(long value) {
+    public io.enkrypt.bolt.models.BlockStats.Builder setAvgTxsFees(long value) {
       validate(fields()[4], value);
       this.avgTxsFees = value;
       fieldSetFlags()[4] = true;
@@ -505,7 +505,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * Total gas price
       * @return This builder.
       */
-    public Builder clearAvgTxsFees() {
+    public io.enkrypt.bolt.models.BlockStats.Builder clearAvgTxsFees() {
       fieldSetFlags()[4] = false;
       return this;
     }
@@ -515,13 +515,13 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
     public BlockStats build() {
       try {
         BlockStats record = new BlockStats();
-        record.blockTimeMs = fieldSetFlags()[0] ? this.blockTimeMs : (Integer) defaultValue(fields()[0]);
-        record.numFailedTxs = fieldSetFlags()[1] ? this.numFailedTxs : (Integer) defaultValue(fields()[1]);
-        record.numSuccessfulTxs = fieldSetFlags()[2] ? this.numSuccessfulTxs : (Integer) defaultValue(fields()[2]);
-        record.avgGasPrice = fieldSetFlags()[3] ? this.avgGasPrice : (Long) defaultValue(fields()[3]);
-        record.avgTxsFees = fieldSetFlags()[4] ? this.avgTxsFees : (Long) defaultValue(fields()[4]);
+        record.blockTimeMs = fieldSetFlags()[0] ? this.blockTimeMs : (java.lang.Integer) defaultValue(fields()[0]);
+        record.numFailedTxs = fieldSetFlags()[1] ? this.numFailedTxs : (java.lang.Integer) defaultValue(fields()[1]);
+        record.numSuccessfulTxs = fieldSetFlags()[2] ? this.numSuccessfulTxs : (java.lang.Integer) defaultValue(fields()[2]);
+        record.avgGasPrice = fieldSetFlags()[3] ? this.avgGasPrice : (java.lang.Long) defaultValue(fields()[3]);
+        record.avgTxsFees = fieldSetFlags()[4] ? this.avgTxsFees : (java.lang.Long) defaultValue(fields()[4]);
         return record;
-      } catch (Exception e) {
+      } catch (java.lang.Exception e) {
         throw new org.apache.avro.AvroRuntimeException(e);
       }
     }

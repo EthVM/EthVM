@@ -13,8 +13,8 @@ import org.apache.avro.message.SchemaStore;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class Block extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 4836690963096465745L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Block\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"number\",\"type\":\"long\",\"doc\":\"The block number\"},{\"name\":\"hash\",\"type\":\"string\",\"doc\":\"Hash of the block\"},{\"name\":\"parentHash\",\"type\":\"string\",\"doc\":\"Hash of the parent block\"},{\"name\":\"isUncle\",\"type\":\"boolean\",\"doc\":\"Determines if the block is an uncle or not\"},{\"name\":\"isCanonical\",\"type\":\"boolean\",\"doc\":\"Determines if the block is canonical one or is a fork\"},{\"name\":\"timestamp\",\"type\":{\"type\":\"long\",\"logicalType\":\"timestamp-millis\"},\"doc\":\"Unix timestamp for when the block was collated\"},{\"name\":\"nonce\",\"type\":\"long\",\"doc\":\"Hash of the generated proof-of-work\"},{\"name\":\"mixDigest\",\"type\":\"string\",\"doc\":\"Block header mix digest\"},{\"name\":\"sha3Uncles\",\"type\":\"string\",\"doc\":\"SHA3 of the uncles data in the block\"},{\"name\":\"logsBloom\",\"type\":\"string\",\"doc\":\"Bloom filter for the logs of the block\"},{\"name\":\"stateRoot\",\"type\":\"string\",\"doc\":\"Root of the final state trie of the block\"},{\"name\":\"transactionsRoot\",\"type\":\"string\",\"doc\":\"Root of the final transactions trie of the block\"},{\"name\":\"miner\",\"type\":\"string\",\"doc\":\"The address of the beneficiary to whom the mining rewards were given\"},{\"name\":\"difficulty\",\"type\":\"long\",\"doc\":\"Current difficulty for this block\"},{\"name\":\"totalDifficulty\",\"type\":\"long\",\"doc\":\"Current total difficulty of the chain until this block\"},{\"name\":\"extraData\",\"type\":\"bytes\",\"doc\":\"The extra data field of this block\"},{\"name\":\"size\",\"type\":\"long\",\"doc\":\"Integer the size of this block in bytes\"},{\"name\":\"gasLimit\",\"type\":\"long\",\"doc\":\"The maximum gas allowed in this block\"},{\"name\":\"gasUsed\",\"type\":\"long\",\"doc\":\"The total used gas by all transactions in this block\"},{\"name\":\"txsFees\",\"type\":\"long\",\"doc\":\"Total transaction fees for this block\"},{\"name\":\"blockReward\",\"type\":\"long\",\"doc\":\"Total current block reward\"},{\"name\":\"uncleReward\",\"type\":\"long\",\"doc\":\"Total current uncle reward\"},{\"name\":\"stats\",\"type\":[\"null\",{\"type\":\"record\",\"name\":\"BlockStats\",\"fields\":[{\"name\":\"blockTimeMs\",\"type\":\"int\",\"doc\":\"Time taken to find the block in milliseconds\"},{\"name\":\"numFailedTxs\",\"type\":\"int\",\"doc\":\"Number of failed transactions\"},{\"name\":\"numSuccessfulTxs\",\"type\":\"int\",\"doc\":\"Number of successful transactions\"},{\"name\":\"avgGasPrice\",\"type\":\"long\",\"doc\":\"Average gas price\"},{\"name\":\"avgTxsFees\",\"type\":\"long\",\"doc\":\"Total gas price\"}]}]},{\"name\":\"transactions\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Transaction\",\"fields\":[{\"name\":\"hash\",\"type\":\"string\",\"doc\":\"Hash of the transaction\"},{\"name\":\"root\",\"type\":\"string\",\"doc\":\"Root of the parent block\"},{\"name\":\"index\",\"type\":\"int\",\"doc\":\"Integer of the transactions index position in the block\"},{\"name\":\"timestamp\",\"type\":{\"type\":\"long\",\"logicalType\":\"timestamp-millis\"},\"doc\":\"Unix timestamp for when the transaction was collated\"},{\"name\":\"nonce\",\"type\":\"long\",\"doc\":\"Number of transactions sent from a given address\"},{\"name\":\"nonceHash\",\"type\":\"string\",\"doc\":\"SHA3 of the transaction nonce\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"long\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":[\"null\",\"string\"],\"doc\":\"Address of the recipient (or null when contract creation)\"},{\"name\":\"toBalance\",\"type\":[\"null\",\"long\"],\"doc\":\"Balance of the receiver (or null when contract creation)\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"The data send along with the transaction\"},{\"name\":\"contractAddress\",\"type\":[\"null\",\"string\"],\"doc\":\"If a contract is created, the address of it (or null if is just a regular transaction)\"},{\"name\":\"value\",\"type\":\"long\",\"doc\":\"Amount of value transferred in Wei\"},{\"name\":\"gas\",\"type\":\"long\",\"doc\":\"Amount of gas provided by the sender\"},{\"name\":\"gasPrice\",\"type\":\"long\",\"doc\":\"Amount of gas price provided by the sender in Wei\"},{\"name\":\"gasUsed\",\"type\":\"long\",\"doc\":\"Amount of gas used consumed by the transaction\"},{\"name\":\"cumulativeGasUsed\",\"type\":\"long\",\"doc\":\"Cumulative gas used by the transaction\"},{\"name\":\"v\",\"type\":\"string\",\"doc\":\"Transaction signature v\"},{\"name\":\"r\",\"type\":\"string\",\"doc\":\"Transaction signature r\"},{\"name\":\"s\",\"type\":\"string\",\"doc\":\"Transaction signature s\"},{\"name\":\"status\",\"type\":\"long\",\"doc\":\"Transaction result status\"},{\"name\":\"logsBloom\",\"type\":\"bytes\",\"doc\":\"Generated and encoded logs by the transaction\"},{\"name\":\"logs\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Log\",\"fields\":[{\"name\":\"address\",\"type\":\"string\",\"desc\":\"Address of the contract that generated the event\"},{\"name\":\"topics\",\"type\":{\"type\":\"array\",\"items\":\"string\"},\"desc\":\"List of topics provided by the contract\"},{\"name\":\"data\",\"type\":\"bytes\",\"desc\":\"Supplied by the contract, usually ABI-encoded\"},{\"name\":\"index\",\"type\":\"int\",\"desc\":\"Index of the log in the receipt\"},{\"name\":\"removed\",\"type\":\"boolean\",\"desc\":\"True if this log was reverted due to a chain reorganisation\"}]}},\"doc\":\"\"},{\"name\":\"trace\",\"type\":{\"type\":\"record\",\"name\":\"Trace\",\"fields\":[{\"name\":\"isError\",\"type\":\"boolean\",\"desc\":\"Signals if an error happened during execution\"},{\"name\":\"msg\",\"type\":\"string\",\"desc\":\"Stores the error message\"},{\"name\":\"transfers\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Transfer\",\"fields\":[{\"name\":\"op\",\"type\":\"string\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"value\",\"type\":\"string\",\"doc\":\"Raw value of the transaction\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"string\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":\"string\",\"doc\":\"Address of the receiver\"},{\"name\":\"toBalance\",\"type\":\"string\",\"doc\":\"Balance of the receiver\"},{\"name\":\"input\",\"type\":\"string\",\"doc\":\"Raw input data\"}]}},\"desc\":\"An array describing transfers\"}]},\"doc\":\"Trace that describes contract creation, destruction or intenal transactions\"}]}},\"doc\":\"Array of transactions\"},{\"name\":\"uncles\",\"type\":{\"type\":\"array\",\"items\":\"string\"},\"doc\":\"Array of uncle hashes\"}]}");
+  private static final long serialVersionUID = 4703163660312736476L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Block\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"number\",\"type\":\"long\",\"doc\":\"The block number\"},{\"name\":\"hash\",\"type\":\"string\",\"doc\":\"Hash of the block\"},{\"name\":\"parentHash\",\"type\":\"string\",\"doc\":\"Hash of the parent block\"},{\"name\":\"uncle\",\"type\":\"boolean\",\"doc\":\"Determines if the block is an uncle or not\"},{\"name\":\"status\",\"type\":\"int\",\"doc\":\"Specifies the status of the block (could be CanonStatTy or SideStatTy)\"},{\"name\":\"timestamp\",\"type\":{\"type\":\"long\",\"logicalType\":\"timestamp-millis\"},\"doc\":\"Unix timestamp for when the block was collated\"},{\"name\":\"nonce\",\"type\":\"long\",\"doc\":\"Hash of the generated proof-of-work\"},{\"name\":\"mixDigest\",\"type\":\"string\",\"doc\":\"Block header mix digest\"},{\"name\":\"sha3Uncles\",\"type\":\"string\",\"doc\":\"SHA3 of the uncles data in the block\"},{\"name\":\"logsBloom\",\"type\":\"string\",\"doc\":\"Bloom filter for the logs of the block\"},{\"name\":\"stateRoot\",\"type\":\"string\",\"doc\":\"Root of the final state trie of the block\"},{\"name\":\"transactionsRoot\",\"type\":\"string\",\"doc\":\"Root of the final transactions trie of the block\"},{\"name\":\"miner\",\"type\":\"string\",\"doc\":\"The address of the beneficiary to whom the mining rewards were given\"},{\"name\":\"difficulty\",\"type\":\"long\",\"doc\":\"Current difficulty for this block\"},{\"name\":\"totalDifficulty\",\"type\":\"long\",\"doc\":\"Current total difficulty of the chain until this block\"},{\"name\":\"extraData\",\"type\":\"bytes\",\"doc\":\"The extra data field of this block\"},{\"name\":\"size\",\"type\":\"long\",\"doc\":\"Integer the size of this block in bytes\"},{\"name\":\"gasLimit\",\"type\":\"long\",\"doc\":\"The maximum gas allowed in this block\"},{\"name\":\"gasUsed\",\"type\":\"long\",\"doc\":\"The total used gas by all transactions in this block\"},{\"name\":\"txsFees\",\"type\":\"long\",\"doc\":\"Total transaction fees for this block\"},{\"name\":\"blockReward\",\"type\":\"long\",\"doc\":\"Total current block reward\"},{\"name\":\"uncleReward\",\"type\":\"long\",\"doc\":\"Total current uncle reward\"},{\"name\":\"stats\",\"type\":[\"null\",{\"type\":\"record\",\"name\":\"BlockStats\",\"fields\":[{\"name\":\"blockTimeMs\",\"type\":\"int\",\"doc\":\"Time taken to find the block in milliseconds\"},{\"name\":\"numFailedTxs\",\"type\":\"int\",\"doc\":\"Number of failed transactions\"},{\"name\":\"numSuccessfulTxs\",\"type\":\"int\",\"doc\":\"Number of successful transactions\"},{\"name\":\"avgGasPrice\",\"type\":\"long\",\"doc\":\"Average gas price\"},{\"name\":\"avgTxsFees\",\"type\":\"long\",\"doc\":\"Total gas price\"}]}]},{\"name\":\"transactions\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Transaction\",\"fields\":[{\"name\":\"hash\",\"type\":\"string\",\"doc\":\"Hash of the transaction\"},{\"name\":\"root\",\"type\":\"string\",\"doc\":\"Root of the parent block\"},{\"name\":\"index\",\"type\":\"int\",\"doc\":\"Integer of the transactions index position in the block\"},{\"name\":\"timestamp\",\"type\":{\"type\":\"long\",\"logicalType\":\"timestamp-millis\"},\"doc\":\"Unix timestamp for when the transaction was collated\"},{\"name\":\"nonce\",\"type\":\"long\",\"doc\":\"Number of transactions sent from a given address\"},{\"name\":\"nonceHash\",\"type\":\"string\",\"doc\":\"SHA3 of the transaction nonce\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"long\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":[\"null\",\"string\"],\"doc\":\"Address of the recipient (or null when contract creation)\"},{\"name\":\"toBalance\",\"type\":[\"null\",\"long\"],\"doc\":\"Balance of the receiver (or null when contract creation)\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"The data send along with the transaction\"},{\"name\":\"contractAddress\",\"type\":[\"null\",\"string\"],\"doc\":\"If a contract is created, the address of it (or null if is just a regular transaction)\"},{\"name\":\"value\",\"type\":\"long\",\"doc\":\"Amount of value transferred in Wei\"},{\"name\":\"gas\",\"type\":\"long\",\"doc\":\"Amount of gas provided by the sender\"},{\"name\":\"gasPrice\",\"type\":\"long\",\"doc\":\"Amount of gas price provided by the sender in Wei\"},{\"name\":\"gasUsed\",\"type\":\"long\",\"doc\":\"Amount of gas used consumed by the transaction\"},{\"name\":\"cumulativeGasUsed\",\"type\":\"long\",\"doc\":\"Cumulative gas used by the transaction\"},{\"name\":\"v\",\"type\":\"string\",\"doc\":\"Transaction signature v\"},{\"name\":\"r\",\"type\":\"string\",\"doc\":\"Transaction signature r\"},{\"name\":\"s\",\"type\":\"string\",\"doc\":\"Transaction signature s\"},{\"name\":\"status\",\"type\":\"long\",\"doc\":\"Transaction result status\"},{\"name\":\"logsBloom\",\"type\":\"bytes\",\"doc\":\"Generated and encoded logs by the transaction\"},{\"name\":\"logs\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Log\",\"fields\":[{\"name\":\"address\",\"type\":\"string\",\"desc\":\"Address of the contract that generated the event\"},{\"name\":\"topics\",\"type\":{\"type\":\"array\",\"items\":\"string\"},\"desc\":\"List of topics provided by the contract\"},{\"name\":\"data\",\"type\":\"bytes\",\"desc\":\"Supplied by the contract, usually ABI-encoded\"},{\"name\":\"index\",\"type\":\"int\",\"desc\":\"Index of the log in the receipt\"},{\"name\":\"removed\",\"type\":\"boolean\",\"desc\":\"True if this log was reverted due to a chain reorganisation\"}]}},\"doc\":\"Logs produced by executing smart contracts\"},{\"name\":\"trace\",\"type\":{\"type\":\"record\",\"name\":\"Trace\",\"fields\":[{\"name\":\"isError\",\"type\":\"boolean\",\"desc\":\"Signals if an error happened during execution\"},{\"name\":\"msg\",\"type\":\"string\",\"desc\":\"Stores the error message\"},{\"name\":\"transfers\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Transfer\",\"fields\":[{\"name\":\"op\",\"type\":\"string\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"value\",\"type\":\"string\",\"doc\":\"Raw value of the transaction\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"string\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":\"string\",\"doc\":\"Address of the receiver\"},{\"name\":\"toBalance\",\"type\":\"string\",\"doc\":\"Balance of the receiver\"},{\"name\":\"input\",\"type\":\"string\",\"doc\":\"Raw input data\"}]}},\"desc\":\"An array describing transfers\"}]},\"doc\":\"Trace that describes contract creation, destruction or intenal transactions\"}]}},\"doc\":\"Array of transactions\"},{\"name\":\"uncles\",\"type\":{\"type\":\"array\",\"items\":\"string\"},\"doc\":\"Array of uncle hashes\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -54,29 +54,29 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
   /** The block number */
   @Deprecated public long number;
   /** Hash of the block */
-  @Deprecated public CharSequence hash;
+  @Deprecated public java.lang.CharSequence hash;
   /** Hash of the parent block */
-  @Deprecated public CharSequence parentHash;
+  @Deprecated public java.lang.CharSequence parentHash;
   /** Determines if the block is an uncle or not */
-  @Deprecated public boolean isUncle;
-  /** Determines if the block is canonical one or is a fork */
-  @Deprecated public boolean isCanonical;
+  @Deprecated public boolean uncle;
+  /** Specifies the status of the block (could be CanonStatTy or SideStatTy) */
+  @Deprecated public int status;
   /** Unix timestamp for when the block was collated */
   @Deprecated public org.joda.time.DateTime timestamp;
   /** Hash of the generated proof-of-work */
   @Deprecated public long nonce;
   /** Block header mix digest */
-  @Deprecated public CharSequence mixDigest;
+  @Deprecated public java.lang.CharSequence mixDigest;
   /** SHA3 of the uncles data in the block */
-  @Deprecated public CharSequence sha3Uncles;
+  @Deprecated public java.lang.CharSequence sha3Uncles;
   /** Bloom filter for the logs of the block */
-  @Deprecated public CharSequence logsBloom;
+  @Deprecated public java.lang.CharSequence logsBloom;
   /** Root of the final state trie of the block */
-  @Deprecated public CharSequence stateRoot;
+  @Deprecated public java.lang.CharSequence stateRoot;
   /** Root of the final transactions trie of the block */
-  @Deprecated public CharSequence transactionsRoot;
+  @Deprecated public java.lang.CharSequence transactionsRoot;
   /** The address of the beneficiary to whom the mining rewards were given */
-  @Deprecated public CharSequence miner;
+  @Deprecated public java.lang.CharSequence miner;
   /** Current difficulty for this block */
   @Deprecated public long difficulty;
   /** Current total difficulty of the chain until this block */
@@ -95,11 +95,11 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
   @Deprecated public long blockReward;
   /** Total current uncle reward */
   @Deprecated public long uncleReward;
-  @Deprecated public BlockStats stats;
+  @Deprecated public io.enkrypt.bolt.models.BlockStats stats;
   /** Array of transactions */
-  @Deprecated public java.util.List<Transaction> transactions;
+  @Deprecated public java.util.List<io.enkrypt.bolt.models.Transaction> transactions;
   /** Array of uncle hashes */
-  @Deprecated public java.util.List<CharSequence> uncles;
+  @Deprecated public java.util.List<java.lang.CharSequence> uncles;
 
   /**
    * Default constructor.  Note that this does not initialize fields
@@ -113,8 +113,8 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * @param number The block number
    * @param hash Hash of the block
    * @param parentHash Hash of the parent block
-   * @param isUncle Determines if the block is an uncle or not
-   * @param isCanonical Determines if the block is canonical one or is a fork
+   * @param uncle Determines if the block is an uncle or not
+   * @param status Specifies the status of the block (could be CanonStatTy or SideStatTy)
    * @param timestamp Unix timestamp for when the block was collated
    * @param nonce Hash of the generated proof-of-work
    * @param mixDigest Block header mix digest
@@ -136,12 +136,12 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * @param transactions Array of transactions
    * @param uncles Array of uncle hashes
    */
-  public Block(Long number, CharSequence hash, CharSequence parentHash, Boolean isUncle, Boolean isCanonical, org.joda.time.DateTime timestamp, Long nonce, CharSequence mixDigest, CharSequence sha3Uncles, CharSequence logsBloom, CharSequence stateRoot, CharSequence transactionsRoot, CharSequence miner, Long difficulty, Long totalDifficulty, java.nio.ByteBuffer extraData, Long size, Long gasLimit, Long gasUsed, Long txsFees, Long blockReward, Long uncleReward, BlockStats stats, java.util.List<Transaction> transactions, java.util.List<CharSequence> uncles) {
+  public Block(java.lang.Long number, java.lang.CharSequence hash, java.lang.CharSequence parentHash, java.lang.Boolean uncle, java.lang.Integer status, org.joda.time.DateTime timestamp, java.lang.Long nonce, java.lang.CharSequence mixDigest, java.lang.CharSequence sha3Uncles, java.lang.CharSequence logsBloom, java.lang.CharSequence stateRoot, java.lang.CharSequence transactionsRoot, java.lang.CharSequence miner, java.lang.Long difficulty, java.lang.Long totalDifficulty, java.nio.ByteBuffer extraData, java.lang.Long size, java.lang.Long gasLimit, java.lang.Long gasUsed, java.lang.Long txsFees, java.lang.Long blockReward, java.lang.Long uncleReward, io.enkrypt.bolt.models.BlockStats stats, java.util.List<io.enkrypt.bolt.models.Transaction> transactions, java.util.List<java.lang.CharSequence> uncles) {
     this.number = number;
     this.hash = hash;
     this.parentHash = parentHash;
-    this.isUncle = isUncle;
-    this.isCanonical = isCanonical;
+    this.uncle = uncle;
+    this.status = status;
     this.timestamp = timestamp;
     this.nonce = nonce;
     this.mixDigest = mixDigest;
@@ -166,13 +166,13 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
 
   public org.apache.avro.Schema getSchema() { return SCHEMA$; }
   // Used by DatumWriter.  Applications should not call.
-  public Object get(int field$) {
+  public java.lang.Object get(int field$) {
     switch (field$) {
     case 0: return number;
     case 1: return hash;
     case 2: return parentHash;
-    case 3: return isUncle;
-    case 4: return isCanonical;
+    case 3: return uncle;
+    case 4: return status;
     case 5: return timestamp;
     case 6: return nonce;
     case 7: return mixDigest;
@@ -239,33 +239,33 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
 
   // Used by DatumReader.  Applications should not call.
   @SuppressWarnings(value="unchecked")
-  public void put(int field$, Object value$) {
+  public void put(int field$, java.lang.Object value$) {
     switch (field$) {
-    case 0: number = (Long)value$; break;
-    case 1: hash = (CharSequence)value$; break;
-    case 2: parentHash = (CharSequence)value$; break;
-    case 3: isUncle = (Boolean)value$; break;
-    case 4: isCanonical = (Boolean)value$; break;
+    case 0: number = (java.lang.Long)value$; break;
+    case 1: hash = (java.lang.CharSequence)value$; break;
+    case 2: parentHash = (java.lang.CharSequence)value$; break;
+    case 3: uncle = (java.lang.Boolean)value$; break;
+    case 4: status = (java.lang.Integer)value$; break;
     case 5: timestamp = (org.joda.time.DateTime)value$; break;
-    case 6: nonce = (Long)value$; break;
-    case 7: mixDigest = (CharSequence)value$; break;
-    case 8: sha3Uncles = (CharSequence)value$; break;
-    case 9: logsBloom = (CharSequence)value$; break;
-    case 10: stateRoot = (CharSequence)value$; break;
-    case 11: transactionsRoot = (CharSequence)value$; break;
-    case 12: miner = (CharSequence)value$; break;
-    case 13: difficulty = (Long)value$; break;
-    case 14: totalDifficulty = (Long)value$; break;
+    case 6: nonce = (java.lang.Long)value$; break;
+    case 7: mixDigest = (java.lang.CharSequence)value$; break;
+    case 8: sha3Uncles = (java.lang.CharSequence)value$; break;
+    case 9: logsBloom = (java.lang.CharSequence)value$; break;
+    case 10: stateRoot = (java.lang.CharSequence)value$; break;
+    case 11: transactionsRoot = (java.lang.CharSequence)value$; break;
+    case 12: miner = (java.lang.CharSequence)value$; break;
+    case 13: difficulty = (java.lang.Long)value$; break;
+    case 14: totalDifficulty = (java.lang.Long)value$; break;
     case 15: extraData = (java.nio.ByteBuffer)value$; break;
-    case 16: size = (Long)value$; break;
-    case 17: gasLimit = (Long)value$; break;
-    case 18: gasUsed = (Long)value$; break;
-    case 19: txsFees = (Long)value$; break;
-    case 20: blockReward = (Long)value$; break;
-    case 21: uncleReward = (Long)value$; break;
-    case 22: stats = (BlockStats)value$; break;
-    case 23: transactions = (java.util.List<Transaction>)value$; break;
-    case 24: uncles = (java.util.List<CharSequence>)value$; break;
+    case 16: size = (java.lang.Long)value$; break;
+    case 17: gasLimit = (java.lang.Long)value$; break;
+    case 18: gasUsed = (java.lang.Long)value$; break;
+    case 19: txsFees = (java.lang.Long)value$; break;
+    case 20: blockReward = (java.lang.Long)value$; break;
+    case 21: uncleReward = (java.lang.Long)value$; break;
+    case 22: stats = (io.enkrypt.bolt.models.BlockStats)value$; break;
+    case 23: transactions = (java.util.List<io.enkrypt.bolt.models.Transaction>)value$; break;
+    case 24: uncles = (java.util.List<java.lang.CharSequence>)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -274,7 +274,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Gets the value of the 'number' field.
    * @return The block number
    */
-  public Long getNumber() {
+  public java.lang.Long getNumber() {
     return number;
   }
 
@@ -283,7 +283,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * The block number
    * @param value the value to set.
    */
-  public void setNumber(Long value) {
+  public void setNumber(java.lang.Long value) {
     this.number = value;
   }
 
@@ -291,7 +291,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Gets the value of the 'hash' field.
    * @return Hash of the block
    */
-  public CharSequence getHash() {
+  public java.lang.CharSequence getHash() {
     return hash;
   }
 
@@ -300,7 +300,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Hash of the block
    * @param value the value to set.
    */
-  public void setHash(CharSequence value) {
+  public void setHash(java.lang.CharSequence value) {
     this.hash = value;
   }
 
@@ -308,7 +308,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Gets the value of the 'parentHash' field.
    * @return Hash of the parent block
    */
-  public CharSequence getParentHash() {
+  public java.lang.CharSequence getParentHash() {
     return parentHash;
   }
 
@@ -317,42 +317,42 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Hash of the parent block
    * @param value the value to set.
    */
-  public void setParentHash(CharSequence value) {
+  public void setParentHash(java.lang.CharSequence value) {
     this.parentHash = value;
   }
 
   /**
-   * Gets the value of the 'isUncle' field.
+   * Gets the value of the 'uncle' field.
    * @return Determines if the block is an uncle or not
    */
-  public Boolean getIsUncle() {
-    return isUncle;
+  public java.lang.Boolean getUncle() {
+    return uncle;
   }
 
   /**
-   * Sets the value of the 'isUncle' field.
+   * Sets the value of the 'uncle' field.
    * Determines if the block is an uncle or not
    * @param value the value to set.
    */
-  public void setIsUncle(Boolean value) {
-    this.isUncle = value;
+  public void setUncle(java.lang.Boolean value) {
+    this.uncle = value;
   }
 
   /**
-   * Gets the value of the 'isCanonical' field.
-   * @return Determines if the block is canonical one or is a fork
+   * Gets the value of the 'status' field.
+   * @return Specifies the status of the block (could be CanonStatTy or SideStatTy)
    */
-  public Boolean getIsCanonical() {
-    return isCanonical;
+  public java.lang.Integer getStatus() {
+    return status;
   }
 
   /**
-   * Sets the value of the 'isCanonical' field.
-   * Determines if the block is canonical one or is a fork
+   * Sets the value of the 'status' field.
+   * Specifies the status of the block (could be CanonStatTy or SideStatTy)
    * @param value the value to set.
    */
-  public void setIsCanonical(Boolean value) {
-    this.isCanonical = value;
+  public void setStatus(java.lang.Integer value) {
+    this.status = value;
   }
 
   /**
@@ -376,7 +376,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Gets the value of the 'nonce' field.
    * @return Hash of the generated proof-of-work
    */
-  public Long getNonce() {
+  public java.lang.Long getNonce() {
     return nonce;
   }
 
@@ -385,7 +385,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Hash of the generated proof-of-work
    * @param value the value to set.
    */
-  public void setNonce(Long value) {
+  public void setNonce(java.lang.Long value) {
     this.nonce = value;
   }
 
@@ -393,7 +393,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Gets the value of the 'mixDigest' field.
    * @return Block header mix digest
    */
-  public CharSequence getMixDigest() {
+  public java.lang.CharSequence getMixDigest() {
     return mixDigest;
   }
 
@@ -402,7 +402,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Block header mix digest
    * @param value the value to set.
    */
-  public void setMixDigest(CharSequence value) {
+  public void setMixDigest(java.lang.CharSequence value) {
     this.mixDigest = value;
   }
 
@@ -410,7 +410,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Gets the value of the 'sha3Uncles' field.
    * @return SHA3 of the uncles data in the block
    */
-  public CharSequence getSha3Uncles() {
+  public java.lang.CharSequence getSha3Uncles() {
     return sha3Uncles;
   }
 
@@ -419,7 +419,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * SHA3 of the uncles data in the block
    * @param value the value to set.
    */
-  public void setSha3Uncles(CharSequence value) {
+  public void setSha3Uncles(java.lang.CharSequence value) {
     this.sha3Uncles = value;
   }
 
@@ -427,7 +427,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Gets the value of the 'logsBloom' field.
    * @return Bloom filter for the logs of the block
    */
-  public CharSequence getLogsBloom() {
+  public java.lang.CharSequence getLogsBloom() {
     return logsBloom;
   }
 
@@ -436,7 +436,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Bloom filter for the logs of the block
    * @param value the value to set.
    */
-  public void setLogsBloom(CharSequence value) {
+  public void setLogsBloom(java.lang.CharSequence value) {
     this.logsBloom = value;
   }
 
@@ -444,7 +444,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Gets the value of the 'stateRoot' field.
    * @return Root of the final state trie of the block
    */
-  public CharSequence getStateRoot() {
+  public java.lang.CharSequence getStateRoot() {
     return stateRoot;
   }
 
@@ -453,7 +453,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Root of the final state trie of the block
    * @param value the value to set.
    */
-  public void setStateRoot(CharSequence value) {
+  public void setStateRoot(java.lang.CharSequence value) {
     this.stateRoot = value;
   }
 
@@ -461,7 +461,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Gets the value of the 'transactionsRoot' field.
    * @return Root of the final transactions trie of the block
    */
-  public CharSequence getTransactionsRoot() {
+  public java.lang.CharSequence getTransactionsRoot() {
     return transactionsRoot;
   }
 
@@ -470,7 +470,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Root of the final transactions trie of the block
    * @param value the value to set.
    */
-  public void setTransactionsRoot(CharSequence value) {
+  public void setTransactionsRoot(java.lang.CharSequence value) {
     this.transactionsRoot = value;
   }
 
@@ -478,7 +478,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Gets the value of the 'miner' field.
    * @return The address of the beneficiary to whom the mining rewards were given
    */
-  public CharSequence getMiner() {
+  public java.lang.CharSequence getMiner() {
     return miner;
   }
 
@@ -487,7 +487,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * The address of the beneficiary to whom the mining rewards were given
    * @param value the value to set.
    */
-  public void setMiner(CharSequence value) {
+  public void setMiner(java.lang.CharSequence value) {
     this.miner = value;
   }
 
@@ -495,7 +495,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Gets the value of the 'difficulty' field.
    * @return Current difficulty for this block
    */
-  public Long getDifficulty() {
+  public java.lang.Long getDifficulty() {
     return difficulty;
   }
 
@@ -504,7 +504,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Current difficulty for this block
    * @param value the value to set.
    */
-  public void setDifficulty(Long value) {
+  public void setDifficulty(java.lang.Long value) {
     this.difficulty = value;
   }
 
@@ -512,7 +512,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Gets the value of the 'totalDifficulty' field.
    * @return Current total difficulty of the chain until this block
    */
-  public Long getTotalDifficulty() {
+  public java.lang.Long getTotalDifficulty() {
     return totalDifficulty;
   }
 
@@ -521,7 +521,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Current total difficulty of the chain until this block
    * @param value the value to set.
    */
-  public void setTotalDifficulty(Long value) {
+  public void setTotalDifficulty(java.lang.Long value) {
     this.totalDifficulty = value;
   }
 
@@ -546,7 +546,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Gets the value of the 'size' field.
    * @return Integer the size of this block in bytes
    */
-  public Long getSize() {
+  public java.lang.Long getSize() {
     return size;
   }
 
@@ -555,7 +555,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Integer the size of this block in bytes
    * @param value the value to set.
    */
-  public void setSize(Long value) {
+  public void setSize(java.lang.Long value) {
     this.size = value;
   }
 
@@ -563,7 +563,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Gets the value of the 'gasLimit' field.
    * @return The maximum gas allowed in this block
    */
-  public Long getGasLimit() {
+  public java.lang.Long getGasLimit() {
     return gasLimit;
   }
 
@@ -572,7 +572,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * The maximum gas allowed in this block
    * @param value the value to set.
    */
-  public void setGasLimit(Long value) {
+  public void setGasLimit(java.lang.Long value) {
     this.gasLimit = value;
   }
 
@@ -580,7 +580,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Gets the value of the 'gasUsed' field.
    * @return The total used gas by all transactions in this block
    */
-  public Long getGasUsed() {
+  public java.lang.Long getGasUsed() {
     return gasUsed;
   }
 
@@ -589,7 +589,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * The total used gas by all transactions in this block
    * @param value the value to set.
    */
-  public void setGasUsed(Long value) {
+  public void setGasUsed(java.lang.Long value) {
     this.gasUsed = value;
   }
 
@@ -597,7 +597,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Gets the value of the 'txsFees' field.
    * @return Total transaction fees for this block
    */
-  public Long getTxsFees() {
+  public java.lang.Long getTxsFees() {
     return txsFees;
   }
 
@@ -606,7 +606,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Total transaction fees for this block
    * @param value the value to set.
    */
-  public void setTxsFees(Long value) {
+  public void setTxsFees(java.lang.Long value) {
     this.txsFees = value;
   }
 
@@ -614,7 +614,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Gets the value of the 'blockReward' field.
    * @return Total current block reward
    */
-  public Long getBlockReward() {
+  public java.lang.Long getBlockReward() {
     return blockReward;
   }
 
@@ -623,7 +623,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Total current block reward
    * @param value the value to set.
    */
-  public void setBlockReward(Long value) {
+  public void setBlockReward(java.lang.Long value) {
     this.blockReward = value;
   }
 
@@ -631,7 +631,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Gets the value of the 'uncleReward' field.
    * @return Total current uncle reward
    */
-  public Long getUncleReward() {
+  public java.lang.Long getUncleReward() {
     return uncleReward;
   }
 
@@ -640,7 +640,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Total current uncle reward
    * @param value the value to set.
    */
-  public void setUncleReward(Long value) {
+  public void setUncleReward(java.lang.Long value) {
     this.uncleReward = value;
   }
 
@@ -648,7 +648,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Gets the value of the 'stats' field.
    * @return The value of the 'stats' field.
    */
-  public BlockStats getStats() {
+  public io.enkrypt.bolt.models.BlockStats getStats() {
     return stats;
   }
 
@@ -656,7 +656,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Sets the value of the 'stats' field.
    * @param value the value to set.
    */
-  public void setStats(BlockStats value) {
+  public void setStats(io.enkrypt.bolt.models.BlockStats value) {
     this.stats = value;
   }
 
@@ -664,7 +664,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Gets the value of the 'transactions' field.
    * @return Array of transactions
    */
-  public java.util.List<Transaction> getTransactions() {
+  public java.util.List<io.enkrypt.bolt.models.Transaction> getTransactions() {
     return transactions;
   }
 
@@ -673,7 +673,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Array of transactions
    * @param value the value to set.
    */
-  public void setTransactions(java.util.List<Transaction> value) {
+  public void setTransactions(java.util.List<io.enkrypt.bolt.models.Transaction> value) {
     this.transactions = value;
   }
 
@@ -681,7 +681,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Gets the value of the 'uncles' field.
    * @return Array of uncle hashes
    */
-  public java.util.List<CharSequence> getUncles() {
+  public java.util.List<java.lang.CharSequence> getUncles() {
     return uncles;
   }
 
@@ -690,7 +690,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Array of uncle hashes
    * @param value the value to set.
    */
-  public void setUncles(java.util.List<CharSequence> value) {
+  public void setUncles(java.util.List<java.lang.CharSequence> value) {
     this.uncles = value;
   }
 
@@ -698,8 +698,8 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * Creates a new Block RecordBuilder.
    * @return A new Block RecordBuilder
    */
-  public static Builder newBuilder() {
-    return new Builder();
+  public static io.enkrypt.bolt.models.Block.Builder newBuilder() {
+    return new io.enkrypt.bolt.models.Block.Builder();
   }
 
   /**
@@ -707,8 +707,8 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * @param other The existing builder to copy.
    * @return A new Block RecordBuilder
    */
-  public static Builder newBuilder(Builder other) {
-    return new Builder(other);
+  public static io.enkrypt.bolt.models.Block.Builder newBuilder(io.enkrypt.bolt.models.Block.Builder other) {
+    return new io.enkrypt.bolt.models.Block.Builder(other);
   }
 
   /**
@@ -716,8 +716,8 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * @param other The existing instance to copy.
    * @return A new Block RecordBuilder
    */
-  public static Builder newBuilder(Block other) {
-    return new Builder(other);
+  public static io.enkrypt.bolt.models.Block.Builder newBuilder(io.enkrypt.bolt.models.Block other) {
+    return new io.enkrypt.bolt.models.Block.Builder(other);
   }
 
   /**
@@ -729,29 +729,29 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
     /** The block number */
     private long number;
     /** Hash of the block */
-    private CharSequence hash;
+    private java.lang.CharSequence hash;
     /** Hash of the parent block */
-    private CharSequence parentHash;
+    private java.lang.CharSequence parentHash;
     /** Determines if the block is an uncle or not */
-    private boolean isUncle;
-    /** Determines if the block is canonical one or is a fork */
-    private boolean isCanonical;
+    private boolean uncle;
+    /** Specifies the status of the block (could be CanonStatTy or SideStatTy) */
+    private int status;
     /** Unix timestamp for when the block was collated */
     private org.joda.time.DateTime timestamp;
     /** Hash of the generated proof-of-work */
     private long nonce;
     /** Block header mix digest */
-    private CharSequence mixDigest;
+    private java.lang.CharSequence mixDigest;
     /** SHA3 of the uncles data in the block */
-    private CharSequence sha3Uncles;
+    private java.lang.CharSequence sha3Uncles;
     /** Bloom filter for the logs of the block */
-    private CharSequence logsBloom;
+    private java.lang.CharSequence logsBloom;
     /** Root of the final state trie of the block */
-    private CharSequence stateRoot;
+    private java.lang.CharSequence stateRoot;
     /** Root of the final transactions trie of the block */
-    private CharSequence transactionsRoot;
+    private java.lang.CharSequence transactionsRoot;
     /** The address of the beneficiary to whom the mining rewards were given */
-    private CharSequence miner;
+    private java.lang.CharSequence miner;
     /** Current difficulty for this block */
     private long difficulty;
     /** Current total difficulty of the chain until this block */
@@ -770,12 +770,12 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
     private long blockReward;
     /** Total current uncle reward */
     private long uncleReward;
-    private BlockStats stats;
-    private BlockStats.Builder statsBuilder;
+    private io.enkrypt.bolt.models.BlockStats stats;
+    private io.enkrypt.bolt.models.BlockStats.Builder statsBuilder;
     /** Array of transactions */
-    private java.util.List<Transaction> transactions;
+    private java.util.List<io.enkrypt.bolt.models.Transaction> transactions;
     /** Array of uncle hashes */
-    private java.util.List<CharSequence> uncles;
+    private java.util.List<java.lang.CharSequence> uncles;
 
     /** Creates a new Builder */
     private Builder() {
@@ -786,7 +786,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
      * Creates a Builder by copying an existing Builder.
      * @param other The existing Builder to copy.
      */
-    private Builder(Builder other) {
+    private Builder(io.enkrypt.bolt.models.Block.Builder other) {
       super(other);
       if (isValidValue(fields()[0], other.number)) {
         this.number = data().deepCopy(fields()[0].schema(), other.number);
@@ -800,12 +800,12 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
         this.parentHash = data().deepCopy(fields()[2].schema(), other.parentHash);
         fieldSetFlags()[2] = true;
       }
-      if (isValidValue(fields()[3], other.isUncle)) {
-        this.isUncle = data().deepCopy(fields()[3].schema(), other.isUncle);
+      if (isValidValue(fields()[3], other.uncle)) {
+        this.uncle = data().deepCopy(fields()[3].schema(), other.uncle);
         fieldSetFlags()[3] = true;
       }
-      if (isValidValue(fields()[4], other.isCanonical)) {
-        this.isCanonical = data().deepCopy(fields()[4].schema(), other.isCanonical);
+      if (isValidValue(fields()[4], other.status)) {
+        this.status = data().deepCopy(fields()[4].schema(), other.status);
         fieldSetFlags()[4] = true;
       }
       if (isValidValue(fields()[5], other.timestamp)) {
@@ -881,7 +881,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
         fieldSetFlags()[22] = true;
       }
       if (other.hasStatsBuilder()) {
-        this.statsBuilder = BlockStats.newBuilder(other.getStatsBuilder());
+        this.statsBuilder = io.enkrypt.bolt.models.BlockStats.newBuilder(other.getStatsBuilder());
       }
       if (isValidValue(fields()[23], other.transactions)) {
         this.transactions = data().deepCopy(fields()[23].schema(), other.transactions);
@@ -897,7 +897,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
      * Creates a Builder by copying an existing Block instance
      * @param other The existing instance to copy.
      */
-    private Builder(Block other) {
+    private Builder(io.enkrypt.bolt.models.Block other) {
             super(SCHEMA$);
       if (isValidValue(fields()[0], other.number)) {
         this.number = data().deepCopy(fields()[0].schema(), other.number);
@@ -911,12 +911,12 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
         this.parentHash = data().deepCopy(fields()[2].schema(), other.parentHash);
         fieldSetFlags()[2] = true;
       }
-      if (isValidValue(fields()[3], other.isUncle)) {
-        this.isUncle = data().deepCopy(fields()[3].schema(), other.isUncle);
+      if (isValidValue(fields()[3], other.uncle)) {
+        this.uncle = data().deepCopy(fields()[3].schema(), other.uncle);
         fieldSetFlags()[3] = true;
       }
-      if (isValidValue(fields()[4], other.isCanonical)) {
-        this.isCanonical = data().deepCopy(fields()[4].schema(), other.isCanonical);
+      if (isValidValue(fields()[4], other.status)) {
+        this.status = data().deepCopy(fields()[4].schema(), other.status);
         fieldSetFlags()[4] = true;
       }
       if (isValidValue(fields()[5], other.timestamp)) {
@@ -1007,7 +1007,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * The block number
       * @return The value.
       */
-    public Long getNumber() {
+    public java.lang.Long getNumber() {
       return number;
     }
 
@@ -1017,7 +1017,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * @param value The value of 'number'.
       * @return This builder.
       */
-    public Builder setNumber(long value) {
+    public io.enkrypt.bolt.models.Block.Builder setNumber(long value) {
       validate(fields()[0], value);
       this.number = value;
       fieldSetFlags()[0] = true;
@@ -1039,7 +1039,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * The block number
       * @return This builder.
       */
-    public Builder clearNumber() {
+    public io.enkrypt.bolt.models.Block.Builder clearNumber() {
       fieldSetFlags()[0] = false;
       return this;
     }
@@ -1049,7 +1049,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Hash of the block
       * @return The value.
       */
-    public CharSequence getHash() {
+    public java.lang.CharSequence getHash() {
       return hash;
     }
 
@@ -1059,7 +1059,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * @param value The value of 'hash'.
       * @return This builder.
       */
-    public Builder setHash(CharSequence value) {
+    public io.enkrypt.bolt.models.Block.Builder setHash(java.lang.CharSequence value) {
       validate(fields()[1], value);
       this.hash = value;
       fieldSetFlags()[1] = true;
@@ -1081,7 +1081,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Hash of the block
       * @return This builder.
       */
-    public Builder clearHash() {
+    public io.enkrypt.bolt.models.Block.Builder clearHash() {
       hash = null;
       fieldSetFlags()[1] = false;
       return this;
@@ -1092,7 +1092,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Hash of the parent block
       * @return The value.
       */
-    public CharSequence getParentHash() {
+    public java.lang.CharSequence getParentHash() {
       return parentHash;
     }
 
@@ -1102,7 +1102,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * @param value The value of 'parentHash'.
       * @return This builder.
       */
-    public Builder setParentHash(CharSequence value) {
+    public io.enkrypt.bolt.models.Block.Builder setParentHash(java.lang.CharSequence value) {
       validate(fields()[2], value);
       this.parentHash = value;
       fieldSetFlags()[2] = true;
@@ -1124,92 +1124,92 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Hash of the parent block
       * @return This builder.
       */
-    public Builder clearParentHash() {
+    public io.enkrypt.bolt.models.Block.Builder clearParentHash() {
       parentHash = null;
       fieldSetFlags()[2] = false;
       return this;
     }
 
     /**
-      * Gets the value of the 'isUncle' field.
+      * Gets the value of the 'uncle' field.
       * Determines if the block is an uncle or not
       * @return The value.
       */
-    public Boolean getIsUncle() {
-      return isUncle;
+    public java.lang.Boolean getUncle() {
+      return uncle;
     }
 
     /**
-      * Sets the value of the 'isUncle' field.
+      * Sets the value of the 'uncle' field.
       * Determines if the block is an uncle or not
-      * @param value The value of 'isUncle'.
+      * @param value The value of 'uncle'.
       * @return This builder.
       */
-    public Builder setIsUncle(boolean value) {
+    public io.enkrypt.bolt.models.Block.Builder setUncle(boolean value) {
       validate(fields()[3], value);
-      this.isUncle = value;
+      this.uncle = value;
       fieldSetFlags()[3] = true;
       return this;
     }
 
     /**
-      * Checks whether the 'isUncle' field has been set.
+      * Checks whether the 'uncle' field has been set.
       * Determines if the block is an uncle or not
-      * @return True if the 'isUncle' field has been set, false otherwise.
+      * @return True if the 'uncle' field has been set, false otherwise.
       */
-    public boolean hasIsUncle() {
+    public boolean hasUncle() {
       return fieldSetFlags()[3];
     }
 
 
     /**
-      * Clears the value of the 'isUncle' field.
+      * Clears the value of the 'uncle' field.
       * Determines if the block is an uncle or not
       * @return This builder.
       */
-    public Builder clearIsUncle() {
+    public io.enkrypt.bolt.models.Block.Builder clearUncle() {
       fieldSetFlags()[3] = false;
       return this;
     }
 
     /**
-      * Gets the value of the 'isCanonical' field.
-      * Determines if the block is canonical one or is a fork
+      * Gets the value of the 'status' field.
+      * Specifies the status of the block (could be CanonStatTy or SideStatTy)
       * @return The value.
       */
-    public Boolean getIsCanonical() {
-      return isCanonical;
+    public java.lang.Integer getStatus() {
+      return status;
     }
 
     /**
-      * Sets the value of the 'isCanonical' field.
-      * Determines if the block is canonical one or is a fork
-      * @param value The value of 'isCanonical'.
+      * Sets the value of the 'status' field.
+      * Specifies the status of the block (could be CanonStatTy or SideStatTy)
+      * @param value The value of 'status'.
       * @return This builder.
       */
-    public Builder setIsCanonical(boolean value) {
+    public io.enkrypt.bolt.models.Block.Builder setStatus(int value) {
       validate(fields()[4], value);
-      this.isCanonical = value;
+      this.status = value;
       fieldSetFlags()[4] = true;
       return this;
     }
 
     /**
-      * Checks whether the 'isCanonical' field has been set.
-      * Determines if the block is canonical one or is a fork
-      * @return True if the 'isCanonical' field has been set, false otherwise.
+      * Checks whether the 'status' field has been set.
+      * Specifies the status of the block (could be CanonStatTy or SideStatTy)
+      * @return True if the 'status' field has been set, false otherwise.
       */
-    public boolean hasIsCanonical() {
+    public boolean hasStatus() {
       return fieldSetFlags()[4];
     }
 
 
     /**
-      * Clears the value of the 'isCanonical' field.
-      * Determines if the block is canonical one or is a fork
+      * Clears the value of the 'status' field.
+      * Specifies the status of the block (could be CanonStatTy or SideStatTy)
       * @return This builder.
       */
-    public Builder clearIsCanonical() {
+    public io.enkrypt.bolt.models.Block.Builder clearStatus() {
       fieldSetFlags()[4] = false;
       return this;
     }
@@ -1229,7 +1229,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * @param value The value of 'timestamp'.
       * @return This builder.
       */
-    public Builder setTimestamp(org.joda.time.DateTime value) {
+    public io.enkrypt.bolt.models.Block.Builder setTimestamp(org.joda.time.DateTime value) {
       validate(fields()[5], value);
       this.timestamp = value;
       fieldSetFlags()[5] = true;
@@ -1251,7 +1251,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Unix timestamp for when the block was collated
       * @return This builder.
       */
-    public Builder clearTimestamp() {
+    public io.enkrypt.bolt.models.Block.Builder clearTimestamp() {
       fieldSetFlags()[5] = false;
       return this;
     }
@@ -1261,7 +1261,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Hash of the generated proof-of-work
       * @return The value.
       */
-    public Long getNonce() {
+    public java.lang.Long getNonce() {
       return nonce;
     }
 
@@ -1271,7 +1271,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * @param value The value of 'nonce'.
       * @return This builder.
       */
-    public Builder setNonce(long value) {
+    public io.enkrypt.bolt.models.Block.Builder setNonce(long value) {
       validate(fields()[6], value);
       this.nonce = value;
       fieldSetFlags()[6] = true;
@@ -1293,7 +1293,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Hash of the generated proof-of-work
       * @return This builder.
       */
-    public Builder clearNonce() {
+    public io.enkrypt.bolt.models.Block.Builder clearNonce() {
       fieldSetFlags()[6] = false;
       return this;
     }
@@ -1303,7 +1303,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Block header mix digest
       * @return The value.
       */
-    public CharSequence getMixDigest() {
+    public java.lang.CharSequence getMixDigest() {
       return mixDigest;
     }
 
@@ -1313,7 +1313,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * @param value The value of 'mixDigest'.
       * @return This builder.
       */
-    public Builder setMixDigest(CharSequence value) {
+    public io.enkrypt.bolt.models.Block.Builder setMixDigest(java.lang.CharSequence value) {
       validate(fields()[7], value);
       this.mixDigest = value;
       fieldSetFlags()[7] = true;
@@ -1335,7 +1335,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Block header mix digest
       * @return This builder.
       */
-    public Builder clearMixDigest() {
+    public io.enkrypt.bolt.models.Block.Builder clearMixDigest() {
       mixDigest = null;
       fieldSetFlags()[7] = false;
       return this;
@@ -1346,7 +1346,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * SHA3 of the uncles data in the block
       * @return The value.
       */
-    public CharSequence getSha3Uncles() {
+    public java.lang.CharSequence getSha3Uncles() {
       return sha3Uncles;
     }
 
@@ -1356,7 +1356,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * @param value The value of 'sha3Uncles'.
       * @return This builder.
       */
-    public Builder setSha3Uncles(CharSequence value) {
+    public io.enkrypt.bolt.models.Block.Builder setSha3Uncles(java.lang.CharSequence value) {
       validate(fields()[8], value);
       this.sha3Uncles = value;
       fieldSetFlags()[8] = true;
@@ -1378,7 +1378,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * SHA3 of the uncles data in the block
       * @return This builder.
       */
-    public Builder clearSha3Uncles() {
+    public io.enkrypt.bolt.models.Block.Builder clearSha3Uncles() {
       sha3Uncles = null;
       fieldSetFlags()[8] = false;
       return this;
@@ -1389,7 +1389,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Bloom filter for the logs of the block
       * @return The value.
       */
-    public CharSequence getLogsBloom() {
+    public java.lang.CharSequence getLogsBloom() {
       return logsBloom;
     }
 
@@ -1399,7 +1399,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * @param value The value of 'logsBloom'.
       * @return This builder.
       */
-    public Builder setLogsBloom(CharSequence value) {
+    public io.enkrypt.bolt.models.Block.Builder setLogsBloom(java.lang.CharSequence value) {
       validate(fields()[9], value);
       this.logsBloom = value;
       fieldSetFlags()[9] = true;
@@ -1421,7 +1421,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Bloom filter for the logs of the block
       * @return This builder.
       */
-    public Builder clearLogsBloom() {
+    public io.enkrypt.bolt.models.Block.Builder clearLogsBloom() {
       logsBloom = null;
       fieldSetFlags()[9] = false;
       return this;
@@ -1432,7 +1432,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Root of the final state trie of the block
       * @return The value.
       */
-    public CharSequence getStateRoot() {
+    public java.lang.CharSequence getStateRoot() {
       return stateRoot;
     }
 
@@ -1442,7 +1442,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * @param value The value of 'stateRoot'.
       * @return This builder.
       */
-    public Builder setStateRoot(CharSequence value) {
+    public io.enkrypt.bolt.models.Block.Builder setStateRoot(java.lang.CharSequence value) {
       validate(fields()[10], value);
       this.stateRoot = value;
       fieldSetFlags()[10] = true;
@@ -1464,7 +1464,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Root of the final state trie of the block
       * @return This builder.
       */
-    public Builder clearStateRoot() {
+    public io.enkrypt.bolt.models.Block.Builder clearStateRoot() {
       stateRoot = null;
       fieldSetFlags()[10] = false;
       return this;
@@ -1475,7 +1475,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Root of the final transactions trie of the block
       * @return The value.
       */
-    public CharSequence getTransactionsRoot() {
+    public java.lang.CharSequence getTransactionsRoot() {
       return transactionsRoot;
     }
 
@@ -1485,7 +1485,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * @param value The value of 'transactionsRoot'.
       * @return This builder.
       */
-    public Builder setTransactionsRoot(CharSequence value) {
+    public io.enkrypt.bolt.models.Block.Builder setTransactionsRoot(java.lang.CharSequence value) {
       validate(fields()[11], value);
       this.transactionsRoot = value;
       fieldSetFlags()[11] = true;
@@ -1507,7 +1507,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Root of the final transactions trie of the block
       * @return This builder.
       */
-    public Builder clearTransactionsRoot() {
+    public io.enkrypt.bolt.models.Block.Builder clearTransactionsRoot() {
       transactionsRoot = null;
       fieldSetFlags()[11] = false;
       return this;
@@ -1518,7 +1518,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * The address of the beneficiary to whom the mining rewards were given
       * @return The value.
       */
-    public CharSequence getMiner() {
+    public java.lang.CharSequence getMiner() {
       return miner;
     }
 
@@ -1528,7 +1528,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * @param value The value of 'miner'.
       * @return This builder.
       */
-    public Builder setMiner(CharSequence value) {
+    public io.enkrypt.bolt.models.Block.Builder setMiner(java.lang.CharSequence value) {
       validate(fields()[12], value);
       this.miner = value;
       fieldSetFlags()[12] = true;
@@ -1550,7 +1550,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * The address of the beneficiary to whom the mining rewards were given
       * @return This builder.
       */
-    public Builder clearMiner() {
+    public io.enkrypt.bolt.models.Block.Builder clearMiner() {
       miner = null;
       fieldSetFlags()[12] = false;
       return this;
@@ -1561,7 +1561,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Current difficulty for this block
       * @return The value.
       */
-    public Long getDifficulty() {
+    public java.lang.Long getDifficulty() {
       return difficulty;
     }
 
@@ -1571,7 +1571,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * @param value The value of 'difficulty'.
       * @return This builder.
       */
-    public Builder setDifficulty(long value) {
+    public io.enkrypt.bolt.models.Block.Builder setDifficulty(long value) {
       validate(fields()[13], value);
       this.difficulty = value;
       fieldSetFlags()[13] = true;
@@ -1593,7 +1593,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Current difficulty for this block
       * @return This builder.
       */
-    public Builder clearDifficulty() {
+    public io.enkrypt.bolt.models.Block.Builder clearDifficulty() {
       fieldSetFlags()[13] = false;
       return this;
     }
@@ -1603,7 +1603,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Current total difficulty of the chain until this block
       * @return The value.
       */
-    public Long getTotalDifficulty() {
+    public java.lang.Long getTotalDifficulty() {
       return totalDifficulty;
     }
 
@@ -1613,7 +1613,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * @param value The value of 'totalDifficulty'.
       * @return This builder.
       */
-    public Builder setTotalDifficulty(long value) {
+    public io.enkrypt.bolt.models.Block.Builder setTotalDifficulty(long value) {
       validate(fields()[14], value);
       this.totalDifficulty = value;
       fieldSetFlags()[14] = true;
@@ -1635,7 +1635,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Current total difficulty of the chain until this block
       * @return This builder.
       */
-    public Builder clearTotalDifficulty() {
+    public io.enkrypt.bolt.models.Block.Builder clearTotalDifficulty() {
       fieldSetFlags()[14] = false;
       return this;
     }
@@ -1655,7 +1655,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * @param value The value of 'extraData'.
       * @return This builder.
       */
-    public Builder setExtraData(java.nio.ByteBuffer value) {
+    public io.enkrypt.bolt.models.Block.Builder setExtraData(java.nio.ByteBuffer value) {
       validate(fields()[15], value);
       this.extraData = value;
       fieldSetFlags()[15] = true;
@@ -1677,7 +1677,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * The extra data field of this block
       * @return This builder.
       */
-    public Builder clearExtraData() {
+    public io.enkrypt.bolt.models.Block.Builder clearExtraData() {
       extraData = null;
       fieldSetFlags()[15] = false;
       return this;
@@ -1688,7 +1688,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Integer the size of this block in bytes
       * @return The value.
       */
-    public Long getSize() {
+    public java.lang.Long getSize() {
       return size;
     }
 
@@ -1698,7 +1698,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * @param value The value of 'size'.
       * @return This builder.
       */
-    public Builder setSize(long value) {
+    public io.enkrypt.bolt.models.Block.Builder setSize(long value) {
       validate(fields()[16], value);
       this.size = value;
       fieldSetFlags()[16] = true;
@@ -1720,7 +1720,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Integer the size of this block in bytes
       * @return This builder.
       */
-    public Builder clearSize() {
+    public io.enkrypt.bolt.models.Block.Builder clearSize() {
       fieldSetFlags()[16] = false;
       return this;
     }
@@ -1730,7 +1730,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * The maximum gas allowed in this block
       * @return The value.
       */
-    public Long getGasLimit() {
+    public java.lang.Long getGasLimit() {
       return gasLimit;
     }
 
@@ -1740,7 +1740,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * @param value The value of 'gasLimit'.
       * @return This builder.
       */
-    public Builder setGasLimit(long value) {
+    public io.enkrypt.bolt.models.Block.Builder setGasLimit(long value) {
       validate(fields()[17], value);
       this.gasLimit = value;
       fieldSetFlags()[17] = true;
@@ -1762,7 +1762,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * The maximum gas allowed in this block
       * @return This builder.
       */
-    public Builder clearGasLimit() {
+    public io.enkrypt.bolt.models.Block.Builder clearGasLimit() {
       fieldSetFlags()[17] = false;
       return this;
     }
@@ -1772,7 +1772,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * The total used gas by all transactions in this block
       * @return The value.
       */
-    public Long getGasUsed() {
+    public java.lang.Long getGasUsed() {
       return gasUsed;
     }
 
@@ -1782,7 +1782,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * @param value The value of 'gasUsed'.
       * @return This builder.
       */
-    public Builder setGasUsed(long value) {
+    public io.enkrypt.bolt.models.Block.Builder setGasUsed(long value) {
       validate(fields()[18], value);
       this.gasUsed = value;
       fieldSetFlags()[18] = true;
@@ -1804,7 +1804,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * The total used gas by all transactions in this block
       * @return This builder.
       */
-    public Builder clearGasUsed() {
+    public io.enkrypt.bolt.models.Block.Builder clearGasUsed() {
       fieldSetFlags()[18] = false;
       return this;
     }
@@ -1814,7 +1814,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Total transaction fees for this block
       * @return The value.
       */
-    public Long getTxsFees() {
+    public java.lang.Long getTxsFees() {
       return txsFees;
     }
 
@@ -1824,7 +1824,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * @param value The value of 'txsFees'.
       * @return This builder.
       */
-    public Builder setTxsFees(long value) {
+    public io.enkrypt.bolt.models.Block.Builder setTxsFees(long value) {
       validate(fields()[19], value);
       this.txsFees = value;
       fieldSetFlags()[19] = true;
@@ -1846,7 +1846,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Total transaction fees for this block
       * @return This builder.
       */
-    public Builder clearTxsFees() {
+    public io.enkrypt.bolt.models.Block.Builder clearTxsFees() {
       fieldSetFlags()[19] = false;
       return this;
     }
@@ -1856,7 +1856,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Total current block reward
       * @return The value.
       */
-    public Long getBlockReward() {
+    public java.lang.Long getBlockReward() {
       return blockReward;
     }
 
@@ -1866,7 +1866,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * @param value The value of 'blockReward'.
       * @return This builder.
       */
-    public Builder setBlockReward(long value) {
+    public io.enkrypt.bolt.models.Block.Builder setBlockReward(long value) {
       validate(fields()[20], value);
       this.blockReward = value;
       fieldSetFlags()[20] = true;
@@ -1888,7 +1888,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Total current block reward
       * @return This builder.
       */
-    public Builder clearBlockReward() {
+    public io.enkrypt.bolt.models.Block.Builder clearBlockReward() {
       fieldSetFlags()[20] = false;
       return this;
     }
@@ -1898,7 +1898,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Total current uncle reward
       * @return The value.
       */
-    public Long getUncleReward() {
+    public java.lang.Long getUncleReward() {
       return uncleReward;
     }
 
@@ -1908,7 +1908,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * @param value The value of 'uncleReward'.
       * @return This builder.
       */
-    public Builder setUncleReward(long value) {
+    public io.enkrypt.bolt.models.Block.Builder setUncleReward(long value) {
       validate(fields()[21], value);
       this.uncleReward = value;
       fieldSetFlags()[21] = true;
@@ -1930,7 +1930,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Total current uncle reward
       * @return This builder.
       */
-    public Builder clearUncleReward() {
+    public io.enkrypt.bolt.models.Block.Builder clearUncleReward() {
       fieldSetFlags()[21] = false;
       return this;
     }
@@ -1939,7 +1939,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Gets the value of the 'stats' field.
       * @return The value.
       */
-    public BlockStats getStats() {
+    public io.enkrypt.bolt.models.BlockStats getStats() {
       return stats;
     }
 
@@ -1948,7 +1948,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * @param value The value of 'stats'.
       * @return This builder.
       */
-    public Builder setStats(BlockStats value) {
+    public io.enkrypt.bolt.models.Block.Builder setStats(io.enkrypt.bolt.models.BlockStats value) {
       validate(fields()[22], value);
       this.statsBuilder = null;
       this.stats = value;
@@ -1968,12 +1968,12 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
      * Gets the Builder instance for the 'stats' field and creates one if it doesn't exist yet.
      * @return This builder.
      */
-    public BlockStats.Builder getStatsBuilder() {
+    public io.enkrypt.bolt.models.BlockStats.Builder getStatsBuilder() {
       if (statsBuilder == null) {
         if (hasStats()) {
-          setStatsBuilder(BlockStats.newBuilder(stats));
+          setStatsBuilder(io.enkrypt.bolt.models.BlockStats.newBuilder(stats));
         } else {
-          setStatsBuilder(BlockStats.newBuilder());
+          setStatsBuilder(io.enkrypt.bolt.models.BlockStats.newBuilder());
         }
       }
       return statsBuilder;
@@ -1984,7 +1984,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
      * @param value The builder instance that must be set.
      * @return This builder.
      */
-    public Builder setStatsBuilder(BlockStats.Builder value) {
+    public io.enkrypt.bolt.models.Block.Builder setStatsBuilder(io.enkrypt.bolt.models.BlockStats.Builder value) {
       clearStats();
       statsBuilder = value;
       return this;
@@ -2002,7 +2002,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Clears the value of the 'stats' field.
       * @return This builder.
       */
-    public Builder clearStats() {
+    public io.enkrypt.bolt.models.Block.Builder clearStats() {
       stats = null;
       statsBuilder = null;
       fieldSetFlags()[22] = false;
@@ -2014,7 +2014,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Array of transactions
       * @return The value.
       */
-    public java.util.List<Transaction> getTransactions() {
+    public java.util.List<io.enkrypt.bolt.models.Transaction> getTransactions() {
       return transactions;
     }
 
@@ -2024,7 +2024,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * @param value The value of 'transactions'.
       * @return This builder.
       */
-    public Builder setTransactions(java.util.List<Transaction> value) {
+    public io.enkrypt.bolt.models.Block.Builder setTransactions(java.util.List<io.enkrypt.bolt.models.Transaction> value) {
       validate(fields()[23], value);
       this.transactions = value;
       fieldSetFlags()[23] = true;
@@ -2046,7 +2046,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Array of transactions
       * @return This builder.
       */
-    public Builder clearTransactions() {
+    public io.enkrypt.bolt.models.Block.Builder clearTransactions() {
       transactions = null;
       fieldSetFlags()[23] = false;
       return this;
@@ -2057,7 +2057,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Array of uncle hashes
       * @return The value.
       */
-    public java.util.List<CharSequence> getUncles() {
+    public java.util.List<java.lang.CharSequence> getUncles() {
       return uncles;
     }
 
@@ -2067,7 +2067,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * @param value The value of 'uncles'.
       * @return This builder.
       */
-    public Builder setUncles(java.util.List<CharSequence> value) {
+    public io.enkrypt.bolt.models.Block.Builder setUncles(java.util.List<java.lang.CharSequence> value) {
       validate(fields()[24], value);
       this.uncles = value;
       fieldSetFlags()[24] = true;
@@ -2089,7 +2089,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * Array of uncle hashes
       * @return This builder.
       */
-    public Builder clearUncles() {
+    public io.enkrypt.bolt.models.Block.Builder clearUncles() {
       uncles = null;
       fieldSetFlags()[24] = false;
       return this;
@@ -2100,37 +2100,37 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
     public Block build() {
       try {
         Block record = new Block();
-        record.number = fieldSetFlags()[0] ? this.number : (Long) defaultValue(fields()[0], record.getConversion(0));
-        record.hash = fieldSetFlags()[1] ? this.hash : (CharSequence) defaultValue(fields()[1], record.getConversion(1));
-        record.parentHash = fieldSetFlags()[2] ? this.parentHash : (CharSequence) defaultValue(fields()[2], record.getConversion(2));
-        record.isUncle = fieldSetFlags()[3] ? this.isUncle : (Boolean) defaultValue(fields()[3], record.getConversion(3));
-        record.isCanonical = fieldSetFlags()[4] ? this.isCanonical : (Boolean) defaultValue(fields()[4], record.getConversion(4));
+        record.number = fieldSetFlags()[0] ? this.number : (java.lang.Long) defaultValue(fields()[0], record.getConversion(0));
+        record.hash = fieldSetFlags()[1] ? this.hash : (java.lang.CharSequence) defaultValue(fields()[1], record.getConversion(1));
+        record.parentHash = fieldSetFlags()[2] ? this.parentHash : (java.lang.CharSequence) defaultValue(fields()[2], record.getConversion(2));
+        record.uncle = fieldSetFlags()[3] ? this.uncle : (java.lang.Boolean) defaultValue(fields()[3], record.getConversion(3));
+        record.status = fieldSetFlags()[4] ? this.status : (java.lang.Integer) defaultValue(fields()[4], record.getConversion(4));
         record.timestamp = fieldSetFlags()[5] ? this.timestamp : (org.joda.time.DateTime) defaultValue(fields()[5], record.getConversion(5));
-        record.nonce = fieldSetFlags()[6] ? this.nonce : (Long) defaultValue(fields()[6], record.getConversion(6));
-        record.mixDigest = fieldSetFlags()[7] ? this.mixDigest : (CharSequence) defaultValue(fields()[7], record.getConversion(7));
-        record.sha3Uncles = fieldSetFlags()[8] ? this.sha3Uncles : (CharSequence) defaultValue(fields()[8], record.getConversion(8));
-        record.logsBloom = fieldSetFlags()[9] ? this.logsBloom : (CharSequence) defaultValue(fields()[9], record.getConversion(9));
-        record.stateRoot = fieldSetFlags()[10] ? this.stateRoot : (CharSequence) defaultValue(fields()[10], record.getConversion(10));
-        record.transactionsRoot = fieldSetFlags()[11] ? this.transactionsRoot : (CharSequence) defaultValue(fields()[11], record.getConversion(11));
-        record.miner = fieldSetFlags()[12] ? this.miner : (CharSequence) defaultValue(fields()[12], record.getConversion(12));
-        record.difficulty = fieldSetFlags()[13] ? this.difficulty : (Long) defaultValue(fields()[13], record.getConversion(13));
-        record.totalDifficulty = fieldSetFlags()[14] ? this.totalDifficulty : (Long) defaultValue(fields()[14], record.getConversion(14));
+        record.nonce = fieldSetFlags()[6] ? this.nonce : (java.lang.Long) defaultValue(fields()[6], record.getConversion(6));
+        record.mixDigest = fieldSetFlags()[7] ? this.mixDigest : (java.lang.CharSequence) defaultValue(fields()[7], record.getConversion(7));
+        record.sha3Uncles = fieldSetFlags()[8] ? this.sha3Uncles : (java.lang.CharSequence) defaultValue(fields()[8], record.getConversion(8));
+        record.logsBloom = fieldSetFlags()[9] ? this.logsBloom : (java.lang.CharSequence) defaultValue(fields()[9], record.getConversion(9));
+        record.stateRoot = fieldSetFlags()[10] ? this.stateRoot : (java.lang.CharSequence) defaultValue(fields()[10], record.getConversion(10));
+        record.transactionsRoot = fieldSetFlags()[11] ? this.transactionsRoot : (java.lang.CharSequence) defaultValue(fields()[11], record.getConversion(11));
+        record.miner = fieldSetFlags()[12] ? this.miner : (java.lang.CharSequence) defaultValue(fields()[12], record.getConversion(12));
+        record.difficulty = fieldSetFlags()[13] ? this.difficulty : (java.lang.Long) defaultValue(fields()[13], record.getConversion(13));
+        record.totalDifficulty = fieldSetFlags()[14] ? this.totalDifficulty : (java.lang.Long) defaultValue(fields()[14], record.getConversion(14));
         record.extraData = fieldSetFlags()[15] ? this.extraData : (java.nio.ByteBuffer) defaultValue(fields()[15], record.getConversion(15));
-        record.size = fieldSetFlags()[16] ? this.size : (Long) defaultValue(fields()[16], record.getConversion(16));
-        record.gasLimit = fieldSetFlags()[17] ? this.gasLimit : (Long) defaultValue(fields()[17], record.getConversion(17));
-        record.gasUsed = fieldSetFlags()[18] ? this.gasUsed : (Long) defaultValue(fields()[18], record.getConversion(18));
-        record.txsFees = fieldSetFlags()[19] ? this.txsFees : (Long) defaultValue(fields()[19], record.getConversion(19));
-        record.blockReward = fieldSetFlags()[20] ? this.blockReward : (Long) defaultValue(fields()[20], record.getConversion(20));
-        record.uncleReward = fieldSetFlags()[21] ? this.uncleReward : (Long) defaultValue(fields()[21], record.getConversion(21));
+        record.size = fieldSetFlags()[16] ? this.size : (java.lang.Long) defaultValue(fields()[16], record.getConversion(16));
+        record.gasLimit = fieldSetFlags()[17] ? this.gasLimit : (java.lang.Long) defaultValue(fields()[17], record.getConversion(17));
+        record.gasUsed = fieldSetFlags()[18] ? this.gasUsed : (java.lang.Long) defaultValue(fields()[18], record.getConversion(18));
+        record.txsFees = fieldSetFlags()[19] ? this.txsFees : (java.lang.Long) defaultValue(fields()[19], record.getConversion(19));
+        record.blockReward = fieldSetFlags()[20] ? this.blockReward : (java.lang.Long) defaultValue(fields()[20], record.getConversion(20));
+        record.uncleReward = fieldSetFlags()[21] ? this.uncleReward : (java.lang.Long) defaultValue(fields()[21], record.getConversion(21));
         if (statsBuilder != null) {
           record.stats = this.statsBuilder.build();
         } else {
-          record.stats = fieldSetFlags()[22] ? this.stats : (BlockStats) defaultValue(fields()[22], record.getConversion(22));
+          record.stats = fieldSetFlags()[22] ? this.stats : (io.enkrypt.bolt.models.BlockStats) defaultValue(fields()[22], record.getConversion(22));
         }
-        record.transactions = fieldSetFlags()[23] ? this.transactions : (java.util.List<Transaction>) defaultValue(fields()[23], record.getConversion(23));
-        record.uncles = fieldSetFlags()[24] ? this.uncles : (java.util.List<CharSequence>) defaultValue(fields()[24], record.getConversion(24));
+        record.transactions = fieldSetFlags()[23] ? this.transactions : (java.util.List<io.enkrypt.bolt.models.Transaction>) defaultValue(fields()[23], record.getConversion(23));
+        record.uncles = fieldSetFlags()[24] ? this.uncles : (java.util.List<java.lang.CharSequence>) defaultValue(fields()[24], record.getConversion(24));
         return record;
-      } catch (Exception e) {
+      } catch (java.lang.Exception e) {
         throw new org.apache.avro.AvroRuntimeException(e);
       }
     }
