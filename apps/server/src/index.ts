@@ -4,7 +4,7 @@ import { RethinkDbStreamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
 import { BlocksServiceImpl, RethinkBlockRepository } from '@app/server/modules/blocks'
 import { ChartsServiceImpl, RethinkChartsRepository } from '@app/server/modules/charts'
-import { MockExchangeServiceImpl } from '@app/server/modules/exchanges'
+import { CoinMarketCapRepository, ExchangeServiceImpl } from '@app/server/modules/exchanges'
 import { RethinkTxsRepository, TxsServiceImpl } from '@app/server/modules/txs'
 import { RedisTrieDb, VmEngine, VmRunner, VmServiceImpl } from '@app/server/modules/vm'
 import { RedisCacheRepository } from '@app/server/repositories'
@@ -95,7 +95,14 @@ async function bootstrapServer() {
   const chartsService = new ChartsServiceImpl(chartsRepository)
 
   // Exchanges
-  const exchangeService = new MockExchangeServiceImpl()
+  const exchangeRepository = new CoinMarketCapRepository(ds)
+  const exchangeService = new ExchangeServiceImpl(exchangeRepository, ds)
+
+  exchangeService.fetchExchangeRates()
+  // TBD
+  setInterval(() => {
+    exchangeService.fetchExchangeRates()
+  }, 240000)
 
   // Vm
   const vmService = new VmServiceImpl(vme, vmr)
