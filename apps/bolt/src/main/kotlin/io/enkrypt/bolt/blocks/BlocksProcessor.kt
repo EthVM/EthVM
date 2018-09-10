@@ -16,7 +16,7 @@ import org.joda.time.DateTime
 import org.joda.time.Period
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
-import java.util.*
+import java.util.Properties
 
 class BlocksProcessor : KoinComponent {
 
@@ -27,20 +27,18 @@ class BlocksProcessor : KoinComponent {
   private val streams: KafkaStreams
 
   init {
-
-    // Avro Serdes
-
     val (rawBlocksTopic) = appConfig.topicsConfig
 
-    val blockSerde = SpecificAvroSerde<Block>()
+    // Avro Serdes
     val blockSerdeProps = mapOf(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG to appConfig.schemaRegistryUrl)
-    blockSerde.configure(blockSerdeProps, false)
+    val blockSerde = SpecificAvroSerde<Block>().apply {
+      configure(blockSerdeProps, false)
+    }
 
     // Create stream builder
     val builder = StreamsBuilder()
 
     val blocks: KStream<String, Block> = builder.stream(rawBlocksTopic, Consumed.with(Serdes.String(), blockSerde))
-
     blocks
       .map { key, block ->
 
@@ -53,21 +51,23 @@ class BlocksProcessor : KoinComponent {
         var totalGasPrice = 0L
         var totalTxsFees = 0L
 
-        val txns = block.getTransactions()
+        val txs = block.getTransactions()
+        txs.forEach { txn ->
+          balances[txn.getFrom().toString()] = txn.getFromBalance()
+          balances[txn.getTo().toString()] = txn.getToBalance()
 
-        txns.forEach { txn ->
+          if (txn.getStatus() > 0) {
+            numSuccessfulTxs += 1
+          } else {
+            numFailedTxs += 1
+          }
 
-          balances.put(txn.getFrom().toString(), txn.getFromBalance())
-          balances.put(txn.getTo().toString(), txn.getToBalance())
-
-          if(txn.getStatus() > 0) numSuccessfulTxs += 1 else numFailedTxs += 1
           totalGasPrice += txn.getGasPrice()
           totalTxsFees += txn.getGasUsed() * txn.getGasPrice()
-
         }
 
-        val avgGasPrice = Math.round(Math.ceil(totalGasPrice * 1.0 / txns.size))
-        val avgTxsFees = Math.round(Math.ceil(totalTxsFees * 1.0 / txns.size))
+        val avgGasPrice = Math.round(Math.ceil(totalGasPrice * 1.0 / txs.size))
+        val avgTxsFees = Math.round(Math.ceil(totalTxsFees * 1.0 / txs.size))
 
         block.setStats(
           BlockStats(

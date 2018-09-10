@@ -12,22 +12,44 @@ import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
 import org.koin.dsl.module.module
 import org.koin.standalone.StandAloneContext.startKoin
-import java.util.*
+import java.util.Properties
 
 class Cli : CliktCommand() {
 
-  // General
-  private val applicationId: String by option(help = "Identifier for the stream processing application", envvar = "BOLT_APPLICATION_ID").default(DEFAULT_APPLICATION_ID)
-  private val bootstrapServers: String by option(help = "A list of host/port pairs to use for establishing the initial connection to the Kafka cluster", envvar = "BOLT_BOOTSTRAP_SERVERS").default(DEFAULT_BOOTSTRAP_SERVERS)
-  private val startingOffset: String by option(help = "From which offset is going to start Bolt processing events", envvar = "BOLT_START_OFFSET").default(DEFAULT_AUTO_OFFSET)
-  private val schemaRegistryUrl: String by option(help = "Specifies in which server are stored AVRO schemas", envvar = "BOLT_SCHEMA_REGISTRY_URL").default(DEFAULT_SCHEMA_REGISTRY_URL)
+  // General - CLI
+  private val applicationId: String by option(
+    help = "Identifier for the stream processing application",
+    envvar = "BOLT_APPLICATION_ID"
+  ).default(DEFAULT_APPLICATION_ID)
 
-  // Input Topics
-  private val rawBlocksTopic: String by option(help = "Name of the raw blocks stream topic on which Bolt will listen", envvar = "BOLT_RAW_BLOCKS_TOPIC").default(DEFAULT_RAW_BLOCK_TOPIC)
-  private val rawPendingTxsTopic: String by option(help = "Name of the raw blocks stream topic on which Bolt will listen", envvar = "BOLT_PENDING_TXS_TOPIC").default(DEFAULT_RAW_PENDING_TXS_TOPIC)
+  private val bootstrapServers: String by option(
+    help = "A list of host/port pairs to use for establishing the initial connection to the Kafka cluster",
+    envvar = "BOLT_BOOTSTRAP_SERVERS"
+  ).default(DEFAULT_BOOTSTRAP_SERVERS)
 
+  private val startingOffset: String by option(
+    help = "From which offset is going to start Bolt processing events",
+    envvar = "BOLT_START_OFFSET"
+  ).default(DEFAULT_AUTO_OFFSET)
+
+  private val schemaRegistryUrl: String by option(
+    help = "Specifies in which server are stored AVRO schemas",
+    envvar = "BOLT_SCHEMA_REGISTRY_URL"
+  ).default(DEFAULT_SCHEMA_REGISTRY_URL)
+
+  // Input Topics - CLI
+  private val rawBlocksTopic: String by option(
+    help = "Name of the raw blocks stream topic on which Bolt will listen",
+    envvar = "BOLT_RAW_BLOCKS_TOPIC"
+  ).default(DEFAULT_RAW_BLOCK_TOPIC)
+
+  private val rawPendingTxsTopic: String by option(
+    help = "Name of the raw blocks stream topic on which Bolt will listen",
+    envvar = "BOLT_PENDING_TXS_TOPIC"
+  ).default(DEFAULT_RAW_PENDING_TXS_TOPIC)
+
+  // DI
   private val boltModule = module {
-
     single { TopicsConfig(rawBlocksTopic, rawPendingTxsTopic) }
     single { AppConfig(applicationId, bootstrapServers, startingOffset, schemaRegistryUrl, get()) }
 
@@ -50,15 +72,12 @@ class Cli : CliktCommand() {
       }
     }
 
-    single{ BlocksProcessor() }
-
+    single { BlocksProcessor() }
   }
 
   override fun run() {
-
     startKoin(listOf(boltModule))
     BlocksProcessor().start()
-
   }
 
   companion object {
