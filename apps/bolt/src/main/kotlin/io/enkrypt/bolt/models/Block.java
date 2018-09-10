@@ -13,8 +13,8 @@ import org.apache.avro.message.SchemaStore;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class Block extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 9197294529747352227L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Block\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"number\",\"type\":\"long\",\"doc\":\"The block number\"},{\"name\":\"hash\",\"type\":\"string\",\"doc\":\"Hash of the block\"},{\"name\":\"parentHash\",\"type\":\"string\",\"doc\":\"Hash of the parent block\"},{\"name\":\"isUncle\",\"type\":\"boolean\",\"doc\":\"Determines if the block is an uncle or not\"},{\"name\":\"isCanonical\",\"type\":\"boolean\",\"doc\":\"Determines if the block is canonical one or is a fork\"},{\"name\":\"timestamp\",\"type\":{\"type\":\"long\",\"logicalType\":\"timestamp-millis\"},\"doc\":\"Unix timestamp for when the block was collated\"},{\"name\":\"nonce\",\"type\":\"long\",\"doc\":\"Hash of the generated proof-of-work\"},{\"name\":\"mixDigest\",\"type\":\"string\",\"doc\":\"Block header mix digest\"},{\"name\":\"sha3Uncles\",\"type\":\"string\",\"doc\":\"SHA3 of the uncles data in the block\"},{\"name\":\"logsBloom\",\"type\":\"string\",\"doc\":\"Bloom filter for the logs of the block\"},{\"name\":\"stateRoot\",\"type\":\"string\",\"doc\":\"Root of the final state trie of the block\"},{\"name\":\"transactionsRoot\",\"type\":\"string\",\"doc\":\"Root of the final transactions trie of the block\"},{\"name\":\"miner\",\"type\":\"string\",\"doc\":\"The address of the beneficiary to whom the mining rewards were given\"},{\"name\":\"difficulty\",\"type\":\"long\",\"doc\":\"Current difficulty for this block\"},{\"name\":\"totalDifficulty\",\"type\":\"long\",\"doc\":\"Current total difficulty of the chain until this block\"},{\"name\":\"extraData\",\"type\":\"bytes\",\"doc\":\"The extra data field of this block\"},{\"name\":\"size\",\"type\":\"long\",\"doc\":\"Integer the size of this block in bytes\"},{\"name\":\"gasLimit\",\"type\":\"long\",\"doc\":\"The maximum gas allowed in this block\"},{\"name\":\"gasUsed\",\"type\":\"long\",\"doc\":\"The total used gas by all transactions in this block\"},{\"name\":\"txsFees\",\"type\":\"long\",\"doc\":\"Total transaction fees for this block\"},{\"name\":\"blockReward\",\"type\":\"long\",\"doc\":\"Total current block reward\"},{\"name\":\"uncleReward\",\"type\":\"long\",\"doc\":\"Total current uncle reward\"},{\"name\":\"transactions\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Transaction\",\"fields\":[{\"name\":\"hash\",\"type\":\"string\",\"doc\":\"Hash of the transaction\"},{\"name\":\"root\",\"type\":\"string\",\"doc\":\"Root of the parent block\"},{\"name\":\"index\",\"type\":\"int\",\"doc\":\"Integer of the transactions index position in the block\"},{\"name\":\"timestamp\",\"type\":{\"type\":\"long\",\"logicalType\":\"timestamp-millis\"},\"doc\":\"Unix timestamp for when the transaction was collated\"},{\"name\":\"nonce\",\"type\":\"long\",\"doc\":\"Number of transactions sent from a given address\"},{\"name\":\"nonceHash\",\"type\":\"string\",\"doc\":\"SHA3 of the transaction nonce\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"long\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":[\"null\",\"string\"],\"doc\":\"Address of the recipient (or null when contract creation)\"},{\"name\":\"toBalance\",\"type\":[\"null\",\"long\"],\"doc\":\"Balance of the receiver (or null when contract creation)\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"The data send along with the transaction\"},{\"name\":\"contractAddress\",\"type\":[\"null\",\"string\"],\"doc\":\"If a contract is created, the address of it (or null if is just a regular transaction)\"},{\"name\":\"value\",\"type\":\"long\",\"doc\":\"Amount of value transferred in Wei\"},{\"name\":\"gas\",\"type\":\"long\",\"doc\":\"Amount of gas provided by the sender\"},{\"name\":\"gasPrice\",\"type\":\"long\",\"doc\":\"Amount of gas price provided by the sender in Wei\"},{\"name\":\"gasUsed\",\"type\":\"long\",\"doc\":\"Amount of gas used consumed by the transaction\"},{\"name\":\"cumulativeGasUsed\",\"type\":\"long\",\"doc\":\"Cumulative gas used by the transaction\"},{\"name\":\"v\",\"type\":\"string\",\"doc\":\"Transaction signature v\"},{\"name\":\"r\",\"type\":\"string\",\"doc\":\"Transaction signature r\"},{\"name\":\"s\",\"type\":\"string\",\"doc\":\"Transaction signature s\"},{\"name\":\"status\",\"type\":\"long\",\"doc\":\"Transaction result status\"},{\"name\":\"logsBloom\",\"type\":\"bytes\",\"doc\":\"Generated and encoded logs by the transaction\"},{\"name\":\"logs\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Log\",\"fields\":[{\"name\":\"address\",\"type\":\"string\",\"desc\":\"Address of the contract that generated the event\"},{\"name\":\"topics\",\"type\":{\"type\":\"array\",\"items\":\"string\"},\"desc\":\"List of topics provided by the contract\"},{\"name\":\"data\",\"type\":\"bytes\",\"desc\":\"Supplied by the contract, usually ABI-encoded\"},{\"name\":\"index\",\"type\":\"int\",\"desc\":\"Index of the log in the receipt\"},{\"name\":\"removed\",\"type\":\"boolean\",\"desc\":\"True if this log was reverted due to a chain reorganisation\"}]}},\"doc\":\"\"},{\"name\":\"trace\",\"type\":{\"type\":\"record\",\"name\":\"Trace\",\"fields\":[{\"name\":\"isError\",\"type\":\"boolean\",\"desc\":\"Signals if an error happened during execution\"},{\"name\":\"msg\",\"type\":\"string\",\"desc\":\"Stores the error message\"},{\"name\":\"transfers\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Transfer\",\"fields\":[{\"name\":\"op\",\"type\":\"string\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"value\",\"type\":\"string\",\"doc\":\"Raw value of the transaction\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"string\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":\"string\",\"doc\":\"Address of the receiver\"},{\"name\":\"toBalance\",\"type\":\"string\",\"doc\":\"Balance of the receiver\"},{\"name\":\"input\",\"type\":\"string\",\"doc\":\"Raw input data\"}]}},\"desc\":\"An array describing transfers\"}]},\"doc\":\"Trace that describes contract creation, destruction or intenal transactions\"}]}},\"doc\":\"Array of transactions\"},{\"name\":\"uncles\",\"type\":{\"type\":\"array\",\"items\":\"string\"},\"doc\":\"Array of uncle hashes\"}]}");
+  private static final long serialVersionUID = -7291519006846537914L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Block\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"number\",\"type\":\"long\",\"doc\":\"The block number\"},{\"name\":\"hash\",\"type\":\"string\",\"doc\":\"Hash of the block\"},{\"name\":\"parentHash\",\"type\":\"string\",\"doc\":\"Hash of the parent block\"},{\"name\":\"isUncle\",\"type\":\"boolean\",\"doc\":\"Determines if the block is an uncle or not\"},{\"name\":\"isCanonical\",\"type\":\"boolean\",\"doc\":\"Determines if the block is canonical one or is a fork\"},{\"name\":\"timestamp\",\"type\":{\"type\":\"long\",\"logicalType\":\"timestamp-millis\"},\"doc\":\"Unix timestamp for when the block was collated\"},{\"name\":\"nonce\",\"type\":\"long\",\"doc\":\"Hash of the generated proof-of-work\"},{\"name\":\"mixDigest\",\"type\":\"string\",\"doc\":\"Block header mix digest\"},{\"name\":\"sha3Uncles\",\"type\":\"string\",\"doc\":\"SHA3 of the uncles data in the block\"},{\"name\":\"logsBloom\",\"type\":\"string\",\"doc\":\"Bloom filter for the logs of the block\"},{\"name\":\"stateRoot\",\"type\":\"string\",\"doc\":\"Root of the final state trie of the block\"},{\"name\":\"transactionsRoot\",\"type\":\"string\",\"doc\":\"Root of the final transactions trie of the block\"},{\"name\":\"miner\",\"type\":\"string\",\"doc\":\"The address of the beneficiary to whom the mining rewards were given\"},{\"name\":\"difficulty\",\"type\":\"long\",\"doc\":\"Current difficulty for this block\"},{\"name\":\"totalDifficulty\",\"type\":\"long\",\"doc\":\"Current total difficulty of the chain until this block\"},{\"name\":\"extraData\",\"type\":\"bytes\",\"doc\":\"The extra data field of this block\"},{\"name\":\"size\",\"type\":\"long\",\"doc\":\"Integer the size of this block in bytes\"},{\"name\":\"gasLimit\",\"type\":\"long\",\"doc\":\"The maximum gas allowed in this block\"},{\"name\":\"gasUsed\",\"type\":\"long\",\"doc\":\"The total used gas by all transactions in this block\"},{\"name\":\"txsFees\",\"type\":\"long\",\"doc\":\"Total transaction fees for this block\"},{\"name\":\"blockReward\",\"type\":\"long\",\"doc\":\"Total current block reward\"},{\"name\":\"uncleReward\",\"type\":\"long\",\"doc\":\"Total current uncle reward\"},{\"name\":\"stats\",\"type\":[\"null\",{\"type\":\"record\",\"name\":\"BlockStats\",\"fields\":[{\"name\":\"blockTime\",\"type\":\"long\",\"doc\":\"Time taken to find the block\"},{\"name\":\"numFailedTxs\",\"type\":\"long\",\"doc\":\"Number of failed transactions\"},{\"name\":\"numSuccessfulTxs\",\"type\":\"long\",\"doc\":\"Number of successful transactions\"},{\"name\":\"avgGasPrice\",\"type\":\"float\",\"doc\":\"Average gas price\"},{\"name\":\"totalGasPrice\",\"type\":\"long\",\"doc\":\"Total gas price\"},{\"name\":\"totalTxFees\",\"type\":\"long\",\"doc\":\"Total txn fees\"}]}]},{\"name\":\"transactions\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Transaction\",\"fields\":[{\"name\":\"hash\",\"type\":\"string\",\"doc\":\"Hash of the transaction\"},{\"name\":\"root\",\"type\":\"string\",\"doc\":\"Root of the parent block\"},{\"name\":\"index\",\"type\":\"int\",\"doc\":\"Integer of the transactions index position in the block\"},{\"name\":\"timestamp\",\"type\":{\"type\":\"long\",\"logicalType\":\"timestamp-millis\"},\"doc\":\"Unix timestamp for when the transaction was collated\"},{\"name\":\"nonce\",\"type\":\"long\",\"doc\":\"Number of transactions sent from a given address\"},{\"name\":\"nonceHash\",\"type\":\"string\",\"doc\":\"SHA3 of the transaction nonce\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"long\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":[\"null\",\"string\"],\"doc\":\"Address of the recipient (or null when contract creation)\"},{\"name\":\"toBalance\",\"type\":[\"null\",\"long\"],\"doc\":\"Balance of the receiver (or null when contract creation)\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"The data send along with the transaction\"},{\"name\":\"contractAddress\",\"type\":[\"null\",\"string\"],\"doc\":\"If a contract is created, the address of it (or null if is just a regular transaction)\"},{\"name\":\"value\",\"type\":\"long\",\"doc\":\"Amount of value transferred in Wei\"},{\"name\":\"gas\",\"type\":\"long\",\"doc\":\"Amount of gas provided by the sender\"},{\"name\":\"gasPrice\",\"type\":\"long\",\"doc\":\"Amount of gas price provided by the sender in Wei\"},{\"name\":\"gasUsed\",\"type\":\"long\",\"doc\":\"Amount of gas used consumed by the transaction\"},{\"name\":\"cumulativeGasUsed\",\"type\":\"long\",\"doc\":\"Cumulative gas used by the transaction\"},{\"name\":\"v\",\"type\":\"string\",\"doc\":\"Transaction signature v\"},{\"name\":\"r\",\"type\":\"string\",\"doc\":\"Transaction signature r\"},{\"name\":\"s\",\"type\":\"string\",\"doc\":\"Transaction signature s\"},{\"name\":\"status\",\"type\":\"long\",\"doc\":\"Transaction result status\"},{\"name\":\"logsBloom\",\"type\":\"bytes\",\"doc\":\"Generated and encoded logs by the transaction\"},{\"name\":\"logs\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Log\",\"fields\":[{\"name\":\"address\",\"type\":\"string\",\"desc\":\"Address of the contract that generated the event\"},{\"name\":\"topics\",\"type\":{\"type\":\"array\",\"items\":\"string\"},\"desc\":\"List of topics provided by the contract\"},{\"name\":\"data\",\"type\":\"bytes\",\"desc\":\"Supplied by the contract, usually ABI-encoded\"},{\"name\":\"index\",\"type\":\"int\",\"desc\":\"Index of the log in the receipt\"},{\"name\":\"removed\",\"type\":\"boolean\",\"desc\":\"True if this log was reverted due to a chain reorganisation\"}]}},\"doc\":\"\"},{\"name\":\"trace\",\"type\":{\"type\":\"record\",\"name\":\"Trace\",\"fields\":[{\"name\":\"isError\",\"type\":\"boolean\",\"desc\":\"Signals if an error happened during execution\"},{\"name\":\"msg\",\"type\":\"string\",\"desc\":\"Stores the error message\"},{\"name\":\"transfers\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Transfer\",\"fields\":[{\"name\":\"op\",\"type\":\"string\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"value\",\"type\":\"string\",\"doc\":\"Raw value of the transaction\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"string\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":\"string\",\"doc\":\"Address of the receiver\"},{\"name\":\"toBalance\",\"type\":\"string\",\"doc\":\"Balance of the receiver\"},{\"name\":\"input\",\"type\":\"string\",\"doc\":\"Raw input data\"}]}},\"desc\":\"An array describing transfers\"}]},\"doc\":\"Trace that describes contract creation, destruction or intenal transactions\"}]}},\"doc\":\"Array of transactions\"},{\"name\":\"uncles\",\"type\":{\"type\":\"array\",\"items\":\"string\"},\"doc\":\"Array of uncle hashes\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -95,6 +95,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
   @Deprecated public long blockReward;
   /** Total current uncle reward */
   @Deprecated public long uncleReward;
+  @Deprecated public BlockStats stats;
   /** Array of transactions */
   @Deprecated public java.util.List<Transaction> transactions;
   /** Array of uncle hashes */
@@ -131,10 +132,11 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * @param txsFees Total transaction fees for this block
    * @param blockReward Total current block reward
    * @param uncleReward Total current uncle reward
+   * @param stats The new value for stats
    * @param transactions Array of transactions
    * @param uncles Array of uncle hashes
    */
-  public Block(Long number, CharSequence hash, CharSequence parentHash, Boolean isUncle, Boolean isCanonical, org.joda.time.DateTime timestamp, Long nonce, CharSequence mixDigest, CharSequence sha3Uncles, CharSequence logsBloom, CharSequence stateRoot, CharSequence transactionsRoot, CharSequence miner, Long difficulty, Long totalDifficulty, java.nio.ByteBuffer extraData, Long size, Long gasLimit, Long gasUsed, Long txsFees, Long blockReward, Long uncleReward, java.util.List<Transaction> transactions, java.util.List<CharSequence> uncles) {
+  public Block(Long number, CharSequence hash, CharSequence parentHash, Boolean isUncle, Boolean isCanonical, org.joda.time.DateTime timestamp, Long nonce, CharSequence mixDigest, CharSequence sha3Uncles, CharSequence logsBloom, CharSequence stateRoot, CharSequence transactionsRoot, CharSequence miner, Long difficulty, Long totalDifficulty, java.nio.ByteBuffer extraData, Long size, Long gasLimit, Long gasUsed, Long txsFees, Long blockReward, Long uncleReward, BlockStats stats, java.util.List<Transaction> transactions, java.util.List<CharSequence> uncles) {
     this.number = number;
     this.hash = hash;
     this.parentHash = parentHash;
@@ -157,6 +159,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
     this.txsFees = txsFees;
     this.blockReward = blockReward;
     this.uncleReward = uncleReward;
+    this.stats = stats;
     this.transactions = transactions;
     this.uncles = uncles;
   }
@@ -187,8 +190,9 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
     case 19: return txsFees;
     case 20: return blockReward;
     case 21: return uncleReward;
-    case 22: return transactions;
-    case 23: return uncles;
+    case 22: return stats;
+    case 23: return transactions;
+    case 24: return uncles;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -206,6 +210,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       null,
       null,
       TIMESTAMP_CONVERSION,
+      null,
       null,
       null,
       null,
@@ -258,8 +263,9 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
     case 19: txsFees = (Long)value$; break;
     case 20: blockReward = (Long)value$; break;
     case 21: uncleReward = (Long)value$; break;
-    case 22: transactions = (java.util.List<Transaction>)value$; break;
-    case 23: uncles = (java.util.List<CharSequence>)value$; break;
+    case 22: stats = (BlockStats)value$; break;
+    case 23: transactions = (java.util.List<Transaction>)value$; break;
+    case 24: uncles = (java.util.List<CharSequence>)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -639,6 +645,22 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
   }
 
   /**
+   * Gets the value of the 'stats' field.
+   * @return The value of the 'stats' field.
+   */
+  public BlockStats getStats() {
+    return stats;
+  }
+
+  /**
+   * Sets the value of the 'stats' field.
+   * @param value the value to set.
+   */
+  public void setStats(BlockStats value) {
+    this.stats = value;
+  }
+
+  /**
    * Gets the value of the 'transactions' field.
    * @return Array of transactions
    */
@@ -748,6 +770,8 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
     private long blockReward;
     /** Total current uncle reward */
     private long uncleReward;
+    private BlockStats stats;
+    private BlockStats.Builder statsBuilder;
     /** Array of transactions */
     private java.util.List<Transaction> transactions;
     /** Array of uncle hashes */
@@ -852,13 +876,20 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
         this.uncleReward = data().deepCopy(fields()[21].schema(), other.uncleReward);
         fieldSetFlags()[21] = true;
       }
-      if (isValidValue(fields()[22], other.transactions)) {
-        this.transactions = data().deepCopy(fields()[22].schema(), other.transactions);
+      if (isValidValue(fields()[22], other.stats)) {
+        this.stats = data().deepCopy(fields()[22].schema(), other.stats);
         fieldSetFlags()[22] = true;
       }
-      if (isValidValue(fields()[23], other.uncles)) {
-        this.uncles = data().deepCopy(fields()[23].schema(), other.uncles);
+      if (other.hasStatsBuilder()) {
+        this.statsBuilder = BlockStats.newBuilder(other.getStatsBuilder());
+      }
+      if (isValidValue(fields()[23], other.transactions)) {
+        this.transactions = data().deepCopy(fields()[23].schema(), other.transactions);
         fieldSetFlags()[23] = true;
+      }
+      if (isValidValue(fields()[24], other.uncles)) {
+        this.uncles = data().deepCopy(fields()[24].schema(), other.uncles);
+        fieldSetFlags()[24] = true;
       }
     }
 
@@ -956,13 +987,18 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
         this.uncleReward = data().deepCopy(fields()[21].schema(), other.uncleReward);
         fieldSetFlags()[21] = true;
       }
-      if (isValidValue(fields()[22], other.transactions)) {
-        this.transactions = data().deepCopy(fields()[22].schema(), other.transactions);
+      if (isValidValue(fields()[22], other.stats)) {
+        this.stats = data().deepCopy(fields()[22].schema(), other.stats);
         fieldSetFlags()[22] = true;
       }
-      if (isValidValue(fields()[23], other.uncles)) {
-        this.uncles = data().deepCopy(fields()[23].schema(), other.uncles);
+      this.statsBuilder = null;
+      if (isValidValue(fields()[23], other.transactions)) {
+        this.transactions = data().deepCopy(fields()[23].schema(), other.transactions);
         fieldSetFlags()[23] = true;
+      }
+      if (isValidValue(fields()[24], other.uncles)) {
+        this.uncles = data().deepCopy(fields()[24].schema(), other.uncles);
+        fieldSetFlags()[24] = true;
       }
     }
 
@@ -1900,6 +1936,80 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
     }
 
     /**
+      * Gets the value of the 'stats' field.
+      * @return The value.
+      */
+    public BlockStats getStats() {
+      return stats;
+    }
+
+    /**
+      * Sets the value of the 'stats' field.
+      * @param value The value of 'stats'.
+      * @return This builder.
+      */
+    public Builder setStats(BlockStats value) {
+      validate(fields()[22], value);
+      this.statsBuilder = null;
+      this.stats = value;
+      fieldSetFlags()[22] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'stats' field has been set.
+      * @return True if the 'stats' field has been set, false otherwise.
+      */
+    public boolean hasStats() {
+      return fieldSetFlags()[22];
+    }
+
+    /**
+     * Gets the Builder instance for the 'stats' field and creates one if it doesn't exist yet.
+     * @return This builder.
+     */
+    public BlockStats.Builder getStatsBuilder() {
+      if (statsBuilder == null) {
+        if (hasStats()) {
+          setStatsBuilder(BlockStats.newBuilder(stats));
+        } else {
+          setStatsBuilder(BlockStats.newBuilder());
+        }
+      }
+      return statsBuilder;
+    }
+
+    /**
+     * Sets the Builder instance for the 'stats' field
+     * @param value The builder instance that must be set.
+     * @return This builder.
+     */
+    public Builder setStatsBuilder(BlockStats.Builder value) {
+      clearStats();
+      statsBuilder = value;
+      return this;
+    }
+
+    /**
+     * Checks whether the 'stats' field has an active Builder instance
+     * @return True if the 'stats' field has an active Builder instance
+     */
+    public boolean hasStatsBuilder() {
+      return statsBuilder != null;
+    }
+
+    /**
+      * Clears the value of the 'stats' field.
+      * @return This builder.
+      */
+    public Builder clearStats() {
+      stats = null;
+      statsBuilder = null;
+      fieldSetFlags()[22] = false;
+      return this;
+    }
+
+    /**
       * Gets the value of the 'transactions' field.
       * Array of transactions
       * @return The value.
@@ -1915,9 +2025,9 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * @return This builder.
       */
     public Builder setTransactions(java.util.List<Transaction> value) {
-      validate(fields()[22], value);
+      validate(fields()[23], value);
       this.transactions = value;
-      fieldSetFlags()[22] = true;
+      fieldSetFlags()[23] = true;
       return this;
     }
 
@@ -1927,7 +2037,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * @return True if the 'transactions' field has been set, false otherwise.
       */
     public boolean hasTransactions() {
-      return fieldSetFlags()[22];
+      return fieldSetFlags()[23];
     }
 
 
@@ -1938,7 +2048,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       */
     public Builder clearTransactions() {
       transactions = null;
-      fieldSetFlags()[22] = false;
+      fieldSetFlags()[23] = false;
       return this;
     }
 
@@ -1958,9 +2068,9 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * @return This builder.
       */
     public Builder setUncles(java.util.List<CharSequence> value) {
-      validate(fields()[23], value);
+      validate(fields()[24], value);
       this.uncles = value;
-      fieldSetFlags()[23] = true;
+      fieldSetFlags()[24] = true;
       return this;
     }
 
@@ -1970,7 +2080,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       * @return True if the 'uncles' field has been set, false otherwise.
       */
     public boolean hasUncles() {
-      return fieldSetFlags()[23];
+      return fieldSetFlags()[24];
     }
 
 
@@ -1981,7 +2091,7 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
       */
     public Builder clearUncles() {
       uncles = null;
-      fieldSetFlags()[23] = false;
+      fieldSetFlags()[24] = false;
       return this;
     }
 
@@ -2012,8 +2122,13 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
         record.txsFees = fieldSetFlags()[19] ? this.txsFees : (Long) defaultValue(fields()[19], record.getConversion(19));
         record.blockReward = fieldSetFlags()[20] ? this.blockReward : (Long) defaultValue(fields()[20], record.getConversion(20));
         record.uncleReward = fieldSetFlags()[21] ? this.uncleReward : (Long) defaultValue(fields()[21], record.getConversion(21));
-        record.transactions = fieldSetFlags()[22] ? this.transactions : (java.util.List<Transaction>) defaultValue(fields()[22], record.getConversion(22));
-        record.uncles = fieldSetFlags()[23] ? this.uncles : (java.util.List<CharSequence>) defaultValue(fields()[23], record.getConversion(23));
+        if (statsBuilder != null) {
+          record.stats = this.statsBuilder.build();
+        } else {
+          record.stats = fieldSetFlags()[22] ? this.stats : (BlockStats) defaultValue(fields()[22], record.getConversion(22));
+        }
+        record.transactions = fieldSetFlags()[23] ? this.transactions : (java.util.List<Transaction>) defaultValue(fields()[23], record.getConversion(23));
+        record.uncles = fieldSetFlags()[24] ? this.uncles : (java.util.List<CharSequence>) defaultValue(fields()[24], record.getConversion(24));
         return record;
       } catch (Exception e) {
         throw new org.apache.avro.AvroRuntimeException(e);

@@ -316,7 +316,7 @@ func readBlock(r io.Reader) (*Block, error) {
 	if err != nil {
 		return nil, err
 	}
-	str.Stats, err = readBlockStats(r)
+	str.Stats, err = readUnionNullBlockStats(r)
 	if err != nil {
 		return nil, err
 	}
@@ -738,6 +738,33 @@ func readTransfer(r io.Reader) (*Transfer, error) {
 	return str, nil
 }
 
+func readUnionNullBlockStats(r io.Reader) (UnionNullBlockStats, error) {
+	field, err := readLong(r)
+	var unionStr UnionNullBlockStats
+	if err != nil {
+		return unionStr, err
+	}
+	unionStr.UnionType = UnionNullBlockStatsTypeEnum(field)
+	switch unionStr.UnionType {
+	case UnionNullBlockStatsTypeEnumNull:
+		val, err := readNull(r)
+		if err != nil {
+			return unionStr, err
+		}
+		unionStr.Null = val
+	case UnionNullBlockStatsTypeEnumBlockStats:
+		val, err := readBlockStats(r)
+		if err != nil {
+			return unionStr, err
+		}
+		unionStr.BlockStats = val
+
+	default:
+		return unionStr, fmt.Errorf("Invalid value for UnionNullBlockStats")
+	}
+	return unionStr, nil
+}
+
 func readUnionNullBytes(r io.Reader) (UnionNullBytes, error) {
 	field, err := readLong(r)
 	var unionStr UnionNullBytes
@@ -969,7 +996,7 @@ func writeBlock(r *Block, w io.Writer) error {
 	if err != nil {
 		return err
 	}
-	err = writeBlockStats(r.Stats, w)
+	err = writeUnionNullBlockStats(r.Stats, w)
 	if err != nil {
 		return err
 	}
@@ -1350,6 +1377,21 @@ func writeTransfer(r *Transfer, w io.Writer) error {
 	}
 
 	return nil
+}
+
+func writeUnionNullBlockStats(r UnionNullBlockStats, w io.Writer) error {
+	err := writeLong(int64(r.UnionType), w)
+	if err != nil {
+		return err
+	}
+	switch r.UnionType {
+	case UnionNullBlockStatsTypeEnumNull:
+		return writeNull(r.Null, w)
+	case UnionNullBlockStatsTypeEnumBlockStats:
+		return writeBlockStats(r.BlockStats, w)
+
+	}
+	return fmt.Errorf("Invalid value for UnionNullBlockStats")
 }
 
 func writeUnionNullBytes(r UnionNullBytes, w io.Writer) error {

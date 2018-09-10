@@ -118,7 +118,7 @@
     },
     {
       "name": "stats",
-      "type": {
+      "type": ["null", {
          "namespace": "io.enkrypt.bolt.models",
          "name": "BlockStats",
          "type": "record",
@@ -154,7 +154,7 @@
             "doc": "Total txn fees"
           }
          ]
-      }
+      }]
     },
     {
       "name": "transactions",
