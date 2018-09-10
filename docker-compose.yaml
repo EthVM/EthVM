@@ -161,40 +161,40 @@ services:
       SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: 'INFO'
       SCHEMA_REGISTRY_LOG4J_LOGGERS: 'org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR'
 
-  kafka-connect:
-    image: enkryptio/kafka-connect:latest
-    restart: unless-stopped
-    depends_on:
-      - zookeeper
-      - kafka
-      - mongodb
-      - kafka-schema-registry
-    networks:
-      - back
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:kafka-connect.ethvm.lan'
-      - 'traefik.port=8083'
-      - 'traefik.backend=kafka-connect'
-    environment:
-      CONNECT_BOOTSTRAP_SERVERS: 'PLAINTEXT://kafka:9092'
-      CONNECT_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      CONNECT_REST_ADVERTISED_HOST_NAME: 'kafka-connect'
-      CONNECT_LOG4J_ROOT_LOGLEVEL: 'INFO'
-      CONNECT_LOG4J_LOGGERS: 'org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR'
-      CONNECT_GROUP_ID: 'ethvm-mongo-sink'
-      CONNECT_KEY_CONVERTER: 'org.apache.kafka.connect.storage.StringConverter'
-      CONNECT_VALUE_CONVERTER: 'io.confluent.connect.avro.AvroConverter'
-      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: 'http://kafka-schema-registry:8081'
-      CONNECT_OFFSET_STORAGE_FILE_FILENAME: 'ethvm'
-      CONNECT_PLUGIN_PATH: '/usr/share/java,/usr/share/confluent-hub-components'
-      CONNECTOR_NAME: 'mongodb-blocks-sink'
-      CONNECTOR_CONNECTOR_CLASS: 'at.grahsl.kafka.connect.mongodb.MongoDbSinkConnector'
-      CONNECTOR_TOPICS: 'blocks'
-      CONNECTOR_TASKS_MAX: 1
-      CONNECTOR_MONGODB_CONNECTION_URI: 'mongodb://mongodb:27017/ethvm?w=1&journal=true'
-      CONNECTOR_MONGODB_COLLECTION: 'blocks'
+  # kafka-connect:
+  #   image: enkryptio/kafka-connect:latest
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - zookeeper
+  #     - kafka
+  #     - mongodb
+  #     - kafka-schema-registry
+  #   networks:
+  #     - back
+  #   labels:
+  #     - 'traefik.enable=true'
+  #     - 'traefik.default.protocol=http'
+  #     - 'traefik.frontend.rule=Host:kafka-connect.ethvm.lan'
+  #     - 'traefik.port=8083'
+  #     - 'traefik.backend=kafka-connect'
+  #   environment:
+  #     CONNECT_BOOTSTRAP_SERVERS: 'PLAINTEXT://kafka:9092'
+  #     CONNECT_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+  #     CONNECT_REST_ADVERTISED_HOST_NAME: 'kafka-connect'
+  #     CONNECT_LOG4J_ROOT_LOGLEVEL: 'INFO'
+  #     CONNECT_LOG4J_LOGGERS: 'org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR'
+  #     CONNECT_GROUP_ID: 'ethvm-mongo-sink'
+  #     CONNECT_KEY_CONVERTER: 'org.apache.kafka.connect.storage.StringConverter'
+  #     CONNECT_VALUE_CONVERTER: 'io.confluent.connect.avro.AvroConverter'
+  #     CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: 'http://kafka-schema-registry:8081'
+  #     CONNECT_OFFSET_STORAGE_FILE_FILENAME: 'ethvm'
+  #     CONNECT_PLUGIN_PATH: '/usr/share/java,/usr/share/confluent-hub-components'
+  #     CONNECTOR_NAME: 'mongodb-blocks-sink'
+  #     CONNECTOR_CONNECTOR_CLASS: 'at.grahsl.kafka.connect.mongodb.MongoDbSinkConnector'
+  #     CONNECTOR_TOPICS: 'blocks'
+  #     CONNECTOR_TASKS_MAX: 1
+  #     CONNECTOR_MONGODB_CONNECTION_URI: 'mongodb://mongodb:27017/ethvm?w=1&journal=true'
+  #     CONNECTOR_MONGODB_COLLECTION: 'blocks'
 
   geth-miner:
     # image: enkryptio/go-ethereum:latest
@@ -248,4 +248,4 @@ services:
       - |
         #echo "y" | geth removedb --datadir '/geth'
         geth --datadir '/geth' --ethvm init /genesis.json
-        geth --datadir '/geth' --verbosity 5 --networkid 1234 --identity geth --ethvm --ethvm-ignore-pending-txs-topic --ethvm-brokers 'kafka:9092' --ethvm-kafka-schema-registry-url 'http://kafka-schema-registry:8081' --ethvm-tracer-file '/geth/tracer.js' --gcmode archive --rpc --rpcaddr '0.0.0.0' --rpccorsdomain '*' --rpcapi 'admin,personal,db,eth,net,web3,txpool,miner' --syncmode full --nat 'extip:172.25.0.102' --nousb --nodiscover --maxpeers 2
+        geth --datadir '/geth' --verbosity 5 --networkid 1234 --identity geth --ethvm --ethvm-ignore-processing-pending-txs --ethvm-brokers 'kafka:9092' --ethvm-kafka-schema-registry-url 'http://kafka-schema-registry:8081' --ethvm-tracer-file '/geth/tracer.js' --gcmode archive --rpc --rpcaddr '0.0.0.0' --rpccorsdomain '*' --rpcapi 'admin,personal,db,eth,net,web3,txpool,miner' --syncmode full --nat 'extip:172.25.0.102' --nousb --nodiscover --maxpeers 2
