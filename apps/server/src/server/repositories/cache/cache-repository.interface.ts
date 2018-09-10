@@ -9,6 +9,6 @@ export interface CacheRepository extends Repository {
   getBlocks(limit: number, page: number): Promise<Block[]>
   putTransactions(txs: Tx[]): Promise<boolean>
   getTransactions(limit: number, page: number): Promise<Tx[]>
-  putExchangeRate(exchangerate: ExchangeRate): Promise<boolean>
-  getExchangeRate(token: string, to: string): Promise<Quote>
+  putRate(exchangerate: ExchangeRate): Promise<boolean>
+  getQuote(token: string, to: string): Promise<Quote>
 }

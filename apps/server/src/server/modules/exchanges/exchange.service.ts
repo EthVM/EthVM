@@ -11,7 +11,7 @@ export class ExchangeServiceImpl implements ExchangeService {
   constructor(readonly exchangeRepository: ExchangeRepository, readonly cacheRepository: CacheRepository) {}
 
   public getExchangeRate(token: string, to: string): Promise<Quote> {
-    return this.cacheRepository.getExchangeRate(token, to)
+    return this.cacheRepository.getQuote(token, to)
   }
 
   public fetchExchangeRates(): Promise<boolean> {

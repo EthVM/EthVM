@@ -35,7 +35,7 @@ export class CoinMarketCapRepository implements ExchangeRepository {
                 }
               }
               exchangerate.quotes = quotes
-              promises.push(this.cache.putExchangeRate(exchangerate))
+              promises.push(this.cache.putRate(exchangerate))
             }
           }
           Promise.all(promises)

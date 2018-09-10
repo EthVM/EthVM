@@ -102,7 +102,7 @@ export class RedisCacheRepository implements CacheRepository {
     return this.getArray<Tx>('transactions')
   }
 
-  public putExchangeRate(exchangerate: ExchangeRate): Promise<boolean> {
+  public putRate(exchangerate: ExchangeRate): Promise<boolean> {
     return new Promise(resolve => {
       this.redis
         .set(exchangerate.symbol, JSON.stringify(exchangerate), 'EX', 300)
@@ -118,7 +118,7 @@ export class RedisCacheRepository implements CacheRepository {
     })
   }
 
-  public getExchangeRate(token: string, to: string): Promise<Quote> {
+  public getQuote(token: string, to: string): Promise<Quote> {
     return new Promise((resolve, reject) => {
       this.redis
         .get(token)
