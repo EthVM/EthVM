@@ -14,7 +14,7 @@ import org.apache.avro.message.SchemaStore;
 @org.apache.avro.specific.AvroGenerated
 public class Transaction extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
   private static final long serialVersionUID = 5751173297275459092L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Transaction\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"hash\",\"type\":\"string\",\"doc\":\"Hash of the transaction\"},{\"name\":\"root\",\"type\":\"string\",\"doc\":\"Root of the parent block\"},{\"name\":\"index\",\"type\":\"int\",\"doc\":\"Integer of the transactions index position in the block\"},{\"name\":\"timestamp\",\"type\":{\"type\":\"long\",\"logicalType\":\"timestamp-millis\"},\"doc\":\"Unix timestamp for when the transaction was collated\"},{\"name\":\"nonce\",\"type\":\"long\",\"doc\":\"Number of transactions sent from a given address\"},{\"name\":\"nonceHash\",\"type\":\"string\",\"doc\":\"SHA3 of the transaction nonce\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"long\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":[\"null\",\"string\"],\"doc\":\"Address of the recipient (or null when contract creation)\"},{\"name\":\"toBalance\",\"type\":[\"null\",\"long\"],\"doc\":\"Balance of the receiver (or null when contract creation)\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"The data send along with the transaction\"},{\"name\":\"contractAddress\",\"type\":[\"null\",\"string\"],\"doc\":\"If a contract is created, the address of it (or null if is just a regular transaction)\"},{\"name\":\"value\",\"type\":\"long\",\"doc\":\"Amount of value transferred in Wei\"},{\"name\":\"gas\",\"type\":\"long\",\"doc\":\"Amount of gas provided by the sender\"},{\"name\":\"gasPrice\",\"type\":\"long\",\"doc\":\"Amount of gas price provided by the sender in Wei\"},{\"name\":\"gasUsed\",\"type\":\"long\",\"doc\":\"Amount of gas used consumed by the transaction\"},{\"name\":\"cumulativeGasUsed\",\"type\":\"long\",\"doc\":\"Cumulative gas used by the transaction\"},{\"name\":\"v\",\"type\":\"string\",\"doc\":\"Transaction signature v\"},{\"name\":\"r\",\"type\":\"string\",\"doc\":\"Transaction signature r\"},{\"name\":\"s\",\"type\":\"string\",\"doc\":\"Transaction signature s\"},{\"name\":\"status\",\"type\":\"long\",\"doc\":\"Transaction result status\"},{\"name\":\"logsBloom\",\"type\":\"bytes\",\"doc\":\"Generated and encoded logs by the transaction\"},{\"name\":\"logs\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Log\",\"fields\":[{\"name\":\"address\",\"type\":\"string\",\"desc\":\"Address of the contract that generated the event\"},{\"name\":\"topics\",\"type\":{\"type\":\"array\",\"items\":\"string\"},\"desc\":\"List of topics provided by the contract\"},{\"name\":\"data\",\"type\":\"bytes\",\"desc\":\"Supplied by the contract, usually ABI-encoded\"},{\"name\":\"index\",\"type\":\"int\",\"desc\":\"Index of the log in the receipt\"},{\"name\":\"removed\",\"type\":\"boolean\",\"desc\":\"True if this log was reverted due to a chain reorganisation\"}]}},\"doc\":\"\"},{\"name\":\"trace\",\"type\":{\"type\":\"record\",\"name\":\"Trace\",\"fields\":[{\"name\":\"isError\",\"type\":\"boolean\",\"desc\":\"Signals if an error happened during execution\"},{\"name\":\"msg\",\"type\":\"string\",\"desc\":\"Stores the error message\"},{\"name\":\"transfers\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Transfer\",\"fields\":[{\"name\":\"op\",\"type\":\"string\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"value\",\"type\":\"string\",\"doc\":\"Raw value of the transaction\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"string\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":\"string\",\"doc\":\"Address of the receiver\"},{\"name\":\"toBalance\",\"type\":\"string\",\"doc\":\"Balance of the receiver\"},{\"name\":\"input\",\"type\":\"string\",\"doc\":\"Raw input data\"}]}},\"desc\":\"An array describing transfers\"}]},\"doc\":\"Trace that describes contract creation, destruction or intenal transactions\"}]}");
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Transaction\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"hash\",\"type\":\"string\",\"doc\":\"Hash of the transaction\"},{\"name\":\"root\",\"type\":\"string\",\"doc\":\"Root of the parent block\"},{\"name\":\"index\",\"type\":\"int\",\"doc\":\"Integer of the transactions index position in the block\"},{\"name\":\"timestamp\",\"type\":{\"type\":\"long\",\"logicalType\":\"timestamp-millis\"},\"doc\":\"Unix timestamp for when the transaction was collated\"},{\"name\":\"nonce\",\"type\":\"long\",\"doc\":\"Number of transactions sent from a given address\"},{\"name\":\"nonceHash\",\"type\":\"string\",\"doc\":\"SHA3 of the transaction nonce\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"long\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":[\"null\",\"string\"],\"doc\":\"Address of the recipient (or null when contract creation)\"},{\"name\":\"toBalance\",\"type\":[\"null\",\"long\"],\"doc\":\"Balance of the receiver (or null when contract creation)\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"The data send along with the transaction\"},{\"name\":\"contractAddress\",\"type\":[\"null\",\"string\"],\"doc\":\"If a contract is created, the address of it (or null if is just a regular transaction)\"},{\"name\":\"value\",\"type\":\"long\",\"doc\":\"Amount of value transferred in Wei\"},{\"name\":\"gas\",\"type\":\"long\",\"doc\":\"Amount of gas provided by the sender\"},{\"name\":\"gasPrice\",\"type\":\"long\",\"doc\":\"Amount of gas price provided by the sender in Wei\"},{\"name\":\"gasUsed\",\"type\":\"long\",\"doc\":\"Amount of gas used consumed by the transaction\"},{\"name\":\"cumulativeGasUsed\",\"type\":\"long\",\"doc\":\"Cumulative gas used by the transaction\"},{\"name\":\"v\",\"type\":\"string\",\"doc\":\"Transaction signature v\"},{\"name\":\"r\",\"type\":\"string\",\"doc\":\"Transaction signature r\"},{\"name\":\"s\",\"type\":\"string\",\"doc\":\"Transaction signature s\"},{\"name\":\"status\",\"type\":\"long\",\"doc\":\"Transaction result status\"},{\"name\":\"logsBloom\",\"type\":\"bytes\",\"doc\":\"Generated and encoded logs by the transaction\"},{\"name\":\"logs\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Log\",\"fields\":[{\"name\":\"address\",\"type\":\"string\",\"desc\":\"Address of the contract that generated the event\"},{\"name\":\"topics\",\"type\":{\"type\":\"array\",\"items\":\"string\"},\"desc\":\"List of topics provided by the contract\"},{\"name\":\"data\",\"type\":\"bytes\",\"desc\":\"Supplied by the contract, usually ABI-encoded\"},{\"name\":\"index\",\"type\":\"int\",\"desc\":\"Index of the log in the receipt\"},{\"name\":\"removed\",\"type\":\"boolean\",\"desc\":\"True if this log was reverted due to a chain reorganisation\"}]}},\"doc\":\"Logs produced by executing smart contracts\"},{\"name\":\"trace\",\"type\":{\"type\":\"record\",\"name\":\"Trace\",\"fields\":[{\"name\":\"isError\",\"type\":\"boolean\",\"desc\":\"Signals if an error happened during execution\"},{\"name\":\"msg\",\"type\":\"string\",\"desc\":\"Stores the error message\"},{\"name\":\"transfers\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Transfer\",\"fields\":[{\"name\":\"op\",\"type\":\"string\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"value\",\"type\":\"string\",\"doc\":\"Raw value of the transaction\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"string\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":\"string\",\"doc\":\"Address of the receiver\"},{\"name\":\"toBalance\",\"type\":\"string\",\"doc\":\"Balance of the receiver\"},{\"name\":\"input\",\"type\":\"string\",\"doc\":\"Raw input data\"}]}},\"desc\":\"An array describing transfers\"}]},\"doc\":\"Trace that describes contract creation, destruction or intenal transactions\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -95,7 +95,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
   @Deprecated public long status;
   /** Generated and encoded logs by the transaction */
   @Deprecated public java.nio.ByteBuffer logsBloom;
-  /**  */
+  /** Logs produced by executing smart contracts */
   @Deprecated public java.util.List<io.enkrypt.bolt.models.Log> logs;
   /** Trace that describes contract creation, destruction or intenal transactions */
   @Deprecated public io.enkrypt.bolt.models.Trace trace;
@@ -131,7 +131,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * @param s Transaction signature s
    * @param status Transaction result status
    * @param logsBloom Generated and encoded logs by the transaction
-   * @param logs 
+   * @param logs Logs produced by executing smart contracts
    * @param trace Trace that describes contract creation, destruction or intenal transactions
    */
   public Transaction(java.lang.CharSequence hash, java.lang.CharSequence root, java.lang.Integer index, org.joda.time.DateTime timestamp, java.lang.Long nonce, java.lang.CharSequence nonceHash, java.lang.CharSequence from, java.lang.Long fromBalance, java.lang.CharSequence to, java.lang.Long toBalance, java.nio.ByteBuffer input, java.lang.CharSequence contractAddress, java.lang.Long value, java.lang.Long gas, java.lang.Long gasPrice, java.lang.Long gasUsed, java.lang.Long cumulativeGasUsed, java.lang.CharSequence v, java.lang.CharSequence r, java.lang.CharSequence s, java.lang.Long status, java.nio.ByteBuffer logsBloom, java.util.List<io.enkrypt.bolt.models.Log> logs, io.enkrypt.bolt.models.Trace trace) {
@@ -640,7 +640,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
   /**
    * Gets the value of the 'logs' field.
-   * @return 
+   * @return Logs produced by executing smart contracts
    */
   public java.util.List<io.enkrypt.bolt.models.Log> getLogs() {
     return logs;
@@ -648,7 +648,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
   /**
    * Sets the value of the 'logs' field.
-   * 
+   * Logs produced by executing smart contracts
    * @param value the value to set.
    */
   public void setLogs(java.util.List<io.enkrypt.bolt.models.Log> value) {
@@ -748,7 +748,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
     private long status;
     /** Generated and encoded logs by the transaction */
     private java.nio.ByteBuffer logsBloom;
-    /**  */
+    /** Logs produced by executing smart contracts */
     private java.util.List<io.enkrypt.bolt.models.Log> logs;
     /** Trace that describes contract creation, destruction or intenal transactions */
     private io.enkrypt.bolt.models.Trace trace;
@@ -1909,7 +1909,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
     /**
       * Gets the value of the 'logs' field.
-      * 
+      * Logs produced by executing smart contracts
       * @return The value.
       */
     public java.util.List<io.enkrypt.bolt.models.Log> getLogs() {
@@ -1918,7 +1918,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
     /**
       * Sets the value of the 'logs' field.
-      * 
+      * Logs produced by executing smart contracts
       * @param value The value of 'logs'.
       * @return This builder.
       */
@@ -1931,7 +1931,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
     /**
       * Checks whether the 'logs' field has been set.
-      * 
+      * Logs produced by executing smart contracts
       * @return True if the 'logs' field has been set, false otherwise.
       */
     public boolean hasLogs() {
@@ -1941,7 +1941,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
     /**
       * Clears the value of the 'logs' field.
-      * 
+      * Logs produced by executing smart contracts
       * @return This builder.
       */
     public io.enkrypt.bolt.models.Transaction.Builder clearLogs() {

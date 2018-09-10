@@ -19,14 +19,14 @@
       "doc": "Hash of the parent block"
     },
     {
-      "name": "isUncle",
+      "name": "uncle",
       "type": "boolean",
       "doc": "Determines if the block is an uncle or not"
     },
     {
-      "name": "isCanonical",
-      "type": "boolean",
-      "doc": "Determines if the block is canonical one or is a fork"
+      "name": "status",
+      "type": "int",
+      "doc": "Specifies the status of the block (could be CanonStatTy or SideStatTy)"
     },
     {
       "name": "timestamp",
@@ -118,41 +118,45 @@
     },
     {
       "name": "stats",
-      "type": ["null", {
-         "namespace": "io.enkrypt.bolt.models",
-         "name": "BlockStats",
-         "type": "record",
-         "fields": [
-          {
-            "name": "blockTimeMs",
-            "type": "int",
-            "doc": "Time taken to find the block in milliseconds"
-          },
-          {
-            "name": "numFailedTxs",
-            "type": "int",
-            "doc": "Number of failed transactions"
-          },
-          {
-            "name": "numSuccessfulTxs",
-            "type": "int",
-            "doc": "Number of successful transactions"
-          },
-          {
-            "name": "avgGasPrice",
-            "type": "long",
-            "doc": "Average gas price"
-          },
-          {
-            "name": "avgTxsFees",
-            "type": "long",
-            "doc": "Total gas price"
-          }
-         ]
-      }]
+      "type": [
+        "null",
+        {
+          "namespace": "io.enkrypt.bolt.models",
+          "name": "BlockStats",
+          "type": "record",
+          "fields": [
+            {
+              "name": "blockTimeMs",
+              "type": "int",
+              "doc": "Time taken to find the block in milliseconds"
+            },
+            {
+              "name": "numFailedTxs",
+              "type": "int",
+              "doc": "Number of failed transactions"
+            },
+            {
+              "name": "numSuccessfulTxs",
+              "type": "int",
+              "doc": "Number of successful transactions"
+            },
+            {
+              "name": "avgGasPrice",
+              "type": "long",
+              "doc": "Average gas price"
+            },
+            {
+              "name": "avgTxsFees",
+              "type": "long",
+              "doc": "Total gas price"
+            }
+          ]
+        }
+      ]
     },
     {
       "name": "transactions",
+      "doc": "Array of transactions",
       "type": {
         "type": "array",
         "items": {
@@ -275,6 +279,7 @@
             },
             {
               "name": "logs",
+              "doc": "Logs produced by executing smart contracts",
               "type": {
                 "type": "array",
                 "items": {
@@ -309,11 +314,11 @@
                     }
                   ]
                 }
-              },
-              "doc": ""
+              }
             },
             {
               "name": "trace",
+              "doc": "Trace that describes contract creation, destruction or intenal transactions",
               "type": {
                 "namespace": "io.enkrypt.bolt.models",
                 "name": "Trace",
@@ -331,6 +336,7 @@
                   },
                   {
                     "name": "transfers",
+                    "desc": "An array describing transfers",
                     "type": {
                       "type": "array",
                       "items": {
@@ -375,17 +381,14 @@
                           }
                         ]
                       }
-                    },
-                    "desc": "An array describing transfers"
+                    }
                   }
                 ]
-              },
-              "doc": "Trace that describes contract creation, destruction or intenal transactions"
+              }
             }
           ]
         }
-      },
-      "doc": "Array of transactions"
+      }
     },
     {
       "name": "uncles",

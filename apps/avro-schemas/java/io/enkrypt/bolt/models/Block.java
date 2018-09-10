@@ -13,8 +13,8 @@ import org.apache.avro.message.SchemaStore;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class Block extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 4836690963096465745L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Block\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"number\",\"type\":\"long\",\"doc\":\"The block number\"},{\"name\":\"hash\",\"type\":\"string\",\"doc\":\"Hash of the block\"},{\"name\":\"parentHash\",\"type\":\"string\",\"doc\":\"Hash of the parent block\"},{\"name\":\"isUncle\",\"type\":\"boolean\",\"doc\":\"Determines if the block is an uncle or not\"},{\"name\":\"isCanonical\",\"type\":\"boolean\",\"doc\":\"Determines if the block is canonical one or is a fork\"},{\"name\":\"timestamp\",\"type\":{\"type\":\"long\",\"logicalType\":\"timestamp-millis\"},\"doc\":\"Unix timestamp for when the block was collated\"},{\"name\":\"nonce\",\"type\":\"long\",\"doc\":\"Hash of the generated proof-of-work\"},{\"name\":\"mixDigest\",\"type\":\"string\",\"doc\":\"Block header mix digest\"},{\"name\":\"sha3Uncles\",\"type\":\"string\",\"doc\":\"SHA3 of the uncles data in the block\"},{\"name\":\"logsBloom\",\"type\":\"string\",\"doc\":\"Bloom filter for the logs of the block\"},{\"name\":\"stateRoot\",\"type\":\"string\",\"doc\":\"Root of the final state trie of the block\"},{\"name\":\"transactionsRoot\",\"type\":\"string\",\"doc\":\"Root of the final transactions trie of the block\"},{\"name\":\"miner\",\"type\":\"string\",\"doc\":\"The address of the beneficiary to whom the mining rewards were given\"},{\"name\":\"difficulty\",\"type\":\"long\",\"doc\":\"Current difficulty for this block\"},{\"name\":\"totalDifficulty\",\"type\":\"long\",\"doc\":\"Current total difficulty of the chain until this block\"},{\"name\":\"extraData\",\"type\":\"bytes\",\"doc\":\"The extra data field of this block\"},{\"name\":\"size\",\"type\":\"long\",\"doc\":\"Integer the size of this block in bytes\"},{\"name\":\"gasLimit\",\"type\":\"long\",\"doc\":\"The maximum gas allowed in this block\"},{\"name\":\"gasUsed\",\"type\":\"long\",\"doc\":\"The total used gas by all transactions in this block\"},{\"name\":\"txsFees\",\"type\":\"long\",\"doc\":\"Total transaction fees for this block\"},{\"name\":\"blockReward\",\"type\":\"long\",\"doc\":\"Total current block reward\"},{\"name\":\"uncleReward\",\"type\":\"long\",\"doc\":\"Total current uncle reward\"},{\"name\":\"stats\",\"type\":[\"null\",{\"type\":\"record\",\"name\":\"BlockStats\",\"fields\":[{\"name\":\"blockTimeMs\",\"type\":\"int\",\"doc\":\"Time taken to find the block in milliseconds\"},{\"name\":\"numFailedTxs\",\"type\":\"int\",\"doc\":\"Number of failed transactions\"},{\"name\":\"numSuccessfulTxs\",\"type\":\"int\",\"doc\":\"Number of successful transactions\"},{\"name\":\"avgGasPrice\",\"type\":\"long\",\"doc\":\"Average gas price\"},{\"name\":\"avgTxsFees\",\"type\":\"long\",\"doc\":\"Total gas price\"}]}]},{\"name\":\"transactions\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Transaction\",\"fields\":[{\"name\":\"hash\",\"type\":\"string\",\"doc\":\"Hash of the transaction\"},{\"name\":\"root\",\"type\":\"string\",\"doc\":\"Root of the parent block\"},{\"name\":\"index\",\"type\":\"int\",\"doc\":\"Integer of the transactions index position in the block\"},{\"name\":\"timestamp\",\"type\":{\"type\":\"long\",\"logicalType\":\"timestamp-millis\"},\"doc\":\"Unix timestamp for when the transaction was collated\"},{\"name\":\"nonce\",\"type\":\"long\",\"doc\":\"Number of transactions sent from a given address\"},{\"name\":\"nonceHash\",\"type\":\"string\",\"doc\":\"SHA3 of the transaction nonce\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"long\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":[\"null\",\"string\"],\"doc\":\"Address of the recipient (or null when contract creation)\"},{\"name\":\"toBalance\",\"type\":[\"null\",\"long\"],\"doc\":\"Balance of the receiver (or null when contract creation)\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"The data send along with the transaction\"},{\"name\":\"contractAddress\",\"type\":[\"null\",\"string\"],\"doc\":\"If a contract is created, the address of it (or null if is just a regular transaction)\"},{\"name\":\"value\",\"type\":\"long\",\"doc\":\"Amount of value transferred in Wei\"},{\"name\":\"gas\",\"type\":\"long\",\"doc\":\"Amount of gas provided by the sender\"},{\"name\":\"gasPrice\",\"type\":\"long\",\"doc\":\"Amount of gas price provided by the sender in Wei\"},{\"name\":\"gasUsed\",\"type\":\"long\",\"doc\":\"Amount of gas used consumed by the transaction\"},{\"name\":\"cumulativeGasUsed\",\"type\":\"long\",\"doc\":\"Cumulative gas used by the transaction\"},{\"name\":\"v\",\"type\":\"string\",\"doc\":\"Transaction signature v\"},{\"name\":\"r\",\"type\":\"string\",\"doc\":\"Transaction signature r\"},{\"name\":\"s\",\"type\":\"string\",\"doc\":\"Transaction signature s\"},{\"name\":\"status\",\"type\":\"long\",\"doc\":\"Transaction result status\"},{\"name\":\"logsBloom\",\"type\":\"bytes\",\"doc\":\"Generated and encoded logs by the transaction\"},{\"name\":\"logs\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Log\",\"fields\":[{\"name\":\"address\",\"type\":\"string\",\"desc\":\"Address of the contract that generated the event\"},{\"name\":\"topics\",\"type\":{\"type\":\"array\",\"items\":\"string\"},\"desc\":\"List of topics provided by the contract\"},{\"name\":\"data\",\"type\":\"bytes\",\"desc\":\"Supplied by the contract, usually ABI-encoded\"},{\"name\":\"index\",\"type\":\"int\",\"desc\":\"Index of the log in the receipt\"},{\"name\":\"removed\",\"type\":\"boolean\",\"desc\":\"True if this log was reverted due to a chain reorganisation\"}]}},\"doc\":\"\"},{\"name\":\"trace\",\"type\":{\"type\":\"record\",\"name\":\"Trace\",\"fields\":[{\"name\":\"isError\",\"type\":\"boolean\",\"desc\":\"Signals if an error happened during execution\"},{\"name\":\"msg\",\"type\":\"string\",\"desc\":\"Stores the error message\"},{\"name\":\"transfers\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Transfer\",\"fields\":[{\"name\":\"op\",\"type\":\"string\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"value\",\"type\":\"string\",\"doc\":\"Raw value of the transaction\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"string\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":\"string\",\"doc\":\"Address of the receiver\"},{\"name\":\"toBalance\",\"type\":\"string\",\"doc\":\"Balance of the receiver\"},{\"name\":\"input\",\"type\":\"string\",\"doc\":\"Raw input data\"}]}},\"desc\":\"An array describing transfers\"}]},\"doc\":\"Trace that describes contract creation, destruction or intenal transactions\"}]}},\"doc\":\"Array of transactions\"},{\"name\":\"uncles\",\"type\":{\"type\":\"array\",\"items\":\"string\"},\"doc\":\"Array of uncle hashes\"}]}");
+  private static final long serialVersionUID = 4703163660312736476L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Block\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"number\",\"type\":\"long\",\"doc\":\"The block number\"},{\"name\":\"hash\",\"type\":\"string\",\"doc\":\"Hash of the block\"},{\"name\":\"parentHash\",\"type\":\"string\",\"doc\":\"Hash of the parent block\"},{\"name\":\"uncle\",\"type\":\"boolean\",\"doc\":\"Determines if the block is an uncle or not\"},{\"name\":\"status\",\"type\":\"int\",\"doc\":\"Specifies the status of the block (could be CanonStatTy or SideStatTy)\"},{\"name\":\"timestamp\",\"type\":{\"type\":\"long\",\"logicalType\":\"timestamp-millis\"},\"doc\":\"Unix timestamp for when the block was collated\"},{\"name\":\"nonce\",\"type\":\"long\",\"doc\":\"Hash of the generated proof-of-work\"},{\"name\":\"mixDigest\",\"type\":\"string\",\"doc\":\"Block header mix digest\"},{\"name\":\"sha3Uncles\",\"type\":\"string\",\"doc\":\"SHA3 of the uncles data in the block\"},{\"name\":\"logsBloom\",\"type\":\"string\",\"doc\":\"Bloom filter for the logs of the block\"},{\"name\":\"stateRoot\",\"type\":\"string\",\"doc\":\"Root of the final state trie of the block\"},{\"name\":\"transactionsRoot\",\"type\":\"string\",\"doc\":\"Root of the final transactions trie of the block\"},{\"name\":\"miner\",\"type\":\"string\",\"doc\":\"The address of the beneficiary to whom the mining rewards were given\"},{\"name\":\"difficulty\",\"type\":\"long\",\"doc\":\"Current difficulty for this block\"},{\"name\":\"totalDifficulty\",\"type\":\"long\",\"doc\":\"Current total difficulty of the chain until this block\"},{\"name\":\"extraData\",\"type\":\"bytes\",\"doc\":\"The extra data field of this block\"},{\"name\":\"size\",\"type\":\"long\",\"doc\":\"Integer the size of this block in bytes\"},{\"name\":\"gasLimit\",\"type\":\"long\",\"doc\":\"The maximum gas allowed in this block\"},{\"name\":\"gasUsed\",\"type\":\"long\",\"doc\":\"The total used gas by all transactions in this block\"},{\"name\":\"txsFees\",\"type\":\"long\",\"doc\":\"Total transaction fees for this block\"},{\"name\":\"blockReward\",\"type\":\"long\",\"doc\":\"Total current block reward\"},{\"name\":\"uncleReward\",\"type\":\"long\",\"doc\":\"Total current uncle reward\"},{\"name\":\"stats\",\"type\":[\"null\",{\"type\":\"record\",\"name\":\"BlockStats\",\"fields\":[{\"name\":\"blockTimeMs\",\"type\":\"int\",\"doc\":\"Time taken to find the block in milliseconds\"},{\"name\":\"numFailedTxs\",\"type\":\"int\",\"doc\":\"Number of failed transactions\"},{\"name\":\"numSuccessfulTxs\",\"type\":\"int\",\"doc\":\"Number of successful transactions\"},{\"name\":\"avgGasPrice\",\"type\":\"long\",\"doc\":\"Average gas price\"},{\"name\":\"avgTxsFees\",\"type\":\"long\",\"doc\":\"Total gas price\"}]}]},{\"name\":\"transactions\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Transaction\",\"fields\":[{\"name\":\"hash\",\"type\":\"string\",\"doc\":\"Hash of the transaction\"},{\"name\":\"root\",\"type\":\"string\",\"doc\":\"Root of the parent block\"},{\"name\":\"index\",\"type\":\"int\",\"doc\":\"Integer of the transactions index position in the block\"},{\"name\":\"timestamp\",\"type\":{\"type\":\"long\",\"logicalType\":\"timestamp-millis\"},\"doc\":\"Unix timestamp for when the transaction was collated\"},{\"name\":\"nonce\",\"type\":\"long\",\"doc\":\"Number of transactions sent from a given address\"},{\"name\":\"nonceHash\",\"type\":\"string\",\"doc\":\"SHA3 of the transaction nonce\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"long\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":[\"null\",\"string\"],\"doc\":\"Address of the recipient (or null when contract creation)\"},{\"name\":\"toBalance\",\"type\":[\"null\",\"long\"],\"doc\":\"Balance of the receiver (or null when contract creation)\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"The data send along with the transaction\"},{\"name\":\"contractAddress\",\"type\":[\"null\",\"string\"],\"doc\":\"If a contract is created, the address of it (or null if is just a regular transaction)\"},{\"name\":\"value\",\"type\":\"long\",\"doc\":\"Amount of value transferred in Wei\"},{\"name\":\"gas\",\"type\":\"long\",\"doc\":\"Amount of gas provided by the sender\"},{\"name\":\"gasPrice\",\"type\":\"long\",\"doc\":\"Amount of gas price provided by the sender in Wei\"},{\"name\":\"gasUsed\",\"type\":\"long\",\"doc\":\"Amount of gas used consumed by the transaction\"},{\"name\":\"cumulativeGasUsed\",\"type\":\"long\",\"doc\":\"Cumulative gas used by the transaction\"},{\"name\":\"v\",\"type\":\"string\",\"doc\":\"Transaction signature v\"},{\"name\":\"r\",\"type\":\"string\",\"doc\":\"Transaction signature r\"},{\"name\":\"s\",\"type\":\"string\",\"doc\":\"Transaction signature s\"},{\"name\":\"status\",\"type\":\"long\",\"doc\":\"Transaction result status\"},{\"name\":\"logsBloom\",\"type\":\"bytes\",\"doc\":\"Generated and encoded logs by the transaction\"},{\"name\":\"logs\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Log\",\"fields\":[{\"name\":\"address\",\"type\":\"string\",\"desc\":\"Address of the contract that generated the event\"},{\"name\":\"topics\",\"type\":{\"type\":\"array\",\"items\":\"string\"},\"desc\":\"List of topics provided by the contract\"},{\"name\":\"data\",\"type\":\"bytes\",\"desc\":\"Supplied by the contract, usually ABI-encoded\"},{\"name\":\"index\",\"type\":\"int\",\"desc\":\"Index of the log in the receipt\"},{\"name\":\"removed\",\"type\":\"boolean\",\"desc\":\"True if this log was reverted due to a chain reorganisation\"}]}},\"doc\":\"Logs produced by executing smart contracts\"},{\"name\":\"trace\",\"type\":{\"type\":\"record\",\"name\":\"Trace\",\"fields\":[{\"name\":\"isError\",\"type\":\"boolean\",\"desc\":\"Signals if an error happened during execution\"},{\"name\":\"msg\",\"type\":\"string\",\"desc\":\"Stores the error message\"},{\"name\":\"transfers\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Transfer\",\"fields\":[{\"name\":\"op\",\"type\":\"string\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"value\",\"type\":\"string\",\"doc\":\"Raw value of the transaction\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"string\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":\"string\",\"doc\":\"Address of the receiver\"},{\"name\":\"toBalance\",\"type\":\"string\",\"doc\":\"Balance of the receiver\"},{\"name\":\"input\",\"type\":\"string\",\"doc\":\"Raw input data\"}]}},\"desc\":\"An array describing transfers\"}]},\"doc\":\"Trace that describes contract creation, destruction or intenal transactions\"}]}},\"doc\":\"Array of transactions\"},{\"name\":\"uncles\",\"type\":{\"type\":\"array\",\"items\":\"string\"},\"doc\":\"Array of uncle hashes\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -58,9 +58,9 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
   /** Hash of the parent block */
   @Deprecated public java.lang.CharSequence parentHash;
   /** Determines if the block is an uncle or not */
-  @Deprecated public boolean isUncle;
-  /** Determines if the block is canonical one or is a fork */
-  @Deprecated public boolean isCanonical;
+  @Deprecated public boolean uncle;
+  /** Specifies the status of the block (could be CanonStatTy or SideStatTy) */
+  @Deprecated public int status;
   /** Unix timestamp for when the block was collated */
   @Deprecated public org.joda.time.DateTime timestamp;
   /** Hash of the generated proof-of-work */
@@ -113,8 +113,8 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * @param number The block number
    * @param hash Hash of the block
    * @param parentHash Hash of the parent block
-   * @param isUncle Determines if the block is an uncle or not
-   * @param isCanonical Determines if the block is canonical one or is a fork
+   * @param uncle Determines if the block is an uncle or not
+   * @param status Specifies the status of the block (could be CanonStatTy or SideStatTy)
    * @param timestamp Unix timestamp for when the block was collated
    * @param nonce Hash of the generated proof-of-work
    * @param mixDigest Block header mix digest
@@ -136,12 +136,12 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
    * @param transactions Array of transactions
    * @param uncles Array of uncle hashes
    */
-  public Block(java.lang.Long number, java.lang.CharSequence hash, java.lang.CharSequence parentHash, java.lang.Boolean isUncle, java.lang.Boolean isCanonical, org.joda.time.DateTime timestamp, java.lang.Long nonce, java.lang.CharSequence mixDigest, java.lang.CharSequence sha3Uncles, java.lang.CharSequence logsBloom, java.lang.CharSequence stateRoot, java.lang.CharSequence transactionsRoot, java.lang.CharSequence miner, java.lang.Long difficulty, java.lang.Long totalDifficulty, java.nio.ByteBuffer extraData, java.lang.Long size, java.lang.Long gasLimit, java.lang.Long gasUsed, java.lang.Long txsFees, java.lang.Long blockReward, java.lang.Long uncleReward, io.enkrypt.bolt.models.BlockStats stats, java.util.List<io.enkrypt.bolt.models.Transaction> transactions, java.util.List<java.lang.CharSequence> uncles) {
+  public Block(java.lang.Long number, java.lang.CharSequence hash, java.lang.CharSequence parentHash, java.lang.Boolean uncle, java.lang.Integer status, org.joda.time.DateTime timestamp, java.lang.Long nonce, java.lang.CharSequence mixDigest, java.lang.CharSequence sha3Uncles, java.lang.CharSequence logsBloom, java.lang.CharSequence stateRoot, java.lang.CharSequence transactionsRoot, java.lang.CharSequence miner, java.lang.Long difficulty, java.lang.Long totalDifficulty, java.nio.ByteBuffer extraData, java.lang.Long size, java.lang.Long gasLimit, java.lang.Long gasUsed, java.lang.Long txsFees, java.lang.Long blockReward, java.lang.Long uncleReward, io.enkrypt.bolt.models.BlockStats stats, java.util.List<io.enkrypt.bolt.models.Transaction> transactions, java.util.List<java.lang.CharSequence> uncles) {
     this.number = number;
     this.hash = hash;
     this.parentHash = parentHash;
-    this.isUncle = isUncle;
-    this.isCanonical = isCanonical;
+    this.uncle = uncle;
+    this.status = status;
     this.timestamp = timestamp;
     this.nonce = nonce;
     this.mixDigest = mixDigest;
@@ -171,8 +171,8 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
     case 0: return number;
     case 1: return hash;
     case 2: return parentHash;
-    case 3: return isUncle;
-    case 4: return isCanonical;
+    case 3: return uncle;
+    case 4: return status;
     case 5: return timestamp;
     case 6: return nonce;
     case 7: return mixDigest;
@@ -244,8 +244,8 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
     case 0: number = (java.lang.Long)value$; break;
     case 1: hash = (java.lang.CharSequence)value$; break;
     case 2: parentHash = (java.lang.CharSequence)value$; break;
-    case 3: isUncle = (java.lang.Boolean)value$; break;
-    case 4: isCanonical = (java.lang.Boolean)value$; break;
+    case 3: uncle = (java.lang.Boolean)value$; break;
+    case 4: status = (java.lang.Integer)value$; break;
     case 5: timestamp = (org.joda.time.DateTime)value$; break;
     case 6: nonce = (java.lang.Long)value$; break;
     case 7: mixDigest = (java.lang.CharSequence)value$; break;
@@ -322,37 +322,37 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
   }
 
   /**
-   * Gets the value of the 'isUncle' field.
+   * Gets the value of the 'uncle' field.
    * @return Determines if the block is an uncle or not
    */
-  public java.lang.Boolean getIsUncle() {
-    return isUncle;
+  public java.lang.Boolean getUncle() {
+    return uncle;
   }
 
   /**
-   * Sets the value of the 'isUncle' field.
+   * Sets the value of the 'uncle' field.
    * Determines if the block is an uncle or not
    * @param value the value to set.
    */
-  public void setIsUncle(java.lang.Boolean value) {
-    this.isUncle = value;
+  public void setUncle(java.lang.Boolean value) {
+    this.uncle = value;
   }
 
   /**
-   * Gets the value of the 'isCanonical' field.
-   * @return Determines if the block is canonical one or is a fork
+   * Gets the value of the 'status' field.
+   * @return Specifies the status of the block (could be CanonStatTy or SideStatTy)
    */
-  public java.lang.Boolean getIsCanonical() {
-    return isCanonical;
+  public java.lang.Integer getStatus() {
+    return status;
   }
 
   /**
-   * Sets the value of the 'isCanonical' field.
-   * Determines if the block is canonical one or is a fork
+   * Sets the value of the 'status' field.
+   * Specifies the status of the block (could be CanonStatTy or SideStatTy)
    * @param value the value to set.
    */
-  public void setIsCanonical(java.lang.Boolean value) {
-    this.isCanonical = value;
+  public void setStatus(java.lang.Integer value) {
+    this.status = value;
   }
 
   /**
@@ -733,9 +733,9 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
     /** Hash of the parent block */
     private java.lang.CharSequence parentHash;
     /** Determines if the block is an uncle or not */
-    private boolean isUncle;
-    /** Determines if the block is canonical one or is a fork */
-    private boolean isCanonical;
+    private boolean uncle;
+    /** Specifies the status of the block (could be CanonStatTy or SideStatTy) */
+    private int status;
     /** Unix timestamp for when the block was collated */
     private org.joda.time.DateTime timestamp;
     /** Hash of the generated proof-of-work */
@@ -800,12 +800,12 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
         this.parentHash = data().deepCopy(fields()[2].schema(), other.parentHash);
         fieldSetFlags()[2] = true;
       }
-      if (isValidValue(fields()[3], other.isUncle)) {
-        this.isUncle = data().deepCopy(fields()[3].schema(), other.isUncle);
+      if (isValidValue(fields()[3], other.uncle)) {
+        this.uncle = data().deepCopy(fields()[3].schema(), other.uncle);
         fieldSetFlags()[3] = true;
       }
-      if (isValidValue(fields()[4], other.isCanonical)) {
-        this.isCanonical = data().deepCopy(fields()[4].schema(), other.isCanonical);
+      if (isValidValue(fields()[4], other.status)) {
+        this.status = data().deepCopy(fields()[4].schema(), other.status);
         fieldSetFlags()[4] = true;
       }
       if (isValidValue(fields()[5], other.timestamp)) {
@@ -911,12 +911,12 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
         this.parentHash = data().deepCopy(fields()[2].schema(), other.parentHash);
         fieldSetFlags()[2] = true;
       }
-      if (isValidValue(fields()[3], other.isUncle)) {
-        this.isUncle = data().deepCopy(fields()[3].schema(), other.isUncle);
+      if (isValidValue(fields()[3], other.uncle)) {
+        this.uncle = data().deepCopy(fields()[3].schema(), other.uncle);
         fieldSetFlags()[3] = true;
       }
-      if (isValidValue(fields()[4], other.isCanonical)) {
-        this.isCanonical = data().deepCopy(fields()[4].schema(), other.isCanonical);
+      if (isValidValue(fields()[4], other.status)) {
+        this.status = data().deepCopy(fields()[4].schema(), other.status);
         fieldSetFlags()[4] = true;
       }
       if (isValidValue(fields()[5], other.timestamp)) {
@@ -1131,85 +1131,85 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
     }
 
     /**
-      * Gets the value of the 'isUncle' field.
+      * Gets the value of the 'uncle' field.
       * Determines if the block is an uncle or not
       * @return The value.
       */
-    public java.lang.Boolean getIsUncle() {
-      return isUncle;
+    public java.lang.Boolean getUncle() {
+      return uncle;
     }
 
     /**
-      * Sets the value of the 'isUncle' field.
+      * Sets the value of the 'uncle' field.
       * Determines if the block is an uncle or not
-      * @param value The value of 'isUncle'.
+      * @param value The value of 'uncle'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Block.Builder setIsUncle(boolean value) {
+    public io.enkrypt.bolt.models.Block.Builder setUncle(boolean value) {
       validate(fields()[3], value);
-      this.isUncle = value;
+      this.uncle = value;
       fieldSetFlags()[3] = true;
       return this;
     }
 
     /**
-      * Checks whether the 'isUncle' field has been set.
+      * Checks whether the 'uncle' field has been set.
       * Determines if the block is an uncle or not
-      * @return True if the 'isUncle' field has been set, false otherwise.
+      * @return True if the 'uncle' field has been set, false otherwise.
       */
-    public boolean hasIsUncle() {
+    public boolean hasUncle() {
       return fieldSetFlags()[3];
     }
 
 
     /**
-      * Clears the value of the 'isUncle' field.
+      * Clears the value of the 'uncle' field.
       * Determines if the block is an uncle or not
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Block.Builder clearIsUncle() {
+    public io.enkrypt.bolt.models.Block.Builder clearUncle() {
       fieldSetFlags()[3] = false;
       return this;
     }
 
     /**
-      * Gets the value of the 'isCanonical' field.
-      * Determines if the block is canonical one or is a fork
+      * Gets the value of the 'status' field.
+      * Specifies the status of the block (could be CanonStatTy or SideStatTy)
       * @return The value.
       */
-    public java.lang.Boolean getIsCanonical() {
-      return isCanonical;
+    public java.lang.Integer getStatus() {
+      return status;
     }
 
     /**
-      * Sets the value of the 'isCanonical' field.
-      * Determines if the block is canonical one or is a fork
-      * @param value The value of 'isCanonical'.
+      * Sets the value of the 'status' field.
+      * Specifies the status of the block (could be CanonStatTy or SideStatTy)
+      * @param value The value of 'status'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Block.Builder setIsCanonical(boolean value) {
+    public io.enkrypt.bolt.models.Block.Builder setStatus(int value) {
       validate(fields()[4], value);
-      this.isCanonical = value;
+      this.status = value;
       fieldSetFlags()[4] = true;
       return this;
     }
 
     /**
-      * Checks whether the 'isCanonical' field has been set.
-      * Determines if the block is canonical one or is a fork
-      * @return True if the 'isCanonical' field has been set, false otherwise.
+      * Checks whether the 'status' field has been set.
+      * Specifies the status of the block (could be CanonStatTy or SideStatTy)
+      * @return True if the 'status' field has been set, false otherwise.
       */
-    public boolean hasIsCanonical() {
+    public boolean hasStatus() {
       return fieldSetFlags()[4];
     }
 
 
     /**
-      * Clears the value of the 'isCanonical' field.
-      * Determines if the block is canonical one or is a fork
+      * Clears the value of the 'status' field.
+      * Specifies the status of the block (could be CanonStatTy or SideStatTy)
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Block.Builder clearIsCanonical() {
+    public io.enkrypt.bolt.models.Block.Builder clearStatus() {
       fieldSetFlags()[4] = false;
       return this;
     }
@@ -2103,8 +2103,8 @@ public class Block extends org.apache.avro.specific.SpecificRecordBase implement
         record.number = fieldSetFlags()[0] ? this.number : (java.lang.Long) defaultValue(fields()[0], record.getConversion(0));
         record.hash = fieldSetFlags()[1] ? this.hash : (java.lang.CharSequence) defaultValue(fields()[1], record.getConversion(1));
         record.parentHash = fieldSetFlags()[2] ? this.parentHash : (java.lang.CharSequence) defaultValue(fields()[2], record.getConversion(2));
-        record.isUncle = fieldSetFlags()[3] ? this.isUncle : (java.lang.Boolean) defaultValue(fields()[3], record.getConversion(3));
-        record.isCanonical = fieldSetFlags()[4] ? this.isCanonical : (java.lang.Boolean) defaultValue(fields()[4], record.getConversion(4));
+        record.uncle = fieldSetFlags()[3] ? this.uncle : (java.lang.Boolean) defaultValue(fields()[3], record.getConversion(3));
+        record.status = fieldSetFlags()[4] ? this.status : (java.lang.Integer) defaultValue(fields()[4], record.getConversion(4));
         record.timestamp = fieldSetFlags()[5] ? this.timestamp : (org.joda.time.DateTime) defaultValue(fields()[5], record.getConversion(5));
         record.nonce = fieldSetFlags()[6] ? this.nonce : (java.lang.Long) defaultValue(fields()[6], record.getConversion(6));
         record.mixDigest = fieldSetFlags()[7] ? this.mixDigest : (java.lang.CharSequence) defaultValue(fields()[7], record.getConversion(7));

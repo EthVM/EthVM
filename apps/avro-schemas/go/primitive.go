@@ -212,11 +212,11 @@ func readBlock(r io.Reader) (*Block, error) {
 	if err != nil {
 		return nil, err
 	}
-	str.IsUncle, err = readBool(r)
+	str.Uncle, err = readBool(r)
 	if err != nil {
 		return nil, err
 	}
-	str.IsCanonical, err = readBool(r)
+	str.Status, err = readInt(r)
 	if err != nil {
 		return nil, err
 	}
@@ -876,11 +876,11 @@ func writeBlock(r *Block, w io.Writer) error {
 	if err != nil {
 		return err
 	}
-	err = writeBool(r.IsUncle, w)
+	err = writeBool(r.Uncle, w)
 	if err != nil {
 		return err
 	}
-	err = writeBool(r.IsCanonical, w)
+	err = writeInt(r.Status, w)
 	if err != nil {
 		return err
 	}
