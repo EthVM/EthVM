@@ -1,6 +1,5 @@
 #!/bin/bash -e
 
-
 AVRO_TOOLS="docker run --rm -v $(pwd):/share enkryptio/avro-tools"
 
 GO_GEN="${AVRO_TOOLS} go"
