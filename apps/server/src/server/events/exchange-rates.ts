@@ -16,7 +16,7 @@ const getExchangeRatesEvent: SocketEvent = {
   },
 
   onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: ExchangeRatePayload): Promise<any> =>
-    fetch('http://still-waters-52916.herokuapp.com/ticker').then(res => res.json())
+    server.exchangesService.getExchangeRate(payload.symbol, payload.to)
 }
 
 export default getExchangeRatesEvent

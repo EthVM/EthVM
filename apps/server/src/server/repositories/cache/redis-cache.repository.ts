@@ -5,7 +5,7 @@ import { Tx } from '@app/server/modules/txs'
 import { CacheRepository } from '@app/server/repositories'
 import { bufferToHex } from 'ethereumjs-util'
 import * as Redis from 'ioredis'
-import { ExchangeRate } from '../../modules/exchanges'
+import { ExchangeRate, Quote } from '../../modules/exchanges'
 
 export interface RedisCacheRepositoryOpts {
   host: string
@@ -45,7 +45,7 @@ export class RedisCacheRepository implements CacheRepository {
   }
 
   public putBlock(block: Block): Promise<boolean> {
-    logger.debug(`RedisDataStore - putBlock / Block: ${bufferToHex(block.hash)}`)
+    logger.debug(`RedisDataStore - putBlock / Block: ${block.hash}`)
 
     return this.getArray<Block>('blocks')
       .then((blocks: Block[]) => {
@@ -105,7 +105,7 @@ export class RedisCacheRepository implements CacheRepository {
   public putExchangeRate(exchangerate: ExchangeRate): Promise<boolean> {
     return new Promise(resolve => {
       this.redis
-        .set(exchangerate.base, exchangerate)
+        .set(exchangerate.symbol, JSON.stringify(exchangerate), 'EX', 300)
         .then(result => {
           if (!result) {
             resolve(false)
@@ -118,17 +118,22 @@ export class RedisCacheRepository implements CacheRepository {
     })
   }
 
-  public getExchangeRate(token: string): Promise<ExchangeRate> {
+  public getExchangeRate(token: string, to: string): Promise<Quote> {
     return new Promise((resolve, reject) => {
       this.redis
         .get(token)
         .then(result => {
           if (!result) {
             reject()
-          } else {
-            const val = JSON.parse(result) as ExchangeRate
-            resolve(val)
+            return
           }
+          const val = JSON.parse(result) as ExchangeRate
+          val.quotes.forEach(q => {
+            if (q.to === 'USD') {
+              resolve(q)
+              return
+            }
+          })
         })
         .catch(error => {
           reject(error)

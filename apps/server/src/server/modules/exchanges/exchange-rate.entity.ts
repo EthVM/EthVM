@@ -1,13 +1,14 @@
 export interface ExchangeRate {
-  base: string
   symbol: string
-  quote: string
+  rank?: number | null
+  quotes: Quote[]
+  total_supply: number | null
+}
+
+export interface Quote {
+  to: string
   price: string
-  open_24h: string
-  low_24h: string
-  exchange: string
-  supply: number
-  market_cap: number
-  last_update: number
-  total_volume_24h: string
+  market_cap: number | null
+  last_update: number | null
+  vol_24h: string | null
 }

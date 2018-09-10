@@ -1,16 +1,20 @@
-import { ExchangeRate } from '@app/server/modules/exchanges'
+import { logger } from '@app/logger'
+import { ExchangeRate, ExchangeRepository, Quote } from '@app/server/modules/exchanges'
+import { CacheRepository } from '@app/server/repositories'
 
 export interface ExchangeService {
-  getExchangeRate(token: string): Promise<ExchangeRate>
-  getExchangeRates(tokens: string[]): Promise<ExchangeRate[]>
+  getExchangeRate(token: string, to: string): Promise<Quote>
+  fetchExchangeRates(): Promise<boolean>
 }
 
-export class MockExchangeServiceImpl implements ExchangeService {
-  public getExchangeRate(token: string): Promise<ExchangeRate> {
-    throw new Error('Method not implemented.')
+export class ExchangeServiceImpl implements ExchangeService {
+  constructor(readonly exchangeRepository: ExchangeRepository, readonly cacheRepository: CacheRepository) {}
+
+  public getExchangeRate(token: string, to: string): Promise<Quote> {
+    return this.cacheRepository.getExchangeRate(token, to)
   }
 
-  public getExchangeRates(tokens: string[]): Promise<ExchangeRate[]> {
-    throw new Error('Method not implemented.')
+  public fetchExchangeRates(): Promise<boolean> {
+    return this.exchangeRepository.fetchAll()
   }
 }

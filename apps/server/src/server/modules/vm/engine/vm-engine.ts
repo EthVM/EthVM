@@ -30,14 +30,14 @@ export class VmEngine {
     return this.client.request('eth_getBalance', [address, 'latest'])
   }
 
-  public getTokensBalance(address: string): Promise<Token[]> {
+  public getTokens(address: string): Promise<Token[]> {
     return new Promise(async (resolve, reject) => {
       const argss = ['address', 'bool', 'bool', 'bool', 'uint256']
       const vals = [address, 'true', 'true', 'true', 0]
 
       const encoded = this.encodeCall('getAllBalance', argss, vals)
       try {
-        const payload = [{ to: this.opts.tokensAddress.address, data: encoded }, 'pending']
+        const payload = [{ to: this.opts.tokensAddress.address, data: encoded }, 'latest']
         const response = await this.client.request('eth_call', payload)
         const tokens = this.decode(response.result || [])
         resolve(tokens)
