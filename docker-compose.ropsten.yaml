@@ -161,40 +161,40 @@ services:
       SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: 'INFO'
       SCHEMA_REGISTRY_LOG4J_LOGGERS: 'org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR'
 
-  kafka-connect:
-    image: enkryptio/kafka-connect:latest
-    restart: unless-stopped
-    depends_on:
-      - zookeeper
-      - kafka
-      - mongodb
-      - kafka-schema-registry
-    networks:
-      - back
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:kafka-connect.ethvm.lan'
-      - 'traefik.port=8083'
-      - 'traefik.backend=kafka-connect'
-    environment:
-      CONNECT_BOOTSTRAP_SERVERS: 'PLAINTEXT://kafka:9092'
-      CONNECT_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      CONNECT_REST_ADVERTISED_HOST_NAME: 'kafka-connect'
-      CONNECT_LOG4J_ROOT_LOGLEVEL: 'INFO'
-      CONNECT_LOG4J_LOGGERS: 'org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR'
-      CONNECT_GROUP_ID: 'ethvm-mongo-sink'
-      CONNECT_KEY_CONVERTER: 'org.apache.kafka.connect.storage.StringConverter'
-      CONNECT_VALUE_CONVERTER: 'io.confluent.connect.avro.AvroConverter'
-      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: 'http://kafka-schema-registry:8081'
-      CONNECT_OFFSET_STORAGE_FILE_FILENAME: 'ethvm'
-      CONNECT_PLUGIN_PATH: '/usr/share/java,/usr/share/confluent-hub-components'
-      CONNECTOR_NAME: 'mongodb-blocks-sink'
-      CONNECTOR_CONNECTOR_CLASS: 'at.grahsl.kafka.connect.mongodb.MongoDbSinkConnector'
-      CONNECTOR_TOPICS: 'blocks'
-      CONNECTOR_TASKS_MAX: 1
-      CONNECTOR_MONGODB_CONNECTION_URI: 'mongodb://mongodb:27017/ethvm?w=1&journal=true'
-      CONNECTOR_MONGODB_COLLECTION: 'blocks'
+#  kafka-connect:
+#    image: enkryptio/kafka-connect:latest
+#    restart: unless-stopped
+#    depends_on:
+#      - zookeeper
+#      - kafka
+#      - mongodb
+#      - kafka-schema-registry
+#    networks:
+#      - back
+#    labels:
+#      - 'traefik.enable=true'
+#      - 'traefik.default.protocol=http'
+#      - 'traefik.frontend.rule=Host:kafka-connect.ethvm.lan'
+#      - 'traefik.port=8083'
+#      - 'traefik.backend=kafka-connect'
+#    environment:
+#      CONNECT_BOOTSTRAP_SERVERS: 'PLAINTEXT://kafka:9092'
+#      CONNECT_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+#      CONNECT_REST_ADVERTISED_HOST_NAME: 'kafka-connect'
+#      CONNECT_LOG4J_ROOT_LOGLEVEL: 'INFO'
+#      CONNECT_LOG4J_LOGGERS: 'org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR'
+#      CONNECT_GROUP_ID: 'ethvm-mongo-sink'
+#      CONNECT_KEY_CONVERTER: 'org.apache.kafka.connect.storage.StringConverter'
+#      CONNECT_VALUE_CONVERTER: 'io.confluent.connect.avro.AvroConverter'
+#      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: 'http://kafka-schema-registry:8081'
+#      CONNECT_OFFSET_STORAGE_FILE_FILENAME: 'ethvm'
+#      CONNECT_PLUGIN_PATH: '/usr/share/java,/usr/share/confluent-hub-components'
+#      CONNECTOR_NAME: 'mongodb-blocks-sink'
+#      CONNECTOR_CONNECTOR_CLASS: 'at.grahsl.kafka.connect.mongodb.MongoDbSinkConnector'
+#      CONNECTOR_TOPICS: 'blocks'
+#      CONNECTOR_TASKS_MAX: 1
+#      CONNECTOR_MONGODB_CONNECTION_URI: 'mongodb://mongodb:27017/ethvm?w=1&journal=true'
+#      CONNECTOR_MONGODB_COLLECTION: 'blocks'
 
   geth:
     # image: enkryptio/go-ethereum:latest

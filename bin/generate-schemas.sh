@@ -1,6 +1,12 @@
 #!/bin/bash -e
 
-gogen-avro --package=models apps/avro-schemas/go apps/avro-schemas/block.schema.v1.asvc apps/avro-schemas/pendingtx.schema.v1.asvc
 
-avro-tools compile schema apps/avro-schemas/block.schema.v1.asvc apps/avro-schemas/java
-avro-tools compile schema apps/avro-schemas/pendingtx.schema.v1.asvc apps/avro-schemas/java
+AVRO_TOOLS="docker run --rm -v $(pwd):/share enkryptio/avro-tools"
+
+GO_GEN="${AVRO_TOOLS} go"
+JAVA_GEN="${AVRO_TOOLS} java"
+
+${GO_GEN} --package=models /share/apps/avro-schemas/go /share/apps/avro-schemas/block.schema.v1.asvc /share/apps/avro-schemas/pendingtx.schema.v1.asvc
+
+${JAVA_GEN} compile schema /share/apps/avro-schemas/block.schema.v1.asvc /share/apps/avro-schemas/java
+${JAVA_GEN} compile schema /share/apps/avro-schemas/pendingtx.schema.v1.asvc /share/apps/avro-schemas/java
