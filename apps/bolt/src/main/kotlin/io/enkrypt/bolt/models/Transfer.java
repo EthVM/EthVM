@@ -13,8 +13,8 @@ import org.apache.avro.message.SchemaStore;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class Transfer extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = -5488701600023039448L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Transfer\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"op\",\"type\":\"string\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"\"},{\"name\":\"to\",\"type\":\"string\",\"doc\":\"\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"\"}]}");
+  private static final long serialVersionUID = -5264509142911970470L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Transfer\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"op\",\"type\":\"string\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"value\",\"type\":\"string\",\"doc\":\"Raw value of the transaction\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"string\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":\"string\",\"doc\":\"Address of the receiver\"},{\"name\":\"toBalance\",\"type\":\"string\",\"doc\":\"Balance of the receiver\"},{\"name\":\"input\",\"type\":\"string\",\"doc\":\"Raw input data\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -53,12 +53,18 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
 
   /** Type of op executed inside the transaction */
   @Deprecated public java.lang.CharSequence op;
-  /**  */
+  /** Raw value of the transaction */
+  @Deprecated public java.lang.CharSequence value;
+  /** Address of the sender */
   @Deprecated public java.lang.CharSequence from;
-  /**  */
+  /** Balance of the sender */
+  @Deprecated public java.lang.CharSequence fromBalance;
+  /** Address of the receiver */
   @Deprecated public java.lang.CharSequence to;
-  /**  */
-  @Deprecated public java.nio.ByteBuffer input;
+  /** Balance of the receiver */
+  @Deprecated public java.lang.CharSequence toBalance;
+  /** Raw input data */
+  @Deprecated public java.lang.CharSequence input;
 
   /**
    * Default constructor.  Note that this does not initialize fields
@@ -70,14 +76,20 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
   /**
    * All-args constructor.
    * @param op Type of op executed inside the transaction
-   * @param from 
-   * @param to 
-   * @param input 
+   * @param value Raw value of the transaction
+   * @param from Address of the sender
+   * @param fromBalance Balance of the sender
+   * @param to Address of the receiver
+   * @param toBalance Balance of the receiver
+   * @param input Raw input data
    */
-  public Transfer(java.lang.CharSequence op, java.lang.CharSequence from, java.lang.CharSequence to, java.nio.ByteBuffer input) {
+  public Transfer(java.lang.CharSequence op, java.lang.CharSequence value, java.lang.CharSequence from, java.lang.CharSequence fromBalance, java.lang.CharSequence to, java.lang.CharSequence toBalance, java.lang.CharSequence input) {
     this.op = op;
+    this.value = value;
     this.from = from;
+    this.fromBalance = fromBalance;
     this.to = to;
+    this.toBalance = toBalance;
     this.input = input;
   }
 
@@ -86,9 +98,12 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
   public java.lang.Object get(int field$) {
     switch (field$) {
     case 0: return op;
-    case 1: return from;
-    case 2: return to;
-    case 3: return input;
+    case 1: return value;
+    case 2: return from;
+    case 3: return fromBalance;
+    case 4: return to;
+    case 5: return toBalance;
+    case 6: return input;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -98,9 +113,12 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
   public void put(int field$, java.lang.Object value$) {
     switch (field$) {
     case 0: op = (java.lang.CharSequence)value$; break;
-    case 1: from = (java.lang.CharSequence)value$; break;
-    case 2: to = (java.lang.CharSequence)value$; break;
-    case 3: input = (java.nio.ByteBuffer)value$; break;
+    case 1: value = (java.lang.CharSequence)value$; break;
+    case 2: from = (java.lang.CharSequence)value$; break;
+    case 3: fromBalance = (java.lang.CharSequence)value$; break;
+    case 4: to = (java.lang.CharSequence)value$; break;
+    case 5: toBalance = (java.lang.CharSequence)value$; break;
+    case 6: input = (java.lang.CharSequence)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -123,8 +141,25 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
   }
 
   /**
+   * Gets the value of the 'value' field.
+   * @return Raw value of the transaction
+   */
+  public java.lang.CharSequence getValue() {
+    return value;
+  }
+
+  /**
+   * Sets the value of the 'value' field.
+   * Raw value of the transaction
+   * @param value the value to set.
+   */
+  public void setValue(java.lang.CharSequence value) {
+    this.value = value;
+  }
+
+  /**
    * Gets the value of the 'from' field.
-   * @return 
+   * @return Address of the sender
    */
   public java.lang.CharSequence getFrom() {
     return from;
@@ -132,7 +167,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
 
   /**
    * Sets the value of the 'from' field.
-   * 
+   * Address of the sender
    * @param value the value to set.
    */
   public void setFrom(java.lang.CharSequence value) {
@@ -140,8 +175,25 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
   }
 
   /**
+   * Gets the value of the 'fromBalance' field.
+   * @return Balance of the sender
+   */
+  public java.lang.CharSequence getFromBalance() {
+    return fromBalance;
+  }
+
+  /**
+   * Sets the value of the 'fromBalance' field.
+   * Balance of the sender
+   * @param value the value to set.
+   */
+  public void setFromBalance(java.lang.CharSequence value) {
+    this.fromBalance = value;
+  }
+
+  /**
    * Gets the value of the 'to' field.
-   * @return 
+   * @return Address of the receiver
    */
   public java.lang.CharSequence getTo() {
     return to;
@@ -149,7 +201,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
 
   /**
    * Sets the value of the 'to' field.
-   * 
+   * Address of the receiver
    * @param value the value to set.
    */
   public void setTo(java.lang.CharSequence value) {
@@ -157,19 +209,36 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
   }
 
   /**
-   * Gets the value of the 'input' field.
-   * @return 
+   * Gets the value of the 'toBalance' field.
+   * @return Balance of the receiver
    */
-  public java.nio.ByteBuffer getInput() {
+  public java.lang.CharSequence getToBalance() {
+    return toBalance;
+  }
+
+  /**
+   * Sets the value of the 'toBalance' field.
+   * Balance of the receiver
+   * @param value the value to set.
+   */
+  public void setToBalance(java.lang.CharSequence value) {
+    this.toBalance = value;
+  }
+
+  /**
+   * Gets the value of the 'input' field.
+   * @return Raw input data
+   */
+  public java.lang.CharSequence getInput() {
     return input;
   }
 
   /**
    * Sets the value of the 'input' field.
-   * 
+   * Raw input data
    * @param value the value to set.
    */
-  public void setInput(java.nio.ByteBuffer value) {
+  public void setInput(java.lang.CharSequence value) {
     this.input = value;
   }
 
@@ -207,12 +276,18 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
 
     /** Type of op executed inside the transaction */
     private java.lang.CharSequence op;
-    /**  */
+    /** Raw value of the transaction */
+    private java.lang.CharSequence value;
+    /** Address of the sender */
     private java.lang.CharSequence from;
-    /**  */
+    /** Balance of the sender */
+    private java.lang.CharSequence fromBalance;
+    /** Address of the receiver */
     private java.lang.CharSequence to;
-    /**  */
-    private java.nio.ByteBuffer input;
+    /** Balance of the receiver */
+    private java.lang.CharSequence toBalance;
+    /** Raw input data */
+    private java.lang.CharSequence input;
 
     /** Creates a new Builder */
     private Builder() {
@@ -229,17 +304,29 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
         this.op = data().deepCopy(fields()[0].schema(), other.op);
         fieldSetFlags()[0] = true;
       }
-      if (isValidValue(fields()[1], other.from)) {
-        this.from = data().deepCopy(fields()[1].schema(), other.from);
+      if (isValidValue(fields()[1], other.value)) {
+        this.value = data().deepCopy(fields()[1].schema(), other.value);
         fieldSetFlags()[1] = true;
       }
-      if (isValidValue(fields()[2], other.to)) {
-        this.to = data().deepCopy(fields()[2].schema(), other.to);
+      if (isValidValue(fields()[2], other.from)) {
+        this.from = data().deepCopy(fields()[2].schema(), other.from);
         fieldSetFlags()[2] = true;
       }
-      if (isValidValue(fields()[3], other.input)) {
-        this.input = data().deepCopy(fields()[3].schema(), other.input);
+      if (isValidValue(fields()[3], other.fromBalance)) {
+        this.fromBalance = data().deepCopy(fields()[3].schema(), other.fromBalance);
         fieldSetFlags()[3] = true;
+      }
+      if (isValidValue(fields()[4], other.to)) {
+        this.to = data().deepCopy(fields()[4].schema(), other.to);
+        fieldSetFlags()[4] = true;
+      }
+      if (isValidValue(fields()[5], other.toBalance)) {
+        this.toBalance = data().deepCopy(fields()[5].schema(), other.toBalance);
+        fieldSetFlags()[5] = true;
+      }
+      if (isValidValue(fields()[6], other.input)) {
+        this.input = data().deepCopy(fields()[6].schema(), other.input);
+        fieldSetFlags()[6] = true;
       }
     }
 
@@ -253,17 +340,29 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
         this.op = data().deepCopy(fields()[0].schema(), other.op);
         fieldSetFlags()[0] = true;
       }
-      if (isValidValue(fields()[1], other.from)) {
-        this.from = data().deepCopy(fields()[1].schema(), other.from);
+      if (isValidValue(fields()[1], other.value)) {
+        this.value = data().deepCopy(fields()[1].schema(), other.value);
         fieldSetFlags()[1] = true;
       }
-      if (isValidValue(fields()[2], other.to)) {
-        this.to = data().deepCopy(fields()[2].schema(), other.to);
+      if (isValidValue(fields()[2], other.from)) {
+        this.from = data().deepCopy(fields()[2].schema(), other.from);
         fieldSetFlags()[2] = true;
       }
-      if (isValidValue(fields()[3], other.input)) {
-        this.input = data().deepCopy(fields()[3].schema(), other.input);
+      if (isValidValue(fields()[3], other.fromBalance)) {
+        this.fromBalance = data().deepCopy(fields()[3].schema(), other.fromBalance);
         fieldSetFlags()[3] = true;
+      }
+      if (isValidValue(fields()[4], other.to)) {
+        this.to = data().deepCopy(fields()[4].schema(), other.to);
+        fieldSetFlags()[4] = true;
+      }
+      if (isValidValue(fields()[5], other.toBalance)) {
+        this.toBalance = data().deepCopy(fields()[5].schema(), other.toBalance);
+        fieldSetFlags()[5] = true;
+      }
+      if (isValidValue(fields()[6], other.input)) {
+        this.input = data().deepCopy(fields()[6].schema(), other.input);
+        fieldSetFlags()[6] = true;
       }
     }
 
@@ -311,8 +410,51 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
     }
 
     /**
+      * Gets the value of the 'value' field.
+      * Raw value of the transaction
+      * @return The value.
+      */
+    public java.lang.CharSequence getValue() {
+      return value;
+    }
+
+    /**
+      * Sets the value of the 'value' field.
+      * Raw value of the transaction
+      * @param value The value of 'value'.
+      * @return This builder.
+      */
+    public io.enkrypt.bolt.models.Transfer.Builder setValue(java.lang.CharSequence value) {
+      validate(fields()[1], value);
+      this.value = value;
+      fieldSetFlags()[1] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'value' field has been set.
+      * Raw value of the transaction
+      * @return True if the 'value' field has been set, false otherwise.
+      */
+    public boolean hasValue() {
+      return fieldSetFlags()[1];
+    }
+
+
+    /**
+      * Clears the value of the 'value' field.
+      * Raw value of the transaction
+      * @return This builder.
+      */
+    public io.enkrypt.bolt.models.Transfer.Builder clearValue() {
+      value = null;
+      fieldSetFlags()[1] = false;
+      return this;
+    }
+
+    /**
       * Gets the value of the 'from' field.
-      * 
+      * Address of the sender
       * @return The value.
       */
     public java.lang.CharSequence getFrom() {
@@ -321,41 +463,84 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
 
     /**
       * Sets the value of the 'from' field.
-      * 
+      * Address of the sender
       * @param value The value of 'from'.
       * @return This builder.
       */
     public io.enkrypt.bolt.models.Transfer.Builder setFrom(java.lang.CharSequence value) {
-      validate(fields()[1], value);
+      validate(fields()[2], value);
       this.from = value;
-      fieldSetFlags()[1] = true;
+      fieldSetFlags()[2] = true;
       return this;
     }
 
     /**
       * Checks whether the 'from' field has been set.
-      * 
+      * Address of the sender
       * @return True if the 'from' field has been set, false otherwise.
       */
     public boolean hasFrom() {
-      return fieldSetFlags()[1];
+      return fieldSetFlags()[2];
     }
 
 
     /**
       * Clears the value of the 'from' field.
-      * 
+      * Address of the sender
       * @return This builder.
       */
     public io.enkrypt.bolt.models.Transfer.Builder clearFrom() {
       from = null;
-      fieldSetFlags()[1] = false;
+      fieldSetFlags()[2] = false;
+      return this;
+    }
+
+    /**
+      * Gets the value of the 'fromBalance' field.
+      * Balance of the sender
+      * @return The value.
+      */
+    public java.lang.CharSequence getFromBalance() {
+      return fromBalance;
+    }
+
+    /**
+      * Sets the value of the 'fromBalance' field.
+      * Balance of the sender
+      * @param value The value of 'fromBalance'.
+      * @return This builder.
+      */
+    public io.enkrypt.bolt.models.Transfer.Builder setFromBalance(java.lang.CharSequence value) {
+      validate(fields()[3], value);
+      this.fromBalance = value;
+      fieldSetFlags()[3] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'fromBalance' field has been set.
+      * Balance of the sender
+      * @return True if the 'fromBalance' field has been set, false otherwise.
+      */
+    public boolean hasFromBalance() {
+      return fieldSetFlags()[3];
+    }
+
+
+    /**
+      * Clears the value of the 'fromBalance' field.
+      * Balance of the sender
+      * @return This builder.
+      */
+    public io.enkrypt.bolt.models.Transfer.Builder clearFromBalance() {
+      fromBalance = null;
+      fieldSetFlags()[3] = false;
       return this;
     }
 
     /**
       * Gets the value of the 'to' field.
-      * 
+      * Address of the receiver
       * @return The value.
       */
     public java.lang.CharSequence getTo() {
@@ -364,78 +549,121 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
 
     /**
       * Sets the value of the 'to' field.
-      * 
+      * Address of the receiver
       * @param value The value of 'to'.
       * @return This builder.
       */
     public io.enkrypt.bolt.models.Transfer.Builder setTo(java.lang.CharSequence value) {
-      validate(fields()[2], value);
+      validate(fields()[4], value);
       this.to = value;
-      fieldSetFlags()[2] = true;
+      fieldSetFlags()[4] = true;
       return this;
     }
 
     /**
       * Checks whether the 'to' field has been set.
-      * 
+      * Address of the receiver
       * @return True if the 'to' field has been set, false otherwise.
       */
     public boolean hasTo() {
-      return fieldSetFlags()[2];
+      return fieldSetFlags()[4];
     }
 
 
     /**
       * Clears the value of the 'to' field.
-      * 
+      * Address of the receiver
       * @return This builder.
       */
     public io.enkrypt.bolt.models.Transfer.Builder clearTo() {
       to = null;
-      fieldSetFlags()[2] = false;
+      fieldSetFlags()[4] = false;
+      return this;
+    }
+
+    /**
+      * Gets the value of the 'toBalance' field.
+      * Balance of the receiver
+      * @return The value.
+      */
+    public java.lang.CharSequence getToBalance() {
+      return toBalance;
+    }
+
+    /**
+      * Sets the value of the 'toBalance' field.
+      * Balance of the receiver
+      * @param value The value of 'toBalance'.
+      * @return This builder.
+      */
+    public io.enkrypt.bolt.models.Transfer.Builder setToBalance(java.lang.CharSequence value) {
+      validate(fields()[5], value);
+      this.toBalance = value;
+      fieldSetFlags()[5] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'toBalance' field has been set.
+      * Balance of the receiver
+      * @return True if the 'toBalance' field has been set, false otherwise.
+      */
+    public boolean hasToBalance() {
+      return fieldSetFlags()[5];
+    }
+
+
+    /**
+      * Clears the value of the 'toBalance' field.
+      * Balance of the receiver
+      * @return This builder.
+      */
+    public io.enkrypt.bolt.models.Transfer.Builder clearToBalance() {
+      toBalance = null;
+      fieldSetFlags()[5] = false;
       return this;
     }
 
     /**
       * Gets the value of the 'input' field.
-      * 
+      * Raw input data
       * @return The value.
       */
-    public java.nio.ByteBuffer getInput() {
+    public java.lang.CharSequence getInput() {
       return input;
     }
 
     /**
       * Sets the value of the 'input' field.
-      * 
+      * Raw input data
       * @param value The value of 'input'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transfer.Builder setInput(java.nio.ByteBuffer value) {
-      validate(fields()[3], value);
+    public io.enkrypt.bolt.models.Transfer.Builder setInput(java.lang.CharSequence value) {
+      validate(fields()[6], value);
       this.input = value;
-      fieldSetFlags()[3] = true;
+      fieldSetFlags()[6] = true;
       return this;
     }
 
     /**
       * Checks whether the 'input' field has been set.
-      * 
+      * Raw input data
       * @return True if the 'input' field has been set, false otherwise.
       */
     public boolean hasInput() {
-      return fieldSetFlags()[3];
+      return fieldSetFlags()[6];
     }
 
 
     /**
       * Clears the value of the 'input' field.
-      * 
+      * Raw input data
       * @return This builder.
       */
     public io.enkrypt.bolt.models.Transfer.Builder clearInput() {
       input = null;
-      fieldSetFlags()[3] = false;
+      fieldSetFlags()[6] = false;
       return this;
     }
 
@@ -445,9 +673,12 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       try {
         Transfer record = new Transfer();
         record.op = fieldSetFlags()[0] ? this.op : (java.lang.CharSequence) defaultValue(fields()[0]);
-        record.from = fieldSetFlags()[1] ? this.from : (java.lang.CharSequence) defaultValue(fields()[1]);
-        record.to = fieldSetFlags()[2] ? this.to : (java.lang.CharSequence) defaultValue(fields()[2]);
-        record.input = fieldSetFlags()[3] ? this.input : (java.nio.ByteBuffer) defaultValue(fields()[3]);
+        record.value = fieldSetFlags()[1] ? this.value : (java.lang.CharSequence) defaultValue(fields()[1]);
+        record.from = fieldSetFlags()[2] ? this.from : (java.lang.CharSequence) defaultValue(fields()[2]);
+        record.fromBalance = fieldSetFlags()[3] ? this.fromBalance : (java.lang.CharSequence) defaultValue(fields()[3]);
+        record.to = fieldSetFlags()[4] ? this.to : (java.lang.CharSequence) defaultValue(fields()[4]);
+        record.toBalance = fieldSetFlags()[5] ? this.toBalance : (java.lang.CharSequence) defaultValue(fields()[5]);
+        record.input = fieldSetFlags()[6] ? this.input : (java.lang.CharSequence) defaultValue(fields()[6]);
         return record;
       } catch (java.lang.Exception e) {
         throw new org.apache.avro.AvroRuntimeException(e);

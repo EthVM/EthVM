@@ -6,9 +6,16 @@
   "author": "enKryptIO Team",
   "license": "MIT",
   "scripts": {
-    "build": "rm -rf out && mkdir out && uglifyjs --compress --mangle -b beautify=false -b quote_style=1 --output out/tracer.js -- tracer.js"
+    "build": "yarn build:clean && uglifyjs --compress --mangle -b beautify=false -b quote_style=1 --output out/tracer.js -- tracer.js",
+    "build:clean": "rm -rf out && mkdir out",
+    "test:unit": "jest --config jest.unit.json",
+    "test:cov": "jest --coverage --config jest.unit.json",
+    "prettier": "prettier --write 'tracer.js'"
   },
-  "dependencies": {
+  "devDependencies": {
+    "jest": "^23.5.0",
+    "mocha": "^5.2.0",
+    "prettier": "1.14.2",
     "uglify-js": "^3.4.9"
   }
 }

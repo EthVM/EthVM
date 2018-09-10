@@ -1,31 +1,30 @@
-var t = {
+var tracer = {
   transfers: [],
   isError: false,
-  msg: '',
+  errorMsg: '',
 
   result: function() {
     return {
       transfers: this.transfers,
       isError: this.isError,
-      msg: this.msg
+      errorMsg: this.msg
     }
   },
 
   step: function(log, db) {
     if (log.err) {
       this.isError = true
-      this.msg = log.err.Error()
+      this.errorMsg = log.err.Error()
       return
     }
 
-    var op = log.op
+    var op = log.op.toString()
     var stack = log.stack
     var memory = log.memory
-    var transfer = {}
     var from = log.account
 
-    if (op.toString() == 'CREATE') {
-      transfer = {
+    if (op == 'CREATE') {
+      var transfer = {
         op: 'CREATE',
         value: stack.peek(0).Bytes(),
         from: from,
@@ -38,8 +37,8 @@ var t = {
       return
     }
 
-    if (op.toString() == 'CALL') {
-      transfer = {
+    if (op == 'CALL') {
+      var transfer = {
         op: 'CALL',
         value: stack.peek(2).Bytes(),
         from: from,
@@ -52,17 +51,17 @@ var t = {
       return
     }
 
-    if (op.toString() == 'SELFDESTRUCT') {
-      transfer = {
+    if (op == 'SELFDESTRUCT') {
+      var transfer = {
         op: 'SELFDESTRUCT',
         value: db.getBalance(from).Bytes(),
         from: from,
         fromBalance: db.getBalance(from).Bytes(),
         to: big.BigToAddress(stack.peek(0)),
-        toBalance: db.getBalance(big.BigToAddress(stack.peek(0))).Bytes()
+        toBalance: db.getBalance(big.BigToAddress(stack.peek(0))).Bytes(),
+        input: ''
       }
       this.transfers.push(transfer)
-      return
     }
   }
 }

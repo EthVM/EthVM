@@ -349,19 +349,34 @@
                             "doc": "Type of op executed inside the transaction"
                           },
                           {
+                            "name": "value",
+                            "type": "string",
+                            "doc": "Raw value of the transaction"
+                          },
+                          {
                             "name": "from",
                             "type": "string",
-                            "doc": ""
+                            "doc": "Address of the sender"
+                          },
+                          {
+                            "name": "fromBalance",
+                            "type": "string",
+                            "doc": "Balance of the sender"
                           },
                           {
                             "name": "to",
                             "type": "string",
-                            "doc": ""
+                            "doc": "Address of the receiver"
+                          },
+                          {
+                            "name": "toBalance",
+                            "type": "string",
+                            "doc": "Balance of the receiver"
                           },
                           {
                             "name": "input",
-                            "type": "bytes",
-                            "doc": ""
+                            "type": "string",
+                            "doc": "Raw input data"
                           }
                         ]
                       }
