@@ -22,6 +22,9 @@ dependencies {
   compile("io.confluent:kafka-streams-avro-serde:5.0.0")
   compile("org.apache.avro:avro:1.8.2")
 
+  // mongo
+  compile("org.litote.kmongo:kmongo:3.8.2")
+
   // Utils
   compile("com.github.ajalt:clikt:1.4.0")
   compile("org.slf4j:slf4j-log4j12:1.7.25")

@@ -1,4 +1,4 @@
-package io.enkrypt.bolt.config
+package io.enkrypt.bolt
 
 data class AppConfig(
   val applicationId: String,
@@ -8,3 +8,7 @@ data class AppConfig(
   val topicsConfig: TopicsConfig
 )
 
+data class TopicsConfig(
+  val rawBlocks: String,
+  val rawPendingTxs: String
+)

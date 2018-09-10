@@ -13,8 +13,8 @@ import org.apache.avro.message.SchemaStore;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class BlockStats extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 1307637618072186974L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"BlockStats\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"blockTime\",\"type\":\"long\",\"doc\":\"Time taken to find the block\"},{\"name\":\"numFailedTxs\",\"type\":\"long\",\"doc\":\"Number of failed transactions\"},{\"name\":\"numSuccessfulTxs\",\"type\":\"long\",\"doc\":\"Number of successful transactions\"},{\"name\":\"avgGasPrice\",\"type\":\"float\",\"doc\":\"Average gas price\"},{\"name\":\"totalGasPrice\",\"type\":\"long\",\"doc\":\"Total gas price\"},{\"name\":\"totalTxFees\",\"type\":\"long\",\"doc\":\"Total txn fees\"}]}");
+  private static final long serialVersionUID = 8298765389091178129L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"BlockStats\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"blockTimeMs\",\"type\":\"int\",\"doc\":\"Time taken to find the block in milliseconds\"},{\"name\":\"numFailedTxs\",\"type\":\"int\",\"doc\":\"Number of failed transactions\"},{\"name\":\"numSuccessfulTxs\",\"type\":\"int\",\"doc\":\"Number of successful transactions\"},{\"name\":\"avgGasPrice\",\"type\":\"long\",\"doc\":\"Average gas price\"},{\"name\":\"avgTxsFees\",\"type\":\"long\",\"doc\":\"Total gas price\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -51,18 +51,16 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
     return DECODER.decode(b);
   }
 
-  /** Time taken to find the block */
-  @Deprecated public long blockTime;
+  /** Time taken to find the block in milliseconds */
+  @Deprecated public int blockTimeMs;
   /** Number of failed transactions */
-  @Deprecated public long numFailedTxs;
+  @Deprecated public int numFailedTxs;
   /** Number of successful transactions */
-  @Deprecated public long numSuccessfulTxs;
+  @Deprecated public int numSuccessfulTxs;
   /** Average gas price */
-  @Deprecated public float avgGasPrice;
+  @Deprecated public long avgGasPrice;
   /** Total gas price */
-  @Deprecated public long totalGasPrice;
-  /** Total txn fees */
-  @Deprecated public long totalTxFees;
+  @Deprecated public long avgTxsFees;
 
   /**
    * Default constructor.  Note that this does not initialize fields
@@ -73,32 +71,29 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
 
   /**
    * All-args constructor.
-   * @param blockTime Time taken to find the block
+   * @param blockTimeMs Time taken to find the block in milliseconds
    * @param numFailedTxs Number of failed transactions
    * @param numSuccessfulTxs Number of successful transactions
    * @param avgGasPrice Average gas price
-   * @param totalGasPrice Total gas price
-   * @param totalTxFees Total txn fees
+   * @param avgTxsFees Total gas price
    */
-  public BlockStats(Long blockTime, Long numFailedTxs, Long numSuccessfulTxs, Float avgGasPrice, Long totalGasPrice, Long totalTxFees) {
-    this.blockTime = blockTime;
+  public BlockStats(Integer blockTimeMs, Integer numFailedTxs, Integer numSuccessfulTxs, Long avgGasPrice, Long avgTxsFees) {
+    this.blockTimeMs = blockTimeMs;
     this.numFailedTxs = numFailedTxs;
     this.numSuccessfulTxs = numSuccessfulTxs;
     this.avgGasPrice = avgGasPrice;
-    this.totalGasPrice = totalGasPrice;
-    this.totalTxFees = totalTxFees;
+    this.avgTxsFees = avgTxsFees;
   }
 
   public org.apache.avro.Schema getSchema() { return SCHEMA$; }
   // Used by DatumWriter.  Applications should not call.
   public Object get(int field$) {
     switch (field$) {
-    case 0: return blockTime;
+    case 0: return blockTimeMs;
     case 1: return numFailedTxs;
     case 2: return numSuccessfulTxs;
     case 3: return avgGasPrice;
-    case 4: return totalGasPrice;
-    case 5: return totalTxFees;
+    case 4: return avgTxsFees;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -107,38 +102,37 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
   @SuppressWarnings(value="unchecked")
   public void put(int field$, Object value$) {
     switch (field$) {
-    case 0: blockTime = (Long)value$; break;
-    case 1: numFailedTxs = (Long)value$; break;
-    case 2: numSuccessfulTxs = (Long)value$; break;
-    case 3: avgGasPrice = (Float)value$; break;
-    case 4: totalGasPrice = (Long)value$; break;
-    case 5: totalTxFees = (Long)value$; break;
+    case 0: blockTimeMs = (Integer)value$; break;
+    case 1: numFailedTxs = (Integer)value$; break;
+    case 2: numSuccessfulTxs = (Integer)value$; break;
+    case 3: avgGasPrice = (Long)value$; break;
+    case 4: avgTxsFees = (Long)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
 
   /**
-   * Gets the value of the 'blockTime' field.
-   * @return Time taken to find the block
+   * Gets the value of the 'blockTimeMs' field.
+   * @return Time taken to find the block in milliseconds
    */
-  public Long getBlockTime() {
-    return blockTime;
+  public Integer getBlockTimeMs() {
+    return blockTimeMs;
   }
 
   /**
-   * Sets the value of the 'blockTime' field.
-   * Time taken to find the block
+   * Sets the value of the 'blockTimeMs' field.
+   * Time taken to find the block in milliseconds
    * @param value the value to set.
    */
-  public void setBlockTime(Long value) {
-    this.blockTime = value;
+  public void setBlockTimeMs(Integer value) {
+    this.blockTimeMs = value;
   }
 
   /**
    * Gets the value of the 'numFailedTxs' field.
    * @return Number of failed transactions
    */
-  public Long getNumFailedTxs() {
+  public Integer getNumFailedTxs() {
     return numFailedTxs;
   }
 
@@ -147,7 +141,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
    * Number of failed transactions
    * @param value the value to set.
    */
-  public void setNumFailedTxs(Long value) {
+  public void setNumFailedTxs(Integer value) {
     this.numFailedTxs = value;
   }
 
@@ -155,7 +149,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
    * Gets the value of the 'numSuccessfulTxs' field.
    * @return Number of successful transactions
    */
-  public Long getNumSuccessfulTxs() {
+  public Integer getNumSuccessfulTxs() {
     return numSuccessfulTxs;
   }
 
@@ -164,7 +158,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
    * Number of successful transactions
    * @param value the value to set.
    */
-  public void setNumSuccessfulTxs(Long value) {
+  public void setNumSuccessfulTxs(Integer value) {
     this.numSuccessfulTxs = value;
   }
 
@@ -172,7 +166,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
    * Gets the value of the 'avgGasPrice' field.
    * @return Average gas price
    */
-  public Float getAvgGasPrice() {
+  public Long getAvgGasPrice() {
     return avgGasPrice;
   }
 
@@ -181,42 +175,25 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
    * Average gas price
    * @param value the value to set.
    */
-  public void setAvgGasPrice(Float value) {
+  public void setAvgGasPrice(Long value) {
     this.avgGasPrice = value;
   }
 
   /**
-   * Gets the value of the 'totalGasPrice' field.
+   * Gets the value of the 'avgTxsFees' field.
    * @return Total gas price
    */
-  public Long getTotalGasPrice() {
-    return totalGasPrice;
+  public Long getAvgTxsFees() {
+    return avgTxsFees;
   }
 
   /**
-   * Sets the value of the 'totalGasPrice' field.
+   * Sets the value of the 'avgTxsFees' field.
    * Total gas price
    * @param value the value to set.
    */
-  public void setTotalGasPrice(Long value) {
-    this.totalGasPrice = value;
-  }
-
-  /**
-   * Gets the value of the 'totalTxFees' field.
-   * @return Total txn fees
-   */
-  public Long getTotalTxFees() {
-    return totalTxFees;
-  }
-
-  /**
-   * Sets the value of the 'totalTxFees' field.
-   * Total txn fees
-   * @param value the value to set.
-   */
-  public void setTotalTxFees(Long value) {
-    this.totalTxFees = value;
+  public void setAvgTxsFees(Long value) {
+    this.avgTxsFees = value;
   }
 
   /**
@@ -251,18 +228,16 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
   public static class Builder extends org.apache.avro.specific.SpecificRecordBuilderBase<BlockStats>
     implements org.apache.avro.data.RecordBuilder<BlockStats> {
 
-    /** Time taken to find the block */
-    private long blockTime;
+    /** Time taken to find the block in milliseconds */
+    private int blockTimeMs;
     /** Number of failed transactions */
-    private long numFailedTxs;
+    private int numFailedTxs;
     /** Number of successful transactions */
-    private long numSuccessfulTxs;
+    private int numSuccessfulTxs;
     /** Average gas price */
-    private float avgGasPrice;
+    private long avgGasPrice;
     /** Total gas price */
-    private long totalGasPrice;
-    /** Total txn fees */
-    private long totalTxFees;
+    private long avgTxsFees;
 
     /** Creates a new Builder */
     private Builder() {
@@ -275,8 +250,8 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
      */
     private Builder(Builder other) {
       super(other);
-      if (isValidValue(fields()[0], other.blockTime)) {
-        this.blockTime = data().deepCopy(fields()[0].schema(), other.blockTime);
+      if (isValidValue(fields()[0], other.blockTimeMs)) {
+        this.blockTimeMs = data().deepCopy(fields()[0].schema(), other.blockTimeMs);
         fieldSetFlags()[0] = true;
       }
       if (isValidValue(fields()[1], other.numFailedTxs)) {
@@ -291,13 +266,9 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
         this.avgGasPrice = data().deepCopy(fields()[3].schema(), other.avgGasPrice);
         fieldSetFlags()[3] = true;
       }
-      if (isValidValue(fields()[4], other.totalGasPrice)) {
-        this.totalGasPrice = data().deepCopy(fields()[4].schema(), other.totalGasPrice);
+      if (isValidValue(fields()[4], other.avgTxsFees)) {
+        this.avgTxsFees = data().deepCopy(fields()[4].schema(), other.avgTxsFees);
         fieldSetFlags()[4] = true;
-      }
-      if (isValidValue(fields()[5], other.totalTxFees)) {
-        this.totalTxFees = data().deepCopy(fields()[5].schema(), other.totalTxFees);
-        fieldSetFlags()[5] = true;
       }
     }
 
@@ -307,8 +278,8 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
      */
     private Builder(BlockStats other) {
             super(SCHEMA$);
-      if (isValidValue(fields()[0], other.blockTime)) {
-        this.blockTime = data().deepCopy(fields()[0].schema(), other.blockTime);
+      if (isValidValue(fields()[0], other.blockTimeMs)) {
+        this.blockTimeMs = data().deepCopy(fields()[0].schema(), other.blockTimeMs);
         fieldSetFlags()[0] = true;
       }
       if (isValidValue(fields()[1], other.numFailedTxs)) {
@@ -323,54 +294,50 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
         this.avgGasPrice = data().deepCopy(fields()[3].schema(), other.avgGasPrice);
         fieldSetFlags()[3] = true;
       }
-      if (isValidValue(fields()[4], other.totalGasPrice)) {
-        this.totalGasPrice = data().deepCopy(fields()[4].schema(), other.totalGasPrice);
+      if (isValidValue(fields()[4], other.avgTxsFees)) {
+        this.avgTxsFees = data().deepCopy(fields()[4].schema(), other.avgTxsFees);
         fieldSetFlags()[4] = true;
       }
-      if (isValidValue(fields()[5], other.totalTxFees)) {
-        this.totalTxFees = data().deepCopy(fields()[5].schema(), other.totalTxFees);
-        fieldSetFlags()[5] = true;
-      }
     }
 
     /**
-      * Gets the value of the 'blockTime' field.
-      * Time taken to find the block
+      * Gets the value of the 'blockTimeMs' field.
+      * Time taken to find the block in milliseconds
       * @return The value.
       */
-    public Long getBlockTime() {
-      return blockTime;
+    public Integer getBlockTimeMs() {
+      return blockTimeMs;
     }
 
     /**
-      * Sets the value of the 'blockTime' field.
-      * Time taken to find the block
-      * @param value The value of 'blockTime'.
+      * Sets the value of the 'blockTimeMs' field.
+      * Time taken to find the block in milliseconds
+      * @param value The value of 'blockTimeMs'.
       * @return This builder.
       */
-    public Builder setBlockTime(long value) {
+    public Builder setBlockTimeMs(int value) {
       validate(fields()[0], value);
-      this.blockTime = value;
+      this.blockTimeMs = value;
       fieldSetFlags()[0] = true;
       return this;
     }
 
     /**
-      * Checks whether the 'blockTime' field has been set.
-      * Time taken to find the block
-      * @return True if the 'blockTime' field has been set, false otherwise.
+      * Checks whether the 'blockTimeMs' field has been set.
+      * Time taken to find the block in milliseconds
+      * @return True if the 'blockTimeMs' field has been set, false otherwise.
       */
-    public boolean hasBlockTime() {
+    public boolean hasBlockTimeMs() {
       return fieldSetFlags()[0];
     }
 
 
     /**
-      * Clears the value of the 'blockTime' field.
-      * Time taken to find the block
+      * Clears the value of the 'blockTimeMs' field.
+      * Time taken to find the block in milliseconds
       * @return This builder.
       */
-    public Builder clearBlockTime() {
+    public Builder clearBlockTimeMs() {
       fieldSetFlags()[0] = false;
       return this;
     }
@@ -380,7 +347,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * Number of failed transactions
       * @return The value.
       */
-    public Long getNumFailedTxs() {
+    public Integer getNumFailedTxs() {
       return numFailedTxs;
     }
 
@@ -390,7 +357,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * @param value The value of 'numFailedTxs'.
       * @return This builder.
       */
-    public Builder setNumFailedTxs(long value) {
+    public Builder setNumFailedTxs(int value) {
       validate(fields()[1], value);
       this.numFailedTxs = value;
       fieldSetFlags()[1] = true;
@@ -422,7 +389,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * Number of successful transactions
       * @return The value.
       */
-    public Long getNumSuccessfulTxs() {
+    public Integer getNumSuccessfulTxs() {
       return numSuccessfulTxs;
     }
 
@@ -432,7 +399,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * @param value The value of 'numSuccessfulTxs'.
       * @return This builder.
       */
-    public Builder setNumSuccessfulTxs(long value) {
+    public Builder setNumSuccessfulTxs(int value) {
       validate(fields()[2], value);
       this.numSuccessfulTxs = value;
       fieldSetFlags()[2] = true;
@@ -464,7 +431,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * Average gas price
       * @return The value.
       */
-    public Float getAvgGasPrice() {
+    public Long getAvgGasPrice() {
       return avgGasPrice;
     }
 
@@ -474,7 +441,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * @param value The value of 'avgGasPrice'.
       * @return This builder.
       */
-    public Builder setAvgGasPrice(float value) {
+    public Builder setAvgGasPrice(long value) {
       validate(fields()[3], value);
       this.avgGasPrice = value;
       fieldSetFlags()[3] = true;
@@ -502,86 +469,44 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
     }
 
     /**
-      * Gets the value of the 'totalGasPrice' field.
+      * Gets the value of the 'avgTxsFees' field.
       * Total gas price
       * @return The value.
       */
-    public Long getTotalGasPrice() {
-      return totalGasPrice;
+    public Long getAvgTxsFees() {
+      return avgTxsFees;
     }
 
     /**
-      * Sets the value of the 'totalGasPrice' field.
+      * Sets the value of the 'avgTxsFees' field.
       * Total gas price
-      * @param value The value of 'totalGasPrice'.
+      * @param value The value of 'avgTxsFees'.
       * @return This builder.
       */
-    public Builder setTotalGasPrice(long value) {
+    public Builder setAvgTxsFees(long value) {
       validate(fields()[4], value);
-      this.totalGasPrice = value;
+      this.avgTxsFees = value;
       fieldSetFlags()[4] = true;
       return this;
     }
 
     /**
-      * Checks whether the 'totalGasPrice' field has been set.
+      * Checks whether the 'avgTxsFees' field has been set.
       * Total gas price
-      * @return True if the 'totalGasPrice' field has been set, false otherwise.
+      * @return True if the 'avgTxsFees' field has been set, false otherwise.
       */
-    public boolean hasTotalGasPrice() {
+    public boolean hasAvgTxsFees() {
       return fieldSetFlags()[4];
     }
 
 
     /**
-      * Clears the value of the 'totalGasPrice' field.
+      * Clears the value of the 'avgTxsFees' field.
       * Total gas price
       * @return This builder.
       */
-    public Builder clearTotalGasPrice() {
+    public Builder clearAvgTxsFees() {
       fieldSetFlags()[4] = false;
-      return this;
-    }
-
-    /**
-      * Gets the value of the 'totalTxFees' field.
-      * Total txn fees
-      * @return The value.
-      */
-    public Long getTotalTxFees() {
-      return totalTxFees;
-    }
-
-    /**
-      * Sets the value of the 'totalTxFees' field.
-      * Total txn fees
-      * @param value The value of 'totalTxFees'.
-      * @return This builder.
-      */
-    public Builder setTotalTxFees(long value) {
-      validate(fields()[5], value);
-      this.totalTxFees = value;
-      fieldSetFlags()[5] = true;
-      return this;
-    }
-
-    /**
-      * Checks whether the 'totalTxFees' field has been set.
-      * Total txn fees
-      * @return True if the 'totalTxFees' field has been set, false otherwise.
-      */
-    public boolean hasTotalTxFees() {
-      return fieldSetFlags()[5];
-    }
-
-
-    /**
-      * Clears the value of the 'totalTxFees' field.
-      * Total txn fees
-      * @return This builder.
-      */
-    public Builder clearTotalTxFees() {
-      fieldSetFlags()[5] = false;
       return this;
     }
 
@@ -590,12 +515,11 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
     public BlockStats build() {
       try {
         BlockStats record = new BlockStats();
-        record.blockTime = fieldSetFlags()[0] ? this.blockTime : (Long) defaultValue(fields()[0]);
-        record.numFailedTxs = fieldSetFlags()[1] ? this.numFailedTxs : (Long) defaultValue(fields()[1]);
-        record.numSuccessfulTxs = fieldSetFlags()[2] ? this.numSuccessfulTxs : (Long) defaultValue(fields()[2]);
-        record.avgGasPrice = fieldSetFlags()[3] ? this.avgGasPrice : (Float) defaultValue(fields()[3]);
-        record.totalGasPrice = fieldSetFlags()[4] ? this.totalGasPrice : (Long) defaultValue(fields()[4]);
-        record.totalTxFees = fieldSetFlags()[5] ? this.totalTxFees : (Long) defaultValue(fields()[5]);
+        record.blockTimeMs = fieldSetFlags()[0] ? this.blockTimeMs : (Integer) defaultValue(fields()[0]);
+        record.numFailedTxs = fieldSetFlags()[1] ? this.numFailedTxs : (Integer) defaultValue(fields()[1]);
+        record.numSuccessfulTxs = fieldSetFlags()[2] ? this.numSuccessfulTxs : (Integer) defaultValue(fields()[2]);
+        record.avgGasPrice = fieldSetFlags()[3] ? this.avgGasPrice : (Long) defaultValue(fields()[3]);
+        record.avgTxsFees = fieldSetFlags()[4] ? this.avgTxsFees : (Long) defaultValue(fields()[4]);
         return record;
       } catch (Exception e) {
         throw new org.apache.avro.AvroRuntimeException(e);

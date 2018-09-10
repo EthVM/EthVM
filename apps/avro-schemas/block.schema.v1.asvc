@@ -124,34 +124,29 @@
          "type": "record",
          "fields": [
           {
-            "name": "blockTime",
-            "type": "long",
-            "doc": "Time taken to find the block"
+            "name": "blockTimeMs",
+            "type": "int",
+            "doc": "Time taken to find the block in milliseconds"
           },
           {
             "name": "numFailedTxs",
-            "type": "long",
+            "type": "int",
             "doc": "Number of failed transactions"
           },
           {
             "name": "numSuccessfulTxs",
-            "type": "long",
+            "type": "int",
             "doc": "Number of successful transactions"
           },
           {
             "name": "avgGasPrice",
-            "type": "float",
+            "type": "long",
             "doc": "Average gas price"
           },
           {
-            "name": "totalGasPrice",
+            "name": "avgTxsFees",
             "type": "long",
             "doc": "Total gas price"
-          },
-          {
-            "name": "totalTxFees",
-            "type": "long",
-            "doc": "Total txn fees"
           }
          ]
       }]

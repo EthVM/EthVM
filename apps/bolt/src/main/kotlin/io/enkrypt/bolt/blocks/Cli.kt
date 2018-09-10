@@ -1,12 +1,12 @@
-package io.enkrypt.bolt
+package io.enkrypt.bolt.blocks
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
-import io.enkrypt.bolt.config.AppConfig
-import io.enkrypt.bolt.config.TopicsConfig
+import io.enkrypt.bolt.AppConfig
+import io.enkrypt.bolt.TopicsConfig
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
@@ -50,14 +50,14 @@ class Cli : CliktCommand() {
       }
     }
 
-    single{ Bolt() }
+    single{ BlocksProcessor() }
 
   }
 
   override fun run() {
 
     startKoin(listOf(boltModule))
-    Bolt().start()
+    BlocksProcessor().start()
 
   }
 
