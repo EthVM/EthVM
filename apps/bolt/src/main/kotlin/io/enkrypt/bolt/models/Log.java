@@ -51,8 +51,8 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
     return DECODER.decode(b);
   }
 
-  @Deprecated public java.lang.CharSequence address;
-  @Deprecated public java.util.List<java.lang.CharSequence> topics;
+  @Deprecated public CharSequence address;
+  @Deprecated public java.util.List<CharSequence> topics;
   @Deprecated public java.nio.ByteBuffer data;
   @Deprecated public int index;
   @Deprecated public boolean removed;
@@ -72,7 +72,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
    * @param index The new value for index
    * @param removed The new value for removed
    */
-  public Log(java.lang.CharSequence address, java.util.List<java.lang.CharSequence> topics, java.nio.ByteBuffer data, java.lang.Integer index, java.lang.Boolean removed) {
+  public Log(CharSequence address, java.util.List<CharSequence> topics, java.nio.ByteBuffer data, Integer index, Boolean removed) {
     this.address = address;
     this.topics = topics;
     this.data = data;
@@ -82,7 +82,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
 
   public org.apache.avro.Schema getSchema() { return SCHEMA$; }
   // Used by DatumWriter.  Applications should not call.
-  public java.lang.Object get(int field$) {
+  public Object get(int field$) {
     switch (field$) {
     case 0: return address;
     case 1: return topics;
@@ -95,13 +95,13 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
 
   // Used by DatumReader.  Applications should not call.
   @SuppressWarnings(value="unchecked")
-  public void put(int field$, java.lang.Object value$) {
+  public void put(int field$, Object value$) {
     switch (field$) {
-    case 0: address = (java.lang.CharSequence)value$; break;
-    case 1: topics = (java.util.List<java.lang.CharSequence>)value$; break;
+    case 0: address = (CharSequence)value$; break;
+    case 1: topics = (java.util.List<CharSequence>)value$; break;
     case 2: data = (java.nio.ByteBuffer)value$; break;
-    case 3: index = (java.lang.Integer)value$; break;
-    case 4: removed = (java.lang.Boolean)value$; break;
+    case 3: index = (Integer)value$; break;
+    case 4: removed = (Boolean)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -110,7 +110,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
    * Gets the value of the 'address' field.
    * @return The value of the 'address' field.
    */
-  public java.lang.CharSequence getAddress() {
+  public CharSequence getAddress() {
     return address;
   }
 
@@ -118,7 +118,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
    * Sets the value of the 'address' field.
    * @param value the value to set.
    */
-  public void setAddress(java.lang.CharSequence value) {
+  public void setAddress(CharSequence value) {
     this.address = value;
   }
 
@@ -126,7 +126,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
    * Gets the value of the 'topics' field.
    * @return The value of the 'topics' field.
    */
-  public java.util.List<java.lang.CharSequence> getTopics() {
+  public java.util.List<CharSequence> getTopics() {
     return topics;
   }
 
@@ -134,7 +134,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
    * Sets the value of the 'topics' field.
    * @param value the value to set.
    */
-  public void setTopics(java.util.List<java.lang.CharSequence> value) {
+  public void setTopics(java.util.List<CharSequence> value) {
     this.topics = value;
   }
 
@@ -158,7 +158,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
    * Gets the value of the 'index' field.
    * @return The value of the 'index' field.
    */
-  public java.lang.Integer getIndex() {
+  public Integer getIndex() {
     return index;
   }
 
@@ -166,7 +166,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
    * Sets the value of the 'index' field.
    * @param value the value to set.
    */
-  public void setIndex(java.lang.Integer value) {
+  public void setIndex(Integer value) {
     this.index = value;
   }
 
@@ -174,7 +174,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
    * Gets the value of the 'removed' field.
    * @return The value of the 'removed' field.
    */
-  public java.lang.Boolean getRemoved() {
+  public Boolean getRemoved() {
     return removed;
   }
 
@@ -182,7 +182,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
    * Sets the value of the 'removed' field.
    * @param value the value to set.
    */
-  public void setRemoved(java.lang.Boolean value) {
+  public void setRemoved(Boolean value) {
     this.removed = value;
   }
 
@@ -190,8 +190,8 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
    * Creates a new Log RecordBuilder.
    * @return A new Log RecordBuilder
    */
-  public static io.enkrypt.bolt.models.Log.Builder newBuilder() {
-    return new io.enkrypt.bolt.models.Log.Builder();
+  public static Builder newBuilder() {
+    return new Builder();
   }
 
   /**
@@ -199,8 +199,8 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
    * @param other The existing builder to copy.
    * @return A new Log RecordBuilder
    */
-  public static io.enkrypt.bolt.models.Log.Builder newBuilder(io.enkrypt.bolt.models.Log.Builder other) {
-    return new io.enkrypt.bolt.models.Log.Builder(other);
+  public static Builder newBuilder(Builder other) {
+    return new Builder(other);
   }
 
   /**
@@ -208,8 +208,8 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
    * @param other The existing instance to copy.
    * @return A new Log RecordBuilder
    */
-  public static io.enkrypt.bolt.models.Log.Builder newBuilder(io.enkrypt.bolt.models.Log other) {
-    return new io.enkrypt.bolt.models.Log.Builder(other);
+  public static Builder newBuilder(Log other) {
+    return new Builder(other);
   }
 
   /**
@@ -218,8 +218,8 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
   public static class Builder extends org.apache.avro.specific.SpecificRecordBuilderBase<Log>
     implements org.apache.avro.data.RecordBuilder<Log> {
 
-    private java.lang.CharSequence address;
-    private java.util.List<java.lang.CharSequence> topics;
+    private CharSequence address;
+    private java.util.List<CharSequence> topics;
     private java.nio.ByteBuffer data;
     private int index;
     private boolean removed;
@@ -233,7 +233,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
      * Creates a Builder by copying an existing Builder.
      * @param other The existing Builder to copy.
      */
-    private Builder(io.enkrypt.bolt.models.Log.Builder other) {
+    private Builder(Builder other) {
       super(other);
       if (isValidValue(fields()[0], other.address)) {
         this.address = data().deepCopy(fields()[0].schema(), other.address);
@@ -261,7 +261,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
      * Creates a Builder by copying an existing Log instance
      * @param other The existing instance to copy.
      */
-    private Builder(io.enkrypt.bolt.models.Log other) {
+    private Builder(Log other) {
             super(SCHEMA$);
       if (isValidValue(fields()[0], other.address)) {
         this.address = data().deepCopy(fields()[0].schema(), other.address);
@@ -289,7 +289,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * Gets the value of the 'address' field.
       * @return The value.
       */
-    public java.lang.CharSequence getAddress() {
+    public CharSequence getAddress() {
       return address;
     }
 
@@ -298,7 +298,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * @param value The value of 'address'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Log.Builder setAddress(java.lang.CharSequence value) {
+    public Builder setAddress(CharSequence value) {
       validate(fields()[0], value);
       this.address = value;
       fieldSetFlags()[0] = true;
@@ -318,7 +318,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * Clears the value of the 'address' field.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Log.Builder clearAddress() {
+    public Builder clearAddress() {
       address = null;
       fieldSetFlags()[0] = false;
       return this;
@@ -328,7 +328,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * Gets the value of the 'topics' field.
       * @return The value.
       */
-    public java.util.List<java.lang.CharSequence> getTopics() {
+    public java.util.List<CharSequence> getTopics() {
       return topics;
     }
 
@@ -337,7 +337,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * @param value The value of 'topics'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Log.Builder setTopics(java.util.List<java.lang.CharSequence> value) {
+    public Builder setTopics(java.util.List<CharSequence> value) {
       validate(fields()[1], value);
       this.topics = value;
       fieldSetFlags()[1] = true;
@@ -357,7 +357,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * Clears the value of the 'topics' field.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Log.Builder clearTopics() {
+    public Builder clearTopics() {
       topics = null;
       fieldSetFlags()[1] = false;
       return this;
@@ -376,7 +376,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * @param value The value of 'data'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Log.Builder setData(java.nio.ByteBuffer value) {
+    public Builder setData(java.nio.ByteBuffer value) {
       validate(fields()[2], value);
       this.data = value;
       fieldSetFlags()[2] = true;
@@ -396,7 +396,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * Clears the value of the 'data' field.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Log.Builder clearData() {
+    public Builder clearData() {
       data = null;
       fieldSetFlags()[2] = false;
       return this;
@@ -406,7 +406,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * Gets the value of the 'index' field.
       * @return The value.
       */
-    public java.lang.Integer getIndex() {
+    public Integer getIndex() {
       return index;
     }
 
@@ -415,7 +415,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * @param value The value of 'index'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Log.Builder setIndex(int value) {
+    public Builder setIndex(int value) {
       validate(fields()[3], value);
       this.index = value;
       fieldSetFlags()[3] = true;
@@ -435,7 +435,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * Clears the value of the 'index' field.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Log.Builder clearIndex() {
+    public Builder clearIndex() {
       fieldSetFlags()[3] = false;
       return this;
     }
@@ -444,7 +444,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * Gets the value of the 'removed' field.
       * @return The value.
       */
-    public java.lang.Boolean getRemoved() {
+    public Boolean getRemoved() {
       return removed;
     }
 
@@ -453,7 +453,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * @param value The value of 'removed'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Log.Builder setRemoved(boolean value) {
+    public Builder setRemoved(boolean value) {
       validate(fields()[4], value);
       this.removed = value;
       fieldSetFlags()[4] = true;
@@ -473,7 +473,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * Clears the value of the 'removed' field.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Log.Builder clearRemoved() {
+    public Builder clearRemoved() {
       fieldSetFlags()[4] = false;
       return this;
     }
@@ -483,13 +483,13 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
     public Log build() {
       try {
         Log record = new Log();
-        record.address = fieldSetFlags()[0] ? this.address : (java.lang.CharSequence) defaultValue(fields()[0]);
-        record.topics = fieldSetFlags()[1] ? this.topics : (java.util.List<java.lang.CharSequence>) defaultValue(fields()[1]);
+        record.address = fieldSetFlags()[0] ? this.address : (CharSequence) defaultValue(fields()[0]);
+        record.topics = fieldSetFlags()[1] ? this.topics : (java.util.List<CharSequence>) defaultValue(fields()[1]);
         record.data = fieldSetFlags()[2] ? this.data : (java.nio.ByteBuffer) defaultValue(fields()[2]);
-        record.index = fieldSetFlags()[3] ? this.index : (java.lang.Integer) defaultValue(fields()[3]);
-        record.removed = fieldSetFlags()[4] ? this.removed : (java.lang.Boolean) defaultValue(fields()[4]);
+        record.index = fieldSetFlags()[3] ? this.index : (Integer) defaultValue(fields()[3]);
+        record.removed = fieldSetFlags()[4] ? this.removed : (Boolean) defaultValue(fields()[4]);
         return record;
-      } catch (java.lang.Exception e) {
+      } catch (Exception e) {
         throw new org.apache.avro.AvroRuntimeException(e);
       }
     }
