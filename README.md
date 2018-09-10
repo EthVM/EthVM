@@ -28,17 +28,16 @@ This repository holds a mirage of different subprojects that in conjuction forms
 | `apps/server`           | NodeJs     | A Socket reactive API that the frontend uses to communicate with the Blockchain.                                                                                                                                                                                            |
 | `apps/eth`              | Go         | A forked version of [`go-ethereum`](https://github.com/enKryptIO/go-ethereum) that processes / listens to Ethereum events. This project is kept as a `git sumbodule` as it will connstantly be updated as main changes are introduced in the main branch of `go-ethereum`.  |
 | `apps/bolt`             | Kotlin     | A Kafka Streams processing blockchain application.                                                                                                                                                                                                                          |
-| `apps/avro-schemas`     | Avro       | A set of Avro schemas used mainly in the forked version of `go-ethereum` and `Bolt`.                                                                                                                                                                                        |                                                                                                                                                                                                                                  |
-| `apps/tracers`          | Js         | A Js tracer used in `go-ethereum` to trace transactions metadata (very simple for now)                                                                                                                                                                                      |
+| `apps/avro-schemas`     | Avro       | A set of Avro schemas that are used mainly as a models in the forked version of `go-ethereum` and `Bolt`.                                                                                                                                                                                        |
 
 Also, there are a couple of different directories, not related itself to any concrete subproject, that lives in the parent one:
 
-| Directory               | Written in          | Purpose                                                                                                                                                                                                                                    |
-|:------------------------|:--------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| `provisioners`          | Kubernetes / Docker | Contains kubernetes definitions for deploying a production ready EthVM project (work in progress, though). Also, it contains `docker` development images (that differs slightly from production ready dockerfiles) needed for development. |
-| `bin`                   | NodeJs              | Contains helper scripts that aids in different aspects. For now, there's only one scrip called `monkey-cli` that helps to produce fake blocks / txs and contract deployments for testing purposes. More utils will come eventually.        |
-| `postman`               | Postman (Js)        | A simple Postman collection that contains all `ethereum` JSON RPC calls.                                                                                                                                                                   |
-| `docker-compose.yml`    | Docker              | For keeping everything sane and to produce a replicable environment in all machines, we use `docker` and `docker compose` as our development orchestrator.                                                                                 |
+| Directory               | Written in          | Purpose                                                                                                                                                                                                                                        |
+|:------------------------|:--------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| `provisioners`          | Kubernetes / Docker | Contains kubernetes definitions for deploying a production ready EthVM project (work in progress, though). Also, it contains `docker` development images (that differs slightly from production ready dockerfiles) needed for development.     |
+| `bin`                   | NodeJs / Bash       | Contains helper scripts that aids in different aspects of the development. Also, there's one script called `monkey-cli` that helps to produce fake blocks / txs and contract deployments for testing purposes. More utils will come eventually.|
+| `postman`               | Postman (Js)        | A simple Postman collection that contains all `ethereum` JSON RPC calls.                                                                                                                                                                       |
+| `docker-compose.yml`    | Docker              | For keeping everything sane and to produce a replicable environment in all machines, we use `docker` and `docker compose` as our development orchestrator. We have support also for testing on `ropsten` network.                              |
 
 ## Getting Started
 
@@ -94,7 +93,7 @@ Another different and classical approach is to edit and add these entries to `/e
 127.0.0.1       mongo.ethvm.lan
 127.0.0.1       ws.ethvm.lan
 127.0.0.1       redis.ethvm.lan
-127.0.0.01      kafka-schema-registry.ethvm.lan
+127.0.0.1       kafka-schema-registry.ethvm.lan
 ```
 
 ### Windows 10 support
