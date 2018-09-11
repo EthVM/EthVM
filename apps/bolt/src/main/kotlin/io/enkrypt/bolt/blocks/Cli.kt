@@ -93,7 +93,7 @@ class Cli : CliktCommand() {
   }
 
   companion object {
-    const val DEFAULT_APPLICATION_ID = "bolt"
+    const val DEFAULT_APPLICATION_ID = "blocks-processor"
     const val DEFAULT_BOOTSTRAP_SERVERS = "kafka:9092"
     const val DEFAULT_AUTO_OFFSET = "earliest"
     const val DEFAULT_SCHEMA_REGISTRY_URL = "http://localhost:8081"

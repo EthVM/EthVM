@@ -1,8 +1,5 @@
-rs.initiate();
 
-conn = new Mongo();
-db = conn.getDB('ethvm_local');
-
+use ethvm_local;
 db.createCollection('blocks');
 db.createCollection('balances');
 

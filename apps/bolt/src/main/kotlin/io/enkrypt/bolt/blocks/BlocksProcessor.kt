@@ -49,6 +49,8 @@ class BlocksProcessor : KoinComponent {
   private val blocksCollection by lazy { mongoDB.getCollection("blocks") }
   private val balancesCollection by lazy { mongoDB.getCollection("balances") }
 
+  private val mongoSession by lazy { mongoClient.startSession() }
+
   private val logger = KotlinLogging.logger {}
   private val streams: KafkaStreams
 
@@ -70,8 +72,6 @@ class BlocksProcessor : KoinComponent {
       .filter { _, block -> block.getStatus() == 1 }    // canonical blocks only
       .map { key, block -> KeyValue(key, Block.newBuilder(block).build() )}
       .map { key, block ->
-
-        block.schema
 
         val balances = mutableListOf<AddressBalance>()
 
@@ -116,31 +116,28 @@ class BlocksProcessor : KoinComponent {
       }
       .foreach { _, (block, balances) ->
 
-        val session = mongoClient.startSession()
-        session.startTransaction()
+        mongoSession.startTransaction()
 
         try {
 
           val replaceOptions = ReplaceOptions().upsert(true)
 
           val blockQuery = Document().append("_id", block.getHash().toString())
-          blocksCollection.replaceOne(session, blockQuery, block.toDocument(), replaceOptions)
+          blocksCollection.replaceOne(mongoSession, blockQuery, block.toDocument(), replaceOptions)
 
           balances.forEach { balance ->
             val balanceQuery = Document().append("_id", balance.address)
-            balancesCollection.replaceOne(session, balanceQuery, balance.toDocument(), replaceOptions)
+            balancesCollection.replaceOne(mongoSession, balanceQuery, balance.toDocument(), replaceOptions)
           }
 
-          session.commitTransaction()
+          mongoSession.commitTransaction()
 
           logger.info { "Committed block data, Number: ${block.getNumber()}, Hash: ${block.getHash()}" }
 
         } catch(e: Exception) {
           e.printStackTrace()
           logger.error {  "Commit error: ${e.stackTrace}" }
-          session.abortTransaction()
-        } finally {
-          session.close()
+          mongoSession.abortTransaction()
         }
 
       }
