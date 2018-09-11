@@ -5,17 +5,17 @@
   "fields": [
     {
       "name": "number",
-      "type": "long",
+      "type": "bytes",
       "doc": "The block number"
     },
     {
       "name": "hash",
-      "type": "string",
+      "type": "bytes",
       "doc": "Hash of the block"
     },
     {
       "name": "parentHash",
-      "type": "string",
+      "type": "bytes",
       "doc": "Hash of the parent block"
     },
     {
@@ -38,47 +38,47 @@
     },
     {
       "name": "nonce",
-      "type": "long",
+      "type": "bytes",
       "doc": "Hash of the generated proof-of-work"
     },
     {
       "name": "mixDigest",
-      "type": "string",
+      "type": "bytes",
       "doc": "Block header mix digest"
     },
     {
       "name": "sha3Uncles",
-      "type": "string",
+      "type": "bytes",
       "doc": "SHA3 of the uncles data in the block"
     },
     {
       "name": "logsBloom",
-      "type": "string",
+      "type": "bytes",
       "doc": "Bloom filter for the logs of the block"
     },
     {
       "name": "stateRoot",
-      "type": "string",
+      "type": "bytes",
       "doc": "Root of the final state trie of the block"
     },
     {
       "name": "transactionsRoot",
-      "type": "string",
+      "type": "bytes",
       "doc": "Root of the final transactions trie of the block"
     },
     {
       "name": "miner",
-      "type": "string",
+      "type": "bytes",
       "doc": "The address of the beneficiary to whom the mining rewards were given"
     },
     {
       "name": "difficulty",
-      "type": "long",
+      "type": "bytes",
       "doc": "Current difficulty for this block"
     },
     {
       "name": "totalDifficulty",
-      "type": "long",
+      "type": "bytes",
       "doc": "Current total difficulty of the chain until this block"
     },
     {
@@ -88,32 +88,32 @@
     },
     {
       "name": "size",
-      "type": "long",
+      "type": "bytes",
       "doc": "Integer the size of this block in bytes"
     },
     {
       "name": "gasLimit",
-      "type": "long",
+      "type": "bytes",
       "doc": "The maximum gas allowed in this block"
     },
     {
       "name": "gasUsed",
-      "type": "long",
+      "type": "bytes",
       "doc": "The total used gas by all transactions in this block"
     },
     {
       "name": "txsFees",
-      "type": "long",
+      "type": "bytes",
       "doc": "Total transaction fees for this block"
     },
     {
       "name": "blockReward",
-      "type": "long",
+      "type": "bytes",
       "doc": "Total current block reward"
     },
     {
       "name": "uncleReward",
-      "type": "long",
+      "type": "bytes",
       "doc": "Total current uncle reward"
     },
     {
@@ -142,12 +142,12 @@
             },
             {
               "name": "avgGasPrice",
-              "type": "long",
+              "type": "bytes",
               "doc": "Average gas price"
             },
             {
               "name": "avgTxsFees",
-              "type": "long",
+              "type": "bytes",
               "doc": "Total gas price"
             }
           ]
@@ -166,12 +166,12 @@
           "fields": [
             {
               "name": "hash",
-              "type": "string",
+              "type": "bytes",
               "doc": "Hash of the transaction"
             },
             {
               "name": "root",
-              "type": "string",
+              "type": "bytes",
               "doc": "Root of the parent block"
             },
             {
@@ -189,32 +189,32 @@
             },
             {
               "name": "nonce",
-              "type": "long",
+              "type": "bytes",
               "doc": "Number of transactions sent from a given address"
             },
             {
               "name": "nonceHash",
-              "type": "string",
+              "type": "bytes",
               "doc": "SHA3 of the transaction nonce"
             },
             {
               "name": "from",
-              "type": "string",
+              "type": "bytes",
               "doc": "Address of the sender"
             },
             {
               "name": "fromBalance",
-              "type": "long",
+              "type": "bytes",
               "doc": "Balance of the sender"
             },
             {
               "name": "to",
-              "type": ["null", "string"],
+              "type": ["null", "bytes"],
               "doc": "Address of the recipient (or null when contract creation)"
             },
             {
               "name": "toBalance",
-              "type": ["null", "long"],
+              "type": ["null", "bytes"],
               "doc": "Balance of the receiver (or null when contract creation)"
             },
             {
@@ -224,52 +224,52 @@
             },
             {
               "name": "contractAddress",
-              "type": ["null", "string"],
+              "type": ["null", "bytes"],
               "doc": "If a contract is created, the address of it (or null if is just a regular transaction)"
             },
             {
               "name": "value",
-              "type": "long",
+              "type": "bytes",
               "doc": "Amount of value transferred in Wei"
             },
             {
               "name": "gas",
-              "type": "long",
+              "type": "bytes",
               "doc": "Amount of gas provided by the sender"
             },
             {
               "name": "gasPrice",
-              "type": "long",
+              "type": "bytes",
               "doc": "Amount of gas price provided by the sender in Wei"
             },
             {
               "name": "gasUsed",
-              "type": "long",
+              "type": "bytes",
               "doc": "Amount of gas used consumed by the transaction"
             },
             {
               "name": "cumulativeGasUsed",
-              "type": "long",
+              "type": "bytes",
               "doc": "Cumulative gas used by the transaction"
             },
             {
               "name": "v",
-              "type": "string",
+              "type": "bytes",
               "doc": "Transaction signature v"
             },
             {
               "name": "r",
-              "type": "string",
+              "type": "bytes",
               "doc": "Transaction signature r"
             },
             {
               "name": "s",
-              "type": "string",
+              "type": "bytes",
               "doc": "Transaction signature s"
             },
             {
               "name": "status",
-              "type": "long",
+              "type": "bytes",
               "doc": "Transaction result status"
             },
             {
@@ -289,12 +289,12 @@
                   "fields": [
                     {
                       "name": "address",
-                      "type": "string",
+                      "type": "bytes",
                       "desc": "Address of the contract that generated the event"
                     },
                     {
                       "name": "topics",
-                      "type": { "type": "array", "items": "string" },
+                      "type": { "type": "array", "items": "bytes" },
                       "desc": "List of topics provided by the contract"
                     },
                     {
@@ -346,37 +346,37 @@
                         "fields": [
                           {
                             "name": "op",
-                            "type": "string",
+                            "type": "int",
                             "doc": "Type of op executed inside the transaction"
                           },
                           {
                             "name": "value",
-                            "type": "string",
+                            "type": "bytes",
                             "doc": "Raw value of the transaction"
                           },
                           {
                             "name": "from",
-                            "type": "string",
+                            "type": "bytes",
                             "doc": "Address of the sender"
                           },
                           {
                             "name": "fromBalance",
-                            "type": "string",
+                            "type": "bytes",
                             "doc": "Balance of the sender"
                           },
                           {
                             "name": "to",
-                            "type": "string",
+                            "type": "bytes",
                             "doc": "Address of the receiver"
                           },
                           {
                             "name": "toBalance",
-                            "type": "string",
+                            "type": "bytes",
                             "doc": "Balance of the receiver"
                           },
                           {
                             "name": "input",
-                            "type": "string",
+                            "type": "bytes",
                             "doc": "Raw input data"
                           }
                         ]
@@ -392,7 +392,7 @@
     },
     {
       "name": "uncles",
-      "type": { "type": "array", "items": "string" },
+      "type": { "type": "array", "items": "bytes" },
       "doc": "Array of uncle hashes"
     }
   ]

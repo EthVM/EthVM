@@ -13,8 +13,8 @@ import org.apache.avro.message.SchemaStore;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class PendingTx extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 9017539364152413925L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"PendingTx\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"hash\",\"type\":\"string\",\"doc\":\"Hash of the transaction\"},{\"name\":\"nonce\",\"type\":[\"null\",\"long\"],\"doc\":\"Number of transactions sent from a given address\"},{\"name\":\"nonceHash\",\"type\":[\"null\",\"string\"],\"doc\":\"SHA3 of the transaction nonce\"},{\"name\":\"from\",\"type\":[\"null\",\"string\"],\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":[\"null\",\"long\"],\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":[\"null\",\"string\"],\"doc\":\"Address of the recipient (or null when contract creation)\"},{\"name\":\"toBalance\",\"type\":[\"null\",\"long\"],\"doc\":\"Balance of the receiver (or null when contract creation)\"},{\"name\":\"input\",\"type\":[\"null\",\"bytes\"],\"doc\":\"The data send along with the transaction\"},{\"name\":\"contractAddress\",\"type\":[\"null\",\"string\"],\"doc\":\"If a contract is created, the address of it (or null if is just a regular transaction)\"},{\"name\":\"value\",\"type\":[\"null\",\"long\"],\"doc\":\"Amount of value transferred in Wei\"},{\"name\":\"gas\",\"type\":[\"null\",\"long\"],\"doc\":\"Amount of gas provided by the sender\"},{\"name\":\"gasPrice\",\"type\":[\"null\",\"long\"],\"doc\":\"Amount of gas price provided by the sender in Wei\"},{\"name\":\"gasUsed\",\"type\":[\"null\",\"long\"],\"doc\":\"Amount of gas used consumed by the transaction\"},{\"name\":\"cumulativeGasUsed\",\"type\":[\"null\",\"long\"],\"doc\":\"Cumulative gas used by the transaction\"},{\"name\":\"v\",\"type\":[\"null\",\"string\"],\"doc\":\"Transaction signature v\"},{\"name\":\"r\",\"type\":[\"null\",\"string\"],\"doc\":\"Transaction signature r\"},{\"name\":\"s\",\"type\":[\"null\",\"string\"],\"doc\":\"Transaction signature s\"},{\"name\":\"status\",\"type\":[\"null\",\"long\"],\"doc\":\"Transaction result status\"},{\"name\":\"logsBloom\",\"type\":[\"null\",\"bytes\"],\"doc\":\"Generated and encoded logs by the transaction\"},{\"name\":\"logs\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Log\",\"fields\":[{\"name\":\"address\",\"type\":\"string\",\"desc\":\"Address of the contract that generated the event\"},{\"name\":\"topics\",\"type\":{\"type\":\"array\",\"items\":\"string\"},\"desc\":\"List of topics provided by the contract\"},{\"name\":\"data\",\"type\":\"bytes\",\"desc\":\"Supplied by the contract, usually ABI-encoded\"},{\"name\":\"index\",\"type\":\"int\",\"desc\":\"Index of the log in the receipt\"},{\"name\":\"removed\",\"type\":\"boolean\",\"desc\":\"True if this log was reverted due to a chain reorganisation\"}]}},\"doc\":\"\"},{\"name\":\"trace\",\"type\":{\"type\":\"record\",\"name\":\"Trace\",\"fields\":[{\"name\":\"isError\",\"type\":\"boolean\",\"desc\":\"Signals if an error happened during execution\"},{\"name\":\"msg\",\"type\":\"string\",\"desc\":\"Stores the error message\"},{\"name\":\"transfers\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Transfer\",\"fields\":[{\"name\":\"op\",\"type\":\"string\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"value\",\"type\":\"string\",\"doc\":\"Raw value of the transaction\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"string\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":\"string\",\"doc\":\"Address of the receiver\"},{\"name\":\"toBalance\",\"type\":\"string\",\"doc\":\"Balance of the receiver\"},{\"name\":\"input\",\"type\":\"string\",\"doc\":\"Raw input data\"}]}},\"desc\":\"An array describing transfers\"}]},\"doc\":\"Trace that describes contract creation, destruction or intenal transactions\"},{\"name\":\"txStatus\",\"type\":{\"type\":\"enum\",\"name\":\"Action\",\"symbols\":[\"QUEUED\",\"MINED\",\"EXPIRED\",\"REPLACED\",\"UNPAYABLE\",\"INVALID_SENDER\",\"LOW_NONCE\",\"UNDERPRICED\",\"INSUFFICIENT_FUNDS\",\"CAP_EXCEEDING\"]},\"doc\":\"Spceficies the status of this pending transaction\"}]}");
+  private static final long serialVersionUID = -7871491866327823917L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"PendingTx\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"hash\",\"type\":\"bytes\",\"doc\":\"Hash of the transaction\"},{\"name\":\"nonce\",\"type\":[\"null\",\"bytes\"],\"doc\":\"Number of transactions sent from a given address\"},{\"name\":\"nonceHash\",\"type\":[\"null\",\"bytes\"],\"doc\":\"SHA3 of the transaction nonce\"},{\"name\":\"from\",\"type\":[\"null\",\"bytes\"],\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":[\"null\",\"bytes\"],\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":[\"null\",\"bytes\"],\"doc\":\"Address of the recipient (or null when contract creation)\"},{\"name\":\"toBalance\",\"type\":[\"null\",\"bytes\"],\"doc\":\"Balance of the receiver (or null when contract creation)\"},{\"name\":\"input\",\"type\":[\"null\",\"bytes\"],\"doc\":\"The data send along with the transaction\"},{\"name\":\"contractAddress\",\"type\":[\"null\",\"bytes\"],\"doc\":\"If a contract is created, the address of it (or null if is just a regular transaction)\"},{\"name\":\"value\",\"type\":[\"null\",\"bytes\"],\"doc\":\"Amount of value transferred in Wei\"},{\"name\":\"gas\",\"type\":[\"null\",\"bytes\"],\"doc\":\"Amount of gas provided by the sender\"},{\"name\":\"gasPrice\",\"type\":[\"null\",\"bytes\"],\"doc\":\"Amount of gas price provided by the sender in Wei\"},{\"name\":\"gasUsed\",\"type\":[\"null\",\"bytes\"],\"doc\":\"Amount of gas used consumed by the transaction\"},{\"name\":\"cumulativeGasUsed\",\"type\":[\"null\",\"bytes\"],\"doc\":\"Cumulative gas used by the transaction\"},{\"name\":\"v\",\"type\":[\"null\",\"bytes\"],\"doc\":\"Transaction signature v\"},{\"name\":\"r\",\"type\":[\"null\",\"bytes\"],\"doc\":\"Transaction signature r\"},{\"name\":\"s\",\"type\":[\"null\",\"bytes\"],\"doc\":\"Transaction signature s\"},{\"name\":\"status\",\"type\":[\"null\",\"bytes\"],\"doc\":\"Transaction result status\"},{\"name\":\"logsBloom\",\"type\":[\"null\",\"bytes\"],\"doc\":\"Generated and encoded logs by the transaction\"},{\"name\":\"logs\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Log\",\"fields\":[{\"name\":\"address\",\"type\":\"bytes\",\"desc\":\"Address of the contract that generated the event\"},{\"name\":\"topics\",\"type\":{\"type\":\"array\",\"items\":\"bytes\"},\"desc\":\"List of topics provided by the contract\"},{\"name\":\"data\",\"type\":\"bytes\",\"desc\":\"Supplied by the contract, usually ABI-encoded\"},{\"name\":\"index\",\"type\":\"int\",\"desc\":\"Index of the log in the receipt\"},{\"name\":\"removed\",\"type\":\"boolean\",\"desc\":\"True if this log was reverted due to a chain reorganisation\"}]}},\"doc\":\"\"},{\"name\":\"trace\",\"type\":{\"type\":\"record\",\"name\":\"Trace\",\"fields\":[{\"name\":\"isError\",\"type\":\"boolean\",\"desc\":\"Signals if an error happened during execution\"},{\"name\":\"msg\",\"type\":\"string\",\"desc\":\"Stores the error message\"},{\"name\":\"transfers\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Transfer\",\"fields\":[{\"name\":\"op\",\"type\":\"int\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"value\",\"type\":\"bytes\",\"doc\":\"Raw value of the transaction\"},{\"name\":\"from\",\"type\":\"bytes\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"bytes\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":\"bytes\",\"doc\":\"Address of the receiver\"},{\"name\":\"toBalance\",\"type\":\"bytes\",\"doc\":\"Balance of the receiver\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"Raw input data\"}]}},\"desc\":\"An array describing transfers\"}]},\"doc\":\"Trace that describes contract creation, destruction or intenal transactions\"},{\"name\":\"txStatus\",\"type\":{\"type\":\"enum\",\"name\":\"Action\",\"symbols\":[\"QUEUED\",\"MINED\",\"EXPIRED\",\"REPLACED\",\"UNPAYABLE\",\"INVALID_SENDER\",\"LOW_NONCE\",\"UNDERPRICED\",\"INSUFFICIENT_FUNDS\",\"CAP_EXCEEDING\"]},\"doc\":\"Spceficies the status of this pending transaction\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -52,41 +52,41 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
   }
 
   /** Hash of the transaction */
-  @Deprecated public java.lang.CharSequence hash;
+  @Deprecated public java.nio.ByteBuffer hash;
   /** Number of transactions sent from a given address */
-  @Deprecated public java.lang.Long nonce;
+  @Deprecated public java.nio.ByteBuffer nonce;
   /** SHA3 of the transaction nonce */
-  @Deprecated public java.lang.CharSequence nonceHash;
+  @Deprecated public java.nio.ByteBuffer nonceHash;
   /** Address of the sender */
-  @Deprecated public java.lang.CharSequence from;
+  @Deprecated public java.nio.ByteBuffer from;
   /** Balance of the sender */
-  @Deprecated public java.lang.Long fromBalance;
+  @Deprecated public java.nio.ByteBuffer fromBalance;
   /** Address of the recipient (or null when contract creation) */
-  @Deprecated public java.lang.CharSequence to;
+  @Deprecated public java.nio.ByteBuffer to;
   /** Balance of the receiver (or null when contract creation) */
-  @Deprecated public java.lang.Long toBalance;
+  @Deprecated public java.nio.ByteBuffer toBalance;
   /** The data send along with the transaction */
   @Deprecated public java.nio.ByteBuffer input;
   /** If a contract is created, the address of it (or null if is just a regular transaction) */
-  @Deprecated public java.lang.CharSequence contractAddress;
+  @Deprecated public java.nio.ByteBuffer contractAddress;
   /** Amount of value transferred in Wei */
-  @Deprecated public java.lang.Long value;
+  @Deprecated public java.nio.ByteBuffer value;
   /** Amount of gas provided by the sender */
-  @Deprecated public java.lang.Long gas;
+  @Deprecated public java.nio.ByteBuffer gas;
   /** Amount of gas price provided by the sender in Wei */
-  @Deprecated public java.lang.Long gasPrice;
+  @Deprecated public java.nio.ByteBuffer gasPrice;
   /** Amount of gas used consumed by the transaction */
-  @Deprecated public java.lang.Long gasUsed;
+  @Deprecated public java.nio.ByteBuffer gasUsed;
   /** Cumulative gas used by the transaction */
-  @Deprecated public java.lang.Long cumulativeGasUsed;
+  @Deprecated public java.nio.ByteBuffer cumulativeGasUsed;
   /** Transaction signature v */
-  @Deprecated public java.lang.CharSequence v;
+  @Deprecated public java.nio.ByteBuffer v;
   /** Transaction signature r */
-  @Deprecated public java.lang.CharSequence r;
+  @Deprecated public java.nio.ByteBuffer r;
   /** Transaction signature s */
-  @Deprecated public java.lang.CharSequence s;
+  @Deprecated public java.nio.ByteBuffer s;
   /** Transaction result status */
-  @Deprecated public java.lang.Long status;
+  @Deprecated public java.nio.ByteBuffer status;
   /** Generated and encoded logs by the transaction */
   @Deprecated public java.nio.ByteBuffer logsBloom;
   /**  */
@@ -128,7 +128,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * @param trace Trace that describes contract creation, destruction or intenal transactions
    * @param txStatus Spceficies the status of this pending transaction
    */
-  public PendingTx(java.lang.CharSequence hash, java.lang.Long nonce, java.lang.CharSequence nonceHash, java.lang.CharSequence from, java.lang.Long fromBalance, java.lang.CharSequence to, java.lang.Long toBalance, java.nio.ByteBuffer input, java.lang.CharSequence contractAddress, java.lang.Long value, java.lang.Long gas, java.lang.Long gasPrice, java.lang.Long gasUsed, java.lang.Long cumulativeGasUsed, java.lang.CharSequence v, java.lang.CharSequence r, java.lang.CharSequence s, java.lang.Long status, java.nio.ByteBuffer logsBloom, java.util.List<io.enkrypt.bolt.models.Log> logs, io.enkrypt.bolt.models.Trace trace, io.enkrypt.bolt.models.Action txStatus) {
+  public PendingTx(java.nio.ByteBuffer hash, java.nio.ByteBuffer nonce, java.nio.ByteBuffer nonceHash, java.nio.ByteBuffer from, java.nio.ByteBuffer fromBalance, java.nio.ByteBuffer to, java.nio.ByteBuffer toBalance, java.nio.ByteBuffer input, java.nio.ByteBuffer contractAddress, java.nio.ByteBuffer value, java.nio.ByteBuffer gas, java.nio.ByteBuffer gasPrice, java.nio.ByteBuffer gasUsed, java.nio.ByteBuffer cumulativeGasUsed, java.nio.ByteBuffer v, java.nio.ByteBuffer r, java.nio.ByteBuffer s, java.nio.ByteBuffer status, java.nio.ByteBuffer logsBloom, java.util.List<io.enkrypt.bolt.models.Log> logs, io.enkrypt.bolt.models.Trace trace, io.enkrypt.bolt.models.Action txStatus) {
     this.hash = hash;
     this.nonce = nonce;
     this.nonceHash = nonceHash;
@@ -187,24 +187,24 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
   @SuppressWarnings(value="unchecked")
   public void put(int field$, java.lang.Object value$) {
     switch (field$) {
-    case 0: hash = (java.lang.CharSequence)value$; break;
-    case 1: nonce = (java.lang.Long)value$; break;
-    case 2: nonceHash = (java.lang.CharSequence)value$; break;
-    case 3: from = (java.lang.CharSequence)value$; break;
-    case 4: fromBalance = (java.lang.Long)value$; break;
-    case 5: to = (java.lang.CharSequence)value$; break;
-    case 6: toBalance = (java.lang.Long)value$; break;
+    case 0: hash = (java.nio.ByteBuffer)value$; break;
+    case 1: nonce = (java.nio.ByteBuffer)value$; break;
+    case 2: nonceHash = (java.nio.ByteBuffer)value$; break;
+    case 3: from = (java.nio.ByteBuffer)value$; break;
+    case 4: fromBalance = (java.nio.ByteBuffer)value$; break;
+    case 5: to = (java.nio.ByteBuffer)value$; break;
+    case 6: toBalance = (java.nio.ByteBuffer)value$; break;
     case 7: input = (java.nio.ByteBuffer)value$; break;
-    case 8: contractAddress = (java.lang.CharSequence)value$; break;
-    case 9: value = (java.lang.Long)value$; break;
-    case 10: gas = (java.lang.Long)value$; break;
-    case 11: gasPrice = (java.lang.Long)value$; break;
-    case 12: gasUsed = (java.lang.Long)value$; break;
-    case 13: cumulativeGasUsed = (java.lang.Long)value$; break;
-    case 14: v = (java.lang.CharSequence)value$; break;
-    case 15: r = (java.lang.CharSequence)value$; break;
-    case 16: s = (java.lang.CharSequence)value$; break;
-    case 17: status = (java.lang.Long)value$; break;
+    case 8: contractAddress = (java.nio.ByteBuffer)value$; break;
+    case 9: value = (java.nio.ByteBuffer)value$; break;
+    case 10: gas = (java.nio.ByteBuffer)value$; break;
+    case 11: gasPrice = (java.nio.ByteBuffer)value$; break;
+    case 12: gasUsed = (java.nio.ByteBuffer)value$; break;
+    case 13: cumulativeGasUsed = (java.nio.ByteBuffer)value$; break;
+    case 14: v = (java.nio.ByteBuffer)value$; break;
+    case 15: r = (java.nio.ByteBuffer)value$; break;
+    case 16: s = (java.nio.ByteBuffer)value$; break;
+    case 17: status = (java.nio.ByteBuffer)value$; break;
     case 18: logsBloom = (java.nio.ByteBuffer)value$; break;
     case 19: logs = (java.util.List<io.enkrypt.bolt.models.Log>)value$; break;
     case 20: trace = (io.enkrypt.bolt.models.Trace)value$; break;
@@ -217,7 +217,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Gets the value of the 'hash' field.
    * @return Hash of the transaction
    */
-  public java.lang.CharSequence getHash() {
+  public java.nio.ByteBuffer getHash() {
     return hash;
   }
 
@@ -226,7 +226,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Hash of the transaction
    * @param value the value to set.
    */
-  public void setHash(java.lang.CharSequence value) {
+  public void setHash(java.nio.ByteBuffer value) {
     this.hash = value;
   }
 
@@ -234,7 +234,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Gets the value of the 'nonce' field.
    * @return Number of transactions sent from a given address
    */
-  public java.lang.Long getNonce() {
+  public java.nio.ByteBuffer getNonce() {
     return nonce;
   }
 
@@ -243,7 +243,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Number of transactions sent from a given address
    * @param value the value to set.
    */
-  public void setNonce(java.lang.Long value) {
+  public void setNonce(java.nio.ByteBuffer value) {
     this.nonce = value;
   }
 
@@ -251,7 +251,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Gets the value of the 'nonceHash' field.
    * @return SHA3 of the transaction nonce
    */
-  public java.lang.CharSequence getNonceHash() {
+  public java.nio.ByteBuffer getNonceHash() {
     return nonceHash;
   }
 
@@ -260,7 +260,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * SHA3 of the transaction nonce
    * @param value the value to set.
    */
-  public void setNonceHash(java.lang.CharSequence value) {
+  public void setNonceHash(java.nio.ByteBuffer value) {
     this.nonceHash = value;
   }
 
@@ -268,7 +268,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Gets the value of the 'from' field.
    * @return Address of the sender
    */
-  public java.lang.CharSequence getFrom() {
+  public java.nio.ByteBuffer getFrom() {
     return from;
   }
 
@@ -277,7 +277,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Address of the sender
    * @param value the value to set.
    */
-  public void setFrom(java.lang.CharSequence value) {
+  public void setFrom(java.nio.ByteBuffer value) {
     this.from = value;
   }
 
@@ -285,7 +285,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Gets the value of the 'fromBalance' field.
    * @return Balance of the sender
    */
-  public java.lang.Long getFromBalance() {
+  public java.nio.ByteBuffer getFromBalance() {
     return fromBalance;
   }
 
@@ -294,7 +294,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Balance of the sender
    * @param value the value to set.
    */
-  public void setFromBalance(java.lang.Long value) {
+  public void setFromBalance(java.nio.ByteBuffer value) {
     this.fromBalance = value;
   }
 
@@ -302,7 +302,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Gets the value of the 'to' field.
    * @return Address of the recipient (or null when contract creation)
    */
-  public java.lang.CharSequence getTo() {
+  public java.nio.ByteBuffer getTo() {
     return to;
   }
 
@@ -311,7 +311,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Address of the recipient (or null when contract creation)
    * @param value the value to set.
    */
-  public void setTo(java.lang.CharSequence value) {
+  public void setTo(java.nio.ByteBuffer value) {
     this.to = value;
   }
 
@@ -319,7 +319,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Gets the value of the 'toBalance' field.
    * @return Balance of the receiver (or null when contract creation)
    */
-  public java.lang.Long getToBalance() {
+  public java.nio.ByteBuffer getToBalance() {
     return toBalance;
   }
 
@@ -328,7 +328,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Balance of the receiver (or null when contract creation)
    * @param value the value to set.
    */
-  public void setToBalance(java.lang.Long value) {
+  public void setToBalance(java.nio.ByteBuffer value) {
     this.toBalance = value;
   }
 
@@ -353,7 +353,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Gets the value of the 'contractAddress' field.
    * @return If a contract is created, the address of it (or null if is just a regular transaction)
    */
-  public java.lang.CharSequence getContractAddress() {
+  public java.nio.ByteBuffer getContractAddress() {
     return contractAddress;
   }
 
@@ -362,7 +362,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * If a contract is created, the address of it (or null if is just a regular transaction)
    * @param value the value to set.
    */
-  public void setContractAddress(java.lang.CharSequence value) {
+  public void setContractAddress(java.nio.ByteBuffer value) {
     this.contractAddress = value;
   }
 
@@ -370,7 +370,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Gets the value of the 'value' field.
    * @return Amount of value transferred in Wei
    */
-  public java.lang.Long getValue() {
+  public java.nio.ByteBuffer getValue() {
     return value;
   }
 
@@ -379,7 +379,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Amount of value transferred in Wei
    * @param value the value to set.
    */
-  public void setValue(java.lang.Long value) {
+  public void setValue(java.nio.ByteBuffer value) {
     this.value = value;
   }
 
@@ -387,7 +387,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Gets the value of the 'gas' field.
    * @return Amount of gas provided by the sender
    */
-  public java.lang.Long getGas() {
+  public java.nio.ByteBuffer getGas() {
     return gas;
   }
 
@@ -396,7 +396,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Amount of gas provided by the sender
    * @param value the value to set.
    */
-  public void setGas(java.lang.Long value) {
+  public void setGas(java.nio.ByteBuffer value) {
     this.gas = value;
   }
 
@@ -404,7 +404,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Gets the value of the 'gasPrice' field.
    * @return Amount of gas price provided by the sender in Wei
    */
-  public java.lang.Long getGasPrice() {
+  public java.nio.ByteBuffer getGasPrice() {
     return gasPrice;
   }
 
@@ -413,7 +413,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Amount of gas price provided by the sender in Wei
    * @param value the value to set.
    */
-  public void setGasPrice(java.lang.Long value) {
+  public void setGasPrice(java.nio.ByteBuffer value) {
     this.gasPrice = value;
   }
 
@@ -421,7 +421,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Gets the value of the 'gasUsed' field.
    * @return Amount of gas used consumed by the transaction
    */
-  public java.lang.Long getGasUsed() {
+  public java.nio.ByteBuffer getGasUsed() {
     return gasUsed;
   }
 
@@ -430,7 +430,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Amount of gas used consumed by the transaction
    * @param value the value to set.
    */
-  public void setGasUsed(java.lang.Long value) {
+  public void setGasUsed(java.nio.ByteBuffer value) {
     this.gasUsed = value;
   }
 
@@ -438,7 +438,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Gets the value of the 'cumulativeGasUsed' field.
    * @return Cumulative gas used by the transaction
    */
-  public java.lang.Long getCumulativeGasUsed() {
+  public java.nio.ByteBuffer getCumulativeGasUsed() {
     return cumulativeGasUsed;
   }
 
@@ -447,7 +447,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Cumulative gas used by the transaction
    * @param value the value to set.
    */
-  public void setCumulativeGasUsed(java.lang.Long value) {
+  public void setCumulativeGasUsed(java.nio.ByteBuffer value) {
     this.cumulativeGasUsed = value;
   }
 
@@ -455,7 +455,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Gets the value of the 'v' field.
    * @return Transaction signature v
    */
-  public java.lang.CharSequence getV() {
+  public java.nio.ByteBuffer getV() {
     return v;
   }
 
@@ -464,7 +464,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Transaction signature v
    * @param value the value to set.
    */
-  public void setV(java.lang.CharSequence value) {
+  public void setV(java.nio.ByteBuffer value) {
     this.v = value;
   }
 
@@ -472,7 +472,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Gets the value of the 'r' field.
    * @return Transaction signature r
    */
-  public java.lang.CharSequence getR() {
+  public java.nio.ByteBuffer getR() {
     return r;
   }
 
@@ -481,7 +481,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Transaction signature r
    * @param value the value to set.
    */
-  public void setR(java.lang.CharSequence value) {
+  public void setR(java.nio.ByteBuffer value) {
     this.r = value;
   }
 
@@ -489,7 +489,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Gets the value of the 's' field.
    * @return Transaction signature s
    */
-  public java.lang.CharSequence getS() {
+  public java.nio.ByteBuffer getS() {
     return s;
   }
 
@@ -498,7 +498,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Transaction signature s
    * @param value the value to set.
    */
-  public void setS(java.lang.CharSequence value) {
+  public void setS(java.nio.ByteBuffer value) {
     this.s = value;
   }
 
@@ -506,7 +506,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Gets the value of the 'status' field.
    * @return Transaction result status
    */
-  public java.lang.Long getStatus() {
+  public java.nio.ByteBuffer getStatus() {
     return status;
   }
 
@@ -515,7 +515,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
    * Transaction result status
    * @param value the value to set.
    */
-  public void setStatus(java.lang.Long value) {
+  public void setStatus(java.nio.ByteBuffer value) {
     this.status = value;
   }
 
@@ -620,41 +620,41 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
     implements org.apache.avro.data.RecordBuilder<PendingTx> {
 
     /** Hash of the transaction */
-    private java.lang.CharSequence hash;
+    private java.nio.ByteBuffer hash;
     /** Number of transactions sent from a given address */
-    private java.lang.Long nonce;
+    private java.nio.ByteBuffer nonce;
     /** SHA3 of the transaction nonce */
-    private java.lang.CharSequence nonceHash;
+    private java.nio.ByteBuffer nonceHash;
     /** Address of the sender */
-    private java.lang.CharSequence from;
+    private java.nio.ByteBuffer from;
     /** Balance of the sender */
-    private java.lang.Long fromBalance;
+    private java.nio.ByteBuffer fromBalance;
     /** Address of the recipient (or null when contract creation) */
-    private java.lang.CharSequence to;
+    private java.nio.ByteBuffer to;
     /** Balance of the receiver (or null when contract creation) */
-    private java.lang.Long toBalance;
+    private java.nio.ByteBuffer toBalance;
     /** The data send along with the transaction */
     private java.nio.ByteBuffer input;
     /** If a contract is created, the address of it (or null if is just a regular transaction) */
-    private java.lang.CharSequence contractAddress;
+    private java.nio.ByteBuffer contractAddress;
     /** Amount of value transferred in Wei */
-    private java.lang.Long value;
+    private java.nio.ByteBuffer value;
     /** Amount of gas provided by the sender */
-    private java.lang.Long gas;
+    private java.nio.ByteBuffer gas;
     /** Amount of gas price provided by the sender in Wei */
-    private java.lang.Long gasPrice;
+    private java.nio.ByteBuffer gasPrice;
     /** Amount of gas used consumed by the transaction */
-    private java.lang.Long gasUsed;
+    private java.nio.ByteBuffer gasUsed;
     /** Cumulative gas used by the transaction */
-    private java.lang.Long cumulativeGasUsed;
+    private java.nio.ByteBuffer cumulativeGasUsed;
     /** Transaction signature v */
-    private java.lang.CharSequence v;
+    private java.nio.ByteBuffer v;
     /** Transaction signature r */
-    private java.lang.CharSequence r;
+    private java.nio.ByteBuffer r;
     /** Transaction signature s */
-    private java.lang.CharSequence s;
+    private java.nio.ByteBuffer s;
     /** Transaction result status */
-    private java.lang.Long status;
+    private java.nio.ByteBuffer status;
     /** Generated and encoded logs by the transaction */
     private java.nio.ByteBuffer logsBloom;
     /**  */
@@ -871,7 +871,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * Hash of the transaction
       * @return The value.
       */
-    public java.lang.CharSequence getHash() {
+    public java.nio.ByteBuffer getHash() {
       return hash;
     }
 
@@ -881,7 +881,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @param value The value of 'hash'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.PendingTx.Builder setHash(java.lang.CharSequence value) {
+    public io.enkrypt.bolt.models.PendingTx.Builder setHash(java.nio.ByteBuffer value) {
       validate(fields()[0], value);
       this.hash = value;
       fieldSetFlags()[0] = true;
@@ -914,7 +914,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * Number of transactions sent from a given address
       * @return The value.
       */
-    public java.lang.Long getNonce() {
+    public java.nio.ByteBuffer getNonce() {
       return nonce;
     }
 
@@ -924,7 +924,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @param value The value of 'nonce'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.PendingTx.Builder setNonce(java.lang.Long value) {
+    public io.enkrypt.bolt.models.PendingTx.Builder setNonce(java.nio.ByteBuffer value) {
       validate(fields()[1], value);
       this.nonce = value;
       fieldSetFlags()[1] = true;
@@ -957,7 +957,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * SHA3 of the transaction nonce
       * @return The value.
       */
-    public java.lang.CharSequence getNonceHash() {
+    public java.nio.ByteBuffer getNonceHash() {
       return nonceHash;
     }
 
@@ -967,7 +967,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @param value The value of 'nonceHash'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.PendingTx.Builder setNonceHash(java.lang.CharSequence value) {
+    public io.enkrypt.bolt.models.PendingTx.Builder setNonceHash(java.nio.ByteBuffer value) {
       validate(fields()[2], value);
       this.nonceHash = value;
       fieldSetFlags()[2] = true;
@@ -1000,7 +1000,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * Address of the sender
       * @return The value.
       */
-    public java.lang.CharSequence getFrom() {
+    public java.nio.ByteBuffer getFrom() {
       return from;
     }
 
@@ -1010,7 +1010,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @param value The value of 'from'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.PendingTx.Builder setFrom(java.lang.CharSequence value) {
+    public io.enkrypt.bolt.models.PendingTx.Builder setFrom(java.nio.ByteBuffer value) {
       validate(fields()[3], value);
       this.from = value;
       fieldSetFlags()[3] = true;
@@ -1043,7 +1043,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * Balance of the sender
       * @return The value.
       */
-    public java.lang.Long getFromBalance() {
+    public java.nio.ByteBuffer getFromBalance() {
       return fromBalance;
     }
 
@@ -1053,7 +1053,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @param value The value of 'fromBalance'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.PendingTx.Builder setFromBalance(java.lang.Long value) {
+    public io.enkrypt.bolt.models.PendingTx.Builder setFromBalance(java.nio.ByteBuffer value) {
       validate(fields()[4], value);
       this.fromBalance = value;
       fieldSetFlags()[4] = true;
@@ -1086,7 +1086,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * Address of the recipient (or null when contract creation)
       * @return The value.
       */
-    public java.lang.CharSequence getTo() {
+    public java.nio.ByteBuffer getTo() {
       return to;
     }
 
@@ -1096,7 +1096,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @param value The value of 'to'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.PendingTx.Builder setTo(java.lang.CharSequence value) {
+    public io.enkrypt.bolt.models.PendingTx.Builder setTo(java.nio.ByteBuffer value) {
       validate(fields()[5], value);
       this.to = value;
       fieldSetFlags()[5] = true;
@@ -1129,7 +1129,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * Balance of the receiver (or null when contract creation)
       * @return The value.
       */
-    public java.lang.Long getToBalance() {
+    public java.nio.ByteBuffer getToBalance() {
       return toBalance;
     }
 
@@ -1139,7 +1139,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @param value The value of 'toBalance'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.PendingTx.Builder setToBalance(java.lang.Long value) {
+    public io.enkrypt.bolt.models.PendingTx.Builder setToBalance(java.nio.ByteBuffer value) {
       validate(fields()[6], value);
       this.toBalance = value;
       fieldSetFlags()[6] = true;
@@ -1215,7 +1215,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * If a contract is created, the address of it (or null if is just a regular transaction)
       * @return The value.
       */
-    public java.lang.CharSequence getContractAddress() {
+    public java.nio.ByteBuffer getContractAddress() {
       return contractAddress;
     }
 
@@ -1225,7 +1225,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @param value The value of 'contractAddress'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.PendingTx.Builder setContractAddress(java.lang.CharSequence value) {
+    public io.enkrypt.bolt.models.PendingTx.Builder setContractAddress(java.nio.ByteBuffer value) {
       validate(fields()[8], value);
       this.contractAddress = value;
       fieldSetFlags()[8] = true;
@@ -1258,7 +1258,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * Amount of value transferred in Wei
       * @return The value.
       */
-    public java.lang.Long getValue() {
+    public java.nio.ByteBuffer getValue() {
       return value;
     }
 
@@ -1268,7 +1268,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @param value The value of 'value'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.PendingTx.Builder setValue(java.lang.Long value) {
+    public io.enkrypt.bolt.models.PendingTx.Builder setValue(java.nio.ByteBuffer value) {
       validate(fields()[9], value);
       this.value = value;
       fieldSetFlags()[9] = true;
@@ -1301,7 +1301,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * Amount of gas provided by the sender
       * @return The value.
       */
-    public java.lang.Long getGas() {
+    public java.nio.ByteBuffer getGas() {
       return gas;
     }
 
@@ -1311,7 +1311,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @param value The value of 'gas'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.PendingTx.Builder setGas(java.lang.Long value) {
+    public io.enkrypt.bolt.models.PendingTx.Builder setGas(java.nio.ByteBuffer value) {
       validate(fields()[10], value);
       this.gas = value;
       fieldSetFlags()[10] = true;
@@ -1344,7 +1344,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * Amount of gas price provided by the sender in Wei
       * @return The value.
       */
-    public java.lang.Long getGasPrice() {
+    public java.nio.ByteBuffer getGasPrice() {
       return gasPrice;
     }
 
@@ -1354,7 +1354,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @param value The value of 'gasPrice'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.PendingTx.Builder setGasPrice(java.lang.Long value) {
+    public io.enkrypt.bolt.models.PendingTx.Builder setGasPrice(java.nio.ByteBuffer value) {
       validate(fields()[11], value);
       this.gasPrice = value;
       fieldSetFlags()[11] = true;
@@ -1387,7 +1387,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * Amount of gas used consumed by the transaction
       * @return The value.
       */
-    public java.lang.Long getGasUsed() {
+    public java.nio.ByteBuffer getGasUsed() {
       return gasUsed;
     }
 
@@ -1397,7 +1397,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @param value The value of 'gasUsed'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.PendingTx.Builder setGasUsed(java.lang.Long value) {
+    public io.enkrypt.bolt.models.PendingTx.Builder setGasUsed(java.nio.ByteBuffer value) {
       validate(fields()[12], value);
       this.gasUsed = value;
       fieldSetFlags()[12] = true;
@@ -1430,7 +1430,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * Cumulative gas used by the transaction
       * @return The value.
       */
-    public java.lang.Long getCumulativeGasUsed() {
+    public java.nio.ByteBuffer getCumulativeGasUsed() {
       return cumulativeGasUsed;
     }
 
@@ -1440,7 +1440,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @param value The value of 'cumulativeGasUsed'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.PendingTx.Builder setCumulativeGasUsed(java.lang.Long value) {
+    public io.enkrypt.bolt.models.PendingTx.Builder setCumulativeGasUsed(java.nio.ByteBuffer value) {
       validate(fields()[13], value);
       this.cumulativeGasUsed = value;
       fieldSetFlags()[13] = true;
@@ -1473,7 +1473,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * Transaction signature v
       * @return The value.
       */
-    public java.lang.CharSequence getV() {
+    public java.nio.ByteBuffer getV() {
       return v;
     }
 
@@ -1483,7 +1483,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @param value The value of 'v'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.PendingTx.Builder setV(java.lang.CharSequence value) {
+    public io.enkrypt.bolt.models.PendingTx.Builder setV(java.nio.ByteBuffer value) {
       validate(fields()[14], value);
       this.v = value;
       fieldSetFlags()[14] = true;
@@ -1516,7 +1516,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * Transaction signature r
       * @return The value.
       */
-    public java.lang.CharSequence getR() {
+    public java.nio.ByteBuffer getR() {
       return r;
     }
 
@@ -1526,7 +1526,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @param value The value of 'r'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.PendingTx.Builder setR(java.lang.CharSequence value) {
+    public io.enkrypt.bolt.models.PendingTx.Builder setR(java.nio.ByteBuffer value) {
       validate(fields()[15], value);
       this.r = value;
       fieldSetFlags()[15] = true;
@@ -1559,7 +1559,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * Transaction signature s
       * @return The value.
       */
-    public java.lang.CharSequence getS() {
+    public java.nio.ByteBuffer getS() {
       return s;
     }
 
@@ -1569,7 +1569,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @param value The value of 's'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.PendingTx.Builder setS(java.lang.CharSequence value) {
+    public io.enkrypt.bolt.models.PendingTx.Builder setS(java.nio.ByteBuffer value) {
       validate(fields()[16], value);
       this.s = value;
       fieldSetFlags()[16] = true;
@@ -1602,7 +1602,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * Transaction result status
       * @return The value.
       */
-    public java.lang.Long getStatus() {
+    public java.nio.ByteBuffer getStatus() {
       return status;
     }
 
@@ -1612,7 +1612,7 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
       * @param value The value of 'status'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.PendingTx.Builder setStatus(java.lang.Long value) {
+    public io.enkrypt.bolt.models.PendingTx.Builder setStatus(java.nio.ByteBuffer value) {
       validate(fields()[17], value);
       this.status = value;
       fieldSetFlags()[17] = true;
@@ -1855,24 +1855,24 @@ public class PendingTx extends org.apache.avro.specific.SpecificRecordBase imple
     public PendingTx build() {
       try {
         PendingTx record = new PendingTx();
-        record.hash = fieldSetFlags()[0] ? this.hash : (java.lang.CharSequence) defaultValue(fields()[0]);
-        record.nonce = fieldSetFlags()[1] ? this.nonce : (java.lang.Long) defaultValue(fields()[1]);
-        record.nonceHash = fieldSetFlags()[2] ? this.nonceHash : (java.lang.CharSequence) defaultValue(fields()[2]);
-        record.from = fieldSetFlags()[3] ? this.from : (java.lang.CharSequence) defaultValue(fields()[3]);
-        record.fromBalance = fieldSetFlags()[4] ? this.fromBalance : (java.lang.Long) defaultValue(fields()[4]);
-        record.to = fieldSetFlags()[5] ? this.to : (java.lang.CharSequence) defaultValue(fields()[5]);
-        record.toBalance = fieldSetFlags()[6] ? this.toBalance : (java.lang.Long) defaultValue(fields()[6]);
+        record.hash = fieldSetFlags()[0] ? this.hash : (java.nio.ByteBuffer) defaultValue(fields()[0]);
+        record.nonce = fieldSetFlags()[1] ? this.nonce : (java.nio.ByteBuffer) defaultValue(fields()[1]);
+        record.nonceHash = fieldSetFlags()[2] ? this.nonceHash : (java.nio.ByteBuffer) defaultValue(fields()[2]);
+        record.from = fieldSetFlags()[3] ? this.from : (java.nio.ByteBuffer) defaultValue(fields()[3]);
+        record.fromBalance = fieldSetFlags()[4] ? this.fromBalance : (java.nio.ByteBuffer) defaultValue(fields()[4]);
+        record.to = fieldSetFlags()[5] ? this.to : (java.nio.ByteBuffer) defaultValue(fields()[5]);
+        record.toBalance = fieldSetFlags()[6] ? this.toBalance : (java.nio.ByteBuffer) defaultValue(fields()[6]);
         record.input = fieldSetFlags()[7] ? this.input : (java.nio.ByteBuffer) defaultValue(fields()[7]);
-        record.contractAddress = fieldSetFlags()[8] ? this.contractAddress : (java.lang.CharSequence) defaultValue(fields()[8]);
-        record.value = fieldSetFlags()[9] ? this.value : (java.lang.Long) defaultValue(fields()[9]);
-        record.gas = fieldSetFlags()[10] ? this.gas : (java.lang.Long) defaultValue(fields()[10]);
-        record.gasPrice = fieldSetFlags()[11] ? this.gasPrice : (java.lang.Long) defaultValue(fields()[11]);
-        record.gasUsed = fieldSetFlags()[12] ? this.gasUsed : (java.lang.Long) defaultValue(fields()[12]);
-        record.cumulativeGasUsed = fieldSetFlags()[13] ? this.cumulativeGasUsed : (java.lang.Long) defaultValue(fields()[13]);
-        record.v = fieldSetFlags()[14] ? this.v : (java.lang.CharSequence) defaultValue(fields()[14]);
-        record.r = fieldSetFlags()[15] ? this.r : (java.lang.CharSequence) defaultValue(fields()[15]);
-        record.s = fieldSetFlags()[16] ? this.s : (java.lang.CharSequence) defaultValue(fields()[16]);
-        record.status = fieldSetFlags()[17] ? this.status : (java.lang.Long) defaultValue(fields()[17]);
+        record.contractAddress = fieldSetFlags()[8] ? this.contractAddress : (java.nio.ByteBuffer) defaultValue(fields()[8]);
+        record.value = fieldSetFlags()[9] ? this.value : (java.nio.ByteBuffer) defaultValue(fields()[9]);
+        record.gas = fieldSetFlags()[10] ? this.gas : (java.nio.ByteBuffer) defaultValue(fields()[10]);
+        record.gasPrice = fieldSetFlags()[11] ? this.gasPrice : (java.nio.ByteBuffer) defaultValue(fields()[11]);
+        record.gasUsed = fieldSetFlags()[12] ? this.gasUsed : (java.nio.ByteBuffer) defaultValue(fields()[12]);
+        record.cumulativeGasUsed = fieldSetFlags()[13] ? this.cumulativeGasUsed : (java.nio.ByteBuffer) defaultValue(fields()[13]);
+        record.v = fieldSetFlags()[14] ? this.v : (java.nio.ByteBuffer) defaultValue(fields()[14]);
+        record.r = fieldSetFlags()[15] ? this.r : (java.nio.ByteBuffer) defaultValue(fields()[15]);
+        record.s = fieldSetFlags()[16] ? this.s : (java.nio.ByteBuffer) defaultValue(fields()[16]);
+        record.status = fieldSetFlags()[17] ? this.status : (java.nio.ByteBuffer) defaultValue(fields()[17]);
         record.logsBloom = fieldSetFlags()[18] ? this.logsBloom : (java.nio.ByteBuffer) defaultValue(fields()[18]);
         record.logs = fieldSetFlags()[19] ? this.logs : (java.util.List<io.enkrypt.bolt.models.Log>) defaultValue(fields()[19]);
         if (traceBuilder != null) {

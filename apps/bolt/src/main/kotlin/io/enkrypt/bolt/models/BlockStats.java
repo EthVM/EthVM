@@ -13,8 +13,8 @@ import org.apache.avro.message.SchemaStore;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class BlockStats extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 8298765389091178129L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"BlockStats\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"blockTimeMs\",\"type\":\"int\",\"doc\":\"Time taken to find the block in milliseconds\"},{\"name\":\"numFailedTxs\",\"type\":\"int\",\"doc\":\"Number of failed transactions\"},{\"name\":\"numSuccessfulTxs\",\"type\":\"int\",\"doc\":\"Number of successful transactions\"},{\"name\":\"avgGasPrice\",\"type\":\"long\",\"doc\":\"Average gas price\"},{\"name\":\"avgTxsFees\",\"type\":\"long\",\"doc\":\"Total gas price\"}]}");
+  private static final long serialVersionUID = -5958936508402285973L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"BlockStats\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"blockTimeMs\",\"type\":\"int\",\"doc\":\"Time taken to find the block in milliseconds\"},{\"name\":\"numFailedTxs\",\"type\":\"int\",\"doc\":\"Number of failed transactions\"},{\"name\":\"numSuccessfulTxs\",\"type\":\"int\",\"doc\":\"Number of successful transactions\"},{\"name\":\"avgGasPrice\",\"type\":\"bytes\",\"doc\":\"Average gas price\"},{\"name\":\"avgTxsFees\",\"type\":\"bytes\",\"doc\":\"Total gas price\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -58,9 +58,9 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
   /** Number of successful transactions */
   @Deprecated public int numSuccessfulTxs;
   /** Average gas price */
-  @Deprecated public long avgGasPrice;
+  @Deprecated public java.nio.ByteBuffer avgGasPrice;
   /** Total gas price */
-  @Deprecated public long avgTxsFees;
+  @Deprecated public java.nio.ByteBuffer avgTxsFees;
 
   /**
    * Default constructor.  Note that this does not initialize fields
@@ -77,7 +77,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
    * @param avgGasPrice Average gas price
    * @param avgTxsFees Total gas price
    */
-  public BlockStats(java.lang.Integer blockTimeMs, java.lang.Integer numFailedTxs, java.lang.Integer numSuccessfulTxs, java.lang.Long avgGasPrice, java.lang.Long avgTxsFees) {
+  public BlockStats(java.lang.Integer blockTimeMs, java.lang.Integer numFailedTxs, java.lang.Integer numSuccessfulTxs, java.nio.ByteBuffer avgGasPrice, java.nio.ByteBuffer avgTxsFees) {
     this.blockTimeMs = blockTimeMs;
     this.numFailedTxs = numFailedTxs;
     this.numSuccessfulTxs = numSuccessfulTxs;
@@ -105,8 +105,8 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
     case 0: blockTimeMs = (java.lang.Integer)value$; break;
     case 1: numFailedTxs = (java.lang.Integer)value$; break;
     case 2: numSuccessfulTxs = (java.lang.Integer)value$; break;
-    case 3: avgGasPrice = (java.lang.Long)value$; break;
-    case 4: avgTxsFees = (java.lang.Long)value$; break;
+    case 3: avgGasPrice = (java.nio.ByteBuffer)value$; break;
+    case 4: avgTxsFees = (java.nio.ByteBuffer)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -166,7 +166,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
    * Gets the value of the 'avgGasPrice' field.
    * @return Average gas price
    */
-  public java.lang.Long getAvgGasPrice() {
+  public java.nio.ByteBuffer getAvgGasPrice() {
     return avgGasPrice;
   }
 
@@ -175,7 +175,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
    * Average gas price
    * @param value the value to set.
    */
-  public void setAvgGasPrice(java.lang.Long value) {
+  public void setAvgGasPrice(java.nio.ByteBuffer value) {
     this.avgGasPrice = value;
   }
 
@@ -183,7 +183,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
    * Gets the value of the 'avgTxsFees' field.
    * @return Total gas price
    */
-  public java.lang.Long getAvgTxsFees() {
+  public java.nio.ByteBuffer getAvgTxsFees() {
     return avgTxsFees;
   }
 
@@ -192,7 +192,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
    * Total gas price
    * @param value the value to set.
    */
-  public void setAvgTxsFees(java.lang.Long value) {
+  public void setAvgTxsFees(java.nio.ByteBuffer value) {
     this.avgTxsFees = value;
   }
 
@@ -235,9 +235,9 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
     /** Number of successful transactions */
     private int numSuccessfulTxs;
     /** Average gas price */
-    private long avgGasPrice;
+    private java.nio.ByteBuffer avgGasPrice;
     /** Total gas price */
-    private long avgTxsFees;
+    private java.nio.ByteBuffer avgTxsFees;
 
     /** Creates a new Builder */
     private Builder() {
@@ -431,7 +431,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * Average gas price
       * @return The value.
       */
-    public java.lang.Long getAvgGasPrice() {
+    public java.nio.ByteBuffer getAvgGasPrice() {
       return avgGasPrice;
     }
 
@@ -441,7 +441,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * @param value The value of 'avgGasPrice'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.BlockStats.Builder setAvgGasPrice(long value) {
+    public io.enkrypt.bolt.models.BlockStats.Builder setAvgGasPrice(java.nio.ByteBuffer value) {
       validate(fields()[3], value);
       this.avgGasPrice = value;
       fieldSetFlags()[3] = true;
@@ -464,6 +464,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * @return This builder.
       */
     public io.enkrypt.bolt.models.BlockStats.Builder clearAvgGasPrice() {
+      avgGasPrice = null;
       fieldSetFlags()[3] = false;
       return this;
     }
@@ -473,7 +474,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * Total gas price
       * @return The value.
       */
-    public java.lang.Long getAvgTxsFees() {
+    public java.nio.ByteBuffer getAvgTxsFees() {
       return avgTxsFees;
     }
 
@@ -483,7 +484,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * @param value The value of 'avgTxsFees'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.BlockStats.Builder setAvgTxsFees(long value) {
+    public io.enkrypt.bolt.models.BlockStats.Builder setAvgTxsFees(java.nio.ByteBuffer value) {
       validate(fields()[4], value);
       this.avgTxsFees = value;
       fieldSetFlags()[4] = true;
@@ -506,6 +507,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * @return This builder.
       */
     public io.enkrypt.bolt.models.BlockStats.Builder clearAvgTxsFees() {
+      avgTxsFees = null;
       fieldSetFlags()[4] = false;
       return this;
     }
@@ -518,8 +520,8 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
         record.blockTimeMs = fieldSetFlags()[0] ? this.blockTimeMs : (java.lang.Integer) defaultValue(fields()[0]);
         record.numFailedTxs = fieldSetFlags()[1] ? this.numFailedTxs : (java.lang.Integer) defaultValue(fields()[1]);
         record.numSuccessfulTxs = fieldSetFlags()[2] ? this.numSuccessfulTxs : (java.lang.Integer) defaultValue(fields()[2]);
-        record.avgGasPrice = fieldSetFlags()[3] ? this.avgGasPrice : (java.lang.Long) defaultValue(fields()[3]);
-        record.avgTxsFees = fieldSetFlags()[4] ? this.avgTxsFees : (java.lang.Long) defaultValue(fields()[4]);
+        record.avgGasPrice = fieldSetFlags()[3] ? this.avgGasPrice : (java.nio.ByteBuffer) defaultValue(fields()[3]);
+        record.avgTxsFees = fieldSetFlags()[4] ? this.avgTxsFees : (java.nio.ByteBuffer) defaultValue(fields()[4]);
         return record;
       } catch (java.lang.Exception e) {
         throw new org.apache.avro.AvroRuntimeException(e);

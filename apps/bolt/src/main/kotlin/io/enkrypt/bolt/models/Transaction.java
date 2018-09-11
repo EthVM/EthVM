@@ -13,8 +13,8 @@ import org.apache.avro.message.SchemaStore;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class Transaction extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 5751173297275459092L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Transaction\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"hash\",\"type\":\"string\",\"doc\":\"Hash of the transaction\"},{\"name\":\"root\",\"type\":\"string\",\"doc\":\"Root of the parent block\"},{\"name\":\"index\",\"type\":\"int\",\"doc\":\"Integer of the transactions index position in the block\"},{\"name\":\"timestamp\",\"type\":{\"type\":\"long\",\"logicalType\":\"timestamp-millis\"},\"doc\":\"Unix timestamp for when the transaction was collated\"},{\"name\":\"nonce\",\"type\":\"long\",\"doc\":\"Number of transactions sent from a given address\"},{\"name\":\"nonceHash\",\"type\":\"string\",\"doc\":\"SHA3 of the transaction nonce\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"long\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":[\"null\",\"string\"],\"doc\":\"Address of the recipient (or null when contract creation)\"},{\"name\":\"toBalance\",\"type\":[\"null\",\"long\"],\"doc\":\"Balance of the receiver (or null when contract creation)\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"The data send along with the transaction\"},{\"name\":\"contractAddress\",\"type\":[\"null\",\"string\"],\"doc\":\"If a contract is created, the address of it (or null if is just a regular transaction)\"},{\"name\":\"value\",\"type\":\"long\",\"doc\":\"Amount of value transferred in Wei\"},{\"name\":\"gas\",\"type\":\"long\",\"doc\":\"Amount of gas provided by the sender\"},{\"name\":\"gasPrice\",\"type\":\"long\",\"doc\":\"Amount of gas price provided by the sender in Wei\"},{\"name\":\"gasUsed\",\"type\":\"long\",\"doc\":\"Amount of gas used consumed by the transaction\"},{\"name\":\"cumulativeGasUsed\",\"type\":\"long\",\"doc\":\"Cumulative gas used by the transaction\"},{\"name\":\"v\",\"type\":\"string\",\"doc\":\"Transaction signature v\"},{\"name\":\"r\",\"type\":\"string\",\"doc\":\"Transaction signature r\"},{\"name\":\"s\",\"type\":\"string\",\"doc\":\"Transaction signature s\"},{\"name\":\"status\",\"type\":\"long\",\"doc\":\"Transaction result status\"},{\"name\":\"logsBloom\",\"type\":\"bytes\",\"doc\":\"Generated and encoded logs by the transaction\"},{\"name\":\"logs\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Log\",\"fields\":[{\"name\":\"address\",\"type\":\"string\",\"desc\":\"Address of the contract that generated the event\"},{\"name\":\"topics\",\"type\":{\"type\":\"array\",\"items\":\"string\"},\"desc\":\"List of topics provided by the contract\"},{\"name\":\"data\",\"type\":\"bytes\",\"desc\":\"Supplied by the contract, usually ABI-encoded\"},{\"name\":\"index\",\"type\":\"int\",\"desc\":\"Index of the log in the receipt\"},{\"name\":\"removed\",\"type\":\"boolean\",\"desc\":\"True if this log was reverted due to a chain reorganisation\"}]}},\"doc\":\"Logs produced by executing smart contracts\"},{\"name\":\"trace\",\"type\":{\"type\":\"record\",\"name\":\"Trace\",\"fields\":[{\"name\":\"isError\",\"type\":\"boolean\",\"desc\":\"Signals if an error happened during execution\"},{\"name\":\"msg\",\"type\":\"string\",\"desc\":\"Stores the error message\"},{\"name\":\"transfers\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Transfer\",\"fields\":[{\"name\":\"op\",\"type\":\"string\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"value\",\"type\":\"string\",\"doc\":\"Raw value of the transaction\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"string\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":\"string\",\"doc\":\"Address of the receiver\"},{\"name\":\"toBalance\",\"type\":\"string\",\"doc\":\"Balance of the receiver\"},{\"name\":\"input\",\"type\":\"string\",\"doc\":\"Raw input data\"}]}},\"desc\":\"An array describing transfers\"}]},\"doc\":\"Trace that describes contract creation, destruction or intenal transactions\"}]}");
+  private static final long serialVersionUID = 8079538282665533076L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Transaction\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"hash\",\"type\":\"bytes\",\"doc\":\"Hash of the transaction\"},{\"name\":\"root\",\"type\":\"bytes\",\"doc\":\"Root of the parent block\"},{\"name\":\"index\",\"type\":\"int\",\"doc\":\"Integer of the transactions index position in the block\"},{\"name\":\"timestamp\",\"type\":{\"type\":\"long\",\"logicalType\":\"timestamp-millis\"},\"doc\":\"Unix timestamp for when the transaction was collated\"},{\"name\":\"nonce\",\"type\":\"bytes\",\"doc\":\"Number of transactions sent from a given address\"},{\"name\":\"nonceHash\",\"type\":\"bytes\",\"doc\":\"SHA3 of the transaction nonce\"},{\"name\":\"from\",\"type\":\"bytes\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"bytes\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":[\"null\",\"bytes\"],\"doc\":\"Address of the recipient (or null when contract creation)\"},{\"name\":\"toBalance\",\"type\":[\"null\",\"bytes\"],\"doc\":\"Balance of the receiver (or null when contract creation)\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"The data send along with the transaction\"},{\"name\":\"contractAddress\",\"type\":[\"null\",\"bytes\"],\"doc\":\"If a contract is created, the address of it (or null if is just a regular transaction)\"},{\"name\":\"value\",\"type\":\"bytes\",\"doc\":\"Amount of value transferred in Wei\"},{\"name\":\"gas\",\"type\":\"bytes\",\"doc\":\"Amount of gas provided by the sender\"},{\"name\":\"gasPrice\",\"type\":\"bytes\",\"doc\":\"Amount of gas price provided by the sender in Wei\"},{\"name\":\"gasUsed\",\"type\":\"bytes\",\"doc\":\"Amount of gas used consumed by the transaction\"},{\"name\":\"cumulativeGasUsed\",\"type\":\"bytes\",\"doc\":\"Cumulative gas used by the transaction\"},{\"name\":\"v\",\"type\":\"bytes\",\"doc\":\"Transaction signature v\"},{\"name\":\"r\",\"type\":\"bytes\",\"doc\":\"Transaction signature r\"},{\"name\":\"s\",\"type\":\"bytes\",\"doc\":\"Transaction signature s\"},{\"name\":\"status\",\"type\":\"bytes\",\"doc\":\"Transaction result status\"},{\"name\":\"logsBloom\",\"type\":\"bytes\",\"doc\":\"Generated and encoded logs by the transaction\"},{\"name\":\"logs\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Log\",\"fields\":[{\"name\":\"address\",\"type\":\"bytes\",\"desc\":\"Address of the contract that generated the event\"},{\"name\":\"topics\",\"type\":{\"type\":\"array\",\"items\":\"bytes\"},\"desc\":\"List of topics provided by the contract\"},{\"name\":\"data\",\"type\":\"bytes\",\"desc\":\"Supplied by the contract, usually ABI-encoded\"},{\"name\":\"index\",\"type\":\"int\",\"desc\":\"Index of the log in the receipt\"},{\"name\":\"removed\",\"type\":\"boolean\",\"desc\":\"True if this log was reverted due to a chain reorganisation\"}]}},\"doc\":\"Logs produced by executing smart contracts\"},{\"name\":\"trace\",\"type\":{\"type\":\"record\",\"name\":\"Trace\",\"fields\":[{\"name\":\"isError\",\"type\":\"boolean\",\"desc\":\"Signals if an error happened during execution\"},{\"name\":\"msg\",\"type\":\"string\",\"desc\":\"Stores the error message\"},{\"name\":\"transfers\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Transfer\",\"fields\":[{\"name\":\"op\",\"type\":\"int\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"value\",\"type\":\"bytes\",\"doc\":\"Raw value of the transaction\"},{\"name\":\"from\",\"type\":\"bytes\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"bytes\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":\"bytes\",\"doc\":\"Address of the receiver\"},{\"name\":\"toBalance\",\"type\":\"bytes\",\"doc\":\"Balance of the receiver\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"Raw input data\"}]}},\"desc\":\"An array describing transfers\"}]},\"doc\":\"Trace that describes contract creation, destruction or intenal transactions\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -52,47 +52,47 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
   }
 
   /** Hash of the transaction */
-  @Deprecated public java.lang.CharSequence hash;
+  @Deprecated public java.nio.ByteBuffer hash;
   /** Root of the parent block */
-  @Deprecated public java.lang.CharSequence root;
+  @Deprecated public java.nio.ByteBuffer root;
   /** Integer of the transactions index position in the block */
   @Deprecated public int index;
   /** Unix timestamp for when the transaction was collated */
   @Deprecated public org.joda.time.DateTime timestamp;
   /** Number of transactions sent from a given address */
-  @Deprecated public long nonce;
+  @Deprecated public java.nio.ByteBuffer nonce;
   /** SHA3 of the transaction nonce */
-  @Deprecated public java.lang.CharSequence nonceHash;
+  @Deprecated public java.nio.ByteBuffer nonceHash;
   /** Address of the sender */
-  @Deprecated public java.lang.CharSequence from;
+  @Deprecated public java.nio.ByteBuffer from;
   /** Balance of the sender */
-  @Deprecated public long fromBalance;
+  @Deprecated public java.nio.ByteBuffer fromBalance;
   /** Address of the recipient (or null when contract creation) */
-  @Deprecated public java.lang.CharSequence to;
+  @Deprecated public java.nio.ByteBuffer to;
   /** Balance of the receiver (or null when contract creation) */
-  @Deprecated public java.lang.Long toBalance;
+  @Deprecated public java.nio.ByteBuffer toBalance;
   /** The data send along with the transaction */
   @Deprecated public java.nio.ByteBuffer input;
   /** If a contract is created, the address of it (or null if is just a regular transaction) */
-  @Deprecated public java.lang.CharSequence contractAddress;
+  @Deprecated public java.nio.ByteBuffer contractAddress;
   /** Amount of value transferred in Wei */
-  @Deprecated public long value;
+  @Deprecated public java.nio.ByteBuffer value;
   /** Amount of gas provided by the sender */
-  @Deprecated public long gas;
+  @Deprecated public java.nio.ByteBuffer gas;
   /** Amount of gas price provided by the sender in Wei */
-  @Deprecated public long gasPrice;
+  @Deprecated public java.nio.ByteBuffer gasPrice;
   /** Amount of gas used consumed by the transaction */
-  @Deprecated public long gasUsed;
+  @Deprecated public java.nio.ByteBuffer gasUsed;
   /** Cumulative gas used by the transaction */
-  @Deprecated public long cumulativeGasUsed;
+  @Deprecated public java.nio.ByteBuffer cumulativeGasUsed;
   /** Transaction signature v */
-  @Deprecated public java.lang.CharSequence v;
+  @Deprecated public java.nio.ByteBuffer v;
   /** Transaction signature r */
-  @Deprecated public java.lang.CharSequence r;
+  @Deprecated public java.nio.ByteBuffer r;
   /** Transaction signature s */
-  @Deprecated public java.lang.CharSequence s;
+  @Deprecated public java.nio.ByteBuffer s;
   /** Transaction result status */
-  @Deprecated public long status;
+  @Deprecated public java.nio.ByteBuffer status;
   /** Generated and encoded logs by the transaction */
   @Deprecated public java.nio.ByteBuffer logsBloom;
   /** Logs produced by executing smart contracts */
@@ -134,7 +134,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * @param logs Logs produced by executing smart contracts
    * @param trace Trace that describes contract creation, destruction or intenal transactions
    */
-  public Transaction(java.lang.CharSequence hash, java.lang.CharSequence root, java.lang.Integer index, org.joda.time.DateTime timestamp, java.lang.Long nonce, java.lang.CharSequence nonceHash, java.lang.CharSequence from, java.lang.Long fromBalance, java.lang.CharSequence to, java.lang.Long toBalance, java.nio.ByteBuffer input, java.lang.CharSequence contractAddress, java.lang.Long value, java.lang.Long gas, java.lang.Long gasPrice, java.lang.Long gasUsed, java.lang.Long cumulativeGasUsed, java.lang.CharSequence v, java.lang.CharSequence r, java.lang.CharSequence s, java.lang.Long status, java.nio.ByteBuffer logsBloom, java.util.List<io.enkrypt.bolt.models.Log> logs, io.enkrypt.bolt.models.Trace trace) {
+  public Transaction(java.nio.ByteBuffer hash, java.nio.ByteBuffer root, java.lang.Integer index, org.joda.time.DateTime timestamp, java.nio.ByteBuffer nonce, java.nio.ByteBuffer nonceHash, java.nio.ByteBuffer from, java.nio.ByteBuffer fromBalance, java.nio.ByteBuffer to, java.nio.ByteBuffer toBalance, java.nio.ByteBuffer input, java.nio.ByteBuffer contractAddress, java.nio.ByteBuffer value, java.nio.ByteBuffer gas, java.nio.ByteBuffer gasPrice, java.nio.ByteBuffer gasUsed, java.nio.ByteBuffer cumulativeGasUsed, java.nio.ByteBuffer v, java.nio.ByteBuffer r, java.nio.ByteBuffer s, java.nio.ByteBuffer status, java.nio.ByteBuffer logsBloom, java.util.List<io.enkrypt.bolt.models.Log> logs, io.enkrypt.bolt.models.Trace trace) {
     this.hash = hash;
     this.root = root;
     this.index = index;
@@ -236,27 +236,27 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
   @SuppressWarnings(value="unchecked")
   public void put(int field$, java.lang.Object value$) {
     switch (field$) {
-    case 0: hash = (java.lang.CharSequence)value$; break;
-    case 1: root = (java.lang.CharSequence)value$; break;
+    case 0: hash = (java.nio.ByteBuffer)value$; break;
+    case 1: root = (java.nio.ByteBuffer)value$; break;
     case 2: index = (java.lang.Integer)value$; break;
     case 3: timestamp = (org.joda.time.DateTime)value$; break;
-    case 4: nonce = (java.lang.Long)value$; break;
-    case 5: nonceHash = (java.lang.CharSequence)value$; break;
-    case 6: from = (java.lang.CharSequence)value$; break;
-    case 7: fromBalance = (java.lang.Long)value$; break;
-    case 8: to = (java.lang.CharSequence)value$; break;
-    case 9: toBalance = (java.lang.Long)value$; break;
+    case 4: nonce = (java.nio.ByteBuffer)value$; break;
+    case 5: nonceHash = (java.nio.ByteBuffer)value$; break;
+    case 6: from = (java.nio.ByteBuffer)value$; break;
+    case 7: fromBalance = (java.nio.ByteBuffer)value$; break;
+    case 8: to = (java.nio.ByteBuffer)value$; break;
+    case 9: toBalance = (java.nio.ByteBuffer)value$; break;
     case 10: input = (java.nio.ByteBuffer)value$; break;
-    case 11: contractAddress = (java.lang.CharSequence)value$; break;
-    case 12: value = (java.lang.Long)value$; break;
-    case 13: gas = (java.lang.Long)value$; break;
-    case 14: gasPrice = (java.lang.Long)value$; break;
-    case 15: gasUsed = (java.lang.Long)value$; break;
-    case 16: cumulativeGasUsed = (java.lang.Long)value$; break;
-    case 17: v = (java.lang.CharSequence)value$; break;
-    case 18: r = (java.lang.CharSequence)value$; break;
-    case 19: s = (java.lang.CharSequence)value$; break;
-    case 20: status = (java.lang.Long)value$; break;
+    case 11: contractAddress = (java.nio.ByteBuffer)value$; break;
+    case 12: value = (java.nio.ByteBuffer)value$; break;
+    case 13: gas = (java.nio.ByteBuffer)value$; break;
+    case 14: gasPrice = (java.nio.ByteBuffer)value$; break;
+    case 15: gasUsed = (java.nio.ByteBuffer)value$; break;
+    case 16: cumulativeGasUsed = (java.nio.ByteBuffer)value$; break;
+    case 17: v = (java.nio.ByteBuffer)value$; break;
+    case 18: r = (java.nio.ByteBuffer)value$; break;
+    case 19: s = (java.nio.ByteBuffer)value$; break;
+    case 20: status = (java.nio.ByteBuffer)value$; break;
     case 21: logsBloom = (java.nio.ByteBuffer)value$; break;
     case 22: logs = (java.util.List<io.enkrypt.bolt.models.Log>)value$; break;
     case 23: trace = (io.enkrypt.bolt.models.Trace)value$; break;
@@ -268,7 +268,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Gets the value of the 'hash' field.
    * @return Hash of the transaction
    */
-  public java.lang.CharSequence getHash() {
+  public java.nio.ByteBuffer getHash() {
     return hash;
   }
 
@@ -277,7 +277,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Hash of the transaction
    * @param value the value to set.
    */
-  public void setHash(java.lang.CharSequence value) {
+  public void setHash(java.nio.ByteBuffer value) {
     this.hash = value;
   }
 
@@ -285,7 +285,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Gets the value of the 'root' field.
    * @return Root of the parent block
    */
-  public java.lang.CharSequence getRoot() {
+  public java.nio.ByteBuffer getRoot() {
     return root;
   }
 
@@ -294,7 +294,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Root of the parent block
    * @param value the value to set.
    */
-  public void setRoot(java.lang.CharSequence value) {
+  public void setRoot(java.nio.ByteBuffer value) {
     this.root = value;
   }
 
@@ -336,7 +336,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Gets the value of the 'nonce' field.
    * @return Number of transactions sent from a given address
    */
-  public java.lang.Long getNonce() {
+  public java.nio.ByteBuffer getNonce() {
     return nonce;
   }
 
@@ -345,7 +345,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Number of transactions sent from a given address
    * @param value the value to set.
    */
-  public void setNonce(java.lang.Long value) {
+  public void setNonce(java.nio.ByteBuffer value) {
     this.nonce = value;
   }
 
@@ -353,7 +353,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Gets the value of the 'nonceHash' field.
    * @return SHA3 of the transaction nonce
    */
-  public java.lang.CharSequence getNonceHash() {
+  public java.nio.ByteBuffer getNonceHash() {
     return nonceHash;
   }
 
@@ -362,7 +362,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * SHA3 of the transaction nonce
    * @param value the value to set.
    */
-  public void setNonceHash(java.lang.CharSequence value) {
+  public void setNonceHash(java.nio.ByteBuffer value) {
     this.nonceHash = value;
   }
 
@@ -370,7 +370,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Gets the value of the 'from' field.
    * @return Address of the sender
    */
-  public java.lang.CharSequence getFrom() {
+  public java.nio.ByteBuffer getFrom() {
     return from;
   }
 
@@ -379,7 +379,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Address of the sender
    * @param value the value to set.
    */
-  public void setFrom(java.lang.CharSequence value) {
+  public void setFrom(java.nio.ByteBuffer value) {
     this.from = value;
   }
 
@@ -387,7 +387,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Gets the value of the 'fromBalance' field.
    * @return Balance of the sender
    */
-  public java.lang.Long getFromBalance() {
+  public java.nio.ByteBuffer getFromBalance() {
     return fromBalance;
   }
 
@@ -396,7 +396,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Balance of the sender
    * @param value the value to set.
    */
-  public void setFromBalance(java.lang.Long value) {
+  public void setFromBalance(java.nio.ByteBuffer value) {
     this.fromBalance = value;
   }
 
@@ -404,7 +404,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Gets the value of the 'to' field.
    * @return Address of the recipient (or null when contract creation)
    */
-  public java.lang.CharSequence getTo() {
+  public java.nio.ByteBuffer getTo() {
     return to;
   }
 
@@ -413,7 +413,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Address of the recipient (or null when contract creation)
    * @param value the value to set.
    */
-  public void setTo(java.lang.CharSequence value) {
+  public void setTo(java.nio.ByteBuffer value) {
     this.to = value;
   }
 
@@ -421,7 +421,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Gets the value of the 'toBalance' field.
    * @return Balance of the receiver (or null when contract creation)
    */
-  public java.lang.Long getToBalance() {
+  public java.nio.ByteBuffer getToBalance() {
     return toBalance;
   }
 
@@ -430,7 +430,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Balance of the receiver (or null when contract creation)
    * @param value the value to set.
    */
-  public void setToBalance(java.lang.Long value) {
+  public void setToBalance(java.nio.ByteBuffer value) {
     this.toBalance = value;
   }
 
@@ -455,7 +455,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Gets the value of the 'contractAddress' field.
    * @return If a contract is created, the address of it (or null if is just a regular transaction)
    */
-  public java.lang.CharSequence getContractAddress() {
+  public java.nio.ByteBuffer getContractAddress() {
     return contractAddress;
   }
 
@@ -464,7 +464,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * If a contract is created, the address of it (or null if is just a regular transaction)
    * @param value the value to set.
    */
-  public void setContractAddress(java.lang.CharSequence value) {
+  public void setContractAddress(java.nio.ByteBuffer value) {
     this.contractAddress = value;
   }
 
@@ -472,7 +472,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Gets the value of the 'value' field.
    * @return Amount of value transferred in Wei
    */
-  public java.lang.Long getValue() {
+  public java.nio.ByteBuffer getValue() {
     return value;
   }
 
@@ -481,7 +481,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Amount of value transferred in Wei
    * @param value the value to set.
    */
-  public void setValue(java.lang.Long value) {
+  public void setValue(java.nio.ByteBuffer value) {
     this.value = value;
   }
 
@@ -489,7 +489,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Gets the value of the 'gas' field.
    * @return Amount of gas provided by the sender
    */
-  public java.lang.Long getGas() {
+  public java.nio.ByteBuffer getGas() {
     return gas;
   }
 
@@ -498,7 +498,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Amount of gas provided by the sender
    * @param value the value to set.
    */
-  public void setGas(java.lang.Long value) {
+  public void setGas(java.nio.ByteBuffer value) {
     this.gas = value;
   }
 
@@ -506,7 +506,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Gets the value of the 'gasPrice' field.
    * @return Amount of gas price provided by the sender in Wei
    */
-  public java.lang.Long getGasPrice() {
+  public java.nio.ByteBuffer getGasPrice() {
     return gasPrice;
   }
 
@@ -515,7 +515,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Amount of gas price provided by the sender in Wei
    * @param value the value to set.
    */
-  public void setGasPrice(java.lang.Long value) {
+  public void setGasPrice(java.nio.ByteBuffer value) {
     this.gasPrice = value;
   }
 
@@ -523,7 +523,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Gets the value of the 'gasUsed' field.
    * @return Amount of gas used consumed by the transaction
    */
-  public java.lang.Long getGasUsed() {
+  public java.nio.ByteBuffer getGasUsed() {
     return gasUsed;
   }
 
@@ -532,7 +532,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Amount of gas used consumed by the transaction
    * @param value the value to set.
    */
-  public void setGasUsed(java.lang.Long value) {
+  public void setGasUsed(java.nio.ByteBuffer value) {
     this.gasUsed = value;
   }
 
@@ -540,7 +540,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Gets the value of the 'cumulativeGasUsed' field.
    * @return Cumulative gas used by the transaction
    */
-  public java.lang.Long getCumulativeGasUsed() {
+  public java.nio.ByteBuffer getCumulativeGasUsed() {
     return cumulativeGasUsed;
   }
 
@@ -549,7 +549,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Cumulative gas used by the transaction
    * @param value the value to set.
    */
-  public void setCumulativeGasUsed(java.lang.Long value) {
+  public void setCumulativeGasUsed(java.nio.ByteBuffer value) {
     this.cumulativeGasUsed = value;
   }
 
@@ -557,7 +557,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Gets the value of the 'v' field.
    * @return Transaction signature v
    */
-  public java.lang.CharSequence getV() {
+  public java.nio.ByteBuffer getV() {
     return v;
   }
 
@@ -566,7 +566,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Transaction signature v
    * @param value the value to set.
    */
-  public void setV(java.lang.CharSequence value) {
+  public void setV(java.nio.ByteBuffer value) {
     this.v = value;
   }
 
@@ -574,7 +574,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Gets the value of the 'r' field.
    * @return Transaction signature r
    */
-  public java.lang.CharSequence getR() {
+  public java.nio.ByteBuffer getR() {
     return r;
   }
 
@@ -583,7 +583,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Transaction signature r
    * @param value the value to set.
    */
-  public void setR(java.lang.CharSequence value) {
+  public void setR(java.nio.ByteBuffer value) {
     this.r = value;
   }
 
@@ -591,7 +591,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Gets the value of the 's' field.
    * @return Transaction signature s
    */
-  public java.lang.CharSequence getS() {
+  public java.nio.ByteBuffer getS() {
     return s;
   }
 
@@ -600,7 +600,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Transaction signature s
    * @param value the value to set.
    */
-  public void setS(java.lang.CharSequence value) {
+  public void setS(java.nio.ByteBuffer value) {
     this.s = value;
   }
 
@@ -608,7 +608,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Gets the value of the 'status' field.
    * @return Transaction result status
    */
-  public java.lang.Long getStatus() {
+  public java.nio.ByteBuffer getStatus() {
     return status;
   }
 
@@ -617,7 +617,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Transaction result status
    * @param value the value to set.
    */
-  public void setStatus(java.lang.Long value) {
+  public void setStatus(java.nio.ByteBuffer value) {
     this.status = value;
   }
 
@@ -705,47 +705,47 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
     implements org.apache.avro.data.RecordBuilder<Transaction> {
 
     /** Hash of the transaction */
-    private java.lang.CharSequence hash;
+    private java.nio.ByteBuffer hash;
     /** Root of the parent block */
-    private java.lang.CharSequence root;
+    private java.nio.ByteBuffer root;
     /** Integer of the transactions index position in the block */
     private int index;
     /** Unix timestamp for when the transaction was collated */
     private org.joda.time.DateTime timestamp;
     /** Number of transactions sent from a given address */
-    private long nonce;
+    private java.nio.ByteBuffer nonce;
     /** SHA3 of the transaction nonce */
-    private java.lang.CharSequence nonceHash;
+    private java.nio.ByteBuffer nonceHash;
     /** Address of the sender */
-    private java.lang.CharSequence from;
+    private java.nio.ByteBuffer from;
     /** Balance of the sender */
-    private long fromBalance;
+    private java.nio.ByteBuffer fromBalance;
     /** Address of the recipient (or null when contract creation) */
-    private java.lang.CharSequence to;
+    private java.nio.ByteBuffer to;
     /** Balance of the receiver (or null when contract creation) */
-    private java.lang.Long toBalance;
+    private java.nio.ByteBuffer toBalance;
     /** The data send along with the transaction */
     private java.nio.ByteBuffer input;
     /** If a contract is created, the address of it (or null if is just a regular transaction) */
-    private java.lang.CharSequence contractAddress;
+    private java.nio.ByteBuffer contractAddress;
     /** Amount of value transferred in Wei */
-    private long value;
+    private java.nio.ByteBuffer value;
     /** Amount of gas provided by the sender */
-    private long gas;
+    private java.nio.ByteBuffer gas;
     /** Amount of gas price provided by the sender in Wei */
-    private long gasPrice;
+    private java.nio.ByteBuffer gasPrice;
     /** Amount of gas used consumed by the transaction */
-    private long gasUsed;
+    private java.nio.ByteBuffer gasUsed;
     /** Cumulative gas used by the transaction */
-    private long cumulativeGasUsed;
+    private java.nio.ByteBuffer cumulativeGasUsed;
     /** Transaction signature v */
-    private java.lang.CharSequence v;
+    private java.nio.ByteBuffer v;
     /** Transaction signature r */
-    private java.lang.CharSequence r;
+    private java.nio.ByteBuffer r;
     /** Transaction signature s */
-    private java.lang.CharSequence s;
+    private java.nio.ByteBuffer s;
     /** Transaction result status */
-    private long status;
+    private java.nio.ByteBuffer status;
     /** Generated and encoded logs by the transaction */
     private java.nio.ByteBuffer logsBloom;
     /** Logs produced by executing smart contracts */
@@ -976,7 +976,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Hash of the transaction
       * @return The value.
       */
-    public java.lang.CharSequence getHash() {
+    public java.nio.ByteBuffer getHash() {
       return hash;
     }
 
@@ -986,7 +986,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'hash'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setHash(java.lang.CharSequence value) {
+    public io.enkrypt.bolt.models.Transaction.Builder setHash(java.nio.ByteBuffer value) {
       validate(fields()[0], value);
       this.hash = value;
       fieldSetFlags()[0] = true;
@@ -1019,7 +1019,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Root of the parent block
       * @return The value.
       */
-    public java.lang.CharSequence getRoot() {
+    public java.nio.ByteBuffer getRoot() {
       return root;
     }
 
@@ -1029,7 +1029,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'root'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setRoot(java.lang.CharSequence value) {
+    public io.enkrypt.bolt.models.Transaction.Builder setRoot(java.nio.ByteBuffer value) {
       validate(fields()[1], value);
       this.root = value;
       fieldSetFlags()[1] = true;
@@ -1146,7 +1146,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Number of transactions sent from a given address
       * @return The value.
       */
-    public java.lang.Long getNonce() {
+    public java.nio.ByteBuffer getNonce() {
       return nonce;
     }
 
@@ -1156,7 +1156,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'nonce'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setNonce(long value) {
+    public io.enkrypt.bolt.models.Transaction.Builder setNonce(java.nio.ByteBuffer value) {
       validate(fields()[4], value);
       this.nonce = value;
       fieldSetFlags()[4] = true;
@@ -1179,6 +1179,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return This builder.
       */
     public io.enkrypt.bolt.models.Transaction.Builder clearNonce() {
+      nonce = null;
       fieldSetFlags()[4] = false;
       return this;
     }
@@ -1188,7 +1189,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * SHA3 of the transaction nonce
       * @return The value.
       */
-    public java.lang.CharSequence getNonceHash() {
+    public java.nio.ByteBuffer getNonceHash() {
       return nonceHash;
     }
 
@@ -1198,7 +1199,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'nonceHash'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setNonceHash(java.lang.CharSequence value) {
+    public io.enkrypt.bolt.models.Transaction.Builder setNonceHash(java.nio.ByteBuffer value) {
       validate(fields()[5], value);
       this.nonceHash = value;
       fieldSetFlags()[5] = true;
@@ -1231,7 +1232,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Address of the sender
       * @return The value.
       */
-    public java.lang.CharSequence getFrom() {
+    public java.nio.ByteBuffer getFrom() {
       return from;
     }
 
@@ -1241,7 +1242,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'from'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setFrom(java.lang.CharSequence value) {
+    public io.enkrypt.bolt.models.Transaction.Builder setFrom(java.nio.ByteBuffer value) {
       validate(fields()[6], value);
       this.from = value;
       fieldSetFlags()[6] = true;
@@ -1274,7 +1275,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Balance of the sender
       * @return The value.
       */
-    public java.lang.Long getFromBalance() {
+    public java.nio.ByteBuffer getFromBalance() {
       return fromBalance;
     }
 
@@ -1284,7 +1285,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'fromBalance'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setFromBalance(long value) {
+    public io.enkrypt.bolt.models.Transaction.Builder setFromBalance(java.nio.ByteBuffer value) {
       validate(fields()[7], value);
       this.fromBalance = value;
       fieldSetFlags()[7] = true;
@@ -1307,6 +1308,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return This builder.
       */
     public io.enkrypt.bolt.models.Transaction.Builder clearFromBalance() {
+      fromBalance = null;
       fieldSetFlags()[7] = false;
       return this;
     }
@@ -1316,7 +1318,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Address of the recipient (or null when contract creation)
       * @return The value.
       */
-    public java.lang.CharSequence getTo() {
+    public java.nio.ByteBuffer getTo() {
       return to;
     }
 
@@ -1326,7 +1328,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'to'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setTo(java.lang.CharSequence value) {
+    public io.enkrypt.bolt.models.Transaction.Builder setTo(java.nio.ByteBuffer value) {
       validate(fields()[8], value);
       this.to = value;
       fieldSetFlags()[8] = true;
@@ -1359,7 +1361,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Balance of the receiver (or null when contract creation)
       * @return The value.
       */
-    public java.lang.Long getToBalance() {
+    public java.nio.ByteBuffer getToBalance() {
       return toBalance;
     }
 
@@ -1369,7 +1371,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'toBalance'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setToBalance(java.lang.Long value) {
+    public io.enkrypt.bolt.models.Transaction.Builder setToBalance(java.nio.ByteBuffer value) {
       validate(fields()[9], value);
       this.toBalance = value;
       fieldSetFlags()[9] = true;
@@ -1445,7 +1447,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * If a contract is created, the address of it (or null if is just a regular transaction)
       * @return The value.
       */
-    public java.lang.CharSequence getContractAddress() {
+    public java.nio.ByteBuffer getContractAddress() {
       return contractAddress;
     }
 
@@ -1455,7 +1457,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'contractAddress'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setContractAddress(java.lang.CharSequence value) {
+    public io.enkrypt.bolt.models.Transaction.Builder setContractAddress(java.nio.ByteBuffer value) {
       validate(fields()[11], value);
       this.contractAddress = value;
       fieldSetFlags()[11] = true;
@@ -1488,7 +1490,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Amount of value transferred in Wei
       * @return The value.
       */
-    public java.lang.Long getValue() {
+    public java.nio.ByteBuffer getValue() {
       return value;
     }
 
@@ -1498,7 +1500,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'value'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setValue(long value) {
+    public io.enkrypt.bolt.models.Transaction.Builder setValue(java.nio.ByteBuffer value) {
       validate(fields()[12], value);
       this.value = value;
       fieldSetFlags()[12] = true;
@@ -1521,6 +1523,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return This builder.
       */
     public io.enkrypt.bolt.models.Transaction.Builder clearValue() {
+      value = null;
       fieldSetFlags()[12] = false;
       return this;
     }
@@ -1530,7 +1533,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Amount of gas provided by the sender
       * @return The value.
       */
-    public java.lang.Long getGas() {
+    public java.nio.ByteBuffer getGas() {
       return gas;
     }
 
@@ -1540,7 +1543,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'gas'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setGas(long value) {
+    public io.enkrypt.bolt.models.Transaction.Builder setGas(java.nio.ByteBuffer value) {
       validate(fields()[13], value);
       this.gas = value;
       fieldSetFlags()[13] = true;
@@ -1563,6 +1566,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return This builder.
       */
     public io.enkrypt.bolt.models.Transaction.Builder clearGas() {
+      gas = null;
       fieldSetFlags()[13] = false;
       return this;
     }
@@ -1572,7 +1576,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Amount of gas price provided by the sender in Wei
       * @return The value.
       */
-    public java.lang.Long getGasPrice() {
+    public java.nio.ByteBuffer getGasPrice() {
       return gasPrice;
     }
 
@@ -1582,7 +1586,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'gasPrice'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setGasPrice(long value) {
+    public io.enkrypt.bolt.models.Transaction.Builder setGasPrice(java.nio.ByteBuffer value) {
       validate(fields()[14], value);
       this.gasPrice = value;
       fieldSetFlags()[14] = true;
@@ -1605,6 +1609,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return This builder.
       */
     public io.enkrypt.bolt.models.Transaction.Builder clearGasPrice() {
+      gasPrice = null;
       fieldSetFlags()[14] = false;
       return this;
     }
@@ -1614,7 +1619,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Amount of gas used consumed by the transaction
       * @return The value.
       */
-    public java.lang.Long getGasUsed() {
+    public java.nio.ByteBuffer getGasUsed() {
       return gasUsed;
     }
 
@@ -1624,7 +1629,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'gasUsed'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setGasUsed(long value) {
+    public io.enkrypt.bolt.models.Transaction.Builder setGasUsed(java.nio.ByteBuffer value) {
       validate(fields()[15], value);
       this.gasUsed = value;
       fieldSetFlags()[15] = true;
@@ -1647,6 +1652,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return This builder.
       */
     public io.enkrypt.bolt.models.Transaction.Builder clearGasUsed() {
+      gasUsed = null;
       fieldSetFlags()[15] = false;
       return this;
     }
@@ -1656,7 +1662,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Cumulative gas used by the transaction
       * @return The value.
       */
-    public java.lang.Long getCumulativeGasUsed() {
+    public java.nio.ByteBuffer getCumulativeGasUsed() {
       return cumulativeGasUsed;
     }
 
@@ -1666,7 +1672,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'cumulativeGasUsed'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setCumulativeGasUsed(long value) {
+    public io.enkrypt.bolt.models.Transaction.Builder setCumulativeGasUsed(java.nio.ByteBuffer value) {
       validate(fields()[16], value);
       this.cumulativeGasUsed = value;
       fieldSetFlags()[16] = true;
@@ -1689,6 +1695,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return This builder.
       */
     public io.enkrypt.bolt.models.Transaction.Builder clearCumulativeGasUsed() {
+      cumulativeGasUsed = null;
       fieldSetFlags()[16] = false;
       return this;
     }
@@ -1698,7 +1705,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Transaction signature v
       * @return The value.
       */
-    public java.lang.CharSequence getV() {
+    public java.nio.ByteBuffer getV() {
       return v;
     }
 
@@ -1708,7 +1715,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'v'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setV(java.lang.CharSequence value) {
+    public io.enkrypt.bolt.models.Transaction.Builder setV(java.nio.ByteBuffer value) {
       validate(fields()[17], value);
       this.v = value;
       fieldSetFlags()[17] = true;
@@ -1741,7 +1748,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Transaction signature r
       * @return The value.
       */
-    public java.lang.CharSequence getR() {
+    public java.nio.ByteBuffer getR() {
       return r;
     }
 
@@ -1751,7 +1758,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'r'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setR(java.lang.CharSequence value) {
+    public io.enkrypt.bolt.models.Transaction.Builder setR(java.nio.ByteBuffer value) {
       validate(fields()[18], value);
       this.r = value;
       fieldSetFlags()[18] = true;
@@ -1784,7 +1791,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Transaction signature s
       * @return The value.
       */
-    public java.lang.CharSequence getS() {
+    public java.nio.ByteBuffer getS() {
       return s;
     }
 
@@ -1794,7 +1801,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 's'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setS(java.lang.CharSequence value) {
+    public io.enkrypt.bolt.models.Transaction.Builder setS(java.nio.ByteBuffer value) {
       validate(fields()[19], value);
       this.s = value;
       fieldSetFlags()[19] = true;
@@ -1827,7 +1834,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Transaction result status
       * @return The value.
       */
-    public java.lang.Long getStatus() {
+    public java.nio.ByteBuffer getStatus() {
       return status;
     }
 
@@ -1837,7 +1844,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'status'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transaction.Builder setStatus(long value) {
+    public io.enkrypt.bolt.models.Transaction.Builder setStatus(java.nio.ByteBuffer value) {
       validate(fields()[20], value);
       this.status = value;
       fieldSetFlags()[20] = true;
@@ -1860,6 +1867,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return This builder.
       */
     public io.enkrypt.bolt.models.Transaction.Builder clearStatus() {
+      status = null;
       fieldSetFlags()[20] = false;
       return this;
     }
@@ -2036,27 +2044,27 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
     public Transaction build() {
       try {
         Transaction record = new Transaction();
-        record.hash = fieldSetFlags()[0] ? this.hash : (java.lang.CharSequence) defaultValue(fields()[0], record.getConversion(0));
-        record.root = fieldSetFlags()[1] ? this.root : (java.lang.CharSequence) defaultValue(fields()[1], record.getConversion(1));
+        record.hash = fieldSetFlags()[0] ? this.hash : (java.nio.ByteBuffer) defaultValue(fields()[0], record.getConversion(0));
+        record.root = fieldSetFlags()[1] ? this.root : (java.nio.ByteBuffer) defaultValue(fields()[1], record.getConversion(1));
         record.index = fieldSetFlags()[2] ? this.index : (java.lang.Integer) defaultValue(fields()[2], record.getConversion(2));
         record.timestamp = fieldSetFlags()[3] ? this.timestamp : (org.joda.time.DateTime) defaultValue(fields()[3], record.getConversion(3));
-        record.nonce = fieldSetFlags()[4] ? this.nonce : (java.lang.Long) defaultValue(fields()[4], record.getConversion(4));
-        record.nonceHash = fieldSetFlags()[5] ? this.nonceHash : (java.lang.CharSequence) defaultValue(fields()[5], record.getConversion(5));
-        record.from = fieldSetFlags()[6] ? this.from : (java.lang.CharSequence) defaultValue(fields()[6], record.getConversion(6));
-        record.fromBalance = fieldSetFlags()[7] ? this.fromBalance : (java.lang.Long) defaultValue(fields()[7], record.getConversion(7));
-        record.to = fieldSetFlags()[8] ? this.to : (java.lang.CharSequence) defaultValue(fields()[8], record.getConversion(8));
-        record.toBalance = fieldSetFlags()[9] ? this.toBalance : (java.lang.Long) defaultValue(fields()[9], record.getConversion(9));
+        record.nonce = fieldSetFlags()[4] ? this.nonce : (java.nio.ByteBuffer) defaultValue(fields()[4], record.getConversion(4));
+        record.nonceHash = fieldSetFlags()[5] ? this.nonceHash : (java.nio.ByteBuffer) defaultValue(fields()[5], record.getConversion(5));
+        record.from = fieldSetFlags()[6] ? this.from : (java.nio.ByteBuffer) defaultValue(fields()[6], record.getConversion(6));
+        record.fromBalance = fieldSetFlags()[7] ? this.fromBalance : (java.nio.ByteBuffer) defaultValue(fields()[7], record.getConversion(7));
+        record.to = fieldSetFlags()[8] ? this.to : (java.nio.ByteBuffer) defaultValue(fields()[8], record.getConversion(8));
+        record.toBalance = fieldSetFlags()[9] ? this.toBalance : (java.nio.ByteBuffer) defaultValue(fields()[9], record.getConversion(9));
         record.input = fieldSetFlags()[10] ? this.input : (java.nio.ByteBuffer) defaultValue(fields()[10], record.getConversion(10));
-        record.contractAddress = fieldSetFlags()[11] ? this.contractAddress : (java.lang.CharSequence) defaultValue(fields()[11], record.getConversion(11));
-        record.value = fieldSetFlags()[12] ? this.value : (java.lang.Long) defaultValue(fields()[12], record.getConversion(12));
-        record.gas = fieldSetFlags()[13] ? this.gas : (java.lang.Long) defaultValue(fields()[13], record.getConversion(13));
-        record.gasPrice = fieldSetFlags()[14] ? this.gasPrice : (java.lang.Long) defaultValue(fields()[14], record.getConversion(14));
-        record.gasUsed = fieldSetFlags()[15] ? this.gasUsed : (java.lang.Long) defaultValue(fields()[15], record.getConversion(15));
-        record.cumulativeGasUsed = fieldSetFlags()[16] ? this.cumulativeGasUsed : (java.lang.Long) defaultValue(fields()[16], record.getConversion(16));
-        record.v = fieldSetFlags()[17] ? this.v : (java.lang.CharSequence) defaultValue(fields()[17], record.getConversion(17));
-        record.r = fieldSetFlags()[18] ? this.r : (java.lang.CharSequence) defaultValue(fields()[18], record.getConversion(18));
-        record.s = fieldSetFlags()[19] ? this.s : (java.lang.CharSequence) defaultValue(fields()[19], record.getConversion(19));
-        record.status = fieldSetFlags()[20] ? this.status : (java.lang.Long) defaultValue(fields()[20], record.getConversion(20));
+        record.contractAddress = fieldSetFlags()[11] ? this.contractAddress : (java.nio.ByteBuffer) defaultValue(fields()[11], record.getConversion(11));
+        record.value = fieldSetFlags()[12] ? this.value : (java.nio.ByteBuffer) defaultValue(fields()[12], record.getConversion(12));
+        record.gas = fieldSetFlags()[13] ? this.gas : (java.nio.ByteBuffer) defaultValue(fields()[13], record.getConversion(13));
+        record.gasPrice = fieldSetFlags()[14] ? this.gasPrice : (java.nio.ByteBuffer) defaultValue(fields()[14], record.getConversion(14));
+        record.gasUsed = fieldSetFlags()[15] ? this.gasUsed : (java.nio.ByteBuffer) defaultValue(fields()[15], record.getConversion(15));
+        record.cumulativeGasUsed = fieldSetFlags()[16] ? this.cumulativeGasUsed : (java.nio.ByteBuffer) defaultValue(fields()[16], record.getConversion(16));
+        record.v = fieldSetFlags()[17] ? this.v : (java.nio.ByteBuffer) defaultValue(fields()[17], record.getConversion(17));
+        record.r = fieldSetFlags()[18] ? this.r : (java.nio.ByteBuffer) defaultValue(fields()[18], record.getConversion(18));
+        record.s = fieldSetFlags()[19] ? this.s : (java.nio.ByteBuffer) defaultValue(fields()[19], record.getConversion(19));
+        record.status = fieldSetFlags()[20] ? this.status : (java.nio.ByteBuffer) defaultValue(fields()[20], record.getConversion(20));
         record.logsBloom = fieldSetFlags()[21] ? this.logsBloom : (java.nio.ByteBuffer) defaultValue(fields()[21], record.getConversion(21));
         record.logs = fieldSetFlags()[22] ? this.logs : (java.util.List<io.enkrypt.bolt.models.Log>) defaultValue(fields()[22], record.getConversion(22));
         if (traceBuilder != null) {

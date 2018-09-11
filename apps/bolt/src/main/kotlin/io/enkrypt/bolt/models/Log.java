@@ -13,8 +13,8 @@ import org.apache.avro.message.SchemaStore;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class Log extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 2939691309127777290L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Log\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"address\",\"type\":\"string\",\"desc\":\"Address of the contract that generated the event\"},{\"name\":\"topics\",\"type\":{\"type\":\"array\",\"items\":\"string\"},\"desc\":\"List of topics provided by the contract\"},{\"name\":\"data\",\"type\":\"bytes\",\"desc\":\"Supplied by the contract, usually ABI-encoded\"},{\"name\":\"index\",\"type\":\"int\",\"desc\":\"Index of the log in the receipt\"},{\"name\":\"removed\",\"type\":\"boolean\",\"desc\":\"True if this log was reverted due to a chain reorganisation\"}]}");
+  private static final long serialVersionUID = 2799115108094243710L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Log\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"address\",\"type\":\"bytes\",\"desc\":\"Address of the contract that generated the event\"},{\"name\":\"topics\",\"type\":{\"type\":\"array\",\"items\":\"bytes\"},\"desc\":\"List of topics provided by the contract\"},{\"name\":\"data\",\"type\":\"bytes\",\"desc\":\"Supplied by the contract, usually ABI-encoded\"},{\"name\":\"index\",\"type\":\"int\",\"desc\":\"Index of the log in the receipt\"},{\"name\":\"removed\",\"type\":\"boolean\",\"desc\":\"True if this log was reverted due to a chain reorganisation\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -51,8 +51,8 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
     return DECODER.decode(b);
   }
 
-  @Deprecated public java.lang.CharSequence address;
-  @Deprecated public java.util.List<java.lang.CharSequence> topics;
+  @Deprecated public java.nio.ByteBuffer address;
+  @Deprecated public java.util.List<java.nio.ByteBuffer> topics;
   @Deprecated public java.nio.ByteBuffer data;
   @Deprecated public int index;
   @Deprecated public boolean removed;
@@ -72,7 +72,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
    * @param index The new value for index
    * @param removed The new value for removed
    */
-  public Log(java.lang.CharSequence address, java.util.List<java.lang.CharSequence> topics, java.nio.ByteBuffer data, java.lang.Integer index, java.lang.Boolean removed) {
+  public Log(java.nio.ByteBuffer address, java.util.List<java.nio.ByteBuffer> topics, java.nio.ByteBuffer data, java.lang.Integer index, java.lang.Boolean removed) {
     this.address = address;
     this.topics = topics;
     this.data = data;
@@ -97,8 +97,8 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
   @SuppressWarnings(value="unchecked")
   public void put(int field$, java.lang.Object value$) {
     switch (field$) {
-    case 0: address = (java.lang.CharSequence)value$; break;
-    case 1: topics = (java.util.List<java.lang.CharSequence>)value$; break;
+    case 0: address = (java.nio.ByteBuffer)value$; break;
+    case 1: topics = (java.util.List<java.nio.ByteBuffer>)value$; break;
     case 2: data = (java.nio.ByteBuffer)value$; break;
     case 3: index = (java.lang.Integer)value$; break;
     case 4: removed = (java.lang.Boolean)value$; break;
@@ -110,7 +110,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
    * Gets the value of the 'address' field.
    * @return The value of the 'address' field.
    */
-  public java.lang.CharSequence getAddress() {
+  public java.nio.ByteBuffer getAddress() {
     return address;
   }
 
@@ -118,7 +118,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
    * Sets the value of the 'address' field.
    * @param value the value to set.
    */
-  public void setAddress(java.lang.CharSequence value) {
+  public void setAddress(java.nio.ByteBuffer value) {
     this.address = value;
   }
 
@@ -126,7 +126,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
    * Gets the value of the 'topics' field.
    * @return The value of the 'topics' field.
    */
-  public java.util.List<java.lang.CharSequence> getTopics() {
+  public java.util.List<java.nio.ByteBuffer> getTopics() {
     return topics;
   }
 
@@ -134,7 +134,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
    * Sets the value of the 'topics' field.
    * @param value the value to set.
    */
-  public void setTopics(java.util.List<java.lang.CharSequence> value) {
+  public void setTopics(java.util.List<java.nio.ByteBuffer> value) {
     this.topics = value;
   }
 
@@ -218,8 +218,8 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
   public static class Builder extends org.apache.avro.specific.SpecificRecordBuilderBase<Log>
     implements org.apache.avro.data.RecordBuilder<Log> {
 
-    private java.lang.CharSequence address;
-    private java.util.List<java.lang.CharSequence> topics;
+    private java.nio.ByteBuffer address;
+    private java.util.List<java.nio.ByteBuffer> topics;
     private java.nio.ByteBuffer data;
     private int index;
     private boolean removed;
@@ -289,7 +289,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * Gets the value of the 'address' field.
       * @return The value.
       */
-    public java.lang.CharSequence getAddress() {
+    public java.nio.ByteBuffer getAddress() {
       return address;
     }
 
@@ -298,7 +298,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * @param value The value of 'address'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Log.Builder setAddress(java.lang.CharSequence value) {
+    public io.enkrypt.bolt.models.Log.Builder setAddress(java.nio.ByteBuffer value) {
       validate(fields()[0], value);
       this.address = value;
       fieldSetFlags()[0] = true;
@@ -328,7 +328,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * Gets the value of the 'topics' field.
       * @return The value.
       */
-    public java.util.List<java.lang.CharSequence> getTopics() {
+    public java.util.List<java.nio.ByteBuffer> getTopics() {
       return topics;
     }
 
@@ -337,7 +337,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * @param value The value of 'topics'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Log.Builder setTopics(java.util.List<java.lang.CharSequence> value) {
+    public io.enkrypt.bolt.models.Log.Builder setTopics(java.util.List<java.nio.ByteBuffer> value) {
       validate(fields()[1], value);
       this.topics = value;
       fieldSetFlags()[1] = true;
@@ -483,8 +483,8 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
     public Log build() {
       try {
         Log record = new Log();
-        record.address = fieldSetFlags()[0] ? this.address : (java.lang.CharSequence) defaultValue(fields()[0]);
-        record.topics = fieldSetFlags()[1] ? this.topics : (java.util.List<java.lang.CharSequence>) defaultValue(fields()[1]);
+        record.address = fieldSetFlags()[0] ? this.address : (java.nio.ByteBuffer) defaultValue(fields()[0]);
+        record.topics = fieldSetFlags()[1] ? this.topics : (java.util.List<java.nio.ByteBuffer>) defaultValue(fields()[1]);
         record.data = fieldSetFlags()[2] ? this.data : (java.nio.ByteBuffer) defaultValue(fields()[2]);
         record.index = fieldSetFlags()[3] ? this.index : (java.lang.Integer) defaultValue(fields()[3]);
         record.removed = fieldSetFlags()[4] ? this.removed : (java.lang.Boolean) defaultValue(fields()[4]);

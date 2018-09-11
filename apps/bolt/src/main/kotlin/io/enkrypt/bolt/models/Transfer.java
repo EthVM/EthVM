@@ -13,8 +13,8 @@ import org.apache.avro.message.SchemaStore;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class Transfer extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = -5264509142911970470L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Transfer\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"op\",\"type\":\"string\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"value\",\"type\":\"string\",\"doc\":\"Raw value of the transaction\"},{\"name\":\"from\",\"type\":\"string\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"string\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":\"string\",\"doc\":\"Address of the receiver\"},{\"name\":\"toBalance\",\"type\":\"string\",\"doc\":\"Balance of the receiver\"},{\"name\":\"input\",\"type\":\"string\",\"doc\":\"Raw input data\"}]}");
+  private static final long serialVersionUID = -4850567253330044902L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Transfer\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"op\",\"type\":\"int\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"value\",\"type\":\"bytes\",\"doc\":\"Raw value of the transaction\"},{\"name\":\"from\",\"type\":\"bytes\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"bytes\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":\"bytes\",\"doc\":\"Address of the receiver\"},{\"name\":\"toBalance\",\"type\":\"bytes\",\"doc\":\"Balance of the receiver\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"Raw input data\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -52,19 +52,19 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
   }
 
   /** Type of op executed inside the transaction */
-  @Deprecated public java.lang.CharSequence op;
+  @Deprecated public int op;
   /** Raw value of the transaction */
-  @Deprecated public java.lang.CharSequence value;
+  @Deprecated public java.nio.ByteBuffer value;
   /** Address of the sender */
-  @Deprecated public java.lang.CharSequence from;
+  @Deprecated public java.nio.ByteBuffer from;
   /** Balance of the sender */
-  @Deprecated public java.lang.CharSequence fromBalance;
+  @Deprecated public java.nio.ByteBuffer fromBalance;
   /** Address of the receiver */
-  @Deprecated public java.lang.CharSequence to;
+  @Deprecated public java.nio.ByteBuffer to;
   /** Balance of the receiver */
-  @Deprecated public java.lang.CharSequence toBalance;
+  @Deprecated public java.nio.ByteBuffer toBalance;
   /** Raw input data */
-  @Deprecated public java.lang.CharSequence input;
+  @Deprecated public java.nio.ByteBuffer input;
 
   /**
    * Default constructor.  Note that this does not initialize fields
@@ -83,7 +83,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
    * @param toBalance Balance of the receiver
    * @param input Raw input data
    */
-  public Transfer(java.lang.CharSequence op, java.lang.CharSequence value, java.lang.CharSequence from, java.lang.CharSequence fromBalance, java.lang.CharSequence to, java.lang.CharSequence toBalance, java.lang.CharSequence input) {
+  public Transfer(java.lang.Integer op, java.nio.ByteBuffer value, java.nio.ByteBuffer from, java.nio.ByteBuffer fromBalance, java.nio.ByteBuffer to, java.nio.ByteBuffer toBalance, java.nio.ByteBuffer input) {
     this.op = op;
     this.value = value;
     this.from = from;
@@ -112,13 +112,13 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
   @SuppressWarnings(value="unchecked")
   public void put(int field$, java.lang.Object value$) {
     switch (field$) {
-    case 0: op = (java.lang.CharSequence)value$; break;
-    case 1: value = (java.lang.CharSequence)value$; break;
-    case 2: from = (java.lang.CharSequence)value$; break;
-    case 3: fromBalance = (java.lang.CharSequence)value$; break;
-    case 4: to = (java.lang.CharSequence)value$; break;
-    case 5: toBalance = (java.lang.CharSequence)value$; break;
-    case 6: input = (java.lang.CharSequence)value$; break;
+    case 0: op = (java.lang.Integer)value$; break;
+    case 1: value = (java.nio.ByteBuffer)value$; break;
+    case 2: from = (java.nio.ByteBuffer)value$; break;
+    case 3: fromBalance = (java.nio.ByteBuffer)value$; break;
+    case 4: to = (java.nio.ByteBuffer)value$; break;
+    case 5: toBalance = (java.nio.ByteBuffer)value$; break;
+    case 6: input = (java.nio.ByteBuffer)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -127,7 +127,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
    * Gets the value of the 'op' field.
    * @return Type of op executed inside the transaction
    */
-  public java.lang.CharSequence getOp() {
+  public java.lang.Integer getOp() {
     return op;
   }
 
@@ -136,7 +136,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
    * Type of op executed inside the transaction
    * @param value the value to set.
    */
-  public void setOp(java.lang.CharSequence value) {
+  public void setOp(java.lang.Integer value) {
     this.op = value;
   }
 
@@ -144,7 +144,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
    * Gets the value of the 'value' field.
    * @return Raw value of the transaction
    */
-  public java.lang.CharSequence getValue() {
+  public java.nio.ByteBuffer getValue() {
     return value;
   }
 
@@ -153,7 +153,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
    * Raw value of the transaction
    * @param value the value to set.
    */
-  public void setValue(java.lang.CharSequence value) {
+  public void setValue(java.nio.ByteBuffer value) {
     this.value = value;
   }
 
@@ -161,7 +161,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
    * Gets the value of the 'from' field.
    * @return Address of the sender
    */
-  public java.lang.CharSequence getFrom() {
+  public java.nio.ByteBuffer getFrom() {
     return from;
   }
 
@@ -170,7 +170,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
    * Address of the sender
    * @param value the value to set.
    */
-  public void setFrom(java.lang.CharSequence value) {
+  public void setFrom(java.nio.ByteBuffer value) {
     this.from = value;
   }
 
@@ -178,7 +178,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
    * Gets the value of the 'fromBalance' field.
    * @return Balance of the sender
    */
-  public java.lang.CharSequence getFromBalance() {
+  public java.nio.ByteBuffer getFromBalance() {
     return fromBalance;
   }
 
@@ -187,7 +187,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
    * Balance of the sender
    * @param value the value to set.
    */
-  public void setFromBalance(java.lang.CharSequence value) {
+  public void setFromBalance(java.nio.ByteBuffer value) {
     this.fromBalance = value;
   }
 
@@ -195,7 +195,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
    * Gets the value of the 'to' field.
    * @return Address of the receiver
    */
-  public java.lang.CharSequence getTo() {
+  public java.nio.ByteBuffer getTo() {
     return to;
   }
 
@@ -204,7 +204,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
    * Address of the receiver
    * @param value the value to set.
    */
-  public void setTo(java.lang.CharSequence value) {
+  public void setTo(java.nio.ByteBuffer value) {
     this.to = value;
   }
 
@@ -212,7 +212,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
    * Gets the value of the 'toBalance' field.
    * @return Balance of the receiver
    */
-  public java.lang.CharSequence getToBalance() {
+  public java.nio.ByteBuffer getToBalance() {
     return toBalance;
   }
 
@@ -221,7 +221,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
    * Balance of the receiver
    * @param value the value to set.
    */
-  public void setToBalance(java.lang.CharSequence value) {
+  public void setToBalance(java.nio.ByteBuffer value) {
     this.toBalance = value;
   }
 
@@ -229,7 +229,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
    * Gets the value of the 'input' field.
    * @return Raw input data
    */
-  public java.lang.CharSequence getInput() {
+  public java.nio.ByteBuffer getInput() {
     return input;
   }
 
@@ -238,7 +238,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
    * Raw input data
    * @param value the value to set.
    */
-  public void setInput(java.lang.CharSequence value) {
+  public void setInput(java.nio.ByteBuffer value) {
     this.input = value;
   }
 
@@ -275,19 +275,19 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
     implements org.apache.avro.data.RecordBuilder<Transfer> {
 
     /** Type of op executed inside the transaction */
-    private java.lang.CharSequence op;
+    private int op;
     /** Raw value of the transaction */
-    private java.lang.CharSequence value;
+    private java.nio.ByteBuffer value;
     /** Address of the sender */
-    private java.lang.CharSequence from;
+    private java.nio.ByteBuffer from;
     /** Balance of the sender */
-    private java.lang.CharSequence fromBalance;
+    private java.nio.ByteBuffer fromBalance;
     /** Address of the receiver */
-    private java.lang.CharSequence to;
+    private java.nio.ByteBuffer to;
     /** Balance of the receiver */
-    private java.lang.CharSequence toBalance;
+    private java.nio.ByteBuffer toBalance;
     /** Raw input data */
-    private java.lang.CharSequence input;
+    private java.nio.ByteBuffer input;
 
     /** Creates a new Builder */
     private Builder() {
@@ -371,7 +371,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * Type of op executed inside the transaction
       * @return The value.
       */
-    public java.lang.CharSequence getOp() {
+    public java.lang.Integer getOp() {
       return op;
     }
 
@@ -381,7 +381,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * @param value The value of 'op'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transfer.Builder setOp(java.lang.CharSequence value) {
+    public io.enkrypt.bolt.models.Transfer.Builder setOp(int value) {
       validate(fields()[0], value);
       this.op = value;
       fieldSetFlags()[0] = true;
@@ -404,7 +404,6 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * @return This builder.
       */
     public io.enkrypt.bolt.models.Transfer.Builder clearOp() {
-      op = null;
       fieldSetFlags()[0] = false;
       return this;
     }
@@ -414,7 +413,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * Raw value of the transaction
       * @return The value.
       */
-    public java.lang.CharSequence getValue() {
+    public java.nio.ByteBuffer getValue() {
       return value;
     }
 
@@ -424,7 +423,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * @param value The value of 'value'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transfer.Builder setValue(java.lang.CharSequence value) {
+    public io.enkrypt.bolt.models.Transfer.Builder setValue(java.nio.ByteBuffer value) {
       validate(fields()[1], value);
       this.value = value;
       fieldSetFlags()[1] = true;
@@ -457,7 +456,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * Address of the sender
       * @return The value.
       */
-    public java.lang.CharSequence getFrom() {
+    public java.nio.ByteBuffer getFrom() {
       return from;
     }
 
@@ -467,7 +466,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * @param value The value of 'from'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transfer.Builder setFrom(java.lang.CharSequence value) {
+    public io.enkrypt.bolt.models.Transfer.Builder setFrom(java.nio.ByteBuffer value) {
       validate(fields()[2], value);
       this.from = value;
       fieldSetFlags()[2] = true;
@@ -500,7 +499,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * Balance of the sender
       * @return The value.
       */
-    public java.lang.CharSequence getFromBalance() {
+    public java.nio.ByteBuffer getFromBalance() {
       return fromBalance;
     }
 
@@ -510,7 +509,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * @param value The value of 'fromBalance'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transfer.Builder setFromBalance(java.lang.CharSequence value) {
+    public io.enkrypt.bolt.models.Transfer.Builder setFromBalance(java.nio.ByteBuffer value) {
       validate(fields()[3], value);
       this.fromBalance = value;
       fieldSetFlags()[3] = true;
@@ -543,7 +542,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * Address of the receiver
       * @return The value.
       */
-    public java.lang.CharSequence getTo() {
+    public java.nio.ByteBuffer getTo() {
       return to;
     }
 
@@ -553,7 +552,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * @param value The value of 'to'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transfer.Builder setTo(java.lang.CharSequence value) {
+    public io.enkrypt.bolt.models.Transfer.Builder setTo(java.nio.ByteBuffer value) {
       validate(fields()[4], value);
       this.to = value;
       fieldSetFlags()[4] = true;
@@ -586,7 +585,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * Balance of the receiver
       * @return The value.
       */
-    public java.lang.CharSequence getToBalance() {
+    public java.nio.ByteBuffer getToBalance() {
       return toBalance;
     }
 
@@ -596,7 +595,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * @param value The value of 'toBalance'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transfer.Builder setToBalance(java.lang.CharSequence value) {
+    public io.enkrypt.bolt.models.Transfer.Builder setToBalance(java.nio.ByteBuffer value) {
       validate(fields()[5], value);
       this.toBalance = value;
       fieldSetFlags()[5] = true;
@@ -629,7 +628,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * Raw input data
       * @return The value.
       */
-    public java.lang.CharSequence getInput() {
+    public java.nio.ByteBuffer getInput() {
       return input;
     }
 
@@ -639,7 +638,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * @param value The value of 'input'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transfer.Builder setInput(java.lang.CharSequence value) {
+    public io.enkrypt.bolt.models.Transfer.Builder setInput(java.nio.ByteBuffer value) {
       validate(fields()[6], value);
       this.input = value;
       fieldSetFlags()[6] = true;
@@ -672,13 +671,13 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
     public Transfer build() {
       try {
         Transfer record = new Transfer();
-        record.op = fieldSetFlags()[0] ? this.op : (java.lang.CharSequence) defaultValue(fields()[0]);
-        record.value = fieldSetFlags()[1] ? this.value : (java.lang.CharSequence) defaultValue(fields()[1]);
-        record.from = fieldSetFlags()[2] ? this.from : (java.lang.CharSequence) defaultValue(fields()[2]);
-        record.fromBalance = fieldSetFlags()[3] ? this.fromBalance : (java.lang.CharSequence) defaultValue(fields()[3]);
-        record.to = fieldSetFlags()[4] ? this.to : (java.lang.CharSequence) defaultValue(fields()[4]);
-        record.toBalance = fieldSetFlags()[5] ? this.toBalance : (java.lang.CharSequence) defaultValue(fields()[5]);
-        record.input = fieldSetFlags()[6] ? this.input : (java.lang.CharSequence) defaultValue(fields()[6]);
+        record.op = fieldSetFlags()[0] ? this.op : (java.lang.Integer) defaultValue(fields()[0]);
+        record.value = fieldSetFlags()[1] ? this.value : (java.nio.ByteBuffer) defaultValue(fields()[1]);
+        record.from = fieldSetFlags()[2] ? this.from : (java.nio.ByteBuffer) defaultValue(fields()[2]);
+        record.fromBalance = fieldSetFlags()[3] ? this.fromBalance : (java.nio.ByteBuffer) defaultValue(fields()[3]);
+        record.to = fieldSetFlags()[4] ? this.to : (java.nio.ByteBuffer) defaultValue(fields()[4]);
+        record.toBalance = fieldSetFlags()[5] ? this.toBalance : (java.nio.ByteBuffer) defaultValue(fields()[5]);
+        record.input = fieldSetFlags()[6] ? this.input : (java.nio.ByteBuffer) defaultValue(fields()[6]);
         return record;
       } catch (java.lang.Exception e) {
         throw new org.apache.avro.AvroRuntimeException(e);

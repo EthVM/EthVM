@@ -5,37 +5,37 @@
   "fields": [
     {
       "name": "hash",
-      "type": "string",
+      "type": "bytes",
       "doc": "Hash of the transaction"
     },
     {
       "name": "nonce",
-      "type": ["null", "long"],
+      "type": ["null", "bytes"],
       "doc": "Number of transactions sent from a given address"
     },
     {
       "name": "nonceHash",
-      "type": ["null", "string"],
+      "type": ["null", "bytes"],
       "doc": "SHA3 of the transaction nonce"
     },
     {
       "name": "from",
-      "type": ["null", "string"],
+      "type": ["null", "bytes"],
       "doc": "Address of the sender"
     },
     {
       "name": "fromBalance",
-      "type": ["null", "long"],
+      "type": ["null", "bytes"],
       "doc": "Balance of the sender"
     },
     {
       "name": "to",
-      "type": ["null", "string"],
+      "type": ["null", "bytes"],
       "doc": "Address of the recipient (or null when contract creation)"
     },
     {
       "name": "toBalance",
-      "type": ["null", "long"],
+      "type": ["null", "bytes"],
       "doc": "Balance of the receiver (or null when contract creation)"
     },
     {
@@ -45,52 +45,52 @@
     },
     {
       "name": "contractAddress",
-      "type": ["null", "string"],
+      "type": ["null", "bytes"],
       "doc": "If a contract is created, the address of it (or null if is just a regular transaction)"
     },
     {
       "name": "value",
-      "type": ["null", "long"],
+      "type": ["null", "bytes"],
       "doc": "Amount of value transferred in Wei"
     },
     {
       "name": "gas",
-      "type": ["null", "long"],
+      "type": ["null", "bytes"],
       "doc": "Amount of gas provided by the sender"
     },
     {
       "name": "gasPrice",
-      "type": ["null", "long"],
+      "type": ["null", "bytes"],
       "doc": "Amount of gas price provided by the sender in Wei"
     },
     {
       "name": "gasUsed",
-      "type": ["null", "long"],
+      "type": ["null", "bytes"],
       "doc": "Amount of gas used consumed by the transaction"
     },
     {
       "name": "cumulativeGasUsed",
-      "type": ["null", "long"],
+      "type": ["null", "bytes"],
       "doc": "Cumulative gas used by the transaction"
     },
     {
       "name": "v",
-      "type": ["null", "string"],
+      "type": ["null", "bytes"],
       "doc": "Transaction signature v"
     },
     {
       "name": "r",
-      "type": ["null", "string"],
+      "type": ["null", "bytes"],
       "doc": "Transaction signature r"
     },
     {
       "name": "s",
-      "type": ["null", "string"],
+      "type": ["null", "bytes"],
       "doc": "Transaction signature s"
     },
     {
       "name": "status",
-      "type": ["null", "long"],
+      "type": ["null", "bytes"],
       "doc": "Transaction result status"
     },
     {
@@ -109,12 +109,12 @@
           "fields": [
             {
               "name": "address",
-              "type": "string",
+              "type": "bytes",
               "desc": "Address of the contract that generated the event"
             },
             {
               "name": "topics",
-              "type": { "type": "array", "items": "string" },
+              "type": { "type": "array", "items": "bytes" },
               "desc": "List of topics provided by the contract"
             },
             {
@@ -165,37 +165,37 @@
                 "fields": [
                   {
                     "name": "op",
-                    "type": "string",
+                    "type": "int",
                     "doc": "Type of op executed inside the transaction"
                   },
                   {
                     "name": "value",
-                    "type": "string",
+                    "type": "bytes",
                     "doc": "Raw value of the transaction"
                   },
                   {
                     "name": "from",
-                    "type": "string",
+                    "type": "bytes",
                     "doc": "Address of the sender"
                   },
                   {
                     "name": "fromBalance",
-                    "type": "string",
+                    "type": "bytes",
                     "doc": "Balance of the sender"
                   },
                   {
                     "name": "to",
-                    "type": "string",
+                    "type": "bytes",
                     "doc": "Address of the receiver"
                   },
                   {
                     "name": "toBalance",
-                    "type": "string",
+                    "type": "bytes",
                     "doc": "Balance of the receiver"
                   },
                   {
                     "name": "input",
-                    "type": "string",
+                    "type": "bytes",
                     "doc": "Raw input data"
                   }
                 ]
