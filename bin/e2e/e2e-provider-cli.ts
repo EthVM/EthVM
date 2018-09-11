@@ -1,6 +1,5 @@
 import commander from 'commander'
 import Ora from 'ora'
-import * as r from 'rethinkdb'
 
 const version = '1.0.0'
 
@@ -35,7 +34,7 @@ const tx1 = {
   timestamp: Buffer.from('')
 }
 
-const tx2  = {
+const tx2 = {
   blockHash: hexToBuffer('0x983e535f45911199e74bec284b258b643392855eeb27e812aae902d149061dd7'),
   blockNumber: 3,
   contractAddress: null,
@@ -102,56 +101,7 @@ commander
   .command('generate')
   .alias('g')
   .action(() => {
-    r.connect(
-      { host: 'localhost', port: 28015 },
-      function(err, conn) {
-        if (err) {
-          ora.info(`Error Connecting database `)
-        }
-        // TODO resolve this callback hell
-        r.dbCreate('eth_mainnet').run(conn, function(err, cursor) {
-          r.db('eth_mainnet')
-            .tableCreate('transactions')
-            .run(conn, function(err, cursor) {
-              r.db('eth_mainnet')
-                .table('transactions')
-                .insert([tx1, tx2])
-                .run(conn, function(err, cursor) {
-                  r.db('eth_mainnet')
-                    .tableCreate('blocks',{primaryKey: 'hash'})
-                    .run(conn, function(err, cursor) {
-                      r.db('eth_mainnet')
-                        .table('blocks')
-                        .insert([block1, block2])
-                        .run(conn, function(err, cursor) {
-                          r.db('eth_mainnet')
-                            .table('transactions')
-                            .indexCreate('cofrom', { multi: true })
-                            .run(conn, function(err, cursor) {
-                              r.db('eth_mainnet')
-                                .table('transactions')
-                                .indexCreate('to')
-                                .run(conn, function(err, cursor) {
-                                  r.db('eth_mainnet')
-                                    .table('transactions')
-                                    .indexCreate('from')
-                                    .run(conn, function(err, cursor) {
-                                      r.db('eth_mainnet')
-                                        .table('blocks')
-                                        .indexCreate('number')
-                                        .run(conn, function(err, cursor) {
-                                          process.exit(0)
-                                        })
-                                    })
-                                })
-                            })
-                        })
-                    })
-                })
-            })
-        })
-      }
-    )
+    // TODO: Replace with mongo
   })
 
 commander.parse(process.argv)
