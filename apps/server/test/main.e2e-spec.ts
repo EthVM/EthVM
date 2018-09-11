@@ -1,23 +1,20 @@
 import config from '@app/config'
 import { errors } from  '@app/server/core/exceptions'
-import { RethinkDbStreamer, Streamer } from '@app/server/core/streams'
+import { KafkaStreamer, Streamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
-import { BlocksServiceImpl, RethinkBlockRepository } from '@app/server/modules/blocks'
-import { RethinkChartsRepository } from '@app/server/modules/charts'
+import { BlocksServiceImpl, MockBlockRepository } from '@app/server/modules/blocks'
+import { MockChartsRepository } from '@app/server/modules/charts'
 import { ExchangeService, MockExchangeServiceImpl } from '@app/server/modules/exchanges'
-import { RethinkTxsRepository, TxsService, TxsServiceImpl } from '@app/server/modules/txs'
+import { MockTxsRepository, TxsService, TxsServiceImpl } from '@app/server/modules/txs'
 import { VmService } from '@app/server/modules/vm'
 import { RedisCacheRepository } from '@app/server/repositories'
 import { expect } from 'chai'
-import * as r from 'rethinkdb'
 import * as io from 'socket.io-client'
 import { mock } from 'ts-mockito'
 import { ChartsServiceImpl,VmServiceImpl } from './mocks'
 
-
 // Increase Jest timeout for safety
 jest.setTimeout(50000)
-
 
 function callEvent(ev, payload, client): Promise<any> {
   return new Promise((resolve, reject) => {
@@ -39,33 +36,16 @@ describe('ethvm-server-events', () => {
     // Create mocks
     const ds = mock(RedisCacheRepository)
 
-    const rethinkOpts = {
-      host: config.get('rethink_db.host'),
-      port: config.get('rethink_db.port'),
-      db: config.get('rethink_db.db_name'),
-      user: config.get('rethink_db.user'),
-      password: config.get('rethink_db.password'),
-      ssl: {
-        cert: config.get('rethink_db.cert_raw')
-      }
-    }
-
-    if (!rethinkOpts.ssl.cert) {
-      delete rethinkOpts.ssl
-    }
-    const rConn = await r.connect(rethinkOpts)
-
-    const blocksRepository = new RethinkBlockRepository(rConn, rethinkOpts)
+    const blocksRepository = new MockBlockRepository()
     const blockService = new BlocksServiceImpl(blocksRepository, ds)
 
-    const txsRepository = new RethinkTxsRepository(rConn, rethinkOpts)
+    const txsRepository = new MockTxsRepository()
     const txsService:TxsService = new TxsServiceImpl(txsRepository, ds)
 
-    const chartsService = new ChartsServiceImpl(mock(RethinkChartsRepository))
+    const chartsService = new ChartsServiceImpl(mock(MockChartsRepository))
     const exchangeService: ExchangeService = new MockExchangeServiceImpl()
     const vmService: VmService = new VmServiceImpl()
-    const streamer: Streamer = mock(RethinkDbStreamer)
-
+    const streamer: Streamer = mock(KafkaStreamer)
 
     client = io.connect(`http://${config.get('server.host')}:${config.get('server.port')}`)
 
