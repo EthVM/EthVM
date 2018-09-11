@@ -116,7 +116,7 @@ export class RedisCacheRepository implements CacheRepository {
         .get(token)
         .then(result => {
           if (!result) {
-            reject()
+            reject(false)
             return
           }
           const val = JSON.parse(result) as ExchangeRate

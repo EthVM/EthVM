@@ -13,7 +13,7 @@ import * as Redis from 'ioredis'
 import * as r from 'rethinkdb'
 import * as io from 'socket.io-client'
 import { mock } from 'ts-mockito'
-import { ChartsServiceImpl, MockExchange, VmServiceImpl } from './mocks'
+import { ChartsServiceImpl, MockExchangeRepository, VmServiceImpl } from './mocks'
 
 jest.setTimeout(50000)
 
@@ -65,8 +65,9 @@ describe('ethvm-server-events', () => {
     const txsService:TxsService = new TxsServiceImpl(txsRepository, ds)
 
     const chartsService = new ChartsServiceImpl(mock(RethinkChartsRepository))
+    const exRepository = new MockExchangeRepository(ds)
 
-    const exchangeService: ExchangeService = new ExchangeServiceImpl(mock(CoinMarketCapRepository), ds)
+    const exchangeService: ExchangeService = new ExchangeServiceImpl(exRepository, ds)
 
     const vmService: VmService = new VmServiceImpl()
     const streamer: Streamer = mock(RethinkDbStreamer)
@@ -757,15 +758,25 @@ describe('ethvm-server-events', () => {
     it('should return Promise<Quote>  of EUR', async () => {
       const input = {
         symbol: 'ETH',
-        to: 'EUR'
+        to: 'USD'
       }
       // Fill Redis Cache with ExchangeRate
-      const quote: Quote = { to: 'USD', price: '20' }
+      const quote: Quote = { to: 'USD', price: '22' }
       const quote2: Quote = { to: 'EUR', price: '23' }
       const er: ExchangeRate = { symbol: 'ETH', quotes: [quote, quote2], total_supply: 1000 }
       await ds.putRate(er)
       const data = await callEvent('getTicker', input, client)
-      expect(data).to.be.deep.equals({ to: 'EUR', price: '23' })
+      expect(data).to.be.deep.equals({ to: 'USD', price: '22' })
+    })
+
+    it('should return Promise<Quote> of USD Data is not in cache', async () => {
+      const input = {
+        symbol: 'BTC',
+        to: 'USD'
+      }
+      await redisClient.flushall()
+      const data = await callEvent('getTicker', input, client)
+      expect(data).to.be.deep.equals({ to: 'USD', price: '2000' })
     })
   })
 })

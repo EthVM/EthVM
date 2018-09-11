@@ -105,10 +105,6 @@ async function bootstrapServer() {
   const exchangeService = new ExchangeServiceImpl(exchangeRepository, ds)
 
   exchangeService.fetchExchangeRates()
-  // TBD
-  setInterval(() => {
-    exchangeService.fetchExchangeRates()
-  }, 240000)
 
   // Vm
   const vmService = new VmServiceImpl(vme, vmr)
