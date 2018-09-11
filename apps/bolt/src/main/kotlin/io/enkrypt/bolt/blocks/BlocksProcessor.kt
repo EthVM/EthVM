@@ -8,7 +8,7 @@ import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
 import io.enkrypt.bolt.AppConfig
 import io.enkrypt.bolt.models.Block
 import io.enkrypt.bolt.models.BlockStats
-import io.enkrypt.bolt.models.toDocument
+import io.enkrypt.bolt.extensions.toDocument
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
@@ -22,8 +22,6 @@ import org.joda.time.Period
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 import java.util.*
-
-import io.enkrypt.bolt.models.*
 
 data class AddressBalance(
   val address: String,
@@ -130,7 +128,6 @@ class BlocksProcessor : KoinComponent {
           mongoSession.commitTransaction()
 
           logger.info { "Committed block data, Number: ${block.getNumber()}, Hash: ${block.getHash()}" }
-
         } catch (e: Exception) {
           e.printStackTrace()
           logger.error { "Commit error: ${e.stackTrace}" }

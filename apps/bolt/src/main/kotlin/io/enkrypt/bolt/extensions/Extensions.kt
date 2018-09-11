@@ -1,5 +1,11 @@
-package io.enkrypt.bolt.models
+package io.enkrypt.bolt.extensions
 
+import io.enkrypt.bolt.models.Block
+import io.enkrypt.bolt.models.BlockStats
+import io.enkrypt.bolt.models.Log
+import io.enkrypt.bolt.models.Trace
+import io.enkrypt.bolt.models.Transaction
+import io.enkrypt.bolt.models.Transfer
 import org.bson.Document
 import org.bson.conversions.Bson
 import java.nio.ByteBuffer
