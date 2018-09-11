@@ -1,11 +1,11 @@
 import { logger } from '@app/logger'
 import { b64Replacer, b64Reviver } from '@app/server/core/encoding'
 import { Block } from '@app/server/modules/blocks'
+import { ExchangeRate, Quote } from '@app/server/modules/exchanges'
 import { Tx } from '@app/server/modules/txs'
 import { CacheRepository } from '@app/server/repositories'
 import { bufferToHex } from 'ethereumjs-util'
 import * as Redis from 'ioredis'
-import { ExchangeRate, Quote } from '../../modules/exchanges'
 
 export interface RedisCacheRepositoryOpts {
   host: string
@@ -15,17 +15,9 @@ export interface RedisCacheRepositoryOpts {
 
 // TODO: Separate memory cache to its own class
 export class RedisCacheRepository implements CacheRepository {
-  private readonly redis: Redis.Redis
-  private readonly socketRows: number
   private readonly cache: Map<string, Block[] | Tx[]> = new Map()
 
-  constructor(private readonly opts: RedisCacheRepositoryOpts) {
-    this.redis = new Redis({
-      host: this.opts.host,
-      port: this.opts.port
-    })
-    this.socketRows = this.opts.socketRows
-  }
+  constructor(private readonly redis: Redis.Redis, private readonly socketRows: number) {}
 
   public initialize(): Promise<boolean> {
     return new Promise(resolve => {
@@ -129,7 +121,7 @@ export class RedisCacheRepository implements CacheRepository {
           }
           const val = JSON.parse(result) as ExchangeRate
           val.quotes.forEach(q => {
-            if (q.to === 'USD') {
+            if (q.to === to) {
               resolve(q)
               return
             }

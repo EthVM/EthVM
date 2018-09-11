@@ -11,7 +11,7 @@ export class CoinMarketCapRepository implements ExchangeRepository {
 
   public fetchAll(): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      logger.debug(`FetchExchangeRates -  / Cache exchange rates`)
+      logger.debug(`CoinMarketCapRepository - fetchAll  / Cache exchange rates`)
       fetch('https://api.coinmarketcap.com/v2/ticker/')
         .then(res => res.json())
         .then(json => {
@@ -40,7 +40,7 @@ export class CoinMarketCapRepository implements ExchangeRepository {
           }
           Promise.all(promises)
             .then(values => {
-              logger.debug(`FetchExchangeRates -  / Done caching ${promises.length} exchange rates`)
+              logger.debug(`CoinMarketCapRepository - fetchAll() / Done caching ${promises.length} exchange rates`)
               resolve(true)
             })
             .catch(error => {

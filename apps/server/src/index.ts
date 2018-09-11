@@ -9,6 +9,7 @@ import { RethinkTxsRepository, TxsServiceImpl } from '@app/server/modules/txs'
 import { RedisTrieDb, VmEngine, VmRunner, VmServiceImpl } from '@app/server/modules/vm'
 import { RedisCacheRepository } from '@app/server/repositories'
 import * as EventEmitter from 'eventemitter3'
+import * as Redis from 'ioredis'
 import * as r from 'rethinkdb'
 
 async function bootstrapServer() {
@@ -47,7 +48,12 @@ async function bootstrapServer() {
     db: config.get('data_stores.redis.db'),
     socketRows: config.get('data_stores.redis.socket_rows')
   }
-  const ds = new RedisCacheRepository(redisDsOpts)
+
+  const redis = new Redis({
+    host: config.get('data_stores.redis.host'),
+    port: config.get('data_stores.redis.port')
+  })
+  const ds = new RedisCacheRepository(redis, config.get('data_stores.redis.socket_rows'))
   await ds.initialize().catch(() => process.exit(-1))
 
   // Set default state block to VmRunner

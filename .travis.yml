@@ -2,6 +2,8 @@ sudo: false
 language: generic
 addons:
   rethinkdb: "2.3.4"
+services:
+  - redis-server
 env:
   - ETHVM_RETHINK_DB_HOST=localhost
   - ETHVM_RETHINK_DB_PORT=28015

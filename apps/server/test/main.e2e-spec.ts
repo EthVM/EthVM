@@ -1,23 +1,27 @@
 import config from '@app/config'
-import { errors } from  '@app/server/core/exceptions'
+import { errors } from '@app/server/core/exceptions'
 import { RethinkDbStreamer, Streamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
 import { BlocksServiceImpl, RethinkBlockRepository } from '@app/server/modules/blocks'
 import { RethinkChartsRepository } from '@app/server/modules/charts'
-import { ExchangeService, MockExchangeServiceImpl } from '@app/server/modules/exchanges'
+import { CoinMarketCapRepository, ExchangeRate, ExchangeService, ExchangeServiceImpl, Quote } from '@app/server/modules/exchanges'
 import { RethinkTxsRepository, TxsService, TxsServiceImpl } from '@app/server/modules/txs'
 import { VmService } from '@app/server/modules/vm'
 import { RedisCacheRepository } from '@app/server/repositories'
 import { expect } from 'chai'
+import * as Redis from 'ioredis'
 import * as r from 'rethinkdb'
 import * as io from 'socket.io-client'
 import { mock } from 'ts-mockito'
-import { ChartsServiceImpl,VmServiceImpl } from './mocks'
+import { ChartsServiceImpl, MockExchange, VmServiceImpl } from './mocks'
 
-
-// Increase Jest timeout for safety
 jest.setTimeout(50000)
 
+const redisClient = new Redis({
+  host: config.get('data_stores.redis.host'),
+  port: config.get('data_stores.redis.port')
+})
+const ds = new RedisCacheRepository(redisClient, 10)
 
 function callEvent(ev, payload, client): Promise<any> {
   return new Promise((resolve, reject) => {
@@ -37,7 +41,6 @@ describe('ethvm-server-events', () => {
 
   beforeAll(async () => {
     // Create mocks
-    const ds = mock(RedisCacheRepository)
 
     const rethinkOpts = {
       host: config.get('rethink_db.host'),
@@ -62,10 +65,11 @@ describe('ethvm-server-events', () => {
     const txsService:TxsService = new TxsServiceImpl(txsRepository, ds)
 
     const chartsService = new ChartsServiceImpl(mock(RethinkChartsRepository))
-    const exchangeService: ExchangeService = new MockExchangeServiceImpl()
+
+    const exchangeService: ExchangeService = new ExchangeServiceImpl(mock(CoinMarketCapRepository), ds)
+
     const vmService: VmService = new VmServiceImpl()
     const streamer: Streamer = mock(RethinkDbStreamer)
-
 
     client = io.connect(`http://${config.get('server.host')}:${config.get('server.port')}`)
 
@@ -115,7 +119,7 @@ describe('ethvm-server-events', () => {
         }
       ]
 
-      for (const  input of  inputs) {
+      for (const input of inputs) {
         try {
           const data = await callEvent('getTxs', input, client)
         } catch (e) {
@@ -160,7 +164,7 @@ describe('ethvm-server-events', () => {
         }
       ]
 
-      for (  const input of inputs ) {
+      for (const input of inputs) {
         try {
           const data = await callEvent('getBalance', input, client)
         } catch (e) {
@@ -215,7 +219,6 @@ describe('ethvm-server-events', () => {
     })
   })
 
-
   // need trace and log table
   describe('getTx Event', () => {
     it.skip('should return Promise<Tx>', async () => {
@@ -251,7 +254,7 @@ describe('ethvm-server-events', () => {
         }
       ]
 
-      for (const  input of  inputs) {
+      for (const input of inputs) {
         try {
           const data = await callEvent('getTx', input, client)
         } catch (e) {
@@ -261,7 +264,6 @@ describe('ethvm-server-events', () => {
       }
     })
   })
-
 
   describe('getTotalTxs Event', () => {
     it.skip('should return Promise<number>', async () => {
@@ -297,54 +299,9 @@ describe('ethvm-server-events', () => {
         }
       ]
 
-      for (const  input of  inputs) {
+      for (const input of inputs) {
         try {
           const data = await callEvent('getTotalTxs', input, client)
-        } catch (e) {
-          expect(e).to.be.eql(errors.BAD_REQUEST)
-          expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
-        }
-      }
-    })
-  })
-
-  describe('getTokenBalance', () => {
-    it.skip('should return Promise<any>', async () => {
-      const inputs = [
-        {
-          address: '0xd9ea042ad059033ba3c3be79f4081244f183bf03'
-        }
-      ]
-
-      for (const input of inputs) {
-        const data = await callEvent('getTokenBalance', input, client)
-        expect(data).to.not.be.undefined
-       }
-    })
-
-    it('should return err ', async () => {
-      const inputs = [
-        '',
-        '0x',
-        '0x0',
-        10,
-        {},
-        {
-          address: '0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238'
-        },
-        {
-          address: '0xd9ea042ad059033ba3c3be79f4081244f183bf03',
-          limit: '1',
-          page: 1
-        },
-        {
-          number: 1
-        }
-      ]
-
-      for (  const input of inputs ) {
-        try {
-          const data = await callEvent('getTokenBalance', input, client)
         } catch (e) {
           expect(e).to.be.eql(errors.BAD_REQUEST)
           expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
@@ -387,7 +344,7 @@ describe('ethvm-server-events', () => {
         }
       ]
 
-      for (const  input of  inputs) {
+      for (const input of inputs) {
         try {
           const data = await callEvent('pastTxs', input, client)
         } catch (e) {
@@ -431,7 +388,7 @@ describe('ethvm-server-events', () => {
         }
       ]
 
-      for (const  input of  inputs) {
+      for (const input of inputs) {
         try {
           const data = await callEvent('pastBlocks', input, client)
         } catch (e) {
@@ -521,7 +478,7 @@ describe('ethvm-server-events', () => {
           number: '1'
         },
         {
-          address:  '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
+          address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
           number: 1
         },
         {
@@ -584,7 +541,7 @@ describe('ethvm-server-events', () => {
           number: '1'
         },
         {
-          address:  '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
+          address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
           number: 1
         },
         {
@@ -647,7 +604,7 @@ describe('ethvm-server-events', () => {
           number: '1'
         },
         {
-          address:  '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
+          address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
           number: 1
         },
         {
@@ -710,7 +667,7 @@ describe('ethvm-server-events', () => {
           number: '1'
         },
         {
-          address:  '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
+          address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
           number: 1
         },
         {
@@ -734,6 +691,81 @@ describe('ethvm-server-events', () => {
           expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
         }
       }
+    })
+  })
+
+  describe('getTokenBalance', () => {
+    it.skip('should return Promise<any>', async () => {
+      const inputs = [
+        {
+          address: '0xd9ea042ad059033ba3c3be79f4081244f183bf03'
+        }
+      ]
+
+      for (const input of inputs) {
+        const data = await callEvent('getTokenBalance', input, client)
+        expect(data).to.not.be.undefined
+      }
+    })
+
+    it('should return err ', async () => {
+      const inputs = [
+        '',
+        '0x',
+        '0x0',
+        10,
+        {},
+        {
+          address: '0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238'
+        },
+        {
+          address: '0xd9ea042ad059033ba3c3be79f4081244f183bf03',
+          limit: '1',
+          page: 1
+        },
+        {
+          number: 1
+        }
+      ]
+
+      for (const input of inputs) {
+        try {
+          const data = await callEvent('getTokenBalance', input, client)
+        } catch (e) {
+          expect(e).to.be.eql(errors.BAD_REQUEST)
+          expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
+        }
+      }
+    })
+  })
+
+  describe('getTicker', () => {
+    it('should return Promise<Quote> of USD', async () => {
+      const input = {
+        symbol: 'ETH',
+        to: 'USD'
+      }
+      // Fill Redis Cache with ExchangeRate
+      const quote: Quote = { to: 'USD', price: '20' }
+      const quote2: Quote = { to: 'EUR', price: '23' }
+      const er: ExchangeRate = { symbol: 'ETH', quotes: [quote], total_supply: 1000 }
+      await ds.putRate(er)
+      const data = await callEvent('getTicker', input, client)
+      expect(data).to.be.deep.equals({ to: 'USD', price: '20' })
+    })
+
+    it('should return Promise<Quote>  of EUR', async () => {
+      const input = {
+        symbol: 'ETH',
+        to: 'EUR'
+      }
+      // Fill Redis Cache with ExchangeRate
+      const quote: Quote = { to: 'USD', price: '20' }
+      const quote2: Quote = { to: 'EUR', price: '23' }
+      const er: ExchangeRate = { symbol: 'ETH', quotes: [quote, quote2], total_supply: 1000 }
+      await ds.putRate(er)
+      const data = await callEvent('getTicker', input, client)
+      expect(data).to.be.deep.equals({ to: 'EUR', price: '23' })
     })
   })
 })
