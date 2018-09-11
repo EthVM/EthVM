@@ -89,6 +89,7 @@ services:
   mongodb:
     image: mvertes/alpine-mongo:4.0.1-0
     restart: unless-stopped
+    command: "mongod --bind_ip 0.0.0.0 --replSet rs0"
     volumes:
       - mongodb-volume:/data/db
     networks:
