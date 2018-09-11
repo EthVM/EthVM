@@ -104,8 +104,6 @@ async function bootstrapServer() {
   const exchangeRepository = new CoinMarketCapRepository(ds)
   const exchangeService = new ExchangeServiceImpl(exchangeRepository, ds)
 
-  exchangeService.fetchExchangeRates()
-
   // Vm
   const vmService = new VmServiceImpl(vme, vmr)
 
