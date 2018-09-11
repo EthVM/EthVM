@@ -195,7 +195,7 @@ export class EthVMServer {
     const txs = block.transactions || []
     if (txs.length > 0) {
       txs.forEach(tx => {
-        const txHash = bufferToHex(tx.hash)
+        const txHash = tx.hash
         this.io.to(txHash).emit(txHash + '_update', tx)
       })
       this.io.to('txs').emit('newTx', txs)
@@ -205,7 +205,7 @@ export class EthVMServer {
 
   private onNewPendingTxsEvent = (tx: Tx): void => {
     logger.info(`EthVMServer - onNewPendingTxsEvent / Tx: ${tx}`)
-    const txHash = bufferToHex(tx.hash)
+    const txHash = tx.hash
     this.io.to(txHash).emit(`${txHash}_update`, tx)
     this.io.to('pendingTxs').emit('newPendingTx', tx)
   }

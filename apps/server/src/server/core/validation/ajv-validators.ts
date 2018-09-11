@@ -8,6 +8,110 @@ const PAGINATION_SIZE = 100
 const ROOMS = ['blocks', 'txs', 'pendingTxs', 'uncles']
 const PERIODS = ['ALL', 'YEAR', 'MONTH', 'DAY']
 
+const EXCHANGE_TO = ['USD']
+const EXCHANGE_FROM = [
+  'BTC',
+  'LTC',
+  'XRP',
+  'NXT',
+  'DOGE',
+  'DGB',
+  'RDD',
+  'DASH',
+  'MONA',
+  'MAID',
+  'XMR',
+  'BCN',
+  'BTS',
+  'BTCD',
+  'XLM',
+  'EMC',
+  'XVG',
+  'USDT',
+  'XEM',
+  'ETH',
+  'SC',
+  'REP',
+  'DCR',
+  'PIVX',
+  'LSK',
+  'DGD',
+  'STEEM',
+  'WAVES',
+  'ARDR',
+  'ETC',
+  'STRAT',
+  'NEO',
+  'XZC',
+  'ZEC',
+  'GNT',
+  'MKR',
+  'KMD',
+  'NANO',
+  'ARK',
+  'QTUM',
+  'BAT',
+  'ZEN',
+  'AE',
+  'ETP',
+  'MIOTA',
+  'BNT',
+  'GXS',
+  'FUN',
+  'PAY',
+  'SNT',
+  'EOS',
+  'MCO',
+  'GAS',
+  'PPT',
+  'OMG',
+  'BCH',
+  'BNB',
+  'BTM',
+  'DCN',
+  'ZRX',
+  'HSR',
+  'NAS',
+  'WTC',
+  'LRC',
+  'TRX',
+  'MANA',
+  'LINK',
+  'KNC',
+  'KIN',
+  'ADA',
+  'XTZ',
+  'RHOC',
+  'CNX',
+  'AION',
+  'BTG',
+  'KCS',
+  'NULS',
+  'ICX',
+  'POWR',
+  'QASH',
+  'BCD',
+  'CMT',
+  'ELF',
+  'WAX',
+  'XIN',
+  'MOAC',
+  'IOST',
+  'THETA',
+  'ZIL',
+  'ELA',
+  'HT',
+  'TUSD',
+  'ONT',
+  'BTCP',
+  'DROP',
+  'NPXS',
+  'WAN',
+  'MITH',
+  'HOT',
+  'VET'
+]
+
 // Create Ajv
 const ajv = new Ajv()
 require('ajv-keywords')(ajv, ['instanceof']) // tslint:disable-line no-var-requires
@@ -216,6 +320,26 @@ const PastBlocksSchema = {
   additionalProperties: false
 }
 
+const ExchangeRateSchema = {
+  $id: 'https://ethvm.com/exchange.payload.schema.json',
+  $schema: 'http://json-schema.org/draft-07/schema#',
+  type: 'object',
+  properties: {
+    symbol: {
+      $id: '/properties/symbol',
+      type: 'string',
+      enum: EXCHANGE_FROM
+    },
+    to: {
+      $id: '/properties/to',
+      type: 'string',
+      enum: EXCHANGE_TO
+    }
+  },
+  required: ['symbol', 'to'],
+  additionalProperties: false
+}
+
 // Compile schemas
 const balancePayloadValidator = ajv.compile(BalancePayloadSchema)
 const blockTxsPayloadValidator = ajv.compile(BlockTxsPayloadSchema)
@@ -230,6 +354,7 @@ const txsPayloadValidator = ajv.compile(TxsPayloadSchema)
 const totalTxsPayloadValidator = ajv.compile(TotalTxsPayloadSchema)
 const pastTxsPayloadValidator = ajv.compile(PastTxsSchema)
 const pastBlockPayloadValidator = ajv.compile(PastBlocksSchema)
+const exchangeRatePayloadValidator = ajv.compile(ExchangeRateSchema)
 
 export {
   balancePayloadValidator,
@@ -244,5 +369,6 @@ export {
   txsPayloadValidator,
   totalTxsPayloadValidator,
   pastTxsPayloadValidator,
+  exchangeRatePayloadValidator,
   pastBlockPayloadValidator
 }

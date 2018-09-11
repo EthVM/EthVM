@@ -9,7 +9,7 @@
   "getBalance": "getBalance",
   "getTokenBalance": "getTokenBalance",
   "getTotalTxs": "getTotalTxs",
-  "getTokenToUSD": "getTokenToUSD",
+  "getTicker": "getTicker",
   "getTxs": "getTxs",
   "getTx": "getTx",
   "getBlock": "getBlock",

@@ -1,5 +1,4 @@
-// TODO: Define properly this payload
 export interface ExchangeRatePayload {
-  from: string
+  symbol: string
   to: string
 }

@@ -1,5 +1,7 @@
+import { logger } from '@app/logger'
+import { Token } from '@app/server/modules/token'
 import BigNumber from 'bignumber.js'
-import abi from 'ethereumjs-abi'
+import * as abi from 'ethereumjs-abi'
 import * as jayson from 'jayson/promise'
 import * as utils from 'web3-utils'
 
@@ -28,13 +30,15 @@ export class VmEngine {
     return this.client.request('eth_getBalance', [address, 'latest'])
   }
 
-  public getTokensBalance(address: string): Promise<any> {
+  public getTokens(address: string): Promise<Token[]> {
     return new Promise(async (resolve, reject) => {
       const argss = ['address', 'bool', 'bool', 'bool', 'uint256']
       const vals = [address, 'true', 'true', 'true', 0]
+
       const encoded = this.encodeCall('getAllBalance', argss, vals)
       try {
-        const response = await this.client.request('eth_call', [{ to: this.opts.tokensAddress.address, data: encoded }, 'pending'])
+        const payload = [{ to: this.opts.tokensAddress.address, data: encoded }, 'latest']
+        const response = await this.client.request('eth_call', payload)
         const tokens = this.decode(response.result || [])
         resolve(tokens)
       } catch (err) {
@@ -50,8 +54,8 @@ export class VmEngine {
     return '0x' + methodId + params
   }
 
-  private decode(hex: string): any[] {
-    const tokens: any[] = []
+  private decode(hex: string): Token[] {
+    const tokens: Token[] = []
 
     const sizeHex = bytes => bytes * 2
     const trim = (str: string): string => str.replace(/\0[\s\S]*$/g, '')

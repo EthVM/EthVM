@@ -1,3 +1,4 @@
+import { Token } from '@app/server/modules/token'
 import { VmService } from '@app/server/modules/vm'
 
 export class  VmServiceImpl implements VmService {
@@ -13,8 +14,9 @@ export class  VmServiceImpl implements VmService {
   public getBalance(address: string): Promise<any> {
     return Promise.resolve(10)
   }
-  public getTokensBalance(address: string): Promise<any> {
-    return Promise.resolve(Buffer.from(''))
+  public getTokens(address: string): Promise<Token[]> {
+    const tokens:Token[] =[]
+    return Promise.resolve(tokens)
   }
   public call(args: any): Promise<any> {
     return Promise.resolve(Buffer.from(''))
