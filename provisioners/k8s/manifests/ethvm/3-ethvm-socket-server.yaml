@@ -46,7 +46,5 @@ spec:
           value: "dev"
         - name: ETHVM_DATA_STORE_REDIS_HOST
           value: "redis-cluster.ethvm"
-        - name: ETHVM_RETHINK_DB_HOST
-          value: "rethinkdb-proxy"
         - name: ETHVM_ETH_RPC_HOST
           value: "geth-rpc"
