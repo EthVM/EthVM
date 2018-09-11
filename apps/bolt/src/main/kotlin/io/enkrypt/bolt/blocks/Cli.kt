@@ -3,6 +3,8 @@ package io.enkrypt.bolt.blocks
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
+import com.mongodb.MongoClient
+import com.mongodb.MongoClientURI
 import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
 import io.enkrypt.bolt.AppConfig
@@ -12,6 +14,7 @@ import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
 import org.koin.dsl.module.module
 import org.koin.standalone.StandAloneContext.startKoin
+import org.litote.kmongo.KMongo
 import java.util.Properties
 
 class Cli : CliktCommand() {
@@ -48,10 +51,19 @@ class Cli : CliktCommand() {
     envvar = "BOLT_PENDING_TXS_TOPIC"
   ).default(DEFAULT_RAW_PENDING_TXS_TOPIC)
 
+  private val mongoUri: String by option(
+    help = "Mongo URI",
+    envvar = "MONGO_URI"
+  ).default(DEFAULT_MONGO_URI)
+
   // DI
   private val boltModule = module {
+
     single { TopicsConfig(rawBlocksTopic, rawPendingTxsTopic) }
     single { AppConfig(applicationId, bootstrapServers, startingOffset, schemaRegistryUrl, get()) }
+
+    single { MongoClientURI(mongoUri) }
+    single { KMongo.createClient(MongoClientURI(mongoUri)) }
 
     module("kafka") {
       single {
@@ -85,6 +97,8 @@ class Cli : CliktCommand() {
     const val DEFAULT_BOOTSTRAP_SERVERS = "kafka:9092"
     const val DEFAULT_AUTO_OFFSET = "earliest"
     const val DEFAULT_SCHEMA_REGISTRY_URL = "http://localhost:8081"
+
+    const val DEFAULT_MONGO_URI = "mongodb://localhost:27017/ethvm_local"
 
     const val DEFAULT_RAW_BLOCK_TOPIC = "raw-blocks"
     const val DEFAULT_RAW_PENDING_TXS_TOPIC = "raw-pending-txs"

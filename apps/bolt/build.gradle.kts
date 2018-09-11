@@ -1,6 +1,12 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
   application
   kotlin("jvm") version "1.2.61"
+}
+
+tasks.withType<KotlinCompile> {
+  kotlinOptions.jvmTarget = "1.8"
 }
 
 repositories {
