@@ -19,9 +19,9 @@ export class CoinMarketCapRepository implements ExchangeRepository {
           const promises: Array<Promise<boolean>> = []
           for (const coin in coins) {
             if (coin) {
-              const exchangerate: any = {}
-              exchangerate.symbol = coins[coin].symbol
-              exchangerate.total_supply = coins[coin].total_supply
+              const rate: any = {}
+              rate.symbol = coins[coin].symbol
+              rate.total_supply = coins[coin].total_supply
               const quotes: Quote[] = []
               for (const currency in coins[coin].quotes) {
                 if (currency) {
@@ -34,8 +34,8 @@ export class CoinMarketCapRepository implements ExchangeRepository {
                   quotes.push(q)
                 }
               }
-              exchangerate.quotes = quotes
-              promises.push(this.cache.putRate(exchangerate))
+              rate.quotes = quotes
+              promises.push(this.cache.putRate(rate))
             }
           }
           Promise.all(promises)

@@ -15,9 +15,7 @@ export class ExchangeServiceImpl implements ExchangeService {
         .then(q => resolve(q))
         .catch(err => {
           this.exchangeRepository.fetchAll().then(bool => {
-            this.cacheRepository.getQuote(token, to).then(q => {
-              resolve(q)
-            })
+            this.cacheRepository.getQuote(token, to).then(q => resolve(q))
           })
         })
     })
