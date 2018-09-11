@@ -23,6 +23,3 @@ echo "Restarting some services"
 CMD="${SCRIPT_DIR}/restart.sh geth"
 echo "Executing: ${CMD}"
 ${CMD}
-
-
-
