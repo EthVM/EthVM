@@ -4,7 +4,7 @@ import { RethinkDbStreamer, Streamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
 import { BlocksServiceImpl, RethinkBlockRepository } from '@app/server/modules/blocks'
 import { RethinkChartsRepository } from '@app/server/modules/charts'
-import { CoinMarketCapRepository, ExchangeRate, ExchangeService, ExchangeServiceImpl, Quote } from '@app/server/modules/exchanges'
+import { ExchangeRate, ExchangeService, ExchangeServiceImpl, Quote } from '@app/server/modules/exchanges'
 import { RethinkTxsRepository, TxsService, TxsServiceImpl } from '@app/server/modules/txs'
 import { VmService } from '@app/server/modules/vm'
 import { RedisCacheRepository } from '@app/server/repositories'
@@ -62,7 +62,7 @@ describe('ethvm-server-events', () => {
     const blockService = new BlocksServiceImpl(blocksRepository, ds)
 
     const txsRepository = new RethinkTxsRepository(rConn, rethinkOpts)
-    const txsService:TxsService = new TxsServiceImpl(txsRepository, ds)
+    const txsService: TxsService = new TxsServiceImpl(txsRepository, ds)
 
     const chartsService = new ChartsServiceImpl(mock(RethinkChartsRepository))
     const exRepository = new MockExchangeRepository(ds)
@@ -748,7 +748,6 @@ describe('ethvm-server-events', () => {
       }
       // Fill Redis Cache with ExchangeRate
       const quote: Quote = { to: 'USD', price: '20' }
-      const quote2: Quote = { to: 'EUR', price: '23' }
       const er: ExchangeRate = { symbol: 'ETH', quotes: [quote], total_supply: 1000 }
       await ds.putRate(er)
       const data = await callEvent('getTicker', input, client)

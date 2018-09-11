@@ -42,18 +42,12 @@ async function bootstrapServer() {
 
   // Create Cache data store
   logger.info('bootstrapper -> Initializing redis cache data store')
-  const redisDsOpts = {
-    host: config.get('data_stores.redis.host'),
-    port: config.get('data_stores.redis.port'),
-    db: config.get('data_stores.redis.db'),
-    socketRows: config.get('data_stores.redis.socket_rows')
-  }
-
   const redis = new Redis({
     host: config.get('data_stores.redis.host'),
     port: config.get('data_stores.redis.port')
   })
-  const ds = new RedisCacheRepository(redis, config.get('data_stores.redis.socket_rows'))
+  const socketRows = config.get('data_stores.redis.socket_rows')
+  const ds = new RedisCacheRepository(redis, socketRows)
   await ds.initialize().catch(() => process.exit(-1))
 
   // Set default state block to VmRunner

@@ -4,14 +4,7 @@ import { Block } from '@app/server/modules/blocks'
 import { ExchangeRate, Quote } from '@app/server/modules/exchanges'
 import { Tx } from '@app/server/modules/txs'
 import { CacheRepository } from '@app/server/repositories'
-import { bufferToHex } from 'ethereumjs-util'
 import * as Redis from 'ioredis'
-
-export interface RedisCacheRepositoryOpts {
-  host: string
-  port: number
-  socketRows: number
-}
 
 // TODO: Separate memory cache to its own class
 export class RedisCacheRepository implements CacheRepository {
@@ -104,9 +97,7 @@ export class RedisCacheRepository implements CacheRepository {
           }
           resolve(true)
         })
-        .catch(error => {
-          resolve(false)
-        })
+        .catch(error => resolve(false))
     })
   }
 

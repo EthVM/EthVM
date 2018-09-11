@@ -1,6 +1,6 @@
 import { logger } from '@app/logger'
+import { Quote } from '@app/server/modules/exchanges'
 import fetch from 'node-fetch'
-import { Quote } from './exchange-rate.entity'
 
 export interface ExchangeRepository {
   fetchAll(): Promise<boolean>
