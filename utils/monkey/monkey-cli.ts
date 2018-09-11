@@ -8,8 +8,10 @@ import { bufferToHex, generateAddress, toBuffer } from 'ethereumjs-util'
 import Ora from 'ora'
 import * as utils from 'web3-utils'
 import data from './accounts.json'
+import contracts from './contracts.json'
 
-const { accounts, tokencontract, from } = data
+const { accounts, from } = data
+const { tokencontract } = contracts
 
 const version = '1.0.0'
 

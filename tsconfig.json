@@ -15,7 +15,7 @@
     "allowJs": false
   },
   "include": [
-    "bin/**/*",
+    "utils/monkey/**/*",
   ],
   "exclude": [
     "node_modules"
