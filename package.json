@@ -18,7 +18,7 @@
     }
   },
   "scripts": {
-    "monkey": "ts-node utils/monkey/monkey-cli.ts",
+    "monkey": "ts-node bin/monkey/monkey-cli.ts",
     "format": "yarn lint:fix && yarn prettier",
     "lint": "tslint -c tslint.json --project .",
     "lint:fix": "tslint -c tslint.json --project . --fix",
