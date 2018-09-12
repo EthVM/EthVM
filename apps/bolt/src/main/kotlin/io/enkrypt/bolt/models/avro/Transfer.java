@@ -3,7 +3,7 @@
  *
  * DO NOT EDIT DIRECTLY
  */
-package io.enkrypt.bolt.models;
+package io.enkrypt.bolt.models.avro;
 
 import org.apache.avro.specific.SpecificData;
 import org.apache.avro.message.BinaryMessageEncoder;
@@ -13,8 +13,8 @@ import org.apache.avro.message.SchemaStore;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class Transfer extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = -4850567253330044902L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Transfer\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"op\",\"type\":\"int\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"value\",\"type\":\"bytes\",\"doc\":\"Raw value of the transaction\"},{\"name\":\"from\",\"type\":\"bytes\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"bytes\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":\"bytes\",\"doc\":\"Address of the receiver\"},{\"name\":\"toBalance\",\"type\":\"bytes\",\"doc\":\"Balance of the receiver\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"Raw input data\"}]}");
+  private static final long serialVersionUID = -4926849421107712152L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Transfer\",\"namespace\":\"io.enkrypt.bolt.models.avro\",\"fields\":[{\"name\":\"op\",\"type\":\"int\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"value\",\"type\":\"bytes\",\"doc\":\"Raw value of the transaction\"},{\"name\":\"from\",\"type\":\"bytes\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"bytes\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":\"bytes\",\"doc\":\"Address of the receiver\"},{\"name\":\"toBalance\",\"type\":\"bytes\",\"doc\":\"Balance of the receiver\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"Raw input data\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -246,8 +246,8 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
    * Creates a new Transfer RecordBuilder.
    * @return A new Transfer RecordBuilder
    */
-  public static io.enkrypt.bolt.models.Transfer.Builder newBuilder() {
-    return new io.enkrypt.bolt.models.Transfer.Builder();
+  public static io.enkrypt.bolt.models.avro.Transfer.Builder newBuilder() {
+    return new io.enkrypt.bolt.models.avro.Transfer.Builder();
   }
 
   /**
@@ -255,8 +255,8 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
    * @param other The existing builder to copy.
    * @return A new Transfer RecordBuilder
    */
-  public static io.enkrypt.bolt.models.Transfer.Builder newBuilder(io.enkrypt.bolt.models.Transfer.Builder other) {
-    return new io.enkrypt.bolt.models.Transfer.Builder(other);
+  public static io.enkrypt.bolt.models.avro.Transfer.Builder newBuilder(io.enkrypt.bolt.models.avro.Transfer.Builder other) {
+    return new io.enkrypt.bolt.models.avro.Transfer.Builder(other);
   }
 
   /**
@@ -264,8 +264,8 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
    * @param other The existing instance to copy.
    * @return A new Transfer RecordBuilder
    */
-  public static io.enkrypt.bolt.models.Transfer.Builder newBuilder(io.enkrypt.bolt.models.Transfer other) {
-    return new io.enkrypt.bolt.models.Transfer.Builder(other);
+  public static io.enkrypt.bolt.models.avro.Transfer.Builder newBuilder(io.enkrypt.bolt.models.avro.Transfer other) {
+    return new io.enkrypt.bolt.models.avro.Transfer.Builder(other);
   }
 
   /**
@@ -298,7 +298,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
      * Creates a Builder by copying an existing Builder.
      * @param other The existing Builder to copy.
      */
-    private Builder(io.enkrypt.bolt.models.Transfer.Builder other) {
+    private Builder(io.enkrypt.bolt.models.avro.Transfer.Builder other) {
       super(other);
       if (isValidValue(fields()[0], other.op)) {
         this.op = data().deepCopy(fields()[0].schema(), other.op);
@@ -334,7 +334,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
      * Creates a Builder by copying an existing Transfer instance
      * @param other The existing instance to copy.
      */
-    private Builder(io.enkrypt.bolt.models.Transfer other) {
+    private Builder(io.enkrypt.bolt.models.avro.Transfer other) {
             super(SCHEMA$);
       if (isValidValue(fields()[0], other.op)) {
         this.op = data().deepCopy(fields()[0].schema(), other.op);
@@ -381,7 +381,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * @param value The value of 'op'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transfer.Builder setOp(int value) {
+    public io.enkrypt.bolt.models.avro.Transfer.Builder setOp(int value) {
       validate(fields()[0], value);
       this.op = value;
       fieldSetFlags()[0] = true;
@@ -403,7 +403,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * Type of op executed inside the transaction
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transfer.Builder clearOp() {
+    public io.enkrypt.bolt.models.avro.Transfer.Builder clearOp() {
       fieldSetFlags()[0] = false;
       return this;
     }
@@ -423,7 +423,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * @param value The value of 'value'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transfer.Builder setValue(java.nio.ByteBuffer value) {
+    public io.enkrypt.bolt.models.avro.Transfer.Builder setValue(java.nio.ByteBuffer value) {
       validate(fields()[1], value);
       this.value = value;
       fieldSetFlags()[1] = true;
@@ -445,7 +445,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * Raw value of the transaction
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transfer.Builder clearValue() {
+    public io.enkrypt.bolt.models.avro.Transfer.Builder clearValue() {
       value = null;
       fieldSetFlags()[1] = false;
       return this;
@@ -466,7 +466,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * @param value The value of 'from'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transfer.Builder setFrom(java.nio.ByteBuffer value) {
+    public io.enkrypt.bolt.models.avro.Transfer.Builder setFrom(java.nio.ByteBuffer value) {
       validate(fields()[2], value);
       this.from = value;
       fieldSetFlags()[2] = true;
@@ -488,7 +488,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * Address of the sender
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transfer.Builder clearFrom() {
+    public io.enkrypt.bolt.models.avro.Transfer.Builder clearFrom() {
       from = null;
       fieldSetFlags()[2] = false;
       return this;
@@ -509,7 +509,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * @param value The value of 'fromBalance'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transfer.Builder setFromBalance(java.nio.ByteBuffer value) {
+    public io.enkrypt.bolt.models.avro.Transfer.Builder setFromBalance(java.nio.ByteBuffer value) {
       validate(fields()[3], value);
       this.fromBalance = value;
       fieldSetFlags()[3] = true;
@@ -531,7 +531,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * Balance of the sender
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transfer.Builder clearFromBalance() {
+    public io.enkrypt.bolt.models.avro.Transfer.Builder clearFromBalance() {
       fromBalance = null;
       fieldSetFlags()[3] = false;
       return this;
@@ -552,7 +552,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * @param value The value of 'to'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transfer.Builder setTo(java.nio.ByteBuffer value) {
+    public io.enkrypt.bolt.models.avro.Transfer.Builder setTo(java.nio.ByteBuffer value) {
       validate(fields()[4], value);
       this.to = value;
       fieldSetFlags()[4] = true;
@@ -574,7 +574,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * Address of the receiver
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transfer.Builder clearTo() {
+    public io.enkrypt.bolt.models.avro.Transfer.Builder clearTo() {
       to = null;
       fieldSetFlags()[4] = false;
       return this;
@@ -595,7 +595,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * @param value The value of 'toBalance'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transfer.Builder setToBalance(java.nio.ByteBuffer value) {
+    public io.enkrypt.bolt.models.avro.Transfer.Builder setToBalance(java.nio.ByteBuffer value) {
       validate(fields()[5], value);
       this.toBalance = value;
       fieldSetFlags()[5] = true;
@@ -617,7 +617,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * Balance of the receiver
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transfer.Builder clearToBalance() {
+    public io.enkrypt.bolt.models.avro.Transfer.Builder clearToBalance() {
       toBalance = null;
       fieldSetFlags()[5] = false;
       return this;
@@ -638,7 +638,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * @param value The value of 'input'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transfer.Builder setInput(java.nio.ByteBuffer value) {
+    public io.enkrypt.bolt.models.avro.Transfer.Builder setInput(java.nio.ByteBuffer value) {
       validate(fields()[6], value);
       this.input = value;
       fieldSetFlags()[6] = true;
@@ -660,7 +660,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * Raw input data
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Transfer.Builder clearInput() {
+    public io.enkrypt.bolt.models.avro.Transfer.Builder clearInput() {
       input = null;
       fieldSetFlags()[6] = false;
       return this;

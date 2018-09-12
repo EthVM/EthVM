@@ -1,4 +1,4 @@
-FROM zenika/alpine-kotlin:1.2.40-jdk8 as builder
+FROM zenika/kotlin:1.2.61-jdk8-slim
 
 # Create workdir
 RUN mkdir -p /var/bolt

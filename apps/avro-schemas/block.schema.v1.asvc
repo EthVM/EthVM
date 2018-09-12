@@ -1,5 +1,5 @@
 {
-  "namespace": "io.enkrypt.bolt.models",
+  "namespace": "io.enkrypt.bolt.models.avro",
   "name": "Block",
   "type": "record",
   "fields": [
@@ -121,7 +121,7 @@
       "type": [
         "null",
         {
-          "namespace": "io.enkrypt.bolt.models",
+          "namespace": "io.enkrypt.bolt.models.avro",
           "name": "BlockStats",
           "type": "record",
           "fields": [
@@ -160,7 +160,7 @@
       "type": {
         "type": "array",
         "items": {
-          "namespace": "io.enkrypt.bolt.models",
+          "namespace": "io.enkrypt.bolt.models.avro",
           "name": "Transaction",
           "type": "record",
           "fields": [
@@ -283,7 +283,7 @@
               "type": {
                 "type": "array",
                 "items": {
-                  "namespace": "io.enkrypt.bolt.models",
+                  "namespace": "io.enkrypt.bolt.models.avro",
                   "name": "Log",
                   "type": "record",
                   "fields": [
@@ -320,7 +320,7 @@
               "name": "trace",
               "doc": "Trace that describes contract creation, destruction or intenal transactions",
               "type": {
-                "namespace": "io.enkrypt.bolt.models",
+                "namespace": "io.enkrypt.bolt.models.avro",
                 "name": "Trace",
                 "type": "record",
                 "fields": [
@@ -340,7 +340,7 @@
                     "type": {
                       "type": "array",
                       "items": {
-                        "namespace": "io.enkrypt.bolt.models",
+                        "namespace": "io.enkrypt.bolt.models.avro",
                         "name": "Transfer",
                         "type": "record",
                         "fields": [

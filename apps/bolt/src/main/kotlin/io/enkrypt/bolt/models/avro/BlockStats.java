@@ -3,7 +3,7 @@
  *
  * DO NOT EDIT DIRECTLY
  */
-package io.enkrypt.bolt.models;
+package io.enkrypt.bolt.models.avro;
 
 import org.apache.avro.specific.SpecificData;
 import org.apache.avro.message.BinaryMessageEncoder;
@@ -13,8 +13,8 @@ import org.apache.avro.message.SchemaStore;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class BlockStats extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = -5958936508402285973L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"BlockStats\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"blockTimeMs\",\"type\":\"int\",\"doc\":\"Time taken to find the block in milliseconds\"},{\"name\":\"numFailedTxs\",\"type\":\"int\",\"doc\":\"Number of failed transactions\"},{\"name\":\"numSuccessfulTxs\",\"type\":\"int\",\"doc\":\"Number of successful transactions\"},{\"name\":\"avgGasPrice\",\"type\":\"bytes\",\"doc\":\"Average gas price\"},{\"name\":\"avgTxsFees\",\"type\":\"bytes\",\"doc\":\"Total gas price\"}]}");
+  private static final long serialVersionUID = 4767458774272772995L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"BlockStats\",\"namespace\":\"io.enkrypt.bolt.models.avro\",\"fields\":[{\"name\":\"blockTimeMs\",\"type\":\"int\",\"doc\":\"Time taken to find the block in milliseconds\"},{\"name\":\"numFailedTxs\",\"type\":\"int\",\"doc\":\"Number of failed transactions\"},{\"name\":\"numSuccessfulTxs\",\"type\":\"int\",\"doc\":\"Number of successful transactions\"},{\"name\":\"avgGasPrice\",\"type\":\"bytes\",\"doc\":\"Average gas price\"},{\"name\":\"avgTxsFees\",\"type\":\"bytes\",\"doc\":\"Total gas price\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -200,8 +200,8 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
    * Creates a new BlockStats RecordBuilder.
    * @return A new BlockStats RecordBuilder
    */
-  public static io.enkrypt.bolt.models.BlockStats.Builder newBuilder() {
-    return new io.enkrypt.bolt.models.BlockStats.Builder();
+  public static io.enkrypt.bolt.models.avro.BlockStats.Builder newBuilder() {
+    return new io.enkrypt.bolt.models.avro.BlockStats.Builder();
   }
 
   /**
@@ -209,8 +209,8 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
    * @param other The existing builder to copy.
    * @return A new BlockStats RecordBuilder
    */
-  public static io.enkrypt.bolt.models.BlockStats.Builder newBuilder(io.enkrypt.bolt.models.BlockStats.Builder other) {
-    return new io.enkrypt.bolt.models.BlockStats.Builder(other);
+  public static io.enkrypt.bolt.models.avro.BlockStats.Builder newBuilder(io.enkrypt.bolt.models.avro.BlockStats.Builder other) {
+    return new io.enkrypt.bolt.models.avro.BlockStats.Builder(other);
   }
 
   /**
@@ -218,8 +218,8 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
    * @param other The existing instance to copy.
    * @return A new BlockStats RecordBuilder
    */
-  public static io.enkrypt.bolt.models.BlockStats.Builder newBuilder(io.enkrypt.bolt.models.BlockStats other) {
-    return new io.enkrypt.bolt.models.BlockStats.Builder(other);
+  public static io.enkrypt.bolt.models.avro.BlockStats.Builder newBuilder(io.enkrypt.bolt.models.avro.BlockStats other) {
+    return new io.enkrypt.bolt.models.avro.BlockStats.Builder(other);
   }
 
   /**
@@ -248,7 +248,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
      * Creates a Builder by copying an existing Builder.
      * @param other The existing Builder to copy.
      */
-    private Builder(io.enkrypt.bolt.models.BlockStats.Builder other) {
+    private Builder(io.enkrypt.bolt.models.avro.BlockStats.Builder other) {
       super(other);
       if (isValidValue(fields()[0], other.blockTimeMs)) {
         this.blockTimeMs = data().deepCopy(fields()[0].schema(), other.blockTimeMs);
@@ -276,7 +276,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
      * Creates a Builder by copying an existing BlockStats instance
      * @param other The existing instance to copy.
      */
-    private Builder(io.enkrypt.bolt.models.BlockStats other) {
+    private Builder(io.enkrypt.bolt.models.avro.BlockStats other) {
             super(SCHEMA$);
       if (isValidValue(fields()[0], other.blockTimeMs)) {
         this.blockTimeMs = data().deepCopy(fields()[0].schema(), other.blockTimeMs);
@@ -315,7 +315,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * @param value The value of 'blockTimeMs'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.BlockStats.Builder setBlockTimeMs(int value) {
+    public io.enkrypt.bolt.models.avro.BlockStats.Builder setBlockTimeMs(int value) {
       validate(fields()[0], value);
       this.blockTimeMs = value;
       fieldSetFlags()[0] = true;
@@ -337,7 +337,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * Time taken to find the block in milliseconds
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.BlockStats.Builder clearBlockTimeMs() {
+    public io.enkrypt.bolt.models.avro.BlockStats.Builder clearBlockTimeMs() {
       fieldSetFlags()[0] = false;
       return this;
     }
@@ -357,7 +357,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * @param value The value of 'numFailedTxs'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.BlockStats.Builder setNumFailedTxs(int value) {
+    public io.enkrypt.bolt.models.avro.BlockStats.Builder setNumFailedTxs(int value) {
       validate(fields()[1], value);
       this.numFailedTxs = value;
       fieldSetFlags()[1] = true;
@@ -379,7 +379,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * Number of failed transactions
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.BlockStats.Builder clearNumFailedTxs() {
+    public io.enkrypt.bolt.models.avro.BlockStats.Builder clearNumFailedTxs() {
       fieldSetFlags()[1] = false;
       return this;
     }
@@ -399,7 +399,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * @param value The value of 'numSuccessfulTxs'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.BlockStats.Builder setNumSuccessfulTxs(int value) {
+    public io.enkrypt.bolt.models.avro.BlockStats.Builder setNumSuccessfulTxs(int value) {
       validate(fields()[2], value);
       this.numSuccessfulTxs = value;
       fieldSetFlags()[2] = true;
@@ -421,7 +421,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * Number of successful transactions
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.BlockStats.Builder clearNumSuccessfulTxs() {
+    public io.enkrypt.bolt.models.avro.BlockStats.Builder clearNumSuccessfulTxs() {
       fieldSetFlags()[2] = false;
       return this;
     }
@@ -441,7 +441,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * @param value The value of 'avgGasPrice'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.BlockStats.Builder setAvgGasPrice(java.nio.ByteBuffer value) {
+    public io.enkrypt.bolt.models.avro.BlockStats.Builder setAvgGasPrice(java.nio.ByteBuffer value) {
       validate(fields()[3], value);
       this.avgGasPrice = value;
       fieldSetFlags()[3] = true;
@@ -463,7 +463,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * Average gas price
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.BlockStats.Builder clearAvgGasPrice() {
+    public io.enkrypt.bolt.models.avro.BlockStats.Builder clearAvgGasPrice() {
       avgGasPrice = null;
       fieldSetFlags()[3] = false;
       return this;
@@ -484,7 +484,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * @param value The value of 'avgTxsFees'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.BlockStats.Builder setAvgTxsFees(java.nio.ByteBuffer value) {
+    public io.enkrypt.bolt.models.avro.BlockStats.Builder setAvgTxsFees(java.nio.ByteBuffer value) {
       validate(fields()[4], value);
       this.avgTxsFees = value;
       fieldSetFlags()[4] = true;
@@ -506,7 +506,7 @@ public class BlockStats extends org.apache.avro.specific.SpecificRecordBase impl
       * Total gas price
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.BlockStats.Builder clearAvgTxsFees() {
+    public io.enkrypt.bolt.models.avro.BlockStats.Builder clearAvgTxsFees() {
       avgTxsFees = null;
       fieldSetFlags()[4] = false;
       return this;

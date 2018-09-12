@@ -3,7 +3,7 @@
  *
  * DO NOT EDIT DIRECTLY
  */
-package io.enkrypt.bolt.models;
+package io.enkrypt.bolt.models.avro;
 
 import org.apache.avro.specific.SpecificData;
 import org.apache.avro.message.BinaryMessageEncoder;
@@ -13,8 +13,8 @@ import org.apache.avro.message.SchemaStore;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class Log extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 2799115108094243710L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Log\",\"namespace\":\"io.enkrypt.bolt.models\",\"fields\":[{\"name\":\"address\",\"type\":\"bytes\",\"desc\":\"Address of the contract that generated the event\"},{\"name\":\"topics\",\"type\":{\"type\":\"array\",\"items\":\"bytes\"},\"desc\":\"List of topics provided by the contract\"},{\"name\":\"data\",\"type\":\"bytes\",\"desc\":\"Supplied by the contract, usually ABI-encoded\"},{\"name\":\"index\",\"type\":\"int\",\"desc\":\"Index of the log in the receipt\"},{\"name\":\"removed\",\"type\":\"boolean\",\"desc\":\"True if this log was reverted due to a chain reorganisation\"}]}");
+  private static final long serialVersionUID = 8263204784512043887L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Log\",\"namespace\":\"io.enkrypt.bolt.models.avro\",\"fields\":[{\"name\":\"address\",\"type\":\"bytes\",\"desc\":\"Address of the contract that generated the event\"},{\"name\":\"topics\",\"type\":{\"type\":\"array\",\"items\":\"bytes\"},\"desc\":\"List of topics provided by the contract\"},{\"name\":\"data\",\"type\":\"bytes\",\"desc\":\"Supplied by the contract, usually ABI-encoded\"},{\"name\":\"index\",\"type\":\"int\",\"desc\":\"Index of the log in the receipt\"},{\"name\":\"removed\",\"type\":\"boolean\",\"desc\":\"True if this log was reverted due to a chain reorganisation\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -190,8 +190,8 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
    * Creates a new Log RecordBuilder.
    * @return A new Log RecordBuilder
    */
-  public static io.enkrypt.bolt.models.Log.Builder newBuilder() {
-    return new io.enkrypt.bolt.models.Log.Builder();
+  public static io.enkrypt.bolt.models.avro.Log.Builder newBuilder() {
+    return new io.enkrypt.bolt.models.avro.Log.Builder();
   }
 
   /**
@@ -199,8 +199,8 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
    * @param other The existing builder to copy.
    * @return A new Log RecordBuilder
    */
-  public static io.enkrypt.bolt.models.Log.Builder newBuilder(io.enkrypt.bolt.models.Log.Builder other) {
-    return new io.enkrypt.bolt.models.Log.Builder(other);
+  public static io.enkrypt.bolt.models.avro.Log.Builder newBuilder(io.enkrypt.bolt.models.avro.Log.Builder other) {
+    return new io.enkrypt.bolt.models.avro.Log.Builder(other);
   }
 
   /**
@@ -208,8 +208,8 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
    * @param other The existing instance to copy.
    * @return A new Log RecordBuilder
    */
-  public static io.enkrypt.bolt.models.Log.Builder newBuilder(io.enkrypt.bolt.models.Log other) {
-    return new io.enkrypt.bolt.models.Log.Builder(other);
+  public static io.enkrypt.bolt.models.avro.Log.Builder newBuilder(io.enkrypt.bolt.models.avro.Log other) {
+    return new io.enkrypt.bolt.models.avro.Log.Builder(other);
   }
 
   /**
@@ -233,7 +233,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
      * Creates a Builder by copying an existing Builder.
      * @param other The existing Builder to copy.
      */
-    private Builder(io.enkrypt.bolt.models.Log.Builder other) {
+    private Builder(io.enkrypt.bolt.models.avro.Log.Builder other) {
       super(other);
       if (isValidValue(fields()[0], other.address)) {
         this.address = data().deepCopy(fields()[0].schema(), other.address);
@@ -261,7 +261,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
      * Creates a Builder by copying an existing Log instance
      * @param other The existing instance to copy.
      */
-    private Builder(io.enkrypt.bolt.models.Log other) {
+    private Builder(io.enkrypt.bolt.models.avro.Log other) {
             super(SCHEMA$);
       if (isValidValue(fields()[0], other.address)) {
         this.address = data().deepCopy(fields()[0].schema(), other.address);
@@ -298,7 +298,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * @param value The value of 'address'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Log.Builder setAddress(java.nio.ByteBuffer value) {
+    public io.enkrypt.bolt.models.avro.Log.Builder setAddress(java.nio.ByteBuffer value) {
       validate(fields()[0], value);
       this.address = value;
       fieldSetFlags()[0] = true;
@@ -318,7 +318,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * Clears the value of the 'address' field.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Log.Builder clearAddress() {
+    public io.enkrypt.bolt.models.avro.Log.Builder clearAddress() {
       address = null;
       fieldSetFlags()[0] = false;
       return this;
@@ -337,7 +337,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * @param value The value of 'topics'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Log.Builder setTopics(java.util.List<java.nio.ByteBuffer> value) {
+    public io.enkrypt.bolt.models.avro.Log.Builder setTopics(java.util.List<java.nio.ByteBuffer> value) {
       validate(fields()[1], value);
       this.topics = value;
       fieldSetFlags()[1] = true;
@@ -357,7 +357,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * Clears the value of the 'topics' field.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Log.Builder clearTopics() {
+    public io.enkrypt.bolt.models.avro.Log.Builder clearTopics() {
       topics = null;
       fieldSetFlags()[1] = false;
       return this;
@@ -376,7 +376,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * @param value The value of 'data'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Log.Builder setData(java.nio.ByteBuffer value) {
+    public io.enkrypt.bolt.models.avro.Log.Builder setData(java.nio.ByteBuffer value) {
       validate(fields()[2], value);
       this.data = value;
       fieldSetFlags()[2] = true;
@@ -396,7 +396,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * Clears the value of the 'data' field.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Log.Builder clearData() {
+    public io.enkrypt.bolt.models.avro.Log.Builder clearData() {
       data = null;
       fieldSetFlags()[2] = false;
       return this;
@@ -415,7 +415,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * @param value The value of 'index'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Log.Builder setIndex(int value) {
+    public io.enkrypt.bolt.models.avro.Log.Builder setIndex(int value) {
       validate(fields()[3], value);
       this.index = value;
       fieldSetFlags()[3] = true;
@@ -435,7 +435,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * Clears the value of the 'index' field.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Log.Builder clearIndex() {
+    public io.enkrypt.bolt.models.avro.Log.Builder clearIndex() {
       fieldSetFlags()[3] = false;
       return this;
     }
@@ -453,7 +453,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * @param value The value of 'removed'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Log.Builder setRemoved(boolean value) {
+    public io.enkrypt.bolt.models.avro.Log.Builder setRemoved(boolean value) {
       validate(fields()[4], value);
       this.removed = value;
       fieldSetFlags()[4] = true;
@@ -473,7 +473,7 @@ public class Log extends org.apache.avro.specific.SpecificRecordBase implements 
       * Clears the value of the 'removed' field.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.Log.Builder clearRemoved() {
+    public io.enkrypt.bolt.models.avro.Log.Builder clearRemoved() {
       fieldSetFlags()[4] = false;
       return this;
     }

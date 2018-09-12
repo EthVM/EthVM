@@ -20,6 +20,10 @@ application {
   mainClassName = "io.enkrypt.bolt.MainKt"
 }
 
+project.java.sourceSets["main"].java {
+  srcDir("src/main/kotlin")
+}
+
 dependencies {
   compile(kotlin("stdlib"))
 
