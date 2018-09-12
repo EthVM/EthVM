@@ -1,5 +1,5 @@
 <template>
-  <v-card color="blue darken-4 white--text">
+  <v-card :color="getColor" class="mr-2 ml-2 mt-1">
     <v-card-title class="headline pb-1 font-weight-medium">{{value}}</v-card-title>
     <v-card-text class="caption pt-0 pb-0">{{title}}</v-card-text>
     <v-card-text class="text-xs-right pt-0 pb-1">
@@ -20,10 +20,13 @@ import Vue from 'vue'
 
 export default Vue.extend({
   name: 'BlockComponent',
-  props: ['title', 'value', 'icon', 'backgroundColor'],
+  props: ['title', 'value', 'icon', 'colorType'],
   data() {
-    return {
-      colors: 'primary'
+    return {}
+  },
+  computed: {
+    getColor(): string {
+      return this.colorType
     }
   }
 })

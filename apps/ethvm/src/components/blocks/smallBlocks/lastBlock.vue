@@ -1,5 +1,5 @@
 <template>
-  <block-component primary :title="blockTitle" backgroundColor="color" :value="latestBlockNumber" :icon="iconType"></block-component>
+  <block-component :title="blockTitle" :value="latestBlockNumber" :icon="iconType" :colorType="type"></block-component>
 </template>
 
 <script lang="ts">
@@ -12,8 +12,8 @@ export default Vue.extend({
   data() {
     return {
       blockTitle: this.$i18n.t('smlBlock.last'),
-      iconType: 'fa fa-cube blue--text text--darken-3',
-      color: String(colors.blue.darken4)
+      iconType: 'fa fa-cube white--text ',
+      type: 'secondary  white--text'
     }
   },
   computed: {

@@ -1,5 +1,5 @@
 <template>
-  <block-component :title="blockTitle" backgroundColor="color2" :value="getPendingTx" :icon-name="blockIconType" :icon-color="blockIconColor"></block-component>
+  <block-component :title="blockTitle"  :value="getPendingTx" :icon="iconType" :colorType="type"></block-component>
 </template>
 
 <script lang="ts">
@@ -11,8 +11,8 @@ export default Vue.extend({
   data() {
     return {
       blockTitle: this.$i18n.t('smlBlock.pending'),
-      blockIconType: 'asterisk',
-      blockIconColor: '#7c76fc'
+      iconType: 'fa fa-question  white--text',
+      type: 'accent white--text'
     }
   },
   computed: {

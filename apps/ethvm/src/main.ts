@@ -168,14 +168,12 @@ Vue.use(Vuetify, {
   theme: {
     // used -->
     primary: String(colors.blue.darken4),
-    secondary: String(colors.grey.darken1),
-    accent: String(colors.purple),
-    error: String(colors.red.accent),
-    info: String(colors.grey),
-    success: String(colors.yellow),
-    warning: String(colors.black),
+    secondary: '#2779ff',
+    accent: '#7c76fc',
+    success: '#20c0c7',
+    warning: '#f9967b'
     // used -->
-    background: String(colors.grey.darken3)
+    // background: String(colors.grey.darken3)
   }
 })
 new Vue({

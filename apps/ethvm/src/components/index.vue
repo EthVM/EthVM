@@ -2,7 +2,7 @@
   <v-app>
     <navigation></navigation>
     <v-content>
-      <v-container>
+      <v-container fluid>
         <!-- BODY -->
         <!-- Main Pages -->
         <frame-blocks v-if="pageName == 'blocks'"></frame-blocks>
@@ -17,11 +17,8 @@
         <frame-tx-detail v-else-if="pageName == 'tx' && param" :txHash="param"></frame-tx-detail>
         <frame-token-detail v-else-if="pageName == 'token' && !holder" :tokenAddr="param"></frame-token-detail>
         <frame-token-detail v-else-if="pageName == 'token' && holder" :tokenAddr="param" :holderAddr="holder"></frame-token-detail>
-
         <!-- Hope Page -->
         <frame-home v-else></frame-home>
-
-
       </v-container>
          <!-- FOOTER -->
         <block-footer></block-footer>
