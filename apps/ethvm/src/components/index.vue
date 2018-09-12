@@ -2,7 +2,7 @@
   <v-app>
     <navigation></navigation>
     <v-content>
-      <v-container fluid>
+      <v-container fluid wrap fill-height>
         <!-- BODY -->
         <!-- Main Pages -->
         <frame-blocks v-if="pageName == 'blocks'"></frame-blocks>

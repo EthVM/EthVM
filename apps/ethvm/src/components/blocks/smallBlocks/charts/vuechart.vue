@@ -1,14 +1,13 @@
 <template>
-  <div class="chart-container">
-    <div class="chart-title-1">
-      <p>{{chartTitle}}<div class="tooltip-button" v-tooltip="chartDescription"><i class="fa fa-question-circle-o" aria-hidden="true"></i></div></p>
-    </div>
-
-    <div class="chart">
-      <canvas ref="chart" :width="width" :height="height"></canvas>
-    </div>
-
-  </div>
+  <v-card color="white" class="ma-2 mb-3 mt-3">
+    <v-card-title><strong>{{chartTitle}}</strong>
+      <v-tooltip bottom>
+        <v-icon slot="activator" dark small class="pl-2">fa fa-question-circle grey--text</v-icon>
+        <span>{{chartDescription}}</span>
+      </v-tooltip>
+    </v-card-title>
+    <canvas ref="chart" :width="width" :height="height"></canvas>
+  </v-card>
 </template>
 
 <script lang="ts">

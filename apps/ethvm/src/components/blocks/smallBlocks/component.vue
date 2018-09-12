@@ -1,5 +1,5 @@
 <template>
-  <v-card :color="getColor" class="mr-2 ml-2 mt-1">
+  <v-card :color="getColor" class="mt-1">
     <v-card-title class="headline pb-1 font-weight-medium">{{value}}</v-card-title>
     <v-card-text class="caption pt-0 pb-0">{{title}}</v-card-text>
     <v-card-text class="text-xs-right pt-0 pb-1">

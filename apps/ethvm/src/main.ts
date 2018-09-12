@@ -37,6 +37,7 @@ import mobileMenu from '@app/components/blocks/header/mobileMenu.vue'
 // SMALL BLOCKS ----------------------
 // Parent Small Block Component:
 import blockComponent from '@app/components/blocks/smallBlocks/component.vue'
+import footnote from '@app/components/blocks/smallBlocks/footnote.vue'
 
 // Search Block:
 import blockSearch from '@app/components/blocks/smallBlocks/search.vue'
@@ -103,6 +104,7 @@ Vue.component('mobile-menu', mobileMenu)
 // SMALL BLOCKS ----------------------
 // Parent Small Block Component:
 Vue.component('block-component', blockComponent)
+Vue.component('footnote', footnote)
 
 // Search Block:
 Vue.component('block-search', blockSearch)
