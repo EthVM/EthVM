@@ -1,72 +1,76 @@
 <template>
-  <div class="last-transactions">
-    <div class="block-body">
-      <!-- Table Header -->
-      <div class="tx-table-header" v-if="showHeader === true">
-        <li>{{ $t('tableHeader.txN') }} </li>
-        <li class="eth">{{ $t('common.eth') }}</li>
-        <li class="limit">{{ $t( 'gas.limit' ) }}</li>
-        <li class="gas">{{ $t( 'common.gwei' ) }}</li>
-        <li></li>
-        <!-- End Table Header -->
-      </div>
-      <!-- Transactions Table -->
-      <div class="block" v-for="tx in transactions" v-bind:key="tx.getHash()">
-        <li>
-          <!-- Tx Hash Number -->
-          <div class="hash-block">
-            <p class="hash">
-              <router-link :to="'/tx/'+tx.getHash()">{{tx.getHash()}}</router-link>
+  <v-layout column>
+    <v-card flat color="transparent" class="pb-1">
+      <v-layout row>
+        <v-flex xs8>
+          <h5 class="ml-3">{{ $t( 'tableHeader.txN' ) }}</h5>
+        </v-flex>
+        <v-flex xs3 md1>
+          <h5>{{ $t( 'common.eth' ) }}</h5>
+        </v-flex>
+        <v-flex hidden-sm-and-down md1>
+          <h5>{{ $t( 'gas.limit' ) }}</h5>
+        </v-flex>
+        <v-flex hidden-sm-and-down md1>
+          <h5>{{ $t( 'common.gwei' ) }}</h5>
+        </v-flex>
+        <v-flex xs1>
+        </v-flex>
+      </v-layout>
+    </v-card>
+    <div id="scroll-target" style="max-height: 390px" class="scroll-y pt-0 mb-3">
+      <v-card v-scroll:#scroll-target v-for="tx in transactions" v-bind:key="tx.getHash()" class="pt-3 mb-1">
+        <v-layout wrap align-center class="ma-0">
+          <v-flex xs8>
+            <v-layout column>
+              <v-flex xs12>
+                <p class="text-truncate">
+                  <router-link class="accent--text " :to="'/tx/'+tx.getHash()">{{tx.getHash()}}</router-link>
+                </p>
+              </v-flex>
+              <v-flex xs12>
+                <v-layout row>
+                  <v-flex xs6>
+                    <p class="text-truncate"><strong>{{ $t( 'tx.from' ) }} </strong>
+                      <router-link :to="'/address/'+tx.getFrom().toString()">{{tx.getFrom().toString()}} </router-link>
+                    </p>
+                  </v-flex>
+                  <v-flex xs6>
+                    <p class="text-truncate" v-if="tx.getContractAddress().toString()"><strong> {{ $t( 'tx.contract' ) }}</strong>
+                      <router-link :to="'/address/'+tx.getContractAddress().toString()">{{tx.getContractAddress().toString()}} </router-link>
+                    </p>
+                    <p class="text-truncate" v-else><strong> {{ $t( 'tx.to' ) }} </strong>
+                      <router-link :to="'/address/'+tx.getTo().toString()">{{tx.getTo().toString()}}</router-link>
+                    </p>
+                  </v-flex>
+                </v-layout>
+              </v-flex>
+            </v-layout>
+          </v-flex>
+          <v-flex xs3 md1>
+            <p class="text-truncate grey--text text--darken-2">
+              <v-tooltip v-if="getShortEthValue(tx.getValue().toEth().toString(), true)" bottom>
+                <v-icon slot="activator" dark small class="pl-2">fa fa-question-circle grey--text</v-icon>
+                <span>{{tx.getValue().toEth()}}</span>
+              </v-tooltip>
+              {{getShortEthValue(tx.getValue().toEth().toString(), false)}}
             </p>
-            <!-- End Tx Hash Number -->
-          </div>
-          <!-- Tx Addresses -->
-          <div class="fromto">
-            <p class="title">{{ $t( 'tx.from' ) }}</p>
-            <p class="">
-              <router-link :to="'/address/'+tx.getFrom().toString()">{{tx.getFrom().toString()}}</router-link>
-            </p>
-            <p class="title" v-if="tx.getContractAddress().toString()">{{ $t( 'tx.contract' ) }}</p>
-            <p class="title" v-else>{{ $t( 'tx.to' ) }}</p>
-            <p class="" v-if="tx.getContractAddress().toString()">
-              <router-link :to="'/address/'+tx.getContractAddress().toString()">{{tx.getContractAddress().toString()}}</router-link>
-            </p>
-            <p class="" v-else>
-              <router-link :to="'/address/'+tx.getTo().toString()">{{tx.getTo().toString()}}</router-link>
-            </p>
-            <!-- End Tx Addresses -->
-          </div>
-        </li>
-        <!-- Tx Eth Value -->
-        <li class="vertical-middle eth">
-          <div class="">{{getShortEthValue(tx.getValue().toEth().toString(), false)}}</div>
-          <div v-if="getShortEthValue(tx.getValue().toEth().toString(), true)" class="tooltip-button" v-tooltip="tx.getValue().toEth()"><i class="fa fa-question-circle-o" aria-hidden="true"></i></div>
-          <!-- End Tx Eth Value -->
-        </li>
-        <li class="vertical-middle limit">
-          <div>
-            <p>{{tx.getGasUsed().toNumber()}}</p>
-          </div>
-        </li>
-        <li class="vertical-middle gas">
-          <div>
-            <p>{{tx.getGasPrice().toGWei()}}</p>
-          </div>
-        </li>
-        <!-- Tx Status -->
-        <li class="vertical-middle status">
-          <div v-if="!tx.getStatus()">
-            <span class="glyphicon glyphicon-remove failed"></span>
-          </div>
-          <div v-else>
-            <span class="glyphicon glyphicon-ok success"></span>
-          </div>
-          <!-- End Tx Status -->
-        </li>
-        <!-- End Transactions Table -->
-      </div>
+          </v-flex>
+          <v-flex hidden-sm-and-down md1>
+            <p class="grey--text text--darken-2">{{tx.getGasUsed().toNumber()}}</p>
+          </v-flex>
+          <v-flex hidden-sm-and-down md1>
+            <p class="grey--text text--darken-2">{{tx.getGasPrice().toGWei()}}</p>
+          </v-flex>
+          <v-flex xs1 align-content-center>
+            <v-icon v-if="tx.getStatus()" small class="success--text text-xs-center"> fa fa-check-circle </v-icon>
+            <v-icon v-else small class="warning--text text-xs-center">fa fa-times-circle </v-icon>
+          </v-flex>
+        </v-layout>
+      </v-card>
     </div>
-  </div>
+    <footnote :footnotes="footnote"></footnote>
+  </v-layout>
 </template>
 
 <script lang="ts">
@@ -75,6 +79,23 @@ import Vue from 'vue'
 export default Vue.extend({
   name: 'TableTransactions',
   props: ['transactions', 'showHeader'],
+  data() {
+    return {
+      footnote: [
+        {
+          color: 'success',
+          text: this.$i18n.t('footnote.success'),
+          icon: 'fa-check-circle'
+        },
+        {
+          color: 'warning',
+          text: this.$i18n.t('footnote.failed'),
+          icon: 'fa fa-times-circle'
+        }
+      ],
+      color: 'grey'
+    }
+  },
   methods: {
     /* Method to reduce Strig length : */
     getShortEthValue(newEthValue, isBool) {
@@ -93,6 +114,3 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped lang="less">
-@import '~lessPath/sunil/blocks/largeBlocks/transactionsTable.less';
-</style>

@@ -15,16 +15,16 @@
       </v-layout>
     </v-card>
     <div id="scroll-target" style="max-height: 390px" class="scroll-y pt-0 mb-3" >
-        <v-card v-scroll:#scroll-target v-for="block in getBlocks" v-if="!block.getIsUncle()" v-bind:key="block.hash" class="pt-3">
+        <v-card v-scroll:#scroll-target v-for="block in getBlocks" v-if="!block.getIsUncle()" v-bind:key="block.hash" class="pt-3 mb-1">
           <v-layout wrap align-center class="ma-0" >
-            <v-flex xs3 md1 justify-center>
-              <p class="ml-3">
+            <v-flex xs3 md1 >
+              <p class="text-xs-center">
                 <router-link :to="'/block/'+block.getHash()">{{block.getNumber()}}</router-link>
               </p>
             </v-flex>
             <v-flex xs5 md8 class="pl-1 pr-0">
               <p class="text-truncate"><strong>{{ $t( 'common.hash' ) }} </strong>
-                <router-link :to="'/block/'+block.getHash()">{{block.getHash()}}</router-link>
+                <router-link class=" grey--text text--darken-2" :to="'/block/'+block.getHash()">{{block.getHash()}}</router-link>
               </p>
               <p class="text-truncate"><strong>{{ $t( 'block.miner' ) }}  </strong>
                 <router-link :to="'/address/'+block.getMiner().toString()">{{block.getMiner().toString()}}</router-link>
@@ -35,7 +35,7 @@
               <p class="warning--text"> {{getNumber(block.getStats().failed)}}</p>
             </v-flex>
             <v-flex xs4 md2 class="pr-1">
-              <p class="text-truncate">
+              <p class="text-truncate grey--text text--darken-2">
                 <v-tooltip v-if="getShortRewardValue(block.getTotalBlockReward().toEth().toString(), true)" bottom>
                   <v-icon slot="activator" dark small class="pl-2">fa fa-question-circle grey--text</v-icon>
                   <span>{{block.getTotalBlockReward().toEth().toString()}}</span>
@@ -126,7 +126,3 @@ export default Vue.extend({
   }
 })
 </script>
-
-<style scoped lang="less">
-@import '~lessPath/sunil/blocks/largeBlocks/blocksTable.less';
-</style>

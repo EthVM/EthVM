@@ -41,8 +41,21 @@
       </v-flex>
     </v-layout>
     <block-latest-blocks :max-items="20" :showHeader="true"></block-latest-blocks>
-
-
+    <!-- End Last Blocks -->
+    <!-- Last Txs -->
+    <v-layout row class="mt-3">
+      <v-flex xs6>
+        <h4>{{ $t('title.lastTxs') }}</h4>
+      </v-flex>
+      <v-spacer></v-spacer>
+      <v-flex xs2>
+        <v-layout justify-end>
+          <v-btn color="primary" to="/transactions"> {{ $t('bttn.viewAll') }}</v-btn>
+        </v-layout>
+      </v-flex>
+    </v-layout>
+  <block-last-transactions :transactions="txs" :showHeader="true "></block-last-transactions>
+    <!-- End Last Txs -->
   </v-container>
 </template>
 
