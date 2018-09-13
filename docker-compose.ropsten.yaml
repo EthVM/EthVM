@@ -198,8 +198,6 @@ services:
 #      CONNECTOR_MONGODB_COLLECTION: 'blocks'
 
   geth:
-    # image: enkryptio/go-ethereum:latest
-    # Uncomment this if you want to compile directly geth
     build:
       context: ./apps/eth
     restart: unless-stopped
