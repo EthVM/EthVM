@@ -7,6 +7,8 @@ class KBlockStats(
   var blockTimeMs: Int = 0,
   var numFailedTxs: Int = 0,
   var numSuccessfulTxs: Int = 0,
+  var totalTxs: Int = 0,
+  var totalInternalTxs: Int = 0,
   var avgGasPrice: BigDecimal? = null,
   var avgTxsFees: BigDecimal? = null
 ) {
@@ -15,6 +17,8 @@ class KBlockStats(
     .append("blockTimeMs", blockTimeMs)
     .append("numFailedTxs", numFailedTxs)
     .append("numSuccessfulTxs", numSuccessfulTxs)
+    .append("totalTxs", totalTxs)
+    .append("totalInternalTxs", totalInternalTxs)
     .append("avgGasPrice", avgGasPrice)
     .append("avgTxsFees", avgTxsFees)
 

@@ -12,6 +12,7 @@ import io.enkrypt.bolt.models.avro.Block
 import io.enkrypt.bolt.models.kafka.KAddress
 import io.enkrypt.bolt.models.kafka.KBlock
 import io.enkrypt.bolt.models.kafka.KBlockStats
+import io.enkrypt.bolt.models.kafka.KTransaction
 import io.enkrypt.bolt.processors.Processor
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serdes
@@ -70,8 +71,18 @@ class BlocksProcessor : KoinComponent, Processor {
         var numFailedTxs = 0
         val totalGasPrice = BigDecimal(0)
         val totalTxsFees = BigDecimal(0)
+        val totalTxs = 0
+        val totalInternalTxs = 0
 
         val txs = kBlock.transactions
+        txs.forEach { txn ->
+          if (txn.status == KTransaction.RECEIPT_STATUS_SUCCESSFUL) {
+            numSuccessfulTxs += 1
+          } else {
+            numFailedTxs += 1
+          }
+        }
+
 //        txs.forEach { txn ->
 //          if (!(txn.getFrom() == null || txn.getFromBalance() === null)) {
 //            balances.add(KAddress(txn.getFrom().toHex()!!, txn.getFromBalance().toBigDecimal()!!))
@@ -94,7 +105,15 @@ class BlocksProcessor : KoinComponent, Processor {
         val avgGasPrice = BigDecimal(0) //Math.round(Math.ceil(totalGasPrice * 1.0 / txs.size))
         val avgTxsFees = BigDecimal(0) // Math.round(Math.ceil(totalTxsFees * 1.0 / txs.size))
 
-        kBlock.stats = KBlockStats(blockTimeMs, numFailedTxs, numSuccessfulTxs, avgGasPrice, avgTxsFees)
+        kBlock.stats = KBlockStats(
+          blockTimeMs,
+          numFailedTxs,
+          numSuccessfulTxs,
+          totalTxs,
+          totalInternalTxs,
+          avgGasPrice,
+          avgTxsFees
+        )
 
         KeyValue(key, kBlock)
       }

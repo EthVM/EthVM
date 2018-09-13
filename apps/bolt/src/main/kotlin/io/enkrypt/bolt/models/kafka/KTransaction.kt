@@ -29,7 +29,7 @@ class KTransaction(private val delegate: Transaction) {
   val v: String? by lazy { delegate.getV().toHex() }
   val r: String? by lazy { delegate.getR().toHex() }
   val s: String? by lazy { delegate.getS().toHex() }
-  val status: String? by lazy { delegate.getStatus().toHex() }
+  val status: Int? by lazy { delegate.getStatus() }
   val logsBloom: String? by lazy { delegate.getLogsBloom().toHex() }
   val logs: List<KLog?> by lazy { delegate.getLogs().map { KLog(it) } }
   val trace: KTrace? by lazy { KTrace(delegate.getTrace()) }
@@ -60,4 +60,11 @@ class KTransaction(private val delegate: Transaction) {
     .append("logs", logs.map { it?.toDocument() })
     .append("trace", trace?.toDocument())
 
+  companion object {
+    // ReceiptStatusFailed is the status code of a transaction if execution failed.
+    const val RECEIPT_STATUS_FAILED = 0
+
+    // ReceiptStatusSuccessful is the status code of a transaction if execution succeeded.
+    const val RECEIPT_STATUS_SUCCESSFUL = 1
+  }
 }

@@ -13,8 +13,8 @@ import org.apache.avro.message.SchemaStore;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class Transaction extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 4234164368003123090L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Transaction\",\"namespace\":\"io.enkrypt.bolt.models.avro\",\"fields\":[{\"name\":\"hash\",\"type\":\"bytes\",\"doc\":\"Hash of the transaction\"},{\"name\":\"root\",\"type\":\"bytes\",\"doc\":\"Root of the parent block\"},{\"name\":\"index\",\"type\":\"int\",\"doc\":\"Integer of the transactions index position in the block\"},{\"name\":\"timestamp\",\"type\":{\"type\":\"long\",\"logicalType\":\"timestamp-millis\"},\"doc\":\"Unix timestamp for when the transaction was collated\"},{\"name\":\"nonce\",\"type\":\"bytes\",\"doc\":\"Number of transactions sent from a given address\"},{\"name\":\"nonceHash\",\"type\":\"bytes\",\"doc\":\"SHA3 of the transaction nonce\"},{\"name\":\"from\",\"type\":\"bytes\",\"doc\":\"KAddress of the sender\"},{\"name\":\"fromBalance\",\"type\":\"bytes\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":[\"null\",\"bytes\"],\"doc\":\"KAddress of the recipient (or null when contract creation)\"},{\"name\":\"toBalance\",\"type\":[\"null\",\"bytes\"],\"doc\":\"Balance of the receiver (or null when contract creation)\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"The data send along with the transaction\"},{\"name\":\"contractAddress\",\"type\":[\"null\",\"bytes\"],\"doc\":\"If a contract is created, the address of it (or null if is just a regular transaction)\"},{\"name\":\"value\",\"type\":\"bytes\",\"doc\":\"Amount of value transferred in Wei\"},{\"name\":\"gas\",\"type\":\"bytes\",\"doc\":\"Amount of gas provided by the sender\"},{\"name\":\"gasPrice\",\"type\":\"bytes\",\"doc\":\"Amount of gas price provided by the sender in Wei\"},{\"name\":\"gasUsed\",\"type\":\"bytes\",\"doc\":\"Amount of gas used consumed by the transaction\"},{\"name\":\"cumulativeGasUsed\",\"type\":\"bytes\",\"doc\":\"Cumulative gas used by the transaction\"},{\"name\":\"v\",\"type\":\"bytes\",\"doc\":\"Transaction signature v\"},{\"name\":\"r\",\"type\":\"bytes\",\"doc\":\"Transaction signature r\"},{\"name\":\"s\",\"type\":\"bytes\",\"doc\":\"Transaction signature s\"},{\"name\":\"status\",\"type\":\"bytes\",\"doc\":\"Transaction result status\"},{\"name\":\"logsBloom\",\"type\":\"bytes\",\"doc\":\"Generated and encoded logs by the transaction\"},{\"name\":\"logs\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Log\",\"fields\":[{\"name\":\"address\",\"type\":\"bytes\",\"desc\":\"KAddress of the contract that generated the event\"},{\"name\":\"topics\",\"type\":{\"type\":\"array\",\"items\":\"bytes\"},\"desc\":\"List of topics provided by the contract\"},{\"name\":\"data\",\"type\":\"bytes\",\"desc\":\"Supplied by the contract, usually ABI-encoded\"},{\"name\":\"index\",\"type\":\"int\",\"desc\":\"Index of the log in the receipt\"},{\"name\":\"removed\",\"type\":\"boolean\",\"desc\":\"True if this log was reverted due to a chain reorganisation\"}]}},\"doc\":\"Logs produced by executing smart contracts\"},{\"name\":\"trace\",\"type\":{\"type\":\"record\",\"name\":\"Trace\",\"fields\":[{\"name\":\"isError\",\"type\":\"boolean\",\"desc\":\"Signals if an error happened during execution\"},{\"name\":\"msg\",\"type\":\"string\",\"desc\":\"Stores the error message\"},{\"name\":\"transfers\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Transfer\",\"fields\":[{\"name\":\"op\",\"type\":\"int\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"value\",\"type\":\"bytes\",\"doc\":\"Raw value of the transaction\"},{\"name\":\"from\",\"type\":\"bytes\",\"doc\":\"KAddress of the sender\"},{\"name\":\"fromBalance\",\"type\":\"bytes\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":\"bytes\",\"doc\":\"KAddress of the receiver\"},{\"name\":\"toBalance\",\"type\":\"bytes\",\"doc\":\"Balance of the receiver\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"Raw input data\"}]}},\"desc\":\"An array describing transfers\"}]},\"doc\":\"Trace that describes contract creation, destruction or intenal transactions\"}]}");
+  private static final long serialVersionUID = 5372872272476396781L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Transaction\",\"namespace\":\"io.enkrypt.bolt.models.avro\",\"fields\":[{\"name\":\"hash\",\"type\":\"bytes\",\"doc\":\"Hash of the transaction\"},{\"name\":\"root\",\"type\":\"bytes\",\"doc\":\"Root of the parent block\"},{\"name\":\"index\",\"type\":\"int\",\"doc\":\"Integer of the transactions index position in the block\"},{\"name\":\"timestamp\",\"type\":{\"type\":\"long\",\"logicalType\":\"timestamp-millis\"},\"doc\":\"Unix timestamp for when the transaction was collated\"},{\"name\":\"nonce\",\"type\":\"bytes\",\"doc\":\"Number of transactions sent from a given address\"},{\"name\":\"nonceHash\",\"type\":\"bytes\",\"doc\":\"SHA3 of the transaction nonce\"},{\"name\":\"from\",\"type\":\"bytes\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"bytes\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":[\"null\",\"bytes\"],\"doc\":\"Address of the recipient (or null when contract creation)\"},{\"name\":\"toBalance\",\"type\":[\"null\",\"bytes\"],\"doc\":\"Balance of the receiver (or null when contract creation)\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"The data send along with the transaction\"},{\"name\":\"contractAddress\",\"type\":[\"null\",\"bytes\"],\"doc\":\"If a contract is created, the address of it (or null if is just a regular transaction)\"},{\"name\":\"value\",\"type\":\"bytes\",\"doc\":\"Amount of value transferred in Wei\"},{\"name\":\"gas\",\"type\":\"bytes\",\"doc\":\"Amount of gas provided by the sender\"},{\"name\":\"gasPrice\",\"type\":\"bytes\",\"doc\":\"Amount of gas price provided by the sender in Wei\"},{\"name\":\"gasUsed\",\"type\":\"bytes\",\"doc\":\"Amount of gas used consumed by the transaction\"},{\"name\":\"cumulativeGasUsed\",\"type\":\"bytes\",\"doc\":\"Cumulative gas used by the transaction\"},{\"name\":\"v\",\"type\":\"bytes\",\"doc\":\"Transaction signature v\"},{\"name\":\"r\",\"type\":\"bytes\",\"doc\":\"Transaction signature r\"},{\"name\":\"s\",\"type\":\"bytes\",\"doc\":\"Transaction signature s\"},{\"name\":\"status\",\"type\":\"int\",\"doc\":\"Transaction result status\"},{\"name\":\"logsBloom\",\"type\":\"bytes\",\"doc\":\"Generated and encoded logs by the transaction\"},{\"name\":\"logs\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Log\",\"fields\":[{\"name\":\"address\",\"type\":\"bytes\",\"desc\":\"Address of the contract that generated the event\"},{\"name\":\"topics\",\"type\":{\"type\":\"array\",\"items\":\"bytes\"},\"desc\":\"List of topics provided by the contract\"},{\"name\":\"data\",\"type\":\"bytes\",\"desc\":\"Supplied by the contract, usually ABI-encoded\"},{\"name\":\"index\",\"type\":\"int\",\"desc\":\"Index of the log in the receipt\"},{\"name\":\"removed\",\"type\":\"boolean\",\"desc\":\"True if this log was reverted due to a chain reorganisation\"}]}},\"doc\":\"Logs produced by executing smart contracts\"},{\"name\":\"trace\",\"type\":{\"type\":\"record\",\"name\":\"Trace\",\"fields\":[{\"name\":\"isError\",\"type\":\"boolean\",\"desc\":\"Signals if an error happened during execution\"},{\"name\":\"msg\",\"type\":\"string\",\"desc\":\"Stores the error message\"},{\"name\":\"transfers\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Transfer\",\"fields\":[{\"name\":\"op\",\"type\":\"int\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"value\",\"type\":\"bytes\",\"doc\":\"Raw value of the transaction\"},{\"name\":\"from\",\"type\":\"bytes\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"bytes\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":\"bytes\",\"doc\":\"Address of the receiver\"},{\"name\":\"toBalance\",\"type\":\"bytes\",\"doc\":\"Balance of the receiver\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"Raw input data\"}]}},\"desc\":\"An array describing transfers\"}]},\"doc\":\"Trace that describes contract creation, destruction or intenal transactions\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -63,11 +63,11 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
   @Deprecated public java.nio.ByteBuffer nonce;
   /** SHA3 of the transaction nonce */
   @Deprecated public java.nio.ByteBuffer nonceHash;
-  /** KAddress of the sender */
+  /** Address of the sender */
   @Deprecated public java.nio.ByteBuffer from;
   /** Balance of the sender */
   @Deprecated public java.nio.ByteBuffer fromBalance;
-  /** KAddress of the recipient (or null when contract creation) */
+  /** Address of the recipient (or null when contract creation) */
   @Deprecated public java.nio.ByteBuffer to;
   /** Balance of the receiver (or null when contract creation) */
   @Deprecated public java.nio.ByteBuffer toBalance;
@@ -92,7 +92,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
   /** Transaction signature s */
   @Deprecated public java.nio.ByteBuffer s;
   /** Transaction result status */
-  @Deprecated public java.nio.ByteBuffer status;
+  @Deprecated public int status;
   /** Generated and encoded logs by the transaction */
   @Deprecated public java.nio.ByteBuffer logsBloom;
   /** Logs produced by executing smart contracts */
@@ -115,9 +115,9 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * @param timestamp Unix timestamp for when the transaction was collated
    * @param nonce Number of transactions sent from a given address
    * @param nonceHash SHA3 of the transaction nonce
-   * @param from KAddress of the sender
+   * @param from Address of the sender
    * @param fromBalance Balance of the sender
-   * @param to KAddress of the recipient (or null when contract creation)
+   * @param to Address of the recipient (or null when contract creation)
    * @param toBalance Balance of the receiver (or null when contract creation)
    * @param input The data send along with the transaction
    * @param contractAddress If a contract is created, the address of it (or null if is just a regular transaction)
@@ -134,7 +134,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * @param logs Logs produced by executing smart contracts
    * @param trace Trace that describes contract creation, destruction or intenal transactions
    */
-  public Transaction(java.nio.ByteBuffer hash, java.nio.ByteBuffer root, java.lang.Integer index, org.joda.time.DateTime timestamp, java.nio.ByteBuffer nonce, java.nio.ByteBuffer nonceHash, java.nio.ByteBuffer from, java.nio.ByteBuffer fromBalance, java.nio.ByteBuffer to, java.nio.ByteBuffer toBalance, java.nio.ByteBuffer input, java.nio.ByteBuffer contractAddress, java.nio.ByteBuffer value, java.nio.ByteBuffer gas, java.nio.ByteBuffer gasPrice, java.nio.ByteBuffer gasUsed, java.nio.ByteBuffer cumulativeGasUsed, java.nio.ByteBuffer v, java.nio.ByteBuffer r, java.nio.ByteBuffer s, java.nio.ByteBuffer status, java.nio.ByteBuffer logsBloom, java.util.List<io.enkrypt.bolt.models.avro.Log> logs, io.enkrypt.bolt.models.avro.Trace trace) {
+  public Transaction(java.nio.ByteBuffer hash, java.nio.ByteBuffer root, java.lang.Integer index, org.joda.time.DateTime timestamp, java.nio.ByteBuffer nonce, java.nio.ByteBuffer nonceHash, java.nio.ByteBuffer from, java.nio.ByteBuffer fromBalance, java.nio.ByteBuffer to, java.nio.ByteBuffer toBalance, java.nio.ByteBuffer input, java.nio.ByteBuffer contractAddress, java.nio.ByteBuffer value, java.nio.ByteBuffer gas, java.nio.ByteBuffer gasPrice, java.nio.ByteBuffer gasUsed, java.nio.ByteBuffer cumulativeGasUsed, java.nio.ByteBuffer v, java.nio.ByteBuffer r, java.nio.ByteBuffer s, java.lang.Integer status, java.nio.ByteBuffer logsBloom, java.util.List<io.enkrypt.bolt.models.avro.Log> logs, io.enkrypt.bolt.models.avro.Trace trace) {
     this.hash = hash;
     this.root = root;
     this.index = index;
@@ -256,7 +256,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
     case 17: v = (java.nio.ByteBuffer)value$; break;
     case 18: r = (java.nio.ByteBuffer)value$; break;
     case 19: s = (java.nio.ByteBuffer)value$; break;
-    case 20: status = (java.nio.ByteBuffer)value$; break;
+    case 20: status = (java.lang.Integer)value$; break;
     case 21: logsBloom = (java.nio.ByteBuffer)value$; break;
     case 22: logs = (java.util.List<io.enkrypt.bolt.models.avro.Log>)value$; break;
     case 23: trace = (io.enkrypt.bolt.models.avro.Trace)value$; break;
@@ -368,7 +368,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
   /**
    * Gets the value of the 'from' field.
-   * @return KAddress of the sender
+   * @return Address of the sender
    */
   public java.nio.ByteBuffer getFrom() {
     return from;
@@ -376,7 +376,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
   /**
    * Sets the value of the 'from' field.
-   * KAddress of the sender
+   * Address of the sender
    * @param value the value to set.
    */
   public void setFrom(java.nio.ByteBuffer value) {
@@ -402,7 +402,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
   /**
    * Gets the value of the 'to' field.
-   * @return KAddress of the recipient (or null when contract creation)
+   * @return Address of the recipient (or null when contract creation)
    */
   public java.nio.ByteBuffer getTo() {
     return to;
@@ -410,7 +410,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
   /**
    * Sets the value of the 'to' field.
-   * KAddress of the recipient (or null when contract creation)
+   * Address of the recipient (or null when contract creation)
    * @param value the value to set.
    */
   public void setTo(java.nio.ByteBuffer value) {
@@ -608,7 +608,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Gets the value of the 'status' field.
    * @return Transaction result status
    */
-  public java.nio.ByteBuffer getStatus() {
+  public java.lang.Integer getStatus() {
     return status;
   }
 
@@ -617,7 +617,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
    * Transaction result status
    * @param value the value to set.
    */
-  public void setStatus(java.nio.ByteBuffer value) {
+  public void setStatus(java.lang.Integer value) {
     this.status = value;
   }
 
@@ -716,11 +716,11 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
     private java.nio.ByteBuffer nonce;
     /** SHA3 of the transaction nonce */
     private java.nio.ByteBuffer nonceHash;
-    /** KAddress of the sender */
+    /** Address of the sender */
     private java.nio.ByteBuffer from;
     /** Balance of the sender */
     private java.nio.ByteBuffer fromBalance;
-    /** KAddress of the recipient (or null when contract creation) */
+    /** Address of the recipient (or null when contract creation) */
     private java.nio.ByteBuffer to;
     /** Balance of the receiver (or null when contract creation) */
     private java.nio.ByteBuffer toBalance;
@@ -745,7 +745,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
     /** Transaction signature s */
     private java.nio.ByteBuffer s;
     /** Transaction result status */
-    private java.nio.ByteBuffer status;
+    private int status;
     /** Generated and encoded logs by the transaction */
     private java.nio.ByteBuffer logsBloom;
     /** Logs produced by executing smart contracts */
@@ -1229,7 +1229,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
     /**
       * Gets the value of the 'from' field.
-      * KAddress of the sender
+      * Address of the sender
       * @return The value.
       */
     public java.nio.ByteBuffer getFrom() {
@@ -1238,7 +1238,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
     /**
       * Sets the value of the 'from' field.
-      * KAddress of the sender
+      * Address of the sender
       * @param value The value of 'from'.
       * @return This builder.
       */
@@ -1251,7 +1251,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
     /**
       * Checks whether the 'from' field has been set.
-      * KAddress of the sender
+      * Address of the sender
       * @return True if the 'from' field has been set, false otherwise.
       */
     public boolean hasFrom() {
@@ -1261,7 +1261,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
     /**
       * Clears the value of the 'from' field.
-      * KAddress of the sender
+      * Address of the sender
       * @return This builder.
       */
     public io.enkrypt.bolt.models.avro.Transaction.Builder clearFrom() {
@@ -1315,7 +1315,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
     /**
       * Gets the value of the 'to' field.
-      * KAddress of the recipient (or null when contract creation)
+      * Address of the recipient (or null when contract creation)
       * @return The value.
       */
     public java.nio.ByteBuffer getTo() {
@@ -1324,7 +1324,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
     /**
       * Sets the value of the 'to' field.
-      * KAddress of the recipient (or null when contract creation)
+      * Address of the recipient (or null when contract creation)
       * @param value The value of 'to'.
       * @return This builder.
       */
@@ -1337,7 +1337,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
     /**
       * Checks whether the 'to' field has been set.
-      * KAddress of the recipient (or null when contract creation)
+      * Address of the recipient (or null when contract creation)
       * @return True if the 'to' field has been set, false otherwise.
       */
     public boolean hasTo() {
@@ -1347,7 +1347,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
 
     /**
       * Clears the value of the 'to' field.
-      * KAddress of the recipient (or null when contract creation)
+      * Address of the recipient (or null when contract creation)
       * @return This builder.
       */
     public io.enkrypt.bolt.models.avro.Transaction.Builder clearTo() {
@@ -1834,7 +1834,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * Transaction result status
       * @return The value.
       */
-    public java.nio.ByteBuffer getStatus() {
+    public java.lang.Integer getStatus() {
       return status;
     }
 
@@ -1844,7 +1844,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @param value The value of 'status'.
       * @return This builder.
       */
-    public io.enkrypt.bolt.models.avro.Transaction.Builder setStatus(java.nio.ByteBuffer value) {
+    public io.enkrypt.bolt.models.avro.Transaction.Builder setStatus(int value) {
       validate(fields()[20], value);
       this.status = value;
       fieldSetFlags()[20] = true;
@@ -1867,7 +1867,6 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
       * @return This builder.
       */
     public io.enkrypt.bolt.models.avro.Transaction.Builder clearStatus() {
-      status = null;
       fieldSetFlags()[20] = false;
       return this;
     }
@@ -2064,7 +2063,7 @@ public class Transaction extends org.apache.avro.specific.SpecificRecordBase imp
         record.v = fieldSetFlags()[17] ? this.v : (java.nio.ByteBuffer) defaultValue(fields()[17], record.getConversion(17));
         record.r = fieldSetFlags()[18] ? this.r : (java.nio.ByteBuffer) defaultValue(fields()[18], record.getConversion(18));
         record.s = fieldSetFlags()[19] ? this.s : (java.nio.ByteBuffer) defaultValue(fields()[19], record.getConversion(19));
-        record.status = fieldSetFlags()[20] ? this.status : (java.nio.ByteBuffer) defaultValue(fields()[20], record.getConversion(20));
+        record.status = fieldSetFlags()[20] ? this.status : (java.lang.Integer) defaultValue(fields()[20], record.getConversion(20));
         record.logsBloom = fieldSetFlags()[21] ? this.logsBloom : (java.nio.ByteBuffer) defaultValue(fields()[21], record.getConversion(21));
         record.logs = fieldSetFlags()[22] ? this.logs : (java.util.List<io.enkrypt.bolt.models.avro.Log>) defaultValue(fields()[22], record.getConversion(22));
         if (traceBuilder != null) {
