@@ -1,36 +1,15 @@
 <template>
-  <div>
-    <div class="container">
-      <div class="page-title-container">
-        <div class="page-title">
-          <h3>{{ $t('title.pending') }}</h3>
-          <h6 class="text-muted">{{ $t('subTitle.pending') }}</h6>
-        </div>
-        <div class="search-block">
-          <block-search></block-search>
-        </div>
-      </div>
-
-      <div v-if="pendingTxs.length > 0" class="row">
-        <div class="col-md-12 table-data">
-          <div class="last-transactions-data">
-            <block-pending-txs :transactions="pendingTxs" :showHeader="true"></block-pending-txs>
-          </div>
-          <div class="footnote">
-            <ul>
-              <li><i class="fa fa-check success" aria-hidden="true"></i> {{ $t('footnote.success') }}</li>
-              <li><i class="fa fa-times failed" aria-hidden="true"></i> {{ $t('footnote.failed') }}</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div v-else class="info-common">
-        <p> {{ $t('message.noPending') }}  </p>
-      </div>
-
-    </div>
-    <!-- .container -->
-  </div>
+  <v-container grid-list-lg class="mt-0">
+    <v-card fluid flat color="transparent">
+      <v-breadcrumbs large>
+        <v-icon slot="divider">fa fa-arrow-right</v-icon>
+        <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link">
+          {{ item.text }}
+        </v-breadcrumbs-item>
+      </v-breadcrumbs>
+    </v-card>
+   <block-last-transactions :transactions="pendingTxs" :showHeader="true" class="mt-3" :pending="true">{{getLength}}</block-last-transactions>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -83,7 +62,18 @@ export default Vue.extend({
   name: 'LatestPendingTransactions',
   data() {
     return {
-      pendingTxs: []
+      pendingTxs: [],
+      items: [
+        {
+          text: this.$i18n.t('title.home'),
+          disabled: false,
+          link: '/'
+        },
+        {
+          text: this.$i18n.t('title.pending'),
+          disabled: true
+        }
+      ]
     }
   },
   created() {
@@ -98,10 +88,11 @@ export default Vue.extend({
   },
   beforeDestroy() {
     this.$socket.emit(sEvents.leave, 'pendingTxs')
+  },
+  methods: {
+    getLength() {
+      console.log(this.pendingTxs)
+    }
   }
 })
 </script>
-
-<style scoped lang="less">
-@import '~lessPath/sunil/frames/pendingTxs.less';
-</style>

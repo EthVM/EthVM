@@ -22,7 +22,9 @@
         <block-difficulty></block-difficulty>
       </v-flex>
     </v-layout>
-    <block-latest-blocks :max-items="20" :showHeader="true" class="mt-3"></block-latest-blocks>
+    <v-layout row wrap>
+      <block-latest-blocks :max-items="20" :showHeader="true" class="mt-3"></block-latest-blocks>
+    </v-layout>
   </v-container>
 </template>
 

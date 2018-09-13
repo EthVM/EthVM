@@ -42,7 +42,7 @@ export default Vue.extend({
           link: '/'
         },
         {
-          text: this.$i18n.t('title.tx'),
+          text: this.$i18n.t('title.mined'),
           disabled: true
         }
       ]

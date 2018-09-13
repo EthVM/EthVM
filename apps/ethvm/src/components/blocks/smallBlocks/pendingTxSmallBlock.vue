@@ -11,7 +11,7 @@ export default Vue.extend({
   data() {
     return {
       blockTitle: this.$i18n.t('smlBlock.pending'),
-      iconType: 'fa fa-question  white--text',
+      iconType: 'fa fa-question-circle  white--text',
       type: 'accent white--text'
     }
   },

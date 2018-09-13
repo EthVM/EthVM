@@ -14,11 +14,13 @@
         <v-flex hidden-sm-and-down md1>
           <h5>{{ $t( 'common.gwei' ) }}</h5>
         </v-flex>
-        <v-flex xs1>
+        <v-flex v-if="!pending" xs1>
+        </v-flex>
+        <v-flex v-else hidden-xs-and-up>
         </v-flex>
       </v-layout>
     </v-card>
-    <div v-if="transactions" id="scroll-target" :style="getStyle" class="scroll-y pt-0 mb-3">
+    <div v-if="transactions.length > 0" id="scroll-target" :style="getStyle" class="scroll-y pt-0 mb-3">
       <v-card v-scroll:#scroll-target v-for="tx in transactions" v-bind:key="tx.getHash()" class="pt-3 mb-1">
         <v-layout wrap align-center class="ma-0">
           <v-flex xs8>
@@ -62,19 +64,22 @@
           <v-flex hidden-sm-and-down md1>
             <p class="grey--text text--darken-2">{{tx.getGasPrice().toGWei()}}</p>
           </v-flex>
-          <v-flex xs1 align-content-center>
+          <v-flex v-if="!pending" xs1 align-content-center>
             <v-icon v-if="tx.getStatus()" small class="success--text text-xs-center"> fa fa-check-circle </v-icon>
             <v-icon v-else small class="warning--text text-xs-center">fa fa-times-circle </v-icon>
+          </v-flex>
+          <v-flex v-else hidden-xs-and-up>
           </v-flex>
         </v-layout>
       </v-card>
     </div>
     <div v-else>
-      <v-card class="mt-3 mb-3" >
-        <v-card-text class="text-xs-center text-muted">{{ $t('message.noTxHistory')}} </v-card-text>
+      <v-card class="mt-3 mb-3">
+        <v-card-text v-if="!pending" class="text-xs-center text-muted">{{ $t('message.noTxHistory')}} </v-card-text>
+        <v-card-text v-else class="text-xs-center text-muted">{{ $t('message.noPending') }} </v-card-text>
       </v-card>
-     </div>
-    <footnote :footnotes="footnote"></footnote>
+    </div>
+    <footnote v-if="!pending" :footnotes="footnote"></footnote>
   </v-layout>
 </template>
 
@@ -84,6 +89,10 @@ import Vue from 'vue'
 export default Vue.extend({
   name: 'TableTransactions',
   props: {
+    pending: {
+      type: Boolean,
+      defualt: false
+    },
     showHeader: {
       type: Boolean,
       default: true

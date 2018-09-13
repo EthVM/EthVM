@@ -75,7 +75,7 @@
     "noTokens": "Address does not hold any common tokens",
     "noTxHistory": "There is no transaction history",
     "noTxInBlock": "This block does not have any transactions",
-    "noPending": "There Are No Pending Transactions",
+    "noPending": "There are no pending transactions",
     "load": "Loading ..."
   },
 
