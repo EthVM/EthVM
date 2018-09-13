@@ -90,7 +90,7 @@
     },
     {
       "name": "status",
-      "type": ["null", "bytes"],
+      "type": ["null", "int"],
       "doc": "Transaction result status"
     },
     {

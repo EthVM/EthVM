@@ -269,7 +269,7 @@
             },
             {
               "name": "status",
-              "type": "bytes",
+              "type": "int",
               "doc": "Transaction result status"
             },
             {
