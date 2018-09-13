@@ -6,8 +6,8 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.mongodb.MongoClientURI
 import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig
 import io.confluent.kafka.streams.serdes.avro.GenericAvroSerde
-import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
 import io.enkrypt.bolt.processors.blocks.BlocksProcessor
+import io.enkrypt.bolt.processors.blocks.BlocksProducer
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
@@ -19,10 +19,10 @@ import java.util.Properties
 class Cli : CliktCommand() {
 
   // General - CLI
-  private val applicationId: String by option(
-    help = "Identifier for the stream processing application",
-    envvar = "APPLICATION_ID"
-  ).default(DEFAULT_APPLICATION_ID)
+  private val processor: String by option(
+    help = "Selects a processor to use for the stream processing application (acts also as identifier for the kafka stream)",
+    envvar = "PROCESSOR"
+  ).default(BLOCK_PROCESSOR)
 
   private val bootstrapServers: String by option(
     help = "A list of host/port pairs to use for establishing the initial connection to the Kafka cluster",
@@ -50,6 +50,13 @@ class Cli : CliktCommand() {
     envvar = "KAFKA_PENDING_TXS_TOPIC"
   ).default(DEFAULT_RAW_PENDING_TXS_TOPIC)
 
+  // Output Topics - CLI
+  private val processedBlocksTopic: String by option(
+    help = "Name of the out blocks stream topic on which Bolt will listen",
+    envvar = "KAFKA_PROCESSED_BLOCK_TOPIC"
+  ).default(DEFAULT_PROCESSED_BLOCK_TOPIC)
+
+  // Mongo - CLI
   private val mongoUri: String by option(
     help = "Mongo URI",
     envvar = "MONGO_URI"
@@ -57,8 +64,8 @@ class Cli : CliktCommand() {
 
   // DI
   private val boltModule = module {
-    single { TopicsConfig(rawBlocksTopic, rawPendingTxsTopic) }
-    single { AppConfig(applicationId, bootstrapServers, startingOffset, schemaRegistryUrl, get()) }
+    single { TopicsConfig(rawBlocksTopic, rawPendingTxsTopic, processedBlocksTopic) }
+    single { AppConfig(processor, bootstrapServers, schemaRegistryUrl, startingOffset, get()) }
 
     single { MongoClientURI(mongoUri) }
     single { KMongo.createClient(MongoClientURI(mongoUri)) }
@@ -67,7 +74,7 @@ class Cli : CliktCommand() {
       single {
         Properties().apply {
           // App
-          put(StreamsConfig.APPLICATION_ID_CONFIG, applicationId)
+          put(StreamsConfig.APPLICATION_ID_CONFIG, processor)
           put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
           put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl)
 
@@ -75,26 +82,38 @@ class Cli : CliktCommand() {
           put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, StreamsConfig.AT_LEAST_ONCE)
           put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, startingOffset)
 
-          // Serdes
+          // Serdes - Defaults
           put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().javaClass.name)
           put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, GenericAvroSerde::class.java)
         }
       }
     }
 
-    single { BlocksProcessor() }
+    single { BlocksProducer(get()) }
   }
 
   override fun run() {
     startKoin(listOf(boltModule))
-    BlocksProcessor().apply {
-      onPrepare()
-      start()
+
+    when (processor) {
+      BLOCK_PROCESSOR -> {
+        BlocksProcessor().apply {
+          onPrepareProcessor()
+          start()
+        }
+      }
+
+      PENDING_TXS_PROCESSOR -> {
+      }
+
+      else -> System.exit(-1)
     }
   }
 
   companion object Defaults {
-    const val DEFAULT_APPLICATION_ID = "blocks-processor"
+    const val BLOCK_PROCESSOR = "blocks-processor"
+    const val PENDING_TXS_PROCESSOR = "pending-txs-processor"
+
     const val DEFAULT_BOOTSTRAP_SERVERS = "localhost:9092"
     const val DEFAULT_AUTO_OFFSET = "earliest"
     const val DEFAULT_SCHEMA_REGISTRY_URL = "http://localhost:8081"
@@ -103,5 +122,7 @@ class Cli : CliktCommand() {
 
     const val DEFAULT_RAW_BLOCK_TOPIC = "raw-blocks"
     const val DEFAULT_RAW_PENDING_TXS_TOPIC = "raw-pending-txs"
+
+    const val DEFAULT_PROCESSED_BLOCK_TOPIC = "blocks"
   }
 }

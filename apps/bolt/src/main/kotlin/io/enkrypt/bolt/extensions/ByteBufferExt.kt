@@ -4,24 +4,20 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import java.nio.ByteBuffer
 import javax.xml.bind.DatatypeConverter
-import java.util.BitSet
 
 fun ByteBuffer?.toByteArray(): ByteArray? {
   if (this == null) {
     return null
   }
-  val arr = ByteArray(remaining())
-  get(arr)
-  return arr
+  return ByteArray(remaining()).also { get(it) }
 }
 
 fun ByteBuffer?.toBigInteger(): BigInteger? {
   if (this == null) {
     return null
   }
-  val arr = ByteArray(remaining())
-  get(arr)
-  return BigInteger(1, arr)
+  val arr = ByteArray(remaining()).also { get(it) }
+  return BigInteger(arr)
 }
 
 fun ByteBuffer?.toBigDecimal(): BigDecimal? {
@@ -35,7 +31,6 @@ fun ByteBuffer?.toHex(): String? {
   if (this == null) {
     return null
   }
-  val arr = ByteArray(remaining())
-  get(arr)
+  val arr = ByteArray(remaining()).also { get(it) }
   return "0x" + DatatypeConverter.printHexBinary(arr)
 }

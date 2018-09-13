@@ -14,7 +14,7 @@ import org.apache.avro.message.SchemaStore;
 @org.apache.avro.specific.AvroGenerated
 public class Transfer extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
   private static final long serialVersionUID = -4926849421107712152L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Transfer\",\"namespace\":\"io.enkrypt.bolt.models.avro\",\"fields\":[{\"name\":\"op\",\"type\":\"int\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"value\",\"type\":\"bytes\",\"doc\":\"Raw value of the transaction\"},{\"name\":\"from\",\"type\":\"bytes\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"bytes\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":\"bytes\",\"doc\":\"Address of the receiver\"},{\"name\":\"toBalance\",\"type\":\"bytes\",\"doc\":\"Balance of the receiver\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"Raw input data\"}]}");
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Transfer\",\"namespace\":\"io.enkrypt.bolt.models.avro\",\"fields\":[{\"name\":\"op\",\"type\":\"int\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"value\",\"type\":\"bytes\",\"doc\":\"Raw value of the transaction\"},{\"name\":\"from\",\"type\":\"bytes\",\"doc\":\"KAddress of the sender\"},{\"name\":\"fromBalance\",\"type\":\"bytes\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":\"bytes\",\"doc\":\"KAddress of the receiver\"},{\"name\":\"toBalance\",\"type\":\"bytes\",\"doc\":\"Balance of the receiver\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"Raw input data\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -55,11 +55,11 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
   @Deprecated public int op;
   /** Raw value of the transaction */
   @Deprecated public java.nio.ByteBuffer value;
-  /** Address of the sender */
+  /** KAddress of the sender */
   @Deprecated public java.nio.ByteBuffer from;
   /** Balance of the sender */
   @Deprecated public java.nio.ByteBuffer fromBalance;
-  /** Address of the receiver */
+  /** KAddress of the receiver */
   @Deprecated public java.nio.ByteBuffer to;
   /** Balance of the receiver */
   @Deprecated public java.nio.ByteBuffer toBalance;
@@ -77,9 +77,9 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
    * All-args constructor.
    * @param op Type of op executed inside the transaction
    * @param value Raw value of the transaction
-   * @param from Address of the sender
+   * @param from KAddress of the sender
    * @param fromBalance Balance of the sender
-   * @param to Address of the receiver
+   * @param to KAddress of the receiver
    * @param toBalance Balance of the receiver
    * @param input Raw input data
    */
@@ -159,7 +159,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
 
   /**
    * Gets the value of the 'from' field.
-   * @return Address of the sender
+   * @return KAddress of the sender
    */
   public java.nio.ByteBuffer getFrom() {
     return from;
@@ -167,7 +167,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
 
   /**
    * Sets the value of the 'from' field.
-   * Address of the sender
+   * KAddress of the sender
    * @param value the value to set.
    */
   public void setFrom(java.nio.ByteBuffer value) {
@@ -193,7 +193,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
 
   /**
    * Gets the value of the 'to' field.
-   * @return Address of the receiver
+   * @return KAddress of the receiver
    */
   public java.nio.ByteBuffer getTo() {
     return to;
@@ -201,7 +201,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
 
   /**
    * Sets the value of the 'to' field.
-   * Address of the receiver
+   * KAddress of the receiver
    * @param value the value to set.
    */
   public void setTo(java.nio.ByteBuffer value) {
@@ -278,11 +278,11 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
     private int op;
     /** Raw value of the transaction */
     private java.nio.ByteBuffer value;
-    /** Address of the sender */
+    /** KAddress of the sender */
     private java.nio.ByteBuffer from;
     /** Balance of the sender */
     private java.nio.ByteBuffer fromBalance;
-    /** Address of the receiver */
+    /** KAddress of the receiver */
     private java.nio.ByteBuffer to;
     /** Balance of the receiver */
     private java.nio.ByteBuffer toBalance;
@@ -453,7 +453,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
 
     /**
       * Gets the value of the 'from' field.
-      * Address of the sender
+      * KAddress of the sender
       * @return The value.
       */
     public java.nio.ByteBuffer getFrom() {
@@ -462,7 +462,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
 
     /**
       * Sets the value of the 'from' field.
-      * Address of the sender
+      * KAddress of the sender
       * @param value The value of 'from'.
       * @return This builder.
       */
@@ -475,7 +475,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
 
     /**
       * Checks whether the 'from' field has been set.
-      * Address of the sender
+      * KAddress of the sender
       * @return True if the 'from' field has been set, false otherwise.
       */
     public boolean hasFrom() {
@@ -485,7 +485,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
 
     /**
       * Clears the value of the 'from' field.
-      * Address of the sender
+      * KAddress of the sender
       * @return This builder.
       */
     public io.enkrypt.bolt.models.avro.Transfer.Builder clearFrom() {
@@ -539,7 +539,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
 
     /**
       * Gets the value of the 'to' field.
-      * Address of the receiver
+      * KAddress of the receiver
       * @return The value.
       */
     public java.nio.ByteBuffer getTo() {
@@ -548,7 +548,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
 
     /**
       * Sets the value of the 'to' field.
-      * Address of the receiver
+      * KAddress of the receiver
       * @param value The value of 'to'.
       * @return This builder.
       */
@@ -561,7 +561,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
 
     /**
       * Checks whether the 'to' field has been set.
-      * Address of the receiver
+      * KAddress of the receiver
       * @return True if the 'to' field has been set, false otherwise.
       */
     public boolean hasTo() {
@@ -571,7 +571,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
 
     /**
       * Clears the value of the 'to' field.
-      * Address of the receiver
+      * KAddress of the receiver
       * @return This builder.
       */
     public io.enkrypt.bolt.models.avro.Transfer.Builder clearTo() {

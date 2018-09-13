@@ -5,7 +5,7 @@ import org.koin.standalone.KoinComponent
 
 // TODO: To be written
 class PendingTxsProcessor : KoinComponent, Processor {
-  override fun onPrepare() {
+  override fun onPrepareProcessor() {
   }
 
   override fun start() {

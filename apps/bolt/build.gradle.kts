@@ -41,6 +41,7 @@ dependencies {
   compile("io.github.microutils:kotlin-logging:1.5.9")
   compile("joda-time:joda-time:2.10")
   compile("org.koin:koin-core:1.0.0-RC-2")
+  compile("io.arrow-kt:arrow-core:0.7.3")
   compile("org.web3j:utils:3.5.0")
 
   testCompile("org.koin:koin-test:1.0.0-RC-2")
