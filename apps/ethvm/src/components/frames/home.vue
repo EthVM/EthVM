@@ -28,6 +28,21 @@
       </v-flex>
     </v-layout>
     <!-- End Charts -->
+    <!-- Last Blocks -->
+    <v-layout row class="mt-3">
+      <v-flex xs4>
+        <h4>{{ $t('title.lastBlock') }}</h4>
+      </v-flex>
+      <v-spacer></v-spacer>
+      <v-flex xs2>
+        <v-layout justify-end>
+          <v-btn color="primary" to="/blocks"> {{ $t('bttn.viewAll') }}</v-btn>
+        </v-layout>
+      </v-flex>
+    </v-layout>
+    <block-latest-blocks :max-items="20" :showHeader="true"></block-latest-blocks>
+
+
   </v-container>
 </template>
 

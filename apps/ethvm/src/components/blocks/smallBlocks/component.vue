@@ -6,13 +6,6 @@
       <v-icon size="50px">{{icon}}</v-icon>
     </v-card-text>
   </v-card>
-  <!--
-              <div id="component" v-bind:class="backgroundColor">
-                <p class="block-title"></p>
-                <div class="small-bottom-block">
-                    <p class="small-block-value"</p>
-                </div>
-              </div> -->
 </template>
 
 <script lang="ts">

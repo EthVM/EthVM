@@ -1,94 +1,55 @@
 <template>
-  <div id="latest-blocks">
-    <!-- Table Header -->
-    <div v-if="showHeader" class="block-table-header">
-      <li>{{ $t( 'tableHeader.blockN' ) }}</li>
-      <li></li>
-      <li>{{ $t( 'tableHeader.txs' ) }}</li>
-      <li>{{ $t( 'tableHeader.reward' ) }}</li>
-      <!-- End Table Header -->
-    </div>
-    <div class="block-body">
-      <!-- Table Row -->
-      <div class="block" v-for="block in getBlocks" v-if="!block.getIsUncle()" v-bind:key="block.hash">
-        <!-- Block Info -->
-        <div class="block-data">
-          <!-- Col1: Block Number -->
-          <li>
-            <p class="block-number"><router-link :to="'/block/'+block.getHash()">{{block.getNumber()}}</router-link></p>
-            <!-- End Col1 -->
-          </li>
-          <!-- Col2: Block Hash and Miner -->
-          <li class="hash">
-            <div>
-              <p>{{ $t( 'common.hash' ) }}</p>
-              <p>
+  <v-layout column>
+    <v-card flat color="transparent" class="pb-1">
+      <v-layout row justify-center align-center>
+        <v-flex xs3 md2>
+          <h5 class="ml-3">{{ $t( 'tableHeader.blockN' ) }}</h5>
+        </v-flex>
+        <v-spacer></v-spacer>
+        <v-flex hidden-sm-and-down md1>
+          <h5>{{ $t( 'tableHeader.txs' ) }}</h5>
+        </v-flex>
+        <v-flex xs3 md2>
+          <h5>{{ $t( 'tableHeader.reward' ) }}</h5>
+        </v-flex>
+      </v-layout>
+    </v-card>
+    <div id="scroll-target" style="max-height: 390px" class="scroll-y pt-0 mb-3" >
+        <v-card v-scroll:#scroll-target v-for="block in getBlocks" v-if="!block.getIsUncle()" v-bind:key="block.hash" class="pt-3">
+          <v-layout wrap align-center class="ma-0" >
+            <v-flex xs3 md1 justify-center>
+              <p class="ml-3">
+                <router-link :to="'/block/'+block.getHash()">{{block.getNumber()}}</router-link>
+              </p>
+            </v-flex>
+            <v-flex xs5 md8 class="pl-1 pr-0">
+              <p class="text-truncate"><strong>{{ $t( 'common.hash' ) }} </strong>
                 <router-link :to="'/block/'+block.getHash()">{{block.getHash()}}</router-link>
               </p>
-            </div>
-            <div>
-              <p>{{ $t( 'block.miner' ) }}</p>
-              <p>
+              <p class="text-truncate"><strong>{{ $t( 'block.miner' ) }}  </strong>
                 <router-link :to="'/address/'+block.getMiner().toString()">{{block.getMiner().toString()}}</router-link>
               </p>
-            </div>
-            <!-- End Col2-->
-          </li>
-          <!-- Col3: Transactions Info -->
-          <li class="txs">
-            <div class="success">
-              {{getNumber(block.getStats().success)}}
-            </div>
-            <div class="failed">
-              {{getNumber(block.getStats().failed)}}
-            </div>
-            <!-- End Col3 -->
-          </li>
-          <!-- Col4: Block Reward -->
-          <li>
-            <div class="reward">
-              <div class="">{{getShortRewardValue(block.getTotalBlockReward().toEth().toString(), false)}}</div>
-              <div class="tooltip-button" v-tooltip="block.getTotalBlockReward().toEth()" v-if="getShortRewardValue(block.getTotalBlockReward().toEth().toString(), true)"><i class="fa fa-question-circle-o" aria-hidden="true"></i></div>
-            </div>
-            <!-- End Col4 -->
-          </li>
-          <!-- End Block Data -->
-        </div>
-        <!-- If Block has Uncles -->
-        <div class="uncles-block" v-if="block.getUncles()">
-          <div class="uncles-line"></div>
-          <div class="uncles-title">{{ $t( 'block.uncle', 1 ) }}:</div>
-          <!-- SUB LOOP START-->
-          <div class="uncles-data" v-for="uncle in block.getUncles()" v-bind:key="uncle.hash">
-            <li class="sub-hash">
-              <p>{{ $t( 'common.hash') }}</p>
-              <p>
-                <router-link :to="'/block/'+uncle.getHash()">{{uncle.getHash()}}</router-link>
+            </v-flex>
+            <v-flex hidden-sm-and-down md1>
+              <p class="success--text"> {{getNumber(block.getStats().success)}}</p>
+              <p class="warning--text"> {{getNumber(block.getStats().failed)}}</p>
+            </v-flex>
+            <v-flex xs4 md2 class="pr-1">
+              <p class="text-truncate">
+                <v-tooltip v-if="getShortRewardValue(block.getTotalBlockReward().toEth().toString(), true)" bottom>
+                  <v-icon slot="activator" dark small class="pl-2">fa fa-question-circle grey--text</v-icon>
+                  <span>{{block.getTotalBlockReward().toEth().toString()}}</span>
+                </v-tooltip>
+                {{getShortRewardValue(block.getTotalBlockReward().toEth().toString(), false)}}
               </p>
-            </li>
-            <li class="sub-miner">
-              <p>{{ $t( 'block.miner' ) }}</p>
-              <p>
-                <router-link :to="'/address/'+uncle.getMiner().toString()">{{uncle.getMiner().toString()}}</router-link>
-              </p>
-            </li>
-            <li class="sub-height">
-              <p>{{ $t( 'block.height' ) }}</p>
-              <p>{{uncle.getNumber()}}</p>
-            </li>
-            <li class="sub-reward">
-              <p>{{ $t( 'block.reward' ) }}</p>
-              <p>{{uncle.getTotalBlockReward().toEth()}}</p>
-            </li>
-            <!-- SUB LOOP END -->
-          </div>
-          <!-- End If Block has Uncles -->
-        </div>
-        <!-- End Table Row -->
-      </div>
+            </v-flex>
+          </v-layout>
+        </v-card>
     </div>
-  </div>
+    <footnote :footnotes="footnote"></footnote>
+  </v-layout>
 </template>
+
 
 <script lang="ts">
 import sEvents from '@app/configs/socketEvents.json'
@@ -107,7 +68,19 @@ export default Vue.extend({
   data() {
     return {
       blocks: [],
-      showUncles: {}
+      showUncles: {},
+      footnote: [
+        {
+          color: 'success',
+          text: this.$i18n.t('footnote.success'),
+          icon: 'fa fa-circle'
+        },
+        {
+          color: 'warning',
+          text: this.$i18n.t('footnote.failed'),
+          icon: 'fa fa-circle'
+        }
+      ]
     }
   },
   methods: {
