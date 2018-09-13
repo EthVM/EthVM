@@ -1,3 +1,13 @@
+export interface Trace {
+  op: string
+  value: Buffer
+  from: Buffer
+  fromBalance: Buffer
+  to: Buffer
+  toBalance: Buffer
+  input: Buffer
+}
+
 export interface Log {
   address: Buffer
   topics: Buffer[]

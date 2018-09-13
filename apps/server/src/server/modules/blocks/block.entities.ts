@@ -1,5 +1,13 @@
-import { BlockStats } from '@app/server/modules/stats'
 import { Tx } from '@app/server/modules/txs'
+
+export interface BlockStats {
+  blockTime
+  failed
+  success
+  avgGasPrice
+  avgTxFees
+  pendingTxs?
+}
 
 export interface SmallBlock {
   number: number

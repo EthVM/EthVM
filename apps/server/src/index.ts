@@ -2,7 +2,7 @@ import config from '@app/config'
 import { logger } from '@app/logger'
 import { KafkaStreamer, KafkaStreamerOpts } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
-import { BlocksServiceImpl, MockBlockRepository } from '@app/server/modules/blocks'
+import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blocks'
 import { ChartsServiceImpl, MockChartsRepository } from '@app/server/modules/charts'
 import { CoinMarketCapRepository, ExchangeServiceImpl } from '@app/server/modules/exchanges'
 import { MockTxsRepository, TxsServiceImpl } from '@app/server/modules/txs'
@@ -10,6 +10,7 @@ import { RedisTrieDb, VmEngine, VmRunner, VmServiceImpl } from '@app/server/modu
 import { RedisCacheRepository } from '@app/server/repositories'
 import * as EventEmitter from 'eventemitter3'
 import * as Redis from 'ioredis'
+import { MongoClient } from 'mongodb'
 
 async function bootstrapServer() {
   logger.debug('bootstrapper -> Bootstraping ethvm-socket-server!')
@@ -60,11 +61,20 @@ async function bootstrapServer() {
   logger.debug('bootstrapper -> Initializing event emitter')
   const emitter = new EventEmitter()
 
+  // Create Blockchain data store
+  logger.debug('bootstrapper -> Connecting MongoDB')
+  const mongoUrl = config.get('data_stores.mongo_db.url')
+  const client = await MongoClient.connect(mongoUrl).catch(() => process.exit(-1))
+
+  logger.debug('bootstrapper -> Selecting MongoDB database')
+  const dbName = config.get('data_stores.mongo_db.name')
+  const db = client.db(dbName)
+
   // Create services
   // ---------------
 
   // Blocks
-  const blocksRepository = new MockBlockRepository()
+  const blocksRepository = new MongoBlockRepository(db)
   const blockService = new BlocksServiceImpl(blocksRepository, ds)
 
   // Txs
@@ -96,8 +106,7 @@ async function bootstrapServer() {
 
   // Create server
   logger.debug('bootstrapper -> Initializing server')
-  const blockTime: number = config.get('eth.block_time')
-  const server = new EthVMServer(blockService, txsService, chartsService, exchangeService, vmService, streamer, ds, blockTime)
+  const server = new EthVMServer(blockService, txsService, chartsService, exchangeService, vmService, streamer, ds)
   await server.start()
 }
 

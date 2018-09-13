@@ -42,31 +42,15 @@ const config = convict({
 
   data_stores: {
     mongo_db: {
-      db_name: {
-        default: 'eth_mainnet',
+      url: {
+        default: 'mongodb://mongodb:27017/',
+        format: String,
+        env: 'ETHVM_MONGO_DB_URL'
+      },
+      db: {
+        default: 'ethvm_local',
         format: String,
         env: 'ETHVM_MONGO_DB_NAME'
-      },
-      host: {
-        default: 'localhost',
-        format: String,
-        env: 'ETHVM_MONGO_DB_HOST'
-      },
-      port: {
-        default: 28015,
-        format: 'port',
-        env: 'ETHVM_MONGO_DB_PORT'
-      },
-      user: {
-        default: 'admin',
-        format: String,
-        env: 'ETHVM_MONGO_DB_USER'
-      },
-      password: {
-        default: '',
-        format: String,
-        env: 'ETHVM_MONGO_DB_PASSWORD',
-        sensitive: true
       }
     },
 
@@ -106,11 +90,6 @@ const config = convict({
         format: 'port',
         env: 'ETHVM_RPC_ETH_PORT'
       }
-    },
-    block_time: {
-      default: '14 seconds',
-      format: 'duration',
-      env: 'ETHVM_ETH_BLOCK_TIME'
     },
     state_root: {
       default: 'd7f8974fb5ac78d9ac099b9ad5018bedc2ce0a72dad1827a1709da30580f0544',
