@@ -14,7 +14,8 @@
         </v-flex>
       </v-layout>
     </v-card>
-    <div id="scroll-target" style="max-height: 390px" class="scroll-y pt-0 mb-3" >
+
+    <div v-if="getBlocks" id="scroll-target" :style="getStyle" class="scroll-y pt-0 mb-3" >
         <v-card v-scroll:#scroll-target v-for="block in getBlocks" v-if="!block.getIsUncle()" v-bind:key="block.hash" class="pt-3 mb-1">
           <v-layout wrap align-center class="ma-0" >
             <v-flex xs3 md1 >
@@ -46,6 +47,11 @@
           </v-layout>
         </v-card>
     </div>
+     <div v-else>
+      <v-card class="mt-3 mb-3" >
+        <v-card-text class="text-xs-center text-muted">{{ $t('message.error')}} </v-card-text>
+      </v-card>
+     </div>
     <footnote :footnotes="footnote"></footnote>
   </v-layout>
 </template>
@@ -63,6 +69,10 @@ export default Vue.extend({
     showHeader: {
       type: Boolean,
       default: false
+    },
+    showStyle: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -122,6 +132,9 @@ export default Vue.extend({
   computed: {
     getBlocks() {
       return this.blocks.slice(0, this.maxItems)
+    },
+    getStyle() {
+      return this.showStyle
     }
   }
 })

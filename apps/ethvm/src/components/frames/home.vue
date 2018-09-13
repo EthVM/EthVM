@@ -40,7 +40,7 @@
         </v-layout>
       </v-flex>
     </v-layout>
-    <block-latest-blocks :max-items="20" :showHeader="true"></block-latest-blocks>
+    <block-latest-blocks :max-items="20" :showHeader="true" showStyle="max-height: 390px"></block-latest-blocks>
     <!-- End Last Blocks -->
     <!-- Last Txs -->
     <v-layout row class="mt-3">
@@ -54,7 +54,7 @@
         </v-layout>
       </v-flex>
     </v-layout>
-  <block-last-transactions :transactions="txs" :showHeader="true "></block-last-transactions>
+  <block-last-transactions :transactions="txs" :showHeader="true " showStyle="max-height: 390px"></block-last-transactions>
     <!-- End Last Txs -->
   </v-container>
 </template>

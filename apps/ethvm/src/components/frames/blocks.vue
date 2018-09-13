@@ -1,41 +1,31 @@
 <template>
-  <div id="blocks-frame">
-    <div class="container">
-      <!-- Page Title -->
-      <div class="page-title-container">
-        <div class="page-title">
-          <h3>{{ $t('title.blocks') }}</h3>
-          <h6 class="text-muted">{{ $t('subTitle.blocks') }}</h6>
-        </div>
-        <div class="search-block">
-          <block-search></block-search>
-        </div>
-      <!-- End Page Title -->
-      </div>
-      <!-- 4 Top Blocks -->
-      <div class="small-blocks-row">
+  <v-container grid-list-lg class="mt-0">
+    <v-card fluid flat color="transparent">
+      <v-breadcrumbs large>
+        <v-icon slot="divider">fa fa-arrow-right</v-icon>
+        <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link">
+          {{ item.text }}
+        </v-breadcrumbs-item>
+      </v-breadcrumbs>
+    </v-card>
+    <v-layout row wrap justify-space-between>
+      <v-flex xs12 md6 lg3>
         <block-last-block></block-last-block>
+      </v-flex>
+      <v-flex xs12 md6 lg3>
         <block-time-since-last-block></block-time-since-last-block>
+      </v-flex>
+      <v-flex xs12 md6 lg3>
         <block-hash-rate></block-hash-rate>
+      </v-flex>
+      <v-flex xs12 md6 lg3>
         <block-difficulty></block-difficulty>
-      <!-- End 4 Top Blocks -->
-      </div>
-      <!-- Blocks Table -->
-      <div class="row">
-        <div class="col-md-12">
-          <block-latest-blocks :max-items="20" v-bind:showHeader="true"></block-latest-blocks>
-          <div class="footnote">
-            <ul>
-              <li><i class="fa fa-circle success" aria-hidden="true"></i>{{ $t('footnote.success') }}</li>
-              <li><i class="fa fa-circle failed" aria-hidden="true"></i>{{ $t('footnote.failed') }}</li>
-            </ul>
-          </div>
-        </div>
-      <!-- EndBlocks Table -->
-      </div>
-    </div>
-  </div>
+      </v-flex>
+    </v-layout>
+    <block-latest-blocks :max-items="20" :showHeader="true" class="mt-3"></block-latest-blocks>
+  </v-container>
 </template>
+
 
 <script lang="ts">
 import Vue from 'vue'
@@ -44,7 +34,19 @@ const MAX_ITEMS = 20
 export default Vue.extend({
   name: 'FramesHome',
   data() {
-    return {}
+    return {
+      items: [
+        {
+          text: this.$i18n.t('title.home'),
+          disabled: false,
+          link: '/'
+        },
+        {
+          text: this.$i18n.t('title.blocks'),
+          disabled: true
+        }
+      ]
+    }
   },
   computed: {
     txs() {

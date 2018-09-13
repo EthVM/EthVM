@@ -18,7 +18,7 @@
         </v-flex>
       </v-layout>
     </v-card>
-    <div id="scroll-target" style="max-height: 390px" class="scroll-y pt-0 mb-3">
+    <div v-if="transactions" id="scroll-target" :style="getStyle" class="scroll-y pt-0 mb-3">
       <v-card v-scroll:#scroll-target v-for="tx in transactions" v-bind:key="tx.getHash()" class="pt-3 mb-1">
         <v-layout wrap align-center class="ma-0">
           <v-flex xs8>
@@ -69,6 +69,11 @@
         </v-layout>
       </v-card>
     </div>
+    <div v-else>
+      <v-card class="mt-3 mb-3" >
+        <v-card-text class="text-xs-center text-muted">{{ $t('message.noTxHistory')}} </v-card-text>
+      </v-card>
+     </div>
     <footnote :footnotes="footnote"></footnote>
   </v-layout>
 </template>
@@ -78,7 +83,17 @@ import Vue from 'vue'
 
 export default Vue.extend({
   name: 'TableTransactions',
-  props: ['transactions', 'showHeader'],
+  props: {
+    showHeader: {
+      type: Boolean,
+      default: true
+    },
+    showStyle: {
+      type: String,
+      default: ''
+    },
+    transactions: {}
+  },
   data() {
     return {
       footnote: [
@@ -109,6 +124,11 @@ export default Vue.extend({
         return newEthValue
       }
       return isShort
+    }
+  },
+  computed: {
+    getStyle() {
+      return this.showStyle
     }
   }
 })
