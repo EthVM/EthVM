@@ -1,9 +1,9 @@
 package io.enkrypt.bolt.extensions
 
+import org.ethereum.util.ByteUtil
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.nio.ByteBuffer
-import javax.xml.bind.DatatypeConverter
 
 fun ByteBuffer?.toByteArray(): ByteArray? {
   if (this == null) {
@@ -32,5 +32,5 @@ fun ByteBuffer?.toHex(): String? {
     return null
   }
   val arr = ByteArray(remaining()).also { get(it) }
-  return "0x" + DatatypeConverter.printHexBinary(arr)
+  return ByteUtil.toHexString(arr)
 }

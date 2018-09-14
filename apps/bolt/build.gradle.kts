@@ -1,5 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+
+
 plugins {
   application
   kotlin("jvm") version "1.2.61"
@@ -26,6 +28,10 @@ project.java.sourceSets["main"].java {
 
 dependencies {
   compile(kotlin("stdlib"))
+
+  // ethereumj
+  compile("org.ethereum:ethereumj-core:1.8.+")
+  compile("org.ethereum:solcJ-all:0.4.24")
 
   // Kafka
   compile("org.apache.kafka:kafka-streams:2.0.0")
