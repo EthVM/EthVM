@@ -29,29 +29,29 @@
   ],
   "bytecode": "0x608060405234801561001057600080fd5b506040516020806100f38339810180604052810190808051906020019092919050505080600081600019169055505060a68061004d6000396000f300608060405260043610603f576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680638052474d146044575b600080fd5b348015604f57600080fd5b5060566074565b60405180826000191660001916815260200191505060405180910390f35b600054815600a165627a7a72305820329273bf159b774810434caa3db7deccb51cfcbb46b751406649cdcea19059cd0029",
   "deployedBytecode": "0x608060405260043610603f576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680638052474d146044575b600080fd5b348015604f57600080fd5b5060566074565b60405180826000191660001916815260200191505060405180910390f35b600054815600a165627a7a72305820329273bf159b774810434caa3db7deccb51cfcbb46b751406649cdcea19059cd0029",
-  "sourceMap": "25:114:5:-;;;75:62;8:9:-1;5:2;;;30:1;27;20:12;5:2;75:62:5;;;;;;;;;;;;;;;;;;;;;;;;;;;;;126:4;119;:11;;;;;;;75:62;25:114;;;;;;",
-  "deployedSourceMap": "25:114:5:-;;;;;;;;;;;;;;;;;;;;;;;;49:19;;8:9:-1;5:2;;;30:1;27;20:12;5:2;49:19:5;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o",
+  "sourceMap": "25:114:2:-;;;75:62;8:9:-1;5:2;;;30:1;27;20:12;5:2;75:62:2;;;;;;;;;;;;;;;;;;;;;;;;;;;;;126:4;119;:11;;;;;;;75:62;25:114;;;;;;",
+  "deployedSourceMap": "25:114:2:-;;;;;;;;;;;;;;;;;;;;;;;;49:19;;8:9:-1;5:2;;;30:1;27;20:12;5:2;49:19:2;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o",
   "source": "pragma solidity 0.4.23;\n\ncontract Contract {\n    bytes32 public Name;\n\n    constructor (bytes32 name) public {\n        Name = name;\n    }\n}\n",
   "sourcePath": "/Users/aldo/Development/ethvm/ethvm/utils/test-contracts/contracts/Tracer/Contract.sol",
   "ast": {
     "absolutePath": "/Users/aldo/Development/ethvm/ethvm/utils/test-contracts/contracts/Tracer/Contract.sol",
     "exportedSymbols": {
       "Contract": [
-        753
+        744
       ]
     },
-    "id": 754,
+    "id": 745,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 740,
+        "id": 731,
         "literals": [
           "solidity",
           "0.4",
           ".23"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:5"
+        "src": "0:23:2"
       },
       {
         "baseContracts": [],
@@ -59,20 +59,20 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 753,
+        "id": 744,
         "linearizedBaseContracts": [
-          753
+          744
         ],
         "name": "Contract",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 742,
+            "id": 733,
             "name": "Name",
             "nodeType": "VariableDeclaration",
-            "scope": 753,
-            "src": "49:19:5",
+            "scope": 744,
+            "src": "49:19:2",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -80,10 +80,10 @@
               "typeString": "bytes32"
             },
             "typeName": {
-              "id": 741,
+              "id": 732,
               "name": "bytes32",
               "nodeType": "ElementaryTypeName",
-              "src": "49:7:5",
+              "src": "49:7:2",
               "typeDescriptions": {
                 "typeIdentifier": "t_bytes32",
                 "typeString": "bytes32"
@@ -94,26 +94,26 @@
           },
           {
             "body": {
-              "id": 751,
+              "id": 742,
               "nodeType": "Block",
-              "src": "109:28:5",
+              "src": "109:28:2",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 749,
+                    "id": 740,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 747,
+                      "id": 738,
                       "name": "Name",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 742,
-                      "src": "119:4:5",
+                      "referencedDeclaration": 733,
+                      "src": "119:4:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bytes32",
                         "typeString": "bytes32"
@@ -123,31 +123,31 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "id": 748,
+                      "id": 739,
                       "name": "name",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 744,
-                      "src": "126:4:5",
+                      "referencedDeclaration": 735,
+                      "src": "126:4:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bytes32",
                         "typeString": "bytes32"
                       }
                     },
-                    "src": "119:11:5",
+                    "src": "119:11:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
                     }
                   },
-                  "id": 750,
+                  "id": 741,
                   "nodeType": "ExpressionStatement",
-                  "src": "119:11:5"
+                  "src": "119:11:2"
                 }
               ]
             },
             "documentation": null,
-            "id": 752,
+            "id": 743,
             "implemented": true,
             "isConstructor": true,
             "isDeclaredConst": false,
@@ -155,16 +155,16 @@
             "name": "",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 745,
+              "id": 736,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 744,
+                  "id": 735,
                   "name": "name",
                   "nodeType": "VariableDeclaration",
-                  "scope": 752,
-                  "src": "88:12:5",
+                  "scope": 743,
+                  "src": "88:12:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -172,10 +172,10 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 743,
+                    "id": 734,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "88:7:5",
+                    "src": "88:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -185,47 +185,47 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "87:14:5"
+              "src": "87:14:2"
             },
             "payable": false,
             "returnParameters": {
-              "id": 746,
+              "id": 737,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "109:0:5"
+              "src": "109:0:2"
             },
-            "scope": 753,
-            "src": "75:62:5",
+            "scope": 744,
+            "src": "75:62:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 754,
-        "src": "25:114:5"
+        "scope": 745,
+        "src": "25:114:2"
       }
     ],
-    "src": "0:140:5"
+    "src": "0:140:2"
   },
   "legacyAST": {
     "absolutePath": "/Users/aldo/Development/ethvm/ethvm/utils/test-contracts/contracts/Tracer/Contract.sol",
     "exportedSymbols": {
       "Contract": [
-        753
+        744
       ]
     },
-    "id": 754,
+    "id": 745,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 740,
+        "id": 731,
         "literals": [
           "solidity",
           "0.4",
           ".23"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:5"
+        "src": "0:23:2"
       },
       {
         "baseContracts": [],
@@ -233,20 +233,20 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 753,
+        "id": 744,
         "linearizedBaseContracts": [
-          753
+          744
         ],
         "name": "Contract",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 742,
+            "id": 733,
             "name": "Name",
             "nodeType": "VariableDeclaration",
-            "scope": 753,
-            "src": "49:19:5",
+            "scope": 744,
+            "src": "49:19:2",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -254,10 +254,10 @@
               "typeString": "bytes32"
             },
             "typeName": {
-              "id": 741,
+              "id": 732,
               "name": "bytes32",
               "nodeType": "ElementaryTypeName",
-              "src": "49:7:5",
+              "src": "49:7:2",
               "typeDescriptions": {
                 "typeIdentifier": "t_bytes32",
                 "typeString": "bytes32"
@@ -268,26 +268,26 @@
           },
           {
             "body": {
-              "id": 751,
+              "id": 742,
               "nodeType": "Block",
-              "src": "109:28:5",
+              "src": "109:28:2",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 749,
+                    "id": 740,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 747,
+                      "id": 738,
                       "name": "Name",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 742,
-                      "src": "119:4:5",
+                      "referencedDeclaration": 733,
+                      "src": "119:4:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bytes32",
                         "typeString": "bytes32"
@@ -297,31 +297,31 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "id": 748,
+                      "id": 739,
                       "name": "name",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 744,
-                      "src": "126:4:5",
+                      "referencedDeclaration": 735,
+                      "src": "126:4:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bytes32",
                         "typeString": "bytes32"
                       }
                     },
-                    "src": "119:11:5",
+                    "src": "119:11:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
                     }
                   },
-                  "id": 750,
+                  "id": 741,
                   "nodeType": "ExpressionStatement",
-                  "src": "119:11:5"
+                  "src": "119:11:2"
                 }
               ]
             },
             "documentation": null,
-            "id": 752,
+            "id": 743,
             "implemented": true,
             "isConstructor": true,
             "isDeclaredConst": false,
@@ -329,16 +329,16 @@
             "name": "",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 745,
+              "id": 736,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 744,
+                  "id": 735,
                   "name": "name",
                   "nodeType": "VariableDeclaration",
-                  "scope": 752,
-                  "src": "88:12:5",
+                  "scope": 743,
+                  "src": "88:12:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -346,10 +346,10 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 743,
+                    "id": 734,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "88:7:5",
+                    "src": "88:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -359,27 +359,27 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "87:14:5"
+              "src": "87:14:2"
             },
             "payable": false,
             "returnParameters": {
-              "id": 746,
+              "id": 737,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "109:0:5"
+              "src": "109:0:2"
             },
-            "scope": 753,
-            "src": "75:62:5",
+            "scope": 744,
+            "src": "75:62:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 754,
-        "src": "25:114:5"
+        "scope": 745,
+        "src": "25:114:2"
       }
     ],
-    "src": "0:140:5"
+    "src": "0:140:2"
   },
   "compiler": {
     "name": "solc",
@@ -387,5 +387,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-09-14T17:12:17.387Z"
+  "updatedAt": "2018-09-14T17:26:56.511Z"
 }
