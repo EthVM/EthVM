@@ -11,7 +11,7 @@ import data from './accounts.json'
 import contracts from './contracts.json'
 
 const { accounts, from } = data
-const { tokencontract } = contracts
+const { erc20 } = contracts
 
 const version = '1.0.0'
 
@@ -219,22 +219,25 @@ async function fillAndSend(txParams: Txp, amount: number = 10): Promise<any> {
 async function deployContract(txParams: Txp): Promise<Result> {
   // change from of deploy and sendcontractTx
   const privateKey = Buffer.from('d069c15e0df2e63ee62342c5c1983cb0c4ea50a915fceeaaeacf0865f63424be', 'hex')
+
   txParams.to = ''
   txParams.value = ''
   txParams.from = '0x9319b0835c2DB1a31E067b5667B1e9b0AD278215'
-  txParams.data = tokencontract.data
+  txParams.data = erc20.data
   txParams.gas = '0x47B760'
+
   return send(txParams, privateKey)
 }
 
 async function contractTxs(txParams: Txp, address: string): Promise<any> {
   const privateKey = Buffer.from('d069c15e0df2e63ee62342c5c1983cb0c4ea50a915fceeaaeacf0865f63424be', 'hex')
+
   txParams.to = ''
   txParams.value = ''
   txParams.from = '0x9319b0835c2DB1a31E067b5667B1e9b0AD278215'
-  txParams.data = tokencontract.data
   txParams.gas = '0x47B760'
   txParams.to = address
+
   try {
     await sleep(3000)
   } catch (s) {
