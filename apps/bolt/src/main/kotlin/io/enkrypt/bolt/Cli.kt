@@ -111,7 +111,7 @@ class Cli : CliktCommand() {
   }
 
   companion object Defaults {
-    const val BLOCK_PROCESSOR = "blocks-processor"
+    const val BLOCK_PROCESSOR = "blocks-processor4"
     const val PENDING_TXS_PROCESSOR = "pending-txs-processor"
 
     const val DEFAULT_BOOTSTRAP_SERVERS = "localhost:9092"

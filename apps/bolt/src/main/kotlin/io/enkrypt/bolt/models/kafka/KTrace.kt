@@ -14,4 +14,9 @@ class KTrace(private val delegate: Trace) {
     .append("msg", msg)
     .append("transfers", tranfers.map { t -> t?.toDocument() })
 
+  override fun toString(): String {
+    return toDocument().toString()
+  }
+
+
 }

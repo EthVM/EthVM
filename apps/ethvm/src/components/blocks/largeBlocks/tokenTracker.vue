@@ -31,12 +31,13 @@
         <p class="token-symbol">{{token.symbol}}</p>
         <p class="token-name">{{token.name}}</p>
         <div class="token-balance">
-          <div class="">{{checkValue(getBalance(token.balance, token.decimals), false)}}</div>
-          <div v-if="checkValue(getBalance(token.balance, token.decimals), true)" class="tooltip-button token-tooltip" v-tooltip="getBalance(token.balance, token.decimals)">
+          <div class="">{{checkValue(getBalanceCommand(token.balance, token.decimals), false)}}</div>
+          <div v-if="checkValue(getBalanceCommand(token.balance, token.decimals), true)" class="tooltip-button token-tooltip" v-tooltip="getBalanceCommand(token.balance, token.decimals)">
             <i class="fa fa-question-circle-o" aria-hidden="true"></i></div>
         </div>
         <div v-if="token.USDValue > 0" class="token-usd">
-          <p>${{formatUSDBalance(getBalance(token.balance, token.decimals)*token.USDValue)}} (@ ${{formatUSDBalance(token.USDValue)}} per {{token.symbol}})</p>
+          <p>${{formatUSDBalance(getBalanceCommand(token.balance, token.decimals)*token.USDValue)}} (@
+            ${{formatUSDBalance(token.USDValue)}} per {{token.symbol}})</p>
         </div>
         <div v-else class="token-usd">
           <p> $0.00</p>

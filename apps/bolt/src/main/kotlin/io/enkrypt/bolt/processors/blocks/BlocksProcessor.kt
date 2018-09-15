@@ -9,7 +9,6 @@ import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
 import io.enkrypt.bolt.AppConfig
 import io.enkrypt.bolt.extensions.transaction
 import io.enkrypt.bolt.models.avro.Block
-import io.enkrypt.bolt.models.kafka.KAddress
 import io.enkrypt.bolt.models.kafka.KBlock
 import io.enkrypt.bolt.models.kafka.KBlockStats
 import io.enkrypt.bolt.models.kafka.KTransaction
@@ -27,6 +26,7 @@ import org.joda.time.Period
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.util.Properties
 
 class BlocksProcessor : KoinComponent, Processor {
@@ -49,6 +49,7 @@ class BlocksProcessor : KoinComponent, Processor {
   private lateinit var streams: KafkaStreams
 
   override fun onPrepareProcessor() {
+
     // Avro Serdes - Specific
     val serdeProps = mapOf(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG to appConfig.schemaRegistryUrl)
     val blockSerde = SpecificAvroSerde<Block>().apply { configure(serdeProps, false) }
@@ -59,93 +60,30 @@ class BlocksProcessor : KoinComponent, Processor {
     // Raw Blocks Stream
     val (blocksTopic) = appConfig.topicsConfig
     val blocks: KStream<String, Block> = builder.stream(blocksTopic, Consumed.with(Serdes.String(), blockSerde))
+
     blocks
       .filter { _, block -> block.getStatus() == KBlock.Status.CANONICAL.ordinal }
       .map { key, block -> KeyValue(key, KBlock(block)) }
-
-      // Calculate block stats
-      .map { key, kBlock ->
-        val blockTimeMs = Period(kBlock.timestamp, DateTime.now()).millis
-
-        var numSuccessfulTxs = 0
-        var numFailedTxs = 0
-        val totalGasPrice = BigDecimal(0)
-        val totalTxsFees = BigDecimal(0)
-        val totalTxs = 0
-        val totalInternalTxs = 0
-
-        val txs = kBlock.transactions
-        txs.forEach { txn ->
-          if (txn.status == KTransaction.RECEIPT_STATUS_SUCCESSFUL) {
-            numSuccessfulTxs += 1
-          } else {
-            numFailedTxs += 1
-          }
-        }
-
-//        txs.forEach { txn ->
-//          if (!(txn.getFrom() == null || txn.getFromBalance() === null)) {
-//            balances.add(KAddress(txn.getFrom().toHex()!!, txn.getFromBalance().toBigDecimal()!!))
-//          }
-//
-//          if (!(txn.getTo() == null || txn.getToBalance() === null)) {
-//            balances.add(KAddress(txn.getTo().toHex()!!, txn.getToBalance().toBigDecimal()!!))
-//          }
-//
-//          if (txn.getStatus().int > 0) {
-//            numSuccessfulTxs += 1
-//          } else {
-//            numFailedTxs += 1
-//          }
-//
-//          totalGasPrice += txn.getGasPrice()
-//          totalTxsFees += txn.getGasUsed() * txn.getGasPrice()
-//        }
-
-        val avgGasPrice = BigDecimal(0) //Math.round(Math.ceil(totalGasPrice * 1.0 / txs.size))
-        val avgTxsFees = BigDecimal(0) // Math.round(Math.ceil(totalTxsFees * 1.0 / txs.size))
-
-        kBlock.stats = KBlockStats(
-          blockTimeMs,
-          numFailedTxs,
-          numSuccessfulTxs,
-          totalTxs,
-          totalInternalTxs,
-          avgGasPrice,
-          avgTxsFees
-        )
-
-        KeyValue(key, kBlock)
-      }
-
-      // Calculate addresses balances
-      .map { key, kBlock ->
-        // Calculate addresses balances
-        val addresses = mutableListOf<KAddress>()
-        KeyValue(key, Pair(kBlock, addresses))
-      }
-
+      .map(::calculateStatistics)
       // Store process
-      .foreach { key, (kBlock, _) ->
+      .foreach { key, block ->
         mongoSession.transaction {
           val replaceOptions = ReplaceOptions().upsert(true)
 
           // Store kBlock
-          val blockQuery = Document().append("_id", kBlock.hash)
-          blocksCollection.replaceOne(mongoSession, blockQuery, kBlock.toDocument(), replaceOptions)
+          val blockQuery = Document().append("_id", block.hash)
+          blocksCollection.replaceOne(mongoSession, blockQuery, block.toDocument(), replaceOptions)
 
           // Process addresses
 //          addresses.forEach { balance ->
-//            val balanceQuery = Document().append("_id", balance.address)
-//            addressesCollection.replaceOne(mongoSession, balanceQuery, balance.toDocument(), replaceOptions)
+//            val balanceQuery = DocumenfeOne(mongoSession, balanceQuery, balance.toDocument(), replaceOptions)
 //          }
         }.also {
           when {
             it.isLeft() -> {
-              logger.info { "Block stored: ${kBlock.hash} " }
-//              blocksProducer.send(key, kBlock.toBlock())
+              logger.info { "Block stored: ${block.hash} " }
             }
-            it.isRight() -> logger.error { "Error storing block: ${kBlock.hash} | Exception: ${it.right()}" }
+            it.isRight() -> logger.error { "Error storing block: ${block.hash} | Exception: ${it.right()}" }
           }
         }
       }
@@ -155,6 +93,72 @@ class BlocksProcessor : KoinComponent, Processor {
 
     // Create streams
     streams = KafkaStreams(topology, kafkaProps)
+  }
+
+  fun calculateStatistics(key: String, block: KBlock): KeyValue<String, KBlock> {
+
+    if (block.status != KBlock.Status.CANONICAL.ordinal) {
+      // we only calculate statistics for canonical blocks
+      return KeyValue(key, block)
+    }
+
+    val blockTimeMs = Period(block.timestamp, DateTime.now()).millis
+
+    var numSuccessfulTxs = 0
+    var numFailedTxs = 0
+    val totalGasPrice = BigDecimal(0)
+    val totalTxsFees = BigDecimal(0)
+    val totalTxs = 0
+    val totalInternalTxs = 0
+
+    // TODO count internal transactions
+
+    val txs = block.transactions
+    txs.forEach { txn ->
+
+      logger.info { "Txn: ${txn.toDocument()} "}
+
+      if(txn.to === null && txn.contractAddress != null) {
+
+        logger.info{ "Contract detected via method 1"}
+        logger.info { "Txn: ${txn.toDocument()} "}
+
+      }
+
+      if (txn.status == KTransaction.RECEIPT_STATUS_SUCCESSFUL) {
+        numSuccessfulTxs += 1
+      } else {
+        numFailedTxs += 1
+      }
+
+      totalGasPrice.add(txn.gasPrice!!)
+
+      val txsFee = txn.gasUsed!!.times(txn.gasPrice!!)
+      totalTxsFees.add(txsFee)
+
+    }
+
+    val txsCount = txs.size.toBigDecimal()
+
+    var avgGasPrice = BigDecimal.ZERO
+    var avgTxsFees = BigDecimal.ZERO
+
+    if(txsCount.intValueExact() > 0) {
+      avgGasPrice = totalGasPrice.divide(txsCount, RoundingMode.CEILING)
+      avgTxsFees = totalTxsFees.divide(txsCount, RoundingMode.CEILING)
+    }
+
+    block.stats = KBlockStats(
+      blockTimeMs,
+      numFailedTxs,
+      numSuccessfulTxs,
+      totalTxs,
+      totalInternalTxs,
+      avgGasPrice,
+      avgTxsFees
+    )
+
+    return KeyValue(key, block)
   }
 
   override fun start() {

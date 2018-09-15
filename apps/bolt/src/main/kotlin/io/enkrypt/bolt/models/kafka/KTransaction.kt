@@ -60,6 +60,10 @@ class KTransaction(private val delegate: Transaction) {
     .append("logs", logs.map { it?.toDocument() })
     .append("trace", trace?.toDocument())
 
+  override fun toString(): String {
+    return toDocument().toString()
+  }
+
   companion object {
     // ReceiptStatusFailed is the status code of a transaction if execution failed.
     const val RECEIPT_STATUS_FAILED = 0
@@ -67,4 +71,6 @@ class KTransaction(private val delegate: Transaction) {
     // ReceiptStatusSuccessful is the status code of a transaction if execution succeeded.
     const val RECEIPT_STATUS_SUCCESSFUL = 1
   }
+
+
 }

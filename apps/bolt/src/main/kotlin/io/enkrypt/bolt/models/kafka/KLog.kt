@@ -19,4 +19,9 @@ class KLog(private val delegate: Log) {
     .append("index", index)
     .append("removed", removed)
 
+  override fun toString(): String {
+    return toDocument().toString()
+  }
+
+
 }

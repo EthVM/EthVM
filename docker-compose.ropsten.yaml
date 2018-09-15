@@ -91,17 +91,18 @@ services:
     image: mvertes/alpine-mongo:4.0.1-0
     restart: unless-stopped
     volumes:
-      - mongodb-volume:/data/db
+    - mongodb-volume:/data/db
     networks:
-      - back
+    - back
     ports:
-      - 27017:27017
+    - 27017:27017
+    command: "mongod --bind_ip 0.0.0.0 --replSet rs0"
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:mongo.ethvm.lan'
-      - 'traefik.port=27017'
-      - 'traefik.backend=mongodb'
+    - 'traefik.enable=true'
+    - 'traefik.default.protocol=http'
+    - 'traefik.frontend.rule=Host:mongo.ethvm.lan'
+    - 'traefik.port=27017'
+    - 'traefik.backend=mongodb'
 
   zookeeper:
     image: confluentinc/cp-zookeeper:5.0.0
@@ -216,4 +217,4 @@ services:
       - 'traefik.frontend.rule=Host:geth.ethvm.lan'
       - 'traefik.port=8545'
       - 'traefik.backend=geth'
-    command: geth --datadir '/geth' --testnet --verbosity 5 --identity geth --ethvm --ethvm-tracer 'noop-tracer' --ethvm-kafka-schema-registry-url 'http://kafka-schema-registry:8081' --ethvm-brokers 'kafka:9092' --gcmode archive --rpc --rpcaddr '0.0.0.0' --rpccorsdomain '*' --rpcapi 'admin,personal,db,eth,net,web3,txpool,miner' --syncmode full --nat 'extip:172.25.0.102' --nousb --nodiscover --maxpeers 2
+    command: geth --datadir '/geth' --testnet --verbosity 5 --identity geth --ethvm --ethvm-tracer 'internal-txs-tracer' --ethvm-kafka-schema-registry-url 'http://kafka-schema-registry:8081' --ethvm-brokers 'kafka:9092' --gcmode archive --rpc --rpcaddr '0.0.0.0' --rpccorsdomain '*' --rpcapi 'admin,personal,db,eth,net,web3,txpool,miner' --syncmode full --nat 'extip:172.25.0.102' --nousb --nodiscover --maxpeers 2
