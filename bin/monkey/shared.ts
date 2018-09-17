@@ -1,11 +1,11 @@
-import Ora from 'ora'
 import * as rpc from '@enkrypt.io/json-rpc2'
-import * as Util from 'util'
+import assert from 'assert'
 import EthereumTx from 'ethereumjs-tx'
+import Ora from 'ora'
+import * as Util from 'util'
+import * as utils from 'web3-utils'
 import accountsData from './accounts.json'
 import contracts from './contracts.json'
-import assert from 'assert'
-import * as utils from 'web3-utils'
 
 export const client = rpc.Client.$create(8545, 'localhost')
 client.callAsync = Util.promisify(client.call)
@@ -25,13 +25,12 @@ export interface TxParams {
 }
 
 export interface ContractDefinition {
-  name: string,
-  data: string,
+  name: string
+  data: string
   abi: any
 }
 
 export async function sendTransaction(params: TxParams, privateKey?: string): Promise<string> {
-
   const { from, to, value, gas } = params
 
   const pending = await client.callAsync('eth_getTransactionCount', [from, 'pending'])
@@ -39,7 +38,7 @@ export async function sendTransaction(params: TxParams, privateKey?: string): Pr
 
   const tx = new EthereumTx({ ...params, nonce })
 
-  if(from && privateKey) {
+  if (from && privateKey) {
     tx.sign(Buffer.from(privateKey, 'hex'))
   }
 
@@ -59,16 +58,15 @@ export async function sendTransaction(params: TxParams, privateKey?: string): Pr
 
 export async function estimateGas(txParams: TxParams): Promise<string> {
   const estimate = await client.callAsync('eth_estimateGas', [txParams])
-  let wei = utils.hexToNumber(estimate);
-  wei += Math.ceil(wei * 0.015);
-  return utils.numberToHex(wei);
+  let wei = utils.hexToNumber(estimate)
+  wei += Math.ceil(wei * 0.015)
+  return utils.numberToHex(wei)
 }
 
 export async function sendContract(fromAddress: string, type: string = 'erc20'): Promise<string> {
-
   const privateKey = privateKeyForAddress(fromAddress)
   const contract = contractForType(type)
-  const { data } = contract;
+  const { data } = contract
 
   const params: TxParams = {
     to: '',
@@ -84,34 +82,31 @@ export async function sendContract(fromAddress: string, type: string = 'erc20'):
 }
 
 export async function waitOnConfirmation(txhash: string, timeoutSeconds: number = 120): Promise<void> {
-
   ora.start(`Waiting up to ${timeoutSeconds} seconds for tx confirmation...`)
 
-  const intervalMs = 5 * 1000;
-  const startMs = new Date().getTime();
-  let elapsedSeconds = 0;
+  const intervalMs = 5 * 1000
+  const startMs = new Date().getTime()
+  let elapsedSeconds = 0
 
   return new Promise<void>((resolve, reject) => {
-
     async function checkStatus() {
-      const detail = await client.callAsync('eth_getTransactionByHash', [txhash]);
+      const detail = await client.callAsync('eth_getTransactionByHash', [txhash])
 
-      if(detail.blockNumber) {
+      if (detail.blockNumber) {
         ora.succeed(`Confirmation received, block number = ${utils.hexToNumber(detail.blockNumber)}`)
-        resolve(detail);
+        resolve(detail)
       } else {
-        elapsedSeconds = ((new Date().getTime() - startMs) / 1000);
-        if(elapsedSeconds > timeoutSeconds) {
-          ora.fail('Timed out waiting for tx confirmation');
-          reject(new Error('Timeout whist waiting'));
+        elapsedSeconds = (new Date().getTime() - startMs) / 1000
+        if (elapsedSeconds > timeoutSeconds) {
+          ora.fail('Timed out waiting for tx confirmation')
+          reject(new Error('Timeout whist waiting'))
         }
-        setTimeout(checkStatus, intervalMs);
+        setTimeout(checkStatus, intervalMs)
       }
     }
 
-    checkStatus();
-  });
-
+    checkStatus()
+  })
 }
 
 export function contractForType(type: string): ContractDefinition {

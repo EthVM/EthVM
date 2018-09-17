@@ -13,19 +13,7 @@ import { ora } from './shared'
 
 const version = '1.0.0'
 
-interface Txp {
-  from: string
-  to: string
-  nonce?: string
-  gas?: string
-  data?: any
-  gasPrice?: string
-  value?: string
-}
-
-commander
-  .description('Ethereum utility that helps to create random txs to aid in development')
-  .version(version, '-v, --version')
+commander.description('Ethereum utility that helps to create random txs to aid in development').version(version, '-v, --version')
 
 commander
   .command('random')
@@ -48,22 +36,22 @@ commander
 commander
   .command('contract-address <txhash>')
   .alias('ca')
-  .action(async (txhash) => {
+  .action(async txhash => {
     await invoke(() => getContractAddressCommand(txhash))
   })
 
 commander
   .command('balance <address>')
   .alias('b')
-  .action(async (address) => {
+  .action(async address => {
     await invoke(() => getBalanceCommand(address))
   })
 
 commander
   .command('confirm <txhash>')
   .alias('cf')
-  .action(async(txhash: string) => {
-    await invoke(() => waitForConfirmationCommand(txhash));
+  .action(async (txhash: string) => {
+    await invoke(() => waitForConfirmationCommand(txhash))
   })
 
 commander
@@ -75,16 +63,10 @@ commander
   .action(async (methodArgs, options) => {
     console.log('Method args', methodArgs)
     const { contractAddress, fromAddress, method } = options
-    await invoke(() => contractExecCommand(
-      contractAddress,
-      fromAddress || '0xF15bCa2e1cb09718A9217a1e07693415C2032666',
-      method,
-      ...methodArgs
-    ))
+    await invoke(() => contractExecCommand(contractAddress, fromAddress || '0xF15bCa2e1cb09718A9217a1e07693415C2032666', method, ...methodArgs))
   })
 
 async function invoke(fn: () => void) {
-
   try {
     await fn()
     process.exit(0)
@@ -92,7 +74,6 @@ async function invoke(fn: () => void) {
     ora.fail(e.message)
     process.exit(1)
   }
-
 }
 
 commander.parse(process.argv)
