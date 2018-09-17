@@ -1,10 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-
-
 plugins {
   application
-  kotlin("jvm") version "1.2.61"
+  kotlin("jvm") version "1.2.70"
 }
 
 tasks.withType<KotlinCompile> {
@@ -16,6 +14,8 @@ repositories {
   mavenCentral()
   maven("https://jitpack.io")
   maven("https://packages.confluent.io/maven/")
+  maven("https://oss.sonatype.org/content/repositories/releases/")
+  maven("https://dl.bintray.com/ethereum/maven/")
 }
 
 application {
@@ -27,28 +27,27 @@ project.java.sourceSets["main"].java {
 }
 
 dependencies {
-  compile(kotlin("stdlib"))
+  implementation(kotlin("stdlib"))
 
   // ethereumj
-  compile("org.ethereum:ethereumj-core:1.8.+")
-  compile("org.ethereum:solcJ-all:0.4.24")
+  implementation("org.ethereum:ethereumj-core:1.8.2-RELEASE")
 
   // Kafka
-  compile("org.apache.kafka:kafka-streams:2.0.0")
-  compile("io.confluent:kafka-streams-avro-serde:5.0.0")
-  compile("org.apache.avro:avro:1.8.2")
+  implementation("org.apache.kafka:kafka-streams:2.0.0")
+  implementation("io.confluent:kafka-streams-avro-serde:5.0.0")
+  implementation("org.apache.avro:avro:1.8.2")
 
   // mongo
-  compile("org.litote.kmongo:kmongo:3.8.2")
+  implementation("org.litote.kmongo:kmongo:3.8.2")
 
   // Utils
-  compile("com.github.ajalt:clikt:1.4.0")
-  compile("org.slf4j:slf4j-log4j12:1.7.25")
-  compile("io.github.microutils:kotlin-logging:1.5.9")
-  compile("joda-time:joda-time:2.10")
-  compile("org.koin:koin-core:1.0.0-RC-2")
-  compile("io.arrow-kt:arrow-core:0.7.3")
-  compile("org.web3j:utils:3.5.0")
+  implementation("com.github.ajalt:clikt:1.4.0")
+  implementation("org.slf4j:slf4j-log4j12:1.7.25")
+  implementation("io.github.microutils:kotlin-logging:1.5.9")
+  implementation("joda-time:joda-time:2.10")
+  implementation("org.koin:koin-core:1.0.0-RC-2")
+  implementation("io.arrow-kt:arrow-core:0.7.3")
+  implementation("org.web3j:utils:3.5.0")
 
-  testCompile("org.koin:koin-test:1.0.0-RC-2")
+  testImplementation("org.koin:koin-test:1.0.0-RC-2")
 }
