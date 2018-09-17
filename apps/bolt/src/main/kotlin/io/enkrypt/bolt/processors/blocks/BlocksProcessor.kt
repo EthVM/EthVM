@@ -95,8 +95,7 @@ class BlocksProcessor : KoinComponent, Processor {
     streams = KafkaStreams(topology, kafkaProps)
   }
 
-  fun calculateStatistics(key: String, block: KBlock): KeyValue<String, KBlock> {
-
+  private fun calculateStatistics(key: String, block: KBlock): KeyValue<String, KBlock> {
     if (block.status != KBlock.Status.CANONICAL.ordinal) {
       // we only calculate statistics for canonical blocks
       return KeyValue(key, block)
@@ -115,14 +114,11 @@ class BlocksProcessor : KoinComponent, Processor {
 
     val txs = block.transactions
     txs.forEach { txn ->
+      logger.info { "Txn: ${txn.toDocument()} " }
 
-      logger.info { "Txn: ${txn.toDocument()} "}
-
-      if(txn.to === null && txn.contractAddress != null) {
-
-        logger.info{ "Contract detected via method 1"}
-        logger.info { "Txn: ${txn.toDocument()} "}
-
+      if (txn.to === null && txn.contractAddress != null) {
+        logger.info { "Contract detected via method 1" }
+        logger.info { "Txn: ${txn.toDocument()} " }
       }
 
       if (txn.status == KTransaction.RECEIPT_STATUS_SUCCESSFUL) {
@@ -135,7 +131,6 @@ class BlocksProcessor : KoinComponent, Processor {
 
       val txsFee = txn.gasUsed!!.times(txn.gasPrice!!)
       totalTxsFees.add(txsFee)
-
     }
 
     val txsCount = txs.size.toBigDecimal()
@@ -143,7 +138,7 @@ class BlocksProcessor : KoinComponent, Processor {
     var avgGasPrice = BigDecimal.ZERO
     var avgTxsFees = BigDecimal.ZERO
 
-    if(txsCount.intValueExact() > 0) {
+    if (txsCount.intValueExact() > 0) {
       avgGasPrice = totalGasPrice.divide(txsCount, RoundingMode.CEILING)
       avgTxsFees = totalTxsFees.divide(txsCount, RoundingMode.CEILING)
     }
