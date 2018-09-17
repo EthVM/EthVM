@@ -11,7 +11,7 @@ contract Contract {
 contract Factory {
     address[] newContracts;
 
-    function createOpcodeCreateContract () public {
+    constructor() public {
         address newContract = new Contract("CREATE");
         newContracts.push(newContract);
     }
