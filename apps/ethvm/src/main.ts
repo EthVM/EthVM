@@ -66,7 +66,6 @@ import blockaddressTx from '@app/components/blocks/largeBlocks/addressTx.vue'
 import blockTxDetail from '@app/components/blocks/largeBlocks/txDetail.vue'
 import blockTokenTracker from '@app/components/blocks/largeBlocks/tokenTracker.vue'
 import blockTokenDetail from '@app/components/blocks/largeBlocks/blockTokenDetail.vue'
-import blockPendingTxs from '@app/components/blocks/largeBlocks/pendingTxs.vue'
 
 // Charts ----------------------
 import vueChart from '@app/components/blocks/smallBlocks/charts/vuechart.vue'
@@ -133,7 +132,6 @@ Vue.component('block-address-tx', blockaddressTx)
 Vue.component('block-tx-detail', blockTxDetail)
 Vue.component('block-token-tracker', blockTokenTracker)
 Vue.component('block-token-detail', blockTokenDetail)
-Vue.component('block-pending-txs', blockPendingTxs)
 
 // Charts ----------------------
 Vue.component('vue-chart', vueChart)

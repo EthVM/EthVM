@@ -8,7 +8,7 @@
         </v-breadcrumbs-item>
       </v-breadcrumbs>
     </v-card>
-   <block-last-transactions :transactions="pendingTxs" :showHeader="true" class="mt-3" :pending="true">{{getLength}}</block-last-transactions>
+    <block-last-transactions :transactions="pendingTxs" :showHeader="true" class="mt-3" :pending="true">{{getLength}}</block-last-transactions>
   </v-container>
 </template>
 

@@ -23,7 +23,6 @@
       </v-flex>
     </v-layout>
    <block-last-transactions :transactions="txs" :showHeader="true" class="mt-3"></block-last-transactions>
-
   </v-container>
 </template>
 

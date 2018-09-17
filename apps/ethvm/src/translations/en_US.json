@@ -14,6 +14,7 @@
     "charts": "Charts",
     "about": "About Us",
     "address": "Address",
+    "blockN": "Block #",
     "blockDetail": "Block Detail",
     "tokenDetail": "Token Detail",
     "txDetail": "Transaction Info",
@@ -97,7 +98,7 @@
     "recRoot": "Receipts Root",
     "uncReward": "Reward",
     "sha": "SHA3",
-    "uncle": "Uncle | Uncles"
+    "uncle": "Uncle(s)"
   },
 
   "addrOverview": {
