@@ -145,14 +145,9 @@
         "type": "record",
         "fields": [
           {
-            "name": "isError",
-            "type": "boolean",
-            "desc": "Signals if an error happened during execution"
-          },
-          {
-            "name": "msg",
-            "type": "string",
-            "desc": "Stores the error message"
+            "name": "error",
+            "type": "int",
+            "desc": "Returns an error code if the transaction has failed, otherwise will return 0"
           },
           {
             "name": "transfers",
