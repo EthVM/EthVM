@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import commander from 'commander'
+import accounts from './accounts.json'
 import {
   contractExecCommand,
   deployContractCommand,
@@ -18,24 +19,29 @@ commander.description('Ethereum utility that helps to create random txs to aid i
 commander
   .command('random')
   .alias('r')
-  .option('-c, --count <count>', 'amount of random txs')
+  .description('Generates a fixed amount of random txs (regular ones, not internal ones produced by smart contracts)')
+  .option('-n, --number <count>', 'Amount of random txs')
   .action(async options => {
     await invoke(() => randomTxsCommand(options.count || 10))
   })
 
 commander
-  .command('deploy [address]')
+  .command('deploy')
   .alias('d')
-  .option('-c, --contract', 'contract type. Default to erc20')
-  .action(async (address, options) => {
-    address = address || '0xF15bCa2e1cb09718A9217a1e07693415C2032666'
-    const type = options.contract || 'erc20'
+  .description('Deploys a new contract (possible values are specified in contracts.json file)')
+  .option('-a, --address [address]', 'Specifies which address will deploy the contract', accounts.main.address)
+  .option('-c, --contract [contract]', 'Contract type to deploy', /^(erc20|factory)$/i, 'erc20')
+  .action(async options => {
+    const address = options.address
+    const type = options.contract
+    ora.succeed(`Deploying contract: '${type}' with address: '${address}'`)
     await invoke(() => deployContractCommand(address, type))
   })
 
 commander
   .command('contract-address <txhash>')
   .alias('ca')
+  .description('Obtains the contract address for the specified <txhash> (if any)')
   .action(async txhash => {
     await invoke(() => getContractAddressCommand(txhash))
   })
@@ -43,6 +49,7 @@ commander
 commander
   .command('balance <address>')
   .alias('b')
+  .description('Obtains the balance for the given <address> (if any)')
   .action(async address => {
     await invoke(() => getBalanceCommand(address))
   })
@@ -57,13 +64,14 @@ commander
 commander
   .command('exec [methodArgs...]')
   .alias('e')
+  .description("Executes the specified RPC method (no input validation, so make sure you're passing correctly arguments")
   .option('-c, --contract-address <contractAddress>', 'contract address')
   .option('-f, --from-address <fromAddress>', 'from address')
   .option('-m, --method <method>', 'method to execute')
   .action(async (methodArgs, options) => {
     console.log('Method args', methodArgs)
     const { contractAddress, fromAddress, method } = options
-    await invoke(() => contractExecCommand(contractAddress, fromAddress || '0xF15bCa2e1cb09718A9217a1e07693415C2032666', method, ...methodArgs))
+    await invoke(() => contractExecCommand(contractAddress, fromAddress || accounts.main.address, method, ...methodArgs))
   })
 
 async function invoke(fn: () => void) {
