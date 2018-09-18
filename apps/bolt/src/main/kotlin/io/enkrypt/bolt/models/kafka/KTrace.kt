@@ -16,11 +16,13 @@ class KTrace(private val delegate: Trace) {
 
   companion object {
     const val TRACE_OK = 0
-    const val TraceOutOfGasError = 1
-    const val TRACE_DEPTH = 2
-    const val TRACE_LIMIT_REACHED = 3
-    const val TRACE_INSUFFICIENT_BALANCE = 4
-    const val TRACE_CONTRACT_ADDRESS_COLLISION = 5
-    const val TRACE_UNKNOWN_ERROR = 6
+    const val TRACE_OUT_OF_GAS_ERROR = 1
+    const val TRACE_CODE_STORE_OUT_OF_GAS = 2
+    const val TRACE_DEPTH = 3
+    const val TRACE_LIMIT_REACHED = 4
+    const val TRACE_INSUFFICIENT_BALANCE = 5
+    const val TRACE_CONTRACT_ADDRESS_COLLISION = 6
+    const val TRACE_UNKNOWN_ERROR = 7
   }
+
 }
