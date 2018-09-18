@@ -31,7 +31,8 @@
     "status": "Status",
     "timestmp": "Timestamp",
     "gwei": "GWEI",
-    "more": "More"
+    "more": "More",
+    "tx": "Tx"
   },
   "subTitle": {
     "home": "Welcome to Ethereum Virtual Machine",
