@@ -18,8 +18,8 @@ import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
-import org.apache.kafka.streams.kstream.Consumed
-import org.apache.kafka.streams.kstream.KStream
+import org.apache.kafka.streams.kstream.*
+import org.apache.kafka.streams.state.*
 import org.bson.Document
 import org.joda.time.DateTime
 import org.joda.time.Period
@@ -29,12 +29,11 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.Properties
 
+
 class BlocksProcessor : KoinComponent, Processor {
 
   private val appConfig: AppConfig by inject()
   private val kafkaProps: Properties by inject(name = "kafka.Properties")
-
-  private val blocksProducer: BlocksProducer by inject()
 
   private val mongoUri: MongoClientURI by inject()
   private val mongoClient: MongoClient by inject()
@@ -48,7 +47,12 @@ class BlocksProcessor : KoinComponent, Processor {
 
   private lateinit var streams: KafkaStreams
 
+  enum class BlockOperation {
+    Apply, Reverse, Ignore
+  }
+
   override fun onPrepareProcessor() {
+
 
     // Avro Serdes - Specific
     val serdeProps = mapOf(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG to appConfig.schemaRegistryUrl)
@@ -59,34 +63,45 @@ class BlocksProcessor : KoinComponent, Processor {
 
     // Raw Blocks Stream
     val (blocksTopic) = appConfig.topicsConfig
-    val blocks: KStream<String, Block> = builder.stream(blocksTopic, Consumed.with(Serdes.String(), blockSerde))
 
-    blocks
-      .filter { _, block -> block.getStatus() == KBlock.Status.CANONICAL.ordinal }
-      .map { key, block -> KeyValue(key, KBlock(block)) }
-      .map(::calculateStatistics)
-      // Store process
-      .foreach { key, block ->
-        mongoSession.transaction {
-          val replaceOptions = ReplaceOptions().upsert(true)
+    val blocks = builder
+      .stream(blocksTopic, Consumed.with(Serdes.String(), blockSerde))
+      .map{ key, block -> KeyValue(key, Block.newBuilder(block).build())}
 
-          // Store kBlock
-          val blockQuery = Document().append("_id", block.hash)
-          blocksCollection.replaceOne(mongoSession, blockQuery, block.toDocument(), replaceOptions)
+    val latestBlocksWindow = blocks
+      .groupByKey(Serialized.with(Serdes.String(), blockSerde))
+      .reduce(
+        { memo, next -> next },
+        Materialized.`as`(Stores.persistentKeyValueStore("latest-blocks"))
+      )
 
-          // Process addresses
-//          addresses.forEach { balance ->
-//            val balanceQuery = DocumenfeOne(mongoSession, balanceQuery, balance.toDocument(), replaceOptions)
-//          }
-        }.also {
-          when {
-            it.isLeft() -> {
-              logger.info { "Block stored: ${block.hash} " }
-            }
-            it.isRight() -> logger.error { "Error storing block: ${block.hash} | Exception: ${it.right()}" }
-          }
+    val blockWithOperation = blocks.join(
+      latestBlocksWindow,
+      { block, lastSeenBlock ->
+
+        val isCanonical = block.getStatus() == KBlock.Status.CANONICAL.ordinal
+        var wasCanonical = lastSeenBlock?.getStatus() == KBlock.Status.CANONICAL.ordinal
+
+        if(lastSeenBlock != null) {
+          wasCanonical = (lastSeenBlock.getStatus() == KBlock.Status.CANONICAL.ordinal) ?: false
         }
-      }
+
+        val operation = when(Pair(isCanonical, wasCanonical)) {
+          Pair(true, true) -> BlockOperation.Apply
+          Pair(true, false) -> BlockOperation.Apply
+          Pair(false, true) -> BlockOperation.Reverse
+          else -> BlockOperation.Ignore
+        }
+
+        Pair(operation, block)
+      },
+      Joined.with(Serdes.String(), blockSerde, blockSerde)
+    )
+
+    blockWithOperation
+      .map { key, (op, block) -> KeyValue(key, Pair(op, KBlock(block)))}
+      .map(::calculateStatistics)
+      .foreach(::persistToMongo)
 
     // Generate the topology
     val topology = builder.build()
@@ -95,12 +110,9 @@ class BlocksProcessor : KoinComponent, Processor {
     streams = KafkaStreams(topology, kafkaProps)
   }
 
-  private fun calculateStatistics(key: String, block: KBlock): KeyValue<String, KBlock> {
-    if (block.status != KBlock.Status.CANONICAL.ordinal) {
-      // we only calculate statistics for canonical blocks
-      return KeyValue(key, block)
-    }
+  private fun calculateStatistics(key: String, blockWithOp: Pair<BlockOperation, KBlock>): KeyValue<String, Pair<BlockOperation, KBlock>> {
 
+    val block = blockWithOp.second
     val blockTimeMs = Period(block.timestamp, DateTime.now()).millis
 
     var numSuccessfulTxs = 0
@@ -108,18 +120,10 @@ class BlocksProcessor : KoinComponent, Processor {
     val totalGasPrice = BigDecimal(0)
     val totalTxsFees = BigDecimal(0)
     val totalTxs = 0
-    val totalInternalTxs = 0
-
-    // TODO count internal transactions
+    var totalInternalTxs = 0
 
     val txs = block.transactions
     txs.forEach { txn ->
-      logger.info { "Txn: ${txn.toDocument()} " }
-
-      if (txn.to === null && txn.contractAddress != null) {
-        logger.info { "Contract detected via method 1" }
-        logger.info { "Txn: ${txn.toDocument()} " }
-      }
 
       if (txn.status == KTransaction.RECEIPT_STATUS_SUCCESSFUL) {
         numSuccessfulTxs += 1
@@ -131,6 +135,8 @@ class BlocksProcessor : KoinComponent, Processor {
 
       val txsFee = txn.gasUsed!!.times(txn.gasPrice!!)
       totalTxsFees.add(txsFee)
+
+      totalInternalTxs += txn.trace!!.transfers.size
     }
 
     val txsCount = txs.size.toBigDecimal()
@@ -153,7 +159,35 @@ class BlocksProcessor : KoinComponent, Processor {
       avgTxsFees
     )
 
-    return KeyValue(key, block)
+    return KeyValue(key, blockWithOp)
+  }
+
+  private fun persistToMongo(key: String, blockWithOp: Pair<BlockOperation, KBlock>) {
+
+    val block = blockWithOp.second
+
+    mongoSession.transaction {
+
+      val replaceOptions = ReplaceOptions().upsert(true)
+
+      // nullify the number field of the previous canonical block
+
+      val numberFilter = Document(mapOf("number" to block.number))
+      val numberUpdate = Document(mapOf("\$set" to mapOf("number" to null)))
+      blocksCollection.updateMany(mongoSession, numberFilter, numberUpdate)
+
+      // upsert the new block
+      val blockQuery = Document().append("_id", block.hash)
+      blocksCollection.replaceOne(mongoSession, blockQuery, block.toDocument(), replaceOptions)
+
+    }.also {
+      when {
+        it.isLeft() -> {
+          logger.info { "Block stored: ${block.hash} " }
+        }
+        it.isRight() -> logger.error { "Error storing block: ${block.hash} | Exception: ${it.right()}" }
+      }
+    }
   }
 
   override fun start() {

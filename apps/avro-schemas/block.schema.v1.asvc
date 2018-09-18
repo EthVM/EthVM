@@ -156,7 +156,7 @@
     },
     {
       "name": "transactions",
-      "doc": "Array of transactions",
+      "doc": "of transactions",
       "type": {
         "type": "array",
         "items": {

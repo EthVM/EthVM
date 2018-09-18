@@ -36,6 +36,8 @@ class KBlock(private val delegate: Block) {
   val uncleReward: BigDecimal? by lazy { delegate.getUncleReward().toBigDecimal() }
   var stats: KBlockStats? = null
 
+  val isCanonical: Boolean by lazy { status == Status.CANONICAL.ordinal }
+
   // Storing in pure binary
 //  val number: ByteArray? by lazy { delegate.getNumber().toByteArray() }
 //  val hash: ByteArray? by lazy { delegate.getHash().toByteArray() }

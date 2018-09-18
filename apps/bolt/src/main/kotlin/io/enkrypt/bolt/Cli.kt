@@ -7,7 +7,6 @@ import com.mongodb.MongoClientURI
 import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig
 import io.confluent.kafka.streams.serdes.avro.GenericAvroSerde
 import io.enkrypt.bolt.processors.blocks.BlocksProcessor
-import io.enkrypt.bolt.processors.blocks.BlocksProducer
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
@@ -89,7 +88,6 @@ class Cli : CliktCommand() {
       }
     }
 
-    single { BlocksProducer(get()) }
   }
 
   override fun run() {
@@ -111,7 +109,7 @@ class Cli : CliktCommand() {
   }
 
   companion object Defaults {
-    const val BLOCK_PROCESSOR = "blocks-processor4"
+    const val BLOCK_PROCESSOR = "blocks-processor"
     const val PENDING_TXS_PROCESSOR = "pending-txs-processor"
 
     const val DEFAULT_BOOTSTRAP_SERVERS = "localhost:9092"

@@ -1,0 +1,32 @@
+{
+  "namespace": "io.enkrypt.bolt.models.avro",
+  "name": "Balance",
+  "type": "record",
+  "fields": [
+    {
+      "name": "key",
+      "type": {
+        "namespace": "io.enkrypt.bolt.models.avro",
+        "name": "BalanceKey",
+        "type": "record",
+        "fields": [
+          {
+            "name": "address",
+            "type": "bytes"
+          },
+          {
+            "name": "contractAddress",
+            "type": ["null", "bytes"],
+            "doc": "Optional contract address for tracking token balances"
+          }
+        ]
+      }
+
+    },
+    {
+      "name": "amount",
+      "type": "bytes",
+      "doc": "Total amount of the balance held"
+    }
+  ]
+}
