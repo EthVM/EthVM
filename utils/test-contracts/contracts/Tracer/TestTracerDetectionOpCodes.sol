@@ -6,13 +6,21 @@ contract Contract {
     constructor (bytes32 name) public {
         Name = name;
     }
+
+    function changeName(bytes32 name) public {
+        Name = name;
+    }
 }
 
 contract Factory {
-    address[] newContracts;
+    address[] contracts;
 
     constructor() public {
-        address newContract = new Contract("CREATE");
-        newContracts.push(newContract);
+        // This will trigger OpCode CREATE
+        Contract c = new Contract("CREATE");
+        contracts.push(c);
+
+        // This will trigger OpCode CALL
+        c.changeName("CALL");
     }
 }

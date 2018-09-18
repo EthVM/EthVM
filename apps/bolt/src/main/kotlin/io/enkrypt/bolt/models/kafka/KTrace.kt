@@ -12,8 +12,15 @@ class KTrace(private val delegate: Trace) {
     .append("error", error)
     .append("transfers", tranfers.map { t -> t?.toDocument() })
 
-  override fun toString(): String {
-    return toDocument().toString()
-  }
+  override fun toString(): String = toDocument().toString()
 
+  companion object {
+    const val TRACE_OK = 0
+    const val TraceOutOfGasError = 1
+    const val TRACE_DEPTH = 2
+    const val TRACE_LIMIT_REACHED = 3
+    const val TRACE_INSUFFICIENT_BALANCE = 4
+    const val TRACE_CONTRACT_ADDRESS_COLLISION = 5
+    const val TRACE_UNKNOWN_ERROR = 6
+  }
 }
