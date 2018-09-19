@@ -13,8 +13,8 @@ import org.apache.avro.message.SchemaStore;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class Transfer extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = -4926849421107712152L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Transfer\",\"namespace\":\"io.enkrypt.bolt.models.avro\",\"fields\":[{\"name\":\"op\",\"type\":\"int\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"value\",\"type\":\"bytes\",\"doc\":\"Raw value of the transaction\"},{\"name\":\"from\",\"type\":\"bytes\",\"doc\":\"Address of the sender\"},{\"name\":\"fromBalance\",\"type\":\"bytes\",\"doc\":\"Balance of the sender\"},{\"name\":\"to\",\"type\":\"bytes\",\"doc\":\"Address of the receiver\"},{\"name\":\"toBalance\",\"type\":\"bytes\",\"doc\":\"Balance of the receiver\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"Raw input data\"}]}");
+  private static final long serialVersionUID = -7790787958902096536L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Transfer\",\"namespace\":\"io.enkrypt.bolt.models.avro\",\"fields\":[{\"name\":\"op\",\"type\":\"int\",\"doc\":\"Type of op executed inside the transaction\"},{\"name\":\"value\",\"type\":\"bytes\",\"doc\":\"Raw value of the transaction\"},{\"name\":\"from\",\"type\":\"bytes\",\"doc\":\"Address of the sender\"},{\"name\":\"to\",\"type\":\"bytes\",\"doc\":\"Address of the receiver\"},{\"name\":\"input\",\"type\":\"bytes\",\"doc\":\"Raw input data\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -57,12 +57,8 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
   @Deprecated public java.nio.ByteBuffer value;
   /** Address of the sender */
   @Deprecated public java.nio.ByteBuffer from;
-  /** Balance of the sender */
-  @Deprecated public java.nio.ByteBuffer fromBalance;
   /** Address of the receiver */
   @Deprecated public java.nio.ByteBuffer to;
-  /** Balance of the receiver */
-  @Deprecated public java.nio.ByteBuffer toBalance;
   /** Raw input data */
   @Deprecated public java.nio.ByteBuffer input;
 
@@ -78,18 +74,14 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
    * @param op Type of op executed inside the transaction
    * @param value Raw value of the transaction
    * @param from Address of the sender
-   * @param fromBalance Balance of the sender
    * @param to Address of the receiver
-   * @param toBalance Balance of the receiver
    * @param input Raw input data
    */
-  public Transfer(java.lang.Integer op, java.nio.ByteBuffer value, java.nio.ByteBuffer from, java.nio.ByteBuffer fromBalance, java.nio.ByteBuffer to, java.nio.ByteBuffer toBalance, java.nio.ByteBuffer input) {
+  public Transfer(java.lang.Integer op, java.nio.ByteBuffer value, java.nio.ByteBuffer from, java.nio.ByteBuffer to, java.nio.ByteBuffer input) {
     this.op = op;
     this.value = value;
     this.from = from;
-    this.fromBalance = fromBalance;
     this.to = to;
-    this.toBalance = toBalance;
     this.input = input;
   }
 
@@ -100,10 +92,8 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
     case 0: return op;
     case 1: return value;
     case 2: return from;
-    case 3: return fromBalance;
-    case 4: return to;
-    case 5: return toBalance;
-    case 6: return input;
+    case 3: return to;
+    case 4: return input;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -115,10 +105,8 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
     case 0: op = (java.lang.Integer)value$; break;
     case 1: value = (java.nio.ByteBuffer)value$; break;
     case 2: from = (java.nio.ByteBuffer)value$; break;
-    case 3: fromBalance = (java.nio.ByteBuffer)value$; break;
-    case 4: to = (java.nio.ByteBuffer)value$; break;
-    case 5: toBalance = (java.nio.ByteBuffer)value$; break;
-    case 6: input = (java.nio.ByteBuffer)value$; break;
+    case 3: to = (java.nio.ByteBuffer)value$; break;
+    case 4: input = (java.nio.ByteBuffer)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -175,23 +163,6 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
   }
 
   /**
-   * Gets the value of the 'fromBalance' field.
-   * @return Balance of the sender
-   */
-  public java.nio.ByteBuffer getFromBalance() {
-    return fromBalance;
-  }
-
-  /**
-   * Sets the value of the 'fromBalance' field.
-   * Balance of the sender
-   * @param value the value to set.
-   */
-  public void setFromBalance(java.nio.ByteBuffer value) {
-    this.fromBalance = value;
-  }
-
-  /**
    * Gets the value of the 'to' field.
    * @return Address of the receiver
    */
@@ -206,23 +177,6 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
    */
   public void setTo(java.nio.ByteBuffer value) {
     this.to = value;
-  }
-
-  /**
-   * Gets the value of the 'toBalance' field.
-   * @return Balance of the receiver
-   */
-  public java.nio.ByteBuffer getToBalance() {
-    return toBalance;
-  }
-
-  /**
-   * Sets the value of the 'toBalance' field.
-   * Balance of the receiver
-   * @param value the value to set.
-   */
-  public void setToBalance(java.nio.ByteBuffer value) {
-    this.toBalance = value;
   }
 
   /**
@@ -280,12 +234,8 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
     private java.nio.ByteBuffer value;
     /** Address of the sender */
     private java.nio.ByteBuffer from;
-    /** Balance of the sender */
-    private java.nio.ByteBuffer fromBalance;
     /** Address of the receiver */
     private java.nio.ByteBuffer to;
-    /** Balance of the receiver */
-    private java.nio.ByteBuffer toBalance;
     /** Raw input data */
     private java.nio.ByteBuffer input;
 
@@ -312,21 +262,13 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
         this.from = data().deepCopy(fields()[2].schema(), other.from);
         fieldSetFlags()[2] = true;
       }
-      if (isValidValue(fields()[3], other.fromBalance)) {
-        this.fromBalance = data().deepCopy(fields()[3].schema(), other.fromBalance);
+      if (isValidValue(fields()[3], other.to)) {
+        this.to = data().deepCopy(fields()[3].schema(), other.to);
         fieldSetFlags()[3] = true;
       }
-      if (isValidValue(fields()[4], other.to)) {
-        this.to = data().deepCopy(fields()[4].schema(), other.to);
+      if (isValidValue(fields()[4], other.input)) {
+        this.input = data().deepCopy(fields()[4].schema(), other.input);
         fieldSetFlags()[4] = true;
-      }
-      if (isValidValue(fields()[5], other.toBalance)) {
-        this.toBalance = data().deepCopy(fields()[5].schema(), other.toBalance);
-        fieldSetFlags()[5] = true;
-      }
-      if (isValidValue(fields()[6], other.input)) {
-        this.input = data().deepCopy(fields()[6].schema(), other.input);
-        fieldSetFlags()[6] = true;
       }
     }
 
@@ -348,21 +290,13 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
         this.from = data().deepCopy(fields()[2].schema(), other.from);
         fieldSetFlags()[2] = true;
       }
-      if (isValidValue(fields()[3], other.fromBalance)) {
-        this.fromBalance = data().deepCopy(fields()[3].schema(), other.fromBalance);
+      if (isValidValue(fields()[3], other.to)) {
+        this.to = data().deepCopy(fields()[3].schema(), other.to);
         fieldSetFlags()[3] = true;
       }
-      if (isValidValue(fields()[4], other.to)) {
-        this.to = data().deepCopy(fields()[4].schema(), other.to);
+      if (isValidValue(fields()[4], other.input)) {
+        this.input = data().deepCopy(fields()[4].schema(), other.input);
         fieldSetFlags()[4] = true;
-      }
-      if (isValidValue(fields()[5], other.toBalance)) {
-        this.toBalance = data().deepCopy(fields()[5].schema(), other.toBalance);
-        fieldSetFlags()[5] = true;
-      }
-      if (isValidValue(fields()[6], other.input)) {
-        this.input = data().deepCopy(fields()[6].schema(), other.input);
-        fieldSetFlags()[6] = true;
       }
     }
 
@@ -495,49 +429,6 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
     }
 
     /**
-      * Gets the value of the 'fromBalance' field.
-      * Balance of the sender
-      * @return The value.
-      */
-    public java.nio.ByteBuffer getFromBalance() {
-      return fromBalance;
-    }
-
-    /**
-      * Sets the value of the 'fromBalance' field.
-      * Balance of the sender
-      * @param value The value of 'fromBalance'.
-      * @return This builder.
-      */
-    public io.enkrypt.bolt.models.avro.Transfer.Builder setFromBalance(java.nio.ByteBuffer value) {
-      validate(fields()[3], value);
-      this.fromBalance = value;
-      fieldSetFlags()[3] = true;
-      return this;
-    }
-
-    /**
-      * Checks whether the 'fromBalance' field has been set.
-      * Balance of the sender
-      * @return True if the 'fromBalance' field has been set, false otherwise.
-      */
-    public boolean hasFromBalance() {
-      return fieldSetFlags()[3];
-    }
-
-
-    /**
-      * Clears the value of the 'fromBalance' field.
-      * Balance of the sender
-      * @return This builder.
-      */
-    public io.enkrypt.bolt.models.avro.Transfer.Builder clearFromBalance() {
-      fromBalance = null;
-      fieldSetFlags()[3] = false;
-      return this;
-    }
-
-    /**
       * Gets the value of the 'to' field.
       * Address of the receiver
       * @return The value.
@@ -553,9 +444,9 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * @return This builder.
       */
     public io.enkrypt.bolt.models.avro.Transfer.Builder setTo(java.nio.ByteBuffer value) {
-      validate(fields()[4], value);
+      validate(fields()[3], value);
       this.to = value;
-      fieldSetFlags()[4] = true;
+      fieldSetFlags()[3] = true;
       return this;
     }
 
@@ -565,7 +456,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * @return True if the 'to' field has been set, false otherwise.
       */
     public boolean hasTo() {
-      return fieldSetFlags()[4];
+      return fieldSetFlags()[3];
     }
 
 
@@ -576,50 +467,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       */
     public io.enkrypt.bolt.models.avro.Transfer.Builder clearTo() {
       to = null;
-      fieldSetFlags()[4] = false;
-      return this;
-    }
-
-    /**
-      * Gets the value of the 'toBalance' field.
-      * Balance of the receiver
-      * @return The value.
-      */
-    public java.nio.ByteBuffer getToBalance() {
-      return toBalance;
-    }
-
-    /**
-      * Sets the value of the 'toBalance' field.
-      * Balance of the receiver
-      * @param value The value of 'toBalance'.
-      * @return This builder.
-      */
-    public io.enkrypt.bolt.models.avro.Transfer.Builder setToBalance(java.nio.ByteBuffer value) {
-      validate(fields()[5], value);
-      this.toBalance = value;
-      fieldSetFlags()[5] = true;
-      return this;
-    }
-
-    /**
-      * Checks whether the 'toBalance' field has been set.
-      * Balance of the receiver
-      * @return True if the 'toBalance' field has been set, false otherwise.
-      */
-    public boolean hasToBalance() {
-      return fieldSetFlags()[5];
-    }
-
-
-    /**
-      * Clears the value of the 'toBalance' field.
-      * Balance of the receiver
-      * @return This builder.
-      */
-    public io.enkrypt.bolt.models.avro.Transfer.Builder clearToBalance() {
-      toBalance = null;
-      fieldSetFlags()[5] = false;
+      fieldSetFlags()[3] = false;
       return this;
     }
 
@@ -639,9 +487,9 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * @return This builder.
       */
     public io.enkrypt.bolt.models.avro.Transfer.Builder setInput(java.nio.ByteBuffer value) {
-      validate(fields()[6], value);
+      validate(fields()[4], value);
       this.input = value;
-      fieldSetFlags()[6] = true;
+      fieldSetFlags()[4] = true;
       return this;
     }
 
@@ -651,7 +499,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       * @return True if the 'input' field has been set, false otherwise.
       */
     public boolean hasInput() {
-      return fieldSetFlags()[6];
+      return fieldSetFlags()[4];
     }
 
 
@@ -662,7 +510,7 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
       */
     public io.enkrypt.bolt.models.avro.Transfer.Builder clearInput() {
       input = null;
-      fieldSetFlags()[6] = false;
+      fieldSetFlags()[4] = false;
       return this;
     }
 
@@ -674,10 +522,8 @@ public class Transfer extends org.apache.avro.specific.SpecificRecordBase implem
         record.op = fieldSetFlags()[0] ? this.op : (java.lang.Integer) defaultValue(fields()[0]);
         record.value = fieldSetFlags()[1] ? this.value : (java.nio.ByteBuffer) defaultValue(fields()[1]);
         record.from = fieldSetFlags()[2] ? this.from : (java.nio.ByteBuffer) defaultValue(fields()[2]);
-        record.fromBalance = fieldSetFlags()[3] ? this.fromBalance : (java.nio.ByteBuffer) defaultValue(fields()[3]);
-        record.to = fieldSetFlags()[4] ? this.to : (java.nio.ByteBuffer) defaultValue(fields()[4]);
-        record.toBalance = fieldSetFlags()[5] ? this.toBalance : (java.nio.ByteBuffer) defaultValue(fields()[5]);
-        record.input = fieldSetFlags()[6] ? this.input : (java.nio.ByteBuffer) defaultValue(fields()[6]);
+        record.to = fieldSetFlags()[3] ? this.to : (java.nio.ByteBuffer) defaultValue(fields()[3]);
+        record.input = fieldSetFlags()[4] ? this.input : (java.nio.ByteBuffer) defaultValue(fields()[4]);
         return record;
       } catch (java.lang.Exception e) {
         throw new org.apache.avro.AvroRuntimeException(e);

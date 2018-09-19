@@ -16,9 +16,7 @@ class KTransaction(private val delegate: Transaction) {
   val nonce: String? by lazy { delegate.getNonce().toHex() }
   val nonceHash: String? by lazy { delegate.getNonce().toHex() }
   val from: String? by lazy { delegate.getFrom().toHex() }
-  val fromBalance: BigDecimal? by lazy { delegate.getFromBalance().toBigDecimal() }
   val to: String? by lazy { delegate.getTo().toHex() }
-  val toBalance: BigDecimal? by lazy { delegate.getToBalance().toBigDecimal() }
   val input: String? by lazy { delegate.getInput().toHex() }
   val contractAddress: String? by lazy { delegate.getContractAddress().toHex() }
   val value: String? by lazy { delegate.getValue().toHex() }
@@ -42,9 +40,7 @@ class KTransaction(private val delegate: Transaction) {
     .append("nonce", nonce)
     .append("nonceHash", nonceHash)
     .append("from", from)
-    .append("fromBalance", fromBalance)
     .append("to", to)
-    .append("toBalance", toBalance)
     .append("input", input)
     .append("contractAddress", contractAddress)
     .append("value", value)
