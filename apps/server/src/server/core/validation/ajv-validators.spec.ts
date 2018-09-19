@@ -5,6 +5,7 @@ import {
   blockPayloadValidator,
   blockTxsPayloadValidator,
   chartPayloadValidator,
+  exchangeRatePayloadValidator,
   joinLeavePayloadValidator,
   tokensBalancePayloadValidator,
   totalTxsPayloadValidator,
@@ -377,6 +378,51 @@ describe('ajv-validators', () => {
       inputs.forEach(input => {
         const payload = input
         const isvalid = joinLeavePayloadValidator(payload)
+        expect(isvalid).to.be.false
+      })
+    })
+  })
+
+  describe('Exchange validator', () => {
+    it('should validate a correct Exchange payload', () => {
+      const inputs = [
+        {
+          to: 'USD',
+          symbol: 'BTC'
+        },
+        {
+          to: 'USD',
+          symbol: 'ETH'
+        }
+      ]
+      inputs.forEach(input => {
+        const isvalid = exchangeRatePayloadValidator(input)
+        expect(isvalid).to.be.true
+      })
+    })
+
+    it('should not validate an incorrect Exchange payload', () => {
+      const inputs = [
+        '',
+        '0x',
+        '0x0',
+        10,
+        {},
+        {
+          to: 'ETH',
+          symbol: 'ETH'
+        },
+        {
+          to: 'USD',
+          symbol: 'SCC'
+        },
+        {
+          to: 'USD'
+        }
+      ]
+      inputs.forEach(input => {
+        const payload = input
+        const isvalid = exchangeRatePayloadValidator(payload)
         expect(isvalid).to.be.false
       })
     })

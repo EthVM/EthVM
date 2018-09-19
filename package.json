@@ -18,6 +18,7 @@
     }
   },
   "scripts": {
+    "testprovider": "ts-node bin/e2e-provider-cli.ts",
     "monkey": "ts-node bin/monkey-cli.ts",
     "format": "yarn lint:fix && yarn prettier",
     "lint": "tslint -c tslint.json --project .",
@@ -48,6 +49,7 @@
   },
   "dependencies": {
     "ethereumjs-abi": "^0.6.5",
-    "ethereumjs-util": "^5.2.0"
+    "ethereumjs-util": "^5.2.0",
+    "rethinkdb": "^2.3.3"
   }
 }

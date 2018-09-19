@@ -14,6 +14,7 @@
     },
     "removeComments": true,
     "strict": true,
+    "strictPropertyInitialization": false,
     "target": "es6",
     "typeRoots": [
       "node_modules/@types",
