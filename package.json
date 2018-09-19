@@ -23,7 +23,8 @@
     "format": "yarn lint:fix && yarn prettier",
     "lint": "tslint -c tslint.json --project .",
     "lint:fix": "tslint -c tslint.json --project . --fix",
-    "prettier": "prettier --write 'bin/**/*.ts'"
+    "prettier": "prettier --write 'bin/**/*.ts'",
+    "test:contract": "jest --coverage --config ./apps/contracts/jest.contract.json"
   },
   "devDependencies": {
     "@enkrypt.io/json-rpc2": "^1.0.2",
@@ -48,5 +49,11 @@
     "tslint-consistent-codestyle": "^1.13.3",
     "typescript": "^3.0.1",
     "web3-utils": "^1.0.0-beta.35"
+  },
+  "dependencies": {
+    "chai": "^4.1.2",
+    "jest": "^23.6.0",
+    "ts-jest": "^23.1.4",
+    "web3": "^1.0.0-beta.36"
   }
 }
