@@ -1,14 +1,8 @@
 <template>
-  <div id="GraphsLineChart" class="line-chart">
-
-     <vue-chart type="line" :data="chartData"
-                            :options="chartOptions"
-                            :redraw="redraw"
-                            :chartTitle="newTitle"
-                            :chartDescription="newDescription"
-                            unfilled="true"></vue-chart>
-
-  </div>
+  <v-layout column justify-center>
+    <vue-chart type="line" :data="chartData" :options="chartOptions" :redraw="redraw" :chartTitle="newTitle" :chartDescription="newDescription" unfilled="true"></vue-chart>
+    <footnote :footnotes="footnote"></footnote>
+  </v-layout>
 </template>
 
 <script lang="ts">
@@ -69,13 +63,27 @@ const lineOptions = {
 
 export default Vue.extend({
   name: 'BarChart',
-  data: () => ({
-    chartData: {},
-    chartOptions: lineOptions,
-    redraw: false,
-    newTitle: title,
-    newDescription: description
-  }),
+  data() {
+    return {
+      chartData: {},
+      chartOptions: lineOptions,
+      redraw: false,
+      newTitle: title,
+      newDescription: description,
+      footnote: [
+        {
+          color: 'secondary',
+          text: this.$i18n.t('footnote.aveTxFees'),
+          icon: 'fa fa-circle'
+        },
+        {
+          color: 'warning',
+          text: this.$i18n.t('footnote.aveGasPrice'),
+          icon: 'fa fa-circle'
+        }
+      ]
+    }
+  },
   created() {
     this.chartData = this.initData
     this.$eventHub.$on(sEvents.pastBlocksR, () => {

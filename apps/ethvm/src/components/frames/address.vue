@@ -7,11 +7,8 @@
           <div class="ident">
             <div id="icon" class="identicon"></div>
           </div>
-
             <h3 class="address-string">{{ $t('title.address') }}</h3>
-
             <h3 class="address-hash">{{address}}</h3>
-
           <h6 class="text">{{ $t('subTitle.address') }}</h6>
 
 

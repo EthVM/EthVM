@@ -1,4 +1,6 @@
 import App from '@app/App.vue'
+import colors from 'vuetify/es5/util/colors'
+
 import socketConfig from '@app/configs/socket.json'
 import router from '@app/router'
 import store from '@app/states'
@@ -9,10 +11,13 @@ import Vue from 'vue'
 import infiniteScroll from 'vue-infinite-scroll'
 import VueSocketio from 'vue-socket.io'
 import VueTimeago from 'vue-timeago'
+import Vuetify from 'vuetify'
+import 'vuetify/dist/vuetify.min.css'
 import Toasted from 'vue-toasted'
 
 // EthVM Frames
 // Main ----
+import navigation from '@app/components/blocks/navigationDrawer/nav.vue'
 import frameHome from '@app/components/frames/home.vue'
 import frameBlocks from '@app/components/frames/blocks.vue'
 import frameTxs from '@app/components/frames/transactions.vue'
@@ -32,6 +37,7 @@ import mobileMenu from '@app/components/blocks/header/mobileMenu.vue'
 // SMALL BLOCKS ----------------------
 // Parent Small Block Component:
 import blockComponent from '@app/components/blocks/smallBlocks/component.vue'
+import footnote from '@app/components/blocks/smallBlocks/footnote.vue'
 
 // Search Block:
 import blockSearch from '@app/components/blocks/smallBlocks/search.vue'
@@ -60,7 +66,6 @@ import blockaddressTx from '@app/components/blocks/largeBlocks/addressTx.vue'
 import blockTxDetail from '@app/components/blocks/largeBlocks/txDetail.vue'
 import blockTokenTracker from '@app/components/blocks/largeBlocks/tokenTracker.vue'
 import blockTokenDetail from '@app/components/blocks/largeBlocks/blockTokenDetail.vue'
-import blockPendingTxs from '@app/components/blocks/largeBlocks/pendingTxs.vue'
 
 // Charts ----------------------
 import vueChart from '@app/components/blocks/smallBlocks/charts/vuechart.vue'
@@ -79,6 +84,7 @@ import blockFooter from '@app/components/blocks/footer/footer.vue'
 
 // Vue
 // Main ----
+Vue.component('navigation', navigation)
 Vue.component('frame-home', frameHome)
 Vue.component('frame-blocks', frameBlocks)
 Vue.component('frame-txs', frameTxs)
@@ -97,6 +103,7 @@ Vue.component('mobile-menu', mobileMenu)
 // SMALL BLOCKS ----------------------
 // Parent Small Block Component:
 Vue.component('block-component', blockComponent)
+Vue.component('footnote', footnote)
 
 // Search Block:
 Vue.component('block-search', blockSearch)
@@ -125,7 +132,6 @@ Vue.component('block-address-tx', blockaddressTx)
 Vue.component('block-tx-detail', blockTxDetail)
 Vue.component('block-token-tracker', blockTokenTracker)
 Vue.component('block-token-detail', blockTokenDetail)
-Vue.component('block-pending-txs', blockPendingTxs)
 
 // Charts ----------------------
 Vue.component('vue-chart', vueChart)
@@ -158,6 +164,18 @@ Vue.use(VueTimeago, {
   }
 })
 Vue.use(infiniteScroll)
+Vue.use(Vuetify, {
+  theme: {
+    // used -->
+    primary: String(colors.blue.darken4),
+    secondary: '#2779ff',
+    accent: '#7c76fc',
+    success: '#20c0c7',
+    warning: '#f9967b'
+    // used -->
+    // background: String(colors.grey.darken3)
+  }
+})
 new Vue({
   el: '#app',
   store,

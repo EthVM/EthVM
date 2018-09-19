@@ -1,5 +1,5 @@
 <template>
-  <block-component :title="blockTitle" backgroundColor="color4" :value="getSuccessfulTx" :icon-name="blockIconType" :icon-color="blockIconColor">
+  <block-component :title="blockTitle" :value="getSuccessfulTx" :icon="iconType" :colorType="type">
   </block-component>
 </template>
 
@@ -13,8 +13,8 @@ export default Vue.extend({
   data() {
     return {
       blockTitle: this.$i18n.t('smlBlock.success'),
-      blockIconType: 'asterisk',
-      blockIconColor: '#6bee69'
+      iconType: 'fa fa-check-circle white--text',
+      type: 'success white--text'
     }
   },
   computed: {

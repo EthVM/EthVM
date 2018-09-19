@@ -1,13 +1,8 @@
 <template>
-<div id="GraphsBarChart">
-  <vue-chart type="bar"
-    :data="chartData"
-    :options="chartOptions"
-    :chartTitle="newTitle"
-    :chartDescription="newDescription"
-    :redraw="redraw"></vue-chart>
-  </div>
-</div>
+  <v-layout column justify-center>
+    <vue-chart type="bar" :data="chartData" :options="chartOptions" :chartTitle="newTitle" :chartDescription="newDescription" :redraw="redraw"></vue-chart>
+    <footnote :footnotes="footnote"> </footnote>
+  </v-layout>
 </template>
 
 <script lang="ts">
@@ -69,14 +64,32 @@ const barOptions = {
 }
 export default Vue.extend({
   name: 'BarChart',
-  data: () => ({
-    chartData: {},
-    chartOptions: barOptions,
-    redraw: false,
-    newTitle: title,
-    newDescription: description
-  }),
-  mounted() {},
+  data() {
+    return {
+      chartData: {},
+      chartOptions: barOptions,
+      redraw: false,
+      newTitle: title,
+      newDescription: description,
+      footnote: [
+        {
+          color: 'success',
+          text: this.$i18n.t('footnote.success'),
+          icon: 'fa fa-circle'
+        },
+        {
+          color: 'warning',
+          text: this.$i18n.t('footnote.failed'),
+          icon: 'fa fa-circle'
+        },
+        {
+          color: 'accent',
+          text: this.$i18n.t('footnote.pending'),
+          icon: 'fa fa-circle'
+        }
+      ]
+    }
+  },
   created() {
     this.chartData = this.initData
     this.$eventHub.$on(sEvents.pastBlocksR, () => {

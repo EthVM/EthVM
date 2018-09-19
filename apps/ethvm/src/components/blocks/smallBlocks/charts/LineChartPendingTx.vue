@@ -1,12 +1,8 @@
 <template>
-<div id="GraphsRealChart" class="real-chart component-shadow">
-  <div class="graphs">
-    <vue-chart type="line"
-      :data="chartData"
-      :options="chartOptions"
-      :redraw="redraw"></vue-chart>
-  </div>
-</div>
+  <v-layout column justify-center>
+    <vue-chart type="line" :data="chartData" :options="chartOptions" :redraw="redraw"></vue-chart>
+    <footnote :footnotes="footnote"> </footnote>
+  </v-layout>
 </template>
 
 <script lang="ts">
@@ -55,12 +51,20 @@ const newOptions = {
 const MAX_ITEMS = 10
 export default Vue.extend({
   name: 'pendingTxsChart',
-  data: () => ({
-    chartData: {},
-    chartOptions: newOptions,
-    redraw: false
-  }),
-  mounted() {},
+  data() {
+    return {
+      chartData: {},
+      chartOptions: newOptions,
+      redraw: false,
+      footnote: [
+        {
+          color: 'acent',
+          text: this.$i18n.t('footnote.pending'),
+          icon: 'fa fa-circle'
+        }
+      ]
+    }
+  },
   created() {
     this.chartData = this.initData
     this.$eventHub.$on(sEvents.pastBlocksR, () => {

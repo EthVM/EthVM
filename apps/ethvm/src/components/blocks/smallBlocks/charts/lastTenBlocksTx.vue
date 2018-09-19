@@ -1,12 +1,7 @@
 <template>
-<div id="GraphsBarChart" class="bar-chart component-shadow">
-  <div class="graphs">
-    <vue-chart type="bar"
-      :data="chartData"
-      :options="chartOptions"
-      :redraw="redraw"></vue-chart>
-  </div>
-</div>
+  <v-layout column justify-center>
+    <vue-chart type="bar" :data="chartData" :options="chartOptions" :redraw="redraw"></vue-chart>
+  </v-layout>
 </template>
 
 <script lang="ts">
