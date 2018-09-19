@@ -1,43 +1,29 @@
 <template>
-  <div id="tx-frame">
-    <div class="container">
-      <!-- Page Title -->
-      <div class="page-title-container">
-        <div class="page-title">
-          <h3>{{ $t('title.tx') }}</h3>
-          <h6 class="text-muted">{{ $t('subTitle.tx') }}</h6>
-        </div>
-        <div class="search-block">
-          <block-search></block-search>
-        </div>
-        <!-- End Page Title -->
-      </div>
-      <!-- 4 Top Blocks -->
-      <div class="small-blocks-row">
+  <v-container grid-list-lg class="mt-0">
+    <v-card fluid flat color="transparent">
+      <v-breadcrumbs large>
+        <v-icon slot="divider">fa fa-arrow-right</v-icon>
+        <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link">
+          {{ item.text }}
+        </v-breadcrumbs-item>
+      </v-breadcrumbs>
+    </v-card>
+    <v-layout row wrap justify-space-between>
+      <v-flex xs12 md6 lg3>
         <block-last-block></block-last-block>
-        <successful-tx-small-block></successful-tx-small-block>
-        <failed-tx-small-block></failed-tx-small-block>
+      </v-flex>
+      <v-flex xs12 md6 lg3>
+         <successful-tx-small-block></successful-tx-small-block>
+      </v-flex>
+      <v-flex xs12 md6 lg3>
+         <failed-tx-small-block></failed-tx-small-block>
+      </v-flex>
+      <v-flex xs12 md6 lg3>
         <pending-tx-small-block></pending-tx-small-block>
-        <!-- End 4 Top Blocks -->
-      </div>
-      <!-- Tx Table -->
-      <div v-if="txs.length > 0" class="row">
-        <div class="col-md-12">
-          <block-last-transactions :transactions="txs" :showHeader="true"></block-last-transactions>
-        </div>
-        <div class="col-md-12 footnote">
-          <ul>
-            <li><i class="fa fa-check success" aria-hidden="true"></i> {{ $t('footnote.success') }}</li>
-            <li><i class="fa fa-times failed" aria-hidden="true"></i> {{ $t('footnote.failed') }}</li>
-          </ul>
-        </div>
-        <!-- End Tx Table -->
-      </div>
-      <div v-else class="info-common">
-        <p>{{ $t('message.noTxHistory') }}</p>
-      </div>
-    </div>
-  </div>
+      </v-flex>
+    </v-layout>
+   <block-last-transactions :transactions="txs" :showHeader="true" class="mt-3"></block-last-transactions>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -47,7 +33,19 @@ const MAX_ITEMS = 20
 export default Vue.extend({
   name: 'FramesHome',
   data() {
-    return {}
+    return {
+      items: [
+        {
+          text: this.$i18n.t('title.home'),
+          disabled: false,
+          link: '/'
+        },
+        {
+          text: this.$i18n.t('title.mined'),
+          disabled: true
+        }
+      ]
+    }
   },
   computed: {
     txs() {

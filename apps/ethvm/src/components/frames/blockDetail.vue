@@ -1,38 +1,24 @@
 <template>
-  <div id="block">
-    <div class="container">
-      <!-- Page Title -->
-      <div class="page-title-container">
-        <div class="page-title">
-          <h3>{{ $t('title.blockDetail') }}</h3>
-          <h6 class="text-muted">{{ $t('subTitle.blockDetail') }}</h6>
-        </div>
-        <div class="search-block">
-          <block-search></block-search>
-        </div>
-        <!-- End Page Title -->
-      </div>
-      <div class="row">
-        <div class="col-md-12 col-sm-12 col-xs-12">
-          <div class="block">
-            <block-block-detail :block="block" :uncles="uncles"></block-block-detail>
-          </div>
-        </div>
-        <div class="col-md-12 col-sm-12 col-xs-12" v-if="!isUncle">
-          <div class="block-title-container">
-            <h3>{{ $t('title.blockTx') }}</h3>
-          </div>
-          <div v-if="transactions.length > 0" class="block">
-            <block-last-transactions :transactions="transactions" :showHeader="true"></block-last-transactions>
-          </div>
-          <div v-else class="info-common">
-            <p>{{ $t( 'message.noTxInBlock' ) }} </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <v-container v-if="block != null" grid-list-lg class="mt-0">
+    <v-card fluid flat color="transparent">
+      <v-breadcrumbs large>
+        <v-icon slot="divider">fa fa-arrow-right</v-icon>
+        <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link">
+          {{ item.text }}
+        </v-breadcrumbs-item>
+      </v-breadcrumbs>
+    </v-card>
+    <h4 class="mt-5">{{ $t('title.blockDetail') }}</h4>
+    <block-block-detail :block="block" :uncles="uncles"></block-block-detail>
+    <h4>{{ $t('title.blockTx') }}</h4>
+    <block-last-transactions v-if="transactions.length > 0" :transactions="transactions" :showHeader="true" class="mt-3"></block-last-transactions>
+    <v-card v-else color="white">
+      <v-card-text class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }} </v-card-text>
+    </v-card>
+  </v-container>
 </template>
+
+
 
 <script lang="ts">
 import { common } from '@app/helpers'
@@ -51,13 +37,37 @@ export default Vue.extend({
       store,
       options: chartOptions,
       block: null,
+      bNum: null,
       uncles: [],
       unixtimestamp: null,
       timestamp: null,
-      transactions: []
+      transactions: [],
+      items: [
+        {
+          text: this.$i18n.t('title.home'),
+          disabled: false,
+          link: '/'
+        },
+        {
+          text: this.$i18n.t('title.blocks'),
+          disabled: false,
+          link: '/blocks'
+        }
+      ],
+      details: []
     }
   },
-  methods: {},
+  methods: {
+    setItems(num) {
+      const newText = this.$i18n.t('title.blockN') + ' ' + num
+      const newI = {
+        text: newText,
+        disabled: false,
+        link: '/'
+      }
+      this.items.push(newI)
+    }
+  },
   computed: {
     isUncle() {
       if (this.block && this.block.getIsUncle()) {
@@ -68,23 +78,44 @@ export default Vue.extend({
   },
   mounted() {
     /* Get Block Data: */
-    this.$socket.emit(sEvents.getBlock, { hash: this.blockHash }, (error, result) => {
-      if (result) {
-        this.block = new Block(result)
-        const uncleHashes = this.block.getUncleHashes()
-        /*Get Transactions for the block: */
-        this.$socket.emit(sEvents.getBlockTransactions, { hash: this.blockHash }, (err, data) => {
-          this.transactions = data.map(_tx => {
-            return new Tx(_tx)
+    this.$socket.emit(
+      sEvents.getBlock,
+      {
+        hash: this.blockHash
+      },
+      (error, result) => {
+        if (result) {
+          this.block = new Block(result)
+          console.log(this.block.getNumber())
+
+          this.setItems(this.block.getNumber().toString())
+          const uncleHashes = this.block.getUncleHashes()
+          /*Get Transactions for the block: */
+          this.$socket.emit(
+            sEvents.getBlockTransactions,
+            {
+              hash: this.blockHash
+            },
+            (err, data) => {
+              this.transactions = data.map(_tx => {
+                return new Tx(_tx)
+              })
+            }
+          )
+          uncleHashes.forEach((_hash: any, idx: number) => {
+            this.$socket.emit(
+              sEvents.getBlock,
+              {
+                hash: _hash.toBuffer()
+              },
+              (err, data) => {
+                this.uncles.push(new Block(data))
+              }
+            )
           })
-        })
-        uncleHashes.forEach((_hash: any, idx: number) => {
-          this.$socket.emit(sEvents.getBlock, { hash: _hash.toBuffer() }, (err, data) => {
-            this.uncles.push(new Block(data))
-          })
-        })
+        }
       }
-    })
+    )
   }
 })
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <i class="fa fa-copy copy" v-on:click="copyToClip(valueToCopy)"></i>
+  <v-icon class="fa fa-copy accent--text" v-on:click="copyToClip(valueToCopy)"></v-icon>
 </template>
 
 <script lang="ts">
