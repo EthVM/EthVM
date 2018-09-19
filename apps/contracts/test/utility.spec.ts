@@ -19,14 +19,13 @@ export interface TxParams {
 const utilityABI =[ { "constant": true, "inputs": [ { "name": "Owner", "type": "address" }, { "name": "Limit", "type": "uint256" }, { "name": "Page", "type": "uint256" } ], "name": "getAllBalance", "outputs": [ { "name": "", "type": "bytes" } ], "payable": false, "stateMutability": "pure", "type": "function" } ]
 const utilityAddress = '0x0000000000000000000000000000000000000065'
 var web3 = new Web3('http://localhost:8545');
-const utilityInstance = new web3.eth.Contract(utilityABI,utilityAddress)
+
+
 describe('getAllBalance', () => {
   it('It should return array of tokens one with balance',async()=>{
     const argss = ['address', 'uint32', 'uint32']
-    const vals = ['0x9319b0835c2DB1a31E067b5667B1e9b0AD278215', 3, 0]
+    const vals = ['0x9319b0835c2DB1a31E067b5667B1e9b0AD278215', 4, 0]
     const encodedData =  encodeCall('getAllBalance', argss, vals)
-    // const encodedData = await utilityInstance.methods.getAllBalance([,'0','1']).encodeABI()
-    // expect(encodedData).to.be.a('int');
     const hexResponse = await ethCall({to:utilityAddress, data:encodedData})
     const jsonString = web3.utils.hexToString(hexResponse)
     const tokens = JSON.parse(jsonString)
@@ -37,6 +36,17 @@ describe('getAllBalance', () => {
     });
     expect(tokens).to.be.length(3);
     })
+
+    it('It should return array of tokens size 2',async()=>{
+      const argss = ['address', 'uint32', 'uint32']
+      let vals = ['0x9319b0835c2DB1a31E067b5667B1e9b0AD278215', 2, 0]
+      let encodedData =  encodeCall('getAllBalance', argss, vals)
+      let hexResponse = await ethCall({to:utilityAddress, data:encodedData})
+      let jsonString = web3.utils.hexToString(hexResponse)
+      const tokens = JSON.parse(jsonString)
+      expect(tokens).to.be.length(2);
+    });
+
     it('It should return array of tokens without balance',async()=>{
       const argss = ['address', 'uint32', 'uint32']
       let vals = ['0x9319b0835c2DB1a31E067b5667B1e9b0AD278215', 100, 100]
