@@ -17,7 +17,7 @@ fun ByteBuffer?.toBigInteger(): BigInteger? {
     return null
   }
   val arr = ByteArray(remaining()).also { get(it) }
-  return BigInteger(arr)
+  return if (arr.isNotEmpty()) BigInteger(arr) else BigInteger.ZERO
 }
 
 fun ByteBuffer?.toBigDecimal(): BigDecimal? {

@@ -30,7 +30,7 @@ commander
   .alias('d')
   .description('Deploys a new contract (possible values are specified in contracts.json file)')
   .option('-a, --address [address]', 'Specifies which address will deploy the contract', accounts.main.address)
-  .option('-c, --contract [contract]', 'Contract type to deploy', /^(erc20|factory)$/i, 'erc20')
+  .option('-c, --contract [contract]', 'Contract type to deploy', /^(erc20|traceropcodes)$/i, 'erc20')
   .action(async options => {
     const address = options.address
     const type = options.contract
@@ -62,16 +62,17 @@ commander
   })
 
 commander
-  .command('exec [methodArgs...]')
+  .command('exec [contractAddress] [method] [methodArgs...]')
   .alias('e')
-  .description("Executes the specified RPC method (no input validation, so make sure you're passing correctly arguments")
-  .option('-c, --contract-address <contractAddress>', 'contract address')
-  .option('-f, --from-address <fromAddress>', 'from address')
-  .option('-m, --method <method>', 'method to execute')
-  .action(async (methodArgs, options) => {
-    console.log('Method args', methodArgs)
-    const { contractAddress, fromAddress, method } = options
-    await invoke(() => contractExecCommand(contractAddress, fromAddress || accounts.main.address, method, ...methodArgs))
+  .description("Executes the specified smart contract method (no input validation, so make sure you're passing correctly arguments")
+  .option('-f, --from-address <fromAddress>', 'from address', accounts.main.address)
+  .action(async (contractAddress, method, methodArgs, options) => {
+    if (!contractAddress || !method) {
+      ora.fail(`Please provide correctly [contractAddress] and [method]`)
+      process.exit(1)
+    }
+    const { fromAddress } = options
+    await invoke(() => contractExecCommand(contractAddress, fromAddress, method, ...methodArgs || []))
   })
 
 async function invoke(fn: () => void) {

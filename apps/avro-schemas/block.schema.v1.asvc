@@ -204,19 +204,9 @@
               "doc": "Address of the sender"
             },
             {
-              "name": "fromBalance",
-              "type": "bytes",
-              "doc": "Balance of the sender"
-            },
-            {
               "name": "to",
               "type": ["null", "bytes"],
               "doc": "Address of the recipient (or null when contract creation)"
-            },
-            {
-              "name": "toBalance",
-              "type": ["null", "bytes"],
-              "doc": "Balance of the receiver (or null when contract creation)"
             },
             {
               "name": "input",
@@ -361,19 +351,9 @@
                             "doc": "Address of the sender"
                           },
                           {
-                            "name": "fromBalance",
-                            "type": "bytes",
-                            "doc": "Balance of the sender"
-                          },
-                          {
                             "name": "to",
                             "type": "bytes",
                             "doc": "Address of the receiver"
-                          },
-                          {
-                            "name": "toBalance",
-                            "type": "bytes",
-                            "doc": "Balance of the receiver"
                           },
                           {
                             "name": "input",
