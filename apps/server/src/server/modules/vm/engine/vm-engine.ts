@@ -4,6 +4,8 @@ import BigNumber from 'bignumber.js'
 import * as abi from 'ethereumjs-abi'
 import * as jayson from 'jayson/promise'
 import * as utils from 'web3-utils'
+import { URL } from "url";
+
 
 export interface VmEngineOptions {
   rpcUrl: string
@@ -19,7 +21,14 @@ export class VmEngine {
   private readonly client: jayson.Client
 
   constructor(private readonly opts: VmEngineOptions) {
-    this.client = jayson.Client.https(this.opts.rpcUrl)
+    const u = new URL(this.opts.rpcUrl)
+    logger.debug("-------------u.protocol-------------",u.protocol)
+    logger.debug("-------------u.protocol-------------",u.protocol.toString() == 'https')
+    logger.debug("-------------u.protocol-------------", u.protocol.toString() == "http")
+
+
+       this.client = jayson.Client.http(this.opts.rpcUrl)
+
   }
 
   public getAccount(): Promise<any> {
@@ -32,14 +41,24 @@ export class VmEngine {
 
   public getTokens(address: string): Promise<Token[]> {
     return new Promise(async (resolve, reject) => {
-      const argss = ['address', 'bool', 'bool', 'bool', 'uint256']
-      const vals = [address, 'true', 'true', 'true', 0]
+      const argss = ['address', 'uint32', 'uint32']
+      const vals = [address, 4,0]
 
       const encoded = this.encodeCall('getAllBalance', argss, vals)
+      logger.debug("----------------",this.client)
+
+
       try {
         const payload = [{ to: this.opts.tokensAddress.address, data: encoded }, 'latest']
+        logger.debug("----------------",payload)
+
         const response = await this.client.request('eth_call', payload)
-        const tokens = this.decode(response.result || [])
+        logger.debug("----------------",response)
+
+        const tokens = utils.hexToUtf8(response.result)
+
+
+        //const tokens = this.decode(response.result || [])
         resolve(tokens)
       } catch (err) {
         reject(err)

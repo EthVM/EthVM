@@ -136,13 +136,13 @@ const config = convict({
     vm: {
       engine: {
         rpc_url: {
-          default: 'https://api.myetherwallet.com/eth',
+          default: 'http://172.25.0.102:8545',
           format: String,
           env: 'ETHVM_ETH_VM_ENGINE_RPC_URL'
         },
         tokens_smart_contract: {
           address: {
-            default: '0xbe1ecf8e340f13071761e0eef054d9a511e1cb56',
+            default: '0x0000000000000000000000000000000000000065',
             format: String,
             env: 'ETHVM_ETH_VM_ENGINE_TOKENS_SMART_CONTRACT_ADDRESS'
           }
