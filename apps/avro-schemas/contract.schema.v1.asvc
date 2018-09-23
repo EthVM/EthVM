@@ -1,0 +1,34 @@
+{
+  "namespace": "io.enkrypt.bolt.models.avro",
+  "name": "Contract",
+  "type": "record",
+  "fields": [
+    {
+      "name": "address",
+      "type": "string",
+      "doc": "The contract address"
+    },
+    {
+      "name": "data",
+      "type": ["null", "bytes"],
+      "doc": "Contract bytes if provided"
+    },
+    {
+      "name": "type",
+      "type": ["null", "string"],
+      "doc": "Verified contract type"
+    },
+    {
+      "name": "estimatedType",
+      "type": ["null", "string"],
+      "doc": "Current estimate of contract type"
+    },
+    {
+      "name": "methodsSeen",
+      "type": {
+        "type": "array",
+        "items": "string"
+      }
+    }
+   ]
+}
