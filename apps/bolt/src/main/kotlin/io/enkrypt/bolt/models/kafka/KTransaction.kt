@@ -30,7 +30,6 @@ class KTransaction(private val delegate: Transaction) {
   val status: Int? by lazy { delegate.getStatus() }
   val logsBloom: String? by lazy { delegate.getLogsBloom().toHex() }
   val logs: List<KLog?> by lazy { delegate.getLogs().map { KLog(it) } }
-  val trace: KTrace? by lazy { KTrace(delegate.getTrace()) }
 
   fun toDocument(): Document = Document()
     .append("hash", hash)
@@ -54,7 +53,6 @@ class KTransaction(private val delegate: Transaction) {
     .append("status", status)
     .append("logsBloom", logsBloom)
     .append("logs", logs.map { it?.toDocument() })
-    .append("trace", trace?.toDocument())
 
   override fun toString(): String {
     return toDocument().toString()

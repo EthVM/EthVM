@@ -91,8 +91,6 @@ class KBlock(private val delegate: Block) {
     .append("uncles", uncles)
     .append("stats", stats?.toDocument())
 
-  fun toBlock(): Block = Block.newBuilder(delegate.rewind()).build()
-
   enum class Status {
     UNKNOWN,
     CANONICAL,

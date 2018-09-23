@@ -103,6 +103,21 @@ services:
       - 'traefik.port=27017'
       - 'traefik.backend=mongodb'
 
+  mongodb-ui:
+    image: mongo-express
+    depends_on:
+      - mongodb
+    networks:
+      - back
+    environment:
+      ME_CONFIG_MONGODB_SERVER: 'mongodb'
+    labels:
+    - 'traefik.enable=true'
+    - 'traefik.default.protocol=http'
+    - 'traefik.frontend.rule=Host:mongo-ui.ethvm.lan'
+    - 'traefik.port=8081'
+    - 'traefik.backend=mongodb-ui'
+
   zookeeper:
     image: confluentinc/cp-zookeeper:5.0.0
     networks:

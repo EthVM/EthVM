@@ -1,0 +1,96 @@
+@namespace("io.enkrypt.avro")
+protocol EnkryptIO {
+
+  fixed Bytes20(20);
+  fixed Bytes32(32);
+
+  record BlockStats {
+    int blockTimeMs;
+    int numFailedTxs;
+    int numSuccessfulTxs;
+    bytes avgGasPrice;
+    bytes avgTxsFees;
+  }
+
+  record LogInfo {
+    Bytes20 address;
+    array<bytes> topics;
+    bytes data;
+  }
+
+  record TransactionReceipt {
+
+    bytes postTxState;
+    bytes cumulativeGas;
+    bytes bloomFilter;
+    bytes gasUsed;
+    bytes executionResult;
+    array<LogInfo> logs;
+
+    union { null, string } `error`;
+
+    union { null, bytes } txHash;
+  }
+
+  record Transaction {
+
+    Bytes32 hash;
+    bytes nonce;
+    union { null, Bytes20 } from;
+    union { null, Bytes20 } to;
+    bytes value;
+    bytes gasPrice;
+    bytes gasLimit;
+    union { null, bytes } data = null;
+
+    union { null, TransactionReceipt } receipt;
+
+  }
+
+  record BlockHeader {
+
+    Bytes32 parentHash;
+    Bytes32 unclesHash;
+    Bytes20 coinbase;
+    Bytes32 stateRoot;
+    Bytes32 txTrieRoot;
+    Bytes32 receiptTrieRoot;
+    bytes logsBloom;
+    bytes difficulty;
+    long timestamp;
+    long number;
+    bytes gasLimit;
+    long gasUsed;
+    bytes mixHash;
+    bytes extraData;
+    bytes nonce;
+
+  }
+
+  record BlockInfo {
+    bytes hash;
+    bytes difficulty;
+    boolean mainChain;
+  }
+
+  record Block {
+
+    Bytes32 hash;
+    BlockHeader header;
+    union { null, array<Transaction> } transactions = null;
+    union { null, array<BlockHeader> } uncleList = null;
+    union { null, BlockInfo } blockInfo = null;
+    union { null, BlockStats } blockStats = null;
+
+  }
+
+
+
+  record AccountState {
+    bytes nonce;
+    bytes balance;
+    bytes stateRoot;
+    bytes codeHash;
+  }
+
+}

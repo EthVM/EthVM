@@ -3,17 +3,17 @@ package io.enkrypt.bolt
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
+import com.mongodb.MongoClient
 import com.mongodb.MongoClientURI
 import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig
 import io.confluent.kafka.streams.serdes.avro.GenericAvroSerde
-import io.enkrypt.bolt.processors.blocks.BlocksProcessor
+import io.enkrypt.bolt.processors.BlocksProcessor
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
 import org.koin.dsl.module.module
 import org.koin.standalone.StandAloneContext.startKoin
-import org.litote.kmongo.KMongo
-import java.util.Properties
+import java.util.*
 
 class Cli : CliktCommand() {
 
@@ -67,7 +67,7 @@ class Cli : CliktCommand() {
     single { AppConfig(processor, bootstrapServers, schemaRegistryUrl, startingOffset, get()) }
 
     single { MongoClientURI(mongoUri) }
-    single { KMongo.createClient(MongoClientURI(mongoUri)) }
+    single { MongoClient(MongoClientURI(mongoUri)) }
 
     module("kafka") {
       single {
@@ -93,23 +93,15 @@ class Cli : CliktCommand() {
   override fun run() {
     startKoin(listOf(boltModule))
 
-    when (processor) {
-      BLOCK_PROCESSOR -> {
-        BlocksProcessor().apply {
-          onPrepareProcessor()
-          start()
-        }
-      }
-
-      PENDING_TXS_PROCESSOR -> {
-      }
-
-      else -> System.exit(-1)
+    BlocksProcessor().apply {
+      onPrepareProcessor()
+      start()
     }
+
   }
 
   companion object Defaults {
-    const val BLOCK_PROCESSOR = "blocks-processor"
+    const val BLOCK_PROCESSOR = "bolt-processor"
     const val PENDING_TXS_PROCESSOR = "pending-txs-processor"
 
     const val DEFAULT_BOOTSTRAP_SERVERS = "localhost:9092"

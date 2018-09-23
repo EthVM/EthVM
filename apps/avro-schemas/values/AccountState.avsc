@@ -1,0 +1,18 @@
+{
+  "type" : "record",
+  "name" : "AccountState",
+  "namespace" : "io.enkrypt.avro",
+  "fields" : [ {
+    "name" : "nonce",
+    "type" : "bytes"
+  }, {
+    "name" : "balance",
+    "type" : "bytes"
+  }, {
+    "name" : "stateRoot",
+    "type" : "bytes"
+  }, {
+    "name" : "codeHash",
+    "type" : "bytes"
+  } ]
+}
