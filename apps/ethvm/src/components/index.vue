@@ -93,3 +93,7 @@ export default Vue.extend({
   }
 })
 </script>
+
+<style scoped lang="css">
+@import '~cssPath/global.css';
+</style>

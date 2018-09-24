@@ -1,6 +1,6 @@
 <template>
   <div id="nav">
-    <v-navigation-drawer v-model="drawer" fixed clipped class="white" app>
+    <v-navigation-drawer v-model="drawer" fixed clipped class="white elevation-3 pt-3" app>
       <v-list dense class="white">
         <div v-for="item in items" :key="item.text">
           <v-layout v-if="item.heading" row align-center>
@@ -84,12 +84,12 @@ export default Vue.extend({
           heading: this.$i18n.t('title.tx')
         },
         {
-          icon: 'fa fa-exchange',
+          icon: 'fas fa-hand-holding-usd',
           text: this.$i18n.t('title.mined'),
           routerLink: '/transactions'
         },
         {
-          icon: 'fa fa-question',
+          icon: 'fas fa-question-circle',
           text: this.$i18n.t('title.pending'),
           routerLink: '/pending'
         },
@@ -121,7 +121,7 @@ export default Vue.extend({
           heading: this.$i18n.t('common.more')
         },
         {
-          icon: 'fa fa-line-chart',
+          icon: 'fas fa-chart-bar',
           text: this.$i18n.t('title.charts'),
           routerLink: '/charts'
         },
@@ -131,7 +131,7 @@ export default Vue.extend({
           routerLink: '/about'
         },
         {
-          icon: 'fa fa-info',
+          icon: 'fas fa-info-circle',
           text: this.$i18n.t('title.kb'),
           routerLink: '/about'
         }

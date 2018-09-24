@@ -8,7 +8,9 @@
         </v-breadcrumbs-item>
       </v-breadcrumbs>
     </v-card>
-    <block-last-transactions :transactions="pendingTxs" :showHeader="true" class="mt-3" :pending="true">{{getLength}}</block-last-transactions>
+    <v-layout row justify-center fill-height class="ma-3">
+      <block-last-transactions :transactions="pendingTxs" :showHeader="true" class="mt-3" :pending="true">{{getLength}}</block-last-transactions>
+    </v-layout>
   </v-container>
 </template>
 

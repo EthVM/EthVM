@@ -167,7 +167,7 @@ Vue.use(infiniteScroll)
 Vue.use(Vuetify, {
   theme: {
     // used -->
-    primary: String(colors.blue.darken4),
+    primary: '#2779ff',
     secondary: '#2779ff',
     accent: '#7c76fc',
     success: '#20c0c7',

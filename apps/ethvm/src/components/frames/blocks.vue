@@ -8,7 +8,7 @@
         </v-breadcrumbs-item>
       </v-breadcrumbs>
     </v-card>
-    <v-layout row wrap justify-space-between>
+    <v-layout row wrap  justify-space-between class="mb-4">
       <v-flex xs12 md6 lg3>
         <block-last-block></block-last-block>
       </v-flex>
@@ -22,7 +22,7 @@
         <block-difficulty></block-difficulty>
       </v-flex>
     </v-layout>
-    <v-layout row wrap>
+    <v-layout row justify-center class="ma-1">
       <block-latest-blocks :max-items="20" :showHeader="true" class="mt-3"></block-latest-blocks>
     </v-layout>
   </v-container>

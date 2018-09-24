@@ -145,8 +145,8 @@
   "smlBlock": {
     "last": "Last Block #",
     "time": "Since Last Block",
-    "hashR": "Hash Rate TH/s",
-    "diff": "Difficulty TH",
+    "hashR": "Hash Rate",
+    "diff": "Difficulty",
     "success": "Successful Tx",
     "failed": "Failed Tx",
     "pending": "Pending Tx"

@@ -6,7 +6,7 @@
           <v-icon small :color="getColor(i)">{{i.icon}}</v-icon>
         </v-flex>
         <v-flex xs11>
-          <v-card-text class="pt-0 pl-0">{{i.text}}</v-card-text>
+          <v-card-text class="pt-0 pl-1 caption">{{i.text}}</v-card-text>
         </v-flex>
       </v-layout>
     </v-card>
