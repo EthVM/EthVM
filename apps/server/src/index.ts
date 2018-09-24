@@ -4,11 +4,12 @@ import { RethinkDbStreamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
 import { BlocksServiceImpl, RethinkBlockRepository } from '@app/server/modules/blocks'
 import { ChartsServiceImpl, RethinkChartsRepository } from '@app/server/modules/charts'
-import { MockExchangeServiceImpl } from '@app/server/modules/exchanges'
+import { CoinMarketCapRepository, ExchangeServiceImpl } from '@app/server/modules/exchanges'
 import { RethinkTxsRepository, TxsServiceImpl } from '@app/server/modules/txs'
 import { RedisTrieDb, VmEngine, VmRunner, VmServiceImpl } from '@app/server/modules/vm'
 import { RedisCacheRepository } from '@app/server/repositories'
 import * as EventEmitter from 'eventemitter3'
+import * as Redis from 'ioredis'
 import * as r from 'rethinkdb'
 
 async function bootstrapServer() {
@@ -41,13 +42,12 @@ async function bootstrapServer() {
 
   // Create Cache data store
   logger.info('bootstrapper -> Initializing redis cache data store')
-  const redisDsOpts = {
+  const redis = new Redis({
     host: config.get('data_stores.redis.host'),
-    port: config.get('data_stores.redis.port'),
-    db: config.get('data_stores.redis.db'),
-    socketRows: config.get('data_stores.redis.socket_rows')
-  }
-  const ds = new RedisCacheRepository(redisDsOpts)
+    port: config.get('data_stores.redis.port')
+  })
+  const socketRows = config.get('data_stores.redis.socket_rows')
+  const ds = new RedisCacheRepository(redis, socketRows)
   await ds.initialize().catch(() => process.exit(-1))
 
   // Set default state block to VmRunner
@@ -95,7 +95,8 @@ async function bootstrapServer() {
   const chartsService = new ChartsServiceImpl(chartsRepository)
 
   // Exchanges
-  const exchangeService = new MockExchangeServiceImpl()
+  const exchangeRepository = new CoinMarketCapRepository(ds)
+  const exchangeService = new ExchangeServiceImpl(exchangeRepository, ds)
 
   // Vm
   const vmService = new VmServiceImpl(vme, vmr)

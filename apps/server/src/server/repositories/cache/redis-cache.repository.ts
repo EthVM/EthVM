@@ -1,30 +1,16 @@
 import { logger } from '@app/logger'
 import { b64Replacer, b64Reviver } from '@app/server/core/encoding'
 import { Block } from '@app/server/modules/blocks'
+import { ExchangeRate, Quote } from '@app/server/modules/exchanges'
 import { Tx } from '@app/server/modules/txs'
 import { CacheRepository } from '@app/server/repositories'
-import { bufferToHex } from 'ethereumjs-util'
 import * as Redis from 'ioredis'
-
-export interface RedisCacheRepositoryOpts {
-  host: string
-  port: number
-  socketRows: number
-}
 
 // TODO: Separate memory cache to its own class
 export class RedisCacheRepository implements CacheRepository {
-  private readonly redis: Redis.Redis
-  private readonly socketRows: number
   private readonly cache: Map<string, Block[] | Tx[]> = new Map()
 
-  constructor(private readonly opts: RedisCacheRepositoryOpts) {
-    this.redis = new Redis({
-      host: this.opts.host,
-      port: this.opts.port
-    })
-    this.socketRows = this.opts.socketRows
-  }
+  constructor(private readonly redis: Redis.Redis, private readonly socketRows: number) {}
 
   public initialize(): Promise<boolean> {
     return new Promise(resolve => {
@@ -44,7 +30,7 @@ export class RedisCacheRepository implements CacheRepository {
   }
 
   public putBlock(block: Block): Promise<boolean> {
-    logger.debug(`RedisDataStore - putBlock / Block: ${bufferToHex(block.hash)}`)
+    logger.debug(`RedisDataStore - putBlock / Block: ${block.hash}`)
 
     return this.getArray<Block>('blocks')
       .then((blocks: Block[]) => {
@@ -99,6 +85,43 @@ export class RedisCacheRepository implements CacheRepository {
 
   public getTransactions(): Promise<Tx[]> {
     return this.getArray<Tx>('transactions')
+  }
+
+  public putRate(exchangerate: ExchangeRate): Promise<boolean> {
+    return new Promise(resolve => {
+      this.redis
+        .set(exchangerate.symbol, JSON.stringify(exchangerate), 'EX', 300)
+        .then(result => {
+          if (!result) {
+            resolve(false)
+          }
+          resolve(true)
+        })
+        .catch(error => resolve(false))
+    })
+  }
+
+  public getQuote(token: string, to: string): Promise<Quote> {
+    return new Promise((resolve, reject) => {
+      this.redis
+        .get(token)
+        .then(result => {
+          if (!result) {
+            reject(false)
+            return
+          }
+          const val = JSON.parse(result) as ExchangeRate
+          val.quotes.forEach(q => {
+            if (q.to === to) {
+              resolve(q)
+              return
+            }
+          })
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
   }
 
   private getArray<T extends Tx | Block>(key: string): Promise<T[]> {

@@ -1,3 +1,4 @@
+import { Token } from '@app/server/modules/token'
 import { VmEngine, VmRunner } from '@app/server/modules/vm'
 
 export interface VmService {
@@ -5,7 +6,7 @@ export interface VmService {
   getCurrentStateRoot(): Promise<Buffer>
   getAccount(): Promise<any>
   getBalance(address: string): Promise<any>
-  getTokensBalance(address: string): Promise<any>
+  getTokens(address: string): Promise<Token[]>
   call(args: any): Promise<any>
 }
 
@@ -29,8 +30,8 @@ export class VmServiceImpl implements VmService {
     return this.vme.getBalance(address)
   }
 
-  public getTokensBalance(address: string): Promise<any> {
-    return this.vme.getTokensBalance(address).then(res => res.filter(token => token.balance > 0))
+  public getTokens(address: string): Promise<Token[]> {
+    return this.vme.getTokens(address)
   }
 
   public call(args: any): Promise<any> {
