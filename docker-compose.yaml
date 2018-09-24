@@ -12,8 +12,8 @@ networks:
 volumes:
   redis-volume:
   mongodb-volume:
-  geth-volume:
   geth-miner-volume:
+  ethereumj-volume:
 
 services:
   traefik:
@@ -213,8 +213,7 @@ services:
 #       CONNECTOR_MONGODB_COLLECTION: 'blocks'
 
   geth-miner:
-    build:
-      context: ./apps/eth
+    image: enkryptio/go-ethereum:latest
     restart: unless-stopped
     volumes:
       - geth-miner-volume:/geth
@@ -226,32 +225,16 @@ services:
         ipv4_address: 172.25.0.101
     command: sh -c "chmod 777 /start.sh && /start.sh"
 
-  geth:
+  ethereumj:
     build:
-      context: ./apps/eth
+      context: ./apps/ethereumj
     restart: unless-stopped
     depends_on:
       - geth-miner
     volumes:
-      - geth-volume:/geth
-      - ./provisioners/docker/config/geth/genesis.json:/genesis.json
-      - ./provisioners/docker/config/geth/keystore/:/geth/keystore/
-      - ./provisioners/docker/config/geth/static-nodes.json:/geth/static-nodes.json
-      - ./provisioners/docker/config/geth/tracer.js:/geth/tracer.js
+      - ethereumj-volume:/ethj
+      - ./provisioners/docker/config/geth/genesis.json:/ethereumj-core/src/main/java/resources/genesis/private-net-genesis.json
     networks:
       back:
         ipv4_address: 172.25.0.102
-    ports:
-      - 8545:8545
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:geth.ethvm.lan'
-      - 'traefik.port=8545'
-      - 'traefik.backend=geth'
-    command:
-      - /bin/zsh
-      - -c
-      - |
-        geth --datadir '/geth' --ethvm init /genesis.json
-        geth --datadir '/geth' --verbosity 5 --networkid 1234 --identity geth --ethvm --ethvm-tracer 'internal-txs-tracer' --ethvm-ignore-processing-pending-txs --ethvm-brokers 'kafka:9092' --ethvm-kafka-schema-registry-url 'http://kafka-schema-registry:8081' --gcmode archive --rpc --rpcaddr '0.0.0.0' --rpccorsdomain '*' --rpcapi 'admin,personal,db,eth,net,web3,txpool,miner' --syncmode full --nat 'extip:172.25.0.102' --nousb --nodiscover --maxpeers 2
+    command: sh -C "./gradlew run -PmainClass=io.enkrypt.kafka.EthereumPrivateNetKafkaStarter"
