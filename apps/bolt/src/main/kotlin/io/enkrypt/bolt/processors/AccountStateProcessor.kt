@@ -35,7 +35,7 @@ class AccountStateProcessor : KoinComponent, Processor {
   private val kafkaProps: Properties = Properties(baseKafkaProps)
     .apply {
       putAll(baseKafkaProps.toMap())
-      put(StreamsConfig.APPLICATION_ID_CONFIG, "address-state-processor")
+      put(StreamsConfig.APPLICATION_ID_CONFIG, "account-state-processor")
     }
 
   private val mongoUri: MongoClientURI by inject()

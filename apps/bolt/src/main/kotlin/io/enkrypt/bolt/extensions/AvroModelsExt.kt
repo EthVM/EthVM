@@ -14,9 +14,8 @@ fun Bytes20?.toHex(): String? {
 }
 
 fun Block?.toDocument() = Document(mapOf(
-  "hash" to this?.getHash()?.bytes(),
+  "hash" to this?.getHash()?.toHex(),
   "header" to this?.getHeader().toDocument(),
-//  "transactions" to this?.getTransactions()?.map{ it.toDocument() },
   "stats" to this?.getBlockStats().toDocument()
 ))
 
@@ -30,10 +29,10 @@ fun BlockStats?.toDocument() = Document(mapOf(
 
 fun Transaction?.toDocument(): Document {
   val result = Document(mapOf(
-    "hash" to this?.getHash()?.bytes(),
+    "hash" to this?.getHash()?.toHex(),
     "nonce" to this?.getNonce().toByteArray(),
-    "from" to this?.getFrom()?.bytes(),
-    "to" to this?.getTo()?.bytes(),
+    "from" to this?.getFrom()?.toHex(),
+    "to" to this?.getTo()?.toHex(),
     "value" to this?.getValue()?.toByteArray(),
     "gasPrice" to this?.getGasPrice()?.toByteArray(),
     "gasLimit" to this?.getGasLimit()?.toByteArray(),
@@ -58,18 +57,18 @@ fun TransactionReceipt?.toDocument() = Document(mapOf(
 ))
 
 fun LogInfo?.toDocument() = Document(mapOf(
-  "address" to this?.getAddress()?.bytes(),
+  "address" to this?.getAddress()?.toHex(),
   "topics" to this?.getTopics()?.map{ it.toByteArray() },
   "data" to this?.getData().toByteArray()
 ))
 
 fun BlockHeader?.toDocument() = Document(mapOf(
-  "parentHash" to this?.getParentHash()?.bytes(),
-  "unclesHash" to this?.getParentHash()?.bytes(),
-  "coinbase" to this?.getParentHash()?.bytes(),
-  "stateRoot" to this?.getParentHash()?.bytes(),
-  "txTrieRoot" to this?.getParentHash()?.bytes(),
-  "receiptTrieRoot" to this?.getReceiptTrieRoot()?.bytes(),
+  "parentHash" to this?.getParentHash()?.toHex(),
+  "unclesHash" to this?.getParentHash()?.toHex(),
+  "coinbase" to this?.getParentHash()?.toHex(),
+  "stateRoot" to this?.getParentHash()?.toHex(),
+  "txTrieRoot" to this?.getParentHash()?.toHex(),
+  "receiptTrieRoot" to this?.getReceiptTrieRoot()?.toHex(),
   "logsBloom" to this?.getLogsBloom().toByteArray(),
   "difficulty" to this?.getDifficulty()?.toByteArray(),
   "timestamp" to this?.getTimestamp(),
