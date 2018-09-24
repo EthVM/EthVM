@@ -1,7 +1,3 @@
-[submodule "apps/eth"]
-	path = apps/eth
-	url = https://github.com/enKryptIO/go-ethereum.git
-	branch = master
 [submodule "apps/ethereumj"]
 	path = apps/ethereumj
 	url = git@github.com:enKryptIO/ethereumj.git
