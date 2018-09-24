@@ -12,7 +12,6 @@ networks:
 volumes:
   redis-volume:
   mongodb-volume:
-  geth-miner-volume:
   ethereumj-volume:
 
 services:
@@ -182,8 +181,6 @@ services:
     build:
       context: ./apps/ethereumj
     restart: unless-stopped
-    depends_on:
-      - geth-miner
     volumes:
       - ethereumj-volume:/ethj
     networks:
