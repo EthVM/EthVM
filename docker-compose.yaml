@@ -55,7 +55,7 @@ services:
     volumes:
       - ./apps/server:/var/ethvm-server
     depends_on:
-      - geth
+      - ethereumj
       - redis
       - mongodb
     networks:
@@ -237,4 +237,4 @@ services:
     networks:
       back:
         ipv4_address: 172.25.0.102
-    command: sh -C "./gradlew run -PmainClass=io.enkrypt.kafka.EthereumPrivateNetKafkaStarter"
+    command: ./gradlew run -PmainClass=io.enkrypt.kafka.EthereumPrivateNetKafkaStarter
