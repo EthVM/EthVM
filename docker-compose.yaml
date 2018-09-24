@@ -218,17 +218,13 @@ services:
     restart: unless-stopped
     volumes:
       - geth-miner-volume:/geth
+      - ./provisioners/docker/config/geth/start-geth-miner.sh:/start.sh
       - ./provisioners/docker/config/geth/genesis.json:/genesis.json
       - ./provisioners/docker/config/geth/keystore/:/geth/keystore/
     networks:
       back:
         ipv4_address: 172.25.0.101
-    command:
-      - /bin/zsh
-      - -c
-      - |
-        geth --datadir '/geth' init /genesis.json
-        geth --datadir '/geth' --verbosity 5 --networkid 1234 --identity geth-miner --mine --minerthreads 1 --nousb --unlock '84baabad835e6ca9252658cd6eae0152f6330c09' --rpc --rpcaddr '0.0.0.0' --password =(echo '123456789') --nodiscover --maxpeers 2 --nodekeyhex '08f0e1dee5c1b4645f3331a566009e41a4514b6cd28656d63d0449ecf812812b'
+    command: sh -c "chmod 777 /start.sh && /start.sh"
 
   geth:
     build:
