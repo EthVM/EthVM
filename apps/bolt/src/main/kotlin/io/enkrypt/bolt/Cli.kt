@@ -7,7 +7,9 @@ import com.mongodb.MongoClient
 import com.mongodb.MongoClientURI
 import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig
 import io.confluent.kafka.streams.serdes.avro.GenericAvroSerde
+import io.enkrypt.bolt.processors.AccountStateProcessor
 import io.enkrypt.bolt.processors.BlocksProcessor
+import io.enkrypt.bolt.processors.TransactionsProcessor
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
@@ -18,10 +20,6 @@ import java.util.*
 class Cli : CliktCommand() {
 
   // General - CLI
-  private val processor: String by option(
-    help = "Selects a processor to use for the stream processing application (acts also as identifier for the kafka stream)",
-    envvar = "PROCESSOR"
-  ).default(BLOCK_PROCESSOR)
 
   private val bootstrapServers: String by option(
     help = "A list of host/port pairs to use for establishing the initial connection to the Kafka cluster",
@@ -64,7 +62,7 @@ class Cli : CliktCommand() {
   // DI
   private val boltModule = module {
     single { TopicsConfig(rawBlocksTopic, rawPendingTxsTopic, processedBlocksTopic) }
-    single { AppConfig(processor, bootstrapServers, schemaRegistryUrl, startingOffset, get()) }
+    single { AppConfig(bootstrapServers, schemaRegistryUrl, startingOffset, get()) }
 
     single { MongoClientURI(mongoUri) }
     single { MongoClient(MongoClientURI(mongoUri)) }
@@ -73,7 +71,6 @@ class Cli : CliktCommand() {
       single {
         Properties().apply {
           // App
-          put(StreamsConfig.APPLICATION_ID_CONFIG, processor)
           put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
           put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl)
 
@@ -98,11 +95,19 @@ class Cli : CliktCommand() {
       start()
     }
 
+    AccountStateProcessor().apply {
+      onPrepareProcessor()
+      start()
+    }
+
+    TransactionsProcessor().apply {
+      onPrepareProcessor()
+      start()
+    }
+
   }
 
   companion object Defaults {
-    const val BLOCK_PROCESSOR = "bolt-processor"
-    const val PENDING_TXS_PROCESSOR = "pending-txs-processor"
 
     const val DEFAULT_BOOTSTRAP_SERVERS = "localhost:9092"
     const val DEFAULT_AUTO_OFFSET = "earliest"

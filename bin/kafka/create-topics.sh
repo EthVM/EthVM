@@ -6,7 +6,7 @@ echo "COMMAND: $CMD"
 docker-compose exec kafka sh -c "$CMD"
 
 # block info
-CMD="kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 10 --topic info --config retention.ms=-1"
+CMD="kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 10 --topic blocks-info --config retention.ms=-1"
 echo "COMMAND: $CMD"
 docker-compose exec kafka sh -c "$CMD"
 

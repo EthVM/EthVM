@@ -1,7 +1,6 @@
 package io.enkrypt.bolt
 
 data class AppConfig(
-  val processor: String,
   val bootstrapServers: String,
   val schemaRegistryUrl: String,
   val startingOffset: String,
