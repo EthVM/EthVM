@@ -20,7 +20,7 @@ CMD="kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 1 --p
 echo "COMMAND: $CMD"
 docker-compose exec kafka sh -c "$CMD"
 
-# transactions
+# pending transactions
 CMD="kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 10 --topic pending-transactions --config retention.ms=-1"
 echo "COMMAND: $CMD"
 docker-compose exec kafka sh -c "$CMD"
