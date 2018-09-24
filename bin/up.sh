@@ -4,11 +4,17 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 
 # create containers
-CMD="docker-compose up -d --build --remove-orphans"
+echo "Building containers..."
+CMD="docker-compose build"
 echo "Executing: ${CMD}"
 ${CMD}
 
-echo "Waiting 15 seconds to allow service initialisation..."
+echo "Starting up containers: traefik, zookeeper, kafka, kafka-schema-registry and mongo"
+CMD="docker-compose up -d traefik kafka-schema-registry mongodb"
+echo "Executing: ${CMD}"
+${CMD}
+
+echo "Waiting 15 seconds to allow docker services initialisation..."
 sleep 15
 
 CMD="${SCRIPT_DIR}/kafka/init.sh"
@@ -19,7 +25,7 @@ CMD="${SCRIPT_DIR}/mongo/init.sh"
 echo "Executing: ${CMD}"
 ${CMD}
 
-echo "Restarting some services"
-CMD="${SCRIPT_DIR}/restart.sh geth"
+echo "Starting ethereumj container..."
+CMD="docker-compose up -d ethereumj"
 echo "Executing: ${CMD}"
 ${CMD}
