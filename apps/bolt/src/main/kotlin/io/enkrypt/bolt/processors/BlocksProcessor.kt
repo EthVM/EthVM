@@ -18,6 +18,7 @@ import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
+import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.kstream.Consumed
 import org.bson.Document
 import org.ethereum.util.ByteUtil
@@ -29,14 +30,19 @@ import java.util.*
 class BlocksProcessor : KoinComponent, Processor {
 
   private val appConfig: AppConfig by inject()
-  private val kafkaProps: Properties by inject(name = "kafka.Properties")
+  private val baseKafkaProps: Properties by inject(name = "kafka.Properties")
+
+  private val kafkaProps: Properties = Properties(baseKafkaProps)
+    .apply {
+      putAll(baseKafkaProps.toMap())
+      put(StreamsConfig.APPLICATION_ID_CONFIG, "blocks-processor")
+    }
 
   private val mongoUri: MongoClientURI by inject()
   private val mongoClient: MongoClient by inject()
   private val mongoDB by lazy { mongoClient.getDatabase(mongoUri.database!!) }
 
   private val blocksCollection by lazy { mongoDB.getCollection("blocks") }
-  private val addressStateCollection by lazy { mongoDB.getCollection("address-state") }
 
   private val logger = KotlinLogging.logger {}
 
@@ -44,33 +50,23 @@ class BlocksProcessor : KoinComponent, Processor {
 
   override fun onPrepareProcessor() {
 
-
     // Avro Serdes - Specific
     val serdeProps = mapOf(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG to appConfig.schemaRegistryUrl)
 
     val blockSerde = SpecificAvroSerde<Block>().apply { configure(serdeProps, false) }
     val blockInfoSerde = SpecificAvroSerde<BlockInfo>().apply { configure(serdeProps, false) }
-    val accountStateSerde = SpecificAvroSerde<AccountState>().apply { configure(serdeProps, false) }
-    val transactionSerde = SpecificAvroSerde<Transaction>().apply { configure(serdeProps, false) }
 
     // Create stream builder
     val builder = StreamsBuilder()
 
-    builder
-      .stream("account-state", Consumed.with(Serdes.ByteArray(), accountStateSerde))
-      .foreach(::persistAccountState)
-
     builder.stream("blocks", Consumed.with(Serdes.ByteArray(), blockSerde))
+      .map{ k, v -> KeyValue(ByteUtil.toHexString(k), v)}
       .foreach(::persistBlock)
 
     builder
-      .stream("info", Consumed.with(Serdes.ByteArray(), blockInfoSerde))
+      .stream("blocks-info", Consumed.with(Serdes.ByteArray(), blockInfoSerde))
       .map { k, v -> KeyValue(ByteUtil.byteArrayToLong(k), v) }
       .foreach(::persistBlockInfo)
-
-    builder.stream("transactions", Consumed.with(Serdes.ByteArray(), transactionSerde))
-      .foreach(::persistTransaction)
-
 
 //    // Raw Blocks Stream
 //    val (blocksTopic) = appConfig.topicsConfig
@@ -174,36 +170,15 @@ class BlocksProcessor : KoinComponent, Processor {
 //  }
 //
 
-  private fun persistBlock(hash: ByteArray, block: Block) {
+  private fun persistBlock(hash: String, block: Block) {
 
     val options = UpdateOptions().upsert(true)
 
-    val idQuery = Document(mapOf("_id" to block.getHash().toHex()))
+    val idQuery = Document(mapOf("_id" to hash))
     val update = Document(mapOf("\$set" to block.toDocument()))
 
     blocksCollection.updateOne(idQuery, update, options)
-    logger.debug { "Block stored: ${hash.toHex()}, $idQuery" }
-  }
-
-  private fun persistAccountState(address: ByteArray, state: AccountState?) {
-
-    val options = UpdateOptions().upsert(true)
-
-    val idQuery = Document(mapOf("_id" to address.toHex()?.substring(10)))
-
-    if(state != null) {
-
-      val update = Document(mapOf("\$set" to state.toDocument()))
-
-      addressStateCollection.updateOne(idQuery, update, options)
-      logger.info { "Account state stored: $idQuery " }
-    } else {
-
-      addressStateCollection.deleteOne(idQuery)
-      logger.info { "Account state deleted: $idQuery " }
-
-    }
-
+    logger.info { "Block stored: $hash, $idQuery" }
   }
 
   private fun persistBlockInfo(number: Long, info: BlockInfo) {
@@ -226,18 +201,7 @@ class BlocksProcessor : KoinComponent, Processor {
     }
 
     blocksCollection.updateOne(idQuery, update, options)
-    logger.debug { "Block info stored: $number, $idQuery, $update" }
-  }
-
-  private fun persistTransaction(blockHash: ByteArray, tx: Transaction) {
-
-    val options = UpdateOptions().upsert(true)
-
-    val idQuery = Document(mapOf("_id" to blockHash.toHex()?.substring(10)))
-    val update = Document(mapOf("\$push" to Document(mapOf("transactions" to tx.toDocument()))))
-
-    blocksCollection.updateOne(idQuery, update, options)
-    logger.debug { "Transaction stored: ${blockHash.toHex()}, $idQuery, $update" }
+    logger.info { "Block info stored: $number, $idQuery, $update" }
   }
 
   override fun start() {
