@@ -8,7 +8,6 @@ JAVA_OUT="/share/apps/bolt/src/main/kotlin"
 
 AVRO_TOOLS="docker run --rm -v ${ROOT_DIR}:/share enkryptio/avro-tools"
 
-GO_GEN="${AVRO_TOOLS} go"
 JAVA_GEN="${AVRO_TOOLS} java"
 
 ${JAVA_GEN} idl2schemata ${DIR_IN}/enkryptio.v1.avdl ${DIR_IN}/values
