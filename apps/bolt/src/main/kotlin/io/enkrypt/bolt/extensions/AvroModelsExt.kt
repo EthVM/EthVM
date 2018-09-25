@@ -1,17 +1,20 @@
 package io.enkrypt.bolt.extensions
 
-import io.enkrypt.avro.*
+import io.enkrypt.avro.AccountState
+import io.enkrypt.avro.Block
+import io.enkrypt.avro.BlockHeader
+import io.enkrypt.avro.BlockStats
+import io.enkrypt.avro.Bytes20
+import io.enkrypt.avro.Bytes32
+import io.enkrypt.avro.LogInfo
+import io.enkrypt.avro.Transaction
+import io.enkrypt.avro.TransactionReceipt
 import org.bson.Document
 import org.ethereum.util.ByteUtil
-import java.nio.ByteBuffer
 
-fun Bytes32?.toHex(): String? {
-  return if(this == null) { null; } else ByteUtil.toHexString(this.bytes())
-}
+fun Bytes32?.toHex(): String? = if (this == null) null else ByteUtil.toHexString(this.bytes())
 
-fun Bytes20?.toHex(): String? {
-  return if(this == null) { null; } else ByteUtil.toHexString(this.bytes())
-}
+fun Bytes20?.toHex(): String? = if (this == null) null else ByteUtil.toHexString(this.bytes())
 
 fun Block?.toDocument() = Document(mapOf(
   "hash" to this?.getHash()?.toHex(),
@@ -39,10 +42,10 @@ fun Transaction?.toDocument(): Document {
     "data" to this?.getData().toByteArray()
   ))
 
-  if(this?.getReceipt() != null) {
+  if (this?.getReceipt() != null) {
     result.append("receipt", this.getReceipt().toDocument())
   }
-  return result;
+  return result
 }
 
 fun TransactionReceipt?.toDocument() = Document(mapOf(
@@ -51,14 +54,14 @@ fun TransactionReceipt?.toDocument() = Document(mapOf(
   "bloomFilter" to this?.getBloomFilter().toByteArray(),
   "gasUsed" to this?.getGasUsed().toByteArray(),
   "executionResult" to this?.getExecutionResult().toByteArray(),
-  "logs" to this?.getLogs()?.map{ it.toDocument() },
+  "logs" to this?.getLogs()?.map { it.toDocument() },
   "error" to this?.getError().toString(),
   "txHash" to this?.getTxHash().toByteArray()
 ))
 
 fun LogInfo?.toDocument() = Document(mapOf(
   "address" to this?.getAddress()?.toHex(),
-  "topics" to this?.getTopics()?.map{ it.toByteArray() },
+  "topics" to this?.getTopics()?.map { it.toByteArray() },
   "data" to this?.getData().toByteArray()
 ))
 
@@ -86,18 +89,3 @@ fun AccountState?.toDocument() = Document(mapOf(
   "stateRoot" to this?.getStateRoot().toByteArray(),
   "codeHash" to this?.getCodeHash().toByteArray()
 ))
-
-fun Block?.rewind(): Block? {
-  if (this == null) {
-    return null
-  }
-
-  for (i in 0..24) {
-    val field = get(i)
-    if (field is ByteBuffer) {
-      field.rewind()
-    }
-  }
-
-  return this
-}
