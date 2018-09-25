@@ -31,9 +31,7 @@ export interface Tx {
   blockNumber?: number
   transactionIndex?: Buffer
   from: Buffer
-  fromBalance?: Buffer
   to: Buffer
-  toBalance?: Buffer
   gasUsed: Buffer
   cumulativeGasUsed?: Buffer
   contractAddress: Buffer | null
