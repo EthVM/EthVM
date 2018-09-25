@@ -80,7 +80,8 @@
           "type" : "bytes"
         }, {
           "name" : "transactionIndex",
-          "type" : [ "null", "int" ]
+          "type" : [ "null", "int" ],
+          "default" : null
         }, {
           "name" : "from",
           "type" : [ "null", "Bytes20" ]
