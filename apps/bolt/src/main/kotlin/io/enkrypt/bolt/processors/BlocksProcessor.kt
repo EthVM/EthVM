@@ -56,12 +56,12 @@ class BlocksProcessor : KoinComponent, Processor {
     // Create stream builder
     val builder = StreamsBuilder()
 
-    builder.stream("blocks", Consumed.with(Serdes.ByteArray(), blockSerde))
+    builder.stream(appConfig.topicsConfig.blocks, Consumed.with(Serdes.ByteArray(), blockSerde))
       .map { k, v -> KeyValue(ByteUtil.toHexString(k), v) }
       .foreach(::persistBlock)
 
     builder
-      .stream("blocks-info", Consumed.with(Serdes.ByteArray(), blockInfoSerde))
+      .stream(appConfig.topicsConfig.blocksInfo, Consumed.with(Serdes.ByteArray(), blockInfoSerde))
       .map { k, v -> KeyValue(ByteUtil.byteArrayToLong(k), v) }
       .foreach(::persistBlockInfo)
 

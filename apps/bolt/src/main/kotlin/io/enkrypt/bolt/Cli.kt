@@ -15,12 +15,11 @@ import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
 import org.koin.dsl.module.module
 import org.koin.standalone.StandAloneContext.startKoin
-import java.util.*
+import java.util.Properties
 
 class Cli : CliktCommand() {
 
   // General - CLI
-
   private val bootstrapServers: String by option(
     help = "A list of host/port pairs to use for establishing the initial connection to the Kafka cluster",
     envvar = "KAFKA_BOOTSTRAP_SERVERS"
@@ -37,21 +36,25 @@ class Cli : CliktCommand() {
   ).default(DEFAULT_SCHEMA_REGISTRY_URL)
 
   // Input Topics - CLI
-  private val rawBlocksTopic: String by option(
-    help = "Name of the raw blocks stream topic on which Bolt will listen",
-    envvar = "KAFA_RAW_BLOCKS_TOPIC"
-  ).default(DEFAULT_RAW_BLOCK_TOPIC)
+  private val blocksTopic: String by option(
+    help = "Name of the blocks stream topic on which Bolt will listen",
+    envvar = "KAFA_BLOCKS_TOPIC"
+  ).default(DEFAULT_BLOCKS_TOPIC)
 
-  private val rawPendingTxsTopic: String by option(
-    help = "Name of the raw blocks stream topic on which Bolt will listen",
+  private val blocksInfoTopic: String by option(
+    help = "Name of the blocks info topic on which Bolt will listen",
+    envvar = "KAFKA_BLOCKS_INFO_TOPIC"
+  ).default(DEFAULT_BLOCKS_INFO_TOPIC)
+
+  private val txsTopic: String by option(
+    help = "Name of the transactions topic on which Bolt will listen",
     envvar = "KAFKA_PENDING_TXS_TOPIC"
-  ).default(DEFAULT_RAW_PENDING_TXS_TOPIC)
+  ).default(DEFAULT_TXS_TOPIC)
 
-  // Output Topics - CLI
-  private val processedBlocksTopic: String by option(
-    help = "Name of the out blocks stream topic on which Bolt will listen",
-    envvar = "KAFKA_PROCESSED_BLOCK_TOPIC"
-  ).default(DEFAULT_PROCESSED_BLOCK_TOPIC)
+  private val accountStateTopic: String by option(
+    help = "Name of the account state topic on which Bolt will listen",
+    envvar = "KAFKA_ACCOUNT_STATE_TOPIC"
+  ).default(DEFAULT_ACCOUNT_STATE_TOPIC)
 
   // Mongo - CLI
   private val mongoUri: String by option(
@@ -61,7 +64,7 @@ class Cli : CliktCommand() {
 
   // DI
   private val boltModule = module {
-    single { TopicsConfig(rawBlocksTopic, rawPendingTxsTopic, processedBlocksTopic) }
+    single { TopicsConfig(blocksTopic, blocksInfoTopic, txsTopic, accountStateTopic) }
     single { AppConfig(bootstrapServers, schemaRegistryUrl, startingOffset, get()) }
 
     single { MongoClientURI(mongoUri) }
@@ -84,7 +87,6 @@ class Cli : CliktCommand() {
         }
       }
     }
-
   }
 
   override fun run() {
@@ -104,20 +106,20 @@ class Cli : CliktCommand() {
       onPrepareProcessor()
       start()
     }
-
   }
 
   companion object Defaults {
-
     const val DEFAULT_BOOTSTRAP_SERVERS = "localhost:9092"
     const val DEFAULT_AUTO_OFFSET = "earliest"
     const val DEFAULT_SCHEMA_REGISTRY_URL = "http://localhost:8081"
 
     const val DEFAULT_MONGO_URI = "mongodb://localhost:27017/ethvm_local"
 
-    const val DEFAULT_RAW_BLOCK_TOPIC = "raw-blocks"
-    const val DEFAULT_RAW_PENDING_TXS_TOPIC = "raw-pending-txs"
+    const val DEFAULT_BLOCKS_TOPIC = "blocks"
+    const val DEFAULT_BLOCKS_INFO_TOPIC = "blocks-info"
 
-    const val DEFAULT_PROCESSED_BLOCK_TOPIC = "blocks"
+    const val DEFAULT_TXS_TOPIC = "transactions"
+
+    const val DEFAULT_ACCOUNT_STATE_TOPIC = "account-state"
   }
 }

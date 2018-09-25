@@ -51,7 +51,7 @@ class TransactionsProcessor : KoinComponent, Processor {
     // Create stream builder
     val builder = StreamsBuilder()
 
-    builder.stream("transactions", Consumed.with(Serdes.ByteArray(), transactionSerde))
+    builder.stream(appConfig.topicsConfig.transactions, Consumed.with(Serdes.ByteArray(), transactionSerde))
       .map { k, v -> KeyValue(ByteUtil.toHexString(k), v) }
       .foreach(::persistTransaction)
 

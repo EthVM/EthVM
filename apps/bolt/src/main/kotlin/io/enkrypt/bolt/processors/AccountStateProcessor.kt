@@ -52,7 +52,7 @@ class AccountStateProcessor : KoinComponent, Processor {
     val builder = StreamsBuilder()
 
     builder
-      .stream("account-state", Consumed.with(Serdes.ByteArray(), accountStateSerde))
+      .stream(appConfig.topicsConfig.accountState, Consumed.with(Serdes.ByteArray(), accountStateSerde))
       .map { k, v -> KeyValue(ByteUtil.toHexString(k), v) }
       .foreach(::persistAccountState)
 

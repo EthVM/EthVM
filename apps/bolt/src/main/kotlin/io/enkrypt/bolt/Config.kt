@@ -8,7 +8,8 @@ data class AppConfig(
 )
 
 data class TopicsConfig(
-  val rawBlocks: String,
-  val rawPendingTxs: String,
-  val processedBlocks: String
+  val blocks: String,
+  val blocksInfo: String,
+  val transactions: String,
+  val accountState: String
 )
