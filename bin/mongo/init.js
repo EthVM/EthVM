@@ -1,4 +1,4 @@
 
 use ethvm_local;
 db.createCollection('blocks');
-db.createCollection('addresses');
+db.createCollection('account-state');
