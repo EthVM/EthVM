@@ -1,6 +1,5 @@
 @namespace("io.enkrypt.avro")
 protocol EnkryptIO {
-
   fixed Bytes20(20);
   fixed Bytes32(32);
 
@@ -19,36 +18,33 @@ protocol EnkryptIO {
   }
 
   record TransactionReceipt {
-
     bytes postTxState;
     bytes cumulativeGas;
     bytes bloomFilter;
     bytes gasUsed;
     bytes executionResult;
     array<LogInfo> logs;
-
     union { null, string } `error`;
-
     union { null, bytes } txHash;
   }
 
   record Transaction {
-
     Bytes32 hash;
     bytes nonce;
+    union { null, int } transactionIndex;
     union { null, Bytes20 } from;
     union { null, Bytes20 } to;
     bytes value;
     bytes gasPrice;
     bytes gasLimit;
     union { null, bytes } data = null;
-
     union { null, TransactionReceipt } receipt;
-
+    bytes v;
+    bytes r;
+    bytes s;
   }
 
   record BlockHeader {
-
     Bytes32 parentHash;
     Bytes32 unclesHash;
     Bytes20 coinbase;
@@ -64,7 +60,6 @@ protocol EnkryptIO {
     bytes mixHash;
     bytes extraData;
     bytes nonce;
-
   }
 
   record BlockInfo {
@@ -74,17 +69,13 @@ protocol EnkryptIO {
   }
 
   record Block {
-
     Bytes32 hash;
     BlockHeader header;
     union { null, array<Transaction> } transactions = null;
     union { null, array<BlockHeader> } uncleList = null;
     union { null, BlockInfo } blockInfo = null;
     union { null, BlockStats } blockStats = null;
-
   }
-
-
 
   record AccountState {
     bytes nonce;
@@ -92,5 +83,4 @@ protocol EnkryptIO {
     bytes stateRoot;
     bytes codeHash;
   }
-
 }

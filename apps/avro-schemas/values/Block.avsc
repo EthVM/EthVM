@@ -79,6 +79,9 @@
           "name" : "nonce",
           "type" : "bytes"
         }, {
+          "name" : "transactionIndex",
+          "type" : [ "null", "int" ]
+        }, {
           "name" : "from",
           "type" : [ "null", "Bytes20" ]
         }, {
@@ -147,6 +150,15 @@
               "type" : [ "null", "bytes" ]
             } ]
           } ]
+        }, {
+          "name" : "v",
+          "type" : "bytes"
+        }, {
+          "name" : "r",
+          "type" : "bytes"
+        }, {
+          "name" : "s",
+          "type" : "bytes"
         } ]
       }
     } ],
