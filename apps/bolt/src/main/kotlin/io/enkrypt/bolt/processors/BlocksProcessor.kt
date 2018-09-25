@@ -5,10 +5,8 @@ import com.mongodb.MongoClientURI
 import com.mongodb.client.model.UpdateOptions
 import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
-import io.enkrypt.avro.AccountState
 import io.enkrypt.avro.Block
 import io.enkrypt.avro.BlockInfo
-import io.enkrypt.avro.Transaction
 import io.enkrypt.bolt.AppConfig
 import io.enkrypt.bolt.extensions.toByteArray
 import io.enkrypt.bolt.extensions.toDocument
@@ -24,8 +22,7 @@ import org.bson.Document
 import org.ethereum.util.ByteUtil
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
-import java.util.*
-
+import java.util.Properties
 
 class BlocksProcessor : KoinComponent, Processor {
 
@@ -60,7 +57,7 @@ class BlocksProcessor : KoinComponent, Processor {
     val builder = StreamsBuilder()
 
     builder.stream("blocks", Consumed.with(Serdes.ByteArray(), blockSerde))
-      .map{ k, v -> KeyValue(ByteUtil.toHexString(k), v)}
+      .map { k, v -> KeyValue(ByteUtil.toHexString(k), v) }
       .foreach(::persistBlock)
 
     builder
@@ -171,7 +168,6 @@ class BlocksProcessor : KoinComponent, Processor {
 //
 
   private fun persistBlock(hash: String, block: Block) {
-
     val options = UpdateOptions().upsert(true)
 
     val idQuery = Document(mapOf("_id" to hash))
@@ -182,7 +178,6 @@ class BlocksProcessor : KoinComponent, Processor {
   }
 
   private fun persistBlockInfo(number: Long, info: BlockInfo) {
-
     val options = UpdateOptions().upsert(true)
 
     val idQuery = Document(mapOf("_id" to info.getHash().toHex()))

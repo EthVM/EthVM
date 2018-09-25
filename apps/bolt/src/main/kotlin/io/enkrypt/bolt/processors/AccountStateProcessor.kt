@@ -6,13 +6,8 @@ import com.mongodb.client.model.UpdateOptions
 import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
 import io.enkrypt.avro.AccountState
-import io.enkrypt.avro.Block
-import io.enkrypt.avro.BlockInfo
-import io.enkrypt.avro.Transaction
 import io.enkrypt.bolt.AppConfig
-import io.enkrypt.bolt.extensions.toByteArray
 import io.enkrypt.bolt.extensions.toDocument
-import io.enkrypt.bolt.extensions.toHex
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
@@ -24,8 +19,7 @@ import org.bson.Document
 import org.ethereum.util.ByteUtil
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
-import java.util.*
-
+import java.util.Properties
 
 class AccountStateProcessor : KoinComponent, Processor {
 
@@ -49,8 +43,6 @@ class AccountStateProcessor : KoinComponent, Processor {
   private lateinit var streams: KafkaStreams
 
   override fun onPrepareProcessor() {
-
-
     // Avro Serdes - Specific
     val serdeProps = mapOf(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG to appConfig.schemaRegistryUrl)
 
@@ -61,7 +53,7 @@ class AccountStateProcessor : KoinComponent, Processor {
 
     builder
       .stream("account-state", Consumed.with(Serdes.ByteArray(), accountStateSerde))
-      .map{ k, v -> KeyValue(ByteUtil.toHexString(k), v)}
+      .map { k, v -> KeyValue(ByteUtil.toHexString(k), v) }
       .foreach(::persistAccountState)
 
     // Generate the topology
@@ -72,24 +64,17 @@ class AccountStateProcessor : KoinComponent, Processor {
   }
 
   private fun persistAccountState(address: String, state: AccountState?) {
-
     val options = UpdateOptions().upsert(true)
-
     val idQuery = Document(mapOf("_id" to address))
 
-    if(state != null) {
-
+    if (state != null) {
       val update = Document(mapOf("\$set" to state.toDocument()))
-
       addressStateCollection.updateOne(idQuery, update, options)
       logger.info { "Account state stored: $idQuery " }
     } else {
-
       addressStateCollection.deleteOne(idQuery)
       logger.info { "Account state deleted: $idQuery " }
-
     }
-
   }
 
   override fun start() {

@@ -8,7 +8,6 @@ import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
 import io.enkrypt.avro.Transaction
 import io.enkrypt.bolt.AppConfig
 import io.enkrypt.bolt.extensions.toDocument
-import io.enkrypt.bolt.extensions.toHex
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
@@ -20,9 +19,7 @@ import org.bson.Document
 import org.ethereum.util.ByteUtil
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
-import java.nio.charset.Charset
-import java.util.*
-
+import java.util.Properties
 
 class TransactionsProcessor : KoinComponent, Processor {
 
@@ -46,7 +43,6 @@ class TransactionsProcessor : KoinComponent, Processor {
   private lateinit var streams: KafkaStreams
 
   override fun onPrepareProcessor() {
-
     // Avro Serdes - Specific
     val serdeProps = mapOf(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG to appConfig.schemaRegistryUrl)
 
@@ -56,7 +52,7 @@ class TransactionsProcessor : KoinComponent, Processor {
     val builder = StreamsBuilder()
 
     builder.stream("transactions", Consumed.with(Serdes.ByteArray(), transactionSerde))
-      .map{ k, v -> KeyValue(ByteUtil.toHexString(k), v) }
+      .map { k, v -> KeyValue(ByteUtil.toHexString(k), v) }
       .foreach(::persistTransaction)
 
     // Generate the topology
@@ -67,7 +63,6 @@ class TransactionsProcessor : KoinComponent, Processor {
   }
 
   private fun persistTransaction(blockHash: String, tx: Transaction) {
-
     val options = UpdateOptions().upsert(true)
 
     val idQuery = Document(mapOf("_id" to blockHash))
