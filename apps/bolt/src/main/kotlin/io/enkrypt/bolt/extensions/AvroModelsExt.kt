@@ -30,16 +30,21 @@ fun BlockStats?.toDocument() = Document(mapOf(
   "avgTxsFees" to this?.getAvgTxsFees()
 ))
 
-fun Transaction?.toDocument(): Document {
+fun Transaction?.toDocument(blockHash: String): Document {
   val result = Document(mapOf(
     "hash" to this?.getHash()?.toHex(),
+    "blockHash" to blockHash,
+    "transactionIndex" to this?.getTransactionIndex(),
     "nonce" to this?.getNonce().toByteArray(),
     "from" to this?.getFrom()?.toHex(),
     "to" to this?.getTo()?.toHex(),
     "value" to this?.getValue()?.toByteArray(),
     "gasPrice" to this?.getGasPrice()?.toByteArray(),
     "gasLimit" to this?.getGasLimit()?.toByteArray(),
-    "data" to this?.getData().toByteArray()
+    "data" to this?.getData().toByteArray(),
+    "v" to this?.getV().toByteArray(),
+    "r" to this?.getR().toByteArray(),
+    "s" to this?.getS().toByteArray()
   ))
 
   if (this?.getReceipt() != null) {
@@ -54,9 +59,7 @@ fun TransactionReceipt?.toDocument() = Document(mapOf(
   "bloomFilter" to this?.getBloomFilter().toByteArray(),
   "gasUsed" to this?.getGasUsed().toByteArray(),
   "executionResult" to this?.getExecutionResult().toByteArray(),
-  "logs" to this?.getLogs()?.map { it.toDocument() },
-  "error" to this?.getError().toString(),
-  "txHash" to this?.getTxHash().toByteArray()
+  "logs" to this?.getLogs()?.map { it.toDocument() }
 ))
 
 fun LogInfo?.toDocument() = Document(mapOf(

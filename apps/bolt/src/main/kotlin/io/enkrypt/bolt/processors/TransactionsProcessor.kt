@@ -8,6 +8,8 @@ import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
 import io.enkrypt.avro.Transaction
 import io.enkrypt.bolt.AppConfig
 import io.enkrypt.bolt.extensions.toDocument
+import io.enkrypt.bolt.extensions.toHex
+import io.enkrypt.bolt.extensions.transaction
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
@@ -35,8 +37,10 @@ class TransactionsProcessor : KoinComponent, Processor {
   private val mongoUri: MongoClientURI by inject()
   private val mongoClient: MongoClient by inject()
   private val mongoDB by lazy { mongoClient.getDatabase(mongoUri.database!!) }
+  private val mongoSession by lazy { mongoClient.startSession() }
 
   private val blocksCollection by lazy { mongoDB.getCollection("blocks") }
+  private val transactionsCollection by lazy { mongoDB.getCollection("transactions") }
 
   private val logger = KotlinLogging.logger {}
 
@@ -65,11 +69,29 @@ class TransactionsProcessor : KoinComponent, Processor {
   private fun persistTransaction(blockHash: String, tx: Transaction) {
     val options = UpdateOptions().upsert(true)
 
-    val idQuery = Document(mapOf("_id" to blockHash))
-    val update = Document(mapOf("\$push" to Document(mapOf("transactions" to tx.toDocument()))))
+    val txHash = tx.getHash()?.toHex()
 
-    blocksCollection.updateOne(idQuery, update, options)
-    logger.info { "Transaction stored: $blockHash, $idQuery, $update" }
+    val idBlockQuery = Document(mapOf("_id" to blockHash))
+    val updateBlock = Document(
+      mapOf(
+        "\$push" to Document(mapOf("transactions" to txHash)),
+        "\$inc" to Document(mapOf("blockStats.${if (tx.getReceipt().getStatus() == 1) "numSuccessfulTxs" else "numFailedTxs"}" to 1)),
+        "\$inc" to Document(mapOf("blockStats.totalTxs" to 1))
+      )
+    )
+
+    val idTxQuery = Document(mapOf("_id" to txHash))
+    val txDocument = tx.toDocument(blockHash)
+
+    mongoSession.transaction {
+      blocksCollection.updateOne(idBlockQuery, updateBlock, options)
+      transactionsCollection.updateOne(idTxQuery, txDocument, options)
+    }.also {
+      when {
+        it.isLeft() -> logger.info { "Transaction stored: $blockHash, $idBlockQuery, $updateBlock" }
+        it.isRight() -> logger.error { "Transaction not stored: $blockHash" }
+      }
+    }
   }
 
   override fun start() {
