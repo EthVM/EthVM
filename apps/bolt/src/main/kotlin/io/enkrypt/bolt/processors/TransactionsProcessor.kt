@@ -75,13 +75,13 @@ class TransactionsProcessor : KoinComponent, Processor {
     val updateBlock = Document(
       mapOf(
         "\$push" to Document(mapOf("transactions" to txHash)),
-        "\$inc" to Document(mapOf("blockStats.${if (tx.getReceipt().getStatus() == 1) "numSuccessfulTxs" else "numFailedTxs"}" to 1)),
-        "\$inc" to Document(mapOf("blockStats.totalTxs" to 1))
+        "\$inc" to Document(mapOf("stats.${if (tx.getReceipt().getStatus() == 1) "numSuccessfulTxs" else "numFailedTxs"}" to 1)),
+        "\$inc" to Document(mapOf("stats.totalTxs" to 1))
       )
     )
 
     val idTxQuery = Document(mapOf("_id" to txHash))
-    val txDocument = tx.toDocument(blockHash)
+    val txDocument = Document(mapOf("\$set" to tx.toDocument(blockHash)))
 
     mongoSession.transaction {
       blocksCollection.updateOne(idBlockQuery, updateBlock, options)
