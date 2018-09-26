@@ -5,7 +5,7 @@ import { EthVMServer } from '@app/server/ethvm-server'
 import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blocks'
 import { ChartsServiceImpl, MockChartsRepository } from '@app/server/modules/charts'
 import { CoinMarketCapRepository, ExchangeServiceImpl } from '@app/server/modules/exchanges'
-import { MockTxsRepository, TxsServiceImpl } from '@app/server/modules/txs'
+import { MongoTxsRepository, TxsServiceImpl } from '@app/server/modules/txs'
 import { RedisTrieDb, VmEngine, VmRunner, VmServiceImpl } from '@app/server/modules/vm'
 import { RedisCacheRepository } from '@app/server/repositories'
 import * as EventEmitter from 'eventemitter3'
@@ -78,7 +78,7 @@ async function bootstrapServer() {
   const blockService = new BlocksServiceImpl(blocksRepository, ds)
 
   // Txs
-  const txsRepository = new MockTxsRepository()
+  const txsRepository = new MongoTxsRepository(db)
   const txsService = new TxsServiceImpl(txsRepository, ds)
 
   // Charts

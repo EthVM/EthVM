@@ -9,43 +9,31 @@ export interface Trace {
 }
 
 export interface Log {
-  address: Buffer
+  address: string
   topics: Buffer[]
   data: Buffer
-  blockNumber: Buffer
-  txHash: Buffer
-  txIndex: Buffer
-  blockHash: Buffer
-  index: Buffer
-  removed: boolean
 }
 
-export interface TxLog {
-  hash: Buffer
+export interface Receipt {
+  postTxState: Buffer
+  cumulativeGas: Buffer
+  gasUsed: Buffer
+  bloomFilter: Buffer
+  executionResult: Buffer
   logs: Log[]
 }
 
 export interface Tx {
-  root?: Buffer
-  blockHash: Buffer
-  blockNumber?: number
-  transactionIndex?: Buffer
+  hash: string
+  blockHash: string
+  transactionIndex: number
+  blockNumber: number
+  nonce: Buffer
   from: Buffer
   to: Buffer
-  gasUsed: Buffer
-  cumulativeGasUsed?: Buffer
-  contractAddress: Buffer | null
-  logsBloom?: Buffer | null
-  gas: Buffer
-  gasPrice: Buffer
-  hash: string
-  input: Buffer
-  nonce?: Buffer
   value: Buffer
-  v?: Buffer
-  r?: Buffer
-  s?: Buffer
-  status: boolean
-  pending?: boolean
-  timestamp: Buffer
+  gasPrice: Buffer
+  gasLimit: Buffer
+  data: Buffer
+  receipt?: Receipt
 }
