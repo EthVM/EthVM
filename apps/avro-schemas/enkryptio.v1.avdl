@@ -18,22 +18,22 @@ protocol EnkryptIO {
   }
 
   record TransactionReceipt {
+    int status;
     bytes postTxState;
     bytes cumulativeGas;
     bytes bloomFilter;
     bytes gasUsed;
     bytes executionResult;
     array<LogInfo> logs;
-    union { null, string } `error`;
-    union { null, bytes } txHash;
   }
 
   record Transaction {
     Bytes32 hash;
+    union { null, Bytes32 } blockHash = null;
     bytes nonce;
     union { null, int } transactionIndex = null;
     union { null, Bytes20 } from;
-    union { null, Bytes20 } to;
+    union { null, Bytes20 } to = null;
     bytes value;
     bytes gasPrice;
     bytes gasLimit;

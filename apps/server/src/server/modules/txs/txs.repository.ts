@@ -1,5 +1,6 @@
 import { hexToBuffer } from '@app/server/core/utils'
 import { Tx } from '@app/server/modules/txs'
+import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
 
 export interface TxsRepository {
   getTx(hash: string): Promise<Tx | null>
@@ -9,7 +10,7 @@ export interface TxsRepository {
   getTotalTxs(hash: string): Promise<number>
 }
 
-export class MockTxsRepository implements TxsRepository {
+export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepository {
   public getTxs(limit: number, page: number): Promise<Tx[]> {
     const start = page * limit
     const end = start + limit
@@ -17,11 +18,31 @@ export class MockTxsRepository implements TxsRepository {
   }
 
   public getBlockTxs(hash: string): Promise<Tx[]> {
-    return Promise.reject()
+    return this.db
+      .collection(MongoEthVM.collections.blocks)
+      .findOne({ _id: hash }, { projection: { number: 1, hash: 1, transactions: 1 } })
+      .then(resp => {
+        if (!resp) {
+          return []
+        }
+
+        // TODO: Add number and hash to each of transactions (instead of returning directly)
+        return resp.transactions
+      })
   }
 
   public getTx(hash: string): Promise<Tx | null> {
-    return Promise.reject()
+    return this.db
+      .collection(MongoEthVM.collections.blocks)
+      .findOne({ 'transaction.hash': hash }, { projection: { number: 1, hash: 1, 'transactions.$': 1 } })
+      .then(resp => {
+        if (!resp) {
+          return {}
+        }
+
+        // TODO: Add number and hash to each of transactions (instead of returning directly)
+        return resp.transactions[0]
+      })
   }
 
   public getTxsOfAddress(hash: string, limit: number, page: number): Promise<Tx[]> {
