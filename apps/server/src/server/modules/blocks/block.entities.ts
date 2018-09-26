@@ -1,13 +1,3 @@
-import { Tx } from '@app/server/modules/txs'
-
-export interface BlockStats {
-  blockTime
-  failed
-  success
-  avgGasPrice
-  avgTxFees
-  pendingTxs?
-}
 
 export interface SmallBlock {
   number: number
@@ -26,35 +16,36 @@ export interface SmallBlock {
   blockStats?: BlockStats
 }
 
+export interface Header {
+  parentHash: Buffer
+  unclesHash?: string
+  coinbase?: string
+  stateRoot?: string
+  txTrieRoot?: string
+  receiptTrieRoot?: string
+  logsBloom?: Buffer
+  difficulty?: Buffer
+  timestamp?: number
+  number: number
+  gasLimit?: Buffer
+  gasUsed?: number
+  mixHash?: Buffer
+  extraData?: Buffer
+  nonce?: Buffer
+}
+
+export interface BlockStats {
+  blockTimeMs?: string
+  numFailedTxs?: string
+  numSuccessfulTxs?: string
+  avgGasPrice?: string
+  avgTxsFees?: string
+}
+
 export interface Block {
   number: number
   hash: string
-  parentHash?: Buffer
-  nonce?: Buffer
-  mixHash?: Buffer
-  sha3Uncles?: Buffer
-  logsBloom?: Buffer
-  stateRoot?: Buffer
-  miner: Buffer
-  minerBalance?: Buffer
+  header: Header
+  stats: BlockStats
   difficulty?: Buffer
-  totalDifficulty?: Buffer
-  extraData?: Buffer
-  size?: Buffer
-  gasLimit?: Buffer
-  gasUsed?: Buffer
-  timestamp: Buffer
-  transactionsRoot?: Buffer
-  receiptsRoot?: Buffer
-  transactions?: Tx[]
-  transactionHashes?: string[]
-  transactionCount?: number
-  uncleHashes?: Buffer[]
-  uncles?: Block[]
-  isUncle: boolean
-  txFees?: Buffer
-  blockReward?: Buffer
-  totalBlockReward?: Buffer
-  uncleReward?: Buffer
-  blockStats?: BlockStats
 }
