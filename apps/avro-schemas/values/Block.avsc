@@ -76,6 +76,10 @@
           "name" : "hash",
           "type" : "Bytes32"
         }, {
+          "name" : "blockHash",
+          "type" : [ "null", "Bytes32" ],
+          "default" : null
+        }, {
           "name" : "nonce",
           "type" : "bytes"
         }, {
@@ -87,7 +91,8 @@
           "type" : [ "null", "Bytes20" ]
         }, {
           "name" : "to",
-          "type" : [ "null", "Bytes20" ]
+          "type" : [ "null", "Bytes20" ],
+          "default" : null
         }, {
           "name" : "value",
           "type" : "bytes"
@@ -107,6 +112,9 @@
             "type" : "record",
             "name" : "TransactionReceipt",
             "fields" : [ {
+              "name" : "status",
+              "type" : "int"
+            }, {
               "name" : "postTxState",
               "type" : "bytes"
             }, {
@@ -143,12 +151,6 @@
                   } ]
                 }
               }
-            }, {
-              "name" : "error",
-              "type" : [ "null", "string" ]
-            }, {
-              "name" : "txHash",
-              "type" : [ "null", "bytes" ]
             } ]
           } ]
         }, {
