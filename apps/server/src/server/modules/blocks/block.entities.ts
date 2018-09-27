@@ -1,12 +1,11 @@
+import { Timestamp } from 'bson'
 
 export interface SmallBlock {
   number: number
   hash: string
-  miner: Buffer
-  timestamp: Buffer
-  transactionCount: number
-  uncleHashes?: Buffer[]
-  isUncle: boolean
+  miner: string
+  timestamp?: Timestamp
+  transactionCount?: number
   totalBlockReward?: Buffer
   blockReward?: Buffer
   txFees?: Buffer
@@ -17,29 +16,35 @@ export interface SmallBlock {
 }
 
 export interface Header {
-  parentHash: Buffer
+  parentHash: string
   unclesHash?: string
-  coinbase?: string
-  stateRoot?: string
-  txTrieRoot?: string
-  receiptTrieRoot?: string
-  logsBloom?: Buffer
+  timestamp?: Timestamp
+  nonce?: Buffer
+  miner: string
+  rewards: any
   difficulty?: Buffer
-  timestamp?: number
-  number: number
+  totalDifficulty?: Buffer
+  stateRoot?: Buffer
+  transactionsRoot?: Buffer
+  receiptsRoot: Buffer
+  logsBloom?: Buffer
   gasLimit?: Buffer
   gasUsed?: number
   mixHash?: Buffer
   extraData?: Buffer
-  nonce?: Buffer
 }
 
 export interface BlockStats {
-  blockTimeMs?: string
-  numFailedTxs?: string
-  numSuccessfulTxs?: string
-  avgGasPrice?: string
-  avgTxsFees?: string
+  blockTimeMs?: number
+  numSuccessfulTxs?: number
+  numFailedTxs?: number
+  totalTxs?: number
+  totalInternalTxs?: number
+  avgGasPrice?: Buffer
+  avgTxsFees?: Buffer
+  totalGasPrice?: Buffer
+  totalTxsFees?: Buffer
+  pendingTxs?: Buffer
 }
 
 export interface Block {
@@ -47,5 +52,6 @@ export interface Block {
   hash: string
   header: Header
   stats: BlockStats
-  difficulty?: Buffer
+  transactions?: string[]
+  uncles?: string[]
 }
