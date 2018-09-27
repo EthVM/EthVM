@@ -33,15 +33,13 @@ export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepo
 
   public getTx(hash: string): Promise<Tx | null> {
     return this.db
-      .collection(MongoEthVM.collections.blocks)
-      .findOne({ 'transaction.hash': hash }, { projection: { number: 1, hash: 1, 'transactions.$': 1 } })
+      .collection(MongoEthVM.collections.transactions)
+      .findOne({ _id: hash })
       .then(resp => {
         if (!resp) {
           return {}
         }
-
-        // TODO: Add number and hash to each of transactions (instead of returning directly)
-        return resp.transactions[0]
+        return resp
       })
   }
 
@@ -54,7 +52,14 @@ export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepo
   }
 
   public getTotalTxs(hash: string): Promise<number> {
-    const bhash = hexToBuffer(hash)
-    return Promise.reject()
+    return this.db
+      .collection(MongoEthVM.collections.transactions)
+      .count({ $or: [{ from: hash }, { to: hash }] })
+      .then(resp => {
+        if (!resp) {
+          return 0
+        }
+        return resp
+      })
   }
 }
