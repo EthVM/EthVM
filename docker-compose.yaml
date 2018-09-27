@@ -102,21 +102,6 @@ services:
       - 'traefik.port=27017'
       - 'traefik.backend=mongodb'
 
-  mongodb-ui:
-    image: mongo-express
-    depends_on:
-      - mongodb
-    networks:
-      - back
-    environment:
-      ME_CONFIG_MONGODB_SERVER: 'mongodb'
-    labels:
-    - 'traefik.enable=true'
-    - 'traefik.default.protocol=http'
-    - 'traefik.frontend.rule=Host:mongo-ui.ethvm.lan'
-    - 'traefik.port=8081'
-    - 'traefik.backend=mongodb-ui'
-
   zookeeper:
     image: confluentinc/cp-zookeeper:5.0.0
     networks:
@@ -152,31 +137,6 @@ services:
       CONFLUENT_SUPPORT_METRICS_ENABLE: 'false'
       KAFKA_MESSAGE_MAX_BYTES: '2000000000'
 
-  kafka-schema-registry:
-    image: confluentinc/cp-schema-registry:5.0.0
-    restart: unless-stopped
-    depends_on:
-      - zookeeper
-      - kafka
-    networks:
-      - back
-    ports:
-      - 8081:8081
-    volumes:
-      - ./apps/avro-schemas/:/avro-schemas/
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:kafka-schema-registry.ethvm.lan'
-      - 'traefik.port=8081'
-      - 'traefik.backend=kafka-schema-registry'
-    environment:
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'PLAINTEXT://kafka:9092'
-      SCHEMA_REGISTRY_HOST_NAME: kafka-schema-registry
-      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
-      SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: 'INFO'
-      SCHEMA_REGISTRY_LOG4J_LOGGERS: 'org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR'
-
   ethereumj:
     build:
       context: ./apps/ethereumj
@@ -202,5 +162,4 @@ services:
       - back
     environment:
       KAFKA_BOOTSTRAP_SERVERS: 'kafka:9092'
-      KAFKA_SCHEMA_REGISTRY_URL: 'http://kafka-schema-registry:8081'
       MONGO_URI: 'mongodb://mongodb:27017/ethvm_local'
