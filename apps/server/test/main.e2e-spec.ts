@@ -71,18 +71,17 @@ describe('ethvm-server-events', () => {
   })
 
   describe('getTxsEvent', () => {
-    it.skip('should return Promise<Tx[]>', async () => {
+    it('should return Promise<Tx[]>', async () => {
       const inputs = [
         {
-          address: '0x8b2a6d0b4183b5db91bb901eefdd0d0ba06ef125',
+          address: '54daeb3e8a6bbc797e4ad2b0339f134b186e4637',
           limit: 10,
           page: 0
         }
       ]
-
       for (const input of inputs) {
         const data = await callEvent('getTxs', input, client)
-        expect(data).to.have.lengthOf(1)
+        expect(data).to.have.lengthOf(10)
       }
     })
 
@@ -296,18 +295,18 @@ describe('ethvm-server-events', () => {
   })
 
   describe('pastTxs', () => {
-    it.skip('should return Promise<Tx[]>', async () => {
+    it('should return Promise<Tx[]>', async () => {
       const inputs = [
         {
           limit: 10,
-          page: 0
+          page: 8
         }
       ]
 
       for (const input of inputs) {
         const data = await callEvent('pastTxs', input, client)
         // timeout happens here
-        expect(data).to.have.lengthOf(2)
+        expect(data).to.have.lengthOf(10)
       }
     })
 

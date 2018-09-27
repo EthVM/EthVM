@@ -13,8 +13,19 @@ export interface TxsRepository {
 export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepository {
   public getTxs(limit: number, page: number): Promise<Tx[]> {
     const start = page * limit
-    const end = start + limit
-    return Promise.reject()
+    return this.db
+      .collection(MongoEthVM.collections.transactions)
+      .find()
+      .sort({ transactionIndex: -1 })
+      .skip(start)
+      .limit(limit)
+      .toArray()
+      .then(resp => {
+        if (!resp) {
+          return []
+        }
+        return resp
+      })
   }
 
   public getBlockTxs(hash: string): Promise<Tx[]> {
@@ -45,10 +56,19 @@ export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepo
 
   public getTxsOfAddress(hash: string, limit: number, page: number): Promise<Tx[]> {
     const start = page * limit
-    const end = start + limit
-    const bhash = hexToBuffer(hash)
-
-    return Promise.reject()
+    return this.db
+      .collection(MongoEthVM.collections.transactions)
+      .find({ $or: [{ from: hash }, { to: hash }] })
+      .sort({ transactionIndex: -1 })
+      .skip(start)
+      .limit(limit)
+      .toArray()
+      .then(resp => {
+        if (!resp) {
+          return []
+        }
+        return resp
+      })
   }
 
   public getTotalTxs(hash: string): Promise<number> {
