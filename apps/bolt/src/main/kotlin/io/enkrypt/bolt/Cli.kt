@@ -5,11 +5,7 @@ import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.mongodb.MongoClient
 import com.mongodb.MongoClientURI
-import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig
-import io.confluent.kafka.streams.serdes.avro.GenericAvroSerde
-import io.enkrypt.bolt.processors.AccountStateProcessor
 import io.enkrypt.bolt.processors.BlocksProcessor
-import io.enkrypt.bolt.processors.TransactionsProcessor
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
@@ -30,11 +26,6 @@ class Cli : CliktCommand() {
     envvar = "KAFKA_START_OFFSET"
   ).default(DEFAULT_AUTO_OFFSET)
 
-  private val schemaRegistryUrl: String by option(
-    help = "Specifies in which server are stored AVRO schemas",
-    envvar = "KAFKA_SCHEMA_REGISTRY_URL"
-  ).default(DEFAULT_SCHEMA_REGISTRY_URL)
-
   // Input Topics - CLI
   private val blocksTopic: String by option(
     help = "Name of the blocks stream topic on which Bolt will listen",
@@ -51,6 +42,11 @@ class Cli : CliktCommand() {
     envvar = "KAFKA_PENDING_TXS_TOPIC"
   ).default(DEFAULT_TXS_TOPIC)
 
+  private val pendingTxsTopic: String by option(
+    help = "Name of the pending transactions topic on which Bolt will listen",
+    envvar = "KAFKA_PENDING_TXS_TOPIC"
+  ).default(DEFAULT_PENDING_TXS_TOPIC)
+
   private val accountStateTopic: String by option(
     help = "Name of the account state topic on which Bolt will listen",
     envvar = "KAFKA_ACCOUNT_STATE_TOPIC"
@@ -64,8 +60,8 @@ class Cli : CliktCommand() {
 
   // DI
   private val boltModule = module {
-    single { TopicsConfig(blocksTopic, blocksInfoTopic, txsTopic, accountStateTopic) }
-    single { AppConfig(bootstrapServers, schemaRegistryUrl, startingOffset, get()) }
+    single { TopicsConfig(blocksTopic, blocksInfoTopic, txsTopic, pendingTxsTopic, accountStateTopic) }
+    single { AppConfig(bootstrapServers, "", startingOffset, get()) }
 
     single { MongoClientURI(mongoUri) }
     single { MongoClient(MongoClientURI(mongoUri)) }
@@ -75,7 +71,6 @@ class Cli : CliktCommand() {
         Properties().apply {
           // App
           put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
-          put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl)
 
           // Processing
           put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, StreamsConfig.AT_LEAST_ONCE)
@@ -83,7 +78,7 @@ class Cli : CliktCommand() {
 
           // Serdes - Defaults
           put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().javaClass.name)
-          put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, GenericAvroSerde::class.java)
+          put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.ByteArray().javaClass.name)
         }
       }
     }
@@ -97,21 +92,20 @@ class Cli : CliktCommand() {
       start()
     }
 
-    AccountStateProcessor().apply {
-      onPrepareProcessor()
-      start()
-    }
+//    AddressesProcessor().apply {
+//      onPrepareProcessor()
+//      start()
+//    }
 
-    TransactionsProcessor().apply {
-      onPrepareProcessor()
-      start()
-    }
+//    TransactionsProcessor().apply {
+//      onPrepareProcessor()
+//      start()
+//    }
   }
 
   companion object Defaults {
     const val DEFAULT_BOOTSTRAP_SERVERS = "localhost:9092"
     const val DEFAULT_AUTO_OFFSET = "earliest"
-    const val DEFAULT_SCHEMA_REGISTRY_URL = "http://localhost:8081"
 
     const val DEFAULT_MONGO_URI = "mongodb://localhost:27017/ethvm_local"
 
@@ -119,6 +113,7 @@ class Cli : CliktCommand() {
     const val DEFAULT_BLOCKS_INFO_TOPIC = "blocks-info"
 
     const val DEFAULT_TXS_TOPIC = "transactions"
+    const val DEFAULT_PENDING_TXS_TOPIC = "pending-transactions"
 
     const val DEFAULT_ACCOUNT_STATE_TOPIC = "account-state"
   }

@@ -11,5 +11,6 @@ data class TopicsConfig(
   val blocks: String,
   val blocksInfo: String,
   val transactions: String,
+  val pendingTransactions: String,
   val accountState: String
 )

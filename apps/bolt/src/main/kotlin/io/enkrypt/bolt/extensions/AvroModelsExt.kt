@@ -70,10 +70,10 @@ fun LogInfo?.toDocument() = Document(mapOf(
 
 fun BlockHeader?.toDocument() = Document(mapOf(
   "parentHash" to this?.getParentHash()?.toHex(),
-  "unclesHash" to this?.getParentHash()?.toHex(),
-  "coinbase" to this?.getParentHash()?.toHex(),
-  "stateRoot" to this?.getParentHash()?.toHex(),
-  "txTrieRoot" to this?.getParentHash()?.toHex(),
+  "unclesHash" to this?.getUnclesHash()?.toHex(),
+  "coinbase" to this?.getCoinbase()?.toHex(),
+  "stateRoot" to this?.getStateRoot()?.toHex(),
+  "txTrieRoot" to this?.getTxTrieRoot()?.toHex(),
   "receiptTrieRoot" to this?.getReceiptTrieRoot()?.toHex(),
   "logsBloom" to this?.getLogsBloom().toByteArray(),
   "difficulty" to this?.getDifficulty()?.toByteArray(),
