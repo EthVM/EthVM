@@ -1,6 +1,6 @@
 
 use ethvm_local;
+db.createCollection('addreses');
 db.createCollection('blocks');
-db.createCollection('transactions');
 db.createCollection('pending-transactions');
-db.createCollection('account-state');
+db.createCollection('transactions');

@@ -5,13 +5,8 @@ CMD="kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 1 --p
 echo "COMMAND: $CMD"
 docker-compose exec kafka sh -c "$CMD"
 
-# block info
-CMD="kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 10 --topic blocks-info --config retention.ms=-1"
-echo "COMMAND: $CMD"
-docker-compose exec kafka sh -c "$CMD"
-
-# state
-CMD="kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 10 --topic account-state --config retention.ms=-1 --config cleanup.policy=compact"
+# addresses
+CMD="kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 10 --topic addresses --config retention.ms=-1 --config cleanup.policy=compact"
 echo "COMMAND: $CMD"
 docker-compose exec kafka sh -c "$CMD"
 
