@@ -1,22 +1,11 @@
-import { Tx } from '@app/server/modules/txs'
-
-export interface BlockStats {
-  blockTime
-  failed
-  success
-  avgGasPrice
-  avgTxFees
-  pendingTxs?
-}
+import { Timestamp } from 'bson'
 
 export interface SmallBlock {
   number: number
   hash: string
-  miner: Buffer
-  timestamp: Buffer
-  transactionCount: number
-  uncleHashes?: Buffer[]
-  isUncle: boolean
+  miner: string
+  timestamp?: Timestamp
+  transactionCount?: number
   totalBlockReward?: Buffer
   blockReward?: Buffer
   txFees?: Buffer
@@ -24,37 +13,45 @@ export interface SmallBlock {
   uncleReward?: Buffer
   difficulty?: Buffer
   blockStats?: BlockStats
+}
+
+export interface Header {
+  parentHash: string
+  unclesHash?: string
+  timestamp?: Timestamp
+  nonce?: Buffer
+  miner: string
+  rewards: any
+  difficulty?: Buffer
+  totalDifficulty?: Buffer
+  stateRoot?: Buffer
+  transactionsRoot?: Buffer
+  receiptsRoot: Buffer
+  logsBloom?: Buffer
+  gasLimit?: Buffer
+  gasUsed?: number
+  mixHash?: Buffer
+  extraData?: Buffer
+}
+
+export interface BlockStats {
+  blockTimeMs?: number
+  numSuccessfulTxs?: number
+  numFailedTxs?: number
+  totalTxs?: number
+  totalInternalTxs?: number
+  avgGasPrice?: Buffer
+  avgTxsFees?: Buffer
+  totalGasPrice?: Buffer
+  totalTxsFees?: Buffer
+  pendingTxs?: Buffer
 }
 
 export interface Block {
   number: number
   hash: string
-  parentHash?: Buffer
-  nonce?: Buffer
-  mixHash?: Buffer
-  sha3Uncles?: Buffer
-  logsBloom?: Buffer
-  stateRoot?: Buffer
-  miner: Buffer
-  minerBalance?: Buffer
-  difficulty?: Buffer
-  totalDifficulty?: Buffer
-  extraData?: Buffer
-  size?: Buffer
-  gasLimit?: Buffer
-  gasUsed?: Buffer
-  timestamp: Buffer
-  transactionsRoot?: Buffer
-  receiptsRoot?: Buffer
-  transactions?: Tx[]
-  transactionHashes?: string[]
-  transactionCount?: number
-  uncleHashes?: Buffer[]
-  uncles?: Block[]
-  isUncle: boolean
-  txFees?: Buffer
-  blockReward?: Buffer
-  totalBlockReward?: Buffer
-  uncleReward?: Buffer
-  blockStats?: BlockStats
+  header: Header
+  stats: BlockStats
+  transactions?: string[]
+  uncles?: string[]
 }

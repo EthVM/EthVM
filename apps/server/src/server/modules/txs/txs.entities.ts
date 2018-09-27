@@ -1,12 +1,4 @@
-export interface Trace {
-  op: string
-  value: Buffer
-  from: Buffer
-  fromBalance: Buffer
-  to: Buffer
-  toBalance: Buffer
-  input: Buffer
-}
+import { Timestamp } from 'bson'
 
 export interface Log {
   address: string
@@ -14,26 +6,26 @@ export interface Log {
   data: Buffer
 }
 
-export interface Receipt {
-  postTxState: Buffer
-  cumulativeGas: Buffer
-  gasUsed: Buffer
-  bloomFilter: Buffer
-  executionResult: Buffer
-  logs: Log[]
-}
-
 export interface Tx {
-  hash: string
   blockHash: string
-  transactionIndex: number
   blockNumber: number
-  nonce: Buffer
-  from: Buffer
-  to: Buffer
-  value: Buffer
-  gasPrice: Buffer
-  gasLimit: Buffer
-  data: Buffer
-  receipt?: Receipt
+  contractAddress?: string
+  data?: Buffer
+  fee?: Buffer
+  from?: string
+  gasLeftover?: Buffer
+  gasLimit?: Buffer
+  gasRefund?: Buffer
+  gasUsed?: Buffer
+  hash?: string
+  logs?: Log
+  nonce?: Buffer
+  r?: Buffer
+  result?: boolean
+  s?: Buffer
+  timestamp: Timestamp
+  to?: string
+  transactionIndex: number
+  v?: number
+  value?: Buffer
 }

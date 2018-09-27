@@ -3,7 +3,8 @@ import { Db } from 'mongodb'
 
 export const MongoEthVM = {
   collections: {
-    blocks: 'blocks'
+    blocks: 'blocks',
+    transactions: 'transactions'
   }
 }
 

@@ -13,8 +13,19 @@ export interface TxsRepository {
 export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepository {
   public getTxs(limit: number, page: number): Promise<Tx[]> {
     const start = page * limit
-    const end = start + limit
-    return Promise.reject()
+    return this.db
+      .collection(MongoEthVM.collections.transactions)
+      .find()
+      .sort({ transactionIndex: -1 })
+      .skip(start)
+      .limit(limit)
+      .toArray()
+      .then(resp => {
+        if (!resp) {
+          return []
+        }
+        return resp
+      })
   }
 
   public getBlockTxs(hash: string): Promise<Tx[]> {
@@ -33,28 +44,42 @@ export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepo
 
   public getTx(hash: string): Promise<Tx | null> {
     return this.db
-      .collection(MongoEthVM.collections.blocks)
-      .findOne({ 'transaction.hash': hash }, { projection: { number: 1, hash: 1, 'transactions.$': 1 } })
+      .collection(MongoEthVM.collections.transactions)
+      .findOne({ _id: hash })
       .then(resp => {
         if (!resp) {
           return {}
         }
-
-        // TODO: Add number and hash to each of transactions (instead of returning directly)
-        return resp.transactions[0]
+        return resp
       })
   }
 
   public getTxsOfAddress(hash: string, limit: number, page: number): Promise<Tx[]> {
     const start = page * limit
-    const end = start + limit
-    const bhash = hexToBuffer(hash)
-
-    return Promise.reject()
+    return this.db
+      .collection(MongoEthVM.collections.transactions)
+      .find({ $or: [{ from: hash }, { to: hash }] })
+      .sort({ transactionIndex: -1 })
+      .skip(start)
+      .limit(limit)
+      .toArray()
+      .then(resp => {
+        if (!resp) {
+          return []
+        }
+        return resp
+      })
   }
 
   public getTotalTxs(hash: string): Promise<number> {
-    const bhash = hexToBuffer(hash)
-    return Promise.reject()
+    return this.db
+      .collection(MongoEthVM.collections.transactions)
+      .count({ $or: [{ from: hash }, { to: hash }] })
+      .then(resp => {
+        if (!resp) {
+          return 0
+        }
+        return resp
+      })
   }
 }
