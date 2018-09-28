@@ -34,7 +34,7 @@ export interface Tx {
   gasPrice?: Buffer
   gasRefund?: Buffer
   gasUsed?: Buffer
-  hash?: string
+  hash: string
   internalTxs?: Trace[]
   logs?: Log
   nonce?: Buffer

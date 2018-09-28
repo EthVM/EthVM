@@ -53,8 +53,8 @@ async function bootstrapServer() {
   // Set default state block to VmRunner
   const blocks = await ds.getBlocks()
   const configStateRoot = config.get('eth.state_root')
-  const hasStateRoot = blocks && blocks[0] && blocks[0].stateRoot
-  const stateRoot = hasStateRoot ? Buffer.from(blocks[0].stateRoot!!) : Buffer.from(configStateRoot, 'hex')
+  const hasStateRoot = blocks && blocks[0] && blocks[0].header.stateRoot
+  const stateRoot = hasStateRoot ? Buffer.from(blocks[0].header.stateRoot!!) : Buffer.from(configStateRoot, 'hex')
   vmr.setStateRoot(stateRoot)
 
   // Create block event emmiter
@@ -67,7 +67,7 @@ async function bootstrapServer() {
   const client = await MongoClient.connect(mongoUrl).catch(() => process.exit(-1))
 
   logger.debug('bootstrapper -> Selecting MongoDB database')
-  const dbName = config.get('data_stores.mongo_db.name')
+  const dbName = config.get('data_stores.mongo_db.db')
   const db = client.db(dbName)
 
   // Create services
