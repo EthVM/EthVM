@@ -15,13 +15,9 @@ class RLPBlockSummarySerde : Serde<BlockSummary> {
 
   override fun close() {}
 
-  override fun serializer(): Serializer<BlockSummary> {
-    return serializer
-  }
+  override fun serializer(): Serializer<BlockSummary> = serializer
 
-  override fun deserializer(): Deserializer<BlockSummary> {
-    return deserializer
-  }
+  override fun deserializer(): Deserializer<BlockSummary> = deserializer
 }
 
 class RLPBlockSummarySerializer : Serializer<BlockSummary> {

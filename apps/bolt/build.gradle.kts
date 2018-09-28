@@ -10,6 +10,7 @@ tasks.withType<KotlinCompile> {
 }
 
 repositories {
+  mavenLocal()
   jcenter()
   mavenCentral()
   maven("https://jitpack.io")
@@ -29,13 +30,11 @@ project.java.sourceSets["main"].java {
 dependencies {
   implementation(kotlin("stdlib"))
 
-  // ethereumj
-  implementation("org.ethereum:ethereumj-core:1.8.2-RELEASE")
+  // Ethereumj
+  implementation("org.ethereum:ethereumj-core:1.9.0-SNAPSHOT")
 
   // Kafka
   implementation("org.apache.kafka:kafka-streams:2.0.0")
-  implementation("io.confluent:kafka-streams-avro-serde:5.0.0")
-  implementation("org.apache.avro:avro:1.8.2")
 
   // mongo
   implementation("org.litote.kmongo:kmongo:3.8.2")
@@ -47,7 +46,6 @@ dependencies {
   implementation("joda-time:joda-time:2.10")
   implementation("org.koin:koin-core:1.0.0-RC-2")
   implementation("io.arrow-kt:arrow-core:0.7.3")
-  implementation("org.web3j:utils:3.5.0")
 
   testImplementation("org.koin:koin-test:1.0.0-RC-2")
 }
