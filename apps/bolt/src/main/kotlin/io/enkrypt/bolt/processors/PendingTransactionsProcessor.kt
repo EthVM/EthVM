@@ -12,6 +12,9 @@ import org.ethereum.core.TransactionReceipt
 import org.ethereum.util.ByteUtil
 import java.util.Properties
 
+/**
+ * This processor process Pending Txs in the node.
+ */
 class PendingTransactionsProcessor : AbstractBaseProcessor() {
 
   private val kafkaProps: Properties = Properties()

@@ -24,6 +24,9 @@ import org.joda.time.Period
 import java.math.BigInteger
 import java.util.Properties
 
+/**
+ * This processor process Blocks and Txs at the same time. It calculates also block stats.
+ */
 class BlocksProcessor : AbstractBaseProcessor() {
 
   private val kafkaProps: Properties = Properties()

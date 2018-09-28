@@ -32,16 +32,6 @@ class Cli : CliktCommand() {
     envvar = "KAFA_BLOCKS_TOPIC"
   ).default(DEFAULT_BLOCKS_TOPIC)
 
-  private val blocksInfoTopic: String by option(
-    help = "Name of the blocks info topic on which Bolt will listen",
-    envvar = "KAFKA_BLOCKS_INFO_TOPIC"
-  ).default(DEFAULT_BLOCKS_INFO_TOPIC)
-
-  private val txsTopic: String by option(
-    help = "Name of the transactions topic on which Bolt will listen",
-    envvar = "KAFKA_PENDING_TXS_TOPIC"
-  ).default(DEFAULT_TXS_TOPIC)
-
   private val pendingTxsTopic: String by option(
     help = "Name of the pending transactions topic on which Bolt will listen",
     envvar = "KAFKA_PENDING_TXS_TOPIC"
@@ -60,8 +50,8 @@ class Cli : CliktCommand() {
 
   // DI
   private val boltModule = module {
-    single { TopicsConfig(blocksTopic, blocksInfoTopic, txsTopic, pendingTxsTopic, accountStateTopic) }
-    single { AppConfig(bootstrapServers, "", startingOffset, get()) }
+    single { TopicsConfig(blocksTopic, pendingTxsTopic, accountStateTopic) }
+    single { AppConfig(bootstrapServers, startingOffset, get()) }
 
     single { MongoClientURI(mongoUri) }
     single { MongoClient(MongoClientURI(mongoUri)) }
@@ -92,12 +82,17 @@ class Cli : CliktCommand() {
       start()
     }
 
-//    AddressesProcessor().apply {
+//    AccountStateProcessor().apply {
 //      onPrepareProcessor()
 //      start()
 //    }
 
-//    TransactionsProcessor().apply {
+//    PendingTransactionsProcessor().apply {
+//      onPrepareProcessor()
+//      start()
+//    }
+
+//    TokenDetectorProcessor().apply {
 //      onPrepareProcessor()
 //      start()
 //    }
@@ -110,11 +105,7 @@ class Cli : CliktCommand() {
     const val DEFAULT_MONGO_URI = "mongodb://localhost:27017/ethvm_local"
 
     const val DEFAULT_BLOCKS_TOPIC = "blocks"
-    const val DEFAULT_BLOCKS_INFO_TOPIC = "blocks-info"
-
-    const val DEFAULT_TXS_TOPIC = "transactions"
     const val DEFAULT_PENDING_TXS_TOPIC = "pending-transactions"
-
     const val DEFAULT_ACCOUNT_STATE_TOPIC = "account-state"
   }
 }
