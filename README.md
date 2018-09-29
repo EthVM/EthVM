@@ -8,6 +8,10 @@
 
 ![Screenshot example](.github/assets/ethvm.png)
 
+## WARNING
+
+Currently we're working on re-architecting all the stack to be Kafka centric (removing RethinkDB in the process) and opening new processors and platforms to where store data. All work is being done on `feature/bolt-setup` branch. Proper instructions will be eventually written in the Wiki as soon as we find those changes stable enough to be merge back also to `master` branch.
+
 ## Philosophy
 
 We have strong foundations on how an Open Source explorer should be:
