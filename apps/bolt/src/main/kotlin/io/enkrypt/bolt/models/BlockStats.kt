@@ -18,10 +18,10 @@ data class BlockStats(
   fun toDocument(): Document = Document(
     mapOf(
       "blockTimeMs" to blockTimeMs,
-      "numSuccessfulTxs" to numSuccessfulTxs,
-      "numFailedTxs" to numFailedTxs,
-      "totalTxs" to totalTxs,
-      "totalInternalTxs" to totalInternalTxs,
+      "successfulTxs" to numSuccessfulTxs,
+      "failedTxs" to numFailedTxs,
+      "txs" to totalTxs,
+      "internalTxs" to totalInternalTxs,
       "totalGasPrice" to totalGasPrice.toByteArray(),
       "avgGasPrice" to avgGasPrice.toByteArray(),
       "totalTxsFees" to totalTxFees.toByteArray(),
