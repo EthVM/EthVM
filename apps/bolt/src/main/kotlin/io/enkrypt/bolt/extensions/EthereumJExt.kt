@@ -58,7 +58,7 @@ fun Transaction?.toDocument(pos: Int = 0, summary: BlockSummary, receipt: Transa
       "transactionIndex" to pos,
       "timestamp" to block.timestamp,
       "nonce" to this?.nonce,
-      "result" to receipt.isTxStatusOK,
+      "status" to receipt.isTxStatusOK,
       "fee" to txSummary?.fee?.toByteArray(),
       "from" to this?.sender.toHex(),
       "to" to this?.receiveAddress?.toHex(),
