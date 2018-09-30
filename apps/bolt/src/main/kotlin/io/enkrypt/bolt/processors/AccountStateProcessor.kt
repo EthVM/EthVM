@@ -16,14 +16,16 @@ import org.ethereum.util.ByteUtil
 import java.util.Properties
 
 /**
- * This processor processes addresses balances.
+ * This processor processes addresses balances (and if the address is deceased or not).
  */
 class AccountStateProcessor : AbstractBaseProcessor() {
+
+  override val id: String = "account-state-processor"
 
   private val kafkaProps: Properties = Properties(baseKafkaProps)
     .apply {
       putAll(baseKafkaProps.toMap())
-      put(StreamsConfig.APPLICATION_ID_CONFIG, "account-state-processor")
+      put(StreamsConfig.APPLICATION_ID_CONFIG, id)
     }
 
   private val logger = KotlinLogging.logger {}
@@ -52,8 +54,8 @@ class AccountStateProcessor : AbstractBaseProcessor() {
     val options = UpdateOptions().upsert(true)
 
     if (account != null) {
-      val document = Document(mapOf("\$set" to account.toDocument()))
-      addressesCollection.updateOne(filter, document, options)
+      val accountState = Document(mapOf("\$set" to account.toDocument()))
+      addressesCollection.updateOne(filter, accountState, options)
     }
 
     // TODO: Explore if data should be removed if balance is zero

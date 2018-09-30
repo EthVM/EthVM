@@ -17,6 +17,8 @@ interface Processor {
 
 abstract class AbstractBaseProcessor : Processor, KoinComponent {
 
+  protected abstract val id: String
+
   protected val appConfig: AppConfig by inject()
   protected val baseKafkaProps: Properties by inject(name = "kafka.Properties")
 
