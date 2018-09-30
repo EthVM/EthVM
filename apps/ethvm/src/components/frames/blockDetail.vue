@@ -11,10 +11,10 @@
     <h4 class="mt-5">{{ $t('title.blockDetail') }}</h4>
     <block-block-detail :block="block" :uncles="uncles"></block-block-detail>
     <h4>{{ $t('title.blockTx') }}</h4>
-    <block-last-transactions v-if="transactions.length > 0" :transactions="transactions" :showHeader="true" class="mt-3"></block-last-transactions>
-    <v-card v-else color="white">
+    <!-- <block-last-transactions v-if="transactions.length > 0" :transactions="transactions" :showHeader="true" class="mt-3"></block-last-transactions> -->
+    <!-- <v-card v-else color="white">
       <v-card-text class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }} </v-card-text>
-    </v-card>
+    </v-card> -->
   </v-container>
 </template>
 
@@ -86,10 +86,9 @@ export default Vue.extend({
       (error, result) => {
         if (result) {
           this.block = new Block(result)
-          console.log(this.block.getNumber())
 
-          this.setItems(this.block.getNumber().toString())
-          const uncleHashes = this.block.getUncleHashes()
+          this.setItems(this.block.getNumber())
+         // const uncleHashes = this.block.getUncleHashes()
           /*Get Transactions for the block: */
           this.$socket.emit(
             sEvents.getBlockTransactions,
@@ -102,17 +101,17 @@ export default Vue.extend({
               })
             }
           )
-          uncleHashes.forEach((_hash: any, idx: number) => {
-            this.$socket.emit(
-              sEvents.getBlock,
-              {
-                hash: _hash.toBuffer()
-              },
-              (err, data) => {
-                this.uncles.push(new Block(data))
-              }
-            )
-          })
+          // uncleHashes.forEach((_hash: any, idx: number) => {
+          //   this.$socket.emit(
+          //     sEvents.getBlock,
+          //     {
+          //       hash: _hash.toBuffer()
+          //     },
+          //     (err, data) => {
+          //       this.uncles.push(new Block(data))
+          //     }
+          //   )
+          // })
         }
       }
     )
