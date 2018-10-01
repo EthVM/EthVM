@@ -50,23 +50,19 @@ class AccountStateProcessor : AbstractBaseProcessor() {
   }
 
   private fun persist(key: String, account: Account?) {
+    if (account == null) {
+      return
+    }
+
     val filter = Document(mapOf("_id" to key))
     val options = UpdateOptions().upsert(true)
 
-    if (account != null) {
+    if (!account.isEmpty) {
       val accountState = Document(mapOf("\$set" to account.toDocument()))
       addressesCollection.updateOne(filter, accountState, options)
+    } else {
+      addressesCollection.deleteOne(filter)
     }
-
-    // TODO: Explore if data should be removed if balance is zero
-//    if (state != null) {
-//      val update = Document(mapOf("\$set" to state.toDocument()))
-//      addressesCollection.updateOne(idQuery, update, options)
-//      logger.info { "Account state stored: $idQuery " }
-//    } else {
-//      addressesCollection.deleteOne(idQuery)
-//      logger.info { "Account state deleted: $idQuery " }
-//    }
   }
 
   override fun start() {
