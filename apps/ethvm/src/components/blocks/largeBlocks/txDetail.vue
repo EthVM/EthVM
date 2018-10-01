@@ -10,7 +10,7 @@
             <v-flex xs7 sm8 md9>
               <p v-if="item.title == $t('common.status')" :class="statusColor">{{item.detail}}</p>
               <p v-else-if="!item.link" class="text-muted text-truncate">{{item.detail}}
-                <timeago v-if="item.title == $t('common.timestmp')" :since="tx.getTimestamp().toDate()" :auto-update="10"></timeago>
+                <timeago v-if="item.title == $t('common.timestmp')" :since="tx.getTimestamp()" :auto-update="10"></timeago>
               </p>
               <router-link v-else :to="item.link">
                 <p class="text-truncate">{{item.detail}}</p>
@@ -70,37 +70,30 @@ export default Vue.extend({
           copy: true
         },
         {
-          title: this.$i18n.t('common.status'),
-          detail: this.getStringStatus(this.tx.getStatus())
-        },
-        {
           title: this.$i18n.t('common.timestmp'),
-          detail: this.tx
-            .getTimestamp()
-            .toDate()
-            .toString()
+          detail: this.tx.getTimestamp().toString()
         },
         {
           title: this.$i18n.t('tx.from'),
-          detail: this.tx.getFrom().toString(),
+          detail: this.tx.getFrom(),
           copy: true,
-          link: '/address/' + this.tx.getFrom().toString()
+          link: '/address/' + this.tx.getFrom()
         }
       ]
-      if (this.tx.getContractAddress().toString()) {
+      if (this.tx.getContractAddress()) {
         const item = {
           title: this.$i18n.t('tx.to') + ' ' + this.$i18n.t('tx.contract'),
-          detail: this.tx.getContractAddress().toString(),
+          detail: this.tx.getContractAddress(),
           copy: true,
-          link: '/address/' + this.tx.getContractAddress().toString()
+          link: '/address/' + this.tx.getContractAddress()
         }
         this.items.push(item)
       } else {
         const item = {
           title: this.$i18n.t('tx.to'),
-          detail: this.tx.getTo().toString(),
+          detail: this.tx.getTo(),
           copy: true,
-          link: '/address/' + this.tx.getTo().toString()
+          link: '/address/' + this.tx.getTo()
         }
         this.items.push(item)
       }

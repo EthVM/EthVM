@@ -1,26 +1,48 @@
-export interface TxLayout {
-  root: Buffer
-  blockHash: Buffer
-  blockNumber: number
-  transactionIndex: Buffer
-  from: Buffer
-  fromBalance: Buffer
-  to: Buffer
-  toBalance: Buffer
-  gasUsed: Buffer
-  cumulativeGasUsed: Buffer
-  contractAddress: Buffer
-  logsBloom: Buffer
-  gas: Buffer
-  gasPrice: Buffer
-  hash: string
-  input: Buffer
-  nonce: Buffer
-  value: Buffer
-  v: Buffer
-  r: Buffer
-  s: Buffer
-  status: boolean
-  pending: boolean
-  timestamp: Buffer
+export interface Log {
+  address: string
+  topics: Buffer[]
+  data: Buffer
 }
+
+export interface Trace {
+  parentHash?: string
+  hash?: string
+  opcode?: string
+  deep?: number
+  index?: number
+  rejected?: boolean
+  from?: Buffer
+  to?: Buffer
+  value?: Buffer
+  data?: Buffer
+  gas?: Buffer
+  gasPrice?: Buffer
+  nonce?: Buffer
+}
+
+export interface TxLayout {
+  blockHash: string
+  blockNumber: number
+  contractAddress?: string
+  data?: Buffer
+  fee?: Buffer
+  from?: string
+  gasLeftover?: Buffer
+  gasLimit?: Buffer
+  gasPrice?: Buffer
+  gasRefund?: Buffer
+  gasUsed?: Buffer
+  hash: string
+  internalTxs?: Trace[]
+  logs?: Log
+  nonce?: Buffer
+  r?: Buffer
+  result?: boolean
+  s?: Buffer
+  timestamp: number
+  to?: string
+  transactionIndex: number
+  v?: number
+  value?: Buffer
+}
+
