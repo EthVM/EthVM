@@ -7,6 +7,7 @@ import com.mongodb.MongoClient
 import com.mongodb.MongoClientURI
 import io.enkrypt.bolt.processors.AccountStateProcessor
 import io.enkrypt.bolt.processors.BlocksProcessor
+import io.enkrypt.bolt.processors.PendingTransactionsProcessor
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
@@ -88,10 +89,10 @@ class Cli : CliktCommand() {
       start()
     }
 
-//    PendingTransactionsProcessor().apply {
-//      onPrepareProcessor()
-//      start()
-//    }
+    PendingTransactionsProcessor().apply {
+      onPrepareProcessor()
+      start()
+    }
 
 //    TokenDetectorProcessor().apply {
 //      onPrepareProcessor()

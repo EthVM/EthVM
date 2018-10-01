@@ -43,6 +43,24 @@ fun BlockHeader?.toDocument(summary: BlockSummary) = Document(
   )
 )
 
+fun Transaction?.toDocument(): Document {
+  return Document(
+    mapOf(
+      "nonce" to this?.nonce,
+      "from" to this?.sender.toHex(),
+      "to" to this?.receiveAddress?.toHex(),
+      "contractAddress" to this?.contractAddress?.toHex(),
+      "value" to this?.value,
+      "data" to this?.data,
+      "gasPrice" to this?.gasPrice,
+      "gasLimit" to this?.gasLimit,
+      "v" to this?.signature?.v,
+      "r" to this?.signature?.r?.toByteArray(),
+      "s" to this?.signature?.s?.toByteArray()
+    )
+  )
+}
+
 fun Transaction?.toDocument(pos: Int = 0, summary: BlockSummary, receipt: TransactionReceipt): Document {
   val txHash = this?.hash.toHex()
 
@@ -78,6 +96,13 @@ fun Transaction?.toDocument(pos: Int = 0, summary: BlockSummary, receipt: Transa
     )
   )
 }
+
+fun TransactionReceipt?.toDocument(): Document = Document(
+  mapOf(
+    "status" to this?.isTxStatusOK
+
+  )
+)
 
 fun LogInfo?.toDocument(): Document = Document(
   mapOf(
