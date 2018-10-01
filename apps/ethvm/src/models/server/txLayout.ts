@@ -44,5 +44,5 @@ export interface TxLayout {
   transactionIndex: number
   v?: number
   value?: Buffer
+  status: boolean
 }
-

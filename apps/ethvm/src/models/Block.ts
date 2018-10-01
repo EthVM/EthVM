@@ -33,7 +33,7 @@ export class Block {
   }
 
   public setUncles(uncles: string[]): void {
-  // this.block.header.unclesHash = uncles
+    // this.block.header.unclesHash = uncles
   }
 
   public addUncle(uncle: Block): void {
@@ -45,11 +45,10 @@ export class Block {
 
   public getIsUncle(): boolean {
     if (!this.cache.isUncle) {
-      if(this.block.uncles.length == 0){
-        return this.cache.isUncle = false
+      if (this.block.uncles.length == 0) {
+        return (this.cache.isUncle = false)
       }
-      return this.cache.isUncle = true
-
+      return (this.cache.isUncle = true)
     }
     return this.cache.isUncle
   }
@@ -101,7 +100,7 @@ export class Block {
 
   public getParentHash(): string {
     if (!this.cache.parentHash) {
-      this.cache.parentHash =  this.block.header.parentHash
+      this.cache.parentHash = this.block.header.parentHash
     }
     return this.cache.parentHash
   }
@@ -122,7 +121,7 @@ export class Block {
 
   public getSha3Uncles(): string {
     if (!this.cache.sha3Uncles) {
-      this.cache.sha3Uncles =  this.block.header.unclesHash
+      this.cache.sha3Uncles = this.block.header.unclesHash
     }
     return this.cache.sha3Uncles
   }
@@ -192,14 +191,14 @@ export class Block {
 
   public getGasUsed(): number {
     if (!this.cache.gasUsed) {
-      this.cache.gasUsed =  this.block.header.gasUsed
+      this.cache.gasUsed = this.block.header.gasUsed
     }
     return this.cache.gasUsed
   }
 
   public getTimestamp(): Date {
     if (!this.cache.timestamp) {
-      this.cache.timestamp =  this.block.header.timestamp
+      this.cache.timestamp = this.block.header.timestamp
     }
     return new Date(this.cache.timestamp * 1000)
   }
@@ -245,10 +244,10 @@ export class Block {
   }
 
   public getUncleReward(): EthValue {
-    console.log("this.block.header.rewards[this.block.header.uncle]",this.block.header.rewards[this.block.header.unclesHash])
+    console.log('this.block.header.rewards[this.block.header.uncle]', this.block.header.rewards[this.block.header.unclesHash])
     if (!this.cache.uncleReward) {
-      if(this.block.header.rewards[this.block.header.unclesHash]){
-        return this.cache.uncleReward = common.EthValue(Buffer.from(new bn(0).toString()))
+      if (this.block.header.rewards[this.block.header.unclesHash]) {
+        return (this.cache.uncleReward = common.EthValue(Buffer.from(new bn(0).toString())))
       }
       this.cache.uncleReward = common.EthValue(this.block.header.rewards[this.block.header.unclesHash])
     }

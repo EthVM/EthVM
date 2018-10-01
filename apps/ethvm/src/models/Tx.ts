@@ -23,7 +23,7 @@ export class Tx {
 
   public getTo(): string {
     if (!this.cache.to) {
-      this.cache.to =  this.tx.to
+      this.cache.to = this.tx.to
     }
     return this.cache.to
   }
@@ -151,9 +151,9 @@ export class Tx {
     return this.cache.s
   }
 
-  // public getStatus(): boolean {
-  //   return this.tx.status
-  // }
+  public getStatus(): boolean {
+    return this.tx.status
+  }
 
   // public isPending(): boolean {
   //   return this.tx.pending

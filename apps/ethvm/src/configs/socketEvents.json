@@ -14,5 +14,6 @@
   "getTx": "getTx",
   "getBlock": "getBlock",
   "getBlockTransactions": "getBlockTransactions",
+  "getAddress": "getAddress",
   "pastBlocksR": "PAST_BLOCKS_RECEIVED"
 }

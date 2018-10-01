@@ -46,4 +46,5 @@ export interface Tx {
   transactionIndex: number
   v?: number
   value?: Buffer
+  status: boolean
 }

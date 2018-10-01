@@ -9,7 +9,6 @@ interface IblockStats {
   pendingTxs: number
 }
 
-
 export interface Header {
   parentHash: string
   unclesHash?: string

@@ -178,7 +178,7 @@ export default Vue.extend({
           },
           {
             title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.sha'),
-            detail:  this.block.getSha3Uncles()
+            detail: this.block.getSha3Uncles()
           }
         ]
         newItems.forEach(i => {

@@ -25,6 +25,7 @@ import { bufferToHex } from 'ethereumjs-util'
 import * as fs from 'fs'
 import * as http from 'http'
 import * as SocketIO from 'socket.io'
+import { AddressService } from './modules/address'
 
 export type SocketEventPayload =
   | AddressTxsPagesPayload
@@ -61,6 +62,7 @@ export class EthVMServer {
 
   constructor(
     public readonly blockService: BlocksService,
+    public readonly addressService: AddressService,
     public readonly txsService: TxsService,
     public readonly chartsService: ChartService,
     public readonly exchangesService: ExchangeService,

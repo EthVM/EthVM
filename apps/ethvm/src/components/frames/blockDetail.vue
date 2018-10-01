@@ -88,7 +88,7 @@ export default Vue.extend({
           this.block = new Block(result)
 
           this.setItems(this.block.getNumber())
-         // const uncleHashes = this.block.getUncleHashes()
+          // const uncleHashes = this.block.getUncleHashes()
           /*Get Transactions for the block: */
           this.$socket.emit(
             sEvents.getBlockTransactions,
