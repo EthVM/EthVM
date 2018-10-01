@@ -34,15 +34,15 @@
                 <v-layout row>
                   <v-flex xs6>
                     <p class="text-truncate"><strong>{{ $t( 'tx.from' ) }} </strong>
-                      <router-link :to="'/address/'+tx.getFrom().toString()">{{tx.getFrom().toString()}} </router-link>
+                      <router-link :to="'/address/'+tx.getFrom()">{{tx.getFrom()}} </router-link>
                     </p>
                   </v-flex>
                   <v-flex xs6>
-                    <p class="text-truncate" v-if="tx.getContractAddress().toString()"><strong> {{ $t( 'tx.contract' ) }}</strong>
-                      <router-link :to="'/address/'+tx.getContractAddress().toString()">{{tx.getContractAddress().toString()}} </router-link>
+                    <p class="text-truncate" v-if="tx.getContractAddress()"><strong> {{ $t( 'tx.contract' ) }}</strong>
+                      <router-link :to="'/address/'+tx.getContractAddress()">{{tx.getContractAddress()}} </router-link>
                     </p>
                     <p class="text-truncate" v-else><strong> {{ $t( 'tx.to' ) }} </strong>
-                      <router-link :to="'/address/'+tx.getTo().toString()">{{tx.getTo().toString()}}</router-link>
+                      <router-link :to="'/address/'+tx.getTo()">{{tx.getTo()}}</router-link>
                     </p>
                   </v-flex>
                 </v-layout>
@@ -64,12 +64,12 @@
           <v-flex hidden-sm-and-down md1>
             <p class="grey--text text--darken-2">{{tx.getGasPrice().toGWei()}}</p>
           </v-flex>
-          <v-flex v-if="!pending" xs1 align-content-center>
+          <!-- <v-flex v-if="!pending" xs1 align-content-center>
             <v-icon v-if="tx.getStatus()" small class="success--text text-xs-center"> fa fa-check-circle </v-icon>
             <v-icon v-else small class="warning--text text-xs-center">fa fa-times-circle </v-icon>
-          </v-flex>
-          <v-flex v-else hidden-xs-and-up>
-          </v-flex>
+          </v-flex> -->
+          <!-- <v-flex v-else hidden-xs-and-up>
+          </v-flex> -->
         </v-layout>
       </v-card>
     </div>

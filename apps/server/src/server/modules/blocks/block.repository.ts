@@ -20,7 +20,7 @@ export class MongoBlockRepository extends BaseMongoDbRepository implements Block
   public getBlock(hash: string): Promise<Block | null> {
     return this.db
       .collection(MongoEthVM.collections.blocks)
-      .findOne({ _id: hash })
+      .findOne({ hash })
       .then(resp => {
         if (!resp) {
           return {}

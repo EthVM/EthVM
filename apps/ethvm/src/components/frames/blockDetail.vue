@@ -11,10 +11,10 @@
     <h4 class="mt-5">{{ $t('title.blockDetail') }}</h4>
     <block-block-detail :block="block" :uncles="uncles"></block-block-detail>
     <h4>{{ $t('title.blockTx') }}</h4>
-    <!-- <block-last-transactions v-if="transactions.length > 0" :transactions="transactions" :showHeader="true" class="mt-3"></block-last-transactions> -->
-    <!-- <v-card v-else color="white">
+    <block-last-transactions v-if="transactions.length > 0" :transactions="transactions" :showHeader="true" class="mt-3"></block-last-transactions>
+    <v-card v-else color="white">
       <v-card-text class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }} </v-card-text>
-    </v-card> -->
+    </v-card>
   </v-container>
 </template>
 
