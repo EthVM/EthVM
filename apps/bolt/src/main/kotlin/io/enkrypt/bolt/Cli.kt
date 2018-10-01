@@ -84,6 +84,21 @@ class Cli : CliktCommand() {
       start()
     }
 
+    BlocksProcessor().apply {
+      onPrepareProcessor()
+      start()
+    }
+
+    BlocksProcessor().apply {
+      onPrepareProcessor()
+      start()
+    }
+
+    BlocksProcessor().apply {
+      onPrepareProcessor()
+      start()
+    }
+
     AccountStateProcessor().apply {
       onPrepareProcessor()
       start()

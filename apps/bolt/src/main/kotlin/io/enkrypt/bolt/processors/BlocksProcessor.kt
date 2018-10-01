@@ -3,7 +3,6 @@ package io.enkrypt.bolt.processors
 import arrow.core.right
 import com.mongodb.client.model.ReplaceOneModel
 import com.mongodb.client.model.ReplaceOptions
-import com.mongodb.client.model.UpdateOneModel
 import io.enkrypt.bolt.extensions.toDocument
 import io.enkrypt.bolt.extensions.toHex
 import io.enkrypt.bolt.extensions.transaction
@@ -131,18 +130,27 @@ class BlocksProcessor : AbstractBaseProcessor() {
     val blockUpdate = block.toDocument(summary, blockStats)
 
     // Transactions
-    val txsInsert = mutableListOf<ReplaceOneModel<Document>>()
+    val txsReplace = mutableListOf<ReplaceOneModel<Document>>()
+
     receipts.forEachIndexed { i, receipt ->
       val txId = Document(mapOf("_id" to receipt.transaction.hash.toHex()))
       val txDoc = receipt.transaction.toDocument(i, summary, receipt)
-      txsInsert.add(ReplaceOneModel(txId, txDoc, replaceOptions))
+      txsReplace.add(ReplaceOneModel(txId, txDoc, replaceOptions))
+    }
+
+    val unclesReplace = block.uncleList.map { u ->
+      val hash = u.hash.toHex()
+      val query = Document(mapOf("_id" to hash))
+      ReplaceOneModel(query, u.toDocument(summary))
     }
 
     mongoSession.transaction {
+
       blocksCollection.replaceOne(blockQuery, blockUpdate, replaceOptions)
-      if (txsInsert.isNotEmpty()) {
-        transactionsCollection.bulkWrite(txsInsert)
-      }
+
+      if(unclesReplace.isNotEmpty()) { unclesCollection.bulkWrite(unclesReplace) }
+      if (txsReplace.isNotEmpty()) { transactionsCollection.bulkWrite(txsReplace) }
+
     }.also {
       when {
         it.isLeft() -> logger.info { "Block stored - Number: ${block.number} - Hash: ${block.hash.toHex()} - Txs: ${receipts.size}" }

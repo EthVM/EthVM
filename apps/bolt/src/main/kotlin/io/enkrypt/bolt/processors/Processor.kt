@@ -28,6 +28,7 @@ abstract class AbstractBaseProcessor : Processor, KoinComponent {
   protected val mongoSession by lazy { mongoClient.startSession() }
 
   protected val addressesCollection: MongoCollection<Document> by lazy { mongoDB.getCollection("addresses") }
+  protected val unclesCollection: MongoCollection<Document> by lazy { mongoDB.getCollection("uncles") }
   protected val blocksCollection: MongoCollection<Document>by lazy { mongoDB.getCollection("blocks") }
   protected val transactionsCollection: MongoCollection<Document> by lazy { mongoDB.getCollection("transactions") }
   protected val pendingTransactionsCollection: MongoCollection<Document> by lazy { mongoDB.getCollection("pending_transactions") }
