@@ -1,6 +1,9 @@
 package io.enkrypt.bolt.processors
 
-import io.enkrypt.bolt.serdes.RLPTransactionReceiptSerde
+import com.mongodb.client.model.ReplaceOptions
+import com.mongodb.client.model.UpdateOptions
+import io.enkrypt.bolt.extensions.toDocument
+import io.enkrypt.bolt.serdes.RLPTransactionSerde
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
@@ -8,9 +11,11 @@ import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.kstream.Consumed
-import org.ethereum.core.TransactionReceipt
+import org.bson.Document
+import org.ethereum.core.Transaction
 import org.ethereum.util.ByteUtil
-import java.util.Properties
+import org.litote.kmongo.deleteOneById
+import java.util.*
 
 /**
  * This processor process Pending Txs in the node.
@@ -29,7 +34,7 @@ class PendingTransactionsProcessor : AbstractBaseProcessor() {
 
   override fun onPrepareProcessor() {
     // Create Serde
-    val serde = RLPTransactionReceiptSerde()
+    val serde = RLPTransactionSerde()
 
     // Create stream builder
     val builder = StreamsBuilder()
@@ -46,7 +51,20 @@ class PendingTransactionsProcessor : AbstractBaseProcessor() {
     streams = KafkaStreams(topology, kafkaProps)
   }
 
-  private fun persist(hash: String, receipt: TransactionReceipt) {}
+  private fun persist(hash: String, txn: Transaction?) {
+
+    logger.info { "Pending txn: $hash $txn"}
+
+    val replaceOptions = ReplaceOptions().upsert(true)
+
+    val idQuery = Document(mapOf("_id" to hash))
+
+    if(txn == null) {
+      pendingTransactionsCollection.deleteOneById(hash)
+    } else {
+      pendingTransactionsCollection.replaceOne(idQuery, txn.toDocument(), replaceOptions)
+    }
+  }
 
   override fun start() {
     logger.info { "Starting ${this.javaClass.simpleName}..." }

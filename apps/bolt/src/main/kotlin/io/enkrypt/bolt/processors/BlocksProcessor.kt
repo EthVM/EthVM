@@ -1,8 +1,8 @@
 package io.enkrypt.bolt.processors
 
 import arrow.core.right
-import com.mongodb.client.model.UpdateOneModel
-import com.mongodb.client.model.UpdateOptions
+import com.mongodb.client.model.ReplaceOneModel
+import com.mongodb.client.model.ReplaceOptions
 import io.enkrypt.bolt.extensions.toDocument
 import io.enkrypt.bolt.extensions.toHex
 import io.enkrypt.bolt.extensions.transaction
@@ -48,7 +48,7 @@ class BlocksProcessor : AbstractBaseProcessor() {
 
     builder
       .stream(appConfig.topicsConfig.blocks, Consumed.with(Serdes.ByteArray(), blockSerde))
-      .map { k, v -> KeyValue(ByteUtil.toHexString(k), v) }
+      .map { k, v -> KeyValue(ByteUtil.byteArrayToLong(k), v) }
       .map(::calculateStatistics)
       .foreach(::persist)
 
@@ -59,7 +59,7 @@ class BlocksProcessor : AbstractBaseProcessor() {
     streams = KafkaStreams(topology, kafkaProps)
   }
 
-  private fun calculateStatistics(hash: String, summary: BlockSummary): KeyValue<String, Pair<BlockSummary, BlockStats>> {
+  private fun calculateStatistics(number: Long, summary: BlockSummary): KeyValue<Long, Pair<BlockSummary, BlockStats>> {
     val block = summary.block
     val receipts = summary.receipts
 
@@ -112,10 +112,10 @@ class BlocksProcessor : AbstractBaseProcessor() {
       avgTxsFees
     )
 
-    return KeyValue(hash, Pair(summary, stats))
+    return KeyValue(number, Pair(summary, stats))
   }
 
-  private fun persist(hash: String, pair: Pair<BlockSummary, BlockStats>) {
+  private fun persist(number: Long, pair: Pair<BlockSummary, BlockStats>) {
     val summary = pair.first
     val blockStats = pair.second
 
@@ -123,25 +123,34 @@ class BlocksProcessor : AbstractBaseProcessor() {
     val receipts = summary.receipts
 
     // Mongo
-    val updateOptions = UpdateOptions().upsert(true)
+    val replaceOptions = ReplaceOptions().upsert(true)
 
     // Blocks
-    val blockId = Document(mapOf("_id" to hash))
-    val blockUpdate = Document(mapOf("\$set" to block.toDocument(summary, blockStats)))
+    val blockQuery = Document(mapOf("number" to number))
+    val blockUpdate = block.toDocument(summary, blockStats)
 
     // Transactions
-    val txsInsert = mutableListOf<UpdateOneModel<Document>>()
+    val txsReplace = mutableListOf<ReplaceOneModel<Document>>()
+
     receipts.forEachIndexed { i, receipt ->
       val txId = Document(mapOf("_id" to receipt.transaction.hash.toHex()))
-      val txUpdate = Document(mapOf("\$set" to receipt.transaction.toDocument(i, summary, receipt)))
-      txsInsert.add(UpdateOneModel(txId, txUpdate, updateOptions))
+      val txDoc = receipt.transaction.toDocument(i, summary, receipt)
+      txsReplace.add(ReplaceOneModel(txId, txDoc, replaceOptions))
+    }
+
+    val unclesReplace = block.uncleList.map { u ->
+      val hash = u.hash.toHex()
+      val query = Document(mapOf("_id" to hash))
+      ReplaceOneModel(query, u.toDocument(summary))
     }
 
     mongoSession.transaction {
-      blocksCollection.updateOne(blockId, blockUpdate, updateOptions)
-      if (txsInsert.isNotEmpty()) {
-        transactionsCollection.bulkWrite(txsInsert)
-      }
+
+      blocksCollection.replaceOne(blockQuery, blockUpdate, replaceOptions)
+
+      if(unclesReplace.isNotEmpty()) { unclesCollection.bulkWrite(unclesReplace) }
+      if (txsReplace.isNotEmpty()) { transactionsCollection.bulkWrite(txsReplace) }
+
     }.also {
       when {
         it.isLeft() -> logger.info { "Block stored - Number: ${block.number} - Hash: ${block.hash.toHex()} - Txs: ${receipts.size}" }
