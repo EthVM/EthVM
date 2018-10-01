@@ -1,6 +1,7 @@
 package io.enkrypt.bolt.extensions
 
 import io.enkrypt.bolt.models.BlockStats
+import io.enkrypt.kafka.models.Account
 import org.bson.Document
 import org.ethereum.core.Block
 import org.ethereum.core.BlockHeader
@@ -57,7 +58,7 @@ fun Transaction?.toDocument(pos: Int = 0, summary: BlockSummary, receipt: Transa
       "transactionIndex" to pos,
       "timestamp" to block.timestamp,
       "nonce" to this?.nonce,
-      "result" to receipt.isTxStatusOK,
+      "status" to receipt.isTxStatusOK,
       "fee" to txSummary?.fee?.toByteArray(),
       "from" to this?.sender.toHex(),
       "to" to this?.receiveAddress?.toHex(),
@@ -70,7 +71,7 @@ fun Transaction?.toDocument(pos: Int = 0, summary: BlockSummary, receipt: Transa
       "gasUsed" to txSummary?.gasUsed?.toByteArray(),
       "gasRefund" to txSummary?.gasRefund?.toByteArray(),
       "gasLeftover" to txSummary?.gasLeftover?.toByteArray(),
-      "internalTxs" to internalTxs.map { it.toDocument() },
+      "traces" to internalTxs.map { it.toDocument() },
       "v" to this?.signature?.v,
       "r" to this?.signature?.r?.toByteArray(),
       "s" to this?.signature?.s?.toByteArray()
@@ -94,12 +95,20 @@ fun InternalTransaction?.toDocument(): Document = Document(
     "deep" to this?.deep,
     "index" to this?.index,
     "rejected" to this?.isRejected,
-    "from" to this?.sender,
-    "to" to this?.receiveAddress,
+    "from" to this?.sender.toHex(),
+    "to" to this?.receiveAddress.toHex(),
     "value" to this?.value,
     "data" to this?.data,
     "gas" to this?.gasLimit,
     "gasPrice" to this?.gasLimit,
     "nonce" to this?.nonce
+  )
+)
+
+fun Account?.toDocument(): Document = Document(
+  mapOf(
+    "address" to this?.address.toHex(),
+    "nonce" to this?.nonce?.toByteArray(),
+    "balance" to this?.balance?.toByteArray()
   )
 )

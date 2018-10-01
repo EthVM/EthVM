@@ -17,10 +17,12 @@ import java.util.Properties
  */
 class PendingTransactionsProcessor : AbstractBaseProcessor() {
 
+  override val id: String = "pending-transactions-processor"
+
   private val kafkaProps: Properties = Properties()
     .apply {
       putAll(baseKafkaProps.toMap())
-      put(StreamsConfig.APPLICATION_ID_CONFIG, "pending-transactions-processor")
+      put(StreamsConfig.APPLICATION_ID_CONFIG, id)
     }
 
   private val logger = KotlinLogging.logger {}

@@ -29,10 +29,12 @@ import java.util.Properties
  */
 class BlocksProcessor : AbstractBaseProcessor() {
 
+  override val id: String = "blocks-processor"
+
   private val kafkaProps: Properties = Properties()
     .apply {
       putAll(baseKafkaProps.toMap())
-      put(StreamsConfig.APPLICATION_ID_CONFIG, "blocks-processor")
+      put(StreamsConfig.APPLICATION_ID_CONFIG, id)
     }
 
   private val logger = KotlinLogging.logger {}
@@ -62,8 +64,8 @@ class BlocksProcessor : AbstractBaseProcessor() {
     val receipts = summary.receipts
 
     val blockTimeMs = Period(block.timestamp, DateTime.now().millis).millis // TODO: Review if this calculation is correct
-    var numSuccessfulTxs = 0
-    var numFailedTxs = 0
+    var successfulTxs = 0
+    var failedTxs = 0
     var totalInternalTxs = 0
     val totalTxs = receipts.size
     val totalGasPrice = BigInteger.valueOf(0L)
@@ -76,8 +78,8 @@ class BlocksProcessor : AbstractBaseProcessor() {
       val txSummary: TransactionExecutionSummary? = summary.summaries.find { transaction.hash.toHex() == it.transaction.hash.toHex() }
 
       when {
-        receipt.isTxStatusOK -> numSuccessfulTxs += 1
-        else -> numFailedTxs += 1
+        receipt.isTxStatusOK -> successfulTxs += 1
+        else -> failedTxs += 1
       }
 
       val gasPrice = ByteUtil.bytesToBigInteger(transaction.gasPrice)
@@ -100,8 +102,8 @@ class BlocksProcessor : AbstractBaseProcessor() {
 
     val stats = BlockStats(
       blockTimeMs,
-      numSuccessfulTxs,
-      numFailedTxs,
+      successfulTxs,
+      failedTxs,
       totalTxs,
       totalInternalTxs,
       totalGasPrice,

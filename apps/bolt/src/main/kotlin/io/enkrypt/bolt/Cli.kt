@@ -5,6 +5,7 @@ import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.mongodb.MongoClient
 import com.mongodb.MongoClientURI
+import io.enkrypt.bolt.processors.AccountStateProcessor
 import io.enkrypt.bolt.processors.BlocksProcessor
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.Serdes
@@ -29,7 +30,7 @@ class Cli : CliktCommand() {
   // Input Topics - CLI
   private val blocksTopic: String by option(
     help = "Name of the blocks stream topic on which Bolt will listen",
-    envvar = "KAFA_BLOCKS_TOPIC"
+    envvar = "KAFKA_BLOCKS_TOPIC"
   ).default(DEFAULT_BLOCKS_TOPIC)
 
   private val pendingTxsTopic: String by option(
@@ -82,10 +83,10 @@ class Cli : CliktCommand() {
       start()
     }
 
-//    AccountStateProcessor().apply {
-//      onPrepareProcessor()
-//      start()
-//    }
+    AccountStateProcessor().apply {
+      onPrepareProcessor()
+      start()
+    }
 
 //    PendingTransactionsProcessor().apply {
 //      onPrepareProcessor()
