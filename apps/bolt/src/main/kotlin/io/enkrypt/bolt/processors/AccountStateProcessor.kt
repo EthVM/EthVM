@@ -1,7 +1,6 @@
 package io.enkrypt.bolt.processors
 
 import com.mongodb.client.model.ReplaceOptions
-import com.mongodb.client.model.UpdateOptions
 import io.enkrypt.bolt.extensions.toDocument
 import io.enkrypt.bolt.serdes.RLPAccountSerde
 import io.enkrypt.kafka.models.Account
@@ -51,22 +50,19 @@ class AccountStateProcessor : AbstractBaseProcessor() {
   }
 
   private fun persist(key: String, account: Account?) {
+    if (account == null) {
+      return
+    }
+
     val filter = Document(mapOf("_id" to key))
     val options = ReplaceOptions().upsert(true)
 
-    if (account != null) {
+    if (!account.isEmpty) {
+      val accountState = Document(mapOf("\$set" to account.toDocument()))
       addressesCollection.replaceOne(filter, account.toDocument(), options)
+    } else {
+      addressesCollection.deleteOne(filter)
     }
-
-    // TODO: Explore if data should be removed if balance is zero
-//    if (state != null) {
-//      val update = Document(mapOf("\$set" to state.toDocument()))
-//      addressesCollection.updateOne(idQuery, update, options)
-//      logger.info { "Account state stored: $idQuery " }
-//    } else {
-//      addressesCollection.deleteOne(idQuery)
-//      logger.info { "Account state deleted: $idQuery " }
-//    }
   }
 
   override fun start() {

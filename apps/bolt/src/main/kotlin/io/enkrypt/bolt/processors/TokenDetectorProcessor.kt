@@ -1,13 +1,18 @@
 package io.enkrypt.bolt.processors
 
+import io.enkrypt.bolt.extensions.toHex
 import org.ethereum.crypto.HashUtil
 
 /**
  * This processor detects ERC20 and ERC721 tokens.
+ *
+ * In order for this to work properly, we need that getContractStorage from ContractDetails in EthereumJ is available.
+ *
+ * URL: https://github.com/ethereum/ethereumj/blob/a03131f66dd68dac27be04ad453d7b278878b557/ethereumj-core/src/main/java/org/ethereum/core/TransactionExecutor.java#L422
  */
 class TokenDetectorProcessor : AbstractBaseProcessor() {
 
-  override val id: String = "tokens-processors"
+  override val id: String = "tokens-detector-processors"
 
   override fun onPrepareProcessor() {
   }
@@ -18,8 +23,6 @@ class TokenDetectorFactory {
 }
 
 interface TokenDetector {
-  val signatures: Set<Signature>
-
   fun detect(input: ByteArray): Boolean
 }
 
@@ -30,13 +33,18 @@ interface TokenDetector {
  */
 class ERC20TokenDetector : TokenDetector {
 
-  override val signatures: Set<Signature> = setOf(
+  val mandatory: Set<Signature> = setOf(
     Signature("totalSupply()"),
     Signature("balanceOf(address)"),
     Signature("transfer(address,uint256)"),
     Signature("transferFrom(address,address,uint256)"),
     Signature("approve(address,uint256)"),
     Signature("allowance(address,address)")
+  )
+
+  val optional: Set<Signature> = setOf(
+    Signature("name()"),
+    Signature("symbol()")
   )
 
   override fun detect(input: ByteArray): Boolean {
@@ -51,7 +59,7 @@ class ERC20TokenDetector : TokenDetector {
  * */
 class ERC721TokenDetector : TokenDetector {
 
-  override val signatures: Set<Signature> = setOf(
+  val mandatory: Set<Signature> = setOf(
     Signature("balanceOf(address)"),
     Signature("ownerOf(uint256)"),
     Signature("transfer(address,uint256)"),
@@ -70,6 +78,6 @@ class Signature(val fn: String) {
     assert(fn.isEmpty()) { "Not valid fn name. Must not be null or empty." }
   }
 
-  private val signature by lazy { HashUtil.sha3(fn.toByteArray()).toString().substring(0, 8) }
+  private val signature by lazy { HashUtil.sha3(fn.toByteArray()).toHex()?.substring(0, 8) }
 
 }
