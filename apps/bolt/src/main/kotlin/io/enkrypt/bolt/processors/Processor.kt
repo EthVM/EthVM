@@ -30,7 +30,7 @@ abstract class AbstractBaseProcessor : Processor, KoinComponent {
   protected val addressesCollection: MongoCollection<Document> by lazy { mongoDB.getCollection("addresses") }
   protected val blocksCollection: MongoCollection<Document>by lazy { mongoDB.getCollection("blocks") }
   protected val transactionsCollection: MongoCollection<Document> by lazy { mongoDB.getCollection("transactions") }
-  protected val pendingTransactionsCollection: MongoCollection<Document> by lazy { mongoDB.getCollection("pending-transactions") }
+  protected val pendingTransactionsCollection: MongoCollection<Document> by lazy { mongoDB.getCollection("pending_transactions") }
 
   protected lateinit var streams: KafkaStreams
 

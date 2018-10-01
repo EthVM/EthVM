@@ -1,9 +1,9 @@
 package io.enkrypt.bolt.processors
 
-import com.mongodb.client.model.ReplaceOptions
 import com.mongodb.client.model.UpdateOptions
 import io.enkrypt.bolt.extensions.toDocument
-import io.enkrypt.bolt.serdes.RLPAccountSerde
+import io.enkrypt.bolt.kafka.BlockSummaryTimestampExtractor
+import io.enkrypt.bolt.serdes.RLPBlockSummarySerde
 import io.enkrypt.kafka.models.Account
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serdes
@@ -19,9 +19,9 @@ import java.util.Properties
 /**
  * This processor processes addresses balances (and if the address is deceased or not).
  */
-class AccountStateProcessor : AbstractBaseProcessor() {
+class StatsProcessor : AbstractBaseProcessor() {
 
-  override val id: String = "account-state-processor"
+  override val id: String = "stats-processor"
 
   private val kafkaProps: Properties = Properties(baseKafkaProps)
     .apply {
@@ -33,15 +33,18 @@ class AccountStateProcessor : AbstractBaseProcessor() {
 
   override fun onPrepareProcessor() {
     // RLP Account Serde
-    val accountSerde = RLPAccountSerde()
+    val blockSummarySerde = RLPBlockSummarySerde()
 
     // Create stream builder
     val builder = StreamsBuilder()
 
     builder
-      .stream(appConfig.topicsConfig.accountState, Consumed.with(Serdes.ByteArray(), accountSerde))
+      .stream(
+        appConfig.topicsConfig.blocks,
+        Consumed
+          .with(Serdes.ByteArray(), blockSummarySerde)
+          .withTimestampExtractor(BlockSummaryTimestampExtractor()))    // use block time for event time
       .map { k, v -> KeyValue(ByteUtil.toHexString(k), v) }
-      .foreach(::persist)
 
     // Generate the topology
     val topology = builder.build()
@@ -52,10 +55,11 @@ class AccountStateProcessor : AbstractBaseProcessor() {
 
   private fun persist(key: String, account: Account?) {
     val filter = Document(mapOf("_id" to key))
-    val options = ReplaceOptions().upsert(true)
+    val options = UpdateOptions().upsert(true)
 
     if (account != null) {
-      addressesCollection.replaceOne(filter, account.toDocument(), options)
+      val accountState = Document(mapOf("\$set" to account.toDocument()))
+      addressesCollection.updateOne(filter, accountState, options)
     }
 
     // TODO: Explore if data should be removed if balance is zero
