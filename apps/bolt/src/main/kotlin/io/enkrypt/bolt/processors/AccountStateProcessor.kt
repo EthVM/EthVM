@@ -1,9 +1,7 @@
 package io.enkrypt.bolt.processors
 
-import com.mongodb.client.model.ReplaceOptions
-import io.enkrypt.bolt.extensions.toDocument
 import io.enkrypt.bolt.serdes.RLPAccountSerde
-import io.enkrypt.kafka.models.Account
+import io.enkrypt.bolt.sinks.AccountMongoSink
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
@@ -11,9 +9,9 @@ import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.kstream.Consumed
-import org.bson.Document
 import org.ethereum.util.ByteUtil
-import java.util.Properties
+import org.koin.standalone.get
+import java.util.*
 
 /**
  * This processor processes addresses balances (and if the address is deceased or not).
@@ -26,6 +24,7 @@ class AccountStateProcessor : AbstractBaseProcessor() {
     .apply {
       putAll(baseKafkaProps.toMap())
       put(StreamsConfig.APPLICATION_ID_CONFIG, id)
+      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 1)
     }
 
   private val logger = KotlinLogging.logger {}
@@ -40,28 +39,13 @@ class AccountStateProcessor : AbstractBaseProcessor() {
     builder
       .stream(appConfig.topicsConfig.accountState, Consumed.with(Serdes.ByteArray(), accountSerde))
       .map { k, v -> KeyValue(ByteUtil.toHexString(k), v) }
-      .foreach(::persist)
+      .process({ get<AccountMongoSink>() }, null)
 
     // Generate the topology
     val topology = builder.build()
 
     // Create streams
     streams = KafkaStreams(topology, kafkaProps)
-  }
-
-  private fun persist(key: String, account: Account?) {
-    if (account == null) {
-      return
-    }
-
-    val filter = Document(mapOf("_id" to key))
-    val options = ReplaceOptions().upsert(true)
-
-    if (!account.isEmpty) {
-      addressesCollection.replaceOne(filter, account.toDocument(), options)
-    } else {
-      addressesCollection.deleteOne(filter)
-    }
   }
 
   override fun start() {

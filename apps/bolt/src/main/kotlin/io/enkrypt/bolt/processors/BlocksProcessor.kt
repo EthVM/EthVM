@@ -1,13 +1,9 @@
 package io.enkrypt.bolt.processors
 
-import arrow.core.right
-import com.mongodb.client.model.ReplaceOneModel
-import com.mongodb.client.model.ReplaceOptions
-import io.enkrypt.bolt.extensions.toDocument
 import io.enkrypt.bolt.extensions.toHex
-import io.enkrypt.bolt.extensions.transaction
 import io.enkrypt.bolt.models.BlockStats
 import io.enkrypt.bolt.serdes.RLPBlockSummarySerde
+import io.enkrypt.bolt.sinks.BlockMongoSink
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
@@ -15,14 +11,14 @@ import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.kstream.Consumed
-import org.bson.Document
 import org.ethereum.core.BlockSummary
 import org.ethereum.core.TransactionExecutionSummary
 import org.ethereum.util.ByteUtil
 import org.joda.time.DateTime
 import org.joda.time.Period
+import org.koin.standalone.get
 import java.math.BigInteger
-import java.util.Properties
+import java.util.*
 
 /**
  * This processor process Blocks and Txs at the same time. It calculates also block stats.
@@ -35,6 +31,7 @@ class BlocksProcessor : AbstractBaseProcessor() {
     .apply {
       putAll(baseKafkaProps.toMap())
       put(StreamsConfig.APPLICATION_ID_CONFIG, id)
+      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 4)
     }
 
   private val logger = KotlinLogging.logger {}
@@ -50,7 +47,7 @@ class BlocksProcessor : AbstractBaseProcessor() {
       .stream(appConfig.topicsConfig.blocks, Consumed.with(Serdes.ByteArray(), blockSerde))
       .map { k, v -> KeyValue(ByteUtil.byteArrayToLong(k), v) }
       .map(::calculateStatistics)
-      .foreach(::persist)
+      .process({ get<BlockMongoSink>() }, null)
 
     // Generate the topology
     val topology = builder.build()
@@ -115,56 +112,12 @@ class BlocksProcessor : AbstractBaseProcessor() {
     return KeyValue(number, Pair(summary, stats))
   }
 
-  private fun persist(number: Long, pair: Pair<BlockSummary, BlockStats>) {
-    val summary = pair.first
-    val blockStats = pair.second
-
-    val block = summary.block
-    val receipts = summary.receipts
-
-    // Mongo
-    val replaceOptions = ReplaceOptions().upsert(true)
-
-    // Blocks
-    val blockQuery = Document(mapOf("number" to number))
-    val blockUpdate = block.toDocument(summary, blockStats)
-
-    // Transactions
-    val txsReplace = mutableListOf<ReplaceOneModel<Document>>()
-
-    receipts.forEachIndexed { i, receipt ->
-      val txId = Document(mapOf("_id" to receipt.transaction.hash.toHex()))
-      val txDoc = receipt.transaction.toDocument(i, summary, receipt)
-      txsReplace.add(ReplaceOneModel(txId, txDoc, replaceOptions))
-    }
-
-    val unclesReplace = block.uncleList.map { u ->
-      val hash = u.hash.toHex()
-      val query = Document(mapOf("_id" to hash))
-      ReplaceOneModel(query, u.toDocument(summary))
-    }
-
-    mongoSession.transaction {
-
-      blocksCollection.replaceOne(blockQuery, blockUpdate, replaceOptions)
-
-      if (unclesReplace.isNotEmpty()) {
-        unclesCollection.bulkWrite(unclesReplace)
-      }
-      if (txsReplace.isNotEmpty()) {
-        transactionsCollection.bulkWrite(txsReplace)
-      }
-
-    }.also {
-      when {
-        it.isLeft() -> logger.info { "Block stored - Number: ${block.number} - Hash: ${block.hash.toHex()} - Txs: ${receipts.size}" }
-        it.isRight() -> logger.error { "Block not stored - Number: ${block.number} - Hash: ${block.hash.toHex()}. Error: ${it.right()}" }
-      }
-    }
-  }
-
   override fun start() {
     logger.info { "Starting ${this.javaClass.simpleName}..." }
     super.start()
   }
 }
+
+
+
+
