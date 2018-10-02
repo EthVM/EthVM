@@ -148,8 +148,12 @@ class BlocksProcessor : AbstractBaseProcessor() {
 
       blocksCollection.replaceOne(blockQuery, blockUpdate, replaceOptions)
 
-      if(unclesReplace.isNotEmpty()) { unclesCollection.bulkWrite(unclesReplace) }
-      if (txsReplace.isNotEmpty()) { transactionsCollection.bulkWrite(txsReplace) }
+      if (unclesReplace.isNotEmpty()) {
+        unclesCollection.bulkWrite(unclesReplace)
+      }
+      if (txsReplace.isNotEmpty()) {
+        transactionsCollection.bulkWrite(txsReplace)
+      }
 
     }.also {
       when {

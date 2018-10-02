@@ -58,7 +58,6 @@ class AccountStateProcessor : AbstractBaseProcessor() {
     val options = ReplaceOptions().upsert(true)
 
     if (!account.isEmpty) {
-      val accountState = Document(mapOf("\$set" to account.toDocument()))
       addressesCollection.replaceOne(filter, account.toDocument(), options)
     } else {
       addressesCollection.deleteOne(filter)
