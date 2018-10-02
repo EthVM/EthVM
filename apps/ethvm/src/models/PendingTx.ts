@@ -1,5 +1,5 @@
 import { common } from '@app/helpers'
-import { Address, EthValue, Hash, Hex, HexNumber, HexTime } from '@app/models'
+import { EthValue, Hex, HexNumber } from '@app/models'
 import { PendingTxLayout } from '@app/models/server'
 
 export class PendingTx {
@@ -13,7 +13,7 @@ export class PendingTx {
   }
 
   public getID() : string{
-    return this.pTx.from + this.pTx.to + this.pTx.nonce.toString('utf8');  // add nonce too
+    return this.pTx.from + this.pTx.to + this.pTx.nonce.toString('utf8')
   }
 
   public getTo(): string {
@@ -38,6 +38,13 @@ export class PendingTx {
     return this.cache.gasPrice
   }
 
+  public getGasLimit(): HexNumber {
+    if (!this.cache.gasLimit) {
+      this.cache.gasLimit = common.HexNumber(this.pTx.gasLimit)
+    }
+    return this.cache.gasLimit
+  }
+
   public getContractAddress(): string {
     if (!this.cache.contractAddress) {
       this.cache.contractAddress = this.pTx.contractAddress
@@ -47,8 +54,8 @@ export class PendingTx {
 
 
   public getNonce(): HexNumber {
-    if (!this.cache.hexNumber) {
-      this.cache.hexNumber = common.HexNumber(this.pTx.nonce)
+    if (!this.cache.nonce) {
+      this.cache.nonce = common.HexNumber(this.pTx.nonce)
     }
     return this.cache.hexNumber
   }
