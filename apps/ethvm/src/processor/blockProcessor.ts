@@ -23,8 +23,6 @@ const dedup = (block: Block, pastBlocks: Block[]): Block[] => {
 
 export const processBlocks = (block: Block, pastBlocks: Block[]): Block[] => {
   pastBlocks = dedup(block, pastBlocks)
-  pastBlocks.sort((a, b) => {
-    return b.getNumber() - a.getNumber()
-  })
+  pastBlocks.unshift(block)
   return pastBlocks
 }
