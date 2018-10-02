@@ -1,5 +1,3 @@
-import { logger } from '@app/logger'
-import { hexToBuffer } from '@app/server/core/utils'
 import { Tx } from '@app/server/modules/txs'
 import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
 
