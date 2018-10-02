@@ -4,3 +4,4 @@ db.createCollection('addresses');
 db.createCollection('blocks');
 db.createCollection('pending-transactions');
 db.createCollection('transactions');
+db.createCollection('uncles');
