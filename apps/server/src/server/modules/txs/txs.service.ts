@@ -6,7 +6,6 @@ export interface TxsService {
   getTx(hash: string): Promise<Tx | null>
   getBlockTxs(hash: string): Promise<Tx[]>
   getTxsOfAddress(hash: string, limit: number, page: number): Promise<Tx[]>
-  getTotalTxs(hash: string): Promise<number>
 }
 
 export class TxsServiceImpl implements TxsService {
@@ -22,10 +21,6 @@ export class TxsServiceImpl implements TxsService {
 
   public getBlockTxs(hash: string): Promise<Tx[]> {
     return this.txsRepository.getBlockTxs(hash)
-  }
-
-  public getTotalTxs(hash: string): Promise<number> {
-    return this.txsRepository.getTotalTxs(hash)
   }
 
   public getTxsOfAddress(hash: string, limit: number = 10, page: number = 0): Promise<Tx[]> {

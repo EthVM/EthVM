@@ -2,9 +2,12 @@ import config from '@app/config'
 import { logger } from '@app/logger'
 import { KafkaStreamer, KafkaStreamerOpts } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
+import { AddressServiceImpl, MongoAddressRepository } from '@app/server/modules/address'
 import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blocks'
 import { ChartsServiceImpl, MockChartsRepository } from '@app/server/modules/charts'
+
 import { CoinMarketCapRepository, ExchangeServiceImpl } from '@app/server/modules/exchanges'
+import { MongoPendingTxRepository, PendingTxServiceImpl } from '@app/server/modules/pending-tx'
 import { MongoTxsRepository, TxsServiceImpl } from '@app/server/modules/txs'
 import { RedisTrieDb, VmEngine, VmRunner, VmServiceImpl } from '@app/server/modules/vm'
 import { RedisCacheRepository } from '@app/server/repositories'
@@ -77,6 +80,14 @@ async function bootstrapServer() {
   const blocksRepository = new MongoBlockRepository(db)
   const blockService = new BlocksServiceImpl(blocksRepository, ds)
 
+  // Adress
+  const addressRepository = new MongoAddressRepository(db)
+  const addressService = new AddressServiceImpl(addressRepository, ds)
+
+  // Adress
+  const pendingTxRepository = new MongoPendingTxRepository(db)
+  const pendingTxService = new PendingTxServiceImpl(pendingTxRepository, ds)
+
   // Txs
   const txsRepository = new MongoTxsRepository(db)
   const txsService = new TxsServiceImpl(txsRepository, ds)
@@ -106,7 +117,7 @@ async function bootstrapServer() {
 
   // Create server
   logger.debug('bootstrapper -> Initializing server')
-  const server = new EthVMServer(blockService, txsService, chartsService, exchangeService, vmService, streamer, ds)
+  const server = new EthVMServer(blockService, addressService, txsService, chartsService, pendingTxService, exchangeService, vmService, streamer, ds)
   await server.start()
 }
 

@@ -97,13 +97,6 @@ fun Transaction?.toDocument(pos: Int = 0, summary: BlockSummary, receipt: Transa
   )
 }
 
-fun TransactionReceipt?.toDocument(): Document = Document(
-  mapOf(
-    "status" to this?.isTxStatusOK
-
-  )
-)
-
 fun LogInfo?.toDocument(): Document = Document(
   mapOf(
     "address" to this?.address.toHex(),

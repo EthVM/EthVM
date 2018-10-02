@@ -29,7 +29,7 @@
 <script lang="ts">
 import 'vuetify/dist/vuetify.min.css'
 import sEvents from '@app/configs/socketEvents.json'
-import { Block, Tx } from '@app/models'
+import { Block, Tx, PendingTx } from '@app/models'
 import Vue from 'vue'
 
 export default Vue.extend({
@@ -75,6 +75,19 @@ export default Vue.extend({
           if (blocks && blocks.length > 0) {
             this.$eventHub.$emit(sEvents.newBlock, new Block(blocks[0]))
             this.$eventHub.$emit(sEvents.pastBlocksR)
+          }
+        }
+      )
+        this.$socket.emit(
+        sEvents.pendingTxs,
+        {
+          limit: 100,
+          page: 0
+        },
+        (err, pTxs) => {
+          this.$store.commit(sEvents.newPendingTx, pTxs)
+          if (pTxs && pTxs.length > 0) {
+            this.$eventHub.$emit(sEvents.newPendingTx)
           }
         }
       )

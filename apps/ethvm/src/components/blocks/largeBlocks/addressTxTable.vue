@@ -25,15 +25,15 @@
           <div class="fromto">
             <p class="title">{{ $t( 'tx.from' )}}</p>
             <p class="">
-              <router-link :to="'/address/'+tx.getFrom().toString()">{{tx.getFrom().toString()}}</router-link>
+              <router-link :to="'/address/'+tx.getFrom()">{{tx.getFrom()}}</router-link>
             </p>
-            <p class="title" v-if="tx.getContractAddress().toString()">{{ $t( 'tx.contract' )}}</p>
+            <p class="title" v-if="tx.getContractAddress()">{{ $t( 'tx.contract' )}}</p>
             <p class="title" v-else>{{ $t( 'tx.to' )}}</p>
-            <p class="" v-if="tx.getContractAddress().toString()">
-              <router-link :to="'/address/'+tx.getContractAddress().toString()">{{tx.getContractAddress().toString()}}</router-link>
+            <p class="" v-if="tx.getContractAddress()">
+              <router-link :to="'/address/'+tx.getContractAddress()">{{tx.getContractAddress()}}</router-link>
             </p>
             <p class="" v-else>
-              <router-link :to="'/address/'+tx.getTo().toString()">{{tx.getTo().toString()}}</router-link>
+              <router-link :to="'/address/'+tx.getTo()">{{tx.getTo()}}</router-link>
             </p>
           </div>
         </li>
@@ -86,12 +86,7 @@ export default Vue.extend({
   props: ['transactions', 'showheader', 'account', 'filter', 'total', 'isPending'],
   methods: {
     getType(tx) {
-      if (
-        tx
-          .getFrom()
-          .toString()
-          .toLowerCase() === this.account.toString().toLowerCase()
-      ) {
+      if (tx.getFrom().toLowerCase() === this.account.toString().toLowerCase()) {
         return true
       }
       return false

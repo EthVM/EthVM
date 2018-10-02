@@ -8,8 +8,8 @@ CMD="docker-compose build"
 echo "Executing: ${CMD}"
 ${CMD}
 
-echo "Starting up containers: traefik, zookeeper, kafka and mongo"
-CMD="docker-compose up -d traefik mongodb kafka zookeeper"
+echo "Starting up containers: traefik, zookeeper, kafka, kafka-schema-registry and mongo"
+CMD="docker-compose up -d traefik kafka mongodb"
 echo "Executing: ${CMD}"
 ${CMD}
 

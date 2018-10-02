@@ -21,16 +21,16 @@ export class Tx {
     return this.tx.hash
   }
 
-  public getTo(): Address {
+  public getTo(): string {
     if (!this.cache.to) {
-      this.cache.to = common.Address(this.tx.to)
+      this.cache.to = this.tx.to
     }
     return this.cache.to
   }
 
-  public getFrom(): Address {
+  public getFrom(): string {
     if (!this.cache.from) {
-      this.cache.from = common.Address(this.tx.from)
+      this.cache.from = this.tx.from
     }
     return this.cache.from
   }
@@ -42,9 +42,9 @@ export class Tx {
     return this.cache.gasUsed
   }
 
-  public getBlockHash(): Hash {
+  public getBlockHash(): string {
     if (!this.cache.blcokHash) {
-      this.cache.blcokHash = common.Hash(this.tx.blockHash)
+      this.cache.blcokHash = this.tx.blockHash
     }
     return this.cache.blcokHash
   }
@@ -53,51 +53,51 @@ export class Tx {
     return this.tx.blockNumber
   }
 
-  public geTransactionIndex(): HexNumber {
+  public geTransactionIndex(): number {
     if (!this.cache.transactionIndex) {
-      this.cache.transactionIndex = common.HexNumber(this.tx.transactionIndex)
+      this.cache.transactionIndex = this.tx.transactionIndex
     }
     return this.cache.transactionIndex
   }
 
-  public getFromBalance(): EthValue {
-    if (!this.cache.fromBalance) {
-      this.cache.fromBalance = common.EthValue(this.tx.fromBalance)
-    }
-    return this.cache.fromBalance
-  }
+  // public getFromBalance(): EthValue {
+  //   if (!this.cache.fromBalance) {
+  //     this.cache.fromBalance = common.EthValue(this.tx.fromBalance)
+  //   }
+  //   return this.cache.fromBalance
+  // }
 
-  public getToBalance(): EthValue {
-    if (!this.cache.ethValue) {
-      this.cache.ethValue = common.EthValue(this.tx.toBalance)
-    }
-    return this.cache.ethValue
-  }
+  // public getToBalance(): EthValue {
+  //   if (!this.cache.ethValue) {
+  //     this.cache.ethValue = common.EthValue(this.tx.toBalance)
+  //   }
+  //   return this.cache.ethValue
+  // }
 
-  public getCumulativeGasUsed(): HexNumber {
-    if (!this.cache.cumulativeGasUsed) {
-      this.cache.cumulativeGasUsed = common.HexNumber(this.tx.cumulativeGasUsed)
-    }
-    return this.cache.cumulativeGasUsed
-  }
+  // public getCumulativeGasUsed(): HexNumber {
+  //   if (!this.cache.cumulativeGasUsed) {
+  //     this.cache.cumulativeGasUsed = common.HexNumber(this.tx.cumulativeGasUsed)
+  //   }
+  //   return this.cache.cumulativeGasUsed
+  // }
 
-  public getContractAddress(): Address {
+  public getContractAddress(): string {
     if (!this.cache.contractAddress) {
-      this.cache.contractAddress = common.Address(this.tx.contractAddress)
+      this.cache.contractAddress = this.tx.contractAddress
     }
     return this.cache.contractAddress
   }
 
-  public getLogsBloom(): Hex {
-    if (!this.cache.logsBloom) {
-      this.cache.logsBloom = common.Hex(this.tx.logsBloom)
-    }
-    return this.cache.logsBloom
-  }
+  // public getLogsBloom(): Hex {
+  //   if (!this.cache.logsBloom) {
+  //     this.cache.logsBloom = common.Hex(this.tx.logsBloom)
+  //   }
+  //   return this.cache.logsBloom
+  // }
 
   public getGas(): HexNumber {
     if (!this.cache.gas) {
-      this.cache.gas = common.HexNumber(this.tx.gas)
+      this.cache.gas = common.HexNumber(this.tx.gasUsed)
     }
     return this.cache.gas
   }
@@ -109,12 +109,12 @@ export class Tx {
     return this.cache.gasPrice
   }
 
-  public getInput(): Hex {
-    if (!this.cache.input) {
-      this.cache.input = common.Hex(this.tx.input)
-    }
-    return this.cache.input
-  }
+  // public getInput(): Hex {
+  //   if (!this.cache.input) {
+  //     this.cache.input = common.Hex(this.tx.input)
+  //   }
+  //   return this.cache.input
+  // }
 
   public getNonce(): HexNumber {
     if (!this.cache.hexNumber) {
@@ -130,9 +130,9 @@ export class Tx {
     return this.cache.ethValue
   }
 
-  public getV(): Hex {
+  public getV(): number {
     if (!this.cache.v) {
-      this.cache.v = common.Hex(this.tx.v)
+      this.cache.v = this.tx.v
     }
     return this.cache.v
   }
@@ -155,14 +155,14 @@ export class Tx {
     return this.tx.status
   }
 
-  public isPending(): boolean {
-    return this.tx.pending
-  }
+  // public isPending(): boolean {
+  //   return this.tx.pending
+  // }
 
-  public getTimestamp(): HexTime {
+  public getTimestamp(): Date {
     if (!this.cache.timestamp) {
-      this.cache.timestamp = common.HexTime(this.tx.timestamp)
+      this.cache.timestamp = new Date(this.tx.timestamp * 1000)
     }
-    return this.cache.timestamp
+    return new Date(this.cache.timestamp * 1000)
   }
 }

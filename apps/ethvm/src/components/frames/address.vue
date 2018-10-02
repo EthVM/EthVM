@@ -85,7 +85,7 @@
 
 <script lang="ts">
 import { common } from '@app/helpers'
-import { Tx } from '@app/models'
+import { Tx, Account } from '@app/models'
 import bn from 'bignumber.js'
 import blockies from 'ethereum-blockies'
 import ethUnits from 'ethereumjs-units'
@@ -139,13 +139,14 @@ export default Vue.extend({
   created() {
     /* Geting Address Balance: */
     this.$socket.emit(
-      sEvents.getBalance,
+      sEvents.getAddress,
       {
         address: this.address
       },
       (err, result) => {
+        const addr = new Account(result)
         if (!err && result) {
-          const balance = common.EthValue(common.HexToBuffer(result.result)).toEth()
+          const balance = common.EthValue(addr.getBalance()).toEth()
           this.account.balance = balance
         }
       }

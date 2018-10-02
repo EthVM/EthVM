@@ -86,10 +86,9 @@ export default Vue.extend({
       (error, result) => {
         if (result) {
           this.block = new Block(result)
-          console.log(this.block.getNumber())
 
-          this.setItems(this.block.getNumber().toString())
-          const uncleHashes = this.block.getUncleHashes()
+          this.setItems(this.block.getNumber())
+          // const uncleHashes = this.block.getUncleHashes()
           /*Get Transactions for the block: */
           this.$socket.emit(
             sEvents.getBlockTransactions,
@@ -102,17 +101,17 @@ export default Vue.extend({
               })
             }
           )
-          uncleHashes.forEach((_hash: any, idx: number) => {
-            this.$socket.emit(
-              sEvents.getBlock,
-              {
-                hash: _hash.toBuffer()
-              },
-              (err, data) => {
-                this.uncles.push(new Block(data))
-              }
-            )
-          })
+          // uncleHashes.forEach((_hash: any, idx: number) => {
+          //   this.$socket.emit(
+          //     sEvents.getBlock,
+          //     {
+          //       hash: _hash.toBuffer()
+          //     },
+          //     (err, data) => {
+          //       this.uncles.push(new Block(data))
+          //     }
+          //   )
+          // })
         }
       }
     )
