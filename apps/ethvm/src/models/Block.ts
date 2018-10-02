@@ -140,7 +140,7 @@ export class Block {
     return this.cache.stateRoot
   }
 
-  public getMiner(): Address {
+  public getMiner(): string {
     if (!this.cache.miner) {
       this.cache.miner = this.block.header.miner
     }
@@ -244,7 +244,6 @@ export class Block {
   }
 
   public getUncleReward(): EthValue {
-    console.log('this.block.header.rewards[this.block.header.uncle]', this.block.header.rewards[this.block.header.unclesHash])
     if (!this.cache.uncleReward) {
       if (this.block.header.rewards[this.block.header.unclesHash]) {
         return (this.cache.uncleReward = common.EthValue(Buffer.from(new bn(0).toString())))
