@@ -62,12 +62,10 @@ class Cli : CliktCommand() {
     single { MongoClient(MongoClientURI(mongoUri)) }
 
     single {
-
       val client = get<MongoClient>()
       val uri = get<MongoClientURI>()
 
       client.getDatabase(uri.database!!)
-
     }
 
     factory { BlockMongoSink() }

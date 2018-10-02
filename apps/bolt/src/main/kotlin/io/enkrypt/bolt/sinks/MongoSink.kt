@@ -23,8 +23,8 @@ abstract class MongoSink<K, V> : Processor<K, V>, KoinComponent {
 
   protected val logger = KotlinLogging.logger {}
 
-  override fun init(context: ProcessorContext?) {
-    this.context = context!!
+  override fun init(context: ProcessorContext) {
+    this.context = context
     mongoSession = mongoClient.startSession()
     running = true
   }

@@ -46,6 +46,7 @@ fun BlockHeader?.toDocument(summary: BlockSummary) = Document(
 fun Transaction?.toDocument(): Document {
   return Document(
     mapOf(
+      "hash" to this?.hash,
       "nonce" to this?.nonce,
       "from" to this?.sender.toHex(),
       "to" to this?.receiveAddress?.toHex(),

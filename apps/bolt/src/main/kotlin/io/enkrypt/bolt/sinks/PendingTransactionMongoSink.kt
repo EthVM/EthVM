@@ -23,9 +23,9 @@ class PendingTransactionMongoSink : MongoSink<String, Transaction?>() {
   private val batch = ArrayList<Pair<String, Transaction?>>()
   private var scheduledWrite: Cancellable? = null
 
-  override fun init(context: ProcessorContext?) {
+  override fun init(context: ProcessorContext) {
     super.init(context)
-    this.scheduledWrite = context?.schedule(timeoutMs, PunctuationType.WALL_CLOCK_TIME) { _ -> tryToWrite() }
+    this.scheduledWrite = context.schedule(timeoutMs, PunctuationType.WALL_CLOCK_TIME) { _ -> tryToWrite() }
   }
 
   override fun process(key: String, value: Transaction?) {
@@ -56,7 +56,7 @@ class PendingTransactionMongoSink : MongoSink<String, Transaction?>() {
       }
     }
 
-    mongoSession?.transaction {
+    mongoSession.transaction {
       accountsCollection.bulkWrite(ops)
     }.also {
       when {

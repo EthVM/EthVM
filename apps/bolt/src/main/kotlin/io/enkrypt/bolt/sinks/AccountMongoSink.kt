@@ -24,9 +24,9 @@ class AccountMongoSink : MongoSink<String, Account>() {
   private val batch = ArrayList<Account>()
   private var scheduledWrite: Cancellable? = null
 
-  override fun init(context: ProcessorContext?) {
+  override fun init(context: ProcessorContext) {
     super.init(context)
-    this.scheduledWrite = context?.schedule(timeoutMs, PunctuationType.WALL_CLOCK_TIME) { _ -> tryToWrite() }
+    this.scheduledWrite = context.schedule(timeoutMs, PunctuationType.WALL_CLOCK_TIME) { _ -> tryToWrite() }
   }
 
   override fun process(key: String, value: Account) {
