@@ -16,7 +16,7 @@ import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
 import org.koin.dsl.module.module
 import org.koin.standalone.StandAloneContext.startKoin
-import java.util.*
+import java.util.Properties
 
 class Cli : CliktCommand() {
 

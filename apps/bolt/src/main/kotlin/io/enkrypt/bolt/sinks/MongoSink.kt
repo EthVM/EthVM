@@ -16,23 +16,20 @@ abstract class MongoSink<K, V> : Processor<K, V>, KoinComponent {
 
   protected val mongoClient: MongoClient by inject()
   protected val mongoDB: MongoDatabase by inject()
+  protected lateinit var mongoSession: ClientSession
 
-  protected var mongoSession: ClientSession? = null
+  protected lateinit var context: ProcessorContext
+  protected var running: Boolean = false
 
   protected val logger = KotlinLogging.logger {}
 
-  protected var context: ProcessorContext? = null
-  protected var running: Boolean = false
-
   override fun init(context: ProcessorContext?) {
-    this.context = context
-    this.mongoSession = mongoClient.startSession()
-    this.running = true
+    this.context = context!!
+    mongoSession = mongoClient.startSession()
+    running = true
   }
 
-
-
   override fun close() {
-    this.running = false
+    running = false
   }
 }
