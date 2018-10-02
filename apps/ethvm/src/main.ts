@@ -167,11 +167,12 @@ Vue.use(infiniteScroll)
 Vue.use(Vuetify, {
   theme: {
     // used -->
-    primary: '#2779ff',
+    primary: '#3d55a5',
     secondary: '#2779ff',
-    accent: '#7c76fc',
+    accent: '#4a67c6',
     success: '#20c0c7',
-    warning: '#f9967b'
+    warning: '#f9967b',
+    info: '#a0a8fd'
     // used -->
     // background: String(colors.grey.darken3)
   }
