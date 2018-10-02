@@ -31,7 +31,7 @@ class BlocksProcessor : AbstractBaseProcessor() {
     .apply {
       putAll(baseKafkaProps.toMap())
       put(StreamsConfig.APPLICATION_ID_CONFIG, id)
-      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 4)
+      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 1)
     }
 
   private val logger = KotlinLogging.logger {}

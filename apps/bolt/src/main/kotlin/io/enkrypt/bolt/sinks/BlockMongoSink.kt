@@ -100,14 +100,14 @@ class BlockMongoSink : MongoSink<Long, Pair<BlockSummary, BlockStats>>() {
           context?.commit()
 
           val elapsedMs = System.currentTimeMillis() - startMs
-          logger.info{ "${batch.size} blocks stored in $elapsedMs ms"}
+          logger.info{ "${batch.size} blocks stored in $elapsedMs ms" }
 
           batch.clear()
 
         }
         it.isRight() -> {
           // TODO handle error
-          logger.error{ "Failed to store blocks. ${it.right()}"}
+          logger.error{ "Failed to store blocks. ${it.right()}" }
         }
       }
     }
