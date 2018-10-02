@@ -1,7 +1,6 @@
 package io.enkrypt.bolt.processors
 
 import com.mongodb.client.model.ReplaceOptions
-import com.mongodb.client.model.UpdateOptions
 import io.enkrypt.bolt.extensions.toDocument
 import io.enkrypt.bolt.serdes.RLPTransactionSerde
 import mu.KotlinLogging
@@ -15,7 +14,7 @@ import org.bson.Document
 import org.ethereum.core.Transaction
 import org.ethereum.util.ByteUtil
 import org.litote.kmongo.deleteOneById
-import java.util.*
+import java.util.Properties
 
 /**
  * This processor process Pending Txs in the node.
@@ -52,14 +51,12 @@ class PendingTransactionsProcessor : AbstractBaseProcessor() {
   }
 
   private fun persist(hash: String, txn: Transaction?) {
-
-    logger.info { "Pending txn: $hash $txn"}
+    logger.info { "Pending txn: $hash $txn" }
 
     val replaceOptions = ReplaceOptions().upsert(true)
-
     val idQuery = Document(mapOf("_id" to hash))
 
-    if(txn == null) {
+    if (txn == null) {
       pendingTransactionsCollection.deleteOneById(hash)
     } else {
       pendingTransactionsCollection.replaceOne(idQuery, txn.toDocument(), replaceOptions)

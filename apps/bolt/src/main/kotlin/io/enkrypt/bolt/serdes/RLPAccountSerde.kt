@@ -1,6 +1,5 @@
 package io.enkrypt.bolt.serdes
 
-import com.sun.xml.internal.ws.encoding.soap.DeserializationException
 import io.enkrypt.kafka.models.Account
 import org.apache.kafka.common.errors.SerializationException
 import org.apache.kafka.common.serialization.Deserializer
