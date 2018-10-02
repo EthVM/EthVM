@@ -3,6 +3,7 @@ package io.enkrypt.bolt.processors
 import com.mongodb.MongoClient
 import com.mongodb.MongoClientURI
 import com.mongodb.client.MongoCollection
+import com.mongodb.client.MongoDatabase
 import io.enkrypt.bolt.AppConfig
 import org.apache.kafka.streams.KafkaStreams
 import org.bson.Document
@@ -22,15 +23,9 @@ abstract class AbstractBaseProcessor : Processor, KoinComponent {
   protected val appConfig: AppConfig by inject()
   protected val baseKafkaProps: Properties by inject(name = "kafka.Properties")
 
-  protected val mongoUri: MongoClientURI by inject()
-  protected val mongoClient: MongoClient by inject()
-  protected val mongoDB by lazy { mongoClient.getDatabase(mongoUri.database!!) }
-  protected val mongoSession by lazy { mongoClient.startSession() }
+  protected val mongoDB: MongoDatabase by inject()
 
   protected val addressesCollection: MongoCollection<Document> by lazy { mongoDB.getCollection("addresses") }
-  protected val unclesCollection: MongoCollection<Document> by lazy { mongoDB.getCollection("uncles") }
-  protected val blocksCollection: MongoCollection<Document>by lazy { mongoDB.getCollection("blocks") }
-  protected val transactionsCollection: MongoCollection<Document> by lazy { mongoDB.getCollection("transactions") }
   protected val pendingTransactionsCollection: MongoCollection<Document> by lazy { mongoDB.getCollection("pending_transactions") }
 
   protected lateinit var streams: KafkaStreams

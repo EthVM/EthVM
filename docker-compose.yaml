@@ -94,7 +94,7 @@ services:
       - back
     ports:
       - 27017:27017
-    command: "mongod --bind_ip 0.0.0.0 --replSet rs0"
+    command: "mongod --bind_ip 0.0.0.0 --replSet rs0 --quiet --slowms 10000"
     labels:
       - 'traefik.enable=true'
       - 'traefik.default.protocol=http'

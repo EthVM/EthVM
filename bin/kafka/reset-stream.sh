@@ -6,12 +6,7 @@ echo "COMMAND: $CMD"
 docker-compose exec kafka sh -c "$CMD"
 
 # addresses
-CMD="kafka-streams-application-reset --zookeeper zookeeper:2181 --bootstrap-servers kafka:9092 --application-id addresses-processor --input-topics addresses"
-echo "COMMAND: $CMD"
-docker-compose exec kafka sh -c "$CMD"
-
-# transactions
-CMD="kafka-streams-application-reset --zookeeper zookeeper:2181 --bootstrap-servers kafka:9092 --application-id transactions-processor --input-topics transactions"
+CMD="kafka-streams-application-reset --zookeeper zookeeper:2181 --bootstrap-servers kafka:9092 --application-id account-state-processor --input-topics account-state"
 echo "COMMAND: $CMD"
 docker-compose exec kafka sh -c "$CMD"
 
