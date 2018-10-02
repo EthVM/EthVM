@@ -9,35 +9,19 @@ const toSmallBlock = (block: Block): SmallBlock => {
     hash: block.hash,
     miner: block.header.miner,
     timestamp: block.header.timestamp,
-    transactionCount: block.stats.totalTxs,
+    transactionCount: block.stats.txs,
     difficulty: block.header.difficulty,
     stateRoot: block.header.stateRoot,
-    totalBlockReward: block.header.rewards.block.header.miner + block.header.rewards.block.header.unclesHash,
-    blockReward: block.header.rewards.block.header.miner,
+    totalBlockReward: block.header.rewards[block.header.miner], // add miner, uncle block reward
+    blockReward: block.header.rewards[block.header.miner],
     txFees: block.stats.totalTxsFees,
-    uncleReward: block.header.rewards.block.header.unclesHash,
+    uncleReward: block.header.rewards[block.header.miner], // need uncle hash
     blockStats: block.stats
   }
 }
 
-const toBlockStats = (txs: Tx[] = [], blockTime: BigNumber): BlockStats => {
-  const zero = utils.toHex(0)
-
-  if (txs.length === 0) {
-    return {
-      pendingTxs: zero
-    }
-  }
-
-  return {
-    // TODO calc pending tx
-    pendingTxs: zero
-  }
-}
-
 const mappers = {
-  toSmallBlock,
-  toBlockStats
+  toSmallBlock
 }
 
 export { mappers }

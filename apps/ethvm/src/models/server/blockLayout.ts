@@ -30,15 +30,14 @@ export interface Header {
 
 export interface BlockStats {
   blockTimeMs?: number
-  numSuccessfulTxs?: number
-  numFailedTxs?: number
-  totalTxs?: number
-  totalInternalTxs?: number
+  successfulTxs?: number
+  failedTxs?: number
+  txs?: number
+  internalTxs?: number
   avgGasPrice?: Buffer
   avgTxsFees?: Buffer
   totalGasPrice?: Buffer
   totalTxsFees?: Buffer
-  pendingTxs?: Buffer
 }
 
 export interface BlockLayout {
