@@ -23,7 +23,7 @@ export default Vue.extend({
         return this.$i18n.t('message.load')
       }
       const newBlockStat = this.$store.getters.getBlocks[0].getStats()
-      const successfull = new BN(newBlockStat.success).toNumber()
+      const successfull = newBlockStat.successfulTxs
       return successfull
     }
   }
