@@ -3,7 +3,7 @@ import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/serv
 import { PendingTx } from '@app/server/modules/pending-tx'
 
 const pendingTxsEvent: SocketEvent = {
-  id: 'pendingTxs', // new_name: past_txs
+  id: 'pendingTxs',
 
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = pastTxsPayloadValidator(payload) as boolean
@@ -13,7 +13,6 @@ const pendingTxsEvent: SocketEvent = {
     }
   },
 
-  // TODO: Remove fliping txs from here (txs should be ordered properly from db)
   onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<PendingTx[]> => server.pendingTxService.getTxs(payload.limit, payload.page)
 }
 

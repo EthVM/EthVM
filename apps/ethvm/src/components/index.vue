@@ -78,7 +78,7 @@ export default Vue.extend({
           }
         }
       )
-        this.$socket.emit(
+      this.$socket.emit(
         sEvents.pendingTxs,
         {
           limit: 100,

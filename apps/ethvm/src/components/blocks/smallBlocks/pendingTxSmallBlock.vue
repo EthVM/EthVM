@@ -17,11 +17,7 @@ export default Vue.extend({
   },
   computed: {
     getPendingTx() {
-      if (!this.$store.getters.getBlocks[0]) {
-        return this.$i18n.t('message.load')
-      }
-      const newBlockStat = this.$store.getters.getBlocks[0].getStats()
-      const pending = new BN(newBlockStat.pendingTxs).toNumber()
+      const pending = this.$store.getters.getPendingTxs.length
       return pending
     }
   }

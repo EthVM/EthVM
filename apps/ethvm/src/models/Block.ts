@@ -221,12 +221,12 @@ export class Block {
     return []
   }
 
-  // public geTransactionHashes(): string[] {
-  //   if (!this.cache.transactionHashes) {
-  //     this.cache.transactionHashes = this.block.transactionHashes
-  //   }
-  //   return this.cache.transactionHashes
-  // }
+  public geTransactionHashes(): string[] {
+    if (!this.cache.transactions) {
+      this.cache.transactions = this.block.transactions
+    }
+    return this.cache.transactions
+  }
 
   public getTxFees(): EthValue {
     if (!this.cache.txFees) {

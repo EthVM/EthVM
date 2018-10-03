@@ -111,6 +111,9 @@
             </p>
           </v-flex>
           <v-flex hidden-sm-and-down md1>
+            <p class="grey--text text--darken-2">{{tx.getGasLimit().toNumber()}}</p>
+          </v-flex>
+          <v-flex hidden-sm-and-down md1>
             <p class="grey--text text--darken-2">{{tx.getGasPrice().toGWei()}}</p>
           </v-flex>
 

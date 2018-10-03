@@ -28,14 +28,14 @@
                 <router-link class=" grey--text text--darken-2" :to="'/block/'+block.getHash()">{{block.getHash()}}</router-link>
               </p>
               <p class="text-truncate"><strong>{{ $t( 'block.miner' ) }}  </strong>
-                <router-link :to="'/address/'+block.getMiner().toString()">{{block.getMiner().toString()}}</router-link>
+                <router-link :to="'/address/'+block.getMiner()">{{block.getMiner()}}</router-link>
               </p>
             </v-flex>
             <v-flex hidden-sm-and-down md1>
-              <p class="success--text"> {{getNumber(block.getStats().success)}}</p>
-              <p class="warning--text"> {{getNumber(block.getStats().failed)}}</p>
+              <p class="success--text"> {{block.getStats().numSuccessfulTxs}}</p>
+              <p class="warning--text"> {{block.getStats().numFailedTxs}}</p>
             </v-flex>
-            <v-flex xs4 md2 class="pr-1">
+            <!-- <v-flex xs4 md2 class="pr-1">
               <p class="text-truncate grey--text text--darken-2">
                 <v-tooltip v-if="getShortRewardValue(block.getTotalBlockReward().toEth().toString(), true)" bottom>
                   <v-icon slot="activator" dark small class="pl-2">fa fa-question-circle grey--text</v-icon>
@@ -43,7 +43,7 @@
                 </v-tooltip>
                 {{getShortRewardValue(block.getTotalBlockReward().toEth().toString(), false)}}
               </p>
-            </v-flex>
+            </v-flex> -->
           </v-layout>
         </v-card>
     </div>

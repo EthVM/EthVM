@@ -8,6 +8,9 @@ import com.mongodb.MongoClientURI
 import io.enkrypt.bolt.processors.AccountStateProcessor
 import io.enkrypt.bolt.processors.BlocksProcessor
 import io.enkrypt.bolt.processors.PendingTransactionsProcessor
+import io.enkrypt.bolt.sinks.AccountMongoSink
+import io.enkrypt.bolt.sinks.BlockMongoSink
+import io.enkrypt.bolt.sinks.PendingTransactionMongoSink
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
@@ -58,6 +61,19 @@ class Cli : CliktCommand() {
     single { MongoClientURI(mongoUri) }
     single { MongoClient(MongoClientURI(mongoUri)) }
 
+    single {
+
+      val client = get<MongoClient>()
+      val uri = get<MongoClientURI>()
+
+      client.getDatabase(uri.database!!)
+
+    }
+
+    factory { BlockMongoSink() }
+    factory { AccountMongoSink() }
+    factory { PendingTransactionMongoSink() }
+
     module("kafka") {
       single {
         Properties().apply {
@@ -78,21 +94,6 @@ class Cli : CliktCommand() {
 
   override fun run() {
     startKoin(listOf(boltModule))
-
-    BlocksProcessor().apply {
-      onPrepareProcessor()
-      start()
-    }
-
-    BlocksProcessor().apply {
-      onPrepareProcessor()
-      start()
-    }
-
-    BlocksProcessor().apply {
-      onPrepareProcessor()
-      start()
-    }
 
     BlocksProcessor().apply {
       onPrepareProcessor()

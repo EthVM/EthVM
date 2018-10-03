@@ -11,9 +11,9 @@
         <li>{{ $t( 'tableHeader.txN' )}}</li>
         <li class="type"></li>
         <li class="eth">{{ $t( 'common.eth' )}}</li>
-        <li class="limit">{{ $t( 'gas.limit' )}}</li>
+        <li v-if="!isPending" class="limit">{{ $t( 'gas.limit' )}}</li>
         <li class="gas">{{ $t( 'common.gwei' )}}</li>
-        <li class="status"></li>
+        <li v-if="!isPending" class="status"></li>
       </div>
       <div class="block" v-for="tx in transactions" v-bind:key="tx.getHash()">
         <li>
@@ -37,7 +37,7 @@
             </p>
           </div>
         </li>
-        <li class="vertical-middle type">
+        <li v-if="!isPending" class="vertical-middle type">
           <div v-if="getType(tx)">
             <span class="failed">{{ $t( 'type.out' )}}</span>
           </div>
@@ -49,7 +49,7 @@
           <div class="">{{getShortEthValue(tx.getValue().toEth().toString(), false)}}</div>
           <div v-if="getShortEthValue(tx.getValue().toEth().toString(), true)" class="tooltip-button" v-tooltip="tx.getValue().toEth()"><i class="fa fa-question-circle-o" aria-hidden="true"></i></div>
         </li>
-        <li class="vertical-middle limit">
+        <li v-if="!isPending" class="vertical-middle limit">
           <div>
             <p>{{tx.getGasUsed().toNumber()}}</p>
           </div>
@@ -59,7 +59,7 @@
             <p>{{tx.getGasPrice().toGWei()}}</p>
           </div>
         </li>
-        <li class="vertical-middle status">
+        <li v-if="!isPending" class="vertical-middle status">
           <div v-if="!tx.getStatus()">
             <span class="glyphicon glyphicon-remove failed"></span>
           </div>
