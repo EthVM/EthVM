@@ -30,18 +30,18 @@
     </v-navigation-drawer>
     <v-toolbar color="white" app fixed clipped flat height="77px">
       <v-layout align-center row fill-height>
-        <v-flex sm4>
+        <v-flex xs1>
           <v-layout row>
             <v-btn icon @click.native="drawer = !drawer">
               <v-icon class="fa fa-bars primary--text"></v-icon>
             </v-btn>
-            <v-btn color="transparent" flat to="/" class="pa-0 ml-0">
-            </v-btn>
           </v-layout>
         </v-flex>
         <v-spacer></v-spacer>
-        <v-flex sm3>
+        <v-flex xs10>
+          <v-layout align-center justify-end row fill-height>
           <block-search></block-search>
+          </v-layout>
         </v-flex>
       </v-layout>
     </v-toolbar>

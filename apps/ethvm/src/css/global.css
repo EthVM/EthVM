@@ -14,9 +14,25 @@ a:link {
 }
 
 .navlist {
-    height: 66px
+    height: 66px;
 }
 
 .theme--light.v-icon {
-    color: inherit
+    color: inherit;
+}
+
+/* SEARCH COMPONENT: */
+
+.search-button {
+    height: 48px;
+    width: 115px;
+    color: white;
+}
+
+.v-input__slot {
+    margin-bottom: 0px;
+}
+
+.v-text-field.v-text-field--solo .v-input__control {
+    min-height: 46px;
 }
