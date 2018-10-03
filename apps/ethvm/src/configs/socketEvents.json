@@ -17,5 +17,6 @@
   "getBlockTransactions": "getBlockTransactions",
   "getAddress": "getAddress",
   "pendingTxs":"pendingTxs",
+  "pendingTxsAddress":"getPendingTxs",
   "pastBlocksR": "PAST_BLOCKS_RECEIVED"
 }

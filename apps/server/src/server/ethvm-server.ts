@@ -19,6 +19,7 @@ import { ChartService } from '@app/server/modules/charts'
 import { ExchangeService } from '@app/server/modules/exchanges'
 import { PendingTxService } from '@app/server/modules/pending-tx'
 import { Tx, TxsService } from '@app/server/modules/txs'
+import { Uncle, UnclesService } from '@app/server/modules/uncle'
 import { VmService } from '@app/server/modules/vm'
 import { CacheRepository } from '@app/server/repositories'
 import BigNumber from 'bignumber.js'
@@ -61,6 +62,7 @@ export class EthVMServer {
 
   constructor(
     public readonly blockService: BlocksService,
+    public readonly uncleService: UnclesService,
     public readonly addressService: AddressService,
     public readonly txsService: TxsService,
     public readonly chartsService: ChartService,
