@@ -3,16 +3,16 @@
     <v-card class="flex blue-grey darken-4" flat tile>
       <v-card class="text-xs-center justify-content white--text primary" flat tile>
         <v-btn href="https://www.facebook.com/enKryptIO/" icon>
-          <v-icon class="fa fa-facebook-f white--text"></v-icon>
+          <v-icon class="fab fa-facebook-f white--text"></v-icon>
         </v-btn>
         <v-btn href="https://twitter.com/enkryptio" icon>
-          <v-icon class="fa fa-twitter white--text"></v-icon>
+          <v-icon class="fab fa-twitter white--text"></v-icon>
         </v-btn>
         <v-btn href="https://github.com/enKryptIO" icon>
-          <v-icon class="fa fa-github white--text"></v-icon>
+          <v-icon class="fab fa-github white--text"></v-icon>
         </v-btn>
         <v-btn href="https://github.com/enKryptIO" icon>
-          <v-icon class="fa fa-medium white--text"></v-icon>
+          <v-icon class="fab fa-medium-m white--text"></v-icon>
         </v-btn>
       </v-card>
 

@@ -1,7 +1,5 @@
 <template>
-  <v-app>
-    <navigation></navigation>
-    <v-content>
+
       <v-container fluid wrap fill-height>
         <!-- BODY -->
         <!-- Main Pages -->
@@ -20,10 +18,7 @@
         <!-- Hope Page -->
         <frame-home v-else></frame-home>
       </v-container>
-         <!-- FOOTER -->
-        <block-footer></block-footer>
-    </v-content>
-  </v-app>
+
 </template>
 
 <script lang="ts">
@@ -106,3 +101,7 @@ export default Vue.extend({
   }
 })
 </script>
+
+<style scoped lang="css">
+@import '~cssPath/global.css';
+</style>

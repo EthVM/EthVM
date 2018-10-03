@@ -10,7 +10,7 @@ export default Vue.extend({
   data() {
     return {
       blockTitle: this.$i18n.t('smlBlock.time'),
-      timeIcon: 'fa fa-clock-o white--text',
+      timeIcon: 'fas fa-clock white--text',
       type: 'success white--text',
       lastBlockTime: 0,
       seconds: 0
