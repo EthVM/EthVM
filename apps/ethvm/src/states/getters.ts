@@ -15,7 +15,6 @@ const getTxs = (state: StateLayout): Tx[] => {
 
 const getBlocks = (state: StateLayout): Block[] => {
   return state.blocks.items()
-
 }
 
 export default {

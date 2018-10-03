@@ -11,7 +11,6 @@ const setUncles = (block: Block, hash: string, blocks: Block[]): Block[] => {
   return blocks
 }
 
-
 const dedup = (block: Block, pastBlocks: Block[]): Block[] => {
   for (let i = 0; i < pastBlocks.length; i++) {
     if (block.getId() === pastBlocks[i].getId()) {
