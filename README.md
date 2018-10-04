@@ -4,7 +4,7 @@
   <p>Powered by <a href="https://www.typescriptlang.org/">TypeScript</a> / <a href="https://github.com/socketio/socket.io">Socket.io</a> / <a href="https://github.com/ethereum/ethereumj">EthereumJ</a> / <a href="https://kafka.apache.org/">Kafka</a> / <a href="https://github.com/mongodb/mongo">MongoDB</a> / <a href="https://redis.io/topics/quickstart">Redis</a></p>
 </div>
 
-# EthVM: Ethereum Blockchain Explorer
+# EthVM: Open Source Ethereum Blockchain Explorer
 
 ![Screenshot example](.github/assets/ethvm.png)
 
