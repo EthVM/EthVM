@@ -170,8 +170,9 @@ Vue.use(Vuetify, {
     primary: '#3d55a5',
     secondary: '#2779ff',
     accent: '#4a67c6',
-    success: '#20c0c7',
-    warning: '#f9967b',
+    success: '#92cce1',
+    warning: '#fed9a1',
+    error: '#fe8778',
     info: '#a0a8fd'
     // used -->
     // background: String(colors.grey.darken3)

@@ -5,16 +5,16 @@
       <h4 class="grey--text">{{ $t('title.home') }}</h4>
     </v-card>
     <v-layout row wrap justify-space-between class="mb-4">
-      <v-flex xs12 md6 lg3>
+      <v-flex xs12 sm6 md3>
         <block-last-block></block-last-block>
       </v-flex>
-      <v-flex xs12 md6 lg3>
+      <v-flex xs12 sm6 md3>
         <block-time-since-last-block></block-time-since-last-block>
       </v-flex>
-      <v-flex xs12 md6 lg3>
+      <v-flex xs12 sm6 md3>
         <block-hash-rate></block-hash-rate>
       </v-flex>
-      <v-flex xs12 md6 lg3>
+      <v-flex xs12 sm6 md3>
         <block-difficulty></block-difficulty>
       </v-flex>
     </v-layout>
