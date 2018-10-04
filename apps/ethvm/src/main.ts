@@ -20,6 +20,8 @@ import Toasted from 'vue-toasted'
 import navigation from '@app/components/blocks/navigationDrawer/nav.vue'
 import frameHome from '@app/components/frames/home.vue'
 import frameBlocks from '@app/components/frames/blocks.vue'
+import frameUncles from '@app/components/frames/uncles.vue'
+
 import frameTxs from '@app/components/frames/transactions.vue'
 import framePending from '@app/components/frames/pendingTxs.vue'
 import frameAbout from '@app/components/frames/about.vue'
@@ -87,6 +89,8 @@ import blockFooter from '@app/components/blocks/footer/footer.vue'
 Vue.component('navigation', navigation)
 Vue.component('frame-home', frameHome)
 Vue.component('frame-blocks', frameBlocks)
+Vue.component('frame-uncles', frameUncles)
+
 Vue.component('frame-txs', frameTxs)
 Vue.component('frame-pending', framePending)
 Vue.component('frame-about', frameAbout)
