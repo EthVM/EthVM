@@ -1,5 +1,5 @@
 <template>
-  <block-component :title="blockTitle" :colorType="type" :value="hashRate" :icon="iconType">
+  <block-component :title="blockTitle" :colorType="type" :value="hashRate" :icon="iconType" :metrics="metric">
   </block-component>
 </template>
 
@@ -41,15 +41,16 @@ export default Vue.extend({
       blockTitle: this.$i18n.t('smlBlock.hashR'),
       iconType: 'fa fa-hashtag white--text',
       type: 'accent white--text',
-      hashRate: this.$i18n.t('message.load')
+      hashRate: this.$i18n.t('message.load'),
+      metric: 'Th/s'
     }
   },
   created() {
     if (this.$store.getters.getBlocks.length) {
-      this.hashRate = getAvgHashRate(this.$store.getters.getBlocks).toString() + ' TH/s'
+      this.hashRate = getAvgHashRate(this.$store.getters.getBlocks).toString()
     }
     this.$eventHub.$on([sEvents.pastBlocksR, sEvents.newBlock], () => {
-      this.hashRate = getAvgHashRate(this.$store.getters.getBlocks).toString() + ' TH/s'
+      this.hashRate = getAvgHashRate(this.$store.getters.getBlocks).toString()
     })
   },
   beforeDestroy() {

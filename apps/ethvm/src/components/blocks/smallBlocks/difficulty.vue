@@ -1,5 +1,5 @@
 <template>
-  <block-component  :title="blockTitle" :colorType="type" :value="difficulty" :icon="iconType">
+  <block-component  :title="blockTitle" :colorType="type" :value="difficulty" :icon="iconType" :metrics="th">
   </block-component>
 </template>
 
@@ -22,15 +22,16 @@ export default Vue.extend({
       blockTitle: this.$i18n.t('smlBlock.diff'),
       iconType: 'fas fa-tachometer-alt white--text',
       type: 'warning white--text',
-      difficulty: 0
+      difficulty: 0,
+      th: 'Th'
     }
   },
   created() {
     if (this.$store.getters.getBlocks.length) {
-      this.difficulty = getTHs(this.$store.getters.getBlocks[0].getDifficulty().toNumber()).toString() + ' TH'
+      this.difficulty = getTHs(this.$store.getters.getBlocks[0].getDifficulty().toNumber()).toString()
     }
     this.$eventHub.$on(sEvents.pastBlocksR, () => {
-      this.difficulty = getTHs(this.$store.getters.getBlocks[0].getDifficulty().toNumber()) + ' TH'
+      this.difficulty = getTHs(this.$store.getters.getBlocks[0].getDifficulty().toNumber())
     })
     this.$eventHub.$on(sEvents.newBlock, _block => {
       this.difficulty = getTHs(_block.getDifficulty().toNumber())
