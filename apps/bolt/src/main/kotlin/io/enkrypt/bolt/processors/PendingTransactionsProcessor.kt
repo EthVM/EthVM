@@ -11,7 +11,7 @@ import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.kstream.Consumed
 import org.ethereum.util.ByteUtil
 import org.koin.standalone.get
-import java.util.*
+import java.util.Properties
 
 /**
  * This processor process Pending Txs in the node.

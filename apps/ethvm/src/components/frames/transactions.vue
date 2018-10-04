@@ -8,7 +8,7 @@
         </v-breadcrumbs-item>
       </v-breadcrumbs>
     </v-card>
-    <v-layout row wrap justify-space-between>
+    <v-layout row wrap justify-space-between class="mb-4">
       <v-flex xs12 md6 lg3>
         <block-last-block></block-last-block>
       </v-flex>
@@ -22,7 +22,9 @@
         <pending-tx-small-block></pending-tx-small-block>
       </v-flex>
     </v-layout>
+    <v-layout  row justify-center class="ma-1">
    <block-last-transactions :transactions="txs" :showHeader="true" class="mt-3"></block-last-transactions>
+    </v-layout>
   </v-container>
 </template>
 

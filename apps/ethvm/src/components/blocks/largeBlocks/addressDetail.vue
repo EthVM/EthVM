@@ -9,7 +9,7 @@
         <div class="detail-row-copy">
           <li>{{ $t( 'common.hash' ) }}: </li>
           <div class="copy">
-            <copy-to-clip-component :valueToCopy="account.address.toString()"></copy-to-clip-component>
+            <copy-to-clip-component :valueToCopy="account.address"></copy-to-clip-component>
           </div>
           <li>{{account.address}}</li>
         </div>

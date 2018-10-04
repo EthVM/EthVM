@@ -18,19 +18,19 @@ export class Tx {
   }
 
   public getHash(): string {
-    return this.tx.hash
+    return '0x' + this.tx.hash
   }
 
   public getTo(): string {
     if (!this.cache.to) {
-      this.cache.to = this.tx.to
+      this.cache.to = '0x' + this.tx.to
     }
     return this.cache.to
   }
 
   public getFrom(): string {
     if (!this.cache.from) {
-      this.cache.from = this.tx.from
+      this.cache.from = '0x' + this.tx.from
     }
     return this.cache.from
   }
@@ -44,7 +44,7 @@ export class Tx {
 
   public getBlockHash(): string {
     if (!this.cache.blcokHash) {
-      this.cache.blcokHash = this.tx.blockHash
+      this.cache.blcokHash = '0x' + this.tx.blockHash
     }
     return this.cache.blcokHash
   }
@@ -83,7 +83,9 @@ export class Tx {
 
   public getContractAddress(): string {
     if (!this.cache.contractAddress) {
-      this.cache.contractAddress = this.tx.contractAddress
+      if(this.tx.contractAddress){
+        this.cache.contractAddress = '0x' + this.tx.contractAddress
+      }
     }
     return this.cache.contractAddress
   }

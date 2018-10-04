@@ -1,10 +1,11 @@
 import config from '@app/config'
 import { logger } from '@app/logger'
-import { KafkaStreamer, KafkaStreamerOpts } from '@app/server/core/streams'
+import { NullStreamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
 import { AddressServiceImpl, MongoAddressRepository } from '@app/server/modules/address'
 import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blocks'
 import { ChartsServiceImpl, MockChartsRepository } from '@app/server/modules/charts'
+import { MongoUncleRepository, UnclesServiceImpl } from '@app/server/modules/uncle'
 
 import { CoinMarketCapRepository, ExchangeServiceImpl } from '@app/server/modules/exchanges'
 import { MongoPendingTxRepository, PendingTxServiceImpl } from '@app/server/modules/pending-tx'
@@ -80,6 +81,10 @@ async function bootstrapServer() {
   const blocksRepository = new MongoBlockRepository(db)
   const blockService = new BlocksServiceImpl(blocksRepository, ds)
 
+  // Uncles
+  const unclesRepository = new MongoUncleRepository(db)
+  const uncleService = new UnclesServiceImpl(unclesRepository, ds)
+
   // Adress
   const addressRepository = new MongoAddressRepository(db)
   const addressService = new AddressServiceImpl(addressRepository, ds)
@@ -106,18 +111,19 @@ async function bootstrapServer() {
   // Create streamer
   // ---------------
   logger.debug('bootstrapper -> Initializing streamer')
-  const kafkaStreamerOpts: KafkaStreamerOpts = {
-    groupId: config.get('streamer.kafka.group_id'),
-    brokers: config.get('streamer.kafka.brokers'),
-    blocksTopic: config.get('streamer.kafka.topics.blocks'),
-    pendingTxsTopic: config.get('streamer.kafka.topics.pending_txs')
-  }
-  const streamer = new KafkaStreamer(kafkaStreamerOpts, emitter)
-  await streamer.initialize()
+  // const kafkaStreamerOpts: KafkaStreamerOpts = {
+  //   groupId: config.get('streamer.kafka.group_id'),
+  //   brokers: config.get('streamer.kafka.brokers'),
+  //   blocksTopic: config.get('streamer.kafka.topics.blocks'),
+  //   pendingTxsTopic: config.get('streamer.kafka.topics.pending_txs')
+  // }
+  // const streamer = new KafkaStreamer(kafkaStreamerOpts, emitter)
+  // await streamer.initialize()
+  const streamer = new NullStreamer()
 
   // Create server
   logger.debug('bootstrapper -> Initializing server')
-  const server = new EthVMServer(blockService, addressService, txsService, chartsService, pendingTxService, exchangeService, vmService, streamer, ds)
+  const server = new EthVMServer(blockService, uncleService, addressService, txsService, chartsService, pendingTxService, exchangeService, vmService, streamer)
   await server.start()
 }
 

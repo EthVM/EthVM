@@ -81,19 +81,18 @@ export default Vue.extend({
     this.$socket.emit(
       sEvents.getBlock,
       {
-        hash: this.blockHash
+        hash: this.blockHash.replace('0x','')
       },
       (error, result) => {
         if (result) {
           this.block = new Block(result)
 
           this.setItems(this.block.getNumber())
-          // const uncleHashes = this.block.getUncleHashes()
-          /*Get Transactions for the block: */
+
           this.$socket.emit(
             sEvents.getBlockTransactions,
             {
-              hash: this.blockHash
+              hash: this.blockHash.replace('0x','')
             },
             (err, data) => {
               this.transactions = data.map(_tx => {

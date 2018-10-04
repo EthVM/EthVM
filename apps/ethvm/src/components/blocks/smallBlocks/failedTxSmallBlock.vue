@@ -24,7 +24,7 @@ export default Vue.extend({
         return 'Loading'
       }
       const newBlockStat = this.$store.getters.getBlocks[0].getStats()
-      const failed = new BN(newBlockStat.failed).toNumber()
+      const failed = newBlockStat.failedTxs
       return failed
     }
   }

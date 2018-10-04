@@ -68,7 +68,7 @@ export class Block {
   // }
 
   public getHash(): string {
-    return this.block.hash
+    return '0x' + this.block.hash
   }
 
   public getNumber(): number {
@@ -100,7 +100,7 @@ export class Block {
 
   public getParentHash(): string {
     if (!this.cache.parentHash) {
-      this.cache.parentHash = this.block.header.parentHash
+      this.cache.parentHash = '0x' + this.block.header.parentHash
     }
     return this.cache.parentHash
   }
@@ -121,7 +121,7 @@ export class Block {
 
   public getSha3Uncles(): string {
     if (!this.cache.sha3Uncles) {
-      this.cache.sha3Uncles = this.block.header.unclesHash
+      this.cache.sha3Uncles = '0x' + this.block.header.unclesHash
     }
     return this.cache.sha3Uncles
   }
@@ -142,7 +142,7 @@ export class Block {
 
   public getMiner(): string {
     if (!this.cache.miner) {
-      this.cache.miner = this.block.header.miner
+      this.cache.miner = '0x' + this.block.header.miner
     }
     return this.cache.miner
   }
@@ -221,12 +221,12 @@ export class Block {
     return []
   }
 
-  // public geTransactionHashes(): string[] {
-  //   if (!this.cache.transactionHashes) {
-  //     this.cache.transactionHashes = this.block.transactionHashes
-  //   }
-  //   return this.cache.transactionHashes
-  // }
+  public geTransactionHashes(): string[] {
+    if (!this.cache.transactions) {
+      this.cache.transactions = this.block.transactions
+    }
+    return this.cache.transactions
+  }
 
   public getTxFees(): EthValue {
     if (!this.cache.txFees) {

@@ -18,7 +18,7 @@ import org.joda.time.DateTime
 import org.joda.time.Period
 import org.koin.standalone.get
 import java.math.BigInteger
-import java.util.*
+import java.util.Properties
 
 /**
  * This processor process Blocks and Txs at the same time. It calculates also block stats.

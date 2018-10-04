@@ -17,5 +17,9 @@
   "getBlockTransactions": "getBlockTransactions",
   "getAddress": "getAddress",
   "pendingTxs":"pendingTxs",
+  "pendingTxsAddress":"getPendingTxs",
+  "getUncle":"uncle",
+  "getUncles":"uncles",
+  "newUncle":"NEW_UNCLE",
   "pastBlocksR": "PAST_BLOCKS_RECEIVED"
 }
