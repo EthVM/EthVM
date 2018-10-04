@@ -26,9 +26,9 @@ class BlockMongoSink : MongoSink<Long, Pair<BlockSummary, BlockStats>>() {
 
   private var scheduledWrite: Cancellable? = null
 
-  override fun init(context: ProcessorContext?) {
+  override fun init(context: ProcessorContext) {
     super.init(context)
-    this.scheduledWrite = context?.schedule(timeoutMs, PunctuationType.WALL_CLOCK_TIME) { _ -> tryToWrite() }
+    this.scheduledWrite = context.schedule(timeoutMs, PunctuationType.WALL_CLOCK_TIME) { _ -> tryToWrite() }
   }
 
   override fun process(key: Long?, value: Pair<BlockSummary, BlockStats>?) {
@@ -45,7 +45,7 @@ class BlockMongoSink : MongoSink<Long, Pair<BlockSummary, BlockStats>>() {
 
     val startMs = System.currentTimeMillis()
 
-    val (blocksOps, txsOps, unclesOps) = batch.map { pair ->
+    val (blocksOps, txsOps, unclesOps) = batch.asSequence().map { pair ->
 
       val summary = pair.first
       val blockStats = pair.second

@@ -1,6 +1,6 @@
 import config from '@app/config'
 import { logger } from '@app/logger'
-import { KafkaStreamer, KafkaStreamerOpts } from '@app/server/core/streams'
+import { NullStreamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
 import { AddressServiceImpl, MongoAddressRepository } from '@app/server/modules/address'
 import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blocks'
@@ -111,14 +111,15 @@ async function bootstrapServer() {
   // Create streamer
   // ---------------
   logger.debug('bootstrapper -> Initializing streamer')
-  const kafkaStreamerOpts: KafkaStreamerOpts = {
-    groupId: config.get('streamer.kafka.group_id'),
-    brokers: config.get('streamer.kafka.brokers'),
-    blocksTopic: config.get('streamer.kafka.topics.blocks'),
-    pendingTxsTopic: config.get('streamer.kafka.topics.pending_txs')
-  }
-  const streamer = new KafkaStreamer(kafkaStreamerOpts, emitter)
-  await streamer.initialize()
+  // const kafkaStreamerOpts: KafkaStreamerOpts = {
+  //   groupId: config.get('streamer.kafka.group_id'),
+  //   brokers: config.get('streamer.kafka.brokers'),
+  //   blocksTopic: config.get('streamer.kafka.topics.blocks'),
+  //   pendingTxsTopic: config.get('streamer.kafka.topics.pending_txs')
+  // }
+  // const streamer = new KafkaStreamer(kafkaStreamerOpts, emitter)
+  // await streamer.initialize()
+  const streamer = new NullStreamer()
 
   // Create server
   logger.debug('bootstrapper -> Initializing server')
@@ -131,8 +132,7 @@ async function bootstrapServer() {
     pendingTxService,
     exchangeService,
     vmService,
-    streamer,
-    ds
+    streamer
   )
   await server.start()
 }

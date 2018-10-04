@@ -14,7 +14,7 @@ import {
   TxsPayload
 } from '@app/server/core/payloads'
 import { Streamer, StreamerEvents } from '@app/server/core/streams'
-import { Block, BlocksService, mappers } from '@app/server/modules/blocks'
+import { Block, BlocksService } from '@app/server/modules/blocks'
 import { ChartService } from '@app/server/modules/charts'
 import { ExchangeService } from '@app/server/modules/exchanges'
 import { PendingTxService } from '@app/server/modules/pending-tx'
@@ -23,7 +23,6 @@ import { Uncle, UnclesService } from '@app/server/modules/uncle'
 import { VmService } from '@app/server/modules/vm'
 import { CacheRepository } from '@app/server/repositories'
 import BigNumber from 'bignumber.js'
-import { bufferToHex } from 'ethereumjs-util'
 import * as fs from 'fs'
 import * as http from 'http'
 import * as SocketIO from 'socket.io'
@@ -60,7 +59,6 @@ export class EthVMServer {
 
   private server
   private readonly events: Map<string, SocketEvent> = new Map()
-  private previousBlockTime = new BigNumber(0)
 
   constructor(
     public readonly blockService: BlocksService,
@@ -71,8 +69,7 @@ export class EthVMServer {
     public readonly pendingTxService: PendingTxService,
     public readonly exchangesService: ExchangeService,
     public readonly vmService: VmService,
-    private readonly streamer: Streamer,
-    private readonly ds: CacheRepository
+    private readonly streamer: Streamer
   ) {}
 
   public async start() {
