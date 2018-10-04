@@ -1,16 +1,12 @@
 <div align="center">
   <img src="https://raw.githubusercontent.com/enKryptIO/ethvm/master/.github/assets/logo.png" alt="ethvm-logo">
-  <p>:zap::zap::zap: EthVM Project: An open source blockchain explorer for Ethereum networks :zap::zap::zap:</p>
-  <p>Powered by <a href="https://www.typescriptlang.org/">TypeScript</a> / <a href="https://github.com/socketio/socket.io">Socket.io</a> / <a href="https://github.com/ethereum/go-ethereum">go-ethereum</a> / <a href="https://kafka.apache.org/">Kafka</a> / <a href="https://github.com/mongodb/mongo">MongoDB</a> / <a href="https://redis.io/topics/quickstart">Redis</a></p>
+  <p>:zap::zap::zap: EthVM Project: An open source blockchain explorer for Ethereum network :zap::zap::zap:</p>
+  <p>Powered by <a href="https://www.typescriptlang.org/">TypeScript</a> / <a href="https://github.com/socketio/socket.io">Socket.io</a> / <a href="https://github.com/ethereum/ethereumj">EthereumJ</a> / <a href="https://kafka.apache.org/">Kafka</a> / <a href="https://github.com/mongodb/mongo">MongoDB</a> / <a href="https://redis.io/topics/quickstart">Redis</a></p>
 </div>
 
 # EthVM: Ethereum Blockchain Explorer
 
 ![Screenshot example](.github/assets/ethvm.png)
-
-## WARNING
-
-Currently we're working on re-architecting all the stack to be Kafka centric (removing RethinkDB in the process) and opening new processors and platforms to where store data. All work is being done on `feature/bolt-setup` branch. Proper instructions will be eventually written in the Wiki as soon as we find those changes stable enough to be merge back also to `master` branch.
 
 ## Philosophy
 
@@ -41,7 +37,6 @@ Also, there are a couple of different directories, not related itself to any con
 | `bin`                        | NodeJs / Bash       | Contains helper scripts that aids in different aspects of the development. Also, there's one script called `monkey-cli` that helps to produce fake blocks / txs and contract deployments for testing purposes.                                 |
 | `postman`                    | Postman (Js)        | A simple Postman collection that contains all `ethereum` JSON RPC calls. Very useful for testing our custom geth node.                                                                                                                         |
 | `provisioners`               | Kubernetes / Docker | Contains kubernetes definitions for deploying a production ready EthVM project (work in progress, though). Also, it contains `docker` development images (that differs slightly from production ready `dockerfiles`) needed for development.   |
-| `utils`                      | Js, Solidity...     | This folder contains the source code of `monkey-cli`. Also, it contains `Solidity` contracts for testing our `interal-transaction-tracer` inside `go-ethereum`.                                                                                |
 | `docker-compose.yml`         | Docker              | This `docker-compose` file contains everything needed to setup a private environment ready for developing.                                                                                                                                     |
 | `docker-compose.ropsten.yml` | Docker              | Same as above but giving support to `ropsten` network.                                                                                                                                                                                         |
 
