@@ -8,7 +8,7 @@ CMD="docker-compose build"
 echo "Executing: ${CMD}"
 ${CMD}
 
-echo "Starting up containers: traefik, zookeeper, kafka, kafka-schema-registry and mongo"
+echo "Starting up containers: traefik, kafka and mongo"
 CMD="docker-compose up -d traefik kafka mongodb"
 echo "Executing: ${CMD}"
 ${CMD}
@@ -25,16 +25,3 @@ echo "Initialisation of mongo"
 CMD="${SCRIPT_DIR}/mongo/init.sh"
 echo "Executing: ${CMD}"
 ${CMD}
-
-#echo "Starting up container: ethereumj"
-#CMD="docker-compose up -d ethereumj"
-#echo "Executing: ${CMD}"
-#${CMD}
-#
-#echo "Waiting 15 secs to allow ethereumj to compile (it will take a lot more than that...)"
-#sleep 15
-#
-#echo "Starting up container: bolt"
-#CMD="docker-compose up -d bolt"
-#echo "Executing: ${CMD}"
-#${CMD}

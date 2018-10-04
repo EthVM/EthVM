@@ -123,17 +123,7 @@ async function bootstrapServer() {
 
   // Create server
   logger.debug('bootstrapper -> Initializing server')
-  const server = new EthVMServer(
-    blockService,
-    uncleService,
-    addressService,
-    txsService,
-    chartsService,
-    pendingTxService,
-    exchangeService,
-    vmService,
-    streamer
-  )
+  const server = new EthVMServer(blockService, uncleService, addressService, txsService, chartsService, pendingTxService, exchangeService, vmService, streamer)
   await server.start()
 }
 

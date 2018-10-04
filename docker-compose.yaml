@@ -54,7 +54,6 @@ services:
     volumes:
       - ./apps/server:/var/ethvm-server
     depends_on:
-#      - ethereumj
       - redis
       - mongodb
     networks:
@@ -86,10 +85,11 @@ services:
       - 'traefik.backend=redis'
 
   mongodb:
-    image: mvertes/alpine-mongo:4.0.1-0
+    image: enkryptio/mongodb:4.0
     restart: unless-stopped
     volumes:
       - mongodb-volume:/data/db
+      - ./provisioners/docker/config/mongo/ethvm_sample.archive:/ethvm_sample.archive
     networks:
       - back
     ports:
@@ -137,29 +137,28 @@ services:
       CONFLUENT_SUPPORT_METRICS_ENABLE: 'false'
       KAFKA_MESSAGE_MAX_BYTES: '2000000000'
 
-#  ethereumj:
-#    build:
-#      context: ./apps/ethereumj
-#    restart: unless-stopped
-#    volumes:
-#      - ethereumj-volume:/ethj
-#      - ./provisioners/docker/config/ethereumj/kafka-ropsten.conf:/ethereumj/ethereumj-core/src/main/resources/kafka-ethereumj.conf
-#      - ./provisioners/docker/config/ethereumj/kafka-ropsten.conf:/ethereumj/ethereumj-core/src/main/resources/kafka-private-net.conf
-#      - ./provisioners/docker/config/ethereumj/kafka-ropsten.conf:/ethereumj/ethereumj-core/src/main/resources/kafka-ropsten.conf
-#    networks:
-#      back:
-#        ipv4_address: 172.25.0.102
-#    # -- Select one of these options to connect to different networks: MainNet, PrivateNet or Ropsten
-#    command: ./gradlew --no-daemon run -PmainClass=io.enkrypt.kafka.EthereumKafkaStarter
-#    #command: ./gradlew --no-daemon run -PmainClass=io.enkrypt.kafka.EthereumPrivateNetKafkaStarter
-#    #command: ./gradlew --no-daemon run -PmainClass=io.enkrypt.kafka.EthereumRopstenKafkaStarter
-#
-#  bolt:
-#    build:
-#      context: ./apps/bolt
-#    restart: unless-stopped
-#    networks:
-#      - back
-#    environment:
-#      KAFKA_BOOTSTRAP_SERVERS: 'kafka:9092'
-#      MONGO_URI: 'mongodb://mongodb:27017/ethvm_local'
+  ethereumj:
+    build:
+      context: ./apps/ethereumj
+    restart: on-failure:3
+    volumes:
+      - ethereumj-volume:/ethj
+      - ./provisioners/docker/config/ethereumj/kafka-ropsten.conf:/ethereumj/ethereumj-core/src/main/resources/kafka-ethereumj.conf
+      - ./provisioners/docker/config/ethereumj/kafka-ropsten.conf:/ethereumj/ethereumj-core/src/main/resources/kafka-private-net.conf
+      - ./provisioners/docker/config/ethereumj/kafka-ropsten.conf:/ethereumj/ethereumj-core/src/main/resources/kafka-ropsten.conf
+    networks:
+      back:
+        ipv4_address: 172.25.0.102
+    # -- Select one of these options to connect to different networks: MainNet or Ropsten
+    command: ./gradlew --no-daemon run -PmainClass=io.enkrypt.kafka.EthereumKafkaStarter
+    #command: ./gradlew --no-daemon run -PmainClass=io.enkrypt.kafka.EthereumRopstenKafkaStarter
+
+  bolt:
+    build:
+      context: ./apps/bolt
+    restart: on-failure:3
+    networks:
+      - back
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: 'kafka:9092'
+      MONGO_URI: 'mongodb://mongodb:27017/ethvm_local'
