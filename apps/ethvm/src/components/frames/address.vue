@@ -143,7 +143,7 @@ export default Vue.extend({
     this.$socket.emit(
       sEvents.getAddress,
       {
-        address: this.address
+        address: this.address.replace('0x','')
       },
       (err, result) => {
         const addr = new Account(result)
@@ -157,7 +157,7 @@ export default Vue.extend({
     this.$socket.emit(
       sEvents.getTokenBalance,
       {
-        address: '0x'+this.address
+        address: this.address
       },
       (err, result) => {
         if (result !== '0x') {
@@ -172,7 +172,7 @@ export default Vue.extend({
     this.$socket.emit(
       sEvents.getTotalTxs,
       {
-        address: this.address
+        address: this.address.replace('0x','')
       },
       (err, result) => {
         this.account.totalTxs = result
@@ -186,7 +186,7 @@ export default Vue.extend({
     this.$socket.emit(
       sEvents.getTxs,
       {
-        address: this.address,
+        address: this.address.replace('0x',''),
         limit: 10,
         page: 0
       },
@@ -200,7 +200,7 @@ export default Vue.extend({
     )
     /*Getting Address Pending Transactions: */
       this.$socket.emit(
-      sEvents.pendingTxsAddress,
+      sEvents.pendingTxsAddress.replace('0x',''),
       {
         address: this.address,
         limit: 10,

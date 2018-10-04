@@ -28,11 +28,6 @@
               <router-link class="accent--text " :to="'/tx/'+tx.getHash()">{{tx.getHash()}}</router-link>
             </p>
             <v-layout row >
-              <v-flex xs6 class="pt-0">
-                <p class="text-truncate"><strong>{{ $t( 'tx.from' ) }} </strong>
-                  <router-link :to="'/address/'+tx.getFrom().toString()">{{tx.getFrom().toString()}} </router-link>
-                </p>
-              </v-flex>
               <v-flex xs12>
                 <v-layout row>
                   <v-flex xs6>

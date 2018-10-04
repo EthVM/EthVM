@@ -11,8 +11,8 @@
         <frame-about v-else-if="pageName == 'about'"></frame-about>
 
         <!--Detail Pages -->
-        <frame-uncle-detail v-else-if="pageName == 'uncles' && param" :blockHash="param"></frame-uncle-detail>
-        <frame-block-detail v-else-if="pageName == 'blocks' && param" :blockHash="param"></frame-block-detail>
+        <frame-uncle-detail v-else-if="pageName == 'uncle' && param" :blockHash="param"></frame-uncle-detail>
+        <frame-block-detail v-else-if="pageName == 'block' && param" :blockHash="param"></frame-block-detail>
         <frame-address v-else-if="pageName == 'address' && param" :address="param"></frame-address>
         <frame-tx-detail v-else-if="pageName == 'tx' && param" :txHash="param"></frame-tx-detail>
         <frame-token-detail v-else-if="pageName == 'token' && !holder" :tokenAddr="param"></frame-token-detail>
@@ -96,7 +96,6 @@ export default Vue.extend({
           page: 0
         },
         (err, uncles) => {
-          console.log("Uncles",uncles)
           this.$store.commit(sEvents.newUncle, uncles)
           if (uncles && uncles.length > 0) {
             this.$eventHub.$emit(sEvents.newUncle)

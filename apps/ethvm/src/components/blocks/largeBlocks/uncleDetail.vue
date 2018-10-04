@@ -109,82 +109,9 @@ export default Vue.extend({
           detail: 'TODO'
         }
       ]
-      if (!this.isUncle) {
-        const item = {
-          title: this.$i18n.t('title.tx'),
-          detail: this.block.getTransactionCount()
-        }
-        newItems.push(item)
-      }
       this.items = newItems
     },
     setMore() {
-      this.moreItems = [
-        {
-          title: this.$i18n.t('block.diff'),
-          details: this.block.getDifficulty().toNumber()
-        },
-        {
-          title: this.$i18n.t('block.totalDiff'),
-          details: this.block.getTotalDifficulty().toNumber()
-        },
-        {
-          title: this.$i18n.t('block.nonce'),
-          details: this.block.getNonce().toString()
-        },
-        {
-          title: this.$i18n.t('block.root'),
-          details: this.block.getStateRoot().toString()
-        },
-        {
-          title: this.$i18n.t('block.data'),
-          details: this.block.getExtraData().toString()
-        }
-      ]
-
-      if (!this.isUncle) {
-        const newItems = [
-          {
-            title: this.$i18n.t('block.totalReward'),
-            detail: '' //this.block.getBlockReward().toEth() + ' ' + this.$i18n.t('common.eth')
-          },
-          {
-            title: this.$i18n.t('block.fees'),
-            detail: this.block.getTxFees().toEth() + ' ' + this.$i18n.t('common.eth')
-          },
-          {
-            title: this.$i18n.t('gas.limit'),
-            detail: this.block.getGasLimit().toNumber()
-          },
-          {
-            title: this.$i18n.t('gas.used'),
-            detail: this.block.getGasUsed()
-          },
-          {
-            title: this.$i18n.t('block.logs'),
-            detail: this.block.getLogsBloom().toString()
-          },
-          {
-            title: this.$i18n.t('block.txRoot'),
-            detail: this.block.getTransactionsRoot().toString()
-          },
-          {
-            title: this.$i18n.t('block.recRoot'),
-            detail: this.block.getReceiptsRoot().toString()
-          },
-          {
-            title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward'),
-            detail: 'TODO'
-          },
-          {
-            title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.sha'),
-            detail: this.block.getSha3Uncles()
-          }
-        ]
-        newItems.forEach(i => {
-          this.moreItems.push(i)
-        })
-      }
     }
   },
   mounted() {

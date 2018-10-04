@@ -106,7 +106,6 @@ export default Vue.extend({
   },
   created() {
     this.uncles = this.$store.getters.getUncles
-    console.log("getter", this.uncles )
     this.$eventHub.$on(sEvents.newUncle, _uncle => {
       if (Visibility.state() === 'visible') {
         this.uncles = this.$store.getters.getUncles
@@ -118,7 +117,6 @@ export default Vue.extend({
   },
   computed: {
     getUncles() {
-      console.log("unclesunclesuncles",this.uncles)
       return this.uncles.slice(0, this.maxItems)
     },
     getStyle() {
