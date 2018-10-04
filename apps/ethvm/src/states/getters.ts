@@ -1,4 +1,4 @@
-import { Block, Tx, PendingTx } from '@app/models'
+import { Block, Tx, PendingTx, Uncle } from '@app/models'
 import { StateLayout } from '@app/models/server'
 
 const all = (state: StateLayout): StateLayout => {
@@ -17,9 +17,14 @@ const getBlocks = (state: StateLayout): Block[] => {
   return state.blocks.items()
 }
 
+const getUncles = (state: StateLayout): Uncle[] => {
+  return state.uncles.items()
+}
+
 export default {
   all,
   getTxs,
   getPendingTxs,
+  getUncles,
   getBlocks
 }

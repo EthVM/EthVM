@@ -1,17 +1,15 @@
 <template>
-  <div class="pr-0">
-    <v-text-field v-if="phText === 'default'" color="white" dark flat hide-details autofocus v-bind:label="$t('search.default')" append-icon="fa fa-search white--text" class="pb-2 mt-1"></v-text-field>
-    <v-text-field v-if="phText === 'addressTxSearch'"  flat hide-details v-bind:label="$t('search.addressTx')" append-icon="fa fa-search white--text"></v-text-field>
-    <div v-if="search === true" class="search-result">
-      <p><a href="">5121656486846536321513151684613513512165648684653632151315168461351351216564868465363215131516846135135121656486846536321513151</a></p>
-      <p><a href="">6846135135121656486846536321513151684613513512165648684653632151315168461351351216564868465363215131516846135135121656486846536321513151</a></p>
-      <p><a href="">6846135135121656486846536321513151684613513512165648684653632151315168461351351216564868465363215131516846135135121656486846536321513151</a></p>
-      <p><a href="">165648684653632151315168461351351216564868465363215131516846135135121656486846536321513151</a></p>
-      <p><a href="">6846135135121656486846536321513151684613513512165648684653632151315168461351351216564868465363215131516846135135121656486846536321513151</a></p>
-      <p><a href="">36321513151684613513512165648684653632151315168461351351216564868465363215131516846135135121656486846536321513151</a></p>
-      <p><a href="">6846135135121656486846536321513151684613513512165648684653632151315168461351351216564868465363215131516846135135121656486846536321513151</a></p>
+  <v-layout align-center justify-end row height="48px" class="pl-1">
+    <div  style="height: 48px;min-width: 200px; max-width: 380px; border: solid 1px #efefef;">
+      <v-layout align-center justify-end>
+      <v-text-field v-if="phText === 'default'"  v-on:keyup.enter="start" :placeholder="$t('search.default')" color="primary"  solo flat clearable spellcheck="false" prepend-inner-icon="fa fa-search grey--text text--lighten-1 pr-4 pl-4" class="ma-0" height="46px"></v-text-field>
+      <v-text-field v-if="phText === 'addressTxSearch'"  v-on:keyup.enter="start" flat  :placeholder="$t('search.addressTx')" color="primary"  solo flat clearable spellcheck="false" prepend-inner-icon="fa fa-search grey--text text--lighten-1 pr-4 pl-4" class="ma-0" height="46px"></v-text-field>
+      </v-layout>
     </div>
-  </div>
+    <v-flex hidden-sm-and-down md2>
+      <v-btn @click="start" depressed color="primary" class="search-button text-capitalize ml-0">Search</v-btn>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script lang="ts">
@@ -27,18 +25,16 @@ export default Vue.extend({
   },
   data() {
     return {
-      search: String
+      search: 'Hello',
+      input: String
     }
   },
   methods: {
-    setSearch() {
-      return (this.search = !this.search)
-    }
-  },
-  computed: {
-    default(): string {
-      return this.$i18n.t('search.default')
+    /* Search Method : */
+    start() {
+      console.log('searching')
     }
   }
 })
 </script>
+

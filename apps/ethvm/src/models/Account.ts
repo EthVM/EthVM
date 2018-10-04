@@ -19,4 +19,11 @@ export class Account {
     }
     return this.cache.balance
   }
+
+  public getHexAddress() {
+    if (!this.cache.hexAddress) {
+      this.cache.hexAddress = '0x'+this.address
+    }
+    return this.cache.hexAddress
+  }
 }

@@ -16,6 +16,13 @@ export class PendingTx {
     return this.pTx.from + this.pTx.to + this.pTx.nonce.toString('utf8')
   }
 
+  public getHash(): string {
+    if (!this.cache.to) {
+      this.cache.to = ""  // TODO get from mongo
+    }
+    return this.cache.to
+  }
+
   public getTo(): string {
     if (!this.cache.to) {
       this.cache.to = this.pTx.to

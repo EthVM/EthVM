@@ -20,17 +20,17 @@ export default Vue.extend({
   data() {
     return {
       blockTitle: this.$i18n.t('smlBlock.diff'),
-      iconType: 'fa fa-tachometer white--text',
+      iconType: 'fas fa-tachometer-alt white--text',
       type: 'warning white--text',
       difficulty: 0
     }
   },
   created() {
     if (this.$store.getters.getBlocks.length) {
-      this.difficulty = getTHs(this.$store.getters.getBlocks[0].getDifficulty().toNumber())
+      this.difficulty = getTHs(this.$store.getters.getBlocks[0].getDifficulty().toNumber()).toString() + ' TH'
     }
     this.$eventHub.$on(sEvents.pastBlocksR, () => {
-      this.difficulty = getTHs(this.$store.getters.getBlocks[0].getDifficulty().toNumber())
+      this.difficulty = getTHs(this.$store.getters.getBlocks[0].getDifficulty().toNumber()) + ' TH'
     })
     this.$eventHub.$on(sEvents.newBlock, _block => {
       this.difficulty = getTHs(_block.getDifficulty().toNumber())

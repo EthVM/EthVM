@@ -8,22 +8,8 @@
         </v-breadcrumbs-item>
       </v-breadcrumbs>
     </v-card>
-    <v-layout row wrap  justify-space-between class="mb-4">
-      <v-flex xs12 md6 lg3>
-        <block-last-block></block-last-block>
-      </v-flex>
-      <v-flex xs12 md6 lg3>
-        <block-time-since-last-block></block-time-since-last-block>
-      </v-flex>
-      <v-flex xs12 md6 lg3>
-        <block-hash-rate></block-hash-rate>
-      </v-flex>
-      <v-flex xs12 md6 lg3>
-        <block-difficulty></block-difficulty>
-      </v-flex>
-    </v-layout>
-    <v-layout row justify-center class="ma-1">
-      <block-latest-blocks :max-items="20" :showHeader="true" class="mt-3"></block-latest-blocks>
+    <v-layout row wrap>
+      <block-latest-uncles :max-items="20" :showHeader="true" class="mt-3"></block-latest-uncles>
     </v-layout>
   </v-container>
 </template>
@@ -44,20 +30,13 @@ export default Vue.extend({
           link: '/'
         },
         {
-          text: this.$i18n.t('title.blocks'),
+          text: 'uncles',
           disabled: true
         }
       ]
     }
   },
-  computed: {
-    txs() {
-      if (this.$store.getters.getTxs.length) {
-        return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
-      }
-      return []
-    }
-  }
+
 })
 </script>
 

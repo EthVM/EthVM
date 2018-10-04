@@ -60,7 +60,7 @@ export default Vue.extend({
     this.$socket.emit(
       sEvents.getTx,
       {
-        hash: this.txHash
+        hash: this.txHash.replace('0x','')
       },
       (err, data) => {
         if (data) {

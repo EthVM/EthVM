@@ -3,7 +3,7 @@
     <v-card flat color="transparent" class="pb-1 mr-1 ml-1">
       <v-layout row justify-center align-center>
         <v-flex xs3 md1>
-          <h5 class="ml-3">{{ $t( 'tableHeader.blockN' ) }}</h5>
+          <h5 class="ml-3">Uncle#</h5>
         </v-flex>
         <v-spacer></v-spacer>
         <v-flex hidden-sm-and-down md1 class="pl-0">
@@ -14,35 +14,22 @@
         </v-flex>
       </v-layout>
     </v-card>
-    <div v-if="getBlocks" id="scroll-target" :style="getStyle" class="scroll-y pt-0 mb-3" >
-        <v-card v-scroll:#scroll-target v-for="block in getBlocks" v-if="!block.getIsUncle()" v-bind:key="block.hash" class="pt-3 mb-3 elevation-2 mr-1 ml-1">
+    <div v-if="getUncles" id="scroll-target" :style="getStyle" class="scroll-y pt-0 mb-3" >
+        <v-card v-scroll:#scroll-target v-for="uncle in getUncles" v-bind:key="uncle.hash" class="pt-3 mb-3 elevation-2 mr-1 ml-1">
           <v-layout wrap align-center class="ma-0" >
             <v-flex xs3 md1 >
               <p class="text-xs-center">
-                <router-link :to="'/block/'+block.getHash()">{{block.getNumber()}}</router-link>
+                <router-link :to="'/block/'+uncle.getHash()">{{uncle.getHash()}}</router-link>
               </p>
             </v-flex>
             <v-flex xs5 md8 class="pl-1 pr-0">
               <p class="text-truncate"><strong>{{ $t( 'common.hash' ) }} </strong>
-                <router-link class=" grey--text text--darken-2" :to="'/block/'+block.getHash()">{{block.getHash()}}</router-link>
+                <router-link class=" grey--text text--darken-2" :to="'/uncle/'+uncle.getHash()">{{uncle.getHash()}}</router-link>
               </p>
               <p class="text-truncate"><strong>{{ $t( 'block.miner' ) }}  </strong>
-                <router-link :to="'/address/'+block.getMiner()">{{block.getMiner()}}</router-link>
+                <router-link :to="'/address/'+uncle.getMiner()">{{uncle.getMiner()}}</router-link>
               </p>
             </v-flex>
-            <v-flex hidden-sm-and-down md1>
-              <p class="success--text"> {{block.getStats().numSuccessfulTxs}}</p>
-              <p class="warning--text"> {{block.getStats().numFailedTxs}}</p>
-            </v-flex>
-            <!-- <v-flex xs4 md2 class="pr-1">
-              <p class="text-truncate grey--text text--darken-2">
-                <v-tooltip v-if="getShortRewardValue(block.getTotalBlockReward().toEth().toString(), true)" bottom>
-                  <v-icon slot="activator" dark small >fa fa-question-circle grey--text</v-icon>
-                  <span>{{block.getTotalBlockReward().toEth().toString()}}</span>
-                </v-tooltip>
-                {{getShortRewardValue(block.getTotalBlockReward().toEth().toString(), false)}}
-              </p>
-            </v-flex> -->
           </v-layout>
         </v-card>
     </div>
@@ -76,7 +63,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      blocks: [],
+      uncles: [],
       showUncles: {},
       footnote: [
         {
@@ -118,19 +105,19 @@ export default Vue.extend({
     }
   },
   created() {
-    this.blocks = this.$store.getters.getBlocks
-    this.$eventHub.$on(sEvents.newBlock, _block => {
+    this.uncles = this.$store.getters.getUncles
+    this.$eventHub.$on(sEvents.newUncle, _uncle => {
       if (Visibility.state() === 'visible') {
-        this.blocks = this.$store.getters.getBlocks
+        this.uncles = this.$store.getters.getUncles
       }
     })
   },
   beforeDestroy() {
-    this.$eventHub.$off(sEvents.newBlock)
+    this.$eventHub.$off(sEvents.newUncle)
   },
   computed: {
-    getBlocks() {
-      return this.blocks.slice(0, this.maxItems)
+    getUncles() {
+      return this.uncles.slice(0, this.maxItems)
     },
     getStyle() {
       return this.showStyle
