@@ -1,6 +1,6 @@
 <template>
-  <v-card color="white" class="ma-2 mb-3 mt-3">
-    <v-card-title><strong>{{chartTitle}}</strong>
+  <v-card color="white" class="ma-2 mb-3 mt-3 elevation-5">
+    <v-card-title>{{chartTitle}}
       <v-tooltip bottom>
         <v-icon slot="activator" dark small class="pl-2">fa fa-question-circle grey--text</v-icon>
         <span>{{chartDescription}}</span>

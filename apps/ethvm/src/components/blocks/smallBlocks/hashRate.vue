@@ -46,10 +46,10 @@ export default Vue.extend({
   },
   created() {
     if (this.$store.getters.getBlocks.length) {
-      this.hashRate = getAvgHashRate(this.$store.getters.getBlocks)
+      this.hashRate = getAvgHashRate(this.$store.getters.getBlocks).toString() + ' TH/s'
     }
     this.$eventHub.$on([sEvents.pastBlocksR, sEvents.newBlock], () => {
-      this.hashRate = getAvgHashRate(this.$store.getters.getBlocks)
+      this.hashRate = getAvgHashRate(this.$store.getters.getBlocks).toString() + ' TH/s'
     })
   },
   beforeDestroy() {

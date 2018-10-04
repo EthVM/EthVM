@@ -28,6 +28,7 @@ import frameAbout from '@app/components/frames/about.vue'
 
 // Detail Frames -----
 import frameBlockDetail from '@app/components/frames/blockDetail.vue'
+import frameUncleDetail from '@app/components/frames/uncleDetail.vue'
 import frameTxDetail from '@app/components/frames/txDetail.vue'
 import frameTokenDetail from '@app/components/frames/tokenDetail.vue'
 import frameAddress from '@app/components/frames/address.vue'
@@ -59,6 +60,7 @@ import pendingTxSmallBlock from '@app/components/blocks/smallBlocks/pendingTxSma
 
 // LARGE BLOCKS ----------------------
 import blockLatestBlocks from '@app/components/blocks/largeBlocks/latestBlocks.vue'
+import blockLatestUncles from '@app/components/blocks/largeBlocks/latestUncles.vue'
 import blockLastTransactions from '@app/components/blocks/largeBlocks/lastTransactions.vue'
 import blockAddressTxTable from '@app/components/blocks/largeBlocks/addressTxTable.vue'
 import blockAbout from '@app/components/blocks/largeBlocks/about.vue'
@@ -97,6 +99,7 @@ Vue.component('frame-about', frameAbout)
 
 // Detail Frames -----
 Vue.component('frame-block-detail', frameBlockDetail)
+Vue.component('frame-uncle-detail', frameUncleDetail)
 Vue.component('frame-tx-detail', frameTxDetail)
 Vue.component('frame-token-detail', frameTokenDetail)
 Vue.component('frame-address', frameAddress)
@@ -127,6 +130,7 @@ Vue.component('pending-tx-small-block', pendingTxSmallBlock)
 
 // LARGE BLOCKS ----------------------
 Vue.component('block-latest-blocks', blockLatestBlocks)
+Vue.component('block-latest-uncles', blockLatestUncles)
 Vue.component('block-last-transactions', blockLastTransactions)
 Vue.component('block-address-tx-table', blockAddressTxTable)
 Vue.component('block-about', blockAbout)
@@ -171,11 +175,12 @@ Vue.use(infiniteScroll)
 Vue.use(Vuetify, {
   theme: {
     // used -->
-    primary: String(colors.blue.darken4),
+    primary: '#3d55a5',
     secondary: '#2779ff',
-    accent: '#7c76fc',
+    accent: '#4a67c6',
     success: '#20c0c7',
-    warning: '#f9967b'
+    warning: '#f9967b',
+    info: '#a0a8fd'
     // used -->
     // background: String(colors.grey.darken3)
   }
