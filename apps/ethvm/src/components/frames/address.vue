@@ -200,9 +200,9 @@ export default Vue.extend({
     )
     /*Getting Address Pending Transactions: */
       this.$socket.emit(
-      sEvents.pendingTxsAddress.replace('0x',''),
+      sEvents.pendingTxsAddress,
       {
-        address: this.address,
+        address: this.address.replace('0x',''),
         limit: 10,
         page: 0
       },
