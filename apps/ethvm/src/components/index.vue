@@ -88,6 +88,21 @@ export default Vue.extend({
           }
         }
       )
+
+        this.$socket.emit(
+        sEvents.getUncles,
+        {
+          limit: 100,
+          page: 0
+        },
+        (err, uncles) => {
+          console.log("Uncles",uncles)
+          this.$store.commit(sEvents.newUncle, uncles)
+          if (uncles && uncles.length > 0) {
+            this.$eventHub.$emit(sEvents.newUncle)
+          }
+        }
+      )
     }
   },
   computed: {
