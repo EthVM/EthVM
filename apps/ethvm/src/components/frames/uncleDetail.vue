@@ -10,11 +10,6 @@
     </v-card>
     <h4 class="mt-5">{{ $t('title.blockDetail') }}</h4>
     <block-block-detail :block="block" :uncles="uncles"></block-block-detail>
-    <h4>{{ $t('title.blockTx') }}</h4>
-    <block-last-transactions v-if="transactions.length > 0" :transactions="transactions" :showHeader="true" class="mt-3"></block-last-transactions>
-    <v-card v-else color="white">
-      <v-card-text class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }} </v-card-text>
-    </v-card>
   </v-container>
 </template>
 
@@ -22,26 +17,20 @@
 
 <script lang="ts">
 import { common } from '@app/helpers'
-import { Block, Tx } from '@app/models'
+import { Uncle } from '@app/models'
 import chartOptions from '@app/sampleData/chartData.json'
 import sEvents from '@app/configs/socketEvents.json'
 import store from '@app/states'
 import Vue from 'vue'
 
 export default Vue.extend({
-  name: 'Block',
+  name: 'Uncle',
   props: ['blockHash'],
   data() {
     return {
       common,
       store,
-      options: chartOptions,
-      block: null,
-      bNum: null,
-      uncles: [],
-      unixtimestamp: null,
-      timestamp: null,
-      transactions: [],
+      uncle: null,
       items: [
         {
           text: this.$i18n.t('title.home'),
@@ -49,7 +38,7 @@ export default Vue.extend({
           link: '/'
         },
         {
-          text: this.$i18n.t('title.blocks'),
+          text: 'Uncles',
           disabled: false,
           link: '/blocks'
         }
@@ -69,48 +58,17 @@ export default Vue.extend({
     }
   },
   computed: {
-    isUncle() {
-      if (this.block && this.block.getIsUncle()) {
-        return true
-      }
-      return false
-    }
   },
   mounted() {
     /* Get Block Data: */
     this.$socket.emit(
-      sEvents.getBlock,
+      sEvents.getUncle,
       {
         hash: this.blockHash.replace('0x','')
       },
       (error, result) => {
         if (result) {
-          this.block = new Block(result)
-
-          this.setItems(this.block.getNumber())
-
-          this.$socket.emit(
-            sEvents.getBlockTransactions,
-            {
-              hash: this.blockHash.replace('0x','')
-            },
-            (err, data) => {
-              this.transactions = data.map(_tx => {
-                return new Tx(_tx)
-              })
-            }
-          )
-          // uncleHashes.forEach((_hash: any, idx: number) => {
-          //   this.$socket.emit(
-          //     sEvents.getBlock,
-          //     {
-          //       hash: _hash.toBuffer()
-          //     },
-          //     (err, data) => {
-          //       this.uncles.push(new Block(data))
-          //     }
-          //   )
-          // })
+          this.block = new Uncle(result)
         }
       }
     )

@@ -4,12 +4,14 @@
         <!-- BODY -->
         <!-- Main Pages -->
         <frame-blocks v-if="pageName == 'blocks'"></frame-blocks>
+        <frame-uncles v-else-if="pageName == 'uncles'"></frame-uncles>
         <frame-txs v-else-if="pageName == 'transactions' || pageName == 'pendingTransactions'" :type="pageName"></frame-txs>
         <frame-pending v-else-if="pageName == 'pending'" :type="pageName"></frame-pending>
         <frame-charts v-else-if="pageName == 'charts'"></frame-charts>
         <frame-about v-else-if="pageName == 'about'"></frame-about>
 
         <!--Detail Pages -->
+        <frame-uncle-detail v-else-if="pageName == 'uncle' && param" :blockHash="param"></frame-uncle-detail>
         <frame-block-detail v-else-if="pageName == 'block' && param" :blockHash="param"></frame-block-detail>
         <frame-address v-else-if="pageName == 'address' && param" :address="param"></frame-address>
         <frame-tx-detail v-else-if="pageName == 'tx' && param" :txHash="param"></frame-tx-detail>
@@ -83,6 +85,20 @@ export default Vue.extend({
           this.$store.commit(sEvents.newPendingTx, pTxs)
           if (pTxs && pTxs.length > 0) {
             this.$eventHub.$emit(sEvents.newPendingTx)
+          }
+        }
+      )
+
+        this.$socket.emit(
+        sEvents.getUncles,
+        {
+          limit: 100,
+          page: 0
+        },
+        (err, uncles) => {
+          this.$store.commit(sEvents.newUncle, uncles)
+          if (uncles && uncles.length > 0) {
+            this.$eventHub.$emit(sEvents.newUncle)
           }
         }
       )

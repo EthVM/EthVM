@@ -20,12 +20,15 @@ import Toasted from 'vue-toasted'
 import navigation from '@app/components/blocks/navigationDrawer/nav.vue'
 import frameHome from '@app/components/frames/home.vue'
 import frameBlocks from '@app/components/frames/blocks.vue'
+import frameUncles from '@app/components/frames/uncles.vue'
+
 import frameTxs from '@app/components/frames/transactions.vue'
 import framePending from '@app/components/frames/pendingTxs.vue'
 import frameAbout from '@app/components/frames/about.vue'
 
 // Detail Frames -----
 import frameBlockDetail from '@app/components/frames/blockDetail.vue'
+import frameUncleDetail from '@app/components/frames/uncleDetail.vue'
 import frameTxDetail from '@app/components/frames/txDetail.vue'
 import frameTokenDetail from '@app/components/frames/tokenDetail.vue'
 import frameAddress from '@app/components/frames/address.vue'
@@ -57,10 +60,12 @@ import pendingTxSmallBlock from '@app/components/blocks/smallBlocks/pendingTxSma
 
 // LARGE BLOCKS ----------------------
 import blockLatestBlocks from '@app/components/blocks/largeBlocks/latestBlocks.vue'
+import blockLatestUncles from '@app/components/blocks/largeBlocks/latestUncles.vue'
 import blockLastTransactions from '@app/components/blocks/largeBlocks/lastTransactions.vue'
 import blockAddressTxTable from '@app/components/blocks/largeBlocks/addressTxTable.vue'
 import blockAbout from '@app/components/blocks/largeBlocks/about.vue'
 import blockBlockDetail from '@app/components/blocks/largeBlocks/blockDetail.vue'
+import blockUncleDetail from '@app/components/blocks/largeBlocks/uncleDetail.vue'
 import addressDetail from '@app/components/blocks/largeBlocks/addressDetail.vue'
 import blockaddressTx from '@app/components/blocks/largeBlocks/addressTx.vue'
 import blockTxDetail from '@app/components/blocks/largeBlocks/txDetail.vue'
@@ -87,12 +92,15 @@ import blockFooter from '@app/components/blocks/footer/footer.vue'
 Vue.component('navigation', navigation)
 Vue.component('frame-home', frameHome)
 Vue.component('frame-blocks', frameBlocks)
+Vue.component('frame-uncles', frameUncles)
+
 Vue.component('frame-txs', frameTxs)
 Vue.component('frame-pending', framePending)
 Vue.component('frame-about', frameAbout)
 
 // Detail Frames -----
 Vue.component('frame-block-detail', frameBlockDetail)
+Vue.component('frame-uncle-detail', frameUncleDetail)
 Vue.component('frame-tx-detail', frameTxDetail)
 Vue.component('frame-token-detail', frameTokenDetail)
 Vue.component('frame-address', frameAddress)
@@ -123,10 +131,12 @@ Vue.component('pending-tx-small-block', pendingTxSmallBlock)
 
 // LARGE BLOCKS ----------------------
 Vue.component('block-latest-blocks', blockLatestBlocks)
+Vue.component('block-latest-uncles', blockLatestUncles)
 Vue.component('block-last-transactions', blockLastTransactions)
 Vue.component('block-address-tx-table', blockAddressTxTable)
 Vue.component('block-about', blockAbout)
 Vue.component('block-block-detail', blockBlockDetail)
+Vue.component('block-uncle-detail', blockUncleDetail)
 Vue.component('address-detail', addressDetail)
 Vue.component('block-address-tx', blockaddressTx)
 Vue.component('block-tx-detail', blockTxDetail)
