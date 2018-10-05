@@ -22,7 +22,7 @@ export class MongoAddressRepository extends BaseMongoDbRepository implements Add
   }
   public getAddress(hash: string): Promise<Address> {
     return this.db
-      .collection(MongoEthVM.collections.addresses)
+      .collection(MongoEthVM.collections.accounts)
       .findOne({ address: hash })
       .then(resp => {
         if (!resp) {

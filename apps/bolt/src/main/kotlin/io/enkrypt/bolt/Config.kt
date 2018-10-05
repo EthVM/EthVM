@@ -9,5 +9,6 @@ data class AppConfig(
 data class TopicsConfig(
   val blocks: String,
   val pendingTransactions: String,
-  val accountState: String
+  val accountState: String,
+  val metadata: String
 )

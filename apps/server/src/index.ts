@@ -15,6 +15,7 @@ import { RedisCacheRepository } from '@app/server/repositories'
 import * as EventEmitter from 'eventemitter3'
 import * as Redis from 'ioredis'
 import { MongoClient } from 'mongodb'
+import { MongoStreamer } from '@app/server/core/streams/mongo.streamer'
 
 async function bootstrapServer() {
   logger.debug('bootstrapper -> Bootstraping ethvm-socket-server!')
@@ -111,15 +112,8 @@ async function bootstrapServer() {
   // Create streamer
   // ---------------
   logger.debug('bootstrapper -> Initializing streamer')
-  // const kafkaStreamerOpts: KafkaStreamerOpts = {
-  //   groupId: config.get('streamer.kafka.group_id'),
-  //   brokers: config.get('streamer.kafka.brokers'),
-  //   blocksTopic: config.get('streamer.kafka.topics.blocks'),
-  //   pendingTxsTopic: config.get('streamer.kafka.topics.pending_txs')
-  // }
-  // const streamer = new KafkaStreamer(kafkaStreamerOpts, emitter)
-  // await streamer.initialize()
-  const streamer = new NullStreamer()
+  const streamer = new MongoStreamer(db, emitter)
+  await streamer.initialize()
 
   // Create server
   logger.debug('bootstrapper -> Initializing server')

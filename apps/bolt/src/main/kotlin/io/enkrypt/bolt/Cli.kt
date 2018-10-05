@@ -47,6 +47,11 @@ class Cli : CliktCommand() {
     envvar = "KAFKA_ACCOUNT_STATE_TOPIC"
   ).default(DEFAULT_ACCOUNT_STATE_TOPIC)
 
+  private val metadataTopic: String by option(
+    help = "Name of the metadata topic on which Bolt will listen",
+    envvar = "KAFKA_METADATA_TOPIC"
+  ).default(DEFAULT_METADATA_TOPIC)
+
   // Mongo - CLI
   private val mongoUri: String by option(
     help = "Mongo URI",
@@ -55,7 +60,7 @@ class Cli : CliktCommand() {
 
   // DI
   private val boltModule = module {
-    single { TopicsConfig(blocksTopic, pendingTxsTopic, accountStateTopic) }
+    single { TopicsConfig(blocksTopic, pendingTxsTopic, accountStateTopic, metadataTopic) }
     single { AppConfig(bootstrapServers, startingOffset, get()) }
 
     single { MongoClientURI(mongoUri) }
@@ -123,5 +128,6 @@ class Cli : CliktCommand() {
     const val DEFAULT_BLOCKS_TOPIC = "blocks"
     const val DEFAULT_PENDING_TXS_TOPIC = "pending-transactions"
     const val DEFAULT_ACCOUNT_STATE_TOPIC = "account-state"
+    const val DEFAULT_METADATA_TOPIC = "account-state"
   }
 }

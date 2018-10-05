@@ -11,6 +11,7 @@ import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.kstream.Consumed
+import org.apache.kafka.streams.kstream.Serialized
 import org.ethereum.core.BlockSummary
 import org.ethereum.core.TransactionExecutionSummary
 import org.ethereum.util.ByteUtil
@@ -31,7 +32,7 @@ class BlocksProcessor : AbstractBaseProcessor() {
     .apply {
       putAll(baseKafkaProps.toMap())
       put(StreamsConfig.APPLICATION_ID_CONFIG, id)
-      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 4)
+      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 1)
     }
 
   private val logger = KotlinLogging.logger {}
@@ -43,7 +44,7 @@ class BlocksProcessor : AbstractBaseProcessor() {
     // Create stream builder
     val builder = StreamsBuilder()
 
-    builder
+    val blocks = builder
       .stream(appConfig.topicsConfig.blocks, Consumed.with(Serdes.ByteArray(), blockSerde))
       .map { k, v -> KeyValue(ByteUtil.byteArrayToLong(k), v) }
       .map(::calculateStatistics)
