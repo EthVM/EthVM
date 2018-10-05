@@ -26,9 +26,9 @@ class BlockMongoSink : MongoSink<Long, Pair<BlockSummary, BlockStats>>() {
 
   private var scheduledWrite: Cancellable? = null
 
-  override fun init(context: ProcessorContext?) {
+  override fun init(context: ProcessorContext) {
     super.init(context)
-    this.scheduledWrite = context?.schedule(timeoutMs, PunctuationType.WALL_CLOCK_TIME) { _ -> tryToWrite() }
+    this.scheduledWrite = context.schedule(timeoutMs, PunctuationType.WALL_CLOCK_TIME) { _ -> tryToWrite() }
   }
 
   override fun process(key: Long?, value: Pair<BlockSummary, BlockStats>?) {
@@ -82,7 +82,7 @@ class BlockMongoSink : MongoSink<Long, Pair<BlockSummary, BlockStats>>() {
       Tuple3(listOf(blockReplace), txsReplace, unclesReplace)
     }.reduce{ sum, element -> Tuple3(sum.a + element.a, sum.b + element.b, sum.c + element.c) }
 
-    mongoSession?.transaction {
+    mongoSession.transaction {
 
       blocksCollection.bulkWrite(blocksOps)
 
@@ -95,9 +95,9 @@ class BlockMongoSink : MongoSink<Long, Pair<BlockSummary, BlockStats>>() {
 
     }.also {
       when {
-        it!!.isLeft() -> {
+        it.isLeft() -> {
 
-          context?.commit()
+          context.commit()
 
           val elapsedMs = System.currentTimeMillis() - startMs
           logger.info{ "${batch.size} blocks stored in $elapsedMs ms" }
@@ -117,7 +117,7 @@ class BlockMongoSink : MongoSink<Long, Pair<BlockSummary, BlockStats>>() {
   override fun close() {
     this.running = false
     scheduledWrite?.cancel()
-    mongoSession?.close()
+    mongoSession.close()
   }
 
 }
