@@ -1,11 +1,15 @@
 <template>
-  <v-card color="white" class="ma-2 mb-3 mt-3 elevation-5">
-    <v-card-title>{{chartTitle}}
+  <v-card color="white" flat class="ma-2 mb-3">
+    <v-card-title class="title font-weight-bold pt-4 pl-4" >{{chartTitle}}
       <v-tooltip bottom>
-        <v-icon slot="activator" dark small class="pl-2">fa fa-question-circle grey--text</v-icon>
+        <v-icon slot="activator" dark small class="pl-2">fas fa-exclamation-circle grey--text</v-icon>
         <span>{{chartDescription}}</span>
       </v-tooltip>
     </v-card-title>
+    <v-divider></v-divider>
+    <v-card-media class="pl-4 pt-4">
+      <footnote :footnotes="footnoteArr"></footnote>
+    </v-card-media>
     <canvas ref="chart" :width="width" :height="height"></canvas>
   </v-card>
 </template>
@@ -66,7 +70,8 @@ export default Vue.extend({
     width: Number,
     height: Number,
     chartTitle: String,
-    chartDescription: String
+    chartDescription: String,
+    footnoteArr: Array
   },
   data: () => ({
     chart: ''
