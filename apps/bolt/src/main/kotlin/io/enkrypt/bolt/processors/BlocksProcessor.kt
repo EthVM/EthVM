@@ -7,6 +7,7 @@ import io.enkrypt.bolt.serdes.RLPBlockSummarySerde
 import io.enkrypt.bolt.sinks.BlockMongoSink
 import io.enkrypt.bolt.utils.StandardTokenDetector
 import mu.KotlinLogging
+import org.apache.commons.lang3.ArrayUtils
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.KeyValue
@@ -64,7 +65,7 @@ class BlocksProcessor : AbstractBaseProcessor() {
       .asSequence()
       .filter { it.isContractCreation }
       .map { c ->
-        val type = StandardTokenDetector.detect(c.data)
+        val type = StandardTokenDetector.detect(ArrayUtils.nullToEmpty(c.data))
         logger.info { "Smart contract detected: ${c.contractAddress.toHex()} | Type: $type" }
         Contract(c.contractAddress, true, type)
       }

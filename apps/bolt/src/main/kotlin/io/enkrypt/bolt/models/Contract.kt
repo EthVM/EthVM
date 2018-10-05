@@ -1,6 +1,7 @@
 package io.enkrypt.bolt.models
 
 import io.enkrypt.bolt.extensions.toHex
+import io.enkrypt.bolt.utils.ContractType
 import org.bson.Document
 
 class Contract(
@@ -16,11 +17,4 @@ class Contract(
       "type" to type?.name
     )
   )
-
-}
-
-enum class ContractType {
-  ERC20,
-  ERC721,
-  GENERIC
 }
