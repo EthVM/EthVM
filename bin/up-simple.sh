@@ -3,13 +3,8 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 
-echo "Building containers: ethvm, server"
-CMD="docker-compose build ethvm server"
-echo "Executing: ${CMD}"
-${CMD}
-
 echo "Starting up containers: traefik, mongo, ethvm and server"
-CMD="docker-compose up -d traefik mongodb ethvm server"
+CMD="docker-compose up -d --build traefik mongodb ethvm server"
 echo "Executing: ${CMD}"
 ${CMD}
 

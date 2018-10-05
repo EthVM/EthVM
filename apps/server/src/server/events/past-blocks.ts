@@ -15,7 +15,19 @@ const pastBlocksEvent: SocketEvent = {
   },
 
   // TODO: Remove calculation of stats
-  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Block[]> => server.blockService.getBlocks(payload.limit, payload.page)
+  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<SmallBlock[]> =>
+    server.blockService.getBlocks(payload.limit, payload.page).then(
+      (_blocks: Block[]): SmallBlock[] => {
+        const blocks: SmallBlock[] = []
+        _blocks.forEach(
+          (block: Block): void => {
+            // TODO: Remove harcoded time from zero
+            blocks.unshift(mappers.toSmallBlock(block))
+          }
+        )
+        return blocks
+      }
+    )
 }
 
 export default pastBlocksEvent
