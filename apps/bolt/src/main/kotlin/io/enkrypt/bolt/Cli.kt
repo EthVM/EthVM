@@ -112,11 +112,6 @@ class Cli : CliktCommand() {
       onPrepareProcessor()
       start()
     }
-
-//    TokenDetectorProcessor().apply {
-//      onPrepareProcessor()
-//      start()
-//    }
   }
 
   companion object Defaults {

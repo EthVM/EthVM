@@ -2,8 +2,10 @@ package io.enkrypt.bolt.processors
 
 import io.enkrypt.bolt.extensions.toHex
 import io.enkrypt.bolt.models.BlockStats
+import io.enkrypt.bolt.models.Contract
 import io.enkrypt.bolt.serdes.RLPBlockSummarySerde
 import io.enkrypt.bolt.sinks.BlockMongoSink
+import io.enkrypt.bolt.utils.StandardTokenDetector
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
@@ -11,7 +13,6 @@ import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.kstream.Consumed
-import org.apache.kafka.streams.kstream.Serialized
 import org.ethereum.core.BlockSummary
 import org.ethereum.core.TransactionExecutionSummary
 import org.ethereum.util.ByteUtil
@@ -32,7 +33,7 @@ class BlocksProcessor : AbstractBaseProcessor() {
     .apply {
       putAll(baseKafkaProps.toMap())
       put(StreamsConfig.APPLICATION_ID_CONFIG, id)
-      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 1)
+      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 4)
     }
 
   private val logger = KotlinLogging.logger {}
@@ -44,10 +45,11 @@ class BlocksProcessor : AbstractBaseProcessor() {
     // Create stream builder
     val builder = StreamsBuilder()
 
-    val blocks = builder
+    builder
       .stream(appConfig.topicsConfig.blocks, Consumed.with(Serdes.ByteArray(), blockSerde))
       .map { k, v -> KeyValue(ByteUtil.byteArrayToLong(k), v) }
-      .map(::calculateStatistics)
+      .map(::detectSmartContracts)
+      .map(::calculateBlockStatistics)
       .process({ get<BlockMongoSink>() }, null)
 
     // Generate the topology
@@ -57,7 +59,24 @@ class BlocksProcessor : AbstractBaseProcessor() {
     streams = KafkaStreams(topology, kafkaProps)
   }
 
-  private fun calculateStatistics(number: Long, summary: BlockSummary): KeyValue<Long, Pair<BlockSummary, BlockStats>> {
+  private fun detectSmartContracts(number: Long, summary: BlockSummary): KeyValue<Long, Pair<BlockSummary, Set<Contract>>> {
+    val contracts: Set<Contract> = summary.block.transactionsList
+      .asSequence()
+      .filter { it.isContractCreation }
+      .map { c ->
+        val type = StandardTokenDetector.detect(c.data)
+        logger.info { "Smart contract detected: ${c.contractAddress.toHex()} | Type: $type" }
+        Contract(c.contractAddress, true, type)
+      }
+      .toSet()
+
+    return KeyValue(number, Pair(summary, contracts))
+  }
+
+  private fun calculateBlockStatistics(number: Long, elems: Pair<BlockSummary, Set<Contract>>): KeyValue<Long, Triple<BlockSummary, Set<Contract>, BlockStats>> {
+    val contracts = elems.second
+
+    val summary = elems.first
     val block = summary.block
     val receipts = summary.receipts
 
@@ -110,7 +129,7 @@ class BlocksProcessor : AbstractBaseProcessor() {
       avgTxsFees
     )
 
-    return KeyValue(number, Pair(summary, stats))
+    return KeyValue(number, Triple(summary, contracts, stats))
   }
 
   override fun start() {

@@ -7,6 +7,7 @@ import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blo
 import { ChartsServiceImpl, MockChartsRepository } from '@app/server/modules/charts'
 import { MongoUncleRepository, UnclesServiceImpl } from '@app/server/modules/uncle'
 
+import { MongoStreamer } from '@app/server/core/streams/mongo.streamer'
 import { CoinMarketCapRepository, ExchangeServiceImpl } from '@app/server/modules/exchanges'
 import { MongoPendingTxRepository, PendingTxServiceImpl } from '@app/server/modules/pending-tx'
 import { MongoTxsRepository, TxsServiceImpl } from '@app/server/modules/txs'
@@ -15,7 +16,6 @@ import { RedisCacheRepository } from '@app/server/repositories'
 import * as EventEmitter from 'eventemitter3'
 import * as Redis from 'ioredis'
 import { MongoClient } from 'mongodb'
-import { MongoStreamer } from '@app/server/core/streams/mongo.streamer'
 
 async function bootstrapServer() {
   logger.debug('bootstrapper -> Bootstraping ethvm-socket-server!')
