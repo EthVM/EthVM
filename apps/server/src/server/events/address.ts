@@ -13,7 +13,7 @@ const getAddressEvent: SocketEvent = {
     }
   },
 
-  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: BalancePayload): Promise<Address> => server.addressService.getAddress(payload.address)
+  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: BalancePayload): Promise<Address | null> => server.addressService.getAddress(payload.address)
 }
 
 export default getAddressEvent
