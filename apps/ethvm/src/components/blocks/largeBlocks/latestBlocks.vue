@@ -50,8 +50,8 @@
             </p>
           </v-flex>
           <v-flex hidden-sm-and-down md1>
-            <p class="success--text"> {{getNumber(block.getStats().success)}}</p>
-            <p class="warning--text"> {{getNumber(block.getStats().failed)}}</p>
+            <p class="success--text"> {{block.getStats().successfulTxs}}</p>
+            <p class="warning--text"> {{block.getStats().failedTxs}}</p>
           </v-flex>
           <v-flex xs4 md2 class="pr-1">
             <p class="text-truncate grey--text text--darken-2">
@@ -132,13 +132,12 @@ export default Vue.extend({
       }
       return isShort
     },
-    getNumber(raw: string) {
-      return new BN(raw).toNumber()
-    }
   },
   created() {
     this.blocks = this.$store.getters.getBlocks
+
     this.$eventHub.$on(sEvents.newBlock, _block => {
+      console.log( this.blocks)
       if (Visibility.state() === 'visible') {
         this.blocks = this.$store.getters.getBlocks
       }
