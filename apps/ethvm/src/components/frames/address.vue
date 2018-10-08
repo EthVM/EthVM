@@ -55,7 +55,8 @@
         </div>
         <!-- Pending Transactions -->
         <div v-if="addressTabs[2].isActive" class="">
-          <block-address-tx :address='account' :transactions='account.txs' :isPending='true'></block-address-tx>
+          <block-address-tx :address='account' :transactions='account.pendingTxs' :isPending='true'></block-address-tx>
+
           <!-- End Pending Transactions -->
         </div>
         <!--Mining History This are temp strings (no need to implement yet)  -->
@@ -85,7 +86,7 @@
 
 <script lang="ts">
 import { common } from '@app/helpers'
-import { Tx } from '@app/models'
+import { Tx, Account, PendingTx } from '@app/models'
 import bn from 'bignumber.js'
 import blockies from 'ethereum-blockies'
 import ethUnits from 'ethereumjs-units'
@@ -96,7 +97,7 @@ const MAX_ITEMS = 20
 
 export default Vue.extend({
   name: 'FrameAccount',
-  props: ['address', 'tokens', 'txs'],
+  props: ['address', 'tokens', 'txs', 'pendingTxs'],
   data() {
     return {
       account: {
@@ -107,6 +108,7 @@ export default Vue.extend({
         totalTxs: 0,
         tokens: this.tokens,
         txs: this.txs,
+        pendingTxs: this.pendingTxs,
         isMiner: false
       },
       identicon: null,
@@ -139,13 +141,14 @@ export default Vue.extend({
   created() {
     /* Geting Address Balance: */
     this.$socket.emit(
-      sEvents.getBalance,
+      sEvents.getAddress,
       {
-        address: this.address
+        address: this.address.replace('0x','')
       },
       (err, result) => {
+        const addr = new Account(result)
         if (!err && result) {
-          const balance = common.EthValue(common.HexToBuffer(result.result)).toEth()
+          const balance =  addr.getBalance().toEth()
           this.account.balance = balance
         }
       }
@@ -160,7 +163,6 @@ export default Vue.extend({
         if (result !== '0x') {
           this.account.tokens = result
           this.tokensLoaded = true
-          // console.log('tokens', _this.account.tokens)
         } else {
           this.tokenError = true
         }
@@ -170,7 +172,7 @@ export default Vue.extend({
     this.$socket.emit(
       sEvents.getTotalTxs,
       {
-        address: this.address
+        address: this.address.replace('0x','')
       },
       (err, result) => {
         this.account.totalTxs = result
@@ -184,7 +186,7 @@ export default Vue.extend({
     this.$socket.emit(
       sEvents.getTxs,
       {
-        address: this.address,
+        address: this.address.replace('0x',''),
         limit: 10,
         page: 0
       },
@@ -196,9 +198,25 @@ export default Vue.extend({
         this.account.txs = txs
       }
     )
-    this.setTabs()
     /*Getting Address Pending Transactions: */
-    // Method here:
+      this.$socket.emit(
+      sEvents.pendingTxsAddress,
+      {
+        address: this.address.replace('0x',''),
+        limit: 10,
+        page: 0
+      },
+      (err, result) => {
+        const pTxs = []
+        result.forEach(element => {
+          pTxs.push(new PendingTx(element))
+        })
+        this.account.pendingTxs = pTxs
+      }
+    )
+
+    this.setTabs()
+
   },
   mounted() {
     this.getIdenticon()

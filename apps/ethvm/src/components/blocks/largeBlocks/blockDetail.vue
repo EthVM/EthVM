@@ -8,7 +8,7 @@
               <v-list-tile-title><strong>{{item.title}}</strong></v-list-tile-title>
             </v-flex>
             <v-flex xs7 sm8 md9>
-              <p v-if="!item.link" class="text-muted text-truncate">{{item.detail}}<timeago v-if="item.title == $t('common.timestmp')" :since="block.getTimestamp().toDate()" :auto-update="10"></timeago></p>
+              <p v-if="!item.link" class="text-muted text-truncate">{{item.detail}}<timeago v-if="item.title == $t('common.timestmp')" :since="block.getTimestamp()" :auto-update="10"></timeago></p>
               <router-link v-else :to="item.link"><p class="text-truncate">{{item.detail}}</p></router-link>
             </v-flex>
             <v-flex xs1>
@@ -81,16 +81,13 @@ export default Vue.extend({
         },
         {
           title: this.$i18n.t('block.miner'),
-          detail: this.block.getMiner().toString(),
-          link: '/address/' + this.block.getMiner().toString(),
+          detail: this.block.getMiner(),
+          link: '/address/' + this.block.getMiner(),
           copy: true
         },
         {
           title: this.$i18n.t('common.timestmp'),
-          detail: this.block
-            .getTimestamp()
-            .toDate()
-            .toString()
+          detail: this.block.getTimestamp().toString()
         },
         {
           title: this.$i18n.t('block.reward'),
@@ -104,12 +101,12 @@ export default Vue.extend({
         },
         {
           title: this.$i18n.t('block.pHash'),
-          detail: this.block.getParentHash().toString(),
-          link: '/block/' + this.block.getParentHash().toString()
+          detail: this.block.getParentHash(),
+          link: '/block/' + this.block.getParentHash()
         },
         {
           title: this.$i18n.t('block.size'),
-          detail: this.block.getSize().toNumber()
+          detail: 'TODO'
         }
       ]
       if (!this.isUncle) {
@@ -144,11 +141,12 @@ export default Vue.extend({
           details: this.block.getExtraData().toString()
         }
       ]
+
       if (!this.isUncle) {
         const newItems = [
           {
             title: this.$i18n.t('block.totalReward'),
-            detail: this.block.getTotalBlockReward().toEth() + ' ' + this.$i18n.t('common.eth')
+            detail: '' //this.block.getBlockReward().toEth() + ' ' + this.$i18n.t('common.eth')
           },
           {
             title: this.$i18n.t('block.fees'),
@@ -160,7 +158,7 @@ export default Vue.extend({
           },
           {
             title: this.$i18n.t('gas.used'),
-            detail: this.block.getGasUsed().toNumber()
+            detail: this.block.getGasUsed()
           },
           {
             title: this.$i18n.t('block.logs'),
@@ -176,14 +174,11 @@ export default Vue.extend({
           },
           {
             title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward'),
-            detail: this.block
-              .getUncleReward()
-              .toEth()
-              .toString()
+            detail: 'TODO'
           },
           {
             title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.sha'),
-            detail: this.block.getSha3Uncles().toString()
+            detail: this.block.getSha3Uncles()
           }
         ]
         newItems.forEach(i => {

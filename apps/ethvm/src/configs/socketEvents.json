@@ -2,6 +2,7 @@
   "join": "join",
   "leave": "leave",
   "newTx": "NEW_TX",
+  "newPendingTx": "NEW_PENDING_TX",
   "newBlock": "NEW_BLOCK",
   "pastTxs": "pastTxs",
   "pastTxsR": "PAST_TXS_RECEIVED",
@@ -14,5 +15,11 @@
   "getTx": "getTx",
   "getBlock": "getBlock",
   "getBlockTransactions": "getBlockTransactions",
+  "getAddress": "getAddress",
+  "pendingTxs":"pendingTxs",
+  "pendingTxsAddress":"getPendingTxs",
+  "getUncle":"uncle",
+  "getUncles":"uncles",
+  "newUncle":"NEW_UNCLE",
   "pastBlocksR": "PAST_BLOCKS_RECEIVED"
 }

@@ -22,8 +22,6 @@ const pastBlocksEvent: SocketEvent = {
         _blocks.forEach(
           (block: Block): void => {
             // TODO: Remove harcoded time from zero
-            const bstats = mappers.toBlockStats(block.transactions, new BigNumber(0))
-            block.blockStats = { ...bstats, ...block.blockStats }
             blocks.unshift(mappers.toSmallBlock(block))
           }
         )

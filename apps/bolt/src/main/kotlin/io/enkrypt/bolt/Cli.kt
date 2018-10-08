@@ -1,71 +1,128 @@
 package io.enkrypt.bolt
 
-import com.fasterxml.jackson.databind.JsonNode
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.default
-import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
+import com.mongodb.MongoClient
+import com.mongodb.MongoClientURI
+import io.enkrypt.bolt.processors.AccountStateProcessor
+import io.enkrypt.bolt.processors.BlocksProcessor
+import io.enkrypt.bolt.processors.PendingTransactionsProcessor
+import io.enkrypt.bolt.sinks.AccountMongoSink
+import io.enkrypt.bolt.sinks.BlockMongoSink
+import io.enkrypt.bolt.sinks.PendingTransactionMongoSink
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.Serdes
-import org.apache.kafka.connect.json.JsonDeserializer
-import org.apache.kafka.connect.json.JsonSerializer
-import org.apache.kafka.streams.KafkaStreams
-import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
-import org.apache.kafka.streams.kstream.Consumed
-import org.apache.kafka.streams.kstream.KStream
-import java.util.*
+import org.koin.dsl.module.module
+import org.koin.standalone.StandAloneContext.startKoin
+import java.util.Properties
 
 class Cli : CliktCommand() {
 
-    // Kafka
-    private val applicationId: String by option(help = "Identifier for the stream processing application").default(DEFAULT_APPLICATION_ID)
-    private val streamTopic: String by option(help = "Name of the stream that Bolt will listen").default(DEFAULT_STREAM_TOPIC)
-    private val bootstrapServers: String by option(help = "A list of host/port pairs to use for establishing the initial connection to the Kafka cluster").default(DEFAULT_BOOTSTRAP_SERVERS)
-    private val offset: String by option(help = "From which offset is going to start processing events").default(DEFAULT_AUTO_OFFSET)
+  // General - CLI
+  private val bootstrapServers: String by option(
+    help = "A list of host/port pairs to use for establishing the initial connection to the Kafka cluster",
+    envvar = "KAFKA_BOOTSTRAP_SERVERS"
+  ).default(DEFAULT_BOOTSTRAP_SERVERS)
 
-    // General
-    private val verbose: Boolean by option("Enable verbose mode").flag()
+  private val startingOffset: String by option(
+    help = "From which offset is going to start Bolt processing events",
+    envvar = "KAFKA_START_OFFSET"
+  ).default(DEFAULT_AUTO_OFFSET)
 
-    override fun run() {
-        val props = Properties().apply {
-            put(StreamsConfig.APPLICATION_ID_CONFIG, applicationId)
-            put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
+  // Input Topics - CLI
+  private val blocksTopic: String by option(
+    help = "Name of the blocks stream topic on which Bolt will listen",
+    envvar = "KAFKA_BLOCKS_TOPIC"
+  ).default(DEFAULT_BLOCKS_TOPIC)
 
-            put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().javaClass.name)
-            put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().javaClass.name)
+  private val pendingTxsTopic: String by option(
+    help = "Name of the pending transactions topic on which Bolt will listen",
+    envvar = "KAFKA_PENDING_TXS_TOPIC"
+  ).default(DEFAULT_PENDING_TXS_TOPIC)
 
-            put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, offset)
-        }
+  private val accountStateTopic: String by option(
+    help = "Name of the account state topic on which Bolt will listen",
+    envvar = "KAFKA_ACCOUNT_STATE_TOPIC"
+  ).default(DEFAULT_ACCOUNT_STATE_TOPIC)
 
-        // JSON Serde
-        val jsonSerializer = JsonSerializer()
-        val jsonDeserializer = JsonDeserializer()
-        val jsonSerde = Serdes.serdeFrom<JsonNode>(jsonSerializer, jsonDeserializer)
+  private val metadataTopic: String by option(
+    help = "Name of the metadata topic on which Bolt will listen",
+    envvar = "KAFKA_METADATA_TOPIC"
+  ).default(DEFAULT_METADATA_TOPIC)
 
-        // Assemble a streams builder
-        val builder = StreamsBuilder()
-        val stream: KStream<String, JsonNode> = builder.stream(streamTopic, Consumed.with(Serdes.String(), jsonSerde))
-        stream.mapValues { _, value ->
-            println("VALUE: $value")
-        }
-        val topology = builder.build()
+  // Mongo - CLI
+  private val mongoUri: String by option(
+    help = "Mongo URI",
+    envvar = "MONGO_URI"
+  ).default(DEFAULT_MONGO_URI)
 
-        // Create stream
-        val streams = KafkaStreams(topology, props).apply {
-            cleanUp()
-            start()
-            localThreadsMetadata().forEach { data -> println(data) }
-        }
+  // DI
+  private val boltModule = module {
+    single { TopicsConfig(blocksTopic, pendingTxsTopic, accountStateTopic, metadataTopic) }
+    single { AppConfig(bootstrapServers, startingOffset, get()) }
 
-        // Add hook to listen to Ctrl + C events
-        Runtime.getRuntime().addShutdownHook(Thread(streams::close))
+    single { MongoClientURI(mongoUri) }
+    single { MongoClient(MongoClientURI(mongoUri)) }
+
+    single {
+      val client = get<MongoClient>()
+      val uri = get<MongoClientURI>()
+
+      client.getDatabase(uri.database!!)
     }
 
-    companion object {
-        const val DEFAULT_APPLICATION_ID = "bolt"
-        const val DEFAULT_BOOTSTRAP_SERVERS = "127.0.0.1:9092"
-        const val DEFAULT_STREAM_TOPIC = "blocks"
-        const val DEFAULT_AUTO_OFFSET = "earliest"
+    factory { BlockMongoSink() }
+    factory { AccountMongoSink() }
+    factory { PendingTransactionMongoSink() }
+
+    module("kafka") {
+      single {
+        Properties().apply {
+          // App
+          put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
+
+          // Processing
+          put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, StreamsConfig.AT_LEAST_ONCE)
+          put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, startingOffset)
+
+          // Serdes - Defaults
+          put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().javaClass.name)
+          put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.ByteArray().javaClass.name)
+        }
+      }
     }
+  }
+
+  override fun run() {
+    startKoin(listOf(boltModule))
+
+    BlocksProcessor().apply {
+      onPrepareProcessor()
+      start()
+    }
+
+    AccountStateProcessor().apply {
+      onPrepareProcessor()
+      start()
+    }
+
+    PendingTransactionsProcessor().apply {
+      onPrepareProcessor()
+      start()
+    }
+  }
+
+  companion object Defaults {
+    const val DEFAULT_BOOTSTRAP_SERVERS = "localhost:9092"
+    const val DEFAULT_AUTO_OFFSET = "earliest"
+
+    const val DEFAULT_MONGO_URI = "mongodb://localhost:27017/ethvm_local"
+
+    const val DEFAULT_BLOCKS_TOPIC = "blocks"
+    const val DEFAULT_PENDING_TXS_TOPIC = "pending-transactions"
+    const val DEFAULT_ACCOUNT_STATE_TOPIC = "account-state"
+    const val DEFAULT_METADATA_TOPIC = "account-state"
+  }
 }

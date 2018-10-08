@@ -37,20 +37,23 @@ const config = convict({
       default: 3000,
       format: 'port',
       env: 'ETHVM_SERVER_PORT'
-    },
-    ping_interval: {
-      default: 10000,
-      format: 'duration',
-      env: 'ETHVM_SERVER_PING_INTERVAL'
-    },
-    ping_timeout: {
-      default: 5000,
-      format: 'duration',
-      env: 'ETHVM_PING_TIMEOUT'
     }
   },
 
   data_stores: {
+    mongo_db: {
+      url: {
+        default: 'mongodb://mongodb:27017/',
+        format: String,
+        env: 'ETHVM_MONGO_DB_URL'
+      },
+      db: {
+        default: 'ethvm_local',
+        format: String,
+        env: 'ETHVM_MONGO_DB_NAME'
+      }
+    },
+
     redis: {
       host: {
         default: 'localhost',
@@ -75,41 +78,6 @@ const config = convict({
     }
   },
 
-  rethink_db: {
-    db_name: {
-      default: 'eth_mainnet',
-      format: String,
-      env: 'ETHVM_RETHINK_DB_NAME'
-    },
-    host: {
-      default: 'localhost',
-      format: String,
-      env: 'ETHVM_RETHINK_DB_HOST'
-    },
-    port: {
-      default: 28015,
-      format: 'port',
-      env: 'ETHVM_RETHINK_DB_PORT'
-    },
-    user: {
-      default: 'admin',
-      format: String,
-      env: 'ETHVM_RETHINK_DB_USER'
-    },
-    password: {
-      default: '',
-      format: String,
-      env: 'ETHVM_RETHINK_DB_PASSWORD',
-      sensitive: true
-    },
-    cert_raw: {
-      default: '',
-      format: String,
-      env: 'ETHVM_RETHINK_DB_CERT_RAW',
-      sensitive: true
-    }
-  },
-
   eth: {
     rpc: {
       host: {
@@ -122,11 +90,6 @@ const config = convict({
         format: 'port',
         env: 'ETHVM_RPC_ETH_PORT'
       }
-    },
-    block_time: {
-      default: '14 seconds',
-      format: 'duration',
-      env: 'ETHVM_ETH_BLOCK_TIME'
     },
     state_root: {
       default: 'd7f8974fb5ac78d9ac099b9ad5018bedc2ce0a72dad1827a1709da30580f0544',
@@ -175,6 +138,33 @@ const config = convict({
           default: 1,
           format: Number,
           env: 'ETHVM_ETH_TRIE_DB_REDIS_DB'
+        }
+      }
+    }
+  },
+
+  streamer: {
+    kafka: {
+      group_id: {
+        default: 'server-consumer',
+        format: String,
+        env: 'ETHVM_STREAMER_KAFKA_GROUP_ID'
+      },
+      brokers: {
+        default: 'kafka:9092',
+        format: String,
+        env: 'ETHVM_STREAMER_KAFKA_BROKERS'
+      },
+      topics: {
+        blocks: {
+          default: 'blocks',
+          format: String,
+          env: 'ETHVM_STREAMER_KAFKA_TOPICS_BLOCKS'
+        },
+        pending_txs: {
+          default: 'pending-txs',
+          format: String,
+          env: 'ETHVM_STREAMER_KAFKA_TOPICS_PENDING_TXS'
         }
       }
     }

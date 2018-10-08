@@ -1,9 +1,9 @@
 <template>
   <v-layout column>
-    <v-card flat color="transparent" class="pb-1">
-      <v-layout row>
+    <v-card flat color="transparent" class="pb-1 mr-1 ml-1">
+      <v-layout row wrap align-center class="pr-3 pl-1">
         <v-flex xs8>
-          <h5 class="ml-3">{{ $t( 'tableHeader.txN' ) }}</h5>
+          <h5 class="ml-1">{{ $t( 'tableHeader.txN' ) }}</h5>
         </v-flex>
         <v-flex xs3 md1>
           <h5>{{ $t( 'common.eth' ) }}</h5>
@@ -21,28 +21,83 @@
       </v-layout>
     </v-card>
     <div v-if="transactions.length > 0" id="scroll-target" :style="getStyle" class="scroll-y pt-0 mb-3">
-      <v-card v-scroll:#scroll-target v-for="tx in transactions" v-bind:key="tx.getHash()" class="pt-3 mb-1">
+      <v-card v-if="!pending" v-scroll:#scroll-target v-for="tx in transactions" v-bind:key="tx.getHash()" class="pt-3 mb-3 mr-1 ml-1 elevation-2">
         <v-layout wrap align-center class="ma-0">
           <v-flex xs8>
-            <v-layout column>
-              <v-flex xs12>
-                <p class="text-truncate">
-                  <router-link class="accent--text " :to="'/tx/'+tx.getHash()">{{tx.getHash()}}</router-link>
+            <p class="text-truncate">
+              <router-link class="accent--text " :to="'/tx/'+tx.getHash()">{{tx.getHash()}}</router-link>
+            </p>
+            <v-layout row >
+              <v-flex xs6 class="pt-0">
+                <p class="text-truncate"><strong>{{ $t( 'tx.from' ) }} </strong>
+                  <router-link :to="'/address/'+tx.getFrom().toString()">{{tx.getFrom().toString()}} </router-link>
                 </p>
               </v-flex>
               <v-flex xs12>
                 <v-layout row>
                   <v-flex xs6>
                     <p class="text-truncate"><strong>{{ $t( 'tx.from' ) }} </strong>
-                      <router-link :to="'/address/'+tx.getFrom().toString()">{{tx.getFrom().toString()}} </router-link>
+                      <router-link :to="'/address/'+tx.getFrom()">{{tx.getFrom()}} </router-link>
                     </p>
                   </v-flex>
                   <v-flex xs6>
-                    <p class="text-truncate" v-if="tx.getContractAddress().toString()"><strong> {{ $t( 'tx.contract' ) }}</strong>
-                      <router-link :to="'/address/'+tx.getContractAddress().toString()">{{tx.getContractAddress().toString()}} </router-link>
+                    <p class="text-truncate" v-if="tx.getContractAddress()"><strong> {{ $t( 'tx.contract' ) }}</strong>
+                      <router-link :to="'/address/'+tx.getContractAddress()">{{tx.getContractAddress()}} </router-link>
                     </p>
                     <p class="text-truncate" v-else><strong> {{ $t( 'tx.to' ) }} </strong>
-                      <router-link :to="'/address/'+tx.getTo().toString()">{{tx.getTo().toString()}}</router-link>
+                      <router-link :to="'/address/'+tx.getTo()">{{tx.getTo()}}</router-link>
+                    </p>
+                  </v-flex>
+                </v-layout>
+              </v-flex>
+            </v-layout>
+          </v-flex>
+          <v-flex xs3 md1>
+            <p class="text-truncate grey--text text--darken-2">
+              <v-tooltip v-if="getShortEthValue(tx.getValue().toEth().toString(), true)" bottom>
+                <v-icon slot="activator" dark small>fa fa-question-circle grey--text</v-icon>
+                <span>{{tx.getValue().toEth()}}</span>
+              </v-tooltip>
+              {{getShortEthValue(tx.getValue().toEth().toString(), false)}}
+            </p>
+          </v-flex>
+          <v-flex hidden-sm-and-down md1>
+            <p class="grey--text text--darken-2">{{tx.getGasUsed().toNumber()}}</p>
+          </v-flex>
+          <v-flex hidden-sm-and-down md1>
+            <p class="grey--text text--darken-2">{{tx.getGasPrice().toGWei()}}</p>
+          </v-flex>
+          <!-- <v-flex v-if="!pending" xs1 align-content-center>
+            <v-icon v-if="tx.getStatus()" small class="success--text text-xs-center"> fa fa-check-circle </v-icon>
+            <v-icon v-else small class="warning--text text-xs-center">fa fa-times-circle </v-icon>
+          </v-flex> -->
+          <!-- <v-flex v-else hidden-xs-and-up>
+          </v-flex> -->
+        </v-layout>
+      </v-card>
+
+       <v-card v-if="pending" v-scroll:#scroll-target v-for="tx in transactions" v-bind:key="tx.getID()" class="pt-3 mb-1">
+        <v-layout wrap align-center class="ma-0">
+          <v-flex xs8>
+            <v-layout column>
+              <v-flex xs12>
+                <!-- <p class="text-truncate">
+                  <router-link class="accent--text " :to="'/tx/'+tx.getHash()">{{tx.getHash()}}</router-link>
+                </p> -->
+              </v-flex>
+              <v-flex xs12>
+                <v-layout row>
+                  <v-flex xs6>
+                    <p class="text-truncate"><strong>{{ $t( 'tx.from' ) }} </strong>
+                      <router-link :to="'/address/'+tx.getFrom()">{{tx.getFrom()}} </router-link>
+                    </p>
+                  </v-flex>
+                  <v-flex xs6>
+                    <p class="text-truncate" v-if="tx.getContractAddress()"><strong> {{ $t( 'tx.contract' ) }}</strong>
+                      <router-link :to="'/address/'+tx.getContractAddress()">{{tx.getContractAddress()}} </router-link>
+                    </p>
+                    <p class="text-truncate" v-else><strong> {{ $t( 'tx.to' ) }} </strong>
+                      <router-link :to="'/address/'+tx.getTo()">{{tx.getTo()}}</router-link>
                     </p>
                   </v-flex>
                 </v-layout>
@@ -59,17 +114,12 @@
             </p>
           </v-flex>
           <v-flex hidden-sm-and-down md1>
-            <p class="grey--text text--darken-2">{{tx.getGasUsed().toNumber()}}</p>
+            <p class="grey--text text--darken-2">{{tx.getGasLimit().toNumber()}}</p>
           </v-flex>
           <v-flex hidden-sm-and-down md1>
             <p class="grey--text text--darken-2">{{tx.getGasPrice().toGWei()}}</p>
           </v-flex>
-          <v-flex v-if="!pending" xs1 align-content-center>
-            <v-icon v-if="tx.getStatus()" small class="success--text text-xs-center"> fa fa-check-circle </v-icon>
-            <v-icon v-else small class="warning--text text-xs-center">fa fa-times-circle </v-icon>
-          </v-flex>
-          <v-flex v-else hidden-xs-and-up>
-          </v-flex>
+
         </v-layout>
       </v-card>
     </div>
@@ -142,4 +192,3 @@ export default Vue.extend({
   }
 })
 </script>
-

@@ -1,5 +1,5 @@
-import { Block, Tx } from '@app/models'
-import { BlockLayout, StateLayout, TxLayout } from '@app/models/server'
+import { Block, Tx, PendingTx, Uncle } from '@app/models'
+import { BlockLayout, StateLayout, TxLayout, PendingTxLayout, UncleLayout } from '@app/models/server'
 
 const NEW_BLOCK = (state: StateLayout, blocks: BlockLayout | BlockLayout[]) => {
   if (!Array.isArray(blocks)) {
@@ -21,7 +21,29 @@ const NEW_TX = (state: StateLayout, txs: TxLayout | TxLayout[]) => {
   })
 }
 
+const NEW_PENDING_TX = (state: StateLayout, pTxs: PendingTxLayout | PendingTxLayout[]) => {
+  if (!Array.isArray(pTxs)) {
+    pTxs = [pTxs]
+  }
+
+  pTxs.forEach(pTx => {
+    state.pendingTxs.add(new PendingTx(pTx))
+  })
+}
+
+const NEW_UNCLE = (state: StateLayout, uncles: UncleLayout | UncleLayout[]) => {
+  if (!Array.isArray(uncles)) {
+    uncles = [uncles]
+  }
+
+  uncles.forEach(uncle => {
+    state.uncles.add(new Uncle(uncle))
+  })
+}
+
 export default {
   NEW_BLOCK,
-  NEW_TX
+  NEW_TX,
+  NEW_UNCLE,
+  NEW_PENDING_TX
 }

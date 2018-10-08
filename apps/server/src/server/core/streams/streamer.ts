@@ -1,18 +1,16 @@
-import { Block } from '@app/server/modules/blocks'
-import { Tx } from '@app/server/modules/txs'
 import { ListenerFn } from 'eventemitter3'
 
-export const StreamerEvents = {
-  newBlock: 'onNewBlock',
-  newTx: 'onNewTx',
-  pendingTx: 'onNewPendingTx'
+export type StreamingEventName = 'block' | 'tx' | 'pendingTx' | 'uncle' | 'account'
+
+export interface StreamingEvent {
+  op: 'insert' | 'delete' | 'replace' | 'updated' | 'invalidate'
+  key: any
+  value: any
 }
 
 export interface Streamer {
-  addListener(eventName: string, fn: ListenerFn)
-  removeListener(eventName: string, fn?: ListenerFn)
+  initialize(): Promise<boolean>
 
-  onNewBlock(block: Block)
-  onNewTx(tx: Tx)
-  onNewPendingTx(tx: Tx)
+  addListener(eventName: StreamingEventName, fn: ListenerFn)
+  removeListener(eventName: StreamingEventName, fn?: ListenerFn)
 }

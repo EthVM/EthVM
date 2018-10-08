@@ -1,4 +1,4 @@
-FROM node:9.11.1-alpine
+FROM node:10.9.0-alpine
 
 # Install deps
 RUN apk add --no-cache make gcc musl-dev linux-headers git python g++

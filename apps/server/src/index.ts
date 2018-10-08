@@ -1,16 +1,21 @@
 import config from '@app/config'
 import { logger } from '@app/logger'
-import { RethinkDbStreamer } from '@app/server/core/streams'
+import { NullStreamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
-import { BlocksServiceImpl, RethinkBlockRepository } from '@app/server/modules/blocks'
-import { ChartsServiceImpl, RethinkChartsRepository } from '@app/server/modules/charts'
+import { AddressServiceImpl, MongoAddressRepository } from '@app/server/modules/address'
+import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blocks'
+import { ChartsServiceImpl, MockChartsRepository } from '@app/server/modules/charts'
+import { MongoUncleRepository, UnclesServiceImpl } from '@app/server/modules/uncle'
+
+import { MongoStreamer } from '@app/server/core/streams/mongo.streamer'
 import { CoinMarketCapRepository, ExchangeServiceImpl } from '@app/server/modules/exchanges'
-import { RethinkTxsRepository, TxsServiceImpl } from '@app/server/modules/txs'
+import { MongoPendingTxRepository, PendingTxServiceImpl } from '@app/server/modules/pending-tx'
+import { MongoTxsRepository, TxsServiceImpl } from '@app/server/modules/txs'
 import { RedisTrieDb, VmEngine, VmRunner, VmServiceImpl } from '@app/server/modules/vm'
 import { RedisCacheRepository } from '@app/server/repositories'
 import * as EventEmitter from 'eventemitter3'
 import * as Redis from 'ioredis'
-import * as r from 'rethinkdb'
+import { MongoClient } from 'mongodb'
 
 async function bootstrapServer() {
   logger.debug('bootstrapper -> Bootstraping ethvm-socket-server!')
@@ -53,8 +58,8 @@ async function bootstrapServer() {
   // Set default state block to VmRunner
   const blocks = await ds.getBlocks()
   const configStateRoot = config.get('eth.state_root')
-  const hasStateRoot = blocks && blocks[0] && blocks[0].stateRoot
-  const stateRoot = hasStateRoot ? Buffer.from(blocks[0].stateRoot!!) : Buffer.from(configStateRoot, 'hex')
+  const hasStateRoot = blocks && blocks[0] && blocks[0].header.stateRoot
+  const stateRoot = hasStateRoot ? Buffer.from(blocks[0].header.stateRoot!!) : Buffer.from(configStateRoot, 'hex')
   vmr.setStateRoot(stateRoot)
 
   // Create block event emmiter
@@ -62,36 +67,39 @@ async function bootstrapServer() {
   const emitter = new EventEmitter()
 
   // Create Blockchain data store
-  logger.debug('bootstrapper -> Initializing RethinkDBDataStore')
-  const rethinkOpts = {
-    host: config.get('rethink_db.host'),
-    port: config.get('rethink_db.port'),
-    db: config.get('rethink_db.db_name'),
-    user: config.get('rethink_db.user'),
-    password: config.get('rethink_db.password'),
-    ssl: {
-      cert: config.get('rethink_db.cert_raw')
-    }
-  }
+  logger.debug('bootstrapper -> Connecting MongoDB')
+  const mongoUrl = config.get('data_stores.mongo_db.url')
+  const client = await MongoClient.connect(mongoUrl).catch(() => process.exit(-1))
 
-  if (!rethinkOpts.ssl.cert) {
-    delete rethinkOpts.ssl
-  }
-  const rConn = await r.connect(rethinkOpts)
+  logger.debug('bootstrapper -> Selecting MongoDB database')
+  const dbName = config.get('data_stores.mongo_db.db')
+  const db = client.db(dbName)
 
   // Create services
   // ---------------
 
   // Blocks
-  const blocksRepository = new RethinkBlockRepository(rConn, rethinkOpts)
+  const blocksRepository = new MongoBlockRepository(db)
   const blockService = new BlocksServiceImpl(blocksRepository, ds)
 
+  // Uncles
+  const unclesRepository = new MongoUncleRepository(db)
+  const uncleService = new UnclesServiceImpl(unclesRepository, ds)
+
+  // Adress
+  const addressRepository = new MongoAddressRepository(db)
+  const addressService = new AddressServiceImpl(addressRepository, ds)
+
+  // Adress
+  const pendingTxRepository = new MongoPendingTxRepository(db)
+  const pendingTxService = new PendingTxServiceImpl(pendingTxRepository, ds)
+
   // Txs
-  const txsRepository = new RethinkTxsRepository(rConn, rethinkOpts)
+  const txsRepository = new MongoTxsRepository(db)
   const txsService = new TxsServiceImpl(txsRepository, ds)
 
   // Charts
-  const chartsRepository = new RethinkChartsRepository(rConn, rethinkOpts)
+  const chartsRepository = new MockChartsRepository()
   const chartsService = new ChartsServiceImpl(chartsRepository)
 
   // Exchanges
@@ -104,13 +112,12 @@ async function bootstrapServer() {
   // Create streamer
   // ---------------
   logger.debug('bootstrapper -> Initializing streamer')
-  const streamer = new RethinkDbStreamer(rConn, emitter)
+  const streamer = new MongoStreamer(db, emitter)
   await streamer.initialize()
 
   // Create server
   logger.debug('bootstrapper -> Initializing server')
-  const blockTime: number = config.get('eth.block_time')
-  const server = new EthVMServer(blockService, txsService, chartsService, exchangeService, vmService, streamer, ds, blockTime)
+  const server = new EthVMServer(blockService, uncleService, addressService, txsService, chartsService, pendingTxService, exchangeService, vmService, streamer)
   await server.start()
 }
 

@@ -81,20 +81,18 @@ export default Vue.extend({
     this.$socket.emit(
       sEvents.getBlock,
       {
-        hash: this.blockHash
+        hash: this.blockHash.replace('0x','')
       },
       (error, result) => {
         if (result) {
           this.block = new Block(result)
-          console.log(this.block.getNumber())
 
-          this.setItems(this.block.getNumber().toString())
-          const uncleHashes = this.block.getUncleHashes()
-          /*Get Transactions for the block: */
+          this.setItems(this.block.getNumber())
+
           this.$socket.emit(
             sEvents.getBlockTransactions,
             {
-              hash: this.blockHash
+              hash: this.blockHash.replace('0x','')
             },
             (err, data) => {
               this.transactions = data.map(_tx => {
@@ -102,17 +100,17 @@ export default Vue.extend({
               })
             }
           )
-          uncleHashes.forEach((_hash: any, idx: number) => {
-            this.$socket.emit(
-              sEvents.getBlock,
-              {
-                hash: _hash.toBuffer()
-              },
-              (err, data) => {
-                this.uncles.push(new Block(data))
-              }
-            )
-          })
+          // uncleHashes.forEach((_hash: any, idx: number) => {
+          //   this.$socket.emit(
+          //     sEvents.getBlock,
+          //     {
+          //       hash: _hash.toBuffer()
+          //     },
+          //     (err, data) => {
+          //       this.uncles.push(new Block(data))
+          //     }
+          //   )
+          // })
         }
       }
     )

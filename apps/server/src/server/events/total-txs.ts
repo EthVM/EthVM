@@ -13,7 +13,7 @@ const getTotalTxsEvent: SocketEvent = {
     }
   },
 
-  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: TotalTxsPayload): Promise<number> => server.txsService.getTotalTxs(payload.address)
+  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: TotalTxsPayload): Promise<number> => server.addressService.getTotalTxs(payload.address)
 }
 
 export default getTotalTxsEvent

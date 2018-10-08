@@ -18,7 +18,7 @@ const getAvgHashRate = (blocks: Block[]): number => {
 
   blocks.forEach(block => {
     const stats = block.getStats()
-    const blockTime = stats.blockTime
+    const blockTime = stats.blockTimeMs
     avg = avg.add(new bn(blockTime))
   })
   avg = avg.div(blocks.length)
@@ -46,10 +46,10 @@ export default Vue.extend({
   },
   created() {
     if (this.$store.getters.getBlocks.length) {
-      this.hashRate = getAvgHashRate(this.$store.getters.getBlocks)
+      this.hashRate = getAvgHashRate(this.$store.getters.getBlocks).toString() + ' TH/s'
     }
     this.$eventHub.$on([sEvents.pastBlocksR, sEvents.newBlock], () => {
-      this.hashRate = getAvgHashRate(this.$store.getters.getBlocks)
+      this.hashRate = getAvgHashRate(this.$store.getters.getBlocks).toString() + ' TH/s'
     })
   },
   beforeDestroy() {

@@ -18,8 +18,8 @@
     }
   },
   "scripts": {
-    "testprovider": "ts-node bin/e2e-provider-cli.ts",
-    "monkey": "ts-node bin/monkey-cli.ts",
+    "e2e-provider": "ts-node bin/e2e-provider-cli.ts",
+    "monkey": "ts-node bin/monkey/monkey-cli.ts",
     "format": "yarn lint:fix && yarn prettier",
     "lint": "tslint -c tslint.json --project .",
     "lint:fix": "tslint -c tslint.json --project . --fix",
@@ -33,8 +33,10 @@
     "@types/node": "^10.7.0",
     "@types/ora": "^1.3.4",
     "@types/web3": "^1.0.3",
-    "commander": "^2.17.1",
+    "commander": "^2.18.0",
+    "ethereumjs-abi": "^0.6.5",
     "ethereumjs-tx": "^1.3.7",
+    "ethereumjs-util": "^5.2.0",
     "ghooks": "^2.0.4",
     "lerna": "^3.0.5",
     "opt-cli": "^1.6.0",
@@ -46,10 +48,5 @@
     "tslint-consistent-codestyle": "^1.13.3",
     "typescript": "^3.0.1",
     "web3-utils": "^1.0.0-beta.35"
-  },
-  "dependencies": {
-    "ethereumjs-abi": "^0.6.5",
-    "ethereumjs-util": "^5.2.0",
-    "rethinkdb": "^2.3.3"
   }
 }

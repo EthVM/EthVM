@@ -7,10 +7,14 @@ networks:
     driver: bridge
     ipam:
       config:
-      - subnet: 172.25.0.0/24
+        - subnet: 172.25.0.0/24
+
+volumes:
+  redis-volume:
+  mongodb-volume:
+  ethereumj-volume:
 
 services:
-
   traefik:
     image: traefik:1.6.2-alpine
     restart: unless-stopped
@@ -34,13 +38,13 @@ services:
     networks:
       - back
     labels:
-      - "traefik.enable=true"
-      - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:ethvm.lan"
-      - "traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:*||Access-Control-Allow-Credentials:true"
-      - "traefik.frontend.passHostHeader=true"
-      - "traefik.backend=ethvm"
-      - "traefik.port=8080"
+      - 'traefik.enable=true'
+      - 'traefik.default.protocol=http'
+      - 'traefik.frontend.rule=Host:ethvm.lan'
+      - 'traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:*||Access-Control-Allow-Credentials:true'
+      - 'traefik.frontend.passHostHeader=true'
+      - 'traefik.backend=ethvm'
+      - 'traefik.port=8080'
 
   server:
     build:
@@ -50,104 +54,85 @@ services:
     volumes:
       - ./apps/server:/var/ethvm-server
     depends_on:
-      - geth
       - redis
-      - rethinkdb
+      - mongodb
     networks:
       - back
     labels:
-      - "traefik.enable=true"
-      - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:ws.ethvm.lan"
-      - "traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://ethvm.lan||Access-Control-Allow-Credentials:true"
-      - "traefik.frontend.passHostHeader=true"
-      - "traefik.backend=server"
+      - 'traefik.enable=true'
+      - 'traefik.default.protocol=http'
+      - 'traefik.frontend.rule=Host:ws.ethvm.lan'
+      - 'traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://ethvm.lan||Access-Control-Allow-Credentials:true'
+      - 'traefik.frontend.passHostHeader=true'
+      - 'traefik.backend=server'
+      - 'traefik.port=3000'
     environment:
       - ETHVM_DATA_STORE_REDIS_HOST=redis
       - ETHVM_ETH_TRIE_DB_REDIS_HOST=redis
-      - ETHVM_RETHINK_DB_HOST=rethinkdb
 
   redis:
     image: redis:4.0.9-alpine
     restart: unless-stopped
+    volumes:
+      - redis-volume:/data
     networks:
       - back
     labels:
-      - "traefik.enable=true"
-      - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:redis.ethvm.lan"
-      - "traefik.port=6379"
-      - "traefik.backend=redis"
-    command: >
-      sh -c "redis-server && redis-cli flushall"
+      - 'traefik.enable=true'
+      - 'traefik.default.protocol=http'
+      - 'traefik.frontend.rule=Host:redis.ethvm.lan'
+      - 'traefik.port=6379'
+      - 'traefik.backend=redis'
 
-  rethinkdb:
-    image: rethinkdb:2.3.6
-    restart: unless-stopped
-    networks:
-      - back
-    labels:
-      - "traefik.enable=true"
-      - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:rethink.ethvm.lan"
-      - "traefik.port=28015"
-      - "traefik.backend=rethinkdb"
-      - "traefik.dashboard.frontend.rule=Host:rethink.dashboard.ethvm.lan"
-      - "traefik.dashboard.protocol=http"
-      - "traefik.dashboard.backend=ethvm_socket_server"
-      - "traefik.dashboard.port=8080"
-    command: >
-      bash -c "rm -rf /data/* && rethinkdb --bind all"
-
-  geth_miner:
-    build:
-      context: ./apps/eth
+  mongodb:
+    image: enkryptio/mongodb:4.0
     restart: unless-stopped
     volumes:
-      - ./provisioners/docker/config/geth/genesis.json:/genesis.json
-      - ./provisioners/docker/config/geth/keystore/:/keystore/
+      - mongodb-volume:/data/db
+      - ./provisioners/docker/config/mongo/ethvm_sample.archive:/ethvm_sample.archive
+    networks:
+      - back
+    ports:
+      - 27017:27017
+    command: "mongod --bind_ip 0.0.0.0 --replSet rs0 --quiet --slowms 10000"
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.default.protocol=http'
+      - 'traefik.frontend.rule=Host:mongo.ethvm.lan'
+      - 'traefik.port=27017'
+      - 'traefik.backend=mongodb'
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:5.0.0
     networks:
       back:
-        ipv4_address: 172.25.0.101
-    command:
-      - /bin/zsh
-      - -c
-      - |
-        rm -rf /geth && mkdir -p /geth/keystore
-        cp -a /keystore/. /geth/keystore/
-        geth --datadir '/geth' init /genesis.json
-        geth --datadir '/geth' --networkid 1234 --identity geth_miner --mine --minerthreads 1 --nousb --unlock '84baabad835e6ca9252658cd6eae0152f6330c09' --rpc --rpcaddr '0.0.0.0' --password =(echo '123456789') --nodiscover --maxpeers 2 --nodekeyhex '08f0e1dee5c1b4645f3331a566009e41a4514b6cd28656d63d0449ecf812812b'
+        ipv4_address: 172.25.0.103
+    ports:
+      - 2181:2181
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_SERVERS: 'server.1=zookeeper:2888:3888'
+      ZOOKEEPER_CLIENT_PORT: 2181
 
-  geth:
-    build:
-      context: ./apps/eth
+  kafka:
+    image: confluentinc/cp-kafka:5.0.0
     restart: unless-stopped
     depends_on:
-      - geth_miner
-      - rethinkdb
-    volumes:
-      - ./provisioners/docker/config/geth/genesis.json:/genesis.json
-      - ./provisioners/docker/config/geth/keystore/:/keystore/
-      - ./provisioners/docker/config/geth/static-nodes.json:/static-nodes.json
+      - zookeeper
     networks:
       back:
-        ipv4_address: 172.25.0.102
+        ipv4_address: 172.25.0.104
     ports:
-      - 8545:8545
-    labels:
-      - "traefik.enable=true"
-      - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:geth.ethvm.lan"
-      - "traefik.port=9545"
-      - "traefik.backend=geth"
+      - 9092:9092
     environment:
-      - RETHINKDB_URL=http://rethinkdb:28015
-    command:
-      - /bin/zsh
-      - -c
-      - |
-        rm -rf /geth && mkdir -p /geth/keystore
-        cp -a /keystore/. /geth/keystore/
-        cp /static-nodes.json /geth/
-        geth --datadir '/geth' --ethvm init /genesis.json
-        geth --datadir '/geth' --verbosity 6 --networkid 1234 --identity geth --ethvm --gcmode archive --rpc --rpcaddr '0.0.0.0' --rpccorsdomain '*' --rpcapi 'admin,personal,db,eth,net,web3,txpool,miner' --syncmode full --nat 'extip:172.25.0.102' --nousb --nodiscover --maxpeers 2
+      KAFKA_ADVERTISED_HOST_NAME: 'kafka'
+      KAFKA_ADVERTISED_LISTENERS: 'DOCKER://kafka:9092'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'DOCKER:PLAINTEXT'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'DOCKER'
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_BROKER_ID: 1
+      KAFKA_LOG4J_LOGGERS: 'kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
+      CONFLUENT_SUPPORT_METRICS_ENABLE: 'false'
+      KAFKA_MESSAGE_MAX_BYTES: '2000000000'

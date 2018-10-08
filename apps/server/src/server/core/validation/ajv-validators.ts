@@ -118,7 +118,10 @@ require('ajv-keywords')(ajv, ['instanceof']) // tslint:disable-line no-var-requi
 
 // Create custom data types
 ajv.addKeyword('address', {
-  validate: (schema, data) => isValidAddress(data),
+  validate: (schema, data) => {
+    data = '0x' + data
+    return isValidAddress(data)
+  },
   errors: false
 })
 

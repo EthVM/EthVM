@@ -1,0 +1,14 @@
+{
+  "accounts": [
+    { "address": "0xF15bCa2e1cb09718A9217a1e07693415C2032666", "key": "9eb7ca166c3d59a776e1d351bd590e4ca203fb30f8486590ccc222e03fd16f5a" },
+    { "address": "0x9319b0835c2DB1a31E067b5667B1e9b0AD278215", "key": "d069c15e0df2e63ee62342c5c1983cb0c4ea50a915fceeaaeacf0865f63424be" },
+    { "address": "0xD8E3EF88446D0e673d71374cBcC0955B50D1BA7A", "key": "aece9c0fc2f9c78b8949847ae5958d1f4a993b4b4ee28750c3e20abac0d523dd" },
+    { "address": "0x42ac2084283a327895EB1cFa5c9a12fc9096b839", "key": "e607dde9dfcde86da4bfd5cda2bf0e3faf2d2bd52c611e11e90fe4277d77a130" },
+    { "address": "0xB700f1B561d8Aa7b7d1E4bb8cB802039379D7Eff", "key": "cedc0b52fe193f6860f485f857f4670209819a4f00d1d38a5ea74df883ec7060" },
+    { "address": "0x7DF6e8B220dc1fE4b4e2F9b5D65a6cFFa58676a1", "key": "196d3b3d2287893fcfff22c78447554fa0cc26474a378b606d8af05c1a2bc81b" },
+    { "address": "0x7777F66ca508381d5063039FBa724b39987704AC", "key": "6a975a701769b34d7fb1091285c297dfbe308cecdb4740dcddb88f9587d3ee8f" },
+    { "address": "0x602e35CCe4e7AaB13D2e77f63683601BFEb5113c", "key": "7cb038bbb07479f548b1b4f5d94f4ca390219f721400cb1ffca4c2d54b2d5a03" },
+    { "address": "0xe977ff3c432A5De1860292EA2A14936B78Ca1Db1", "key": "fd7363eb603efd759a6e5f0d85d20daae80c55578d6052966b35aa3366c39799" }
+  ],
+  "main": { "address": "0xF15bCa2e1cb09718A9217a1e07693415C2032666", "key": "9eb7ca166c3d59a776e1d351bd590e4ca203fb30f8486590ccc222e03fd16f5a" }
+}

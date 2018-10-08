@@ -20,6 +20,7 @@
     }],
     "no-submodule-imports": [true, "@app", "web3-provider-engine", "merkle-patricia-tree","jayson"],
     "radix": false,
-    "no-unused-expression": false
+    "no-unused-expression": false,
+    "max-classes-per-file": false
   }
 }

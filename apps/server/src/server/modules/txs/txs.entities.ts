@@ -1,43 +1,50 @@
+import { Timestamp } from 'bson'
+
 export interface Log {
-  address: Buffer
+  address: string
   topics: Buffer[]
   data: Buffer
-  blockNumber: Buffer
-  txHash: Buffer
-  txIndex: Buffer
-  blockHash: Buffer
-  index: Buffer
-  removed: boolean
 }
 
-export interface TxLog {
-  hash: Buffer
-  logs: Log[]
+export interface Trace {
+  parentHash?: string
+  hash?: string
+  opcode?: string
+  deep?: number
+  index?: number
+  rejected?: boolean
+  from?: Buffer
+  to?: Buffer
+  value?: Buffer
+  data?: Buffer
+  gas?: Buffer
+  gasPrice?: Buffer
+  nonce?: Buffer
 }
 
 export interface Tx {
-  root?: Buffer
-  blockHash: Buffer
-  blockNumber?: number
-  transactionIndex?: Buffer
-  from: Buffer
-  fromBalance?: Buffer
-  to: Buffer
-  toBalance?: Buffer
-  gasUsed: Buffer
-  cumulativeGasUsed?: Buffer
-  contractAddress: Buffer | null
-  logsBloom?: Buffer | null
-  gas: Buffer
-  gasPrice: Buffer
+  blockHash: string
+  blockNumber: number
+  contractAddress?: string
+  data?: Buffer
+  fee?: Buffer
+  from?: string
+  gasLeftover?: Buffer
+  gasLimit?: Buffer
+  gasPrice?: Buffer
+  gasRefund?: Buffer
+  gasUsed?: Buffer
   hash: string
-  input: Buffer
+  internalTxs?: Trace[]
+  logs?: Log
   nonce?: Buffer
-  value: Buffer
-  v?: Buffer
   r?: Buffer
+  result?: boolean
   s?: Buffer
+  timestamp: Timestamp
+  to?: string
+  transactionIndex: number
+  v?: number
+  value?: Buffer
   status: boolean
-  pending?: boolean
-  timestamp: Buffer
 }

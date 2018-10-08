@@ -18,7 +18,8 @@ export class Block {
     return this.id
   }
 
-  public setTransactions(txs: Tx[]): void {
+  // ony tx hash are there
+  public setTransactions(txs: string[]): void {
     this.block.transactions = txs
   }
 
@@ -26,49 +27,48 @@ export class Block {
     if (isUncle) {
       this.setTransactions([])
       this.setUncles([])
-      this.setUncleHashes([])
+      //this.setUncleHashes([])
     }
-    this.block.isUncle = isUncle
+    //this.block.isUncle = isUncle
   }
 
-  public setUncles(uncles: Block[]): void {
-    this.block.uncles = uncles
+  public setUncles(uncles: string[]): void {
+    // this.block.header.unclesHash = uncles
   }
 
   public addUncle(uncle: Block): void {
     if (!this.block.uncles) {
       this.block.uncles = []
     }
-    this.block.uncles.push(uncle)
+    //this.block.uncles.push(uncle)
   }
 
   public getIsUncle(): boolean {
     if (!this.cache.isUncle) {
-      this.cache.isUncle = this.block.isUncle
+      if (this.block.uncles.length == 0) {
+        return (this.cache.isUncle = false)
+      }
+      return (this.cache.isUncle = true)
     }
     return this.cache.isUncle
   }
 
-  public getUncles(): Block[] {
-    return this.block.uncles
-  }
+  // public getUncles(): Block[] {
+  //   return this.block.uncles
+  // }
 
-  public getUncleHashes(): Hash[] {
-    return this.block.uncleHashes.map(_uncle => {
-      return common.Hash(_uncle)
-    })
-  }
+  // public getUncleHashes(): Hash[] {
+  //   return this.block.uncleHashes.map(_uncle => {
+  //     return common.Hash(_uncle)
+  //   })
+  // }
 
-  public setUncleHashes(hashes: Hash[]): void {
-    this.block.uncleHashes = hashes
-  }
+  // public setUncleHashes(hashes: Hash[]): void {
+  //   this.block.uncleHashes = hashes
+  // }
 
   public getHash(): string {
-    return this.block.hash
-  }
-
-  public getIntNumber(): number {
-    return this.block.number
+    return '0x' + this.block.hash
   }
 
   public getNumber(): number {
@@ -76,179 +76,184 @@ export class Block {
   }
 
   public getTransactionCount(): number {
-    return typeof this.block.transactionCount !== 'undefined' ? this.block.transactionCount : this.block.transactionHashes.length
+    return this.block.transactions.length
   }
 
-  public getTotalBlockReward(): EthValue {
-    if (!this.cache.totalBlockReward) {
-      this.cache.totalBlockReward = this.block.totalBlockReward
-        ? common.EthValue(this.block.totalBlockReward)
-        : common.EthValue(
-            Buffer.from(
-              new bn(common.HexNumber(this.block.blockReward).toString())
-                .plus(new bn(common.HexNumber(this.block.uncleReward).toString()))
-                .plus(new bn(common.HexNumber(this.block.txFees).toString()))
-                .toString(16),
-              'hex'
-            )
-          )
-    }
+  // public getTotalBlockReward(): EthValue {
+  //   this.block.header.
+  //   if (!this.cache.totalBlockReward) {
+  //     this.cache.totalBlockReward = this.block.totalBlockReward
+  //       ? common.EthValue(this.block.totalBlockReward)
+  //       : common.EthValue(
+  //           Buffer.from(
+  //             new bn(common.HexNumber(this.block.blockReward).toString())
+  //               .plus(new bn(common.HexNumber(this.block.uncleReward).toString()))
+  //               .plus(new bn(common.HexNumber(this.block.txFees).toString()))
+  //               .toString(16),
+  //             'hex'
+  //           )
+  //         )
+  //   }
 
-    return this.cache.totalBlockReward
-  }
+  //   return this.cache.totalBlockReward
+  // }
 
-  public getParentHash(): Hash {
+  public getParentHash(): string {
     if (!this.cache.parentHash) {
-      this.cache.parentHash = common.Hash(this.block.parentHash)
+      this.cache.parentHash = '0x' + this.block.header.parentHash
     }
     return this.cache.parentHash
   }
 
   public getNonce(): Hex {
     if (!this.cache.nonce) {
-      this.cache.nonce = common.Hex(this.block.nonce)
+      this.cache.nonce = this.block.header.nonce
     }
     return this.cache.nonce
   }
 
-  public getMixHash(): Hash {
-    if (!this.cache.mixHash) {
-      this.cache.mixHash = common.Hash(this.block.mixHash)
-    }
-    return this.cache.mixHash
-  }
+  // public getMixHash(): Hash {
+  //   if (!this.cache.mixHash) {
+  //     this.cache.mixHash = common.Hash(this.block.mixHash)
+  //   }
+  //   return this.cache.mixHash
+  // }
 
-  public getSha3Uncles(): Hash {
+  public getSha3Uncles(): string {
     if (!this.cache.sha3Uncles) {
-      this.cache.sha3Uncles = common.Hash(this.block.sha3Uncles)
+      this.cache.sha3Uncles = '0x' + this.block.header.unclesHash
     }
     return this.cache.sha3Uncles
   }
 
   public getLogsBloom(): Hex {
     if (!this.cache.logsBloom) {
-      this.cache.logsBloom = common.Hex(this.block.logsBloom)
+      this.cache.logsBloom = this.block.header.logsBloom
     }
     return this.cache.logsBloom
   }
 
   public getStateRoot(): Hash {
     if (!this.cache.stateRoot) {
-      this.cache.stateRoot = common.Hash(this.block.stateRoot)
+      this.cache.stateRoot = this.block.header.stateRoot
     }
     return this.cache.stateRoot
   }
 
-  public getMiner(): Address {
+  public getMiner(): string {
     if (!this.cache.miner) {
-      this.cache.miner = common.Address(this.block.miner)
+      this.cache.miner = '0x' + this.block.header.miner
     }
     return this.cache.miner
   }
 
   public getMinerBalance(): EthValue {
     if (!this.cache.minerBalance) {
-      this.cache.minerBalance = common.EthValue(this.block.minerBalance)
+      this.cache.minerBalance = common.EthValue(this.block.header.rewards[this.block.header.miner])
     }
     return this.cache.minerBalance
   }
 
   public getDifficulty(): HexNumber {
     if (!this.cache.difficulty) {
-      this.cache.difficulty = common.HexNumber(this.block.difficulty)
+      this.cache.difficulty = common.HexNumber(this.block.header.difficulty)
     }
     return this.cache.difficulty
   }
 
   public getTotalDifficulty(): HexNumber {
     if (!this.cache.totalDifficulty) {
-      this.cache.totalDifficulty = common.HexNumber(this.block.totalDifficulty)
+      this.cache.totalDifficulty = common.HexNumber(this.block.header.totalDifficulty)
     }
     return this.cache.totalDifficulty
   }
 
   public getExtraData(): Hex {
     if (!this.cache.extraData) {
-      this.cache.extraData = common.Hex(this.block.extraData)
+      this.cache.extraData = common.Hex(this.block.header.extraData)
     }
     return this.cache.extraData
   }
 
-  public getSize(): HexNumber {
-    if (!this.cache.size) {
-      this.cache.size = common.HexNumber(this.block.size)
-    }
-    return this.cache.size
-  }
+  // public getSize(): HexNumber {
+  //   if (!this.cache.size) {
+  //     this.cache.size = common.HexNumber(this.block.header.)
+  //   }
+  //   return this.cache.size
+  // }
 
   public getGasLimit(): HexNumber {
     if (!this.cache.gasLimit) {
-      this.cache.garLimit = common.HexNumber(this.block.gasLimit)
+      this.cache.garLimit = common.HexNumber(this.block.header.gasLimit)
     }
     return this.cache.garLimit
   }
 
-  public getGasUsed(): HexNumber {
+  public getGasUsed(): number {
     if (!this.cache.gasUsed) {
-      this.cache.gasUsed = common.HexNumber(this.block.gasUsed)
+      this.cache.gasUsed = this.block.header.gasUsed
     }
     return this.cache.gasUsed
   }
 
-  public getTimestamp(): HexTime {
+  public getTimestamp(): Date {
     if (!this.cache.timestamp) {
-      this.cache.timestamp = common.HexTime(this.block.timestamp)
+      this.cache.timestamp = this.block.header.timestamp
     }
-    return this.cache.timestamp
+    return new Date(this.cache.timestamp * 1000)
   }
 
   public getTransactionsRoot(): Hash {
     if (!this.cache.transactionsRoot) {
-      this.cache.transactionsRoot = common.Hash(this.block.transactionsRoot)
+      this.cache.transactionsRoot = common.Hash(this.block.header.transactionsRoot)
     }
     return this.cache.transactionsRoot
   }
 
   public getReceiptsRoot(): Hash {
     if (!this.cache.receiptsRoot) {
-      this.cache.receiptsRoot = common.Hash(this.block.receiptsRoot)
+      this.cache.receiptsRoot = common.Hash(this.block.header.receiptsRoot)
     }
     return this.cache.receiptsRoot
   }
 
   public getTransactions(): Tx[] {
-    return this.block.transactions
+    return []
   }
 
   public geTransactionHashes(): string[] {
-    if (!this.cache.transactionHashes) {
-      this.cache.transactionHashes = this.block.transactionHashes
+    if (!this.cache.transactions) {
+      this.cache.transactions = this.block.transactions
     }
-    return this.cache.transactionHashes
+    return this.cache.transactions
   }
 
   public getTxFees(): EthValue {
     if (!this.cache.txFees) {
-      this.cache.txFees = common.EthValue(this.block.txFees)
+      this.cache.txFees = common.EthValue(this.block.stats.totalTxsFees)
     }
     return this.cache.txFees
   }
 
   public getBlockReward(): EthValue {
+    const rewards = this.block.header.rewards
     if (!this.cache.blockReward) {
-      this.cache.blockReward = common.EthValue(this.block.blockReward)
+      this.cache.blockReward = common.EthValue(rewards[this.block.header.miner])
     }
     return this.cache.blockReward
   }
 
   public getUncleReward(): EthValue {
     if (!this.cache.uncleReward) {
-      this.cache.uncleReward = common.EthValue(this.block.uncleReward)
+      if (this.block.header.rewards[this.block.header.unclesHash]) {
+        return (this.cache.uncleReward = common.EthValue(Buffer.from(new bn(0).toString())))
+      }
+      this.cache.uncleReward = common.EthValue(this.block.header.rewards[this.block.header.unclesHash])
     }
     return this.cache.uncleReward
   }
 
-  public getStats(): BlockLayout['blockStats'] {
-    return this.block.blockStats
+  public getStats(): BlockLayout['stats'] {
+    return this.block.stats
   }
 }

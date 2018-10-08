@@ -1,10 +1,10 @@
 <template>
   <v-container grid-list-lg class="mt-0">
     <v-card fluid flat color="transparent">
-      <h4>{{ $t('subTitle.home') }} </h4>
-      <h6 class="text-muted">{{ $t('title.home') }}</h6>
+      <h2>{{ $t('subTitle.home') }} </h2>
+      <h4 class="grey--text">{{ $t('title.home') }}</h4>
     </v-card>
-    <v-layout row wrap justify-space-between>
+    <v-layout row wrap justify-space-between class="mb-4">
       <v-flex xs12 md6 lg3>
         <block-last-block></block-last-block>
       </v-flex>
@@ -19,7 +19,7 @@
       </v-flex>
     </v-layout>
     <!-- Charts -->
-    <v-layout row wrap justify-center>
+    <v-layout row wrap justify-center class="mb-4">
       <v-flex xs12 md6>
         <bar-chart-last-ten-blocks-tx></bar-chart-last-ten-blocks-tx>
       </v-flex>
@@ -29,9 +29,9 @@
     </v-layout>
     <!-- End Charts -->
     <!-- Last Blocks -->
-    <v-layout row class="mt-3">
+    <v-layout row class="mt-3 mb-4">
       <v-flex xs4>
-        <h4>{{ $t('title.lastBlock') }}</h4>
+        <h2>{{ $t('title.lastBlock') }}</h2>
       </v-flex>
       <v-spacer></v-spacer>
       <v-flex xs2>
@@ -40,12 +40,12 @@
         </v-layout>
       </v-flex>
     </v-layout>
-    <block-latest-blocks :max-items="20" :showHeader="true" showStyle="max-height: 390px"></block-latest-blocks>
+    <block-latest-blocks :max-items="20" :showHeader="true" showStyle="max-height: 609px"></block-latest-blocks>
     <!-- End Last Blocks -->
     <!-- Last Txs -->
     <v-layout row class="mt-3">
       <v-flex xs6>
-        <h4>{{ $t('title.lastTxs') }}</h4>
+        <h2>{{ $t('title.lastTxs') }}</h2>
       </v-flex>
       <v-spacer></v-spacer>
       <v-flex xs2>
@@ -54,7 +54,7 @@
         </v-layout>
       </v-flex>
     </v-layout>
-  <block-last-transactions :transactions="txs" :showHeader="true " showStyle="max-height: 390px"></block-last-transactions>
+    <block-last-transactions :transactions="txs" :showHeader="true " showStyle="max-height: 609px"></block-last-transactions>
     <!-- End Last Txs -->
   </v-container>
 </template>

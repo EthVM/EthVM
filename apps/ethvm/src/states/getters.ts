@@ -1,8 +1,12 @@
-import { Block, Tx } from '@app/models'
+import { Block, Tx, PendingTx, Uncle } from '@app/models'
 import { StateLayout } from '@app/models/server'
 
 const all = (state: StateLayout): StateLayout => {
   return state
+}
+
+const getPendingTxs = (state: StateLayout): PendingTx[] => {
+  return state.pendingTxs.items()
 }
 
 const getTxs = (state: StateLayout): Tx[] => {
@@ -10,17 +14,17 @@ const getTxs = (state: StateLayout): Tx[] => {
 }
 
 const getBlocks = (state: StateLayout): Block[] => {
-  const blocks = []
-  state.blocks.items().forEach(block => {
-    if (!block.getIsUncle()) {
-      blocks.push(block)
-    }
-  })
-  return blocks
+  return state.blocks.items()
+}
+
+const getUncles = (state: StateLayout): Uncle[] => {
+  return state.uncles.items()
 }
 
 export default {
   all,
   getTxs,
+  getPendingTxs,
+  getUncles,
   getBlocks
 }

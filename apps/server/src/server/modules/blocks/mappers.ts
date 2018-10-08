@@ -1,5 +1,4 @@
-import { Block, SmallBlock } from '@app/server/modules/blocks'
-import { BlockStats } from '@app/server/modules/stats'
+import { Block, BlockStats, SmallBlock } from '@app/server/modules/blocks'
 import { Tx } from '@app/server/modules/txs'
 import BigNumber from 'bignumber.js'
 import * as utils from 'web3-utils'
@@ -8,71 +7,21 @@ const toSmallBlock = (block: Block): SmallBlock => {
   return {
     number: block.number,
     hash: block.hash,
-    miner: block.miner,
-    timestamp: block.timestamp,
-    transactionCount: block.transactionHashes ? block.transactionHashes.length : 0,
-    uncleHashes: block.uncleHashes,
-    isUncle: block.isUncle,
-    totalBlockReward: Buffer.from(
-      new BigNumber(utils.toHex(block.blockReward))
-        .plus(new BigNumber(utils.toHex(block.txFees)))
-        .plus(new BigNumber(utils.toHex(block.uncleReward)))
-        .toString(16),
-      'hex'
-    ),
-    blockReward: block.blockReward,
-    txFees: block.txFees,
-    stateRoot: block.stateRoot,
-    uncleReward: block.uncleReward,
-    difficulty: block.difficulty,
-    blockStats: block.blockStats
-  }
-}
-
-const toBlockStats = (txs: Tx[] = [], blockTime: BigNumber): BlockStats => {
-  if (txs.length === 0) {
-    const zero = utils.toHex(0)
-    return {
-      blockTime: zero,
-      failed: zero,
-      success: zero,
-      avgGasPrice: zero,
-      pendingTxs: zero,
-      avgTxFees: zero
-    }
-  }
-
-  const txStatus = {
-    failed: new BigNumber(0),
-    success: new BigNumber(0),
-    totGasPrice: new BigNumber(0),
-    totTxFees: new BigNumber(0)
-  }
-
-  txs.forEach(tx => {
-    if (tx.status) {
-      txStatus.success = txStatus.success.plus(1)
-    } else {
-      txStatus.failed = txStatus.failed.plus(1)
-    }
-    txStatus.totGasPrice = txStatus.totGasPrice.plus(new BigNumber(utils.toHex(tx.gasPrice)))
-    txStatus.totTxFees = txStatus.totTxFees.plus(new BigNumber(utils.toHex(tx.gasPrice)).times(new BigNumber(utils.toHex(tx.gasUsed))))
-  })
-
-  return {
-    blockTime: utils.toHex(blockTime),
-    failed: utils.toHex(txStatus.failed),
-    success: utils.toHex(txStatus.success),
-    // TODO calc pending tx
-    pendingTxs: utils.toHex(0),
-    avgGasPrice: utils.toHex(txStatus.totGasPrice.div(txs.length).integerValue(BigNumber.ROUND_CEIL)),
-    avgTxFees: utils.toHex(txStatus.totTxFees.div(txs.length).integerValue(BigNumber.ROUND_CEIL))
+    miner: block.header.miner,
+    timestamp: block.header.timestamp,
+    transactionCount: block.stats.txs,
+    difficulty: block.header.difficulty,
+    stateRoot: block.header.stateRoot,
+    totalBlockReward: block.header.rewards[block.header.miner], // add miner, uncle block reward
+    blockReward: block.header.rewards[block.header.miner],
+    txFees: block.stats.totalTxsFees,
+    uncleReward: block.header.rewards[block.header.miner], // need uncle hash
+    blockStats: block.stats
   }
 }
 
 const mappers = {
-  toSmallBlock,
-  toBlockStats
+  toSmallBlock
 }
 
 export { mappers }

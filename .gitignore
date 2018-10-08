@@ -1,6 +1,10 @@
 # OSX
 .DS_Store
 
+database*
+logs
+state
+
 # Package managers
 node_modules/
 npm-debug.log*
@@ -22,3 +26,5 @@ package-lock.json
 # Project
 dist/
 rethinkdb_data/
+tmp/
+bin/geth/tmp/
