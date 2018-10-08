@@ -42,10 +42,10 @@ export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepo
   public getTx(hash: string): Promise<Tx | null> {
     return this.db
       .collection(MongoEthVM.collections.transactions)
-      .findOne({ _id: hash })
+      .findOne({ hash })
       .then(resp => {
         if (!resp) {
-          return {}
+          return null
         }
         return resp
       })

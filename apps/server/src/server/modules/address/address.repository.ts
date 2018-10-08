@@ -1,10 +1,10 @@
 import { Address } from '@app/server/modules/address'
+import { Tx } from '@app/server/modules/txs'
 import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
-import { Tx } from '../txs'
 
 export interface AddressRepository {
   getTxs(hash: string, limit: number, page: number): Promise<Tx[]>
-  getAddress(hash: string): Promise<Address>
+  getAddress(hash: string): Promise<Address | null>
   getTotalTxs(hash: string): Promise<number>
 }
 
@@ -20,13 +20,13 @@ export class MongoAddressRepository extends BaseMongoDbRepository implements Add
         return resp
       })
   }
-  public getAddress(hash: string): Promise<Address> {
+  public getAddress(hash: string): Promise<Address | null> {
     return this.db
       .collection(MongoEthVM.collections.accounts)
       .findOne({ address: hash })
       .then(resp => {
         if (!resp) {
-          return {}
+          return null
         }
         return resp
       })

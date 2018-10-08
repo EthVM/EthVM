@@ -11,7 +11,7 @@ export enum searchType {
 
 export interface Search {
   type: searchType
-  address?: Address
-  block?: Block
-  tx?: Tx
+  address?: Address | null
+  block?: Block | null
+  tx?: Tx | null
 }

@@ -7,7 +7,7 @@ import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blo
 import { MockChartsRepository } from '@app/server/modules/charts'
 import { ExchangeRate, ExchangeService, ExchangeServiceImpl, Quote } from '@app/server/modules/exchanges'
 import { MongoPendingTxRepository, PendingTxServiceImpl } from '@app/server/modules/pending-tx'
-import { SearchServiceImpl } from '@app/server/modules/search'
+import { SearchServiceImpl,searchType } from '@app/server/modules/search'
 import { MongoTxsRepository, TxsService, TxsServiceImpl } from '@app/server/modules/txs'
 import { MongoUncleRepository, UnclesServiceImpl } from '@app/server/modules/uncle'
 import { VmService } from '@app/server/modules/vm'
@@ -788,6 +788,76 @@ describe('ethvm-server-events', () => {
       await redisClient.flushall()
       const data = await callEvent('getTicker', input, client)
       expect(data).to.be.deep.equals({ to: 'USD', price: '2000' })
+    })
+  })
+
+  describe('search', () => {
+    it('should return Promise<search> with search result', async () => {
+      const inputs = [
+        {
+          hash: 'a6a18fe479c8aa8009244bfad3fc2d76ba90fa2419d6564c63e97f85d05a2313' // block
+        },
+        {
+          hash: '0008dbb2bfe21dee3bb76f3092f717fbe2560271774419eb71a4b02bd54a3a88' // tx
+        },
+        {
+          hash: '003565e290b647163de76fd75bc50c5d6d687711'
+        }
+      ]
+
+      for (const input of inputs) {
+        const data = await callEvent('search', input, client)
+        expect(data.type).to.be.lessThan(searchType.None)
+      }
+    })
+
+    it('should return Promise<search> without search result', async () => {
+      const inputs = [
+        {
+          hash: 'a6a18fe479c8aa8009244bfad3fc2d76ba90fa2419d6564c63e97f85d04a2314' // block
+        },
+        {
+          hash: '0008dbb2bfe21dee3bb76f3092f717fbe2560271774419eb71a4b02bd53a3a87' // tx
+        },
+        {
+          hash: '003565e290b647163de76fd75bc50c5d6d587710'
+        }
+      ]
+
+      for (const input of inputs) {
+        const data = await callEvent('search', input, client)
+        expect(data.type).to.be.eq(searchType.None)
+      }
+    })
+
+    it('should return err ', async () => {
+      const inputs = [
+        '',
+        '0x',
+        '0x0',
+        10,
+        {},
+        {
+          address: '0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238'
+        },
+        {
+          address: '0xd9ea042ad059033ba3c3be79f4081244f183bf03',
+          limit: '1',
+          page: 1
+        },
+        {
+          number: 1
+        }
+      ]
+
+      for (const input of inputs) {
+        try {
+          const data = await callEvent('getTokenBalance', input, client)
+        } catch (e) {
+          expect(e).to.be.eql(errors.BAD_REQUEST)
+          expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
+        }
+      }
     })
   })
 })

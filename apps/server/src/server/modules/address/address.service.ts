@@ -5,7 +5,7 @@ import { CacheRepository } from '@app/server/repositories'
 
 export interface AddressService {
   getTxs(hash: string, limit: number, page: number): Promise<Tx[]>
-  getAddress(hash: string): Promise<Address>
+  getAddress(hash: string): Promise<Address | null>
   getTotalTxs(hash: string): Promise<number>
 }
 
@@ -14,7 +14,7 @@ export class AddressServiceImpl implements AddressService {
   public getTxs(hash: string, limit: number, page: number): Promise<Tx[]> {
     return this.addressRepository.getTxs(hash, limit, page)
   }
-  public getAddress(hash: string): Promise<Address> {
+  public getAddress(hash: string): Promise<Address | null> {
     return this.addressRepository.getAddress(hash)
   }
 
