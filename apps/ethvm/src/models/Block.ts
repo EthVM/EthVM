@@ -82,7 +82,7 @@ export class Block {
   public getTotalBlockReward(): EthValue {
 
     if (!this.cache.totalBlockReward) {
-      let total = new bn('0')
+      let total = new bn(0)
       for (let address in this.block.header.rewards) {
         total = new bn(common.EthValue(this.block.header.rewards[address]).toString()).plus(total)
       }
@@ -238,11 +238,16 @@ export class Block {
 
   public getUncleReward(): EthValue {
     if (!this.cache.uncleReward) {
+      let total = new bn(0)
       if (this.block.header.rewards[this.block.header.unclesHash]) {
-        return (this.cache.uncleReward = common.EthValue(Buffer.from(new bn(0).toString())))
+        return (this.cache.uncleReward = common.EthValue(Buffer.from(total.toString())))
       }
-      this.cache.uncleReward = common.EthValue(this.block.header.rewards[this.block.header.unclesHash])
-    }
+        for (let address in this.block.header.rewards) {
+          if(address === this.block.header.miner) continue
+          total = new bn(common.EthValue(this.block.header.rewards[address]).toString()).plus(total)
+        }
+        this.cache.uncleReward = common.EthValue(Buffer.from(total.toString()))
+      }
     return this.cache.uncleReward
   }
 
