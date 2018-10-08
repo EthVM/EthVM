@@ -38,9 +38,9 @@
           </v-layout>
         </v-flex>
         <v-spacer></v-spacer>
-        <v-flex xs10>
+        <v-flex xs9>
           <v-layout align-center justify-end row fill-height>
-          <block-search></block-search>
+            <block-search></block-search>
           </v-layout>
         </v-flex>
       </v-layout>

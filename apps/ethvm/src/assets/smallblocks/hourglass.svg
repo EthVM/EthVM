@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="87px" height="115px" viewBox="0 0 87 115" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52 (66869) - http://www.bohemiancoding.com/sketch -->
+    <title>Shape</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-12.6%" y="-21.9%" width="125.3%" height="143.8%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="9" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="4" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.597496811   0 0 0 0 0.597496811   0 0 0 0 0.597496811  0 0 0 0.0387228261 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="linearGradient-2">
+            <stop stop-color="#6A11CB" offset="0%"></stop>
+            <stop stop-color="#2575FC" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="desktop_new" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.200000003">
+        <g id="Home-dropdown-menu-" transform="translate(-761.000000, -219.000000)" fill="#FFFFFF" fill-rule="nonzero">
+            <g id="Group-3" filter="url(#filter-1)" transform="translate(575.000000, 164.000000)">
+                <g id="hourglass">
+                    <g transform="translate(193.000000, 55.000000)" id="Shape">
+                        <path d="M101.508606,109.999766 L99.8673516,109.999766 C97.9820927,88.5991234 85.4787681,72.1695673 75.7596678,60.5 C85.4813366,48.8330071 97.9795242,32.4008766 99.8724885,11.000234 L101.513743,11.000234 C104.54454,11.000234 107,8.53657291 107,5.49882984 C107,2.46108676 104.54454,0 101.513743,0 L5.48625747,0 C2.4554598,0 0,2.46366112 0,5.49882984 C0,8.53657291 2.4554598,11.000234 5.48625747,11.000234 L7.12751146,11.000234 C9.01533882,32.4034509 21.5135265,48.8355815 31.2351953,60.5 C21.516095,72.1669929 9.01533882,88.5965491 7.12494299,109.999766 L5.48625747,109.999766 C2.4554598,109.999766 0,112.458278 0,115.496021 C0,118.536339 2.4554598,121 5.48625747,121 L12.3466478,121 L94.6507837,121 L101.513743,121 C104.54454,121 107,118.536339 107,115.496021 C107,112.458278 104.541972,109.999766 101.508606,109.999766 Z M18,110 C20.0698882,90.6618901 32.6567674,75.770181 42.0627723,64.6425934 L42.5654226,64.0478519 C44.2976329,62.0010143 44.2976329,59.004135 42.5654226,56.9547228 L42.06535,56.3625559 C32.6619227,45.2323936 20.0698882,30.3406845 18,11 L89,11 C86.9301118,30.3406845 74.3380773,45.2323936 64.93465,56.3625559 L64.4371551,56.9547228 C62.7049448,59.0015604 62.7049448,61.9984396 64.4371551,64.0478519 L64.9398054,64.6425934 C74.3432326,75.770181 86.9301118,90.6618901 89,110 L18,110 Z"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

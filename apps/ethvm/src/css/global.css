@@ -36,3 +36,25 @@ a:link {
 .v-text-field.v-text-field--solo .v-input__control {
     min-height: 46px;
 }
+
+/*SMALL COMPONENT: */
+
+.last-block {
+    background-position: right -10px bottom -17px;
+    background-image: url('~@/assets/smallblocks/cubes-in-stack-with-shadow.svg');
+}
+
+.time-since {
+    background-position: right -10px bottom -17px;
+    background-image: url('~@/assets/smallblocks/hourglass.svg')
+}
+
+.hash-rate {
+    background-position: right -10px bottom -17px;
+    background-image: url('~@/assets/smallblocks/hash.svg')
+}
+
+.difficulty {
+    background-position: right -10px bottom -17px;
+    background-image: url('~@/assets/smallblocks/dashboard.svg')
+}
