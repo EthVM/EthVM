@@ -1,4 +1,4 @@
-import { ChartService,ChartsRepository } from '@app/server/modules/charts'
+import { ChartService, ChartsRepository } from '@app/server/modules/charts'
 
 export class ChartsServiceImpl implements ChartService {
   constructor(private readonly chartsRepository: ChartsRepository) {}
@@ -19,5 +19,3 @@ export class ChartsServiceImpl implements ChartService {
     return Promise.resolve(3)
   }
 }
-
-

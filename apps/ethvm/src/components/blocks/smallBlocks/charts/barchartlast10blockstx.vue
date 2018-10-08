@@ -1,7 +1,6 @@
 <template>
   <v-layout column justify-center>
-    <vue-chart type="bar" :data="chartData" :options="chartOptions" :chartTitle="newTitle" :chartDescription="newDescription" :redraw="redraw"></vue-chart>
-    <footnote :footnotes="footnote"> </footnote>
+    <vue-chart type="bar" :data="chartData" :options="chartOptions" :chartTitle="newTitle" :chartDescription="newDescription" :redraw="redraw" :footnoteArr="footnote"></vue-chart>
   </v-layout>
 </template>
 
@@ -73,17 +72,17 @@ export default Vue.extend({
       newDescription: description,
       footnote: [
         {
-          color: 'success',
+          color: '#40ce9c',
           text: this.$i18n.t('footnote.success'),
           icon: 'fa fa-circle'
         },
         {
-          color: 'warning',
+          color: '#fe136c',
           text: this.$i18n.t('footnote.failed'),
           icon: 'fa fa-circle'
         },
         {
-          color: 'accent',
+          color: '#eea66b',
           text: this.$i18n.t('footnote.pending'),
           icon: 'fa fa-circle'
         }
@@ -138,8 +137,8 @@ export default Vue.extend({
         datasets: [
           {
             label: 'Pending',
-            backgroundColor: '#7c76fc',
-            borderColor: '#7c76fc',
+            backgroundColor: '#eea66b',
+            borderColor: '#eea66b',
             data: data.pData,
             type: 'line',
             fill: false,
@@ -147,13 +146,13 @@ export default Vue.extend({
           },
           {
             label: 'Sucessfull',
-            backgroundColor: '#20c0c7',
+            backgroundColor: '#40ce9c',
             data: data.sData,
             yAxisID: 'y-axis-1'
           },
           {
             label: 'Failed',
-            backgroundColor: '#f9967b',
+            backgroundColor: '#fe136c',
             data: data.fData,
             yAxisID: 'y-axis-1'
           }

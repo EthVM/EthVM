@@ -1,14 +1,11 @@
 sudo: false
 language: generic
-addons:
-  rethinkdb: "2.3.4"
 services:
-  - redis-server
   - mongodb
-env:
-  - ETHVM_RETHINK_DB_HOST=localhost
-  - ETHVM_RETHINK_DB_PORT=28015
-
+  - redis-server
+git:
+  submodules:
+    false
 matrix:
   include:
     -
@@ -33,9 +30,10 @@ matrix:
         - "10"
 
 before_install:
+  - ./.travis/build-condition.sh .travis/build-condition.sh
   - 'if [ $PROJECT = "apps/ethvm" ]; then cd $TRAVIS_BUILD_DIR/apps/ethvm; fi'
   - 'if [ $PROJECT = "apps/server" ]; then cd $TRAVIS_BUILD_DIR/apps/server; fi'
-  - 'if [ $PROJECT = "apps/ethvm-e2etest" ]; then yarn install; yarn testprovider generate; cd $TRAVIS_BUILD_DIR/apps/server; ls; pwd; fi'
+  - 'if [ $PROJECT = "apps/ethvm-e2etest" ]; then cd $TRAVIS_BUILD_DIR/apps/server; fi'
   - 'if [ $PROJECT = "apps/serverunittest" ]; then cd $TRAVIS_BUILD_DIR/apps/server; fi'
 
 install:

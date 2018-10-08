@@ -1,5 +1,6 @@
 <template>
-  <v-app>
+  <v-app style="
+    background: #f3f4f8;">
     <navigation></navigation>
     <v-content>
       <router-view :key="$route.fullPath" />
@@ -10,17 +11,16 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue'
-  export default Vue.extend({
-    name: 'app',
-    data() {
-      return {
-        pageName: '/'
-      }
+import Vue from 'vue'
+export default Vue.extend({
+  name: 'app',
+  data() {
+    return {
+      pageName: '/'
     }
-  })
+  }
+})
 </script>
 
 <style lang="less">
-
 </style>

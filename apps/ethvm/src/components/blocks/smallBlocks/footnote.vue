@@ -1,7 +1,8 @@
 <template>
-  <v-layout row justify-center>
-    <v-card v-for="i in footnotes" flat color="transparent" :key="i.text">
-      <v-layout row justify-start align-start fill-height>
+<v-card flat color="transparent">
+  <v-layout row>
+    <v-card-content v-for="i in footnotes" :key="i.text">
+      <v-layout row justify-start align-start>
         <v-flex xs1>
           <v-icon small :color="getColor(i)">{{i.icon}}</v-icon>
         </v-flex>
@@ -9,8 +10,9 @@
           <v-card-text class="pt-0 pl-1 caption">{{i.text}}</v-card-text>
         </v-flex>
       </v-layout>
-    </v-card>
+    </v-card-content>
   </v-layout>
+</v-card>
 </template>
 
 <script lang="ts">

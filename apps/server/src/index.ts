@@ -4,6 +4,8 @@ import { NullStreamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
 import { AddressServiceImpl, MongoAddressRepository } from '@app/server/modules/address'
 import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blocks'
+import { SearchServiceImpl } from '@app/server/modules/search'
+
 import { ChartsServiceImpl, MockChartsRepository } from '@app/server/modules/charts'
 import { MongoUncleRepository, UnclesServiceImpl } from '@app/server/modules/uncle'
 
@@ -98,6 +100,9 @@ async function bootstrapServer() {
   const txsRepository = new MongoTxsRepository(db)
   const txsService = new TxsServiceImpl(txsRepository, ds)
 
+  // Search
+  const searchService = new SearchServiceImpl(txsRepository, addressRepository, blocksRepository, ds)
+
   // Charts
   const chartsRepository = new MockChartsRepository()
   const chartsService = new ChartsServiceImpl(chartsRepository)
@@ -117,7 +122,18 @@ async function bootstrapServer() {
 
   // Create server
   logger.debug('bootstrapper -> Initializing server')
-  const server = new EthVMServer(blockService, uncleService, addressService, txsService, chartsService, pendingTxService, exchangeService, vmService, streamer)
+  const server = new EthVMServer(
+    blockService,
+    uncleService,
+    addressService,
+    txsService,
+    chartsService,
+    pendingTxService,
+    exchangeService,
+    searchService,
+    vmService,
+    streamer
+  )
   await server.start()
 }
 

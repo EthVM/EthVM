@@ -2,10 +2,14 @@ import config from '@app/config'
 import { errors } from '@app/server/core/exceptions'
 import { KafkaStreamer, Streamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
+import { AddressServiceImpl, MongoAddressRepository } from '@app/server/modules/address'
 import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blocks'
 import { MockChartsRepository } from '@app/server/modules/charts'
 import { ExchangeRate, ExchangeService, ExchangeServiceImpl, Quote } from '@app/server/modules/exchanges'
-import {  MongoTxsRepository, TxsService,TxsServiceImpl } from '@app/server/modules/txs'
+import { MongoPendingTxRepository, PendingTxServiceImpl } from '@app/server/modules/pending-tx'
+import { SearchServiceImpl } from '@app/server/modules/search'
+import { MongoTxsRepository, TxsService, TxsServiceImpl } from '@app/server/modules/txs'
+import { MongoUncleRepository, UnclesServiceImpl } from '@app/server/modules/uncle'
 import { VmService } from '@app/server/modules/vm'
 import { RedisCacheRepository } from '@app/server/repositories'
 import { expect } from 'chai'
@@ -40,8 +44,7 @@ describe('ethvm-server-events', () => {
   let client: any
 
   beforeAll(async () => {
-
-    const mClient = await MongoClient.connect("mongodb://localhost:27017").catch(() => process.exit(-1))
+    const mClient = await MongoClient.connect('mongodb://localhost:27017').catch(() => process.exit(-1))
     const db = mClient.db('ethvm_local')
 
     const blocksRepository = new MongoBlockRepository(db)
@@ -50,10 +53,25 @@ describe('ethvm-server-events', () => {
     const txsRepository = new MongoTxsRepository(db)
     const txsService: TxsService = new TxsServiceImpl(txsRepository, ds)
 
-    const chartsService = new ChartsServiceImpl(mock(MockChartsRepository))
-    const exRepository = new MockExchangeRepository(ds)
+    // Adress
+    const addressRepository = new MongoAddressRepository(db)
+    const addressService = new AddressServiceImpl(addressRepository, ds)
 
+    // Uncles
+    const unclesRepository = new MongoUncleRepository(db)
+    const uncleService = new UnclesServiceImpl(unclesRepository, ds)
+
+    const chartsService = new ChartsServiceImpl(mock(MockChartsRepository))
+
+    const searchService = new SearchServiceImpl(txsRepository, addressRepository, blocksRepository, ds)
+
+    const exRepository = new MockExchangeRepository(ds)
     const exchangeService: ExchangeService = new ExchangeServiceImpl(exRepository, ds)
+
+    // Adress
+    const pendingTxRepository = new MongoPendingTxRepository(db)
+    const pendingTxService = new PendingTxServiceImpl(pendingTxRepository, ds)
+
     const vmService: VmService = new VmServiceImpl()
 
     const streamer: Streamer = mock(KafkaStreamer)
@@ -61,7 +79,18 @@ describe('ethvm-server-events', () => {
     client = io.connect(`http://${config.get('server.host')}:${config.get('server.port')}`)
 
     // Create server
-    server = new EthVMServer(blockService, txsService, chartsService, exchangeService, vmService, streamer, ds)
+    server = new EthVMServer(
+      blockService,
+      uncleService,
+      addressService,
+      txsService,
+      chartsService,
+      pendingTxService,
+      exchangeService,
+      searchService,
+      vmService,
+      streamer
+    )
     await server.start()
   })
 
@@ -74,7 +103,7 @@ describe('ethvm-server-events', () => {
     it('should return Promise<Tx[]>', async () => {
       const inputs = [
         {
-          address: '54daeb3e8a6bbc797e4ad2b0339f134b186e4637',
+          address: '2a65aca4d5fc5b5c859090a6c34d164135398226',
           limit: 10,
           page: 0
         }
@@ -209,7 +238,7 @@ describe('ethvm-server-events', () => {
     it('should return Promise<Tx>', async () => {
       const inputs = [
         {
-          hash: '19f1df2c7ee6b464720ad28e903aeda1a5ad8780afc22f0b960827bd4fcf656d'
+          hash: '033befc7dc0cb6de880e6e11ad74e7cad7d9cde318012ba6a86e53838408af4f'
         }
       ]
       for (const input of inputs) {
@@ -253,13 +282,13 @@ describe('ethvm-server-events', () => {
     it('should return Promise<number>', async () => {
       const inputs = [
         {
-          address: 'bd08e0cddec097db7901ea819a3d1fd9de8951a2'
+          address: '2a65aca4d5fc5b5c859090a6c34d164135398226'
         }
       ]
 
       for (const input of inputs) {
         const data = await callEvent('getTotalTxs', input, client)
-        expect(data).to.equal(1)
+        expect(data).to.equal(516)
       }
     })
 
@@ -350,7 +379,7 @@ describe('ethvm-server-events', () => {
 
       for (const input of inputs) {
         const data = await callEvent('pastBlocks', input, client)
-        expect(data).to.have.lengthOf(2)
+        expect(data).to.have.lengthOf(10)
       }
     })
 
@@ -387,7 +416,7 @@ describe('ethvm-server-events', () => {
     it('should return Promise<Block>', async () => {
       const inputs = [
         {
-          hash: '2ce94342df186bab4165c268c43ab982d360c9474f429fec5565adfc5d1f258b'
+          hash: '6d2b88ef2c35b3050dc4095a0b22adf36a2d3c055e784b223dffeabb03bafebb'
         }
       ]
       for (const input of inputs) {
