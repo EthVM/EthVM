@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "@enkrypt.io/ethereumjs-vm": "^2.3.3",
+    "@types/jest": "^23.3.3",
     "ajv": "^6.5.2",
     "ajv-keywords": "^3.2.0",
     "bignumber.js": "^7.2.1",
@@ -72,7 +73,7 @@
     "@types/socket.io": "^1.4.36",
     "chai": "^4.1.2",
     "husky": "^1.0.0-rc.9",
-    "jest": "^23.5.0",
+    "jest": "^23.6.0",
     "mocha": "^5.2.0",
     "nodemon": "^1.18.3",
     "prettier": "1.14.2",
