@@ -5,8 +5,6 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import java.nio.ByteBuffer
 
-fun ByteArray?.toHex(): String? = ByteUtil.toHexString(this)
-
 fun ByteBuffer?.toByteArray(): ByteArray? {
   if (this == null) {
     return null

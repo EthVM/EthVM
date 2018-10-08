@@ -1,4 +1,4 @@
-import { Uncle } from '@app/server/modules/Uncle'
+import { Uncle } from '@app/server/modules/uncle'
 import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
 
 export interface UnclesRepository {

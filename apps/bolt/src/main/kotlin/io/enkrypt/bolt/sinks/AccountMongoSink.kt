@@ -3,8 +3,8 @@ package io.enkrypt.bolt.sinks
 import arrow.core.right
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.DeleteOneModel
-import com.mongodb.client.model.ReplaceOneModel
-import com.mongodb.client.model.ReplaceOptions
+import com.mongodb.client.model.UpdateOneModel
+import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.WriteModel
 import io.enkrypt.bolt.extensions.toDocument
 import io.enkrypt.bolt.extensions.toHex
@@ -45,12 +45,13 @@ class AccountMongoSink : MongoSink<String, Account>() {
 
     val ops = batch.map<Account, WriteModel<Document>> { account ->
       val filter = Document(mapOf("_id" to account.address.toHex()))
-      val replaceOptions = ReplaceOptions().upsert(true)
+      val updateOptions = UpdateOptions().upsert(true)
 
       if (account.isEmpty) {
         DeleteOneModel<Document>(filter)
       } else {
-        ReplaceOneModel(filter, account.toDocument(), replaceOptions)
+        val update = Document(mapOf("\$set" to account.toDocument()))
+        UpdateOneModel(filter, update, updateOptions)
       }
     }
 

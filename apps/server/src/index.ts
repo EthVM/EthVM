@@ -9,6 +9,7 @@ import { SearchServiceImpl } from '@app/server/modules/search'
 import { ChartsServiceImpl, MockChartsRepository } from '@app/server/modules/charts'
 import { MongoUncleRepository, UnclesServiceImpl } from '@app/server/modules/uncle'
 
+import { MongoStreamer } from '@app/server/core/streams/mongo.streamer'
 import { CoinMarketCapRepository, ExchangeServiceImpl } from '@app/server/modules/exchanges'
 import { MongoPendingTxRepository, PendingTxServiceImpl } from '@app/server/modules/pending-tx'
 import { MongoTxsRepository, TxsServiceImpl } from '@app/server/modules/txs'
@@ -116,15 +117,8 @@ async function bootstrapServer() {
   // Create streamer
   // ---------------
   logger.debug('bootstrapper -> Initializing streamer')
-  // const kafkaStreamerOpts: KafkaStreamerOpts = {
-  //   groupId: config.get('streamer.kafka.group_id'),
-  //   brokers: config.get('streamer.kafka.brokers'),
-  //   blocksTopic: config.get('streamer.kafka.topics.blocks'),
-  //   pendingTxsTopic: config.get('streamer.kafka.topics.pending_txs')
-  // }
-  // const streamer = new KafkaStreamer(kafkaStreamerOpts, emitter)
-  // await streamer.initialize()
-  const streamer = new NullStreamer()
+  const streamer = new MongoStreamer(db, emitter)
+  await streamer.initialize()
 
   // Create server
   logger.debug('bootstrapper -> Initializing server')

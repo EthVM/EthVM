@@ -13,7 +13,7 @@ import {
   TokensBalancePayload,
   TxsPayload
 } from '@app/server/core/payloads'
-import { Streamer, StreamerEvents } from '@app/server/core/streams'
+import { Streamer, StreamingEvent } from '@app/server/core/streams'
 import { Block, BlocksService } from '@app/server/modules/blocks'
 import { ChartService } from '@app/server/modules/charts'
 import { SearchService } from '@app/server/modules/search'
@@ -21,10 +21,8 @@ import { SearchService } from '@app/server/modules/search'
 import { ExchangeService } from '@app/server/modules/exchanges'
 import { PendingTxService } from '@app/server/modules/pending-tx'
 import { Tx, TxsService } from '@app/server/modules/txs'
-import { Uncle, UnclesService } from '@app/server/modules/uncle'
+import { UnclesService } from '@app/server/modules/uncle'
 import { VmService } from '@app/server/modules/vm'
-import { CacheRepository } from '@app/server/repositories'
-import BigNumber from 'bignumber.js'
 import * as fs from 'fs'
 import * as http from 'http'
 import * as SocketIO from 'socket.io'
@@ -104,8 +102,11 @@ export class EthVMServer {
     })
 
     logger.debug('EthVMServer - start() / Registering streamer events')
-    this.streamer.addListener(StreamerEvents.newBlock, this.onNewBlockEvent)
-    this.streamer.addListener(StreamerEvents.pendingTx, this.onNewPendingTxsEvent)
+    this.streamer.addListener('block', this.onBlockEvent)
+    this.streamer.addListener('tx', this.onTxEvent)
+    this.streamer.addListener('pendingTx', this.onPendingTxEvent)
+    this.streamer.addListener('account', this.onAccountEvent)
+    this.streamer.addListener('uncle', this.onUncleEvent)
 
     logger.debug('EthVMServer - start() / Starting to listen socket events on SocketIO')
     this.io.on(
@@ -165,8 +166,10 @@ export class EthVMServer {
 
   // TODO: This method should only receive the block and emit it directly
   // This logic should not be here
-  private onNewBlockEvent = (block: any): void => {
-    logger.info(`EthVMServer - onNewBlockEvent / Block: ${block.hash}`)
+  private onBlockEvent = (event: StreamingEvent): void => {
+    const { op, key, value } = event
+
+    logger.info(`EthVMServer - onBlockEvent / Op: ${op}, Hash: ${value.hash}, `)
 
     // Save state root if defined
     // if (block.stateRoot) {
@@ -207,10 +210,33 @@ export class EthVMServer {
     // }
   }
 
-  private onNewPendingTxsEvent = (tx: Tx): void => {
-    logger.info(`EthVMServer - onNewPendingTxsEvent / Tx: ${tx}`)
-    const txHash = tx.hash
-    this.io.to(txHash).emit(`${txHash}_update`, tx)
-    this.io.to('pendingTxs').emit('newPendingTx', tx)
+  private onTxEvent = (event: StreamingEvent): void => {
+    const { op, key, value } = event
+
+    logger.info(`EthVMServer - onTxEvent / Op: ${op}, Hash: ${key}`)
+    // const txHash = tx.hash
+    // this.io.to(txHash).emit(`${txHash}_update`, tx)
+    // this.io.to('pendingTxs').emit('newPendingTx', tx)
+  }
+
+  private onPendingTxEvent = (event: StreamingEvent): void => {
+    const { op, key, value } = event
+
+    logger.info(`EthVMServer - onPendingTxEvent / Op: ${op}, Hash: ${key}`)
+    // const txHash = tx.hash
+    // this.io.to(txHash).emit(`${txHash}_update`, tx)
+    // this.io.to('pendingTxs').emit('newPendingTx', tx)
+  }
+
+  private onUncleEvent = (event: StreamingEvent): void => {
+    const { op, key, value } = event
+
+    logger.info(`EthVMServer - onUncleEvent / Op: ${op}, Hash: ${key}`)
+  }
+
+  private onAccountEvent = (event: StreamingEvent): void => {
+    const { op, key, value } = event
+
+    logger.info(`EthVMServer - onAccountEvent / Op: ${op}, Address: ${key}`)
   }
 }
