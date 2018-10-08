@@ -17,7 +17,7 @@ describe('ajv-validators', () => {
   describe('balancePayloadValidator', () => {
     it('should validate a correct balance payload', () => {
       const payload = {
-        address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+        address: 'DECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
       }
       const isvalid = balancePayloadValidator(payload)
       expect(isvalid).to.be.true
@@ -186,7 +186,7 @@ describe('ajv-validators', () => {
   describe('tokensBalancePayloadValidator', () => {
     it('should validate a correct tokens balance payload', () => {
       const payload = {
-        address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+        address: 'DECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
       }
       const isvalid = tokensBalancePayloadValidator(payload)
       expect(isvalid).to.be.true
@@ -222,7 +222,7 @@ describe('ajv-validators', () => {
   describe('totalTxsPayloadValidator', () => {
     it('should validate a correct total txs payload', () => {
       const payload = {
-        address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+        address: 'DECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
       }
       const isvalid = totalTxsPayloadValidator(payload)
       expect(isvalid).to.be.true
@@ -298,14 +298,14 @@ describe('ajv-validators', () => {
     it('should validate a correct txs payload', () => {
       const inputs = [
         {
-          address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+          address: 'DECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
         },
         {
-          address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
+          address: 'DECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
           limit: 10
         },
         {
-          address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
+          address: 'DECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
           limit: 10,
           page: 1
         }
