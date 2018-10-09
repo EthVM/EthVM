@@ -52,7 +52,7 @@
   },
   "tableHeader": {
     "blockN": "Block #",
-    "txs": "Txs",
+    "txs": "Transactions",
     "reward": "Reward",
     "txN": "Tx #",
     "limit": "Limit",

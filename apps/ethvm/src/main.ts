@@ -183,7 +183,12 @@ Vue.use(Vuetify, {
     success: '#92cce1',
     warning: '#fed9a1',
     error: '#fe8778',
-    info: '#a0a8fd'
+    info: '#8391a8',
+    nav: '#a0a8fd',
+    txSuccess: '#40ce9c',
+    txFail: '#fe1377',
+    txPen: '#eea66b'
+
     // used -->
     // background: String(colors.grey.darken3)
   }

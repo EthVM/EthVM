@@ -58,3 +58,7 @@ a:link {
     background-position: right -10px bottom -17px;
     background-image: url('~@/assets/smallblocks/dashboard.svg')
 }
+
+.psmall {
+    padding-bottom: 10px
+}

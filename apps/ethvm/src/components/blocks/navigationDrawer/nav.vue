@@ -3,7 +3,7 @@
     <v-navigation-drawer v-model="drawer" fixed floating class="primary elevation-3 pt-3" app width="260">
       <v-img :src="require('@/assets/logo-white.png')" height="50px" contain class="ma-4"></v-img>
       <v-list class="pa-0" two-line v-for="(item, index) in items" :key="index" v-model="item.active">
-        <v-list-tile v-if="!item.links" class="info--text" :to="item.header.routerLink" active-class="white--text accent" :prepend-icon="item.header.icon" @click="setActive(index, null)">
+        <v-list-tile v-if="!item.links" class="nav--text" :to="item.header.routerLink" active-class="white--text accent" :prepend-icon="item.header.icon" @click="setActive(index, null)">
           <v-layout row align-center justify-start fill-height>
             <v-list-tile-action>
               <v-icon class="mr-2 ml-3">{{item.header.icon}}</v-icon>
@@ -11,7 +11,7 @@
             <v-list-tile-title>{{ item.header.text }}</v-list-tile-title>
           </v-layout>
         </v-list-tile>
-        <v-list-group v-else :class="[item.isActive ? 'accent white--text' : 'info--text']">
+        <v-list-group v-else :class="[item.isActive ? 'accent white--text' : 'nav--text']">
           <v-list-tile slot="activator">
             <v-layout row align-center justify-start fill-height>
               <v-list-tile-action>
@@ -22,7 +22,7 @@
           </v-list-tile>
           <v-list-tile v-for="(link, j) in item.links" v-if="link.routerLink" :to="link.routerLink" :key="j" @click="setActive(index, j)">
             <v-list-tile-content>
-              <v-list-tile-title :class="[link.isActive ? 'white--text ml-5 pl-2' : 'info--text ml-5 pl-2']">{{link.text}}</v-list-tile-title>
+              <v-list-tile-title :class="[link.isActive ? 'white--text ml-5 pl-2' : 'nav--text ml-5 pl-2']">{{link.text}}</v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
         </v-list-group>
