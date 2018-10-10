@@ -100,10 +100,7 @@ export class EthVMServer {
 
     logger.debug('EthVMServer - start() / Registering streamer events')
     this.streamer.addListener('block', this.onBlockEvent)
-    this.streamer.addListener('tx', this.onTxEvent);
-    this.streamer.addListener('pendingTx', this.onPendingTxEvent)
     this.streamer.addListener('account', this.onAccountEvent);
-    this.streamer.addListener('uncle', this.onUncleEvent);
 
     logger.debug('EthVMServer - start() / Starting to listen socket events on SocketIO')
     this.io.on(
@@ -206,34 +203,6 @@ export class EthVMServer {
     //   this.io.to('txs').emit('newTx', txs)
     //   this.ds.putTransactions(txs)
     // }
-  }
-
-  private onTxEvent = (event: StreamingEvent): void => {
-
-    const { op, key, value } = event;
-
-    logger.info(`EthVMServer - onTxEvent / Op: ${op}, Hash: ${key}`);
-    // const txHash = tx.hash
-    // this.io.to(txHash).emit(`${txHash}_update`, tx)
-    // this.io.to('pendingTxs').emit('newPendingTx', tx)
-  }
-
-  private onPendingTxEvent = (event: StreamingEvent): void => {
-
-    const { op, key, value } = event;
-
-    logger.info(`EthVMServer - onPendingTxEvent / Op: ${op}, Hash: ${key}`);
-    // const txHash = tx.hash
-    // this.io.to(txHash).emit(`${txHash}_update`, tx)
-    // this.io.to('pendingTxs').emit('newPendingTx', tx)
-  }
-
-  private onUncleEvent = (event: StreamingEvent): void => {
-
-    const { op, key, value } = event;
-
-    logger.info(`EthVMServer - onUncleEvent / Op: ${op}, Hash: ${key}`);
-
   }
 
   private onAccountEvent = (event: StreamingEvent): void => {

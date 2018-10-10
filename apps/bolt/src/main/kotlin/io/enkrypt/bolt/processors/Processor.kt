@@ -23,8 +23,7 @@ abstract class AbstractBaseProcessor : Processor, KoinComponent {
 
   protected val mongoDB: MongoDatabase by inject()
 
-  protected val addressesCollection: MongoCollection<Document> by lazy { mongoDB.getCollection("addresses") }
-  protected val pendingTransactionsCollection: MongoCollection<Document> by lazy { mongoDB.getCollection("pending_transactions") }
+  protected val statsCollection: MongoCollection<Document> by lazy { mongoDB.getCollection("statistics") }
 
   protected lateinit var streams: KafkaStreams
 

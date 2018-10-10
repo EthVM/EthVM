@@ -1,13 +1,11 @@
-package io.enkrypt.bolt.sinks
+package io.enkrypt.bolt.kafka
 
-import arrow.core.right
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.DeleteOneModel
 import com.mongodb.client.model.ReplaceOneModel
 import com.mongodb.client.model.ReplaceOptions
 import com.mongodb.client.model.WriteModel
 import io.enkrypt.bolt.extensions.toDocument
-import io.enkrypt.bolt.extensions.transaction
 import org.apache.kafka.streams.processor.Cancellable
 import org.apache.kafka.streams.processor.ProcessorContext
 import org.apache.kafka.streams.processor.PunctuationType
@@ -16,7 +14,7 @@ import org.ethereum.core.Transaction
 
 class PendingTransactionMongoSink : MongoSink<String, Transaction?>() {
 
-  private val accountsCollection: MongoCollection<Document> by lazy { mongoDB.getCollection("pending_transactions") }
+  private val pendingTransactionsCollection: MongoCollection<Document> by lazy { mongoDB.getCollection("pending_transactions") }
 
   override val batchSize = 100
 
@@ -56,23 +54,18 @@ class PendingTransactionMongoSink : MongoSink<String, Transaction?>() {
       }
     }
 
-    mongoSession.transaction {
-      accountsCollection.bulkWrite(ops)
-    }.also {
-      when {
-        it.isLeft() -> {
-          context.commit()
+    try {
+      pendingTransactionsCollection.bulkWrite(ops)
 
-          val elapsedMs = System.currentTimeMillis() - startMs
-          logger.info { "${batch.size} pending transactions updated in $elapsedMs ms" }
+      context.commit()
 
-          batch.clear()
-        }
-        it.isRight() -> {
-          // TODO handle error
-          logger.error { "Failed to update pending transactions. ${it.right()}" }
-        }
-      }
+      val elapsedMs = System.currentTimeMillis() - startMs
+      logger.debug { "${batch.size} pending transactions updated in $elapsedMs ms" }
+
+      batch.clear()
+
+    } catch (e: Exception) {
+      logger.error { "Failed to update pending transactions. $e" }
     }
 
   }
@@ -80,7 +73,6 @@ class PendingTransactionMongoSink : MongoSink<String, Transaction?>() {
   override fun close() {
     running = false
     scheduledWrite?.cancel()
-    mongoSession.close()
   }
 
 }

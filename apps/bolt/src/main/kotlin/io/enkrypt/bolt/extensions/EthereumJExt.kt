@@ -1,26 +1,40 @@
 package io.enkrypt.bolt.extensions
 
-import io.enkrypt.bolt.models.BlockStats
 import io.enkrypt.kafka.models.Account
 import org.bson.Document
-import org.ethereum.core.Block
-import org.ethereum.core.BlockHeader
-import org.ethereum.core.BlockSummary
-import org.ethereum.core.Transaction
-import org.ethereum.core.TransactionReceipt
+import org.ethereum.core.*
 import org.ethereum.vm.LogInfo
 import org.ethereum.vm.program.InternalTransaction
 
-fun Block?.toDocument(summary: BlockSummary, stats: BlockStats? = null) = Document(
+fun Block?.toDocument(summary: BlockSummary) = Document(
   mapOf(
     "hash" to this?.hash?.toHex(),
     "number" to this?.number,
     "header" to this?.header.toDocument(summary),
-    "transactions" to this?.transactionsList?.map { it.hash.toHex() },
-    "uncles" to this?.uncleList?.map { it.hash.toHex() },
-    "stats" to stats?.toDocument()
+    "transactions" to this?.transactionsList?.map { it.toDocument() },
+    "uncles" to this?.uncleList?.map { it.toDocument(summary) },
+    "stats" to summary.statistics.toDocument()
   )
 )
+
+fun BlockStatistics?.toDocument(): Document? {
+  return if(this == null) {
+    null
+  } else {
+    Document(
+      mapOf(
+        "successfulTxs" to numSuccessfulTxs,
+        "failedTxs" to numFailedTxs,
+        "txs" to totalTxs,
+        "internalTxs" to totalInternalTxs,
+        "totalGasPrice" to totalGasPrice.toByteArray(),
+        "avgGasPrice" to avgGasPrice.toByteArray(),
+        "totalTxsFees" to totalTxsFees.toByteArray(),
+        "avgTxsFees" to avgTxsFees.toByteArray()
+      )
+    )
+  }
+}
 
 fun BlockHeader?.toDocument(summary: BlockSummary) = Document(
   mapOf(
@@ -46,8 +60,8 @@ fun BlockHeader?.toDocument(summary: BlockSummary) = Document(
 fun Transaction?.toDocument(): Document {
   return Document(
     mapOf(
-      "hash" to this?.hash,
-      "nonce" to this?.nonce,
+      "hash" to this?.hash.toHex(),
+      "nonce" to this?.nonce.toHex(),
       "from" to this?.sender.toHex(),
       "to" to this?.receiveAddress?.toHex(),
       "contractAddress" to this?.contractAddress?.toHex(),

@@ -26,29 +26,13 @@ export class MongoStreamer implements Streamer {
       intervalMs, 'block', emitter
     )
 
-    this.txReader = new MongoCollectionChangeStreamReader(
-      db.collection(MongoEthVM.collections.transactions),
-      intervalMs, 'tx', emitter
-    )
-
-    this.pendingTxReader = new MongoCollectionChangeStreamReader(
-      db.collection(MongoEthVM.collections.pendingTxs),
-      intervalMs, 'pendingTx', emitter
-    )
-
-    this.unclesReader = new MongoCollectionChangeStreamReader(
-      db.collection(MongoEthVM.collections.uncles),
-      intervalMs, 'uncle', emitter
-    )
-
     this.accountsReader = new MongoCollectionChangeStreamReader(
       db.collection(MongoEthVM.collections.accounts),
       intervalMs, 'account', emitter
     )
 
     await this.blocksReader.start()
-    await this.txReader.start()
-    await this.pendingTxReader.start()
+    await this.accountsReader.start();
 
     return true
   }

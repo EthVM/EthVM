@@ -1,7 +1,7 @@
 package io.enkrypt.bolt.processors
 
 import io.enkrypt.bolt.serdes.RLPTransactionSerde
-import io.enkrypt.bolt.sinks.PendingTransactionMongoSink
+import io.enkrypt.bolt.kafka.PendingTransactionMongoSink
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams

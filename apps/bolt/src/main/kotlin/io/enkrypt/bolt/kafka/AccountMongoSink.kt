@@ -1,6 +1,5 @@
-package io.enkrypt.bolt.sinks
+package io.enkrypt.bolt.kafka
 
-import arrow.core.right
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.DeleteOneModel
 import com.mongodb.client.model.ReplaceOneModel
@@ -8,7 +7,6 @@ import com.mongodb.client.model.ReplaceOptions
 import com.mongodb.client.model.WriteModel
 import io.enkrypt.bolt.extensions.toDocument
 import io.enkrypt.bolt.extensions.toHex
-import io.enkrypt.bolt.extensions.transaction
 import io.enkrypt.kafka.models.Account
 import org.apache.kafka.streams.processor.Cancellable
 import org.apache.kafka.streams.processor.ProcessorContext
@@ -54,30 +52,26 @@ class AccountMongoSink : MongoSink<String, Account>() {
       }
     }
 
-    mongoSession.transaction {
+    try {
+
       accountsCollection.bulkWrite(ops)
-    }.also {
-      when {
-        it.isLeft() -> {
-          context.commit()
 
-          val elapsedMs = System.currentTimeMillis() - startMs
-          logger.info { "${batch.size} accounts updated in $elapsedMs ms" }
+      context.commit()
 
-          batch.clear()
-        }
-        it.isRight() -> {
-          // TODO handle error
-          logger.error { "Failed to update accounts. ${it.right()}" }
-        }
-      }
+      val elapsedMs = System.currentTimeMillis() - startMs
+      logger.debug { "${batch.size} accounts updated in $elapsedMs ms" }
+
+      batch.clear()
+
+    } catch (e: Exception) {
+      logger.error { "Failed to update accounts. $e" }
     }
+
   }
 
   override fun close() {
     running = false
     scheduledWrite?.cancel()
-    mongoSession.close()
   }
 
 }
