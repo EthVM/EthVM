@@ -78,7 +78,7 @@ export async function sendContract(fromAddress: string, type: string = 'erc20'):
 
   params.gas = await estimateGas({ data })
 
-  return await sendTransaction(params, privateKey)
+  return sendTransaction(params, privateKey)
 }
 
 export async function waitOnConfirmation(txhash: string, timeoutSeconds: number = 120): Promise<void> {
