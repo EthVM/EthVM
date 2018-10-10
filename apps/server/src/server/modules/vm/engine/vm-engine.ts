@@ -1,9 +1,7 @@
-import { logger } from '@app/logger'
 import { Token } from '@app/server/modules/token'
 import BigNumber from 'bignumber.js'
 import * as abi from 'ethereumjs-abi'
 import * as jayson from 'jayson/promise'
-import { URL } from 'url'
 import * as utils from 'web3-utils'
 
 export interface VmEngineOptions {

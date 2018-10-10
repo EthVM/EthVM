@@ -1,7 +1,4 @@
-import { Block, BlockStats, SmallBlock } from '@app/server/modules/blocks'
-import { Tx } from '@app/server/modules/txs'
-import BigNumber from 'bignumber.js'
-import * as utils from 'web3-utils'
+import { Block, SmallBlock } from '@app/server/modules/blocks'
 
 const toSmallBlock = (block: Block): SmallBlock => {
   return {
