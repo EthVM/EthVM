@@ -11,7 +11,6 @@ export interface KafkaStreamerOpts {
 }
 
 export class KafkaStreamer implements Streamer {
-
   private blocksStream: Kafka.ConsumerStream
 
   constructor(private readonly opts: KafkaStreamerOpts, private readonly emitter: EventEmitter) {}

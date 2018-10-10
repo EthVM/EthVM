@@ -1,11 +1,11 @@
 import { ListenerFn } from 'eventemitter3'
 
-export type StreamingEventName = 'block' | 'tx' | 'pendingTx' | 'uncle' | 'account';
+export type StreamingEventName = 'block' | 'tx' | 'pendingTx' | 'uncle' | 'account'
 
 export interface StreamingEvent {
-  op: 'insert' | 'delete' | 'replace' | 'updated' | 'invalidate';
-  key: any;
-  value: any;
+  op: 'insert' | 'delete' | 'replace' | 'updated' | 'invalidate'
+  key: any
+  value: any
 }
 
 export interface Streamer {

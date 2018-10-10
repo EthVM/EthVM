@@ -100,7 +100,7 @@ export class EthVMServer {
 
     logger.debug('EthVMServer - start() / Registering streamer events')
     this.streamer.addListener('block', this.onBlockEvent)
-    this.streamer.addListener('account', this.onAccountEvent);
+    this.streamer.addListener('account', this.onAccountEvent)
 
     logger.debug('EthVMServer - start() / Starting to listen socket events on SocketIO')
     this.io.on(
@@ -161,8 +161,7 @@ export class EthVMServer {
   // TODO: This method should only receive the block and emit it directly
   // This logic should not be here
   private onBlockEvent = (event: StreamingEvent): void => {
-
-    const { op, key, value } = event;
+    const { op, key, value } = event
 
     logger.info(`EthVMServer - onBlockEvent / Op: ${op}, Hash: ${value.hash}, `)
 
@@ -206,10 +205,8 @@ export class EthVMServer {
   }
 
   private onAccountEvent = (event: StreamingEvent): void => {
+    const { op, key, value } = event
 
-    const { op, key, value } = event;
-
-    logger.info(`EthVMServer - onAccountEvent / Op: ${op}, Address: ${key}`);
-
+    logger.info(`EthVMServer - onAccountEvent / Op: ${op}, Address: ${key}`)
   }
 }
