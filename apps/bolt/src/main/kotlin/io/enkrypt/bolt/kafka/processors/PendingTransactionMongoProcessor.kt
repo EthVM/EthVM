@@ -14,7 +14,9 @@ import org.ethereum.core.Transaction
 
 class PendingTransactionMongoProcessor : MongoProcessor<String, Transaction?>() {
 
-  private val pendingTransactionsCollection: MongoCollection<Document> by lazy { mongoDB.getCollection("pending_transactions") }
+  private val pendingTransactionsCollection: MongoCollection<Document> by lazy {
+    mongoDB.getCollection(config.mongo.pendingTransactionsCollection)
+  }
 
   override val batchSize = 100
 
@@ -34,6 +36,7 @@ class PendingTransactionMongoProcessor : MongoProcessor<String, Transaction?>() 
   }
 
   private fun tryToWrite() {
+
     if (!running || batch.isEmpty()) {
       return
     }
@@ -50,7 +53,7 @@ class PendingTransactionMongoProcessor : MongoProcessor<String, Transaction?>() 
       if (txn == null) {
         DeleteOneModel<Document>(filter)
       } else {
-        ReplaceOneModel(filter, txn.toDocument(), replaceOptions)
+        ReplaceOneModel(filter, txn.toDocument(null, null, null), replaceOptions)
       }
     }
 

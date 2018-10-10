@@ -41,7 +41,7 @@ class ChartsProcessor : AbstractBaseProcessor() {
 
   override fun onPrepareProcessor() {
 
-    // RLP Serde
+    // Serdes
     val blockSerde = RLPBlockSummarySerde()
     val bigIntegerSerde = BigIntegerSerde()
     val dateSerde = DateSerde()
@@ -55,6 +55,8 @@ class ChartsProcessor : AbstractBaseProcessor() {
         Consumed.with(Serdes.ByteArray(), blockSerde)
       )
       .map { _, v -> KeyValue(timestampToDay(v.block.timestamp), v) }
+
+    // Blocks count
 
     val blockCountByDay = blocksByDay
       .mapValues { v -> v.block.hash.toHex() }
@@ -77,7 +79,7 @@ class ChartsProcessor : AbstractBaseProcessor() {
         },
         Materialized.with(dateSerde, bigIntegerSerde)
       ).toStream()
-      .foreach { date, value -> this.persistStatistic("avg_total_difficulty", date, value.toLong()) }
+      .foreach { date, value -> persistStatistic("avg_total_difficulty", date, value.toLong()) }
 
     // Avg Gas Price
 
@@ -93,7 +95,7 @@ class ChartsProcessor : AbstractBaseProcessor() {
         { total, count -> total.divide(BigInteger.valueOf(count)) },
         Materialized.with(dateSerde, bigIntegerSerde)
       ).toStream()
-      .foreach { date, value -> this.persistStatistic("avg_gas_price", date, value.toLong()) }
+      .foreach { date, value -> persistStatistic("avg_gas_price", date, value.toLong()) }
 
     // Avg Txs Fees
 
@@ -111,7 +113,7 @@ class ChartsProcessor : AbstractBaseProcessor() {
         },
         Materialized.with(dateSerde, bigIntegerSerde)
       ).toStream()
-      .foreach { date, value -> this.persistStatistic("avg_tx_fees", date, value.toLong()) }
+      .foreach { date, value -> persistStatistic("avg_tx_fees", date, value.toLong()) }
 
     // Avg Failed Txs
 
@@ -129,7 +131,7 @@ class ChartsProcessor : AbstractBaseProcessor() {
         { total, count -> total / count },
         Materialized.with(dateSerde, Serdes.Long())
       ).toStream()
-      .foreach { date, value -> this.persistStatistic("avg_failed_txs", date, value.toLong()) }
+      .foreach { date, value -> persistStatistic("avg_failed_txs", date, value.toLong()) }
 
     // Avg Successful Txs
 
@@ -147,7 +149,7 @@ class ChartsProcessor : AbstractBaseProcessor() {
         { total, count -> total / count },
         Materialized.with(dateSerde, Serdes.Long())
       ).toStream()
-      .foreach { date, value -> this.persistStatistic("avg_successful_txs", date, value.toLong()) }
+      .foreach { date, value -> persistStatistic("avg_successful_txs", date, value.toLong()) }
 
     // Generate the topology
     val topology = builder.build()

@@ -15,7 +15,9 @@ import org.bson.Document
 
 class AccountMongoProcessor : MongoProcessor<String, Account>() {
 
-  private val accountsCollection: MongoCollection<Document> by lazy { mongoDB.getCollection("accounts") }
+  private val accountsCollection: MongoCollection<Document> by lazy {
+    mongoDB.getCollection(config.mongo.accountsCollection)
+  }
 
   override val batchSize = 100
 

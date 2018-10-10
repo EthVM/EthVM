@@ -7,6 +7,7 @@ import org.ethereum.core.BlockHeader
 import org.ethereum.core.BlockStatistics
 import org.ethereum.core.BlockSummary
 import org.ethereum.core.Transaction
+import org.ethereum.core.TransactionExecutionSummary
 import org.ethereum.core.TransactionReceipt
 import org.ethereum.vm.LogInfo
 import org.ethereum.vm.program.InternalTransaction
@@ -16,7 +17,7 @@ fun Block?.toDocument(summary: BlockSummary) = Document(
     "hash" to this?.hash?.toHex(),
     "number" to this?.number,
     "header" to this?.header.toDocument(summary),
-    "transactions" to this?.transactionsList?.map { it.toDocument() },
+    "transactions" to this?.transactionsList?.mapIndexed { pos, tx -> tx.toDocument(pos, summary) },
     "uncles" to this?.uncleList?.map { it.toDocument(summary) },
     "stats" to summary.statistics.toDocument()
   )
@@ -62,53 +63,35 @@ fun BlockHeader?.toDocument(summary: BlockSummary) = Document(
   )
 )
 
-fun Transaction?.toDocument(): Document {
+fun Transaction?.toDocument(pos: Int, blockSummary: BlockSummary): Document {
+  val txHash = this?.hash.toHex()
+  val receipt = blockSummary.receipts.find { txHash == it.transaction.hash.toHex() }
+  val executionSummary = blockSummary.summaries.find { txHash == it.transaction.hash.toHex() }
+
+  return this.toDocument(pos, receipt, executionSummary)
+}
+
+fun Transaction?.toDocument(pos: Int? = null, receipt: TransactionReceipt?, executionSummary: TransactionExecutionSummary?): Document {
+  val internalTxs = executionSummary?.internalTransactions ?: emptyList()
+
   return Document(
     mapOf(
       "hash" to this?.hash.toHex(),
+      "transactionIndex" to pos,
       "nonce" to this?.nonce.toHex(),
       "from" to this?.sender.toHex(),
       "to" to this?.receiveAddress?.toHex(),
       "contractAddress" to this?.contractAddress?.toHex(),
+      "status" to receipt?.isTxStatusOK,
+      "fee" to executionSummary?.fee?.toByteArray(),
       "value" to this?.value,
       "data" to this?.data,
+      "logs" to executionSummary?.logs?.map { it.toDocument() },
       "gasPrice" to this?.gasPrice,
       "gasLimit" to this?.gasLimit,
-      "v" to this?.signature?.v,
-      "r" to this?.signature?.r?.toByteArray(),
-      "s" to this?.signature?.s?.toByteArray()
-    )
-  )
-}
-
-fun Transaction?.toDocument(pos: Int = 0, summary: BlockSummary, receipt: TransactionReceipt): Document {
-  val txHash = this?.hash.toHex()
-
-  val block = summary.block
-  val txSummary = summary.summaries.find { txHash == it.transaction.hash.toHex() }
-  val internalTxs = txSummary?.internalTransactions ?: emptyList()
-
-  return Document(
-    mapOf(
-      "hash" to txHash,
-      "blockHash" to block.hash.toHex(),
-      "blockNumber" to block.number,
-      "transactionIndex" to pos,
-      "timestamp" to block.timestamp,
-      "nonce" to this?.nonce,
-      "status" to receipt.isTxStatusOK,
-      "fee" to txSummary?.fee?.toByteArray(),
-      "from" to this?.sender.toHex(),
-      "to" to this?.receiveAddress?.toHex(),
-      "contractAddress" to this?.contractAddress?.toHex(),
-      "value" to this?.value,
-      "data" to this?.data,
-      "logs" to txSummary?.logs?.map { it.toDocument() },
-      "gasPrice" to this?.gasPrice,
-      "gasLimit" to this?.gasLimit,
-      "gasUsed" to txSummary?.gasUsed?.toByteArray(),
-      "gasRefund" to txSummary?.gasRefund?.toByteArray(),
-      "gasLeftover" to txSummary?.gasLeftover?.toByteArray(),
+      "gasUsed" to executionSummary?.gasUsed?.toByteArray(),
+      "gasRefund" to executionSummary?.gasRefund?.toByteArray(),
+      "gasLeftover" to executionSummary?.gasLeftover?.toByteArray(),
       "traces" to internalTxs.map { it.toDocument() },
       "v" to this?.signature?.v,
       "r" to this?.signature?.r?.toByteArray(),

@@ -14,7 +14,9 @@ import org.ethereum.core.BlockSummary
 
 class BlockMongoTransformer : MongoTransformer<Long, BlockSummary>() {
 
-  private val blocksCollection: MongoCollection<Document>by lazy { mongoDB.getCollection("blocks") }
+  private val blocksCollection: MongoCollection<Document>by lazy {
+    mongoDB.getCollection(config.mongo.blocksCollection)
+  }
 
   override val batchSize = 50
   private val batch = ArrayList<BlockSummary>()

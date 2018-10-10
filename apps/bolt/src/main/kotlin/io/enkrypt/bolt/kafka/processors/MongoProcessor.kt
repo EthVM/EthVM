@@ -2,6 +2,7 @@ package io.enkrypt.bolt.kafka.processors
 
 import com.mongodb.MongoClient
 import com.mongodb.client.MongoDatabase
+import io.enkrypt.bolt.AppConfig
 import mu.KotlinLogging
 import org.apache.kafka.streams.processor.Processor
 import org.apache.kafka.streams.processor.ProcessorContext
@@ -12,6 +13,8 @@ abstract class MongoProcessor<K, V> : Processor<K, V>, KoinComponent {
 
   open val timeoutMs = 500L
   open val batchSize = 10
+
+  protected val config: AppConfig by inject()
 
   protected val mongoClient: MongoClient by inject()
   protected val mongoDB: MongoDatabase by inject()

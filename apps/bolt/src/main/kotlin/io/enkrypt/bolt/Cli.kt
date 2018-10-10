@@ -6,8 +6,8 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.mongodb.MongoClient
 import com.mongodb.MongoClientURI
 import io.enkrypt.bolt.kafka.processors.AccountMongoProcessor
-import io.enkrypt.bolt.kafka.transformers.BlockMongoTransformer
 import io.enkrypt.bolt.kafka.processors.PendingTransactionMongoProcessor
+import io.enkrypt.bolt.kafka.transformers.BlockMongoTransformer
 import io.enkrypt.bolt.processors.AccountStateProcessor
 import io.enkrypt.bolt.processors.BlocksProcessor
 import io.enkrypt.bolt.processors.ChartsProcessor
@@ -72,12 +72,35 @@ class Cli : CliktCommand() {
   // DI
   private val boltModule = module {
 
-    single { TopicsConfig(blocksTopic, processedBlocksTopic, canonicalChainTopic, pendingTxsTopic, accountStateTopic, metadataTopic) }
-    single { AppConfig(bootstrapServers, startingOffset, get()) }
+    single {
+      MongoCollectionsConfig(
+        "blocks",
+        "pending_transactions"
+      )
+    }
+
+    single {
+      TopicsConfig(
+        blocksTopic,
+        processedBlocksTopic,
+        canonicalChainTopic,
+        pendingTxsTopic,
+        accountStateTopic,
+        metadataTopic
+      )
+    }
+
+    single {
+      AppConfig(
+        bootstrapServers,
+        startingOffset,
+        get(),
+        get()
+      )
+    }
 
     single { MongoClientURI(mongoUri) }
-    single { MongoClient(MongoClientURI(mongoUri)) }
-
+    single { MongoClient(get<MongoClientURI>()) }
     single {
       val client = get<MongoClient>()
       val uri = get<MongoClientURI>()
