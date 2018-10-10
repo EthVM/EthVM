@@ -2,26 +2,22 @@
   <v-card color="white" flat class="pt-3 pr-4 pl-4">
     <v-layout row wrap align-center pb-1>
       <v-flex d-flex xs8 md7 order-xs1>
-        <v-layout row wrap>
-          <v-flex d-flex>
-            <v-card-title class="title font-weight-bold">{{ $t('title.lastBlock') }}</v-card-title>
-          </v-flex>
-        </v-layout>
+        <v-card-title class="title font-weight-bold">{{ $t('title.lastBlock') }}</v-card-title>
       </v-flex>
       <v-flex hidden-sm-and-down md4 order-md2>
         <v-layout justify-center>
           <footnote :footnotes="footnote"></footnote>
         </v-layout>
       </v-flex>
-      <v-flex d-flex xs4 md1 order-xs2 order-md3>
+      <v-flex d-flex xs4 md1 order-xs2 order-md3 v-if="!frameBlocks">
         <v-layout justify-end>
           <v-btn outline color="secondary" class="text-capitalize" to="/blocks"> {{ $t('bttn.viewAll') }}</v-btn>
         </v-layout>
       </v-flex>
     </v-layout>
     <!-- Table Header -->
-    <v-card color="info" flat class="white--text pl-3 pr-1" height="40px">
-      <v-layout align-center justify-start row fill-height pr-3 >
+    <v-card color="info" flat class="white--text pl-3 pr-1" height="40px" style="margin-right: 1px">
+      <v-layout align-center justify-start row fill-height pr-3>
         <v-flex xs6 md2>
           <h5>{{ $t( 'tableHeader.blockN' ) }}</h5>
         </v-flex>
@@ -35,40 +31,40 @@
       </v-layout>
     </v-card>
     <!--End Table Header-->
-    <v-card v-if="getBlocks" flat id="scroll-target" :style="getStyle" class="scroll-y ma-0 pt-0 pb-0">
-      <v-layout column fill-height v-scroll:#scroll-target class="pt-1">
+    <v-card v-if="getBlocks" flat id="scroll-target" :style="getStyle" class="scroll-y pt-0 pb-0">
+      <v-layout column fill-height v-scroll:#scroll-target class="pt-1" style="margin-right: 1px">
         <v-flex xs12>
-        <v-card v-for="block in getBlocks" class="transparent pb-1"  flat v-if="!block.getIsUncle()" v-bind:key="block.hash" >
-          <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
-            <v-flex d-flex xs6 md2 order-xs1>
-              <router-link class="black--text" :to="'/block/'+block.getHash()">{{block.getNumber()}}</router-link>
-            </v-flex>
-            <v-flex xs12 md6 lg6 class="pr-0" order-xs3 order-md2 pr-3>
-              <p  class="text-truncate info--text font-weight-thin  psmall mb-0"><strong>{{ $t( 'common.hash' ) }}: </strong>
-                <router-link class="primary--text font-italic font-weight-regular" :to="'/block/'+block.getHash()">{{block.getHash()}}</router-link>
-              </p>
-              <p class="text-truncate info--text font-weight-thin mb-0"><strong>{{ $t( 'block.miner' ) }}:  </strong>
-                <router-link :to="'/address/'+block.getMiner().toString()" class="secondary--text font-italic font-weight-regular">{{block.getMiner().toString()}}</router-link>
-              </p>
-            </v-flex>
-            <v-flex hidden-sm-and-down md2 order-xs4 order-md3>
-              <p class="txSuccess--text mb-0 psmall"> {{block.getStats().successfulTxs}}</p>
-              <p class="txFail--text mb-0"> {{block.getStats().failedTxs}}</p>
-            </v-flex>
-            <v-flex d-flex xs6 md2  order-xs2 order-md4>
-              <p class="text-truncate black--text align-center mb-0">
-                <v-tooltip v-if="getShortRewardValue(block.getTotalBlockReward().toEth().toString(), true)" bottom>
-                  <v-icon slot="activator" dark small>fa fa-question-circle info--text</v-icon>
-                  <span>{{block.getTotalBlockReward().toEth().toString()}}</span>
-                </v-tooltip>
-                {{getShortRewardValue(block.getTotalBlockReward().toEth().toString(), false)}}
-              </p>
-            </v-flex>
-          </v-layout>
-          <v-divider></v-divider>
-        </v-card>
+          <v-card v-for="block in getBlocks" class="transparent pb-1" flat v-if="!block.getIsUncle()" v-bind:key="block.hash">
+            <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
+              <v-flex d-flex xs6 md2 order-xs1>
+                <router-link class="black--text pb-1" :to="'/block/'+block.getHash()">{{block.getNumber()}}</router-link>
+              </v-flex>
+              <v-flex xs12 md6 lg6 class="pr-0" order-xs3 order-md2 pr-3>
+                <p class="text-truncate info--text  psmall mb-0 pb-2">{{ $t( 'common.hash' ) }}:
+                  <router-link class="primary--text font-italic font-weight-regular" :to="'/block/'+block.getHash()">{{block.getHash()}}</router-link>
+                </p>
+                <p class="text-truncate info--text  mb-0">{{ $t( 'block.miner' ) }}:
+                  <router-link :to="'/address/'+block.getMiner().toString()" class="secondary--text font-italic font-weight-regular">{{block.getMiner().toString()}}</router-link>
+                </p>
+              </v-flex>
+              <v-flex hidden-sm-and-down md2 order-xs4 order-md3>
+                <p class="txSuccess--text mb-0 psmall"> {{block.getStats().successfulTxs}}</p>
+                <p class="txFail--text mb-0"> {{block.getStats().failedTxs}}</p>
+              </v-flex>
+              <v-flex d-flex xs6 md2 order-xs2 order-md4>
+                <p class="text-truncate black--text align-center mb-0">
+                  <v-tooltip v-if="getShortRewardValue(block.getTotalBlockReward().toEth().toString(), true)" bottom>
+                    <v-icon slot="activator" dark small>fa fa-question-circle info--text</v-icon>
+                    <span>{{block.getTotalBlockReward().toEth().toString()}}</span>
+                  </v-tooltip>
+                  {{getShortRewardValue(block.getTotalBlockReward().toEth().toString(), false)}}
+                </p>
+              </v-flex>
+            </v-layout>
+            <v-divider></v-divider>
+          </v-card>
         </v-flex>
-        </v-layout>
+      </v-layout>
     </v-card>
     <div v-else>
       <v-card class="mt-3 mb-3">
@@ -87,7 +83,7 @@ import BN from 'bignumber.js'
 export default Vue.extend({
   name: 'TablesLatestBlocks',
   props: {
-    showHeader: {
+    frameBlocks: {
       type: Boolean,
       default: false
     },

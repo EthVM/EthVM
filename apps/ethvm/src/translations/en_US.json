@@ -54,7 +54,7 @@
     "blockN": "Block #",
     "txs": "Transactions",
     "reward": "Reward",
-    "txN": "Tx #",
+    "txN": "Transaction #",
     "limit": "Limit",
     "gas": "Gas"
   },
