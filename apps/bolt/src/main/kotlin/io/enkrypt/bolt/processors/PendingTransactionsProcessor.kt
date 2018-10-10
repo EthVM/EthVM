@@ -1,7 +1,7 @@
 package io.enkrypt.bolt.processors
 
-import io.enkrypt.bolt.serdes.RLPTransactionSerde
-import io.enkrypt.bolt.kafka.PendingTransactionMongoSink
+import io.enkrypt.bolt.kafka.processors.PendingTransactionMongoProcessor
+import io.enkrypt.bolt.kafka.serdes.RLPTransactionSerde
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
@@ -39,7 +39,7 @@ class PendingTransactionsProcessor : AbstractBaseProcessor() {
     builder
       .stream(appConfig.topicsConfig.pendingTransactions, Consumed.with(Serdes.ByteArray(), serde))
       .map { k, v -> KeyValue(ByteUtil.toHexString(k), v) }
-      .process({ get<PendingTransactionMongoSink>() }, null)
+      .process({ get<PendingTransactionMongoProcessor>() }, null)
 
     // Generate the topology
     val topology = builder.build()

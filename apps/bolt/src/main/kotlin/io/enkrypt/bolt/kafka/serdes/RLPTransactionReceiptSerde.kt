@@ -1,4 +1,4 @@
-package io.enkrypt.bolt.serdes
+package io.enkrypt.bolt.kafka.serdes
 
 import org.apache.kafka.common.errors.SerializationException
 import org.apache.kafka.common.serialization.Deserializer

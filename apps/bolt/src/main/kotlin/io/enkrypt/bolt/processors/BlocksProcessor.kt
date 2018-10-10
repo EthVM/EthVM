@@ -1,9 +1,9 @@
 package io.enkrypt.bolt.processors
 
 import io.enkrypt.bolt.extensions.toHex
-import io.enkrypt.bolt.serdes.RLPBlockSummarySerde
-import io.enkrypt.bolt.kafka.BlockMongoTransformer
-import io.enkrypt.bolt.kafka.BlockSummaryTimestampExtractor
+import io.enkrypt.bolt.kafka.extractors.BlockSummaryTimestampExtractor
+import io.enkrypt.bolt.kafka.serdes.RLPBlockSummarySerde
+import io.enkrypt.bolt.kafka.transformers.BlockMongoTransformer
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
@@ -15,10 +15,10 @@ import org.apache.kafka.streams.kstream.Produced
 import org.ethereum.core.BlockSummary
 import org.ethereum.util.ByteUtil
 import org.koin.standalone.get
-import java.util.*
+import java.util.Properties
 
 /**
- * This processor process Blocks and Txs at the same time. It calculates also block stats.
+ * This processor process Blocks and Txs at the same time.
  */
 class BlocksProcessor : AbstractBaseProcessor() {
 
@@ -43,8 +43,9 @@ class BlocksProcessor : AbstractBaseProcessor() {
     val (blocks) = appConfig.topicsConfig
 
     builder
-      .stream(blocks, Consumed.with(Serdes.ByteArray(), blockSerde)
-        .withTimestampExtractor(BlockSummaryTimestampExtractor())
+      .stream(
+        blocks,
+        Consumed.with(Serdes.ByteArray(), blockSerde).withTimestampExtractor(BlockSummaryTimestampExtractor())
       )
       .map { k, v -> KeyValue(ByteUtil.byteArrayToLong(k), v) }
       .transform<Long, BlockSummary>({ get<BlockMongoTransformer>() }, null)    // persist to db

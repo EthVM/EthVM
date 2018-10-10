@@ -2,9 +2,9 @@ package io.enkrypt.bolt.processors
 
 import com.mongodb.client.model.ReplaceOptions
 import io.enkrypt.bolt.extensions.toHex
-import io.enkrypt.bolt.serdes.BigIntegerSerde
-import io.enkrypt.bolt.serdes.DateSerde
-import io.enkrypt.bolt.serdes.RLPBlockSummarySerde
+import io.enkrypt.bolt.kafka.serdes.BigIntegerSerde
+import io.enkrypt.bolt.kafka.serdes.DateSerde
+import io.enkrypt.bolt.kafka.serdes.RLPBlockSummarySerde
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
@@ -18,10 +18,13 @@ import org.apache.kafka.streams.kstream.Serialized
 import org.bson.Document
 import org.ethereum.core.BlockSummary
 import java.math.BigInteger
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Properties
+import java.util.TimeZone
 
 /**
- * This processor process Blocks and Txs at the same time. It calculates also block stats.
+ * This processor processes different statistics.
  */
 class ChartsProcessor : AbstractBaseProcessor() {
 
@@ -46,18 +49,22 @@ class ChartsProcessor : AbstractBaseProcessor() {
     // Create stream builder
     val builder = StreamsBuilder()
 
-    val blocksByDay: KStream<Date, BlockSummary> = builder.stream(appConfig.topicsConfig.blocks, Consumed.with(Serdes.ByteArray(), blockSerde))
-      .map { k, v -> KeyValue(timestampToDay(v.block.timestamp), v) }
+    val blocksByDay: KStream<Date, BlockSummary> = builder
+      .stream(
+        appConfig.topicsConfig.blocks,
+        Consumed.with(Serdes.ByteArray(), blockSerde)
+      )
+      .map { _, v -> KeyValue(timestampToDay(v.block.timestamp), v) }
 
     val blockCountByDay = blocksByDay
-      .mapValues{ v -> v.block.hash.toHex() }
+      .mapValues { v -> v.block.hash.toHex() }
       .groupByKey(Serialized.with(dateSerde, Serdes.String()))
       .count(Materialized.with(dateSerde, Serdes.Long()))
 
-    //
+    // Avg Total Difficulty
 
     blocksByDay
-      .mapValues{ v -> v.block.cumulativeDifficulty}
+      .mapValues { v -> v.block.cumulativeDifficulty }
       .groupByKey(Serialized.with(dateSerde, bigIntegerSerde))
       .aggregate(
         { BigInteger.ZERO },
@@ -72,11 +79,10 @@ class ChartsProcessor : AbstractBaseProcessor() {
       ).toStream()
       .foreach { date, value -> this.persistStatistic("avg_total_difficulty", date, value.toLong()) }
 
-
-    //
+    // Avg Gas Price
 
     blocksByDay
-      .mapValues{ v -> v.statistics.avgGasPrice}
+      .mapValues { v -> v.statistics.avgGasPrice }
       .groupByKey(Serialized.with(dateSerde, bigIntegerSerde))
       .aggregate(
         { BigInteger.ZERO },
@@ -89,8 +95,10 @@ class ChartsProcessor : AbstractBaseProcessor() {
       ).toStream()
       .foreach { date, value -> this.persistStatistic("avg_gas_price", date, value.toLong()) }
 
+    // Avg Txs Fees
+
     blocksByDay
-      .mapValues{ v -> v.statistics.avgTxsFees }
+      .mapValues { v -> v.statistics.avgTxsFees }
       .groupByKey(Serialized.with(dateSerde, bigIntegerSerde))
       .aggregate(
         { BigInteger.ZERO },
@@ -105,8 +113,10 @@ class ChartsProcessor : AbstractBaseProcessor() {
       ).toStream()
       .foreach { date, value -> this.persistStatistic("avg_tx_fees", date, value.toLong()) }
 
+    // Avg Failed Txs
+
     blocksByDay
-      .mapValues{ v -> v.statistics.numFailedTxs }
+      .mapValues { v -> v.statistics.numFailedTxs }
       .groupByKey(Serialized.with(dateSerde, Serdes.Integer()))
       .aggregate(
         { 0 },
@@ -121,8 +131,10 @@ class ChartsProcessor : AbstractBaseProcessor() {
       ).toStream()
       .foreach { date, value -> this.persistStatistic("avg_failed_txs", date, value.toLong()) }
 
+    // Avg Successful Txs
+
     blocksByDay
-      .mapValues{ v -> v.statistics.numSuccessfulTxs }
+      .mapValues { v -> v.statistics.numSuccessfulTxs }
       .groupByKey(Serialized.with(dateSerde, Serdes.Integer()))
       .aggregate(
         { 0 },
@@ -137,7 +149,6 @@ class ChartsProcessor : AbstractBaseProcessor() {
       ).toStream()
       .foreach { date, value -> this.persistStatistic("avg_successful_txs", date, value.toLong()) }
 
-
     // Generate the topology
     val topology = builder.build()
 
@@ -147,19 +158,21 @@ class ChartsProcessor : AbstractBaseProcessor() {
 
   private fun timestampToDay(timestampSeconds: Long): Date {
     val cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
-    cal.timeInMillis = timestampSeconds * 1000
-    cal.set(Calendar.HOUR_OF_DAY, 0)
-    cal.set(Calendar.MINUTE, 0)
-    cal.set(Calendar.SECOND, 0)
-    cal.set(Calendar.MILLISECOND, 0)
+    with(cal) {
+      timeInMillis = timestampSeconds * 1000
+      set(Calendar.HOUR_OF_DAY, 0)
+      set(Calendar.MINUTE, 0)
+      set(Calendar.SECOND, 0)
+      set(Calendar.MILLISECOND, 0)
+    }
     return cal.time
   }
 
   private fun persistStatistic(name: String, date: Date, value: Long) {
 
     val filter = Document(mapOf(
-        "name" to name,
-        "date" to date
+      "name" to name,
+      "date" to date
     ))
 
     val options = ReplaceOptions().upsert(true)
@@ -169,7 +182,7 @@ class ChartsProcessor : AbstractBaseProcessor() {
       "value" to value)
     ), options)
 
-    logger.info{ "Persisting stat: $name, $date, $value"}
+    logger.info { "Persisting stat: $name, $date, $value" }
 
   }
 

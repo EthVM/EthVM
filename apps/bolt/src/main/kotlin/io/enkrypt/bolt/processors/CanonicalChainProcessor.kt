@@ -14,7 +14,7 @@ import org.apache.kafka.streams.processor.ProcessorContext
 import org.apache.kafka.streams.processor.PunctuationType
 import org.apache.kafka.streams.state.KeyValueStore
 import org.apache.kafka.streams.state.Stores
-import java.util.*
+import java.util.Properties
 
 class CanonicalChainProcessor : AbstractBaseProcessor() {
 
@@ -44,8 +44,8 @@ class CanonicalChainProcessor : AbstractBaseProcessor() {
     builder
       .stream(appConfig.topicsConfig.processedBlocks, Consumed.with(Serdes.Long(), Serdes.String()))
       .transform<Long, String>({ ProcessedBlockTransformer("canonical-chain-store") }, arrayOf("canonical-chain-store"))
-      .peek{ k, v -> logger.info("Latest processed block number: $k")}
-      .map{ k, _ -> KeyValue("latest_processed_number", k.toString(16)) }
+      .peek { k, v -> logger.info("Latest processed block number: $k") }
+      .map { k, _ -> KeyValue("latest_processed_number", k.toString(16)) }
       .to(appConfig.topicsConfig.metadata, Produced.with(Serdes.String(), Serdes.String()))
 
     // Generate the topology
@@ -74,11 +74,15 @@ class ProcessedBlockTransformer(private val stateStoreName: String) : Transforme
   private val logger = KotlinLogging.logger {}
 
   private var greatestContiguousBlockNumber: Long?
-    set (value) { store.put(-1L, value.toString())}
+    set (value) {
+      store.put(-1L, value.toString())
+    }
     get() = store.get(-1L)?.toLong()
 
   private var greatestPruneBlockNumber: Long?
-    set (value) { store.put(-1L, value.toString())}
+    set (value) {
+      store.put(-1L, value.toString())
+    }
     get() = store.get(-1L)?.toLong()
 
   override fun init(context: ProcessorContext) {
@@ -109,7 +113,6 @@ class ProcessedBlockTransformer(private val stateStoreName: String) : Transforme
     range.close()
     greatestContiguousBlockNumber = latest
 
-
   }
 
   private fun prune() {
@@ -117,10 +120,10 @@ class ProcessedBlockTransformer(private val stateStoreName: String) : Transforme
     var next = (greatestPruneBlockNumber ?: -1L) + 1L
     val stop = greatestContiguousBlockNumber ?: -1L
 
-    if(stop > -1L) {
+    if (stop > -1L) {
 
       while (next < stop) {
-        if(store.delete(next) != null) {
+        if (store.delete(next) != null) {
           next += 1
         } else {
           break
@@ -132,7 +135,6 @@ class ProcessedBlockTransformer(private val stateStoreName: String) : Transforme
       logger.debug("Pruned until $next")
 
     }
-
 
   }
 

@@ -21,8 +21,7 @@ abstract class AbstractBaseProcessor : Processor, KoinComponent {
   protected val appConfig: AppConfig by inject()
   protected val baseKafkaProps: Properties by inject(name = "kafka.Properties")
 
-  protected val mongoDB: MongoDatabase by inject()
-
+  private val mongoDB: MongoDatabase by inject()
   protected val statsCollection: MongoCollection<Document> by lazy { mongoDB.getCollection("statistics") }
 
   protected lateinit var streams: KafkaStreams

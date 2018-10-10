@@ -1,7 +1,9 @@
-package io.enkrypt.bolt.kafka
+package io.enkrypt.bolt.kafka.transformers
 
 import com.mongodb.client.MongoCollection
-import com.mongodb.client.model.*
+import com.mongodb.client.model.BulkWriteOptions
+import com.mongodb.client.model.ReplaceOneModel
+import com.mongodb.client.model.ReplaceOptions
 import io.enkrypt.bolt.extensions.toDocument
 import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.processor.Cancellable

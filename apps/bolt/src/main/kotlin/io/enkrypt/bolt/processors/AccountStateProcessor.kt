@@ -1,7 +1,7 @@
 package io.enkrypt.bolt.processors
 
-import io.enkrypt.bolt.serdes.RLPAccountSerde
-import io.enkrypt.bolt.kafka.AccountMongoSink
+import io.enkrypt.bolt.kafka.processors.AccountMongoProcessor
+import io.enkrypt.bolt.kafka.serdes.RLPAccountSerde
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
@@ -14,7 +14,7 @@ import org.koin.standalone.get
 import java.util.Properties
 
 /**
- * This processor processes addresses balances (and if the address is deceased or not).
+ * This processor processes addresses balances and type (if is a smart contract or not).
  */
 class AccountStateProcessor : AbstractBaseProcessor() {
 
@@ -39,7 +39,7 @@ class AccountStateProcessor : AbstractBaseProcessor() {
     builder
       .stream(appConfig.topicsConfig.accountState, Consumed.with(Serdes.ByteArray(), accountSerde))
       .map { k, v -> KeyValue(ByteUtil.toHexString(k), v) }
-      .process({ get<AccountMongoSink>() }, null)
+      .process({ get<AccountMongoProcessor>() }, null)
 
     // Generate the topology
     val topology = builder.build()

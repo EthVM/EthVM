@@ -1,4 +1,4 @@
-package io.enkrypt.bolt.kafka
+package io.enkrypt.bolt.kafka.processors
 
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.DeleteOneModel
@@ -12,7 +12,7 @@ import org.apache.kafka.streams.processor.PunctuationType
 import org.bson.Document
 import org.ethereum.core.Transaction
 
-class PendingTransactionMongoSink : MongoSink<String, Transaction?>() {
+class PendingTransactionMongoProcessor : MongoProcessor<String, Transaction?>() {
 
   private val pendingTransactionsCollection: MongoCollection<Document> by lazy { mongoDB.getCollection("pending_transactions") }
 

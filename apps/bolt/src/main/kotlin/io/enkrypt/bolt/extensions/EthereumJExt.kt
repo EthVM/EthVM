@@ -2,7 +2,12 @@ package io.enkrypt.bolt.extensions
 
 import io.enkrypt.kafka.models.Account
 import org.bson.Document
-import org.ethereum.core.*
+import org.ethereum.core.Block
+import org.ethereum.core.BlockHeader
+import org.ethereum.core.BlockStatistics
+import org.ethereum.core.BlockSummary
+import org.ethereum.core.Transaction
+import org.ethereum.core.TransactionReceipt
 import org.ethereum.vm.LogInfo
 import org.ethereum.vm.program.InternalTransaction
 
@@ -18,7 +23,7 @@ fun Block?.toDocument(summary: BlockSummary) = Document(
 )
 
 fun BlockStatistics?.toDocument(): Document? {
-  return if(this == null) {
+  return if (this == null) {
     null
   } else {
     Document(

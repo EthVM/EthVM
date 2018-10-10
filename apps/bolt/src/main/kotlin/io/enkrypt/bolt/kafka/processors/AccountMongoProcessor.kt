@@ -1,4 +1,4 @@
-package io.enkrypt.bolt.kafka
+package io.enkrypt.bolt.kafka.processors
 
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.DeleteOneModel
@@ -13,7 +13,7 @@ import org.apache.kafka.streams.processor.ProcessorContext
 import org.apache.kafka.streams.processor.PunctuationType
 import org.bson.Document
 
-class AccountMongoSink : MongoSink<String, Account>() {
+class AccountMongoProcessor : MongoProcessor<String, Account>() {
 
   private val accountsCollection: MongoCollection<Document> by lazy { mongoDB.getCollection("accounts") }
 

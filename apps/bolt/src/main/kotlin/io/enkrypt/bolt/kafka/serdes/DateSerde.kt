@@ -1,44 +1,45 @@
-package io.enkrypt.bolt.serdes
+package io.enkrypt.bolt.kafka.serdes
 
-import io.enkrypt.kafka.models.Account
 import org.apache.kafka.common.errors.SerializationException
 import org.apache.kafka.common.serialization.Deserializer
 import org.apache.kafka.common.serialization.Serde
 import org.apache.kafka.common.serialization.Serializer
+import org.ethereum.util.ByteUtil
+import java.util.Date
 
-class RLPAccountSerde : Serde<Account> {
+class DateSerde : Serde<Date> {
 
-  private val serializer: RLPAccountSerializer = RLPAccountSerializer()
-  private val deserializer: RLPAccountDeserializer = RLPAccountDeserializer()
+  private val serializer: DateSerializer = DateSerializer()
+  private val deserializer: DateDeserializer = DateDeserializer()
 
   override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
 
-  override fun deserializer(): Deserializer<Account> = deserializer
+  override fun deserializer(): Deserializer<Date> = deserializer
 
-  override fun serializer(): Serializer<Account> = serializer
+  override fun serializer(): Serializer<Date> = serializer
 
   override fun close() {}
 }
 
-class RLPAccountSerializer : Serializer<Account> {
+class DateSerializer : Serializer<Date> {
   override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
 
-  override fun serialize(topic: String?, data: Account?): ByteArray =
-    if (data == null) ByteArray(0) else data.rlpEncoded
+  override fun serialize(topic: String?, data: Date?): ByteArray =
+    if (data == null) ByteArray(0) else ByteUtil.longToBytes(data.time)
 
   override fun close() {
   }
 }
 
-class RLPAccountDeserializer : Deserializer<Account> {
+class DateDeserializer : Deserializer<Date> {
   override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
 
-  override fun deserialize(topic: String?, data: ByteArray?): Account? {
+  override fun deserialize(topic: String?, data: ByteArray?): Date? {
     if (data == null) {
       return null
     }
     return try {
-      Account(data)
+      Date(ByteUtil.byteArrayToLong(data))
     } catch (e: Exception) {
       throw SerializationException("Error deserializing value", e)
     }
