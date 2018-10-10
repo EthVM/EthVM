@@ -166,8 +166,8 @@ export class EthVMServer {
     logger.info(`EthVMServer - onBlockEvent / Op: ${op}, Hash: ${value.hash}, `)
 
     // Save state root if defined
-    // if (block.stateRoot) {
-    //   this.vmService.setStateRoot(Buffer.from(block.stateRoot))
+    // if (value && value.header && value.header.stateRoot) {
+    //   this.vmService.setStateRoot(value.header.stateRoot)
     // }
 
     // // TODO: Remove this calculation from here, should be done while inserting the new block

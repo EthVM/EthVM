@@ -6,10 +6,8 @@ import { ChangeStream, Collection, Cursor, Db } from 'mongodb'
 
 export class MongoStreamer implements Streamer {
   private blocksReader: MongoCollectionChangeStreamReader
-  private txReader: MongoCollectionChangeStreamReader
-  private pendingTxReader: MongoCollectionChangeStreamReader
-  private unclesReader: MongoCollectionChangeStreamReader
   private accountsReader: MongoCollectionChangeStreamReader
+  private pendingTxReader: MongoCollectionChangeStreamReader
 
   constructor(private readonly db: Db, private readonly emitter: EventEmitter) {}
 
@@ -20,9 +18,11 @@ export class MongoStreamer implements Streamer {
 
     this.blocksReader = new MongoCollectionChangeStreamReader(db.collection(MongoEthVM.collections.blocks), intervalMs, 'block', emitter)
     this.accountsReader = new MongoCollectionChangeStreamReader(db.collection(MongoEthVM.collections.accounts), intervalMs, 'account', emitter)
+    this.pendingTxReader = new MongoCollectionChangeStreamReader(db.collection(MongoEthVM.collections.pendingTxs), intervalMs, 'pendingTx', emitter)
 
     await this.blocksReader.start()
     await this.accountsReader.start()
+    await this.pendingTxReader.start()
 
     return true
   }
