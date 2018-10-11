@@ -18,14 +18,14 @@
     <!-- Table Header -->
     <v-card color="info" flat class="white--text pl-3 pr-1" height="40px" style="margin-right: 1px">
       <v-layout align-center justify-start row fill-height pr-3>
-        <v-flex xs6 md2>
+        <v-flex xs6 sm2 md3 lg2>
           <h5>{{ $t( 'tableHeader.blockN' ) }}</h5>
         </v-flex>
         <v-spacer></v-spacer>
-        <v-flex hidden-sm-and-down md1 lg2>
+        <v-flex hidden-sm-and-down md2 >
           <h5>{{ $t( 'tableHeader.txs' ) }}</h5>
         </v-flex>
-        <v-flex xs6 md1 lg2>
+        <v-flex xs6 sm3 md2>
           <h5>{{ $t( 'tableHeader.reward' ) }}</h5>
         </v-flex>
       </v-layout>
@@ -36,10 +36,10 @@
         <v-flex xs12>
           <v-card v-for="block in getBlocks" class="transparent pb-1" flat v-if="!block.getIsUncle()" v-bind:key="block.hash">
             <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
-              <v-flex d-flex xs6 md2 order-xs1>
+              <v-flex d-flex xs6 sm2  order-xs1>
                 <router-link class="black--text pb-1" :to="'/block/'+block.getHash()">{{block.getNumber()}}</router-link>
               </v-flex>
-              <v-flex xs12 md6 lg6 class="pr-0" order-xs3 order-md2 pr-3>
+              <v-flex xs12 sm7 md6 lass="pr-0" order-xs3 order-sm2>
                 <p class="text-truncate info--text  psmall mb-0 pb-2">{{ $t( 'common.hash' ) }}:
                   <router-link class="primary--text font-italic font-weight-regular" :to="'/block/'+block.getHash()">{{block.getHash()}}</router-link>
                 </p>
@@ -47,11 +47,11 @@
                   <router-link :to="'/address/'+block.getMiner().toString()" class="secondary--text font-italic font-weight-regular">{{block.getMiner().toString()}}</router-link>
                 </p>
               </v-flex>
-              <v-flex hidden-sm-and-down md2 order-xs4 order-md3>
+              <v-flex hidden-sm-and-down md2 order-xs4 order-sm3>
                 <p class="txSuccess--text mb-0 psmall"> {{block.getStats().successfulTxs}}</p>
                 <p class="txFail--text mb-0"> {{block.getStats().failedTxs}}</p>
               </v-flex>
-              <v-flex d-flex xs6 md2 order-xs2 order-md4>
+              <v-flex d-flex xs6 sm3 md2 order-xs2 order-md4>
                 <p class="text-truncate black--text align-center mb-0">
                   <v-tooltip v-if="getShortRewardValue(block.getTotalBlockReward().toEth().toString(), true)" bottom>
                     <v-icon slot="activator" dark small>fa fa-question-circle info--text</v-icon>
