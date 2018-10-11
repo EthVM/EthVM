@@ -1,9 +1,12 @@
 
 use ethvm_local;
 
+// create collections
+
 db.createCollection('accounts');
 db.createCollection('blocks');
 db.createCollection('pending_transactions');
+db.createCollection('statistics');
 
 // create indexes
 
@@ -20,13 +23,25 @@ db.statistics.createIndex({ 'name': 1, 'date': 1});
 // create views
 
 db.createView('transactions', 'blocks', [
-  { $sort: { _id: -1 }},
-  { $unwind: { path: '$transactions', includeArrayIndex: "index" } },
+  { $sort: { _id: -1 } },
+  { $unwind: { path: '$transactions', includeArrayIndex: "transactionIndex" } },
   { $project: { hash: 1, number: 1, timestamp: 1, transactions: 1 } }
   ]);
 
 db.createView('uncles', 'blocks', [
-  { $sort: { _id: -1 }},
+  { $sort: { _id: -1 } },
   { $unwind: { path: '$uncles', includeArrayIndex: "index" } },
   { $project: { hash: 1, number: 1, timestamp: 1, uncles: 1 } }
+]);
+
+db.createView('erc20_contracts', 'accounts', [
+  { $sort: { _id: -1 } },
+  { $find: { contract: { $eq: 1 } } },
+  { $project : { address: 1, nonce: 1, balance: 1, contract: 1 } }
+]);
+
+db.createView('erc721_contracts', 'accounts', [
+  { $sort: { _id: -1 } },
+  { $find: { contract: { $eq: 2 } } },
+  { $project : { address: 1, nonce: 1, balance: 1, contract: 1 } }
 ]);
