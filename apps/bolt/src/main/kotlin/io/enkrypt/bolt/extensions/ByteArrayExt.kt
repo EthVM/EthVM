@@ -45,5 +45,4 @@ fun ByteArray.indexByteArrayOf(pattern: ByteArray): Int {
   }
 
   return -1
-
 }

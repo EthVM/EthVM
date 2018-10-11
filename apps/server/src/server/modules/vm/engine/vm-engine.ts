@@ -1,4 +1,3 @@
-import { logger } from '@app/logger'
 import { Token } from '@app/server/modules/token'
 import BigNumber from 'bignumber.js'
 import * as abi from 'ethereumjs-abi'
@@ -32,13 +31,16 @@ export class VmEngine {
 
   public getTokens(address: string): Promise<Token[]> {
     return new Promise(async (resolve, reject) => {
-      const argss = ['address', 'bool', 'bool', 'bool', 'uint256']
-      const vals = [address, 'true', 'true', 'true', 0]
+      const argss = ['address', 'uint32', 'uint32']
+      const vals = [address, 4, 0]
 
       const encoded = this.encodeCall('getAllBalance', argss, vals)
+
       try {
         const payload = [{ to: this.opts.tokensAddress.address, data: encoded }, 'latest']
+
         const response = await this.client.request('eth_call', payload)
+
         const tokens = this.decode(response.result || [])
         resolve(tokens)
       } catch (err) {

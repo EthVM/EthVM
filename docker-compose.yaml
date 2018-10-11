@@ -13,6 +13,8 @@ volumes:
   redis-volume:
   mongodb-volume:
   ethereumj-volume:
+  kafka-volume:
+  zookeeper-volume:
 
 services:
   traefik:
@@ -104,6 +106,8 @@ services:
 
   zookeeper:
     image: confluentinc/cp-zookeeper:5.0.0
+    volumes:
+      - zookeeper-volume:/var/lib/zookeeper
     networks:
       back:
         ipv4_address: 172.25.0.103
@@ -119,6 +123,8 @@ services:
     restart: unless-stopped
     depends_on:
       - zookeeper
+    volumes:
+      - kafka-volume:/var/lib/kafka
     networks:
       back:
         ipv4_address: 172.25.0.104

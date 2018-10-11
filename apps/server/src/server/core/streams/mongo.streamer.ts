@@ -53,7 +53,6 @@ class MongoCollectionChangeStreamReader {
     }))
 
     this.cursor = changeStream.stream()
-
     this.pull()
   }
 
@@ -80,7 +79,7 @@ class MongoCollectionChangeStreamReader {
         }
       }
     } catch (e) {
-      logger.error('Failed to pull', eventType, e)
+      logger.error('Failed to pull', this.eventType, e)
     }
   }
 

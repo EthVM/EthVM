@@ -7,6 +7,7 @@ import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blo
 import { ChartsServiceImpl, MockChartsRepository } from '@app/server/modules/charts'
 import { CoinMarketCapRepository, ExchangeServiceImpl } from '@app/server/modules/exchanges'
 import { MongoPendingTxRepository, PendingTxServiceImpl } from '@app/server/modules/pending-tx'
+import { SearchServiceImpl } from '@app/server/modules/search'
 import { MongoTxsRepository, TxsServiceImpl } from '@app/server/modules/txs'
 import { MongoUncleRepository, UnclesServiceImpl } from '@app/server/modules/uncle'
 import { RedisTrieDb, VmEngine, VmRunner, VmServiceImpl } from '@app/server/modules/vm'
@@ -96,6 +97,9 @@ async function bootstrapServer() {
   const txsRepository = new MongoTxsRepository(db)
   const txsService = new TxsServiceImpl(txsRepository, ds)
 
+  // Search
+  const searchService = new SearchServiceImpl(txsRepository, addressRepository, blocksRepository, ds)
+
   // Charts
   const chartsRepository = new MockChartsRepository()
   const chartsService = new ChartsServiceImpl(chartsRepository)
@@ -115,7 +119,18 @@ async function bootstrapServer() {
 
   // Create server
   logger.debug('bootstrapper -> Initializing server')
-  const server = new EthVMServer(blockService, uncleService, addressService, txsService, chartsService, pendingTxService, exchangeService, vmService, streamer)
+  const server = new EthVMServer(
+    blockService,
+    uncleService,
+    addressService,
+    txsService,
+    chartsService,
+    pendingTxService,
+    exchangeService,
+    searchService,
+    vmService,
+    streamer
+  )
   await server.start()
 }
 

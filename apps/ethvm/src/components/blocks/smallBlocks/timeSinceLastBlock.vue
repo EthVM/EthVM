@@ -1,5 +1,5 @@
 <template>
-  <block-component :title="blockTitle"  :colorType="type" :value="seconds+ ' sec'" :icon="timeIcon"></block-component>
+  <block-component :title="blockTitle"  :colorType="type" :value="seconds" :backType="background" :metrics="sec"></block-component>
 </template>
 
 <script lang="ts">
@@ -10,10 +10,11 @@ export default Vue.extend({
   data() {
     return {
       blockTitle: this.$i18n.t('smlBlock.time'),
-      timeIcon: 'fas fa-clock white--text',
+      background: 'time-since',
       type: 'success white--text',
       lastBlockTime: 0,
-      seconds: 0
+      seconds: 0,
+      sec: 'sec'
     }
   },
   created() {

@@ -1,7 +1,6 @@
 <template>
   <v-layout column justify-center>
-    <vue-chart type="line" :data="chartData" :options="chartOptions" :redraw="redraw" :chartTitle="newTitle" :chartDescription="newDescription" unfilled="true"></vue-chart>
-    <footnote :footnotes="footnote"></footnote>
+    <vue-chart type="line" :data="chartData" :options="chartOptions" :redraw="redraw" :chartTitle="newTitle" :chartDescription="newDescription" unfilled="true" :footnoteArr="footnote"></vue-chart>
   </v-layout>
 </template>
 
@@ -72,12 +71,12 @@ export default Vue.extend({
       newDescription: description,
       footnote: [
         {
-          color: 'secondary',
+          color: '#40ce9c',
           text: this.$i18n.t('footnote.aveTxFees'),
           icon: 'fa fa-circle'
         },
         {
-          color: 'warning',
+          color: '#eea66b',
           text: this.$i18n.t('footnote.aveGasPrice'),
           icon: 'fa fa-circle'
         }
@@ -128,16 +127,16 @@ export default Vue.extend({
         datasets: [
           {
             label: 'avg Tx Fees (ETH)',
-            borderColor: '#2779ff',
-            backgroundColor: '#2779ff',
+            borderColor: '#40ce9c',
+            backgroundColor: '#40ce9c',
             data: data.avgFees,
             yAxisID: 'y-axis-1',
             fill: false
           },
           {
             label: 'avg Gas Price (GWEI)',
-            borderColor: '#f9967b',
-            backgroundColor: '#f9967b',
+            borderColor: '#eea66b',
+            backgroundColor: '#eea56b',
             data: data.avgPrice,
             yAxisID: 'y-axis-2',
             fill: false

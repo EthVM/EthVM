@@ -23,7 +23,7 @@ export class MongoBlockRepository extends BaseMongoDbRepository implements Block
       .findOne({ hash })
       .then(resp => {
         if (!resp) {
-          return {}
+          return null
         }
         return resp
       })

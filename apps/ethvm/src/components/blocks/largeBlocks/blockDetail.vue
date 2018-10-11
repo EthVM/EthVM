@@ -174,7 +174,12 @@ export default Vue.extend({
           },
           {
             title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward'),
-            detail: 'TODO'
+            detail: this.block
+              .getUncleReward()
+              .toEth()
+              .toString() +
+            ' ' +
+            this.$i18n.t('common.eth')
           },
           {
             title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.sha'),

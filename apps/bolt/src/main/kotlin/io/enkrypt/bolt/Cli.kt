@@ -150,7 +150,6 @@ class Cli : CliktCommand() {
       it.onPrepareProcessor()
       it.start()
     }
-
   }
 
   companion object Defaults {

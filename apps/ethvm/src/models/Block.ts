@@ -1,6 +1,6 @@
 import { common } from '@app/helpers'
 import { Address, EthValue, Hash, Hex, HexNumber, HexTime, Tx } from '@app/models'
-import { BlockLayout } from '@app/models/server'
+import { BlockLayout, BlockStats } from '@app/models/server'
 import bn from 'bignumber.js'
 
 export class Block {
@@ -79,24 +79,17 @@ export class Block {
     return this.block.transactions.length
   }
 
-  // public getTotalBlockReward(): EthValue {
-  //   this.block.header.
-  //   if (!this.cache.totalBlockReward) {
-  //     this.cache.totalBlockReward = this.block.totalBlockReward
-  //       ? common.EthValue(this.block.totalBlockReward)
-  //       : common.EthValue(
-  //           Buffer.from(
-  //             new bn(common.HexNumber(this.block.blockReward).toString())
-  //               .plus(new bn(common.HexNumber(this.block.uncleReward).toString()))
-  //               .plus(new bn(common.HexNumber(this.block.txFees).toString()))
-  //               .toString(16),
-  //             'hex'
-  //           )
-  //         )
-  //   }
+  public getTotalBlockReward(): EthValue {
 
-  //   return this.cache.totalBlockReward
-  // }
+    if (!this.cache.totalBlockReward) {
+      let total = new bn(0)
+      for (let address in this.block.header.rewards) {
+        total = new bn(common.EthValue(this.block.header.rewards[address]).toString()).plus(total)
+      }
+      this.cache.totalBlockReward = common.EthValue(Buffer.from(total.toString()))
+    }
+    return this.cache.totalBlockReward
+  }
 
   public getParentHash(): string {
     if (!this.cache.parentHash) {
@@ -245,15 +238,20 @@ export class Block {
 
   public getUncleReward(): EthValue {
     if (!this.cache.uncleReward) {
+      let total = new bn(0)
       if (this.block.header.rewards[this.block.header.unclesHash]) {
-        return (this.cache.uncleReward = common.EthValue(Buffer.from(new bn(0).toString())))
+        return (this.cache.uncleReward = common.EthValue(Buffer.from(total.toString())))
       }
-      this.cache.uncleReward = common.EthValue(this.block.header.rewards[this.block.header.unclesHash])
-    }
+        for (let address in this.block.header.rewards) {
+          if(address === this.block.header.miner) continue
+          total = new bn(common.EthValue(this.block.header.rewards[address]).toString()).plus(total)
+        }
+        this.cache.uncleReward = common.EthValue(Buffer.from(total.toString()))
+      }
     return this.cache.uncleReward
   }
 
-  public getStats(): BlockLayout['stats'] {
+  public getStats(): BlockStats {
     return this.block.stats
   }
 }
