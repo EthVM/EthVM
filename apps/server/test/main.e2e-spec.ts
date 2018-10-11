@@ -7,7 +7,7 @@ import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blo
 import { MockChartsRepository } from '@app/server/modules/charts'
 import { ExchangeRate, ExchangeService, ExchangeServiceImpl, Quote } from '@app/server/modules/exchanges'
 import { MongoPendingTxRepository, PendingTxServiceImpl } from '@app/server/modules/pending-txs'
-import { SearchServiceImpl, searchType } from '@app/server/modules/search'
+import { SearchServiceImpl, SearchType } from '@app/server/modules/search'
 import { MongoTxsRepository, TxsService, TxsServiceImpl } from '@app/server/modules/txs'
 import { MongoUncleRepository, UnclesServiceImpl } from '@app/server/modules/uncles'
 import { VmService } from '@app/server/modules/vm'
@@ -807,7 +807,7 @@ describe('ethvm-server-events', () => {
 
       for (const input of inputs) {
         const data = await callEvent('search', input, client)
-        expect(data.type).to.be.lessThan(searchType.None)
+        expect(data.type).to.be.lessThan(SearchType.None)
       }
     })
 
@@ -826,7 +826,7 @@ describe('ethvm-server-events', () => {
 
       for (const input of inputs) {
         const data = await callEvent('search', input, client)
-        expect(data.type).to.be.eq(searchType.None)
+        expect(data.type).to.be.eq(SearchType.None)
       }
     })
 
