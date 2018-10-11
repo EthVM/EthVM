@@ -1,10 +1,10 @@
 import { Timestamp } from 'bson'
 
 export interface Uncle {
-  parendHash: string
-  unclesHash: string
-  timestamp: Timestamp
-  nonce: Buffer
+  parentHash?: string
+  unclesHash?: string
+  timestamp?: Timestamp
+  nonce?: Buffer
   miner?: string
   rewards?: any
   difficulty?: Buffer

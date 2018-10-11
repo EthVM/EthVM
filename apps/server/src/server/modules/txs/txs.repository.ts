@@ -14,7 +14,7 @@ export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepo
     return this.db
       .collection(MongoEthVM.collections.transactions)
       .find()
-      .sort({ transactionIndex: -1 })
+      .sort({ _id: -1, index: 1 })
       .skip(start)
       .limit(limit)
       .toArray()
@@ -29,7 +29,7 @@ export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepo
   public getBlockTxs(hash: string): Promise<Tx[]> {
     return this.db
       .collection(MongoEthVM.collections.transactions)
-      .find({ blockHash: hash })
+      .find({ hash })
       .toArray()
       .then(resp => {
         if (!resp) {
@@ -55,8 +55,8 @@ export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepo
     const start = page * limit
     return this.db
       .collection(MongoEthVM.collections.transactions)
-      .find({ $or: [{ from: hash }, { to: hash }] })
-      .sort({ transactionIndex: -1 })
+      .find({ $or: [{ 'transaction.from': hash }, { 'transaction.to': hash }] })
+      .sort({ timestamp: -1 })
       .skip(start)
       .limit(limit)
       .toArray()

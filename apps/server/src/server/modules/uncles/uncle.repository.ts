@@ -1,4 +1,4 @@
-import { Uncle } from '@app/server/modules/uncle'
+import { Uncle } from '@app/server/modules/uncles'
 import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
 
 export interface UnclesRepository {
@@ -11,7 +11,7 @@ export class MongoUncleRepository extends BaseMongoDbRepository implements Uncle
     return this.db
       .collection(MongoEthVM.collections.uncles)
       .find()
-      .sort({ number: -1 })
+      .sort({ _id: -1 })
       .skip(page)
       .limit(limit)
       .toArray()

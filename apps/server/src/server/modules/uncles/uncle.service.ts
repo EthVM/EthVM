@@ -1,4 +1,4 @@
-import { MongoUncleRepository, Uncle } from '@app/server/modules/uncle'
+import { MongoUncleRepository, Uncle } from '@app/server/modules/uncles'
 import { CacheRepository } from '@app/server/repositories'
 
 export interface UnclesService {

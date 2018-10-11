@@ -23,28 +23,27 @@ export interface Trace {
 }
 
 export interface Tx {
-  blockHash: string
-  blockNumber: number
+  blockHash?: string
+  blockNumber?: number
+  hash?: string
+  timestamp?: Timestamp
+  nonce?: string
+  from?: string
+  to?: string
   contractAddress?: string
+  status?: boolean
   data?: Buffer
   fee?: Buffer
-  from?: string
-  gasLeftover?: Buffer
-  gasLimit?: Buffer
-  gasPrice?: Buffer
-  gasRefund?: Buffer
-  gasUsed?: Buffer
-  hash: string
-  internalTxs?: Trace[]
   logs?: Log
-  nonce?: Buffer
-  r?: Buffer
   result?: boolean
-  s?: Buffer
-  timestamp: Timestamp
-  to?: string
-  transactionIndex: number
+  gasPrice?: Buffer
+  gasLimit?: Buffer
+  gasUsed?: Buffer
+  gasRefund?: Buffer
+  gasLeftover?: Buffer
+  traces?: Trace[]
   v?: number
+  r?: Buffer
+  s?: Buffer
   value?: Buffer
-  status: boolean
 }
