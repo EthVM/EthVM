@@ -101,6 +101,7 @@ export class EthVMServer {
     logger.debug('EthVMServer - start() / Registering streamer events')
     this.streamer.addListener('block', this.onBlockEvent)
     this.streamer.addListener('account', this.onAccountEvent)
+    this.streamer.addListener('pendingTx', this.onPendingTxEvent)
 
     logger.debug('EthVMServer - start() / Starting to listen socket events on SocketIO')
     this.io.on(
@@ -158,35 +159,16 @@ export class EthVMServer {
     )
   }
 
-  // TODO: This method should only receive the block and emit it directly
-  // This logic should not be here
   private onBlockEvent = (event: StreamingEvent): void => {
     const { op, key, value } = event
 
-    logger.info(`EthVMServer - onBlockEvent / Op: ${op}, Hash: ${value.hash}, `)
+    logger.info(`EthVMServer - onBlockEvent / Op: ${op}, Block Hash: ${value.hash}, `)
 
     // Save state root if defined
-    // if (value && value.header && value.header.stateRoot) {
-    //   this.vmService.setStateRoot(value.header.stateRoot)
-    // }
+    if (value && value.header && value.header.stateRoot) {
+      this.vmService.setStateRoot(value.header.stateRoot)
+    }
 
-    // // TODO: Remove this calculation from here, should be done while inserting the new block
-    // // Calculate previous block time
-    // const ts = new BigNumber(utils.toHex(block.timestamp))
-    // if (!this.previousBlockTime) {
-    // this.previousBlockTime = ts.minus(this.blockTime)
-    // }
-
-    // const currentBlockTime = ts.minus(this.previousBlockTime).abs()
-    // if (!block.isUncle) {
-    // this.previousBlockTime = new BigNumber(utils.toHex(block.timestamp))
-    // }
-
-    // // Generate block stats
-    // const bstats = mappers.toBlockStats(block.transactions, currentBlockTime)
-    // block.blockStats = { ...bstats, ...block.blockStats }
-
-    // const blockHash = bufferToHex(Buffer.from(block.hash))
     // const smallBlock = mappers.toSmallBlock(block)
 
     // // Send to client
@@ -208,5 +190,11 @@ export class EthVMServer {
     const { op, key, value } = event
 
     logger.info(`EthVMServer - onAccountEvent / Op: ${op}, Address: ${key}`)
+  }
+
+  private onPendingTxEvent = (event: StreamingEvent): void => {
+    const { op, key, value } = event
+
+    logger.info(`EthVMServer - onPendingTxEvent / Op: ${op}, Pending Tx Hash: ${value.hash}`)
   }
 }

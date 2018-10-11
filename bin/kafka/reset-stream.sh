@@ -14,8 +14,7 @@ CMD="kafka-streams-application-reset --zookeeper zookeeper:2181 --bootstrap-serv
 echo "COMMAND: $CMD"
 docker-compose exec kafka sh -c "$CMD"
 
-
-# addresses
+# account-state
 CMD="kafka-streams-application-reset --zookeeper zookeeper:2181 --bootstrap-servers kafka:9092 --application-id account-state-processor --input-topics account-state"
 echo "COMMAND: $CMD"
 docker-compose exec kafka sh -c "$CMD"
