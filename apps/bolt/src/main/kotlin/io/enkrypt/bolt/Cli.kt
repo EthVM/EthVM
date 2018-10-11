@@ -14,6 +14,7 @@ import io.enkrypt.bolt.processors.ChartsProcessor
 import io.enkrypt.bolt.processors.PendingTransactionMongoProcessor
 import io.enkrypt.bolt.processors.PendingTransactionsProcessor
 import io.enkrypt.bolt.processors.Processor
+import io.enkrypt.bolt.processors.TokenDetectorTransformer
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
@@ -113,6 +114,7 @@ class Cli : CliktCommand() {
     }
 
     factory { BlockMongoTransformer() }
+    factory { TokenDetectorTransformer() }
     factory { AccountMongoProcessor() }
     factory { PendingTransactionMongoProcessor() }
 
