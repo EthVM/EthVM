@@ -77,7 +77,6 @@ fun Transaction?.toDocument(pos: Int? = null, receipt: TransactionReceipt?, exec
   return Document(
     mapOf(
       "hash" to this?.hash.toHex(),
-      "transactionIndex" to pos,
       "nonce" to this?.nonce.toHex(),
       "from" to this?.sender.toHex(),
       "to" to this?.receiveAddress?.toHex(),

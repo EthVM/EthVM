@@ -19,5 +19,6 @@ data class TopicsConfig(
 data class MongoCollectionsConfig(
   val accountsCollection: String,
   val blocksCollection: String,
-  val pendingTransactionsCollection: String
+  val pendingTransactionsCollection: String,
+  val statisticsCollection: String
 )

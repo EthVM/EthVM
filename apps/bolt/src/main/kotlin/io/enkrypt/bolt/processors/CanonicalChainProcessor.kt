@@ -20,7 +20,7 @@ class CanonicalChainProcessor : AbstractBaseProcessor() {
 
   override val id: String = "canonical-chain-processor"
 
-  private val logger = KotlinLogging.logger {}
+  override val logger = KotlinLogging.logger {}
 
   private val kafkaProps: Properties = Properties()
     .apply {
@@ -36,15 +36,15 @@ class CanonicalChainProcessor : AbstractBaseProcessor() {
 
     builder.addStateStore(
       Stores.keyValueStoreBuilder(
-        Stores.persistentKeyValueStore("canonical-chain-store"),
+        Stores.persistentKeyValueStore(CANONICAL_CHAIN_STORE),
         Serdes.Long(),
         Serdes.String()
       ))
 
     builder
       .stream(appConfig.topicsConfig.processedBlocks, Consumed.with(Serdes.Long(), Serdes.String()))
-      .transform<Long, String>({ ProcessedBlockTransformer("canonical-chain-store") }, arrayOf("canonical-chain-store"))
-      .peek { k, v -> logger.info("Latest processed block number: $k") }
+      .transform<Long, String>({ ProcessedBlockTransformer(CANONICAL_CHAIN_STORE) }, arrayOf(CANONICAL_CHAIN_STORE))
+      .peek { k, _ -> logger.info("Latest processed block number: $k") }
       .map { k, _ -> KeyValue("latest_processed_number", k.toString(16)) }
       .to(appConfig.topicsConfig.metadata, Produced.with(Serdes.String(), Serdes.String()))
 
@@ -56,9 +56,8 @@ class CanonicalChainProcessor : AbstractBaseProcessor() {
 
   }
 
-  override fun start() {
-    logger.info { "Starting ${this.javaClass.simpleName}..." }
-    super.start()
+  companion object {
+    private const val CANONICAL_CHAIN_STORE = "canonical-chain-store"
   }
 }
 
@@ -87,10 +86,10 @@ class ProcessedBlockTransformer(private val stateStoreName: String) : Transforme
 
   override fun init(context: ProcessorContext) {
     this.context = context
-    this.store = context.getStateStore(stateStoreName) as KeyValueStore<Long, String>
+    store = context.getStateStore(stateStoreName) as KeyValueStore<Long, String>
 
-    this.scheduledAdvance = context.schedule(1000, PunctuationType.WALL_CLOCK_TIME) { _ -> tryToAdvance() }
-    this.scheduledPrune = context.schedule(10000, PunctuationType.WALL_CLOCK_TIME) { _ -> prune() }
+    scheduledAdvance = context.schedule(1000, PunctuationType.WALL_CLOCK_TIME) { _ -> tryToAdvance() }
+    scheduledPrune = context.schedule(10000, PunctuationType.WALL_CLOCK_TIME) { _ -> prune() }
   }
 
   private fun tryToAdvance() {

@@ -5,9 +5,30 @@ import org.ethereum.util.ByteUtil
 fun ByteArray?.toHex(): String? = ByteUtil.toHexString(this)
 
 /**
- * Search the data byte array for the first occurrence of the byte array pattern.
+ * Search the data for the first occurrence of the byte array pattern.
  */
 fun ByteArray.indexByteArrayOf(pattern: ByteArray): Int {
+
+  /**
+   * Computes the failure function using a boot-strapping process, where the pattern is matched against itself.
+   */
+  fun computeFailure(pattern: ByteArray): IntArray {
+    val failure = IntArray(pattern.size)
+    var j = 0
+
+    for (i in 1 until pattern.size) {
+      while (j > 0 && pattern[j] != pattern[i]) {
+        j = failure[j - 1]
+      }
+      if (pattern[j] == pattern[i]) {
+        j++
+      }
+      failure[i] = j
+    }
+
+    return failure
+  }
+
   val failure = computeFailure(pattern)
   var j = 0
 
@@ -24,24 +45,5 @@ fun ByteArray.indexByteArrayOf(pattern: ByteArray): Int {
   }
 
   return -1
-}
 
-/**
- * Computes the failure function using a boot-strapping process, where the pattern is matched against itself.
- */
-private fun computeFailure(pattern: ByteArray): IntArray {
-  val failure = IntArray(pattern.size)
-  var j = 0
-
-  for (i in 1 until pattern.size) {
-    while (j > 0 && pattern[j] != pattern[i]) {
-      j = failure[j - 1]
-    }
-    if (pattern[j] == pattern[i]) {
-      j++
-    }
-    failure[i] = j
-  }
-
-  return failure
 }

@@ -1,5 +1,7 @@
 package io.enkrypt.bolt.processors
 
+import com.mongodb.client.MongoCollection
+import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.ReplaceOptions
 import io.enkrypt.bolt.extensions.toHex
 import io.enkrypt.bolt.kafka.serdes.BigIntegerSerde
@@ -17,6 +19,7 @@ import org.apache.kafka.streams.kstream.Materialized
 import org.apache.kafka.streams.kstream.Serialized
 import org.bson.Document
 import org.ethereum.core.BlockSummary
+import org.koin.standalone.inject
 import java.math.BigInteger
 import java.util.Calendar
 import java.util.Date
@@ -37,7 +40,12 @@ class ChartsProcessor : AbstractBaseProcessor() {
       put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 2)
     }
 
-  private val logger = KotlinLogging.logger {}
+  private val mongoDB: MongoDatabase by inject()
+  private val statsCollection: MongoCollection<Document> by lazy {
+    mongoDB.getCollection(appConfig.mongo.statisticsCollection)
+  }
+
+  override val logger = KotlinLogging.logger {}
 
   override fun onPrepareProcessor() {
 
@@ -56,7 +64,8 @@ class ChartsProcessor : AbstractBaseProcessor() {
       )
       .map { _, v -> KeyValue(timestampToDay(v.block.timestamp), v) }
 
-    // Blocks count
+    // Blocks count per day
+    // --------------------
 
     val blockCountByDay = blocksByDay
       .mapValues { v -> v.block.hash.toHex() }
@@ -64,6 +73,7 @@ class ChartsProcessor : AbstractBaseProcessor() {
       .count(Materialized.with(dateSerde, Serdes.Long()))
 
     // Avg Total Difficulty
+    // --------------------
 
     blocksByDay
       .mapValues { v -> v.block.cumulativeDifficulty }
@@ -82,6 +92,7 @@ class ChartsProcessor : AbstractBaseProcessor() {
       .foreach { date, value -> persistStatistic("avg_total_difficulty", date, value.toLong()) }
 
     // Avg Gas Price
+    // -------------
 
     blocksByDay
       .mapValues { v -> v.statistics.avgGasPrice }
@@ -98,6 +109,7 @@ class ChartsProcessor : AbstractBaseProcessor() {
       .foreach { date, value -> persistStatistic("avg_gas_price", date, value.toLong()) }
 
     // Avg Txs Fees
+    // ------------
 
     blocksByDay
       .mapValues { v -> v.statistics.avgTxsFees }
@@ -116,6 +128,7 @@ class ChartsProcessor : AbstractBaseProcessor() {
       .foreach { date, value -> persistStatistic("avg_tx_fees", date, value.toLong()) }
 
     // Avg Failed Txs
+    // --------------
 
     blocksByDay
       .mapValues { v -> v.statistics.numFailedTxs }
@@ -134,6 +147,7 @@ class ChartsProcessor : AbstractBaseProcessor() {
       .foreach { date, value -> persistStatistic("avg_failed_txs", date, value.toLong()) }
 
     // Avg Successful Txs
+    // ------------------
 
     blocksByDay
       .mapValues { v -> v.statistics.numSuccessfulTxs }
@@ -188,10 +202,6 @@ class ChartsProcessor : AbstractBaseProcessor() {
 
   }
 
-  override fun start() {
-    logger.info { "Starting ${this.javaClass.simpleName}..." }
-    super.start()
-  }
 }
 
 
