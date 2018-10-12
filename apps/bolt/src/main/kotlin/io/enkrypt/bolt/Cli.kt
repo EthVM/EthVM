@@ -5,11 +5,10 @@ import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.mongodb.MongoClient
 import com.mongodb.MongoClientURI
-import io.enkrypt.bolt.processors.AccountMongoProcessor
+import io.enkrypt.bolt.processors.AccountStateMongoProcessor
 import io.enkrypt.bolt.processors.AccountStateProcessor
 import io.enkrypt.bolt.processors.BlockMongoTransformer
 import io.enkrypt.bolt.processors.BlocksProcessor
-import io.enkrypt.bolt.processors.CanonicalChainProcessor
 import io.enkrypt.bolt.processors.ChartsProcessor
 import io.enkrypt.bolt.processors.PendingTransactionMongoProcessor
 import io.enkrypt.bolt.processors.PendingTransactionsProcessor
@@ -115,7 +114,7 @@ class Cli : CliktCommand() {
 
     factory { BlockMongoTransformer() }
     factory { TokenDetectorTransformer() }
-    factory { AccountMongoProcessor() }
+    factory { AccountStateMongoProcessor() }
     factory { PendingTransactionMongoProcessor() }
 
     module("kafka") {
@@ -142,7 +141,6 @@ class Cli : CliktCommand() {
 
     listOf<Processor>(
       BlocksProcessor(),
-      CanonicalChainProcessor(),
       ChartsProcessor(),
       AccountStateProcessor(),
       PendingTransactionsProcessor()

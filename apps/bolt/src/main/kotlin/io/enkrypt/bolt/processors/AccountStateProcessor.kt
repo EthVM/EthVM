@@ -8,7 +8,7 @@ import com.mongodb.client.model.WriteModel
 import io.enkrypt.bolt.extensions.toDocument
 import io.enkrypt.bolt.extensions.toHex
 import io.enkrypt.bolt.kafka.processors.MongoProcessor
-import io.enkrypt.bolt.kafka.serdes.RLPAccountSerde
+import io.enkrypt.bolt.kafka.serdes.RLPAccountStateSerde
 import io.enkrypt.kafka.models.Account
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serdes
@@ -21,6 +21,7 @@ import org.apache.kafka.streams.processor.Cancellable
 import org.apache.kafka.streams.processor.ProcessorContext
 import org.apache.kafka.streams.processor.PunctuationType
 import org.bson.Document
+import org.ethereum.core.AccountState
 import org.ethereum.util.ByteUtil
 import org.koin.standalone.get
 import java.util.Properties
@@ -43,7 +44,7 @@ class AccountStateProcessor : AbstractBaseProcessor() {
 
   override fun onPrepareProcessor() {
     // RLP Account Serde
-    val accountSerde = RLPAccountSerde()
+    val accountSerde = RLPAccountStateSerde()
 
     // Create stream builder
     val builder = StreamsBuilder()
@@ -51,7 +52,7 @@ class AccountStateProcessor : AbstractBaseProcessor() {
     builder
       .stream(appConfig.topicsConfig.accountState, Consumed.with(Serdes.ByteArray(), accountSerde))
       .map { k, v -> KeyValue(ByteUtil.toHexString(k), v) }
-      .process({ get<AccountMongoProcessor>() }, null)
+      .process({ get<AccountStateMongoProcessor>() }, null)
 
     // Generate the topology
     val topology = builder.build()
@@ -62,7 +63,7 @@ class AccountStateProcessor : AbstractBaseProcessor() {
 
 }
 
-class AccountMongoProcessor : MongoProcessor<String, Account>() {
+class AccountStateMongoProcessor : MongoProcessor<String, AccountState>() {
 
   private val accountsCollection: MongoCollection<Document> by lazy {
     mongoDB.getCollection(config.mongo.accountsCollection)
@@ -70,7 +71,7 @@ class AccountMongoProcessor : MongoProcessor<String, Account>() {
 
   override val batchSize = 100
 
-  private val batch = ArrayList<Account>()
+  private var batch = mapOf<String, AccountState>()
   private var scheduledWrite: Cancellable? = null
 
   override fun init(context: ProcessorContext) {
@@ -78,8 +79,8 @@ class AccountMongoProcessor : MongoProcessor<String, Account>() {
     this.scheduledWrite = context.schedule(timeoutMs, PunctuationType.WALL_CLOCK_TIME) { _ -> tryToWrite() }
   }
 
-  override fun process(key: String, value: Account) {
-    batch.add(value)
+  override fun process(key: String, value: AccountState) {
+    batch += key to value
     if (batch.size == batchSize) {
       tryToWrite()
     }
@@ -92,14 +93,18 @@ class AccountMongoProcessor : MongoProcessor<String, Account>() {
 
     val startMs = System.currentTimeMillis()
 
-    val ops = batch.map<Account, WriteModel<Document>> { account ->
-      val filter = Document(mapOf("_id" to account.address.toHex()))
+    val ops = batch.toList().map<Pair<String, AccountState>, WriteModel<Document>> { pair ->
+
+      val address = pair.first
+      val state = pair.second
+
+      val filter = Document(mapOf("_id" to address))
       val updateOptions = UpdateOptions().upsert(true)
 
-      if (account.isEmpty) {
-        DeleteOneModel<Document>(filter)
+      if (state.isEmpty) {
+        UpdateOneModel(filter, Document(mapOf("\$set" to Document(mapOf("empty" to true)))))
       } else {
-        val update = Document(mapOf("\$set" to account.toDocument()))
+        val update = Document(mapOf("\$set" to state.toDocument()))
         UpdateOneModel(filter, update, updateOptions)
       }
     }
@@ -113,7 +118,7 @@ class AccountMongoProcessor : MongoProcessor<String, Account>() {
       val elapsedMs = System.currentTimeMillis() - startMs
       logger.debug { "${batch.size} accounts updated in $elapsedMs ms" }
 
-      batch.clear()
+      batch = emptyMap()
 
     } catch (e: Exception) {
       logger.error { "Failed to update accounts. $e" }

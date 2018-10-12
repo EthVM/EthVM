@@ -2,13 +2,7 @@ package io.enkrypt.bolt.extensions
 
 import io.enkrypt.kafka.models.Account
 import org.bson.Document
-import org.ethereum.core.Block
-import org.ethereum.core.BlockHeader
-import org.ethereum.core.BlockStatistics
-import org.ethereum.core.BlockSummary
-import org.ethereum.core.Transaction
-import org.ethereum.core.TransactionExecutionSummary
-import org.ethereum.core.TransactionReceipt
+import org.ethereum.core.*
 import org.ethereum.vm.LogInfo
 import org.ethereum.vm.program.InternalTransaction
 
@@ -125,9 +119,8 @@ fun InternalTransaction?.toDocument(): Document = Document(
   )
 )
 
-fun Account?.toDocument(): Document = Document(
+fun AccountState?.toDocument(): Document = Document(
   mapOf(
-    "address" to this?.address.toHex(),
     "nonce" to this?.nonce?.toByteArray(),
     "balance" to this?.balance?.toByteArray()
   )
