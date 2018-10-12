@@ -1,4 +1,4 @@
-import { PendingTx } from '@app/server/modules/pending-tx'
+import { PendingTx } from '@app/server/modules/pending-txs'
 import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
 
 export interface PendingTxRepository {

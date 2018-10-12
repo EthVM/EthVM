@@ -1,4 +1,4 @@
-import { PendingTx, PendingTxRepository } from '@app/server/modules/pending-tx'
+import { PendingTx, PendingTxRepository } from '@app/server/modules/pending-txs'
 import { CacheRepository } from '@app/server/repositories'
 
 export interface PendingTxService {
