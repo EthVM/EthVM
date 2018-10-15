@@ -1,10 +1,10 @@
 import config from '@app/config'
 import { errors } from '@app/server/core/exceptions'
-import { KafkaStreamer, Streamer } from '@app/server/core/streams'
+import { MongoStreamer, Streamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
 import { AddressServiceImpl, MongoAddressRepository } from '@app/server/modules/address'
 import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blocks'
-import { MockChartsRepository } from '@app/server/modules/charts'
+import { ChartsServiceImpl, MockChartsRepository } from '@app/server/modules/charts'
 import { ExchangeRate, ExchangeService, ExchangeServiceImpl, Quote } from '@app/server/modules/exchanges'
 import { MongoPendingTxRepository, PendingTxServiceImpl } from '@app/server/modules/pending-txs'
 import { SearchServiceImpl, SearchType } from '@app/server/modules/search'
@@ -17,7 +17,7 @@ import * as Redis from 'ioredis'
 import { MongoClient } from 'mongodb'
 import * as io from 'socket.io-client'
 import { mock } from 'ts-mockito'
-import { ChartsServiceImpl, MockExchangeRepository, VmServiceImpl } from './mocks'
+import { MockExchangeRepository, VmServiceImpl } from './mocks'
 
 jest.setTimeout(50000)
 
@@ -47,9 +47,11 @@ describe('ethvm-server-events', () => {
     const mClient = await MongoClient.connect('mongodb://localhost:27017').catch(() => process.exit(-1))
     const db = mClient.db('ethvm_local')
 
+    // Blocks
     const blocksRepository = new MongoBlockRepository(db)
     const blockService = new BlocksServiceImpl(blocksRepository, ds)
 
+    // Txs
     const txsRepository = new MongoTxsRepository(db)
     const txsService: TxsService = new TxsServiceImpl(txsRepository, ds)
 
@@ -61,24 +63,28 @@ describe('ethvm-server-events', () => {
     const unclesRepository = new MongoUncleRepository(db)
     const uncleService = new UnclesServiceImpl(unclesRepository, ds)
 
-    const chartsService = new ChartsServiceImpl(mock(MockChartsRepository))
+    // Charts
+    const chartsService = new ChartsServiceImpl(new MockChartsRepository())
 
+    // Search
     const searchService = new SearchServiceImpl(txsRepository, addressRepository, blocksRepository, ds)
 
-    const exRepository = new MockExchangeRepository(ds)
-    const exchangeService: ExchangeService = new ExchangeServiceImpl(exRepository, ds)
+    // Exchange
+    const exchangeRepository = new MockExchangeRepository(ds)
+    const exchangeService: ExchangeService = new ExchangeServiceImpl(exchangeRepository, ds)
 
-    // Adress
+    // Pending Txs
     const pendingTxRepository = new MongoPendingTxRepository(db)
     const pendingTxService = new PendingTxServiceImpl(pendingTxRepository, ds)
 
+    // Vm
     const vmService: VmService = new VmServiceImpl()
 
-    const streamer: Streamer = mock(KafkaStreamer)
-
-    client = io.connect(`http://${config.get('server.host')}:${config.get('server.port')}`)
+    // Streamer
+    const streamer: Streamer = mock(MongoStreamer)
 
     // Create server
+    client = io.connect(`http://${config.get('server.host')}:${config.get('server.port')}`)
     server = new EthVMServer(
       blockService,
       uncleService,
@@ -99,7 +105,7 @@ describe('ethvm-server-events', () => {
     client.stop()
   })
 
-  describe('getTxsEvent', () => {
+  describe('getTxs', () => {
     it('should return Promise<Tx[]>', async () => {
       const inputs = [
         {
@@ -204,6 +210,7 @@ describe('ethvm-server-events', () => {
         expect(data).to.have.lengthOf(10)
       }
     })
+    
     it('should return err ', async () => {
       const inputs = [
         '',
@@ -234,7 +241,7 @@ describe('ethvm-server-events', () => {
     })
   })
 
-  describe('getTx Event', () => {
+  describe('getTx', () => {
     it('should return Promise<Tx>', async () => {
       const inputs = [
         {
@@ -278,7 +285,7 @@ describe('ethvm-server-events', () => {
     })
   })
 
-  describe('getTotalTxs Event', () => {
+  describe('getTotalTxs', () => {
     it('should return Promise<number>', async () => {
       const inputs = [
         {
@@ -424,6 +431,7 @@ describe('ethvm-server-events', () => {
         expect(data).to.be.not.empty
       }
     })
+
     it('should return err ', async () => {
       const inputs = [
         '',
@@ -476,6 +484,7 @@ describe('ethvm-server-events', () => {
         expect(data).to.be.not.undefined
       }
     })
+
     it('should return err ', async () => {
       const inputs = [
         '',
@@ -539,6 +548,7 @@ describe('ethvm-server-events', () => {
         expect(data).to.be.not.undefined
       }
     })
+
     it('should return err ', async () => {
       const inputs = [
         '',
@@ -602,6 +612,7 @@ describe('ethvm-server-events', () => {
         expect(data).to.be.not.undefined
       }
     })
+
     it('should return err ', async () => {
       const inputs = [
         '',
@@ -665,6 +676,7 @@ describe('ethvm-server-events', () => {
         expect(data).to.be.not.undefined
       }
     })
+
     it('should return err ', async () => {
       const inputs = [
         '',
