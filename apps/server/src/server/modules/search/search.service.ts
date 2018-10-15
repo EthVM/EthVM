@@ -9,6 +9,7 @@ import { isValidAddress } from 'ethereumjs-util'
 export interface SearchService {
   search(hash: string): Promise<Search>
 }
+
 export class SearchServiceImpl implements SearchService {
   constructor(
     private readonly txsRepository: TxsRepository,
@@ -22,6 +23,7 @@ export class SearchServiceImpl implements SearchService {
     return new Promise(async (resolve, reject) => {
       const s: Search = { type: SearchType.None }
       hash.slice(0, 2) === '0x' ? (hashWth0x = hash.replace('0x', '')) : (hashWth0x = '0x' + hash)
+      
       if (isValidAddress(hashWth0x)) {
         const address = await this.addressRepository.getAddress(hash)
         if (address != null) {
@@ -40,6 +42,7 @@ export class SearchServiceImpl implements SearchService {
           s.type = SearchType.Transaction
         }
       }
+      
       return resolve(s)
     })
   }
