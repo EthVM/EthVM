@@ -1,52 +1,61 @@
 <template>
-  <v-card class="mt-3 mb-5">
-    <v-list dense>
-      <template v-for="(item,index) in items">
-        <v-list-tile  :key="item.title" class="pl-1 pr-1">
-          <v-layout justify-start>
-            <v-flex xs4 sm3 md2>
-              <v-list-tile-title><strong>{{item.title}}</strong></v-list-tile-title>
-            </v-flex>
-            <v-flex xs7 sm8 md9>
-              <p v-if="!item.link" class="text-muted text-truncate">{{item.detail}}<timeago v-if="item.title == $t('common.timestmp')" :since="block.getTimestamp()" :auto-update="10"></timeago></p>
-              <router-link v-else :to="item.link"><p class="text-truncate">{{item.detail}}</p></router-link>
-            </v-flex>
-            <v-flex xs1>
-              <v-list-tile-action v-if="item.copy">
-                <copy-to-clip-component :valueToCopy="item.detail"></copy-to-clip-component>
-              </v-list-tile-action>
-            </v-flex>
-          </v-layout>
-        </v-list-tile>
-        <v-divider class="ma-0" :key="index"></v-divider>
-      </template>
-      <template v-if="more" v-for="(item,index) in moreItems">
-        <v-list-tile  :key="item.title" class="pl-1 pr-1">
-          <v-layout justify-start>
-            <v-flex xs4 sm3 md2>
-              <v-list-tile-title><strong>{{item.title}}</strong></v-list-tile-title>
-            </v-flex>
-            <v-flex xs7 sm8 md9>
-              <p v-if="!item.link" class="text-muted text-truncate">{{item.detail}}</p>
-              <router-link v-else :to="item.link"><p class="text-truncate">{{item.detail}}</p></router-link>
-            </v-flex>
-            <v-flex xs1>
-              <v-list-tile-action v-if="item.copy">
-                <copy-to-clip-component :valueToCopy="item.detail"></copy-to-clip-component>
-              </v-list-tile-action>
-            </v-flex>
-          </v-layout>
-        </v-list-tile>
-        <v-divider class="ma-0" :key="(index+1)*10"></v-divider>
-      </template>
-    </v-list>
-    <v-layout justify-end>
-      <v-btn v-if="!more" v-on:click="setView()" flat class="trasparent"><v-icon class="fa fa-angle-down black--text"></v-icon></v-btn>
-      <v-btn v-else v-on:click="setView()" flat class="trasparent"><v-icon class="fa fa-angle-up black--text"></v-icon></v-btn>
+  <v-card color="white" flat class="pt-3">
+    <v-layout wrap row align-center pb-1 pr-4 pl-4>
+      <v-card-title class="title font-weight-bold">{{ $t('title.blockDetail') }}</v-card-title>
     </v-layout>
+    <v-divider class="lineGrey"></v-divider>
+    <v-list>
+      <v-list-tile v-for="(item, index) in items" :key="index" :class="[ index % 2 == 0 ?'background: white' : 'background: tableGrey']">
+        <v-layout align-center justify-start row fill-height class="pa-3 ">
+          <v-flex xs4 sm3 md2>
+            <v-list-tile-title class="info--text font-weight-medium">{{item.title}}</v-list-tile-title>
+          </v-flex>
+          <v-flex xs7 sm8 md9>
+            <v-list-tile-title v-if="!item.link" class="text-muted text-truncate">{{item.detail}}
+              <timeago v-if="item.title == $t('common.timestmp')" :since="block.getTimestamp()" :auto-update="10"></timeago>
+            </v-list-tile-title>
+            <router-link v-else :to="item.link">
+              <v-list-tile-title class="text-truncate">{{item.detail}}</v-list-tile-title>
+            </router-link>
+          </v-flex>
+          <v-flex xs1>
+            <v-list-tile-action v-if="item.copy">
+              <copy-to-clip-component :valueToCopy="item.detail"></copy-to-clip-component>
+            </v-list-tile-action>
+          </v-flex>
+        </v-layout>
+      </v-list-tile>
+      <v-slide-y-transition group>
+          <v-list-tile v-if="more" v-for="(item,count) in moreItems" :key="count" :class="[ count % 2 == 0 ?'background: white' : 'background: tableGrey']">
+            <v-layout align-center justify-start row fill-height class="pa-3">
+              <v-flex xs4 sm3 md2>
+                <v-list-tile-title class="info--text font-weight-medium">{{item.title}}</v-list-tile-title>
+              </v-flex>
+              <v-flex xs7 sm8 md9>
+                <v-list-tile-title v-if="!item.link" class="text-muted text-truncate">{{item.detail}}
+                  <timeago v-if="item.title == $t('common.timestmp')" :since="block.getTimestamp()" :auto-update="10"></timeago>
+                </v-list-tile-title>
+                <router-link v-else :to="item.link">
+                  <v-list-tile-title class="text-truncate">{{item.detail}}</v-list-tile-title>
+                </router-link>
+              </v-flex>
+              <v-flex xs1>
+                <v-list-tile-action v-if="item.copy">
+                  <copy-to-clip-component :valueToCopy="item.detail"></copy-to-clip-component>
+                </v-list-tile-action>
+              </v-flex>
+            </v-layout>
+          </v-list-tile>
+      </v-slide-y-transition>
+    </v-list>
+    <v-btn v-if="!more" v-on:click="setView()" flat block class="secondary">
+      <v-icon class="fa fa-angle-down white--text"></v-icon>
+    </v-btn>
+    <v-btn v-else v-on:click="setView()" flat block class="secondary">
+      <v-icon class="fa fa-angle-up white--text"></v-icon>
+    </v-btn>
   </v-card>
 </template>
-
 
 <script lang="ts">
 import { common } from '@app/helpers'
@@ -174,12 +183,13 @@ export default Vue.extend({
           },
           {
             title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward'),
-            detail: this.block
-              .getUncleReward()
-              .toEth()
-              .toString() +
-            ' ' +
-            this.$i18n.t('common.eth')
+            detail:
+              this.block
+                .getUncleReward()
+                .toEth()
+                .toString() +
+              ' ' +
+              this.$i18n.t('common.eth')
           },
           {
             title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.sha'),

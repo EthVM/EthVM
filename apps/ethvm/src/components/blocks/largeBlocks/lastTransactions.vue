@@ -1,10 +1,10 @@
 <template>
-  <v-card color="white" flat class="pt-3 pr-4 pl-4">
+  <v-card color="white" flat class="pt-3 pr-4 pl-4 pb-2">
     <v-layout row wrap align-center pb-1>
       <v-flex xs8>
-        <v-card-title class="title font-weight-bold">{{ $t('title.lastTxs') }}</v-card-title>
+        <v-card-title class="title font-weight-bold">{{ getTitle }}</v-card-title>
       </v-flex>
-      <v-flex xs4>
+      <v-flex xs4 v-if="!frameTxs">
         <v-layout justify-end>
           <v-btn outline color="secondary" class="text-capitalize" to="/transactions"> {{ $t('bttn.viewAll') }}</v-btn>
         </v-layout>
@@ -60,7 +60,7 @@
                 </v-layout>
               </v-flex>
               <v-flex d-flex xs6 sm3 md2>
-                <p class="text-truncate black--text align-center mb-0">
+                <p :class="[tx.getStatus()? 'txSuccess--text': 'txFail--text']">
                   <v-tooltip v-if="getShortEthValue(tx.getValue().toEth().toString(), true)" bottom>
                     <v-icon slot="activator" dark small>fa fa-question-circle info--text</v-icon>
                     <span>{{tx.getValue().toEth()}}</span>
@@ -97,7 +97,6 @@
 
 <script lang="ts">
 import Vue from 'vue'
-
 export default Vue.extend({
   name: 'TableTransactions',
   props: {
@@ -110,6 +109,10 @@ export default Vue.extend({
       default: false
     },
     showStyle: {
+      type: String,
+      default: ''
+    },
+    tableTitle: {
       type: String,
       default: ''
     },
@@ -129,7 +132,8 @@ export default Vue.extend({
           icon: 'fa fa-times-circle'
         }
       ],
-      color: 'grey'
+      color: 'grey',
+      defaultTitle: this.$i18n.t('title.lastTxs')
     }
   },
   methods: {
@@ -150,6 +154,13 @@ export default Vue.extend({
   computed: {
     getStyle() {
       return this.showStyle
+    },
+    getTitle() {
+      if (this.tableTitle !== '') {
+        return this.tableTitle
+      } else {
+        return this.defaultTitle
+      }
     }
   }
 })

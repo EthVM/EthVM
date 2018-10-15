@@ -187,7 +187,9 @@ Vue.use(Vuetify, {
     nav: '#a0a8fd',
     txSuccess: '#40ce9c',
     txFail: '#fe1377',
-    txPen: '#eea66b'
+    txPen: '#eea66b',
+    lineGrey: '#efefef',
+    tableGrey: '#fbfcfe'
 
     // used -->
     // background: String(colors.grey.darken3)

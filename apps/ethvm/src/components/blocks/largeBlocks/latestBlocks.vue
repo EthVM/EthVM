@@ -1,6 +1,16 @@
 <template>
-  <v-card color="white" flat class="pt-3 pr-4 pl-4">
-    <v-layout row wrap align-center pb-1>
+  <v-card color="white" flat class="pt-3 pr-4 pl-4 mt-0">
+    <v-layout v-if="frameBlocks" row wrap align-center pb-1>
+      <v-flex d-flex xs12 sm8 order-xs1>
+        <v-card-title class="title font-weight-bold">{{ $t('title.lastBlock') }}</v-card-title>
+      </v-flex>
+      <v-flex  hidden-sm-and-down md4 order-xs2>
+        <v-layout justify-end>
+          <footnote :footnotes="footnote"></footnote>
+        </v-layout>
+      </v-flex>
+    </v-layout>
+    <v-layout v-else row wrap align-center pb-1>
       <v-flex d-flex xs8 md7 order-xs1>
         <v-card-title class="title font-weight-bold">{{ $t('title.lastBlock') }}</v-card-title>
       </v-flex>
@@ -9,7 +19,7 @@
           <footnote :footnotes="footnote"></footnote>
         </v-layout>
       </v-flex>
-      <v-flex d-flex xs4 md1 order-xs2 order-md3 v-if="!frameBlocks">
+      <v-flex d-flex xs4 md1 order-xs2 order-md3>
         <v-layout justify-end>
           <v-btn outline color="secondary" class="text-capitalize" to="/blocks"> {{ $t('bttn.viewAll') }}</v-btn>
         </v-layout>
@@ -22,7 +32,7 @@
           <h5>{{ $t( 'tableHeader.blockN' ) }}</h5>
         </v-flex>
         <v-spacer></v-spacer>
-        <v-flex hidden-sm-and-down md2 >
+        <v-flex hidden-sm-and-down md2>
           <h5>{{ $t( 'tableHeader.txs' ) }}</h5>
         </v-flex>
         <v-flex xs6 sm3 md2>
@@ -34,9 +44,9 @@
     <v-card v-if="getBlocks" flat id="scroll-target" :style="getStyle" class="scroll-y pt-0 pb-0">
       <v-layout column fill-height v-scroll:#scroll-target class="pt-1" style="margin-right: 1px">
         <v-flex xs12>
-          <v-card v-for="block in getBlocks" class="transparent pb-1" flat v-if="!block.getIsUncle()" v-bind:key="block.hash">
+          <v-card v-for="block in getBlocks" class="transparent" flat v-if="!block.getIsUncle()" v-bind:key="block.hash">
             <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
-              <v-flex d-flex xs6 sm2  order-xs1>
+              <v-flex d-flex xs6 sm2 order-xs1 >
                 <router-link class="black--text pb-1" :to="'/block/'+block.getHash()">{{block.getNumber()}}</router-link>
               </v-flex>
               <v-flex xs12 sm7 md6 lass="pr-0" order-xs3 order-sm2>
@@ -67,7 +77,7 @@
       </v-layout>
     </v-card>
     <div v-else>
-      <v-card class="mt-3 mb-3">
+      <v-card mb-4>
         <v-card-text class="text-xs-center text-muted">{{ $t('message.error')}} </v-card-text>
       </v-card>
     </div>
@@ -96,6 +106,7 @@ export default Vue.extend({
     return {
       blocks: [],
       showUncles: {},
+      background: false,
       footnote: [
         {
           color: 'txSuccess',

@@ -1,20 +1,30 @@
 <template>
   <v-container v-if="block != null" grid-list-lg class="mt-0">
-    <v-card fluid flat color="transparent">
-      <v-breadcrumbs large>
-        <v-icon slot="divider">fa fa-arrow-right</v-icon>
-        <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link">
-          {{ item.text }}
-        </v-breadcrumbs-item>
-      </v-breadcrumbs>
-    </v-card>
-    <h4 class="mt-5">{{ $t('title.blockDetail') }}</h4>
-    <block-block-detail :block="block" :uncles="uncles"></block-block-detail>
-    <h4>{{ $t('title.blockTx') }}</h4>
-    <block-last-transactions v-if="transactions.length > 0" :transactions="transactions" :showHeader="true" class="mt-3"></block-last-transactions>
-    <v-card v-else color="white">
-      <v-card-text class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }} </v-card-text>
-    </v-card>
+    <v-layout row wrap justify-start class="mb-4">
+      <v-flex xs12>
+        <v-card fluid flat color="transparent">
+          <v-breadcrumbs large>
+            <v-icon slot="divider">fa fa-arrow-right</v-icon>
+            <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link">
+              {{ item.text }}
+            </v-breadcrumbs-item>
+          </v-breadcrumbs>
+        </v-card>
+      </v-flex>
+    </v-layout>
+    <v-layout row wrap justify-start class="mb-4">
+      <v-flex xs12>
+        <block-block-detail :block="block" :uncles="uncles"></block-block-detail>
+      </v-flex>
+    </v-layout>
+    <v-layout row wrap justify-start class="mb-4">
+      <v-flex xs12>
+        <block-last-transactions v-if="transactions.length > 0" :transactions="transactions" :frameTxs="true" :tableTitle="$t('title.blockTx')"class="mt-3"></block-last-transactions>
+        <v-card v-else color="white">
+          <v-card-text class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }} </v-card-text>
+        </v-card>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 
@@ -81,7 +91,7 @@ export default Vue.extend({
     this.$socket.emit(
       sEvents.getBlock,
       {
-        hash: this.blockHash.replace('0x','')
+        hash: this.blockHash.replace('0x', '')
       },
       (error, result) => {
         if (result) {
@@ -92,7 +102,7 @@ export default Vue.extend({
           this.$socket.emit(
             sEvents.getBlockTransactions,
             {
-              hash: this.blockHash.replace('0x','')
+              hash: this.blockHash.replace('0x', '')
             },
             (err, data) => {
               this.transactions = data.map(_tx => {
