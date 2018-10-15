@@ -1,18 +1,18 @@
-import { Address } from '@app/server/modules/address'
+import { Account } from '@app/server/modules/accounts'
 import { Tx } from '@app/server/modules/txs'
 import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
 
-export interface AddressRepository {
+export interface AccountsRepository {
   getTxs(hash: string, limit: number, page: number): Promise<Tx[]>
-  getAddress(hash: string): Promise<Address | null>
+  getAccount(hash: string): Promise<Account | null>
   getTotalTxs(hash: string): Promise<number>
 }
 
-export class MongoAddressRepository extends BaseMongoDbRepository implements AddressRepository {
+export class MongoAccountsRepository extends BaseMongoDbRepository implements AccountsRepository {
   public getTotalTxs(hash: string): Promise<number> {
     return this.db
-      .collection(MongoEthVM.collections.transactions)
-      .count({ $or: [{ from: hash }, { to: hash }] })
+      .collection(MongoEthVM.collections.blocks)
+      .countDocuments({ $or: [{ 'transactions.from': hash }, { 'transactions.to': hash }] })
       .then(resp => {
         if (!resp) {
           return 0
@@ -20,10 +20,11 @@ export class MongoAddressRepository extends BaseMongoDbRepository implements Add
         return resp
       })
   }
-  public getAddress(hash: string): Promise<Address | null> {
+
+  public getAccount(hash: string): Promise<Account | null> {
     return this.db
       .collection(MongoEthVM.collections.accounts)
-      .findOne({ address: hash })
+      .findOne({ _id: hash })
       .then(resp => {
         if (!resp) {
           return null

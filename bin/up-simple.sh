@@ -17,7 +17,7 @@ echo "Executing: ${CMD}"
 ${CMD}
 
 echo "Importing bootstraped db to mongo..."
-CMD="mongorestore --db ethvm_local --archive=\"ethvm_sample.archive\""
+CMD="mongorestore --db ethvm_local --archive=\"/datasets/ethvm_mainnet_sample.mongo.archive\""
 echo "Executing: ${CMD}"
 docker-compose exec mongodb sh -c "$CMD"
 

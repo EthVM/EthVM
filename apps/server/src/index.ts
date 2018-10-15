@@ -2,7 +2,7 @@ import config from '@app/config'
 import { logger } from '@app/logger'
 import { MongoStreamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
-import { AddressServiceImpl, MongoAddressRepository } from '@app/server/modules/address'
+import { AccountsServiceImpl, MongoAccountsRepository } from '@app/server/modules/accounts'
 import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blocks'
 import { ChartsServiceImpl, MockChartsRepository } from '@app/server/modules/charts'
 import { CoinMarketCapRepository, ExchangeServiceImpl } from '@app/server/modules/exchanges'
@@ -86,8 +86,8 @@ async function bootstrapServer() {
   const uncleService = new UnclesServiceImpl(unclesRepository, ds)
 
   // Adress
-  const addressRepository = new MongoAddressRepository(db)
-  const addressService = new AddressServiceImpl(addressRepository, ds)
+  const addressRepository = new MongoAccountsRepository(db)
+  const addressService = new AccountsServiceImpl(addressRepository, ds)
 
   // Adress
   const pendingTxRepository = new MongoPendingTxRepository(db)

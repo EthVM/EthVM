@@ -12,11 +12,6 @@
     "url": "https://github.com/enKryptIO/ethvm-dev-kit/issues"
   },
   "homepage": "https://github.com/enKryptIO/ethvm-dev-kit#readme",
-  "config": {
-    "ghooks": {
-      "pre-commit": "opt --in pre-commit --exec 'yarn format'"
-    }
-  },
   "scripts": {
     "monkey": "ts-node bin/monkey/monkey-cli.ts",
     "format": "yarn lint:fix && yarn prettier",
@@ -36,7 +31,6 @@
     "ethereumjs-abi": "^0.6.5",
     "ethereumjs-tx": "^1.3.7",
     "ethereumjs-util": "^5.2.0",
-    "ghooks": "^2.0.4",
     "lerna": "^3.0.5",
     "opt-cli": "^1.6.0",
     "ora": "^3.0.0",

@@ -14,6 +14,7 @@ import {
   TxsPayload
 } from '@app/server/core/payloads'
 import { Streamer, StreamingEvent } from '@app/server/core/streams'
+import { AccountsService } from '@app/server/modules/accounts'
 import { Block, BlocksService } from '@app/server/modules/blocks'
 import { ChartService } from '@app/server/modules/charts'
 import { ExchangeService } from '@app/server/modules/exchanges'
@@ -25,7 +26,6 @@ import { VmService } from '@app/server/modules/vm'
 import * as fs from 'fs'
 import * as http from 'http'
 import * as SocketIO from 'socket.io'
-import { AddressService } from './modules/address'
 
 export type SocketEventPayload =
   | AddressTxsPagesPayload
@@ -62,7 +62,7 @@ export class EthVMServer {
   constructor(
     public readonly blockService: BlocksService,
     public readonly uncleService: UnclesService,
-    public readonly addressService: AddressService,
+    public readonly accountsService: AccountsService,
     public readonly txsService: TxsService,
     public readonly chartsService: ChartService,
     public readonly pendingTxService: PendingTxService,
@@ -91,10 +91,6 @@ export class EthVMServer {
     logger.debug('EthVMServer - start() / Loading socket events...')
     const events = fs.readdirSync(`${__dirname}/events/`)
     events.forEach(async ev => {
-      if (ev.match(/.*\.spec\.ts/)) {
-        // Ignore test files
-        return
-      }
       logger.debug(`EthVMServer - start() / Registering socket event: ${ev}`)
       const event = await import(`${__dirname}/events/${ev}`)
       this.events.set(event.default.id, event.default)
@@ -150,7 +146,7 @@ export class EthVMServer {
               .catch(err => {
                 logger.error(`event -> ${event.id} / Error: ${err}`)
 
-                // TODO: Until we have defined which errors are we going to return, we use a generic one
+                // TODO: Until we have defined which errors we are going to return, we use a generic one
                 if (cb) {
                   cb(errors.INTERNAL_SERVER_ERROR, null)
                 }
@@ -164,7 +160,7 @@ export class EthVMServer {
   private onBlockEvent = (event: StreamingEvent): void => {
     const { op, key, value } = event
 
-    logger.info(`EthVMServer - onBlockEvent / Op: ${op}, Block Hash: ${value.hash}, `)
+    logger.info(`EthVMServer - onBlockEvent / Op: ${op} - Number: ${key} - Hash: ${value.hash}`)
 
     // Save state root if defined
     if (value && value.header && value.header.stateRoot) {
@@ -191,12 +187,12 @@ export class EthVMServer {
   private onAccountEvent = (event: StreamingEvent): void => {
     const { op, key, value } = event
 
-    logger.info(`EthVMServer - onAccountEvent / Op: ${op}, Address: ${key}`)
+    logger.info(`EthVMServer - onAccountEvent / Op: ${op} - Address: ${key}`)
   }
 
   private onPendingTxEvent = (event: StreamingEvent): void => {
     const { op, key, value } = event
 
-    logger.info(`EthVMServer - onPendingTxEvent / Op: ${op}, Pending Tx Hash: ${value.hash}`)
+    logger.info(`EthVMServer - onPendingTxEvent / Op: ${op} - Hash: ${value.hash}`)
   }
 }

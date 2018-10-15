@@ -104,7 +104,7 @@ class AccountStateMongoProcessor : MongoProcessor<String, AccountState>() {
       if (state.isEmpty) {
         UpdateOneModel(filter, Document(mapOf("\$set" to Document(mapOf("empty" to true)))))
       } else {
-        val update = Document(mapOf("\$set" to state.toDocument()))
+        val update = Document(mapOf("\$set" to state.toDocument(address)))
         UpdateOneModel(filter, update, updateOptions)
       }
     }
