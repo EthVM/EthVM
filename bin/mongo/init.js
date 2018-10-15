@@ -98,6 +98,12 @@ db.createView('uncles', 'blocks', [
   }
 ]);
 
+db.createView('contracts', 'accounts', [
+  { $sort: { _id: -1 } },
+  { $match: { contract: { $eq: 1 } } },
+  { $project : { address: 1, nonce: 1, balance: 1, contract: 0 } }
+]);
+
 db.createView('erc20_contracts', 'accounts', [
   { $sort: { _id: -1 } },
   { $match: { contract: { $eq: 1 } } },
@@ -107,5 +113,5 @@ db.createView('erc20_contracts', 'accounts', [
 db.createView('erc721_contracts', 'accounts', [
   { $sort: { _id: -1 } },
   { $match: { contract: { $eq: 2 } } },
-  { $project : { address: 1, nonce: 1, balance: 1, contract: 1 } }
+  { $project : { address: 1, nonce: 1, balance: 1, contract: 2 } }
 ]);
