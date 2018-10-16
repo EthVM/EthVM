@@ -4,8 +4,16 @@ import { Block, Tx } from '@app/models'
 import { BlockLayout, TxLayout } from '@app/models/server'
 
 const socket_socketNewblock = function({ commit }, block: BlockLayout | BlockLayout[]) {
-  commit(sEvents.newBlock, block)
-  this._vm.$eventHub.$emit(sEvents.newBlock, Array.isArray(block) ? new Block(block[0]) : new Block(block))
+  if (Array.isArray(block)) {
+    block.forEach(_block => {
+      commit(sEvents.newBlock, _block)
+      this._vm.$eventHub.$emit(sEvents.newBlock, new Block(_block))
+    })
+  } else {
+    commit(sEvents.newBlock, block)
+    this._vm.$eventHub.$emit(sEvents.newBlock, new Block(block))
+  }
+
 }
 
 const socket_socketNewtx = function({ commit }, tx: TxLayout | TxLayout[]) {

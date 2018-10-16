@@ -164,28 +164,32 @@ export class EthVMServer {
   private onBlockEvent = (event: StreamingEvent): void => {
     const { op, key, value } = event
 
-    logger.info(`EthVMServer - onBlockEvent / Op: ${op}, Block Hash: ${value.hash}, `)
+    logger.info(`EthVMServer - onBlockEvent / Op: ${op}, Block Hash: ${value}, `)
 
     // Save state root if defined
-    if (value && value.header && value.header.stateRoot) {
-      this.vmService.setStateRoot(value.header.stateRoot)
-    }
+    // if (value && value.header && value.header.stateRoot) {
+    //   this.vmService.setStateRoot(value.header.stateRoot)
+    // }
 
     // const smallBlock = mappers.toSmallBlock(block)
 
     // // Send to client
     // this.io.to(blockHash).emit(blockHash + '_update', smallBlock)
-    // this.io.to('blocks').emit('newBlock', smallBlock)
 
-    // const txs = block.transactions || []
-    // if (txs.length > 0) {
-    //   txs.forEach(tx => {
-    //     const txHash = tx.hash
-    //     this.io.to(txHash).emit(txHash + '_update', tx)
-    //   })
-    //   this.io.to('txs').emit('newTx', txs)
-    //   this.ds.putTransactions(txs)
-    // }
+    if (op !== 'delete') {
+      const txs = value.transactions || []
+      if (txs.length > 0) {
+        txs.forEach(tx => {
+          const txHash = tx.hash
+          this.io.to(txHash).emit(txHash + '_update', tx)
+        })
+        this.io.to('txs').emit('newTx', txs)
+        // this.ds.putTransactions(txs)
+      }
+      value.transactions = []
+      value.uncles = []
+      this.io.to('blocks').emit('newBlock', value)
+    }
   }
 
   private onAccountEvent = (event: StreamingEvent): void => {
