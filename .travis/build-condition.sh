@@ -2,6 +2,7 @@
 
 echo -e "machine github.com\n  login $GITHUB_TOKEN" > ~/.netrc
 git lfs pull
+git lfs fetch --all
 
 mongo --eval "rs.initiate()"
 mongo < ./bin/mongo/init.js
