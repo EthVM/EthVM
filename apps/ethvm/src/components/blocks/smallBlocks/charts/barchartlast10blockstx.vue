@@ -97,18 +97,16 @@ export default Vue.extend({
     })
     this.$eventHub.$on(sEvents.newBlock, _block => {
       if (this.chartData.datasets[0]) {
-        this.redraw = false
-        if (!_block.getIsUncle()) {
-          const _tempD = _block.getStats()
+          this.redraw = false
+           const _tempD = _block.getStats()
           this.chartData.labels.push(_block.getNumber())
           this.chartData.labels.shift()
-          this.chartData.datasets[0].data.push(_tempD.pendingTxs)
+          this.chartData.datasets[0].data.push(0) //pending tx ev
           this.chartData.datasets[0].data.shift()
-          this.chartData.datasets[1].data.push(_tempD.success)
+          this.chartData.datasets[1].data.push(_tempD.successfulTxs)
           this.chartData.datasets[1].data.shift()
-          this.chartData.datasets[2].data.push(_tempD.failed)
+          this.chartData.datasets[2].data.push(_tempD.failedTxs)
           this.chartData.datasets[2].data.shift()
-        }
       }
     })
   },
@@ -128,9 +126,9 @@ export default Vue.extend({
       latestBlocks.forEach(_block => {
         data.labels.unshift(_block.getNumber())
         const _tempD = _block.getStats()
-        data.sData.unshift(new BN(_tempD.success).toNumber())
-        data.fData.unshift(new BN(_tempD.failed).toNumber())
-        data.pData.unshift(new BN(_tempD.pendingTxs).toNumber())
+        data.sData.unshift(new BN(_tempD.successfulTxs).toNumber())
+        data.fData.unshift(new BN(_tempD.failedTxs).toNumber())
+        data.pData.unshift(new BN(0).toNumber()) //pending tx ev
       })
       return {
         labels: data.labels,
