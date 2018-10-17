@@ -1,6 +1,5 @@
 package io.enkrypt.bolt.extensions
 
-import io.enkrypt.kafka.models.Account
 import org.bson.Document
 import org.ethereum.core.*
 import org.ethereum.vm.LogInfo
