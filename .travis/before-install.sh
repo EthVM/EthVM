@@ -16,11 +16,10 @@ if [ "$ID" == "apps/server-e2e-test" ]; then
   sudo apt-get install -y mongodb-org
 
 read -r -d '' REPLICA_SET << EOM
-replication:
-  replSetName: rs0
+replSet=rs0
 EOM
 
-  sudo sh -c 'echo "$REPLICA_SET" | tee -a /etc/mongodb.conf'
+  echo "$REPLICA_SET" | sudo tee -a /etc/mongodb.conf
   sudo service mongod start
 
   sleep 10
