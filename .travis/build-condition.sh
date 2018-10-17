@@ -8,9 +8,9 @@ git lfs fetch --all
 
 # Prepare properly Mongo in ReplicaSet
 
-sudo service mongodb stop
+sudo service mongod stop
 sudo sh -c 'echo "replSet = rs0" | tee -a /etc/mongodb.conf'
-sudo service mongodb restart
+sudo service mongod restart
 sleep 10
 mongo --eval "rs.initiate()"
 mongo < ./bin/mongo/init.js
