@@ -2,9 +2,6 @@
 
 if [ "$ID" == "apps/server-e2e-test" ]; then
 
-  # Install systemd
-  sudo apt-get install systemd
-
   # Download datasets with Git LFS (if applies)
 
   echo -e "machine github.com\n  login $GITHUB_TOKEN" > ~/.netrc
@@ -26,7 +23,7 @@ EOM
   sudo sh -c 'echo "$REPLICA_SET" | tee -a /etc/mongodb.conf'
   sudo service mongod start
 
-  while ! systemctl is-active --quiet mongod; do sleep 1; done
+  sleep 10
 
   mongo --eval "rs.initiate()"
   mongo < ./bin/mongo/init.js
