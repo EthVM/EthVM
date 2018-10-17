@@ -8,43 +8,40 @@ git:
 matrix:
   include:
     -
-      env: PROJECT=apps/ethvm
+      env:
+        - ID=apps/server
+        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/server
+        - INSTALL='yarn install'
+        - ACTION='yarn lint'
       language: node_js
       node_js:
         - "10"
     -
-      env: PROJECT=apps/ethvm-e2e-test
+      env:
+        - ID=apps/server-unit-test
+        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/server
+        - INSTALL='yarn install'
+        - ACTION='yarn test:unit'
       language: node_js
       node_js:
         - "10"
     -
-      env: PROJECT=apps/server-unit-test
-      language: node_js
-      node_js:
-        - "10"
-    -
-      env: PROJECT=apps/server
+      env:
+        - ID=apps/server-e2e-test
+        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/server
+        - INSTALL='yarn install'
+        - ACTION='yarn test:e2e'
       language: node_js
       node_js:
         - "10"
 
 before_install:
-  - ./.travis/build-condition.sh .travis/build-condition.sh
-  - 'if [ $PROJECT = "apps/ethvm" ]; then cd $TRAVIS_BUILD_DIR/apps/ethvm; fi'
-  - 'if [ $PROJECT = "apps/server" ]; then cd $TRAVIS_BUILD_DIR/apps/server; fi'
-  - 'if [ $PROJECT = "apps/ethvm-e2e-test" ]; then cd $TRAVIS_BUILD_DIR/apps/server; fi'
-  - 'if [ $PROJECT = "apps/server-unit-test" ]; then cd $TRAVIS_BUILD_DIR/apps/server; fi'
+  - ./.travis/before-install.sh
 
 install:
-  - yarn install
-
-before_script:
-  - 'if [ $PROJECT = "apps/ethvm" ]; then cd $TRAVIS_BUILD_DIR/apps/ethvm; fi'
-  - 'if [ $PROJECT = "apps/server" ]; then cd $TRAVIS_BUILD_DIR/apps/server; fi'
-  - 'if [ $PROJECT = "apps/ethvm-e2e-test" ]; then cd $TRAVIS_BUILD_DIR/apps/server; fi'
-  - 'if [ $PROJECT = "apps/server-unit-test" ]; then cd $TRAVIS_BUILD_DIR/apps/server; fi'
+  - cd $PROJECT_DIR
+  - eval $INSTALL
 
 script:
-  - 'if [ $PROJECT = "apps/server" ]; then yarn lint;  fi'
-  - 'if [ $PROJECT = "apps/ethvm-e2e-test" ]; then yarn test:e2e;  fi'
-  - 'if [ $PROJECT = "apps/server-unit-test" ]; then yarn test:unit;  fi'
+  - cd $PROJECT_DIR
+  - eval $ACTION
