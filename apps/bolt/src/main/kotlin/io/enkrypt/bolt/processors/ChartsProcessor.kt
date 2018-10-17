@@ -70,7 +70,7 @@ class ChartsProcessor : AbstractBaseProcessor() {
         Materialized.with(Serdes.Long(), blockSummarySerde)
       ).groupBy(
         { _, v ->
-          KeyValue(timestampToDay(v.block.timestamp), v.statistics.setTotalDifficulty(v.block.cumulativeDifficulty) )
+          KeyValue(timestampToDay(v.block.timestamp), v.statistics.setTotalDifficulty(v.block.cumulativeDifficulty))
         },
         Serialized.with(dateSerde, blockStatisticsSerde)
       )
@@ -91,7 +91,7 @@ class ChartsProcessor : AbstractBaseProcessor() {
         Materialized.with(dateSerde, bigIntegerSerde)
       ).join(
         blockCountByDay,
-        { total, count -> if(count == 0L) BigInteger.ZERO else total.divide(BigInteger.valueOf(count)) },
+        { total, count -> if (count == 0L) BigInteger.ZERO else total.divide(BigInteger.valueOf(count)) },
         Materialized.with(dateSerde, bigIntegerSerde)
       )
       .toStream()
@@ -109,7 +109,7 @@ class ChartsProcessor : AbstractBaseProcessor() {
         Materialized.with(dateSerde, bigIntegerSerde)
       ).join(
         blockCountByDay,
-        { total, count -> if(count == 0L) BigInteger.ZERO else total.divide(BigInteger.valueOf(count)) },
+        { total, count -> if (count == 0L) BigInteger.ZERO else total.divide(BigInteger.valueOf(count)) },
         Materialized.with(dateSerde, bigIntegerSerde)
       )
       .toStream()
@@ -128,7 +128,7 @@ class ChartsProcessor : AbstractBaseProcessor() {
         Materialized.with(dateSerde, bigIntegerSerde)
       ).join(
         blockCountByDay,
-        { total, count -> if(count == 0L) BigInteger.ZERO else total.divide(BigInteger.valueOf(count)) },
+        { total, count -> if (count == 0L) BigInteger.ZERO else total.divide(BigInteger.valueOf(count)) },
         Materialized.with(dateSerde, bigIntegerSerde)
       )
       .toStream()
@@ -147,7 +147,7 @@ class ChartsProcessor : AbstractBaseProcessor() {
         Materialized.with(dateSerde, Serdes.Integer())
       ).join(
         blockCountByDay,
-        { total, count -> if(count == 0L) 0 else total / count },
+        { total, count -> if (count == 0L) 0 else total / count },
         Materialized.with(dateSerde, Serdes.Long())
       )
       .toStream()
@@ -165,7 +165,7 @@ class ChartsProcessor : AbstractBaseProcessor() {
         Materialized.with(dateSerde, Serdes.Integer())
       ).join(
         blockCountByDay,
-        { total, count -> if(count == 0L) 0 else total / count },
+        { total, count -> if (count == 0L) 0 else total / count },
         Materialized.with(dateSerde, Serdes.Long())
       )
       .toStream()
@@ -219,7 +219,7 @@ class StatisticMongoProcessor : MongoProcessor<Date, Pair<String, Long>>() {
     val startMs = System.currentTimeMillis()
     val updateOptions = UpdateOptions().upsert(true)
 
-    val ops = batch.toList().map{ kv ->
+    val ops = batch.toList().map { kv ->
 
       val date = kv.first.first
       val name = kv.first.second
@@ -227,7 +227,13 @@ class StatisticMongoProcessor : MongoProcessor<Date, Pair<String, Long>>() {
 
       val filter = Document(mapOf("name" to name, "date" to date))
 
-      UpdateOneModel<Document>(filter, Document(mapOf("\$set" to Document(mapOf("name" to name, "date" to date, "value" to value)))), updateOptions)
+      UpdateOneModel<Document>(filter, Document(
+        mapOf("\$set" to Document(
+         oggin mapOf(
+            "name" to name,
+            "date" to date,
+            "value" to value)
+        ))), updateOptions)
     }
 
     try {
@@ -237,7 +243,7 @@ class StatisticMongoProcessor : MongoProcessor<Date, Pair<String, Long>>() {
       context.commit()
 
       val elapsedMs = System.currentTimeMillis() - startMs
-      logger.info { "${batch.size} stats updated in $elapsedMs ms" }
+      logger.debug { "${batch.size} stats updated in $elapsedMs ms" }
 
       batch = emptyMap()
 
