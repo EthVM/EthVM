@@ -1,7 +1,6 @@
 sudo: true
 language: generic
 services:
-  - mongodb
   - redis-server
 git:
   submodules:
