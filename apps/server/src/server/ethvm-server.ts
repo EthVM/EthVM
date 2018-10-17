@@ -203,5 +203,8 @@ export class EthVMServer {
     const { op, key, value } = event
 
     logger.info(`EthVMServer - onPendingTxEvent / Op: ${op}, Pending Tx Hash: ${value.hash}`)
+
+    this.io.to('pendingTxs').emit('newpTx', event)
+
   }
 }

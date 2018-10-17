@@ -1,7 +1,7 @@
 import defaultRooms from '@app/configs/defaultRooms.json'
 import sEvents from '@app/configs/socketEvents.json'
-import { Block, Tx } from '@app/models'
-import { BlockLayout, TxLayout, EventLayout } from '@app/models/server'
+import { Block, Tx ,PendingTx} from '@app/models'
+import { BlockLayout, TxLayout, EventLayout} from '@app/models/server'
 
 const socket_socketNewblock = function({ commit }, ev: EventLayout | EventLayout[]) {
 
@@ -29,6 +29,21 @@ const socket_socketNewtx = function({ commit }, ev: EventLayout | EventLayout[])
   }
 }
 
+const socket_socketNewptx = function({ commit }, ev: EventLayout | EventLayout[]) {
+
+  console.log('socket_socketNewptx',ev)
+
+  if (Array.isArray(ev)) {
+    ev.forEach(_event => {
+      commit(sEvents.newPendingTx, _event.value)
+      this._vm.$eventHub.$emit(sEvents.newPendingTx, new PendingTx(_event.value))
+    })
+  } else {
+    commit(sEvents.newPendingTx, ev.value)
+    this._vm.$eventHub.$emit(sEvents.newPendingTx, new PendingTx(ev.value))
+  }
+}
+
 // eslint-disable-next-line
 const socket_socketConnect = function({}) {
   this._vm.$socket.emit(sEvents.join, { rooms: defaultRooms })
@@ -37,5 +52,6 @@ const socket_socketConnect = function({}) {
 export default {
   socket_socketNewblock,
   socket_socketNewtx,
+  socket_socketNewptx,
   socket_socketConnect
 }
