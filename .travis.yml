@@ -1,4 +1,4 @@
-sudo: false
+sudo: true
 language: generic
 services:
   - mongodb
@@ -14,12 +14,12 @@ matrix:
       node_js:
         - "10"
     -
-      env: PROJECT=apps/ethvm-e2etest
+      env: PROJECT=apps/ethvm-e2e-test
       language: node_js
       node_js:
         - "10"
     -
-      env: PROJECT=apps/serverunittest
+      env: PROJECT=apps/server-unit-test
       language: node_js
       node_js:
         - "10"
@@ -33,8 +33,8 @@ before_install:
   - ./.travis/build-condition.sh .travis/build-condition.sh
   - 'if [ $PROJECT = "apps/ethvm" ]; then cd $TRAVIS_BUILD_DIR/apps/ethvm; fi'
   - 'if [ $PROJECT = "apps/server" ]; then cd $TRAVIS_BUILD_DIR/apps/server; fi'
-  - 'if [ $PROJECT = "apps/ethvm-e2etest" ]; then cd $TRAVIS_BUILD_DIR/apps/server; fi'
-  - 'if [ $PROJECT = "apps/serverunittest" ]; then cd $TRAVIS_BUILD_DIR/apps/server; fi'
+  - 'if [ $PROJECT = "apps/ethvm-e2e-test" ]; then cd $TRAVIS_BUILD_DIR/apps/server; fi'
+  - 'if [ $PROJECT = "apps/server-unit-test" ]; then cd $TRAVIS_BUILD_DIR/apps/server; fi'
 
 install:
   - yarn install
@@ -42,10 +42,10 @@ install:
 before_script:
   - 'if [ $PROJECT = "apps/ethvm" ]; then cd $TRAVIS_BUILD_DIR/apps/ethvm; fi'
   - 'if [ $PROJECT = "apps/server" ]; then cd $TRAVIS_BUILD_DIR/apps/server; fi'
-  - 'if [ $PROJECT = "apps/ethvm-e2etest" ]; then cd $TRAVIS_BUILD_DIR/apps/server; fi'
-  - 'if [ $PROJECT = "apps/serverunittest" ]; then cd $TRAVIS_BUILD_DIR/apps/server; fi'
+  - 'if [ $PROJECT = "apps/ethvm-e2e-test" ]; then cd $TRAVIS_BUILD_DIR/apps/server; fi'
+  - 'if [ $PROJECT = "apps/server-unit-test" ]; then cd $TRAVIS_BUILD_DIR/apps/server; fi'
 
 script:
   - 'if [ $PROJECT = "apps/server" ]; then yarn lint;  fi'
-  - 'if [ $PROJECT = "apps/ethvm-e2etest" ]; then yarn test:e2e;  fi'
-  - 'if [ $PROJECT = "apps/serverunittest" ]; then yarn test:unit;  fi'
+  - 'if [ $PROJECT = "apps/ethvm-e2e-test" ]; then yarn test:e2e;  fi'
+  - 'if [ $PROJECT = "apps/server-unit-test" ]; then yarn test:unit;  fi'
