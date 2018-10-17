@@ -183,13 +183,14 @@ export class EthVMServer {
           const txHash = tx.hash
           this.io.to(txHash).emit(txHash + '_update', tx)
         })
-        this.io.to('txs').emit('newTx', txs)
+        const txEvent: StreamingEvent = { op: event.op, key: event.key, value: txs }
+        this.io.to('txs').emit('newTx', txEvent)
         // this.ds.putTransactions(txs)
       }
-      value.transactions = []
-      value.uncles = []
-      this.io.to('blocks').emit('newBlock', value)
+      event.value.transactions = []
+      event.value.uncles = []
     }
+    this.io.to('blocks').emit('newBlock', event)
   }
 
   private onAccountEvent = (event: StreamingEvent): void => {

@@ -1,35 +1,36 @@
 import defaultRooms from '@app/configs/defaultRooms.json'
 import sEvents from '@app/configs/socketEvents.json'
 import { Block, Tx } from '@app/models'
-import { BlockLayout, TxLayout } from '@app/models/server'
+import { BlockLayout, TxLayout, EventLayout } from '@app/models/server'
 
-const socket_socketNewblock = function({ commit }, block: BlockLayout | BlockLayout[]) {
-  if (Array.isArray(block)) {
-    block.forEach(_block => {
-      commit(sEvents.newBlock, _block)
-      this._vm.$eventHub.$emit(sEvents.newBlock, new Block(_block))
+const socket_socketNewblock = function({ commit }, ev: EventLayout | EventLayout[]) {
+
+  if (Array.isArray(ev)) {
+    ev.forEach(_event => {
+      commit(sEvents.newBlock, _event.value)
+      this._vm.$eventHub.$emit(sEvents.newBlock, new Block(_event.value))
     })
   } else {
-    commit(sEvents.newBlock, block)
-    this._vm.$eventHub.$emit(sEvents.newBlock, new Block(block))
+    commit(sEvents.newBlock, ev.value )
+    this._vm.$eventHub.$emit(sEvents.newBlock, new Block(ev.value))
   }
-
 }
 
-const socket_socketNewtx = function({ commit }, tx: TxLayout | TxLayout[]) {
-  if (Array.isArray(tx)) {
-    tx.forEach(_tx => {
-      commit(sEvents.newTx, _tx)
-      this._vm.$eventHub.$emit(sEvents.newTx, new Tx(_tx))
+const socket_socketNewtx = function({ commit }, ev: EventLayout | EventLayout[]) {
+
+  if (Array.isArray(ev)) {
+    ev.forEach(_event => {
+      commit(sEvents.newTx, _event.value)
+      this._vm.$eventHub.$emit(sEvents.newTx, new Tx(_event.value))
     })
   } else {
-    commit(sEvents.newTx, tx)
-    this._vm.$eventHub.$emit(sEvents.newTx, new Tx(tx))
+    commit(sEvents.newTx, ev.value)
+    this._vm.$eventHub.$emit(sEvents.newTx, new Tx(ev.value))
   }
 }
 
 // eslint-disable-next-line
-const socket_socketConnect = function({}, tx: TxLayout) {
+const socket_socketConnect = function({}) {
   this._vm.$socket.emit(sEvents.join, { rooms: defaultRooms })
 }
 
