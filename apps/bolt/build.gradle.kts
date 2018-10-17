@@ -18,6 +18,7 @@ repositories {
   maven("https://jitpack.io")
   maven("https://packages.confluent.io/maven/")
   maven("https://oss.sonatype.org/content/repositories/releases/")
+  maven("https://dl.bintray.com/enkryptio/maven/")
   maven("https://dl.bintray.com/ethereum/maven/")
 }
 
@@ -34,7 +35,7 @@ dependencies {
   implementation(kotlin("stdlib"))
 
   // Ethereumj
-  implementation("io.enkrypt:ethereumj-core:1.10.0-SNAPSHOT")
+  implementation("org.ethereum:ethereumj-core:1.10.0-RELEASE")
 
   // Kafka
   implementation("org.apache.kafka:kafka-streams:2.0.0")

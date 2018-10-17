@@ -23,7 +23,7 @@ if [ "$ID" == "apps/server-e2e-test" ]; then
   mongorestore --host 127.0.0.1 --port 27017 --archive="${ROOT_DIR}/datasets/ethvm_mainnet_sample.mongo.archive"
   sudo kill -9 $(pgrep mongod)
 
-  sudo mongod --bind_ip 127.0.0.1 --replSet rs0 --quiet --slowms 10000 &>/dev/null &
+  sudo mongod --bind_ip 0.0.0.0 --replSet rs0 --quiet --slowms 10000 &>/dev/null &
   sleep 10
   mongo --eval "rs.initiate()"
   mongo < ./bin/mongo/init.js
