@@ -13,11 +13,15 @@ echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/
 sudo apt-get update
 sudo apt-get install -y mongodb-org
 
-sudo service mongod stop
-sudo sh -c 'echo "replSet = rs0" | tee -a /etc/mongodb.conf'
+read -r -d '' REPLICA_SET << EOM
+replication:
+  replSetName: rs0
+EOM
+
+sudo sh -c 'echo "$REPLICA_SET" | tee -a /etc/mongodb.conf'
 sudo service mongod start
 
-sleep 10
+while ! systemctl is-active --quiet mongod; do sleep 1; done
 
 mongo --eval "rs.initiate()"
 mongo < ./bin/mongo/init.js
