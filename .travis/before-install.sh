@@ -20,9 +20,9 @@ replSet=rs0
 EOM
 
   echo "$REPLICA_SET" | sudo tee -a /etc/mongodb.conf
-  sudo service mongod start
+  sudo mongod --bind_ip 0.0.0.0 --replSet rs0 --quiet --slowms 10000 &>/dev/null &
 
-  sleep 10
+  sleep 5
 
   mongo --eval "rs.initiate()"
   mongo < ./bin/mongo/init.js
