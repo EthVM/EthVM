@@ -164,19 +164,21 @@ export class EthVMServer {
   private onBlockEvent = (event: StreamingEvent): void => {
     const { op, key, value } = event
 
+    const block = value as Block
+
     logger.info(`EthVMServer - onBlockEvent / Op: ${op}, Block Hash: ${value}, `)
 
-    // Save state root if defined
-    // if (value && value.header && value.header.stateRoot) {
-    //   this.vmService.setStateRoot(value.header.stateRoot)
-    // }
-
-    // const smallBlock = mappers.toSmallBlock(block)
-
-    // // Send to client
-    // this.io.to(blockHash).emit(blockHash + '_update', smallBlock)
-
     if (op !== 'delete') {
+      logger.info(`EthVMServer - onBlockEvent / value: ${value},  `)
+
+      if (value && value.header && value.header.stateRoot) {
+        try {
+          this.vmService.setStateRoot(block.header.stateRoot)
+        } catch (e) {
+          logger.error(`EthVMServer - onBlockEvent  / setStateRoot err : ${e},  `)
+        }
+      }
+
       const txs = value.transactions || []
       if (txs.length > 0) {
         txs.forEach(tx => {
@@ -205,6 +207,5 @@ export class EthVMServer {
     logger.info(`EthVMServer - onPendingTxEvent / Op: ${op}, Pending Tx Hash: ${value.hash}`)
 
     this.io.to('pendingTxs').emit('newpTx', event)
-
   }
 }
