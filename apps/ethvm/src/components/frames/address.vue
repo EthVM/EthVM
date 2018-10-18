@@ -228,9 +228,6 @@ export default Vue.extend({
 
     this.setTabs()
   },
-  mounted() {
-    this.getIdenticon()
-  },
   methods: {
     /*Checking of address is Miner? --> add new tab for the menu*/
     setTabs() {
@@ -242,19 +239,6 @@ export default Vue.extend({
         }
         this.addressTabs.push(newTab)
       }
-    },
-    getIdenticon() {
-      this.identicon = document.getElementById('icon')
-      this.identicon.style.backgroundImage =
-        'url(' +
-        blockies
-          .create({
-            seed: this.account.address,
-            size: 5,
-            scale: 3
-          })
-          .toDataURL() +
-        ')'
     }
   }
 })

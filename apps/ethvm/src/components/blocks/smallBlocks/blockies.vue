@@ -12,11 +12,11 @@ export default {
     },
     width: {
       type: String,
-      default: '60px'
+      default: '50px'
     },
     height: {
       type: String,
-      default: '60px'
+      default: '50px'
     }
   },
   data() {
@@ -55,7 +55,7 @@ export default {
 <style scoped lang="css">
 .blockie {
   border-radius: 50px;
-  min-width: 60px;
+  min-width: 50px;
   height: 100%;
   margin: 5px;
 }

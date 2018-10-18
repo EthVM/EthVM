@@ -42,7 +42,7 @@ import mobileMenu from '@app/components/blocks/header/mobileMenu.vue'
 import blockComponent from '@app/components/blocks/smallBlocks/component.vue'
 import footnote from '@app/components/blocks/smallBlocks/footnote.vue'
 import blockies from '@app/components/blocks/smallBlocks/blockies.vue'
-import addressQR from '@app/components/blocks/smallBlocks/addressQR.vue'
+import addressQR from '@app/components/blocks/smallBlocks/qrComponent.vue'
 
 // Search Block:
 import blockSearch from '@app/components/blocks/smallBlocks/search.vue'

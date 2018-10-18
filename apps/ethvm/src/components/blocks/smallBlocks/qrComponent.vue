@@ -4,7 +4,8 @@
     <v-menu transition="slide-y-transition" bottom>
       <v-btn slot="activator" icon>
           <!-- <v-img :src="require('@/assets/qrcode.png')" height="50px" contain ></v-img> !-->
-          <v-icon>fas fa-qrcode</v-icon>
+          <v-icon v-if="large" large>fas fa-qrcode</v-icon>
+          <v-icon v-else>fas fa-qrcode</v-icon>
       </v-btn>
       <v-list>
         <v-list-tile>
@@ -28,13 +29,18 @@ export default Vue.extend({
   props: {
     addressQR: {
       type: String
+    },
+    large: {
+      type: Boolean,
+      deafult: false
     }
   },
   data() {
     return {}
   },
   computed: {
-    getQr() {
+    getQR() {
+      console.log(this.addressQR)
       if (this.addressQR) {
         return this.addressQR.toLowerCase()
       }
