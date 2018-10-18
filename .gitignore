@@ -25,6 +25,4 @@ package-lock.json
 
 # Project
 dist/
-rethinkdb_data/
 tmp/
-bin/geth/tmp/

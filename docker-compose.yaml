@@ -79,6 +79,8 @@ services:
       - redis-volume:/data
     networks:
       - back
+    ports:
+      - 6379:6379
     labels:
       - 'traefik.enable=true'
       - 'traefik.default.protocol=http'
@@ -91,7 +93,7 @@ services:
     restart: unless-stopped
     volumes:
       - mongodb-volume:/data/db
-      - ./provisioners/docker/config/mongo/ethvm_sample.archive:/ethvm_sample.archive
+      - ./datasets:/datasets
     networks:
       - back
     ports:

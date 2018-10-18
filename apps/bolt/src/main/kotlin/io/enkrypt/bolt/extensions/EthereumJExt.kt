@@ -1,6 +1,5 @@
 package io.enkrypt.bolt.extensions
 
-import io.enkrypt.kafka.models.Account
 import org.bson.Document
 import org.ethereum.core.*
 import org.ethereum.vm.LogInfo
@@ -119,8 +118,9 @@ fun InternalTransaction?.toDocument(): Document = Document(
   )
 )
 
-fun AccountState?.toDocument(): Document = Document(
+fun AccountState?.toDocument(address: String): Document = Document(
   mapOf(
+    "address" to address,
     "nonce" to this?.nonce?.toByteArray(),
     "balance" to this?.balance?.toByteArray()
   )

@@ -1,7 +1,6 @@
 import { pastBlockPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
-import { Block, mappers, SmallBlock } from '@app/server/modules/blocks'
-import BigNumber from 'bignumber.js'
+import { Block } from '@app/server/modules/blocks'
 
 const pastBlocksEvent: SocketEvent = {
   id: 'pastBlocks', // new_name: past_blocks

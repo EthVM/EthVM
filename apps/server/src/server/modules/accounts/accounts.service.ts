@@ -1,21 +1,22 @@
-import { Address, AddressRepository } from '@app/server/modules/address'
+import { Account, AccountsRepository } from '@app/server/modules/accounts'
 import { Tx } from '@app/server/modules/txs'
-
 import { CacheRepository } from '@app/server/repositories'
 
-export interface AddressService {
+export interface AccountsService {
   getTxs(hash: string, limit: number, page: number): Promise<Tx[]>
-  getAddress(hash: string): Promise<Address | null>
+  getAccount(hash: string): Promise<Account | null>
   getTotalTxs(hash: string): Promise<number>
 }
 
-export class AddressServiceImpl implements AddressService {
-  constructor(private readonly addressRepository: AddressRepository, private readonly cacheRepository: CacheRepository) {}
+export class AccountsServiceImpl implements AccountsService {
+  constructor(private readonly addressRepository: AccountsRepository, private readonly cacheRepository: CacheRepository) {}
+
   public getTxs(hash: string, limit: number, page: number): Promise<Tx[]> {
     return this.addressRepository.getTxs(hash, limit, page)
   }
-  public getAddress(hash: string): Promise<Address | null> {
-    return this.addressRepository.getAddress(hash)
+
+  public getAccount(hash: string): Promise<Account | null> {
+    return this.addressRepository.getAccount(hash)
   }
 
   public getTotalTxs(hash: string): Promise<number> {

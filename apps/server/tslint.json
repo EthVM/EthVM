@@ -22,6 +22,7 @@
     "radix": false,
     "no-unused-expression": false,
     "max-classes-per-file": false,
-    "no-this-assignment": [true, {"allow-destructuring": true}]
+    "no-this-assignment": [true, {"allow-destructuring": true}],
+    "no-empty-interface": false
   }
 }

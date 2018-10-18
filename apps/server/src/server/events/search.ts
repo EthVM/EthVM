@@ -3,6 +3,7 @@ import { Search } from '@app/server/modules/search'
 
 const searchEvent: SocketEvent = {
   id: 'search',
+
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = true
     return {
@@ -11,9 +12,7 @@ const searchEvent: SocketEvent = {
     }
   },
 
-  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Search> => {
-    return server.searchService.search(payload.hash)
-  }
+  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Search> => server.searchService.search(payload.hash)
 }
 
 export default searchEvent
