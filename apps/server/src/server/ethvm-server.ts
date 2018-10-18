@@ -160,8 +160,8 @@ export class EthVMServer {
   private onBlockEvent = (event: StreamingEvent): void => {
     const { op, key, value } = event
 
-     const block = value as Block
-     logger.info(`EthVMServer - onBlockEvent / Op: ${op} - Number: ${key} - Hash: ${value.hash}`)
+    const block = value as Block
+    logger.info(`EthVMServer - onBlockEvent / Op: ${op} - Number: ${key} - Hash: ${value.hash}`)
 
     logger.info(`EthVMServer - onBlockEvent / Op: ${op}, Block Hash: ${value}, `)
 
