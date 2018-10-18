@@ -41,6 +41,8 @@ import mobileMenu from '@app/components/blocks/header/mobileMenu.vue'
 // Parent Small Block Component:
 import blockComponent from '@app/components/blocks/smallBlocks/component.vue'
 import footnote from '@app/components/blocks/smallBlocks/footnote.vue'
+import blockies from '@app/components/blocks/smallBlocks/blockies.vue'
+import addressQR from '@app/components/blocks/smallBlocks/addressQR.vue'
 
 // Search Block:
 import blockSearch from '@app/components/blocks/smallBlocks/search.vue'
@@ -108,10 +110,13 @@ Vue.component('frame-address', frameAddress)
 // Header ----------------------
 Vue.component('block-header', blockHeader)
 Vue.component('mobile-menu', mobileMenu)
+
 // SMALL BLOCKS ----------------------
 // Parent Small Block Component:
 Vue.component('block-component', blockComponent)
 Vue.component('footnote', footnote)
+Vue.component('blockies', blockies)
+Vue.component('address-qr', addressQR)
 
 // Search Block:
 Vue.component('block-search', blockSearch)

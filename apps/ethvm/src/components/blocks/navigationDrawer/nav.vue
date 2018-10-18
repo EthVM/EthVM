@@ -45,7 +45,6 @@
         </v-flex>
       </v-layout>
     </v-toolbar>
-
   </div>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-      <v-container fluid mt-3 pa-0>
+      <v-container fluid mt-3 >
         <!-- BODY -->
         <!-- Main Pages -->
         <frame-blocks v-if="pageName == 'blocks'"></frame-blocks>

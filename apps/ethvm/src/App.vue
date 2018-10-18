@@ -1,6 +1,5 @@
 <template>
-  <v-app style="
-    background: #f3f4f8;">
+  <v-app style="background: #f3f4f8;">
     <navigation></navigation>
     <v-content>
       <router-view :key="$route.fullPath" />
@@ -21,6 +20,3 @@ export default Vue.extend({
   }
 })
 </script>
-
-<style lang="less">
-</style>
