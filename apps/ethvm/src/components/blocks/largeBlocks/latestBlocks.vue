@@ -34,7 +34,7 @@
     </v-card>
     <!--End Table Header-->
     <div v-if="getBlocks" id="scroll-target" :style="getStyle" class="scroll-y pt-0 mb-3">
-      <v-card v-scroll:#scroll-target v-for="block in getBlocks" v-if="!block.getIsUncle()" v-bind:key="block.hash" class="pt-3 mb-3 elevation-2 mr-1 ml-1">
+      <v-card v-scroll:#scroll-target v-for="block in getBlocks" v-bind:key="block.hash" class="pt-3 mb-3 elevation-2 mr-1 ml-1">
         <v-layout wrap align-center class="ma-0">
           <v-flex xs3 md1>
             <p class="text-xs-center">
@@ -137,7 +137,6 @@ export default Vue.extend({
     this.blocks = this.$store.getters.getBlocks
 
     this.$eventHub.$on(sEvents.newBlock, _block => {
-      console.log( this.blocks)
       if (Visibility.state() === 'visible') {
         this.blocks = this.$store.getters.getBlocks
       }

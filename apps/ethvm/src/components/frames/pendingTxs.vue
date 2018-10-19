@@ -14,6 +14,8 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import sEvents from '@app/configs/socketEvents.json'
+
 const MAX_ITEMS = 20
 
 export default Vue.extend({
@@ -34,12 +36,15 @@ export default Vue.extend({
     }
   },
   computed: {
-    txs() {
-      if (this.$store.getters.getPendingTxs.length) {
-        return this.$store.getters.getPendingTxs.slice(0, MAX_ITEMS)
-      }
-      return []
-    }
+  txs() {
+    this.transactions = this.$store.getters.getPendingTxs
+
+    this.$eventHub.$on(sEvents.newPendingTx, _transactions => {
+      this.transactions = this.$store.getters.getPendingTxs
+      return  this.transactions.slice(0, MAX_ITEMS)
+    })
+    return  this.transactions.slice(0, MAX_ITEMS)
+  },
   }
 })
 </script>
