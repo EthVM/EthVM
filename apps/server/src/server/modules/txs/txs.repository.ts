@@ -29,12 +29,13 @@ export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepo
   public getBlockTxs(hash: string): Promise<Tx[]> {
     return this.db
       .collection(MongoEthVM.collections.transactions)
-      .find({ hash })
+      .find({ blockHash: hash })
       .toArray()
-      .then(resp => {
+      .then((resp: any) => {
         if (!resp) {
           return []
         }
+
         return resp
       })
   }
@@ -55,7 +56,7 @@ export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepo
     const start = page * limit
     return this.db
       .collection(MongoEthVM.collections.transactions)
-      .find({ $or: [{ 'transaction.from': hash }, { 'transaction.to': hash }] })
+      .find({ $or: [{ from: hash }, { to: hash }] })
       .sort({ timestamp: -1 })
       .skip(start)
       .limit(limit)

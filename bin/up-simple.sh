@@ -3,8 +3,8 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 
-echo "Starting up containers: traefik, mongo, ethvm and server"
-CMD="docker-compose up -d --build traefik mongodb ethvm server"
+echo "Starting up containers: traefik, mongo, redis ethvm and server"
+CMD="docker-compose up -d --build traefik mongodb redis ethvm server"
 echo "Executing: ${CMD}"
 ${CMD}
 
@@ -17,7 +17,7 @@ echo "Executing: ${CMD}"
 ${CMD}
 
 echo "Importing bootstraped db to mongo..."
-CMD="mongorestore --db ethvm_local --archive=\"ethvm_sample.archive\""
+CMD="mongorestore --db ethvm_local --archive=\"/datasets/ethvm_mainnet_sample.mongo.archive\""
 echo "Executing: ${CMD}"
 docker-compose exec mongodb sh -c "$CMD"
 
