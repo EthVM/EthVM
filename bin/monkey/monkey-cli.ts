@@ -72,7 +72,7 @@ commander
       process.exit(1)
     }
     const { fromAddress } = options
-    await invoke(() => contractExecCommand(contractAddress, fromAddress, method, ...methodArgs || []))
+    await invoke(() => contractExecCommand(contractAddress, fromAddress, method, ...(methodArgs || [])))
   })
 
 async function invoke(fn: () => void) {

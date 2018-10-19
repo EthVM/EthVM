@@ -1,8 +1,8 @@
-import { Address } from '@app/server/modules/address'
+import { Account } from '@app/server/modules/accounts'
 import { Block } from '@app/server/modules/blocks'
 import { Tx } from '@app/server/modules/txs'
 
-export enum searchType {
+export enum SearchType {
   Transaction,
   Address,
   Block,
@@ -10,8 +10,8 @@ export enum searchType {
 }
 
 export interface Search {
-  type: searchType
-  address?: Address | null
+  type: SearchType
+  address?: Account | null
   block?: Block | null
   tx?: Tx | null
 }

@@ -6,24 +6,22 @@ import { ChangeStream, Collection, Cursor, Db } from 'mongodb'
 
 export class MongoStreamer implements Streamer {
   private blocksReader: MongoCollectionChangeStreamReader
-  private txReader: MongoCollectionChangeStreamReader
-  private pendingTxReader: MongoCollectionChangeStreamReader
-  private unclesReader: MongoCollectionChangeStreamReader
   private accountsReader: MongoCollectionChangeStreamReader
+  private pendingTxReader: MongoCollectionChangeStreamReader
 
   constructor(private readonly db: Db, private readonly emitter: EventEmitter) {}
 
   public async initialize(): Promise<boolean> {
+    const { db, emitter } = this
+
     const intervalMs = 1000
 
-    this.blocksReader = new MongoCollectionChangeStreamReader(this.db.collection(MongoEthVM.collections.blocks), intervalMs, 'block', this.emitter)
-    this.txReader = new MongoCollectionChangeStreamReader(this.db.collection(MongoEthVM.collections.transactions), intervalMs, 'tx', this.emitter)
-    this.pendingTxReader = new MongoCollectionChangeStreamReader(this.db.collection(MongoEthVM.collections.pendingTxs), intervalMs, 'pendingTx', this.emitter)
-    this.unclesReader = new MongoCollectionChangeStreamReader(this.db.collection(MongoEthVM.collections.uncles), intervalMs, 'uncle', this.emitter)
-    this.accountsReader = new MongoCollectionChangeStreamReader(this.db.collection(MongoEthVM.collections.accounts), intervalMs, 'account', this.emitter)
+    this.blocksReader = new MongoCollectionChangeStreamReader(db.collection(MongoEthVM.collections.blocks), intervalMs, 'block', emitter)
+    this.accountsReader = new MongoCollectionChangeStreamReader(db.collection(MongoEthVM.collections.accounts), intervalMs, 'account', emitter)
+    this.pendingTxReader = new MongoCollectionChangeStreamReader(db.collection(MongoEthVM.collections.pendingTxs), intervalMs, 'pendingTx', emitter)
 
     await this.blocksReader.start()
-    await this.txReader.start()
+    await this.accountsReader.start()
     await this.pendingTxReader.start()
 
     return true
@@ -59,11 +57,13 @@ class MongoCollectionChangeStreamReader {
   }
 
   public async pull() {
-    try {
-      logger.info('Attempting to pull', this.eventType)
+    const { cursor, eventType, emitter } = this
 
-      while (!this.cursor.isClosed()) {
-        const next = await this.cursor.next()
+    try {
+      logger.info('Attempting to pull', eventType)
+
+      while (!cursor.isClosed()) {
+        const next = await cursor.next()
 
         if (next != null) {
           const { operationType, fullDocument, documentKey } = next
@@ -73,7 +73,7 @@ class MongoCollectionChangeStreamReader {
             value: fullDocument
           }
 
-          this.emitter.emit(this.eventType, event)
+          emitter.emit(eventType, event)
         } else {
           logger.warn('Empty mongo event')
         }

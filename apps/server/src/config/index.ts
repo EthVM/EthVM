@@ -10,8 +10,8 @@ const config = convict({
   general: {
     logs: {
       enabled: {
-        default: 'true',
-        format: String,
+        default: true,
+        format: Boolean,
         env: 'ETHVM_LOGS_ENABLED'
       },
       app_id: {
@@ -22,7 +22,12 @@ const config = convict({
       level: {
         default: 'debug',
         format: String,
-        env: 'ETHVM_LOG_LEVEL'
+        env: 'ETHVM_LOGS_LEVEL'
+      },
+      pretty: {
+        default: true,
+        format: Boolean,
+        env: 'ETHVM_LOGS_PRETTY'
       }
     }
   },

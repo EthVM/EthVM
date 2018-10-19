@@ -9,6 +9,8 @@ tasks.withType<KotlinCompile> {
   kotlinOptions.jvmTarget = "1.8"
 }
 
+val test by tasks.getting(Test::class) { useJUnitPlatform {} }
+
 repositories {
   mavenLocal()
   jcenter()
@@ -16,6 +18,7 @@ repositories {
   maven("https://jitpack.io")
   maven("https://packages.confluent.io/maven/")
   maven("https://oss.sonatype.org/content/repositories/releases/")
+  maven("https://dl.bintray.com/enkryptio/maven/")
   maven("https://dl.bintray.com/ethereum/maven/")
 }
 
@@ -28,10 +31,11 @@ project.java.sourceSets["main"].java {
 }
 
 dependencies {
+  // Kotlin
   implementation(kotlin("stdlib"))
 
   // Ethereumj
-  implementation("org.ethereum:ethereumj-core:1.9.0-SNAPSHOT")
+  implementation("org.ethereum:ethereumj-core:1.10.0-RELEASE")
 
   // Kafka
   implementation("org.apache.kafka:kafka-streams:2.0.0")
@@ -47,5 +51,7 @@ dependencies {
   implementation("org.koin:koin-core:1.0.0-RC-2")
   implementation("io.arrow-kt:arrow-core:0.7.3")
 
+  // Testing
   testImplementation("org.koin:koin-test:1.0.0-RC-2")
+  testImplementation("io.kotlintest:kotlintest-runner-junit5:3.1.9")
 }

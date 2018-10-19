@@ -14,19 +14,18 @@ import {
   TxsPayload
 } from '@app/server/core/payloads'
 import { Streamer, StreamingEvent } from '@app/server/core/streams'
+import { AccountsService } from '@app/server/modules/accounts'
 import { Block, BlocksService } from '@app/server/modules/blocks'
 import { ChartService } from '@app/server/modules/charts'
-import { SearchService } from '@app/server/modules/search'
-
 import { ExchangeService } from '@app/server/modules/exchanges'
-import { PendingTxService } from '@app/server/modules/pending-tx'
+import { PendingTxService } from '@app/server/modules/pending-txs'
+import { SearchService } from '@app/server/modules/search'
 import { Tx, TxsService } from '@app/server/modules/txs'
-import { UnclesService } from '@app/server/modules/uncle'
+import { UnclesService } from '@app/server/modules/uncles'
 import { VmService } from '@app/server/modules/vm'
 import * as fs from 'fs'
 import * as http from 'http'
 import * as SocketIO from 'socket.io'
-import { AddressService } from './modules/address'
 
 export type SocketEventPayload =
   | AddressTxsPagesPayload
@@ -63,7 +62,7 @@ export class EthVMServer {
   constructor(
     public readonly blockService: BlocksService,
     public readonly uncleService: UnclesService,
-    public readonly addressService: AddressService,
+    public readonly accountsService: AccountsService,
     public readonly txsService: TxsService,
     public readonly chartsService: ChartService,
     public readonly pendingTxService: PendingTxService,
@@ -92,10 +91,6 @@ export class EthVMServer {
     logger.debug('EthVMServer - start() / Loading socket events...')
     const events = fs.readdirSync(`${__dirname}/events/`)
     events.forEach(async ev => {
-      if (ev.match(/.*\.spec\.ts/)) {
-        // Ignore test files
-        return
-      }
       logger.debug(`EthVMServer - start() / Registering socket event: ${ev}`)
       const event = await import(`${__dirname}/events/${ev}`)
       this.events.set(event.default.id, event.default)
@@ -103,10 +98,8 @@ export class EthVMServer {
 
     logger.debug('EthVMServer - start() / Registering streamer events')
     this.streamer.addListener('block', this.onBlockEvent)
-    this.streamer.addListener('tx', this.onTxEvent)
-    this.streamer.addListener('pendingTx', this.onPendingTxEvent)
     this.streamer.addListener('account', this.onAccountEvent)
-    this.streamer.addListener('uncle', this.onUncleEvent)
+    this.streamer.addListener('pendingTx', this.onPendingTxEvent)
 
     logger.debug('EthVMServer - start() / Starting to listen socket events on SocketIO')
     this.io.on(
@@ -153,7 +146,7 @@ export class EthVMServer {
               .catch(err => {
                 logger.error(`event -> ${event.id} / Error: ${err}`)
 
-                // TODO: Until we have defined which errors are we going to return, we use a generic one
+                // TODO: Until we have defined which errors we are going to return, we use a generic one
                 if (cb) {
                   cb(errors.INTERNAL_SERVER_ERROR, null)
                 }
@@ -164,35 +157,16 @@ export class EthVMServer {
     )
   }
 
-  // TODO: This method should only receive the block and emit it directly
-  // This logic should not be here
   private onBlockEvent = (event: StreamingEvent): void => {
     const { op, key, value } = event
 
-    logger.info(`EthVMServer - onBlockEvent / Op: ${op}, Hash: ${value.hash}, `)
+    logger.info(`EthVMServer - onBlockEvent / Op: ${op} - Number: ${key} - Hash: ${value.hash}`)
 
     // Save state root if defined
-    // if (block.stateRoot) {
-    //   this.vmService.setStateRoot(Buffer.from(block.stateRoot))
-    // }
+    if (value && value.header && value.header.stateRoot) {
+      this.vmService.setStateRoot(value.header.stateRoot)
+    }
 
-    // // TODO: Remove this calculation from here, should be done while inserting the new block
-    // // Calculate previous block time
-    // const ts = new BigNumber(utils.toHex(block.timestamp))
-    // if (!this.previousBlockTime) {
-    // this.previousBlockTime = ts.minus(this.blockTime)
-    // }
-
-    // const currentBlockTime = ts.minus(this.previousBlockTime).abs()
-    // if (!block.isUncle) {
-    // this.previousBlockTime = new BigNumber(utils.toHex(block.timestamp))
-    // }
-
-    // // Generate block stats
-    // const bstats = mappers.toBlockStats(block.transactions, currentBlockTime)
-    // block.blockStats = { ...bstats, ...block.blockStats }
-
-    // const blockHash = bufferToHex(Buffer.from(block.hash))
     // const smallBlock = mappers.toSmallBlock(block)
 
     // // Send to client
@@ -210,33 +184,15 @@ export class EthVMServer {
     // }
   }
 
-  private onTxEvent = (event: StreamingEvent): void => {
+  private onAccountEvent = (event: StreamingEvent): void => {
     const { op, key, value } = event
 
-    logger.info(`EthVMServer - onTxEvent / Op: ${op}, Hash: ${key}`)
-    // const txHash = tx.hash
-    // this.io.to(txHash).emit(`${txHash}_update`, tx)
-    // this.io.to('pendingTxs').emit('newPendingTx', tx)
+    logger.info(`EthVMServer - onAccountEvent / Op: ${op} - Address: ${key}`)
   }
 
   private onPendingTxEvent = (event: StreamingEvent): void => {
     const { op, key, value } = event
 
-    logger.info(`EthVMServer - onPendingTxEvent / Op: ${op}, Hash: ${key}`)
-    // const txHash = tx.hash
-    // this.io.to(txHash).emit(`${txHash}_update`, tx)
-    // this.io.to('pendingTxs').emit('newPendingTx', tx)
-  }
-
-  private onUncleEvent = (event: StreamingEvent): void => {
-    const { op, key, value } = event
-
-    logger.info(`EthVMServer - onUncleEvent / Op: ${op}, Hash: ${key}`)
-  }
-
-  private onAccountEvent = (event: StreamingEvent): void => {
-    const { op, key, value } = event
-
-    logger.info(`EthVMServer - onAccountEvent / Op: ${op}, Address: ${key}`)
+    logger.info(`EthVMServer - onPendingTxEvent / Op: ${op} - Hash: ${value.hash}`)
   }
 }

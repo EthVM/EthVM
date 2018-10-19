@@ -94,6 +94,7 @@ export class RedisCacheRepository implements CacheRepository {
         .then(result => {
           if (!result) {
             resolve(false)
+            return
           }
           resolve(true)
         })

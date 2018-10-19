@@ -1,18 +1,15 @@
 import config from '@app/config'
 import { logger } from '@app/logger'
-import { NullStreamer } from '@app/server/core/streams'
+import { MongoStreamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
-import { AddressServiceImpl, MongoAddressRepository } from '@app/server/modules/address'
+import { AccountsServiceImpl, MongoAccountsRepository } from '@app/server/modules/accounts'
 import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blocks'
-import { SearchServiceImpl } from '@app/server/modules/search'
-
 import { ChartsServiceImpl, MockChartsRepository } from '@app/server/modules/charts'
-import { MongoUncleRepository, UnclesServiceImpl } from '@app/server/modules/uncle'
-
-import { MongoStreamer } from '@app/server/core/streams/mongo.streamer'
 import { CoinMarketCapRepository, ExchangeServiceImpl } from '@app/server/modules/exchanges'
-import { MongoPendingTxRepository, PendingTxServiceImpl } from '@app/server/modules/pending-tx'
+import { MongoPendingTxRepository, PendingTxServiceImpl } from '@app/server/modules/pending-txs'
+import { SearchServiceImpl } from '@app/server/modules/search'
 import { MongoTxsRepository, TxsServiceImpl } from '@app/server/modules/txs'
+import { MongoUncleRepository, UnclesServiceImpl } from '@app/server/modules/uncles'
 import { RedisTrieDb, VmEngine, VmRunner, VmServiceImpl } from '@app/server/modules/vm'
 import { RedisCacheRepository } from '@app/server/repositories'
 import * as EventEmitter from 'eventemitter3'
@@ -89,8 +86,8 @@ async function bootstrapServer() {
   const uncleService = new UnclesServiceImpl(unclesRepository, ds)
 
   // Adress
-  const addressRepository = new MongoAddressRepository(db)
-  const addressService = new AddressServiceImpl(addressRepository, ds)
+  const addressRepository = new MongoAccountsRepository(db)
+  const addressService = new AccountsServiceImpl(addressRepository, ds)
 
   // Adress
   const pendingTxRepository = new MongoPendingTxRepository(db)

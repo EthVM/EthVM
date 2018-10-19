@@ -1,26 +1,39 @@
 package io.enkrypt.bolt.extensions
 
-import io.enkrypt.bolt.models.BlockStats
-import io.enkrypt.kafka.models.Account
 import org.bson.Document
-import org.ethereum.core.Block
-import org.ethereum.core.BlockHeader
-import org.ethereum.core.BlockSummary
-import org.ethereum.core.Transaction
-import org.ethereum.core.TransactionReceipt
+import org.ethereum.core.*
 import org.ethereum.vm.LogInfo
 import org.ethereum.vm.program.InternalTransaction
 
-fun Block?.toDocument(summary: BlockSummary, stats: BlockStats? = null) = Document(
+fun Block?.toDocument(summary: BlockSummary) = Document(
   mapOf(
     "hash" to this?.hash?.toHex(),
     "number" to this?.number,
     "header" to this?.header.toDocument(summary),
-    "transactions" to this?.transactionsList?.map { it.hash.toHex() },
-    "uncles" to this?.uncleList?.map { it.hash.toHex() },
-    "stats" to stats?.toDocument()
+    "transactions" to this?.transactionsList?.mapIndexed { pos, tx -> tx.toDocument(pos, summary) },
+    "uncles" to this?.uncleList?.map { it.toDocument(summary) },
+    "stats" to summary.statistics.toDocument()
   )
 )
+
+fun BlockStatistics?.toDocument(): Document? {
+  return if (this == null) {
+    null
+  } else {
+    Document(
+      mapOf(
+        "successfulTxs" to numSuccessfulTxs,
+        "failedTxs" to numFailedTxs,
+        "txs" to totalTxs,
+        "internalTxs" to totalInternalTxs,
+        "totalGasPrice" to totalGasPrice.toByteArray(),
+        "avgGasPrice" to avgGasPrice.toByteArray(),
+        "totalTxsFees" to totalTxsFees.toByteArray(),
+        "avgTxsFees" to avgTxsFees.toByteArray()
+      )
+    )
+  }
+}
 
 fun BlockHeader?.toDocument(summary: BlockSummary) = Document(
   mapOf(
@@ -43,53 +56,34 @@ fun BlockHeader?.toDocument(summary: BlockSummary) = Document(
   )
 )
 
-fun Transaction?.toDocument(): Document {
-  return Document(
-    mapOf(
-      "hash" to this?.hash,
-      "nonce" to this?.nonce,
-      "from" to this?.sender.toHex(),
-      "to" to this?.receiveAddress?.toHex(),
-      "contractAddress" to this?.contractAddress?.toHex(),
-      "value" to this?.value,
-      "data" to this?.data,
-      "gasPrice" to this?.gasPrice,
-      "gasLimit" to this?.gasLimit,
-      "v" to this?.signature?.v,
-      "r" to this?.signature?.r?.toByteArray(),
-      "s" to this?.signature?.s?.toByteArray()
-    )
-  )
+fun Transaction?.toDocument(pos: Int, blockSummary: BlockSummary): Document {
+  val txHash = this?.hash.toHex()
+  val receipt = blockSummary.receipts.find { txHash == it.transaction.hash.toHex() }
+  val executionSummary = blockSummary.summaries.find { txHash == it.transaction.hash.toHex() }
+
+  return this.toDocument(pos, receipt, executionSummary)
 }
 
-fun Transaction?.toDocument(pos: Int = 0, summary: BlockSummary, receipt: TransactionReceipt): Document {
-  val txHash = this?.hash.toHex()
-
-  val block = summary.block
-  val txSummary = summary.summaries.find { txHash == it.transaction.hash.toHex() }
-  val internalTxs = txSummary?.internalTransactions ?: emptyList()
+fun Transaction?.toDocument(pos: Int? = null, receipt: TransactionReceipt?, executionSummary: TransactionExecutionSummary?): Document {
+  val internalTxs = executionSummary?.internalTransactions ?: emptyList()
 
   return Document(
     mapOf(
-      "hash" to txHash,
-      "blockHash" to block.hash.toHex(),
-      "blockNumber" to block.number,
-      "transactionIndex" to pos,
-      "timestamp" to block.timestamp,
-      "nonce" to this?.nonce,
-      "status" to receipt.isTxStatusOK,
-      "fee" to txSummary?.fee?.toByteArray(),
+      "hash" to this?.hash.toHex(),
+      "nonce" to this?.nonce.toHex(),
       "from" to this?.sender.toHex(),
       "to" to this?.receiveAddress?.toHex(),
       "contractAddress" to this?.contractAddress?.toHex(),
+      "status" to receipt?.isTxStatusOK,
+      "fee" to executionSummary?.fee?.toByteArray(),
       "value" to this?.value,
       "data" to this?.data,
-      "logs" to txSummary?.logs?.map { it.toDocument() },
+      "logs" to executionSummary?.logs?.map { it.toDocument() },
       "gasPrice" to this?.gasPrice,
       "gasLimit" to this?.gasLimit,
-      "gasUsed" to txSummary?.gasUsed?.toByteArray(),
-      "gasRefund" to txSummary?.gasRefund?.toByteArray(),
-      "gasLeftover" to txSummary?.gasLeftover?.toByteArray(),
+      "gasUsed" to executionSummary?.gasUsed?.toByteArray(),
+      "gasRefund" to executionSummary?.gasRefund?.toByteArray(),
+      "gasLeftover" to executionSummary?.gasLeftover?.toByteArray(),
       "traces" to internalTxs.map { it.toDocument() },
       "v" to this?.signature?.v,
       "r" to this?.signature?.r?.toByteArray(),
@@ -124,9 +118,9 @@ fun InternalTransaction?.toDocument(): Document = Document(
   )
 )
 
-fun Account?.toDocument(): Document = Document(
+fun AccountState?.toDocument(address: String): Document = Document(
   mapOf(
-    "address" to this?.address.toHex(),
+    "address" to address,
     "nonce" to this?.nonce?.toByteArray(),
     "balance" to this?.balance?.toByteArray()
   )

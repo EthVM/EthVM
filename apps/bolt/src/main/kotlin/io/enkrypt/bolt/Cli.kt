@@ -5,12 +5,15 @@ import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.mongodb.MongoClient
 import com.mongodb.MongoClientURI
+import io.enkrypt.bolt.processors.AccountStateMongoProcessor
 import io.enkrypt.bolt.processors.AccountStateProcessor
+import io.enkrypt.bolt.processors.BlockMongoTransformer
 import io.enkrypt.bolt.processors.BlocksProcessor
+import io.enkrypt.bolt.processors.ChartsProcessor
+import io.enkrypt.bolt.processors.PendingTransactionMongoProcessor
 import io.enkrypt.bolt.processors.PendingTransactionsProcessor
-import io.enkrypt.bolt.sinks.AccountMongoSink
-import io.enkrypt.bolt.sinks.BlockMongoSink
-import io.enkrypt.bolt.sinks.PendingTransactionMongoSink
+import io.enkrypt.bolt.processors.Processor
+import io.enkrypt.bolt.processors.TokenDetectorTransformer
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
@@ -37,6 +40,16 @@ class Cli : CliktCommand() {
     envvar = "KAFKA_BLOCKS_TOPIC"
   ).default(DEFAULT_BLOCKS_TOPIC)
 
+  private val processedBlocksTopic: String by option(
+    help = "Name of the processed blocks stream topic on which Bolt will listen",
+    envvar = "KAFKA_PROCESSED_BLOCKS_TOPIC"
+  ).default(DEFAULT_PROCESSED_BLOCKS_TOPIC)
+
+  private val canonicalChainTopic: String by option(
+    help = "Name of the canonical chain stream topic on which Bolt will listen",
+    envvar = "KAFKA_PROCESSED_BLOCKS_TOPIC"
+  ).default(DEFAULT_CANONICAL_CHAIN_TOPIC)
+
   private val pendingTxsTopic: String by option(
     help = "Name of the pending transactions topic on which Bolt will listen",
     envvar = "KAFKA_PENDING_TXS_TOPIC"
@@ -60,12 +73,38 @@ class Cli : CliktCommand() {
 
   // DI
   private val boltModule = module {
-    single { TopicsConfig(blocksTopic, pendingTxsTopic, accountStateTopic, metadataTopic) }
-    single { AppConfig(bootstrapServers, startingOffset, get()) }
+
+    single {
+      MongoCollectionsConfig(
+        "accounts",
+        "blocks",
+        "pending_transactions",
+        "statistics"
+      )
+    }
+
+    single {
+      TopicsConfig(
+        blocksTopic,
+        processedBlocksTopic,
+        canonicalChainTopic,
+        pendingTxsTopic,
+        accountStateTopic,
+        metadataTopic
+      )
+    }
+
+    single {
+      AppConfig(
+        bootstrapServers,
+        startingOffset,
+        get(),
+        get()
+      )
+    }
 
     single { MongoClientURI(mongoUri) }
-    single { MongoClient(MongoClientURI(mongoUri)) }
-
+    single { MongoClient(get<MongoClientURI>()) }
     single {
       val client = get<MongoClient>()
       val uri = get<MongoClientURI>()
@@ -73,9 +112,10 @@ class Cli : CliktCommand() {
       client.getDatabase(uri.database!!)
     }
 
-    factory { BlockMongoSink() }
-    factory { AccountMongoSink() }
-    factory { PendingTransactionMongoSink() }
+    factory { BlockMongoTransformer() }
+    factory { TokenDetectorTransformer() }
+    factory { AccountStateMongoProcessor() }
+    factory { PendingTransactionMongoProcessor() }
 
     module("kafka") {
       single {
@@ -96,21 +136,17 @@ class Cli : CliktCommand() {
   }
 
   override fun run() {
+
     startKoin(listOf(boltModule))
 
-    BlocksProcessor().apply {
-      onPrepareProcessor()
-      start()
-    }
-
-    AccountStateProcessor().apply {
-      onPrepareProcessor()
-      start()
-    }
-
-    PendingTransactionsProcessor().apply {
-      onPrepareProcessor()
-      start()
+    listOf<Processor>(
+      BlocksProcessor(),
+      ChartsProcessor(),
+      AccountStateProcessor(),
+      PendingTransactionsProcessor()
+    ).forEach {
+      it.onPrepareProcessor()
+      it.start()
     }
   }
 
@@ -121,6 +157,8 @@ class Cli : CliktCommand() {
     const val DEFAULT_MONGO_URI = "mongodb://localhost:27017/ethvm_local"
 
     const val DEFAULT_BLOCKS_TOPIC = "blocks"
+    const val DEFAULT_PROCESSED_BLOCKS_TOPIC = "processed-blocks"
+    const val DEFAULT_CANONICAL_CHAIN_TOPIC = "canonical-chain"
     const val DEFAULT_PENDING_TXS_TOPIC = "pending-transactions"
     const val DEFAULT_ACCOUNT_STATE_TOPIC = "account-state"
     const val DEFAULT_METADATA_TOPIC = "account-state"
