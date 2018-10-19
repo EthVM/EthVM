@@ -15,8 +15,6 @@
           <v-icon class="fab fa-medium-m white--text"></v-icon>
         </v-btn>
       </v-card>
-
-      <v-container fluid grid-list-md>
         <v-layout row wrap justify-space-between>
           <v-flex sm12 md4>
             <v-card color="transparent" class="white--text" flat>
@@ -33,7 +31,7 @@
             </v-card>
           </v-flex>
         </v-layout>
-      </v-container>
+
       <v-divider class="blue-grey darken-3"></v-divider>
       <v-card color="transparent" class=" text-xs-center white--text" flat>
         <v-card-text class="white--text">© {{ $t( 'footer.copy' ) }}<a href="/about" class="text-white">{{ $t( 'footer.enkrypt' ) }}</a></v-card-text>

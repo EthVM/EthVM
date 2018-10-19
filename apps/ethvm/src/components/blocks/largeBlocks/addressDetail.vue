@@ -26,7 +26,6 @@
             </v-layout>
           </v-flex>
         </v-layout>
-
     <v-layout hidden-sm-and-up align-center justify-space-around row fill-height pa-2>
       <copy-to-clip-component :valueToCopy="account.address"></copy-to-clip-component>
       <address-qr :addressQR="account.address"></address-qr>
@@ -35,13 +34,13 @@
       <v-flex xs12 md4>
         <v-card class="primary white--text pl-2" flat>
           <v-card-text class="pb-0">{{ $t( 'addrOverview.balance' ) }}</v-card-text>
-          <v-card-title class="headline">{{formatEthBalance}} {{ $t( 'common.eth')}}</v-card-title>
+          <v-card-title class="headline text-truncate">{{formatEthBalance}} {{ $t( 'common.eth')}}</v-card-title>
         </v-card>
       </v-flex>
       <v-flex xs12 md4>
         <v-card class="error white--text pl-2" flat>
           <v-card-text class="pb-0"> {{$t( 'addrOverview.usd')}} (1{{ $t( 'common.eth')}} = ${{formatEthUSD}})</v-card-text>
-          <v-card-title class="headline">${{formatUSDBalance}}</v-card-title>
+          <v-card-title class="headline text-truncate">${{formatUSDBalance}}</v-card-title>
         </v-card>
       </v-flex>
        <v-flex xs12 md4>
@@ -70,7 +69,7 @@ export default Vue.extend({
   },
   computed: {
     formatEthBalance() {
-      return NumberFormatter('#,##0.#####', this.account.balance)
+      return NumberFormatter('#,##0.##', this.account.balance)
     },
     formatUSDBalance() {
       return NumberFormatter('#,##0.##', this.account.balance * this.account.ethusd)
@@ -82,6 +81,3 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped lang="less">
-@import '~lessPath/sunil/blocks/largeBlocks/addressDetail.less';
-</style>

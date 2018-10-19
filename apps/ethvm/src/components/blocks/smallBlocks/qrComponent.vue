@@ -40,7 +40,6 @@ export default Vue.extend({
   },
   computed: {
     getQR() {
-      console.log(this.addressQR)
       if (this.addressQR) {
         return this.addressQR.toLowerCase()
       }

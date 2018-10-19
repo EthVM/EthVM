@@ -38,10 +38,8 @@
           </v-layout>
         </v-flex>
         <v-spacer></v-spacer>
-        <v-flex xs9>
-          <v-layout align-center justify-end row fill-height>
-            <block-search></block-search>
-          </v-layout>
+        <v-flex xs9 sm7 md6 >
+          <block-search></block-search>
         </v-flex>
       </v-layout>
     </v-toolbar>

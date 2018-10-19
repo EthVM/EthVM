@@ -18,45 +18,42 @@
       </v-flex>
     </v-layout>
     <!-- End Address Details -->
-
     <!-- Tab Menu -->
-    <tab-component :tabs="addressTabs"></tab-component>
-    <!-- End Tab Menu -->
-    <!--Tab Content -->
-    <div class="tab-menu-container">
-      <!-- Transactions -->
-      <div v-if="addressTabs[0].isActive">
-        <div v-if="account.txs">
-          <block-address-tx :address='account' :transactions='account.txs' :isPending='false'></block-address-tx>
-        </div>
-        <!-- End Transactions -->
-      </div>
-      <!-- Tokens -->
-      <div v-if="addressTabs[1].isActive">
-        <div v-if="!tokenError">
-          <div v-if="tokensLoaded">
-            <block-token-tracker :tokens="account.tokens" :holder="account.address"></block-token-tracker>
+    <v-card color="white" flat>
+      <v-tabs v-model="activeTab" color="white" show-arrows class=" pr-3 pl-3 pt-3">
+        <v-tab v-for="(item) in tabs" class="info--text text-capitalize pb-2 tab-opacity" active-class="primary--text " :key="item.title" ripple>
+          {{ item.title }}
+        </v-tab>
+        <v-tabs-slider color="primary" class="mb-0" style="height: 4px;"></v-tabs-slider>
+      </v-tabs>
+      <v-tabs-items v-model="activeTab" style="border-top: 1px solid #efefef">
+        <!-- Transactions-->
+        <v-tab-item id="tab-0">
+          <block-address-tx v-if="account.txs" :address='account.address' :transactions='account.txs' ></block-address-tx>
+        </v-tab-item>
+        <!-- Tokens -->
+        <v-tab-item id="tab-1">
+          <div v-if="!tokenError">
+            <div v-if="tokensLoaded">
+              <block-token-tracker :tokens="account.tokens" :holder="account.address"></block-token-tracker>
+            </div>
+            <v-card flat v-else class="loading-tokens">
+              <i class="fa fa-spinner fa-pulse fa-4x fa-fw"></i>
+              <span class="sr-only">{{ $t('message.load') }}</span>
+            </v-card>
           </div>
-          <div v-else class="loading-tokens">
-            <i class="fa fa-spinner fa-pulse fa-4x fa-fw"></i>
-            <span class="sr-only">{{ $t('message.load') }}</span>
-          </div>
-        </div>
-        <div v-else class="info-common">
-          <p> {{ $t('message.error') }}</p>
-        </div>
+          <v-card v-else class="info-common">
+            <p> {{ $t('message.error') }}</p>
+          </v-card>
+        </v-tab-item>
         <!-- End Tokens -->
-      </div>
-      <!-- Pending Transactions -->
-      <div v-if="addressTabs[2].isActive" class="">
-        <block-address-tx :address='account' :transactions='account.pendingTxs' :isPending='true'></block-address-tx>
-
-        <!-- End Pending Transactions -->
-      </div>
-      <!--Mining History This are temp strings (no need to implement yet)  -->
-      <div v-if="account.isMiner">
-        <div v-if="addressTabs[3].isActive">
-          <div>
+        <!-- Pending Transactions -->
+        <v-tab-item id="tab-2">
+          <!--<block-address-tx :address='account' :transactions='account.pendingTxs' :isPending='true'></block-address-tx> -->
+        </v-tab-item>
+        <v-tab-item v-if="account.isMiner" id="tab-3">
+          <!--Mining History This are temp strings (no need to implement yet)  -->
+          <v-card>
             <ul>
               <li>Name:</li>
               <li>TWN</li>
@@ -67,12 +64,27 @@
               <li>ERC 20 Contract:</li>
               <li>0x045619099665fc6f661b1745e5350290ceb933f</li>
             </ul>
-          </div>
-        </div>
+          </v-card>
+        </v-tab-item>
         <!--End Mining History -->
-      </div>
-      <!-- End Tab Content -->
-    </div>
+        <v-tab-item v-if="account.conCreator" id="tab-4">
+          <!--Mining History This are temp strings (no need to implement yet)  -->
+          <v-card>
+            <ul>
+              <li>Name:</li>
+              <li>TWN</li>
+              <li>Balance:</li>
+              <li>20,930 TWN</li>
+              <li>Value:</li>
+              <li>$0.00</li>
+              <li>ERC 20 Contract:</li>
+              <li>0x045619099665fc6f661b1745e5350290ceb933f</li>
+            </ul>
+          </v-card>
+        </v-tab-item>
+        <!--End Mining History -->
+      </v-tabs-items>
+    </v-card>
   </v-container>
 </template>
 
@@ -104,7 +116,6 @@ export default Vue.extend({
         isMiner: false,
         conCreator: false
       },
-      identicon: null,
       items: [
         {
           text: this.$i18n.t('title.home'),
@@ -116,23 +127,24 @@ export default Vue.extend({
           disabled: true
         }
       ],
-      addressTabs: [
+      tabs: [
         {
-          id: 0,
+          id: '0',
           title: this.$i18n.t('tabs.txH'),
           isActive: true
         },
         {
-          id: 1,
+          id: '1',
           title: this.$i18n.t('tabs.tokens'),
           isActive: false
         },
         {
-          id: 2,
+          id: '2',
           title: this.$i18n.t('tabs.pending'),
           isActive: false
         }
       ],
+      activeTab: 'tab-0',
       tokensLoaded: false,
       tokenError: false,
       usdValue: {
@@ -233,8 +245,16 @@ export default Vue.extend({
     setTabs() {
       if (this.account.isMiner) {
         const newTab = {
-          id: 3,
+          id: '3',
           title: this.$i18n.t('tabs.miningH'),
+          isActive: false
+        }
+        this.addressTabs.push(newTab)
+      }
+      if (this.account.conCreator) {
+        const newTab = {
+          id: '4',
+          title: this.$i18n.t('tabs.contracts'),
           isActive: false
         }
         this.addressTabs.push(newTab)
@@ -243,7 +263,3 @@ export default Vue.extend({
   }
 })
 </script>
-
-<style scoped lang="less">
-@import '~lessPath/sunil/frames/address.less';
-</style>

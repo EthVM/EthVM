@@ -34,7 +34,7 @@ a:link {
 }
 
 .v-text-field.v-text-field--solo .v-input__control {
-    min-height: 46px;
+    min-height: 32px;
 }
 
 /*SMALL COMPONENT: */
@@ -46,19 +46,23 @@ a:link {
 
 .time-since {
     background-position: right -10px bottom -17px;
-    background-image: url('~@/assets/smallblocks/hourglass.svg')
+    background-image: url('~@/assets/smallblocks/hourglass.svg');
 }
 
 .hash-rate {
     background-position: right -10px bottom -17px;
-    background-image: url('~@/assets/smallblocks/hash.svg')
+    background-image: url('~@/assets/smallblocks/hash.svg');
 }
 
 .difficulty {
     background-position: right -10px bottom -17px;
-    background-image: url('~@/assets/smallblocks/dashboard.svg')
+    background-image: url('~@/assets/smallblocks/dashboard.svg');
 }
 
 .psmall {
-    padding-bottom: 10px
+    padding-bottom: 10px;
+}
+
+.v-tabs__item:not(.v-tabs__item--active) {
+    opacity: 1;
 }

@@ -194,7 +194,8 @@ Vue.use(Vuetify, {
     txFail: '#fe1377',
     txPen: '#eea66b',
     lineGrey: '#efefef',
-    tableGrey: '#fbfcfe'
+    tableGrey: '#fbfcfe',
+    tabActive: '#3844b8'
 
     // used -->
     // background: String(colors.grey.darken3)
