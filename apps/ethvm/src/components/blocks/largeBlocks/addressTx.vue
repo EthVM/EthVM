@@ -33,7 +33,6 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { getContractAddressCommand } from '../../../../../../bin/monkey/commands'
 export default Vue.extend({
   name: 'TableTransactions',
   props: ['address', 'transactions', 'isPending'],
