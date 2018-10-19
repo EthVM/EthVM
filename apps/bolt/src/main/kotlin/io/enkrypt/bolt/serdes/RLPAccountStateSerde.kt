@@ -1,4 +1,4 @@
-package io.enkrypt.bolt.kafka.serdes
+package io.enkrypt.bolt.serdes
 
 import org.apache.kafka.common.errors.SerializationException
 import org.apache.kafka.common.serialization.Deserializer
@@ -8,8 +8,8 @@ import org.ethereum.core.AccountState
 
 class RLPAccountStateSerde : Serde<AccountState> {
 
-  private val serializer: RLPAccountSerializer = RLPAccountSerializer()
-  private val deserializer: RLPAccountDeserializer = RLPAccountDeserializer()
+  private val serializer: RLPAccountStateSerializer = RLPAccountStateSerializer()
+  private val deserializer: RLPAccountStateDeserializer = RLPAccountStateDeserializer()
 
   override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
 
@@ -20,7 +20,7 @@ class RLPAccountStateSerde : Serde<AccountState> {
   override fun close() {}
 }
 
-class RLPAccountSerializer : Serializer<AccountState> {
+class RLPAccountStateSerializer : Serializer<AccountState> {
   override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
 
   override fun serialize(topic: String?, data: AccountState?): ByteArray =
@@ -30,11 +30,11 @@ class RLPAccountSerializer : Serializer<AccountState> {
   }
 }
 
-class RLPAccountDeserializer : Deserializer<AccountState> {
+class RLPAccountStateDeserializer : Deserializer<AccountState> {
   override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
 
   override fun deserialize(topic: String?, data: ByteArray?): AccountState? {
-    if (data == null || data.isEmpty()) {
+    if (data == null) {
       return null
     }
     return try {

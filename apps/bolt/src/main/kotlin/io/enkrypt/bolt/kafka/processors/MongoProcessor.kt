@@ -11,7 +11,7 @@ import org.koin.standalone.inject
 
 abstract class MongoProcessor<K, V> : Processor<K, V>, KoinComponent {
 
-  open val timeoutMs = 500L
+  open val timeoutMs = 5000L
   open val batchSize = 10
 
   protected val config: AppConfig by inject()
