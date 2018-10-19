@@ -1,12 +1,15 @@
-#!/bin/bash
+#!/bin/bash -e
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 
 if [ "$ID" == "apps/server-e2e-test" ]; then
 
   # Download datasets with Git LFS (if applies)
 
   echo -e "machine github.com\n  login $GITHUB_TOKEN" > ~/.netrc
-  git lfs pull
   git lfs fetch --all
+  git lfs checkout
 
   # Install modern version of Mongo
 
@@ -15,18 +18,15 @@ if [ "$ID" == "apps/server-e2e-test" ]; then
   sudo apt-get update
   sudo apt-get install -y mongodb-org
 
-read -r -d '' REPLICA_SET << EOM
-replSet=rs0
-EOM
+  sudo mkdir -p /data/db
+  sudo mongod --bind_ip 127.0.0.1 --quiet &>/dev/null &
+  mongorestore --host 127.0.0.1 --port 27017 --archive="${ROOT_DIR}/datasets/ethvm_mainnet_sample.mongo.archive"
+  sudo kill -9 $(pgrep mongod)
 
-  echo "$REPLICA_SET" | sudo tee -a /etc/mongodb.conf
   sudo mongod --bind_ip 0.0.0.0 --replSet rs0 --quiet --slowms 10000 &>/dev/null &
-
-  sleep 5
-
+  sleep 10
   mongo --eval "rs.initiate()"
   mongo < ./bin/mongo/init.js
-  mongorestore -h 127.0.0.1 --port 27017 --db ethvm_local --archive="./datasets/ethvm_mainnet_sample.mongo.archive?raw=true"
 
 fi
 

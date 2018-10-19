@@ -34,6 +34,13 @@ matrix:
       language: node_js
       node_js:
         - "10"
+    -
+      env:
+        - ID=apps/bolt
+        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/bolt
+        - INSTALL=''
+        - ACTION='./gradlew --no-daemon test'
+      language: generic
 
 before_install:
   - ./.travis/before-install.sh
