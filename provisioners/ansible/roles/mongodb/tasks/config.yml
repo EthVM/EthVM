@@ -1,0 +1,7 @@
+---
+- name: config | Configuring MongoDB
+  template:
+    src: "etc/mongod.conf.j2"
+    dest: "{{ mongodb_config }}"
+  register: "mongodb_configured"
+  notify: "Restart MongoDB"

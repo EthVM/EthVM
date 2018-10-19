@@ -1,0 +1,10 @@
+[Unit]
+Description=High-performance, schema-free document-oriented database
+After=network.target
+
+[Service]
+User=mongodb
+ExecStart=/usr/bin/mongod --quiet --config {{ mongodb_config }}
+
+[Install]
+WantedBy=multi-user.target

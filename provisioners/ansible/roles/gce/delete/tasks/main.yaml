@@ -1,0 +1,16 @@
+---
+
+- name: Check if Google Cloud SDK is installed
+  command: gcloud version
+  register: gcloud_installed
+  changed_when: false
+  ignore_errors: yes
+
+- fail:
+    msg: "Please make sure Google Cloud SDK is installed before executing the role."
+  when: gcloud_installed is not successful
+
+- include: kafka.yaml
+- include: ethj.yaml
+- include: mongo.yaml
+- include: server.yaml

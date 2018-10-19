@@ -1,0 +1,12 @@
+---
+
+- hosts: localhost
+  vars:
+    zookeeper_hosts: localhost:2181
+    kafka_zookeeper_hosts:
+      - localhost
+    kafka_hosts:
+      - localhost
+  roles:
+  - zookeeper
+  - ansible-kafka

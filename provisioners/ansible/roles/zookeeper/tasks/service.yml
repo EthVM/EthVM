@@ -1,0 +1,8 @@
+---
+
+- name: ZOOKEEPER | Configuring service
+  systemd:
+    name: zookeeper
+    state: "{{ zookeeper_service_state }}"
+    enabled: "{{ zookeeper_service_enabled }}"
+    daemon_reload: yes

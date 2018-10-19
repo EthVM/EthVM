@@ -1,0 +1,21 @@
+---
+- name: redhat | Adding MongoDB Repo
+  yum_repository:
+    name: "{{ mongodb_redhat_repo_info.name }}"
+    description: "{{ mongodb_redhat_repo_info.description }}"
+    baseurl: "{{ mongodb_redhat_repo_info.baseurl }}"
+    gpgcheck: "{{ mongodb_redhat_repo_info.gpgcheck }}"
+    enabled: "{{ mongodb_redhat_repo_info.enabled }}"
+    gpgkey: "{{ mongodb_redhat_repo_info.gpgkey }}"
+    state: "present"
+
+- name: redhat | Installing MongoDB
+  yum:
+    name: "mongodb-org"
+    state: "present"
+
+- name: redhat | Ensuring MongoDB Is Enabled and Started
+  service:
+    name: "mongod"
+    state: "started"
+    enabled: yes

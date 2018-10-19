@@ -1,0 +1,20 @@
+---
+
+- name: check for ansible 1.x
+  fail:
+    msg: >
+      This role no longer supports Ansible 1.x. The last known good tag
+      for Ansible 1.x support in this role is 1.2.5.
+  when:
+    - ansible_version.major < 2
+
+- name: check for checksum
+  fail:
+    msg: >
+      There is no sha1 checksum defined for version {{ redis_version }} in
+      vars/main.yml. Set redis_checksum manually or submit a PR to add this
+      version.
+  when:
+    - redis_verify_checksum|bool
+    - redis_checksum is not defined
+    - redis_version not in redis_checksums

@@ -1,0 +1,36 @@
+---
+
+name: ethvm
+
+gcp:
+  zone: us-central1-a
+  image_family: ubuntu-1804-lts
+  image_project: ubuntu-os-cloud
+  boot_disk_size: 10GB
+  boot_disk_type: pd-standard
+  can_ip_forward: --can-ip-forward
+  ssh_private_key_file: "{{ lookup('env', 'HOME') }}/.ssh/gcp_ethvm.pub"
+
+  kafka:
+    name: kafka-broker
+    machine_type: n1-standard-8
+    instances: 3
+    inventory_output_file: ./outputs/output-kafka.ini
+
+  mongo:
+    name: mongodb
+    machine_type: n1-standard-4
+    instances: 2
+    inventory_output_file: ./outputs/output-mongodb.ini
+
+  server:
+    name: server
+    machine_type: n1-standard-2
+    instances: 1
+    inventory_output_file: ./outputs/output-server.ini
+
+  ethereumj:
+    name: ethj
+    machine_type: n1-standard-4
+    instances: 1
+    inventory_output_file: ./outputs/output-ethereumj.ini

@@ -1,0 +1,24 @@
+---
+galaxy_info:
+  author: Jay Taylor
+  description: An Ansible role for installing and configuring a kafka cluster.
+  company: Gigawatt
+  license: BSD
+  min_ansible_version: 2.2.3.0
+  platforms:
+  - name: Debian
+    versions:
+    - 7
+  - name: Ubuntu
+    versions:
+    - trusty
+    - xenial
+  categories:
+  - cloud
+  - kafka
+  - pubsub
+  - queue
+  - messaging
+  - clustering
+  - development
+dependencies: []

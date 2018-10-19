@@ -1,0 +1,20 @@
+# {{ansible_managed}}
+
+[Unit]
+Description=ZooKeeper
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User={{ zookeeper_user }}
+Group={{zookeeper_group }}
+Environment='ZOO_LOG_DIR={{ zookeeper_log_dir }}'
+Environment='ZOO_LOG4J_PROP=INFO,ROLLINGFILE'
+ExecStart={{zookeeper_install_path}}/bin/zkServer.sh start-foreground
+Restart=on-failure
+
+TimeoutSec=300
+
+[Install]
+WantedBy=multi-user.target

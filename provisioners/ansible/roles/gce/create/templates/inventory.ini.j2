@@ -1,0 +1,4 @@
+{% for value in hostvars.localhost.instances_metadata.stdout_lines %}
+{% set instance_metadata = value.split(',') %}
+{{ instance_metadata[0] }} ansible_host={{ instance_metadata[2] }} internal_ip={{ instance_metadata[1] }}
+{% endfor %}

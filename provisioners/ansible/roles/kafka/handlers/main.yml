@@ -1,0 +1,13 @@
+---
+- name: "start kafka"
+  service: name=kafka state=started
+  sudo: yes
+
+- name: "stop kafka"
+  service: name=kafka state=stopped
+  sudo: yes
+
+- name: "restart kafka"
+  service: name=kafka state=restarted
+  sudo: yes
+

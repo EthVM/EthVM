@@ -1,0 +1,7 @@
+---
+
+- name: Restart zookeeper
+  systemd:
+    name: zookeeper
+    state: restarted
+  when: zookeeper_service_state != 'stopped'

@@ -1,0 +1,9 @@
+# consumer.properties.j2
+
+zookeeper.connect={{ kafka_zookeeper_connection_string }}
+
+# timeout in ms for connecting to zookeeper
+zookeeper.connection.timeout.ms=6000
+
+# consumer group id
+group.id=my-consumer-group

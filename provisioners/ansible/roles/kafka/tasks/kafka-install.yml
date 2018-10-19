@@ -1,0 +1,60 @@
+---
+- name: "Download kafka binary package archive"
+  get_url: url={{ kafka_url }} dest={{ kafka_bin_tmp }} timeout=600
+
+- name: "Download the corresponding cryptographic signature file"
+  get_url: url={{ kafka_sig_url }} dest={{ kafka_sig_tmp }} timeout=600
+
+- name: "Download the kafka PGP keys"
+  get_url: url={{ kafka_keys_url }} dest={{ kafka_keys_tmp }} timeout=600
+  changed_when: False
+
+- name: "Import kafka PGP keys"
+  shell: gpg --import {{ kafka_keys_tmp }}
+  changed_when: False
+
+- name: "Verify kafka binary package archive authenticity"
+  shell: gpg --verify {{ kafka_sig_tmp }} {{ kafka_bin_tmp }}
+  changed_when: False
+
+- name: "Extract downloaded kafka archive"
+  unarchive: copy=no creates=/usr/local/kafka_{{ kafka_scala_version }}-{{ kafka_version }} dest=/usr/local src={{ kafka_bin_tmp }}
+  sudo: yes
+
+- name: "Link /usr/local/kafka to the right version"
+  file: path=/usr/local/kafka state=link src=/usr/local/kafka_{{ kafka_scala_version }}-{{ kafka_version }}
+  sudo: yes
+
+- name: "Create upstart config"
+  template: dest=/etc/init/kafka.conf src=etc/init/kafka.conf.j2 mode=0644 owner=root group=root
+  sudo: yes
+  when: ansible_service_mgr != 'systemd'
+  notify:
+    - restart kafka
+
+- name: "Create systemd config"
+  template: dest=/etc/systemd/system/kafka.service src=etc/systemd/system/kafka.service.j2 mode=0644 owner=root group=root
+  sudo: yes
+  when: ansible_service_mgr == 'systemd'
+  notify:
+    - restart kafka
+
+- name: "Reload systemctl daemon"
+  command: systemctl daemon-reload
+  sudo: yes
+  when: ansible_service_mgr == 'systemd'
+
+- name: "Create kafka directories"
+  file: path={{ item }} state=directory mode=0755 owner={{ kafka_user }} group={{ kafka_group }}
+  sudo: yes
+  with_items:
+    - "{{ kafka_data_dir }}"
+    - "{{ kafka_log_dir }}"
+
+- name: "Remove lost+found in the datadir"
+  file: path="{{ kafka_data_dir }}/lost+found" state=absent
+  sudo: yes
+
+- name: "Symlink kafka_conf_dir to /usr/local/kafka/config"
+  file: src=/usr/local/kafka/config path={{ kafka_conf_dir }} state=link
+  sudo: yes

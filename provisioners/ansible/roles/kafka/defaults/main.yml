@@ -1,0 +1,176 @@
+---
+kafka_zookeeper_hosts: # <-- must be overridden further up the chain
+# e.g. [ 'srvr1', 'srvr2' ]
+kafka_zookeeper_port: 2181
+
+kafka_hosts: # <-- must be overridden further up the chain
+# e.g. [ 'srvr1', 'srvr2' ]
+
+kafka_version: "0.11.0.2"
+
+kafka_scala_version: "2.11"
+# NB: 2.11 is recommended at https://kafka.apache.org/downloads.html.
+
+kafka_java_enabled: true
+# set false if the role should not handle the java dependency
+kafka_java_version: "openjdk-7-jre-headless"
+
+# Use this selector to use a mirror for a "current" version or an "archived" one
+kafka_mirror_selector: "current"
+kafka_mirror:
+  current: http://apache.mirrors.tds.net/kafka
+  archive: https://archive.apache.org/dist/kafka
+kafka_url: "{{ kafka_mirror[kafka_mirror_selector] }}/{{ kafka_version }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}.tgz"
+kafka_bin_tmp: "/tmp/kafka_{{ kafka_scala_version }}-{{ kafka_version }}.tar.gz"
+
+kafka_sig_mirror_selector: "{{ kafka_mirror_selector }}"
+kafka_sig_mirror:
+  current: https://dist.apache.org/repos/dist/release/kafka
+  archive: https://archive.apache.org/dist/kafka/
+kafka_sig_url: "{{ kafka_sig_mirror[kafka_sig_mirror_selector] }}/{{ kafka_version }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}.tgz.asc"
+kafka_keys_url: "http://kafka.apache.org/KEYS"
+kafka_keys_tmp: "/tmp/kafka_KEYS"
+kafka_sig_tmp: "/tmp/kafka_{{ kafka_scala_version }}-{{ kafka_version }}.tar.gz.asc"
+
+kafka_conf_dir: /etc/kafka
+kafka_data_dir: /var/kafka
+kafka_log_dir: /var/log/kafka
+
+kafka_user: kafka
+kafka_group: kafka
+
+kafka_max_logfile_size: 50MB
+kafka_max_logbackup_idx: 7
+kafka_logger_root: INFO, stdout
+kafka_logger_kafka: INFO, kafkaAppender
+kafka_logger_kafka_controller: TRACE, controllerAppender
+kafka_logger_kafka_request: WARN, requestAppender
+kafka_logger_kafka_cleaner: INFO, cleanerAppender
+kafka_logger_state: TRACE, stateChangeAppender
+
+kafka_heap_opts: "-Xmx1G -Xms1G"
+
+kafka_nofiles_limit: 50000
+
+kafka_port_test_timeout_seconds: 120
+
+kafka_generate_broker_id: yes
+
+kafka_log4j_date_pattern: "'.'yyyy-MM-dd" # Rollover at midnight each day.
+
+
+kafka_environment: {}
+
+kafka_healthcheck_address: ""
+
+kafka_server: {}
+
+kafka_server_defaults:
+  # broker_id: <-- this is auto-set by hashing the machine-id during kafka-cfg step.
+  # zookeeper_hosts: <-- this is auto-set by the global "kafka_zookeeper_hosts" setting.
+  log_dirs: "{{ kafka_data_dir }}"
+  port: 9092
+  message_max_bytes:
+  num_network_threads: 3
+  num_io_threads: 8
+  background_threads:
+  queued_max_requests:
+  host_name: localhost
+  advertised_host_name:
+  advertised_port:
+  advertised_listeners:
+  listeners:
+  socket_send_buffer_bytes: 102400
+  socket_receive_buffer_bytes: 102400
+  socket_request_max_bytes: 104857600
+  num_partitions: 1
+  log_segment_bytes: 1073741824
+  log_roll_ms:
+  log_roll_hours:
+  log_cleanup_policy:
+  log_retention_ms:
+  log_retention_minutes:
+  log_retention_hours: 168
+  log_retention_bytes: 1073741824
+  log_retention_check_interval_ms: 300000
+  log_cleaner_enable: false
+  log_cleaner_threads:
+  log_cleaner_io_max_bytes_per_second:
+  log_cleaner_dedupe_buffer_size:
+  log_cleaner_io_buffer_size:
+  log_cleaner_io_buffer_load_factor:
+  log_cleaner_backoff_ms:
+  log_cleaner_min_cleanable_ratio:
+  log_cleaner_delete_retention_ms:
+  log_index_size_max_bytes:
+  log_index_interval_bytes:
+  log_flush_interval_messages: 1000
+  log_flush_scheduler_interval_ms: 1000
+  log_flush_interval_ms:
+  log_delete_delay_ms:
+  log_flush_offset_checkpoint_interval_ms:
+  log_segment_delete_delay_ms:
+  auto_create_topics_enable:
+  controller_socket_timeout_ms:
+  controller_message_queue_size:
+  default_replication_factor:
+  replica_lag_time_max_ms:
+  replica_lag_max_messages:
+  replica_socket_timeout_ms:
+  replica_socket_receive_buffer_bytes:
+  replica_fetch_max_bytes:
+  replica_fetch_wait_max_ms:
+  replica_fetch_min_bytes:
+  num_replica_fetchers:
+  replica_high_watermark_checkpoint_interval_ms:
+  fetch_purgatory_purge_interval_requests:
+  producer_purgatory_purge_interval_requests:
+  zookeeper_session_timeout_ms:
+  zookeeper_connection_timeout_ms: 6000
+  zookeeper_sync_time_ms:
+  controlled_shutdown_enable: "true"
+  controlled_shutdown_max_retries: 3
+  controlled_shutdown_retry_backoff_ms: 5000
+  auto_leader_rebalance_enable:
+  leader_imbalance_per_broker_percentage:
+  leader_imbalance_check_interval_seconds:
+  offset_metadata_max_bytes:
+  max_connections_per_ip:
+  max_connections_per_ip_overrides:
+  connections_max_idle_ms:
+  log_roll_jitter_ms:
+  log_roll_jitter_hours:
+  num_recovery_threads_per_data_dir: 1
+  unclean_leader_election_enable:
+  delete_topic_enable:
+  offsets_topic_num_partitions:
+  offsets_topic_retention_minutes:
+  offsets_retention_check_interval_ms:
+  offsets_topic_replication_factor:
+  offsets_topic_segment_bytes:
+  offsets_load_buffer_size:
+  offsets_commit_required_acks:
+  offsets_commit_timeout_ms:
+  misc: {}
+
+kafka_producer: {}
+
+kafka_producer_defaults:
+  # metadata_broker_list: <-- this is auto-set by the global "kafka_hosts" setting.
+  request_required_acks: 1
+  request_timeout_ms:
+  type: sync
+  serializer_class: kafka.serializer.DefaultEncoder
+  partitioner_class:
+  key_serializer_class:
+  compression_codec: none
+  compressed_topics:
+  message_send_max_retries:
+  retry_backoff_ms:
+  topic_metadata_refresh_interval_ms:
+  send_buffer_bytes:
+  # async options.
+  queue_buffering_max_ms:
+  queue_buffering_max_messages:
+  queue_enqueue_timeout_ms:
+  batch_num_messages:

@@ -1,0 +1,13 @@
+---
+galaxy_info:
+  company: Idealista S.A.U.
+  description: Apache ZooKeeper role
+  min_ansible_version: 2.4.0.0
+  license: Apache 2.0
+  platforms:
+    - name: Debian
+      versions:
+        - all
+  categories:
+    - configuration
+    - distributed

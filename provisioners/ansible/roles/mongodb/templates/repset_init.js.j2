@@ -1,0 +1,9 @@
+rs.initiate()
+sleep(13000)
+{% for host in groups[mongodb_replication_group] %}
+{%   if host != mongodb_replication_master %}
+rs.add("{{ host }}:{{ mongodb_port }}")
+sleep(8000)
+{%   endif %}
+{% endfor %}
+printjson(rs.status())

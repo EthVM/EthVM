@@ -1,0 +1,63 @@
+---
+- name: users | Checking If Admin User Has Been Set
+  stat:
+    path: "/var/log/mongod_admin_set"
+  register: "mongod_admin_user_check"
+
+- name: users | Creating Admin User
+  mongodb_user:
+    database: "{{ mongodb_admin_user.database }}"
+    login_password: "{{ mongodb_admin_user.password }}"
+    login_user: "{{ mongodb_admin_user.name }}"
+    name: "{{ mongodb_admin_user.name }}"
+    password: "{{ mongodb_admin_user.password }}"
+    roles: "{{ mongodb_admin_user.roles|join(',') }}"
+    state: "{{ mongodb_admin_user.state }}"
+  failed_when: false
+  when: mongod_admin_user_check.stat.exists
+
+- name: users | Creating Admin User
+  mongodb_user:
+    database: "{{ mongodb_admin_user.database }}"
+    name: "{{ mongodb_admin_user.name }}"
+    password: "{{ mongodb_admin_user.password }}"
+    roles: "{{ mongodb_admin_user.roles|join(',') }}"
+    state: "{{ mongodb_admin_user.state }}"
+  register: "mongod_admin_user_created"
+  when: not mongod_admin_user_check.stat.exists
+
+- name: users | Creating MongoDB Users
+  mongodb_user:
+    database: "{{ item.database }}"
+    name: "{{ item.name }}"
+    password: "{{ item.password }}"
+    roles: "{{ item.roles|join(',') }}"
+    state: "{{ item.state }}"
+  with_items: '{{ mongodb_users }}'
+  when: >
+        not mongod_admin_user_check.stat.exists and
+        not mongod_admin_user_created.changed
+
+- name: users | Creating MongoDB Users
+  mongodb_user:
+    database: "{{ item.database }}"
+    login_password: "{{ mongodb_admin_user.password }}"
+    login_user: "{{ mongodb_admin_user.name }}"
+    name: "{{ item.name }}"
+    password: "{{ item.password }}"
+    roles: "{{ item.roles|join(',') }}"
+    state: "{{ item.state }}"
+  failed_when: false
+  with_items: '{{ mongodb_users }}'
+  when: >
+        (not mongod_admin_user_check.stat.exists and
+        mongod_admin_user_created.changed) or
+        mongod_admin_user_check.stat.exists
+
+- name: users | Marking As MongoDB Admin User Created
+  file:
+    path: "/var/log/mongod_admin_set"
+    state: "touch"
+  when: >
+        not mongod_admin_user_check.stat.exists and
+        mongod_admin_user_created.changed

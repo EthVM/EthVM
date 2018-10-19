@@ -1,0 +1,32 @@
+- name: Testing prerequisites
+  hosts: all
+  gather_facts: yes
+
+  vars:
+    goss_version: "v0.3.5"
+    goss_url: "https://github.com/aelsabbahy/goss/releases/download/{{ goss_version }}/goss-linux-amd64"
+    goss_results: goss_results
+
+  vars_files:
+    - ../../defaults/main.yml
+    - ../../vars/main.yml
+    - ../group_vars/zookeeper.yml
+
+  tasks:
+    - name: Download and install Goss
+      get_url:
+        url: "{{ goss_url }}"
+        dest: "/usr/local/bin/goss"
+        mode: 0755
+
+    - name: Copy tests to remote
+      template:
+        src: "{{ playbook_dir }}/specs/{{ item }}.j2"
+        dest: "/tmp/{{ item }}"
+      with_items:
+        - zookeeper.yml
+
+    - name: Goss tests
+      command: "goss -g /tmp/{{ item }} validate -format tap"
+      with_items:
+        - zookeeper.yml

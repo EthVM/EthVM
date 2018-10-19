@@ -1,0 +1,23 @@
+tickTime={{ zookeeper_tick_time }}
+dataDir={{ zookeeper_data_dir }}
+dataLogDir={{ zookeeper_log_dir }}
+clientPort={{ zookeeper_client_port }}
+initLimit={{ zookeeper_init_limit }}
+syncLimit={{ zookeeper_sync_limit }}
+
+{% if zookeeper_autopurge_purgeInterval > 0 %}
+autopurge.purgeInterval={{ zookeeper_autopurge_purgeInterval }}
+autopurge.snapRetainCount={{ zookeeper_autopurge_snapRetainCount }}
+{% endif %}
+
+{% for server in zookeeper_hosts %}
+{% if server.host is defined %}
+{% if server.ip is defined %}
+server.{{server.id}}={{server.ip}}:2888:3888
+{% else %}
+server.{{server.id}}={{server.host}}:2888:3888
+{% endif %}
+{% else %}
+server.{{loop.index}}={{server}}:2888:3888
+{% endif %}
+{% endfor %}

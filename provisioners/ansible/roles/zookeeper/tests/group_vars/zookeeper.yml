@@ -1,0 +1,13 @@
+---
+## JAVA
+java_implementation: openjdk
+
+zookeeper_version: 3.4.12
+
+zookeeper_hosts:
+  - host: zookeeper1
+    id: 1
+  - host: zookeeper2
+    id: 2
+  - host: zookeeper3
+    id: 3

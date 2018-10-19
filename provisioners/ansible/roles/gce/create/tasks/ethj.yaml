@@ -1,0 +1,46 @@
+---
+
+- name: Check if EthereumJ GCP instances has been created
+  command: "gcloud compute instances list --filter='name:{{ name }}-{{ gcp.ethereumj.name }}' --format='value(status)'"
+  register: instance_created
+  changed_when: false
+  ignore_errors: yes
+
+- name: Set EthereumJ GCP instances names
+  debug:
+    msg: "{{ name }}-{{ gcp.ethereumj.name }}-{{ '%d'|format(item|int) }}"
+  register: instance_names
+  with_sequence:
+    - "start=1 end={{ gcp.ethereumj.instances }}"
+  when: instance_created.stdout == ""
+
+- name: Create EthereumJ instances on GCP
+  command: >
+    gcloud compute instances create
+    {{ hostvars.localhost.instance_names.results | map(attribute='msg') | list | join(' ') }}
+    --boot-disk-size="{{gcp.boot_disk_size}}"
+    --boot-disk-type="{{ gcp.boot_disk_type }}"
+    --image-family="{{ gcp.image_family }}"
+    --image-project="{{ gcp.image_project }}"
+    --machine-type="{{ gcp.ethereumj.machine_type }}"
+    "{{ gcp.can_ip_forward}}"
+    --zone="{{ gcp.zone }}"
+    --metadata-from-file ssh-keys={{ gcp.ssh_private_key_file }}
+  changed_when: false
+  when: instance_created.stdout == ""
+
+- name: Start EthereumJ instances if it's on TERMINATED status
+  command: gcloud compute instances start "{{ name }}-{{ gcp.ethereumj.name }}"
+  changed_when: false
+  when: instance_created.stdout == "TERMINATED"
+
+- name: Get metadata about EthereumJ instances
+  command: gcloud compute instances list --filter='name:{{ name }}-{{ gcp.ethereumj.name }}' --format="value[separator=','](name, networkInterfaces[0].networkIP, networkInterfaces[0].accessConfigs[0].natIP)"
+  register: instances_metadata
+  ignore_errors: yes
+
+- debug: msg="{{ instances_metadata.stdout }}"
+- name: "Generate {{ gcp.ethereumj.inventory_output_file }}"
+  template:
+    src: inventory.ini.j2
+    dest: "{{ gcp.ethereumj.inventory_output_file }}"

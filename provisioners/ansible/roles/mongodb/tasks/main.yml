@@ -1,0 +1,18 @@
+---
+# tasks file for ansible-mongodb
+- include: debian.yml
+  when: ansible_os_family == "Debian"
+
+- include: redhat.yml
+  when: ansible_os_family == "RedHat"
+
+- include: python_modules.yml
+
+- include: users.yml
+  when: mongodb_create_users
+
+- include: config.yml
+  when: mongodb_config_mongodb
+
+- include: replication.yml
+  when: mongodb_replication

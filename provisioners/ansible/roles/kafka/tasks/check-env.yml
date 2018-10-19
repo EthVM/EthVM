@@ -1,0 +1,16 @@
+---
+
+- name: "Check 'kafka_zookeeper_hosts' variable"
+  fail: msg="Playbook execution aborted due to missing or empty required variable 'kafka_zookeeper_hosts'"
+  when: kafka_zookeeper_hosts is not defined or kafka_zookeeper_hosts | length == 0
+
+- name: "Check 'kafka_hosts' variable"
+  fail: msg="Playbook execution aborted due to missing or empty required variable 'kafka_hosts'"
+  when: kafka_hosts is not defined or kafka_hosts == ''
+
+- name: "Check 'kafka_generate_broker_id' variable"
+  fail: msg="Playbook execution aborted because when 'kafka_version' < '0.9.0.0' either 'kafka_broker_id' must be defined or 'kafka_generate_broker_id' enabled"
+  when: >
+    not kafka_generate_broker_id | bool and
+    kafka_broker_id is not defined and
+    kafka_version | version_compare('0.9.0.0', '<')

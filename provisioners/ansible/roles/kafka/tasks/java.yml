@@ -1,0 +1,12 @@
+---
+- name: "Check if Java is installed"
+  shell: command -v java
+  register: check_java
+  ignore_errors: True
+  changed_when: False
+  check_mode: False
+
+- name: "Install OpenJDK"
+  apt: name="{{ kafka_java_version }}" state=present
+  become: true
+  when: check_java.rc != 0

@@ -1,0 +1,36 @@
+storage:
+  dbPath: {{ mongodb_dbPath }}
+  journal:
+    enabled: true
+#  engine:
+#  mmapv1:
+#  wiredTiger:
+
+systemLog:
+  destination: file
+  logAppend: true
+  path: {{ mongodb_systemlog_path }}
+
+net:
+  port: {{ mongodb_port }}
+  bindIp: {{ mongodb_bind_ip|join (',') }}
+
+#processManagement:
+
+{% if mongodb_replication %}
+replication:
+  replSetName: {{ mongodb_replication_set }}
+
+#security:
+#  keyFile: {{ mongodb_replication_keyfile }}
+{% endif %}
+
+#operationProfiling:
+
+#sharding:
+
+## Enterprise-Only Options:
+
+#auditLog:
+
+#snmp:

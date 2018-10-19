@@ -1,0 +1,56 @@
+---
+## General
+zookeeper_version: 3.4.12
+
+## Service options
+
+# Owner
+zookeeper_user: zookeeper
+zookeeper_group: zookeeper
+
+# start on boot
+zookeeper_service_enabled: 'yes'
+# current state: started, stopped
+zookeeper_service_state: started
+
+# Files & Paths
+zookeeper_data_dir: /usr/local/zookeeper
+zookeeper_log_dir: /var/log/zookeeper
+zookeeper_install_path: /opt/zookeeper
+zookeeper_conf_dir: "{{ zookeeper_install_path }}/conf"
+
+
+# Connection properties
+client_port: 2181 # Deprecated
+init_limit: 5 # Deprecated
+sync_limit: 2 # Deprecated
+tick_time: 2000 # Deprecated
+zookeeper_client_port: "{{ client_port }}"
+zookeeper_init_limit: "{{ init_limit }}"
+zookeeper_sync_limit: "{{ sync_limit }}"
+zookeeper_tick_time: "{{ tick_time }}"
+
+zookeeper_autopurge_purgeInterval: 0
+zookeeper_autopurge_snapRetainCount: 10
+
+# Java options
+zookeeper_jmx_enabled: true
+zookeeper_jmx_port: 1099
+zookeeper_java_opts: "-Djava.net.preferIPv4Stack=true"
+
+# Rolling file appender setttings
+zookeeper_rolling_log_file_max_size: 10MB
+zookeeper_max_rolling_log_file_count: 10
+
+# List of dict (i.e. {zookeeper_hosts:[{host:,id:},{host:,id:},...]})
+zookeeper_hosts:
+  - host: "{{inventory_hostname}}" # the machine running
+    id: 1
+
+# Dict of ENV settings to be written into the (optional) conf/zookeeper-env.sh
+zookeeper_env: {}
+
+# Controls Zookeeper myid generation
+zookeeper_force_myid: yes
+
+zookeeper_force_reinstall: false
