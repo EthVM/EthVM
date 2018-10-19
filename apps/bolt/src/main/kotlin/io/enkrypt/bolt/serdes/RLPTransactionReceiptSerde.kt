@@ -1,4 +1,4 @@
-package io.enkrypt.bolt.kafka.serdes
+package io.enkrypt.bolt.serdes
 
 import org.apache.kafka.common.errors.SerializationException
 import org.apache.kafka.common.serialization.Deserializer
@@ -37,7 +37,7 @@ class RLPTransactionDeserializer : Deserializer<Transaction> {
   override fun configure(configs: Map<String, *>, isKey: Boolean) {}
 
   override fun deserialize(topic: String, data: ByteArray?): Transaction? {
-    if (data == null || data.isEmpty()) {
+    if (data == null) {
       return null
     }
     try {

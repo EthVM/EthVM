@@ -1,4 +1,5 @@
 export interface PendingTxLayout {
+  hash?: string
   nonce: Buffer
   from: string
   to: string

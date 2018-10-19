@@ -1,5 +1,4 @@
 export interface PendingTx {
-  hash?: string
   nonce: Buffer
   from: string
   to: string
