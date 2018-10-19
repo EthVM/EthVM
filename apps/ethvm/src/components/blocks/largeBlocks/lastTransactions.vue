@@ -81,9 +81,9 @@
           <v-flex xs8>
             <v-layout column>
               <v-flex xs12>
-                <!-- <p class="text-truncate">
+                <p class="text-truncate">
                   <router-link class="accent--text " :to="'/tx/'+tx.getHash()">{{tx.getHash()}}</router-link>
-                </p> -->
+                </p>
               </v-flex>
               <v-flex xs12>
                 <v-layout row>

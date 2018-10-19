@@ -13,7 +13,7 @@ export class PendingTx {
   }
 
   public getID() : string{
-    return this.pTx.from + this.pTx.to + this.pTx.nonce.toString('utf8')
+    return this.pTx.hash
   }
 
   public getHash(): string {

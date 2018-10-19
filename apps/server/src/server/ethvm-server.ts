@@ -160,28 +160,35 @@ export class EthVMServer {
   private onBlockEvent = (event: StreamingEvent): void => {
     const { op, key, value } = event
 
-    logger.info(`EthVMServer - onBlockEvent / Op: ${op} - Number: ${key} - Hash: ${value.hash}`)
+    const block = value as Block
 
-    // Save state root if defined
-    if (value && value.header && value.header.stateRoot) {
-      this.vmService.setStateRoot(value.header.stateRoot)
+    logger.info(`EthVMServer - onBlockEvent / Op: ${op}, Block Hash: ${value}, `)
+
+    if (op !== 'delete') {
+      logger.info(`EthVMServer - onBlockEvent / value: ${value},  `)
+
+      if (value && value.header && value.header.stateRoot) {
+        try {
+          this.vmService.setStateRoot(block.header.stateRoot)
+        } catch (e) {
+          logger.error(`EthVMServer - onBlockEvent  / setStateRoot err : ${e},  `)
+        }
+      }
+
+      const txs = value.transactions || []
+      if (txs.length > 0) {
+        txs.forEach(tx => {
+          const txHash = tx.hash
+          this.io.to(txHash).emit(txHash + '_update', tx)
+        })
+        const txEvent: StreamingEvent = { op: event.op, key: event.key, value: txs }
+        this.io.to('txs').emit('newTx', txEvent)
+        // this.ds.putTransactions(txs)
+      }
+      event.value.transactions = []
+      event.value.uncles = []
     }
-
-    // const smallBlock = mappers.toSmallBlock(block)
-
-    // // Send to client
-    // this.io.to(blockHash).emit(blockHash + '_update', smallBlock)
-    // this.io.to('blocks').emit('newBlock', smallBlock)
-
-    // const txs = block.transactions || []
-    // if (txs.length > 0) {
-    //   txs.forEach(tx => {
-    //     const txHash = tx.hash
-    //     this.io.to(txHash).emit(txHash + '_update', tx)
-    //   })
-    //   this.io.to('txs').emit('newTx', txs)
-    //   this.ds.putTransactions(txs)
-    // }
+    this.io.to('blocks').emit('newBlock', event)
   }
 
   private onAccountEvent = (event: StreamingEvent): void => {
@@ -193,6 +200,8 @@ export class EthVMServer {
   private onPendingTxEvent = (event: StreamingEvent): void => {
     const { op, key, value } = event
 
-    logger.info(`EthVMServer - onPendingTxEvent / Op: ${op} - Hash: ${value.hash}`)
+    logger.info(`EthVMServer - onPendingTxEvent / Op: ${op}, Pending Tx Hash: ${value.hash}`)
+
+    this.io.to('pendingTxs').emit('newpTx', event)
   }
 }
