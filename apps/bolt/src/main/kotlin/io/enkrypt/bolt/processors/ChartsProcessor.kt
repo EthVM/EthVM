@@ -229,7 +229,7 @@ class StatisticMongoProcessor : MongoProcessor<Date, Pair<String, Long>>() {
 
       UpdateOneModel<Document>(filter, Document(
         mapOf("\$set" to Document(
-         oggin mapOf(
+         mapOf(
             "name" to name,
             "date" to date,
             "value" to value)

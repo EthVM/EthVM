@@ -24,6 +24,7 @@ fun BlockStatistics?.toDocument(): Document? {
       mapOf(
         "successfulTxs" to numSuccessfulTxs,
         "failedTxs" to numFailedTxs,
+        "pendingTxs" to numPendingTxs,
         "txs" to totalTxs,
         "internalTxs" to totalInternalTxs,
         "totalGasPrice" to totalGasPrice.toByteArray(),

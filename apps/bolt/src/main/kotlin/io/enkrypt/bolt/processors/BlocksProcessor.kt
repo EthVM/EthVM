@@ -79,9 +79,6 @@ class BlocksProcessor : AbstractBaseProcessor() {
     super.start()
   }
 
-  companion object {
-    private const val UNIQUE_BLOCKS_STORE = "unique-blocks-store"
-  }
 }
 
 
