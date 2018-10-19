@@ -35,7 +35,7 @@ dependencies {
   implementation(kotlin("stdlib"))
 
   // Ethereumj
-  implementation("org.ethereum:ethereumj-core:1.10.0@ethvm.1-RELEASE")
+  implementation(group = "org.ethereum", name ="ethereumj-core", version = "1.10.0@ethvm.1-RELEASE")
 
   // Kafka
   implementation("org.apache.kafka:kafka-streams:2.0.0")
