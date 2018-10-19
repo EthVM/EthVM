@@ -25,6 +25,7 @@ fun BlockStatistics?.toDocument(): Document? {
         "successfulTxs" to numSuccessfulTxs,
         "failedTxs" to numFailedTxs,
         "pendingTxs" to numPendingTxs,
+        "processingTimeMs" to processingTimeMs,
         "txs" to totalTxs,
         "internalTxs" to totalInternalTxs,
         "totalGasPrice" to totalGasPrice.toByteArray(),
