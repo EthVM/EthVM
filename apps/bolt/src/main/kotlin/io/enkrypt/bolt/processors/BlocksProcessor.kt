@@ -22,10 +22,13 @@ import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.Produced
+import org.apache.kafka.streams.kstream.Transformer
 import org.apache.kafka.streams.processor.Cancellable
 import org.apache.kafka.streams.processor.ProcessorContext
 import org.apache.kafka.streams.processor.PunctuationType
 import org.apache.kafka.streams.processor.TimestampExtractor
+import org.apache.kafka.streams.state.KeyValueStore
+import org.apache.kafka.streams.state.Stores
 import org.bson.Document
 import org.ethereum.core.BlockSummary
 import org.ethereum.util.ByteUtil
@@ -59,15 +62,9 @@ class BlocksProcessor : AbstractBaseProcessor() {
     val (blocks) = appConfig.topicsConfig
 
     builder
-      .stream(
-        blocks,
-        Consumed.with(Serdes.ByteArray(), blockSerde).withTimestampExtractor(BlockSummaryTimestampExtractor())
-      )
-      .map { k, v -> KeyValue(ByteUtil.byteArrayToLong(k), v) }
-      .transform<Long, BlockSummary>({ get<BlockMongoTransformer>() }, null)
-      .transform<Long, BlockSummary>({ get<TokenDetectorTransformer>() }, null)
-      .mapValues { v -> v.block.hash.toHex() }
-      .to(appConfig.topicsConfig.processedBlocks, Produced.with(Serdes.Long(), Serdes.String()))
+      .stream(blocks, Consumed.with(Serdes.ByteArray(), blockSerde))
+      .transform<ByteArray, BlockSummary>({ get<BlockMongoTransformer>() }, null)
+      .transform<ByteArray, BlockSummary>({ get<TokenDetectorTransformer>() }, null)
 
     // Generate the topology
     val topology = builder.build()
@@ -81,16 +78,18 @@ class BlocksProcessor : AbstractBaseProcessor() {
     logger.info { "Starting ${this.javaClass.simpleName}..." }
     super.start()
   }
+
 }
 
-class BlockMongoTransformer : MongoTransformer<Long, BlockSummary>() {
+
+class BlockMongoTransformer : MongoTransformer<ByteArray, BlockSummary?>() {
 
   private val blocksCollection: MongoCollection<Document>by lazy {
     mongoDB.getCollection(config.mongo.blocksCollection)
   }
 
   override val batchSize = 50
-  private val batch: MutableList<BlockSummary> = ArrayList()
+  private val batch: MutableList<Pair<ByteArray, BlockSummary>> = ArrayList()
 
   private var scheduledWrite: Cancellable? = null
 
@@ -99,9 +98,11 @@ class BlockMongoTransformer : MongoTransformer<Long, BlockSummary>() {
     this.scheduledWrite = context.schedule(timeoutMs, PunctuationType.WALL_CLOCK_TIME) { _ -> tryToWrite() }
   }
 
-  override fun transform(key: Long?, value: BlockSummary?): KeyValue<Long, BlockSummary>? {
+  override fun transform(key: ByteArray, value: BlockSummary?): KeyValue<ByteArray, BlockSummary?>? {
 
-    batch.add(value!!)
+    if(value != null) {
+      batch.add(Pair(key, value))
+    }
 
     if (batch.size == batchSize) {
       tryToWrite()
@@ -119,7 +120,10 @@ class BlockMongoTransformer : MongoTransformer<Long, BlockSummary>() {
 
     val startMs = System.currentTimeMillis()
 
-    val blocksOps = batch.map { summary ->
+    val blocksOps = batch.map { pair ->
+
+      val key = pair.first
+      val summary = pair.second
 
       val block = summary.block
 
@@ -139,7 +143,7 @@ class BlockMongoTransformer : MongoTransformer<Long, BlockSummary>() {
       blocksCollection.bulkWrite(blocksOps, bulkOptions)
 
       // forward to downstream processors and commit
-      batch.forEach { b -> context.forward(b.block.number, b) }
+      batch.forEach { pair -> context.forward(pair.first, pair.second) }
 
       val elapsedMs = System.currentTimeMillis() - startMs
       logger.debug { "${batch.size} blocks stored in $elapsedMs ms" }
@@ -162,7 +166,7 @@ class BlockMongoTransformer : MongoTransformer<Long, BlockSummary>() {
 
 }
 
-class TokenDetectorTransformer : MongoTransformer<Long, BlockSummary>() {
+class TokenDetectorTransformer : MongoTransformer<ByteArray, BlockSummary?>() {
 
   private val accountsCollection: MongoCollection<Document>by lazy {
     mongoDB.getCollection(config.mongo.accountsCollection)
@@ -178,7 +182,9 @@ class TokenDetectorTransformer : MongoTransformer<Long, BlockSummary>() {
     this.scheduledWrite = context.schedule(timeoutMs, PunctuationType.WALL_CLOCK_TIME) { _ -> tryToWrite() }
   }
 
-  override fun transform(key: Long, value: BlockSummary): KeyValue<Long, BlockSummary> {
+  override fun transform(key: ByteArray, value: BlockSummary?): KeyValue<ByteArray, BlockSummary?>? {
+
+    if(value == null) return null
 
     val block = value.block
     val txs = block?.transactionsList ?: emptyList()
