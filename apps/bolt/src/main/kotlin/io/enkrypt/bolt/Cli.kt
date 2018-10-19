@@ -4,11 +4,14 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.mongodb.MongoClient
+import com.mongodb.MongoClientOptions
 import com.mongodb.MongoClientURI
+import io.enkrypt.bolt.mongo.codecs.BigIntegerCodec
 import io.enkrypt.bolt.processors.*
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
+import org.bson.codecs.configuration.CodecRegistries
 import org.koin.dsl.module.module
 import org.koin.standalone.StandAloneContext.startKoin
 import java.util.Properties
@@ -95,7 +98,14 @@ class Cli : CliktCommand() {
       )
     }
 
-    single { MongoClientURI(mongoUri) }
+    single {
+      val options = MongoClientOptions.Builder()
+        .codecRegistry(CodecRegistries.fromRegistries(
+          MongoClient.getDefaultCodecRegistry(),
+          CodecRegistries.fromCodecs(BigIntegerCodec())
+        ))
+      MongoClientURI(mongoUri, options)
+    }
     single { MongoClient(get<MongoClientURI>()) }
     single {
       val client = get<MongoClient>()

@@ -28,10 +28,10 @@ fun BlockStatistics?.toDocument(): Document? {
         "processingTimeMs" to processingTimeMs,
         "txs" to totalTxs,
         "internalTxs" to totalInternalTxs,
-        "totalGasPrice" to totalGasPrice.toByteArray(),
-        "avgGasPrice" to avgGasPrice.toByteArray(),
-        "totalTxsFees" to totalTxsFees.toByteArray(),
-        "avgTxsFees" to avgTxsFees.toByteArray()
+        "totalGasPrice" to totalGasPrice,
+        "avgGasPrice" to avgGasPrice,
+        "totalTxsFees" to totalTxsFees,
+        "avgTxsFees" to avgTxsFees
       )
     )
   }
@@ -46,7 +46,7 @@ fun BlockHeader?.toDocument(summary: BlockSummary) = Document(
     "miner" to this?.coinbase?.toHex(),
     "rewards" to summary.rewards?.entries?.associate { it.key.toHex() to it.value.toByteArray() },
     "difficulty" to this?.difficulty,
-    "totalDifficulty" to summary.totalDifficulty.toByteArray(),
+    "totalDifficulty" to summary.totalDifficulty,
     "stateRoot" to this?.stateRoot,
     "transactionsRoot" to this?.txTrieRoot,
     "receiptsRoot" to this?.receiptsRoot,
@@ -77,19 +77,19 @@ fun Transaction?.toDocument(pos: Int? = null, receipt: TransactionReceipt?, exec
       "to" to this?.receiveAddress?.toHex(),
       "contractAddress" to this?.contractAddress?.toHex(),
       "status" to receipt?.isTxStatusOK,
-      "fee" to executionSummary?.fee?.toByteArray(),
+      "fee" to executionSummary?.fee,
       "value" to this?.value,
       "data" to this?.data,
       "logs" to executionSummary?.logs?.map { it.toDocument() },
       "gasPrice" to this?.gasPrice,
       "gasLimit" to this?.gasLimit,
-      "gasUsed" to executionSummary?.gasUsed?.toByteArray(),
-      "gasRefund" to executionSummary?.gasRefund?.toByteArray(),
-      "gasLeftover" to executionSummary?.gasLeftover?.toByteArray(),
+      "gasUsed" to executionSummary?.gasUsed,
+      "gasRefund" to executionSummary?.gasRefund,
+      "gasLeftover" to executionSummary?.gasLeftover,
       "traces" to internalTxs.map { it.toDocument() },
       "v" to this?.signature?.v,
-      "r" to this?.signature?.r?.toByteArray(),
-      "s" to this?.signature?.s?.toByteArray()
+      "r" to this?.signature?.r,
+      "s" to this?.signature?.s
     )
   )
 }
