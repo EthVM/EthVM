@@ -3,7 +3,7 @@ import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/serv
 import { Uncle } from '@app/server/modules/uncles'
 
 const getUnclesEvent: SocketEvent = {
-  id: 'uncles',
+  id: 'uncles', // get-uncles
 
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = pastBlockPayloadValidator(payload) as boolean

@@ -3,7 +3,7 @@ import { ethCallPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
 
 const ethCallEvent: SocketEvent = {
-  id: 'ethCall', // new_id: eth_call
+  id: 'ethCall', // new_id: eth-call
 
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = ethCallPayloadValidator(payload) as boolean

@@ -3,7 +3,8 @@ import { exchangeRatePayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
 
 const getExchangeRatesEvent: SocketEvent = {
-  id: 'getTicker', // new_name: exchange_rate
+  id: 'getTicker', // new_name: get-exchange-rate
+
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = exchangeRatePayloadValidator(payload) as boolean
     return {

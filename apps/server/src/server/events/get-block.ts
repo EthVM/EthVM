@@ -1,9 +1,9 @@
 import { blockPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
-import { Uncle } from '@app/server/modules/uncles'
+import { Block } from '@app/server/modules/blocks'
 
-const getUncleEvent: SocketEvent = {
-  id: 'uncle',
+const getBlockEvent: SocketEvent = {
+  id: 'getBlock', // new_name: get-block
 
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = blockPayloadValidator(payload) as boolean
@@ -13,7 +13,7 @@ const getUncleEvent: SocketEvent = {
     }
   },
 
-  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Uncle | null> => server.uncleService.getUncle(payload.hash)
+  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Block | null> => server.blockService.getBlock(payload.hash)
 }
 
-export default getUncleEvent
+export default getBlockEvent

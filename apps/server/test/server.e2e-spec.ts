@@ -1,5 +1,4 @@
 import config from '@app/config'
-import { logger } from '@app/logger'
 import { errors } from '@app/server/core/exceptions'
 import { MongoStreamer, Streamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
@@ -20,7 +19,7 @@ import * as io from 'socket.io-client'
 import { mock } from 'ts-mockito'
 import { MockExchangeRepository, VmServiceImpl } from './mocks'
 
-jest.setTimeout(50000)
+jest.setTimeout(100000)
 
 const redisClient = new Redis({
   host: config.get('data_stores.redis.host'),
@@ -119,10 +118,11 @@ describe('ethvm-server-events', () => {
       for (const input of inputs) {
         const data = await callEvent('getTxs', input, client)
         expect(data).to.have.lengthOf(10)
+        const b = Buffer.from(data[0].gasUsed)
       }
     })
 
-    it('should return err ', async () => {
+    it.skip('should return err ', async () => {
       const inputs = [
         '',
         '0x',

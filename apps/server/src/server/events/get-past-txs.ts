@@ -3,7 +3,7 @@ import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/serv
 import { Tx } from '@app/server/modules/txs'
 
 const pastTxsEvent: SocketEvent = {
-  id: 'pastTxs', // new_name: past_txs
+  id: 'pastTxs', // new_name: get-past-txs
 
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = pastTxsPayloadValidator(payload) as boolean
