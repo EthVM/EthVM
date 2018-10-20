@@ -33,7 +33,7 @@
 
 - name: "Render and write out kafka configuration files"
   template: src=usr/local/kafka/config/{{ item }}.j2 dest="{{ kafka_conf_dir }}/{{ item }}" mode=0640 owner={{ kafka_user }} group={{ kafka_group }}
-  sudo: yes
+  become: true
   with_items:
     - server.properties
     - producer.properties
@@ -44,20 +44,20 @@
 
 - name: "Render and write out kafka user env file"
   template: src=etc/defaults/kafka.j2 dest="/etc/default/kafka" mode=0644 owner=root group=root
-  sudo: yes
+  become: true
   notify:
     - restart kafka
 
 - name: "Enable kafka system service"
   service: name=kafka state=started enabled=yes
-  sudo: yes
+  become: true
   tags:
     - kafka-install
 
 - name: "Link alternate logs directory and touch output files"
   shell: "( test ! -e /usr/local/kafka/logs || rm -rf /usr/local/kafka/logs ) && ln -s {{ kafka_log_dir }} /usr/local/kafka/logs && touch {{ kafka_log_dir }}/state-change.log {{ kafka_log_dir }}/kafkaServer.out && chown {{ kafka_user }}:{{ kafka_group }} {{ kafka_log_dir }}/state-change.log {{ kafka_log_dir }}/kafkaServer.out"
   changed_when: False
-  sudo: yes
+  become: true
 
 - meta: flush_handlers
 

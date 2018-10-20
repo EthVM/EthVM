@@ -6,14 +6,14 @@ kafka_zookeeper_port: 2181
 kafka_hosts: # <-- must be overridden further up the chain
 # e.g. [ 'srvr1', 'srvr2' ]
 
-kafka_version: "0.11.0.2"
+kafka_version: "2.0.0"
 
-kafka_scala_version: "2.11"
+kafka_scala_version: "2.12"
 # NB: 2.11 is recommended at https://kafka.apache.org/downloads.html.
 
 kafka_java_enabled: true
 # set false if the role should not handle the java dependency
-kafka_java_version: "openjdk-7-jre-headless"
+kafka_java_version: "openjdk-8-jre-headless"
 
 # Use this selector to use a mirror for a "current" version or an "archived" one
 kafka_mirror_selector: "current"
@@ -110,7 +110,7 @@ kafka_server_defaults:
   log_delete_delay_ms:
   log_flush_offset_checkpoint_interval_ms:
   log_segment_delete_delay_ms:
-  auto_create_topics_enable:
+  auto_create_topics_enable: "false"
   controller_socket_timeout_ms:
   controller_message_queue_size:
   default_replication_factor:

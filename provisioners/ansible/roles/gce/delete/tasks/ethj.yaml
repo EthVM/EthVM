@@ -1,7 +1,7 @@
 ---
 
 - name: Check if EthereumJ instances are created on GCP
-  command: "gcloud compute instances list --filter='name:{{ name }}' --format='value(status)'"
+  command: "gcloud compute instances list --filter='name:{{ name }}-{{ gcp.ethereumj.name }}' --format='value(status)'"
   register: instance_created
   changed_when: false
   ignore_errors: yes

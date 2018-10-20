@@ -1,20 +1,20 @@
 ---
 
-- name: Check if Mongo instances are created on GCP
-  command: "gcloud compute instances list --filter='name:{{ name }}-{{ gcp.mongo.name }}' --format='value(status)'"
+- name: Check if Bolt instances are created on GCP
+  command: "gcloud compute instances list --filter='name:{{ name }}-{{ gcp.bolt.name }}' --format='value(status)'"
   register: instance_created
   changed_when: false
   ignore_errors: yes
 
-- name: Set Mongo instance names
+- name: Set Bolt instance names
   debug:
-    msg: "{{ name }}-{{ gcp.mongo.name }}-{{ '%d'|format(item|int) }}"
+    msg: "{{ name }}-{{ gcp.bolt.name }}-{{ '%d'|format(item|int) }}"
   register: instance_names
   with_sequence:
-    - "start=1 end={{ gcp.instances_count }}"
+    - "start=1 end={{ gcp.bolt.instances }}"
   when: instance_created.stdout != ""
 
-- name: Delete Mongo instances on GCP
+- name: Delete Bolt instances on GCP
   command: >
     gcloud compute instances delete
     {{ hostvars.localhost.instance_names.results | map(attribute='msg') | list | join(' ') }}

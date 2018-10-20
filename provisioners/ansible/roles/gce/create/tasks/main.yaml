@@ -14,3 +14,4 @@
 - include: ethj.yaml
 - include: mongo.yaml
 - include: server.yaml
+- include: bolt.yaml

@@ -1,6 +1,6 @@
 ---
 ## General
-zookeeper_version: 3.4.12
+zookeeper_version: 3.4.13
 
 ## Service options
 
@@ -34,7 +34,7 @@ zookeeper_autopurge_purgeInterval: 0
 zookeeper_autopurge_snapRetainCount: 10
 
 # Java options
-zookeeper_jmx_enabled: true
+zookeeper_jmx_enabled: false
 zookeeper_jmx_port: 1099
 zookeeper_java_opts: "-Djava.net.preferIPv4Stack=true"
 

@@ -1,20 +1,20 @@
 ---
 
-- name: Check if EthereumJ instances are created on GCP
-  command: "gcloud compute instances list --filter='name:{{ name }}' --format='value(status)'"
+- name: Check if Server instances are created on GCP
+  command: "gcloud compute instances list --filter='name:{{ name }}-{{ gcp.server.name }}' --format='value(status)'"
   register: instance_created
   changed_when: false
   ignore_errors: yes
 
-- name: Set EthereumJ instance names
+- name: Set Server instance names
   debug:
-    msg: "{{ name }}-{{ '%d'|format(item|int) }}"
+    msg: "{{ name }}-{{ gcp.server.name }}-{{ '%d'|format(item|int) }}"
   register: instance_names
   with_sequence:
     - "start=1 end={{ gcp.instances_count }}"
   when: instance_created.stdout != ""
 
-- name: Delete EthereumJ instances on GCP
+- name: Delete Server instances on GCP
   command: >
     gcloud compute instances delete
     {{ hostvars.localhost.instance_names.results | map(attribute='msg') | list | join(' ') }}

@@ -73,4 +73,4 @@ mongodb_users:
     state: 'present'
 
 # Define MongoDB version to install
-mongodb_version: '3.2'
+mongodb_version: '4.0'

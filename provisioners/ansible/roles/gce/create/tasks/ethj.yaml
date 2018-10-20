@@ -26,6 +26,7 @@
     "{{ gcp.can_ip_forward}}"
     --zone="{{ gcp.zone }}"
     --metadata-from-file ssh-keys={{ gcp.ssh_private_key_file }}
+    --tags="{{ gcp.ethj.name }}"
   changed_when: false
   when: instance_created.stdout == ""
 
