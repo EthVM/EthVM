@@ -172,16 +172,13 @@
   },
 
   "footer": {
-    "links": "Quick Links",
-    "find": "Help",
+    "dicover": "Discover",
+    "privPolicy": "Privacy Policy",
     "donate": "Donate",
     "btc": "BTC",
     "ens": "mewtopia.eth",
     "copy": "Copyright 2018 All rights reserved by ",
-    "enkrypt": "enKrypt LLC",
-    "email": "support@ethvm.com",
-
-    "aboutPar": "EthVM is a free and open source interface for exploring and evaluating real time Ethereum blocks, transactions and more."
+    "enkrypt": "enKrypt LLC"
   },
 
   "footnote": {

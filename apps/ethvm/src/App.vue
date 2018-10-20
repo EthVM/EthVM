@@ -3,8 +3,7 @@
     <navigation></navigation>
     <v-content>
       <router-view :key="$route.fullPath" />
-      <!-- FOOTER -->
-      <!-- <block-footer></block-footer> -->
+      <block-footer></block-footer>
     </v-content>
   </v-app>
 </template>
