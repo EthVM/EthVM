@@ -4,7 +4,7 @@ import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/serv
 import { Tx } from '@app/server/modules/txs'
 
 const getTxEvent: SocketEvent = {
-  id: 'getTx', // new_name: tx
+  id: 'getTx', // new_name: get-tx
 
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = txPayloadValidator(payload) as boolean

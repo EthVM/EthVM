@@ -1,5 +1,5 @@
 {
-  "testEnvironment": "node",
+  "testEnvironment": "./test/ethvm-test-environment.js",
   "rootDir": "..",
   "moduleNameMapper": {
     "^@app/(.*)": "<rootDir>/src/$1"

@@ -1,5 +1,4 @@
 import config from '@app/config'
-import { logger } from '@app/logger'
 import { errors } from '@app/server/core/exceptions'
 import { MongoStreamer, Streamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
@@ -119,6 +118,7 @@ describe('ethvm-server-events', () => {
       for (const input of inputs) {
         const data = await callEvent('getTxs', input, client)
         expect(data).to.have.lengthOf(10)
+        const b = Buffer.from(data[0].gasUsed)
       }
     })
 

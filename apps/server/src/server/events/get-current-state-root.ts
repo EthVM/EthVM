@@ -1,7 +1,7 @@
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
 
 const getCurrentStateRootEvent: SocketEvent = {
-  id: 'getCurrentStateRoot', // new_name: current_state_root
+  id: 'getCurrentStateRoot', // new_name: get-current-state-root
 
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     return {
