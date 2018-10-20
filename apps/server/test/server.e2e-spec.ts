@@ -19,7 +19,7 @@ import * as io from 'socket.io-client'
 import { mock } from 'ts-mockito'
 import { MockExchangeRepository, VmServiceImpl } from './mocks'
 
-jest.setTimeout(100000)
+jest.setTimeout(50000)
 
 const redisClient = new Redis({
   host: config.get('data_stores.redis.host'),
@@ -122,7 +122,7 @@ describe('ethvm-server-events', () => {
       }
     })
 
-    it.skip('should return err ', async () => {
+    it('should return err ', async () => {
       const inputs = [
         '',
         '0x',

@@ -9,12 +9,12 @@ const toTx = (tx: any): Tx => {
   if (tx.logs.topics) {
     const topics: string[] = []
     t.topics.forEach(topic => {
-      topics.push(topic.buffer.toString('base64'))
+      topics.push(topic.buffer)
     })
     t.logs.topics = topics
   }
   if (tx.logs.data) {
-    t.logs.data = tx.logs.data.buffer.toString('base64')
+    t.logs.data = tx.logs.data.buffer
   }
 
   t.traces = []
@@ -38,25 +38,25 @@ const toTx = (tx: any): Tx => {
       trace.rejected = trace.rejected
     }
     if (trace.from) {
-      trace.from = trace.from.buffer.toString('base64')
+      trace.from = trace.from.buffer
     }
     if (trace.to) {
-      trace.to = trace.to.buffer.toString('base64')
+      trace.to = trace.to.buffer
     }
     if (trace.value) {
-      trace.value = trace.value.buffer.toString('base64')
+      trace.value = trace.value.buffer
     }
     if (trace.data) {
-      trace.data = trace.data.buffer.toString('base64')
+      trace.data = trace.data.buffer
     }
     if (trace.gas) {
-      trace.gas = trace.gas.buffer.toString('base64')
+      trace.gas = trace.gas.buffer
     }
     if (trace.gasPrice) {
-      trace.gasPrice = trace.gasPrice.buffer.toString('base64')
+      trace.gasPrice = trace.gasPrice.buffer
     }
     if (trace.nonce) {
-      trace.nonce = trace.nonce.buffer.toString('base64')
+      trace.nonce = trace.nonce.buffer
     }
     t.traces.push(trace)
   })
@@ -91,42 +91,42 @@ const toTx = (tx: any): Tx => {
     t.status = tx.status
   }
   if (tx.data) {
-    t.data = tx.data.buffer.toString('base64')
+    t.data = tx.data.buffer
   }
   if (tx.fee) {
-    t.fee = tx.fee.buffer.toString('base64')
+    t.fee = tx.fee.buffer
   }
   if (tx.result) {
     t.result = tx.result
   }
   if (tx.gasPrice) {
-    t.gasPrice = tx.gasPrice.buffer.toString('base64')
+    t.gasPrice = tx.gasPrice.buffer
   }
   if (tx.gasLimit) {
-    t.gasLimit = tx.gasLimit.buffer.toString('base64')
+    t.gasLimit = tx.gasLimit.buffer
   }
 
   if (tx.gasUsed) {
-    t.gasUsed = tx.gasUsed.buffer.toString('base64')
+    t.gasUsed = tx.gasUsed.buffer
   }
   if (tx.gasRefund) {
-    t.gasRefund = tx.gasRefund.buffer.toString('base64')
+    t.gasRefund = tx.gasRefund.buffer
   }
   if (tx.gasLeftover) {
-    t.gasLeftover = tx.gasLeftover.buffer.toString('base64')
+    t.gasLeftover = tx.gasLeftover.buffer
   }
 
   if (tx.v) {
     t.v = tx.v
   }
   if (tx.r) {
-    t.r = tx.r.buffer.toString('base64')
+    t.r = tx.r.buffer
   }
   if (tx.s) {
-    t.s = tx.s.buffer.toString('base64')
+    t.s = tx.s.buffer
   }
   if (tx.value) {
-    t.value = tx.value.buffer.toString('base64')
+    t.value = tx.value.buffer
   }
 
   return t
