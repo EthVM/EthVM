@@ -1,0 +1,33 @@
+---
+
+- name: Check if API GCP instances has been created
+  command: "gcloud compute instances list --filter='name:{{ name }}-{{ gcp.api.name }}' --format='value(status)'"
+  register: instance_created
+  changed_when: false
+  ignore_errors: yes
+
+- name: Create API instances on GCP
+  command: >
+    gcloud compute instances create
+    {{ name }}-{{ gcp.api.name }}
+    --zone="{{ gcp.zone }}"
+    --image-family="{{ gcp.image_family }}"
+    --image-project="{{ gcp.image_project }}"
+    --machine-type="{{ gcp.api.machine_type }}"
+    --boot-disk-size="{{gcp.api.disks.size }}"
+    --boot-disk-type="{{ gcp.api.disks.type }}"
+    --metadata-from-file ssh-keys={{ gcp.ssh_private_key_file }}
+    --tags="{{ gcp.api.name }}"
+    --can-ip-forward
+  changed_when: false
+  when: instance_created.stdout == ""
+
+- name: Start API instances if it's on TERMINATED status
+  command: gcloud compute instances start "{{ name }}-{{ gcp.api.name }}"
+  changed_when: false
+  when: instance_created.stdout == "TERMINATED"
+
+- name: Get metadata API about instances
+  command: gcloud compute instances list --filter='name:{{ name }}-{{ gcp.api.name }}' --format="value[separator=','](name, networkInterfaces[0].networkIP, networkInterfaces[0].accessConfigs[0].natIP)"
+  register: server_instances_metadata
+  ignore_errors: yes

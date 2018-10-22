@@ -1,4 +1,39 @@
-{% for value in hostvars.localhost.instances_metadata.stdout_lines %}
+{% if hostvars.localhost.server_instances_metadata is defined %}
+[server-hosts]
+{% for value in hostvars.localhost.server_instances_metadata.stdout_lines %}
 {% set instance_metadata = value.split(',') %}
 {{ instance_metadata[0] }} ansible_host={{ instance_metadata[2] }} internal_ip={{ instance_metadata[1] }}
 {% endfor %}
+{% endif -%}
+
+{% if hostvars.localhost.mongo_instances_metadata is defined %}
+[mongo-hosts]
+{% for value in hostvars.localhost.mongo_instances_metadata.stdout_lines %}
+{% set instance_metadata = value.split(',') %}
+{{ instance_metadata[0] }} ansible_host={{ instance_metadata[2] }} internal_ip={{ instance_metadata[1] }}
+{% endfor %}
+{% endif -%}
+
+{% if hostvars.localhost.kafka_instances_metadata is defined %}
+[kafka-hosts]
+{% for value in hostvars.localhost.kafka_instances_metadata.stdout_lines %}
+{% set instance_metadata = value.split(',') %}
+{{ instance_metadata[0] }} ansible_host={{ instance_metadata[2] }} internal_ip={{ instance_metadata[1] }}
+{% endfor %}
+{% endif -%}
+
+{% if hostvars.localhost.ethj_instances_metadata is defined %}
+[ethj-hosts]
+{% for value in hostvars.localhost.ethj_instances_metadata.stdout_lines %}
+{% set instance_metadata = value.split(',') %}
+{{ instance_metadata[0] }} ansible_host={{ instance_metadata[2] }} internal_ip={{ instance_metadata[1] }}
+{% endfor %}
+{% endif -%}
+
+{% if hostvars.localhost.bolt_instances_metadata is defined %}
+[bolt-hosts]
+{% for value in hostvars.localhost.bolt_instances_metadata.stdout_lines %}
+{% set instance_metadata = value.split(',') %}
+{{ instance_metadata[0] }} ansible_host={{ instance_metadata[2] }} internal_ip={{ instance_metadata[1] }}
+{% endfor %}
+{% endif -%}

@@ -6,37 +6,60 @@ gcp:
   zone: us-central1-a
   image_family: ubuntu-1804-lts
   image_project: ubuntu-os-cloud
-  boot_disk_size: 10GB
+  boot_disk_size: 200GB
   boot_disk_type: pd-standard
-  can_ip_forward: --can-ip-forward
+  inventory_output_file: ./inventory/gcp.ini
   ssh_private_key_file: "{{ lookup('env', 'HOME') }}/.ssh/gcp_ethvm.pub"
+
+  api:
+    name: api
+    machine_type: n1-standard-4
+    disks:
+      type: pd-ssd
+      size: 200GB
+      autodelete: true
 
   kafka:
     name: kafka-broker
     machine_type: n1-standard-4
     instances: 3
-    inventory_output_file: ./inventory/output-kafka.ini
+    disks:
+      kafka:
+        name: kafka-ssd
+        type: pd-ssd
+        size: 500GB
+        autodelete: true
+      zookeeper:
+        name: zookeeper-ssd
+        type: pd-ssd
+        size: 100Gb
+        autodelete: true
 
   bolt:
     name: bolt
     machine_type: n1-standard-4
     instances: 2
-    inventory_output_file: ./inventory/bolt-inventory.ini
+    disks:
+      name: bolt-ssd
+      type: pd-ssd
+      size: 500GB
+      autodelete: true
 
   mongo:
     name: mongodb
     machine_type: n1-standard-4
     instances: 2
-    inventory_output_file: ./inventory/mongodb-inventory.ini
+    disks:
+      name: mongo-ssd
+      type: pd-ssd
+      size: 500GB
+      autodelete: true
 
-  server:
-    name: server
-    machine_type: n1-standard-2
-    instances: 1
-    inventory_output_file: ./inventory/server-inventory.ini
-
-  ethereumj:
+  ethj:
     name: ethj
     machine_type: n1-standard-4
-    instances: 1
-    inventory_output_file: ./inventory/ethereumj-inventory.ini
+    disks:
+      name: ethj-ssd
+      type: pd-ssd
+      size: 1TB
+      autodelete: true

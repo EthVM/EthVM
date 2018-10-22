@@ -11,12 +11,10 @@
     msg: "{{ name }}-{{ gcp.mongo.name }}-{{ '%d'|format(item|int) }}"
   register: instance_names
   with_sequence:
-    - "start=1 end={{ gcp.instances_count }}"
+    - "start=1 end={{ gcp.mongo.instances }}"
   when: instance_created.stdout != ""
 
 - name: Delete Mongo instances on GCP
-  command: >
-    gcloud compute instances delete
-    {{ hostvars.localhost.instance_names.results | map(attribute='msg') | list | join(' ') }}
+  command: "gcloud compute instances delete {{ hostvars.localhost.instance_names.results | map(attribute='msg') | list | join(' ') }}"
   changed_when: false
   when: instance_created.stdout != ""

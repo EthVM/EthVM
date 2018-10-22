@@ -1,47 +1,107 @@
 ---
 
+## -----
+## Disks
+## -----
+
+## -- Kafka SSDs
+
+- name: Check if Kafka SSD disks has been created
+  command: "gcloud compute disks list --filter='name:{{ gcp.kafka.disks.kafka.name }}' --format='value(status)'"
+  register: kafka_disks_created
+  changed_when: false
+  ignore_errors: yes
+
+- name: Create Kafka SSD disk on GCP
+  command: "gcloud compute disks create {{ gcp.kafka.disks.kafka.name }}-{{ item }} --size='{{ gcp.kafka.disks.kafka.size }}' --type='{{ gcp.kafka.disks.kafka.type }}' --zone='{{ gcp.zone }}'"
+  changed_when: false
+  when: kafka_disks_created.stdout == ""
+  with_sequence: "start=1 end={{ gcp.kafka.instances }}"
+
+## -- Zookeeper SSDs
+
+- name: Check if Zookeeper disks has been created
+  command: "gcloud compute disks list --filter='name:{{ gcp.kafka.disks.zookeeper.name }}' --format='value(status)'"
+  register: zookeeper_disks_created
+  changed_when: false
+  ignore_errors: yes
+
+- name: Create Zookeeper SSD disk on GCP
+  command: "gcloud compute disks create {{ gcp.kafka.disks.zookeeper.name }}-{{ item }} --size='{{ gcp.kafka.disks.zookeeper.size }}' --type='{{ gcp.kafka.disks.zookeeper.type }}' --zone='{{ gcp.zone }}'"
+  changed_when: false
+  when: zookeeper_disks_created.stdout == ""
+  with_sequence: "start=1 end={{ gcp.kafka.instances }}"
+
+## ---
+## VMs
+## ---
+
+- name: Set Kafka GCP instances names
+  debug:
+    msg: "{{ name }}-{{ gcp.kafka.name }}-{{ '%d'|format(item|int) }}"
+  register: instance_names
+  with_sequence: "start=1 end={{ gcp.kafka.instances }}"
+
 - name: Check if Kafka GCP instances has been created
   command: "gcloud compute instances list --filter='name:{{ name }}-{{ gcp.kafka.name }}' --format='value(status)'"
   register: instance_created
   changed_when: false
   ignore_errors: yes
 
-- name: Set Kafka GCP instances names
-  debug:
-    msg: "{{ name }}-{{ gcp.kafka.name }}-{{ '%d'|format(item|int) }}"
-  register: instance_names
-  with_sequence:
-    - "start=1 end={{ gcp.kafka.instances }}"
-  when: instance_created.stdout == ""
-
 - name: Create Kafka instances on GCP
+  loop: "{{ hostvars.localhost.instance_names.results | map(attribute='msg') | list }}"
+  loop_control:
+    index_var: i
   command: >
     gcloud compute instances create
-    {{ hostvars.localhost.instance_names.results | map(attribute='msg') | list | join(' ') }}
-    --boot-disk-size="{{gcp.boot_disk_size}}"
-    --boot-disk-type="{{ gcp.boot_disk_type }}"
+    {{ item }}
+    --zone="{{ gcp.zone }}"
     --image-family="{{ gcp.image_family }}"
     --image-project="{{ gcp.image_project }}"
     --machine-type="{{ gcp.kafka.machine_type }}"
-    "{{ gcp.can_ip_forward}}"
-    --zone="{{ gcp.zone }}"
+    --boot-disk-size="{{gcp.boot_disk_size}}"
+    --boot-disk-type="{{ gcp.boot_disk_type }}"
     --metadata-from-file ssh-keys={{ gcp.ssh_private_key_file }}
     --tags="{{ gcp.kafka.name }}"
   changed_when: false
   when: instance_created.stdout == ""
 
-- name: Start Kafka instances if it's on TERMINATED status
+- name: Attaching Kafka SDD disks to Kafka instances on GCP
+  loop: "{{ hostvars.localhost.instance_names.results | map(attribute='msg') | list }}"
+  loop_control:
+    index_var: i
+  command: "gcloud compute instances attach-disk {{ item }} --disk='{{ gcp.kafka.disks.kafka.name }}-{{ i + 1 }}' --device-name='{{ gcp.kafka.disks.kafka.name }}-{{ i + 1 }}' --zone='{{ gcp.zone }}'"
+  changed_when: false
+  when: instance_created.stdout == ""
+
+- name: "Enabling autodelete Kafka SSD disks on GCP"
+  loop: "{{ hostvars.localhost.instance_names.results | map(attribute='msg') | list }}"
+  loop_control:
+    index_var: i
+  command: "gcloud compute instances set-disk-auto-delete {{ item }} --disk='{{ gcp.kafka.disks.kafka.name }}-{{ i + 1 }}' --auto-delete --zone='{{ gcp.zone }}'"
+  when: gcp.kafka.disks.kafka.autodelete == "true"
+
+- name: Attaching Zookeeper SDD disks to Kafka instances on GCP
+  loop: "{{ hostvars.localhost.instance_names.results | map(attribute='msg') | list }}"
+  loop_control:
+    index_var: i
+  command: "gcloud compute instances attach-disk {{ item }} --disk='{{ gcp.kafka.disks.zookeeper.name }}-{{ i + 1 }}' --device-name='{{ gcp.kafka.disks.zookeeper.name }}-{{ i + 1 }}' --zone='{{ gcp.zone }}'"
+  changed_when: false
+  when: instance_created.stdout == ""
+
+- name: "Enabling autodelete Zookeeper SSD disks on GCP"
+  loop: "{{ hostvars.localhost.instance_names.results | map(attribute='msg') | list }}"
+  loop_control:
+    index_var: i
+  command: "gcloud compute instances set-disk-auto-delete {{ item }} --disk='{{ gcp.kafka.disks.zookeeper.name }}-{{ i + 1 }}' --auto-delete --zone='{{ gcp.zone }}'"
+  when: instance_created.stdout == "" and gcp.kafka.disks.zookeeper.autodelete == "true"
+
+- name: Start Kafka instances on GCP if it's on TERMINATED status
   command: gcloud compute instances start "{{ name }}-{{ gcp.kafka.name }}"
   changed_when: false
   when: instance_created.stdout == "TERMINATED"
 
-- name: Get metadata about Kafka instances
+- name: Get metadata about Kafka GCP instances
   command: gcloud compute instances list --filter='name:{{ name }}-{{ gcp.kafka.name }}' --format="value[separator=','](name, networkInterfaces[0].networkIP, networkInterfaces[0].accessConfigs[0].natIP)"
-  register: instances_metadata
+  register: kafka_instances_metadata
   ignore_errors: yes
-
-- debug: msg="{{ instances_metadata.stdout }}"
-- name: "Generate {{ gcp.kafka.inventory_output_file }}"
-  template:
-    src: inventory.ini.j2
-    dest: "{{ gcp.kafka.inventory_output_file }}"

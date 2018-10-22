@@ -10,8 +10,22 @@
     msg: "Please make sure Google Cloud SDK is installed before executing the role."
   when: gcloud_installed is not successful
 
-- include: kafka.yaml
-- include: ethj.yaml
-- include: mongo.yaml
-- include: server.yaml
-- include: bolt.yaml
+- name: API Server | Creation
+  import_tasks: api.yaml
+
+- name: Kafka Server | Creation
+  import_tasks: kafka.yaml
+
+- name: EthereumJ Server | Creation
+  import_tasks: ethj.yaml
+
+- name: MongoDb Server | Creation
+  import_tasks: mongo.yaml
+
+- name: Bolt Server | Creation
+  import_tasks: bolt.yaml
+
+- name: "Generate {{ gcp.inventory_output_file }}"
+  template:
+    src: inventory.ini.j2
+    dest: "{{ gcp.inventory_output_file }}"

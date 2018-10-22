@@ -1,30 +1,30 @@
 ---
 
+- name: Set Bolt GCP instances names
+  debug:
+    msg: "{{ name }}-{{ gcp.bolt.name }}-{{ '%d'|format(item|int) }}"
+  register: instance_names
+  with_sequence: "start=1 end={{ gcp.bolt.instances }}"
+
 - name: Check if Bolt GCP instances has been created
   command: "gcloud compute instances list --filter='name:{{ name }}-{{ gcp.bolt.name }}' --format='value(status)'"
   register: instance_created
   changed_when: false
   ignore_errors: yes
 
-- name: Set Bolt GCP instances names
-  debug:
-    msg: "{{ name }}-{{ gcp.bolt.name }}-{{ '%d'|format(item|int) }}"
-  register: instance_names
-  with_sequence:
-    - "start=1 end={{ gcp.bolt.instances }}"
-  when: instance_created.stdout == ""
-
 - name: Create Bolt instances on GCP
+  loop: "{{ hostvars.localhost.instance_names.results | map(attribute='msg') | list }}"
+  loop_control:
+    index_var: i
   command: >
     gcloud compute instances create
-    {{ hostvars.localhost.instance_names.results | map(attribute='msg') | list | join(' ') }}
-    --boot-disk-size="{{gcp.boot_disk_size}}"
-    --boot-disk-type="{{ gcp.boot_disk_type }}"
+    {{ item }}
+    --zone="{{ gcp.zone }}"
     --image-family="{{ gcp.image_family }}"
     --image-project="{{ gcp.image_project }}"
     --machine-type="{{ gcp.bolt.machine_type }}"
-    "{{ gcp.can_ip_forward}}"
-    --zone="{{ gcp.zone }}"
+    --boot-disk-size="{{gcp.bolt.disks.size }}"
+    --boot-disk-type="{{ gcp.bolt.disks.type }}"
     --metadata-from-file ssh-keys={{ gcp.ssh_private_key_file }}
     --tags="{{ gcp.bolt.name }}"
   changed_when: false
@@ -37,11 +37,5 @@
 
 - name: Get metadata about Bolt instances
   command: gcloud compute instances list --filter='name:{{ name }}-{{ gcp.bolt.name }}' --format="value[separator=','](name, networkInterfaces[0].networkIP, networkInterfaces[0].accessConfigs[0].natIP)"
-  register: instances_metadata
+  register: bolt_instances_metadata
   ignore_errors: yes
-
-- debug: msg="{{ instances_metadata.stdout }}"
-- name: "Generate {{ gcp.bolt.inventory_output_file }}"
-  template:
-    src: inventory.ini.j2
-    dest: "{{ gcp.bolt.inventory_output_file }}"
