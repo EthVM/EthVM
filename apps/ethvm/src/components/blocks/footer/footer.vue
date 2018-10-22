@@ -71,15 +71,15 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue'
-  import VFooter from 'vuetify'
-  export default Vue.extend({
-    name: 'footer',
-    data() {
-      return {
-        btcAddr: '1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9">1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9',
-        ethAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-      }
+import Vue from 'vue'
+import VFooter from 'vuetify'
+export default Vue.extend({
+  name: 'block-footer',
+  data() {
+    return {
+      btcAddr: '1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9">1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9',
+      ethAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
     }
-  })
+  }
+})
 </script>
