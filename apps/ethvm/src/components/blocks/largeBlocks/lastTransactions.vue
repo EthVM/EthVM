@@ -16,7 +16,7 @@
         <v-flex xs6 sm8 md5 >
           <h5>{{ $t( 'tableHeader.txN' ) }}</h5>
         </v-flex>
-        <v-flex xs6 sm3 md2 >
+        <v-flex  hidden-xs-only sm3 md2 >
           <h5>{{ $t( 'common.eth' ) }}</h5>
         </v-flex>
         <v-flex hidden-sm-and-down md2>
@@ -38,12 +38,12 @@
         <v-flex xs12>
           <v-card v-for="tx in transactions" class="transparent pb-1" flat v-bind:key="tx.getHash()">
             <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
-              <v-flex d-flex xs6 sm8 md5 pr-3>
+              <v-flex d-flex xs12 sm8 md5 pr-3>
                 <v-layout row wrap align-center pb-1>
                   <v-flex d-flex xs12 pb-2>
                     <router-link class="primary--text text-truncate font-italic psmall" :to="'/tx/'+tx.getHash()">{{tx.getHash()}}</router-link>
                   </v-flex>
-                  <v-flex hidden-xs-and-down sm12 pt-0>
+                  <v-flex xs12 pt-0>
                     <v-layout row pl-2>
                       <p class="text-truncate info--text mb-0 ">{{ $t( 'tx.from' ) }}:
                         <router-link :to="'/address/'+tx.getFrom().toString()" class="secondary--text font-italic font-weight-regular">{{tx.getFrom().toString()}} </router-link>
@@ -59,9 +59,9 @@
                   </v-flex>
                 </v-layout>
               </v-flex>
-              <v-flex d-flex xs6 sm3 md2>
-                <p :class="[tx.getStatus()? 'txSuccess--text': 'txFail--text']">
-                  <v-tooltip v-if="getShortEthValue(tx.getValue().toEth().toString(), true)" bottom>
+              <v-flex d-flex sm3 md2>
+                <p v-if="$vuetify.breakpoint.xsOnly" class="text-truncate info--text">Amount: </p>
+                  <p :class="[tx.getStatus()? 'txSuccess--text': 'txFail--text']"> <v-tooltip v-if="getShortEthValue(tx.getValue().toEth().toString(), true)" bottom>
                     <v-icon slot="activator" dark small>fa fa-question-circle info--text</v-icon>
                     <span>{{tx.getValue().toEth()}}</span>
                   </v-tooltip>

@@ -1,26 +1,30 @@
 <template>
   <v-card color="white" flat v-if="transactions" class="pl-3 pr-3 pt-2">
     <!-- Tx Header -->
-    <v-layout align-center justify-space-between row fill-height>
+    <v-layout align-center justify-space-between wrap row fill-height>
       <v-flex d-flex xs12 sm6 md4>
         <v-layout row align-center justify-start fill-height height="40px">
-          <v-flex xs10 pr-0>
+          <v-flex xs7 sm9 md10 pr-0>
             <v-card flat style="border-top: solid 1px #efefef; border-left: solid 1px #efefef; border-bottom: solid 1px #efefef;" height="36px" class="pr-3 pl-3 pt-2">
               <input :placeholder="$t('search.addressTx')" v-model="searchInput" class="width: 100%">
             </v-card>
           </v-flex>
-          <v-flex xs2 pl-0>
-            <v-btn depressed outline class="primary--text text-capitalize ml-0 lineGrey" @click="searching">Search</v-btn>
+          <v-flex xs7 sm3 md2 pl-0>
+            <v-btn depressed  outline class="primary--text text-capitalize ml-0 lineGrey" @click="searching">Search</v-btn>
           </v-flex>
         </v-layout>
       </v-flex>
       <v-spacer></v-spacer>
-      <v-flex d-flex xs12 sm4 md3 lg2>
+      <v-flex d-flex xs12 sm4 md3>
         <v-layout row align-center justify-start fill-height height="40px">
+          <v-flex>
           <p class="pr-2 ma-0">View:</p>
+          </v-flex>
+          <v-flex>
           <v-card flat style="border: solid 1px #efefef; padding-top: 1px;" height="36px" class="pl-2">
             <v-select solo flat hide-details v-model="selected.value" class="primary body-1" :items="options" item-text="text" item-value="value" height="32px" @click="setSelectedTxs"></v-select>
           </v-card>
+          </v-flex>
         </v-layout>
       </v-flex>
     </v-layout>

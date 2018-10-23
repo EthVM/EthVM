@@ -20,7 +20,7 @@
     <!-- End Address Details -->
     <!-- Tab Menu -->
     <v-card color="white" flat>
-      <v-tabs v-model="activeTab" color="white" show-arrows class=" pr-3 pl-3 pt-3">
+      <v-tabs v-model="activeTab" color="white" show-arrows :class="{'pl-0 pr-0': $vuetify.breakpoint.smAndDown, 'pl-3 pr-3': $vuetify.breakpoint.mdAndUp, 'pt-2': $vuetify.breakpoint.mdAndUp }">
         <v-tab v-for="(item) in tabs" class="info--text text-capitalize pb-2 tab-opacity" active-class="primary--text " :key="item.title" ripple>
           {{ item.title }}
         </v-tab>
@@ -113,7 +113,7 @@ export default Vue.extend({
         tokens: this.tokens,
         txs: this.txs,
         pendingTxs: this.pendingTxs,
-        isMiner: false,
+        isMiner: true,
         conCreator: false
       },
       items: [

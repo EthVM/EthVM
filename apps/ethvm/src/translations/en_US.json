@@ -48,7 +48,7 @@
   },
   "search": {
     "default": "Search Block / Address / Tx",
-    "addressTx": "Search tx hash/address"
+    "addressTx": "Tx Hash/Address"
   },
   "tableHeader": {
     "blockN": "Block #",

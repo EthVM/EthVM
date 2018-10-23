@@ -3,10 +3,10 @@
   <v-card color="white" flat class="pt-3 pr-3 pl-3">
     <v-layout row grid-list-lg align-center pb-1>
           <blockies :address="account.address"></blockies>
-          <v-layout wrap column fill-height>
-            <v-flex xs12>
-              <v-layout row align-center justify-start>
-                <v-card-title class="title font-weight-bold pb-1 ">{{ $t('title.address') }}</v-card-title>
+          <v-layout wrap column fill-height pl-2>
+            <v-flex xs12 pb-0>
+              <v-layout row align-center justify-start mbz>
+                <v-card-title class="title font-weight-bold">{{ $t('title.address') }}</v-card-title>
                 <v-chip v-if="account.isMiner" color="txSuccess" text-color="white" small>Miner</v-chip>
                 <v-chip v-if="account.conCreator" color="success" text-color="white" small>Contract Creator</v-chip>
               </v-layout>
