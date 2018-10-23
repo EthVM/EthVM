@@ -1,4 +1,4 @@
-import { Account } from '@app/server/modules/accounts'
+import { Account, toAccount } from '@app/server/modules/accounts'
 import { Tx } from '@app/server/modules/txs'
 import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
 
@@ -29,7 +29,7 @@ export class MongoAccountsRepository extends BaseMongoDbRepository implements Ac
         if (!resp) {
           return null
         }
-        return resp
+        return toAccount(resp)
       })
   }
 

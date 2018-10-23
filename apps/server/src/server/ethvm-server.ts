@@ -159,14 +159,11 @@ export class EthVMServer {
 
   private onBlockEvent = (event: StreamingEvent): void => {
     const { op, key, value } = event
-
     const block = value as Block
 
-    logger.info(`EthVMServer - onBlockEvent / Op: ${op}, Block Hash: ${value}, `)
+    logger.info(`EthVMServer - onBlockEvent / Op: ${op} - Number: ${key} - Hash: ${block.hash}`)
 
     if (op !== 'delete') {
-      logger.info(`EthVMServer - onBlockEvent / value: ${value},  `)
-
       if (value && value.header && value.header.stateRoot) {
         try {
           this.vmService.setStateRoot(block.header.stateRoot)
@@ -183,11 +180,11 @@ export class EthVMServer {
         })
         const txEvent: StreamingEvent = { op: event.op, key: event.key, value: txs }
         this.io.to('txs').emit('newTx', txEvent)
-        // this.ds.putTransactions(txs)
       }
       event.value.transactions = []
       event.value.uncles = []
     }
+
     this.io.to('blocks').emit('newBlock', event)
   }
 
@@ -200,7 +197,7 @@ export class EthVMServer {
   private onPendingTxEvent = (event: StreamingEvent): void => {
     const { op, key, value } = event
 
-    logger.info(`EthVMServer - onPendingTxEvent / Op: ${op}, Pending Tx Hash: ${value.hash}`)
+    logger.info(`EthVMServer - onPendingTxEvent / Op: ${op} - Hash: ${value.hash}`)
 
     this.io.to('pendingTxs').emit('newpTx', event)
   }

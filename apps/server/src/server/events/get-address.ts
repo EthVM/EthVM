@@ -4,7 +4,7 @@ import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/serv
 import { Account } from '@app/server/modules/accounts'
 
 const getAddressEvent: SocketEvent = {
-  id: 'getAddress',
+  id: 'getAddress', // new name: get-account
 
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = balancePayloadValidator(payload) as boolean

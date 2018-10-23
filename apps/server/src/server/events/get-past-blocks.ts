@@ -3,7 +3,7 @@ import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/serv
 import { Block } from '@app/server/modules/blocks'
 
 const pastBlocksEvent: SocketEvent = {
-  id: 'pastBlocks', // new_name: past_blocks
+  id: 'pastBlocks', // new_name: get-past-blocks
 
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = pastBlockPayloadValidator(payload) as boolean

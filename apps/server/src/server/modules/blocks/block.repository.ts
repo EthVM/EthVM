@@ -1,4 +1,4 @@
-import { Block } from '@app/server/modules/blocks'
+import { Block, toBlock } from '@app/server/modules/blocks'
 import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
 
 export interface BlocksRepository {
@@ -15,6 +15,16 @@ export class MongoBlockRepository extends BaseMongoDbRepository implements Block
       .skip(page)
       .limit(limit)
       .toArray()
+      .then(resp => {
+        const b: Block[] = []
+        if (!resp) {
+          return b
+        }
+        resp.forEach(block => {
+          b.push(toBlock(block))
+        })
+        return b
+      })
   }
 
   public getBlock(hash: string): Promise<Block | null> {
@@ -25,7 +35,7 @@ export class MongoBlockRepository extends BaseMongoDbRepository implements Block
         if (!resp) {
           return null
         }
-        return resp
+        return toBlock(resp)
       })
   }
 }
