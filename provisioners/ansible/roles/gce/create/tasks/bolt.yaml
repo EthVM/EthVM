@@ -25,7 +25,7 @@
     --machine-type="{{ gcp.bolt.machine_type }}"
     --boot-disk-size="{{gcp.bolt.disks.size }}"
     --boot-disk-type="{{ gcp.bolt.disks.type }}"
-    --metadata-from-file ssh-keys={{ gcp.ssh_private_key_file }}
+    --metadata-from-file=ssh-keys="{{ gcp.ssh_private_key_file }}"
     --tags="{{ gcp.bolt.name }}"
   changed_when: false
   when: instance_created.stdout == ""
@@ -34,8 +34,3 @@
   command: gcloud compute instances start "{{ name }}-{{ gcp.bolt.name }}"
   changed_when: false
   when: instance_created.stdout == "TERMINATED"
-
-- name: Get metadata about Bolt instances
-  command: gcloud compute instances list --filter='name:{{ name }}-{{ gcp.bolt.name }}' --format="value[separator=','](name, networkInterfaces[0].networkIP, networkInterfaces[0].accessConfigs[0].natIP)"
-  register: bolt_instances_metadata
-  ignore_errors: yes

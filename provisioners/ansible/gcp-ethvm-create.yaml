@@ -1,7 +1,0 @@
----
-
-- name: Create EthVM infrastructure on Google Cloud Platform
-  gather_facts: false
-  hosts: provisioner
-  roles:
-    - role: roles/gce/create

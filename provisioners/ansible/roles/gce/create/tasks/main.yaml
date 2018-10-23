@@ -24,8 +24,3 @@
 
 - name: Bolt Server | Creation
   import_tasks: bolt.yaml
-
-- name: "Generate {{ gcp.inventory_output_file }}"
-  template:
-    src: inventory.ini.j2
-    dest: "{{ gcp.inventory_output_file }}"

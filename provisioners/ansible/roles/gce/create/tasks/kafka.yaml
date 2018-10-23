@@ -61,7 +61,7 @@
     --machine-type="{{ gcp.kafka.machine_type }}"
     --boot-disk-size="{{gcp.boot_disk_size}}"
     --boot-disk-type="{{ gcp.boot_disk_type }}"
-    --metadata-from-file ssh-keys={{ gcp.ssh_private_key_file }}
+    --metadata-from-file=ssh-keys="{{ gcp.ssh_private_key_file }}"
     --tags="{{ gcp.kafka.name }}"
   changed_when: false
   when: instance_created.stdout == ""
@@ -100,8 +100,3 @@
   command: gcloud compute instances start "{{ name }}-{{ gcp.kafka.name }}"
   changed_when: false
   when: instance_created.stdout == "TERMINATED"
-
-- name: Get metadata about Kafka GCP instances
-  command: gcloud compute instances list --filter='name:{{ name }}-{{ gcp.kafka.name }}' --format="value[separator=','](name, networkInterfaces[0].networkIP, networkInterfaces[0].accessConfigs[0].natIP)"
-  register: kafka_instances_metadata
-  ignore_errors: yes

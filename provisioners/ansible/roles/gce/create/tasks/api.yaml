@@ -16,7 +16,7 @@
     --machine-type="{{ gcp.api.machine_type }}"
     --boot-disk-size="{{gcp.api.disks.size }}"
     --boot-disk-type="{{ gcp.api.disks.type }}"
-    --metadata-from-file ssh-keys={{ gcp.ssh_private_key_file }}
+    --metadata-from-file=ssh-keys="{{ gcp.ssh_private_key_file }}"
     --tags="{{ gcp.api.name }}"
     --can-ip-forward
   changed_when: false
@@ -26,8 +26,3 @@
   command: gcloud compute instances start "{{ name }}-{{ gcp.api.name }}"
   changed_when: false
   when: instance_created.stdout == "TERMINATED"
-
-- name: Get metadata API about instances
-  command: gcloud compute instances list --filter='name:{{ name }}-{{ gcp.api.name }}' --format="value[separator=','](name, networkInterfaces[0].networkIP, networkInterfaces[0].accessConfigs[0].natIP)"
-  register: server_instances_metadata
-  ignore_errors: yes

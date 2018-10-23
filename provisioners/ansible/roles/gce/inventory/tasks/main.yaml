@@ -1,0 +1,31 @@
+---
+
+- name: Get metadata API about instances
+  command: gcloud compute instances list --filter='name:{{ name }}-{{ gcp.api.name }}' --format="value[separator=','](name, networkInterfaces[0].networkIP, networkInterfaces[0].accessConfigs[0].natIP)"
+  register: api_instances_metadata
+  ignore_errors: yes
+
+- name: Get metadata about Bolt instances
+  command: gcloud compute instances list --filter='name:{{ name }}-{{ gcp.bolt.name }}' --format="value[separator=','](name, networkInterfaces[0].networkIP, networkInterfaces[0].accessConfigs[0].natIP)"
+  register: bolt_instances_metadata
+  ignore_errors: yes
+
+- name: Get metadata about EthereumJ instances
+  command: gcloud compute instances list --filter='name:{{ name }}-{{ gcp.ethj.name }}' --format="value[separator=','](name, networkInterfaces[0].networkIP, networkInterfaces[0].accessConfigs[0].natIP)"
+  register: ethj_instances_metadata
+  ignore_errors: yes
+
+- name: Get metadata about Kafka instances
+  command: gcloud compute instances list --filter='name:{{ name }}-{{ gcp.kafka.name }}' --format="value[separator=','](name, networkInterfaces[0].networkIP, networkInterfaces[0].accessConfigs[0].natIP)"
+  register: kafka_instances_metadata
+  ignore_errors: yes
+
+- name: Get metadata Mongo about instances
+  command: gcloud compute instances list --filter='name:{{ name }}-{{ gcp.mongo.name }}' --format="value[separator=','](name, networkInterfaces[0].networkIP, networkInterfaces[0].accessConfigs[0].natIP)"
+  register: mongo_instances_metadata
+  ignore_errors: yes
+
+- name: "Generate {{ gcp.inventory_output_file }}"
+  template:
+    src: inventory.ini.j2
+    dest: "{{ gcp.inventory_output_file }}"

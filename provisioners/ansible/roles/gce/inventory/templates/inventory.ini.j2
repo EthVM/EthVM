@@ -1,37 +1,37 @@
-{% if hostvars.localhost.server_instances_metadata is defined %}
-[server-hosts]
-{% for value in hostvars.localhost.server_instances_metadata.stdout_lines %}
+{% if hostvars.localhost.api_instances_metadata.stdout_lines != [] %}
+[api]
+{% for value in hostvars.localhost.api_instances_metadata.stdout_lines %}
 {% set instance_metadata = value.split(',') %}
 {{ instance_metadata[0] }} ansible_host={{ instance_metadata[2] }} internal_ip={{ instance_metadata[1] }}
 {% endfor %}
 {% endif -%}
 
-{% if hostvars.localhost.mongo_instances_metadata is defined %}
-[mongo-hosts]
+{% if hostvars.localhost.mongo_instances_metadata.stdout_lines != [] %}
+[mongo]
 {% for value in hostvars.localhost.mongo_instances_metadata.stdout_lines %}
 {% set instance_metadata = value.split(',') %}
 {{ instance_metadata[0] }} ansible_host={{ instance_metadata[2] }} internal_ip={{ instance_metadata[1] }}
 {% endfor %}
 {% endif -%}
 
-{% if hostvars.localhost.kafka_instances_metadata is defined %}
-[kafka-hosts]
+{% if hostvars.localhost.kafka_instances_metadata.stdout_lines != [] %}
+[kafka]
 {% for value in hostvars.localhost.kafka_instances_metadata.stdout_lines %}
 {% set instance_metadata = value.split(',') %}
 {{ instance_metadata[0] }} ansible_host={{ instance_metadata[2] }} internal_ip={{ instance_metadata[1] }}
 {% endfor %}
 {% endif -%}
 
-{% if hostvars.localhost.ethj_instances_metadata is defined %}
-[ethj-hosts]
+{% if hostvars.localhost.ethj_instances_metadata.stdout_lines != [] %}
+[ethj]
 {% for value in hostvars.localhost.ethj_instances_metadata.stdout_lines %}
 {% set instance_metadata = value.split(',') %}
 {{ instance_metadata[0] }} ansible_host={{ instance_metadata[2] }} internal_ip={{ instance_metadata[1] }}
 {% endfor %}
 {% endif -%}
 
-{% if hostvars.localhost.bolt_instances_metadata is defined %}
-[bolt-hosts]
+{% if hostvars.localhost.bolt_instances_metadata.stdout_lines != [] %}
+[bolt]
 {% for value in hostvars.localhost.bolt_instances_metadata.stdout_lines %}
 {% set instance_metadata = value.split(',') %}
 {{ instance_metadata[0] }} ansible_host={{ instance_metadata[2] }} internal_ip={{ instance_metadata[1] }}
