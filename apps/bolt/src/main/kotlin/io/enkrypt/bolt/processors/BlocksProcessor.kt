@@ -69,9 +69,9 @@ class BlocksProcessor : AbstractBaseProcessor() {
 
   }
 
-  override fun start() {
+  override fun start(cleanUp: Boolean) {
     logger.info { "Starting ${this.javaClass.simpleName}..." }
-    super.start()
+    super.start(cleanUp)
   }
 
 }

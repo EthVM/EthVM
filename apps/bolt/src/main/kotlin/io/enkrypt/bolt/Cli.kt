@@ -3,6 +3,7 @@ package io.enkrypt.bolt
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
+import com.github.ajalt.clikt.parameters.types.int
 import io.enkrypt.bolt.Modules.kafkaModule
 import io.enkrypt.bolt.Modules.mongoModule
 import io.enkrypt.bolt.Modules.processorsModule
@@ -22,6 +23,11 @@ class Cli : CliktCommand() {
     help = "From which offset is going to start Bolt processing events",
     envvar = "KAFKA_START_OFFSET"
   ).default(DEFAULT_AUTO_OFFSET)
+
+  private val resetStreamsState: Int by option(
+    help = "Whether or not to reset local persisted streams processing state",
+    envvar = "KAFKA_STREAMS_RESET"
+  ).int().default(DEFAULT_STREAMS_RESET)
 
   // Input Topics - CLI
   private val blocksTopic: String by option(
@@ -93,13 +99,15 @@ class Cli : CliktCommand() {
       PendingTransactionsProcessor()
     ).forEach {
       it.onPrepareProcessor()
-      it.start()
+      it.start(resetStreamsState == 1)
     }
   }
 
   companion object Defaults {
+
     const val DEFAULT_BOOTSTRAP_SERVERS = "localhost:9092"
     const val DEFAULT_AUTO_OFFSET = "earliest"
+    const val DEFAULT_STREAMS_RESET = 0
 
     const val DEFAULT_MONGO_URI = "mongodb://localhost:27017/ethvm_local"
 
