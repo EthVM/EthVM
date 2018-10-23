@@ -44,7 +44,7 @@ fun BlockHeader?.toDocument(summary: BlockSummary) = Document(
     "timestamp" to this?.timestamp,
     "nonce" to this?.nonce,
     "miner" to this?.coinbase?.toHex(),
-    "rewards" to summary.rewards?.entries?.associate { it.key.toHex() to it.value.toByteArray() },
+    "rewards" to summary.rewards?.entries?.associate { it.key.toHex() to it.value },
     "difficulty" to this?.difficulty,
     "totalDifficulty" to summary.totalDifficulty,
     "stateRoot" to this?.stateRoot,
@@ -123,7 +123,7 @@ fun InternalTransaction?.toDocument(): Document = Document(
 fun AccountState?.toDocument(address: String): Document = Document(
   mapOf(
     "address" to address,
-    "nonce" to this?.nonce?.toByteArray(),
-    "balance" to this?.balance?.toByteArray()
+    "nonce" to this?.nonce,
+    "balance" to this?.balance
   )
 )

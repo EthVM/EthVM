@@ -11,16 +11,13 @@ import java.math.MathContext
 
 class BigIntegerCodec : Codec<BigInteger> {
 
-  override fun getEncoderClass(): Class<BigInteger> {
-    return BigInteger::class.java
-  }
+  override fun getEncoderClass(): Class<BigInteger> = BigInteger::class.java
 
   override fun encode(writer: BsonWriter, value: BigInteger, encoderContext: EncoderContext) {
     writer.writeDecimal128(Decimal128(value.toBigDecimal(0, MathContext.DECIMAL128)))
   }
 
-  override fun decode(reader: BsonReader, decoderContext: DecoderContext): BigInteger {
-    return reader.readDecimal128().bigDecimalValue().toBigIntegerExact()
-  }
+  override fun decode(reader: BsonReader, decoderContext: DecoderContext): BigInteger =
+    reader.readDecimal128().bigDecimalValue().toBigIntegerExact()
 
 }
