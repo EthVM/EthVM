@@ -1,8 +1,7 @@
 ---
 
-- name: Harden all systems
-  hosts: all
-  become: yes
-  roles:
-    # - role: roles/hardening
-    - role: roles/security
+- hosts: all
+  tasks:
+    - name: Harden all systems
+      include_role:
+        name: security
