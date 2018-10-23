@@ -1,4 +1,4 @@
-import { PendingTx } from '@app/server/modules/pending-txs'
+import { PendingTx, toPendingTx } from '@app/server/modules/pending-txs'
 import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
 
 export interface PendingTxRepository {
@@ -17,10 +17,14 @@ export class MongoPendingTxRepository extends BaseMongoDbRepository implements P
       .limit(limit)
       .toArray()
       .then(resp => {
+        const t: PendingTx[] = []
         if (!resp) {
-          return []
+          return t
         }
-        return resp
+        resp.forEach(tx => {
+          t.push(toPendingTx(tx))
+        })
+        return t
       })
   }
 
@@ -34,10 +38,14 @@ export class MongoPendingTxRepository extends BaseMongoDbRepository implements P
       .limit(limit)
       .toArray()
       .then(resp => {
+        const t: PendingTx[] = []
         if (!resp) {
-          return []
+          return t
         }
-        return resp
+        resp.forEach(tx => {
+          t.push(toPendingTx(tx))
+        })
+        return t
       })
   }
 }

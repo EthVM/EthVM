@@ -1,4 +1,4 @@
-import { Tx } from '@app/server/modules/txs'
+import { toTx, Tx } from '@app/server/modules/txs'
 import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
 
 export interface TxsRepository {
@@ -19,10 +19,14 @@ export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepo
       .limit(limit)
       .toArray()
       .then(resp => {
+        const t: Tx[] = []
         if (!resp) {
-          return []
+          return t
         }
-        return resp
+        resp.forEach(tx => {
+          t.push(toTx(tx))
+        })
+        return t
       })
   }
 
@@ -31,12 +35,15 @@ export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepo
       .collection(MongoEthVM.collections.transactions)
       .find({ blockHash: hash })
       .toArray()
-      .then((resp: any) => {
+      .then(resp => {
+        const t: Tx[] = []
         if (!resp) {
-          return []
+          return t
         }
-
-        return resp
+        resp.forEach(tx => {
+          t.push(toTx(tx))
+        })
+        return t
       })
   }
 
@@ -48,7 +55,7 @@ export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepo
         if (!resp) {
           return null
         }
-        return resp
+        return toTx(resp)
       })
   }
 
@@ -62,10 +69,14 @@ export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepo
       .limit(limit)
       .toArray()
       .then(resp => {
+        const t: Tx[] = []
         if (!resp) {
-          return []
+          return t
         }
-        return resp
+        resp.forEach(tx => {
+          t.push(toTx(tx))
+        })
+        return t
       })
   }
 }

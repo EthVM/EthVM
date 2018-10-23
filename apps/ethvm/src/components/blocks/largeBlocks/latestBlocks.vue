@@ -44,7 +44,7 @@
     <v-card v-if="getBlocks" flat id="scroll-target" :style="getStyle" class="scroll-y pt-0 pb-0">
       <v-layout column fill-height v-scroll:#scroll-target class="pt-1" style="margin-right: 1px">
         <v-flex xs12>
-          <v-card v-for="block in getBlocks" class="transparent" flat v-if="!block.getIsUncle()" v-bind:key="block.hash">
+          <v-card v-for="block in getBlocks" class="transparent" flat  v-bind:key="block.hash">
             <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
               <v-flex d-flex xs6 sm2 order-xs1 >
                 <router-link class="black--text pb-1" :to="'/block/'+block.getHash()">{{block.getNumber()}}</router-link>

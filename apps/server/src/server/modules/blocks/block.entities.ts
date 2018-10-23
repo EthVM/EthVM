@@ -9,7 +9,7 @@ export interface SmallBlock {
   totalBlockReward?: Buffer
   blockReward?: Buffer
   txFees?: Buffer
-  stateRoot?: Buffer
+  stateRoot: Buffer
   uncleReward?: Buffer
   difficulty?: Buffer
   blockStats?: BlockStats
@@ -24,7 +24,7 @@ export interface Header {
   rewards: any
   difficulty?: Buffer
   totalDifficulty?: Buffer
-  stateRoot?: Buffer
+  stateRoot: Buffer
   transactionsRoot?: Buffer
   receiptsRoot: Buffer
   logsBloom?: Buffer
