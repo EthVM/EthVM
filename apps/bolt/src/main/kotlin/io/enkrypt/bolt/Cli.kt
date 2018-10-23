@@ -3,18 +3,12 @@ package io.enkrypt.bolt
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
-import com.mongodb.MongoClient
-import com.mongodb.MongoClientOptions
-import com.mongodb.MongoClientURI
-import io.enkrypt.bolt.mongo.codecs.BigIntegerCodec
+import io.enkrypt.bolt.Modules.kafkaModule
+import io.enkrypt.bolt.Modules.mongoModule
+import io.enkrypt.bolt.Modules.processorsModule
 import io.enkrypt.bolt.processors.*
-import org.apache.kafka.clients.consumer.ConsumerConfig
-import org.apache.kafka.common.serialization.Serdes
-import org.apache.kafka.streams.StreamsConfig
-import org.bson.codecs.configuration.CodecRegistries
 import org.koin.dsl.module.module
 import org.koin.standalone.StandAloneContext.startKoin
-import java.util.Properties
 
 class Cli : CliktCommand() {
 
@@ -34,16 +28,6 @@ class Cli : CliktCommand() {
     help = "Name of the blocks stream topic on which Bolt will listen",
     envvar = "KAFKA_BLOCKS_TOPIC"
   ).default(DEFAULT_BLOCKS_TOPIC)
-
-  private val processedBlocksTopic: String by option(
-    help = "Name of the processed blocks stream topic on which Bolt will listen",
-    envvar = "KAFKA_PROCESSED_BLOCKS_TOPIC"
-  ).default(DEFAULT_PROCESSED_BLOCKS_TOPIC)
-
-  private val canonicalChainTopic: String by option(
-    help = "Name of the canonical chain stream topic on which Bolt will listen",
-    envvar = "KAFKA_PROCESSED_BLOCKS_TOPIC"
-  ).default(DEFAULT_CANONICAL_CHAIN_TOPIC)
 
   private val pendingTxsTopic: String by option(
     help = "Name of the pending transactions topic on which Bolt will listen",
@@ -67,80 +51,40 @@ class Cli : CliktCommand() {
   ).default(DEFAULT_MONGO_URI)
 
   // DI
-  private val boltModule = module {
+
+  private val configModule = module {
 
     single {
-      MongoCollectionsConfig(
+
+      MongoConfig(
+        mongoUri,
         "accounts",
         "blocks",
         "pending_transactions",
         "statistics"
       )
+
     }
 
     single {
-      TopicsConfig(
-        blocksTopic,
-        processedBlocksTopic,
-        canonicalChainTopic,
-        pendingTxsTopic,
-        accountStateTopic,
-        metadataTopic
-      )
-    }
-
-    single {
-      AppConfig(
+      KafkaConfig(
         bootstrapServers,
         startingOffset,
-        get(),
-        get()
-      )
-    }
-
-    single {
-      val options = MongoClientOptions.Builder()
-        .codecRegistry(CodecRegistries.fromRegistries(
-          MongoClient.getDefaultCodecRegistry(),
-          CodecRegistries.fromCodecs(BigIntegerCodec())
+        KafkaTopicsConfig(
+          blocksTopic,
+          pendingTxsTopic,
+          accountStateTopic,
+          metadataTopic
         ))
-      MongoClientURI(mongoUri, options)
-    }
-    single { MongoClient(get<MongoClientURI>()) }
-    single {
-      val client = get<MongoClient>()
-      val uri = get<MongoClientURI>()
-
-      client.getDatabase(uri.database!!)
     }
 
-    factory { BlockMongoTransformer() }
-    factory { TokenDetectorTransformer() }
-    factory { AccountStateMongoProcessor() }
-    factory { PendingTransactionMongoProcessor() }
-    factory { StatisticMongoProcessor() }
+    single { AppConfig(get(), get()) }
 
-    module("kafka") {
-      single {
-        Properties().apply {
-          // App
-          put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
-
-          // Processing
-          put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, StreamsConfig.AT_LEAST_ONCE)
-          put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, startingOffset)
-
-          // Serdes - Defaults
-          put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().javaClass.name)
-          put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.ByteArray().javaClass.name)
-        }
-      }
-    }
   }
 
   override fun run() {
 
-    startKoin(listOf(boltModule))
+    startKoin(listOf(configModule, mongoModule, kafkaModule, processorsModule))
 
     listOf<Processor>(
       BlocksProcessor(),
@@ -160,8 +104,6 @@ class Cli : CliktCommand() {
     const val DEFAULT_MONGO_URI = "mongodb://localhost:27017/ethvm_local"
 
     const val DEFAULT_BLOCKS_TOPIC = "blocks"
-    const val DEFAULT_PROCESSED_BLOCKS_TOPIC = "processed-blocks"
-    const val DEFAULT_CANONICAL_CHAIN_TOPIC = "canonical-chain"
     const val DEFAULT_PENDING_TXS_TOPIC = "pending-transactions"
     const val DEFAULT_ACCOUNT_STATE_TOPIC = "account-state"
     const val DEFAULT_METADATA_TOPIC = "account-state"

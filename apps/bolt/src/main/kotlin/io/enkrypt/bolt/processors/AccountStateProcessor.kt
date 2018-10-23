@@ -47,8 +47,10 @@ class AccountStateProcessor : AbstractBaseProcessor() {
     // Create stream builder
     val builder = StreamsBuilder()
 
+    val ( _, _, accountState ) = appConfig.kafka.topicsConfig
+
     builder
-      .stream(appConfig.topicsConfig.accountState, Consumed.with(Serdes.ByteArray(), accountSerde))
+      .stream(accountState, Consumed.with(Serdes.ByteArray(), accountSerde))
       .map { k, v -> KeyValue(ByteUtil.toHexString(k), v) }
       .process({ get<AccountStateMongoProcessor>() }, null)
 
