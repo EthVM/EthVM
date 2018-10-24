@@ -93,6 +93,7 @@ services:
     restart: unless-stopped
     volumes:
       - mongodb-volume:/data/db
+      - ./datasets:/datasets
     networks:
       - back
     ports:
