@@ -1,6 +1,6 @@
 import { Account } from '@app/server/modules/accounts'
 import { Block } from '@app/server/modules/blocks'
-import { Tx } from '@app/server/modules/txs'
+import { Tx } from 'ethvm-models'
 
 export enum SearchType {
   Transaction,

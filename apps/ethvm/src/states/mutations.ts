@@ -1,5 +1,7 @@
 import { Block, Tx, PendingTx, Uncle } from '@app/models'
-import { BlockLayout, StateLayout, TxLayout, PendingTxLayout, UncleLayout } from '@app/models/server'
+import { BlockLayout, StateLayout, PendingTxLayout, UncleLayout } from '@app/models/server'
+import {Tx as TxLayout} from 'ethvm-models'
+
 
 const NEW_BLOCK = (state: StateLayout, blocks: BlockLayout | BlockLayout[]) => {
   if (!Array.isArray(blocks)) {

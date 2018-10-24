@@ -1,7 +1,9 @@
 import defaultRooms from '@app/configs/defaultRooms.json'
 import sEvents from '@app/configs/socketEvents.json'
 import { Block, Tx ,PendingTx} from '@app/models'
-import { BlockLayout, TxLayout, EventLayout} from '@app/models/server'
+import { BlockLayout, EventLayout} from '@app/models/server'
+
+import {Tx as TxLayout} from 'ethvm-models'
 
 const socket_socketNewblock = function({ commit }, ev: EventLayout | EventLayout[]) {
 
