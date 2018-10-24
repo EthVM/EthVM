@@ -1,5 +1,6 @@
-import { Block, BlocksRepository } from '@app/server/modules/blocks'
+import { BlocksRepository } from '@app/server/modules/blocks'
 import { CacheRepository } from '@app/server/repositories'
+import { Block } from 'ethvm-models'
 
 export interface BlocksService {
   getBlocks(limit: number, page: number): Promise<Block[]>

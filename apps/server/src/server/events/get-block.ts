@@ -1,6 +1,6 @@
 import { blockPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
-import { Block } from '@app/server/modules/blocks'
+import { Block } from 'ethvm-models'
 
 const getBlockEvent: SocketEvent = {
   id: 'getBlock', // new_name: get-block

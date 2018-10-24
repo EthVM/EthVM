@@ -1,6 +1,6 @@
 import { blockPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
-import { Uncle } from '@app/server/modules/uncles'
+import { Uncle } from 'ethvm-models'
 
 const getUncleEvent: SocketEvent = {
   id: 'uncle', // new name: get-uncle

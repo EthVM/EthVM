@@ -1,7 +1,5 @@
-import { Block } from '@app/server/modules/blocks'
-import { ExchangeRate, Quote } from '@app/server/modules/exchanges'
-import { Tx } from '@app/server/modules/txs'
 import { CacheRepository } from '@app/server/repositories'
+import { Block, ExchangeRate, Quote, Tx } from 'ethvm-models'
 
 export class MemoryCacheRepository implements CacheRepository {
   public initialize(): Promise<boolean> {

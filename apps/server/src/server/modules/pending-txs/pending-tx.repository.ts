@@ -1,5 +1,6 @@
-import { PendingTx, toPendingTx } from '@app/server/modules/pending-txs'
+import { toPendingTx } from '@app/server/modules/pending-txs'
 import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
+import { PendingTx } from 'ethvm-models'
 
 export interface PendingTxRepository {
   getPendingTxs(limit: number, page: number): Promise<PendingTx[]>

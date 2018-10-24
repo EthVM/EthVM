@@ -1,4 +1,4 @@
-import { PendingTx } from '@app/server/modules/pending-txs'
+import { PendingTx } from 'ethvm-models'
 
 const toPendingTx = (tx: any): PendingTx => {
   const t: any = {}

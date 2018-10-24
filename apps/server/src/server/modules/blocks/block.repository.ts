@@ -1,5 +1,6 @@
-import { Block, toBlock } from '@app/server/modules/blocks'
+import { toBlock } from '@app/server/modules/blocks'
 import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
+import { Block } from 'ethvm-models'
 
 export interface BlocksRepository {
   getBlocks(limit: number, page: number): Promise<Block[]>
