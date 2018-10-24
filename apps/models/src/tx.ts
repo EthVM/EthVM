@@ -1,4 +1,3 @@
-import { Timestamp } from 'bson'
 
 export interface Log {
   address: string
@@ -13,12 +12,12 @@ export interface Trace {
   deep?: number
   index?: number
   rejected?: boolean
-  from?: Buffer
-  to?: Buffer
+  from?: string
+  to?: string
   value?: Buffer
   data?: Buffer
-  gas?: Buffer
-  gasPrice?: Buffer
+  gas?: number
+  gasPrice?: number
   nonce?: Buffer
 }
 
@@ -26,24 +25,25 @@ export interface Tx {
   blockHash?: string
   blockNumber?: number
   hash?: string
-  timestamp?: Timestamp
+  timestamp?: number
+  index?: number
   nonce?: string
   from?: string
   to?: string
   contractAddress?: string
   status?: boolean
   data?: Buffer
-  fee?: Buffer
+  fee?: number
   logs?: Log
   result?: boolean
-  gasPrice?: Buffer
-  gasLimit?: Buffer
-  gasUsed?: Buffer
-  gasRefund?: Buffer
-  gasLeftover?: Buffer
+  gasPrice?: number
+  gasLimit?: number
+  gasUsed?: number
+  gasRefund?: number
+  gasLeftover?: number
   traces?: Trace[]
   v?: number
-  r?: Buffer
-  s?: Buffer
+  r?: number
+  s?: number
   value?: Buffer
 }
