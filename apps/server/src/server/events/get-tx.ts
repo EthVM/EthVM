@@ -1,7 +1,7 @@
 import { TxPayload } from '@app/server/core/payloads'
 import { txPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
-import { Tx } from '@app/server/modules/txs'
+import { Tx } from 'ethvm-models'
 
 const getTxEvent: SocketEvent = {
   id: 'getTx', // new_name: get-tx

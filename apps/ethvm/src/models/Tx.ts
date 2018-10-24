@@ -1,6 +1,6 @@
 import { common } from '@app/helpers'
 import { Address, EthValue, Hash, Hex, HexNumber, HexTime } from '@app/models'
-import { TxLayout } from '@app/models/server'
+import { Tx as TxLayout } from 'ethvm-models'
 
 export class Tx {
   public readonly id: string
@@ -53,12 +53,12 @@ export class Tx {
     return this.tx.blockNumber
   }
 
-  public geTransactionIndex(): number {
-    if (!this.cache.transactionIndex) {
-      this.cache.transactionIndex = this.tx.transactionIndex
-    }
-    return this.cache.transactionIndex
-  }
+  // public geTransactionIndex(): number {
+  //   if (!this.cache.transactionIndex) {
+  //     this.cache.transactionIndex = this.tx.transactionIndex
+  //   }
+  //   return this.cache.transactionIndex
+  // }
 
   // public getFromBalance(): EthValue {
   //   if (!this.cache.fromBalance) {
@@ -120,7 +120,7 @@ export class Tx {
 
   public getNonce(): HexNumber {
     if (!this.cache.hexNumber) {
-      this.cache.hexNumber = common.HexNumber(this.tx.nonce)
+      this.cache.hexNumber = this.tx.nonce
     }
     return this.cache.hexNumber
   }
