@@ -42,17 +42,17 @@ fun BlockHeader?.toDocument(summary: BlockSummary) = Document(
     "parentHash" to this?.parentHash?.toHex(),
     "unclesHash" to this?.unclesHash?.toHex(),
     "timestamp" to this?.timestamp,
-    "nonce" to this?.nonce,
+    "nonce" to this?.nonce.toHex(),
     "miner" to this?.coinbase?.toHex(),
     "rewards" to summary.rewards?.entries?.associate { it.key.toHex() to it.value },
-    "difficulty" to this?.difficulty,
+    "difficulty" to this?.difficulty.toBigInteger(),
     "totalDifficulty" to summary.totalDifficulty,
     "stateRoot" to this?.stateRoot,
     "transactionsRoot" to this?.txTrieRoot,
     "receiptsRoot" to this?.receiptsRoot,
     "logsBloom" to this?.logsBloom,
-    "gasLimit" to this?.gasLimit,
-    "gasUsed" to this?.gasUsed,
+    "gasLimit" to this?.gasLimit.toBigInteger(),
+    "gasUsed" to this?.gasUsed?.toBigInteger(),
     "mixHash" to this?.mixHash,
     "extraData" to this?.extraData
   )
@@ -81,8 +81,8 @@ fun Transaction?.toDocument(pos: Int? = null, receipt: TransactionReceipt?, exec
       "value" to this?.value,
       "data" to this?.data,
       "logs" to executionSummary?.logs?.map { it.toDocument() },
-      "gasPrice" to this?.gasPrice,
-      "gasLimit" to this?.gasLimit,
+      "gasPrice" to this?.gasPrice.toBigInteger(),
+      "gasLimit" to this?.gasLimit.toBigInteger(),
       "gasUsed" to executionSummary?.gasUsed,
       "gasRefund" to executionSummary?.gasRefund,
       "gasLeftover" to executionSummary?.gasLeftover,
@@ -114,9 +114,9 @@ fun InternalTransaction?.toDocument(): Document = Document(
     "to" to this?.receiveAddress.toHex(),
     "value" to this?.value,
     "data" to this?.data,
-    "gas" to this?.gasLimit,
-    "gasPrice" to this?.gasLimit,
-    "nonce" to this?.nonce
+    "gas" to this?.gasLimit?.toBigInteger(),
+    "gasPrice" to this?.gasLimit?.toBigInteger(),
+    "nonce" to this?.nonce.toHex()
   )
 )
 
