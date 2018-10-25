@@ -94,36 +94,36 @@ const toTx = (tx: any): Tx => {
     t.data = tx.data.buffer
   }
   if (tx.fee) {
-    t.fee = tx.fee.buffer
+    t.fee = parseFloat(tx.fee)
   }
   if (tx.result) {
     t.result = tx.result
   }
   if (tx.gasPrice) {
-    t.gasPrice = tx.gasPrice.buffer
+    t.gasPrice = parseFloat(tx.gasPrice)
   }
   if (tx.gasLimit) {
-    t.gasLimit = tx.gasLimit.buffer
+    t.gasLimit = parseFloat(tx.gasLimit)
   }
 
   if (tx.gasUsed) {
-    t.gasUsed = tx.gasUsed.buffer
+    t.gasUsed = parseFloat(tx.gasUsed)
   }
   if (tx.gasRefund) {
-    t.gasRefund = tx.gasRefund.buffer
+    t.gasRefund = parseFloat(tx.gasRefund)
   }
   if (tx.gasLeftover) {
-    t.gasLeftover = tx.gasLeftover.buffer
+    t.gasLeftover = parseFloat(tx.gasLeftover)
   }
 
   if (tx.v) {
     t.v = tx.v
   }
   if (tx.r) {
-    t.r = tx.r.buffer
+    t.r = parseFloat(tx.r)
   }
   if (tx.s) {
-    t.s = tx.s.buffer
+    t.s = parseFloat(tx.s)
   }
   if (tx.value) {
     t.value = tx.value.buffer
