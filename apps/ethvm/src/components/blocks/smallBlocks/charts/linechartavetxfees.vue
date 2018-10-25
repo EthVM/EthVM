@@ -73,12 +73,12 @@ export default Vue.extend({
       newDescription: description,
       footnote: [
         {
-          color: '#40ce9c',
+          color: 'txFail',
           text: this.$i18n.t('footnote.aveTxFees'),
           icon: 'fa fa-circle'
         },
         {
-          color: '#eea66b',
+          color: 'txPen',
           text: this.$i18n.t('footnote.aveGasPrice'),
           icon: 'fa fa-circle'
         }

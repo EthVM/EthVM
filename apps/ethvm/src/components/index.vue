@@ -1,6 +1,5 @@
 <template>
-
-      <v-container fluid wrap fill-height>
+      <v-container fluid mt-3 >
         <!-- BODY -->
         <!-- Main Pages -->
         <frame-blocks v-if="pageName == 'blocks'"></frame-blocks>
@@ -89,7 +88,7 @@ export default Vue.extend({
         }
       )
 
-        this.$socket.emit(
+      this.$socket.emit(
         sEvents.getUncles,
         {
           limit: 100,

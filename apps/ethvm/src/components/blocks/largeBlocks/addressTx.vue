@@ -1,76 +1,85 @@
 <template>
-  <div v-if="transactions" class="address-tx">
+  <v-card color="white" flat v-if="transactions" class="pl-3 pr-3 pt-2">
     <!-- Tx Header -->
-    <div class="address-tx-header">
-      <div class="filter-tx">
-        <div class="tx-tabs">
-          <span> {{ $t( 'filter.view')}}: </span>
-          <button v-for="option in options" v-bind:key="option.text" v-bind:class="{ active: isActive(option.value)}" v-on:click="setFilter(option.value)">
-              {{option.text}}
-            </button>
-        </div>
-        <!-- This will be removed to pagination -->
-        <span>Selected: {{ getTotal }} transactions</span>
-      </div>
-      <div class="search-block">
-        <block-search :phText="placeholder"></block-search>
-      </div>
-      <!-- End Tx Header -->
-    </div>
+    <v-layout align-center justify-space-between wrap row fill-height>
+      <v-flex d-flex xs12 sm6 md4>
+        <v-layout row align-center justify-start fill-height height="40px">
+          <v-flex xs7 sm9 md10 pr-0>
+            <v-card flat style="border-top: solid 1px #efefef; border-left: solid 1px #efefef; border-bottom: solid 1px #efefef;" height="36px" class="pr-3 pl-3 pt-2">
+              <input :placeholder="$t('search.addressTx')" v-model="searchInput" class="width: 100%">
+            </v-card>
+          </v-flex>
+          <v-flex xs7 sm3 md2 pl-0>
+            <v-btn depressed  outline class="primary--text text-capitalize ml-0 lineGrey" @click="searching">Search</v-btn>
+          </v-flex>
+        </v-layout>
+      </v-flex>
+      <v-spacer></v-spacer>
+      <v-flex d-flex xs12 sm4 md3>
+        <v-layout row align-center justify-start fill-height height="40px">
+          <v-flex>
+          <p class="pr-2 ma-0">View:</p>
+          </v-flex>
+          <v-flex>
+          <v-card flat style="border: solid 1px #efefef; padding-top: 1px;" height="36px" class="pl-2">
+            <v-select solo flat hide-details v-model="selected.value" class="primary body-1" :items="options" item-text="text" item-value="value" height="32px" @click="setSelectedTxs"></v-select>
+          </v-card>
+          </v-flex>
+        </v-layout>
+      </v-flex>
+    </v-layout>
     <!-- Tx Table Header -->
-    <block-address-tx-table :transactions=' filteredTxs' :showheader='true' :account='address.address' :filter="filter" :total="getTotal" :isPending="isPending">
+    <block-address-tx-table :transactions='filteredTxs' :account='address' :filter="selectedTx" :total="getTotal">
     </block-address-tx-table>
     <!-- End Tx Table Header -->
-  </div>
+  </v-card>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-
 export default Vue.extend({
   name: 'TableTransactions',
   props: ['address', 'transactions', 'isPending'],
   data() {
     return {
-      placeholder: 'addressTxSearch',
+      searchInput: '',
+      selected: {
+        text: this.$i18n.t('filter.all'),
+        value: 0
+      },
       options: [
         {
           text: this.$i18n.t('filter.all'),
-          value: 'all'
+          value: 0
         },
         {
           text: this.$i18n.t('filter.in'),
-          value: 'in'
+          value: 1
         },
         {
           text: this.$i18n.t('filter.out'),
-          value: 'out'
+          value: 2
         }
       ],
-      filter: 'all',
       inTx: [],
       outTx: [],
-      recievedTx: false
+      recievedTx: false,
+      filtered: this.transactions
     }
   },
+  mounted() {
+    this.getTxsType()
+  },
   methods: {
-    setFilter(option) {
-      this.filter = option
-    },
-    isActive(value) {
-      if (value === this.filter) {
-        return true
-      }
-      return false
-    },
     getTxsType() {
+      console.log('ere')
       let i
       for (i = 0; i < this.transactions.length; i++) {
         if (
           this.transactions[i]
             .getFrom()
             .toString()
-            .toLowerCase() === this.address.address.toLowerCase()
+            .toLowerCase() === this.address.toLowerCase()
         ) {
           this.outTx.push(this.transactions[i])
         } else {
@@ -78,31 +87,41 @@ export default Vue.extend({
         }
       }
       this.recievedTx = true
-    }
-  },
-  computed: {
-    filteredTxs() {
-      if (this.filter === 'all') {
-        return this.transactions
-      }
+    },
+    searching() {
+      console.log('searching')
+    },
+    setSelectedTxs() {
       if (this.transactions) {
         if (!this.recievedTx) {
           this.getTxsType()
         }
-        if (this.filter === 'out') {
-          return this.outTx
+        if (this.selectedTx === 0) {
+          this.filtered = this.transactions
         }
-        if (this.filter === 'in') {
-          return this.inTx
+        if (this.selectedTx === 2) {
+          this.filtered = this.outTx
+        }
+        if (this.selectedTx === 1) {
+          this.filtered = this.inTx
         }
       }
+    }
+  },
+  computed: {
+    selectedTx() {
+      console.log(this.selected.value)
+      return this.selected.value
+    },
+    filteredTxs() {
+      return this.filtered
     },
     getTotal() {
       if (this.transactions) {
-        if (this.filter === 'all') {
+        if (this.selected.value === 0) {
           return this.transactions.length
         }
-        if (this.filter === 'in') {
+        if (this.selected.value === 1) {
           return this.inTx.length
         }
         return this.outTx.length
@@ -113,6 +132,3 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped lang="less">
-@import '~lessPath/sunil/blocks/largeBlocks/addressTx.less';
-</style>
