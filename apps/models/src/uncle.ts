@@ -7,13 +7,13 @@ export interface Uncle {
   nonce?: Buffer
   miner?: string
   rewards?: any
-  difficulty?: Buffer
-  totalDifficulty?: Buffer
+  difficulty?: number
+  totalDifficulty?: number
   stateRoot?: Buffer
   transactionsRoot?: Buffer
   receiptsRoot?: Buffer
   logsBloom?: Buffer
-  gasLimit?: Buffer
+  gasLimit?: number
   gasUsed?: number
   mixHash?: Buffer
   extraData?: Buffer

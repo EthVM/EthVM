@@ -38,16 +38,16 @@ export class PendingTx {
   }
 
 
-  public getGasPrice(): EthValue {
+  public getGasPrice(): number {
     if (!this.cache.gasPrice) {
-      this.cache.gasPrice = common.EthValue(this.pTx.gasPrice)
+      this.cache.gasPrice = this.pTx.gasPrice
     }
     return this.cache.gasPrice
   }
 
-  public getGasLimit(): HexNumber {
+  public getGasLimit(): number {
     if (!this.cache.gasLimit) {
-      this.cache.gasLimit = common.HexNumber(this.pTx.gasLimit)
+      this.cache.gasLimit = this.pTx.gasLimit
     }
     return this.cache.gasLimit
   }
@@ -60,9 +60,9 @@ export class PendingTx {
   }
 
 
-  public getNonce(): HexNumber {
+  public getNonce(): string {
     if (!this.cache.nonce) {
-      this.cache.nonce = common.HexNumber(this.pTx.nonce)
+      this.cache.nonce = this.pTx.nonce
     }
     return this.cache.hexNumber
   }
@@ -81,16 +81,16 @@ export class PendingTx {
     return this.cache.v
   }
 
-  public getR(): Hex {
+  public getR(): number {
     if (!this.cache.r) {
-      this.cache.r = common.Hex(this.pTx.r)
+      this.cache.r = this.pTx.r
     }
     return this.cache.r
   }
 
-  public getS(): Hex {
+  public getS(): number {
     if (!this.cache.s) {
-      this.cache.s = common.Hex(this.pTx.s)
+      this.cache.s = this.pTx.s
     }
     return this.cache.s
   }

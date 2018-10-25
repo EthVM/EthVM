@@ -53,9 +53,9 @@ export class Uncle {
     return this.cache.miner
   }
 
-  public getDifficulty(): HexNumber {
+  public getDifficulty(): number {
     if (!this.cache.difficulty) {
-      this.cache.difficulty = common.HexNumber(this.uncle.difficulty)
+      this.cache.difficulty = this.uncle.difficulty
     }
     return this.cache.difficulty
   }
@@ -88,9 +88,9 @@ export class Uncle {
     return this.cache.logsBloom
   }
 
-  public getGasLimit(): HexNumber {
+  public getGasLimit(): number {
     if (!this.cache.gasLimit) {
-      this.cache.garLimit = common.HexNumber(this.uncle.gasLimit)
+      this.cache.garLimit = this.uncle.gasLimit
     }
     return this.cache.garLimit
   }

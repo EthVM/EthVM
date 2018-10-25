@@ -1,14 +1,14 @@
 export interface PendingTx {
   hash?: string
-  nonce: Buffer
+  nonce: string
   from: string
   to: string
   contractAddress: string
   value: Buffer
   data: Buffer
-  gasPrice: Buffer
-  gasLimit: Buffer
+  gasPrice: number
+  gasLimit: number
   v: number
-  r: Buffer
-  s: Buffer
+  r: number
+  s: number
 }
