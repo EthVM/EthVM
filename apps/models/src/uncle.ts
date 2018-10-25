@@ -1,5 +1,3 @@
-import { Timestamp } from 'bson'
-
 export interface Uncle {
   parentHash?: string
   unclesHash?: string

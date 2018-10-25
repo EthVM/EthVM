@@ -1,4 +1,3 @@
-
 export interface Log {
   address: string
   topics: Buffer[]

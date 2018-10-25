@@ -1,16 +1,6 @@
 export interface SmallBlock {
   number: number
   hash: string
-  miner: string
-  timestamp?: number
-  transactionCount?: number
-  totalBlockReward?: Buffer
-  blockReward?: Buffer
-  txFees?: Buffer
-  stateRoot: Buffer
-  uncleReward?: Buffer
-  difficulty?: Buffer
-  blockStats?: BlockStats
 }
 
 export interface Header {
