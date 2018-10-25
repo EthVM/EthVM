@@ -1,6 +1,6 @@
 export interface Account {
   address: string
-  balance: Buffer
-  nonce: Buffer
-  contract?: number
+  balance: number
+  nonce: number
+  contract?: string
 }

@@ -8,14 +8,15 @@ export class Account {
   private cache: any
 
   constructor(address: AccountLayout) {
+    console.log(address)
     this.cache = {}
     this.address = address
-    this.id = this.address.address
+    this.id = address.address
   }
 
   public getBalance() {
     if (!this.cache.balance) {
-      this.cache.balance = common.EthValue(this.address.balance)
+      this.cache.balance = this.address.balance
     }
     return this.cache.balance
   }

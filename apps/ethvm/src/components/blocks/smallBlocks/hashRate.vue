@@ -18,6 +18,7 @@ const getAvgHashRate = (blocks: Block[]): number => {
 
   blocks.forEach(block => {
     const stats = block.getStats()
+    console.log(stats)
     const blockTime = stats.blockTimeMs
     avg = avg.add(new bn(blockTime))
   })
@@ -26,7 +27,7 @@ const getAvgHashRate = (blocks: Block[]): number => {
     return avg.toNumber()
   }
 
-  const difficulty = blocks[0].getDifficulty().toNumber()
+  const difficulty = blocks[0].getDifficulty()
   return new bn(difficulty)
     .div(avg)
     .div('1e12')

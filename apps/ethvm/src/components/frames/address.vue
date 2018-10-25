@@ -164,7 +164,7 @@ export default Vue.extend({
       (err, result) => {
         const addr = new Account(result)
         if (!err && result) {
-          const balance = addr.getBalance().toEth()
+          const balance = addr.getBalance()
           this.account.balance = balance
         }
       }

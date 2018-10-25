@@ -68,10 +68,10 @@
                   </p>
                 </v-flex>
                 <v-flex hidden-sm-and-down md2>
-                  <p class="black--text text-truncate mb-0">{{tx.getGasUsed().toNumber()}}</p>
+                  <p class="black--text text-truncate mb-0">{{tx.getGasUsed()}}</p>
                 </v-flex>
                 <v-flex hidden-sm-and-down md2>
-                  <p class="text-truncate black--text mb-0">{{tx.getGasPrice().toGWei()}}</p>
+                  <p class="text-truncate black--text mb-0">{{tx.getGasPrice()}}</p>
                 </v-flex>
                 <v-flex hidden-xs-only sm1>
                   <v-icon v-if="tx.getStatus()" small class="txSuccess--text"> fa fa-check-circle </v-icon>
