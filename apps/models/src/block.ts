@@ -22,13 +22,13 @@ export interface Header {
   nonce?: Buffer
   miner: string
   rewards: any
-  difficulty?: Buffer
-  totalDifficulty?: Buffer
+  difficulty?: number
+  totalDifficulty?: number
   stateRoot: Buffer
   transactionsRoot?: Buffer
   receiptsRoot: Buffer
   logsBloom?: Buffer
-  gasLimit?: Buffer
+  gasLimit?: number
   gasUsed?: number
   mixHash?: Buffer
   extraData?: Buffer
@@ -40,10 +40,10 @@ export interface BlockStats {
   failedTxs?: number
   txs?: number
   internalTxs?: number
-  avgGasPrice?: Buffer
-  avgTxsFees?: Buffer
-  totalGasPrice?: Buffer
-  totalTxsFees?: Buffer
+  avgGasPrice?: number
+  avgTxsFees?: number
+  totalGasPrice?: number
+  totalTxsFees?: number
 }
 
 export interface Block {

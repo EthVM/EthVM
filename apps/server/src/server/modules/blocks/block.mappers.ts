@@ -19,10 +19,10 @@ const toBlock = (block: any): Block => {
     b.header.miner = block.header.miner
   }
   if (block.header.difficulty) {
-    b.header.difficulty = block.header.difficulty.buffer
+    b.header.difficulty = parseFloat(block.header.difficulty)
   }
   if (block.header.totalDifficulty) {
-    b.header.totalDifficulty = block.header.totalDifficulty.buffer
+    b.header.totalDifficulty = parseFloat(block.header.totalDifficulty)
   }
   if (block.header.stateRoot) {
     b.header.stateRoot = block.header.stateRoot.buffer
@@ -37,10 +37,10 @@ const toBlock = (block: any): Block => {
     b.header.logsBloom = block.header.logsBloom.buffer
   }
   if (block.header.gasLimit) {
-    b.header.gasLimit = block.header.gasLimit.buffer
+    b.header.gasLimit = parseFloat(block.header.gasLimit)
   }
   if (block.header.gasUsed) {
-    b.header.gasUsed = block.header.gasUsed
+    b.header.gasUsed = parseFloat(block.header.gasUsed)
   }
   if (block.header.mixHash) {
     b.header.mixHash = block.header.mixHash.buffer
@@ -51,7 +51,7 @@ const toBlock = (block: any): Block => {
   if (block.header.rewards) {
     for (const address in block.header.rewards) {
       if (block.header.rewards[address]) {
-        block.header.rewards[address] = block.header.rewards[address].buffer
+        block.header.rewards[address] = parseFloat(block.header.rewards[address])
       }
     }
     b.header.rewards = block.header.rewards
@@ -74,16 +74,16 @@ const toBlock = (block: any): Block => {
     b.stats.internalTxs = block.stats.internalTxs
   }
   if (block.stats.avgGasPrice) {
-    b.stats.avgGasPrice = block.stats.avgGasPrice.buffer
+    b.stats.avgGasPrice = parseFloat(block.stats.avgGasPrice)
   }
   if (block.stats.avgTxsFees) {
-    b.stats.avgTxsFees = block.stats.avgTxsFees.buffer
+    b.stats.avgTxsFees = parseFloat(block.stats.avgTxsFees)
   }
   if (block.stats.totalGasPrice) {
-    b.stats.totalGasPrice = block.stats.totalGasPrice.buffer
+    b.stats.totalGasPrice = parseFloat(block.stats.totalGasPrice)
   }
   if (block.stats.totalTxsFees) {
-    b.stats.totalTxsFees = block.stats.totalTxsFees.buffer
+    b.stats.totalTxsFees = parseFloat(block.stats.totalTxsFees)
   }
 
   b.number = block.number
