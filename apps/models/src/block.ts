@@ -1,10 +1,8 @@
-import { Timestamp } from 'bson'
-
 export interface SmallBlock {
   number: number
   hash: string
   miner: string
-  timestamp?: Timestamp
+  timestamp?: number
   transactionCount?: number
   totalBlockReward?: Buffer
   blockReward?: Buffer
@@ -18,8 +16,8 @@ export interface SmallBlock {
 export interface Header {
   parentHash: string
   unclesHash?: string
-  timestamp?: Timestamp
-  nonce?: Buffer
+  timestamp?: number
+  nonce?: string
   miner: string
   rewards: any
   difficulty?: number
@@ -35,9 +33,10 @@ export interface Header {
 }
 
 export interface BlockStats {
-  blockTimeMs?: number
   successfulTxs?: number
   failedTxs?: number
+  pendingTxs?: number
+  processingTimeMs?: number
   txs?: number
   internalTxs?: number
   avgGasPrice?: number

@@ -8,7 +8,6 @@ export class Account {
   private cache: any
 
   constructor(address: AccountLayout) {
-    console.log(address)
     this.cache = {}
     this.address = address
     this.id = address.address

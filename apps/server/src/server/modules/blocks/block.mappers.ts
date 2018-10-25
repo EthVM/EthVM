@@ -13,7 +13,7 @@ const toBlock = (block: any): Block => {
     b.header.timestamp = block.header.timestamp
   }
   if (block.header.nonce) {
-    b.header.nonce = block.header.nonce.buffer
+    b.header.nonce = block.header.nonce
   }
   if (block.header.miner) {
     b.header.miner = block.header.miner
@@ -58,14 +58,17 @@ const toBlock = (block: any): Block => {
   }
 
   b.stats = {}
-  if (block.stats.blockTimeMs) {
-    b.stats.blockTimeMs = block.stats.blockTimeMs
+  if (block.stats.processingTimeMs) {
+    b.stats.processingTimeMs = block.stats.processingTimeMs
   }
   if (block.stats.successfulTxs) {
     b.stats.successfulTxs = block.stats.successfulTxs
   }
   if (block.stats.failedTxs) {
     b.stats.failedTxs = block.stats.failedTxs
+  }
+  if (block.stats.pendingTxs) {
+    b.stats.pendingTxs = block.stats.pendingTxs
   }
   if (block.stats.txs) {
     b.stats.txs = block.stats.txs
