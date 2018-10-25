@@ -6,10 +6,8 @@ import com.mongodb.client.model.UpdateOneModel
 import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.WriteModel
 import io.enkrypt.bolt.extensions.toDocument
-import io.enkrypt.bolt.extensions.toHex
 import io.enkrypt.bolt.kafka.processors.MongoProcessor
 import io.enkrypt.bolt.kafka.serdes.RLPAccountStateSerde
-import io.enkrypt.kafka.models.Account
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
@@ -24,7 +22,7 @@ import org.bson.Document
 import org.ethereum.core.AccountState
 import org.ethereum.util.ByteUtil
 import org.koin.standalone.get
-import java.util.Properties
+import java.util.*
 
 /**
  * This processor processes addresses balances and type (if is a smart contract or not).
@@ -49,8 +47,10 @@ class AccountStateProcessor : AbstractBaseProcessor() {
     // Create stream builder
     val builder = StreamsBuilder()
 
+    val ( _, _, accountState ) = appConfig.kafka.topicsConfig
+
     builder
-      .stream(appConfig.topicsConfig.accountState, Consumed.with(Serdes.ByteArray(), accountSerde))
+      .stream(accountState, Consumed.with(Serdes.ByteArray(), accountSerde))
       .map { k, v -> KeyValue(ByteUtil.toHexString(k), v) }
       .process({ get<AccountStateMongoProcessor>() }, null)
 
@@ -102,7 +102,7 @@ class AccountStateMongoProcessor : MongoProcessor<String, AccountState>() {
       val updateOptions = UpdateOptions().upsert(true)
 
       if (state.isEmpty) {
-        UpdateOneModel(filter, Document(mapOf("\$set" to Document(mapOf("empty" to true)))))
+        DeleteOneModel(filter)
       } else {
         val update = Document(mapOf("\$set" to state.toDocument(address)))
         UpdateOneModel(filter, update, updateOptions)

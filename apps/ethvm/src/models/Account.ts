@@ -1,21 +1,21 @@
 import { common } from '@app/helpers'
 import { Address, EthValue, Hash, Hex, HexNumber, HexTime, Tx } from '@app/models'
-import { AddressLayout } from '@app/models/server'
+import { Account as AccountLayout } from 'ethvm-models'
 
 export class Account {
   public readonly id: string
-  private readonly address: AddressLayout
+  private readonly address: AccountLayout
   private cache: any
 
-  constructor(address: AddressLayout) {
+  constructor(address: AccountLayout) {
     this.cache = {}
     this.address = address
-    this.id = this.address.address
+    this.id = address.address
   }
 
   public getBalance() {
     if (!this.cache.balance) {
-      this.cache.balance = common.EthValue(this.address.balance)
+      this.cache.balance = this.address.balance
     }
     return this.cache.balance
   }

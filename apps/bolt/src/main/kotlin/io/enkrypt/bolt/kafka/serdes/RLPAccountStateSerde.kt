@@ -1,6 +1,5 @@
 package io.enkrypt.bolt.kafka.serdes
 
-import io.enkrypt.kafka.models.Account
 import org.apache.kafka.common.errors.SerializationException
 import org.apache.kafka.common.serialization.Deserializer
 import org.apache.kafka.common.serialization.Serde
@@ -35,7 +34,7 @@ class RLPAccountDeserializer : Deserializer<AccountState> {
   override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
 
   override fun deserialize(topic: String?, data: ByteArray?): AccountState? {
-    if (data == null) {
+    if (data == null || data.isEmpty()) {
       return null
     }
     return try {

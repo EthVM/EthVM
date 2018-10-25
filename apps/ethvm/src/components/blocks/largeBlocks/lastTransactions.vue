@@ -46,7 +46,7 @@
                   <v-flex xs12 pt-0>
                     <v-layout row pl-2>
                       <p class="text-truncate info--text mb-0 ">{{ $t( 'tx.from' ) }}:
-                        <router-link :to="'/address/'+tx.getFrom().toString()" class="secondary--text font-italic font-weight-regular">{{tx.getFrom().toString()}} </router-link>
+                        <router-link :to="'/address/'+tx.getFrom()" class="secondary--text font-italic font-weight-regular">{{tx.getFrom().toString()}} </router-link>
                       </p>
                       <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2 " small></v-icon>
                       <p class="text-truncate info--text font-weight-thin mb-0" v-if="tx.getContractAddress()">{{ $t( 'tx.contract' ) }}:
@@ -61,7 +61,7 @@
               </v-flex>
               <v-flex d-flex sm3 md2>
                 <p v-if="$vuetify.breakpoint.xsOnly" class="text-truncate info--text">Amount: </p>
-                  <p :class="[tx.getStatus()? 'txSuccess--text': 'txFail--text']"> <v-tooltip v-if="getShortEthValue(tx.getValue().toEth().toString(), true)" bottom>
+                  <p :class="[tx.getStatus()? 'txSuccess--text': 'txFail--text']"> <v-tooltip v-if="getShortEthValue(tx.getValue(), true)" bottom>
                     <v-icon slot="activator" dark small>fa fa-question-circle info--text</v-icon>
                     <span>{{tx.getValue().toEth()}}</span>
                   </v-tooltip>
@@ -69,10 +69,10 @@
                 </p>
               </v-flex>
               <v-flex hidden-sm-and-down md2>
-                <p class="black--text text-truncate mb-0">{{tx.getGasUsed().toNumber()}}</p>
+                <p class="black--text text-truncate mb-0">{{tx.getGasUsed()}}</p>
               </v-flex>
               <v-flex hidden-sm-and-down md2>
-                <p class="text-truncate black--text mb-0">{{tx.getGasPrice().toGWei()}}</p>
+                <p class="text-truncate black--text mb-0">{{tx.getGasPrice()}}</p>
               </v-flex>
               <v-flex  hidden-xs-only v-if="!pending" sm1>
                 <v-icon v-if="tx.getStatus()" small class="txSuccess--text"> fa fa-check-circle </v-icon>

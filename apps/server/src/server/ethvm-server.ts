@@ -15,14 +15,15 @@ import {
 } from '@app/server/core/payloads'
 import { Streamer, StreamingEvent } from '@app/server/core/streams'
 import { AccountsService } from '@app/server/modules/accounts'
-import { Block, BlocksService } from '@app/server/modules/blocks'
+import { BlocksService } from '@app/server/modules/blocks'
 import { ChartService } from '@app/server/modules/charts'
 import { ExchangeService } from '@app/server/modules/exchanges'
 import { PendingTxService } from '@app/server/modules/pending-txs'
 import { SearchService } from '@app/server/modules/search'
-import { Tx, TxsService } from '@app/server/modules/txs'
+import { TxsService } from '@app/server/modules/txs'
 import { UnclesService } from '@app/server/modules/uncles'
 import { VmService } from '@app/server/modules/vm'
+import { Block, Tx } from 'ethvm-models'
 import * as fs from 'fs'
 import * as http from 'http'
 import * as SocketIO from 'socket.io'
@@ -159,29 +160,33 @@ export class EthVMServer {
 
   private onBlockEvent = (event: StreamingEvent): void => {
     const { op, key, value } = event
+    const block = value as Block
 
-    logger.info(`EthVMServer - onBlockEvent / Op: ${op} - Number: ${key} - Hash: ${value.hash}`)
+    logger.info(`EthVMServer - onBlockEvent / Op: ${op} - Number: ${key} - Hash: ${block.hash}`)
 
-    // Save state root if defined
-    if (value && value.header && value.header.stateRoot) {
-      this.vmService.setStateRoot(value.header.stateRoot)
+    if (op !== 'delete') {
+      if (value && value.header && value.header.stateRoot) {
+        try {
+          this.vmService.setStateRoot(block.header.stateRoot)
+        } catch (e) {
+          logger.error(`EthVMServer - onBlockEvent  / setStateRoot err : ${e},  `)
+        }
+      }
+
+      const txs = value.transactions || []
+      if (txs.length > 0) {
+        txs.forEach(tx => {
+          const txHash = tx.hash
+          this.io.to(txHash).emit(txHash + '_update', tx)
+        })
+        const txEvent: StreamingEvent = { op: event.op, key: event.key, value: txs }
+        this.io.to('txs').emit('newTx', txEvent)
+      }
+      event.value.transactions = []
+      event.value.uncles = []
     }
 
-    // const smallBlock = mappers.toSmallBlock(block)
-
-    // // Send to client
-    // this.io.to(blockHash).emit(blockHash + '_update', smallBlock)
-    // this.io.to('blocks').emit('newBlock', smallBlock)
-
-    // const txs = block.transactions || []
-    // if (txs.length > 0) {
-    //   txs.forEach(tx => {
-    //     const txHash = tx.hash
-    //     this.io.to(txHash).emit(txHash + '_update', tx)
-    //   })
-    //   this.io.to('txs').emit('newTx', txs)
-    //   this.ds.putTransactions(txs)
-    // }
+    this.io.to('blocks').emit('newBlock', event)
   }
 
   private onAccountEvent = (event: StreamingEvent): void => {
@@ -194,5 +199,7 @@ export class EthVMServer {
     const { op, key, value } = event
 
     logger.info(`EthVMServer - onPendingTxEvent / Op: ${op} - Hash: ${value.hash}`)
+
+    this.io.to('pendingTxs').emit('newpTx', event)
   }
 }

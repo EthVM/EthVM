@@ -96,15 +96,13 @@ export default Vue.extend({
         },
         {
           title: this.$i18n.t('common.timestmp'),
-          detail: this.block.getTimestamp().toString()
+          detail: this.block.getTimestamp()
         },
         {
           title: this.$i18n.t('block.reward'),
           detail:
             this.block
-              .getBlockReward()
-              .toEth()
-              .toString() +
+              .getBlockReward() +
             ' ' +
             this.$i18n.t('common.eth')
         },
@@ -131,15 +129,15 @@ export default Vue.extend({
       this.moreItems = [
         {
           title: this.$i18n.t('block.diff'),
-          details: this.block.getDifficulty().toNumber()
+          details: this.block.getDifficulty()
         },
         {
           title: this.$i18n.t('block.totalDiff'),
-          details: this.block.getTotalDifficulty().toNumber()
+          details: this.block.getTotalDifficulty()
         },
         {
           title: this.$i18n.t('block.nonce'),
-          details: this.block.getNonce().toString()
+          details: this.block.getNonce()
         },
         {
           title: this.$i18n.t('block.root'),
@@ -159,11 +157,11 @@ export default Vue.extend({
           },
           {
             title: this.$i18n.t('block.fees'),
-            detail: this.block.getTxFees().toEth() + ' ' + this.$i18n.t('common.eth')
+            detail: this.block.getTxFees() + ' ' + this.$i18n.t('common.eth')
           },
           {
             title: this.$i18n.t('gas.limit'),
-            detail: this.block.getGasLimit().toNumber()
+            detail: this.block.getGasLimit()
           },
           {
             title: this.$i18n.t('gas.used'),
@@ -185,9 +183,7 @@ export default Vue.extend({
             title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward'),
             detail:
               this.block
-                .getUncleReward()
-                .toEth()
-                .toString() +
+                .getUncleReward() +
               ' ' +
               this.$i18n.t('common.eth')
           },

@@ -1,12 +1,11 @@
 import config from '@app/config'
-import { logger } from '@app/logger'
 import { errors } from '@app/server/core/exceptions'
 import { MongoStreamer, Streamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
 import { AccountsServiceImpl, MongoAccountsRepository } from '@app/server/modules/accounts'
 import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blocks'
 import { ChartsServiceImpl, MockChartsRepository } from '@app/server/modules/charts'
-import { ExchangeRate, ExchangeService, ExchangeServiceImpl, Quote } from '@app/server/modules/exchanges'
+import {  ExchangeService, ExchangeServiceImpl } from '@app/server/modules/exchanges'
 import { MongoPendingTxRepository, PendingTxServiceImpl } from '@app/server/modules/pending-txs'
 import { SearchServiceImpl, SearchType } from '@app/server/modules/search'
 import { MongoTxsRepository, TxsService, TxsServiceImpl } from '@app/server/modules/txs'
@@ -14,6 +13,7 @@ import { MongoUncleRepository, UnclesServiceImpl } from '@app/server/modules/unc
 import { VmService } from '@app/server/modules/vm'
 import { RedisCacheRepository } from '@app/server/repositories'
 import { expect } from 'chai'
+import { ExchangeRate, Quote } from 'ethvm-models'
 import * as Redis from 'ioredis'
 import { MongoClient } from 'mongodb'
 import * as io from 'socket.io-client'
@@ -119,7 +119,7 @@ describe('ethvm-server-events', () => {
       for (const input of inputs) {
         const data = await callEvent('getTxs', input, client)
         expect(data).to.have.lengthOf(10)
-      }
+       }
     })
 
     it('should return err ', async () => {

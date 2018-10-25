@@ -34,7 +34,7 @@ class RLPBlockSummaryDeserializer : Deserializer<BlockSummary> {
   override fun configure(configs: Map<String, *>, isKey: Boolean) {}
 
   override fun deserialize(topic: String, data: ByteArray?): BlockSummary? {
-    if (data == null) {
+    if (data == null || data.isEmpty()) {
       return null
     }
     return try {

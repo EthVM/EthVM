@@ -90,12 +90,12 @@ export default Vue.extend({
       this.items = [
         {
           title: this.$i18n.t('common.hash'),
-          detail: this.tx.getHash().toString(),
+          detail: this.tx.getHash(),
           copy: true
         },
         {
           title: this.$i18n.t('common.timestmp'),
-          detail: this.tx.getTimestamp().toString()
+          detail: this.tx.getTimestamp()
         },
         {
           title: this.$i18n.t('tx.from'),
@@ -138,23 +138,23 @@ export default Vue.extend({
         {
           title: this.$i18n.t('tableHeader.blockN'),
           detail: this.tx.getBlockNumber(),
-          link: '/block/' + this.tx.getBlockHash().toString()
+          link: '/block/' + this.tx.getBlockHash()
         },
         {
           title: this.$i18n.t('gas.limit'),
-          detail: this.tx.getGas().toNumber()
+          detail: this.tx.getGas()
         },
         {
           title: this.$i18n.t('gas.used'),
-          detail: this.tx.getGasUsed().toNumber()
+          detail: this.tx.getGasUsed()
         },
         {
           title: this.$i18n.t('gas.price'),
-          detail: this.tx.getGasPrice().toGWei()
+          detail: this.tx.getGasPrice()
         },
         {
           title: this.$i18n.t('tx.cost'),
-          detail: this.getTxCost(this.tx.getGasPrice().toEth(), this.tx.getGasUsed().toNumber()) + ' ' + this.$i18n.t('common.eth')
+          detail: this.getTxCost(this.tx.getGasPrice(), this.tx.getGasUsed()) + ' ' + this.$i18n.t('common.eth')
         }
       ]
       items.forEach(i => {

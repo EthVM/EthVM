@@ -1,7 +1,6 @@
 import { common } from '@app/helpers'
 import { Address, EthValue, Hash, Hex, HexNumber, HexTime, Tx } from '@app/models'
-import { BlockLayout, BlockStats } from '@app/models/server'
-import bn from 'bignumber.js'
+import { Block as BlockLayout, BlockStats } from 'ethvm-models'
 
 export class Block {
   public readonly id: string
@@ -82,11 +81,11 @@ export class Block {
   public getTotalBlockReward(): EthValue {
 
     if (!this.cache.totalBlockReward) {
-      let total = new bn(0)
+      let total = 0
       for (let address in this.block.header.rewards) {
-        total = new bn(common.EthValue(this.block.header.rewards[address]).toString()).plus(total)
+        total =  this.block.header.rewards[address] + total
       }
-      this.cache.totalBlockReward = common.EthValue(Buffer.from(total.toString()))
+      this.cache.totalBlockReward = total
     }
     return this.cache.totalBlockReward
   }
@@ -147,16 +146,16 @@ export class Block {
     return this.cache.minerBalance
   }
 
-  public getDifficulty(): HexNumber {
+  public getDifficulty(): number {
     if (!this.cache.difficulty) {
-      this.cache.difficulty = common.HexNumber(this.block.header.difficulty)
+      this.cache.difficulty = this.block.header.difficulty
     }
     return this.cache.difficulty
   }
 
-  public getTotalDifficulty(): HexNumber {
+  public getTotalDifficulty(): number {
     if (!this.cache.totalDifficulty) {
-      this.cache.totalDifficulty = common.HexNumber(this.block.header.totalDifficulty)
+      this.cache.totalDifficulty = this.block.header.totalDifficulty
     }
     return this.cache.totalDifficulty
   }
@@ -175,9 +174,9 @@ export class Block {
   //   return this.cache.size
   // }
 
-  public getGasLimit(): HexNumber {
+  public getGasLimit(): number {
     if (!this.cache.gasLimit) {
-      this.cache.garLimit = common.HexNumber(this.block.header.gasLimit)
+      this.cache.garLimit = this.block.header.gasLimit
     }
     return this.cache.garLimit
   }
@@ -221,32 +220,32 @@ export class Block {
     return this.cache.transactions
   }
 
-  public getTxFees(): EthValue {
+  public getTxFees(): number {
     if (!this.cache.txFees) {
-      this.cache.txFees = common.EthValue(this.block.stats.totalTxsFees)
+      this.cache.txFees = this.block.stats.totalTxsFees
     }
     return this.cache.txFees
   }
 
-  public getBlockReward(): EthValue {
+  public getBlockReward(): number {
     const rewards = this.block.header.rewards
     if (!this.cache.blockReward) {
-      this.cache.blockReward = common.EthValue(rewards[this.block.header.miner])
+      this.cache.blockReward = rewards[this.block.header.miner]
     }
     return this.cache.blockReward
   }
 
-  public getUncleReward(): EthValue {
+  public getUncleReward(): number {
     if (!this.cache.uncleReward) {
-      let total = new bn(0)
+      let total = 0
       if (this.block.header.rewards[this.block.header.unclesHash]) {
-        return (this.cache.uncleReward = common.EthValue(Buffer.from(total.toString())))
+        return this.cache.uncleReward =  total
       }
         for (let address in this.block.header.rewards) {
           if(address === this.block.header.miner) continue
-          total = new bn(common.EthValue(this.block.header.rewards[address]).toString()).plus(total)
+          total =  this.block.header.rewards[address] + total
         }
-        this.cache.uncleReward = common.EthValue(Buffer.from(total.toString()))
+        this.cache.uncleReward =  total
       }
     return this.cache.uncleReward
   }

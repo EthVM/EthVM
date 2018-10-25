@@ -1,8 +1,12 @@
 package io.enkrypt.bolt.extensions
 
+import org.ethereum.util.BIUtil
 import org.ethereum.util.ByteUtil
+import java.math.BigInteger
 
 fun ByteArray?.toHex(): String? = ByteUtil.toHexString(this)
+
+fun ByteArray?.toBigInteger(): BigInteger? = BIUtil.toBI(this)
 
 /**
  * Search the data for the first occurrence of the byte array pattern.
