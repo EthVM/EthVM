@@ -58,24 +58,12 @@ const toBlock = (block: any): Block => {
   }
 
   b.stats = {}
-  if (block.stats.processingTimeMs) {
-    b.stats.processingTimeMs = block.stats.processingTimeMs
-  }
-  if (block.stats.successfulTxs) {
-    b.stats.successfulTxs = block.stats.successfulTxs
-  }
-  if (block.stats.failedTxs) {
-    b.stats.failedTxs = block.stats.failedTxs
-  }
-  if (block.stats.pendingTxs) {
-    b.stats.pendingTxs = block.stats.pendingTxs
-  }
-  if (block.stats.txs) {
-    b.stats.txs = block.stats.txs
-  }
-  if (block.stats.internalTxs) {
-    b.stats.internalTxs = block.stats.internalTxs
-  }
+  b.stats.processingTimeMs = block.stats.processingTimeMs || 0
+  b.stats.successfulTxs = block.stats.successfulTxs || 0
+  b.stats.failedTxs = block.stats.failedTxs || 0
+  b.stats.pendingTxs = block.stats.pendingTxs || 0
+  b.stats.txs = block.stats.txs || 0
+  b.stats.internalTxs = block.stats.internalTxs || 0
   if (block.stats.avgGasPrice) {
     b.stats.avgGasPrice = parseFloat(block.stats.avgGasPrice)
   }
