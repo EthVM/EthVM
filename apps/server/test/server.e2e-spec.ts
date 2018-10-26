@@ -19,6 +19,17 @@ import { MongoClient } from 'mongodb'
 import * as io from 'socket.io-client'
 import { mock } from 'ts-mockito'
 import { MockExchangeRepository, VmServiceImpl } from './mocks'
+import blockTI  from './models-test/block-ti'
+import txTI  from './models-test/tx-ti'
+
+import {createCheckers} from "ts-interface-checker"
+
+
+// Typescript type checks
+const { Tx }  = createCheckers(txTI);
+const { BlockType }  = createCheckers(blockTI);
+
+
 
 jest.setTimeout(50000)
 
@@ -107,7 +118,7 @@ describe('ethvm-server-events', () => {
     client.stop()
   })
 
-  describe('getTxs', () => {
+  describe('get-address-txs', () => {
     it('should return Promise<Tx[]>', async () => {
       const inputs = [
         {
@@ -117,9 +128,11 @@ describe('ethvm-server-events', () => {
         }
       ]
       for (const input of inputs) {
-        const data = await callEvent('getTxs', input, client)
+        const data = await callEvent('get-address-txs', input, client)
+        expect(Tx.test(data[0])).to.to.to.to.true
         expect(data).to.have.lengthOf(10)
-       }
+        expect(data[0].blockNumber).to.eq(97760)
+      }
     })
 
     it('should return err ', async () => {
@@ -163,7 +176,7 @@ describe('ethvm-server-events', () => {
 
       for (const input of inputs) {
         const data = await callEvent('getBalance', input, client)
-        expect(data).to.equal(10)
+        expect(data).to.eq(10)
       }
     })
 
