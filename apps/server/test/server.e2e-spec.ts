@@ -17,17 +17,14 @@ import { ExchangeRate, Quote } from 'ethvm-models'
 import * as Redis from 'ioredis'
 import { MongoClient } from 'mongodb'
 import * as io from 'socket.io-client'
+import {createCheckers} from "ts-interface-checker"
 import { mock } from 'ts-mockito'
 import { MockExchangeRepository, VmServiceImpl } from './mocks'
-import blockTI  from './models-test/block-ti'
 import txTI  from './models-test/tx-ti'
-
-import {createCheckers} from "ts-interface-checker"
 
 
 // Typescript type checks
 const { Tx }  = createCheckers(txTI);
-const { BlockType }  = createCheckers(blockTI);
 
 
 
@@ -129,7 +126,9 @@ describe('ethvm-server-events', () => {
       ]
       for (const input of inputs) {
         const data = await callEvent('get-address-txs', input, client)
-        expect(Tx.test(data[0])).to.to.to.to.true
+        data.forEach(transaction => {
+          expect(Tx.test(transaction)).to.to.to.to.true
+        });
         expect(data).to.have.lengthOf(10)
         expect(data[0].blockNumber).to.eq(97760)
       }
@@ -220,6 +219,8 @@ describe('ethvm-server-events', () => {
       ]
       for (const input of inputs) {
         const data = await callEvent('getBlockTransactions', input, client)
+        expect(Tx.test(data)).to.to.to.to.true
+        expect(data[0].blockNumber).to.be.eq(46214)
         expect(data).to.have.lengthOf(1)
       }
     })
@@ -263,6 +264,9 @@ describe('ethvm-server-events', () => {
       ]
       for (const input of inputs) {
         const data = await callEvent('getTx', input, client)
+        expect(Tx.test(data)).to.to.to.to.true
+        expect(data.blockNumber).to.be.eq(46214)
+
         expect(data).to.not.be.empty
       }
     })
@@ -309,6 +313,7 @@ describe('ethvm-server-events', () => {
       for (const input of inputs) {
         const data = await callEvent('getTotalTxs', input, client)
         expect(data).to.equal(151)
+
       }
     })
 
@@ -355,7 +360,9 @@ describe('ethvm-server-events', () => {
       for (const input of inputs) {
         const data = await callEvent('pastTxs', input, client)
         // timeout happens here
+        expect(data[9].blockHash).to.be.eq("2a3b88a7f4dce885a30bb8933c8e656870282d3a9846476f288078311e801875")
         expect(data).to.have.lengthOf(10)
+        expect(Tx.test(data)).to.to.to.to.true
       }
     })
 
@@ -399,6 +406,7 @@ describe('ethvm-server-events', () => {
 
       for (const input of inputs) {
         const data = await callEvent('pastBlocks', input, client)
+        expect(data[0].header.parentHash).to.be.eq("fbafb4b7b6f6789338d15ff046f40dc608a42b1a33b093e109c6d7a36cd76f61")
         expect(data).to.have.lengthOf(10)
       }
     })
@@ -441,7 +449,8 @@ describe('ethvm-server-events', () => {
       ]
       for (const input of inputs) {
         const data = await callEvent('getBlock', input, client)
-        expect(data).to.be.not.empty
+        expect(data.header.parentHash).to.be.eq("5a41d0e66b4120775176c09fcf39e7c0520517a13d2b57b18d33d342df038bfc")
+        expect(data).to.be.not.undefined
       }
     })
 
