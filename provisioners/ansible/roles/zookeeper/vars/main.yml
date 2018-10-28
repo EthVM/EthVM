@@ -1,7 +1,0 @@
----
-zookeeper_required_libs:
-  - unzip
-
-zookeeper_url: "http://apache.rediris.es/zookeeper/zookeeper-{{zookeeper_version}}/zookeeper-{{zookeeper_version}}.tar.gz"
-
-zookeeper_main_file: org.apache.zookeeper.server.quorum.QuorumPeerMain

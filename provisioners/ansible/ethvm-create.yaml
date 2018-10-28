@@ -1,8 +1,0 @@
----
-
-- name: Provision EthVM infrastructure on Google Cloud Platform
-  gather_facts: false
-  hosts: provisioner
-  roles:
-    - role: roles/gce/create
-    - role: roles/gce/inventory

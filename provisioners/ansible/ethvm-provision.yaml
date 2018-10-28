@@ -1,7 +1,0 @@
----
-
-- hosts: all
-  tasks:
-    - name: Harden all systems
-      include_role:
-        name: security

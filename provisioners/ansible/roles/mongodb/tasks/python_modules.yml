@@ -1,5 +1,0 @@
----
-- name: python_modules | Installing Python Modules
-  pip:
-    name: "pymongo"
-    state: "present"

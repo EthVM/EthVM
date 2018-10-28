@@ -1,0 +1,11 @@
+project_id = "ethvm-123456"
+region = "us-central1"
+zone = "us-central1-a"
+
+name = "ethvm-cluster"
+description = "EthVM Kubernetes cluster"
+cluster_node_count = 3
+
+ntw_name = "ethvm-network"
+
+domain_name = "ethvm-cluster.com"

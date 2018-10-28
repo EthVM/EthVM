@@ -1,7 +1,0 @@
----
-
-- name: Create EthVM inventory hosts retrieved from Google Cloud Platform
-  gather_facts: false
-  hosts: provisioner
-  roles:
-    - role: roles/gce/inventory
