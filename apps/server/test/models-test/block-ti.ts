@@ -46,8 +46,6 @@ export const Block = t.iface([], {
   "hash": "string",
   "header": "Header",
   "stats": "BlockStats",
-  "transactions": t.opt(t.array("string")),
-  "uncles": t.opt(t.array("string")),
 });
 
 const exportedTypeSuite: t.ITypeSuite = {
