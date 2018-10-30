@@ -17,7 +17,7 @@ import { ExchangeRate, Quote } from 'ethvm-models'
 import * as Redis from 'ioredis'
 import { MongoClient } from 'mongodb'
 import * as io from 'socket.io-client'
-import {createCheckers} from "ts-interface-checker"
+import { createCheckers } from 'ts-interface-checker'
 import { mock } from 'ts-mockito'
 import { MockExchangeRepository, VmServiceImpl } from './mocks'
 import blockTI  from './models-test/block-ti'
