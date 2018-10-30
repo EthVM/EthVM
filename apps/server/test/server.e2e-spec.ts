@@ -28,7 +28,6 @@ const { Tx }  = createCheckers(txTI);
 const { Block }  = createCheckers(blockTI);
 
 
-
 jest.setTimeout(50000)
 
 const redisClient = new Redis({
