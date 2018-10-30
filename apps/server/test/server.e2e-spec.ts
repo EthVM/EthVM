@@ -23,7 +23,6 @@ import { MockExchangeRepository, VmServiceImpl } from './mocks'
 import blockTI  from './models-test/block-ti'
 import txTI  from './models-test/tx-ti'
 
-
 // Typescript type checks
 const { Tx }  = createCheckers(txTI);
 const { Block }  = createCheckers(blockTI);
