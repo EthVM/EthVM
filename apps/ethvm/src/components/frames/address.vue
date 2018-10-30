@@ -184,7 +184,7 @@ export default Vue.extend({
     })
     /*Getting Address Transactions: */
     this.$socket.emit(
-      sEvents.getTxs,
+      sEvents.getAddressTx,
       {
         address: this.address.replace('0x',''),
         limit: 10,
