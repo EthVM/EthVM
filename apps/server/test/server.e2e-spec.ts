@@ -462,6 +462,51 @@ describe('ethvm-server-events', () => {
     })
   })
 
+
+  describe.only('getBlocksMined', () => {
+    it('should return Promise<Block>', async () => {
+      const inputs = [
+        {
+          address: '05a56e2d52c817161883f50c441c3228cfe54d9f',
+          limit: 10,
+          page: 0
+        }
+      ]
+      for (const input of inputs) {
+        const data = await callEvent('getBlocksMined', input, client)
+        expect(data[0].hash).to.be.eq("b86d9095750cddaa9d4471eda2e29fe2aa9101c2753c1a0d5bf1a91fdd020388")
+        expect(data).to.be.not.empty
+      }
+    })
+
+    it('should return err ', async () => {
+      const inputs = [
+        '',
+        '0x',
+        '0x0',
+        10,
+        {
+          address: '0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238'
+        },
+        {
+          address: '0xd9ea042ad059033ba3c3be79f4081244f183bf03',
+          limit: '1',
+          page: 1
+        },
+        {
+          number: 1
+        }
+      ]
+      for (const input of inputs) {
+        try {
+          const data = await callEvent('getBlocksMined', input, client)
+        } catch (e) {
+          expect(e).to.be.eql(errors.BAD_REQUEST)
+          expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
+        }
+      }
+    })
+  })
   describe('getTokenBalance', () => {
     it.skip('should return Promise<any>', async () => {
       const inputs = [
