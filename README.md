@@ -39,7 +39,7 @@ Also, there are a couple of different directories, not related itself to any con
 | `postman`                    | Postman (Js)        | A simple Postman collection that contains all `ethereum` JSON RPC calls. Very useful for testing our custom geth node.                                                                                                                         |
 | `provisioners`               | Kubernetes / Docker | Contains kubernetes definitions for deploying a production ready EthVM project (work in progress, though). Also, it contains `docker` development images (that differs slightly from production ready `dockerfiles`) needed for development.   |
 | `docker-compose.yml`         | Docker              | This `docker-compose` file contains everything needed to setup a private environment ready for developing.                                                                                                                                     |
-| `docker-compose.ropsten.yml` | Docker              | Same as above but giving support to `ropsten` network.                                                                                                                                                                                         |
+| `docker-compose.extra.yml` | Docker           | As usually we usually develop bolt and ethereumj, these two projects are out of the previous `docker-compose` file. This file contains those two services dockerized.                                                                                                                                                                                         |
 
 ## Getting Started
 
