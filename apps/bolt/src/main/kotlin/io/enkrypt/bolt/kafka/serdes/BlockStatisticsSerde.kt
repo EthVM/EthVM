@@ -6,30 +6,29 @@ import org.apache.kafka.common.serialization.Serde
 import org.apache.kafka.common.serialization.Serializer
 import org.ethereum.core.BlockStatistics
 
-class RLPBlockStatisticsSerde : Serde<BlockStatistics> {
+class BlockStatisticsSerde : Serde<BlockStatistics?> {
 
-  private val serializer: RLPBlockStatisticsSerializer = RLPBlockStatisticsSerializer()
-  private val deserializer: RLPBlockStatisticsDeserializer = RLPBlockStatisticsDeserializer()
+  private val serializer: BlockStatisticsSerializer = BlockStatisticsSerializer()
+  private val deserializer: BlockStatisticsDeserializer = BlockStatisticsDeserializer()
 
   override fun configure(configs: Map<String, *>, isKey: Boolean) {}
 
   override fun close() {}
 
-  override fun serializer(): Serializer<BlockStatistics> = serializer
+  override fun serializer(): Serializer<BlockStatistics?> = serializer
 
-  override fun deserializer(): Deserializer<BlockStatistics> = deserializer
+  override fun deserializer(): Deserializer<BlockStatistics?> = deserializer
 }
 
-class RLPBlockStatisticsSerializer : Serializer<BlockStatistics> {
+class BlockStatisticsSerializer : Serializer<BlockStatistics?> {
   override fun configure(configs: Map<String, *>, isKey: Boolean) {}
 
-  override fun serialize(topic: String, data: BlockStatistics?): ByteArray =
-    if (data == null) ByteArray(0) else data.encoded
+  override fun serialize(topic: String, data: BlockStatistics?): ByteArray? = data?.encoded
 
   override fun close() {}
 }
 
-class RLPBlockStatisticsDeserializer : Deserializer<BlockStatistics> {
+class BlockStatisticsDeserializer : Deserializer<BlockStatistics?> {
 
   override fun configure(configs: Map<String, *>, isKey: Boolean) {}
 

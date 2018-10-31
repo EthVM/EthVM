@@ -1,5 +1,7 @@
 package io.enkrypt.bolt.extensions
 
+import io.enkrypt.kafka.models.TokenTransfer
+import io.enkrypt.kafka.models.TokenTransferKey
 import org.bson.Document
 import org.ethereum.core.*
 import org.ethereum.vm.LogInfo
@@ -10,7 +12,7 @@ fun Block?.toDocument(summary: BlockSummary) = Document(
     "hash" to this?.hash?.toHex(),
     "number" to this?.number,
     "header" to this?.header.toDocument(summary),
-    "transactions" to this?.transactionsList?.mapIndexed { pos, tx -> tx.toDocument(pos, summary) },
+    "transactions" to this?.transactionsList?.map { it.toDocument(summary) },
     "uncles" to this?.uncleList?.map { it.toDocument(summary) },
     "stats" to summary.statistics.toDocument()
   )
@@ -58,15 +60,15 @@ fun BlockHeader?.toDocument(summary: BlockSummary) = Document(
   )
 )
 
-fun Transaction?.toDocument(pos: Int, blockSummary: BlockSummary): Document {
+fun Transaction?.toDocument(blockSummary: BlockSummary): Document {
   val txHash = this?.hash.toHex()
   val receipt = blockSummary.receipts.find { txHash == it.transaction.hash.toHex() }
   val executionSummary = blockSummary.summaries.find { txHash == it.transaction.hash.toHex() }
 
-  return this.toDocument(pos, receipt, executionSummary)
+  return this.toDocument(receipt, executionSummary)
 }
 
-fun Transaction?.toDocument(pos: Int? = null, receipt: TransactionReceipt?, executionSummary: TransactionExecutionSummary?): Document {
+fun Transaction?.toDocument(receipt: TransactionReceipt?, executionSummary: TransactionExecutionSummary?): Document {
   val internalTxs = executionSummary?.internalTransactions ?: emptyList()
 
   return Document(
@@ -120,10 +122,39 @@ fun InternalTransaction?.toDocument(): Document = Document(
   )
 )
 
-fun AccountState?.toDocument(address: String): Document = Document(
-  mapOf(
-    "address" to address,
-    "nonce" to this?.nonce,
-    "balance" to this?.balance
+fun io.enkrypt.kafka.models.AccountState?.toDocument(address: String): Document {
+
+  var map: Map<String, Any?> = mapOf("address" to address)
+
+  if(this?.nonce != null) map += "nonce" to this.nonce
+  if(this?.balance != null) map += "balance" to this.balance
+  if(this?.code != null) map += "code" to this.code
+  if(this?.codeHash != null) map += "codeHash" to this.codeHash
+  if(this?.creator != null) map += "creator" to this.creator.toHex()
+  if(this?.isMiner != null) map += "miner" to this.isMiner
+
+  return Document(map)
+}
+
+fun TokenTransferKey?.toDocument() = Document(mapOf(
+  "t" to this?.txHash.toHex(),
+  "tI" to this?.txIdx,
+  "lI" to this?.logIdx
+))
+
+fun TokenTransfer?.toDocument(key: TokenTransferKey): Document {
+
+  var map = mapOf(
+    "txHash" to key.txHash.toHex(),
+    "txIdx" to key.txIdx,
+    "logIdx" to key.logIdx,
+    "address" to this?.address.toHex(),
+    "from" to this?.from.toHex(),
+    "to" to this?.to.toHex()
   )
-)
+
+  if(this?.value != null) map += "value" to this.value
+  if(this?.tokenId != null) map += "tokenId" to this.tokenId
+
+  return Document(map)
+}

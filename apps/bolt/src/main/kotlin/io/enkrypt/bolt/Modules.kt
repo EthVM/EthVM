@@ -6,6 +6,8 @@ import com.mongodb.MongoClientURI
 import io.enkrypt.bolt.mongo.codecs.BigIntegerCodec
 import io.enkrypt.bolt.processors.*
 import org.apache.kafka.clients.consumer.ConsumerConfig
+import org.apache.kafka.clients.producer.ProducerConfig
+import org.apache.kafka.common.requests.IsolationLevel
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
 import org.bson.codecs.configuration.CodecRegistries
@@ -25,7 +27,6 @@ object Modules {
           MongoClient.getDefaultCodecRegistry(),
           CodecRegistries.fromCodecs(BigIntegerCodec())   // biginteger to Decimal codec
         ))
-
 
       MongoClientURI(config.mongo.uri, optionsBuilder)
     }
@@ -54,8 +55,8 @@ object Modules {
         put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, config.kafka.bootstrapServers)
 
         // Processing
-        put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, StreamsConfig.AT_LEAST_ONCE)
         put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, config.kafka.startingOffset)
+        put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, StreamsConfig.AT_LEAST_ONCE)
 
         // Serdes - Defaults
         put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().javaClass.name)
@@ -71,6 +72,7 @@ object Modules {
     factory { AccountStateMongoProcessor() }
     factory { PendingTransactionMongoProcessor() }
     factory { StatisticMongoProcessor() }
+    factory { TokenTransferMongoProcessor() }
   }
 
 }

@@ -1,45 +1,43 @@
 package io.enkrypt.bolt.kafka.serdes
 
+import io.enkrypt.kafka.models.TokenTransfer
 import org.apache.kafka.common.errors.SerializationException
 import org.apache.kafka.common.serialization.Deserializer
 import org.apache.kafka.common.serialization.Serde
 import org.apache.kafka.common.serialization.Serializer
-import org.ethereum.util.ByteUtil
-import java.util.Date
 
-class DateSerde : Serde<Date?> {
+class TokenTransferSerde : Serde<TokenTransfer?> {
 
-  private val serializer: DateSerializer = DateSerializer()
-  private val deserializer: DateDeserializer = DateDeserializer()
+  private val serializer: TokenTransferSerializer = TokenTransferSerializer()
+  private val deserializer: TokenTransferDeserializer = TokenTransferDeserializer()
 
   override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
 
-  override fun deserializer(): Deserializer<Date?> = deserializer
+  override fun deserializer(): Deserializer<TokenTransfer?> = deserializer
 
-  override fun serializer(): Serializer<Date?> = serializer
+  override fun serializer(): Serializer<TokenTransfer?> = serializer
 
   override fun close() {}
 }
 
-class DateSerializer : Serializer<Date?> {
+class TokenTransferSerializer : Serializer<TokenTransfer?> {
   override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
 
-  override fun serialize(topic: String?, data: Date?): ByteArray? =
-    if (data == null) null else ByteUtil.longToBytes(data.time)
+  override fun serialize(topic: String?, data: TokenTransfer?): ByteArray? = data?.encoded
 
   override fun close() {
   }
 }
 
-class DateDeserializer : Deserializer<Date?> {
+class TokenTransferDeserializer : Deserializer<TokenTransfer?> {
   override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
 
-  override fun deserialize(topic: String?, data: ByteArray?): Date? {
+  override fun deserialize(topic: String?, data: ByteArray?): TokenTransfer? {
     if (data == null || data.isEmpty()) {
       return null
     }
     return try {
-      Date(ByteUtil.byteArrayToLong(data))
+      TokenTransfer.newBuilder(data).build()
     } catch (e: Exception) {
       throw SerializationException("Error deserializing value", e)
     }

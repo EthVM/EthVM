@@ -7,7 +7,8 @@ import com.mongodb.client.model.ReplaceOptions
 import com.mongodb.client.model.WriteModel
 import io.enkrypt.bolt.extensions.toDocument
 import io.enkrypt.bolt.kafka.processors.MongoProcessor
-import io.enkrypt.bolt.kafka.serdes.RLPTransactionSerde
+import io.enkrypt.bolt.kafka.serdes.BoltSerdes
+import io.enkrypt.bolt.kafka.serdes.TransactionSerde
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
@@ -41,8 +42,6 @@ class PendingTransactionsProcessor : AbstractBaseProcessor() {
   override val logger = KotlinLogging.logger {}
 
   override fun onPrepareProcessor() {
-    // Create Serde
-    val serde = RLPTransactionSerde()
 
     // Create stream builder
     val builder = StreamsBuilder()
@@ -50,7 +49,7 @@ class PendingTransactionsProcessor : AbstractBaseProcessor() {
     val (_, pendingTransactions) =appConfig.kafka.topicsConfig
 
     builder
-      .stream(pendingTransactions, Consumed.with(Serdes.ByteArray(), serde))
+      .stream(pendingTransactions, Consumed.with(Serdes.ByteArray(), BoltSerdes.Transaction()))
       .map { k, v -> KeyValue(ByteUtil.toHexString(k), v) }
       .process({ get<PendingTransactionMongoProcessor>() }, null)
 
@@ -106,7 +105,7 @@ class PendingTransactionMongoProcessor : MongoProcessor<String, Transaction?>() 
       if (txn == null) {
         DeleteOneModel<Document>(filter)
       } else {
-        ReplaceOneModel(filter, txn.toDocument(null, null, null), replaceOptions)
+        ReplaceOneModel(filter, txn.toDocument(null, null), replaceOptions)
       }
     }
 

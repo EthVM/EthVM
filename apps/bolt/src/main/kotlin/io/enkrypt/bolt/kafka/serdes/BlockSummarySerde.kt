@@ -6,30 +6,29 @@ import org.apache.kafka.common.serialization.Serde
 import org.apache.kafka.common.serialization.Serializer
 import org.ethereum.core.BlockSummary
 
-class RLPBlockSummarySerde : Serde<BlockSummary> {
+class BlockSummarySerde : Serde<BlockSummary?> {
 
-  private val serializer: RLPBlockSummarySerializer = RLPBlockSummarySerializer()
-  private val deserializer: RLPBlockSummaryDeserializer = RLPBlockSummaryDeserializer()
+  private val serializer: BlockSummarySerializer = BlockSummarySerializer()
+  private val deserializer: BlockSummaryDeserializer = BlockSummaryDeserializer()
 
   override fun configure(configs: Map<String, *>, isKey: Boolean) {}
 
   override fun close() {}
 
-  override fun serializer(): Serializer<BlockSummary> = serializer
+  override fun serializer(): Serializer<BlockSummary?> = serializer
 
-  override fun deserializer(): Deserializer<BlockSummary> = deserializer
+  override fun deserializer(): Deserializer<BlockSummary?> = deserializer
 }
 
-class RLPBlockSummarySerializer : Serializer<BlockSummary> {
+class BlockSummarySerializer : Serializer<BlockSummary?> {
   override fun configure(configs: Map<String, *>, isKey: Boolean) {}
 
-  override fun serialize(topic: String, data: BlockSummary?): ByteArray =
-    if (data == null) ByteArray(0) else data.encoded
+  override fun serialize(topic: String, data: BlockSummary?): ByteArray? = data?.encoded
 
   override fun close() {}
 }
 
-class RLPBlockSummaryDeserializer : Deserializer<BlockSummary> {
+class BlockSummaryDeserializer : Deserializer<BlockSummary?> {
 
   override fun configure(configs: Map<String, *>, isKey: Boolean) {}
 

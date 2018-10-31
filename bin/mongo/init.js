@@ -7,8 +7,13 @@ db.createCollection('accounts');
 db.createCollection('blocks');
 db.createCollection('pending_transactions');
 db.createCollection('statistics');
+db.createCollection('token_transfers')
+db.createCollection('token_balances')
 
 // create indexes
+
+db.accounts.createIndex({ miner: 1 })
+db.accounts.createIndex({ creator: 1 })
 
 db.blocks.createIndex({ hash: 1 }, { unique: 1 });
 db.blocks.createIndex({ 'header.timestamp': 1 });

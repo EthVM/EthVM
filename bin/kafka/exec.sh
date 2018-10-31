@@ -5,5 +5,5 @@ shift
 
 CMD="$@"
 
-docker-compose exec kafka sh -c "kafka-${UTIL} ${@}"
+docker-compose exec kafka-1 sh -c "kafka-${UTIL} ${@}"
 

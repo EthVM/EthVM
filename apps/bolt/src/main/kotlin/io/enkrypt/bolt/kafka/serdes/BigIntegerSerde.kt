@@ -6,35 +6,34 @@ import org.apache.kafka.common.serialization.Serde
 import org.apache.kafka.common.serialization.Serializer
 import java.math.BigInteger
 
-class BigIntegerSerde : Serde<BigInteger> {
+class BigIntegerSerde : Serde<BigInteger?> {
 
   private val serializer: BigIntegerSerializer = BigIntegerSerializer()
   private val deserializer: BigIntegerDeserializer = BigIntegerDeserializer()
 
   override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
 
-  override fun deserializer(): Deserializer<BigInteger> = deserializer
+  override fun deserializer(): Deserializer<BigInteger?> = deserializer
 
-  override fun serializer(): Serializer<BigInteger> = serializer
+  override fun serializer(): Serializer<BigInteger?> = serializer
 
   override fun close() {}
 }
 
-class BigIntegerSerializer : Serializer<BigInteger> {
+class BigIntegerSerializer : Serializer<BigInteger?> {
   override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
 
-  override fun serialize(topic: String?, data: BigInteger?): ByteArray =
-    if (data == null) ByteArray(0) else data.toByteArray()
+  override fun serialize(topic: String?, data: BigInteger?): ByteArray? = data?.toByteArray()
 
   override fun close() {
   }
 }
 
-class BigIntegerDeserializer : Deserializer<BigInteger> {
+class BigIntegerDeserializer : Deserializer<BigInteger?> {
   override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
 
   override fun deserialize(topic: String?, data: ByteArray?): BigInteger? {
-    if (data == null) {
+    if (data == null || data.isEmpty()) {
       return null
     }
     return try {

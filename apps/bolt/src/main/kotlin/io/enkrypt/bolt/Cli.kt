@@ -14,6 +14,12 @@ import org.koin.standalone.StandAloneContext.startKoin
 class Cli : CliktCommand() {
 
   // General - CLI
+
+  private val transactionalId: String by option(
+    help = "A unique instance id for use in kafka transactions",
+    envvar = "KAFKA_TRANSACTIONAL_ID"
+  ).default(DEFAULT_TRANSACTIONAL_ID)
+
   private val bootstrapServers: String by option(
     help = "A list of host/port pairs to use for establishing the initial connection to the Kafka cluster",
     envvar = "KAFKA_BOOTSTRAP_SERVERS"
@@ -45,6 +51,11 @@ class Cli : CliktCommand() {
     envvar = "KAFKA_ACCOUNT_STATE_TOPIC"
   ).default(DEFAULT_ACCOUNT_STATE_TOPIC)
 
+  private val tokenTransfersTopic: String by option(
+    help = "Name of the token transfers topic on which Bolt will listen",
+    envvar = "KAFKA_TOKEN_TRANSFERS_TOPIC"
+  ).default(DEFAULT_TOKEN_TRANSFERS_TOPIC)
+
   private val metadataTopic: String by option(
     help = "Name of the metadata topic on which Bolt will listen",
     envvar = "KAFKA_METADATA_TOPIC"
@@ -67,7 +78,9 @@ class Cli : CliktCommand() {
         "accounts",
         "blocks",
         "pending_transactions",
-        "statistics"
+        "statistics",
+        "token_transfers",
+        "token_balances"
       )
 
     }
@@ -76,10 +89,12 @@ class Cli : CliktCommand() {
       KafkaConfig(
         bootstrapServers,
         startingOffset,
+        transactionalId,
         KafkaTopicsConfig(
           blocksTopic,
           pendingTxsTopic,
           accountStateTopic,
+          tokenTransfersTopic,
           metadataTopic
         ))
     }
@@ -105,7 +120,8 @@ class Cli : CliktCommand() {
 
   companion object Defaults {
 
-    const val DEFAULT_BOOTSTRAP_SERVERS = "localhost:9092"
+    const val DEFAULT_TRANSACTIONAL_ID = "bolt-1"
+    const val DEFAULT_BOOTSTRAP_SERVERS = "kafka-1:9091,kafka-2:9092,kafka-3:9093"
     const val DEFAULT_AUTO_OFFSET = "earliest"
     const val DEFAULT_STREAMS_RESET = 0
 
@@ -114,6 +130,7 @@ class Cli : CliktCommand() {
     const val DEFAULT_BLOCKS_TOPIC = "blocks"
     const val DEFAULT_PENDING_TXS_TOPIC = "pending-transactions"
     const val DEFAULT_ACCOUNT_STATE_TOPIC = "account-state"
+    const val DEFAULT_TOKEN_TRANSFERS_TOPIC = "token-transfers"
     const val DEFAULT_METADATA_TOPIC = "account-state"
   }
 }

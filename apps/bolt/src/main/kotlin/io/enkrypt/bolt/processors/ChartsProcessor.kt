@@ -1,15 +1,10 @@
 package io.enkrypt.bolt.processors
 
 import com.mongodb.client.MongoCollection
-import com.mongodb.client.MongoDatabase
-import com.mongodb.client.model.ReplaceOptions
 import com.mongodb.client.model.UpdateOneModel
 import com.mongodb.client.model.UpdateOptions
 import io.enkrypt.bolt.kafka.processors.MongoProcessor
-import io.enkrypt.bolt.kafka.serdes.BigIntegerSerde
-import io.enkrypt.bolt.kafka.serdes.DateSerde
-import io.enkrypt.bolt.kafka.serdes.RLPBlockStatisticsSerde
-import io.enkrypt.bolt.kafka.serdes.RLPBlockSummarySerde
+import io.enkrypt.bolt.kafka.serdes.*
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
@@ -23,7 +18,6 @@ import org.apache.kafka.streams.processor.PunctuationType
 import org.bson.Document
 import org.ethereum.util.ByteUtil
 import org.koin.standalone.get
-import org.koin.standalone.inject
 import java.math.BigInteger
 import java.util.Calendar
 import java.util.Date
@@ -48,30 +42,28 @@ class ChartsProcessor : AbstractBaseProcessor() {
 
   override fun onPrepareProcessor() {
 
-    // Serdes
-    val blockSummarySerde = RLPBlockSummarySerde()
-    val blockStatisticsSerde = RLPBlockStatisticsSerde()
-    val bigIntegerSerde = BigIntegerSerde()
-    val dateSerde = DateSerde()
-
     // Create stream builder
     val builder = StreamsBuilder()
 
+    Serdes.Long()
+
     val (blocks) = appConfig.kafka.topicsConfig
 
-    val blocksStream = builder.stream(blocks, Consumed.with(Serdes.ByteArray(), blockSummarySerde))
+    val blocksStream = builder
+      .stream(blocks, Consumed.with(BoltSerdes.Long(), BoltSerdes.BlockSummary()))
+      .filter{ k, v -> !(k == null || v == null)}
+      .map{ k, v -> KeyValue(k!!, v!!) }
 
     val statsByDay = blocksStream
-      .map { k, v -> KeyValue(ByteUtil.byteArrayToLong(k), v) }
-      .groupByKey(Serialized.with(Serdes.Long(), blockSummarySerde))
+      .groupByKey(Serialized.with(BoltSerdes.Long(), BoltSerdes.BlockSummary()))
       .reduce(
         { a, b -> if (a.totalDifficulty >= b.totalDifficulty) a else b },
-        Materialized.with(Serdes.Long(), blockSummarySerde)
+        Materialized.with(BoltSerdes.Long(), BoltSerdes.BlockSummary())
       ).groupBy(
         { _, v ->
           KeyValue(timestampToDay(v.block.timestamp), v.statistics.setTotalDifficulty(v.block.cumulativeDifficulty))
         },
-        Serialized.with(dateSerde, blockStatisticsSerde)
+        Serialized.with(BoltSerdes.Date(), BoltSerdes.BlockStatistics())
       )
 
     // Blocks count per day
@@ -85,16 +77,17 @@ class ChartsProcessor : AbstractBaseProcessor() {
     statsByDay
       .aggregate(
         { BigInteger.ZERO },
-        { _, v, total -> total.add(v.totalDifficulty) },
-        { _, v, total -> total.subtract(v.totalDifficulty) },
-        Materialized.with(dateSerde, bigIntegerSerde)
+        { _, v, total -> total?.add(v!!.totalDifficulty) },
+        { _, v, total -> total?.subtract(v!!.totalDifficulty) },
+        Materialized.with(BoltSerdes.Date(), BoltSerdes.BigInteger())
       ).join(
         blockCountByDay,
-        { total, count -> if (count == 0L) BigInteger.ZERO else total.divide(BigInteger.valueOf(count)) },
-        Materialized.with(dateSerde, bigIntegerSerde)
+        { total, count -> if (count == 0L) BigInteger.ZERO else total?.divide(BigInteger.valueOf(count)) },
+        Materialized.with(BoltSerdes.Date(), BoltSerdes.BigInteger())
       )
       .toStream()
-      .mapValues { v -> Pair("avg_total_difficulty", v.toLong()) }
+      .mapValues { v -> Pair("avg_total_difficulty", v!!.toLong()) }
+      .map { k, v -> KeyValue(k!!, v!!) }
       .process({ get<StatisticMongoProcessor>() }, null)
 
     // Avg Gas Price
@@ -103,16 +96,17 @@ class ChartsProcessor : AbstractBaseProcessor() {
     statsByDay
       .aggregate(
         { BigInteger.ZERO },
-        { _, v, total -> total.add(v.avgGasPrice) },
-        { _, v, total -> total.subtract(v.avgGasPrice) },
-        Materialized.with(dateSerde, bigIntegerSerde)
+        { _, v, total -> total?.add(v!!.avgGasPrice) },
+        { _, v, total -> total?.subtract(v!!.avgGasPrice) },
+        Materialized.with(BoltSerdes.Date(), BoltSerdes.BigInteger())
       ).join(
         blockCountByDay,
-        { total, count -> if (count == 0L) BigInteger.ZERO else total.divide(BigInteger.valueOf(count)) },
-        Materialized.with(dateSerde, bigIntegerSerde)
+        { total, count -> if (count == 0L) BigInteger.ZERO else total?.divide(BigInteger.valueOf(count)) },
+        Materialized.with(BoltSerdes.Date(), BoltSerdes.BigInteger())
       )
       .toStream()
-      .mapValues { v -> Pair("avg_gas_price", v.toLong()) }
+      .mapValues { v -> Pair("avg_gas_price", v!!.toLong()) }
+      .map { k, v -> KeyValue(k!!, v!!) }
       .process({ get<StatisticMongoProcessor>() }, null)
 
 
@@ -122,16 +116,17 @@ class ChartsProcessor : AbstractBaseProcessor() {
     statsByDay
       .aggregate(
         { BigInteger.ZERO },
-        { _, v, total -> total.add(v.avgTxsFees) },
-        { _, v, total -> total.subtract(v.avgTxsFees) },
-        Materialized.with(dateSerde, bigIntegerSerde)
+        { _, v, total -> total?.add(v!!.avgTxsFees) },
+        { _, v, total -> total?.subtract(v!!.avgTxsFees) },
+        Materialized.with(BoltSerdes.Date(), BoltSerdes.BigInteger())
       ).join(
         blockCountByDay,
-        { total, count -> if (count == 0L) BigInteger.ZERO else total.divide(BigInteger.valueOf(count)) },
-        Materialized.with(dateSerde, bigIntegerSerde)
+        { total, count -> if (count == 0L) BigInteger.ZERO else total?.divide(BigInteger.valueOf(count)) },
+        Materialized.with(BoltSerdes.Date(), BoltSerdes.BigInteger())
       )
       .toStream()
-      .mapValues { v -> Pair("avg_txs_fees", v.toLong()) }
+      .mapValues { v -> Pair("avg_txs_fees", v!!.toLong()) }
+      .map { k, v -> KeyValue(k!!, v!!) }
       .process({ get<StatisticMongoProcessor>() }, null)
 
 
@@ -141,16 +136,17 @@ class ChartsProcessor : AbstractBaseProcessor() {
     statsByDay
       .aggregate(
         { 0 },
-        { _, v, total -> total + v.numFailedTxs },
-        { _, v, total -> total - v.numFailedTxs },
-        Materialized.with(dateSerde, Serdes.Integer())
+        { _, v, total -> total + v!!.numFailedTxs },
+        { _, v, total -> total - v!!.numFailedTxs },
+        Materialized.with(BoltSerdes.Date(), Serdes.Integer())
       ).join(
         blockCountByDay,
         { total, count -> if (count == 0L) 0 else total / count },
-        Materialized.with(dateSerde, Serdes.Long())
+        Materialized.with(BoltSerdes.Date(), BoltSerdes.Long())
       )
       .toStream()
-      .mapValues { v -> Pair("avg_failed_txs", v.toLong()) }
+      .mapValues { v -> Pair("avg_failed_txs", v!!.toLong()) }
+      .map { k, v -> KeyValue(k!!, v!!) }
       .process({ get<StatisticMongoProcessor>() }, null)
 
     // Avg Successful Txs
@@ -159,16 +155,17 @@ class ChartsProcessor : AbstractBaseProcessor() {
     statsByDay
       .aggregate(
         { 0 },
-        { _, v, total -> total + v.numSuccessfulTxs },
-        { _, v, total -> total - v.numSuccessfulTxs },
-        Materialized.with(dateSerde, Serdes.Integer())
+        { _, v, total -> total + v!!.numSuccessfulTxs },
+        { _, v, total -> total - v!!.numSuccessfulTxs },
+        Materialized.with(BoltSerdes.Date(), Serdes.Integer())
       ).join(
         blockCountByDay,
         { total, count -> if (count == 0L) 0 else total / count },
-        Materialized.with(dateSerde, Serdes.Long())
+        Materialized.with(BoltSerdes.Date(), BoltSerdes.Long())
       )
       .toStream()
-      .mapValues { v -> Pair("avg_successful_txs", v.toLong()) }
+      .mapValues { v -> Pair("avg_successful_txs", v!!.toLong()) }
+      .map { k, v -> KeyValue(k!!, v!!) }
       .process({ get<StatisticMongoProcessor>() }, null)
 
     // Generate the topology

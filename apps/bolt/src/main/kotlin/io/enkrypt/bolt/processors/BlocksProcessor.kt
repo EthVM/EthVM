@@ -1,17 +1,17 @@
 package io.enkrypt.bolt.processors
 
+import arrow.core.Option
+import arrow.core.getOrElse
 import com.mongodb.client.MongoCollection
-import com.mongodb.client.model.BulkWriteOptions
-import com.mongodb.client.model.ReplaceOneModel
-import com.mongodb.client.model.ReplaceOptions
-import com.mongodb.client.model.UpdateOneModel
-import com.mongodb.client.model.UpdateOptions
+import com.mongodb.client.model.*
 import io.enkrypt.bolt.eth.utils.StandardTokenDetector
 import io.enkrypt.bolt.extensions.toDocument
 import io.enkrypt.bolt.extensions.toHex
-import io.enkrypt.bolt.kafka.serdes.RLPBlockSummarySerde
+import io.enkrypt.bolt.kafka.serdes.BlockSummarySerde
+import io.enkrypt.bolt.kafka.serdes.BoltSerdes
 import io.enkrypt.bolt.kafka.transformers.MongoTransformer
 import io.enkrypt.bolt.models.Contract
+import io.enkrypt.kafka.models.AccountState
 import mu.KotlinLogging
 import org.apache.commons.lang3.ArrayUtils
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -21,6 +21,7 @@ import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.kstream.Consumed
+import org.apache.kafka.streams.kstream.Produced
 import org.apache.kafka.streams.processor.Cancellable
 import org.apache.kafka.streams.processor.ProcessorContext
 import org.apache.kafka.streams.processor.PunctuationType
@@ -48,18 +49,21 @@ class BlocksProcessor : AbstractBaseProcessor() {
 
   override fun onPrepareProcessor() {
 
-    // RLP Serde
-    val blockSerde = RLPBlockSummarySerde()
-
     // Create stream builder
     val builder = StreamsBuilder()
 
-    val (blocks) = appConfig.kafka.topicsConfig
+    val (blocksTopic) = appConfig.kafka.topicsConfig
 
-    builder
-      .stream(blocks, Consumed.with(Serdes.ByteArray(), blockSerde))
-      .transform({ get<BlockMongoTransformer>() }, null)
-      .transform({ get<TokenDetectorTransformer>() }, null)
+    val blocksStream = builder
+      .stream(blocksTopic, Consumed.with(BoltSerdes.Long(), BoltSerdes.BlockSummary()))
+      .filter { k, _ -> k != null }
+      .map { k, v -> KeyValue(k!!, v) }
+
+    // persist block info
+    blocksStream.transform({ get<BlockMongoTransformer>() }, null)
+
+    // detect contract types
+    blocksStream.transform({ get<TokenDetectorTransformer>() }, null)
 
     // Generate the topology
     val topology = builder.build()
@@ -77,14 +81,14 @@ class BlocksProcessor : AbstractBaseProcessor() {
 }
 
 
-class BlockMongoTransformer : MongoTransformer<ByteArray, BlockSummary?>() {
+class BlockMongoTransformer : MongoTransformer<Long, BlockSummary?>() {
 
   private val blocksCollection: MongoCollection<Document>by lazy {
     mongoDB.getCollection(config.mongo.blocksCollection)
   }
 
   override val batchSize = 50
-  private val batch: MutableList<Pair<ByteArray, BlockSummary>> = ArrayList()
+  private val batch: MutableList<Pair<Long, BlockSummary?>> = ArrayList()
 
   private var scheduledWrite: Cancellable? = null
 
@@ -93,9 +97,9 @@ class BlockMongoTransformer : MongoTransformer<ByteArray, BlockSummary?>() {
     this.scheduledWrite = context.schedule(timeoutMs, PunctuationType.WALL_CLOCK_TIME) { _ -> tryToWrite() }
   }
 
-  override fun transform(key: ByteArray, value: BlockSummary?): KeyValue<ByteArray, BlockSummary?>? {
+  override fun transform(key: Long, value: BlockSummary?): KeyValue<Long, BlockSummary?>? {
 
-    if(value != null) {
+    if (value != null) {
       batch.add(Pair(key, value))
     }
 
@@ -115,22 +119,29 @@ class BlockMongoTransformer : MongoTransformer<ByteArray, BlockSummary?>() {
 
     val startMs = System.currentTimeMillis()
 
-    val blocksOps = batch.map { pair ->
+    val replaceOptions = ReplaceOptions().upsert(true)
 
-      val key = pair.first
-      val summary = pair.second
+    val blocksOps = batch
+      .map { pair ->
 
-      val block = summary.block
+        val number = pair.first
+        val summary = pair.second
 
-      // Mongo
-      val replaceOptions = ReplaceOptions().upsert(true)
+        val blockQuery = Document(mapOf("_id" to number))
 
-      // Blocks
-      val blockQuery = Document(mapOf("_id" to block.number))
-      val blockUpdate = block.toDocument(summary)
+        Option.fromNullable(summary)
+          .map { summary ->
 
-      ReplaceOneModel(blockQuery, blockUpdate, replaceOptions)
-    }
+            val block = summary.block
+            val blockUpdate = block.toDocument(summary)
+            ReplaceOneModel(blockQuery, blockUpdate, replaceOptions)
+
+          }.getOrElse {
+            // delete the block entry
+            DeleteOneModel<Document>(blockQuery)
+          }
+
+      }
 
     try {
 
@@ -141,7 +152,7 @@ class BlockMongoTransformer : MongoTransformer<ByteArray, BlockSummary?>() {
       batch.forEach { pair -> context.forward(pair.first, pair.second) }
 
       val elapsedMs = System.currentTimeMillis() - startMs
-      logger.debug { "${batch.size} blocks stored in $elapsedMs ms" }
+      logger.info { "${batch.size} blocks stored in $elapsedMs ms" }
 
       batch.clear()
 
@@ -161,7 +172,7 @@ class BlockMongoTransformer : MongoTransformer<ByteArray, BlockSummary?>() {
 
 }
 
-class TokenDetectorTransformer : MongoTransformer<ByteArray, BlockSummary?>() {
+class TokenDetectorTransformer : MongoTransformer<Long, BlockSummary?>() {
 
   private val accountsCollection: MongoCollection<Document>by lazy {
     mongoDB.getCollection(config.mongo.accountsCollection)
@@ -177,9 +188,9 @@ class TokenDetectorTransformer : MongoTransformer<ByteArray, BlockSummary?>() {
     this.scheduledWrite = context.schedule(timeoutMs, PunctuationType.WALL_CLOCK_TIME) { _ -> tryToWrite() }
   }
 
-  override fun transform(key: ByteArray, value: BlockSummary?): KeyValue<ByteArray, BlockSummary?>? {
+  override fun transform(key: Long, value: BlockSummary?): KeyValue<Long, BlockSummary?>? {
 
-    if(value == null) return null
+    if (value == null) return null
 
     val block = value.block
     val txs = block?.transactionsList ?: emptyList()
@@ -245,25 +256,4 @@ class TokenDetectorTransformer : MongoTransformer<ByteArray, BlockSummary?>() {
     running = false
     scheduledWrite?.cancel()
   }
-}
-
-class BlockSummaryTimestampExtractor : TimestampExtractor {
-
-  override fun extract(record: ConsumerRecord<Any, Any>?, previousTimestamp: Long): Long {
-    var timestamp: Long = -1
-    val summary = record?.value() as BlockSummary
-    if (summary != null) {
-      timestamp = summary.block.timestamp * 1000   // timestamp is in unix time
-    }
-    return if (timestamp < 0) {
-      // Invalid timestamp!  Attempt to estimate a new timestamp,
-      // otherwise fall back to wall-clock time (processing-time).
-      if (previousTimestamp >= 0) {
-        previousTimestamp
-      } else {
-        System.currentTimeMillis()
-      }
-    } else timestamp
-  }
-
 }

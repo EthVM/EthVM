@@ -1,21 +1,30 @@
 #!/bin/bash -e
 
 # blocks
-CMD="kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 12 --topic blocks --config retention.ms=-1 --config cleanup.policy=compact"
+CMD="kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 3 --partitions 4 --topic blocks --config retention.ms=-1 --config cleanup.policy=compact"
 echo "COMMAND: $CMD"
-docker-compose exec kafka sh -c "$CMD"
+docker-compose exec kafka-1 sh -c "$CMD"
+sleep 2
 
 # account-state
-CMD="kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 12 --topic account-state --config retention.ms=-1 --config cleanup.policy=compact"
+CMD="kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 3 --partitions 4 --topic account-state --config retention.ms=-1 --config cleanup.policy=compact"
 echo "COMMAND: $CMD"
-docker-compose exec kafka sh -c "$CMD"
+docker-compose exec kafka-1 sh -c "$CMD"
+sleep 2
+
+# token-transfers
+CMD="kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 3 --partitions 4 --topic token-transfers --config retention.ms=-1 --config cleanup.policy=compact"
+echo "COMMAND: $CMD"
+docker-compose exec kafka-1 sh -c "$CMD"
+sleep 2
 
 # pending transactions
-CMD="kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 12 --topic pending-transactions --config retention.ms=-1 --config cleanup.policy=compact"
+CMD="kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 3 --partitions 4 --topic pending-transactions --config retention.ms=-1 --config cleanup.policy=compact"
 echo "COMMAND: $CMD"
-docker-compose exec kafka sh -c "$CMD"
+docker-compose exec kafka-1 sh -c "$CMD"
+sleep 2
 
 # metadata
-CMD="kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic metadata --config retention.ms=-1 --config cleanup.policy=compact"
+CMD="kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 3 --partitions 1 --topic metadata --config retention.ms=-1 --config cleanup.policy=compact"
 echo "COMMAND: $CMD"
-docker-compose exec kafka sh -c "$CMD"
+docker-compose exec kafka-1 sh -c "$CMD"

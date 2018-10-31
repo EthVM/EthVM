@@ -8,6 +8,7 @@ data class AppConfig(
 data class KafkaConfig(
   val bootstrapServers: String,
   val startingOffset: String,
+  val transactionalId: String,
   val topicsConfig: KafkaTopicsConfig
 )
 
@@ -15,6 +16,7 @@ data class KafkaTopicsConfig(
   val blocks: String,
   val pendingTransactions: String,
   val accountState: String,
+  val tokenTransfers: String,
   val metadata: String
 )
 
@@ -23,5 +25,7 @@ data class MongoConfig(
   val accountsCollection: String,
   val blocksCollection: String,
   val pendingTransactionsCollection: String,
-  val statisticsCollection: String
+  val statisticsCollection: String,
+  val tokenTransfersCollection: String,
+  val tokenBalancesCollection: String
 )

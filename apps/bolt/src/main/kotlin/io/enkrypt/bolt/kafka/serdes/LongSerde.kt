@@ -7,39 +7,39 @@ import org.apache.kafka.common.serialization.Serializer
 import org.ethereum.util.ByteUtil
 import java.util.Date
 
-class DateSerde : Serde<Date?> {
+class LongSerde : Serde<Long?> {
 
-  private val serializer: DateSerializer = DateSerializer()
-  private val deserializer: DateDeserializer = DateDeserializer()
+  private val serializer: LongSerializer = LongSerializer()
+  private val deserializer: LongDeserializer = LongDeserializer()
 
   override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
 
-  override fun deserializer(): Deserializer<Date?> = deserializer
+  override fun deserializer(): Deserializer<Long?> = deserializer
 
-  override fun serializer(): Serializer<Date?> = serializer
+  override fun serializer(): Serializer<Long?> = serializer
 
   override fun close() {}
 }
 
-class DateSerializer : Serializer<Date?> {
+class LongSerializer : Serializer<Long?> {
   override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
 
-  override fun serialize(topic: String?, data: Date?): ByteArray? =
-    if (data == null) null else ByteUtil.longToBytes(data.time)
+  override fun serialize(topic: String?, data: Long?): ByteArray? =
+    if (data == null) null else ByteUtil.longToBytes(data)
 
   override fun close() {
   }
 }
 
-class DateDeserializer : Deserializer<Date?> {
+class LongDeserializer : Deserializer<Long?> {
   override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
 
-  override fun deserialize(topic: String?, data: ByteArray?): Date? {
+  override fun deserialize(topic: String?, data: ByteArray?): Long? {
     if (data == null || data.isEmpty()) {
       return null
     }
     return try {
-      Date(ByteUtil.byteArrayToLong(data))
+      ByteUtil.byteArrayToLong(data)
     } catch (e: Exception) {
       throw SerializationException("Error deserializing value", e)
     }

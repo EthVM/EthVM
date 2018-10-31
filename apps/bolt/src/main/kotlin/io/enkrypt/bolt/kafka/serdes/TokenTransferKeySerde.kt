@@ -1,44 +1,43 @@
 package io.enkrypt.bolt.kafka.serdes
 
+import io.enkrypt.kafka.models.TokenTransferKey
 import org.apache.kafka.common.errors.SerializationException
 import org.apache.kafka.common.serialization.Deserializer
 import org.apache.kafka.common.serialization.Serde
 import org.apache.kafka.common.serialization.Serializer
-import org.ethereum.core.AccountState
 
-class RLPAccountStateSerde : Serde<AccountState> {
+class TokenTransferKeySerde : Serde<TokenTransferKey?> {
 
-  private val serializer: RLPAccountSerializer = RLPAccountSerializer()
-  private val deserializer: RLPAccountDeserializer = RLPAccountDeserializer()
+  private val serializer: TokenTransferKeySerializer = TokenTransferKeySerializer()
+  private val deserializer: TokenTransferKeyDeserializer = TokenTransferKeyDeserializer()
 
   override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
 
-  override fun deserializer(): Deserializer<AccountState> = deserializer
+  override fun deserializer(): Deserializer<TokenTransferKey?> = deserializer
 
-  override fun serializer(): Serializer<AccountState> = serializer
+  override fun serializer(): Serializer<TokenTransferKey?> = serializer
 
   override fun close() {}
 }
 
-class RLPAccountSerializer : Serializer<AccountState> {
+class TokenTransferKeySerializer : Serializer<TokenTransferKey?> {
   override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
 
-  override fun serialize(topic: String?, data: AccountState?): ByteArray =
-    if (data == null) ByteArray(0) else data.encoded
+  override fun serialize(topic: String?, data: TokenTransferKey?): ByteArray? = data?.encoded
 
   override fun close() {
   }
 }
 
-class RLPAccountDeserializer : Deserializer<AccountState> {
+class TokenTransferKeyDeserializer : Deserializer<TokenTransferKey?> {
   override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
 
-  override fun deserialize(topic: String?, data: ByteArray?): AccountState? {
+  override fun deserialize(topic: String?, data: ByteArray?): TokenTransferKey? {
     if (data == null || data.isEmpty()) {
       return null
     }
     return try {
-      AccountState(data)
+      TokenTransferKey(data)
     } catch (e: Exception) {
       throw SerializationException("Error deserializing value", e)
     }
