@@ -2,9 +2,10 @@ import { TxsPayload } from '@app/server/core/payloads'
 import { txsPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
 import { Tx } from 'ethvm-models'
+import { Events } from '@app/server/core/events'
 
-const getTxsEvent: SocketEvent = {
-  id: 'get-address-txs',
+const getAddressTxsEvent: SocketEvent = {
+  id: Events.getAddressTxs, // new_name: get-address-txs
 
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = txsPayloadValidator(payload) as boolean
@@ -18,4 +19,4 @@ const getTxsEvent: SocketEvent = {
     server.txsService.getTxsOfAddress(payload.address, payload.limit, payload.page)
 }
 
-export default getTxsEvent
+export default getAddressTxsEvent

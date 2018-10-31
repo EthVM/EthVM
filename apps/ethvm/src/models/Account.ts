@@ -15,7 +15,7 @@ export class Account {
 
   public getBalance() {
     if (!this.cache.balance) {
-      this.cache.balance = common.EthValue(this.address.balance)
+      this.cache.balance = this.address.balance
     }
     return this.cache.balance
   }

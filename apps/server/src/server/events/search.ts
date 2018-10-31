@@ -1,8 +1,9 @@
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
 import { Search } from '@app/server/modules/search'
+import { Events } from '@app/server/core/events'
 
 const searchEvent: SocketEvent = {
-  id: 'search',
+  id: Events.search,
 
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = true

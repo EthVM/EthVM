@@ -1,9 +1,10 @@
 import { blockPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
 import { Block } from 'ethvm-models'
+import { Events } from '@app/server/core/events'
 
 const getBlockEvent: SocketEvent = {
-  id: 'getBlock', // new_name: get-block
+  id: Events.getBlock, // new_name: get-block
 
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = blockPayloadValidator(payload) as boolean

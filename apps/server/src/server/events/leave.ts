@@ -2,9 +2,10 @@ import { logger } from '@app/logger'
 import { JoinLeavePayload } from '@app/server/core/payloads'
 import { joinLeavePayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
+import { Events  } from '@app/server/core/events'
 
 const leaveEvent: SocketEvent = {
-  id: 'leave',
+  id: Events.leave,
 
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = joinLeavePayloadValidator(payload) as boolean

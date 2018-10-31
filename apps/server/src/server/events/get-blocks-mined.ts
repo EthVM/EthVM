@@ -1,9 +1,10 @@
 import { blockMinedPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
 import { SmallBlock } from 'ethvm-models'
+import { Events } from '@app/server/core/events'
 
 const getBlocksMinedEvent: SocketEvent = {
-  id: 'getBlocksMined', // new_name: get-blocks-mined
+  id: 'ggg', // new_name: get-blocks-mined
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = blockMinedPayloadValidator(payload) as boolean
     return {
