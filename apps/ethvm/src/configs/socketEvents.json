@@ -16,6 +16,7 @@
   "getBlock": "getBlock",
   "getBlockTransactions": "getBlockTransactions",
   "getAddress": "getAddress",
+  "getAddressTx": "get-address-txs",
   "pendingTxs":"pendingTxs",
   "pendingTxsAddress":"getPendingTxs",
   "getUncle":"uncle",
