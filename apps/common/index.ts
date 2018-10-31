@@ -4,3 +4,5 @@ export * from './src/account'
 export * from './src/exchange-rate'
 export * from './src/pending-tx'
 export * from './src/uncle'
+export * from './src/events'
+

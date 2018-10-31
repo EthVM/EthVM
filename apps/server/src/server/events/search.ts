@@ -1,6 +1,6 @@
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
 import { Search } from '@app/server/modules/search'
-import { Events } from '@app/server/core/events'
+import { Events } from 'ethvm-models'
 
 const searchEvent: SocketEvent = {
   id: Events.search,

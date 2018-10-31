@@ -1,4 +1,4 @@
-const Events = {
+export const Events = {
   join: 'join',
   leave: 'leave',
   newTx: 'NEW_TX',
@@ -31,4 +31,16 @@ const Events = {
   search: 'search'
 }
 
-export { Events }
+
+// interface Events {
+// 	readonly link: string
+// 	readonly byLine: string
+// }
+
+// export const events: Events = {
+// 	link: '#502012',
+// 	byLine: 'grey'
+// }
+
+
+
