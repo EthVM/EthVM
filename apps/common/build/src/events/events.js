@@ -12,7 +12,6 @@ exports.Events = {
     getBalance: "get-balance",
     getTokenBalance: "get-tokens-balance",
     getTotalTxs: "get-total-txs",
-    getTicker: "getTicker",
     getTxs: "get-txs",
     getTx: "get-tx",
     getBlock: "get-block",
