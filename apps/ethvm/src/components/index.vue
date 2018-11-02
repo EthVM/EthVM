@@ -25,7 +25,8 @@
 
 <script lang="ts">
 import 'vuetify/dist/vuetify.min.css'
-import { Events as sEvents, Block, Tx, PendingTx } from 'ethvm-common'
+import { Block, Tx, PendingTx } from '@app/models'
+import { Events as sEvents } from 'ethvm-common'
 import Vue from 'vue'
 
 export default Vue.extend({
