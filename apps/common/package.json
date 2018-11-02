@@ -1,5 +1,5 @@
 {
-  "name": "ethvm-models",
+  "name": "ethvm-common",
   "version": "1.0.1",
   "description": "Models for ethvm ",
   "license": "MIT",

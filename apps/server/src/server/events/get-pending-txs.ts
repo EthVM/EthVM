@@ -1,6 +1,6 @@
 import { pastTxsPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
-import { Events, PendingTx } from 'ethvm-models'
+import { Events, PendingTx } from 'ethvm-common'
 
 const pendingTxsEvent: SocketEvent = {
   id: Events.pendingTxs,

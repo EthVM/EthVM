@@ -4,7 +4,7 @@
 </template>
 
 <script lang="ts">
-import { Events as sEvents } from 'ethvm-models'
+import { Events as sEvents } from 'ethvm-common'
 import { Block } from '@app/models'
 import bn from 'bignumber.js'
 import Vue from 'vue'

@@ -24,7 +24,7 @@ import { common } from '@app/helpers'
 import chartOptions from '@app/sampleData/chartData.json'
 import store from '@app/states'
 import Vue from 'vue'
-import { Events as sEvents, Block, Tx } from 'ethvm-models'
+import { Events as sEvents, Block, Tx } from 'ethvm-common'
 
 export default Vue.extend({
   name: 'tx-Detail',

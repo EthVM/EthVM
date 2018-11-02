@@ -1,5 +1,5 @@
 import defaultRooms from '@app/configs/defaultRooms.json'
-import { Events as sEvents } from 'ethvm-models'
+import { Events as sEvents } from 'ethvm-common'
 import { Block, Tx, PendingTx} from '@app/models'
 import { EventLayout } from '@app/models/server'
 

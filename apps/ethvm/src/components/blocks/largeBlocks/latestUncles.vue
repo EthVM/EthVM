@@ -44,7 +44,7 @@
 
 
 <script lang="ts">
-import { Events as sEvents } from 'ethvm-models'
+import { Events as sEvents } from 'ethvm-common'
 import Visibility from 'visibilityjs'
 import Vue from 'vue'
 import BN from 'bignumber.js'

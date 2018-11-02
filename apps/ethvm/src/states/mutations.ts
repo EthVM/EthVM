@@ -1,6 +1,6 @@
 import { Block, Tx, PendingTx, Uncle } from '@app/models'
 import {  StateLayout } from '@app/models/server'
-import {Tx as TxLayout, Block as BlockLayout, PendingTx as PendingTxLayout, Uncle as UncleLayout} from 'ethvm-models'
+import {Tx as TxLayout, Block as BlockLayout, PendingTx as PendingTxLayout, Uncle as UncleLayout} from 'ethvm-common'
 
 
 const NEW_BLOCK = (state: StateLayout, blocks: BlockLayout | BlockLayout[]) => {

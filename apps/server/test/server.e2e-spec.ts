@@ -13,7 +13,7 @@ import { MongoUncleRepository, UnclesServiceImpl } from '@app/server/modules/unc
 import { VmService } from '@app/server/modules/vm'
 import { RedisCacheRepository } from '@app/server/repositories'
 import { expect } from 'chai'
- import { Events, ExchangeRate ,Quote} from 'ethvm-models'
+ import { Events, ExchangeRate ,Quote} from 'ethvm-common'
 import * as Redis from 'ioredis'
 import { MongoClient } from 'mongodb'
 import * as io from 'socket.io-client'

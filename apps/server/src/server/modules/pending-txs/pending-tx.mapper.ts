@@ -1,4 +1,4 @@
-import { PendingTx } from 'ethvm-models'
+import { PendingTx } from 'ethvm-common'
 
 const toPendingTx = (tx: any): PendingTx => {
   const t: any = {}

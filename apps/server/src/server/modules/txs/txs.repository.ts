@@ -1,6 +1,6 @@
 import { toTx } from '@app/server/modules/txs'
 import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
-import { Tx } from 'ethvm-models'
+import { Tx } from 'ethvm-common'
 
 export interface TxsRepository {
   getTx(hash: string): Promise<Tx | null>

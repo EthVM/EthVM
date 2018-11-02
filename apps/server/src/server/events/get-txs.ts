@@ -1,6 +1,6 @@
 import { txsPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
-import { Events, Tx } from 'ethvm-models'
+import { Events, Tx } from 'ethvm-common'
 
 const getTxsEvent: SocketEvent = {
   id: Events.getTxs,

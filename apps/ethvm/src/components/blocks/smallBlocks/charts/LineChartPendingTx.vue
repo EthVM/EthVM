@@ -9,7 +9,7 @@
 /* To use a scatter chart, data must be passed as objects containing X and Y properties */
 
 import Vue from 'vue'
-import { Events as sEvents } from 'ethvm-models'
+import { Events as sEvents } from 'ethvm-common'
 const newOptions = {
   title: {
     text: 'Pending Tx'

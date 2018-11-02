@@ -1,7 +1,7 @@
 import { TotalTxsPayload } from '@app/server/core/payloads'
 import { totalTxsPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
-import { Events } from 'ethvm-models'
+import { Events } from 'ethvm-common'
 
 const getTotalTxsEvent: SocketEvent = {
   id: Events.getTotalTxs,

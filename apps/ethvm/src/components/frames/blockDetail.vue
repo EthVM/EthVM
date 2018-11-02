@@ -23,7 +23,7 @@
 <script lang="ts">
 import { common } from '@app/helpers'
 import chartOptions from '@app/sampleData/chartData.json'
-import { Events as sEvents, Block, Tx } from 'ethvm-models'
+import { Events as sEvents, Block, Tx } from 'ethvm-common'
 import store from '@app/states'
 import Vue from 'vue'
 

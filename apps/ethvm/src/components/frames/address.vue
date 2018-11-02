@@ -89,7 +89,7 @@ import { common } from '@app/helpers'
 import bn from 'bignumber.js'
 import blockies from 'ethereum-blockies'
 import ethUnits from 'ethereumjs-units'
-import { Events as sEvents, Tx, Account, PendingTx} from 'ethvm-models'
+import { Events as sEvents, Tx, Account, PendingTx} from 'ethvm-common'
 import Vue from 'vue'
 
 const MAX_ITEMS = 20

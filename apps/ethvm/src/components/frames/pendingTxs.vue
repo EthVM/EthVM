@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Events as sEvents } from 'ethvm-models'
+import { Events as sEvents } from 'ethvm-common'
 
 const MAX_ITEMS = 20
 

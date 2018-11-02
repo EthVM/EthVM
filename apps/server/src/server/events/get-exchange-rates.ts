@@ -1,7 +1,7 @@
 import { ExchangeRatePayload } from '@app/server/core/payloads/ExchangeRatePayload'
 import { exchangeRatePayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
-import { Events } from 'ethvm-models'
+import { Events } from 'ethvm-common'
 
 const getExchangeRatesEvent: SocketEvent = {
   id: Events.getExchangeRates,

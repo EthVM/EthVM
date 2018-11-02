@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { Events as sEvents } from 'ethvm-models'
+import { Events as sEvents } from 'ethvm-common'
 import Vue from 'vue'
 export default Vue.extend({
   name: 'ShortDataLastBlock',

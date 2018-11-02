@@ -1,7 +1,7 @@
 import { EthCallPayload } from '@app/server/core/payloads'
 import { ethCallPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
-import { Events } from 'ethvm-models'
+import { Events } from 'ethvm-common'
 
 const ethCallEvent: SocketEvent = {
   id: Events.ethCall,

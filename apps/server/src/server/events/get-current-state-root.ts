@@ -1,5 +1,5 @@
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
-import { Events } from 'ethvm-models'
+import { Events } from 'ethvm-common'
 
 const getCurrentStateRootEvent: SocketEvent = {
   id: Events.getCurrentStateRoot,

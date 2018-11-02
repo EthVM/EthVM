@@ -5,7 +5,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import colors from 'vuetify/es5/util/colors'
-import { Events as sEvents } from 'ethvm-models'
+import { Events as sEvents } from 'ethvm-common'
 
 export default Vue.extend({
   name: 'ShortDataLastBlock',

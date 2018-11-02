@@ -78,7 +78,7 @@
 <script lang="ts">
 import Visibility from 'visibilityjs'
 import Vue from 'vue'
-import { Events as sEvents } from 'ethvm-models'
+import { Events as sEvents } from 'ethvm-common'
 import BN from 'bignumber.js'
 
 export default Vue.extend({
