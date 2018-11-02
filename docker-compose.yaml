@@ -37,7 +37,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./apps/ethvm:/var/ethvm
-      - ./apps/models:/var/models
+      - ./apps/common:/var/common
     networks:
       - back
     labels:
@@ -56,7 +56,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./apps/server:/var/ethvm-server
-      - ./apps/models:/var/models
+      - ./apps/common:/var/common
     depends_on:
       - redis
       - mongodb

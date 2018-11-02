@@ -4,7 +4,6 @@
 </template>
 
 <script lang="ts">
-import sEvents from '@app/configs/socketEvents.json'
 import BN from 'bignumber.js'
 import Vue from 'vue'
 

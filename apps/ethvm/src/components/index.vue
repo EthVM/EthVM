@@ -25,8 +25,7 @@
 
 <script lang="ts">
 import 'vuetify/dist/vuetify.min.css'
-import sEvents from '@app/configs/socketEvents.json'
-import { Block, Tx, PendingTx } from '@app/models'
+import { Events as sEvents, Block, Tx, PendingTx } from 'ethvm-models'
 import Vue from 'vue'
 
 export default Vue.extend({

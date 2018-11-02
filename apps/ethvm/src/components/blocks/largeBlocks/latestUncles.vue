@@ -44,7 +44,7 @@
 
 
 <script lang="ts">
-import sEvents from '@app/configs/socketEvents.json'
+import { Events as sEvents } from 'ethvm-models'
 import Visibility from 'visibilityjs'
 import Vue from 'vue'
 import BN from 'bignumber.js'

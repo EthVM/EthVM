@@ -5,7 +5,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import colors from 'vuetify/es5/util/colors'
-import sEvents from '@app/configs/socketEvents.json'
+import { Events as sEvents } from 'ethvm-models'
 
 export default Vue.extend({
   name: 'ShortDataLastBlock',

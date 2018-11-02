@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import sEvents from '@app/configs/socketEvents.json'
+import { Events as sEvents } from 'ethvm-models'
 
 const MAX_ITEMS = 20
 

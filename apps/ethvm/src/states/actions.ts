@@ -1,8 +1,7 @@
 import defaultRooms from '@app/configs/defaultRooms.json'
-import sEvents from '@app/configs/socketEvents.json'
-import { Block, Tx ,PendingTx} from '@app/models'
-import { EventLayout} from '@app/models/server'
-
+import { Events as sEvents } from 'ethvm-models'
+import { Block, Tx, PendingTx} from '@app/models'
+import { EventLayout } from '@app/models/server'
 
 const socket_socketNewblock = function({ commit }, ev: EventLayout | EventLayout[]) {
 
@@ -12,7 +11,7 @@ const socket_socketNewblock = function({ commit }, ev: EventLayout | EventLayout
       this._vm.$eventHub.$emit(sEvents.newBlock, new Block(_event.value))
     })
   } else {
-    commit(sEvents.newBlock, ev.value )
+    commit(sEvents.newBlock, ev.value)
     this._vm.$eventHub.$emit(sEvents.newBlock, new Block(ev.value))
   }
 }
@@ -31,8 +30,6 @@ const socket_socketNewtx = function({ commit }, ev: EventLayout | EventLayout[])
 }
 
 const socket_socketNewptx = function({ commit }, ev: EventLayout | EventLayout[]) {
-
-  console.log('socket_socketNewptx',ev)
 
   if (Array.isArray(ev)) {
     ev.forEach(_event => {
