@@ -1,26 +1,26 @@
-module "zookeeper" {
-  source = "./zookeeper"
-}
+# module "zookeeper" {
+#   source = "./zookeeper"
+# }
 
-module "kafka" {
-  source = "./kafka"
-}
+# module "kafka" {
+#   source = "./kafka"
+# }
 
-module "mongo" {
-  source = "./mongo"
-}
+# module "mongo" {
+#   source = "./mongo"
+# }
 
-module "redis" {
-  source = "./redis"
-}
+# module "redis" {
+#   source = "./redis"
+# }
 
-module "ethereumj" {
-  source = "./ethereumj"
-}
+# module "ethereumj" {
+#   source = "./ethereumj"
+# }
 
-module "api" {
-  source = "./api"
-}
+# module "api" {
+#   source = "./api"
+# }
 
 module "traefik" {
   source = "./traefik"
