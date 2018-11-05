@@ -27,4 +27,4 @@ override.tf.json
 *.tfvars
 
 # Ignore credentials
-config/credentials.json
+config/gcp/credentials.json

@@ -133,5 +133,5 @@ resource "kubernetes_stateful_set" "traefik-sateful-set" {
 }
 
 output "lb_ip" {
-  value = "${kubernetes_service.wordpress.load_balancer_ingress.0.ip}"
+  value = "${kubernetes_service.traefik-service.load_balancer_ingress.0.ip}"
 }
