@@ -4,7 +4,7 @@ module "ethvm_network" {
   name   = "${var.ntw_name}"
 }
 
-# create cluster
+# create kubernetes master clusters
 module "ethvm_cluster" {
   source             = "../../terraform-modules/gcp/cluster"
   name               = "${var.name}"
@@ -14,7 +14,7 @@ module "ethvm_cluster" {
   network            = "${module.ethvm_network.name}"
 }
 
-# create ethvm node pool and attach it to the cluster
+# create kubernetes node pool
 module "ethvm_np" {
   source       = "../../terraform-modules/gcp/node-pool"
   name         = "${var.node_pool_name}"

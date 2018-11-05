@@ -1,6 +1,6 @@
 resource "kubernetes_service_account" "traefik-service-account" {
   metadata {
-    name = "traefik-ingress-account"
+    name      = "traefik-ingress-account"
     namespace = "kube-system"
   }
 }
@@ -11,30 +11,30 @@ resource "kubernetes_cluster_role" "traefik-cluster-role" {
   }
 
   rule {
-    api_groups = ""
+    api_groups = [""]
 
     resources = [
       "services",
       "endpoints",
-      "secrets"
+      "secrets",
     ]
 
     verbs = [
       "get",
       "list",
-      "watch"
+      "watch",
     ]
   }
 
   rule {
-    api_groups = "extensions"
+    api_groups = ["extensions"]
 
-    resources = "ingresses"
+    resources = ["ingresses"]
 
     verbs = [
       "get",
       "list",
-      "watch"
+      "watch",
     ]
   }
 }
@@ -46,8 +46,8 @@ resource "kubernetes_cluster_role_binding" "traefik-cluster-role-binding" {
 
   role_ref {
     api_group = "rbac.authorization.k8s.io"
-    kind = "ClusterRole"
-    name = "traefik-ingress-cr"
+    kind      = "ClusterRole"
+    name      = "traefik-ingress-cr"
   }
 
   subject {
@@ -58,7 +58,7 @@ resource "kubernetes_cluster_role_binding" "traefik-cluster-role-binding" {
 
 resource "kubernetes_config_map" "traefik-config-map" {
   metadata {
-    name = "traefik-config"
+    name      = "traefik-config"
     namespace = "kube-system"
   }
 }
@@ -76,22 +76,22 @@ resource "kubernetes_service" "traefik-service" {
     type = "LoadBalancer"
 
     port {
-      name = "http"
+      name     = "http"
       protocol = "TCP"
-      port = 80
+      port     = 80
     }
 
     port {
-      name = "https"
+      name     = "https"
       protocol = "TCP"
-      port = 443
+      port     = 443
     }
   }
 }
 
 resource "kubernetes_stateful_set" "traefik-sateful-set" {
   metadata {
-    name = "kube-system"
+    name      = "kube-system"
     namespace = "traefik-ingress-controller"
 
     labels {
@@ -100,18 +100,38 @@ resource "kubernetes_stateful_set" "traefik-sateful-set" {
   }
 
   spec {
-    replicas = 1
+    replicas     = 1
     service_name = "traefik-ingress-service"
 
     selector {
       app = "traefik-ingress-lb"
     }
 
+    update_strategy {
+      type = "RollingUpdate"
+
+      rolling_update {
+        partition = 1
+      }
+    }
+
     template {
-      container {
-        image = "traefik:1.7.3-alpine"
-        name = "traefik-ingress-lb"
+      metadata {
+        labels {
+          app = "traefik-ingress-lb"
+        }
+      }
+
+      spec {
+        container {
+          image = "traefik:${var.traefik_version}-alpine"
+          name  = "traefik-ingress-lb"
+        }
       }
     }
   }
+}
+
+output "lb_ip" {
+  value = "${kubernetes_service.wordpress.load_balancer_ingress.0.ip}"
 }
