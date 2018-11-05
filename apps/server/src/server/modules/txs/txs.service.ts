@@ -1,6 +1,6 @@
 import { TxsRepository } from '@app/server/modules/txs'
 import { CacheRepository } from '@app/server/repositories'
-import { Tx } from 'ethvm-models'
+import { Tx } from 'ethvm-common'
 
 export interface TxsService {
   getTxs(limit: number, page: number): Promise<Tx[]>

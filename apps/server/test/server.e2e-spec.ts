@@ -13,7 +13,7 @@ import { MongoUncleRepository, UnclesServiceImpl } from '@app/server/modules/unc
 import { VmService } from '@app/server/modules/vm'
 import { RedisCacheRepository } from '@app/server/repositories'
 import { expect } from 'chai'
-import { ExchangeRate, Quote } from 'ethvm-models'
+ import { Events, ExchangeRate ,Quote} from 'ethvm-common'
 import * as Redis from 'ioredis'
 import { MongoClient } from 'mongodb'
 import * as io from 'socket.io-client'
@@ -125,7 +125,7 @@ describe('ethvm-server-events', () => {
         }
       ]
       for (const input of inputs) {
-        const data = await callEvent('get-address-txs', input, client)
+        const data = await callEvent(Events.getAddressTxs, input, client)
         data.forEach(transaction => {
           expect(Tx.test(data)).to.to.to.to.true
         });
@@ -156,7 +156,7 @@ describe('ethvm-server-events', () => {
 
       for (const input of inputs) {
         try {
-          const data = await callEvent('getTxs', input, client)
+          const data = await callEvent(Events.getAddressTxs, input, client)
         } catch (e) {
           expect(e).to.be.eql(errors.BAD_REQUEST)
           expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
@@ -174,7 +174,7 @@ describe('ethvm-server-events', () => {
       ]
 
       for (const input of inputs) {
-        const data = await callEvent('getBalance', input, client)
+        const data = await callEvent(Events.getBalance, input, client)
         expect(data).to.eq(10)
       }
     })
@@ -201,7 +201,7 @@ describe('ethvm-server-events', () => {
 
       for (const input of inputs) {
         try {
-          const data = await callEvent('getBalance', input, client)
+          const data = await callEvent(Events.getBalance, input, client)
         } catch (e) {
           expect(e).to.be.eql(errors.BAD_REQUEST)
           expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
@@ -218,7 +218,7 @@ describe('ethvm-server-events', () => {
         }
       ]
       for (const input of inputs) {
-        const data = await callEvent('getBlockTransactions', input, client)
+        const data = await callEvent(Events.getBlockTransactions, input, client)
         expect(Tx.test(data)).to.to.to.to.true
         expect(data[0].blockNumber).to.be.eq(46214)
         expect(data).to.have.lengthOf(1)
@@ -246,7 +246,7 @@ describe('ethvm-server-events', () => {
       ]
       for (const input of inputs) {
         try {
-          const data = await callEvent('getBlockTransactions', input, client)
+          const data = await callEvent(Events.getBlockTransactions, input, client)
         } catch (e) {
           expect(e).to.be.eql(errors.BAD_REQUEST)
           expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
@@ -263,7 +263,7 @@ describe('ethvm-server-events', () => {
         }
       ]
       for (const input of inputs) {
-        const data = await callEvent('getTx', input, client)
+        const data = await callEvent(Events.getTx, input, client)
         expect(Tx.test(data)).to.to.to.to.true
         expect(data.blockNumber).to.be.eq(46214)
 
@@ -293,7 +293,7 @@ describe('ethvm-server-events', () => {
 
       for (const input of inputs) {
         try {
-          const data = await callEvent('getTx', input, client)
+          const data = await callEvent(Events.getTx, input, client)
         } catch (e) {
           expect(e).to.be.eql(errors.BAD_REQUEST)
           expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
@@ -310,7 +310,7 @@ describe('ethvm-server-events', () => {
         }
       ]
       for (const input of inputs) {
-        const data = await callEvent('getAddress', input, client)
+        const data = await callEvent(Events.getAccount, input, client)
         expect(data.balance).to.equal(4500000000000000000)
       }
     })
@@ -337,7 +337,7 @@ describe('ethvm-server-events', () => {
 
       for (const input of inputs) {
         try {
-          const data = await callEvent('getAddress', input, client)
+          const data = await callEvent(Events.getAccount, input, client)
         } catch (e) {
           expect(e).to.be.eql(errors.BAD_REQUEST)
           expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
@@ -355,7 +355,7 @@ describe('ethvm-server-events', () => {
       ]
 
       for (const input of inputs) {
-        const data = await callEvent('getTotalTxs', input, client)
+        const data = await callEvent(Events.getTotalTxs, input, client)
         expect(data).to.equal(151)
 
       }
@@ -383,7 +383,7 @@ describe('ethvm-server-events', () => {
 
       for (const input of inputs) {
         try {
-          const data = await callEvent('getTotalTxs', input, client)
+          const data = await callEvent(Events.getTotalTxs, input, client)
         } catch (e) {
           expect(e).to.be.eql(errors.BAD_REQUEST)
           expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
@@ -402,7 +402,7 @@ describe('ethvm-server-events', () => {
       ]
 
       for (const input of inputs) {
-        const data = await callEvent('pastTxs', input, client)
+        const data = await callEvent(Events.pastTxs, input, client)
         // timeout happens here
         expect(data[9].blockHash).to.be.eq("2a3b88a7f4dce885a30bb8933c8e656870282d3a9846476f288078311e801875")
         expect(data).to.have.lengthOf(10)
@@ -430,7 +430,7 @@ describe('ethvm-server-events', () => {
 
       for (const input of inputs) {
         try {
-          const data = await callEvent('pastTxs', input, client)
+          const data = await callEvent(Events.pastTxs, input, client)
         } catch (e) {
           expect(e).to.be.eql(errors.BAD_REQUEST)
           expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
@@ -449,7 +449,7 @@ describe('ethvm-server-events', () => {
       ]
 
       for (const input of inputs) {
-        const data = await callEvent('pastBlocks', input, client)
+        const data = await callEvent(Events.pastBlocks, input, client)
         expect(data[0].header.parentHash).to.be.eq("fbafb4b7b6f6789338d15ff046f40dc608a42b1a33b093e109c6d7a36cd76f61")
         expect(data).to.have.lengthOf(10)
         data.forEach(block => {
@@ -478,7 +478,7 @@ describe('ethvm-server-events', () => {
 
       for (const input of inputs) {
         try {
-          const data = await callEvent('pastBlocks', input, client)
+          const data = await callEvent(Events.pastBlocks, input, client)
         } catch (e) {
           expect(e).to.be.eql(errors.BAD_REQUEST)
           expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
@@ -495,7 +495,7 @@ describe('ethvm-server-events', () => {
         }
       ]
       for (const input of inputs) {
-        const data = await callEvent('getBlock', input, client)
+        const data = await callEvent(Events.getBlock, input, client)
         expect(data.header.parentHash).to.be.eq("5a41d0e66b4120775176c09fcf39e7c0520517a13d2b57b18d33d342df038bfc")
         expect(data).to.be.not.undefined
         expect(Block.test(data)).to.to.to.to.true
@@ -523,7 +523,7 @@ describe('ethvm-server-events', () => {
       ]
       for (const input of inputs) {
         try {
-          const data = await callEvent('getBlock', input, client)
+          const data = await callEvent(Events.getBlock, input, client)
         } catch (e) {
           expect(e).to.be.eql(errors.BAD_REQUEST)
           expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
@@ -533,7 +533,7 @@ describe('ethvm-server-events', () => {
   })
 
 
-  describe.only('getBlocksMined', () => {
+  describe('getBlocksMined', () => {
     it('should return Promise<Block>', async () => {
       const inputs = [
         {
@@ -543,7 +543,7 @@ describe('ethvm-server-events', () => {
         }
       ]
       for (const input of inputs) {
-        const data = await callEvent('getBlocksMined', input, client)
+        const data = await callEvent(Events.getBlocksMined, input, client)
         expect(data[0].hash).to.be.eq("b86d9095750cddaa9d4471eda2e29fe2aa9101c2753c1a0d5bf1a91fdd020388")
         expect(data).to.be.not.empty
       }
@@ -569,7 +569,7 @@ describe('ethvm-server-events', () => {
       ]
       for (const input of inputs) {
         try {
-          const data = await callEvent('getBlocksMined', input, client)
+          const data = await callEvent(Events.getBlocksMined, input, client)
         } catch (e) {
           expect(e).to.be.eql(errors.BAD_REQUEST)
           expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
@@ -586,7 +586,7 @@ describe('ethvm-server-events', () => {
       ]
 
       for (const input of inputs) {
-        const data = await callEvent('getTokenBalance', input, client)
+        const data = await callEvent(Events.getTokenBalance, input, client)
         expect(data).to.not.be.undefined
       }
     })
@@ -613,7 +613,7 @@ describe('ethvm-server-events', () => {
 
       for (const input of inputs) {
         try {
-          const data = await callEvent('getTokenBalance', input, client)
+          const data = await callEvent(Events.getTokenBalance, input, client)
         } catch (e) {
           expect(e).to.be.eql(errors.BAD_REQUEST)
           expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
@@ -634,7 +634,7 @@ describe('ethvm-server-events', () => {
         to: 'USD'
       }
 
-      const data = await callEvent('getTicker', input, client)
+      const data = await callEvent(Events.getExchangeRates, input, client)
       expect(data).to.be.deep.equals({ to: 'USD', price: '20' })
     })
 
@@ -650,7 +650,7 @@ describe('ethvm-server-events', () => {
         to: 'USD'
       }
 
-      const data = await callEvent('getTicker', input, client)
+      const data = await callEvent(Events.getExchangeRates, input, client)
       expect(data).to.be.deep.equals({ to: 'USD', price: '22' })
     })
 
@@ -661,7 +661,7 @@ describe('ethvm-server-events', () => {
         symbol: 'BTC',
         to: 'USD'
       }
-      const data = await callEvent('getTicker', input, client)
+      const data = await callEvent(Events.getExchangeRates, input, client)
       expect(data).to.be.deep.equals({ to: 'USD', price: '2000' })
     })
   })
@@ -681,7 +681,7 @@ describe('ethvm-server-events', () => {
       ]
 
       for (const input of inputs) {
-        const data = await callEvent('search', input, client)
+        const data = await callEvent(Events.search, input, client)
         expect(data.type).to.be.not.equal(SearchType.None)
       }
     })
@@ -700,7 +700,7 @@ describe('ethvm-server-events', () => {
       ]
 
       for (const input of inputs) {
-        const data = await callEvent('search', input, client)
+        const data = await callEvent(Events.search, input, client)
         expect(data.type).to.be.eq(SearchType.None)
       }
     })
@@ -727,7 +727,7 @@ describe('ethvm-server-events', () => {
 
       for (const input of inputs) {
         try {
-          const data = await callEvent('getTokenBalance', input, client)
+          const data = await callEvent(Events.search, input, client)
         } catch (e) {
           expect(e).to.be.eql(errors.BAD_REQUEST)
           expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
