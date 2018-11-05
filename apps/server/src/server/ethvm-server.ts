@@ -16,10 +16,10 @@ import {
 import { Streamer, StreamingEvent } from '@app/server/core/streams'
 import { AccountsService } from '@app/server/modules/accounts'
 import { BlocksService } from '@app/server/modules/blocks'
-import { ChartService } from '@app/server/modules/charts'
 import { ExchangeService } from '@app/server/modules/exchanges'
 import { PendingTxService } from '@app/server/modules/pending-txs'
 import { SearchService } from '@app/server/modules/search'
+import { StatisticsService } from '@app/server/modules/statistics'
 import { TxsService } from '@app/server/modules/txs'
 import { UnclesService } from '@app/server/modules/uncles'
 import { VmService } from '@app/server/modules/vm'
@@ -65,7 +65,7 @@ export class EthVMServer {
     public readonly uncleService: UnclesService,
     public readonly accountsService: AccountsService,
     public readonly txsService: TxsService,
-    public readonly chartsService: ChartService,
+    public readonly statisticsService: StatisticsService,
     public readonly pendingTxService: PendingTxService,
     public readonly exchangesService: ExchangeService,
     public readonly searchService: SearchService,

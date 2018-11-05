@@ -4,10 +4,10 @@ import { MongoStreamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
 import { AccountsServiceImpl, MongoAccountsRepository } from '@app/server/modules/accounts'
 import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blocks'
-import { ChartsServiceImpl, MockChartsRepository } from '@app/server/modules/charts'
 import { CoinMarketCapRepository, ExchangeServiceImpl } from '@app/server/modules/exchanges'
 import { MongoPendingTxRepository, PendingTxServiceImpl } from '@app/server/modules/pending-txs'
 import { SearchServiceImpl } from '@app/server/modules/search'
+import { MongoStatisticsRepository, StatisticsServiceImpl } from '@app/server/modules/statistics'
 import { MongoTxsRepository, TxsServiceImpl } from '@app/server/modules/txs'
 import { MongoUncleRepository, UnclesServiceImpl } from '@app/server/modules/uncles'
 import { RedisTrieDb, VmEngine, VmRunner, VmServiceImpl } from '@app/server/modules/vm'
@@ -101,8 +101,8 @@ async function bootstrapServer() {
   const searchService = new SearchServiceImpl(txsRepository, addressRepository, blocksRepository, ds)
 
   // Charts
-  const chartsRepository = new MockChartsRepository()
-  const chartsService = new ChartsServiceImpl(chartsRepository)
+  const statisticsRepository = new MongoStatisticsRepository(db)
+  const statisticsService = new StatisticsServiceImpl(statisticsRepository, ds)
 
   // Exchanges
   const exchangeRepository = new CoinMarketCapRepository(ds)
@@ -124,7 +124,7 @@ async function bootstrapServer() {
     uncleService,
     addressService,
     txsService,
-    chartsService,
+    statisticsService,
     pendingTxService,
     exchangeService,
     searchService,

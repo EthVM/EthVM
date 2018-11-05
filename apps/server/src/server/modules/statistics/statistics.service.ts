@@ -1,4 +1,5 @@
 import { Statistic, StatisticsRepository } from '@app/server/modules/statistics'
+import { CacheRepository } from '@app/server/repositories'
 
 export interface StatisticsService {
   getAverageTotalDifficulty(start: Date, end: Date): Promise<Statistic[]>
@@ -8,7 +9,7 @@ export interface StatisticsService {
 }
 
 export class StatisticsServiceImpl implements StatisticsService {
-  constructor(private readonly statisticsRepository: StatisticsRepository) {}
+  constructor(private readonly statisticsRepository: StatisticsRepository, private readonly cacheRepository: CacheRepository) {}
 
   public getAverageTotalDifficulty(start: Date, end: Date): Promise<Statistic[]> {
     return this.statisticsRepository.getAverageTotalDifficulty(start, end)
