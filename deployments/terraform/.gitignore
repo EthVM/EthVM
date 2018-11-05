@@ -25,3 +25,6 @@ override.tf.json
 #
 # !example_override.tf
 *.tfvars
+
+# Ignore credentials
+config/credentials.json
