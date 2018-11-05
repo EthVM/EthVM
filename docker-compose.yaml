@@ -22,7 +22,7 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./provisioners/docker/config/traefik/traefik.dev.toml:/etc/traefik/traefik.toml
+      - ./deployments/docker/config/traefik/traefik.dev.toml:/etc/traefik/traefik.toml
     networks:
       - web
       - back
