@@ -29,5 +29,6 @@ exports.Events = {
     getAddressPendingTxs: "get-address-pending-txs",
     getCurrentStateRoot: "get-current-state-root",
     getExchangeRates: "get-exchange-rates",
-    search: "search"
+    search: "search",
+    getAvgTotalDifficultyStats: "get-average-difficulty-stats"
 };

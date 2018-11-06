@@ -3,7 +3,6 @@ import { chartPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
 import { Events, Statistic } from 'ethvm-common'
 
-
 const getAverageTotalDifficulty: SocketEvent = {
   id: Events.getAvgTotalDifficultyStats,
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
@@ -14,7 +13,8 @@ const getAverageTotalDifficulty: SocketEvent = {
     }
   },
 
-  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: StatsPayload): Promise<Statistic[]> => server.statisticsService.getAverageTotalDifficulty(payload.duration)
+  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: StatsPayload): Promise<Statistic[]> =>
+    server.statisticsService.getAverageTotalDifficulty(payload.duration)
 }
 
 export default getAverageTotalDifficulty

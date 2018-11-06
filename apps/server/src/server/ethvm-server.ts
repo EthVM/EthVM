@@ -6,7 +6,7 @@ import {
   AddressTxsPagesPayload,
   BalancePayload,
   BlocksTxsPayload,
-  ChartPayload,
+  StatsPayload,
   EthCallPayload,
   ExchangeRatePayload,
   JoinLeavePayload,
@@ -33,7 +33,7 @@ export type SocketEventPayload =
   | BalancePayload
   | BlocksTxsPayload
   | Buffer
-  | ChartPayload
+  | StatsPayload
   | EthCallPayload
   | ExchangeRatePayload
   | JoinLeavePayload

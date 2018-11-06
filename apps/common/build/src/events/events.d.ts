@@ -28,4 +28,5 @@ export declare const Events: {
     getCurrentStateRoot: string;
     getExchangeRates: string;
     search: string;
+    getAvgTotalDifficultyStats: string;
 };

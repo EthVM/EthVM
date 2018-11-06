@@ -12,7 +12,7 @@ export class MongoStatisticsRepository extends BaseMongoDbRepository implements 
   public getAverageTotalDifficulty(start: Date, end: Date): Promise<Statistic[]> {
     return this.db
       .collection(MongoEthVM.collections.statistics)
-      .find({ name: 'avg_txs_fees' })
+      .find({ $and: [{ name: 'avg_txs_fees' }, { date: { $gte: start } }, { date: { $lte: end } }] })
       .sort({ _id: -1 })
       .toArray()
       .then(resp => {

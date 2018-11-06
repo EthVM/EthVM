@@ -737,4 +737,18 @@ describe('ethvm-server-events', () => {
       }
     })
   })
+
+  describe('avg_txs_fees', () => {
+    it('should return Promise<Statistics[]> with search result', async () => {
+      const inputs = [
+        {
+          duration: 'ALL'
+        }
+      ]
+      for (const input of inputs) {
+        const data = await callEvent(Events.getAvgTotalDifficultyStats, input, client)
+        expect(data).to.have.lengthOf(20)
+      }
+    })
+  })
 })
