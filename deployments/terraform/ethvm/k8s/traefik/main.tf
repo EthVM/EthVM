@@ -1,11 +1,11 @@
-resource "kubernetes_service_account" "traefik-service-account" {
+resource "kubernetes_service_account" "traefik_service_account" {
   metadata {
     name      = "traefik-ingress-account"
     namespace = "kube-system"
   }
 }
 
-resource "kubernetes_cluster_role" "traefik-cluster-role" {
+resource "kubernetes_cluster_role" "traefik_cluster_role" {
   metadata {
     name = "traefik-ingress-cr"
   }
@@ -39,7 +39,7 @@ resource "kubernetes_cluster_role" "traefik-cluster-role" {
   }
 }
 
-resource "kubernetes_cluster_role_binding" "traefik-cluster-role-binding" {
+resource "kubernetes_cluster_role_binding" "traefik_cluster_role_binding" {
   metadata {
     name = "traefik-ingress-crb"
   }
@@ -52,11 +52,11 @@ resource "kubernetes_cluster_role_binding" "traefik-cluster-role-binding" {
 
   subject {
     kind = "ServiceAccount"
-    name = "traefik-ingress-account"
+    name = "${kubernetes_service_account.traefik_service_account.metadata.name}"
   }
 }
 
-resource "kubernetes_config_map" "traefik-config-map" {
+resource "kubernetes_config_map" "traefik_config_map" {
   metadata {
     name      = "traefik-config"
     namespace = "kube-system"
@@ -87,7 +87,7 @@ logLevel = "INFO"
 [accessLog]
 
 [acme]
-  email = "it@enkryptio.com"
+  email = "${var.traefik_email}"
   storage = "/etc/traefik/acme/account"
   acmeLogging = true
   entryPoint = "https"
@@ -98,7 +98,7 @@ EOF
   }
 }
 
-resource "kubernetes_service" "traefik-service" {
+resource "kubernetes_service" "traefik_service" {
   metadata {
     name = "traefik-ingress-service"
   }
@@ -124,7 +124,7 @@ resource "kubernetes_service" "traefik-service" {
   }
 }
 
-resource "kubernetes_stateful_set" "traefik-sateful-set" {
+resource "kubernetes_stateful_set" "traefik_sateful_set" {
   metadata {
     name      = "kube-system"
     namespace = "traefik-ingress-controller"
@@ -135,12 +135,12 @@ resource "kubernetes_stateful_set" "traefik-sateful-set" {
   }
 
   spec {
-    replicas     = 1
-    service_name = "traefik-ingress-service"
-
     selector {
       app = "traefik-ingress-lb"
     }
+
+    replicas     = 1
+    service_name = "${kubernetes_service.traefik_service.metadata.name}"
 
     update_strategy {
       type = "RollingUpdate"
@@ -153,41 +153,64 @@ resource "kubernetes_stateful_set" "traefik-sateful-set" {
     template {
       metadata {
         labels {
-          app = "traefik-ingress-lb"
+          app  = "traefik-ingress-lb"
           name = "traefik-ingress-lb"
         }
       }
 
       spec {
         container {
-          image = "traefik:${var.traefik_version}-alpine"
-          name  = "traefik-ingress-lb"
+          image             = "traefik:${var.traefik_version}-alpine"
+          name              = "traefik-ingress-lb"
           image_pull_policy = "IfNotPresent"
-          args = ["--configFile=/etc/traefik/config/traefik.toml"]
+          args              = ["--configFile=/etc/traefik/config/traefik.toml"]
 
           port {
-            name = "http"
+            name           = "http"
             container_port = 80
           }
 
           port {
-            name = "https"
+            name           = "https"
             container_port = 443
           }
 
           volume_mount {
-            name = "config"
+            name       = "config"
             mount_path = "/etc/traefik/config"
           }
 
           volume_mount {
-            name = "traefik-storage-volume"
+            name       = "traefik-storage-volume"
             mount_path = "/etc/traefik/acme"
           }
         }
 
         volume {
           name = "config"
+
+          config_map {
+            name = "traefik-config"
+          }
+        }
+
+        service_account_name             = "${kubernetes_service_account.traefik_service_account.metadata.name}"
+        termination_grace_period_seconds = 60
+      }
+    }
+
+    volume_claim_templates {
+      metadata {
+        name = "traefik-storage-volume"
+      }
+
+      spec {
+        access_modes = ["ReadWriteOnce"]
+
+        resources {
+          requests {
+            storage = "25Mi"
+          }
         }
       }
     }
@@ -195,5 +218,5 @@ resource "kubernetes_stateful_set" "traefik-sateful-set" {
 }
 
 output "lb_ip" {
-  value = "${kubernetes_service.traefik-service.load_balancer_ingress.0.ip}"
+  value = "${kubernetes_service.traefik_service.load_balancer_ingress.0.ip}"
 }

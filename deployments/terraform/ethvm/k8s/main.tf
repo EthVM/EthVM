@@ -1,6 +1,6 @@
-# module "zookeeper" {
-#   source = "./zookeeper"
-# }
+module "zookeeper" {
+  source = "./zookeeper"
+}
 
 # module "kafka" {
 #   source = "./kafka"
@@ -10,9 +10,9 @@
 #   source = "./mongo"
 # }
 
-# module "redis" {
-#   source = "./redis"
-# }
+module "redis" {
+  source = "./redis"
+}
 
 # module "ethereumj" {
 #   source = "./ethereumj"
