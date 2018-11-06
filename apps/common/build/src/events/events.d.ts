@@ -32,4 +32,5 @@ export declare const Events: {
     getAvgGasPriceStats: string;
     getAvgTxFeeStats: string;
     getAvgSuccessfullTxStats: string;
+    getAvgFailedTxStats: string;
 };
