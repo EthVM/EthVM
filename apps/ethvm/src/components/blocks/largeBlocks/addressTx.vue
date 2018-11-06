@@ -1,5 +1,5 @@
 <template>
-  <v-card color="white" flat v-if="transactions" class="pl-3 pr-3 pt-2">
+  <v-card color="white" flat v-if="transactions" class="pl-3 pr-3 pt-2 pb-0">
     <!-- Tx Header -->
     <v-layout align-center justify-space-between wrap row fill-height>
       <v-flex d-flex xs12 sm6 md4>

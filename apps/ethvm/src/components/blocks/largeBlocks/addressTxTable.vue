@@ -6,8 +6,8 @@
         <p>{{getText}}</p>
       </div>
     </div>
-    <v-card v-else color="white" flat class="pt-3 pb-2">
-      <v-layout justify-end>
+    <v-card v-else color="white" flat class="pt-0 pb-2">
+      <v-layout justify-end class="pb-1">
         <footnote :footnotes="footnote"></footnote>
       </v-layout>
       <!-- Table Header -->

@@ -1,7 +1,7 @@
 <template>
 <v-card flat color="transparent">
   <v-layout row>
-    <v-card-text v-for="i in footnotes" :key="i.text">
+    <v-card-text  v-for="i in footnotes" :key="i.text" class="pa-0">
       <v-layout row align-center>
         <v-flex xs1>
           <v-icon small :color="getColor(i)">{{i.icon}}</v-icon>

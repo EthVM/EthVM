@@ -20,7 +20,7 @@
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
         <block-last-transactions v-if="transactions.length > 0" :transactions="transactions" :frameTxs="true" :tableTitle="$t('title.blockTx')"class="mt-3"></block-last-transactions>
-        <v-card v-else color="white">
+        <v-card v-else flat color="white">
           <v-card-text class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }} </v-card-text>
         </v-card>
       </v-flex>
@@ -95,7 +95,9 @@ export default Vue.extend({
       },
       (error, result) => {
         if (result) {
+          console.log(result)
           this.block = new Block(result)
+          console.log('block is : ', this.block)
 
           this.setItems(this.block.getNumber())
 
