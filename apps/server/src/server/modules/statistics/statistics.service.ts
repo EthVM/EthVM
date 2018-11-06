@@ -1,5 +1,6 @@
-import { Statistic, StatisticsRepository } from '@app/server/modules/statistics'
+import { StatisticsRepository } from '@app/server/modules/statistics'
 import { CacheRepository } from '@app/server/repositories'
+import { Statistic } from 'ethvm-common'
 
 export interface StatisticsService {
   getAverageTotalDifficulty(start: Date, end: Date): Promise<Statistic[]>

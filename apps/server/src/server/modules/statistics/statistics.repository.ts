@@ -1,5 +1,5 @@
-import { Statistic } from '@app/server/modules/statistics'
 import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
+import { Statistic } from 'ethvm-common'
 
 export interface StatisticsRepository {
   getAverageTotalDifficulty(start: Date, end: Date): Promise<Statistic[]>
