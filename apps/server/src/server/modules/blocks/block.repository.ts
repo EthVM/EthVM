@@ -23,7 +23,7 @@ export class MongoBlockRepository extends BaseMongoDbRepository implements Block
           return b
         }
         resp.forEach(block => {
-          b.push(toBlock(block))
+          b.unshift(toBlock(block))
         })
         return b
       })
