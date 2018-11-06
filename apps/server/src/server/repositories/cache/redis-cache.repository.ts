@@ -1,7 +1,7 @@
 import { logger } from '@app/logger'
 import { b64Replacer, b64Reviver } from '@app/server/core/encoding'
 import { CacheRepository } from '@app/server/repositories'
-import { Block, ExchangeRate, Quote, Tx } from 'ethvm-models'
+import { Block, ExchangeRate, Quote, Tx } from 'ethvm-common'
 import * as Redis from 'ioredis'
 
 // TODO: Separate memory cache to its own class

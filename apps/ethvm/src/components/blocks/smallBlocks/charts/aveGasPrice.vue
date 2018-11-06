@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import sEvents from '@app/configs/socketEvents.json'
+import { Events as sEvents } from 'ethvm-common'
 import BN from 'bignumber.js'
 import ethUnits from 'ethereumjs-units'
 

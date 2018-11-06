@@ -1,4 +1,4 @@
-import { Tx } from 'ethvm-models'
+import { Tx } from 'ethvm-common'
 
 const toTx = (tx: any): Tx => {
   const t: any = {}

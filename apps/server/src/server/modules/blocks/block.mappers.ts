@@ -1,4 +1,4 @@
-import { Block } from 'ethvm-models'
+import { Block } from 'ethvm-common'
 
 const toBlock = (block: any): Block => {
   const b: any = {}

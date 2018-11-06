@@ -1,6 +1,6 @@
 import { common } from '@app/helpers'
 import { Hash, Hex, HexNumber, HexTime, Tx } from '@app/models'
-import { Uncle as UncleLayout } from 'ethvm-models'
+import { Uncle as UncleLayout } from 'ethvm-common'
 
 export class Uncle {
   public readonly id: string

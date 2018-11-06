@@ -90,11 +90,11 @@
 
 <script lang="ts">
 import { common } from '@app/helpers'
-import { Tx, Account, PendingTx } from '@app/models'
 import bn from 'bignumber.js'
 import blockies from 'ethereum-blockies'
 import ethUnits from 'ethereumjs-units'
-import sEvents from '@app/configs/socketEvents.json'
+import {Tx, Account, PendingTx } from '@app/models'
+import { Events as sEvents } from 'ethvm-common'
 import Vue from 'vue'
 
 const MAX_ITEMS = 20
@@ -157,7 +157,7 @@ export default Vue.extend({
   created() {
     /* Geting Address Balance: */
     this.$socket.emit(
-      sEvents.getAddress,
+      sEvents.getAccount,
       {
         address: this.address.replace('0x', '')
       },
@@ -195,19 +195,12 @@ export default Vue.extend({
       }
     )
     /*Getting USD Values: */
-    this.$socket.emit(
-      sEvents.getTicker,
-      {
-        symbol: 'ETH',
-        to: 'USD'
-      },
-      (err, result) => {
-        this.account.ethusd = result.price
-      }
-    )
+    this.$socket.emit(sEvents.getExchangeRates, { symbol: 'ETH', to: 'USD' }, (err, result) => {
+      this.account.ethusd = result.price
+    })
     /*Getting Address Transactions: */
     this.$socket.emit(
-      sEvents.getTxs,
+      sEvents.getAddressTxs,
       {
         address: this.address.replace('0x', ''),
         limit: 10,

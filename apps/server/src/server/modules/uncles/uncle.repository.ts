@@ -1,5 +1,5 @@
 import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
-import { Uncle } from 'ethvm-models'
+import { Uncle } from 'ethvm-common'
 
 export interface UnclesRepository {
   getUncles(limit: number, page: number): Promise<Uncle[]>

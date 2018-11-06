@@ -17,9 +17,9 @@
 
 <script lang="ts">
 import { common } from '@app/helpers'
-import { Uncle } from '@app/models'
 import chartOptions from '@app/sampleData/chartData.json'
-import sEvents from '@app/configs/socketEvents.json'
+import { Uncle } from '@app/models'
+import { Events as sEvents } from 'ethvm-common'
 import store from '@app/states'
 import Vue from 'vue'
 
