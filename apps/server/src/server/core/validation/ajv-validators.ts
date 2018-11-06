@@ -217,6 +217,20 @@ const BlockPayloadSchema = {
   additionalProperties: false
 }
 
+const SearchPayloadSchema = {
+  $id: 'https://ethvm.com/search.payload.schema.json',
+  $schema: 'http://json-schema.org/draft-07/schema#',
+  type: 'object',
+  properties: {
+    hash: {
+      $id: '/properties/hash',
+      type: 'string'
+    }
+  },
+  required: ['hash'],
+  additionalProperties: false
+}
+
 const ChartPayloadSchema = {
   $id: 'https://ethvm.com/chart.payload.schema.json',
   $schema: 'http://json-schema.org/draft-07/schema#',
@@ -358,6 +372,7 @@ const ExchangeRateSchema = {
 const balancePayloadValidator = ajv.compile(BalancePayloadSchema)
 const blockTxsPayloadValidator = ajv.compile(BlockTxsPayloadSchema)
 const blockPayloadValidator = ajv.compile(BlockPayloadSchema)
+const searchpayloadValidator = ajv.compile(SearchPayloadSchema)
 const chartPayloadValidator = ajv.compile(ChartPayloadSchema)
 const ethCallPayloadValidator = ajv.compile(EthCallPayloadSchema)
 const joinLeavePayloadValidator = ajv.compile(JoinLeavePayloadSchema)
@@ -386,5 +401,6 @@ export {
   pastTxsPayloadValidator,
   exchangeRatePayloadValidator,
   blockMinedPayloadValidator,
+  searchpayloadValidator,
   pastBlockPayloadValidator
 }

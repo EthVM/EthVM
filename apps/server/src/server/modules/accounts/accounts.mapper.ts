@@ -1,4 +1,4 @@
-import { Account } from 'ethvm-models'
+import { Account } from 'ethvm-common'
 
 const toAccount = (a: any): Account => {
   const acc: any = {}

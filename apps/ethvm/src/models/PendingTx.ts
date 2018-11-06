@@ -1,6 +1,6 @@
 import { common } from '@app/helpers'
 import { EthValue, Hex, HexNumber } from '@app/models'
-import { PendingTx as PendingTxLayout } from  'ethvm-models'
+import { PendingTx as PendingTxLayout } from  'ethvm-common'
 
 export class PendingTx {
   public readonly id: string

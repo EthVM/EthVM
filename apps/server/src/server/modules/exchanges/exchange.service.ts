@@ -1,6 +1,6 @@
 import { ExchangeRepository } from '@app/server/modules/exchanges'
 import { CacheRepository } from '@app/server/repositories'
-import { Quote } from 'ethvm-models'
+import { Quote } from 'ethvm-common'
 
 export interface ExchangeService {
   getExchangeRate(token: string, to: string): Promise<Quote>

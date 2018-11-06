@@ -1,6 +1,6 @@
 import { common } from '@app/helpers'
 import { Address, EthValue, Hash, Hex, HexNumber, HexTime } from '@app/models'
-import { Tx as TxLayout } from 'ethvm-models'
+import { Tx as TxLayout } from 'ethvm-common'
 
 export class Tx {
   public readonly id: string

@@ -1,6 +1,6 @@
 import { common } from '@app/helpers'
 import { Address, EthValue, Hash, Hex, HexNumber, HexTime, Tx } from '@app/models'
-import { Account as AccountLayout } from 'ethvm-models'
+import { Account as AccountLayout } from 'ethvm-common'
 
 export class Account {
   public readonly id: string
@@ -15,7 +15,7 @@ export class Account {
 
   public getBalance() {
     if (!this.cache.balance) {
-      this.cache.balance = common.EthValue(this.address.balance)
+      this.cache.balance = this.address.balance
     }
     return this.cache.balance
   }

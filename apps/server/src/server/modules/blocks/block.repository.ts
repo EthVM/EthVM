@@ -1,6 +1,6 @@
 import { toBlock } from '@app/server/modules/blocks'
 import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
-import { Block, SmallBlock } from 'ethvm-models'
+import { Block, SmallBlock } from 'ethvm-common'
 
 export interface BlocksRepository {
   getBlocks(limit: number, page: number): Promise<Block[]>
@@ -23,7 +23,7 @@ export class MongoBlockRepository extends BaseMongoDbRepository implements Block
           return b
         }
         resp.forEach(block => {
-          b.unshift(toBlock(block))
+          b.push(toBlock(block))
         })
         return b
       })

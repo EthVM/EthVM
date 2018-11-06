@@ -1,4 +1,4 @@
-import { Account, Block, Tx } from 'ethvm-models'
+import { Account, Block, Tx } from 'ethvm-common'
 
 export enum SearchType {
   Transaction,

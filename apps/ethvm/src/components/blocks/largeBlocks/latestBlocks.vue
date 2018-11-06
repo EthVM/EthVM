@@ -76,9 +76,9 @@
 
 
 <script lang="ts">
-import sEvents from '@app/configs/socketEvents.json'
 import Visibility from 'visibilityjs'
 import Vue from 'vue'
+import { Events as sEvents } from 'ethvm-common'
 import BN from 'bignumber.js'
 
 export default Vue.extend({

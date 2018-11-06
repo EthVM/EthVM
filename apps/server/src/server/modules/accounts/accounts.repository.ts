@@ -1,6 +1,6 @@
 import { toAccount } from '@app/server/modules/accounts'
 import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
-import { Account, Tx } from 'ethvm-models'
+import { Account, Tx } from 'ethvm-common'
 
 export interface AccountsRepository {
   getTxs(hash: string, limit: number, page: number): Promise<Tx[]>

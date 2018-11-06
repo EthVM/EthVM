@@ -1,5 +1,5 @@
 import { ExchangeRepository } from '@app/server/modules/exchanges'
-import { ExchangeRate, Quote } from 'ethvm-models'
+import { ExchangeRate, Quote } from 'ethvm-common'
 
 
 export class MockExchangeRepository implements ExchangeRepository {
