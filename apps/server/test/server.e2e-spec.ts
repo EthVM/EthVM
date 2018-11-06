@@ -452,7 +452,7 @@ describe('ethvm-server-events', () => {
 
       for (const input of inputs) {
         const data = await callEvent(Events.pastBlocks, input, client)
-        expect(data[0].header.parentHash).to.be.eq("fbafb4b7b6f6789338d15ff046f40dc608a42b1a33b093e109c6d7a36cd76f61")
+        expect(data[0].header.parentHash).to.be.eq("971b253cb452cbac8a325473889156401c18fa0beef58e8a76cff71c294cb866")
         expect(data).to.have.lengthOf(10)
         data.forEach(block => {
           expect(Block.test(block)).to.to.to.to.true
