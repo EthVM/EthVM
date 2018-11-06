@@ -1,27 +1,32 @@
 import { StatisticsRepository } from '@app/server/modules/statistics'
 import { CacheRepository } from '@app/server/repositories'
 import { Statistic } from 'ethvm-common'
+import { toDatePeriods } from '@app/server/core/utils'
+
 
 export interface StatisticsService {
-  getAverageTotalDifficulty(start: Date, end: Date): Promise<Statistic[]>
-  getAveragegasPrice(start: Date, end: Date): Promise<Statistic[]>
-  getAverageTxFee(start: Date, end: Date): Promise<Statistic[]>
-  getAverageSuccessfullTx(start: Date, end: Date): Promise<Statistic[]>
+  getAverageTotalDifficulty(duration : string): Promise<Statistic[]>
+  getAveragegasPrice(duration : string): Promise<Statistic[]>
+  getAverageTxFee(duration : string): Promise<Statistic[]>
+  getAverageSuccessfullTx(duration : string): Promise<Statistic[]>
 }
 
 export class StatisticsServiceImpl implements StatisticsService {
   constructor(private readonly statisticsRepository: StatisticsRepository, private readonly cacheRepository: CacheRepository) {}
-
-  public getAverageTotalDifficulty(start: Date, end: Date): Promise<Statistic[]> {
-    return this.statisticsRepository.getAverageTotalDifficulty(start, end)
+  public getAverageTotalDifficulty(duration : string): Promise<Statistic[]> {
+    let {from,to} = toDatePeriods(duration)
+    return this.statisticsRepository.getAverageTotalDifficulty(from, to)
   }
-  public getAveragegasPrice(start: Date, end: Date): Promise<Statistic[]> {
-    return this.statisticsRepository.getAveragegasPrice(start, end)
+  public getAveragegasPrice(duration : string): Promise<Statistic[]> {
+    let {from,to} = toDatePeriods(duration)
+    return this.statisticsRepository.getAveragegasPrice(from, to)
   }
-  public getAverageTxFee(start: Date, end: Date): Promise<Statistic[]> {
-    return this.statisticsRepository.getAverageTxFee(start, end)
+  public getAverageTxFee(duration : string): Promise<Statistic[]> {
+    let {from,to} = toDatePeriods(duration)
+    return this.statisticsRepository.getAverageTxFee(from, to)
   }
-  public getAverageSuccessfullTx(start: Date, end: Date): Promise<Statistic[]> {
-    return this.statisticsRepository.getAverageSuccessfullTx(start, end)
+  public getAverageSuccessfullTx(duration : string): Promise<Statistic[]> {
+    let {from,to} = toDatePeriods(duration)
+    return this.statisticsRepository.getAverageSuccessfullTx(from, to)
   }
 }

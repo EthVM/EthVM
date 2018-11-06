@@ -3,7 +3,7 @@ export const toDatePeriods = (duration: string) => {
   // Always at the end of the day
   to.setHours(23, 59, 59, 999)
 
-  let from
+  let from: Date
   switch (duration) {
     case 'ALL':
       from = new Date(1970, 0, 1) // Far away date, we support different networks

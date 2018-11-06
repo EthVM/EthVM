@@ -14,7 +14,7 @@ const getAverageTotalDifficulty: SocketEvent = {
     }
   },
 
-  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: StatsPayload): Promise<Statistic[]> => server.statisticsService.getAverageTotalDifficulty(payload.start,payload.end)
+  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: StatsPayload): Promise<Statistic[]> => server.statisticsService.getAverageTotalDifficulty(payload.duration)
 }
 
 export default getAverageTotalDifficulty

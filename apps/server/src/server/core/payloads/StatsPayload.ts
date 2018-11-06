@@ -1,4 +1,3 @@
 export interface StatsPayload {
-  start: Date
-  end: Date
+  duration: string
 }
