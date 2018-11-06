@@ -29,4 +29,7 @@ export declare const Events: {
     getExchangeRates: string;
     search: string;
     getAvgTotalDifficultyStats: string;
+    getAvgGasPriceStats: string;
+    getAvgTxFeeStats: string;
+    getAvgSuccessfullTxStats: string;
 };

@@ -6,10 +6,10 @@ import {
   AddressTxsPagesPayload,
   BalancePayload,
   BlocksTxsPayload,
-  StatsPayload,
   EthCallPayload,
   ExchangeRatePayload,
   JoinLeavePayload,
+  StatsPayload,
   TokensBalancePayload,
   TxsPayload
 } from '@app/server/core/payloads'

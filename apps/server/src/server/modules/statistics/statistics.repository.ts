@@ -12,7 +12,7 @@ export class MongoStatisticsRepository extends BaseMongoDbRepository implements 
   public getAverageTotalDifficulty(start: Date, end: Date): Promise<Statistic[]> {
     return this.db
       .collection(MongoEthVM.collections.statistics)
-      .find({ $and: [{ name: 'avg_txs_fees' }, { date: { $gte: start } }, { date: { $lte: end } }] })
+      .find({ $and: [{ name: 'avg_total_difficulty' }, { date: { $gte: start } }, { date: { $lte: end } }] })
       .sort({ _id: -1 })
       .toArray()
       .then(resp => {
@@ -23,7 +23,7 @@ export class MongoStatisticsRepository extends BaseMongoDbRepository implements 
   public getAveragegasPrice(start: Date, end: Date): Promise<Statistic[]> {
     return this.db
       .collection(MongoEthVM.collections.statistics)
-      .find({ name: 'avg_txs_fees' })
+      .find({ $and: [{ name: 'avg_gas_price' }, { date: { $gte: start } }, { date: { $lte: end } }] })
       .sort({ _id: -1 })
       .toArray()
       .then(resp => {
@@ -34,7 +34,7 @@ export class MongoStatisticsRepository extends BaseMongoDbRepository implements 
   public getAverageTxFee(start: Date, end: Date): Promise<Statistic[]> {
     return this.db
       .collection(MongoEthVM.collections.statistics)
-      .find({ name: 'avg_txs_fees' })
+      .find({ $and: [{ name: 'avg_txs_fees' }, { date: { $gte: start } }, { date: { $lte: end } }] })
       .sort({ _id: -1 })
       .toArray()
       .then(resp => {
@@ -45,7 +45,7 @@ export class MongoStatisticsRepository extends BaseMongoDbRepository implements 
   public getAverageSuccessfullTx(start: Date, end: Date): Promise<Statistic[]> {
     return this.db
       .collection(MongoEthVM.collections.statistics)
-      .find({ name: 'avg_txs_fees' })
+      .find({ $and: [{ name: 'avg_successful_txs' }, { date: { $gte: start } }, { date: { $lte: end } }] })
       .sort({ _id: -1 })
       .toArray()
       .then(resp => {

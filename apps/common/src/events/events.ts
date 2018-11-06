@@ -28,7 +28,9 @@ export const Events = {
   getCurrentStateRoot: "get-current-state-root",
   getExchangeRates: "get-exchange-rates",
   search: "search",
-  getAvgTotalDifficultyStats: "get-average-difficulty-stats"
-
+  getAvgTotalDifficultyStats: "get-average-difficulty-stats",
+  getAvgGasPriceStats: "get-average-gas-price-stats",
+  getAvgTxFeeStats: "get-average-tx-fee-stats",
+  getAvgSuccessfullTxStats: "get-average-successfull-tx-stats"
 }
 

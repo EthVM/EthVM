@@ -750,5 +750,16 @@ describe('ethvm-server-events', () => {
         expect(data).to.have.lengthOf(20)
       }
     })
+    it('should return Promise<Statistics[]> with 0  search result', async () => {
+      const inputs = [
+        {
+          duration: 'YEAR'
+        }
+      ]
+      for (const input of inputs) {
+        const data = await callEvent(Events.getAvgTotalDifficultyStats, input, client)
+        expect(data).to.have.lengthOf(0)
+      }
+    })
   })
 })
