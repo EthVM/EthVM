@@ -61,6 +61,41 @@ resource "kubernetes_config_map" "traefik-config-map" {
     name      = "traefik-config"
     namespace = "kube-system"
   }
+
+  data {
+    traefik_config = <<EOF
+defaultEntryPoints = ["http","https"]
+debug = false
+logLevel = "INFO"
+
+[entryPoints]
+  [entryPoints.http]
+    address = ":80"
+    compress = true
+    [entryPoints.http.redirect]
+      entryPoint = "https"
+      [entryPoints.https]
+        address = ":443"
+        compress = true
+        [entryPoints.https.tls]
+
+[kubernetes]
+
+[ping]
+  entryPoint = "http"
+
+[accessLog]
+
+[acme]
+  email = "it@enkryptio.com"
+  storage = "/etc/traefik/acme/account"
+  acmeLogging = true
+  entryPoint = "https"
+  OnHostRule = true
+  [acme.httpChallenge]
+    entryPoint="http"
+EOF
+  }
 }
 
 resource "kubernetes_service" "traefik-service" {
@@ -119,6 +154,7 @@ resource "kubernetes_stateful_set" "traefik-sateful-set" {
       metadata {
         labels {
           app = "traefik-ingress-lb"
+          name = "traefik-ingress-lb"
         }
       }
 
@@ -126,6 +162,32 @@ resource "kubernetes_stateful_set" "traefik-sateful-set" {
         container {
           image = "traefik:${var.traefik_version}-alpine"
           name  = "traefik-ingress-lb"
+          image_pull_policy = "IfNotPresent"
+          args = ["--configFile=/etc/traefik/config/traefik.toml"]
+
+          port {
+            name = "http"
+            container_port = 80
+          }
+
+          port {
+            name = "https"
+            container_port = 443
+          }
+
+          volume_mount {
+            name = "config"
+            mount_path = "/etc/traefik/config"
+          }
+
+          volume_mount {
+            name = "traefik-storage-volume"
+            mount_path = "/etc/traefik/acme"
+          }
+        }
+
+        volume {
+          name = "config"
         }
       }
     }
