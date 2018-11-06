@@ -6,6 +6,7 @@ export interface StatisticsRepository {
   getAveragegasPrice(start: Date, end: Date): Promise<Statistic[]>
   getAverageTxFee(start: Date, end: Date): Promise<Statistic[]>
   getAverageSuccessfullTx(start: Date, end: Date): Promise<Statistic[]>
+  getAverageFailedTx(start: Date, end: Date): Promise<Statistic[]>
 }
 
 export class MongoStatisticsRepository extends BaseMongoDbRepository implements StatisticsRepository {
@@ -46,6 +47,17 @@ export class MongoStatisticsRepository extends BaseMongoDbRepository implements 
     return this.db
       .collection(MongoEthVM.collections.statistics)
       .find({ $and: [{ name: 'avg_successful_txs' }, { date: { $gte: start } }, { date: { $lte: end } }] })
+      .sort({ _id: -1 })
+      .toArray()
+      .then(resp => {
+        return resp
+      })
+  }
+
+  public getAverageFailedTx(start: Date, end: Date): Promise<Statistic[]> {
+    return this.db
+      .collection(MongoEthVM.collections.statistics)
+      .find({ $and: [{ name: 'avg_failed_txs' }, { date: { $gte: start } }, { date: { $lte: end } }] })
       .sort({ _id: -1 })
       .toArray()
       .then(resp => {

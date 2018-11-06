@@ -31,6 +31,7 @@ export const Events = {
   getAvgTotalDifficultyStats: "get-average-difficulty-stats",
   getAvgGasPriceStats: "get-average-gas-price-stats",
   getAvgTxFeeStats: "get-average-tx-fee-stats",
-  getAvgSuccessfullTxStats: "get-average-successfull-tx-stats"
+  getAvgSuccessfullTxStats: "get-average-successfull-tx-stats",
+  getAvgFailedTxStats: "get-average-successfull-tx-stats"
 }
 
