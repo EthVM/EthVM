@@ -14,7 +14,9 @@ import io.enkrypt.bolt.models.Contract
 import io.enkrypt.kafka.models.AccountState
 import mu.KotlinLogging
 import org.apache.commons.lang3.ArrayUtils
+import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
+import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.KeyValue
@@ -55,7 +57,7 @@ class BlocksProcessor : AbstractBaseProcessor() {
     val (blocksTopic) = appConfig.kafka.topicsConfig
 
     val blocksStream = builder
-      .stream(blocksTopic, Consumed.with(BoltSerdes.Long(), BoltSerdes.BlockSummary()))
+      .stream(blocksTopic, Consumed.with(Serdes.Long(), BoltSerdes.BlockSummary()))
       .filter { k, _ -> k != null }
       .map { k, v -> KeyValue(k!!, v) }
 

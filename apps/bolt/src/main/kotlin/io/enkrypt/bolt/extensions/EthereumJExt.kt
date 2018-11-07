@@ -138,7 +138,6 @@ fun io.enkrypt.kafka.models.AccountState?.toDocument(address: String): Document 
 
 fun TokenTransferKey?.toDocument() = Document(mapOf(
   "t" to this?.txHash.toHex(),
-  "tI" to this?.txIdx,
   "lI" to this?.logIdx
 ))
 
@@ -146,7 +145,6 @@ fun TokenTransfer?.toDocument(key: TokenTransferKey): Document {
 
   var map = mapOf(
     "txHash" to key.txHash.toHex(),
-    "txIdx" to key.txIdx,
     "logIdx" to key.logIdx,
     "address" to this?.address.toHex(),
     "from" to this?.from.toHex(),

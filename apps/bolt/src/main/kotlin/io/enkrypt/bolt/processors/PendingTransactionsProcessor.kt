@@ -49,8 +49,8 @@ class PendingTransactionsProcessor : AbstractBaseProcessor() {
     val (_, pendingTransactions) =appConfig.kafka.topicsConfig
 
     builder
-      .stream(pendingTransactions, Consumed.with(Serdes.ByteArray(), BoltSerdes.Transaction()))
-      .map { k, v -> KeyValue(ByteUtil.toHexString(k), v) }
+      .stream(pendingTransactions, Consumed.with(BoltSerdes.HexString(), BoltSerdes.Transaction()))
+      .map { k, v -> KeyValue(k!!, v) }
       .process({ get<PendingTransactionMongoProcessor>() }, null)
 
     // Generate the topology

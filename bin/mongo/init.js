@@ -14,6 +14,7 @@ db.createCollection('token_balances')
 
 db.accounts.createIndex({ miner: 1 })
 db.accounts.createIndex({ creator: 1 })
+db.accounts.createIndex({ deleted: 1})
 
 db.blocks.createIndex({ hash: 1 }, { unique: 1 });
 db.blocks.createIndex({ 'header.timestamp': 1 });

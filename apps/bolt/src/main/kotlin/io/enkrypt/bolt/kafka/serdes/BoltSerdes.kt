@@ -20,6 +20,6 @@ object BoltSerdes {
 
   fun TokenTransfer() = TokenTransferSerde()
 
-  fun Address() = AddressSerde()
+  fun HexString() = HexStringSerde()
 
 }

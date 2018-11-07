@@ -53,10 +53,13 @@ object Modules {
       Properties().apply {
         // App
         put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, config.kafka.bootstrapServers)
-
-        // Processing
-        put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, config.kafka.startingOffset)
         put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, StreamsConfig.AT_LEAST_ONCE)
+
+        //
+        put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, config.kafka.startingOffset)
+//        put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, "read_committed")
+
+        put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 1000)    // important when dealing with aggregations/reduces
 
         // Serdes - Defaults
         put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().javaClass.name)

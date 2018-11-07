@@ -50,7 +50,7 @@ class ChartsProcessor : AbstractBaseProcessor() {
     val (blocks) = appConfig.kafka.topicsConfig
 
     val blocksStream = builder
-      .stream(blocks, Consumed.with(BoltSerdes.Long(), BoltSerdes.BlockSummary()))
+      .stream(blocks, Consumed.with(Serdes.Long(), BoltSerdes.BlockSummary()))
       .filter{ k, v -> !(k == null || v == null)}
       .map{ k, v -> KeyValue(k!!, v!!) }
 

@@ -50,29 +50,39 @@ class AccountStateProcessor : AbstractBaseProcessor() {
 
     // account state
 
-    builder
-      .stream(accountStateTopic, Consumed.with(BoltSerdes.Address(), BoltSerdes.AccountState()))
-      .filter { k, _ -> k != null }
-      .map { k, v -> KeyValue(k!!, v) }
-      .groupByKey(Serialized.with(BoltSerdes.Address(), BoltSerdes.AccountState()))
+    val stateByAccount = builder
+      .table(
+        accountStateTopic,
+        Consumed.with(BoltSerdes.HexString(), BoltSerdes.AccountState()),
+        Materialized.with(BoltSerdes.HexString(), BoltSerdes.AccountState())
+      ).groupBy(
+        { k, v -> KeyValue(k, v) },
+        Serialized.with(BoltSerdes.HexString(), BoltSerdes.AccountState())
+      )
+
+    val reducedStateByAccount = stateByAccount
       .reduce(
-        { memo, next ->
-
-          // we reduce in order to determine the latest overall state which may combine multiple partial updates
-
-          when {
-            next == null -> null
-            memo == null -> next
-            else -> memo.toBuilder().merge(next).build()
+        // adder is only called when the value is not null
+        { agg, newValue ->
+          when (agg) {
+            null -> newValue
+            else -> agg.toBuilder().merge(newValue!!).build()
           }
-
         },
-        Materialized.with(BoltSerdes.Address(), BoltSerdes.AccountState())
-      ).toStream()
+        // subtractor is only called when a tombstone value (null) was received
+        { _, _ -> null },
+        Materialized.with(BoltSerdes.HexString(), BoltSerdes.AccountState())
+      )
+
+    // persist reduced state to mongo
+    // TODO move this to Kafka Connect
+
+    reducedStateByAccount
+      .toStream()
       .process({ get<AccountStateMongoProcessor>() }, null)
 
-
     // token transfers
+    // TODO move this to Kafka Connect
 
     builder
       .stream(tokenTransfersTopic, Consumed.with(BoltSerdes.TokenTransferKey(), BoltSerdes.TokenTransfer()))
@@ -90,7 +100,7 @@ class AccountStateProcessor : AbstractBaseProcessor() {
 
 }
 
-class AccountStateMongoProcessor : MongoProcessor<String, AccountState?>() {
+class AccountStateMongoProcessor : MongoProcessor<String?, AccountState?>() {
 
   private val accountsCollection: MongoCollection<Document> by lazy {
     mongoDB.getCollection(config.mongo.accountsCollection)
@@ -98,7 +108,7 @@ class AccountStateMongoProcessor : MongoProcessor<String, AccountState?>() {
 
   override val batchSize = 100
 
-  private var batch = mapOf<String, AccountState?>()
+  private var batch = mapOf<String?, AccountState?>()
   private var scheduledWrite: Cancellable? = null
 
   override fun init(context: ProcessorContext) {
@@ -106,7 +116,7 @@ class AccountStateMongoProcessor : MongoProcessor<String, AccountState?>() {
     this.scheduledWrite = context.schedule(timeoutMs, PunctuationType.WALL_CLOCK_TIME) { _ -> tryToWrite() }
   }
 
-  override fun process(key: String, value: AccountState?) {
+  override fun process(key: String?, value: AccountState?) {
     batch += key to value
     if (batch.size == batchSize) {
       tryToWrite()
@@ -123,7 +133,8 @@ class AccountStateMongoProcessor : MongoProcessor<String, AccountState?>() {
     val replaceOptions = ReplaceOptions().upsert(true)
 
     val ops = batch.toList()
-      .map<Pair<String, AccountState?>, WriteModel<Document>> { pair ->
+      .filter{ it.first != null }
+      .map<Pair<String?, AccountState?>, WriteModel<Document>> { pair ->
 
         val address = pair.first
         val state = pair.second
@@ -131,9 +142,9 @@ class AccountStateMongoProcessor : MongoProcessor<String, AccountState?>() {
         val filter = Document(mapOf("_id" to address))
 
         if (state == null || state.isEmpty) {
-          DeleteOneModel(filter)
+          UpdateOneModel(filter, Document(mapOf("deleted" to true)))
         } else {
-          val update = state.toDocument(address)
+          val update = state.toDocument(address!!)
           ReplaceOneModel(filter, update, replaceOptions)
         }
       }
