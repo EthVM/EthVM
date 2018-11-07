@@ -68,7 +68,10 @@ async function bootstrapServer() {
   // Create Blockchain data store
   logger.debug('bootstrapper -> Connecting MongoDB')
   const mongoUrl = config.get('data_stores.mongo_db.url')
-  const client = await MongoClient.connect(mongoUrl).catch(() => process.exit(-1))
+  const client = await MongoClient.connect(
+    mongoUrl,
+    { useNewUrlParser: true }
+  ).catch(() => process.exit(-1))
 
   logger.debug('bootstrapper -> Selecting MongoDB database')
   const dbName = config.get('data_stores.mongo_db.db')
