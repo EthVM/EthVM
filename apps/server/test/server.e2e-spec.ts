@@ -4,10 +4,10 @@ import { MongoStreamer, Streamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
 import { AccountsServiceImpl, MongoAccountsRepository } from '@app/server/modules/accounts'
 import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blocks'
-import { ChartsServiceImpl, MockChartsRepository } from '@app/server/modules/charts'
 import {  ExchangeService, ExchangeServiceImpl } from '@app/server/modules/exchanges'
 import { MongoPendingTxRepository, PendingTxServiceImpl } from '@app/server/modules/pending-txs'
 import { SearchServiceImpl, SearchType } from '@app/server/modules/search'
+import { MongoStatisticsRepository, StatisticsRepository, StatisticsService, StatisticsServiceImpl } from '@app/server/modules/statistics'
 import { MongoTxsRepository, TxsService, TxsServiceImpl } from '@app/server/modules/txs'
 import { MongoUncleRepository, UnclesServiceImpl } from '@app/server/modules/uncles'
 import { VmService } from '@app/server/modules/vm'
@@ -74,7 +74,9 @@ describe('ethvm-server-events', () => {
     const uncleService = new UnclesServiceImpl(unclesRepository, ds)
 
     // Charts
-    const chartsService = new ChartsServiceImpl(new MockChartsRepository())
+    const statisticsRepository = new MongoStatisticsRepository(db)
+
+    const statisticsService = new StatisticsServiceImpl(statisticsRepository,ds)
 
     // Search
     const searchService = new SearchServiceImpl(txsRepository, addressRepository, blocksRepository, ds)
@@ -100,7 +102,7 @@ describe('ethvm-server-events', () => {
       uncleService,
       addressService,
       txsService,
-      chartsService,
+      statisticsService,
       pendingTxService,
       exchangeService,
       searchService,
@@ -450,7 +452,7 @@ describe('ethvm-server-events', () => {
 
       for (const input of inputs) {
         const data = await callEvent(Events.pastBlocks, input, client)
-        expect(data[0].header.parentHash).to.be.eq("fbafb4b7b6f6789338d15ff046f40dc608a42b1a33b093e109c6d7a36cd76f61")
+        expect(data[0].header.parentHash).to.be.eq("971b253cb452cbac8a325473889156401c18fa0beef58e8a76cff71c294cb866")
         expect(data).to.have.lengthOf(10)
         data.forEach(block => {
           expect(Block.test(block)).to.to.to.to.true
@@ -732,6 +734,31 @@ describe('ethvm-server-events', () => {
           expect(e).to.be.eql(errors.BAD_REQUEST)
           expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
         }
+      }
+    })
+  })
+
+  describe('avg_txs_fees', () => {
+    it('should return Promise<Statistics[]> with search result', async () => {
+      const inputs = [
+        {
+          duration: 'ALL'
+        }
+      ]
+      for (const input of inputs) {
+        const data = await callEvent(Events.getAvgTotalDifficultyStats, input, client)
+        expect(data).to.have.lengthOf(20)
+      }
+    })
+    it('should return Promise<Statistics[]> with 0  search result', async () => {
+      const inputs = [
+        {
+          duration: 'YEAR'
+        }
+      ]
+      for (const input of inputs) {
+        const data = await callEvent(Events.getAvgTotalDifficultyStats, input, client)
+        expect(data).to.have.lengthOf(0)
       }
     })
   })
