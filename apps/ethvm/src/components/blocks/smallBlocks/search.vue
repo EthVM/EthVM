@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Events as sEvents } from 'ethvm-common'
+import { Events } from 'ethvm-common'
 
 export default Vue.extend({
   name: 'Search',
@@ -37,29 +37,28 @@ export default Vue.extend({
     /* Search Method : */
     start() {
       this.$socket.emit(
-        sEvents.search,
+        Events.search,
         {
           hash: this.searchhash
         },
         (error, result) => {
           if (result) {
-            console.log(result)
             switch (result.type) {
               case 0: {
                 this.$router.push({
-                  path: '/transaction/' + this.searchhash
+                  path: '/transaction/0x' + this.searchhash
                 })
               }
               break;
               case 1: {
                 this.$router.push({
-                  path: '/address/' + this.searchhash
+                  path: '/address/0x' + this.searchhash
                 })
               }
               break;
               case 2: {
                 this.$router.push({
-                  path: '/block/' + this.searchhash
+                  path: '/block/0x' + this.searchhash
                 })
               }
               break;
@@ -72,7 +71,6 @@ export default Vue.extend({
       )
     },
     sendReq() {
-      console.log('sending')
     }
   }
 })
