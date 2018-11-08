@@ -20,6 +20,11 @@ variable "machine_type" {
   default     = "n1-standard-4"
 }
 
+variable "image_type" {
+  description = "The image type to use for nodes. See supported image types https://cloud.google.com/kubernetes-engine/docs/concepts/node-images"
+  default     = "COS"
+}
+
 variable "disk_type" {
   description = "Type of the disk attached to each node"
   default     = "pd-ssd"
@@ -28,9 +33,4 @@ variable "disk_type" {
 variable "disk_size_gb" {
   description = "Disk of which size to attach to the nodes in the pool "
   default     = "40"
-}
-
-variable "image_type" {
-  description = "The image type to use for nodes. See supported image types https://cloud.google.com/kubernetes-engine/docs/concepts/node-images"
-  default     = "COS"
 }
