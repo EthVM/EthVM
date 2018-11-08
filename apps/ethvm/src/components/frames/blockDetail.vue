@@ -28,8 +28,6 @@
   </v-container>
 </template>
 
-
-
 <script lang="ts">
 import { common } from '@app/helpers'
 import chartOptions from '@app/sampleData/chartData.json'
@@ -97,10 +95,10 @@ export default Vue.extend({
         if (result) {
           console.log(result)
           this.block = new Block(result)
-          console.log('block is : ', this.block)
 
+          this.uncles = this.block.getUncles()
+          console.log('uncles ', this.uncles)
           this.setItems(this.block.getNumber())
-
           this.$socket.emit(
             sEvents.getBlockTransactions,
             {

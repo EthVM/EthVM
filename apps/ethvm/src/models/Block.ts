@@ -53,9 +53,9 @@ export class Block {
     return this.cache.isUncle
   }
 
-  // public getUncles(): Block[] {
-  //   return this.block.uncles
-  // }
+  public getUncles(): string[] {
+    return this.block.uncles
+  }
 
   // public getUncleHashes(): Hash[] {
   //   return this.block.uncleHashes.map(_uncle => {
