@@ -1,6 +1,7 @@
-# module "zookeeper" {
-#   source = "./zookeeper"
-# }
+module "zookeeper" {
+  source            = "./zookeeper"
+  zookeeper_version = "${var.zookeeper_version}"
+}
 
 # module "kafka" {
 #   source = "./kafka"
@@ -10,9 +11,10 @@
 #   source = "./mongo"
 # }
 
-# module "redis" {
-#   source = "./redis"
-# }
+module "redis" {
+  source        = "./redis"
+  redis_version = "${var.redis_version}"
+}
 
 # module "ethereumj" {
 #   source = "./ethereumj"

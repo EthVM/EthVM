@@ -103,7 +103,7 @@ resource "kubernetes_stateful_set" "zookeeper_stateful_set" {
           command = [
             "/bin/bash",
             "-xec",
-            "zkGenConfig.sh && exec zkServer.sh start-foreground",
+            "zkGenConfig.sh && exec /usr/bin/zkServer.sh start-foreground",
           ]
 
           port {

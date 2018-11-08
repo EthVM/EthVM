@@ -8,7 +8,7 @@ resource "kubernetes_config_map" "redis_config_map" {
   }
 
   data {
-    ping_local = <<EOF
+    "ping_local.sh" = <<EOF
 response=$(
   redis-cli \
   -h localhost \
@@ -21,7 +21,7 @@ if [ "$response" != "PONG" ]; then
 fi
 EOF
 
-    ping_master = <<EOF
+    "ping_master.sh" = <<EOF
 response=$(
   redis-cli \
   -h $REDIS_MASTER_HOST \
@@ -34,7 +34,7 @@ if [ "$response" != "PONG" ]; then
 fi
 EOF
 
-    ping_local_and_master = <<EOF
+    "ping_local_and_master.sh" = <<EOF
 script_dir="$(dirname "$0")"
 exit_status=0
 "$script_dir/ping_local.sh" || exit_status=$?
@@ -148,7 +148,7 @@ resource "kubernetes_stateful_set" "redis_stateful_set" {
               command = [
                 "sh",
                 "-c",
-                "/health/ping_local.sh",
+                "\"/health/ping_local.sh\"",
               ]
             }
           }
@@ -164,7 +164,7 @@ resource "kubernetes_stateful_set" "redis_stateful_set" {
               command = [
                 "sh",
                 "-c",
-                "/health/ping_local.sh",
+                "\"/health/ping_local.sh\"",
               ]
             }
           }
