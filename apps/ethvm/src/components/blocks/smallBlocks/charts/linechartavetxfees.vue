@@ -98,9 +98,9 @@ export default Vue.extend({
           const _tempD = _block.getStats()
           this.chartData.labels.push(_block.getNumber())
           this.chartData.labels.shift()
-          this.chartData.datasets[0].data.push(common.EthValue(_tempD.avgTxsFees).toEth())
+          this.chartData.datasets[0].data.push(ethUnits.convert(_tempD.avgTxsFees, 'wei', 'eth'))
           this.chartData.datasets[0].data.shift()
-          this.chartData.datasets[1].data.push(common.EthValue(_tempD.avgGasPrice).toEth())
+          this.chartData.datasets[1].data.push(ethUnits.convert(_tempD.avgGasPrice, 'wei', 'gwei'))
           this.chartData.datasets[1].data.shift()
         }
       }
@@ -121,8 +121,8 @@ export default Vue.extend({
       latestBlocks.forEach(_block => {
         data.labels.unshift(_block.getNumber())
         const _tempD = _block.getStats()
-        data.avgFees.unshift(common.EthValue(_tempD.avgTxsFees).toEth())
-        data.avgPrice.unshift(common.EthValue(_tempD.avgTxsFees).toEth())
+        data.avgFees.unshift(ethUnits.convert(_tempD.avgTxsFees, 'wei', 'eth'))
+        data.avgPrice.unshift(ethUnits.convert(_tempD.avgGasPrice, 'wei', 'gwei'))
       })
       return {
         labels: data.labels,

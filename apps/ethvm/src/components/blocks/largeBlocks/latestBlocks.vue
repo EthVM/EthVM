@@ -147,7 +147,6 @@ export default Vue.extend({
     this.blocks = this.$store.getters.getBlocks
 
     this.$eventHub.$on(sEvents.newBlock, _block => {
-      console.log(this.blocks)
       if (Visibility.state() === 'visible') {
         this.blocks = this.$store.getters.getBlocks
       }
