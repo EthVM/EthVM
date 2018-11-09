@@ -11,9 +11,7 @@ services:
     restart: on-failure:3
     volumes:
       - ethereumj-volume:/ethj
-      - ./deployments/docker/config/ethereumj/kafka-ropsten.conf:/ethereumj/ethereumj-core/src/main/resources/kafka-ethereumj.conf
-      - ./deployments/docker/config/ethereumj/kafka-ropsten.conf:/ethereumj/ethereumj-core/src/main/resources/kafka-private-net.conf
-      - ./deployments/docker/config/ethereumj/kafka-ropsten.conf:/ethereumj/ethereumj-core/src/main/resources/kafka-ropsten.conf
+      - ./deployments/docker/config/ethereumj/:/ethereumj/ethereumj-core/src/main/resources/
     networks:
       back:
         ipv4_address: 172.25.0.102
