@@ -1,6 +1,6 @@
 import { common } from '@app/helpers'
 import { Address, EthValue, Hash, Hex, HexNumber, HexTime } from '@app/models'
-import { TxLayout } from '@app/models/server'
+import { Tx as TxLayout } from 'ethvm-common'
 
 export class Tx {
   public readonly id: string
@@ -35,9 +35,9 @@ export class Tx {
     return this.cache.from
   }
 
-  public getGasUsed(): HexNumber {
+  public getGasUsed(): number {
     if (!this.cache.gasUsed) {
-      this.cache.gasUsed = common.HexNumber(this.tx.gasUsed)
+      this.cache.gasUsed = this.tx.gasUsed
     }
     return this.cache.gasUsed
   }
@@ -55,7 +55,7 @@ export class Tx {
 
   public geTransactionIndex(): number {
     if (!this.cache.transactionIndex) {
-      this.cache.transactionIndex = this.tx.transactionIndex
+      this.cache.transactionIndex = this.tx.index
     }
     return this.cache.transactionIndex
   }
@@ -97,16 +97,16 @@ export class Tx {
   //   return this.cache.logsBloom
   // }
 
-  public getGas(): HexNumber {
+  public getGas(): number {
     if (!this.cache.gas) {
-      this.cache.gas = common.HexNumber(this.tx.gasUsed)
+      this.cache.gas = this.tx.gasUsed
     }
     return this.cache.gas
   }
 
-  public getGasPrice(): EthValue {
+  public getGasPrice(): number {
     if (!this.cache.gasPrice) {
-      this.cache.gasPrice = common.EthValue(this.tx.gasPrice)
+      this.cache.gasPrice = this.tx.gasPrice
     }
     return this.cache.gasPrice
   }
@@ -118,11 +118,11 @@ export class Tx {
   //   return this.cache.input
   // }
 
-  public getNonce(): HexNumber {
-    if (!this.cache.hexNumber) {
-      this.cache.hexNumber = common.HexNumber(this.tx.nonce)
+  public getNonce(): string {
+    if (!this.cache.nonce) {
+      this.cache.nonce = this.tx.nonce
     }
-    return this.cache.hexNumber
+    return this.cache.nonce
   }
 
   public getValue(): EthValue {
@@ -139,16 +139,16 @@ export class Tx {
     return this.cache.v
   }
 
-  public getR(): Hex {
+  public getR(): number {
     if (!this.cache.r) {
-      this.cache.r = common.Hex(this.tx.r)
+      this.cache.r = this.tx.r
     }
     return this.cache.r
   }
 
-  public getS(): Hex {
+  public getS(): number {
     if (!this.cache.s) {
-      this.cache.s = common.Hex(this.tx.s)
+      this.cache.s = this.tx.s
     }
     return this.cache.s
   }

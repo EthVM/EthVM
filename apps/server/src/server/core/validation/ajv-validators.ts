@@ -217,6 +217,20 @@ const BlockPayloadSchema = {
   additionalProperties: false
 }
 
+const SearchPayloadSchema = {
+  $id: 'https://ethvm.com/search.payload.schema.json',
+  $schema: 'http://json-schema.org/draft-07/schema#',
+  type: 'object',
+  properties: {
+    hash: {
+      $id: '/properties/hash',
+      type: 'string'
+    }
+  },
+  required: ['hash'],
+  additionalProperties: false
+}
+
 const ChartPayloadSchema = {
   $id: 'https://ethvm.com/chart.payload.schema.json',
   $schema: 'http://json-schema.org/draft-07/schema#',
@@ -322,6 +336,17 @@ const PastBlocksSchema = {
   },
   additionalProperties: false
 }
+const BlocksMinedSchema = {
+  $id: 'https://ethvm.com/blocksmined.payload.schema.json',
+  $schema: 'http://json-schema.org/draft-07/schema#',
+  type: 'object',
+  properties: {
+    address: addressSchema,
+    limit: limitSchema,
+    page: pageSchema
+  },
+  additionalProperties: false
+}
 
 const ExchangeRateSchema = {
   $id: 'https://ethvm.com/exchange.payload.schema.json',
@@ -347,6 +372,7 @@ const ExchangeRateSchema = {
 const balancePayloadValidator = ajv.compile(BalancePayloadSchema)
 const blockTxsPayloadValidator = ajv.compile(BlockTxsPayloadSchema)
 const blockPayloadValidator = ajv.compile(BlockPayloadSchema)
+const searchpayloadValidator = ajv.compile(SearchPayloadSchema)
 const chartPayloadValidator = ajv.compile(ChartPayloadSchema)
 const ethCallPayloadValidator = ajv.compile(EthCallPayloadSchema)
 const joinLeavePayloadValidator = ajv.compile(JoinLeavePayloadSchema)
@@ -357,6 +383,7 @@ const txsPayloadValidator = ajv.compile(TxsPayloadSchema)
 const totalTxsPayloadValidator = ajv.compile(TotalTxsPayloadSchema)
 const pastTxsPayloadValidator = ajv.compile(PastTxsSchema)
 const pastBlockPayloadValidator = ajv.compile(PastBlocksSchema)
+const blockMinedPayloadValidator = ajv.compile(BlocksMinedSchema)
 const exchangeRatePayloadValidator = ajv.compile(ExchangeRateSchema)
 
 export {
@@ -373,5 +400,7 @@ export {
   totalTxsPayloadValidator,
   pastTxsPayloadValidator,
   exchangeRatePayloadValidator,
+  blockMinedPayloadValidator,
+  searchpayloadValidator,
   pastBlockPayloadValidator
 }

@@ -1,6 +1,6 @@
-import { Account } from '@app/server/modules/accounts'
-import { Tx } from '@app/server/modules/txs'
+import { toAccount } from '@app/server/modules/accounts'
 import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
+import { Account, Tx } from 'ethvm-common'
 
 export interface AccountsRepository {
   getTxs(hash: string, limit: number, page: number): Promise<Tx[]>
@@ -29,7 +29,7 @@ export class MongoAccountsRepository extends BaseMongoDbRepository implements Ac
         if (!resp) {
           return null
         }
-        return resp
+        return toAccount(resp)
       })
   }
 

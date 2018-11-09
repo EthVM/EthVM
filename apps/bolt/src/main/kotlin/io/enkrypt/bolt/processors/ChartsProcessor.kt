@@ -57,10 +57,9 @@ class ChartsProcessor : AbstractBaseProcessor() {
     // Create stream builder
     val builder = StreamsBuilder()
 
-    val blocksStream = builder.stream(
-      appConfig.topicsConfig.blocks,
-      Consumed.with(Serdes.ByteArray(), blockSummarySerde)
-    )
+    val (blocks) = appConfig.kafka.topicsConfig
+
+    val blocksStream = builder.stream(blocks, Consumed.with(Serdes.ByteArray(), blockSummarySerde))
 
     val statsByDay = blocksStream
       .map { k, v -> KeyValue(ByteUtil.byteArrayToLong(k), v) }

@@ -2,6 +2,7 @@
   <img src="https://raw.githubusercontent.com/enKryptIO/ethvm/master/.github/assets/logo.png" alt="ethvm-logo">
   <p>:zap::zap::zap: EthVM Project: An open source blockchain explorer for Ethereum network :zap::zap::zap:</p>
   <p>Powered by <a href="https://www.typescriptlang.org/">TypeScript</a> / <a href="https://vuejs.org/">VueJS</a> / <a href="https://github.com/socketio/socket.io">Socket.io</a> / <a href="https://github.com/ethereum/ethereumj">EthereumJ</a> / <a href="https://kafka.apache.org/">Kafka</a> / <a href="https://github.com/mongodb/mongo">MongoDB</a> / <a href="https://redis.io/topics/quickstart">Redis</a></p>
+  <p><a href="https://travis-ci.org/enKryptIO/ethvm.svg?branch=develop"><img src="https://travis-ci.org/enKryptIO/ethvm.svg?branch=develop"/></a><img src="https://img.shields.io/github/license/mashape/apistatus.svg" /></p>
 </div>
 
 # EthVM: Open Source Ethereum Blockchain Explorer
@@ -38,7 +39,7 @@ Also, there are a couple of different directories, not related itself to any con
 | `postman`                    | Postman (Js)        | A simple Postman collection that contains all `ethereum` JSON RPC calls. Very useful for testing our custom geth node.                                                                                                                         |
 | `provisioners`               | Kubernetes / Docker | Contains kubernetes definitions for deploying a production ready EthVM project (work in progress, though). Also, it contains `docker` development images (that differs slightly from production ready `dockerfiles`) needed for development.   |
 | `docker-compose.yml`         | Docker              | This `docker-compose` file contains everything needed to setup a private environment ready for developing.                                                                                                                                     |
-| `docker-compose.ropsten.yml` | Docker              | Same as above but giving support to `ropsten` network.                                                                                                                                                                                         |
+| `docker-compose.extra.yml` | Docker           | As usually we usually develop bolt and ethereumj, these two projects are out of the previous `docker-compose` file. This file contains those two services dockerized.                                                                                                                                                                                         |
 
 ## Getting Started
 

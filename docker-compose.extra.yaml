@@ -5,6 +5,10 @@ volumes:
 
 services:
 
+  mongodb:
+    volumes:
+      - ./datasets:/datasets
+
   ethereumj:
     build:
       context: ./apps/ethereumj

@@ -46,7 +46,7 @@
               <router-link class=" grey--text text--darken-2" :to="'/block/'+block.getHash()">{{block.getHash()}}</router-link>
             </p>
             <p class="text-truncate"><strong>{{ $t( 'block.miner' ) }}  </strong>
-              <router-link :to="'/address/'+block.getMiner().toString()">{{block.getMiner().toString()}}</router-link>
+              <router-link :to="'/address/'+block.getMiner()">{{block.getMiner()}}</router-link>
             </p>
           </v-flex>
           <v-flex hidden-sm-and-down md1>
@@ -55,11 +55,11 @@
           </v-flex>
           <v-flex xs4 md2 class="pr-1">
             <p class="text-truncate grey--text text--darken-2">
-              <v-tooltip v-if="getShortRewardValue(block.getTotalBlockReward().toEth().toString(), true)" bottom>
+              <v-tooltip v-if="getShortRewardValue(block.getTotalBlockReward(), true)" bottom>
                 <v-icon slot="activator" dark small>fa fa-question-circle grey--text</v-icon>
-                <span>{{block.getTotalBlockReward().toEth().toString()}}</span>
+                <span>{{block.getTotalBlockReward()}}</span>
               </v-tooltip>
-              {{getShortRewardValue(block.getTotalBlockReward().toEth().toString(), false)}}
+              {{getShortRewardValue(block.getTotalBlockReward(), false)}}
             </p>
           </v-flex>
         </v-layout>
@@ -76,9 +76,9 @@
 
 
 <script lang="ts">
-import sEvents from '@app/configs/socketEvents.json'
 import Visibility from 'visibilityjs'
 import Vue from 'vue'
+import { Events as sEvents } from 'ethvm-common'
 import BN from 'bignumber.js'
 
 export default Vue.extend({

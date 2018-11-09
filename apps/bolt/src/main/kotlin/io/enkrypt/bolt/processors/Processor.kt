@@ -9,7 +9,7 @@ import java.util.Properties
 
 interface Processor {
   fun onPrepareProcessor()
-  fun start()
+  fun start(cleanUp: Boolean = false)
 }
 
 abstract class AbstractBaseProcessor : Processor, KoinComponent {
@@ -22,12 +22,17 @@ abstract class AbstractBaseProcessor : Processor, KoinComponent {
 
   protected lateinit var streams: KafkaStreams
 
-  override fun start() {
+  override fun start(cleanUp: Boolean) {
 
     logger.info { "Starting ${this.javaClass.simpleName}..." }
 
     streams.apply {
-      cleanUp()
+
+      if(cleanUp) {
+        // remove local streams state
+        cleanUp()
+      }
+
       start()
     }
 

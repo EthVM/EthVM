@@ -47,8 +47,10 @@ class PendingTransactionsProcessor : AbstractBaseProcessor() {
     // Create stream builder
     val builder = StreamsBuilder()
 
+    val (_, pendingTransactions) =appConfig.kafka.topicsConfig
+
     builder
-      .stream(appConfig.topicsConfig.pendingTransactions, Consumed.with(Serdes.ByteArray(), serde))
+      .stream(pendingTransactions, Consumed.with(Serdes.ByteArray(), serde))
       .map { k, v -> KeyValue(ByteUtil.toHexString(k), v) }
       .process({ get<PendingTransactionMongoProcessor>() }, null)
 
@@ -98,6 +100,8 @@ class PendingTransactionMongoProcessor : MongoProcessor<String, Transaction?>() 
 
       val filter = Document(mapOf("_id" to hash))
       val replaceOptions = ReplaceOptions().upsert(true)
+
+      logger.info{ "Trying to write transaction: ${txn?.encoded}"}
 
       if (txn == null) {
         DeleteOneModel<Document>(filter)

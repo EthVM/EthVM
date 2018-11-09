@@ -21,17 +21,12 @@ import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.kstream.Consumed
-import org.apache.kafka.streams.kstream.Produced
-import org.apache.kafka.streams.kstream.Transformer
 import org.apache.kafka.streams.processor.Cancellable
 import org.apache.kafka.streams.processor.ProcessorContext
 import org.apache.kafka.streams.processor.PunctuationType
 import org.apache.kafka.streams.processor.TimestampExtractor
-import org.apache.kafka.streams.state.KeyValueStore
-import org.apache.kafka.streams.state.Stores
 import org.bson.Document
 import org.ethereum.core.BlockSummary
-import org.ethereum.util.ByteUtil
 import org.koin.standalone.get
 import java.util.Properties
 
@@ -59,12 +54,12 @@ class BlocksProcessor : AbstractBaseProcessor() {
     // Create stream builder
     val builder = StreamsBuilder()
 
-    val (blocks) = appConfig.topicsConfig
+    val (blocks) = appConfig.kafka.topicsConfig
 
     builder
       .stream(blocks, Consumed.with(Serdes.ByteArray(), blockSerde))
-      .transform<ByteArray, BlockSummary>({ get<BlockMongoTransformer>() }, null)
-      .transform<ByteArray, BlockSummary>({ get<TokenDetectorTransformer>() }, null)
+      .transform({ get<BlockMongoTransformer>() }, null)
+      .transform({ get<TokenDetectorTransformer>() }, null)
 
     // Generate the topology
     val topology = builder.build()
@@ -74,9 +69,9 @@ class BlocksProcessor : AbstractBaseProcessor() {
 
   }
 
-  override fun start() {
+  override fun start(cleanUp: Boolean) {
     logger.info { "Starting ${this.javaClass.simpleName}..." }
-    super.start()
+    super.start(cleanUp)
   }
 
 }
