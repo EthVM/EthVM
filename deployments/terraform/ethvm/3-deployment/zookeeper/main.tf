@@ -97,7 +97,7 @@ resource "kubernetes_stateful_set" "zookeeper_stateful_set" {
 
         container {
           name              = "zookeeper"
-          image             = "gcr.io/google_samples/k8szk:v3"
+          image             = "enkryptio/zookeeper:${var.zookeeper_version}"
           image_pull_policy = "IfNotPresent"
 
           command = [
