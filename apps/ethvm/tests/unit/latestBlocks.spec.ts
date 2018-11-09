@@ -25,21 +25,7 @@ const i18n = new VueI18n({
   fallbackLocale: 'en_US'
 })
 
-
 describe('latestBlocks.vue', () => {
-  let getters
-  let store
-
-  beforeEach(() => {
-    getters = {
-      getBlocks: () => []
-    }
-
-    store = new Vuex.Store({
-      getters
-    })
-  })
-
   it('renders LatestBlocks', () => {
     const wrapper = shallowMount(LatestBlocks, {
       propsData: { blocks: [] },
