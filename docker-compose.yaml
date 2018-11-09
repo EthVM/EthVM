@@ -18,7 +18,7 @@ volumes:
 
 services:
   traefik:
-    image: traefik:1.6.2-alpine
+    image: traefik:1.7.3-alpine
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -89,7 +89,7 @@ services:
       - 'traefik.backend=redis'
 
   mongodb:
-    image: enkryptio/mongodb:4.0
+    image: enkryptio/mongodb:4.0-dev
     restart: unless-stopped
     volumes:
       - mongodb-volume:/data/db
