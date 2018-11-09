@@ -29,7 +29,7 @@
       </v-flex>
     </v-layout>
     <!-- Tx Table Header -->
-    <block-address-tx-table :transactions='filteredTxs' :account='address' :filter="selectedTx" :total="getTotal">
+    <block-address-tx-table :transactions='filteredTxs' :account='address' :filter="selectedTx" :total="getTotal" :type="isPending">
     </block-address-tx-table>
     <!-- End Tx Table Header -->
   </v-card>
@@ -72,7 +72,6 @@ export default Vue.extend({
   },
   methods: {
     getTxsType() {
-      console.log('ere')
       let i
       for (i = 0; i < this.transactions.length; i++) {
         if (
@@ -110,7 +109,6 @@ export default Vue.extend({
   },
   computed: {
     selectedTx() {
-      console.log(this.selected.value)
       return this.selected.value
     },
     filteredTxs() {

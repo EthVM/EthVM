@@ -43,6 +43,7 @@ import blockComponent from '@app/components/blocks/smallBlocks/component.vue'
 import footnote from '@app/components/blocks/smallBlocks/footnote.vue'
 import blockies from '@app/components/blocks/smallBlocks/blockies.vue'
 import addressQR from '@app/components/blocks/smallBlocks/qrComponent.vue'
+import errorNoData from '@app/components/blocks/smallBlocks/errorNoData.vue'
 
 // Search Block:
 import blockSearch from '@app/components/blocks/smallBlocks/search.vue'
@@ -117,6 +118,7 @@ Vue.component('block-component', blockComponent)
 Vue.component('footnote', footnote)
 Vue.component('blockies', blockies)
 Vue.component('address-qr', addressQR)
+Vue.component('error-no-data', errorNoData)
 
 // Search Block:
 Vue.component('block-search', blockSearch)

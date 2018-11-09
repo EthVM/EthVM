@@ -1,11 +1,9 @@
 <template>
   <div class="last-transactions">
     <!-- If no Transactions: -->
-    <div v-if="total == 0" class="info">
-      <div class="info-common">
-        <p>{{getText}}</p>
-      </div>
-    </div>
+    <v-card v-if="total == 0" flat>
+      <v-card-text class="text-xs-center secondary--text">{{getText}}</v-card-text>
+    </v-card>
     <v-card v-else color="white" flat class="pt-0 pb-2">
       <v-layout justify-end class="pb-1">
         <footnote :footnotes="footnote"></footnote>
@@ -36,8 +34,10 @@
             <v-card v-for="tx in transactions" class="transparent pb-1" flat v-bind:key="tx.getHash()">
               <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
                 <v-flex d-flex xs6 sm8 md5 pr-3>
-                  <v-icon v-if="getType(tx)" class="fas fa-circle warning--text pr-3" small/>
-                  <v-icon v-else class="fas fa-circle success--text pr-3" small/>
+                  <div v-if="!type">
+                    <v-icon v-if="getType(tx)" class="fas fa-circle warning--text pr-3" small/>
+                    <v-icon v-else class="fas fa-circle success--text pr-3" small/>
+                  </div>
                   <v-layout row wrap align-center pb-1>
                     <v-flex d-flex xs12 pb-2>
                       <router-link class="primary--text text-truncate font-italic psmall" :to="'/tx/'+tx.getHash()">{{tx.getHash()}}</router-link>
@@ -59,7 +59,7 @@
                   </v-layout>
                 </v-flex>
                 <v-flex d-flex xs6 sm3 md2>
-                  <p :class="[tx.getStatus()? 'txSuccess--text': 'txFail--text']">
+                  <p :class="[tx.getStatus()? 'txSuccess--text mb-0': 'txFail--text mb-0']">
                     <v-tooltip v-if="getShortEthValue(tx.getValue().toEth().toString(), true)" bottom>
                       <v-icon slot="activator" dark small>fa fa-question-circle info--text</v-icon>
                       <span>{{tx.getValue().toEth()}}</span>
@@ -74,8 +74,8 @@
                   <p class="text-truncate black--text mb-0">{{tx.getGasPrice()}}</p>
                 </v-flex>
                 <v-flex hidden-xs-only sm1>
-                  <v-icon v-if="tx.getStatus()" small class="txSuccess--text"> fa fa-check-circle </v-icon>
-                  <v-icon v-else small class="txFail--text">fa fa-times-circle </v-icon>
+                  <v-icon v-if="tx.getStatus()" small class="txSuccess--text"> fa fa-check-circle {{log(tx)}}</v-icon>
+                  <v-icon v-else small class="txFail--text">fa fa-times-circle {{log(tx)}}</v-icon>
                 </v-flex>
               </v-layout>
               <v-divider></v-divider>
@@ -105,6 +105,10 @@ export default Vue.extend({
     total: {
       type: Number,
       default: 0
+    },
+    type: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -141,6 +145,9 @@ export default Vue.extend({
         return newEthValue
       }
       return isShort
+    },
+    log(tx) {
+      //console.log(tx, ' status', tx.getStatus())
     }
   },
   computed: {
@@ -152,13 +159,14 @@ export default Vue.extend({
           return this.$i18n.t('message.txIn')
         }
         return this.$i18n.t('message.txOut')
+      } else {
+        if (this.filter === '2') {
+          return this.$i18n.t('message.txPen')
+        } else if (this.filter === '1') {
+          return this.$i18n.t('message.txPenIn')
+        }
+        return this.$i18n.t('message.txPenOut')
       }
-      /*if (this.filter === '2') {
-                  return this.$i18n.t('message.txPen')
-                } else if (this.filter === '1') {
-                  return this.$i18n.t('message.txPenIn')
-                }
-                return this.$i18n.t('message.txPenOut')*/
     }
   }
 })

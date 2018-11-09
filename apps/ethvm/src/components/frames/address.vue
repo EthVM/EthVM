@@ -21,18 +21,19 @@
     <!-- Tab Menu -->
     <v-card color="white" flat>
       <v-tabs v-model="activeTab" color="white" show-arrows :class="{'pl-0 pr-0': $vuetify.breakpoint.smAndDown, 'pl-3 pr-3': $vuetify.breakpoint.mdAndUp, 'pt-2': $vuetify.breakpoint.mdAndUp }">
-        <v-tab v-for="(item) in tabs" class="info--text text-capitalize pb-2 tab-opacity" active-class="primary--text " :key="item.title" ripple>
+        <v-tab v-for="(item) in tabs" class="info--text text-capitalize pb-2 tab-opacity" active-class="primary--text " :key="item.id" :href="'#tab-'+item.id" ripple>
           {{ item.title }}
         </v-tab>
         <v-tabs-slider color="primary" class="mb-0" style="height: 4px;"></v-tabs-slider>
       </v-tabs>
       <v-tabs-items v-model="activeTab" style="border-top: 1px solid #efefef">
         <!-- Transactions-->
-        <v-tab-item id="tab-0">
-          <block-address-tx v-if="account.txs" :address='account.address' :transactions='account.txs' ></block-address-tx>
+        <v-tab-item value="tab-0">
+          <block-address-tx v-if="account.txs" :address='account.address' :transactions='account.txs'></block-address-tx>
+          <error-no-data v-else></error-no-data>
         </v-tab-item>
         <!-- Tokens -->
-        <v-tab-item id="tab-1">
+        <v-tab-item value="tab-1">
           <div v-if="!tokenError">
             <div v-if="tokensLoaded">
               <block-token-tracker :tokens="account.tokens" :holder="account.address"></block-token-tracker>
@@ -42,16 +43,15 @@
               <span class="sr-only">{{ $t('message.load') }}</span>
             </v-card>
           </div>
-          <v-card v-else class="info-common">
-            <p> {{ $t('message.error') }}</p>
-          </v-card>
+          <error-no-data v-else></error-no-data>
         </v-tab-item>
         <!-- End Tokens -->
         <!-- Pending Transactions -->
-        <v-tab-item id="tab-2">
-          <!--<block-address-tx :address='account' :transactions='account.pendingTxs' :isPending='true'></block-address-tx> -->
+        <v-tab-item value="tab-2">
+          <block-address-tx v-if="account.pendingTxs" :address='account' :transactions='account.pendingTxs' :isPending='true'></block-address-tx>
+          <error-no-data v-else></error-no-data>
         </v-tab-item>
-        <v-tab-item v-if="account.isMiner" id="tab-3">
+        <v-tab-item v-if="account.isMiner" value="tab-3">
           <!--Mining History This are temp strings (no need to implement yet)  -->
           <v-card>
             <ul>
@@ -67,7 +67,7 @@
           </v-card>
         </v-tab-item>
         <!--End Mining History -->
-        <v-tab-item v-if="account.conCreator" id="tab-4">
+        <v-tab-item v-if="account.conCreator" value="tab-4">
           <!--Mining History This are temp strings (no need to implement yet)  -->
           <v-card>
             <ul>
@@ -93,7 +93,7 @@ import { common } from '@app/helpers'
 import bn from 'bignumber.js'
 import blockies from 'ethereum-blockies'
 import ethUnits from 'ethereumjs-units'
-import {Tx, Account, PendingTx } from '@app/models'
+import { Tx, Account, PendingTx } from '@app/models'
 import { Events as sEvents } from 'ethvm-common'
 import Vue from 'vue'
 
@@ -195,9 +195,16 @@ export default Vue.extend({
       }
     )
     /*Getting USD Values: */
-    this.$socket.emit(sEvents.getExchangeRates, { symbol: 'ETH', to: 'USD' }, (err, result) => {
-      this.account.ethusd = result.price
-    })
+    this.$socket.emit(
+      sEvents.getExchangeRates,
+      {
+        symbol: 'ETH',
+        to: 'USD'
+      },
+      (err, result) => {
+        this.account.ethusd = result.price
+      }
+    )
     /*Getting Address Transactions: */
     this.$socket.emit(
       sEvents.getAddressTxs,
@@ -228,10 +235,9 @@ export default Vue.extend({
           pTxs.push(new PendingTx(element))
         })
         this.account.pendingTxs = pTxs
+        console.log('pending ', this.account.pendingTxs)
       }
     )
-
-    this.setTabs()
   },
   methods: {
     /*Checking of address is Miner? --> add new tab for the menu*/
