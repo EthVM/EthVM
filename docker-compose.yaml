@@ -144,60 +144,13 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       KAFKA_BROKER_ID: 1
       KAFKA_LOG4J_LOGGERS: 'kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO'
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
       CONFLUENT_SUPPORT_METRICS_ENABLE: 'false'
       KAFKA_MESSAGE_MAX_BYTES: '2000000000'
 
-  kafka-2:
-    image: confluentinc/cp-kafka:5.0.0
-    restart: unless-stopped
-    depends_on:
-    - zookeeper
-    volumes:
-    - kafka-volume-2:/var/lib/kafka
-    ports:
-    - 9092:9092
-    networks:
-      back:
-        ipv4_address: 172.25.0.105
-    environment:
-      KAFKA_ADVERTISED_HOST_NAME: 'kafka-2'
-      KAFKA_ADVERTISED_LISTENERS: 'DOCKER://kafka-2:9092'
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'DOCKER:PLAINTEXT'
-      KAFKA_INTER_BROKER_LISTENER_NAME: 'DOCKER'
-      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      KAFKA_BROKER_ID: 2
-      KAFKA_LOG4J_LOGGERS: 'kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO'
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
-      CONFLUENT_SUPPORT_METRICS_ENABLE: 'false'
-      KAFKA_MESSAGE_MAX_BYTES: '2000000000'
-
-  kafka-3:
-    image: confluentinc/cp-kafka:5.0.0
-    restart: unless-stopped
-    depends_on:
-    - zookeeper
-    volumes:
-    - kafka-volume-3:/var/lib/kafka
-    ports:
-    - 9093:9093
-    networks:
-      back:
-        ipv4_address: 172.25.0.106
-    environment:
-      KAFKA_ADVERTISED_HOST_NAME: 'kafka-3'
-      KAFKA_ADVERTISED_LISTENERS: 'DOCKER://kafka-3:9093'
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'DOCKER:PLAINTEXT'
-      KAFKA_INTER_BROKER_LISTENER_NAME: 'DOCKER'
-      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      KAFKA_BROKER_ID: 3
-      KAFKA_LOG4J_LOGGERS: 'kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO'
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
-      CONFLUENT_SUPPORT_METRICS_ENABLE: 'false'
-      KAFKA_MESSAGE_MAX_BYTES: '2000000000'
 
   kafka-schema-registry:
     image: confluentinc/cp-schema-registry:5.0.0
@@ -205,8 +158,6 @@ services:
     depends_on:
     - zookeeper
     - kafka-1
-    - kafka-2
-    - kafka-3
     networks:
       back:
         ipv4_address: 172.25.0.107
@@ -219,7 +170,7 @@ services:
     - 'traefik.port=8081'
     - 'traefik.backend=kafka-schema-registry'
     environment:
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'PLAINTEXT://kafka-1:9091,PLAINTEXT://kafka-2:9092,PLAINTEXT://kafka-3:9093'
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'PLAINTEXT://kafka-1:9091'
       SCHEMA_REGISTRY_HOST_NAME: kafka-schema-registry
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
       SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: 'INFO'

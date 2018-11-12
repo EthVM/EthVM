@@ -95,7 +95,7 @@ class Cli : CliktCommand() {
   companion object Defaults {
 
     const val DEFAULT_TRANSACTIONAL_ID = "bolt-1"
-    const val DEFAULT_BOOTSTRAP_SERVERS = "kafka-1:9091,kafka-2:9092,kafka-3:9093"
+    const val DEFAULT_BOOTSTRAP_SERVERS = "kafka-1:9091"
     const val DEFAULT_SCHEMA_REGISTRY_URL = "http://kafka-schema-registry:8081"
     const val DEFAULT_AUTO_OFFSET = "earliest"
     const val DEFAULT_STREAMS_RESET = 0
