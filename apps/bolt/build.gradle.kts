@@ -42,9 +42,6 @@ dependencies {
   implementation("io.confluent:kafka-streams-avro-serde:5.0.1")
   implementation("io.enkrypt:avro:0.0.1-SNAPSHOT")
 
-  // mongo
-  implementation("org.litote.kmongo:kmongo:3.8.2")
-
   // Utils
   implementation("com.github.ajalt:clikt:1.4.0")
   implementation("ch.qos.logback.logback:logback-classic:1.2.3")

@@ -141,7 +141,7 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
     val (blocksTopic) = appConfig.kafka.topicsConfig
 
     val blockSummaryStream = builder
-      .stream("blocks", Consumed.with(Serdes.Long(), BoltSerdes.BlockSummaryRecord()))
+      .stream("blockSummaries", Consumed.with(Serdes.Long(), BoltSerdes.BlockSummaryRecord()))
 
     val gatedStream = blockSummaryStream
       .transform(

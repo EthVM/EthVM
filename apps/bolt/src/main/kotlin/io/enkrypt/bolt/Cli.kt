@@ -5,7 +5,6 @@ import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
 import io.enkrypt.bolt.Modules.kafkaModule
-import io.enkrypt.bolt.Modules.mongoModule
 import io.enkrypt.bolt.Modules.processorsModule
 import io.enkrypt.bolt.processors.*
 import org.koin.dsl.module.module
@@ -36,25 +35,15 @@ class Cli : CliktCommand() {
   ).int().default(DEFAULT_STREAMS_RESET)
 
   // Input Topics - CLI
-  private val blocksTopic: String by option(
-    help = "Name of the blocks stream topic on which Bolt will listen",
+  private val blockSummariesTopic: String by option(
+    help = "Name of the block summaries stream topic on which Bolt will listen",
     envvar = "KAFKA_BLOCKS_TOPIC"
-  ).default(DEFAULT_BLOCKS_TOPIC)
+  ).default(DEFAULT_BLOCK_SUMMARIES_TOPIC)
 
   private val pendingTxsTopic: String by option(
     help = "Name of the pending transactions topic on which Bolt will listen",
     envvar = "KAFKA_PENDING_TXS_TOPIC"
   ).default(DEFAULT_PENDING_TXS_TOPIC)
-
-  private val accountStateTopic: String by option(
-    help = "Name of the account state topic on which Bolt will listen",
-    envvar = "KAFKA_ACCOUNT_STATE_TOPIC"
-  ).default(DEFAULT_ACCOUNT_STATE_TOPIC)
-
-  private val tokenTransfersTopic: String by option(
-    help = "Name of the token transfers topic on which Bolt will listen",
-    envvar = "KAFKA_TOKEN_TRANSFERS_TOPIC"
-  ).default(DEFAULT_TOKEN_TRANSFERS_TOPIC)
 
   private val metadataTopic: String by option(
     help = "Name of the metadata topic on which Bolt will listen",
@@ -73,16 +62,6 @@ class Cli : CliktCommand() {
 
     single {
 
-      MongoConfig(
-        mongoUri,
-        "accounts",
-        "blocks",
-        "pending_transactions",
-        "statistics",
-        "token_transfers",
-        "token_balances"
-      )
-
     }
 
     single {
@@ -91,28 +70,23 @@ class Cli : CliktCommand() {
         startingOffset,
         transactionalId,
         KafkaTopicsConfig(
-          blocksTopic,
+          blockSummariesTopic,
           pendingTxsTopic,
-          accountStateTopic,
-          tokenTransfersTopic,
           metadataTopic
         ))
     }
 
-    single { AppConfig(get(), get()) }
+    single { AppConfig(get()) }
 
   }
 
   override fun run() {
 
-    startKoin(listOf(configModule, mongoModule, kafkaModule, processorsModule))
+    startKoin(listOf(configModule, kafkaModule, processorsModule))
 
     listOf<BoltProcessor>(
       BlockSummaryBoltProcessor(),
-        StateBoltProcessor()
-//      ChartsBoltProcessor(),
-
-//      PendingTransactionsBoltProcessor()
+      StateBoltProcessor()
     ).forEach {
       it.onPrepareProcessor()
       it.start(resetStreamsState == 1)
@@ -128,10 +102,8 @@ class Cli : CliktCommand() {
 
     const val DEFAULT_MONGO_URI = "mongodb://localhost:27017/ethvm_local"
 
-    const val DEFAULT_BLOCKS_TOPIC = "blocks"
+    const val DEFAULT_BLOCK_SUMMARIES_TOPIC = "block-summaries"
     const val DEFAULT_PENDING_TXS_TOPIC = "pending-transactions"
-    const val DEFAULT_ACCOUNT_STATE_TOPIC = "account-state"
-    const val DEFAULT_TOKEN_TRANSFERS_TOPIC = "token-transfers"
-    const val DEFAULT_METADATA_TOPIC = "account-state"
+    const val DEFAULT_METADATA_TOPIC = "metadata"
   }
 }

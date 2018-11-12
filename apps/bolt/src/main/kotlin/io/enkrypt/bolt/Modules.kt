@@ -16,35 +16,6 @@ import java.util.*
 
 object Modules {
 
-  val mongoModule = module("mongo") {
-
-    single {
-
-      val config = get<AppConfig>()
-
-      val optionsBuilder = MongoClientOptions.Builder()
-        .codecRegistry(CodecRegistries.fromRegistries(
-          MongoClient.getDefaultCodecRegistry(),
-          CodecRegistries.fromCodecs(BigIntegerCodec())   // biginteger to Decimal codec
-        ))
-
-      MongoClientURI(config.mongo.uri, optionsBuilder)
-    }
-
-    single {
-      val uri = get<MongoClientURI>()
-      MongoClient(uri)
-    }
-
-    single {
-      val client = get<MongoClient>()
-      val uri = get<MongoClientURI>()
-
-      client.getDatabase(uri.database!!)
-    }
-
-  }
-
   val kafkaModule = module("kafka") {
 
     val config = get<AppConfig>()
@@ -69,12 +40,7 @@ object Modules {
   }
 
   val processorsModule = module("processors") {
-    factory { BlockMongoTransformer() }
     factory { TokenDetectorTransformer() }
-    factory { AccountStateMongoProcessor() }
-    factory { PendingTransactionMongoProcessor() }
-    factory { StatisticMongoProcessor() }
-    factory { TokenTransferMongoProcessor() }
   }
 
 }
