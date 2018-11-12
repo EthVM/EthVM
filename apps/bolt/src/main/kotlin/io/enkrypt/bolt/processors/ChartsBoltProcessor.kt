@@ -16,7 +16,6 @@ import org.apache.kafka.streams.processor.Cancellable
 import org.apache.kafka.streams.processor.ProcessorContext
 import org.apache.kafka.streams.processor.PunctuationType
 import org.bson.Document
-import org.ethereum.util.ByteUtil
 import org.koin.standalone.get
 import java.math.BigInteger
 import java.util.Calendar
@@ -27,7 +26,7 @@ import java.util.TimeZone
 /**
  * This processor processes different statistics.
  */
-class ChartsProcessor : AbstractBaseProcessor() {
+class ChartsBoltProcessor : AbstractBoltProcessor() {
 
   override val id: String = "charts-processor"
 

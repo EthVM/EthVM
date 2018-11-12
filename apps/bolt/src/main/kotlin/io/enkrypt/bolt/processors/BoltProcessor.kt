@@ -7,12 +7,12 @@ import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 import java.util.Properties
 
-interface Processor {
+interface BoltProcessor {
   fun onPrepareProcessor()
   fun start(cleanUp: Boolean = false)
 }
 
-abstract class AbstractBaseProcessor : Processor, KoinComponent {
+abstract class AbstractBoltProcessor : BoltProcessor, KoinComponent {
 
   protected abstract val id: String
   protected abstract val logger: KLogger

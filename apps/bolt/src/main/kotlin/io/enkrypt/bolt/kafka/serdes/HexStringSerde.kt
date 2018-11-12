@@ -10,8 +10,8 @@ import org.ethereum.util.ByteUtil.toHexString
 
 class HexStringSerde : Serde<String?> {
 
-  private val serializer: AddressSerializer = AddressSerializer()
-  private val deserializer: AddressDeserializer = AddressDeserializer()
+  private val serializer: HexStringSerializer = HexStringSerializer()
+  private val deserializer: HexStringDeserializer = HexStringDeserializer()
 
   override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
 
@@ -22,7 +22,7 @@ class HexStringSerde : Serde<String?> {
   override fun close() {}
 }
 
-class AddressSerializer : Serializer<String?> {
+class HexStringSerializer : Serializer<String?> {
   override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {
   }
 
@@ -35,7 +35,7 @@ class AddressSerializer : Serializer<String?> {
   }
 }
 
-class AddressDeserializer : Deserializer<String?> {
+class HexStringDeserializer : Deserializer<String?> {
   override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
 
   override fun deserialize(topic: String, data: ByteArray?): String? {

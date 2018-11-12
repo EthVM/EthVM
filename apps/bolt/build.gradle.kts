@@ -39,13 +39,15 @@ dependencies {
 
   // Kafka
   implementation("org.apache.kafka:kafka-streams:2.0.0")
+  implementation("io.confluent:kafka-streams-avro-serde:5.0.1")
+  implementation("io.enkrypt:avro:0.0.1-SNAPSHOT")
 
   // mongo
   implementation("org.litote.kmongo:kmongo:3.8.2")
 
   // Utils
   implementation("com.github.ajalt:clikt:1.4.0")
-  implementation("org.slf4j:slf4j-log4j12:1.7.25")
+  implementation("ch.qos.logback.logback:logback-classic:1.2.3")
   implementation("io.github.microutils:kotlin-logging:1.5.9")
   implementation("joda-time:joda-time:2.10")
   implementation("org.koin:koin-core:1.0.0-RC-2")

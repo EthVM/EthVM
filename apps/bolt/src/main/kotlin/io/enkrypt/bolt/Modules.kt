@@ -53,11 +53,10 @@ object Modules {
       Properties().apply {
         // App
         put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, config.kafka.bootstrapServers)
-        put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, StreamsConfig.AT_LEAST_ONCE)
+        put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, StreamsConfig.EXACTLY_ONCE)
 
         //
         put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, config.kafka.startingOffset)
-//        put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, "read_committed")
 
         put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 1000)    // important when dealing with aggregations/reduces
 

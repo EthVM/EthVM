@@ -20,3 +20,8 @@ echo "Initialisation of mongo"
 CMD="${SCRIPT_DIR}/mongo/init.sh"
 echo "Executing: ${CMD}"
 ${CMD}
+
+echo "Registering avro schemas"
+CMD="${SCRIPT_DIR}/avro/register-schemas.sh"
+echo "Executing: ${CMD}"
+${CMD}

@@ -107,11 +107,12 @@ class Cli : CliktCommand() {
 
     startKoin(listOf(configModule, mongoModule, kafkaModule, processorsModule))
 
-    listOf<Processor>(
-      BlocksProcessor(),
-      ChartsProcessor(),
-      AccountStateProcessor(),
-      PendingTransactionsProcessor()
+    listOf<BoltProcessor>(
+      BlockSummaryBoltProcessor(),
+        StateBoltProcessor()
+//      ChartsBoltProcessor(),
+
+//      PendingTransactionsBoltProcessor()
     ).forEach {
       it.onPrepareProcessor()
       it.start(resetStreamsState == 1)

@@ -8,9 +8,7 @@ import com.mongodb.client.model.WriteModel
 import io.enkrypt.bolt.extensions.toDocument
 import io.enkrypt.bolt.kafka.processors.MongoProcessor
 import io.enkrypt.bolt.kafka.serdes.BoltSerdes
-import io.enkrypt.bolt.kafka.serdes.TransactionSerde
 import mu.KotlinLogging
-import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
@@ -21,14 +19,13 @@ import org.apache.kafka.streams.processor.ProcessorContext
 import org.apache.kafka.streams.processor.PunctuationType
 import org.bson.Document
 import org.ethereum.core.Transaction
-import org.ethereum.util.ByteUtil
 import org.koin.standalone.get
 import java.util.Properties
 
 /**
  * This processor process Pending Txs in the node.
  */
-class PendingTransactionsProcessor : AbstractBaseProcessor() {
+class PendingTransactionsBoltProcessor : AbstractBoltProcessor() {
 
   override val id: String = "pending-transactions-processor"
 

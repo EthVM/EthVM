@@ -2,6 +2,10 @@ package io.enkrypt.bolt.processors
 
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.*
+import io.enkrypt.avro.processing.FungibleTokenBalanceRecord
+import io.enkrypt.avro.processing.MetricRecord
+import io.enkrypt.bolt.extensions.toBigInteger
+import io.enkrypt.bolt.extensions.toByteBuffer
 import io.enkrypt.bolt.extensions.toDocument
 import io.enkrypt.bolt.extensions.toHex
 import io.enkrypt.bolt.kafka.processors.MongoProcessor
@@ -10,33 +14,34 @@ import io.enkrypt.kafka.models.AccountState
 import io.enkrypt.kafka.models.TokenTransfer
 import io.enkrypt.kafka.models.TokenTransferKey
 import mu.KotlinLogging
+import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
-import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.Materialized
+import org.apache.kafka.streams.kstream.Produced
 import org.apache.kafka.streams.kstream.Serialized
 import org.apache.kafka.streams.processor.Cancellable
 import org.apache.kafka.streams.processor.ProcessorContext
 import org.apache.kafka.streams.processor.PunctuationType
 import org.bson.Document
-import org.koin.standalone.get
 import java.math.BigInteger
+import java.nio.ByteBuffer
 import java.util.*
 
 /**
  * This processor processes addresses balances and type (if is a smart contract or not).
  */
-class AccountStateProcessor : AbstractBaseProcessor() {
+class StateBoltProcessor : AbstractBoltProcessor() {
 
-  override val id: String = "account-state-processor"
+  override val id: String = "state-processor"
 
   private val kafkaProps: Properties = Properties(baseKafkaProps)
     .apply {
       putAll(baseKafkaProps.toMap())
       put(StreamsConfig.APPLICATION_ID_CONFIG, id)
-      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 2)
+      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 4)
     }
 
   override val logger = KotlinLogging.logger {}
@@ -48,48 +53,80 @@ class AccountStateProcessor : AbstractBaseProcessor() {
 
     val (_, _, accountStateTopic, tokenTransfersTopic) = appConfig.kafka.topicsConfig
 
-    // account state
-
-    val stateByAccount = builder
-      .table(
-        accountStateTopic,
-        Consumed.with(BoltSerdes.HexString(), BoltSerdes.AccountState()),
-        Materialized.with(BoltSerdes.HexString(), BoltSerdes.AccountState())
-      ).groupBy(
-        { k, v -> KeyValue(k, v) },
-        Serialized.with(BoltSerdes.HexString(), BoltSerdes.AccountState())
-      )
-
-    val reducedStateByAccount = stateByAccount
+    val fungibleBalances = builder
+      .stream("fungible-token-movements", Consumed.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance()))
+      .groupByKey(Serialized.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance()))
       .reduce(
-        // adder is only called when the value is not null
-        { agg, newValue ->
-          when (agg) {
-            null -> newValue
-            else -> agg.toBuilder().merge(newValue!!).build()
-          }
+        { memo, next -> FungibleTokenBalanceRecord
+          .newBuilder(memo)
+          .setAmount(ByteBuffer.wrap(memo.getAmount().toBigInteger()!!.add(next.getAmount().toBigInteger()).toByteArray()))
+          .build()
         },
-        // subtractor is only called when a tombstone value (null) was received
-        { _, _ -> null },
-        Materialized.with(BoltSerdes.HexString(), BoltSerdes.AccountState())
+        Materialized.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance())
       )
 
-    // persist reduced state to mongo
-    // TODO move this to Kafka Connect
-
-    reducedStateByAccount
+    fungibleBalances
       .toStream()
-      .process({ get<AccountStateMongoProcessor>() }, null)
+      .to("fungible-token-balances", Produced.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance()))
 
-    // token transfers
-    // TODO move this to Kafka Connect
+    //
 
-    builder
-      .stream(tokenTransfersTopic, Consumed.with(BoltSerdes.TokenTransferKey(), BoltSerdes.TokenTransfer()))
-      .filter{ k, v -> !(k == null || v == null) }
-      .map{ k, v -> KeyValue(k!!, v!!) }
-      .peek { k, v -> logger.debug { "Token transfer. Key = $k, value = $v" } }
-      .process({ get<TokenTransferMongoProcessor>() }, null)
+    val blockMetricsStream = builder
+      .stream("block-metrics", Consumed.with(BoltSerdes.MetricKey(), BoltSerdes.Metric()))
+
+    val blockMetricsByDayCount = blockMetricsStream
+      .groupByKey(Serialized.with(BoltSerdes.MetricKey(), BoltSerdes.Metric()))
+      .count(Materialized.with(BoltSerdes.MetricKey(), Serdes.Long()))
+
+    blockMetricsStream
+      .groupByKey(Serialized.with(BoltSerdes.MetricKey(), BoltSerdes.Metric()))
+      .reduce(
+        { memo, next ->
+
+          val metricBuilder = MetricRecord.newBuilder(memo)
+
+          if(next.getIntValue() != null){ metricBuilder.setIntValue(memo.getIntValue() + next.getIntValue()) }
+          if(next.getLongValue() != null){ metricBuilder.setLongValue(memo.getLongValue() + next.getLongValue()) }
+          if(next.getFloatValue() != null){ metricBuilder.setFloatValue(memo.getFloatValue() + next.getFloatValue()) }
+          if(next.getDoubleValue() != null){ metricBuilder.setDoubleValue(memo.getDoubleValue() + next.getDoubleValue()) }
+
+          if(next.getBigIntegerValue() != null){
+            val memoBigInt = memo.getBigIntegerValue().toBigInteger()!!
+            val nextBigInt = next.getBigIntegerValue().toBigInteger()
+            metricBuilder.setBigIntegerValue(memoBigInt.add(nextBigInt).toByteBuffer())
+          }
+
+          metricBuilder.build()
+        },
+        Materialized.with(BoltSerdes.MetricKey(), BoltSerdes.Metric())
+      ).join(
+        blockMetricsByDayCount,
+        { aggMetric, metricsCount ->
+
+          if(metricsCount < 2) {
+            aggMetric
+          } else {
+
+            val metricBuilder = MetricRecord.newBuilder(aggMetric)
+
+            if(aggMetric.getIntValue() != null){ metricBuilder.setIntValue(aggMetric.getIntValue() / metricsCount.toInt()) }
+            if(aggMetric.getLongValue() != null){ metricBuilder.setLongValue(aggMetric.getLongValue() / metricsCount) }
+            if(aggMetric.getFloatValue() != null){ metricBuilder.setFloatValue(aggMetric.getFloatValue() / metricsCount ) }
+            if(aggMetric.getDoubleValue() != null){ metricBuilder.setDoubleValue(aggMetric.getDoubleValue() / metricsCount) }
+
+            if(aggMetric.getBigIntegerValue() != null){
+              val aggBigInt = aggMetric.getBigIntegerValue().toBigInteger()!!
+              metricBuilder.setBigIntegerValue(aggBigInt.divide(BigInteger.valueOf(metricsCount)).toByteBuffer())
+            }
+
+            metricBuilder.build()
+
+          }
+
+        },
+        Materialized.with(BoltSerdes.MetricKey(), BoltSerdes.Metric())
+      ).toStream()
+      .to("block-statistics", Produced.with(BoltSerdes.MetricKey(), BoltSerdes.Metric()))
 
     // Generate the topology
     val topology = builder.build()
@@ -133,7 +170,7 @@ class AccountStateMongoProcessor : MongoProcessor<String?, AccountState?>() {
     val replaceOptions = ReplaceOptions().upsert(true)
 
     val ops = batch.toList()
-      .filter{ it.first != null }
+      .filter { it.first != null }
       .map<Pair<String?, AccountState?>, WriteModel<Document>> { pair ->
 
         val address = pair.first
@@ -223,8 +260,6 @@ class TokenTransferMongoProcessor : MongoProcessor<TokenTransferKey, TokenTransf
         val toAddress = transfer.to.toHex()!!
 
         val balanceUpdates = listOf(
-          erc20BalanceUpdate(contractAddress, fromAddress, transfer.fromBalance, updateOptions),
-          erc20BalanceUpdate(contractAddress, toAddress, transfer.toBalance, updateOptions),
           erc721BalanceUpdate(contractAddress, fromAddress, toAddress, transfer.tokenId)
         ).flatten()
 

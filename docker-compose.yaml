@@ -198,3 +198,29 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
       CONFLUENT_SUPPORT_METRICS_ENABLE: 'false'
       KAFKA_MESSAGE_MAX_BYTES: '2000000000'
+
+  kafka-schema-registry:
+    image: confluentinc/cp-schema-registry:5.0.0
+    restart: unless-stopped
+    depends_on:
+    - zookeeper
+    - kafka-1
+    - kafka-2
+    - kafka-3
+    networks:
+      back:
+        ipv4_address: 172.25.0.107
+    ports:
+    - 8081:8081
+    labels:
+    - 'traefik.enable=true'
+    - 'traefik.default.protocol=http'
+    - 'traefik.frontend.rule=Host:kafka-schema-registry.ethvm.lan'
+    - 'traefik.port=8081'
+    - 'traefik.backend=kafka-schema-registry'
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'PLAINTEXT://kafka-1:9091,PLAINTEXT://kafka-2:9092,PLAINTEXT://kafka-3:9093'
+      SCHEMA_REGISTRY_HOST_NAME: kafka-schema-registry
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+      SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: 'INFO'
+      SCHEMA_REGISTRY_LOG4J_LOGGERS: 'org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR'
