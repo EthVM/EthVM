@@ -6,6 +6,7 @@ export interface BlocksRepository {
   getBlocks(limit: number, page: number): Promise<Block[]>
   getBlock(hash: string): Promise<Block | null>
   getBlocksMined(address: string, limit: number, page: number): Promise<SmallBlock[]>
+  getBlockByNumber(no: number): Promise<Block | null>
 }
 
 export class MongoBlockRepository extends BaseMongoDbRepository implements BlocksRepository {
@@ -33,6 +34,18 @@ export class MongoBlockRepository extends BaseMongoDbRepository implements Block
     return this.db
       .collection(MongoEthVM.collections.blocks)
       .findOne({ hash })
+      .then(resp => {
+        if (!resp) {
+          return null
+        }
+        return toBlock(resp)
+      })
+  }
+
+  public getBlockByNumber(no: number): Promise<Block | null> {
+    return this.db
+      .collection(MongoEthVM.collections.blocks)
+      .findOne({ no })
       .then(resp => {
         if (!resp) {
           return null
