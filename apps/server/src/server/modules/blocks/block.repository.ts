@@ -45,7 +45,7 @@ export class MongoBlockRepository extends BaseMongoDbRepository implements Block
   public getBlockByNumber(no: number): Promise<Block | null> {
     return this.db
       .collection(MongoEthVM.collections.blocks)
-      .findOne({ no })
+      .findOne({ number: no })
       .then(resp => {
         if (!resp) {
           return null
