@@ -9,7 +9,7 @@ import io.enkrypt.bolt.eth.utils.ERC721Abi
 import io.enkrypt.bolt.extensions.toBigInteger
 import io.enkrypt.bolt.extensions.toByteArray
 import io.enkrypt.bolt.extensions.toByteBuffer
-import io.enkrypt.bolt.kafka.serdes.BoltSerdes
+import io.enkrypt.bolt.BoltSerdes
 import io.enkrypt.bolt.models.BlockStatistic
 import io.enkrypt.bolt.models.BlockStatistics
 import mu.KotlinLogging

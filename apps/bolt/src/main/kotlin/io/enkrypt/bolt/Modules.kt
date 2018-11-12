@@ -1,16 +1,8 @@
 package io.enkrypt.bolt
 
-import com.mongodb.MongoClient
-import com.mongodb.MongoClientOptions
-import com.mongodb.MongoClientURI
-import io.enkrypt.bolt.mongo.codecs.BigIntegerCodec
-import io.enkrypt.bolt.processors.*
 import org.apache.kafka.clients.consumer.ConsumerConfig
-import org.apache.kafka.clients.producer.ProducerConfig
-import org.apache.kafka.common.requests.IsolationLevel
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
-import org.bson.codecs.configuration.CodecRegistries
 import org.koin.dsl.module.module
 import java.util.*
 
@@ -39,8 +31,6 @@ object Modules {
 
   }
 
-  val processorsModule = module("processors") {
-    factory { TokenDetectorTransformer() }
-  }
+
 
 }

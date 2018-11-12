@@ -4,7 +4,7 @@ import io.enkrypt.avro.processing.FungibleTokenBalanceRecord
 import io.enkrypt.avro.processing.MetricRecord
 import io.enkrypt.bolt.extensions.toBigInteger
 import io.enkrypt.bolt.extensions.toByteBuffer
-import io.enkrypt.bolt.kafka.serdes.BoltSerdes
+import io.enkrypt.bolt.BoltSerdes
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams

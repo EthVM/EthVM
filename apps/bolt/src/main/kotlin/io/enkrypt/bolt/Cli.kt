@@ -5,7 +5,6 @@ import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
 import io.enkrypt.bolt.Modules.kafkaModule
-import io.enkrypt.bolt.Modules.processorsModule
 import io.enkrypt.bolt.processors.*
 import org.koin.dsl.module.module
 import org.koin.standalone.StandAloneContext.startKoin
@@ -23,6 +22,11 @@ class Cli : CliktCommand() {
     help = "A list of host/port pairs to use for establishing the initial connection to the Kafka cluster",
     envvar = "KAFKA_BOOTSTRAP_SERVERS"
   ).default(DEFAULT_BOOTSTRAP_SERVERS)
+
+  private val schemaRegistryUrl: String by option(
+    help = "Kafka schema registry url",
+    envvar = "KAFKA_SCHEMA_REGISTRY_URL"
+  ).default(DEFAULT_SCHEMA_REGISTRY_URL)
 
   private val startingOffset: String by option(
     help = "From which offset is going to start Bolt processing events",
@@ -50,12 +54,6 @@ class Cli : CliktCommand() {
     envvar = "KAFKA_METADATA_TOPIC"
   ).default(DEFAULT_METADATA_TOPIC)
 
-  // Mongo - CLI
-  private val mongoUri: String by option(
-    help = "Mongo URI",
-    envvar = "MONGO_URI"
-  ).default(DEFAULT_MONGO_URI)
-
   // DI
 
   private val configModule = module {
@@ -69,6 +67,7 @@ class Cli : CliktCommand() {
         bootstrapServers,
         startingOffset,
         transactionalId,
+        schemaRegistryUrl,
         KafkaTopicsConfig(
           blockSummariesTopic,
           pendingTxsTopic,
@@ -82,7 +81,7 @@ class Cli : CliktCommand() {
 
   override fun run() {
 
-    startKoin(listOf(configModule, kafkaModule, processorsModule))
+    startKoin(listOf(configModule, kafkaModule))
 
     listOf<BoltProcessor>(
       BlockSummaryBoltProcessor(),
@@ -97,10 +96,9 @@ class Cli : CliktCommand() {
 
     const val DEFAULT_TRANSACTIONAL_ID = "bolt-1"
     const val DEFAULT_BOOTSTRAP_SERVERS = "kafka-1:9091,kafka-2:9092,kafka-3:9093"
+    const val DEFAULT_SCHEMA_REGISTRY_URL = "http://kafka-schema-registry:8081"
     const val DEFAULT_AUTO_OFFSET = "earliest"
     const val DEFAULT_STREAMS_RESET = 0
-
-    const val DEFAULT_MONGO_URI = "mongodb://localhost:27017/ethvm_local"
 
     const val DEFAULT_BLOCK_SUMMARIES_TOPIC = "block-summaries"
     const val DEFAULT_PENDING_TXS_TOPIC = "pending-transactions"
