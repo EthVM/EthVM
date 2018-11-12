@@ -10,6 +10,8 @@ import io.enkrypt.bolt.extensions.toBigInteger
 import io.enkrypt.bolt.extensions.toByteArray
 import io.enkrypt.bolt.extensions.toByteBuffer
 import io.enkrypt.bolt.BoltSerdes
+import io.enkrypt.bolt.OutputTopics
+import io.enkrypt.bolt.eth.utils.StandardTokenDetector
 import io.enkrypt.bolt.models.BlockStatistic
 import io.enkrypt.bolt.models.BlockStatistics
 import mu.KotlinLogging
@@ -105,12 +107,12 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
     txEvents
       .flatMap { _, v -> v.fungibleBalanceDeltas }
       .mapValues { v -> FungibleTokenBalanceRecord.newBuilder().setAmount(ByteBuffer.wrap(v.toByteArray())).build() }
-      .to("fungible-token-movements", Produced.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance()))
+      .to(OutputTopics.FungibleTokenMovements, Produced.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance()))
 
     txEvents
       .flatMap { _, v -> v.nonFungibleBalanceDeltas }
       .mapValues { v -> NonFungibleTokenBalanceRecord.newBuilder().setAddress(v).build() }
-      .to("non-fungible-token-balances", Produced.with(BoltSerdes.NonFungibleTokenBalanceKey(), BoltSerdes.NonFungibleTokenBalance()))
+      .to(OutputTopics.NonFungibleTokenBalances, Produced.with(BoltSerdes.NonFungibleTokenBalanceKey(), BoltSerdes.NonFungibleTokenBalance()))
 
     txEvents
       .flatMap{ _, v -> v.contractCreations.map{ c ->
@@ -125,7 +127,7 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
           KeyValue(key, value)
 
       }}
-      .to("contract-creations", Produced.with(BoltSerdes.ContractKey(), BoltSerdes.ContractCreation()))
+      .to(OutputTopics.ContractCreations, Produced.with(BoltSerdes.ContractKey(), BoltSerdes.ContractCreation()))
 
     txEvents
       .flatMap{ _, v -> v.contractSuicides.map{ c ->
@@ -140,7 +142,7 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
           KeyValue(key, value)
 
       }}
-      .to("contract-suicides", Produced.with(BoltSerdes.ContractKey(), BoltSerdes.ContractSuicide()))
+      .to(OutputTopics.ContractSuicides, Produced.with(BoltSerdes.ContractKey(), BoltSerdes.ContractSuicide()))
 
 
     // statistics
@@ -170,7 +172,7 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
           KeyValue(keyBuilder.setName(BlockStatistic.AvgTxsFees.name).build(), MetricRecord.newBuilder().setBigIntegerValue(avgTxsFees.toByteBuffer()).build())
         )
 
-      }.to("block-metrics", Produced.with(BoltSerdes.MetricKey(), BoltSerdes.Metric()))
+      }.to(OutputTopics.BlockMetrics, Produced.with(BoltSerdes.MetricKey(), BoltSerdes.Metric()))
 
     // Generate the topology
     val topology = builder.build()
@@ -255,8 +257,12 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
             .setAddress(contractAddress)
             .build()
 
+          // detect contract type
+          val (contractType, _) = StandardTokenDetector.detect(tx.getData().toByteArray()!!)
+
           val value = ContractCreationRecord
             .newBuilder()
+            .setType(contractType)
             .setCreator(tx.getFrom())
             .setBlockHash(summary.getBlock().getHeader().getHash())
             .setTxHash(tx.getHash())

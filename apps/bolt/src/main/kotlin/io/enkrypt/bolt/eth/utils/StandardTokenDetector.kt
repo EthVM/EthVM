@@ -1,5 +1,6 @@
 package io.enkrypt.bolt.eth.utils
 
+import io.enkrypt.avro.common.ContractType
 import io.enkrypt.bolt.eth.utils.TokenContract.Companion.DECIMALS
 import io.enkrypt.bolt.eth.utils.TokenContract.Companion.NAME
 import io.enkrypt.bolt.eth.utils.TokenContract.Companion.SYMBOL
@@ -31,12 +32,6 @@ object StandardTokenDetector {
 
     return Pair(ContractType.GENERIC, TokenContractMatchResult.NONE_MATCH)
   }
-}
-
-enum class ContractType {
-  GENERIC,
-  ERC20,
-  ERC721
 }
 
 interface TokenContract {

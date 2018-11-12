@@ -18,19 +18,15 @@ data class KafkaInputTopicsConfig(
   val metadata: String
 )
 
-enum class OutputTopics(private val topic: String) {
+object OutputTopics {
 
-  FungibleTokenMovements("fungible-token-movements"),
-  FungibleTokenBalances("fungible-token-balances"),
-  NonFungibleTokenBalances("non-fungible-token-balances"),
-  ContractCreations("contract-creations"),
-  ContractSuicides("contract-suicides"),
-  BlockMetrics("block-metrics"),
-  BlockStatistics("block-statistics");
-
-  override fun toString(): String{
-    return this.topic
-  }
-
+  const val FungibleTokenMovements = "fungible-token-movements"
+  const val FungibleTokenBalances = "fungible-token-balances"
+  const val NonFungibleTokenBalances = "non-fungible-token-balances"
+  const val ContractCreations = "contract-creations"
+  const val ContractSuicides = "contract-suicides"
+  const val ContractClassifications = "contract-classifications"
+  const val BlockMetrics = "block-metrics"
+  const val BlockStatistics = "block-statistics"
 
 }

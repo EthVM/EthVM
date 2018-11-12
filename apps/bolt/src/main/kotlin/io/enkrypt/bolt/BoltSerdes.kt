@@ -54,5 +54,9 @@ object BoltSerdes : KoinComponent {
   fun ContractSuicide() = SpecificAvroSerde<ContractSuicideRecord>().apply {
     configure(config, false)
   }
+
+  fun ContractClassification() = SpecificAvroSerde<ContractClassificationRecord>().apply {
+    configure(config, false)
+  }
 }
 
