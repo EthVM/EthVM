@@ -21,7 +21,7 @@ export class BlocksServiceImpl implements BlocksService {
   }
 
   public getBlockByNumber(no: number): Promise<Block | null> {
-    return this.blocksRepository.getBlockByNumber(number)
+    return this.blocksRepository.getBlockByNumber(no)
   }
 
   public getBlocksMined(address: string, limit: number, page: number): Promise<SmallBlock[]> {
