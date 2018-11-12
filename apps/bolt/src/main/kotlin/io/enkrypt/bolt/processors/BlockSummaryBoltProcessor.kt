@@ -244,6 +244,19 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
 
     var fungible = listOf<KeyValue<FungibleTokenBalanceKeyRecord, BigInteger>>()
 
+    // premine balances
+
+    summary.getPremineBalances()
+      .forEach{ p ->
+        fungible += generateBalanceDeltas(
+          ETHER_CONTRACT_ADDRESS,
+          ETHER_CONTRACT_ADDRESS,
+          p.getAddress(),
+          p.getAmount().toBigInteger()!!,
+          reverse
+        )
+      }
+
     // rewards
 
     summary.getRewards()
@@ -376,6 +389,7 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
   }
 
   private fun generateBalanceDeltas(contract: ByteBuffer, from: ByteBuffer, to: ByteBuffer, amount: BigInteger, reverse: Boolean): List<KeyValue<FungibleTokenBalanceKeyRecord, BigInteger>> {
+
     var result = listOf<KeyValue<FungibleTokenBalanceKeyRecord, BigInteger>>()
 
     val fromKey = FungibleTokenBalanceKeyRecord
@@ -535,98 +549,6 @@ class GatedBlockSummaryTransformer : Transformer<Long?, BlockSummaryRecord?, Key
 
   override fun close() {
 
-  }
-
-}
-
-
-class BlockMongoTransformer : MongoTransformer<Long, BlockSummary?>() {
-
-  private val blocksCollection: MongoCollection<Document>by lazy {
-    mongoDB.getCollection(config.mongo.blocksCollection)
-  }
-
-  override val batchSize = 50
-  private val batch: MutableList<Pair<Long, BlockSummary?>> = ArrayList()
-
-  private var scheduledWrite: Cancellable? = null
-
-  override fun init(context: ProcessorContext) {
-    super.init(context)
-    this.scheduledWrite = context.schedule(timeoutMs, PunctuationType.WALL_CLOCK_TIME) { _ -> tryToWrite() }
-  }
-
-  override fun transform(key: Long, value: BlockSummary?): KeyValue<Long, BlockSummary?>? {
-
-    if (value != null) {
-      batch.add(Pair(key, value))
-    }
-
-    if (batch.size == batchSize) {
-      tryToWrite()
-    }
-
-    // we will forward later
-    return null
-  }
-
-  private fun tryToWrite() {
-
-    if (!running || batch.isEmpty()) {
-      return
-    }
-
-    val startMs = System.currentTimeMillis()
-
-    val replaceOptions = ReplaceOptions().upsert(true)
-
-    val blocksOps = batch
-      .map { pair ->
-
-        val number = pair.first
-        val summary = pair.second
-
-        val blockQuery = Document(mapOf("_id" to number))
-
-        Option.fromNullable(summary)
-          .map { s ->
-
-            val block = s.block
-            val blockUpdate = block.toDocument(s)
-            ReplaceOneModel(blockQuery, blockUpdate, replaceOptions)
-
-          }.getOrElse {
-            // delete the block entry
-            DeleteOneModel<Document>(blockQuery)
-          }
-
-      }
-
-    try {
-
-      val bulkOptions = BulkWriteOptions().ordered(false)
-      blocksCollection.bulkWrite(blocksOps, bulkOptions)
-
-      // forward to downstream processors and commit
-      batch.forEach { pair -> context.forward(pair.first, pair.second) }
-
-      val elapsedMs = System.currentTimeMillis() - startMs
-      logger.info { "${batch.size} blocks stored in $elapsedMs ms" }
-
-      batch.clear()
-
-    } catch (e: Exception) {
-
-      // TODO handle error
-      logger.error { "Failed to store blocks. $e" }
-
-    }
-
-  }
-
-  override fun close() {
-    running = false
-    scheduledWrite?.cancel()
   }
 
 }
