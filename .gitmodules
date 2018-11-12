@@ -2,3 +2,6 @@
 	path = apps/ethereumj
 	url = git@github.com:enKryptIO/ethereumj.git
 	branch = feature/kafka
+[submodule "apps/avro"]
+	path = apps/avro
+	url = git@github.com:enKryptIO/avro.git
