@@ -32,6 +32,7 @@ export const Events = {
   getAvgGasPriceStats: "get-average-gas-price-stats",
   getAvgTxFeeStats: "get-average-tx-fee-stats",
   getAvgSuccessfullTxStats: "get-average-successfull-tx-stats",
+  getBlockByNumber: "get-average-successfull-tx-stats",
   getAvgFailedTxStats: "get-average-successfull-tx-stats"
 }
 
