@@ -1,21 +1,18 @@
 package io.enkrypt.bolt.processors
 
 import arrow.core.Option
-import arrow.core.getOrElse
-import com.mongodb.client.MongoCollection
-import com.mongodb.client.model.*
 import io.enkrypt.avro.capture.BlockSummaryRecord
 import io.enkrypt.avro.common.DataWord
 import io.enkrypt.avro.processing.*
-import io.enkrypt.bolt.contracts.ERC20Abi
-import io.enkrypt.bolt.contracts.ERC721Abi
-import io.enkrypt.bolt.eth.utils.StandardTokenDetector
-import io.enkrypt.bolt.extensions.*
+import io.enkrypt.bolt.eth.utils.ERC20Abi
+import io.enkrypt.bolt.eth.utils.ERC721Abi
+import io.enkrypt.bolt.extensions.toBigInteger
+import io.enkrypt.bolt.extensions.toByteArray
+import io.enkrypt.bolt.extensions.toByteBuffer
 import io.enkrypt.bolt.kafka.serdes.BoltSerdes
-import io.enkrypt.bolt.kafka.transformers.MongoTransformer
-import io.enkrypt.bolt.models.Contract
+import io.enkrypt.bolt.models.BlockStatistic
+import io.enkrypt.bolt.models.BlockStatistics
 import mu.KotlinLogging
-import org.apache.commons.lang3.ArrayUtils
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.KeyValue
@@ -25,13 +22,9 @@ import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.Produced
 import org.apache.kafka.streams.kstream.Transformer
 import org.apache.kafka.streams.kstream.TransformerSupplier
-import org.apache.kafka.streams.processor.Cancellable
 import org.apache.kafka.streams.processor.ProcessorContext
-import org.apache.kafka.streams.processor.PunctuationType
 import org.apache.kafka.streams.state.KeyValueStore
 import org.apache.kafka.streams.state.Stores
-import org.bson.Document
-import org.ethereum.core.BlockSummary
 import org.ethereum.crypto.HashUtil
 import org.ethereum.util.ByteUtil
 import java.math.BigInteger
@@ -55,59 +48,6 @@ data class TransactionData(val fungibleBalanceDeltas: List<KeyValue<FungibleToke
   )
 
 }
-
-data class BlockStatistics(val totalTxs: Int,
-                           val numSuccessfulTxs: Int,
-                           val numFailedTxs: Int,
-                           val numPendingTxs: Int,
-                           val totalDifficulty: BigInteger,
-                           val totalGasPrice: BigInteger,
-                           val avgGasPrice: BigInteger,
-                           val totalTxsFees: BigInteger,
-                           val avgTxsFees: BigInteger) {
-
-  companion object {
-    fun forBlockSummary(summary: BlockSummaryRecord): BlockStatistics {
-      val block = summary.getBlock()
-
-      val receipts = block.getTransactions()
-
-      val totalDifficulty = summary.getTotalDifficulty().toBigInteger()
-      val numPendingTxs = summary.getNumPendingTxs()
-      val totalTxs = receipts.size
-
-      var numSuccessfulTxs = 0
-      var numFailedTxs = 0
-      var totalInternalTxs = 0
-
-      var totalGasPrice = BigInteger.ZERO
-      var totalTxsFees = BigInteger.ZERO
-
-      receipts.forEach { receipt ->
-
-        totalInternalTxs += receipt.getInternalTxs().size
-        if (receipt.isSuccess()) numSuccessfulTxs += 1 else numFailedTxs += 1
-
-        totalGasPrice = totalGasPrice.add(receipt.getGasPrice().toBigInteger())
-        totalTxsFees = totalTxsFees.add(receipt.getGasPrice().toBigInteger())
-
-      }
-
-      var avgGasPrice = BigInteger.ZERO
-      var avgTxsFees = BigInteger.ZERO
-
-      if(totalTxs > 0) {
-        avgGasPrice = totalGasPrice.divide(totalTxs.toBigInteger())
-        avgTxsFees = totalTxsFees.divide(totalTxs.toBigInteger())
-      }
-
-      return BlockStatistics(totalTxs, numSuccessfulTxs, numFailedTxs, numPendingTxs, totalDifficulty!!, totalGasPrice, avgGasPrice, totalTxsFees, avgTxsFees)
-    }
-  }
-
-
-}
-
 
 /**
  *
@@ -138,10 +78,10 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
     builder.addStateStore(GatedBlockSummaryTransformer.blockSummariesStore())
     builder.addStateStore(GatedBlockSummaryTransformer.metadataStore())
 
-    val (blocksTopic) = appConfig.kafka.topicsConfig
+    val (blocksSummariesTopic) = appConfig.kafka.topicsConfig
 
     val blockSummaryStream = builder
-      .stream("blockSummaries", Consumed.with(Serdes.Long(), BoltSerdes.BlockSummaryRecord()))
+      .stream(blocksSummariesTopic, Consumed.with(Serdes.Long(), BoltSerdes.BlockSummaryRecord()))
 
     val gatedStream = blockSummaryStream
       .transform(
@@ -151,26 +91,28 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
 
     gatedStream.foreach { k, _ -> logger.info { "Processing block number = $k" } }
 
-    //
+    // generate various events based on tx data
 
-    val txData = gatedStream
+    val txEvents = gatedStream
       .mapValues { _, v ->
         val etherDeltas = this.generateEtherBalanceDeltas(v)
         val tokenData = this.generateTokenData(v)
         etherDeltas.concat(tokenData)
       }
 
-    txData
+    // forward the tx events to their relevant topics
+
+    txEvents
       .flatMap { _, v -> v.fungibleBalanceDeltas }
       .mapValues { v -> FungibleTokenBalanceRecord.newBuilder().setAmount(ByteBuffer.wrap(v.toByteArray())).build() }
       .to("fungible-token-movements", Produced.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance()))
 
-    txData
+    txEvents
       .flatMap { _, v -> v.nonFungibleBalanceDeltas }
       .mapValues { v -> NonFungibleTokenBalanceRecord.newBuilder().setAddress(v).build() }
       .to("non-fungible-token-balances", Produced.with(BoltSerdes.NonFungibleTokenBalanceKey(), BoltSerdes.NonFungibleTokenBalance()))
 
-    txData
+    txEvents
       .flatMap{ _, v -> v.contractCreations.map{ c ->
 
         val key = c.key
@@ -185,7 +127,7 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
       }}
       .to("contract-creations", Produced.with(BoltSerdes.ContractKey(), BoltSerdes.ContractCreation()))
 
-    txData
+    txEvents
       .flatMap{ _, v -> v.contractSuicides.map{ c ->
 
         val key = c.key
@@ -217,15 +159,15 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
           .setDate(startOfDayEpoch)
 
         listOf(
-          KeyValue(keyBuilder.setName("totalTxs").build(), MetricRecord.newBuilder().setIntValue(totalTxs).build()),
-          KeyValue(keyBuilder.setName("numSuccessfulTxs").build(), MetricRecord.newBuilder().setIntValue(numSuccessfulTxs).build()),
-          KeyValue(keyBuilder.setName("numFailedTxs").build(), MetricRecord.newBuilder().setIntValue(numFailedTxs).build()),
-          KeyValue(keyBuilder.setName("numPendingTxs").build(), MetricRecord.newBuilder().setIntValue(numPendingTxs).build()),
-          KeyValue(keyBuilder.setName("totalDifficulty").build(), MetricRecord.newBuilder().setBigIntegerValue(totalDifficulty.toByteBuffer()).build()),
-          KeyValue(keyBuilder.setName("totalGasPrice").build(), MetricRecord.newBuilder().setBigIntegerValue(totalGasPrice.toByteBuffer()).build()),
-          KeyValue(keyBuilder.setName("avgGasPrice").build(), MetricRecord.newBuilder().setBigIntegerValue(avgGasPrice.toByteBuffer()).build()),
-          KeyValue(keyBuilder.setName("totalTxsFees").build(), MetricRecord.newBuilder().setBigIntegerValue(totalTxsFees.toByteBuffer()).build()),
-          KeyValue(keyBuilder.setName("avgTxsFees").build(), MetricRecord.newBuilder().setBigIntegerValue(avgTxsFees.toByteBuffer()).build())
+          KeyValue(keyBuilder.setName(BlockStatistic.TotalTxs.name).build(), MetricRecord.newBuilder().setIntValue(totalTxs).build()),
+          KeyValue(keyBuilder.setName(BlockStatistic.NumSuccessfulTxs.name).build(), MetricRecord.newBuilder().setIntValue(numSuccessfulTxs).build()),
+          KeyValue(keyBuilder.setName(BlockStatistic.NumFailedTxs.name).build(), MetricRecord.newBuilder().setIntValue(numFailedTxs).build()),
+          KeyValue(keyBuilder.setName(BlockStatistic.NumPendingTxs.name).build(), MetricRecord.newBuilder().setIntValue(numPendingTxs).build()),
+          KeyValue(keyBuilder.setName(BlockStatistic.TotalDifficulty.name).build(), MetricRecord.newBuilder().setBigIntegerValue(totalDifficulty.toByteBuffer()).build()),
+          KeyValue(keyBuilder.setName(BlockStatistic.TotalGasPrice.name).build(), MetricRecord.newBuilder().setBigIntegerValue(totalGasPrice.toByteBuffer()).build()),
+          KeyValue(keyBuilder.setName(BlockStatistic.AvgGasPrice.name).build(), MetricRecord.newBuilder().setBigIntegerValue(avgGasPrice.toByteBuffer()).build()),
+          KeyValue(keyBuilder.setName(BlockStatistic.TotalTxsFees.name).build(), MetricRecord.newBuilder().setBigIntegerValue(totalTxsFees.toByteBuffer()).build()),
+          KeyValue(keyBuilder.setName(BlockStatistic.AvgTxsFees.name).build(), MetricRecord.newBuilder().setBigIntegerValue(avgTxsFees.toByteBuffer()).build())
         )
 
       }.to("block-metrics", Produced.with(BoltSerdes.MetricKey(), BoltSerdes.Metric()))
@@ -551,90 +493,4 @@ class GatedBlockSummaryTransformer : Transformer<Long?, BlockSummaryRecord?, Key
 
   }
 
-}
-
-class TokenDetectorTransformer : MongoTransformer<Long, BlockSummary?>() {
-
-  private val accountsCollection: MongoCollection<Document>by lazy {
-    mongoDB.getCollection(config.mongo.accountsCollection)
-  }
-
-  override val batchSize = 50
-  private val batch: MutableList<Contract> = ArrayList()
-
-  private var scheduledWrite: Cancellable? = null
-
-  override fun init(context: ProcessorContext) {
-    super.init(context)
-    this.scheduledWrite = context.schedule(timeoutMs, PunctuationType.WALL_CLOCK_TIME) { _ -> tryToWrite() }
-  }
-
-  override fun transform(key: Long, value: BlockSummary?): KeyValue<Long, BlockSummary?>? {
-
-    if (value == null) return null
-
-    val block = value.block
-    val txs = block?.transactionsList ?: emptyList()
-
-    txs
-      .asSequence()
-      .filter { it.isContractCreation }
-      .map { c ->
-        val type = StandardTokenDetector.detect(ArrayUtils.nullToEmpty(c.data))
-
-        logger.info { "Smart contract detected: ${c.contractAddress.toHex()} | Type: $type" }
-
-        val contract = Contract(c.contractAddress, type.first)
-
-        batch.add(contract)
-      }
-
-    if (batch.size == batchSize) {
-      tryToWrite()
-    }
-
-    return KeyValue(key, value) // Don't change the state as this transformer just only reads information on the fly
-  }
-
-  private fun tryToWrite() {
-
-    if (!running || batch.isEmpty()) {
-      return
-    }
-
-    val startMs = System.currentTimeMillis()
-
-    val contractOps = batch.map { contract ->
-      // Mongo
-      val updateOptions = UpdateOptions().upsert(true)
-
-      // Contracts
-      val query = Document(mapOf("_id" to contract.address.toHex()))
-      val document = Document(mapOf("\$set" to contract.toDocument()))
-
-      UpdateOneModel<Document>(query, document, updateOptions)
-    }
-
-    try {
-
-      val bulkOptions = BulkWriteOptions().ordered(false)
-      accountsCollection.bulkWrite(contractOps, bulkOptions)
-
-      val elapsedMs = System.currentTimeMillis() - startMs
-      logger.debug { "${batch.size} contracts accounts updated in $elapsedMs ms" }
-
-      batch.clear()
-
-    } catch (e: Exception) {
-
-      // TODO handle error
-      logger.error { "Failed to store smart contracts detection. Error: $e" }
-
-    }
-  }
-
-  override fun close() {
-    running = false
-    scheduledWrite?.cancel()
-  }
 }

@@ -1,4 +1,4 @@
-package io.enkrypt.bolt.contracts
+package io.enkrypt.bolt.eth.utils
 
 import arrow.core.Option
 import io.enkrypt.avro.common.DataWord

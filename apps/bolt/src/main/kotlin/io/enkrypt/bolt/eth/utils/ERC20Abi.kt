@@ -1,20 +1,14 @@
-package io.enkrypt.bolt.contracts
+package io.enkrypt.bolt.eth.utils
 
 import arrow.core.Option
-import io.enkrypt.avro.common.Address
 import io.enkrypt.avro.common.DataWord
 import io.enkrypt.avro.processing.FungibleTokenTransferRecord
 import io.enkrypt.bolt.extensions.setAmount
 import io.enkrypt.bolt.extensions.toByteBuffer
 import io.enkrypt.kafka.contract.ERC20Abi
-import io.enkrypt.kafka.models.TokenTransfer
-import org.ethereum.util.ByteUtil
-import org.ethereum.util.ByteUtil.wordListToArray
 
 import java.math.BigInteger
-import java.nio.ByteBuffer
 import java.nio.file.Paths
-import java.util.*
 
 object ERC20Abi : AbstractAbi(Paths.get(ERC20Abi::class.java.getResource("/abi/erc20.json").toURI())) {
 

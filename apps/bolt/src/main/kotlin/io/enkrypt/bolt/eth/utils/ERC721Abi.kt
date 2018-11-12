@@ -1,11 +1,8 @@
-package io.enkrypt.bolt.contracts
+package io.enkrypt.bolt.eth.utils
 
 import arrow.core.Option
-import io.enkrypt.avro.common.Address
 import io.enkrypt.avro.common.DataWord
-import io.enkrypt.avro.processing.FungibleTokenTransferRecord
 import io.enkrypt.avro.processing.NonFungibleTokenTransferRecord
-import io.enkrypt.bolt.extensions.setAmount
 import io.enkrypt.bolt.extensions.setTokenId
 import io.enkrypt.bolt.extensions.toByteBuffer
 import java.math.BigInteger
