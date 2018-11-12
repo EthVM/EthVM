@@ -68,7 +68,7 @@ class Cli : CliktCommand() {
         startingOffset,
         transactionalId,
         schemaRegistryUrl,
-        KafkaTopicsConfig(
+        KafkaInputTopicsConfig(
           blockSummariesTopic,
           pendingTxsTopic,
           metadataTopic

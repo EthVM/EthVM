@@ -5,6 +5,7 @@ import io.enkrypt.avro.processing.MetricRecord
 import io.enkrypt.bolt.extensions.toBigInteger
 import io.enkrypt.bolt.extensions.toByteBuffer
 import io.enkrypt.bolt.BoltSerdes
+import io.enkrypt.bolt.OutputTopics
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
@@ -39,10 +40,8 @@ class StateBoltProcessor : AbstractBoltProcessor() {
     // Create stream builder
     val builder = StreamsBuilder()
 
-    val (_, _, accountStateTopic, tokenTransfersTopic) = appConfig.kafka.topicsConfig
-
     val fungibleBalances = builder
-      .stream("fungible-token-movements", Consumed.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance()))
+      .stream(OutputTopics.FungibleTokenMovements.toString(), Consumed.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance()))
       .groupByKey(Serialized.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance()))
       .reduce(
         { memo, next -> FungibleTokenBalanceRecord
@@ -55,12 +54,12 @@ class StateBoltProcessor : AbstractBoltProcessor() {
 
     fungibleBalances
       .toStream()
-      .to("fungible-token-balances", Produced.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance()))
+      .to(OutputTopics.FungibleTokenBalances.toString(), Produced.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance()))
 
     //
 
     val blockMetricsStream = builder
-      .stream("block-metrics", Consumed.with(BoltSerdes.MetricKey(), BoltSerdes.Metric()))
+      .stream(OutputTopics.BlockMetrics.toString(), Consumed.with(BoltSerdes.MetricKey(), BoltSerdes.Metric()))
 
     val blockMetricsByDayCount = blockMetricsStream
       .groupByKey(Serialized.with(BoltSerdes.MetricKey(), BoltSerdes.Metric()))
@@ -114,7 +113,7 @@ class StateBoltProcessor : AbstractBoltProcessor() {
         },
         Materialized.with(BoltSerdes.MetricKey(), BoltSerdes.Metric())
       ).toStream()
-      .to("block-statistics", Produced.with(BoltSerdes.MetricKey(), BoltSerdes.Metric()))
+      .to(OutputTopics.BlockStatistics.toString(), Produced.with(BoltSerdes.MetricKey(), BoltSerdes.Metric()))
 
     // Generate the topology
     val topology = builder.build()

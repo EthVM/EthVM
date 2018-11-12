@@ -78,7 +78,7 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
     builder.addStateStore(GatedBlockSummaryTransformer.blockSummariesStore())
     builder.addStateStore(GatedBlockSummaryTransformer.metadataStore())
 
-    val (blocksSummariesTopic) = appConfig.kafka.topicsConfig
+    val (blocksSummariesTopic) = appConfig.kafka.inputTopicsConfig
 
     val blockSummaryStream = builder
       .stream(blocksSummariesTopic, Consumed.with(Serdes.Long(), BoltSerdes.BlockSummaryRecord()))
