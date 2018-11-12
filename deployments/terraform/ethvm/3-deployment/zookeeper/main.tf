@@ -52,8 +52,8 @@ resource "kubernetes_service" "zookeeper_service" {
 
     port {
       name        = "client"
-      port        = 2181
       protocol    = "TCP"
+      port        = 2181
       target_port = 2181
     }
   }
@@ -74,7 +74,9 @@ resource "kubernetes_stateful_set" "zookeeper_stateful_set" {
     }
 
     service_name = "zookeeper-headless"
-    replicas     = 3
+    replicas     = "${var.zookeeper_nodes}"
+
+    pod_management_policy = "Parallel"
 
     update_strategy {
       type = "OnDelete"
@@ -98,12 +100,12 @@ resource "kubernetes_stateful_set" "zookeeper_stateful_set" {
         container {
           name              = "zookeeper"
           image             = "enkryptio/zookeeper:${var.zookeeper_version}"
-          image_pull_policy = "IfNotPresent"
+          image_pull_policy = "Always"
 
           command = [
             "/bin/bash",
             "-xec",
-            "zkGenConfig.sh && exec /usr/bin/zkServer.sh start-foreground",
+            "zkGenConfig.sh && exec exec zkServer.sh start-foreground",
           ]
 
           port {
@@ -142,7 +144,7 @@ resource "kubernetes_stateful_set" "zookeeper_stateful_set" {
 
           env {
             name  = "ZK_REPLICAS"
-            value = "3"
+            value = "${var.zookeeper_nodes}"
           }
 
           env {
@@ -224,13 +226,15 @@ resource "kubernetes_stateful_set" "zookeeper_stateful_set" {
         affinity {
           pod_anti_affinity {
             required_during_scheduling_ignored_during_execution {
+              topology_key = "kubernetes.io/hostname"
+
               label_selector {
-                match_labels {
-                  release = "zookeeper"
+                match_expressions {
+                  key      = "app"
+                  operator = "In"
+                  values   = ["zookeeper"]
                 }
               }
-
-              topology_key = "kubernetes.io/hostname"
             }
           }
         }
@@ -243,11 +247,12 @@ resource "kubernetes_stateful_set" "zookeeper_stateful_set" {
       }
 
       spec {
-        access_modes = ["ReadWriteOnce"]
+        storage_class_name = "${var.zookeeper_storage_type}"
+        access_modes       = ["ReadWriteOnce"]
 
         resources {
           requests {
-            storage = "5Gi"
+            storage = "${var.zookeeper_storage_size}"
           }
         }
       }

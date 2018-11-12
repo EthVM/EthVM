@@ -63,7 +63,7 @@ resource "kubernetes_stateful_set" "kafka_stateful_set" {
 
     service_name          = "kafka-headless"
     pod_management_policy = "OrderedReady"
-    replicas              = 3
+    replicas              = "${var.kafka_brokers}"
 
     update_strategy {
       type = "OnDelete"
@@ -79,7 +79,7 @@ resource "kubernetes_stateful_set" "kafka_stateful_set" {
       spec {
         container {
           name              = "kafka-broker"
-          image             = "confluentinc/cp-kafka:5.0.0-2"
+          image             = "confluentinc/cp-kafka:${var.kafka_version}"
           image_pull_policy = "IfNotPresent"
 
           liveness_probe {
@@ -123,13 +123,23 @@ resource "kubernetes_stateful_set" "kafka_stateful_set" {
           }
 
           env {
+            name  = "KAFKA_JVM_PERFORMANCE_OPTS"
+            value = "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:+UseG1CC"
+          }
+
+          env {
             name  = "KAFKA_HEAP_OPTS"
-            value = "-Xmx1G -Xms1G"
+            value = "-Xmx4G -Xms4G"
           }
 
           env {
             name  = "KAFKA_ZOOKEEPER_CONNECT"
-            value = "zookeeper:2181"
+            value = "localhost:2181"
+          }
+
+          env {
+            name  = "KAFKA_LOG4J_LOGGERS"
+            value = "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
           }
 
           env {
@@ -138,13 +148,18 @@ resource "kubernetes_stateful_set" "kafka_stateful_set" {
           }
 
           env {
-            name  = "KAFKA_CONFLUENT_SUPPORT_METRICS_ENABL"
+            name  = "KAFKA_AUTO_CREATE_TOPICS_ENABLE"
             value = "false"
           }
 
           env {
             name  = "KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR"
-            value = "3"
+            value = "${var.kafka_brokers}"
+          }
+
+          env {
+            name  = "KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE"
+            value = "false"
           }
 
           env {
@@ -164,6 +179,8 @@ resource "kubernetes_stateful_set" "kafka_stateful_set" {
           pod_affinity {
             preferred_during_scheduling_ignored_during_execution {
               pod_affinity_term {
+                topology_key = "kubernetes.io/hostname"
+
                 label_selector {
                   match_expressions {
                     key      = "app"
@@ -171,8 +188,6 @@ resource "kubernetes_stateful_set" "kafka_stateful_set" {
                     values   = ["zookeeper"]
                   }
                 }
-
-                topology_key = "kubernetes.io/hostname"
               }
 
               weight = 50
@@ -181,15 +196,15 @@ resource "kubernetes_stateful_set" "kafka_stateful_set" {
 
           pod_anti_affinity {
             required_during_scheduling_ignored_during_execution {
+              topology_key = "kubernetes.io/hostname"
+
               label_selector {
                 match_expressions {
                   key      = "app"
                   operator = "In"
-                  values   = ["kafka"]
+                  values   = ["kafka", "mongodb"]
                 }
               }
-
-              topology_key = "kubernetes.io/hostname"
             }
           }
         }
@@ -202,11 +217,12 @@ resource "kubernetes_stateful_set" "kafka_stateful_set" {
       }
 
       spec {
-        access_modes = ["ReadWriteOnce"]
+        storage_class_name = "${var.kafka_storage_type}"
+        access_modes       = ["ReadWriteOnce"]
 
         resources {
           requests {
-            storage = "5Gi"
+            storage = "${var.kafka_storage_size}"
           }
         }
       }
@@ -216,22 +232,16 @@ resource "kubernetes_stateful_set" "kafka_stateful_set" {
 
 resource "kubernetes_pod" "kafka_pod_create_topics" {
   metadata {
-    name = "topics-creation"
+    name = "kafka-topics-creation"
   }
 
   spec {
     container {
-      name  = "create-topics"
-      image = "confluentinc/cp-kafka:5.0.0-2"
+      name              = "kafka-create-topics"
+      image             = "confluentinc/cp-kafka:${var.kafka_version}"
+      image_pull_policy = "IfNotPresent"
 
-      command = [
-        "sh",
-        "-c",
-        "kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 12 --topic blocks --config retention.ms=-1 --config cleanup.policy=compact",
-        "kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 12 --topic account-state --config retention.ms=-1 --config cleanup.policy=compact",
-        "kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 12 --topic pending-transactions --config retention.ms=-1 --config cleanup.policy=compact",
-        "kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic metadata --config retention.ms=-1 --config cleanup.policy=compact",
-      ]
+      command = ["${file("${path.module}/create_topics.sh")}"]
     }
   }
 }

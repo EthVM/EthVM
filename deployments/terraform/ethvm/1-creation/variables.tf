@@ -1,6 +1,7 @@
 ## ---------------------
 ## Provider configuration
 ## ---------------------
+
 variable "project_id" {
   description = "Project ID in GCP"
 }
@@ -12,6 +13,7 @@ variable "region" {
 ## ---------------------
 ## Cluster configuration
 ## ---------------------
+
 variable "name" {
   description = "The name of the cluster, unique within the project and zone"
 }
@@ -34,7 +36,7 @@ variable "zone" {
 }
 
 variable "cluster_node_count" {
-  description = "Number of master nodes in the cluster"
+  description = "Number of nodes in the cluster (default pool)"
   default     = 2
 }
 

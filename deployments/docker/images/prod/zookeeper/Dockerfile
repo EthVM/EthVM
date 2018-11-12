@@ -40,6 +40,12 @@ RUN set -x \
 # Copy configuration generator script to bin
 COPY zkGenConfig.sh zkOk.sh zkMetrics.sh /opt/zookeeper/bin/
 
+# Give running perms
+RUN set -x && \
+  chmod +x \
+  /opt/zookeeper/bin/zkGenConfig.sh \
+  /opt/zookeeper/bin/zkMetrics.sh
+
 # Create a user for the zookeeper process and configure file system ownership
 # for necessary directories and symlink the distribution as a user executable
 RUN set -x \

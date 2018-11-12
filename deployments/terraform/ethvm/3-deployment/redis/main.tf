@@ -8,39 +8,11 @@ resource "kubernetes_config_map" "redis_config_map" {
   }
 
   data {
-    "ping_local.sh" = <<EOF
-response=$(
-  redis-cli \
-  -h localhost \
-  -p $REDIS_PORT \
-  ping
-)
-if [ "$response" != "PONG" ]; then
-  echo "$response"
-  exit 1
-fi
-EOF
+    "ping_local.sh" = "${file("${path.module}/ping_local.sh")}"
 
-    "ping_master.sh" = <<EOF
-response=$(
-  redis-cli \
-  -h $REDIS_MASTER_HOST \
-  -p $REDIS_MASTER_PORT_NUMBER \
-  ping
-)
-if [ "$response" != "PONG" ]; then
-  echo "$response"
-  exit 1
-fi
-EOF
+    "ping_master.sh" = "${file("${path.module}/ping_master.sh")}"
 
-    "ping_local_and_master.sh" = <<EOF
-script_dir="$(dirname "$0")"
-exit_status=0
-"$script_dir/ping_local.sh" || exit_status=$?
-"$script_dir/ping_master.sh" || exit_status=$?
-exit $exit_status
-EOF
+    "ping_local_and_master.sh" = "${file("${path.module}/ping_local_master.sh")}"
   }
 }
 

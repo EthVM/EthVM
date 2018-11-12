@@ -1,10 +1,10 @@
-# create network to run cluster instances
+# 1 - Create network to run cluster instances
 module "ethvm_network" {
   source = "../../terraform-modules/gcp/vpc"
   name   = "${var.ntw_name}"
 }
 
-# create kubernetes master clusters
+# 2 - Create create cluster and default pool
 module "ethvm_cluster" {
   source             = "../../terraform-modules/gcp/cluster"
   name               = "${var.name}"
@@ -14,7 +14,7 @@ module "ethvm_cluster" {
   network            = "${module.ethvm_network.name}"
 }
 
-# create kubernetes node pool
+# 3 - create kubernetes node pool
 # module "ethvm_np" {
 #   source       = "../../terraform-modules/gcp/node-pool"
 #   name         = "${var.node_pool_name}"

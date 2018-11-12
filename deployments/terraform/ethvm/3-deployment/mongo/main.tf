@@ -151,7 +151,7 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
     }
 
     service_name = "mongodb-replicaset"
-    replicas     = 3
+    replicas     = "${var.mongodb_nodes}"
 
     template {
       metadata {
@@ -191,7 +191,7 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
           }
 
           volume_mount {
-            name       = "configdir"
+            name       = "config"
             mount_path = "/data/configdb"
           }
         }
@@ -211,7 +211,7 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
 
         init_container {
           name              = "bootstrap"
-          image             = "mongo:4.1"
+          image             = "mongo:${var.mongodb_version}"
           image_pull_policy = "IfNotPresent"
 
           command = ["/work-dir/peer-finder"]
@@ -248,12 +248,12 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
           }
 
           volume_mount {
-            name       = "configdir"
+            name       = "config"
             mount_path = "/data/configdb"
           }
 
           volume_mount {
-            name       = "datadir"
+            name       = "data"
             mount_path = "/data/db"
           }
         }
@@ -334,7 +334,7 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
         }
 
         volume {
-          name      = "configdir"
+          name      = "config"
           empty_dir = []
         }
       }
@@ -342,15 +342,16 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
 
     volume_claim_templates {
       metadata {
-        name = "datadir"
+        name = "data"
       }
 
       spec {
-        access_modes = ["ReadWriteOnce"]
+        storage_class_name = "${var.mongodb_storage_type}"
+        access_modes       = ["ReadWriteOnce"]
 
         resources {
           requests {
-            storage = "10Gi"
+            storage = "${var.mongodb_storage_size}"
           }
         }
       }
