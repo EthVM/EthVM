@@ -7,6 +7,8 @@
 
 # EthVM: Open Source Ethereum Blockchain Explorer
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/enKryptIO/ethvm.svg)](https://greenkeeper.io/)
+
 ![Screenshot example](.github/assets/ethvm.png)
 
 ## Philosophy
