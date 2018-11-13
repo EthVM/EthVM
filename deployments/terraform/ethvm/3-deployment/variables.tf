@@ -28,7 +28,7 @@ variable "zookeeper_storage_type" {
 
 variable "kafka_version" {
   description = "Version of Kafka"
-  default     = "5.0.0-2"
+  default     = "5.0.1"
 }
 
 variable "kafka_brokers" {
@@ -44,6 +44,34 @@ variable "kafka_storage_size" {
 variable "kafka_storage_type" {
   description = "Storage type to be used by Kafka nodes"
   default     = "ssd"
+}
+
+## ---------------------------
+## Kafka Connect configuration
+## ---------------------------
+
+variable "kafka_connect_version" {
+  description = "Version of Kafka Connect"
+  default     = "5.0.0-1"
+}
+
+variable "kafka_connect_storage_size" {
+  description = "Storage size for Kafka Connect"
+  default     = "5Gi"
+}
+
+variable "kafka_connect_storage_type" {
+  description = "Storage type to be used by Kafka Connect nodes"
+  default     = "ssd"
+}
+
+## -----------------------------------
+## Kafka Schema Registry configuration
+## -----------------------------------
+
+variable "kafka_schema_registry_version" {
+  description = "Version of Kafka Schema Registry"
+  default     = "5.0.1-1"
 }
 
 ## ---------------------

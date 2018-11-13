@@ -32,5 +32,5 @@ variable "disk_type" {
 
 variable "disk_size_gb" {
   description = "Disk of which size to attach to the nodes in the pool "
-  default     = "40"
+  default     = "10"
 }

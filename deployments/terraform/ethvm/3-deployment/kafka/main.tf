@@ -82,8 +82,24 @@ resource "kubernetes_stateful_set" "kafka_stateful_set" {
           image             = "confluentinc/cp-kafka:${var.kafka_version}"
           image_pull_policy = "IfNotPresent"
 
+          command = [
+            "bash",
+            "-c",
+            "${file("${path.module}/command.sh")}",
+          ]
+
+          port {
+            name           = "kafka"
+            container_port = 9092
+          }
+
+          volume_mount {
+            name       = "data"
+            mount_path = "/opt/kafka/data"
+          }
+
           liveness_probe {
-            initial_delay_seconds = 30
+            initial_delay_seconds = 60
             timeout_seconds       = 5
 
             exec {
@@ -96,7 +112,7 @@ resource "kubernetes_stateful_set" "kafka_stateful_set" {
           }
 
           readiness_probe {
-            initial_delay_seconds = 30
+            initial_delay_seconds = 60
             period_seconds        = 10
             timeout_seconds       = 5
             success_threshold     = 1
@@ -105,11 +121,6 @@ resource "kubernetes_stateful_set" "kafka_stateful_set" {
             tcp_socket {
               port = 9092
             }
-          }
-
-          port {
-            name           = "kafka"
-            container_port = 9092
           }
 
           env {
@@ -124,7 +135,7 @@ resource "kubernetes_stateful_set" "kafka_stateful_set" {
 
           env {
             name  = "KAFKA_JVM_PERFORMANCE_OPTS"
-            value = "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:+UseG1CC"
+            value = "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
           }
 
           env {
@@ -134,7 +145,7 @@ resource "kubernetes_stateful_set" "kafka_stateful_set" {
 
           env {
             name  = "KAFKA_ZOOKEEPER_CONNECT"
-            value = "localhost:2181"
+            value = "zookeeper:2181"
           }
 
           env {
@@ -165,13 +176,6 @@ resource "kubernetes_stateful_set" "kafka_stateful_set" {
           env {
             name  = "KAFKA_JMX_PORT"
             value = "555"
-          }
-
-          command = ["${file("${path.module}/command.sh")}"]
-
-          volume_mount {
-            name       = "data"
-            mount_path = "/opt/kafka/data"
           }
         }
 
@@ -236,12 +240,18 @@ resource "kubernetes_pod" "kafka_pod_create_topics" {
   }
 
   spec {
+    restart_policy = "Never"
+
     container {
       name              = "kafka-create-topics"
       image             = "confluentinc/cp-kafka:${var.kafka_version}"
       image_pull_policy = "IfNotPresent"
 
-      command = ["${file("${path.module}/create_topics.sh")}"]
+      command = [
+        "bash",
+        "-c",
+        "${file("${path.module}/create_topics.sh")}",
+      ]
     }
   }
 }

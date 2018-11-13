@@ -76,8 +76,6 @@ resource "kubernetes_stateful_set" "zookeeper_stateful_set" {
     service_name = "zookeeper-headless"
     replicas     = "${var.zookeeper_nodes}"
 
-    pod_management_policy = "Parallel"
-
     update_strategy {
       type = "OnDelete"
     }
@@ -105,7 +103,7 @@ resource "kubernetes_stateful_set" "zookeeper_stateful_set" {
           command = [
             "/bin/bash",
             "-xec",
-            "zkGenConfig.sh && exec exec zkServer.sh start-foreground",
+            "zkGenConfig.sh && exec zkServer.sh start-foreground",
           ]
 
           port {
@@ -126,19 +124,32 @@ resource "kubernetes_stateful_set" "zookeeper_stateful_set" {
             protocol       = "TCP"
           }
 
+          volume_mount {
+            name       = "zookeeper-data"
+            mount_path = "/var/lib/zookeeper"
+          }
+
           liveness_probe {
-            initial_delay_seconds = 20
+            initial_delay_seconds = 60
 
             exec {
-              command = ["zkOk.sh"]
+              command = [
+                "/bin/bash",
+                "-ec",
+                "/usr/bin/zkOk.sh",
+              ]
             }
           }
 
           readiness_probe {
-            initial_delay_seconds = 20
+            initial_delay_seconds = 60
 
             exec {
-              command = ["zkOk.sh"]
+              command = [
+                "/bin/bash",
+                "-ec",
+                "/usr/bin/zkOk.sh",
+              ]
             }
           }
 
@@ -216,11 +227,6 @@ resource "kubernetes_stateful_set" "zookeeper_stateful_set" {
             name  = "ZK_TICK_TIME"
             value = "2000"
           }
-
-          volume_mount {
-            name       = "data"
-            mount_path = "/var/lib/zookeeper"
-          }
         }
 
         affinity {
@@ -243,7 +249,7 @@ resource "kubernetes_stateful_set" "zookeeper_stateful_set" {
 
     volume_claim_templates {
       metadata {
-        name = "data"
+        name = "zookeeper-data"
       }
 
       spec {

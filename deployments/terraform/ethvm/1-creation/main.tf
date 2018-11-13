@@ -4,21 +4,21 @@ module "ethvm_network" {
   name   = "${var.ntw_name}"
 }
 
-# 2 - Create create cluster and default pool
+# 2 - Create cluster default pool
 module "ethvm_cluster" {
   source             = "../../terraform-modules/gcp/cluster"
   name               = "${var.name}"
   description        = "${var.description}"
   zone               = "${var.zone}"
-  initial_node_count = "${var.cluster_node_count}"
+  initial_node_count = "${var.default_cluster_node_count}"
   network            = "${module.ethvm_network.name}"
 }
 
-# 3 - create kubernetes node pool
-# module "ethvm_np" {
+# 3 - create kafka node pool
+# module "ethvm_kafka_np" {
 #   source       = "../../terraform-modules/gcp/node-pool"
-#   name         = "${var.node_pool_name}"
-#   zone         = "${var.zone}"
 #   cluster_name = "${module.ethvm_cluster.name}"
-#   node_count   = "${var.node_pool_count}"
+#   name         = "${var.kafka_np_name}"
+#   zone         = "${var.zone}"
+#   node_count   = "${var.kafka_np_count}"
 # }

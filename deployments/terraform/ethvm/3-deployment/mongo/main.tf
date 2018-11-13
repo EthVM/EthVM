@@ -26,20 +26,6 @@ resource "kubernetes_config_map" "mongodb_replicaset_configmap_mongodb" {
   }
 }
 
-resource "kubernetes_config_map" "mongodb_replicaset_configmap_tests" {
-  metadata {
-    name = "mongodb-replicaset-tests"
-
-    labels {
-      app = "mongodb-replicaset"
-    }
-  }
-
-  data {
-    mongodb_up_test = "${file("${path.module}/mongodb-test.sh")}"
-  }
-}
-
 resource "kubernetes_service" "mongodb_service" {
   metadata {
     name = "mongodb-replicaset"
@@ -68,74 +54,6 @@ resource "kubernetes_service" "mongodb_service" {
   }
 }
 
-resource "kubernetes_pod" "mongodb_pod" {
-  metadata {
-    name = "mongodb-replicaset-test"
-
-    labels {
-      app = "mongodb-replicaset"
-    }
-  }
-
-  spec {
-    restart_policy = "Never"
-
-    init_container {
-      name  = "test-framework"
-      image = "dduportal/bats:0.4.0"
-
-      command = [
-        "bash",
-        "-c",
-        "set -ex && cp -R /usr/local/libexec/ /tools/bats/",
-      ]
-
-      volume_mount {
-        name       = "tools"
-        mount_path = "/tools"
-      }
-    }
-
-    container {
-      name  = "mongo"
-      image = "mongo:4.1"
-
-      env {
-        name  = "FULL_NAME"
-        value = "mongodb-replicaset"
-      }
-
-      env {
-        name  = "REPLICAS"
-        value = "3"
-      }
-
-      volume_mount {
-        name       = "tools"
-        mount_path = "/tools"
-      }
-
-      volume_mount {
-        name       = "tests"
-        mount_path = "/tests"
-      }
-    }
-
-    volume {
-      name      = "tools"
-      empty_dir = []
-    }
-
-    volume {
-      name = "tests"
-
-      config_map {
-        name = "mongodb-replicaset-tests"
-      }
-    }
-  }
-}
-
 resource "kubernetes_stateful_set" "mongodb_stateful_set" {
   metadata {
     name = "mongodb-replicaset"
@@ -147,7 +65,7 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
 
   spec {
     selector {
-      match_labels = "mongodb-replicaset"
+      app = "mongodb-replicaset"
     }
 
     service_name = "mongodb-replicaset"
@@ -163,8 +81,8 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
       spec {
         security_context {
           fs_group        = 999
-          run_as_non_root = "true"
           run_as_user     = 999
+          run_as_non_root = "true"
         }
 
         termination_grace_period_seconds = 30
@@ -177,21 +95,21 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
 
           args = [
             "-c",
-            "set -e && set -x && cp /configdb-readonly/mongod.conf /data/configdb/mongod.conf",
+            "set -ex && cp /configdb-readonly/mongod.conf /data/configdb/mongod.conf",
           ]
 
           volume_mount {
-            name       = "workdir"
+            name       = "mongodb-workdir"
             mount_path = "/work-dir"
           }
 
           volume_mount {
-            name       = "config"
+            name       = "mongodb-config"
             mount_path = "/configdb-readonly"
           }
 
           volume_mount {
-            name       = "config"
+            name       = "mongodb-config"
             mount_path = "/data/configdb"
           }
         }
@@ -204,7 +122,7 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
           args = ["--work-dir=/work-dir"]
 
           volume_mount {
-            name       = "workdir"
+            name       = "mongodb-workdir"
             mount_path = "/work-dir"
           }
         }
@@ -238,7 +156,7 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
           }
 
           volume_mount {
-            name       = "workdir"
+            name       = "mongodb-workdir"
             mount_path = "/work-dir"
           }
 
@@ -248,12 +166,12 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
           }
 
           volume_mount {
-            name       = "config"
+            name       = "mongodb-config"
             mount_path = "/data/configdb"
           }
 
           volume_mount {
-            name       = "data"
+            name       = "mongodb-data"
             mount_path = "/data/db"
           }
         }
@@ -312,7 +230,7 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
         }
 
         volume {
-          name = "config"
+          name = "mongodb-config"
 
           config_map {
             name = "mongodb-replicaset-mongodb"
@@ -329,12 +247,12 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
         }
 
         volume {
-          name      = "workdir"
+          name      = "mongodb-workdir"
           empty_dir = []
         }
 
         volume {
-          name      = "config"
+          name      = "mongodb-config"
           empty_dir = []
         }
       }
@@ -342,7 +260,7 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
 
     volume_claim_templates {
       metadata {
-        name = "data"
+        name = "mongodb-data"
       }
 
       spec {

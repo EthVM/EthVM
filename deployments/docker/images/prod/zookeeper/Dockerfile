@@ -44,7 +44,8 @@ COPY zkGenConfig.sh zkOk.sh zkMetrics.sh /opt/zookeeper/bin/
 RUN set -x && \
   chmod +x \
   /opt/zookeeper/bin/zkGenConfig.sh \
-  /opt/zookeeper/bin/zkMetrics.sh
+  /opt/zookeeper/bin/zkMetrics.sh \
+  /opt/zookeeper/bin/zkOk.sh
 
 # Create a user for the zookeeper process and configure file system ownership
 # for necessary directories and symlink the distribution as a user executable

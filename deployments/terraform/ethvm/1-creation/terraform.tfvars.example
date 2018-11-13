@@ -7,7 +7,7 @@ name = "ethvm"
 description = "EthVM Kubernetes cluster"
 
 node_pool_name= "ethvm-pool"
-cluster_node_count = 5
+default_cluster_node_count = 5
 node_pool_count = 0
 
 ntw_name = "ethvm-network"
