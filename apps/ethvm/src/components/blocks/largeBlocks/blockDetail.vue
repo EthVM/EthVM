@@ -216,7 +216,6 @@ export default Vue.extend({
   mounted() {
     this.setItems()
     this.setMore()
-    console.log(this.uncles)
   },
   computed: {
     isUncle() {
