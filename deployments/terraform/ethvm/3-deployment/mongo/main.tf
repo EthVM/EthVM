@@ -1,9 +1,9 @@
 resource "kubernetes_config_map" "mongodb_replicaset_configmap_init" {
   metadata {
-    name = "mongodb-replicaset-init"
+    name = "mongodb-init"
 
     labels {
-      app = "mongodb-replicaset"
+      app = "mongodb"
     }
   }
 
@@ -14,10 +14,10 @@ resource "kubernetes_config_map" "mongodb_replicaset_configmap_init" {
 
 resource "kubernetes_config_map" "mongodb_replicaset_configmap_mongodb" {
   metadata {
-    name = "mongodb-replicaset-mongodb"
+    name = "mongodb"
 
     labels {
-      app = "mongodb-replicaset"
+      app = "mongodb"
     }
   }
 
@@ -28,20 +28,20 @@ resource "kubernetes_config_map" "mongodb_replicaset_configmap_mongodb" {
 
 resource "kubernetes_service" "mongodb_service" {
   metadata {
-    name = "mongodb-replicaset"
+    name = "mongodb"
 
     annotations {
       "service.alpha.kubernetes.io/tolerate-unready-endpoints" = "true"
     }
 
     labels {
-      app = "mongodb-replicaset"
+      app = "mongodb"
     }
   }
 
   spec {
     selector {
-      app = "mongodb-replicaset"
+      app = "mongodb"
     }
 
     type       = "ClusterIP"
@@ -56,25 +56,25 @@ resource "kubernetes_service" "mongodb_service" {
 
 resource "kubernetes_stateful_set" "mongodb_stateful_set" {
   metadata {
-    name = "mongodb-replicaset"
+    name = "mongodb"
 
     labels {
-      app = "mongodb-replicaset"
+      app = "mongodb"
     }
   }
 
   spec {
     selector {
-      app = "mongodb-replicaset"
+      app = "mongodb"
     }
 
-    service_name = "mongodb-replicaset"
+    service_name = "mongodb"
     replicas     = "${var.mongodb_nodes}"
 
     template {
       metadata {
         labels {
-          app = "mongodb-replicaset"
+          app = "mongodb"
         }
       }
 
@@ -107,11 +107,6 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
             name       = "mongodb-config"
             mount_path = "/configdb-readonly"
           }
-
-          volume_mount {
-            name       = "mongodb-config"
-            mount_path = "/data/configdb"
-          }
         }
 
         init_container {
@@ -136,7 +131,7 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
 
           args = [
             "-on-start=/init/on-start.sh",
-            "\"-service=mongodb-replicaset\"",
+            "\"-service=mongodb\"",
           ]
 
           env {
@@ -177,8 +172,8 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
         }
 
         container {
-          name              = "mongodb-replicaset"
-          image             = "mongo:4.1"
+          name              = "mongodb"
+          image             = "mongo:${var.mongodb_version}"
           image_pull_policy = "IfNotPresent"
 
           port {
@@ -187,7 +182,7 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
           }
 
           liveness_probe {
-            initial_delay_seconds = 30
+            initial_delay_seconds = 60
             timeout_seconds       = 5
             failure_threshold     = 3
             period_seconds        = 10
@@ -203,7 +198,7 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
           }
 
           readiness_probe {
-            initial_delay_seconds = 5
+            initial_delay_seconds = 60
             timeout_seconds       = 1
             failure_threshold     = 3
             period_seconds        = 10
@@ -233,7 +228,7 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
           name = "mongodb-config"
 
           config_map {
-            name = "mongodb-replicaset-mongodb"
+            name = "mongodb"
           }
         }
 
@@ -241,18 +236,13 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
           name = "init"
 
           config_map {
-            name         = "mongodb-replicaset-init"
+            name         = "mongodb-init"
             default_mode = 0755
           }
         }
 
         volume {
           name      = "mongodb-workdir"
-          empty_dir = []
-        }
-
-        volume {
-          name      = "mongodb-config"
           empty_dir = []
         }
       }

@@ -63,38 +63,7 @@ resource "kubernetes_config_map" "traefik_config_map" {
   }
 
   data {
-    traefik_config = <<EOF
-defaultEntryPoints = ["http","https"]
-debug = false
-logLevel = "INFO"
-
-[entryPoints]
-  [entryPoints.http]
-    address = ":80"
-    compress = true
-    [entryPoints.http.redirect]
-      entryPoint = "https"
-      [entryPoints.https]
-        address = ":443"
-        compress = true
-        [entryPoints.https.tls]
-
-[kubernetes]
-
-[ping]
-  entryPoint = "http"
-
-[accessLog]
-
-[acme]
-  email = "${var.traefik_email}"
-  storage = "/etc/traefik/acme/account"
-  acmeLogging = true
-  entryPoint = "https"
-  OnHostRule = true
-  [acme.httpChallenge]
-    entryPoint="http"
-EOF
+    traefik_config = "${file("${path.module}/traefik.toml")}"
   }
 }
 
@@ -163,6 +132,7 @@ resource "kubernetes_stateful_set" "traefik_sateful_set" {
           image             = "traefik:${var.traefik_version}-alpine"
           name              = "traefik-ingress-lb"
           image_pull_policy = "IfNotPresent"
+
           args              = ["--configFile=/etc/traefik/config/traefik.toml"]
 
           port {
