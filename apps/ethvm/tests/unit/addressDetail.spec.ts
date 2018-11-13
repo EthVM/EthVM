@@ -7,13 +7,10 @@ import en_US from '@app/translations/en_US.json'
 import VueI18n from 'vue-i18n'
 import Vuetify from 'vuetify'
 import footnote from '@/components/blocks/smallBlocks/footnote.vue'
-// import addressQR from '@app/components/blocks/smallBlocks/qrComponent.vue'
 import blockies from '@app/components/blocks/smallBlocks/blockies.vue'
 import router from '@app/router'
 import { Account } from '@app/models'
 import VueTimeago from 'vue-timeago'
-
-
 
 const defaultLocale: string = 'en_US'
 const messages: any = {
@@ -35,10 +32,7 @@ localVue.use(VueTimeago, {
 localVue.component('footnote', footnote)
 // localVue.component('address-qr', addressQR)
 localVue.component('blockies', blockies)
-
-
 localVue.component('copy-to-clip-component', copyToClipComponent)
-
 
 const i18n = new VueI18n({
   locale: defaultLocale,
@@ -46,11 +40,10 @@ const i18n = new VueI18n({
   fallbackLocale: 'en_US'
 })
 
-
 let acc = new Account({address:'e6a7a1d47ff21b6321162aea7c6cb457d5476bca',balance:8888,nonce:8})
 
-describe.skip('latestBlocks.vue', () => {
-  it('renders LatestBlocks', () => {
+describe.skip('addressDetail.vue', () => {
+  it('renders addressDetail', () => {
     const wrapper = mount(AddressDetail, {
       propsData: { account: acc},
       localVue,
