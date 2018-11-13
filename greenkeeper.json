@@ -1,0 +1,13 @@
+{
+  "groups": {
+    "default": {
+      "packages": [
+        "apps/common/package.json",
+        "apps/ethvm/package.json",
+        "apps/server/package.json",
+        "apps/server/packages/ethereumjs-vm/package.json",
+        "package.json"
+      ]
+    }
+  }
+}
