@@ -149,7 +149,6 @@ export default Vue.extend({
     this.$eventHub.$on(sEvents.newBlock, _block => {
       if (Visibility.state() === 'visible') {
         this.blocks = this.$store.getters.getBlocks
-
       }
     })
   },
