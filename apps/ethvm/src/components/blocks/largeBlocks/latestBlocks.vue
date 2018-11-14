@@ -4,7 +4,7 @@
       <v-flex d-flex xs12 sm8 order-xs1>
         <v-card-title class="title font-weight-bold">{{ $t('title.lastBlock') }}</v-card-title>
       </v-flex>
-      <v-flex  hidden-sm-and-down md4 order-xs2>
+      <v-flex hidden-sm-and-down md4 order-xs2>
         <v-layout justify-end>
           <footnote :footnotes="footnote"></footnote>
         </v-layout>
@@ -44,9 +44,9 @@
     <v-card v-if="getBlocks" flat id="scroll-target" :style="getStyle" class="scroll-y pt-0 pb-0">
       <v-layout column fill-height v-scroll:#scroll-target class="pt-1" style="margin-right: 1px">
         <v-flex xs12>
-          <v-card v-for="block in getBlocks" class="transparent" flat  v-bind:key="block.hash">
+          <v-card v-for="block in getBlocks" class="transparent" flat v-bind:key="block.hash">
             <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
-              <v-flex d-flex xs6 sm2 order-xs1 >
+              <v-flex xs6 sm2 order-xs1>
                 <router-link class="black--text pb-1" :to="'/block/'+block.getHash()">{{block.getNumber()}}</router-link>
               </v-flex>
               <v-flex xs12 sm7 md6 lass="pr-0" order-xs3 order-sm2>
@@ -69,6 +69,23 @@
                   </v-tooltip>
                   {{getShortRewardValue(block.getTotalBlockReward(), false)}}
                 </p>
+              </v-flex>
+            </v-layout>
+            <v-layout row v-if="hasUncles(block)"  pl-3 pr-2 pt-0 pb-1>
+              <v-flex d-flex hidden-xs-only sm2 pt-0 pr-0>
+                <v-img v-if="hasUncles(block)" :src="require('@/assets/uncle.png')" height="30px"contain></v-img>
+              </v-flex>
+              <v-flex xs12 sm7 md6>
+                <v-card flat color="uncleGrey">
+                  <v-card-title class="pt-1 font-weight-medium">Uncles:</v-card-title>
+                  <v-card-text v-for="(uncle, index) in block.getUncles" :key="index" class="text-truncate info--text">Hash:
+                     <router-link :to="'/block/'+'0x'+ uncle.unclesHash">
+                    0x{{uncle.unclesHash}}
+                  </router-link>
+                  </v-card-text>
+                </v-card>
+              </v-flex>
+              <v-flex hidden-xs-only sm3 md4>
               </v-flex>
             </v-layout>
             <v-divider></v-divider>
@@ -141,6 +158,9 @@ export default Vue.extend({
         return newRewardValue
       }
       return isShort
+    },
+    hasUncles(block) {
+      return block.getUncles.length > 0
     }
   },
   created() {

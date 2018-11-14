@@ -95,7 +95,6 @@ export default Vue.extend({
         if (result) {
           console.log(result)
           this.block = new Block(result)
-
           this.uncles = this.block.getUncles()
           console.log('uncles ', this.uncles)
           this.setItems(this.block.getNumber())

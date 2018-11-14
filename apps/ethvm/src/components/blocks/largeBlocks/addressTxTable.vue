@@ -147,7 +147,7 @@ export default Vue.extend({
       return isShort
     },
     log(tx) {
-      //console.log(tx, ' status', tx.getStatus())
+
     }
   },
   computed: {

@@ -235,7 +235,6 @@ export default Vue.extend({
           pTxs.push(new PendingTx(element))
         })
         this.account.pendingTxs = pTxs
-        console.log('pending ', this.account.pendingTxs)
       }
     )
   },
