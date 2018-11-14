@@ -8,7 +8,7 @@ resource "kubernetes_config_map" "mongodb_replicaset_configmap_init" {
   }
 
   data {
-    on_start_sh = "${file("${path.module}/replicaset-init.sh")}"
+    "on-start.sh" = "${file("${path.module}/replicaset-init.sh")}"
   }
 }
 
@@ -22,13 +22,13 @@ resource "kubernetes_config_map" "mongodb_replicaset_configmap_mongodb" {
   }
 
   data {
-    "mongodb.conf" = "${file("${path.module}/mongod.conf")}"
+    "mongod.conf" = "${file("${path.module}/mongod.conf")}"
   }
 }
 
 resource "kubernetes_service" "mongodb_service" {
   metadata {
-    name = "mongodb-service"
+    name = "mongodb"
 
     annotations {
       "service.alpha.kubernetes.io/tolerate-unready-endpoints" = "true"
@@ -88,8 +88,9 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
         termination_grace_period_seconds = 30
 
         init_container {
-          name  = "copy-config"
-          image = "busybox"
+          name              = "copy-config"
+          image             = "busybox"
+          image_pull_policy = "IfNotPresent"
 
           command = ["sh"]
 
@@ -136,7 +137,7 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
 
           args = [
             "-on-start=/init/on-start.sh",
-            "\"-service=mongodb-service\"",
+            "-service=mongodb",
           ]
 
           env {
@@ -270,6 +271,21 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
           name      = "configdir"
           empty_dir = []
         }
+
+        # affinity {
+        #   pod_anti_affinity {
+        #     required_during_scheduling_ignored_during_execution {
+        #       topology_key = "kubernetes.io/hostname"
+        #       label_selector {
+        #         match_expressions {
+        #           key      = "app"
+        #           operator = "In"
+        #           values   = ["kafka", "zookeeper"]
+        #         }
+        #       }
+        #     }
+        #   }
+        # }
       }
     }
 

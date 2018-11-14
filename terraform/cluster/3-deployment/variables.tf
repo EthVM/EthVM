@@ -80,7 +80,7 @@ variable "kafka_schema_registry_version" {
 
 variable "mongodb_version" {
   description = "Version of MongoDb"
-  default     = "4.1"
+  default     = "4.0"
 }
 
 variable "mongodb_nodes" {

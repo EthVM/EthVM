@@ -59,6 +59,10 @@ module "mongo" {
 #   source = "./api"
 # }
 
+# moduel "explorer" {
+#   source = "./explorer"
+# }
+
 # module "traefik" {
 #   source = "./traefik"
 # }
