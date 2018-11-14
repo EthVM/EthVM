@@ -1,0 +1,25 @@
+{
+  "groups": {
+    "common": {
+      "packages": [
+        "apps/common/package.json"
+      ]
+    },
+    "frontend": {
+      "packages": [
+        "apps/ethvm/package.json"
+      ],
+      "ignore": ["vue-timeago","bignumber.js"]
+    },
+    "backend": {
+      "packages": [
+        "apps/server/packages/ethereumjs-vm/package.json"
+      ]
+    },
+    "utils": {
+      "packages": [
+        "package.json"
+      ]
+    }
+  }
+}
