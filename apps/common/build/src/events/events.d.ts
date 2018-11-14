@@ -28,4 +28,10 @@ export declare const Events: {
     getCurrentStateRoot: string;
     getExchangeRates: string;
     search: string;
+    getAvgTotalDifficultyStats: string;
+    getAvgGasPriceStats: string;
+    getAvgTxFeeStats: string;
+    getAvgSuccessfullTxStats: string;
+    getBlockByNumber: string;
+    getAvgFailedTxStats: string;
 };

@@ -216,11 +216,10 @@ export default Vue.extend({
   mounted() {
     this.setItems()
     this.setMore()
-    console.log(this.uncles)
   },
   computed: {
     isUncle() {
-      return this.block.getIsUncle()
+      return false
     },
     update() {
       return String
@@ -229,11 +228,7 @@ export default Vue.extend({
       return this.showMore
     },
     hasUncles() {
-      if (this.uncles.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.block.getIsUncle ()
     }
   }
 })

@@ -23,19 +23,6 @@ export class Block {
     this.block.transactions = txs
   }
 
-  public setIsUncle(isUncle: boolean): void {
-    if (isUncle) {
-      this.setTransactions([])
-      this.setUncles([])
-      //this.setUncleHashes([])
-    }
-    //this.block.isUncle = isUncle
-  }
-
-  public setUncles(uncles: string[]): void {
-    // this.block.header.unclesHash = uncles
-  }
-
   public addUncle(uncle: Block): void {
     if (!this.block.uncles) {
       this.block.uncles = []
