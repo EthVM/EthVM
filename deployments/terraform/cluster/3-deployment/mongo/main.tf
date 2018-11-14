@@ -1,6 +1,6 @@
 resource "kubernetes_config_map" "mongodb_replicaset_configmap_init" {
   metadata {
-    name = "mongodb-init"
+    name = "mongodb-config-init"
 
     labels {
       app = "mongodb"
@@ -14,7 +14,7 @@ resource "kubernetes_config_map" "mongodb_replicaset_configmap_init" {
 
 resource "kubernetes_config_map" "mongodb_replicaset_configmap_mongodb" {
   metadata {
-    name = "mongodb"
+    name = "mongodb-config"
 
     labels {
       app = "mongodb"
@@ -22,13 +22,13 @@ resource "kubernetes_config_map" "mongodb_replicaset_configmap_mongodb" {
   }
 
   data {
-    mongodb_conf = ""
+    "mongodb.conf" = "${file("${path.module}/mongod.conf")}"
   }
 }
 
 resource "kubernetes_service" "mongodb_service" {
   metadata {
-    name = "mongodb"
+    name = "mongodb-service"
 
     annotations {
       "service.alpha.kubernetes.io/tolerate-unready-endpoints" = "true"
@@ -99,13 +99,18 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
           ]
 
           volume_mount {
-            name       = "mongodb-workdir"
+            name       = "workdir"
             mount_path = "/work-dir"
           }
 
           volume_mount {
-            name       = "mongodb-config"
+            name       = "config"
             mount_path = "/configdb-readonly"
+          }
+
+          volume_mount {
+            name       = "configdir"
+            mount_path = "/data/configdb"
           }
         }
 
@@ -117,7 +122,7 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
           args = ["--work-dir=/work-dir"]
 
           volume_mount {
-            name       = "mongodb-workdir"
+            name       = "workdir"
             mount_path = "/work-dir"
           }
         }
@@ -131,7 +136,7 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
 
           args = [
             "-on-start=/init/on-start.sh",
-            "\"-service=mongodb\"",
+            "\"-service=mongodb-service\"",
           ]
 
           env {
@@ -151,7 +156,7 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
           }
 
           volume_mount {
-            name       = "mongodb-workdir"
+            name       = "workdir"
             mount_path = "/work-dir"
           }
 
@@ -161,12 +166,12 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
           }
 
           volume_mount {
-            name       = "mongodb-config"
+            name       = "config"
             mount_path = "/data/configdb"
           }
 
           volume_mount {
-            name       = "mongodb-data"
+            name       = "data"
             mount_path = "/data/db"
           }
         }
@@ -175,6 +180,16 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
           name              = "mongodb"
           image             = "mongo:${var.mongodb_version}"
           image_pull_policy = "IfNotPresent"
+
+          command = ["mongod"]
+
+          args = [
+            "--config=/data/configdb/mongod.conf",
+            "--dbpath=/data/db",
+            "--replSet=rs0",
+            "--port=27017",
+            "--bind_ip=0.0.0.0",
+          ]
 
           port {
             name           = "mongodb"
@@ -213,22 +228,27 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
             }
           }
 
-          command = ["mongod"]
+          volume_mount {
+            name       = "data"
+            mount_path = "/data/db"
+          }
 
-          args = [
-            "--config=/data/configdb/mongod.conf",
-            "--dbpath=/data/db",
-            "--replSet=rs0",
-            "--port=27017",
-            "--bind_ip=0.0.0.0",
-          ]
+          volume_mount {
+            name       = "config"
+            mount_path = "/data/configdb"
+          }
+
+          volume_mount {
+            name       = "workdir"
+            mount_path = "/work-dir"
+          }
         }
 
         volume {
-          name = "mongodb-config"
+          name = "config"
 
           config_map {
-            name = "mongodb"
+            name = "mongodb-config"
           }
         }
 
@@ -236,13 +256,18 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
           name = "init"
 
           config_map {
-            name         = "mongodb-init"
+            name         = "mongodb-config-init"
             default_mode = 0755
           }
         }
 
         volume {
-          name      = "mongodb-workdir"
+          name      = "workdir"
+          empty_dir = []
+        }
+
+        volume {
+          name      = "configdir"
           empty_dir = []
         }
       }
@@ -250,7 +275,7 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
 
     volume_claim_templates {
       metadata {
-        name = "mongodb-data"
+        name = "data"
       }
 
       spec {

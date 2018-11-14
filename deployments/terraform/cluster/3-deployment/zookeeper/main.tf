@@ -125,7 +125,7 @@ resource "kubernetes_stateful_set" "zookeeper_stateful_set" {
           }
 
           volume_mount {
-            name       = "zookeeper-data"
+            name       = "data"
             mount_path = "/var/lib/zookeeper"
           }
 
@@ -249,7 +249,7 @@ resource "kubernetes_stateful_set" "zookeeper_stateful_set" {
 
     volume_claim_templates {
       metadata {
-        name = "zookeeper-data"
+        name = "data"
       }
 
       spec {

@@ -147,7 +147,7 @@ resource "kubernetes_stateful_set" "redis_stateful_set" {
           }
 
           volume_mount {
-            name       = "redis-data"
+            name       = "data"
             mount_path = "/bitnami/redis/data"
           }
         }
@@ -178,7 +178,7 @@ resource "kubernetes_stateful_set" "redis_stateful_set" {
           }
 
           volume_mount {
-            name       = "redis-data"
+            name       = "data"
             mount_path = "/bitnami/redis/data"
           }
         }
@@ -187,7 +187,7 @@ resource "kubernetes_stateful_set" "redis_stateful_set" {
 
     volume_claim_templates {
       metadata {
-        name = "redis-data"
+        name = "data"
 
         labels {
           app = "redis"
@@ -195,11 +195,12 @@ resource "kubernetes_stateful_set" "redis_stateful_set" {
       }
 
       spec {
-        access_modes = ["ReadWriteOnce"]
+        storage_class_name = "${var.redis_storage_type}"
+        access_modes       = ["ReadWriteOnce"]
 
         resources {
           requests {
-            storage = "8Gi"
+            storage = "${var.redis_storage_size}"
           }
         }
       }

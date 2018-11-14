@@ -1,6 +1,6 @@
 resource "kubernetes_service" "kafka_connect_service" {
   metadata {
-    name = "kafka-connect"
+    name = "kafka-connect-service"
 
     labels {
       app = "kafka-connect"
@@ -34,7 +34,7 @@ resource "kubernetes_stateful_set" "kafka_connect_stateful_set" {
     }
 
     replicas     = 1
-    service_name = "kafka-connect"
+    service_name = "kafka-connect-service"
 
     update_strategy {
       type = "RollingUpdate"
@@ -58,7 +58,7 @@ resource "kubernetes_stateful_set" "kafka_connect_stateful_set" {
           }
 
           volume_mount {
-            name       = "kafka-connect-data"
+            name       = "data"
             mount_path = "/kafka/connect"
           }
 
@@ -116,7 +116,7 @@ resource "kubernetes_stateful_set" "kafka_connect_stateful_set" {
 
     volume_claim_templates {
       metadata {
-        name = "kafka-connect-data"
+        name = "data"
       }
 
       spec {
