@@ -1,11 +1,23 @@
 {
   "groups": {
-    "default": {
+    "common": {
       "packages": [
-        "apps/common/package.json",
-        "apps/ethvm/package.json",
-        "apps/server/package.json",
-        "apps/server/packages/ethereumjs-vm/package.json",
+        "apps/common/package.json"
+      ]
+    },
+    "frontend": {
+      "packages": [
+        "apps/ethvm/package.json"
+      ],
+      "ignore": ["vue-timeago","bignumber.js"]
+    },
+    "backend": {
+      "packages": [
+        "apps/server/packages/ethereumjs-vm/package.json"
+      ]
+    },
+    "utils": {
+      "packages": [
         "package.json"
       ]
     }

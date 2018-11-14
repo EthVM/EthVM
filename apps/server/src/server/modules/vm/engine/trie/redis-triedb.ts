@@ -29,7 +29,7 @@ export class RedisTrieDb implements TrieDB {
 
   public async get(key: Buffer, opts: TrieDBOptions, cb: Callback) {
     const keyStr = key.toString()
-    this.redis.get(keyStr, (err: Error, result: string) => {
+    this.redis.get(keyStr, (err: Error, result: string | null) => {
       if (!err && result) {
         cb(null, Buffer.from(result, 'hex'))
         return
