@@ -29,13 +29,6 @@
   </v-card>
 </template>
 
-
-
-
-
-
-</template>
-
 <script lang="ts">
 import { common } from '@app/helpers'
 import { Block, Tx } from '@app/models'
