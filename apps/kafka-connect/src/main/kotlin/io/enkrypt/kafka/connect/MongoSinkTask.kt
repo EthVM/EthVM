@@ -347,7 +347,7 @@ class MongoSinkTask : SinkTask() {
     } else {
 
       val struct = record.value() as Struct
-      var bson = StructToBsonConverter.convert(struct)
+      var bson = StructToBsonConverter.convert(struct, false)
 
       // combine with id fields so we can query on them later
       idBson.forEach{ k, v -> bson = bson.append(k, v) }
