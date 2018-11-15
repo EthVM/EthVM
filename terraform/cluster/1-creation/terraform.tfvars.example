@@ -1,14 +1,3 @@
 project_id = "ethvm-1234567"
 
-region = "us-central1"
-zone = "us-central1-a"
-
-name = "ethvm"
-description = "EthVM Kubernetes cluster"
-
-node_pool_name= "ethvm-pool"
-default_cluster_node_count = 5
-node_pool_count = 0
-
-ntw_name = "ethvm-network"
 domain_name = "ethvm-sample.com."

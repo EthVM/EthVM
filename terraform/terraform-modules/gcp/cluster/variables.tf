@@ -5,10 +5,12 @@ variable "name" {
 
 variable "description" {
   description = "Cluster description"
+  default     = ""
 }
 
 variable "zone" {
   description = "The zone the master and nodes specified in initial_node_count should be created in"
+  default     = "us-central1-a"
 }
 
 variable "additional_zones" {
@@ -31,6 +33,11 @@ variable "initial_node_count" {
   default     = 3
 }
 
+variable "remove_default_node_pool" {
+  description = "If true, deletes the default node pool upon cluster creation"
+  default     = false
+}
+
 variable "network" {
   description = "The name or self_link of the Google Compute Engine network to which the cluster is connected"
   default     = "default"
@@ -38,7 +45,7 @@ variable "network" {
 
 variable "node_machine_type" {
   description = "The name of a Google Compute Engine machine type"
-  default     = "n1-standard-4"
+  default     = "n1-standard-2"
 }
 
 variable "node_image_type" {

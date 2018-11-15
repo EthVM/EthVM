@@ -4,6 +4,25 @@ variable "name" {
 
 variable "zone" {
   description = "In which zone to create the Node Pool"
+  default     = "us-central1-a"
+}
+
+variable "min_node_count" {
+  description = "Minimum number of nodes in the NodePool"
+}
+
+variable "max_node_count" {
+  description = "Maximum number of nodes in the NodePool"
+}
+
+variable "auto_repair" {
+  description = "Whether the nodes will be automatically repaired"
+  default     = true
+}
+
+variable "auto_upgrade" {
+  description = "Whether the nodes will be automatically upgraded"
+  default     = true
 }
 
 variable "node_count" {

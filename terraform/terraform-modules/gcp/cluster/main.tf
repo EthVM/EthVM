@@ -1,8 +1,9 @@
 resource "google_container_cluster" "primary" {
-  name               = "${var.name}"
-  description        = "${var.description}"
-  zone               = "${var.zone}"
-  initial_node_count = "${var.initial_node_count}"
+  name                     = "${var.name}"
+  description              = "${var.description}"
+  zone                     = "${var.zone}"
+  initial_node_count       = "${var.initial_node_count}"
+  remove_default_node_pool = "${var.remove_default_node_pool}"
 
   addons_config {
     kubernetes_dashboard {
@@ -31,10 +32,10 @@ resource "google_container_cluster" "primary" {
     # The set of Google API scopes
     # The following scopes are necessary to ensure the correct functioning of the cluster
     oauth_scopes = [
-      "https://www.googleapis.com/auth/compute",
-      "https://www.googleapis.com/auth/devstorage.read_only",
-      "https://www.googleapis.com/auth/logging.write",
-      "https://www.googleapis.com/auth/monitoring",
+      "compute-rw",
+      "storage-ro",
+      "logging-write",
+      "monitoring",
     ]
 
     # Tags can used to identify targets in firewall rules
