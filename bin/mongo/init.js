@@ -9,7 +9,7 @@ db.createCollection('contracts');
 db.createCollection('fungible_balances')
 db.createCollection('non_fungible_balances')
 db.createCollection('pending_transactions');
-db.createCollection('statistics');
+db.createCollection('block_statistics');
 
 // create indexes
 

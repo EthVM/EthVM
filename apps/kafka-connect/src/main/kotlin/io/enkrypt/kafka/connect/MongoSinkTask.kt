@@ -15,7 +15,7 @@ import org.bson.*
 
 enum class CollectionId {
 
-  Blocks, Accounts, Transactions, Contracts, FungibleBalances, NonFungibleBalances, PendingTransactions
+  Blocks, Accounts, Transactions, Contracts, FungibleBalances, NonFungibleBalances, PendingTransactions, BlockStatistics
 
 }
 
@@ -46,6 +46,7 @@ class MongoSinkTask : SinkTask() {
     collectionsMap += CollectionId.FungibleBalances to db.getCollection("fungible_balances", BsonDocument::class.java)
     collectionsMap += CollectionId.NonFungibleBalances to db.getCollection("non_fungible_balances", BsonDocument::class.java)
     collectionsMap += CollectionId.PendingTransactions to db.getCollection("pending_transactions", BsonDocument::class.java)
+    collectionsMap += CollectionId.BlockStatistics to db.getCollection("block_statistics", BsonDocument::class.java)
   }
 
   override fun stop() {
@@ -70,13 +71,12 @@ class MongoSinkTask : SinkTask() {
         "contract-suicides" -> processContractSuicide(it)
         "fungible-token-balances" -> processFungibleTokenBalance(it)
         "pending-transactions" -> processPendingTransaction(it)
+        "block-statistics" -> processBlockStatistic(it)
         else -> throw IllegalStateException("Unhandled topic: " + it.topic())
       }
 
       writesMap.forEach{ (collectionId, writesForCollection) ->
-
         batch += collectionId to batch.getOrDefault(collectionId, emptyList()) + writesForCollection
-
       }
     }
 
@@ -260,6 +260,38 @@ class MongoSinkTask : SinkTask() {
   }
 
   private fun processPendingTransaction(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
+
+    var writes = listOf<WriteModel<BsonDocument>>()
+
+    val keySchema = record.keySchema()
+    if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key schema must be a struct")
+
+    val valueSchema = record.valueSchema()
+    if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value schema must be a struct")
+
+    val idBson = StructToBsonConverter.convert(record.key() as Struct)
+    val idFilter = BsonDocument().apply { append("_id", idBson) }
+
+    if (record.value() == null) {
+
+      // tombstone received so we need to delete
+      writes += DeleteOneModel(idFilter)
+
+    } else {
+
+      val struct = record.value() as Struct
+      var bson = StructToBsonConverter.convert(struct)
+
+      // combine with id fields so we can query on them later
+      idBson.forEach{ k, v -> bson = bson.append(k, v) }
+
+      writes += ReplaceOneModel(idFilter, bson, replaceOptions)
+    }
+
+    return mapOf(CollectionId.PendingTransactions to writes)
+  }
+
+  private fun processBlockStatistic(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
 
     var writes = listOf<WriteModel<BsonDocument>>()
 
