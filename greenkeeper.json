@@ -9,7 +9,7 @@
       "packages": [
         "apps/ethvm/package.json"
       ],
-      "ignore": ["vue-timeago","bignumber.js"]
+      "ignore": ["vue-timeago", "bignumber.js", "vue-i18n"]
     },
     "backend": {
       "packages": [
@@ -18,7 +18,7 @@
     },
     "utils": {
       "packages": [
-        "package.json"
+        "bin/monkey/package.json"
       ]
     }
   }
