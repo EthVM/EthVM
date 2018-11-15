@@ -70,6 +70,7 @@ class MongoSinkTask : SinkTask() {
         "contract-creations" -> processContractCreation(it)
         "contract-suicides" -> processContractSuicide(it)
         "fungible-token-balances" -> processFungibleTokenBalance(it)
+        "non-fungible-token-balances" -> processNonFungibleTokenBalance(it)
         "pending-transactions" -> processPendingTransaction(it)
         "block-statistics" -> processBlockStatistic(it)
         else -> throw IllegalStateException("Unhandled topic: " + it.topic())
@@ -259,6 +260,40 @@ class MongoSinkTask : SinkTask() {
     return mapOf(CollectionId.FungibleBalances to writes)
   }
 
+  private fun processNonFungibleTokenBalance(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
+
+    var writes = listOf<WriteModel<BsonDocument>>()
+
+    val keySchema = record.keySchema()
+    if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key schema must be a struct")
+
+    val valueSchema = record.valueSchema()
+    if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value schema must be a struct")
+
+    val idBson = StructToBsonConverter.convert(record.key() as Struct)
+    val idFilter = BsonDocument().apply { append("_id", idBson) }
+
+    if (record.value() == null) {
+
+      // tombstone received so we need to delete
+      writes += DeleteOneModel(idFilter)
+
+    } else {
+
+      val struct = record.value() as Struct
+
+      var bson = StructToBsonConverter
+        .convert(struct)
+
+      // combine with id fields so we can query on them later
+      idBson.forEach{ k, v -> bson = bson.append(k, v) }
+
+      writes += ReplaceOneModel(idFilter, bson, replaceOptions)
+    }
+
+    return mapOf(CollectionId.NonFungibleBalances to writes)
+  }
+
   private fun processPendingTransaction(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
 
     var writes = listOf<WriteModel<BsonDocument>>()
@@ -320,7 +355,7 @@ class MongoSinkTask : SinkTask() {
       writes += ReplaceOneModel(idFilter, bson, replaceOptions)
     }
 
-    return mapOf(CollectionId.PendingTransactions to writes)
+    return mapOf(CollectionId.BlockStatistics to writes)
   }
 
   companion object {
