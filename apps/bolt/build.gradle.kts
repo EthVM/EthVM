@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   application
-  kotlin("jvm") version "1.2.70"
+  kotlin("jvm") version "1.3.10"
 }
 
 tasks.withType<KotlinCompile> {

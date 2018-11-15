@@ -4,16 +4,22 @@ FROM node:10.9.0-alpine
 RUN apk add --no-cache make gcc musl-dev linux-headers git python g++
 
 # Create workdir
-RUN mkdir -p /var/ethvm
-WORKDIR /var/ethvm
+RUN mkdir -p /var/www
+WORKDIR /var/www
 
 # Copy
-COPY . .
+COPY ethvm/ ethvm/
+COPY common/ common/
 
 # Instal & build
-RUN yarn install
-RUN yarn build
+RUN cd ethvm/ && \
+  yarn install && \
+  yarn build && \
+  cd .. && \
+  rm -rf common
+
+WORKDIR /var/www/ethvm
 
 # Expose
 EXPOSE 8080
-CMD ["yarn start"]
+CMD ["yarn start:prod"]
