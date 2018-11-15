@@ -272,20 +272,20 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
           empty_dir = []
         }
 
-        # affinity {
-        #   pod_anti_affinity {
-        #     required_during_scheduling_ignored_during_execution {
-        #       topology_key = "kubernetes.io/hostname"
-        #       label_selector {
-        #         match_expressions {
-        #           key      = "app"
-        #           operator = "In"
-        #           values   = ["kafka", "zookeeper"]
-        #         }
-        #       }
-        #     }
-        #   }
-        # }
+        affinity {
+          pod_anti_affinity {
+            required_during_scheduling_ignored_during_execution {
+              topology_key = "kubernetes.io/hostname"
+              label_selector {
+                match_expressions {
+                  key      = "app"
+                  operator = "In"
+                  values   = ["kafka", "zookeeper"]
+                }
+              }
+            }
+          }
+        }
       }
     }
 
