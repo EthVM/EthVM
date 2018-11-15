@@ -1,6 +1,7 @@
 package io.enkrypt.bolt
 
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
+import io.enkrypt.avro.capture.BlockSummaryKeyRecord
 import io.enkrypt.avro.capture.BlockSummaryRecord
 import io.enkrypt.avro.processing.*
 import org.koin.standalone.KoinComponent
@@ -11,11 +12,15 @@ object BoltSerdes : KoinComponent {
 
   private val kafkaConfig: KafkaConfig by inject()
 
-  private val config = mapOf(
+  private val config = mutableMapOf(
     "schema.registry.url" to kafkaConfig.schemaRegistryUrl
   )
 
-  fun BlockSummaryRecord() = SpecificAvroSerde<BlockSummaryRecord>().apply {
+  fun BlockSummaryKey() = SpecificAvroSerde<BlockSummaryKeyRecord>().apply {
+    configure(config, false)
+  }
+
+  fun BlockSummary() = SpecificAvroSerde<BlockSummaryRecord>().apply {
     configure(config, false)
   }
 
@@ -55,8 +60,5 @@ object BoltSerdes : KoinComponent {
     configure(config, false)
   }
 
-  fun ContractClassification() = SpecificAvroSerde<ContractClassificationRecord>().apply {
-    configure(config, false)
-  }
 }
 

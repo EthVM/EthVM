@@ -34,7 +34,7 @@ data class BlockStatistics(val totalTxs: Int,
     fun forBlockSummary(summary: BlockSummaryRecord): BlockStatistics {
       val block = summary.getBlock()
 
-      val receipts = block.getTransactions()
+      val receipts = block.getTxReceipts()
 
       val totalDifficulty = summary.getTotalDifficulty().toBigInteger()
       val numPendingTxs = summary.getNumPendingTxs()

@@ -14,8 +14,6 @@ volumes:
   mongodb-volume:
   ethereumj-volume:
   kafka-volume-1:
-  kafka-volume-2:
-  kafka-volume-3:
   zookeeper-volume:
 
 services:
@@ -207,7 +205,7 @@ services:
     - kafka-rest-proxy
 
   kafka-connect:
-    build: ./apps/kafka-connect
+    image: confluentinc/cp-kafka-connect:5.0.0
     restart: unless-stopped
     depends_on:
     - zookeeper
@@ -218,6 +216,8 @@ services:
     - back
     ports:
     - "8083:8083"
+    volumes:
+    - ./apps/kafka-connect/libs:/usr/share/enkryptio
     labels:
     - 'traefik.enable=true'
     - 'traefik.default.protocol=http'
@@ -230,6 +230,7 @@ services:
       CONNECT_GROUP_ID: "kafka-connect-avro"
       CONNECT_CONFIG_STORAGE_TOPIC: "kafka-connect-avro-config"
       CONNECT_OFFSET_STORAGE_TOPIC: "kafka-connect-avro-offsets"
+      CONNECT_OFFSET_COMMIT_INTERVAL_MS: 1000
       CONNECT_STATUS_STORAGE_TOPIC: "kafka-connect-avro-status"
       CONNECT_KEY_CONVERTER: "io.confluent.connect.avro.AvroConverter"
       CONNECT_VALUE_CONVERTER: "io.confluent.connect.avro.AvroConverter"
@@ -243,7 +244,7 @@ services:
       CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: "1"
       CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
       CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
-      CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components
+      CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/enkryptio
 
   kafka-connect-ui:
     image: landoop/kafka-connect-ui:0.9.4

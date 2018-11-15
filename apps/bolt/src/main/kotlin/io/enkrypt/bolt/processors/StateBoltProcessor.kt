@@ -1,14 +1,11 @@
 package io.enkrypt.bolt.processors
 
-import io.enkrypt.avro.processing.ContractClassificationRecord
 import io.enkrypt.avro.processing.FungibleTokenBalanceRecord
 import io.enkrypt.avro.processing.MetricRecord
 import io.enkrypt.bolt.extensions.toBigInteger
 import io.enkrypt.bolt.extensions.toByteBuffer
 import io.enkrypt.bolt.BoltSerdes
 import io.enkrypt.bolt.OutputTopics
-import io.enkrypt.bolt.eth.utils.StandardTokenDetector
-import io.enkrypt.bolt.extensions.toByteArray
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams

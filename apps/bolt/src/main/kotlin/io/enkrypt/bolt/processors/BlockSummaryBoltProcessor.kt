@@ -39,8 +39,8 @@ import java.util.*
 
 data class TransactionData(val fungibleBalanceDeltas: List<KeyValue<FungibleTokenBalanceKeyRecord, BigInteger>>,
                            val nonFungibleBalanceDeltas: List<KeyValue<NonFungibleTokenBalanceKeyRecord, ByteBuffer>>,
-                           val contractCreations: Map<ContractKeyRecord, Pair<ContractCreationRecord, Boolean>>,
-                           val contractSuicides: Map<ContractKeyRecord, Pair<ContractSuicideRecord, Boolean>>) {
+                           val contractCreations: Map<ByteBuffer, Pair<ContractCreationRecord, Boolean>>,
+                           val contractSuicides: Map<ByteBuffer, Pair<ContractSuicideRecord, Boolean>>) {
 
   fun concat(other: TransactionData) = TransactionData(
     fungibleBalanceDeltas + other.fungibleBalanceDeltas,
@@ -83,7 +83,8 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
     val (blocksSummariesTopic) = appConfig.kafka.inputTopicsConfig
 
     val blockSummaryStream = builder
-      .stream(blocksSummariesTopic, Consumed.with(Serdes.Long(), BoltSerdes.BlockSummaryRecord()))
+      .stream(blocksSummariesTopic, Consumed.with(BoltSerdes.BlockSummaryKey(), BoltSerdes.BlockSummary()))
+      .map{ k, v -> KeyValue(k.getNumber(), v) }
 
     val gatedStream = blockSummaryStream
       .transform(
@@ -117,7 +118,7 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
     txEvents
       .flatMap{ _, v -> v.contractCreations.map{ c ->
 
-        val key = c.key
+        val key = ContractKeyRecord.newBuilder().setAddress(c.key).build()
         val value = c.value.first
         val reverse = c.value.second
 
@@ -132,7 +133,7 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
     txEvents
       .flatMap{ _, v -> v.contractSuicides.map{ c ->
 
-        val key = c.key
+        val key = ContractKeyRecord.newBuilder().setAddress(c.key).build()
         val value = c.value.first
         val reverse = c.value.second
 
@@ -190,23 +191,27 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
 
     // premine balances
 
-    summary.getPremineBalances()
-      .forEach{ p ->
-        fungible += generateBalanceDeltas(
-          ETHER_CONTRACT_ADDRESS,
-          ETHER_CONTRACT_ADDRESS,
-          p.getAddress(),
-          p.getAmount().toBigInteger()!!,
-          reverse
-        )
-      }
+    if(summary.getPremineBalances() != null) {
+      // Genesis block only
+      summary.getPremineBalances()
+        .forEach{ p ->
+          fungible += generateBalanceDeltas(
+            null,
+            ETHER_CONTRACT_ADDRESS,
+            p.getAddress(),
+            p.getAmount().toBigInteger()!!,
+            reverse
+          )
+        }
+
+    }
 
     // rewards
 
     summary.getRewards()
       .forEach { e ->
         fungible += generateBalanceDeltas(
-          ETHER_CONTRACT_ADDRESS,
+          null,
           ETHER_CONTRACT_ADDRESS,
           e.getAddress(),
           e.getReward().toBigInteger()!!,
@@ -216,12 +221,12 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
 
     // ether transactions
 
-    summary.getBlock().getTransactions()
+    summary.getBlock().getTxReceipts()
       .map { it.getTx() }
       .filter { !(it.getFrom() == null || it.getTo() == null || it.getValue() == null) }
       .forEach { e ->
         fungible += generateBalanceDeltas(
-          ETHER_CONTRACT_ADDRESS,
+          null,
           e.getFrom(),
           e.getTo(),
           e.getValue().toBigInteger()!!,
@@ -238,10 +243,10 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
 
     var fungible = listOf<KeyValue<FungibleTokenBalanceKeyRecord, BigInteger>>()
     var nonFungible = listOf<KeyValue<NonFungibleTokenBalanceKeyRecord, ByteBuffer>>()
-    var contractCreations= mapOf<ContractKeyRecord, Pair<ContractCreationRecord, Boolean>>()
-    var contractSuicides = mapOf<ContractKeyRecord, Pair<ContractSuicideRecord, Boolean>>()
+    var contractCreations= mapOf<ByteBuffer, Pair<ContractCreationRecord, Boolean>>()
+    var contractSuicides = mapOf<ByteBuffer, Pair<ContractSuicideRecord, Boolean>>()
 
-    summary.getBlock().getTransactions()
+    summary.getBlock().getTxReceipts()
       .forEach { receipt ->
 
         val tx = receipt.getTx()
@@ -251,11 +256,6 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
         if((tx.getTo() == null || tx.getTo().capacity() == 0) && tx.getData() != null) {
 
           val contractAddress = ByteBuffer.wrap(HashUtil.calcNewAddr(tx.getTo().toByteArray(), tx.getNonce().toByteArray()))
-
-          val key = ContractKeyRecord
-            .newBuilder()
-            .setAddress(contractAddress)
-            .build()
 
           // detect contract type
           val (contractType, _) = StandardTokenDetector.detect(tx.getData().toByteArray()!!)
@@ -269,18 +269,13 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
             .setData(tx.getData())
             .build()
 
-          contractCreations += key to Pair(value, reverse)
+          contractCreations += contractAddress to Pair(value, reverse)
         }
 
         // contract suicides
 
         receipt.getDeletedAccounts()
-          .forEach{ address ->
-
-            val key = ContractKeyRecord
-              .newBuilder()
-              .setAddress(address)
-              .build()
+          .forEach{ contractAddress ->
 
             val value = ContractSuicideRecord
               .newBuilder()
@@ -288,7 +283,7 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
               .setTxHash(tx.getHash())
               .build()
 
-            contractSuicides += key to Pair(value, reverse)
+            contractSuicides += contractAddress to Pair(value, reverse)
 
           }
 
@@ -336,7 +331,7 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
     return TransactionData(fungible, nonFungible, contractCreations, contractSuicides)
   }
 
-  private fun generateBalanceDeltas(contract: ByteBuffer, from: ByteBuffer, to: ByteBuffer, amount: BigInteger, reverse: Boolean): List<KeyValue<FungibleTokenBalanceKeyRecord, BigInteger>> {
+  private fun generateBalanceDeltas(contract: ByteBuffer?, from: ByteBuffer, to: ByteBuffer, amount: BigInteger, reverse: Boolean): List<KeyValue<FungibleTokenBalanceKeyRecord, BigInteger>> {
 
     var result = listOf<KeyValue<FungibleTokenBalanceKeyRecord, BigInteger>>()
 
@@ -391,7 +386,7 @@ class GatedBlockSummaryTransformer : Transformer<Long?, BlockSummaryRecord?, Key
 
     fun blockSummariesStore() = Stores.keyValueStoreBuilder(
       Stores.persistentKeyValueStore(STORE_NAME_SUMMARIES),
-      Serdes.Long(), BoltSerdes.BlockSummaryRecord()
+      Serdes.Long(), BoltSerdes.BlockSummary()
     )
 
     fun metadataStore() = Stores.keyValueStoreBuilder(

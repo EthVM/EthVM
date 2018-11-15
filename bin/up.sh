@@ -21,7 +21,12 @@ CMD="${SCRIPT_DIR}/mongo/init.sh"
 echo "Executing: ${CMD}"
 ${CMD}
 
-echo "Registering avro schemas"
-CMD="${SCRIPT_DIR}/avro/register-schemas.sh"
+echo "Initialising avro"
+CMD="${SCRIPT_DIR}/avro/init.sh"
+echo "Executing: ${CMD}"
+${CMD}
+
+echo "Initialising kafka connect"
+CMD="${SCRIPT_DIR}/kafka-connect/init.sh"
 echo "Executing: ${CMD}"
 ${CMD}
