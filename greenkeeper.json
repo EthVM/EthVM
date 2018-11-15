@@ -17,7 +17,7 @@
     },
     "utils": {
       "packages": [
-        "package.json"
+        "bin/monkey/package.json"
       ]
     }
   }
