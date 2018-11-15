@@ -18,8 +18,3 @@ cp ${KAFKA_CONNECT_DIR}/build/libs/enkryptio-mongo-* ${KAFKA_CONNECT_DIR}/libs/
 echo "Restarting kafka connect"
 ${ROOT_DIR}/bin/restart.sh kafka-connect
 
-# register sink
-
-echo "Registering sink"
-curl -s -H "Content-Type: application/json" -X POST -d @${SCRIPT_DIR}/sink.json http://kafka-connect.ethvm.lan/connectors
-
