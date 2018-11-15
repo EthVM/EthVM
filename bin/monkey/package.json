@@ -1,7 +1,7 @@
 {
   "name": "ethvm-dev-kit",
   "version": "1.0.0",
-  "description": "A complete Docker solution for developing EthVM project ",
+  "description": "Utility to generate random transactions.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/enKryptIO/ethvm-dev-kit.git"
@@ -13,7 +13,7 @@
   },
   "homepage": "https://github.com/enKryptIO/ethvm-dev-kit#readme",
   "scripts": {
-    "monkey": "ts-node bin/monkey/monkey-cli.ts",
+    "monkey": "ts-node monkey-cli.ts",
     "format": "yarn lint:fix && yarn prettier",
     "lint": "tslint -c tslint.json --project .",
     "lint:fix": "tslint -c tslint.json --project . --fix",
@@ -29,12 +29,12 @@
     "@types/web3": "^1.0.3",
     "commander": "^2.18.0",
     "ethereumjs-abi": "^0.6.5",
-    "ethereumjs-tx": "^1.3.7",
-    "ethereumjs-util": "^5.2.0",
+    "ethereumjs-tx": "1.3.7",
+    "ethereumjs-util": "^6.0.0",
     "lerna": "^3.0.5",
     "opt-cli": "^1.6.0",
     "ora": "^3.0.0",
-    "prettier": "1.14.2",
+    "prettier": "1.15.2",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.14.0",
