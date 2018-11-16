@@ -19,7 +19,7 @@
     </v-layout>
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
-        <block-last-transactions v-if="transactions.length > 0" :transactions="transactions" :frameTxs="true" :tableTitle="$t('title.blockTx')"class="mt-3"></block-last-transactions>
+        <block-last-transactions v-if="transactions.length > 0" :transactions="transactions" :frameTxs="true" :tableTitle="$t('title.blockTx')" class="mt-3"></block-last-transactions>
         <v-card v-else flat color="white">
           <v-card-text class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }} </v-card-text>
         </v-card>
@@ -38,7 +38,11 @@ import Vue from 'vue'
 
 export default Vue.extend({
   name: 'Block',
-  props: ['blockHash'],
+  props: {
+    blockRef: {
+      type: String
+    }
+  },
   data() {
     return {
       common,
@@ -74,6 +78,22 @@ export default Vue.extend({
         link: '/'
       }
       this.items.push(newI)
+    },
+    setBlock(result) {
+      this.block = new Block(result)
+      this.uncles = this.block.getUncles()
+      this.setItems(this.block.getNumber())
+      this.$socket.emit(
+        sEvents.getBlockTransactions,
+        {
+          hash: this.blockRef.replace('0x', '')
+        },
+        (err, data) => {
+          this.transactions = data.map(_tx => {
+            return new Tx(_tx)
+          })
+        }
+      )
     }
   },
   computed: {
@@ -86,43 +106,31 @@ export default Vue.extend({
   },
   mounted() {
     /* Get Block Data: */
-    this.$socket.emit(
-      sEvents.getBlock,
-      {
-        hash: this.blockHash.replace('0x', '')
-      },
-      (error, result) => {
-        if (result) {
-          console.log(result)
-          this.block = new Block(result)
-          this.uncles = this.block.getUncles()
-          console.log('uncles ', this.uncles)
-          this.setItems(this.block.getNumber())
-          this.$socket.emit(
-            sEvents.getBlockTransactions,
-            {
-              hash: this.blockHash.replace('0x', '')
-            },
-            (err, data) => {
-              this.transactions = data.map(_tx => {
-                return new Tx(_tx)
-              })
-            }
-          )
-          // uncleHashes.forEach((_hash: any, idx: number) => {
-          //   this.$socket.emit(
-          //     sEvents.getBlock,
-          //     {
-          //       hash: _hash.toBuffer()
-          //     },
-          //     (err, data) => {
-          //       this.uncles.push(new Block(data))
-          //     }
-          //   )
-          // })
+    if (this.blockRef.includes('0x')) {
+      this.$socket.emit(
+        sEvents.getBlock,
+        {
+          hash: this.blockRef.replace('0x', '')
+        },
+        (error, result) => {
+          if (result) {
+            this.setBlock(result)
+          }
         }
-      }
-    )
+      )
+    } else {
+      this.$socket.emit(
+        sEvents.getBlockByNumber,
+        {
+          number: this.blockRef
+        },
+        (error, result) => {
+          if (result) {
+            this.setBlock(result)
+          }
+        }
+      )
+    }
   }
 })
 </script>
