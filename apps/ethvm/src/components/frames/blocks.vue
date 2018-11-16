@@ -37,7 +37,7 @@ import Vue from 'vue'
 
 const MAX_ITEMS = 20
 export default Vue.extend({
-  name: 'FramesHome',
+  name: 'FramesBlocks',
   data() {
     return {
       items: [
