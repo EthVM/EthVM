@@ -7,9 +7,9 @@
       </v-tooltip>
     </v-card-title>
     <v-divider></v-divider>
-    <v-card-media class="pl-4 pt-4">
+    <v-img class="pl-4 pt-4">
       <footnote :footnotes="footnoteArr"></footnote>
-    </v-card-media>
+    </v-img>
     <canvas ref="chart" :width="width" :height="height"></canvas>
   </v-card>
 </template>
