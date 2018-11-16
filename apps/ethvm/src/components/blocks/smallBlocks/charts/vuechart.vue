@@ -92,9 +92,13 @@ export default Vue.extend({
   },
   methods: {
     createChart() {
+      // @ts-ignore
       this.chart = new Chart(this.$refs.chart, {
+        // @ts-ignore
         type: this.type,
+        // @ts-ignore
         data: this.data,
+        // @ts-ignore
         options: this.options
       })
     }

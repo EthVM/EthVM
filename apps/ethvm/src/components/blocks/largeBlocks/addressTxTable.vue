@@ -129,6 +129,7 @@ export default Vue.extend({
   },
   methods: {
     getType(tx) {
+      // @ts-ignore
       if (tx.getFrom().toLowerCase() === this.account.toLowerCase()) {
         return true
       }

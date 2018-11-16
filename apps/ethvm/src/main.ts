@@ -13,7 +13,6 @@ import VueSocketio from 'vue-socket.io'
 import VueTimeago from 'vue-timeago'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
-import Toasted from 'vue-toasted'
 
 // EthVM Frames
 // Main ----
@@ -169,9 +168,6 @@ Vue.component('block-footer', blockFooter)
 Vue.use(VTooltip)
 Vue.prototype.$eventHub = new Vue()
 Vue.config.productionTip = false
-Vue.use(Toasted, {
-  router
-})
 Vue.use(VueSocketio, io(socketConfig.url + ':' + socketConfig.port), store)
 Vue.use(VueTimeago, {
   name: 'timeago',
