@@ -1,21 +1,21 @@
 
 <template>
-  <div>
-    <v-menu transition="slide-y-transition" bottom>
-      <v-btn slot="activator" icon>
-          <!-- <v-img :src="require('@/assets/qrcode.png')" height="50px" contain ></v-img> !-->
-          <v-icon v-if="large" large>fas fa-qrcode</v-icon>
-          <v-icon v-else>fas fa-qrcode</v-icon>
-      </v-btn>
-      <v-list>
-        <v-list-tile>
-          <v-list-tile-content>
-           <vue-qr v-if="getQR" text="getQR" :size="40"></vue-qr>
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-    </v-menu>
-  </div>
+  <v-dialog v-model="dialog" max-width="400">
+        <v-btn flat color="black" fab slot="activator" class="black--text" large><v-icon>fas fa-qrcode</v-icon></v-btn>
+        <v-card>
+          <v-layout column align-center justify-center pa-2>
+            <v-flex xs12>
+           <vue-qr v-if="getQR" text="getQR" :size="260"></vue-qr>
+            </v-flex>
+            <v-flex xs12>
+           <v-card-title class="title font-weight-medium">{{$t('title.address')}}: </v-card-title>
+            </v-flex>
+            <v-flex xs12>
+           <p class="break-string">{{addressQR}}</p>
+            </v-flex>
+          </v-layout>
+        </v-card>
+      </v-dialog>
 </template>
 
 <script lang="ts">
@@ -36,7 +36,9 @@ export default Vue.extend({
     }
   },
   data() {
-    return {}
+    return {
+      dialog: false
+    }
   },
   computed: {
     getQR() {

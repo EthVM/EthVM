@@ -66,3 +66,7 @@ a:link {
 .v-tabs__item:not(.v-tabs__item--active) {
     opacity: 1;
 }
+
+.break-string {
+    overflow-wrap: break-word;
+}
