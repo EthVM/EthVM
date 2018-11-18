@@ -1,5 +1,4 @@
 import App from '@app/App.vue'
-import colors from 'vuetify/es5/util/colors'
 
 import socketConfig from '@app/configs/socket.json'
 import router from '@app/router'

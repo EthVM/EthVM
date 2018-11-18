@@ -43,7 +43,7 @@
           <v-card-title class="headline text-truncate">${{formatUSDBalance}}</v-card-title>
         </v-card>
       </v-flex>
-       <v-flex xs12 md4>
+      <v-flex xs12 md4>
         <v-card class="warning white--text pl-2" flat>
           <v-card-text class="pb-0">{{ $t( 'addrOverview.txN')}}</v-card-text>
           <v-card-title class="headline">{{account.totalTxs}}</v-card-title>
