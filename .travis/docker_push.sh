@@ -1,6 +1,14 @@
 #!/bin/bash
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
+
+
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-docker build $TRAVIS_BUILD_DIR/apps/ethvm . -t niktrix/ethvm
-docker push niktrix/ethvm
-docker build $TRAVIS_BUILD_DIR/apps/server . -t niktrix/server
-docker push niktrix/server
+
+cd $ROOT_DIR
+$ROOT_DIR/bin/docker-build.sh build api
+$ROOT_DIR/bin/docker-build.sh push api
+
+$ROOT_DIR/bin/docker-build.sh build explorer
+$ROOT_DIR/bin/docker-build.sh push explorer

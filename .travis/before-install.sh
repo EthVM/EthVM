@@ -3,6 +3,10 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 
+sudo apt-get update
+
+sudo apt-get install jq
+
 if [ "$ID" == "apps/server-e2e-test" ]; then
 
   # Download datasets with Git LFS (if applies)
