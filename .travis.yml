@@ -64,6 +64,6 @@ script:
 
 deploy:
   provider: script
-  script: bash ./.travis/docker_push.sh
+  script: bash $TRAVIS_BUILD_DIR/.travis/docker_push.sh
   on:
     branch: master
