@@ -48,6 +48,16 @@ resource "kubernetes_deployment" "kafka_schema_registry_deployment" {
           image             = "confluentinc/cp-schema-registry:${var.kafka_schema_registry_version}"
           image_pull_policy = "IfNotPresent"
 
+          resources {
+            requests {
+              memory = "1Gi"
+            }
+
+            limits {
+              memory = "2Gi"
+            }
+          }
+
           port {
             container_port = 8081
           }
@@ -76,8 +86,13 @@ resource "kubernetes_deployment" "kafka_schema_registry_deployment" {
           }
 
           env {
-            name  = "KAFKA_JVM_PERFORMANCE_OPTS"
-            value = "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+            name  = "SCHEMA_REGISTRY_JVM_PERFORMANCE_OPTS"
+            value = "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MetaspaceSize=96m -XX:+UseG1GC -XX:MaxGCPauseMillis=20 -XX:InitiatingHeapOccupancyPercent=35 -XX:G1HeapRegionSize=16M -XX:MinMetaspaceFreeRatio=50 -XX:MaxMetaspaceFreeRatio=80"
+          }
+
+          env {
+            name  = "SCHEMA_REGISTRY_HEAP_OPTS"
+            value = "-Xms1g -Xmx1g"
           }
 
           env {

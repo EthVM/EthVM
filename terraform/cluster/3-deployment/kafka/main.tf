@@ -88,6 +88,16 @@ resource "kubernetes_stateful_set" "kafka_stateful_set" {
             "${file("${path.module}/command.sh")}",
           ]
 
+          resources {
+            requests {
+              memory = "8Gi"
+            }
+
+            limits {
+              memory = "14Gi"
+            }
+          }
+
           port {
             name           = "kafka"
             container_port = 9092
@@ -135,12 +145,12 @@ resource "kubernetes_stateful_set" "kafka_stateful_set" {
 
           env {
             name  = "KAFKA_JVM_PERFORMANCE_OPTS"
-            value = "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+            value = "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MetaspaceSize=96m -XX:+UseG1GC -XX:MaxGCPauseMillis=20 -XX:InitiatingHeapOccupancyPercent=35 -XX:G1HeapRegionSize=16M -XX:MinMetaspaceFreeRatio=50 -XX:MaxMetaspaceFreeRatio=80"
           }
 
           env {
             name  = "KAFKA_HEAP_OPTS"
-            value = "-Xmx4G -Xms4G"
+            value = "-Xms6g -Xmx6g"
           }
 
           env {
@@ -206,11 +216,18 @@ resource "kubernetes_stateful_set" "kafka_stateful_set" {
                 match_expressions {
                   key      = "app"
                   operator = "In"
-                  values   = ["kafka", "mongodb"]
+                  values   = ["kafka"]
                 }
               }
             }
           }
+        }
+
+        toleration {
+          key      = "kafka"
+          operator = "Equal"
+          value    = "false"
+          effect   = "NoSchedule"
         }
       }
     }

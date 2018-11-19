@@ -53,6 +53,16 @@ resource "kubernetes_stateful_set" "kafka_connect_stateful_set" {
           image             = "confluentinc/cp-kafka-connect:${var.kafka_connect_version}"
           image_pull_policy = "IfNotPresent"
 
+          resources {
+            requests {
+              memory = "4Gi"
+            }
+
+            limits {
+              memory = "7Gi"
+            }
+          }
+
           port {
             container_port = 8083
           }

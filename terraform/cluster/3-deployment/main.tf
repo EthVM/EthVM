@@ -1,5 +1,5 @@
-module "meta" {
-  source = "./meta"
+module "k8s" {
+  source = "./k8s"
 }
 
 module "zookeeper" {
@@ -51,18 +51,34 @@ module "mongo" {
   mongodb_storage_type = "${var.mongodb_storage_type}"
 }
 
+# module "bolt" {
+#   source = "./bolt"
+
+#   bolt_version = "${var.bolt_version}"
+# }
+
 # module "ethereumj" {
 #   source = "./ethereumj"
 # }
 
 # module "api" {
 #   source = "./api"
+
+#   api_version = "${var.api_version}"
+#   api_nodes   = "${var.api_nodes}"
 # }
 
-# moduel "explorer" {
+# module "explorer" {
 #   source = "./explorer"
+
+#   explorer_version = "${var.explorer_version}"
 # }
 
-# module "traefik" {
-#   source = "./traefik"
-# }
+module "traefik" {
+  source = "./traefik"
+
+  traefik_version       = "${var.traefik_version}"
+  traefik_acme_email    = "${var.traefik_acme_email}"
+  traefik_domain        = "${var.domain}"
+  traefik_api_subdomain = "${var.api_subdomain}"
+}

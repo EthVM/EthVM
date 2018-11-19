@@ -1,4 +1,17 @@
 ## -----------------------
+## Generic
+## -----------------------
+
+variable "domain" {
+  description = "Default domain on which EthVM will be running"
+}
+
+variable "api_subdomain" {
+  description = "Subdomain for API"
+  default     = "api"
+}
+
+## -----------------------
 ## Zookeeper configuration
 ## -----------------------
 
@@ -90,7 +103,7 @@ variable "mongodb_nodes" {
 
 variable "mongodb_storage_size" {
   description = "Storage size for MongoDb"
-  default     = "10Gi"
+  default     = "5Gi"
 }
 
 variable "mongodb_storage_type" {
@@ -115,4 +128,37 @@ variable "redis_storage_size" {
 variable "redis_storage_type" {
   description = "Storage type to be used by Redis nodes"
   default     = "5Gi"
+}
+
+## -----------------
+## API configuration
+## -----------------
+
+variable "api_version" {
+  description = "Version of API"
+  default     = "0.1.0"
+}
+
+variable "api_nodes" {
+  description = "Number of API nodes"
+  default     = 1
+}
+
+## ---------------------
+## Traefik configuration
+## ---------------------
+
+variable "traefik_version" {
+  description = "The version of Traefik to use"
+  default     = "1.7.3"
+}
+
+variable "traefik_enable_acme" {
+  description = "Enables ACME (SSL) for Traefik"
+  default     = true
+}
+
+variable "traefik_acme_email" {
+  description = "The email for ACME (Let's Enkrypt certificate)"
+  default     = "test@email.com"
 }

@@ -98,13 +98,28 @@ resource "kubernetes_stateful_set" "zookeeper_stateful_set" {
         container {
           name              = "zookeeper"
           image             = "enkryptio/zookeeper:${var.zookeeper_version}"
-          image_pull_policy = "Always"
+          image_pull_policy = "IfNotPresent"
 
           command = [
             "/bin/bash",
             "-xec",
             "zkGenConfig.sh && exec zkServer.sh start-foreground",
           ]
+
+          resources {
+            requests {
+              memory = "8Gi"
+            }
+
+            limits {
+              memory = "14Gi"
+            }
+          }
+
+          env {
+            name  = "SERVER_JVMFLAGS"
+            value = "-Xms6g -Xmx6g -XX:+UseContainerSupport -XX:+UseG1GC"
+          }
 
           port {
             name           = "client"
@@ -175,7 +190,7 @@ resource "kubernetes_stateful_set" "zookeeper_stateful_set" {
 
           env {
             name  = "ZK_HEAP_SIZE"
-            value = "2G"
+            value = "6G"
           }
 
           env {
@@ -243,6 +258,13 @@ resource "kubernetes_stateful_set" "zookeeper_stateful_set" {
               }
             }
           }
+        }
+
+        toleration {
+          key      = "kafka"
+          operator = "Equal"
+          value    = "false"
+          effect   = "NoSchedule"
         }
       }
     }
