@@ -81,3 +81,20 @@ variable "kafka_np_count" {
   description = "Number of Kafka nodes in the node pool"
   default     = 3
 }
+
+variable "kafka_np_taints" {
+  description = "Taints to apply to Kafka np (so we can schedule better the pods)"
+
+  default = [
+    {
+      key    = "kafka"
+      value  = "false"
+      effect = "NO_EXECUTE"
+    },
+    {
+      key    = "kafka"
+      value  = "false"
+      effect = "NO_SCHEDULE"
+    },
+  ]
+}
