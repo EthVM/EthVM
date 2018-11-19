@@ -3,15 +3,23 @@ package io.enkrypt.bolt.processors
 import arrow.core.Option
 import io.enkrypt.avro.capture.BlockSummaryRecord
 import io.enkrypt.avro.common.DataWord
-import io.enkrypt.avro.processing.*
+import io.enkrypt.avro.processing.ContractCreationRecord
+import io.enkrypt.avro.processing.ContractKeyRecord
+import io.enkrypt.avro.processing.ContractSuicideRecord
+import io.enkrypt.avro.processing.FungibleTokenBalanceKeyRecord
+import io.enkrypt.avro.processing.FungibleTokenBalanceRecord
+import io.enkrypt.avro.processing.MetricKeyRecord
+import io.enkrypt.avro.processing.MetricRecord
+import io.enkrypt.avro.processing.NonFungibleTokenBalanceKeyRecord
+import io.enkrypt.avro.processing.NonFungibleTokenBalanceRecord
+import io.enkrypt.bolt.BoltSerdes
+import io.enkrypt.bolt.OutputTopics
 import io.enkrypt.bolt.eth.utils.ERC20Abi
 import io.enkrypt.bolt.eth.utils.ERC721Abi
+import io.enkrypt.bolt.eth.utils.StandardTokenDetector
 import io.enkrypt.bolt.extensions.toBigInteger
 import io.enkrypt.bolt.extensions.toByteArray
 import io.enkrypt.bolt.extensions.toByteBuffer
-import io.enkrypt.bolt.BoltSerdes
-import io.enkrypt.bolt.OutputTopics
-import io.enkrypt.bolt.eth.utils.StandardTokenDetector
 import io.enkrypt.bolt.models.BlockStatistic
 import io.enkrypt.bolt.models.BlockStatistics
 import mu.KotlinLogging
@@ -26,6 +34,7 @@ import org.apache.kafka.streams.kstream.Transformer
 import org.apache.kafka.streams.kstream.TransformerSupplier
 import org.apache.kafka.streams.processor.ProcessorContext
 import org.apache.kafka.streams.state.KeyValueStore
+import org.apache.kafka.streams.state.StoreBuilder
 import org.apache.kafka.streams.state.Stores
 import org.ethereum.crypto.HashUtil
 import org.ethereum.util.ByteUtil
@@ -35,12 +44,14 @@ import java.time.Instant
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
-import java.util.*
+import java.util.Properties
 
-data class TransactionData(val fungibleBalanceDeltas: List<KeyValue<FungibleTokenBalanceKeyRecord, BigInteger>>,
-                           val nonFungibleBalanceDeltas: List<KeyValue<NonFungibleTokenBalanceKeyRecord, ByteBuffer>>,
-                           val contractCreations: Map<ByteBuffer, Pair<ContractCreationRecord, Boolean>>,
-                           val contractSuicides: Map<ByteBuffer, Pair<ContractSuicideRecord, Boolean>>) {
+data class TransactionData(
+  val fungibleBalanceDeltas: List<KeyValue<FungibleTokenBalanceKeyRecord, BigInteger>>,
+  val nonFungibleBalanceDeltas: List<KeyValue<NonFungibleTokenBalanceKeyRecord, ByteBuffer>>,
+  val contractCreations: Map<ByteBuffer, Pair<ContractCreationRecord, Boolean>>,
+  val contractSuicides: Map<ByteBuffer, Pair<ContractSuicideRecord, Boolean>>
+) {
 
   fun concat(other: TransactionData) = TransactionData(
     fungibleBalanceDeltas + other.fungibleBalanceDeltas,
@@ -51,9 +62,6 @@ data class TransactionData(val fungibleBalanceDeltas: List<KeyValue<FungibleToke
 
 }
 
-/**
- *
- */
 class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
 
   companion object {
@@ -84,7 +92,7 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
 
     val blockSummaryStream = builder
       .stream(blocksSummariesTopic, Consumed.with(BoltSerdes.BlockSummaryKey(), BoltSerdes.BlockSummary()))
-      .map{ k, v -> KeyValue(k.getNumber(), v) }
+      .map { k, v -> KeyValue(k.getNumber(), v) }
 
     val gatedStream = blockSummaryStream
       .transform(
@@ -116,42 +124,46 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
       .to(OutputTopics.NonFungibleTokenBalances, Produced.with(BoltSerdes.NonFungibleTokenBalanceKey(), BoltSerdes.NonFungibleTokenBalance()))
 
     txEvents
-      .flatMap{ _, v -> v.contractCreations.map{ c ->
+      .flatMap { _, v ->
+        v.contractCreations.map { c ->
 
-        val key = ContractKeyRecord.newBuilder().setAddress(c.key).build()
-        val value = c.value.first
-        val reverse = c.value.second
+          val key = ContractKeyRecord.newBuilder().setAddress(c.key).build()
+          val value = c.value.first
+          val reverse = c.value.second
 
-        if(reverse)
-          KeyValue(key, null)   // tombstone
-        else
-          KeyValue(key, value)
+          if (reverse)
+            KeyValue(key, null)   // tombstone
+          else
+            KeyValue(key, value)
 
-      }}
+        }
+      }
       .to(OutputTopics.ContractCreations, Produced.with(BoltSerdes.ContractKey(), BoltSerdes.ContractCreation()))
 
     txEvents
-      .flatMap{ _, v -> v.contractSuicides.map{ c ->
+      .flatMap { _, v ->
+        v.contractSuicides.map { c ->
 
-        val key = ContractKeyRecord.newBuilder().setAddress(c.key).build()
-        val value = c.value.first
-        val reverse = c.value.second
+          val key = ContractKeyRecord.newBuilder().setAddress(c.key).build()
+          val value = c.value.first
+          val reverse = c.value.second
 
-        if(reverse)
-          KeyValue(key, null)   // tombstone
-        else
-          KeyValue(key, value)
+          if (reverse)
+            KeyValue(key, null)   // tombstone
+          else
+            KeyValue(key, value)
 
-      }}
+        }
+      }
       .to(OutputTopics.ContractSuicides, Produced.with(BoltSerdes.ContractKey(), BoltSerdes.ContractSuicide()))
-
 
     // statistics
 
     blockSummaryStream
       .flatMap { _, summary ->
 
-        val (totalTxs, numSuccessfulTxs, numFailedTxs, numPendingTxs, totalDifficulty, totalGasPrice, avgGasPrice, totalTxsFees, avgTxsFees) = BlockStatistics.forBlockSummary(summary)
+        val (totalTxs, numSuccessfulTxs, numFailedTxs, numPendingTxs, totalDifficulty, totalGasPrice, avgGasPrice, totalTxsFees, avgTxsFees) = BlockStatistics.forBlockSummary(
+          summary)
 
         val instant = Instant.ofEpochSecond(summary.getBlock().getHeader().getTimestamp())
         val dateTime = ZonedDateTime.ofInstant(instant, ZoneOffset.UTC)
@@ -191,10 +203,10 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
 
     // premine balances
 
-    if(summary.getPremineBalances() != null) {
+    if (summary.getPremineBalances() != null) {
       // Genesis block only
       summary.getPremineBalances()
-        .forEach{ p ->
+        .forEach { p ->
           fungible += generateBalanceDeltas(
             null,
             ETHER_CONTRACT_ADDRESS,
@@ -243,7 +255,7 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
 
     var fungible = listOf<KeyValue<FungibleTokenBalanceKeyRecord, BigInteger>>()
     var nonFungible = listOf<KeyValue<NonFungibleTokenBalanceKeyRecord, ByteBuffer>>()
-    var contractCreations= mapOf<ByteBuffer, Pair<ContractCreationRecord, Boolean>>()
+    var contractCreations = mapOf<ByteBuffer, Pair<ContractCreationRecord, Boolean>>()
     var contractSuicides = mapOf<ByteBuffer, Pair<ContractSuicideRecord, Boolean>>()
 
     summary.getBlock().getTxReceipts()
@@ -253,7 +265,7 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
 
         // contract creation
 
-        if((tx.getTo() == null || tx.getTo().capacity() == 0) && tx.getData() != null) {
+        if ((tx.getTo() == null || tx.getTo().capacity() == 0) && tx.getData() != null) {
 
           val contractAddress = ByteBuffer.wrap(HashUtil.calcNewAddr(tx.getTo().toByteArray(), tx.getNonce().toByteArray()))
 
@@ -275,7 +287,7 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
         // contract suicides
 
         receipt.getDeletedAccounts()
-          .forEach{ contractAddress ->
+          .forEach { contractAddress ->
 
             val value = ContractSuicideRecord
               .newBuilder()
@@ -331,7 +343,13 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
     return TransactionData(fungible, nonFungible, contractCreations, contractSuicides)
   }
 
-  private fun generateBalanceDeltas(contract: ByteBuffer?, from: ByteBuffer, to: ByteBuffer, amount: BigInteger, reverse: Boolean): List<KeyValue<FungibleTokenBalanceKeyRecord, BigInteger>> {
+  private fun generateBalanceDeltas(
+    contract: ByteBuffer?,
+    from: ByteBuffer,
+    to: ByteBuffer,
+    amount: BigInteger,
+    reverse: Boolean
+  ): List<KeyValue<FungibleTokenBalanceKeyRecord, BigInteger>> {
 
     var result = listOf<KeyValue<FungibleTokenBalanceKeyRecord, BigInteger>>()
 
@@ -365,7 +383,6 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
     return result
   }
 
-
   override fun start(cleanUp: Boolean) {
     logger.info { "Starting ${this.javaClass.simpleName}..." }
     super.start(cleanUp)
@@ -377,19 +394,19 @@ class GatedBlockSummaryTransformer : Transformer<Long?, BlockSummaryRecord?, Key
 
   companion object {
 
-    val STORE_NAME_SUMMARIES = "gated-block-summaries"
-    val STORE_NAME_METADATA = "gated-block-summaries-metadata"
+    const val STORE_NAME_SUMMARIES = "gated-block-summaries"
+    const val STORE_NAME_METADATA = "gated-block-summaries-metadata"
 
     val STORE_NAMES = arrayOf(STORE_NAME_SUMMARIES, STORE_NAME_METADATA)
 
-    val META_HIGH = "high"
+    const val META_HIGH = "high"
 
-    fun blockSummariesStore() = Stores.keyValueStoreBuilder(
+    fun blockSummariesStore(): StoreBuilder<KeyValueStore<Long, BlockSummaryRecord>> = Stores.keyValueStoreBuilder(
       Stores.persistentKeyValueStore(STORE_NAME_SUMMARIES),
       Serdes.Long(), BoltSerdes.BlockSummary()
     )
 
-    fun metadataStore() = Stores.keyValueStoreBuilder(
+    fun metadataStore(): StoreBuilder<KeyValueStore<String, Long>> = Stores.keyValueStoreBuilder(
       Stores.persistentKeyValueStore(STORE_NAME_METADATA),
       Serdes.String(), Serdes.Long()
     )

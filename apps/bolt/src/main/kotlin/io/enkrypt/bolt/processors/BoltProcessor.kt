@@ -28,7 +28,7 @@ abstract class AbstractBoltProcessor : BoltProcessor, KoinComponent {
 
     streams.apply {
 
-      if(cleanUp) {
+      if (cleanUp) {
         // remove local streams state
         cleanUp()
       }

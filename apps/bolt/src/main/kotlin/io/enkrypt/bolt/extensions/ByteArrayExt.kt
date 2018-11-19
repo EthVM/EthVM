@@ -8,7 +8,7 @@ fun ByteArray?.toHex(): String? = ByteUtil.toHexString(this)
 
 fun ByteArray?.toBigInteger(): BigInteger? = BigInteger(this)
 
-fun ByteArray?.toByteBuffer(): ByteBuffer? = if(this != null) ByteBuffer.wrap(this) else null
+fun ByteArray?.toByteBuffer(): ByteBuffer? = if (this != null) ByteBuffer.wrap(this) else null
 
 /**
  * Search the data for the first occurrence of the byte array pattern.

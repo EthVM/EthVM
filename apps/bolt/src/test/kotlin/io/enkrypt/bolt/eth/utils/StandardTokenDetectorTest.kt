@@ -8,6 +8,7 @@ import io.enkrypt.bolt.eth.utils.ERC721Tokens.CryptoKittiesByteCode
 import io.enkrypt.bolt.eth.utils.ERC721Tokens.SuSquaresByteCode
 import io.enkrypt.bolt.eth.utils.RandomByteCodes.EmptyByteCode
 import io.enkrypt.bolt.eth.utils.RandomByteCodes.RandomByteCode1
+import io.kotlintest.shouldBe
 import io.kotlintest.specs.ShouldSpec
 import org.ethereum.util.ByteUtil
 

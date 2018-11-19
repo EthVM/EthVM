@@ -5,7 +5,9 @@ import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
 import io.enkrypt.bolt.Modules.kafkaModule
-import io.enkrypt.bolt.processors.*
+import io.enkrypt.bolt.processors.BlockSummaryBoltProcessor
+import io.enkrypt.bolt.processors.BoltProcessor
+import io.enkrypt.bolt.processors.StateBoltProcessor
 import org.koin.dsl.module.module
 import org.koin.standalone.StandAloneContext.startKoin
 
