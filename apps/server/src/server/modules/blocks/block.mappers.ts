@@ -13,7 +13,7 @@ const toBlock = (block: any): Block => {
     b.header.timestamp = block.header.timestamp
   }
   if (block.header.nonce) {
-    b.header.nonce = block.header.nonce.buffer
+    b.header.nonce = block.header.nonce
   }
   if (block.header.miner) {
     b.header.miner = block.header.miner
@@ -58,21 +58,12 @@ const toBlock = (block: any): Block => {
   }
 
   b.stats = {}
-  if (block.stats.blockTimeMs) {
-    b.stats.blockTimeMs = block.stats.blockTimeMs
-  }
-  if (block.stats.successfulTxs) {
-    b.stats.successfulTxs = block.stats.successfulTxs
-  }
-  if (block.stats.failedTxs) {
-    b.stats.failedTxs = block.stats.failedTxs
-  }
-  if (block.stats.txs) {
-    b.stats.txs = block.stats.txs
-  }
-  if (block.stats.internalTxs) {
-    b.stats.internalTxs = block.stats.internalTxs
-  }
+  b.stats.processingTimeMs = block.stats.processingTimeMs || 0
+  b.stats.successfulTxs = block.stats.successfulTxs || 0
+  b.stats.failedTxs = block.stats.failedTxs || 0
+  b.stats.pendingTxs = block.stats.pendingTxs || 0
+  b.stats.txs = block.stats.txs || 0
+  b.stats.internalTxs = block.stats.internalTxs || 0
   if (block.stats.avgGasPrice) {
     b.stats.avgGasPrice = parseFloat(block.stats.avgGasPrice)
   }

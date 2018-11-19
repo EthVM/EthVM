@@ -1,9 +1,9 @@
 <template>
-  <div class="tabs-menu-container">
-    <ul class="tabs">
-      <li v-for="tab in tabs" v-bind:key="tab.id" v-on:click="setActive(tab)" v-bind:class="{active: tab.isActive}">{{tab.title}}</li>
-    </ul>
-  </div>
+  <v-tabs v-model="active" dark color="white" slider-color="primary" show-arrows>
+    <v-tab v-for="(item, index) in tabs" class="grey--text" active-class="primary--text" :href="'#tab-' + item" :key="index" v-on:click="setActive(item)">
+       {{ item.title }}
+    </v-tab>
+  </v-tabs>
 </template>
 
 <script lang="ts">

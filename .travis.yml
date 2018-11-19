@@ -36,6 +36,15 @@ matrix:
         - "10"
     -
       env:
+        - ID=apps/ethvm-unit-test
+        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/ethvm
+        - INSTALL='yarn install'
+        - ACTION='yarn test:unit'
+      language: node_js
+      node_js:
+        - "10"
+    -
+      env:
         - ID=apps/bolt
         - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/bolt
         - INSTALL=''
