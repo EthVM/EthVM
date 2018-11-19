@@ -125,7 +125,6 @@ export default Vue.extend({
           number: Number(this.blockRef)
         },
         (error, result) => {
-          console.log(result)
           if (result) {
             this.setBlock(result)
           }
