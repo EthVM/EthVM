@@ -86,7 +86,7 @@ export default Vue.extend({
       this.$socket.emit(
         sEvents.getBlockTransactions,
         {
-          hash: this.blockRef.replace('0x', '')
+          hash: this.block.getHash().replace('0x', '')
         },
         (err, data) => {
           this.transactions = data.map(_tx => {
@@ -122,9 +122,10 @@ export default Vue.extend({
       this.$socket.emit(
         sEvents.getBlockByNumber,
         {
-          number: this.blockRef
+          number: Number(this.blockRef)
         },
         (error, result) => {
+          console.log(result)
           if (result) {
             this.setBlock(result)
           }
