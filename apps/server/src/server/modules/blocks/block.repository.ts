@@ -1,11 +1,12 @@
 import { toBlock } from '@app/server/modules/blocks'
 import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
-import { Block, SmallBlock } from 'ethvm-models'
+import { Block, SmallBlock } from 'ethvm-common'
 
 export interface BlocksRepository {
   getBlocks(limit: number, page: number): Promise<Block[]>
   getBlock(hash: string): Promise<Block | null>
   getBlocksMined(address: string, limit: number, page: number): Promise<SmallBlock[]>
+  getBlockByNumber(no: number): Promise<Block | null>
 }
 
 export class MongoBlockRepository extends BaseMongoDbRepository implements BlocksRepository {
@@ -33,6 +34,18 @@ export class MongoBlockRepository extends BaseMongoDbRepository implements Block
     return this.db
       .collection(MongoEthVM.collections.blocks)
       .findOne({ hash })
+      .then(resp => {
+        if (!resp) {
+          return null
+        }
+        return toBlock(resp)
+      })
+  }
+
+  public getBlockByNumber(no: number): Promise<Block | null> {
+    return this.db
+      .collection(MongoEthVM.collections.blocks)
+      .findOne({ number: no })
       .then(resp => {
         if (!resp) {
           return null

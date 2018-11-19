@@ -18,11 +18,11 @@ volumes:
 
 services:
   traefik:
-    image: traefik:1.6.2-alpine
+    image: traefik:1.7.3-alpine
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./provisioners/docker/config/traefik/traefik.dev.toml:/etc/traefik/traefik.toml
+      - ./docker/config/traefik/traefik.dev.toml:/etc/traefik/traefik.toml
     networks:
       - web
       - back
@@ -33,11 +33,11 @@ services:
   ethvm:
     build:
       context: ./apps/ethvm
-      dockerfile: ../../provisioners/docker/images/dev/ethvm/Dockerfile
+      dockerfile: ./apps/ethvm/Dockerfile.dev
     restart: unless-stopped
     volumes:
       - ./apps/ethvm:/var/ethvm
-      - ./apps/models:/var/models
+      - ./apps/common:/var/common
     networks:
       - back
     labels:
@@ -52,11 +52,11 @@ services:
   server:
     build:
       context: ./apps/server
-      dockerfile: ../../provisioners/docker/images/dev/server/Dockerfile
+      dockerfile: ./apps/server/Dockerfile.dev
     restart: unless-stopped
     volumes:
       - ./apps/server:/var/ethvm-server
-      - ./apps/models:/var/models
+      - ./apps/common:/var/common
     depends_on:
       - redis
       - mongodb
@@ -91,7 +91,7 @@ services:
       - 'traefik.backend=redis'
 
   mongodb:
-    image: enkryptio/mongodb:4.0
+    image: enkryptio/mongodb:4.0-dev
     restart: unless-stopped
     volumes:
       - mongodb-volume:/data/db

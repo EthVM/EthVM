@@ -1,9 +1,9 @@
 import { pastTxsPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
-import { Tx } from 'ethvm-models'
+import { Events, Tx } from 'ethvm-common'
 
 const pastTxsEvent: SocketEvent = {
-  id: 'pastTxs', // new_name: get-past-txs
+  id: Events.pastTxs,
 
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = pastTxsPayloadValidator(payload) as boolean

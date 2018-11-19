@@ -1,5 +1,5 @@
 import { logger } from '@app/logger'
-import { Quote } from 'ethvm-models'
+import { Quote } from 'ethvm-common'
 import fetch from 'node-fetch'
 
 export interface ExchangeRepository {
