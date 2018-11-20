@@ -90,11 +90,11 @@ resource "kubernetes_stateful_set" "kafka_stateful_set" {
 
           resources {
             requests {
-              memory = "8Gi"
+              memory = "7Gi"
             }
 
             limits {
-              memory = "14Gi"
+              memory = "8Gi"
             }
           }
 
@@ -190,24 +190,6 @@ resource "kubernetes_stateful_set" "kafka_stateful_set" {
         }
 
         affinity {
-          pod_affinity {
-            preferred_during_scheduling_ignored_during_execution {
-              pod_affinity_term {
-                topology_key = "kubernetes.io/hostname"
-
-                label_selector {
-                  match_expressions {
-                    key      = "app"
-                    operator = "In"
-                    values   = ["zookeeper"]
-                  }
-                }
-              }
-
-              weight = 50
-            }
-          }
-
           pod_anti_affinity {
             required_during_scheduling_ignored_during_execution {
               topology_key = "kubernetes.io/hostname"
@@ -251,24 +233,22 @@ resource "kubernetes_stateful_set" "kafka_stateful_set" {
   }
 }
 
-resource "kubernetes_pod" "kafka_pod_create_topics" {
+resource "kubernetes_job" "kafka_create_topics" {
   metadata {
     name = "kafka-topics-creation"
   }
 
   spec {
-    restart_policy = "Never"
+    template {
+      spec {
+        restart_policy = "Never"
 
-    container {
-      name              = "kafka-create-topics"
-      image             = "confluentinc/cp-kafka:${var.kafka_version}"
-      image_pull_policy = "IfNotPresent"
-
-      command = [
-        "bash",
-        "-c",
-        "${file("${path.module}/create_topics.sh")}",
-      ]
+        container {
+          name              = "kafka-create-topics"
+          image             = "enkryptio/kafka-ethvm-init:${var.kafka_ethvm_init_version}"
+          image_pull_policy = "Always"
+        }
+      }
     }
   }
 }
