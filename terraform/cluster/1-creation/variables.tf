@@ -89,11 +89,6 @@ variable "kafka_np_taints" {
     {
       key    = "kafka"
       value  = "false"
-      effect = "NO_EXECUTE"
-    },
-    {
-      key    = "kafka"
-      value  = "false"
       effect = "NO_SCHEDULE"
     },
   ]
