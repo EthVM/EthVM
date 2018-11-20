@@ -127,12 +127,12 @@ variable "redis_version" {
 
 variable "redis_storage_size" {
   description = "Storage size for Redis"
-  default     = "ssd"
+  default     = "5Gi"
 }
 
 variable "redis_storage_type" {
   description = "Storage type to be used by Redis nodes"
-  default     = "5Gi"
+  default     = "ssd"
 }
 
 ## -----------------

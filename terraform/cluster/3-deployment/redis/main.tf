@@ -79,6 +79,28 @@ resource "kubernetes_stateful_set" "redis_stateful_set" {
 
         service_account_name = "default"
 
+        init_container {
+          name              = "volume-permissions"
+          image             = "docker.io/bitnami/minideb:latest"
+          image_pull_policy = "IfNotPresent"
+
+          command = [
+            "/bin/chown",
+            "-R",
+            "1001:1001",
+            "/bitnami/redis/data",
+          ]
+
+          security_context {
+            run_as_user = 0
+          }
+
+          volume_mount {
+            name       = "data"
+            mount_path = "/bitnami/redis/data"
+          }
+        }
+
         container {
           name              = "redis"
           image             = "docker.io/bitnami/redis:${var.redis_version}"
@@ -120,7 +142,7 @@ resource "kubernetes_stateful_set" "redis_stateful_set" {
               command = [
                 "sh",
                 "-c",
-                "\"/health/ping_local.sh\"",
+                "/health/ping_local.sh",
               ]
             }
           }
@@ -136,7 +158,7 @@ resource "kubernetes_stateful_set" "redis_stateful_set" {
               command = [
                 "sh",
                 "-c",
-                "\"/health/ping_local.sh\"",
+                "/health/ping_local.sh",
               ]
             }
           }
@@ -160,38 +182,12 @@ resource "kubernetes_stateful_set" "redis_stateful_set" {
             default_mode = 0755
           }
         }
-
-        init_container {
-          name              = "volume-permissions"
-          image             = "docker.io/bitnami/minideb:latest"
-          image_pull_policy = "IfNotPresent"
-
-          command = [
-            "/bin/chown",
-            "-R",
-            "1001:1001",
-            "/bitnami/redis/data",
-          ]
-
-          security_context {
-            run_as_user = 0
-          }
-
-          volume_mount {
-            name       = "data"
-            mount_path = "/bitnami/redis/data"
-          }
-        }
       }
     }
 
     volume_claim_templates {
       metadata {
         name = "data"
-
-        labels {
-          app = "redis"
-        }
       }
 
       spec {
