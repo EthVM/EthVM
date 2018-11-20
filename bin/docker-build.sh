@@ -5,8 +5,10 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 
 # DEFAULT VARS
-PROJECTS=("bolt", "explorer", "api", "kafka-connect", "mongodb-install", "zookeeper")
+PROJECTS=("bolt", "explorer", "api", "kafka-connect", "kafka-ethvm-init", "mongodb-install", "zookeeper")
+
 ORG="enkryptio"
+DOCKER_PATH="docker/images"
 
 # Usage prints the help for this command.
 usage() {
@@ -42,31 +44,30 @@ push() {
   docker push "$repo"
 }
 
-function prop {
+prop() {
   grep $1 $2 | cut -d '=' -f2
 }
 
+run() {
 ensure
-case "$1" in
-  build)
-    case "$2" in
-      bolt) build "$2" "$(prop 'version' 'apps/bolt/version.properties')" "apps/bolt/Dockerfile" "apps/bolt" ;;
-      explorer) build "$2" "$(jq .version apps/ethvm/package.json -r)" "apps/ethvm/Dockerfile" "apps/" ;;
-      api) build "$2" "$(jq .version apps/server/package.json -r)" "apps/server/Dockerfile" "apps/" ;;
-      kafka-connect) build "$2" "$(prop 'version' 'docker/images/prod/kafka-connect/version.properties')" "docker/images/prod/kafka-connect/Dockerfile" "docker/images/prod/kafka-connect/" ;;
-      mongodb-install) build "$2" "$(prop 'version' 'docker/images/prod/mongodb-install/version.properties')" "docker/images/prod/mongodb-install/Dockerfile" "docker/images/prod/mongodb-install/" ;;
-      zookeeper) build "$2" "$(prop 'version' 'docker/images/prod/zookeeper/version.properties')" "docker/images/prod/zookeeper/Dockerfile" "docker/images/prod/zookeeper/" ;;
-    esac
-    ;;
-  push)
-    case "$2" in
-      bolt) push "$ORG/$2:$(prop 'version' 'apps/bolt/version.properties')" ;;
-      explorer) push "$ORG/$2:$(jq .version apps/ethvm/package.json -r)" ;;
-      api) push "$ORG/$2:$(jq .version apps/server/package.json -r)" ;;
-      kafka-connect) push "$ORG/$2:$(prop 'version' 'docker/images/prod/kafka-connect/version.properties')" ;;
-      mongodb-install) push "$ORG/$2:$(prop 'version' 'docker/images/prod/mongodb-install/version.properties')" ;;
-      zookeeper) push "$ORG/$2:$(prop 'version' 'docker/images/prod/zookeeper/version.properties')" ;;
-    esac
-    ;;
-  *) usage ;;
-esac
+  case "$1" in
+    build)
+      case "$2" in
+        bolt) build "$2" "$(prop 'version' "apps/$2/version.properties")" "apps/$2/Dockerfile" "apps/$2" ;;
+        explorer) build "$2" "$(jq .version apps/ethvm/package.json -r)" "apps/ethvm/Dockerfile" "apps/" ;;
+        api) build "$2" "$(jq .version apps/server/package.json -r)" "apps/server/Dockerfile" "apps/" ;;
+        kafka-connect|kafka-ethvm-init|mongodb-install|zookeeper) build "$2" "$(prop 'version' "${DOCKER_PATH}/$2/version.properties")" "${DOCKER_PATH}/$2/Dockerfile" "${DOCKER_PATH}/$2/" ;;
+      esac
+      ;;
+    push)
+      case "$2" in
+        bolt) push "$ORG/$2:$(prop 'version' "apps/$2/version.properties")" ;;
+        explorer) push "$ORG/$2:$(jq .version apps/ethvm/package.json -r)" ;;
+        api) push "$ORG/$2:$(jq .version apps/server/package.json -r)" ;;
+        kafka-connect|kafka-ethvm-init|mongodb-install|zookeeper) push "$ORG/$2:$(prop 'version' "${DOCKER_PATH}/$2/version.properties")" ;;
+      esac
+      ;;
+    *) usage ;;
+  esac
+}
+run "$@"
