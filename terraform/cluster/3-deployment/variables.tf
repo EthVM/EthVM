@@ -27,7 +27,7 @@ variable "zookeeper_nodes" {
 
 variable "zookeeper_storage_size" {
   description = "Storage size for Zookeeper"
-  default     = "5Gi"
+  default     = "5Gi"                        # Value for production: 64Gi
 }
 
 variable "zookeeper_storage_type" {
@@ -42,6 +42,11 @@ variable "zookeeper_storage_type" {
 variable "kafka_version" {
   description = "Version of Kafka"
   default     = "5.0.1"
+}
+
+variable "kafka_ethvm_init_version" {
+  description = "Version of Kafka Ethvm Init"
+  default     = "0.1.0"
 }
 
 variable "kafka_brokers" {
@@ -141,6 +146,20 @@ variable "api_version" {
 
 variable "api_nodes" {
   description = "Number of API nodes"
+  default     = 1
+}
+
+## ----------------------
+## Explorer configuration
+## ----------------------
+
+variable "explorer_version" {
+  description = "Version of Explorer"
+  default     = "0.1.0"
+}
+
+variable "explorer_nodes" {
+  description = "Number of Explorer nodes"
   default     = 1
 }
 

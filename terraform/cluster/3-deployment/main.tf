@@ -14,10 +14,11 @@ module "zookeeper" {
 module "kafka" {
   source = "./kafka"
 
-  kafka_version      = "${var.kafka_version}"
-  kafka_brokers      = "${var.kafka_brokers}"
-  kafka_storage_size = "${var.kafka_storage_size}"
-  kafka_storage_type = "${var.kafka_storage_type}"
+  kafka_version            = "${var.kafka_version}"
+  kafka_ethvm_init_version = "${var.kafka_ethvm_init_version}"
+  kafka_brokers            = "${var.kafka_brokers}"
+  kafka_storage_size       = "${var.kafka_storage_size}"
+  kafka_storage_type       = "${var.kafka_storage_type}"
 }
 
 module "kafka-connect" {
@@ -42,14 +43,14 @@ module "redis" {
   redis_storage_type = "${var.redis_storage_type}"
 }
 
-module "mongo" {
-  source = "./mongo"
+# module "mongo" {
+#   source = "./mongo"
 
-  mongodb_version      = "${var.mongodb_version}"
-  mongodb_nodes        = "${var.mongodb_nodes}"
-  mongodb_storage_size = "${var.mongodb_storage_size}"
-  mongodb_storage_type = "${var.mongodb_storage_type}"
-}
+#   mongodb_version      = "${var.mongodb_version}"
+#   mongodb_nodes        = "${var.mongodb_nodes}"
+#   mongodb_storage_size = "${var.mongodb_storage_size}"
+#   mongodb_storage_type = "${var.mongodb_storage_type}"
+# }
 
 # module "bolt" {
 #   source = "./bolt"
@@ -61,24 +62,25 @@ module "mongo" {
 #   source = "./ethereumj"
 # }
 
-# module "api" {
-#   source = "./api"
+module "api" {
+  source = "./api"
 
-#   api_version = "${var.api_version}"
-#   api_nodes   = "${var.api_nodes}"
-# }
-
-# module "explorer" {
-#   source = "./explorer"
-
-#   explorer_version = "${var.explorer_version}"
-# }
-
-module "traefik" {
-  source = "./traefik"
-
-  traefik_version       = "${var.traefik_version}"
-  traefik_acme_email    = "${var.traefik_acme_email}"
-  traefik_domain        = "${var.domain}"
-  traefik_api_subdomain = "${var.api_subdomain}"
+  api_version = "${var.api_version}"
+  api_nodes   = "${var.api_nodes}"
 }
+
+module "explorer" {
+  source = "./explorer"
+
+  explorer_version = "${var.explorer_version}"
+  explorer_nodes   = "${var.explorer_nodes}"
+}
+
+# module "traefik" {
+#   source = "./traefik"
+
+#   traefik_version       = "${var.traefik_version}"
+#   traefik_acme_email    = "${var.traefik_acme_email}"
+#   traefik_domain        = "${var.domain}"
+#   traefik_api_subdomain = "${var.api_subdomain}"
+# }
