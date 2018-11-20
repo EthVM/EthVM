@@ -5,7 +5,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 
 # DEFAULT VARS
-PROJECTS=("bolt", "explorer", "api", "kafka-connect", "mongodb", "zoo")
+PROJECTS=("bolt", "explorer", "api", "kafka-connect", "mongodb", "zookeeper")
 ORG="enkryptio"
 
 # Usage prints the help for this command.
@@ -55,7 +55,7 @@ case "$1" in
       api) build "$2" "$(jq .version apps/server/package.json -r)" "apps/server/Dockerfile" "apps/" ;;
       kafka-connect) build "$2" "$(prop 'version' 'docker/images/prod/kafka-connect/version.properties')" "docker/images/prod/kafka-connect/Dockerfile" "docker/images/prod/kafka-connect/" ;;
       mongodb) build "$2" "$(prop 'version' 'docker/images/prod/mongodb-install/version.properties')" "docker/images/prod/mongodb-install/Dockerfile" "docker/images/prod/mongodb-install/" ;;
-      zoo) build "$2" "$(prop 'version' 'docker/images/prod/zookeeper/version.properties')" "docker/images/prod/zookeeper/Dockerfile" "docker/images/prod/zookeeper/" ;;
+      zookeeper) build "$2" "$(prop 'version' 'docker/images/prod/zookeeper/version.properties')" "docker/images/prod/zookeeper/Dockerfile" "docker/images/prod/zookeeper/" ;;
     esac
     ;;
   push)
@@ -65,7 +65,7 @@ case "$1" in
       api) push "$ORG/$2:$(jq .version apps/server/package.json -r)" ;;
       kafka-connect) push "$ORG/$2:$(prop 'version' 'docker/images/prod/kafka-connect/version.properties')" ;;
       mongodb) push "$ORG/$2:$(prop 'version' 'docker/images/prod/mongodb-install/version.properties')" ;;
-      zoo) push "$ORG/$2:$(prop 'version' 'docker/images/prod/zookeeper/version.properties')" ;;
+      zookeeper) push "$ORG/$2:$(prop 'version' 'docker/images/prod/zookeeper/version.properties')" ;;
     esac
     ;;
   *) usage ;;
