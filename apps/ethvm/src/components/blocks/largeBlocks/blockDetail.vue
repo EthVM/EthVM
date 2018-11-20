@@ -10,31 +10,31 @@
       </v-flex>
       <v-flex xs6 sm8 md10 pl-0>
         <v-layout row wrap align-center justify-start pl-0>
-        <v-card-title class="title font-weight-bold">{{ $t('title.blockDetail') }}</v-card-title>
-        <v-dialog v-if="hasUncles" v-model="dialog" max-width="700">
-          <v-btn round outline slot="activator" color="primary" class="text-capitalize" small>Unlces
-            <v-icon right>fa fa-angle-right</v-icon>
-          </v-btn>
-          <v-card>
-            <v-card-title class="title font-weight-bold">Uncles:</v-card-title>
-            <v-divider class="lineGrey"></v-divider>
-            <v-list>
-              <v-list-tile v-for="(uncle, index) in uncles" :key="index">
-                <v-layout row justify-start align-center fill-height>
-                  <v-card-title class="info--text pr-0 pl-0">{{$t('common.hash')}}:</v-card-title>
-                  <v-card-text class="text-truncate">
-                    <router-link :to="'/block/'+uncles[index]">
-                      0x{{uncles[index].unclesHash}}
-                    </router-link>
-                  </v-card-text>
-                </v-layout>
-              </v-list-tile>
-            </v-list>
-          </v-card>
-        </v-dialog>
+          <v-card-title class="title font-weight-bold">{{ $t('title.blockDetail') }}</v-card-title>
+          <v-dialog v-if="hasUncles" v-model="dialog" max-width="700">
+            <v-btn round outline slot="activator" color="primary" class="text-capitalize" small>Unlces
+              <v-icon right>fa fa-angle-right</v-icon>
+            </v-btn>
+            <v-card>
+              <v-card-title class="title font-weight-bold">Uncles:</v-card-title>
+              <v-divider class="lineGrey"></v-divider>
+              <v-list>
+                <v-list-tile v-for="(uncle, index) in uncles" :key="index">
+                  <v-layout row justify-start align-center fill-height>
+                    <v-card-title class="info--text pr-0 pl-0">{{$t('common.hash')}}:</v-card-title>
+                    <v-card-text class="text-truncate">
+                      <router-link :to="'/block/'+uncles[index]">
+                        0x{{uncles[index].unclesHash}}
+                      </router-link>
+                    </v-card-text>
+                  </v-layout>
+                </v-list-tile>
+              </v-list>
+            </v-card>
+          </v-dialog>
         </v-layout>
       </v-flex>
-      <v-flex xs3 sm2 md1>
+      <v-flex v-if="mined" xs3 sm2 md1>
         <v-layout align-center justify-end>
           <v-btn flat color="primary" class="black--text" icon :to="nextBlock()">
             <v-icon>fas fa-angle-right</v-icon>
@@ -43,7 +43,7 @@
       </v-flex>
     </v-layout>
     <v-divider class="lineGrey"></v-divider>
-    <v-list>
+    <v-list v-if="mined">
       <v-list-tile v-for="(item, index) in items" :key="index" :class="[ index % 2 == 0 ?'background: white' : 'background: tableGrey']">
         <v-layout align-center justify-start row fill-height class="pa-3 ">
           <v-flex xs4 sm3 md2>
@@ -58,9 +58,7 @@
             </router-link>
           </v-flex>
           <v-flex xs1>
-            <v-list-tile-action v-if="item.copy">
-              <copy-to-clip-component :valueToCopy="item.detail"></copy-to-clip-component>
-            </v-list-tile-action>
+            <v-list-tile-action v-if="item.copy"><copy-to-clip-component :valueToCopy="item.detail"></copy-to-clip-component></v-list-tile-action>
           </v-flex>
         </v-layout>
       </v-list-tile>
@@ -79,20 +77,22 @@
               </router-link>
             </v-flex>
             <v-flex xs1>
-              <v-list-tile-action v-if="item.copy">
-                <copy-to-clip-component :valueToCopy="item.detail"></copy-to-clip-component>
-              </v-list-tile-action>
+              <v-list-tile-action v-if="item.copy"><copy-to-clip-component :valueToCopy="item.detail"></copy-to-clip-component></v-list-tile-action>
             </v-flex>
           </v-layout>
         </v-list-tile>
       </v-slide-y-transition>
     </v-list>
-    <v-btn v-if="!more" v-on:click="setView()" flat block class="secondary">
-      <v-icon class="fa fa-angle-down white--text"></v-icon>
-    </v-btn>
-    <v-btn v-else v-on:click="setView()" flat block class="secondary">
-      <v-icon class="fa fa-angle-up white--text"></v-icon>
-    </v-btn>
+    <div v-if="mined">
+      <v-btn v-if="!more" v-on:click="setView()" flat block class="secondary"><v-icon class="fa fa-angle-down white--text"></v-icon></v-btn>
+      <v-btn v-else v-on:click="setView()" flat block class="secondary"><v-icon class="fa fa-angle-up white--text"></v-icon></v-btn>
+    </div>
+    <v-card flat v-else class="pa-3">
+      <v-layout column align-center justify-center ma-3>
+        <v-card-title class="primary--text text-xs-center body-2 pb-4"> Sit tight, this Block has not been mined yet </v-card-title>
+        <v-icon class="fa fa-spinner fa-pulse fa-4x fa-fw primary--text" large></v-icon>
+      </v-layout>
+    </v-card>
   </v-card>
 </template>
 
@@ -104,14 +104,25 @@ import Vue from 'vue'
 
 export default Vue.extend({
   name: 'BlockView',
-  props: ['block', 'uncles'],
+  props: {
+    block: {
+      type: Object,
+      default: null
+    },
+    isMined: {
+      type: Boolean,
+      default: true
+    },
+    prev: {
+      type: Number
+    }
+  },
   data() {
     return {
       showMore: false,
       items: [],
       moreItems: [],
-      dialog: false,
-      hash: '0x9da34191b2d785bc6dcdc40707a1d18c6b0d1d596350b418d815cdc103741fc6'
+      dialog: false
     }
   },
   methods: {
@@ -181,9 +192,9 @@ export default Vue.extend({
           details: this.block.getStateRoot().toString()
         }
         /*{
-            title: this.$i18n.t('block.data'),
-            details: this.block.getExtraData().toString()
-          }*/
+                title: this.$i18n.t('block.data'),
+                details: this.block.getExtraData().toString()
+              }*/
       ]
 
       if (!this.isUncle) {
@@ -231,17 +242,12 @@ export default Vue.extend({
       }
     },
     nextBlock() {
-      let next = this.block.getNumber() + 1
+      const next = this.block.getNumber() + 1
       return '/block/' + next.toString()
     },
     previousBlock() {
-      let prev = this.block.getNumber() - 1
-      return '/block/' + prev.toString()
+      return this.block ? '/block/' + (this.block.getNumber() - 1).toString() : '/block/' + this.prev.toString()
     }
-  },
-  mounted() {
-    this.setItems()
-    this.setMore()
   },
   computed: {
     isUncle() {
@@ -254,7 +260,14 @@ export default Vue.extend({
       return this.showMore
     },
     hasUncles() {
-      return this.block.getIsUncle()
+      return this.isMined ? this.block.getIsUncle() : false
+    },
+    mined() {
+      if (this.isMined) {
+        this.setItems()
+        this.setMore()
+      }
+      return this.isMined
     }
   }
 })

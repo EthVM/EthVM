@@ -1,5 +1,5 @@
 <template>
-  <v-container v-if="block != null" grid-list-lg class="mt-0">
+  <v-container grid-list-lg class="mt-0">
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
         <v-card fluid flat color="transparent">
@@ -13,13 +13,13 @@
       </v-flex>
     </v-layout>
     <v-layout row wrap justify-start class="mb-4">
-      <v-flex xs12>
-        <block-block-detail :block="block" :uncles="uncles"></block-block-detail>
-      </v-flex>
+      <v-flex v-if="blockMined" xs12> <block-block-detail :block="block" :isMined="true"></block-block-detail></v-flex>
+      <v-flex v-else xs12> <block-block-detail :isMined="blockMined" :prev="getPrev()"></block-block-detail></v-flex>
     </v-layout>
     <v-layout row wrap justify-start class="mb-4">
-      <v-flex xs12>
-        <block-last-transactions v-if="transactions.length > 0" :transactions="transactions" :frameTxs="true" :tableTitle="$t('title.blockTx')" class="mt-3"></block-last-transactions>
+      <v-flex v-if="blockMined" xs12>
+        <block-last-transactions v-if="transactions.length > 0" :transactions="transactions" :frameTxs="true" :tableTitle="$t('title.blockTx')" class="mt-3">
+        </block-last-transactions>
         <v-card v-else flat color="white">
           <v-card-text class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }} </v-card-text>
         </v-card>
@@ -49,7 +49,7 @@ export default Vue.extend({
       store,
       options: chartOptions,
       block: null,
-      bNum: null,
+      bNum: Number,
       uncles: [],
       unixtimestamp: null,
       timestamp: null,
@@ -82,7 +82,10 @@ export default Vue.extend({
     setBlock(result) {
       this.block = new Block(result)
       this.uncles = this.block.getUncles()
-      this.setItems(this.block.getNumber())
+      if (!this.bNum) {
+        this.bNum = this.block.getNumber()
+        this.setItems(this.bNum.toString())
+      }
       this.$socket.emit(
         sEvents.getBlockTransactions,
         {
@@ -94,6 +97,9 @@ export default Vue.extend({
           })
         }
       )
+    },
+    getPrev() {
+      return this.bNum - 1
     }
   },
   computed: {
@@ -102,6 +108,10 @@ export default Vue.extend({
         return true
       }
       return false
+    },
+    blockMined() {
+      console.log('mined in frame', this.block)
+      return this.block
     }
   },
   mounted() {
@@ -119,6 +129,8 @@ export default Vue.extend({
         }
       )
     } else {
+      this.bNum = Number(this.blockRef)
+      this.setItems(this.bNum.toString())
       this.$socket.emit(
         sEvents.getBlockByNumber,
         {
