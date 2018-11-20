@@ -16,7 +16,7 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
-    "bignumber.js": "^5.0.0",
+    "bignumber.js": "^8.0.0",
     "chart.js": "^2.7.2",
     "clipboard-copy": "^2.0.0",
     "ethereum-blockies": "^0.1.1",
