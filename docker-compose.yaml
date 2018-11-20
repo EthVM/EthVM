@@ -33,7 +33,7 @@ services:
   ethvm:
     build:
       context: ./apps/ethvm
-      dockerfile: Dockerfile.dev
+      dockerfile: ./apps/ethvm/Dockerfile.dev
     restart: unless-stopped
     volumes:
       - ./apps/ethvm:/var/ethvm
@@ -52,7 +52,7 @@ services:
   server:
     build:
       context: ./apps/server
-      dockerfile: Dockerfile.dev
+      dockerfile: ./apps/server/Dockerfile.dev
     restart: unless-stopped
     volumes:
       - ./apps/server:/var/ethvm-server
