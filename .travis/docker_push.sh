@@ -12,3 +12,6 @@ $ROOT_DIR/bin/docker-build.sh push api
 
 $ROOT_DIR/bin/docker-build.sh build explorer
 $ROOT_DIR/bin/docker-build.sh push explorer
+
+$ROOT_DIR/bin/docker-build.sh build kafka
+$ROOT_DIR/bin/docker-build.sh push kafka
