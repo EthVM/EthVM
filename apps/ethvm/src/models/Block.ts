@@ -1,7 +1,6 @@
 import { common } from '@app/helpers'
 import { Address, EthValue, Hash, Hex, HexNumber, HexTime, Tx } from '@app/models'
 import { Block as BlockLayout, BlockStats } from 'ethvm-common'
-import bn from 'bignumber.js'
 
 export class Block {
   public readonly id: string

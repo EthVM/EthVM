@@ -10,8 +10,7 @@ import Vue from 'vue'
 
 const getTHs = (_num: string): number => {
   return new bn(_num)
-    .div('1e12')
-    .round(2)
+    .dividedBy('1e12')
     .toNumber()
 }
 
