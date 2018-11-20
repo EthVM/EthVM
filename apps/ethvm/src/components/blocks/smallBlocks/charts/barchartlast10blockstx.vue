@@ -72,17 +72,17 @@ export default Vue.extend({
       newDescription: description,
       footnote: [
         {
-          color: '#40ce9c',
+          color: 'txSuccess',
           text: this.$i18n.t('footnote.success'),
           icon: 'fa fa-circle'
         },
         {
-          color: '#fe136c',
+          color: 'txFail',
           text: this.$i18n.t('footnote.failed'),
           icon: 'fa fa-circle'
         },
         {
-          color: '#eea66b',
+          color: 'txPen',
           text: this.$i18n.t('footnote.pending'),
           icon: 'fa fa-circle'
         }

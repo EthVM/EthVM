@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="52px" height="53px" viewBox="0 0 52 53" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 6</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-3.1%" y="-14.4%" width="106.1%" height="128.9%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="9" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="4" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.597496811   0 0 0 0 0.597496811   0 0 0 0 0.597496811  0 0 0 0.0387228261 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="desktop_new" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Address-Txs-history" transform="translate(-1307.000000, -202.000000)" fill="#303030" fill-rule="nonzero">
+            <g id="Group-3" filter="url(#filter-1)" transform="translate(301.000000, 165.000000)">
+                <g id="Group-6" transform="translate(1014.000000, 37.000000)">
+                    <g id="qr-code">
+                        <path d="M0,35.0769231 L15.6923077,35.0769231 L15.6923077,20.3076923 L0,20.3076923 L0,35.0769231 Z M3.13822107,23.2617648 L12.5537431,23.2617648 L12.5537431,32.1003806 L3.13822107,32.1003806 L3.13822107,23.2617648 Z" id="Shape"></path>
+                        <polygon id="Rectangle-path" points="8.30769231 25.8461538 12.9230769 25.8461538 12.9230769 30.4615385 8.30769231 30.4615385"></polygon>
+                        <polygon id="Rectangle-path" points="25.8461538 32.3076923 30.4615385 32.3076923 30.4615385 36 25.8461538 36"></polygon>
+                        <polygon id="Rectangle-path" points="32.3076923 32.3076923 36 32.3076923 36 36 32.3076923 36"></polygon>
+                        <polygon id="Shape" points="32.1230931 23.2617648 29.1695056 23.2617648 29.1695056 20.3076923 20.3076923 20.3076923 20.3076923 35.0769231 23.2617648 35.0769231 23.2617648 26.2153523 26.2151098 26.2153523 26.2151098 29.1695056 35.0769231 29.1695056 35.0769231 20.3076923 35.0769231 20.3076923 32.1230931 20.3076923"></polygon>
+                        <path d="M0,15.6923077 L15.6923077,15.6923077 L15.6923077,0 L0,0 L0,15.6923077 Z M3.13822107,3.13815238 L12.5537431,3.13815238 L12.5537431,12.5534683 L3.13822107,12.5534683 L3.13822107,3.13815238 Z" id="Shape"></path>
+                        <polygon id="Rectangle-path" points="8.30769231 8.30769231 12.9230769 8.30769231 12.9230769 12.9230769 8.30769231 12.9230769"></polygon>
+                        <path d="M20.3076923,0 L20.3076923,15.6923077 L35.0769231,15.6923077 L35.0769231,0 L20.3076923,0 Z M32.1228991,12.5534683 L23.2617163,12.5534683 L23.2617163,3.13815238 L32.1228991,3.13815238 L32.1228991,12.5534683 Z" id="Shape"></path>
+                        <polygon id="Rectangle-path" points="25.8461538 8.30769231 30.4615385 8.30769231 30.4615385 12.9230769 25.8461538 12.9230769"></polygon>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

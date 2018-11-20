@@ -1,29 +1,33 @@
 <template>
-  <v-container grid-list-lg class="mt-0">
-    <v-card fluid flat color="transparent">
-      <v-breadcrumbs large>
-        <v-icon slot="divider">fa fa-arrow-right</v-icon>
-        <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link">
-          {{ item.text }}
-        </v-breadcrumbs-item>
-      </v-breadcrumbs>
-    </v-card>
-    <v-layout row wrap justify-space-between class="mb-4">
+  <v-container grid-list-lg class="pa-0 mt-0 mb-0">
+    <v-layout row wrap mb-4>
+      <v-flex xs12>
+        <v-breadcrumbs large>
+          <v-icon slot="divider">fa fa-arrow-right</v-icon>
+          <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link">
+            {{ item.text }}
+          </v-breadcrumbs-item>
+        </v-breadcrumbs>
+      </v-flex>
+    </v-layout>
+    <v-layout row wrap justify-space-between mb-4>
       <v-flex xs12 md6 lg3>
         <block-last-block></block-last-block>
       </v-flex>
       <v-flex xs12 md6 lg3>
-         <successful-tx-small-block></successful-tx-small-block>
+        <successful-tx-small-block></successful-tx-small-block>
       </v-flex>
       <v-flex xs12 md6 lg3>
-         <failed-tx-small-block></failed-tx-small-block>
+        <failed-tx-small-block></failed-tx-small-block>
       </v-flex>
       <v-flex xs12 md6 lg3>
         <pending-tx-small-block></pending-tx-small-block>
       </v-flex>
     </v-layout>
-    <v-layout  row justify-center class="ma-1">
-   <block-last-transactions :transactions="txs" :showHeader="true" class="mt-3"></block-last-transactions>
+    <v-layout row justify-center mb-4>
+      <v-flex xs12>
+       <block-last-transactions :transactions="txs" :frameTxs="true" ></block-last-transactions>
+      </v-flex>
     </v-layout>
   </v-container>
 </template>

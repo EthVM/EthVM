@@ -10,7 +10,7 @@ export class Account {
   constructor(address: AccountLayout) {
     this.cache = {}
     this.address = address
-    this.id = this.address.address
+    this.id = address.address
   }
 
   public getBalance() {

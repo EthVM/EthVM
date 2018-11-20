@@ -1,10 +1,8 @@
 <template>
-  <v-app style="
-    background: #f3f4f8;">
+  <v-app style="background: #f3f4f8;">
     <navigation></navigation>
     <v-content>
       <router-view :key="$route.fullPath" />
-      <!-- FOOTER -->
       <block-footer></block-footer>
     </v-content>
   </v-app>
@@ -21,6 +19,3 @@ export default Vue.extend({
   }
 })
 </script>
-
-<style lang="less">
-</style>
