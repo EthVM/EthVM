@@ -16,8 +16,8 @@ $ROOT_DIR/bin/docker-build.sh push explorer
 $ROOT_DIR/bin/docker-build.sh build kafka-connect
 $ROOT_DIR/bin/docker-build.sh push kafka-connect
 
-$ROOT_DIR/bin/docker-build.sh build mongodb
-$ROOT_DIR/bin/docker-build.sh push mongodb
+$ROOT_DIR/bin/docker-build.sh build mongodb-install
+$ROOT_DIR/bin/docker-build.sh push mongodb-install
 
-$ROOT_DIR/bin/docker-build.sh build zoo
-$ROOT_DIR/bin/docker-build.sh push zoo
+$ROOT_DIR/bin/docker-build.sh build zookeeper
+$ROOT_DIR/bin/docker-build.sh push zookeeper
