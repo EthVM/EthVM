@@ -108,17 +108,17 @@ resource "kubernetes_stateful_set" "zookeeper_stateful_set" {
 
           resources {
             requests {
-              memory = "8Gi"
+              memory = "2Gi"
             }
 
             limits {
-              memory = "14Gi"
+              memory = "4Gi"
             }
           }
 
           env {
             name  = "SERVER_JVMFLAGS"
-            value = "-Xms6g -Xmx6g -XX:+UseContainerSupport -XX:+UseG1GC"
+            value = "-Xms2g -Xmx2g -XX:+UseContainerSupport -XX:+UseG1GC"
           }
 
           port {
@@ -157,7 +157,7 @@ resource "kubernetes_stateful_set" "zookeeper_stateful_set" {
           }
 
           readiness_probe {
-            initial_delay_seconds = 60
+            initial_delay_seconds = 30
 
             exec {
               command = [
@@ -190,7 +190,7 @@ resource "kubernetes_stateful_set" "zookeeper_stateful_set" {
 
           env {
             name  = "ZK_HEAP_SIZE"
-            value = "6G"
+            value = "2G"
           }
 
           env {
