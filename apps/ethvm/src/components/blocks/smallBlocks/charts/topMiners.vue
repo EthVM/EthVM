@@ -6,7 +6,6 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import BN from 'bignumber.js'
 import ethUnits from 'ethereumjs-units'
 
 /* Time Variables: */

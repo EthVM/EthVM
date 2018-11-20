@@ -172,7 +172,7 @@ Vue.use(VueTimeago, {
   name: 'timeago',
   locale: 'en-US',
   locales: {
-    'en-US': require('vue-timeago/locales/en-US.json')
+    'en-US': require('date-fns/locale/en')
   }
 })
 Vue.use(infiniteScroll)

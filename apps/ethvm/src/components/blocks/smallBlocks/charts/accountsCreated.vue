@@ -13,7 +13,6 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import BN from 'bignumber.js'
 import ethUnits from 'ethereumjs-units'
 
 const title = 'Accounts Growth'
@@ -78,7 +77,6 @@ export default Vue.extend({
 
       this.$socket.emit('getChartAccountsGrowth', 'LAST_7_DAYS', (err, result) => {
         if (!err && result) {
-          console.log('result', result)
           result.forEach(function(block) {
             data.points.push(block.reduction)
             data.labels.push(block.group)

@@ -35,7 +35,6 @@
 <script lang="ts">
 import { common } from '@app/helpers'
 import { Tx } from '@app/models'
-import bn from 'bignumber.js'
 import Account from 'ethereumjs-account'
 import ethUnits from 'ethereumjs-units'
 import Vue from 'vue'
