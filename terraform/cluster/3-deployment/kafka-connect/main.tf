@@ -59,7 +59,7 @@ resource "kubernetes_stateful_set" "kafka_connect_stateful_set" {
             }
 
             limits {
-              memory = "7Gi"
+              memory = "5Gi"
             }
           }
 
