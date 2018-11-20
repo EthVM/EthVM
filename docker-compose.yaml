@@ -91,7 +91,9 @@ services:
       - 'traefik.backend=redis'
 
   mongodb:
-    image: enkryptio/mongodb:4.0-dev
+    build:
+      context: ./docker/images/mongodb-dev
+      dockerfile: Dockerfile
     restart: unless-stopped
     volumes:
       - mongodb-volume:/data/db
