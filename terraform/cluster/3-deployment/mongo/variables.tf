@@ -2,6 +2,10 @@ variable "mongodb_version" {
   description = "Version of MongoDb"
 }
 
+variable "mongodb_ethvm_init_version" {
+  description = "Version of MongoDb Ethvm Init"
+}
+
 variable "mongodb_nodes" {
   description = "Number of MongoDb nodes"
 }

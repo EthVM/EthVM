@@ -307,3 +307,23 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
     }
   }
 }
+
+resource "kubernetes_job" "mongodb_ethvm_init" {
+  metadata {
+    name = "mongodb-ethvm-init"
+  }
+
+  spec {
+    template {
+      spec {
+        restart_policy = "Never"
+
+        container {
+          name              = "mongodb-ethvm-init"
+          image             = "enkryptio/mongodb-ethvm-init:${var.mongodb_ethvm_init_version}"
+          image_pull_policy = "Always"
+        }
+      }
+    }
+  }
+}
