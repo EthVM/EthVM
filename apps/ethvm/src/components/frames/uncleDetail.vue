@@ -13,7 +13,6 @@
 
 <script lang="ts">
 import { common } from '@app/helpers'
-import chartOptions from '@app/sampleData/chartData.json'
 import { Uncle } from '@app/models'
 import { Events as sEvents } from 'ethvm-common'
 import store from '@app/states'
