@@ -5,12 +5,12 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 
 # DEFAULT VARS
-PROJECTS=("bolt", "explorer", "api", "kafka-connect", "kafka-ethvm-init", "mongodb-install", "zookeeper")
+PROJECTS=("bolt", "explorer", "api", "kafka-connect", "kafka-ethvm-init", "mongodb-install", "mongodb-ethvm-init", "zookeeper")
 
 ORG="enkryptio"
 DOCKER_PATH="docker/images"
 
-# Usage prints the help for this command.
+# Usage prints the help for this command
 usage() {
   >&2 echo "Usage:"
   >&2 echo "    docker-build <command>"
@@ -29,7 +29,7 @@ ensure() {
   fi
 }
 
-# Build builds the docker image and tags it with the git sha and branch.
+# Build builds the docker image
 build() {
   local name="$1"
   local version="$2"
@@ -38,7 +38,7 @@ build() {
   docker build -t "$ORG/$name:$version" -f $dockerfile $path
 }
 
-# Push pushes all of the built docker images.
+# Push pushes the built docker image
 push() {
   local repo="$1"
   docker push "$repo"
@@ -49,22 +49,22 @@ prop() {
 }
 
 run() {
-ensure
+  ensure
   case "$1" in
     build)
       case "$2" in
         bolt) build "$2" "$(prop 'version' "apps/$2/version.properties")" "apps/$2/Dockerfile" "apps/$2" ;;
         explorer) build "$2" "$(jq .version apps/ethvm/package.json -r)" "apps/ethvm/Dockerfile" "apps/" ;;
         api) build "$2" "$(jq .version apps/server/package.json -r)" "apps/server/Dockerfile" "apps/" ;;
-        kafka-connect|kafka-ethvm-init|mongodb-install|zookeeper) build "$2" "$(prop 'version' "${DOCKER_PATH}/$2/version.properties")" "${DOCKER_PATH}/$2/Dockerfile" "${DOCKER_PATH}/$2/" ;;
+        kafka-connect|kafka-ethvm-init|mongodb-install|mongodb-ethvm-init|zookeeper) build "$2" "$(prop 'version' "${DOCKER_PATH}/$2/version.properties")" "${DOCKER_PATH}/$2/Dockerfile" "${DOCKER_PATH}/$2/" ;;
       esac
       ;;
     push)
       case "$2" in
         bolt) push "$ORG/$2:$(prop 'version' "apps/$2/version.properties")" ;;
-        explorer) push "$ORG/$2:$(jq .version apps/ethvm/package.json -r)" ;;
-        api) push "$ORG/$2:$(jq .version apps/server/package.json -r)" ;;
-        kafka-connect|kafka-ethvm-init|mongodb-install|zookeeper) push "$ORG/$2:$(prop 'version' "${DOCKER_PATH}/$2/version.properties")" ;;
+        explorer) push "$ORG/$2:$(jq .version apps/$2/package.json -r)" ;;
+        api) push "$ORG/$2:$(jq .version apps/$2/package.json -r)" ;;
+        kafka-connect|kafka-ethvm-init|mongodb-install|mongodb-ethvm-init|zookeeper) push "$ORG/$2:$(prop 'version' "${DOCKER_PATH}/$2/version.properties")" ;;
       esac
       ;;
     *) usage ;;
