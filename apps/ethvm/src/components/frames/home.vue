@@ -42,7 +42,6 @@ export default Vue.extend({
   name: 'FramesHome',
   data() {
     return {
-      maxItems: MAX_ITEMS,
       blocks: null
     }
   },
@@ -50,7 +49,7 @@ export default Vue.extend({
     this.blocks = this.$store.getters.getBlocks
     this.$eventHub.$on(sEvents.newBlock, _block => {
       if (Visibility.state() === 'visible') {
-        this.blocks = this.$store.getters.getBlocks
+        this.blocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
       }
     })
   },
@@ -63,9 +62,6 @@ export default Vue.extend({
         return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
       }
       return []
-    },
-    getBlocks() {
-      return this.blocks.slice(0, this.maxItems)
     }
   }
 })
