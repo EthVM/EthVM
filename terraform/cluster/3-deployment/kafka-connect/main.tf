@@ -1,6 +1,6 @@
 resource "kubernetes_service" "kafka_connect_service" {
   metadata {
-    name = "kafka-connect-service"
+    name = "kafka-connect"
 
     labels {
       app = "kafka-connect"
@@ -34,7 +34,7 @@ resource "kubernetes_stateful_set" "kafka_connect_stateful_set" {
     }
 
     replicas     = 1
-    service_name = "kafka-connect-service"
+    service_name = "kafka-connect"
 
     update_strategy {
       type = "RollingUpdate"
@@ -50,7 +50,7 @@ resource "kubernetes_stateful_set" "kafka_connect_stateful_set" {
       spec {
         container {
           name              = "kafka-connect"
-          image             = "confluentinc/cp-kafka-connect:${var.kafka_connect_version}"
+          image             = "enkryptio/kafka-connect:${var.kafka_connect_version}"
           image_pull_policy = "IfNotPresent"
 
           resources {
@@ -73,7 +73,7 @@ resource "kubernetes_stateful_set" "kafka_connect_stateful_set" {
           }
 
           readiness_probe {
-            initial_delay_seconds = 30
+            initial_delay_seconds = 60
             period_seconds        = 10
             timeout_seconds       = 5
             success_threshold     = 1
@@ -85,7 +85,7 @@ resource "kubernetes_stateful_set" "kafka_connect_stateful_set" {
           }
 
           liveness_probe {
-            initial_delay_seconds = 30
+            initial_delay_seconds = 60
             period_seconds        = 10
             timeout_seconds       = 5
             success_threshold     = 1
@@ -112,13 +112,13 @@ resource "kubernetes_stateful_set" "kafka_connect_stateful_set" {
           }
 
           env {
-            name  = "CONNECT_REST_PORT"
-            value = "8083"
+            name  = "CONNECT_REST_ADVERTISED_HOST_NAME"
+            value = "kafka-connect"
           }
 
           env {
-            name = "CONNECT_GROUP_ID"
-            name = "ethvm"
+            name  = "CONNECT_REST_PORT"
+            value = "8083"
           }
         }
       }
