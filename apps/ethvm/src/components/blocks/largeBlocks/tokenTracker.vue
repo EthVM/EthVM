@@ -2,18 +2,16 @@
   <div class="token-tracker">
     <div v-if="!tokens">
       <div class="info-common">
-        <p> {{ $t( 'message.noTokens' ) }} </p>
+        <p>{{ $t('message.noTokens') }}</p>
       </div>
     </div>
     <!-- Show Token List -->
     <div v-else>
       <!-- Header -->
       <div class="tokens-header">
-        <p> {{ $t( 'token.number' ) }} </p>
-        <p> {{ $t( 'token.totalUSD' ) }} ${{getTotalUSDValue}}</p>
-        <div class="search-block">
-          <block-search :phText="placeholder"></block-search>
-        </div>
+        <p>{{ $t('token.number') }}</p>
+        <p>{{ $t('token.totalUSD') }} ${{ getTotalUSDValue }}</p>
+        <div class="search-block"><block-search :phText="placeholder"></block-search></div>
         <!-- End Header -->
       </div>
       <!-- Table Header -->
@@ -27,21 +25,26 @@
     </div>
     <!-- Tokens List -->
     <div class="tokens-list" v-for="token in tokens" v-bind:key="token">
-      <router-link :to="'/token/' +  token.addr.toString() + '/holder=' + holder" v-if="token.balance != 0" class="tokens-data">
-        <p class="token-symbol">{{token.symbol}}</p>
-        <p class="token-name">{{token.name}}</p>
+      <router-link :to="'/token/' + token.addr.toString() + '/holder=' + holder" v-if="token.balance != 0" class="tokens-data">
+        <p class="token-symbol">{{ token.symbol }}</p>
+        <p class="token-name">{{ token.name }}</p>
         <div class="token-balance">
-          <div class="">{{checkValue(getBalanceCommand(token.balance, token.decimals), false)}}</div>
-          <div v-if="checkValue(getBalanceCommand(token.balance, token.decimals), true)" class="tooltip-button token-tooltip" v-tooltip="getBalanceCommand(token.balance, token.decimals)">
-            <i class="fa fa-question-circle-o" aria-hidden="true"></i></div>
+          <div class="">{{ checkValue(getBalanceCommand(token.balance, token.decimals), false) }}</div>
+          <div
+            v-if="checkValue(getBalanceCommand(token.balance, token.decimals), true)"
+            class="tooltip-button token-tooltip"
+            v-tooltip="getBalanceCommand(token.balance, token.decimals)"
+          >
+            <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+          </div>
         </div>
         <div v-if="token.USDValue > 0" class="token-usd">
-          <p>${{formatUSDBalance(getBalanceCommand(token.balance, token.decimals)*token.USDValue)}} (@
-            ${{formatUSDBalance(token.USDValue)}} per {{token.symbol}})</p>
+          <p>
+            ${{ formatUSDBalance(getBalanceCommand(token.balance, token.decimals) * token.USDValue) }} (@ ${{ formatUSDBalance(token.USDValue) }} per
+            {{ token.symbol }})
+          </p>
         </div>
-        <div v-else class="token-usd">
-          <p> $0.00</p>
-        </div>
+        <div v-else class="token-usd"><p>$0.00</p></div>
       </router-link>
       <!-- End Tokens List -->
     </div>
@@ -65,20 +68,22 @@ export default Vue.extend({
   computed: {
     /*Calculates total number of tokens: */
     getTotalTokens() {
+      let totalToken = this.totalTokens
       this.tokens.forEach(token => {
         if (this.checkBalance(token.balance)) {
-          this.totalTokens++
+          totalToken++
         }
       })
-      return this.totalTokens
+      return totalToken
     },
     /*Calculates total usd token value: */
     getTotalUSDValue() {
       const usd = 0
+      let totalUsdVal = this.totalUSDValue
       this.tokens.forEach(token => {
-        this.totalUSDValue += this.getBalance(token.balance, token.decimals) * token.USDValue
+        totalUsdVal += this.getBalance(token.balance, token.decimals) * token.USDValue
       })
-      return this.formatUSDBalance(this.totalUSDValue)
+      return this.formatUSDBalance(totalUsdVal)
     }
   },
   methods: {

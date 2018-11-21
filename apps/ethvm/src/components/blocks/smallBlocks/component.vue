@@ -1,11 +1,11 @@
 <template>
   <v-card :color="getColor" :class="getBack" flat class="mt-1 pr-1" height="150px" style="padding-top: 42px; padding-left: 24px;">
     <v-layout wrap>
-    <v-layout row wrap>
-      <v-card-title class="display-1 font-weight-medium pb-0 pl- pb-0">{{value}}</v-card-title>
-      <v-card-title v-if="metrics" class="headline pl-0 pb-0">{{metrics}}</v-card-title>
-    </v-layout>
-    <v-card-text class="text-uppercase pt-0 pl-0">{{title}}</v-card-text>
+      <v-layout row wrap>
+        <v-card-title class="display-1 font-weight-medium pb-0 pl- pb-0">{{ value }}</v-card-title>
+        <v-card-title v-if="metrics" class="headline pl-0 pb-0">{{ metrics }}</v-card-title>
+      </v-layout>
+      <v-card-text class="text-uppercase pt-0 pl-0">{{ title }}</v-card-text>
     </v-layout>
   </v-card>
 </template>

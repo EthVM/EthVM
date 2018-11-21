@@ -1,14 +1,14 @@
-
 <template>
   <div id="GraphsLineChart" class="line-chart">
-
-     <vue-chart type="line" :data="chartData"
-                            :options="chartOptions"
-                            :redraw="redraw"
-                            :chartTitle="newTitle"
-                            :chartDescription="newDescription"
-                            unfilled="true"></vue-chart>
-
+    <vue-chart
+      type="line"
+      :data="chartData"
+      :options="chartOptions"
+      :redraw="redraw"
+      :chartTitle="newTitle"
+      :chartDescription="newDescription"
+      unfilled="true"
+    ></vue-chart>
   </div>
 </template>
 

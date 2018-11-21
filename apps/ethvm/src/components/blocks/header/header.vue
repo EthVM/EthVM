@@ -2,20 +2,50 @@
   <div id="menu-top" class="navbar navbar-default navbar-fixed-top">
     <div class="container menu-container">
       <div class="logo">
-        <router-link to="/"><img src="~@/assets/logo.png"></router-link>
+        <router-link to="/"><img src="~@/assets/logo.png"/></router-link>
       </div>
       <nav class="main-menu">
         <ul>
-          <li v-bind:class="{ 'selected' : pagename == undefined }"><a href="/"><div class="icon"></div><span>{{ $t('title.home') }}</span></a></li>
-          <li v-bind:class="{ 'selected' : pagename == 'blocks' }"><a href="/blocks"><div class="icon"></div><span>{{ $t('title.blocks') }}</span></a></li>
-          <li v-bind:class="{ 'selected' : pagename == 'transactions' }"><a href="/transactions"><div class="icon"></div><span>{{ $t('title.tx') }}</span></a></li>
-          <li v-bind:class="{ 'selected' : pagename == 'pending' }"><a href="/pending"><div class="icon"></div><span>{{ $t('title.pending') }}</span></a></li>
-          <li v-bind:class="{ 'selected' : pagename == 'charts' }"><a href="/charts"><div class="icon"></div><span>{{ $t('title.charts') }}</span></a></li>
-          <li v-bind:class="{ 'selected' : pagename == 'about' }"><a href="/about"><div class="icon"></div><span>{{ $t('title.about') }}</span></a></li>
+          <li v-bind:class="{ selected: pagename == undefined }">
+            <a href="/"
+              ><div class="icon"></div>
+              <span>{{ $t('title.home') }}</span></a
+            >
+          </li>
+          <li v-bind:class="{ selected: pagename == 'blocks' }">
+            <a href="/blocks"
+              ><div class="icon"></div>
+              <span>{{ $t('title.blocks') }}</span></a
+            >
+          </li>
+          <li v-bind:class="{ selected: pagename == 'transactions' }">
+            <a href="/transactions"
+              ><div class="icon"></div>
+              <span>{{ $t('title.tx') }}</span></a
+            >
+          </li>
+          <li v-bind:class="{ selected: pagename == 'pending' }">
+            <a href="/pending"
+              ><div class="icon"></div>
+              <span>{{ $t('title.pending') }}</span></a
+            >
+          </li>
+          <li v-bind:class="{ selected: pagename == 'charts' }">
+            <a href="/charts"
+              ><div class="icon"></div>
+              <span>{{ $t('title.charts') }}</span></a
+            >
+          </li>
+          <li v-bind:class="{ selected: pagename == 'about' }">
+            <a href="/about"
+              ><div class="icon"></div>
+              <span>{{ $t('title.about') }}</span></a
+            >
+          </li>
         </ul>
       </nav>
       <mobile-menu></mobile-menu>
-      <!-- Select language will go here-->
+      <!-- Select language will go here -->
     </div>
   </div>
 </template>

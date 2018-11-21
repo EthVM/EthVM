@@ -5,24 +5,21 @@
         <v-card fluid flat color="transparent">
           <v-breadcrumbs large>
             <v-icon slot="divider">fa fa-arrow-right</v-icon>
-            <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link">
-              {{ item.text }}
-            </v-breadcrumbs-item>
+            <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link"> {{ item.text }} </v-breadcrumbs-item>
           </v-breadcrumbs>
         </v-card>
       </v-flex>
     </v-layout>
     <v-layout row wrap justify-start class="mb-4">
-      <v-flex xs12>
-        <block-tx-detail :tx="transaction"></block-tx-detail>
-      </v-flex>
+      <v-flex xs12> <block-tx-detail :tx="transaction"></block-tx-detail> </v-flex>
     </v-layout>
-    <!-- Get Sub Tx
+    <!--
+      Get Sub Tx
       <div v-if>
         <h4>Sub Transactions</h4>
         <block-last-transactions :tx="transactions"></block-last-transactions>
       </div>
-      -->
+    -->
   </v-container>
 </template>
 
