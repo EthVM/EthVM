@@ -73,6 +73,11 @@ variable "kafka_connect_version" {
   default     = "5.0.0-1"
 }
 
+variable "kafka_connect_ethvm_init_version" {
+  description = "Version of Kafka Connect Ethvm Init"
+  default     = "0.1.0"
+}
+
 variable "kafka_connect_storage_size" {
   description = "Storage size for Kafka Connect"
   default     = "5Gi"
@@ -99,6 +104,11 @@ variable "kafka_schema_registry_version" {
 variable "mongodb_version" {
   description = "Version of MongoDb"
   default     = "4.0"
+}
+
+variable "mongodb_ethvm_init_version" {
+  description = "Version of MongoDb Ethvm Init"
+  default     = "0.1.0"
 }
 
 variable "mongodb_nodes" {
