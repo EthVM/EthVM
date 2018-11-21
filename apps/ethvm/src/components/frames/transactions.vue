@@ -44,7 +44,7 @@ export default Vue.extend({
   },
   computed: {
     txs() {
-      var tx
+      let tx
       tx = this.$store.getters.getTxs
       this.$eventHub.$on(sEvents.newTx, _transactions => {
         tx = this.$store.getters.getTxs
