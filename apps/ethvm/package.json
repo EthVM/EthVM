@@ -10,7 +10,8 @@
     "build": "vue-cli-service build",
     "clean": "rm -rf dist/",
     "external": "node external/",
-    "lint": "vue-cli-service lint",
+    "lint": "eslint --ext src/**/*.{js,ts,vue}",
+    "lint-autofix": "eslint --ext src/**/*.{js,ts,vue} --fix",
     "prettier": "prettier --write src/**/*.{js,ts,vue,less,json}",
     "format": "yarn lint && yarn prettier",
     "test:unit": "vue-cli-service test:unit"
