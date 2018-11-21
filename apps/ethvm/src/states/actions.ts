@@ -4,7 +4,6 @@ import { Block, Tx, PendingTx } from '@app/models'
 import { EventLayout } from '@app/models/server'
 
 const socket_socketNewblock = function({ commit }, ev: EventLayout | EventLayout[]) {
-
   if (Array.isArray(ev)) {
     ev.forEach(_event => {
       commit(sEvents.newBlock, _event.value)
@@ -17,7 +16,6 @@ const socket_socketNewblock = function({ commit }, ev: EventLayout | EventLayout
 }
 
 const socket_socketNewtx = function({ commit }, ev: EventLayout | EventLayout[]) {
-
   if (Array.isArray(ev)) {
     ev.forEach(_event => {
       commit(sEvents.newTx, _event.value)
@@ -30,7 +28,6 @@ const socket_socketNewtx = function({ commit }, ev: EventLayout | EventLayout[])
 }
 
 const socket_socketNewptx = function({ commit }, ev: EventLayout | EventLayout[]) {
-
   if (Array.isArray(ev)) {
     ev.forEach(_event => {
       commit(sEvents.newPendingTx, _event.value)

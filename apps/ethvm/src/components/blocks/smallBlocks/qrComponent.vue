@@ -54,5 +54,3 @@ export default Vue.extend({
 <style scoped lang="less">
 @import '~lessPath/sunil/blocks/largeBlocks/addressDetail.less';
 </style>
-
-

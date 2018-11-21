@@ -147,9 +147,7 @@ export default Vue.extend({
       }
       return isShort
     },
-    log(tx) {
-
-    }
+    log(tx) {}
   },
   computed: {
     getText() {

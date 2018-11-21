@@ -55,16 +55,15 @@ export default Vue.extend({
     }
   },
   computed: {
-
-  txs() {
-    this.transactions = this.$store.getters.getTxs
-
-    this.$eventHub.$on(sEvents.newTx, _transactions => {
+    txs() {
       this.transactions = this.$store.getters.getTxs
-      return  this.transactions.slice(0, MAX_ITEMS)
-    })
-    return  this.transactions.slice(0, MAX_ITEMS)
-  },
+
+      this.$eventHub.$on(sEvents.newTx, _transactions => {
+        this.transactions = this.$store.getters.getTxs
+        return this.transactions.slice(0, MAX_ITEMS)
+      })
+      return this.transactions.slice(0, MAX_ITEMS)
+    }
   }
 })
 </script>

@@ -111,8 +111,7 @@ export default Vue.extend({
       ]
       this.items = newItems
     },
-    setMore() {
-    }
+    setMore() {}
   },
   mounted() {
     this.setItems()

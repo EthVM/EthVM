@@ -9,9 +9,7 @@ import bn from 'bignumber.js'
 import Vue from 'vue'
 
 const getTHs = (_num: string): number => {
-  return new bn(_num)
-    .dividedBy('1e12')
-    .toNumber()
+  return new bn(_num).dividedBy('1e12').toNumber()
 }
 
 export default Vue.extend({

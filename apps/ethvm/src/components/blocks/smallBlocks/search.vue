@@ -44,24 +44,27 @@ export default Vue.extend({
         (error, result) => {
           if (result) {
             switch (result.type) {
-              case 0: {
-                this.$router.push({
-                  path: '/transaction/0x' + this.searchhash
-                })
-              }
-              break;
-              case 1: {
-                this.$router.push({
-                  path: '/address/0x' + this.searchhash
-                })
-              }
-              break;
-              case 2: {
-                this.$router.push({
-                  path: '/block/0x' + this.searchhash
-                })
-              }
-              break;
+              case 0:
+                {
+                  this.$router.push({
+                    path: '/transaction/0x' + this.searchhash
+                  })
+                }
+                break
+              case 1:
+                {
+                  this.$router.push({
+                    path: '/address/0x' + this.searchhash
+                  })
+                }
+                break
+              case 2:
+                {
+                  this.$router.push({
+                    path: '/block/0x' + this.searchhash
+                  })
+                }
+                break
               case 3: {
                 // search not found mess
               }
@@ -70,9 +73,7 @@ export default Vue.extend({
         }
       )
     },
-    sendReq() {
-    }
+    sendReq() {}
   }
 })
 </script>
-

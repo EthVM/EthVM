@@ -97,16 +97,16 @@ export default Vue.extend({
     })
     this.$eventHub.$on(sEvents.newBlock, _block => {
       if (this.chartData.datasets[0]) {
-          this.redraw = false
-           const _tempD = _block.getStats()
-          this.chartData.labels.push(_block.getNumber())
-          this.chartData.labels.shift()
-          this.chartData.datasets[0].data.push(0) //pending tx ev
-          this.chartData.datasets[0].data.shift()
-          this.chartData.datasets[1].data.push(_tempD.successfulTxs)
-          this.chartData.datasets[1].data.shift()
-          this.chartData.datasets[2].data.push(_tempD.failedTxs)
-          this.chartData.datasets[2].data.shift()
+        this.redraw = false
+        const _tempD = _block.getStats()
+        this.chartData.labels.push(_block.getNumber())
+        this.chartData.labels.shift()
+        this.chartData.datasets[0].data.push(0) //pending tx ev
+        this.chartData.datasets[0].data.shift()
+        this.chartData.datasets[1].data.push(_tempD.successfulTxs)
+        this.chartData.datasets[1].data.shift()
+        this.chartData.datasets[2].data.push(_tempD.failedTxs)
+        this.chartData.datasets[2].data.shift()
       }
     })
   },

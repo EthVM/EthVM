@@ -57,14 +57,13 @@ export default Vue.extend({
       this.items.push(newI)
     }
   },
-  computed: {
-  },
+  computed: {},
   mounted() {
     /* Get Block Data: */
     this.$socket.emit(
       sEvents.getUncle,
       {
-        hash: this.blockHash.replace('0x','')
+        hash: this.blockHash.replace('0x', '')
       },
       (error, result) => {
         if (result) {

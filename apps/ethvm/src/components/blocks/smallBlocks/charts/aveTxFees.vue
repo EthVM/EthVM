@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import {Events as sEvents} from 'ethvm-common'
+import { Events as sEvents } from 'ethvm-common'
 import BN from 'bignumber.js'
 import ethUnits from 'ethereumjs-units'
 
