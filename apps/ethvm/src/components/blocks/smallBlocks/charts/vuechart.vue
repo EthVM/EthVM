@@ -1,15 +1,14 @@
 <template>
   <v-card color="white" flat class="ma-2 mb-3">
-    <v-card-title class="title font-weight-bold pt-4 pl-4" >{{chartTitle}}
+    <v-card-title class="title font-weight-bold pt-4 pl-4"
+      >{{ chartTitle }}
       <v-tooltip bottom>
         <v-icon slot="activator" dark small class="pl-2">fas fa-exclamation-circle info--text</v-icon>
-        <span>{{chartDescription}}</span>
+        <span>{{ chartDescription }}</span>
       </v-tooltip>
     </v-card-title>
     <v-divider></v-divider>
-    <v-img class="pl-4 pt-4">
-      <footnote :footnotes="footnoteArr"></footnote>
-    </v-img>
+    <v-img class="pl-4 pt-4"> <footnote :footnotes="footnoteArr"></footnote> </v-img>
     <canvas ref="chart" :width="width" :height="height"></canvas>
   </v-card>
 </template>

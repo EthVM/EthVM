@@ -1,5 +1,5 @@
 <template lang="html">
-  <div v-show="address" ref="identicon" class="blockie"/>
+  <div v-show="address" ref="identicon" class="blockie" />
 </template>
 
 <script>

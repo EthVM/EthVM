@@ -1,6 +1,15 @@
 <template>
   <v-layout column justify-center>
-    <vue-chart type="line" :data="chartData" :options="chartOptions" :redraw="redraw" :chartTitle="newTitle" :chartDescription="newDescription" unfilled="true" :footnoteArr="footnote"></vue-chart>
+    <vue-chart
+      type="line"
+      :data="chartData"
+      :options="chartOptions"
+      :redraw="redraw"
+      :chartTitle="newTitle"
+      :chartDescription="newDescription"
+      unfilled="true"
+      :footnoteArr="footnote"
+    ></vue-chart>
   </v-layout>
 </template>
 

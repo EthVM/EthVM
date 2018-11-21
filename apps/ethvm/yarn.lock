@@ -1529,9 +1529,9 @@ bignumber.js@^2.3.0:
   version "2.4.0"
   resolved "http://registry.npmjs.org/bignumber.js/-/bignumber.js-2.4.0.tgz#838a992da9f9d737e0f4b2db0be62bb09dd0c5e8"
 
-bignumber.js@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-5.0.0.tgz#fbce63f09776b3000a83185badcde525daf34833"
+bignumber.js@^8.0.1:
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-8.0.1.tgz#5d419191370fb558c64e3e5f70d68e5947138832"
 
 binary-extensions@^1.0.0:
   version "1.12.0"
@@ -2608,7 +2608,7 @@ data-urls@^1.0.0:
     whatwg-mimetype "^2.2.0"
     whatwg-url "^7.0.0"
 
-date-fns@^1.27.2:
+date-fns@^1.27.2, date-fns@^1.29.0:
   version "1.29.0"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.29.0.tgz#12e609cdcb935127311d04d33334e2960a2a54e6"
 
@@ -9220,9 +9220,11 @@ vue-template-es2015-compiler@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.6.0.tgz#dc42697133302ce3017524356a6c61b7b69b4a18"
 
-vue-timeago@^3.4.4:
-  version "3.4.4"
-  resolved "https://registry.yarnpkg.com/vue-timeago/-/vue-timeago-3.4.4.tgz#a878c9ba5840816939a89659451902f84ebdf23f"
+vue-timeago@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/vue-timeago/-/vue-timeago-5.0.0.tgz#e9633c28f923b380518f91305a6477e2712f1c0a"
+  dependencies:
+    date-fns "^1.29.0"
 
 vue-toasted@^1.1.24:
   version "1.1.25"
