@@ -68,7 +68,7 @@ export class Block {
   public getTotalBlockReward(): EthValue {
     if (!this.cache.totalBlockReward) {
       let total = 0
-      for (let address in this.block.header.rewards) {
+      for (const address in this.block.header.rewards) {
         total = this.block.header.rewards[address] + total
       }
       this.cache.totalBlockReward = total
@@ -227,8 +227,10 @@ export class Block {
       if (this.block.header.rewards[this.block.header.unclesHash]) {
         return (this.cache.uncleReward = total)
       }
-      for (let address in this.block.header.rewards) {
-        if (address === this.block.header.miner) continue
+      for (const address in this.block.header.rewards) {
+        if (address === this.block.header.miner) {
+          continue
+        }
         total = this.block.header.rewards[address] + total
       }
       this.cache.uncleReward = total

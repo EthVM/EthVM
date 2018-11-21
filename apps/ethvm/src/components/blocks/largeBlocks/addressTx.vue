@@ -5,32 +5,43 @@
       <v-flex d-flex xs12 sm6 md4>
         <v-layout row align-center justify-start fill-height height="40px">
           <v-flex xs7 sm9 md10 pr-0>
-            <v-card flat style="border-top: solid 1px #efefef; border-left: solid 1px #efefef; border-bottom: solid 1px #efefef;" height="36px" class="pr-3 pl-3 pt-2">
-              <input :placeholder="$t('search.addressTx')" v-model="searchInput" class="width: 100%">
+            <v-card
+              flat
+              style="border-top: solid 1px #efefef; border-left: solid 1px #efefef; border-bottom: solid 1px #efefef;"
+              height="36px"
+              class="pr-3 pl-3 pt-2"
+            >
+              <input :placeholder="$t('search.addressTx')" v-model="searchInput" class="width: 100%" />
             </v-card>
           </v-flex>
-          <v-flex xs7 sm3 md2 pl-0>
-            <v-btn depressed  outline class="primary--text text-capitalize ml-0 lineGrey" @click="searching">Search</v-btn>
-          </v-flex>
+          <v-flex xs7 sm3 md2 pl-0> <v-btn depressed outline class="primary--text text-capitalize ml-0 lineGrey" @click="searching">Search</v-btn> </v-flex>
         </v-layout>
       </v-flex>
       <v-spacer></v-spacer>
       <v-flex d-flex xs12 sm4 md3>
         <v-layout row align-center justify-start fill-height height="40px">
+          <v-flex> <p class="pr-2 ma-0">View:</p> </v-flex>
           <v-flex>
-          <p class="pr-2 ma-0">View:</p>
-          </v-flex>
-          <v-flex>
-          <v-card flat style="border: solid 1px #efefef; padding-top: 1px;" height="36px" class="pl-2">
-            <v-select solo flat hide-details v-model="selected.value" class="primary body-1" :items="options" item-text="text" item-value="value" height="32px" @click="setSelectedTxs"></v-select>
-          </v-card>
+            <v-card flat style="border: solid 1px #efefef; padding-top: 1px;" height="36px" class="pl-2">
+              <v-select
+                solo
+                flat
+                hide-details
+                v-model="selected.value"
+                class="primary body-1"
+                :items="options"
+                item-text="text"
+                item-value="value"
+                height="32px"
+                @click="setSelectedTxs"
+              ></v-select>
+            </v-card>
           </v-flex>
         </v-layout>
       </v-flex>
     </v-layout>
     <!-- Tx Table Header -->
-    <block-address-tx-table :transactions='filteredTxs' :account='address' :filter="selectedTx" :total="getTotal" :type="isPending">
-    </block-address-tx-table>
+    <block-address-tx-table :transactions="filteredTxs" :account="address" :filter="selectedTx" :total="getTotal" :type="isPending"> </block-address-tx-table>
     <!-- End Tx Table Header -->
   </v-card>
 </template>

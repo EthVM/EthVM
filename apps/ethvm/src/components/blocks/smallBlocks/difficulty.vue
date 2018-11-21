@@ -1,6 +1,5 @@
 <template>
-  <block-component  :title="blockTitle" :colorType="type" :value="difficulty" :backType="background" :metrics="th">
-  </block-component>
+  <block-component :title="blockTitle" :colorType="type" :value="difficulty" :backType="background" :metrics="th"> </block-component>
 </template>
 
 <script lang="ts">
@@ -40,5 +39,4 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped lang="less">
-</style>
+<style scoped lang="less"></style>

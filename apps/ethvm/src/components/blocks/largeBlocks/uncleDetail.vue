@@ -1,43 +1,49 @@
 <template>
   <v-card class="mt-3 mb-5">
     <v-list dense>
-      <template v-for="(item,index) in items">
-        <v-list-tile  :key="item.title" class="pl-1 pr-1">
+      <template v-for="(item, index) in items">
+        <v-list-tile :key="item.title" class="pl-1 pr-1">
           <v-layout justify-start>
             <v-flex xs4 sm3 md2>
-              <v-list-tile-title><strong>{{item.title}}</strong></v-list-tile-title>
+              <v-list-tile-title
+                ><strong>{{ item.title }}</strong></v-list-tile-title
+              >
             </v-flex>
             <v-flex xs7 sm8 md9>
-              <p v-if="!item.link" class="text-muted text-truncate">{{item.detail}}<timeago v-if="item.title == $t('common.timestmp')" :since="block.getTimestamp()" :auto-update="10"></timeago></p>
-              <router-link v-else :to="item.link"><p class="text-truncate">{{item.detail}}</p></router-link>
+              <p v-if="!item.link" class="text-muted text-truncate">
+                {{ item.detail }}<timeago v-if="item.title == $t('common.timestmp')" :since="block.getTimestamp()" :auto-update="10"></timeago>
+              </p>
+              <router-link v-else :to="item.link"
+                ><p class="text-truncate">{{ item.detail }}</p></router-link
+              >
             </v-flex>
             <v-flex xs1>
-              <v-list-tile-action v-if="item.copy">
-                <copy-to-clip-component :valueToCopy="item.detail"></copy-to-clip-component>
-              </v-list-tile-action>
+              <v-list-tile-action v-if="item.copy"> <copy-to-clip-component :valueToCopy="item.detail"></copy-to-clip-component> </v-list-tile-action>
             </v-flex>
           </v-layout>
         </v-list-tile>
         <v-divider class="ma-0" :key="index"></v-divider>
       </template>
-      <template v-if="more" v-for="(item,index) in moreItems">
-        <v-list-tile  :key="item.title" class="pl-1 pr-1">
+      <template v-if="more" v-for="(item, index) in moreItems">
+        <v-list-tile :key="item.title" class="pl-1 pr-1">
           <v-layout justify-start>
             <v-flex xs4 sm3 md2>
-              <v-list-tile-title><strong>{{item.title}}</strong></v-list-tile-title>
+              <v-list-tile-title
+                ><strong>{{ item.title }}</strong></v-list-tile-title
+              >
             </v-flex>
             <v-flex xs7 sm8 md9>
-              <p v-if="!item.link" class="text-muted text-truncate">{{item.detail}}</p>
-              <router-link v-else :to="item.link"><p class="text-truncate">{{item.detail}}</p></router-link>
+              <p v-if="!item.link" class="text-muted text-truncate">{{ item.detail }}</p>
+              <router-link v-else :to="item.link"
+                ><p class="text-truncate">{{ item.detail }}</p></router-link
+              >
             </v-flex>
             <v-flex xs1>
-              <v-list-tile-action v-if="item.copy">
-                <copy-to-clip-component :valueToCopy="item.detail"></copy-to-clip-component>
-              </v-list-tile-action>
+              <v-list-tile-action v-if="item.copy"> <copy-to-clip-component :valueToCopy="item.detail"></copy-to-clip-component> </v-list-tile-action>
             </v-flex>
           </v-layout>
         </v-list-tile>
-        <v-divider class="ma-0" :key="(index+1)*10"></v-divider>
+        <v-divider class="ma-0" :key="(index + 1) * 10"></v-divider>
       </template>
     </v-list>
     <v-layout justify-end>
@@ -46,7 +52,6 @@
     </v-layout>
   </v-card>
 </template>
-
 
 <script lang="ts">
 import { common } from '@app/helpers'
