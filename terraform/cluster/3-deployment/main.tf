@@ -24,9 +24,10 @@ module "kafka" {
 module "kafka-connect" {
   source = "./kafka-connect"
 
-  kafka_connect_version      = "${var.kafka_connect_version}"
-  kafka_connect_storage_size = "${var.kafka_connect_storage_size}"
-  kafka_connect_storage_type = "${var.kafka_connect_storage_type}"
+  kafka_connect_version            = "${var.kafka_connect_version}"
+  kafka_connect_ethvm_init_version = "${var.kafka_connect_ethvm_init_version}"
+  kafka_connect_storage_size       = "${var.kafka_connect_storage_size}"
+  kafka_connect_storage_type       = "${var.kafka_connect_storage_type}"
 }
 
 module "kafka-schema-registry" {
@@ -46,10 +47,11 @@ module "redis" {
 module "mongo" {
   source = "./mongo"
 
-  mongodb_version      = "${var.mongodb_version}"
-  mongodb_nodes        = "${var.mongodb_nodes}"
-  mongodb_storage_size = "${var.mongodb_storage_size}"
-  mongodb_storage_type = "${var.mongodb_storage_type}"
+  mongodb_version            = "${var.mongodb_version}"
+  mongodb_ethvm_init_version = "${var.mongodb_ethvm_init_version}"
+  mongodb_nodes              = "${var.mongodb_nodes}"
+  mongodb_storage_size       = "${var.mongodb_storage_size}"
+  mongodb_storage_type       = "${var.mongodb_storage_type}"
 }
 
 # module "bolt" {
