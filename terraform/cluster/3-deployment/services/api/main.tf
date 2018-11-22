@@ -78,12 +78,12 @@ resource "kubernetes_deployment" "api_deployment" {
 
           env {
             name  = "ETHVM_DATA_STORE_REDIS_HOST"
-            value = "redis-master"
+            value = "redis"
           }
 
           env {
             name  = "ETHVM_ETH_TRIE_DB_REDIS_HOST"
-            value = "redis-master"
+            value = "redis"
           }
         }
       }

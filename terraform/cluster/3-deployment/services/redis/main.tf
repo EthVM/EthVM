@@ -18,7 +18,7 @@ resource "kubernetes_config_map" "redis_config_map" {
 
 resource "kubernetes_service" "redis_master_service" {
   metadata {
-    name = "redis-master"
+    name = "redis"
 
     labels {
       app = "redis"
@@ -43,7 +43,7 @@ resource "kubernetes_service" "redis_master_service" {
 
 resource "kubernetes_stateful_set" "redis_stateful_set" {
   metadata {
-    name = "redis-master"
+    name = "redis"
 
     labels {
       app = "redis"
@@ -57,7 +57,7 @@ resource "kubernetes_stateful_set" "redis_stateful_set" {
     }
 
     replicas     = 1
-    service_name = "redis-master"
+    service_name = "redis"
 
     update_strategy {
       type = "RollingUpdate"

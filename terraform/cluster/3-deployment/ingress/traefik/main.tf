@@ -1,13 +1,13 @@
 resource "kubernetes_service_account" "traefik_service_account" {
   metadata {
-    name      = "traefik-ingress-account"
+    name      = "traefik-ingress-controller"
     namespace = "kube-system"
   }
 }
 
 resource "kubernetes_cluster_role" "traefik_cluster_role" {
   metadata {
-    name = "traefik-ingress-cr"
+    name = "traefik-ingress-controller"
   }
 
   rule {
@@ -41,18 +41,19 @@ resource "kubernetes_cluster_role" "traefik_cluster_role" {
 
 resource "kubernetes_cluster_role_binding" "traefik_cluster_role_binding" {
   metadata {
-    name = "traefik-ingress-crb"
+    name = "traefik-ingress-controller"
   }
 
   role_ref {
     api_group = "rbac.authorization.k8s.io"
     kind      = "ClusterRole"
-    name      = "traefik-ingress-cr"
+    name      = "traefik-ingress-controller"
   }
 
   subject {
-    kind = "ServiceAccount"
-    name = "${kubernetes_service_account.traefik_service_account.metadata.name}"
+    kind      = "ServiceAccount"
+    name      = "traefik-ingress-controller"
+    namespace = "kube-system"
   }
 }
 
@@ -95,7 +96,8 @@ resource "kubernetes_config_map" "traefik_config_map" {
 
 resource "kubernetes_service" "traefik_service" {
   metadata {
-    name = "traefik-service"
+    name      = "traefik"
+    namespace = "kube-system"
   }
 
   spec {
@@ -146,8 +148,8 @@ resource "kubernetes_service" "traefik_dashboard_service" {
 
 resource "kubernetes_stateful_set" "traefik_sateful_set" {
   metadata {
-    name      = "kube-system"
-    namespace = "traefik-ingress-controller"
+    name      = "traefik-ingress-controller"
+    namespace = "kube-system"
 
     labels {
       app = "traefik"
@@ -160,7 +162,7 @@ resource "kubernetes_stateful_set" "traefik_sateful_set" {
     }
 
     replicas     = 1
-    service_name = "${kubernetes_service.traefik_service.metadata.name}"
+    service_name = "traefik"
 
     update_strategy {
       type = "RollingUpdate"
@@ -179,7 +181,7 @@ resource "kubernetes_stateful_set" "traefik_sateful_set" {
       }
 
       spec {
-        service_account_name             = "${kubernetes_service_account.traefik_service_account.metadata.name}"
+        service_account_name             = "traefik-ingress-controller"
         termination_grace_period_seconds = 60
 
         container {
@@ -263,7 +265,7 @@ resource "kubernetes_stateful_set" "traefik_sateful_set" {
           name = "config"
 
           config_map {
-            name = "${kubernetes_config_map.traefik_config_map.metadata.name}"
+            name = "traefik-config"
           }
         }
 
@@ -271,7 +273,7 @@ resource "kubernetes_stateful_set" "traefik_sateful_set" {
           name = "ssl"
 
           secret {
-            secret_name = "${kubernetes_secret.traefik_default_cert.metadata.name}"
+            secret_name = "traefik-default-cert"
           }
         }
 
@@ -314,13 +316,26 @@ resource "kubernetes_ingress" "traefik_ingress" {
 
   spec {
     rule {
+      host = "${var.traefik_domain}"
+
+      http {
+        path {
+          backend {
+            service_name = "explorer"
+            service_port = 8080
+          }
+        }
+      }
+    }
+
+    rule {
       host = "${format("%s.%s", var.traefik_api_subdomain, var.traefik_domain)}"
 
       http {
         path {
           backend {
             service_name = "api"
-            service_port = 80
+            service_port = 3000
           }
         }
       }
