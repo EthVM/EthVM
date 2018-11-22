@@ -5,4 +5,4 @@ set -o nounset \
     -o verbose \
     -o xtrace
 
-retry.sh -t 100 mongo $MONGODB_URL /mongodb-init.js
+retry.sh -t 100 "mongo $MONGODB_URL < mongodb-init.js"
