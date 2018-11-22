@@ -6,3 +6,4 @@ export * from './src/entities/pending-tx';
 export * from './src/entities/statistics';
 export * from './src/entities/uncle';
 export * from './src/events/events';
+export * from './src/rooms/rooms';
