@@ -1,12 +1,19 @@
 <template>
-    <div id="top-miners-chart" class="line-chart">
-        <vue-chart type="doughnut" :data="chartData" :options="chartOptions" :redraw="redraw" :chartTitle="newTitle" :chartDescription="newDescription" unfilled="true"></vue-chart>
-    </div>
+  <div id="top-miners-chart" class="line-chart">
+    <vue-chart
+      type="doughnut"
+      :data="chartData"
+      :options="chartOptions"
+      :redraw="redraw"
+      :chartTitle="newTitle"
+      :chartDescription="newDescription"
+      unfilled="true"
+    ></vue-chart>
+  </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import BN from 'bignumber.js'
 import ethUnits from 'ethereumjs-units'
 
 /* Time Variables: */
@@ -68,6 +75,7 @@ export default Vue.extend({
       } else if (stateChanged && currentState != STATES.BEGIN) {
         description = DES.OTHER + currentState
       }
+      return ''
     }
   },
   mounted: function() {}

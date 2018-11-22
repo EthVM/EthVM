@@ -3,9 +3,7 @@
     <v-card fluid flat color="transparent">
       <v-breadcrumbs large>
         <v-icon slot="divider">fa fa-arrow-right</v-icon>
-        <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link">
-          {{ item.text }}
-        </v-breadcrumbs-item>
+        <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link"> {{ item.text }} </v-breadcrumbs-item>
       </v-breadcrumbs>
     </v-card>
     <block-last-transactions :transactions="txs" :showHeader="true" class="mt-3" :pending="true"></block-last-transactions>
@@ -36,15 +34,15 @@ export default Vue.extend({
     }
   },
   computed: {
-  txs() {
-    this.transactions = this.$store.getters.getPendingTxs
+    txs() {
+      let tx = this.$store.getters.getPendingTxs
 
-    this.$eventHub.$on(sEvents.newPendingTx, _transactions => {
-      this.transactions = this.$store.getters.getPendingTxs
-      return  this.transactions.slice(0, MAX_ITEMS)
-    })
-    return  this.transactions.slice(0, MAX_ITEMS)
-  },
+      this.$eventHub.$on(sEvents.newPendingTx, _transactions => {
+        tx = this.$store.getters.getPendingTxs
+        return tx.slice(0, MAX_ITEMS)
+      })
+      return tx.slice(0, MAX_ITEMS)
+    }
   }
 })
 </script>

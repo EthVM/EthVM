@@ -83,7 +83,7 @@ export class Tx {
 
   public getContractAddress(): string {
     if (!this.cache.contractAddress) {
-      if(this.tx.contractAddress){
+      if (this.tx.contractAddress) {
         this.cache.contractAddress = '0x' + this.tx.contractAddress
       }
     }

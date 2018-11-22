@@ -1,6 +1,5 @@
 <template>
-  <block-component :title="blockTitle"  :value="getFailedTx" :icon="iconType" :colorType="type">
-  </block-component>
+  <block-component :title="blockTitle" :value="getFailedTx" :icon="iconType" :colorType="type"> </block-component>
 </template>
 
 <script lang="ts">
@@ -30,5 +29,4 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped lang="less">
-</style>
+<style scoped lang="less"></style>

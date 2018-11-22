@@ -1,7 +1,5 @@
 import App from '@app/App.vue'
-import colors from 'vuetify/es5/util/colors'
 
-import socketConfig from '@app/configs/socket.json'
 import router from '@app/router'
 import store from '@app/states'
 import i18n from '@app/translations'
@@ -13,7 +11,6 @@ import VueSocketio from 'vue-socket.io'
 import VueTimeago from 'vue-timeago'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
-import Toasted from 'vue-toasted'
 
 // EthVM Frames
 // Main ----
@@ -41,6 +38,9 @@ import mobileMenu from '@app/components/blocks/header/mobileMenu.vue'
 // Parent Small Block Component:
 import blockComponent from '@app/components/blocks/smallBlocks/component.vue'
 import footnote from '@app/components/blocks/smallBlocks/footnote.vue'
+import blockies from '@app/components/blocks/smallBlocks/blockies.vue'
+import addressQR from '@app/components/blocks/smallBlocks/qrComponent.vue'
+import errorNoData from '@app/components/blocks/smallBlocks/errorNoData.vue'
 
 // Search Block:
 import blockSearch from '@app/components/blocks/smallBlocks/search.vue'
@@ -108,10 +108,14 @@ Vue.component('frame-address', frameAddress)
 // Header ----------------------
 Vue.component('block-header', blockHeader)
 Vue.component('mobile-menu', mobileMenu)
+
 // SMALL BLOCKS ----------------------
 // Parent Small Block Component:
 Vue.component('block-component', blockComponent)
 Vue.component('footnote', footnote)
+Vue.component('blockies', blockies)
+Vue.component('address-qr', addressQR)
+Vue.component('error-no-data', errorNoData)
 
 // Search Block:
 Vue.component('block-search', blockSearch)
@@ -162,15 +166,12 @@ Vue.component('block-footer', blockFooter)
 Vue.use(VTooltip)
 Vue.prototype.$eventHub = new Vue()
 Vue.config.productionTip = false
-Vue.use(Toasted, {
-  router
-})
-Vue.use(VueSocketio, io(socketConfig.url + ':' + socketConfig.port), store)
+Vue.use(VueSocketio, io(process.env.VUE_APP_SOCKET_URL + ':' + process.env.VUE_APP_SOCKET_PORT), store)
 Vue.use(VueTimeago, {
   name: 'timeago',
   locale: 'en-US',
   locales: {
-    'en-US': require('vue-timeago/locales/en-US.json')
+    'en-US': require('date-fns/locale/en')
   }
 })
 Vue.use(infiniteScroll)
@@ -183,7 +184,16 @@ Vue.use(Vuetify, {
     success: '#92cce1',
     warning: '#fed9a1',
     error: '#fe8778',
-    info: '#a0a8fd'
+    info: '#8391a8',
+    nav: '#a0a8fd',
+    txSuccess: '#40ce9c',
+    txFail: '#fe1377',
+    txPen: '#eea66b',
+    lineGrey: '#efefef',
+    tableGrey: '#fbfcfe',
+    tabActive: '#3844b8',
+    uncleGrey: '#eff1f6'
+
     // used -->
     // background: String(colors.grey.darken3)
   }

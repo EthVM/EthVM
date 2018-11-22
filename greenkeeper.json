@@ -8,8 +8,7 @@
     "frontend": {
       "packages": [
         "apps/ethvm/package.json"
-      ],
-      "ignore": ["vue-timeago", "bignumber.js", "vue-i18n"]
+      ]
     },
     "backend": {
       "packages": [

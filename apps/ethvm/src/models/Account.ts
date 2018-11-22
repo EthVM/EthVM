@@ -10,7 +10,7 @@ export class Account {
   constructor(address: AccountLayout) {
     this.cache = {}
     this.address = address
-    this.id = this.address.address
+    this.id = address.address
   }
 
   public getBalance() {
@@ -22,7 +22,7 @@ export class Account {
 
   public getHexAddress() {
     if (!this.cache.hexAddress) {
-      this.cache.hexAddress = '0x'+this.address
+      this.cache.hexAddress = '0x' + this.address
     }
     return this.cache.hexAddress
   }

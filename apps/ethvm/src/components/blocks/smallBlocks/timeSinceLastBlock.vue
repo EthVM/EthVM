@@ -1,5 +1,5 @@
 <template>
-  <block-component :title="blockTitle"  :colorType="type" :value="seconds" :backType="background" :metrics="sec"></block-component>
+  <block-component :title="blockTitle" :colorType="type" :value="seconds" :backType="background" :metrics="sec"></block-component>
 </template>
 
 <script lang="ts">
@@ -44,5 +44,4 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped lang="less">
-</style>
+<style scoped lang="less"></style>
