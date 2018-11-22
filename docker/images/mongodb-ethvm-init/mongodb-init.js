@@ -1,7 +1,3 @@
-// Initiate connection
-
-db = connect(MONGODB_URL);
-
 // create collections
 
 db.createCollection('accounts');
