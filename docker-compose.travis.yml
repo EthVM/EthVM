@@ -1,0 +1,38 @@
+version: '3.6'
+
+volumes:
+  redis-volume:
+  mongodb-volume:
+
+services:
+
+  redis:
+    image: redis:4.0.9-alpine
+    restart: unless-stopped
+    volumes:
+      - redis-volume:/data
+    ports:
+      - 6379:6379
+
+  mongodb:
+    build:
+      context: ./docker/images/mongodb-dev
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - mongodb-volume:/data/db
+      - ./datasets:/datasets
+    ports:
+      - 27017:27017
+    command:
+      - /bin/sh
+      - -c
+      - |
+          set -x
+          mongod --bind_ip 0.0.0.0 --replSet rs0 --quiet --slowms 10000 &
+          sleep 5
+          mongo --eval "rs.initiate()"
+          mongorestore --archive="/datasets/ethvm_mainnet_sample.mongo.archive"
+          kill -9 $$(pgrep mongod)
+          sleep 5
+          mongod --bind_ip 0.0.0.0 --replSet rs0 --quiet --slowms 10000
