@@ -6,7 +6,6 @@ set -o errexit \
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 
-sudo apt update
 sudo apt install -y jq
 
 if [ "$ID" == "apps/server-e2e-test" ]; then
@@ -29,8 +28,8 @@ if [ "$ID" == "apps/server-e2e-test" ]; then
   # Prepare data
   docker-compose -f ${ROOT_DIR}/docker-compose.travis.yml up -d
 
-  # Wait 15 secs to allow container proper initialization
-  sleep 15
+  # Wait 30 secs to allow container proper initialization
+  sleep 30
 fi
 
 # Install global jest
