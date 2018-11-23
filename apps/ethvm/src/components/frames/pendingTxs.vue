@@ -35,7 +35,7 @@ export default Vue.extend({
   },
   computed: {
     txs() {
-      var tx = this.$store.getters.getPendingTxs
+      let tx = this.$store.getters.getPendingTxs
 
       this.$eventHub.$on(sEvents.newPendingTx, _transactions => {
         tx = this.$store.getters.getPendingTxs
