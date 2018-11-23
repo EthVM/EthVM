@@ -4,16 +4,12 @@
       <v-flex xs12>
         <v-breadcrumbs large ma-0 pa-0>
           <v-icon slot="divider">fa fa-arrow-right</v-icon>
-          <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link">
-            {{ item.text }}
-          </v-breadcrumbs-item>
+          <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link"></v-breadcrumbs-item>
         </v-breadcrumbs>
       </v-flex>
     </v-layout>
     <v-layout row wrap justify-center mb-4>
-      <v-flex xs12>
-        <block-latest-blocks :maxBlocks="true" :blocks="getuncles" :frameBlocks="false"></block-latest-blocks>
-      </v-flex>
+      <v-flex xs12><block-latest-blocks :maxBlocks="true" :blocks="getuncles" :frameBlocks="false"></block-latest-blocks></v-flex>
     </v-layout>
   </v-container>
 </template>
@@ -23,7 +19,6 @@ import Visibility from 'visibilityjs'
 import Vue from 'vue'
 import { Events as sEvents } from 'ethvm-common'
 import BN from 'bignumber.js'
-import { Uncle } from '../../models/Uncle';
 const MAX_ITEMS = 20
 export default Vue.extend({
   name: 'FrameUncles',
@@ -45,15 +40,12 @@ export default Vue.extend({
     }
   },
   created() {
-
     this.uncles = this.$store.getters.getUncles
     this.$eventHub.$on(sEvents.newUncle, _uncle => {
       if (Visibility.state() === 'visible') {
         this.uncles = this.$store.getters.getUncles
-            console.log(this.uncles)
       }
     })
-
   },
   beforeDestroy() {
     this.$eventHub.$off(sEvents.newUncle)
@@ -63,6 +55,5 @@ export default Vue.extend({
       return this.uncles.slice(0, this.maxItems)
     }
   }
-
 })
 </script>

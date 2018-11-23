@@ -15,7 +15,6 @@ const socket_socketNewblock = function({ commit }, ev: EventLayout | EventLayout
   }
 }
 
-
 const socket_socketNewuncle = function({ commit }, ev: EventLayout | EventLayout[]) {
   console.log('socket_socketNewuncle')
   if (Array.isArray(ev)) {

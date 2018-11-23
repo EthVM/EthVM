@@ -57,6 +57,10 @@ export class Block {
     return '0x' + this.block.hash
   }
 
+  public getType(): string {
+    return 'block'
+  }
+
   public getNumber(): number {
     return this.block.number
   }

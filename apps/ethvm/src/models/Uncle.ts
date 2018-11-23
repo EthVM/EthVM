@@ -17,6 +17,14 @@ export class Uncle {
     return this.id
   }
 
+  public getNumber(): number {
+    return 0    // TBD: Height of Uncle
+  }
+
+  public getType(): string {
+    return 'uncle'
+  }
+
   public getParentHash(): string {
     if (!this.cache.parentHash) {
       this.cache.parentHash = this.uncle.parentHash
@@ -115,7 +123,6 @@ export class Uncle {
     return this.cache.extraData
   }
   public getTotalReward(): number {
-    console.log('uncle',this.uncle)
     if (!this.cache.getTotalReward) {
       let total = 0
       for (const address in this.uncle.rewards) {
