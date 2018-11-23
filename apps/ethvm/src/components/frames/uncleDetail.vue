@@ -63,7 +63,6 @@ export default Vue.extend({
       },
       (error, result) => {
         if (result) {
-          console.log(result)
           this.block = new Uncle(result)
         }
       }

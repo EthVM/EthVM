@@ -88,6 +88,8 @@ import { common } from '@app/helpers'
 import { Block, Tx } from '@app/models'
 import store from '@app/states'
 import Vue from 'vue'
+import ethUnits from 'ethereumjs-units'
+import Bn from 'bignumber.js'
 
 export default Vue.extend({
   name: 'BlockView',
@@ -128,7 +130,7 @@ export default Vue.extend({
         },
         {
           title: this.$i18n.t('block.reward'),
-          detail: this.block.getTotalReward() + ' ' + this.$i18n.t('common.eth')
+          detail: ethUnits.convert(new Bn(this.block.getTotalReward()).toFixed(), 'wei', 'eth') + ' ' + this.$i18n.t('common.eth')
         },
         {
           title: this.$i18n.t('block.pHash'),
@@ -164,11 +166,10 @@ export default Vue.extend({
           details: this.block.getStateRoot().toString()
         },
         {
-            title: this.$i18n.t('block.data'),
-            details: this.block.getExtraData().toString()
-          }
+          title: this.$i18n.t('block.data'),
+          details: this.block.getExtraData().toString()
+        }
       ]
-
       if (!this.isUncle) {
         const newItems = [
           {
@@ -177,7 +178,7 @@ export default Vue.extend({
           },
           {
             title: this.$i18n.t('block.fees'),
-            detail: this.block.getTxFees() + ' ' + this.$i18n.t('common.eth')
+            detail: ethUnits.convert(new Bn(this.block.getTxFees()), 'wei', 'eth') + ' ' + this.$i18n.t('common.eth')
           },
           {
             title: this.$i18n.t('gas.limit'),
@@ -201,7 +202,7 @@ export default Vue.extend({
           },
           {
             title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward'),
-            detail: this.block.getUncleReward() + ' ' + this.$i18n.t('common.eth')
+            detail: ethUnits.convert(new Bn(this.block.getUncleReward()).toFixed(), 'wei', 'eth') + ' ' + this.$i18n.t('common.eth')
           },
           {
             title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.sha'),
@@ -237,8 +238,8 @@ export default Vue.extend({
       return this.showMore
     },
     hasUncles() {
-      if(!this.block.getIsUncle()){
-      return this.block.getHasUncle()
+      if (!this.block.getIsUncle()) {
+        return this.block.getHasUncle()
       }
       return false
     }
