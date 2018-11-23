@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-set -o errexit
-set -o pipefail
-set -o nounset
+set -o errexit \
+    -o pipefail \
+    -o nounset \
+    -o xtrace
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
@@ -34,6 +35,5 @@ if [ "$ID" == "apps/server-e2e-test" ]; then
   sleep 15
 fi
 
-# Install jest
-
+# Install global jest
 yarn global add jest
