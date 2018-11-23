@@ -29,14 +29,21 @@ export class Block {
     //this.block.uncles.push(uncle)
   }
 
-  public getIsUncle(): boolean {
-    if (!this.cache.isUncle) {
+  public getHasUncle(): boolean {
+    if (!this.cache.getHasUncle) {
       if (this.block.uncles.length == 0) {
-        return (this.cache.isUncle = false)
+        this.cache.getHasUncle = false
       }
-      return (this.cache.isUncle = true)
+      this.cache.getHasUncle = true
     }
-    return this.cache.isUncle
+    return this.cache.getHasUncle
+  }
+
+  public getIsUncle(): boolean{
+    if (!this.cache.getIsUncle) {
+      this.cache.getIsUncle = false
+    }
+    return this.cache.getIsUncle
   }
 
   public getUncles(): string[] {

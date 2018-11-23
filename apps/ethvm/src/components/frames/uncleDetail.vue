@@ -20,12 +20,13 @@ import Vue from 'vue'
 
 export default Vue.extend({
   name: 'Uncle',
-  props: ['blockHash'],
+  props: ['uncleRef'],
   data() {
     return {
       common,
       store,
-      uncle: null,
+      block: null,
+      uncles: null,
       items: [
         {
           text: this.$i18n.t('title.home'),
@@ -58,10 +59,11 @@ export default Vue.extend({
     this.$socket.emit(
       sEvents.getUncle,
       {
-        hash: this.blockHash.replace('0x', '')
+        hash: this.uncleRef.replace('0x', '')
       },
       (error, result) => {
         if (result) {
+          console.log(result)
           this.block = new Uncle(result)
         }
       }

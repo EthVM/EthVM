@@ -46,6 +46,13 @@ export class Uncle {
     return new Date(this.cache.timestamp * 1000)
   }
 
+  public getIsUncle(): boolean{
+    if (!this.cache.getIsUncle) {
+      this.cache.getIsUncle = true
+    }
+    return this.cache.getIsUncle
+  }
+
   public getNonce(): Hex {
     if (!this.cache.nonce) {
       this.cache.nonce = this.uncle.nonce
@@ -58,6 +65,13 @@ export class Uncle {
       this.cache.miner = this.uncle.miner
     }
     return this.cache.miner
+  }
+
+  public getTotalDifficulty(): number {
+    if (!this.cache.totalDifficulty) {
+      this.cache.totalDifficulty = this.uncle.totalDifficulty
+    }
+    return this.cache.totalDifficulty
   }
 
   public getDifficulty(): number {

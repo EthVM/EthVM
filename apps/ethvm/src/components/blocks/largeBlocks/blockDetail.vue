@@ -65,7 +65,7 @@
             </v-flex>
             <v-flex xs7 sm8 md9>
               <v-list-tile-title v-if="!item.link" class="text-muted text-truncate"
-                >{{ item.detail }} <timeago v-if="item.title == $t('common.timestmp')" :since="block.getTimestamp()" :auto-update="10"></timeago>
+                >{{ item.detail }} <timeago v-if="item.title == $t('common.timestmp')" :datetime="block.getTimestamp()" :auto-update="10"></timeago>
               </v-list-tile-title>
               <router-link v-else :to="item.link">
                 <v-list-tile-title class="text-truncate">{{ item.detail }}</v-list-tile-title>
@@ -128,16 +128,12 @@ export default Vue.extend({
         },
         {
           title: this.$i18n.t('block.reward'),
-          detail: this.block.getBlockReward() + ' ' + this.$i18n.t('common.eth')
+          detail: this.block.getTotalReward() + ' ' + this.$i18n.t('common.eth')
         },
         {
           title: this.$i18n.t('block.pHash'),
           detail: this.block.getParentHash(),
           link: '/block/' + this.block.getParentHash()
-        },
-        {
-          title: this.$i18n.t('block.size'),
-          detail: 'TODO'
         }
       ]
       if (!this.isUncle) {
@@ -166,18 +162,18 @@ export default Vue.extend({
         {
           title: this.$i18n.t('block.root'),
           details: this.block.getStateRoot().toString()
-        }
-        /*{
+        },
+        {
             title: this.$i18n.t('block.data'),
             details: this.block.getExtraData().toString()
-          }*/
+          }
       ]
 
       if (!this.isUncle) {
         const newItems = [
           {
-            title: this.$i18n.t('block.totalReward'),
-            detail: '' //this.block.getBlockReward().toEth() + ' ' + this.$i18n.t('common.eth')
+            title: this.$i18n.t('block.root'),
+            details: this.block.getStateRoot().toString()
           },
           {
             title: this.$i18n.t('block.fees'),
@@ -232,7 +228,7 @@ export default Vue.extend({
   },
   computed: {
     isUncle() {
-      return false
+      return this.block.getIsUncle()
     },
     update() {
       return String
@@ -241,7 +237,10 @@ export default Vue.extend({
       return this.showMore
     },
     hasUncles() {
-      return this.block.getIsUncle()
+      if(!this.block.getIsUncle()){
+      return this.block.getHasUncle()
+      }
+      return false
     }
   }
 })
