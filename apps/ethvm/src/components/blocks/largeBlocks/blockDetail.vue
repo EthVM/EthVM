@@ -46,7 +46,7 @@
           </v-flex>
           <v-flex xs7 sm8 md9>
             <v-list-tile-title v-if="!item.link" class="text-muted text-truncate"
-              >{{ item.detail }} <timeago v-if="item.title == $t('common.timestmp')" :since="block.getTimestamp()" :auto-update="10"></timeago>
+              >{{ item.detail }} <timeago v-if="item.title == $t('common.timestmp')" :datetime="block.getTimestamp()" :auto-update="10"></timeago>
             </v-list-tile-title>
             <router-link v-else :to="item.link">
               <v-list-tile-title class="text-truncate">{{ item.detail }}</v-list-tile-title>
