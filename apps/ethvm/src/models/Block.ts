@@ -39,7 +39,7 @@ export class Block {
     return this.cache.getHasUncle
   }
 
-  public getIsUncle(): boolean{
+  public getIsUncle(): boolean {
     if (!this.cache.getIsUncle) {
       this.cache.getIsUncle = false
     }

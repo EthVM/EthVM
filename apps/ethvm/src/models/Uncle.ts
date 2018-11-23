@@ -18,7 +18,7 @@ export class Uncle {
   }
 
   public getNumber(): number {
-    return 0    // TBD: Height of Uncle
+    return 0 // TBD: Height of Uncle
   }
 
   public getType(): string {
@@ -46,7 +46,7 @@ export class Uncle {
     return new Date(this.cache.timestamp * 1000)
   }
 
-  public getIsUncle(): boolean{
+  public getIsUncle(): boolean {
     if (!this.cache.getIsUncle) {
       this.cache.getIsUncle = true
     }
