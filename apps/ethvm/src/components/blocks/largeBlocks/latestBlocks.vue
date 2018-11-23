@@ -48,7 +48,7 @@
           <v-card v-for="block in blocks" class="transparent" flat v-bind:key="block.getHash()">
             <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
               <v-flex xs6 sm2 order-xs1>
-                <router-link class="black--text pb-1" :to="'/block/'+block.getHash()">{{block.getNumber()}}</router-link>
+                <router-link class="black--text pb-1" :to="'/block/'+block.getHash()">{{''}}</router-link>
               </v-flex>
               <v-flex xs12 sm7 md6 lass="pr-0" order-xs3 order-sm2>
                 <p class="text-truncate info--text  psmall mb-0 pb-2">{{ $t( 'common.hash' ) }}:
@@ -58,21 +58,21 @@
                   <router-link :to="'/address/'+block.getMiner().toString()" class="secondary--text font-italic font-weight-regular">{{block.getMiner().toString()}}</router-link>
                 </p>
               </v-flex>
-              <v-flex hidden-sm-and-down md2 order-xs4 order-sm3>
+              <!-- <v-flex hidden-sm-and-down md2 order-xs4 order-sm3>
                 <p class="txSuccess--text mb-0 psmall"> {{block.getStats().successfulTxs}}</p>
                 <p class="txFail--text mb-0"> {{block.getStats().failedTxs}}</p>
-              </v-flex>
+              </v-flex> -->
               <v-flex d-flex xs6 sm3 md2 order-xs2 order-md4>
                 <p class="text-truncate black--text align-center mb-0">
-                  <v-tooltip v-if="getShortRewardValue(block.getTotalBlockReward(), true)" bottom>
+                  <v-tooltip v-if="getShortRewardValue(block.getTotalReward(), true)" bottom>
                     <v-icon slot="activator" dark small>fa fa-question-circle info--text</v-icon>
-                    <span>{{block.getTotalBlockReward()}}</span>
+                    <span>{{block.getTotalReward()}}</span>
                   </v-tooltip>
-                  {{getShortRewardValue(block.getTotalBlockReward(), false)}}
+                  {{getShortRewardValue(block.getTotalReward(), false)}}
                 </p>
               </v-flex>
             </v-layout>
-            <v-layout row v-if="hasUncles(block)"  pl-3 pr-2 pt-0 pb-1>
+            <!-- <v-layout row v-if="hasUncles(block)"  pl-3 pr-2 pt-0 pb-1>
               <v-flex d-flex hidden-xs-only sm2 pt-0 pr-0>
                 <v-img v-if="hasUncles(block)" :src="require('@/assets/uncle.png')" height="30px" contain></v-img>
               </v-flex>
@@ -88,7 +88,7 @@
               </v-flex>
               <v-flex hidden-xs-only sm3 md4>
               </v-flex>
-            </v-layout>
+            </v-layout> -->
             <v-divider></v-divider>
           </v-card>
           </transition-group>
@@ -140,6 +140,7 @@ export default Vue.extend({
   methods: {
     /* Method to reduce reward string: */
     getShortRewardValue(newRewardValue, isBool) {
+      console.log(JSON.stringify(newRewardValue))
       const length = newRewardValue.length
       let isShort = false
       if (length > 8) {

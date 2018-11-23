@@ -12,7 +12,7 @@
     </v-layout>
     <v-layout row wrap justify-center mb-4>
       <v-flex xs12>
-        <block-latest-blocks :maxBlocks="true" :blocks="uncles" :frameBlocks="false"></block-latest-blocks>
+        <block-latest-blocks :maxBlocks="true" :blocks="getuncles" :frameBlocks="false"></block-latest-blocks>
       </v-flex>
     </v-layout>
   </v-container>
@@ -23,6 +23,7 @@ import Visibility from 'visibilityjs'
 import Vue from 'vue'
 import { Events as sEvents } from 'ethvm-common'
 import BN from 'bignumber.js'
+import { Uncle } from '../../models/Uncle';
 const MAX_ITEMS = 20
 export default Vue.extend({
   name: 'FrameUncles',
@@ -42,26 +43,26 @@ export default Vue.extend({
       ],
       maxItems: MAX_ITEMS
     }
-  }
-  /* Get Uncles
+  },
   created() {
 
-    this.uncles = this.$store.getters.getuncles
-    this.$eventHub.$on(sEvents.newBlock, _block => {
+    this.uncles = this.$store.getters.getUncles
+    this.$eventHub.$on(sEvents.newUncle, _uncle => {
       if (Visibility.state() === 'visible') {
-        this.uncles = this.$store.getters.getuncles
+        this.uncles = this.$store.getters.getUncles
+            console.log(this.uncles)
       }
     })
 
   },
   beforeDestroy() {
-    this.$eventHub.$off(sEvents.newBlock)
+    this.$eventHub.$off(sEvents.newUncle)
   },
   computed: {
     getuncles() {
       return this.uncles.slice(0, this.maxItems)
     }
   }
-   */
+
 })
 </script>

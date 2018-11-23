@@ -2,7 +2,7 @@ export interface Uncle {
   parentHash?: string
   unclesHash?: string
   timestamp?: number
-  nonce?: Buffer
+  nonce?: string
   miner?: string
   rewards?: any
   difficulty?: number
