@@ -65,15 +65,15 @@ export class Block {
     return this.block.transactions.length
   }
 
-  public getTotalBlockReward(): EthValue {
-    if (!this.cache.totalBlockReward) {
+  public getTotalReward(): EthValue {
+    if (!this.cache.getTotalReward) {
       let total = 0
       for (const address in this.block.header.rewards) {
         total = this.block.header.rewards[address] + total
       }
-      this.cache.totalBlockReward = total
+      this.cache.getTotalReward = total
     }
-    return this.cache.totalBlockReward
+    return this.cache.getTotalReward
   }
 
   public getParentHash(): string {

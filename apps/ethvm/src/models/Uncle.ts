@@ -1,5 +1,5 @@
 import { common } from '@app/helpers'
-import { Hash, Hex, HexNumber, HexTime, Tx } from '@app/models'
+import { Hash, Hex } from '@app/models'
 import { Uncle as UncleLayout } from 'ethvm-common'
 
 export class Uncle {
@@ -113,5 +113,16 @@ export class Uncle {
       this.cache.extraData = common.Hex(this.uncle.extraData)
     }
     return this.cache.extraData
+  }
+  public getTotalReward(): number {
+    console.log('uncle',this.uncle)
+    if (!this.cache.getTotalReward) {
+      let total = 0
+      for (const address in this.uncle.rewards) {
+        total = this.uncle.rewards[address] + total
+      }
+      this.cache.getTotalReward = total
+    }
+    return this.cache.getTotalReward
   }
 }
