@@ -15,17 +15,28 @@ const toUncle = (uncle: any): Uncle => {
     }
     u.rewards = uncle.rewards
   }
-
   u.difficulty = parseFloat(uncle.difficulty)
   u.totalDifficulty = parseFloat(uncle.totalDifficulty)
-  u.stateRoot = uncle.stateRoot.buffer
-  u.transactionsRoot = uncle.transactionsRoot.buffer
-  u.receiptsRoot = uncle.receiptsRoot.buffer
-  u.logsBloom = uncle.logsBloom.buffer
+  if (uncle.stateRoot) {
+    u.stateRoot = uncle.stateRoot.buffer
+  }
+  if (uncle.transactionsRoot) {
+    u.transactionsRoot = uncle.transactionsRoot.buffer
+  }
+  if (uncle.receiptsRoot) {
+    u.receiptsRoot = uncle.receiptsRoot.buffer
+  }
+  if (uncle.logsBloom) {
+    u.logsBloom = uncle.logsBloom.buffer
+  }
   u.gasLimit = parseFloat(uncle.gasLimit)
   u.gasUsed = parseFloat(uncle.gasUsed)
-  u.mixHash = uncle.mixHash.buffer
-  u.extraData = uncle.extraData.buffer
+  if (uncle.mixHash) {
+    u.mixHash = uncle.mixHash.buffer
+  }
+  if (uncle.extraData) {
+    u.extraData = uncle.extraData.buffer
+  }
   return u
 }
 
