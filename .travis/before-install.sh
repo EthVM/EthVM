@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
 set -o errexit \
-    -o pipefail \
-    -o nounset \
-    -o xtrace
+    -o pipefail
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
@@ -14,7 +12,7 @@ sudo apt install -y jq
 if [ "$ID" == "apps/server-e2e-test" ]; then
 
   # Download datasets with Git LFS (if applies)
-  echo -e "machine github.com\n  login $GITHUB_TOKEN" > ~/.netrc
+  echo -e "machine github.com\n  login ${GITHUB_TOKEN}" > ~/.netrc
   git lfs fetch --all
   git lfs checkout
 
