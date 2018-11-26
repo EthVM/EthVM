@@ -1,11 +1,14 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+
+set -o errexit
+# set -o xtrace
 
 # Give script sane defaults
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 
 # DEFAULT VARS
-PROJECTS=("bolt", "explorer", "api", "kafka-connect", "kafka-connect-ethvm-init", "kafka-ethvm-init", "mongodb-install", "mongodb-ethvm-init", "zookeeper")
+PROJECTS=("bolt", "explorer", "api", "ethereumj", "kafka-connect", "kafka-connect-ethvm-init", "kafka-ethvm-init", "mongodb-install", "mongodb-ethvm-init", "zookeeper")
 
 ORG="enkryptio"
 DOCKER_PATH="docker/images"
@@ -16,8 +19,11 @@ usage() {
   >&2 echo "    docker-build <command>"
   >&2 echo ""
   >&2 echo "Commands:"
-  >&2 echo "    build <project>  Build a docker image from this repo. Valid values: [${PROJECTS[*]}]"
-  >&2 echo "    push  <project>  Push the built image to the docker registry. Valid values: [${PROJECTS[*]}]"
+  >&2 echo "    build <image>  Build a docker image from this repo."
+  >&2 echo "    push  <image>  Push the built image to the docker registry."
+  >&2 echo ""
+  >&2 echo "Images:"
+  >&2 echo "    [${PROJECTS[*]}]"
   exit 1
 }
 
