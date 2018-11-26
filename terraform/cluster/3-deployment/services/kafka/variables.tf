@@ -1,3 +1,7 @@
+variable "namespace" {
+  description = "Which namespace the resources should belong to"
+}
+
 variable "kafka_version" {
   description = "Version of Kafka"
   default     = "5.0.1"
@@ -21,8 +25,4 @@ variable "kafka_storage_size" {
 variable "kafka_storage_type" {
   description = "Storage type to be used by Kafka nodes"
   default     = "ssd"
-}
-
-variable "namespace" {
-  description = "Which namespace the resources should belong to"
 }

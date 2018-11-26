@@ -1,3 +1,7 @@
+variable "namespace" {
+  description = "Which namespace the resources should belong to"
+}
+
 variable "zookeeper_version" {
   description = "Version of Zookeeper"
   default     = "3.4.13"
@@ -16,8 +20,4 @@ variable "zookeeper_storage_size" {
 variable "zookeeper_storage_type" {
   description = "Storage type to be used by Zookeeper nodes"
   default     = "ssd"
-}
-
-variable "namespace" {
-  description = "Which namespace the resources should belong to"
 }

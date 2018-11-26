@@ -34,10 +34,10 @@ module "bolt" {
   namespace = "${var.namespace}"
 }
 
-# module "ethereumj" {
-#   source    = "./ethereumj"
-#   namespace = "${var.namespace}"
-# }
+module "ethereumj" {
+  source    = "./ethereumj"
+  namespace = "${var.namespace}"
+}
 
 module "api" {
   source    = "./api"
