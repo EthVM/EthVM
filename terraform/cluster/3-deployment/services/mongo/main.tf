@@ -327,12 +327,12 @@ resource "kubernetes_job" "mongodb_ethvm_init" {
         container {
           name              = "mongodb-ethvm-init"
           image             = "enkryptio/mongodb-ethvm-init:${var.mongodb_ethvm_init_version}"
-          image_pull_policy = "Always"
-        }
+          image_pull_policy = "IfNotPresent"
 
-        env {
-          name  = "MONGODB_URL"
-          value = "mongodb://mongodb:27017/${var.chain}"
+          env {
+            name  = "MONGODB_URL"
+            value = "mongodb://mongodb:27017/${var.chain}"
+          }
         }
       }
     }
