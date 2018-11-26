@@ -1,3 +1,23 @@
+data "template_file" "ethereumj_conf" {
+  template = "${file("${path.module}/${var.ethereumj_conf}")}"
+
+  vars {
+    kafka_bootstrap_servers = "${var.ethereumj_kafka_bootstrap_servers}"
+    kafka_registry_url      = "${var.ethereumj_kafka_registry_url}"
+  }
+}
+
+resource "kubernetes_config_map" "ethereumj_config_map" {
+  metadata {
+    name      = "ethereumj-config"
+    namespace = "${var.namespace}"
+  }
+
+  data {
+    "ethereumj.conf" = "${data.template_file.ethereumj_conf.rendered}"
+  }
+}
+
 resource "kubernetes_service" "ethereumj_service" {
   metadata {
     name      = "ethereumj"
@@ -11,12 +31,6 @@ resource "kubernetes_service" "ethereumj_service" {
   spec {
     selector {
       app = "ethereumj"
-    }
-
-    port {
-      name        = "rpc"
-      port        = 8545
-      target_port = 8545
     }
 
     port {
@@ -43,7 +57,8 @@ resource "kubernetes_stateful_set" "ethereumj_stateful_set" {
       app = "ethereumj"
     }
 
-    replicas = 1
+    replicas     = 1
+    service_name = "ethereumj"
 
     template {
       metadata {
@@ -58,19 +73,18 @@ resource "kubernetes_stateful_set" "ethereumj_stateful_set" {
           image             = "enkryptio/etherumj:${var.ethereumj_version}"
           image_pull_policy = "IfNotPresent"
 
+          args = [
+            "-Dethereumj.conf.res=${var.ethereumj_conf} -PmainClassName='${var.ethereumj_mainclass}' -PjvmArgs='-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:+UseG1GC'",
+          ]
+
           resources {
             requests {
-              memory = "7Gi"
+              memory = "2Gi"
             }
 
             limits {
-              memory = "8Gi"
+              memory = "4Gi"
             }
-          }
-
-          port {
-            name           = "rpc"
-            container_port = 8545
           }
 
           port {
@@ -79,8 +93,13 @@ resource "kubernetes_stateful_set" "ethereumj_stateful_set" {
           }
 
           volume_mount {
+            name       = "config"
+            mount_path = "/ethereumj/config"
+          }
+
+          volume_mount {
             name       = "data"
-            mount_path = "/opt/ethereumj/data"
+            mount_path = "/ethereumj/data"
           }
 
           liveness_probe {
@@ -103,10 +122,13 @@ resource "kubernetes_stateful_set" "ethereumj_stateful_set" {
               port = 30303
             }
           }
+        }
 
-          env {
-            name  = "JVM_OPTS"
-            value = "-Xms6g -Xmx6g -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:+UseG1GC"
+        volume {
+          name = "config"
+
+          config_map {
+            name = "ethereumj-config"
           }
         }
       }
