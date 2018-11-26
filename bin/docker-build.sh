@@ -41,7 +41,7 @@ build() {
   local version="$2"
   local dockerfile="$3"
   local path="$4"
-  docker build -t "$ORG/$name:$version" -f $dockerfile $path
+  docker build -t "${ORG}/${name}:${version}" -f ${dockerfile} ${path}
 }
 
 # Push pushes the built docker image
@@ -59,18 +59,20 @@ run() {
   case "$1" in
     build)
       case "$2" in
-        bolt) build "$2" "$(prop 'version' "apps/$2/version.properties")" "apps/$2/Dockerfile" "apps/$2" ;;
-        explorer) build "$2" "$(jq .version apps/ethvm/package.json -r)" "apps/ethvm/Dockerfile" "apps/" ;;
-        api) build "$2" "$(jq .version apps/server/package.json -r)" "apps/server/Dockerfile" "apps/" ;;
-        kafka-connect|kafka-connect-ethvm-init|kafka-ethvm-init|mongodb-install|mongodb-ethvm-init|zookeeper) build "$2" "$(prop 'version' "${DOCKER_PATH}/$2/version.properties")" "${DOCKER_PATH}/$2/Dockerfile" "${DOCKER_PATH}/$2/" ;;
+        bolt) build "${2}" "$(prop 'version' "apps/${2}/version.properties")" "apps/${2}/Dockerfile" "apps/${2}" ;;
+        explorer) build "${2}" "$(jq .version apps/ethvm/package.json -r)" "apps/ethvm/Dockerfile" "apps/" ;;
+        api) build "${2}" "$(jq .version apps/server/package.json -r)" "apps/server/Dockerfile" "apps/" ;;
+        ethereumj) build "${2}" "$(prop 'versionNumber' "apps/${2}/ethereumj-core/src/main/resources/version.properties")" "apps/${2}/Dockerfile" "apps/${2}" ;;
+        kafka-connect|kafka-connect-ethvm-init|kafka-ethvm-init|mongodb-install|mongodb-ethvm-init|zookeeper) build "$2" "$(prop 'version' "${DOCKER_PATH}/$2/version.properties")" "${DOCKER_PATH}/${2}/Dockerfile" "${DOCKER_PATH}/${2}/" ;;
       esac
       ;;
     push)
       case "$2" in
-        bolt) push "$ORG/$2:$(prop 'version' "apps/$2/version.properties")" ;;
-        explorer) push "$ORG/$2:$(jq .version apps/$2/package.json -r)" ;;
-        api) push "$ORG/$2:$(jq .version apps/$2/package.json -r)" ;;
-        kafka-connect|kafka-connect-ethvm-init|kafka-ethvm-init|mongodb-install|mongodb-ethvm-init|zookeeper) push "$ORG/$2:$(prop 'version' "${DOCKER_PATH}/$2/version.properties")" ;;
+        bolt) push "${ORG}/${2}:$(prop 'version' "apps/${2}/version.properties")" ;;
+        explorer) push "${ORG}/${2}:$(jq .version apps/${2}/package.json -r)" ;;
+        api) push "${ORG}/${2}:$(jq .version apps/server/package.json -r)" ;;
+        ethereumj) push "${ORG}/${2}:$(prop 'versionNumber' "apps/${2}/ethereumj-core/src/main/resources/version.properties")" ;;
+        kafka-connect|kafka-connect-ethvm-init|kafka-ethvm-init|mongodb-install|mongodb-ethvm-init|zookeeper) push "${ORG}/${2}:$(prop 'version' "${DOCKER_PATH}/${2}/version.properties")" ;;
       esac
       ;;
     *) usage ;;
