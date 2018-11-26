@@ -1,12 +1,21 @@
 <template>
   <v-layout column justify-center>
-    <vue-chart type="line" :data="chartData" :options="chartOptions" :redraw="redraw" :chartTitle="newTitle" :chartDescription="newDescription" unfilled="true" :footnoteArr="footnote"></vue-chart>
+    <vue-chart
+      type="line"
+      :data="chartData"
+      :options="chartOptions"
+      :redraw="redraw"
+      :chartTitle="newTitle"
+      :chartDescription="newDescription"
+      unfilled="true"
+      :footnoteArr="footnote"
+    ></vue-chart>
   </v-layout>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import sEvents from '@app/configs/socketEvents.json'
+import { Events as sEvents } from 'ethvm-common'
 import BN from 'bignumber.js'
 import ethUnits from 'ethereumjs-units'
 
@@ -73,12 +82,12 @@ export default Vue.extend({
       newDescription: description,
       footnote: [
         {
-          color: '#40ce9c',
+          color: 'txFail',
           text: this.$i18n.t('footnote.aveTxFees'),
           icon: 'fa fa-circle'
         },
         {
-          color: '#eea66b',
+          color: 'txPen',
           text: this.$i18n.t('footnote.aveGasPrice'),
           icon: 'fa fa-circle'
         }
@@ -98,9 +107,9 @@ export default Vue.extend({
           const _tempD = _block.getStats()
           this.chartData.labels.push(_block.getNumber())
           this.chartData.labels.shift()
-          this.chartData.datasets[0].data.push(common.EthValue(_tempD.avgTxsFees).toEth())
+          this.chartData.datasets[0].data.push(ethUnits.convert(_tempD.avgTxsFees, 'wei', 'eth'))
           this.chartData.datasets[0].data.shift()
-          this.chartData.datasets[1].data.push(common.EthValue(_tempD.avgGasPrice).toEth())
+          this.chartData.datasets[1].data.push(ethUnits.convert(_tempD.avgGasPrice, 'wei', 'gwei'))
           this.chartData.datasets[1].data.shift()
         }
       }
@@ -121,8 +130,8 @@ export default Vue.extend({
       latestBlocks.forEach(_block => {
         data.labels.unshift(_block.getNumber())
         const _tempD = _block.getStats()
-        data.avgFees.unshift(common.EthValue(_tempD.avgTxsFees).toEth())
-        data.avgPrice.unshift(common.EthValue(_tempD.avgTxsFees).toEth())
+        data.avgFees.unshift(ethUnits.convert(_tempD.avgTxsFees, 'wei', 'eth'))
+        data.avgPrice.unshift(ethUnits.convert(_tempD.avgGasPrice, 'wei', 'gwei'))
       })
       return {
         labels: data.labels,

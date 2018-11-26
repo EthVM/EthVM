@@ -7,7 +7,6 @@ import io.enkrypt.avro.processing.*
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
-
 object BoltSerdes : KoinComponent {
 
   private val kafkaConfig: KafkaConfig by inject()

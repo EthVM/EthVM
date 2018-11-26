@@ -1,19 +1,20 @@
 <template>
   <div id="GraphsLineChart" class="line-chart">
-
-     <vue-chart type="line" :data="chartData"
-                            :options="chartOptions"
-                            :redraw="redraw"
-                            :chartTitle="newTitle"
-                            :chartDescription="newDescription"
-                            unfilled="true"></vue-chart>
-
+    <vue-chart
+      type="line"
+      :data="chartData"
+      :options="chartOptions"
+      :redraw="redraw"
+      :chartTitle="newTitle"
+      :chartDescription="newDescription"
+      unfilled="true"
+    ></vue-chart>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import sEvents from '@app/configs/socketEvents.json'
+import { Events as sEvents } from 'ethvm-common'
 import BN from 'bignumber.js'
 import ethUnits from 'ethereumjs-units'
 

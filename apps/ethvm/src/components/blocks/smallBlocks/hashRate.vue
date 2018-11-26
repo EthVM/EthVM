@@ -1,10 +1,9 @@
 <template>
-  <block-component :title="blockTitle" :colorType="type" :value="hashRate"  :metrics="metric" :backType="background">
-  </block-component>
+  <block-component :title="blockTitle" :colorType="type" :value="hashRate" :metrics="metric" :backType="background"> </block-component>
 </template>
 
 <script lang="ts">
-import sEvents from '@app/configs/socketEvents.json'
+import { Events as sEvents } from 'ethvm-common'
 import { Block } from '@app/models'
 import bn from 'bignumber.js'
 import Vue from 'vue'
@@ -18,19 +17,18 @@ const getAvgHashRate = (blocks: Block[]): number => {
 
   blocks.forEach(block => {
     const stats = block.getStats()
-    const blockTime = stats.blockTimeMs
-    avg = avg.add(new bn(blockTime))
+    const blockTime = stats.processingTimeMs
+    avg = avg.plus(new bn(blockTime))
   })
-  avg = avg.div(blocks.length)
+  avg = avg.dividedBy(blocks.length)
   if (avg.isZero) {
     return avg.toNumber()
   }
 
-  const difficulty = blocks[0].getDifficulty().toNumber()
+  const difficulty = blocks[0].getDifficulty()
   return new bn(difficulty)
-    .div(avg)
-    .div('1e12')
-    .round(2)
+    .dividedBy(avg)
+    .dividedBy('1e12')
     .toNumber()
 }
 
@@ -59,5 +57,4 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped lang="less">
-</style>
+<style scoped lang="less"></style>

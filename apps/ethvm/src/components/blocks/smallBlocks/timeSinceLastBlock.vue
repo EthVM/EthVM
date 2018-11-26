@@ -1,9 +1,9 @@
 <template>
-  <block-component :title="blockTitle"  :colorType="type" :value="seconds" :backType="background" :metrics="sec"></block-component>
+  <block-component :title="blockTitle" :colorType="type" :value="seconds" :backType="background" :metrics="sec"></block-component>
 </template>
 
 <script lang="ts">
-import sEvents from '@app/configs/socketEvents.json'
+import { Events as sEvents } from 'ethvm-common'
 import Vue from 'vue'
 export default Vue.extend({
   name: 'ShortDataLastBlock',
@@ -44,5 +44,4 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped lang="less">
-</style>
+<style scoped lang="less"></style>

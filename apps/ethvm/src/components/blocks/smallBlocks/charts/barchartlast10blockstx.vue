@@ -1,12 +1,20 @@
 <template>
   <v-layout column justify-center>
-    <vue-chart type="bar" :data="chartData" :options="chartOptions" :chartTitle="newTitle" :chartDescription="newDescription" :redraw="redraw" :footnoteArr="footnote"></vue-chart>
+    <vue-chart
+      type="bar"
+      :data="chartData"
+      :options="chartOptions"
+      :chartTitle="newTitle"
+      :chartDescription="newDescription"
+      :redraw="redraw"
+      :footnoteArr="footnote"
+    ></vue-chart>
   </v-layout>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import sEvents from '@app/configs/socketEvents.json'
+import { Events as sEvents } from 'ethvm-common'
 import BN from 'bignumber.js'
 
 const MAX_ITEMS = 10
@@ -72,17 +80,17 @@ export default Vue.extend({
       newDescription: description,
       footnote: [
         {
-          color: '#40ce9c',
+          color: 'txSuccess',
           text: this.$i18n.t('footnote.success'),
           icon: 'fa fa-circle'
         },
         {
-          color: '#fe136c',
+          color: 'txFail',
           text: this.$i18n.t('footnote.failed'),
           icon: 'fa fa-circle'
         },
         {
-          color: '#eea66b',
+          color: 'txPen',
           text: this.$i18n.t('footnote.pending'),
           icon: 'fa fa-circle'
         }
@@ -97,16 +105,16 @@ export default Vue.extend({
     })
     this.$eventHub.$on(sEvents.newBlock, _block => {
       if (this.chartData.datasets[0]) {
-          this.redraw = false
-           const _tempD = _block.getStats()
-          this.chartData.labels.push(_block.getNumber())
-          this.chartData.labels.shift()
-          this.chartData.datasets[0].data.push(0) //pending tx ev
-          this.chartData.datasets[0].data.shift()
-          this.chartData.datasets[1].data.push(_tempD.successfulTxs)
-          this.chartData.datasets[1].data.shift()
-          this.chartData.datasets[2].data.push(_tempD.failedTxs)
-          this.chartData.datasets[2].data.shift()
+        this.redraw = false
+        const _tempD = _block.getStats()
+        this.chartData.labels.push(_block.getNumber())
+        this.chartData.labels.shift()
+        this.chartData.datasets[0].data.push(0) //pending tx ev
+        this.chartData.datasets[0].data.shift()
+        this.chartData.datasets[1].data.push(_tempD.successfulTxs)
+        this.chartData.datasets[1].data.shift()
+        this.chartData.datasets[2].data.push(_tempD.failedTxs)
+        this.chartData.datasets[2].data.shift()
       }
     })
   },

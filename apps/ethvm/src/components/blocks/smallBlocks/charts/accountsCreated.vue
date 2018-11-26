@@ -1,20 +1,19 @@
 <template>
   <div id="GraphsLineChart" class="line-chart">
-
-     <vue-chart type="line" :data="chartData"
-                            :options="chartOptions"
-                            :redraw="redraw"
-                            :chartTitle="newTitle"
-                            :chartDescription="newDescription"
-                            unfilled="true"></vue-chart>
-
+    <vue-chart
+      type="line"
+      :data="chartData"
+      :options="chartOptions"
+      :redraw="redraw"
+      :chartTitle="newTitle"
+      :chartDescription="newDescription"
+      unfilled="true"
+    ></vue-chart>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import sEvents from '@app/configs/socketEvents.json'
-import BN from 'bignumber.js'
 import ethUnits from 'ethereumjs-units'
 
 const title = 'Accounts Growth'
@@ -79,7 +78,6 @@ export default Vue.extend({
 
       this.$socket.emit('getChartAccountsGrowth', 'LAST_7_DAYS', (err, result) => {
         if (!err && result) {
-          console.log('result', result)
           result.forEach(function(block) {
             data.points.push(block.reduction)
             data.labels.push(block.group)

@@ -1,41 +1,41 @@
 //@import (css) '~bootstrap/dist/css/bootstrap.css';
 @import '~lessPath/sunil/globalVars';
 * {
-    outline: none;
+  outline: none;
 }
 
 body {
-    margin: 0; //font-family: 'Roboto', sans-serif;
-    line-height: 1.5;
-    color: @text-color-grey;
-    text-align: left;
-    background-color: @main-color-grey-light;
-    font-size: 13px;
+  margin: 0; //font-family: 'Roboto', sans-serif;
+  line-height: 1.5;
+  color: @text-color-grey;
+  text-align: left;
+  background-color: @main-color-grey-light;
+  font-size: 13px;
 }
 
 a,
 a:link {
-    color: @main-color-blue;
+  color: @main-color-blue;
 }
 
 a:visited,
 a:active {
-    text-decoration: none;
-    color: @main-color-blue;
+  text-decoration: none;
+  color: @main-color-blue;
 }
 
 a:hover {
-    color: @main-color-grey-dark;
+  color: @main-color-grey-dark;
 }
 
 ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  li {
     margin: 0;
     padding: 0;
-    list-style-type: none;
-    li {
-        margin: 0;
-        padding: 0;
-    }
+  }
 }
 
 /*Scroll Bar */
@@ -43,26 +43,26 @@ ul {
 /* width */
 
 ::-webkit-scrollbar {
-    width: 7px;
+  width: 7px;
 }
 
 /* Track */
 
 ::-webkit-scrollbar-track {
-    background: @main-color-grey-light;
+  background: @main-color-grey-light;
 }
 
 /* Handle */
 
 ::-webkit-scrollbar-thumb {
-    background: @color-grey;
-    border-radius: 2px;
+  background: @color-grey;
+  border-radius: 2px;
 }
 
 /* Handle on hover */
 
 ::-webkit-scrollbar-thumb:hover {
-    background: @main-color-grey-dark;
+  background: @main-color-grey-dark;
 }
 
 /* End Scroll Bar */
@@ -71,233 +71,233 @@ ul {
     Frames using it: Home, Address Info, Token Info, Block Info; */
 
 .button-common {
-    position: absolute;
-    color: white;
-    background-color: @main-color-blue;
-    box-shadow: @box-shadow-dark;
-    border: 2px;
-    border-radius: @main-radius;
-    padding: 6px 15px;
-    right: 20px;
-    top: 0px;
-    cursor: pointer;
-    min-width: 70px;
-    font-size: 15px;
+  position: absolute;
+  color: white;
+  background-color: @main-color-blue;
+  box-shadow: @box-shadow-dark;
+  border: 2px;
+  border-radius: @main-radius;
+  padding: 6px 15px;
+  right: 20px;
+  top: 0px;
+  cursor: pointer;
+  min-width: 70px;
+  font-size: 15px;
 }
 
 /* Top Title + Search Container. Is used on every single frame: */
 
 .page-title-container {
-    margin-top: 1px;
-    display: flex;
-    padding: 30px 0px 40px 0px;
-    .page-title {
-        h3 {
-            font-weight: @main-fw-bold;
-            color: black;
-            font-size: @font-h3-web;
-            margin: 0px 0 6px 0;
-        }
-        h6 {
-            font-weight: @main-fw-normal;
-            margin: 0;
-            font-size: 13px;
-        }
+  margin-top: 1px;
+  display: flex;
+  padding: 30px 0px 40px 0px;
+  .page-title {
+    h3 {
+      font-weight: @main-fw-bold;
+      color: black;
+      font-size: @font-h3-web;
+      margin: 0px 0 6px 0;
     }
-    .search-block {
-        margin-left: auto;
+    h6 {
+      font-weight: @main-fw-normal;
+      margin: 0;
+      font-size: 13px;
     }
+  }
+  .search-block {
+    margin-left: auto;
+  }
 }
 
 /* Block title container used on Home and Block Frames. */
 
 .block-title-container {
-    display: flex;
-    padding: 0px 0 10px 0;
-    height: 50px;
-    h3 {
-        font-weight: @main-fw-bold;
-        color: black;
-        font-size: 24px;
-        margin: 0px 0 6px 0;
-        padding-right: 5px;
-        padding-top: 10px;
-    }
-    h6 {
-        font-weight: @main-fw-bold;
-        max-width: 350px;
-        line-height: 16px;
-    }
+  display: flex;
+  padding: 0px 0 10px 0;
+  height: 50px;
+  h3 {
+    font-weight: @main-fw-bold;
+    color: black;
+    font-size: 24px;
+    margin: 0px 0 6px 0;
+    padding-right: 5px;
+    padding-top: 10px;
+  }
+  h6 {
+    font-weight: @main-fw-bold;
+    max-width: 350px;
+    line-height: 16px;
+  }
 }
 
 /* Footnote class is used to display footnotes under charts and tables.
     Used on Home Frame, Transactions, Blocks, etc. */
 
 .footnote {
-    display: flex;
-    ul {
-        margin: 20px auto;
-        padding: 0;
-        li {
-            display: inline-block;
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            margin-right: 10px;
-            i.success {
-                color: @color-green;
-            }
-            i.failed {
-                color: @color-orange;
-            }
-            i.pending {
-                color: @color-purple;
-            }
-            i.tx-fees {
-                color: @main-color-blue;
-            }
-        }
+  display: flex;
+  ul {
+    margin: 20px auto;
+    padding: 0;
+    li {
+      display: inline-block;
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      margin-right: 10px;
+      i.success {
+        color: @color-green;
+      }
+      i.failed {
+        color: @color-orange;
+      }
+      i.pending {
+        color: @color-purple;
+      }
+      i.tx-fees {
+        color: @main-color-blue;
+      }
     }
+  }
 }
 
 /*Common Info:
   Used by About, Address and Token Frames*/
 
 .info-common {
-    margin-top: 20px;
-    padding: 40px 100px;
-    background-color: white;
-    box-shadow: @box-shadow-light;
-    border-radius: @main-radius;
-    p {
-        text-align: center;
-        line-height: 1.5;
-        color: @text-color-grey;
-    }
+  margin-top: 20px;
+  padding: 40px 100px;
+  background-color: white;
+  box-shadow: @box-shadow-light;
+  border-radius: @main-radius;
+  p {
+    text-align: center;
+    line-height: 1.5;
+    color: @text-color-grey;
+  }
 }
 
 /* Small Blocks Row
   Us ed on Home, Transactions and Blocks Page: */
 
 .small-blocks-row {
-    display: grid;
-    grid-column-gap: 10px;
-    grid-row-gap: 10px;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    margin-bottom: 40px;
+  display: grid;
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  margin-bottom: 40px;
 }
 
 /* Tooltip: */
 
 .tooltip-button {
-    cursor: pointer;
-    font-size: 14px;
+  cursor: pointer;
+  font-size: 14px;
 }
 
 .tooltip {
-    display: block !important;
-    z-index: 10000;
+  display: block !important;
+  z-index: 10000;
 }
 
 .tooltip .tooltip-inner {
-    background: black;
-    color: white;
-    border-radius: 16px;
-    padding: 5px 10px 4px;
+  background: black;
+  color: white;
+  border-radius: 16px;
+  padding: 5px 10px 4px;
 }
 
 .tooltip .tooltip-arrow {
-    width: 0;
-    height: 0;
-    border-style: solid;
-    position: absolute;
-    margin: 5px;
-    border-color: black;
-    z-index: 1;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  position: absolute;
+  margin: 5px;
+  border-color: black;
+  z-index: 1;
 }
 
 .tooltip[x-placement^='top'] {
-    margin-bottom: 5px;
+  margin-bottom: 5px;
 }
 
 .tooltip[x-placement^='top'] .tooltip-arrow {
-    border-width: 5px 5px 0 5px;
-    border-left-color: transparent !important;
-    border-right-color: transparent !important;
-    border-bottom-color: transparent !important;
-    bottom: -5px;
-    left: calc(50% - 5px);
-    margin-top: 0;
-    margin-bottom: 0;
+  border-width: 5px 5px 0 5px;
+  border-left-color: transparent !important;
+  border-right-color: transparent !important;
+  border-bottom-color: transparent !important;
+  bottom: -5px;
+  left: calc(50% - 5px);
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .tooltip[x-placement^='bottom'] {
-    margin-top: 5px;
+  margin-top: 5px;
 }
 
 .tooltip[x-placement^='bottom'] .tooltip-arrow {
-    border-width: 0 5px 5px 5px;
-    border-left-color: transparent !important;
-    border-right-color: transparent !important;
-    border-top-color: transparent !important;
-    top: -5px;
-    left: calc(50% - 5px);
-    margin-top: 0;
-    margin-bottom: 0;
+  border-width: 0 5px 5px 5px;
+  border-left-color: transparent !important;
+  border-right-color: transparent !important;
+  border-top-color: transparent !important;
+  top: -5px;
+  left: calc(50% - 5px);
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .tooltip[x-placement^='right'] {
-    margin-left: 5px;
+  margin-left: 5px;
 }
 
 .tooltip[x-placement^='right'] .tooltip-arrow {
-    border-width: 5px 5px 5px 0;
-    border-left-color: transparent !important;
-    border-top-color: transparent !important;
-    border-bottom-color: transparent !important;
-    left: -5px;
-    top: calc(50% - 5px);
-    margin-left: 0;
-    margin-right: 0;
+  border-width: 5px 5px 5px 0;
+  border-left-color: transparent !important;
+  border-top-color: transparent !important;
+  border-bottom-color: transparent !important;
+  left: -5px;
+  top: calc(50% - 5px);
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .tooltip[x-placement^='left'] {
-    margin-right: 5px;
+  margin-right: 5px;
 }
 
 .tooltip[x-placement^='left'] .tooltip-arrow {
-    border-width: 5px 0 5px 5px;
-    border-top-color: transparent !important;
-    border-right-color: transparent !important;
-    border-bottom-color: transparent !important;
-    right: -5px;
-    top: calc(50% - 5px);
-    margin-left: 0;
-    margin-right: 0;
+  border-width: 5px 0 5px 5px;
+  border-top-color: transparent !important;
+  border-right-color: transparent !important;
+  border-bottom-color: transparent !important;
+  right: -5px;
+  top: calc(50% - 5px);
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .tooltip.popover .popover-inner {
-    background: #f9f9f9;
-    color: black;
-    padding: 24px;
-    border-radius: 5px;
-    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.1);
+  background: #f9f9f9;
+  color: black;
+  padding: 24px;
+  border-radius: 5px;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.1);
 }
 
 .tooltip.popover .popover-arrow {
-    border-color: #f9f9f9;
+  border-color: #f9f9f9;
 }
 
 .tooltip[aria-hidden='true'] {
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.15s, visibility 0.15s;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.15s, visibility 0.15s;
 }
 
 .tooltip[aria-hidden='false'] {
-    visibility: visible;
-    opacity: 1;
-    transition: opacity 0.15s;
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.15s;
 }
 
 /* End Tooltip */
@@ -305,122 +305,122 @@ ul {
 /* Table Header for Blocks Table: */
 
 .block-table-header {
-    font-weight: @main-fw-bold;
-    color: black;
-    display: grid;
-    grid-template-columns: 100px auto 150px 150px;
-    grid-column-gap: 0px;
-    margin-bottom: 10px;
-    li {
-        padding: 15px;
-    }
+  font-weight: @main-fw-bold;
+  color: black;
+  display: grid;
+  grid-template-columns: 100px auto 150px 150px;
+  grid-column-gap: 0px;
+  margin-bottom: 10px;
+  li {
+    padding: 15px;
+  }
 }
 
 /*Table Header for Transactions Table: */
 
 .tx-table-header {
-    font-weight: @main-fw-bold;
-    color: black;
-    display: grid;
-    grid-template-columns: 1fr 100px 100px 100px 50px;
-    grid-column-gap: 0px;
-    margin-bottom: 10px;
-    li {
-        padding: 15px;
-    }
+  font-weight: @main-fw-bold;
+  color: black;
+  display: grid;
+  grid-template-columns: 1fr 100px 100px 100px 50px;
+  grid-column-gap: 0px;
+  margin-bottom: 10px;
+  li {
+    padding: 15px;
+  }
 }
 
 /*Class for copy icon: */
 
 .copy {
-    visibility: hidden;
-    color: @color-purple;
-    font-size: 16px;
+  visibility: hidden;
+  color: @color-purple;
+  font-size: 16px;
 }
 
 /* Itenticon: */
 
 .identicon {
-    display: float;
-    width: 60px;
-    height: 60px;
-    background-size: cover;
-    border-radius: 50%;
+  display: float;
+  width: 60px;
+  height: 60px;
+  background-size: cover;
+  border-radius: 50%;
 }
 
 /* Small-Large Screen Size: */
 
 @media all and (max-width: @bp-large) {
-    .page-title-container {
-        display: block !important;
-        padding: 30px 0px 20px 0px;
-        h3 {
-            font-size: 20px;
-        }
-        .search-block {
-            display: none;
-        }
+  .page-title-container {
+    display: block !important;
+    padding: 30px 0px 20px 0px;
+    h3 {
+      font-size: 20px;
     }
-    .block-title-container {
-        h3 {
-            font-size: 20px;
-        }
+    .search-block {
+      display: none;
     }
-    /*Common Button: */
-    .button-common {
-        padding: 4px 10px;
-        right: 20px;
-        min-width: 50px;
-        font-size: 12px;
+  }
+  .block-title-container {
+    h3 {
+      font-size: 20px;
     }
-    .small-blocks-row {
-        grid-template-columns: 1fr 1fr !important;
-        grid-template-rows: 1fr 1fr !important;
-    }
-    .identicon {
-        width: 45px;
-        height: 45px;
-    }
+  }
+  /*Common Button: */
+  .button-common {
+    padding: 4px 10px;
+    right: 20px;
+    min-width: 50px;
+    font-size: 12px;
+  }
+  .small-blocks-row {
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-rows: 1fr 1fr !important;
+  }
+  .identicon {
+    width: 45px;
+    height: 45px;
+  }
 }
 
 /* Small-Medium screen Query: */
 
 @media all and (max-width: @bp-medium) {
-    .small-blocks-row {
-        grid-template-columns: 1fr !important;
-        grid-template-rows: 1fr 1fr 1fr 1fr !important;
+  .small-blocks-row {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: 1fr 1fr 1fr 1fr !important;
+  }
+  .block-table-header {
+    grid-template-columns: 60px auto 50px 70px !important;
+    font-size: 12px !important;
+    li {
+      padding: 5px !important;
     }
-    .block-table-header {
-        grid-template-columns: 60px auto 50px 70px !important;
-        font-size: 12px !important;
-        li {
-            padding: 5px !important;
-        }
+  }
+  .tx-table-header {
+    grid-template-columns: auto 60px 30px !important;
+    font-size: 12px !important;
+    padding-right: 5px !important;
+    li {
+      padding: 5px !important;
     }
-    .tx-table-header {
-        grid-template-columns: auto 60px 30px !important;
-        font-size: 12px !important;
-        padding-right: 5px !important;
-        li {
-            padding: 5px !important;
-        }
+  }
+  .limit,
+  .gas {
+    display: none !important;
+  }
+  .page-title-container {
+    h3 {
+      font-size: @font-h3-mobile;
     }
-    .limit,
-    .gas {
-        display: none !important;
+  }
+  .block-title-container {
+    h3 {
+      font-size: @font-h3-mobile;
     }
-    .page-title-container {
-        h3 {
-            font-size: @font-h3-mobile;
-        }
-    }
-    .block-title-container {
-        h3 {
-            font-size: @font-h3-mobile;
-        }
-    }
-    .identicon {
-        width: 40px;
-        height: 40px;
-    }
+  }
+  .identicon {
+    width: 40px;
+    height: 40px;
+  }
 }

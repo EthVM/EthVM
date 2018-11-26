@@ -1,6 +1,6 @@
 import { common } from '@app/helpers'
 import { Address, EthValue, Hash, Hex, HexNumber, HexTime } from '@app/models'
-import { Tx as TxLayout } from 'ethvm-models'
+import { Tx as TxLayout } from 'ethvm-common'
 
 export class Tx {
   public readonly id: string
@@ -83,7 +83,7 @@ export class Tx {
 
   public getContractAddress(): string {
     if (!this.cache.contractAddress) {
-      if(this.tx.contractAddress){
+      if (this.tx.contractAddress) {
         this.cache.contractAddress = '0x' + this.tx.contractAddress
       }
     }

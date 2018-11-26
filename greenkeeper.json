@@ -1,0 +1,24 @@
+{
+  "groups": {
+    "common": {
+      "packages": [
+        "apps/common/package.json"
+      ]
+    },
+    "frontend": {
+      "packages": [
+        "apps/ethvm/package.json"
+      ]
+    },
+    "backend": {
+      "packages": [
+        "apps/server/packages/ethereumjs-vm/package.json"
+      ]
+    },
+    "utils": {
+      "packages": [
+        "bin/monkey/package.json"
+      ]
+    }
+  }
+}

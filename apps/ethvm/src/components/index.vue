@@ -1,32 +1,30 @@
 <template>
+  <v-container fluid mt-3>
+    <!-- BODY -->
+    <!-- Main Pages -->
+    <frame-blocks v-if="pageName == 'blocks'"></frame-blocks>
+    <frame-uncles v-else-if="pageName == 'uncles'"></frame-uncles>
+    <frame-txs v-else-if="pageName == 'transactions' || pageName == 'pendingTransactions'" :type="pageName"></frame-txs>
+    <frame-pending v-else-if="pageName == 'pending'" :type="pageName"></frame-pending>
+    <frame-charts v-else-if="pageName == 'charts'"></frame-charts>
+    <frame-about v-else-if="pageName == 'about'"></frame-about>
 
-      <v-container fluid wrap fill-height>
-        <!-- BODY -->
-        <!-- Main Pages -->
-        <frame-blocks v-if="pageName == 'blocks'"></frame-blocks>
-        <frame-uncles v-else-if="pageName == 'uncles'"></frame-uncles>
-        <frame-txs v-else-if="pageName == 'transactions' || pageName == 'pendingTransactions'" :type="pageName"></frame-txs>
-        <frame-pending v-else-if="pageName == 'pending'" :type="pageName"></frame-pending>
-        <frame-charts v-else-if="pageName == 'charts'"></frame-charts>
-        <frame-about v-else-if="pageName == 'about'"></frame-about>
-
-        <!--Detail Pages -->
-        <frame-uncle-detail v-else-if="pageName == 'uncle' && param" :blockHash="param"></frame-uncle-detail>
-        <frame-block-detail v-else-if="pageName == 'block' && param" :blockHash="param"></frame-block-detail>
-        <frame-address v-else-if="pageName == 'address' && param" :address="param"></frame-address>
-        <frame-tx-detail v-else-if="pageName == 'tx' && param" :txHash="param"></frame-tx-detail>
-        <frame-token-detail v-else-if="pageName == 'token' && !holder" :tokenAddr="param"></frame-token-detail>
-        <frame-token-detail v-else-if="pageName == 'token' && holder" :tokenAddr="param" :holderAddr="holder"></frame-token-detail>
-        <!-- Hope Page -->
-        <frame-home v-else></frame-home>
-      </v-container>
-
+    <!-- Detail Pages -->
+    <frame-uncle-detail v-else-if="pageName == 'uncle' && param" :blockRef="param"></frame-uncle-detail>
+    <frame-block-detail v-else-if="pageName == 'block' && param" :blockRef="param"></frame-block-detail>
+    <frame-address v-else-if="pageName == 'address' && param" :address="param"></frame-address>
+    <frame-tx-detail v-else-if="pageName == 'tx' && param" :txHash="param"></frame-tx-detail>
+    <frame-token-detail v-else-if="pageName == 'token' && !holder" :tokenAddr="param"></frame-token-detail>
+    <frame-token-detail v-else-if="pageName == 'token' && holder" :tokenAddr="param" :holderAddr="holder"></frame-token-detail>
+    <!-- Hope Page -->
+    <frame-home v-else></frame-home>
+  </v-container>
 </template>
 
 <script lang="ts">
 import 'vuetify/dist/vuetify.min.css'
-import sEvents from '@app/configs/socketEvents.json'
 import { Block, Tx, PendingTx } from '@app/models'
+import { Events as sEvents } from 'ethvm-common'
 import Vue from 'vue'
 
 export default Vue.extend({
@@ -89,7 +87,7 @@ export default Vue.extend({
         }
       )
 
-        this.$socket.emit(
+      this.$socket.emit(
         sEvents.getUncles,
         {
           limit: 100,

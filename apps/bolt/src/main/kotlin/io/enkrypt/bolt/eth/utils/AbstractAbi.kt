@@ -24,14 +24,18 @@ abstract class AbstractAbi protected constructor(path: Path) {
 
       // index the functions
       this.functionMap = this.functions()
-        .map { name -> abi.findFunction{ f -> f.name == name } }
-        .map{ f -> f.encodeSignature().toByteBuffer()!! to f }
+        .asSequence()
+        .map { name -> abi.findFunction { f -> f.name == name } }
+        .map { f -> f.encodeSignature().toByteBuffer()!! to f }
+        .toList()
         .toMap()
 
       // index the events
       this.eventMap = this.events()
-        .map { name -> abi.findEvent { e -> e.name == name }}
+        .asSequence()
+        .map { name -> abi.findEvent { e -> e.name == name } }
         .map { e -> e.encodeSignature().toByteBuffer()!! to e }
+        .toList()
         .toMap()
 
     } catch (ex: Exception) {
@@ -51,12 +55,9 @@ abstract class AbstractAbi protected constructor(path: Path) {
     return Option.fromNullable(functionMap[key])
   }
 
-  fun matchEvent(topics: List<DataWord>): Option<Abi.Event> {
-    return if (topics.isEmpty()) Option.empty() else matchEvent(topics[0])
-  }
+  fun matchEvent(topics: List<DataWord>): Option<Abi.Event> =
+    if (topics.isEmpty()) Option.empty() else matchEvent(topics[0])
 
-  fun matchEvent(word: DataWord): Option<Abi.Event> {
-    return Option.fromNullable(eventMap[word.bytes().toByteBuffer()])
-  }
+  fun matchEvent(word: DataWord): Option<Abi.Event> = Option.fromNullable(eventMap[word.bytes().toByteBuffer()])
 
 }

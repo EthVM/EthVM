@@ -17,21 +17,26 @@ RUN apk --no-cache add \
 
 RUN apk add --no-cache --virtual \
   .build-deps \
-  gcc zlib-dev \
+  gcc \
+  zlib-dev \
   libc-dev \
   bsd-compat-headers \
   py-setuptools \
   bash
 
 # Create workdir
-RUN mkdir -p /var/ethvm-server
-WORKDIR /var/ethvm-server
+RUN mkdir -p /var/www
+WORKDIR /var/www
 
 # Copy
-COPY . .
+COPY server/ api/
+COPY common/ common/
 
 # Install
-RUN yarn install
+RUN cd api && \
+  yarn install
+
+WORKDIR /var/www/api
 
 # Expose
 EXPOSE 3000

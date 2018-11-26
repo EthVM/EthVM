@@ -1,96 +1,105 @@
 <template>
-  <div class="">
-    <div class="container">
-      <!-- Page Title -->
-      <div class="page-title-container">
-        <div class="title-box">
-          <div class="ident">
-            <div id="icon" class="identicon"></div>
-          </div>
-            <h3 class="address-string">{{ $t('title.address') }}</h3>
-            <h3 class="address-hash">{{address}}</h3>
-          <h6 class="text">{{ $t('subTitle.address') }}</h6>
-
-
-        </div>
-        <div class="search-block">
-          <block-search></block-search>
-        </div>
-        <!-- End Page Title -->
-      </div>
-      <!-- Address Details -->
-      <div class="row">
-        <div class="col-md-12 col-sm-12 col-xs-12">
-          <address-detail :account="account"></address-detail>
-        </div>
-        <!-- End Address Details -->
-      </div>
-      <!-- Tab Menu -->
-      <tab-component :tabs="addressTabs"></tab-component>
-      <!-- End Tab Menu -->
-      <!--Tab Content -->
-      <div class="tab-menu-container">
+  <v-container grid-list-lg class="mt-0">
+    <v-layout row wrap justify-start class="mb-4">
+      <v-flex xs12>
+        <v-card fluid flat color="transparent">
+          <v-breadcrumbs large>
+            <v-icon slot="divider">fa fa-arrow-right</v-icon>
+            <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link"> {{ item.text }} </v-breadcrumbs-item>
+          </v-breadcrumbs>
+        </v-card>
+      </v-flex>
+    </v-layout>
+    <v-layout row wrap justify-start class="mb-4">
+      <v-flex xs12> <address-detail :account="account"></address-detail> </v-flex>
+    </v-layout>
+    <!-- End Address Details -->
+    <!-- Tab Menu -->
+    <v-card color="white" flat>
+      <v-tabs
+        v-model="activeTab"
+        color="white"
+        show-arrows
+        :class="{ 'pl-0 pr-0': $vuetify.breakpoint.smAndDown, 'pl-3 pr-3': $vuetify.breakpoint.mdAndUp, 'pt-2': $vuetify.breakpoint.mdAndUp }"
+      >
+        <v-tab
+          v-for="item in tabs"
+          class="info--text text-capitalize pb-2 tab-opacity"
+          active-class="primary--text "
+          :key="item.id"
+          :href="'#tab-' + item.id"
+          ripple
+        >
+          {{ item.title }}
+        </v-tab>
+        <v-tabs-slider color="primary" class="mb-0" style="height: 4px;"></v-tabs-slider>
+      </v-tabs>
+      <v-tabs-items v-model="activeTab" style="border-top: 1px solid #efefef">
         <!-- Transactions -->
-        <div v-if="addressTabs[0].isActive">
-          <div v-if="account.txs">
-            <block-address-tx :address='account' :transactions='account.txs' :isPending='false'></block-address-tx>
-          </div>
-          <!-- End Transactions -->
-        </div>
+        <v-tab-item value="tab-0">
+          <block-address-tx v-if="account.txs" :address="account.address" :transactions="account.txs"></block-address-tx>
+          <error-no-data v-else></error-no-data>
+        </v-tab-item>
         <!-- Tokens -->
-        <div v-if="addressTabs[1].isActive">
+        <v-tab-item value="tab-1">
           <div v-if="!tokenError">
-            <div v-if="tokensLoaded">
-              <block-token-tracker :tokens="account.tokens" :holder="account.address"></block-token-tracker>
-            </div>
-            <div v-else class="loading-tokens">
-              <i class="fa fa-spinner fa-pulse fa-4x fa-fw"></i>
-              <span class="sr-only">{{ $t('message.load') }}</span>
-            </div>
+            <div v-if="tokensLoaded"><block-token-tracker :tokens="account.tokens" :holder="account.address"></block-token-tracker></div>
+            <v-card flat v-else class="loading-tokens">
+              <i class="fa fa-spinner fa-pulse fa-4x fa-fw"></i> <span class="sr-only">{{ $t('message.load') }}</span>
+            </v-card>
           </div>
-          <div v-else class="info-common">
-            <p> {{ $t('message.error') }}</p>
-          </div>
-          <!-- End Tokens -->
-        </div>
+          <error-no-data v-else></error-no-data>
+        </v-tab-item>
+        <!-- End Tokens -->
         <!-- Pending Transactions -->
-        <div v-if="addressTabs[2].isActive" class="">
-          <block-address-tx :address='account' :transactions='account.pendingTxs' :isPending='true'></block-address-tx>
-
-          <!-- End Pending Transactions -->
-        </div>
-        <!--Mining History This are temp strings (no need to implement yet)  -->
-        <div v-if="account.isMiner">
-          <div v-if="addressTabs[3].isActive">
-            <div>
-              <ul>
-                <li>Name:</li>
-                <li>TWN</li>
-                <li>Balance:</li>
-                <li>20,930 TWN</li>
-                <li>Value:</li>
-                <li>$0.00</li>
-                <li>ERC 20 Contract:</li>
-                <li>0x045619099665fc6f661b1745e5350290ceb933f</li>
-              </ul>
-            </div>
-          </div>
-          <!--End Mining History -->
-        </div>
-        <!-- End Tab Content -->
-      </div>
-    </div>
-    <!-- container -->
-  </div>
+        <v-tab-item value="tab-2">
+          <block-address-tx v-if="account.pendingTxs" :address="account" :transactions="account.pendingTxs" :isPending="true"></block-address-tx>
+          <error-no-data v-else></error-no-data>
+        </v-tab-item>
+        <v-tab-item v-if="account.isMiner" value="tab-3">
+          <!-- Mining History This are temp strings (no need to implement yet) -->
+          <v-card>
+            <ul>
+              <li>Name:</li>
+              <li>TWN</li>
+              <li>Balance:</li>
+              <li>20,930 TWN</li>
+              <li>Value:</li>
+              <li>$0.00</li>
+              <li>ERC 20 Contract:</li>
+              <li>0x045619099665fc6f661b1745e5350290ceb933f</li>
+            </ul>
+          </v-card>
+        </v-tab-item>
+        <!-- End Mining History -->
+        <v-tab-item v-if="account.conCreator" value="tab-4">
+          <!-- Mining History This are temp strings (no need to implement yet) -->
+          <v-card>
+            <ul>
+              <li>Name:</li>
+              <li>TWN</li>
+              <li>Balance:</li>
+              <li>20,930 TWN</li>
+              <li>Value:</li>
+              <li>$0.00</li>
+              <li>ERC 20 Contract:</li>
+              <li>0x045619099665fc6f661b1745e5350290ceb933f</li>
+            </ul>
+          </v-card>
+        </v-tab-item>
+        <!-- End Mining History -->
+      </v-tabs-items>
+    </v-card>
+  </v-container>
 </template>
 
 <script lang="ts">
 import { common } from '@app/helpers'
-import { Tx, Account, PendingTx } from '@app/models'
 import bn from 'bignumber.js'
 import blockies from 'ethereum-blockies'
 import ethUnits from 'ethereumjs-units'
-import sEvents from '@app/configs/socketEvents.json'
+import { Tx, Account, PendingTx } from '@app/models'
+import { Events as sEvents } from 'ethvm-common'
 import Vue from 'vue'
 
 const MAX_ITEMS = 20
@@ -109,26 +118,38 @@ export default Vue.extend({
         tokens: this.tokens,
         txs: this.txs,
         pendingTxs: this.pendingTxs,
-        isMiner: false
+        isMiner: true,
+        conCreator: false
       },
-      identicon: null,
-      addressTabs: [
+      items: [
         {
-          id: 0,
+          text: this.$i18n.t('title.home'),
+          disabled: false,
+          link: '/'
+        },
+        {
+          text: this.$i18n.t('title.address'),
+          disabled: true
+        }
+      ],
+      tabs: [
+        {
+          id: '0',
           title: this.$i18n.t('tabs.txH'),
           isActive: true
         },
         {
-          id: 1,
+          id: '1',
           title: this.$i18n.t('tabs.tokens'),
           isActive: false
         },
         {
-          id: 2,
+          id: '2',
           title: this.$i18n.t('tabs.pending'),
           isActive: false
         }
       ],
+      activeTab: 'tab-0',
       tokensLoaded: false,
       tokenError: false,
       usdValue: {
@@ -141,14 +162,14 @@ export default Vue.extend({
   created() {
     /* Geting Address Balance: */
     this.$socket.emit(
-      sEvents.getAddress,
+      sEvents.getAccount,
       {
-        address: this.address.replace('0x','')
+        address: this.address.replace('0x', '')
       },
       (err, result) => {
         const addr = new Account(result)
         if (!err && result) {
-          const balance =  addr.getBalance().toEth()
+          const balance = addr.getBalance()
           this.account.balance = balance
         }
       }
@@ -172,21 +193,28 @@ export default Vue.extend({
     this.$socket.emit(
       sEvents.getTotalTxs,
       {
-        address: this.address.replace('0x','')
+        address: this.address.replace('0x', '')
       },
       (err, result) => {
         this.account.totalTxs = result
       }
     )
     /*Getting USD Values: */
-    this.$socket.emit(sEvents.getTicker, { symbol: 'ETH', to: 'USD' }, (err, result) => {
-      this.account.ethusd = result.price
-    })
+    this.$socket.emit(
+      sEvents.getExchangeRates,
+      {
+        symbol: 'ETH',
+        to: 'USD'
+      },
+      (err, result) => {
+        this.account.ethusd = result.price
+      }
+    )
     /*Getting Address Transactions: */
     this.$socket.emit(
-      sEvents.getAddressTx,
+      sEvents.getAddressTxs,
       {
-        address: this.address.replace('0x',''),
+        address: this.address.replace('0x', ''),
         limit: 10,
         page: 0
       },
@@ -199,10 +227,10 @@ export default Vue.extend({
       }
     )
     /*Getting Address Pending Transactions: */
-      this.$socket.emit(
+    this.$socket.emit(
       sEvents.pendingTxsAddress,
       {
-        address: this.address.replace('0x',''),
+        address: this.address.replace('0x', ''),
         limit: 10,
         page: 0
       },
@@ -214,42 +242,27 @@ export default Vue.extend({
         this.account.pendingTxs = pTxs
       }
     )
-
-    this.setTabs()
-
-  },
-  mounted() {
-    this.getIdenticon()
   },
   methods: {
     /*Checking of address is Miner? --> add new tab for the menu*/
     setTabs() {
       if (this.account.isMiner) {
         const newTab = {
-          id: 3,
+          id: '3',
           title: this.$i18n.t('tabs.miningH'),
           isActive: false
         }
         this.addressTabs.push(newTab)
       }
-    },
-    getIdenticon() {
-      this.identicon = document.getElementById('icon')
-      this.identicon.style.backgroundImage =
-        'url(' +
-        blockies
-          .create({
-            seed: this.account.address,
-            size: 5,
-            scale: 3
-          })
-          .toDataURL() +
-        ')'
+      if (this.account.conCreator) {
+        const newTab = {
+          id: '4',
+          title: this.$i18n.t('tabs.contracts'),
+          isActive: false
+        }
+        this.addressTabs.push(newTab)
+      }
     }
   }
 })
 </script>
-
-<style scoped lang="less">
-@import '~lessPath/sunil/frames/address.less';
-</style>

@@ -1,52 +1,87 @@
 <template>
-  <v-card class="mt-3 mb-5">
-    <v-list dense>
-      <template v-for="(item,index) in items">
-        <v-list-tile  :key="item.title" class="pl-1 pr-1">
-          <v-layout justify-start>
-            <v-flex xs4 sm3 md2>
-              <v-list-tile-title><strong>{{item.title}}</strong></v-list-tile-title>
-            </v-flex>
-            <v-flex xs7 sm8 md9>
-              <p v-if="!item.link" class="text-muted text-truncate">{{item.detail}}<timeago v-if="item.title == $t('common.timestmp')" :since="block.getTimestamp()" :auto-update="10"></timeago></p>
-              <router-link v-else :to="item.link"><p class="text-truncate">{{item.detail}}</p></router-link>
-            </v-flex>
-            <v-flex xs1>
-              <v-list-tile-action v-if="item.copy">
-                <copy-to-clip-component :valueToCopy="item.detail"></copy-to-clip-component>
-              </v-list-tile-action>
-            </v-flex>
-          </v-layout>
-        </v-list-tile>
-        <v-divider class="ma-0" :key="index"></v-divider>
-      </template>
-      <template v-if="more" v-for="(item,index) in moreItems">
-        <v-list-tile  :key="item.title" class="pl-1 pr-1">
-          <v-layout justify-start>
-            <v-flex xs4 sm3 md2>
-              <v-list-tile-title><strong>{{item.title}}</strong></v-list-tile-title>
-            </v-flex>
-            <v-flex xs7 sm8 md9>
-              <p v-if="!item.link" class="text-muted text-truncate">{{item.detail}}</p>
-              <router-link v-else :to="item.link"><p class="text-truncate">{{item.detail}}</p></router-link>
-            </v-flex>
-            <v-flex xs1>
-              <v-list-tile-action v-if="item.copy">
-                <copy-to-clip-component :valueToCopy="item.detail"></copy-to-clip-component>
-              </v-list-tile-action>
-            </v-flex>
-          </v-layout>
-        </v-list-tile>
-        <v-divider class="ma-0" :key="(index+1)*10"></v-divider>
-      </template>
-    </v-list>
-    <v-layout justify-end>
-      <v-btn v-if="!more" v-on:click="setView()" flat class="trasparent"><v-icon class="fa fa-angle-down black--text"></v-icon></v-btn>
-      <v-btn v-else v-on:click="setView()" flat class="trasparent"><v-icon class="fa fa-angle-up black--text"></v-icon></v-btn>
+  <v-card color="white" flat class="pt-3">
+    <v-layout wrap row align-center justify-start pb-1>
+      <v-flex xs3 sm2 md1>
+        <v-layout align-center justify-start>
+          <v-btn flat color="primary" class="black--text" icon :to="previousBlock()"> <v-icon>fas fa-angle-left</v-icon> </v-btn>
+        </v-layout>
+      </v-flex>
+      <v-flex xs6 sm8 md10 pl-0>
+        <v-layout row wrap align-center justify-start pl-0>
+          <v-card-title class="title font-weight-bold">{{ $t('title.blockDetail') }}</v-card-title>
+          <v-dialog v-if="hasUncles" v-model="dialog" max-width="700">
+            <v-btn round outline slot="activator" color="primary" class="text-capitalize" small
+              >Unlces
+              <v-icon right>fa fa-angle-right</v-icon>
+            </v-btn>
+            <v-card>
+              <v-card-title class="title font-weight-bold">Uncles:</v-card-title>
+              <v-divider class="lineGrey"></v-divider>
+              <v-list>
+                <v-list-tile v-for="(uncle, index) in uncles" :key="index">
+                  <v-layout row justify-start align-center fill-height>
+                    <v-card-title class="info--text pr-0 pl-0">{{ $t('common.hash') }}:</v-card-title>
+                    <v-card-text class="text-truncate">
+                      <router-link :to="'/block/' + uncles[index]"> 0x{{ uncles[index].unclesHash }} </router-link>
+                    </v-card-text>
+                  </v-layout>
+                </v-list-tile>
+              </v-list>
+            </v-card>
+          </v-dialog>
+        </v-layout>
+      </v-flex>
+      <v-flex xs3 sm2 md1>
+        <v-layout align-center justify-end>
+          <v-btn flat color="primary" class="black--text" icon :to="nextBlock()"> <v-icon>fas fa-angle-right</v-icon> </v-btn>
+        </v-layout>
+      </v-flex>
     </v-layout>
+    <v-divider class="lineGrey"></v-divider>
+    <v-list>
+      <v-list-tile v-for="(item, index) in items" :key="index" :class="[index % 2 == 0 ? 'background: white' : 'background: tableGrey']">
+        <v-layout align-center justify-start row fill-height class="pa-3 ">
+          <v-flex xs4 sm3 md2>
+            <v-list-tile-title class="info--text font-weight-medium">{{ item.title }}</v-list-tile-title>
+          </v-flex>
+          <v-flex xs7 sm8 md9>
+            <v-list-tile-title v-if="!item.link" class="text-muted text-truncate"
+              >{{ item.detail }} <timeago v-if="item.title == $t('common.timestmp')" :since="block.getTimestamp()" :auto-update="10"></timeago>
+            </v-list-tile-title>
+            <router-link v-else :to="item.link">
+              <v-list-tile-title class="text-truncate">{{ item.detail }}</v-list-tile-title>
+            </router-link>
+          </v-flex>
+          <v-flex xs1>
+            <v-list-tile-action v-if="item.copy"> <copy-to-clip-component :valueToCopy="item.detail"></copy-to-clip-component> </v-list-tile-action>
+          </v-flex>
+        </v-layout>
+      </v-list-tile>
+      <v-slide-y-transition group>
+        <v-list-tile v-if="more" v-for="(item, count) in moreItems" :key="count" :class="[count % 2 == 0 ? 'background: white' : 'background: tableGrey']">
+          <v-layout align-center justify-start row fill-height class="pa-3">
+            <v-flex xs4 sm3 md2>
+              <v-list-tile-title class="info--text font-weight-medium">{{ item.title }}</v-list-tile-title>
+            </v-flex>
+            <v-flex xs7 sm8 md9>
+              <v-list-tile-title v-if="!item.link" class="text-muted text-truncate"
+                >{{ item.detail }} <timeago v-if="item.title == $t('common.timestmp')" :since="block.getTimestamp()" :auto-update="10"></timeago>
+              </v-list-tile-title>
+              <router-link v-else :to="item.link">
+                <v-list-tile-title class="text-truncate">{{ item.detail }}</v-list-tile-title>
+              </router-link>
+            </v-flex>
+            <v-flex xs1>
+              <v-list-tile-action v-if="item.copy"> <copy-to-clip-component :valueToCopy="item.detail"></copy-to-clip-component> </v-list-tile-action>
+            </v-flex>
+          </v-layout>
+        </v-list-tile>
+      </v-slide-y-transition>
+    </v-list>
+    <v-btn v-if="!more" v-on:click="setView()" flat block class="secondary"> <v-icon class="fa fa-angle-down white--text"></v-icon> </v-btn>
+    <v-btn v-else v-on:click="setView()" flat block class="secondary"> <v-icon class="fa fa-angle-up white--text"></v-icon> </v-btn>
   </v-card>
 </template>
-
 
 <script lang="ts">
 import { common } from '@app/helpers'
@@ -61,7 +96,9 @@ export default Vue.extend({
     return {
       showMore: false,
       items: [],
-      moreItems: []
+      moreItems: [],
+      dialog: false,
+      hash: '0x9da34191b2d785bc6dcdc40707a1d18c6b0d1d596350b418d815cdc103741fc6'
     }
   },
   methods: {
@@ -87,17 +124,11 @@ export default Vue.extend({
         },
         {
           title: this.$i18n.t('common.timestmp'),
-          detail: this.block.getTimestamp().toString()
+          detail: this.block.getTimestamp()
         },
         {
           title: this.$i18n.t('block.reward'),
-          detail:
-            this.block
-              .getBlockReward()
-              .toEth()
-              .toString() +
-            ' ' +
-            this.$i18n.t('common.eth')
+          detail: this.block.getBlockReward() + ' ' + this.$i18n.t('common.eth')
         },
         {
           title: this.$i18n.t('block.pHash'),
@@ -122,24 +153,24 @@ export default Vue.extend({
       this.moreItems = [
         {
           title: this.$i18n.t('block.diff'),
-          details: this.block.getDifficulty().toNumber()
+          details: this.block.getDifficulty()
         },
         {
           title: this.$i18n.t('block.totalDiff'),
-          details: this.block.getTotalDifficulty().toNumber()
+          details: this.block.getTotalDifficulty()
         },
         {
           title: this.$i18n.t('block.nonce'),
-          details: this.block.getNonce().toString()
+          details: this.block.getNonce()
         },
         {
           title: this.$i18n.t('block.root'),
           details: this.block.getStateRoot().toString()
-        },
-        {
-          title: this.$i18n.t('block.data'),
-          details: this.block.getExtraData().toString()
         }
+        /*{
+            title: this.$i18n.t('block.data'),
+            details: this.block.getExtraData().toString()
+          }*/
       ]
 
       if (!this.isUncle) {
@@ -150,11 +181,11 @@ export default Vue.extend({
           },
           {
             title: this.$i18n.t('block.fees'),
-            detail: this.block.getTxFees().toEth() + ' ' + this.$i18n.t('common.eth')
+            detail: this.block.getTxFees() + ' ' + this.$i18n.t('common.eth')
           },
           {
             title: this.$i18n.t('gas.limit'),
-            detail: this.block.getGasLimit().toNumber()
+            detail: this.block.getGasLimit()
           },
           {
             title: this.$i18n.t('gas.used'),
@@ -174,12 +205,7 @@ export default Vue.extend({
           },
           {
             title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward'),
-            detail: this.block
-              .getUncleReward()
-              .toEth()
-              .toString() +
-            ' ' +
-            this.$i18n.t('common.eth')
+            detail: this.block.getUncleReward() + ' ' + this.$i18n.t('common.eth')
           },
           {
             title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.sha'),
@@ -190,6 +216,14 @@ export default Vue.extend({
           this.moreItems.push(i)
         })
       }
+    },
+    nextBlock() {
+      const next = this.block.getNumber() + 1
+      return '/block/' + next.toString()
+    },
+    previousBlock() {
+      const prev = this.block.getNumber() - 1
+      return '/block/' + prev.toString()
     }
   },
   mounted() {
@@ -198,13 +232,16 @@ export default Vue.extend({
   },
   computed: {
     isUncle() {
-      return this.block.getIsUncle()
+      return false
     },
     update() {
       return String
     },
     more() {
       return this.showMore
+    },
+    hasUncles() {
+      return this.block.getIsUncle()
     }
   }
 })

@@ -19,15 +19,17 @@ enum class BlockStatistic {
 
 }
 
-data class BlockStatistics(val totalTxs: Int,
-                           val numSuccessfulTxs: Int,
-                           val numFailedTxs: Int,
-                           val numPendingTxs: Int,
-                           val totalDifficulty: BigInteger,
-                           val totalGasPrice: BigInteger,
-                           val avgGasPrice: BigInteger,
-                           val totalTxsFees: BigInteger,
-                           val avgTxsFees: BigInteger) {
+data class BlockStatistics(
+  val totalTxs: Int,
+  val numSuccessfulTxs: Int,
+  val numFailedTxs: Int,
+  val numPendingTxs: Int,
+  val totalDifficulty: BigInteger,
+  val totalGasPrice: BigInteger,
+  val avgGasPrice: BigInteger,
+  val totalTxsFees: BigInteger,
+  val avgTxsFees: BigInteger
+) {
 
   companion object {
 
@@ -60,15 +62,24 @@ data class BlockStatistics(val totalTxs: Int,
       var avgGasPrice = BigInteger.ZERO
       var avgTxsFees = BigInteger.ZERO
 
-      if(totalTxs > 0) {
+      if (totalTxs > 0) {
         avgGasPrice = totalGasPrice.divide(totalTxs.toBigInteger())
         avgTxsFees = totalTxsFees.divide(totalTxs.toBigInteger())
       }
 
-      return BlockStatistics(totalTxs, numSuccessfulTxs, numFailedTxs, numPendingTxs, totalDifficulty!!, totalGasPrice, avgGasPrice, totalTxsFees, avgTxsFees)
+      return BlockStatistics(
+        totalTxs,
+        numSuccessfulTxs,
+        numFailedTxs,
+        numPendingTxs,
+        totalDifficulty!!,
+        totalGasPrice,
+        avgGasPrice,
+        totalTxsFees,
+        avgTxsFees
+      )
     }
 
   }
-
 
 }

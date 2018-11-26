@@ -1,6 +1,6 @@
 import { common } from '@app/helpers'
 import { Hash, Hex, HexNumber, HexTime, Tx } from '@app/models'
-import { Uncle as UncleLayout } from 'ethvm-models'
+import { Uncle as UncleLayout } from 'ethvm-common'
 
 export class Uncle {
   public readonly id: string
@@ -44,7 +44,6 @@ export class Uncle {
     }
     return this.cache.nonce
   }
-
 
   public getMiner(): string {
     if (!this.cache.miner) {
@@ -102,7 +101,6 @@ export class Uncle {
     return this.cache.gasUsed
   }
 
-
   public getMixHash(): Hash {
     if (!this.cache.mixHash) {
       this.cache.mixHash = common.Hash(this.uncle.mixHash)
@@ -116,5 +114,4 @@ export class Uncle {
     }
     return this.cache.extraData
   }
-
 }

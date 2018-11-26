@@ -1,6 +1,6 @@
 import { common } from '@app/helpers'
 import { EthValue, Hex, HexNumber } from '@app/models'
-import { PendingTx as PendingTxLayout } from  'ethvm-models'
+import { PendingTx as PendingTxLayout } from 'ethvm-common'
 
 export class PendingTx {
   public readonly id: string
@@ -12,13 +12,13 @@ export class PendingTx {
     this.pTx = pTx
   }
 
-  public getID() : string{
+  public getID(): string {
     return this.pTx.hash
   }
 
   public getHash(): string {
     if (!this.cache.to) {
-      this.cache.to = ""  // TODO get from mongo
+      this.cache.to = '' // TODO get from mongo
     }
     return this.cache.to
   }
@@ -36,7 +36,6 @@ export class PendingTx {
     }
     return this.cache.from
   }
-
 
   public getGasPrice(): number {
     if (!this.cache.gasPrice) {
@@ -58,7 +57,6 @@ export class PendingTx {
     }
     return this.cache.contractAddress
   }
-
 
   public getNonce(): string {
     if (!this.cache.nonce) {

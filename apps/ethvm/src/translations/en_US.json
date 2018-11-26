@@ -15,9 +15,9 @@
     "about": "About Us",
     "address": "Address",
     "blockN": "Block #",
-    "blockDetail": "Block Detail",
-    "tokenDetail": "Token Detail",
-    "txDetail": "Transaction Info",
+    "blockDetail": "Block Details",
+    "tokenDetail": "Token Details",
+    "txDetail": "Transaction Deatails",
     "overview": "Overview",
     "blockTx": "Block Transactions",
     "lastBlock": "Last Blocks",
@@ -48,13 +48,13 @@
   },
   "search": {
     "default": "Search Block / Address / Tx",
-    "addressTx": "Search tx hash/address"
+    "addressTx": "Tx Hash/Address"
   },
   "tableHeader": {
     "blockN": "Block #",
-    "txs": "Txs",
+    "txs": "Transactions",
     "reward": "Reward",
-    "txN": "Tx #",
+    "txN": "Transaction #",
     "limit": "Limit",
     "gas": "Gas"
   },
@@ -67,7 +67,7 @@
   },
 
   "message": {
-    "error": "Oops something went wrong :(",
+    "error": "Oops something went wrong, no data from server :(",
     "txAll": "This address does not have any transaction history",
     "txIn": "This address does not have incoming transactions",
     "txOut": "This address does not have outgoing transactions",
@@ -153,9 +153,9 @@
   },
 
   "tabs": {
-    "txH": "Txs History",
+    "txH": "Transaction History",
     "tokens": "Tokens",
-    "pending": "Pending Txs",
+    "pending": "Pending Transactions",
     "miningH": "Mining History",
     "contracts": "Contracts"
   },
@@ -172,16 +172,13 @@
   },
 
   "footer": {
-    "links": "Quick Links",
-    "find": "Help",
+    "dicover": "Discover",
+    "privPolicy": "Privacy Policy",
     "donate": "Donate",
     "btc": "BTC",
     "ens": "mewtopia.eth",
     "copy": "Copyright 2018 All rights reserved by ",
-    "enkrypt": "enKrypt LLC",
-    "email": "support@ethvm.com",
-
-    "aboutPar": "EthVM is a free and open source interface for exploring and evaluating real time Ethereum blocks, transactions and more."
+    "enkrypt": "enKrypt LLC"
   },
 
   "footnote": {
