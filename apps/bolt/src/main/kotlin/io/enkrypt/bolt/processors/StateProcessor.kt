@@ -5,12 +5,12 @@ import io.enkrypt.avro.processing.MetricRecord
 import io.enkrypt.bolt.extensions.toBigInteger
 import io.enkrypt.bolt.extensions.toByteBuffer
 import io.enkrypt.bolt.BoltSerdes
-import io.enkrypt.bolt.OutputTopics
+import io.enkrypt.bolt.Topics
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serdes
-import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
+import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.Materialized
 import org.apache.kafka.streams.kstream.Produced
@@ -22,11 +22,11 @@ import java.util.*
 /**
  * This processor processes addresses balances and type (if is a smart contract or not).
  */
-class StateBoltProcessor : AbstractBoltProcessor() {
+class StateProcessor : AbstractKafkaProcessor() {
 
   override val id: String = "state-processor"
 
-  private val kafkaProps: Properties = Properties(baseKafkaProps)
+  override val kafkaProps: Properties = Properties(baseKafkaProps)
     .apply {
       putAll(baseKafkaProps.toMap())
       put(StreamsConfig.APPLICATION_ID_CONFIG, id)
@@ -35,13 +35,13 @@ class StateBoltProcessor : AbstractBoltProcessor() {
 
   override val logger = KotlinLogging.logger {}
 
-  override fun onPrepareProcessor() {
+  override fun buildTopology(): Topology {
 
     // Create stream builder
     val builder = StreamsBuilder()
 
     val fungibleBalances = builder
-      .stream(OutputTopics.FungibleTokenMovements, Consumed.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance()))
+      .stream(Topics.FungibleTokenMovements, Consumed.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance()))
       .groupByKey(Serialized.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance()))
       .reduce(
         { memo, next -> FungibleTokenBalanceRecord
@@ -54,12 +54,12 @@ class StateBoltProcessor : AbstractBoltProcessor() {
 
     fungibleBalances
       .toStream()
-      .to(OutputTopics.FungibleTokenBalances, Produced.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance()))
+      .to(Topics.FungibleTokenBalances, Produced.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance()))
 
     //
 
     val blockMetricsStream = builder
-      .stream(OutputTopics.BlockMetrics, Consumed.with(BoltSerdes.MetricKey(), BoltSerdes.Metric()))
+      .stream(Topics.BlockMetrics, Consumed.with(BoltSerdes.MetricKey(), BoltSerdes.Metric()))
 
     val blockMetricsByDayCount = blockMetricsStream
       .groupByKey(Serialized.with(BoltSerdes.MetricKey(), BoltSerdes.Metric()))
@@ -113,13 +113,10 @@ class StateBoltProcessor : AbstractBoltProcessor() {
         },
         Materialized.with(BoltSerdes.MetricKey(), BoltSerdes.Metric())
       ).toStream()
-      .to(OutputTopics.BlockStatistics, Produced.with(BoltSerdes.MetricKey(), BoltSerdes.Metric()))
+      .to(Topics.BlockStatistics, Produced.with(BoltSerdes.MetricKey(), BoltSerdes.Metric()))
 
     // Generate the topology
-    val topology = builder.build()
-
-    // Create streams
-    streams = KafkaStreams(topology, kafkaProps)
+    return builder.build()
   }
 
 }

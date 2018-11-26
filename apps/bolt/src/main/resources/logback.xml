@@ -14,6 +14,6 @@
 
   <logger name="org.apache.kafka" level="WARN"/>
   <logger name="io.enkrypt" level="INFO"/>
-  <logger name="io.enkrypt.bolt.processors.StateBoltProcessor" level="INFO"/>
+  <logger name="io.enkrypt.bolt.processors.StateProcessor" level="INFO"/>
 
 </configuration>

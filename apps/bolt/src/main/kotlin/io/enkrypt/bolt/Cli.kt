@@ -59,10 +59,6 @@ class Cli : CliktCommand() {
   private val configModule = module {
 
     single {
-
-    }
-
-    single {
       KafkaConfig(
         bootstrapServers,
         startingOffset,
@@ -83,11 +79,11 @@ class Cli : CliktCommand() {
 
     startKoin(listOf(configModule, kafkaModule))
 
-    listOf<BoltProcessor>(
-      BlockSummaryBoltProcessor(),
-      StateBoltProcessor()
+    listOf<KafkaProcessor>(
+      BlockSummaryProcessor(),
+      StateProcessor()
     ).forEach {
-      it.onPrepareProcessor()
+      it.buildTopology()
       it.start(resetStreamsState == 1)
     }
   }

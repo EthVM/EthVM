@@ -10,16 +10,13 @@ import io.enkrypt.bolt.extensions.toBigInteger
 import io.enkrypt.bolt.extensions.toByteArray
 import io.enkrypt.bolt.extensions.toByteBuffer
 import io.enkrypt.bolt.BoltSerdes
-import io.enkrypt.bolt.OutputTopics
+import io.enkrypt.bolt.Topics
 import io.enkrypt.bolt.eth.utils.StandardTokenDetector
 import io.enkrypt.bolt.models.BlockStatistic
 import io.enkrypt.bolt.models.BlockStatistics
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serdes
-import org.apache.kafka.streams.KafkaStreams
-import org.apache.kafka.streams.KeyValue
-import org.apache.kafka.streams.StreamsBuilder
-import org.apache.kafka.streams.StreamsConfig
+import org.apache.kafka.streams.*
 import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.Produced
 import org.apache.kafka.streams.kstream.Transformer
@@ -54,7 +51,7 @@ data class TransactionData(val fungibleBalanceDeltas: List<KeyValue<FungibleToke
 /**
  *
  */
-class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
+class BlockSummaryProcessor : AbstractKafkaProcessor() {
 
   companion object {
     val ETHER_CONTRACT_ADDRESS = ByteUtil.hexStringToBytes("0000000000000000000000000000000000000000").toByteBuffer()!!
@@ -62,7 +59,7 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
 
   override val id: String = "block-summaries-processor"
 
-  private val kafkaProps: Properties = Properties()
+  override val kafkaProps: Properties = Properties()
     .apply {
       putAll(baseKafkaProps.toMap())
       put(StreamsConfig.APPLICATION_ID_CONFIG, id)
@@ -72,7 +69,7 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
 
   override val logger = KotlinLogging.logger {}
 
-  override fun onPrepareProcessor() {
+  override fun buildTopology(): Topology {
 
     // Create stream builder
     val builder = StreamsBuilder()
@@ -108,12 +105,12 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
     txEvents
       .flatMap { _, v -> v.fungibleBalanceDeltas }
       .mapValues { v -> FungibleTokenBalanceRecord.newBuilder().setAmount(ByteBuffer.wrap(v.toByteArray())).build() }
-      .to(OutputTopics.FungibleTokenMovements, Produced.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance()))
+      .to(Topics.FungibleTokenMovements, Produced.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance()))
 
     txEvents
       .flatMap { _, v -> v.nonFungibleBalanceDeltas }
       .mapValues { v -> NonFungibleTokenBalanceRecord.newBuilder().setAddress(v).build() }
-      .to(OutputTopics.NonFungibleTokenBalances, Produced.with(BoltSerdes.NonFungibleTokenBalanceKey(), BoltSerdes.NonFungibleTokenBalance()))
+      .to(Topics.NonFungibleTokenBalances, Produced.with(BoltSerdes.NonFungibleTokenBalanceKey(), BoltSerdes.NonFungibleTokenBalance()))
 
     txEvents
       .flatMap{ _, v -> v.contractCreations.map{ c ->
@@ -128,7 +125,7 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
           KeyValue(key, value)
 
       }}
-      .to(OutputTopics.ContractCreations, Produced.with(BoltSerdes.ContractKey(), BoltSerdes.ContractCreation()))
+      .to(Topics.ContractCreations, Produced.with(BoltSerdes.ContractKey(), BoltSerdes.ContractCreation()))
 
     txEvents
       .flatMap{ _, v -> v.contractSuicides.map{ c ->
@@ -143,7 +140,7 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
           KeyValue(key, value)
 
       }}
-      .to(OutputTopics.ContractSuicides, Produced.with(BoltSerdes.ContractKey(), BoltSerdes.ContractSuicide()))
+      .to(Topics.ContractSuicides, Produced.with(BoltSerdes.ContractKey(), BoltSerdes.ContractSuicide()))
 
 
     // statistics
@@ -173,14 +170,10 @@ class BlockSummaryBoltProcessor : AbstractBoltProcessor() {
           KeyValue(keyBuilder.setName(BlockStatistic.AvgTxsFees.name).build(), MetricRecord.newBuilder().setBigIntegerValue(avgTxsFees.toByteBuffer()).build())
         )
 
-      }.to(OutputTopics.BlockMetrics, Produced.with(BoltSerdes.MetricKey(), BoltSerdes.Metric()))
+      }.to(Topics.BlockMetrics, Produced.with(BoltSerdes.MetricKey(), BoltSerdes.Metric()))
 
     // Generate the topology
-    val topology = builder.build()
-
-    // Create streams
-    streams = KafkaStreams(topology, kafkaProps)
-
+    return builder.build()
   }
 
   private fun generateEtherBalanceDeltas(summary: BlockSummaryRecord): TransactionData {
