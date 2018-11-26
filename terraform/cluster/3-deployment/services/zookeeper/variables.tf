@@ -17,3 +17,7 @@ variable "zookeeper_storage_type" {
   description = "Storage type to be used by Zookeeper nodes"
   default     = "ssd"
 }
+
+variable "namespace" {
+  description = "Which namespace the resources should belong to"
+}

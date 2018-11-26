@@ -7,3 +7,7 @@ variable "explorer_nodes" {
   description = "Number of Explorer nodes"
   default     = 1
 }
+
+variable "namespace" {
+  description = "Which namespace the resources should belong to"
+}

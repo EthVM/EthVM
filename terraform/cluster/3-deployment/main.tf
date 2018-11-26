@@ -9,9 +9,10 @@ module "environments" {
 }
 
 # Deploy production
-module "production-services" {
+module "services-production" {
   source    = "./services"
   namespace = "${module.environments.prod-namespace}"
+  chain     = "${var.chain}"
 }
 
 # Creation of external ingresses to access the cluster

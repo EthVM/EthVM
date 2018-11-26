@@ -1,6 +1,7 @@
 resource "kubernetes_service" "api_service" {
   metadata {
-    name = "api"
+    name      = "api"
+    namespace = "${var.namespace}"
 
     labels {
       app                  = "api"
@@ -24,7 +25,8 @@ resource "kubernetes_service" "api_service" {
 
 resource "kubernetes_deployment" "api_deployment" {
   metadata {
-    name = "api"
+    name      = "api"
+    namespace = "${var.namespace}"
 
     labels {
       app = "api"
@@ -73,7 +75,7 @@ resource "kubernetes_deployment" "api_deployment" {
 
           env {
             name  = "ETHVM_MONGO_DB_NAME"
-            value = "ethvm_mainnet"
+            value = "${var.chain}"
           }
 
           env {

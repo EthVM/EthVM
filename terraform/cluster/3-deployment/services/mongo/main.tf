@@ -1,6 +1,7 @@
 resource "kubernetes_config_map" "mongodb_replicaset_configmap_init" {
   metadata {
-    name = "mongodb-config-init"
+    name      = "mongodb-config-init"
+    namespace = "${var.namespace}"
 
     labels {
       app = "mongodb"
@@ -14,7 +15,8 @@ resource "kubernetes_config_map" "mongodb_replicaset_configmap_init" {
 
 resource "kubernetes_config_map" "mongodb_replicaset_configmap_mongodb" {
   metadata {
-    name = "mongodb-config"
+    name      = "mongodb-config"
+    namespace = "${var.namespace}"
 
     labels {
       app = "mongodb"
@@ -28,7 +30,8 @@ resource "kubernetes_config_map" "mongodb_replicaset_configmap_mongodb" {
 
 resource "kubernetes_service" "mongodb_service" {
   metadata {
-    name = "mongodb"
+    name      = "mongodb"
+    namespace = "${var.namespace}"
 
     annotations {
       "service.alpha.kubernetes.io/tolerate-unready-endpoints" = "true"
@@ -56,7 +59,8 @@ resource "kubernetes_service" "mongodb_service" {
 
 resource "kubernetes_stateful_set" "mongodb_stateful_set" {
   metadata {
-    name = "mongodb"
+    name      = "mongodb"
+    namespace = "${var.namespace}"
 
     labels {
       app = "mongodb"
@@ -276,6 +280,7 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
           pod_anti_affinity {
             required_during_scheduling_ignored_during_execution {
               topology_key = "kubernetes.io/hostname"
+
               label_selector {
                 match_expressions {
                   key      = "app"
@@ -310,7 +315,8 @@ resource "kubernetes_stateful_set" "mongodb_stateful_set" {
 
 resource "kubernetes_job" "mongodb_ethvm_init" {
   metadata {
-    name = "mongodb-ethvm-init"
+    name      = "mongodb-ethvm-init"
+    namespace = "${var.namespace}"
   }
 
   spec {
@@ -322,6 +328,11 @@ resource "kubernetes_job" "mongodb_ethvm_init" {
           name              = "mongodb-ethvm-init"
           image             = "enkryptio/mongodb-ethvm-init:${var.mongodb_ethvm_init_version}"
           image_pull_policy = "Always"
+        }
+
+        env {
+          name  = "MONGODB_URL"
+          value = "mongodb://mongodb:27017/${var.chain}"
         }
       }
     }

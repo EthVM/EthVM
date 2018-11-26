@@ -1,6 +1,7 @@
 resource "kubernetes_service" "kafka_schema_registry_service" {
   metadata {
-    name = "kafka-schema-registry"
+    name      = "kafka-schema-registry"
+    namespace = "${var.namespace}"
 
     labels {
       app = "kafka-schema-registry"
@@ -21,7 +22,8 @@ resource "kubernetes_service" "kafka_schema_registry_service" {
 
 resource "kubernetes_deployment" "kafka_schema_registry_deployment" {
   metadata {
-    name = "kafka-schema-registry"
+    name      = "kafka-schema-registry"
+    namespace = "${var.namespace}"
 
     labels {
       app = "kafka-schema-registry"

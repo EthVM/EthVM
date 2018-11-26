@@ -1,6 +1,7 @@
 resource "kubernetes_service" "kafka_service" {
   metadata {
-    name = "kafka"
+    name      = "kafka"
+    namespace = "${var.namespace}"
 
     labels {
       app = "kafka"
@@ -22,7 +23,8 @@ resource "kubernetes_service" "kafka_service" {
 
 resource "kubernetes_service" "kafka_service_headless" {
   metadata {
-    name = "kafka-headless"
+    name      = "kafka-headless"
+    namespace = "${var.namespace}"
 
     labels {
       app = "kafka"
@@ -49,7 +51,8 @@ resource "kubernetes_service" "kafka_service_headless" {
 
 resource "kubernetes_stateful_set" "kafka_stateful_set" {
   metadata {
-    name = "kafka"
+    name      = "kafka"
+    namespace = "${var.namespace}"
 
     labels {
       app = "kafka"
@@ -235,7 +238,8 @@ resource "kubernetes_stateful_set" "kafka_stateful_set" {
 
 resource "kubernetes_job" "kafka_create_topics" {
   metadata {
-    name = "kafka-topics-creation"
+    name      = "kafka-topics-creation"
+    namespace = "${var.namespace}"
   }
 
   spec {

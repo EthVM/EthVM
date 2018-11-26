@@ -1,6 +1,7 @@
 resource "kubernetes_service" "kafka_connect_service" {
   metadata {
     name = "kafka-connect"
+    namespace = "${var.namespace}"
 
     labels {
       app = "kafka-connect"
@@ -22,6 +23,7 @@ resource "kubernetes_service" "kafka_connect_service" {
 resource "kubernetes_stateful_set" "kafka_connect_stateful_set" {
   metadata {
     name = "kafka-connect"
+    namespace = "${var.namespace}"
 
     labels {
       app = "kafka-connect"

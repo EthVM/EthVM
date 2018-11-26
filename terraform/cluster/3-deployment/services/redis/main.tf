@@ -1,6 +1,7 @@
 resource "kubernetes_config_map" "redis_config_map" {
   metadata {
-    name = "redis-health"
+    name      = "redis-health"
+    namespace = "${var.namespace}"
 
     labels {
       app = "redis"
@@ -18,7 +19,8 @@ resource "kubernetes_config_map" "redis_config_map" {
 
 resource "kubernetes_service" "redis_master_service" {
   metadata {
-    name = "redis"
+    name      = "redis"
+    namespace = "${var.namespace}"
 
     labels {
       app = "redis"
@@ -43,7 +45,8 @@ resource "kubernetes_service" "redis_master_service" {
 
 resource "kubernetes_stateful_set" "redis_stateful_set" {
   metadata {
-    name = "redis"
+    name      = "redis"
+    namespace = "${var.namespace}"
 
     labels {
       app = "redis"

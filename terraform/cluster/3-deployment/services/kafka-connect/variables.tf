@@ -17,3 +17,7 @@ variable "kafka_connect_storage_type" {
   description = "Storage type to be used by Kafka Connect nodes"
   default     = "ssd"
 }
+
+variable "namespace" {
+  description = "Which namespace the resources should belong to"
+}

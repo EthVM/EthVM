@@ -1,6 +1,7 @@
 resource "kubernetes_service" "zookeeper_service_headless" {
   metadata {
-    name = "zookeeper-headless"
+    name      = "zookeeper-headless"
+    namespace = "${var.namespace}"
 
     labels {
       app = "zookeeper"
@@ -36,7 +37,8 @@ resource "kubernetes_service" "zookeeper_service_headless" {
 
 resource "kubernetes_service" "zookeeper_service" {
   metadata {
-    name = "zookeeper"
+    name      = "zookeeper"
+    namespace = "${var.namespace}"
 
     labels {
       app = "zookeeper"
@@ -61,7 +63,8 @@ resource "kubernetes_service" "zookeeper_service" {
 
 resource "kubernetes_stateful_set" "zookeeper_stateful_set" {
   metadata {
-    name = "zookeeper"
+    name      = "zookeeper"
+    namespace = "${var.namespace}"
 
     labels {
       app = "zookeeper"

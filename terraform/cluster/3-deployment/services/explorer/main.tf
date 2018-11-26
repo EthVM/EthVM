@@ -1,6 +1,7 @@
 resource "kubernetes_service" "explorer_service" {
   metadata {
-    name = "explorer"
+    name      = "explorer"
+    namespace = "${var.namespace}"
 
     labels {
       app                  = "explorer"
@@ -24,7 +25,8 @@ resource "kubernetes_service" "explorer_service" {
 
 resource "kubernetes_deployment" "explorer_deployment" {
   metadata {
-    name = "explorer"
+    name      = "explorer"
+    namespace = "${var.namespace}"
 
     labels {
       app = "explorer"
