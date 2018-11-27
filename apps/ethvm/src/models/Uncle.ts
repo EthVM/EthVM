@@ -45,7 +45,6 @@ export class Uncle {
     return this.cache.nonce
   }
 
-
   public getMiner(): string {
     if (!this.cache.miner) {
       this.cache.miner = this.uncle.miner
@@ -102,7 +101,6 @@ export class Uncle {
     return this.cache.gasUsed
   }
 
-
   public getMixHash(): Hash {
     if (!this.cache.mixHash) {
       this.cache.mixHash = common.Hash(this.uncle.mixHash)
@@ -116,5 +114,4 @@ export class Uncle {
     }
     return this.cache.extraData
   }
-
 }

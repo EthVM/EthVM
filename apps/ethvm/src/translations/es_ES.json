@@ -1,0 +1,191 @@
+{
+  "title": {
+    "home": "Inicio",
+    "blocks": "Bloques",
+    "viewAll": "Ver todo",
+    "uncles": "Uncles",
+    "tx": "Transacciones",
+    "pending": "Transacciones Pendientes",
+    "mined": "Transacciones Minadas",
+    "tokens": "Tokens",
+    "tokenCntrc": "Contratos",
+    "tokenPrice20": "ERC20 Prices",
+    "tokenPrice721": "ERC721 Prices",
+    "charts": "Graficas",
+    "about": "Acerca de",
+    "address": "Direcciones",
+    "blockN": "Bloque #",
+    "blockDetail": "Detalle del Bloque",
+    "tokenDetail": "Detalle del Token",
+    "txDetail": "Detalles de la Transacci'on",
+    "overview": "Sumario",
+    "blockTx": "Transacciones relativas al Bloque",
+    "lastBlock": "Ultimos Bloques",
+    "lastTxs": "Ultimas Transacciones",
+    "kb": "Knowledge Base"
+  },
+  "common": {
+    "address": "Direccion",
+    "hash": "Hash",
+    "eth": "ETH",
+    "status": "Estado",
+    "timestmp": "Timestamp",
+    "gwei": "GWEI",
+    "more": "Mas",
+    "tx": "Tx"
+  },
+  "subTitle": {
+    "home": "Bienvenido a Ethereum Virtual Machine",
+    "blocks": "Bloques, mas recientes primero",
+    "tx": "Transacciones, mas recientes primero",
+    "pending": "Transactions that haven't been mined on Ethereum network",
+    "charts": "Ethereum network charts and stats",
+    "about": "EthVM Informacion General",
+    "address": "Informacion General / Sumario de Transacciones",
+    "blockDetail": "Informacion general del Bloque / Sumario de Transacciones",
+    "tokenDetail": "Token overview / Historico de Transferencias",
+    "txDetail": "Ethereum transaction overview"
+  },
+  "search": {
+    "default": "Buscar Bloque / Direccion / Tx",
+    "addressTx": "Tx Hash/Direccion"
+  },
+  "tableHeader": {
+    "blockN": "Bloque #",
+    "txs": "Transacciones",
+    "reward": "Recompensa",
+    "txN": "Transaccion #",
+    "limit": "Limite",
+    "gas": "Gas"
+  },
+
+  "filter": {
+    "view": "Ver",
+    "all": "Todo",
+    "out": "Salientes",
+    "in": "Entrantes"
+  },
+
+  "message": {
+    "error": "Uy, algo ha ido mal, no hay datos desde el servidor :(",
+    "txAll": "Esta direccion no contiene ningun historico de transacciones",
+    "txIn": "Esta direccion no contine ninguna transaccion entrante",
+    "txOut": "Esta direccion no contiene ninguna transaccion saliente",
+    "txPen": "Esta direccion no contiene ninguna transaccion pendiente",
+    "txPenIn": "Esta direccion no contine ninguna transaccion entrante",
+    "txPenOut": "Esta direccion no contine ninguna transaccion saliente",
+    "noTokens": "La direccion no contine ningun token",
+    "noTxHistory": "No existe historico de transacciones",
+    "noTxInBlock": "Este bloque no contiene ninguna transaccion",
+    "noPending": "No hay transacciones pendientes",
+    "load": "Cargando ..."
+  },
+
+  "block": {
+    "height": "Height",
+    "miner": "Miner",
+    "reward": "Miner Reward",
+    "totalReward": "Total Block Reward",
+    "fees": "Tx Fees",
+    "pHash": "Parent Hash",
+    "size": "Size",
+    "diff": "Dificultad",
+    "totalDiff": "Dificultad Total",
+    "logs": "Registros",
+    "nonce": "Nonce",
+    "root": "State Root",
+    "data": "Datos Extra",
+    "txRoot": "Transactions Root",
+    "recRoot": "Receipts Root",
+    "uncReward": "Recompensa",
+    "sha": "SHA3",
+    "uncle": "Uncle(s)"
+  },
+
+  "addrOverview": {
+    "balance": "Ether Balance",
+    "usd": "USD Value",
+    "txN": "Number of Txs",
+    "mined": "Mined",
+    "creator": "Contract Creator",
+    "forTx": "For Tx",
+    "per": "per",
+    "uncles": "Uncles",
+    "and": "and"
+  },
+
+  "tx": {
+    "from": "Desde",
+    "to": "A",
+    "contract": "Contract",
+    "amount": "Cantidad",
+    "block": "Bloque #",
+    "cost": "Coste de la Transaccion"
+  },
+
+  "token": {
+    "holder": "Holder",
+    "balance": "Balance",
+    "supply": "Total Supply",
+    "totalHold": "Total Holders",
+    "symbol": "Symbol",
+    "transfers": "Total Transfers",
+    "value": "Value",
+    "decimal": "Decimals",
+    "number": "Total Number of Tokens",
+    "totalUSD": "Total USD Value"
+  },
+
+  "gas": {
+    "limit": "Limite de Gas",
+    "used": "Gas Utilizado",
+    "price": "Precio del Gas"
+  },
+
+  "smlBlock": {
+    "last": "Ultimo Bloque #",
+    "time": "Desde el Ultimo Bloque",
+    "hashR": "Hash Rate",
+    "diff": "Dificultad",
+    "success": "Tx Exitosas",
+    "failed": "Tx Fallidas",
+    "pending": "Tx Pendientes"
+  },
+
+  "tabs": {
+    "txH": "Historico de Transacciones",
+    "tokens": "Tokens",
+    "pending": "Transacciones Pendientes",
+    "miningH": "Historico de Minado",
+    "contracts": "Contratos"
+  },
+
+  "bttn": {
+    "more": "Mas",
+    "less": "Menos",
+    "viewAll": "Ver Todo"
+  },
+
+  "type": {
+    "in": "Entrante",
+    "out": "Saliente"
+  },
+
+  "footer": {
+    "dicover": "Descubrir",
+    "privPolicy": "Politica de Privacidad",
+    "donate": "Donaciones",
+    "btc": "BTC",
+    "ens": "mewtopia.eth",
+    "copy": "Copyright 2018 Todos los derechos reservados por ",
+    "enkrypt": "enKrypt LLC"
+  },
+
+  "footnote": {
+    "success": "Exitosas",
+    "failed": "Fallidas",
+    "pending": "Pendientes",
+    "aveTxFees": "Avg Tx Fees (ETH)",
+    "aveGasPrice": "Avg Gas Price (GWEI)"
+  }
+}

@@ -3,17 +3,12 @@
     <v-card fluid flat color="transparent">
       <v-breadcrumbs large>
         <v-icon slot="divider">fa fa-arrow-right</v-icon>
-        <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link">
-          {{ item.text }}
-        </v-breadcrumbs-item>
+        <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link"> {{ item.text }} </v-breadcrumbs-item>
       </v-breadcrumbs>
     </v-card>
-    <v-layout row wrap>
-      <block-latest-uncles :max-items="20" :showHeader="true" class="mt-3"></block-latest-uncles>
-    </v-layout>
+    <v-layout row wrap> <block-latest-uncles :max-items="20" :showHeader="true" class="mt-3"></block-latest-uncles> </v-layout>
   </v-container>
 </template>
-
 
 <script lang="ts">
 import Vue from 'vue'
@@ -35,8 +30,7 @@ export default Vue.extend({
         }
       ]
     }
-  },
-
+  }
 })
 </script>
 

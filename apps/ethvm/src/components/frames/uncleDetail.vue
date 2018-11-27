@@ -3,9 +3,7 @@
     <v-card fluid flat color="transparent">
       <v-breadcrumbs large>
         <v-icon slot="divider">fa fa-arrow-right</v-icon>
-        <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link">
-          {{ item.text }}
-        </v-breadcrumbs-item>
+        <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link"> {{ item.text }} </v-breadcrumbs-item>
       </v-breadcrumbs>
     </v-card>
     <h4 class="mt-5">{{ $t('title.blockDetail') }}</h4>
@@ -13,11 +11,8 @@
   </v-container>
 </template>
 
-
-
 <script lang="ts">
 import { common } from '@app/helpers'
-import chartOptions from '@app/sampleData/chartData.json'
 import { Uncle } from '@app/models'
 import { Events as sEvents } from 'ethvm-common'
 import store from '@app/states'
@@ -57,14 +52,13 @@ export default Vue.extend({
       this.items.push(newI)
     }
   },
-  computed: {
-  },
+  computed: {},
   mounted() {
     /* Get Block Data: */
     this.$socket.emit(
       sEvents.getUncle,
       {
-        hash: this.blockHash.replace('0x','')
+        hash: this.blockHash.replace('0x', '')
       },
       (error, result) => {
         if (result) {

@@ -22,7 +22,7 @@ export class Account {
 
   public getHexAddress() {
     if (!this.cache.hexAddress) {
-      this.cache.hexAddress = '0x'+this.address
+      this.cache.hexAddress = '0x' + this.address
     }
     return this.cache.hexAddress
   }

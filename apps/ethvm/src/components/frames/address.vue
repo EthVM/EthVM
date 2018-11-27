@@ -5,42 +5,47 @@
         <v-card fluid flat color="transparent">
           <v-breadcrumbs large>
             <v-icon slot="divider">fa fa-arrow-right</v-icon>
-            <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link">
-              {{ item.text }}
-            </v-breadcrumbs-item>
+            <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link"> {{ item.text }} </v-breadcrumbs-item>
           </v-breadcrumbs>
         </v-card>
       </v-flex>
     </v-layout>
     <v-layout row wrap justify-start class="mb-4">
-      <v-flex xs12>
-        <address-detail :account="account"></address-detail>
-      </v-flex>
+      <v-flex xs12> <address-detail :account="account"></address-detail> </v-flex>
     </v-layout>
     <!-- End Address Details -->
     <!-- Tab Menu -->
     <v-card color="white" flat>
-      <v-tabs v-model="activeTab" color="white" show-arrows :class="{'pl-0 pr-0': $vuetify.breakpoint.smAndDown, 'pl-3 pr-3': $vuetify.breakpoint.mdAndUp, 'pt-2': $vuetify.breakpoint.mdAndUp }">
-        <v-tab v-for="(item) in tabs" class="info--text text-capitalize pb-2 tab-opacity" active-class="primary--text " :key="item.id" :href="'#tab-'+item.id" ripple>
+      <v-tabs
+        v-model="activeTab"
+        color="white"
+        show-arrows
+        :class="{ 'pl-0 pr-0': $vuetify.breakpoint.smAndDown, 'pl-3 pr-3': $vuetify.breakpoint.mdAndUp, 'pt-2': $vuetify.breakpoint.mdAndUp }"
+      >
+        <v-tab
+          v-for="item in tabs"
+          class="info--text text-capitalize pb-2 tab-opacity"
+          active-class="primary--text "
+          :key="item.id"
+          :href="'#tab-' + item.id"
+          ripple
+        >
           {{ item.title }}
         </v-tab>
         <v-tabs-slider color="primary" class="mb-0" style="height: 4px;"></v-tabs-slider>
       </v-tabs>
       <v-tabs-items v-model="activeTab" style="border-top: 1px solid #efefef">
-        <!-- Transactions-->
+        <!-- Transactions -->
         <v-tab-item value="tab-0">
-          <block-address-tx v-if="account.txs" :address='account.address' :transactions='account.txs'></block-address-tx>
+          <block-address-tx v-if="account.txs" :address="account.address" :transactions="account.txs"></block-address-tx>
           <error-no-data v-else></error-no-data>
         </v-tab-item>
         <!-- Tokens -->
         <v-tab-item value="tab-1">
           <div v-if="!tokenError">
-            <div v-if="tokensLoaded">
-              <block-token-tracker :tokens="account.tokens" :holder="account.address"></block-token-tracker>
-            </div>
+            <div v-if="tokensLoaded"><block-token-tracker :tokens="account.tokens" :holder="account.address"></block-token-tracker></div>
             <v-card flat v-else class="loading-tokens">
-              <i class="fa fa-spinner fa-pulse fa-4x fa-fw"></i>
-              <span class="sr-only">{{ $t('message.load') }}</span>
+              <i class="fa fa-spinner fa-pulse fa-4x fa-fw"></i> <span class="sr-only">{{ $t('message.load') }}</span>
             </v-card>
           </div>
           <error-no-data v-else></error-no-data>
@@ -48,11 +53,11 @@
         <!-- End Tokens -->
         <!-- Pending Transactions -->
         <v-tab-item value="tab-2">
-          <block-address-tx v-if="account.pendingTxs" :address='account' :transactions='account.pendingTxs' :isPending='true'></block-address-tx>
+          <block-address-tx v-if="account.pendingTxs" :address="account" :transactions="account.pendingTxs" :isPending="true"></block-address-tx>
           <error-no-data v-else></error-no-data>
         </v-tab-item>
         <v-tab-item v-if="account.isMiner" value="tab-3">
-          <!--Mining History This are temp strings (no need to implement yet)  -->
+          <!-- Mining History This are temp strings (no need to implement yet) -->
           <v-card>
             <ul>
               <li>Name:</li>
@@ -66,9 +71,9 @@
             </ul>
           </v-card>
         </v-tab-item>
-        <!--End Mining History -->
+        <!-- End Mining History -->
         <v-tab-item v-if="account.conCreator" value="tab-4">
-          <!--Mining History This are temp strings (no need to implement yet)  -->
+          <!-- Mining History This are temp strings (no need to implement yet) -->
           <v-card>
             <ul>
               <li>Name:</li>
@@ -82,7 +87,7 @@
             </ul>
           </v-card>
         </v-tab-item>
-        <!--End Mining History -->
+        <!-- End Mining History -->
       </v-tabs-items>
     </v-card>
   </v-container>

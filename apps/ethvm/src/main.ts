@@ -1,6 +1,5 @@
 import App from '@app/App.vue'
 
-import socketConfig from '@app/configs/socket.json'
 import router from '@app/router'
 import store from '@app/states'
 import i18n from '@app/translations'
@@ -167,12 +166,12 @@ Vue.component('block-footer', blockFooter)
 Vue.use(VTooltip)
 Vue.prototype.$eventHub = new Vue()
 Vue.config.productionTip = false
-Vue.use(VueSocketio, io(socketConfig.url + ':' + socketConfig.port), store)
+Vue.use(VueSocketio, io(process.env.VUE_APP_SOCKET_URL + ':' + process.env.VUE_APP_SOCKET_PORT), store)
 Vue.use(VueTimeago, {
   name: 'timeago',
   locale: 'en-US',
   locales: {
-    'en-US': require('vue-timeago/locales/en-US.json')
+    'en-US': require('date-fns/locale/en')
   }
 })
 Vue.use(infiniteScroll)

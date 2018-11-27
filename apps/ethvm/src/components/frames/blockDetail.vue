@@ -5,9 +5,7 @@
         <v-card fluid flat color="transparent">
           <v-breadcrumbs large>
             <v-icon slot="divider">fa fa-arrow-right</v-icon>
-            <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link">
-              {{ item.text }}
-            </v-breadcrumbs-item>
+            <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link"> {{ item.text }} </v-breadcrumbs-item>
           </v-breadcrumbs>
         </v-card>
       </v-flex>
@@ -30,7 +28,6 @@
 
 <script lang="ts">
 import { common } from '@app/helpers'
-import chartOptions from '@app/sampleData/chartData.json'
 import { Block, Tx } from '@app/models'
 import { Events as sEvents } from 'ethvm-common'
 import store from '@app/states'
@@ -47,7 +44,6 @@ export default Vue.extend({
     return {
       common,
       store,
-      options: chartOptions,
       block: null,
       bNum: Number,
       uncles: [],

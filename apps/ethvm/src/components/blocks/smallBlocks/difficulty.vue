@@ -1,6 +1,5 @@
 <template>
-  <block-component  :title="blockTitle" :colorType="type" :value="difficulty" :backType="background" :metrics="th">
-  </block-component>
+  <block-component :title="blockTitle" :colorType="type" :value="difficulty" :backType="background" :metrics="th"> </block-component>
 </template>
 
 <script lang="ts">
@@ -9,10 +8,7 @@ import bn from 'bignumber.js'
 import Vue from 'vue'
 
 const getTHs = (_num: string): number => {
-  return new bn(_num)
-    .div('1e12')
-    .round(2)
-    .toNumber()
+  return new bn(_num).dividedBy('1e12').toNumber()
 }
 
 export default Vue.extend({
@@ -43,5 +39,4 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped lang="less">
-</style>
+<style scoped lang="less"></style>

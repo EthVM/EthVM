@@ -61,3 +61,9 @@ install:
 script:
   - cd $PROJECT_DIR
   - eval $ACTION
+
+deploy:
+  provider: script
+  script: bash $TRAVIS_BUILD_DIR/.travis/docker_push.sh
+  on:
+    branch: master

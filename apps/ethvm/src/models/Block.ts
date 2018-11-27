@@ -1,7 +1,6 @@
 import { common } from '@app/helpers'
 import { Address, EthValue, Hash, Hex, HexNumber, HexTime, Tx } from '@app/models'
 import { Block as BlockLayout, BlockStats } from 'ethvm-common'
-import bn from 'bignumber.js'
 
 export class Block {
   public readonly id: string
@@ -67,11 +66,10 @@ export class Block {
   }
 
   public getTotalBlockReward(): EthValue {
-
     if (!this.cache.totalBlockReward) {
       let total = 0
-      for (let address in this.block.header.rewards) {
-        total =  this.block.header.rewards[address] + total
+      for (const address in this.block.header.rewards) {
+        total = this.block.header.rewards[address] + total
       }
       this.cache.totalBlockReward = total
     }
@@ -227,14 +225,16 @@ export class Block {
     if (!this.cache.uncleReward) {
       let total = 0
       if (this.block.header.rewards[this.block.header.unclesHash]) {
-        return this.cache.uncleReward =  total
+        return (this.cache.uncleReward = total)
       }
-        for (let address in this.block.header.rewards) {
-          if(address === this.block.header.miner) continue
-          total =  this.block.header.rewards[address] + total
+      for (const address in this.block.header.rewards) {
+        if (address === this.block.header.miner) {
+          continue
         }
-        this.cache.uncleReward =  total
+        total = this.block.header.rewards[address] + total
       }
+      this.cache.uncleReward = total
+    }
     return this.cache.uncleReward
   }
 
