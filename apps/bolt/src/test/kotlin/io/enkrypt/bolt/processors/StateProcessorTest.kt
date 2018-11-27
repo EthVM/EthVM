@@ -2,15 +2,15 @@ package io.enkrypt.bolt.processors
 
 import io.enkrypt.avro.processing.FungibleTokenBalanceKeyRecord
 import io.enkrypt.avro.processing.FungibleTokenBalanceRecord
+import io.enkrypt.avro.processing.MetricKeyRecord
+import io.enkrypt.avro.processing.MetricRecord
 import io.enkrypt.bolt.Addresses
 import io.enkrypt.bolt.Modules
 import io.enkrypt.bolt.TestModules
 import io.enkrypt.bolt.Topics
-import io.enkrypt.bolt.extensions.bigIntBuffer
-import io.enkrypt.bolt.extensions.hexBuffer
-import io.enkrypt.bolt.extensions.toBigInteger
-import io.enkrypt.bolt.extensions.toHex
+import io.enkrypt.bolt.extensions.*
 import io.enkrypt.bolt.kafka.IntegrationTestUtils
+import io.kotlintest.matchers.plusOrMinus
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
 import org.apache.kafka.streams.KeyValue
@@ -87,6 +87,66 @@ class StateProcessorTest : KoinTest, BehaviorSpec() {
       }
     }
 
+    given("a series of metric records") {
+
+      val metrics = listOf(
+        createMetric(1, "min", 12),
+        createMetric(1, "max", 145.0),
+        createMetric(1, "min", 124),
+        createMetric(1, "max", 14.2),
+        createMetric(1, "min", 34),
+        createMetric(1, "max", 56.7),
+        createMetric(2, "min", 12),
+        createMetric(2, "max", 142.56),
+        createMetric(2, "min", 144),
+        createMetric(2, "max", 14.78),
+        createMetric(2, "min", 34),
+        createMetric(2, "max", 52.45),
+        createMetric(3, "min", 12),
+        createMetric(3, "max", 14.789),
+        createMetric(3, "min", 1245),
+        createMetric(3, "max", 143.12),
+        createMetric(3, "min", 345),
+        createMetric(3, "max", 5.57),
+        createMetric(1, "min", 345),
+        createMetric(2, "min", 123),
+        createMetric(3, "max", 121.75)
+      )
+
+      `when`("they are published to the metrics topic") {
+
+        IntegrationTestUtils
+          .produceKeyValuesSynchronously(
+            Topics.BlockMetrics,
+            metrics,
+            producerConfig
+          )
+
+        then("a series of averages should be emitted") {
+
+          val avgMap =
+            IntegrationTestUtils
+              .waitUntilMinKeyValueRecordsReceived<MetricKeyRecord, MetricRecord>(
+                consumerConfig,
+                Topics.BlockStatistics,
+                5,
+                30000L
+              ).map { Pair(it.key.getDate(), it.key.getName()) to it.value }
+              .toMap()
+
+          avgMap.size shouldBe 6
+          avgMap[Pair(1L, "min")]!!.getIntValue() shouldBe 128
+          avgMap[Pair(1L, "max")]!!.getDoubleValue() shouldBe(71.966666.plusOrMinus(0.000001))
+          avgMap[Pair(2L, "min")]!!.getIntValue() shouldBe 78
+          avgMap[Pair(2L, "max")]!!.getDoubleValue() shouldBe 69.93
+          avgMap[Pair(3L, "min")]!!.getIntValue() shouldBe 534
+          avgMap[Pair(3L, "max")]!!.getDoubleValue() shouldBe 71.30725
+
+        }
+      }
+
+
+    }
   }
 
   private fun fungibleTokenBalanceMovements(contract: String,
@@ -107,5 +167,28 @@ class StateProcessorTest : KoinTest, BehaviorSpec() {
       .newBuilder()
       .setAmount(amount.bigIntBuffer())
       .build()
+
+  private fun createMetric(date: Long, name: String, value: Any): KeyValue<MetricKeyRecord, MetricRecord> {
+
+    val key = MetricKeyRecord
+      .newBuilder()
+      .setDate(date)
+      .setName(name)
+      .build()
+
+    val valueBuilder = MetricRecord.newBuilder()
+
+    when (value) {
+      is Int -> valueBuilder.intValue = value
+      is Long -> valueBuilder.longValue = value
+      is Float -> valueBuilder.floatValue = value
+      is Double -> valueBuilder.doubleValue = value
+      is BigInteger -> valueBuilder.bigIntegerValue = value.toByteBuffer()
+      else -> throw IllegalArgumentException("Unexpected value type: $value")
+    }
+
+    return KeyValue(key, valueBuilder.build())
+  }
+
 
 }
