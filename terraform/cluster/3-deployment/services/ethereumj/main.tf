@@ -70,7 +70,7 @@ resource "kubernetes_stateful_set" "ethereumj_stateful_set" {
       spec {
         container {
           name              = "ethereumj-node"
-          image             = "enkryptio/etherumj:${var.ethereumj_version}"
+          image             = "enkryptio/ethereumj:${var.ethereumj_version}"
           image_pull_policy = "IfNotPresent"
 
           args = [
