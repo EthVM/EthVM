@@ -32,7 +32,6 @@
 
 <script lang="ts">
 import { common } from '@app/helpers'
-import chartOptions from '@app/sampleData/chartData.json'
 import { Block, Tx } from '@app/models'
 import { Events as sEvents } from 'ethvm-common'
 import store from '@app/states'
@@ -49,7 +48,6 @@ export default Vue.extend({
     return {
       common,
       store,
-      options: chartOptions,
       block: null,
       bNum: null,
       uncles: [],
