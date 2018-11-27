@@ -22,10 +22,14 @@ object TestModules {
       val cluster = EmbeddedSingleNodeKafkaCluster()
       cluster.start()
 
+      val compactionProps = Properties().apply {
+        put("cleanup.policy", "compact")
+      }
+
       cluster.createTopic(Topics.FungibleTokenMovements, 3, 1)
-      cluster.createTopic(Topics.FungibleTokenBalances, 3, 1)
+      cluster.createTopic(Topics.FungibleTokenBalances, 3, 1, compactionProps)
       cluster.createTopic(Topics.BlockMetrics, 3, 1)
-      cluster.createTopic(Topics.BlockStatistics, 3, 1)
+      cluster.createTopic(Topics.BlockStatistics, 3, 1, compactionProps)
 
       cluster
 
