@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
 set -o errexit \
-    -o pipefail && \
-    -o verbose && \
-    -o xtrace
+    -o pipefail
+
+# set -o verbose && \
+#     -o xtrace
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
@@ -31,7 +32,7 @@ if [ "$ID" == "apps/server-e2e-test" ]; then
   # Prepare data
   docker-compose -f ${ROOT_DIR}/docker-compose.travis.yml up -d
 
-  # Wait 30 secs to allow container proper initialization
+  # Wait 60 secs to allow container proper initialization
   sleep 60
 fi
 
