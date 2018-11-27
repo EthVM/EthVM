@@ -15,6 +15,7 @@ VALUE_SCHEMAS=(\
   'processing/MetricRecord.avsc' \
   'processing/ContractCreationRecord.avsc' \
   'processing/ContractSuicideRecord.avsc' \
+  'processing/ContractMetadataRecord.avsc' \
 )
 
 KEY_SCHEMAS=(\
