@@ -4,7 +4,7 @@ variable "namespace" {
 
 variable "ethereumj_version" {
   description = "Version of EthereumJ"
-  default     = "0.1.0"
+  default     = "1.10.0"
 }
 
 variable "ethereumj_storage_size" {
