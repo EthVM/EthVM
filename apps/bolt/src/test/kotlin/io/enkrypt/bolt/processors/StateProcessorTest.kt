@@ -35,19 +35,26 @@ class StateProcessorTest : KoinTest, BehaviorSpec() {
     val producerConfig by inject<Properties>("producerConfig")
     val consumerConfig by inject<Properties>("consumerConfig")
 
-    given("a series of ether balance movements") {
+    given("a series of balance movements") {
 
       val addressOne = Addresses.createAddress()
       val addressTwo = Addresses.createAddress()
       val addressThree = Addresses.createAddress()
 
+      val contractOne = Addresses.createAddress()
+      val contractTwo = Addresses.createAddress()
+
       val movements = listOf(
-        fungibleTokenBalanceMovements(addressOne, Addresses.ETHER_CONTRACT, 10, -5, 25, -15),      // 15
-        fungibleTokenBalanceMovements(addressTwo, Addresses.ETHER_CONTRACT, 100, -20, 35, 125),   // 240
-        fungibleTokenBalanceMovements(addressThree, Addresses.ETHER_CONTRACT, 25, 89, -74, 356)   // 396
+        fungibleTokenBalanceMovements(Addresses.ETHER_CONTRACT, addressOne, 10, -5, 25, -15),      // 15
+        fungibleTokenBalanceMovements(Addresses.ETHER_CONTRACT, addressTwo, 100, -20, 35, 125),    // 240
+        fungibleTokenBalanceMovements(Addresses.ETHER_CONTRACT, addressThree, 25, 89, -74, 356),   // 396
+        fungibleTokenBalanceMovements(contractOne, addressOne, 126, 587, -156, -75, 89),           // 571
+        fungibleTokenBalanceMovements(contractTwo, addressTwo, 100000, -1567, 879, -2564),         // 96748
+        fungibleTokenBalanceMovements(Addresses.ETHER_CONTRACT, addressTwo, -45, 65789, -1245),    // 64739
+        fungibleTokenBalanceMovements(Addresses.ETHER_CONTRACT, addressThree, 1000000, -56789)     // 943607
       ).flatten()
 
-      `when`("they are published to the fungible token movements topics") {
+      `when`("they are published to the fungible token movements topic") {
 
         IntegrationTestUtils
           .produceKeyValuesSynchronously(
@@ -63,15 +70,17 @@ class StateProcessorTest : KoinTest, BehaviorSpec() {
               .waitUntilMinKeyValueRecordsReceived<FungibleTokenBalanceKeyRecord, FungibleTokenBalanceRecord>(
                 consumerConfig,
                 Topics.FungibleTokenBalances,
-                3,
+                5,
                 30000L
-              ).map { it.key.getAddress().toHex() to it.value.getAmount().toBigInteger() }
+              ).map { Pair(it.key.getContract().toHex(), it.key.getAddress().toHex()) to it.value.getAmount().toBigInteger() }
               .toMap()
 
-          balancesMap.size shouldBe 3
-          balancesMap[addressOne] shouldBe BigInteger.valueOf(15L)
-          balancesMap[addressTwo] shouldBe BigInteger.valueOf(240L)
-          balancesMap[addressThree] shouldBe BigInteger.valueOf(396L)
+          balancesMap.size shouldBe 5
+          balancesMap[Pair(Addresses.ETHER_CONTRACT, addressOne)] shouldBe BigInteger.valueOf(15L)
+          balancesMap[Pair(Addresses.ETHER_CONTRACT, addressTwo)] shouldBe BigInteger.valueOf(64739L)
+          balancesMap[Pair(Addresses.ETHER_CONTRACT, addressThree)] shouldBe BigInteger.valueOf(943607L)
+          balancesMap[Pair(contractOne, addressOne)] shouldBe BigInteger.valueOf(571L)
+          balancesMap[Pair(contractTwo, addressTwo)] shouldBe BigInteger.valueOf(96748L)
 
         }
 
@@ -80,8 +89,8 @@ class StateProcessorTest : KoinTest, BehaviorSpec() {
 
   }
 
-  private fun fungibleTokenBalanceMovements(address: String = Addresses.createAddress(),
-                                            contract: String,
+  private fun fungibleTokenBalanceMovements(contract: String,
+                                            address: String = Addresses.createAddress(),
                                             vararg movement: Long) =
     movement.map { KeyValue(fungibleTokenBalanceKey(address, contract), fungibleTokenBalance(it)) }
 
