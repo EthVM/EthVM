@@ -1,22 +1,20 @@
 package io.enkrypt.bolt.processors
 
-import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig
-import io.confluent.kafka.serializers.KafkaAvroDeserializer
-import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig
-import io.confluent.kafka.serializers.KafkaAvroSerializer
-import io.enkrypt.avro.capture.BlockSummaryRecord
 import io.enkrypt.avro.processing.FungibleTokenBalanceKeyRecord
 import io.enkrypt.avro.processing.FungibleTokenBalanceRecord
-import io.enkrypt.bolt.*
-import io.enkrypt.bolt.extensions.*
-import io.enkrypt.bolt.kafka.EmbeddedSingleNodeKafkaCluster
+import io.enkrypt.bolt.Addresses
+import io.enkrypt.bolt.Modules
+import io.enkrypt.bolt.TestModules
+import io.enkrypt.bolt.Topics
+import io.enkrypt.bolt.extensions.bigIntBuffer
+import io.enkrypt.bolt.extensions.hexBuffer
+import io.enkrypt.bolt.extensions.toBigInteger
+import io.enkrypt.bolt.extensions.toHex
 import io.enkrypt.bolt.kafka.IntegrationTestUtils
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
-import org.apache.kafka.clients.consumer.ConsumerConfig
-import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.streams.KeyValue
-import org.koin.dsl.module.module
+import org.koin.log.EmptyLogger
 import org.koin.standalone.StandAloneContext.startKoin
 import org.koin.standalone.inject
 import org.koin.test.KoinTest
@@ -26,66 +24,16 @@ import java.util.*
 
 class StateProcessorTest : KoinTest, BehaviorSpec() {
 
-  val cluster = EmbeddedSingleNodeKafkaCluster()
-
-  val appConfig: AppConfig by inject()
-  val kafkaProps: Properties by inject("kafka")
-
-//  val blockRecordFactory = ConsumerRecordFactory<String, BlockSummaryRecord>(KafkaAvroSerializer(), KafkaAvroSerializer())
-
   init {
 
-    cluster.start()
-
-    // TODO add compaction and other properties
-    cluster.createTopic(Topics.FungibleTokenMovements, 3, 1)
-    cluster.createTopic(Topics.FungibleTokenBalances, 3, 1)
-    cluster.createTopic(Topics.BlockMetrics, 3, 1)
-    cluster.createTopic(Topics.BlockStatistics, 3, 1)
-
-    val producerConfig = Properties().apply {
-      put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, cluster.bootstrapServers())
-      put(ProducerConfig.ACKS_CONFIG, "all")
-      put(ProducerConfig.RETRIES_CONFIG, 0)
-      put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer::class.java)
-      put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer::class.java)
-      put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, cluster.schemaRegistryUrl())
-    }
-
-    val consumerConfig = Properties().apply {
-      put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, cluster.bootstrapServers())
-      put(ConsumerConfig.GROUP_ID_CONFIG, "state-processor-test")
-      put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
-      put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, KafkaAvroDeserializer::class.java)
-      put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaAvroDeserializer::class.java)
-      put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, cluster.schemaRegistryUrl())
-      put(KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG, true)
-    }
-
-    startKoin(listOf(
-      module("config") {
-
-        single {
-          KafkaConfig(
-            cluster.bootstrapServers(),
-            "earliest",
-            "test",
-            cluster.schemaRegistryUrl(),
-            KafkaInputTopicsConfig(
-              "block-summaries",
-              "pending-txs",
-              "metadata"
-            ))
-        }
-
-        single { AppConfig(get()) }
-
-      }, Modules.kafkaModule))
-
+    startKoin(listOf(TestModules.embeddedKafka, Modules.kafkaStreams), logger = EmptyLogger())
 
     val processor = StateProcessor()
     processor.buildTopology()
     processor.start(true)
+
+    val producerConfig by inject<Properties>("producerConfig")
+    val consumerConfig by inject<Properties>("consumerConfig")
 
     given("a series of ether balance movements") {
 
@@ -99,7 +47,7 @@ class StateProcessorTest : KoinTest, BehaviorSpec() {
         fungibleTokenBalanceMovements(addressThree, Addresses.ETHER_CONTRACT, 25, 89, -74, 356)   // 396
       ).flatten()
 
-      `when`("published to the fungible token movements topics") {
+      `when`("they are published to the fungible token movements topics") {
 
         IntegrationTestUtils
           .produceKeyValuesSynchronously(

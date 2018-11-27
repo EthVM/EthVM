@@ -8,11 +8,11 @@ import java.util.Properties
 
 object Modules {
 
-  val kafkaModule = module("kafka") {
+  val kafkaStreams = module("kafkaStreams") {
 
     val config = get<AppConfig>()
 
-    single {
+    single(name = "baseKafkaStreamsConfig") {
       Properties().apply {
         // App
         put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, config.kafka.bootstrapServers)

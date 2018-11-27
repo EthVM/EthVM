@@ -16,7 +16,7 @@ interface KafkaProcessor {
 abstract class AbstractKafkaProcessor : KafkaProcessor, KoinComponent {
 
   protected val appConfig: AppConfig by inject()
-  protected val baseKafkaProps: Properties by inject(name = "kafka.Properties")
+  protected val baseKafkaProps: Properties by inject(name = "baseKafkaStreamsConfig")
 
   protected abstract val id: String
   protected abstract val logger: KLogger

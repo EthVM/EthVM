@@ -4,10 +4,10 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
-import io.enkrypt.bolt.Modules.kafkaModule
-import io.enkrypt.bolt.processors.BlockSummaryBoltProcessor
-import io.enkrypt.bolt.processors.BoltProcessor
-import io.enkrypt.bolt.processors.StateBoltProcessor
+import io.enkrypt.bolt.Modules.kafkaStreams
+import io.enkrypt.bolt.processors.BlockSummaryProcessor
+import io.enkrypt.bolt.processors.KafkaProcessor
+import io.enkrypt.bolt.processors.StateProcessor
 import org.koin.dsl.module.module
 import org.koin.standalone.StandAloneContext.startKoin
 
@@ -16,7 +16,7 @@ class Cli : CliktCommand() {
   // General - CLI
 
   private val transactionalId: String by option(
-    help = "A unique instance id for use in kafka transactions",
+    help = "A unique instance id for use in kafkaStreams transactions",
     envvar = "KAFKA_TRANSACTIONAL_ID"
   ).default(DEFAULT_TRANSACTIONAL_ID)
 
@@ -79,7 +79,7 @@ class Cli : CliktCommand() {
 
   override fun run() {
 
-    startKoin(listOf(configModule, kafkaModule))
+    startKoin(listOf(configModule, kafkaStreams))
 
     listOf<KafkaProcessor>(
       BlockSummaryProcessor(),
@@ -93,8 +93,8 @@ class Cli : CliktCommand() {
   companion object Defaults {
 
     const val DEFAULT_TRANSACTIONAL_ID = "bolt-1"
-    const val DEFAULT_BOOTSTRAP_SERVERS = "kafka-1:9091"
-    const val DEFAULT_SCHEMA_REGISTRY_URL = "http://kafka-schema-registry:8081"
+    const val DEFAULT_BOOTSTRAP_SERVERS = "kafkaStreams-1:9091"
+    const val DEFAULT_SCHEMA_REGISTRY_URL = "http://kafkaStreams-schema-registry:8081"
     const val DEFAULT_AUTO_OFFSET = "earliest"
     const val DEFAULT_STREAMS_RESET = 0
 

@@ -19,7 +19,7 @@ import java.io.File
 import java.util.*
 
 /**
- * Adapted from https://github.com/confluentinc/kafka-streams-examples/blob/5.0.0-post/src/test/java/io/confluent/examples/streams/kafka/KafkaEmbedded.java
+ * Adapted from https://github.com/confluentinc/kafkaStreams-streams-examples/blob/5.0.0-post/src/test/java/io/confluent/examples/streams/kafkaStreams/KafkaEmbedded.java
  *
  */
 class KafkaEmbedded(config: Properties) {
