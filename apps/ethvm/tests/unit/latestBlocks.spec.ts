@@ -9,7 +9,6 @@ import footnote from '@/components/blocks/smallBlocks/footnote.vue'
 import router from '@app/router'
 import { Block } from '@app/models'
 
-
 const defaultLocale: string = 'en_US'
 const messages: any = {
   en_US

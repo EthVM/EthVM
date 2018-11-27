@@ -34,8 +34,9 @@
 <script lang="ts">
 import Vue from 'vue'
 import Visibility from 'visibilityjs'
-import { Events as sEvents } from 'ethvm-common'
+import { Events  } from 'ethvm-common'
 import BN from 'bignumber.js'
+
 const MAX_ITEMS = 20
 
 export default Vue.extend({
@@ -47,14 +48,14 @@ export default Vue.extend({
   },
   created() {
     this.blocks = this.$store.getters.getBlocks
-    this.$eventHub.$on(sEvents.newBlock, _block => {
+    this.$eventHub.$on(Events.newBlock, _block => {
       if (Visibility.state() === 'visible') {
         this.blocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
       }
     })
   },
   beforeDestroy() {
-    this.$eventHub.$off(sEvents.newBlock)
+    this.$eventHub.$off(Events.newBlock)
   },
   computed: {
     txs() {

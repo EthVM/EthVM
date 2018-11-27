@@ -17,9 +17,11 @@
 <script lang="ts">
 import Visibility from 'visibilityjs'
 import Vue from 'vue'
-import { Events as sEvents } from 'ethvm-common'
+import { Events } from 'ethvm-common'
 import BN from 'bignumber.js'
+
 const MAX_ITEMS = 20
+
 export default Vue.extend({
   name: 'FrameUncles',
   data() {
@@ -41,14 +43,14 @@ export default Vue.extend({
   },
   created() {
     this.uncles = this.$store.getters.getUncles
-    this.$eventHub.$on(sEvents.newUncle, _uncle => {
+    this.$eventHub.$on(Events.newUncle, _uncle => {
       if (Visibility.state() === 'visible') {
         this.uncles = this.$store.getters.getUncles
       }
     })
   },
   beforeDestroy() {
-    this.$eventHub.$off(sEvents.newUncle)
+    this.$eventHub.$off(Events.newUncle)
   },
   computed: {
     getuncles() {
