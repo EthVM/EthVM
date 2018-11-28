@@ -73,8 +73,12 @@ resource "kubernetes_stateful_set" "ethereumj_stateful_set" {
           image             = "enkryptio/ethereumj:${var.ethereumj_version}"
           image_pull_policy = "IfNotPresent"
 
+          command = [
+            "/usr/bin/ethereumj/bin/ethereumj-core",
+          ]
+
           args = [
-            "-Dethereumj.conf.res=${var.ethereumj_conf} -PmainClassName='${var.ethereumj_mainclass}' -PjvmArgs='-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:+UseG1GC'",
+            "-Dethereumj.conf.res=/config/ethereumj.conf",
           ]
 
           resources {
@@ -94,12 +98,12 @@ resource "kubernetes_stateful_set" "ethereumj_stateful_set" {
 
           volume_mount {
             name       = "config"
-            mount_path = "/ethereumj/config"
+            mount_path = "/config"
           }
 
           volume_mount {
             name       = "data"
-            mount_path = "/ethereumj/data"
+            mount_path = "/data"
           }
 
           liveness_probe {
