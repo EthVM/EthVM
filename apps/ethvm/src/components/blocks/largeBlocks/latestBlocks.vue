@@ -47,15 +47,21 @@
           <transition-group name="list" tag="p">
           <v-card v-for="block in blocks" class="transparent" flat v-bind:key="block.getHash()">
             <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
-              <v-flex xs6 sm2 order-xs1>
-                <router-link class="black--text pb-1" :to="'/block/'+block.getHash()">{{block.getNumber()}}</router-link>
+              <v-flex xs6 sm2 order-xs1 v-if="block.getType() == 'block'">
+                <router-link class="black--text pb-1" :to="'/block/0x'+block.getHash()">{{block.getNumber()}}</router-link>
+              </v-flex>
+              <v-flex xs6 sm2 order-xs1 v-if="block.getType() == 'uncle'">
+                <router-link class="black--text pb-1" :to="'/uncle/0x'+block.getHash()">{{block.getNumber()}}</router-link>
               </v-flex>
               <v-flex xs12 sm7 md6 lass="pr-0" order-xs3 order-sm2>
-                <p class="text-truncate info--text  psmall mb-0 pb-2">{{ $t( 'common.hash' ) }}:
-                  <router-link class="primary--text font-italic font-weight-regular" :to="'/block/'+block.getHash()">{{block.getHash()}}</router-link>
+                <p v-if="block.getType() == 'block'" class="text-truncate info--text  psmall mb-0 pb-2">{{ $t( 'common.hash' ) }}:
+                  <router-link class="primary--text font-italic font-weight-regular" :to="'/block/0x'+block.getHash()">{{block.getHash()}}</router-link>
+                </p>
+                <p v-else class="text-truncate info--text  psmall mb-0 pb-2">{{ $t( 'common.hash' ) }}:
+                  <router-link class="primary--text font-italic font-weight-regular" :to="'/uncle/0x'+block.getHash()">{{block.getHash()}}</router-link>
                 </p>
                 <p class="text-truncate info--text  mb-0">{{ $t( 'block.miner' ) }}:
-                  <router-link :to="'/address/'+block.getMiner().toString()" class="secondary--text font-italic font-weight-regular">{{block.getMiner().toString()}}</router-link>
+                  <router-link :to="'/address/0x'+block.getMiner().toString()" class="secondary--text font-italic font-weight-regular">{{block.getMiner().toString()}}</router-link>
                 </p>
               </v-flex>
               <v-flex v-if="block.getType() == 'block'" hidden-sm-and-down md2 order-xs4 order-sm3>
