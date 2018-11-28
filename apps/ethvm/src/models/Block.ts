@@ -117,7 +117,7 @@ export class Block {
 
   public getLogsBloom(): Hex {
     if (!this.cache.logsBloom) {
-      this.cache.logsBloom = this.block.header.logsBloom
+      this.cache.logsBloom = common.Hex(this.block.header.logsBloom)
     }
     return this.cache.logsBloom
   }
