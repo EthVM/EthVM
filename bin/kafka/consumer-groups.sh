@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
 
 CMD="kafka-consumer-groups --bootstrap-server kafka:9092 --group $@ --describe"
 echo "COMMAND: $CMD"

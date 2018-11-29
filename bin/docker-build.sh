@@ -1,31 +1,14 @@
 #!/usr/bin/env bash
 
 set -o errexit
+set -o nounset
+
 # set -o xtrace
+# set -o verbose
 
 # Give script sane defaults
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
-
-# DEFAULT VARS
-PROJECTS=("bolt", "explorer", "api", "ethereumj", "kafka-connect", "kafka-connect-ethvm-init", "kafka-ethvm-init", "mongodb-install", "mongodb-ethvm-init", "zookeeper")
-
-ORG="enkryptio"
-DOCKER_PATH="docker/images"
-
-# Usage prints the help for this command
-usage() {
-  >&2 echo "Usage:"
-  >&2 echo "    docker-build <command>"
-  >&2 echo ""
-  >&2 echo "Commands:"
-  >&2 echo "    build <image>  Build a docker image from this repo."
-  >&2 echo "    push  <image>  Push the built image to the docker registry."
-  >&2 echo ""
-  >&2 echo "Images:"
-  >&2 echo "    [${PROJECTS[*]}]"
-  exit 1
-}
 
 # ensure checks that whe have corresponding utilities installed
 ensure() {
@@ -33,47 +16,162 @@ ensure() {
     >&2 echo "jq is necessary to be installed to run this script!"
     exit 1
   fi
-}
 
-# Build builds the docker image
-build() {
-  local name="$1"
-  local version="$2"
-  local dockerfile="$3"
-  local path="$4"
-  docker build -t "${ORG}/${name}:${version}" -f ${dockerfile} ${path}
+  if ! [ -x "$(command -v docker)" ]; then
+    >&2 echo "docker is necessary to be installed to run this script!"
+    exit 1
+  fi
 }
+ensure
 
-# Push pushes the built docker image
-push() {
-  local repo="$1"
-  docker push "$repo"
-}
+# Utility fns
 
+# prop - read .properties files and search elements by key
 prop() {
-  grep $1 $2 | cut -d '=' -f2
+  local path=${1}
+  local key=${2:-'version'}
+  grep ${key} ${path} | cut -d '=' -f2
 }
 
+# inArray - tests that certain element exists inside an array
+inArray () {
+  local e match="$1"
+  shift
+  for e; do [[ "$e" == "$match" ]] && return 0; done
+  return 1
+}
+
+# DEFAULT VARS
+ORG="enkryptio"
+APPS_PATH="${ROOT_DIR}/apps"
+DOCKER_IMAGES_PATH="${ROOT_DIR}/docker/images"
+
+# Syntax: Key - Value: project-id ; version ; docker file path ; context path
+declare -A PROJECTS
+PROJECTS["api"]="api;$(jq .version "${APPS_PATH}/server/package.json");${APPS_PATH}/server/Dockerfile;${APPS_PATH}/"
+PROJECTS["bolt"]="bolt;$(prop "${APPS_PATH}/bolt/version.properties");${APPS_PATH}/bolt/Dockerfile;${APPS_PATH}/bolt/"
+PROJECTS["ethereumj"]="ethereumj;$(prop "${APPS_PATH}/ethereumj/version.properties");${APPS_PATH}/ethereumj/Dockerfile;${APPS_PATH}/ethereumj/"
+PROJECTS["explorer"]="explorer;$(jq .version "${APPS_PATH}/ethvm/package.json");${APPS_PATH}/ethvm/Dockerfile;${APPS_PATH}/"
+PROJECTS["kafka-connect"]="kafka-connect;$(prop "${DOCKER_IMAGES_PATH}/kafka-connect/version.properties");${DOCKER_IMAGES_PATH}/kafka-connect/Dockerfile;${DOCKER_IMAGES_PATH}/kafka-connect/"
+PROJECTS["kafka-connect-ethvm-init"]="kafka-connect-ethvm-init;$(prop "${DOCKER_IMAGES_PATH}/kafka-connect-ethvm-init/version.properties");${DOCKER_IMAGES_PATH}/kafka-connect-ethvm-init/Dockerfile;${DOCKER_IMAGES_PATH}/kafka-connect-ethvm-init/"
+PROJECTS["kafka-ethvm-init"]="kafka-ethvm-init;$(prop "${DOCKER_IMAGES_PATH}/kafka-ethvm-init/version.properties");${DOCKER_IMAGES_PATH}/kafka-ethvm-init/Dockerfile;${DOCKER_IMAGES_PATH}/kafka-ethvm-init"
+PROJECTS["mongodb-dev"]="mongodb-dev;$(prop "${DOCKER_IMAGES_PATH}/mongodb-dev/version.properties");${DOCKER_IMAGES_PATH}/mongodb-dev/Dockerfile;${DOCKER_IMAGES_PATH}/mongodb-dev"
+PROJECTS["mongodb-ethvm-init"]="mongodb-ethvm-init;$(prop "${DOCKER_IMAGES_PATH}/mongodb-ethvm-init/version.properties");${DOCKER_IMAGES_PATH}/mongodb-ethvm-init/Dockerfile;${DOCKER_IMAGES_PATH}/mongodb-ethvm-init/"
+PROJECTS["mongodb-install"]="mongodb-install;$(prop "${DOCKER_IMAGES_PATH}/mongodb-install/version.properties");${DOCKER_IMAGES_PATH}/mongodb-install/Dockerfile;${DOCKER_IMAGES_PATH}/mongodb-install/"
+PROJECTS["zookeeper"]="zookeeper;$(prop "${DOCKER_IMAGES_PATH}/zookeeper/version.properties");${DOCKER_IMAGES_PATH}/zookeeper/Dockerfile;${DOCKER_IMAGES_PATH}/zookeeper/"
+
+# invalid - prints invalid message
+invalid() {
+  >&2 echo "Invalid argument passed!"
+  >&2 echo ""
+}
+
+# usage - prints the help for this command
+usage() {
+  echo ""
+  echo "Builds different docker images easily for EthVM project."
+  echo ""
+  echo "Usage:"
+  echo "    docker-build <command>"
+  echo ""
+  echo "Commands:"
+  echo "    build <image>  Build a docker image from this repo."
+  echo "    push  <image>  Push an image to the registered docker registry."
+  echo ""
+  echo "Images:"
+  echo "    [${!PROJECTS[*]}]"
+}
+
+# build - builds docker images
+build() {
+  local name=$(echo "${PROJECTS[$1]}" | cut -d ";" -f 1)
+  local dockerfile=$(echo "${PROJECTS[$1]}" | cut -d ";" -f 3)
+  local context=$(echo "${PROJECTS[$1]}" | cut -d ";" -f 4)
+  local version=$(echo "${PROJECTS[$1]}" | cut -d ";" -f 2 | sed -r s/[\"]+//g)
+  docker build -t "${ORG}/${name}:${version}" -f ${dockerfile} ${context}
+}
+
+# push - sends the built docker image to the registered registry
+push() {
+  local name=$(echo "${PROJECTS[$1]}" | cut -d ";" -f 1)
+  local version=$(echo "${PROJECTS[$1]}" | cut -d ";" -f 2 | sed -r s/[\"]+//g)
+  docker push "${ORG}/${name}:${version}"
+}
+
+# run - executes main script
 run() {
-  ensure
-  case "$1" in
+  local command=${1}
+  local image=${2}
+
+  case ${command} in
     build)
-      case "$2" in
-        bolt|ethereumj) build "${2}" "$(prop 'version' "apps/${2}/version.properties")" "apps/${2}/Dockerfile" "apps/${2}" ;;
-        explorer) build "${2}" "$(jq .version apps/ethvm/package.json -r)" "apps/ethvm/Dockerfile" "apps/" ;;
-        api) build "${2}" "$(jq .version apps/server/package.json -r)" "apps/server/Dockerfile" "apps/" ;;
-        kafka-connect|kafka-connect-ethvm-init|kafka-ethvm-init|mongodb-install|mongodb-ethvm-init|zookeeper) build "$2" "$(prop 'version' "${DOCKER_PATH}/$2/version.properties")" "${DOCKER_PATH}/${2}/Dockerfile" "${DOCKER_PATH}/${2}/" ;;
+      case ${image} in
+        all)
+          for image in "${!PROJECTS[@]}"; do
+            build "$image"
+          done
+          exit 0
+        ;;
+
+        *)
+          # Test if image var is empty
+          if [ -z "${image}" ]; then
+            usage
+            exit 0
+          fi
+
+          # Check if image var is inside our array of known images
+          inArray "${image}" ${!PROJECTS[*]}
+          local status=$?
+          if [ "$status" -eq "0" ]; then
+            build $image
+            exit 0
+          fi
+
+          # Otherwhise print error message, help and exit
+          invalid
+          usage
+          exit 1
+        ;;
       esac
-      ;;
+    ;;
+
     push)
-      case "$2" in
-        bolt|ethereumj) push "${ORG}/${2}:$(prop 'version' "apps/${2}/version.properties")" ;;
-        explorer) push "${ORG}/${2}:$(jq .version apps/${2}/package.json -r)" ;;
-        api) push "${ORG}/${2}:$(jq .version apps/server/package.json -r)" ;;
-        kafka-connect|kafka-connect-ethvm-init|kafka-ethvm-init|mongodb-install|mongodb-ethvm-init|zookeeper) push "${ORG}/${2}:$(prop 'version' "${DOCKER_PATH}/${2}/version.properties")" ;;
+      case ${image} in
+        all)
+          for image in "${!PROJECTS[@]}"; do
+            push "$image"
+          done
+          exit 0
+        ;;
+
+        *)
+          # Test if image var is empty
+          if [ -z "${image}" ]; then
+            usage
+            exit 0
+          fi
+
+          # Check if image var is inside our array of known images
+          inArray "${image}" ${!PROJECTS[*]}
+          local status=$?
+          if [ "$status" -eq "0" ]; then
+            push $image
+            exit 0
+          fi
+
+          # Otherwhise print error message, help and exit
+          invalid
+          usage
+          exit 1
+        ;;
       esac
-      ;;
-    *) usage ;;
+    ;;
+
+    *)
+      usage
+      exit 0
+    ;;
   esac
 }
 run "$@"

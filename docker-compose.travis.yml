@@ -7,7 +7,7 @@ volumes:
 services:
 
   redis:
-    image: redis:4.0.9-alpine
+    image: redis:${REDIS_VERSION}-alpine
     restart: unless-stopped
     volumes:
       - redis-volume:/data
@@ -15,9 +15,7 @@ services:
       - 6379:6379
 
   mongodb:
-    build:
-      context: ./docker/images/mongodb-dev
-      dockerfile: Dockerfile
+    image: enkryptio/mongodb-dev:${MONGODB_VERSION}
     restart: unless-stopped
     volumes:
       - mongodb-volume:/data/db

@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
 
 CMD="kafka-topics --list --zookeeper zookeeper:2181"
 echo "COMMAND: $CMD"
