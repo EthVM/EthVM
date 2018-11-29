@@ -7,6 +7,7 @@ AVRO_DIR=$(cd ${ROOT_DIR}/apps/avro; pwd)
 SCHEMA_DIR=$(cd ${AVRO_DIR}/build/generated-main-avro-avsc/io/enkrypt/avro; pwd)
 
 VALUE_SCHEMAS=(\
+  'capture/Web3BlockRecord.avsc' \
   'capture/BlockSummaryRecord.avsc' \
   'processing/FungibleTokenTransferRecord.avsc' \
   'processing/FungibleTokenBalanceRecord.avsc' \
@@ -19,6 +20,7 @@ VALUE_SCHEMAS=(\
 )
 
 KEY_SCHEMAS=(\
+  'capture/Web3BlockKeyRecord.avsc' \
   'capture/BlockSummaryKeyRecord.avsc' \
   'capture/TransactionKeyRecord.avsc' \
   'processing/ContractKeyRecord.avsc' \

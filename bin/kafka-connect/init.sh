@@ -7,4 +7,5 @@ ${SCRIPT_DIR}/build-connector.sh
 echo "Waiting 30 seconds for kafka-connect to restart"
 sleep 30
 
-${SCRIPT_DIR}/register-sink.sh
+${SCRIPT_DIR}/register-sinks.sh
+${SCRIPT_DIR}/register-sources.sh

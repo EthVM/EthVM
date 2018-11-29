@@ -19,10 +19,14 @@ object StructToBsonConverter {
   private val hexFields = setOf(
     "hash", "parentHash", "unclesHash", "coinbase", "stateRoot", "txTrieRoot", "receiptTrieRoot",
     "logsBloom", "mixHash", "nonce", "extraData", "from", "to", "data", "postTxState", "bloomFilter",
-    "contract", "tokenId", "address", "txHash", "creator", "blockHash"
+    "contract", "tokenId", "address", "txHash", "creator", "blockHash", "miner", "sha3Uncles", "transactionsRoot",
+    "receiptsRoot", "input", "r", "s"
   )
 
-  private val bigIntegerFields = setOf("difficulty", "totalDifficulty", "cumulativeGas", "bigIntegerValue", "gasPrice", "gasLimit", "gasUsed", "gasLeftover", "gasRefund", "reward", "value", "amount")
+  private val bigIntegerFields = setOf(
+    "difficulty", "totalDifficulty", "cumulativeGas", "bigIntegerValue", "gasPrice", "gasLimit", "gasUsed",
+    "gasLeftover", "gasRefund", "reward", "value", "amount", "blockNumber", "transactionIndex", "gas"
+  )
 
   private val basicConverters = mapOf<Schema.Type, BsonFactory>(
     BOOLEAN to { v: Any -> BsonBoolean(v as Boolean) },
@@ -99,7 +103,7 @@ object StructToBsonConverter {
       BYTES -> convertField(value, allowNulls, basicConverters[BYTES]!!)
       ARRAY -> convertArray(schema, value)
       STRUCT -> convertStruct(value, allowNulls)
-      else -> throw IllegalArgumentException("Unhandled schema type: " + schema.type())
+      else -> throw IllegalArgumentException("Unhandled contractMetadataSchema type: " + schema.type())
     }
 
 

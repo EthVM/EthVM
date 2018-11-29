@@ -6,6 +6,11 @@ echo "COMMAND: $CMD"
 docker-compose exec kafka-1 sh -c "$CMD"
 sleep 2
 
+CMD="kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic blocks --config retention.ms=-1 --config cleanup.policy=compact"
+echo "COMMAND: $CMD"
+docker-compose exec kafka-1 sh -c "$CMD"
+sleep 2
+
 CMD="kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 12 --topic block-metrics --config retention.ms=-1 --config cleanup.policy=compact"
 echo "COMMAND: $CMD"
 docker-compose exec kafka-1 sh -c "$CMD"
@@ -22,6 +27,11 @@ docker-compose exec kafka-1 sh -c "$CMD"
 sleep 2
 
 CMD="kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 12 --topic contract-creations --config retention.ms=-1 --config cleanup.policy=compact"
+echo "COMMAND: $CMD"
+docker-compose exec kafka-1 sh -c "$CMD"
+sleep 2
+
+CMD="kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 12 --topic contract-metadata --config retention.ms=-1 --config cleanup.policy=compact"
 echo "COMMAND: $CMD"
 docker-compose exec kafka-1 sh -c "$CMD"
 sleep 2

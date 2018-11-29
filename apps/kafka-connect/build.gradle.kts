@@ -6,7 +6,7 @@ import sun.tools.jar.resources.jar
 
 buildscript {
 
-  val kotlinVer by extra { "1.2.71" }
+  val kotlinVer by extra { "1.3.10" }
   val junitPlatformVer by extra { "1.0.1" }
 
   val versionPluginVer = "0.15.0"
@@ -41,13 +41,14 @@ apply {
 plugins {
   `java-library`
   idea
-  kotlin("jvm") version("1.2.71")
+  kotlin("jvm") version("1.3.10")
 }
 
 
 tasks.withType<KotlinCompile> {
   kotlinOptions.jvmTarget = "1.8"
 }
+
 
 group = "io.enkrypt"
 version = "0.0.1-SNAPSHOT"
@@ -61,11 +62,18 @@ dependencies {
 
   kafkaConnectApi
 
+  implementation("org.web3j:core:4.0.3")
   implementation("org.mongodb:mongodb-driver:3.9.0")
+  implementation("io.enkrypt:avro:0.0.1-SNAPSHOT")
+  implementation("io.confluent:kafka-schema-registry-client:5.0.1")
+  implementation("io.confluent:kafka-connect-avro-converter:5.0.1")
 
   implementation("io.arrow-kt:arrow-core:0.7.3")
   implementation("ch.qos.logback:logback-classic:1.2.3")
   implementation("io.github.microutils:kotlin-logging:1.5.9")
+  implementation("com.beust:klaxon:3.0.1")
+  implementation("commons-codec:commons-codec:1.11")
+
 }
 
 val test by tasks.getting(Test::class) { useJUnitPlatform {} }

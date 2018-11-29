@@ -3,6 +3,7 @@ use ethvm_local;
 
 // create collections
 
+db.createCollection('web3_blocks');
 db.createCollection('blocks');
 db.createCollection('transactions');
 db.createCollection('contracts');
