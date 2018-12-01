@@ -130,7 +130,11 @@ export default Vue.extend({
         },
         {
           title: this.$i18n.t('block.reward'),
-          detail: ethUnits.convert(new Bn(this.block.getTotalReward()).toFixed(), 'wei', 'eth') + ' ' + this.$i18n.t('common.eth')
+          detail: ethUnits.convert(new Bn(this.block.getMinerReward()).toFixed(), 'wei', 'eth') + ' ' + this.$i18n.t('common.eth')
+        },
+        {
+            title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward'),
+            detail: ethUnits.convert(new Bn(this.block.getUncleReward()).toFixed(), 'wei', 'eth') + ' ' + this.$i18n.t('common.eth')
         },
         {
           title: this.$i18n.t('block.pHash'),
@@ -199,10 +203,6 @@ export default Vue.extend({
           {
             title: this.$i18n.t('block.recRoot'),
             detail: this.block.getReceiptsRoot().toString()
-          },
-          {
-            title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward'),
-            detail: ethUnits.convert(new Bn(this.block.getUncleReward()).toFixed(), 'wei', 'eth') + ' ' + this.$i18n.t('common.eth')
           },
           {
             title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.sha'),

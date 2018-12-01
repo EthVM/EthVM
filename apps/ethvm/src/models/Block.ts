@@ -76,17 +76,6 @@ export class Block {
     return this.block.transactions.length
   }
 
-  public getTotalReward(): EthValue {
-    if (!this.cache.getTotalReward) {
-      let total = 0
-      for (const address in this.block.header.rewards) {
-        total = this.block.header.rewards[address] + total
-      }
-      this.cache.getTotalReward = total
-    }
-    return this.cache.getTotalReward
-  }
-
   public getParentHash(): string {
     if (!this.cache.parentHash) {
       this.cache.parentHash = '0x' + this.block.header.parentHash
@@ -224,12 +213,12 @@ export class Block {
     return this.cache.txFees
   }
 
-  public getBlockReward(): number {
+  public getMinerReward(): number {
     const rewards = this.block.header.rewards
-    if (!this.cache.blockReward) {
-      this.cache.blockReward = rewards[this.block.header.miner]
+    if (!this.cache.getMinerReward) {
+      this.cache.getMinerReward = rewards[this.block.header.miner]
     }
-    return this.cache.blockReward
+    return this.cache.getMinerReward
   }
 
   public getUncleReward(): number {
@@ -247,6 +236,17 @@ export class Block {
       this.cache.uncleReward = total
     }
     return this.cache.uncleReward
+  }
+
+  public getTotalReward(): EthValue {
+    if (!this.cache.getTotalReward) {
+      let total = 0
+      for (const address in this.block.header.rewards) {
+        total = this.block.header.rewards[address] + total
+      }
+      this.cache.getTotalReward = total
+    }
+    return this.cache.getTotalReward
   }
 
   public getStats(): BlockStats {

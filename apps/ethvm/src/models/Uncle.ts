@@ -136,6 +136,14 @@ export class Uncle {
     }
     return this.cache.extraData
   }
+
+  public getMinerReward(): number {
+    const rewards = this.uncle.rewards
+    if (!this.cache.getMinerReward) {
+      this.cache.getMinerReward = rewards[this.uncle.miner]
+    }
+    return this.cache.getMinerReward
+  }
   public getTotalReward(): number {
     if (!this.cache.getTotalReward) {
       let total = 0
@@ -145,5 +153,17 @@ export class Uncle {
       this.cache.getTotalReward = total
     }
     return this.cache.getTotalReward
+  }
+
+  // uncle reward =  total reward - block reward
+  public getUncleReward(): number {
+    if (!this.cache.getReward) {
+      let total = 0
+      for (const address in this.uncle.rewards) {
+        total = this.uncle.rewards[address] + total
+      }
+      this.cache.getReward = total - this.uncle.rewards[this.uncle.miner]
+    }
+    return this.cache.getReward
   }
 }
