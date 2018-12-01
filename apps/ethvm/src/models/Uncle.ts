@@ -27,14 +27,14 @@ export class Uncle {
 
   public getParentHash(): string {
     if (!this.cache.parentHash) {
-      this.cache.parentHash = this.uncle.parentHash
+      this.cache.parentHash = '0x' + this.uncle.parentHash
     }
     return this.cache.parentHash
   }
 
   public getHash(): string {
     if (!this.cache.hash) {
-      this.cache.hash = this.uncle.hash
+      this.cache.hash = '0x' + this.uncle.hash
     }
     return this.cache.hash
   }
@@ -62,7 +62,7 @@ export class Uncle {
 
   public getMiner(): string {
     if (!this.cache.miner) {
-      this.cache.miner = this.uncle.miner
+      this.cache.miner = '0x' + this.uncle.miner
     }
     return this.cache.miner
   }
