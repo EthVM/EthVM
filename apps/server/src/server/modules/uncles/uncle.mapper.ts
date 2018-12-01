@@ -2,7 +2,8 @@ import { Uncle } from 'ethvm-common'
 
 const toUncle = (uncle: any): Uncle => {
   const u: any = {}
-  u.unclesHash = uncle.unclesHash
+  u.sha3Uncles = uncle.sha3Uncles
+  u.hash = uncle.hash
   u.parentHash = uncle.parentHash
   u.timestamp = uncle.timestamp
   u.nonce = uncle.nonce

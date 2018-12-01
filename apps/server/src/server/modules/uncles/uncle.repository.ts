@@ -32,7 +32,7 @@ export class MongoUncleRepository extends BaseMongoDbRepository implements Uncle
   public getUncle(hash: string): Promise<Uncle | null> {
     return this.db
       .collection(MongoEthVM.collections.uncles)
-      .findOne({ unclesHash: hash })
+      .findOne({ hash })
       .then(resp => {
         if (!resp) {
           return {}
