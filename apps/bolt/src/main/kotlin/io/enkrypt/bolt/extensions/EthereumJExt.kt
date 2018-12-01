@@ -40,7 +40,8 @@ fun BlockStatistics?.toDocument(): Document? {
 fun BlockHeader?.toDocument(summary: BlockSummary) = Document(
   mapOf(
     "parentHash" to this?.parentHash?.toHex(),
-    "unclesHash" to this?.unclesHash?.toHex(),
+    "sha3Uncles" to this?.unclesHash?.toHex(),
+    "hash" to this?.hash?.toHex(),
     "timestamp" to this?.timestamp,
     "nonce" to this?.nonce.toHex(),
     "miner" to this?.coinbase?.toHex(),
