@@ -1,7 +1,8 @@
 /// <reference types="node" />
 export interface Uncle {
     parentHash?: string;
-    unclesHash?: string;
+    sha3Uncles?: string;
+    hash?: string;
     timestamp?: number;
     nonce?: string;
     miner?: string;

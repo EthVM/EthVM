@@ -10,7 +10,7 @@ export class Uncle {
   constructor(uncle: UncleLayout) {
     this.cache = {}
     this.uncle = uncle
-    this.id = this.uncle.unclesHash
+    this.id = this.uncle.hash
   }
 
   public getId(): string {
@@ -33,10 +33,10 @@ export class Uncle {
   }
 
   public getHash(): string {
-    if (!this.cache.unclesHash) {
-      this.cache.unclesHash = this.uncle.unclesHash
+    if (!this.cache.hash) {
+      this.cache.hash = this.uncle.hash
     }
-    return this.cache.unclesHash
+    return this.cache.hash
   }
 
   public getTimestamp(): Date {
