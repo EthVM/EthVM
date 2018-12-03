@@ -140,7 +140,7 @@ export default Vue.extend({
         {
           title: this.$i18n.t('block.miner'),
           detail: this.block.getMiner(),
-          link: '/address/0x' + this.block.getMiner(),
+          link: '/address/' + this.block.getMiner(),
           copy: true
         },
         {
@@ -158,7 +158,7 @@ export default Vue.extend({
         {
           title: this.$i18n.t('block.pHash'),
           detail: this.block.getParentHash(),
-          link: '/block/0x' + this.block.getParentHash()
+          link: '/block/' + this.block.getParentHash()
         }
       ]
       if (!this.isUncle) {
