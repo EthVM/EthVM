@@ -21,8 +21,8 @@
     "overview": "Sumario",
     "blockTx": "Transacciones relativas al Bloque",
     "lastBlock": "Ultimos Bloques",
-    "lastTxs": "Ultimas Transacciones",
-    "kb": "Base de conocimiento"
+    "lastTxs": "Últimas Transacciones",
+    "kb": "Knowledge Base"
   },
   "common": {
     "address": "Dirección",
@@ -82,7 +82,7 @@
   },
 
   "block": {
-    "height": "Altura",
+    "height": "Posición",
     "miner": "Minero",
     "reward": "Recompensa",
     "totalReward": "Recompensa Total del Bloque",
@@ -186,6 +186,6 @@
     "failed": "Fallidas",
     "pending": "Pendientes",
     "aveTxFees": " Tarifas de transacción promedio (ETH)",
-    "aveGasPrice": "Precio promedio del gas (GWEI)"
+    "aveGasPrice": "Precio promedio de gas (GWEI)"
   }
 }
