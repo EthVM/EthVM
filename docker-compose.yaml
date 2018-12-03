@@ -65,7 +65,7 @@ services:
     labels:
       - 'traefik.enable=true'
       - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:ws.ethvm.${DOMAIN}'
+      - 'traefik.frontend.rule=Host:api.ethvm.${DOMAIN}'
       - 'traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://ethvm.${DOMAIN}||Access-Control-Allow-Credentials:true'
       - 'traefik.frontend.passHostHeader=true'
       - 'traefik.backend=server'
