@@ -1,0 +1,39 @@
+logLevel = "INFO"
+debug = false
+
+defaultEntryPoints = ["http","https"]
+[entryPoints]
+  [entryPoints.http]
+    address = ":80"
+    compress = true
+    [entryPoints.http.redirect]
+      entryPoint = "https"
+  [entryPoints.https]
+    address = ":443"
+    compress = true
+    [entryPoints.https.tls]
+      [[entryPoints.https.tls.certificates]]
+        CertFile = "/ssl/tls.crt"
+        KeyFile = "/ssl/tls.key"
+  [entryPoints.traefik]
+    address = ":8080"
+
+[api]
+  entryPoint = "traefik"
+  dashboard = true
+
+[kubernetes]
+
+[traefikLog]
+  format = "json"
+
+[acme]
+  email = "${email}"
+  storage = "/acme/acme.json"
+  entryPoint = "https"
+  onHostRule = true
+  caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
+  [acme.tlsChallenge]
+    [[acme.domains]]
+      main = "*.${domain}"
+      sans = ["${domain}"]
