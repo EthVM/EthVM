@@ -18,7 +18,9 @@
     <!-- End Charts -->
     <!-- Last Blocks -->
     <v-layout row wrap justify-center mb-4>
-      <v-flex xs12> <block-latest-blocks :max-items="20" showStyle="max-height: 590px"></block-latest-blocks> </v-flex>
+      <v-flex xs12>
+        <block-latest-blocks v-if="blocks" :maxBlocks="true" :blocks="blocks" showStyle="max-height: 590px"></block-latest-blocks>
+      </v-flex>
     </v-layout>
     <!-- End Last Blocks -->
     <!-- Last Txs -->
@@ -31,12 +33,29 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import Visibility from 'visibilityjs'
+import { Events  } from 'ethvm-common'
+import BN from 'bignumber.js'
+
 const MAX_ITEMS = 20
 
 export default Vue.extend({
   name: 'FramesHome',
   data() {
-    return {}
+    return {
+      blocks: null
+    }
+  },
+  created() {
+    this.blocks = this.$store.getters.getBlocks
+    this.$eventHub.$on(Events.newBlock, _block => {
+      if (Visibility.state() === 'visible') {
+        this.blocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
+      }
+    })
+  },
+  beforeDestroy() {
+    this.$eventHub.$off(Events.newBlock)
   },
   computed: {
     txs() {

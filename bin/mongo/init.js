@@ -79,7 +79,8 @@ db.createView('uncles', 'blocks', [
   {
     $project: {
       parentHash: '$uncle.parentHash',
-      unclesHash: '$uncle.unclesHash',
+      sha3Uncles: '$uncle.sha3Uncles',
+      hash: '$uncle.hash',
       timestamp: '$uncle.timestamp',
       nonce: '$uncle.nonce',
       miner: '$uncle.miner',

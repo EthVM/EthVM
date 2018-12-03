@@ -2,7 +2,7 @@ export class Hex {
   public hexString: string
 
   constructor(_hex: Buffer) {
-    this.hexString = '0x' + new Buffer(_hex).toString('hex')
+    this.hexString = '0x' + Buffer.from(_hex).toString('hex')
   }
 
   public toString(): string {
@@ -10,6 +10,6 @@ export class Hex {
   }
 
   public toBuffer(): Buffer {
-    return new Buffer(this.hexString.substring(2), 'hex')
+    return Buffer.from(this.hexString.substring(2), 'hex')
   }
 }

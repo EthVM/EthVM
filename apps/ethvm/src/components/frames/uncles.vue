@@ -1,23 +1,32 @@
 <template>
-  <v-container grid-list-lg class="mt-0">
-    <v-card fluid flat color="transparent">
-      <v-breadcrumbs large>
-        <v-icon slot="divider">fa fa-arrow-right</v-icon>
-        <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link"> {{ item.text }} </v-breadcrumbs-item>
-      </v-breadcrumbs>
-    </v-card>
-    <v-layout row wrap> <block-latest-uncles :max-items="20" :showHeader="true" class="mt-3"></block-latest-uncles> </v-layout>
+  <v-container grid-list-lg class="pa-0 mt-0 mb-0">
+    <v-layout row wrap mb-4>
+      <v-flex xs12>
+        <v-breadcrumbs large ma-0 pa-0>
+          <v-icon slot="divider">fa fa-arrow-right</v-icon>
+          <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link"></v-breadcrumbs-item>
+        </v-breadcrumbs>
+      </v-flex>
+    </v-layout>
+    <v-layout row wrap justify-center mb-4>
+      <v-flex xs12><block-latest-blocks :maxBlocks="true" :blocks="getuncles" :frameBlocks="false"></block-latest-blocks></v-flex>
+    </v-layout>
   </v-container>
 </template>
 
 <script lang="ts">
+import Visibility from 'visibilityjs'
 import Vue from 'vue'
+import { Events } from 'ethvm-common'
+import BN from 'bignumber.js'
 
 const MAX_ITEMS = 20
+
 export default Vue.extend({
-  name: 'FramesHome',
+  name: 'FrameUncles',
   data() {
     return {
+      uncles: null,
       items: [
         {
           text: this.$i18n.t('title.home'),
@@ -25,15 +34,28 @@ export default Vue.extend({
           link: '/'
         },
         {
-          text: 'uncles',
+          text: this.$i18n.t('title.uncles'),
           disabled: true
         }
-      ]
+      ],
+      maxItems: MAX_ITEMS
+    }
+  },
+  created() {
+    this.uncles = this.$store.getters.getUncles
+    this.$eventHub.$on(Events.newUncle, _uncle => {
+      if (Visibility.state() === 'visible') {
+        this.uncles = this.$store.getters.getUncles
+      }
+    })
+  },
+  beforeDestroy() {
+    this.$eventHub.$off(Events.newUncle)
+  },
+  computed: {
+    getuncles() {
+      return this.uncles.slice(0, this.maxItems)
     }
   }
 })
 </script>
-
-<style scoped lang="less">
-@import '~lessPath/sunil/global';
-</style>

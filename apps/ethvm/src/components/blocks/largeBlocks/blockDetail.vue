@@ -46,7 +46,7 @@
           </v-flex>
           <v-flex xs7 sm8 md9>
             <v-list-tile-title v-if="!item.link" class="text-muted text-truncate"
-              >{{ item.detail }} <timeago v-if="item.title == $t('common.timestmp')" :since="block.getTimestamp()" :auto-update="10"></timeago>
+              >{{ item.detail }} <timeago v-if="item.title == $t('common.timestmp')" :datetime="block.getTimestamp()" :auto-update="10"></timeago>
             </v-list-tile-title>
             <router-link v-else :to="item.link">
               <v-list-tile-title class="text-truncate">{{ item.detail }}</v-list-tile-title>
@@ -65,7 +65,7 @@
             </v-flex>
             <v-flex xs7 sm8 md9>
               <v-list-tile-title v-if="!item.link" class="text-muted text-truncate"
-                >{{ item.detail }} <timeago v-if="item.title == $t('common.timestmp')" :since="block.getTimestamp()" :auto-update="10"></timeago>
+                >{{ item.detail }} <timeago v-if="item.title == $t('common.timestmp')" :datetime="block.getTimestamp()" :auto-update="10"></timeago>
               </v-list-tile-title>
               <router-link v-else :to="item.link">
                 <v-list-tile-title class="text-truncate">{{ item.detail }}</v-list-tile-title>
@@ -96,6 +96,8 @@ import { common } from '@app/helpers'
 import { Block, Tx } from '@app/models'
 import store from '@app/states'
 import Vue from 'vue'
+import ethUnits from 'ethereumjs-units'
+import Bn from 'bignumber.js'
 
 export default Vue.extend({
   name: 'BlockView',
@@ -138,7 +140,7 @@ export default Vue.extend({
         {
           title: this.$i18n.t('block.miner'),
           detail: this.block.getMiner(),
-          link: '/address/' + this.block.getMiner(),
+          link: '/address/0x' + this.block.getMiner(),
           copy: true
         },
         {
@@ -147,16 +149,16 @@ export default Vue.extend({
         },
         {
           title: this.$i18n.t('block.reward'),
-          detail: this.block.getBlockReward() + ' ' + this.$i18n.t('common.eth')
+          detail: ethUnits.convert(new Bn(this.block.getMinerReward()).toFixed(), 'wei', 'eth') + ' ' + this.$i18n.t('common.eth')
+        },
+        {
+            title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward'),
+            detail: ethUnits.convert(new Bn(this.block.getUncleReward()).toFixed(), 'wei', 'eth') + ' ' + this.$i18n.t('common.eth')
         },
         {
           title: this.$i18n.t('block.pHash'),
           detail: this.block.getParentHash(),
-          link: '/block/' + this.block.getParentHash()
-        },
-        {
-          title: this.$i18n.t('block.size'),
-          detail: 'TODO'
+          link: '/block/0x' + this.block.getParentHash()
         }
       ]
       if (!this.isUncle) {
@@ -185,22 +187,25 @@ export default Vue.extend({
         {
           title: this.$i18n.t('block.root'),
           details: this.block.getStateRoot().toString()
+        },
+        {
+          title: this.$i18n.t('block.data'),
+          details: this.block.getExtraData().toString()
         }
         /*{
                 title: this.$i18n.t('block.data'),
                 details: this.block.getExtraData().toString()
               }*/
       ]
-
       if (!this.isUncle) {
         const newItems = [
           {
-            title: this.$i18n.t('block.totalReward'),
-            detail: '' //this.block.getBlockReward().toEth() + ' ' + this.$i18n.t('common.eth')
+            title: this.$i18n.t('block.root'),
+            details: this.block.getStateRoot().toString()
           },
           {
             title: this.$i18n.t('block.fees'),
-            detail: this.block.getTxFees() + ' ' + this.$i18n.t('common.eth')
+            detail: ethUnits.convert(new Bn(this.block.getTxFees()), 'wei', 'eth') + ' ' + this.$i18n.t('common.eth')
           },
           {
             title: this.$i18n.t('gas.limit'),
@@ -223,10 +228,6 @@ export default Vue.extend({
             detail: this.block.getReceiptsRoot().toString()
           },
           {
-            title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward'),
-            detail: this.block.getUncleReward() + ' ' + this.$i18n.t('common.eth')
-          },
-          {
             title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.sha'),
             detail: this.block.getSha3Uncles()
           }
@@ -246,7 +247,7 @@ export default Vue.extend({
   },
   computed: {
     isUncle() {
-      return false
+      return this.block.getIsUncle()
     },
     update() {
       return String

@@ -10,7 +10,7 @@
     <frame-about v-else-if="pageName == 'about'"></frame-about>
 
     <!-- Detail Pages -->
-    <frame-uncle-detail v-else-if="pageName == 'uncle' && param" :blockRef="param"></frame-uncle-detail>
+    <frame-uncle-detail v-else-if="pageName == 'uncle' && param" :uncleRef="param"></frame-uncle-detail>
     <frame-block-detail v-else-if="pageName == 'block' && param" :blockRef="param"></frame-block-detail>
     <frame-address v-else-if="pageName == 'address' && param" :address="param"></frame-address>
     <frame-tx-detail v-else-if="pageName == 'tx' && param" :txHash="param"></frame-tx-detail>

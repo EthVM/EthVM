@@ -11,7 +11,7 @@
             </v-flex>
             <v-flex xs7 sm8 md9>
               <p v-if="!item.link" class="text-muted text-truncate">
-                {{ item.detail }}<timeago v-if="item.title == $t('common.timestmp')" :since="block.getTimestamp()" :auto-update="10"></timeago>
+                {{ item.detail }}<timeago v-if="item.title == $t('common.timestmp')" :datetime="block.getTimestamp()" :auto-update="10"></timeago>
               </p>
               <router-link v-else :to="item.link"
                 ><p class="text-truncate">{{ item.detail }}</p></router-link

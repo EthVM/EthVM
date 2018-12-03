@@ -1,3 +1,4 @@
+import { toUncle } from '@app/server/modules/uncles'
 import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
 import { Uncle } from 'ethvm-common'
 
@@ -15,6 +16,17 @@ export class MongoUncleRepository extends BaseMongoDbRepository implements Uncle
       .skip(page)
       .limit(limit)
       .toArray()
+      .then(resp => {
+        const u: Uncle[] = []
+        if (!resp) {
+          return u
+        }
+        resp.forEach(uncle => {
+          const tu = toUncle(uncle)
+          u.unshift(tu)
+        })
+        return u
+      })
   }
 
   public getUncle(hash: string): Promise<Uncle | null> {
@@ -25,7 +37,7 @@ export class MongoUncleRepository extends BaseMongoDbRepository implements Uncle
         if (!resp) {
           return {}
         }
-        return resp
+        return toUncle(resp)
       })
   }
 }
