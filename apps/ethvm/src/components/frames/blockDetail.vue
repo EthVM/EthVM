@@ -5,21 +5,35 @@
         <v-card fluid flat color="transparent">
           <v-breadcrumbs large>
             <v-icon slot="divider">fa fa-arrow-right</v-icon>
-            <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link"> {{ item.text }} </v-breadcrumbs-item>
+            <v-breadcrumbs-item
+              v-for="item in items"
+              :disabled="item.disabled"
+              :key="item.text"
+              :to="item.link"
+            >{{ item.text }}</v-breadcrumbs-item>
           </v-breadcrumbs>
         </v-card>
       </v-flex>
     </v-layout>
     <v-layout row wrap justify-start class="mb-4">
-      <v-flex v-if="blockMined" xs12> <block-block-detail :block="block" :isMined="true"></block-block-detail></v-flex>
-      <v-flex v-else xs12> <block-block-detail :isMined="blockMined" :prev="getPrev()"></block-block-detail></v-flex>
+      <v-flex v-if="blockMined" xs12>
+        <block-block-detail :block="block" :isMined="true"></block-block-detail>
+      </v-flex>
+      <v-flex v-else xs12>
+        <block-block-detail :isMined="blockMined" :prev="getPrev()"></block-block-detail>
+      </v-flex>
     </v-layout>
     <v-layout row wrap justify-start class="mb-4">
       <v-flex v-if="blockMined" xs12>
-        <block-last-transactions v-if="transactions.length > 0" :transactions="transactions" :frameTxs="true" :tableTitle="$t('title.blockTx')" class="mt-3">
-        </block-last-transactions>
+        <block-last-transactions
+          v-if="transactions.length > 0"
+          :transactions="transactions"
+          :frameTxs="true"
+          :tableTitle="$t('title.blockTx')"
+          class="mt-3"
+        ></block-last-transactions>
         <v-card v-else flat color="white">
-          <v-card-text class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }} </v-card-text>
+          <v-card-text class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }}</v-card-text>
         </v-card>
       </v-flex>
     </v-layout>
@@ -75,8 +89,11 @@ export default Vue.extend({
       }
       this.items.push(newI)
     },
-    setBlock(result) {
+    setRawBlock(result) {
       this.block = new Block(result)
+      this.setBlock()
+    },
+    setBlock() {
       this.uncles = this.block.getUncles()
       if (!this.bNum) {
         this.bNum = this.block.getNumber()
@@ -112,6 +129,20 @@ export default Vue.extend({
   },
   mounted() {
     /* Get Block Data: */
+    if (this.$store.getters.getBlocks.length > 0) {
+      this.lastMinedBlock = this.$store.getters.getBlocks[0]
+    }
+    this.$eventHub.$on(sEvents.newBlock, _block => {
+      if (this.$store.getters.getBlocks.length > 0) {
+        this.lastMinedBlock = this.$store.getters.getBlocks[0]
+      }
+      if (!this.blockMined) {
+        if (this.block.getNumber() == Number(this.blockRef)) {
+          this.block = this.lastMinedBlock
+          this.setBlock()
+        }
+      }
+    })
     if (this.blockRef.includes('0x')) {
       this.$socket.emit(
         sEvents.getBlock,
@@ -120,7 +151,7 @@ export default Vue.extend({
         },
         (error, result) => {
           if (result) {
-            this.setBlock(result)
+            this.setRawBlock(result)
           }
         }
       )
@@ -134,7 +165,7 @@ export default Vue.extend({
         },
         (error, result) => {
           if (result) {
-            this.setBlock(result)
+            this.setRawBlock(result)
           }
         }
       )
