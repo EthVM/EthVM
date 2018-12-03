@@ -31,16 +31,16 @@
       "version": "${DOCKER_IMAGES_PATH}/kafka-connect/version.properties"
     },
     {
-      "id": "kafka-connect-ethvm-init",
-      "dockerfile": "${DOCKER_IMAGES_PATH}/kafka-connect-ethvm-init/Dockerfile",
-      "context": "${DOCKER_IMAGES_PATH}/kafka-connect-ethvm-init/",
-      "version": "${DOCKER_IMAGES_PATH}/kafka-connect-ethvm-init/version.properties"
+      "id": "kafka-connect-ethvm-utils",
+      "dockerfile": "${DOCKER_IMAGES_PATH}/kafka-connect-ethvm-utils/Dockerfile",
+      "context": "${DOCKER_IMAGES_PATH}/kafka-connect-ethvm-utils/",
+      "version": "${DOCKER_IMAGES_PATH}/kafka-connect-ethvm-utils/version.properties"
     },
     {
-      "id": "kafka-ethvm-init",
-      "dockerfile": "${DOCKER_IMAGES_PATH}/kafka-ethvm-init/Dockerfile",
-      "context": "${DOCKER_IMAGES_PATH}/kafka-ethvm-init",
-      "version": "${DOCKER_IMAGES_PATH}/kafka-ethvm-init/version.properties"
+      "id": "kafka-ethvm-utils",
+      "dockerfile": "${DOCKER_IMAGES_PATH}/kafka-ethvm-utils/Dockerfile",
+      "context": "${DOCKER_IMAGES_PATH}/kafka-ethvm-utils",
+      "version": "${DOCKER_IMAGES_PATH}/kafka-ethvm-utils/version.properties"
     },
     {
       "id": "mongodb-dev",
@@ -49,10 +49,10 @@
       "version": "${DOCKER_IMAGES_PATH}/mongodb-dev/version.properties"
     },
     {
-      "id": "mongodb-ethvm-init",
-      "dockerfile": "${DOCKER_IMAGES_PATH}/mongodb-ethvm-init/Dockerfile",
-      "context": "${DOCKER_IMAGES_PATH}/mongodb-ethvm-init/",
-      "version": "${DOCKER_IMAGES_PATH}/mongodb-ethvm-init/version.properties"
+      "id": "mongodb-ethvm-utils",
+      "dockerfile": "${DOCKER_IMAGES_PATH}/mongodb-ethvm-utils/Dockerfile",
+      "context": "${DOCKER_IMAGES_PATH}/mongodb-ethvm-utils/",
+      "version": "${DOCKER_IMAGES_PATH}/mongodb-ethvm-utils/version.properties"
     },
     {
       "id": "mongodb-install",

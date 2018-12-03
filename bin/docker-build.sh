@@ -10,33 +10,16 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 
 # DEFAULT VARS
-ORG="enkryptio"
+ORG="${ORG:-enkryptio}"
 APPS_PATH="${ROOT_DIR}/apps"
 DOCKER_IMAGES_PATH="${ROOT_DIR}/docker/images"
-PROJECTS_PATH="${SCRIPT_DIR}/docker-build.meta.json"
+PROJECTS_PATH="${SCRIPT_DIR}/projects.meta.json"
 
-# ensure checks that whe have corresponding utilities installed
-ensure() {
-  if ! [ -x "$(command -v jq)" ]; then
-    >&2 echo "jq is necessary to be installed to run this script!"
-    exit 1
-  fi
+# import utils
+source ${SCRIPT_DIR}/utils.sh
 
-  if ! [ -x "$(command -v docker)" ]; then
-    >&2 echo "docker is necessary to be installed to run this script!"
-    exit 1
-  fi
-}
+# verify we have required utilities installed
 ensure
-
-# Utility fns
-
-# prop - read .properties files and search elements by key
-prop() {
-  local path=${1}
-  local key=${2:-'version'}
-  grep ${key} ${path} | cut -d '=' -f2
-}
 
 # invalid - prints invalid message
 invalid() {
@@ -55,6 +38,7 @@ usage() {
   echo "Commands:"
   echo "    build <image>  Build a docker image from this repo."
   echo "    push  <image>  Push an image to the registered docker registry."
+  echo "    help           Print version information and exit."
   echo ""
   echo "Images:"
   echo "    $(jq -r '[.projects[].id] | join(", ")' $PROJECTS_PATH)"
@@ -126,13 +110,13 @@ process_subcommand() {
 
 # run - executes main script
 run() {
-  local command=${1}
-  local image=${2:-false}
+  local command="${1:-""}"
+  local image="${2:-false}"
 
   case ${command} in
-    build) process_subcommand "build" $image ;;
-    push)  process_subcommand "push"  $image ;;
-    *)     usage; exit 0                     ;;
+    build)  process_subcommand "build" $image ;;
+    push)   process_subcommand "push"  $image ;;
+    help|*) usage; exit 0                     ;;
   esac
 }
 run "$@"

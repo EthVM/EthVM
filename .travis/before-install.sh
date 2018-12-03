@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 
-set -o errexit \
-    -o pipefail
-
-# set -o verbose && \
-#     -o xtrace
+set -o errexit
+set -o pipefail
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
@@ -16,8 +13,6 @@ if [ "$ID" == "apps/server-e2e-test" ]; then
 
   # Download datasets with Git LFS (if applies)
   echo -e "machine github.com\n  login ${GITHUB_TOKEN}" > ~/.netrc
-  git lfs fetch --all
-  git lfs checkout
 
   # Install Docker
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -

@@ -26,14 +26,14 @@ usage() {
   echo "Usage:"
   echo "  ethvm [COMMAND] [ARGS...]"
   echo ""
-  echo "Options:"
-  echo "  ethvm --version | -v             Print version information and exit."
-  echo "  ethvm --help    | -h             Print this help information and exit."
-  echo ""
   echo "Commands:"
   echo "  docker | d                       Spin up an EthVM environment suitable for development purposes."
   echo "  docker-build | db                Build and upload different docker images used in this project."
   echo "  monkey | m                       Utility to generate random transactions to a RPC endpoint."
+  echo "  kafka | k                        Utility to operate with Kafka."
+  echo "  mongo | mdb                      Utility to operate with MongoDB."
+  echo "  version                          Print this help information and exit."
+  echo "  help                             Print version information and exit."
   echo ""
 }
 
@@ -45,8 +45,6 @@ parse_args() {
   # named args
   while [[ "$1" != "" ]]; do
     case "$1" in
-      -v | --version ) version; exit 0 ;;
-      -h | --help )    usage; exit 0   ;; # show usage
       * )              args+=("$1")       # if no match, add it to the positional args
     esac
     shift # move to next kv pair
@@ -56,19 +54,22 @@ parse_args() {
   set -- "${args[@]}"
 
   # set positionals to vars
-  command="${args[0]}"
-  action="${args[1]}"
-  subaction="${args[2]}"
+  command="${args[0]:-false}"
+  action="${args[1]:-false}"
+  subaction="${args[2]:-false}"
 }
 
 # run - execute main script
 run() {
   parse_args "$@"
   case ${command} in
-    docker|d)        ${SCRIPT_DIR}/docker.sh $action                  ;;
+    docker|d)        ${SCRIPT_DIR}/docker.sh $action $subaction       ;;
     docker-build|db) ${SCRIPT_DIR}/docker-build.sh $action $subaction ;;
     monkey|m)        ${SCRIPT_DIR}/monkey.sh $action                  ;;
-    *)               usage; exit 0                                    ;;
+    kafka|k)         ${SCRIPT_DIR}/kafka.sh $action                   ;;
+    mongo|mdb)       ${SCRIPT_DIR}/mongo.sh $action                   ;;
+    version)         version; exit 0                                  ;;
+    help|*)          usage; exit 0                                    ;;
   esac
 }
 run "$@"
