@@ -30,7 +30,8 @@ services:
           mongod --bind_ip 0.0.0.0 --replSet rs0 --quiet --slowms 10000 &
           sleep 5
           mongo --eval "rs.initiate()"
-          mongorestore --archive="/datasets/ethvm_mainnet_sample.mongo.archive"
+          sleep 5
+          mongorestore --archive="/datasets/${ETH_SAMPLE_DATASET}"
           kill -9 $$(pgrep mongod)
           sleep 5
           mongod --bind_ip 0.0.0.0 --replSet rs0 --quiet --slowms 10000
