@@ -41,7 +41,7 @@ prepare_e2e_environment() {
   git lfs checkout
 
   # Prepare data
-  docker-compose -f ${ROOT_DIR}/docker-compose.travis.yml up -d
+  docker-compose -f ${ROOT_DIR}/docker-compose.travis.yaml up -d
 
   # Wait 60 secs to allow container proper initialization
   sleep 60
