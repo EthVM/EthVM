@@ -84,8 +84,8 @@
     </div>
     <v-card flat v-else class="pa-3">
       <v-layout column align-center justify-center ma-3>
-        <v-card-title class="primary--text text-xs-center body-2 pb-4"> Sit tight, this Block has not been mined yet </v-card-title>
         <v-icon class="fa fa-spinner fa-pulse fa-4x fa-fw primary--text" large></v-icon>
+        <v-card-title v-if="isNotMinedBlock" class="primary--text text-xs-center body-2 pb-4"> Sit tight, this Block has not been mined yet </v-card-title>
       </v-layout>
     </v-card>
   </v-card>
@@ -110,8 +110,13 @@ export default Vue.extend({
       type: Boolean,
       default: true
     },
+    uncles:[],
     prev: {
       type: Number
+    },
+    isNotMinedBlock:{
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -256,7 +261,10 @@ export default Vue.extend({
       return this.showMore
     },
     hasUncles() {
-      return this.isMined ? this.block.getIsUncle() : false
+      if(this.block){
+        return this.block.getHasUncle()
+      }
+      return false
     },
     mined() {
       if (this.isMined) {

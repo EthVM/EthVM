@@ -11,8 +11,8 @@
       </v-flex>
     </v-layout>
     <v-layout row wrap justify-start class="mb-4">
-      <v-flex v-if="blockMined" xs12> <block-block-detail :block="block" :isMined="true"></block-block-detail> </v-flex>
-      <v-flex v-else xs12> <block-block-detail :isMined="blockMined" :prev="getPrev()"></block-block-detail> </v-flex>
+      <v-flex v-if="blockMined" xs12> <block-block-detail :block="block" :isNotMinedBlock ="isNotMinedBlock" :uncles="uncles" :isMined="true"></block-block-detail> </v-flex>
+      <v-flex v-else xs12> <block-block-detail :isMined="false" :isNotMinedBlock ="isNotMinedBlock" :prev="getPrev()"></block-block-detail> </v-flex>
     </v-layout>
     <v-layout row wrap justify-start class="mb-4">
       <v-flex v-if="blockMined" xs12>
@@ -55,6 +55,7 @@ export default Vue.extend({
       unixtimestamp: null,
       timestamp: null,
       transactions: [],
+      isNotMinedBlock: false,
       items: [
         {
           text: this.$i18n.t('title.home'),
@@ -126,11 +127,8 @@ export default Vue.extend({
     this.$eventHub.$on(sEvents.newBlock, _block => {
       if (this.$store.getters.getBlocks.length > 0) {
         this.lastMinedBlock = this.$store.getters.getBlocks[0]
-      }
-      if (!this.blockMined) {
-        if (this.block.getNumber() == Number(this.blockRef)) {
-          this.block = this.lastMinedBlock
-          this.setBlock()
+        if (this.lastMinedBlock < Number(this.blockRef)){
+          this.isNotMinedBlock = true
         }
       }
     })
