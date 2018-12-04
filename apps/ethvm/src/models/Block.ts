@@ -32,7 +32,7 @@ export class Block {
   public getHasUncle(): boolean {
     if (!this.cache.getHasUncle) {
       if (this.block.uncles.length == 0) {
-        this.cache.getHasUncle = false
+        return this.cache.getHasUncle = false
       }
       this.cache.getHasUncle = true
     }
@@ -99,7 +99,7 @@ export class Block {
 
   public getSha3Uncles(): string {
     if (!this.cache.sha3Uncles) {
-      this.cache.sha3Uncles = '0x' + this.block.header.unclesHash
+      this.cache.sha3Uncles = '0x' + this.block.header.sha3Uncles
     }
     return this.cache.sha3Uncles
   }
@@ -224,7 +224,7 @@ export class Block {
   public getUncleReward(): number {
     if (!this.cache.uncleReward) {
       let total = 0
-      if (this.block.header.rewards[this.block.header.unclesHash]) {
+      if (this.block.header.rewards[this.block.header.sha3Uncles]) {
         return (this.cache.uncleReward = total)
       }
       for (const address in this.block.header.rewards) {
