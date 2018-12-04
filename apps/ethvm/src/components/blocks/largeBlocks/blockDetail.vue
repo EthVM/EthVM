@@ -39,7 +39,7 @@
     </v-layout>
     <v-divider class="lineGrey"></v-divider>
     <v-list v-if="mined">
-      <v-list-tile v-for="(item, index) in items" :key="index" :class="[ index % 2 == 0 ?'background: white' : 'background: tableGrey']">
+      <v-list-tile v-for="(item, index) in items" :key="index" :class="[index % 2 == 0 ? 'background: white' : 'background: tableGrey']">
         <v-layout align-center justify-start row fill-height class="pa-3 ">
           <v-flex xs4 sm3 md2>
             <v-list-tile-title class="info--text font-weight-medium">{{ item.title }}</v-list-tile-title>
@@ -152,8 +152,8 @@ export default Vue.extend({
           detail: ethUnits.convert(new Bn(this.block.getMinerReward()).toFixed(), 'wei', 'eth') + ' ' + this.$i18n.t('common.eth')
         },
         {
-            title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward'),
-            detail: ethUnits.convert(new Bn(this.block.getUncleReward()).toFixed(), 'wei', 'eth') + ' ' + this.$i18n.t('common.eth')
+          title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward'),
+          detail: ethUnits.convert(new Bn(this.block.getUncleReward()).toFixed(), 'wei', 'eth') + ' ' + this.$i18n.t('common.eth')
         },
         {
           title: this.$i18n.t('block.pHash'),
