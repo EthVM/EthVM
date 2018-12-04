@@ -32,6 +32,7 @@ usage() {
   echo "  monkey | m                       Utility to generate random transactions to a RPC endpoint."
   echo "  kafka | k                        Utility to operate with Kafka."
   echo "  mongo | mdb                      Utility to operate with MongoDB."
+  echo "  terraform | tf                   Utility to operate with Terraform."
   echo "  version                          Print this help information and exit."
   echo "  help                             Print version information and exit."
   echo ""
@@ -68,6 +69,7 @@ run() {
     monkey|m)        ${SCRIPT_DIR}/monkey.sh $action                  ;;
     kafka|k)         ${SCRIPT_DIR}/kafka.sh $action                   ;;
     mongo|mdb)       ${SCRIPT_DIR}/mongo.sh $action                   ;;
+    terraform|tf)    ${SCRIPT_DIR}/terraform.sh $action               ;;
     version)         version; exit 0                                  ;;
     help|*)          usage; exit 0                                    ;;
   esac
