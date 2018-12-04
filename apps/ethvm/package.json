@@ -31,7 +31,7 @@
     "visibilityjs": "^2.0.2",
     "vue": "^2.5.17",
     "vue-class-component": "^6.2.0",
-    "vue-i18n": "^7.6.0",
+    "vue-i18n": "^8.4.0",
     "vue-infinite-scroll": "^2.0.2",
     "vue-paginate": "^3.6.0",
     "vue-property-decorator": "^7.0.0",
