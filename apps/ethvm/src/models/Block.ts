@@ -148,7 +148,11 @@ export class Block {
 
   public getExtraData(): Hex {
     if (!this.cache.extraData) {
+      if(this.block.header.extraData){
       this.cache.extraData = common.Hex(this.block.header.extraData)
+      }else{
+        this.cache.extraData = common.Hex(Buffer.from('0'))
+      }
     }
     return this.cache.extraData
   }
