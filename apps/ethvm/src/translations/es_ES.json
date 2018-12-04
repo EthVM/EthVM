@@ -9,52 +9,52 @@
     "mined": "Transacciones Minadas",
     "tokens": "Tokens",
     "tokenCntrc": "Contratos",
-    "tokenPrice20": "ERC20 Prices",
-    "tokenPrice721": "ERC721 Prices",
-    "charts": "Graficas",
+    "tokenPrice20": "ERC20 Precios",
+    "tokenPrice721": "ERC721 Precios",
+    "charts": "Gráficos",
     "about": "Acerca de",
     "address": "Direcciones",
     "blockN": "Bloque #",
     "blockDetail": "Detalle del Bloque",
     "tokenDetail": "Detalle del Token",
-    "txDetail": "Detalles de la Transacci'on",
+    "txDetail": "Detalles de la Transacción",
     "overview": "Sumario",
     "blockTx": "Transacciones relativas al Bloque",
     "lastBlock": "Ultimos Bloques",
-    "lastTxs": "Ultimas Transacciones",
+    "lastTxs": "Últimas Transacciones",
     "kb": "Knowledge Base"
   },
   "common": {
-    "address": "Direccion",
+    "address": "Dirección",
     "hash": "Hash",
     "eth": "ETH",
     "status": "Estado",
-    "timestmp": "Timestamp",
+    "timestmp": "Marca de tiempo",
     "gwei": "GWEI",
-    "more": "Mas",
-    "tx": "Tx"
+    "more": "Más",
+    "tx": "Transacción"
   },
   "subTitle": {
     "home": "Bienvenido a Ethereum Virtual Machine",
     "blocks": "Bloques, mas recientes primero",
     "tx": "Transacciones, mas recientes primero",
-    "pending": "Transactions that haven't been mined on Ethereum network",
-    "charts": "Ethereum network charts and stats",
-    "about": "EthVM Informacion General",
-    "address": "Informacion General / Sumario de Transacciones",
-    "blockDetail": "Informacion general del Bloque / Sumario de Transacciones",
-    "tokenDetail": "Token overview / Historico de Transferencias",
-    "txDetail": "Ethereum transaction overview"
+    "pending": "Transacciones que no han sido minadas en Ethereum network",
+    "charts": "Ethereum network tablas y estadísticas",
+    "about": "EthVM Información General",
+    "address": "Información General / Sumario de Transacciones",
+    "blockDetail": "Información general del Bloque / Sumario de Transacciones",
+    "tokenDetail": "Información general del Token / Historial de Transferencias",
+    "txDetail": "Resumen de transacciones de Ethereum"
   },
   "search": {
-    "default": "Buscar Bloque / Direccion / Tx",
-    "addressTx": "Tx Hash/Direccion"
+    "default": "Buscar Bloque / Dirección / Tx",
+    "addressTx": "Tx Hash/Dirección"
   },
   "tableHeader": {
     "blockN": "Bloque #",
     "txs": "Transacciones",
     "reward": "Recompensa",
-    "txN": "Transaccion #",
+    "txN": "Transacción #",
     "limit": "Limite",
     "gas": "Gas"
   },
@@ -68,25 +68,25 @@
 
   "message": {
     "error": "Uy, algo ha ido mal, no hay datos desde el servidor :(",
-    "txAll": "Esta direccion no contiene ningun historico de transacciones",
-    "txIn": "Esta direccion no contine ninguna transaccion entrante",
-    "txOut": "Esta direccion no contiene ninguna transaccion saliente",
-    "txPen": "Esta direccion no contiene ninguna transaccion pendiente",
-    "txPenIn": "Esta direccion no contine ninguna transaccion entrante",
-    "txPenOut": "Esta direccion no contine ninguna transaccion saliente",
-    "noTokens": "La direccion no contine ningun token",
-    "noTxHistory": "No existe historico de transacciones",
-    "noTxInBlock": "Este bloque no contiene ninguna transaccion",
+    "txAll": "Esta dirección no contiene ningun historial de transacciones",
+    "txIn": "Esta dirección no contine ninguna transacción entrante",
+    "txOut": "Esta dirección no contiene ninguna transacción saliente",
+    "txPen": "Esta dirección no contiene ninguna transacción pendiente",
+    "txPenIn": "Esta dirección no contine ninguna transacción entrante",
+    "txPenOut": "Esta dirección no contine ninguna transacción saliente",
+    "noTokens": "La dirección no contine ningun token",
+    "noTxHistory": "No existe historial de transacciones",
+    "noTxInBlock": "Este bloque no contiene ninguna transacción",
     "noPending": "No hay transacciones pendientes",
     "load": "Cargando ..."
   },
 
   "block": {
-    "height": "Height",
-    "miner": "Miner",
-    "reward": "Miner Reward",
-    "totalReward": "Total Block Reward",
-    "fees": "Tx Fees",
+    "height": "Posición",
+    "miner": "Minero",
+    "reward": "Recompensa",
+    "totalReward": "Recompensa Total del Bloque",
+    "fees": "Tarifa de Transacción",
     "pHash": "Parent Hash",
     "size": "Size",
     "diff": "Dificultad",
@@ -104,36 +104,36 @@
 
   "addrOverview": {
     "balance": "Ether Balance",
-    "usd": "USD Value",
-    "txN": "Number of Txs",
-    "mined": "Mined",
-    "creator": "Contract Creator",
-    "forTx": "For Tx",
-    "per": "per",
+    "usd": "Valor en USD",
+    "txN": "Numero de Transacciones",
+    "mined": "Minado",
+    "creator": "Creador del Contrato",
+    "forTx": "Por Transacción",
+    "per": "por",
     "uncles": "Uncles",
-    "and": "and"
+    "and": "y"
   },
 
   "tx": {
     "from": "Desde",
     "to": "A",
-    "contract": "Contract",
+    "contract": "Contrato",
     "amount": "Cantidad",
     "block": "Bloque #",
-    "cost": "Coste de la Transaccion"
+    "cost": "Costo de la Transacción"
   },
 
   "token": {
     "holder": "Holder",
     "balance": "Balance",
-    "supply": "Total Supply",
+    "supply": "Suministro Total",
     "totalHold": "Total Holders",
-    "symbol": "Symbol",
-    "transfers": "Total Transfers",
-    "value": "Value",
-    "decimal": "Decimals",
-    "number": "Total Number of Tokens",
-    "totalUSD": "Total USD Value"
+    "symbol": "Símbolo",
+    "transfers": "Transferencias Totales",
+    "value": "Valor",
+    "decimal": "Decimales",
+    "number": "Numero total de Tokens",
+    "totalUSD": "Valor total en USD"
   },
 
   "gas": {
@@ -145,7 +145,7 @@
   "smlBlock": {
     "last": "Ultimo Bloque #",
     "time": "Desde el Ultimo Bloque",
-    "hashR": "Hash Rate",
+    "hashR": "Tasa de Hash",
     "diff": "Dificultad",
     "success": "Tx Exitosas",
     "failed": "Tx Fallidas",
@@ -153,15 +153,15 @@
   },
 
   "tabs": {
-    "txH": "Historico de Transacciones",
+    "txH": "Historial de Transacciones",
     "tokens": "Tokens",
     "pending": "Transacciones Pendientes",
-    "miningH": "Historico de Minado",
+    "miningH": "Historial de Minado",
     "contracts": "Contratos"
   },
 
   "bttn": {
-    "more": "Mas",
+    "more": "Más",
     "less": "Menos",
     "viewAll": "Ver Todo"
   },
@@ -185,7 +185,7 @@
     "success": "Exitosas",
     "failed": "Fallidas",
     "pending": "Pendientes",
-    "aveTxFees": "Avg Tx Fees (ETH)",
-    "aveGasPrice": "Avg Gas Price (GWEI)"
+    "aveTxFees": " Tarifas de transacción promedio (ETH)",
+    "aveGasPrice": "Precio promedio de gas (GWEI)"
   }
 }
