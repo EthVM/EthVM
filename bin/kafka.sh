@@ -49,9 +49,9 @@ run() {
   local action="${2:-false}"
 
   case "${command}" in
-    create-topics) up "${action}"       ;;
-    list-topics)   down                 ;;
-    help|*)        kafka_usage; exit 0  ;;
+    create-topics) create_topics "${action}" ;;
+    list-topics)   list_topics               ;;
+    help|*)        kafka_usage; exit 0       ;;
   esac
 }
 run "$@"

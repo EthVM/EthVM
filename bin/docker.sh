@@ -2,7 +2,7 @@
 
 set -o errexit
 # set -o nounset
-set -o xtrace
+# set -o xtrace
 # set -o verbose
 
 # Give script sane defaults

@@ -55,8 +55,8 @@ parse_args() {
 
   # set positionals to vars
   command="${args[0]:-false}"
-  action="${args[1]:-false}"
-  subaction="${args[2]:-false}"
+  action="${args[1]}"
+  subaction="${args[2]}"
 }
 
 # run - execute main script

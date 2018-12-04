@@ -7,6 +7,7 @@ set -o nounset
 
 # Give script sane defaults
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 
 # import utils
 source ${SCRIPT_DIR}/utils.sh
@@ -33,12 +34,16 @@ kafka_usage() {
 # init - lists registered Kafka topics
 init() {
   docker-compose exec -T mongodb mongo --eval "rs.initiate()"
+  sleep 5
   docker run --rm --network ethvm_back -e MONGODB_URL='mongodb://mongodb:27017/ethvm_local' enkryptio/mongodb-ethvm-init:0.1.0
 }
 
 # create_dump - creates a MongoDB dump file
 create_dump() {
   docker-compose exec mongodb sh -c "mongodump --db='ethvm_local' --archive='/dump.mongo.archive'"
+  mkdir -p ${ROOT_DIR}/datasets/dumps
+  local date=$(date '+%Y-%m-%d-%H:%M:%S')
+  docker cp $(docker ps -aqf "name=mongodb"):/dump.mongo.archive ${ROOT_DIR}/datasets/dumps/dump-${date}.mongo.archive
 }
 
 # bootstrap - inserts into MongoDB a dump file
@@ -56,7 +61,7 @@ run() {
   case "${command}" in
     init)        init                 ;;
     create-dump) create_dump          ;;
-    bootstrap)    bootstrap           ;;
+    bootstrap)   bootstrap            ;;
     help|*)      kafka_usage; exit 0  ;;
   esac
 }
