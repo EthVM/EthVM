@@ -1,7 +1,5 @@
 <template>
-  <v-layout column justify-center>
-    <vue-chart type="bar" :data="chartData" :options="chartOptions" :redraw="redraw"></vue-chart>
-  </v-layout>
+  <v-layout column justify-center> <vue-chart type="bar" :data="chartData" :options="chartOptions" :redraw="redraw"></vue-chart> </v-layout>
 </template>
 
 <script lang="ts">

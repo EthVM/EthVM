@@ -1,21 +1,29 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+
+set -o errexit
+# set -o xtrace
 
 # Give script sane defaults
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 
 # DEFAULT VARS
-PROJECTS=("bolt", "explorer", "api")
-ORG="enkryptio"
+PROJECTS=("bolt", "explorer", "api", "ethereumj", "kafka-connect", "kafka-connect-ethvm-init", "kafka-ethvm-init", "mongodb-install", "mongodb-ethvm-init", "zookeeper")
 
-# Usage prints the help for this command.
+ORG="enkryptio"
+DOCKER_PATH="docker/images"
+
+# Usage prints the help for this command
 usage() {
   >&2 echo "Usage:"
   >&2 echo "    docker-build <command>"
   >&2 echo ""
   >&2 echo "Commands:"
-  >&2 echo "    build <project>  Build a docker image from this repo. Valid values: [${PROJECTS[*]}]"
-  >&2 echo "    push  <project>  Push the built image to the docker registry. Valid values: [${PROJECTS[*]}]"
+  >&2 echo "    build <image>  Build a docker image from this repo."
+  >&2 echo "    push  <image>  Push the built image to the docker registry."
+  >&2 echo ""
+  >&2 echo "Images:"
+  >&2 echo "    [${PROJECTS[*]}]"
   exit 1
 }
 
@@ -27,40 +35,45 @@ ensure() {
   fi
 }
 
-# Build builds the docker image and tags it with the git sha and branch.
+# Build builds the docker image
 build() {
   local name="$1"
   local version="$2"
   local dockerfile="$3"
   local path="$4"
-  docker build -t "$ORG/$name:$version" -f $dockerfile $path
+  docker build -t "${ORG}/${name}:${version}" -f ${dockerfile} ${path}
 }
 
-# Push pushes all of the built docker images.
+# Push pushes the built docker image
 push() {
   local repo="$1"
   docker push "$repo"
 }
 
-function prop {
+prop() {
   grep $1 $2 | cut -d '=' -f2
 }
 
-ensure
-case "$1" in
-  build)
-    case "$2" in
-      bolt) build "$2" "$(prop 'version' 'apps/bolt/version.properties')" "apps/bolt/Dockerfile" "apps/bolt" ;;
-      explorer) build "$2" "$(jq .version apps/ethvm/package.json -r)" "apps/ethvm/Dockerfile" "apps/" ;;
-      api) build "$2" "$(jq .version apps/server/package.json -r)" "apps/server/Dockerfile" "apps/" ;;
-    esac
-    ;;
-  push)
-    case "$2" in
-      bolt) push "$ORG/$2:$(prop 'version' 'apps/bolt/version.properties')" ;;
-      explorer) push "$ORG/$2:$(jq .version apps/ethvm/package.json -r)" ;;
-      api) push "$ORG/$2:$(jq .version apps/server/package.json -r)" ;;
-    esac
-    ;;
-  *) usage ;;
-esac
+run() {
+  ensure
+  case "$1" in
+    build)
+      case "$2" in
+        bolt|ethereumj) build "${2}" "$(prop 'version' "apps/${2}/version.properties")" "apps/${2}/Dockerfile" "apps/${2}" ;;
+        explorer) build "${2}" "$(jq .version apps/ethvm/package.json -r)" "apps/ethvm/Dockerfile" "apps/" ;;
+        api) build "${2}" "$(jq .version apps/server/package.json -r)" "apps/server/Dockerfile" "apps/" ;;
+        kafka-connect|kafka-connect-ethvm-init|kafka-ethvm-init|mongodb-install|mongodb-ethvm-init|zookeeper) build "$2" "$(prop 'version' "${DOCKER_PATH}/$2/version.properties")" "${DOCKER_PATH}/${2}/Dockerfile" "${DOCKER_PATH}/${2}/" ;;
+      esac
+      ;;
+    push)
+      case "$2" in
+        bolt|ethereumj) push "${ORG}/${2}:$(prop 'version' "apps/${2}/version.properties")" ;;
+        explorer) push "${ORG}/${2}:$(jq .version apps/${2}/package.json -r)" ;;
+        api) push "${ORG}/${2}:$(jq .version apps/server/package.json -r)" ;;
+        kafka-connect|kafka-connect-ethvm-init|kafka-ethvm-init|mongodb-install|mongodb-ethvm-init|zookeeper) push "${ORG}/${2}:$(prop 'version' "${DOCKER_PATH}/${2}/version.properties")" ;;
+      esac
+      ;;
+    *) usage ;;
+  esac
+}
+run "$@"

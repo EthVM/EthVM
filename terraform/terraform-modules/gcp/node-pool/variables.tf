@@ -53,3 +53,8 @@ variable "disk_size_gb" {
   description = "Disk of which size to attach to the nodes in the pool "
   default     = "10"
 }
+
+variable "taints" {
+  description = "List of kubernetes taints to apply to each node"
+  default     = []
+}

@@ -36,4 +36,5 @@ module "ethvm_kafka_np" {
   node_count     = "${var.kafka_np_count}"
   min_node_count = "${var.kafka_np_count}"
   max_node_count = "${var.kafka_np_count}"
+  taints         = "${var.kafka_np_taints}"
 }

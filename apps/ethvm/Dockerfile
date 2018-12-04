@@ -1,7 +1,8 @@
-FROM node:10.9.0-alpine
+FROM node:10.13.0-slim
 
 # Install deps
-RUN apk add --no-cache make gcc musl-dev linux-headers git python g++
+RUN apt-get update && \
+    apt-get install -y git python make gcc g++
 
 # Create workdir
 RUN mkdir -p /var/www
@@ -22,4 +23,4 @@ WORKDIR /var/www/ethvm
 
 # Expose
 EXPOSE 8080
-CMD ["yarn start:prod"]
+CMD yarn start:prod

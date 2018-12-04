@@ -6,25 +6,23 @@
         <h3>{{ $t('title.tokenDetail') }}</h3>
         <h6 class="text-muted">{{ $t('subTitle.tokenDetail') }}</h6>
       </div>
-      <div class="search-block">
-        <block-search></block-search>
-      </div>
+      <div class="search-block"><block-search></block-search></div>
       <!-- End Top Container -->
     </div>
     <div class="row">
-      <div class="col-md-12 col-sm-12 col-xs-12">
-        <block-token-detail :token="token" :isHolder="holderPresent"></block-token-detail>
-      </div>
+      <div class="col-md-12 col-sm-12 col-xs-12"><block-token-detail :token="token" :isHolder="holderPresent"></block-token-detail></div>
     </div>
     <!-- Tab Menu -->
     <tab-component :tabs="tokenTabs"></tab-component>
     <div class="tab-menu-container">
       <div class="tab-content">
-        <!-- Transfers
-              <div v-if="tokenTabs[0].isActive">
-                <div v-if="account.txs">
-                </div>
-                <!End Transfers -->
+        <!--
+          Transfers
+           <div v-if="tokenTabs[0].isActive">
+             <div v-if="account.txs">
+             </div>
+             <!End Transfers
+        -->
       </div>
     </div>
     <!-- End Tab Menu -->
@@ -35,7 +33,6 @@
 <script lang="ts">
 import { common } from '@app/helpers'
 import { Tx } from '@app/models'
-import bn from 'bignumber.js'
 import Account from 'ethereumjs-account'
 import ethUnits from 'ethereumjs-units'
 import Vue from 'vue'

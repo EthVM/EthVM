@@ -1,4 +1,6 @@
 resource "google_container_node_pool" "np" {
+  provider = "google-beta"
+
   name       = "${var.name}"
   zone       = "${var.zone}"
   cluster    = "${var.cluster_name}"
@@ -31,5 +33,8 @@ resource "google_container_node_pool" "np" {
 
     # Tags can used to identify targets in firewall rules
     tags = ["${var.name}-cluster", "nodes"]
+
+    # List of kubernetes taints to apply to each node
+    taint = "${var.taints}"
   }
 }
