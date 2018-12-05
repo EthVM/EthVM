@@ -23,8 +23,7 @@ class MongoSinkConnector : SinkConnector() {
 
   override fun taskClass(): Class<out Task> = MongoSinkTask::class.java
 
-  override fun taskConfigs(maxTasks: Int): MutableList<MutableMap<String, String>> =
-    (1..maxTasks).map { config }.toMutableList()
+  override fun taskConfigs(maxTasks: Int): MutableList<MutableMap<String, String>> = (1..maxTasks).map { config }.toMutableList()
 
   override fun config(): ConfigDef = ConfigDef().apply {
 
@@ -34,8 +33,8 @@ class MongoSinkConnector : SinkConnector() {
 
   object Config {
 
-    val MONGO_URI_CONFIG = "mongo.uri"
-    val MONGO_URI_DOC = "Mongo uri for connecting to the mongo instance"
+    const val MONGO_URI_CONFIG = "mongo.uri"
+    const val MONGO_URI_DOC = "Mongo uri for connecting to the mongo instance"
 
     fun mongoUri(props: MutableMap<String, String>) = MongoClientURI(props[MONGO_URI_CONFIG]!!)
 

@@ -6,8 +6,7 @@ import org.web3j.protocol.core.Request
 import org.web3j.protocol.core.Response
 import org.web3j.protocol.core.methods.response.TransactionReceipt
 import org.web3j.protocol.parity.JsonRpc2_0Parity
-import org.web3j.protocol.parity.methods.response.ParityAllAccountsInfo
-import java.util.*
+import java.util.Arrays
 
 class ParityBlockReceipts : Response<List<TransactionReceipt>>()
 
@@ -15,10 +14,10 @@ class JsonRpc2_0ParityExtended(web3jService: Web3jService?) : JsonRpc2_0Parity(w
 
   fun parityGetBlockReceipts(defaultBlockParameter: DefaultBlockParameter): Request<*, ParityBlockReceipts> {
     return Request(
-      "parity_getBlockReceipts",
-      Arrays.asList(defaultBlockParameter.value),
-      web3jService,
-      ParityBlockReceipts::class.java
+        "parity_getBlockReceipts",
+        Arrays.asList(defaultBlockParameter.value),
+        web3jService,
+        ParityBlockReceipts::class.java
     )
   }
 

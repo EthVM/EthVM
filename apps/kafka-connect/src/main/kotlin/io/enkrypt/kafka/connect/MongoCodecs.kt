@@ -18,6 +18,6 @@ class BigIntegerCodec : Codec<BigInteger> {
   }
 
   override fun decode(reader: BsonReader, decoderContext: DecoderContext): BigInteger =
-    reader.readDecimal128().bigDecimalValue().toBigIntegerExact()
+      reader.readDecimal128().bigDecimalValue().toBigIntegerExact()
 
 }

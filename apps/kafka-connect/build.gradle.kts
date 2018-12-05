@@ -41,7 +41,7 @@ apply {
 plugins {
   `java-library`
   idea
-  kotlin("jvm") version("1.3.10")
+  kotlin("jvm") version ("1.3.10")
 }
 
 
@@ -108,7 +108,6 @@ build.dependsOn(shadowJar)
 project.java.sourceSets["main"].java {
   srcDir("src/main/kotlin")
 }
-
 
 tasks.withType<ShadowJar> {
   baseName = "enkryptio-mongo-connectors"

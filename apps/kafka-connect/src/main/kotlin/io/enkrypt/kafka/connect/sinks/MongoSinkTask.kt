@@ -3,7 +3,13 @@ package io.enkrypt.kafka.connect.sinks
 import com.mongodb.MongoClient
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
-import com.mongodb.client.model.*
+import com.mongodb.client.model.DeleteManyModel
+import com.mongodb.client.model.DeleteOneModel
+import com.mongodb.client.model.ReplaceOneModel
+import com.mongodb.client.model.ReplaceOptions
+import com.mongodb.client.model.UpdateOneModel
+import com.mongodb.client.model.UpdateOptions
+import com.mongodb.client.model.WriteModel
 import io.enkrypt.kafka.connect.StructToBsonConverter
 import io.enkrypt.kafka.connect.toHex
 import mu.KotlinLogging
@@ -13,17 +19,27 @@ import org.apache.kafka.connect.data.Schema
 import org.apache.kafka.connect.data.Struct
 import org.apache.kafka.connect.sink.SinkRecord
 import org.apache.kafka.connect.sink.SinkTask
-import org.bson.*
+import org.bson.BsonBinary
+import org.bson.BsonDocument
+import org.bson.BsonString
+import org.bson.Document
 
 enum class CollectionId {
 
-  Blocks, Accounts, Transactions, Contracts, FungibleBalances, NonFungibleBalances, PendingTransactions, BlockStatistics
+  Blocks,
+  Accounts,
+  Transactions,
+  Contracts,
+  FungibleBalances,
+  NonFungibleBalances,
+  PendingTransactions,
+  BlockStatistics
 
 }
 
 class MongoSinkTask : SinkTask() {
 
-  val logger = KotlinLogging.logger {}
+  private val logger = KotlinLogging.logger {}
 
   private lateinit var client: MongoClient
   private lateinit var db: MongoDatabase
@@ -80,24 +96,24 @@ class MongoSinkTask : SinkTask() {
         else -> throw IllegalStateException("Unhandled topic: " + it.topic())
       }
 
-      writesMap.forEach{ (collectionId, writesForCollection) ->
+      writesMap.forEach { (collectionId, writesForCollection) ->
         batch += collectionId to batch.getOrDefault(collectionId, emptyList()) + writesForCollection
       }
     }
 
     batch
-      .filterValues { it.isNotEmpty() }
-      .forEach { (collectionId, writes) ->
+        .filterValues { it.isNotEmpty() }
+        .forEach { (collectionId, writes) ->
 
-      val collection = collectionsMap[collectionId]!!
-      val bulkWrite = collection.bulkWrite(writes)
+          val collection = collectionsMap[collectionId]!!
+          val bulkWrite = collection.bulkWrite(writes)
 
-      logger.debug { "Bulk write complete. Collection = $collectionId, inserts = ${bulkWrite.insertedCount}, updates = ${bulkWrite.modifiedCount}, upserts = ${bulkWrite.upserts.size}, deletes = ${bulkWrite.deletedCount}" }
-    }
+          logger.debug { "Bulk write complete. Collection = $collectionId, inserts = ${bulkWrite.insertedCount}, updates = ${bulkWrite.modifiedCount}, upserts = ${bulkWrite.upserts.size}, deletes = ${bulkWrite.deletedCount}" }
+        }
 
     val elapsedMs = System.currentTimeMillis() - startMs
 
-    logger.info{ "Batch processing completed in $elapsedMs ms"}
+    logger.info { "Batch processing completed in $elapsedMs ms" }
 
   }
 
@@ -137,26 +153,26 @@ class MongoSinkTask : SinkTask() {
       blockWrites += ReplaceOneModel(blockFilter, valueBson, replaceOptions)
 
       val txReceiptsBson = valueBson
-        .getArray("transactions")
+          .getArray("transactions")
 
       txWrites += txReceiptsBson
-        .map { it as BsonDocument }
-        .map {
+          .map { it as BsonDocument }
+          .map {
 
-          val txHash = it.getString("hash")
+            val txHash = it.getString("hash")
 
-          val doc = it
-            .append("blockNumber", blockNumberBson)
+            val doc = it
+                .append("blockNumber", blockNumberBson)
 
-          ReplaceOneModel(BsonDocument("_id", txHash), doc, replaceOptions)
+            ReplaceOneModel(BsonDocument("_id", txHash), doc, replaceOptions)
 
-        }
+          }
 
     }
 
     return mapOf(
-      CollectionId.Blocks to blockWrites,
-      CollectionId.Transactions to txWrites
+        CollectionId.Blocks to blockWrites,
+        CollectionId.Transactions to txWrites
     )
 
   }
@@ -184,9 +200,9 @@ class MongoSinkTask : SinkTask() {
 
       val struct = record.value() as Struct
       val bson = BsonDocument()
-        .apply {
-          append("\$set", StructToBsonConverter.convert(struct))
-        }
+          .apply {
+            append("\$set", StructToBsonConverter.convert(struct))
+          }
 
       writes += UpdateOneModel(idFilter, bson, updateOptions)
     }
@@ -218,17 +234,16 @@ class MongoSinkTask : SinkTask() {
 
       val struct = record.value() as Struct
       val bson = BsonDocument()
-        .apply {
-          append("\$set", BsonDocument()
-            .apply { append("metadata", StructToBsonConverter.convert(struct)) })
-        }
+          .apply {
+            append("\$set", BsonDocument()
+                .apply { append("metadata", StructToBsonConverter.convert(struct)) })
+          }
 
       writes += UpdateOneModel(idFilter, bson, updateOptions)
     }
 
     return mapOf(CollectionId.Contracts to writes)
   }
-
 
   private fun processContractSuicide(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
 
@@ -255,10 +270,10 @@ class MongoSinkTask : SinkTask() {
       val struct = record.value() as Struct
 
       val bson = BsonDocument()
-        .apply {
-          append("\$set", BsonDocument()
-            .apply { append("suicide", StructToBsonConverter.convert(struct)) })
-        }
+          .apply {
+            append("\$set", BsonDocument()
+                .apply { append("suicide", StructToBsonConverter.convert(struct)) })
+          }
 
       writes += UpdateOneModel(idFilter, bson)
     }
@@ -291,7 +306,7 @@ class MongoSinkTask : SinkTask() {
       var bson = StructToBsonConverter.convert(struct)
 
       // combine with id fields so we can query on them later
-      idBson.forEach{ k, v -> bson = bson.append(k, v) }
+      idBson.forEach { k, v -> bson = bson.append(k, v) }
 
       writes += ReplaceOneModel(idFilter, bson, replaceOptions)
     }
@@ -324,7 +339,7 @@ class MongoSinkTask : SinkTask() {
       var bson = StructToBsonConverter.convert(struct)
 
       // combine with id fields so we can query on them later
-      idBson.forEach{ k, v -> bson = bson.append(k, v) }
+      idBson.forEach { k, v -> bson = bson.append(k, v) }
 
       writes += ReplaceOneModel(idFilter, bson, replaceOptions)
     }
@@ -356,7 +371,7 @@ class MongoSinkTask : SinkTask() {
       var bson = StructToBsonConverter.convert(struct)
 
       // combine with id fields so we can query on them later
-      idBson.forEach{ k, v -> bson = bson.append(k, v) }
+      idBson.forEach { k, v -> bson = bson.append(k, v) }
 
       writes += ReplaceOneModel(idFilter, bson, replaceOptions)
     }
@@ -388,7 +403,7 @@ class MongoSinkTask : SinkTask() {
       var bson = StructToBsonConverter.convert(struct, false)
 
       // combine with id fields so we can query on them later
-      idBson.forEach{ k, v -> bson = bson.append(k, v) }
+      idBson.forEach { k, v -> bson = bson.append(k, v) }
 
       writes += ReplaceOneModel(idFilter, bson, replaceOptions)
     }
@@ -398,8 +413,8 @@ class MongoSinkTask : SinkTask() {
 
   companion object {
 
-    val updateOptions = UpdateOptions().upsert(true)
-    val replaceOptions = ReplaceOptions().upsert(true)
+    val updateOptions: UpdateOptions = UpdateOptions().upsert(true)
+    val replaceOptions: ReplaceOptions = ReplaceOptions().upsert(true)
 
   }
 

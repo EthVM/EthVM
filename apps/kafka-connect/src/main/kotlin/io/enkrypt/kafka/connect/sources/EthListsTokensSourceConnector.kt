@@ -23,15 +23,15 @@ class EthListsTokensSourceConnector : SourceConnector() {
   override fun taskClass(): Class<out Task> = EthListsTokensSourceTask::class.java
 
   override fun taskConfigs(maxTasks: Int): MutableList<MutableMap<String, String>> {
-    if(maxTasks != 1) throw IllegalStateException("Exactly 1 task must be configured")
+    if (maxTasks != 1) throw IllegalStateException("Exactly 1 task must be configured")
     return listOf(config).toMutableList()
   }
-
 
   override fun config(): ConfigDef = ConfigDef().apply {
 
     define(Config.TOPIC_CONFIG, STRING, "contract-metadata", HIGH, Config.TOPIC_CONFIG_DOC)
-    define(Config.TOKENS_URL_CONFIG, STRING, "https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/tokens/eth/tokens-eth.min.json", HIGH, Config.TOKENS_URL_DOC)
+    define(Config.TOKENS_URL_CONFIG, STRING, "https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/tokens/eth/tokens-eth.min.json", HIGH,
+        Config.TOKENS_URL_DOC)
     define(Config.SYNC_INTERVAL_CONFIG, ConfigDef.Type.INT, 21600, HIGH, Config.SYNC_INTERVAL_DOC)    // every 6 hours by default
   }
 

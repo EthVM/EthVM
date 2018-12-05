@@ -7,7 +7,6 @@ import org.web3j.protocol.core.methods.response.EthBlock
 import org.web3j.protocol.core.methods.response.Log
 import org.web3j.protocol.core.methods.response.Transaction
 import org.web3j.protocol.core.methods.response.TransactionReceipt
-import org.web3j.protocol.parity.JsonRpc2_0Parity
 import java.math.BigInteger
 
 private val HEX_CHARS = "0123456789abcdef".toCharArray()
@@ -15,7 +14,7 @@ private val HEX_CHARS = "0123456789abcdef".toCharArray()
 /**
  * Taken from https://gist.github.com/fabiomsr/845664a9c7e92bafb6fb0ca70d4e44fd
  */
-fun ByteArray.toHex() : String {
+fun ByteArray.toHex(): String {
   val result = StringBuffer()
 
   forEach {
@@ -55,7 +54,7 @@ fun EthBlock.Block.toStruct(schema: Schema): Struct {
   struct.put("gasLimit", gasLimit.toByteArray())
   struct.put("gasUsed", gasUsed.toByteArray())
   struct.put("timestamp", timestamp.toLong())
-  struct.put("uncles", uncles.map{ it.hexToBytes() })
+  struct.put("uncles", uncles.map { it.hexToBytes() })
 
 //  struct.put("transactions", transactions.map {
 //
@@ -66,9 +65,9 @@ fun EthBlock.Block.toStruct(schema: Schema): Struct {
 //
 //  })
 
-  if(author != null) struct.put("author", author)
-  if(sealFields != null) struct.put("sealFields", sealFields.map{ it.hexToBytes() })
-  if(mixHash != null) struct.put("mixHash", mixHash.hexToBytes())
+  if (author != null) struct.put("author", author)
+  if (sealFields != null) struct.put("sealFields", sealFields.map { it.hexToBytes() })
+  if (mixHash != null) struct.put("mixHash", mixHash.hexToBytes())
 
   return struct
 
@@ -85,13 +84,13 @@ fun Transaction.toStruct(schema: Schema, receipt: TransactionReceipt?): Struct {
   struct.put("gasPrice", gasPrice.toByteArray())
   struct.put("gas", gas.toByteArray())
 
-  if(receipt != null) struct.put("receipt", receipt.toStruct(schema.field("receipt").schema()))
+  if (receipt != null) struct.put("receipt", receipt.toStruct(schema.field("receipt").schema()))
 
-  if(to != null) struct.put("to", to.hexToBytes())
-  if(input != null) struct.put("input", input.hexToBytes())
-  if(creates != null) struct.put("creates", creates.hexToBytes())
-  if(publicKey != null) struct.put("publicKey", publicKey.hexToBytes())
-  if(raw != null) struct.put("raw", raw.hexToBytes())
+  if (to != null) struct.put("to", to.hexToBytes())
+  if (input != null) struct.put("input", input.hexToBytes())
+  if (creates != null) struct.put("creates", creates.hexToBytes())
+  if (publicKey != null) struct.put("publicKey", publicKey.hexToBytes())
+  if (raw != null) struct.put("raw", raw.hexToBytes())
 
   return struct
 
@@ -103,18 +102,18 @@ fun TransactionReceipt.toStruct(schema: Schema): Struct {
   struct.put("cumulativeGasUsed", cumulativeGasUsed.toByteArray())
   struct.put("gasUsed", gasUsed.toByteArray())
   struct.put("logsBloom", logsBloom.hexToBytes())
-  struct.put("logs", logs.map{ it.toStruct(schema.field("logs").schema().valueSchema())})
+  struct.put("logs", logs.map { it.toStruct(schema.field("logs").schema().valueSchema()) })
 
-  if(root != null) struct.put("root", root.hexToBytes())
-  if(contractAddress != null) struct.put("contractAddress", contractAddress.hexToBytes())
-  if(status != null) struct.put("status", status.hexToBytes())
+  if (root != null) struct.put("root", root.hexToBytes())
+  if (contractAddress != null) struct.put("contractAddress", contractAddress.hexToBytes())
+  if (status != null) struct.put("status", status.hexToBytes())
 
   return struct
 }
 
 fun Log.toStruct(schema: Schema): Struct =
-  Struct(schema)
-    .put("address", address.hexToBytes())
-    .put("data", data.hexToBytes())
-    .put("topics", topics.map{ it.hexToBytes() })
+    Struct(schema)
+        .put("address", address.hexToBytes())
+        .put("data", data.hexToBytes())
+        .put("topics", topics.map { it.hexToBytes() })
 

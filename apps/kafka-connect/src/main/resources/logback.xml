@@ -8,10 +8,10 @@
     </encoder>
   </appender>
 
-  <logger name="io.enkrypt.kafka.connect" level="DEBUG" />
+  <logger name="io.enkrypt.kafka.connect" level="DEBUG"/>
 
   <root level="INFO">
-    <appender-ref ref="STDOUT" />
+    <appender-ref ref="STDOUT"/>
   </root>
 
   <!-- for testcontainers -->
