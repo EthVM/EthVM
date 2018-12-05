@@ -100,7 +100,8 @@
     "recRoot": "Receipts Root",
     "uncReward": "Reward",
     "sha": "SHA3",
-    "uncle": "Uncle(s)"
+    "uncle": "Uncle(s)",
+    "loadingBlockTx":"Loading Block transactions..."
   },
 
   "addrOverview": {

@@ -117,7 +117,6 @@ export default Vue.extend({
       type: Boolean,
       default: true
     },
-    uncles:[],
     prev: {
       type: Number
     },
@@ -259,7 +258,10 @@ export default Vue.extend({
   },
   computed: {
     isUncle() {
-      return this.block.getIsUncle()
+      if(this.block){
+        return this.block.getIsUncle()
+      }
+      return false
     },
     update() {
       return String

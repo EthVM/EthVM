@@ -11,7 +11,7 @@
       </v-flex>
     </v-layout>
     <v-layout row wrap justify-start class="mb-4">
-      <v-flex v-if="blockMined" xs12> <block-block-detail :block="block" :isNotMinedBlock ="isNotMinedBlock" :uncles="uncles" :isMined="true"></block-block-detail> </v-flex>
+      <v-flex v-if="blockMined" xs12> <block-block-detail :block="block" :isNotMinedBlock ="isNotMinedBlock" :isMined="true"></block-block-detail> </v-flex>
       <v-flex v-else xs12> <block-block-detail :isMined="false" :isNotMinedBlock ="isNotMinedBlock" :prev="getPrev()"></block-block-detail> </v-flex>
     </v-layout>
     <v-layout row wrap justify-start class="mb-4">
@@ -24,7 +24,9 @@
           class="mt-3"
         ></block-last-transactions>
         <v-card v-else flat color="white">
-          <v-card-text class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }}</v-card-text>
+          <v-icon v-if="transactionLoading" class=" text-xs-center fa fa-spinner fa-pulse fa-4x fa-fw primary--text" large></v-icon>
+          <v-card-text v-if="transactionLoading" class="text-xs-center text-muted">{{ $t('block.loadingBlockTx') }}</v-card-text>
+          <v-card-text v-else class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }}</v-card-text>
         </v-card>
       </v-flex>
     </v-layout>
@@ -55,7 +57,8 @@ export default Vue.extend({
       unixtimestamp: null,
       timestamp: null,
       transactions: [],
-      isNotMinedBlock: false,
+      transactionLoading: Boolean,
+      isNotMinedBlock: Boolean,
       items: [
         {
           text: this.$i18n.t('title.home'),
@@ -97,6 +100,7 @@ export default Vue.extend({
           hash: this.block.getHash().replace('0x', '')
         },
         (err, data) => {
+          this.transactionLoading = false
           this.transactions = data.map(_tx => {
             return new Tx(_tx)
           })
@@ -120,6 +124,7 @@ export default Vue.extend({
     }
   },
   mounted() {
+    this.transactionLoading = true
     /* Get Block Data: */
     if (this.$store.getters.getBlocks.length > 0) {
       this.lastMinedBlock = this.$store.getters.getBlocks[0]
