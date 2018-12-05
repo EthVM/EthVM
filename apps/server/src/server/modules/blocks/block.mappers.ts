@@ -80,6 +80,10 @@ const toBlock = (block: any): Block => {
   b.number = block.number
   b.hash = block.hash
   b.transactions = block.transactions
+  b.uncles = []
+  block.uncles.forEach(element => {
+    b.uncles.push(element.hash)
+  })
   b.uncles = block.uncles
   return b
 }

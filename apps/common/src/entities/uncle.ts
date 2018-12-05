@@ -1,6 +1,9 @@
 export interface Uncle {
   parentHash?: string
   sha3Uncles?: string
+  uncleHeight?:number
+  blockHeight?:number
+  position?:number
   hash?: string
   timestamp?: number
   nonce?: string

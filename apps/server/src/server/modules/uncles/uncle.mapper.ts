@@ -3,6 +3,9 @@ import { Uncle } from 'ethvm-common'
 const toUncle = (uncle: any): Uncle => {
   const u: any = {}
   u.sha3Uncles = uncle.sha3Uncles
+  u.uncleHeight = uncle.uncleHeight
+  u.blockHeight = uncle.blockHeight
+  u.position = uncle.position
   u.hash = uncle.hash
   u.parentHash = uncle.parentHash
   u.timestamp = uncle.timestamp
