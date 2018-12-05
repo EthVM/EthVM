@@ -116,6 +116,10 @@ export class Uncle {
     return this.cache.garLimit
   }
 
+  public getHasUncle(): boolean {
+    return false
+  }
+
   public getGasUsed(): number {
     if (!this.cache.gasUsed) {
       this.cache.gasUsed = this.uncle.gasUsed

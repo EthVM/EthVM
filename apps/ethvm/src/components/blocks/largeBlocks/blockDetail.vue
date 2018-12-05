@@ -1,12 +1,12 @@
 <template>
   <v-card color="white" flat class="pt-3">
-    <v-layout wrap row align-center justify-start pb-1>
+    <v-layout v-if="!isUncle" wrap row align-center justify-start pb-1>
       <v-flex xs3 sm2 md1>
         <v-layout align-center justify-start>
           <v-btn flat color="primary" class="black--text" icon :to="previousBlock()"> <v-icon>fas fa-angle-left</v-icon> </v-btn>
         </v-layout>
       </v-flex>
-      <v-flex xs6 sm8 md10 pl-0>
+      <v-flex  xs6 sm8 md10 pl-0>
         <v-layout row wrap align-center justify-start pl-0>
           <v-card-title class="title font-weight-bold">{{ $t('title.blockDetail') }}</v-card-title>
           <v-dialog v-if="hasUncles" v-model="dialog" max-width="700">
@@ -37,6 +37,13 @@
         </v-layout>
       </v-flex>
     </v-layout>
+        <v-layout v-if="isUncle" wrap row align-center justify-start pb-1>
+      <v-flex  xs6 sm8 md10 pl-0>
+        <v-layout row wrap align-center justify-start pl-0>
+          <v-card-title class="title font-weight-bold">{{ $t('title.uncleDetail') }}</v-card-title>
+        </v-layout>
+      </v-flex>
+    </v-layout>
     <v-divider class="lineGrey"></v-divider>
     <v-list v-if="mined">
       <v-list-tile v-for="(item, index) in items" :key="index" :class="[index % 2 == 0 ? 'background: white' : 'background: tableGrey']">
@@ -46,7 +53,7 @@
           </v-flex>
           <v-flex xs7 sm8 md9>
             <v-list-tile-title v-if="!item.link" class="text-muted text-truncate"
-              >{{ item.detail }} <timeago v-if="item.title == $t('common.timestmp')" :datetime="block.getTimestamp()" :auto-update="10"></timeago>
+              ><timeago v-if="item.title == $t('common.timestmp')" :datetime="block.getTimestamp()" :auto-update="10"></timeago> {{ item.detail }}
             </v-list-tile-title>
             <router-link v-else :to="item.link">
               <v-list-tile-title class="text-truncate">{{ item.detail }}</v-list-tile-title>
@@ -150,7 +157,7 @@ export default Vue.extend({
         },
         {
           title: this.$i18n.t('common.timestmp'),
-          detail: this.block.getTimestamp()
+          detail: this.formatTime
         },
         {
           title: this.$i18n.t('block.reward'),
@@ -272,6 +279,10 @@ export default Vue.extend({
         this.setMore()
       }
       return this.isMined
+    },
+    formatTime(){
+      let date = new Date(this.block.getTimestamp())
+      return date
     }
   }
 })

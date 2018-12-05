@@ -16,6 +16,7 @@
     "address": "Address",
     "blockN": "Block #",
     "blockDetail": "Block Details",
+    "uncleDetail": "Uncle Details",
     "tokenDetail": "Token Details",
     "txDetail": "Transaction Deatails",
     "overview": "Overview",
