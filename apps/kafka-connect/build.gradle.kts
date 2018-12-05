@@ -62,12 +62,13 @@ dependencies {
 
   kafkaConnectApi
 
-  implementation("org.web3j:core:4.0.3")
+  implementation("org.web3j:parity:4.0.3")
   implementation("org.mongodb:mongodb-driver:3.9.0")
   implementation("io.enkrypt:avro:0.0.1-SNAPSHOT")
   implementation("io.confluent:kafka-schema-registry-client:5.0.1")
   implementation("io.confluent:kafka-connect-avro-converter:5.0.1")
 
+  implementation("com.github.tinder:statemachine:0.1.2")
   implementation("io.arrow-kt:arrow-core:0.7.3")
   implementation("ch.qos.logback:logback-classic:1.2.3")
   implementation("io.github.microutils:kotlin-logging:1.5.9")

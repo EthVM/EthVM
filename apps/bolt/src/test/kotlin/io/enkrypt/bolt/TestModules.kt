@@ -5,11 +5,8 @@ import io.confluent.kafka.serializers.KafkaAvroDeserializer
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig
 import io.confluent.kafka.serializers.KafkaAvroSerializer
 import io.enkrypt.bolt.kafka.EmbeddedSingleNodeKafkaCluster
-import io.enkrypt.kafka.db.BlockSummaryStore
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.producer.ProducerConfig
-import org.ethereum.datasource.DbSettings
-import org.ethereum.datasource.rocksdb.RocksDbDataSource
 import org.koin.dsl.module.module
 import java.util.*
 
@@ -74,7 +71,7 @@ object TestModules {
         "test",
         cluster.schemaRegistryUrl(),
         KafkaInputTopicsConfig(
-          Cli.DEFAULT_BLOCK_SUMMARIES_TOPIC,
+          Cli.DEFAULT_BLOCKS_TOPIC,
           Cli.DEFAULT_PENDING_TXS_TOPIC,
           Cli.DEFAULT_METADATA_TOPIC
         ))

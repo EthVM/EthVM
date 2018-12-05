@@ -8,5 +8,5 @@ KAFKA_CONNECT_DIR=$(cd ${ROOT_DIR}/apps/kafka-connect; pwd)
 
 echo "Registering sources"
 curl -s -H "Content-Type: application/json" -X POST -d @${SCRIPT_DIR}/sources/ethlists.json http://kafka-connect.ethvm.lan/connectors
-curl -s -H "Content-Type: application/json" -X POST -d @${SCRIPT_DIR}/sources/geth.json http://kafka-connect.ethvm.lan/connectors
+#curl -s -H "Content-Type: application/json" -X POST -d @${SCRIPT_DIR}/sources/parity.json http://kafka-connect.ethvm.lan/connectors
 

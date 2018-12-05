@@ -69,8 +69,7 @@ class MongoSinkTask : SinkTask() {
     records.forEach {
 
       val writesMap = when (it.topic()) {
-        "blocks" -> processWeb3Block(it)
-        "block-summaries" -> processBlock(it)
+        "blocks" -> processBlock(it)
         "contract-creations" -> processContractCreation(it)
         "contract-suicides" -> processContractSuicide(it)
         "fungible-token-balances" -> processFungibleTokenBalance(it)
@@ -106,13 +105,13 @@ class MongoSinkTask : SinkTask() {
 
   }
 
-  private fun processWeb3Block(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
+  private fun processBlock(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
 
     var blockWrites = listOf<WriteModel<BsonDocument>>()
     var txWrites = listOf<WriteModel<BsonDocument>>()
 
     val keySchema = record.keySchema()
-    if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a struct")
+    if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a long")
 
     val valueSchema = record.valueSchema()
     if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
@@ -133,70 +132,18 @@ class MongoSinkTask : SinkTask() {
 
     } else {
 
-      val valueBson = StructToBsonConverter.convert(record.value() as Struct, false)
-
-      blockWrites += ReplaceOneModel(blockFilter, valueBson, replaceOptions)
-
-      val txs = valueBson.getArray("transactions")
-
-      txWrites += txs
-        .map { it as BsonDocument }
-        .map {
-
-          val txHash = it.getString("hash")
-          ReplaceOneModel(BsonDocument("_id", txHash), it, replaceOptions)
-
-        }
-
-    }
-
-    return mapOf(
-      CollectionId.Blocks to blockWrites,
-      CollectionId.Transactions to txWrites
-    )
-
-  }
-
-  private fun processBlock(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
-
-    var blockWrites = listOf<WriteModel<BsonDocument>>()
-    var txWrites = listOf<WriteModel<BsonDocument>>()
-
-    val keySchema = record.keySchema()
-    if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a long")
-
-    val valueSchema = record.valueSchema()
-    if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
-
-    val blockNumber = (record.key() as Struct).getInt64("number")
-    val blockNumberBson = BsonInt64(blockNumber)
-
-    val blockFilter = BsonDocument().apply { append("_id", blockNumberBson) }
-
-    if (record.value() == null) {
-
-      // tombstone received so we need to delete
-      blockWrites += DeleteOneModel(blockFilter)
-
-      // delete transactions as-well
-      val txsFilter = BsonDocument().apply { append("blockNumber", blockNumberBson) }
-      txWrites += DeleteManyModel(txsFilter)
-
-    } else {
-
       val valueBson = StructToBsonConverter.convert(record.value() as Struct)
 
       blockWrites += ReplaceOneModel(blockFilter, valueBson, replaceOptions)
 
       val txReceiptsBson = valueBson
-        .getDocument("block")
-        .getArray("txReceipts")
+        .getArray("transactions")
 
       txWrites += txReceiptsBson
         .map { it as BsonDocument }
         .map {
 
-          val txHash = it.getDocument("tx").getString("hash")
+          val txHash = it.getString("hash")
 
           val doc = it
             .append("blockNumber", blockNumberBson)

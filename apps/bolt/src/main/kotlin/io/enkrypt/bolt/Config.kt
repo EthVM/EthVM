@@ -13,7 +13,7 @@ data class KafkaConfig(
 )
 
 data class KafkaInputTopicsConfig(
-  val blockSummaries: String,
+  val blocks: String,
   val pendingTransactions: String,
   val metadata: String
 )

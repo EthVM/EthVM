@@ -14,6 +14,6 @@ fun NonFungibleTokenTransferRecord.Builder.setTokenId(tokenId: BigInteger): NonF
   this.setTokenId(ByteBuffer.wrap(ByteUtil.bigIntegerToBytes(tokenId)))
 
 fun TransactionReceiptRecord.isSuccess(): Boolean {
-  val postTxState = this.getPostTxState()
-  return postTxState != null && postTxState.capacity() == 1 && postTxState[0].toInt() == 1
+  val status = this.getStatus().bytes()
+  return status != null && status.size == 1 && status[0].toInt() == 1
 }

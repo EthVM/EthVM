@@ -1,11 +1,6 @@
 #!/bin/bash -e
 
 # blocks
-CMD="kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic block-summaries --config retention.ms=-1 --config cleanup.policy=compact"
-echo "COMMAND: $CMD"
-docker-compose exec kafka-1 sh -c "$CMD"
-sleep 2
-
 CMD="kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic blocks --config retention.ms=-1 --config cleanup.policy=compact"
 echo "COMMAND: $CMD"
 docker-compose exec kafka-1 sh -c "$CMD"

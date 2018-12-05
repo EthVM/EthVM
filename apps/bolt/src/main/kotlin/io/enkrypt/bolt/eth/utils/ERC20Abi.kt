@@ -1,10 +1,10 @@
 package io.enkrypt.bolt.eth.utils
 
 import arrow.core.Option
-import io.enkrypt.avro.common.DataWord
+import io.enkrypt.avro.common.Data20
+import io.enkrypt.avro.common.Data32
 import io.enkrypt.avro.processing.FungibleTokenTransferRecord
 import io.enkrypt.bolt.extensions.setAmount
-import io.enkrypt.bolt.extensions.toByteBuffer
 import java.math.BigInteger
 import java.nio.file.Paths
 
@@ -20,7 +20,7 @@ object ERC20Abi : AbstractAbi(Paths.get(ERC20Abi::class.java.getResource("/abi/e
 
   override fun functions(): Set<String> = setOf(FUNCTION_BALANCE_OF, FUNCTION_TOTAL_SUPPLY)
 
-  fun decodeTransferEvent(data: ByteArray, topics: List<DataWord>): Option<FungibleTokenTransferRecord.Builder> {
+  fun decodeTransferEvent(data: ByteArray, topics: List<Data32>): Option<FungibleTokenTransferRecord.Builder> {
 
     return if (topics.size != 3) {
       Option.empty()
@@ -30,8 +30,8 @@ object ERC20Abi : AbstractAbi(Paths.get(ERC20Abi::class.java.getResource("/abi/e
         .map { it.decode(data, topics.map { it.bytes() }.toTypedArray()) }
         .map { values ->
           FungibleTokenTransferRecord.newBuilder()
-            .setFrom((values[0] as ByteArray).toByteBuffer())
-            .setTo((values[1] as ByteArray).toByteBuffer())
+            .setFrom(Data20(values[0] as ByteArray))
+            .setTo(Data20(values[1] as ByteArray))
             .setAmount(values[2] as BigInteger)
         }
 

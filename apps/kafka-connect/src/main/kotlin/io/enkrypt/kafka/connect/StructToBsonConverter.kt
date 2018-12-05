@@ -20,12 +20,12 @@ object StructToBsonConverter {
     "hash", "parentHash", "unclesHash", "coinbase", "stateRoot", "txTrieRoot", "receiptTrieRoot",
     "logsBloom", "mixHash", "nonce", "extraData", "from", "to", "data", "postTxState", "bloomFilter",
     "contract", "tokenId", "address", "txHash", "creator", "blockHash", "miner", "sha3Uncles", "transactionsRoot",
-    "receiptsRoot", "input", "r", "s"
+    "receiptsRoot", "input", "r", "s", "author"
   )
 
   private val bigIntegerFields = setOf(
     "difficulty", "totalDifficulty", "cumulativeGas", "bigIntegerValue", "gasPrice", "gasLimit", "gasUsed",
-    "gasLeftover", "gasRefund", "reward", "value", "amount", "blockNumber", "transactionIndex", "gas"
+    "gasLeftover", "gasRefund", "reward", "value", "amount", "blockNumber", "transactionIndex", "gas", "balance", "blockNumber"
   )
 
   private val basicConverters = mapOf<Schema.Type, BsonFactory>(

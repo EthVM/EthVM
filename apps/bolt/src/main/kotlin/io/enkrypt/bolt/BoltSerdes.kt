@@ -1,8 +1,8 @@
 package io.enkrypt.bolt
 
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
-import io.enkrypt.avro.capture.BlockSummaryKeyRecord
-import io.enkrypt.avro.capture.BlockSummaryRecord
+import io.enkrypt.avro.capture.BlockKeyRecord
+import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.processing.*
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
@@ -15,11 +15,11 @@ object BoltSerdes : KoinComponent {
     "schema.registry.url" to kafkaConfig.schemaRegistryUrl
   )
 
-  fun BlockSummaryKey() = SpecificAvroSerde<BlockSummaryKeyRecord>().apply {
-    configure(config, false)
+  fun BlockKey() = SpecificAvroSerde<BlockKeyRecord>().apply {
+    configure(config, true)
   }
 
-  fun BlockSummary() = SpecificAvroSerde<BlockSummaryRecord>().apply {
+  fun Block() = SpecificAvroSerde<BlockRecord>().apply {
     configure(config, false)
   }
 

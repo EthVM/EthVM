@@ -1,7 +1,7 @@
 package io.enkrypt.bolt.eth.utils
 
 import arrow.core.Option
-import io.enkrypt.avro.common.DataWord
+import io.enkrypt.avro.common.Data32
 import io.enkrypt.bolt.extensions.toByteBuffer
 import org.ethereum.solidity.Abi
 import java.nio.ByteBuffer
@@ -55,9 +55,9 @@ abstract class AbstractAbi protected constructor(path: Path) {
     return Option.fromNullable(functionMap[key])
   }
 
-  fun matchEvent(topics: List<DataWord>): Option<Abi.Event> =
+  fun matchEvent(topics: List<Data32>): Option<Abi.Event> =
     if (topics.isEmpty()) Option.empty() else matchEvent(topics[0])
 
-  fun matchEvent(word: DataWord): Option<Abi.Event> = Option.fromNullable(eventMap[word.bytes().toByteBuffer()])
+  fun matchEvent(word: Data32): Option<Abi.Event> = Option.fromNullable(eventMap[word.bytes().toByteBuffer()])
 
 }

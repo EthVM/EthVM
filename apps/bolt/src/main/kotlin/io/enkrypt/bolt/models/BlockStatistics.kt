@@ -1,6 +1,6 @@
 package io.enkrypt.bolt.models
 
-import io.enkrypt.avro.capture.BlockSummaryRecord
+import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.bolt.extensions.isSuccess
 import io.enkrypt.bolt.extensions.toBigInteger
 import java.math.BigInteger
@@ -33,13 +33,13 @@ data class BlockStatistics(
 
   companion object {
 
-    fun forBlockSummary(summary: BlockSummaryRecord): BlockStatistics {
-      val block = summary.getBlock()
+    fun forBlock(block: BlockRecord): BlockStatistics {
 
-      val receipts = block.getTxReceipts()
+      val transactions = block.getTransactions()
+      val receipts = block.getTransactionReceipts()
 
-      val totalDifficulty = summary.getTotalDifficulty().toBigInteger()
-      val numPendingTxs = summary.getNumPendingTxs()
+      val totalDifficulty = block.getTotalDifficulty().toBigInteger()
+      val numPendingTxs = block.getNumPendingTxs()
       val totalTxs = receipts.size
 
       var numSuccessfulTxs = 0
@@ -49,13 +49,15 @@ data class BlockStatistics(
       var totalGasPrice = BigInteger.ZERO
       var totalTxsFees = BigInteger.ZERO
 
-      receipts.forEach { receipt ->
+      transactions
+        .zip(receipts)
+        .forEach { (tx, receipt) ->
 
         totalInternalTxs += receipt.getInternalTxs().size
         if (receipt.isSuccess()) numSuccessfulTxs += 1 else numFailedTxs += 1
 
-        totalGasPrice = totalGasPrice.add(receipt.getGasPrice().toBigInteger())
-        totalTxsFees = totalTxsFees.add(receipt.getGasPrice().toBigInteger())
+        totalGasPrice = totalGasPrice.add(tx.getGasPrice().toBigInteger())
+        totalTxsFees = totalTxsFees.add(tx.getGasPrice().toBigInteger())
 
       }
 

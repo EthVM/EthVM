@@ -1,10 +1,10 @@
 package io.enkrypt.bolt.eth.utils
 
 import arrow.core.Option
-import io.enkrypt.avro.common.DataWord
+import io.enkrypt.avro.common.Data20
+import io.enkrypt.avro.common.Data32
 import io.enkrypt.avro.processing.NonFungibleTokenTransferRecord
 import io.enkrypt.bolt.extensions.setTokenId
-import io.enkrypt.bolt.extensions.toByteBuffer
 import java.math.BigInteger
 import java.nio.file.Paths
 
@@ -17,7 +17,7 @@ object ERC721Abi : AbstractAbi(Paths.get(ERC721Abi::class.java.getResource("/abi
 
   override fun functions(): Set<String> = emptySet()
 
-  fun decodeTransferEvent(data: ByteArray, topics: List<DataWord>): Option<NonFungibleTokenTransferRecord.Builder> {
+  fun decodeTransferEvent(data: ByteArray, topics: List<Data32>): Option<NonFungibleTokenTransferRecord.Builder> {
 
     return if (topics.size != 4) {
       Option.empty()
@@ -27,8 +27,8 @@ object ERC721Abi : AbstractAbi(Paths.get(ERC721Abi::class.java.getResource("/abi
         .map { it.decode(data, topics.map { it.bytes() }.toTypedArray()) }
         .map { values ->
           NonFungibleTokenTransferRecord.newBuilder()
-            .setFrom((values[0] as ByteArray).toByteBuffer())
-            .setTo((values[1] as ByteArray).toByteBuffer())
+            .setFrom(Data20(values[0] as ByteArray))
+            .setTo(Data20(values[1] as ByteArray))
             .setTokenId(values[2] as BigInteger)
         }
 

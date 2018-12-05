@@ -5,7 +5,7 @@ import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
 import io.enkrypt.bolt.Modules.kafkaStreams
-import io.enkrypt.bolt.processors.BlockSummaryProcessor
+import io.enkrypt.bolt.processors.BlockProcessor
 import io.enkrypt.bolt.processors.KafkaProcessor
 import io.enkrypt.bolt.processors.StateProcessor
 import org.koin.dsl.module.module
@@ -41,10 +41,10 @@ class Cli : CliktCommand() {
   ).int().default(DEFAULT_STREAMS_RESET)
 
   // Input Topics - CLI
-  private val blockSummariesTopic: String by option(
+  private val blocksTopic: String by option(
     help = "Name of the block summaries stream topic on which Bolt will listen",
     envvar = "KAFKA_BLOCKS_TOPIC"
-  ).default(DEFAULT_BLOCK_SUMMARIES_TOPIC)
+  ).default(DEFAULT_BLOCKS_TOPIC)
 
   private val pendingTxsTopic: String by option(
     help = "Name of the pending transactions topic on which Bolt will listen",
@@ -67,7 +67,7 @@ class Cli : CliktCommand() {
         transactionalId,
         schemaRegistryUrl,
         KafkaInputTopicsConfig(
-          blockSummariesTopic,
+          blocksTopic,
           pendingTxsTopic,
           metadataTopic
         ))
@@ -82,7 +82,7 @@ class Cli : CliktCommand() {
     startKoin(listOf(configModule, kafkaStreams))
 
     listOf<KafkaProcessor>(
-      BlockSummaryProcessor(),
+      BlockProcessor(),
       StateProcessor()
     ).forEach {
       it.buildTopology()
@@ -98,7 +98,7 @@ class Cli : CliktCommand() {
     const val DEFAULT_AUTO_OFFSET = "earliest"
     const val DEFAULT_STREAMS_RESET = 0
 
-    const val DEFAULT_BLOCK_SUMMARIES_TOPIC = "block-summaries"
+    const val DEFAULT_BLOCKS_TOPIC = "blocks"
     const val DEFAULT_PENDING_TXS_TOPIC = "pending-transactions"
     const val DEFAULT_METADATA_TOPIC = "metadata"
   }

@@ -1,14 +1,13 @@
 package io.enkrypt.kafka.connect
 
-import io.enkrypt.kafka.connect.sources.Web3SourceTask
 import org.apache.commons.codec.binary.Hex
 import org.apache.kafka.connect.data.Schema
 import org.apache.kafka.connect.data.Struct
-
 import org.web3j.protocol.core.methods.response.EthBlock
 import org.web3j.protocol.core.methods.response.Log
 import org.web3j.protocol.core.methods.response.Transaction
 import org.web3j.protocol.core.methods.response.TransactionReceipt
+import org.web3j.protocol.parity.JsonRpc2_0Parity
 import java.math.BigInteger
 
 private val HEX_CHARS = "0123456789abcdef".toCharArray()
@@ -49,7 +48,6 @@ fun EthBlock.Block.toStruct(schema: Schema): Struct {
   struct.put("stateRoot", stateRoot.hexToBytes())
   struct.put("receiptsRoot", receiptsRoot.hexToBytes())
   struct.put("miner", miner.hexToBytes())
-  struct.put("mixHash", mixHash.hexToBytes())
   struct.put("difficulty", difficulty.toByteArray())
   struct.put("totalDifficulty", totalDifficulty.toByteArray())
   struct.put("extraData", extraData.hexToBytes())
@@ -70,12 +68,13 @@ fun EthBlock.Block.toStruct(schema: Schema): Struct {
 
   if(author != null) struct.put("author", author)
   if(sealFields != null) struct.put("sealFields", sealFields.map{ it.hexToBytes() })
+  if(mixHash != null) struct.put("mixHash", mixHash.hexToBytes())
 
   return struct
 
 }
 
-fun Transaction.toStruct(schema: Schema, receipt: TransactionReceipt): Struct {
+fun Transaction.toStruct(schema: Schema, receipt: TransactionReceipt?): Struct {
 
   val struct = Struct(schema)
   struct.put("hash", hash.hexToBytes())
@@ -85,7 +84,8 @@ fun Transaction.toStruct(schema: Schema, receipt: TransactionReceipt): Struct {
   struct.put("value", value.toByteArray())
   struct.put("gasPrice", gasPrice.toByteArray())
   struct.put("gas", gas.toByteArray())
-  struct.put("receipt", receipt.toStruct(schema.field("receipt").schema()))
+
+  if(receipt != null) struct.put("receipt", receipt.toStruct(schema.field("receipt").schema()))
 
   if(to != null) struct.put("to", to.hexToBytes())
   if(input != null) struct.put("input", input.hexToBytes())
@@ -117,5 +117,4 @@ fun Log.toStruct(schema: Schema): Struct =
     .put("address", address.hexToBytes())
     .put("data", data.hexToBytes())
     .put("topics", topics.map{ it.hexToBytes() })
-
 
