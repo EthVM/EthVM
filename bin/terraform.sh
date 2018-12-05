@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
+# Give script sane defaults
 set -o errexit
 set -o nounset
 # set -o xtrace
 # set -o verbose
 
-# Give script sane defaults
+# Useful VARS
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 
@@ -26,33 +27,58 @@ terraform_usage() {
   echo ""
 }
 
+# terraform_install - Performs an installation of Terraform (TODO: Improve script)
 terraform_install() {
-    [[ -f ${HOME}/bin/terraform ]] && echo "`${HOME}/bin/terraform version` already installed at ${HOME}/bin/terraform" && return 0
-    local latest_url=$(curl -sL https://releases.hashicorp.com/terraform/index.json | jq -r '.versions[].builds[].url' | sort -t. -k 1,1n -k 2,2n -k 3,3n -k 4,4n | egrep -v 'rc|alpha|beta' | egrep "$(uname | tr '[:upper:]' '[:lower:]').*amd64" |tail -1)
+  if [ -x "$(command -v terraform)" ]; then
+    echo "Terraform is already already installed"
+    return 0
+  fi
+
+  if [[ "$OSTYPE" == "linux-gnu" ]]; then
+    local latest_url=$(curl -sL https://releases.hashicorp.com/terraform/index.json | jq -r '.versions[].builds[].url' | sort -t. -k 1,1n -k 2,2n -k 3,3n -k 4,4n | egrep -v 'rc|alpha|beta' | egrep "$(uname | tr '[:upper:]' '[:lower:]').*amd64" | tail -1)
     curl ${latest_url} > /tmp/terraform.zip
     mkdir -p ${HOME}/bin
     (cd ${HOME}/bin && unzip /tmp/terraform.zip)
+
     if [[ -z $(grep 'export PATH=${HOME}/bin:${PATH}' ~/.bashrc 2>/dev/null) ]]; then
-        echo 'export PATH=${HOME}/bin:${PATH}' >> ~/.bashrc
+      echo 'export PATH=${HOME}/bin:${PATH}' >> ~/.bashrc
     fi
 
-    echo "Installed: `${HOME}/bin/terraform version`"
+    if [[ -z $(grep 'export PATH=${HOME}/bin:${PATH}' ~/.zshrc 2>/dev/null) ]]; then
+      echo 'export PATH=${HOME}/bin:${PATH}' >> ~/.zshrc
+    fi
 
-  cat - << EOF
+    echo "Installed: `$(command -v terraform)`"
+
+      cat - << EOF
 
 Run the following to reload your PATH with terraform:
 
-  source ~/.bashrc
+  source ~/.bashrc  # If using bash
+  source ~/.zshrc   # If using zsh
 
 EOF
+
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+    if [ -x "$(command -v brew)" ]; then
+      >&2 "In order to install Terraform, brew is needed. More information: https://brew.sh/"
+      exit 1
+    fi
+    echo "Installing terraform using brew..."
+    brew install terraform
+  else
+    echo "Operating System '${OSTYPE}' is not supported for automatic installation of Terraform"
+    exit 1
+  fi
+
 }
 
 run() {
-    local command="${1:-false}"
+  local command="${1:-false}"
 
-    case "${command}" in
-        install) terraform_install   ;;
-        help|*)  kafka_usage; exit 0 ;;
-    esac
+  case "${command}" in
+    install) terraform_install       ;;
+    help|*)  terraform_usage; exit 0 ;;
+  esac
 }
 run "$@"

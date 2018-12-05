@@ -4,7 +4,7 @@
 set -o errexit
 set -o pipefail
 
-# Useful VARs
+# Useful VARS
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 

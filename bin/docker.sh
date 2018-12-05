@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
+# Give script sane defaults
 set -o errexit
 # set -o nounset
 # set -o xtrace
 # set -o verbose
 
-# Give script sane defaults
+# Useful VARS
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 
@@ -25,6 +26,8 @@ docker_usage() {
   echo ""
   echo "Commands:"
   echo "  up      [full|simple|default]   Create and start docker containers."
+  echo "  start                           Start stopped docker containers."
+  echo "  stop                            Stop docker containers."
   echo "  down                            Stop and remove docker containers, networks, images, and volumes."
   echo "  rebuild                         Build or rebuild docker services."
   echo "  restart                         Restart docker services."
@@ -90,13 +93,18 @@ up_simple() {
 }
 
 # down - stops all running docker containers, volumes, images and related stuff
-down() {
-  docker-compose down -v --remove-orphans
+start() {
+  docker-compose start
 }
 
-# rebuild - recreates running containers
-rebuild() {
-  docker-compose rebuild
+# down - stops all running docker containers, volumes, images and related stuff
+stop() {
+  docker-compose stop
+}
+
+# down - stops all running docker containers, volumes, images and related stuff
+down() {
+  docker-compose down -v --remove-orphans
 }
 
 # restart - restart docker services
@@ -115,8 +123,9 @@ run() {
 
   case "${command}" in
     up)      up "${action}"       ;;
+    start)   start                ;;
+    stop)    stop                 ;;
     down)    down                 ;;
-    rebuild) rebuild              ;;
     restart) restart              ;;
     logs)    logs "$2"            ;;
     help|*)  docker_usage; exit 0 ;;

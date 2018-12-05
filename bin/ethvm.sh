@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# Give script sane defaults
 set -o errexit
 # set -o nounset
 # set -o xtrace
@@ -7,7 +8,7 @@ set -o errexit
 
 VERSION='0.1.0'
 
-# Give script sane defaults
+# Useful VARS
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 
@@ -29,12 +30,12 @@ usage() {
   echo "Commands:"
   echo "  docker | d                       Spin up an EthVM environment suitable for development purposes."
   echo "  docker-build | db                Build and upload different docker images used in this project."
+  echo "  help                             Print version information and exit."
+  echo "  mongo | mdb                      Utility to operate with MongoDB."
   echo "  monkey | m                       Utility to generate random transactions to a RPC endpoint."
   echo "  kafka | k                        Utility to operate with Kafka."
-  echo "  mongo | mdb                      Utility to operate with MongoDB."
   echo "  terraform | tf                   Utility to operate with Terraform."
   echo "  version                          Print this help information and exit."
-  echo "  help                             Print version information and exit."
   echo ""
 }
 
