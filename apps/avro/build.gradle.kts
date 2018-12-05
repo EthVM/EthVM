@@ -51,7 +51,6 @@ tasks {
     setOutputDir(File("build/generated-main-avro-avsc"))
   }
 
-
 }
 
 val sourcesJar by tasks.creating(Jar::class) {

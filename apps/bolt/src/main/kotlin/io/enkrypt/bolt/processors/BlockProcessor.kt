@@ -4,15 +4,23 @@ import arrow.core.Option
 import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.common.Data20
-import io.enkrypt.avro.processing.*
+import io.enkrypt.avro.processing.ContractCreationRecord
+import io.enkrypt.avro.processing.ContractKeyRecord
+import io.enkrypt.avro.processing.ContractSuicideRecord
+import io.enkrypt.avro.processing.FungibleTokenBalanceKeyRecord
+import io.enkrypt.avro.processing.FungibleTokenBalanceRecord
+import io.enkrypt.avro.processing.MetricKeyRecord
+import io.enkrypt.avro.processing.MetricRecord
+import io.enkrypt.avro.processing.NonFungibleTokenBalanceKeyRecord
+import io.enkrypt.avro.processing.NonFungibleTokenBalanceRecord
 import io.enkrypt.bolt.BoltSerdes
 import io.enkrypt.bolt.Topics
 import io.enkrypt.bolt.eth.utils.ERC20Abi
 import io.enkrypt.bolt.eth.utils.ERC721Abi
 import io.enkrypt.bolt.eth.utils.StandardTokenDetector
-import io.enkrypt.bolt.extensions.toBigInteger
-import io.enkrypt.bolt.extensions.toByteArray
-import io.enkrypt.bolt.extensions.toByteBuffer
+import io.enkrypt.bolt.extensions.bigInteger
+import io.enkrypt.bolt.extensions.byteArray
+import io.enkrypt.bolt.extensions.byteBuffer
 import io.enkrypt.bolt.models.BlockStatistic
 import io.enkrypt.bolt.models.BlockStatistics
 import mu.KotlinLogging
@@ -36,25 +44,8 @@ import java.time.Instant
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
-import java.util.*
+import java.util.Properties
 
-data class TransactionData(val fungibleBalanceDeltas: List<KeyValue<FungibleTokenBalanceKeyRecord, BigInteger>>,
-                           val nonFungibleBalanceDeltas: List<KeyValue<NonFungibleTokenBalanceKeyRecord, Data20>>,
-                           val contractCreations: Map<Data20, Pair<ContractCreationRecord, Boolean>>,
-                           val contractSuicides: Map<Data20, Pair<ContractSuicideRecord, Boolean>>) {
-
-  fun concat(other: TransactionData) = TransactionData(
-    fungibleBalanceDeltas + other.fungibleBalanceDeltas,
-    nonFungibleBalanceDeltas + other.nonFungibleBalanceDeltas,
-    contractCreations + other.contractCreations,
-    contractSuicides + other.contractSuicides
-  )
-
-}
-
-/**
- *
- */
 class BlockProcessor : AbstractKafkaProcessor() {
 
   companion object {
@@ -92,7 +83,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
         *GatedBlockTransformer.STORE_NAMES
       )
 
-    gatedStream.foreach { k, _ -> logger.info { "Processing block number = ${k.getNumber().toBigInteger()}" } }
+    gatedStream.foreach { k, _ -> logger.info { "Processing block number = ${k.getNumber().bigInteger()}" } }
 
     // generate various events based on tx data
 
@@ -116,42 +107,56 @@ class BlockProcessor : AbstractKafkaProcessor() {
       .to(Topics.NonFungibleTokenBalances, Produced.with(BoltSerdes.NonFungibleTokenBalanceKey(), BoltSerdes.NonFungibleTokenBalance()))
 
     txEvents
-      .flatMap{ _, v -> v.contractCreations.map{ c ->
+      .flatMap { _, v ->
+        v.contractCreations.map { c ->
 
-        val key = ContractKeyRecord.newBuilder().setAddress(c.key).build()
-        val value = c.value.first
-        val reverse = c.value.second
+          val key = ContractKeyRecord.newBuilder().setAddress(c.key).build()
+          val value = c.value.first
+          val reverse = c.value.second
 
-        if(reverse)
-          KeyValue(key, null)   // tombstone
-        else
-          KeyValue(key, value)
-
-      }}
+          if (reverse) {
+            KeyValue(key, null)   // tombstone
+          } else {
+            KeyValue(key, value)
+          }
+        }
+      }
       .to(Topics.ContractCreations, Produced.with(BoltSerdes.ContractKey(), BoltSerdes.ContractCreation()))
 
     txEvents
-      .flatMap{ _, v -> v.contractSuicides.map{ c ->
+      .flatMap { _, v ->
+        v.contractSuicides.map { c ->
 
-        val key = ContractKeyRecord.newBuilder().setAddress(c.key).build()
-        val value = c.value.first
-        val reverse = c.value.second
+          val key = ContractKeyRecord.newBuilder().setAddress(c.key).build()
+          val value = c.value.first
+          val reverse = c.value.second
 
-        if(reverse)
-          KeyValue(key, null)   // tombstone
-        else
-          KeyValue(key, value)
+          if (reverse) {
+            KeyValue(key, null)   // tombstone
+          } else {
+            KeyValue(key, value)
+          }
 
-      }}
+        }
+      }
       .to(Topics.ContractSuicides, Produced.with(BoltSerdes.ContractKey(), BoltSerdes.ContractSuicide()))
-
 
     // statistics
 
     blockStream
       .flatMap { _, block ->
 
-        val (totalTxs, numSuccessfulTxs, numFailedTxs, numPendingTxs, totalDifficulty, totalGasPrice, avgGasPrice, totalTxsFees, avgTxsFees) = BlockStatistics.forBlock(block)
+        val (
+          totalTxs,
+          numSuccessfulTxs,
+          numFailedTxs,
+          numPendingTxs,
+          totalDifficulty,
+          totalGasPrice,
+          avgGasPrice,
+          totalTxsFees,
+          avgTxsFees
+        ) = BlockStatistics.forBlock(block)
 
         val instant = Instant.ofEpochSecond(block.getHeader().getTimestamp())
         val dateTime = ZonedDateTime.ofInstant(instant, ZoneOffset.UTC)
@@ -162,15 +167,42 @@ class BlockProcessor : AbstractKafkaProcessor() {
           .setDate(startOfDayEpoch)
 
         listOf(
-          KeyValue(keyBuilder.setName(BlockStatistic.TotalTxs.name).build(), MetricRecord.newBuilder().setIntValue(totalTxs).build()),
-          KeyValue(keyBuilder.setName(BlockStatistic.NumSuccessfulTxs.name).build(), MetricRecord.newBuilder().setIntValue(numSuccessfulTxs).build()),
-          KeyValue(keyBuilder.setName(BlockStatistic.NumFailedTxs.name).build(), MetricRecord.newBuilder().setIntValue(numFailedTxs).build()),
-          KeyValue(keyBuilder.setName(BlockStatistic.NumPendingTxs.name).build(), MetricRecord.newBuilder().setIntValue(numPendingTxs).build()),
-          KeyValue(keyBuilder.setName(BlockStatistic.TotalDifficulty.name).build(), MetricRecord.newBuilder().setBigIntegerValue(totalDifficulty.toByteBuffer()).build()),
-          KeyValue(keyBuilder.setName(BlockStatistic.TotalGasPrice.name).build(), MetricRecord.newBuilder().setBigIntegerValue(totalGasPrice.toByteBuffer()).build()),
-          KeyValue(keyBuilder.setName(BlockStatistic.AvgGasPrice.name).build(), MetricRecord.newBuilder().setBigIntegerValue(avgGasPrice.toByteBuffer()).build()),
-          KeyValue(keyBuilder.setName(BlockStatistic.TotalTxsFees.name).build(), MetricRecord.newBuilder().setBigIntegerValue(totalTxsFees.toByteBuffer()).build()),
-          KeyValue(keyBuilder.setName(BlockStatistic.AvgTxsFees.name).build(), MetricRecord.newBuilder().setBigIntegerValue(avgTxsFees.toByteBuffer()).build())
+          KeyValue(
+            keyBuilder.setName(BlockStatistic.TotalTxs.name).build(),
+            MetricRecord.newBuilder().setIntValue(totalTxs).build()
+          ),
+          KeyValue(
+            keyBuilder.setName(BlockStatistic.NumSuccessfulTxs.name).build(),
+            MetricRecord.newBuilder().setIntValue(numSuccessfulTxs).build()
+          ),
+          KeyValue(
+            keyBuilder.setName(BlockStatistic.NumFailedTxs.name).build(),
+            MetricRecord.newBuilder().setIntValue(numFailedTxs).build()
+          ),
+          KeyValue(
+            keyBuilder.setName(BlockStatistic.NumPendingTxs.name).build(),
+            MetricRecord.newBuilder().setIntValue(numPendingTxs).build()
+          ),
+          KeyValue(
+            keyBuilder.setName(BlockStatistic.TotalDifficulty.name).build(),
+            MetricRecord.newBuilder().setBigIntegerValue(totalDifficulty.byteBuffer()).build()
+          ),
+          KeyValue(
+            keyBuilder.setName(BlockStatistic.TotalGasPrice.name).build(),
+            MetricRecord.newBuilder().setBigIntegerValue(totalGasPrice.byteBuffer()).build()
+          ),
+          KeyValue(
+            keyBuilder.setName(BlockStatistic.AvgGasPrice.name).build(),
+            MetricRecord.newBuilder().setBigIntegerValue(avgGasPrice.byteBuffer()).build()
+          ),
+          KeyValue(
+            keyBuilder.setName(BlockStatistic.TotalTxsFees.name).build(),
+            MetricRecord.newBuilder().setBigIntegerValue(totalTxsFees.byteBuffer()).build()
+          ),
+          KeyValue(
+            keyBuilder.setName(BlockStatistic.AvgTxsFees.name).build(),
+            MetricRecord.newBuilder().setBigIntegerValue(avgTxsFees.byteBuffer()).build()
+          )
         )
 
       }.to(Topics.BlockMetrics, Produced.with(BoltSerdes.MetricKey(), BoltSerdes.Metric()))
@@ -187,15 +219,15 @@ class BlockProcessor : AbstractKafkaProcessor() {
 
     // premine balances
 
-    if(block.getPremineBalances() != null) {
+    if (block.getPremineBalances() != null) {
       // Genesis block only
       block.getPremineBalances()
-        .forEach{ p ->
+        .forEach { p ->
           fungible += generateBalanceDeltas(
             null,
             ETHER_CONTRACT_ADDRESS,
             p.getAddress(),
-            p.getBalance().toBigInteger()!!,
+            p.getBalance().bigInteger()!!,
             reverse
           )
         }
@@ -210,7 +242,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
           null,
           ETHER_CONTRACT_ADDRESS,
           e.getAddress(),
-          e.getReward().toBigInteger()!!,
+          e.getReward().bigInteger()!!,
           reverse
         )
       }
@@ -226,7 +258,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
           null,
           tx.getFrom(),
           tx.getTo(),
-          tx.getValue().toBigInteger()!!,
+          tx.getValue().bigInteger()!!,
           reverse
         )
       }
@@ -240,7 +272,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
 
     var fungible = listOf<KeyValue<FungibleTokenBalanceKeyRecord, BigInteger>>()
     var nonFungible = listOf<KeyValue<NonFungibleTokenBalanceKeyRecord, Data20>>()
-    var contractCreations= mapOf<Data20, Pair<ContractCreationRecord, Boolean>>()
+    var contractCreations = mapOf<Data20, Pair<ContractCreationRecord, Boolean>>()
     var contractSuicides = mapOf<Data20, Pair<ContractSuicideRecord, Boolean>>()
 
     block.getTransactions()
@@ -249,12 +281,12 @@ class BlockProcessor : AbstractKafkaProcessor() {
 
         // contract creation
 
-        if(tx.getTo() == null && tx.getInput() != null) {
+        if (tx.getTo() == null && tx.getInput() != null) {
 
-          val contractAddress = Data20(HashUtil.calcNewAddr(tx.getFrom().bytes(), tx.getNonce().toByteArray()))
+          val contractAddress = Data20(HashUtil.calcNewAddr(tx.getFrom().bytes(), tx.getNonce().byteArray()))
 
           // detect contract type
-          val (contractType, _) = StandardTokenDetector.detect(tx.getInput().toByteArray()!!)
+          val (contractType, _) = StandardTokenDetector.detect(tx.getInput().byteArray()!!)
 
           val value = ContractCreationRecord
             .newBuilder()
@@ -271,7 +303,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
         // contract suicides
 
         receipt.getDeletedAccounts()
-          .forEach{ contractAddress ->
+          .forEach { contractAddress ->
 
             val value = ContractSuicideRecord
               .newBuilder()
@@ -303,7 +335,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
               erc20Transfer
                 .filter { it.amount != BigInteger.ZERO }
                 .fold({ Unit }, { builder ->
-                  fungible += generateBalanceDeltas(tx.getFrom(), builder.from, builder.to, builder.amount.toBigInteger()!!, reverse)
+                  fungible += generateBalanceDeltas(tx.getFrom(), builder.from, builder.to, builder.amount.bigInteger()!!, reverse)
                 })
 
               erc721Transfer
@@ -360,7 +392,6 @@ class BlockProcessor : AbstractKafkaProcessor() {
     return result
   }
 
-
   override fun start(cleanUp: Boolean) {
     logger.info { "Starting ${this.javaClass.simpleName}..." }
     super.start(cleanUp)
@@ -372,12 +403,11 @@ class GatedBlockTransformer : Transformer<BlockKeyRecord?, BlockRecord?, KeyValu
 
   companion object {
 
-    val STORE_NAME_BLOCKS = "gated-blocks"
-    val STORE_NAME_METADATA = "gated-blocks-metadata"
+    const val STORE_NAME_BLOCKS = "gated-blocks"
+    const val STORE_NAME_METADATA = "gated-blocks-metadata"
+    const val META_HIGH = "high"
 
     val STORE_NAMES = arrayOf(STORE_NAME_BLOCKS, STORE_NAME_METADATA)
-
-    val META_HIGH = "high"
 
     fun blockSummariesStore() = Stores.keyValueStoreBuilder(
       Stores.persistentKeyValueStore(STORE_NAME_BLOCKS),
@@ -436,7 +466,7 @@ class GatedBlockTransformer : Transformer<BlockKeyRecord?, BlockRecord?, KeyValu
 
   private fun onNewBlock(key: BlockKeyRecord, summary: BlockRecord) {
 
-    logger.debug { "New block, key = ${key.getNumber().toBigInteger()}" }
+    logger.debug { "New block, key = ${key.getNumber().bigInteger()}" }
 
     // record the key -> summary
     blockStore.put(key, summary)
@@ -449,7 +479,7 @@ class GatedBlockTransformer : Transformer<BlockKeyRecord?, BlockRecord?, KeyValu
 
   private fun onReorg(key: BlockKeyRecord, summary: BlockRecord) {
 
-    logger.info { "Re-org triggered by block key = ${key.getNumber().toBigInteger()}" }
+    logger.info { "Re-org triggered by block key = ${key.getNumber().bigInteger()}" }
 
     // first we reverse all the summaries from highest key back to this key in preparation for the new summaries to come
     // as part of the new chain
@@ -457,8 +487,8 @@ class GatedBlockTransformer : Transformer<BlockKeyRecord?, BlockRecord?, KeyValu
     // TODO see if this can be made more efficient with ranging,
     // documentation says ranging provides no ordering guarantees
 
-    var highKey = metaStore.get(META_HIGH) ?: BlockKeyRecord.newBuilder().setNumber(BigInteger.ZERO.toByteBuffer()).build()
-    var numberToReverse = highKey.getNumber().toBigInteger()!!
+    val highKey = metaStore.get(META_HIGH) ?: BlockKeyRecord.newBuilder().setNumber(BigInteger.ZERO.byteBuffer()).build()
+    var numberToReverse = highKey.getNumber().bigInteger()!!
     var summaryToReverse: BlockRecord?
 
     do {
@@ -490,5 +520,21 @@ class GatedBlockTransformer : Transformer<BlockKeyRecord?, BlockRecord?, KeyValu
   override fun close() {
 
   }
+
+}
+
+data class TransactionData(
+  val fungibleBalanceDeltas: List<KeyValue<FungibleTokenBalanceKeyRecord, BigInteger>>,
+  val nonFungibleBalanceDeltas: List<KeyValue<NonFungibleTokenBalanceKeyRecord, Data20>>,
+  val contractCreations: Map<Data20, Pair<ContractCreationRecord, Boolean>>,
+  val contractSuicides: Map<Data20, Pair<ContractSuicideRecord, Boolean>>
+) {
+
+  fun concat(other: TransactionData) = TransactionData(
+    fungibleBalanceDeltas + other.fungibleBalanceDeltas,
+    nonFungibleBalanceDeltas + other.nonFungibleBalanceDeltas,
+    contractCreations + other.contractCreations,
+    contractSuicides + other.contractSuicides
+  )
 
 }

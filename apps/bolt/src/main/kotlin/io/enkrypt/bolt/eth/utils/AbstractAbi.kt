@@ -2,7 +2,7 @@ package io.enkrypt.bolt.eth.utils
 
 import arrow.core.Option
 import io.enkrypt.avro.common.Data32
-import io.enkrypt.bolt.extensions.toByteBuffer
+import io.enkrypt.bolt.extensions.byteBuffer
 import org.ethereum.solidity.Abi
 import java.nio.ByteBuffer
 import java.nio.file.Files
@@ -26,7 +26,7 @@ abstract class AbstractAbi protected constructor(path: Path) {
       this.functionMap = this.functions()
         .asSequence()
         .map { name -> abi.findFunction { f -> f.name == name } }
-        .map { f -> f.encodeSignature().toByteBuffer()!! to f }
+        .map { f -> f.encodeSignature().byteBuffer()!! to f }
         .toList()
         .toMap()
 
@@ -34,7 +34,7 @@ abstract class AbstractAbi protected constructor(path: Path) {
       this.eventMap = this.events()
         .asSequence()
         .map { name -> abi.findEvent { e -> e.name == name } }
-        .map { e -> e.encodeSignature().toByteBuffer()!! to e }
+        .map { e -> e.encodeSignature().byteBuffer()!! to e }
         .toList()
         .toMap()
 
@@ -51,13 +51,13 @@ abstract class AbstractAbi protected constructor(path: Path) {
   fun matchFunction(data: ByteArray?): Option<Abi.Function> {
     if (data == null || data.size < 4) return Option.empty()
 
-    val key = data.copyOfRange(0, 4).toByteBuffer()
+    val key = data.copyOfRange(0, 4).byteBuffer()
     return Option.fromNullable(functionMap[key])
   }
 
   fun matchEvent(topics: List<Data32>): Option<Abi.Event> =
     if (topics.isEmpty()) Option.empty() else matchEvent(topics[0])
 
-  fun matchEvent(word: Data32): Option<Abi.Event> = Option.fromNullable(eventMap[word.bytes().toByteBuffer()])
+  fun matchEvent(word: Data32): Option<Abi.Event> = Option.fromNullable(eventMap[word.bytes().byteBuffer()])
 
 }

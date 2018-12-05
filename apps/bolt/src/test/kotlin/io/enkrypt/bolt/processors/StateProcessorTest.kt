@@ -1,5 +1,6 @@
 package io.enkrypt.bolt.processors
 
+import io.enkrypt.avro.common.Data20
 import io.enkrypt.avro.processing.FungibleTokenBalanceKeyRecord
 import io.enkrypt.avro.processing.FungibleTokenBalanceRecord
 import io.enkrypt.avro.processing.MetricKeyRecord
@@ -8,8 +9,11 @@ import io.enkrypt.bolt.Addresses
 import io.enkrypt.bolt.Modules
 import io.enkrypt.bolt.TestModules
 import io.enkrypt.bolt.Topics
-import io.enkrypt.bolt.extensions.*
-import io.enkrypt.bolt.kafka.IntegrationTestUtils
+import io.enkrypt.bolt.extensions.bigIntBuffer
+import io.enkrypt.bolt.extensions.bigInteger
+import io.enkrypt.bolt.extensions.byteBuffer
+import io.enkrypt.bolt.extensions.hex
+import io.enkrypt.bolt.test.utils.IntegrationTestUtils
 import io.kotlintest.matchers.plusOrMinus
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
@@ -19,8 +23,7 @@ import org.koin.standalone.StandAloneContext.startKoin
 import org.koin.standalone.inject
 import org.koin.test.KoinTest
 import java.math.BigInteger
-import java.util.*
-
+import java.util.Properties
 
 class StateProcessorTest : KoinTest, BehaviorSpec() {
 
@@ -72,7 +75,12 @@ class StateProcessorTest : KoinTest, BehaviorSpec() {
                 Topics.FungibleTokenBalances,
                 5,
                 30000L
-              ).map { Pair(it.key.getContract().toHex(), it.key.getAddress().toHex()) to it.value.getAmount().toBigInteger() }
+              ).map {
+                Pair(
+                  it.key.getContract().bytes().hex(),
+                  it.key.getAddress().bytes().hex()
+                ) to it.value.getAmount().bigInteger()
+              }
               .toMap()
 
           balancesMap.size shouldBe 5
@@ -136,7 +144,7 @@ class StateProcessorTest : KoinTest, BehaviorSpec() {
 
           avgMap.size shouldBe 6
           avgMap[Pair(1L, "min")]!!.getIntValue() shouldBe 128
-          avgMap[Pair(1L, "max")]!!.getDoubleValue() shouldBe(71.966666.plusOrMinus(0.000001))
+          avgMap[Pair(1L, "max")]!!.getDoubleValue() shouldBe (71.966666.plusOrMinus(0.000001))
           avgMap[Pair(2L, "min")]!!.getIntValue() shouldBe 78
           avgMap[Pair(2L, "max")]!!.getDoubleValue() shouldBe 69.93
           avgMap[Pair(3L, "min")]!!.getIntValue() shouldBe 534
@@ -145,21 +153,21 @@ class StateProcessorTest : KoinTest, BehaviorSpec() {
         }
       }
 
-
     }
   }
 
-  private fun fungibleTokenBalanceMovements(contract: String,
-                                            address: String = Addresses.createAddress(),
-                                            vararg movement: Long) =
+  private fun fungibleTokenBalanceMovements(
+    contract: String,
+    address: String = Addresses.createAddress(),
+    vararg movement: Long
+  ) =
     movement.map { KeyValue(fungibleTokenBalanceKey(address, contract), fungibleTokenBalance(it)) }
-
 
   private fun fungibleTokenBalanceKey(address: String = Addresses.createAddress(), contract: String = Addresses.ETHER_CONTRACT) =
     FungibleTokenBalanceKeyRecord
       .newBuilder()
-      .setAddress(address.hexBuffer())
-      .setContract(contract.hexBuffer())
+      .setAddress(Data20(address.toByteArray()))
+      .setContract(Data20(contract.toByteArray()))
       .build()
 
   private fun fungibleTokenBalance(amount: Long) =
@@ -183,12 +191,11 @@ class StateProcessorTest : KoinTest, BehaviorSpec() {
       is Long -> valueBuilder.longValue = value
       is Float -> valueBuilder.floatValue = value
       is Double -> valueBuilder.doubleValue = value
-      is BigInteger -> valueBuilder.bigIntegerValue = value.toByteBuffer()
+      is BigInteger -> valueBuilder.bigIntegerValue = value.byteBuffer()
       else -> throw IllegalArgumentException("Unexpected value type: $value")
     }
 
     return KeyValue(key, valueBuilder.build())
   }
-
 
 }

@@ -4,11 +4,11 @@ import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig
 import io.confluent.kafka.serializers.KafkaAvroDeserializer
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig
 import io.confluent.kafka.serializers.KafkaAvroSerializer
-import io.enkrypt.bolt.kafka.EmbeddedSingleNodeKafkaCluster
+import io.enkrypt.bolt.test.utils.EmbeddedSingleNodeKafkaCluster
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.koin.dsl.module.module
-import java.util.*
+import java.util.Properties
 
 object TestModules {
 

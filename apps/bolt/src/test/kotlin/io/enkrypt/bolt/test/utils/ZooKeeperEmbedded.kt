@@ -1,11 +1,7 @@
-package io.enkrypt.bolt.zookeeper
+package io.enkrypt.bolt.test.utils
 
 import mu.KotlinLogging
 import org.apache.curator.test.TestingServer
-import org.slf4j.LoggerFactory
-import java.io.IOException
-
-
 
 class ZooKeeperEmbedded {
 
@@ -26,10 +22,9 @@ class ZooKeeperEmbedded {
   val hostname: String by lazy { connectString.substring(0, connectString.lastIndexOf(':')) }
 
   fun stop() {
-    log.debug { "Shutting down embedded ZooKeeper server at ${server.connectString}..."}
+    log.debug { "Shutting down embedded ZooKeeper server at ${server.connectString}..." }
     server.close()
-    log.debug { "Shutdown of embedded ZooKeeper server at ${server.connectString} completed"}
+    log.debug { "Shutdown of embedded ZooKeeper server at ${server.connectString} completed" }
   }
-
 
 }

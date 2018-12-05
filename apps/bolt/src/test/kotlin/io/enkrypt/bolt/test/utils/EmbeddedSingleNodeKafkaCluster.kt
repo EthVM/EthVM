@@ -1,8 +1,7 @@
-package io.enkrypt.bolt.kafka
+package io.enkrypt.bolt.test.utils
 
 import io.confluent.kafka.schemaregistry.RestApp
 import io.confluent.kafka.schemaregistry.rest.SchemaRegistryConfig
-import io.enkrypt.bolt.zookeeper.ZooKeeperEmbedded
 import kafka.server.`KafkaConfig$`
 import kafka.utils.ZkUtils
 import mu.KotlinLogging
@@ -12,8 +11,8 @@ import org.apache.kafka.test.TestCondition
 import org.apache.kafka.test.TestUtils
 import org.junit.rules.ExternalResource
 import java.io.IOException
-import java.util.*
-
+import java.util.HashSet
+import java.util.Properties
 
 /**
  * Runs an in-memory, "embedded" Kafka cluster with 1 ZooKeeper instance, 1 Kafka broker, and 1
@@ -22,14 +21,6 @@ import java.util.*
 class EmbeddedSingleNodeKafkaCluster : ExternalResource {
 
   private val log = KotlinLogging.logger {}
-
-  private val DEFAULT_BROKER_PORT = 0 // 0 results in a random port being selected
-  private val KAFKA_SCHEMAS_TOPIC = "_schemas"
-  private val AVRO_COMPATIBILITY_TYPE = "NONE"
-
-  private val KAFKASTORE_OPERATION_TIMEOUT_MS = "10000"
-  private val KAFKASTORE_DEBUG = "true"
-  private val KAFKASTORE_INIT_TIMEOUT = "90000"
 
   private val brokerConfig: Properties = Properties()
 
@@ -40,9 +31,9 @@ class EmbeddedSingleNodeKafkaCluster : ExternalResource {
 
   private var running: Boolean = false
 
-  constructor(): this(Properties())
+  constructor() : this(Properties())
 
-  constructor(config: Properties): super() {
+  constructor(config: Properties) : super() {
     this.brokerConfig.putAll(config)
   }
 
@@ -55,7 +46,7 @@ class EmbeddedSingleNodeKafkaCluster : ExternalResource {
     log.debug("Initiating embedded Kafka cluster startup")
     log.debug("Starting a ZooKeeper instance...")
     zookeeper = ZooKeeperEmbedded()
-    log.debug{"ZooKeeper instance is running at ${zookeeper!!.connectString}"}
+    log.debug { "ZooKeeper instance is running at ${zookeeper!!.connectString}" }
 
     zkUtils = ZkUtils.apply(
       zookeeper!!.connectString,
@@ -64,36 +55,38 @@ class EmbeddedSingleNodeKafkaCluster : ExternalResource {
       JaasUtils.isZkSecurityEnabled())
 
     val effectiveBrokerConfig = effectiveBrokerConfigFrom(brokerConfig, zookeeper!!)
-    log.debug("Starting a Kafka instance on port {} ...",
-      effectiveBrokerConfig.getProperty(`KafkaConfig$`.`MODULE$`.PortProp()))
+    log.debug("Starting a Kafka instance on port {} ...", effectiveBrokerConfig.getProperty(`KafkaConfig$`.`MODULE$`.PortProp()))
     broker = KafkaEmbedded(effectiveBrokerConfig)
-    log.debug("Kafka instance is running at {}, connected to ZooKeeper at {}",
-      broker!!.brokerList(), broker!!.zookeeperConnect())
+    log.debug("Kafka instance is running at {}, connected to ZooKeeper at {}", broker!!.brokerList(), broker!!.zookeeperConnect())
 
     val schemaRegistryProps = Properties()
+    with(schemaRegistryProps) {
+      put(SchemaRegistryConfig.KAFKASTORE_TIMEOUT_CONFIG, KAFKASTORE_OPERATION_TIMEOUT_MS)
+      put(SchemaRegistryConfig.DEBUG_CONFIG, KAFKASTORE_DEBUG)
+      put(SchemaRegistryConfig.KAFKASTORE_INIT_TIMEOUT_CONFIG, KAFKASTORE_INIT_TIMEOUT)
+    }
 
-    schemaRegistryProps[SchemaRegistryConfig.KAFKASTORE_TIMEOUT_CONFIG] = KAFKASTORE_OPERATION_TIMEOUT_MS
-    schemaRegistryProps[SchemaRegistryConfig.DEBUG_CONFIG] = KAFKASTORE_DEBUG
-    schemaRegistryProps[SchemaRegistryConfig.KAFKASTORE_INIT_TIMEOUT_CONFIG] = KAFKASTORE_INIT_TIMEOUT
-
-    schemaRegistry = RestApp(0, zookeeperConnect(), KAFKA_SCHEMAS_TOPIC, AVRO_COMPATIBILITY_TYPE, schemaRegistryProps)
+    schemaRegistry = RestApp(0, zookeeperConnect(), KAFKA_SCHEMAS_TOPIC,
+      AVRO_COMPATIBILITY_TYPE, schemaRegistryProps)
     schemaRegistry!!.start()
     running = true
   }
 
   private fun effectiveBrokerConfigFrom(brokerConfig: Properties, zookeeper: ZooKeeperEmbedded): Properties {
     val effectiveConfig = Properties()
-    effectiveConfig.putAll(brokerConfig)
-    effectiveConfig.put(`KafkaConfig$`.`MODULE$`.ZkConnectProp(), zookeeper.connectString)
-    effectiveConfig.put(`KafkaConfig$`.`MODULE$`.ZkSessionTimeoutMsProp(), 30 * 1000)
-    effectiveConfig.put(`KafkaConfig$`.`MODULE$`.PortProp(), DEFAULT_BROKER_PORT)
-    effectiveConfig.put(`KafkaConfig$`.`MODULE$`.ZkConnectionTimeoutMsProp(), 60 * 1000)
-    effectiveConfig.put(`KafkaConfig$`.`MODULE$`.DeleteTopicEnableProp(), true)
-    effectiveConfig.put(`KafkaConfig$`.`MODULE$`.LogCleanerDedupeBufferSizeProp(), 2 * 1024 * 1024L)
-    effectiveConfig.put(`KafkaConfig$`.`MODULE$`.GroupMinSessionTimeoutMsProp(), 0)
-    effectiveConfig.put(`KafkaConfig$`.`MODULE$`.OffsetsTopicReplicationFactorProp(), 1.toShort())
-    effectiveConfig.put(`KafkaConfig$`.`MODULE$`.OffsetsTopicPartitionsProp(), 1)
-    effectiveConfig.put(`KafkaConfig$`.`MODULE$`.AutoCreateTopicsEnableProp(), true)
+    with(effectiveConfig) {
+      putAll(brokerConfig)
+      put(`KafkaConfig$`.`MODULE$`.ZkConnectProp(), zookeeper.connectString)
+      put(`KafkaConfig$`.`MODULE$`.ZkSessionTimeoutMsProp(), 30 * 1000)
+      put(`KafkaConfig$`.`MODULE$`.PortProp(), DEFAULT_BROKER_PORT)
+      put(`KafkaConfig$`.`MODULE$`.ZkConnectionTimeoutMsProp(), 60 * 1000)
+      put(`KafkaConfig$`.`MODULE$`.DeleteTopicEnableProp(), true)
+      put(`KafkaConfig$`.`MODULE$`.LogCleanerDedupeBufferSizeProp(), 2 * 1024 * 1024L)
+      put(`KafkaConfig$`.`MODULE$`.GroupMinSessionTimeoutMsProp(), 0)
+      put(`KafkaConfig$`.`MODULE$`.OffsetsTopicReplicationFactorProp(), 1.toShort())
+      put(`KafkaConfig$`.`MODULE$`.OffsetsTopicPartitionsProp(), 1)
+      put(`KafkaConfig$`.`MODULE$`.AutoCreateTopicsEnableProp(), true)
+    }
     return effectiveConfig
   }
 
@@ -109,7 +102,7 @@ class EmbeddedSingleNodeKafkaCluster : ExternalResource {
   /**
    * Stops the cluster.
    */
-  fun stop() {
+  private fun stop() {
     log.info("Stopping Confluent")
     try {
       try {
@@ -143,9 +136,7 @@ class EmbeddedSingleNodeKafkaCluster : ExternalResource {
    * You can use this to tell Kafka Streams applications, Kafka producers, and Kafka consumers (new
    * consumer API) how to connect to this cluster.
    */
-  fun bootstrapServers(): String {
-    return broker!!.brokerList()
-  }
+  fun bootstrapServers(): String = broker!!.brokerList()
 
   /**
    * This cluster's ZK connection string aka `zookeeper.connect` in `hostnameOrIp:port` format.
@@ -154,16 +145,12 @@ class EmbeddedSingleNodeKafkaCluster : ExternalResource {
    * You can use this to e.g. tell Kafka consumers (old consumer API) how to connect to this
    * cluster.
    */
-  fun zookeeperConnect(): String {
-    return zookeeper!!.connectString
-  }
+  fun zookeeperConnect(): String = zookeeper!!.connectString
 
   /**
    * The "schema.registry.url" setting of the schema registry instance.
    */
-  fun schemaRegistryUrl(): String {
-    return schemaRegistry!!.restConnect
-  }
+  fun schemaRegistryUrl(): String = schemaRegistry!!.restConnect
 
   /**
    * Creates a Kafka topic with 1 partition and a replication factor of 1.
@@ -193,10 +180,12 @@ class EmbeddedSingleNodeKafkaCluster : ExternalResource {
    * @param replication The replication factor for (partitions of) this topic.
    * @param topicConfig Additional topic-level configuration settings.
    */
-  fun createTopic(topic: String,
-                  partitions: Int,
-                  replication: Int,
-                  topicConfig: Properties) {
+  fun createTopic(
+    topic: String,
+    partitions: Int,
+    replication: Int,
+    topicConfig: Properties
+  ) {
     broker!!.createTopic(topic, partitions, replication, topicConfig)
   }
 
@@ -222,19 +211,26 @@ class EmbeddedSingleNodeKafkaCluster : ExternalResource {
     }
   }
 
-  fun isRunning(): Boolean {
-    return running
-  }
+  fun isRunning(): Boolean = running
 
   private inner class TopicsDeletedCondition(vararg topics: String) : TestCondition {
 
     internal val deletedTopics = topics.toSet()
 
     override fun conditionMet(): Boolean {
-      val allTopics = HashSet(scala.collection.JavaConversions.seqAsJavaList(zkUtils!!.getAllTopics()))
+      val allTopics = HashSet(scala.collection.JavaConversions.seqAsJavaList(zkUtils!!.allTopics))
       return !allTopics.removeAll(deletedTopics)
     }
   }
 
+  companion object {
+    private const val DEFAULT_BROKER_PORT = 0 // 0 results in a random port being selected
+    private const val KAFKA_SCHEMAS_TOPIC = "_schemas"
+    private const val AVRO_COMPATIBILITY_TYPE = "NONE"
+
+    private const val KAFKASTORE_OPERATION_TIMEOUT_MS = "10000"
+    private const val KAFKASTORE_DEBUG = "true"
+    private const val KAFKASTORE_INIT_TIMEOUT = "90000"
+  }
 
 }

@@ -4,17 +4,17 @@ protocol Processing {
   import idl "common.avdl";
 
   record FungibleTokenBalanceKeyRecord {
-    union { null, bytes } contract;
-    bytes address;
+    union { null, io.enkrypt.avro.common.Data20 } contract;
+    io.enkrypt.avro.common.Data20 address;
   }
 
   record FungibleTokenTransferRecord {
-    bytes from;
-    bytes to;
+    io.enkrypt.avro.common.Data20 from;
+    io.enkrypt.avro.common.Data20 to;
     bytes amount;
 
   /* null if the token is ETH */
-    union { null, bytes } contract;
+    union { null, io.enkrypt.avro.common.Data20 } contract;
 
   }
 
@@ -23,20 +23,20 @@ protocol Processing {
   }
 
   record NonFungibleTokenBalanceKeyRecord {
-    bytes contract;
+    io.enkrypt.avro.common.Data20 contract;
     bytes tokenId;
   }
 
   record NonFungibleTokenTransferRecord {
-    bytes contract;
-    bytes from;
-    bytes to;
+    io.enkrypt.avro.common.Data20 contract;
+    io.enkrypt.avro.common.Data20 from;
+    io.enkrypt.avro.common.Data20 to;
     bytes tokenId;
 
   }
 
   record NonFungibleTokenBalanceRecord {
-    bytes address;
+    io.enkrypt.avro.common.Data20 address;
   }
 
   record MetricKeyRecord {
@@ -56,7 +56,7 @@ protocol Processing {
 
   record ContractKeyRecord {
 
-    bytes address;
+    io.enkrypt.avro.common.Data20 address;
 
   }
 
@@ -64,17 +64,60 @@ protocol Processing {
 
     io.enkrypt.avro.common.ContractType type;
 
-    bytes creator;
+    io.enkrypt.avro.common.Data20 creator;
     bytes data;
-    bytes txHash;
-    bytes blockHash;
+    io.enkrypt.avro.common.Data32 txHash;
+    io.enkrypt.avro.common.Data32 blockHash;
 
   }
 
   record ContractSuicideRecord {
 
-    bytes txHash;
-    bytes blockHash;
+    io.enkrypt.avro.common.Data32 txHash;
+    io.enkrypt.avro.common.Data32 blockHash;
+
+  }
+
+  record ContractLogoRecord {
+    union { null, string } src;
+    union { null, string } width;
+    union { null, string } height;
+  }
+
+  record ContractSupportRecord {
+    union { null, string } email;
+    union { null, string } url;
+  }
+
+  record ContractSocialRecord {
+    union { null, string } blog;
+    union { null, string } chat;
+    union { null, string } facebook;
+    union { null, string } forum;
+    union { null, string } github;
+    union { null, string } gitter;
+    union { null, string } instagram;
+    union { null, string } linkedin;
+    union { null, string } reddit;
+    union { null, string } slack;
+    union { null, string } telegram;
+    union { null, string } twitter;
+    union { null, string } youtube;
+  }
+
+  record ContractMetadataRecord {
+
+    string name;
+    string symbol;
+    bytes address;
+    int decimals;
+
+    union { null, string } ens_address;
+    union { null, io.enkrypt.avro.common.ContractType } type;
+    union { null, ContractLogoRecord } logo;
+    union { null, ContractSupportRecord } support;
+    union { null, ContractSocialRecord } social;
+    union { null, string } website;
 
   }
 

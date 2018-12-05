@@ -2,10 +2,10 @@ package io.enkrypt.bolt.processors
 
 import io.enkrypt.avro.processing.FungibleTokenBalanceRecord
 import io.enkrypt.avro.processing.MetricRecord
-import io.enkrypt.bolt.extensions.toBigInteger
-import io.enkrypt.bolt.extensions.toByteBuffer
 import io.enkrypt.bolt.BoltSerdes
 import io.enkrypt.bolt.Topics
+import io.enkrypt.bolt.extensions.bigInteger
+import io.enkrypt.bolt.extensions.byteBuffer
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsBuilder
@@ -17,7 +17,7 @@ import org.apache.kafka.streams.kstream.Produced
 import org.apache.kafka.streams.kstream.Serialized
 import java.math.BigInteger
 import java.nio.ByteBuffer
-import java.util.*
+import java.util.Properties
 
 /**
  * This processor processes addresses balances and type (if is a smart contract or not).
@@ -44,10 +44,11 @@ class StateProcessor : AbstractKafkaProcessor() {
       .stream(Topics.FungibleTokenMovements, Consumed.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance()))
       .groupByKey(Serialized.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance()))
       .reduce(
-        { memo, next -> FungibleTokenBalanceRecord
-          .newBuilder(memo)
-          .setAmount(ByteBuffer.wrap(memo.getAmount().toBigInteger()!!.add(next.getAmount().toBigInteger()).toByteArray()))
-          .build()
+        { memo, next ->
+          FungibleTokenBalanceRecord
+            .newBuilder(memo)
+            .setAmount(ByteBuffer.wrap(memo.getAmount().bigInteger()!!.add(next.getAmount().bigInteger()).toByteArray()))
+            .build()
         },
         Materialized.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance())
       )
@@ -72,15 +73,23 @@ class StateProcessor : AbstractKafkaProcessor() {
 
           val metricBuilder = MetricRecord.newBuilder(memo)
 
-          if(next.getIntValue() != null){ metricBuilder.setIntValue(memo.getIntValue() + next.getIntValue()) }
-          if(next.getLongValue() != null){ metricBuilder.setLongValue(memo.getLongValue() + next.getLongValue()) }
-          if(next.getFloatValue() != null){ metricBuilder.setFloatValue(memo.getFloatValue() + next.getFloatValue()) }
-          if(next.getDoubleValue() != null){ metricBuilder.setDoubleValue(memo.getDoubleValue() + next.getDoubleValue()) }
+          if (next.getIntValue() != null) {
+            metricBuilder.intValue = memo.getIntValue() + next.getIntValue()
+          }
+          if (next.getLongValue() != null) {
+            metricBuilder.longValue = memo.getLongValue() + next.getLongValue()
+          }
+          if (next.getFloatValue() != null) {
+            metricBuilder.floatValue = memo.getFloatValue() + next.getFloatValue()
+          }
+          if (next.getDoubleValue() != null) {
+            metricBuilder.doubleValue = memo.getDoubleValue() + next.getDoubleValue()
+          }
 
-          if(next.getBigIntegerValue() != null){
-            val memoBigInt = memo.getBigIntegerValue().toBigInteger()!!
-            val nextBigInt = next.getBigIntegerValue().toBigInteger()
-            metricBuilder.setBigIntegerValue(memoBigInt.add(nextBigInt).toByteBuffer())
+          if (next.getBigIntegerValue() != null) {
+            val memoBigInt = memo.getBigIntegerValue().bigInteger()!!
+            val nextBigInt = next.getBigIntegerValue().bigInteger()
+            metricBuilder.bigIntegerValue = memoBigInt.add(nextBigInt).byteBuffer()
           }
 
           metricBuilder.build()
@@ -90,20 +99,28 @@ class StateProcessor : AbstractKafkaProcessor() {
         blockMetricsByDayCount,
         { aggMetric, metricsCount ->
 
-          if(metricsCount < 2) {
+          if (metricsCount < 2) {
             aggMetric
           } else {
 
             val metricBuilder = MetricRecord.newBuilder(aggMetric)
 
-            if(aggMetric.getIntValue() != null){ metricBuilder.setIntValue(aggMetric.getIntValue() / metricsCount.toInt()) }
-            if(aggMetric.getLongValue() != null){ metricBuilder.setLongValue(aggMetric.getLongValue() / metricsCount) }
-            if(aggMetric.getFloatValue() != null){ metricBuilder.setFloatValue(aggMetric.getFloatValue() / metricsCount ) }
-            if(aggMetric.getDoubleValue() != null){ metricBuilder.setDoubleValue(aggMetric.getDoubleValue() / metricsCount) }
+            if (aggMetric.getIntValue() != null) {
+              metricBuilder.intValue = aggMetric.getIntValue() / metricsCount.toInt()
+            }
+            if (aggMetric.getLongValue() != null) {
+              metricBuilder.longValue = aggMetric.getLongValue() / metricsCount
+            }
+            if (aggMetric.getFloatValue() != null) {
+              metricBuilder.floatValue = aggMetric.getFloatValue() / metricsCount
+            }
+            if (aggMetric.getDoubleValue() != null) {
+              metricBuilder.doubleValue = aggMetric.getDoubleValue() / metricsCount
+            }
 
-            if(aggMetric.getBigIntegerValue() != null){
-              val aggBigInt = aggMetric.getBigIntegerValue().toBigInteger()!!
-              metricBuilder.setBigIntegerValue(aggBigInt.divide(BigInteger.valueOf(metricsCount)).toByteBuffer())
+            if (aggMetric.getBigIntegerValue() != null) {
+              val aggBigInt = aggMetric.getBigIntegerValue().bigInteger()!!
+              metricBuilder.bigIntegerValue = aggBigInt.divide(BigInteger.valueOf(metricsCount)).byteBuffer()
             }
 
             metricBuilder.build()

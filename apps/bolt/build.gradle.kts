@@ -66,6 +66,4 @@ dependencies {
   testImplementation("io.confluent:kafka-schema-registry:5.0.1")
   testImplementation("io.confluent:kafka-schema-registry:5.0.1:tests")
 
-
-
 }

@@ -5,14 +5,14 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import java.nio.ByteBuffer
 
-fun ByteBuffer?.toByteArray(): ByteArray? {
+fun ByteBuffer?.byteArray(): ByteArray? {
   if (this == null) {
     return null
   }
   return ByteArray(remaining()).also { get(it) }
 }
 
-fun ByteBuffer?.toBigInteger(): BigInteger? {
+fun ByteBuffer?.bigInteger(): BigInteger? {
   if (this == null) {
     return null
   }
@@ -20,14 +20,14 @@ fun ByteBuffer?.toBigInteger(): BigInteger? {
   return if (arr.isNotEmpty()) BigInteger(arr) else BigInteger.ZERO
 }
 
-fun ByteBuffer?.toBigDecimal(): BigDecimal? {
+fun ByteBuffer?.bigDecimal(): BigDecimal? {
   if (this == null) {
     return null
   }
-  return BigDecimal(toBigInteger())
+  return BigDecimal(bigInteger())
 }
 
-fun ByteBuffer?.toHex(): String? {
+fun ByteBuffer?.hex(): String? {
   if (this == null) {
     return null
   }

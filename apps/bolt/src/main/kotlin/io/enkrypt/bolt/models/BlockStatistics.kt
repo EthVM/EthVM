@@ -2,7 +2,7 @@ package io.enkrypt.bolt.models
 
 import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.bolt.extensions.isSuccess
-import io.enkrypt.bolt.extensions.toBigInteger
+import io.enkrypt.bolt.extensions.bigInteger
 import java.math.BigInteger
 
 enum class BlockStatistic {
@@ -38,7 +38,7 @@ data class BlockStatistics(
       val transactions = block.getTransactions()
       val receipts = block.getTransactionReceipts()
 
-      val totalDifficulty = block.getTotalDifficulty().toBigInteger()
+      val totalDifficulty = block.getTotalDifficulty().bigInteger()
       val numPendingTxs = block.getNumPendingTxs()
       val totalTxs = receipts.size
 
@@ -53,13 +53,13 @@ data class BlockStatistics(
         .zip(receipts)
         .forEach { (tx, receipt) ->
 
-        totalInternalTxs += receipt.getInternalTxs().size
-        if (receipt.isSuccess()) numSuccessfulTxs += 1 else numFailedTxs += 1
+          totalInternalTxs += receipt.getInternalTxs().size
+          if (receipt.isSuccess()) numSuccessfulTxs += 1 else numFailedTxs += 1
 
-        totalGasPrice = totalGasPrice.add(tx.getGasPrice().toBigInteger())
-        totalTxsFees = totalTxsFees.add(tx.getGasPrice().toBigInteger())
+          totalGasPrice = totalGasPrice.add(tx.getGasPrice().bigInteger())
+          totalTxsFees = totalTxsFees.add(tx.getGasPrice().bigInteger())
 
-      }
+        }
 
       var avgGasPrice = BigInteger.ZERO
       var avgTxsFees = BigInteger.ZERO

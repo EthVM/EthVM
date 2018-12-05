@@ -1,18 +1,17 @@
-package io.enkrypt.bolt.kafka
+package io.enkrypt.bolt.test.utils
 
 import org.apache.kafka.clients.consumer.ConsumerRecords
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
-import org.apache.kafka.streams.KeyValue
-import java.time.Duration
-import java.util.*
-import org.apache.kafka.streams.state.ReadOnlyKeyValueStore
-import org.apache.kafka.streams.errors.InvalidStateStoreException
 import org.apache.kafka.streams.KafkaStreams
+import org.apache.kafka.streams.KeyValue
+import org.apache.kafka.streams.errors.InvalidStateStoreException
 import org.apache.kafka.streams.state.QueryableStoreType
+import org.apache.kafka.streams.state.ReadOnlyKeyValueStore
 import org.apache.kafka.test.TestUtils
 import java.util.ArrayList
+import java.util.Properties
 
 object IntegrationTestUtils {
 
@@ -21,8 +20,7 @@ object IntegrationTestUtils {
 
   fun <K, V> readValues(topic: String, consumerConfig: Properties, maxMessages: Int): List<V> =
     readKeyValues<K, V>(topic, consumerConfig, maxMessages)
-      .map{ it.value }
-
+      .map { it.value }
 
   fun <K, V> readKeyValues(topic: String, consumerConfig: Properties): List<KeyValue<K, V>> =
     readKeyValues(topic, consumerConfig, UNLIMITED_MESSAGES)
@@ -37,10 +35,10 @@ object IntegrationTestUtils {
 
     var consumedValues = listOf<KeyValue<K, V>>()
 
-    while(totalPollTimeMs < maxTotalPollTimeMs && continueConsuming(consumedValues.size, maxMessages)) {
+    while (totalPollTimeMs < maxTotalPollTimeMs && continueConsuming(consumedValues.size, maxMessages)) {
       totalPollTimeMs += pollIntervalMs
       val records: ConsumerRecords<K, V> = consumer.poll(pollIntervalMs)
-      consumedValues += records.map{ KeyValue<K, V>(it.key(), it.value()) }
+      consumedValues += records.map { KeyValue<K, V>(it.key(), it.value()) }
     }
     consumer.close()
 
@@ -55,22 +53,23 @@ object IntegrationTestUtils {
     records
       .map { ProducerRecord(topic, it.key, it.value) }
       .map { producer.send(it) }
-      .forEach{ it.get() }
+      .forEach { it.get() }
     producer.flush()
     producer.close()
   }
 
   fun <K, V> produceValuesSynchronously(topic: String, records: List<V>, producerConfig: Properties) {
-    produceKeyValuesSynchronously(topic, records.map{ KeyValue(null, it) }, producerConfig)
+    produceKeyValuesSynchronously(topic, records.map { KeyValue(null, it) }, producerConfig)
   }
 
   @Throws(InterruptedException::class)
-  fun <K, V> waitUntilMinKeyValueRecordsReceived(consumerConfig: Properties,
-                                                 topic: String,
-                                                 expectedNumRecords: Int): List<KeyValue<K, V>> {
-
-    return waitUntilMinKeyValueRecordsReceived(consumerConfig, topic, expectedNumRecords, DEFAULT_TIMEOUT)
-  }
+  fun <K, V> waitUntilMinKeyValueRecordsReceived(
+    consumerConfig: Properties,
+    topic: String,
+    expectedNumRecords: Int
+  ): List<KeyValue<K, V>> =
+    waitUntilMinKeyValueRecordsReceived(consumerConfig, topic, expectedNumRecords,
+      DEFAULT_TIMEOUT)
 
   /**
    * Wait until enough data (key-value records) has been consumed.
@@ -83,10 +82,12 @@ object IntegrationTestUtils {
    * @throws AssertionError if the given wait time elapses
    */
   @Throws(InterruptedException::class)
-  fun <K, V> waitUntilMinKeyValueRecordsReceived(consumerConfig: Properties,
-                                                 topic: String,
-                                                 expectedNumRecords: Int,
-                                                 waitTime: Long): List<KeyValue<K, V>> {
+  fun <K, V> waitUntilMinKeyValueRecordsReceived(
+    consumerConfig: Properties,
+    topic: String,
+    expectedNumRecords: Int,
+    waitTime: Long
+  ): List<KeyValue<K, V>> {
     val accumData = ArrayList<KeyValue<K, V>>()
     val startTime = System.currentTimeMillis()
     while (true) {
@@ -103,11 +104,14 @@ object IntegrationTestUtils {
   }
 
   @Throws(InterruptedException::class)
-  fun <V> waitUntilMinValuesRecordsReceived(consumerConfig: Properties,
-                                            topic: String,
-                                            expectedNumRecords: Int): List<V> {
+  fun <V> waitUntilMinValuesRecordsReceived(
+    consumerConfig: Properties,
+    topic: String,
+    expectedNumRecords: Int
+  ): List<V> {
 
-    return waitUntilMinValuesRecordsReceived(consumerConfig, topic, expectedNumRecords, DEFAULT_TIMEOUT)
+    return waitUntilMinValuesRecordsReceived(consumerConfig, topic, expectedNumRecords,
+      DEFAULT_TIMEOUT)
   }
 
   /**
@@ -121,10 +125,12 @@ object IntegrationTestUtils {
    * @throws AssertionError if the given wait time elapses
    */
   @Throws(InterruptedException::class)
-  fun <V> waitUntilMinValuesRecordsReceived(consumerConfig: Properties,
-                                            topic: String,
-                                            expectedNumRecords: Int,
-                                            waitTime: Long): List<V> {
+  fun <V> waitUntilMinValuesRecordsReceived(
+    consumerConfig: Properties,
+    topic: String,
+    expectedNumRecords: Int,
+    waitTime: Long
+  ): List<V> {
     val accumData = ArrayList<V>()
     val startTime = System.currentTimeMillis()
     while (true) {
@@ -155,9 +161,11 @@ object IntegrationTestUtils {
    * @return the same store, which is now ready for querying (but see caveat above)
   </T> */
   @Throws(InterruptedException::class)
-  fun <T> waitUntilStoreIsQueryable(storeName: String,
-                                    queryableStoreType: QueryableStoreType<T>,
-                                    streams: KafkaStreams): T {
+  fun <T> waitUntilStoreIsQueryable(
+    storeName: String,
+    queryableStoreType: QueryableStoreType<T>,
+    streams: KafkaStreams
+  ): T {
     while (true) {
       try {
         return streams.store(storeName, queryableStoreType)
