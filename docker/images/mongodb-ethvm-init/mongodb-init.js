@@ -66,16 +66,20 @@ db.createView('transactions', 'blocks', [
 db.createView('uncles', 'blocks', [
   { $sort: { _id: -1 } },
   { $unwind: { path: '$uncles', includeArrayIndex: "index" } },
-  { $project: { hash: 1, number: 1, timestamp: '$header.timestamp', index: 1, uncle: '$uncles' } },
+  { $project: { hash: 1, number: 1, timestamp: '$header.timestamp', index: 1, uncle: '$uncles'} },
   {
     $addFields: {
       'uncle.timestamp': '$timestamp',
-      'uncle.index': '$index',
+      'uncle.position': '$index',
     }
   },
   {
     $project: {
       parentHash: '$uncle.parentHash',
+      position: '$uncle.position',
+      uncleHeight: '$uncle.number',
+      blockHeight: '$number',
+      position: '$uncle.position',
       sha3Uncles: '$uncle.sha3Uncles',
       hash: '$uncle.hash',
       timestamp: '$uncle.timestamp',
