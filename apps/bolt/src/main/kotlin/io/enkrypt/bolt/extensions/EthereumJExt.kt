@@ -42,6 +42,7 @@ fun BlockHeader?.toDocument(summary: BlockSummary) = Document(
     "parentHash" to this?.parentHash?.toHex(),
     "sha3Uncles" to this?.unclesHash?.toHex(),
     "hash" to this?.hash?.toHex(),
+    "number" to this?.number,
     "timestamp" to this?.timestamp,
     "nonce" to this?.nonce.toHex(),
     "miner" to this?.coinbase?.toHex(),
