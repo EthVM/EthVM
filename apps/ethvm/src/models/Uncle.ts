@@ -18,7 +18,14 @@ export class Uncle {
   }
 
   public getNumber(): number {
-    return 0 // TBD: Height of Uncle
+    return this.uncle.uncleHeight
+  }
+
+  public getBlockHeight(): number {
+    return this.uncle.blockHeight
+  }
+  public getPosition(): number {
+    return this.uncle.position
   }
 
   public getType(): string {

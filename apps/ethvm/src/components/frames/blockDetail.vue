@@ -11,7 +11,7 @@
       </v-flex>
     </v-layout>
     <v-layout row wrap justify-start class="mb-4">
-      <v-flex v-if="blockMined" xs12> <block-block-detail :block="block" :isNotMinedBlock ="isNotMinedBlock" :isMined="true"></block-block-detail> </v-flex>
+      <v-flex v-if="blockMined" xs12> <block-block-detail :block="block" :uncles="uncles" :isNotMinedBlock ="isNotMinedBlock" :isMined="true"></block-block-detail> </v-flex>
       <v-flex v-else xs12> <block-block-detail :isMined="false" :isNotMinedBlock ="isNotMinedBlock" :prev="getPrev()"></block-block-detail> </v-flex>
     </v-layout>
     <v-layout row wrap justify-start class="mb-4">
@@ -58,7 +58,7 @@ export default Vue.extend({
       timestamp: null,
       transactions: [],
       transactionLoading: Boolean,
-      isNotMinedBlock: Boolean,
+      isNotMinedBlock: false,
       items: [
         {
           text: this.$i18n.t('title.home'),

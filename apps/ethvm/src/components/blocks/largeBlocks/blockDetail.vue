@@ -22,7 +22,7 @@
                   <v-layout row justify-start align-center fill-height>
                     <v-card-title class="info--text pr-0 pl-0">{{ $t('common.hash') }}:</v-card-title>
                     <v-card-text class="text-truncate">
-                      <router-link :to="'/block/' + uncles[index]"> 0x{{ uncles[index].unclesHash }} </router-link>
+                      <router-link :to="'/uncle/0x' + uncles[index]"> 0x{{ uncles[index] }} </router-link>
                     </v-card-text>
                   </v-layout>
                 </v-list-tile>
@@ -119,6 +119,9 @@ export default Vue.extend({
     },
     prev: {
       type: Number
+    },
+    uncles :{
+      type: Array,
     },
     isNotMinedBlock:{
       type: Boolean,

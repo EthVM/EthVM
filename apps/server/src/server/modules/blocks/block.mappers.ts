@@ -84,7 +84,6 @@ const toBlock = (block: any): Block => {
   block.uncles.forEach(element => {
     b.uncles.push(element.hash)
   })
-  b.uncles = block.uncles
   return b
 }
 
