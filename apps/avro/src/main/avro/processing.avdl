@@ -1,0 +1,81 @@
+@namespace("io.enkrypt.avro.processing")
+protocol Processing {
+
+  import idl "common.avdl";
+
+  record FungibleTokenBalanceKeyRecord {
+    union { null, bytes } contract;
+    bytes address;
+  }
+
+  record FungibleTokenTransferRecord {
+    bytes from;
+    bytes to;
+    bytes amount;
+
+  /* null if the token is ETH */
+    union { null, bytes } contract;
+
+  }
+
+  record FungibleTokenBalanceRecord {
+    bytes amount;
+  }
+
+  record NonFungibleTokenBalanceKeyRecord {
+    bytes contract;
+    bytes tokenId;
+  }
+
+  record NonFungibleTokenTransferRecord {
+    bytes contract;
+    bytes from;
+    bytes to;
+    bytes tokenId;
+
+  }
+
+  record NonFungibleTokenBalanceRecord {
+    bytes address;
+  }
+
+  record MetricKeyRecord {
+    long `date`;
+    string name;
+  }
+
+  record MetricRecord {
+
+    union { null, int } intValue = null;
+    union { null, long } longValue = null;
+    union { null, float } floatValue = null;
+    union { null, double } doubleValue = null;
+    union { null, bytes } bigIntegerValue = null;
+
+  }
+
+  record ContractKeyRecord {
+
+    bytes address;
+
+  }
+
+  record ContractCreationRecord {
+
+    io.enkrypt.avro.common.ContractType type;
+
+    bytes creator;
+    bytes data;
+    bytes txHash;
+    bytes blockHash;
+
+  }
+
+  record ContractSuicideRecord {
+
+    bytes txHash;
+    bytes blockHash;
+
+  }
+
+}

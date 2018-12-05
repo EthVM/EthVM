@@ -1,0 +1,201 @@
+@namespace("io.enkrypt.avro.capture")
+protocol Capture {
+
+  import idl "common.avdl";
+
+  record BlockRewardRecord {
+    bytes address;
+    bytes reward;
+  }
+
+  record TransactionKeyRecord {
+    bytes hash;
+  }
+
+  record TransactionRecord {
+
+    /* a counter used to make sure each transaction can only be processed once */
+    bytes nonce;
+
+    /* the originating address of the transaction */
+    bytes from;
+
+    /* the amount of ether to pay as a transaction fee to the miner for each unit of gas */
+    bytes gasPrice;
+
+    /* the amount of "gas" to allow for the computation.
+     * Gas is the fuel of the computational engine;
+     * every computational step taken and every byte added
+     * to the state or transaction list consumes some gas. */
+    bytes gasLimit;
+
+    /* SHA3 hash of the RLP encoded transaction */
+    union { null, bytes } hash = null;
+
+    /* indicates the chain in which this transaction occurred */
+    union { null, int } chainId = null;
+
+    /* the address of the destination account. In creation transaction the receive address is null */
+    union { null, bytes } to = null;
+
+    /* the amount of ether to transfer (calculated as wei) */
+    union { null, bytes } value = null;
+
+    /* An unlimited size byte array specifying
+     * input [data] of the message call or
+     * Initialization code for a new contract */
+    union { null, bytes } data = null;
+
+  }
+
+  record LogInfoRecord {
+    bytes address;
+    bytes data;
+    array<io.enkrypt.avro.common.DataWord> topics;
+  }
+
+  record InternalTransactionRecord {
+
+    TransactionRecord base;
+
+    int deep;
+    int index;
+    boolean rejected;
+    string note;
+
+    union { null, bytes } parentHash = null;
+  }
+
+  record TransactionReceiptRecord {
+
+    TransactionRecord tx;
+
+    bytes postTxState;
+    bytes cumulativeGas;
+    bytes bloomFilter;
+
+    bytes gasPrice;
+    bytes gasLimit;
+    bytes gasUsed;
+    bytes gasLeftover;
+    bytes gasRefund;
+
+    bytes result;
+
+    array<LogInfoRecord> logInfos;
+    array<InternalTransactionRecord> internalTxs;
+    array<bytes> deletedAccounts;
+
+    union { null, string } `error` = null;
+
+  }
+
+  record BlockHeaderRecord {
+
+    /* hash of this block */
+    bytes hash;
+
+    /* The SHA3 256-bit hash of the parent block, in its entirety */
+    bytes parentHash;
+
+    /* The SHA3 256-bit hash of the uncles list portion of this block */
+    bytes unclesHash;
+
+    /* The 160-bit address to which all fees collected from the
+     * successful mining of this block be transferred; formally */
+    bytes coinbase;
+
+    /* The SHA3 256-bit hash of the root node of the state trie,
+    * after all transactions are executed and finalisations applied */
+    bytes stateRoot;
+
+    /* The SHA3 256-bit hash of the root node of the trie structure
+     * populated with each transaction in the transaction
+     * list portion, the trie is populate by [key, val] --> [rlp(index), rlp(tx_recipe)]
+     * of the block */
+    bytes txTrieRoot;
+
+    /* The SHA3 256-bit hash of the root node of the trie structure
+     * populated with each transaction recipe in the transaction recipes
+     * list portion, the trie is populate by [key, val] --> [rlp(index), rlp(tx_recipe)]
+     * of the block */
+    bytes receiptTrieRoot;
+
+    /* The Bloom filter composed from indexable information
+     * (logger address and log topics) contained in each log entry
+     * from the receipt of each transaction in the transactions list */
+    bytes logsBloom;
+
+    /* A scalar value corresponding to the difficulty level of this block.
+     * This can be calculated from the previous block’s difficulty level
+     * and the timestamp */
+    bytes difficulty;
+
+    /* A scalar value equal to the reasonable output of Unix's time()
+     * at this block's inception */
+    long timestamp;
+
+    /* A scalar value equal to the number of ancestor blocks.
+     * The genesis block has a number of zero */
+    long number;
+
+    /* A scalar value equal to the current limit of gas expenditure per block */
+    bytes gasLimit;
+
+    /* A scalar value equal to the total gas used in transactions in this block */
+    long gasUsed;
+
+    bytes mixHash;
+
+    /* A 256-bit hash which proves that a sufficient amount
+     * of computation has been carried out on this block */
+    bytes nonce;
+
+    /* An arbitrary byte array containing data relevant to this block.
+     * With the exception of the genesis block, this must be 32 bytes or fewer */
+    union { null, bytes } extraData = null;
+
+  }
+
+  record BlockRecord {
+
+    BlockHeaderRecord header;
+
+    array<BlockHeaderRecord> uncles;
+
+    array<TransactionReceiptRecord> txReceipts;
+
+  }
+
+  record PremineBalanceRecord {
+    bytes address;
+    bytes amount;
+  }
+
+  record BlockSummaryKeyRecord {
+    long number;
+  }
+
+  record BlockSummaryRecord {
+
+    /* whether this block summary should be applied or reversed from cumulative state */
+    boolean reverse;
+
+    BlockRecord block;
+
+    /* sum of this blocks difficulty and all ancestors */
+    bytes totalDifficulty;
+
+    /* coinbase and uncle rewards */
+    array<BlockRewardRecord> rewards;
+
+    /* count as of time of processing */
+    int numPendingTxs;
+
+    /* used with the genesis block */
+    union { null, array<PremineBalanceRecord> } premineBalances = null;
+
+  }
+
+
+}
