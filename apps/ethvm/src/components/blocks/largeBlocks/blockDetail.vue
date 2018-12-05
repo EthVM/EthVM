@@ -281,8 +281,8 @@ export default Vue.extend({
       return this.isMined
     },
     formatTime(){
-      let date = new Date(this.block.getTimestamp())
-      return date
+      let date = new Date(this.block.getTimestamp()).toString()
+      return '('+ date +')'
     }
   }
 })
