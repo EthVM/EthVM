@@ -128,11 +128,27 @@ export default Vue.extend({
     /* Get Block Data: */
     if (this.$store.getters.getBlocks.length > 0) {
       this.lastMinedBlock = this.$store.getters.getBlocks[0]
+      if (Number(this.lastMinedBlock.block.number) < Number(this.blockRef)){
+          this.isNotMinedBlock = true
+        }
     }
     this.$eventHub.$on(sEvents.newBlock, _block => {
       if (this.$store.getters.getBlocks.length > 0) {
         this.lastMinedBlock = this.$store.getters.getBlocks[0]
-        if (this.lastMinedBlock < Number(this.blockRef)){
+        if (Number(this.lastMinedBlock.block.number) == Number(this.blockRef)){
+        this.$socket.emit(
+          sEvents.getBlockByNumber,
+          {
+            number: Number(this.blockRef)
+          },
+          (error, result) => {
+            if (result) {
+              this.setRawBlock(result)
+            }
+          }
+        )
+      }
+        if (Number(this.lastMinedBlock.block.number) < Number(this.blockRef)){
           this.isNotMinedBlock = true
         }
       }

@@ -101,7 +101,8 @@
     "uncReward": "Reward",
     "sha": "SHA3",
     "uncle": "Uncle(s)",
-    "loadingBlockTx":"Loading Block transactions..."
+    "loadingBlockTx":"Loading Block transactions...",
+    "notMined":"Sit tight, this Block has not been mined yet"
   },
 
   "addrOverview": {

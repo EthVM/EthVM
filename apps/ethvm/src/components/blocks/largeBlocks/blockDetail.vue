@@ -92,7 +92,7 @@
     <v-card flat v-else class="pa-3">
       <v-layout column align-center justify-center ma-3>
         <v-icon class="fa fa-spinner fa-pulse fa-4x fa-fw primary--text" large></v-icon>
-        <v-card-title v-if="isNotMinedBlock" class="primary--text text-xs-center body-2 pb-4"> Sit tight, this Block has not been mined yet </v-card-title>
+        <v-card-title v-if="isNotMinedBlock" class="primary--text text-xs-center body-2 pb-4"> {{ $t('block.notMined') }} </v-card-title>
       </v-layout>
     </v-card>
   </v-card>
