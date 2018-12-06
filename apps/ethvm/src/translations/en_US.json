@@ -23,7 +23,9 @@
     "blockTx": "Block Transactions",
     "lastBlock": "Last Blocks",
     "lastTxs": "Last Transactions",
-    "kb": "Knowledge Base"
+    "kb": "Knowledge Base",
+    "position":"Position"
+
   },
   "common": {
     "address": "Address",

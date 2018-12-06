@@ -182,6 +182,13 @@ export default Vue.extend({
         }
         newItems.push(item)
       }
+      if (this.isUncle) {
+        const item = {
+          title: this.$i18n.t('title.position'),
+          detail: this.block.getPosition()
+        }
+        newItems.unshift(item)
+      }
       this.items = newItems
     },
     setMore() {
@@ -261,7 +268,7 @@ export default Vue.extend({
   },
   computed: {
     isUncle() {
-      return this.Block && this.block.getIsUncle()
+      return this.block && this.block.getIsUncle()
     },
     update() {
       return String

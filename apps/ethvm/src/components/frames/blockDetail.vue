@@ -81,8 +81,7 @@ export default Vue.extend({
       const newText = this.$i18n.t('title.blockN') + ' ' + num
       const newI = {
         text: newText,
-        disabled: false,
-        link: '/'
+        disabled: true
       }
       this.items.push(newI)
     },
