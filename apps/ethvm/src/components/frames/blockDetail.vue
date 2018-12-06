@@ -24,9 +24,11 @@
           class="mt-3"
         ></block-last-transactions>
         <v-card v-else flat color="white">
-          <v-icon v-if="transactionLoading" class=" text-xs-center fa fa-spinner fa-pulse fa-4x fa-fw primary--text" large></v-icon>
-          <v-card-text v-if="transactionLoading" class="text-xs-center text-muted">{{ $t('block.loadingBlockTx') }}</v-card-text>
-          <v-card-text v-else class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }}</v-card-text>
+          <v-layout column align-center justify-center ma-3>
+            <v-icon v-if="transactionLoading" class=" text-xs-center fa fa-spinner fa-pulse fa-4x fa-fw primary--text" large></v-icon>
+            <v-card-text v-if="transactionLoading" class="text-xs-center text-muted">{{ $t('block.loadingBlockTx') }}</v-card-text>
+            <v-card-text v-else class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }}</v-card-text>
+          </v-layout>
         </v-card>
       </v-flex>
     </v-layout>

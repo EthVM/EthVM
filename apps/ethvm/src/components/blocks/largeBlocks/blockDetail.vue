@@ -261,10 +261,7 @@ export default Vue.extend({
   },
   computed: {
     isUncle() {
-      if(this.block){
-        return this.block.getIsUncle()
-      }
-      return false
+      return this.Block && this.block.getIsUncle()
     },
     update() {
       return String
@@ -286,7 +283,7 @@ export default Vue.extend({
       return this.isMined
     },
     formatTime(){
-      let date = new Date(this.block.getTimestamp()).toString()
+      const date = new Date(this.block.getTimestamp()).toString()
       return '('+ date +')'
     }
   }
