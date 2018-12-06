@@ -452,7 +452,7 @@ describe('ethvm-server-events', () => {
 
       for (const input of inputs) {
         const data = await callEvent(Events.pastBlocks, input, client)
-        expect(data[0].header.parentHash).to.be.eq("2468a4f160c20bf9d8947601ae176cc8dfb1d5c7b5294e9b2208385accb542d7")
+        expect(data[0].header.parentHash).to.be.eq("971b253cb452cbac8a325473889156401c18fa0beef58e8a76cff71c294cb866")
         expect(data).to.have.lengthOf(10)
         data.forEach(block => {
           expect(Block.test(block)).to.to.to.to.true
@@ -546,7 +546,7 @@ describe('ethvm-server-events', () => {
       ]
       for (const input of inputs) {
         const data = await callEvent(Events.getBlocksMined, input, client)
-        expect(data[0].hash).to.be.eq("e37c632d361e0a93f08ba29b1a2c708d9caa3ee19d1ee8d2a02612bffe49f0a9")
+        expect(data[0].hash).to.be.eq("b86d9095750cddaa9d4471eda2e29fe2aa9101c2753c1a0d5bf1a91fdd020388")
         expect(data).to.be.not.empty
       }
     })
