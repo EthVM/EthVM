@@ -28,7 +28,10 @@
           <h5>{{ $t('tableHeader.blockN') }}</h5>
         </v-flex>
         <v-spacer></v-spacer>
-        <v-flex hidden-sm-and-down md2>
+        <v-flex  v-if="blocks[0].getType() == 'uncle'" hidden-sm-and-down md2>
+          <h5>{{ $t('title.position') }}</h5>
+        </v-flex>
+        <v-flex  v-else hidden-sm-and-down md2>
           <h5>{{ $t('tableHeader.txs') }}</h5>
         </v-flex>
         <v-flex xs6 sm3 md2>
@@ -70,8 +73,7 @@
                   <p class="txFail--text mb-0">{{ block.getStats().failedTxs }}</p>
                 </v-flex>
                 <v-flex v-if="block.getType() == 'uncle'" hidden-sm-and-down md2 order-xs4 order-sm3>
-                  <p class="txSuccess--text mb-0 psmall">{{ 0 }}</p>
-                  <p class="txFail--text mb-0">{{ 0 }}</p>
+                  <p class="txSuccess--text mb-0 psmall">{{ block.getPosition() }}</p>
                 </v-flex>
                 <v-flex d-flex xs6 sm3 md2 order-xs2 order-md4>
                   <p class="text-truncate black--text align-center mb-0">
