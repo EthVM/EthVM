@@ -31,8 +31,8 @@ export class Block {
 
   public getHasUncle(): boolean {
     if (!this.cache.getHasUncle) {
-      if (this.block.uncles.length == 0) {
-        return this.cache.getHasUncle = false
+      if (this.block.uncles && this.block.uncles.length == 0) {
+        return (this.cache.getHasUncle = false)
       }
       this.cache.getHasUncle = true
     }
@@ -47,18 +47,15 @@ export class Block {
   }
 
   public getUncles(): string[] {
-    return this.block.uncles
+    if (!this.cache.getUncles) {
+      let uncles = []
+      this.block.uncles.forEach(b => {
+        uncles.push('0x' + b)
+      })
+      this.cache.getUncles = uncles
+    }
+    return this.cache.getUncles
   }
-
-  // public getUncleHashes(): Hash[] {
-  //   return this.block.uncleHashes.map(_uncle => {
-  //     return common.Hash(_uncle)
-  //   })
-  // }
-
-  // public setUncleHashes(hashes: Hash[]): void {
-  //   this.block.uncleHashes = hashes
-  // }
 
   public getHash(): string {
     return '0x' + this.block.hash
@@ -148,9 +145,9 @@ export class Block {
 
   public getExtraData(): Hex {
     if (!this.cache.extraData) {
-      if(this.block.header.extraData){
-      this.cache.extraData = common.Hex(this.block.header.extraData)
-      }else{
+      if (this.block.header.extraData) {
+        this.cache.extraData = common.Hex(this.block.header.extraData)
+      } else {
         this.cache.extraData = common.Hex(Buffer.from('0'))
       }
     }
