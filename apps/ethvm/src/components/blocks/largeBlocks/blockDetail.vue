@@ -105,6 +105,7 @@ import store from '@app/states'
 import Vue from 'vue'
 import ethUnits from 'ethereumjs-units'
 import Bn from 'bignumber.js'
+import NumberFormatter from 'number-formatter'
 
 export default Vue.extend({
   name: 'BlockView',
@@ -163,11 +164,11 @@ export default Vue.extend({
         },
         {
           title: this.$i18n.t('block.reward'),
-          detail: ethUnits.convert(new Bn(this.block.getMinerReward()).toFixed(), 'wei', 'eth') + ' ' + this.$i18n.t('common.eth')
+          detail: this.minerReward
         },
         {
           title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward'),
-          detail: ethUnits.convert(new Bn(this.block.getUncleReward()).toFixed(), 'wei', 'eth') + ' ' + this.$i18n.t('common.eth')
+          detail: this.uncleReward
         },
         {
           title: this.$i18n.t('block.pHash'),
@@ -292,6 +293,14 @@ export default Vue.extend({
     formatTime(){
       const date = new Date(this.block.getTimestamp()).toString()
       return '('+ date +')'
+    },
+    minerReward(){
+      const minerrewards = ethUnits.convert(new Bn(this.block.getMinerReward()).toFixed(), 'wei', 'eth')
+      return NumberFormatter('#,##0.##', minerrewards) + ' ' + this.$i18n.t('common.eth')
+    },
+    uncleReward(){
+      const uncelerewards =  ethUnits.convert(new Bn(this.block.getUncleReward()).toFixed(), 'wei', 'eth')
+      return NumberFormatter('#,##0.##', uncelerewards) + ' ' + this.$i18n.t('common.eth')
     }
   }
 })
