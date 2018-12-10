@@ -1,4 +1,4 @@
-version: '3.6'
+version: "3.6"
 
 networks:
   web:
@@ -10,12 +10,6 @@ networks:
         - subnet: 172.25.0.0/24
 
 volumes:
-
-  parity-volume:
-    external: true
-
-  pantheon-volume:
-  geth-volume:
   redis-volume:
   mongodb-volume:
   ethereumj-volume:
@@ -23,9 +17,8 @@ volumes:
   zookeeper-volume:
 
 services:
-
   traefik:
-    image: traefik:1.7.3-alpine
+    image: traefik:${TRAEFIK_VERSION}-alpine
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -36,49 +29,6 @@ services:
     ports:
       - 80:80
       - 81:81
-
-#  parity:
-#    image: parity/parity:v2.2.3
-#    networks:
-#      back:
-#        ipv4_address: 172.25.0.101
-#    volumes:
-#      - parity-volume:/home/parity/.local/share/io.parity.ethereum/
-#    command: "--tracing on --no-warp --jsonrpc-interface all --jsonrpc-cors all --ws-interface all --ws-origins all --min-peers 50 --max-peers 100"
-#    ports:
-#      - 8545:8545
-#      - 8546:8546
-#      - 30303:30303
-
-#  pantheon:
-#    image: pegasyseng/pantheon:0.8.2
-#    networks:
-#      back:
-#        ipv4_address: 172.25.0.101
-#    ports:
-#      - 8545:8545
-#      - 8546:8546
-#      - 30303:30303
-#    volumes:
-#      - pantheon-volume:/var/lib/pantheon
-#    environment:
-#      RPC_ENABLED: 'true'
-#      WS_ENABLED: 'true'
-#      RPC_CORS_ORIGIN: 'all'
-
-#  geth:
-#    image: ethereum/client-go:v1.8.19
-#    restart: on-failure
-#    volumes:
-#    - geth-volume:/data
-#    networks:
-#      back:
-#        ipv4_address: 172.25.0.101
-#    ports:
-#      - 30303:30303
-#      - 8545:8545
-#      - 8546:8546
-#    command:  --rpc --rpcaddr '0.0.0.0' --rpcport '8545' --rpcapi 'db,eth,net,web3,personal' --ws --wsaddr '0.0.0.0' --wsapi 'db,eth,net,web3,personal' --wsport '8546' --wsorigins '*' --datadir '/data' --gcmode archive --syncmode full
 
   ethvm:
     build:
@@ -91,13 +41,13 @@ services:
     networks:
       - back
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:ethvm.lan'
-      - 'traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:*||Access-Control-Allow-Credentials:true'
-      - 'traefik.frontend.passHostHeader=true'
-      - 'traefik.backend=ethvm'
-      - 'traefik.port=8080'
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.frontend.rule=Host:ethvm.${DOMAIN}"
+      - "traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:*||Access-Control-Allow-Credentials:true"
+      - "traefik.frontend.passHostHeader=true"
+      - "traefik.backend=ethvm"
+      - "traefik.port=8080"
 
   server:
     build:
@@ -113,19 +63,19 @@ services:
     networks:
       - back
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:ws.ethvm.lan'
-      - 'traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://ethvm.lan||Access-Control-Allow-Credentials:true'
-      - 'traefik.frontend.passHostHeader=true'
-      - 'traefik.backend=server'
-      - 'traefik.port=3000'
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.frontend.rule=Host:api.ethvm.${DOMAIN}"
+      - "traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://ethvm.${DOMAIN}||Access-Control-Allow-Credentials:true"
+      - "traefik.frontend.passHostHeader=true"
+      - "traefik.backend=server"
+      - "traefik.port=3000"
     environment:
       - ETHVM_DATA_STORE_REDIS_HOST=redis
       - ETHVM_ETH_TRIE_DB_REDIS_HOST=redis
 
   redis:
-    image: redis:4.0.9-alpine
+    image: redis:${REDIS_VERSION}-alpine
     restart: unless-stopped
     volumes:
       - redis-volume:/data
@@ -134,14 +84,14 @@ services:
     ports:
       - 6379:6379
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:redis.ethvm.lan'
-      - 'traefik.port=6379'
-      - 'traefik.backend=redis'
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.frontend.rule=Host:redis.ethvm.${DOMAIN}"
+      - "traefik.port=6379"
+      - "traefik.backend=redis"
 
   mongodb:
-    image: enkryptio/mongodb:4.0-dev
+    image: enkryptio/mongodb-dev:${MONGODB_VERSION}
     restart: unless-stopped
     volumes:
       - mongodb-volume:/data/db
@@ -152,14 +102,14 @@ services:
       - 27017:27017
     command: "mongod --bind_ip 0.0.0.0 --replSet rs0 --quiet --slowms 10000"
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:mongo.ethvm.lan'
-      - 'traefik.port=27017'
-      - 'traefik.backend=mongodb'
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.frontend.rule=Host:mongo.ethvm.${DOMAIN}"
+      - "traefik.port=27017"
+      - "traefik.backend=mongodb"
 
   zookeeper:
-    image: confluentinc/cp-zookeeper:5.0.0
+    image: confluentinc/cp-zookeeper:${CP_VERSION}
     volumes:
       - zookeeper-volume:/var/lib/zookeeper
     networks:
@@ -169,11 +119,11 @@ services:
       - 2181:2181
     environment:
       ZOOKEEPER_SERVER_ID: 1
-      ZOOKEEPER_SERVERS: 'server.1=zookeeper:2888:3888'
+      ZOOKEEPER_SERVERS: "server.1=zookeeper:2888:3888"
       ZOOKEEPER_CLIENT_PORT: 2181
 
   kafka-1:
-    image: confluentinc/cp-kafka:5.0.0
+    image: confluentinc/cp-kafka:${CP_VERSION}
     restart: unless-stopped
     depends_on:
       - zookeeper
@@ -185,21 +135,20 @@ services:
     ports:
       - 9091:9091
     environment:
-      KAFKA_ADVERTISED_HOST_NAME: 'kafka-1'
-      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka-1:9091'
-      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_ADVERTISED_HOST_NAME: "kafka-1"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka-1:9091"
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
       KAFKA_BROKER_ID: 1
-      KAFKA_LOG4J_LOGGERS: 'kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO'
+      KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
-      CONFLUENT_SUPPORT_METRICS_ENABLE: 'false'
-      KAFKA_MESSAGE_MAX_BYTES: '2000000000'
-
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+      CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
+      KAFKA_MESSAGE_MAX_BYTES: "2000000000"
 
   kafka-schema-registry:
-    image: confluentinc/cp-schema-registry:5.0.0
+    image: confluentinc/cp-schema-registry:${CP_VERSION}
     restart: unless-stopped
     depends_on:
       - zookeeper
@@ -210,52 +159,20 @@ services:
     ports:
       - 8081:8081
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:kafka-schema-registry.ethvm.lan'
-      - 'traefik.port=8081'
-      - 'traefik.backend=kafka-schema-registry'
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.frontend.rule=Host:kafka-schema-registry.ethvm.${DOMAIN}"
+      - "traefik.port=8081"
+      - "traefik.backend=kafka-schema-registry"
     environment:
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'PLAINTEXT://kafka-1:9091'
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "PLAINTEXT://kafka-1:9091"
       SCHEMA_REGISTRY_HOST_NAME: kafka-schema-registry
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
-      SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: 'INFO'
-      SCHEMA_REGISTRY_LOG4J_LOGGERS: 'org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR'
-
-  kafka-rest-proxy:
-    image: confluentinc/cp-kafka-rest:5.0.0
-    networks:
-      - back
-    ports:
-      - "8082:8082"
-    environment:
-      KAFKA_REST_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_REST_LISTENERS: http://0.0.0.0:8082/
-      KAFKA_REST_SCHEMA_REGISTRY_URL: http://kafka-schema-registry:8081/
-      KAFKA_REST_HOST_NAME: kafka-rest-proxy
-      KAFKA_REST_BOOTSTRAP_SERVERS: PLAINTEXT://kafka-1:9091
-    depends_on:
-      - zookeeper
-      - kafka-1
-      - kafka-schema-registry
-
-  kafka-topics-ui:
-    image: landoop/kafka-topics-ui:0.9.4
-    networks:
-      - back
-    ports:
-      - "8000:8000"
-    environment:
-      KAFKA_REST_PROXY_URL: "http://kafka-rest-proxy:8082/"
-      PROXY: "true"
-    depends_on:
-      - zookeeper
-      - kafka-1
-      - kafka-schema-registry
-      - kafka-rest-proxy
+      SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: "INFO"
+      SCHEMA_REGISTRY_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR"
 
   kafka-connect:
-    image: confluentinc/cp-kafka-connect:5.0.0
+    image: confluentinc/cp-kafka-connect:${CP_VERSION}
     restart: unless-stopped
     depends_on:
       - zookeeper
@@ -265,15 +182,15 @@ services:
     networks:
       - back
     ports:
-      - "8083:8083"
+      - 8083:8083
     volumes:
       - ./apps/kafka-connect/libs:/usr/share/enkryptio
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:kafka-connect.ethvm.lan'
-      - 'traefik.port=8083'
-      - 'traefik.backend=kafka-connect'
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.frontend.rule=Host:kafka-connect.ethvm.${DOMAIN}"
+      - "traefik.port=8083"
+      - "traefik.backend=kafka-connect"
     environment:
       CONNECT_BOOTSTRAP_SERVERS: kafka-1:9091
       CONNECT_REST_PORT: 8083
@@ -296,24 +213,83 @@ services:
       CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
       CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/enkryptio
 
-  kafka-connect-ui:
-    image: landoop/kafka-connect-ui:0.9.4
+  # ----------------------------------------
+  # Helpers (Components that assists in dev)
+  # ----------------------------------------
+
+  kafka-rest-proxy:
+    image: confluentinc/cp-kafka-rest:${CP_VERSION}
     networks:
       - back
     ports:
-      - "8003:8000"
+      - 8082:8082
+    environment:
+      KAFKA_REST_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_REST_LISTENERS: http://0.0.0.0:8082/
+      KAFKA_REST_SCHEMA_REGISTRY_URL: http://kafka-schema-registry:8081/
+      KAFKA_REST_HOST_NAME: kafka-rest-proxy
+      KAFKA_REST_BOOTSTRAP_SERVERS: PLAINTEXT://kafka-1:9091
+    depends_on:
+      - zookeeper
+      - kafka-1
+      - kafka-schema-registry
+
+  kafka-topics-ui:
+    image: landoop/kafka-topics-ui:${KAFKA_UI_VERSION}
+    networks:
+      - back
+    ports:
+      - "8000:8000"
+    environment:
+      KAFKA_REST_PROXY_URL: "http://kafka-rest-proxy:8082/"
+      PROXY: "true"
+    depends_on:
+      - zookeeper
+      - kafka-1
+      - kafka-schema-registry
+      - kafka-rest-proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.frontend.rule=Host:kafka-ui.ethvm.${DOMAIN}"
+      - "traefik.frontend.passHostHeader=true"
+      - "traefik.backend=kafka-topics-ui"
+      - "traefik.port=8000"
+
+  kafka-connect-ui:
+    image: landoop/kafka-connect-ui:${KAFKA_UI_VERSION}
+    networks:
+      - back
+    ports:
+      - 8003:8000
     environment:
       CONNECT_URL: "http://kafka-connect:8083/"
       PROXY: "true"
     depends_on:
       - kafka-connect
+    labels:
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.frontend.rule=Host:kafka-connect-ui.ethvm.${DOMAIN}"
+      - "traefik.frontend.passHostHeader=true"
+      - "traefik.backend=kafka-connect-ui"
+      - "traefik.port=8003"
+
+  zoonavigator-api:
+    image: elkozmon/zoonavigator-api:${ZOONAVIGATOR_VERSION}
+    networks:
+      - back
+    environment:
+      SERVER_HTTP_PORT: 9000
+    depends_on:
+      - zookeeper
 
   zoonavigator-web:
-    image: elkozmon/zoonavigator-web:0.4.0
+    image: elkozmon/zoonavigator-web:${ZOONAVIGATOR_VERSION}
     networks:
       - back
     ports:
-      - "8004:8000"
+      - 8004:8000
     environment:
       API_HOST: "zoonavigator-api"
       API_PORT: 9000
@@ -321,12 +297,10 @@ services:
       - zoonavigator-api
     depends_on:
       - zoonavigator-api
-
-  zoonavigator-api:
-    image: elkozmon/zoonavigator-api:0.4.0
-    networks:
-      - back
-    environment:
-      SERVER_HTTP_PORT: 9000
-    depends_on:
-      - zookeeper
+    labels:
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.frontend.rule=Host:zookeeper-ui.ethvm.${DOMAIN}"
+      - "traefik.frontend.passHostHeader=true"
+      - "traefik.backend=zoonavigator-api"
+      - "traefik.port=8004"

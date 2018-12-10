@@ -1,0 +1,37 @@
+version: '3.6'
+
+volumes:
+  redis-volume:
+  mongodb-volume:
+
+services:
+
+  redis:
+    image: redis:${REDIS_VERSION}-alpine
+    restart: unless-stopped
+    volumes:
+      - redis-volume:/data
+    ports:
+      - 6379:6379
+
+  mongodb:
+    image: enkryptio/mongodb-dev:${MONGODB_VERSION}
+    restart: unless-stopped
+    volumes:
+      - mongodb-volume:/data/db
+      - ./datasets:/datasets
+    ports:
+      - 27017:27017
+    command:
+      - /bin/sh
+      - -c
+      - |
+          set -x
+          mongod --bind_ip 0.0.0.0 --replSet rs0 --quiet --slowms 10000 &
+          sleep 5
+          mongo --eval "rs.initiate()"
+          sleep 5
+          mongorestore --archive="/datasets/${ETH_SAMPLE_DATASET}"
+          kill -9 $$(pgrep mongod)
+          sleep 5
+          mongod --bind_ip 0.0.0.0 --replSet rs0 --quiet --slowms 10000

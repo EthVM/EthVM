@@ -1,72 +1,100 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
 
-# Give script sane defaults
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 
-# DEFAULT VARS
-PROJECTS=("bolt", "explorer", "api", "kafka-connect", "mongodb-install", "zookeeper")
-ORG="enkryptio"
+# import utils
+source ${SCRIPT_DIR}/utils.sh
 
-# Usage prints the help for this command.
-usage() {
-  >&2 echo "Usage:"
-  >&2 echo "    docker-build <command>"
-  >&2 echo ""
-  >&2 echo "Commands:"
-  >&2 echo "    build <project>  Build a docker image from this repo. Valid values: [${PROJECTS[*]}]"
-  >&2 echo "    push  <project>  Push the built image to the docker registry. Valid values: [${PROJECTS[*]}]"
-  exit 1
-}
-
-# ensure checks that whe have corresponding utilities installed
-ensure() {
-  if ! [ -x "$(command -v jq)" ]; then
-    >&2 echo "jq is necessary to be installed to run this script!"
-    exit 1
-  fi
-}
-
-# Build builds the docker image and tags it with the git sha and branch.
-build() {
-  local name="$1"
-  local version="$2"
-  local dockerfile="$3"
-  local path="$4"
-  docker build -t "$ORG/$name:$version" -f $dockerfile $path
-}
-
-# Push pushes all of the built docker images.
-push() {
-  local repo="$1"
-  docker push "$repo"
-}
-
-function prop {
-  grep $1 $2 | cut -d '=' -f2
-}
-
+# verify we have required utilities installed
 ensure
-case "$1" in
-  build)
-    case "$2" in
-      bolt) build "$2" "$(prop 'version' 'apps/bolt/version.properties')" "apps/bolt/Dockerfile" "apps/bolt" ;;
-      explorer) build "$2" "$(jq .version apps/ethvm/package.json -r)" "apps/ethvm/Dockerfile" "apps/" ;;
-      api) build "$2" "$(jq .version apps/server/package.json -r)" "apps/server/Dockerfile" "apps/" ;;
-      kafka-connect) build "$2" "$(prop 'version' 'docker/images/prod/kafka-connect/version.properties')" "docker/images/prod/kafka-connect/Dockerfile" "docker/images/prod/kafka-connect/" ;;
-      mongodb-install) build "$2" "$(prop 'version' 'docker/images/prod/mongodb-install/version.properties')" "docker/images/prod/mongodb-install/Dockerfile" "docker/images/prod/mongodb-install/" ;;
-      zookeeper) build "$2" "$(prop 'version' 'docker/images/prod/zookeeper/version.properties')" "docker/images/prod/zookeeper/Dockerfile" "docker/images/prod/zookeeper/" ;;
-    esac
+
+# invalid - prints invalid message
+invalid() {
+  >&2 echo "Invalid argument passed!"
+  >&2 echo ""
+}
+
+# usage - prints the help for this command
+usage() {
+  echo ""
+  echo "Builds different docker images easily for EthVM project."
+  echo ""
+  echo "Usage:"
+  echo "    ethvm docker-build <command>"
+  echo ""
+  echo "Commands:"
+  echo "    build <image>  Build a docker image from this repo."
+  echo "    push  <image>  Push an image to the registered docker registry."
+  echo "    help           Print version information and exit."
+  echo ""
+  echo "Images:"
+  echo "    $(jq -r '[.projects[].id] | join(", ")' $PROJECTS_PATH)"
+}
+
+# build - builds docker images
+build() {
+  local name=$(jq -r '.id' <<< "$1")
+  local dockerfile=$(eval echo -e $(jq -r '.dockerfile' <<< "$1"))
+  local context=$(eval echo -e $(jq -r '.context' <<< "$1"))
+  local raw_version=$(eval echo -e $(jq -r '.version' <<< "$1"))
+  local version=$(to_version "${raw_version}")
+
+  docker build -t "${ORG}/${name}:${version}" -f "${dockerfile}" "${context}"
+}
+
+# push - sends the built docker image to the registered registry
+push() {
+  local name=$(jq -r '.id' <<< "$1")
+  local raw_version=$(eval echo -e $(jq -r '.version' <<< "$1"))
+  local version=$(to_version $raw_version)
+
+  docker push "${ORG}/${name}:${version}"
+}
+
+process_subcommand() {
+  local action=$1
+  local image=$2
+
+  case ${image} in
+    *)
+      # Test if image var is empty
+      if [[ -z $image ]]; then
+        invalid
+        usage
+        exit 0
+      fi
+
+      # Iterate our projects
+      local builds=false
+      for project in $(jq -car '.projects[]' $PROJECTS_PATH); do
+        local id=$(jq -r '.id' <<< "$project")
+        if [[ $image == "all" || $image == $id ]]; then
+          $action "$project"
+          builds=true
+        fi
+      done
+
+      # Otherwise print error message, help and exit
+      if [[ $builds == false ]]; then
+        invalid
+        usage
+        exit 1
+      else
+        exit 0
+      fi
     ;;
-  push)
-    case "$2" in
-      bolt) push "$ORG/$2:$(prop 'version' 'apps/bolt/version.properties')" ;;
-      explorer) push "$ORG/$2:$(jq .version apps/ethvm/package.json -r)" ;;
-      api) push "$ORG/$2:$(jq .version apps/server/package.json -r)" ;;
-      kafka-connect) push "$ORG/$2:$(prop 'version' 'docker/images/prod/kafka-connect/version.properties')" ;;
-      mongodb-install) push "$ORG/$2:$(prop 'version' 'docker/images/prod/mongodb-install/version.properties')" ;;
-      zookeeper) push "$ORG/$2:$(prop 'version' 'docker/images/prod/zookeeper/version.properties')" ;;
-    esac
-    ;;
-  *) usage ;;
-esac
+  esac
+}
+
+# run - executes main script
+run() {
+  local command="${1:-""}"
+  local image="${2:-false}"
+
+  case ${command} in
+    build)  process_subcommand "build" $image ;;
+    push)   process_subcommand "push"  $image ;;
+    help|*) usage; exit 0                     ;;
+  esac
+}
+run "$@"
