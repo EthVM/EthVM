@@ -6,16 +6,16 @@
           <v-btn flat color="primary" class="black--text" icon :to="previousBlock()"> <v-icon>fas fa-angle-left</v-icon> </v-btn>
         </v-layout>
       </v-flex>
-      <v-flex  xs6 sm8 md10 pl-0>
+      <v-flex xs6 sm8 md10 pl-0>
         <v-layout row wrap align-center justify-start pl-0>
           <v-card-title class="title font-weight-bold">{{ $t('title.blockDetail') }}</v-card-title>
           <v-dialog v-if="hasUncles" v-model="dialog" max-width="700">
-            <v-btn round outline slot="activator" color="primary" class="text-capitalize" small
-              >Unlces
+            <v-btn round outline slot="activator" color="primary" class="text-capitalize" small>
+              {{ $t('title.uncles') }}
               <v-icon right>fa fa-angle-right</v-icon>
             </v-btn>
             <v-card>
-              <v-card-title class="title font-weight-bold">Uncles:</v-card-title>
+              <v-card-title class="title font-weight-bold">{{ $t('title.uncles') }}:</v-card-title>
               <v-divider class="lineGrey"></v-divider>
               <v-list>
                 <v-list-tile v-for="(uncle, index) in uncles" :key="index">
@@ -37,8 +37,8 @@
         </v-layout>
       </v-flex>
     </v-layout>
-        <v-layout v-if="isUncle" wrap row align-center justify-start pb-1>
-      <v-flex  xs6 sm8 md10 pl-0>
+    <v-layout v-if="isUncle" wrap row align-center justify-start pb-1>
+      <v-flex xs6 sm8 md10 pl-0>
         <v-layout row wrap align-center justify-start pl-0>
           <v-card-title class="title font-weight-bold">{{ $t('title.uncleDetail') }}</v-card-title>
         </v-layout>
@@ -121,10 +121,10 @@ export default Vue.extend({
     prev: {
       type: Number
     },
-    uncles :{
-      type: Array,
+    uncles: {
+      type: Array
     },
-    isNotMinedBlock:{
+    isNotMinedBlock: {
       type: Boolean,
       default: false
     }
@@ -196,23 +196,23 @@ export default Vue.extend({
       this.moreItems = [
         {
           title: this.$i18n.t('block.diff'),
-          details: this.block.getDifficulty()
+          detail: this.block.getDifficulty()
         },
         {
           title: this.$i18n.t('block.totalDiff'),
-          details: this.block.getTotalDifficulty()
+          detail: this.block.getTotalDifficulty()
         },
         {
           title: this.$i18n.t('block.nonce'),
-          details: this.block.getNonce()
+          detail: this.block.getNonce()
         },
         {
           title: this.$i18n.t('block.root'),
-          details: this.block.getStateRoot().toString()
+          detail: this.block.getStateRoot().toString()
         },
         {
           title: this.$i18n.t('block.data'),
-          details: this.block.getExtraData().toString()
+          detail: this.block.getExtraData().toString()
         }
         /*{
                 title: this.$i18n.t('block.data'),
@@ -278,10 +278,7 @@ export default Vue.extend({
       return this.showMore
     },
     hasUncles() {
-      if(this.block){
-        return this.block.getHasUncle()
-      }
-      return false
+      return this.block && this.block.getHasUncle()
     },
     mined() {
       if (this.isMined) {
@@ -290,16 +287,16 @@ export default Vue.extend({
       }
       return this.isMined
     },
-    formatTime(){
+    formatTime() {
       const date = new Date(this.block.getTimestamp()).toString()
-      return '('+ date +')'
+      return '(' + date + ')'
     },
-    minerReward(){
+    minerReward() {
       const minerrewards = ethUnits.convert(new Bn(this.block.getMinerReward()).toFixed(), 'wei', 'eth')
       return NumberFormatter('#,##0.##', minerrewards) + ' ' + this.$i18n.t('common.eth')
     },
-    uncleReward(){
-      const uncelerewards =  ethUnits.convert(new Bn(this.block.getUncleReward()).toFixed(), 'wei', 'eth')
+    uncleReward() {
+      const uncelerewards = ethUnits.convert(new Bn(this.block.getUncleReward()).toFixed(), 'wei', 'eth')
       return NumberFormatter('#,##0.##', uncelerewards) + ' ' + this.$i18n.t('common.eth')
     }
   }

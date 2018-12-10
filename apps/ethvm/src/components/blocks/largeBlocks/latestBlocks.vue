@@ -28,10 +28,10 @@
           <h5>{{ $t('tableHeader.blockN') }}</h5>
         </v-flex>
         <v-spacer></v-spacer>
-        <v-flex  v-if="blocks[0].getType() == 'uncle'" hidden-sm-and-down md2>
+        <v-flex v-if="blocks[0].getType() == 'uncle'" hidden-sm-and-down md2>
           <h5>{{ $t('title.position') }}</h5>
         </v-flex>
-        <v-flex  v-else hidden-sm-and-down md2>
+        <v-flex v-else hidden-sm-and-down md2>
           <h5>{{ $t('tableHeader.txs') }}</h5>
         </v-flex>
         <v-flex xs6 sm3 md2>

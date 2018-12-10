@@ -121,6 +121,7 @@ export default Vue.extend({
   mounted() {
     this.setItems()
     this.setMore()
+    console.log('Me ejecuto')
   },
   computed: {
     isUncle() {

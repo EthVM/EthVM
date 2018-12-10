@@ -48,7 +48,7 @@ export class Block {
 
   public getUncles(): string[] {
     if (!this.cache.getUncles) {
-      let uncles = []
+      const uncles = []
       this.block.uncles.forEach(b => {
         uncles.push('0x' + b)
       })
