@@ -28,10 +28,11 @@ kafka_connect_usage() {
 build_connector() {
   echo "Building connector..."
 
-  local kafka_connect_dir=$(cd ${ROOT_DIR}/apps/kafka-connect; pwd)
-  cd ${kafka_connect_dir}
+  local processing_dir=$(cd ${ROOT_DIR}/apps/processing; pwd)
+  local kafka_connect_dir=$(cd ${processing_dir}/kafka-connect; pwd)
+  cd ${processing_dir}
 
-  ./gradlew build
+  ./gradlew kafka-connect:build
   cp ${kafka_connect_dir}/build/libs/enkryptio-mongo-* ${kafka_connect_dir}/libs/
 
   echo "Restarting kafka connect (if running)..."
