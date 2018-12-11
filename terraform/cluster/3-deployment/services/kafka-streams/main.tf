@@ -1,31 +1,31 @@
-resource "kubernetes_deployment" "bolt_deployment" {
+resource "kubernetes_deployment" "kafka_streams_deployment" {
   metadata {
-    name      = "bolt"
+    name      = "kafka-streams"
     namespace = "${var.namespace}"
 
     labels {
-      app = "bolt"
+      app = "kafka-streams"
     }
   }
 
   spec {
     selector {
-      app = "bolt"
+      app = "kafka-streams"
     }
 
-    replicas = "${var.bolt_nodes}"
+    replicas = "${var.kafka_streams_nodes}"
 
     template {
       metadata {
         labels {
-          app = "bolt"
+          app = "kafka-streams"
         }
       }
 
       spec {
         container {
-          name              = "bolt"
-          image             = "enkryptio/bolt:${var.bolt_version}"
+          name              = "kafka-streams"
+          image             = "enkryptio/kafka-streams:${var.kafka_streams_version}"
           image_pull_policy = "IfNotPresent"
 
           env {

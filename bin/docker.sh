@@ -48,7 +48,7 @@ up() {
   esac
 }
 
-# up - spins up a clean dev environment (but it will not run eth client, neither bolt in order to control the flow of data)
+# up - spins up a clean dev environment (but it will not run eth client, neither kafka-streams in order to control the flow of data)
 up_default() {
   echo -e "Starting up containers...\n"
   docker-compose up -d --build
@@ -81,7 +81,7 @@ up_full() {
   echo "To be finished and tested properly..."
   # up
 
-  # echo "Starting up extra containers: ethereumj, bolt"
+  # echo "Starting up extra containers: ethereumj, kafka-streams"
   # ${DOCKER_COMPOSE} -f docker-compose.extra.yaml up -d --build
 }
 

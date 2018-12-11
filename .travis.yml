@@ -44,8 +44,8 @@ matrix:
         - "10"
     -
       env:
-        - ID=bolt-unit-tests
-        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/bolt
+        - ID=kafka-streams-unit-tests
+        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/kafka-streams
         - INSTALL=''
         - ACTION='./gradlew --no-daemon test'
       language: generic
