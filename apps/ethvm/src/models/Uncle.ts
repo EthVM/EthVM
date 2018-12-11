@@ -90,7 +90,7 @@ export class Uncle {
 
   public getStateRoot(): Hash {
     if (!this.cache.stateRoot) {
-      this.cache.stateRoot = this.uncle.stateRoot
+      this.cache.stateRoot = common.Hex(this.uncle.stateRoot)
     }
     return this.cache.stateRoot
   }

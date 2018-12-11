@@ -110,7 +110,7 @@ export class Block {
 
   public getStateRoot(): Hash {
     if (!this.cache.stateRoot) {
-      this.cache.stateRoot = this.block.header.stateRoot
+      this.cache.stateRoot = common.Hex(this.block.header.stateRoot)
     }
     return this.cache.stateRoot
   }
