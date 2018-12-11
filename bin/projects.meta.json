@@ -7,10 +7,10 @@
       "version": "${APPS_PATH}/server/package.json"
     },
     {
-      "id": "bolt",
-      "dockerfile": "${APPS_PATH}/bolt/Dockerfile",
-      "context": "${APPS_PATH}/bolt/",
-      "version": "${APPS_PATH}/bolt/version.properties"
+      "id": "kafka-streams",
+      "dockerfile": "${APPS_PATH}/kafka-streams/Dockerfile",
+      "context": "${APPS_PATH}/kafka-streams/",
+      "version": "${APPS_PATH}/kafka-streams/version.properties"
     },
     {
       "id": "ethereumj",

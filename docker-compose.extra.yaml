@@ -65,9 +65,9 @@ services:
   #      - 8546:8546
   #    command:  --rpc --rpcaddr '0.0.0.0' --rpcport '8545' --rpcapi 'db,eth,net,web3,personal' --ws --wsaddr '0.0.0.0' --wsapi 'db,eth,net,web3,personal' --wsport '8546' --wsorigins '*' --datadir '/data' --gcmode archive --syncmode full
 
-  bolt:
+  kafka-streams:
     build:
-      context: ./apps/bolt
+      context: ./apps/kafka-streams
       dockerfile: Dockerfile.dev
     restart: on-failure
     networks:
