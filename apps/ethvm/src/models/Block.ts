@@ -29,32 +29,40 @@ export class Block {
     //this.block.uncles.push(uncle)
   }
 
-  public getIsUncle(): boolean {
-    if (!this.cache.isUncle) {
-      if (this.block.uncles.length == 0) {
-        return (this.cache.isUncle = false)
+  public getHasUncle(): boolean {
+    if (!this.cache.getHasUncle) {
+      if (this.block.uncles && this.block.uncles.length == 0) {
+        return (this.cache.getHasUncle = false)
       }
-      return (this.cache.isUncle = true)
+      this.cache.getHasUncle = true
     }
-    return this.cache.isUncle
+    return this.cache.getHasUncle
+  }
+
+  public getIsUncle(): boolean {
+    if (!this.cache.getIsUncle) {
+      this.cache.getIsUncle = false
+    }
+    return this.cache.getIsUncle
   }
 
   public getUncles(): string[] {
-    return this.block.uncles
+    if (!this.cache.getUncles) {
+      const uncles = []
+      this.block.uncles.forEach(b => {
+        uncles.push('0x' + b)
+      })
+      this.cache.getUncles = uncles
+    }
+    return this.cache.getUncles
   }
-
-  // public getUncleHashes(): Hash[] {
-  //   return this.block.uncleHashes.map(_uncle => {
-  //     return common.Hash(_uncle)
-  //   })
-  // }
-
-  // public setUncleHashes(hashes: Hash[]): void {
-  //   this.block.uncleHashes = hashes
-  // }
 
   public getHash(): string {
     return '0x' + this.block.hash
+  }
+
+  public getType(): string {
+    return 'block'
   }
 
   public getNumber(): number {
@@ -63,17 +71,6 @@ export class Block {
 
   public getTransactionCount(): number {
     return this.block.transactions.length
-  }
-
-  public getTotalBlockReward(): EthValue {
-    if (!this.cache.totalBlockReward) {
-      let total = 0
-      for (const address in this.block.header.rewards) {
-        total = this.block.header.rewards[address] + total
-      }
-      this.cache.totalBlockReward = total
-    }
-    return this.cache.totalBlockReward
   }
 
   public getParentHash(): string {
@@ -99,21 +96,21 @@ export class Block {
 
   public getSha3Uncles(): string {
     if (!this.cache.sha3Uncles) {
-      this.cache.sha3Uncles = '0x' + this.block.header.unclesHash
+      this.cache.sha3Uncles = '0x' + this.block.header.sha3Uncles
     }
     return this.cache.sha3Uncles
   }
 
   public getLogsBloom(): Hex {
     if (!this.cache.logsBloom) {
-      this.cache.logsBloom = this.block.header.logsBloom
+      this.cache.logsBloom = common.Hex(this.block.header.logsBloom)
     }
     return this.cache.logsBloom
   }
 
   public getStateRoot(): Hash {
     if (!this.cache.stateRoot) {
-      this.cache.stateRoot = this.block.header.stateRoot
+      this.cache.stateRoot = common.Hex(this.block.header.stateRoot)
     }
     return this.cache.stateRoot
   }
@@ -148,7 +145,11 @@ export class Block {
 
   public getExtraData(): Hex {
     if (!this.cache.extraData) {
-      this.cache.extraData = common.Hex(this.block.header.extraData)
+      if (this.block.header.extraData) {
+        this.cache.extraData = common.Hex(this.block.header.extraData)
+      } else {
+        this.cache.extraData = common.Hex(Buffer.from('0'))
+      }
     }
     return this.cache.extraData
   }
@@ -213,18 +214,18 @@ export class Block {
     return this.cache.txFees
   }
 
-  public getBlockReward(): number {
+  public getMinerReward(): number {
     const rewards = this.block.header.rewards
-    if (!this.cache.blockReward) {
-      this.cache.blockReward = rewards[this.block.header.miner]
+    if (!this.cache.getMinerReward) {
+      this.cache.getMinerReward = rewards[this.block.header.miner]
     }
-    return this.cache.blockReward
+    return this.cache.getMinerReward
   }
 
   public getUncleReward(): number {
     if (!this.cache.uncleReward) {
       let total = 0
-      if (this.block.header.rewards[this.block.header.unclesHash]) {
+      if (this.block.header.rewards[this.block.header.sha3Uncles]) {
         return (this.cache.uncleReward = total)
       }
       for (const address in this.block.header.rewards) {
@@ -236,6 +237,17 @@ export class Block {
       this.cache.uncleReward = total
     }
     return this.cache.uncleReward
+  }
+
+  public getTotalReward(): EthValue {
+    if (!this.cache.getTotalReward) {
+      let total = 0
+      for (const address in this.block.header.rewards) {
+        total = this.block.header.rewards[address] + total
+      }
+      this.cache.getTotalReward = total
+    }
+    return this.cache.getTotalReward
   }
 
   public getStats(): BlockStats {

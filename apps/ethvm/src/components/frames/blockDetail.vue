@@ -1,20 +1,21 @@
 <template>
-  <v-container v-if="block != null" grid-list-lg class="mt-0">
+  <v-container grid-list-lg class="mb-0">
+    <bread-crumbs :newItems="getItems"></bread-crumbs>
     <v-layout row wrap justify-start class="mb-4">
-      <v-flex xs12>
-        <v-card fluid flat color="transparent">
-          <v-breadcrumbs large>
-            <v-icon slot="divider">fa fa-arrow-right</v-icon>
-            <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link"> {{ item.text }} </v-breadcrumbs-item>
-          </v-breadcrumbs>
-        </v-card>
+      <v-flex v-if="blockMined" xs12>
+        <block-block-detail
+          :block="block"
+          :uncles="uncles"
+          :isNotMinedBlock="isNotMinedBlock"
+          :isMined="true"
+        ></block-block-detail>
+      </v-flex>
+      <v-flex v-else xs12>
+        <block-block-detail :isMined="false" :isNotMinedBlock="isNotMinedBlock" :prev="getPrev()"></block-block-detail>
       </v-flex>
     </v-layout>
     <v-layout row wrap justify-start class="mb-4">
-      <v-flex xs12> <block-block-detail :block="block" :uncles="uncles"></block-block-detail> </v-flex>
-    </v-layout>
-    <v-layout row wrap justify-start class="mb-4">
-      <v-flex xs12>
+      <v-flex v-if="blockMined" xs12>
         <block-last-transactions
           v-if="transactions.length > 0"
           :transactions="transactions"
@@ -23,7 +24,18 @@
           class="mt-3"
         ></block-last-transactions>
         <v-card v-else flat color="white">
-          <v-card-text class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }} </v-card-text>
+          <v-layout column align-center justify-center ma-3>
+            <v-icon
+              v-if="transactionLoading"
+              class="text-xs-center fa fa-spinner fa-pulse fa-4x fa-fw primary--text"
+              large
+            ></v-icon>
+            <v-card-text
+              v-if="transactionLoading"
+              class="text-xs-center text-muted"
+            >{{ $t('block.loadingBlockTx') }}</v-card-text>
+            <v-card-text v-else class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }}</v-card-text>
+          </v-layout>
         </v-card>
       </v-flex>
     </v-layout>
@@ -54,58 +66,97 @@ export default Vue.extend({
       unixtimestamp: null,
       timestamp: null,
       transactions: [],
+      transactionLoading: Boolean,
+      isNotMinedBlock: false,
       items: [
-        {
-          text: this.$i18n.t('title.home'),
-          disabled: false,
-          link: '/'
-        },
         {
           text: this.$i18n.t('title.blocks'),
           disabled: false,
           link: '/blocks'
+        },
+        {
+          text: '',
+          disabled: true
         }
       ],
       details: []
     }
   },
   methods: {
-    setItems(num) {
-      const newText = this.$i18n.t('title.blockN') + ' ' + num
-      const newI = {
-        text: newText,
-        disabled: false,
-        link: '/'
-      }
-      this.items.push(newI)
-    },
-    setBlock(result) {
+    setRawBlock(result) {
       this.block = new Block(result)
+      this.setBlock()
+    },
+    setBlock() {
       this.uncles = this.block.getUncles()
-      this.setItems(this.block.getNumber())
+      if (!this.bNum) {
+        this.bNum = this.block.getNumber()
+      }
       this.$socket.emit(
         sEvents.getBlockTransactions,
         {
-          hash: this.blockRef.replace('0x', '')
+          hash: this.block.getHash().replace('0x', '')
         },
         (err, data) => {
+          this.transactionLoading = false
           this.transactions = data.map(_tx => {
             return new Tx(_tx)
           })
         }
       )
+    },
+    getPrev() {
+      return this.bNum - 1
     }
   },
   computed: {
+    getItems() {
+      if (this.bNum) {
+        this.items[1].text = this.$i18n.t('title.blockN') + ' ' + this.bNum
+      }
+      return this.items
+    },
     isUncle() {
       if (this.block && this.block.getIsUncle()) {
         return true
       }
       return false
+    },
+    blockMined() {
+      console.log('mined in frame', this.block)
+      return this.block
     }
   },
   mounted() {
+    this.transactionLoading = true
     /* Get Block Data: */
+    if (this.$store.getters.getBlocks.length > 0) {
+      this.lastMinedBlock = this.$store.getters.getBlocks[0]
+      if (Number(this.lastMinedBlock.block.number) < Number(this.blockRef)) {
+        this.isNotMinedBlock = true
+      }
+    }
+    this.$eventHub.$on(sEvents.newBlock, _block => {
+      if (this.$store.getters.getBlocks.length > 0) {
+        this.lastMinedBlock = this.$store.getters.getBlocks[0]
+        if (Number(this.lastMinedBlock.block.number) == Number(this.blockRef)) {
+          this.$socket.emit(
+            sEvents.getBlockByNumber,
+            {
+              number: Number(this.blockRef)
+            },
+            (error, result) => {
+              if (result) {
+                this.setRawBlock(result)
+              }
+            }
+          )
+        }
+        if (Number(this.lastMinedBlock.block.number) < Number(this.blockRef)) {
+          this.isNotMinedBlock = true
+        }
+      }
+    })
     if (this.blockRef.includes('0x')) {
       this.$socket.emit(
         sEvents.getBlock,
@@ -114,19 +165,20 @@ export default Vue.extend({
         },
         (error, result) => {
           if (result) {
-            this.setBlock(result)
+            this.setRawBlock(result)
           }
         }
       )
     } else {
+      this.bNum = Number(this.blockRef)
       this.$socket.emit(
         sEvents.getBlockByNumber,
         {
-          number: this.blockRef
+          number: Number(this.blockRef)
         },
         (error, result) => {
           if (result) {
-            this.setBlock(result)
+            this.setRawBlock(result)
           }
         }
       )

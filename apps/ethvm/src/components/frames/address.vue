@@ -1,17 +1,10 @@
 <template>
-  <v-container grid-list-lg class="mt-0">
+  <v-container grid-list-lg class="mb-0">
+    <bread-crumbs :newItems="items"></bread-crumbs>
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
-        <v-card fluid flat color="transparent">
-          <v-breadcrumbs large>
-            <v-icon slot="divider">fa fa-arrow-right</v-icon>
-            <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link"> {{ item.text }} </v-breadcrumbs-item>
-          </v-breadcrumbs>
-        </v-card>
+        <address-detail :account="account"></address-detail>
       </v-flex>
-    </v-layout>
-    <v-layout row wrap justify-start class="mb-4">
-      <v-flex xs12> <address-detail :account="account"></address-detail> </v-flex>
     </v-layout>
     <!-- End Address Details -->
     <!-- Tab Menu -->
@@ -29,23 +22,28 @@
           :key="item.id"
           :href="'#tab-' + item.id"
           ripple
-        >
-          {{ item.title }}
-        </v-tab>
+        >{{ item.title }}</v-tab>
         <v-tabs-slider color="primary" class="mb-0" style="height: 4px;"></v-tabs-slider>
       </v-tabs>
       <v-tabs-items v-model="activeTab" style="border-top: 1px solid #efefef">
         <!-- Transactions -->
         <v-tab-item value="tab-0">
-          <block-address-tx v-if="account.txs" :address="account.address" :transactions="account.txs"></block-address-tx>
+          <block-address-tx
+            v-if="account.txs"
+            :address="account.address"
+            :transactions="account.txs"
+          ></block-address-tx>
           <error-no-data v-else></error-no-data>
         </v-tab-item>
         <!-- Tokens -->
         <v-tab-item value="tab-1">
           <div v-if="!tokenError">
-            <div v-if="tokensLoaded"><block-token-tracker :tokens="account.tokens" :holder="account.address"></block-token-tracker></div>
+            <div v-if="tokensLoaded">
+              <block-token-tracker :tokens="account.tokens" :holder="account.address"></block-token-tracker>
+            </div>
             <v-card flat v-else class="loading-tokens">
-              <i class="fa fa-spinner fa-pulse fa-4x fa-fw"></i> <span class="sr-only">{{ $t('message.load') }}</span>
+              <i class="fa fa-spinner fa-pulse fa-4x fa-fw"></i>
+              <span class="sr-only">{{ $t('message.load') }}</span>
             </v-card>
           </div>
           <error-no-data v-else></error-no-data>
@@ -53,7 +51,12 @@
         <!-- End Tokens -->
         <!-- Pending Transactions -->
         <v-tab-item value="tab-2">
-          <block-address-tx v-if="account.pendingTxs" :address="account" :transactions="account.pendingTxs" :isPending="true"></block-address-tx>
+          <block-address-tx
+            v-if="account.pendingTxs"
+            :address="account"
+            :transactions="account.pendingTxs"
+            :isPending="true"
+          ></block-address-tx>
           <error-no-data v-else></error-no-data>
         </v-tab-item>
         <v-tab-item v-if="account.isMiner" value="tab-3">
@@ -122,11 +125,6 @@ export default Vue.extend({
         conCreator: false
       },
       items: [
-        {
-          text: this.$i18n.t('title.home'),
-          disabled: false,
-          link: '/'
-        },
         {
           text: this.$i18n.t('title.address'),
           disabled: true

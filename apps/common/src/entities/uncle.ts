@@ -1,8 +1,12 @@
 export interface Uncle {
   parentHash?: string
-  unclesHash?: string
+  sha3Uncles?: string
+  uncleHeight?:number
+  blockHeight?:number
+  position?:number
+  hash?: string
   timestamp?: number
-  nonce?: Buffer
+  nonce?: string
   miner?: string
   rewards?: any
   difficulty?: number

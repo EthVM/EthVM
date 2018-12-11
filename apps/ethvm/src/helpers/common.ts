@@ -1,4 +1,4 @@
-import { Address, EthValue, Hash, Hex, HexNumber, HexTime } from '@app/models'
+import { Address, EthValue, Hash, Hex, HexNumber, HexTime, WeiValue } from '@app/models'
 
 const common = {
   Hash: (_hash: Buffer): Hash => {
@@ -26,7 +26,10 @@ const common = {
     _hex = _hex.substr(0, 2) === '0x' ? _hex.substr(2) : _hex
     _hex = _hex.length % 2 ? '0' + _hex : _hex
     return new Buffer(_hex, 'hex')
-  }
+  },
+  WeiValue: (_value: number): WeiValue => {
+    return new WeiValue(_value)
+  },
 }
 
 export { common }
