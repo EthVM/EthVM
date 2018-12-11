@@ -198,11 +198,11 @@ export default Vue.extend({
         },
         {
           title: this.$i18n.t('block.reward'),
-          detail: this.minerReward
+          detail: common.WeiValue(this.block.getMinerReward()).toEthFormated() + '  ' + this.$i18n.t('common.eth')
         },
         {
           title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward'),
-          detail: this.uncleReward
+          detail: common.WeiValue(this.block.getUncleReward()).toEthFormated() + ' ' + this.$i18n.t('common.eth')
         },
         {
           title: this.$i18n.t('block.pHash'),
@@ -324,14 +324,6 @@ export default Vue.extend({
     formatTime() {
       const date = new Date(this.block.getTimestamp()).toString()
       return '(' + date + ')'
-    },
-    minerReward() {
-      const minerrewards = ethUnits.convert(new Bn(this.block.getMinerReward()).toFixed(), 'wei', 'eth')
-      return NumberFormatter('#,##0.##', minerrewards) + ' ' + this.$i18n.t('common.eth')
-    },
-    uncleReward() {
-      const uncelerewards = ethUnits.convert(new Bn(this.block.getUncleReward()).toFixed(), 'wei', 'eth')
-      return NumberFormatter('#,##0.##', uncelerewards) + ' ' + this.$i18n.t('common.eth')
     }
   }
 })
