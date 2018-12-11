@@ -13,6 +13,6 @@
 
   <logger name="org.apache.kafka" level="WARN"/>
   <logger name="io.enkrypt" level="INFO"/>
-  <logger name="io.enkrypt.processing.processors.StateProcessor" level="INFO"/>
+  <logger name="io.enkrypt.kafka.streams.processors.StateProcessor" level="INFO"/>
 
 </configuration>
