@@ -6,8 +6,8 @@ const toBlock = (block: any): Block => {
   if (block.header.parentHash) {
     b.header.parentHash = block.header.parentHash
   }
-  if (block.header.unclesHash) {
-    b.header.unclesHash = block.header.unclesHash
+  if (block.header.sha3Uncles) {
+    b.header.sha3Uncles = block.header.sha3Uncles
   }
   if (block.header.timestamp) {
     b.header.timestamp = block.header.timestamp
@@ -80,7 +80,10 @@ const toBlock = (block: any): Block => {
   b.number = block.number
   b.hash = block.hash
   b.transactions = block.transactions
-  b.uncles = block.uncles
+  b.uncles = []
+  block.uncles.forEach(element => {
+    b.uncles.push(element.hash)
+  })
   return b
 }
 

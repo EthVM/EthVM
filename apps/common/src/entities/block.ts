@@ -5,7 +5,7 @@ export interface SmallBlock {
 
 export interface Header {
   parentHash: string
-  unclesHash?: string
+  sha3Uncles?: string
   timestamp?: number
   nonce?: string
   miner: string

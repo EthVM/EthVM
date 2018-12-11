@@ -69,8 +69,8 @@ export default Vue.extend({
               routerLink: '/blocks'
             },
             {
-              text: this.$i18n.t('title.uncles')
-              // routerLink: '/uncles',
+              text: this.$i18n.t('title.uncles'),
+              routerLink: '/uncles'
             }
           ]
         },
