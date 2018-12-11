@@ -1,12 +1,14 @@
 package io.enkrypt.kafka.streams.utils
 
 import io.enkrypt.avro.common.ContractType
+import io.enkrypt.kafka.streams.extensions.byteArray
 import io.enkrypt.kafka.streams.utils.TokenContract.Companion.DECIMALS
 import io.enkrypt.kafka.streams.utils.TokenContract.Companion.NAME
 import io.enkrypt.kafka.streams.utils.TokenContract.Companion.SYMBOL
 import io.enkrypt.kafka.streams.utils.TokenContract.Companion.TOTAL_SUPPLY
 import io.enkrypt.kafka.streams.extensions.indexByteArrayOf
 import org.ethereum.crypto.HashUtil
+import java.nio.ByteBuffer
 
 /**
  * This object tries to detect ERC20 and ERC721 smart contract tokens by verifying the signatures in the raw smart contract input.
@@ -21,6 +23,8 @@ object StandardTokenDetector {
     ERC721TokenContract(),
     CryptoKittiesTokenContract()
   )
+
+  fun detect(input: ByteBuffer): Pair<ContractType, TokenContractMatchResult> = detect(input.byteArray()!!)
 
   fun detect(input: ByteArray): Pair<ContractType, TokenContractMatchResult> {
     for (detector in detectors) {

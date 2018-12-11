@@ -7,6 +7,14 @@ import org.ethereum.util.ByteUtil
 import java.math.BigInteger
 import java.nio.ByteBuffer
 
+fun FungibleTokenTransferRecord.reverse(): FungibleTokenTransferRecord =
+  FungibleTokenTransferRecord.newBuilder(this)
+    .setAmount(this.amountBI!!.negate())
+    .build()
+
+val FungibleTokenTransferRecord.amountBI: BigInteger?
+  get() = getAmount().bigInteger()
+
 fun FungibleTokenTransferRecord.Builder.setAmount(amount: BigInteger): FungibleTokenTransferRecord.Builder =
   this.setAmount(ByteBuffer.wrap(ByteUtil.bigIntegerToBytes(amount)))
 

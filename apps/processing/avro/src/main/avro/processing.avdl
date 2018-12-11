@@ -3,23 +3,40 @@ protocol Processing {
 
   import idl "common.avdl";
 
+  // fungible tokens
+
+  record FungibleTokenTransferRecord {
+
+    boolean reverse = false;
+
+    union { null, io.enkrypt.avro.common.Data20 } contract;
+    io.enkrypt.avro.common.Data20 from;
+    io.enkrypt.avro.common.Data20 to;
+    bytes amount;
+
+  }
+
   record FungibleTokenBalanceKeyRecord {
     union { null, io.enkrypt.avro.common.Data20 } contract;
     io.enkrypt.avro.common.Data20 address;
   }
 
-  record FungibleTokenTransferRecord {
-    io.enkrypt.avro.common.Data20 from;
-    io.enkrypt.avro.common.Data20 to;
-    bytes amount;
-
-  /* null if the token is ETH */
-    union { null, io.enkrypt.avro.common.Data20 } contract;
-
-  }
-
   record FungibleTokenBalanceRecord {
     bytes amount;
+  }
+
+
+
+  // Non fungible tokens
+
+  record NonFungibleTokenTransferRecord {
+
+    boolean reverse = false;
+
+    io.enkrypt.avro.common.Data20 contract;
+    io.enkrypt.avro.common.Data20 from;
+    io.enkrypt.avro.common.Data20 to;
+    bytes tokenId;
   }
 
   record NonFungibleTokenBalanceKeyRecord {
@@ -27,32 +44,11 @@ protocol Processing {
     bytes tokenId;
   }
 
-  record NonFungibleTokenTransferRecord {
-    io.enkrypt.avro.common.Data20 contract;
-    io.enkrypt.avro.common.Data20 from;
-    io.enkrypt.avro.common.Data20 to;
-    bytes tokenId;
-
-  }
-
   record NonFungibleTokenBalanceRecord {
     io.enkrypt.avro.common.Data20 address;
   }
 
-  record MetricKeyRecord {
-    long `date`;
-    string name;
-  }
-
-  record MetricRecord {
-
-    union { null, int } intValue = null;
-    union { null, long } longValue = null;
-    union { null, float } floatValue = null;
-    union { null, double } doubleValue = null;
-    union { null, bytes } bigIntegerValue = null;
-
-  }
+  // contracts
 
   record ContractKeyRecord {
 
@@ -62,19 +58,24 @@ protocol Processing {
 
   record ContractCreationRecord {
 
-    io.enkrypt.avro.common.ContractType type;
+    boolean reverse = false;
 
+    io.enkrypt.avro.common.ContractType type;
     io.enkrypt.avro.common.Data20 creator;
-    bytes data;
     io.enkrypt.avro.common.Data32 txHash;
     io.enkrypt.avro.common.Data32 blockHash;
+    io.enkrypt.avro.common.Data20 address;
+    bytes data;
 
   }
 
   record ContractSuicideRecord {
 
+    boolean reverse = false;
+
     io.enkrypt.avro.common.Data32 txHash;
     io.enkrypt.avro.common.Data32 blockHash;
+    io.enkrypt.avro.common.Data20 address;
 
   }
 
@@ -120,5 +121,23 @@ protocol Processing {
     union { null, string } website;
 
   }
+
+//
+
+  record MetricKeyRecord {
+    long `date`;
+    string name;
+  }
+
+  record MetricRecord {
+
+    union { null, int } intValue = null;
+    union { null, long } longValue = null;
+    union { null, float } floatValue = null;
+    union { null, double } doubleValue = null;
+    union { null, bytes } bigIntegerValue = null;
+
+  }
+
 
 }

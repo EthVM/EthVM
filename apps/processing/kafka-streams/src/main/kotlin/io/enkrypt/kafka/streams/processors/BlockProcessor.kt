@@ -1,28 +1,19 @@
 package io.enkrypt.kafka.streams.processors
 
 import arrow.core.Option
-import io.enkrypt.avro.capture.BlockKeyRecord
-import io.enkrypt.avro.capture.BlockRecord
+import io.enkrypt.avro.capture.*
 import io.enkrypt.avro.common.Data20
-import io.enkrypt.avro.processing.ContractCreationRecord
-import io.enkrypt.avro.processing.ContractKeyRecord
-import io.enkrypt.avro.processing.ContractSuicideRecord
-import io.enkrypt.avro.processing.FungibleTokenBalanceKeyRecord
-import io.enkrypt.avro.processing.FungibleTokenBalanceRecord
-import io.enkrypt.avro.processing.MetricKeyRecord
-import io.enkrypt.avro.processing.MetricRecord
-import io.enkrypt.avro.processing.NonFungibleTokenBalanceKeyRecord
-import io.enkrypt.avro.processing.NonFungibleTokenBalanceRecord
+import io.enkrypt.avro.processing.*
 import io.enkrypt.kafka.streams.BoltSerdes
 import io.enkrypt.kafka.streams.Topics
-import io.enkrypt.kafka.streams.utils.ERC20Abi
-import io.enkrypt.kafka.streams.utils.ERC721Abi
-import io.enkrypt.kafka.streams.utils.StandardTokenDetector
+import io.enkrypt.kafka.streams.extensions.amountBI
 import io.enkrypt.kafka.streams.extensions.bigInteger
 import io.enkrypt.kafka.streams.extensions.byteArray
 import io.enkrypt.kafka.streams.extensions.byteBuffer
-import io.enkrypt.kafka.streams.models.BlockStatistic
-import io.enkrypt.kafka.streams.models.BlockStatistics
+import io.enkrypt.kafka.streams.models.*
+import io.enkrypt.kafka.streams.utils.ERC20Abi
+import io.enkrypt.kafka.streams.utils.ERC721Abi
+import io.enkrypt.kafka.streams.utils.StandardTokenDetector
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KeyValue
@@ -37,20 +28,16 @@ import org.apache.kafka.streams.processor.ProcessorContext
 import org.apache.kafka.streams.state.KeyValueStore
 import org.apache.kafka.streams.state.Stores
 import org.ethereum.crypto.HashUtil
-import org.ethereum.util.ByteUtil
 import java.math.BigInteger
 import java.nio.ByteBuffer
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
-import java.util.Properties
+import java.util.*
 
 class BlockProcessor : AbstractKafkaProcessor() {
 
-  companion object {
-    val ETHER_CONTRACT_ADDRESS = Data20(ByteUtil.hexStringToBytes("0000000000000000000000000000000000000000"))
-  }
 
   override val id: String = "block-processor"
 
@@ -85,311 +72,302 @@ class BlockProcessor : AbstractKafkaProcessor() {
 
     gatedStream.foreach { k, _ -> logger.info { "Processing block number = ${k.getNumber().bigInteger()}" } }
 
-    // generate various events based on tx data
+    // process into a stream of chain events
 
-    val txEvents = gatedStream
-      .mapValues { _, v ->
-        val etherDeltas = this.generateEtherBalanceDeltas(v)
-        val tokenData = this.generateTokenData(v)
-        etherDeltas.concat(tokenData)
-      }
+    val chainEvents = gatedStream
+      .flatMapValues(this::processBlock)
 
-    // forward the tx events to their relevant topics
+    // fungible token transfers
 
-    txEvents
-      .flatMap { _, v -> v.fungibleBalanceDeltas }
-      .mapValues { v -> FungibleTokenBalanceRecord.newBuilder().setAmount(ByteBuffer.wrap(v.toByteArray())).build() }
-      .to(Topics.FungibleTokenMovements, Produced.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance()))
+    chainEvents
+      .filter{ _, e -> e.type == ChainEventType.FungibleBalanceTransfer }
+      .mapValues { v -> v.fungibleTransfer }
+      .flatMap{ _, v ->
 
-    txEvents
-      .flatMap { _, v -> v.nonFungibleBalanceDeltas }
-      .mapValues { v -> NonFungibleTokenBalanceRecord.newBuilder().setAddress(v).build() }
-      .to(Topics.NonFungibleTokenBalances, Produced.with(BoltSerdes.NonFungibleTokenBalanceKey(), BoltSerdes.NonFungibleTokenBalance()))
+        val reverse = v.getReverse()
 
-    txEvents
-      .flatMap { _, v ->
-        v.contractCreations.map { c ->
+        // double entry style book-keeping
 
-          val key = ContractKeyRecord.newBuilder().setAddress(c.key).build()
-          val value = c.value.first
-          val reverse = c.value.second
+        val fromBalance = KeyValue(
+          FungibleTokenBalanceKeyRecord.newBuilder()
+            .setContract(v.getContract())
+            .setAddress(v.getFrom())
+            .build(),
+          FungibleTokenBalanceRecord.newBuilder()
+            .setAmount(if(reverse) { v.getAmount() } else { v.amountBI!!.negate().byteBuffer() })
+            .build()
+        )
 
-          if (reverse) {
-            KeyValue(key, null)   // tombstone
-          } else {
-            KeyValue(key, value)
-          }
-        }
-      }
-      .to(Topics.ContractCreations, Produced.with(BoltSerdes.ContractKey(), BoltSerdes.ContractCreation()))
+        val toBalance = KeyValue(
+          FungibleTokenBalanceKeyRecord.newBuilder()
+            .setContract(v.getContract())
+            .setAddress(v.getTo())
+            .build(),
+          FungibleTokenBalanceRecord.newBuilder()
+            .setAmount(if(reverse) { v.amountBI!!.negate().byteBuffer() } else { v.getAmount() })
+            .build()
+        )
 
-    txEvents
-      .flatMap { _, v ->
-        v.contractSuicides.map { c ->
+        listOf(fromBalance, toBalance)
 
-          val key = ContractKeyRecord.newBuilder().setAddress(c.key).build()
-          val value = c.value.first
-          val reverse = c.value.second
+      }.to(Topics.FungibleTokenMovements, Produced.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance()))
 
-          if (reverse) {
-            KeyValue(key, null)   // tombstone
-          } else {
-            KeyValue(key, value)
-          }
+    // non fungible token transfers
 
-        }
-      }
-      .to(Topics.ContractSuicides, Produced.with(BoltSerdes.ContractKey(), BoltSerdes.ContractSuicide()))
+    chainEvents
+      .filter{ _, e -> e.type == ChainEventType.NonFungibleBalanceTransfer }
+      .mapValues { v -> v.nonFungibleTransfer }
+      .map{ _, v ->
+
+        val reverse = v.getReverse()
+
+        KeyValue(
+          NonFungibleTokenBalanceKeyRecord.newBuilder()
+            .setContract(v.getContract())
+            .setTokenId(v.getTokenId())
+            .build(),
+          NonFungibleTokenBalanceRecord.newBuilder()
+            .setAddress(if(reverse) { v.getFrom() } else { v.getTo() })
+            .build()
+        )
+
+      }.to(Topics.NonFungibleTokenBalances, Produced.with(BoltSerdes.NonFungibleTokenBalanceKey(), BoltSerdes.NonFungibleTokenBalance()))
+
+    // contract creations
+
+    chainEvents
+      .filter{ _, e -> e.type == ChainEventType.ContractCreation }
+      .mapValues { v -> v.contractCreation }
+      .map{ _, v ->
+
+        val reverse = v.getReverse()
+
+        KeyValue(
+          ContractKeyRecord.newBuilder()
+            .setAddress(v.getAddress())
+            .build(),
+          if(reverse) { null } else { v }
+        )
+
+      }.to(Topics.ContractCreations, Produced.with(BoltSerdes.ContractKey(), BoltSerdes.ContractCreation()))
+
+    // contract suicides
+
+    chainEvents
+      .filter{ _, e -> e.type == ChainEventType.ContractSuicide }
+      .mapValues { v -> v.contractSuicide }
+      .map{ _, v ->
+
+        val reverse = v.getReverse()
+
+        KeyValue(
+          ContractKeyRecord.newBuilder()
+            .setAddress(v.getAddress())
+            .build(),
+          if(reverse) { null } else { v }
+        )
+
+      }.to(Topics.ContractSuicides, Produced.with(BoltSerdes.ContractKey(), BoltSerdes.ContractSuicide()))
 
     // statistics
 
     blockStream
-      .flatMap { _, block ->
-
-        val (
-          totalTxs,
-          numSuccessfulTxs,
-          numFailedTxs,
-          numPendingTxs,
-          totalDifficulty,
-          totalGasPrice,
-          avgGasPrice,
-          totalTxsFees,
-          avgTxsFees
-        ) = BlockStatistics.forBlock(block)
-
-        val instant = Instant.ofEpochSecond(block.getHeader().getTimestamp())
-        val dateTime = ZonedDateTime.ofInstant(instant, ZoneOffset.UTC)
-        val startOfDayEpoch = dateTime.truncatedTo(ChronoUnit.DAYS).toInstant().epochSecond
-
-        val keyBuilder = MetricKeyRecord
-          .newBuilder()
-          .setDate(startOfDayEpoch)
-
-        listOf(
-          KeyValue(
-            keyBuilder.setName(BlockStatistic.TotalTxs.name).build(),
-            MetricRecord.newBuilder().setIntValue(totalTxs).build()
-          ),
-          KeyValue(
-            keyBuilder.setName(BlockStatistic.NumSuccessfulTxs.name).build(),
-            MetricRecord.newBuilder().setIntValue(numSuccessfulTxs).build()
-          ),
-          KeyValue(
-            keyBuilder.setName(BlockStatistic.NumFailedTxs.name).build(),
-            MetricRecord.newBuilder().setIntValue(numFailedTxs).build()
-          ),
-          KeyValue(
-            keyBuilder.setName(BlockStatistic.NumPendingTxs.name).build(),
-            MetricRecord.newBuilder().setIntValue(numPendingTxs).build()
-          ),
-          KeyValue(
-            keyBuilder.setName(BlockStatistic.TotalDifficulty.name).build(),
-            MetricRecord.newBuilder().setBigIntegerValue(totalDifficulty.byteBuffer()).build()
-          ),
-          KeyValue(
-            keyBuilder.setName(BlockStatistic.TotalGasPrice.name).build(),
-            MetricRecord.newBuilder().setBigIntegerValue(totalGasPrice.byteBuffer()).build()
-          ),
-          KeyValue(
-            keyBuilder.setName(BlockStatistic.AvgGasPrice.name).build(),
-            MetricRecord.newBuilder().setBigIntegerValue(avgGasPrice.byteBuffer()).build()
-          ),
-          KeyValue(
-            keyBuilder.setName(BlockStatistic.TotalTxsFees.name).build(),
-            MetricRecord.newBuilder().setBigIntegerValue(totalTxsFees.byteBuffer()).build()
-          ),
-          KeyValue(
-            keyBuilder.setName(BlockStatistic.AvgTxsFees.name).build(),
-            MetricRecord.newBuilder().setBigIntegerValue(avgTxsFees.byteBuffer()).build()
-          )
-        )
-
-      }.to(Topics.BlockMetrics, Produced.with(BoltSerdes.MetricKey(), BoltSerdes.Metric()))
+      .flatMap { _, block -> calculateStatistics(block) }
+      .to(Topics.BlockMetrics, Produced.with(BoltSerdes.MetricKey(), BoltSerdes.Metric()))
 
     // Generate the topology
     return builder.build()
   }
 
-  private fun generateEtherBalanceDeltas(block: BlockRecord): TransactionData {
+  private fun processBlock(block: BlockRecord) =
+      processPremineBalances(block) +
+      processBlockRewards(block) +
+      processTransactions(block)
 
-    val reverse = block.getReverse()
+  private fun processPremineBalances(block: BlockRecord) =
+    block.getPremineBalances()
+      .map { ChainEvent.fungibleTransfer(StaticAddresses.etherZero, it.getAddress(), it.getBalance(), block.getReverse()) }
 
-    var fungible = listOf<KeyValue<FungibleTokenBalanceKeyRecord, BigInteger>>()
-
-    // premine balances
-
-    if (block.getPremineBalances() != null) {
-      // Genesis block only
-      block.getPremineBalances()
-        .forEach { p ->
-          fungible += generateBalanceDeltas(
-            null,
-            ETHER_CONTRACT_ADDRESS,
-            p.getAddress(),
-            p.getBalance().bigInteger()!!,
-            reverse
-          )
-        }
-
-    }
-
-    // rewards
-
+  private fun processBlockRewards(block: BlockRecord) =
     block.getRewards()
-      .forEach { e ->
-        fungible += generateBalanceDeltas(
-          null,
-          ETHER_CONTRACT_ADDRESS,
-          e.getAddress(),
-          e.getReward().bigInteger()!!,
-          reverse
-        )
-      }
+      .map{ ChainEvent.fungibleTransfer(StaticAddresses.etherZero, it.getAddress(), it.getReward(), block.getReverse()) }
 
-    // ether transactions
-
-    block
-      .getTransactions()
-      .zip(block.getTransactionReceipts())
-      .filter { (tx, _) -> !(tx.getFrom() == null || tx.getTo() == null || tx.getValue() == null) }
-      .forEach { (tx, _) ->
-        fungible += generateBalanceDeltas(
-          null,
-          tx.getFrom(),
-          tx.getTo(),
-          tx.getValue().bigInteger()!!,
-          reverse
-        )
-      }
-
-    return TransactionData(fungible, emptyList(), emptyMap(), emptyMap())
-  }
-
-  private fun generateTokenData(block: BlockRecord): TransactionData {
-
-    val reverse = block.getReverse()
-
-    var fungible = listOf<KeyValue<FungibleTokenBalanceKeyRecord, BigInteger>>()
-    var nonFungible = listOf<KeyValue<NonFungibleTokenBalanceKeyRecord, Data20>>()
-    var contractCreations = mapOf<Data20, Pair<ContractCreationRecord, Boolean>>()
-    var contractSuicides = mapOf<Data20, Pair<ContractSuicideRecord, Boolean>>()
-
+  private fun processTransactions(block: BlockRecord) =
     block.getTransactions()
       .zip(block.getTransactionReceipts())
-      .forEach { (tx, receipt) ->
+      .map{ (tx, receipt) -> processTransaction(block, tx, receipt) }
+      .flatten()
 
-        // contract creation
+  private fun processTransaction(block: BlockRecord, tx: TransactionRecord, receipt: TransactionReceiptRecord): List<ChainEvent> {
 
-        if (tx.getTo() == null && tx.getInput() != null) {
+    val reverse = block.getReverse()
 
-          val contractAddress = Data20(HashUtil.calcNewAddr(tx.getFrom().bytes(), tx.getNonce().byteArray()))
+    var events = listOf<ChainEvent>()
 
-          // detect contract type
-          val (contractType, _) = StandardTokenDetector.detect(tx.getInput().byteArray()!!)
+    val blockHash = block.getHeader().getHash()
+    val txHash = tx.getHash()
 
-          val value = ContractCreationRecord
-            .newBuilder()
-            .setType(contractType)
-            .setCreator(tx.getFrom())
-            .setBlockHash(block.getHeader().getHash())
-            .setTxHash(tx.getHash())
-            .setData(tx.getInput())
-            .build()
+    val from = tx.getFrom()
+    val to = tx.getTo()
+    val value = tx.getValue()
+    val data = tx.getInput()
 
-          contractCreations += contractAddress to Pair(value, reverse)
-        }
+    // simple ether transfer
+    if(!(from == null || to == null || value == null)) {
+      events += ChainEvent.fungibleTransfer(from, to, value, reverse)
+    }
 
-        // contract suicides
+    // contract creation
+    if(tx.getCreates() != null) {
+      val (contractType, _) = StandardTokenDetector.detect(data)
+      events += ChainEvent.contractCreation(contractType, from, blockHash, txHash, tx.getCreates(), data, reverse)
+    }
 
-        receipt.getDeletedAccounts()
-          .forEach { contractAddress ->
+    // contract suicides
+    receipt.getDeletedAccounts()
+      .forEach { events += ChainEvent.contractSuicide(blockHash, txHash, it, reverse) }
 
-            val value = ContractSuicideRecord
-              .newBuilder()
-              .setBlockHash(block.getHeader().getHash())
-              .setTxHash(tx.getHash())
-              .build()
+    // token transfers
 
-            contractSuicides += contractAddress to Pair(value, reverse)
+    receipt.getLogs().forEach { log ->
 
-          }
+      val topics = log.getTopics().toList()
+      val logData = log.getData().array()
 
-        // token transfers
+      // ERC20 transfer event has the same signature as ERC721 so we use this initial match to detect any
+      // transfer event
 
-        receipt.getLogs().forEach { log ->
+      ERC20Abi.matchEvent(log.getTopics())
+        .filter { it.name == ERC20Abi.EVENT_TRANSFER }
+        .fold({ Unit }, {
 
-          val topics = log.getTopics().toList()
-          val data = log.getData().array()
+          val erc20Transfer = ERC20Abi.decodeTransferEvent(logData, topics)
+          val erc721Transfer = if (erc20Transfer.isDefined()) Option.empty() else ERC721Abi.decodeTransferEvent(logData, topics)
 
-          // ERC20 transfer event has the same signature as ERC721 so we use this initial match to detect any
-          // transfer event
-
-          ERC20Abi.matchEvent(log.getTopics())
-            .filter { it.name == ERC20Abi.EVENT_TRANSFER }
+          erc20Transfer
+            .filter { it.amount != BigInteger.ZERO }
             .fold({ Unit }, {
-
-              val erc20Transfer = ERC20Abi.decodeTransferEvent(data, topics)
-              val erc721Transfer = if (erc20Transfer.isDefined()) Option.empty() else ERC721Abi.decodeTransferEvent(data, topics)
-
-              erc20Transfer
-                .filter { it.amount != BigInteger.ZERO }
-                .fold({ Unit }, { builder ->
-                  fungible += generateBalanceDeltas(tx.getFrom(), builder.from, builder.to, builder.amount.bigInteger()!!, reverse)
-                })
-
-              erc721Transfer
-                .fold({ Unit }, { builder ->
-
-                  val key = NonFungibleTokenBalanceKeyRecord.newBuilder()
-                    .setContract(tx.getFrom())
-                    .setTokenId(builder.tokenId)
-                    .build()
-
-                  nonFungible += KeyValue(key, if (reverse) builder.from else builder.to)
-
-                })
-
+              events += ChainEvent.fungibleTransfer(it.from, it.to, it.amount, reverse, it.contract)
             })
 
-        }
-      }
+          erc721Transfer
+            .fold({ Unit }, {
+              events += ChainEvent.nonFungibleTransfer(it.contract, it.from, it.to, it.tokenId, reverse)
+            })
 
-    return TransactionData(fungible, nonFungible, contractCreations, contractSuicides)
-  }
-
-  private fun generateBalanceDeltas(contract: Data20?, from: Data20, to: Data20, amount: BigInteger, reverse: Boolean): List<KeyValue<FungibleTokenBalanceKeyRecord, BigInteger>> {
-
-    var result = listOf<KeyValue<FungibleTokenBalanceKeyRecord, BigInteger>>()
-
-    val fromKey = FungibleTokenBalanceKeyRecord
-      .newBuilder()
-      .setContract(contract)
-      .setAddress(from)
-      .build()
-
-    val toKey = FungibleTokenBalanceKeyRecord
-      .newBuilder()
-      .setContract(contract)
-      .setAddress(to)
-      .build()
-
-    // much like double entry book keeping we create a delta for the from address and a delta for the to address
-    // taking into account whether or not it's a reversal
-
-    if (reverse) {
-
-      result += KeyValue(fromKey, amount)
-      result += KeyValue(toKey, amount.negate())
-
-    } else {
-
-      result += KeyValue(fromKey, amount.negate())
-      result += KeyValue(toKey, amount)
+        })
 
     }
 
-    return result
+    // internal transactions
+
+    events += receipt.getInternalTxs()
+      .map{ processInternalTransactions(block, tx, receipt, it) }
+      .flatten()
+
+    return events
+  }
+
+  private fun processInternalTransactions(
+    block: BlockRecord,
+    tx: TransactionRecord,
+    receipt: TransactionReceiptRecord,
+    internalTx: InternalTransactionRecord): List<ChainEvent> {
+
+    val reverse = block.getReverse()
+    var events = listOf<ChainEvent>()
+
+    val blockHash = block.getHeader().getHash()
+    val txHash = tx.getHash()
+
+    val from = internalTx.getFrom()
+    val to = internalTx.getTo()
+    val value = internalTx.getValue()
+    val data = internalTx.getInput()
+
+    // simple ether transfer
+    if(!(from == null || to == null || value == null)) {
+      events += ChainEvent.fungibleTransfer(from, to, value, reverse)
+    }
+
+    // contract creation
+    if(tx.getCreates() != null) {
+      val (contractType, _) = StandardTokenDetector.detect(data)
+      events += ChainEvent.contractCreation(contractType, from, blockHash, txHash, tx.getCreates(), data, reverse)
+    }
+
+    // contract suicides
+    receipt.getDeletedAccounts()
+      .forEach { events += ChainEvent.contractSuicide(blockHash, txHash, it, reverse) }
+
+    return events
+  }
+
+  private fun calculateStatistics(block: BlockRecord): List<KeyValue<MetricKeyRecord, MetricRecord>> {
+
+    val (
+      totalTxs,
+      numSuccessfulTxs,
+      numFailedTxs,
+      numPendingTxs,
+      totalDifficulty,
+      totalGasPrice,
+      avgGasPrice,
+      totalTxsFees,
+      avgTxsFees
+    ) = BlockStatistics.forBlock(block)
+
+    val reverse = block.getReverse()
+    val intMultiplier = if(reverse) { -1 } else { 1 }
+    val bigIntMultiplier = if(reverse) { BigInteger.ONE.negate() } else { BigInteger.ONE }
+
+    val instant = Instant.ofEpochSecond(block.getHeader().getTimestamp())
+    val dateTime = ZonedDateTime.ofInstant(instant, ZoneOffset.UTC)
+    val startOfDayEpoch = dateTime.truncatedTo(ChronoUnit.DAYS).toInstant().epochSecond
+
+    val keyBuilder = MetricKeyRecord
+      .newBuilder()
+      .setDate(startOfDayEpoch)
+
+    return listOf(
+      KeyValue(
+        keyBuilder.setName(BlockStatistic.TotalTxs.name).build(),
+        MetricRecord.newBuilder().setIntValue(totalTxs * intMultiplier).build()
+      ),
+      KeyValue(
+        keyBuilder.setName(BlockStatistic.NumSuccessfulTxs.name).build(),
+        MetricRecord.newBuilder().setIntValue(numSuccessfulTxs * intMultiplier).build()
+      ),
+      KeyValue(
+        keyBuilder.setName(BlockStatistic.NumFailedTxs.name).build(),
+        MetricRecord.newBuilder().setIntValue(numFailedTxs * intMultiplier).build()
+      ),
+      KeyValue(
+        keyBuilder.setName(BlockStatistic.NumPendingTxs.name).build(),
+        MetricRecord.newBuilder().setIntValue(numPendingTxs * intMultiplier).build()
+      ),
+      KeyValue(
+        keyBuilder.setName(BlockStatistic.TotalDifficulty.name).build(),
+        MetricRecord.newBuilder().setBigIntegerValue(totalDifficulty.times(bigIntMultiplier).byteBuffer()).build()
+      ),
+      KeyValue(
+        keyBuilder.setName(BlockStatistic.TotalGasPrice.name).build(),
+        MetricRecord.newBuilder().setBigIntegerValue(totalGasPrice.times(bigIntMultiplier).byteBuffer()).build()
+      ),
+      KeyValue(
+        keyBuilder.setName(BlockStatistic.AvgGasPrice.name).build(),
+        MetricRecord.newBuilder().setBigIntegerValue(avgGasPrice.times(bigIntMultiplier).byteBuffer()).build()
+      ),
+      KeyValue(
+        keyBuilder.setName(BlockStatistic.TotalTxsFees.name).build(),
+        MetricRecord.newBuilder().setBigIntegerValue(totalTxsFees.times(bigIntMultiplier).byteBuffer()).build()
+      ),
+      KeyValue(
+        keyBuilder.setName(BlockStatistic.AvgTxsFees.name).build(),
+        MetricRecord.newBuilder().setBigIntegerValue(avgTxsFees.times(bigIntMultiplier).byteBuffer()).build()
+      )
+    )
+
   }
 
   override fun start(cleanUp: Boolean) {
