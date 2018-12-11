@@ -14,7 +14,7 @@ tasks.withType<KotlinCompile> {
 val test by tasks.getting(Test::class) { useJUnitPlatform {} }
 
 application {
-  mainClassName = "io.enkrypt.bolt.MainKt"
+  mainClassName = "io.enkrypt.kafka.streams.MainKt"
 }
 
 project.java.sourceSets["main"].java {
