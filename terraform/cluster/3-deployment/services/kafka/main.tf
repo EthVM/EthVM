@@ -249,7 +249,7 @@ resource "kubernetes_job" "kafka_create_topics" {
 
         container {
           name              = "kafka-create-topics"
-          image             = "enkryptio/kafka-ethvm-init:${var.kafka_ethvm_init_version}"
+          image             = "enkryptio/kafka-ethvm-utils:${var.kafka_ethvm_init_version}"
           image_pull_policy = "IfNotPresent"
         }
       }

@@ -1,0 +1,70 @@
+{
+  "projects": [
+    {
+      "id": "api",
+      "dockerfile": "${APPS_PATH}/server/Dockerfile",
+      "context": "${APPS_PATH}/",
+      "version": "${APPS_PATH}/server/package.json"
+    },
+    {
+      "id": "bolt",
+      "dockerfile": "${APPS_PATH}/bolt/Dockerfile",
+      "context": "${APPS_PATH}/bolt/",
+      "version": "${APPS_PATH}/bolt/version.properties"
+    },
+    {
+      "id": "ethereumj",
+      "dockerfile": "${APPS_PATH}/ethereumj/Dockerfile",
+      "context": "${APPS_PATH}/ethereumj/",
+      "version": "${APPS_PATH}/ethereumj/version.properties"
+    },
+    {
+      "id": "explorer",
+      "dockerfile": "${APPS_PATH}/ethvm/Dockerfile",
+      "context": "${APPS_PATH}/",
+      "version": "${APPS_PATH}/ethvm/package.json"
+    },
+    {
+      "id": "kafka-connect",
+      "dockerfile": "${DOCKER_IMAGES_PATH}/kafka-connect/Dockerfile",
+      "context": "${DOCKER_IMAGES_PATH}/kafka-connect/",
+      "version": "${DOCKER_IMAGES_PATH}/kafka-connect/version.properties"
+    },
+    {
+      "id": "kafka-connect-ethvm-utils",
+      "dockerfile": "${DOCKER_IMAGES_PATH}/kafka-connect-ethvm-utils/Dockerfile",
+      "context": "${DOCKER_IMAGES_PATH}/kafka-connect-ethvm-utils/",
+      "version": "${DOCKER_IMAGES_PATH}/kafka-connect-ethvm-utils/version.properties"
+    },
+    {
+      "id": "kafka-ethvm-utils",
+      "dockerfile": "${DOCKER_IMAGES_PATH}/kafka-ethvm-utils/Dockerfile",
+      "context": "${DOCKER_IMAGES_PATH}/kafka-ethvm-utils",
+      "version": "${DOCKER_IMAGES_PATH}/kafka-ethvm-utils/version.properties"
+    },
+    {
+      "id": "mongodb-dev",
+      "dockerfile": "${DOCKER_IMAGES_PATH}/mongodb-dev/Dockerfile",
+      "context": "${DOCKER_IMAGES_PATH}/mongodb-dev",
+      "version": "${DOCKER_IMAGES_PATH}/mongodb-dev/version.properties"
+    },
+    {
+      "id": "mongodb-ethvm-utils",
+      "dockerfile": "${DOCKER_IMAGES_PATH}/mongodb-ethvm-utils/Dockerfile",
+      "context": "${DOCKER_IMAGES_PATH}/mongodb-ethvm-utils/",
+      "version": "${DOCKER_IMAGES_PATH}/mongodb-ethvm-utils/version.properties"
+    },
+    {
+      "id": "mongodb-install",
+      "dockerfile": "${DOCKER_IMAGES_PATH}/mongodb-install/Dockerfile",
+      "context": "${DOCKER_IMAGES_PATH}/mongodb-install/",
+      "version": "${DOCKER_IMAGES_PATH}/mongodb-install/version.properties"
+    },
+    {
+      "id": "zookeeper",
+      "dockerfile": "${DOCKER_IMAGES_PATH}/zookeeper/Dockerfile",
+      "context": "${DOCKER_IMAGES_PATH}/zookeeper/",
+      "version": "${DOCKER_IMAGES_PATH}/zookeeper/version.properties"
+    }
+  ]
+}

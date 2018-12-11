@@ -5,28 +5,24 @@ volumes:
 
 services:
 
-  mongodb:
-    volumes:
-      - ./datasets:/datasets
-
   ethereumj:
     build:
       context: ./apps/ethereumj
-    restart: on-failure:3
+      dockerfile: Dockerfile.dev
+    restart: on-failure
     volumes:
       - ethereumj-volume:/ethj
       - ./docker/config/ethereumj/:/ethereumj/ethereumj-core/src/main/resources/
     networks:
       back:
         ipv4_address: 172.25.0.102
-    # -- Select one of these options to connect to different networks: MainNet or Ropsten
-    command: ./gradlew --no-daemon run -PmainClass=io.enkrypt.kafka.EthereumKafkaStarter
-    #command: ./gradlew --no-daemon run -PmainClass=io.enkrypt.kafka.EthereumRopstenKafkaStarter
+    command: ./gradlew --no-daemon run -PmainClass=io.enkrypt.kafka.${ETH_NETWORK}
 
   bolt:
     build:
       context: ./apps/bolt
-    restart: on-failure:3
+      dockerfile: Dockerfile.dev
+    restart: on-failure
     networks:
       - back
     environment:

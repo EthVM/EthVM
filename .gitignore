@@ -26,3 +26,4 @@ package-lock.json
 # Project
 dist/
 tmp/
+datasets/dumps/

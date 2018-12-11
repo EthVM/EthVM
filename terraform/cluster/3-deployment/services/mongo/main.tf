@@ -326,7 +326,7 @@ resource "kubernetes_job" "mongodb_ethvm_init" {
 
         container {
           name              = "mongodb-ethvm-init"
-          image             = "enkryptio/mongodb-ethvm-init:${var.mongodb_ethvm_init_version}"
+          image             = "enkryptio/mongodb-ethvm-utils:${var.mongodb_ethvm_init_version}"
           image_pull_policy = "IfNotPresent"
 
           env {

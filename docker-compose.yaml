@@ -18,7 +18,7 @@ volumes:
 
 services:
   traefik:
-    image: traefik:1.7.3-alpine
+    image: traefik:${TRAEFIK_VERSION}-alpine
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -43,7 +43,7 @@ services:
     labels:
       - 'traefik.enable=true'
       - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:ethvm.lan'
+      - 'traefik.frontend.rule=Host:ethvm.${DOMAIN}'
       - 'traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:*||Access-Control-Allow-Credentials:true'
       - 'traefik.frontend.passHostHeader=true'
       - 'traefik.backend=ethvm'
@@ -65,8 +65,8 @@ services:
     labels:
       - 'traefik.enable=true'
       - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:ws.ethvm.lan'
-      - 'traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://ethvm.lan||Access-Control-Allow-Credentials:true'
+      - 'traefik.frontend.rule=Host:api.ethvm.${DOMAIN}'
+      - 'traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://ethvm.${DOMAIN}||Access-Control-Allow-Credentials:true'
       - 'traefik.frontend.passHostHeader=true'
       - 'traefik.backend=server'
       - 'traefik.port=3000'
@@ -75,7 +75,7 @@ services:
       - ETHVM_ETH_TRIE_DB_REDIS_HOST=redis
 
   redis:
-    image: redis:4.0.9-alpine
+    image: redis:${REDIS_VERSION}-alpine
     restart: unless-stopped
     volumes:
       - redis-volume:/data
@@ -86,14 +86,12 @@ services:
     labels:
       - 'traefik.enable=true'
       - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:redis.ethvm.lan'
+      - 'traefik.frontend.rule=Host:redis.ethvm.${DOMAIN}'
       - 'traefik.port=6379'
       - 'traefik.backend=redis'
 
   mongodb:
-    build:
-      context: ./docker/images/mongodb-dev
-      dockerfile: Dockerfile
+    image: enkryptio/mongodb-dev:${MONGODB_VERSION}
     restart: unless-stopped
     volumes:
       - mongodb-volume:/data/db
@@ -106,12 +104,12 @@ services:
     labels:
       - 'traefik.enable=true'
       - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:mongo.ethvm.lan'
+      - 'traefik.frontend.rule=Host:mongo.ethvm.${DOMAIN}'
       - 'traefik.port=27017'
       - 'traefik.backend=mongodb'
 
   zookeeper:
-    image: confluentinc/cp-zookeeper:5.0.0
+    image: confluentinc/cp-zookeeper:${CP_VERSION}
     volumes:
       - zookeeper-volume:/var/lib/zookeeper
     networks:
@@ -125,7 +123,7 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
 
   kafka:
-    image: confluentinc/cp-kafka:5.0.0
+    image: confluentinc/cp-kafka:${CP_VERSION}
     restart: unless-stopped
     depends_on:
       - zookeeper

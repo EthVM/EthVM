@@ -1,79 +1,123 @@
 #!/usr/bin/env bash
 
-set -o errexit
-# set -o xtrace
-
 # Give script sane defaults
+set -o errexit
+set -o nounset
+# set -o xtrace
+# set -o verbose
+
+# Useful VARS
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 
 # DEFAULT VARS
-PROJECTS=("bolt", "explorer", "api", "ethereumj", "kafka-connect", "kafka-connect-ethvm-init", "kafka-ethvm-init", "mongodb-install", "mongodb-ethvm-init", "zookeeper")
+ORG="${ORG:-enkryptio}"
+APPS_PATH="${ROOT_DIR}/apps"
+DOCKER_IMAGES_PATH="${ROOT_DIR}/docker/images"
+PROJECTS_PATH="${SCRIPT_DIR}/projects.meta.json"
 
-ORG="enkryptio"
-DOCKER_PATH="docker/images"
+# import utils
+source ${SCRIPT_DIR}/utils.sh
 
-# Usage prints the help for this command
-usage() {
-  >&2 echo "Usage:"
-  >&2 echo "    docker-build <command>"
+# verify we have required utilities installed
+ensure
+
+# invalid - prints invalid message
+invalid() {
+  >&2 echo "Invalid argument passed!"
   >&2 echo ""
-  >&2 echo "Commands:"
-  >&2 echo "    build <image>  Build a docker image from this repo."
-  >&2 echo "    push  <image>  Push the built image to the docker registry."
-  >&2 echo ""
-  >&2 echo "Images:"
-  >&2 echo "    [${PROJECTS[*]}]"
-  exit 1
 }
 
-# ensure checks that whe have corresponding utilities installed
-ensure() {
-  if ! [ -x "$(command -v jq)" ]; then
-    >&2 echo "jq is necessary to be installed to run this script!"
-    exit 1
+# usage - prints the help for this command
+usage() {
+  echo ""
+  echo "Builds different docker images easily for EthVM project."
+  echo ""
+  echo "Usage:"
+  echo "    ethvm docker-build <command>"
+  echo ""
+  echo "Commands:"
+  echo "    build <image>  Build a docker image from this repo."
+  echo "    push  <image>  Push an image to the registered docker registry."
+  echo "    help           Print version information and exit."
+  echo ""
+  echo "Images:"
+  echo "    $(jq -r '[.projects[].id] | join(", ")' $PROJECTS_PATH)"
+}
+
+# to_version - tries to find the version, depending on the extension name
+to_version() {
+  if [[ "$1" =~ \.properties$ ]]; then
+    echo $(prop "$1")
+  else
+    echo $(jq -r '.version' "$1")
   fi
 }
 
-# Build builds the docker image
+# build - builds docker images
 build() {
-  local name="$1"
-  local version="$2"
-  local dockerfile="$3"
-  local path="$4"
-  docker build -t "${ORG}/${name}:${version}" -f ${dockerfile} ${path}
+  local name=$(jq -r '.id' <<< "$1")
+  local dockerfile=$(eval echo -e $(jq -r '.dockerfile' <<< "$1"))
+  local context=$(eval echo -e $(jq -r '.context' <<< "$1"))
+  local raw_version=$(eval echo -e $(jq -r '.version' <<< "$1"))
+  local version=$(to_version "${raw_version}")
+
+  docker build -t "${ORG}/${name}:${version}" -f "${dockerfile}" "${context}"
 }
 
-# Push pushes the built docker image
+# push - sends the built docker image to the registered registry
 push() {
-  local repo="$1"
-  docker push "$repo"
+  local name=$(jq -r '.id' <<< "$1")
+  local raw_version=$(eval echo -e $(jq -r '.version' <<< "$1"))
+  local version=$(to_version $raw_version)
+
+  docker push "${ORG}/${name}:${version}"
 }
 
-prop() {
-  grep $1 $2 | cut -d '=' -f2
+process_subcommand() {
+  local action=$1
+  local image=$2
+
+  case ${image} in
+    *)
+      # Test if image var is empty
+      if [[ -z $image ]]; then
+        invalid
+        usage
+        exit 0
+      fi
+
+      # Iterate our projects
+      local builds=false
+      for project in $(jq -car '.projects[]' $PROJECTS_PATH); do
+        local id=$(jq -r '.id' <<< "$project")
+        if [[ $image == "all" || $image == $id ]]; then
+          $action "$project"
+          builds=true
+        fi
+      done
+
+      # Otherwise print error message, help and exit
+      if [[ $builds == false ]]; then
+        invalid
+        usage
+        exit 1
+      else
+        exit 0
+      fi
+    ;;
+  esac
 }
 
+# run - executes main script
 run() {
-  ensure
-  case "$1" in
-    build)
-      case "$2" in
-        bolt|ethereumj) build "${2}" "$(prop 'version' "apps/${2}/version.properties")" "apps/${2}/Dockerfile" "apps/${2}" ;;
-        explorer) build "${2}" "$(jq .version apps/ethvm/package.json -r)" "apps/ethvm/Dockerfile" "apps/" ;;
-        api) build "${2}" "$(jq .version apps/server/package.json -r)" "apps/server/Dockerfile" "apps/" ;;
-        kafka-connect|kafka-connect-ethvm-init|kafka-ethvm-init|mongodb-install|mongodb-ethvm-init|zookeeper) build "$2" "$(prop 'version' "${DOCKER_PATH}/$2/version.properties")" "${DOCKER_PATH}/${2}/Dockerfile" "${DOCKER_PATH}/${2}/" ;;
-      esac
-      ;;
-    push)
-      case "$2" in
-        bolt|ethereumj) push "${ORG}/${2}:$(prop 'version' "apps/${2}/version.properties")" ;;
-        explorer) push "${ORG}/${2}:$(jq .version apps/${2}/package.json -r)" ;;
-        api) push "${ORG}/${2}:$(jq .version apps/server/package.json -r)" ;;
-        kafka-connect|kafka-connect-ethvm-init|kafka-ethvm-init|mongodb-install|mongodb-ethvm-init|zookeeper) push "${ORG}/${2}:$(prop 'version' "${DOCKER_PATH}/${2}/version.properties")" ;;
-      esac
-      ;;
-    *) usage ;;
+  local command="${1:-""}"
+  local image="${2:-false}"
+
+  case ${command} in
+    build)  process_subcommand "build" $image ;;
+    push)   process_subcommand "push"  $image ;;
+    help|*) usage; exit 0                     ;;
   esac
 }
 run "$@"

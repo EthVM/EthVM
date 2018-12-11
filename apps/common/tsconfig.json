@@ -5,6 +5,7 @@
     "declaration": true,
     "outDir": "./build",
     "strict": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "types": ["node"]
   }
 }
