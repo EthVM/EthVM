@@ -87,8 +87,8 @@ up_full() {
 
 # up - spins up a dev environment with a fixed dataset ready to be used on frontend
 up_simple() {
-  echo "Starting up containers: traefik, mongo, redis, ethvm and server"
-  docker-compose up -d --build traefik mongodb redis ethvm server
+  echo "Starting up containers: traefik, mongo, redis, ethvm and api"
+  docker-compose up -d --build traefik mongodb redis ethvm api
 
   echo -e "\nWaiting 10 seconds to allow previous docker containers initialisation...\n"
   sleep 10

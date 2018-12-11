@@ -9,7 +9,7 @@ matrix:
     -
       env:
         - ID=api-lint
-        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/server
+        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/api
         - INSTALL='yarn install'
         - ACTION='yarn lint'
       language: node_js
@@ -18,7 +18,7 @@ matrix:
     -
       env:
         - ID=api-unit-tests
-        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/server
+        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/api
         - INSTALL='yarn install'
         - ACTION='yarn test:unit'
       language: node_js
@@ -27,7 +27,7 @@ matrix:
     -
       env:
         - ID=api-e2e-tests
-        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/server
+        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/api
         - INSTALL='yarn install'
         - ACTION='yarn test:e2e'
       language: node_js

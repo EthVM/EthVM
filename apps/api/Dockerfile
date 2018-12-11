@@ -29,7 +29,7 @@ RUN mkdir -p /var/www
 WORKDIR /var/www
 
 # Copy
-COPY server/ api/
+COPY api/ api/
 COPY common/ common/
 
 # Install

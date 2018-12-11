@@ -49,13 +49,13 @@ services:
       - "traefik.backend=ethvm"
       - "traefik.port=8080"
 
-  server:
+  api:
     build:
-      context: ./apps/server
+      context: ./apps/api
       dockerfile: Dockerfile.dev
     restart: unless-stopped
     volumes:
-      - ./apps/server:/var/ethvm-server
+      - ./apps/api:/var/api
       - ./apps/common:/var/common
     depends_on:
       - redis
@@ -68,7 +68,7 @@ services:
       - "traefik.frontend.rule=Host:api.ethvm.${DOMAIN}"
       - "traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://ethvm.${DOMAIN}||Access-Control-Allow-Credentials:true"
       - "traefik.frontend.passHostHeader=true"
-      - "traefik.backend=server"
+      - "traefik.backend=api"
       - "traefik.port=3000"
     environment:
       - ETHVM_DATA_STORE_REDIS_HOST=redis

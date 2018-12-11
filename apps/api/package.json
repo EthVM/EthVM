@@ -1,10 +1,10 @@
 {
-  "name": "ethvm-socket-server",
+  "name": "ethvm-api",
   "version": "0.1.0",
-  "description": "Backend socket server for EthVM",
+  "description": "Backend API for EthVM",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/enKryptIO/ethvm-socket-server.git"
+    "url": "git+https://github.com/enKryptIO/ethvm.git"
   },
   "keywords": [
     "ethvm",
@@ -16,9 +16,9 @@
   "author": "EnKryptIO",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/enKryptIO/ethvm-socket-server/issues"
+    "url": "https://github.com/enKryptIO/ethvm-server/issues"
   },
-  "homepage": "https://github.com/enKryptIO/ethvm-socket-server#readme",
+  "homepage": "https://github.com/enKryptIO/ethvm-server#readme",
   "scripts": {
     "start": "ts-node -r tsconfig-paths/register src/index.ts",
     "start:dev": "nodemon",

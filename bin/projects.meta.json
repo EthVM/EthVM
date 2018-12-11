@@ -2,9 +2,9 @@
   "projects": [
     {
       "id": "api",
-      "dockerfile": "${APPS_PATH}/server/Dockerfile",
+      "dockerfile": "${APPS_PATH}/api/Dockerfile",
       "context": "${APPS_PATH}/",
-      "version": "${APPS_PATH}/server/package.json"
+      "version": "${APPS_PATH}/api/package.json"
     },
     {
       "id": "kafka-streams",
