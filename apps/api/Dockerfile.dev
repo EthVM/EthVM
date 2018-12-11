@@ -27,8 +27,8 @@ RUN apk add --no-cache --virtual \
   bash
 
 # Create workdir
-RUN mkdir -p /var/ethvm-server
-WORKDIR /var/ethvm-server
+RUN mkdir -p /var/api
+WORKDIR /var/api
 USER node
 
 # Copy
