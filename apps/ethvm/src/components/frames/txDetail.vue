@@ -1,17 +1,10 @@
 <template>
-  <v-container v-if="transaction != null" grid-list-lg class="mt-0">
+  <v-container v-if="transaction != null" grid-list-lg class="mb-0">
+    <bread-crumbs :newItems="getItems"></bread-crumbs>
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
-        <v-card fluid flat color="transparent">
-          <v-breadcrumbs large>
-            <v-icon slot="divider">fa fa-arrow-right</v-icon>
-            <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link"> {{ item.text }} </v-breadcrumbs-item>
-          </v-breadcrumbs>
-        </v-card>
+        <block-tx-detail :tx="transaction"></block-tx-detail>
       </v-flex>
-    </v-layout>
-    <v-layout row wrap justify-start class="mb-4">
-      <v-flex xs12> <block-tx-detail :tx="transaction"></block-tx-detail> </v-flex>
     </v-layout>
     <!--
       Get Sub Tx
@@ -41,11 +34,6 @@ export default Vue.extend({
       unixtimestamp: null,
       timestamp: null,
       items: [
-        {
-          text: this.$i18n.t('title.home'),
-          disabled: false,
-          link: '/'
-        },
         {
           text: this.$i18n.t('title.tx'),
           disabled: false,

@@ -18,14 +18,13 @@
     "blockDetail": "Block Details",
     "uncleDetail": "Uncle Details",
     "tokenDetail": "Token Details",
-    "txDetail": "Transaction Deatails",
+    "txDetail": "Transaction Details",
     "overview": "Overview",
     "blockTx": "Block Transactions",
     "lastBlock": "Last Blocks",
     "lastTxs": "Last Transactions",
     "kb": "Knowledge Base",
-    "position":"Position"
-
+    "position": "Position"
   },
   "common": {
     "address": "Address",
@@ -102,9 +101,9 @@
     "recRoot": "Receipts Root",
     "uncReward": "Reward",
     "sha": "SHA3",
-    "uncle": "Uncle(s)",
-    "loadingBlockTx":"Loading Block transactions...",
-    "notMined":"This Block has not been mined yet..."
+    "uncle": "Uncle",
+    "loadingBlockTx": "Loading Block transactions...",
+    "notMined": "This Block has not been mined yet..."
   },
 
   "addrOverview": {

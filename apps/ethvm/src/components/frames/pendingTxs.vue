@@ -1,12 +1,16 @@
 <template>
-  <v-container grid-list-lg class="mt-0">
-    <v-card fluid flat color="transparent">
-      <v-breadcrumbs large>
-        <v-icon slot="divider">fa fa-arrow-right</v-icon>
-        <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link"> {{ item.text }} </v-breadcrumbs-item>
-      </v-breadcrumbs>
-    </v-card>
-    <block-last-transactions :transactions="txs" :showHeader="true" class="mt-3" :pending="true"></block-last-transactions>
+  <v-container grid-list-lg class="mb-0">
+    <bread-crumbs :newItems="items"></bread-crumbs>
+    <v-layout row justify-center mb-4>
+      <v-flex xs12>
+        <block-last-transactions
+          :transactions="txs"
+          :showHeader="true"
+          class="mt-3"
+          :pending="true"
+        ></block-last-transactions>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 
@@ -21,11 +25,6 @@ export default Vue.extend({
   data() {
     return {
       items: [
-        {
-          text: this.$i18n.t('title.home'),
-          disabled: false,
-          link: '/'
-        },
         {
           text: this.$i18n.t('title.pending'),
           disabled: true

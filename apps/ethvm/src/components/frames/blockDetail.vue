@@ -1,20 +1,18 @@
 <template>
-  <v-container grid-list-lg class="mt-0">
-    <v-layout row wrap justify-start class="mb-4">
-      <v-flex xs12>
-        <v-card fluid flat color="transparent">
-          <v-breadcrumbs large>
-            <v-icon slot="divider">fa fa-arrow-right</v-icon>
-            <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link">{{ item.text }}</v-breadcrumbs-item>
-          </v-breadcrumbs>
-        </v-card>
-      </v-flex>
-    </v-layout>
+  <v-container grid-list-lg class="mb-0">
+    <bread-crumbs :newItems="getItems"></bread-crumbs>
     <v-layout row wrap justify-start class="mb-4">
       <v-flex v-if="blockMined" xs12>
-        <block-block-detail :block="block" :uncles="uncles" :isNotMinedBlock="isNotMinedBlock" :isMined="true"></block-block-detail>
+        <block-block-detail
+          :block="block"
+          :uncles="uncles"
+          :isNotMinedBlock="isNotMinedBlock"
+          :isMined="true"
+        ></block-block-detail>
       </v-flex>
-      <v-flex v-else xs12> <block-block-detail :isMined="false" :isNotMinedBlock="isNotMinedBlock" :prev="getPrev()"></block-block-detail> </v-flex>
+      <v-flex v-else xs12>
+        <block-block-detail :isMined="false" :isNotMinedBlock="isNotMinedBlock" :prev="getPrev()"></block-block-detail>
+      </v-flex>
     </v-layout>
     <v-layout row wrap justify-start class="mb-4">
       <v-flex v-if="blockMined" xs12>
@@ -27,8 +25,15 @@
         ></block-last-transactions>
         <v-card v-else flat color="white">
           <v-layout column align-center justify-center ma-3>
-            <v-icon v-if="transactionLoading" class=" text-xs-center fa fa-spinner fa-pulse fa-4x fa-fw primary--text" large></v-icon>
-            <v-card-text v-if="transactionLoading" class="text-xs-center text-muted">{{ $t('block.loadingBlockTx') }}</v-card-text>
+            <v-icon
+              v-if="transactionLoading"
+              class="text-xs-center fa fa-spinner fa-pulse fa-4x fa-fw primary--text"
+              large
+            ></v-icon>
+            <v-card-text
+              v-if="transactionLoading"
+              class="text-xs-center text-muted"
+            >{{ $t('block.loadingBlockTx') }}</v-card-text>
             <v-card-text v-else class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }}</v-card-text>
           </v-layout>
         </v-card>
@@ -56,7 +61,7 @@ export default Vue.extend({
       common,
       store,
       block: null,
-      bNum: Number,
+      bNum: null,
       uncles: [],
       unixtimestamp: null,
       timestamp: null,
@@ -65,28 +70,19 @@ export default Vue.extend({
       isNotMinedBlock: false,
       items: [
         {
-          text: this.$i18n.t('title.home'),
-          disabled: false,
-          link: '/'
-        },
-        {
           text: this.$i18n.t('title.blocks'),
           disabled: false,
           link: '/blocks'
+        },
+        {
+          text: '',
+          disabled: true
         }
       ],
       details: []
     }
   },
   methods: {
-    setItems(num) {
-      const newText = this.$i18n.t('title.blockN') + ' ' + num
-      const newI = {
-        text: newText,
-        disabled: true
-      }
-      this.items.push(newI)
-    },
     setRawBlock(result) {
       this.block = new Block(result)
       this.setBlock()
@@ -95,7 +91,6 @@ export default Vue.extend({
       this.uncles = this.block.getUncles()
       if (!this.bNum) {
         this.bNum = this.block.getNumber()
-        this.setItems(this.bNum.toString())
       }
       this.$socket.emit(
         sEvents.getBlockTransactions,
@@ -115,6 +110,12 @@ export default Vue.extend({
     }
   },
   computed: {
+    getItems() {
+      if (this.bNum) {
+        this.items[1].text = this.$i18n.t('title.blockN') + ' ' + this.bNum
+      }
+      return this.items
+    },
     isUncle() {
       if (this.block && this.block.getIsUncle()) {
         return true
@@ -170,7 +171,6 @@ export default Vue.extend({
       )
     } else {
       this.bNum = Number(this.blockRef)
-      this.setItems(this.bNum.toString())
       this.$socket.emit(
         sEvents.getBlockByNumber,
         {

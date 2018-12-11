@@ -1,12 +1,6 @@
 <template>
-  <v-container v-if="block != null" grid-list-lg class="mt-0">
-    <v-card fluid flat color="transparent">
-      <v-breadcrumbs large>
-        <v-icon slot="divider">fa fa-arrow-right</v-icon>
-        <v-breadcrumbs-item v-for="item in items" :disabled="item.disabled" :key="item.text" :to="item.link"> {{ item.text }} </v-breadcrumbs-item>
-      </v-breadcrumbs>
-    </v-card>
-    <h4 class="mt-5">{{ $t('title.blockDetail') }}</h4>
+  <v-container v-if="block != null" grid-list-lg class="mb-0">
+    <bread-crumbs :newItems="getItems"></bread-crumbs>
     <block-block-detail :block="block" :uncles="uncles"></block-block-detail>
   </v-container>
 </template>
@@ -29,31 +23,24 @@ export default Vue.extend({
       uncles: null,
       items: [
         {
-          text: this.$i18n.t('title.home'),
+          text: this.$i18n.t('title.uncles'),
           disabled: false,
-          link: '/'
+          link: '/uncles'
         },
         {
-          text: 'Uncles',
-          disabled: false,
-          link: '/blocks'
+          text: '',
+          disabled: true
         }
       ],
       details: []
     }
   },
-  methods: {
-    setItems(num) {
-      const newText = this.$i18n.t('title.blockN') + ' ' + num
-      const newI = {
-        text: newText,
-        disabled: false,
-        link: '/'
-      }
-      this.items.push(newI)
+  computed: {
+    getItems() {
+      this.items[1].text = this.$i18n.t('block.uncle') + ': ' + this.uncleRef
+      return this.items
     }
   },
-  computed: {},
   mounted() {
     /* Get Block Data: */
     this.$socket.emit(
