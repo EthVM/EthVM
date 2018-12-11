@@ -6,25 +6,11 @@ import org.gradle.api.tasks.bundling.Jar
 plugins {
   `java-library`
   `maven-publish`
-  kotlin("jvm") version "1.2.71"
+  kotlin("jvm")
   id("com.commercehub.gradle.plugin.avro") version "0.15.1"
 }
 
-group = "io.enkrypt"
-version = "0.0.1-SNAPSHOT"
-
 val test by tasks.getting(Test::class) { useJUnitPlatform {} }
-
-repositories {
-  mavenLocal()
-  jcenter()
-  mavenCentral()
-  maven("https://jitpack.io")
-  maven("https://packages.confluent.io/maven/")
-  maven("https://oss.sonatype.org/content/repositories/releases/")
-  maven("https://dl.bintray.com/enkryptio/maven/")
-  maven("https://dl.bintray.com/ethereum/maven/")
-}
 
 dependencies {
 

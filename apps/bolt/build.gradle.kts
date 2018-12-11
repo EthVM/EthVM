@@ -4,7 +4,7 @@ val kotlinVersion = "1.3.10"
 
 plugins {
   application
-  kotlin("jvm") version "1.3.10"
+  kotlin("jvm")
 }
 
 tasks.withType<KotlinCompile> {
@@ -12,17 +12,6 @@ tasks.withType<KotlinCompile> {
 }
 
 val test by tasks.getting(Test::class) { useJUnitPlatform {} }
-
-repositories {
-  mavenLocal()
-  jcenter()
-  mavenCentral()
-  maven("https://jitpack.io")
-  maven("https://packages.confluent.io/maven/")
-  maven("https://oss.sonatype.org/content/repositories/releases/")
-  maven("https://dl.bintray.com/enkryptio/maven/")
-  maven("https://dl.bintray.com/ethereum/maven/")
-}
 
 application {
   mainClassName = "io.enkrypt.bolt.MainKt"
@@ -40,10 +29,12 @@ dependencies {
   // Ethereumj
   implementation(group = "org.ethereum", name = "ethereumj-core", version = "1.9.+")
 
+  // Avro
+  implementation(project(":avro"))
+
   // Kafka
   implementation("org.apache.kafka:kafka-streams:2.0.1")
   implementation("io.confluent:kafka-streams-avro-serde:5.0.1")
-  implementation("io.enkrypt:avro:0.0.1-SNAPSHOT")
 
   // Utils
   implementation("com.github.ajalt:clikt:1.5.0")

@@ -41,17 +41,13 @@ apply {
 plugins {
   `java-library`
   idea
-  kotlin("jvm") version ("1.3.10")
+  kotlin("jvm")
 }
 
 
 tasks.withType<KotlinCompile> {
   kotlinOptions.jvmTarget = "1.8"
 }
-
-
-group = "io.enkrypt"
-version = "0.0.1-SNAPSHOT"
 
 val kafkaConnectApi = dependencies.compileOnly("org.apache.kafka:connect-api:2.0.0")
 
@@ -62,9 +58,10 @@ dependencies {
 
   kafkaConnectApi
 
+  implementation(project(":avro"))
+
   implementation("org.web3j:parity:4.0.3")
   implementation("org.mongodb:mongodb-driver:3.9.0")
-  implementation("io.enkrypt:avro:0.0.1-SNAPSHOT")
   implementation("io.confluent:kafka-schema-registry-client:5.0.1")
   implementation("io.confluent:kafka-connect-avro-converter:5.0.1")
 
@@ -78,27 +75,6 @@ dependencies {
 }
 
 val test by tasks.getting(Test::class) { useJUnitPlatform {} }
-
-repositories {
-  mavenLocal()
-  jcenter()
-  mavenCentral()
-  maven("https://jitpack.io")
-  maven("https://packages.confluent.io/maven/")
-  maven("https://oss.sonatype.org/content/repositories/releases/")
-  maven("https://dl.bintray.com/enkryptio/maven/")
-  maven("https://dl.bintray.com/ethereum/maven/")
-}
-
-configure<IdeaModel> {
-  project {
-    languageLevel = IdeaLanguageLevel(JavaVersion.VERSION_1_8)
-  }
-  module {
-    isDownloadJavadoc = true
-    isDownloadSources = true
-  }
-}
 
 val build: DefaultTask by tasks
 
