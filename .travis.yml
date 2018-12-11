@@ -45,9 +45,9 @@ matrix:
     -
       env:
         - ID=kafka-streams-unit-tests
-        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/kafka-streams
+        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/processing
         - INSTALL=''
-        - ACTION='./gradlew --no-daemon test'
+        - ACTION='./gradlew --no-daemon :kafka-streams:test'
       language: generic
 
 before_install:
