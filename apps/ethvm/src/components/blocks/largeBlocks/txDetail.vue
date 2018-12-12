@@ -12,7 +12,7 @@
           </v-flex>
           <v-flex xs7 sm8 md9>
             <v-list-tile-title v-if="!item.link" class="text-muted text-truncate"
-              >{{ item.detail }} <timeago v-if="item.title == $t('common.timestmp')" :datetime="tx.getTimestamp()" :auto-update="10"></timeago>
+              ><timeago v-if="item.title == $t('common.timestmp')" :datetime="tx.getTimestamp()" :auto-update="10"></timeago> {{ item.detail }}
             </v-list-tile-title>
             <router-link v-else :to="item.link">
               <v-list-tile-title class="text-truncate">{{ item.detail }}</v-list-tile-title>
@@ -86,7 +86,7 @@ export default Vue.extend({
         },
         {
           title: this.$i18n.t('common.timestmp'),
-          detail: this.tx.getTimestamp()
+          detail: this.formatTime
         },
         {
           title: this.$i18n.t('tx.from'),
@@ -117,7 +117,7 @@ export default Vue.extend({
         detail:
           this.tx
             .getValue()
-            .toEth()
+            .toEthFormated()
             .toString() +
           ' ' +
           this.$i18n.t('common.eth')
@@ -154,6 +154,12 @@ export default Vue.extend({
     },
     setView() {
       this.showMore = !this.showMore
+    }
+  },
+  computed :{
+      formatTime() {
+      const date = new Date(this.tx.getTimestamp()).toString()
+      return '(' + date + ') '
     }
   },
   mounted() {
