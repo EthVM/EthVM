@@ -34,9 +34,6 @@ object ERC20Abi : AbstractAbi(Paths.get(ERC20Abi::class.java.getResource("/abi/e
             .setTo(Data20(values[1] as ByteArray))
             .setAmount(values[2] as BigInteger)
         }
-
     }
-
   }
-
 }

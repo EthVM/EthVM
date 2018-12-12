@@ -74,7 +74,6 @@ class Cli : CliktCommand() {
     }
 
     single { AppConfig(get()) }
-
   }
 
   override fun run() {

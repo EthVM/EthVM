@@ -37,11 +37,9 @@ abstract class AbstractAbi protected constructor(path: Path) {
         .map { e -> e.encodeSignature().byteBuffer()!! to e }
         .toList()
         .toMap()
-
     } catch (ex: Exception) {
       throw RuntimeException(ex)
     }
-
   }
 
   protected abstract fun functions(): Set<String>
@@ -59,5 +57,4 @@ abstract class AbstractAbi protected constructor(path: Path) {
     if (topics.isEmpty()) Option.empty() else matchEvent(topics[0])
 
   fun matchEvent(word: Data32): Option<Abi.Event> = Option.fromNullable(eventMap[word.bytes().byteBuffer()])
-
 }

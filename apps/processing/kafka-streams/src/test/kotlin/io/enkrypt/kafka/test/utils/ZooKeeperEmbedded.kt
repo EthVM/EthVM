@@ -14,7 +14,6 @@ class ZooKeeperEmbedded {
     log.debug { "Starting embedded ZooKeeper server..." }
     server = TestingServer()
     log.debug { "Embedded ZooKeeper server at ${server.connectString} uses the temp directory at ${server.tempDirectory}" }
-
   }
 
   val connectString: String by lazy { server.connectString }
@@ -26,5 +25,4 @@ class ZooKeeperEmbedded {
     server.close()
     log.debug { "Shutdown of embedded ZooKeeper server at ${server.connectString} completed" }
   }
-
 }

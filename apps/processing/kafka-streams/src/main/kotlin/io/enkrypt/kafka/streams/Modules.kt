@@ -21,14 +21,12 @@ object Modules {
         //
         put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, config.kafka.startingOffset)
 
-        put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 1000)    // important when dealing with aggregations/reduces
+        put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 1000) // important when dealing with aggregations/reduces
 
         // Serdes - Defaults
         put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().javaClass.name)
         put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.ByteArray().javaClass.name)
       }
     }
-
   }
-
 }

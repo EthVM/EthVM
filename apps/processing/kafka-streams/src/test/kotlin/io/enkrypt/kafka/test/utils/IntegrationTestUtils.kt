@@ -74,10 +74,10 @@ object IntegrationTestUtils {
   /**
    * Wait until enough data (key-value records) has been consumed.
    *
-   * @param consumerConfig     Kafka Consumer configuration
-   * @param topic              Topic to consume from
+   * @param consumerConfig Kafka Consumer configuration
+   * @param topic Topic to consume from
    * @param expectedNumRecords Minimum number of expected records
-   * @param waitTime           Upper bound in waiting time in milliseconds
+   * @param waitTime Upper bound in waiting time in milliseconds
    * @return All the records consumed, or null if no records are consumed
    * @throws AssertionError if the given wait time elapses
    */
@@ -117,10 +117,10 @@ object IntegrationTestUtils {
   /**
    * Wait until enough data (value records) has been consumed.
    *
-   * @param consumerConfig     Kafka Consumer configuration
-   * @param topic              Topic to consume from
+   * @param consumerConfig Kafka Consumer configuration
+   * @param topic Topic to consume from
    * @param expectedNumRecords Minimum number of expected records
-   * @param waitTime           Upper bound in waiting time in milliseconds
+   * @param waitTime Upper bound in waiting time in milliseconds
    * @return All the records consumed, or null if no records are consumed
    * @throws AssertionError if the given wait time elapses
    */
@@ -154,8 +154,8 @@ object IntegrationTestUtils {
    * happened around the same time.  This caveat is acceptable for testing purposes when only a
    * single `KafkaStreams` instance of the application is running.
    *
-   * @param streams            the `KafkaStreams` instance to which the store belongs
-   * @param storeName          the name of the store
+   * @param streams the `KafkaStreams` instance to which the store belongs
+   * @param storeName the name of the store
    * @param queryableStoreType the type of the (queryable) store
    * @param <T>                the type of the (queryable) store
    * @return the same store, which is now ready for querying (but see caveat above)
@@ -173,14 +173,13 @@ object IntegrationTestUtils {
         // store not yet ready for querying
         Thread.sleep(50)
       }
-
     }
   }
 
   /**
    * Asserts that the key-value store contains exactly the expected content and nothing more.
    *
-   * @param store    the store to be validated
+   * @param store the store to be validated
    * @param expected the expected contents of the store
    * @param <K>      the store's key type
    * @param <V>      the store's value type
@@ -195,5 +194,4 @@ object IntegrationTestUtils {
       30000,
       "Expected values not found in KV store")
   }
-
 }

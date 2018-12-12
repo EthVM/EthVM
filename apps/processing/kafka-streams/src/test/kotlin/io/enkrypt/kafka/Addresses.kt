@@ -8,5 +8,4 @@ object Addresses {
   const val ETHER_CONTRACT = "0000000000000000000000000000000000000000"
 
   fun createAddress() = ECKey().address.hex()!!
-
 }

@@ -12,13 +12,12 @@ class ParityBlockReceipts : Response<List<TransactionReceipt>>()
 
 class JsonRpc2_0ParityExtended(web3jService: Web3jService?) : JsonRpc2_0Parity(web3jService) {
 
-  fun parityGetBlockReceipts(defaultBlockParameter: DefaultBlockParameter): Request<*, ParityBlockReceipts> {
-    return Request(
-        "parity_getBlockReceipts",
-        Arrays.asList(defaultBlockParameter.value),
-        web3jService,
-        ParityBlockReceipts::class.java
-    )
-  }
-
+    fun parityGetBlockReceipts(defaultBlockParameter: DefaultBlockParameter): Request<*, ParityBlockReceipts> {
+        return Request(
+                "parity_getBlockReceipts",
+                Arrays.asList(defaultBlockParameter.value),
+                web3jService,
+                ParityBlockReceipts::class.java
+        )
+    }
 }

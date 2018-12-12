@@ -1,6 +1,12 @@
 plugins {
   base
   kotlin("jvm") version "1.3.10" apply false
+  id("org.jlleitschuh.gradle.ktlint") version "6.3.1"
+}
+
+plugins.apply("org.jlleitschuh.gradle.ktlint-idea")
+subprojects {
+  plugins.apply("org.jlleitschuh.gradle.ktlint")
 }
 
 allprojects {

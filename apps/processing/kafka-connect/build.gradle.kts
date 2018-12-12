@@ -6,26 +6,27 @@ import sun.tools.jar.resources.jar
 
 buildscript {
 
-  val kotlinVer by extra { "1.3.10" }
-  val junitPlatformVer by extra { "1.0.1" }
+    val kotlinVer by extra { "1.3.10" }
+    val junitPlatformVer by extra { "1.0.1" }
 
-  val versionPluginVer = "0.15.0"
-  val shadowPluginVer = "2.0.1"
+    val versionPluginVer = "0.15.0"
+    val shadowPluginVer = "2.0.1"
 
-  repositories {
-    jcenter()
-    mavenCentral()
-    maven { setUrl("https://plugins.gradle.org/m2/") }
-  }
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven("https://plugins.gradle.org/m2/")
+        maven("https://plugins.gradle.org/m2/")
+    }
 
-  dependencies {
-    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVer")
-    classpath("com.github.jengelman.gradle.plugins:shadow:$shadowPluginVer")
+    dependencies {
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVer")
+        classpath("com.github.jengelman.gradle.plugins:shadow:$shadowPluginVer")
 
-    // gradle dependencyUpdates -Drevision=release
-    classpath("com.github.ben-manes:gradle-versions-plugin:$versionPluginVer")
-    classpath("org.junit.platform:junit-platform-gradle-plugin:$junitPlatformVer")
-  }
+        // gradle dependencyUpdates -Drevision=release
+        classpath("com.github.ben-manes:gradle-versions-plugin:$versionPluginVer")
+        classpath("org.junit.platform:junit-platform-gradle-plugin:$junitPlatformVer")
+    }
 
 }
 
@@ -35,42 +36,41 @@ val kotlinLoggingVer = "1.4.6"
 val logbackVer = "1.2.3"
 
 apply {
-  plugin("com.github.johnrengelman.shadow")
+    plugin("com.github.johnrengelman.shadow")
 }
 
 plugins {
-  `java-library`
-  idea
-  kotlin("jvm")
+    `java-library`
+    idea
+    kotlin("jvm")
 }
-
+plugins.apply("org.jlleitschuh.gradle.ktlint")
 
 tasks.withType<KotlinCompile> {
-  kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "1.8"
 }
-
-val kafkaConnectApi = dependencies.compileOnly("org.apache.kafka:connect-api:2.0.0")
 
 dependencies {
 
-  // Kotlin
-  implementation(kotlin("stdlib"))
+    // Kotlin
+    implementation(kotlin("stdlib"))
 
-  kafkaConnectApi
+    // Modules deps
+    implementation(project(":avro"))
 
-  implementation(project(":avro"))
+    compileOnly("org.apache.kafka:connect-api:2.0.0")
+    implementation("io.confluent:kafka-schema-registry-client:5.0.1")
+    implementation("io.confluent:kafka-connect-avro-converter:5.0.1")
 
-  implementation("org.web3j:parity:4.0.3")
-  implementation("org.mongodb:mongodb-driver:3.9.0")
-  implementation("io.confluent:kafka-schema-registry-client:5.0.1")
-  implementation("io.confluent:kafka-connect-avro-converter:5.0.1")
+    implementation("org.web3j:parity:4.0.3")
+    implementation("org.mongodb:mongodb-driver:3.9.0")
 
-  implementation("com.github.tinder:statemachine:0.1.2")
-  implementation("io.arrow-kt:arrow-core:0.7.3")
-  implementation("ch.qos.logback:logback-classic:1.2.3")
-  implementation("io.github.microutils:kotlin-logging:1.5.9")
-  implementation("com.beust:klaxon:3.0.1")
-  implementation("commons-codec:commons-codec:1.11")
+    implementation("com.github.tinder:statemachine:0.1.2")
+    implementation("io.arrow-kt:arrow-core:0.8.1")
+    implementation("ch.qos.logback:logback-classic:1.2.3")
+    implementation("io.github.microutils:kotlin-logging:1.5.9")
+    implementation("com.beust:klaxon:3.0.1")
+    implementation("commons-codec:commons-codec:1.11")
 
 }
 
@@ -82,9 +82,10 @@ val shadowJar = tasks["shadowJar"] as ShadowJar
 build.dependsOn(shadowJar)
 
 project.java.sourceSets["main"].java {
-  srcDir("src/main/kotlin")
+    srcDir("src/main/kotlin")
 }
 
 tasks.withType<ShadowJar> {
-  baseName = "enkryptio-mongo-connectors"
+    baseName = "enkryptio-mongo-connectors"
 }
+

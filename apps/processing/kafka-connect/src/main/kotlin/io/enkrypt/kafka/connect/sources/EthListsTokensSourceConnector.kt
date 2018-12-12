@@ -8,49 +8,47 @@ import org.apache.kafka.connect.source.SourceConnector
 
 class EthListsTokensSourceConnector : SourceConnector() {
 
-  private lateinit var config: MutableMap<String, String>
+    private lateinit var config: MutableMap<String, String>
 
-  override fun version() = "0.0.1"    // TODO load from resources
+    override fun version() = "0.0.1" // TODO load from resources
 
-  override fun start(props: MutableMap<String, String>?) {
-    config = props!!
-  }
+    override fun start(props: MutableMap<String, String>?) {
+        config = props!!
+    }
 
-  override fun stop() {
+    override fun stop() {
+    }
 
-  }
+    override fun taskClass(): Class<out Task> = EthListsTokensSourceTask::class.java
 
-  override fun taskClass(): Class<out Task> = EthListsTokensSourceTask::class.java
+    override fun taskConfigs(maxTasks: Int): MutableList<MutableMap<String, String>> {
+        if (maxTasks != 1) throw IllegalStateException("Exactly 1 task must be configured")
+        return listOf(config).toMutableList()
+    }
 
-  override fun taskConfigs(maxTasks: Int): MutableList<MutableMap<String, String>> {
-    if (maxTasks != 1) throw IllegalStateException("Exactly 1 task must be configured")
-    return listOf(config).toMutableList()
-  }
+    override fun config(): ConfigDef = ConfigDef().apply {
 
-  override fun config(): ConfigDef = ConfigDef().apply {
+        define(Config.TOPIC_CONFIG, STRING, "contract-metadata", HIGH, Config.TOPIC_CONFIG_DOC)
+        define(Config.TOKENS_URL_CONFIG, STRING, "https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/tokens/eth/tokens-eth.min.json", HIGH,
+                Config.TOKENS_URL_DOC)
+        define(Config.SYNC_INTERVAL_CONFIG, ConfigDef.Type.INT, 21600, HIGH, Config.SYNC_INTERVAL_DOC) // every 6 hours by default
+    }
 
-    define(Config.TOPIC_CONFIG, STRING, "contract-metadata", HIGH, Config.TOPIC_CONFIG_DOC)
-    define(Config.TOKENS_URL_CONFIG, STRING, "https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/tokens/eth/tokens-eth.min.json", HIGH,
-        Config.TOKENS_URL_DOC)
-    define(Config.SYNC_INTERVAL_CONFIG, ConfigDef.Type.INT, 21600, HIGH, Config.SYNC_INTERVAL_DOC)    // every 6 hours by default
-  }
+    object Config {
 
-  object Config {
+        const val TOPIC_CONFIG = "topic"
+        const val TOPIC_CONFIG_DOC = "Topic into which to publish"
 
-    const val TOPIC_CONFIG = "topic"
-    const val TOPIC_CONFIG_DOC = "Topic into which to publish"
+        const val TOKENS_URL_CONFIG = "tokens.url"
+        const val TOKENS_URL_DOC = "Url of json file from which to download info"
 
-    const val TOKENS_URL_CONFIG = "tokens.url"
-    const val TOKENS_URL_DOC = "Url of json file from which to download info"
+        const val SYNC_INTERVAL_CONFIG = "sync.interval"
+        const val SYNC_INTERVAL_DOC = "How often to check for updates in seconds"
 
-    const val SYNC_INTERVAL_CONFIG = "sync.interval"
-    const val SYNC_INTERVAL_DOC = "How often to check for updates in seconds"
+        fun topic(props: MutableMap<String, String>) = props[TOPIC_CONFIG]!!
 
-    fun topic(props: MutableMap<String, String>) = props[TOPIC_CONFIG]!!
+        fun tokensUrl(props: MutableMap<String, String>) = props[TOKENS_URL_CONFIG]!!
 
-    fun tokensUrl(props: MutableMap<String, String>) = props[TOKENS_URL_CONFIG]!!
-
-    fun syncInterval(props: MutableMap<String, String>) = props[SYNC_INTERVAL_CONFIG]!!.toInt()
-
-  }
+        fun syncInterval(props: MutableMap<String, String>) = props[SYNC_INTERVAL_CONFIG]!!.toInt()
+    }
 }

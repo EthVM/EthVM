@@ -124,9 +124,7 @@ class StateProcessor : AbstractKafkaProcessor() {
             }
 
             metricBuilder.build()
-
           }
-
         },
         Materialized.with(BoltSerdes.MetricKey(), BoltSerdes.Metric())
       ).toStream()
@@ -135,5 +133,4 @@ class StateProcessor : AbstractKafkaProcessor() {
     // Generate the topology
     return builder.build()
   }
-
 }

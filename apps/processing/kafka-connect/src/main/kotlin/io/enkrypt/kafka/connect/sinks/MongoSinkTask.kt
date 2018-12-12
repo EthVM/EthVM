@@ -26,397 +26,380 @@ import org.bson.Document
 
 enum class CollectionId {
 
-  Blocks,
-  Accounts,
-  Transactions,
-  Contracts,
-  FungibleBalances,
-  NonFungibleBalances,
-  PendingTransactions,
-  BlockStatistics
-
+    Blocks,
+    Accounts,
+    Transactions,
+    Contracts,
+    FungibleBalances,
+    NonFungibleBalances,
+    PendingTransactions,
+    BlockStatistics
 }
 
 class MongoSinkTask : SinkTask() {
 
-  private val logger = KotlinLogging.logger {}
+    private val logger = KotlinLogging.logger {}
 
-  private lateinit var client: MongoClient
-  private lateinit var db: MongoDatabase
+    private lateinit var client: MongoClient
+    private lateinit var db: MongoDatabase
 
-  private var collectionsMap = mapOf<CollectionId, MongoCollection<BsonDocument>>()
+    private var collectionsMap = mapOf<CollectionId, MongoCollection<BsonDocument>>()
 
-  override fun version() = "0.0.1"    // TODO load from resources
+    override fun version() = "0.0.1" // TODO load from resources
 
-  override fun start(props: MutableMap<String, String>) {
+    override fun start(props: MutableMap<String, String>) {
 
-    val uri = MongoSinkConnector.Config.mongoUri(props)
+        val uri = MongoSinkConnector.Config.mongoUri(props)
 
-    client = MongoClient(uri)
-    db = client.getDatabase(uri.database!!)
+        client = MongoClient(uri)
+        db = client.getDatabase(uri.database!!)
 
-    // TODO maybe use a Struct to Bson Codec?
+        // TODO maybe use a Struct to Bson Codec?
 
-    collectionsMap += CollectionId.Blocks to db.getCollection("blocks", BsonDocument::class.java)
-    collectionsMap += CollectionId.Accounts to db.getCollection("accounts", BsonDocument::class.java)
-    collectionsMap += CollectionId.Transactions to db.getCollection("transactions", BsonDocument::class.java)
-    collectionsMap += CollectionId.Contracts to db.getCollection("contracts", BsonDocument::class.java)
-    collectionsMap += CollectionId.FungibleBalances to db.getCollection("fungible_balances", BsonDocument::class.java)
-    collectionsMap += CollectionId.NonFungibleBalances to db.getCollection("non_fungible_balances", BsonDocument::class.java)
-    collectionsMap += CollectionId.PendingTransactions to db.getCollection("pending_transactions", BsonDocument::class.java)
-    collectionsMap += CollectionId.BlockStatistics to db.getCollection("block_statistics", BsonDocument::class.java)
-    collectionsMap += CollectionId.BlockStatistics to db.getCollection("block_statistics", BsonDocument::class.java)
-  }
-
-  override fun stop() {
-    client.close()
-  }
-
-  override fun put(records: MutableCollection<SinkRecord>) {
-
-    // TODO use mongo transactions
-
-    logger.info { "Processing ${records.size} records" }
-
-    val startMs = System.currentTimeMillis()
-
-    var batch = mapOf<CollectionId, List<WriteModel<BsonDocument>>>()
-
-    records.forEach {
-
-      val writesMap = when (it.topic()) {
-        "blocks" -> processBlock(it)
-        "contract-creations" -> processContractCreation(it)
-        "contract-suicides" -> processContractSuicide(it)
-        "fungible-token-balances" -> processFungibleTokenBalance(it)
-        "non-fungible-token-balances" -> processNonFungibleTokenBalance(it)
-        "pending-transactions" -> processPendingTransaction(it)
-        "block-statistics" -> processBlockStatistic(it)
-        "contract-metadata" -> processContractMetadata(it)
-        else -> throw IllegalStateException("Unhandled topic: " + it.topic())
-      }
-
-      writesMap.forEach { (collectionId, writesForCollection) ->
-        batch += collectionId to batch.getOrDefault(collectionId, emptyList()) + writesForCollection
-      }
+        collectionsMap += CollectionId.Blocks to db.getCollection("blocks", BsonDocument::class.java)
+        collectionsMap += CollectionId.Accounts to db.getCollection("accounts", BsonDocument::class.java)
+        collectionsMap += CollectionId.Transactions to db.getCollection("transactions", BsonDocument::class.java)
+        collectionsMap += CollectionId.Contracts to db.getCollection("contracts", BsonDocument::class.java)
+        collectionsMap += CollectionId.FungibleBalances to db.getCollection("fungible_balances", BsonDocument::class.java)
+        collectionsMap += CollectionId.NonFungibleBalances to db.getCollection("non_fungible_balances", BsonDocument::class.java)
+        collectionsMap += CollectionId.PendingTransactions to db.getCollection("pending_transactions", BsonDocument::class.java)
+        collectionsMap += CollectionId.BlockStatistics to db.getCollection("block_statistics", BsonDocument::class.java)
+        collectionsMap += CollectionId.BlockStatistics to db.getCollection("block_statistics", BsonDocument::class.java)
     }
 
-    batch
-        .filterValues { it.isNotEmpty() }
-        .forEach { (collectionId, writes) ->
+    override fun stop() {
+        client.close()
+    }
 
-          val collection = collectionsMap[collectionId]!!
-          val bulkWrite = collection.bulkWrite(writes)
+    override fun put(records: MutableCollection<SinkRecord>) {
 
-          logger.debug { "Bulk write complete. Collection = $collectionId, inserts = ${bulkWrite.insertedCount}, updates = ${bulkWrite.modifiedCount}, upserts = ${bulkWrite.upserts.size}, deletes = ${bulkWrite.deletedCount}" }
+        // TODO use mongo transactions
+
+        logger.info { "Processing ${records.size} records" }
+
+        val startMs = System.currentTimeMillis()
+
+        var batch = mapOf<CollectionId, List<WriteModel<BsonDocument>>>()
+
+        records.forEach {
+
+            val writesMap = when (it.topic()) {
+                "blocks" -> processBlock(it)
+                "contract-creations" -> processContractCreation(it)
+                "contract-suicides" -> processContractSuicide(it)
+                "fungible-token-balances" -> processFungibleTokenBalance(it)
+                "non-fungible-token-balances" -> processNonFungibleTokenBalance(it)
+                "pending-transactions" -> processPendingTransaction(it)
+                "block-statistics" -> processBlockStatistic(it)
+                "contract-metadata" -> processContractMetadata(it)
+                else -> throw IllegalStateException("Unhandled topic: " + it.topic())
+            }
+
+            writesMap.forEach { (collectionId, writesForCollection) ->
+                batch += collectionId to batch.getOrDefault(collectionId, emptyList()) + writesForCollection
+            }
         }
 
-    val elapsedMs = System.currentTimeMillis() - startMs
+        batch
+                .filterValues { it.isNotEmpty() }
+                .forEach { (collectionId, writes) ->
 
-    logger.info { "Batch processing completed in $elapsedMs ms" }
+                    val collection = collectionsMap[collectionId]!!
+                    val bulkWrite = collection.bulkWrite(writes)
 
-  }
+                    logger.debug { "Bulk write complete. Collection = $collectionId, inserts = ${bulkWrite.insertedCount}, updates = ${bulkWrite.modifiedCount}, upserts = ${bulkWrite.upserts.size}, deletes = ${bulkWrite.deletedCount}" }
+                }
 
-  override fun flush(currentOffsets: MutableMap<TopicPartition, OffsetAndMetadata>?) {
+        val elapsedMs = System.currentTimeMillis() - startMs
 
-  }
-
-  private fun processBlock(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
-
-    var blockWrites = listOf<WriteModel<BsonDocument>>()
-    var txWrites = listOf<WriteModel<BsonDocument>>()
-
-    val keySchema = record.keySchema()
-    if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a long")
-
-    val valueSchema = record.valueSchema()
-    if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
-
-    val blockNumber = (record.key() as Struct).getBytes("number")
-    val blockNumberBson = BsonBinary(blockNumber)
-
-    val blockFilter = BsonDocument().apply { append("_id", blockNumberBson) }
-
-    if (record.value() == null) {
-
-      // tombstone received so we need to delete
-      blockWrites += DeleteOneModel(blockFilter)
-
-      // delete transactions as-well
-      val txsFilter = BsonDocument().apply { append("blockNumber", blockNumberBson) }
-      txWrites += DeleteManyModel(txsFilter)
-
-    } else {
-
-      val valueBson = StructToBsonConverter.convert(record.value() as Struct)
-
-      blockWrites += ReplaceOneModel(blockFilter, valueBson, replaceOptions)
-
-      val txReceiptsBson = valueBson
-          .getArray("transactions")
-
-      txWrites += txReceiptsBson
-          .map { it as BsonDocument }
-          .map {
-
-            val txHash = it.getString("hash")
-
-            val doc = it
-                .append("blockNumber", blockNumberBson)
-
-            ReplaceOneModel(BsonDocument("_id", txHash), doc, replaceOptions)
-
-          }
-
+        logger.info { "Batch processing completed in $elapsedMs ms" }
     }
 
-    return mapOf(
-        CollectionId.Blocks to blockWrites,
-        CollectionId.Transactions to txWrites
-    )
-
-  }
-
-  private fun processContractCreation(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
-
-    var writes = listOf<WriteModel<BsonDocument>>()
-
-    val keySchema = record.keySchema()
-    if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a struct")
-
-    val valueSchema = record.valueSchema()
-    if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
-
-    val address = (record.key() as Struct).getBytes("address")
-    val addressBson = BsonString(address.toHex())
-
-    val idFilter = BsonDocument().apply { append("_id", addressBson) }
-
-    if (record.value() == null) {
-
-      // TODO determine how to handle tombstones in light of merging with data from ethlists
-
-    } else {
-
-      val struct = record.value() as Struct
-      val bson = BsonDocument()
-          .apply {
-            append("\$set", StructToBsonConverter.convert(struct))
-          }
-
-      writes += UpdateOneModel(idFilter, bson, updateOptions)
+    override fun flush(currentOffsets: MutableMap<TopicPartition, OffsetAndMetadata>?) {
     }
 
-    return mapOf(CollectionId.Contracts to writes)
-  }
+    private fun processBlock(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
 
-  private fun processContractMetadata(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
+        var blockWrites = listOf<WriteModel<BsonDocument>>()
+        var txWrites = listOf<WriteModel<BsonDocument>>()
 
-    var writes = listOf<WriteModel<BsonDocument>>()
+        val keySchema = record.keySchema()
+        if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a long")
 
-    val keySchema = record.keySchema()
-    if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be struct")
+        val valueSchema = record.valueSchema()
+        if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
 
-    val valueSchema = record.valueSchema()
-    if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
+        val blockNumber = (record.key() as Struct).getBytes("number")
+        val blockNumberBson = BsonBinary(blockNumber)
 
-    val address = (record.key() as Struct).getBytes("address")
-    val addressBson = BsonString(address.toHex())
+        val blockFilter = BsonDocument().apply { append("_id", blockNumberBson) }
 
-    val idFilter = BsonDocument().apply { append("_id", addressBson) }
+        if (record.value() == null) {
 
-    if (record.value() == null) {
+            // tombstone received so we need to delete
+            blockWrites += DeleteOneModel(blockFilter)
 
-      // tombstone received so we need to delete
-      writes += UpdateOneModel(idFilter, Document(mapOf("\$unset" to "metadata")))
+            // delete transactions as-well
+            val txsFilter = BsonDocument().apply { append("blockNumber", blockNumberBson) }
+            txWrites += DeleteManyModel(txsFilter)
+        } else {
 
-    } else {
+            val valueBson = StructToBsonConverter.convert(record.value() as Struct)
 
-      val struct = record.value() as Struct
-      val bson = BsonDocument()
-          .apply {
-            append("\$set", BsonDocument()
-                .apply { append("metadata", StructToBsonConverter.convert(struct)) })
-          }
+            blockWrites += ReplaceOneModel(blockFilter, valueBson, replaceOptions)
 
-      writes += UpdateOneModel(idFilter, bson, updateOptions)
+            val txReceiptsBson = valueBson
+                    .getArray("transactions")
+
+            txWrites += txReceiptsBson
+                    .map { it as BsonDocument }
+                    .map {
+
+                        val txHash = it.getString("hash")
+
+                        val doc = it
+                                .append("blockNumber", blockNumberBson)
+
+                        ReplaceOneModel(BsonDocument("_id", txHash), doc, replaceOptions)
+                    }
+        }
+
+        return mapOf(
+                CollectionId.Blocks to blockWrites,
+                CollectionId.Transactions to txWrites
+        )
     }
 
-    return mapOf(CollectionId.Contracts to writes)
-  }
+    private fun processContractCreation(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
 
-  private fun processContractSuicide(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
+        var writes = listOf<WriteModel<BsonDocument>>()
 
-    var writes = listOf<WriteModel<BsonDocument>>()
+        val keySchema = record.keySchema()
+        if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a struct")
 
-    val keySchema = record.keySchema()
-    if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be binary")
+        val valueSchema = record.valueSchema()
+        if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
 
-    val valueSchema = record.valueSchema()
-    if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
+        val address = (record.key() as Struct).getBytes("address")
+        val addressBson = BsonString(address.toHex())
 
-    val address = (record.key() as Struct).getBytes("address")
-    val addressBson = BsonString(address.toHex())
+        val idFilter = BsonDocument().apply { append("_id", addressBson) }
 
-    val idFilter = BsonDocument().apply { append("_id", addressBson) }
+        if (record.value() == null) {
 
-    if (record.value() == null) {
+            // TODO determine how to handle tombstones in light of merging with data from ethlists
+        } else {
 
-      // tombstone received so we need unset the suicide in the contract object
-      writes += UpdateOneModel(idFilter, Document(mapOf("\$unset" to "suicide")))
+            val struct = record.value() as Struct
+            val bson = BsonDocument()
+                    .apply {
+                        append("\$set", StructToBsonConverter.convert(struct))
+                    }
 
-    } else {
+            writes += UpdateOneModel(idFilter, bson, updateOptions)
+        }
 
-      val struct = record.value() as Struct
-
-      val bson = BsonDocument()
-          .apply {
-            append("\$set", BsonDocument()
-                .apply { append("suicide", StructToBsonConverter.convert(struct)) })
-          }
-
-      writes += UpdateOneModel(idFilter, bson)
+        return mapOf(CollectionId.Contracts to writes)
     }
 
-    return mapOf(CollectionId.Contracts to writes)
-  }
+    private fun processContractMetadata(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
 
-  private fun processFungibleTokenBalance(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
+        var writes = listOf<WriteModel<BsonDocument>>()
 
-    var writes = listOf<WriteModel<BsonDocument>>()
+        val keySchema = record.keySchema()
+        if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be struct")
 
-    val keySchema = record.keySchema()
-    if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a struct")
+        val valueSchema = record.valueSchema()
+        if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
 
-    val valueSchema = record.valueSchema()
-    if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
+        val address = (record.key() as Struct).getBytes("address")
+        val addressBson = BsonString(address.toHex())
 
-    val idBson = StructToBsonConverter.convert(record.key() as Struct)
-    val idFilter = BsonDocument().apply { append("_id", idBson) }
+        val idFilter = BsonDocument().apply { append("_id", addressBson) }
 
-    if (record.value() == null) {
+        if (record.value() == null) {
 
-      // tombstone received so we need to delete
-      writes += DeleteOneModel(idFilter)
+            // tombstone received so we need to delete
+            writes += UpdateOneModel(idFilter, Document(mapOf("\$unset" to "metadata")))
+        } else {
 
-    } else {
+            val struct = record.value() as Struct
+            val bson = BsonDocument()
+                    .apply {
+                        append("\$set", BsonDocument()
+                                .apply { append("metadata", StructToBsonConverter.convert(struct)) })
+                    }
 
-      val struct = record.value() as Struct
+            writes += UpdateOneModel(idFilter, bson, updateOptions)
+        }
 
-      var bson = StructToBsonConverter.convert(struct)
-
-      // combine with id fields so we can query on them later
-      idBson.forEach { k, v -> bson = bson.append(k, v) }
-
-      writes += ReplaceOneModel(idFilter, bson, replaceOptions)
+        return mapOf(CollectionId.Contracts to writes)
     }
 
-    return mapOf(CollectionId.FungibleBalances to writes)
-  }
+    private fun processContractSuicide(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
 
-  private fun processNonFungibleTokenBalance(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
+        var writes = listOf<WriteModel<BsonDocument>>()
 
-    var writes = listOf<WriteModel<BsonDocument>>()
+        val keySchema = record.keySchema()
+        if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be binary")
 
-    val keySchema = record.keySchema()
-    if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a struct")
+        val valueSchema = record.valueSchema()
+        if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
 
-    val valueSchema = record.valueSchema()
-    if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
+        val address = (record.key() as Struct).getBytes("address")
+        val addressBson = BsonString(address.toHex())
 
-    val idBson = StructToBsonConverter.convert(record.key() as Struct)
-    val idFilter = BsonDocument().apply { append("_id", idBson) }
+        val idFilter = BsonDocument().apply { append("_id", addressBson) }
 
-    if (record.value() == null) {
+        if (record.value() == null) {
 
-      // tombstone received so we need to delete
-      writes += DeleteOneModel(idFilter)
+            // tombstone received so we need unset the suicide in the contract object
+            writes += UpdateOneModel(idFilter, Document(mapOf("\$unset" to "suicide")))
+        } else {
 
-    } else {
+            val struct = record.value() as Struct
 
-      val struct = record.value() as Struct
+            val bson = BsonDocument()
+                    .apply {
+                        append("\$set", BsonDocument()
+                                .apply { append("suicide", StructToBsonConverter.convert(struct)) })
+                    }
 
-      var bson = StructToBsonConverter.convert(struct)
+            writes += UpdateOneModel(idFilter, bson)
+        }
 
-      // combine with id fields so we can query on them later
-      idBson.forEach { k, v -> bson = bson.append(k, v) }
-
-      writes += ReplaceOneModel(idFilter, bson, replaceOptions)
+        return mapOf(CollectionId.Contracts to writes)
     }
 
-    return mapOf(CollectionId.NonFungibleBalances to writes)
-  }
+    private fun processFungibleTokenBalance(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
 
-  private fun processPendingTransaction(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
+        var writes = listOf<WriteModel<BsonDocument>>()
 
-    var writes = listOf<WriteModel<BsonDocument>>()
+        val keySchema = record.keySchema()
+        if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a struct")
 
-    val keySchema = record.keySchema()
-    if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a struct")
+        val valueSchema = record.valueSchema()
+        if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
 
-    val valueSchema = record.valueSchema()
-    if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
+        val idBson = StructToBsonConverter.convert(record.key() as Struct)
+        val idFilter = BsonDocument().apply { append("_id", idBson) }
 
-    val idBson = StructToBsonConverter.convert(record.key() as Struct)
-    val idFilter = BsonDocument().apply { append("_id", idBson) }
+        if (record.value() == null) {
 
-    if (record.value() == null) {
+            // tombstone received so we need to delete
+            writes += DeleteOneModel(idFilter)
+        } else {
 
-      // tombstone received so we need to delete
-      writes += DeleteOneModel(idFilter)
+            val struct = record.value() as Struct
 
-    } else {
+            var bson = StructToBsonConverter.convert(struct)
 
-      val struct = record.value() as Struct
-      var bson = StructToBsonConverter.convert(struct)
+            // combine with id fields so we can query on them later
+            idBson.forEach { k, v -> bson = bson.append(k, v) }
 
-      // combine with id fields so we can query on them later
-      idBson.forEach { k, v -> bson = bson.append(k, v) }
+            writes += ReplaceOneModel(idFilter, bson, replaceOptions)
+        }
 
-      writes += ReplaceOneModel(idFilter, bson, replaceOptions)
+        return mapOf(CollectionId.FungibleBalances to writes)
     }
 
-    return mapOf(CollectionId.PendingTransactions to writes)
-  }
+    private fun processNonFungibleTokenBalance(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
 
-  private fun processBlockStatistic(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
+        var writes = listOf<WriteModel<BsonDocument>>()
 
-    var writes = listOf<WriteModel<BsonDocument>>()
+        val keySchema = record.keySchema()
+        if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a struct")
 
-    val keySchema = record.keySchema()
-    if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a struct")
+        val valueSchema = record.valueSchema()
+        if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
 
-    val valueSchema = record.valueSchema()
-    if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
+        val idBson = StructToBsonConverter.convert(record.key() as Struct)
+        val idFilter = BsonDocument().apply { append("_id", idBson) }
 
-    val idBson = StructToBsonConverter.convert(record.key() as Struct)
-    val idFilter = BsonDocument().apply { append("_id", idBson) }
+        if (record.value() == null) {
 
-    if (record.value() == null) {
+            // tombstone received so we need to delete
+            writes += DeleteOneModel(idFilter)
+        } else {
 
-      // tombstone received so we need to delete
-      writes += DeleteOneModel(idFilter)
+            val struct = record.value() as Struct
 
-    } else {
+            var bson = StructToBsonConverter.convert(struct)
 
-      val struct = record.value() as Struct
-      var bson = StructToBsonConverter.convert(struct, false)
+            // combine with id fields so we can query on them later
+            idBson.forEach { k, v -> bson = bson.append(k, v) }
 
-      // combine with id fields so we can query on them later
-      idBson.forEach { k, v -> bson = bson.append(k, v) }
+            writes += ReplaceOneModel(idFilter, bson, replaceOptions)
+        }
 
-      writes += ReplaceOneModel(idFilter, bson, replaceOptions)
+        return mapOf(CollectionId.NonFungibleBalances to writes)
     }
 
-    return mapOf(CollectionId.BlockStatistics to writes)
-  }
+    private fun processPendingTransaction(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
 
-  companion object {
+        var writes = listOf<WriteModel<BsonDocument>>()
 
-    val updateOptions: UpdateOptions = UpdateOptions().upsert(true)
-    val replaceOptions: ReplaceOptions = ReplaceOptions().upsert(true)
+        val keySchema = record.keySchema()
+        if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a struct")
 
-  }
+        val valueSchema = record.valueSchema()
+        if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
 
+        val idBson = StructToBsonConverter.convert(record.key() as Struct)
+        val idFilter = BsonDocument().apply { append("_id", idBson) }
+
+        if (record.value() == null) {
+
+            // tombstone received so we need to delete
+            writes += DeleteOneModel(idFilter)
+        } else {
+
+            val struct = record.value() as Struct
+            var bson = StructToBsonConverter.convert(struct)
+
+            // combine with id fields so we can query on them later
+            idBson.forEach { k, v -> bson = bson.append(k, v) }
+
+            writes += ReplaceOneModel(idFilter, bson, replaceOptions)
+        }
+
+        return mapOf(CollectionId.PendingTransactions to writes)
+    }
+
+    private fun processBlockStatistic(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
+
+        var writes = listOf<WriteModel<BsonDocument>>()
+
+        val keySchema = record.keySchema()
+        if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a struct")
+
+        val valueSchema = record.valueSchema()
+        if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
+
+        val idBson = StructToBsonConverter.convert(record.key() as Struct)
+        val idFilter = BsonDocument().apply { append("_id", idBson) }
+
+        if (record.value() == null) {
+
+            // tombstone received so we need to delete
+            writes += DeleteOneModel(idFilter)
+        } else {
+
+            val struct = record.value() as Struct
+            var bson = StructToBsonConverter.convert(struct, false)
+
+            // combine with id fields so we can query on them later
+            idBson.forEach { k, v -> bson = bson.append(k, v) }
+
+            writes += ReplaceOneModel(idFilter, bson, replaceOptions)
+        }
+
+        return mapOf(CollectionId.BlockStatistics to writes)
+    }
+
+    companion object {
+
+        val updateOptions: UpdateOptions = UpdateOptions().upsert(true)
+        val replaceOptions: ReplaceOptions = ReplaceOptions().upsert(true)
+    }
 }
-

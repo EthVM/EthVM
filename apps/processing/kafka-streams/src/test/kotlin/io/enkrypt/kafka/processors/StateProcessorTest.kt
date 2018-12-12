@@ -87,9 +87,7 @@ class StateProcessorTest : KoinTest, BehaviorSpec() {
           balancesMap[Pair(Addresses.ETHER_CONTRACT, addressThree)] shouldBe BigInteger.valueOf(943607L)
           balancesMap[Pair(contractOne, addressOne)] shouldBe BigInteger.valueOf(571L)
           balancesMap[Pair(contractTwo, addressTwo)] shouldBe BigInteger.valueOf(96748L)
-
         }
-
       }
     }
 
@@ -147,10 +145,8 @@ class StateProcessorTest : KoinTest, BehaviorSpec() {
           avgMap[Pair(2L, "max")]!!.getDoubleValue() shouldBe 69.93
           avgMap[Pair(3L, "min")]!!.getIntValue() shouldBe 534
           avgMap[Pair(3L, "max")]!!.getDoubleValue() shouldBe 71.30725
-
         }
       }
-
     }
   }
 
@@ -195,5 +191,4 @@ class StateProcessorTest : KoinTest, BehaviorSpec() {
 
     return KeyValue(key, valueBuilder.build())
   }
-
 }

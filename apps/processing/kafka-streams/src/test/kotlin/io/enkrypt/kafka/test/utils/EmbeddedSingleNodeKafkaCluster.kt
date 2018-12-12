@@ -123,7 +123,6 @@ class EmbeddedSingleNodeKafkaCluster : ExternalResource {
       } catch (e: IOException) {
         throw RuntimeException(e)
       }
-
     } finally {
       running = false
     }
@@ -164,8 +163,8 @@ class EmbeddedSingleNodeKafkaCluster : ExternalResource {
   /**
    * Creates a Kafka topic with the given parameters.
    *
-   * @param topic       The name of the topic.
-   * @param partitions  The number of partitions for this topic.
+   * @param topic The name of the topic.
+   * @param partitions The number of partitions for this topic.
    * @param replication The replication factor for (the partitions of) this topic.
    */
   fun createTopic(topic: String, partitions: Int, replication: Int) {
@@ -175,8 +174,8 @@ class EmbeddedSingleNodeKafkaCluster : ExternalResource {
   /**
    * Creates a Kafka topic with the given parameters.
    *
-   * @param topic       The name of the topic.
-   * @param partitions  The number of partitions for this topic.
+   * @param topic The name of the topic.
+   * @param partitions The number of partitions for this topic.
    * @param replication The replication factor for (partitions of) this topic.
    * @param topicConfig Additional topic-level configuration settings.
    */
@@ -202,7 +201,6 @@ class EmbeddedSingleNodeKafkaCluster : ExternalResource {
         broker!!.deleteTopic(topic)
       } catch (e: UnknownTopicOrPartitionException) {
       }
-
     }
 
     // TODO find testing dependency
@@ -232,5 +230,4 @@ class EmbeddedSingleNodeKafkaCluster : ExternalResource {
     private const val KAFKASTORE_DEBUG = "true"
     private const val KAFKASTORE_INIT_TIMEOUT = "90000"
   }
-
 }

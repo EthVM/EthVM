@@ -174,5 +174,4 @@ class FnSignature(fn: String) {
   }
 
   val signature by lazy { HashUtil.sha3(fn.toByteArray()).slice(0..3).toByteArray() }
-
 }

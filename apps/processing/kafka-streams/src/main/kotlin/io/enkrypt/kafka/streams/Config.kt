@@ -27,5 +27,4 @@ object Topics {
   const val ContractSuicides = "contract-suicides"
   const val BlockMetrics = "block-metrics"
   const val BlockStatistics = "block-statistics"
-
 }

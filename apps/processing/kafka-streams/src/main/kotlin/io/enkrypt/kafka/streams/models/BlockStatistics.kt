@@ -16,7 +16,6 @@ enum class BlockStatistic {
   AvgGasPrice,
   TotalTxsFees,
   AvgTxsFees
-
 }
 
 data class BlockStatistics(
@@ -58,7 +57,6 @@ data class BlockStatistics(
 
           totalGasPrice = totalGasPrice.add(tx.getGasPrice().bigInteger())
           totalTxsFees = totalTxsFees.add(tx.getGasPrice().bigInteger())
-
         }
 
       var avgGasPrice = BigInteger.ZERO
@@ -81,7 +79,5 @@ data class BlockStatistics(
         avgTxsFees
       )
     }
-
   }
-
 }

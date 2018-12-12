@@ -3,7 +3,10 @@ package io.enkrypt.kafka.streams.models
 import io.enkrypt.avro.common.ContractType
 import io.enkrypt.avro.common.Data20
 import io.enkrypt.avro.common.Data32
-import io.enkrypt.avro.processing.*
+import io.enkrypt.avro.processing.ContractCreationRecord
+import io.enkrypt.avro.processing.ContractSuicideRecord
+import io.enkrypt.avro.processing.FungibleTokenTransferRecord
+import io.enkrypt.avro.processing.NonFungibleTokenTransferRecord
 import java.nio.ByteBuffer
 
 enum class ChainEventType {
@@ -12,14 +15,15 @@ enum class ChainEventType {
   NonFungibleBalanceTransfer,
   ContractCreation,
   ContractSuicide
-
 }
 
-class ChainEvent(val type: ChainEventType,
-                 private val _fungibleBalance: FungibleTokenTransferRecord? = null,
-                 private val _nonFungibleBalance: NonFungibleTokenTransferRecord? = null,
-                 private val _contractCreation: ContractCreationRecord? = null,
-                 private val _contractSuicide: ContractSuicideRecord? = null) {
+class ChainEvent(
+  val type: ChainEventType,
+  private val _fungibleBalance: FungibleTokenTransferRecord? = null,
+  private val _nonFungibleBalance: NonFungibleTokenTransferRecord? = null,
+  private val _contractCreation: ContractCreationRecord? = null,
+  private val _contractSuicide: ContractSuicideRecord? = null
+) {
 
   val fungibleTransfer: FungibleTokenTransferRecord
     get() {
@@ -103,7 +107,5 @@ class ChainEvent(val type: ChainEventType,
           .setAddress(address)
           .build()
       )
-
   }
-
 }

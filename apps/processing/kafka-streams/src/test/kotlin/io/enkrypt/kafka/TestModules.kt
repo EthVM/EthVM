@@ -4,7 +4,11 @@ import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig
 import io.confluent.kafka.serializers.KafkaAvroDeserializer
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig
 import io.confluent.kafka.serializers.KafkaAvroSerializer
-import io.enkrypt.kafka.streams.*
+import io.enkrypt.kafka.streams.AppConfig
+import io.enkrypt.kafka.streams.Cli
+import io.enkrypt.kafka.streams.KafkaConfig
+import io.enkrypt.kafka.streams.KafkaInputTopicsConfig
+import io.enkrypt.kafka.streams.Topics
 import io.enkrypt.kafka.test.utils.EmbeddedSingleNodeKafkaCluster
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.producer.ProducerConfig
@@ -30,7 +34,6 @@ object TestModules {
       cluster.createTopic(Topics.BlockStatistics, 3, 1, compactionProps)
 
       cluster
-
     }
 
     factory(name = "producerConfig") {
@@ -75,11 +78,10 @@ object TestModules {
           Cli.DEFAULT_BLOCKS_TOPIC,
           Cli.DEFAULT_PENDING_TXS_TOPIC,
           Cli.DEFAULT_METADATA_TOPIC
-        ))
+        )
+      )
     }
 
     single { AppConfig(get()) }
-
   }
-
 }

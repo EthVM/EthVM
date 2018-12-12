@@ -31,9 +31,6 @@ object ERC721Abi : AbstractAbi(Paths.get(ERC721Abi::class.java.getResource("/abi
             .setTo(Data20(values[1] as ByteArray))
             .setTokenId(values[2] as BigInteger)
         }
-
     }
-
   }
-
 }

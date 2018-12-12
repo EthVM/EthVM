@@ -8,5 +8,5 @@ pluginManagement {
 
 }
 
-include("avro", "kafka-streams", "kafka-connect")
 
+include("avro", "kafka-streams", "kafka-connect")

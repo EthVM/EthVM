@@ -42,6 +42,5 @@ abstract class AbstractKafkaProcessor : KafkaProcessor, KoinComponent {
 
     // Add shutdown hook to respond to SIGTERM and gracefully close Kafka Streams
     Runtime.getRuntime().addShutdownHook(Thread(streams::close))
-
   }
 }

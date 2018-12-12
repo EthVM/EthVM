@@ -1,16 +1,31 @@
 package io.enkrypt.kafka.streams.processors
 
 import arrow.core.Option
-import io.enkrypt.avro.capture.*
+import io.enkrypt.avro.capture.BlockKeyRecord
+import io.enkrypt.avro.capture.BlockRecord
+import io.enkrypt.avro.capture.InternalTransactionRecord
+import io.enkrypt.avro.capture.TransactionReceiptRecord
+import io.enkrypt.avro.capture.TransactionRecord
 import io.enkrypt.avro.common.Data20
-import io.enkrypt.avro.processing.*
+import io.enkrypt.avro.processing.ContractCreationRecord
+import io.enkrypt.avro.processing.ContractKeyRecord
+import io.enkrypt.avro.processing.ContractSuicideRecord
+import io.enkrypt.avro.processing.FungibleTokenBalanceKeyRecord
+import io.enkrypt.avro.processing.FungibleTokenBalanceRecord
+import io.enkrypt.avro.processing.MetricKeyRecord
+import io.enkrypt.avro.processing.MetricRecord
+import io.enkrypt.avro.processing.NonFungibleTokenBalanceKeyRecord
+import io.enkrypt.avro.processing.NonFungibleTokenBalanceRecord
 import io.enkrypt.kafka.streams.BoltSerdes
 import io.enkrypt.kafka.streams.Topics
 import io.enkrypt.kafka.streams.extensions.amountBI
 import io.enkrypt.kafka.streams.extensions.bigInteger
-import io.enkrypt.kafka.streams.extensions.byteArray
 import io.enkrypt.kafka.streams.extensions.byteBuffer
-import io.enkrypt.kafka.streams.models.*
+import io.enkrypt.kafka.streams.models.BlockStatistic
+import io.enkrypt.kafka.streams.models.BlockStatistics
+import io.enkrypt.kafka.streams.models.ChainEvent
+import io.enkrypt.kafka.streams.models.ChainEventType
+import io.enkrypt.kafka.streams.models.StaticAddresses
 import io.enkrypt.kafka.streams.utils.ERC20Abi
 import io.enkrypt.kafka.streams.utils.ERC721Abi
 import io.enkrypt.kafka.streams.utils.StandardTokenDetector
@@ -27,17 +42,14 @@ import org.apache.kafka.streams.kstream.TransformerSupplier
 import org.apache.kafka.streams.processor.ProcessorContext
 import org.apache.kafka.streams.state.KeyValueStore
 import org.apache.kafka.streams.state.Stores
-import org.ethereum.crypto.HashUtil
 import java.math.BigInteger
-import java.nio.ByteBuffer
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
-import java.util.*
+import java.util.Properties
 
 class BlockProcessor : AbstractKafkaProcessor() {
-
 
   override val id: String = "block-processor"
 
@@ -80,9 +92,9 @@ class BlockProcessor : AbstractKafkaProcessor() {
     // fungible token transfers
 
     chainEvents
-      .filter{ _, e -> e.type == ChainEventType.FungibleBalanceTransfer }
+      .filter { _, e -> e.type == ChainEventType.FungibleBalanceTransfer }
       .mapValues { v -> v.fungibleTransfer }
-      .flatMap{ _, v ->
+      .flatMap { _, v ->
 
         val reverse = v.getReverse()
 
@@ -94,7 +106,13 @@ class BlockProcessor : AbstractKafkaProcessor() {
             .setAddress(v.getFrom())
             .build(),
           FungibleTokenBalanceRecord.newBuilder()
-            .setAmount(if(reverse) { v.getAmount() } else { v.amountBI!!.negate().byteBuffer() })
+            .setAmount(
+              if (reverse) {
+                v.getAmount()
+              } else {
+                v.amountBI!!.negate().byteBuffer()
+              }
+            )
             .build()
         )
 
@@ -104,20 +122,28 @@ class BlockProcessor : AbstractKafkaProcessor() {
             .setAddress(v.getTo())
             .build(),
           FungibleTokenBalanceRecord.newBuilder()
-            .setAmount(if(reverse) { v.amountBI!!.negate().byteBuffer() } else { v.getAmount() })
+            .setAmount(
+              if (reverse) {
+                v.amountBI!!.negate().byteBuffer()
+              } else {
+                v.getAmount()
+              }
+            )
             .build()
         )
 
         listOf(fromBalance, toBalance)
-
-      }.to(Topics.FungibleTokenMovements, Produced.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance()))
+      }.to(
+        Topics.FungibleTokenMovements,
+        Produced.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance())
+      )
 
     // non fungible token transfers
 
     chainEvents
-      .filter{ _, e -> e.type == ChainEventType.NonFungibleBalanceTransfer }
+      .filter { _, e -> e.type == ChainEventType.NonFungibleBalanceTransfer }
       .mapValues { v -> v.nonFungibleTransfer }
-      .map{ _, v ->
+      .map { _, v ->
 
         val reverse = v.getReverse()
 
@@ -127,18 +153,26 @@ class BlockProcessor : AbstractKafkaProcessor() {
             .setTokenId(v.getTokenId())
             .build(),
           NonFungibleTokenBalanceRecord.newBuilder()
-            .setAddress(if(reverse) { v.getFrom() } else { v.getTo() })
+            .setAddress(
+              if (reverse) {
+                v.getFrom()
+              } else {
+                v.getTo()
+              }
+            )
             .build()
         )
-
-      }.to(Topics.NonFungibleTokenBalances, Produced.with(BoltSerdes.NonFungibleTokenBalanceKey(), BoltSerdes.NonFungibleTokenBalance()))
+      }.to(
+        Topics.NonFungibleTokenBalances,
+        Produced.with(BoltSerdes.NonFungibleTokenBalanceKey(), BoltSerdes.NonFungibleTokenBalance())
+      )
 
     // contract creations
 
     chainEvents
-      .filter{ _, e -> e.type == ChainEventType.ContractCreation }
+      .filter { _, e -> e.type == ChainEventType.ContractCreation }
       .mapValues { v -> v.contractCreation }
-      .map{ _, v ->
+      .map { _, v ->
 
         val reverse = v.getReverse()
 
@@ -146,17 +180,20 @@ class BlockProcessor : AbstractKafkaProcessor() {
           ContractKeyRecord.newBuilder()
             .setAddress(v.getAddress())
             .build(),
-          if(reverse) { null } else { v }
+          if (reverse) {
+            null
+          } else {
+            v
+          }
         )
-
       }.to(Topics.ContractCreations, Produced.with(BoltSerdes.ContractKey(), BoltSerdes.ContractCreation()))
 
     // contract suicides
 
     chainEvents
-      .filter{ _, e -> e.type == ChainEventType.ContractSuicide }
+      .filter { _, e -> e.type == ChainEventType.ContractSuicide }
       .mapValues { v -> v.contractSuicide }
-      .map{ _, v ->
+      .map { _, v ->
 
         val reverse = v.getReverse()
 
@@ -164,9 +201,12 @@ class BlockProcessor : AbstractKafkaProcessor() {
           ContractKeyRecord.newBuilder()
             .setAddress(v.getAddress())
             .build(),
-          if(reverse) { null } else { v }
+          if (reverse) {
+            null
+          } else {
+            v
+          }
         )
-
       }.to(Topics.ContractSuicides, Produced.with(BoltSerdes.ContractKey(), BoltSerdes.ContractSuicide()))
 
     // statistics
@@ -180,25 +220,43 @@ class BlockProcessor : AbstractKafkaProcessor() {
   }
 
   private fun processBlock(block: BlockRecord) =
-      processPremineBalances(block) +
+    processPremineBalances(block) +
       processBlockRewards(block) +
       processTransactions(block)
 
   private fun processPremineBalances(block: BlockRecord) =
     block.getPremineBalances()
-      .map { ChainEvent.fungibleTransfer(StaticAddresses.etherZero, it.getAddress(), it.getBalance(), block.getReverse()) }
+      .map {
+        ChainEvent.fungibleTransfer(
+          StaticAddresses.etherZero,
+          it.getAddress(),
+          it.getBalance(),
+          block.getReverse()
+        )
+      }
 
   private fun processBlockRewards(block: BlockRecord) =
     block.getRewards()
-      .map{ ChainEvent.fungibleTransfer(StaticAddresses.etherZero, it.getAddress(), it.getReward(), block.getReverse()) }
+      .map {
+        ChainEvent.fungibleTransfer(
+          StaticAddresses.etherZero,
+          it.getAddress(),
+          it.getReward(),
+          block.getReverse()
+        )
+      }
 
   private fun processTransactions(block: BlockRecord) =
     block.getTransactions()
       .zip(block.getTransactionReceipts())
-      .map{ (tx, receipt) -> processTransaction(block, tx, receipt) }
+      .map { (tx, receipt) -> processTransaction(block, tx, receipt) }
       .flatten()
 
-  private fun processTransaction(block: BlockRecord, tx: TransactionRecord, receipt: TransactionReceiptRecord): List<ChainEvent> {
+  private fun processTransaction(
+    block: BlockRecord,
+    tx: TransactionRecord,
+    receipt: TransactionReceiptRecord
+  ): List<ChainEvent> {
 
     val reverse = block.getReverse()
 
@@ -213,12 +271,12 @@ class BlockProcessor : AbstractKafkaProcessor() {
     val data = tx.getInput()
 
     // simple ether transfer
-    if(!(from == null || to == null || value == null)) {
+    if (!(from == null || to == null || value == null)) {
       events += ChainEvent.fungibleTransfer(from, to, value, reverse)
     }
 
     // contract creation
-    if(tx.getCreates() != null) {
+    if (tx.getCreates() != null) {
       val (contractType, _) = StandardTokenDetector.detect(data)
       events += ChainEvent.contractCreation(contractType, from, blockHash, txHash, tx.getCreates(), data, reverse)
     }
@@ -242,7 +300,8 @@ class BlockProcessor : AbstractKafkaProcessor() {
         .fold({ Unit }, {
 
           val erc20Transfer = ERC20Abi.decodeTransferEvent(logData, topics)
-          val erc721Transfer = if (erc20Transfer.isDefined()) Option.empty() else ERC721Abi.decodeTransferEvent(logData, topics)
+          val erc721Transfer =
+            if (erc20Transfer.isDefined()) Option.empty() else ERC721Abi.decodeTransferEvent(logData, topics)
 
           erc20Transfer
             .filter { it.amount != BigInteger.ZERO }
@@ -254,15 +313,13 @@ class BlockProcessor : AbstractKafkaProcessor() {
             .fold({ Unit }, {
               events += ChainEvent.nonFungibleTransfer(it.contract, it.from, it.to, it.tokenId, reverse)
             })
-
         })
-
     }
 
     // internal transactions
 
     events += receipt.getInternalTxs()
-      .map{ processInternalTransactions(block, tx, receipt, it) }
+      .map { processInternalTransactions(block, tx, receipt, it) }
       .flatten()
 
     return events
@@ -272,7 +329,8 @@ class BlockProcessor : AbstractKafkaProcessor() {
     block: BlockRecord,
     tx: TransactionRecord,
     receipt: TransactionReceiptRecord,
-    internalTx: InternalTransactionRecord): List<ChainEvent> {
+    internalTx: InternalTransactionRecord
+  ): List<ChainEvent> {
 
     val reverse = block.getReverse()
     var events = listOf<ChainEvent>()
@@ -286,12 +344,12 @@ class BlockProcessor : AbstractKafkaProcessor() {
     val data = internalTx.getInput()
 
     // simple ether transfer
-    if(!(from == null || to == null || value == null)) {
+    if (!(from == null || to == null || value == null)) {
       events += ChainEvent.fungibleTransfer(from, to, value, reverse)
     }
 
     // contract creation
-    if(tx.getCreates() != null) {
+    if (tx.getCreates() != null) {
       val (contractType, _) = StandardTokenDetector.detect(data)
       events += ChainEvent.contractCreation(contractType, from, blockHash, txHash, tx.getCreates(), data, reverse)
     }
@@ -318,8 +376,16 @@ class BlockProcessor : AbstractKafkaProcessor() {
     ) = BlockStatistics.forBlock(block)
 
     val reverse = block.getReverse()
-    val intMultiplier = if(reverse) { -1 } else { 1 }
-    val bigIntMultiplier = if(reverse) { BigInteger.ONE.negate() } else { BigInteger.ONE }
+    val intMultiplier = if (reverse) {
+      -1
+    } else {
+      1
+    }
+    val bigIntMultiplier = if (reverse) {
+      BigInteger.ONE.negate()
+    } else {
+      BigInteger.ONE
+    }
 
     val instant = Instant.ofEpochSecond(block.getHeader().getTimestamp())
     val dateTime = ZonedDateTime.ofInstant(instant, ZoneOffset.UTC)
@@ -367,14 +433,12 @@ class BlockProcessor : AbstractKafkaProcessor() {
         MetricRecord.newBuilder().setBigIntegerValue(avgTxsFees.times(bigIntMultiplier).byteBuffer()).build()
       )
     )
-
   }
 
   override fun start(cleanUp: Boolean) {
     logger.info { "Starting ${this.javaClass.simpleName}..." }
     super.start(cleanUp)
   }
-
 }
 
 class GatedBlockTransformer : Transformer<BlockKeyRecord?, BlockRecord?, KeyValue<BlockKeyRecord, BlockRecord>> {
@@ -430,13 +494,11 @@ class GatedBlockTransformer : Transformer<BlockKeyRecord?, BlockRecord?, KeyValu
 
       // we've never seen any block for this block key before
       onNewBlock(key, block)
-
     } else if (lastVersion.getHeader().getHash() != block.getHeader().getHash()) {
 
       // we've received a block for block key n which does not have a block hash which matches the one we
       // have in the state store indicating a chain re-org is taking place
       onReorg(key, block)
-
     }
 
     return null
@@ -452,7 +514,6 @@ class GatedBlockTransformer : Transformer<BlockKeyRecord?, BlockRecord?, KeyValu
 
     // forward on for more processing
     context.forward(key, summary)
-
   }
 
   private fun onReorg(key: BlockKeyRecord, summary: BlockRecord) {
@@ -465,7 +526,8 @@ class GatedBlockTransformer : Transformer<BlockKeyRecord?, BlockRecord?, KeyValu
     // TODO see if this can be made more efficient with ranging,
     // documentation says ranging provides no ordering guarantees
 
-    val highKey = metaStore.get(META_HIGH) ?: BlockKeyRecord.newBuilder().setNumber(BigInteger.ZERO.byteBuffer()).build()
+    val highKey =
+      metaStore.get(META_HIGH) ?: BlockKeyRecord.newBuilder().setNumber(BigInteger.ZERO.byteBuffer()).build()
     var numberToReverse = highKey.getNumber().bigInteger()!!
     var summaryToReverse: BlockRecord?
 
@@ -485,20 +547,16 @@ class GatedBlockTransformer : Transformer<BlockKeyRecord?, BlockRecord?, KeyValu
       }
 
       numberToReverse -= BigInteger.ONE
-
     } while (summaryToReverse != null)
 
     // commit and publish the new version of the summary for this block key
 
     blockStore.put(key, summary)
     context.forward(key, summary)
-
   }
 
   override fun close() {
-
   }
-
 }
 
 data class TransactionData(
@@ -514,5 +572,4 @@ data class TransactionData(
     contractCreations + other.contractCreations,
     contractSuicides + other.contractSuicides
   )
-
 }

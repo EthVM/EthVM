@@ -64,7 +64,6 @@ class KafkaEmbedded(config: Properties) {
     kafka = TestUtils.createServer(kafkaConfig, Time.SYSTEM)
 
     log.debug { "Startup of embedded Kafka broker at ${brokerList()} completed (with ZK ensemble at ${zookeeperConnect()}) ..." }
-
   }
 
   /**
@@ -105,8 +104,8 @@ class KafkaEmbedded(config: Properties) {
   /**
    * Create a Kafka topic with the given parameters.
    *
-   * @param topic       The name of the topic.
-   * @param partitions  The number of partitions for this topic.
+   * @param topic The name of the topic.
+   * @param partitions The number of partitions for this topic.
    * @param replication The replication factor for (the partitions of) this topic.
    */
   fun createTopic(topic: String, partitions: Int, replication: Int) {
@@ -116,8 +115,8 @@ class KafkaEmbedded(config: Properties) {
   /**
    * Create a Kafka topic with the given parameters.
    *
-   * @param topic       The name of the topic.
-   * @param partitions  The number of partitions for this topic.
+   * @param topic The name of the topic.
+   * @param partitions The number of partitions for this topic.
    * @param replication The replication factor for (partitions of) this topic.
    * @param topicConfig Additional topic-level configuration settings.
    */
@@ -163,5 +162,4 @@ class KafkaEmbedded(config: Properties) {
     AdminUtils.deleteTopic(zkUtils, topic)
     zkClient.close()
   }
-
 }
