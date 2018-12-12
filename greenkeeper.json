@@ -7,7 +7,7 @@
     },
     "frontend": {
       "packages": [
-        "apps/ethvm/package.json"
+        "apps/explorer/package.json"
       ]
     },
     "backend": {
