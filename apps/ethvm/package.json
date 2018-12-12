@@ -39,7 +39,7 @@
     "vue-socket.io": "^2.1.1-b",
     "vue-timeago": "^5.0.0",
     "vue-toasted": "^1.1.24",
-    "vuetify": "^1.2.1",
+    "vuetify": "^1.3.13",
     "vuex": "^3.0.1",
     "web3": "^1.0.0-beta.35"
   },
