@@ -1,5 +1,6 @@
 import Bn from 'bignumber.js'
 import ethUnits from 'ethereumjs-units'
+import NumberFormatter from 'number-formatter'
 
 export class EthValue {
   public value: string
@@ -23,5 +24,9 @@ export class EthValue {
 
   public toString(): string {
     return this.value
+  }
+
+  public toEthFormated(): number {
+    return NumberFormatter('#,##0.##', ethUnits.convert(new Bn(this.value).toFixed(), 'wei', 'eth'))
   }
 }
