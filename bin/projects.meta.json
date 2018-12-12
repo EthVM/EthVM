@@ -20,9 +20,9 @@
     },
     {
       "id": "explorer",
-      "dockerfile": "${APPS_PATH}/ethvm/Dockerfile",
+      "dockerfile": "${APPS_PATH}/explorer/Dockerfile",
       "context": "${APPS_PATH}/",
-      "version": "${APPS_PATH}/ethvm/package.json"
+      "version": "${APPS_PATH}/explorer/package.json"
     },
     {
       "id": "kafka-connect",

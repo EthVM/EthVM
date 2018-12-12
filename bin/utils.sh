@@ -40,6 +40,11 @@ ensure() {
     >&2 echo "grep is necessary to be installed to run this script!"
     exit 1
   fi
+
+  if ! [ -x "$(command -v git-lfs)" ]; then
+    >&2 echo "git-lfs is necessary to be installed to run this script!"
+    exit 1
+  fi
 }
 
 # prop - read .properties files and search elements by key

@@ -7,8 +7,8 @@ RUN echo -e "http://uk.alpinelinux.org/alpine/v3.8/main\nhttp://uk.alpinelinux.o
 RUN apk add --no-cache bash make gcc musl-dev linux-headers git python g++
 
 # Create workdir
-RUN mkdir -p /var/ethvm
-WORKDIR /var/ethvm
+RUN mkdir -p /var/explorer
+WORKDIR /var/explorer
 USER node
 
 # Copy
