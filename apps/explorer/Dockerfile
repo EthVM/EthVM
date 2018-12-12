@@ -9,17 +9,17 @@ RUN mkdir -p /var/www
 WORKDIR /var/www
 
 # Copy
-COPY ethvm/ ethvm/
+COPY explorer/ explorer/
 COPY common/ common/
 
 # Instal & build
-RUN cd ethvm/ && \
+RUN cd explorer/ && \
   yarn install && \
   yarn build && \
   cd .. && \
   rm -rf common
 
-WORKDIR /var/www/ethvm
+WORKDIR /var/www/explorer
 
 # Expose
 EXPOSE 8080

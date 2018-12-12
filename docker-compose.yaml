@@ -30,13 +30,13 @@ services:
       - 80:80
       - 81:81
 
-  ethvm:
+  explorer:
     build:
-      context: ./apps/ethvm
+      context: ./apps/explorer
       dockerfile: Dockerfile.dev
     restart: unless-stopped
     volumes:
-      - ./apps/ethvm:/var/ethvm
+      - ./apps/explorer:/var/explorer
       - ./apps/common:/var/common
     networks:
       - back
@@ -46,7 +46,7 @@ services:
       - 'traefik.frontend.rule=Host:ethvm.${DOMAIN}'
       - 'traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:*||Access-Control-Allow-Credentials:true'
       - 'traefik.frontend.passHostHeader=true'
-      - 'traefik.backend=ethvm'
+      - 'traefik.backend=explorer'
       - 'traefik.port=8080'
 
   server:
