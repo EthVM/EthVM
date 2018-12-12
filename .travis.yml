@@ -8,7 +8,7 @@ matrix:
   include:
     -
       env:
-        - ID=api-lint
+        - ID=api/lint
         - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/api
         - INSTALL='yarn install'
         - ACTION='yarn lint'
@@ -17,7 +17,7 @@ matrix:
         - "10"
     -
       env:
-        - ID=api-unit-tests
+        - ID=api/unit-tests
         - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/api
         - INSTALL='yarn install'
         - ACTION='yarn test:unit'
@@ -26,7 +26,7 @@ matrix:
         - "10"
     -
       env:
-        - ID=api-e2e-tests
+        - ID=api/e2e-tests
         - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/api
         - INSTALL='yarn install'
         - ACTION='yarn test:e2e'
@@ -35,7 +35,7 @@ matrix:
         - "10"
     -
       env:
-        - ID=explorer-unit-tests
+        - ID=explorer/unit-tests
         - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/ethvm
         - INSTALL='yarn install'
         - ACTION='yarn test:unit'
@@ -44,7 +44,14 @@ matrix:
         - "10"
     -
       env:
-        - ID=kafka-streams-unit-tests
+        - ID=processing/lint
+        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/processing
+        - INSTALL=''
+        - ACTION='./gradlew --no-daemon :ktlintCheck'
+      language: generic
+    -
+      env:
+        - ID=processing/kafka-streams/unit-tests
         - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/processing
         - INSTALL=''
         - ACTION='./gradlew --no-daemon :kafka-streams:test'
