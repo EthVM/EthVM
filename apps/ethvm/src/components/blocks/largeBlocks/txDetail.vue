@@ -145,7 +145,7 @@ export default Vue.extend({
         },
         {
           title: this.$i18n.t('tx.cost'),
-          detail: common.WeiValue(this.getTxCost(this.tx.getGasPrice(), this.tx.getGasUsed())).toEthFormated() + ' ' + this.$i18n.t('common.eth')
+          detail: this.getTxCost(this.tx.getGasPrice(), this.tx.getGasUsed()) + ' ' + this.$i18n.t('common.eth')
         }
       ]
       items.forEach(i => {
