@@ -3,7 +3,7 @@ protocol Processing {
 
   import idl "common.avdl";
 
-  // fungible tokens
+// fungible tokens
 
   record FungibleTokenTransferRecord {
 
@@ -25,9 +25,7 @@ protocol Processing {
     bytes amount;
   }
 
-
-
-  // Non fungible tokens
+// Non fungible tokens
 
   record NonFungibleTokenTransferRecord {
 
@@ -48,7 +46,7 @@ protocol Processing {
     io.enkrypt.avro.common.Data20 address;
   }
 
-  // contracts
+// contracts
 
   record ContractKeyRecord {
 
@@ -122,7 +120,7 @@ protocol Processing {
 
   }
 
-//
+// metrics
 
   record MetricKeyRecord {
     long `date`;
@@ -138,6 +136,5 @@ protocol Processing {
     union { null, bytes } bigIntegerValue = null;
 
   }
-
 
 }
