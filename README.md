@@ -11,6 +11,10 @@
 
 ![Screenshot example](.github/assets/ethvm.png)
 
+## Warning
+
+We're on active development! So things may broke or not work as expected and documentation may be deprecated! You have been warned!
+
 ## Philosophy
 
 We have strong foundations on how an Open Source explorer should be:
