@@ -35,8 +35,20 @@
       </v-card>
     </v-flex>
     <v-flex hidden-sm-and-down md4 style="max-width: 115px;">
-      <v-btn v-if="phText === 'default'" @click="start" depressed color="secondary" class="search-button text-capitalize ml-0">Search</v-btn>
-      <v-btn v-else @click="sendReq" depressed outline class="search-button text-capitalize ml-0 primary--text lineGrey">Search</v-btn>
+      <v-btn
+        v-if="phText === 'default'"
+        @click="start"
+        depressed
+        color="secondary"
+        class="search-button text-capitalize ml-0"
+      >Search</v-btn>
+      <v-btn
+        v-else
+        @click="sendReq"
+        depressed
+        outline
+        class="search-button text-capitalize ml-0 primary--text lineGrey"
+      >Search</v-btn>
     </v-flex>
   </v-layout>
 </template>
@@ -46,7 +58,7 @@ import Vue from 'vue'
 import { Events } from 'ethvm-common'
 
 export default Vue.extend({
-  name: 'Search',
+  name: 'AppSearch',
   props: {
     phText: {
       type: String,

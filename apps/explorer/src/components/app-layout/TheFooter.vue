@@ -17,26 +17,28 @@
           <v-layout row wrap justify-start>
             <v-flex d-flex xs12 sm7 md6>
               <v-btn outline color="secondary" class="text-lowercase" block>
-                <v-icon class="secondary--text fab fa-ethereum pr-2" />{{ $t('common.eth') }} - {{ $t('footer.ens') }}</v-btn
-              >
+                <v-icon class="secondary--text fab fa-ethereum pr-2"/>
+                {{ $t('common.eth') }} - {{ $t('footer.ens') }}
+              </v-btn>
             </v-flex>
             <v-flex d-flex xs12 sm5 md6>
               <v-layout reverse>
-                <copy-to-clip-component :valueToCopy="ethAddr"></copy-to-clip-component>
-                <v-card-text class="pl-0 secondary--text"> Copy ETH address</v-card-text>
+                <app-copy-to-clip :valueToCopy="ethAddr"></app-copy-to-clip>
+                <v-card-text class="pl-0 secondary--text">Copy ETH address</v-card-text>
               </v-layout>
             </v-flex>
           </v-layout>
           <v-layout row wrap justify-start>
             <v-flex d-flex xs12 sm7 md6>
               <v-btn outline color="secondary" class="text-lowercase" block>
-                <v-icon class="secondary--text fab fa-btc pr-2" />{{ $t('footer.btc') }} - blochchain.com</v-btn
-              >
+                <v-icon class="secondary--text fab fa-btc pr-2"/>
+                {{ $t('footer.btc') }} - blochchain.com
+              </v-btn>
             </v-flex>
             <v-flex d-flex xs12 sm5 md6>
               <v-layout reverse>
-                <copy-to-clip-component :valueToCopy="btcAddr"></copy-to-clip-component>
-                <v-card-text class="pl-0 secondary--text"> Copy BTC address</v-card-text>
+                <app-copy-to-clip :valueToCopy="btcAddr"></app-copy-to-clip>
+                <v-card-text class="pl-0 secondary--text">Copy BTC address</v-card-text>
               </v-layout>
             </v-flex>
           </v-layout>
@@ -46,16 +48,24 @@
         <v-layout column justify-end fill-height>
           <v-flex xs12>
             <v-layout row justify-end pt-3>
-              <v-btn href="https://www.facebook.com/enKryptIO/" icon> <v-icon class="fab fa-facebook-f grey--text"></v-icon> </v-btn>
-              <v-btn href="https://twitter.com/enkryptio" icon> <v-icon class="fab fa-twitter grey--text"></v-icon> </v-btn>
-              <v-btn href="https://github.com/enKryptIO" icon> <v-icon class="fab fa-github grey--text"></v-icon> </v-btn>
-              <v-btn href="https://github.com/enKryptIO" icon> <v-icon class="fab fa-medium-m grey--text"></v-icon> </v-btn>
+              <v-btn href="https://www.facebook.com/enKryptIO/" icon>
+                <v-icon class="fab fa-facebook-f grey--text"></v-icon>
+              </v-btn>
+              <v-btn href="https://twitter.com/enkryptio" icon>
+                <v-icon class="fab fa-twitter grey--text"></v-icon>
+              </v-btn>
+              <v-btn href="https://github.com/enKryptIO" icon>
+                <v-icon class="fab fa-github grey--text"></v-icon>
+              </v-btn>
+              <v-btn href="https://github.com/enKryptIO" icon>
+                <v-icon class="fab fa-medium-m grey--text"></v-icon>
+              </v-btn>
             </v-layout>
           </v-flex>
           <v-spacer></v-spacer>
           <v-flex xs12>
             <v-layout align-end justify-end fill-height>
-              <p class="info--text ">© {{ $t('footer.copy') }} {{ $t('footer.enkrypt') }}</p>
+              <p class="info--text">© {{ $t('footer.copy') }} {{ $t('footer.enkrypt') }}</p>
             </v-layout>
           </v-flex>
         </v-layout>
@@ -66,9 +76,12 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import VFooter from 'vuetify'
+import AppCopyToClip from '@app/components/ui/AppCopyToClip.vue'
 export default Vue.extend({
-  name: 'block-footer',
+  name: 'TheFooter',
+  components: {
+    AppCopyToClip
+  },
   data() {
     return {
       btcAddr: '1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9">1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9',

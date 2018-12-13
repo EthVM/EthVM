@@ -12,7 +12,7 @@ import VueTimeago from 'vue-timeago'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 
-// EthVM Frames
+/* // EthVM Frames
 // Main ----
 import navigation from '@app/components/blocks/navigationDrawer/nav.vue'
 import frameHome from '@app/components/frames/home.vue'
@@ -161,7 +161,7 @@ Vue.component('tx-fee-chart', avgTxFee)
 
 // Footer ----------------------
 Vue.component('block-footer', blockFooter)
-
+*/
 // Vue modules configuration
 Vue.use(VTooltip)
 Vue.prototype.$eventHub = new Vue()

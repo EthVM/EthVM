@@ -1,5 +1,12 @@
 <template>
-  <v-card :color="getColor" :class="getBack" flat class="mt-1 pr-1" height="150px" style="padding-top: 42px; padding-left: 24px;">
+  <v-card
+    :color="getColor"
+    :class="getBack"
+    flat
+    class="mt-1 pr-1"
+    height="150px"
+    style="padding-top: 42px; padding-left: 24px;"
+  >
     <v-layout wrap>
       <v-layout row wrap>
         <v-card-title class="display-1 font-weight-medium pb-0 pl- pb-0">{{ value }}</v-card-title>
@@ -14,7 +21,7 @@
 import Vue from 'vue'
 
 export default Vue.extend({
-  name: 'BlockComponent',
+  name: 'AppInfoCard',
   props: ['title', 'value', 'colorType', 'metrics', 'backType'],
   data() {
     return {}

@@ -3,8 +3,16 @@
     <!-- Header -->
     <div class="block-title-container">
       <h3 class="block-title">{{ $t('title.overview') }} {{ token.name }}</h3>
-      <button class="button-common" v-on:click="showMore = !showMore" v-if="showMore === false">{{ $t('bttn.more') }}</button>
-      <button class="button-common" v-on:click="showMore = !showMore" v-if="showMore === true">{{ $t('bttn.less') }}</button>
+      <button
+        class="button-common"
+        v-on:click="showMore = !showMore"
+        v-if="showMore === false"
+      >{{ $t('bttn.more') }}</button>
+      <button
+        class="button-common"
+        v-on:click="showMore = !showMore"
+        v-if="showMore === true"
+      >{{ $t('bttn.less') }}</button>
       <!-- End Header -->
     </div>
     <!-- Token Details -->
@@ -12,7 +20,9 @@
       <!-- Main Info -->
       <div v-if="isHolder" class="detail-row-copy">
         <li>{{ $t('token.holder') }}</li>
-        <div class="copy"><copy-to-clip-component :valueToCopy="token.holder"></copy-to-clip-component></div>
+        <div class="copy">
+          <copy-to-clip-component :valueToCopy="token.holder"></copy-to-clip-component>
+        </div>
         <li>
           <router-link :to="'/address/' + token.holder">{{ token.holder }}</router-link>
         </li>
@@ -51,7 +61,9 @@
           </div>
           <div class="detail-row-copy">
             <li>{{ $t('tx.contract') }}</li>
-            <div class="copy"><copy-to-clip-component :valueToCopy="token.contract"></copy-to-clip-component></div>
+            <div class="copy">
+              <copy-to-clip-component :valueToCopy="token.contract"></copy-to-clip-component>
+            </div>
             <li>
               <router-link :to="'/address/' + token.contract">{{ token.contract }}</router-link>
             </li>
@@ -97,6 +109,5 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped lang="less">
-@import '~lessPath/sunil/blocks/largeBlocks/detailComponent.less';
+<style scoped lang="css">
 </style>
