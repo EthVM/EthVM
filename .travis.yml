@@ -8,7 +8,7 @@ matrix:
   include:
     -
       env:
-        - ID=api-lint
+        - ID=api/lint
         - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/api
         - INSTALL='yarn install'
         - ACTION='yarn lint'
@@ -17,7 +17,7 @@ matrix:
         - "10"
     -
       env:
-        - ID=api-unit-tests
+        - ID=api/unit-tests
         - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/api
         - INSTALL='yarn install'
         - ACTION='yarn test:unit'
@@ -26,7 +26,7 @@ matrix:
         - "10"
     -
       env:
-        - ID=api-e2e-tests
+        - ID=api/e2e-tests
         - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/api
         - INSTALL='yarn install'
         - ACTION='yarn test:e2e'
@@ -44,7 +44,7 @@ matrix:
         - "10"
     -
       env:
-        - ID=explorer-unit-tests
+        - ID=explorer/unit-tests
         - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/explorer
         - INSTALL='yarn install'
         - ACTION='yarn test:unit'
@@ -53,7 +53,7 @@ matrix:
         - "10"
     -
       env:
-        - ID=bolt-unit-tests
+        - ID=bolt/unit-tests
         - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/bolt
         - INSTALL=''
         - ACTION='./gradlew --no-daemon test'
