@@ -1,8 +1,13 @@
 <template>
   <v-tabs v-model="active" dark color="white" slider-color="primary" show-arrows>
-    <v-tab v-for="(item, index) in tabs" class="grey--text" active-class="primary--text" :href="'#tab-' + item" :key="index" v-on:click="setActive(item)">
-      {{ item.title }}
-    </v-tab>
+    <v-tab
+      v-for="(item, index) in tabs"
+      class="grey--text"
+      active-class="primary--text"
+      :href="'#tab-' + item"
+      :key="index"
+      v-on:click="setActive(item)"
+    >{{ item.title }}</v-tab>
   </v-tabs>
 </template>
 
@@ -10,7 +15,7 @@
 import Vue from 'vue'
 
 export default Vue.extend({
-  name: 'tabComponent',
+  name: 'AppTabs',
   /* Tabs Object Array Example:
     tabs: [
       {
@@ -41,6 +46,3 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped lang="less">
-@import '~lessPath/sunil/blocks/smallBlocks/tabComponent.less';
-</style>

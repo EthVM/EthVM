@@ -24,7 +24,7 @@
 <script>
 import Vue from 'vue'
 export default Vue.extend({
-  name: 'BreadCrumbs',
+  name: 'AppBreadCrumbs',
   props: {
     newItems: {
       type: Array,
@@ -57,5 +57,4 @@ export default Vue.extend({
 })
 </script>
 
-<style>
-</style>
+

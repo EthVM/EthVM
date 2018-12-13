@@ -5,6 +5,7 @@
 <script>
 import createIcon from '@/helpers/blockies'
 export default {
+  name: 'AppBlockies',
   props: {
     address: {
       type: String,
