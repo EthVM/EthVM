@@ -1,6 +1,7 @@
 package io.enkrypt.kafka.connect.sinks.mongo
 
 import com.mongodb.MongoClientURI
+import io.enkrypt.kafka.connect.sinks.mongo.MongoSinkConnector.Config.MONGO_DEFAULT_URI_VALUE
 import io.enkrypt.kafka.connect.utils.Versions
 import org.apache.kafka.common.config.ConfigDef
 import org.apache.kafka.common.config.ConfigDef.Importance.HIGH
@@ -30,7 +31,10 @@ class MongoSinkConnector : SinkConnector() {
   override fun config(): ConfigDef = ConfigDef().apply {
 
     define(
-      Config.MONGO_URI_CONFIG, STRING, "mongo://localhost:27017/kafka", HIGH,
+      Config.MONGO_URI_CONFIG,
+      STRING,
+      MONGO_DEFAULT_URI_VALUE,
+      HIGH,
       Config.MONGO_URI_DOC
     )
   }
@@ -39,6 +43,7 @@ class MongoSinkConnector : SinkConnector() {
 
     const val MONGO_URI_CONFIG = "mongo.uri"
     const val MONGO_URI_DOC = "Mongo uri for connecting to the mongo instance"
+    const val MONGO_DEFAULT_URI_VALUE = "mongo://localhost:27017/kafka"
 
     fun mongoUri(props: MutableMap<String, String>) = MongoClientURI(props[MONGO_URI_CONFIG]!!)
   }

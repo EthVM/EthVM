@@ -6,21 +6,18 @@ import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.capture.InternalTransactionRecord
 import io.enkrypt.avro.capture.TransactionReceiptRecord
 import io.enkrypt.avro.capture.TransactionRecord
-import io.enkrypt.avro.common.Data20
-import io.enkrypt.avro.processing.ContractCreationRecord
 import io.enkrypt.avro.processing.ContractKeyRecord
-import io.enkrypt.avro.processing.ContractSuicideRecord
 import io.enkrypt.avro.processing.FungibleTokenBalanceKeyRecord
 import io.enkrypt.avro.processing.FungibleTokenBalanceRecord
 import io.enkrypt.avro.processing.MetricKeyRecord
 import io.enkrypt.avro.processing.MetricRecord
 import io.enkrypt.avro.processing.NonFungibleTokenBalanceKeyRecord
 import io.enkrypt.avro.processing.NonFungibleTokenBalanceRecord
-import io.enkrypt.kafka.streams.BoltSerdes
+import io.enkrypt.kafka.streams.Serdes
 import io.enkrypt.kafka.streams.Topics
-import io.enkrypt.kafka.streams.extensions.amountBI
-import io.enkrypt.kafka.streams.extensions.bigInteger
-import io.enkrypt.kafka.streams.extensions.byteBuffer
+import io.enkrypt.common.extensions.amountBI
+import io.enkrypt.common.extensions.bigInteger
+import io.enkrypt.common.extensions.byteBuffer
 import io.enkrypt.kafka.streams.models.BlockStatistic
 import io.enkrypt.kafka.streams.models.BlockStatistics
 import io.enkrypt.kafka.streams.models.ChainEvent
@@ -30,7 +27,6 @@ import io.enkrypt.kafka.streams.utils.ERC20Abi
 import io.enkrypt.kafka.streams.utils.ERC721Abi
 import io.enkrypt.kafka.streams.utils.StandardTokenDetector
 import mu.KotlinLogging
-import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
@@ -48,6 +44,7 @@ import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
 import java.util.Properties
+import org.apache.kafka.common.serialization.Serdes as KafkaSerdes
 
 class BlockProcessor : AbstractKafkaProcessor() {
 
@@ -74,7 +71,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
     val (blocks) = appConfig.kafka.inputTopicsConfig
 
     val blockStream = builder
-      .stream(blocks, Consumed.with(BoltSerdes.BlockKey(), BoltSerdes.Block()))
+      .stream(blocks, Consumed.with(Serdes.BlockKey(), Serdes.Block()))
 
     val gatedStream = blockStream
       .transform(
@@ -135,7 +132,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
         listOf(fromBalance, toBalance)
       }.to(
         Topics.FungibleTokenMovements,
-        Produced.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance())
+        Produced.with(Serdes.FungibleTokenBalanceKey(), Serdes.FungibleTokenBalance())
       )
 
     // non fungible token transfers
@@ -164,7 +161,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
         )
       }.to(
         Topics.NonFungibleTokenBalances,
-        Produced.with(BoltSerdes.NonFungibleTokenBalanceKey(), BoltSerdes.NonFungibleTokenBalance())
+        Produced.with(Serdes.NonFungibleTokenBalanceKey(), Serdes.NonFungibleTokenBalance())
       )
 
     // contract creations
@@ -186,7 +183,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
             v
           }
         )
-      }.to(Topics.ContractCreations, Produced.with(BoltSerdes.ContractKey(), BoltSerdes.ContractCreation()))
+      }.to(Topics.ContractCreations, Produced.with(Serdes.ContractKey(), Serdes.ContractCreation()))
 
     // contract suicides
 
@@ -207,13 +204,13 @@ class BlockProcessor : AbstractKafkaProcessor() {
             v
           }
         )
-      }.to(Topics.ContractSuicides, Produced.with(BoltSerdes.ContractKey(), BoltSerdes.ContractSuicide()))
+      }.to(Topics.ContractSuicides, Produced.with(Serdes.ContractKey(), Serdes.ContractSuicide()))
 
     // statistics
 
     blockStream
       .flatMap { _, block -> calculateStatistics(block) }
-      .to(Topics.BlockMetrics, Produced.with(BoltSerdes.MetricKey(), BoltSerdes.Metric()))
+      .to(Topics.BlockMetrics, Produced.with(Serdes.MetricKey(), Serdes.Metric()))
 
     // Generate the topology
     return builder.build()
@@ -228,7 +225,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
     block.getPremineBalances()
       .map {
         ChainEvent.fungibleTransfer(
-          StaticAddresses.etherZero,
+          StaticAddresses.EtherZero,
           it.getAddress(),
           it.getBalance(),
           block.getReverse()
@@ -239,7 +236,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
     block.getRewards()
       .map {
         ChainEvent.fungibleTransfer(
-          StaticAddresses.etherZero,
+          StaticAddresses.EtherZero,
           it.getAddress(),
           it.getReward(),
           block.getReverse()
@@ -453,12 +450,12 @@ class GatedBlockTransformer : Transformer<BlockKeyRecord?, BlockRecord?, KeyValu
 
     fun blockSummariesStore() = Stores.keyValueStoreBuilder(
       Stores.persistentKeyValueStore(STORE_NAME_BLOCKS),
-      BoltSerdes.BlockKey(), BoltSerdes.Block()
+      Serdes.BlockKey(), Serdes.Block()
     )
 
     fun metadataStore() = Stores.keyValueStoreBuilder(
       Stores.persistentKeyValueStore(STORE_NAME_METADATA),
-      Serdes.String(), BoltSerdes.BlockKey()
+      KafkaSerdes.String(), Serdes.BlockKey()
     )
   }
 
@@ -557,19 +554,4 @@ class GatedBlockTransformer : Transformer<BlockKeyRecord?, BlockRecord?, KeyValu
 
   override fun close() {
   }
-}
-
-data class TransactionData(
-  val fungibleBalanceDeltas: List<KeyValue<FungibleTokenBalanceKeyRecord, BigInteger>>,
-  val nonFungibleBalanceDeltas: List<KeyValue<NonFungibleTokenBalanceKeyRecord, Data20>>,
-  val contractCreations: Map<Data20, Pair<ContractCreationRecord, Boolean>>,
-  val contractSuicides: Map<Data20, Pair<ContractSuicideRecord, Boolean>>
-) {
-
-  fun concat(other: TransactionData) = TransactionData(
-    fungibleBalanceDeltas + other.fungibleBalanceDeltas,
-    nonFungibleBalanceDeltas + other.nonFungibleBalanceDeltas,
-    contractCreations + other.contractCreations,
-    contractSuicides + other.contractSuicides
-  )
 }

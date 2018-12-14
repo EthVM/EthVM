@@ -4,7 +4,7 @@ import arrow.core.Option
 import io.enkrypt.avro.common.Data20
 import io.enkrypt.avro.common.Data32
 import io.enkrypt.avro.processing.FungibleTokenTransferRecord
-import io.enkrypt.kafka.streams.extensions.setAmount
+import io.enkrypt.common.extensions.setAmount
 import java.math.BigInteger
 import java.nio.file.Paths
 

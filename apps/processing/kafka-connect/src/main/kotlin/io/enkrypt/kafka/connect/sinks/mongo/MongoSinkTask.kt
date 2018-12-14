@@ -10,7 +10,7 @@ import com.mongodb.client.model.ReplaceOptions
 import com.mongodb.client.model.UpdateOneModel
 import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.WriteModel
-import io.enkrypt.kafka.connect.extensions.toHex
+import io.enkrypt.common.extensions.toHex
 import io.enkrypt.kafka.connect.utils.Versions
 import mu.KotlinLogging
 import org.apache.kafka.clients.consumer.OffsetAndMetadata
@@ -70,7 +70,6 @@ class MongoSinkTask : SinkTask() {
       BsonDocument::class.java
     )
     collectionsMap += CollectionId.BlockStatistics to db.getCollection("block_statistics", BsonDocument::class.java)
-    collectionsMap += CollectionId.BlockStatistics to db.getCollection("block_statistics", BsonDocument::class.java)
   }
 
   override fun stop() {
@@ -113,7 +112,11 @@ class MongoSinkTask : SinkTask() {
         val collection = collectionsMap[collectionId]!!
         val bulkWrite = collection.bulkWrite(writes)
 
-        logger.debug { "Bulk write complete. Collection = $collectionId, inserts = ${bulkWrite.insertedCount}, updates = ${bulkWrite.modifiedCount}, upserts = ${bulkWrite.upserts.size}, deletes = ${bulkWrite.deletedCount}" }
+        logger.debug {
+          "Bulk write complete. Collection = $collectionId, inserts = ${bulkWrite.insertedCount}, " +
+            "updates = ${bulkWrite.modifiedCount}, upserts = ${bulkWrite.upserts.size}, " +
+            "deletes = ${bulkWrite.deletedCount}"
+        }
       }
 
     val elapsedMs = System.currentTimeMillis() - startMs
@@ -152,7 +155,8 @@ class MongoSinkTask : SinkTask() {
 
       val valueBson = StructToBsonConverter.convert(record.value() as Struct)
 
-      blockWrites += ReplaceOneModel(blockFilter, valueBson,
+      blockWrites += ReplaceOneModel(
+        blockFilter, valueBson,
         replaceOptions
       )
 
@@ -168,7 +172,8 @@ class MongoSinkTask : SinkTask() {
           val doc = it
             .append("blockNumber", blockNumberBson)
 
-          ReplaceOneModel(BsonDocument("_id", txHash), doc,
+          ReplaceOneModel(
+            BsonDocument("_id", txHash), doc,
             replaceOptions
           )
         }
@@ -206,7 +211,8 @@ class MongoSinkTask : SinkTask() {
           append("\$set", StructToBsonConverter.convert(struct))
         }
 
-      writes += UpdateOneModel(idFilter, bson,
+      writes += UpdateOneModel(
+        idFilter, bson,
         updateOptions
       )
     }
@@ -242,7 +248,8 @@ class MongoSinkTask : SinkTask() {
             .apply { append("metadata", StructToBsonConverter.convert(struct)) })
         }
 
-      writes += UpdateOneModel(idFilter, bson,
+      writes += UpdateOneModel(
+        idFilter, bson,
         updateOptions
       )
     }
@@ -311,7 +318,8 @@ class MongoSinkTask : SinkTask() {
       // combine with id fields so we can query on them later
       idBson.forEach { k, v -> bson = bson.append(k, v) }
 
-      writes += ReplaceOneModel(idFilter, bson,
+      writes += ReplaceOneModel(
+        idFilter, bson,
         replaceOptions
       )
     }
@@ -345,7 +353,8 @@ class MongoSinkTask : SinkTask() {
       // combine with id fields so we can query on them later
       idBson.forEach { k, v -> bson = bson.append(k, v) }
 
-      writes += ReplaceOneModel(idFilter, bson,
+      writes += ReplaceOneModel(
+        idFilter, bson,
         replaceOptions
       )
     }
@@ -378,7 +387,8 @@ class MongoSinkTask : SinkTask() {
       // combine with id fields so we can query on them later
       idBson.forEach { k, v -> bson = bson.append(k, v) }
 
-      writes += ReplaceOneModel(idFilter, bson,
+      writes += ReplaceOneModel(
+        idFilter, bson,
         replaceOptions
       )
     }
@@ -411,7 +421,8 @@ class MongoSinkTask : SinkTask() {
       // combine with id fields so we can query on them later
       idBson.forEach { k, v -> bson = bson.append(k, v) }
 
-      writes += ReplaceOneModel(idFilter, bson,
+      writes += ReplaceOneModel(
+        idFilter, bson,
         replaceOptions
       )
     }

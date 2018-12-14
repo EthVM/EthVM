@@ -54,7 +54,13 @@ class ChainEvent(
     fun fungibleTransfer(record: FungibleTokenTransferRecord): ChainEvent =
       ChainEvent(ChainEventType.FungibleBalanceTransfer, _fungibleBalance = record)
 
-    fun fungibleTransfer(from: Data20, to: Data20, amount: ByteBuffer, reverse: Boolean = false, contract: Data20? = null): ChainEvent =
+    fun fungibleTransfer(
+      from: Data20,
+      to: Data20,
+      amount: ByteBuffer,
+      reverse: Boolean = false,
+      contract: Data20? = null
+    ): ChainEvent =
       fungibleTransfer(
         FungibleTokenTransferRecord.newBuilder()
           .setReverse(reverse)
@@ -68,7 +74,13 @@ class ChainEvent(
     fun nonFungibleTransfer(record: NonFungibleTokenTransferRecord): ChainEvent =
       ChainEvent(ChainEventType.NonFungibleBalanceTransfer, _nonFungibleBalance = record)
 
-    fun nonFungibleTransfer(contract: Data20, from: Data20, to: Data20, tokenId: ByteBuffer, reverse: Boolean = false): ChainEvent =
+    fun nonFungibleTransfer(
+      contract: Data20,
+      from: Data20,
+      to: Data20,
+      tokenId: ByteBuffer,
+      reverse: Boolean = false
+    ): ChainEvent =
       nonFungibleTransfer(
         NonFungibleTokenTransferRecord.newBuilder()
           .setReverse(reverse)
@@ -82,7 +94,15 @@ class ChainEvent(
     fun contractCreation(record: ContractCreationRecord): ChainEvent =
       ChainEvent(ChainEventType.ContractCreation, _contractCreation = record)
 
-    fun contractCreation(contractType: ContractType, creator: Data20, blockHash: Data32, txHash: Data32, address: Data20, data: ByteBuffer, reverse: Boolean = false): ChainEvent =
+    fun contractCreation(
+      contractType: ContractType,
+      creator: Data20,
+      blockHash: Data32,
+      txHash: Data32,
+      address: Data20,
+      data: ByteBuffer,
+      reverse: Boolean = false
+    ): ChainEvent =
       contractCreation(
         ContractCreationRecord.newBuilder()
           .setReverse(reverse)

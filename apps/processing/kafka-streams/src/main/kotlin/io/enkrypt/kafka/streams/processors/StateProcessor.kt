@@ -2,12 +2,11 @@ package io.enkrypt.kafka.streams.processors
 
 import io.enkrypt.avro.processing.FungibleTokenBalanceRecord
 import io.enkrypt.avro.processing.MetricRecord
-import io.enkrypt.kafka.streams.BoltSerdes
+import io.enkrypt.common.extensions.bigInteger
+import io.enkrypt.common.extensions.byteBuffer
+import io.enkrypt.kafka.streams.Serdes
 import io.enkrypt.kafka.streams.Topics
-import io.enkrypt.kafka.streams.extensions.bigInteger
-import io.enkrypt.kafka.streams.extensions.byteBuffer
 import mu.KotlinLogging
-import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
@@ -18,10 +17,8 @@ import org.apache.kafka.streams.kstream.Serialized
 import java.math.BigInteger
 import java.nio.ByteBuffer
 import java.util.Properties
+import org.apache.kafka.common.serialization.Serdes as KafkaSerdes
 
-/**
- * This processor processes addresses balances and type (if is a smart contract or not).
- */
 class StateProcessor : AbstractKafkaProcessor() {
 
   override val id: String = "state-processor"
@@ -41,8 +38,11 @@ class StateProcessor : AbstractKafkaProcessor() {
     val builder = StreamsBuilder()
 
     val fungibleBalances = builder
-      .stream(Topics.FungibleTokenMovements, Consumed.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance()))
-      .groupByKey(Serialized.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance()))
+      .stream(
+        Topics.FungibleTokenMovements,
+        Consumed.with(Serdes.FungibleTokenBalanceKey(), Serdes.FungibleTokenBalance())
+      )
+      .groupByKey(Serialized.with(Serdes.FungibleTokenBalanceKey(), Serdes.FungibleTokenBalance()))
       .reduce(
         { memo, next ->
           FungibleTokenBalanceRecord
@@ -50,24 +50,24 @@ class StateProcessor : AbstractKafkaProcessor() {
             .setAmount(ByteBuffer.wrap(memo.getAmount().bigInteger()!!.add(next.getAmount().bigInteger()).toByteArray()))
             .build()
         },
-        Materialized.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance())
+        Materialized.with(Serdes.FungibleTokenBalanceKey(), Serdes.FungibleTokenBalance())
       )
 
     fungibleBalances
       .toStream()
-      .to(Topics.FungibleTokenBalances, Produced.with(BoltSerdes.FungibleTokenBalanceKey(), BoltSerdes.FungibleTokenBalance()))
+      .to(Topics.FungibleTokenBalances, Produced.with(Serdes.FungibleTokenBalanceKey(), Serdes.FungibleTokenBalance()))
 
-    //
+    // Metrics
 
     val blockMetricsStream = builder
-      .stream(Topics.BlockMetrics, Consumed.with(BoltSerdes.MetricKey(), BoltSerdes.Metric()))
+      .stream(Topics.BlockMetrics, Consumed.with(Serdes.MetricKey(), Serdes.Metric()))
 
     val blockMetricsByDayCount = blockMetricsStream
-      .groupByKey(Serialized.with(BoltSerdes.MetricKey(), BoltSerdes.Metric()))
-      .count(Materialized.with(BoltSerdes.MetricKey(), Serdes.Long()))
+      .groupByKey(Serialized.with(Serdes.MetricKey(), Serdes.Metric()))
+      .count(Materialized.with(Serdes.MetricKey(), KafkaSerdes.Long()))
 
     blockMetricsStream
-      .groupByKey(Serialized.with(BoltSerdes.MetricKey(), BoltSerdes.Metric()))
+      .groupByKey(Serialized.with(Serdes.MetricKey(), Serdes.Metric()))
       .reduce(
         { memo, next ->
 
@@ -94,7 +94,7 @@ class StateProcessor : AbstractKafkaProcessor() {
 
           metricBuilder.build()
         },
-        Materialized.with(BoltSerdes.MetricKey(), BoltSerdes.Metric())
+        Materialized.with(Serdes.MetricKey(), Serdes.Metric())
       ).join(
         blockMetricsByDayCount,
         { aggMetric, metricsCount ->
@@ -126,9 +126,9 @@ class StateProcessor : AbstractKafkaProcessor() {
             metricBuilder.build()
           }
         },
-        Materialized.with(BoltSerdes.MetricKey(), BoltSerdes.Metric())
+        Materialized.with(Serdes.MetricKey(), Serdes.Metric())
       ).toStream()
-      .to(Topics.BlockStatistics, Produced.with(BoltSerdes.MetricKey(), BoltSerdes.Metric()))
+      .to(Topics.BlockStatistics, Produced.with(Serdes.MetricKey(), Serdes.Metric()))
 
     // Generate the topology
     return builder.build()

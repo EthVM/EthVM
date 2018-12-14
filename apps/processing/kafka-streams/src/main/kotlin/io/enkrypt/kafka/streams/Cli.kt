@@ -70,7 +70,8 @@ class Cli : CliktCommand() {
           blocksTopic,
           pendingTxsTopic,
           metadataTopic
-        ))
+        )
+      )
     }
 
     single { AppConfig(get()) }

@@ -1,8 +1,8 @@
 package io.enkrypt.kafka.streams.models
 
 import io.enkrypt.avro.capture.BlockRecord
-import io.enkrypt.kafka.streams.extensions.bigInteger
-import io.enkrypt.kafka.streams.extensions.isSuccess
+import io.enkrypt.common.extensions.bigInteger
+import io.enkrypt.common.extensions.isSuccess
 import java.math.BigInteger
 
 enum class BlockStatistic {

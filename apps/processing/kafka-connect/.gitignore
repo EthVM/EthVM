@@ -1,8 +1,0 @@
-# IntelliJ
-.idea/
-*.iml
-out/
-
-# Project
-build/
-.gradle

@@ -2,7 +2,7 @@ package io.enkrypt.kafka.streams.utils
 
 import arrow.core.Option
 import io.enkrypt.avro.common.Data32
-import io.enkrypt.kafka.streams.extensions.byteBuffer
+import io.enkrypt.common.extensions.byteBuffer
 import org.ethereum.solidity.Abi
 import java.nio.ByteBuffer
 import java.nio.file.Files

@@ -5,14 +5,14 @@ import io.enkrypt.avro.processing.FungibleTokenBalanceKeyRecord
 import io.enkrypt.avro.processing.FungibleTokenBalanceRecord
 import io.enkrypt.avro.processing.MetricKeyRecord
 import io.enkrypt.avro.processing.MetricRecord
+import io.enkrypt.common.extensions.bigIntBuffer
+import io.enkrypt.common.extensions.bigInteger
+import io.enkrypt.common.extensions.byteBuffer
+import io.enkrypt.common.extensions.hex
 import io.enkrypt.kafka.Addresses
 import io.enkrypt.kafka.TestModules
 import io.enkrypt.kafka.streams.Modules
 import io.enkrypt.kafka.streams.Topics
-import io.enkrypt.kafka.streams.extensions.bigIntBuffer
-import io.enkrypt.kafka.streams.extensions.bigInteger
-import io.enkrypt.kafka.streams.extensions.byteBuffer
-import io.enkrypt.kafka.streams.extensions.hex
 import io.enkrypt.kafka.streams.processors.StateProcessor
 import io.enkrypt.kafka.test.utils.IntegrationTestUtils
 import io.kotlintest.matchers.plusOrMinus
@@ -160,7 +160,10 @@ class StateProcessorTest : KoinTest, BehaviorSpec() {
   ) =
     movement.map { KeyValue(fungibleTokenBalanceKey(address, contract), fungibleTokenBalance(it)) }
 
-  private fun fungibleTokenBalanceKey(address: String = Addresses.createAddress(), contract: String = Addresses.ETHER_CONTRACT) =
+  private fun fungibleTokenBalanceKey(
+    address: String = Addresses.createAddress(),
+    contract: String = Addresses.ETHER_CONTRACT
+  ) =
     FungibleTokenBalanceKeyRecord
       .newBuilder()
       .setAddress(Data20(address.toByteArray()))

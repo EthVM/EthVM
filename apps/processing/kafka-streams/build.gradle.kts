@@ -1,14 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val kotlinVersion = "1.3.10"
-
 plugins {
   application
   kotlin("jvm")
-}
-
-tasks.withType<KotlinCompile> {
-  kotlinOptions.jvmTarget = "1.8"
+  id("org.jlleitschuh.gradle.ktlint")
 }
 
 val test by tasks.getting(Test::class) { useJUnitPlatform {} }
@@ -23,13 +18,14 @@ project.java.sourceSets["main"].java {
 
 dependencies {
   // Kotlin
-  implementation(kotlin("stdlib", kotlinVersion))
-  compile(kotlin("reflect", kotlinVersion))
+  implementation(kotlin("stdlib"))
+  implementation(kotlin("reflect"))
 
   // Ethereumj
   implementation(group = "org.ethereum", name = "ethereumj-core", version = "1.9.+")
 
   // Avro
+  implementation(project(":common"))
   implementation(project(":avro"))
 
   // Kafka

@@ -68,8 +68,10 @@ object IntegrationTestUtils {
     topic: String,
     expectedNumRecords: Int
   ): List<KeyValue<K, V>> =
-    waitUntilMinKeyValueRecordsReceived(consumerConfig, topic, expectedNumRecords,
-      DEFAULT_TIMEOUT)
+    waitUntilMinKeyValueRecordsReceived(
+      consumerConfig, topic, expectedNumRecords,
+      DEFAULT_TIMEOUT
+    )
 
   /**
    * Wait until enough data (key-value records) has been consumed.
@@ -96,9 +98,11 @@ object IntegrationTestUtils {
       if (accumData.size >= expectedNumRecords)
         return accumData
       if (System.currentTimeMillis() > startTime + waitTime)
-        throw AssertionError("Expected " + expectedNumRecords +
-          " but received only " + accumData.size +
-          " records before timeout " + waitTime + " ms")
+        throw AssertionError(
+          "Expected " + expectedNumRecords +
+            " but received only " + accumData.size +
+            " records before timeout " + waitTime + " ms"
+        )
       Thread.sleep(Math.min(waitTime, 100L))
     }
   }
@@ -110,8 +114,10 @@ object IntegrationTestUtils {
     expectedNumRecords: Int
   ): List<V> {
 
-    return waitUntilMinValuesRecordsReceived(consumerConfig, topic, expectedNumRecords,
-      DEFAULT_TIMEOUT)
+    return waitUntilMinValuesRecordsReceived(
+      consumerConfig, topic, expectedNumRecords,
+      DEFAULT_TIMEOUT
+    )
   }
 
   /**
@@ -139,9 +145,11 @@ object IntegrationTestUtils {
       if (accumData.size >= expectedNumRecords)
         return accumData
       if (System.currentTimeMillis() > startTime + waitTime)
-        throw AssertionError("Expected " + expectedNumRecords +
-          " but received only " + accumData.size +
-          " records before timeout " + waitTime + " ms")
+        throw AssertionError(
+          "Expected " + expectedNumRecords +
+            " but received only " + accumData.size +
+            " records before timeout " + waitTime + " ms"
+        )
       Thread.sleep(Math.min(waitTime, 100L))
     }
   }
@@ -186,12 +194,14 @@ object IntegrationTestUtils {
   </V></K> */
   @Throws(InterruptedException::class)
   fun <K, V> assertThatKeyValueStoreContains(store: ReadOnlyKeyValueStore<K, V>, expected: Map<K, V>) {
-    TestUtils.waitForCondition({
-      expected.keys
-        .stream()
-        .allMatch { k -> expected[k] == store.get(k) }
-    },
+    TestUtils.waitForCondition(
+      {
+        expected.keys
+          .stream()
+          .allMatch { k -> expected[k] == store.get(k) }
+      },
       30000,
-      "Expected values not found in KV store")
+      "Expected values not found in KV store"
+    )
   }
 }

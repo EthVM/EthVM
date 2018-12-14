@@ -1,6 +1,6 @@
 package io.enkrypt.kafka
 
-import io.enkrypt.kafka.streams.extensions.hex
+import io.enkrypt.common.extensions.hex
 import org.ethereum.crypto.ECKey
 
 object Addresses {

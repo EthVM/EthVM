@@ -1,7 +1,7 @@
 package io.enkrypt.kafka.connect.sources.tokens
 
 import com.beust.klaxon.Klaxon
-import org.apache.commons.codec.binary.Hex
+import io.enkrypt.common.codec.Hex
 import org.apache.kafka.connect.data.Schema
 import org.apache.kafka.connect.data.SchemaBuilder
 import org.apache.kafka.connect.data.Struct

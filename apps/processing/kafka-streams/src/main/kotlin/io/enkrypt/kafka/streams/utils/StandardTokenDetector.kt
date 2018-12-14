@@ -1,12 +1,12 @@
 package io.enkrypt.kafka.streams.utils
 
 import io.enkrypt.avro.common.ContractType
-import io.enkrypt.kafka.streams.extensions.byteArray
+import io.enkrypt.common.extensions.byteArray
+import io.enkrypt.common.extensions.indexByteArrayOf
 import io.enkrypt.kafka.streams.utils.TokenContract.Companion.DECIMALS
 import io.enkrypt.kafka.streams.utils.TokenContract.Companion.NAME
 import io.enkrypt.kafka.streams.utils.TokenContract.Companion.SYMBOL
 import io.enkrypt.kafka.streams.utils.TokenContract.Companion.TOTAL_SUPPLY
-import io.enkrypt.kafka.streams.extensions.indexByteArrayOf
 import org.ethereum.crypto.HashUtil
 import java.nio.ByteBuffer
 

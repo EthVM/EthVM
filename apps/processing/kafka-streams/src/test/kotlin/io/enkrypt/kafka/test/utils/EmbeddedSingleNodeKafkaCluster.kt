@@ -52,12 +52,20 @@ class EmbeddedSingleNodeKafkaCluster : ExternalResource {
       zookeeper!!.connectString,
       30000,
       30000,
-      JaasUtils.isZkSecurityEnabled())
+      JaasUtils.isZkSecurityEnabled()
+    )
 
     val effectiveBrokerConfig = effectiveBrokerConfigFrom(brokerConfig, zookeeper!!)
-    log.debug("Starting a Kafka instance on port {} ...", effectiveBrokerConfig.getProperty(`KafkaConfig$`.`MODULE$`.PortProp()))
+    log.debug(
+      "Starting a Kafka instance on port {} ...",
+      effectiveBrokerConfig.getProperty(`KafkaConfig$`.`MODULE$`.PortProp())
+    )
     broker = KafkaEmbedded(effectiveBrokerConfig)
-    log.debug("Kafka instance is running at {}, connected to ZooKeeper at {}", broker!!.brokerList(), broker!!.zookeeperConnect())
+    log.debug(
+      "Kafka instance is running at {}, connected to ZooKeeper at {}",
+      broker!!.brokerList(),
+      broker!!.zookeeperConnect()
+    )
 
     val schemaRegistryProps = Properties()
     with(schemaRegistryProps) {
@@ -66,8 +74,10 @@ class EmbeddedSingleNodeKafkaCluster : ExternalResource {
       put(SchemaRegistryConfig.KAFKASTORE_INIT_TIMEOUT_CONFIG, KAFKASTORE_INIT_TIMEOUT)
     }
 
-    schemaRegistry = RestApp(0, zookeeperConnect(), KAFKA_SCHEMAS_TOPIC,
-      AVRO_COMPATIBILITY_TYPE, schemaRegistryProps)
+    schemaRegistry = RestApp(
+      0, zookeeperConnect(), KAFKA_SCHEMAS_TOPIC,
+      AVRO_COMPATIBILITY_TYPE, schemaRegistryProps
+    )
     schemaRegistry!!.start()
     running = true
   }
@@ -205,7 +215,11 @@ class EmbeddedSingleNodeKafkaCluster : ExternalResource {
 
     // TODO find testing dependency
     if (timeoutMs > 0) {
-      TestUtils.waitForCondition(TopicsDeletedCondition(*topics), timeoutMs, "Topics not deleted after $timeoutMs milli seconds.")
+      TestUtils.waitForCondition(
+        TopicsDeletedCondition(*topics),
+        timeoutMs,
+        "Topics not deleted after $timeoutMs milli seconds."
+      )
     }
   }
 

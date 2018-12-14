@@ -72,8 +72,16 @@ class KafkaEmbedded(config: Properties) {
    * You can use this to tell Kafka producers and consumers how to connect to this instance.
    */
   fun brokerList(): String =
-    arrayOf(kafka.config().hostName(), Integer.toString(kafka.boundPort(ListenerName.forSecurityProtocol(SecurityProtocol
-      .PLAINTEXT)))).joinToString(":")
+    arrayOf(
+      kafka.config().hostName(), Integer.toString(
+        kafka.boundPort(
+          ListenerName.forSecurityProtocol(
+            SecurityProtocol
+              .PLAINTEXT
+          )
+        )
+      )
+    ).joinToString(":")
 
   /**
    * The ZooKeeper connection string aka `zookeeper.connect`.
@@ -84,12 +92,20 @@ class KafkaEmbedded(config: Properties) {
    * Stop the broker.
    */
   fun stop() {
-    log.debug("Shutting down embedded Kafka broker at {} (with ZK ensemble at {}) ...", brokerList(), zookeeperConnect())
+    log.debug(
+      "Shutting down embedded Kafka broker at {} (with ZK ensemble at {}) ...",
+      brokerList(),
+      zookeeperConnect()
+    )
     kafka.shutdown()
     kafka.awaitShutdown()
     log.debug("Removing temp folder {} with logs.dir at {} ...", tmpFolder, logDir)
     tmpFolder.delete()
-    log.debug("Shutdown of embedded Kafka broker at {} completed (with ZK ensemble at {}) ...", brokerList(), zookeeperConnect())
+    log.debug(
+      "Shutdown of embedded Kafka broker at {} completed (with ZK ensemble at {}) ...",
+      brokerList(),
+      zookeeperConnect()
+    )
   }
 
   /**
@@ -126,8 +142,10 @@ class KafkaEmbedded(config: Properties) {
     replication: Int,
     topicConfig: Properties
   ) {
-    log.debug("Creating topic { name: {}, partitions: {}, replication: {}, config: {} }",
-      topic, partitions, replication, topicConfig)
+    log.debug(
+      "Creating topic { name: {}, partitions: {}, replication: {}, config: {} }",
+      topic, partitions, replication, topicConfig
+    )
     // Note: You must initialize the ZkClient with ZKStringSerializer.  If you don't, then
     // createTopic() will only seem to work (it will return without error).  The topic will exist in
     // only ZooKeeper and will be returned when listing topics, but Kafka itself does not create the

@@ -33,7 +33,7 @@ build_connector() {
   cd ${processing_dir}
 
   ./gradlew kafka-connect:build
-  cp ${kafka_connect_dir}/build/libs/enkryptio-mongo-* ${kafka_connect_dir}/libs/
+  cp ${kafka_connect_dir}/build/libs/io.enkrypt-kafka-connect-* ${kafka_connect_dir}/libs/
 
   echo "Restarting kafka connect (if running)..."
   (cd ${ROOT_DIR}; docker-compose restart kafka-connect)
@@ -43,13 +43,13 @@ build_connector() {
 register_sinks () {
   echo "Registering sinks..."
   local domain=$(prop "${ROOT_DIR}/.env" "DOMAIN")
-  curl -s -H "Content-Type: application/json" -X POST -d @${SCRIPT_DIR}/kafka-connect/sinks/mongo.json http://kafka-connect.ethvm.${domain}/connectors
+  curl -s -H "Content-Type: application/json" -X POST -d @${SCRIPT_DIR}/kafka-connect/sinks/mongo-sink.json http://localhost:8083/connectors
 }
 
 register_sources() {
   echo "Registering sources..."
   local domain=$(prop "${ROOT_DIR}/.env" "DOMAIN")
-  curl -s -H "Content-Type: application/json" -X POST -d @${SCRIPT_DIR}/kafka-connect/sources/ethlists.json http://kafka-connect.ethvm.${domain}/connectors
+  curl -s -H "Content-Type: application/json" -X POST -d @${SCRIPT_DIR}/kafka-connect/sources/eth-lists-source.json http://localhost:8083/connectors
 }
 
 reset() {

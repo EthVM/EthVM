@@ -1,7 +1,7 @@
 package io.enkrypt.kafka.connect.sinks.mongo
 
 import arrow.core.Option
-import io.enkrypt.kafka.connect.extensions.toHex
+import io.enkrypt.common.extensions.hex
 import org.apache.kafka.connect.data.Schema
 import org.apache.kafka.connect.data.Schema.Type.ARRAY
 import org.apache.kafka.connect.data.Schema.Type.BOOLEAN
@@ -37,10 +37,36 @@ typealias BsonFactory = (Any) -> BsonValue?
 object StructToBsonConverter {
 
   private val hexFields = setOf(
-    "hash", "parentHash", "unclesHash", "coinbase", "stateRoot", "txTrieRoot", "receiptTrieRoot",
-    "logsBloom", "mixHash", "nonce", "extraData", "from", "to", "data", "postTxState", "bloomFilter",
-    "contract", "tokenId", "address", "txHash", "creator", "blockHash", "miner", "sha3Uncles", "transactionsRoot",
-    "receiptsRoot", "input", "r", "s", "author"
+    "hash",
+    "parentHash",
+    "unclesHash",
+    "coinbase",
+    "stateRoot",
+    "txTrieRoot",
+    "receiptTrieRoot",
+    "logsBloom",
+    "mixHash",
+    "nonce",
+    "extraData",
+    "from",
+    "to",
+    "data",
+    "postTxState",
+    "bloomFilter",
+    "contract",
+    "tokenId",
+    "address",
+    "txHash",
+    "creator",
+    "blockHash",
+    "miner",
+    "sha3Uncles",
+    "transactionsRoot",
+    "receiptsRoot",
+    "input",
+    "r",
+    "s",
+    "author"
   )
 
   private val bigIntegerFields = setOf(
@@ -106,7 +132,7 @@ object StructToBsonConverter {
               val bytes = (bsonValue as BsonBinary).data
 
               if (hexFields.contains(fieldName)) {
-                bsonValue = BsonString(bytes.toHex())
+                bsonValue = BsonString(bytes.hex())
               } else if (bigIntegerFields.contains(fieldName)) {
 
                 val bigDecimal =
