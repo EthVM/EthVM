@@ -4,7 +4,7 @@ export class HexTime {
   public time: string
 
   constructor(_time: Buffer) {
-    this.time = '0x' + new Buffer(_time).toString('hex')
+    this.time = '0x' + Buffer.from(_time).toString('hex')
   }
 
   public toString(): string {
@@ -12,7 +12,7 @@ export class HexTime {
   }
 
   public toBuffer(): Buffer {
-    return new Buffer(this.time.substring(2), 'hex')
+    return Buffer.from(this.time.substring(2), 'hex')
   }
 
   public toDate(): Date {
