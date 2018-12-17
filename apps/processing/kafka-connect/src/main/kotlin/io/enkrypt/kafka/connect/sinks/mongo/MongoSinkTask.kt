@@ -24,18 +24,6 @@ import org.bson.BsonDocument
 import org.bson.BsonString
 import org.bson.Document
 
-enum class CollectionId {
-
-  Blocks,
-  Accounts,
-  Transactions,
-  Contracts,
-  FungibleBalances,
-  NonFungibleBalances,
-  PendingTransactions,
-  BlockStatistics
-}
-
 class MongoSinkTask : SinkTask() {
 
   private val logger = KotlinLogging.logger {}
@@ -56,11 +44,26 @@ class MongoSinkTask : SinkTask() {
 
     // TODO maybe use a Struct to Bson Codec?
 
-    collectionsMap += CollectionId.Blocks to db.getCollection("blocks", BsonDocument::class.java)
-    collectionsMap += CollectionId.Accounts to db.getCollection("accounts", BsonDocument::class.java)
-    collectionsMap += CollectionId.Transactions to db.getCollection("transactions", BsonDocument::class.java)
-    collectionsMap += CollectionId.Contracts to db.getCollection("contracts", BsonDocument::class.java)
-    collectionsMap += CollectionId.FungibleBalances to db.getCollection("fungible_balances", BsonDocument::class.java)
+    collectionsMap += CollectionId.Blocks to db.getCollection(
+      "blocks",
+      BsonDocument::class.java
+    )
+    collectionsMap += CollectionId.Accounts to db.getCollection(
+      "accounts",
+      BsonDocument::class.java
+    )
+    collectionsMap += CollectionId.Transactions to db.getCollection(
+      "transactions",
+      BsonDocument::class.java
+    )
+    collectionsMap += CollectionId.Contracts to db.getCollection(
+      "contracts",
+      BsonDocument::class.java
+    )
+    collectionsMap += CollectionId.FungibleBalances to db.getCollection(
+      "fungible_balances",
+      BsonDocument::class.java
+    )
     collectionsMap += CollectionId.NonFungibleBalances to db.getCollection(
       "non_fungible_balances",
       BsonDocument::class.java
@@ -69,7 +72,10 @@ class MongoSinkTask : SinkTask() {
       "pending_transactions",
       BsonDocument::class.java
     )
-    collectionsMap += CollectionId.BlockStatistics to db.getCollection("block_statistics", BsonDocument::class.java)
+    collectionsMap += CollectionId.BlockStatistics to db.getCollection(
+      "block_statistics",
+      BsonDocument::class.java
+    )
   }
 
   override fun stop() {
@@ -435,4 +441,15 @@ class MongoSinkTask : SinkTask() {
     val updateOptions: UpdateOptions = UpdateOptions().upsert(true)
     val replaceOptions: ReplaceOptions = ReplaceOptions().upsert(true)
   }
+}
+
+enum class CollectionId {
+  Blocks,
+  BlockStatistics,
+  Accounts,
+  Transactions,
+  Contracts,
+  FungibleBalances,
+  NonFungibleBalances,
+  PendingTransactions
 }

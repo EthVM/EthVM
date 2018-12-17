@@ -11,11 +11,6 @@ plugins {
   id("org.jlleitschuh.gradle.ktlint")
 }
 
-project.tasks.getting(Test::class) { useJUnitPlatform {} }
-
-val build: DefaultTask by tasks
-build.dependsOn(tasks["shadowJar"] as ShadowJar)
-
 project.java.sourceSets["main"].java {
   srcDir("src/main/kotlin")
 }
@@ -49,6 +44,23 @@ dependencies {
 
 }
 
+project.tasks.getting(Test::class) { useJUnitPlatform {} }
+
+val build: DefaultTask by tasks
+build.dependsOn(project.tasks["shadowJar"] as ShadowJar)
+
+tasks {
+  "copyJar"(Copy::class) {
+    dependsOn("shadowJar")
+    from("build/libs/") { include("**/*.jar") }
+    into("libs/")
+  }
+
+  "buildConnectJar" {
+    dependsOn("copyJar")
+  }
+}
+
 tasks.withType<ShadowJar> {
-  baseName = project.rootProject.group.toString() + "-" + project.name
+  baseName = project.rootProject.group.toString().replace(".", "-") + "-" + project.name
 }

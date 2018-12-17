@@ -26,30 +26,31 @@ kafka_connect_usage() {
 
 # build_connector - builds the Kafka connector
 build_connector() {
-  echo "Building connector..."
-
   local processing_dir=$(cd ${ROOT_DIR}/apps/processing; pwd)
   local kafka_connect_dir=$(cd ${processing_dir}/kafka-connect; pwd)
-  cd ${processing_dir}
 
-  ./gradlew kafka-connect:build
-  cp ${kafka_connect_dir}/build/libs/io.enkrypt-kafka-connect-* ${kafka_connect_dir}/libs/
+  echo "Building connector..."
+  (cd ${processing_dir}; ./gradlew kafka-connect:buildConnectJar)
 
   echo "Restarting kafka connect (if running)..."
   (cd ${ROOT_DIR}; docker-compose restart kafka-connect)
 }
 
+read_version() {
+  local raw_version_path=$(jq -car '.projects[] | select(.id=="kafka-ethvm-utils") | .version' $PROJECTS_PATH)
+  local version_path=$(eval "echo -e ${raw_version_path}")
+  echo $(to_version "${version_path}")
+}
+
 # register_sinks  - lists registered Kafka topics
 register_sinks () {
-  echo "Registering sinks..."
-  local domain=$(prop "${ROOT_DIR}/.env" "DOMAIN")
-  curl -s -H "Content-Type: application/json" -X POST -d @${SCRIPT_DIR}/kafka-connect/sinks/mongo-sink.json http://localhost:8083/connectors
+  local version=$(read_version)
+  docker run --rm --network ethvm_back enkryptio/kafka-ethvm-utils:${version} register-sinks
 }
 
 register_sources() {
-  echo "Registering sources..."
-  local domain=$(prop "${ROOT_DIR}/.env" "DOMAIN")
-  curl -s -H "Content-Type: application/json" -X POST -d @${SCRIPT_DIR}/kafka-connect/sources/eth-lists-source.json http://localhost:8083/connectors
+  local version=$(read_version)
+  docker run --rm --network ethvm_back enkryptio/kafka-ethvm-utils:${version} register-sources
 }
 
 reset() {

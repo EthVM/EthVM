@@ -71,6 +71,7 @@ up_default() {
   echo "Waiting 30 seconds for kafka-connect to restart"
   sleep 30
 
+  echo "Registering sinks and sources into kafka connect..."
   ${SCRIPT_DIR}/kafka-connect.sh register-sinks
   ${SCRIPT_DIR}/kafka-connect.sh register-sources
 }

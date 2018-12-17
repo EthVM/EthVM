@@ -31,12 +31,6 @@
       "version": "${DOCKER_IMAGES_PATH}/kafka-connect/version.properties"
     },
     {
-      "id": "kafka-connect-ethvm-utils",
-      "dockerfile": "${DOCKER_IMAGES_PATH}/kafka-connect-ethvm-utils/Dockerfile",
-      "context": "${DOCKER_IMAGES_PATH}/kafka-connect-ethvm-utils/",
-      "version": "${DOCKER_IMAGES_PATH}/kafka-connect-ethvm-utils/version.properties"
-    },
-    {
       "id": "kafka-ethvm-utils",
       "dockerfile": "${DOCKER_IMAGES_PATH}/kafka-ethvm-utils/Dockerfile",
       "context": "${DOCKER_IMAGES_PATH}/kafka-ethvm-utils",

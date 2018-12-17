@@ -13,16 +13,16 @@ import io.enkrypt.avro.processing.MetricKeyRecord
 import io.enkrypt.avro.processing.MetricRecord
 import io.enkrypt.avro.processing.NonFungibleTokenBalanceKeyRecord
 import io.enkrypt.avro.processing.NonFungibleTokenBalanceRecord
-import io.enkrypt.kafka.streams.Serdes
-import io.enkrypt.kafka.streams.Topics
 import io.enkrypt.common.extensions.amountBI
 import io.enkrypt.common.extensions.bigInteger
 import io.enkrypt.common.extensions.byteBuffer
+import io.enkrypt.kafka.streams.config.Topics
 import io.enkrypt.kafka.streams.models.BlockStatistic
 import io.enkrypt.kafka.streams.models.BlockStatistics
 import io.enkrypt.kafka.streams.models.ChainEvent
 import io.enkrypt.kafka.streams.models.ChainEventType
 import io.enkrypt.kafka.streams.models.StaticAddresses
+import io.enkrypt.kafka.streams.serdes.Serdes
 import io.enkrypt.kafka.streams.utils.ERC20Abi
 import io.enkrypt.kafka.streams.utils.ERC721Abi
 import io.enkrypt.kafka.streams.utils.StandardTokenDetector
@@ -37,6 +37,7 @@ import org.apache.kafka.streams.kstream.Transformer
 import org.apache.kafka.streams.kstream.TransformerSupplier
 import org.apache.kafka.streams.processor.ProcessorContext
 import org.apache.kafka.streams.state.KeyValueStore
+import org.apache.kafka.streams.state.StoreBuilder
 import org.apache.kafka.streams.state.Stores
 import java.math.BigInteger
 import java.time.Instant
@@ -63,15 +64,13 @@ class BlockProcessor : AbstractKafkaProcessor() {
   override fun buildTopology(): Topology {
 
     // Create stream builder
-    val builder = StreamsBuilder()
-
-    builder.addStateStore(GatedBlockTransformer.blockSummariesStore())
-    builder.addStateStore(GatedBlockTransformer.metadataStore())
-
-    val (blocks) = appConfig.kafka.inputTopicsConfig
+    val builder = StreamsBuilder().apply {
+      addStateStore(GatedBlockTransformer.blockSummariesStore())
+      addStateStore(GatedBlockTransformer.metadataStore())
+    }
 
     val blockStream = builder
-      .stream(blocks, Consumed.with(Serdes.BlockKey(), Serdes.Block()))
+      .stream(Topics.Blocks, Consumed.with(Serdes.BlockKey(), Serdes.Block()))
 
     val gatedStream = blockStream
       .transform(
@@ -448,12 +447,12 @@ class GatedBlockTransformer : Transformer<BlockKeyRecord?, BlockRecord?, KeyValu
 
     val STORE_NAMES = arrayOf(STORE_NAME_BLOCKS, STORE_NAME_METADATA)
 
-    fun blockSummariesStore() = Stores.keyValueStoreBuilder(
+    fun blockSummariesStore(): StoreBuilder<KeyValueStore<BlockKeyRecord, BlockRecord>> = Stores.keyValueStoreBuilder(
       Stores.persistentKeyValueStore(STORE_NAME_BLOCKS),
       Serdes.BlockKey(), Serdes.Block()
     )
 
-    fun metadataStore() = Stores.keyValueStoreBuilder(
+    fun metadataStore(): StoreBuilder<KeyValueStore<String, BlockKeyRecord>> = Stores.keyValueStoreBuilder(
       Stores.persistentKeyValueStore(STORE_NAME_METADATA),
       KafkaSerdes.String(), Serdes.BlockKey()
     )

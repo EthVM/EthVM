@@ -24,11 +24,15 @@ kafka_usage() {
   echo ""
 }
 
-# create_topics - create EthVM Kafka topics
-create_topics() {
+read_version() {
   local raw_version_path=$(jq -car '.projects[] | select(.id=="kafka-ethvm-utils") | .version' $PROJECTS_PATH)
   local version_path=$(eval "echo -e ${raw_version_path}")
-  local version=$(to_version "${version_path}")
+  echo $(to_version "${version_path}")
+}
+
+# create_topics - create EthVM Kafka topics
+create_topics() {
+  local version=$(read_version)
   docker run --rm --network ethvm_back -e KAFKA_BROKERS=1 enkryptio/kafka-ethvm-utils:${version}
 }
 

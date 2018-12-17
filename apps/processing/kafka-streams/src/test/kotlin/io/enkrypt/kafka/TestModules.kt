@@ -4,11 +4,11 @@ import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig
 import io.confluent.kafka.serializers.KafkaAvroDeserializer
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig
 import io.confluent.kafka.serializers.KafkaAvroSerializer
-import io.enkrypt.kafka.streams.AppConfig
+import io.enkrypt.kafka.streams.config.AppConfig
 import io.enkrypt.kafka.streams.Cli
-import io.enkrypt.kafka.streams.KafkaConfig
+import io.enkrypt.kafka.streams.config.KafkaConfig
 import io.enkrypt.kafka.streams.KafkaInputTopicsConfig
-import io.enkrypt.kafka.streams.Topics
+import io.enkrypt.kafka.streams.config.Topics
 import io.enkrypt.kafka.test.utils.EmbeddedSingleNodeKafkaCluster
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.producer.ProducerConfig

@@ -1,10 +1,14 @@
 // create collections
 
-db.createCollection('web3_blocks');
-db.createCollection('blocks');
-db.createCollection('transactions');
-db.createCollection('contracts');
-db.createCollection('fungible_balances')
-db.createCollection('non_fungible_balances')
-db.createCollection('pending_transactions');
-db.createCollection('block_statistics');
+const collections = [
+  "web3_blocks",
+  "blocks",
+  "transactions",
+  "contracts",
+  "fungible_balances",
+  "non_fungible_balances",
+  "pending_transactions",
+  "block_statistics"
+];
+
+collections.forEach(name => db.createCollection(name));

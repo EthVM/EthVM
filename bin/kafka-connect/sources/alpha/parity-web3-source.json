@@ -1,9 +1,0 @@
-{
-  "name": "enkryptio-parity-block-source",
-  "config": {
-    "connector.class": "io.enkrypt.kafka.connect.sources.web3.ParityBlockSourceConnector",
-    "tasks.max": 1,
-    "ws.url": "ws://parity:8546",
-    "schema.registry.url": "http://kafka-schema-registry:8081"
-  }
-}

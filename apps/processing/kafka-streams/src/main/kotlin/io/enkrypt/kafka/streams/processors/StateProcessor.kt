@@ -4,8 +4,8 @@ import io.enkrypt.avro.processing.FungibleTokenBalanceRecord
 import io.enkrypt.avro.processing.MetricRecord
 import io.enkrypt.common.extensions.bigInteger
 import io.enkrypt.common.extensions.byteBuffer
-import io.enkrypt.kafka.streams.Serdes
-import io.enkrypt.kafka.streams.Topics
+import io.enkrypt.kafka.streams.serdes.Serdes
+import io.enkrypt.kafka.streams.config.Topics
 import mu.KotlinLogging
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig

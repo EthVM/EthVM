@@ -4,7 +4,9 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
-import io.enkrypt.kafka.streams.Modules.kafkaStreams
+import io.enkrypt.kafka.streams.config.AppConfig
+import io.enkrypt.kafka.streams.di.Modules.kafkaStreams
+import io.enkrypt.kafka.streams.config.KafkaConfig
 import io.enkrypt.kafka.streams.processors.BlockProcessor
 import io.enkrypt.kafka.streams.processors.KafkaProcessor
 import io.enkrypt.kafka.streams.processors.StateProcessor
@@ -40,22 +42,6 @@ class Cli : CliktCommand() {
     envvar = "KAFKA_STREAMS_RESET"
   ).int().default(DEFAULT_STREAMS_RESET)
 
-  // Input Topics - CLI
-  private val blocksTopic: String by option(
-    help = "Name of the block summaries stream topic on which Bolt will listen",
-    envvar = "KAFKA_BLOCKS_TOPIC"
-  ).default(DEFAULT_BLOCKS_TOPIC)
-
-  private val pendingTxsTopic: String by option(
-    help = "Name of the pending transactions topic on which Bolt will listen",
-    envvar = "KAFKA_PENDING_TXS_TOPIC"
-  ).default(DEFAULT_PENDING_TXS_TOPIC)
-
-  private val metadataTopic: String by option(
-    help = "Name of the metadata topic on which Bolt will listen",
-    envvar = "KAFKA_METADATA_TOPIC"
-  ).default(DEFAULT_METADATA_TOPIC)
-
   // DI
 
   private val configModule = module {
@@ -65,12 +51,7 @@ class Cli : CliktCommand() {
         bootstrapServers,
         startingOffset,
         transactionalId,
-        schemaRegistryUrl,
-        KafkaInputTopicsConfig(
-          blocksTopic,
-          pendingTxsTopic,
-          metadataTopic
-        )
+        schemaRegistryUrl
       )
     }
 
@@ -97,9 +78,5 @@ class Cli : CliktCommand() {
     const val DEFAULT_SCHEMA_REGISTRY_URL = "http://kafka-schema-registry:8081"
     const val DEFAULT_AUTO_OFFSET = "earliest"
     const val DEFAULT_STREAMS_RESET = 0
-
-    const val DEFAULT_BLOCKS_TOPIC = "blocks"
-    const val DEFAULT_PENDING_TXS_TOPIC = "pending-transactions"
-    const val DEFAULT_METADATA_TOPIC = "metadata"
   }
 }

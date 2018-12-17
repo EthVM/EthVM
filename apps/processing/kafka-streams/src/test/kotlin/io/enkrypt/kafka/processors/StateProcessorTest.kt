@@ -11,8 +11,8 @@ import io.enkrypt.common.extensions.byteBuffer
 import io.enkrypt.common.extensions.hex
 import io.enkrypt.kafka.Addresses
 import io.enkrypt.kafka.TestModules
-import io.enkrypt.kafka.streams.Modules
-import io.enkrypt.kafka.streams.Topics
+import io.enkrypt.kafka.streams.di.Modules
+import io.enkrypt.kafka.streams.config.Topics
 import io.enkrypt.kafka.streams.processors.StateProcessor
 import io.enkrypt.kafka.test.utils.IntegrationTestUtils
 import io.kotlintest.matchers.plusOrMinus
