@@ -1,4 +1,4 @@
-FROM node:10.9.0-alpine
+FROM node:10.14.2-alpine
 
 # Add repositories
 RUN echo -e "http://uk.alpinelinux.org/alpine/v3.8/main\nhttp://uk.alpinelinux.org/alpine/v3.8/community" > /etc/apk/repositories
