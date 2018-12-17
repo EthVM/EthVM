@@ -1,8 +1,11 @@
 {
-    "type": "sqlite",
-    "database": "./sqlite-example.sql",
-    "entities": [
-        "src/**/**.entity{.ts,.js}"
-    ],
-    "synchronize": true
+  "type": "mongodb",
+  "host": "localhost",
+  "database": "ethvm_local",
+  "synchronize": false,
+  "logging": true,
+  "useNewUrlParser":true,
+  "entities": [
+    "src/entity/*.ts"
+  ]
 }
