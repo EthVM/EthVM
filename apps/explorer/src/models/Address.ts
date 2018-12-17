@@ -3,7 +3,7 @@ export class Address {
 
   constructor(_add: Buffer) {
     if (_add) {
-      this.address = '0x' + new Buffer(_add).toString('hex')
+      this.address = '0x' + Buffer.from(_add).toString('hex')
       this.address = this.address === '0x' ? '0x0000000000000000000000000000000000000000' : this.address
     } else {
       this.address = null
@@ -15,7 +15,7 @@ export class Address {
   }
 
   public toBuffer(): Buffer {
-    return new Buffer(this.address.substring(2), 'hex')
+    return  Buffer.from(this.address.substring(2), 'hex')
   }
 
   public toNakedAddress(): string {

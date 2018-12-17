@@ -14,7 +14,7 @@ const common = {
     return new Address(_add)
   },
   AddressFromHex: (_add: string): Address => {
-    return new Address(new Buffer(_add.toLowerCase().replace('0x', ''), 'hex'))
+    return new Address(Buffer.from(_add.toLowerCase().replace('0x', ''), 'hex'))
   },
   Hex: (_hex: Buffer): Hex => {
     return new Hex(_hex)
@@ -25,7 +25,7 @@ const common = {
   HexToBuffer: (_hex: string): Buffer => {
     _hex = _hex.substr(0, 2) === '0x' ? _hex.substr(2) : _hex
     _hex = _hex.length % 2 ? '0' + _hex : _hex
-    return new Buffer(_hex, 'hex')
+    return Buffer.from(_hex, 'hex')
   },
   WeiValue: (_value: number): WeiValue => {
     return new WeiValue(_value)
