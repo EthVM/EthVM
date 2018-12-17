@@ -33,7 +33,7 @@ read_version() {
 # create_topics - create EthVM Kafka topics
 create_topics() {
   local version=$(read_version)
-  docker run --rm --network ethvm_back -e KAFKA_BROKERS=1 enkryptio/kafka-ethvm-utils:${version}
+  docker run --rm --network ethvm_back -e KAFKA_BROKERS=1 enkryptio/kafka-ethvm-utils:${version} create-topics
 }
 
 # list_topics - lists registered Kafka topics
