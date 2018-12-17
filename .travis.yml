@@ -58,6 +58,15 @@ matrix:
         - INSTALL=''
         - ACTION='./gradlew --no-daemon test'
       language: generic
+    -
+      env:
+        - ID=api2/unit-tests
+        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/api2
+        - INSTALL='yarn install'
+        - ACTION='yarn test'
+      language: node_js
+      node_js:
+        - "10"
 
 before_install:
   - ./.travis/before-install.sh

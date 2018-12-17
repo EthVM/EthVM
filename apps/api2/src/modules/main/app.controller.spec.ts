@@ -15,9 +15,9 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "http://vivifyideas.com"', () => {
+    it('should return "http://api.ethvm.lan"', () => {
       const appController = app.get<AppController>(AppController);
-      expect(appController.root()).toBe('http://vivifyideas.com');
+      expect(appController.root()).toBe('http://api.ethvm.lan');
     });
   });
 });
