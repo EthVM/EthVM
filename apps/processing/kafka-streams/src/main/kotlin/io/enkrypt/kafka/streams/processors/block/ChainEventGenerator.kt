@@ -1,0 +1,163 @@
+package io.enkrypt.kafka.streams.processors.block
+
+import arrow.core.Option
+import io.enkrypt.avro.capture.BlockRecord
+import io.enkrypt.avro.capture.InternalTransactionRecord
+import io.enkrypt.avro.capture.TransactionReceiptRecord
+import io.enkrypt.avro.capture.TransactionRecord
+import io.enkrypt.kafka.streams.models.ChainEvent
+import io.enkrypt.kafka.streams.models.StaticAddresses
+import io.enkrypt.kafka.streams.utils.ERC20Abi
+import io.enkrypt.kafka.streams.utils.ERC721Abi
+import io.enkrypt.kafka.streams.utils.StandardTokenDetector
+import java.math.BigInteger
+
+object ChainEventGenerator {
+
+  fun processBlock(block: BlockRecord): List<ChainEvent> {
+    val events = processPremineBalances(block) +
+      processBlockRewards(block) +
+      processTransactions(block)
+
+    // return the events in reverse order if we are reversing the block
+    return if(block.getReverse()) events.asReversed() else events
+  }
+
+  fun processPremineBalances(block: BlockRecord) =
+    block.getPremineBalances()
+      .map {
+        ChainEvent.fungibleTransfer(
+          StaticAddresses.EtherZero,
+          it.getAddress(),
+          it.getBalance(),
+          block.getReverse()
+        )
+      }
+
+  fun processBlockRewards(block: BlockRecord) =
+    block.getRewards()
+      .map {
+        ChainEvent.fungibleTransfer(
+          StaticAddresses.EtherZero,
+          it.getAddress(),
+          it.getReward(),
+          block.getReverse()
+        )
+      }
+
+  fun processTransactions(block: BlockRecord) =
+    block.getTransactions()
+      .zip(block.getTransactionReceipts())
+      .map { (tx, receipt) -> processTransaction(block, tx, receipt) }
+      .flatten()
+
+  fun processTransaction(
+    block: BlockRecord,
+    tx: TransactionRecord,
+    receipt: TransactionReceiptRecord
+  ): List<ChainEvent> {
+
+    val reverse = block.getReverse()
+
+    var events = listOf<ChainEvent>()
+
+    val blockHash = block.getHeader().getHash()
+    val txHash = tx.getHash()
+
+    val from = tx.getFrom()
+    val to = tx.getTo()
+    val value = tx.getValue()
+    val data = tx.getInput()
+
+    // simple ether transfer
+    if (!(from == null || to == null || value == null)) {
+      events += ChainEvent.fungibleTransfer(from, to, value, reverse)
+    }
+
+    // contract creation
+    if (tx.getCreates() != null) {
+      val (contractType, _) = StandardTokenDetector.detect(data)
+      events += ChainEvent.contractCreation(contractType, from, blockHash, txHash, tx.getCreates(), data, reverse)
+    }
+
+    // contract suicides
+    receipt.getDeletedAccounts()
+      .forEach { events += ChainEvent.contractSuicide(blockHash, txHash, it, reverse) }
+
+    // token transfers
+
+    receipt.getLogs().forEach { log ->
+
+      val topics = log.getTopics().toList()
+      val logData = log.getData().array()
+
+      // ERC20 transfer event has the same signature as ERC721 so we use this initial match to detect any
+      // transfer event
+
+      ERC20Abi.matchEvent(log.getTopics())
+        .filter { it.name == ERC20Abi.EVENT_TRANSFER }
+        .fold({ Unit }, {
+
+          val erc20Transfer = ERC20Abi.decodeTransferEvent(logData, topics)
+          val erc721Transfer =
+            if (erc20Transfer.isDefined()) Option.empty() else ERC721Abi.decodeTransferEvent(logData, topics)
+
+          erc20Transfer
+            .filter { it.amount != BigInteger.ZERO }
+            .fold({ Unit }, {
+              events += ChainEvent.fungibleTransfer(it.from, it.to, it.amount, reverse, it.contract)
+            })
+
+          erc721Transfer
+            .fold({ Unit }, {
+              events += ChainEvent.nonFungibleTransfer(it.contract, it.from, it.to, it.tokenId, reverse)
+            })
+        })
+    }
+
+    // internal transactions
+
+    events += receipt.getInternalTxs()
+      .map { processInternalTransactions(block, tx, receipt, it) }
+      .flatten()
+
+    return events
+  }
+
+  fun processInternalTransactions(
+    block: BlockRecord,
+    tx: TransactionRecord,
+    receipt: TransactionReceiptRecord,
+    internalTx: InternalTransactionRecord
+  ): List<ChainEvent> {
+
+    val reverse = block.getReverse()
+    var events = listOf<ChainEvent>()
+
+    val blockHash = block.getHeader().getHash()
+    val txHash = tx.getHash()
+
+    val from = internalTx.getFrom()
+    val to = internalTx.getTo()
+    val value = internalTx.getValue()
+    val data = internalTx.getInput()
+
+    // simple ether transfer
+    if (!(from == null || to == null || value == null)) {
+      events += ChainEvent.fungibleTransfer(from, to, value, reverse)
+    }
+
+    // contract creation
+    if (tx.getCreates() != null) {
+      val (contractType, _) = StandardTokenDetector.detect(data)
+      events += ChainEvent.contractCreation(contractType, from, blockHash, txHash, tx.getCreates(), data, reverse)
+    }
+
+    // contract suicides
+    receipt.getDeletedAccounts()
+      .forEach { events += ChainEvent.contractSuicide(blockHash, txHash, it, reverse) }
+
+    return events
+  }
+
+}
