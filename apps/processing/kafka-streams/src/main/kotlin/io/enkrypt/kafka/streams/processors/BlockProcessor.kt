@@ -7,10 +7,9 @@ import io.enkrypt.common.extensions.amountBI
 import io.enkrypt.common.extensions.bigInteger
 import io.enkrypt.common.extensions.byteBuffer
 import io.enkrypt.kafka.streams.config.Topics
-import io.enkrypt.kafka.streams.models.BlockStatistic
-import io.enkrypt.kafka.streams.models.BlockStatistics
 import io.enkrypt.kafka.streams.models.ChainEventType
-import io.enkrypt.kafka.streams.processors.block.ChainEventGenerator
+import io.enkrypt.kafka.streams.processors.block.BlockStatistics
+import io.enkrypt.kafka.streams.processors.block.ChainEvents
 import io.enkrypt.kafka.streams.serdes.Serdes
 import mu.KotlinLogging
 import org.apache.kafka.streams.KeyValue
@@ -26,10 +25,6 @@ import org.apache.kafka.streams.state.KeyValueStore
 import org.apache.kafka.streams.state.StoreBuilder
 import org.apache.kafka.streams.state.Stores
 import java.math.BigInteger
-import java.time.Instant
-import java.time.ZoneOffset
-import java.time.ZonedDateTime
-import java.time.temporal.ChronoUnit
 import java.util.*
 import org.apache.kafka.common.serialization.Serdes as KafkaSerdes
 
@@ -69,7 +64,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
     // process into a stream of chain events
 
     val chainEvents = gatedStream
-      .flatMapValues(ChainEventGenerator::processBlock)
+      .flatMapValues(ChainEvents::forBlock)
 
     // fungible token transfers
 
@@ -194,86 +189,13 @@ class BlockProcessor : AbstractKafkaProcessor() {
     // statistics
 
     blockStream
-      .flatMap { _, block -> calculateStatistics(block) }
+      .flatMap { _, block -> BlockStatistics.forBlock(block) }
       .to(Topics.BlockMetrics, Produced.with(Serdes.MetricKey(), Serdes.Metric()))
 
     // Generate the topology
     return builder.build()
   }
 
-  private fun calculateStatistics(block: BlockRecord): List<KeyValue<MetricKeyRecord, MetricRecord>> {
-
-    val (
-      totalTxs,
-      numSuccessfulTxs,
-      numFailedTxs,
-      numPendingTxs,
-      totalDifficulty,
-      totalGasPrice,
-      avgGasPrice,
-      totalTxsFees,
-      avgTxsFees
-    ) = BlockStatistics.forBlock(block)
-
-    val reverse = block.getReverse()
-    val intMultiplier = if (reverse) {
-      -1
-    } else {
-      1
-    }
-    val bigIntMultiplier = if (reverse) {
-      BigInteger.ONE.negate()
-    } else {
-      BigInteger.ONE
-    }
-
-    val instant = Instant.ofEpochSecond(block.getHeader().getTimestamp())
-    val dateTime = ZonedDateTime.ofInstant(instant, ZoneOffset.UTC)
-    val startOfDayEpoch = dateTime.truncatedTo(ChronoUnit.DAYS).toInstant().epochSecond
-
-    val keyBuilder = MetricKeyRecord
-      .newBuilder()
-      .setDate(startOfDayEpoch)
-
-    return listOf(
-      KeyValue(
-        keyBuilder.setName(BlockStatistic.TotalTxs.name).build(),
-        MetricRecord.newBuilder().setIntValue(totalTxs * intMultiplier).build()
-      ),
-      KeyValue(
-        keyBuilder.setName(BlockStatistic.NumSuccessfulTxs.name).build(),
-        MetricRecord.newBuilder().setIntValue(numSuccessfulTxs * intMultiplier).build()
-      ),
-      KeyValue(
-        keyBuilder.setName(BlockStatistic.NumFailedTxs.name).build(),
-        MetricRecord.newBuilder().setIntValue(numFailedTxs * intMultiplier).build()
-      ),
-      KeyValue(
-        keyBuilder.setName(BlockStatistic.NumPendingTxs.name).build(),
-        MetricRecord.newBuilder().setIntValue(numPendingTxs * intMultiplier).build()
-      ),
-      KeyValue(
-        keyBuilder.setName(BlockStatistic.TotalDifficulty.name).build(),
-        MetricRecord.newBuilder().setBigIntegerValue(totalDifficulty.times(bigIntMultiplier).byteBuffer()).build()
-      ),
-      KeyValue(
-        keyBuilder.setName(BlockStatistic.TotalGasPrice.name).build(),
-        MetricRecord.newBuilder().setBigIntegerValue(totalGasPrice.times(bigIntMultiplier).byteBuffer()).build()
-      ),
-      KeyValue(
-        keyBuilder.setName(BlockStatistic.AvgGasPrice.name).build(),
-        MetricRecord.newBuilder().setBigIntegerValue(avgGasPrice.times(bigIntMultiplier).byteBuffer()).build()
-      ),
-      KeyValue(
-        keyBuilder.setName(BlockStatistic.TotalTxsFees.name).build(),
-        MetricRecord.newBuilder().setBigIntegerValue(totalTxsFees.times(bigIntMultiplier).byteBuffer()).build()
-      ),
-      KeyValue(
-        keyBuilder.setName(BlockStatistic.AvgTxsFees.name).build(),
-        MetricRecord.newBuilder().setBigIntegerValue(avgTxsFees.times(bigIntMultiplier).byteBuffer()).build()
-      )
-    )
-  }
 
   override fun start(cleanUp: Boolean) {
     logger.info { "Starting ${this.javaClass.simpleName}..." }

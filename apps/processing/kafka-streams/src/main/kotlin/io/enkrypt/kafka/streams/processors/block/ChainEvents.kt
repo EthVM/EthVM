@@ -12,18 +12,18 @@ import io.enkrypt.kafka.streams.utils.ERC721Abi
 import io.enkrypt.kafka.streams.utils.StandardTokenDetector
 import java.math.BigInteger
 
-object ChainEventGenerator {
+object ChainEvents {
 
-  fun processBlock(block: BlockRecord): List<ChainEvent> {
-    val events = processPremineBalances(block) +
-      processBlockRewards(block) +
-      processTransactions(block)
+  fun forBlock(block: BlockRecord): List<ChainEvent> {
+    val events = forPremineBalances(block) +
+      forBlockRewards(block) +
+      forTransactions(block)
 
     // return the events in reverse order if we are reversing the block
     return if(block.getReverse()) events.asReversed() else events
   }
 
-  fun processPremineBalances(block: BlockRecord) =
+  fun forPremineBalances(block: BlockRecord) =
     block.getPremineBalances()
       .map {
         ChainEvent.fungibleTransfer(
@@ -34,7 +34,7 @@ object ChainEventGenerator {
         )
       }
 
-  fun processBlockRewards(block: BlockRecord) =
+  fun forBlockRewards(block: BlockRecord) =
     block.getRewards()
       .map {
         ChainEvent.fungibleTransfer(
@@ -45,13 +45,13 @@ object ChainEventGenerator {
         )
       }
 
-  fun processTransactions(block: BlockRecord) =
+  fun forTransactions(block: BlockRecord) =
     block.getTransactions()
       .zip(block.getTransactionReceipts())
-      .map { (tx, receipt) -> processTransaction(block, tx, receipt) }
+      .map { (tx, receipt) -> forTransaction(block, tx, receipt) }
       .flatten()
 
-  fun processTransaction(
+  fun forTransaction(
     block: BlockRecord,
     tx: TransactionRecord,
     receipt: TransactionReceiptRecord
@@ -118,13 +118,13 @@ object ChainEventGenerator {
     // internal transactions
 
     events += receipt.getInternalTxs()
-      .map { processInternalTransactions(block, tx, receipt, it) }
+      .map { forInternalTransactions(block, tx, receipt, it) }
       .flatten()
 
     return events
   }
 
-  fun processInternalTransactions(
+  fun forInternalTransactions(
     block: BlockRecord,
     tx: TransactionRecord,
     receipt: TransactionReceiptRecord,
