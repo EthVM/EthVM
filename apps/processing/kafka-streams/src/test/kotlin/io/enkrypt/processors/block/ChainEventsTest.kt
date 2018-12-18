@@ -5,6 +5,7 @@ import io.enkrypt.common.extensions.*
 import io.enkrypt.kafka.mapping.ObjectMapper
 import io.enkrypt.kafka.streams.models.StaticAddresses
 import io.enkrypt.kafka.streams.processors.block.ChainEvents
+import io.enkrypt.util.TestEthereumListener
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
@@ -21,83 +22,16 @@ import org.ethereum.util.blockchain.StandaloneBlockchain
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-
-class TestEthereumListener : EthereumListener {
-
-  var blockSummariesLatch: CountDownLatch = CountDownLatch(0)
-
-  var blockSummaries: List<BlockSummary> = emptyList()
-
-  override fun onSyncDone(state: EthereumListener.SyncState?) {
-  }
-
-  override fun onSendMessage(channel: Channel?, message: Message?) {
-  }
-
-  override fun onPendingStateChanged(pendingState: PendingState?) {
-  }
-
-  override fun onRecvMessage(channel: Channel?, message: Message?) {
-  }
-
-  override fun onPendingTransactionUpdate(txReceipt: TransactionReceipt?, state: EthereumListener.PendingTransactionState?, block: Block?) {
-  }
-
-  override fun onVMTraceCreated(transactionHash: String?, trace: String?) {
-  }
-
-  override fun onBlock(blockSummary: BlockSummary) {
-    blockSummaries += blockSummary
-    blockSummariesLatch.countDown()
-  }
-
-  override fun onPeerDisconnect(host: String?, port: Long) {
-  }
-
-  override fun onPeerAddedToSyncPool(peer: Channel?) {
-  }
-
-  override fun onPendingTransactionsReceived(transactions: MutableList<Transaction>?) {
-  }
-
-  override fun onTransactionExecuted(summary: TransactionExecutionSummary?) {
-  }
-
-  override fun onNodeDiscovered(node: Node?) {
-  }
-
-  override fun onHandShakePeer(channel: Channel?, helloMessage: HelloMessage?) {
-  }
-
-  override fun onEthStatusUpdated(channel: Channel?, status: StatusMessage?) {
-  }
-
-  override fun trace(output: String?) {
-  }
-
-  override fun onNoConnections() {
-  }
-
-  fun resetBlockSummaries(count: Int) {
-    blockSummaries = emptyList()
-    blockSummariesLatch = CountDownLatch(count)
-  }
-
-  fun waitForBlockSummaries(timeout: Long, unit: TimeUnit) {
-    blockSummariesLatch.await(timeout, unit)
-  }
-
-}
-
 class ChainEventsTest : BehaviorSpec() {
-
-  val objectMapper = ObjectMapper()
 
   val coinbase = ECKey()
 
   val bob = ECKey()
   val alice = ECKey()
   val terence = ECKey()
+
+  // for converting ethj objects into avro records
+  val objectMapper = ObjectMapper()
 
   val netConfig = BaseNetConfig().apply {
     add(0, StandaloneBlockchain.getEasyMiningConfig())
