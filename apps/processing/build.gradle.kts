@@ -7,6 +7,7 @@ plugins {
 }
 
 apply(plugin = "org.jlleitschuh.gradle.ktlint-idea")
+
 subprojects {
   plugins.apply("org.jlleitschuh.gradle.ktlint")
 }
@@ -17,8 +18,9 @@ allprojects {
   version = "2.0.0"
 
   repositories {
-    jcenter()
+    mavenLocal()
     mavenCentral()
+    jcenter()
     maven("https://jitpack.io")
     maven("https://packages.confluent.io/maven/")
     maven("https://oss.sonatype.org/content/repositories/releases/")

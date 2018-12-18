@@ -21,12 +21,12 @@ dependencies {
   implementation(kotlin("stdlib"))
   implementation(kotlin("reflect"))
 
-  // Ethereumj
-  implementation(group = "org.ethereum", name = "ethereumj-core", version = "1.9.+")
-
   // Avro
   implementation(project(":common"))
   implementation(project(":avro"))
+
+  // Ethereumj
+  implementation(group = "org.ethereum", name = "ethereumj-core", version = "1.10.0@ethvm.2")
 
   // Kafka
   implementation("org.apache.kafka:kafka-streams:2.0.1")
@@ -52,5 +52,8 @@ dependencies {
   testImplementation("org.apache.kafka:kafka-clients:2.0.1:test")
   testImplementation("io.confluent:kafka-schema-registry:5.0.1")
   testImplementation("io.confluent:kafka-schema-registry:5.0.1:tests")
+
+
+
 
 }
