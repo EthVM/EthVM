@@ -1,32 +1,17 @@
 package io.enkrypt.kafka.streams.processors
 
-import arrow.core.Option
 import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
-import io.enkrypt.avro.capture.InternalTransactionRecord
-import io.enkrypt.avro.capture.TransactionReceiptRecord
-import io.enkrypt.avro.capture.TransactionRecord
-import io.enkrypt.avro.processing.ContractKeyRecord
-import io.enkrypt.avro.processing.FungibleTokenBalanceKeyRecord
-import io.enkrypt.avro.processing.FungibleTokenBalanceRecord
-import io.enkrypt.avro.processing.MetricKeyRecord
-import io.enkrypt.avro.processing.MetricRecord
-import io.enkrypt.avro.processing.NonFungibleTokenBalanceKeyRecord
-import io.enkrypt.avro.processing.NonFungibleTokenBalanceRecord
+import io.enkrypt.avro.processing.*
 import io.enkrypt.common.extensions.amountBI
 import io.enkrypt.common.extensions.bigInteger
 import io.enkrypt.common.extensions.byteBuffer
 import io.enkrypt.kafka.streams.config.Topics
 import io.enkrypt.kafka.streams.models.BlockStatistic
 import io.enkrypt.kafka.streams.models.BlockStatistics
-import io.enkrypt.kafka.streams.models.ChainEvent
 import io.enkrypt.kafka.streams.models.ChainEventType
-import io.enkrypt.kafka.streams.models.StaticAddresses
 import io.enkrypt.kafka.streams.processors.block.ChainEventGenerator
 import io.enkrypt.kafka.streams.serdes.Serdes
-import io.enkrypt.kafka.streams.utils.ERC20Abi
-import io.enkrypt.kafka.streams.utils.ERC721Abi
-import io.enkrypt.kafka.streams.utils.StandardTokenDetector
 import mu.KotlinLogging
 import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
@@ -45,7 +30,7 @@ import java.time.Instant
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
-import java.util.Properties
+import java.util.*
 import org.apache.kafka.common.serialization.Serdes as KafkaSerdes
 
 class BlockProcessor : AbstractKafkaProcessor() {
