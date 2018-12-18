@@ -2,17 +2,19 @@
 # yarn lockfile v1
 
 
-"@types/node@^10.12.1":
-  version "10.12.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.2.tgz#d77f9faa027cadad9c912cd47f4f8b07b0fb0864"
+"@types/node@^10.12.16":
+  version "10.12.17"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.17.tgz#7040565b2c93d59325a68fa69073e754a7eda93a"
+  integrity sha512-umSCRkjWH70uNzFiOof5yxCqrMXIBJ9UJJUzbEsmtWt8apURQh06pylGMqnhdjHGJSeoBrhzk+mibu6NgL1oBA==
 
 base64-js@^1.0.2:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.3.0.tgz#cab1e6118f051095e58b5281aea8c1cd22bfc0e3"
 
-bson@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/bson/-/bson-4.0.0.tgz#7684b512e9ae59fe3518ff2b35ec0c9741bf9f57"
+bson@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/bson/-/bson-4.0.1.tgz#652dbf4bbdd864b54bec6c8fb13fa9b7b853a7a1"
+  integrity sha512-Q+E5edAc2DnSb77xcBJga0iJDyZlhkKRhWxKdPJcT3UK6nC6BtmMJGpkt+99bGht3HIhXHu7mxi5FLBgQAj5MA==
   dependencies:
     buffer "^5.1.0"
     long "^4.0.0"
@@ -75,9 +77,10 @@ process@~0.5.1:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/process/-/process-0.5.2.tgz#1638d8a8e34c2f440a91db95ab9aeb677fc185cf"
 
-ts-interface-builder@^0.1.5:
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/ts-interface-builder/-/ts-interface-builder-0.1.5.tgz#e411de08b5b93412062457fcd0c6a33750263364"
+ts-interface-builder@^0.1.7:
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/ts-interface-builder/-/ts-interface-builder-0.1.7.tgz#5391f0f209b028a91eb14603c4b07fc2b4ad63b7"
+  integrity sha512-TOWTdXjViNqLkVMJ8wwhjNFtPGN6SfktTySgpE4YeDt26/iwQu6OMCBGsXCkpTVs9jvp7BBpOLjaDNoWgJ3QxQ==
   dependencies:
     commander "^2.12.2"
     fs-extra "^4.0.3"
@@ -91,9 +94,10 @@ typescript@^2.6.2:
   version "2.9.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.9.2.tgz#1cbf61d05d6b96269244eb6a3bce4bd914e0f00c"
 
-typescript@^3.1.3:
-  version "3.1.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.1.3.tgz#01b70247a6d3c2467f70c45795ef5ea18ce191d5"
+typescript@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.2.2.tgz#fe8101c46aa123f8353523ebdcf5730c2ae493e5"
+  integrity sha512-VCj5UiSyHBjwfYacmDuc/NOk4QQixbE+Wn7MFJuS0nRuPQbof132Pw4u53dm264O8LPc2MVsc7RJNml5szurkg==
 
 universalify@^0.1.0:
   version "0.1.2"
