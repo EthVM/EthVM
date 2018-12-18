@@ -15,6 +15,7 @@ import org.ethereum.core.genesis.GenesisLoader
 import org.ethereum.crypto.ECKey
 import org.ethereum.util.ByteUtil.wrap
 import org.ethereum.util.blockchain.StandaloneBlockchain
+import java.io.File
 import java.math.BigInteger
 import java.util.concurrent.TimeUnit
 
@@ -27,6 +28,8 @@ class ChainEventsTest : BehaviorSpec() {
   val bob = ECKey()
   val alice = ECKey()
   val terence = ECKey()
+
+  val contractSourceERC20 = ChainEventsTest::class.java.getResource("/solidity/erc20.sol").readText()
 
   // for converting ethj objects into avro records
   val objectMapper = ObjectMapper()
@@ -194,6 +197,41 @@ class ChainEventsTest : BehaviorSpec() {
           aliceToTerence.getFrom() shouldBe alice.address.data20()
           aliceToTerence.getTo() shouldBe terence.address.data20()
           aliceToTerence.amountBI shouldBe 56.gwei()
+        }
+
+      }
+
+    }
+
+    given("a block with a contract creation") {
+
+      bc.sender = bob
+
+      val contract = bc
+        .withGasLimit(500000)
+        .submitNewContract(contractSourceERC20, "ERC20")
+
+      val blockRecord = createBlockRecord(bc, listener)
+
+      `when`("we convert the block") {
+
+        val chainEvents = ChainEvents.forBlock(blockRecord)
+
+        then("there should be 2 chain events") {
+          chainEvents.size shouldBe 2
+        }
+
+        then("there should be a fungible ether transfer for the coinbase") {
+          val coinbaseTransfer = chainEvents.first().fungibleTransfer
+          coinbaseTransfer.getFrom() shouldBe StaticAddresses.EtherZero
+          coinbaseTransfer.getTo() shouldBe coinbase.address.data20()
+          coinbaseTransfer.amountBI shouldBe 3000267605000000000.toBigInteger()
+        }
+
+        then("there should be a contract creation") {
+          val creation = chainEvents[1].contractCreation
+          creation.getAddress() shouldBe contract.address.data20()
+          creation.getData().hex() shouldBe contract.binary
         }
 
       }
