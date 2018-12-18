@@ -21,6 +21,8 @@ fun FungibleTokenTransferRecord.Builder.setAmount(amount: BigInteger): FungibleT
 fun NonFungibleTokenTransferRecord.Builder.setTokenId(tokenId: BigInteger): NonFungibleTokenTransferRecord.Builder =
   this.setTokenId(ByteBuffer.wrap(ByteUtil.bigIntegerToBytes(tokenId)))
 
+
+
 fun TransactionReceiptRecord.isSuccess(): Boolean {
   val status = this.getStatus().byteArray()
   return status != null && status.size == 1 && status[0].toInt() == 1

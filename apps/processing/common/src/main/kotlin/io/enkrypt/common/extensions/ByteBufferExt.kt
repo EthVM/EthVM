@@ -20,7 +20,10 @@ fun ByteBuffer?.byteArray(): ByteArray? {
   if (this == null) {
     return null
   }
-  return ByteArray(remaining()).also { get(it) }
+
+  val result = ByteArray(remaining()).also { get(it) }
+  position(0)
+  return result
 }
 
 fun ByteBuffer?.bigInteger(): BigInteger? {
@@ -28,6 +31,7 @@ fun ByteBuffer?.bigInteger(): BigInteger? {
     return null
   }
   val arr = ByteArray(remaining()).also { get(it) }
+  position(0)
   return if (arr.isNotEmpty()) BigInteger(arr) else BigInteger.ZERO
 }
 
@@ -43,5 +47,6 @@ fun ByteBuffer?.hex(): String? {
     return null
   }
   val arr = ByteArray(remaining()).also { get(it) }
+  position(0)
   return ByteUtil.toHexString(arr)
 }

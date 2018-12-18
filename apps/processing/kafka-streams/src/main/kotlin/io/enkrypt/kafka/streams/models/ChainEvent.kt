@@ -17,24 +17,24 @@ enum class ChainEventType {
   ContractSuicide
 }
 
-class ChainEvent(
+data class ChainEvent(
   val type: ChainEventType,
-  private val _fungibleBalance: FungibleTokenTransferRecord? = null,
-  private val _nonFungibleBalance: NonFungibleTokenTransferRecord? = null,
-  private val _contractCreation: ContractCreationRecord? = null,
-  private val _contractSuicide: ContractSuicideRecord? = null
+  val _fungibleTransfer: FungibleTokenTransferRecord? = null,
+  val _nonFungibleTransfer: NonFungibleTokenTransferRecord? = null,
+  val _contractCreation: ContractCreationRecord? = null,
+  val _contractSuicide: ContractSuicideRecord? = null
 ) {
 
   val fungibleTransfer: FungibleTokenTransferRecord
     get() {
       assert(type == ChainEventType.FungibleBalanceTransfer) { "Type must be FungibleBalanceTransfer" }
-      return _fungibleBalance!!
+      return _fungibleTransfer!!
     }
 
   val nonFungibleTransfer: NonFungibleTokenTransferRecord
     get() {
       assert(type == ChainEventType.NonFungibleBalanceTransfer) { "Type must be NonFungibleBalanceTransfer" }
-      return _nonFungibleBalance!!
+      return _nonFungibleTransfer!!
     }
 
   val contractCreation: ContractCreationRecord
@@ -49,10 +49,17 @@ class ChainEvent(
       return _contractSuicide!!
     }
 
+  fun reverse(reverse: Boolean = true): ChainEvent = when(type) {
+    ChainEventType.FungibleBalanceTransfer -> copy(_fungibleTransfer = FungibleTokenTransferRecord.newBuilder(fungibleTransfer).setReverse(reverse).build())
+    ChainEventType.NonFungibleBalanceTransfer -> copy(_nonFungibleTransfer = NonFungibleTokenTransferRecord.newBuilder(nonFungibleTransfer).setReverse(reverse).build())
+    ChainEventType.ContractCreation -> copy(_contractCreation = ContractCreationRecord.newBuilder(contractCreation).setReverse(reverse).build())
+    ChainEventType.ContractSuicide -> copy(_contractSuicide = ContractSuicideRecord.newBuilder(contractSuicide).setReverse(reverse).build())
+  }
+
   companion object {
 
     fun fungibleTransfer(record: FungibleTokenTransferRecord): ChainEvent =
-      ChainEvent(ChainEventType.FungibleBalanceTransfer, _fungibleBalance = record)
+      ChainEvent(ChainEventType.FungibleBalanceTransfer, _fungibleTransfer = record)
 
     fun fungibleTransfer(
       from: Data20,
@@ -72,7 +79,7 @@ class ChainEvent(
       )
 
     fun nonFungibleTransfer(record: NonFungibleTokenTransferRecord): ChainEvent =
-      ChainEvent(ChainEventType.NonFungibleBalanceTransfer, _nonFungibleBalance = record)
+      ChainEvent(ChainEventType.NonFungibleBalanceTransfer, _nonFungibleTransfer = record)
 
     fun nonFungibleTransfer(
       contract: Data20,
@@ -128,4 +135,6 @@ class ChainEvent(
           .build()
       )
   }
+
+
 }

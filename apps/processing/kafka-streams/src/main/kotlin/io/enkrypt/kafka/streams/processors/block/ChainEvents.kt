@@ -1,10 +1,12 @@
 package io.enkrypt.kafka.streams.processors.block
 
 import arrow.core.Option
+import arrow.core.success
 import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.capture.InternalTransactionRecord
 import io.enkrypt.avro.capture.TransactionReceiptRecord
 import io.enkrypt.avro.capture.TransactionRecord
+import io.enkrypt.common.extensions.isSuccess
 import io.enkrypt.kafka.streams.models.ChainEvent
 import io.enkrypt.kafka.streams.models.StaticAddresses
 import io.enkrypt.kafka.streams.utils.ERC20Abi
@@ -48,6 +50,7 @@ object ChainEvents {
   fun forTransactions(block: BlockRecord) =
     block.getTransactions()
       .zip(block.getTransactionReceipts())
+      .filter{ (_, receipt) -> receipt.isSuccess() }
       .map { (tx, receipt) -> forTransaction(block, tx, receipt) }
       .flatten()
 
@@ -118,13 +121,14 @@ object ChainEvents {
     // internal transactions
 
     events += receipt.getInternalTxs()
-      .map { forInternalTransactions(block, tx, receipt, it) }
+      .filter{ !it.getRejected() }
+      .map { forInternalTransaction(block, tx, receipt, it) }
       .flatten()
 
     return events
   }
 
-  fun forInternalTransactions(
+  fun forInternalTransaction(
     block: BlockRecord,
     tx: TransactionRecord,
     receipt: TransactionReceiptRecord,
