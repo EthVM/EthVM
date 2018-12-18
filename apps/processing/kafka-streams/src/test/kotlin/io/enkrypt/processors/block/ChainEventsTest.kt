@@ -11,16 +11,14 @@ import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
 import org.ethereum.config.net.BaseNetConfig
 import org.ethereum.core.*
+import org.ethereum.core.genesis.GenesisLoader
 import org.ethereum.crypto.ECKey
-import org.ethereum.listener.EthereumListener
-import org.ethereum.net.eth.message.StatusMessage
-import org.ethereum.net.message.Message
-import org.ethereum.net.p2p.HelloMessage
-import org.ethereum.net.rlpx.Node
-import org.ethereum.net.server.Channel
+import org.ethereum.util.ByteUtil.wrap
 import org.ethereum.util.blockchain.StandaloneBlockchain
-import java.util.concurrent.CountDownLatch
+import java.math.BigInteger
 import java.util.concurrent.TimeUnit
+
+
 
 class ChainEventsTest : BehaviorSpec() {
 
@@ -39,14 +37,22 @@ class ChainEventsTest : BehaviorSpec() {
 
   val listener = TestEthereumListener()
 
+  val genesisBlock = GenesisLoader.loadGenesis(javaClass.getResourceAsStream("/genesis/genesis-light-sb.json")).apply {
+
+    // initial balances
+    addPremine(wrap(bob.address), AccountState(BigInteger.ZERO, 20.ether()))
+    addPremine(wrap(alice.address), AccountState(BigInteger.ZERO, 50.ether()))
+    addPremine(wrap(terence.address), AccountState(BigInteger.ZERO, 100.ether()))
+
+    stateRoot = GenesisLoader.generateRootHash(premine)
+  }
+
   val bc = StandaloneBlockchain().apply {
+    withGenesis(genesisBlock)
     withNetConfig(netConfig)
     withMinerCoinbase(coinbase.address)
     withGasLimit(21000)
     withGasPrice(1.gwei().toLong())
-    withAccountBalance(bob.address, 20.ether())
-    withAccountBalance(alice.address, 50.ether())
-    withAccountBalance(terence.address, 100.ether())
     addEthereumListener(listener)
   }
 
@@ -155,6 +161,44 @@ class ChainEventsTest : BehaviorSpec() {
 
     }
 
+    given("a block with some invalid ether transfers") {
+
+      bc.sender = bob     // invalid, insufficient ether in account
+      bc.sendEther(alice.address, 100.ether())
+
+      bc.sender = alice
+      bc.sendEther(terence.address, 56.gwei())
+
+      bc.sender = terence // invalid, insufficient ether in account
+      bc.sendEther(bob.address, 200.ether())
+
+      val blockRecord = createBlockRecord(bc, listener)
+
+      `when`("we convert the block") {
+
+        val chainEvents = ChainEvents.forBlock(blockRecord)
+
+        then("there should be 2 chain events") {
+          chainEvents.size shouldBe 2
+        }
+
+        then("there should be a fungible ether transfer for the coinbase") {
+          val coinbaseTransfer = chainEvents.first().fungibleTransfer
+          coinbaseTransfer.getFrom() shouldBe StaticAddresses.EtherZero
+          coinbaseTransfer.getTo() shouldBe coinbase.address.data20()
+          coinbaseTransfer.amountBI shouldBe 3000021000000000000.toBigInteger()
+        }
+
+        then("there should be a single transfer from alice to terence") {
+          val aliceToTerence = chainEvents[1].fungibleTransfer
+          aliceToTerence.getFrom() shouldBe alice.address.data20()
+          aliceToTerence.getTo() shouldBe terence.address.data20()
+          aliceToTerence.amountBI shouldBe 56.gwei()
+        }
+
+      }
+
+    }
   }
 
   private fun createBlockRecord(bc: StandaloneBlockchain, listener: TestEthereumListener): BlockRecord {
