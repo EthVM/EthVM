@@ -215,10 +215,14 @@ class BlockProcessor : AbstractKafkaProcessor() {
     return builder.build()
   }
 
-  private fun processBlock(block: BlockRecord) =
-    processPremineBalances(block) +
+  private fun processBlock(block: BlockRecord): List<ChainEvent> {
+    val events = processPremineBalances(block) +
       processBlockRewards(block) +
       processTransactions(block)
+
+    // return the events in reverse order if we are reversing the block
+    return if(block.getReverse()) events.asReversed() else events
+  }
 
   private fun processPremineBalances(block: BlockRecord) =
     block.getPremineBalances()
