@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
-import HomeRouter from '@/components/index.vue'
+//Import route layouts components:
+import PageHome from '@/components/pages/PageHome.vue'
 
 Vue.use(Router)
 
@@ -9,9 +9,9 @@ export default new Router({
   routes: [
     {
       path: '/',
-      component: HomeRouter
-    },
-    {
+      component: PageHome
+    }
+    /*{
       path: '/:pageName',
       component: HomeRouter
     },
@@ -23,7 +23,7 @@ export default new Router({
       path: '/:pageName/:param/holder=:holder',
       name: 'token',
       component: HomeRouter
-    }
+    } */
   ],
   mode: 'history'
 })

@@ -2,6 +2,7 @@
   <v-app style="background: #f3f4f8;">
     <the-navigation-drawer/>
     <v-content>
+      <router-view></router-view>
       <!--<router-view :key="$route.fullPath"/ -->
       <the-footer/>
     </v-content>
@@ -18,7 +19,7 @@ export default Vue.extend({
   components: {
     TheNavigationDrawer,
     TheFooter
-  }
+  },
   //Add footer + nav declaration
   data() {
     return {
