@@ -8,15 +8,30 @@ import io.enkrypt.util.TestEthereumListener
 import io.enkrypt.util.createBlockRecord
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
+import mu.KotlinLogging
 import org.ethereum.config.net.BaseNetConfig
 import org.ethereum.core.*
 import org.ethereum.core.genesis.GenesisLoader
 import org.ethereum.crypto.ECKey
 import org.ethereum.util.ByteUtil.wrap
 import org.ethereum.util.blockchain.StandaloneBlockchain
+import org.ethereum.vm.OpCode
+import org.ethereum.vm.hook.VMHook
+import org.ethereum.vm.program.Program
 import java.math.BigInteger
 
+class LoggingVMHook : VMHook {
+
+  val logger = KotlinLogging.logger {}
+
+  override fun step(program: Program, opcode: OpCode) {
+    logger.info{ "Step: origin = ${program.originAddress.shortHex()} owner = ${program.ownerAddress.shortHex()}, opcode = ${opcode}"}
+  }
+}
+
 class ContractLifecycleTest : BehaviorSpec() {
+
+  val logger = KotlinLogging.logger {}
 
   val coinbase = ECKey()
 
@@ -46,6 +61,7 @@ class ContractLifecycleTest : BehaviorSpec() {
     withMinerCoinbase(coinbase.address)
     withGasLimit(21000)
     withGasPrice(1.gwei().toLong())
+    withVmHook(LoggingVMHook())
     addEthereumListener(listener)
   }
 
@@ -100,10 +116,10 @@ class ContractLifecycleTest : BehaviorSpec() {
 
         val seppuku = contract.callFunction("seppuku")
 
+        logger.info{ "Executing seppuku"}
+
         val blockRecord = bc.createBlockRecord(listener)
         val chainEvents = ChainEvents.forBlock(blockRecord)
-
-        seppuku.isSuccessful shouldBe true
 
         then("there should be 2 chain events") {
           chainEvents.size shouldBe 2
@@ -114,7 +130,6 @@ class ContractLifecycleTest : BehaviorSpec() {
         }
 
         then("there should be several fungible transfer events") {
-
 
 
         }
