@@ -4,7 +4,7 @@ export class HexNumber {
   public value: string
 
   constructor(_value: Buffer) {
-    this.value = '0x' + new Buffer(_value).toString('hex')
+    this.value = '0x' + Buffer.from(_value).toString('hex')
     this.value = this.value === '0x' ? '0x0' : this.value
   }
 

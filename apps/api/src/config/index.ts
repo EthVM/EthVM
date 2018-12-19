@@ -15,7 +15,7 @@ const config = convict({
         env: 'ETHVM_LOGS_ENABLED'
       },
       app_id: {
-        default: 'ethvm-socket',
+        default: 'api',
         format: String,
         env: 'ETHVM_APP_ID'
       },
