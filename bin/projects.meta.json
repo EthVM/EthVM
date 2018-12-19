@@ -16,7 +16,7 @@
       "id": "ethereumj",
       "dockerfile": "${APPS_PATH}/ethereumj/Dockerfile",
       "context": "${APPS_PATH}/ethereumj/",
-      "version": "${APPS_PATH}/ethereumj/version.properties"
+      "version": "${APPS_PATH}/ethereumj/ethereumj-core/src/main/resources/version.properties"
     },
     {
       "id": "explorer",

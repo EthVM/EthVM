@@ -1,14 +1,17 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import com.jfrog.bintray.gradle.BintrayExtension
 import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
 import org.gradle.plugins.ide.idea.model.IdeaModel
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import sun.tools.jar.resources.jar
 
 plugins {
-  id("com.github.johnrengelman.shadow") version "4.0.3"
   `java-library`
+  `maven-publish`
   kotlin("jvm")
+  id("com.github.johnrengelman.shadow") version "4.0.3"
   id("org.jlleitschuh.gradle.ktlint")
+  id("com.jfrog.bintray")
 }
 
 project.java.sourceSets["main"].java {
@@ -57,10 +60,43 @@ tasks {
   }
 
   "buildConnectJar" {
+    group = "build"
     dependsOn("copyJar")
   }
 }
 
 tasks.withType<ShadowJar> {
-  baseName = project.rootProject.group.toString().replace(".", "-") + "-" + project.name
+  baseName = project.name
+  classifier = ""
+}
+
+publishing {
+
+  publications {
+
+    create<MavenPublication>("JCenter") {
+      artifactId = project.name
+      project.shadow.component(this)
+    }
+
+  }
+
+}
+
+bintray {
+  user = project.findProperty("bintrayUser")?.toString() ?: ""
+  key = project.findProperty("bintrayKey")?.toString() ?: ""
+
+  dryRun = false
+  publish = true
+
+  setPublications("JCenter")
+
+  pkg(delegateClosureOf<BintrayExtension.PackageConfig> {
+    userOrg = "enkryptio"
+    repo = "maven"
+    name = "io.enkrypt.ethvm.kafka-connect"
+    setLicenses("MIT")
+    vcsUrl = "https://github.com/enkryptio/ethvm.git"
+  })
 }

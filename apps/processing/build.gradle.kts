@@ -4,18 +4,19 @@ plugins {
   base
   kotlin("jvm") version "1.3.10" apply false
   id("org.jlleitschuh.gradle.ktlint") version "6.3.1" apply false
+  id("com.jfrog.bintray") version "1.8.4" apply false
 }
 
 apply(plugin = "org.jlleitschuh.gradle.ktlint-idea")
-
 subprojects {
-  plugins.apply("org.jlleitschuh.gradle.ktlint")
+  if (name == "kafka-connect" || name == "kafka-streams") {
+    plugins.apply("org.jlleitschuh.gradle.ktlint")
+  }
 }
 
 allprojects {
 
-  group = "io.enkrypt"
-  version = "2.0.0"
+  group = "io.enkrypt.ethvm"
 
   repositories {
     mavenLocal()
