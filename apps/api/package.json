@@ -68,7 +68,7 @@
     "@types/lru-cache": "^4.1.1",
     "@types/mocha": "^5.2.5",
     "@types/mongodb": "^3.1.17",
-    "@types/node": "^10.12.15",
+    "@types/node": "^10.12.17",
     "@types/node-fetch": "^2.1.4",
     "@types/pino": "^5.8.3",
     "@types/redis": "^2.8.8",
@@ -86,7 +86,7 @@
     "ts-mockito": "^2.3.1",
     "ts-node": "^7.0.1",
     "tsconfig-paths": "^3.7.0",
-    "tslint": "^5.11.0",
+    "tslint": "^5.12.0",
     "tslint-config-prettier": "^1.17.0",
     "tslint-consistent-codestyle": "^1.14.1",
     "typescript": "^3.2.2"
