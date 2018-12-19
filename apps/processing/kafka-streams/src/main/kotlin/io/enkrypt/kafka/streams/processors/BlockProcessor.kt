@@ -2,7 +2,11 @@ package io.enkrypt.kafka.streams.processors
 
 import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
-import io.enkrypt.avro.processing.*
+import io.enkrypt.avro.processing.ContractKeyRecord
+import io.enkrypt.avro.processing.FungibleTokenBalanceKeyRecord
+import io.enkrypt.avro.processing.FungibleTokenBalanceRecord
+import io.enkrypt.avro.processing.NonFungibleTokenBalanceKeyRecord
+import io.enkrypt.avro.processing.NonFungibleTokenBalanceRecord
 import io.enkrypt.common.extensions.amountBI
 import io.enkrypt.common.extensions.bigInteger
 import io.enkrypt.common.extensions.byteBuffer
@@ -25,7 +29,7 @@ import org.apache.kafka.streams.state.KeyValueStore
 import org.apache.kafka.streams.state.StoreBuilder
 import org.apache.kafka.streams.state.Stores
 import java.math.BigInteger
-import java.util.*
+import java.util.Properties
 import org.apache.kafka.common.serialization.Serdes as KafkaSerdes
 
 class BlockProcessor : AbstractKafkaProcessor() {
@@ -195,7 +199,6 @@ class BlockProcessor : AbstractKafkaProcessor() {
     // Generate the topology
     return builder.build()
   }
-
 
   override fun start(cleanUp: Boolean) {
     logger.info { "Starting ${this.javaClass.simpleName}..." }

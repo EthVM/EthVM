@@ -49,7 +49,7 @@ data class ChainEvent(
       return _contractSuicide!!
     }
 
-  fun reverse(reverse: Boolean = true): ChainEvent = when(type) {
+  fun reverse(reverse: Boolean = true): ChainEvent = when (type) {
     ChainEventType.FungibleBalanceTransfer -> copy(_fungibleTransfer = FungibleTokenTransferRecord.newBuilder(fungibleTransfer).setReverse(reverse).build())
     ChainEventType.NonFungibleBalanceTransfer -> copy(_nonFungibleTransfer = NonFungibleTokenTransferRecord.newBuilder(nonFungibleTransfer).setReverse(reverse).build())
     ChainEventType.ContractCreation -> copy(_contractCreation = ContractCreationRecord.newBuilder(contractCreation).setReverse(reverse).build())
@@ -135,6 +135,4 @@ data class ChainEvent(
           .build()
       )
   }
-
-
 }

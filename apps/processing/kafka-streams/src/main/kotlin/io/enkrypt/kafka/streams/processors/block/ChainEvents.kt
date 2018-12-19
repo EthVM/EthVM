@@ -1,7 +1,6 @@
 package io.enkrypt.kafka.streams.processors.block
 
 import arrow.core.Option
-import arrow.core.success
 import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.capture.InternalTransactionRecord
 import io.enkrypt.avro.capture.TransactionReceiptRecord
@@ -22,7 +21,7 @@ object ChainEvents {
       forTransactions(block)
 
     // return the events in reverse order if we are reversing the block
-    return if(block.getReverse()) events.asReversed() else events
+    return if (block.getReverse()) events.asReversed() else events
   }
 
   fun forPremineBalances(block: BlockRecord) =
@@ -50,7 +49,7 @@ object ChainEvents {
   fun forTransactions(block: BlockRecord) =
     block.getTransactions()
       .zip(block.getTransactionReceipts())
-      .filter{ (_, receipt) -> receipt.isSuccess() }
+      .filter { (_, receipt) -> receipt.isSuccess() }
       .map { (tx, receipt) -> forTransaction(block, tx, receipt) }
       .flatten()
 
@@ -121,7 +120,7 @@ object ChainEvents {
     // internal transactions
 
     events += receipt.getInternalTxs()
-      .filter{ !it.getRejected() }
+      .filter { !it.getRejected() }
       .map { forInternalTransaction(block, tx, receipt, it) }
       .flatten()
 
@@ -163,5 +162,4 @@ object ChainEvents {
 
     return events
   }
-
 }

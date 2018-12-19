@@ -1,6 +1,10 @@
 package io.enkrypt.common.extensions
 
-import io.enkrypt.avro.common.*
+import io.enkrypt.avro.common.Data1
+import io.enkrypt.avro.common.Data20
+import io.enkrypt.avro.common.Data256
+import io.enkrypt.avro.common.Data32
+import io.enkrypt.avro.common.Data8
 import org.ethereum.util.ByteUtil
 import java.math.BigInteger
 import java.nio.ByteBuffer
@@ -10,7 +14,6 @@ fun ByteArray?.data8(): Data8? = if (this == null) null else Data8(this)
 fun ByteArray?.data20(): Data20? = if (this == null) null else Data20(this)
 fun ByteArray?.data32(): Data32? = if (this == null) null else Data32(this)
 fun ByteArray?.data256(): Data256? = if (this == null) null else Data256(this)
-
 
 fun ByteArray?.hex(): String? = ByteUtil.toHexString(this)
 
