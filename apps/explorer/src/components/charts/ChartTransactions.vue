@@ -1,14 +1,16 @@
 <template>
-  <v-layout column justify-center> <vue-chart type="bar" :data="chartData" :options="chartOptions" :redraw="redraw"></vue-chart> </v-layout>
+  <v-layout column justify-center>
+    <app-chart type="bar" :data="chartData" :options="chartOptions" :redraw="redraw"/>
+  </v-layout>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import { Events as sEvents } from 'ethvm-common'
 import BN from 'bignumber.js'
+import AppChart from '@app/components/ui/AppChart.vue'
 
 const MAX_ITEMS = 10
-
 const barOptions = {
   title: {
     text: 'Transactions from the last 10 blocks'
@@ -33,18 +35,21 @@ const barOptions = {
       }
     ]
   },
-
   barShowLabels: true
 }
 
 export default Vue.extend({
-  name: 'BarChart',
-  data: () => ({
-    chartData: {},
-    chartOptions: barOptions,
-    redraw: false
-  }),
-  mounted() {},
+  name: 'ChartTransactions',
+  components: {
+    AppChart
+  },
+  data() {
+    return {
+      chartData: {},
+      chartOptions: barOptions,
+      redraw: false
+    }
+  },
   created() {
     this.chartData = this.initData
     this.$eventHub.$on(sEvents.pastBlocksR, () => {

@@ -9,13 +9,13 @@
   >
     <v-layout wrap>
       <v-flex xs12>
-        <v-layout row wrap align-end>
-          <v-card-title class="display-1 font-weight-medium pb-0 pl-1 pb-0">{{ value }}</v-card-title>
-          <v-card-title v-if="metrics" class="headline pl-0 pb-0">{{ metrics }}</v-card-title>
+        <v-layout row align-end>
+          <p class="display-1 text-truncate font-weight-medium pb-0 pl-1 mb-0">{{ value }}</p>
+          <p v-if="metrics" class="headline pl-1 mb-0">{{ metrics }}</p>
         </v-layout>
       </v-flex>
       <v-flex xs12>
-        <v-card-text class="text-uppercase pt-1 pl-0">{{ title }}</v-card-text>
+        <v-card-text class="text-uppercase pt-0 pl-0">{{ title }}</v-card-text>
       </v-flex>
     </v-layout>
   </v-card>

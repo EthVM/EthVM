@@ -1,8 +1,9 @@
 import { Events as sEvents } from 'ethvm-common'
 import { Block } from '@app/models'
 import bn from 'bignumber.js'
-
+import stringConcat from '@app/components/mixins/mixin-number-string-concat'
 export const lastBlockInfo = {
+  mixins: [stringConcat],
   data() {
     return {
       block: null,
@@ -19,11 +20,11 @@ export const lastBlockInfo = {
     },
 
     latestHashRate() {
-      return this.dataRecieved ? this.getAvgHashRate(this.$store.getters.getBlocks).toString() : this.loading
+      return this.dataRecieved ? this.getRoundNumber(this.getAvgHashRate(this.$store.getters.getBlocks).toString()) : this.loading
     },
 
     latestDifficulty() {
-      return this.dataRecieved ? this.getTHs(this.block.getDifficulty()) : this.loading
+      return this.dataRecieved ? this.getRoundNumber(this.getTHs(this.block.getDifficulty())) : this.loading
     },
 
     latestBlockSuccessTxs() {
@@ -88,7 +89,7 @@ export const lastBlockInfo = {
 
     startCount() {
       this.secondsInterval = setInterval(() => {
-        this.seconds = Math.ceil((new Date().getTime() - this.block.lastBlockTime) / 1000)
+        this.seconds = Math.ceil((new Date().getTime() - this.block.getTimestamp()) / 1000)
       }, 1000)
     }
   }

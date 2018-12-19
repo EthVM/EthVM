@@ -1,14 +1,15 @@
 <template>
   <v-layout column justify-center>
-    <vue-chart
-      type="bar"
+    <app-chart
+      type="line"
       :data="chartData"
       :options="chartOptions"
+      :redraw="redraw"
       :chartTitle="newTitle"
       :chartDescription="newDescription"
-      :redraw="redraw"
+      unfilled="true"
       :footnoteArr="footnote"
-    ></vue-chart>
+    ></app-chart>
   </v-layout>
 </template>
 
@@ -16,21 +17,23 @@
 import Vue from 'vue'
 import { Events as sEvents } from 'ethvm-common'
 import BN from 'bignumber.js'
+import AppChart from '@app/components/ui/AppChart.vue'
+import ethUnits from 'ethereumjs-units'
 
+const title = 'Average Tx Costs'
+const description = 'Average transaction fees and average gas price in the last 10 blocks'
 const MAX_ITEMS = 10
-const title = 'Tx Summary'
-const description = 'Number of successful, failed, and pending transactions that have occured in the last 10 blocks'
-
-const barOptions = {
+const lineOptions = {
   title: {
-    text: 'Transactions (Last 10 blocks)'
+    text: 'Average Tx Fees',
+    lineHeight: 1
   },
   responsive: true,
   scales: {
     yAxes: [
       {
+        position: 'left',
         id: 'y-axis-1',
-        stacked: false,
         ticks: {
           beginAtZero: true
         },
@@ -39,13 +42,12 @@ const barOptions = {
         },
         scaleLabel: {
           display: true,
-          labelString: 'Sucessfull and Failed Tx '
+          labelString: 'Tx Fees ETH'
         }
       },
       {
         id: 'y-axis-2',
         position: 'right',
-        stacked: false,
         ticks: {
           beginAtZero: true
         },
@@ -54,44 +56,43 @@ const barOptions = {
         },
         scaleLabel: {
           display: true,
-          labelString: 'Pending Tx'
+          labelString: ' Gas Price GWEI'
         }
       }
     ],
     xAxes: [
       {
-        stacked: false,
-        display: false,
-        categoryPercentage: 0.7
+        display: false
       }
     ]
   },
 
-  barShowLabels: true
+  scaleShowLabels: false
 }
+
+import { common } from '@app/helpers'
+
 export default Vue.extend({
-  name: 'BarChart',
+  name: 'ChartLiveTxFees',
+  components: {
+    AppChart
+  },
   data() {
     return {
       chartData: {},
-      chartOptions: barOptions,
+      chartOptions: lineOptions,
       redraw: false,
       newTitle: title,
       newDescription: description,
       footnote: [
         {
-          color: 'txSuccess',
-          text: this.$i18n.t('footnote.success'),
-          icon: 'fa fa-circle'
-        },
-        {
           color: 'txFail',
-          text: this.$i18n.t('footnote.failed'),
+          text: this.$i18n.t('footnote.aveTxFees'),
           icon: 'fa fa-circle'
         },
         {
           color: 'txPen',
-          text: this.$i18n.t('footnote.pending'),
+          text: this.$i18n.t('footnote.aveGasPrice'),
           icon: 'fa fa-circle'
         }
       ]
@@ -106,15 +107,15 @@ export default Vue.extend({
     this.$eventHub.$on(sEvents.newBlock, _block => {
       if (this.chartData.datasets[0]) {
         this.redraw = false
-        const _tempD = _block.getStats()
-        this.chartData.labels.push(_block.getNumber())
-        this.chartData.labels.shift()
-        this.chartData.datasets[0].data.push(0) //pending tx ev
-        this.chartData.datasets[0].data.shift()
-        this.chartData.datasets[1].data.push(_tempD.successfulTxs)
-        this.chartData.datasets[1].data.shift()
-        this.chartData.datasets[2].data.push(_tempD.failedTxs)
-        this.chartData.datasets[2].data.shift()
+        if (!_block.getIsUncle()) {
+          const _tempD = _block.getStats()
+          this.chartData.labels.push(_block.getNumber())
+          this.chartData.labels.shift()
+          this.chartData.datasets[0].data.push(ethUnits.convert(_tempD.avgTxsFees, 'wei', 'eth'))
+          this.chartData.datasets[0].data.shift()
+          this.chartData.datasets[1].data.push(ethUnits.convert(_tempD.avgGasPrice, 'wei', 'gwei'))
+          this.chartData.datasets[1].data.shift()
+        }
       }
     })
   },
@@ -126,45 +127,39 @@ export default Vue.extend({
     initData() {
       const data = {
         labels: [],
-        sData: [],
-        fData: [],
-        pData: []
+        avgFees: [],
+        avgPrice: []
       }
       const latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
       latestBlocks.forEach(_block => {
         data.labels.unshift(_block.getNumber())
         const _tempD = _block.getStats()
-        data.sData.unshift(new BN(_tempD.successfulTxs).toNumber())
-        data.fData.unshift(new BN(_tempD.failedTxs).toNumber())
-        data.pData.unshift(new BN(0).toNumber()) //pending tx ev
+        data.avgFees.unshift(ethUnits.convert(_tempD.avgTxsFees, 'wei', 'eth'))
+        data.avgPrice.unshift(ethUnits.convert(_tempD.avgGasPrice, 'wei', 'gwei'))
       })
       return {
         labels: data.labels,
         datasets: [
           {
-            label: 'Pending',
-            backgroundColor: '#eea66b',
-            borderColor: '#eea66b',
-            data: data.pData,
-            type: 'line',
-            fill: false,
-            yAxisID: 'y-axis-2'
-          },
-          {
-            label: 'Sucessfull',
+            label: 'avg Tx Fees (ETH)',
+            borderColor: '#40ce9c',
             backgroundColor: '#40ce9c',
-            data: data.sData,
-            yAxisID: 'y-axis-1'
+            data: data.avgFees,
+            yAxisID: 'y-axis-1',
+            fill: false
           },
           {
-            label: 'Failed',
-            backgroundColor: '#fe136c',
-            data: data.fData,
-            yAxisID: 'y-axis-1'
+            label: 'avg Gas Price (GWEI)',
+            borderColor: '#eea66b',
+            backgroundColor: '#eea56b',
+            data: data.avgPrice,
+            yAxisID: 'y-axis-2',
+            fill: false
           }
         ]
       }
     }
-  }
+  },
+  mounted: function() {}
 })
 </script>
