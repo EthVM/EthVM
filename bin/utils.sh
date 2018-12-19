@@ -51,7 +51,7 @@ ensure() {
 prop() {
   local path=${1}
   local key=${2:-'version'}
-  grep ${key} ${path} | cut -d '=' -f2
+  grep ${key} ${path} | cut -d '=' -f2 | sed "s/'/ /g"
 }
 
 # to_version - tries to find the version, depending on the extension name
