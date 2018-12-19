@@ -103,7 +103,7 @@ contract ERC20 is IERC20 {
 
   mapping (address => mapping (address => uint256)) private _allowed;
 
-  uint256 private _totalSupply;
+  uint256 private _totalSupply = 1000000;
 
   /**
   * @dev Total number of tokens in existence
@@ -210,6 +210,13 @@ contract ERC20 is IERC20 {
   }
 
   /**
+   * Custom function for testing purposes, causes the contract to self destruct
+   */
+  function seppuku() public view returns (bool){
+    return true;
+  }
+
+  /**
   * @dev Transfer token for a specified addresses
   * @param from The address to transfer from.
   * @param to The address to transfer to.
@@ -265,4 +272,5 @@ contract ERC20 is IERC20 {
     _burn(account, value);
     emit Approval(account, msg.sender, _allowed[account][msg.sender]);
   }
+
 }

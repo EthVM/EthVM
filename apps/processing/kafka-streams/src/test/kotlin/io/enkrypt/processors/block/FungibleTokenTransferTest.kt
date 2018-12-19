@@ -1,38 +1,32 @@
 package io.enkrypt.processors.block
 
 import io.enkrypt.avro.capture.BlockRecord
-import io.enkrypt.common.extensions.*
-import io.enkrypt.kafka.mapping.ObjectMapper
+import io.enkrypt.common.extensions.amountBI
+import io.enkrypt.common.extensions.data20
+import io.enkrypt.common.extensions.ether
+import io.enkrypt.common.extensions.gwei
 import io.enkrypt.kafka.streams.models.StaticAddresses
 import io.enkrypt.kafka.streams.processors.block.ChainEvents
 import io.enkrypt.util.TestEthereumListener
+import io.enkrypt.util.createBlockRecord
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
 import org.ethereum.config.net.BaseNetConfig
-import org.ethereum.core.*
+import org.ethereum.core.AccountState
 import org.ethereum.core.genesis.GenesisLoader
 import org.ethereum.crypto.ECKey
 import org.ethereum.util.ByteUtil.wrap
 import org.ethereum.util.blockchain.StandaloneBlockchain
-import java.io.File
 import java.math.BigInteger
-import java.util.concurrent.TimeUnit
 
-
-
-class ChainEventsTest : BehaviorSpec() {
+class FungibleTokenTransferTest : BehaviorSpec() {
 
   val coinbase = ECKey()
 
   val bob = ECKey()
   val alice = ECKey()
   val terence = ECKey()
-
-  val contractSourceERC20 = ChainEventsTest::class.java.getResource("/solidity/erc20.sol").readText()
-
-  // for converting ethj objects into avro records
-  val objectMapper = ObjectMapper()
 
   val netConfig = BaseNetConfig().apply {
     add(0, StandaloneBlockchain.getEasyMiningConfig())
@@ -72,7 +66,7 @@ class ChainEventsTest : BehaviorSpec() {
       bc.sender = terence
       bc.sendEther(bob.address, 125.gwei())
 
-      val blockRecord = createBlockRecord(bc, listener)
+      val blockRecord = bc.createBlockRecord(listener)
 
       `when`("we convert the block") {
 
@@ -175,7 +169,7 @@ class ChainEventsTest : BehaviorSpec() {
       bc.sender = terence // invalid, insufficient ether in account
       bc.sendEther(bob.address, 200.ether())
 
-      val blockRecord = createBlockRecord(bc, listener)
+      val blockRecord = bc.createBlockRecord(listener)
 
       `when`("we convert the block") {
 
@@ -203,53 +197,6 @@ class ChainEventsTest : BehaviorSpec() {
 
     }
 
-    given("a block with a contract creation") {
-
-      bc.sender = bob
-
-      val contract = bc
-        .withGasLimit(500000)
-        .submitNewContract(contractSourceERC20, "ERC20")
-
-      val blockRecord = createBlockRecord(bc, listener)
-
-      `when`("we convert the block") {
-
-        val chainEvents = ChainEvents.forBlock(blockRecord)
-
-        then("there should be 2 chain events") {
-          chainEvents.size shouldBe 2
-        }
-
-        then("there should be a fungible ether transfer for the coinbase") {
-          val coinbaseTransfer = chainEvents.first().fungibleTransfer
-          coinbaseTransfer.getFrom() shouldBe StaticAddresses.EtherZero
-          coinbaseTransfer.getTo() shouldBe coinbase.address.data20()
-          coinbaseTransfer.amountBI shouldBe 3000267605000000000.toBigInteger()
-        }
-
-        then("there should be a contract creation") {
-          val creation = chainEvents[1].contractCreation
-          creation.getAddress() shouldBe contract.address.data20()
-          creation.getData().hex() shouldBe contract.binary
-        }
-
-      }
-
-    }
-  }
-
-  private fun createBlockRecord(bc: StandaloneBlockchain, listener: TestEthereumListener): BlockRecord {
-
-    // reset listener and generate block
-    listener.resetBlockSummaries(1)
-    bc.createBlock()
-
-    // capture block summary and convert to block record
-    listener.waitForBlockSummaries(30, TimeUnit.SECONDS)
-    val blockSummary = listener.blockSummaries.first()
-
-    return objectMapper.convert(objectMapper, BlockSummary::class.java, BlockRecord.Builder::class.java, blockSummary).build()
   }
 
 }
