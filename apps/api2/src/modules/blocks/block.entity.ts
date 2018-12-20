@@ -1,7 +1,7 @@
 import {Entity,ObjectIdColumn,Column,ObjectID,PrimaryColumn,PrimaryGeneratedColumn} from "typeorm";
 
-@Entity()
-export class Blocks {
+@Entity('blocks')
+export class BlockEntity {
   @PrimaryColumn()
   number: number
 
