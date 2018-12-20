@@ -6,7 +6,7 @@ import { BlockResolvers } from './block.resolvers'
 @Module({
   imports: [
       TypeOrmModule.forFeature([BlockEntity])
-  ],
+      ],
   providers: [ BlockService, BlockResolvers ],
   exports: [ BlockService ]
 })

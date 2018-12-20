@@ -44,6 +44,7 @@
     "crypto": "^1.0.1",
     "dotenv": "^6.2.0",
     "graphql": "^14.0.2",
+    "graphql-type-json": "^0.2.1",
     "mongodb": "^3.1.10",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
