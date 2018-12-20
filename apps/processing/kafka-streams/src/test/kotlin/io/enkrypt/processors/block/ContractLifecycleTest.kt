@@ -1,6 +1,5 @@
 package io.enkrypt.processors.block
 
-import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.common.extensions.amountBI
 import io.enkrypt.common.extensions.data20
 import io.enkrypt.common.extensions.ether
@@ -16,7 +15,6 @@ import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
 import mu.KotlinLogging
 import org.ethereum.core.AccountState
-import org.ethereum.core.BlockSummary
 import org.ethereum.core.CallTransaction
 import org.ethereum.core.genesis.GenesisLoader
 import org.ethereum.solidity.compiler.CompilationResult
@@ -82,7 +80,10 @@ class ContractLifecycleTest : BehaviorSpec() {
       }
     }
 
-    given(" a live contract which holds some ether") {
+    given("a live contract which holds some ether") {
+
+      sbc.sender = Blockchains.Users.Bob
+
       val res = SolidityCompiler.compile(
         erc20Source.toByteArray(),
         true,
@@ -91,42 +92,36 @@ class ContractLifecycleTest : BehaviorSpec() {
       )
       val cres = CompilationResult.parse(res.output)
 
-      val tx = Blockchains.Utils.createTx(
-        cbc,
+      val contractCreationTx = Blockchains.Utils.createTx(
+        sbc.blockchain.repository,
         Blockchains.Users.Bob,
         ByteUtil.EMPTY_BYTE_ARRAY,
         Hex.decode(cres.getContract("ERC20").bin)
       )
-      Blockchains.Utils.executeTransaction(cbc, tx)
 
-      val contractAddress = tx.contractAddress
+      sbc
+        .withGasLimit(500000)
+        .submitTransaction(contractCreationTx)
 
-      `when`("the contract self destructs") {
+      val blockRecord1 = sbc.createBlockRecord(listener)
+      val contractAddress = blockRecord1.getTransactionReceipts()[0].contractAddress.bytes()
+
+      `when`("we convert the block") {
 
         val c = CallTransaction.Contract(cres.getContract("ERC20").abi)
         val callData = c.getByName("seppuku").encode()
-
-        val methodTx = Blockchains.Utils.createTx(cbc, Blockchains.Users.Bob, contractAddress, callData, 0L)
-
-        val (executor, executionSummary) = Blockchains.Utils.executeTransaction(cbc, methodTx)
-
-        val programResult = executor.result
-        val touchedAccounts = programResult.touchedAccounts
-
-        val blockSummary = BlockSummary(
-          cbc.bestBlock,
-          emptyMap(), // Not interested in block reward
-          arrayListOf(executor.receipt),
-          arrayListOf(executionSummary)
+        val contractMethodTx = Blockchains.Utils.createTx(
+          sbc.blockchain.repository,
+          Blockchains.Users.Bob,
+          contractAddress,
+          callData,
+          0L
         )
-        val chainEvents = ChainEvents.forBlock(
-          objectMapper.convert(
-            objectMapper,
-            BlockSummary::class.java,
-            BlockRecord.Builder::class.java,
-            blockSummary
-          ).build()
-        )
+
+        sbc.submitTransaction(contractMethodTx)
+
+        val blockRecord2 = sbc.createBlockRecord(listener)
+        val chainEvents = ChainEvents.forBlock(blockRecord2)
 
         then("there should be 2 chain events") {
           chainEvents.size shouldBe 2
@@ -134,10 +129,6 @@ class ContractLifecycleTest : BehaviorSpec() {
 
         then("there should be a fungible ether transfer for the coinbase") {
           checkCoinbase(chainEvents.first(), 3000292048000000000.toBigInteger())
-        }
-
-        then("there should be several fungible transfer events") {
-          programResult.futureRefund shouldBe 24000L
         }
       }
     }
