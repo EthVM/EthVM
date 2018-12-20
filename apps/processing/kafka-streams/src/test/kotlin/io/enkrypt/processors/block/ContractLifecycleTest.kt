@@ -18,7 +18,6 @@ import mu.KotlinLogging
 import org.ethereum.core.AccountState
 import org.ethereum.core.BlockSummary
 import org.ethereum.core.CallTransaction
-import org.ethereum.core.TransactionExecutor
 import org.ethereum.core.genesis.GenesisLoader
 import org.ethereum.solidity.compiler.CompilationResult
 import org.ethereum.solidity.compiler.SolidityCompiler
@@ -94,40 +93,6 @@ class ContractLifecycleTest : BehaviorSpec() {
       }
     }
 
-//    given("a live contract which holds some ether") {
-//
-//      sbc.sender = bob
-//
-//      val contract = sbc
-//        .withGasLimit(500000)
-//        .submitNewContract(erc20Source, "ERC20")
-//
-//      sbc.createBlockRecord(listener)
-//
-//      `when`("the contract self destructs") {
-//
-//        val seppuku = contract.callConstFunction("seppuku")
-//
-//        logger.info { "Executing seppuku" }
-//
-//        val blockRecord = sbc.createBlockRecord(listener)
-//        val chainEvents = ChainEvents.forBlock(blockRecord)
-//
-//        then("there should be 2 chain events") {
-//          chainEvents.size shouldBe 2
-//        }
-//
-//        then("there should be a fungible ether transfer for the coinbase") {
-//          checkCoinbase(chainEvents.first(), 3000021272000000000.toBigInteger())
-//        }
-//
-//        then("there should be several fungible transfer events") {
-//        }
-//
-//      }
-//
-//    }
-
     given(" a live contract which holds some ether") {
       val res = SolidityCompiler.compile(
         erc20Source.toByteArray(),
@@ -154,22 +119,7 @@ class ContractLifecycleTest : BehaviorSpec() {
 
         val methodTx = Blockchains.Utils.createTx(cbc, Blockchains.Users.Bob, contractAddress, callData, 0L)
 
-        val track = cbc.repository.startTracking()
-        val executor = TransactionExecutor(
-          methodTx,
-          ByteArray(32),
-          cbc.repository,
-          cbc.blockStore,
-          cbc.programInvokeFactory,
-          cbc.bestBlock
-        )
-
-        executor.init()
-        executor.execute()
-        executor.go()
-        val executionSummary = executor.finalization()
-
-        track.commit()
+        val (executor, executionSummary) = Blockchains.Utils.executeTransaction(cbc, methodTx)
 
         val programResult = executor.result
         val touchedAccounts = programResult.touchedAccounts

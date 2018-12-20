@@ -8,6 +8,7 @@ import org.ethereum.core.BlockchainImpl
 import org.ethereum.core.Genesis
 import org.ethereum.core.PendingStateImpl
 import org.ethereum.core.Transaction
+import org.ethereum.core.TransactionExecutionSummary
 import org.ethereum.core.TransactionExecutor
 import org.ethereum.core.genesis.GenesisLoader
 import org.ethereum.crypto.ECKey
@@ -111,7 +112,7 @@ object Blockchains {
       return tx
     }
 
-    fun executeTransaction(b: BlockchainImpl, tx: Transaction): TransactionExecutor {
+    fun executeTransaction(b: BlockchainImpl, tx: Transaction): Pair<TransactionExecutor, TransactionExecutionSummary> {
       val track = b.repository.startTracking()
       val executor = TransactionExecutor(
         tx,
@@ -125,10 +126,11 @@ object Blockchains {
       executor.init()
       executor.execute()
       executor.go()
-      executor.finalization()
+      val s = executor.finalization()
 
       track.commit()
-      return executor
+
+      return Pair(executor, s)
     }
   }
 }
