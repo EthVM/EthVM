@@ -4,7 +4,6 @@ import io.enkrypt.common.extensions.amountBI
 import io.enkrypt.common.extensions.data20
 import io.enkrypt.common.extensions.ether
 import io.enkrypt.common.extensions.hex
-import io.enkrypt.kafka.mapping.ObjectMapper
 import io.enkrypt.kafka.streams.models.ChainEvent
 import io.enkrypt.kafka.streams.models.StaticAddresses
 import io.enkrypt.kafka.streams.processors.block.ChainEvents
@@ -51,10 +50,7 @@ class ContractLifecycleTest : BehaviorSpec() {
     stateRoot = GenesisLoader.generateRootHash(premine)
   }
 
-  private val objectMapper = ObjectMapper()
-
   private val sbc = Blockchains.Factory.createStandalone(genesisBlock, listener)
-  private val cbc = Blockchains.Factory.createContractFocused(genesisBlock, listener)
 
   init {
 
