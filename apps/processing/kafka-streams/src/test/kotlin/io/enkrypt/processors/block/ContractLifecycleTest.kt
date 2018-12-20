@@ -3,25 +3,28 @@ package io.enkrypt.processors.block
 import io.enkrypt.common.extensions.amountBI
 import io.enkrypt.common.extensions.data20
 import io.enkrypt.common.extensions.ether
-import io.enkrypt.common.extensions.gwei
 import io.enkrypt.common.extensions.hex
 import io.enkrypt.kafka.streams.models.ChainEvent
 import io.enkrypt.kafka.streams.models.StaticAddresses
 import io.enkrypt.kafka.streams.processors.block.ChainEvents
+import io.enkrypt.util.Blockchains
 import io.enkrypt.util.TestEthereumListener
 import io.enkrypt.util.createBlockRecord
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldNotBe
 import io.kotlintest.specs.BehaviorSpec
 import mu.KotlinLogging
-import org.ethereum.config.net.BaseNetConfig
 import org.ethereum.core.AccountState
+import org.ethereum.core.CallTransaction
 import org.ethereum.core.genesis.GenesisLoader
-import org.ethereum.crypto.ECKey
+import org.ethereum.solidity.compiler.CompilationResult
+import org.ethereum.solidity.compiler.SolidityCompiler
+import org.ethereum.util.ByteUtil
 import org.ethereum.util.ByteUtil.wrap
-import org.ethereum.util.blockchain.StandaloneBlockchain
 import org.ethereum.vm.OpCode
 import org.ethereum.vm.hook.VMHook
 import org.ethereum.vm.program.Program
+import org.spongycastle.util.encoders.Hex
 import java.math.BigInteger
 
 class LoggingVMHook : VMHook {
@@ -37,48 +40,31 @@ class ContractLifecycleTest : BehaviorSpec() {
 
   private val logger = KotlinLogging.logger {}
 
-  private val coinbase = ECKey()
-
-  private val bob = ECKey()
-
   private val erc20Source = ContractLifecycleTest::class.java.getResource("/solidity/erc20.sol").readText()
-
-  private val netConfig = BaseNetConfig().apply {
-    add(0, StandaloneBlockchain.getEasyMiningConfig())
-  }
 
   private val listener = TestEthereumListener()
 
-  private val genesisBlock =
-    GenesisLoader.loadGenesis(javaClass.getResourceAsStream("/genesis/genesis-light-sb.json")).apply {
+  private val genesisBlock = Blockchains.Genesis.apply {
+    // initial balances
+    addPremine(wrap(Blockchains.Users.Bob.address), AccountState(BigInteger.ZERO, 20.ether()))
 
-      // initial balances
-      addPremine(wrap(bob.address), AccountState(BigInteger.ZERO, 20.ether()))
-
-      stateRoot = GenesisLoader.generateRootHash(premine)
-    }
-
-  private val bc = StandaloneBlockchain().apply {
-    withGenesis(genesisBlock)
-    withNetConfig(netConfig)
-    withMinerCoinbase(coinbase.address)
-    withGasLimit(21000)
-    withGasPrice(1.gwei().toLong())
-    withVmHook(LoggingVMHook())
-    addEthereumListener(listener)
+    stateRoot = GenesisLoader.generateRootHash(premine)
   }
+
+  private val sbc = Blockchains.Factory.createStandalone(genesisBlock, listener)
+  private val cbc = Blockchains.Factory.createContractFocused(genesisBlock)
 
   init {
 
     given("a block with a contract creation") {
 
-      bc.sender = bob
+      sbc.sender = Blockchains.Users.Bob
 
-      val contract = bc
+      val contract = sbc
         .withGasLimit(500000)
         .submitNewContract(erc20Source, "ERC20")
 
-      val blockRecord = bc.createBlockRecord(listener)
+      val blockRecord = sbc.createBlockRecord(listener)
 
       `when`("we convert the block") {
 
@@ -96,7 +82,7 @@ class ContractLifecycleTest : BehaviorSpec() {
           val creation = chainEvents[1].contractCreation
           creation.getAddress() shouldBe contract.address.data20()
           creation.getData().hex() shouldBe contract.binary
-          creation.getCreator() shouldBe bob.address.data20()
+          creation.getCreator() shouldBe Blockchains.Users.Bob.address.data20()
           creation.getBlockHash() shouldBe blockRecord.getHeader().getHash()
           creation.getTxHash() shouldBe blockRecord.getTransactions().first().getHash()
         }
@@ -105,45 +91,78 @@ class ContractLifecycleTest : BehaviorSpec() {
 
     }
 
-    given("a live contract which holds some ether") {
+//    given("a live contract which holds some ether") {
+//
+//      sbc.sender = bob
+//
+//      val contract = sbc
+//        .withGasLimit(500000)
+//        .submitNewContract(erc20Source, "ERC20")
+//
+//      sbc.createBlockRecord(listener)
+//
+//      `when`("the contract self destructs") {
+//
+//        val seppuku = contract.callConstFunction("seppuku")
+//
+//        logger.info { "Executing seppuku" }
+//
+//        val blockRecord = sbc.createBlockRecord(listener)
+//        val chainEvents = ChainEvents.forBlock(blockRecord)
+//
+//        then("there should be 2 chain events") {
+//          chainEvents.size shouldBe 2
+//        }
+//
+//        then("there should be a fungible ether transfer for the coinbase") {
+//          checkCoinbase(chainEvents.first(), 3000021272000000000.toBigInteger())
+//        }
+//
+//        then("there should be several fungible transfer events") {
+//        }
+//
+//      }
+//
+//    }
 
-      bc.sender = bob
+    given(" a live contract which holds some ether") {
+      val res = SolidityCompiler.compile(
+        erc20Source.toByteArray(),
+        true,
+        SolidityCompiler.Options.ABI,
+        SolidityCompiler.Options.BIN
+      )
+      val cres = CompilationResult.parse(res.output)
 
-      val contract = bc
-        .withGasLimit(500000)
-        .submitNewContract(erc20Source, "ERC20")
+      val tx = Blockchains.Utils.createTx(
+        cbc,
+        Blockchains.Users.Bob,
+        ByteUtil.EMPTY_BYTE_ARRAY,
+        Hex.decode(cres.getContract("ERC20").bin)
+      )
+      Blockchains.Utils.executeTransaction(cbc, tx)
 
-      bc.createBlockRecord(listener)
+      val contractAddress = tx.contractAddress
 
-      `when`("the contract self destructs") {
+      `when`("we execute the contract method") {
 
-        val seppuku = contract.callConstFunction("seppuku")
+        val c = CallTransaction.Contract(cres.getContract("ERC20").abi)
+        val callData = c.getByName("seppuku").encode()
 
-        logger.info { "Executing seppuku" }
+        val methodTx = Blockchains.Utils.createTx(cbc, Blockchains.Users.Bob, contractAddress, callData, 0L)
+        val programResult = Blockchains.Utils.executeTransaction(cbc, methodTx).result
 
-        val blockRecord = bc.createBlockRecord(listener)
-        val chainEvents = ChainEvents.forBlock(blockRecord)
-
-        then("there should be 2 chain events") {
-          chainEvents.size shouldBe 2
+        then("method execution should return false") {
+          programResult.hReturn shouldNotBe null
         }
-
-        then("there should be a fungible ether transfer for the coinbase") {
-          checkCoinbase(chainEvents.first(), 3000021272000000000.toBigInteger())
-        }
-
-        then("there should be several fungible transfer events") {
-        }
-
       }
-
     }
   }
 
   private fun checkCoinbase(event: ChainEvent, reward: BigInteger) {
     val coinbaseTransfer = event.fungibleTransfer
     coinbaseTransfer.getFrom() shouldBe StaticAddresses.EtherZero
-    coinbaseTransfer.getTo() shouldBe coinbase.address.data20()
+    coinbaseTransfer.getTo() shouldBe Blockchains.Coinbase.address.data20()
     coinbaseTransfer.amountBI shouldBe reward
   }
 }

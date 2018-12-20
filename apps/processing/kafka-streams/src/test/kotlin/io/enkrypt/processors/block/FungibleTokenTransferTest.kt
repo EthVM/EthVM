@@ -7,6 +7,7 @@ import io.enkrypt.common.extensions.ether
 import io.enkrypt.common.extensions.gwei
 import io.enkrypt.kafka.streams.models.StaticAddresses
 import io.enkrypt.kafka.streams.processors.block.ChainEvents
+import io.enkrypt.util.Blockchains
 import io.enkrypt.util.TestEthereumListener
 import io.enkrypt.util.createBlockRecord
 import io.kotlintest.matchers.collections.shouldContainExactly
@@ -23,50 +24,32 @@ import java.math.BigInteger
 
 class FungibleTokenTransferTest : BehaviorSpec() {
 
-  private val coinbase = ECKey()
-
-  private val bob = ECKey()
-  private val alice = ECKey()
-  private val terence = ECKey()
-
-  private val netConfig = BaseNetConfig().apply {
-    add(0, StandaloneBlockchain.getEasyMiningConfig())
-  }
-
   private val listener = TestEthereumListener()
 
-  private val genesisBlock: Genesis =
-    GenesisLoader.loadGenesis(javaClass.getResourceAsStream("/genesis/genesis-light-sb.json")).apply {
+  private val genesisBlock: Genesis = Blockchains.Genesis.apply {
 
       // initial balances
-      addPremine(wrap(bob.address), AccountState(BigInteger.ZERO, 20.ether()))
-      addPremine(wrap(alice.address), AccountState(BigInteger.ZERO, 50.ether()))
-      addPremine(wrap(terence.address), AccountState(BigInteger.ZERO, 100.ether()))
+      addPremine(wrap(Blockchains.Users.Bob.address), AccountState(BigInteger.ZERO, 20.ether()))
+      addPremine(wrap(Blockchains.Users.Alice.address), AccountState(BigInteger.ZERO, 50.ether()))
+      addPremine(wrap(Blockchains.Users.Terence.address), AccountState(BigInteger.ZERO, 100.ether()))
 
       stateRoot = GenesisLoader.generateRootHash(premine)
     }
 
-  val bc = StandaloneBlockchain().apply {
-    withGenesis(genesisBlock)
-    withNetConfig(netConfig)
-    withMinerCoinbase(coinbase.address)
-    withGasLimit(21000)
-    withGasPrice(1.gwei().toLong())
-    addEthereumListener(listener)
-  }
+  val bc = Blockchains.Factory.createStandalone(genesisBlock, listener)
 
   init {
 
     given("a block with a series of valid ether transfers") {
 
-      bc.sender = bob
-      bc.sendEther(alice.address, 50.gwei())
+      bc.sender = Blockchains.Users.Bob
+      bc.sendEther(Blockchains.Users.Alice.address, 50.gwei())
 
-      bc.sender = alice
-      bc.sendEther(terence.address, 25.gwei())
+      bc.sender = Blockchains.Users.Alice
+      bc.sendEther(Blockchains.Users.Terence.address, 25.gwei())
 
-      bc.sender = terence
-      bc.sendEther(bob.address, 125.gwei())
+      bc.sender = Blockchains.Users.Terence
+      bc.sendEther(Blockchains.Users.Bob.address, 125.gwei())
 
       val blockRecord = bc.createBlockRecord(listener)
 
@@ -81,7 +64,7 @@ class FungibleTokenTransferTest : BehaviorSpec() {
         then("there should be a fungible ether transfer for the coinbase") {
           val coinbaseTransfer = chainEvents.first().fungibleTransfer
           coinbaseTransfer.getFrom() shouldBe StaticAddresses.EtherZero
-          coinbaseTransfer.getTo() shouldBe coinbase.address.data20()
+          coinbaseTransfer.getTo() shouldBe Blockchains.Coinbase.address.data20()
           coinbaseTransfer.amountBI shouldBe 3000063000000000000.toBigInteger()
           coinbaseTransfer.getReverse() shouldBe false
         }
@@ -89,20 +72,20 @@ class FungibleTokenTransferTest : BehaviorSpec() {
         then("there should be 3 fungible ether transfers between bob, alice and terence") {
 
           val bobToAlice = chainEvents[1].fungibleTransfer
-          bobToAlice.getFrom() shouldBe bob.address.data20()
-          bobToAlice.getTo() shouldBe alice.address.data20()
+          bobToAlice.getFrom() shouldBe Blockchains.Users.Bob.address.data20()
+          bobToAlice.getTo() shouldBe Blockchains.Users.Alice.address.data20()
           bobToAlice.amountBI shouldBe 50.gwei()
           bobToAlice.getReverse() shouldBe false
 
           val aliceToTerence = chainEvents[2].fungibleTransfer
-          aliceToTerence.getFrom() shouldBe alice.address.data20()
-          aliceToTerence.getTo() shouldBe terence.address.data20()
+          aliceToTerence.getFrom() shouldBe Blockchains.Users.Alice.address.data20()
+          aliceToTerence.getTo() shouldBe Blockchains.Users.Terence.address.data20()
           aliceToTerence.amountBI shouldBe 25.gwei()
           aliceToTerence.getReverse() shouldBe false
 
           val terenceToBob = chainEvents[3].fungibleTransfer
-          terenceToBob.getFrom() shouldBe terence.address.data20()
-          terenceToBob.getTo() shouldBe bob.address.data20()
+          terenceToBob.getFrom() shouldBe Blockchains.Users.Terence.address.data20()
+          terenceToBob.getTo() shouldBe Blockchains.Users.Bob.address.data20()
           terenceToBob.amountBI shouldBe 125.gwei()
           terenceToBob.getReverse() shouldBe false
         }
@@ -130,7 +113,7 @@ class FungibleTokenTransferTest : BehaviorSpec() {
         then("there should be a reversed fungible ether transfer for the coinbase") {
           val coinbaseTransfer = reversedChainEvents.last().fungibleTransfer
           coinbaseTransfer.getFrom() shouldBe StaticAddresses.EtherZero
-          coinbaseTransfer.getTo() shouldBe coinbase.address.data20()
+          coinbaseTransfer.getTo() shouldBe Blockchains.Coinbase.address.data20()
           coinbaseTransfer.amountBI shouldBe 3000063000000000000.toBigInteger()
           coinbaseTransfer.getReverse() shouldBe true
         }
@@ -138,20 +121,20 @@ class FungibleTokenTransferTest : BehaviorSpec() {
         then("there should be a reversed fungible ether transfer for each originating transfer") {
 
           val bobToAlice = reversedChainEvents[2].fungibleTransfer
-          bobToAlice.getFrom() shouldBe bob.address.data20()
-          bobToAlice.getTo() shouldBe alice.address.data20()
+          bobToAlice.getFrom() shouldBe Blockchains.Users.Bob.address.data20()
+          bobToAlice.getTo() shouldBe Blockchains.Users.Alice.address.data20()
           bobToAlice.amountBI shouldBe 50.gwei()
           bobToAlice.getReverse() shouldBe true
 
           val aliceToTerence = reversedChainEvents[1].fungibleTransfer
-          aliceToTerence.getFrom() shouldBe alice.address.data20()
-          aliceToTerence.getTo() shouldBe terence.address.data20()
+          aliceToTerence.getFrom() shouldBe Blockchains.Users.Alice.address.data20()
+          aliceToTerence.getTo() shouldBe Blockchains.Users.Terence.address.data20()
           aliceToTerence.amountBI shouldBe 25.gwei()
           aliceToTerence.getReverse() shouldBe true
 
           val terenceToBob = reversedChainEvents[0].fungibleTransfer
-          terenceToBob.getFrom() shouldBe terence.address.data20()
-          terenceToBob.getTo() shouldBe bob.address.data20()
+          terenceToBob.getFrom() shouldBe Blockchains.Users.Terence.address.data20()
+          terenceToBob.getTo() shouldBe Blockchains.Users.Bob.address.data20()
           terenceToBob.amountBI shouldBe 125.gwei()
           terenceToBob.getReverse() shouldBe true
 
@@ -162,14 +145,14 @@ class FungibleTokenTransferTest : BehaviorSpec() {
 
     given("a block with some invalid ether transfers") {
 
-      bc.sender = bob     // invalid, insufficient ether in account
-      bc.sendEther(alice.address, 100.ether())
+      bc.sender = Blockchains.Users.Bob     // invalid, insufficient ether in account
+      bc.sendEther(Blockchains.Users.Alice.address, 100.ether())
 
-      bc.sender = alice
-      bc.sendEther(terence.address, 56.gwei())
+      bc.sender = Blockchains.Users.Alice
+      bc.sendEther(Blockchains.Users.Terence.address, 56.gwei())
 
-      bc.sender = terence // invalid, insufficient ether in account
-      bc.sendEther(bob.address, 200.ether())
+      bc.sender = Blockchains.Users.Terence // invalid, insufficient ether in account
+      bc.sendEther(Blockchains.Users.Bob.address, 200.ether())
 
       val blockRecord = bc.createBlockRecord(listener)
 
@@ -184,14 +167,14 @@ class FungibleTokenTransferTest : BehaviorSpec() {
         then("there should be a fungible ether transfer for the coinbase") {
           val coinbaseTransfer = chainEvents.first().fungibleTransfer
           coinbaseTransfer.getFrom() shouldBe StaticAddresses.EtherZero
-          coinbaseTransfer.getTo() shouldBe coinbase.address.data20()
+          coinbaseTransfer.getTo() shouldBe Blockchains.Coinbase.address.data20()
           coinbaseTransfer.amountBI shouldBe 3000021000000000000.toBigInteger()
         }
 
         then("there should be a single transfer from alice to terence") {
           val aliceToTerence = chainEvents[1].fungibleTransfer
-          aliceToTerence.getFrom() shouldBe alice.address.data20()
-          aliceToTerence.getTo() shouldBe terence.address.data20()
+          aliceToTerence.getFrom() shouldBe Blockchains.Users.Alice.address.data20()
+          aliceToTerence.getTo() shouldBe Blockchains.Users.Terence.address.data20()
           aliceToTerence.amountBI shouldBe 56.gwei()
         }
 
