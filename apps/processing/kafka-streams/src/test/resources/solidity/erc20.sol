@@ -212,8 +212,8 @@ contract ERC20 is IERC20 {
   /**
    * Custom function for testing purposes, causes the contract to self destruct
    */
-  function seppuku() public view returns (bool){
-    return true;
+  function seppuku() public {
+    selfdestruct(msg.sender);
   }
 
   /**

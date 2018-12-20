@@ -1,9 +1,11 @@
 package io.enkrypt.processors.block
 
+import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.common.extensions.amountBI
 import io.enkrypt.common.extensions.data20
 import io.enkrypt.common.extensions.ether
 import io.enkrypt.common.extensions.hex
+import io.enkrypt.kafka.mapping.ObjectMapper
 import io.enkrypt.kafka.streams.models.ChainEvent
 import io.enkrypt.kafka.streams.models.StaticAddresses
 import io.enkrypt.kafka.streams.processors.block.ChainEvents
@@ -11,11 +13,12 @@ import io.enkrypt.util.Blockchains
 import io.enkrypt.util.TestEthereumListener
 import io.enkrypt.util.createBlockRecord
 import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
 import io.kotlintest.specs.BehaviorSpec
 import mu.KotlinLogging
 import org.ethereum.core.AccountState
+import org.ethereum.core.BlockSummary
 import org.ethereum.core.CallTransaction
+import org.ethereum.core.TransactionExecutor
 import org.ethereum.core.genesis.GenesisLoader
 import org.ethereum.solidity.compiler.CompilationResult
 import org.ethereum.solidity.compiler.SolidityCompiler
@@ -51,8 +54,10 @@ class ContractLifecycleTest : BehaviorSpec() {
     stateRoot = GenesisLoader.generateRootHash(premine)
   }
 
+  private val objectMapper = ObjectMapper()
+
   private val sbc = Blockchains.Factory.createStandalone(genesisBlock, listener)
-  private val cbc = Blockchains.Factory.createContractFocused(genesisBlock)
+  private val cbc = Blockchains.Factory.createContractFocused(genesisBlock, listener)
 
   init {
 
@@ -75,7 +80,7 @@ class ContractLifecycleTest : BehaviorSpec() {
         }
 
         then("there should be a fungible ether transfer for the coinbase") {
-          checkCoinbase(chainEvents.first(), 3000292592000000000.toBigInteger())
+          checkCoinbase(chainEvents.first(), 3000292048000000000.toBigInteger())
         }
 
         then("there should be a contract creation event") {
@@ -142,16 +147,58 @@ class ContractLifecycleTest : BehaviorSpec() {
 
       val contractAddress = tx.contractAddress
 
-      `when`("we execute the contract method") {
+      `when`("the contract self destructs") {
 
         val c = CallTransaction.Contract(cres.getContract("ERC20").abi)
         val callData = c.getByName("seppuku").encode()
 
         val methodTx = Blockchains.Utils.createTx(cbc, Blockchains.Users.Bob, contractAddress, callData, 0L)
-        val programResult = Blockchains.Utils.executeTransaction(cbc, methodTx).result
 
-        then("method execution should return false") {
-          programResult.hReturn shouldNotBe null
+        val track = cbc.repository.startTracking()
+        val executor = TransactionExecutor(
+          methodTx,
+          ByteArray(32),
+          cbc.repository,
+          cbc.blockStore,
+          cbc.programInvokeFactory,
+          cbc.bestBlock
+        )
+
+        executor.init()
+        executor.execute()
+        executor.go()
+        val executionSummary = executor.finalization()
+
+        track.commit()
+
+        val programResult = executor.result
+        val touchedAccounts = programResult.touchedAccounts
+
+        val blockSummary = BlockSummary(
+          cbc.bestBlock,
+          emptyMap(), // Not interested in block reward
+          arrayListOf(executor.receipt),
+          arrayListOf(executionSummary)
+        )
+        val chainEvents = ChainEvents.forBlock(
+          objectMapper.convert(
+            objectMapper,
+            BlockSummary::class.java,
+            BlockRecord.Builder::class.java,
+            blockSummary
+          ).build()
+        )
+
+        then("there should be 2 chain events") {
+          chainEvents.size shouldBe 2
+        }
+
+        then("there should be a fungible ether transfer for the coinbase") {
+          checkCoinbase(chainEvents.first(), 3000292048000000000.toBigInteger())
+        }
+
+        then("there should be several fungible transfer events") {
+          programResult.futureRefund shouldBe 24000L
         }
       }
     }
