@@ -7,6 +7,7 @@ import org.ethereum.config.net.BaseNetConfig
 import org.ethereum.core.BlockchainImpl
 import org.ethereum.core.Genesis
 import org.ethereum.core.PendingStateImpl
+import org.ethereum.core.Repository
 import org.ethereum.core.Transaction
 import org.ethereum.core.TransactionExecutionSummary
 import org.ethereum.core.TransactionExecutor
@@ -93,13 +94,13 @@ object Blockchains {
   object Utils {
 
     fun createTx(
-      b: BlockchainImpl,
+      r: Repository,
       sender: ECKey,
       receiveAddress: ByteArray,
       data: ByteArray,
       value: Long = 0
     ): Transaction {
-      val nonce = b.repository.getNonce(sender.address)
+      val nonce = r.getNonce(sender.address)
       val tx = Transaction(
         ByteUtil.bigIntegerToBytes(nonce),
         ByteUtil.longToBytesNoLeadZeroes(0),
