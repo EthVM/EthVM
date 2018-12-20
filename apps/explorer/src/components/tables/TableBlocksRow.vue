@@ -49,11 +49,11 @@
       </v-flex>
       <v-flex d-flex xs6 sm3 md2 order-xs2 order-md4>
         <p class="text-truncate black--text align-center mb-0">
-          <v-tooltip v-if="getShortRewardValue(block.getTotalReward(), true)" bottom>
+          <v-tooltip v-if="getShortValue(block.getTotalReward(), true)" bottom>
             <v-icon slot="activator" dark small>fa fa-question-circle info--text</v-icon>
             <span>{{ block.getTotalReward() }}</span>
           </v-tooltip>
-          {{ getShortRewardValue(block.getTotalReward(), false) }}
+          {{ getShortValue(block.getTotalReward(), false) }}
         </p>
       </v-flex>
     </v-layout>

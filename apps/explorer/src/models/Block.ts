@@ -126,7 +126,6 @@ export class Block {
     if (!this.cache.minerBalance) {
       this.cache.minerBalance = common.EthValue(this.block.header.rewards[this.block.header.miner])
     }
-    console.log()
     return this.cache.minerBalance
   }
 
@@ -245,9 +244,7 @@ export class Block {
       let total = 0
       for (const address in this.block.header.rewards) {
         total = this.block.header.rewards[address] + total
-        // console.log(this.block.header.rewards[address])
       }
-      console.log(this.block.header.rewards)
       this.cache.getTotalReward = total
     }
     return this.cache.getTotalReward
