@@ -7,15 +7,14 @@
  * @param source
  */
 export function assignClean(target: any, source: any) {
+  const sourceCopy = { ...source }
 
-  const sourceCopy = {...source};
-
-  for(const key of Object.keys(sourceCopy)) {
-      const value = sourceCopy[key];
-      if(value === null || value === undefined) {
-          delete sourceCopy[key];
-      }
+  for (const key of Object.keys(sourceCopy)) {
+    const value = sourceCopy[key]
+    if (value === null || value === undefined) {
+      delete sourceCopy[key]
+    }
   }
 
-  return Object.assign(target, sourceCopy);
+  return Object.assign(target, sourceCopy)
 }
