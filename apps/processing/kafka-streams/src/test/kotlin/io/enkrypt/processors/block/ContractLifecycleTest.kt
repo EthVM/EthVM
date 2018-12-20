@@ -1,6 +1,10 @@
 package io.enkrypt.processors.block
 
-import io.enkrypt.common.extensions.*
+import io.enkrypt.common.extensions.amountBI
+import io.enkrypt.common.extensions.data20
+import io.enkrypt.common.extensions.ether
+import io.enkrypt.common.extensions.gwei
+import io.enkrypt.common.extensions.hex
 import io.enkrypt.kafka.streams.models.ChainEvent
 import io.enkrypt.kafka.streams.models.StaticAddresses
 import io.enkrypt.kafka.streams.processors.block.ChainEvents
@@ -10,7 +14,7 @@ import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
 import mu.KotlinLogging
 import org.ethereum.config.net.BaseNetConfig
-import org.ethereum.core.*
+import org.ethereum.core.AccountState
 import org.ethereum.core.genesis.GenesisLoader
 import org.ethereum.crypto.ECKey
 import org.ethereum.util.ByteUtil.wrap
@@ -25,37 +29,36 @@ class LoggingVMHook : VMHook {
   val logger = KotlinLogging.logger {}
 
   override fun step(program: Program, opcode: OpCode) {
-    logger.info{ "Step: origin = ${program.originAddress.shortHex()} owner = ${program.ownerAddress.shortHex()}, opcode = ${opcode}"}
+    logger.info { "Step: origin = ${program.originAddress.shortHex()} owner = ${program.ownerAddress.shortHex()}, opcode = ${opcode}" }
   }
 }
 
 class ContractLifecycleTest : BehaviorSpec() {
 
-  val logger = KotlinLogging.logger {}
+  private val logger = KotlinLogging.logger {}
 
-  val coinbase = ECKey()
+  private val coinbase = ECKey()
 
-  val bob = ECKey()
-  val alice = ECKey()
-  val terence = ECKey()
+  private val bob = ECKey()
 
-  val erc20Source = ContractLifecycleTest::class.java.getResource("/solidity/erc20.sol").readText()
+  private val erc20Source = ContractLifecycleTest::class.java.getResource("/solidity/erc20.sol").readText()
 
-  val netConfig = BaseNetConfig().apply {
+  private val netConfig = BaseNetConfig().apply {
     add(0, StandaloneBlockchain.getEasyMiningConfig())
   }
 
-  val listener = TestEthereumListener()
+  private val listener = TestEthereumListener()
 
-  val genesisBlock = GenesisLoader.loadGenesis(javaClass.getResourceAsStream("/genesis/genesis-light-sb.json")).apply {
+  private val genesisBlock =
+    GenesisLoader.loadGenesis(javaClass.getResourceAsStream("/genesis/genesis-light-sb.json")).apply {
 
-    // initial balances
-    addPremine(wrap(bob.address), AccountState(BigInteger.ZERO, 20.ether()))
+      // initial balances
+      addPremine(wrap(bob.address), AccountState(BigInteger.ZERO, 20.ether()))
 
-    stateRoot = GenesisLoader.generateRootHash(premine)
-  }
+      stateRoot = GenesisLoader.generateRootHash(premine)
+    }
 
-  val bc = StandaloneBlockchain().apply {
+  private val bc = StandaloneBlockchain().apply {
     withGenesis(genesisBlock)
     withNetConfig(netConfig)
     withMinerCoinbase(coinbase.address)
@@ -114,9 +117,9 @@ class ContractLifecycleTest : BehaviorSpec() {
 
       `when`("the contract self destructs") {
 
-        val seppuku = contract.callFunction("seppuku")
+        val seppuku = contract.callConstFunction("seppuku")
 
-        logger.info{ "Executing seppuku"}
+        logger.info { "Executing seppuku" }
 
         val blockRecord = bc.createBlockRecord(listener)
         val chainEvents = ChainEvents.forBlock(blockRecord)
@@ -130,8 +133,6 @@ class ContractLifecycleTest : BehaviorSpec() {
         }
 
         then("there should be several fungible transfer events") {
-
-
         }
 
       }
@@ -145,5 +146,4 @@ class ContractLifecycleTest : BehaviorSpec() {
     coinbaseTransfer.getTo() shouldBe coinbase.address.data20()
     coinbaseTransfer.amountBI shouldBe reward
   }
-
 }

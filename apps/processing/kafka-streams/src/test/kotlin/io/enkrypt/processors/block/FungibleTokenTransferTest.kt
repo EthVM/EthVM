@@ -14,6 +14,7 @@ import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
 import org.ethereum.config.net.BaseNetConfig
 import org.ethereum.core.AccountState
+import org.ethereum.core.Genesis
 import org.ethereum.core.genesis.GenesisLoader
 import org.ethereum.crypto.ECKey
 import org.ethereum.util.ByteUtil.wrap
@@ -22,27 +23,28 @@ import java.math.BigInteger
 
 class FungibleTokenTransferTest : BehaviorSpec() {
 
-  val coinbase = ECKey()
+  private val coinbase = ECKey()
 
-  val bob = ECKey()
-  val alice = ECKey()
-  val terence = ECKey()
+  private val bob = ECKey()
+  private val alice = ECKey()
+  private val terence = ECKey()
 
-  val netConfig = BaseNetConfig().apply {
+  private val netConfig = BaseNetConfig().apply {
     add(0, StandaloneBlockchain.getEasyMiningConfig())
   }
 
-  val listener = TestEthereumListener()
+  private val listener = TestEthereumListener()
 
-  val genesisBlock = GenesisLoader.loadGenesis(javaClass.getResourceAsStream("/genesis/genesis-light-sb.json")).apply {
+  private val genesisBlock: Genesis =
+    GenesisLoader.loadGenesis(javaClass.getResourceAsStream("/genesis/genesis-light-sb.json")).apply {
 
-    // initial balances
-    addPremine(wrap(bob.address), AccountState(BigInteger.ZERO, 20.ether()))
-    addPremine(wrap(alice.address), AccountState(BigInteger.ZERO, 50.ether()))
-    addPremine(wrap(terence.address), AccountState(BigInteger.ZERO, 100.ether()))
+      // initial balances
+      addPremine(wrap(bob.address), AccountState(BigInteger.ZERO, 20.ether()))
+      addPremine(wrap(alice.address), AccountState(BigInteger.ZERO, 50.ether()))
+      addPremine(wrap(terence.address), AccountState(BigInteger.ZERO, 100.ether()))
 
-    stateRoot = GenesisLoader.generateRootHash(premine)
-  }
+      stateRoot = GenesisLoader.generateRootHash(premine)
+    }
 
   val bc = StandaloneBlockchain().apply {
     withGenesis(genesisBlock)
@@ -122,7 +124,7 @@ class FungibleTokenTransferTest : BehaviorSpec() {
         }
 
         then("the chain events should be in reverse order") {
-          chainEvents.map{ it.reverse() }.asReversed() shouldContainExactly reversedChainEvents
+          chainEvents.map { it.reverse() }.asReversed() shouldContainExactly reversedChainEvents
         }
 
         then("there should be a reversed fungible ether transfer for the coinbase") {
@@ -196,7 +198,5 @@ class FungibleTokenTransferTest : BehaviorSpec() {
       }
 
     }
-
   }
-
 }
