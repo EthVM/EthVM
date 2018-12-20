@@ -12,7 +12,7 @@
     },
     "backend": {
       "packages": [
-        "apps/api/packages/ethereumjs-vm/package.json"
+        "apps/api2/package.json"
       ]
     },
     "utils": {
