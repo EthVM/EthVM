@@ -6,6 +6,6 @@
   "logging": true,
   "useNewUrlParser":true,
   "entities": [
-    "src/entity/*.ts"
+    "src/modules/blocks/*.entity.ts"
   ]
 }

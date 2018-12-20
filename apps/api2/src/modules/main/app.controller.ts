@@ -9,7 +9,6 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  @UseGuards(AuthGuard())
   root(): string {
     return this.appService.root();
   }

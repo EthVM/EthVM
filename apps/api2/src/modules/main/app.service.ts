@@ -8,4 +8,5 @@ export class AppService {
   root(): string {
     return this.config.get('API_URL');
   }
+
 }
