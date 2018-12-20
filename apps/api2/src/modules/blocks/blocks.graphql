@@ -1,12 +1,8 @@
 type Query {
-  getBlocks: [Block]
+  blocks(limit: Int,page: Int): [Block]
+  block(hash: String): Block
 }
-
-type Subscription {
-  blockGenerated: Block
-}
-
 
 type Block {
-  id: Int
+  number: Int
 }

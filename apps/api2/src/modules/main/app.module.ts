@@ -24,9 +24,6 @@ import { BlockModule } from '../blocks/block.module'
     ConfigModule,
     BlockModule
   ],
-  controllers: [
-    AppController
-  ],
   providers: [
     AppService
   ],
