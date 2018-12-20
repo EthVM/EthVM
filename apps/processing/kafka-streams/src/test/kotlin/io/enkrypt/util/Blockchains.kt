@@ -32,7 +32,6 @@ object Blockchains {
     val Bob = ECKey()
     val Alice = ECKey()
     val Terence = ECKey()
-
   }
 
   object Factory {
@@ -88,7 +87,6 @@ object Blockchains {
 
       return bc
     }
-
   }
 
   object Utils {
@@ -132,6 +130,5 @@ object Blockchains {
       track.commit()
       return executor
     }
-
   }
 }

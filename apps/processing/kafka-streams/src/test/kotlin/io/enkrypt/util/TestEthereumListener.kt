@@ -1,6 +1,11 @@
 package io.enkrypt.util
 
-import org.ethereum.core.*
+import org.ethereum.core.Block
+import org.ethereum.core.BlockSummary
+import org.ethereum.core.PendingState
+import org.ethereum.core.Transaction
+import org.ethereum.core.TransactionExecutionSummary
+import org.ethereum.core.TransactionReceipt
 import org.ethereum.listener.EthereumListener
 import org.ethereum.net.eth.message.StatusMessage
 import org.ethereum.net.message.Message
@@ -75,5 +80,4 @@ class TestEthereumListener : EthereumListener {
   fun waitForBlockSummaries(timeout: Long, unit: TimeUnit) {
     blockSummariesLatch.await(timeout, unit)
   }
-
 }

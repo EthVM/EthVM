@@ -32,7 +32,7 @@ class LoggingVMHook : VMHook {
   val logger = KotlinLogging.logger {}
 
   override fun step(program: Program, opcode: OpCode) {
-    logger.info { "Step: origin = ${program.originAddress.shortHex()} owner = ${program.ownerAddress.shortHex()}, opcode = ${opcode}" }
+    logger.info { "Step: origin = ${program.originAddress.shortHex()} owner = ${program.ownerAddress.shortHex()}, opcode = $opcode" }
   }
 }
 
@@ -86,9 +86,7 @@ class ContractLifecycleTest : BehaviorSpec() {
           creation.getBlockHash() shouldBe blockRecord.getHeader().getHash()
           creation.getTxHash() shouldBe blockRecord.getTransactions().first().getHash()
         }
-
       }
-
     }
 
 //    given("a live contract which holds some ether") {

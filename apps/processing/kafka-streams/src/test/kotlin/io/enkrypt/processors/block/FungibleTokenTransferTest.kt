@@ -13,13 +13,10 @@ import io.enkrypt.util.createBlockRecord
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
-import org.ethereum.config.net.BaseNetConfig
 import org.ethereum.core.AccountState
 import org.ethereum.core.Genesis
 import org.ethereum.core.genesis.GenesisLoader
-import org.ethereum.crypto.ECKey
 import org.ethereum.util.ByteUtil.wrap
-import org.ethereum.util.blockchain.StandaloneBlockchain
 import java.math.BigInteger
 
 class FungibleTokenTransferTest : BehaviorSpec() {
@@ -89,7 +86,6 @@ class FungibleTokenTransferTest : BehaviorSpec() {
           terenceToBob.amountBI shouldBe 125.gwei()
           terenceToBob.getReverse() shouldBe false
         }
-
       }
 
       `when`("we reverse the block") {
@@ -137,15 +133,13 @@ class FungibleTokenTransferTest : BehaviorSpec() {
           terenceToBob.getTo() shouldBe Blockchains.Users.Bob.address.data20()
           terenceToBob.amountBI shouldBe 125.gwei()
           terenceToBob.getReverse() shouldBe true
-
         }
       }
-
     }
 
     given("a block with some invalid ether transfers") {
 
-      bc.sender = Blockchains.Users.Bob     // invalid, insufficient ether in account
+      bc.sender = Blockchains.Users.Bob // invalid, insufficient ether in account
       bc.sendEther(Blockchains.Users.Alice.address, 100.ether())
 
       bc.sender = Blockchains.Users.Alice
@@ -177,9 +171,7 @@ class FungibleTokenTransferTest : BehaviorSpec() {
           aliceToTerence.getTo() shouldBe Blockchains.Users.Terence.address.data20()
           aliceToTerence.amountBI shouldBe 56.gwei()
         }
-
       }
-
     }
   }
 }
