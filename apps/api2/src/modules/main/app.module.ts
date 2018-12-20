@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { ConfigModule } from './../config';
-import { GraphQLModule } from '@nestjs/graphql';
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { AppController } from './app.controller'
+import { AppService } from './app.service'
+import { ConfigModule } from './../config'
+import { GraphQLModule } from '../graphql/graphql.module'
+import { BlockModule } from '../blocks/block.module'
+
+
 
 // import {createConnection} from "typeorm";
 // import {Blocks} from "../blocks/block.entity";
@@ -17,10 +20,9 @@ import { GraphQLModule } from '@nestjs/graphql';
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
-    GraphQLModule.forRoot({
-      typePaths: ['./**/*.graphql'],
-    }),
+    GraphQLModule,
     ConfigModule,
+    BlockModule
   ],
   controllers: [
     AppController
