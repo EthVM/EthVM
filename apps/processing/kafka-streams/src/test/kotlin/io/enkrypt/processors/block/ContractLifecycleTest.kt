@@ -29,18 +29,7 @@ import org.ethereum.vm.program.Program
 import org.spongycastle.util.encoders.Hex
 import java.math.BigInteger
 
-class LoggingVMHook : VMHook {
-
-  val logger = KotlinLogging.logger {}
-
-  override fun step(program: Program, opcode: OpCode) {
-    logger.info { "Step: origin = ${program.originAddress.shortHex()} owner = ${program.ownerAddress.shortHex()}, opcode = $opcode" }
-  }
-}
-
 class ContractLifecycleTest : BehaviorSpec() {
-
-  private val logger = KotlinLogging.logger {}
 
   private val erc20Source = ContractLifecycleTest::class.java.getResource("/solidity/erc20.sol").readText()
 
