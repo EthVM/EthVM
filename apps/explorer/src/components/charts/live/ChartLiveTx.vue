@@ -71,7 +71,7 @@ const barOptions = {
   barShowLabels: true
 }
 export default Vue.extend({
-  name: 'BarChart',
+  name: 'ChartLiveTransactions',
   components: {
     AppChart
   },

@@ -9,7 +9,7 @@
     </v-card-title>
     <v-divider></v-divider>
     <v-img class="pl-4 pt-4">
-      <footnote :footnotes="footnoteArr"></footnote>
+      <app-footnotes :footnotes="footnoteArr"></app-footnotes>
     </v-img>
     <canvas ref="chart" :width="width" :height="height"></canvas>
   </v-card>
@@ -17,6 +17,7 @@
 
 <script lang="ts">
 import Chart from 'chart.js'
+import AppFootnotes from '@app/components/ui/AppFootnotes.vue'
 import Vue from 'vue'
 
 Chart.defaults.global = Object.assign(Chart.defaults.global, {
@@ -74,9 +75,12 @@ export default Vue.extend({
     chartDescription: String,
     footnoteArr: Array
   },
-  data: () => ({
-    chart: ''
-  }),
+  components: {
+    AppFootnotes
+  },
+  data() {
+    return {}
+  },
 
   watch: {
     'data.labels'() {

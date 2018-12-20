@@ -63,7 +63,7 @@
     <!-- Last Txs -->
     <v-layout row wrap justify-center mb-4>
       <v-flex xs12>
-        <table-transactions :transactions="txs" showStyle="max-height: 590px"/>
+        <table-transactions v-if="txs" :transactions="txs" showStyle="max-height: 590px"/>
       </v-flex>
     </v-layout>
     <!-- End Last Txs -->
