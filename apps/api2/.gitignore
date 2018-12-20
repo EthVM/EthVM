@@ -1,9 +1,6 @@
 # dependencies
 node_modules/
 
-# IDE
-/.vscode
-
 # misc
 .DS_Store
 lerna-debug.log
@@ -22,5 +19,3 @@ yarn-error.log
 /coverage
 /.nyc_output
 build/config\.gypi
-
-sqlite-example.sql
