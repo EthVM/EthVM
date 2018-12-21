@@ -1,11 +1,10 @@
-import { Injectable } from '@nestjs/common'
-import { ConfigService } from './../config'
+import { Injectable, Inject } from '@nestjs/common'
 
 @Injectable()
 export class AppService {
-  constructor(private config: ConfigService) {}
+  constructor() {}
 
   root(): string {
-    return this.config.get('API_URL')
+    return 'http://api.ethvm.lan'
   }
 }

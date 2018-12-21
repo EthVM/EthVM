@@ -2,10 +2,18 @@ export class Block {
   number?: number
   hash?: string
   header?: Header
+  transactions?: string[]
+  uncles?: string[]
 }
 
 export class Header {
   parentHash?: string
+  sha3Uncles?: string
+  hash?: string
+  number?: number
+  timestamp?: number
+  nonce?: string
+  miner?: string
 }
 
 export abstract class IQuery {

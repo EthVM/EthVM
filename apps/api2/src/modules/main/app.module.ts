@@ -1,12 +1,13 @@
-import { Module } from '@nestjs/common'
+import { Module, NestModule, MiddlewareConsumer, Inject } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { AppService } from './app.service'
-import { ConfigModule } from './../config'
 import { GraphQLModule } from '../graphql/graphql.module'
 import { BlockModule } from '../blocks/block.module'
+import { ConfigModule } from '../config/config.module'
 
+// import { ConfigService } from '../config/config.service'
 @Module({
-  imports: [TypeOrmModule.forRoot(), GraphQLModule, ConfigModule, BlockModule],
+  imports: [TypeOrmModule.forRoot(), GraphQLModule, BlockModule, ConfigModule],
   providers: [AppService]
 })
 export class AppModule {}

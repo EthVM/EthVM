@@ -9,8 +9,6 @@ type Block {
   header: Header
   transactions: [String]
   uncles: [String]
-  header: Header
-
 }
 
 type Header {
