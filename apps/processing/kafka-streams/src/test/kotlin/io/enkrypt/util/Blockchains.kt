@@ -1,7 +1,7 @@
 package io.enkrypt.util
 
 import io.enkrypt.common.extensions.gwei
-import io.enkrypt.processors.block.LoggingVMHook
+import mu.KotlinLogging
 import org.ethereum.config.net.BaseNetConfig
 import org.ethereum.core.Genesis
 import org.ethereum.core.Repository
@@ -11,6 +11,9 @@ import org.ethereum.crypto.ECKey
 import org.ethereum.listener.EthereumListener
 import org.ethereum.util.ByteUtil
 import org.ethereum.util.blockchain.StandaloneBlockchain
+import org.ethereum.vm.OpCode
+import org.ethereum.vm.hook.VMHook
+import org.ethereum.vm.program.Program
 
 object Blockchains {
 
@@ -64,6 +67,15 @@ object Blockchains {
       )
       tx.sign(sender)
       return tx
+    }
+  }
+
+  class LoggingVMHook : VMHook {
+
+    private val logger = KotlinLogging.logger {}
+
+    override fun step(program: Program, opcode: OpCode) {
+      logger.info { "Step: origin = ${program.originAddress.shortHex()} owner = ${program.ownerAddress.shortHex()}, opcode = $opcode" }
     }
   }
 }
