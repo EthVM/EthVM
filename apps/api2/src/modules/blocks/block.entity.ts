@@ -1,5 +1,5 @@
-import {Entity,Column,PrimaryColumn,EntityRepository} from "typeorm";
-import {assignClean} from '../../shared/utils';
+import {Entity,Column,PrimaryColumn,EntityRepository} from 'typeorm'
+import {assignClean} from '../../shared/utils'
 
 @Entity('blocks')
 @EntityRepository(this)

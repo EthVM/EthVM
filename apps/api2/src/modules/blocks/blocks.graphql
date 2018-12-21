@@ -5,4 +5,20 @@ type Query {
 
 type Block {
   number: Int
+  hash: String
+  header: Header
+  transactions: [String]
+  uncles: [String]
+  header: Header
+
+}
+
+type Header {
+  parentHash: String
+  sha3Uncles: String
+  hash: String
+  number: Int
+  timestamp: Int
+  nonce: String
+  miner: String
 }

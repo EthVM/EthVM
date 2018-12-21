@@ -1,5 +1,11 @@
 export class Block {
     number?: number;
+    hash?: string;
+    header?: Header;
+}
+
+export class Header {
+    parentHash?: string;
 }
 
 export abstract class IQuery {
