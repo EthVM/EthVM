@@ -32,7 +32,7 @@
             <v-flex d-flex xs12 sm7 md6>
               <v-btn outline color="secondary" class="text-lowercase" block>
                 <v-icon class="secondary--text fab fa-btc pr-2" />
-                {{ $t('footer.btc') }} - blochchain.com
+                {{ $t('footer.btc') }} - blockchain.com
               </v-btn>
             </v-flex>
             <v-flex d-flex xs12 sm5 md6>
@@ -67,19 +67,20 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 import AppCopyToClip from '@app/components/ui/AppCopyToClip.vue'
 
-export default Vue.extend({
-  name: 'TheFooter',
+@Component({
   components: {
     AppCopyToClip
-  },
+  }
+})
+export default class TheFooter extends Vue {
   data() {
     return {
       btcAddr: '1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9">1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9',
       ethAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
     }
   }
-})
+}
 </script>

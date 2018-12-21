@@ -59,6 +59,7 @@ export default class App extends Vue {
         }
       }
     )
+
     this.$socket.emit(
       sEvents.pastBlocks,
       {
@@ -73,6 +74,7 @@ export default class App extends Vue {
         }
       }
     )
+
     this.$socket.emit(
       sEvents.pendingTxs,
       {
