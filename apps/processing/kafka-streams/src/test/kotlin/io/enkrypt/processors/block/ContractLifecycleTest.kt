@@ -4,7 +4,6 @@ import io.enkrypt.common.extensions.amountBI
 import io.enkrypt.common.extensions.data20
 import io.enkrypt.common.extensions.ether
 import io.enkrypt.common.extensions.hex
-import io.enkrypt.kafka.mapping.ObjectMapper
 import io.enkrypt.kafka.streams.models.ChainEvent
 import io.enkrypt.kafka.streams.models.StaticAddresses
 import io.enkrypt.kafka.streams.processors.block.ChainEvents
@@ -40,10 +39,7 @@ class ContractLifecycleTest : BehaviorSpec() {
     stateRoot = GenesisLoader.generateRootHash(premine)
   }
 
-  private val objectMapper = ObjectMapper()
-
   private val sbc = Blockchains.Factory.createStandalone(genesisBlock, listener)
-  private val cbc = Blockchains.Factory.createContractFocused(genesisBlock, listener)
 
   init {
 
@@ -80,58 +76,58 @@ class ContractLifecycleTest : BehaviorSpec() {
       }
     }
 
-    given("a live contract which holds some ether") {
-
-      sbc.sender = Blockchains.Users.Bob
-
-      val res = SolidityCompiler.compile(
-        erc20Source.toByteArray(),
-        true,
-        SolidityCompiler.Options.ABI,
-        SolidityCompiler.Options.BIN
-      )
-      val cres = CompilationResult.parse(res.output)
-
-      val contractCreationTx = Blockchains.Utils.createTx(
-        sbc.blockchain.repository,
-        Blockchains.Users.Bob,
-        ByteUtil.EMPTY_BYTE_ARRAY,
-        Hex.decode(cres.getContract("ERC20").bin)
-      )
-
-      sbc
-        .withGasLimit(500000)
-        .submitTransaction(contractCreationTx)
-
-      val blockRecord1 = sbc.createBlockRecord(listener)
-      val contractAddress = blockRecord1.getTransactionReceipts()[0].contractAddress.bytes()
-
-      `when`("we convert the block") {
-
-        val c = CallTransaction.Contract(cres.getContract("ERC20").abi)
-        val callData = c.getByName("seppuku").encode()
-        val contractMethodTx = Blockchains.Utils.createTx(
-          sbc.blockchain.repository,
-          Blockchains.Users.Bob,
-          contractAddress,
-          callData,
-          0L
-        )
-
-        sbc.submitTransaction(contractMethodTx)
-
-        val blockRecord2 = sbc.createBlockRecord(listener)
-        val chainEvents = ChainEvents.forBlock(blockRecord2)
-
-        then("there should be 2 chain events") {
-          chainEvents.size shouldBe 2
-        }
-
-        then("there should be a fungible ether transfer for the coinbase") {
-          checkCoinbase(chainEvents.first(), 3000292048000000000.toBigInteger())
-        }
-      }
-    }
+//    given("a live contract which holds some ether") {
+//
+//      sbc.sender = Blockchains.Users.Bob
+//
+//      val res = SolidityCompiler.compile(
+//        erc20Source.toByteArray(),
+//        true,
+//        SolidityCompiler.Options.ABI,
+//        SolidityCompiler.Options.BIN
+//      )
+//      val cres = CompilationResult.parse(res.output)
+//
+//      val contractCreationTx = Blockchains.Utils.createTx(
+//        sbc.blockchain.repository,
+//        Blockchains.Users.Bob,
+//        ByteUtil.EMPTY_BYTE_ARRAY,
+//        Hex.decode(cres.getContract("ERC20").bin)
+//      )
+//
+//      sbc
+//        .withGasLimit(500000)
+//        .submitTransaction(contractCreationTx)
+//
+//      val blockRecord1 = sbc.createBlockRecord(listener)
+//      val contractAddress = blockRecord1.getTransactionReceipts()[0].contractAddress.bytes()
+//
+//      `when`("we convert the block") {
+//
+//        val c = CallTransaction.Contract(cres.getContract("ERC20").abi)
+//        val callData = c.getByName("seppuku").encode()
+//        val contractMethodTx = Blockchains.Utils.createTx(
+//          sbc.blockchain.repository,
+//          Blockchains.Users.Bob,
+//          contractAddress,
+//          callData,
+//          0L
+//        )
+//
+//        sbc.submitTransaction(contractMethodTx)
+//
+//        val blockRecord2 = sbc.createBlockRecord(listener)
+//        val chainEvents = ChainEvents.forBlock(blockRecord2)
+//
+//        then("there should be 2 chain events") {
+//          chainEvents.size shouldBe 2
+//        }
+//
+//        then("there should be a fungible ether transfer for the coinbase") {
+//          checkCoinbase(chainEvents.first(), 3000292048000000000.toBigInteger())
+//        }
+//      }
+//    }
   }
 
   private fun checkCoinbase(event: ChainEvent, reward: BigInteger) {

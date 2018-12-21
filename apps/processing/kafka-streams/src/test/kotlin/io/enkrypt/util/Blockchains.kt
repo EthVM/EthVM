@@ -2,20 +2,20 @@ package io.enkrypt.util
 
 import io.enkrypt.common.extensions.gwei
 import org.ethereum.config.CommonConfig
+import mu.KotlinLogging
 import org.ethereum.config.net.BaseNetConfig
 import org.ethereum.core.*
+import org.ethereum.core.Genesis
+import org.ethereum.core.Repository
+import org.ethereum.core.Transaction
 import org.ethereum.core.genesis.GenesisLoader
 import org.ethereum.crypto.ECKey
-import org.ethereum.datasource.NoDeleteSource
-import org.ethereum.datasource.inmem.HashMapDB
-import org.ethereum.db.IndexedBlockStore
-import org.ethereum.db.RepositoryRoot
 import org.ethereum.listener.EthereumListener
-import org.ethereum.listener.EthereumListenerAdapter
 import org.ethereum.util.ByteUtil
 import org.ethereum.util.blockchain.StandaloneBlockchain
-import org.ethereum.validator.DependentBlockHeaderRuleAdapter
-import org.ethereum.vm.program.invoke.ProgramInvokeFactoryImpl
+import org.ethereum.vm.OpCode
+import org.ethereum.vm.hook.VMHook
+import org.ethereum.vm.program.Program
 
 object Blockchains {
 
@@ -46,41 +46,6 @@ object Blockchains {
         addEthereumListener(listener)
       }
     }
-
-    fun createContractFocused(
-      genesis: Genesis,
-      listener: EthereumListener = EthereumListenerAdapter()
-    ): BlockchainImpl {
-      val blockStore = IndexedBlockStore().apply {
-        init(HashMapDB(), HashMapDB())
-      }
-
-      val repository = RepositoryRoot(NoDeleteSource(HashMapDB()))
-
-      val programInvokeFactory = ProgramInvokeFactoryImpl()
-
-      val bc =
-        BlockchainImpl(blockStore, repository).withParentBlockHeaderValidator(CommonConfig().parentHeaderValidator())
-      bc.setParentHeaderValidator(DependentBlockHeaderRuleAdapter())
-      bc.programInvokeFactory = programInvokeFactory
-      bc.byTest = true
-
-      val pendingState = PendingStateImpl(listener).apply { setBlockchain(bc) }
-      bc.pendingState = pendingState
-
-      val track = repository.startTracking()
-      org.ethereum.core.Genesis.populateRepository(track, genesis)
-
-      track.commit()
-      repository.commit()
-
-      blockStore.saveBlock(genesis, genesis.difficultyBI, true)
-
-      bc.bestBlock = genesis
-      bc.totalDifficulty = genesis.difficultyBI
-
-      return bc
-    }
   }
 
   object Utils {
@@ -104,26 +69,14 @@ object Blockchains {
       tx.sign(sender)
       return tx
     }
+  }
 
-    fun executeTransaction(b: BlockchainImpl, tx: Transaction): Pair<TransactionExecutor, TransactionExecutionSummary> {
-      val track = b.repository.startTracking()
-      val executor = TransactionExecutor(
-        tx,
-        ByteArray(32),
-        b.repository,
-        b.blockStore,
-        b.programInvokeFactory,
-        b.bestBlock
-      )
+  class LoggingVMHook : VMHook {
 
-      executor.init()
-      executor.execute()
-      executor.go()
-      val s = executor.finalization()
+    private val logger = KotlinLogging.logger {}
 
-      track.commit()
-
-      return Pair(executor, s)
+    override fun step(program: Program, opcode: OpCode) {
+      logger.info { "Step: origin = ${program.originAddress.shortHex()} owner = ${program.ownerAddress.shortHex()}, opcode = $opcode" }
     }
   }
 }
