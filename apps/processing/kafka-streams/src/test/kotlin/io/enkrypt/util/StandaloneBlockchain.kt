@@ -87,7 +87,7 @@ class StandaloneBlockchain(config: Config) {
   var repoSnapshot = blockchain.repository.getSnapshotTo(genesis.stateRoot)
 
   private var pendingTxs = listOf<Transaction>()
-  private val noncesMap = emptyMap<ECKey, Long>()
+  private var noncesMap = emptyMap<ECKey, Long>()
 
   private fun createBlockchain(): BlockchainImpl {
 
@@ -182,6 +182,10 @@ class StandaloneBlockchain(config: Config) {
     return noncesMap.getOrElse(key) { repoSnapshot.getNonce(key.address).toLong() }
   }
 
+  private fun updateNonce(key: ECKey, nonce: Long) {
+    noncesMap += key to nonce
+  }
+
   fun sendEther(from: ECKey, to: ECKey, value: BigInteger, autoBlock: Boolean = false): BlockRecord? {
     val nonce = currentNonce(from) + 1L
     val tx = Transaction(
@@ -195,6 +199,8 @@ class StandaloneBlockchain(config: Config) {
     )
     tx.sign(from)
     addTx(tx)
+
+    updateNonce(from, nonce)
 
     return when(autoBlock) {
       true -> createBlock()
