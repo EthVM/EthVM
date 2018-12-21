@@ -132,9 +132,9 @@ class FungibleTokenTransferTest : BehaviorSpec() {
 
     given("a block with some invalid ether transfers") {
 
-      bc.sendEther(Blockchains.Users.Bob, Blockchains.Users.Alice, 100.gwei())
+      bc.sendEther(Blockchains.Users.Bob, Blockchains.Users.Alice, 100.ether())
       bc.sendEther(Blockchains.Users.Alice, Blockchains.Users.Terence, 56.gwei())
-      bc.sendEther(Blockchains.Users.Terence, Blockchains.Users.Bob, 200.gwei())
+      bc.sendEther(Blockchains.Users.Terence, Blockchains.Users.Bob, 200.ether())
 
       val block = bc.createBlock()
 

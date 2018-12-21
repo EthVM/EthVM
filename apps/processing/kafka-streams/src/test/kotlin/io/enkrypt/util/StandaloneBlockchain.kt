@@ -187,7 +187,7 @@ class StandaloneBlockchain(config: Config) {
   }
 
   fun sendEther(from: ECKey, to: ECKey, value: BigInteger, autoBlock: Boolean = false): BlockRecord? {
-    val nonce = currentNonce(from) + 1L
+    val nonce = currentNonce(from)
     val tx = Transaction(
       longToBytesNoLeadZeroes(nonce),
       longToBytesNoLeadZeroes(gasPrice),
@@ -200,7 +200,7 @@ class StandaloneBlockchain(config: Config) {
     tx.sign(from)
     addTx(tx)
 
-    updateNonce(from, nonce)
+    updateNonce(from, nonce + 1)
 
     return when(autoBlock) {
       true -> createBlock()
