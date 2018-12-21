@@ -1,14 +1,12 @@
-import {Entity,Column,PrimaryColumn,EntityRepository} from 'typeorm'
-import {assignClean} from '../../shared/utils'
+import { Entity, Column, PrimaryColumn, EntityRepository } from 'typeorm'
+import { assignClean } from '../../shared/utils'
 
 @Entity('blocks')
 @EntityRepository(this)
-
 export class BlockEntity {
-
   constructor(data: any) {
-    assignClean(this, data);
-}
+    assignClean(this, data)
+  }
 
   @PrimaryColumn()
   number: number
@@ -59,6 +57,3 @@ export interface BlockStats {
   totalGasPrice?: number
   totalTxsFees?: number
 }
-
-
-
