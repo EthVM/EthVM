@@ -44,12 +44,14 @@
 
 <script lang="ts">
 import AppSearch from '@app/components/smart-components/AppSearch.vue'
-import Vue from 'vue'
-export default Vue.extend({
-  name: 'TheNavigationDrawer',
+import { Vue, Component, Prop } from 'vue-property-decorator'
+
+@Component({
   components: {
     AppSearch
-  },
+  }
+})
+export default class TheNavigationDrawer extends Vue {
   data() {
     return {
       drawer: null,
@@ -120,27 +122,28 @@ export default Vue.extend({
         }
       ]
     }
-  },
-  methods: {
-    getCurrPath() {
-      let currPath = '/'
-      if (this.$route.params.pageName) {
-        currPath += this.$route.params.pageName
-      }
-      return currPath
-    },
-    checkLinkPath(link) {
-      return this.getCurrPath() == link ? true : false
-    },
-    checkPath(links) {
-      let i
-      for (i = 0; i < links.length; i++) {
-        if (this.checkLinkPath(links[i].routerLink)) {
-          return true
-        }
-      }
-      return false
-    }
   }
-})
+
+  // Methods
+  getCurrPath() {
+    let currPath = '/'
+    if (this.$route.params.pageName) {
+      currPath += this.$route.params.pageName
+    }
+    return currPath
+  }
+
+  checkLinkPath(link) {
+    return this.getCurrPath() == link ? true : false
+  }
+
+  checkPath(links) {
+    for (let i = 0; i < links.length; i++) {
+      if (this.checkLinkPath(links[i].routerLink)) {
+        return true
+      }
+    }
+    return false
+  }
+}
 </script>
