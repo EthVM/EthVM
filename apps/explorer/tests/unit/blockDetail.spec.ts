@@ -7,7 +7,7 @@ import en_US from '@app/translations/en_US.json'
 import VueI18n from 'vue-i18n'
 import Vuetify from 'vuetify'
 import footnote from '@/components/blocks/smallBlocks/footnote.vue'
-import {Events} from 'ethvm-common'
+import { Events } from 'ethvm-common'
 import router from '@app/router'
 import { Block } from '@app/models'
 import VueTimeago from 'vue-timeago'
@@ -38,12 +38,28 @@ const i18n = new VueI18n({
   fallbackLocale: 'en_US'
 })
 
-let b = new Block({number:43,hash:'blovkhash',header:{parentHash:'gg',miner:'minerhash',rewards:{},stateRoot:Buffer.from(''),receiptsRoot:Buffer.from(''),transactionsRoot:Buffer.from('9'),sha3Uncles:'',logsBloom:Buffer.from('')},stats:{},uncles:[],transactions:[]})
+const b = new Block({
+  number: 43,
+  hash: 'blovkhash',
+  header: {
+    parentHash: 'gg',
+    miner: 'minerhash',
+    rewards: {},
+    stateRoot: Buffer.from(''),
+    receiptsRoot: Buffer.from(''),
+    transactionsRoot: Buffer.from('9'),
+    sha3Uncles: '',
+    logsBloom: Buffer.from('')
+  },
+  stats: {},
+  uncles: [],
+  transactions: []
+})
 
 describe.skip('blockDetail.vue', () => {
   it('renders blockDetail', () => {
     const wrapper = mount(BlockDetail, {
-      propsData: { block: b, uncle : []},
+      propsData: { block: b, uncle: [] },
       localVue,
       i18n,
       router,
@@ -52,5 +68,3 @@ describe.skip('blockDetail.vue', () => {
     expect(wrapper.isVueInstance()).toBeTruthy()
   })
 })
-
-

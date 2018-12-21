@@ -53,6 +53,7 @@ export default {
   }
 }
 </script>
+
 <style scoped lang="css">
 .blockie {
   border-radius: 50px;

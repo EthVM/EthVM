@@ -3,16 +3,9 @@
     <bread-crumbs :newItems="getItems"></bread-crumbs>
     <v-layout row wrap justify-start class="mb-4">
       <v-flex v-if="blockMined" xs12>
-        <block-block-detail
-          :block="block"
-          :uncles="uncles"
-          :isNotMinedBlock="isNotMinedBlock"
-          :isMined="true"
-        ></block-block-detail>
+        <block-block-detail :block="block" :uncles="uncles" :isNotMinedBlock="isNotMinedBlock" :isMined="true"></block-block-detail>
       </v-flex>
-      <v-flex v-else xs12>
-        <block-block-detail :isMined="false" :isNotMinedBlock="isNotMinedBlock" :prev="getPrev()"></block-block-detail>
-      </v-flex>
+      <v-flex v-else xs12> <block-block-detail :isMined="false" :isNotMinedBlock="isNotMinedBlock" :prev="getPrev()"></block-block-detail> </v-flex>
     </v-layout>
     <v-layout row wrap justify-start class="mb-4">
       <v-flex v-if="blockMined" xs12>
@@ -25,15 +18,8 @@
         ></block-last-transactions>
         <v-card v-else flat color="white">
           <v-layout column align-center justify-center ma-3>
-            <v-icon
-              v-if="transactionLoading"
-              class="text-xs-center fa fa-spinner fa-pulse fa-4x fa-fw primary--text"
-              large
-            ></v-icon>
-            <v-card-text
-              v-if="transactionLoading"
-              class="text-xs-center text-muted"
-            >{{ $t('block.loadingBlockTx') }}</v-card-text>
+            <v-icon v-if="transactionLoading" class="text-xs-center fa fa-spinner fa-pulse fa-4x fa-fw primary--text" large></v-icon>
+            <v-card-text v-if="transactionLoading" class="text-xs-center text-muted">{{ $t('block.loadingBlockTx') }}</v-card-text>
             <v-card-text v-else class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }}</v-card-text>
           </v-layout>
         </v-card>
@@ -123,7 +109,6 @@ export default Vue.extend({
       return false
     },
     blockMined() {
-      console.log('mined in frame', this.block)
       return this.block
     }
   },

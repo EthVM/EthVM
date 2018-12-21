@@ -2,9 +2,7 @@
   <v-container v-if="transaction != null" grid-list-lg class="mb-0">
     <bread-crumbs :newItems="getItems"></bread-crumbs>
     <v-layout row wrap justify-start class="mb-4">
-      <v-flex xs12>
-        <block-tx-detail :tx="transaction"></block-tx-detail>
-      </v-flex>
+      <v-flex xs12> <block-tx-detail :tx="transaction"></block-tx-detail> </v-flex>
     </v-layout>
     <!--
       Get Sub Tx

@@ -162,6 +162,7 @@ Vue.component('tx-fee-chart', avgTxFee)
 // Footer ----------------------
 Vue.component('block-footer', blockFooter)
 */
+
 // Vue modules configuration
 Vue.use(VTooltip)
 Vue.prototype.$eventHub = new Vue()

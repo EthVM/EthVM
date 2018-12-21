@@ -94,7 +94,6 @@ export default Vue.extend({
 
       this.$socket.emit('getChartGasLimit', 'LAST_7_DAYS', (err, result) => {
         if (!err && result) {
-          console.log('result getChartGasLimit', result)
           result.forEach(function(block) {
             data.points.push(block.reduction)
             data.labels.push(block.group)

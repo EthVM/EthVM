@@ -45,7 +45,6 @@ export const lastBlockInfo = {
   },
   mounted() {
     this.$eventHub.$on(sEvents.newBlock, _block => {
-      console.log('new block')
       this.setBlock(this.$store.getters.getBlocks[0])
       this.startCount()
     })

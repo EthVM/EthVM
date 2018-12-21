@@ -3,9 +3,7 @@
     <v-layout v-if="!isUncle" wrap row align-center justify-start pb-1>
       <v-flex xs3 sm2 md1>
         <v-layout align-center justify-start>
-          <v-btn flat color="primary" class="black--text" icon :to="previousBlock()">
-            <v-icon>fas fa-angle-left</v-icon>
-          </v-btn>
+          <v-btn flat color="primary" class="black--text" icon :to="previousBlock()"> <v-icon>fas fa-angle-left</v-icon> </v-btn>
         </v-layout>
       </v-flex>
       <v-flex xs6 sm8 md10 pl-0>
@@ -35,9 +33,7 @@
       </v-flex>
       <v-flex v-if="mined" xs3 sm2 md1>
         <v-layout align-center justify-end>
-          <v-btn flat color="primary" class="black--text" icon :to="nextBlock()">
-            <v-icon>fas fa-angle-right</v-icon>
-          </v-btn>
+          <v-btn flat color="primary" class="black--text" icon :to="nextBlock()"> <v-icon>fas fa-angle-right</v-icon> </v-btn>
         </v-layout>
       </v-flex>
     </v-layout>
@@ -50,83 +46,53 @@
     </v-layout>
     <v-divider class="lineGrey"></v-divider>
     <v-list v-if="mined">
-      <v-list-tile
-        v-for="(item, index) in items"
-        :key="index"
-        :class="[index % 2 == 0 ? 'background: white' : 'background: tableGrey']"
-      >
+      <v-list-tile v-for="(item, index) in items" :key="index" :class="[index % 2 == 0 ? 'background: white' : 'background: tableGrey']">
         <v-layout align-center justify-start row fill-height class="pa-3">
           <v-flex xs4 sm3 md2>
             <v-list-tile-title class="info--text font-weight-medium">{{ item.title }}</v-list-tile-title>
           </v-flex>
           <v-flex xs7 sm8 md9>
             <v-list-tile-title v-if="!item.link" class="text-muted text-truncate">
-              <timeago
-                v-if="item.title == $t('common.timestmp')"
-                :datetime="block.getTimestamp()"
-                :auto-update="10"
-              ></timeago>
-              {{ item.detail }}
+              <timeago v-if="item.title == $t('common.timestmp')" :datetime="block.getTimestamp()" :auto-update="10"></timeago> {{ item.detail }}
             </v-list-tile-title>
             <router-link v-else :to="item.link">
               <v-list-tile-title class="text-truncate">{{ item.detail }}</v-list-tile-title>
             </router-link>
           </v-flex>
           <v-flex xs1>
-            <v-list-tile-action v-if="item.copy">
-              <copy-to-clip-component :valueToCopy="item.detail"></copy-to-clip-component>
-            </v-list-tile-action>
+            <v-list-tile-action v-if="item.copy"> <copy-to-clip-component :valueToCopy="item.detail"></copy-to-clip-component> </v-list-tile-action>
           </v-flex>
         </v-layout>
       </v-list-tile>
       <v-slide-y-transition group>
-        <v-list-tile
-          v-if="more"
-          v-for="(item, count) in moreItems"
-          :key="count"
-          :class="[count % 2 == 0 ? 'background: white' : 'background: tableGrey']"
-        >
+        <v-list-tile v-if="more" v-for="(item, count) in moreItems" :key="count" :class="[count % 2 == 0 ? 'background: white' : 'background: tableGrey']">
           <v-layout align-center justify-start row fill-height class="pa-3">
             <v-flex xs4 sm3 md2>
               <v-list-tile-title class="info--text font-weight-medium">{{ item.title }}</v-list-tile-title>
             </v-flex>
             <v-flex xs7 sm8 md9>
               <v-list-tile-title v-if="!item.link" class="text-muted text-truncate">
-                {{ item.detail }}
-                <timeago
-                  v-if="item.title == $t('common.timestmp')"
-                  :datetime="block.getTimestamp()"
-                  :auto-update="10"
-                ></timeago>
+                {{ item.detail }} <timeago v-if="item.title == $t('common.timestmp')" :datetime="block.getTimestamp()" :auto-update="10"></timeago>
               </v-list-tile-title>
               <router-link v-else :to="item.link">
                 <v-list-tile-title class="text-truncate">{{ item.detail }}</v-list-tile-title>
               </router-link>
             </v-flex>
             <v-flex xs1>
-              <v-list-tile-action v-if="item.copy">
-                <copy-to-clip-component :valueToCopy="item.detail"></copy-to-clip-component>
-              </v-list-tile-action>
+              <v-list-tile-action v-if="item.copy"> <copy-to-clip-component :valueToCopy="item.detail"></copy-to-clip-component> </v-list-tile-action>
             </v-flex>
           </v-layout>
         </v-list-tile>
       </v-slide-y-transition>
     </v-list>
     <div v-if="mined">
-      <v-btn v-if="!more" v-on:click="setView()" flat block class="secondary">
-        <v-icon class="fa fa-angle-down white--text"></v-icon>
-      </v-btn>
-      <v-btn v-else v-on:click="setView()" flat block class="secondary">
-        <v-icon class="fa fa-angle-up white--text"></v-icon>
-      </v-btn>
+      <v-btn v-if="!more" v-on:click="setView()" flat block class="secondary"> <v-icon class="fa fa-angle-down white--text"></v-icon> </v-btn>
+      <v-btn v-else v-on:click="setView()" flat block class="secondary"> <v-icon class="fa fa-angle-up white--text"></v-icon> </v-btn>
     </div>
     <v-card flat v-else class="pa-3">
       <v-layout column align-center justify-center ma-3>
         <v-icon class="fa fa-spinner fa-pulse fa-4x fa-fw primary--text" large></v-icon>
-        <v-card-title
-          v-if="isNotMinedBlock"
-          class="primary--text text-xs-center body-2 pb-4"
-        >{{ $t('block.notMined') }}</v-card-title>
+        <v-card-title v-if="isNotMinedBlock" class="primary--text text-xs-center body-2 pb-4">{{ $t('block.notMined') }}</v-card-title>
       </v-layout>
     </v-card>
   </v-card>
@@ -329,5 +295,4 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped lang="css">
-</style>
+<style scoped lang="css"></style>

@@ -15,7 +15,7 @@ export class Address {
   }
 
   public toBuffer(): Buffer {
-    return  Buffer.from(this.address.substring(2), 'hex')
+    return Buffer.from(this.address.substring(2), 'hex')
   }
 
   public toNakedAddress(): string {

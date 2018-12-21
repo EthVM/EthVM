@@ -11,9 +11,7 @@
       <div class="tokens-header">
         <p>{{ $t('token.number') }}</p>
         <p>{{ $t('token.totalUSD') }} ${{ getTotalUSDValue }}</p>
-        <div class="search-block">
-          <block-search :phText="placeholder"></block-search>
-        </div>
+        <div class="search-block"><block-search :phText="placeholder"></block-search></div>
         <!-- End Header -->
       </div>
       <!-- Table Header -->
@@ -27,11 +25,7 @@
     </div>
     <!-- Tokens List -->
     <div class="tokens-list" v-for="token in tokens" v-bind:key="token">
-      <router-link
-        :to="'/token/' + token.addr.toString() + '/holder=' + holder"
-        v-if="token.balance != 0"
-        class="tokens-data"
-      >
+      <router-link :to="'/token/' + token.addr.toString() + '/holder=' + holder" v-if="token.balance != 0" class="tokens-data">
         <p class="token-symbol">{{ token.symbol }}</p>
         <p class="token-name">{{ token.name }}</p>
         <div class="token-balance">
@@ -50,9 +44,7 @@
             {{ token.symbol }})
           </p>
         </div>
-        <div v-else class="token-usd">
-          <p>$0.00</p>
-        </div>
+        <div v-else class="token-usd"><p>$0.00</p></div>
       </router-link>
       <!-- End Tokens List -->
     </div>
@@ -128,5 +120,4 @@ export default Vue.extend({
   }
 })
 </script>
-<style scoped lang="css">
-</style>
+<style scoped lang="css"></style>

@@ -2,7 +2,7 @@ import BN from 'bignumber.js'
 export default {
   methods: {
     getRoundNumber(newNumber) {
-      let n = new BN(newNumber)
+      const n = new BN(newNumber)
       return n.decimalPlaces(2).toString()
     },
     getShortRewardValue(reward, isBool) {

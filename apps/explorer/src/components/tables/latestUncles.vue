@@ -2,9 +2,7 @@
   <v-layout column>
     <v-card flat color="transparent" class="pb-1 mr-1 ml-1">
       <v-layout row justify-center align-center>
-        <v-flex xs3 md1>
-          <h5 class="ml-3">Uncle#</h5>
-        </v-flex>
+        <v-flex xs3 md1> <h5 class="ml-3">Uncle#</h5> </v-flex>
         <v-spacer></v-spacer>
         <v-flex hidden-sm-and-down md1 class="pl-0">
           <h5>{{ $t('tableHeader.txs') }}</h5>
@@ -15,12 +13,7 @@
       </v-layout>
     </v-card>
     <div v-if="getUncles" id="scroll-target" :style="getStyle" class="scroll-y pt-0 mb-3">
-      <v-card
-        v-scroll:#scroll-target
-        v-for="uncle in getUncles"
-        v-bind:key="uncle.hash"
-        class="pt-3 mb-3 elevation-2 mr-1 ml-1"
-      >
+      <v-card v-scroll:#scroll-target v-for="uncle in getUncles" v-bind:key="uncle.hash" class="pt-3 mb-3 elevation-2 mr-1 ml-1">
         <v-layout wrap align-center class="ma-0">
           <v-flex xs3 md1>
             <p class="text-xs-center">
@@ -30,10 +23,7 @@
           <v-flex xs5 md8 class="pl-1 pr-0">
             <p class="text-truncate">
               <strong>{{ $t('common.hash') }}</strong>
-              <router-link
-                class="grey--text text--darken-2"
-                :to="'/uncle/' + uncle.getHash()"
-              >{{ uncle.getHash() }}</router-link>
+              <router-link class="grey--text text--darken-2" :to="'/uncle/' + uncle.getHash()">{{ uncle.getHash() }}</router-link>
             </p>
             <p class="text-truncate">
               <strong>{{ $t('block.miner') }}</strong>

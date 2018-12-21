@@ -29,7 +29,7 @@ const common = {
   },
   WeiValue: (_value: number): WeiValue => {
     return new WeiValue(_value)
-  },
+  }
 }
 
 export { common }

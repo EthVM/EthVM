@@ -9,7 +9,7 @@ import Vuetify from 'vuetify'
 import footnote from '@/components/blocks/smallBlocks/footnote.vue'
 import blockies from '@app/components/blocks/smallBlocks/blockies.vue'
 import router from '@app/router'
-import { Account,Tx } from '@app/models'
+import { Account, Tx } from '@app/models'
 import VueTimeago from 'vue-timeago'
 
 const defaultLocale: string = 'en_US'
@@ -33,20 +33,24 @@ localVue.component('footnote', footnote)
 localVue.component('blockies', blockies)
 localVue.component('copy-to-clip-component', copyToClipComponent)
 
-
 const i18n = new VueI18n({
   locale: defaultLocale,
   messages,
   fallbackLocale: 'en_US'
 })
 
-let t =  new Tx({hash:'f1b7e1da6c42730780a7393c8ab7a57ad0649222f07c7a1abc90d8246053074b',from:'e6a7a1d47ff21b6321162aea7c6cb457d5476bca',value:Buffer.from('989'),to:'a971748c4c493bc96c7d490e1789481e1e96bb10'})
-let transactions = [t]
+const t = new Tx({
+  hash: 'f1b7e1da6c42730780a7393c8ab7a57ad0649222f07c7a1abc90d8246053074b',
+  from: 'e6a7a1d47ff21b6321162aea7c6cb457d5476bca',
+  value: Buffer.from('989'),
+  to: 'a971748c4c493bc96c7d490e1789481e1e96bb10'
+})
+const transactions = [t]
 
 describe('addressTxTable.vue', () => {
   it('renders addressTxTable', () => {
     const wrapper = mount(AddressDetail, {
-      propsData: { account: 'e6a7a1d47ff21b6321162aea7c6cb457d5476bca',transactions:transactions,total: 1},
+      propsData: { account: 'e6a7a1d47ff21b6321162aea7c6cb457d5476bca', transactions: transactions, total: 1 },
       localVue,
       i18n,
       router,
@@ -56,5 +60,3 @@ describe('addressTxTable.vue', () => {
     expect(wrapper.text()).toMatch('e6a7a1d47ff21b6321162aea7c6cb457d5476bca')
   })
 })
-
-

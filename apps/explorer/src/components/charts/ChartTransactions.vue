@@ -1,7 +1,5 @@
 <template>
-  <v-layout column justify-center>
-    <app-chart type="bar" :data="chartData" :options="chartOptions" :redraw="redraw"/>
-  </v-layout>
+  <v-layout column justify-center> <app-chart type="bar" :data="chartData" :options="chartOptions" :redraw="redraw" /> </v-layout>
 </template>
 
 <script lang="ts">

@@ -6,8 +6,8 @@ module.exports = {
   extends: ['plugin:vue/essential', '@vue/prettier', '@vue/typescript'],
   rules: {
     curly: 'error',
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-console': 'error',
+    'no-debugger': 'error',
     'no-else-return': ['error', { allowElseIf: true }],
     'arrow-parens': 'off',
     'generator-star-spacing': 'off',

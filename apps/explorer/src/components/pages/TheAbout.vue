@@ -2,9 +2,7 @@
   <v-container grid-list-lg class="mb-0">
     <bread-crumbs :newItems="items"></bread-crumbs>
     <v-layout row wrap justify-start class="mb-4">
-      <v-flex xs12>
-        <block-about></block-about>
-      </v-flex>
+      <v-flex xs12> <block-about></block-about> </v-flex>
     </v-layout>
   </v-container>
 </template>
