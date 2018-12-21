@@ -15,6 +15,7 @@ import org.ethereum.core.*
 import org.ethereum.core.genesis.GenesisLoader
 import org.ethereum.crypto.ECKey
 import org.ethereum.datasource.JournalSource
+import org.ethereum.datasource.NoDeleteSource
 import org.ethereum.datasource.inmem.HashMapDB
 import org.ethereum.db.IndexedBlockStore
 import org.ethereum.db.PruneManager
@@ -28,9 +29,6 @@ import org.ethereum.vm.program.invoke.ProgramInvokeFactoryImpl
 import java.math.BigInteger
 import java.util.*
 import java.util.concurrent.TimeUnit
-
-typealias TransactionResult = Tuple3<Transaction, TransactionReceipt, TransactionExecutionSummary>
-typealias BlockResult = Pair<BlockRecord, List<TransactionResult>>
 
 class StandaloneBlockchain(config: Config) {
 
@@ -96,12 +94,7 @@ class StandaloneBlockchain(config: Config) {
     val blockStore = IndexedBlockStore()
     blockStore.init(HashMapDB(), HashMapDB())
 
-    val stateDS = HashMapDB<ByteArray>()
-    val pruningStateDS = JournalSource<ByteArray>(stateDS)
-    val pruneManager = PruneManager(blockStore, pruningStateDS,
-      stateDS, SystemProperties.getDefault().databasePruneDepth())
-
-    val repository = RepositoryRoot(pruningStateDS)
+    val repository = RepositoryRoot(NoDeleteSource(HashMapDB()))
     val programInvokeFactory = ProgramInvokeFactoryImpl()
 
     val bc = BlockchainImpl(blockStore, repository)
@@ -110,7 +103,6 @@ class StandaloneBlockchain(config: Config) {
 
     bc.setParentHeaderValidator(DependentBlockHeaderRuleAdapter())
     bc.programInvokeFactory = programInvokeFactory
-    bc.setPruneManager(pruneManager)
 
     bc.byTest = true
 
@@ -119,16 +111,16 @@ class StandaloneBlockchain(config: Config) {
     pendingState.setBlockchain(bc)
     bc.pendingState = pendingState
 
+    val track = repository.startTracking()
     Genesis.populateRepository(repository, genesis)
 
+    track.startTracking()
     repository.commit()
 
     blockStore.saveBlock(genesis, genesis.difficultyBI, true)
 
     bc.bestBlock = genesis
     bc.totalDifficulty = genesis.difficultyBI
-
-    pruneManager.blockCommitted(genesis.header)
 
     bc.minerCoinbase = coinbase.bytes()
 
