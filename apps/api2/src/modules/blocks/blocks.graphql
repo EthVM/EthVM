@@ -7,6 +7,7 @@ type Block {
   number: Int
   hash: String
   header: Header
+  stats: Stats
   transactions: [String]
   uncles: [String]
 }
@@ -19,4 +20,31 @@ type Header {
   timestamp: Int
   nonce: String
   miner: String
+  mixHash: JSON
+  rewards:JSON
+  difficulty: JSON
+  totalDifficulty: JSON
+  stateRoot: JSON
+  transactionsRoot:JSON
+  receiptsRoot:JSON
+  logsBloom:JSON
+  gasLimit:JSON
+  gasUsed:JSON
+  extraData:JSON
 }
+
+type Stats{
+  successfulTxs: Int
+  failedTxs:Int
+  pendingTxs:Int
+  processingTimeMs:Int
+  txs:Int
+  internalTxs:Int
+  totalGasPrice:Int
+  avgGasPrice:Int
+  totalTxsFees:Int
+  avgTxsFees:Int
+}
+
+
+
