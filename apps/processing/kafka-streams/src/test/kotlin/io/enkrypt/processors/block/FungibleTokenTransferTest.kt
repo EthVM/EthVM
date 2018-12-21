@@ -8,51 +8,44 @@ import io.enkrypt.common.extensions.gwei
 import io.enkrypt.kafka.streams.models.StaticAddresses
 import io.enkrypt.kafka.streams.processors.block.ChainEvents
 import io.enkrypt.util.Blockchains
+import io.enkrypt.util.StandaloneBlockchain
 import io.enkrypt.util.TestEthereumListener
-import io.enkrypt.util.createBlockRecord
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
-import org.ethereum.core.AccountState
-import org.ethereum.core.Genesis
-import org.ethereum.core.genesis.GenesisLoader
-import org.ethereum.util.ByteUtil.wrap
-import java.math.BigInteger
 
 class FungibleTokenTransferTest : BehaviorSpec() {
 
   private val listener = TestEthereumListener()
 
-  private val genesisBlock: Genesis = Blockchains.Genesis.apply {
+  private val premineBalances = mapOf(
+    Blockchains.Users.Bob.address.data20() to 20.ether(),
+    Blockchains.Users.Alice.address.data20() to 50.ether(),
+    Blockchains.Users.Terence.address.data20() to 100.ether()
+  )
 
-      // initial balances
-      addPremine(wrap(Blockchains.Users.Bob.address), AccountState(BigInteger.ZERO, 20.ether()))
-      addPremine(wrap(Blockchains.Users.Alice.address), AccountState(BigInteger.ZERO, 50.ether()))
-      addPremine(wrap(Blockchains.Users.Terence.address), AccountState(BigInteger.ZERO, 100.ether()))
+  val bcConfig = StandaloneBlockchain.Config(
+    gasLimit = 21000,
+    gasPrice = 1.gwei().toLong(),
+    premineBalances = premineBalances,
+    coinbase = Blockchains.Coinbase.address.data20()!!
+  )
 
-      stateRoot = GenesisLoader.generateRootHash(premine)
-    }
-
-  val bc = Blockchains.Factory.createStandalone(genesisBlock, listener)
+  val bc = StandaloneBlockchain(bcConfig)
 
   init {
 
     given("a block with a series of valid ether transfers") {
 
-      bc.sender = Blockchains.Users.Bob
-      bc.sendEther(Blockchains.Users.Alice.address, 50.gwei())
+      bc.sendEther(Blockchains.Users.Bob, Blockchains.Users.Alice, 50.gwei())
+      bc.sendEther(Blockchains.Users.Alice, Blockchains.Users.Terence, 25.gwei())
+      bc.sendEther(Blockchains.Users.Terence, Blockchains.Users.Bob, 125.gwei())
 
-      bc.sender = Blockchains.Users.Alice
-      bc.sendEther(Blockchains.Users.Terence.address, 25.gwei())
-
-      bc.sender = Blockchains.Users.Terence
-      bc.sendEther(Blockchains.Users.Bob.address, 125.gwei())
-
-      val blockRecord = bc.createBlockRecord(listener)
+      val block = bc.createBlock()
 
       `when`("we convert the block") {
 
-        val chainEvents = ChainEvents.forBlock(blockRecord)
+        val chainEvents = ChainEvents.forBlock(block)
 
         then("there should be 4 chain events") {
           chainEvents.size shouldBe 4
@@ -90,9 +83,9 @@ class FungibleTokenTransferTest : BehaviorSpec() {
 
       `when`("we reverse the block") {
 
-        val chainEvents = ChainEvents.forBlock(blockRecord)
+        val chainEvents = ChainEvents.forBlock(block)
 
-        val reverseBlockRecord = BlockRecord.newBuilder(blockRecord)
+        val reverseBlockRecord = BlockRecord.newBuilder(block)
           .setReverse(true)
           .build()
 
@@ -139,20 +132,15 @@ class FungibleTokenTransferTest : BehaviorSpec() {
 
     given("a block with some invalid ether transfers") {
 
-      bc.sender = Blockchains.Users.Bob // invalid, insufficient ether in account
-      bc.sendEther(Blockchains.Users.Alice.address, 100.ether())
+      bc.sendEther(Blockchains.Users.Bob, Blockchains.Users.Alice, 100.gwei())
+      bc.sendEther(Blockchains.Users.Alice, Blockchains.Users.Terence, 56.gwei())
+      bc.sendEther(Blockchains.Users.Terence, Blockchains.Users.Bob, 200.gwei())
 
-      bc.sender = Blockchains.Users.Alice
-      bc.sendEther(Blockchains.Users.Terence.address, 56.gwei())
-
-      bc.sender = Blockchains.Users.Terence // invalid, insufficient ether in account
-      bc.sendEther(Blockchains.Users.Bob.address, 200.ether())
-
-      val blockRecord = bc.createBlockRecord(listener)
+      val block = bc.createBlock()
 
       `when`("we convert the block") {
 
-        val chainEvents = ChainEvents.forBlock(blockRecord)
+        val chainEvents = ChainEvents.forBlock(block)
 
         then("there should be 2 chain events") {
           chainEvents.size shouldBe 2

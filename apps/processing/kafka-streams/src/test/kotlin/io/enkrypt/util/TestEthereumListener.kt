@@ -77,7 +77,8 @@ class TestEthereumListener : EthereumListener {
     blockSummariesLatch = CountDownLatch(count)
   }
 
-  fun waitForBlockSummaries(timeout: Long, unit: TimeUnit) {
+  fun waitForBlockSummaries(timeout: Long, unit: TimeUnit): List<BlockSummary> {
     blockSummariesLatch.await(timeout, unit)
+    return blockSummaries
   }
 }

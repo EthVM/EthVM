@@ -1,16 +1,9 @@
 package io.enkrypt.util
 
 import io.enkrypt.common.extensions.gwei
-import io.enkrypt.processors.block.LoggingVMHook
 import org.ethereum.config.CommonConfig
 import org.ethereum.config.net.BaseNetConfig
-import org.ethereum.core.BlockchainImpl
-import org.ethereum.core.Genesis
-import org.ethereum.core.PendingStateImpl
-import org.ethereum.core.Repository
-import org.ethereum.core.Transaction
-import org.ethereum.core.TransactionExecutionSummary
-import org.ethereum.core.TransactionExecutor
+import org.ethereum.core.*
 import org.ethereum.core.genesis.GenesisLoader
 import org.ethereum.crypto.ECKey
 import org.ethereum.datasource.NoDeleteSource
@@ -50,7 +43,6 @@ object Blockchains {
         withMinerCoinbase(Coinbase.address)
         withGasLimit(21000)
         withGasPrice(1.gwei().toLong())
-        withVmHook(LoggingVMHook())
         addEthereumListener(listener)
       }
     }
