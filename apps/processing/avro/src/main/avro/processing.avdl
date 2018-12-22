@@ -54,7 +54,7 @@ protocol Processing {
 
   }
 
-  record ContractCreationRecord {
+  record ContractCreateRecord {
 
     boolean reverse = false;
 
@@ -67,7 +67,7 @@ protocol Processing {
 
   }
 
-  record ContractSuicideRecord {
+  record ContractDestructRecord {
 
     boolean reverse = false;
 

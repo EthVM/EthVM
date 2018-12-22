@@ -3,26 +3,24 @@ package io.enkrypt.kafka.streams.models
 import io.enkrypt.avro.common.ContractType
 import io.enkrypt.avro.common.Data20
 import io.enkrypt.avro.common.Data32
-import io.enkrypt.avro.processing.ContractCreationRecord
-import io.enkrypt.avro.processing.ContractSuicideRecord
-import io.enkrypt.avro.processing.FungibleTokenTransferRecord
-import io.enkrypt.avro.processing.NonFungibleTokenTransferRecord
+import io.enkrypt.avro.processing.*
 import java.nio.ByteBuffer
 
 enum class ChainEventType {
 
   FungibleBalanceTransfer,
   NonFungibleBalanceTransfer,
-  ContractCreation,
-  ContractSuicide
+  ContractCreate,
+  ContractDestruct
+
 }
 
 data class ChainEvent(
   val type: ChainEventType,
   val _fungibleTransfer: FungibleTokenTransferRecord? = null,
   val _nonFungibleTransfer: NonFungibleTokenTransferRecord? = null,
-  val _contractCreation: ContractCreationRecord? = null,
-  val _contractSuicide: ContractSuicideRecord? = null
+  val _contractCreate: ContractCreateRecord? = null,
+  val _contractDestruct: ContractDestructRecord? = null
 ) {
 
   val fungibleTransfer: FungibleTokenTransferRecord
@@ -37,23 +35,23 @@ data class ChainEvent(
       return _nonFungibleTransfer!!
     }
 
-  val contractCreation: ContractCreationRecord
+  val contractCreate: ContractCreateRecord
     get() {
-      assert(type == ChainEventType.ContractCreation) { "Type must be ContractCreation" }
-      return _contractCreation!!
+      assert(type == ChainEventType.ContractCreate) { "Type must be ContractCreate" }
+      return _contractCreate!!
     }
 
-  val contractSuicide: ContractSuicideRecord
+  val contractDestruct: ContractDestructRecord
     get() {
-      assert(type == ChainEventType.ContractSuicide) { "Type must be ContractSuicide" }
-      return _contractSuicide!!
+      assert(type == ChainEventType.ContractDestruct) { "Type must be ContractDestruct" }
+      return _contractDestruct!!
     }
 
   fun reverse(reverse: Boolean = true): ChainEvent = when (type) {
     ChainEventType.FungibleBalanceTransfer -> copy(_fungibleTransfer = FungibleTokenTransferRecord.newBuilder(fungibleTransfer).setReverse(reverse).build())
     ChainEventType.NonFungibleBalanceTransfer -> copy(_nonFungibleTransfer = NonFungibleTokenTransferRecord.newBuilder(nonFungibleTransfer).setReverse(reverse).build())
-    ChainEventType.ContractCreation -> copy(_contractCreation = ContractCreationRecord.newBuilder(contractCreation).setReverse(reverse).build())
-    ChainEventType.ContractSuicide -> copy(_contractSuicide = ContractSuicideRecord.newBuilder(contractSuicide).setReverse(reverse).build())
+    ChainEventType.ContractCreate -> copy(_contractCreate = ContractCreateRecord.newBuilder(contractCreate).setReverse(reverse).build())
+    ChainEventType.ContractDestruct -> copy(_contractDestruct = ContractDestructRecord.newBuilder(contractDestruct).setReverse(reverse).build())
   }
 
   companion object {
@@ -98,10 +96,10 @@ data class ChainEvent(
           .build()
       )
 
-    fun contractCreation(record: ContractCreationRecord): ChainEvent =
-      ChainEvent(ChainEventType.ContractCreation, _contractCreation = record)
+    fun contractCreate(record: ContractCreateRecord): ChainEvent =
+      ChainEvent(ChainEventType.ContractCreate, _contractCreate = record)
 
-    fun contractCreation(
+    fun contractCreate(
       contractType: ContractType,
       creator: Data20,
       blockHash: Data32,
@@ -110,8 +108,8 @@ data class ChainEvent(
       data: ByteBuffer,
       reverse: Boolean = false
     ): ChainEvent =
-      contractCreation(
-        ContractCreationRecord.newBuilder()
+      contractCreate(
+        ContractCreateRecord.newBuilder()
           .setReverse(reverse)
           .setType(contractType)
           .setCreator(creator)
@@ -122,12 +120,12 @@ data class ChainEvent(
           .build()
       )
 
-    fun contractSuicide(record: ContractSuicideRecord): ChainEvent =
-      ChainEvent(ChainEventType.ContractSuicide, _contractSuicide = record)
+    fun contractDestruct(record: ContractDestructRecord): ChainEvent =
+      ChainEvent(ChainEventType.ContractDestruct, _contractDestruct = record)
 
-    fun contractSuicide(blockHash: Data32, txHash: Data32, address: Data20, reverse: Boolean = false): ChainEvent =
-      contractSuicide(
-        ContractSuicideRecord.newBuilder()
+    fun contractDestruct(blockHash: Data32, txHash: Data32, address: Data20, reverse: Boolean = false): ChainEvent =
+      contractDestruct(
+        ContractDestructRecord.newBuilder()
           .setReverse(reverse)
           .setBlockHash(blockHash)
           .setTxHash(txHash)

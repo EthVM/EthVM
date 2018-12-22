@@ -30,9 +30,9 @@ class ContractLifecycleTest : BehaviorSpec() {
 
   init {
 
-    given("a lazy suicide contract") {
+    given("a contract with a self destruct function") {
 
-      val testContract = TestContracts.SUICIDES.contractFor("LazySuicide")
+      val testContract = TestContracts.SELF_DESTRUCTS.contractFor("LazySuicide")
 
       `when`("we instantiate it") {
 
@@ -51,7 +51,7 @@ class ContractLifecycleTest : BehaviorSpec() {
         }
 
         then("there should be a contract creation event") {
-          val creation = chainEvents[1].contractCreation
+          val creation = chainEvents[1].contractCreate
           creation.getAddress() shouldBe contractAddress
           creation.getData().hex() shouldBe testContract.bin
           creation.getCreator() shouldBe bob.address.data20()
@@ -79,7 +79,7 @@ class ContractLifecycleTest : BehaviorSpec() {
         }
 
         then("there should be a contract creation event") {
-          val creation = chainEvents[1].contractCreation
+          val creation = chainEvents[1].contractCreate
           creation.getAddress() shouldBe contractAddress
           creation.getData().hex() shouldBe testContract.bin
           creation.getCreator() shouldBe bob.address.data20()
@@ -120,7 +120,7 @@ class ContractLifecycleTest : BehaviorSpec() {
         }
 
         then("there should be a contract suicide event") {
-          val suicide = chainEvents[1].contractSuicide
+          val suicide = chainEvents[1].contractDestruct
           suicide.getAddress() shouldBe contractAddress
           suicide.getBlockHash() shouldBe block.getHeader().getHash()
           suicide.getTxHash() shouldBe block.getTransactions().first().getHash()

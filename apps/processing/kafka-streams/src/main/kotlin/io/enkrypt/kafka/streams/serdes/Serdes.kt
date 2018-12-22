@@ -3,15 +3,7 @@ package io.enkrypt.kafka.streams.serdes
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
 import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
-import io.enkrypt.avro.processing.ContractCreationRecord
-import io.enkrypt.avro.processing.ContractKeyRecord
-import io.enkrypt.avro.processing.ContractSuicideRecord
-import io.enkrypt.avro.processing.FungibleTokenBalanceKeyRecord
-import io.enkrypt.avro.processing.FungibleTokenBalanceRecord
-import io.enkrypt.avro.processing.MetricKeyRecord
-import io.enkrypt.avro.processing.MetricRecord
-import io.enkrypt.avro.processing.NonFungibleTokenBalanceKeyRecord
-import io.enkrypt.avro.processing.NonFungibleTokenBalanceRecord
+import io.enkrypt.avro.processing.*
 import io.enkrypt.kafka.streams.config.KafkaConfig
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
@@ -61,11 +53,11 @@ object Serdes : KoinComponent {
     configure(config, true)
   }
 
-  fun ContractCreation() = SpecificAvroSerde<ContractCreationRecord>().apply {
+  fun ContractCreate() = SpecificAvroSerde<ContractCreateRecord>().apply {
     configure(config, false)
   }
 
-  fun ContractSuicide() = SpecificAvroSerde<ContractSuicideRecord>().apply {
+  fun ContractDestruct() = SpecificAvroSerde<ContractDestructRecord>().apply {
     configure(config, false)
   }
 }

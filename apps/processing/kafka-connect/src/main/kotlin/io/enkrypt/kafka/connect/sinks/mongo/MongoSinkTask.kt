@@ -96,8 +96,8 @@ class MongoSinkTask : SinkTask() {
 
       val writesMap = when (it.topic()) {
         "blocks" -> processBlock(it)
-        "contract-creations" -> processContractCreation(it)
-        "contract-suicides" -> processContractSuicide(it)
+        "contract-creations" -> processContractCreate(it)
+        "contract-destructions" -> processContractDestruct(it)
         "fungible-token-balances" -> processFungibleTokenBalance(it)
         "non-fungible-token-balances" -> processNonFungibleTokenBalance(it)
         "pending-transactions" -> processPendingTransaction(it)
@@ -191,7 +191,7 @@ class MongoSinkTask : SinkTask() {
     )
   }
 
-  private fun processContractCreation(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
+  private fun processContractCreate(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
 
     var writes = listOf<WriteModel<BsonDocument>>()
 
@@ -263,7 +263,7 @@ class MongoSinkTask : SinkTask() {
     return mapOf(CollectionId.Contracts to writes)
   }
 
-  private fun processContractSuicide(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
+  private fun processContractDestruct(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
 
     var writes = listOf<WriteModel<BsonDocument>>()
 
@@ -281,7 +281,7 @@ class MongoSinkTask : SinkTask() {
     if (record.value() == null) {
 
       // tombstone received so we need unset the suicide in the contract object
-      writes += UpdateOneModel(idFilter, Document(mapOf("\$unset" to "suicide")))
+      writes += UpdateOneModel(idFilter, Document(mapOf("\$unset" to "destructed")))
     } else {
 
       val struct = record.value() as Struct
@@ -289,7 +289,7 @@ class MongoSinkTask : SinkTask() {
       val bson = BsonDocument()
         .apply {
           append("\$set", BsonDocument()
-            .apply { append("suicide", StructToBsonConverter.convert(struct)) })
+            .apply { append("destructed", StructToBsonConverter.convert(struct)) })
         }
 
       writes += UpdateOneModel(idFilter, bson)

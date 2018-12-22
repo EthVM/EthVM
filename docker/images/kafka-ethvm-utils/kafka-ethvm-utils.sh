@@ -36,7 +36,7 @@ create_topics() {
   kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 12 --topic block-statistics --config retention.ms=-1 --config cleanup.policy=compact
 
   kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 1  --topic contract-metadata --config retention.ms=-1 --config cleanup.policy=compact
-  kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 12 --topic contract-suicides --config retention.ms=-1 --config cleanup.policy=compact
+  kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 12 --topic contract-destructions --config retention.ms=-1 --config cleanup.policy=compact
   kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 12 --topic contract-creations --config retention.ms=-1 --config cleanup.policy=compact
 
   kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 12 --topic fungible-token-movements --config retention.ms=-1

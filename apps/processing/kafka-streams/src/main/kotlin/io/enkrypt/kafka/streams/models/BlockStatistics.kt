@@ -16,6 +16,7 @@ enum class BlockStatistic {
   AvgGasPrice,
   TotalTxsFees,
   AvgTxsFees
+
 }
 
 data class BlockStatistics(

@@ -151,8 +151,8 @@ class BlockProcessor : AbstractKafkaProcessor() {
     // contract creations
 
     chainEvents
-      .filter { _, e -> e.type == ChainEventType.ContractCreation }
-      .mapValues { v -> v.contractCreation }
+      .filter { _, e -> e.type == ChainEventType.ContractCreate }
+      .mapValues { v -> v.contractCreate }
       .map { _, v ->
 
         val reverse = v.getReverse()
@@ -167,13 +167,13 @@ class BlockProcessor : AbstractKafkaProcessor() {
             v
           }
         )
-      }.to(Topics.ContractCreations, Produced.with(Serdes.ContractKey(), Serdes.ContractCreation()))
+      }.to(Topics.ContractCreations, Produced.with(Serdes.ContractKey(), Serdes.ContractCreate()))
 
     // contract suicides
 
     chainEvents
-      .filter { _, e -> e.type == ChainEventType.ContractSuicide }
-      .mapValues { v -> v.contractSuicide }
+      .filter { _, e -> e.type == ChainEventType.ContractDestruct }
+      .mapValues { v -> v.contractDestruct }
       .map { _, v ->
 
         val reverse = v.getReverse()
@@ -188,7 +188,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
             v
           }
         )
-      }.to(Topics.ContractSuicides, Produced.with(Serdes.ContractKey(), Serdes.ContractSuicide()))
+      }.to(Topics.ContractSuicides, Produced.with(Serdes.ContractKey(), Serdes.ContractDestruct()))
 
     // statistics
 
