@@ -5,12 +5,16 @@ import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.capture.InternalTransactionRecord
 import io.enkrypt.avro.capture.TransactionReceiptRecord
 import io.enkrypt.avro.capture.TransactionRecord
+import io.enkrypt.common.extensions.bigInteger
+import io.enkrypt.common.extensions.byteArray
+import io.enkrypt.common.extensions.byteBuffer
 import io.enkrypt.common.extensions.isSuccess
 import io.enkrypt.kafka.streams.models.ChainEvent
 import io.enkrypt.kafka.streams.models.StaticAddresses
 import io.enkrypt.kafka.streams.utils.ERC20Abi
 import io.enkrypt.kafka.streams.utils.ERC721Abi
 import io.enkrypt.kafka.streams.utils.StandardTokenDetector
+import org.spongycastle.util.BigIntegers
 import java.math.BigInteger
 
 object ChainEvents {
@@ -71,6 +75,10 @@ object ChainEvents {
     val value = tx.getValue()
     val data = tx.getInput()
 
+    // tx fee
+    val txFee = (receipt.getGasUsed().bigInteger()!! * tx.getGasPrice().bigInteger()!!).byteBuffer()!!
+    events += ChainEvent.fungibleTransfer(from, StaticAddresses.EtherZero, txFee, reverse)
+
     // simple ether transfer
     if (!(from == null || to == null || value.capacity() == 0)) {
       events += ChainEvent.fungibleTransfer(from, to, value, reverse)
@@ -128,7 +136,7 @@ object ChainEvents {
 
     events += receipt.getInternalTxs()
       .filter { !it.getRejected() }
-      .map { forInternalTransaction(block, tx, receipt, it) }
+      .map { forInternalTransaction(block, tx, it) }
       .flatten()
 
     return events
@@ -137,7 +145,6 @@ object ChainEvents {
   fun forInternalTransaction(
     block: BlockRecord,
     tx: TransactionRecord,
-    receipt: TransactionReceiptRecord,
     internalTx: InternalTransactionRecord
   ): List<ChainEvent> {
 

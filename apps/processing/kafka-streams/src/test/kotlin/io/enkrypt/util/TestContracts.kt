@@ -16,7 +16,8 @@ enum class TestContracts(path: String) {
   //  ERC721("/solidity/erc721.sol"),
   GLUTTONY("/solidity/gluttony.sol"),
   MULTI_SIG_TWO_OF_THREE("/solidity/MultiSig2of3.sol"),
-  SELF_DESTRUCTS("/solidity/SelfDestructs.sol");
+  SELF_DESTRUCTS("/solidity/SelfDestructs.sol"),
+  PING_PONG("/solidity/PingPong.sol");
 
   val src = TestContracts::class.java.getResource(path).readText()
 
