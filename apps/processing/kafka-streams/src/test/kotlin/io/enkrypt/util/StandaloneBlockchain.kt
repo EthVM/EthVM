@@ -1,8 +1,8 @@
 package io.enkrypt.util
 
-import arrow.core.Tuple3
 import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.common.Data20
+import io.enkrypt.common.extensions.data20
 import io.enkrypt.kafka.mapping.ObjectMapper
 import io.enkrypt.kafka.streams.models.StaticAddresses
 import org.ethereum.config.BlockchainNetConfig
@@ -14,11 +14,9 @@ import org.ethereum.config.net.BaseNetConfig
 import org.ethereum.core.*
 import org.ethereum.core.genesis.GenesisLoader
 import org.ethereum.crypto.ECKey
-import org.ethereum.datasource.JournalSource
 import org.ethereum.datasource.NoDeleteSource
 import org.ethereum.datasource.inmem.HashMapDB
 import org.ethereum.db.IndexedBlockStore
-import org.ethereum.db.PruneManager
 import org.ethereum.db.RepositoryRoot
 import org.ethereum.mine.Ethash
 import org.ethereum.sync.SyncManager
@@ -33,13 +31,13 @@ import java.util.concurrent.TimeUnit
 class StandaloneBlockchain(config: Config) {
 
   companion object {
-      val easyNetConfig = BaseNetConfig().apply {
-        add(0, ByzantiumConfig(
-          DaoNoHFConfig(HomesteadConfig(object : HomesteadConfig.HomesteadConstants() {
-            override fun getMINIMUM_DIFFICULTY(): BigInteger = BigInteger.ONE
-          }), 0))
-        )
-      }
+    val easyNetConfig = BaseNetConfig().apply {
+      add(0, ByzantiumConfig(
+        DaoNoHFConfig(HomesteadConfig(object : HomesteadConfig.HomesteadConstants() {
+          override fun getMINIMUM_DIFFICULTY(): BigInteger = BigInteger.ONE
+        }), 0))
+      )
+    }
   }
 
   data class Config(val chainId: Int = 1,
@@ -127,13 +125,6 @@ class StandaloneBlockchain(config: Config) {
     return bc
   }
 
-  fun addTx(tx: Transaction, createBlock: Boolean = false) {
-    pendingTxs += tx
-    if (createBlock) {
-      createBlock()
-    }
-  }
-
   fun createBlock(): BlockRecord {
     return createForkBlock(blockchain.bestBlock)
   }
@@ -178,26 +169,69 @@ class StandaloneBlockchain(config: Config) {
     noncesMap += key to nonce
   }
 
-  fun sendEther(from: ECKey, to: ECKey, value: BigInteger, autoBlock: Boolean = false): BlockRecord? {
-    val nonce = currentNonce(from)
+  fun sendEther(from: ECKey, to: ECKey, value: BigInteger): Transaction =
+    submitTx(
+      from,
+      receiver = to.address.data20(),
+      value = bigIntegerToBytes(value)
+    )
+
+
+  fun submitContract(sender: ECKey,
+                     contract: SolidityContract,
+                     gasPrice: Long? = null,
+                     gasLimit: Long? = null,
+                     value: BigInteger? = null,
+                     vararg constructorArgs: Any): Transaction =
+    submitTx(
+      sender,
+      gasPrice,
+      gasLimit,
+      data = contract.construct(*constructorArgs),
+      value = if (value != null) bigIntegerToBytes(value) else ByteArray(0)
+    )
+
+  fun callFunction(sender: ECKey,
+                   contractAddress: Data20,
+                   contract: SolidityContract,
+                   name: String,
+                   gasPrice: Long? = null,
+                   gasLimit: Long? = null,
+                   value: BigInteger? = null,
+                   vararg args: Any) =
+    submitTx(
+      sender,
+      gasPrice,
+      gasLimit,
+      receiver = contractAddress,
+      data = contract.callFunction(name, *args),
+      value = if (value != null) bigIntegerToBytes(value) else ByteArray(0)
+    )
+
+  fun submitTx(sender: ECKey,
+               gasPrice: Long? = null,
+               gasLimit: Long? = null,
+               receiver: Data20? = null,
+               value: ByteArray = ByteArray(0),
+               data: ByteArray = ByteArray(0)): Transaction {
+
+    val nonce = currentNonce(sender)
+
     val tx = Transaction(
       longToBytesNoLeadZeroes(nonce),
-      longToBytesNoLeadZeroes(gasPrice),
-      longToBytesNoLeadZeroes(gasLimit),
-      to.address,
-      bigIntegerToBytes(value),
-      ByteArray(0),
+      longToBytesNoLeadZeroes(gasPrice ?: this.gasPrice),
+      longToBytesNoLeadZeroes(gasLimit ?: this.gasLimit),
+      receiver?.bytes(),
+      value,
+      data,
       null
     )
-    tx.sign(from)
-    addTx(tx)
 
-    updateNonce(from, nonce + 1)
+    tx.sign(sender)
+    updateNonce(sender, nonce + 1)
 
-    return when(autoBlock) {
-      true -> createBlock()
-      false -> null
-    }
+    pendingTxs += tx
+    return tx
   }
 
 

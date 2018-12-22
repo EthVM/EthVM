@@ -16,8 +16,6 @@ import io.kotlintest.specs.BehaviorSpec
 
 class FungibleTokenTransferTest : BehaviorSpec() {
 
-  private val listener = TestEthereumListener()
-
   private val premineBalances = mapOf(
     Blockchains.Users.Bob.address.data20() to 20.ether(),
     Blockchains.Users.Alice.address.data20() to 50.ether(),

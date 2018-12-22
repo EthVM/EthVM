@@ -1,60 +1,45 @@
 package io.enkrypt.processors.block
 
-import io.enkrypt.common.extensions.amountBI
-import io.enkrypt.common.extensions.data20
-import io.enkrypt.common.extensions.ether
-import io.enkrypt.common.extensions.hex
+import io.enkrypt.common.extensions.*
 import io.enkrypt.kafka.streams.models.ChainEvent
 import io.enkrypt.kafka.streams.models.StaticAddresses
 import io.enkrypt.kafka.streams.processors.block.ChainEvents
-import io.enkrypt.util.Blockchains
-import io.enkrypt.util.TestEthereumListener
-import io.enkrypt.util.createBlockRecord
+import io.enkrypt.util.*
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
-import mu.KotlinLogging
-import org.ethereum.core.AccountState
-import org.ethereum.core.CallTransaction
-import org.ethereum.core.genesis.GenesisLoader
-import org.ethereum.solidity.compiler.CompilationResult
-import org.ethereum.solidity.compiler.SolidityCompiler
-import org.ethereum.util.ByteUtil
-import org.ethereum.util.ByteUtil.wrap
-import org.ethereum.vm.OpCode
-import org.ethereum.vm.hook.VMHook
-import org.ethereum.vm.program.Program
-import org.spongycastle.util.encoders.Hex
+import org.ethereum.crypto.ECKey
 import java.math.BigInteger
 
 class ContractLifecycleTest : BehaviorSpec() {
 
-  private val erc20Source = ContractLifecycleTest::class.java.getResource("/solidity/erc20.sol").readText()
+  val coinbase = ECKey()
+  val bob = ECKey()
 
-  private val listener = TestEthereumListener()
+  private val premineBalances = mapOf(
+    bob.address.data20() to 20.ether()
+  )
 
-  private val genesisBlock = Blockchains.Genesis.apply {
-    // initial balances
-    addPremine(wrap(Blockchains.Users.Bob.address), AccountState(BigInteger.ZERO, 20.ether()))
+  val bcConfig = StandaloneBlockchain.Config(
+    gasLimit = 31000,
+    gasPrice = 1.gwei().toLong(),
+    premineBalances = premineBalances,
+    coinbase = coinbase.address.data20()!!
+  )
 
-    stateRoot = GenesisLoader.generateRootHash(premine)
-  }
-
-  private val sbc = Blockchains.Factory.createStandalone(genesisBlock, listener)
+  val bc = StandaloneBlockchain(bcConfig)
 
   init {
 
-    given("a block with a contract creation") {
+    given("a lazy suicide contract") {
 
-      sbc.sender = Blockchains.Users.Bob
+      val testContract = TestContracts.SUICIDES.contractFor("LazySuicide")
 
-      val contract = sbc
-        .withGasLimit(500000)
-        .submitNewContract(erc20Source, "ERC20")
+      `when`("we instantiate it") {
 
-      val blockRecord = sbc.createBlockRecord(listener)
+        val tx = bc.submitContract(bob, testContract, gasLimit = 500_000)
+        val contractAddress = SolidityContract.contractAddress(bob, tx.nonce).data20()
 
-      `when`("we convert the block") {
-
+        val blockRecord = bc.createBlock()
         val chainEvents = ChainEvents.forBlock(blockRecord)
 
         then("there should be 2 chain events") {
@@ -62,78 +47,104 @@ class ContractLifecycleTest : BehaviorSpec() {
         }
 
         then("there should be a fungible ether transfer for the coinbase") {
-          checkCoinbase(chainEvents.first(), 3000292048000000000.toBigInteger())
+          checkCoinbase(chainEvents.first(), 3000058769.gwei())
         }
 
         then("there should be a contract creation event") {
           val creation = chainEvents[1].contractCreation
-          creation.getAddress() shouldBe contract.address.data20()
-          creation.getData().hex() shouldBe contract.binary
-          creation.getCreator() shouldBe Blockchains.Users.Bob.address.data20()
+          creation.getAddress() shouldBe contractAddress
+          creation.getData().hex() shouldBe testContract.bin
+          creation.getCreator() shouldBe bob.address.data20()
           creation.getBlockHash() shouldBe blockRecord.getHeader().getHash()
           creation.getTxHash() shouldBe blockRecord.getTransactions().first().getHash()
+          creation.getReverse() shouldBe false
         }
+
       }
-    }
 
-    given("a live contract which holds some ether") {
+      `when`("we instantiate it with ether") {
 
-      sbc.sender = Blockchains.Users.Bob
+        val tx = bc.submitContract(bob, testContract, gasLimit = 500_000, value = 10.gwei())
+        val contractAddress = SolidityContract.contractAddress(bob, tx.nonce).data20()
 
-      val res = SolidityCompiler.compile(
-        erc20Source.toByteArray(),
-        true,
-        SolidityCompiler.Options.ABI,
-        SolidityCompiler.Options.BIN
-      )
-      val cres = CompilationResult.parse(res.output)
+        val blockRecord = bc.createBlock()
+        val chainEvents = ChainEvents.forBlock(blockRecord)
 
-      val contractCreationTx = Blockchains.Utils.createTx(
-        sbc.blockchain.repository,
-        Blockchains.Users.Bob,
-        ByteUtil.EMPTY_BYTE_ARRAY,
-        Hex.decode(cres.getContract("ERC20").bin)
-      )
-
-      sbc
-        .withGasLimit(500000)
-        .submitTransaction(contractCreationTx)
-
-      val blockRecord1 = sbc.createBlockRecord(listener)
-      val contractAddress = blockRecord1.getTransactionReceipts()[0].contractAddress.bytes()
-
-      `when`("we convert the block") {
-
-        val c = CallTransaction.Contract(cres.getContract("ERC20").abi)
-        val callData = c.getByName("seppuku").encode()
-        val contractMethodTx = Blockchains.Utils.createTx(
-          sbc.blockchain.repository,
-          Blockchains.Users.Bob,
-          contractAddress,
-          callData,
-          0L
-        )
-
-        sbc.submitTransaction(contractMethodTx)
-
-        val blockRecord2 = sbc.createBlockRecord(listener)
-        val chainEvents = ChainEvents.forBlock(blockRecord2)
-
-        then("there should be 2 chain events") {
-          chainEvents.size shouldBe 2
+        then("there should be 3 chain events") {
+          chainEvents.size shouldBe 3
         }
 
         then("there should be a fungible ether transfer for the coinbase") {
-          checkCoinbase(chainEvents.first(), 3000292048000000000.toBigInteger())
+          checkCoinbase(chainEvents.first(), 3000058769.gwei())
         }
+
+        then("there should be a contract creation event") {
+          val creation = chainEvents[1].contractCreation
+          creation.getAddress() shouldBe contractAddress
+          creation.getData().hex() shouldBe testContract.bin
+          creation.getCreator() shouldBe bob.address.data20()
+          creation.getBlockHash() shouldBe blockRecord.getHeader().getHash()
+          creation.getTxHash() shouldBe blockRecord.getTransactions().first().getHash()
+          creation.getReverse() shouldBe false
+        }
+
+        then("there should be a fungible transfer event") {
+          val transfer = chainEvents[2].fungibleTransfer
+          transfer.getFrom() shouldBe bob.address.data20()
+          transfer.getTo() shouldBe contractAddress
+          transfer.getContract() shouldBe null
+          transfer.amountBI shouldBe 10.gwei()
+          transfer.getReverse() shouldBe false
+        }
+
+      }
+
+      `when`("we ask it to self destruct") {
+
+        val tx = bc.submitContract(bob, testContract, gasLimit = 500_000, value = 35.gwei())
+        bc.createBlock()
+
+        val contractAddress = SolidityContract.contractAddress(bob, tx.nonce).data20()!!
+
+        bc.callFunction(bob, contractAddress, testContract, "killYourself")
+
+        val block = bc.createBlock()
+        val chainEvents = ChainEvents.forBlock(block)
+
+        then("there should be 2 chain events") {
+          chainEvents.size shouldBe 3
+        }
+
+        then("there should be a fungible ether transfer for the coinbase") {
+          checkCoinbase(chainEvents.first(), 3000010690.gwei())
+        }
+
+        then("there should be a contract suicide event") {
+          val suicide = chainEvents[1].contractSuicide
+          suicide.getAddress() shouldBe contractAddress
+          suicide.getBlockHash() shouldBe block.getHeader().getHash()
+          suicide.getTxHash() shouldBe block.getTransactions().first().getHash()
+          suicide.getReverse() shouldBe false
+        }
+
+        then("there should be a fungible transfer to the sender with the contract balance") {
+          val transfer = chainEvents[2].fungibleTransfer
+          transfer.getFrom() shouldBe contractAddress
+          transfer.getTo() shouldBe bob.address.data20()
+          transfer.amountBI shouldBe 35.gwei()
+          transfer.getReverse() shouldBe false
+        }
+
+
       }
     }
+
   }
 
   private fun checkCoinbase(event: ChainEvent, reward: BigInteger) {
     val coinbaseTransfer = event.fungibleTransfer
     coinbaseTransfer.getFrom() shouldBe StaticAddresses.EtherZero
-    coinbaseTransfer.getTo() shouldBe Blockchains.Coinbase.address.data20()
+    coinbaseTransfer.getTo() shouldBe coinbase.address.data20()
     coinbaseTransfer.amountBI shouldBe reward
   }
 }

@@ -72,14 +72,21 @@ object ChainEvents {
     val data = tx.getInput()
 
     // simple ether transfer
-    if (!(from == null || to == null || value == null)) {
+    if (!(from == null || to == null || value.capacity() == 0)) {
       events += ChainEvent.fungibleTransfer(from, to, value, reverse)
     }
 
     // contract creation
     if (tx.getCreates() != null) {
+
       val (contractType, _) = StandardTokenDetector.detect(data)
       events += ChainEvent.contractCreation(contractType, from, blockHash, txHash, tx.getCreates(), data, reverse)
+
+      // some ether may have also been sent
+      if (value.capacity() > 0) {
+        events += ChainEvent.fungibleTransfer(from, tx.getCreates(), value)
+      }
+
     }
 
     // contract suicides
@@ -151,14 +158,10 @@ object ChainEvents {
     }
 
     // contract creation
-    if (tx.getCreates() != null) {
+    if (internalTx.getCreates() != null) {
       val (contractType, _) = StandardTokenDetector.detect(data)
       events += ChainEvent.contractCreation(contractType, from, blockHash, txHash, tx.getCreates(), data, reverse)
     }
-
-    // contract suicides
-    receipt.getDeletedAccounts()
-      .forEach { events += ChainEvent.contractSuicide(blockHash, txHash, it, reverse) }
 
     return events
   }
