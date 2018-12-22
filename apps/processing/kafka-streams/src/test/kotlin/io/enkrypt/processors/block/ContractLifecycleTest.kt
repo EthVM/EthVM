@@ -32,7 +32,7 @@ class ContractLifecycleTest : BehaviorSpec() {
 
     given("a contract with a self destruct function") {
 
-      val testContract = TestContracts.SELF_DESTRUCTS.contractFor("LazySuicide")
+      val testContract = TestContracts.SELF_DESTRUCTS.contractFor("SelfDestruct")
 
       `when`("we instantiate it") {
 
@@ -106,7 +106,7 @@ class ContractLifecycleTest : BehaviorSpec() {
 
         val contractAddress = SolidityContract.contractAddress(bob, tx.nonce).data20()!!
 
-        bc.callFunction(bob, contractAddress, testContract, "killYourself")
+        bc.callFunction(bob, contractAddress, testContract, "destroy")
 
         val block = bc.createBlock()
         val chainEvents = ChainEvents.forBlock(block)
@@ -119,7 +119,7 @@ class ContractLifecycleTest : BehaviorSpec() {
           checkCoinbase(chainEvents.first(), 3000010690.gwei())
         }
 
-        then("there should be a contract suicide event") {
+        then("there should be a contract destruct event") {
           val suicide = chainEvents[1].contractDestruct
           suicide.getAddress() shouldBe contractAddress
           suicide.getBlockHash() shouldBe block.getHeader().getHash()
