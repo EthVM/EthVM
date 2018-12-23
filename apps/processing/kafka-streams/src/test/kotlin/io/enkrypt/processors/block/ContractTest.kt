@@ -7,6 +7,7 @@ import io.enkrypt.kafka.streams.models.ChainEvent.Companion.contractCreate
 import io.enkrypt.kafka.streams.models.ChainEvent.Companion.contractDestruct
 import io.enkrypt.kafka.streams.models.ChainEvent.Companion.fungibleTransfer
 import io.enkrypt.kafka.streams.models.StaticAddresses
+import io.enkrypt.kafka.streams.models.StaticAddresses.EtherZero
 import io.enkrypt.kafka.streams.processors.block.ChainEvents
 import io.enkrypt.util.*
 import io.enkrypt.util.Blockchains.Coinbase
@@ -23,7 +24,7 @@ class ContractTest : BehaviorSpec() {
     Bob.address.data20() to 20.ether()
   )
 
-  val bcConfig = StandaloneBlockchain.Config(
+  private val bcConfig = StandaloneBlockchain.Config(
     gasLimit = 31000,
     gasPrice = 1.gwei().toLong(),
     premineBalances = premineBalances,
@@ -41,7 +42,7 @@ class ContractTest : BehaviorSpec() {
       `when`("we instantiate it") {
 
         val tx = bc.submitContract(Bob, contract, gasLimit = 500_000)
-        val contractAddress = SolidityContract.contractAddress(Bob, tx.nonce).data20()
+        val contractAddress = tx.contractAddress.data20()
 
         val blockRecord = bc.createBlock()
         val chainEvents = ChainEvents.forBlock(blockRecord)
@@ -51,11 +52,11 @@ class ContractTest : BehaviorSpec() {
         }
 
         then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe fungibleTransfer(StaticAddresses.EtherZero, Coinbase.address.data20()!!, 3000058641.gwei().byteBuffer()!!)
+          chainEvents.first() shouldBe fungibleTransfer(EtherZero, Coinbase.address.data20()!!, 3000058641.gwei().byteBuffer()!!)
         }
 
         then("there should be a transaction fee ether transfer") {
-          chainEvents[1] shouldBe fungibleTransfer(StaticAddresses.EtherZero, Coinbase.address.data20()!!, 31000.gwei().byteBuffer()!!)
+          chainEvents[1] shouldBe fungibleTransfer(EtherZero, Coinbase.address.data20()!!, 31000.gwei().byteBuffer()!!)
         }
 
         then("there should be a contract creation event") {
@@ -74,7 +75,7 @@ class ContractTest : BehaviorSpec() {
       `when`("we instantiate it with ether") {
 
         val tx = bc.submitContract(Bob, contract, gasLimit = 500_000, value = 10.gwei())
-        val contractAddress = SolidityContract.contractAddress(Bob, tx.nonce).data20()
+        val contractAddress = tx.contractAddress.data20()
 
         val blockRecord = bc.createBlock()
         val chainEvents = ChainEvents.forBlock(blockRecord)
@@ -111,9 +112,9 @@ class ContractTest : BehaviorSpec() {
       `when`("we ask it to self destruct") {
 
         val tx = bc.submitContract(Bob, contract, gasLimit = 500_000, value = 35.gwei())
-        bc.createBlock()
+        val contractAddress = tx.contractAddress.data20()!!
 
-        val contractAddress = SolidityContract.contractAddress(Bob, tx.nonce).data20()!!
+        bc.createBlock()
 
         bc.callFunction(Bob, contractAddress, contract, "destroy")
 

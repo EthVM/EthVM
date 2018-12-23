@@ -6,6 +6,7 @@ import io.enkrypt.common.extensions.data20
 import io.enkrypt.kafka.mapping.ObjectMapper
 import io.enkrypt.kafka.streams.models.StaticAddresses
 import org.ethereum.config.BlockchainNetConfig
+import org.ethereum.config.CommonConfig
 import org.ethereum.config.SystemProperties
 import org.ethereum.config.blockchain.ByzantiumConfig
 import org.ethereum.config.blockchain.DaoNoHFConfig
@@ -89,8 +90,9 @@ class StandaloneBlockchain(config: Config) {
 
     SystemProperties.getDefault().blockchainConfig = netConfig
 
-    val blockStore = IndexedBlockStore()
-    blockStore.init(HashMapDB(), HashMapDB())
+    val blockStore = IndexedBlockStore().apply {
+      init(HashMapDB(), HashMapDB())
+    }
 
     val repository = RepositoryRoot(NoDeleteSource(HashMapDB()))
     val programInvokeFactory = ProgramInvokeFactoryImpl()
@@ -105,14 +107,14 @@ class StandaloneBlockchain(config: Config) {
     bc.byTest = true
 
     val pendingState = PendingStateImpl(listener)
+    bc.pendingState = pendingState
 
     pendingState.setBlockchain(bc)
-    bc.pendingState = pendingState
 
     val track = repository.startTracking()
     Genesis.populateRepository(repository, genesis)
 
-    track.startTracking()
+    track.commit()
     repository.commit()
 
     blockStore.saveBlock(genesis, genesis.difficultyBI, true)
@@ -155,14 +157,11 @@ class StandaloneBlockchain(config: Config) {
     val (blockSummary) = listener.waitForBlockSummaries(10, TimeUnit.SECONDS)
     pendingTxs = emptyList()
 
-    // update repo snapshot
-    repoSnapshot = blockchain.repository.getSnapshotTo(block.stateRoot)
-
     return objectMapper.convert(objectMapper, BlockSummary::class.java, BlockRecord.Builder::class.java, blockSummary).build()
   }
 
   private fun currentNonce(key: ECKey): Long {
-    return noncesMap.getOrElse(key) { repoSnapshot.getNonce(key.address).toLong() }
+    return noncesMap.getOrElse(key) { blockchain.repositorySnapshot.getNonce(key.address).toLong() }
   }
 
   private fun updateNonce(key: ECKey, nonce: Long) {

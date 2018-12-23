@@ -120,14 +120,16 @@ object ChainEvents {
             if (erc20Transfer.isDefined()) Option.empty() else ERC721Abi.decodeTransferEvent(logData, topics)
 
           erc20Transfer
-            .filter { it.amount != BigInteger.ZERO }
+            .filter { it.amount.bigInteger() != BigInteger.ZERO }
             .fold({ Unit }, {
-              events += ChainEvent.fungibleTransfer(it.from, it.to, it.amount, reverse, it.contract)
+              events += ChainEvent.fungibleTransfer(it.from, it.to, it.amount, reverse, to
+                ?: receipt.getContractAddress())
             })
 
           erc721Transfer
             .fold({ Unit }, {
-              events += ChainEvent.nonFungibleTransfer(it.contract, it.from, it.to, it.tokenId, reverse)
+              events += ChainEvent.nonFungibleTransfer(to
+                ?: receipt.getContractAddress(), it.from, it.to, it.tokenId, reverse)
             })
         })
     }
