@@ -13,7 +13,7 @@ import org.spongycastle.util.encoders.Hex
 enum class TestContracts(path: String) {
 
   ERC20("/solidity/erc20.sol"),
-  //  ERC721("/solidity/erc721.sol"),
+  ERC721("/solidity/erc721.sol"),
   GLUTTONY("/solidity/gluttony.sol"),
   MULTI_SIG_TWO_OF_THREE("/solidity/MultiSig2of3.sol"),
   SELF_DESTRUCTS("/solidity/SelfDestructs.sol"),

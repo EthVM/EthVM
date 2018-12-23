@@ -6,6 +6,7 @@ import io.enkrypt.avro.common.Data256
 import io.enkrypt.avro.common.Data32
 import io.enkrypt.avro.common.Data8
 import org.ethereum.util.ByteUtil
+import org.spongycastle.util.BigIntegers
 import java.math.BigInteger
 import java.nio.ByteBuffer
 
@@ -18,6 +19,7 @@ fun ByteArray?.data256(): Data256? = if (this == null) null else Data256(this)
 fun ByteArray?.hex(): String? = ByteUtil.toHexString(this)
 
 fun ByteArray?.bigInteger(): BigInteger? = BigInteger(this)
+fun ByteArray?.unsignedBI(): BigInteger = BigIntegers.fromUnsignedByteArray(this)
 
 fun ByteArray?.byteBuffer(): ByteBuffer? = if (this != null) ByteBuffer.wrap(this) else null
 

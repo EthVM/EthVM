@@ -6,21 +6,16 @@ import io.enkrypt.kafka.streams.models.ChainEvent
 import io.enkrypt.kafka.streams.models.ChainEvent.Companion.fungibleTransfer
 import io.enkrypt.kafka.streams.models.StaticAddresses.EtherZero
 import io.enkrypt.kafka.streams.processors.block.ChainEvents
-import io.enkrypt.util.Blockchains
 import io.enkrypt.util.Blockchains.Coinbase
 import io.enkrypt.util.Blockchains.Users.Alice
 import io.enkrypt.util.Blockchains.Users.Bob
 import io.enkrypt.util.Blockchains.Users.Terence
-import io.enkrypt.util.SolidityContract
 import io.enkrypt.util.StandaloneBlockchain
 import io.enkrypt.util.TestContracts
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
-import mu.KotlinLogging
 
 class ERC20Test : BehaviorSpec() {
-
-  private val logger = KotlinLogging.logger {}
 
   private val premineBalances = mapOf(
     Bob.address.data20() to 20.ether(),
@@ -45,12 +40,12 @@ class ERC20Test : BehaviorSpec() {
 
       val tx = bc.submitContract(Bob, contract, gasLimit = 1.gwei().toLong())
       val contractAddress = tx.contractAddress.data20()!!
-      val createBlock = bc.createBlock()
 
       // TODO test: No gas to return just created contract. We don't seem to get any indication of failure in the tx receipt
 
       `when`("we instantiate it") {
 
+        val createBlock = bc.createBlock()
         val chainEvents = ChainEvents.forBlock(createBlock)
 
         then("there should be 4 chain events") {
@@ -65,7 +60,7 @@ class ERC20Test : BehaviorSpec() {
           chainEvents[1] shouldBe fungibleTransfer(Bob.address.data20()!!, EtherZero, 1378099.gwei().byteBuffer()!!)
         }
 
-        then("there should be a contract creation event") {
+        then("there should be a contract creation event with type ERC20") {
           chainEvents[2] shouldBe ChainEvent.contractCreate(
             ContractType.ERC20,
             Bob.address.data20()!!,
@@ -83,7 +78,7 @@ class ERC20Test : BehaviorSpec() {
 
       `when`("we transfer some tokens from Bob to Alice") {
 
-        bc.callFunction(Bob, contractAddress, contract, "transfer", null, 1.gwei().toLong(), null, Alice.address, 1.ether().unsignedByteArray())
+        bc.callFunction(Bob, contractAddress, contract, "transfer", null, 1.gwei().toLong(), null, Alice.address, 1.ether())
 
         val block = bc.createBlock()
         val chainEvents = ChainEvents.forBlock(block)
@@ -114,7 +109,7 @@ class ERC20Test : BehaviorSpec() {
       val contractAddress = tx.contractAddress.data20()!!
       bc.createBlock()
 
-      bc.callFunction(Bob, contractAddress, contract, "approve", null, 1.gwei().toLong(), null, Terence.address, 1.ether().unsignedByteArray())
+      bc.callFunction(Bob, contractAddress, contract, "approve", null, 1.gwei().toLong(), null, Terence.address, 1.ether())
       bc.createBlock()
 
       `when`("Terence attempts to transfer a portion of the allowance") {
@@ -125,7 +120,7 @@ class ERC20Test : BehaviorSpec() {
           contract,
           "transferFrom",
           null, 100.kwei().toLong(), null,
-          Bob.address, Terence.address, 1.finney().unsignedByteArray()
+          Bob.address, Terence.address, 1.finney()
         )
 
         val block = bc.createBlock()
@@ -158,7 +153,7 @@ class ERC20Test : BehaviorSpec() {
           contract,
           "transferFrom",
           null, 100.kwei().toLong(), null,
-          Bob.address, Terence.address, 999.finney().unsignedByteArray()
+          Bob.address, Terence.address, 999.finney()
         )
 
         val block = bc.createBlock()

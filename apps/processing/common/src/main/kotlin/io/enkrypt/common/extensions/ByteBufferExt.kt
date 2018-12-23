@@ -35,6 +35,15 @@ fun ByteBuffer?.bigInteger(): BigInteger? {
   return if (arr.isNotEmpty()) BigInteger(arr) else BigInteger.ZERO
 }
 
+fun ByteBuffer?.unsignedBI(): BigInteger? {
+  if (this == null) {
+    return null
+  }
+  val arr = ByteArray(remaining()).also { get(it) }
+  position(0)
+  return if (arr.isNotEmpty()) arr.unsignedBI() else BigInteger.ZERO
+}
+
 fun ByteBuffer?.bigDecimal(): BigDecimal? {
   if (this == null) {
     return null
