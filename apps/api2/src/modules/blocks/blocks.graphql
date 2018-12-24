@@ -22,9 +22,9 @@ type Header {
   miner: String
   mixHash: JSON
   rewards:JSON
-  difficulty: JSON
-  totalDifficulty: JSON
-  stateRoot: JSON
+  difficulty: Decimal
+  totalDifficulty: Decimal
+  stateRoot: Buffer
   transactionsRoot:JSON
   receiptsRoot:JSON
   logsBloom:JSON

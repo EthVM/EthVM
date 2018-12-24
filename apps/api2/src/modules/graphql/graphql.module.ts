@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common'
 import { GraphQLModule as ApolloGraphQLModule } from '@nestjs/graphql'
 import * as GraphQLJSON from 'graphql-type-json'
 import { DateScalar } from './scalars/date.scalar'
+import { BufferScalar } from './scalars/buffer.scalar'
+import { DecimalScalar } from './scalars/decimal.scalar'
 import { join } from 'path'
 
 @Module({
@@ -10,7 +12,7 @@ import { join } from 'path'
       useFactory: async (): Promise<any> => {
         return {
           typePaths: ['./src/**/*.graphql'],
-          resolvers: { JSON: GraphQLJSON },
+          resolvers: { JSON: GraphQLJSON, Decimal: DecimalScalar, Buffer: BufferScalar },
           cacheControl: true,
           cors: true,
           definitions: {
