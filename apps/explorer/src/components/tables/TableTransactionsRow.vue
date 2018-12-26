@@ -64,7 +64,7 @@
       <v-flex hidden-sm-and-down md2>
         <p class="text-truncate black--text mb-0">{{ tx.getGasPrice() }}</p>
       </v-flex>
-      <v-flex hidden-xs-only v-if="!pending" sm1>
+      <v-flex hidden-xs-only v-if="!isPending" sm1>
         <v-icon v-if="tx.getStatus()" small class="txSuccess--text">fa fa-check-circle</v-icon>
         <v-icon v-else small class="txFail--text">fa fa-times-circle</v-icon>
       </v-flex>
@@ -82,6 +82,10 @@ export default Vue.extend({
   props: {
     tx: {
       type: Tx
+    },
+    isPending: {
+      type: Boolean,
+      default: false
     }
   },
   mixins: [stringConcat]

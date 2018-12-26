@@ -30,10 +30,10 @@ export default Vue.extend({
   created() {
     this.$options.sockets.connect = () => {
       if (!this.pageName || this.pageName === 'blocks' || this.pageName === 'transactions') {
-        this.setPastData()
+        //this.setPastData()
       } else {
         setTimeout(() => {
-          this.setPastData()
+          //this.setPastData()
         }, 1000)
       }
     }

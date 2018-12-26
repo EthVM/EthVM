@@ -104,7 +104,7 @@ export default Vue.extend({
   },
   created() {
     this.blocks = this.$store.getters.getBlocks
-
+    console.log('hello')
     this.$eventHub.$on(Events.newBlock, _block => {
       if (Visibility.state() === 'visible') {
         this.blocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)

@@ -52,7 +52,7 @@
             flat
             v-bind:key="tx.getHash()"
           >
-            <table-transactions-row :tx="tx"/>
+            <table-transactions-row :tx="tx" :isPending="pending"/>
             <v-divider></v-divider>
           </v-card>
         </v-flex>
