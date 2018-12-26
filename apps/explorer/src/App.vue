@@ -1,10 +1,10 @@
 <template>
   <v-app style="background: #f3f4f8;">
-    <the-navigation-drawer />
+    <the-navigation-drawer/>
     <v-content>
       <router-view></router-view>
       <!--<router-view :key="$route.fullPath"/ -->
-      <the-footer />
+      <the-footer/>
     </v-content>
   </v-app>
 </template>
@@ -34,10 +34,10 @@ export default class App extends Vue {
   created() {
     this.$options.sockets.connect = () => {
       if (!this.pageName || this.pageName === 'blocks' || this.pageName === 'transactions') {
-        //this.setPastData()
+        this.setPastData()
       } else {
         setTimeout(() => {
-          //this.setPastData()
+          this.setPastData()
         }, 1000)
       }
     }

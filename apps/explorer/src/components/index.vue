@@ -4,7 +4,10 @@
     <!-- Main Pages -->
     <frame-blocks v-if="pageName == 'blocks'"></frame-blocks>
     <frame-uncles v-else-if="pageName == 'uncles'"></frame-uncles>
-    <frame-txs v-else-if="pageName == 'transactions' || pageName == 'pendingTransactions'" :type="pageName"></frame-txs>
+    <frame-txs
+      v-else-if="pageName == 'transactions' || pageName == 'pendingTransactions'"
+      :type="pageName"
+    ></frame-txs>
     <frame-pending v-else-if="pageName == 'pending'" :type="pageName"></frame-pending>
     <frame-charts v-else-if="pageName == 'charts'"></frame-charts>
     <frame-about v-else-if="pageName == 'about'"></frame-about>
@@ -15,7 +18,11 @@
     <frame-address v-else-if="pageName == 'address' && param" :address="param"></frame-address>
     <frame-tx-detail v-else-if="pageName == 'tx' && param" :txHash="param"></frame-tx-detail>
     <frame-token-detail v-else-if="pageName == 'token' && !holder" :tokenAddr="param"></frame-token-detail>
-    <frame-token-detail v-else-if="pageName == 'token' && holder" :tokenAddr="param" :holderAddr="holder"></frame-token-detail>
+    <frame-token-detail
+      v-else-if="pageName == 'token' && holder"
+      :tokenAddr="param"
+      :holderAddr="holder"
+    ></frame-token-detail>
 
     <!-- Hope Page -->
     <frame-home v-else></frame-home>
@@ -60,6 +67,8 @@ export default Vue.extend({
           }
         }
       )
+      console.log('blocks')
+
       this.$socket.emit(
         sEvents.pastBlocks,
         {
