@@ -4,37 +4,26 @@
       <v-flex d-flex xs12 sm8 md5 pr-3>
         <v-layout row wrap align-center pb-1>
           <v-flex d-flex xs12 pb-2>
-            <router-link
-              class="primary--text text-truncate font-italic psmall"
-              :to="'/tx/' + tx.getHash()"
-            >{{ tx.getHash() }}</router-link>
+            <router-link class="primary--text text-truncate font-italic psmall" :to="'/tx/' + tx.getHash()">{{ tx.getHash() }}</router-link>
           </v-flex>
           <v-flex xs12 pt-0>
             <v-layout row pl-2>
               <p class="text-truncate info--text mb-0">
                 {{ $t('tx.from') }}:
-                <router-link
-                  :to="'/address/' + tx.getFrom()"
-                  class="secondary--text font-italic font-weight-regular"
-                >{{ tx.getFrom().toString() }}</router-link>
+                <router-link :to="'/address/' + tx.getFrom()" class="secondary--text font-italic font-weight-regular">{{
+                  tx.getFrom().toString()
+                }}</router-link>
               </p>
               <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
-              <p
-                class="text-truncate info--text font-weight-thin mb-0"
-                v-if="tx.getContractAddress()"
-              >
+              <p class="text-truncate info--text font-weight-thin mb-0" v-if="tx.getContractAddress()">
                 {{ $t('tx.contract') }}:
-                <router-link
-                  class="secondary--text font-italic font-weight-regular"
-                  :to="'/address/' + tx.getContractAddress()"
-                >{{ tx.getContractAddress() }}</router-link>
+                <router-link class="secondary--text font-italic font-weight-regular" :to="'/address/' + tx.getContractAddress()">{{
+                  tx.getContractAddress()
+                }}</router-link>
               </p>
               <p class="text-truncate info--text font-weight-thin mb-0" v-else>
                 <strong>{{ $t('tx.to') }}:</strong>
-                <router-link
-                  class="secondary--text font-italic font-weight-regular"
-                  :to="'/address/' + tx.getTo()"
-                >{{ tx.getTo() }}</router-link>
+                <router-link class="secondary--text font-italic font-weight-regular" :to="'/address/' + tx.getTo()">{{ tx.getTo() }}</router-link>
               </p>
             </v-layout>
           </v-flex>
@@ -48,13 +37,13 @@
             <span>{{ tx.getValue().toEth() }}</span>
           </v-tooltip>
           {{
-          getShortValue(
-          tx
-          .getValue()
-          .toEth()
-          .toString(),
-          false
-          )
+            getShortValue(
+              tx
+                .getValue()
+                .toEth()
+                .toString(),
+              false
+            )
           }}
         </p>
       </v-flex>

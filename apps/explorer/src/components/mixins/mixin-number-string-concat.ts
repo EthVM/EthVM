@@ -5,7 +5,7 @@ export default {
       if (!round) {
         round = 2
       }
-      let n = new BN(newNumber)
+      const n = new BN(newNumber)
       return n.decimalPlaces(round).toString()
     },
     getShortValue(newValue, isBool) {

@@ -1,6 +1,6 @@
 <template>
   <v-container grid-list-lg class="mb-0">
-    <app-bread-crumbs />
+    <app-bread-crumbs :newItems="items"></app-bread-crumbs>
     <v-layout row wrap justify-space-between mb-4>
       <v-flex xs12 sm6 md3>
         <app-info-card :title="$t('smlBlock.last')" :value="latestBlockNumber" colorType="primary white--text" backType="last-block" />
@@ -15,74 +15,56 @@
         <app-info-card :title="$t('smlBlock.diff')" :value="latestDifficulty" colorType="error white--text" backType="difficulty" metrics="Th" />
       </v-flex>
     </v-layout>
-    <!-- Charts -->
     <v-layout row wrap justify-center mb-4>
-      <v-flex xs12 md6> <chart-live-tx /> </v-flex>
-      <v-flex xs12 md6> <chart-live-tx-fees /> </v-flex>
+      <v-flex xs12> <table-blocks v-if="blocks" :blocks="blocks"></table-blocks> </v-flex>
     </v-layout>
-    <!-- End Charts -->
-    <!-- Last Blocks -->
-    <v-layout row wrap justify-center mb-4>
-      <v-flex xs12> <table-blocks v-if="blocks" :maxBlocks="true" :blocks="blocks" showStyle="max-height: 590px" /> </v-flex>
-    </v-layout>
-    <!-- End Last Blocks -->
-    <!-- Last Txs -->
-    <v-layout row wrap justify-center mb-4>
-      <v-flex xs12> <table-transactions v-if="txs" :transactions="txs" showStyle="max-height: 590px" /> </v-flex>
-    </v-layout>
-    <!-- End Last Txs -->
   </v-container>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
 import Visibility from 'visibilityjs'
-import { Events } from 'ethvm-common'
-import BN from 'bignumber.js'
+import Vue from 'vue'
 import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
 import AppInfoCard from '@app/components/ui/AppInfoCard.vue'
-import ChartLiveTx from '@app/components/charts/live/ChartLiveTx.vue'
-import ChartLiveTxFees from '@app/components/charts/live/ChartLiveTxFees.vue'
 import TableBlocks from '@app/components/tables/TableBlocks.vue'
-import TableTransactions from '@app/components/tables/TableTransactions.vue'
 import { lastBlockInfo } from '@app/components/mixins/mixin-last-block-stats'
 import { Events as sEvents } from 'ethvm-common'
-import { Block, Tx, PendingTx } from '@app/models'
-
+import BN from 'bignumber.js'
 const MAX_ITEMS = 20
 export default Vue.extend({
-  name: 'FramesHome',
+  name: 'FrameBlocks',
   components: {
     AppBreadCrumbs,
     TableBlocks,
-    TableTransactions,
-    AppInfoCard,
-    ChartLiveTx,
-    ChartLiveTxFees
+    AppInfoCard
   },
   mixins: [lastBlockInfo],
   data() {
     return {
-      blocks: null
+      blocks: null,
+      items: [
+        {
+          text: this.$i18n.t('title.blocks'),
+          disabled: true
+        }
+      ],
+      maxItems: MAX_ITEMS
     }
   },
   created() {
     this.blocks = this.$store.getters.getBlocks
-    this.$eventHub.$on(Events.newBlock, _block => {
+    this.$eventHub.$on(sEvents.newBlock, _block => {
       if (Visibility.state() === 'visible') {
-        this.blocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
+        this.blocks = this.$store.getters.getBlocks
       }
     })
   },
   beforeDestroy() {
-    this.$eventHub.$off(Events.newBlock)
+    this.$eventHub.$off(sEvents.newBlock)
   },
   computed: {
-    txs() {
-      if (this.$store.getters.getTxs.length) {
-        return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
-      }
-      return []
+    getBlocks() {
+      return this.blocks.slice(0, this.maxItems)
     }
   }
 })
