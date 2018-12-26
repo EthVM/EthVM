@@ -2,9 +2,7 @@
   <v-container grid-list-lg class="mb-0">
     <bread-crumbs :newItems="items"></bread-crumbs>
     <v-layout row wrap justify-center mb-4>
-      <v-flex xs12>
-        <block-latest-blocks :maxBlocks="true" :blocks="getuncles" :frameBlocks="false"></block-latest-blocks>
-      </v-flex>
+      <v-flex xs12> <block-latest-blocks :maxBlocks="true" :blocks="getuncles" :frameBlocks="false"></block-latest-blocks> </v-flex>
     </v-layout>
   </v-container>
 </template>

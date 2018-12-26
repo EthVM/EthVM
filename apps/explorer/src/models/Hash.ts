@@ -2,7 +2,7 @@ export class Hash {
   public hash: string
 
   constructor(_hash: Buffer) {
-    this.hash = '0x' + new Buffer(_hash).toString('hex')
+    this.hash = '0x' + Buffer.from(_hash).toString('hex')
     this.hash = this.hash === '0x' ? '0x0' : this.hash
   }
 
@@ -11,6 +11,6 @@ export class Hash {
   }
 
   public toBuffer(): Buffer {
-    return new Buffer(this.hash.substring(2), 'hex')
+    return Buffer.from(this.hash.substring(2), 'hex')
   }
 }

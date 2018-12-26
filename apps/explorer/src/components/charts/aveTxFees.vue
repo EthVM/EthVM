@@ -93,7 +93,6 @@ export default Vue.extend({
 
       this.$socket.emit('getChartAvTxFee', 'LAST_7_DAYS', (err, result) => {
         if (!err && result) {
-          console.log('result Average TxFee', result)
           result.forEach(function(block) {
             data.points.push(block.reduction)
             data.labels.push(block.group)

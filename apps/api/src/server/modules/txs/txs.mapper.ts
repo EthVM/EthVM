@@ -87,9 +87,8 @@ const toTx = (tx: any): Tx => {
     t.contractAddress = tx.contractAddress
   }
 
-  if (tx.status) {
-    t.status = tx.status
-  }
+  t.status = tx.status
+  
   if (tx.data) {
     t.data = tx.data.buffer
   }

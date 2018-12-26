@@ -5,74 +5,47 @@
     </v-layout>
     <v-divider class="lineGrey"></v-divider>
     <v-list>
-      <v-list-tile
-        v-for="(item, index) in items"
-        :key="index"
-        :class="[index % 2 == 0 ? 'background: white' : 'background: tableGrey']"
-      >
+      <v-list-tile v-for="(item, index) in items" :key="index" :class="[index % 2 == 0 ? 'background: white' : 'background: tableGrey']">
         <v-layout align-center justify-start row fill-height class="pa-3">
           <v-flex xs4 sm3 md2>
             <v-list-tile-title class="info--text font-weight-medium">{{ item.title }}</v-list-tile-title>
           </v-flex>
           <v-flex xs7 sm8 md9>
             <v-list-tile-title v-if="!item.link" class="text-muted text-truncate">
-              <timeago
-                v-if="item.title == $t('common.timestmp')"
-                :datetime="tx.getTimestamp()"
-                :auto-update="10"
-              ></timeago>
-              {{ item.detail }}
+              <timeago v-if="item.title == $t('common.timestmp')" :datetime="tx.getTimestamp()" :auto-update="10"></timeago> {{ item.detail }}
             </v-list-tile-title>
             <router-link v-else :to="item.link">
               <v-list-tile-title class="text-truncate">{{ item.detail }}</v-list-tile-title>
             </router-link>
           </v-flex>
           <v-flex xs1>
-            <v-list-tile-action v-if="item.copy">
-              <copy-to-clip-component :valueToCopy="item.detail"></copy-to-clip-component>
-            </v-list-tile-action>
+            <v-list-tile-action v-if="item.copy"> <copy-to-clip-component :valueToCopy="item.detail"></copy-to-clip-component> </v-list-tile-action>
           </v-flex>
         </v-layout>
       </v-list-tile>
       <v-slide-y-transition group>
-        <v-list-tile
-          v-if="showMore"
-          v-for="(item, count) in moreItems"
-          :key="count"
-          :class="[count % 2 == 0 ? 'background: white' : 'background: tableGrey']"
-        >
+        <v-list-tile v-if="showMore" v-for="(item, count) in moreItems" :key="count" :class="[count % 2 == 0 ? 'background: white' : 'background: tableGrey']">
           <v-layout align-center justify-start row fill-height class="pa-3">
             <v-flex xs4 sm3 md2>
               <v-list-tile-title class="info--text font-weight-medium">{{ item.title }}</v-list-tile-title>
             </v-flex>
             <v-flex xs7 sm8 md9>
               <v-list-tile-title v-if="!item.link" class="text-muted text-truncate">
-                {{ item.detail }}
-                <timeago
-                  v-if="item.title == $t('common.timestmp')"
-                  :datetime="tx.getTimestamp()"
-                  :auto-update="10"
-                ></timeago>
+                {{ item.detail }} <timeago v-if="item.title == $t('common.timestmp')" :datetime="tx.getTimestamp()" :auto-update="10"></timeago>
               </v-list-tile-title>
               <router-link v-else :to="item.link">
                 <v-list-tile-title class="text-truncate">{{ item.detail }}</v-list-tile-title>
               </router-link>
             </v-flex>
             <v-flex xs1>
-              <v-list-tile-action v-if="item.copy">
-                <copy-to-clip-component :valueToCopy="item.detail"></copy-to-clip-component>
-              </v-list-tile-action>
+              <v-list-tile-action v-if="item.copy"> <copy-to-clip-component :valueToCopy="item.detail"></copy-to-clip-component> </v-list-tile-action>
             </v-flex>
           </v-layout>
         </v-list-tile>
       </v-slide-y-transition>
     </v-list>
-    <v-btn v-if="!showMore" v-on:click="setView()" flat block class="secondary">
-      <v-icon class="fa fa-angle-down white--text"></v-icon>
-    </v-btn>
-    <v-btn v-else v-on:click="setView()" flat block class="secondary">
-      <v-icon class="fa fa-angle-up white--text"></v-icon>
-    </v-btn>
+    <v-btn v-if="!showMore" v-on:click="setView()" flat block class="secondary"> <v-icon class="fa fa-angle-down white--text"></v-icon> </v-btn>
+    <v-btn v-else v-on:click="setView()" flat block class="secondary"> <v-icon class="fa fa-angle-up white--text"></v-icon> </v-btn>
   </v-card>
 </template>
 
@@ -196,5 +169,4 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped lang="css">
-</style>
+<style scoped lang="css"></style>

@@ -8,9 +8,7 @@
       </v-tooltip>
     </v-card-title>
     <v-divider></v-divider>
-    <v-img class="pl-4 pt-4">
-      <app-footnotes :footnotes="footnoteArr"></app-footnotes>
-    </v-img>
+    <v-img class="pl-4 pt-4"> <app-footnotes :footnotes="footnoteArr"></app-footnotes> </v-img>
     <canvas ref="chart" :width="width" :height="height"></canvas>
   </v-card>
 </template>
@@ -117,5 +115,4 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped lang="css">
-</style>
+<style scoped lang="css"></style>

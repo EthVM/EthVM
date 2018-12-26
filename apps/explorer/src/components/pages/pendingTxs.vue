@@ -2,14 +2,7 @@
   <v-container grid-list-lg class="mb-0">
     <bread-crumbs :newItems="items"></bread-crumbs>
     <v-layout row justify-center mb-4>
-      <v-flex xs12>
-        <block-last-transactions
-          :transactions="txs"
-          :showHeader="true"
-          class="mt-3"
-          :pending="true"
-        ></block-last-transactions>
-      </v-flex>
+      <v-flex xs12> <block-last-transactions :transactions="txs" :showHeader="true" class="mt-3" :pending="true"></block-last-transactions> </v-flex>
     </v-layout>
   </v-container>
 </template>

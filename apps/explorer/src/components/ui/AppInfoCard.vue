@@ -1,12 +1,5 @@
 <template>
-  <v-card
-    :color="getColor"
-    :class="getBack"
-    flat
-    class="mt-1 pr-1"
-    height="150px"
-    style="padding-top: 42px; padding-left: 24px;"
-  >
+  <v-card :color="getColor" :class="getBack" flat class="mt-1 pr-1" height="150px" style="padding-top: 42px; padding-left: 24px;">
     <v-layout wrap>
       <v-flex xs12>
         <v-layout row align-end>

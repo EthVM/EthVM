@@ -40,12 +40,12 @@ const i18n = new VueI18n({
   fallbackLocale: 'en_US'
 })
 
-let acc = new Account({address:'e6a7a1d47ff21b6321162aea7c6cb457d5476bca',balance:8888,nonce:8})
+const acc = new Account({ address: 'e6a7a1d47ff21b6321162aea7c6cb457d5476bca', balance: 8888, nonce: 8 })
 
 describe.skip('addressDetail.vue', () => {
   it('renders addressDetail', () => {
     const wrapper = mount(AddressDetail, {
-      propsData: { account: acc},
+      propsData: { account: acc },
       localVue,
       i18n,
       router,
@@ -55,5 +55,3 @@ describe.skip('addressDetail.vue', () => {
     expect(wrapper.text()).toMatch('e6a7a1d47ff21b6321162aea7c6cb457d5476bca')
   })
 })
-
-

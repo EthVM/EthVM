@@ -35,7 +35,7 @@ const stateChanged = false
 /* Chart Details: */
 
 const title = 'Tx History'
-let description = DES.OTHER + currentState
+const description = DES.OTHER + currentState
 const MAX_ITEMS = 10
 const lineOptions = {
   title: {
@@ -128,15 +128,6 @@ export default Vue.extend({
             fill: false
           }
         ]
-      }
-    },
-
-    /*Method to change description string: */
-    changeDescription() {
-      if (stateChanged && currentState == STATES.BEGIN) {
-        description = DES.BEGIN + currentState
-      } else if (stateChanged && currentState != STATES.BEGIN) {
-        description = DES.OTHER + currentState
       }
     }
   },

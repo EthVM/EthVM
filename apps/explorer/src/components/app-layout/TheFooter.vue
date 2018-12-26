@@ -17,7 +17,7 @@
           <v-layout row wrap justify-start>
             <v-flex d-flex xs12 sm7 md6>
               <v-btn outline color="secondary" class="text-lowercase" block>
-                <v-icon class="secondary--text fab fa-ethereum pr-2"/>
+                <v-icon class="secondary--text fab fa-ethereum pr-2" />
                 {{ $t('common.eth') }} - {{ $t('footer.ens') }}
               </v-btn>
             </v-flex>
@@ -31,8 +31,8 @@
           <v-layout row wrap justify-start>
             <v-flex d-flex xs12 sm7 md6>
               <v-btn outline color="secondary" class="text-lowercase" block>
-                <v-icon class="secondary--text fab fa-btc pr-2"/>
-                {{ $t('footer.btc') }} - blochchain.com
+                <v-icon class="secondary--text fab fa-btc pr-2" />
+                {{ $t('footer.btc') }} - blockchain.com
               </v-btn>
             </v-flex>
             <v-flex d-flex xs12 sm5 md6>
@@ -48,18 +48,10 @@
         <v-layout column justify-end fill-height>
           <v-flex xs12>
             <v-layout row justify-end pt-3>
-              <v-btn href="https://www.facebook.com/enKryptIO/" icon>
-                <v-icon class="fab fa-facebook-f grey--text"></v-icon>
-              </v-btn>
-              <v-btn href="https://twitter.com/enkryptio" icon>
-                <v-icon class="fab fa-twitter grey--text"></v-icon>
-              </v-btn>
-              <v-btn href="https://github.com/enKryptIO" icon>
-                <v-icon class="fab fa-github grey--text"></v-icon>
-              </v-btn>
-              <v-btn href="https://github.com/enKryptIO" icon>
-                <v-icon class="fab fa-medium-m grey--text"></v-icon>
-              </v-btn>
+              <v-btn href="https://www.facebook.com/enKryptIO/" icon> <v-icon class="fab fa-facebook-f grey--text"></v-icon> </v-btn>
+              <v-btn href="https://twitter.com/enkryptio" icon> <v-icon class="fab fa-twitter grey--text"></v-icon> </v-btn>
+              <v-btn href="https://github.com/enKryptIO" icon> <v-icon class="fab fa-github grey--text"></v-icon> </v-btn>
+              <v-btn href="https://github.com/enKryptIO" icon> <v-icon class="fab fa-medium-m grey--text"></v-icon> </v-btn>
             </v-layout>
           </v-flex>
           <v-spacer></v-spacer>
@@ -75,18 +67,20 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 import AppCopyToClip from '@app/components/ui/AppCopyToClip.vue'
-export default Vue.extend({
-  name: 'TheFooter',
+
+@Component({
   components: {
     AppCopyToClip
-  },
+  }
+})
+export default class TheFooter extends Vue {
   data() {
     return {
       btcAddr: '1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9">1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9',
       ethAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
     }
   }
-})
+}
 </script>

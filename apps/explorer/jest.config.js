@@ -8,7 +8,7 @@ module.exports = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '\\.(css|less)$': '<rootDir>/tests/__mocks__/styleMock.js',
-    '^@app/(.*)' : '<rootDir>/src/$1'
+    '^@app/(.*)': '<rootDir>/src/$1'
   },
   snapshotSerializers: ['jest-serializer-vue'],
   testMatch: ['**/tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)'],

@@ -32,7 +32,7 @@ const stateChanged = false
 
 /* Chart Details: */
 const title = 'Top Miners'
-let description = DES.OTHER + currentState
+const description = DES.OTHER + currentState
 const newData = {
   datasets: [
     {
@@ -67,17 +67,7 @@ export default Vue.extend({
     newDescription: description
   }),
 
-  computed: {
-    /*Method to change description string: */
-    changeDescription() {
-      if (stateChanged && currentState == STATES.BEGIN) {
-        description = DES.BEGIN + currentState
-      } else if (stateChanged && currentState != STATES.BEGIN) {
-        description = DES.OTHER + currentState
-      }
-      return ''
-    }
-  },
+  computed: {},
   mounted: function() {}
 })
 </script>

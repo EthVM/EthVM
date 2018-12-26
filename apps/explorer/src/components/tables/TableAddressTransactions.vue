@@ -11,36 +11,18 @@
               height="36px"
               class="pr-3 pl-3 pt-2"
             >
-              <input
-                :placeholder="$t('search.addressTx')"
-                v-model="searchInput"
-                class="width: 100%"
-              >
+              <input :placeholder="$t('search.addressTx')" v-model="searchInput" class="width: 100%" />
             </v-card>
           </v-flex>
-          <v-flex xs7 sm3 md2 pl-0>
-            <v-btn
-              depressed
-              outline
-              class="primary--text text-capitalize ml-0 lineGrey"
-              @click="searching"
-            >Search</v-btn>
-          </v-flex>
+          <v-flex xs7 sm3 md2 pl-0> <v-btn depressed outline class="primary--text text-capitalize ml-0 lineGrey" @click="searching">Search</v-btn> </v-flex>
         </v-layout>
       </v-flex>
       <v-spacer></v-spacer>
       <v-flex d-flex xs12 sm4 md3>
         <v-layout row align-center justify-start fill-height height="40px">
+          <v-flex> <p class="pr-2 ma-0">View:</p> </v-flex>
           <v-flex>
-            <p class="pr-2 ma-0">View:</p>
-          </v-flex>
-          <v-flex>
-            <v-card
-              flat
-              style="border: solid 1px #efefef; padding-top: 1px;"
-              height="36px"
-              class="pl-2"
-            >
+            <v-card flat style="border: solid 1px #efefef; padding-top: 1px;" height="36px" class="pl-2">
               <v-select
                 solo
                 flat
@@ -59,13 +41,7 @@
       </v-flex>
     </v-layout>
     <!-- Tx Table Header -->
-    <block-address-tx-table
-      :transactions="filteredTxs"
-      :account="address"
-      :filter="selectedTx"
-      :total="getTotal"
-      :type="isPending"
-    ></block-address-tx-table>
+    <block-address-tx-table :transactions="filteredTxs" :account="address" :filter="selectedTx" :total="getTotal" :type="isPending"></block-address-tx-table>
     <!-- End Tx Table Header -->
   </v-card>
 </template>
@@ -124,9 +100,7 @@ export default Vue.extend({
       }
       this.recievedTx = true
     },
-    searching() {
-      console.log('searching')
-    },
+    searching() {},
     setSelectedTxs() {
       if (this.transactions) {
         if (!this.recievedTx) {
