@@ -6,7 +6,10 @@ import io.enkrypt.common.extensions.data20
 import io.enkrypt.common.extensions.unsignedBytes
 import io.enkrypt.kafka.mapping.ObjectMapper
 import io.enkrypt.kafka.streams.models.StaticAddresses
+import io.mockk.every
+import io.mockk.mockkStatic
 import org.ethereum.config.BlockchainNetConfig
+import org.ethereum.config.CommonConfig
 import org.ethereum.config.SystemProperties
 import org.ethereum.config.blockchain.ByzantiumConfig
 import org.ethereum.config.blockchain.DaoNoHFConfig
@@ -23,16 +26,17 @@ import org.ethereum.core.Transaction
 import org.ethereum.core.genesis.GenesisLoader
 import org.ethereum.crypto.ECKey
 import org.ethereum.datasource.NoDeleteSource
+import org.ethereum.datasource.Source
 import org.ethereum.datasource.inmem.HashMapDB
 import org.ethereum.db.IndexedBlockStore
 import org.ethereum.db.RepositoryRoot
 import org.ethereum.mine.Ethash
 import org.ethereum.sync.SyncManager
 import org.ethereum.util.ByteUtil
-import org.ethereum.util.ByteUtil.bigIntegerToBytes
 import org.ethereum.util.ByteUtil.longToBytesNoLeadZeroes
 import org.ethereum.util.ByteUtil.wrap
 import org.ethereum.validator.DependentBlockHeaderRuleAdapter
+import org.ethereum.vm.program.ProgramPrecompile
 import org.ethereum.vm.program.invoke.ProgramInvokeFactoryImpl
 import java.math.BigInteger
 import java.util.Date
@@ -40,34 +44,7 @@ import java.util.concurrent.TimeUnit
 
 class StandaloneBlockchain(config: Config) {
 
-  companion object {
-    val easyNetConfig = BaseNetConfig().apply {
-      add(0, ByzantiumConfig(
-        DaoNoHFConfig(HomesteadConfig(object : HomesteadConfig.HomesteadConstants() {
-          override fun getMINIMUM_DIFFICULTY(): BigInteger = BigInteger.ONE
-        }), 0))
-      )
-    }
-  }
-
-  data class Config(
-    val chainId: Int = 1,
-    val blockGasIncreasePercent: Int = 0,
-    val gasPrice: Long = 50_000_000_000L,
-    val gasLimit: Long = 5_000_000L,
-    val coinbase: Data20 = StaticAddresses.EtherMax,
-    val autoblock: Boolean = false,
-    val timeIncrement: Long = 60,
-    val netConfig: BlockchainNetConfig = easyNetConfig,
-    val genesis: Genesis? = null,
-    val premineBalances: Map<Data20?, BigInteger> = emptyMap(),
-    val time: Date? = null
-  )
-
-  var listener = TestEthereumListener()
-  val chainId = config.chainId
-
-  val genesis = (
+  val genesis: Genesis = (
     config.genesis
       ?: GenesisLoader.loadGenesis(javaClass.getResourceAsStream("/genesis/genesis-light-sb.json"))).apply {
 
@@ -79,25 +56,36 @@ class StandaloneBlockchain(config: Config) {
     stateRoot = GenesisLoader.generateRootHash(premine)
   }
 
-  val gasPrice = config.gasPrice
-  val gasLimit = config.gasLimit
-  val blockGasIncreasePercent = config.blockGasIncreasePercent
+  val gasPrice by lazy { config.gasPrice }
+  val gasLimit by lazy { config.gasLimit }
+  val blockGasIncreasePercent by lazy { config.blockGasIncreasePercent }
 
-  val coinbase = config.coinbase
-
+  val coinbase by lazy { config.coinbase }
   val timeIncrement = config.timeIncrement
+  val netConfig by lazy { config.netConfig }
 
-  val netConfig = config.netConfig
-  val blockchain = createBlockchain()
   val objectMapper = ObjectMapper()
 
   var time = (config.time ?: Date()).time / 1000
-  var repoSnapshot = blockchain.repository.getSnapshotTo(genesis.stateRoot)
+  var listener = TestEthereumListener()
 
   private var pendingTxs = listOf<Transaction>()
   private var noncesMap = emptyMap<ECKey, Long>()
 
+  private val commonConfig = object : CommonConfig() {
+    override fun systemProperties() =
+      SystemProperties.getDefault().apply { blockchainConfig = StandaloneBlockchain.TestNetConfig }
+
+    override fun precompileSource(): Source<ByteArray, ProgramPrecompile>? = null
+  }
+
+  val blockchain = createBlockchain()
+
   private fun createBlockchain(): BlockchainImpl {
+    SystemProperties.setUseOnlySpringConfig(false)
+
+    mockkStatic(CommonConfig::class)
+    every { CommonConfig.getDefault() } returns commonConfig
 
     SystemProperties.getDefault().blockchainConfig = netConfig
 
@@ -105,16 +93,15 @@ class StandaloneBlockchain(config: Config) {
       init(HashMapDB(), HashMapDB())
     }
 
-    val repository = RepositoryRoot(NoDeleteSource(HashMapDB()))
-    val programInvokeFactory = ProgramInvokeFactoryImpl()
+    val source = NoDeleteSource<ByteArray, ByteArray>(HashMapDB())
+    val repository = RepositoryRoot(source)
 
     val bc = BlockchainImpl(blockStore, repository)
       .withEthereumListener(listener)
       .withSyncManager(SyncManager())
 
     bc.setParentHeaderValidator(DependentBlockHeaderRuleAdapter())
-    bc.programInvokeFactory = programInvokeFactory
-
+    bc.programInvokeFactory = ProgramInvokeFactoryImpl()
     bc.byTest = true
 
     val pendingState = PendingStateImpl(listener)
@@ -132,15 +119,12 @@ class StandaloneBlockchain(config: Config) {
 
     bc.bestBlock = genesis
     bc.totalDifficulty = genesis.difficultyBI
-
     bc.minerCoinbase = coinbase.bytes()
 
     return bc
   }
 
-  fun createBlock(): BlockRecord {
-    return createForkBlock(blockchain.bestBlock)
-  }
+  fun createBlock(): BlockRecord = createForkBlock(blockchain.bestBlock)
 
   fun createForkBlock(parent: Block): BlockRecord {
 
@@ -168,12 +152,13 @@ class StandaloneBlockchain(config: Config) {
     val (blockSummary) = listener.waitForBlockSummaries(10, TimeUnit.SECONDS)
     pendingTxs = emptyList()
 
-    return objectMapper.convert(objectMapper, BlockSummary::class.java, BlockRecord.Builder::class.java, blockSummary).build()
+    return objectMapper
+      .convert(objectMapper, BlockSummary::class.java, BlockRecord.Builder::class.java, blockSummary)
+      .build()
   }
 
-  private fun currentNonce(key: ECKey): Long {
-    return noncesMap.getOrElse(key) { blockchain.repositorySnapshot.getNonce(key.address).toLong() }
-  }
+  private fun currentNonce(key: ECKey): Long =
+    noncesMap.getOrElse(key) { blockchain.repositorySnapshot.getNonce(key.address).toLong() }
 
   private fun updateNonce(key: ECKey, nonce: Long) {
     noncesMap += key to nonce
@@ -248,4 +233,27 @@ class StandaloneBlockchain(config: Config) {
     pendingTxs += tx
     return tx
   }
+
+  companion object {
+    val TestNetConfig = BaseNetConfig().apply {
+      val constants = object : HomesteadConfig.HomesteadConstants() {
+        override fun getMINIMUM_DIFFICULTY() = BigInteger.ONE
+      }
+      add(0, ByzantiumConfig(DaoNoHFConfig(HomesteadConfig(constants), 0)))
+    }
+  }
+
+  data class Config(
+    val chainId: Int = 1,
+    val blockGasIncreasePercent: Int = 0,
+    val gasPrice: Long = 50_000_000_000L,
+    val gasLimit: Long = 5_000_000L,
+    val coinbase: Data20 = StaticAddresses.EtherMax,
+    val autoBlock: Boolean = false,
+    val timeIncrement: Long = 60,
+    val netConfig: BlockchainNetConfig = TestNetConfig,
+    val genesis: Genesis? = null,
+    val premineBalances: Map<Data20?, BigInteger> = emptyMap(),
+    val time: Date? = null
+  )
 }

@@ -14,7 +14,7 @@ enum class TestContracts(path: String) {
 
   ERC20("/solidity/erc20.sol"),
   ERC721("/solidity/erc721.sol"),
-  GLUTTONY("/solidity/gluttony.sol"),
+  GLUTTONY("/solidity/Gluttony.sol"),
   MULTI_SIG_TWO_OF_THREE("/solidity/MultiSig2of3.sol"),
   SELF_DESTRUCTS("/solidity/SelfDestructs.sol"),
   PING_PONG("/solidity/PingPong.sol");
@@ -33,9 +33,9 @@ enum class TestContracts(path: String) {
     CompilationResult.parse(res.output)
   }()
 
-  fun binaryFor(name: String) = cres.getContract(name).bin
+  fun binaryFor(name: String) = cres.getContract(name).bin!!
 
-  fun abiFor(name: String) = cres.getContract(name).abi
+  fun abiFor(name: String) = cres.getContract(name).abi!!
 
   fun contractFor(name: String) = SolidityContract(name, this)
 }

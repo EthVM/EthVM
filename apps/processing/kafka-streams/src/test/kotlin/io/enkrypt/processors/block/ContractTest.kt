@@ -1,25 +1,30 @@
 package io.enkrypt.processors.block
 
 import io.enkrypt.avro.common.ContractType
-import io.enkrypt.common.extensions.unsignedByteBuffer
+import io.enkrypt.common.extensions.amountBI
 import io.enkrypt.common.extensions.data20
 import io.enkrypt.common.extensions.ether
 import io.enkrypt.common.extensions.gwei
 import io.enkrypt.common.extensions.hexBuffer
+import io.enkrypt.common.extensions.unsignedByteBuffer
+import io.enkrypt.kafka.streams.models.ChainEvent
 import io.enkrypt.kafka.streams.models.ChainEvent.Companion.contractCreate
 import io.enkrypt.kafka.streams.models.ChainEvent.Companion.contractDestruct
 import io.enkrypt.kafka.streams.models.ChainEvent.Companion.fungibleTransfer
 import io.enkrypt.kafka.streams.models.StaticAddresses
 import io.enkrypt.kafka.streams.models.StaticAddresses.EtherZero
 import io.enkrypt.kafka.streams.processors.block.ChainEvents
+import io.enkrypt.util.Blockchains
 import io.enkrypt.util.Blockchains.Coinbase
 import io.enkrypt.util.Blockchains.Users.Bob
+import io.enkrypt.util.SolidityContract
 import io.enkrypt.util.StandaloneBlockchain
 import io.enkrypt.util.TestContracts
 import io.enkrypt.util.totalTxFees
 import io.enkrypt.util.txFees
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
+import java.math.BigInteger
 
 class ContractTest : BehaviorSpec() {
 
@@ -34,7 +39,7 @@ class ContractTest : BehaviorSpec() {
     coinbase = Coinbase.address.data20()!!
   )
 
-  val bc = StandaloneBlockchain(bcConfig)
+  val bc by lazy { StandaloneBlockchain(bcConfig) }
 
   init {
 
@@ -122,7 +127,11 @@ class ContractTest : BehaviorSpec() {
         }
 
         then("there should be a fungible transfer event for the ether sent") {
-          chainEvents[3] shouldBe fungibleTransfer(Bob.address.data20()!!, contractAddress!!, 10.gwei().unsignedByteBuffer()!!)
+          chainEvents[3] shouldBe fungibleTransfer(
+            Bob.address.data20()!!,
+            contractAddress!!,
+            10.gwei().unsignedByteBuffer()!!
+          )
         }
       }
 
@@ -167,36 +176,47 @@ class ContractTest : BehaviorSpec() {
         }
 
         then("there should be a fungible transfer to the sender with the contract balance") {
-          chainEvents[3] shouldBe fungibleTransfer(contractAddress, Bob.address.data20()!!, 35.gwei().unsignedByteBuffer()!!)
+          chainEvents[3] shouldBe fungibleTransfer(
+            contractAddress,
+            Bob.address.data20()!!,
+            35.gwei().unsignedByteBuffer()!!
+          )
         }
       }
     }
 
-//    given("a ping pong contract with delegating calls") {
-//
-//      val contract = TestContracts.PING_PONG.contractFor("PingPong")
-//
-//      val pingTx = bc.submitContract(Bob, contract, gasLimit = 500_000, value = 1.ether())
-//      val pingAddress = SolidityContract.contractAddress(Bob, pingTx.nonce).data20()!!
-//
-//      val pongTx = bc.submitContract(Bob, contract, gasLimit = 500_000, value = 1.ether())
-//      val pongAddress = SolidityContract.contractAddress(Bob, pongTx.nonce).data20()!!
-//
-//      val setupBlock = bc.createBlock()
-//
-//      `when`("we trigger a series of cascading calls") {
-//
-//        bc.callFunction(Bob, pingAddress, contract, "start", null, 10.gwei().toLong(), null, pongAddress.bytes())
-//
-//        val block = bc.createBlock()
-//        val chainEvents = ChainEvents.forBlock(block)
-//
-//        then("there should be a fungible ether transfer for the coinbase") {
-//          checkCoinbase(chainEvents.first(), 3000010690.gwei())
-//        }
-//
-//      }
-//
-//    }
+    given("a ping pong contract with delegating calls") {
+
+      val contract = TestContracts.PING_PONG.contractFor("PingPong")
+
+      val pingTx = bc.submitContract(Bob, contract, gasLimit = 500_000, value = 1.ether())
+      val pingAddress = SolidityContract.contractAddress(Bob, pingTx.nonce).data20()!!
+
+      val pongTx = bc.submitContract(Bob, contract, gasLimit = 500_000, value = 1.ether())
+      val pongAddress = SolidityContract.contractAddress(Bob, pongTx.nonce).data20()!!
+
+      bc.createBlock()
+
+      `when`("we trigger a series of cascading calls") {
+
+        bc.callFunction(Bob, pingAddress, contract, "start", 1, 12_000_000L, null, pongAddress.bytes())
+
+        val block = bc.createBlock()
+        val chainEvents = ChainEvents.forBlock(block)
+
+        then("there should be a fungible ether transfer for the coinbase") {
+          checkCoinbase(chainEvents.first(), 3000000000000025686.toBigInteger())
+        }
+
+      }
+
+    }
+  }
+
+  private fun checkCoinbase(event: ChainEvent, reward: BigInteger) {
+    val coinbaseTransfer = event.fungibleTransfer
+    coinbaseTransfer.getFrom() shouldBe StaticAddresses.EtherZero
+    coinbaseTransfer.getTo() shouldBe Coinbase.address.data20()
+    coinbaseTransfer.amountBI shouldBe reward
   }
 }

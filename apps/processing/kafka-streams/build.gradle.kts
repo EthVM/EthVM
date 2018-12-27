@@ -52,4 +52,5 @@ dependencies {
   testImplementation("org.apache.kafka:kafka-clients:2.0.1:test")
   testImplementation("io.confluent:kafka-schema-registry:5.0.1")
   testImplementation("io.confluent:kafka-schema-registry:5.0.1:tests")
+  testImplementation("io.mockk:mockk:1.8.13")
 }
