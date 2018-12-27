@@ -2,6 +2,7 @@ package io.enkrypt.kafka.connect.sinks.mongo
 
 import arrow.core.Option
 import io.enkrypt.common.extensions.hex
+import io.enkrypt.common.extensions.unsignedBigInteger
 import org.apache.kafka.connect.data.Schema
 import org.apache.kafka.connect.data.Schema.Type.ARRAY
 import org.apache.kafka.connect.data.Schema.Type.BOOLEAN
@@ -28,7 +29,6 @@ import org.bson.BsonString
 import org.bson.BsonValue
 import org.bson.types.Decimal128
 import java.math.BigDecimal
-import java.math.BigInteger
 import java.math.MathContext
 import java.nio.ByteBuffer
 
@@ -69,7 +69,7 @@ object StructToBsonConverter {
     "author"
   )
 
-  private val bigIntegerFields = setOf(
+  private val unsignedBigIntegerFields = setOf(
     "difficulty",
     "totalDifficulty",
     "cumulativeGas",
@@ -133,13 +133,13 @@ object StructToBsonConverter {
 
               if (hexFields.contains(fieldName)) {
                 bsonValue = BsonString(bytes.hex())
-              } else if (bigIntegerFields.contains(fieldName)) {
+              } else if (unsignedBigIntegerFields.contains(fieldName)) {
 
                 val bigDecimal =
                   if (bytes.isEmpty())
                     BigDecimal.ZERO
                   else
-                    BigInteger(bytes).toBigDecimal(0, MathContext.DECIMAL128)
+                    bytes.unsignedBigInteger().toBigDecimal(0, MathContext.DECIMAL128)
 
                 bsonValue = BsonDecimal128(Decimal128(bigDecimal))
               }

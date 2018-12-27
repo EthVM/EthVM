@@ -60,6 +60,12 @@ class StateProcessor : AbstractKafkaProcessor() {
 
     fungibleBalances
       .toStream()
+      .mapValues { it ->
+        TokenBalanceRecord
+          .newBuilder(it)
+          .setAmount(it.getAmount().bigInteger().unsignedByteBuffer())
+          .build()
+      }
       .to(Topics.FungibleTokenBalances, Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance()))
 
     // Metrics

@@ -303,10 +303,10 @@ class MongoSinkTask : SinkTask() {
     var writes = listOf<WriteModel<BsonDocument>>()
 
     val keySchema = record.keySchema()
-    if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a struct")
+    if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("key must be a struct")
 
     val valueSchema = record.valueSchema()
-    if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
+    if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value must be a struct")
 
     val idBson = StructToBsonConverter.convert(record.key() as Struct)
     val idFilter = BsonDocument().apply { append("_id", idBson) }
@@ -338,10 +338,10 @@ class MongoSinkTask : SinkTask() {
     var writes = listOf<WriteModel<BsonDocument>>()
 
     val keySchema = record.keySchema()
-    if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a struct")
+    if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key must be a struct")
 
     val valueSchema = record.valueSchema()
-    if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
+    if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value must be a struct")
 
     val idBson = StructToBsonConverter.convert(record.key() as Struct)
     val idFilter = BsonDocument().apply { append("_id", idBson) }
