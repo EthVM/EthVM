@@ -51,7 +51,6 @@ object ChainEvents {
   fun forTransactions(block: BlockRecord) =
     block.getTransactions()
       .zip(block.getTransactionReceipts())
-      .filter { (_, receipt) -> receipt.isSuccess() }
       .map { (tx, receipt) -> forTransaction(block, tx, receipt) }
       .flatten()
 
@@ -76,6 +75,9 @@ object ChainEvents {
     // tx fee
     val txFee = (receipt.getGasUsed().bigInteger()!! * tx.getGasPrice().bigInteger()!!).unsignedByteBuffer()!!
     events += ChainEvent.fungibleTransfer(from, StaticAddresses.EtherZero, txFee, reverse)
+
+    // short circuit if the tx was not successful
+    if (!receipt.isSuccess()) return events
 
     // simple ether transfer
     if (!(from == null || to == null || value.capacity() == 0)) {

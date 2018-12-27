@@ -16,6 +16,8 @@ import io.enkrypt.util.Blockchains.Coinbase
 import io.enkrypt.util.Blockchains.Users.Bob
 import io.enkrypt.util.StandaloneBlockchain
 import io.enkrypt.util.TestContracts
+import io.enkrypt.util.totalTxFees
+import io.enkrypt.util.txFees
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
 
@@ -45,8 +47,8 @@ class ContractTest : BehaviorSpec() {
         val tx = bc.submitContract(Bob, contract, gasLimit = 500_000)
         val contractAddress = tx.contractAddress.data20()
 
-        val blockRecord = bc.createBlock()
-        val chainEvents = ChainEvents.forBlock(blockRecord)
+        val block = bc.createBlock()
+        val chainEvents = ChainEvents.forBlock(block)
 
         then("there should be 3 chain events") {
           chainEvents.size shouldBe 3
@@ -56,20 +58,24 @@ class ContractTest : BehaviorSpec() {
           chainEvents.first() shouldBe fungibleTransfer(
             EtherZero,
             Coinbase.address.data20()!!,
-            3000058641.gwei().unsignedByteBuffer()!!
+            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
           )
         }
 
         then("there should be a transaction fee ether transfer") {
-          chainEvents[1] shouldBe fungibleTransfer(EtherZero, Coinbase.address.data20()!!, 31000.gwei().unsignedByteBuffer()!!)
+          chainEvents[1] shouldBe fungibleTransfer(
+            Bob.address.data20()!!,
+            EtherZero,
+            block.txFees()[0].unsignedByteBuffer()!!
+          )
         }
 
         then("there should be a contract creation event") {
           chainEvents[2] shouldBe contractCreate(
             ContractType.GENERIC,
             Bob.address.data20()!!,
-            blockRecord.getHeader().getHash(),
-            blockRecord.getTransactions().first().getHash(),
+            block.getHeader().getHash(),
+            block.getTransactions().first().getHash(),
             contractAddress!!,
             contract.bin.hexBuffer()!!
           )
@@ -81,8 +87,8 @@ class ContractTest : BehaviorSpec() {
         val tx = bc.submitContract(Bob, contract, gasLimit = 500_000, value = 10.gwei())
         val contractAddress = tx.contractAddress.data20()
 
-        val blockRecord = bc.createBlock()
-        val chainEvents = ChainEvents.forBlock(blockRecord)
+        val block = bc.createBlock()
+        val chainEvents = ChainEvents.forBlock(block)
 
         then("there should be 4 chain events") {
           chainEvents.size shouldBe 4
@@ -92,15 +98,15 @@ class ContractTest : BehaviorSpec() {
           chainEvents.first() shouldBe fungibleTransfer(
             StaticAddresses.EtherZero,
             Coinbase.address.data20()!!,
-            3000058641.gwei().unsignedByteBuffer()!!
+            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
           )
         }
 
         then("there should be a transaction fee ether transfer") {
           chainEvents[1] shouldBe fungibleTransfer(
-            StaticAddresses.EtherZero,
-            Coinbase.address.data20()!!,
-            31000.gwei().unsignedByteBuffer()!!
+            Bob.address.data20()!!,
+            EtherZero,
+            block.txFees()[0].unsignedByteBuffer()!!
           )
         }
 
@@ -108,8 +114,8 @@ class ContractTest : BehaviorSpec() {
           chainEvents[2] shouldBe contractCreate(
             ContractType.GENERIC,
             Bob.address.data20()!!,
-            blockRecord.getHeader().getHash(),
-            blockRecord.getTransactions().first().getHash(),
+            block.getHeader().getHash(),
+            block.getTransactions().first().getHash(),
             contractAddress!!,
             contract.bin.hexBuffer()!!
           )
@@ -140,15 +146,15 @@ class ContractTest : BehaviorSpec() {
           chainEvents.first() shouldBe fungibleTransfer(
             StaticAddresses.EtherZero,
             Coinbase.address.data20()!!,
-            3000010690.gwei().unsignedByteBuffer()!!
+            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
           )
         }
 
         then("there should be a transaction fee ether transfer") {
           chainEvents[1] shouldBe fungibleTransfer(
-            StaticAddresses.EtherZero,
-            Coinbase.address.data20()!!,
-            31000.gwei().unsignedByteBuffer()!!
+            Bob.address.data20()!!,
+            EtherZero,
+            block.txFees()[0].unsignedByteBuffer()!!
           )
         }
 

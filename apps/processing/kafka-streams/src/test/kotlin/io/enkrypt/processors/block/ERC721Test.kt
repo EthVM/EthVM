@@ -6,6 +6,7 @@ import io.enkrypt.common.extensions.ether
 import io.enkrypt.common.extensions.gwei
 import io.enkrypt.common.extensions.hexBuffer
 import io.enkrypt.common.extensions.unsignedByteBuffer
+import io.enkrypt.common.extensions.wei
 import io.enkrypt.kafka.streams.models.ChainEvent
 import io.enkrypt.kafka.streams.models.StaticAddresses.EtherZero
 import io.enkrypt.kafka.streams.processors.block.ChainEvents
@@ -115,11 +116,10 @@ class ERC721Test : BehaviorSpec() {
         }
 
         then("there should be a transaction fee ether transfer") {
-          // TODO fix me, tx fee seems to be negative
           chainEvents[1] shouldBe ChainEvent.fungibleTransfer(
             Bob.address.data20()!!,
             EtherZero,
-            70490.gwei().unsignedByteBuffer()!!
+            271428976710656.wei().unsignedByteBuffer()!!
           )
         }
 
@@ -155,9 +155,9 @@ class ERC721Test : BehaviorSpec() {
         then("there should be a transaction fee ether transfer") {
           // TODO fix me, tx fee seems to be negative
           chainEvents[1] shouldBe ChainEvent.fungibleTransfer(
-            Bob.address.data20()!!,
+            Alice.address.data20()!!,
             EtherZero,
-            70490.gwei().unsignedByteBuffer()!!
+            81106.gwei().unsignedByteBuffer()!!
           )
         }
 
@@ -193,9 +193,9 @@ class ERC721Test : BehaviorSpec() {
         then("there should be a transaction fee ether transfer") {
           // TODO fix me, tx fee seems to be negative
           chainEvents[1] shouldBe ChainEvent.fungibleTransfer(
-            Bob.address.data20()!!,
+            Terence.address.data20()!!,
             EtherZero,
-            70490.gwei().unsignedByteBuffer()!!
+            85490.gwei().unsignedByteBuffer()!!
           )
         }
 

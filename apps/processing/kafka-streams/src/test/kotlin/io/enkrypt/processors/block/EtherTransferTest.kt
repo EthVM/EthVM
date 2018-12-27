@@ -14,6 +14,8 @@ import io.enkrypt.util.Blockchains.Users.Alice
 import io.enkrypt.util.Blockchains.Users.Bob
 import io.enkrypt.util.Blockchains.Users.Terence
 import io.enkrypt.util.StandaloneBlockchain
+import io.enkrypt.util.totalTxFees
+import io.enkrypt.util.txFees
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
@@ -57,7 +59,7 @@ class EtherTransferTest : BehaviorSpec() {
           chainEvents.first() shouldBe fungibleTransfer(
             EtherZero,
             Coinbase.address.data20()!!,
-            3000063000.gwei().unsignedByteBuffer()!!
+            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
           )
         }
 
@@ -65,7 +67,7 @@ class EtherTransferTest : BehaviorSpec() {
           chainEvents[1] shouldBe fungibleTransfer(
             Bob.address.data20()!!,
             EtherZero,
-            21000.gwei().unsignedByteBuffer()!!
+            block.txFees()[0].unsignedByteBuffer()!!
           ) // tx fee
           chainEvents[2] shouldBe fungibleTransfer(
             Bob.address.data20()!!,
@@ -78,7 +80,7 @@ class EtherTransferTest : BehaviorSpec() {
           chainEvents[3] shouldBe fungibleTransfer(
             Alice.address.data20()!!,
             EtherZero,
-            21000.gwei().unsignedByteBuffer()!!
+            block.txFees()[1].unsignedByteBuffer()!!
           ) // tx fee
           chainEvents[4] shouldBe fungibleTransfer(
             Alice.address.data20()!!,
@@ -91,7 +93,7 @@ class EtherTransferTest : BehaviorSpec() {
           chainEvents[5] shouldBe fungibleTransfer(
             Terence.address.data20()!!,
             EtherZero,
-            21000.gwei().unsignedByteBuffer()!!
+            block.txFees()[2].unsignedByteBuffer()!!
           ) // tx fee
           chainEvents[6] shouldBe fungibleTransfer(
             Terence.address.data20()!!,
@@ -140,29 +142,48 @@ class EtherTransferTest : BehaviorSpec() {
 
         val chainEvents = ChainEvents.forBlock(block)
 
-        then("there should be 3 chain events") {
-          chainEvents.size shouldBe 3
+        then("there should be 5 chain events") {
+          chainEvents.size shouldBe 5
         }
 
         then("there should be a fungible ether transfer for the coinbase") {
           chainEvents.first() shouldBe fungibleTransfer(
             EtherZero,
             Coinbase.address.data20()!!,
-            3000021000.gwei().unsignedByteBuffer()!!
+            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
           )
         }
 
-        then("there should be a single transfer from alice to terence") {
+        then("there should be a tx fee for Bob") {
           chainEvents[1] shouldBe fungibleTransfer(
+            Bob.address.data20()!!,
+            EtherZero,
+            block.txFees()[0].unsignedByteBuffer()!!
+          ) // tx fee
+        }
+
+        then("there should be a tx fee for Alice") {
+          chainEvents[2] shouldBe fungibleTransfer(
             Alice.address.data20()!!,
             EtherZero,
-            21000.gwei().unsignedByteBuffer()!!
+            block.txFees()[1].unsignedByteBuffer()!!
           ) // tx fee
-          chainEvents[2] shouldBe fungibleTransfer(
+        }
+
+        then("there should be an ether transfer from alice to terence") {
+          chainEvents[3] shouldBe fungibleTransfer(
             Alice.address.data20()!!,
             Terence.address.data20()!!,
             56.gwei().unsignedByteBuffer()!!
           )
+        }
+
+        then("there should be a tx fee for Terence") {
+          chainEvents[4] shouldBe fungibleTransfer(
+            Terence.address.data20()!!,
+            EtherZero,
+            block.txFees()[2].unsignedByteBuffer()!!
+          ) // tx fee
         }
       }
     }

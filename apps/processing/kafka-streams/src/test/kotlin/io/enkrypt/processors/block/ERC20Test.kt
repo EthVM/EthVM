@@ -18,6 +18,8 @@ import io.enkrypt.util.Blockchains.Users.Bob
 import io.enkrypt.util.Blockchains.Users.Terence
 import io.enkrypt.util.StandaloneBlockchain
 import io.enkrypt.util.TestContracts
+import io.enkrypt.util.totalTxFees
+import io.enkrypt.util.txFees
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
 
@@ -62,12 +64,16 @@ class ERC20Test : BehaviorSpec() {
           chainEvents.first() shouldBe fungibleTransfer(
             EtherZero,
             Coinbase.address.data20()!!,
-            3001378099.gwei().unsignedByteBuffer()!!
+            (3.ether() + createBlock.totalTxFees()).unsignedByteBuffer()!!
           )
         }
 
         then("there should be a transaction fee ether transfer") {
-          chainEvents[1] shouldBe fungibleTransfer(Bob.address.data20()!!, EtherZero, 1378099.gwei().unsignedByteBuffer()!!)
+          chainEvents[1] shouldBe fungibleTransfer(
+            Bob.address.data20()!!,
+            EtherZero,
+            createBlock.txFees()[0].unsignedByteBuffer()!!
+          )
         }
 
         then("there should be a contract creation event with type ERC20") {
@@ -93,17 +99,7 @@ class ERC20Test : BehaviorSpec() {
 
       `when`("we transfer some tokens from Bob to Alice") {
 
-        bc.callFunction(
-          Bob,
-          contractAddress,
-          contract,
-          "transfer",
-          null,
-          1.gwei().toLong(),
-          null,
-          Alice.address,
-          1.ether()
-        )
+        bc.callFunction(Bob, contractAddress, contract, "transfer", null, 1.gwei().toLong(), null, Alice.address, 1.ether())
 
         val block = bc.createBlock()
         val chainEvents = ChainEvents.forBlock(block)
@@ -116,13 +112,17 @@ class ERC20Test : BehaviorSpec() {
           chainEvents.first() shouldBe fungibleTransfer(
             EtherZero,
             Coinbase.address.data20()!!,
-            3000051349.gwei().unsignedByteBuffer()!!
+            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
           )
         }
 
         then("there should be a transaction fee ether transfer") {
           // TODO fix me, tx fee seems to be negative
-          chainEvents[1] shouldBe fungibleTransfer(Bob.address.data20()!!, EtherZero, 1378099.gwei().unsignedByteBuffer()!!)
+          chainEvents[1] shouldBe fungibleTransfer(
+            Bob.address.data20()!!,
+            EtherZero,
+            block.txFees()[0].unsignedByteBuffer()!!
+          )
         }
 
         then("there should be a token transfer from Bob to Alice") {
@@ -142,18 +142,8 @@ class ERC20Test : BehaviorSpec() {
       val contractAddress = tx.contractAddress.data20()!!
       bc.createBlock()
 
-      bc.callFunction(
-        Bob,
-        contractAddress,
-        contract,
-        "approve",
-        null,
-        1.gwei().toLong(),
-        null,
-        Terence.address,
-        1.ether()
-      )
-      bc.createBlock()
+      bc.callFunction(Bob, contractAddress, contract, "approve", null, 1.gwei().toLong(), null, Terence.address, 1.ether())
+      val block = bc.createBlock()
 
       `when`("Terence attempts to transfer a portion of the allowance") {
 
@@ -177,13 +167,17 @@ class ERC20Test : BehaviorSpec() {
           chainEvents.first() shouldBe fungibleTransfer(
             EtherZero,
             Coinbase.address.data20()!!,
-            3000060232.gwei().unsignedByteBuffer()!!
+            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
           )
         }
 
         then("there should be a transaction fee ether transfer") {
           // TODO fix me, tx fee seems to be negative
-          chainEvents[1] shouldBe fungibleTransfer(Terence.address.data20()!!, EtherZero, 1378099.gwei().unsignedByteBuffer()!!)
+          chainEvents[1] shouldBe fungibleTransfer(
+            Terence.address.data20()!!,
+            EtherZero,
+            block.txFees()[0].unsignedByteBuffer()!!
+          )
         }
 
         then("there should be a token transfer from Bob to Terence") {
@@ -218,13 +212,17 @@ class ERC20Test : BehaviorSpec() {
           chainEvents.first() shouldBe fungibleTransfer(
             EtherZero,
             Coinbase.address.data20()!!,
-            3000030296.gwei().unsignedByteBuffer()!!
+            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
           )
         }
 
         then("there should be a transaction fee ether transfer") {
           // TODO fix me, tx fee seems to be negative
-          chainEvents[1] shouldBe fungibleTransfer(Terence.address.data20()!!, EtherZero, 30296.gwei().unsignedByteBuffer()!!)
+          chainEvents[1] shouldBe fungibleTransfer(
+            Terence.address.data20()!!,
+            EtherZero,
+            block.txFees()[0].unsignedByteBuffer()!!
+          )
         }
 
         then("there should be a token transfer from Bob to Terence") {
