@@ -41,32 +41,35 @@ protocol Processing {
 // contracts
 
   record ContractKeyRecord {
-
     io.enkrypt.avro.common.Data20 address;
-
   }
 
   record ContractCreateRecord {
-
-    boolean reverse = false;
-
     io.enkrypt.avro.common.ContractType type;
     io.enkrypt.avro.common.Data20 creator;
     io.enkrypt.avro.common.Data32 txHash;
     io.enkrypt.avro.common.Data32 blockHash;
     io.enkrypt.avro.common.Data20 address;
     bytes data;
-
   }
 
-  record ContractDestructRecord {
-
-    boolean reverse = false;
-
+  record ContractDestroyRecord {
     io.enkrypt.avro.common.Data32 txHash;
     io.enkrypt.avro.common.Data32 blockHash;
     io.enkrypt.avro.common.Data20 address;
+  }
 
+  enum ChainEventType {
+    TOKEN_TRANSFER, CONTRACT_CREATE, CONTRACT_DESTROY
+  }
+
+  record ChainEventRecord {
+
+    ChainEventType `type`;
+
+    boolean reverse = false;
+
+    union { TokenTransferRecord, ContractCreateRecord, ContractDestroyRecord } value;
   }
 
   record ContractLogoRecord {

@@ -6,10 +6,11 @@ import io.enkrypt.common.extensions.ether
 import io.enkrypt.common.extensions.gwei
 import io.enkrypt.common.extensions.hexBuffer
 import io.enkrypt.common.extensions.unsignedByteBuffer
-import io.enkrypt.common.extensions.wei
-import io.enkrypt.kafka.streams.models.ChainEvent
 import io.enkrypt.kafka.streams.models.StaticAddresses.EtherZero
 import io.enkrypt.kafka.streams.processors.block.ChainEvents
+import io.enkrypt.kafka.streams.processors.block.ChainEvents.contractCreate
+import io.enkrypt.kafka.streams.processors.block.ChainEvents.fungibleTransfer
+import io.enkrypt.kafka.streams.processors.block.ChainEvents.nonFungibleTransfer
 import io.enkrypt.util.Blockchains.Coinbase
 import io.enkrypt.util.Blockchains.Users.Alice
 import io.enkrypt.util.Blockchains.Users.Bob
@@ -57,7 +58,7 @@ class ERC721Test : BehaviorSpec() {
         }
 
         then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe ChainEvent.fungibleTransfer(
+          chainEvents.first() shouldBe fungibleTransfer(
             EtherZero,
             Coinbase.address.data20()!!,
             (3.ether() + createBlock.totalTxFees()).unsignedByteBuffer()!!
@@ -65,7 +66,7 @@ class ERC721Test : BehaviorSpec() {
         }
 
         then("there should be a transaction fee ether transfer") {
-          chainEvents[1] shouldBe ChainEvent.fungibleTransfer(
+          chainEvents[1] shouldBe fungibleTransfer(
             Bob.address.data20()!!,
             EtherZero,
             createBlock.txFees()[0].unsignedByteBuffer()!!
@@ -73,7 +74,7 @@ class ERC721Test : BehaviorSpec() {
         }
 
         then("there should be a contract creation event with type ERC721") {
-          chainEvents[2] shouldBe ChainEvent.contractCreate(
+          chainEvents[2] shouldBe contractCreate(
             ContractType.ERC721,
             Bob.address.data20()!!,
             createBlock.getHeader().getHash(),
@@ -110,7 +111,7 @@ class ERC721Test : BehaviorSpec() {
         }
 
         then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe ChainEvent.fungibleTransfer(
+          chainEvents.first() shouldBe fungibleTransfer(
             EtherZero,
             Coinbase.address.data20()!!,
             (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
@@ -118,7 +119,7 @@ class ERC721Test : BehaviorSpec() {
         }
 
         then("there should be a transaction fee ether transfer") {
-          chainEvents[1] shouldBe ChainEvent.fungibleTransfer(
+          chainEvents[1] shouldBe fungibleTransfer(
             Bob.address.data20()!!,
             EtherZero,
             block.txFees()[0].unsignedByteBuffer()!!
@@ -126,7 +127,7 @@ class ERC721Test : BehaviorSpec() {
         }
 
         then("there should a token transfer to token from Bob to Alice") {
-          chainEvents[2] shouldBe ChainEvent.nonFungibleTransfer(
+          chainEvents[2] shouldBe nonFungibleTransfer(
             contractAddress,
             Bob.address.data20()!!,
             Alice.address.data20()!!,
@@ -147,7 +148,7 @@ class ERC721Test : BehaviorSpec() {
         }
 
         then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe ChainEvent.fungibleTransfer(
+          chainEvents.first() shouldBe fungibleTransfer(
             EtherZero,
             Coinbase.address.data20()!!,
             (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
@@ -156,7 +157,7 @@ class ERC721Test : BehaviorSpec() {
 
         then("there should be a transaction fee ether transfer") {
           // TODO fix me, tx fee seems to be negative
-          chainEvents[1] shouldBe ChainEvent.fungibleTransfer(
+          chainEvents[1] shouldBe fungibleTransfer(
             Alice.address.data20()!!,
             EtherZero,
             block.txFees()[0].unsignedByteBuffer()!!
@@ -164,7 +165,7 @@ class ERC721Test : BehaviorSpec() {
         }
 
         then("there should a token transfer to token from Alice to Terence") {
-          chainEvents[2] shouldBe ChainEvent.nonFungibleTransfer(
+          chainEvents[2] shouldBe nonFungibleTransfer(
             contractAddress,
             Alice.address.data20()!!,
             Terence.address.data20()!!,
@@ -185,7 +186,7 @@ class ERC721Test : BehaviorSpec() {
         }
 
         then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe ChainEvent.fungibleTransfer(
+          chainEvents.first() shouldBe fungibleTransfer(
             EtherZero,
             Coinbase.address.data20()!!,
             (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
@@ -194,7 +195,7 @@ class ERC721Test : BehaviorSpec() {
 
         then("there should be a transaction fee ether transfer") {
           // TODO fix me, tx fee seems to be negative
-          chainEvents[1] shouldBe ChainEvent.fungibleTransfer(
+          chainEvents[1] shouldBe fungibleTransfer(
             Terence.address.data20()!!,
             EtherZero,
             block.txFees()[0].unsignedByteBuffer()!!
@@ -202,7 +203,7 @@ class ERC721Test : BehaviorSpec() {
         }
 
         then("there should a token transfer to token from Terence to Bob") {
-          chainEvents[2] shouldBe ChainEvent.nonFungibleTransfer(
+          chainEvents[2] shouldBe nonFungibleTransfer(
             contractAddress,
             Terence.address.data20()!!,
             Bob.address.data20()!!,

@@ -1,13 +1,13 @@
 package io.enkrypt.processors.block
 
 import io.enkrypt.avro.capture.BlockRecord
-import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.common.extensions.data20
 import io.enkrypt.common.extensions.ether
 import io.enkrypt.common.extensions.gwei
-import io.enkrypt.kafka.streams.models.ChainEvent.Companion.fungibleTransfer
+import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.kafka.streams.models.StaticAddresses.EtherZero
 import io.enkrypt.kafka.streams.processors.block.ChainEvents
+import io.enkrypt.kafka.streams.processors.block.ChainEvents.fungibleTransfer
 import io.enkrypt.util.Blockchains
 import io.enkrypt.util.Blockchains.Coinbase
 import io.enkrypt.util.Blockchains.Users.Alice

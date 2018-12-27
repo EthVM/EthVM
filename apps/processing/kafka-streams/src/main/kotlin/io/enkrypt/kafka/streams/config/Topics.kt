@@ -11,5 +11,5 @@ object Topics {
   const val NonFungibleTokenBalances = "non-fungible-token-balances"
 
   const val ContractCreations = "contract-creations"
-  const val ContractSuicides = "contract-suicides"
+  const val ContractDestructions = "contract-destructions"
 }

@@ -6,12 +6,12 @@ import io.enkrypt.common.extensions.ether
 import io.enkrypt.common.extensions.gwei
 import io.enkrypt.common.extensions.hexBuffer
 import io.enkrypt.common.extensions.unsignedByteBuffer
-import io.enkrypt.kafka.streams.models.ChainEvent.Companion.contractCreate
-import io.enkrypt.kafka.streams.models.ChainEvent.Companion.contractDestruct
-import io.enkrypt.kafka.streams.models.ChainEvent.Companion.fungibleTransfer
 import io.enkrypt.kafka.streams.models.StaticAddresses
 import io.enkrypt.kafka.streams.models.StaticAddresses.EtherZero
 import io.enkrypt.kafka.streams.processors.block.ChainEvents
+import io.enkrypt.kafka.streams.processors.block.ChainEvents.contractCreate
+import io.enkrypt.kafka.streams.processors.block.ChainEvents.contractDestroy
+import io.enkrypt.kafka.streams.processors.block.ChainEvents.fungibleTransfer
 import io.enkrypt.util.Blockchains.Coinbase
 import io.enkrypt.util.Blockchains.Users.Bob
 import io.enkrypt.util.SolidityContract
@@ -164,7 +164,7 @@ class ContractTest : BehaviorSpec() {
         }
 
         then("there should be a contract destruct event") {
-          chainEvents[2] shouldBe contractDestruct(
+          chainEvents[2] shouldBe contractDestroy(
             block.getHeader().getHash(),
             block.getTransactions().first().getHash(),
             contractAddress

@@ -1,17 +1,17 @@
 package io.enkrypt.processors.block
 
 import io.enkrypt.avro.common.ContractType
-import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.common.extensions.data20
 import io.enkrypt.common.extensions.ether
 import io.enkrypt.common.extensions.finney
 import io.enkrypt.common.extensions.gwei
 import io.enkrypt.common.extensions.hexBuffer
 import io.enkrypt.common.extensions.kwei
-import io.enkrypt.kafka.streams.models.ChainEvent
-import io.enkrypt.kafka.streams.models.ChainEvent.Companion.fungibleTransfer
+import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.kafka.streams.models.StaticAddresses.EtherZero
 import io.enkrypt.kafka.streams.processors.block.ChainEvents
+import io.enkrypt.kafka.streams.processors.block.ChainEvents.contractCreate
+import io.enkrypt.kafka.streams.processors.block.ChainEvents.fungibleTransfer
 import io.enkrypt.util.Blockchains.Coinbase
 import io.enkrypt.util.Blockchains.Users.Alice
 import io.enkrypt.util.Blockchains.Users.Bob
@@ -77,7 +77,7 @@ class ERC20Test : BehaviorSpec() {
         }
 
         then("there should be a contract creation event with type ERC20") {
-          chainEvents[2] shouldBe ChainEvent.contractCreate(
+          chainEvents[2] shouldBe contractCreate(
             ContractType.ERC20,
             Bob.address.data20()!!,
             createBlock.getHeader().getHash(),

@@ -2,20 +2,20 @@ package io.enkrypt.kafka.streams.processors
 
 import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
+import io.enkrypt.avro.processing.ChainEventType
+import io.enkrypt.avro.processing.ContractCreateRecord
+import io.enkrypt.avro.processing.ContractDestroyRecord
 import io.enkrypt.avro.processing.ContractKeyRecord
-import io.enkrypt.avro.processing.FungibleTokenBalanceKeyRecord
-import io.enkrypt.avro.processing.FungibleTokenBalanceRecord
-import io.enkrypt.avro.processing.NonFungibleTokenBalanceKeyRecord
-import io.enkrypt.avro.processing.NonFungibleTokenBalanceRecord
 import io.enkrypt.avro.processing.TokenBalanceKeyRecord
 import io.enkrypt.avro.processing.TokenBalanceRecord
-import io.enkrypt.common.extensions.amountBI
+import io.enkrypt.avro.processing.TokenTransferRecord
 import io.enkrypt.common.extensions.bigInteger
 import io.enkrypt.common.extensions.byteBuffer
+import io.enkrypt.common.extensions.isFungible
+import io.enkrypt.common.extensions.isNonFungible
 import io.enkrypt.common.extensions.unsignedBigInteger
 import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.kafka.streams.config.Topics
-import io.enkrypt.kafka.streams.models.ChainEventType
 import io.enkrypt.kafka.streams.processors.block.BlockStatistics
 import io.enkrypt.kafka.streams.processors.block.ChainEvents
 import io.enkrypt.kafka.streams.serdes.Serdes
@@ -33,7 +33,7 @@ import org.apache.kafka.streams.state.KeyValueStore
 import org.apache.kafka.streams.state.StoreBuilder
 import org.apache.kafka.streams.state.Stores
 import java.math.BigInteger
-import java.util.Properties
+import java.util.*
 import org.apache.kafka.common.serialization.Serdes as KafkaSerdes
 
 class BlockProcessor : AbstractKafkaProcessor() {
@@ -77,19 +77,24 @@ class BlockProcessor : AbstractKafkaProcessor() {
     // fungible token transfers
 
     chainEvents
-      .filter { _, e -> e.type == ChainEventType.FungibleBalanceTransfer }
-      .mapValues { v -> v.fungibleTransfer }
+      .filter { _, e -> e.getType() == ChainEventType.TOKEN_TRANSFER }
+      .filter { _, e -> (e.getValue() as TokenTransferRecord).isFungible() }
       .flatMap { _, v ->
 
         val reverse = v.getReverse()
-        val amount = v.getAmount().unsignedBigInteger()!!
+        val transfer = v.getValue() as TokenTransferRecord
+
+        val contract = transfer.getContract()
+        val from = transfer.getFrom()
+        val to = transfer.getTo()
+        val amount = transfer.getAmount().unsignedBigInteger()!!
 
         // double entry style book-keeping
 
         val fromBalance = KeyValue(
           TokenBalanceKeyRecord.newBuilder()
-            .setContract(v.getContract())
-            .setAddress(v.getFrom())
+            .setContract(contract)
+            .setAddress(from)
             .build(),
           TokenBalanceRecord.newBuilder()
             .setAmount(
@@ -104,8 +109,8 @@ class BlockProcessor : AbstractKafkaProcessor() {
 
         val toBalance = KeyValue(
           TokenBalanceKeyRecord.newBuilder()
-            .setContract(v.getContract())
-            .setAddress(v.getTo())
+            .setContract(contract)
+            .setAddress(to)
             .build(),
           TokenBalanceRecord.newBuilder()
             .setAmount(
@@ -127,23 +132,29 @@ class BlockProcessor : AbstractKafkaProcessor() {
     // non fungible token transfers
 
     chainEvents
-      .filter { _, e -> e.type == ChainEventType.NonFungibleBalanceTransfer }
-      .mapValues { v -> v.nonFungibleTransfer }
+      .filter { _, e -> e.getType() == ChainEventType.TOKEN_TRANSFER }
+      .filter { _, e -> (e.getValue() as TokenTransferRecord).isNonFungible() }
       .map { _, v ->
 
         val reverse = v.getReverse()
+        val transfer = v.getValue() as TokenTransferRecord
+
+        val contract = transfer.getContract()
+        val from = transfer.getFrom()
+        val to = transfer.getTo()
+        val tokenId = transfer.getTokenId()
 
         KeyValue(
           TokenBalanceKeyRecord.newBuilder()
-            .setContract(v.getContract())
-            .setTokenId(v.getTokenId())
+            .setContract(contract)
+            .setTokenId(tokenId)
             .build(),
           TokenBalanceRecord.newBuilder()
             .setAddress(
               if (reverse) {
-                v.getFrom()
+                from
               } else {
-                v.getTo()
+                to
               }
             )
             .build()
@@ -156,20 +167,20 @@ class BlockProcessor : AbstractKafkaProcessor() {
     // contract creations
 
     chainEvents
-      .filter { _, e -> e.type == ChainEventType.ContractCreate }
-      .mapValues { v -> v.contractCreate }
+      .filter { _, e -> e.getType() == ChainEventType.CONTRACT_CREATE }
       .map { _, v ->
 
         val reverse = v.getReverse()
+        val create = v.getValue() as ContractCreateRecord
 
         KeyValue(
           ContractKeyRecord.newBuilder()
-            .setAddress(v.getAddress())
+            .setAddress(create.getAddress())
             .build(),
           if (reverse) {
             null
           } else {
-            v
+            create
           }
         )
       }.to(Topics.ContractCreations, Produced.with(Serdes.ContractKey(), Serdes.ContractCreate()))
@@ -177,23 +188,23 @@ class BlockProcessor : AbstractKafkaProcessor() {
     // contract suicides
 
     chainEvents
-      .filter { _, e -> e.type == ChainEventType.ContractDestruct }
-      .mapValues { v -> v.contractDestruct }
+      .filter { _, e -> e.getType() == ChainEventType.CONTRACT_DESTROY }
       .map { _, v ->
 
         val reverse = v.getReverse()
+        val destroy = v.getValue() as ContractDestroyRecord
 
         KeyValue(
           ContractKeyRecord.newBuilder()
-            .setAddress(v.getAddress())
+            .setAddress(destroy.getAddress())
             .build(),
           if (reverse) {
             null
           } else {
-            v
+            destroy
           }
         )
-      }.to(Topics.ContractSuicides, Produced.with(Serdes.ContractKey(), Serdes.ContractDestruct()))
+      }.to(Topics.ContractDestructions, Produced.with(Serdes.ContractKey(), Serdes.ContractDestroy()))
 
     // statistics
 
