@@ -6,7 +6,7 @@ import io.enkrypt.avro.capture.InternalTransactionRecord
 import io.enkrypt.avro.capture.TransactionReceiptRecord
 import io.enkrypt.avro.capture.TransactionRecord
 import io.enkrypt.common.extensions.bigInteger
-import io.enkrypt.common.extensions.byteBuffer
+import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.common.extensions.isSuccess
 import io.enkrypt.kafka.streams.models.ChainEvent
 import io.enkrypt.kafka.streams.models.StaticAddresses
@@ -74,7 +74,7 @@ object ChainEvents {
     val data = tx.getInput()
 
     // tx fee
-    val txFee = (receipt.getGasUsed().bigInteger()!! * tx.getGasPrice().bigInteger()!!).byteBuffer()!!
+    val txFee = (receipt.getGasUsed().bigInteger()!! * tx.getGasPrice().bigInteger()!!).unsignedByteBuffer()!!
     events += ChainEvent.fungibleTransfer(from, StaticAddresses.EtherZero, txFee, reverse)
 
     // simple ether transfer

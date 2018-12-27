@@ -13,7 +13,7 @@ fun FungibleTokenTransferRecord.reverse(): FungibleTokenTransferRecord =
     .build()
 
 val FungibleTokenTransferRecord.amountBI: BigInteger?
-  get() = getAmount().bigInteger()
+  get() = getAmount().unsignedBigInteger()
 
 fun FungibleTokenTransferRecord.Builder.setAmount(amount: BigInteger): FungibleTokenTransferRecord.Builder =
   this.setAmount(ByteBuffer.wrap(ByteUtil.bigIntegerToBytes(amount)))

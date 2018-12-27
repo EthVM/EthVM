@@ -1,7 +1,7 @@
 package io.enkrypt.processors.block
 
 import io.enkrypt.avro.common.ContractType
-import io.enkrypt.common.extensions.byteBuffer
+import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.common.extensions.data20
 import io.enkrypt.common.extensions.ether
 import io.enkrypt.common.extensions.finney
@@ -62,12 +62,12 @@ class ERC20Test : BehaviorSpec() {
           chainEvents.first() shouldBe fungibleTransfer(
             EtherZero,
             Coinbase.address.data20()!!,
-            3001378099.gwei().byteBuffer()!!
+            3001378099.gwei().unsignedByteBuffer()!!
           )
         }
 
         then("there should be a transaction fee ether transfer") {
-          chainEvents[1] shouldBe fungibleTransfer(Bob.address.data20()!!, EtherZero, 1378099.gwei().byteBuffer()!!)
+          chainEvents[1] shouldBe fungibleTransfer(Bob.address.data20()!!, EtherZero, 1378099.gwei().unsignedByteBuffer()!!)
         }
 
         then("there should be a contract creation event with type ERC20") {
@@ -85,7 +85,7 @@ class ERC20Test : BehaviorSpec() {
           chainEvents[3] shouldBe fungibleTransfer(
             EtherZero,
             Bob.address.data20()!!,
-            10_000.ether().byteBuffer()!!,
+            10_000.ether().unsignedByteBuffer()!!,
             contract = contractAddress
           )
         }
@@ -116,20 +116,20 @@ class ERC20Test : BehaviorSpec() {
           chainEvents.first() shouldBe fungibleTransfer(
             EtherZero,
             Coinbase.address.data20()!!,
-            3000051349.gwei().byteBuffer()!!
+            3000051349.gwei().unsignedByteBuffer()!!
           )
         }
 
         then("there should be a transaction fee ether transfer") {
           // TODO fix me, tx fee seems to be negative
-          chainEvents[1] shouldBe fungibleTransfer(Bob.address.data20()!!, EtherZero, 1378099.gwei().byteBuffer()!!)
+          chainEvents[1] shouldBe fungibleTransfer(Bob.address.data20()!!, EtherZero, 1378099.gwei().unsignedByteBuffer()!!)
         }
 
         then("there should be a token transfer from Bob to Alice") {
           chainEvents[2] shouldBe fungibleTransfer(
             Bob.address.data20()!!,
             Alice.address.data20()!!,
-            1.ether().byteBuffer()!!,
+            1.ether().unsignedByteBuffer()!!,
             contract = contractAddress
           )
         }
@@ -177,20 +177,20 @@ class ERC20Test : BehaviorSpec() {
           chainEvents.first() shouldBe fungibleTransfer(
             EtherZero,
             Coinbase.address.data20()!!,
-            3000060232.gwei().byteBuffer()!!
+            3000060232.gwei().unsignedByteBuffer()!!
           )
         }
 
         then("there should be a transaction fee ether transfer") {
           // TODO fix me, tx fee seems to be negative
-          chainEvents[1] shouldBe fungibleTransfer(Terence.address.data20()!!, EtherZero, 1378099.gwei().byteBuffer()!!)
+          chainEvents[1] shouldBe fungibleTransfer(Terence.address.data20()!!, EtherZero, 1378099.gwei().unsignedByteBuffer()!!)
         }
 
         then("there should be a token transfer from Bob to Terence") {
           chainEvents[2] shouldBe fungibleTransfer(
             Bob.address.data20()!!,
             Terence.address.data20()!!,
-            1.finney().byteBuffer()!!,
+            1.finney().unsignedByteBuffer()!!,
             contract = contractAddress
           )
         }
@@ -218,20 +218,20 @@ class ERC20Test : BehaviorSpec() {
           chainEvents.first() shouldBe fungibleTransfer(
             EtherZero,
             Coinbase.address.data20()!!,
-            3000030296.gwei().byteBuffer()!!
+            3000030296.gwei().unsignedByteBuffer()!!
           )
         }
 
         then("there should be a transaction fee ether transfer") {
           // TODO fix me, tx fee seems to be negative
-          chainEvents[1] shouldBe fungibleTransfer(Terence.address.data20()!!, EtherZero, 30296.gwei().byteBuffer()!!)
+          chainEvents[1] shouldBe fungibleTransfer(Terence.address.data20()!!, EtherZero, 30296.gwei().unsignedByteBuffer()!!)
         }
 
         then("there should be a token transfer from Bob to Terence") {
           chainEvents[2] shouldBe fungibleTransfer(
             Bob.address.data20()!!,
             Terence.address.data20()!!,
-            999.finney().byteBuffer()!!,
+            999.finney().unsignedByteBuffer()!!,
             contract = contractAddress
           )
         }

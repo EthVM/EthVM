@@ -1,7 +1,7 @@
 package io.enkrypt.processors.block
 
 import io.enkrypt.avro.capture.BlockRecord
-import io.enkrypt.common.extensions.byteBuffer
+import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.common.extensions.data20
 import io.enkrypt.common.extensions.ether
 import io.enkrypt.common.extensions.gwei
@@ -57,7 +57,7 @@ class EtherTransferTest : BehaviorSpec() {
           chainEvents.first() shouldBe fungibleTransfer(
             EtherZero,
             Coinbase.address.data20()!!,
-            3000063000.gwei().byteBuffer()!!
+            3000063000.gwei().unsignedByteBuffer()!!
           )
         }
 
@@ -65,12 +65,12 @@ class EtherTransferTest : BehaviorSpec() {
           chainEvents[1] shouldBe fungibleTransfer(
             Bob.address.data20()!!,
             EtherZero,
-            21000.gwei().byteBuffer()!!
+            21000.gwei().unsignedByteBuffer()!!
           ) // tx fee
           chainEvents[2] shouldBe fungibleTransfer(
             Bob.address.data20()!!,
             Alice.address.data20()!!,
-            50.gwei().byteBuffer()!!
+            50.gwei().unsignedByteBuffer()!!
           )
         }
 
@@ -78,12 +78,12 @@ class EtherTransferTest : BehaviorSpec() {
           chainEvents[3] shouldBe fungibleTransfer(
             Alice.address.data20()!!,
             EtherZero,
-            21000.gwei().byteBuffer()!!
+            21000.gwei().unsignedByteBuffer()!!
           ) // tx fee
           chainEvents[4] shouldBe fungibleTransfer(
             Alice.address.data20()!!,
             Terence.address.data20()!!,
-            25.gwei().byteBuffer()!!
+            25.gwei().unsignedByteBuffer()!!
           )
         }
 
@@ -91,12 +91,12 @@ class EtherTransferTest : BehaviorSpec() {
           chainEvents[5] shouldBe fungibleTransfer(
             Terence.address.data20()!!,
             EtherZero,
-            21000.gwei().byteBuffer()!!
+            21000.gwei().unsignedByteBuffer()!!
           ) // tx fee
           chainEvents[6] shouldBe fungibleTransfer(
             Terence.address.data20()!!,
             Bob.address.data20()!!,
-            125.gwei().byteBuffer()!!
+            125.gwei().unsignedByteBuffer()!!
           )
         }
       }
@@ -116,13 +116,13 @@ class EtherTransferTest : BehaviorSpec() {
         then("there should be a reversed fungible ether transfer for each originating transfer") {
 
           reversedChainEvents shouldContainExactly listOf(
-            fungibleTransfer(EtherZero, Coinbase.address.data20()!!, 3000063000.gwei().byteBuffer()!!, true),
-            fungibleTransfer(Bob.address.data20()!!, EtherZero, 21000.gwei().byteBuffer()!!, true),
-            fungibleTransfer(Bob.address.data20()!!, Alice.address.data20()!!, 50.gwei().byteBuffer()!!, true),
-            fungibleTransfer(Alice.address.data20()!!, EtherZero, 21000.gwei().byteBuffer()!!, true),
-            fungibleTransfer(Alice.address.data20()!!, Terence.address.data20()!!, 25.gwei().byteBuffer()!!, true),
-            fungibleTransfer(Terence.address.data20()!!, EtherZero, 21000.gwei().byteBuffer()!!, true),
-            fungibleTransfer(Terence.address.data20()!!, Bob.address.data20()!!, 125.gwei().byteBuffer()!!, true)
+            fungibleTransfer(EtherZero, Coinbase.address.data20()!!, 3000063000.gwei().unsignedByteBuffer()!!, true),
+            fungibleTransfer(Bob.address.data20()!!, EtherZero, 21000.gwei().unsignedByteBuffer()!!, true),
+            fungibleTransfer(Bob.address.data20()!!, Alice.address.data20()!!, 50.gwei().unsignedByteBuffer()!!, true),
+            fungibleTransfer(Alice.address.data20()!!, EtherZero, 21000.gwei().unsignedByteBuffer()!!, true),
+            fungibleTransfer(Alice.address.data20()!!, Terence.address.data20()!!, 25.gwei().unsignedByteBuffer()!!, true),
+            fungibleTransfer(Terence.address.data20()!!, EtherZero, 21000.gwei().unsignedByteBuffer()!!, true),
+            fungibleTransfer(Terence.address.data20()!!, Bob.address.data20()!!, 125.gwei().unsignedByteBuffer()!!, true)
           ).asReversed()
         }
       }
@@ -148,7 +148,7 @@ class EtherTransferTest : BehaviorSpec() {
           chainEvents.first() shouldBe fungibleTransfer(
             EtherZero,
             Coinbase.address.data20()!!,
-            3000021000.gwei().byteBuffer()!!
+            3000021000.gwei().unsignedByteBuffer()!!
           )
         }
 
@@ -156,12 +156,12 @@ class EtherTransferTest : BehaviorSpec() {
           chainEvents[1] shouldBe fungibleTransfer(
             Alice.address.data20()!!,
             EtherZero,
-            21000.gwei().byteBuffer()!!
+            21000.gwei().unsignedByteBuffer()!!
           ) // tx fee
           chainEvents[2] shouldBe fungibleTransfer(
             Alice.address.data20()!!,
             Terence.address.data20()!!,
-            56.gwei().byteBuffer()!!
+            56.gwei().unsignedByteBuffer()!!
           )
         }
       }

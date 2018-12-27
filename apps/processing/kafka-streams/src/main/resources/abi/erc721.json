@@ -302,7 +302,7 @@
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "name": "_tokenId",
         "type": "uint256"
       }

@@ -3,7 +3,7 @@ package io.enkrypt.kafka.streams.processors.block
 import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.processing.MetricKeyRecord
 import io.enkrypt.avro.processing.MetricRecord
-import io.enkrypt.common.extensions.byteBuffer
+import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.kafka.streams.models.BlockStatistic
 import io.enkrypt.kafka.streams.models.BlockStatistics
 import org.apache.kafka.streams.KeyValue
@@ -68,23 +68,23 @@ object BlockStatistics {
       ),
       KeyValue(
         keyBuilder.setName(BlockStatistic.TotalDifficulty.name).build(),
-        MetricRecord.newBuilder().setBigIntegerValue(totalDifficulty.times(bigIntMultiplier).byteBuffer()).build()
+        MetricRecord.newBuilder().setBigIntegerValue(totalDifficulty.times(bigIntMultiplier).unsignedByteBuffer()).build()
       ),
       KeyValue(
         keyBuilder.setName(BlockStatistic.TotalGasPrice.name).build(),
-        MetricRecord.newBuilder().setBigIntegerValue(totalGasPrice.times(bigIntMultiplier).byteBuffer()).build()
+        MetricRecord.newBuilder().setBigIntegerValue(totalGasPrice.times(bigIntMultiplier).unsignedByteBuffer()).build()
       ),
       KeyValue(
         keyBuilder.setName(BlockStatistic.AvgGasPrice.name).build(),
-        MetricRecord.newBuilder().setBigIntegerValue(avgGasPrice.times(bigIntMultiplier).byteBuffer()).build()
+        MetricRecord.newBuilder().setBigIntegerValue(avgGasPrice.times(bigIntMultiplier).unsignedByteBuffer()).build()
       ),
       KeyValue(
         keyBuilder.setName(BlockStatistic.TotalTxsFees.name).build(),
-        MetricRecord.newBuilder().setBigIntegerValue(totalTxsFees.times(bigIntMultiplier).byteBuffer()).build()
+        MetricRecord.newBuilder().setBigIntegerValue(totalTxsFees.times(bigIntMultiplier).unsignedByteBuffer()).build()
       ),
       KeyValue(
         keyBuilder.setName(BlockStatistic.AvgTxsFees.name).build(),
-        MetricRecord.newBuilder().setBigIntegerValue(avgTxsFees.times(bigIntMultiplier).byteBuffer()).build()
+        MetricRecord.newBuilder().setBigIntegerValue(avgTxsFees.times(bigIntMultiplier).unsignedByteBuffer()).build()
       )
     )
   }

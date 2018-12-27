@@ -9,7 +9,7 @@ import io.enkrypt.avro.processing.NonFungibleTokenBalanceKeyRecord
 import io.enkrypt.avro.processing.NonFungibleTokenBalanceRecord
 import io.enkrypt.common.extensions.amountBI
 import io.enkrypt.common.extensions.bigInteger
-import io.enkrypt.common.extensions.byteBuffer
+import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.kafka.streams.config.Topics
 import io.enkrypt.kafka.streams.models.ChainEventType
 import io.enkrypt.kafka.streams.processors.block.BlockStatistics
@@ -91,7 +91,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
               if (reverse) {
                 v.getAmount()
               } else {
-                v.amountBI!!.negate().byteBuffer()
+                v.amountBI!!.negate().unsignedByteBuffer()
               }
             )
             .build()
@@ -105,7 +105,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
           FungibleTokenBalanceRecord.newBuilder()
             .setAmount(
               if (reverse) {
-                v.amountBI!!.negate().byteBuffer()
+                v.amountBI!!.negate().unsignedByteBuffer()
               } else {
                 v.getAmount()
               }
@@ -292,7 +292,7 @@ class GatedBlockTransformer : Transformer<BlockKeyRecord?, BlockRecord?, KeyValu
     // documentation says ranging provides no ordering guarantees
 
     val highKey =
-      metaStore.get(META_HIGH) ?: BlockKeyRecord.newBuilder().setNumber(BigInteger.ZERO.byteBuffer()).build()
+      metaStore.get(META_HIGH) ?: BlockKeyRecord.newBuilder().setNumber(BigInteger.ZERO.unsignedByteBuffer()).build()
     var numberToReverse = highKey.getNumber().bigInteger()!!
     var summaryToReverse: BlockRecord?
 

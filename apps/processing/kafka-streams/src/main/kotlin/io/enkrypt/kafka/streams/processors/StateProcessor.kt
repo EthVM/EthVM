@@ -3,7 +3,7 @@ package io.enkrypt.kafka.streams.processors
 import io.enkrypt.avro.processing.FungibleTokenBalanceRecord
 import io.enkrypt.avro.processing.MetricRecord
 import io.enkrypt.common.extensions.bigInteger
-import io.enkrypt.common.extensions.byteBuffer
+import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.kafka.streams.serdes.Serdes
 import io.enkrypt.kafka.streams.config.Topics
 import mu.KotlinLogging
@@ -89,7 +89,7 @@ class StateProcessor : AbstractKafkaProcessor() {
           if (next.getBigIntegerValue() != null) {
             val memoBigInt = memo.getBigIntegerValue().bigInteger()!!
             val nextBigInt = next.getBigIntegerValue().bigInteger()
-            metricBuilder.bigIntegerValue = memoBigInt.add(nextBigInt).byteBuffer()
+            metricBuilder.bigIntegerValue = memoBigInt.add(nextBigInt).unsignedByteBuffer()
           }
 
           metricBuilder.build()
@@ -120,7 +120,7 @@ class StateProcessor : AbstractKafkaProcessor() {
 
             if (aggMetric.getBigIntegerValue() != null) {
               val aggBigInt = aggMetric.getBigIntegerValue().bigInteger()!!
-              metricBuilder.bigIntegerValue = aggBigInt.divide(BigInteger.valueOf(metricsCount)).byteBuffer()
+              metricBuilder.bigIntegerValue = aggBigInt.divide(BigInteger.valueOf(metricsCount)).unsignedByteBuffer()
             }
 
             metricBuilder.build()

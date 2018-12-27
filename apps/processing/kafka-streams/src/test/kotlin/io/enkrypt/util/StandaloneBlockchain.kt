@@ -3,6 +3,7 @@ package io.enkrypt.util
 import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.common.Data20
 import io.enkrypt.common.extensions.data20
+import io.enkrypt.common.extensions.unsignedBytes
 import io.enkrypt.kafka.mapping.ObjectMapper
 import io.enkrypt.kafka.streams.models.StaticAddresses
 import org.ethereum.config.BlockchainNetConfig
@@ -182,7 +183,7 @@ class StandaloneBlockchain(config: Config) {
     submitTx(
       from,
       receiver = to.address.data20(),
-      value = bigIntegerToBytes(value)
+      value = value?.unsignedBytes() ?: ByteArray(0)
     )
 
   fun submitContract(
@@ -198,7 +199,7 @@ class StandaloneBlockchain(config: Config) {
       gasPrice,
       gasLimit,
       data = contract.construct(*constructorArgs),
-      value = if (value != null) bigIntegerToBytes(value) else ByteArray(0)
+      value = value?.unsignedBytes() ?: ByteArray(0)
     )
 
   fun callFunction(
@@ -217,7 +218,7 @@ class StandaloneBlockchain(config: Config) {
       gasLimit,
       receiver = contractAddress,
       data = contract.callFunction(name, *args),
-      value = if (value != null) bigIntegerToBytes(value) else ByteArray(0)
+      value = value?.unsignedBytes() ?: ByteArray(0)
     )
 
   fun submitTx(

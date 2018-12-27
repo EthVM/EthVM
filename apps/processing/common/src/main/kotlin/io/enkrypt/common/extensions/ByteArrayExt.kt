@@ -19,9 +19,10 @@ fun ByteArray?.data256(): Data256? = if (this == null) null else Data256(this)
 fun ByteArray?.hex(): String? = ByteUtil.toHexString(this)
 
 fun ByteArray?.bigInteger(): BigInteger? = BigInteger(this)
-fun ByteArray?.unsignedBigInteger(): BigInteger = BigIntegers.fromUnsignedByteArray(this)
 
-fun ByteArray?.byteBuffer(): ByteBuffer? = if (this != null) ByteBuffer.wrap(this) else null
+fun ByteArray?.unsignedBigInteger(): BigInteger = if (this == null || this.isEmpty()) BigInteger.ZERO else BigIntegers.fromUnsignedByteArray(this)
+
+fun ByteArray?.unsignedByteBuffer(): ByteBuffer? = if (this != null) ByteBuffer.wrap(this) else null
 
 /**
  * Search the data for the first occurrence of the byte array pattern.
