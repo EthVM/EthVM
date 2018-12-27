@@ -27,7 +27,7 @@ object ChainEvents {
     return if (block.getReverse()) events.asReversed() else events
   }
 
-  fun forPremineBalances(block: BlockRecord) =
+  private fun forPremineBalances(block: BlockRecord) =
     block.getPremineBalances()
       .map {
         ChainEvent.fungibleTransfer(
@@ -38,7 +38,7 @@ object ChainEvents {
         )
       }
 
-  fun forBlockRewards(block: BlockRecord) =
+  private fun forBlockRewards(block: BlockRecord) =
     block.getRewards()
       .map {
         ChainEvent.fungibleTransfer(
@@ -49,13 +49,13 @@ object ChainEvents {
         )
       }
 
-  fun forTransactions(block: BlockRecord) =
+  private fun forTransactions(block: BlockRecord) =
     block.getTransactions()
       .zip(block.getTransactionReceipts())
       .map { (tx, receipt) -> forTransaction(block, tx, receipt) }
       .flatten()
 
-  fun forTransaction(
+  private fun forTransaction(
     block: BlockRecord,
     tx: TransactionRecord,
     receipt: TransactionReceiptRecord
@@ -105,13 +105,13 @@ object ChainEvents {
 
     receipt.getLogs().forEach { log ->
 
-      val topics = log.getTopics().toList()
+      val topics = log.getTopics()
       val logData = log.getData().array()
 
       // ERC20 transfer event has the same signature as ERC721 so we use this initial match to detect any
       // transfer event
 
-      ERC20Abi.matchEvent(log.getTopics())
+      ERC20Abi.matchEvent(topics)
         .filter { it.name == ERC20Abi.EVENT_TRANSFER }
         .fold({ Unit }, {
 
@@ -144,7 +144,7 @@ object ChainEvents {
     return events
   }
 
-  fun forInternalTransaction(
+  private fun forInternalTransaction(
     block: BlockRecord,
     tx: TransactionRecord,
     internalTx: InternalTransactionRecord

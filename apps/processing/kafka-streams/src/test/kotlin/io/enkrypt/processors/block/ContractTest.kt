@@ -1,20 +1,17 @@
 package io.enkrypt.processors.block
 
 import io.enkrypt.avro.common.ContractType
-import io.enkrypt.common.extensions.amountBI
 import io.enkrypt.common.extensions.data20
 import io.enkrypt.common.extensions.ether
 import io.enkrypt.common.extensions.gwei
 import io.enkrypt.common.extensions.hexBuffer
 import io.enkrypt.common.extensions.unsignedByteBuffer
-import io.enkrypt.kafka.streams.models.ChainEvent
 import io.enkrypt.kafka.streams.models.ChainEvent.Companion.contractCreate
 import io.enkrypt.kafka.streams.models.ChainEvent.Companion.contractDestruct
 import io.enkrypt.kafka.streams.models.ChainEvent.Companion.fungibleTransfer
 import io.enkrypt.kafka.streams.models.StaticAddresses
 import io.enkrypt.kafka.streams.models.StaticAddresses.EtherZero
 import io.enkrypt.kafka.streams.processors.block.ChainEvents
-import io.enkrypt.util.Blockchains
 import io.enkrypt.util.Blockchains.Coinbase
 import io.enkrypt.util.Blockchains.Users.Bob
 import io.enkrypt.util.SolidityContract
@@ -24,7 +21,6 @@ import io.enkrypt.util.totalTxFees
 import io.enkrypt.util.txFees
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
-import java.math.BigInteger
 
 class ContractTest : BehaviorSpec() {
 
@@ -199,24 +195,25 @@ class ContractTest : BehaviorSpec() {
 
       `when`("we trigger a series of cascading calls") {
 
-        bc.callFunction(Bob, pingAddress, contract, "start", 1, 12_000_000L, null, pongAddress.bytes())
+        bc.callFunction(Bob, pingAddress, contract, "start", null, null, null, pongAddress.bytes())
 
         val block = bc.createBlock()
         val chainEvents = ChainEvents.forBlock(block)
 
+        then("there should be 3 chain events") {
+          chainEvents.size shouldBe 3
+        }
+
         then("there should be a fungible ether transfer for the coinbase") {
-          checkCoinbase(chainEvents.first(), 3000000000000025686.toBigInteger())
+          chainEvents.first() shouldBe fungibleTransfer(
+            StaticAddresses.EtherZero,
+            Coinbase.address.data20()!!,
+            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
+          )
         }
 
       }
 
     }
-  }
-
-  private fun checkCoinbase(event: ChainEvent, reward: BigInteger) {
-    val coinbaseTransfer = event.fungibleTransfer
-    coinbaseTransfer.getFrom() shouldBe StaticAddresses.EtherZero
-    coinbaseTransfer.getTo() shouldBe Coinbase.address.data20()
-    coinbaseTransfer.amountBI shouldBe reward
   }
 }
