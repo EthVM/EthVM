@@ -12,6 +12,8 @@ import io.enkrypt.avro.processing.MetricKeyRecord
 import io.enkrypt.avro.processing.MetricRecord
 import io.enkrypt.avro.processing.NonFungibleTokenBalanceKeyRecord
 import io.enkrypt.avro.processing.NonFungibleTokenBalanceRecord
+import io.enkrypt.avro.processing.TokenBalanceKeyRecord
+import io.enkrypt.avro.processing.TokenBalanceRecord
 import io.enkrypt.kafka.streams.config.KafkaConfig
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
@@ -33,19 +35,11 @@ object Serdes : KoinComponent {
     configure(config, false)
   }
 
-  fun FungibleTokenBalanceKey() = SpecificAvroSerde<FungibleTokenBalanceKeyRecord>().apply {
+  fun TokenBalanceKey() = SpecificAvroSerde<TokenBalanceKeyRecord>().apply {
     configure(config, true)
   }
 
-  fun FungibleTokenBalance() = SpecificAvroSerde<FungibleTokenBalanceRecord>().apply {
-    configure(config, false)
-  }
-
-  fun NonFungibleTokenBalanceKey() = SpecificAvroSerde<NonFungibleTokenBalanceKeyRecord>().apply {
-    configure(config, true)
-  }
-
-  fun NonFungibleTokenBalance() = SpecificAvroSerde<NonFungibleTokenBalanceRecord>().apply {
+  fun TokenBalance() = SpecificAvroSerde<TokenBalanceRecord>().apply {
     configure(config, false)
   }
 

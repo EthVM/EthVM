@@ -4,6 +4,7 @@ import arrow.core.Option
 import io.enkrypt.avro.common.Data20
 import io.enkrypt.avro.common.Data32
 import io.enkrypt.avro.processing.NonFungibleTokenTransferRecord
+import io.enkrypt.avro.processing.TokenTransferRecord
 import io.enkrypt.common.extensions.setTokenId
 import java.math.BigInteger
 import java.nio.file.Paths
@@ -17,7 +18,7 @@ object ERC721Abi : AbstractAbi(Paths.get(ERC721Abi::class.java.getResource("/abi
 
   override fun functions(): Set<String> = emptySet()
 
-  fun decodeTransferEvent(data: ByteArray, topics: List<Data32>): Option<NonFungibleTokenTransferRecord.Builder> {
+  fun decodeTransferEvent(data: ByteArray, topics: List<Data32>): Option<TokenTransferRecord.Builder> {
 
     return if (topics.size != 4) {
       Option.empty()
@@ -26,7 +27,7 @@ object ERC721Abi : AbstractAbi(Paths.get(ERC721Abi::class.java.getResource("/abi
       this.matchEvent(topics[0])
         .map { it.decode(data, topics.map { it.bytes() }.toTypedArray()) }
         .map { values ->
-          NonFungibleTokenTransferRecord.newBuilder()
+          TokenTransferRecord.newBuilder()
             .setFrom(Data20(values[0] as ByteArray))
             .setTo(Data20(values[1] as ByteArray))
             .setTokenId(values[2] as BigInteger)

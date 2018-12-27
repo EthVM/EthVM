@@ -1,11 +1,12 @@
 package io.enkrypt.kafka.streams.processors
 
-import io.enkrypt.avro.processing.FungibleTokenBalanceRecord
 import io.enkrypt.avro.processing.MetricRecord
+import io.enkrypt.avro.processing.TokenBalanceRecord
 import io.enkrypt.common.extensions.bigInteger
+import io.enkrypt.common.extensions.byteBuffer
 import io.enkrypt.common.extensions.unsignedByteBuffer
-import io.enkrypt.kafka.streams.serdes.Serdes
 import io.enkrypt.kafka.streams.config.Topics
+import io.enkrypt.kafka.streams.serdes.Serdes
 import mu.KotlinLogging
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
@@ -15,8 +16,7 @@ import org.apache.kafka.streams.kstream.Materialized
 import org.apache.kafka.streams.kstream.Produced
 import org.apache.kafka.streams.kstream.Serialized
 import java.math.BigInteger
-import java.nio.ByteBuffer
-import java.util.Properties
+import java.util.*
 import org.apache.kafka.common.serialization.Serdes as KafkaSerdes
 
 class StateProcessor : AbstractKafkaProcessor() {
@@ -40,22 +40,27 @@ class StateProcessor : AbstractKafkaProcessor() {
     val fungibleBalances = builder
       .stream(
         Topics.FungibleTokenMovements,
-        Consumed.with(Serdes.FungibleTokenBalanceKey(), Serdes.FungibleTokenBalance())
+        Consumed.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance())
       )
-      .groupByKey(Serialized.with(Serdes.FungibleTokenBalanceKey(), Serdes.FungibleTokenBalance()))
+      .groupByKey(Serialized.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance()))
       .reduce(
         { memo, next ->
-          FungibleTokenBalanceRecord
+
+          val total = memo.getAmount().bigInteger()!!
+          val delta = next.getAmount().bigInteger()!!
+
+          TokenBalanceRecord
             .newBuilder(memo)
-            .setAmount(ByteBuffer.wrap(memo.getAmount().bigInteger()!!.add(next.getAmount().bigInteger()).toByteArray()))
+            .setAmount((total + delta).byteBuffer())
             .build()
+
         },
-        Materialized.with(Serdes.FungibleTokenBalanceKey(), Serdes.FungibleTokenBalance())
+        Materialized.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance())
       )
 
     fungibleBalances
       .toStream()
-      .to(Topics.FungibleTokenBalances, Produced.with(Serdes.FungibleTokenBalanceKey(), Serdes.FungibleTokenBalance()))
+      .to(Topics.FungibleTokenBalances, Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance()))
 
     // Metrics
 

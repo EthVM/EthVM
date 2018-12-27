@@ -3,47 +3,39 @@ protocol Processing {
 
   import idl "common.avdl";
 
-// fungible tokens
+  record TokenTransferKeyRecord {
 
-  record FungibleTokenTransferRecord {
+    union { null, io.enkrypt.avro.common.Data20 } contract = null;
+    union { null, io.enkrypt.avro.common.Data20 } address = null;
+    union { null, bytes } tokenId = null;
 
-    boolean reverse = false;
+  }
 
-    union { null, io.enkrypt.avro.common.Data20 } contract;
+  record TokenTransferRecord {
+
     io.enkrypt.avro.common.Data20 from;
     io.enkrypt.avro.common.Data20 to;
-    bytes amount;
+
+    union { null, io.enkrypt.avro.common.Data20 } contract = null;
+
+    union { null, bytes } amount = null;
+    union { null, bytes } tokenId = null;
 
   }
 
-  record FungibleTokenBalanceKeyRecord {
-    union { null, io.enkrypt.avro.common.Data20 } contract;
-    io.enkrypt.avro.common.Data20 address;
+  record TokenBalanceKeyRecord {
+
+    union { null, io.enkrypt.avro.common.Data20 } contract = null;
+    union { null, io.enkrypt.avro.common.Data20 } address = null;
+    union { null, bytes } tokenId;
+
   }
 
-  record FungibleTokenBalanceRecord {
-    bytes amount;
-  }
+  record TokenBalanceRecord {
 
-// Non fungible tokens
+    union { null, bytes } amount = null;
+    union { null, io.enkrypt.avro.common.Data20 } address = null;
 
-  record NonFungibleTokenTransferRecord {
-
-    boolean reverse = false;
-
-    io.enkrypt.avro.common.Data20 contract;
-    io.enkrypt.avro.common.Data20 from;
-    io.enkrypt.avro.common.Data20 to;
-    bytes tokenId;
-  }
-
-  record NonFungibleTokenBalanceKeyRecord {
-    io.enkrypt.avro.common.Data20 contract;
-    bytes tokenId;
-  }
-
-  record NonFungibleTokenBalanceRecord {
-    io.enkrypt.avro.common.Data20 address;
   }
 
 // contracts

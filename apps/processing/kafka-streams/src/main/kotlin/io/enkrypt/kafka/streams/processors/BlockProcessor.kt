@@ -7,8 +7,12 @@ import io.enkrypt.avro.processing.FungibleTokenBalanceKeyRecord
 import io.enkrypt.avro.processing.FungibleTokenBalanceRecord
 import io.enkrypt.avro.processing.NonFungibleTokenBalanceKeyRecord
 import io.enkrypt.avro.processing.NonFungibleTokenBalanceRecord
+import io.enkrypt.avro.processing.TokenBalanceKeyRecord
+import io.enkrypt.avro.processing.TokenBalanceRecord
 import io.enkrypt.common.extensions.amountBI
 import io.enkrypt.common.extensions.bigInteger
+import io.enkrypt.common.extensions.byteBuffer
+import io.enkrypt.common.extensions.unsignedBigInteger
 import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.kafka.streams.config.Topics
 import io.enkrypt.kafka.streams.models.ChainEventType
@@ -78,36 +82,37 @@ class BlockProcessor : AbstractKafkaProcessor() {
       .flatMap { _, v ->
 
         val reverse = v.getReverse()
+        val amount = v.getAmount().unsignedBigInteger()!!
 
         // double entry style book-keeping
 
         val fromBalance = KeyValue(
-          FungibleTokenBalanceKeyRecord.newBuilder()
+          TokenBalanceKeyRecord.newBuilder()
             .setContract(v.getContract())
             .setAddress(v.getFrom())
             .build(),
-          FungibleTokenBalanceRecord.newBuilder()
+          TokenBalanceRecord.newBuilder()
             .setAmount(
               if (reverse) {
-                v.getAmount()
+                amount.byteBuffer()
               } else {
-                v.amountBI!!.negate().unsignedByteBuffer()
+                amount.negate().byteBuffer()
               }
             )
             .build()
         )
 
         val toBalance = KeyValue(
-          FungibleTokenBalanceKeyRecord.newBuilder()
+          TokenBalanceKeyRecord.newBuilder()
             .setContract(v.getContract())
             .setAddress(v.getTo())
             .build(),
-          FungibleTokenBalanceRecord.newBuilder()
+          TokenBalanceRecord.newBuilder()
             .setAmount(
               if (reverse) {
-                v.amountBI!!.negate().unsignedByteBuffer()
+                amount.negate().byteBuffer()
               } else {
-                v.getAmount()
+                amount.byteBuffer()
               }
             )
             .build()
@@ -116,7 +121,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
         listOf(fromBalance, toBalance)
       }.to(
         Topics.FungibleTokenMovements,
-        Produced.with(Serdes.FungibleTokenBalanceKey(), Serdes.FungibleTokenBalance())
+        Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance())
       )
 
     // non fungible token transfers
@@ -129,11 +134,11 @@ class BlockProcessor : AbstractKafkaProcessor() {
         val reverse = v.getReverse()
 
         KeyValue(
-          NonFungibleTokenBalanceKeyRecord.newBuilder()
+          TokenBalanceKeyRecord.newBuilder()
             .setContract(v.getContract())
             .setTokenId(v.getTokenId())
             .build(),
-          NonFungibleTokenBalanceRecord.newBuilder()
+          TokenBalanceRecord.newBuilder()
             .setAddress(
               if (reverse) {
                 v.getFrom()
@@ -145,7 +150,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
         )
       }.to(
         Topics.NonFungibleTokenBalances,
-        Produced.with(Serdes.NonFungibleTokenBalanceKey(), Serdes.NonFungibleTokenBalance())
+        Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance())
       )
 
     // contract creations

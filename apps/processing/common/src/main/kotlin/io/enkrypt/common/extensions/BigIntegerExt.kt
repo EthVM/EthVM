@@ -47,4 +47,6 @@ fun BigInteger?.unsignedBytes(numBytes: Int): ByteArray? =
     }
   }
 
+fun BigInteger?.byteBuffer(): ByteBuffer = ByteBuffer.wrap((this ?: BigInteger.ZERO).toByteArray())
+
 fun BigInteger?.unsignedByteBuffer() = if (this != null) ByteBuffer.wrap(this.unsignedBytes()) else null
