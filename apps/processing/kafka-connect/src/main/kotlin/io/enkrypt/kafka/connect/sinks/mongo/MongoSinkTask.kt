@@ -10,7 +10,7 @@ import com.mongodb.client.model.ReplaceOptions
 import com.mongodb.client.model.UpdateOneModel
 import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.WriteModel
-import io.enkrypt.common.extensions.toHex
+import io.enkrypt.common.extensions.hex
 import io.enkrypt.kafka.connect.utils.Versions
 import mu.KotlinLogging
 import org.apache.kafka.clients.consumer.OffsetAndMetadata
@@ -202,7 +202,7 @@ class MongoSinkTask : SinkTask() {
     if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
 
     val address = (record.key() as Struct).getBytes("address")
-    val addressBson = BsonString(address.toHex())
+    val addressBson = BsonString(address.hex())
 
     val idFilter = BsonDocument().apply { append("_id", addressBson) }
 
@@ -237,7 +237,7 @@ class MongoSinkTask : SinkTask() {
     if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
 
     val address = (record.key() as Struct).getBytes("address")
-    val addressBson = BsonString(address.toHex())
+    val addressBson = BsonString(address.hex())
 
     val idFilter = BsonDocument().apply { append("_id", addressBson) }
 
@@ -274,7 +274,7 @@ class MongoSinkTask : SinkTask() {
     if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
 
     val address = (record.key() as Struct).getBytes("address")
-    val addressBson = BsonString(address.toHex())
+    val addressBson = BsonString(address.hex())
 
     val idFilter = BsonDocument().apply { append("_id", addressBson) }
 

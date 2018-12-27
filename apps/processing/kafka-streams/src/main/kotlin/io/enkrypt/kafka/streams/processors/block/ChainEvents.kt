@@ -6,7 +6,6 @@ import io.enkrypt.avro.capture.InternalTransactionRecord
 import io.enkrypt.avro.capture.TransactionReceiptRecord
 import io.enkrypt.avro.capture.TransactionRecord
 import io.enkrypt.common.extensions.bigInteger
-import io.enkrypt.common.extensions.byteArray
 import io.enkrypt.common.extensions.byteBuffer
 import io.enkrypt.common.extensions.isSuccess
 import io.enkrypt.kafka.streams.models.ChainEvent
@@ -14,7 +13,6 @@ import io.enkrypt.kafka.streams.models.StaticAddresses
 import io.enkrypt.kafka.streams.utils.ERC20Abi
 import io.enkrypt.kafka.streams.utils.ERC721Abi
 import io.enkrypt.kafka.streams.utils.StandardTokenDetector
-import org.spongycastle.util.BigIntegers
 import java.math.BigInteger
 
 object ChainEvents {
@@ -94,7 +92,6 @@ object ChainEvents {
       if (value.capacity() > 0) {
         events += ChainEvent.fungibleTransfer(from, tx.getCreates(), value)
       }
-
     }
 
     // contract suicides

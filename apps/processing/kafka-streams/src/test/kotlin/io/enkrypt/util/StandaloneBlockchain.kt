@@ -6,13 +6,19 @@ import io.enkrypt.common.extensions.data20
 import io.enkrypt.kafka.mapping.ObjectMapper
 import io.enkrypt.kafka.streams.models.StaticAddresses
 import org.ethereum.config.BlockchainNetConfig
-import org.ethereum.config.CommonConfig
 import org.ethereum.config.SystemProperties
 import org.ethereum.config.blockchain.ByzantiumConfig
 import org.ethereum.config.blockchain.DaoNoHFConfig
 import org.ethereum.config.blockchain.HomesteadConfig
 import org.ethereum.config.net.BaseNetConfig
-import org.ethereum.core.*
+import org.ethereum.core.AccountState
+import org.ethereum.core.Block
+import org.ethereum.core.BlockSummary
+import org.ethereum.core.BlockchainImpl
+import org.ethereum.core.Genesis
+import org.ethereum.core.ImportResult
+import org.ethereum.core.PendingStateImpl
+import org.ethereum.core.Transaction
 import org.ethereum.core.genesis.GenesisLoader
 import org.ethereum.crypto.ECKey
 import org.ethereum.datasource.NoDeleteSource
@@ -22,11 +28,13 @@ import org.ethereum.db.RepositoryRoot
 import org.ethereum.mine.Ethash
 import org.ethereum.sync.SyncManager
 import org.ethereum.util.ByteUtil
-import org.ethereum.util.ByteUtil.*
+import org.ethereum.util.ByteUtil.bigIntegerToBytes
+import org.ethereum.util.ByteUtil.longToBytesNoLeadZeroes
+import org.ethereum.util.ByteUtil.wrap
 import org.ethereum.validator.DependentBlockHeaderRuleAdapter
 import org.ethereum.vm.program.invoke.ProgramInvokeFactoryImpl
 import java.math.BigInteger
-import java.util.*
+import java.util.Date
 import java.util.concurrent.TimeUnit
 
 class StandaloneBlockchain(config: Config) {
@@ -41,17 +49,19 @@ class StandaloneBlockchain(config: Config) {
     }
   }
 
-  data class Config(val chainId: Int = 1,
-                    val blockGasIncreasePercent: Int = 0,
-                    val gasPrice: Long = 50_000_000_000L,
-                    val gasLimit: Long = 5_000_000L,
-                    val coinbase: Data20 = StaticAddresses.EtherMax,
-                    val autoblock: Boolean = false,
-                    val timeIncrement: Long = 60,
-                    val netConfig: BlockchainNetConfig = easyNetConfig,
-                    val genesis: Genesis? = null,
-                    val premineBalances: Map<Data20?, BigInteger> = emptyMap(),
-                    val time: Date? = null)
+  data class Config(
+    val chainId: Int = 1,
+    val blockGasIncreasePercent: Int = 0,
+    val gasPrice: Long = 50_000_000_000L,
+    val gasLimit: Long = 5_000_000L,
+    val coinbase: Data20 = StaticAddresses.EtherMax,
+    val autoblock: Boolean = false,
+    val timeIncrement: Long = 60,
+    val netConfig: BlockchainNetConfig = easyNetConfig,
+    val genesis: Genesis? = null,
+    val premineBalances: Map<Data20?, BigInteger> = emptyMap(),
+    val time: Date? = null
+  )
 
   var listener = TestEthereumListener()
   val chainId = config.chainId
@@ -175,13 +185,14 @@ class StandaloneBlockchain(config: Config) {
       value = bigIntegerToBytes(value)
     )
 
-
-  fun submitContract(sender: ECKey,
-                     contract: SolidityContract,
-                     gasPrice: Long? = null,
-                     gasLimit: Long? = null,
-                     value: BigInteger? = null,
-                     vararg constructorArgs: Any): Transaction =
+  fun submitContract(
+    sender: ECKey,
+    contract: SolidityContract,
+    gasPrice: Long? = null,
+    gasLimit: Long? = null,
+    value: BigInteger? = null,
+    vararg constructorArgs: Any
+  ): Transaction =
     submitTx(
       sender,
       gasPrice,
@@ -190,14 +201,16 @@ class StandaloneBlockchain(config: Config) {
       value = if (value != null) bigIntegerToBytes(value) else ByteArray(0)
     )
 
-  fun callFunction(sender: ECKey,
-                   contractAddress: Data20,
-                   contract: SolidityContract,
-                   name: String,
-                   gasPrice: Long? = null,
-                   gasLimit: Long? = null,
-                   value: BigInteger? = null,
-                   vararg args: Any) =
+  fun callFunction(
+    sender: ECKey,
+    contractAddress: Data20,
+    contract: SolidityContract,
+    name: String,
+    gasPrice: Long? = null,
+    gasLimit: Long? = null,
+    value: BigInteger? = null,
+    vararg args: Any
+  ) =
     submitTx(
       sender,
       gasPrice,
@@ -207,12 +220,14 @@ class StandaloneBlockchain(config: Config) {
       value = if (value != null) bigIntegerToBytes(value) else ByteArray(0)
     )
 
-  fun submitTx(sender: ECKey,
-               gasPrice: Long? = null,
-               gasLimit: Long? = null,
-               receiver: Data20? = null,
-               value: ByteArray = ByteArray(0),
-               data: ByteArray = ByteArray(0)): Transaction {
+  fun submitTx(
+    sender: ECKey,
+    gasPrice: Long? = null,
+    gasLimit: Long? = null,
+    receiver: Data20? = null,
+    value: ByteArray = ByteArray(0),
+    data: ByteArray = ByteArray(0)
+  ): Transaction {
 
     val nonce = currentNonce(sender)
 
@@ -232,6 +247,4 @@ class StandaloneBlockchain(config: Config) {
     pendingTxs += tx
     return tx
   }
-
-
 }

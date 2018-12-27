@@ -4,5 +4,5 @@ import org.apache.commons.codec.binary.Hex as ApacheHex
 
 object Hex {
 
-  fun decodeHex(s: String) = ApacheHex.decodeHex(s)
+  fun decode(s: String): ByteArray = ApacheHex.decodeHex(s)
 }

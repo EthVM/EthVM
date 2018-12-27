@@ -3,7 +3,10 @@ package io.enkrypt.kafka.streams.models
 import io.enkrypt.avro.common.ContractType
 import io.enkrypt.avro.common.Data20
 import io.enkrypt.avro.common.Data32
-import io.enkrypt.avro.processing.*
+import io.enkrypt.avro.processing.ContractCreateRecord
+import io.enkrypt.avro.processing.ContractDestructRecord
+import io.enkrypt.avro.processing.FungibleTokenTransferRecord
+import io.enkrypt.avro.processing.NonFungibleTokenTransferRecord
 import java.nio.ByteBuffer
 
 enum class ChainEventType {
@@ -12,7 +15,6 @@ enum class ChainEventType {
   NonFungibleBalanceTransfer,
   ContractCreate,
   ContractDestruct
-
 }
 
 data class ChainEvent(

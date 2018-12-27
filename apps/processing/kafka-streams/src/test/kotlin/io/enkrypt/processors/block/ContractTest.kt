@@ -1,22 +1,23 @@
 package io.enkrypt.processors.block
 
 import io.enkrypt.avro.common.ContractType
-import io.enkrypt.common.extensions.*
-import io.enkrypt.kafka.streams.models.ChainEvent
+import io.enkrypt.common.extensions.byteBuffer
+import io.enkrypt.common.extensions.data20
+import io.enkrypt.common.extensions.ether
+import io.enkrypt.common.extensions.gwei
+import io.enkrypt.common.extensions.hexBuffer
 import io.enkrypt.kafka.streams.models.ChainEvent.Companion.contractCreate
 import io.enkrypt.kafka.streams.models.ChainEvent.Companion.contractDestruct
 import io.enkrypt.kafka.streams.models.ChainEvent.Companion.fungibleTransfer
 import io.enkrypt.kafka.streams.models.StaticAddresses
 import io.enkrypt.kafka.streams.models.StaticAddresses.EtherZero
 import io.enkrypt.kafka.streams.processors.block.ChainEvents
-import io.enkrypt.util.*
 import io.enkrypt.util.Blockchains.Coinbase
 import io.enkrypt.util.Blockchains.Users.Bob
-import io.kotlintest.should
+import io.enkrypt.util.StandaloneBlockchain
+import io.enkrypt.util.TestContracts
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
-import org.ethereum.crypto.ECKey
-import java.math.BigInteger
 
 class ContractTest : BehaviorSpec() {
 
@@ -52,7 +53,11 @@ class ContractTest : BehaviorSpec() {
         }
 
         then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe fungibleTransfer(EtherZero, Coinbase.address.data20()!!, 3000058641.gwei().byteBuffer()!!)
+          chainEvents.first() shouldBe fungibleTransfer(
+            EtherZero,
+            Coinbase.address.data20()!!,
+            3000058641.gwei().byteBuffer()!!
+          )
         }
 
         then("there should be a transaction fee ether transfer") {
@@ -69,7 +74,6 @@ class ContractTest : BehaviorSpec() {
             contract.bin.hexBuffer()!!
           )
         }
-
       }
 
       `when`("we instantiate it with ether") {
@@ -85,11 +89,19 @@ class ContractTest : BehaviorSpec() {
         }
 
         then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe fungibleTransfer(StaticAddresses.EtherZero, Coinbase.address.data20()!!, 3000058641.gwei().byteBuffer()!!)
+          chainEvents.first() shouldBe fungibleTransfer(
+            StaticAddresses.EtherZero,
+            Coinbase.address.data20()!!,
+            3000058641.gwei().byteBuffer()!!
+          )
         }
 
         then("there should be a transaction fee ether transfer") {
-          chainEvents[1] shouldBe fungibleTransfer(StaticAddresses.EtherZero, Coinbase.address.data20()!!, 31000.gwei().byteBuffer()!!)
+          chainEvents[1] shouldBe fungibleTransfer(
+            StaticAddresses.EtherZero,
+            Coinbase.address.data20()!!,
+            31000.gwei().byteBuffer()!!
+          )
         }
 
         then("there should be a contract creation event") {
@@ -106,7 +118,6 @@ class ContractTest : BehaviorSpec() {
         then("there should be a fungible transfer event for the ether sent") {
           chainEvents[3] shouldBe fungibleTransfer(Bob.address.data20()!!, contractAddress!!, 10.gwei().byteBuffer()!!)
         }
-
       }
 
       `when`("we ask it to self destruct") {
@@ -126,11 +137,19 @@ class ContractTest : BehaviorSpec() {
         }
 
         then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe fungibleTransfer(StaticAddresses.EtherZero, Coinbase.address.data20()!!, 3000010690.gwei().byteBuffer()!!)
+          chainEvents.first() shouldBe fungibleTransfer(
+            StaticAddresses.EtherZero,
+            Coinbase.address.data20()!!,
+            3000010690.gwei().byteBuffer()!!
+          )
         }
 
         then("there should be a transaction fee ether transfer") {
-          chainEvents[1] shouldBe fungibleTransfer(StaticAddresses.EtherZero, Coinbase.address.data20()!!, 31000.gwei().byteBuffer()!!)
+          chainEvents[1] shouldBe fungibleTransfer(
+            StaticAddresses.EtherZero,
+            Coinbase.address.data20()!!,
+            31000.gwei().byteBuffer()!!
+          )
         }
 
         then("there should be a contract destruct event") {
@@ -144,7 +163,6 @@ class ContractTest : BehaviorSpec() {
         then("there should be a fungible transfer to the sender with the contract balance") {
           chainEvents[3] shouldBe fungibleTransfer(contractAddress, Bob.address.data20()!!, 35.gwei().byteBuffer()!!)
         }
-
       }
     }
 
@@ -174,7 +192,5 @@ class ContractTest : BehaviorSpec() {
 //      }
 //
 //    }
-
   }
-
 }

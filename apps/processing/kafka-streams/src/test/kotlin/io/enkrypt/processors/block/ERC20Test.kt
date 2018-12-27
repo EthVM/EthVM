@@ -1,7 +1,13 @@
 package io.enkrypt.processors.block
 
 import io.enkrypt.avro.common.ContractType
-import io.enkrypt.common.extensions.*
+import io.enkrypt.common.extensions.byteBuffer
+import io.enkrypt.common.extensions.data20
+import io.enkrypt.common.extensions.ether
+import io.enkrypt.common.extensions.finney
+import io.enkrypt.common.extensions.gwei
+import io.enkrypt.common.extensions.hexBuffer
+import io.enkrypt.common.extensions.kwei
 import io.enkrypt.kafka.streams.models.ChainEvent
 import io.enkrypt.kafka.streams.models.ChainEvent.Companion.fungibleTransfer
 import io.enkrypt.kafka.streams.models.StaticAddresses.EtherZero
@@ -53,7 +59,11 @@ class ERC20Test : BehaviorSpec() {
         }
 
         then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe fungibleTransfer(EtherZero, Coinbase.address.data20()!!, 3001378099.gwei().byteBuffer()!!)
+          chainEvents.first() shouldBe fungibleTransfer(
+            EtherZero,
+            Coinbase.address.data20()!!,
+            3001378099.gwei().byteBuffer()!!
+          )
         }
 
         then("there should be a transaction fee ether transfer") {
@@ -72,13 +82,28 @@ class ERC20Test : BehaviorSpec() {
         }
 
         then("there should be an ERC20 fungible transfer corresponding to the initial mint") {
-          chainEvents[3] shouldBe fungibleTransfer(EtherZero, Bob.address.data20()!!, 10_000.ether().byteBuffer()!!, contract = contractAddress)
+          chainEvents[3] shouldBe fungibleTransfer(
+            EtherZero,
+            Bob.address.data20()!!,
+            10_000.ether().byteBuffer()!!,
+            contract = contractAddress
+          )
         }
       }
 
       `when`("we transfer some tokens from Bob to Alice") {
 
-        bc.callFunction(Bob, contractAddress, contract, "transfer", null, 1.gwei().toLong(), null, Alice.address, 1.ether())
+        bc.callFunction(
+          Bob,
+          contractAddress,
+          contract,
+          "transfer",
+          null,
+          1.gwei().toLong(),
+          null,
+          Alice.address,
+          1.ether()
+        )
 
         val block = bc.createBlock()
         val chainEvents = ChainEvents.forBlock(block)
@@ -88,7 +113,11 @@ class ERC20Test : BehaviorSpec() {
         }
 
         then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe fungibleTransfer(EtherZero, Coinbase.address.data20()!!, 3000051349.gwei().byteBuffer()!!)
+          chainEvents.first() shouldBe fungibleTransfer(
+            EtherZero,
+            Coinbase.address.data20()!!,
+            3000051349.gwei().byteBuffer()!!
+          )
         }
 
         then("there should be a transaction fee ether transfer") {
@@ -97,10 +126,14 @@ class ERC20Test : BehaviorSpec() {
         }
 
         then("there should be a token transfer from Bob to Alice") {
-          chainEvents[2] shouldBe fungibleTransfer(Bob.address.data20()!!, Alice.address.data20()!!, 1.ether().byteBuffer()!!, contract = contractAddress)
+          chainEvents[2] shouldBe fungibleTransfer(
+            Bob.address.data20()!!,
+            Alice.address.data20()!!,
+            1.ether().byteBuffer()!!,
+            contract = contractAddress
+          )
         }
       }
-
     }
 
     given("a pre-approved token transfer from Bob to Terence") {
@@ -109,7 +142,17 @@ class ERC20Test : BehaviorSpec() {
       val contractAddress = tx.contractAddress.data20()!!
       bc.createBlock()
 
-      bc.callFunction(Bob, contractAddress, contract, "approve", null, 1.gwei().toLong(), null, Terence.address, 1.ether())
+      bc.callFunction(
+        Bob,
+        contractAddress,
+        contract,
+        "approve",
+        null,
+        1.gwei().toLong(),
+        null,
+        Terence.address,
+        1.ether()
+      )
       bc.createBlock()
 
       `when`("Terence attempts to transfer a portion of the allowance") {
@@ -131,7 +174,11 @@ class ERC20Test : BehaviorSpec() {
         }
 
         then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe fungibleTransfer(EtherZero, Coinbase.address.data20()!!, 3000060232.gwei().byteBuffer()!!)
+          chainEvents.first() shouldBe fungibleTransfer(
+            EtherZero,
+            Coinbase.address.data20()!!,
+            3000060232.gwei().byteBuffer()!!
+          )
         }
 
         then("there should be a transaction fee ether transfer") {
@@ -140,9 +187,13 @@ class ERC20Test : BehaviorSpec() {
         }
 
         then("there should be a token transfer from Bob to Terence") {
-          chainEvents[2] shouldBe fungibleTransfer(Bob.address.data20()!!, Terence.address.data20()!!, 1.finney().byteBuffer()!!, contract = contractAddress)
+          chainEvents[2] shouldBe fungibleTransfer(
+            Bob.address.data20()!!,
+            Terence.address.data20()!!,
+            1.finney().byteBuffer()!!,
+            contract = contractAddress
+          )
         }
-
       }
 
       `when`("Terence attempts to transfer the remainder of the allowance") {
@@ -164,7 +215,11 @@ class ERC20Test : BehaviorSpec() {
         }
 
         then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe fungibleTransfer(EtherZero, Coinbase.address.data20()!!, 3000030296.gwei().byteBuffer()!!)
+          chainEvents.first() shouldBe fungibleTransfer(
+            EtherZero,
+            Coinbase.address.data20()!!,
+            3000030296.gwei().byteBuffer()!!
+          )
         }
 
         then("there should be a transaction fee ether transfer") {
@@ -173,19 +228,19 @@ class ERC20Test : BehaviorSpec() {
         }
 
         then("there should be a token transfer from Bob to Terence") {
-          chainEvents[2] shouldBe fungibleTransfer(Bob.address.data20()!!, Terence.address.data20()!!, 999.finney().byteBuffer()!!, contract = contractAddress)
+          chainEvents[2] shouldBe fungibleTransfer(
+            Bob.address.data20()!!,
+            Terence.address.data20()!!,
+            999.finney().byteBuffer()!!,
+            contract = contractAddress
+          )
         }
-
       }
 
       `when`("Terence attempts to transfer more than his allowance") {
 
         // TODO implement
-
       }
     }
-
   }
-
-
 }

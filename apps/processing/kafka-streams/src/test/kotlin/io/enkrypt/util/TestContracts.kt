@@ -74,7 +74,6 @@ class SolidityContract(abi: String, val bin: String) {
       }
     }.toTypedArray()
 
-
   companion object {
 
     fun contractAddress(sender: ECKey, nonce: Long): ByteArray = contractAddress(sender.address, nonce)
@@ -84,7 +83,5 @@ class SolidityContract(abi: String, val bin: String) {
     fun contractAddress(sender: ByteArray, nonce: Long): ByteArray = contractAddress(sender, longToBytesNoLeadZeroes(nonce))
 
     fun contractAddress(sender: ByteArray, nonce: ByteArray): ByteArray = HashUtil.calcNewAddr(sender, nonce)
-
   }
-
 }

@@ -1,8 +1,10 @@
 package io.enkrypt.processors.block
 
 import io.enkrypt.avro.capture.BlockRecord
-import io.enkrypt.common.extensions.*
-import io.enkrypt.kafka.streams.models.ChainEvent
+import io.enkrypt.common.extensions.byteBuffer
+import io.enkrypt.common.extensions.data20
+import io.enkrypt.common.extensions.ether
+import io.enkrypt.common.extensions.gwei
 import io.enkrypt.kafka.streams.models.ChainEvent.Companion.fungibleTransfer
 import io.enkrypt.kafka.streams.models.StaticAddresses.EtherZero
 import io.enkrypt.kafka.streams.processors.block.ChainEvents
@@ -52,22 +54,50 @@ class EtherTransferTest : BehaviorSpec() {
         }
 
         then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe fungibleTransfer(EtherZero, Coinbase.address.data20()!!, 3000063000.gwei().byteBuffer()!!)
+          chainEvents.first() shouldBe fungibleTransfer(
+            EtherZero,
+            Coinbase.address.data20()!!,
+            3000063000.gwei().byteBuffer()!!
+          )
         }
 
         then("there should be an ether transfer between bob and alice") {
-          chainEvents[1] shouldBe fungibleTransfer(Bob.address.data20()!!, EtherZero, 21000.gwei().byteBuffer()!!)                // tx fee
-          chainEvents[2] shouldBe fungibleTransfer(Bob.address.data20()!!, Alice.address.data20()!!, 50.gwei().byteBuffer()!!)
+          chainEvents[1] shouldBe fungibleTransfer(
+            Bob.address.data20()!!,
+            EtherZero,
+            21000.gwei().byteBuffer()!!
+          ) // tx fee
+          chainEvents[2] shouldBe fungibleTransfer(
+            Bob.address.data20()!!,
+            Alice.address.data20()!!,
+            50.gwei().byteBuffer()!!
+          )
         }
 
         then("there should be an ether transfer between alice and terence") {
-          chainEvents[3] shouldBe fungibleTransfer(Alice.address.data20()!!, EtherZero, 21000.gwei().byteBuffer()!!)                // tx fee
-          chainEvents[4] shouldBe fungibleTransfer(Alice.address.data20()!!, Terence.address.data20()!!, 25.gwei().byteBuffer()!!)
+          chainEvents[3] shouldBe fungibleTransfer(
+            Alice.address.data20()!!,
+            EtherZero,
+            21000.gwei().byteBuffer()!!
+          ) // tx fee
+          chainEvents[4] shouldBe fungibleTransfer(
+            Alice.address.data20()!!,
+            Terence.address.data20()!!,
+            25.gwei().byteBuffer()!!
+          )
         }
 
         then("there should be an ether transfer between terence and bob") {
-          chainEvents[5] shouldBe fungibleTransfer(Terence.address.data20()!!, EtherZero, 21000.gwei().byteBuffer()!!)                // tx fee
-          chainEvents[6] shouldBe fungibleTransfer(Terence.address.data20()!!, Bob.address.data20()!!, 125.gwei().byteBuffer()!!)
+          chainEvents[5] shouldBe fungibleTransfer(
+            Terence.address.data20()!!,
+            EtherZero,
+            21000.gwei().byteBuffer()!!
+          ) // tx fee
+          chainEvents[6] shouldBe fungibleTransfer(
+            Terence.address.data20()!!,
+            Bob.address.data20()!!,
+            125.gwei().byteBuffer()!!
+          )
         }
       }
 
@@ -94,7 +124,6 @@ class EtherTransferTest : BehaviorSpec() {
             fungibleTransfer(Terence.address.data20()!!, EtherZero, 21000.gwei().byteBuffer()!!, true),
             fungibleTransfer(Terence.address.data20()!!, Bob.address.data20()!!, 125.gwei().byteBuffer()!!, true)
           ).asReversed()
-
         }
       }
     }
@@ -116,12 +145,24 @@ class EtherTransferTest : BehaviorSpec() {
         }
 
         then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe fungibleTransfer(EtherZero, Coinbase.address.data20()!!, 3000021000.gwei().byteBuffer()!!)
+          chainEvents.first() shouldBe fungibleTransfer(
+            EtherZero,
+            Coinbase.address.data20()!!,
+            3000021000.gwei().byteBuffer()!!
+          )
         }
 
         then("there should be a single transfer from alice to terence") {
-          chainEvents[1] shouldBe fungibleTransfer(Alice.address.data20()!!, EtherZero, 21000.gwei().byteBuffer()!!)                // tx fee
-          chainEvents[2] shouldBe fungibleTransfer(Alice.address.data20()!!, Terence.address.data20()!!, 56.gwei().byteBuffer()!!)
+          chainEvents[1] shouldBe fungibleTransfer(
+            Alice.address.data20()!!,
+            EtherZero,
+            21000.gwei().byteBuffer()!!
+          ) // tx fee
+          chainEvents[2] shouldBe fungibleTransfer(
+            Alice.address.data20()!!,
+            Terence.address.data20()!!,
+            56.gwei().byteBuffer()!!
+          )
         }
       }
     }

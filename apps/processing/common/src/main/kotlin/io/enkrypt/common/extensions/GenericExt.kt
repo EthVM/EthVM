@@ -7,7 +7,7 @@ private val HEX_CHARS = "0123456789abcdef".toCharArray()
 /**
  * Taken from https://gist.github.com/fabiomsr/845664a9c7e92bafb6fb0ca70d4e44fd
  */
-fun ByteArray.toHex(): String {
+fun ByteArray.hex(): String {
   val result = StringBuffer()
 
   forEach {

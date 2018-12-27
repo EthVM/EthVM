@@ -1,10 +1,8 @@
 package io.enkrypt.util
 
 import io.enkrypt.common.extensions.gwei
-import org.ethereum.config.CommonConfig
 import mu.KotlinLogging
 import org.ethereum.config.net.BaseNetConfig
-import org.ethereum.core.*
 import org.ethereum.core.Genesis
 import org.ethereum.core.Repository
 import org.ethereum.core.Transaction

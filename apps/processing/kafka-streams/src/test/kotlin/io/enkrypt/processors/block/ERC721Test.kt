@@ -1,9 +1,14 @@
 package io.enkrypt.processors.block
 
 import io.enkrypt.avro.common.ContractType
-import io.enkrypt.common.extensions.*
+import io.enkrypt.common.extensions.byteBuffer
+import io.enkrypt.common.extensions.data20
+import io.enkrypt.common.extensions.ether
+import io.enkrypt.common.extensions.gwei
+import io.enkrypt.common.extensions.hexBuffer
+import io.enkrypt.common.extensions.unsignedByteArray
+import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.kafka.streams.models.ChainEvent
-import io.enkrypt.kafka.streams.models.StaticAddresses
 import io.enkrypt.kafka.streams.models.StaticAddresses.EtherZero
 import io.enkrypt.kafka.streams.processors.block.ChainEvents
 import io.enkrypt.util.Blockchains.Coinbase
@@ -51,11 +56,19 @@ class ERC721Test : BehaviorSpec() {
         }
 
         then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe ChainEvent.fungibleTransfer(EtherZero, Coinbase.address.data20()!!, 3002909450.gwei().byteBuffer()!!)
+          chainEvents.first() shouldBe ChainEvent.fungibleTransfer(
+            EtherZero,
+            Coinbase.address.data20()!!,
+            3002909450.gwei().byteBuffer()!!
+          )
         }
 
         then("there should be a transaction fee ether transfer") {
-          chainEvents[1] shouldBe ChainEvent.fungibleTransfer(Bob.address.data20()!!, EtherZero, 2909450.gwei().byteBuffer()!!)
+          chainEvents[1] shouldBe ChainEvent.fungibleTransfer(
+            Bob.address.data20()!!,
+            EtherZero,
+            2909450.gwei().byteBuffer()!!
+          )
         }
 
         then("there should be a contract creation event with type ERC721") {
@@ -68,9 +81,7 @@ class ERC721Test : BehaviorSpec() {
             contract.bin.hexBuffer()!!
           )
         }
-
       }
-
     }
 
     given("some minted token ids") {
@@ -80,15 +91,56 @@ class ERC721Test : BehaviorSpec() {
 
       val createBlock = bc.createBlock()
 
-      bc.callFunction(Bob, contractAddress, contract, "mint", null, 1.gwei().toLong(), null, Bob.address, 1.toBigInteger().unsignedByteArray())
-      bc.callFunction(Bob, contractAddress, contract, "mint", null, 1.gwei().toLong(), null, Alice.address, 2.toBigInteger().unsignedByteArray())
-      bc.callFunction(Bob, contractAddress, contract, "mint", null, 1.gwei().toLong(), null, Terence.address, 3.toBigInteger().unsignedByteArray())
+      bc.callFunction(
+        Bob,
+        contractAddress,
+        contract,
+        "mint",
+        null,
+        1.gwei().toLong(),
+        null,
+        Bob.address,
+        1.toBigInteger().unsignedByteArray()
+      )
+      bc.callFunction(
+        Bob,
+        contractAddress,
+        contract,
+        "mint",
+        null,
+        1.gwei().toLong(),
+        null,
+        Alice.address,
+        2.toBigInteger().unsignedByteArray()
+      )
+      bc.callFunction(
+        Bob,
+        contractAddress,
+        contract,
+        "mint",
+        null,
+        1.gwei().toLong(),
+        null,
+        Terence.address,
+        3.toBigInteger().unsignedByteArray()
+      )
 
       val mintBlock = bc.createBlock()
 
       `when`("Bob transfers token 1 to Alice") {
 
-        bc.callFunction(Bob, contractAddress, contract, "safeTransferFrom", null, 1.gwei().toLong(), null, Bob.address, Alice.address, 1)
+        bc.callFunction(
+          Bob,
+          contractAddress,
+          contract,
+          "safeTransferFrom",
+          null,
+          1.gwei().toLong(),
+          null,
+          Bob.address,
+          Alice.address,
+          1
+        )
 
         val block = bc.createBlock()
         val chainEvents = ChainEvents.forBlock(block)
@@ -98,23 +150,32 @@ class ERC721Test : BehaviorSpec() {
         }
 
         then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe ChainEvent.fungibleTransfer(EtherZero, Coinbase.address.data20()!!, 3000055490.gwei().byteBuffer()!!)
+          chainEvents.first() shouldBe ChainEvent.fungibleTransfer(
+            EtherZero,
+            Coinbase.address.data20()!!,
+            3000055490.gwei().byteBuffer()!!
+          )
         }
 
         then("there should be a transaction fee ether transfer") {
           // TODO fix me, tx fee seems to be negative
-          chainEvents[1] shouldBe ChainEvent.fungibleTransfer(Bob.address.data20()!!, EtherZero, 70490.gwei().byteBuffer()!!)
+          chainEvents[1] shouldBe ChainEvent.fungibleTransfer(
+            Bob.address.data20()!!,
+            EtherZero,
+            70490.gwei().byteBuffer()!!
+          )
         }
 
         then("there should a token transfer to token from Bob to Alice") {
           // TODO fix encoding issues with unsigned big integers
-          chainEvents[2] shouldBe ChainEvent.nonFungibleTransfer(contractAddress, Bob.address.data20()!!, Alice.address.data20()!!, 1.toBigInteger().unsignedByteBuffer()!!)
+          chainEvents[2] shouldBe ChainEvent.nonFungibleTransfer(
+            contractAddress,
+            Bob.address.data20()!!,
+            Alice.address.data20()!!,
+            1.toBigInteger().unsignedByteBuffer()!!
+          )
         }
       }
-
     }
-
   }
-
-
 }

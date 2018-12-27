@@ -83,7 +83,7 @@ data class ContractMetadata(
     Struct(EthListsTokensSourceTask.contractMetadataSchema).apply {
       put("name", name)
       put("symbol", symbol)
-      put("address", Hex.decodeHex(address.substring(2)))
+      put("address", Hex.decode(address.substring(2)))
       put("decimals", decimals)
       put("ens_address", ens_address)
       put("type", type)
@@ -131,7 +131,7 @@ class EthListsTokensSourceTask : SourceTask() {
     val result = entries?.map { e ->
 
       val key = Struct(contractKeySchema).apply {
-        put("address", Hex.decodeHex(e.address.substring(2)))
+        put("address", Hex.decode(e.address.substring(2)))
       }
 
       SourceRecord(
