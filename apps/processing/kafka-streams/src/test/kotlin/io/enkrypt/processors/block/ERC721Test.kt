@@ -60,7 +60,7 @@ class ERC721Test : BehaviorSpec() {
           chainEvents.first() shouldBe ChainEvent.fungibleTransfer(
             EtherZero,
             Coinbase.address.data20()!!,
-            3002909450.gwei().unsignedByteBuffer()!!
+            (3.ether() + createBlock.totalTxFees()).unsignedByteBuffer()!!
           )
         }
 
@@ -68,7 +68,7 @@ class ERC721Test : BehaviorSpec() {
           chainEvents[1] shouldBe ChainEvent.fungibleTransfer(
             Bob.address.data20()!!,
             EtherZero,
-            2909450.gwei().unsignedByteBuffer()!!
+            createBlock.txFees()[0].unsignedByteBuffer()!!
           )
         }
 
