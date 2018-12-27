@@ -24,24 +24,24 @@ matrix:
       language: node_js
       node_js:
         - "10"
-    -
-      env:
-        - ID=api/e2e-tests
-        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/api
-        - INSTALL='yarn install'
-        - ACTION='yarn test:e2e'
-      language: node_js
-      node_js:
-        - "10"
-    -
-      env:
-        - ID=explorer/lint
-        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/explorer
-        - INSTALL='yarn install'
-        - ACTION='yarn lint'
-      language: node_js
-      node_js:
-        - "10"
+    # -
+    #   env:
+    #     - ID=api/e2e-tests
+    #     - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/api
+    #     - INSTALL='yarn install'
+    #     - ACTION='yarn test:e2e'
+    #   language: node_js
+    #   node_js:
+    #     - "10"
+    # -
+    #   env:
+    #     - ID=explorer/lint
+    #     - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/explorer
+    #     - INSTALL='yarn install'
+    #     - ACTION='yarn lint'
+    #   language: node_js
+    #   node_js:
+    #     - "10"
     -
       env:
         - ID=explorer/unit-tests
