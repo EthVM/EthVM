@@ -16,6 +16,8 @@ import io.enkrypt.util.Blockchains.Users.Bob
 import io.enkrypt.util.Blockchains.Users.Terence
 import io.enkrypt.util.StandaloneBlockchain
 import io.enkrypt.util.TestContracts
+import io.enkrypt.util.totalTxFees
+import io.enkrypt.util.txFees
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
 
@@ -111,7 +113,7 @@ class ERC721Test : BehaviorSpec() {
           chainEvents.first() shouldBe ChainEvent.fungibleTransfer(
             EtherZero,
             Coinbase.address.data20()!!,
-            3000055490.gwei().unsignedByteBuffer()!!
+            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
           )
         }
 
@@ -119,7 +121,7 @@ class ERC721Test : BehaviorSpec() {
           chainEvents[1] shouldBe ChainEvent.fungibleTransfer(
             Bob.address.data20()!!,
             EtherZero,
-            271428976710656.wei().unsignedByteBuffer()!!
+            block.txFees()[0].unsignedByteBuffer()!!
           )
         }
 
@@ -148,7 +150,7 @@ class ERC721Test : BehaviorSpec() {
           chainEvents.first() shouldBe ChainEvent.fungibleTransfer(
             EtherZero,
             Coinbase.address.data20()!!,
-            3000081106.gwei().unsignedByteBuffer()!!
+            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
           )
         }
 
@@ -157,7 +159,7 @@ class ERC721Test : BehaviorSpec() {
           chainEvents[1] shouldBe ChainEvent.fungibleTransfer(
             Alice.address.data20()!!,
             EtherZero,
-            81106.gwei().unsignedByteBuffer()!!
+            block.txFees()[0].unsignedByteBuffer()!!
           )
         }
 
@@ -186,7 +188,7 @@ class ERC721Test : BehaviorSpec() {
           chainEvents.first() shouldBe ChainEvent.fungibleTransfer(
             EtherZero,
             Coinbase.address.data20()!!,
-            3000085490.gwei().unsignedByteBuffer()!!
+            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
           )
         }
 
@@ -195,7 +197,7 @@ class ERC721Test : BehaviorSpec() {
           chainEvents[1] shouldBe ChainEvent.fungibleTransfer(
             Terence.address.data20()!!,
             EtherZero,
-            85490.gwei().unsignedByteBuffer()!!
+            block.txFees()[0].unsignedByteBuffer()!!
           )
         }
 

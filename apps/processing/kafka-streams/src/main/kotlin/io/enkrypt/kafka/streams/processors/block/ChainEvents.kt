@@ -8,6 +8,7 @@ import io.enkrypt.avro.capture.TransactionRecord
 import io.enkrypt.common.extensions.bigInteger
 import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.common.extensions.isSuccess
+import io.enkrypt.common.extensions.unsignedBigInteger
 import io.enkrypt.kafka.streams.models.ChainEvent
 import io.enkrypt.kafka.streams.models.StaticAddresses
 import io.enkrypt.kafka.streams.utils.ERC20Abi
@@ -73,7 +74,7 @@ object ChainEvents {
     val data = tx.getInput()
 
     // tx fee
-    val txFee = (receipt.getGasUsed().bigInteger()!! * tx.getGasPrice().bigInteger()!!).unsignedByteBuffer()!!
+    val txFee = (receipt.getGasUsed().unsignedBigInteger()!! * tx.getGasPrice().bigInteger()!!).unsignedByteBuffer()!!
     events += ChainEvent.fungibleTransfer(from, StaticAddresses.EtherZero, txFee, reverse)
 
     // short circuit if the tx was not successful
