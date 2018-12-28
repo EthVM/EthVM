@@ -1,12 +1,5 @@
 <template>
-  <v-card
-    :color="getColor"
-    :class="getBackground"
-    flat
-    class="mt-1 pr-1 white--text"
-    height="150px"
-    style="padding-top: 42px; padding-left: 24px;"
-  >
+  <v-card :color="getColor" :class="getBackground" flat class="mt-1 pr-1 white--text" height="150px" style="padding-top: 42px; padding-left: 24px;">
     <v-layout wrap fill-height>
       <v-flex xs12>
         <v-layout align-end row pr-2>
@@ -35,7 +28,6 @@ export default Vue.extend({
       return this.colorType
     },
     getBackground(): string {
-      console.log(this.title, this.backType)
       return this.backType
     }
   }
@@ -71,4 +63,3 @@ export default Vue.extend({
   background-image: url('~@/assets/smallblocks/danger-sing.svg');
 }
 </style>
-

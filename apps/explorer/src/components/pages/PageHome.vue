@@ -1,70 +1,32 @@
 <template>
   <v-container grid-list-lg class="mb-0">
-    <app-bread-crumbs/>
+    <app-bread-crumbs />
     <v-layout row wrap justify-space-between mb-4>
+      <v-flex xs12 sm6 md3> <app-info-card :title="$t('smlBlock.last')" :value="latestBlockNumber" colorType="primary" backType="last-block" /> </v-flex>
       <v-flex xs12 sm6 md3>
-        <app-info-card
-          :title="$t('smlBlock.last')"
-          :value="latestBlockNumber"
-          colorType="primary"
-          backType="last-block"
-        />
+        <app-info-card :title="$t('smlBlock.time')" :value="secSinceLastBlock" colorType="success" backType="time-since" metrics="sec" />
       </v-flex>
       <v-flex xs12 sm6 md3>
-        <app-info-card
-          :title="$t('smlBlock.time')"
-          :value="secSinceLastBlock"
-          colorType="success"
-          backType="time-since"
-          metrics="sec"
-        />
+        <app-info-card :title="$t('smlBlock.hashR')" :value="latestHashRate" colorType="warning" backType="hash-rate" metrics="Th/s" />
       </v-flex>
       <v-flex xs12 sm6 md3>
-        <app-info-card
-          :title="$t('smlBlock.hashR')"
-          :value="latestHashRate"
-          colorType="warning"
-          backType="hash-rate"
-          metrics="Th/s"
-        />
-      </v-flex>
-      <v-flex xs12 sm6 md3>
-        <app-info-card
-          :title="$t('smlBlock.diff')"
-          :value="latestDifficulty"
-          colorType="error"
-          backType="difficulty"
-          metrics="Th"
-        />
+        <app-info-card :title="$t('smlBlock.diff')" :value="latestDifficulty" colorType="error" backType="difficulty" metrics="Th" />
       </v-flex>
     </v-layout>
     <!-- Charts -->
     <v-layout row wrap justify-center mb-4>
-      <v-flex xs12 md6>
-        <chart-live-tx/>
-      </v-flex>
-      <v-flex xs12 md6>
-        <chart-live-tx-fees/>
-      </v-flex>
+      <v-flex xs12 md6> <chart-live-tx /> </v-flex>
+      <v-flex xs12 md6> <chart-live-tx-fees /> </v-flex>
     </v-layout>
     <!-- End Charts -->
     <!-- Last Blocks -->
     <v-layout row wrap justify-center mb-4>
-      <v-flex xs12>
-        <table-blocks
-          v-if="blocks"
-          :maxBlocks="true"
-          :blocks="blocks"
-          showStyle="max-height: 590px"
-        />
-      </v-flex>
+      <v-flex xs12> <table-blocks v-if="blocks" :maxBlocks="true" :blocks="blocks" showStyle="max-height: 590px" /> </v-flex>
     </v-layout>
     <!-- End Last Blocks -->
     <!-- Last Txs -->
     <v-layout row wrap justify-center mb-4>
-      <v-flex xs12>
-        <table-transactions v-if="txs" :transactions="txs" showStyle="max-height: 590px"/>
-      </v-flex>
+      <v-flex xs12> <table-transactions v-if="txs" :transactions="txs" showStyle="max-height: 590px" /> </v-flex>
     </v-layout>
     <!-- End Last Txs -->
   </v-container>

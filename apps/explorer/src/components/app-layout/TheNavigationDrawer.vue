@@ -93,7 +93,7 @@ export default class TheNavigationDrawer extends Vue {
             },
             {
               text: this.$i18n.t('title.pending'),
-              routerLink: '/pending'
+              routerLink: '/pending-transactions'
             }
           ]
         },

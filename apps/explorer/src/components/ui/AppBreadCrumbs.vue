@@ -35,14 +35,16 @@ export default Vue.extend({
       ]
     }
   },
+  mounted() {
+    if (this.newItems) {
+      this.crumbs[0].disabled = false
+      for (const i in this.newItems) {
+        this.crumbs.push(this.newItems[i])
+      }
+    }
+  },
   computed: {
     getItems() {
-      if (this.newItems) {
-        this.crumbs[0].disabled = false
-        for (const i in this.newItems) {
-          this.crumbs.push(this.newItems[i])
-        }
-      }
       return this.crumbs
     }
   }

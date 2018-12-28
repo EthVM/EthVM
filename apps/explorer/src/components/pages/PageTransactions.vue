@@ -2,43 +2,17 @@
   <v-container grid-list-lg class="mt-0">
     <app-bread-crumbs :newItems="items"></app-bread-crumbs>
     <v-layout row wrap justify-space-between mb-4>
+      <v-flex xs12 md6 lg3> <app-info-card :title="$t('smlBlock.last')" :value="latestBlockNumber" colorType="primary" backType="last-block" /> </v-flex>
       <v-flex xs12 md6 lg3>
-        <app-info-card
-          :title="$t('smlBlock.last')"
-          :value="latestBlockNumber"
-          colorType="primary"
-          backType="last-block"
-        />
+        <app-info-card :title="$t('smlBlock.success')" :value="latestBlockSuccessTxs" colorType="txSuccess" backType="success-txs" />
       </v-flex>
+      <v-flex xs12 md6 lg3> <app-info-card :title="$t('smlBlock.failed')" :value="latestBlockFailedTxs" colorType="error" backType="failed-txs" /> </v-flex>
       <v-flex xs12 md6 lg3>
-        <app-info-card
-          :title="$t('smlBlock.success')"
-          :value="latestBlockSuccessTxs"
-          colorType="txSuccess"
-          backType="success-txs"
-        />
-      </v-flex>
-      <v-flex xs12 md6 lg3>
-        <app-info-card
-          :title="$t('smlBlock.failed')"
-          :value="latestBlockFailedTxs"
-          colorType="error"
-          backType="failed-txs"
-        />
-      </v-flex>
-      <v-flex xs12 md6 lg3>
-        <app-info-card
-          :title="$t('smlBlock.pending')"
-          :value="latestBlockPendingTxs"
-          colorType="success"
-          backType="time-since"
-        ></app-info-card>
+        <app-info-card :title="$t('smlBlock.pending')" :value="latestBlockPendingTxs" colorType="success" backType="time-since"></app-info-card>
       </v-flex>
     </v-layout>
     <v-layout row justify-center mb-4>
-      <v-flex xs12>
-        <table-transactions :transactions="txs" :frameTxs="true"></table-transactions>
-      </v-flex>
+      <v-flex xs12> <table-transactions :transactions="txs" :frameTxs="true"></table-transactions> </v-flex>
     </v-layout>
   </v-container>
 </template>
@@ -83,4 +57,3 @@ export default Vue.extend({
   }
 })
 </script>
-

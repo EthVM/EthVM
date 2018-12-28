@@ -43,7 +43,7 @@
       </v-layout>
     </v-card>
     <div v-else>
-      <v-card class="mt-3 mb-3">
+      <v-card flat class="mt-3 mb-3">
         <v-card-text v-if="!pending" class="text-xs-center text-muted">{{ $t('message.noTxHistory') }}</v-card-text>
         <v-card-text v-else class="text-xs-center text-muted">{{ $t('message.noPending') }}</v-card-text>
       </v-card>
@@ -67,10 +67,6 @@ export default Vue.extend({
       default: false
     },
     showStyle: {
-      type: String,
-      default: ''
-    },
-    tableTitle: {
       type: String,
       default: ''
     },
@@ -102,10 +98,7 @@ export default Vue.extend({
       return this.showStyle
     },
     getTitle() {
-      if (this.tableTitle !== '') {
-        return this.tableTitle
-      }
-      return this.defaultTitle
+      return this.pending ? this.$i18n.t('title.pending') : this.defaultTitle
     }
   }
 })
