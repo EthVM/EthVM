@@ -37,28 +37,6 @@ a:link {
     min-height: 32px;
 }
 
-/*SMALL COMPONENT: */
-
-.last-block {
-    background-position: right -10px bottom -17px;
-    background-image: url('~@/assets/smallblocks/cubes-in-stack-with-shadow.svg');
-}
-
-.time-since {
-    background-position: right -10px bottom -17px;
-    background-image: url('~@/assets/smallblocks/hourglass.svg');
-}
-
-.hash-rate {
-    background-position: right -10px bottom -17px;
-    background-image: url('~@/assets/smallblocks/hash.svg');
-}
-
-.difficulty {
-    background-position: right -10px bottom -17px;
-    background-image: url('~@/assets/smallblocks/dashboard.svg');
-}
-
 .psmall {
     padding-bottom: 10px;
 }

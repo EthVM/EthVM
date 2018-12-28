@@ -28,15 +28,15 @@ export const lastBlockInfo = {
     },
 
     latestBlockSuccessTxs() {
-      return this.data.recieved ? this.block.getStats().successfulTxs : this.loading
+      return this.dataRecieved ? this.block.getStats().successfulTxs : this.loading
     },
 
     latestBlockFailedTxs() {
-      return this.data.recieved ? this.block.getStats().failedTxs : this.loading
+      return this.dataRecieved ? this.block.getStats().failedTxs : this.loading
     },
 
-    latestBlockPending() {
-      return this.data.recieved ? this.block.getStats().pendingTxs : this.loading
+    latestBlockPendingTxs() {
+      return this.dataRecieved ? this.block.getStats().pendingTxs : this.loading
     },
 
     secSinceLastBlock() {

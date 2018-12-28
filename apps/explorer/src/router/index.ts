@@ -3,6 +3,7 @@ import Router from 'vue-router'
 //Import route layouts components:
 import PageHome from '@/components/pages/PageHome.vue'
 import PageBlocks from '@/components/pages/PageBlocks.vue'
+import PageTransactions from '@/components/pages/PageTransactions.vue'
 
 Vue.use(Router)
 
@@ -17,7 +18,13 @@ export default new Router({
       path: '/blocks',
       component: PageBlocks,
       name: 'blocks'
+    },
+    {
+      path: '/transactions',
+      component: PageTransactions,
+      name: 'transactions'
     }
+
     /*{
       path: '/:pageName',
       component: HomeRouter
