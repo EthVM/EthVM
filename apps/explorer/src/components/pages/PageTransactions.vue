@@ -24,16 +24,17 @@ import AppInfoCard from '@app/components/ui/AppInfoCard.vue'
 import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
 import { lastBlockInfo } from '@app/components/mixins/mixin-last-block-stats'
 import Vue from 'vue'
+import { Component, Prop, Provide, Mixins } from 'vue-property-decorator'
 const MAX_ITEMS = 20
 
-export default Vue.extend({
-  name: 'PageTransactions',
+@Component({
   components: {
     AppBreadCrumbs,
     AppInfoCard,
     TableTransactions
-  },
-  mixins: [lastBlockInfo],
+  }
+})
+export default class PageTransactions extends Mixins(lastBlockInfo) {
   data() {
     return {
       items: [
@@ -43,17 +44,15 @@ export default Vue.extend({
         }
       ]
     }
-  },
-  computed: {
-    txs() {
-      let tx
-      tx = this.$store.getters.getTxs
-      this.$eventHub.$on(sEvents.newTx, _transactions => {
-        tx = this.$store.getters.getTxs
-        return tx.slice(0, MAX_ITEMS)
-      })
-      return tx.slice(0, MAX_ITEMS)
-    }
   }
-})
+  get txs() {
+    let tx
+    tx = this.$store.getters.getTxs
+    this.$eventHub.$on(sEvents.newTx, _transactions => {
+      tx = this.$store.getters.getTxs
+      return tx.slice(0, MAX_ITEMS)
+    })
+    return tx.slice(0, MAX_ITEMS)
+  }
+}
 </script>

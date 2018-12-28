@@ -59,12 +59,7 @@ const MAX_ITEMS = 20
   }
 })
 export default class FramesHome extends Mixins(lastBlockInfo) {
-  @Provide() blocks = []
-  data() {
-    return {
-      blocks: null
-    }
-  }
+  blocks: any
 
   created() {
     this.blocks = this.$store.getters.getBlocks

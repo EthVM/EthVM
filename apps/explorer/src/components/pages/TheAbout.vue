@@ -9,11 +9,11 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { Component, Prop, Provide, Mixins } from 'vue-property-decorator'
 
 const MAX_ITEMS = 20
 
-export default Vue.extend({
-  name: 'FramesHome',
+export default class FramesHome extends Vue {
   data() {
     return {
       items: [
@@ -23,16 +23,14 @@ export default Vue.extend({
         }
       ]
     }
-  },
-  computed: {
-    txs() {
-      if (this.$store.getters.getTxs.length) {
-        return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
-      }
-      return []
-    }
   }
-})
+  txs() {
+    if (this.$store.getters.getTxs.length) {
+      return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
+    }
+    return []
+  }
+}
 </script>
 
 <style scoped lang="less">
