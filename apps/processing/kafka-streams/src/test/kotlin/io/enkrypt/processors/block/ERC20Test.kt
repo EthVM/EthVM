@@ -143,7 +143,7 @@ class ERC20Test : BehaviorSpec() {
       bc.createBlock()
 
       bc.callFunction(Bob, contractAddress, contract, "approve", null, 1.gwei().toLong(), null, Terence.address, 1.ether())
-      val block = bc.createBlock()
+      bc.createBlock()
 
       `when`("Terence attempts to transfer a portion of the allowance") {
 

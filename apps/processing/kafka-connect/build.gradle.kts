@@ -29,12 +29,12 @@ dependencies {
   implementation(project(":avro"))
 
   // Kafka
-  compileOnly("org.apache.kafka:connect-api:2.0.0")
+  compileOnly("org.apache.kafka:connect-api:2.1.0")
   implementation("io.confluent:kafka-schema-registry-client:5.0.1")
   implementation("io.confluent:kafka-connect-avro-converter:5.0.1")
 
   // Mongo
-  implementation("org.mongodb:mongodb-driver:3.9.0")
+  implementation("org.mongodb:mongodb-driver:3.9.1")
 
   // Web3
   implementation("org.web3j:parity:4.0.3")
@@ -42,11 +42,12 @@ dependencies {
   // Utils
   implementation("io.arrow-kt:arrow-core:0.8.1")
   implementation("ch.qos.logback:logback-classic:1.2.3")
-  implementation("io.github.microutils:kotlin-logging:1.5.9")
-  implementation("com.beust:klaxon:3.0.1")
+  implementation("io.github.microutils:kotlin-logging:1.6.22")
+  implementation("com.beust:klaxon:3.0.5")
 
   // Tests
-  testImplementation("io.kotlintest:kotlintest-runner-junit5:3.1.10")
+  testImplementation("io.kotlintest:kotlintest-runner-junit5:3.1.11")
+  testImplementation("io.mockk:mockk:1.8.12")
 }
 
 project.tasks.getting(Test::class) { useJUnitPlatform {} }
