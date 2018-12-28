@@ -5,8 +5,10 @@ import io.enkrypt.common.extensions.unsignedBigInteger
 import java.math.BigInteger
 
 fun BlockRecord.txFees(): List<BigInteger> =
-  this.getTransactions().zip(this.getTransactionReceipts())
+  getTransactions()
+    .zip(getTransactionReceipts())
     .map { (tx, r) -> tx.getGasPrice().unsignedBigInteger()!! * r.getGasUsed().unsignedBigInteger()!! }
 
-fun BlockRecord.totalTxFees(): BigInteger = this.txFees()
-  .reduce { memo, next -> memo + next }
+fun BlockRecord.totalTxFees(): BigInteger =
+  txFees()
+    .fold(0.toBigInteger()) { memo, next -> memo + next }

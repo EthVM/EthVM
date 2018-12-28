@@ -26,7 +26,13 @@ import java.nio.ByteBuffer
 
 object ChainEvents {
 
-  fun fungibleTransfer(from: Data20, to: Data20, amount: ByteBuffer, reverse: Boolean = false, contract: Data20? = null) =
+  fun fungibleTransfer(
+    from: Data20,
+    to: Data20,
+    amount: ByteBuffer,
+    reverse: Boolean = false,
+    contract: Data20? = null
+  ) =
     ChainEventRecord.newBuilder()
       .setReverse(reverse)
       .setType(ChainEventType.TOKEN_TRANSFER)

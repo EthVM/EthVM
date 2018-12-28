@@ -27,7 +27,7 @@ class EtherTransferTest : BehaviorSpec() {
     Terence.address.data20() to 100.ether()
   )
 
-  val bcConfig = StandaloneBlockchain.Config(
+  private val bcConfig = StandaloneBlockchain.Config(
     gasLimit = 21000,
     gasPrice = 1.gwei().toLong(),
     premineBalances = premineBalances,

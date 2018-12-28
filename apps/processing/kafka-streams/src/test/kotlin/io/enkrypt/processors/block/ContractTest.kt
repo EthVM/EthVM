@@ -39,6 +39,27 @@ class ContractTest : BehaviorSpec() {
 
   init {
 
+    given("an empty contract deployment") {
+
+      `when`("we create an empty block") {
+
+        val block = bc.createBlock()
+        val chainEvents = ChainEvents.forBlock(block)
+
+        then("there should be 1 chain event") {
+          chainEvents.size shouldBe 1
+        }
+
+        then("there should be a fungible ether transfer for the coinbase") {
+          chainEvents.first() shouldBe fungibleTransfer(
+            StaticAddresses.EtherZero,
+            Coinbase.address.data20()!!,
+            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
+          )
+        }
+      }
+    }
+
     given("a contract with a self destruct function") {
 
       val contract = TestContracts.SELF_DESTRUCTS.contractFor("SelfDestruct")
@@ -215,9 +236,34 @@ class ContractTest : BehaviorSpec() {
 
     }
 
+    given("a contract that tries to run indefinitely in the constructor") {
+
+      val contract = TestContracts.OUT_OF_GAS.contractFor("OutOfGasInConstructor")
+
+      `when`("we try to deploy the contract") {
+
+        bc.submitContract(Bob, contract)
+
+        val block = bc.createBlock()
+        val chainEvents = ChainEvents.forBlock(block)
+
+        then("there should be 2 chain events") {
+          chainEvents.size shouldBe 2
+        }
+
+        then("there should be a fungible ether transfer for the coinbase") {
+          chainEvents.first() shouldBe fungibleTransfer(
+            StaticAddresses.EtherZero,
+            Coinbase.address.data20()!!,
+            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
+          )
+        }
+      }
+    }
+
     given("a contract that tries to run indefinitely") {
 
-      val contract = TestContracts.GLUTTONY.contractFor("Gluttony")
+      val contract = TestContracts.OUT_OF_GAS.contractFor("OutOfGasInMethod")
 
       val tx = bc.submitContract(Bob, contract)
       val gluttonyAddress = SolidityContract.contractAddress(Bob, tx.nonce).data20()!!
@@ -226,13 +272,40 @@ class ContractTest : BehaviorSpec() {
 
       `when`("we ask to run indefinitely") {
 
-        bc.callFunction(Bob, gluttonyAddress, contract, "eatTillExplosion")
+        bc.callFunction(Bob, gluttonyAddress, contract, "infiniteLoop")
 
         val block = bc.createBlock()
         val chainEvents = ChainEvents.forBlock(block)
 
-        then("there should be 1 chain events") {
-          chainEvents.size shouldBe 1
+        then("there should be 2 chain events") {
+          chainEvents.size shouldBe 2
+        }
+
+        then("there should be a fungible ether transfer for the coinbase") {
+          chainEvents.first() shouldBe fungibleTransfer(
+            StaticAddresses.EtherZero,
+            Coinbase.address.data20()!!,
+            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
+          )
+        }
+      }
+    }
+
+    given("a pair of contracts deployment (one will be successful and the other's not)") {
+
+      val c1 = TestContracts.PING_PONG.contractFor("PingPong")
+      bc.submitContract(Bob, c1)
+
+      val c2 = TestContracts.OUT_OF_GAS.contractFor("OutOfGasInConstructor")
+      bc.submitContract(Bob, c2)
+
+      `when`("we try to deploy all of them") {
+
+        val block = bc.createBlock()
+        val chainEvents = ChainEvents.forBlock(block)
+
+        then("there should be 4 chain events") {
+          chainEvents.size shouldBe 4
         }
 
         then("there should be a fungible ether transfer for the coinbase") {
