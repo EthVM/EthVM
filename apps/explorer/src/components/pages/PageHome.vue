@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { Vue, Component, Prop, Provide, Mixins } from 'vue-property-decorator'
 import Visibility from 'visibilityjs'
 import { Events } from 'ethvm-common'
 import BN from 'bignumber.js'
@@ -48,8 +48,7 @@ import { Events as sEvents } from 'ethvm-common'
 import { Block, Tx, PendingTx } from '@app/models'
 
 const MAX_ITEMS = 20
-export default Vue.extend({
-  name: 'FramesHome',
+@Component({
   components: {
     AppBreadCrumbs,
     TableBlocks,
@@ -57,13 +56,16 @@ export default Vue.extend({
     AppInfoCard,
     ChartLiveTx,
     ChartLiveTxFees
-  },
-  mixins: [lastBlockInfo],
+  }
+})
+export default class FramesHome extends Mixins(lastBlockInfo) {
+  @Provide() blocks = []
   data() {
     return {
       blocks: null
     }
-  },
+  }
+
   created() {
     this.blocks = this.$store.getters.getBlocks
     this.$eventHub.$on(Events.newBlock, _block => {
@@ -71,17 +73,16 @@ export default Vue.extend({
         this.blocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
       }
     })
-  },
+  }
+
   beforeDestroy() {
     this.$eventHub.$off(Events.newBlock)
-  },
-  computed: {
-    txs() {
-      if (this.$store.getters.getTxs.length) {
-        return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
-      }
-      return []
-    }
   }
-})
+  get txs() {
+    if (this.$store.getters.getTxs.length) {
+      return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
+    }
+    return []
+  }
+}
 </script>
