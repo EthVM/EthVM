@@ -29,8 +29,8 @@ class ContractTest : BehaviorSpec() {
   )
 
   private val bcConfig = StandaloneBlockchain.Config(
-    gasLimit = 500_000, // Enough to cover most transactions
-    gasPrice = 1,
+    gasLimit = 250_000,             // Enough to cover most transactions
+    gasPrice = 100.gwei().toLong(), // Value chosen to speedup a little bit tests
     premineBalances = premineBalances,
     coinbase = Coinbase.address.data20()!!
   )
