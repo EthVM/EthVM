@@ -308,7 +308,7 @@ class MongoSinkTask : SinkTask() {
 
     var writes = listOf<WriteModel<BsonDocument>>()
 
-    val idBson = StructToBsonConverter.convert(record.key() as Struct)
+    val idBson = StructToBsonConverter.convert(record.key() as Struct, false)
     val idFilter = BsonDocument().apply { append("_id", idBson) }
 
     if (record.value() == null) {
@@ -343,7 +343,7 @@ class MongoSinkTask : SinkTask() {
 
     var writes = listOf<WriteModel<BsonDocument>>()
 
-    val idBson = StructToBsonConverter.convert(record.key() as Struct)
+    val idBson = StructToBsonConverter.convert(record.key() as Struct, false)
     val idFilter = BsonDocument().apply { append("_id", idBson) }
 
     if (record.value() == null) {
