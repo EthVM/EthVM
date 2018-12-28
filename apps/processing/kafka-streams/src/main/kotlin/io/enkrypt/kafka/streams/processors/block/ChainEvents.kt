@@ -230,7 +230,7 @@ object ChainEvents {
     val data = internalTx.getInput()
 
     // simple ether transfer
-    if (!(from == null || to == null || value == null)) {
+    if (!(from == null || to == null || value.capacity() == 0)) {
       events += fungibleTransfer(from, to, value, reverse)
     }
 

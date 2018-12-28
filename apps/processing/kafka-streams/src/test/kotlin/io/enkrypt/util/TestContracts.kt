@@ -19,9 +19,9 @@ enum class TestContracts(path: String) {
   SELF_DESTRUCTS("/solidity/SelfDestructs.sol"),
   PING_PONG("/solidity/PingPong.sol");
 
-  val src = TestContracts::class.java.getResource(path).readText()
+  private val src by lazy { TestContracts::class.java.getResource(path).readText() }
 
-  val cres = {
+  private val cres by lazy {
     val res = SolidityCompiler.compile(
       src.toByteArray(),
       true,
@@ -31,7 +31,7 @@ enum class TestContracts(path: String) {
     if (res.isFailed) throw Exception("Failed to compile: " + res.errors)
 
     CompilationResult.parse(res.output)
-  }()
+  }
 
   fun binaryFor(name: String) = cres.getContract(name).bin!!
 

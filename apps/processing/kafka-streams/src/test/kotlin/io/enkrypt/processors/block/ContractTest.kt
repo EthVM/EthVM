@@ -29,8 +29,8 @@ class ContractTest : BehaviorSpec() {
   )
 
   private val bcConfig = StandaloneBlockchain.Config(
-    gasLimit = 31000,
-    gasPrice = 1.gwei().toLong(),
+    gasLimit = 500_000, // Enough to cover most transactions
+    gasPrice = 1,
     premineBalances = premineBalances,
     coinbase = Coinbase.address.data20()!!
   )
@@ -45,7 +45,7 @@ class ContractTest : BehaviorSpec() {
 
       `when`("we instantiate it") {
 
-        val tx = bc.submitContract(Bob, contract, gasLimit = 500_000)
+        val tx = bc.submitContract(Bob, contract)
         val contractAddress = tx.contractAddress.data20()
 
         val block = bc.createBlock()
@@ -85,7 +85,7 @@ class ContractTest : BehaviorSpec() {
 
       `when`("we instantiate it with ether") {
 
-        val tx = bc.submitContract(Bob, contract, gasLimit = 500_000, value = 10.gwei())
+        val tx = bc.submitContract(Bob, contract, value = 10.gwei())
         val contractAddress = tx.contractAddress.data20()
 
         val block = bc.createBlock()
@@ -133,7 +133,7 @@ class ContractTest : BehaviorSpec() {
 
       `when`("we ask it to self destruct") {
 
-        val tx = bc.submitContract(Bob, contract, gasLimit = 500_000, value = 35.gwei())
+        val tx = bc.submitContract(Bob, contract, value = 35.gwei())
         val contractAddress = tx.contractAddress.data20()!!
 
         bc.createBlock()
@@ -185,23 +185,23 @@ class ContractTest : BehaviorSpec() {
 
       val contract = TestContracts.PING_PONG.contractFor("PingPong")
 
-      val pingTx = bc.submitContract(Bob, contract, gasLimit = 500_000, value = 1.ether())
+      val pingTx = bc.submitContract(Bob, contract)
       val pingAddress = SolidityContract.contractAddress(Bob, pingTx.nonce).data20()!!
 
-      val pongTx = bc.submitContract(Bob, contract, gasLimit = 500_000, value = 1.ether())
+      val pongTx = bc.submitContract(Bob, contract)
       val pongAddress = SolidityContract.contractAddress(Bob, pongTx.nonce).data20()!!
 
       bc.createBlock()
 
-      `when`("we trigger a series of cascading calls") {
+      `when`("we trigger a series of cascading calls that only emits events") {
 
-        bc.callFunction(Bob, pingAddress, contract, "start", null, null, null, pongAddress.bytes())
+        bc.callFunction(Bob, pingAddress, contract, "start", args = *arrayOf(pongAddress.bytes()))
 
         val block = bc.createBlock()
         val chainEvents = ChainEvents.forBlock(block)
 
-        then("there should be 3 chain events") {
-          chainEvents.size shouldBe 3
+        then("there should be 2 chain events") {
+          chainEvents.size shouldBe 2
         }
 
         then("there should be a fungible ether transfer for the coinbase") {
@@ -211,7 +211,6 @@ class ContractTest : BehaviorSpec() {
             (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
           )
         }
-
       }
 
     }

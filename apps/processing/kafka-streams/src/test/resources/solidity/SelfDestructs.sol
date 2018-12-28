@@ -11,7 +11,7 @@ contract SelfDestruct {
 
     constructor() public payable {}
 
-  function destroy() public payable {
+    function destroy() public payable {
         selfdestruct(msg.sender);
     }
 
