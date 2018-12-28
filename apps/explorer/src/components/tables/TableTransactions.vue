@@ -55,26 +55,19 @@
 import Vue from 'vue'
 import AppFootnotes from '@app/components/ui/AppFootnotes.vue'
 import TableTransactionsRow from '@app/components/tables/TableTransactionsRow.vue'
-export default Vue.extend({
-  name: 'TableTransactions',
-  props: {
-    pending: {
-      type: Boolean,
-      defualt: false
-    },
-    frameTxs: {
-      type: Boolean,
-      default: false
-    },
-    showStyle: {
-      type: String,
-      default: ''
-    },
-    transactions: {}
-  },
+import { Component, Prop, Provide, Mixins } from 'vue-property-decorator'
+
+@Component({
   components: {
     TableTransactionsRow
-  },
+  }
+})
+export default class TableTransactions extends Vue {
+  @Prop(Boolean) pending: boolean
+  @Prop(Boolean) frameTxs: boolean
+  @Prop(String) showStyle: string
+  @Prop(Object) transactions: any
+
   data() {
     return {
       footnote: [
@@ -92,14 +85,13 @@ export default Vue.extend({
       color: 'grey',
       defaultTitle: this.$i18n.t('title.lastTxs')
     }
-  },
-  computed: {
-    getStyle() {
-      return this.showStyle
-    },
-    getTitle() {
-      return this.pending ? this.$i18n.t('title.pending') : this.defaultTitle
-    }
   }
-})
+  get getStyle() {
+    return this.showStyle
+  }
+
+  get getTitle() {
+    return this.pending ? this.$i18n.t('title.pending') : this.defaultTitle
+  }
+}
 </script>
