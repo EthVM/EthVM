@@ -103,7 +103,7 @@ class ReorgTracker : Transformer<BlockKeyRecord?, BlockRecord?, KeyValue<BlockKe
 
     if (chainEventsStore.get(blockHashKey) != null) {
       // we have already processed this block, do nothing
-      logger.info { "Ignoring block ${blockNumber.unsignedBigInteger()}, already processed" }
+      logger.warn { "Ignoring block ${blockNumber.unsignedBigInteger()}, already processed" }
       return
     }
 
@@ -250,7 +250,7 @@ class ReorgTracker : Transformer<BlockKeyRecord?, BlockRecord?, KeyValue<BlockKe
 
     do {
       stop = deleteChainEvents(blockNumber) == null
-      if (!stop) logger.info { "Removed state for block number = $blockNumber" }
+      if (!stop) logger.debug { "Removed state for block number = $blockNumber" }
       blockNumber -= BigInteger.ONE
     } while (!stop)
 
