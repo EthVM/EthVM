@@ -88,6 +88,7 @@ object ChainEvents {
       ).build()
 
   fun forBlock(block: BlockRecord): List<ChainEventRecord> {
+
     val events = forPremineBalances(block) +
       forBlockRewards(block) +
       forTransactions(block)

@@ -3,6 +3,18 @@ protocol Processing {
 
   import idl "common.avdl";
 
+  record ReorgKeyRecord {
+
+    union { null, io.enkrypt.avro.common.Data32 } blockHash = null;
+    union { null, io.enkrypt.avro.common.Data32 } txHash = null;
+    union { null, io.enkrypt.avro.common.Data20 } address = null;
+
+    union { null, bytes } blockNumber = null;
+    union { null, bytes } nonce = null;
+    union { null, string } name = null;
+
+  }
+
   record TokenTransferKeyRecord {
 
     union { null, io.enkrypt.avro.common.Data20 } contract = null;
@@ -27,7 +39,7 @@ protocol Processing {
 
     union { null, io.enkrypt.avro.common.Data20 } contract = null;
     union { null, io.enkrypt.avro.common.Data20 } address = null;
-    union { null, bytes } tokenId;
+    union { null, bytes } tokenId = null;
 
   }
 
@@ -70,6 +82,7 @@ protocol Processing {
     boolean reverse = false;
 
     union { TokenTransferRecord, ContractCreateRecord, ContractDestroyRecord } value;
+    union { null, io.enkrypt.avro.common.Data32 } txHash = null;
   }
 
   record ContractLogoRecord {
@@ -113,6 +126,12 @@ protocol Processing {
     union { null, ContractSocialRecord } social;
     union { null, string } website;
 
+  }
+
+// block events
+
+  record BlockChainEventsRecord {
+    array<ChainEventRecord> events;
   }
 
 // metrics
