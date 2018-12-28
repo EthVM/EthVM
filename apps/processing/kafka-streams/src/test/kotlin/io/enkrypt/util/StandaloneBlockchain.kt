@@ -5,14 +5,15 @@ import io.enkrypt.avro.common.Data20
 import io.enkrypt.common.extensions.data20
 import io.enkrypt.common.extensions.unsignedBytes
 import io.enkrypt.kafka.mapping.ObjectMapper
-import io.enkrypt.kafka.streams.models.StaticAddresses
 import io.mockk.every
 import io.mockk.mockkStatic
 import org.ethereum.config.BlockchainNetConfig
 import org.ethereum.config.CommonConfig
 import org.ethereum.config.SystemProperties
 import org.ethereum.config.blockchain.ByzantiumConfig
+import org.ethereum.config.blockchain.ConstantinopleConfig
 import org.ethereum.config.blockchain.DaoNoHFConfig
+import org.ethereum.config.blockchain.FrontierConfig
 import org.ethereum.config.blockchain.HomesteadConfig
 import org.ethereum.config.net.BaseNetConfig
 import org.ethereum.core.AccountState
@@ -74,7 +75,7 @@ class StandaloneBlockchain(config: Config) {
 
   private val commonConfig = object : CommonConfig() {
     override fun systemProperties() =
-      SystemProperties.getDefault().apply { blockchainConfig = StandaloneBlockchain.TestNetConfig }
+      SystemProperties.getDefault().apply { blockchainConfig = StandaloneBlockchain.Byzantium }
 
     override fun precompileSource(): Source<ByteArray, ProgramPrecompile>? = null
   }
@@ -168,7 +169,7 @@ class StandaloneBlockchain(config: Config) {
     submitTx(
       from,
       receiver = to.address.data20(),
-      value = value?.unsignedBytes() ?: ByteArray(0)
+      value = value.unsignedBytes() ?: ByteArray(0)
     )
 
   fun submitContract(
@@ -235,12 +236,30 @@ class StandaloneBlockchain(config: Config) {
   }
 
   companion object {
-    val TestNetConfig = BaseNetConfig().apply {
-      val constants = object : HomesteadConfig.HomesteadConstants() {
-        override fun getMINIMUM_DIFFICULTY() = BigInteger.ONE
-      }
+    private val constants = object : HomesteadConfig.HomesteadConstants() {
+      override fun getMINIMUM_DIFFICULTY() = BigInteger.ONE
+    }
+
+    val Frontier: BaseNetConfig = BaseNetConfig().apply {
+      add(0, FrontierConfig(constants))
+    }
+
+    val Homestead: BaseNetConfig = BaseNetConfig().apply {
+      add(0, DaoNoHFConfig(HomesteadConfig(constants), 0))
+    }
+
+    val Byzantium: BaseNetConfig = BaseNetConfig().apply {
       add(0, ByzantiumConfig(DaoNoHFConfig(HomesteadConfig(constants), 0)))
     }
+
+    val Constantinople: BaseNetConfig = BaseNetConfig().apply {
+      add(0, ConstantinopleConfig(ByzantiumConfig(DaoNoHFConfig(HomesteadConfig(constants), 0))))
+    }
+
+    val Coinbase = ECKey()
+    val Bob = ECKey()
+    val Alice = ECKey()
+    val Terence = ECKey()
   }
 
   data class Config(
@@ -248,10 +267,10 @@ class StandaloneBlockchain(config: Config) {
     val blockGasIncreasePercent: Int = 0,
     val gasPrice: Long = 50_000_000_000L,
     val gasLimit: Long = 5_000_000L,
-    val coinbase: Data20 = StaticAddresses.EtherMax,
+    val coinbase: Data20 = Coinbase.address.data20()!!,
     val autoBlock: Boolean = false,
     val timeIncrement: Long = 60,
-    val netConfig: BlockchainNetConfig = TestNetConfig,
+    val netConfig: BlockchainNetConfig = Byzantium,
     val genesis: Genesis? = null,
     val premineBalances: Map<Data20?, BigInteger> = emptyMap(),
     val time: Date? = null

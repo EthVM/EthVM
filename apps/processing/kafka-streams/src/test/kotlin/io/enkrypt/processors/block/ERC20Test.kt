@@ -12,11 +12,11 @@ import io.enkrypt.kafka.streams.models.StaticAddresses.EtherZero
 import io.enkrypt.kafka.streams.processors.block.ChainEvents
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.contractCreate
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.fungibleTransfer
-import io.enkrypt.util.Blockchains.Coinbase
-import io.enkrypt.util.Blockchains.Users.Alice
-import io.enkrypt.util.Blockchains.Users.Bob
-import io.enkrypt.util.Blockchains.Users.Terence
 import io.enkrypt.util.StandaloneBlockchain
+import io.enkrypt.util.StandaloneBlockchain.Companion.Alice
+import io.enkrypt.util.StandaloneBlockchain.Companion.Bob
+import io.enkrypt.util.StandaloneBlockchain.Companion.Coinbase
+import io.enkrypt.util.StandaloneBlockchain.Companion.Terence
 import io.enkrypt.util.TestContracts
 import io.enkrypt.util.totalTxFees
 import io.enkrypt.util.txFees

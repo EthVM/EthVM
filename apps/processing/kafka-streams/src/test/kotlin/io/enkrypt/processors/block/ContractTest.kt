@@ -12,10 +12,10 @@ import io.enkrypt.kafka.streams.processors.block.ChainEvents
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.contractCreate
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.contractDestroy
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.fungibleTransfer
-import io.enkrypt.util.Blockchains.Coinbase
-import io.enkrypt.util.Blockchains.Users.Bob
 import io.enkrypt.util.SolidityContract
 import io.enkrypt.util.StandaloneBlockchain
+import io.enkrypt.util.StandaloneBlockchain.Companion.Bob
+import io.enkrypt.util.StandaloneBlockchain.Companion.Coinbase
 import io.enkrypt.util.TestContracts
 import io.enkrypt.util.totalTxFees
 import io.enkrypt.util.txFees
@@ -213,6 +213,36 @@ class ContractTest : BehaviorSpec() {
         }
       }
 
+    }
+
+    given("a contract that tries to run indefinitely") {
+
+      val contract = TestContracts.GLUTTONY.contractFor("Gluttony")
+
+      val tx = bc.submitContract(Bob, contract)
+      val gluttonyAddress = SolidityContract.contractAddress(Bob, tx.nonce).data20()!!
+
+      bc.createBlock()
+
+      `when`("we ask to run indefinitely") {
+
+        bc.callFunction(Bob, gluttonyAddress, contract, "eatTillExplosion")
+
+        val block = bc.createBlock()
+        val chainEvents = ChainEvents.forBlock(block)
+
+        then("there should be 1 chain events") {
+          chainEvents.size shouldBe 1
+        }
+
+        then("there should be a fungible ether transfer for the coinbase") {
+          chainEvents.first() shouldBe fungibleTransfer(
+            StaticAddresses.EtherZero,
+            Coinbase.address.data20()!!,
+            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
+          )
+        }
+      }
     }
   }
 }

@@ -8,12 +8,11 @@ import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.kafka.streams.models.StaticAddresses.EtherZero
 import io.enkrypt.kafka.streams.processors.block.ChainEvents
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.fungibleTransfer
-import io.enkrypt.util.Blockchains
-import io.enkrypt.util.Blockchains.Coinbase
-import io.enkrypt.util.Blockchains.Users.Alice
-import io.enkrypt.util.Blockchains.Users.Bob
-import io.enkrypt.util.Blockchains.Users.Terence
 import io.enkrypt.util.StandaloneBlockchain
+import io.enkrypt.util.StandaloneBlockchain.Companion.Alice
+import io.enkrypt.util.StandaloneBlockchain.Companion.Bob
+import io.enkrypt.util.StandaloneBlockchain.Companion.Coinbase
+import io.enkrypt.util.StandaloneBlockchain.Companion.Terence
 import io.enkrypt.util.totalTxFees
 import io.enkrypt.util.txFees
 import io.kotlintest.matchers.collections.shouldContainExactly
@@ -32,7 +31,7 @@ class EtherTransferTest : BehaviorSpec() {
     gasLimit = 21000,
     gasPrice = 1.gwei().toLong(),
     premineBalances = premineBalances,
-    coinbase = Blockchains.Coinbase.address.data20()!!
+    coinbase = Coinbase.address.data20()!!
   )
 
   val bc = StandaloneBlockchain(bcConfig)
@@ -122,9 +121,19 @@ class EtherTransferTest : BehaviorSpec() {
             fungibleTransfer(Bob.address.data20()!!, EtherZero, 21000.gwei().unsignedByteBuffer()!!, true),
             fungibleTransfer(Bob.address.data20()!!, Alice.address.data20()!!, 50.gwei().unsignedByteBuffer()!!, true),
             fungibleTransfer(Alice.address.data20()!!, EtherZero, 21000.gwei().unsignedByteBuffer()!!, true),
-            fungibleTransfer(Alice.address.data20()!!, Terence.address.data20()!!, 25.gwei().unsignedByteBuffer()!!, true),
+            fungibleTransfer(
+              Alice.address.data20()!!,
+              Terence.address.data20()!!,
+              25.gwei().unsignedByteBuffer()!!,
+              true
+            ),
             fungibleTransfer(Terence.address.data20()!!, EtherZero, 21000.gwei().unsignedByteBuffer()!!, true),
-            fungibleTransfer(Terence.address.data20()!!, Bob.address.data20()!!, 125.gwei().unsignedByteBuffer()!!, true)
+            fungibleTransfer(
+              Terence.address.data20()!!,
+              Bob.address.data20()!!,
+              125.gwei().unsignedByteBuffer()!!,
+              true
+            )
           ).asReversed()
         }
       }
