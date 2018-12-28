@@ -30,7 +30,7 @@
         <app-info-card
           :title="$t('smlBlock.pending')"
           :value="latestBlockPendingTxs"
-          colorType="accent"
+          colorType="success"
           backType="time-since"
         ></app-info-card>
       </v-flex>
