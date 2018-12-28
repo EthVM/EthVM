@@ -5,6 +5,7 @@ import PageHome from '@/components/pages/PageHome.vue'
 import PageBlocks from '@/components/pages/PageBlocks.vue'
 import PageTransactions from '@/components/pages/PageTransactions.vue'
 import PagePendingTransactions from '@/components/pages/PagePendingTransactions.vue'
+import PageAbout from '@/components/pages/PageAbout.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -28,21 +29,12 @@ export default new Router({
       path: '/pending-transactions',
       component: PagePendingTransactions,
       name: 'pending'
+    },
+    {
+      path: '/about',
+      component: PageAbout,
+      name: 'about'
     }
-
-    /*{
-      path: '/:pageName',
-      component: HomeRouter
-    },
-    {
-      path: '/:pageName/:param',
-      component: HomeRouter
-    },
-    {
-      path: '/:pageName/:param/holder=:holder',
-      name: 'token',
-      component: HomeRouter
-    } */
   ],
   mode: 'history'
 })
