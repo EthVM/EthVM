@@ -13,7 +13,7 @@ class MongoSinkConnector : SinkConnector() {
 
   private lateinit var config: MutableMap<String, String>
 
-  override fun version() = Versions.of("mongo-sink-version.properties")
+  override fun version() = Versions.of("/mongo-sink-version.properties")
 
   override fun start(props: MutableMap<String, String>?) {
     config = props!!

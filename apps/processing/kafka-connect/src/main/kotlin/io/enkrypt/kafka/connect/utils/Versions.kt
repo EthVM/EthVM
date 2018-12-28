@@ -6,10 +6,11 @@ object Versions {
 
   private const val UNKNOWN = "unknown"
 
-  fun of(file: String): String {
+  fun of(path: String): String {
     return try {
+      val inputStream = Versions::class.java.getResourceAsStream(path) ?: return UNKNOWN
       val props = Properties()
-      props.load(Versions::class.java.getResourceAsStream(file))
+      props.load(inputStream)
       props.getProperty("version", UNKNOWN).trim { it <= ' ' }
     } catch (e: Exception) {
       UNKNOWN

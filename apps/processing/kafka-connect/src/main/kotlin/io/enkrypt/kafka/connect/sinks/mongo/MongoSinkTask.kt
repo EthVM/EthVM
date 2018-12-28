@@ -33,7 +33,7 @@ class MongoSinkTask : SinkTask() {
 
   private var collectionsMap = mapOf<CollectionId, MongoCollection<BsonDocument>>()
 
-  override fun version() = Versions.of("mongo-sink-version.properties")
+  override fun version() = Versions.of("/mongo-sink-version.properties")
 
   override fun start(props: MutableMap<String, String>) {
 
@@ -135,14 +135,14 @@ class MongoSinkTask : SinkTask() {
 
   private fun processBlock(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
 
-    var blockWrites = listOf<WriteModel<BsonDocument>>()
-    var txWrites = listOf<WriteModel<BsonDocument>>()
-
     val keySchema = record.keySchema()
     if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a long")
 
     val valueSchema = record.valueSchema()
     if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
+
+    var blockWrites = listOf<WriteModel<BsonDocument>>()
+    var txWrites = listOf<WriteModel<BsonDocument>>()
 
     val blockNumber = (record.key() as Struct).getBytes("number")
     val blockNumberBson = BsonBinary(blockNumber)
@@ -193,13 +193,13 @@ class MongoSinkTask : SinkTask() {
 
   private fun processContractCreate(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
 
-    var writes = listOf<WriteModel<BsonDocument>>()
-
     val keySchema = record.keySchema()
     if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a struct")
 
     val valueSchema = record.valueSchema()
     if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
+
+    var writes = listOf<WriteModel<BsonDocument>>()
 
     val address = (record.key() as Struct).getBytes("address")
     val addressBson = BsonString(address.hex())
@@ -228,13 +228,13 @@ class MongoSinkTask : SinkTask() {
 
   private fun processContractMetadata(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
 
-    var writes = listOf<WriteModel<BsonDocument>>()
-
     val keySchema = record.keySchema()
     if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be struct")
 
     val valueSchema = record.valueSchema()
     if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
+
+    var writes = listOf<WriteModel<BsonDocument>>()
 
     val address = (record.key() as Struct).getBytes("address")
     val addressBson = BsonString(address.hex())
@@ -265,13 +265,13 @@ class MongoSinkTask : SinkTask() {
 
   private fun processContractDestruct(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
 
-    var writes = listOf<WriteModel<BsonDocument>>()
-
     val keySchema = record.keySchema()
     if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be binary")
 
     val valueSchema = record.valueSchema()
     if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
+
+    var writes = listOf<WriteModel<BsonDocument>>()
 
     val address = (record.key() as Struct).getBytes("address")
     val addressBson = BsonString(address.hex())
@@ -300,13 +300,13 @@ class MongoSinkTask : SinkTask() {
 
   private fun processFungibleTokenBalance(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
 
-    var writes = listOf<WriteModel<BsonDocument>>()
-
     val keySchema = record.keySchema()
     if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("key must be a struct")
 
     val valueSchema = record.valueSchema()
     if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value must be a struct")
+
+    var writes = listOf<WriteModel<BsonDocument>>()
 
     val idBson = StructToBsonConverter.convert(record.key() as Struct)
     val idFilter = BsonDocument().apply { append("_id", idBson) }
@@ -335,13 +335,13 @@ class MongoSinkTask : SinkTask() {
 
   private fun processNonFungibleTokenBalance(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
 
-    var writes = listOf<WriteModel<BsonDocument>>()
-
     val keySchema = record.keySchema()
     if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key must be a struct")
 
     val valueSchema = record.valueSchema()
     if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value must be a struct")
+
+    var writes = listOf<WriteModel<BsonDocument>>()
 
     val idBson = StructToBsonConverter.convert(record.key() as Struct)
     val idFilter = BsonDocument().apply { append("_id", idBson) }
@@ -370,13 +370,13 @@ class MongoSinkTask : SinkTask() {
 
   private fun processPendingTransaction(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
 
-    var writes = listOf<WriteModel<BsonDocument>>()
-
     val keySchema = record.keySchema()
     if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a struct")
 
     val valueSchema = record.valueSchema()
     if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
+
+    var writes = listOf<WriteModel<BsonDocument>>()
 
     val idBson = StructToBsonConverter.convert(record.key() as Struct)
     val idFilter = BsonDocument().apply { append("_id", idBson) }
@@ -404,13 +404,13 @@ class MongoSinkTask : SinkTask() {
 
   private fun processBlockStatistic(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
 
-    var writes = listOf<WriteModel<BsonDocument>>()
-
     val keySchema = record.keySchema()
     if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a struct")
 
     val valueSchema = record.valueSchema()
     if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
+
+    var writes = listOf<WriteModel<BsonDocument>>()
 
     val idBson = StructToBsonConverter.convert(record.key() as Struct)
     val idFilter = BsonDocument().apply { append("_id", idBson) }

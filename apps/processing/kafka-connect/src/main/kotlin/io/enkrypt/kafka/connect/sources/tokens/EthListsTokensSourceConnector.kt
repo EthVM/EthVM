@@ -15,7 +15,7 @@ class EthListsTokensSourceConnector : SourceConnector() {
 
   private lateinit var config: MutableMap<String, String>
 
-  override fun version() = Versions.of("eth-lists-tokens-source-version.properties")
+  override fun version() = Versions.of("/eth-lists-tokens-source-version.properties")
 
   override fun start(props: MutableMap<String, String>?) {
     config = props!!

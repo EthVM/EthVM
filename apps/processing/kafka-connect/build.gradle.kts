@@ -45,6 +45,8 @@ dependencies {
   implementation("io.github.microutils:kotlin-logging:1.5.9")
   implementation("com.beust:klaxon:3.0.1")
 
+  // Tests
+  testImplementation("io.kotlintest:kotlintest-runner-junit5:3.1.10")
 }
 
 project.tasks.getting(Test::class) { useJUnitPlatform {} }

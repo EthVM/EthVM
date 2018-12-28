@@ -10,7 +10,7 @@ class Web3SourceConnector : SourceConnector() {
 
   private lateinit var config: MutableMap<String, String>
 
-  override fun version() = Versions.of("web3-source-version.properties")
+  override fun version() = Versions.of("/web3-source-version.properties")
 
   override fun start(props: MutableMap<String, String>?) {
     config = props!!
