@@ -175,14 +175,31 @@ class MongoSinkTask : SinkTask() {
 
           val txHash = it.getString("hash")
 
+          // drop and replace
+
+          val update = UpdateOneModel<BsonDocument>(
+            Document(mapOf(
+              "from" to it.getString("from"),
+              "nonce" to it.getString("nonce"))
+            ),
+            Document(mapOf(
+              "\$set" to mapOf("replacedBy" to txHash),
+              "\$unset" to mapOf("blockNumber" to 1)
+            ))
+          )
+
+          //
+
           val doc = it
             .append("blockNumber", blockNumberBson)
 
-          ReplaceOneModel(
+          val replace = ReplaceOneModel(
             BsonDocument("_id", txHash), doc,
             replaceOptions
           )
-        }
+
+          listOf(update, replace)
+        }.flatten()
     }
 
     return mapOf(
@@ -308,7 +325,7 @@ class MongoSinkTask : SinkTask() {
 
     var writes = listOf<WriteModel<BsonDocument>>()
 
-    val idBson = StructToBsonConverter.convert(record.key() as Struct)
+    val idBson = StructToBsonConverter.convert(record.key() as Struct, false)
     val idFilter = BsonDocument().apply { append("_id", idBson) }
 
     if (record.value() == null) {
@@ -343,7 +360,7 @@ class MongoSinkTask : SinkTask() {
 
     var writes = listOf<WriteModel<BsonDocument>>()
 
-    val idBson = StructToBsonConverter.convert(record.key() as Struct)
+    val idBson = StructToBsonConverter.convert(record.key() as Struct, false)
     val idFilter = BsonDocument().apply { append("_id", idBson) }
 
     if (record.value() == null) {
