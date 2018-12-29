@@ -12,9 +12,9 @@ import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Consumed
+import org.apache.kafka.streams.kstream.Grouped
 import org.apache.kafka.streams.kstream.Materialized
 import org.apache.kafka.streams.kstream.Produced
-import org.apache.kafka.streams.kstream.Serialized
 import java.math.BigInteger
 import java.util.Properties
 import org.apache.kafka.common.serialization.Serdes as KafkaSerdes
@@ -42,7 +42,7 @@ class StateProcessor : AbstractKafkaProcessor() {
         Topics.FungibleTokenMovements,
         Consumed.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance())
       )
-      .groupByKey(Serialized.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance()))
+      .groupByKey(Grouped.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance()))
       .reduce(
         { memo, next ->
 
@@ -73,11 +73,11 @@ class StateProcessor : AbstractKafkaProcessor() {
       .stream(Topics.BlockMetrics, Consumed.with(Serdes.MetricKey(), Serdes.Metric()))
 
     val blockMetricsByDayCount = blockMetricsStream
-      .groupByKey(Serialized.with(Serdes.MetricKey(), Serdes.Metric()))
+      .groupByKey(Grouped.with(Serdes.MetricKey(), Serdes.Metric()))
       .count(Materialized.with(Serdes.MetricKey(), KafkaSerdes.Long()))
 
     blockMetricsStream
-      .groupByKey(Serialized.with(Serdes.MetricKey(), Serdes.Metric()))
+      .groupByKey(Grouped.with(Serdes.MetricKey(), Serdes.Metric()))
       .reduce(
         { memo, next ->
 

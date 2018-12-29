@@ -4,7 +4,8 @@ import org.ethereum.core.CallTransaction
 import org.ethereum.crypto.ECKey
 import org.ethereum.crypto.HashUtil
 import org.ethereum.solidity.compiler.CompilationResult
-import org.ethereum.solidity.compiler.SolidityCompiler
+import org.ethereum.solidity.compiler.SolidityCompiler.Options
+import org.ethereum.solidity.compiler.SolidityCompiler.compile
 import org.ethereum.util.ByteUtil
 import org.ethereum.util.ByteUtil.longToBytesNoLeadZeroes
 import org.ethereum.util.blockchain.SolidityFunction
@@ -21,12 +22,13 @@ enum class TestContracts(path: String) {
 
   private val src by lazy { TestContracts::class.java.getResource(path).readText() }
 
+  @Suppress("INACCESSIBLE_TYPE")
   private val cres by lazy {
-    val res = SolidityCompiler.compile(
+    val res = compile(
       src.toByteArray(),
       true,
-      SolidityCompiler.Options.ABI,
-      SolidityCompiler.Options.BIN
+      Options.ABI,
+      Options.BIN
     )
     if (res.isFailed) throw Exception("Failed to compile: " + res.errors)
 
