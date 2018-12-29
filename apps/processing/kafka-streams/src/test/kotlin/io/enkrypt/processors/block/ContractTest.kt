@@ -5,10 +5,10 @@ import io.enkrypt.common.extensions.data20
 import io.enkrypt.common.extensions.ether
 import io.enkrypt.common.extensions.gwei
 import io.enkrypt.common.extensions.hexBuffer
+import io.enkrypt.common.extensions.txFees
 import io.enkrypt.common.extensions.unsignedByteBuffer
-import io.enkrypt.kafka.streams.models.StaticAddresses
-import io.enkrypt.kafka.streams.models.StaticAddresses.EtherZero
 import io.enkrypt.kafka.streams.processors.block.ChainEvents
+import io.enkrypt.kafka.streams.processors.block.ChainEvents.blockReward
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.contractCreate
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.contractDestroy
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.fungibleTransfer
@@ -17,8 +17,6 @@ import io.enkrypt.util.Blockchains.Users.Bob
 import io.enkrypt.util.SolidityContract
 import io.enkrypt.util.StandaloneBlockchain
 import io.enkrypt.util.TestContracts
-import io.enkrypt.util.totalTxFees
-import io.enkrypt.util.txFees
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
 
@@ -55,18 +53,17 @@ class ContractTest : BehaviorSpec() {
           chainEvents.size shouldBe 3
         }
 
-        then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe fungibleTransfer(
-            EtherZero,
+        then("there should be a block reward for the coinbase") {
+          chainEvents.first() shouldBe blockReward(
             Coinbase.address.data20()!!,
-            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
+            3.ether().unsignedByteBuffer()!!
           )
         }
 
         then("there should be a transaction fee ether transfer") {
           chainEvents[1] shouldBe fungibleTransfer(
             Bob.address.data20()!!,
-            EtherZero,
+            Coinbase.address.data20()!!,
             block.txFees()[0].unsignedByteBuffer()!!
           )
         }
@@ -95,18 +92,17 @@ class ContractTest : BehaviorSpec() {
           chainEvents.size shouldBe 4
         }
 
-        then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe fungibleTransfer(
-            StaticAddresses.EtherZero,
+        then("there should be a block reward for the coinbase") {
+          chainEvents.first() shouldBe blockReward(
             Coinbase.address.data20()!!,
-            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
+            3.ether().unsignedByteBuffer()!!
           )
         }
 
         then("there should be a transaction fee ether transfer") {
           chainEvents[1] shouldBe fungibleTransfer(
             Bob.address.data20()!!,
-            EtherZero,
+            Coinbase.address.data20()!!,
             block.txFees()[0].unsignedByteBuffer()!!
           )
         }
@@ -147,18 +143,17 @@ class ContractTest : BehaviorSpec() {
           chainEvents.size shouldBe 4
         }
 
-        then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe fungibleTransfer(
-            StaticAddresses.EtherZero,
+        then("there should be a block reward for the coinbase") {
+          chainEvents.first() shouldBe blockReward(
             Coinbase.address.data20()!!,
-            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
+            3.ether().unsignedByteBuffer()!!
           )
         }
 
         then("there should be a transaction fee ether transfer") {
           chainEvents[1] shouldBe fungibleTransfer(
             Bob.address.data20()!!,
-            EtherZero,
+            Coinbase.address.data20()!!,
             block.txFees()[0].unsignedByteBuffer()!!
           )
         }
@@ -204,15 +199,13 @@ class ContractTest : BehaviorSpec() {
           chainEvents.size shouldBe 2
         }
 
-        then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe fungibleTransfer(
-            StaticAddresses.EtherZero,
+        then("there should be a block reward for the coinbase") {
+          chainEvents.first() shouldBe blockReward(
             Coinbase.address.data20()!!,
-            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
+            3.ether().unsignedByteBuffer()!!
           )
         }
       }
-
     }
   }
 }

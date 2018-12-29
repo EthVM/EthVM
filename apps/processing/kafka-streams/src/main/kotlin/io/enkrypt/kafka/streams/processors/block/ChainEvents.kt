@@ -2,7 +2,9 @@ package io.enkrypt.kafka.streams.processors.block
 
 import arrow.core.Option
 import io.enkrypt.avro.capture.BlockRecord
+import io.enkrypt.avro.capture.BlockRewardRecord
 import io.enkrypt.avro.capture.InternalTransactionRecord
+import io.enkrypt.avro.capture.PremineBalanceRecord
 import io.enkrypt.avro.capture.TransactionReceiptRecord
 import io.enkrypt.avro.capture.TransactionRecord
 import io.enkrypt.avro.common.ContractType
@@ -15,9 +17,9 @@ import io.enkrypt.avro.processing.ContractDestroyRecord
 import io.enkrypt.avro.processing.TokenTransferRecord
 import io.enkrypt.common.extensions.bigInteger
 import io.enkrypt.common.extensions.isSuccess
+import io.enkrypt.common.extensions.txFee
 import io.enkrypt.common.extensions.unsignedBigInteger
 import io.enkrypt.common.extensions.unsignedByteBuffer
-import io.enkrypt.kafka.streams.models.StaticAddresses
 import io.enkrypt.kafka.streams.utils.ERC20Abi
 import io.enkrypt.kafka.streams.utils.ERC721Abi
 import io.enkrypt.kafka.streams.utils.StandardTokenDetector
@@ -25,6 +27,30 @@ import java.math.BigInteger
 import java.nio.ByteBuffer
 
 object ChainEvents {
+
+  private val zeroByteBuffer = BigInteger.ZERO.unsignedByteBuffer()!!
+
+  fun premineBalance(address: Data20, balance: ByteBuffer, reverse: Boolean = false) =
+    ChainEventRecord.newBuilder()
+      .setReverse(reverse)
+      .setType(ChainEventType.PREMINE_BALANCE)
+      .setValue(
+        PremineBalanceRecord.newBuilder()
+          .setAddress(address)
+          .setBalance(balance)
+          .build()
+      ).build()
+
+  fun blockReward(address: Data20, reward: ByteBuffer, reverse: Boolean = false) =
+    ChainEventRecord.newBuilder()
+      .setReverse(reverse)
+      .setType(ChainEventType.BLOCK_REWARD)
+      .setValue(
+        BlockRewardRecord.newBuilder()
+          .setAddress(address)
+          .setReward(reward)
+          .build()
+      ).build()
 
   fun fungibleTransfer(from: Data20, to: Data20, amount: ByteBuffer, reverse: Boolean = false, contract: Data20? = null) =
     ChainEventRecord.newBuilder()
@@ -89,41 +115,62 @@ object ChainEvents {
 
   fun forBlock(block: BlockRecord): List<ChainEventRecord> {
 
-    val events = forPremineBalances(block) +
-      forBlockRewards(block) +
-      forTransactions(block)
+    val premineEvents = forPremineBalances(block)
+    val (totalTxFees, transactionEvents) = forTransactions(block)
+    val blockRewardEvents = forBlockRewards(block, totalTxFees)
+
+    val events = premineEvents + blockRewardEvents + transactionEvents
 
     // return the events in reverse order if we are reversing the block
     return if (block.getReverse()) events.asReversed() else events
   }
 
-  private fun forPremineBalances(block: BlockRecord) =
-    block.getPremineBalances()
+  private fun forPremineBalances(block: BlockRecord): List<ChainEventRecord> {
+    require(block.getHeader().getNumber() == zeroByteBuffer) { "Premine balances are only acceptable for block 0" }
+    return block.getPremineBalances()
       .map {
-        fungibleTransfer(
-          StaticAddresses.EtherZero,
-          it.getAddress(),
-          it.getBalance(),
-          block.getReverse()
-        )
+        ChainEventRecord.newBuilder()
+          .setReverse(block.getReverse())
+          .setType(ChainEventType.PREMINE_BALANCE)
+          .setValue(it)
+          .build()
       }
+  }
 
-  private fun forBlockRewards(block: BlockRecord) =
+  private fun forBlockRewards(block: BlockRecord, totalTxFees: BigInteger) =
     block.getRewards()
       .map {
-        fungibleTransfer(
-          StaticAddresses.EtherZero,
-          it.getAddress(),
-          it.getReward(),
-          block.getReverse()
-        )
+        ChainEventRecord.newBuilder()
+          .setReverse(block.getReverse())
+          .setType(ChainEventType.BLOCK_REWARD)
+          .setValue(
+            when (it.getAddress()) {
+              block.getHeader().getAuthor() -> {
+                // subtract tx fees from miner reward
+                val reward = it.getReward().unsignedBigInteger()!! - totalTxFees
+                BlockRewardRecord.newBuilder(it)
+                  .setReward(reward.unsignedByteBuffer())
+                  .build()
+              }
+              else -> it
+            }
+          ).build()
       }
 
-  private fun forTransactions(block: BlockRecord) =
-    block.getTransactions()
+  private fun forTransactions(block: BlockRecord): Pair<BigInteger, List<ChainEventRecord>> {
+
+    var totalTxFees = BigInteger.ZERO
+
+    val chainEvents = block.getTransactions()
       .zip(block.getTransactionReceipts())
-      .map { (tx, receipt) -> forTransaction(block, tx, receipt) }
+      .map { (tx, receipt) ->
+        totalTxFees += tx.txFee(receipt)
+        forTransaction(block, tx, receipt)
+      }
       .flatten()
+
+    return Pair(totalTxFees, chainEvents)
+  }
 
   private fun forTransaction(
     block: BlockRecord,
@@ -135,6 +182,7 @@ object ChainEvents {
 
     var events = listOf<ChainEventRecord>()
 
+    val miner = block.getHeader().getAuthor()
     val blockHash = block.getHeader().getHash()
     val txHash = tx.getHash()
 
@@ -145,7 +193,7 @@ object ChainEvents {
 
     // tx fee
     val txFee = (receipt.getGasUsed().unsignedBigInteger()!! * tx.getGasPrice().bigInteger()!!).unsignedByteBuffer()!!
-    events += fungibleTransfer(from, StaticAddresses.EtherZero, txFee, reverse)
+    events += fungibleTransfer(from, miner, txFee, reverse)
 
     // short circuit if the tx was not successful
     if (!receipt.isSuccess()) return events

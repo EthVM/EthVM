@@ -72,6 +72,4 @@ object Serdes : KoinComponent {
   fun BlockChainEvents() = SpecificAvroSerde<BlockChainEventsRecord>().apply {
     configure(config, false)
   }
-
-
 }

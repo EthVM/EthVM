@@ -7,9 +7,11 @@ import io.enkrypt.common.extensions.finney
 import io.enkrypt.common.extensions.gwei
 import io.enkrypt.common.extensions.hexBuffer
 import io.enkrypt.common.extensions.kwei
+import io.enkrypt.common.extensions.txFees
 import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.kafka.streams.models.StaticAddresses.EtherZero
 import io.enkrypt.kafka.streams.processors.block.ChainEvents
+import io.enkrypt.kafka.streams.processors.block.ChainEvents.blockReward
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.contractCreate
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.fungibleTransfer
 import io.enkrypt.util.Blockchains.Coinbase
@@ -18,8 +20,6 @@ import io.enkrypt.util.Blockchains.Users.Bob
 import io.enkrypt.util.Blockchains.Users.Terence
 import io.enkrypt.util.StandaloneBlockchain
 import io.enkrypt.util.TestContracts
-import io.enkrypt.util.totalTxFees
-import io.enkrypt.util.txFees
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
 
@@ -60,18 +60,17 @@ class ERC20Test : BehaviorSpec() {
           chainEvents.size shouldBe 4
         }
 
-        then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe fungibleTransfer(
-            EtherZero,
+        then("there should be a block reward for the coinbase") {
+          chainEvents.first() shouldBe blockReward(
             Coinbase.address.data20()!!,
-            (3.ether() + createBlock.totalTxFees()).unsignedByteBuffer()!!
+            3.ether().unsignedByteBuffer()!!
           )
         }
 
         then("there should be a transaction fee ether transfer") {
           chainEvents[1] shouldBe fungibleTransfer(
             Bob.address.data20()!!,
-            EtherZero,
+            Coinbase.address.data20()!!,
             createBlock.txFees()[0].unsignedByteBuffer()!!
           )
         }
@@ -108,19 +107,17 @@ class ERC20Test : BehaviorSpec() {
           chainEvents.size shouldBe 3
         }
 
-        then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe fungibleTransfer(
-            EtherZero,
+        then("there should be a block reward for the coinbase") {
+          chainEvents.first() shouldBe blockReward(
             Coinbase.address.data20()!!,
-            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
+            3.ether().unsignedByteBuffer()!!
           )
         }
 
         then("there should be a transaction fee ether transfer") {
-          // TODO fix me, tx fee seems to be negative
           chainEvents[1] shouldBe fungibleTransfer(
             Bob.address.data20()!!,
-            EtherZero,
+            Coinbase.address.data20()!!,
             block.txFees()[0].unsignedByteBuffer()!!
           )
         }
@@ -163,19 +160,17 @@ class ERC20Test : BehaviorSpec() {
           chainEvents.size shouldBe 3
         }
 
-        then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe fungibleTransfer(
-            EtherZero,
+        then("there should be a block reward for the coinbase") {
+          chainEvents.first() shouldBe blockReward(
             Coinbase.address.data20()!!,
-            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
+            3.ether().unsignedByteBuffer()!!
           )
         }
 
         then("there should be a transaction fee ether transfer") {
-          // TODO fix me, tx fee seems to be negative
           chainEvents[1] shouldBe fungibleTransfer(
             Terence.address.data20()!!,
-            EtherZero,
+            Coinbase.address.data20()!!,
             block.txFees()[0].unsignedByteBuffer()!!
           )
         }
@@ -208,19 +203,17 @@ class ERC20Test : BehaviorSpec() {
           chainEvents.size shouldBe 3
         }
 
-        then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe fungibleTransfer(
-            EtherZero,
+        then("there should be a block reward for the coinbase") {
+          chainEvents.first() shouldBe blockReward(
             Coinbase.address.data20()!!,
-            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
+            3.ether().unsignedByteBuffer()!!
           )
         }
 
         then("there should be a transaction fee ether transfer") {
-          // TODO fix me, tx fee seems to be negative
           chainEvents[1] shouldBe fungibleTransfer(
             Terence.address.data20()!!,
-            EtherZero,
+            Coinbase.address.data20()!!,
             block.txFees()[0].unsignedByteBuffer()!!
           )
         }

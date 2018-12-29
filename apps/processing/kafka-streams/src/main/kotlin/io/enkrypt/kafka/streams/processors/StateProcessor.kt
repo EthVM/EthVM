@@ -16,7 +16,7 @@ import org.apache.kafka.streams.kstream.Materialized
 import org.apache.kafka.streams.kstream.Produced
 import org.apache.kafka.streams.kstream.Serialized
 import java.math.BigInteger
-import java.util.*
+import java.util.Properties
 import org.apache.kafka.common.serialization.Serdes as KafkaSerdes
 
 class StateProcessor : AbstractKafkaProcessor() {
@@ -53,7 +53,6 @@ class StateProcessor : AbstractKafkaProcessor() {
             .newBuilder(memo)
             .setAmount((total + delta).byteBuffer())
             .build()
-
         },
         Materialized.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance())
       )

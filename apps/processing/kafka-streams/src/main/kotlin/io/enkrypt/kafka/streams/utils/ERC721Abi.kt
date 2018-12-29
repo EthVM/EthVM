@@ -3,7 +3,6 @@ package io.enkrypt.kafka.streams.utils
 import arrow.core.Option
 import io.enkrypt.avro.common.Data20
 import io.enkrypt.avro.common.Data32
-import io.enkrypt.avro.processing.NonFungibleTokenTransferRecord
 import io.enkrypt.avro.processing.TokenTransferRecord
 import io.enkrypt.common.extensions.setTokenId
 import java.math.BigInteger

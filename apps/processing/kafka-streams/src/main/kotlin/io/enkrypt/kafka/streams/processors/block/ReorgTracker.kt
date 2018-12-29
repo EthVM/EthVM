@@ -19,7 +19,6 @@ import org.apache.kafka.streams.state.StoreBuilder
 import org.apache.kafka.streams.state.Stores
 import java.math.BigInteger
 import java.nio.ByteBuffer
-import org.apache.kafka.common.serialization.Serdes as KafkaSerdes
 
 class ReorgTracker : Transformer<BlockKeyRecord?, BlockRecord?, KeyValue<BlockKeyRecord, ChainEventRecord>> {
 
@@ -43,7 +42,7 @@ class ReorgTracker : Transformer<BlockKeyRecord?, BlockRecord?, KeyValue<BlockKe
     )
   }
 
-  private val forkLength = 256   // roughly 1 hour of blocks
+  private val forkLength = 256 // roughly 1 hour of blocks
 
   private lateinit var context: ProcessorContext
 
@@ -114,7 +113,6 @@ class ReorgTracker : Transformer<BlockKeyRecord?, BlockRecord?, KeyValue<BlockKe
       .setEvents(chainEvents)
       .build()
 
-
     val blockNumberKey = ReorgKeyRecord.newBuilder().setBlockNumber(blockNumber).build()
 
     // blockHash => chain events
@@ -177,7 +175,6 @@ class ReorgTracker : Transformer<BlockKeyRecord?, BlockRecord?, KeyValue<BlockKe
       .map { ChainEventRecord.newBuilder(it).setReverse(true).build() }
       .asReversed()
       .forEach { context.forward(blockKey, it) }
-
   }
 
   private fun putHighestBlockNumber(blockNumber: ByteBuffer) {
@@ -253,7 +250,6 @@ class ReorgTracker : Transformer<BlockKeyRecord?, BlockRecord?, KeyValue<BlockKe
       if (!stop) logger.debug { "Removed state for block number = $blockNumber" }
       blockNumber -= BigInteger.ONE
     } while (!stop)
-
   }
 
   override fun close() {

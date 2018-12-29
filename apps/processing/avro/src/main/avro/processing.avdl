@@ -2,6 +2,7 @@
 protocol Processing {
 
   import idl "common.avdl";
+  import idl "capture.avdl";
 
   record ReorgKeyRecord {
 
@@ -72,7 +73,11 @@ protocol Processing {
   }
 
   enum ChainEventType {
-    TOKEN_TRANSFER, CONTRACT_CREATE, CONTRACT_DESTROY
+    PREMINE_BALANCE,
+    BLOCK_REWARD,
+    TOKEN_TRANSFER,
+    CONTRACT_CREATE,
+    CONTRACT_DESTROY
   }
 
   record ChainEventRecord {
@@ -81,7 +86,7 @@ protocol Processing {
 
     boolean reverse = false;
 
-    union { TokenTransferRecord, ContractCreateRecord, ContractDestroyRecord } value;
+    union { io.enkrypt.avro.capture.PremineBalanceRecord, io.enkrypt.avro.capture.BlockRewardRecord, TokenTransferRecord, ContractCreateRecord, ContractDestroyRecord } value;
     union { null, io.enkrypt.avro.common.Data32 } txHash = null;
   }
 

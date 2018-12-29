@@ -1,6 +1,8 @@
 package io.enkrypt.common.extensions
 
+import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.capture.TransactionReceiptRecord
+import io.enkrypt.avro.capture.TransactionRecord
 import io.enkrypt.avro.processing.TokenBalanceKeyRecord
 import io.enkrypt.avro.processing.TokenTransferRecord
 import java.math.BigInteger
@@ -26,3 +28,13 @@ fun TransactionReceiptRecord.isSuccess(): Boolean {
   val status = this.getStatus().byteArray()
   return status != null && status.size == 1 && status[0].toInt() == 1
 }
+
+fun BlockRecord.txFees(): List<BigInteger> =
+  this.getTransactions().zip(this.getTransactionReceipts())
+    .map { (tx, r) -> tx.getGasPrice().unsignedBigInteger()!! * r.getGasUsed().unsignedBigInteger()!! }
+
+fun BlockRecord.totalTxFees(): BigInteger = this.txFees()
+  .reduce { memo, next -> memo + next }
+
+fun TransactionRecord.txFee(receipt: TransactionReceiptRecord): BigInteger =
+  getGasPrice().unsignedBigInteger()!! * receipt.getGasUsed().unsignedBigInteger()!!

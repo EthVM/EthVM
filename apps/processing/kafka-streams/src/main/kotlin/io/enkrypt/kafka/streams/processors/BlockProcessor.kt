@@ -1,5 +1,7 @@
 package io.enkrypt.kafka.streams.processors
 
+import io.enkrypt.avro.capture.BlockRewardRecord
+import io.enkrypt.avro.capture.PremineBalanceRecord
 import io.enkrypt.avro.processing.ChainEventType
 import io.enkrypt.avro.processing.ContractCreateRecord
 import io.enkrypt.avro.processing.ContractDestroyRecord
@@ -23,8 +25,7 @@ import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.Produced
 import org.apache.kafka.streams.kstream.TransformerSupplier
-import java.util.*
-import org.apache.kafka.common.serialization.Serdes as KafkaSerdes
+import java.util.Properties
 
 class BlockProcessor : AbstractKafkaProcessor() {
 
@@ -56,6 +57,46 @@ class BlockProcessor : AbstractKafkaProcessor() {
       .transform(
         TransformerSupplier { ReorgTracker() },
         *ReorgTracker.STORE_NAMES
+      )
+
+    // premine balances
+
+    chainEvents
+      .filter { _, v -> v.getType() == ChainEventType.PREMINE_BALANCE }
+      .mapValues { v -> v.getValue() as PremineBalanceRecord }
+      .map { _, v ->
+
+        KeyValue(
+          TokenBalanceKeyRecord.newBuilder()
+            .setAddress(v.getAddress())
+            .build(),
+          TokenBalanceRecord.newBuilder()
+            .setAmount(v.getBalance())
+            .build()
+        )
+      }.to(
+        Topics.FungibleTokenMovements,
+        Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance())
+      )
+
+    // block rewards
+
+    chainEvents
+      .filter { _, v -> v.getType() == ChainEventType.BLOCK_REWARD }
+      .mapValues { v -> v.getValue() as BlockRewardRecord }
+      .map { _, v ->
+
+        KeyValue(
+          TokenBalanceKeyRecord.newBuilder()
+            .setAddress(v.getAddress())
+            .build(),
+          TokenBalanceRecord.newBuilder()
+            .setAmount(v.getReward())
+            .build()
+        )
+      }.to(
+        Topics.FungibleTokenMovements,
+        Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance())
       )
 
     // fungible token transfers
