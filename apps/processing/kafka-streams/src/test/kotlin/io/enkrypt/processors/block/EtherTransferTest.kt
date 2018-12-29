@@ -14,8 +14,6 @@ import io.enkrypt.util.StandaloneBlockchain.Companion.Alice
 import io.enkrypt.util.StandaloneBlockchain.Companion.Bob
 import io.enkrypt.util.StandaloneBlockchain.Companion.Coinbase
 import io.enkrypt.util.StandaloneBlockchain.Companion.Terence
-import io.enkrypt.util.totalTxFees
-import io.enkrypt.util.txFees
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec

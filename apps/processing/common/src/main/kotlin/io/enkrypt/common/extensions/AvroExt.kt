@@ -34,7 +34,7 @@ fun BlockRecord.txFees(): List<BigInteger> =
     .map { (tx, r) -> tx.getGasPrice().unsignedBigInteger()!! * r.getGasUsed().unsignedBigInteger()!! }
 
 fun BlockRecord.totalTxFees(): BigInteger = this.txFees()
-  .reduce { memo, next -> memo + next }
+  .fold(0.toBigInteger()) { memo, next -> memo + next }
 
 fun TransactionRecord.txFee(receipt: TransactionReceiptRecord): BigInteger =
   getGasPrice().unsignedBigInteger()!! * receipt.getGasUsed().unsignedBigInteger()!!

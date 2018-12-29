@@ -48,11 +48,10 @@ class ContractTest : BehaviorSpec() {
           chainEvents.size shouldBe 1
         }
 
-        then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe fungibleTransfer(
-            StaticAddresses.EtherZero,
+        then("there should be a block reward for the coinbase") {
+          chainEvents.first() shouldBe blockReward(
             Coinbase.address.data20()!!,
-            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
+            3.ether().unsignedByteBuffer()!!
           )
         }
       }
@@ -244,11 +243,10 @@ class ContractTest : BehaviorSpec() {
           chainEvents.size shouldBe 2
         }
 
-        then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe fungibleTransfer(
-            StaticAddresses.EtherZero,
+        then("there should be a block reward for the coinbase") {
+          chainEvents.first() shouldBe blockReward(
             Coinbase.address.data20()!!,
-            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
+            3.ether().unsignedByteBuffer()!!
           )
         }
       }
@@ -274,11 +272,10 @@ class ContractTest : BehaviorSpec() {
           chainEvents.size shouldBe 2
         }
 
-        then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe fungibleTransfer(
-            StaticAddresses.EtherZero,
+        then("there should be a block reward for the coinbase") {
+          chainEvents.first() shouldBe blockReward(
             Coinbase.address.data20()!!,
-            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
+            3.ether().unsignedByteBuffer()!!
           )
         }
       }
@@ -301,11 +298,10 @@ class ContractTest : BehaviorSpec() {
           chainEvents.size shouldBe 4
         }
 
-        then("there should be a fungible ether transfer for the coinbase") {
-          chainEvents.first() shouldBe fungibleTransfer(
-            StaticAddresses.EtherZero,
+        then("there should be a block reward for the coinbase") {
+          chainEvents.first() shouldBe blockReward(
             Coinbase.address.data20()!!,
-            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
+            3.ether().unsignedByteBuffer()!!
           )
         }
       }

@@ -125,17 +125,23 @@ object ChainEvents {
     return if (block.getReverse()) events.asReversed() else events
   }
 
-  private fun forPremineBalances(block: BlockRecord): List<ChainEventRecord> {
-    require(block.getHeader().getNumber() == zeroByteBuffer) { "Premine balances are only acceptable for block 0" }
-    return block.getPremineBalances()
-      .map {
-        ChainEventRecord.newBuilder()
-          .setReverse(block.getReverse())
-          .setType(ChainEventType.PREMINE_BALANCE)
-          .setValue(it)
-          .build()
+  private fun forPremineBalances(block: BlockRecord): List<ChainEventRecord> =
+    when (block.getHeader().getNumber()) {
+      zeroByteBuffer ->
+        block.getPremineBalances()
+          .map {
+            ChainEventRecord.newBuilder()
+              .setReverse(block.getReverse())
+              .setType(ChainEventType.PREMINE_BALANCE)
+              .setValue(it)
+              .build()
+          }
+      else -> {
+        require(block.getPremineBalances().isEmpty()) { "Premine balances are only acceptable for block 0" }
+        emptyList()
       }
-  }
+    }
+
 
   private fun forBlockRewards(block: BlockRecord, totalTxFees: BigInteger) =
     block.getRewards()
