@@ -12,10 +12,10 @@ import io.enkrypt.kafka.streams.processors.block.ChainEvents.blockReward
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.contractCreate
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.contractDestroy
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.fungibleTransfer
-import io.enkrypt.util.Blockchains.Coinbase
-import io.enkrypt.util.Blockchains.Users.Bob
 import io.enkrypt.util.SolidityContract
 import io.enkrypt.util.StandaloneBlockchain
+import io.enkrypt.util.StandaloneBlockchain.Companion.Bob
+import io.enkrypt.util.StandaloneBlockchain.Companion.Coinbase
 import io.enkrypt.util.TestContracts
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
@@ -27,8 +27,8 @@ class ContractTest : BehaviorSpec() {
   )
 
   private val bcConfig = StandaloneBlockchain.Config(
-    gasLimit = 500_000, // Enough to cover most transactions
-    gasPrice = 1,
+    gasLimit = 250_000,             // Enough to cover most transactions
+    gasPrice = 100.gwei().toLong(), // Value chosen to speedup a little bit tests
     premineBalances = premineBalances,
     coinbase = Coinbase.address.data20()!!
   )
@@ -36,6 +36,27 @@ class ContractTest : BehaviorSpec() {
   val bc by lazy { StandaloneBlockchain(bcConfig) }
 
   init {
+
+    given("an empty contract deployment") {
+
+      `when`("we create an empty block") {
+
+        val block = bc.createBlock()
+        val chainEvents = ChainEvents.forBlock(block)
+
+        then("there should be 1 chain event") {
+          chainEvents.size shouldBe 1
+        }
+
+        then("there should be a fungible ether transfer for the coinbase") {
+          chainEvents.first() shouldBe fungibleTransfer(
+            StaticAddresses.EtherZero,
+            Coinbase.address.data20()!!,
+            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
+          )
+        }
+      }
+    }
 
     given("a contract with a self destruct function") {
 
@@ -203,6 +224,88 @@ class ContractTest : BehaviorSpec() {
           chainEvents.first() shouldBe blockReward(
             Coinbase.address.data20()!!,
             3.ether().unsignedByteBuffer()!!
+          )
+        }
+      }
+    }
+
+    given("a contract that tries to run indefinitely in the constructor") {
+
+      val contract = TestContracts.OUT_OF_GAS.contractFor("OutOfGasInConstructor")
+
+      `when`("we try to deploy the contract") {
+
+        bc.submitContract(Bob, contract)
+
+        val block = bc.createBlock()
+        val chainEvents = ChainEvents.forBlock(block)
+
+        then("there should be 2 chain events") {
+          chainEvents.size shouldBe 2
+        }
+
+        then("there should be a fungible ether transfer for the coinbase") {
+          chainEvents.first() shouldBe fungibleTransfer(
+            StaticAddresses.EtherZero,
+            Coinbase.address.data20()!!,
+            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
+          )
+        }
+      }
+    }
+
+    given("a contract that tries to run indefinitely") {
+
+      val contract = TestContracts.OUT_OF_GAS.contractFor("OutOfGasInMethod")
+
+      val tx = bc.submitContract(Bob, contract)
+      val gluttonyAddress = SolidityContract.contractAddress(Bob, tx.nonce).data20()!!
+
+      bc.createBlock()
+
+      `when`("we ask to run indefinitely") {
+
+        bc.callFunction(Bob, gluttonyAddress, contract, "infiniteLoop")
+
+        val block = bc.createBlock()
+        val chainEvents = ChainEvents.forBlock(block)
+
+        then("there should be 2 chain events") {
+          chainEvents.size shouldBe 2
+        }
+
+        then("there should be a fungible ether transfer for the coinbase") {
+          chainEvents.first() shouldBe fungibleTransfer(
+            StaticAddresses.EtherZero,
+            Coinbase.address.data20()!!,
+            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
+          )
+        }
+      }
+    }
+
+    given("a pair of contracts deployment (one will be successful and the other's not)") {
+
+      val c1 = TestContracts.PING_PONG.contractFor("PingPong")
+      bc.submitContract(Bob, c1)
+
+      val c2 = TestContracts.OUT_OF_GAS.contractFor("OutOfGasInConstructor")
+      bc.submitContract(Bob, c2)
+
+      `when`("we try to deploy all of them") {
+
+        val block = bc.createBlock()
+        val chainEvents = ChainEvents.forBlock(block)
+
+        then("there should be 4 chain events") {
+          chainEvents.size shouldBe 4
+        }
+
+        then("there should be a fungible ether transfer for the coinbase") {
+          chainEvents.first() shouldBe fungibleTransfer(
+            StaticAddresses.EtherZero,
+            Coinbase.address.data20()!!,
+            (3.ether() + block.totalTxFees()).unsignedByteBuffer()!!
           )
         }
       }

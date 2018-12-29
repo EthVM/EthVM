@@ -14,11 +14,11 @@ import io.enkrypt.kafka.streams.processors.block.ChainEvents
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.blockReward
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.contractCreate
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.fungibleTransfer
-import io.enkrypt.util.Blockchains.Coinbase
-import io.enkrypt.util.Blockchains.Users.Alice
-import io.enkrypt.util.Blockchains.Users.Bob
-import io.enkrypt.util.Blockchains.Users.Terence
 import io.enkrypt.util.StandaloneBlockchain
+import io.enkrypt.util.StandaloneBlockchain.Companion.Alice
+import io.enkrypt.util.StandaloneBlockchain.Companion.Bob
+import io.enkrypt.util.StandaloneBlockchain.Companion.Coinbase
+import io.enkrypt.util.StandaloneBlockchain.Companion.Terence
 import io.enkrypt.util.TestContracts
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
@@ -140,7 +140,7 @@ class ERC20Test : BehaviorSpec() {
       bc.createBlock()
 
       bc.callFunction(Bob, contractAddress, contract, "approve", null, 1.gwei().toLong(), null, Terence.address, 1.ether())
-      val block = bc.createBlock()
+      bc.createBlock()
 
       `when`("Terence attempts to transfer a portion of the allowance") {
 

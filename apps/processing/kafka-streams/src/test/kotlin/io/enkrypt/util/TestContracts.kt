@@ -14,8 +14,8 @@ enum class TestContracts(path: String) {
 
   ERC20("/solidity/erc20.sol"),
   ERC721("/solidity/erc721.sol"),
-  GLUTTONY("/solidity/Gluttony.sol"),
   MULTI_SIG_TWO_OF_THREE("/solidity/MultiSig2of3.sol"),
+  OUT_OF_GAS("/solidity/OutOfGas.sol"),
   SELF_DESTRUCTS("/solidity/SelfDestructs.sol"),
   PING_PONG("/solidity/PingPong.sol");
 
