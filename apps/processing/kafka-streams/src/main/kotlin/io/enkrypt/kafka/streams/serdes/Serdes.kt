@@ -1,5 +1,6 @@
 package io.enkrypt.kafka.streams.serdes
 
+import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
 import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
@@ -20,56 +21,57 @@ import org.koin.standalone.inject
 object Serdes : KoinComponent {
 
   private val kafkaConfig: KafkaConfig by inject()
+  private val registryClient: SchemaRegistryClient by inject()
 
   private val config = mutableMapOf(
     "schema.registry.url" to kafkaConfig.schemaRegistryUrl
   )
 
-  fun BlockKey() = SpecificAvroSerde<BlockKeyRecord>().apply {
+  fun BlockKey() = SpecificAvroSerde<BlockKeyRecord>(registryClient).apply {
     configure(config, true)
   }
 
-  fun Block() = SpecificAvroSerde<BlockRecord>().apply {
+  fun Block() = SpecificAvroSerde<BlockRecord>(registryClient).apply {
     configure(config, false)
   }
 
-  fun TokenBalanceKey() = SpecificAvroSerde<TokenBalanceKeyRecord>().apply {
+  fun TokenBalanceKey() = SpecificAvroSerde<TokenBalanceKeyRecord>(registryClient).apply {
     configure(config, true)
   }
 
-  fun TokenBalance() = SpecificAvroSerde<TokenBalanceRecord>().apply {
+  fun TokenBalance() = SpecificAvroSerde<TokenBalanceRecord>(registryClient).apply {
     configure(config, false)
   }
 
-  fun MetricKey() = SpecificAvroSerde<MetricKeyRecord>().apply {
+  fun MetricKey() = SpecificAvroSerde<MetricKeyRecord>(registryClient).apply {
     configure(config, true)
   }
 
-  fun Metric() = SpecificAvroSerde<MetricRecord>().apply {
+  fun Metric() = SpecificAvroSerde<MetricRecord>(registryClient).apply {
     configure(config, false)
   }
 
-  fun ContractKey() = SpecificAvroSerde<ContractKeyRecord>().apply {
+  fun ContractKey() = SpecificAvroSerde<ContractKeyRecord>(registryClient).apply {
     configure(config, true)
   }
 
-  fun ContractCreate() = SpecificAvroSerde<ContractCreateRecord>().apply {
+  fun ContractCreate() = SpecificAvroSerde<ContractCreateRecord>(registryClient).apply {
     configure(config, false)
   }
 
-  fun ContractDestroy() = SpecificAvroSerde<ContractDestroyRecord>().apply {
+  fun ContractDestroy() = SpecificAvroSerde<ContractDestroyRecord>(registryClient).apply {
     configure(config, false)
   }
 
-  fun ReorgKey() = SpecificAvroSerde<ReorgKeyRecord>().apply {
+  fun ReorgKey() = SpecificAvroSerde<ReorgKeyRecord>(registryClient).apply {
     configure(config, true)
   }
 
-  fun ReorgKeyValue() = SpecificAvroSerde<ReorgKeyRecord>().apply {
+  fun ReorgKeyValue() = SpecificAvroSerde<ReorgKeyRecord>(registryClient).apply {
     configure(config, false)
   }
 
-  fun BlockChainEvents() = SpecificAvroSerde<BlockChainEventsRecord>().apply {
+  fun BlockChainEvents() = SpecificAvroSerde<BlockChainEventsRecord>(registryClient).apply {
     configure(config, false)
   }
 }

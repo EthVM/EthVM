@@ -5,8 +5,8 @@ import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
 import io.enkrypt.kafka.streams.config.AppConfig
-import io.enkrypt.kafka.streams.di.Modules.kafkaStreams
 import io.enkrypt.kafka.streams.config.KafkaConfig
+import io.enkrypt.kafka.streams.di.Modules.kafkaStreams
 import io.enkrypt.kafka.streams.processors.BlockProcessor
 import io.enkrypt.kafka.streams.processors.KafkaProcessor
 import io.enkrypt.kafka.streams.processors.StateProcessor
@@ -55,7 +55,7 @@ class Cli : CliktCommand() {
       )
     }
 
-    single { AppConfig(get()) }
+    single { AppConfig(false, get()) }
   }
 
   override fun run() {

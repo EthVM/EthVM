@@ -11,6 +11,7 @@ import io.enkrypt.common.extensions.unsignedBigInteger
 import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.kafka.streams.serdes.Serdes
 import mu.KotlinLogging
+import org.apache.kafka.common.serialization.Serde
 import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.kstream.Transformer
 import org.apache.kafka.streams.processor.ProcessorContext
@@ -31,15 +32,21 @@ class ReorgTracker : Transformer<BlockKeyRecord?, BlockRecord?, KeyValue<BlockKe
 
     val STORE_NAMES = arrayOf(STORE_NAME_CHAIN_EVENTS, STORE_NAME_INDICES)
 
-    fun chainEventsStore(): StoreBuilder<KeyValueStore<ReorgKeyRecord, BlockChainEventsRecord>> = Stores.keyValueStoreBuilder(
-      Stores.persistentKeyValueStore(STORE_NAME_CHAIN_EVENTS),
-      Serdes.ReorgKey(), Serdes.BlockChainEvents()
-    )
+    fun chainEventsStore(unitTesting: Boolean = false): StoreBuilder<KeyValueStore<ReorgKeyRecord, BlockChainEventsRecord>> =
+      store(STORE_NAME_CHAIN_EVENTS, Serdes.ReorgKey(), Serdes.BlockChainEvents(), unitTesting)
 
-    fun indexStore(): StoreBuilder<KeyValueStore<ReorgKeyRecord, ReorgKeyRecord>> = Stores.keyValueStoreBuilder(
-      Stores.persistentKeyValueStore(STORE_NAME_INDICES),
-      Serdes.ReorgKey(), Serdes.ReorgKeyValue()
-    )
+    fun indexStore(unitTesting: Boolean = false): StoreBuilder<KeyValueStore<ReorgKeyRecord, ReorgKeyRecord>> =
+      store(STORE_NAME_INDICES, Serdes.ReorgKey(), Serdes.ReorgKeyValue(), unitTesting)
+
+    private fun <K, V> store(name: String, keySerde: Serde<K>, valueSerde: Serde<V>, unitTesting: Boolean = false): StoreBuilder<KeyValueStore<K, V>> {
+      val supplier = if (unitTesting)
+        Stores.inMemoryKeyValueStore(name)
+      else
+        Stores.persistentKeyValueStore(name)
+
+      val store = Stores.keyValueStoreBuilder(supplier, keySerde, valueSerde)
+      return if (unitTesting) store.withLoggingDisabled() else store
+    }
   }
 
   private val forkLength = 256 // roughly 1 hour of blocks

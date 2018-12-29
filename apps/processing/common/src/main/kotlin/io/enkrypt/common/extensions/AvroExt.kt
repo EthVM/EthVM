@@ -1,11 +1,15 @@
 package io.enkrypt.common.extensions
 
+import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.capture.TransactionReceiptRecord
 import io.enkrypt.avro.capture.TransactionRecord
+import io.enkrypt.avro.common.Data20
 import io.enkrypt.avro.processing.TokenBalanceKeyRecord
+import io.enkrypt.avro.processing.TokenBalanceRecord
 import io.enkrypt.avro.processing.TokenTransferRecord
 import java.math.BigInteger
+import java.nio.ByteBuffer
 
 fun TokenTransferRecord.isFungible() = !(this.getFrom() == null || this.getTo() == null || this.getAmount() == null)
 
@@ -36,5 +40,27 @@ fun BlockRecord.txFees(): List<BigInteger> =
 fun BlockRecord.totalTxFees(): BigInteger = this.txFees()
   .fold(0.toBigInteger()) { memo, next -> memo + next }
 
+fun BlockRecord.keyRecord(): BlockKeyRecord =
+  BlockKeyRecord.newBuilder()
+    .setNumber(getHeader().getNumber())
+    .build()
+
 fun TransactionRecord.txFee(receipt: TransactionReceiptRecord): BigInteger =
   getGasPrice().unsignedBigInteger()!! * receipt.getGasUsed().unsignedBigInteger()!!
+
+
+object AvroHelpers {
+
+  fun tokenKey(address: Data20? = null, contract: Data20? = null, tokenId: ByteBuffer? = null) =
+    TokenBalanceKeyRecord.newBuilder()
+      .setAddress(address)
+      .setContract(contract)
+      .setTokenId(tokenId)
+      .build()
+
+  fun tokenBalance(amount: ByteBuffer? = null, address: Data20? = null) =
+    TokenBalanceRecord.newBuilder()
+      .setAmount(amount)
+      .setAddress(address)
+      .build()
+}

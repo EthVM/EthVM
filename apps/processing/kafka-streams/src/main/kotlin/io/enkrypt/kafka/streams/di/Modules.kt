@@ -1,6 +1,19 @@
 package io.enkrypt.kafka.streams.di
 
+import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
+import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient
+import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
+import io.enkrypt.avro.capture.BlockKeyRecord
+import io.enkrypt.avro.capture.BlockRecord
+import io.enkrypt.avro.processing.ContractCreateRecord
+import io.enkrypt.avro.processing.ContractDestroyRecord
+import io.enkrypt.avro.processing.ContractKeyRecord
+import io.enkrypt.avro.processing.MetricKeyRecord
+import io.enkrypt.avro.processing.MetricRecord
+import io.enkrypt.avro.processing.TokenBalanceKeyRecord
+import io.enkrypt.avro.processing.TokenBalanceRecord
 import io.enkrypt.kafka.streams.config.AppConfig
+import io.enkrypt.kafka.streams.config.Topics
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
@@ -9,11 +22,39 @@ import java.util.Properties
 
 object Modules {
 
-  val kafkaStreams = module("kafkaStreams") {
+  val kafkaStreams = module {
 
     val config = get<AppConfig>()
 
-    single(name = "baseKafkaStreamsConfig") {
+    single<SchemaRegistryClient> {
+      when (config.unitTesting) {
+        false -> CachedSchemaRegistryClient(config.kafka.schemaRegistryUrl, 100)
+        true -> MockSchemaRegistryClient().apply {
+
+          val subjectsWithSchemas = listOf(
+            Pair(Topics.Blocks, BlockRecord.`SCHEMA$`),
+            Pair("${Topics.Blocks}-key", BlockKeyRecord.`SCHEMA$`),
+
+            Pair(Topics.FungibleTokenMovements, TokenBalanceRecord.`SCHEMA$`),
+            Pair("${Topics.FungibleTokenMovements}-key", TokenBalanceKeyRecord.`SCHEMA$`),
+
+            Pair(Topics.BlockMetrics, MetricRecord.`SCHEMA$`),
+            Pair("${Topics.BlockMetrics}-key", MetricKeyRecord.`SCHEMA$`),
+
+            Pair(Topics.ContractCreations, ContractCreateRecord.`SCHEMA$`),
+            Pair("${Topics.ContractCreations}-key", ContractKeyRecord.`SCHEMA$`),
+
+            Pair(Topics.ContractDestructions, ContractDestroyRecord.`SCHEMA$`),
+            Pair("${Topics.ContractDestructions}-key", ContractKeyRecord.`SCHEMA$`)
+          )
+
+          subjectsWithSchemas.forEach { (subject, schema) -> register(subject, schema) }
+
+        }
+      }
+    }
+
+    factory(name = "baseKafkaStreamsConfig") {
       Properties().apply {
         // App
         put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, config.kafka.bootstrapServers)

@@ -45,8 +45,8 @@ class BlockProcessor : AbstractKafkaProcessor() {
 
     // Create stream builder
     val builder = StreamsBuilder().apply {
-      addStateStore(ReorgTracker.chainEventsStore())
-      addStateStore(ReorgTracker.indexStore())
+      addStateStore(ReorgTracker.chainEventsStore(appConfig.unitTesting))
+      addStateStore(ReorgTracker.indexStore(appConfig.unitTesting))
     }
 
     val blockStream = builder
