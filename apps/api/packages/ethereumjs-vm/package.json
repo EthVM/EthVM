@@ -31,7 +31,7 @@
     "memdown": "^3.0.0",
     "minimist": "^1.1.1",
     "standard": "^12.0.1",
-    "tape": "4.9.1"
+    "tape": "4.9.2"
   },
   "browserify": {
     "transform": [
