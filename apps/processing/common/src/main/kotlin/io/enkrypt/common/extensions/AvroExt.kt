@@ -4,7 +4,12 @@ import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.capture.TransactionReceiptRecord
 import io.enkrypt.avro.capture.TransactionRecord
+import io.enkrypt.avro.common.ContractType
 import io.enkrypt.avro.common.Data20
+import io.enkrypt.avro.common.Data32
+import io.enkrypt.avro.processing.ContractCreateRecord
+import io.enkrypt.avro.processing.ContractDestroyRecord
+import io.enkrypt.avro.processing.ContractKeyRecord
 import io.enkrypt.avro.processing.TokenBalanceKeyRecord
 import io.enkrypt.avro.processing.TokenBalanceRecord
 import io.enkrypt.avro.processing.TokenTransferRecord
@@ -62,5 +67,27 @@ object AvroHelpers {
     TokenBalanceRecord.newBuilder()
       .setAmount(amount)
       .setAddress(address)
+      .build()
+
+  fun contractKey(address: Data20?) =
+    ContractKeyRecord.newBuilder()
+      .setAddress(address)
+      .build()
+
+  fun contractCreation(type: ContractType?, address: Data20?, creator: Data20?, blockHash: Data32?, txHash: Data32?, data: ByteBuffer?) =
+    ContractCreateRecord.newBuilder()
+      .setType(type)
+      .setAddress(address)
+      .setCreator(creator)
+      .setBlockHash(blockHash)
+      .setTxHash(txHash)
+      .setData(data)
+      .build()
+
+  fun contractDestruction(address: Data20?, blockHash: Data32?, txHash: Data32?) =
+    ContractDestroyRecord.newBuilder()
+      .setAddress(address)
+      .setBlockHash(blockHash)
+      .setTxHash(txHash)
       .build()
 }

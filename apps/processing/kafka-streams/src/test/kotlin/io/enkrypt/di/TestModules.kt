@@ -43,9 +43,9 @@ object TestModules {
     factory {
 
       val premineBalances = mapOf(
-        Bob.address.data20() to 20.ether(),
-        Alice.address.data20() to 20.ether(),
-        Terence.address.data20() to 20.ether()
+        Bob.address.data20() to 1000.ether(),
+        Alice.address.data20() to 1000.ether(),
+        Terence.address.data20() to 1000.ether()
       )
 
       val bcConfig = StandaloneBlockchain.Config(
@@ -62,7 +62,7 @@ object TestModules {
 
   val testDrivers = module {
 
-    factory("blockProcessorDriver") {
+    single("blockProcessorDriver") {
 
       val processor = BlockProcessor()
 

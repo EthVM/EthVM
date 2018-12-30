@@ -23,7 +23,7 @@ import io.enkrypt.util.TestContracts
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
 
-class ERC20Test : BehaviorSpec() {
+class ERC20ChainEventsTest : BehaviorSpec() {
 
   private val premineBalances = mapOf(
     Bob.address.data20() to 20.ether(),
