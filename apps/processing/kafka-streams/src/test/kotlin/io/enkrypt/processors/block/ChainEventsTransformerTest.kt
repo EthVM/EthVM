@@ -17,14 +17,13 @@ import io.enkrypt.util.KafkaStreamsTestListener
 import io.enkrypt.util.KafkaUtil.readContractCreation
 import io.enkrypt.util.KafkaUtil.readContractDestruction
 import io.enkrypt.util.KafkaUtil.readFungibleTokenMovement
-import io.enkrypt.util.KafkaUtil.readFungibleTokenMovementPairs
+import io.enkrypt.util.KafkaUtil.readFungibleTokenMovements
 import io.enkrypt.util.KafkaUtil.readNonFungibleTokenBalance
 import io.enkrypt.util.StandaloneBlockchain
 import io.enkrypt.util.StandaloneBlockchain.Companion.Alice
 import io.enkrypt.util.StandaloneBlockchain.Companion.Bob
 import io.enkrypt.util.StandaloneBlockchain.Companion.Coinbase
 import io.enkrypt.util.StandaloneBlockchain.Companion.Terence
-import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.matchers.collections.shouldContainAll
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
@@ -46,7 +45,7 @@ class ChainEventsTransformerTest : BehaviorSpec() {
 
     val testDriver = kc.get<TopologyTestDriver>(name = "blockProcessorDriver")
 
-    val brf = kc.get<ConsumerRecordFactory<BlockKeyRecord, BlockRecord>>()
+    val brf = kc.get<ConsumerRecordFactory<BlockKeyRecord, BlockRecord>>("blockRecordFactory")
     val bc = kc.get<StandaloneBlockchain>()
 
     given("a chain with simple ether transfers") {
@@ -72,7 +71,8 @@ class ChainEventsTransformerTest : BehaviorSpec() {
 
         then("there should be movements for the original chain") {
 
-          val movements = readFungibleTokenMovementPairs(testDriver, 15)
+          val movements = readFungibleTokenMovements(testDriver, 15)
+            .map { Pair(it.key(), it.value()) }
 
           movements shouldContainAll listOf(
             // block one
@@ -101,7 +101,8 @@ class ChainEventsTransformerTest : BehaviorSpec() {
 
         then("there should be reversals for blocks two and three") {
 
-          val movements = readFungibleTokenMovementPairs(testDriver, 10)
+          val movements = readFungibleTokenMovements(testDriver, 10)
+            .map { Pair(it.key(), it.value()) }
 
           movements shouldContainAll listOf(
             // block two
@@ -122,8 +123,9 @@ class ChainEventsTransformerTest : BehaviorSpec() {
         }
 
         then("there should be new movements for the fork block") {
-          val movements = readFungibleTokenMovementPairs(testDriver, 1)
-          movements shouldContain Pair(tokenKey(Coinbase.address.data20()), tokenBalance(3.ether().byteBuffer()))
+          val record = readFungibleTokenMovement(testDriver)!!
+          record.key() shouldBe tokenKey(Coinbase.address.data20())
+          record.value() shouldBe tokenBalance(3.ether().byteBuffer())
         }
 
         then("there should be no more movements") {
@@ -138,6 +140,11 @@ class ChainEventsTransformerTest : BehaviorSpec() {
 
       }
 
+    }
+
+    given("a chain of contract related transactions") {
+
+      TODO()
 
     }
 

@@ -46,7 +46,7 @@ class BlockProcessorERC20Test : BehaviorSpec() {
 
     val testDriver = kc.get<TopologyTestDriver>(name = "blockProcessorDriver")
 
-    val blockRecordFactory = kc.get<ConsumerRecordFactory<BlockKeyRecord, BlockRecord>>()
+    val blockRecordFactory = kc.get<ConsumerRecordFactory<BlockKeyRecord, BlockRecord>>("blockRecordFactory")
     val bc = kc.get<StandaloneBlockchain>()
 
     // TODO test genesis block
@@ -64,25 +64,25 @@ class BlockProcessorERC20Test : BehaviorSpec() {
         testDriver.pipeInput(blockRecordFactory.create(block.keyRecord(), block))
 
         then("there should be a token movement assigning ether to the miner") {
-          val record = readFungibleTokenMovement(testDriver)
+          val record = readFungibleTokenMovement(testDriver)!!
           record.key() shouldBe tokenKey(Coinbase.address.data20())
           record.value() shouldBe tokenBalance(3.ether().byteBuffer())
         }
 
         then("there should be a token movement deducting the tx fee from the sender") {
-          val record = readFungibleTokenMovement(testDriver)
+          val record = readFungibleTokenMovement(testDriver)!!
           record.key() shouldBe tokenKey(Bob.address.data20())
           record.value() shouldBe tokenBalance(141103900.gwei().negate().byteBuffer())
         }
 
         then("there should be a token movement adding the tx fee to the miner") {
-          val record = readFungibleTokenMovement(testDriver)
+          val record = readFungibleTokenMovement(testDriver)!!
           record.key() shouldBe tokenKey(Coinbase.address.data20())
           record.value() shouldBe tokenBalance(141103900.gwei().byteBuffer())
         }
 
         then("there should be a contract creation") {
-          val record = readContractCreation(testDriver)
+          val record = readContractCreation(testDriver)!!
           record.key() shouldBe contractKey(contractAddress)
           record.value() shouldBe contractCreation(
             ContractType.ERC20,
@@ -97,13 +97,13 @@ class BlockProcessorERC20Test : BehaviorSpec() {
         // TODO is the zero address typically used as the from in mintable ERC20 tokens?
 
         then("there should be a token movement deducting tokens from the zero address") {
-          val record = readFungibleTokenMovement(testDriver)
+          val record = readFungibleTokenMovement(testDriver)!!
           record.key() shouldBe tokenKey(EtherZero, contractAddress)
           record.value() shouldBe tokenBalance(10_000.ether().negate().byteBuffer())
         }
 
         then("there should be a token movement assigning tokens to the creator address") {
-          val record = readFungibleTokenMovement(testDriver)
+          val record = readFungibleTokenMovement(testDriver)!!
           record.key() shouldBe tokenKey(Bob.address.data20(), contractAddress)
           record.value() shouldBe tokenBalance(10_000.ether().byteBuffer())
         }
@@ -122,31 +122,31 @@ class BlockProcessorERC20Test : BehaviorSpec() {
         testDriver.pipeInput(blockRecordFactory.create(block.keyRecord(), block))
 
         then("there should be a token movement assigning ether to the miner") {
-          val record = readFungibleTokenMovement(testDriver)
+          val record = readFungibleTokenMovement(testDriver)!!
           record.key() shouldBe tokenKey(Coinbase.address.data20())
           record.value() shouldBe tokenBalance(3.ether().byteBuffer())
         }
 
         then("there should be a token movement deducting the tx fee from Bob") {
-          val record = readFungibleTokenMovement(testDriver)
+          val record = readFungibleTokenMovement(testDriver)!!
           record.key() shouldBe tokenKey(Bob.address.data20())
           record.value() shouldBe tokenBalance(5164900.gwei().negate().byteBuffer())
         }
 
         then("there should be a token movement adding the tx fee to the miner") {
-          val record = readFungibleTokenMovement(testDriver)
+          val record = readFungibleTokenMovement(testDriver)!!
           record.key() shouldBe tokenKey(Coinbase.address.data20())
           record.value() shouldBe tokenBalance(5164900.gwei().byteBuffer())
         }
 
         then("there should be a token movement deducting tokens from Bob") {
-          val record = readFungibleTokenMovement(testDriver)
+          val record = readFungibleTokenMovement(testDriver)!!
           record.key() shouldBe tokenKey(Bob.address.data20(), contractAddress)
           record.value() shouldBe tokenBalance(1.ether().negate().byteBuffer())
         }
 
         then("there should be a token movement assigning tokens to Alice") {
-          val record = readFungibleTokenMovement(testDriver)
+          val record = readFungibleTokenMovement(testDriver)!!
           record.key() shouldBe tokenKey(Alice.address.data20(), contractAddress)
           record.value() shouldBe tokenBalance(1.ether().byteBuffer())
         }

@@ -47,7 +47,7 @@ class BlockProcessorContractTest : BehaviorSpec() {
 
     val testDriver = kc.get<TopologyTestDriver>(name = "blockProcessorDriver")
 
-    val blockRecordFactory = kc.get<ConsumerRecordFactory<BlockKeyRecord, BlockRecord>>()
+    val blockRecordFactory = kc.get<ConsumerRecordFactory<BlockKeyRecord, BlockRecord>>("blockRecordFactory")
     val bc = kc.get<StandaloneBlockchain>()
 
     // TODO test genesis block
@@ -65,25 +65,25 @@ class BlockProcessorContractTest : BehaviorSpec() {
         testDriver.pipeInput(blockRecordFactory.create(block.keyRecord(), block))
 
         then("there should be a token movement assigning ether to the miner") {
-          val record = readFungibleTokenMovement(testDriver)
+          val record = readFungibleTokenMovement(testDriver)!!
           record.key() shouldBe tokenKey(Coinbase.address.data20())
           record.value() shouldBe tokenBalance(3.ether().byteBuffer())
         }
 
         then("there should be a token movement deducting the tx fee from the sender") {
-          val record = readFungibleTokenMovement(testDriver)
+          val record = readFungibleTokenMovement(testDriver)!!
           record.key() shouldBe tokenKey(Alice.address.data20())
           record.value() shouldBe tokenBalance(9076900.gwei().negate().byteBuffer())
         }
 
         then("there should be a token movement adding the tx fee to the miner") {
-          val record = readFungibleTokenMovement(testDriver)
+          val record = readFungibleTokenMovement(testDriver)!!
           record.key() shouldBe tokenKey(Coinbase.address.data20())
           record.value() shouldBe tokenBalance(9076900.gwei().byteBuffer())
         }
 
         then("there should be a contract creation") {
-          val record = readContractCreation(testDriver)
+          val record = readContractCreation(testDriver)!!
           record.key() shouldBe contractKey(contractAddress)
           record.value() shouldBe contractCreation(
             ContractType.GENERIC,
@@ -109,25 +109,25 @@ class BlockProcessorContractTest : BehaviorSpec() {
         testDriver.pipeInput(blockRecordFactory.create(block.keyRecord(), block))
 
         then("there should be a token movement assigning ether to the miner") {
-          val record = readFungibleTokenMovement(testDriver)
+          val record = readFungibleTokenMovement(testDriver)!!
           record.key() shouldBe tokenKey(Coinbase.address.data20())
           record.value() shouldBe tokenBalance(3.ether().byteBuffer())
         }
 
         then("there should be a token movement deducting the tx fee from the sender") {
-          val record = readFungibleTokenMovement(testDriver)
+          val record = readFungibleTokenMovement(testDriver)!!
           record.key() shouldBe tokenKey(Alice.address.data20())
           record.value() shouldBe tokenBalance(1319.microEther().negate().byteBuffer())
         }
 
         then("there should be a token movement adding the tx fee to the miner") {
-          val record = readFungibleTokenMovement(testDriver)
+          val record = readFungibleTokenMovement(testDriver)!!
           record.key() shouldBe tokenKey(Coinbase.address.data20())
           record.value() shouldBe tokenBalance(1319.microEther().byteBuffer())
         }
 
         then("there should be a contract destruction") {
-          val record = readContractDestruction(testDriver)
+          val record = readContractDestruction(testDriver)!!
           record.key() shouldBe contractKey(contractAddress)
           record.value() shouldBe contractDestruction(
             contractAddress,

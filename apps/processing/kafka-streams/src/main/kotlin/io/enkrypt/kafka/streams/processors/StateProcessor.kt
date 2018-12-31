@@ -60,6 +60,9 @@ class StateProcessor : AbstractKafkaProcessor() {
     fungibleBalances
       .toStream()
       .mapValues { it ->
+
+        // balances are unsigned so we convert here
+
         TokenBalanceRecord
           .newBuilder(it)
           .setAmount(it.getAmount().bigInteger().unsignedByteBuffer())

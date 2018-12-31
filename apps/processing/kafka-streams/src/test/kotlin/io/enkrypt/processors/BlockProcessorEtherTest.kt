@@ -39,7 +39,7 @@ class BlockProcessorEtherTest : BehaviorSpec() {
 
     val testDriver = kc.get<TopologyTestDriver>(name = "blockProcessorDriver")
 
-    val blockRecordFactory = kc.get<ConsumerRecordFactory<BlockKeyRecord, BlockRecord>>()
+    val brf = kc.get<ConsumerRecordFactory<BlockKeyRecord, BlockRecord>>("blockRecordFactory")
     val bc = kc.get<StandaloneBlockchain>()
 
     // TODO test genesis block
@@ -52,34 +52,34 @@ class BlockProcessorEtherTest : BehaviorSpec() {
 
       `when`("we publish it") {
 
-        testDriver.pipeInput(blockRecordFactory.create(block.keyRecord(), block))
+        testDriver.pipeInput(brf.create(block.keyRecord(), block))
 
         then("there should be a token movement assigning ether to the miner") {
-          val record = readFungibleTokenMovement(testDriver)
+          val record = readFungibleTokenMovement(testDriver)!!
           record.key() shouldBe tokenKey(Coinbase.address.data20())
           record.value() shouldBe tokenBalance(3.ether().byteBuffer())
         }
 
         then("there should be a token movement deducting the tx fee from the sender") {
-          val record = readFungibleTokenMovement(testDriver)
+          val record = readFungibleTokenMovement(testDriver)!!
           record.key() shouldBe tokenKey(Bob.address.data20())
           record.value() shouldBe tokenBalance(2100.microEther().negate().byteBuffer())
         }
 
         then("there should be a token movement adding the tx fee to the miner") {
-          val record = readFungibleTokenMovement(testDriver)
+          val record = readFungibleTokenMovement(testDriver)!!
           record.key() shouldBe tokenKey(Coinbase.address.data20())
           record.value() shouldBe tokenBalance(2100.microEther().byteBuffer())
         }
 
         then("there should be a token movement deducting ether from the sender") {
-          val record = readFungibleTokenMovement(testDriver)
+          val record = readFungibleTokenMovement(testDriver)!!
           record.key() shouldBe tokenKey(Bob.address.data20())
           record.value() shouldBe tokenBalance(1.ether().negate().byteBuffer())
         }
 
         then("there should be a token movement adding ether to the receiver") {
-          val record = readFungibleTokenMovement(testDriver)
+          val record = readFungibleTokenMovement(testDriver)!!
           record.key() shouldBe tokenKey(Alice.address.data20())
           record.value() shouldBe tokenBalance(1.ether().byteBuffer())
         }

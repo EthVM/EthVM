@@ -1,52 +1,76 @@
 package io.enkrypt.util
 
-import io.enkrypt.avro.processing.TokenBalanceKeyRecord
-import io.enkrypt.avro.processing.TokenBalanceRecord
 import io.enkrypt.kafka.streams.config.Topics
 import io.enkrypt.kafka.streams.serdes.Serdes
+import org.apache.kafka.clients.producer.ProducerRecord
+import org.apache.kafka.common.serialization.Deserializer
 import org.apache.kafka.streams.TopologyTestDriver
 
 object KafkaUtil {
 
-  fun readFungibleTokenMovement(testDriver: TopologyTestDriver) =
-    testDriver.readOutput(
-      Topics.FungibleTokenMovements,
-      Serdes.TokenBalanceKey().deserializer(),
-      Serdes.TokenBalance().deserializer()
-    )
+  fun <K, V> read(
+    testDriver: TopologyTestDriver,
+    topic: String,
+    keyDeserializer: Deserializer<K>,
+    valueDeserializer: Deserializer<V>,
+    count: Int = 1
+  ): List<ProducerRecord<K, V>> = (1..count).mapNotNull { testDriver.readOutput(topic, keyDeserializer, valueDeserializer) }
 
-  fun readFungibleTokenMovementPair(testDriver: TopologyTestDriver): Pair<TokenBalanceKeyRecord, TokenBalanceRecord> {
-    val record = readFungibleTokenMovement(testDriver)
-    return Pair(record.key(), record.value())
-  }
+  fun <K, V> readOne(
+    testDriver: TopologyTestDriver,
+    topic: String,
+    keyDeserializer: Deserializer<K>,
+    valueDeserializer: Deserializer<V>
+  ): ProducerRecord<K, V>? = read(testDriver, topic, keyDeserializer, valueDeserializer).firstOrNull()
 
-  fun readFungibleTokenMovementPairs(testDriver: TopologyTestDriver, count: Int): List<Pair<TokenBalanceKeyRecord, TokenBalanceRecord>> =
-    (1..count).map {
-      val record = readFungibleTokenMovement(testDriver)
-      if (record == null) null else Pair(record.key(), record.value())
-    }.filterNotNull()
+  fun readFungibleTokenMovements(testDriver: TopologyTestDriver, count: Int) = read(
+    testDriver,
+    Topics.FungibleTokenMovements,
+    Serdes.TokenBalanceKey().deserializer(),
+    Serdes.TokenBalance().deserializer(),
+    count
+  )
 
-  fun readNonFungibleTokenBalance(testDriver: TopologyTestDriver) =
-    testDriver.readOutput(
-      Topics.NonFungibleTokenBalances,
-      Serdes.TokenBalanceKey().deserializer(),
-      Serdes.TokenBalance().deserializer()
-    )
+  fun readFungibleTokenMovement(testDriver: TopologyTestDriver) = readFungibleTokenMovements(testDriver, 1).firstOrNull()
 
-  fun readContractCreation(testDriver: TopologyTestDriver) =
-    testDriver.readOutput(
-      Topics.ContractCreations,
-      Serdes.ContractKey().deserializer(),
-      Serdes.ContractCreate().deserializer()
-    )
+  fun readFungibleTokenBalances(testDriver: TopologyTestDriver, count: Int) = read(
+    testDriver,
+    Topics.FungibleTokenBalances,
+    Serdes.TokenBalanceKey().deserializer(),
+    Serdes.TokenBalance().deserializer(),
+    count
+  )
 
-  fun readContractDestruction(testDriver: TopologyTestDriver) =
-    testDriver.readOutput(
-      Topics.ContractDestructions,
-      Serdes.ContractKey().deserializer(),
-      Serdes.ContractDestroy().deserializer()
-    )
+  fun readFungibleTokenBalance(testDriver: TopologyTestDriver) = readFungibleTokenBalances(testDriver, 1).firstOrNull()
 
+  fun readNonFungibleTokenBalances(testDriver: TopologyTestDriver, count: Int) = read(
+    testDriver,
+    Topics.NonFungibleTokenBalances,
+    Serdes.TokenBalanceKey().deserializer(),
+    Serdes.TokenBalance().deserializer()
+  )
+
+  fun readNonFungibleTokenBalance(testDriver: TopologyTestDriver) = readNonFungibleTokenBalances(testDriver, 1).firstOrNull()
+
+  fun readContractCreations(testDriver: TopologyTestDriver, count: Int) = read(
+    testDriver,
+    Topics.ContractCreations,
+    Serdes.ContractKey().deserializer(),
+    Serdes.ContractCreate().deserializer(),
+    count
+  )
+
+  fun readContractCreation(testDriver: TopologyTestDriver) = readContractCreations(testDriver, 1).firstOrNull()
+
+  fun readContractDestructions(testDriver: TopologyTestDriver, count: Int) = read(
+    testDriver,
+    Topics.ContractDestructions,
+    Serdes.ContractKey().deserializer(),
+    Serdes.ContractCreate().deserializer(),
+    count
+  )
+
+  fun readContractDestruction(testDriver: TopologyTestDriver) = readContractDestructions(testDriver, 1).firstOrNull()
 
 }
 
