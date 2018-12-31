@@ -154,6 +154,8 @@ class BlockProcessorERC20Test : BehaviorSpec() {
       }
 
     }
+
+    // TODO test pre-approved transfer
   }
 
 }

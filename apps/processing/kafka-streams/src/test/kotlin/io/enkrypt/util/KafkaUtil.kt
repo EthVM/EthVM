@@ -13,6 +13,13 @@ object KafkaUtil {
       Serdes.TokenBalance().deserializer()
     )
 
+  fun readNonFungibleTokenBalance(testDriver: TopologyTestDriver) =
+    testDriver.readOutput(
+      Topics.NonFungibleTokenBalances,
+      Serdes.TokenBalanceKey().deserializer(),
+      Serdes.TokenBalance().deserializer()
+    )
+
   fun readContractCreation(testDriver: TopologyTestDriver) =
     testDriver.readOutput(
       Topics.ContractCreations,

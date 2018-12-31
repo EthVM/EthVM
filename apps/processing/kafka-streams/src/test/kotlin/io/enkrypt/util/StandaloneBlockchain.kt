@@ -45,7 +45,7 @@ import java.util.concurrent.TimeUnit
 
 class StandaloneBlockchain(config: Config) {
 
-  val genesis: Genesis = (
+  private val genesis: Genesis = (
     config.genesis
       ?: GenesisLoader.loadGenesis(javaClass.getResourceAsStream("/genesis/genesis-light-sb.json"))).apply {
 
@@ -57,21 +57,23 @@ class StandaloneBlockchain(config: Config) {
     stateRoot = GenesisLoader.generateRootHash(premine)
   }
 
-  val gasPrice by lazy { config.gasPrice }
-  val gasLimit by lazy { config.gasLimit }
-  val blockGasIncreasePercent by lazy { config.blockGasIncreasePercent }
+  private val gasPrice by lazy { config.gasPrice }
+  private val gasLimit by lazy { config.gasLimit }
+  private val blockGasIncreasePercent by lazy { config.blockGasIncreasePercent }
 
-  val coinbase by lazy { config.coinbase }
-  val timeIncrement = config.timeIncrement
-  val netConfig by lazy { config.netConfig }
+  private val coinbase by lazy { config.coinbase }
+  private val timeIncrement = config.timeIncrement
+  private val netConfig by lazy { config.netConfig }
 
-  val objectMapper = ObjectMapper()
+  private val objectMapper = ObjectMapper()
 
-  var time = (config.time ?: Date()).time / 1000
-  var listener = TestEthereumListener()
+  private var time = (config.time ?: Date()).time / 1000
+  private var listener = TestEthereumListener()
 
   private var pendingTxs = listOf<Transaction>()
   private var noncesMap = emptyMap<ECKey, Long>()
+
+  private lateinit var genesisBlock: BlockRecord
 
   private val commonConfig = object : CommonConfig() {
     override fun systemProperties() =

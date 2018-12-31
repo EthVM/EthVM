@@ -15,7 +15,7 @@ import io.enkrypt.common.extensions.isNonFungible
 import io.enkrypt.common.extensions.unsignedBigInteger
 import io.enkrypt.kafka.streams.config.Topics
 import io.enkrypt.kafka.streams.processors.block.BlockStatistics
-import io.enkrypt.kafka.streams.processors.block.ReorgTracker
+import io.enkrypt.kafka.streams.processors.block.ChainEventsTransfromer
 import io.enkrypt.kafka.streams.serdes.Serdes
 import mu.KotlinLogging
 import org.apache.kafka.streams.KeyValue
@@ -45,8 +45,8 @@ class BlockProcessor : AbstractKafkaProcessor() {
 
     // Create stream builder
     val builder = StreamsBuilder().apply {
-      addStateStore(ReorgTracker.chainEventsStore(appConfig.unitTesting))
-      addStateStore(ReorgTracker.indexStore(appConfig.unitTesting))
+      addStateStore(ChainEventsTransfromer.chainEventsStore(appConfig.unitTesting))
+      addStateStore(ChainEventsTransfromer.indexStore(appConfig.unitTesting))
     }
 
     val blockStream = builder
@@ -55,8 +55,8 @@ class BlockProcessor : AbstractKafkaProcessor() {
 
     val chainEvents = blockStream
       .transform(
-        TransformerSupplier { ReorgTracker() },
-        *ReorgTracker.STORE_NAMES
+        TransformerSupplier { ChainEventsTransfromer(appConfig.unitTesting) },
+        *ChainEventsTransfromer.STORE_NAMES
       )
 
     // premine balances

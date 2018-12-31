@@ -228,10 +228,6 @@ class ERC20ChainEventsTest : BehaviorSpec() {
         }
       }
 
-      `when`("Terence attempts to transfer more than his allowance") {
-
-        // TODO implement
-      }
     }
   }
 }

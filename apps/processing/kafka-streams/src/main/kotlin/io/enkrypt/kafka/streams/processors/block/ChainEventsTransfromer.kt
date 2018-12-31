@@ -21,12 +21,12 @@ import org.apache.kafka.streams.state.Stores
 import java.math.BigInteger
 import java.nio.ByteBuffer
 
-class ReorgTracker : Transformer<BlockKeyRecord?, BlockRecord?, KeyValue<BlockKeyRecord, ChainEventRecord>> {
+class ChainEventsTransfromer(val unitTesting: Boolean = false) : Transformer<BlockKeyRecord?, BlockRecord?, KeyValue<BlockKeyRecord, ChainEventRecord>> {
 
   companion object {
 
-    private const val STORE_NAME_CHAIN_EVENTS = "reorg-chain-events"
-    private const val STORE_NAME_INDICES = "reorg-indices"
+    private const val STORE_NAME_CHAIN_EVENTS = "chain-events"
+    private const val STORE_NAME_INDICES = "chain-events-indices"
 
     const val META_HIGH = "high"
 
@@ -80,10 +80,22 @@ class ReorgTracker : Transformer<BlockKeyRecord?, BlockRecord?, KeyValue<BlockKe
 
     when (reorgDetected(block)) {
       true -> onReorg(key, block)
-      false -> storeAndForward(key, block)
+      false -> {
+        ensureSequentialProcessing(block)
+        storeAndForward(key, block)
+      }
     }
 
     return null
+  }
+
+  private fun ensureSequentialProcessing(block: BlockRecord) {
+    val highest = getHighestBlockNumber()
+    val expected = highest + BigInteger.ONE
+    val received = block.getHeader().getNumber().unsignedBigInteger()
+    check(received == expected) {
+      "Block out of sequence. Expected = $expected, received = $received"
+    }
   }
 
   private fun reorgDetected(block: BlockRecord): Boolean {
@@ -194,7 +206,7 @@ class ReorgTracker : Transformer<BlockKeyRecord?, BlockRecord?, KeyValue<BlockKe
     val key = ReorgKeyRecord.newBuilder().setName(META_HIGH).build()
     val value = indexStore.get(key)
     return when (value) {
-      null -> BigInteger.ONE.negate()
+      null -> if (unitTesting) BigInteger.ZERO else BigInteger.ONE.negate()    // hack for now since we can't get a block summary for the genesis block when unit testing
       else -> value.getBlockNumber().unsignedBigInteger()!!
     }
   }

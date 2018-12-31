@@ -16,9 +16,9 @@ import io.enkrypt.avro.processing.TokenTransferRecord
 import java.math.BigInteger
 import java.nio.ByteBuffer
 
-fun TokenTransferRecord.isFungible() = !(this.getFrom() == null || this.getTo() == null || this.getAmount() == null)
+fun TokenTransferRecord.isFungible() = !(this.getFrom() == null || this.getTo() == null || this.getAmount() == null || this.getTokenId() != null)
 
-fun TokenTransferRecord.isNonFungible() = !(this.getFrom() == null || this.getTo() == null || this.getTokenId() == null)
+fun TokenTransferRecord.isNonFungible() = !(this.getFrom() == null || this.getTo() == null || this.getTokenId() == null || this.getAmount() != null)
 
 fun TokenBalanceKeyRecord.isFungible() = this.getAddress() != null
 

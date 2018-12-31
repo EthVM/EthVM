@@ -80,7 +80,7 @@ class ContractChainEventsTest : BehaviorSpec() {
           )
         }
 
-        then("there should be a transaction fee ether transfer") {
+        then("there should be a transaction fee") {
           chainEvents[1] shouldBe fungibleTransfer(
             Bob.address.data20()!!,
             Coinbase.address.data20()!!,
