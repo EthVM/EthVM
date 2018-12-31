@@ -22,11 +22,11 @@ import io.enkrypt.util.KafkaStreamsTestListener
 import io.enkrypt.util.KafkaUtil.readContractCreation
 import io.enkrypt.util.KafkaUtil.readContractDestruction
 import io.enkrypt.util.KafkaUtil.readFungibleTokenMovement
+import io.enkrypt.util.SolidityContract
 import io.enkrypt.util.StandaloneBlockchain
 import io.enkrypt.util.StandaloneBlockchain.Companion.Alice
 import io.enkrypt.util.StandaloneBlockchain.Companion.Bob
 import io.enkrypt.util.StandaloneBlockchain.Companion.Coinbase
-import io.enkrypt.util.StandaloneBlockchain.Companion.Terence
 import io.enkrypt.util.TestContracts
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
@@ -97,10 +97,12 @@ class BlockProcessorEtherTest : BehaviorSpec() {
 
     }
 
+    val contract = TestContracts.SELF_DESTRUCTS.contractFor("SelfDestruct")
+    val contractAddress = SolidityContract.contractAddress(Alice, 0L).data20()!!
+
     given("a block with a contract creation") {
 
-      val contract = TestContracts.SELF_DESTRUCTS.contractFor("SelfDestruct")
-      val tx = bc.submitContract(Alice, contract)
+      bc.submitContract(Alice, contract)
       val block = bc.createBlock()
 
       `when`("we publish it") {
@@ -127,10 +129,10 @@ class BlockProcessorEtherTest : BehaviorSpec() {
 
         then("there should be a contract creation") {
           val record = readContractCreation(testDriver)
-          record.key() shouldBe contractKey(tx.contractAddress.data20())
+          record.key() shouldBe contractKey(contractAddress)
           record.value() shouldBe contractCreation(
             ContractType.GENERIC,
-            tx.contractAddress.data20(),
+            contractAddress,
             Alice.address.data20(),
             block.getHeader().getHash(),
             block.getTransactions()[0].getHash(),
@@ -144,11 +146,7 @@ class BlockProcessorEtherTest : BehaviorSpec() {
 
     given("a block with contract destruction") {
 
-      val contract = TestContracts.SELF_DESTRUCTS.contractFor("SelfDestruct")
-      val tx = bc.submitContract(Terence, contract)
-      bc.createBlock()
-
-      bc.callFunction(Terence, tx.contractAddress.data20()!!, contract, "destroy")
+      bc.callFunction(Alice, contractAddress, contract, "destroy")
       val block = bc.createBlock()
 
       `when`("we publish it") {
@@ -163,7 +161,7 @@ class BlockProcessorEtherTest : BehaviorSpec() {
 
         then("there should be a token movement deducting the tx fee from the sender") {
           val record = readFungibleTokenMovement(testDriver)
-          record.key() shouldBe tokenKey(Terence.address.data20())
+          record.key() shouldBe tokenKey(Alice.address.data20())
           record.value() shouldBe tokenBalance(1319.microEther().negate().byteBuffer())
         }
 
@@ -175,9 +173,9 @@ class BlockProcessorEtherTest : BehaviorSpec() {
 
         then("there should be a contract destruction") {
           val record = readContractDestruction(testDriver)
-          record.key() shouldBe contractKey(tx.contractAddress.data20())
+          record.key() shouldBe contractKey(contractAddress)
           record.value() shouldBe contractDestruction(
-            tx.contractAddress.data20(),
+            contractAddress,
             block.getHeader().getHash(),
             block.getTransactions()[0].getHash()
           )
