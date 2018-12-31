@@ -129,6 +129,9 @@ class StandaloneBlockchain(config: Config) {
 
   fun createBlock(): BlockRecord = createForkBlock(blockchain.bestBlock)
 
+  fun createForkBlock(number: Long): BlockRecord =
+    createForkBlock(blockchain.getBlockByNumber(number))
+
   fun createForkBlock(parent: Block): BlockRecord {
 
     time += timeIncrement

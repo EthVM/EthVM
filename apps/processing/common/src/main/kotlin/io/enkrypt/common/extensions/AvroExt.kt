@@ -56,6 +56,16 @@ fun TransactionRecord.txFee(receipt: TransactionReceiptRecord): BigInteger =
 
 object AvroHelpers {
 
+  fun blockKey(number: Long) = blockKey(number.toBigInteger())
+
+  fun blockKey(number: BigInteger): BlockKeyRecord =
+    blockKey(number.unsignedByteBuffer())
+
+  fun blockKey(number: ByteBuffer?): BlockKeyRecord =
+    BlockKeyRecord.newBuilder()
+      .setNumber(number)
+      .build()
+
   fun tokenKey(address: Data20? = null, contract: Data20? = null, tokenId: ByteBuffer? = null) =
     TokenBalanceKeyRecord.newBuilder()
       .setAddress(address)

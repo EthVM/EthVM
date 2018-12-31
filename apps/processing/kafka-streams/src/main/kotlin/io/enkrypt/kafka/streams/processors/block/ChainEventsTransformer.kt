@@ -21,7 +21,7 @@ import org.apache.kafka.streams.state.Stores
 import java.math.BigInteger
 import java.nio.ByteBuffer
 
-class ChainEventsTransfromer(val unitTesting: Boolean = false) : Transformer<BlockKeyRecord?, BlockRecord?, KeyValue<BlockKeyRecord, ChainEventRecord>> {
+class ChainEventsTransformer(private val unitTesting: Boolean = false) : Transformer<BlockKeyRecord?, BlockRecord?, KeyValue<BlockKeyRecord, ChainEventRecord>> {
 
   companion object {
 
@@ -90,11 +90,15 @@ class ChainEventsTransfromer(val unitTesting: Boolean = false) : Transformer<Blo
   }
 
   private fun ensureSequentialProcessing(block: BlockRecord) {
+
     val highest = getHighestBlockNumber()
-    val expected = highest + BigInteger.ONE
-    val received = block.getHeader().getNumber().unsignedBigInteger()
-    check(received == expected) {
-      "Block out of sequence. Expected = $expected, received = $received"
+    val received = block.getHeader().getNumber().unsignedBigInteger()!!
+
+    if (received > highest) {
+      val nextNumber = highest + BigInteger.ONE
+      check(received == nextNumber) {
+        "Block out of sequence. Expected = $nextNumber, received = $received"
+      }
     }
   }
 
@@ -232,27 +236,30 @@ class ChainEventsTransfromer(val unitTesting: Boolean = false) : Transformer<Blo
     var numberToReverse = getHighestBlockNumber()
     var recordToReverse: BlockChainEventsRecord?
 
-    do {
+    while (numberToReverse >= forkNumber) {
       recordToReverse = deleteChainEvents(numberToReverse)
 
-      if (recordToReverse != null) {
+      if (recordToReverse == null) break
 
-        val events = recordToReverse.getEvents()
+      val events = recordToReverse.getEvents()
 
-        events.map { ChainEventRecord.newBuilder(it).setReverse(true).build() }
-          .asReversed()
-          .forEach { context.forward(key, it) }
+      events.map { ChainEventRecord.newBuilder(it).setReverse(true).build() }
+        .asReversed()
+        .forEach { context.forward(key, it) }
 
-        logger.info { "Reversing block number = $numberToReverse" }
-      }
+      logger.info { "Reversed block number = $numberToReverse" }
 
       numberToReverse -= BigInteger.ONE
-    } while (numberToReverse > forkNumber)
+    }
 
     if (numberToReverse > forkNumber) throw IllegalStateException("Failed to reverse blocks all the way back to the current one")
 
     // commit and publish the new version of the summary for this block key
     storeAndForward(key, block)
+
+    logger.info { "Published events for block = $forkNumber" }
+
+    logger.info { "Re-org complete" }
   }
 
   /**

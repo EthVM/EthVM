@@ -1,5 +1,7 @@
 package io.enkrypt.util
 
+import io.enkrypt.avro.processing.TokenBalanceKeyRecord
+import io.enkrypt.avro.processing.TokenBalanceRecord
 import io.enkrypt.kafka.streams.config.Topics
 import io.enkrypt.kafka.streams.serdes.Serdes
 import org.apache.kafka.streams.TopologyTestDriver
@@ -12,6 +14,17 @@ object KafkaUtil {
       Serdes.TokenBalanceKey().deserializer(),
       Serdes.TokenBalance().deserializer()
     )
+
+  fun readFungibleTokenMovementPair(testDriver: TopologyTestDriver): Pair<TokenBalanceKeyRecord, TokenBalanceRecord> {
+    val record = readFungibleTokenMovement(testDriver)
+    return Pair(record.key(), record.value())
+  }
+
+  fun readFungibleTokenMovementPairs(testDriver: TopologyTestDriver, count: Int): List<Pair<TokenBalanceKeyRecord, TokenBalanceRecord>> =
+    (1..count).map {
+      val record = readFungibleTokenMovement(testDriver)
+      if (record == null) null else Pair(record.key(), record.value())
+    }.filterNotNull()
 
   fun readNonFungibleTokenBalance(testDriver: TopologyTestDriver) =
     testDriver.readOutput(

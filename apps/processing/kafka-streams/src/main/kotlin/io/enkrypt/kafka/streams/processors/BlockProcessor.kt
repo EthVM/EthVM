@@ -15,7 +15,7 @@ import io.enkrypt.common.extensions.isNonFungible
 import io.enkrypt.common.extensions.unsignedBigInteger
 import io.enkrypt.kafka.streams.config.Topics
 import io.enkrypt.kafka.streams.processors.block.BlockStatistics
-import io.enkrypt.kafka.streams.processors.block.ChainEventsTransfromer
+import io.enkrypt.kafka.streams.processors.block.ChainEventsTransformer
 import io.enkrypt.kafka.streams.serdes.Serdes
 import mu.KotlinLogging
 import org.apache.kafka.streams.KeyValue
@@ -45,8 +45,8 @@ class BlockProcessor : AbstractKafkaProcessor() {
 
     // Create stream builder
     val builder = StreamsBuilder().apply {
-      addStateStore(ChainEventsTransfromer.chainEventsStore(appConfig.unitTesting))
-      addStateStore(ChainEventsTransfromer.indexStore(appConfig.unitTesting))
+      addStateStore(ChainEventsTransformer.chainEventsStore(appConfig.unitTesting))
+      addStateStore(ChainEventsTransformer.indexStore(appConfig.unitTesting))
     }
 
     val blockStream = builder
@@ -55,23 +55,26 @@ class BlockProcessor : AbstractKafkaProcessor() {
 
     val chainEvents = blockStream
       .transform(
-        TransformerSupplier { ChainEventsTransfromer(appConfig.unitTesting) },
-        *ChainEventsTransfromer.STORE_NAMES
+        TransformerSupplier { ChainEventsTransformer(appConfig.unitTesting) },
+        *ChainEventsTransformer.STORE_NAMES
       )
 
     // premine balances
 
     chainEvents
       .filter { _, v -> v.getType() == ChainEventType.PREMINE_BALANCE }
-      .mapValues { v -> v.getValue() as PremineBalanceRecord }
       .map { _, v ->
+
+        val reverse = v.getReverse()
+        val premineBalance = v.getValue() as PremineBalanceRecord
+        val amount = premineBalance.getBalance().unsignedBigInteger()!!
 
         KeyValue(
           TokenBalanceKeyRecord.newBuilder()
-            .setAddress(v.getAddress())
+            .setAddress(premineBalance.getAddress())
             .build(),
           TokenBalanceRecord.newBuilder()
-            .setAmount(v.getBalance())
+            .setAmount(if (reverse) amount.negate().byteBuffer() else amount.byteBuffer())
             .build()
         )
       }.to(
@@ -83,15 +86,18 @@ class BlockProcessor : AbstractKafkaProcessor() {
 
     chainEvents
       .filter { _, v -> v.getType() == ChainEventType.BLOCK_REWARD }
-      .mapValues { v -> v.getValue() as BlockRewardRecord }
       .map { _, v ->
+
+        val reverse = v.getReverse()
+        val reward = v.getValue() as BlockRewardRecord
+        val amount = reward.getReward().unsignedBigInteger()!!
 
         KeyValue(
           TokenBalanceKeyRecord.newBuilder()
-            .setAddress(v.getAddress())
+            .setAddress(reward.getAddress())
             .build(),
           TokenBalanceRecord.newBuilder()
-            .setAmount(v.getReward())
+            .setAmount(if (reverse) amount.negate().byteBuffer() else amount.byteBuffer())
             .build()
         )
       }.to(
@@ -122,13 +128,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
             .setAddress(from)
             .build(),
           TokenBalanceRecord.newBuilder()
-            .setAmount(
-              if (reverse) {
-                amount.byteBuffer()
-              } else {
-                amount.negate().byteBuffer()
-              }
-            )
+            .setAmount(if (reverse) amount.byteBuffer() else amount.negate().byteBuffer())
             .build()
         )
 
@@ -138,13 +138,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
             .setAddress(to)
             .build(),
           TokenBalanceRecord.newBuilder()
-            .setAmount(
-              if (reverse) {
-                amount.negate().byteBuffer()
-              } else {
-                amount.byteBuffer()
-              }
-            )
+            .setAmount(if (reverse) amount.negate().byteBuffer() else amount.byteBuffer())
             .build()
         )
 
