@@ -15,23 +15,19 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { Vue, Component } from 'vue-property-decorator'
 
-export default Vue.extend({
-  name: 'AppInfoCard',
-  props: ['title', 'value', 'colorType', 'metrics', 'backType'],
-  data() {
-    return {}
-  },
-  computed: {
-    getColor(): string {
-      return this.colorType
-    },
-    getBackground(): string {
-      return this.backType
-    }
-  }
+@Component({
+  props: ['title', 'value', 'colorType', 'metrics', 'backType']
 })
+export default class AppInfoCard extends Vue {
+  get getColor(): string {
+    return this.colorType
+  }
+  get getBackground(): string {
+    return this.backType
+  }
+}
 </script>
 
 <style scoped lang="css">

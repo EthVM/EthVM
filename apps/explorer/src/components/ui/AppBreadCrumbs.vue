@@ -14,15 +14,17 @@
 </template>
 
 <script>
-import Vue from 'vue'
-export default Vue.extend({
-  name: 'AppBreadCrumbs',
+import { Vue, Component } from 'vue-property-decorator'
+
+@Component({
   props: {
     newItems: {
       type: Array,
       default: null
     }
-  },
+  }
+})
+export default class AppBreadCrumbs extends Vue {
   data() {
     return {
       crumbs: [
@@ -34,7 +36,7 @@ export default Vue.extend({
         }
       ]
     }
-  },
+  }
   mounted() {
     if (this.newItems) {
       this.crumbs[0].disabled = false
@@ -42,11 +44,9 @@ export default Vue.extend({
         this.crumbs.push(this.newItems[i])
       }
     }
-  },
-  computed: {
-    getItems() {
-      return this.crumbs
-    }
   }
-})
+  get getItems() {
+    return this.crumbs
+  }
+}
 </script>

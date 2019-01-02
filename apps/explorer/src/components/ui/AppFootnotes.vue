@@ -16,7 +16,8 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { Vue, Component } from 'vue-property-decorator'
+
 /* Footnote arrya example:
   footnotes: [
     {
@@ -26,16 +27,12 @@ import Vue from 'vue'
     }
   ] */
 
-export default Vue.extend({
-  name: 'BlockComponent',
-  props: ['footnotes'],
-  data() {
-    return {}
-  },
-  methods: {
-    getColor(note): string {
-      return note.color
-    }
-  }
+@Component({
+  props: ['footnotes']
 })
+export default class BlockComponent extends Vue {
+  getColor(note): string {
+    return note.color
+  }
+}
 </script>

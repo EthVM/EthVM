@@ -16,13 +16,13 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { Vue, Component } from 'vue-property-decorator'
 import VueQr from 'vue-qr'
-export default Vue.extend({
+
+@Component({
   components: {
     VueQr
   },
-  name: 'AppAddressQR',
   props: {
     addressQR: {
       type: String
@@ -31,19 +31,20 @@ export default Vue.extend({
       type: Boolean,
       deafult: false
     }
-  },
+  }
+})
+export default class AppAddressQR extends Vue {
+  addressQR: string
   data() {
     return {
       dialog: false
     }
-  },
-  computed: {
-    getQR() {
-      if (this.addressQR) {
-        return this.addressQR.toLowerCase()
-      }
-      return null
-    }
   }
-})
+  get getQR() {
+    if (this.addressQR) {
+      return this.addressQR.toLowerCase()
+    }
+    return null
+  }
+}
 </script>

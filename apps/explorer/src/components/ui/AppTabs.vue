@@ -7,10 +7,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { Vue, Component } from 'vue-property-decorator'
 
-export default Vue.extend({
-  name: 'AppTabs',
+@Component({
+  props: ['tabs']
+})
+export default class AppTabs extends Vue {
   /* Tabs Object Array Example:
     tabs: [
       {
@@ -25,18 +27,12 @@ export default Vue.extend({
       } ..
     ]
    End Example */
-  props: ['tabs'],
-  data() {
-    return {}
-  },
-  methods: {
-    setActive(tab) {
-      let i
-      for (i = 0; i < this.tabs.length; i++) {
-        this.tabs[i].isActive = false
-      }
-      tab.isActive = true
+  setActive(tab) {
+    let i
+    for (i = 0; i < this.tabs.length; i++) {
+      this.tabs[i].isActive = false
     }
+    tab.isActive = true
   }
-})
+}
 </script>
