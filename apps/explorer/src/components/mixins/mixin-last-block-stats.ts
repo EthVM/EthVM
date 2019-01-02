@@ -43,6 +43,13 @@ export const lastBlockInfo = {
       return this.seconds
     }
   },
+  created() {
+    const lastBlock = this.$store.getters.getBlocks[0]
+    if (lastBlock) {
+      this.setBlock(this.$store.getters.getBlocks[0])
+      this.startCount()
+    }
+  },
   mounted() {
     this.$eventHub.$on(sEvents.newBlock, _block => {
       this.setBlock(this.$store.getters.getBlocks[0])
