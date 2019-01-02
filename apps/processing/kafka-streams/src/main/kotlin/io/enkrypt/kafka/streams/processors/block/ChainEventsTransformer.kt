@@ -210,7 +210,7 @@ class ChainEventsTransformer(private val unitTesting: Boolean = false) : Transfo
     val key = ReorgKeyRecord.newBuilder().setName(META_HIGH).build()
     val value = indexStore.get(key)
     return when (value) {
-      null -> if (unitTesting) BigInteger.ZERO else BigInteger.ONE.negate()    // hack for now since we can't get a block summary for the genesis block when unit testing
+      null -> if (unitTesting) BigInteger.ZERO else BigInteger.ONE.negate() // hack for now since we can't get a block summary for the genesis block when unit testing
       else -> value.getBlockNumber().unsignedBigInteger()!!
     }
   }

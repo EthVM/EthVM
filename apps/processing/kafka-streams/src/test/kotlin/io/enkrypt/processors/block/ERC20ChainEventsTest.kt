@@ -227,7 +227,6 @@ class ERC20ChainEventsTest : BehaviorSpec() {
           )
         }
       }
-
     }
   }
 }

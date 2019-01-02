@@ -94,9 +94,7 @@ class BlockProcessorContractTest : BehaviorSpec() {
             block.getTransactions()[0].getInput()
           )
         }
-
       }
-
     }
 
     given("a block with contract destruction") {
@@ -135,9 +133,7 @@ class BlockProcessorContractTest : BehaviorSpec() {
             block.getTransactions()[0].getHash()
           )
         }
-
       }
     }
-
   }
 }

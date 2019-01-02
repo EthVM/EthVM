@@ -83,11 +83,7 @@ class BlockProcessorEtherTest : BehaviorSpec() {
           record.key() shouldBe tokenKey(Alice.address.data20())
           record.value() shouldBe tokenBalance(1.ether().byteBuffer())
         }
-
       }
-
     }
-
   }
-
 }

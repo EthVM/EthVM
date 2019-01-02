@@ -142,7 +142,6 @@ object ChainEvents {
       }
     }
 
-
   private fun forBlockRewards(block: BlockRecord, totalTxFees: BigInteger) =
     block.getRewards()
       .map {

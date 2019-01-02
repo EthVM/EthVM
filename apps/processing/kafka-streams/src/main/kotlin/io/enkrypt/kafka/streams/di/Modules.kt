@@ -49,7 +49,6 @@ object Modules {
           )
 
           subjectsWithSchemas.forEach { (subject, schema) -> register(subject, schema) }
-
         }
       }
     }

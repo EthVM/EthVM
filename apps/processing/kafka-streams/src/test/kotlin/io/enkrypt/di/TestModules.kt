@@ -38,7 +38,6 @@ object TestModules {
     }
 
     single { AppConfig(true, get()) }
-
   }
 
   val testBlockchain = module {
@@ -60,7 +59,6 @@ object TestModules {
 
       StandaloneBlockchain(bcConfig)
     }
-
   }
 
   val testDrivers = module {
@@ -94,7 +92,6 @@ object TestModules {
         Serdes.BlockKey().serializer(),
         Serdes.Block().serializer()
       )
-
     }
 
     factory("fungibleMovementRecordFactory") {
@@ -104,9 +101,6 @@ object TestModules {
         Serdes.TokenBalanceKey().serializer(),
         Serdes.TokenBalance().serializer()
       )
-
     }
-
   }
-
 }

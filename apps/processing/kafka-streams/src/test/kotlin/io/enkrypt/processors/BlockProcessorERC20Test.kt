@@ -107,9 +107,7 @@ class BlockProcessorERC20Test : BehaviorSpec() {
           record.key() shouldBe tokenKey(Bob.address.data20(), contractAddress)
           record.value() shouldBe tokenBalance(10_000.ether().byteBuffer())
         }
-
       }
-
     }
 
     given("a block which transfers some tokens from Bob to Alice") {
@@ -150,12 +148,9 @@ class BlockProcessorERC20Test : BehaviorSpec() {
           record.key() shouldBe tokenKey(Alice.address.data20(), contractAddress)
           record.value() shouldBe tokenBalance(1.ether().byteBuffer())
         }
-
       }
-
     }
 
     // TODO test pre-approved transfer
   }
-
 }

@@ -97,7 +97,6 @@ class BlockProcessorERC721Test : BehaviorSpec() {
           )
         }
       }
-
     }
 
     given("a block which mints some ERC721 tokens") {
@@ -171,9 +170,7 @@ class BlockProcessorERC721Test : BehaviorSpec() {
           record.key() shouldBe tokenKey(contract = contractAddress, tokenId = 3.toBigInteger().unsignedByteBuffer())
           record.value() shouldBe tokenBalance(address = Terence.address.data20())
         }
-
       }
-
     }
 
     given("a block that transfer token 2 from Alice to Terence") {
@@ -208,11 +205,7 @@ class BlockProcessorERC721Test : BehaviorSpec() {
           record.key() shouldBe tokenKey(contract = contractAddress, tokenId = 2.toBigInteger().unsignedByteBuffer())
           record.value() shouldBe tokenBalance(address = Terence.address.data20())
         }
-
       }
-
     }
-
   }
-
 }

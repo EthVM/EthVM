@@ -74,7 +74,6 @@ class StateProcessorTest : BehaviorSpec() {
             Pair(tokenKey(Terence.address.data20()), tokenBalance(45.ether().unsignedByteBuffer()))
           )
         }
-
       }
 
       `when`("we publish additional negative ether movements") {
@@ -93,9 +92,7 @@ class StateProcessorTest : BehaviorSpec() {
             Pair(tokenKey(Terence.address.data20()), tokenBalance(33.ether().unsignedByteBuffer()))
           )
         }
-
       }
-
     }
 
     given("an initial set of ERC20 token balances") {
@@ -109,8 +106,5 @@ class StateProcessorTest : BehaviorSpec() {
     given("an initial set of metrics") {
       TODO()
     }
-
   }
-
-
 }

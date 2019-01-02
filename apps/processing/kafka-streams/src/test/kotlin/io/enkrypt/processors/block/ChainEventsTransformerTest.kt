@@ -96,7 +96,6 @@ class ChainEventsTransformerTest : BehaviorSpec() {
             Pair(tokenKey(Terence.address.data20()), tokenBalance(5.ether().negate().byteBuffer())),
             Pair(tokenKey(Bob.address.data20()), tokenBalance(5.ether().byteBuffer()))
           )
-
         }
 
         then("there should be reversals for blocks two and three") {
@@ -119,7 +118,6 @@ class ChainEventsTransformerTest : BehaviorSpec() {
             Pair(tokenKey(Terence.address.data20()), tokenBalance(5.ether().byteBuffer())),
             Pair(tokenKey(Bob.address.data20()), tokenBalance(5.ether().negate().byteBuffer()))
           )
-
         }
 
         then("there should be new movements for the fork block") {
@@ -137,17 +135,12 @@ class ChainEventsTransformerTest : BehaviorSpec() {
           readContractCreation(testDriver) shouldBe null
           readContractDestruction(testDriver) shouldBe null
         }
-
       }
-
     }
 
     given("a chain of contract related transactions") {
 
       TODO()
-
     }
-
   }
-
 }

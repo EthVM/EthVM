@@ -71,6 +71,4 @@ object KafkaUtil {
   )
 
   fun readContractDestruction(testDriver: TopologyTestDriver) = readContractDestructions(testDriver, 1).firstOrNull()
-
 }
-
