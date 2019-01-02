@@ -42,64 +42,65 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
 import { Events } from 'ethvm-common'
+import { Component, Vue } from 'vue-property-decorator'
 
-export default Vue.extend({
-  name: 'AppSearch',
+@Component({
   props: {
     phText: {
       type: String,
       default: 'default'
     }
-  },
+  }
+})
+export default class AppSearch extends Vue {
+  searchhash: any
   data() {
     return {
       searchhash: '',
       input: String
     }
-  },
-  methods: {
-    /* Search Method : */
-    start() {
-      this.$socket.emit(
-        Events.search,
-        {
-          hash: this.searchhash
-        },
-        (error, result) => {
-          if (result) {
-            switch (result.type) {
-              case 0:
-                {
-                  this.$router.push({
-                    path: '/transaction/0x' + this.searchhash
-                  })
-                }
-                break
-              case 1:
-                {
-                  this.$router.push({
-                    path: '/address/0x' + this.searchhash
-                  })
-                }
-                break
-              case 2:
-                {
-                  this.$router.push({
-                    path: '/block/0x' + this.searchhash
-                  })
-                }
-                break
-              case 3: {
-                // search not found mess
+  }
+  /* Search Method : */
+  start() {
+    this.$socket.emit(
+      Events.search,
+      {
+        hash: this.searchhash
+      },
+      (error, result) => {
+        if (result) {
+          switch (result.type) {
+            case 0:
+              {
+                this.$router.push({
+                  path: '/transaction/0x' + this.searchhash
+                })
               }
+              break
+            case 1:
+              {
+                this.$router.push({
+                  path: '/address/0x' + this.searchhash
+                })
+              }
+              break
+            case 2:
+              {
+                this.$router.push({
+                  path: '/block/0x' + this.searchhash
+                })
+              }
+              break
+            case 3: {
+              // search not found mess
             }
           }
         }
-      )
-    },
-    sendReq() {}
+      }
+    )
   }
-})
+
+  sendReq() {}
+}
 </script>

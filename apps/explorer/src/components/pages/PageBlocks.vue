@@ -23,34 +23,37 @@
 
 <script lang="ts">
 import Visibility from 'visibilityjs'
-import Vue from 'vue'
 import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
 import AppInfoCard from '@app/components/ui/AppInfoCard.vue'
 import TableBlocks from '@app/components/tables/TableBlocks.vue'
 import { lastBlockInfo } from '@app/components/mixins/mixin-last-block-stats'
 import { Events as sEvents } from 'ethvm-common'
 import BN from 'bignumber.js'
+import { Vue, Component, Mixins } from 'vue-property-decorator'
+
 const MAX_ITEMS = 20
-export default Vue.extend({
-  name: 'FrameBlocks',
+
+@Component({
   components: {
     AppBreadCrumbs,
     TableBlocks,
     AppInfoCard
-  },
-  mixins: [lastBlockInfo],
+  }
+})
+export default class FrameBlocks extends Mixins(lastBlockInfo) {
+  blocks: any
+  maxItems: number = MAX_ITEMS
   data() {
     return {
-      blocks: null,
       items: [
         {
           text: this.$i18n.t('title.blocks'),
           disabled: true
         }
-      ],
-      maxItems: MAX_ITEMS
+      ]
     }
-  },
+  }
+
   created() {
     this.blocks = this.$store.getters.getBlocks
     this.$eventHub.$on(sEvents.newBlock, _block => {
@@ -58,14 +61,13 @@ export default Vue.extend({
         this.blocks = this.$store.getters.getBlocks
       }
     })
-  },
+  }
   beforeDestroy() {
     this.$eventHub.$off(sEvents.newBlock)
-  },
-  computed: {
-    getBlocks() {
-      return this.blocks.slice(0, this.maxItems)
-    }
   }
-})
+
+  get getBlocks() {
+    return this.blocks.slice(0, this.maxItems)
+  }
+}
 </script>
