@@ -5,7 +5,9 @@
         <v-card-title class="title font-weight-bold">{{ getTitle }}</v-card-title>
       </v-flex>
       <v-flex hidden-sm-and-down md4 order-xs2>
-        <v-layout justify-end> <app-footnotes :footnotes="footnote" /> </v-layout>
+        <v-layout justify-end>
+          <app-footnotes :footnotes="footnote"/>
+        </v-layout>
       </v-flex>
     </v-layout>
     <v-layout v-else row wrap align-center pb-1>
@@ -13,11 +15,18 @@
         <v-card-title class="title font-weight-bold">{{ $t('title.lastBlock') }}</v-card-title>
       </v-flex>
       <v-flex hidden-sm-and-down md4 order-md2>
-        <v-layout justify-center> <app-footnotes :footnotes="footnote" /> </v-layout>
+        <v-layout justify-center>
+          <app-footnotes :footnotes="footnote"/>
+        </v-layout>
       </v-flex>
       <v-flex d-flex xs4 md1 order-xs2 order-md3>
         <v-layout justify-end>
-          <v-btn outline color="secondary" class="text-capitalize" to="/blocks">{{ $t('bttn.viewAll') }}</v-btn>
+          <v-btn
+            outline
+            color="secondary"
+            class="text-capitalize"
+            to="/blocks"
+          >{{ $t('bttn.viewAll') }}</v-btn>
         </v-layout>
       </v-flex>
     </v-layout>
@@ -28,7 +37,7 @@
           <h5>{{ $t('tableHeader.blockN') }}</h5>
         </v-flex>
         <v-spacer></v-spacer>
-        <v-flex v-if="blocks[0].getType() == 'uncle'" hidden-sm-and-down md2>
+        <v-flex v-if="!getBlockType" hidden-sm-and-down md2>
           <h5>{{ $t('title.position') }}</h5>
         </v-flex>
         <v-flex v-else hidden-sm-and-down md2>
@@ -41,12 +50,12 @@
     </v-card>
     <!-- End Table Header -->
     <v-card v-if="blocks" flat id="scroll-target" :style="getStyle" class="scroll-y pt-0 pb-0">
-      <v-layout column fill-height v-scroll:#scroll-target class="pt-1" style="margin-right: 1px">
+      <v-layout column fill-height v-scroll:#scroll-target style="margin-right: 1px" class="mb-1">
         <v-flex xs12>
           <transition-group name="list" tag="p">
             <v-card v-for="block in blocks" class="transparent" flat v-bind:key="block.getHash()">
               <table-blocks-row :block="block"></table-blocks-row>
-              <v-divider></v-divider>
+              <v-divider class="mb-2 mt-2"></v-divider>
             </v-card>
           </transition-group>
         </v-flex>
@@ -106,6 +115,9 @@ export default Vue.extend({
     },
     getTitle() {
       return this.frameBlocks ? this.$i18n.t('title.blocks') : this.$i18n.t('title.uncles')
+    },
+    getBlockType() {
+      return this.frameBlocks ? true : false
     }
   }
 })

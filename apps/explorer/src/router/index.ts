@@ -6,6 +6,7 @@ import PageBlocks from '@/components/pages/PageBlocks.vue'
 import PageTransactions from '@/components/pages/PageTransactions.vue'
 import PagePendingTransactions from '@/components/pages/PagePendingTransactions.vue'
 import PageAbout from '@/components/pages/PageAbout.vue'
+import PageUncles from '@/components/pages/PageUncles.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -34,6 +35,11 @@ export default new Router({
       path: '/about',
       component: PageAbout,
       name: 'about'
+    },
+    {
+      path: '/uncles',
+      component: PageUncles,
+      name: 'uncles'
     }
   ],
   mode: 'history'

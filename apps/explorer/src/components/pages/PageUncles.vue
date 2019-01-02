@@ -1,8 +1,10 @@
 <template>
   <v-container grid-list-lg class="mb-0">
-    <bread-crumbs :newItems="items"></bread-crumbs>
+    <app-bread-crumbs :newItems="items"></app-bread-crumbs>
     <v-layout row wrap justify-center mb-4>
-      <v-flex xs12> <block-latest-blocks :maxBlocks="true" :blocks="getuncles" :frameBlocks="false"></block-latest-blocks> </v-flex>
+      <v-flex xs12>
+        <table-blocks :maxBlocks="true" :blocks="getuncles" :frameBlocks="false"></table-blocks>
+      </v-flex>
     </v-layout>
   </v-container>
 </template>
@@ -12,11 +14,17 @@ import Visibility from 'visibilityjs'
 import Vue from 'vue'
 import { Events } from 'ethvm-common'
 import BN from 'bignumber.js'
+import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
+import TableBlocks from '@app/components/tables/TableBlocks.vue'
 
-const MAX_ITEMS = 20
+const MAX_ITEMS = 50
 
 export default Vue.extend({
   name: 'FrameUncles',
+  components: {
+    AppBreadCrumbs,
+    TableBlocks
+  },
   data() {
     return {
       uncles: null,

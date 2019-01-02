@@ -53,10 +53,9 @@ import AppInfoCard from '@app/components/ui/AppInfoCard.vue'
 import TableBlocks from '@app/components/tables/TableBlocks.vue'
 import { lastBlockInfo } from '@app/components/mixins/mixin-last-block-stats'
 import { Events as sEvents } from 'ethvm-common'
-import BN from 'bignumber.js'
 import { Vue, Component, Mixins } from 'vue-property-decorator'
 
-const MAX_ITEMS = 20
+const MAX_ITEMS = 50
 
 @Component({
   components: {
@@ -81,8 +80,6 @@ export default class FrameBlocks extends Mixins(lastBlockInfo) {
 
   created() {
     this.blocks = this.$store.getters.getBlocks
-    console.log(this.blocks[0])
-    console.log(this.blocks[1])
     this.$eventHub.$on(sEvents.newBlock, _block => {
       if (Visibility.state() === 'visible') {
         this.blocks = this.$store.getters.getBlocks
