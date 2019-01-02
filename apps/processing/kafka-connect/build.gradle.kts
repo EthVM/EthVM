@@ -47,7 +47,7 @@ dependencies {
 
   // Tests
   testImplementation("io.kotlintest:kotlintest-runner-junit5:3.1.11")
-  testImplementation("io.mockk:mockk:1.8.12")
+  testImplementation("io.mockk:mockk:1.8.13")
 }
 
 project.tasks.getting(Test::class) { useJUnitPlatform {} }

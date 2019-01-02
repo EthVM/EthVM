@@ -26,7 +26,9 @@ dependencies {
   implementation(project(":avro"))
 
   // Ethereumj
-  implementation(group = "io.enkrypt", name = "ethereumj-core", version = "1.10.0.0-SNAPSHOT")
+  implementation(group = "io.enkrypt", name = "ethereumj-core", version = "1.10.0.0-SNAPSHOT") {
+    exclude(group = "io.enkrypt.ethvm", module = "avro-entities")
+  }
 
   // Kafka
   implementation("org.apache.kafka:kafka-streams:2.1.0")

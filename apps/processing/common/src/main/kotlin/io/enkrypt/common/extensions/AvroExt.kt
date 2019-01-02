@@ -53,7 +53,6 @@ fun BlockRecord.keyRecord(): BlockKeyRecord =
 fun TransactionRecord.txFee(receipt: TransactionReceiptRecord): BigInteger =
   getGasPrice().unsignedBigInteger()!! * receipt.getGasUsed().unsignedBigInteger()!!
 
-
 object AvroHelpers {
 
   fun blockKey(number: Long) = blockKey(number.toBigInteger())
