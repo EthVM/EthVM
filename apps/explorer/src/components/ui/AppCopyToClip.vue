@@ -4,14 +4,12 @@
 
 <script lang="ts">
 import copyClip from 'clipboard-copy'
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
-@Component({
-  props: {
-    valueToCopy: String
-  }
-})
+@Component
 export default class AppCopyToClip extends Vue {
+  @Prop(String) valueToCopy: string
+
   copyToClip(newVar) {
     const status = copyClip(newVar)
   }
