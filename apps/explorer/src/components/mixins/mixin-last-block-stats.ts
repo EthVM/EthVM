@@ -15,32 +15,32 @@ export const lastBlockInfo = {
   },
 
   computed: {
-    latestBlockNumber() {
-      return this.dataRecieved ? this.block.getNumber() : this.loading
+    latestBlockNumber():string {
+      return this.dataRecieved ? this.block.getNumber().toString() : this.loading
     },
 
-    latestHashRate() {
-      return this.dataRecieved ? this.getRoundNumber(this.getAvgHashRate(this.$store.getters.getBlocks).toString()) : this.loading
+    latestHashRate():string {
+      return this.dataRecieved ? this.getRoundNumber(this.getAvgHashRate(this.$store.getters.getBlocks).toString()).toString() : this.loading
     },
 
-    latestDifficulty() {
-      return this.dataRecieved ? this.getRoundNumber(this.getTHs(this.block.getDifficulty())) : this.loading
+    latestDifficulty():string {
+      return this.dataRecieved ? this.getRoundNumber(this.getTHs(this.block.getDifficulty())).toString() : this.loading
     },
 
-    latestBlockSuccessTxs() {
-      return this.dataRecieved ? this.block.getStats().successfulTxs : this.loading
+    latestBlockSuccessTxs():string {
+      return this.dataRecieved ? this.block.getStats().successfulTxs.toString() : this.loading
     },
 
-    latestBlockFailedTxs() {
-      return this.dataRecieved ? this.block.getStats().failedTxs : this.loading
+    latestBlockFailedTxs():string {
+      return this.dataRecieved ? this.block.getStats().failedTxs.toString() : this.loading
     },
 
-    latestBlockPendingTxs() {
-      return this.dataRecieved ? this.block.getStats().pendingTxs : this.loading
+    latestBlockPendingTxs():string {
+      return this.dataRecieved ? this.block.getStats().pendingTxs.toString() : this.loading
     },
 
-    secSinceLastBlock() {
-      return this.seconds
+    secSinceLastBlock():string {
+      return this.seconds.toString()
     }
   },
   created() {
