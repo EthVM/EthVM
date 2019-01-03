@@ -31,7 +31,7 @@ class MongoSinkTask : SinkTask() {
   private lateinit var client: MongoClient
   private lateinit var db: MongoDatabase
 
-  private var collectionsMap = mapOf<CollectionId, MongoCollection<BsonDocument>>()
+  private var collectionsMap = mapOf<MongoCollections, MongoCollection<BsonDocument>>()
 
   override fun version() = Versions.of("/mongo-sink-version.properties")
 
@@ -42,38 +42,36 @@ class MongoSinkTask : SinkTask() {
     client = MongoClient(uri)
     db = client.getDatabase(uri.database!!)
 
-    // TODO maybe use a Struct to Bson Codec?
-
-    collectionsMap += CollectionId.Blocks to db.getCollection(
-      "blocks",
+    collectionsMap += MongoCollections.Blocks to db.getCollection(
+      MongoCollections.Blocks.name,
       BsonDocument::class.java
     )
-    collectionsMap += CollectionId.Accounts to db.getCollection(
-      "accounts",
+    collectionsMap += MongoCollections.Accounts to db.getCollection(
+      MongoCollections.Accounts.name,
       BsonDocument::class.java
     )
-    collectionsMap += CollectionId.Transactions to db.getCollection(
-      "transactions",
+    collectionsMap += MongoCollections.Transactions to db.getCollection(
+      MongoCollections.Transactions.name,
       BsonDocument::class.java
     )
-    collectionsMap += CollectionId.Contracts to db.getCollection(
-      "contracts",
+    collectionsMap += MongoCollections.Contracts to db.getCollection(
+      MongoCollections.Contracts.name,
       BsonDocument::class.java
     )
-    collectionsMap += CollectionId.FungibleBalances to db.getCollection(
-      "fungible_balances",
+    collectionsMap += MongoCollections.FungibleBalances to db.getCollection(
+      MongoCollections.FungibleBalances.name,
       BsonDocument::class.java
     )
-    collectionsMap += CollectionId.NonFungibleBalances to db.getCollection(
-      "non_fungible_balances",
+    collectionsMap += MongoCollections.NonFungibleBalances to db.getCollection(
+      MongoCollections.NonFungibleBalances.name,
       BsonDocument::class.java
     )
-    collectionsMap += CollectionId.PendingTransactions to db.getCollection(
-      "pending_transactions",
+    collectionsMap += MongoCollections.PendingTransactions to db.getCollection(
+      MongoCollections.PendingTransactions.name,
       BsonDocument::class.java
     )
-    collectionsMap += CollectionId.BlockStatistics to db.getCollection(
-      "block_statistics",
+    collectionsMap += MongoCollections.BlockStatistics to db.getCollection(
+      MongoCollections.BlockStatistics.name,
       BsonDocument::class.java
     )
   }
@@ -90,7 +88,7 @@ class MongoSinkTask : SinkTask() {
 
     val startMs = System.currentTimeMillis()
 
-    var batch = mapOf<CollectionId, List<WriteModel<BsonDocument>>>()
+    var batch = mapOf<MongoCollections, List<WriteModel<BsonDocument>>>()
 
     records.forEach {
 
@@ -106,8 +104,8 @@ class MongoSinkTask : SinkTask() {
         else -> throw IllegalStateException("Unhandled topic: " + it.topic())
       }
 
-      writesMap.forEach { (collectionId, writesForCollection) ->
-        batch += collectionId to batch.getOrDefault(collectionId, emptyList()) + writesForCollection
+      writesMap.forEach { (topicId, writesForCollection) ->
+        batch += topicId to batch.getOrDefault(topicId, emptyList()) + writesForCollection
       }
     }
 
@@ -133,7 +131,7 @@ class MongoSinkTask : SinkTask() {
   override fun flush(currentOffsets: MutableMap<TopicPartition, OffsetAndMetadata>?) {
   }
 
-  private fun processBlock(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
+  private fun processBlock(record: SinkRecord): Map<MongoCollections, List<WriteModel<BsonDocument>>> {
 
     val keySchema = record.keySchema()
     if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a long")
@@ -203,12 +201,12 @@ class MongoSinkTask : SinkTask() {
     }
 
     return mapOf(
-      CollectionId.Blocks to blockWrites,
-      CollectionId.Transactions to txWrites
+      MongoCollections.Blocks to blockWrites,
+      MongoCollections.Transactions to txWrites
     )
   }
 
-  private fun processContractCreate(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
+  private fun processContractCreate(record: SinkRecord): Map<MongoCollections, List<WriteModel<BsonDocument>>> {
 
     val keySchema = record.keySchema()
     if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a struct")
@@ -240,10 +238,10 @@ class MongoSinkTask : SinkTask() {
       )
     }
 
-    return mapOf(CollectionId.Contracts to writes)
+    return mapOf(MongoCollections.Contracts to writes)
   }
 
-  private fun processContractMetadata(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
+  private fun processContractMetadata(record: SinkRecord): Map<MongoCollections, List<WriteModel<BsonDocument>>> {
 
     val keySchema = record.keySchema()
     if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be struct")
@@ -277,10 +275,10 @@ class MongoSinkTask : SinkTask() {
       )
     }
 
-    return mapOf(CollectionId.Contracts to writes)
+    return mapOf(MongoCollections.Contracts to writes)
   }
 
-  private fun processContractDestruct(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
+  private fun processContractDestruct(record: SinkRecord): Map<MongoCollections, List<WriteModel<BsonDocument>>> {
 
     val keySchema = record.keySchema()
     if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be binary")
@@ -312,10 +310,10 @@ class MongoSinkTask : SinkTask() {
       writes += UpdateOneModel(idFilter, bson)
     }
 
-    return mapOf(CollectionId.Contracts to writes)
+    return mapOf(MongoCollections.Contracts to writes)
   }
 
-  private fun processFungibleTokenBalance(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
+  private fun processFungibleTokenBalance(record: SinkRecord): Map<MongoCollections, List<WriteModel<BsonDocument>>> {
 
     val keySchema = record.keySchema()
     if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("key must be a struct")
@@ -347,10 +345,10 @@ class MongoSinkTask : SinkTask() {
       )
     }
 
-    return mapOf(CollectionId.FungibleBalances to writes)
+    return mapOf(MongoCollections.FungibleBalances to writes)
   }
 
-  private fun processNonFungibleTokenBalance(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
+  private fun processNonFungibleTokenBalance(record: SinkRecord): Map<MongoCollections, List<WriteModel<BsonDocument>>> {
 
     val keySchema = record.keySchema()
     if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key must be a struct")
@@ -382,10 +380,10 @@ class MongoSinkTask : SinkTask() {
       )
     }
 
-    return mapOf(CollectionId.NonFungibleBalances to writes)
+    return mapOf(MongoCollections.NonFungibleBalances to writes)
   }
 
-  private fun processPendingTransaction(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
+  private fun processPendingTransaction(record: SinkRecord): Map<MongoCollections, List<WriteModel<BsonDocument>>> {
 
     val keySchema = record.keySchema()
     if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a struct")
@@ -416,10 +414,10 @@ class MongoSinkTask : SinkTask() {
       )
     }
 
-    return mapOf(CollectionId.PendingTransactions to writes)
+    return mapOf(MongoCollections.PendingTransactions to writes)
   }
 
-  private fun processBlockStatistic(record: SinkRecord): Map<CollectionId, List<WriteModel<BsonDocument>>> {
+  private fun processBlockStatistic(record: SinkRecord): Map<MongoCollections, List<WriteModel<BsonDocument>>> {
 
     val keySchema = record.keySchema()
     if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a struct")
@@ -450,7 +448,7 @@ class MongoSinkTask : SinkTask() {
       )
     }
 
-    return mapOf(CollectionId.BlockStatistics to writes)
+    return mapOf(MongoCollections.BlockStatistics to writes)
   }
 
   companion object {
@@ -460,13 +458,13 @@ class MongoSinkTask : SinkTask() {
   }
 }
 
-enum class CollectionId {
-  Blocks,
-  BlockStatistics,
-  Accounts,
-  Transactions,
-  Contracts,
-  FungibleBalances,
-  NonFungibleBalances,
-  PendingTransactions
+enum class MongoCollections(name: String) {
+  Blocks("blocks"),
+  BlockStatistics("block_statistics"),
+  Accounts("accounts"),
+  Transactions("transactions"),
+  Contracts("contracts"),
+  FungibleBalances("fungible_balances"),
+  NonFungibleBalances("non_fungible_balances"),
+  PendingTransactions("pending_transactions")
 }
