@@ -162,6 +162,10 @@ object TestScenarioOne : TestScenario() {
     Terence.address.data20() to 1000.ether()
   )
 
+  val erc20Address = SolidityContract.contractAddress(Bob, 1L).data20()!!
+
+  val erc721Address = SolidityContract.contractAddress(Alice, 1L).data20()!!
+
   override val blockEvents = listOf(
     listOf(
       EtherTransfer(Bob, Alice, 1.ether()),
@@ -173,17 +177,17 @@ object TestScenarioOne : TestScenario() {
       CreateContract(Alice, erc721Contract, gasLimit = 1.gwei().toLong())
     ),
     listOf(
-      ERC20Transfer(Bob, SolidityContract.contractAddress(Bob, 1L).data20()!!, erc20Contract, null, 1.gwei().toLong(), Alice, 1.ether()),
-      ERC20Transfer(Bob, SolidityContract.contractAddress(Bob, 1L).data20()!!, erc20Contract, null, 1.gwei().toLong(), Terence, 227.gwei())
+      ERC20Transfer(Bob, erc20Address, erc20Contract, null, 1.gwei().toLong(), Alice, 1.ether()),
+      ERC20Transfer(Bob, erc20Address, erc20Contract, null, 1.gwei().toLong(), Terence, 227.gwei())
     ),
     listOf(
-      ERC721Mint(Alice, SolidityContract.contractAddress(Alice, 1L).data20()!!, erc721Contract, null, 1.gwei().toLong(), Bob, 1.toBigInteger()),
-      ERC721Mint(Alice, SolidityContract.contractAddress(Alice, 1L).data20()!!, erc721Contract, null, 1.gwei().toLong(), Alice, 2.toBigInteger()),
-      ERC721Mint(Alice, SolidityContract.contractAddress(Alice, 1L).data20()!!, erc721Contract, null, 1.gwei().toLong(), Terence, 3.toBigInteger())
+      ERC721Mint(Alice, erc721Address, erc721Contract, null, 1.gwei().toLong(), Bob, 1.toBigInteger()),
+      ERC721Mint(Alice, erc721Address, erc721Contract, null, 1.gwei().toLong(), Alice, 2.toBigInteger()),
+      ERC721Mint(Alice, erc721Address, erc721Contract, null, 1.gwei().toLong(), Terence, 3.toBigInteger())
     ),
     listOf(
-      ERC721SafeTransfer(Terence, SolidityContract.contractAddress(Alice, 1L).data20()!!, erc721Contract, null, 1.gwei().toLong(), Terence, Bob, 3.toBigInteger()),
-      ERC721SafeTransfer(Bob, SolidityContract.contractAddress(Alice, 1L).data20()!!, erc721Contract, null, 1.gwei().toLong(), Bob, Alice, 1.toBigInteger())
+      ERC721SafeTransfer(Terence, erc721Address, erc721Contract, null, 1.gwei().toLong(), Terence, Bob, 3.toBigInteger()),
+      ERC721SafeTransfer(Bob, erc721Address, erc721Contract, null, 1.gwei().toLong(), Bob, Alice, 1.toBigInteger())
     )
   )
 }
