@@ -13,30 +13,21 @@
   </v-card>
 </template>
 
-<script>
-import { Vue, Component } from 'vue-property-decorator'
+<script lang="ts">
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import { IBreadCumbs } from '@app/models/types/ui'
 
-@Component({
-  props: {
-    newItems: {
-      type: Array,
-      default: null
-    }
-  }
-})
+@Component
 export default class AppBreadCrumbs extends Vue {
-  data() {
-    return {
-      crumbs: [
-        {
-          text: 'Home',
-          disabled: true,
-          icon: 'fa fa-home',
-          link: '/'
-        }
-      ]
+  @Prop(IBreadCumbs) newItems
+  crumbs: IBreadCumbs[] = [
+    {
+      text: 'Home',
+      disabled: true,
+      icon: 'fa fa-home',
+      link: '/'
     }
-  }
+  ]
   mounted() {
     if (this.newItems) {
       this.crumbs[0].disabled = false
