@@ -48,6 +48,7 @@ dependencies {
   // Tests
   testImplementation("io.kotlintest:kotlintest-runner-junit5:3.1.11")
   testImplementation("io.mockk:mockk:1.8.13")
+  testImplementation("org.apache.kafka:connect-api:2.1.0")
 }
 
 project.tasks.getting(Test::class) { useJUnitPlatform {} }
