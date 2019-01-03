@@ -1,25 +1,39 @@
 <template>
   <v-container grid-list-lg class="mb-0">
-    <bread-crumbs :newItems="getItems"></bread-crumbs>
+    <app-bread-crumbs :newItems="getItems"></app-bread-crumbs>
     <v-layout row wrap justify-start class="mb-4">
       <v-flex v-if="blockMined" xs12>
-        <block-block-detail :block="block" :uncles="uncles" :isNotMinedBlock="isNotMinedBlock" :isMined="true"></block-block-detail>
+        <app-detail
+          :block="block"
+          :uncles="uncles"
+          :isNotMinedBlock="isNotMinedBlock"
+          :isMined="true"
+        ></app-detail>
       </v-flex>
-      <v-flex v-else xs12> <block-block-detail :isMined="false" :isNotMinedBlock="isNotMinedBlock" :prev="getPrev()"></block-block-detail> </v-flex>
+      <v-flex v-else xs12>
+        <app-detail :isMined="false" :isNotMinedBlock="isNotMinedBlock" :prev="getPrev()"></app-detail>
+      </v-flex>
     </v-layout>
     <v-layout row wrap justify-start class="mb-4">
       <v-flex v-if="blockMined" xs12>
-        <block-last-transactions
+        <table-transactions
           v-if="transactions.length > 0"
           :transactions="transactions"
           :frameTxs="true"
           :tableTitle="$t('title.blockTx')"
           class="mt-3"
-        ></block-last-transactions>
+        ></table-transactions>
         <v-card v-else flat color="white">
           <v-layout column align-center justify-center ma-3>
-            <v-icon v-if="transactionLoading" class="text-xs-center fa fa-spinner fa-pulse fa-4x fa-fw primary--text" large></v-icon>
-            <v-card-text v-if="transactionLoading" class="text-xs-center text-muted">{{ $t('block.loadingBlockTx') }}</v-card-text>
+            <v-icon
+              v-if="transactionLoading"
+              class="text-xs-center fa fa-spinner fa-pulse fa-4x fa-fw primary--text"
+              large
+            ></v-icon>
+            <v-card-text
+              v-if="transactionLoading"
+              class="text-xs-center text-muted"
+            >{{ $t('block.loadingBlockTx') }}</v-card-text>
             <v-card-text v-else class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }}</v-card-text>
           </v-layout>
         </v-card>
@@ -34,13 +48,20 @@ import { Block, Tx } from '@app/models'
 import { Events as sEvents } from 'ethvm-common'
 import store from '@app/states'
 import Vue from 'vue'
-
+import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
+import TableTransactions from '@app/components/tables/TableTransactions.vue'
+import AppDetails from '@app/components/ui/AppDetails.vue'
 export default Vue.extend({
   name: 'Block',
   props: {
     blockRef: {
       type: String
     }
+  },
+  components: {
+    AppBreadCrumbs,
+    TableTransactions,
+    AppDetails
   },
   data() {
     return {
@@ -171,7 +192,3 @@ export default Vue.extend({
   }
 })
 </script>
-
-<style scoped lang="less">
-@import '~lessPath/sunil/global.less';
-</style>
