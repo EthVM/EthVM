@@ -13,6 +13,7 @@ import org.apache.kafka.connect.data.Schema.Type.INT16
 import org.apache.kafka.connect.data.Schema.Type.INT32
 import org.apache.kafka.connect.data.Schema.Type.INT64
 import org.apache.kafka.connect.data.Schema.Type.INT8
+import org.apache.kafka.connect.data.Schema.Type.MAP
 import org.apache.kafka.connect.data.Schema.Type.STRING
 import org.apache.kafka.connect.data.Schema.Type.STRUCT
 import org.apache.kafka.connect.data.Struct
@@ -32,11 +33,9 @@ import java.math.BigDecimal
 import java.math.MathContext
 import java.nio.ByteBuffer
 
-typealias BsonFactory = (Any) -> BsonValue?
-
 object StructToBsonConverter {
 
-  private val hexFields = setOf(
+  private val HEX_FIELDS = setOf(
     "hash",
     "parentHash",
     "unclesHash",
@@ -69,7 +68,7 @@ object StructToBsonConverter {
     "author"
   )
 
-  private val unsignedBigIntegerFields = setOf(
+  private val UNSIGNED_BIG_INTEGERS_FIELDS = setOf(
     "difficulty",
     "totalDifficulty",
     "cumulativeGas",
@@ -89,7 +88,7 @@ object StructToBsonConverter {
     "blockNumber"
   )
 
-  private val basicConverters = mapOf<Schema.Type, BsonFactory>(
+  private val BASIC_CONVERTERS = mapOf(
     BOOLEAN to { v: Any -> BsonBoolean(v as Boolean) },
     INT8 to { v: Any -> BsonInt32((v as Byte).toInt()) },
     INT16 to { v: Any -> BsonInt32((v as Short).toInt()) },
@@ -101,108 +100,62 @@ object StructToBsonConverter {
     BYTES to { v: Any -> BsonBinary((v as ByteBuffer).array()) }
   )
 
-  fun convert(struct: Struct, allowNulls: Boolean = true): BsonDocument =
-    convertStruct(struct, allowNulls)
+  fun convert(value: Any?, allowNulls: Boolean = true): BsonDocument =
+    Option
+      .fromNullable(value)
+      .fold(
+        { BsonDocument() },
+        {
 
-  private fun convertStruct(value: Any?, allowNulls: Boolean = true): BsonDocument =
-    Option.fromNullable(value)
-      .fold({ BsonDocument() }, {
+          val struct = (it as Struct)
+          val schema = struct.schema()
 
-        val struct = (it as Struct)
-        val schema = struct.schema()
+          val doc = BsonDocument()
 
-        val doc = BsonDocument()
+          schema.fields().forEach { field ->
 
-        schema.fields().forEach { field ->
+            // TODO make field conversion more generic and respect object structure
 
-          // TODO make field conversion more generic and respect object structure
+            var bsonValue = convertField(field.schema(), struct.get(field), allowNulls)
 
-          var bsonValue = convertField(
-            field.schema(),
-            struct.get(field),
-            allowNulls
-          )
+            if (bsonValue != null) {
 
-          if (bsonValue != null) {
+              val fieldName = field.name()
 
-            val fieldName = field.name()
+              if (bsonValue.isBinary) {
 
-            if (bsonValue.isBinary) {
+                val bytes = (bsonValue as BsonBinary).data
 
-              val bytes = (bsonValue as BsonBinary).data
+                if (HEX_FIELDS.contains(fieldName)) {
+                  bsonValue = BsonString(bytes.hex())
+                } else if (UNSIGNED_BIG_INTEGERS_FIELDS.contains(fieldName)) {
 
-              if (hexFields.contains(fieldName)) {
-                bsonValue = BsonString(bytes.hex())
-              } else if (unsignedBigIntegerFields.contains(fieldName)) {
+                  val bigDecimal =
+                    if (bytes.isEmpty())
+                      BigDecimal.ZERO
+                    else
+                      bytes.unsignedBigInteger().toBigDecimal(0, MathContext.DECIMAL128)
 
-                val bigDecimal =
-                  if (bytes.isEmpty())
-                    BigDecimal.ZERO
-                  else
-                    bytes.unsignedBigInteger().toBigDecimal(0, MathContext.DECIMAL128)
-
-                bsonValue = BsonDecimal128(Decimal128(bigDecimal))
+                  bsonValue = BsonDecimal128(Decimal128(bigDecimal))
+                }
               }
+
+              doc.append(fieldName, bsonValue)
             }
-
-            doc.append(fieldName, bsonValue)
           }
-        }
 
-        doc
-      })
+          doc
+        })
 
-  private fun convertField(schema: Schema, value: Any?, allowNulls: Boolean): BsonValue? =
-    when (schema.type()) {
-      BOOLEAN -> convertField(
-        value,
-        allowNulls,
-        basicConverters[BOOLEAN]!!
-      )
-      INT8 -> convertField(
-        value,
-        allowNulls,
-        basicConverters[INT8]!!
-      )
-      INT16 -> convertField(
-        value,
-        allowNulls,
-        basicConverters[INT16]!!
-      )
-      INT32 -> convertField(
-        value,
-        allowNulls,
-        basicConverters[INT32]!!
-      )
-      INT64 -> convertField(
-        value,
-        allowNulls,
-        basicConverters[INT64]!!
-      )
-      FLOAT32 -> convertField(
-        value,
-        allowNulls,
-        basicConverters[FLOAT32]!!
-      )
-      FLOAT64 -> convertField(
-        value,
-        allowNulls,
-        basicConverters[FLOAT64]!!
-      )
-      STRING -> convertField(
-        value,
-        allowNulls,
-        basicConverters[STRING]!!
-      )
-      BYTES -> convertField(
-        value,
-        allowNulls,
-        basicConverters[BYTES]!!
-      )
+  private fun convertField(schema: Schema, value: Any?, allowNulls: Boolean): BsonValue? {
+    val type = schema.type()
+    return when (type) {
+      in Schema.Type.values().filterNot { it == STRUCT || it == ARRAY || it == MAP } -> convertField(value, allowNulls, BASIC_CONVERTERS[type]!!)
       ARRAY -> convertArray(schema, value)
-      STRUCT -> convertStruct(value, allowNulls)
-      else -> throw IllegalArgumentException("Unhandled contractMetadataSchema type: " + schema.type())
+      STRUCT -> convert(value, allowNulls)
+      else -> throw IllegalArgumentException("Unhandled Schema type: $type")
     }
+  }
 
   private fun convertField(value: Any?, allowNulls: Boolean, bsonFactory: (Any) -> BsonValue?): BsonValue? =
     Option
@@ -223,15 +176,12 @@ object StructToBsonConverter {
         { data ->
 
           val bsonValues = (data as List<Any?>)
-            .map {
-              Option.fromNullable(it)
-                .fold({ BsonNull() }, {
-                  convertField(
-                    valueSchema,
-                    it,
-                    true
-                  )
-                })
+            .map { d ->
+              Option.fromNullable(d)
+                .fold(
+                  { BsonNull() },
+                  { convertField(valueSchema, d, true) }
+                )
             }
 
           BsonArray(bsonValues)
