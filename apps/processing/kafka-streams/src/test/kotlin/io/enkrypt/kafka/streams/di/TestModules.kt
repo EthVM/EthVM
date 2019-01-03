@@ -1,4 +1,4 @@
-package io.enkrypt.di
+package io.enkrypt.kafka.streams.di
 
 import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
@@ -13,11 +13,11 @@ import io.enkrypt.kafka.streams.config.Topics
 import io.enkrypt.kafka.streams.processors.BlockProcessor
 import io.enkrypt.kafka.streams.processors.StateProcessor
 import io.enkrypt.kafka.streams.serdes.Serdes
-import io.enkrypt.util.StandaloneBlockchain
-import io.enkrypt.util.StandaloneBlockchain.Companion.Alice
-import io.enkrypt.util.StandaloneBlockchain.Companion.Bob
-import io.enkrypt.util.StandaloneBlockchain.Companion.Coinbase
-import io.enkrypt.util.StandaloneBlockchain.Companion.Terence
+import io.enkrypt.kafka.streams.util.StandaloneBlockchain
+import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Alice
+import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Bob
+import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Coinbase
+import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Terence
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.TopologyTestDriver
 import org.apache.kafka.streams.test.ConsumerRecordFactory

@@ -1,4 +1,4 @@
-package io.enkrypt.util
+package io.enkrypt.kafka.streams.util
 
 import io.enkrypt.kafka.streams.config.Topics
 import io.enkrypt.kafka.streams.serdes.Serdes

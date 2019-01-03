@@ -1,4 +1,4 @@
-package io.enkrypt.processors.block
+package io.enkrypt.kafka.streams.processors.block
 
 import io.enkrypt.avro.common.ContractType
 import io.enkrypt.common.extensions.data20
@@ -10,16 +10,15 @@ import io.enkrypt.common.extensions.kwei
 import io.enkrypt.common.extensions.txFees
 import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.kafka.streams.models.StaticAddresses.EtherZero
-import io.enkrypt.kafka.streams.processors.block.ChainEvents
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.blockReward
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.contractCreate
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.fungibleTransfer
-import io.enkrypt.util.StandaloneBlockchain
-import io.enkrypt.util.StandaloneBlockchain.Companion.Alice
-import io.enkrypt.util.StandaloneBlockchain.Companion.Bob
-import io.enkrypt.util.StandaloneBlockchain.Companion.Coinbase
-import io.enkrypt.util.StandaloneBlockchain.Companion.Terence
-import io.enkrypt.util.TestContracts
+import io.enkrypt.kafka.streams.util.StandaloneBlockchain
+import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Alice
+import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Bob
+import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Coinbase
+import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Terence
+import io.enkrypt.kafka.streams.util.TestContracts
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
 

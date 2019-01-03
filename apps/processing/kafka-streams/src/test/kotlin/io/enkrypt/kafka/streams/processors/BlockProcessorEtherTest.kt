@@ -1,4 +1,4 @@
-package io.enkrypt.processors
+package io.enkrypt.kafka.streams.processors
 
 import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
@@ -9,16 +9,16 @@ import io.enkrypt.common.extensions.data20
 import io.enkrypt.common.extensions.ether
 import io.enkrypt.common.extensions.keyRecord
 import io.enkrypt.common.extensions.microEther
-import io.enkrypt.di.TestModules.testBlockchain
-import io.enkrypt.di.TestModules.testConfig
-import io.enkrypt.di.TestModules.testDrivers
 import io.enkrypt.kafka.streams.di.Modules.kafkaStreams
-import io.enkrypt.util.KafkaStreamsTestListener
-import io.enkrypt.util.KafkaUtil.readFungibleTokenMovement
-import io.enkrypt.util.StandaloneBlockchain
-import io.enkrypt.util.StandaloneBlockchain.Companion.Alice
-import io.enkrypt.util.StandaloneBlockchain.Companion.Bob
-import io.enkrypt.util.StandaloneBlockchain.Companion.Coinbase
+import io.enkrypt.kafka.streams.di.TestModules.testBlockchain
+import io.enkrypt.kafka.streams.di.TestModules.testConfig
+import io.enkrypt.kafka.streams.di.TestModules.testDrivers
+import io.enkrypt.kafka.streams.util.KafkaStreamsTestListener
+import io.enkrypt.kafka.streams.util.KafkaUtil.readFungibleTokenMovement
+import io.enkrypt.kafka.streams.util.StandaloneBlockchain
+import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Alice
+import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Bob
+import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Coinbase
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
 import org.apache.kafka.streams.TopologyTestDriver

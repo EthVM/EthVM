@@ -1,4 +1,4 @@
-package io.enkrypt.processors
+package io.enkrypt.kafka.streams.processors
 
 import io.enkrypt.avro.processing.TokenBalanceKeyRecord
 import io.enkrypt.avro.processing.TokenBalanceRecord
@@ -8,14 +8,14 @@ import io.enkrypt.common.extensions.byteBuffer
 import io.enkrypt.common.extensions.data20
 import io.enkrypt.common.extensions.ether
 import io.enkrypt.common.extensions.unsignedByteBuffer
-import io.enkrypt.di.TestModules
 import io.enkrypt.kafka.streams.di.Modules
-import io.enkrypt.util.KafkaStreamsTestListener
-import io.enkrypt.util.KafkaUtil.readFungibleTokenBalances
-import io.enkrypt.util.StandaloneBlockchain
-import io.enkrypt.util.StandaloneBlockchain.Companion.Alice
-import io.enkrypt.util.StandaloneBlockchain.Companion.Bob
-import io.enkrypt.util.StandaloneBlockchain.Companion.Terence
+import io.enkrypt.kafka.streams.di.TestModules
+import io.enkrypt.kafka.streams.util.KafkaStreamsTestListener
+import io.enkrypt.kafka.streams.util.KafkaUtil.readFungibleTokenBalances
+import io.enkrypt.kafka.streams.util.StandaloneBlockchain
+import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Alice
+import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Bob
+import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Terence
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
 import org.apache.kafka.streams.TopologyTestDriver

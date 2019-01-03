@@ -16,6 +16,7 @@ import io.enkrypt.avro.processing.ContractCreateRecord
 import io.enkrypt.avro.processing.ContractDestroyRecord
 import io.enkrypt.avro.processing.TokenTransferRecord
 import io.enkrypt.common.extensions.bigInteger
+import io.enkrypt.common.extensions.data20
 import io.enkrypt.common.extensions.isSuccess
 import io.enkrypt.common.extensions.txFee
 import io.enkrypt.common.extensions.unsignedBigInteger
@@ -23,6 +24,7 @@ import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.kafka.streams.utils.ERC20Abi
 import io.enkrypt.kafka.streams.utils.ERC721Abi
 import io.enkrypt.kafka.streams.utils.StandardTokenDetector
+import org.ethereum.crypto.ECKey
 import java.math.BigInteger
 import java.nio.ByteBuffer
 
@@ -51,6 +53,9 @@ object ChainEvents {
           .setReward(reward)
           .build()
       ).build()
+
+  fun fungibleTransfer(from: ECKey, to: ECKey, amount: BigInteger, reverse: Boolean = false, contract: Data20? = null) =
+    fungibleTransfer(from.address.data20()!!, to.address.data20()!!, amount.unsignedByteBuffer()!!, reverse, contract)
 
   fun fungibleTransfer(from: Data20, to: Data20, amount: ByteBuffer, reverse: Boolean = false, contract: Data20? = null) =
     ChainEventRecord.newBuilder()

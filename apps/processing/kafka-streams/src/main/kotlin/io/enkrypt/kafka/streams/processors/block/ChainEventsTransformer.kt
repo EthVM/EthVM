@@ -217,7 +217,7 @@ class ChainEventsTransformer(private val unitTesting: Boolean = false) : Transfo
 
   private fun deleteChainEvents(blockNumber: BigInteger): BlockChainEventsRecord? {
     val blockNumberKey = ReorgKeyRecord.newBuilder().setBlockNumber(blockNumber.unsignedByteBuffer()).build()
-    val blockHashKey = indexStore.get(blockNumberKey)
+    val blockHashKey = indexStore.delete(blockNumberKey)
     return when (blockHashKey) {
       null -> null
       else -> chainEventsStore.delete(blockHashKey)
