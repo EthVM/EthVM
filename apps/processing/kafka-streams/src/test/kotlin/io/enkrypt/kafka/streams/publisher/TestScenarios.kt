@@ -11,6 +11,7 @@ import io.enkrypt.kafka.streams.util.StandaloneBlockchain
 import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Alice
 import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Bob
 import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Terence
+import io.enkrypt.kafka.streams.util.TestContracts
 import org.ethereum.crypto.ECKey
 import java.math.BigInteger
 
@@ -85,7 +86,7 @@ abstract class TestScenario {
               transfer.gasPrice,
               transfer.gasLimit,
               null,
-              transfer.to,
+              transfer.to.address,
               transfer.amount
             )
           }
@@ -102,6 +103,8 @@ abstract class TestScenario {
 
 object TestScenarioOne : TestScenario() {
 
+  private val erc20Contract = TestContracts.ERC20.contractFor("TestERC20Token")
+
   override val premineBalances = mapOf(
     Bob.address.data20() to 1000.ether(),
     Alice.address.data20() to 1000.ether(),
@@ -113,6 +116,13 @@ object TestScenarioOne : TestScenario() {
       EtherTransfer(Bob, Alice, 1.ether()),
       EtherTransfer(Alice, Terence, 125.gwei()),
       EtherTransfer(Terence, Bob, 375.mwei())
+    ),
+    listOf(
+      CreateContract(Bob, erc20Contract, gasLimit = 1.gwei().toLong())
+    ),
+    listOf(
+      ERC20Transfer(Bob, SolidityContract.contractAddress(Bob, 1L).data20()!!, erc20Contract, null, 1.gwei().toLong(), Alice, 1.ether()),
+      ERC20Transfer(Bob, SolidityContract.contractAddress(Bob, 1L).data20()!!, erc20Contract, null, 1.gwei().toLong(), Terence, 227.gwei())
     )
   )
 }
