@@ -11,6 +11,14 @@ import com.mongodb.client.model.UpdateOneModel
 import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.WriteModel
 import io.enkrypt.common.extensions.hex
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Accounts
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.BlockStatistics
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Blocks
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Contracts
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.FungibleBalances
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.NonFungibleBalances
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.PendingTransactions
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Transactions
 import io.enkrypt.kafka.connect.utils.Versions
 import mu.KotlinLogging
 import org.apache.kafka.clients.consumer.OffsetAndMetadata
@@ -30,8 +38,7 @@ class MongoSinkTask : SinkTask() {
 
   private lateinit var client: MongoClient
   private lateinit var db: MongoDatabase
-
-  private var collectionsMap = mapOf<MongoCollections, MongoCollection<BsonDocument>>()
+  private lateinit var collections: Map<MongoCollections, MongoCollection<BsonDocument>>
 
   override fun version() = Versions.of("/mongo-sink-version.properties")
 
@@ -42,37 +49,16 @@ class MongoSinkTask : SinkTask() {
     client = MongoClient(uri)
     db = client.getDatabase(uri.database!!)
 
-    collectionsMap += MongoCollections.Blocks to db.getCollection(
-      MongoCollections.Blocks.name,
-      BsonDocument::class.java
-    )
-    collectionsMap += MongoCollections.Accounts to db.getCollection(
-      MongoCollections.Accounts.name,
-      BsonDocument::class.java
-    )
-    collectionsMap += MongoCollections.Transactions to db.getCollection(
-      MongoCollections.Transactions.name,
-      BsonDocument::class.java
-    )
-    collectionsMap += MongoCollections.Contracts to db.getCollection(
-      MongoCollections.Contracts.name,
-      BsonDocument::class.java
-    )
-    collectionsMap += MongoCollections.FungibleBalances to db.getCollection(
-      MongoCollections.FungibleBalances.name,
-      BsonDocument::class.java
-    )
-    collectionsMap += MongoCollections.NonFungibleBalances to db.getCollection(
-      MongoCollections.NonFungibleBalances.name,
-      BsonDocument::class.java
-    )
-    collectionsMap += MongoCollections.PendingTransactions to db.getCollection(
-      MongoCollections.PendingTransactions.name,
-      BsonDocument::class.java
-    )
-    collectionsMap += MongoCollections.BlockStatistics to db.getCollection(
-      MongoCollections.BlockStatistics.name,
-      BsonDocument::class.java
+    val clazz = BsonDocument::class.java
+    collections = mapOf<MongoCollections, MongoCollection<BsonDocument>>(
+      Blocks to db.getCollection(Blocks.id, clazz),
+      Accounts to db.getCollection(Accounts.id, clazz),
+      Transactions to db.getCollection(Transactions.id, clazz),
+      Contracts to db.getCollection(Contracts.id, clazz),
+      FungibleBalances to db.getCollection(FungibleBalances.id, clazz),
+      NonFungibleBalances to db.getCollection(NonFungibleBalances.id, clazz),
+      PendingTransactions to db.getCollection(PendingTransactions.id, clazz),
+      BlockStatistics to db.getCollection(BlockStatistics.id, clazz)
     )
   }
 
@@ -113,7 +99,7 @@ class MongoSinkTask : SinkTask() {
       .filterValues { it.isNotEmpty() }
       .forEach { (collectionId, writes) ->
 
-        val collection = collectionsMap[collectionId]!!
+        val collection = collections[collectionId]!!
         val bulkWrite = collection.bulkWrite(writes)
 
         logger.debug {
@@ -159,13 +145,9 @@ class MongoSinkTask : SinkTask() {
 
       val valueBson = StructToBsonConverter.convert(record.value() as Struct)
 
-      blockWrites += ReplaceOneModel(
-        blockFilter, valueBson,
-        replaceOptions
-      )
+      blockWrites += ReplaceOneModel(blockFilter, valueBson, replaceOptions)
 
-      val txReceiptsBson = valueBson
-        .getArray("transactions")
+      val txReceiptsBson = valueBson.getArray("transactions")
 
       txWrites += txReceiptsBson
         .map { it as BsonDocument }
@@ -186,23 +168,17 @@ class MongoSinkTask : SinkTask() {
             ))
           )
 
-          //
+          val doc = it.append("blockNumber", blockNumberBson)
 
-          val doc = it
-            .append("blockNumber", blockNumberBson)
-
-          val replace = ReplaceOneModel(
-            BsonDocument("_id", txHash), doc,
-            replaceOptions
-          )
+          val replace = ReplaceOneModel(BsonDocument("_id", txHash), doc, replaceOptions)
 
           listOf(update, replace)
         }.flatten()
     }
 
     return mapOf(
-      MongoCollections.Blocks to blockWrites,
-      MongoCollections.Transactions to txWrites
+      Blocks to blockWrites,
+      Transactions to txWrites
     )
   }
 
@@ -227,18 +203,14 @@ class MongoSinkTask : SinkTask() {
     } else {
 
       val struct = record.value() as Struct
-      val bson = BsonDocument()
-        .apply {
-          append("\$set", StructToBsonConverter.convert(struct))
-        }
+      val bson = BsonDocument().apply {
+        append("\$set", StructToBsonConverter.convert(struct))
+      }
 
-      writes += UpdateOneModel(
-        idFilter, bson,
-        updateOptions
-      )
+      writes += UpdateOneModel(idFilter, bson, updateOptions)
     }
 
-    return mapOf(MongoCollections.Contracts to writes)
+    return mapOf(Contracts to writes)
   }
 
   private fun processContractMetadata(record: SinkRecord): Map<MongoCollections, List<WriteModel<BsonDocument>>> {
@@ -263,19 +235,14 @@ class MongoSinkTask : SinkTask() {
     } else {
 
       val struct = record.value() as Struct
-      val bson = BsonDocument()
-        .apply {
-          append("\$set", BsonDocument()
-            .apply { append("metadata", StructToBsonConverter.convert(struct)) })
-        }
+      val bson = BsonDocument().apply {
+        append("\$set", BsonDocument().apply { append("metadata", StructToBsonConverter.convert(struct)) })
+      }
 
-      writes += UpdateOneModel(
-        idFilter, bson,
-        updateOptions
-      )
+      writes += UpdateOneModel(idFilter, bson, updateOptions)
     }
 
-    return mapOf(MongoCollections.Contracts to writes)
+    return mapOf(Contracts to writes)
   }
 
   private fun processContractDestruct(record: SinkRecord): Map<MongoCollections, List<WriteModel<BsonDocument>>> {
@@ -301,16 +268,14 @@ class MongoSinkTask : SinkTask() {
 
       val struct = record.value() as Struct
 
-      val bson = BsonDocument()
-        .apply {
-          append("\$set", BsonDocument()
-            .apply { append("destructed", StructToBsonConverter.convert(struct)) })
-        }
+      val bson = BsonDocument().apply {
+        append("\$set", BsonDocument().apply { append("destructed", StructToBsonConverter.convert(struct)) })
+      }
 
       writes += UpdateOneModel(idFilter, bson)
     }
 
-    return mapOf(MongoCollections.Contracts to writes)
+    return mapOf(Contracts to writes)
   }
 
   private fun processFungibleTokenBalance(record: SinkRecord): Map<MongoCollections, List<WriteModel<BsonDocument>>> {
@@ -339,13 +304,10 @@ class MongoSinkTask : SinkTask() {
       // combine with id fields so we can query on them later
       idBson.forEach { k, v -> bson = bson.append(k, v) }
 
-      writes += ReplaceOneModel(
-        idFilter, bson,
-        replaceOptions
-      )
+      writes += ReplaceOneModel(idFilter, bson, replaceOptions)
     }
 
-    return mapOf(MongoCollections.FungibleBalances to writes)
+    return mapOf(FungibleBalances to writes)
   }
 
   private fun processNonFungibleTokenBalance(record: SinkRecord): Map<MongoCollections, List<WriteModel<BsonDocument>>> {
@@ -374,13 +336,10 @@ class MongoSinkTask : SinkTask() {
       // combine with id fields so we can query on them later
       idBson.forEach { k, v -> bson = bson.append(k, v) }
 
-      writes += ReplaceOneModel(
-        idFilter, bson,
-        replaceOptions
-      )
+      writes += ReplaceOneModel(idFilter, bson, replaceOptions)
     }
 
-    return mapOf(MongoCollections.NonFungibleBalances to writes)
+    return mapOf(NonFungibleBalances to writes)
   }
 
   private fun processPendingTransaction(record: SinkRecord): Map<MongoCollections, List<WriteModel<BsonDocument>>> {
@@ -408,13 +367,10 @@ class MongoSinkTask : SinkTask() {
       // combine with id fields so we can query on them later
       idBson.forEach { k, v -> bson = bson.append(k, v) }
 
-      writes += ReplaceOneModel(
-        idFilter, bson,
-        replaceOptions
-      )
+      writes += ReplaceOneModel(idFilter, bson, replaceOptions)
     }
 
-    return mapOf(MongoCollections.PendingTransactions to writes)
+    return mapOf(PendingTransactions to writes)
   }
 
   private fun processBlockStatistic(record: SinkRecord): Map<MongoCollections, List<WriteModel<BsonDocument>>> {
@@ -442,13 +398,10 @@ class MongoSinkTask : SinkTask() {
       // combine with id fields so we can query on them later
       idBson.forEach { k, v -> bson = bson.append(k, v) }
 
-      writes += ReplaceOneModel(
-        idFilter, bson,
-        replaceOptions
-      )
+      writes += ReplaceOneModel(idFilter, bson, replaceOptions)
     }
 
-    return mapOf(MongoCollections.BlockStatistics to writes)
+    return mapOf(BlockStatistics to writes)
   }
 
   companion object {
@@ -458,7 +411,7 @@ class MongoSinkTask : SinkTask() {
   }
 }
 
-enum class MongoCollections(name: String) {
+enum class MongoCollections(val id: String) {
   Blocks("blocks"),
   BlockStatistics("block_statistics"),
   Accounts("accounts"),
