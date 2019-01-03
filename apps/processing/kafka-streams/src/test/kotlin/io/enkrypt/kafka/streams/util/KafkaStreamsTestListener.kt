@@ -1,4 +1,4 @@
-package io.enkrypt.util
+package io.enkrypt.kafka.streams.util
 
 import io.kotlintest.Description
 import io.kotlintest.Spec

@@ -20,6 +20,7 @@ protocol Processing {
 
     union { null, io.enkrypt.avro.common.Data20 } contract = null;
     union { null, io.enkrypt.avro.common.Data20 } address = null;
+    union { null, bytes } nonce = null;
     union { null, bytes } tokenId = null;
 
   }

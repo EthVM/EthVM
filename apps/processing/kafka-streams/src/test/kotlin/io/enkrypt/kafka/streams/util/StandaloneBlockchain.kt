@@ -1,7 +1,8 @@
-package io.enkrypt.util
+package io.enkrypt.kafka.streams.util
 
 import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.common.Data20
+import io.enkrypt.common.extensions.byteArray
 import io.enkrypt.common.extensions.data20
 import io.enkrypt.common.extensions.unsignedBytes
 import io.enkrypt.kafka.mapping.ObjectMapper
@@ -40,6 +41,7 @@ import org.ethereum.validator.DependentBlockHeaderRuleAdapter
 import org.ethereum.vm.program.ProgramPrecompile
 import org.ethereum.vm.program.invoke.ProgramInvokeFactoryImpl
 import java.math.BigInteger
+import java.nio.ByteBuffer
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
@@ -73,7 +75,11 @@ class StandaloneBlockchain(config: Config) {
   private var pendingTxs = listOf<Transaction>()
   private var noncesMap = emptyMap<ECKey, Long>()
 
-  private lateinit var genesisBlock: BlockRecord
+  val genesisBlock: BlockRecord by lazy {
+    val summary = BlockSummary(genesis, emptyMap(), emptyList(), emptyList())
+    val builder = objectMapper.convert(objectMapper, BlockSummary::class.java, BlockRecord.Builder::class.java, summary)
+    builder.build()
+  }
 
   private val commonConfig = object : CommonConfig() {
     override fun systemProperties() =
@@ -171,11 +177,10 @@ class StandaloneBlockchain(config: Config) {
   }
 
   fun sendEther(from: ECKey, to: ECKey, value: BigInteger): Transaction =
-    submitTx(
-      from,
-      receiver = to.address.data20(),
-      value = value.unsignedBytes() ?: ByteArray(0)
-    )
+    submitTx(from, receiver = to.address.data20(), value = value.unsignedBytes() ?: ByteArray(0))
+
+  fun sendEther(from: Data20, to: Data20, value: ByteBuffer) =
+    submitTx(ecKeyFor(from)!!, receiver = to, value = value.byteArray() ?: ByteArray(0))
 
   fun submitContract(
     sender: ECKey,
@@ -210,6 +215,25 @@ class StandaloneBlockchain(config: Config) {
       receiver = contractAddress,
       data = contract.callFunction(name, *args),
       value = value?.unsignedBytes() ?: ByteArray(0)
+    )
+
+  fun callFunction(
+    sender: Data20,
+    contractAddress: Data20,
+    contract: SolidityContract,
+    name: String,
+    gasPrice: Long? = null,
+    gasLimit: Long? = null,
+    value: ByteBuffer? = null,
+    vararg args: Any
+  ) =
+    submitTx(
+      ecKeyFor(sender)!!,
+      gasPrice,
+      gasLimit,
+      receiver = contractAddress,
+      data = contract.callFunction(name, *args),
+      value = value?.byteArray() ?: ByteArray(0)
     )
 
   fun submitTx(
@@ -265,6 +289,8 @@ class StandaloneBlockchain(config: Config) {
     val Bob = ECKey()
     val Alice = ECKey()
     val Terence = ECKey()
+
+    fun ecKeyFor(publicKey: Data20) = listOf(Coinbase, Bob, Alice, Terence).filter { it.pubKey == publicKey.bytes() }.firstOrNull()
   }
 
   data class Config(

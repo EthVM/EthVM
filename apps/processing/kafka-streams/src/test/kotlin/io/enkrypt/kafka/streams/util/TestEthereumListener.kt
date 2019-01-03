@@ -1,4 +1,4 @@
-package io.enkrypt.util
+package io.enkrypt.kafka.streams.util
 
 import org.ethereum.core.Block
 import org.ethereum.core.BlockSummary
