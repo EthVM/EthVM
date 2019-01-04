@@ -8,6 +8,7 @@ import PagePendingTransactions from '@/components/pages/PagePendingTransactions.
 import PageAbout from '@/components/pages/PageAbout.vue'
 import PageUncles from '@/components/pages/PageUncles.vue'
 import PageDetailsBlock from '@/components/pages/PageDetailsBlock.vue'
+import PageDetailsTxs from '@/components/pages/PageDetailsTxs.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -45,7 +46,14 @@ export default new Router({
     {
       path: '/block/:param',
       component: PageDetailsBlock,
-      name: 'block'
+      name: 'block',
+      props: true
+    },
+    {
+      path: '/tx/:txHash',
+      component: PageDetailsTxs,
+      name: 'transaction',
+      props: true
     }
   ],
   mode: 'history'

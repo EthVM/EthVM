@@ -1,8 +1,11 @@
 <template>
   <v-container v-if="transaction != null" grid-list-lg class="mb-0">
-    <bread-crumbs :newItems="getItems"></bread-crumbs>
-    <v-layout row wrap justify-start class="mb-4">
-      <v-flex xs12> <block-tx-detail :tx="transaction"></block-tx-detail> </v-flex>
+    <app-bread-crumbs :newItems="getItems"></app-bread-crumbs>
+    <v-layout row wrap justify-start class="mb-4" v-if="getTxs()">
+      <v-flex xs12>
+        <p>Hello</p>
+        <!--<app-list-details :tx="transaction"></app-list-details> -->
+      </v-flex>
     </v-layout>
     <!--
       Get Sub Tx
@@ -15,22 +18,23 @@
 </template>
 
 <script lang="ts">
-import { common } from '@app/helpers'
-import store from '@app/states'
 import Vue from 'vue'
-import { Block, Tx } from '@app/models'
+import { Tx } from '@app/models'
 import { Events as sEvents } from 'ethvm-common'
+import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
+import AppListDetails from '@app/components/ui/AppListDetails.vue'
+import { txDetails } from '@app/components/mixins/mixin-details-txs'
 
 export default Vue.extend({
   name: 'tx-Detail',
   props: ['txHash'],
+  components: {
+    AppBreadCrumbs
+  },
+  mixins: [txDetails],
   data() {
     return {
-      store,
-      common,
       transaction: null,
-      unixtimestamp: null,
-      timestamp: null,
       items: [
         {
           text: this.$i18n.t('title.tx'),
@@ -44,7 +48,7 @@ export default Vue.extend({
       ]
     }
   },
-  mounted() {
+  created() {
     /* Get Tx Info */
     this.$socket.emit(
       sEvents.getTx,
@@ -54,14 +58,18 @@ export default Vue.extend({
       (err, data) => {
         if (data) {
           this.transaction = new Tx(data)
+          console.log(this.transaction)
+          //this.setDetails(this.transaction)
+          //this.setMore(this.transaction)
           /* Method to get Subtransactions: */
         }
       }
     )
+  },
+  computed: {
+    getTxs() {
+      return this.transaction
+    }
   }
 })
 </script>
-
-<style scoped lang="less">
-@import '~lessPath/sunil/global.less';
-</style>
