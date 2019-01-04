@@ -7,26 +7,14 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Tab } from '@app/props'
 
-@Component({
-  props: ['tabs']
-})
+@Component
 export default class AppTabs extends Vue {
-  /* Tabs Object Array Example:
-    tabs: [
-      {
-        id: 0,
-        title: 'title1',
-        isActive: true
-      },
-      {
-        id: '1'
-        title: 'title2',
-        isActive: false
-      } ..
-    ]
-   End Example */
+
+  @Prop(Tab) tabs
+
   setActive(tab) {
     let i
     for (i = 0; i < this.tabs.length; i++) {

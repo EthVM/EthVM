@@ -16,30 +16,20 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 import VueQr from 'vue-qr'
 
 @Component({
   components: {
     VueQr
-  },
-  props: {
-    addressQR: {
-      type: String
-    },
-    large: {
-      type: Boolean,
-      deafult: false
-    }
   }
 })
 export default class AppAddressQR extends Vue {
-  addressQR: string
-  data() {
-    return {
-      dialog: false
-    }
-  }
+  @Prop(String) addressQR: string
+  @Prop(Boolean) large: Boolean = false
+
+  dialog: Boolean = false
+
   get getQR() {
     if (this.addressQR) {
       return this.addressQR.toLowerCase()

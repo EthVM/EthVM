@@ -19,7 +19,6 @@ import { Breadcumb } from '@app/props'
 
 @Component
 export default class AppBreadCrumbs extends Vue {
-
   @Prop(Breadcumb) newItems
 
   crumbs: Breadcumb[] = [
