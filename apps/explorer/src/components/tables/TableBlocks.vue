@@ -61,28 +61,21 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 import AppFootnotes from '@app/components/ui/AppFootnotes.vue'
 import TableBlocksRow from '@app/components/tables/TableBlocksRow.vue'
-export default Vue.extend({
-  name: 'TableBlocks',
-  props: {
-    frameBlocks: {
-      type: Boolean,
-      default: true
-    },
-    showStyle: {
-      type: String,
-      default: ''
-    },
-    blocks: {
-      type: Array
-    }
-  },
+
+@Component({
   components: {
     AppFootnotes,
     TableBlocksRow
-  },
+  }
+})
+export default class TableBlocks extends Vue {
+  @Prop(Boolean) frameBlocks: boolean = true
+  @Prop(String) showStyle: string = 'true'
+  @Prop(Array) blocks
+
   data() {
     return {
       footnote: [
@@ -98,18 +91,16 @@ export default Vue.extend({
         }
       ]
     }
-  },
-
-  computed: {
-    getStyle() {
-      return this.showStyle
-    },
-    getTitle() {
-      return this.frameBlocks ? this.$i18n.t('title.blocks') : this.$i18n.t('title.uncles')
-    },
-    getBlockType() {
-      return this.frameBlocks ? true : false
-    }
   }
-})
+
+  get getStyle() {
+    return this.showStyle
+  }
+  get getTitle() {
+    return this.frameBlocks ? this.$i18n.t('title.blocks') : this.$i18n.t('title.uncles')
+  }
+  get getBlockType() {
+    return this.frameBlocks ? true : false
+  }
+}
 </script>

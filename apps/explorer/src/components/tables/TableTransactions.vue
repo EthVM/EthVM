@@ -52,10 +52,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
 import AppFootnotes from '@app/components/ui/AppFootnotes.vue'
 import TableTransactionsRow from '@app/components/tables/TableTransactionsRow.vue'
-import { Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({
   components: {
