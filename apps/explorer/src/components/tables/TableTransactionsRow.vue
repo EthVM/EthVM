@@ -62,7 +62,7 @@
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
 import stringConcat from '@app/components/mixins/mixin-number-string-concat'
 import { Tx } from '@app/models/Tx'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'

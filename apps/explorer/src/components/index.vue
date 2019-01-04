@@ -26,13 +26,14 @@
 import 'vuetify/dist/vuetify.min.css'
 import { Block, Tx, PendingTx } from '@app/models'
 import { Events as sEvents } from 'ethvm-common'
-import Vue from 'vue'
+import { Component, Vue } from 'vue-property-decorator'
 
-export default Vue.extend({
-  name: 'FramesMainFrame',
+
+@Component
+export default class FramesMainFrame extends Vue{
   data() {
     return {}
-  },
+  }
   created() {
     this.$options.sockets.connect = () => {
       if (!this.pageName || this.pageName === 'blocks' || this.pageName === 'transactions') {
@@ -43,8 +44,8 @@ export default Vue.extend({
         }, 1000)
       }
     }
-  },
-  methods: {
+  }
+
     setPastData() {
       this.$socket.emit(
         sEvents.pastTxs,
@@ -102,19 +103,17 @@ export default Vue.extend({
         }
       )
     }
-  },
-  computed: {
-    pageName() {
+    get pageName(){
       return this.$route.params.pageName
-    },
-    param() {
+    }
+    get param() {
       return this.$route.params.param
-    },
-    holder() {
+    }
+    get holder() {
       return this.$route.params.holder
     }
-  }
-})
+
+}
 </script>
 
 <style scoped lang="css">
