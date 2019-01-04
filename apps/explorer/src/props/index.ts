@@ -1,4 +1,4 @@
-export interface IBreadCumbs {
+export interface Breadcumb {
   text?: string
   disabled?: boolean
   icon?: string

@@ -15,12 +15,14 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { IBreadCumbs } from '@app/models/types/ui'
+import { Breadcumb } from '@app/props'
 
 @Component
 export default class AppBreadCrumbs extends Vue {
-  @Prop(IBreadCumbs) newItems
-  crumbs: IBreadCumbs[] = [
+
+  @Prop(Breadcumb) newItems
+
+  crumbs: Breadcumb[] = [
     {
       text: 'Home',
       disabled: true,
@@ -28,6 +30,7 @@ export default class AppBreadCrumbs extends Vue {
       link: '/'
     }
   ]
+
   mounted() {
     if (this.newItems) {
       this.crumbs[0].disabled = false
