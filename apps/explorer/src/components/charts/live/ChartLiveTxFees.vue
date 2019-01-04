@@ -14,11 +14,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
 import { Events as sEvents } from 'ethvm-common'
 import BN from 'bignumber.js'
 import AppChart from '@app/components/ui/AppChart.vue'
 import ethUnits from 'ethereumjs-units'
+import { Vue, Component } from 'vue-property-decorator'
 
 const title = 'Average Tx Costs'
 const description = 'Average transaction fees and average gas price in the last 10 blocks'
@@ -72,11 +72,12 @@ const lineOptions = {
 
 import { common } from '@app/helpers'
 
-export default Vue.extend({
-  name: 'ChartLiveTxFees',
+@Component({
   components: {
     AppChart
-  },
+  }
+})
+export default class ChartLiveTxFees extends Vue {
   data() {
     return {
       chartData: {},
@@ -97,7 +98,7 @@ export default Vue.extend({
         }
       ]
     }
-  },
+  }
   created() {
     this.chartData = this.initData
     this.$eventHub.$on(sEvents.pastBlocksR, () => {
@@ -118,48 +119,45 @@ export default Vue.extend({
         }
       }
     })
-  },
+  }
   beforeDestroy() {
     this.$eventHub.$off(sEvents.pastBlocksR)
     this.$eventHub.$off(sEvents.newBlock)
-  },
-  computed: {
-    initData() {
-      const data = {
-        labels: [],
-        avgFees: [],
-        avgPrice: []
-      }
-      const latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
-      latestBlocks.forEach(_block => {
-        data.labels.unshift(_block.getNumber())
-        const _tempD = _block.getStats()
-        data.avgFees.unshift(ethUnits.convert(_tempD.avgTxsFees, 'wei', 'eth'))
-        data.avgPrice.unshift(ethUnits.convert(_tempD.avgGasPrice, 'wei', 'gwei'))
-      })
-      return {
-        labels: data.labels,
-        datasets: [
-          {
-            label: 'avg Tx Fees (ETH)',
-            borderColor: '#40ce9c',
-            backgroundColor: '#40ce9c',
-            data: data.avgFees,
-            yAxisID: 'y-axis-1',
-            fill: false
-          },
-          {
-            label: 'avg Gas Price (GWEI)',
-            borderColor: '#eea66b',
-            backgroundColor: '#eea56b',
-            data: data.avgPrice,
-            yAxisID: 'y-axis-2',
-            fill: false
-          }
-        ]
-      }
+  }
+  get initData() {
+    const data = {
+      labels: [],
+      avgFees: [],
+      avgPrice: []
     }
-  },
-  mounted: function() {}
-})
+    const latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
+    latestBlocks.forEach(_block => {
+      data.labels.unshift(_block.getNumber())
+      const _tempD = _block.getStats()
+      data.avgFees.unshift(ethUnits.convert(_tempD.avgTxsFees, 'wei', 'eth'))
+      data.avgPrice.unshift(ethUnits.convert(_tempD.avgGasPrice, 'wei', 'gwei'))
+    })
+    return {
+      labels: data.labels,
+      datasets: [
+        {
+          label: 'avg Tx Fees (ETH)',
+          borderColor: '#40ce9c',
+          backgroundColor: '#40ce9c',
+          data: data.avgFees,
+          yAxisID: 'y-axis-1',
+          fill: false
+        },
+        {
+          label: 'avg Gas Price (GWEI)',
+          borderColor: '#eea66b',
+          backgroundColor: '#eea56b',
+          data: data.avgPrice,
+          yAxisID: 'y-axis-2',
+          fill: false
+        }
+      ]
+    }
+  }
+}
 </script>

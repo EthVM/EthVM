@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { Vue, Component } from 'vue-property-decorator'
 import { Events as sEvents } from 'ethvm-common'
 import BN from 'bignumber.js'
 import ethUnits from 'ethereumjs-units'
@@ -68,15 +68,14 @@ const lineOptions = {
 
   scaleShowLabels: false
 }
-export default Vue.extend({
-  name: 'BarChart',
-  data: () => ({
-    chartData: {},
-    chartOptions: lineOptions,
-    redraw: false,
-    newTitle: title,
+export default class BarChart extends Vue {
+  data: () => {
+    chartData: {}
+    chartOptions: lineOptions
+    redraw: false
+    newTitle: title
     newDescription: description
-  }),
+  }
   created() {
     this.chartData = this.initData
     this.$eventHub.$on(sEvents.pastBlocksR, () => {
@@ -97,40 +96,37 @@ export default Vue.extend({
         }
       }
     })
-  },
+  }
   beforeDestroy() {
     this.$eventHub.$off(sEvents.pastBlocksR)
     this.$eventHub.$off(sEvents.newBlock)
-  },
-  computed: {
-    initData() {
-      const data = {
-        labels: [],
-        avgFees: [],
-        avgPrice: [],
-        sData: null
-      }
-      const latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
-      latestBlocks.forEach(_block => {
-        data.labels.unshift(_block.getNumber())
-        const _tempD = _block.getStats()
-        data.avgFees.unshift(ethUnits.convert(new BN(_tempD.avgTxFees).toFixed(), 'wei', 'eth').substr(0, 8))
-        data.avgPrice.unshift(ethUnits.convert(new BN(_tempD.avgGasPrice).toFixed(), 'wei', 'gwei').substr(0, 5))
-      })
-      return {
-        labels: data.labels,
-        datasets: [
-          {
-            label: 'Average Time',
-            backgroundColor: '#20c0c7',
-            data: data.sData,
-            borderColor: '#20c0c7',
-            fill: false
-          }
-        ]
-      }
+  }
+  get initData() {
+    const data = {
+      labels: [],
+      avgFees: [],
+      avgPrice: [],
+      sData: null
     }
-  },
-  mounted: function() {}
-})
+    const latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
+    latestBlocks.forEach(_block => {
+      data.labels.unshift(_block.getNumber())
+      const _tempD = _block.getStats()
+      data.avgFees.unshift(ethUnits.convert(new BN(_tempD.avgTxFees).toFixed(), 'wei', 'eth').substr(0, 8))
+      data.avgPrice.unshift(ethUnits.convert(new BN(_tempD.avgGasPrice).toFixed(), 'wei', 'gwei').substr(0, 5))
+    })
+    return {
+      labels: data.labels,
+      datasets: [
+        {
+          label: 'Average Time',
+          backgroundColor: '#20c0c7',
+          data: data.sData,
+          borderColor: '#20c0c7',
+          fill: false
+        }
+      ]
+    }
+  }
+}
 </script>

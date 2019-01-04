@@ -13,8 +13,8 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
 import ethUnits from 'ethereumjs-units'
+import { Vue, Component } from 'vue-property-decorator'
 
 /* Time Variables: */
 const STATES = {
@@ -71,49 +71,44 @@ const lineOptions = {
   scaleShowLabels: false
 }
 
-export default Vue.extend({
-  name: 'BarChart',
-  data: () => ({
-    chartData: {},
-    chartOptions: lineOptions,
-    redraw: false,
-    newTitle: title,
+export default class BarChart extends Vue {
+  data: () => {
+    chartData: {}
+    chartOptions: lineOptions
+    redraw: false
+    newTitle: title
     newDescription: description
-  }),
+  }
   created() {
     this.chartData = this.initData
-  },
-  beforeDestroy() {},
-  computed: {
-    initData() {
-      const data = {
-        labels: [],
-        points: []
-      }
-
-      this.$socket.emit('getChartBlockSize', 'LAST_7_DAYS', (err, result) => {
-        if (!err && result) {
-          result.forEach(function(block) {
-            data.points.push(block.reduction)
-            data.labels.push(block.group)
-          })
-        }
-      })
-      return {
-        labels: data.labels,
-        datasets: [
-          {
-            label: 'Average Size',
-            borderColor: '#20c0c7',
-            backgroundColor: '#20c0c7',
-            data: data.points,
-            yAxisID: 'y-axis-1',
-            fill: false
-          }
-        ]
-      }
+  }
+  get initData() {
+    const data = {
+      labels: [],
+      points: []
     }
-  },
-  mounted: function() {}
-})
+
+    this.$socket.emit('getChartBlockSize', 'LAST_7_DAYS', (err, result) => {
+      if (!err && result) {
+        result.forEach(function(block) {
+          data.points.push(block.reduction)
+          data.labels.push(block.group)
+        })
+      }
+    })
+    return {
+      labels: data.labels,
+      datasets: [
+        {
+          label: 'Average Size',
+          borderColor: '#20c0c7',
+          backgroundColor: '#20c0c7',
+          data: data.points,
+          yAxisID: 'y-axis-1',
+          fill: false
+        }
+      ]
+    }
+  }
+}
 </script>

@@ -13,10 +13,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
 import { Events as sEvents } from 'ethvm-common'
 import BN from 'bignumber.js'
 import AppChart from '@app/components/ui/AppChart.vue'
+import { Vue, Component } from 'vue-property-decorator'
 
 const MAX_ITEMS = 10
 const title = 'Tx Summary'
@@ -70,11 +70,12 @@ const barOptions = {
 
   barShowLabels: true
 }
-export default Vue.extend({
-  name: 'ChartLiveTransactions',
+@Component({
   components: {
     AppChart
-  },
+  }
+})
+export default class ChartLiveTransactions extends Vue {
   data() {
     return {
       chartData: {},
@@ -100,7 +101,7 @@ export default Vue.extend({
         }
       ]
     }
-  },
+  }
   created() {
     this.chartData = this.initData
     this.$eventHub.$on(sEvents.pastBlocksR, () => {
@@ -121,54 +122,52 @@ export default Vue.extend({
         this.chartData.datasets[2].data.shift()
       }
     })
-  },
+  }
   beforeDestroy() {
     this.$eventHub.$off(sEvents.pastBlocksR)
     this.$eventHub.$off(sEvents.newBlock)
-  },
-  computed: {
-    initData() {
-      const data = {
-        labels: [],
-        sData: [],
-        fData: [],
-        pData: []
-      }
-      const latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
-      latestBlocks.forEach(_block => {
-        data.labels.unshift(_block.getNumber())
-        const _tempD = _block.getStats()
-        data.sData.unshift(new BN(_tempD.successfulTxs).toNumber())
-        data.fData.unshift(new BN(_tempD.failedTxs).toNumber())
-        data.pData.unshift(new BN(0).toNumber()) //pending tx ev
-      })
-      return {
-        labels: data.labels,
-        datasets: [
-          {
-            label: 'Pending',
-            backgroundColor: '#eea66b',
-            borderColor: '#eea66b',
-            data: data.pData,
-            type: 'line',
-            fill: false,
-            yAxisID: 'y-axis-2'
-          },
-          {
-            label: 'Sucessfull',
-            backgroundColor: '#40ce9c',
-            data: data.sData,
-            yAxisID: 'y-axis-1'
-          },
-          {
-            label: 'Failed',
-            backgroundColor: '#fe136c',
-            data: data.fData,
-            yAxisID: 'y-axis-1'
-          }
-        ]
-      }
+  }
+  get initData() {
+    const data = {
+      labels: [],
+      sData: [],
+      fData: [],
+      pData: []
+    }
+    const latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
+    latestBlocks.forEach(_block => {
+      data.labels.unshift(_block.getNumber())
+      const _tempD = _block.getStats()
+      data.sData.unshift(new BN(_tempD.successfulTxs).toNumber())
+      data.fData.unshift(new BN(_tempD.failedTxs).toNumber())
+      data.pData.unshift(new BN(0).toNumber()) //pending tx ev
+    })
+    return {
+      labels: data.labels,
+      datasets: [
+        {
+          label: 'Pending',
+          backgroundColor: '#eea66b',
+          borderColor: '#eea66b',
+          data: data.pData,
+          type: 'line',
+          fill: false,
+          yAxisID: 'y-axis-2'
+        },
+        {
+          label: 'Sucessfull',
+          backgroundColor: '#40ce9c',
+          data: data.sData,
+          yAxisID: 'y-axis-1'
+        },
+        {
+          label: 'Failed',
+          backgroundColor: '#fe136c',
+          data: data.fData,
+          yAxisID: 'y-axis-1'
+        }
+      ]
     }
   }
-})
+}
 </script>
