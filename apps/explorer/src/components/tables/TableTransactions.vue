@@ -6,12 +6,7 @@
       </v-flex>
       <v-flex xs4 v-if="!frameTxs">
         <v-layout justify-end>
-          <v-btn
-            outline
-            color="secondary"
-            class="text-capitalize"
-            to="/transactions"
-          >{{ $t('bttn.viewAll') }}</v-btn>
+          <v-btn outline color="secondary" class="text-capitalize" to="/transactions">{{ $t('bttn.viewAll') }}</v-btn>
         </v-layout>
       </v-flex>
     </v-layout>
@@ -37,17 +32,11 @@
       </v-layout>
     </v-card>
     <!-- End Table Header -->
-    <v-card
-      v-if="transactions.length > 0"
-      flat
-      id="scroll-target"
-      :style="getStyle"
-      class="scroll-y pt-0 pb-0"
-    >
+    <v-card v-if="transactions.length > 0" flat id="scroll-target" :style="getStyle" class="scroll-y pt-0 pb-0">
       <v-layout column fill-height v-scroll:#scroll-target style="margin-right: 1px" class="mb-1">
         <v-flex xs12>
           <v-card v-for="tx in transactions" class="transparent" flat v-bind:key="tx.getHash()">
-            <table-transactions-row :tx="tx" :isPending="pending"/>
+            <table-transactions-row :tx="tx" :isPending="pending" />
             <v-divider class="mb-2 mt-2"></v-divider>
           </v-card>
         </v-flex>
@@ -55,10 +44,7 @@
     </v-card>
     <div v-else>
       <v-card flat class="mt-3 mb-3">
-        <v-card-text
-          v-if="!pending"
-          class="text-xs-center text-muted"
-        >{{ $t('message.noTxHistory') }}</v-card-text>
+        <v-card-text v-if="!pending" class="text-xs-center text-muted">{{ $t('message.noTxHistory') }}</v-card-text>
         <v-card-text v-else class="text-xs-center text-muted">{{ $t('message.noPending') }}</v-card-text>
       </v-card>
     </div>

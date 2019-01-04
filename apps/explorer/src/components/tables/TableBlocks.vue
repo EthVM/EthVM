@@ -5,9 +5,7 @@
         <v-card-title class="title font-weight-bold">{{ getTitle }}</v-card-title>
       </v-flex>
       <v-flex hidden-sm-and-down md4 order-xs2>
-        <v-layout justify-end>
-          <app-footnotes :footnotes="footnote"/>
-        </v-layout>
+        <v-layout justify-end> <app-footnotes :footnotes="footnote" /> </v-layout>
       </v-flex>
     </v-layout>
     <v-layout v-else row wrap align-center pb-1>
@@ -15,18 +13,11 @@
         <v-card-title class="title font-weight-bold">{{ $t('title.lastBlock') }}</v-card-title>
       </v-flex>
       <v-flex hidden-sm-and-down md4 order-md2>
-        <v-layout justify-center>
-          <app-footnotes :footnotes="footnote"/>
-        </v-layout>
+        <v-layout justify-center> <app-footnotes :footnotes="footnote" /> </v-layout>
       </v-flex>
       <v-flex d-flex xs4 md1 order-xs2 order-md3>
         <v-layout justify-end>
-          <v-btn
-            outline
-            color="secondary"
-            class="text-capitalize"
-            to="/blocks"
-          >{{ $t('bttn.viewAll') }}</v-btn>
+          <v-btn outline color="secondary" class="text-capitalize" to="/blocks">{{ $t('bttn.viewAll') }}</v-btn>
         </v-layout>
       </v-flex>
     </v-layout>

@@ -15,31 +15,31 @@ export const lastBlockInfo = {
   },
 
   computed: {
-    latestBlockNumber():string {
+    latestBlockNumber(): string {
       return this.dataRecieved ? this.block.getNumber().toString() : this.loading
     },
 
-    latestHashRate():string {
+    latestHashRate(): string {
       return this.dataRecieved ? this.getRoundNumber(this.getAvgHashRate(this.$store.getters.getBlocks).toString()).toString() : this.loading
     },
 
-    latestDifficulty():string {
+    latestDifficulty(): string {
       return this.dataRecieved ? this.getRoundNumber(this.getTHs(this.block.getDifficulty())).toString() : this.loading
     },
 
-    latestBlockSuccessTxs():string {
+    latestBlockSuccessTxs(): string {
       return this.dataRecieved ? this.block.getStats().successfulTxs.toString() : this.loading
     },
 
-    latestBlockFailedTxs():string {
+    latestBlockFailedTxs(): string {
       return this.dataRecieved ? this.block.getStats().failedTxs.toString() : this.loading
     },
 
-    latestBlockPendingTxs():string {
+    latestBlockPendingTxs(): string {
       return this.dataRecieved ? this.block.getStats().pendingTxs.toString() : this.loading
     },
 
-    secSinceLastBlock():string {
+    secSinceLastBlock(): string {
       return this.seconds.toString()
     }
   },

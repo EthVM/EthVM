@@ -12,7 +12,6 @@ import { Tab } from '@app/props'
 
 @Component
 export default class AppTabs extends Vue {
-
   @Prop(Tab) tabs
 
   setActive(tab) {
