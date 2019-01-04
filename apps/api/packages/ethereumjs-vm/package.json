@@ -13,7 +13,7 @@
     "fake-merkle-patricia-tree": "^1.0.1",
     "functional-red-black-tree": "^1.0.1",
     "lru": "^3.1.0",
-    "merkle-patricia-tree": "^2.1.2",
+    "merkle-patricia-tree": "^3.0.0",
     "rustbn.js": "~0.2.0",
     "safe-buffer": "^5.1.1"
   },
