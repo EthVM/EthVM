@@ -1,10 +1,9 @@
 <template>
   <v-container v-if="transaction != null" grid-list-lg class="mb-0">
-    <app-bread-crumbs :newItems="getItems"></app-bread-crumbs>
-    <v-layout row wrap justify-start class="mb-4" v-if="getTxs()">
+    <app-bread-crumbs :newItems="items"></app-bread-crumbs>
+    <v-layout row wrap justify-start class="mb-4" v-if="getTxs">
       <v-flex xs12>
-        <p>Hello</p>
-        <!--<app-list-details :tx="transaction"></app-list-details> -->
+        <app-list-details :items="getDetails" :more="getMoreDetails"></app-list-details>
       </v-flex>
     </v-layout>
     <!--
@@ -29,7 +28,8 @@ export default Vue.extend({
   name: 'tx-Detail',
   props: ['txHash'],
   components: {
-    AppBreadCrumbs
+    AppBreadCrumbs,
+    AppListDetails
   },
   mixins: [txDetails],
   data() {
@@ -58,8 +58,8 @@ export default Vue.extend({
       (err, data) => {
         if (data) {
           this.transaction = new Tx(data)
-          console.log(this.transaction)
-          //this.setDetails(this.transaction)
+          this.setDetails(this.transaction)
+          this.setMore(this.transaction)
           //this.setMore(this.transaction)
           /* Method to get Subtransactions: */
         }

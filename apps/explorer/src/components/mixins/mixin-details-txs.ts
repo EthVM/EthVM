@@ -64,33 +64,32 @@ export const txDetails = {
         }
       ]
       this.details.push(this.getTo(tx))
-      console.log(this.details)
+    },
+    setMore(tx) {
+      this.moreDetails = [
+        {
+          title: this.$i18n.t('tableHeader.blockN'),
+          detail: tx.getBlockNumber(),
+          link: '/block/' + tx.getBlockHash()
+        },
+        {
+          title: this.$i18n.t('gas.limit'),
+          detail: tx.getGas()
+        },
+        {
+          title: this.$i18n.t('gas.used'),
+          detail: tx.getGasUsed()
+        },
+        {
+          title: this.$i18n.t('gas.price'),
+          detail: tx.getGasPrice()
+        },
+        {
+          title: this.$i18n.t('tx.cost'),
+          detail: this.getTxCost(tx.getGasPrice(), tx.getGasUsed()) + ' ' + this.$i18n.t('common.eth')
+        }
+      ]
     }
-  },
-  setMore(tx) {
-    this.moreDetails = [
-      {
-        title: this.$i18n.t('tableHeader.blockN'),
-        detail: tx.getBlockNumber(),
-        link: '/block/' + tx.getBlockHash()
-      },
-      {
-        title: this.$i18n.t('gas.limit'),
-        detail: tx.getGas()
-      },
-      {
-        title: this.$i18n.t('gas.used'),
-        detail: tx.getGasUsed()
-      },
-      {
-        title: this.$i18n.t('gas.price'),
-        detail: tx.getGasPrice()
-      },
-      {
-        title: this.$i18n.t('tx.cost'),
-        detail: this.getTxCost(tx.getGasPrice(), tx.getGasUsed()) + ' ' + this.$i18n.t('common.eth')
-      }
-    ]
   },
   computed: {
     getDetails() {
