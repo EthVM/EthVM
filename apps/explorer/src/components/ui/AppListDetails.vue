@@ -20,7 +20,7 @@
           </v-flex>
           <v-flex xs1>
             <v-list-tile-action v-if="item.copy">
-              <app-copy-to-clip-component :valueToCopy="item.detail"></app-copy-to-clip-component>
+              <app-copy-to-clip :valueToCopy="item.detail"></app-copy-to-clip>
             </v-list-tile-action>
           </v-flex>
         </v-layout>
@@ -51,7 +51,7 @@
             </v-flex>
             <v-flex xs1>
               <v-list-tile-action v-if="item.copy">
-                <app-copy-to-clip-component :valueToCopy="item.detail"></app-copy-to-clip-component>
+                <app-copy-to-clip :valueToCopy="item.detail"></app-copy-to-clip>
               </v-list-tile-action>
             </v-flex>
           </v-layout>

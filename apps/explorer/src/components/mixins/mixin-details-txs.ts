@@ -96,6 +96,7 @@ export const txDetails = {
       return this.details
     },
     getMoreDetails() {
+      console.log(this.moreDetails)
       return this.moreDetails
     },
     formatTime() {
