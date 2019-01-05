@@ -264,8 +264,19 @@ enum class KafkaTopics(
       require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
 
       val struct = record.value() as Struct
+      val metadataBson = StructToBsonConverter.convert(struct, "contract")
+
+      val typeBson = metadataBson.remove("type")
+      metadataBson.remove("address")
+
+      val bsonValue = BsonDocument().apply {
+        append("address", addressBson)
+        append("type", typeBson)
+        append("metadata", metadataBson)
+      }
+
       val bson = BsonDocument().apply {
-        append("\$set", BsonDocument().apply { append("metadata", StructToBsonConverter.convert(struct, "contract")) })
+        append("\$set", bsonValue)
       }
 
       writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
