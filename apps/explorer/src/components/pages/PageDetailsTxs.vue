@@ -3,7 +3,9 @@
     <app-bread-crumbs :newItems="items"></app-bread-crumbs>
     <v-layout row wrap justify-start class="mb-4" v-if="getTxs">
       <v-flex xs12>
-        <app-list-details :items="getDetails" :moreItems="getMoreDetails"></app-list-details>
+        <app-list-details :items="getDetails" :moreItems="getMoreDetails">
+          <app-list-title slot="details-title" listType="tx"></app-list-title>
+        </app-list-details>
       </v-flex>
     </v-layout>
     <!--
@@ -22,6 +24,7 @@ import { Tx } from '@app/models'
 import { Events as sEvents } from 'ethvm-common'
 import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
 import AppListDetails from '@app/components/ui/AppListDetails.vue'
+import AppListTitle from '@app/components/ui/AppListTitle.vue'
 import { txDetails } from '@app/components/mixins/mixin-details-txs'
 
 export default Vue.extend({
@@ -29,7 +32,8 @@ export default Vue.extend({
   props: ['txHash'],
   components: {
     AppBreadCrumbs,
-    AppListDetails
+    AppListDetails,
+    AppListTitle
   },
   mixins: [txDetails],
   data() {

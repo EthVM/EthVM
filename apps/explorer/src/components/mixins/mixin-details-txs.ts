@@ -100,8 +100,7 @@ export const txDetails = {
       return this.moreDetails
     },
     formatTime() {
-      const date = new Date(this.timestamp).toString()
-      return '(' + date + ') '
+      return new Date(this.timestamp).toString()
     }
   }
 }
