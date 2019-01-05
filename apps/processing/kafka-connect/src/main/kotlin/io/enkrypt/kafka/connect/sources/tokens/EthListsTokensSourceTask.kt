@@ -22,7 +22,7 @@ class EthListsTokensSourceTask : SourceTask() {
 
   private var lastSyncAt: Instant? = null
 
-  override fun version() = Versions.of("/eth-lists-tokens-source-version.properties")
+  override fun version() = Versions.CURRENT
 
   override fun start(props: MutableMap<String, String>?) {
     topic = EthListsTokensSourceConnector.Config.topic(props!!)

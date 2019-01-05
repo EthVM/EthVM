@@ -11,12 +11,12 @@ import org.apache.kafka.connect.sink.SinkConnector
 
 class MongoSinkConnector : SinkConnector() {
 
-  private lateinit var config: MutableMap<String, String>
+  private var config: MutableMap<String, String> = HashMap()
 
-  override fun version() = Versions.of("/mongo-sink-version.properties")
+  override fun version() = Versions.CURRENT
 
-  override fun start(props: MutableMap<String, String>?) {
-    config = props!!
+  override fun start(props: MutableMap<String, String>) {
+    config = props
   }
 
   override fun stop() {
@@ -43,8 +43,11 @@ class MongoSinkConnector : SinkConnector() {
 
     const val MONGO_URI_CONFIG = "mongo.uri"
     const val MONGO_URI_DOC = "Mongo uri for connecting to the mongo instance"
-    const val MONGO_DEFAULT_URI_VALUE = "mongo://localhost:27017/kafka"
+    const val MONGO_DEFAULT_URI_VALUE = "mongodb://localhost:27017/kafka"
 
-    fun mongoUri(props: MutableMap<String, String>) = MongoClientURI(props[MONGO_URI_CONFIG]!!)
+    fun mongoUri(props: MutableMap<String, String>): MongoClientURI {
+      val uri = props[MONGO_URI_CONFIG] ?: MONGO_DEFAULT_URI_VALUE
+      return MongoClientURI(uri).also { if (it.database == null) throw IllegalArgumentException("Mongo URI does not contain a database name!") }
+    }
   }
 }

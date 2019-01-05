@@ -43,7 +43,7 @@ class Web3SourceTask : SourceTask() {
   @Volatile
   private var web3: Web3j? = null
 
-  override fun version(): String = Versions.of("/web3-source-version.properties")
+  override fun version(): String = Versions.CURRENT
 
   override fun start(props: MutableMap<String, String>?) {
 

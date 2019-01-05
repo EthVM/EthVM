@@ -31,23 +31,24 @@ import org.bson.BsonBinary
 import org.bson.BsonDocument
 import org.bson.BsonString
 import org.bson.Document
+import kotlin.system.measureTimeMillis
 
 class MongoSinkTask : SinkTask() {
 
   private val logger = KotlinLogging.logger {}
 
-  private lateinit var client: MongoClient
+  private var client: MongoClient? = null
   private lateinit var db: MongoDatabase
   private lateinit var collections: Map<MongoCollections, MongoCollection<BsonDocument>>
 
-  override fun version() = Versions.of("/mongo-sink-version.properties")
+  override fun version() = Versions.CURRENT
 
   override fun start(props: MutableMap<String, String>) {
 
     val uri = MongoSinkConnector.Config.mongoUri(props)
-
+    val databaseName = uri.database ?: throw IllegalArgumentException("Mongo URI does not contain a database name!")
     client = MongoClient(uri)
-    db = client.getDatabase(uri.database!!)
+    db = client!!.getDatabase(databaseName)
 
     val clazz = BsonDocument::class.java
     collections = mapOf<MongoCollections, MongoCollection<BsonDocument>>(
@@ -63,7 +64,7 @@ class MongoSinkTask : SinkTask() {
   }
 
   override fun stop() {
-    client.close()
+    client?.close()
   }
 
   override fun put(records: MutableCollection<SinkRecord>) {
@@ -72,44 +73,25 @@ class MongoSinkTask : SinkTask() {
 
     logger.info { "Processing ${records.size} records" }
 
-    val startMs = System.currentTimeMillis()
+    val elapsedMs = measureTimeMillis {
+      var batch = mapOf<MongoCollections, List<WriteModel<BsonDocument>>>()
 
-    var batch = mapOf<MongoCollections, List<WriteModel<BsonDocument>>>()
+      records.forEach { r -> batch += KafkaTopics.forTopic(r.topic())(r) }
 
-    records.forEach {
+      batch
+        .filterValues { it.isNotEmpty() }
+        .forEach { (collectionId, writes) ->
 
-      val writesMap = when (it.topic()) {
-        "blocks" -> processBlock(it)
-        "contract-creations" -> processContractCreate(it)
-        "contract-destructions" -> processContractDestruct(it)
-        "fungible-token-balances" -> processFungibleTokenBalance(it)
-        "non-fungible-token-balances" -> processNonFungibleTokenBalance(it)
-        "pending-transactions" -> processPendingTransaction(it)
-        "block-statistics" -> processBlockStatistic(it)
-        "contract-metadata" -> processContractMetadata(it)
-        else -> throw IllegalStateException("Unhandled topic: " + it.topic())
-      }
+          val collection = collections[collectionId]!!
+          val bulkWrite = collection.bulkWrite(writes)
 
-      writesMap.forEach { (topicId, writesForCollection) ->
-        batch += topicId to batch.getOrDefault(topicId, emptyList()) + writesForCollection
-      }
-    }
-
-    batch
-      .filterValues { it.isNotEmpty() }
-      .forEach { (collectionId, writes) ->
-
-        val collection = collections[collectionId]!!
-        val bulkWrite = collection.bulkWrite(writes)
-
-        logger.debug {
-          "Bulk write complete. Collection = $collectionId, inserts = ${bulkWrite.insertedCount}, " +
-            "updates = ${bulkWrite.modifiedCount}, upserts = ${bulkWrite.upserts.size}, " +
-            "deletes = ${bulkWrite.deletedCount}"
+          logger.debug {
+            "Bulk write complete. Collection = $collectionId, inserts = ${bulkWrite.insertedCount}, " +
+              "updates = ${bulkWrite.modifiedCount}, upserts = ${bulkWrite.upserts.size}, " +
+              "deletes = ${bulkWrite.deletedCount}"
+          }
         }
-      }
-
-    val elapsedMs = System.currentTimeMillis() - startMs
+    }
 
     logger.info { "Batch processing completed in $elapsedMs ms" }
   }
@@ -117,10 +99,35 @@ class MongoSinkTask : SinkTask() {
   override fun flush(currentOffsets: MutableMap<TopicPartition, OffsetAndMetadata>?) {
   }
 
-  private fun processBlock(record: SinkRecord): Map<MongoCollections, List<WriteModel<BsonDocument>>> {
+  companion object {
+
+    val updateOptions: UpdateOptions = UpdateOptions().upsert(true)
+    val replaceOptions: ReplaceOptions = ReplaceOptions().upsert(true)
+  }
+}
+
+enum class MongoCollections(val id: String) {
+  Blocks("blocks"),
+  BlockStatistics("block_statistics"),
+  Accounts("accounts"),
+  Transactions("transactions"),
+  Contracts("contracts"),
+  FungibleBalances("fungible_balances"),
+  NonFungibleBalances("non_fungible_balances"),
+  PendingTransactions("pending_transactions")
+}
+
+typealias SinkRecordToBsonFn = (record: SinkRecord) -> Map<MongoCollections, List<WriteModel<BsonDocument>>>
+
+enum class KafkaTopics(
+  private val id: String,
+  private val convertFn: SinkRecordToBsonFn
+) {
+
+  Blocks("blocks", { record: SinkRecord ->
 
     val keySchema = record.keySchema()
-    if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a long")
+    if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a struct")
 
     val valueSchema = record.valueSchema()
     if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
@@ -145,7 +152,7 @@ class MongoSinkTask : SinkTask() {
 
       val valueBson = StructToBsonConverter.convert(record.value() as Struct)
 
-      blockWrites += ReplaceOneModel(blockFilter, valueBson, replaceOptions)
+      blockWrites += ReplaceOneModel(blockFilter, valueBson, MongoSinkTask.Companion.replaceOptions)
 
       val txReceiptsBson = valueBson.getArray("transactions")
 
@@ -170,25 +177,22 @@ class MongoSinkTask : SinkTask() {
 
           val doc = it.append("blockNumber", blockNumberBson)
 
-          val replace = ReplaceOneModel(BsonDocument("_id", txHash), doc, replaceOptions)
+          val replace = ReplaceOneModel(org.bson.BsonDocument("_id", txHash), doc, MongoSinkTask.replaceOptions)
 
           listOf(update, replace)
         }.flatten()
     }
 
-    return mapOf(
-      Blocks to blockWrites,
-      Transactions to txWrites
-    )
-  }
+    mapOf(MongoCollections.Blocks to blockWrites, MongoCollections.Transactions to txWrites)
+  }),
 
-  private fun processContractCreate(record: SinkRecord): Map<MongoCollections, List<WriteModel<BsonDocument>>> {
+  ContractCreations("contract-creations", { record: SinkRecord ->
 
     val keySchema = record.keySchema()
-    if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a struct")
+    if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key must be a struct")
 
     val valueSchema = record.valueSchema()
-    if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
+    if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value must be a struct")
 
     var writes = listOf<WriteModel<BsonDocument>>()
 
@@ -207,13 +211,46 @@ class MongoSinkTask : SinkTask() {
         append("\$set", StructToBsonConverter.convert(struct))
       }
 
-      writes += UpdateOneModel(idFilter, bson, updateOptions)
+      writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
     }
 
-    return mapOf(Contracts to writes)
-  }
+    mapOf(MongoCollections.Contracts to writes)
+  }),
 
-  private fun processContractMetadata(record: SinkRecord): Map<MongoCollections, List<WriteModel<BsonDocument>>> {
+  ContractDestructions("contract-destructions", { record: SinkRecord ->
+
+    val keySchema = record.keySchema()
+    if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key must be a struct")
+
+    val valueSchema = record.valueSchema()
+    if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value must be a struct")
+
+    var writes = listOf<WriteModel<BsonDocument>>()
+
+    val address = (record.key() as Struct).getBytes("address")
+    val addressBson = BsonString(address.hex())
+
+    val idFilter = BsonDocument().apply { append("_id", addressBson) }
+
+    if (record.value() == null) {
+
+      // tombstone received so we need unset the suicide in the contract object
+      writes += UpdateOneModel(idFilter, Document(mapOf("\$unset" to "destructed")))
+    } else {
+
+      val struct = record.value() as Struct
+
+      val bson = BsonDocument().apply {
+        append("\$set", BsonDocument().apply { append("destructed", StructToBsonConverter.convert(struct)) })
+      }
+
+      writes += UpdateOneModel(idFilter, bson)
+    }
+
+    mapOf(MongoCollections.Contracts to writes)
+  }),
+
+  ContractMetadata("contract-metadata", { record: SinkRecord ->
 
     val keySchema = record.keySchema()
     if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be struct")
@@ -239,46 +276,13 @@ class MongoSinkTask : SinkTask() {
         append("\$set", BsonDocument().apply { append("metadata", StructToBsonConverter.convert(struct)) })
       }
 
-      writes += UpdateOneModel(idFilter, bson, updateOptions)
+      writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
     }
 
-    return mapOf(Contracts to writes)
-  }
+    mapOf(MongoCollections.Contracts to writes)
+  }),
 
-  private fun processContractDestruct(record: SinkRecord): Map<MongoCollections, List<WriteModel<BsonDocument>>> {
-
-    val keySchema = record.keySchema()
-    if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be binary")
-
-    val valueSchema = record.valueSchema()
-    if (valueSchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Value contractMetadataSchema must be a struct")
-
-    var writes = listOf<WriteModel<BsonDocument>>()
-
-    val address = (record.key() as Struct).getBytes("address")
-    val addressBson = BsonString(address.hex())
-
-    val idFilter = BsonDocument().apply { append("_id", addressBson) }
-
-    if (record.value() == null) {
-
-      // tombstone received so we need unset the suicide in the contract object
-      writes += UpdateOneModel(idFilter, Document(mapOf("\$unset" to "destructed")))
-    } else {
-
-      val struct = record.value() as Struct
-
-      val bson = BsonDocument().apply {
-        append("\$set", BsonDocument().apply { append("destructed", StructToBsonConverter.convert(struct)) })
-      }
-
-      writes += UpdateOneModel(idFilter, bson)
-    }
-
-    return mapOf(Contracts to writes)
-  }
-
-  private fun processFungibleTokenBalance(record: SinkRecord): Map<MongoCollections, List<WriteModel<BsonDocument>>> {
+  FungibleTokenBalances("fungible-token-balances", { record: SinkRecord ->
 
     val keySchema = record.keySchema()
     if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("key must be a struct")
@@ -304,13 +308,13 @@ class MongoSinkTask : SinkTask() {
       // combine with id fields so we can query on them later
       idBson.forEach { k, v -> bson = bson.append(k, v) }
 
-      writes += ReplaceOneModel(idFilter, bson, replaceOptions)
+      writes += ReplaceOneModel(idFilter, bson, MongoSinkTask.replaceOptions)
     }
 
-    return mapOf(FungibleBalances to writes)
-  }
+    mapOf(MongoCollections.FungibleBalances to writes)
+  }),
 
-  private fun processNonFungibleTokenBalance(record: SinkRecord): Map<MongoCollections, List<WriteModel<BsonDocument>>> {
+  NonFungibleTokenBalances("non-fungible-token-balances", { record: SinkRecord ->
 
     val keySchema = record.keySchema()
     if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key must be a struct")
@@ -336,13 +340,13 @@ class MongoSinkTask : SinkTask() {
       // combine with id fields so we can query on them later
       idBson.forEach { k, v -> bson = bson.append(k, v) }
 
-      writes += ReplaceOneModel(idFilter, bson, replaceOptions)
+      writes += ReplaceOneModel(idFilter, bson, MongoSinkTask.replaceOptions)
     }
 
-    return mapOf(NonFungibleBalances to writes)
-  }
+    mapOf(MongoCollections.NonFungibleBalances to writes)
+  }),
 
-  private fun processPendingTransaction(record: SinkRecord): Map<MongoCollections, List<WriteModel<BsonDocument>>> {
+  PendingTransactions("pending-transactions", { record: SinkRecord ->
 
     val keySchema = record.keySchema()
     if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a struct")
@@ -367,13 +371,13 @@ class MongoSinkTask : SinkTask() {
       // combine with id fields so we can query on them later
       idBson.forEach { k, v -> bson = bson.append(k, v) }
 
-      writes += ReplaceOneModel(idFilter, bson, replaceOptions)
+      writes += ReplaceOneModel(idFilter, bson, MongoSinkTask.replaceOptions)
     }
 
-    return mapOf(PendingTransactions to writes)
-  }
+    mapOf(MongoCollections.PendingTransactions to writes)
+  }),
 
-  private fun processBlockStatistic(record: SinkRecord): Map<MongoCollections, List<WriteModel<BsonDocument>>> {
+  BlockStatistics("block-statistics", { record: SinkRecord ->
 
     val keySchema = record.keySchema()
     if (keySchema.type() != Schema.Type.STRUCT) throw IllegalArgumentException("Key contractMetadataSchema must be a struct")
@@ -392,32 +396,21 @@ class MongoSinkTask : SinkTask() {
       writes += DeleteOneModel(idFilter)
     } else {
 
-      val struct = record.value() as Struct
+      val struct = record.value() as org.apache.kafka.connect.data.Struct
       var bson = StructToBsonConverter.convert(struct, false)
 
       // combine with id fields so we can query on them later
       idBson.forEach { k, v -> bson = bson.append(k, v) }
 
-      writes += ReplaceOneModel(idFilter, bson, replaceOptions)
+      writes += ReplaceOneModel(idFilter, bson, MongoSinkTask.replaceOptions)
     }
 
-    return mapOf(BlockStatistics to writes)
-  }
+    mapOf(MongoCollections.BlockStatistics to writes)
+  });
 
   companion object {
 
-    val updateOptions: UpdateOptions = UpdateOptions().upsert(true)
-    val replaceOptions: ReplaceOptions = ReplaceOptions().upsert(true)
+    fun forTopic(topic: String): SinkRecordToBsonFn =
+      values().find { it.id == topic }?.convertFn ?: throw IllegalStateException("Unhandled topic: $topic")
   }
-}
-
-enum class MongoCollections(val id: String) {
-  Blocks("blocks"),
-  BlockStatistics("block_statistics"),
-  Accounts("accounts"),
-  Transactions("transactions"),
-  Contracts("contracts"),
-  FungibleBalances("fungible_balances"),
-  NonFungibleBalances("non_fungible_balances"),
-  PendingTransactions("pending_transactions")
 }
