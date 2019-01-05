@@ -19,9 +19,9 @@ import io.enkrypt.kafka.streams.di.TestModules.testBlockchain
 import io.enkrypt.kafka.streams.di.TestModules.testConfig
 import io.enkrypt.kafka.streams.di.TestModules.testDrivers
 import io.enkrypt.kafka.streams.util.KafkaStreamsTestListener
+import io.enkrypt.kafka.streams.util.KafkaUtil.readBalance
 import io.enkrypt.kafka.streams.util.KafkaUtil.readContractCreation
 import io.enkrypt.kafka.streams.util.KafkaUtil.readFungibleTokenMovement
-import io.enkrypt.kafka.streams.util.KafkaUtil.readNonFungibleTokenBalance
 import io.enkrypt.kafka.streams.util.SolidityContract
 import io.enkrypt.kafka.streams.util.StandaloneBlockchain
 import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Alice
@@ -130,7 +130,7 @@ class BlockProcessorERC721Test : BehaviorSpec() {
         }
 
         then("there should be a token balance assigning token 1 to Bob") {
-          val record = readNonFungibleTokenBalance(testDriver)!!
+          val record = readBalance(testDriver)!!
           record.key() shouldBe tokenKey(contract = contractAddress, tokenId = 1.toBigInteger().unsignedByteBuffer())
           record.value() shouldBe tokenBalance(address = Bob.address.data20())
         }
@@ -148,7 +148,7 @@ class BlockProcessorERC721Test : BehaviorSpec() {
         }
 
         then("there should be a token balance assigning token 2 to Alice") {
-          val record = readNonFungibleTokenBalance(testDriver)!!
+          val record = readBalance(testDriver)!!
           record.key() shouldBe tokenKey(contract = contractAddress, tokenId = 2.toBigInteger().unsignedByteBuffer())
           record.value() shouldBe tokenBalance(address = Alice.address.data20())
         }
@@ -166,7 +166,7 @@ class BlockProcessorERC721Test : BehaviorSpec() {
         }
 
         then("there should be a token balance assigning token 3 to Terence") {
-          val record = readNonFungibleTokenBalance(testDriver)!!
+          val record = readBalance(testDriver)!!
           record.key() shouldBe tokenKey(contract = contractAddress, tokenId = 3.toBigInteger().unsignedByteBuffer())
           record.value() shouldBe tokenBalance(address = Terence.address.data20())
         }
@@ -201,7 +201,7 @@ class BlockProcessorERC721Test : BehaviorSpec() {
         }
 
         then("there should be a token balance assigning token 2 to Terence") {
-          val record = readNonFungibleTokenBalance(testDriver)!!
+          val record = readBalance(testDriver)!!
           record.key() shouldBe tokenKey(contract = contractAddress, tokenId = 2.toBigInteger().unsignedByteBuffer())
           record.value() shouldBe tokenBalance(address = Terence.address.data20())
         }

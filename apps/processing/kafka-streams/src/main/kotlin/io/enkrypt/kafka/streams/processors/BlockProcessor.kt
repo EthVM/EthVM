@@ -179,7 +179,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
             .build()
         )
       }.to(
-        Topics.NonFungibleTokenBalances,
+        Topics.Balances,
         Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance())
       )
 

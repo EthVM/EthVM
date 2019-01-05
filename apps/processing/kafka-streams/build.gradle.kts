@@ -28,6 +28,7 @@ dependencies {
   // Ethereumj
   implementation(group = "io.enkrypt", name = "ethereumj-core", version = "1.10.0.0-SNAPSHOT") {
     exclude(group = "io.enkrypt.ethvm", module = "avro-entities")
+    exclude(group = "org.ethereum", module = "rocksdbjni")
   }
 
   // Kafka

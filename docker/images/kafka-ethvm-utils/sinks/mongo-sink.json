@@ -2,7 +2,7 @@
   "name": "enkryptio-mongo-sink",
   "config": {
     "connector.class": "io.enkrypt.kafka.connect.sinks.mongo.MongoSinkConnector",
-    "topics": "blocks,block-summaries,contract-creations,contract-suicides,contract-metadata,fungible-token-balances,non-fungible-token-balances,block-statistics,pending-transactions",
+    "topics": "blocks,contract-creations,contract-destructions,contract-metadata,balances,block-statistics,pending-transactions",
     "tasks.max": 4,
     "key.converter": "io.confluent.connect.avro.AvroConverter",
     "key.converter.schema.registry.url": "http://kafka-schema-registry:8081",

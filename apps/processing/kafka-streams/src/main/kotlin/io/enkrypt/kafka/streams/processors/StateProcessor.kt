@@ -68,7 +68,7 @@ class StateProcessor : AbstractKafkaProcessor() {
           .setAmount(it.getAmount().bigInteger().unsignedByteBuffer())
           .build()
       }
-      .to(Topics.FungibleTokenBalances, Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance()))
+      .to(Topics.Balances, Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance()))
 
     // Metrics
 

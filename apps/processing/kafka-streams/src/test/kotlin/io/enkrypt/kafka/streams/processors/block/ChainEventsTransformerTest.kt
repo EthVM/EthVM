@@ -14,11 +14,11 @@ import io.enkrypt.kafka.streams.di.TestModules.testBlockchain
 import io.enkrypt.kafka.streams.di.TestModules.testConfig
 import io.enkrypt.kafka.streams.di.TestModules.testDrivers
 import io.enkrypt.kafka.streams.util.KafkaStreamsTestListener
+import io.enkrypt.kafka.streams.util.KafkaUtil.readBalance
 import io.enkrypt.kafka.streams.util.KafkaUtil.readContractCreation
 import io.enkrypt.kafka.streams.util.KafkaUtil.readContractDestruction
 import io.enkrypt.kafka.streams.util.KafkaUtil.readFungibleTokenMovement
 import io.enkrypt.kafka.streams.util.KafkaUtil.readFungibleTokenMovements
-import io.enkrypt.kafka.streams.util.KafkaUtil.readNonFungibleTokenBalance
 import io.enkrypt.kafka.streams.util.StandaloneBlockchain
 import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Alice
 import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Bob
@@ -131,7 +131,7 @@ class ChainEventsTransformerTest : BehaviorSpec() {
         }
 
         then("there should have been no other events") {
-          readNonFungibleTokenBalance(testDriver) shouldBe null
+          readBalance(testDriver) shouldBe null
           readContractCreation(testDriver) shouldBe null
           readContractDestruction(testDriver) shouldBe null
         }

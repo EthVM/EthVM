@@ -11,7 +11,7 @@ import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.kafka.streams.di.Modules
 import io.enkrypt.kafka.streams.di.TestModules
 import io.enkrypt.kafka.streams.util.KafkaStreamsTestListener
-import io.enkrypt.kafka.streams.util.KafkaUtil.readFungibleTokenBalances
+import io.enkrypt.kafka.streams.util.KafkaUtil.readBalances
 import io.enkrypt.kafka.streams.util.StandaloneBlockchain
 import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Alice
 import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Bob
@@ -47,7 +47,7 @@ class StateProcessorTest : BehaviorSpec() {
         Pair(tokenKey(Terence.address.data20()), tokenBalance(30.ether().byteBuffer()))
       ).forEach { (key, value) -> testDriver.pipeInput(tbf.create(key, value)) }
 
-      val balances = readFungibleTokenBalances(testDriver, 3)
+      val balances = readBalances(testDriver, 3)
         .map { Pair(it.key(), it.value()) }
 
       // balances are unsigned
@@ -67,7 +67,7 @@ class StateProcessorTest : BehaviorSpec() {
         ).forEach { (key, value) -> testDriver.pipeInput(tbf.create(key, value)) }
 
         then("an ether increase should be observed for each address") {
-          readFungibleTokenBalances(testDriver, 3)
+          readBalances(testDriver, 3)
             .map { Pair(it.key(), it.value()) } shouldBe listOf(
             Pair(tokenKey(Bob.address.data20()), tokenBalance(15.ether().unsignedByteBuffer())),
             Pair(tokenKey(Alice.address.data20()), tokenBalance(30.ether().unsignedByteBuffer())),
@@ -85,7 +85,7 @@ class StateProcessorTest : BehaviorSpec() {
         ).forEach { (key, value) -> testDriver.pipeInput(tbf.create(key, value)) }
 
         then("an ether decrease should be observed for each address") {
-          readFungibleTokenBalances(testDriver, 3)
+          readBalances(testDriver, 3)
             .map { Pair(it.key(), it.value()) } shouldBe listOf(
             Pair(tokenKey(Bob.address.data20()), tokenBalance(13.ether().unsignedByteBuffer())),
             Pair(tokenKey(Alice.address.data20()), tokenBalance(23.ether().unsignedByteBuffer())),

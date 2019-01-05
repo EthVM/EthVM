@@ -34,25 +34,15 @@ object KafkaUtil {
 
   fun readFungibleTokenMovement(testDriver: TopologyTestDriver) = readFungibleTokenMovements(testDriver, 1).firstOrNull()
 
-  fun readFungibleTokenBalances(testDriver: TopologyTestDriver, count: Int) = read(
+  fun readBalances(testDriver: TopologyTestDriver, count: Int) = read(
     testDriver,
-    Topics.FungibleTokenBalances,
+    Topics.Balances,
     Serdes.TokenBalanceKey().deserializer(),
     Serdes.TokenBalance().deserializer(),
     count
   )
 
-  fun readFungibleTokenBalance(testDriver: TopologyTestDriver) = readFungibleTokenBalances(testDriver, 1).firstOrNull()
-
-  fun readNonFungibleTokenBalances(testDriver: TopologyTestDriver, count: Int) =
-    read(
-      testDriver,
-      Topics.NonFungibleTokenBalances,
-      Serdes.TokenBalanceKey().deserializer(),
-      Serdes.TokenBalance().deserializer()
-    )
-
-  fun readNonFungibleTokenBalance(testDriver: TopologyTestDriver) = readNonFungibleTokenBalances(testDriver, 1).firstOrNull()
+  fun readBalance(testDriver: TopologyTestDriver) = readBalances(testDriver, 1).firstOrNull()
 
   fun readContractCreations(testDriver: TopologyTestDriver, count: Int) = read(
     testDriver,

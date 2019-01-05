@@ -5,8 +5,7 @@ const collections = [
   "blocks",
   "transactions",
   "contracts",
-  "fungible_balances",
-  "non_fungible_balances",
+  "balances",
   "pending_transactions",
   "block_statistics"
 ];

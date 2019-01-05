@@ -7,8 +7,7 @@ object Topics {
   const val BlockStatistics = "block-statistics"
 
   const val FungibleTokenMovements = "fungible-token-movements"
-  const val FungibleTokenBalances = "fungible-token-balances"
-  const val NonFungibleTokenBalances = "non-fungible-token-balances"
+  const val Balances = "balances"
 
   const val ContractCreations = "contract-creations"
   const val ContractDestructions = "contract-destructions"
