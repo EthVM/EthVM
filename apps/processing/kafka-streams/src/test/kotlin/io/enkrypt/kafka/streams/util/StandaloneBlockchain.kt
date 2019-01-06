@@ -77,7 +77,7 @@ class StandaloneBlockchain(config: Config) {
 
   val genesisBlock: BlockRecord by lazy {
     val summary = BlockSummary(genesis, emptyMap(), emptyList(), emptyList())
-    val builder = objectMapper.convert(objectMapper, BlockSummary::class.java, BlockRecord.Builder::class.java, summary)
+    val builder = objectMapper.convert(null, BlockSummary::class.java, BlockRecord.Builder::class.java, summary)
     builder.build()
   }
 
@@ -165,7 +165,7 @@ class StandaloneBlockchain(config: Config) {
     pendingTxs = emptyList()
 
     return objectMapper
-      .convert(objectMapper, BlockSummary::class.java, BlockRecord.Builder::class.java, blockSummary)
+      .convert(null, BlockSummary::class.java, BlockRecord.Builder::class.java, blockSummary)
       .build()
   }
 

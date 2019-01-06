@@ -81,7 +81,7 @@ protocol Capture {
 
     union { null, io.enkrypt.avro.common.Data32 } blockHash = null; // hash of the block where this transaction was in
     union { null, bytes } blockNumber = null;                       // integer block number where this transaction was in
-    union { null, bytes } transactionIndex = null;                  // integer of the transactions index position in the block, null when it's pending
+    union { null, int } transactionIndex = null;                    // integer of the transactions index position in the block, null when it's pending
 
     io.enkrypt.avro.common.Data20 from;                             // address of the sender
     union { null, io.enkrypt.avro.common.Data20 } to = null;        // address of the receiver. null when its a contract creation transaction.
