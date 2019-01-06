@@ -25,11 +25,17 @@
 <script lang="ts">
 import 'vuetify/dist/vuetify.min.css'
 import { Block, Tx, PendingTx } from '@app/models'
-import { Events as sEvents } from 'ethvm-common'
+import { Events } from 'ethvm-common'
 import { Component, Vue } from 'vue-property-decorator'
+import { Mutation } from 'vuex-class'
 
 @Component
 export default class FramesMainFrame extends Vue {
+  @Mutation(Events.newTx) newTx
+  @Mutation(Events.newBlock) newBlock
+  @Mutation(Events.newPendingTx) newPendingTx
+  @Mutation(Events.newUncle) newUncle
+
   data() {
     return {}
   }
@@ -53,51 +59,51 @@ export default class FramesMainFrame extends Vue {
         page: 0
       },
       (err, txs) => {
-        this.$store.commit(sEvents.newTx, txs)
+        this.newTx(txs)
         if (txs && txs.length > 0) {
-          this.$eventHub.$emit(sEvents.pastTxsR)
-          this.$eventHub.$emit(sEvents.newTx, new Tx(txs[0]))
+          this.$eventHub.$emit(Events.pastTxsR)
+          this.$eventHub.$emit(Events.newTx, new Tx(txs[0]))
         }
       }
     )
     this.$socket.emit(
-      sEvents.pastBlocks,
+      Events.pastBlocks,
       {
         limit: 100,
         page: 0
       },
       (err, blocks) => {
-        this.$store.commit(sEvents.newBlock, blocks)
+        this.newBlock(blocks)
         if (blocks && blocks.length > 0) {
-          this.$eventHub.$emit(sEvents.newBlock, new Block(blocks[0]))
-          this.$eventHub.$emit(sEvents.pastBlocksR)
+          this.$eventHub.$emit(Events.newBlock, new Block(blocks[0]))
+          this.$eventHub.$emit(Events.pastBlocksR)
         }
       }
     )
     this.$socket.emit(
-      sEvents.pendingTxs,
+      Events.pendingTxs,
       {
         limit: 100,
         page: 0
       },
       (err, pTxs) => {
-        this.$store.commit(sEvents.newPendingTx, pTxs)
+        this.newPendingTx(pTxs)
         if (pTxs && pTxs.length > 0) {
-          this.$eventHub.$emit(sEvents.newPendingTx)
+          this.$eventHub.$emit(Events.newPendingTx)
         }
       }
     )
 
     this.$socket.emit(
-      sEvents.getUncles,
+      Events.getUncles,
       {
         limit: 100,
         page: 0
       },
       (err, uncles) => {
-        this.$store.commit(sEvents.newUncle, uncles)
+        this.newUncle(uncles)
         if (uncles && uncles.length > 0) {
-          this.$eventHub.$emit(sEvents.newUncle)
+          this.$eventHub.$emit(Events.newUncle)
         }
       }
     )
