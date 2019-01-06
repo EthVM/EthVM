@@ -25,6 +25,8 @@ import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
 import { lastBlockInfo } from '@app/components/mixins/mixin-last-block-stats'
 import Vue from 'vue'
 import { Component, Prop, Provide, Mixins } from 'vue-property-decorator'
+import { Getter } from 'vuex-class'
+
 const MAX_ITEMS = 20
 
 @Component({
@@ -35,6 +37,8 @@ const MAX_ITEMS = 20
   }
 })
 export default class PageTransactions extends Mixins(lastBlockInfo) {
+  @Getter getTxs
+
   data() {
     return {
       items: [
@@ -47,9 +51,9 @@ export default class PageTransactions extends Mixins(lastBlockInfo) {
   }
   get txs() {
     let tx
-    tx = this.$store.getters.getTxs
+    tx = this.getTxs
     this.$eventHub.$on(sEvents.newTx, _transactions => {
-      tx = this.$store.getters.getTxs
+      tx = this.getTxs
       return tx.slice(0, MAX_ITEMS)
     })
     return tx.slice(0, MAX_ITEMS)

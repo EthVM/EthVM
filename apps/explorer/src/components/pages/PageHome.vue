@@ -46,6 +46,7 @@ import TableTransactions from '@app/components/tables/TableTransactions.vue'
 import { lastBlockInfo } from '@app/components/mixins/mixin-last-block-stats'
 import { Events as sEvents } from 'ethvm-common'
 import { Block, Tx, PendingTx } from '@app/models'
+import { Getter } from 'vuex-class'
 
 const MAX_ITEMS = 20
 @Component({
@@ -59,13 +60,16 @@ const MAX_ITEMS = 20
   }
 })
 export default class FramesHome extends Mixins(lastBlockInfo) {
+  @Getter getBlocks
+  @Getter getTxs
+
   blocks: any
 
   created() {
-    this.blocks = this.$store.getters.getBlocks
+    this.blocks = this.getBlocks
     this.$eventHub.$on(Events.newBlock, _block => {
       if (Visibility.state() === 'visible') {
-        this.blocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
+        this.blocks = this.getBlocks.slice(0, MAX_ITEMS)
       }
     })
   }
@@ -74,8 +78,8 @@ export default class FramesHome extends Mixins(lastBlockInfo) {
     this.$eventHub.$off(Events.newBlock)
   }
   get txs() {
-    if (this.$store.getters.getTxs.length) {
-      return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
+    if (this.getTxs.length) {
+      return this.getTxs.slice(0, MAX_ITEMS)
     }
     return []
   }

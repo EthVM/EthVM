@@ -29,6 +29,7 @@ import TableBlocks from '@app/components/tables/TableBlocks.vue'
 import { lastBlockInfo } from '@app/components/mixins/mixin-last-block-stats'
 import { Events as sEvents } from 'ethvm-common'
 import { Vue, Component, Mixins } from 'vue-property-decorator'
+import { Getter } from 'vuex-class'
 
 const MAX_ITEMS = 50
 
@@ -40,6 +41,8 @@ const MAX_ITEMS = 50
   }
 })
 export default class FrameBlocks extends Mixins(lastBlockInfo) {
+  @Getter('getBlocks') getBlocks
+
   blocks: any
   maxItems: number = MAX_ITEMS
   data() {
@@ -54,10 +57,10 @@ export default class FrameBlocks extends Mixins(lastBlockInfo) {
   }
 
   created() {
-    this.blocks = this.$store.getters.getBlocks
+    this.blocks = this.getBlocks
     this.$eventHub.$on(sEvents.newBlock, _block => {
       if (Visibility.state() === 'visible') {
-        this.blocks = this.$store.getters.getBlocks
+        this.blocks = this.getBlocks
       }
     })
   }

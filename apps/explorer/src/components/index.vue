@@ -28,9 +28,8 @@ import { Block, Tx, PendingTx } from '@app/models'
 import { Events as sEvents } from 'ethvm-common'
 import { Component, Vue } from 'vue-property-decorator'
 
-
 @Component
-export default class FramesMainFrame extends Vue{
+export default class FramesMainFrame extends Vue {
   data() {
     return {}
   }
@@ -46,73 +45,72 @@ export default class FramesMainFrame extends Vue{
     }
   }
 
-    setPastData() {
-      this.$socket.emit(
-        sEvents.pastTxs,
-        {
-          limit: 100,
-          page: 0
-        },
-        (err, txs) => {
-          this.$store.commit(sEvents.newTx, txs)
-          if (txs && txs.length > 0) {
-            this.$eventHub.$emit(sEvents.pastTxsR)
-            this.$eventHub.$emit(sEvents.newTx, new Tx(txs[0]))
-          }
+  setPastData() {
+    this.$socket.emit(
+      sEvents.pastTxs,
+      {
+        limit: 100,
+        page: 0
+      },
+      (err, txs) => {
+        this.$store.commit(sEvents.newTx, txs)
+        if (txs && txs.length > 0) {
+          this.$eventHub.$emit(sEvents.pastTxsR)
+          this.$eventHub.$emit(sEvents.newTx, new Tx(txs[0]))
         }
-      )
-      this.$socket.emit(
-        sEvents.pastBlocks,
-        {
-          limit: 100,
-          page: 0
-        },
-        (err, blocks) => {
-          this.$store.commit(sEvents.newBlock, blocks)
-          if (blocks && blocks.length > 0) {
-            this.$eventHub.$emit(sEvents.newBlock, new Block(blocks[0]))
-            this.$eventHub.$emit(sEvents.pastBlocksR)
-          }
+      }
+    )
+    this.$socket.emit(
+      sEvents.pastBlocks,
+      {
+        limit: 100,
+        page: 0
+      },
+      (err, blocks) => {
+        this.$store.commit(sEvents.newBlock, blocks)
+        if (blocks && blocks.length > 0) {
+          this.$eventHub.$emit(sEvents.newBlock, new Block(blocks[0]))
+          this.$eventHub.$emit(sEvents.pastBlocksR)
         }
-      )
-      this.$socket.emit(
-        sEvents.pendingTxs,
-        {
-          limit: 100,
-          page: 0
-        },
-        (err, pTxs) => {
-          this.$store.commit(sEvents.newPendingTx, pTxs)
-          if (pTxs && pTxs.length > 0) {
-            this.$eventHub.$emit(sEvents.newPendingTx)
-          }
+      }
+    )
+    this.$socket.emit(
+      sEvents.pendingTxs,
+      {
+        limit: 100,
+        page: 0
+      },
+      (err, pTxs) => {
+        this.$store.commit(sEvents.newPendingTx, pTxs)
+        if (pTxs && pTxs.length > 0) {
+          this.$eventHub.$emit(sEvents.newPendingTx)
         }
-      )
+      }
+    )
 
-      this.$socket.emit(
-        sEvents.getUncles,
-        {
-          limit: 100,
-          page: 0
-        },
-        (err, uncles) => {
-          this.$store.commit(sEvents.newUncle, uncles)
-          if (uncles && uncles.length > 0) {
-            this.$eventHub.$emit(sEvents.newUncle)
-          }
+    this.$socket.emit(
+      sEvents.getUncles,
+      {
+        limit: 100,
+        page: 0
+      },
+      (err, uncles) => {
+        this.$store.commit(sEvents.newUncle, uncles)
+        if (uncles && uncles.length > 0) {
+          this.$eventHub.$emit(sEvents.newUncle)
         }
-      )
-    }
-    get pageName(){
-      return this.$route.params.pageName
-    }
-    get param() {
-      return this.$route.params.param
-    }
-    get holder() {
-      return this.$route.params.holder
-    }
-
+      }
+    )
+  }
+  get pageName() {
+    return this.$route.params.pageName
+  }
+  get param() {
+    return this.$route.params.param
+  }
+  get holder() {
+    return this.$route.params.holder
+  }
 }
 </script>
 

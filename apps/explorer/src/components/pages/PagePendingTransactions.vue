@@ -12,6 +12,7 @@ import { Events as sEvents } from 'ethvm-common'
 import TableTransactions from '@app/components/tables/TableTransactions.vue'
 import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
 import { Vue, Component } from 'vue-property-decorator'
+import { Getter } from 'vuex-class'
 
 const MAX_ITEMS = 20
 @Component({
@@ -21,6 +22,8 @@ const MAX_ITEMS = 20
   }
 })
 export default class LatestPendingTransactions extends Vue {
+  @Getter getPendingTxs
+
   data() {
     return {
       items: [
@@ -32,10 +35,10 @@ export default class LatestPendingTransactions extends Vue {
     }
   }
   get txs() {
-    let tx = this.$store.getters.getPendingTxs
+    let tx = this.getPendingTxs
 
     this.$eventHub.$on(sEvents.newPendingTx, _transactions => {
-      tx = this.$store.getters.getPendingTxs
+      tx = this.getPendingTxs
       return tx.slice(0, MAX_ITEMS)
     })
     return tx.slice(0, MAX_ITEMS)
