@@ -13,6 +13,8 @@ import io.enkrypt.avro.processing.MetricRecord
 import io.enkrypt.avro.processing.ReorgKeyRecord
 import io.enkrypt.avro.processing.TokenBalanceKeyRecord
 import io.enkrypt.avro.processing.TokenBalanceRecord
+import io.enkrypt.avro.processing.TokenTransferKeyRecord
+import io.enkrypt.avro.processing.TokenTransferRecord
 import io.enkrypt.kafka.streams.config.KafkaConfig
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
@@ -32,6 +34,14 @@ object Serdes : KoinComponent {
   }
 
   fun Block() = SpecificAvroSerde<BlockRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun TokenTransferKey() = SpecificAvroSerde<TokenTransferKeyRecord>(registryClient).apply {
+    configure(config, true)
+  }
+
+  fun TokenTransfer() = SpecificAvroSerde<TokenTransferRecord>(registryClient).apply {
     configure(config, false)
   }
 

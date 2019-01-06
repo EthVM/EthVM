@@ -8,11 +8,15 @@ import io.enkrypt.avro.processing.ContractDestroyRecord
 import io.enkrypt.avro.processing.ContractKeyRecord
 import io.enkrypt.avro.processing.TokenBalanceKeyRecord
 import io.enkrypt.avro.processing.TokenBalanceRecord
+import io.enkrypt.avro.processing.TokenTransferKeyRecord
 import io.enkrypt.avro.processing.TokenTransferRecord
+import io.enkrypt.common.extensions.byteArray
 import io.enkrypt.common.extensions.byteBuffer
+import io.enkrypt.common.extensions.hex
 import io.enkrypt.common.extensions.isFungible
 import io.enkrypt.common.extensions.isNonFungible
 import io.enkrypt.common.extensions.unsignedBigInteger
+import io.enkrypt.common.extensions.unsignedBytes
 import io.enkrypt.kafka.streams.config.Topics
 import io.enkrypt.kafka.streams.processors.block.BlockStatistics
 import io.enkrypt.kafka.streams.processors.block.ChainEventsTransformer
@@ -25,6 +29,7 @@ import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.Produced
 import org.apache.kafka.streams.kstream.TransformerSupplier
+import java.security.MessageDigest
 import java.util.Properties
 
 class BlockProcessor : AbstractKafkaProcessor() {
@@ -105,10 +110,52 @@ class BlockProcessor : AbstractKafkaProcessor() {
         Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance())
       )
 
-    // fungible token transfers
-
-    chainEvents
+    val chainEventsStream = chainEvents
       .filter { _, e -> e.getType() == ChainEventType.TOKEN_TRANSFER }
+
+    // publish all transfer events for entry into mongo
+
+    chainEventsStream
+      .map { _, v ->
+
+        val reverse = v.getReverse()
+        val transfer = v.getValue() as TokenTransferRecord
+
+        // need to create a unique key for the transfer event
+
+        val md = MessageDigest.getInstance("SHA-256")
+
+        val keyComponents = listOf(
+          transfer.getBlockHash().bytes(),
+          transfer.getTxHash().bytes(),
+          transfer.getTxIndex().toBigInteger().unsignedBytes(),
+          transfer.getContract()?.bytes() ?: ByteArray(0),
+          (transfer.getInternalTxIdx() ?: 0).toBigInteger().unsignedBytes(),
+          transfer.getFrom().bytes(),
+          transfer.getTo().bytes(),
+          transfer.getTokenId()?.byteArray() ?: ByteArray(0),
+          transfer.getAmount()?.byteArray() ?: ByteArray(0)
+        )
+
+        keyComponents.forEach { md.update(it) }
+
+        val hash = md.digest()
+
+        KeyValue(
+          TokenTransferKeyRecord.newBuilder()
+            .setHash(hash.byteBuffer())
+            .build(),
+          if (reverse) null else transfer    // send a tombstone to remove the entry if this is being reversed
+        )
+
+      }.to(
+        Topics.TokenTransfers,
+        Produced.with(Serdes.TokenTransferKey(), Serdes.TokenTransfer())
+      )
+
+    // publish fungible token movements for aggregation
+
+    chainEventsStream
       .filter { _, e -> (e.getValue() as TokenTransferRecord).isFungible() }
       .flatMap { _, v ->
 
@@ -148,10 +195,9 @@ class BlockProcessor : AbstractKafkaProcessor() {
         Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance())
       )
 
-    // non fungible token transfers
+    // publish non fungible token balances
 
-    chainEvents
-      .filter { _, e -> e.getType() == ChainEventType.TOKEN_TRANSFER }
+    chainEventsStream
       .filter { _, e -> (e.getValue() as TokenTransferRecord).isNonFungible() }
       .map { _, v ->
 
@@ -182,6 +228,9 @@ class BlockProcessor : AbstractKafkaProcessor() {
         Topics.Balances,
         Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance())
       )
+
+    //
+
 
     // contract creations
 

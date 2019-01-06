@@ -150,6 +150,16 @@ object TypeMappings {
       "txHash" to Hex,
       "creator" to Hex,
       "data" to Hex
+    ),
+    "tokenTransfer" to mapOf(
+      "hash" to Hex,
+      "contract" to Hex,
+      "blockHash" to Hex,
+      "txHash" to Hex,
+      "from" to Hex,
+      "to" to Hex,
+      "amount" to UBigInt,
+      "tokenId" to UBigInt
     )
   )
 

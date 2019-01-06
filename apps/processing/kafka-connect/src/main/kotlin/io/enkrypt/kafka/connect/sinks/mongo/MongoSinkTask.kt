@@ -5,6 +5,7 @@ import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.DeleteManyModel
 import com.mongodb.client.model.DeleteOneModel
+import com.mongodb.client.model.InsertOneModel
 import com.mongodb.client.model.ReplaceOneModel
 import com.mongodb.client.model.ReplaceOptions
 import com.mongodb.client.model.UpdateOneModel
@@ -18,6 +19,7 @@ import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Transactions
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Contracts
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Balances
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.PendingTransactions
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.TokenTransfers
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.BlockStatistics
 import io.enkrypt.kafka.connect.utils.Versions
 import mu.KotlinLogging
@@ -33,6 +35,7 @@ import org.bson.BsonDocument
 import org.bson.BsonString
 import org.bson.Document
 import org.bson.types.Decimal128
+import java.nio.ByteBuffer
 import kotlin.system.measureTimeMillis
 
 class MongoSinkTask : SinkTask() {
@@ -58,6 +61,7 @@ class MongoSinkTask : SinkTask() {
       Accounts to db.getCollection(Accounts.id, clazz),
       Transactions to db.getCollection(Transactions.id, clazz),
       Contracts to db.getCollection(Contracts.id, clazz),
+      TokenTransfers to db.getCollection(TokenTransfers.id, clazz),
       Balances to db.getCollection(Balances.id, clazz),
       PendingTransactions to db.getCollection(PendingTransactions.id, clazz),
       BlockStatistics to db.getCollection(BlockStatistics.id, clazz)
@@ -113,6 +117,7 @@ enum class MongoCollections(val id: String) {
   Accounts("accounts"),
   Transactions("transactions"),
   Contracts("contracts"),
+  TokenTransfers("token_transfers"),
   Balances("balances"),
   PendingTransactions("pending_transactions")
 }
@@ -187,6 +192,34 @@ enum class KafkaTopics(
     }
 
     mapOf(MongoCollections.Blocks to blockWrites, MongoCollections.Transactions to txWrites)
+  }),
+
+  TokenTransfers("token-transfers", { record: SinkRecord ->
+
+    require(record.keySchema().type() == Schema.Type.STRUCT) { "Key schema must be a struct" }
+
+    var writes = listOf<WriteModel<BsonDocument>>()
+
+    val id = StructToBsonConverter.convert(record.key() as Struct, "tokenTransfer")
+
+    writes += if (record.value() == null) {
+
+      // remove
+      val filter = BsonDocument("_id", id)
+      DeleteOneModel<BsonDocument>(filter)
+
+    } else {
+
+      val model = StructToBsonConverter
+        .convert(record.value(), "tokenTransfer")
+        .apply {
+          append("_id", id)
+        }
+
+      InsertOneModel(model)
+    }
+
+    mapOf(MongoCollections.TokenTransfers to writes)
   }),
 
   ContractCreations("contract-creations", { record: SinkRecord ->

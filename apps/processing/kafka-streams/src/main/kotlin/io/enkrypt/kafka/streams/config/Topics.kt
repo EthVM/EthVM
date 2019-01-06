@@ -6,6 +6,7 @@ object Topics {
   const val BlockMetrics = "block-metrics"
   const val BlockStatistics = "block-statistics"
 
+  const val TokenTransfers = "token-transfers"
   const val FungibleTokenMovements = "fungible-token-movements"
   const val Balances = "balances"
 

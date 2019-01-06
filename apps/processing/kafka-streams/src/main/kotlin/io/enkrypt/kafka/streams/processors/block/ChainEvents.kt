@@ -57,12 +57,28 @@ object ChainEvents {
   fun fungibleTransfer(from: ECKey, to: ECKey, amount: BigInteger, reverse: Boolean = false, contract: Data20? = null) =
     fungibleTransfer(from.address.data20()!!, to.address.data20()!!, amount.unsignedByteBuffer()!!, reverse, contract)
 
-  fun fungibleTransfer(from: Data20, to: Data20, amount: ByteBuffer, reverse: Boolean = false, contract: Data20? = null) =
+  fun fungibleTransfer(
+    from: Data20,
+    to: Data20,
+    amount: ByteBuffer,
+    reverse: Boolean = false,
+    contract: Data20? = null,
+    timestamp: Long? = null,
+    blockHash: Data32? = null,
+    txHash: Data32? = null,
+    txIndex: Int? = 0,
+    internalTxIdx: Int? = null
+  ) =
     ChainEventRecord.newBuilder()
       .setReverse(reverse)
       .setType(ChainEventType.TOKEN_TRANSFER)
       .setValue(
         TokenTransferRecord.newBuilder()
+          .setTimestamp(timestamp)
+          .setBlockHash(blockHash)
+          .setTxHash(txHash)
+          .setTxIndex(txIndex!!)
+          .setInternalTxIdx(internalTxIdx)
           .setContract(contract)
           .setFrom(from)
           .setTo(to)
@@ -70,12 +86,28 @@ object ChainEvents {
           .build()
       ).build()
 
-  fun nonFungibleTransfer(contract: Data20, from: Data20, to: Data20, tokenId: ByteBuffer, reverse: Boolean = false) =
+  fun nonFungibleTransfer(
+    contract: Data20,
+    from: Data20,
+    to: Data20,
+    tokenId: ByteBuffer,
+    reverse: Boolean = false,
+    timestamp: Long? = null,
+    blockHash: Data32? = null,
+    txHash: Data32? = null,
+    txIndex: Int? = 0,
+    internalTxIdx: Int? = null
+  ) =
     ChainEventRecord.newBuilder()
       .setReverse(reverse)
       .setType(ChainEventType.TOKEN_TRANSFER)
       .setValue(
         TokenTransferRecord.newBuilder()
+          .setTimestamp(timestamp)
+          .setBlockHash(blockHash)
+          .setTxHash(txHash)
+          .setTxIndex(txIndex!!)
+          .setInternalTxIdx(internalTxIdx)
           .setContract(contract)
           .setFrom(from)
           .setTo(to)
@@ -195,6 +227,8 @@ object ChainEvents {
     val miner = block.getHeader().getAuthor()
     val blockHash = block.getHeader().getHash()
     val txHash = tx.getHash()
+    val txIdx = tx.getTransactionIndex()
+    val timestamp = block.getHeader().getTimestamp()
 
     val from = tx.getFrom()
     val to = tx.getTo()
@@ -203,14 +237,14 @@ object ChainEvents {
 
     // tx fee
     val txFee = (receipt.getGasUsed().unsignedBigInteger()!! * tx.getGasPrice().bigInteger()!!).unsignedByteBuffer()!!
-    events += fungibleTransfer(from, miner, txFee, reverse)
+    events += fungibleTransfer(from, miner, txFee, reverse, null, timestamp, blockHash, txHash, txIdx)
 
     // short circuit if the tx was not successful
     if (!receipt.isSuccess()) return events
 
     // simple ether transfer
     if (!(from == null || to == null || value.capacity() == 0)) {
-      events += fungibleTransfer(from, to, value, reverse)
+      events += fungibleTransfer(from, to, value, reverse, null, timestamp, blockHash, txHash, txIdx)
     }
 
     // contract creation
@@ -221,7 +255,7 @@ object ChainEvents {
 
       // some ether may have also been sent
       if (value.capacity() > 0) {
-        events += fungibleTransfer(from, tx.getCreates(), value)
+        events += fungibleTransfer(from, tx.getCreates(), value, reverse, null, timestamp, blockHash, txHash, txIdx)
       }
     }
 
@@ -250,12 +284,14 @@ object ChainEvents {
           erc20Transfer
             .filter { it.amount.bigInteger() != BigInteger.ZERO }
             .fold({ Unit }, {
-              events += fungibleTransfer(it.from, it.to, it.amount, reverse, to ?: receipt.getContractAddress())
+              events += fungibleTransfer(it.from, it.to, it.amount, reverse, to
+                ?: receipt.getContractAddress(), timestamp, blockHash, txHash, txIdx)
             })
 
           erc721Transfer
             .fold({ Unit }, {
-              events += nonFungibleTransfer(to ?: receipt.getContractAddress(), it.from, it.to, it.tokenId, reverse)
+              events += nonFungibleTransfer(to
+                ?: receipt.getContractAddress(), it.from, it.to, it.tokenId, reverse, timestamp, blockHash, txHash, txIdx)
             })
         })
     }
@@ -281,6 +317,9 @@ object ChainEvents {
 
     val blockHash = block.getHeader().getHash()
     val txHash = tx.getHash()
+    val txIdx = tx.getTransactionIndex()
+    val internalTxIdx = internalTx.getInternalTransactionIndex()
+    val timestamp = block.getHeader().getTimestamp()
 
     val from = internalTx.getFrom()
     val to = internalTx.getTo()
@@ -289,7 +328,7 @@ object ChainEvents {
 
     // simple ether transfer
     if (!(from == null || to == null || value.capacity() == 0)) {
-      events += fungibleTransfer(from, to, value, reverse)
+      events += fungibleTransfer(from, to, value, reverse, null, timestamp, txHash, blockHash, txIdx, internalTxIdx)
     }
 
     // contract creation

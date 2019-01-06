@@ -101,6 +101,7 @@ protocol Capture {
     union { null, int } chainId = null;                             // chain id of the transaction, if any
     union { null, bytes } raw = null;                               // raw rlp transaction data
 
+    union { null, long } timestamp = null;                        // block timestamp in seconds since epoch
   }
 
   record BlockRewardRecord {

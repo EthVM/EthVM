@@ -17,15 +17,15 @@ protocol Processing {
   }
 
   record TokenTransferKeyRecord {
-
-    union { null, io.enkrypt.avro.common.Data20 } contract = null;
-    union { null, io.enkrypt.avro.common.Data20 } address = null;
-    union { null, bytes } nonce = null;
-    union { null, bytes } tokenId = null;
-
+    bytes hash;
   }
 
   record TokenTransferRecord {
+
+    io.enkrypt.avro.common.Data32 blockHash;
+    io.enkrypt.avro.common.Data32 txHash;
+    int txIndex;
+    union { null, int } internalTxIdx;
 
     io.enkrypt.avro.common.Data20 from;
     io.enkrypt.avro.common.Data20 to;
@@ -34,7 +34,7 @@ protocol Processing {
 
     union { null, bytes } amount = null;
     union { null, bytes } tokenId = null;
-
+    union { null, long } timestamp = null;                        // block timestamp in seconds since epoch
   }
 
   record TokenBalanceKeyRecord {
