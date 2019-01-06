@@ -4,9 +4,9 @@
       <v-card color="transaprent" flat style="height: 48px; border: solid 1px #efefef;">
         <v-layout align-center justify-end>
           <v-text-field
-            v-model="searchhash"
+            v-model="searchInput"
             v-if="phText === 'default'"
-            v-on:keyup.enter="start"
+            @keyup.enter="search"
             :placeholder="$t('search.default')"
             color="primary"
             solo
@@ -20,7 +20,7 @@
           <v-text-field
             dense
             v-if="phText === 'addressTxSearch'"
-            v-on:keyup.enter="sendReq"
+            @keyup.enter="search"
             flat
             :placeholder="$t('search.addressTx')"
             color="primary"
@@ -35,8 +35,8 @@
       </v-card>
     </v-flex>
     <v-flex hidden-sm-and-down md4 style="max-width: 115px;">
-      <v-btn v-if="phText === 'default'" @click="start" depressed color="secondary" class="search-button text-capitalize ml-0">Search</v-btn>
-      <v-btn v-else @click="sendReq" depressed outline class="search-button text-capitalize ml-0 primary--text lineGrey">Search</v-btn>
+      <v-btn v-if="phText === 'default'" @click="search" depressed color="secondary" class="search-button text-capitalize ml-0">{{ $t('search.title') }}</v-btn>
+      <v-btn v-else @click="search" depressed outline class="search-button text-capitalize ml-0 primary--text lineGrey">{{ $t('search.title') }}</v-btn>
     </v-flex>
   </v-layout>
 </template>
@@ -54,19 +54,15 @@ import { Component, Vue } from 'vue-property-decorator'
   }
 })
 export default class AppSearch extends Vue {
-  searchhash: any
-  data() {
-    return {
-      searchhash: '',
-      input: String
-    }
-  }
+  searchInput: string = ''
+  input: string = ''
+
   /* Search Method : */
-  start() {
+  search() {
     this.$socket.emit(
       Events.search,
       {
-        hash: this.searchhash
+        hash: this.searchInput
       },
       (error, result) => {
         if (result) {
@@ -74,21 +70,21 @@ export default class AppSearch extends Vue {
             case 0:
               {
                 this.$router.push({
-                  path: '/transaction/0x' + this.searchhash
+                  path: '/transaction/0x' + this.searchInput
                 })
               }
               break
             case 1:
               {
                 this.$router.push({
-                  path: '/address/0x' + this.searchhash
+                  path: '/address/0x' + this.searchInput
                 })
               }
               break
             case 2:
               {
                 this.$router.push({
-                  path: '/block/0x' + this.searchhash
+                  path: '/block/0x' + this.searchInput
                 })
               }
               break
@@ -100,7 +96,5 @@ export default class AppSearch extends Vue {
       }
     )
   }
-
-  sendReq() {}
 }
 </script>

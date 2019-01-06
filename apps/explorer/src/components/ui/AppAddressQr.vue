@@ -8,7 +8,7 @@
           <v-card-title class="title font-weight-medium">{{ $t('title.address') }}:</v-card-title>
         </v-flex>
         <v-flex xs12>
-          <p class="break-string">{{ address - QR }}</p>
+          <p class="break-string">{{ addressQR }}</p>
         </v-flex>
       </v-layout>
     </v-card>
@@ -25,10 +25,10 @@ import VueQr from 'vue-qr'
   }
 })
 export default class AppAddressQR extends Vue {
-  @Prop(String) addressQR: string
-  @Prop(Boolean) large: Boolean = false
+  @Prop({ type: String, default: '' }) addressQR!: string
+  @Prop({ type: Boolean, default: false }) large!: boolean
 
-  dialog: Boolean = false
+  dialog: boolean = false
 
   get getQR() {
     if (this.addressQR) {

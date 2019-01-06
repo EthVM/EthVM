@@ -58,14 +58,12 @@
     "limit": "Limite",
     "gas": "Gas"
   },
-
   "filter": {
     "view": "Ver",
     "all": "Todo",
     "out": "Salientes",
     "in": "Entrantes"
   },
-
   "message": {
     "error": "Uy, algo ha ido mal, no hay datos desde el servidor :(",
     "txAll": "Esta dirección no contiene ningun historial de transacciones",
@@ -80,7 +78,6 @@
     "noPending": "No hay transacciones pendientes",
     "load": "Cargando ..."
   },
-
   "block": {
     "height": "Posición",
     "miner": "Minero",
@@ -101,7 +98,6 @@
     "sha": "SHA3",
     "uncle": "Uncle(s)"
   },
-
   "addrOverview": {
     "balance": "Ether Balance",
     "usd": "Valor en USD",
@@ -113,7 +109,6 @@
     "uncles": "Uncles",
     "and": "y"
   },
-
   "tx": {
     "from": "Desde",
     "to": "A",
@@ -122,7 +117,6 @@
     "block": "Bloque #",
     "cost": "Costo de la Transacción"
   },
-
   "token": {
     "holder": "Holder",
     "balance": "Balance",
@@ -135,13 +129,11 @@
     "number": "Numero total de Tokens",
     "totalUSD": "Valor total en USD"
   },
-
   "gas": {
     "limit": "Limite de Gas",
     "used": "Gas Utilizado",
     "price": "Precio del Gas"
   },
-
   "smlBlock": {
     "last": "Ultimo Bloque #",
     "time": "Desde el Ultimo Bloque",
@@ -151,7 +143,6 @@
     "failed": "Tx Fallidas",
     "pending": "Tx Pendientes"
   },
-
   "tabs": {
     "txH": "Historial de Transacciones",
     "tokens": "Tokens",
@@ -159,18 +150,15 @@
     "miningH": "Historial de Minado",
     "contracts": "Contratos"
   },
-
   "bttn": {
     "more": "Más",
     "less": "Menos",
     "viewAll": "Ver Todo"
   },
-
   "type": {
     "in": "Entrante",
     "out": "Saliente"
   },
-
   "footer": {
     "dicover": "Descubrir",
     "privPolicy": "Politica de Privacidad",
@@ -180,7 +168,6 @@
     "copy": "Copyright 2018 Todos los derechos reservados por ",
     "enkrypt": "enKrypt LLC"
   },
-
   "footnote": {
     "success": "Exitosas",
     "failed": "Fallidas",

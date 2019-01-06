@@ -19,15 +19,16 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component
 export default class AppInfoCard extends Vue {
-  @Prop(String) value: string
-  @Prop(String) title: string
-  @Prop(String) colorType: string
-  @Prop(String) metrics: string
-  @Prop(String) backType: string
+  @Prop(String) value!: string
+  @Prop(String) title!: string
+  @Prop(String) colorType!: string
+  @Prop(String) metrics!: string
+  @Prop(String) backType!: string
 
   get getColor(): string {
     return this.colorType
   }
+
   get getBackground(): string {
     return this.backType
   }

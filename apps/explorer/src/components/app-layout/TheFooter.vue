@@ -3,7 +3,7 @@
     <v-layout wrap row justify-space-between fill-height pa-4>
       <v-flex xs12 sm4 md2>
         <v-card flat>
-          <v-card-title class="title font-weight-bold pb-4">Discover</v-card-title>
+          <v-card-title class="title font-weight-bold pb-4">{{ $t('footer.discover') }}</v-card-title>
           <a href="/about">
             <v-card-text class="pt-0 pb-3 black--text">{{ $t('title.about') }}</v-card-text>
           </a>
@@ -23,8 +23,8 @@
             </v-flex>
             <v-flex d-flex xs12 sm5 md6>
               <v-layout reverse>
-                <app-copy-to-clip :valueToCopy="ethAddr"></app-copy-to-clip>
-                <v-card-text class="pl-0 secondary--text">Copy ETH address</v-card-text>
+                <app-copy-to-clip :value-to-copy="ethAddr"></app-copy-to-clip>
+                <v-card-text class="pl-0 secondary--text">{{ $t('footer.copyEthAddress') }}</v-card-text>
               </v-layout>
             </v-flex>
           </v-layout>
@@ -37,8 +37,8 @@
             </v-flex>
             <v-flex d-flex xs12 sm5 md6>
               <v-layout reverse>
-                <app-copy-to-clip :valueToCopy="btcAddr"></app-copy-to-clip>
-                <v-card-text class="pl-0 secondary--text">Copy BTC address</v-card-text>
+                <app-copy-to-clip :value-to-copy="btcAddr"></app-copy-to-clip>
+                <v-card-text class="pl-0 secondary--text">{{ $t('footer.copyBtcAddress') }}</v-card-text>
               </v-layout>
             </v-flex>
           </v-layout>
@@ -76,11 +76,7 @@ import AppCopyToClip from '@app/components/ui/AppCopyToClip.vue'
   }
 })
 export default class TheFooter extends Vue {
-  data() {
-    return {
-      btcAddr: '1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9">1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9',
-      ethAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-    }
-  }
+  btcAddr: string = '1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9">1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9'
+  ethAddr: string = '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
 }
 </script>

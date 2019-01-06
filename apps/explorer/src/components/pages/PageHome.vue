@@ -2,15 +2,15 @@
   <v-container grid-list-lg class="mb-0">
     <app-bread-crumbs />
     <v-layout row wrap justify-space-between mb-4>
-      <v-flex xs12 sm6 md3> <app-info-card :title="$t('smlBlock.last')" :value="latestBlockNumber" colorType="primary" backType="last-block" /> </v-flex>
+      <v-flex xs12 sm6 md3> <app-info-card :title="$t('smlBlock.last')" :value="latestBlockNumber" color-type="primary" back-type="last-block" /> </v-flex>
       <v-flex xs12 sm6 md3>
-        <app-info-card :title="$t('smlBlock.time')" :value="secSinceLastBlock" colorType="success" backType="time-since" metrics="sec" />
+        <app-info-card :title="$t('smlBlock.time')" :value="secSinceLastBlock" color-type="success" back-type="time-since" metrics="sec" />
       </v-flex>
       <v-flex xs12 sm6 md3>
-        <app-info-card :title="$t('smlBlock.hashR')" :value="latestHashRate" colorType="warning" backType="hash-rate" metrics="Th/s" />
+        <app-info-card :title="$t('smlBlock.hashR')" :value="latestHashRate" color-type="warning" back-type="hash-rate" metrics="Th/s" />
       </v-flex>
       <v-flex xs12 sm6 md3>
-        <app-info-card :title="$t('smlBlock.diff')" :value="latestDifficulty" colorType="error" backType="difficulty" metrics="Th" />
+        <app-info-card :title="$t('smlBlock.diff')" :value="latestDifficulty" color-type="error" back-type="difficulty" metrics="Th" />
       </v-flex>
     </v-layout>
     <!-- Charts -->
@@ -21,12 +21,12 @@
     <!-- End Charts -->
     <!-- Last Blocks -->
     <v-layout row wrap justify-center mb-4>
-      <v-flex xs12> <table-blocks v-if="blocks" :maxBlocks="true" :blocks="blocks" showStyle="max-height: 590px" /> </v-flex>
+      <v-flex xs12> <table-blocks v-if="blocks" :max-blocks="true" :blocks="blocks" show-style="max-height: 590px" /> </v-flex>
     </v-layout>
     <!-- End Last Blocks -->
     <!-- Last Txs -->
     <v-layout row wrap justify-center mb-4>
-      <v-flex xs12> <table-transactions v-if="txs" :transactions="txs" showStyle="max-height: 590px" /> </v-flex>
+      <v-flex xs12> <table-transactions v-if="txs" :transactions="txs" show-style="max-height: 590px" /> </v-flex>
     </v-layout>
     <!-- End Last Txs -->
   </v-container>
@@ -43,11 +43,11 @@ import ChartLiveTx from '@app/components/charts/live/ChartLiveTx.vue'
 import ChartLiveTxFees from '@app/components/charts/live/ChartLiveTxFees.vue'
 import TableBlocks from '@app/components/tables/TableBlocks.vue'
 import TableTransactions from '@app/components/tables/TableTransactions.vue'
-import { lastBlockInfo } from '@app/components/mixins/mixin-last-block-stats'
-import { Events as sEvents } from 'ethvm-common'
+import { LastBlockInfoMixin } from '@app/components/mixins'
 import { Block, Tx, PendingTx } from '@app/models'
 
 const MAX_ITEMS = 20
+
 @Component({
   components: {
     AppBreadCrumbs,
@@ -58,8 +58,8 @@ const MAX_ITEMS = 20
     ChartLiveTxFees
   }
 })
-export default class FramesHome extends Mixins(lastBlockInfo) {
-  blocks: any
+export default class PageHome extends Mixins(LastBlockInfoMixin) {
+  blocks: Block[]
 
   created() {
     this.blocks = this.$store.getters.getBlocks
@@ -73,6 +73,7 @@ export default class FramesHome extends Mixins(lastBlockInfo) {
   beforeDestroy() {
     this.$eventHub.$off(Events.newBlock)
   }
+
   get txs() {
     if (this.$store.getters.getTxs.length) {
       return this.$store.getters.getTxs.slice(0, MAX_ITEMS)

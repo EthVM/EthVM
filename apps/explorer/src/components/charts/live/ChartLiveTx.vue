@@ -4,10 +4,10 @@
       type="bar"
       :data="chartData"
       :options="chartOptions"
-      :chartTitle="newTitle"
-      :chartDescription="newDescription"
+      :chart-title="newTitle"
+      :chart-description="newDescription"
       :redraw="redraw"
-      :footnoteArr="footnote"
+      :footnote-arr="footnote"
     ></app-chart>
   </v-layout>
 </template>
@@ -76,32 +76,29 @@ const barOptions = {
   }
 })
 export default class ChartLiveTransactions extends Vue {
-  data() {
-    return {
-      chartData: {},
-      chartOptions: barOptions,
-      redraw: false,
-      newTitle: title,
-      newDescription: description,
-      footnote: [
-        {
-          color: 'txSuccess',
-          text: this.$i18n.t('footnote.success'),
-          icon: 'fa fa-circle'
-        },
-        {
-          color: 'txFail',
-          text: this.$i18n.t('footnote.failed'),
-          icon: 'fa fa-circle'
-        },
-        {
-          color: 'txPen',
-          text: this.$i18n.t('footnote.pending'),
-          icon: 'fa fa-circle'
-        }
-      ]
+  chartData: any = {}
+  chartOptions = barOptions
+  redraw: boolean = false
+  newTitle = title
+  newDescription = description
+  footnote: any[] = [
+    {
+      color: 'txSuccess',
+      text: this.$i18n.t('footnote.success'),
+      icon: 'fa fa-circle'
+    },
+    {
+      color: 'txFail',
+      text: this.$i18n.t('footnote.failed'),
+      icon: 'fa fa-circle'
+    },
+    {
+      color: 'txPen',
+      text: this.$i18n.t('footnote.pending'),
+      icon: 'fa fa-circle'
     }
-  }
+  ]
+
   created() {
     this.chartData = this.initData
     this.$eventHub.$on(sEvents.pastBlocksR, () => {

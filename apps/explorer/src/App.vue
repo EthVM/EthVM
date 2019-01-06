@@ -12,7 +12,7 @@
 <script lang="ts">
 import 'vuetify/dist/vuetify.min.css'
 import { Block, Tx, PendingTx } from '@app/models'
-import { Events as sEvents } from 'ethvm-common'
+import { Events } from 'ethvm-common'
 import TheNavigationDrawer from '@app/components/app-layout/TheNavigationDrawer.vue'
 import TheFooter from '@app/components/app-layout/TheFooter.vue'
 import { Vue, Component, Prop } from 'vue-property-decorator'
@@ -24,9 +24,6 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
   }
 })
 export default class App extends Vue {
-  name: 'app'
-
-  //Add footer + nav declaration
   data() {
     return {}
   }
@@ -46,59 +43,59 @@ export default class App extends Vue {
   // Methods
   setPastData() {
     this.$socket.emit(
-      sEvents.pastTxs,
+      Events.pastTxs,
       {
         limit: 100,
         page: 0
       },
       (err, txs) => {
-        this.$store.commit(sEvents.newTx, txs)
+        this.$store.commit(Events.newTx, txs)
         if (txs && txs.length > 0) {
-          this.$eventHub.$emit(sEvents.pastTxsR)
-          this.$eventHub.$emit(sEvents.newTx, new Tx(txs[0]))
+          this.$eventHub.$emit(Events.pastTxsR)
+          this.$eventHub.$emit(Events.newTx, new Tx(txs[0]))
         }
       }
     )
 
     this.$socket.emit(
-      sEvents.pastBlocks,
+      Events.pastBlocks,
       {
         limit: 100,
         page: 0
       },
       (err, blocks) => {
-        this.$store.commit(sEvents.newBlock, blocks)
+        this.$store.commit(Events.newBlock, blocks)
         if (blocks && blocks.length > 0) {
-          this.$eventHub.$emit(sEvents.newBlock, new Block(blocks[0]))
-          this.$eventHub.$emit(sEvents.pastBlocksR)
+          this.$eventHub.$emit(Events.newBlock, new Block(blocks[0]))
+          this.$eventHub.$emit(Events.pastBlocksR)
         }
       }
     )
 
     this.$socket.emit(
-      sEvents.pendingTxs,
+      Events.pendingTxs,
       {
         limit: 100,
         page: 0
       },
       (err, pTxs) => {
-        this.$store.commit(sEvents.newPendingTx, pTxs)
+        this.$store.commit(Events.newPendingTx, pTxs)
         if (pTxs && pTxs.length > 0) {
-          this.$eventHub.$emit(sEvents.newPendingTx)
+          this.$eventHub.$emit(Events.newPendingTx)
         }
       }
     )
 
     this.$socket.emit(
-      sEvents.getUncles,
+      Events.getUncles,
       {
         limit: 100,
         page: 0
       },
       (err, uncles) => {
-        this.$store.commit(sEvents.newUncle, uncles)
+        this.$store.commit(Events.newUncle, uncles)
         if (uncles && uncles.length > 0) {
-          this.$eventHub.$emit(sEvents.newUncle)
+          this.$eventHub.$emit(Events.newUncle)
         }
       }
     )

@@ -1,8 +1,8 @@
 <template>
   <v-container grid-list-lg class="mb-0">
-    <app-bread-crumbs :newItems="items"></app-bread-crumbs>
+    <app-bread-crumbs :new-items="items"></app-bread-crumbs>
     <v-layout row justify-center mb-4>
-      <v-flex xs12> <table-transactions :transactions="txs" :frameTxs="true" :pending="true"></table-transactions> </v-flex>
+      <v-flex xs12> <table-transactions :transactions="txs" :frame-txs="true" :pending="true"></table-transactions> </v-flex>
     </v-layout>
   </v-container>
 </template>
@@ -14,23 +14,21 @@ import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
 import { Vue, Component } from 'vue-property-decorator'
 
 const MAX_ITEMS = 20
+
 @Component({
   components: {
     AppBreadCrumbs,
     TableTransactions
   }
 })
-export default class LatestPendingTransactions extends Vue {
-  data() {
-    return {
-      items: [
-        {
-          text: this.$i18n.t('title.pending'),
-          disabled: true
-        }
-      ]
+export default class PagePendingTransactions extends Vue {
+  items: any[] = [
+    {
+      text: this.$i18n.t('title.pending'),
+      disabled: true
     }
-  }
+  ]
+
   get txs() {
     let tx = this.$store.getters.getPendingTxs
 
@@ -38,6 +36,7 @@ export default class LatestPendingTransactions extends Vue {
       tx = this.$store.getters.getPendingTxs
       return tx.slice(0, MAX_ITEMS)
     })
+
     return tx.slice(0, MAX_ITEMS)
   }
 }

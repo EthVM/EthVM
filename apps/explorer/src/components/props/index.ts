@@ -5,7 +5,7 @@ export interface Breadcumb {
   link?: string
 }
 
-export interface FootNote {
+export interface Footnote {
   color?: string
   text?: string
   icon?: string

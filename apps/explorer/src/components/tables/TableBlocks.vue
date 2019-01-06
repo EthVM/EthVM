@@ -44,7 +44,7 @@
       <v-layout column fill-height v-scroll:#scroll-target style="margin-right: 1px" class="mb-1">
         <v-flex xs12>
           <transition-group name="list" tag="p">
-            <v-card v-for="block in blocks" class="transparent" flat v-bind:key="block.getHash()">
+            <v-card v-for="block in blocks" class="transparent" flat :key="block.getHash()">
               <table-blocks-row :block="block"></table-blocks-row>
               <v-divider class="mb-2 mt-2"></v-divider>
             </v-card>
@@ -64,6 +64,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import AppFootnotes from '@app/components/ui/AppFootnotes.vue'
 import TableBlocksRow from '@app/components/tables/TableBlocksRow.vue'
+import { Block } from '@app/models'
 
 @Component({
   components: {
@@ -72,35 +73,34 @@ import TableBlocksRow from '@app/components/tables/TableBlocksRow.vue'
   }
 })
 export default class TableBlocks extends Vue {
-  @Prop(Boolean) frameBlocks: boolean = true
-  @Prop(String) showStyle: string = 'true'
-  @Prop(Array) blocks
+  @Prop({ type: Boolean, default: true }) frameBlocks!: boolean
+  @Prop({ type: String, default: 'true' }) showStyle!: string
+  @Prop({ type: Array, default: [] }) blocks!: Block[]
 
-  data() {
-    return {
-      footnote: [
-        {
-          color: 'txSuccess',
-          text: this.$i18n.t('footnote.success'),
-          icon: 'fa fa-circle'
-        },
-        {
-          color: 'txFail',
-          text: this.$i18n.t('footnote.failed'),
-          icon: 'fa fa-circle'
-        }
-      ]
+  footnote: any[] = [
+    {
+      color: 'txSuccess',
+      text: this.$i18n.t('footnote.success'),
+      icon: 'fa fa-circle'
+    },
+    {
+      color: 'txFail',
+      text: this.$i18n.t('footnote.failed'),
+      icon: 'fa fa-circle'
     }
-  }
+  ]
 
+  // Computed
   get getStyle() {
     return this.showStyle
   }
+
   get getTitle() {
     return this.frameBlocks ? this.$i18n.t('title.blocks') : this.$i18n.t('title.uncles')
   }
+
   get getBlockType() {
-    return this.frameBlocks ? true : false
+    return this.frameBlocks
   }
 }
 </script>

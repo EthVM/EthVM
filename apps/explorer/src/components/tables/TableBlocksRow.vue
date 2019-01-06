@@ -57,13 +57,13 @@
 </template>
 
 <script lang="ts">
-import stringConcat from '@app/components/mixins/mixin-number-string-concat'
+import { StringConcatMixin } from '@app/components/mixins'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
-import { Block } from '@app/models/Block'
+import { Block } from '@app/models'
 
 @Component
-export default class TableBlocks extends Mixins(stringConcat) {
-  @Prop(Block) block
+export default class TableBlocks extends Mixins(StringConcatMixin) {
+  @Prop(Object) block!: Block
 
   hasUncles(block) {
     if (block.getType() == 'block') {

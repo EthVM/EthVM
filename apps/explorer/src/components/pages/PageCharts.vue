@@ -10,13 +10,13 @@
       </div>
       <div id="exTab1">
         <ul class="nav-p">
-          <li v-on:click="nav1on" v-bind:class="{ active: nav1 }">General</li>
-          <li v-on:click="nav2on" v-bind:class="{ active: nav2 }">Transaction History</li>
-          <li v-on:click="nav3on" v-bind:class="{ active: nav3 }">Network History</li>
-          <li v-on:click="nav4on" v-bind:class="{ active: nav4 }">Mining History</li>
+          <li @click="nav1on" :class="{ active: nav1 }">General</li>
+          <li @click="nav2on" :class="{ active: nav2 }">Transaction History</li>
+          <li @click="nav3on" :class="{ active: nav3 }">Network History</li>
+          <li @click="nav4on" :class="{ active: nav4 }">Mining History</li>
         </ul>
         <div class="tab-content">
-          <div v-if="nav1 === true" class="">
+          <div v-if="nav1 === true" class>
             <div class="row">
               <div class="col-md-12"><top-miners-chart></top-miners-chart></div>
             </div>
@@ -49,7 +49,7 @@
               </div>
             </div>
           </div>
-          <div v-if="nav2 === true" class="">
+          <div v-if="nav2 === true" class>
             <div class="row">
               <div class="col-md-6">
                 <div class="block-title-container-desc"><h4>Sucessfull Tx History</h4></div>
@@ -81,7 +81,7 @@
               </div>
             </div>
           </div>
-          <div v-if="nav3 === true" class="">
+          <div v-if="nav3 === true" class>
             <div class="row">
               <div class="col-md-6">
                 <div class="block-title-container-desc"><h4>Hash Rate</h4></div>
@@ -112,7 +112,7 @@
               </div>
             </div>
           </div>
-          <div v-if="nav4 === true" class=""></div>
+          <div v-if="nav4 === true" class></div>
         </div>
       </div>
     </div>
@@ -125,15 +125,13 @@ import { Vue, Component } from 'vue-property-decorator'
 const MAX_ITEMS = 20
 
 @Component
-export default class FramesCharts extends Vue {
-  data() {
-    return {
-      nav1: true,
-      nav2: false,
-      nav3: false,
-      nav4: false
-    }
-  }
+export default class PageCharts extends Vue {
+  nav1: boolean = true
+  nav2: boolean = false
+  nav3: boolean = false
+  nav4: boolean = false
+
+  // Computed
   get txs() {
     if (this.$store.getters.getTxs.length) {
       return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
@@ -141,6 +139,7 @@ export default class FramesCharts extends Vue {
     return []
   }
 
+  // Methods
   alloff() {
     this.nav1 = false
     this.nav2 = false

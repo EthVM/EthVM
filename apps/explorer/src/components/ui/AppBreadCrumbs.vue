@@ -15,11 +15,11 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { Breadcumb } from '@app/props'
+import { Breadcumb } from '@app/components/props'
 
 @Component
 export default class AppBreadCrumbs extends Vue {
-  @Prop(Breadcumb) newItems
+  @Prop(Array) newItems!: Breadcumb[]
 
   crumbs: Breadcumb[] = [
     {

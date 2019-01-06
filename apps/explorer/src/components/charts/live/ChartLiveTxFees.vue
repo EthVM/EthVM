@@ -5,10 +5,10 @@
       :data="chartData"
       :options="chartOptions"
       :redraw="redraw"
-      :chartTitle="newTitle"
-      :chartDescription="newDescription"
+      :chart-title="newTitle"
+      :chart-description="newDescription"
       unfilled="true"
-      :footnoteArr="footnote"
+      :footnote-arr="footnote"
     ></app-chart>
   </v-layout>
 </template>
@@ -78,27 +78,24 @@ import { common } from '@app/helpers'
   }
 })
 export default class ChartLiveTxFees extends Vue {
-  data() {
-    return {
-      chartData: {},
-      chartOptions: lineOptions,
-      redraw: false,
-      newTitle: title,
-      newDescription: description,
-      footnote: [
-        {
-          color: 'txFail',
-          text: this.$i18n.t('footnote.aveTxFees'),
-          icon: 'fa fa-circle'
-        },
-        {
-          color: 'txPen',
-          text: this.$i18n.t('footnote.aveGasPrice'),
-          icon: 'fa fa-circle'
-        }
-      ]
+  chartData: any = {}
+  chartOptions = lineOptions
+  redraw: boolean = false
+  newTitle = title
+  newDescription = description
+  footnote: any[] = [
+    {
+      color: 'txFail',
+      text: this.$i18n.t('footnote.aveTxFees'),
+      icon: 'fa fa-circle'
+    },
+    {
+      color: 'txPen',
+      text: this.$i18n.t('footnote.aveGasPrice'),
+      icon: 'fa fa-circle'
     }
-  }
+  ]
+
   created() {
     this.chartData = this.initData
     this.$eventHub.$on(sEvents.pastBlocksR, () => {
@@ -120,10 +117,12 @@ export default class ChartLiveTxFees extends Vue {
       }
     })
   }
+
   beforeDestroy() {
     this.$eventHub.$off(sEvents.pastBlocksR)
     this.$eventHub.$off(sEvents.newBlock)
   }
+
   get initData() {
     const data = {
       labels: [],
@@ -141,7 +140,7 @@ export default class ChartLiveTxFees extends Vue {
       labels: data.labels,
       datasets: [
         {
-          label: 'avg Tx Fees (ETH)',
+          label: 'Avg Tx Fees (ETH)',
           borderColor: '#40ce9c',
           backgroundColor: '#40ce9c',
           data: data.avgFees,
@@ -149,7 +148,7 @@ export default class ChartLiveTxFees extends Vue {
           fill: false
         },
         {
-          label: 'avg Gas Price (GWEI)',
+          label: 'Avg Gas Price (GWEI)',
           borderColor: '#eea66b',
           backgroundColor: '#eea56b',
           data: data.avgPrice,

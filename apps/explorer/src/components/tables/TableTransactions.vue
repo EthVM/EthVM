@@ -35,8 +35,8 @@
     <v-card v-if="transactions.length > 0" flat id="scroll-target" :style="getStyle" class="scroll-y pt-0 pb-0">
       <v-layout column fill-height v-scroll:#scroll-target style="margin-right: 1px" class="mb-1">
         <v-flex xs12>
-          <v-card v-for="tx in transactions" class="transparent" flat v-bind:key="tx.getHash()">
-            <table-transactions-row :tx="tx" :isPending="pending" />
+          <v-card v-for="tx in transactions" class="transparent" flat :key="tx.getHash()">
+            <table-transactions-row :tx="tx" :is-pending="pending" />
             <v-divider class="mb-2 mt-2"></v-divider>
           </v-card>
         </v-flex>
@@ -54,6 +54,7 @@
 <script lang="ts">
 import AppFootnotes from '@app/components/ui/AppFootnotes.vue'
 import TableTransactionsRow from '@app/components/tables/TableTransactionsRow.vue'
+import { Tx } from '@app/models'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({
@@ -62,29 +63,26 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
   }
 })
 export default class TableTransactions extends Vue {
-  @Prop(Boolean) pending: boolean
-  @Prop(Boolean) frameTxs: boolean
-  @Prop(String) showStyle: string
-  @Prop(Array) transactions: any
+  @Prop(Boolean) pending!: boolean
+  @Prop(Boolean) frameTxs!: boolean
+  @Prop(String) showStyle!: string
+  @Prop(Array) transactions!: Tx[]
 
-  data() {
-    return {
-      footnote: [
-        {
-          color: 'success',
-          text: this.$i18n.t('footnote.success'),
-          icon: 'fa-check-circle'
-        },
-        {
-          color: 'warning',
-          text: this.$i18n.t('footnote.failed'),
-          icon: 'fa fa-times-circle'
-        }
-      ],
-      color: 'grey',
-      defaultTitle: this.$i18n.t('title.lastTxs')
+  footnote: any[] = [
+    {
+      color: 'success',
+      text: this.$i18n.t('footnote.success'),
+      icon: 'fa-check-circle'
+    },
+    {
+      color: 'warning',
+      text: this.$i18n.t('footnote.failed'),
+      icon: 'fa fa-times-circle'
     }
-  }
+  ]
+  color: string = 'grey'
+  defaultTitle = this.$i18n.t('title.lastTxs')
+
   get getStyle() {
     return this.showStyle
   }

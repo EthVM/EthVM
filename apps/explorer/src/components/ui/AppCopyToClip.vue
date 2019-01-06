@@ -1,5 +1,5 @@
 <template>
-  <v-btn icon> <v-icon class="fa fa-copy secondary--text" v-on:click="copyToClip(valueToCopy)"></v-icon> </v-btn>
+  <v-btn icon> <v-icon class="fa fa-copy secondary--text" @click="copyToClip(valueToCopy)"></v-icon> </v-btn>
 </template>
 
 <script lang="ts">
@@ -8,7 +8,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component
 export default class AppCopyToClip extends Vue {
-  @Prop(String) valueToCopy: string
+  @Prop(String) valueToCopy!: string
 
   copyToClip(newVar) {
     const status = copyClip(newVar)

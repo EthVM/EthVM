@@ -1,7 +1,7 @@
 <template>
   <v-card color="white" flat class="pt-3 pr-3 pl-3">
     <v-layout row grid-list-lg align-center pb-1>
-      <blockies :address="account.address"></blockies>
+      <app-blockies :address="account.address"></app-blockies>
       <v-layout wrap column fill-height pl-2>
         <v-flex xs12 pb-0>
           <v-layout row align-center justify-start>
@@ -13,19 +13,17 @@
         <v-flex xs12 pt-0>
           <v-layout row wrap align-center justify-start>
             <v-card-title class="text-truncate">{{ account.address }}</v-card-title>
-            <v-flex hidden-xs-only pl-0>
-              <copy-to-clip-component v-if="$vuetify.breakpoint.smAndUp" :valueToCopy="account.address"></copy-to-clip-component>
-            </v-flex>
+            <v-flex hidden-xs-only pl-0> <app-copy-to-clip v-if="$vuetify.breakpoint.smAndUp" :value-to-copy="account.address"></app-copy-to-clip> </v-flex>
           </v-layout>
         </v-flex>
       </v-layout>
       <v-flex hidden-xs-only fill-height mr-3>
-        <v-layout justify-end> <address-qr :addressQR="account.address" :large="true"></address-qr> </v-layout>
+        <v-layout justify-end> <app-address-qr :address-qr="account.address" :large="true"></app-address-qr> </v-layout>
       </v-flex>
     </v-layout>
     <v-layout hidden-sm-and-up align-center justify-space-around row fill-height pa-2>
-      <copy-to-clip-component :valueToCopy="account.address"></copy-to-clip-component>
-      <address-qr :addressQR="account.address"></address-qr>
+      <app-copy-to-clip :value-to-copy="account.address"></app-copy-to-clip>
+      <app-address-qr :address-qr="account.address"></app-address-qr>
     </v-layout>
     <v-layout row wrap justify-space-between mb-4>
       <v-flex xs12 md4>
@@ -36,7 +34,7 @@
       </v-flex>
       <v-flex xs12 md4>
         <v-card class="error white--text pl-2" flat>
-          <v-card-text class="pb-0"> {{ $t('addrOverview.usd') }} (1{{ $t('common.eth') }} = ${{ formatEthUSD }})</v-card-text>
+          <v-card-text class="pb-0">{{ $t('addrOverview.usd') }} (1{{ $t('common.eth') }} = ${{ formatEthUSD }})</v-card-text>
           <v-card-title class="headline text-truncate">${{ formatUSDBalance }}</v-card-title>
         </v-card>
       </v-flex>
@@ -53,27 +51,35 @@
 <script lang="ts">
 import { common } from '@app/helpers'
 import NumberFormatter from 'number-formatter'
-import Vue from 'vue'
+import AppAddressQr from '@app/components/ui/AppAddressQr.vue'
+import AppBlockies from '@app/components/ui/AppBlockies.vue'
+import AppCopyToClip from '@app/components/ui/AppCopyToClip.vue'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
-export default Vue.extend({
-  name: 'Address',
-  props: ['account'],
-  data() {
-    return {
-      showMore: false,
-      domainName: ''
-    }
-  },
-  computed: {
-    formatEthBalance() {
-      return NumberFormatter('#,##0.##', this.account.balance)
-    },
-    formatUSDBalance() {
-      return NumberFormatter('#,##0.##', this.account.balance * this.account.ethusd)
-    },
-    formatEthUSD() {
-      return NumberFormatter('#,##0.##', this.account.ethusd)
-    }
+@Component({
+  components: {
+    AppAddressQr,
+    AppBlockies,
+    AppCopyToClip
   }
 })
+export default class AppAddressDetail extends Vue {
+  @Prop(Object) account: any
+
+  showMore: boolean = false
+  domainName: string = ''
+
+  // Computed
+  get formatEthBalance() {
+    return NumberFormatter('#,##0.##', this.account.balance)
+  }
+
+  get formatUSDBalance() {
+    return NumberFormatter('#,##0.##', this.account.balance * this.account.ethusd)
+  }
+
+  get formatEthUSD() {
+    return NumberFormatter('#,##0.##', this.account.ethusd)
+  }
+}
 </script>

@@ -63,13 +63,13 @@
 </template>
 
 <script lang="ts">
-import stringConcat from '@app/components/mixins/mixin-number-string-concat'
+import { StringConcatMixin } from '@app/components/mixins'
 import { Tx } from '@app/models/Tx'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 
 @Component
-export default class TableBlocks extends Mixins(stringConcat) {
-  @Prop(Tx) tx
-  @Prop(Boolean) isPending = false
+export default class TableBlocks extends Mixins(StringConcatMixin) {
+  @Prop(Tx) tx!: Tx
+  @Prop({ type: Boolean, default: false }) isPending
 }
 </script>

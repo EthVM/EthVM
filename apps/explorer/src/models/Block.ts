@@ -1,5 +1,5 @@
 import { common } from '@app/helpers'
-import { Address, EthValue, Hash, Hex, HexNumber, HexTime, Tx } from '@app/models'
+import { EthValue, Hash, Hex, Tx } from '@app/models'
 import { Block as BlockLayout, BlockStats } from 'ethvm-common'
 
 export class Block {
