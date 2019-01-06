@@ -114,48 +114,52 @@ export default class PageAddress extends Vue {
   @Prop({ type: Array, default: () => [] }) txs!: Tx[]
   @Prop({ type: Array, default: () => [] }) pendingTxs!: PendingTx[]
 
-  account: any = {
-    address: this.address,
-    balance: 0,
-    balanceUSD: 0,
-    ethusd: 0,
-    totalTxs: 0,
-    tokens: this.tokens,
-    txs: this.txs,
-    pendingTxs: this.pendingTxs,
-    isMiner: true,
-    conCreator: false
-  }
-  items: any[] = [
-    {
-      text: this.$i18n.t('title.address'),
-      disabled: true
-    }
-  ]
-  tabs: any[] = [
-    {
-      id: '0',
-      title: this.$i18n.t('tabs.txH'),
-      isActive: true
-    },
-    {
-      id: '1',
-      title: this.$i18n.t('tabs.tokens'),
-      isActive: false
-    },
-    {
-      id: '2',
-      title: this.$i18n.t('tabs.pending'),
-      isActive: false
-    }
-  ]
-  activeTab: string = 'tab-0'
-  addressTabs: any[] = []
-  tokensLoaded: boolean = false
-  tokenError: boolean = false
-  usdValue: any = {
-    ETH: {
-      value: 0
+  data() {
+    return {
+      account: {
+        address: this.address,
+        balance: 0,
+        balanceUSD: 0,
+        ethusd: 0,
+        totalTxs: 0,
+        tokens: this.tokens,
+        txs: this.txs,
+        pendingTxs: this.pendingTxs,
+        isMiner: true,
+        conCreator: false
+      },
+      items: [
+        {
+          text: this.$i18n.t('title.address'),
+          disabled: true
+        }
+      ],
+      tabs: [
+        {
+          id: '0',
+          title: this.$i18n.t('tabs.txH'),
+          isActive: true
+        },
+        {
+          id: '1',
+          title: this.$i18n.t('tabs.tokens'),
+          isActive: false
+        },
+        {
+          id: '2',
+          title: this.$i18n.t('tabs.pending'),
+          isActive: false
+        }
+      ],
+      activeTab: 'tab-0',
+      addressTabs: [],
+      tokensLoaded: false,
+      tokenError: false,
+      usdValue: {
+        ETH: {
+          value: 0
+        }
+      }
     }
   }
 

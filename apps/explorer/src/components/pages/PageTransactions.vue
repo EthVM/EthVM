@@ -35,17 +35,21 @@ const MAX_ITEMS = 20
   }
 })
 export default class PageTransactions extends Mixins(LastBlockInfoMixin) {
-  items: any[] = [
-    {
-      text: this.$i18n.t('title.mined'),
-      disabled: true
+  data() {
+    return {
+      items: [
+        {
+          text: this.$i18n.t('title.mined'),
+          disabled: true
+        }
+      ]
     }
-  ]
+  }
 
   get txs() {
     let tx = this.$store.getters.getTxs
     this.$eventHub.$on(sEvents.newTx, _transactions => {
-      tx = this.$store.getters.getTxs
+      tx = this.getTxs
       return tx.slice(0, MAX_ITEMS)
     })
     return tx.slice(0, MAX_ITEMS)

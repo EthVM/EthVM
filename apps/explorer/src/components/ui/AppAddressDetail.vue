@@ -66,8 +66,12 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 export default class AppAddressDetail extends Vue {
   @Prop(Object) account: any
 
-  showMore: boolean = false
-  domainName: string = ''
+  data() {
+    return {
+      showMore: false,
+      domainName: ''
+    }
+  }
 
   // Computed
   get formatEthBalance() {

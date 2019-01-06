@@ -114,10 +114,14 @@ export default class AppBlockDetail extends Vue {
   @Prop({ type: Array, default: () => [] }) uncles!: Uncle[]
   @Prop({ type: Boolean, default: false }) isNotMinedBlock!: boolean
 
-  showMore: boolean = false
-  items: any[] = []
-  moreItems: any[] = []
-  dialog: boolean = false
+  data() {
+    return {
+      showMore: false,
+      items: [],
+      moreItems: [],
+      dialog: false
+    }
+  }
 
   // Methods
   setView() {

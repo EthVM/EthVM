@@ -77,18 +77,22 @@ export default class TableBlocks extends Vue {
   @Prop({ type: String, default: 'true' }) showStyle!: string
   @Prop({ type: Array, default: [] }) blocks!: Block[]
 
-  footnote: any[] = [
-    {
-      color: 'txSuccess',
-      text: this.$i18n.t('footnote.success'),
-      icon: 'fa fa-circle'
-    },
-    {
-      color: 'txFail',
-      text: this.$i18n.t('footnote.failed'),
-      icon: 'fa fa-circle'
+  data() {
+    return {
+      footnote: [
+        {
+          color: 'txSuccess',
+          text: this.$i18n.t('footnote.success'),
+          icon: 'fa fa-circle'
+        },
+        {
+          color: 'txFail',
+          text: this.$i18n.t('footnote.failed'),
+          icon: 'fa fa-circle'
+        }
+      ]
     }
-  ]
+  }
 
   // Computed
   get getStyle() {

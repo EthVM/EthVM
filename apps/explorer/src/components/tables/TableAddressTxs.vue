@@ -65,29 +65,33 @@ export default class TableAddressTxs extends Vue {
   @Prop(Array) transactions!: Tx[]
   @Prop(Boolean) isPending!: boolean
 
-  searchInput: string = ''
-  selected: any = {
-    text: this.$i18n.t('filter.all'),
-    value: 0
-  }
-  options: any[] = [
-    {
-      text: this.$i18n.t('filter.all'),
-      value: 0
-    },
-    {
-      text: this.$i18n.t('filter.in'),
-      value: 1
-    },
-    {
-      text: this.$i18n.t('filter.out'),
-      value: 2
+  data() {
+    return {
+      searchInput: '',
+      selected: {
+        text: this.$i18n.t('filter.all'),
+        value: 0
+      },
+      options: [
+        {
+          text: this.$i18n.t('filter.all'),
+          value: 0
+        },
+        {
+          text: this.$i18n.t('filter.in'),
+          value: 1
+        },
+        {
+          text: this.$i18n.t('filter.out'),
+          value: 2
+        }
+      ],
+      inTx: [],
+      outTx: [],
+      recievedTx: false,
+      filtered: this.transactions
     }
-  ]
-  inTx: any[] = []
-  outTx: any[] = []
-  recievedTx: boolean = false
-  filtered: Tx[] = this.transactions
+  }
 
   mounted() {
     this.getTxsType()

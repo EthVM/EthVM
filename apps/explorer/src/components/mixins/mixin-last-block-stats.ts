@@ -4,11 +4,15 @@ import bn from 'bignumber.js'
 import Vue from 'vue'
 
 export class LastBlockInfoMixin extends Vue {
-  block: any = null
-  seconds: number = 0
-  secondsInterval: any = null
-  dataRecieved: boolean = false
-  loading = this.$i18n.t('message.load')
+  data() {
+    return {
+      block: null,
+      seconds: 0,
+      secondsInterval: null,
+      dataRecieved: false,
+      loading: this.$i18n.t('message.load')
+    }
+  }
 
   created() {
     const lastBlock = this.$store.getters.getBlocks[0]

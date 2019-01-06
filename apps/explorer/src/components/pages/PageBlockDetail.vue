@@ -48,29 +48,33 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 export default class PageBlockDetail extends Vue {
   @Prop({ type: String }) blockRef!: string
 
-  common: any
-  store: any
-  block: any = null
-  bNum: any = null
-  uncles: any[] = []
-  unixtimestamp: any = null
-  timestamp: any = null
-  transactions: any[] = []
-  transactionLoading: boolean
-  isNotMinedBlock: boolean = false
-  items: any[] = [
-    {
-      text: this.$i18n.t('title.blocks'),
-      disabled: false,
-      link: '/blocks'
-    },
-    {
-      text: '',
-      disabled: true
+  data() {
+    return {
+      common,
+      store,
+      block: null,
+      bNum: null,
+      uncles: [],
+      unixtimestamp: null,
+      timestamp: null,
+      transactions: [],
+      transactionLoading: boolean,
+      isNotMinedBlock: false,
+      items: [
+        {
+          text: this.$i18n.t('title.blocks'),
+          disabled: false,
+          link: '/blocks'
+        },
+        {
+          text: '',
+          disabled: true
+        }
+      ],
+      details: [],
+      lastMinedBlock: null
     }
-  ]
-  details: any[] = []
-  lastMinedBlock: any = null
+  }
 
   mounted() {
     this.transactionLoading = true

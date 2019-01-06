@@ -76,28 +76,32 @@ const barOptions = {
   }
 })
 export default class ChartLiveTransactions extends Vue {
-  chartData: any = {}
-  chartOptions = barOptions
-  redraw: boolean = false
-  newTitle = title
-  newDescription = description
-  footnote: any[] = [
-    {
-      color: 'txSuccess',
-      text: this.$i18n.t('footnote.success'),
-      icon: 'fa fa-circle'
-    },
-    {
-      color: 'txFail',
-      text: this.$i18n.t('footnote.failed'),
-      icon: 'fa fa-circle'
-    },
-    {
-      color: 'txPen',
-      text: this.$i18n.t('footnote.pending'),
-      icon: 'fa fa-circle'
+  data() {
+    return {
+      chartData: {},
+      chartOptions: barOptions,
+      redraw: false,
+      newTitle: title,
+      newDescription: description,
+      footnote: [
+        {
+          color: 'txSuccess',
+          text: this.$i18n.t('footnote.success'),
+          icon: 'fa fa-circle'
+        },
+        {
+          color: 'txFail',
+          text: this.$i18n.t('footnote.failed'),
+          icon: 'fa fa-circle'
+        },
+        {
+          color: 'txPen',
+          text: this.$i18n.t('footnote.pending'),
+          icon: 'fa fa-circle'
+        }
+      ]
     }
-  ]
+  }
 
   created() {
     this.chartData = this.initData

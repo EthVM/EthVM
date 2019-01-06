@@ -24,10 +24,6 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
   }
 })
 export default class App extends Vue {
-  data() {
-    return {}
-  }
-
   created() {
     this.$options.sockets.connect = () => {
       if (!this.pageName || this.pageName === 'blocks' || this.pageName === 'transactions') {

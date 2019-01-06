@@ -62,9 +62,13 @@ export default class AppTokenTracker extends Vue {
   @Prop(Array) tokens!: Array<any>
   @Prop(String) holder!: string
 
-  totalTokens: number = 0
-  totalUSDValue: number = 0
-  placeholder: string = 'Search Tokens Symbol/Name'
+  data() {
+    return {
+      totalTokens: 0,
+      totalUSDValue: 0,
+      placeholder: 'Search Tokens Symbol/Name'
+    }
+  }
 
   // Computed
   /*Calculates total number of tokens: */

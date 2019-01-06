@@ -42,19 +42,23 @@ const MAX_ITEMS = 50
   }
 })
 export default class PageBlocks extends mixins(LastBlockInfoMixin) {
-  blocks: Block[]
-  items: any[] = [
-    {
-      text: this.$i18n.t('title.blocks'),
-      disabled: true
+  data() {
+    return {
+      blocks: [],
+      items: [
+        {
+          text: this.$i18n.t('title.blocks'),
+          disabled: true
+        }
+      ]
     }
-  ]
+  }
 
   created() {
     this.blocks = this.$store.getters.getBlocks
     this.$eventHub.$on(Events.newBlock, _block => {
       if (Visibility.state() === 'visible') {
-        this.blocks = this.$store.getters.getBlocks
+        this.blocks = this.getBlocks
       }
     })
   }

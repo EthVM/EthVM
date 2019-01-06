@@ -57,11 +57,15 @@ const MAX_ITEMS = 20
   }
 })
 export default class PageAbout extends Vue {
-  items: any[] = [
-    {
-      text: this.$i18n.t('title.about'),
-      disabled: true
+  data() {
+    return {
+      items: [
+        {
+          text: this.$i18n.t('title.about'),
+          disabled: true
+        }
+      ]
     }
-  ]
+  }
 }
 </script>

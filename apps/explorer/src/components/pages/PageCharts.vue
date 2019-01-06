@@ -126,10 +126,9 @@ const MAX_ITEMS = 20
 
 @Component
 export default class PageCharts extends Vue {
-  nav1: boolean = true
-  nav2: boolean = false
-  nav3: boolean = false
-  nav4: boolean = false
+  data() {
+    return { nav1: true, nav2: false, nav3: false, nav4: false }
+  }
 
   // Computed
   get txs() {

@@ -52,73 +52,77 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
   }
 })
 export default class TheNavigationDrawer extends Vue {
-  drawer: any = null
-  active: number = 0
-  sublink: any = null
-  items: any[] = [
-    {
-      header: {
-        icon: 'fa fa-home',
-        text: this.$i18n.t('title.home'),
-        routerLink: '/'
-      }
-    },
-    {
-      header: {
-        icon: 'fa fa-cubes',
-        text: this.$i18n.t('title.blocks')
-      },
-      links: [
+  data() {
+    return {
+      drawer: null,
+      active: 0,
+      sublink: null,
+      items: [
         {
-          text: this.$i18n.t('title.viewAll'),
-          routerLink: '/blocks'
+          header: {
+            icon: 'fa fa-home',
+            text: this.$i18n.t('title.home'),
+            routerLink: '/'
+          }
         },
         {
-          text: this.$i18n.t('title.uncles'),
-          routerLink: '/uncles'
-        }
-      ]
-    },
-    {
-      header: {
-        text: this.$i18n.t('title.tx'),
-        icon: 'fas fa-exchange-alt'
-      },
-      links: [
-        {
-          text: this.$i18n.t('title.mined'),
-          routerLink: '/transactions'
+          header: {
+            icon: 'fa fa-cubes',
+            text: this.$i18n.t('title.blocks')
+          },
+          links: [
+            {
+              text: this.$i18n.t('title.viewAll'),
+              routerLink: '/blocks'
+            },
+            {
+              text: this.$i18n.t('title.uncles'),
+              routerLink: '/uncles'
+            }
+          ]
         },
         {
-          text: this.$i18n.t('title.pending'),
-          routerLink: '/pending-transactions'
-        }
-      ]
-    },
-    {
-      header: {
-        text: this.$i18n.t('title.tokens'),
-        icon: 'fab fa-ethereum'
-      },
-      links: [
-        {
-          text: this.$i18n.t('title.tokenCntrc')
-          // routerLink: '/contracts',
+          header: {
+            text: this.$i18n.t('title.tx'),
+            icon: 'fas fa-exchange-alt'
+          },
+          links: [
+            {
+              text: this.$i18n.t('title.mined'),
+              routerLink: '/transactions'
+            },
+            {
+              text: this.$i18n.t('title.pending'),
+              routerLink: '/pending-transactions'
+            }
+          ]
         },
         {
-          text: this.$i18n.t('title.tokenPrice20')
-          // routerLink: '/prices',
+          header: {
+            text: this.$i18n.t('title.tokens'),
+            icon: 'fab fa-ethereum'
+          },
+          links: [
+            {
+              text: this.$i18n.t('title.tokenCntrc')
+              // routerLink: '/contracts',
+            },
+            {
+              text: this.$i18n.t('title.tokenPrice20')
+              // routerLink: '/prices',
+            }
+          ]
+        },
+        {
+          header: {
+            icon: 'fas fa-chart-pie',
+            text: this.$i18n.t('title.charts'),
+            routerLink: '/charts'
+          }
         }
       ]
-    },
-    {
-      header: {
-        icon: 'fas fa-chart-pie',
-        text: this.$i18n.t('title.charts'),
-        routerLink: '/charts'
-      }
     }
-  ]
+  }
 
   // Methods
   getCurrPath() {

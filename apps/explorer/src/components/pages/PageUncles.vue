@@ -24,14 +24,18 @@ const MAX_ITEMS = 50
   }
 })
 export default class PageUncles extends Vue {
-  uncles: any[] = []
-  items: any[] = [
-    {
-      text: this.$i18n.t('title.uncles'),
-      disabled: true
+  data() {
+    return {
+      uncles: [],
+      items: [
+        {
+          text: this.$i18n.t('title.uncles'),
+          disabled: true
+        }
+      ],
+      maxItems: MAX_ITEMS
     }
-  ]
-  maxItems: number = MAX_ITEMS
+  }
 
   created() {
     this.uncles = this.$store.getters.getUncles

@@ -68,20 +68,24 @@ export default class TableTransactions extends Vue {
   @Prop(String) showStyle!: string
   @Prop(Array) transactions!: Tx[]
 
-  footnote: any[] = [
-    {
-      color: 'success',
-      text: this.$i18n.t('footnote.success'),
-      icon: 'fa-check-circle'
-    },
-    {
-      color: 'warning',
-      text: this.$i18n.t('footnote.failed'),
-      icon: 'fa fa-times-circle'
+  data() {
+    return {
+      footnote: [
+        {
+          color: 'success',
+          text: this.$i18n.t('footnote.success'),
+          icon: 'fa-check-circle'
+        },
+        {
+          color: 'warning',
+          text: this.$i18n.t('footnote.failed'),
+          icon: 'fa fa-times-circle'
+        }
+      ],
+      color: 'grey',
+      defaultTitle: his.$i18n.t('title.lastTxs')
     }
-  ]
-  color: string = 'grey'
-  defaultTitle = this.$i18n.t('title.lastTxs')
+  }
 
   get getStyle() {
     return this.showStyle

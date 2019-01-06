@@ -22,18 +22,22 @@ const MAX_ITEMS = 20
   }
 })
 export default class PagePendingTransactions extends Vue {
-  items: any[] = [
-    {
-      text: this.$i18n.t('title.pending'),
-      disabled: true
+  data() {
+    return {
+      items: [
+        {
+          text: this.$i18n.t('title.pending'),
+          disabled: true
+        }
+      ]
     }
-  ]
+  }
 
   get txs() {
-    let tx = this.$store.getters.getPendingTxs
+    let tx = this.getPendingTxs
 
     this.$eventHub.$on(sEvents.newPendingTx, _transactions => {
-      tx = this.$store.getters.getPendingTxs
+      tx = this.getPendingTxs
       return tx.slice(0, MAX_ITEMS)
     })
 
