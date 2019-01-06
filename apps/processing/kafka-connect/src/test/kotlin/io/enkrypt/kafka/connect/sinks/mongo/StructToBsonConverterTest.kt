@@ -322,7 +322,6 @@ class StructToBsonConverterTest : BehaviorSpec() {
           bson.getDecimal128("bigIntegerValue").value shouldBe bigIntegerValue.toDecimal128()
         }
       }
-
     }
 
     given("a token balance record") {
@@ -379,7 +378,5 @@ class StructToBsonConverterTest : BehaviorSpec() {
         }
       }
     }
-
   }
-
 }

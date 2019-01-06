@@ -12,7 +12,13 @@ import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.WriteModel
 import io.enkrypt.common.extensions.hex
 import io.enkrypt.common.extensions.unsignedBigInteger
-import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.*
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Blocks
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Accounts
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Transactions
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Contracts
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Balances
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.PendingTransactions
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.BlockStatistics
 import io.enkrypt.kafka.connect.utils.Versions
 import mu.KotlinLogging
 import org.apache.kafka.clients.consumer.OffsetAndMetadata
@@ -138,7 +144,6 @@ enum class KafkaTopics(
       // delete transactions as-well
       val txsFilter = BsonDocument().apply { append("blockNumber", blockNumberBson) }
       txWrites += DeleteManyModel(txsFilter)
-
     } else {
 
       require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
@@ -148,7 +153,7 @@ enum class KafkaTopics(
       val txs = valueBson.getArray("transactions", BsonArray())
       val txReceipts = valueBson.getArray("transactionReceipts", BsonArray())
 
-      valueBson.remove("transactionReceipts")   // we are going to embed them inside their respective transactions
+      valueBson.remove("transactionReceipts") // we are going to embed them inside their respective transactions
 
       blockWrites += ReplaceOneModel(blockFilter, valueBson, MongoSinkTask.replaceOptions)
 

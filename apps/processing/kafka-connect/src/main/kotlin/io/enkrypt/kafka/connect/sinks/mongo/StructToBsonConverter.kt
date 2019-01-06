@@ -4,9 +4,22 @@ import arrow.core.Option
 import io.enkrypt.common.extensions.bigInteger
 import io.enkrypt.common.extensions.hex
 import io.enkrypt.common.extensions.unsignedBigInteger
-import io.enkrypt.kafka.connect.sinks.mongo.ConversionType.*
+import io.enkrypt.kafka.connect.sinks.mongo.ConversionType.BigInt
+import io.enkrypt.kafka.connect.sinks.mongo.ConversionType.Hex
+import io.enkrypt.kafka.connect.sinks.mongo.ConversionType.UBigInt
 import org.apache.kafka.connect.data.Schema
-import org.apache.kafka.connect.data.Schema.Type.*
+import org.apache.kafka.connect.data.Schema.Type.ARRAY
+import org.apache.kafka.connect.data.Schema.Type.BOOLEAN
+import org.apache.kafka.connect.data.Schema.Type.BYTES
+import org.apache.kafka.connect.data.Schema.Type.FLOAT32
+import org.apache.kafka.connect.data.Schema.Type.FLOAT64
+import org.apache.kafka.connect.data.Schema.Type.INT16
+import org.apache.kafka.connect.data.Schema.Type.INT32
+import org.apache.kafka.connect.data.Schema.Type.INT64
+import org.apache.kafka.connect.data.Schema.Type.INT8
+import org.apache.kafka.connect.data.Schema.Type.MAP
+import org.apache.kafka.connect.data.Schema.Type.STRING
+import org.apache.kafka.connect.data.Schema.Type.STRUCT
 import org.apache.kafka.connect.data.SchemaAndValue
 import org.apache.kafka.connect.data.Struct
 import org.bson.BsonArray
@@ -163,12 +176,11 @@ object TypeMappings {
   }
 
   fun buildFieldPath(vararg component: String?) = component.filterNotNull().joinToString(".")
-
 }
 
 object StructToBsonConverter {
 
-  val conversionMap = TypeMappings.conversionMap
+  private val conversionMap = TypeMappings.conversionMap
 
   private val BASIC_CONVERTERS = mapOf(
     BOOLEAN to { v: Any -> BsonBoolean(v as Boolean) },
@@ -218,7 +230,6 @@ object StructToBsonConverter {
                   UBigInt -> BsonDecimal128(Decimal128(bytes.unsignedBigInteger().toBigDecimal()))
                   BigInt -> BsonDecimal128(Decimal128(bytes.bigInteger()!!.toBigDecimal()))
                 }
-
               }
 
               doc.append(fieldName, bsonValue)
