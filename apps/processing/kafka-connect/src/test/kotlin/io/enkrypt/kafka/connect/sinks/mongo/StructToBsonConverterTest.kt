@@ -312,14 +312,14 @@ class StructToBsonConverterTest : BehaviorSpec() {
         val bson = StructToBsonConverter.convert(struct, "metric")
 
         then("all primitive values should be converted to their BSON counterparts") {
-          bson.getInt32("intValue").value shouldBe intValue
-          bson.getInt64("longValue").value shouldBe longValue
-          bson.getDouble("floatValue").value shouldBe floatValue
-          bson.getDouble("doubleValue").value shouldBe doubleValue
+          bson.getInt32("int").value shouldBe intValue
+          bson.getInt64("long").value shouldBe longValue
+          bson.getDouble("float").value shouldBe floatValue
+          bson.getDouble("double").value shouldBe doubleValue
         }
 
         then("then the bigInteger field should be converted to Decimal128") {
-          bson.getDecimal128("bigIntegerValue").value shouldBe bigIntegerValue.toDecimal128()
+          bson.getDecimal128("bigInteger").value shouldBe bigIntegerValue.toDecimal128()
         }
       }
     }
