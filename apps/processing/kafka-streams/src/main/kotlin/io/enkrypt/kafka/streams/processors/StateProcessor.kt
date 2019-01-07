@@ -86,23 +86,23 @@ class StateProcessor : AbstractKafkaProcessor() {
 
           val metricBuilder = MetricRecord.newBuilder(memo)
 
-          if (next.getIntValue() != null) {
-            metricBuilder.intValue = memo.getIntValue() + next.getIntValue()
+          if (next.`getInt$`() != null) {
+            metricBuilder.`int$` = memo.`getInt$`() + next.`getInt$`()
           }
-          if (next.getLongValue() != null) {
-            metricBuilder.longValue = memo.getLongValue() + next.getLongValue()
+          if (next.`getLong$`() != null) {
+            metricBuilder.`long$` = memo.`getLong$`() + next.`getLong$`()
           }
-          if (next.getFloatValue() != null) {
-            metricBuilder.floatValue = memo.getFloatValue() + next.getFloatValue()
+          if (next.`getFloat$`() != null) {
+            metricBuilder.`float$` = memo.`getFloat$`() + next.`getFloat$`()
           }
-          if (next.getDoubleValue() != null) {
-            metricBuilder.doubleValue = memo.getDoubleValue() + next.getDoubleValue()
+          if (next.`getDouble$`() != null) {
+            metricBuilder.`double$` = memo.`getDouble$`() + next.`getDouble$`()
           }
 
-          if (next.getBigIntegerValue() != null) {
-            val memoBigInt = memo.getBigIntegerValue().bigInteger()!!
-            val nextBigInt = next.getBigIntegerValue().bigInteger()
-            metricBuilder.bigIntegerValue = memoBigInt.add(nextBigInt).unsignedByteBuffer()
+          if (next.getBigInteger() != null) {
+            val memoBigInt = memo.getBigInteger().bigInteger()!!
+            val nextBigInt = next.getBigInteger().bigInteger()
+            metricBuilder.bigInteger = memoBigInt.add(nextBigInt).unsignedByteBuffer()
           }
 
           metricBuilder.build()
@@ -118,22 +118,22 @@ class StateProcessor : AbstractKafkaProcessor() {
 
             val metricBuilder = MetricRecord.newBuilder(aggMetric)
 
-            if (aggMetric.getIntValue() != null) {
-              metricBuilder.intValue = aggMetric.getIntValue() / metricsCount.toInt()
+            if (aggMetric.`getInt$`() != null) {
+              metricBuilder.`int$` = aggMetric.`getInt$`() / metricsCount.toInt()
             }
-            if (aggMetric.getLongValue() != null) {
-              metricBuilder.longValue = aggMetric.getLongValue() / metricsCount
+            if (aggMetric.`getLong$`() != null) {
+              metricBuilder.`long$` = aggMetric.`getLong$`() / metricsCount
             }
-            if (aggMetric.getFloatValue() != null) {
-              metricBuilder.floatValue = aggMetric.getFloatValue() / metricsCount
+            if (aggMetric.`getFloat$`() != null) {
+              metricBuilder.`float$` = aggMetric.`getFloat$`() / metricsCount
             }
-            if (aggMetric.getDoubleValue() != null) {
-              metricBuilder.doubleValue = aggMetric.getDoubleValue() / metricsCount
+            if (aggMetric.`getDouble$`() != null) {
+              metricBuilder.`double$` = aggMetric.`getDouble$`() / metricsCount
             }
 
-            if (aggMetric.getBigIntegerValue() != null) {
-              val aggBigInt = aggMetric.getBigIntegerValue().bigInteger()!!
-              metricBuilder.bigIntegerValue = aggBigInt.divide(BigInteger.valueOf(metricsCount)).unsignedByteBuffer()
+            if (aggMetric.getBigInteger() != null) {
+              val aggBigInt = aggMetric.getBigInteger().bigInteger()!!
+              metricBuilder.bigInteger = aggBigInt.divide(BigInteger.valueOf(metricsCount)).unsignedByteBuffer()
             }
 
             metricBuilder.build()

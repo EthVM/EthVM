@@ -1,7 +1,9 @@
 package io.enkrypt.kafka.streams.processors.block
 
 import io.enkrypt.avro.capture.BlockRecord
+import io.enkrypt.avro.processing.TokenTransferType
 import io.enkrypt.common.extensions.data20
+import io.enkrypt.common.extensions.data32
 import io.enkrypt.common.extensions.ether
 import io.enkrypt.common.extensions.gwei
 import io.enkrypt.common.extensions.txFees
@@ -38,11 +40,15 @@ class EtherTransferChainEventsTest : BehaviorSpec() {
 
     given("a block with a series of valid ether transfers") {
 
-      bc.sendEther(Bob, Alice, 50.gwei())
-      bc.sendEther(Alice, Terence, 25.gwei())
-      bc.sendEther(Terence, Bob, 125.gwei())
+      val txZero = bc.sendEther(Bob, Alice, 50.gwei())
+      val txOne = bc.sendEther(Alice, Terence, 25.gwei())
+      val txTwo = bc.sendEther(Terence, Bob, 125.gwei())
 
       val block = bc.createBlock()
+
+      val blockHeader = block.getHeader()
+      val timestamp = blockHeader.getTimestamp()
+      val blockHash = blockHeader.getHash()
 
       `when`("we convert the block") {
 
@@ -63,12 +69,22 @@ class EtherTransferChainEventsTest : BehaviorSpec() {
           chainEvents[1] shouldBe fungibleTransfer(
             Bob.address.data20()!!,
             Coinbase.address.data20()!!,
-            block.txFees()[0].unsignedByteBuffer()!!
+            block.txFees()[0].unsignedByteBuffer()!!,
+            timestamp = timestamp,
+            blockHash = blockHash,
+            txHash = txZero.hash.data32(),
+            transferType = TokenTransferType.ETHER,
+            txIndex = 0
           ) // tx fee
           chainEvents[2] shouldBe fungibleTransfer(
             Bob.address.data20()!!,
             Alice.address.data20()!!,
-            50.gwei().unsignedByteBuffer()!!
+            50.gwei().unsignedByteBuffer()!!,
+            timestamp = timestamp,
+            blockHash = blockHash,
+            txHash = txZero.hash.data32(),
+            transferType = TokenTransferType.ETHER,
+            txIndex = 0
           )
         }
 
@@ -76,12 +92,22 @@ class EtherTransferChainEventsTest : BehaviorSpec() {
           chainEvents[3] shouldBe fungibleTransfer(
             Alice.address.data20()!!,
             Coinbase.address.data20()!!,
-            block.txFees()[1].unsignedByteBuffer()!!
+            block.txFees()[1].unsignedByteBuffer()!!,
+            timestamp = timestamp,
+            blockHash = blockHash,
+            txHash = txOne.hash.data32(),
+            transferType = TokenTransferType.ETHER,
+            txIndex = 1
           ) // tx fee
           chainEvents[4] shouldBe fungibleTransfer(
             Alice.address.data20()!!,
             Terence.address.data20()!!,
-            25.gwei().unsignedByteBuffer()!!
+            25.gwei().unsignedByteBuffer()!!,
+            timestamp = timestamp,
+            blockHash = blockHash,
+            txHash = txOne.hash.data32(),
+            transferType = TokenTransferType.ETHER,
+            txIndex = 1
           )
         }
 
@@ -89,12 +115,22 @@ class EtherTransferChainEventsTest : BehaviorSpec() {
           chainEvents[5] shouldBe fungibleTransfer(
             Terence.address.data20()!!,
             Coinbase.address.data20()!!,
-            block.txFees()[2].unsignedByteBuffer()!!
+            block.txFees()[2].unsignedByteBuffer()!!,
+            timestamp = timestamp,
+            blockHash = blockHash,
+            txHash = txTwo.hash.data32(),
+            transferType = TokenTransferType.ETHER,
+            txIndex = 2
           ) // tx fee
           chainEvents[6] shouldBe fungibleTransfer(
             Terence.address.data20()!!,
             Bob.address.data20()!!,
-            125.gwei().unsignedByteBuffer()!!
+            125.gwei().unsignedByteBuffer()!!,
+            timestamp = timestamp,
+            blockHash = blockHash,
+            txHash = txTwo.hash.data32(),
+            transferType = TokenTransferType.ETHER,
+            txIndex = 2
           )
         }
       }
@@ -115,12 +151,12 @@ class EtherTransferChainEventsTest : BehaviorSpec() {
 
           reversedChainEvents shouldContainExactly listOf(
             blockReward(Coinbase.address.data20()!!, 3.ether().unsignedByteBuffer()!!, true),
-            fungibleTransfer(Bob.address.data20()!!, Coinbase.address.data20()!!, 21000.gwei().unsignedByteBuffer()!!, true),
-            fungibleTransfer(Bob.address.data20()!!, Alice.address.data20()!!, 50.gwei().unsignedByteBuffer()!!, true),
-            fungibleTransfer(Alice.address.data20()!!, Coinbase.address.data20()!!, 21000.gwei().unsignedByteBuffer()!!, true),
-            fungibleTransfer(Alice.address.data20()!!, Terence.address.data20()!!, 25.gwei().unsignedByteBuffer()!!, true),
-            fungibleTransfer(Terence.address.data20()!!, Coinbase.address.data20()!!, 21000.gwei().unsignedByteBuffer()!!, true),
-            fungibleTransfer(Terence.address.data20()!!, Bob.address.data20()!!, 125.gwei().unsignedByteBuffer()!!, true)
+            fungibleTransfer(Bob.address.data20()!!, Coinbase.address.data20()!!, 21000.gwei().unsignedByteBuffer()!!, true, null, timestamp, blockHash, txZero.hash.data32(), 0, transferType = TokenTransferType.ETHER),
+            fungibleTransfer(Bob.address.data20()!!, Alice.address.data20()!!, 50.gwei().unsignedByteBuffer()!!, true, null, timestamp, blockHash, txZero.hash.data32(), 0, transferType = TokenTransferType.ETHER),
+            fungibleTransfer(Alice.address.data20()!!, Coinbase.address.data20()!!, 21000.gwei().unsignedByteBuffer()!!, true, null, timestamp, blockHash, txOne.hash.data32(), 1, transferType = TokenTransferType.ETHER),
+            fungibleTransfer(Alice.address.data20()!!, Terence.address.data20()!!, 25.gwei().unsignedByteBuffer()!!, true, null, timestamp, blockHash, txOne.hash.data32(), 1, transferType = TokenTransferType.ETHER),
+            fungibleTransfer(Terence.address.data20()!!, Coinbase.address.data20()!!, 21000.gwei().unsignedByteBuffer()!!, true, null, timestamp, blockHash, txTwo.hash.data32(), 2, transferType = TokenTransferType.ETHER),
+            fungibleTransfer(Terence.address.data20()!!, Bob.address.data20()!!, 125.gwei().unsignedByteBuffer()!!, true, null, timestamp, blockHash, txTwo.hash.data32(), 2, transferType = TokenTransferType.ETHER)
           ).asReversed()
         }
       }
@@ -128,11 +164,15 @@ class EtherTransferChainEventsTest : BehaviorSpec() {
 
     given("a block with some invalid ether transfers") {
 
-      bc.sendEther(Bob, Alice, 100.ether())
-      bc.sendEther(Alice, Terence, 56.gwei())
-      bc.sendEther(Terence, Bob, 200.ether())
+      val txZero = bc.sendEther(Bob, Alice, 100.ether())
+      val txOne = bc.sendEther(Alice, Terence, 56.gwei())
+      val txTwo = bc.sendEther(Terence, Bob, 200.ether())
 
       val block = bc.createBlock()
+
+      val blockHeader = block.getHeader()
+      val timestamp = blockHeader.getTimestamp()
+      val blockHash = blockHeader.getHash()
 
       `when`("we convert the block") {
 
@@ -153,7 +193,12 @@ class EtherTransferChainEventsTest : BehaviorSpec() {
           chainEvents[1] shouldBe fungibleTransfer(
             Bob.address.data20()!!,
             Coinbase.address.data20()!!,
-            block.txFees()[0].unsignedByteBuffer()!!
+            block.txFees()[0].unsignedByteBuffer()!!,
+            timestamp = timestamp,
+            blockHash = blockHash,
+            txHash = txZero.hash.data32(),
+            transferType = TokenTransferType.ETHER,
+            txIndex = 0
           ) // tx fee
         }
 
@@ -161,7 +206,12 @@ class EtherTransferChainEventsTest : BehaviorSpec() {
           chainEvents[2] shouldBe fungibleTransfer(
             Alice.address.data20()!!,
             Coinbase.address.data20()!!,
-            block.txFees()[1].unsignedByteBuffer()!!
+            block.txFees()[1].unsignedByteBuffer()!!,
+            timestamp = timestamp,
+            blockHash = blockHash,
+            txHash = txOne.hash.data32(),
+            transferType = TokenTransferType.ETHER,
+            txIndex = 1
           ) // tx fee
         }
 
@@ -169,7 +219,12 @@ class EtherTransferChainEventsTest : BehaviorSpec() {
           chainEvents[3] shouldBe fungibleTransfer(
             Alice.address.data20()!!,
             Terence.address.data20()!!,
-            56.gwei().unsignedByteBuffer()!!
+            56.gwei().unsignedByteBuffer()!!,
+            timestamp = timestamp,
+            blockHash = blockHash,
+            txHash = txOne.hash.data32(),
+            transferType = TokenTransferType.ETHER,
+            txIndex = 1
           )
         }
 
@@ -177,7 +232,12 @@ class EtherTransferChainEventsTest : BehaviorSpec() {
           chainEvents[4] shouldBe fungibleTransfer(
             Terence.address.data20()!!,
             Coinbase.address.data20()!!,
-            block.txFees()[2].unsignedByteBuffer()!!
+            block.txFees()[2].unsignedByteBuffer()!!,
+            timestamp = timestamp,
+            blockHash = blockHash,
+            txHash = txTwo.hash.data32(),
+            transferType = TokenTransferType.ETHER,
+            txIndex = 2
           ) // tx fee
         }
       }

@@ -155,11 +155,11 @@ protocol Processing {
 
   record MetricRecord {
 
-    union { null, int } intValue = null;
-    union { null, long } longValue = null;
-    union { null, float } floatValue = null;
-    union { null, double } doubleValue = null;
-    union { null, bytes } bigIntegerValue = null;
+    union { null, int } `int` = null;
+    union { null, long } `long` = null;
+    union { null, float } `float` = null;
+    union { null, double } `double` = null;
+    union { null, bytes } `bigInteger` = null;
 
   }
 

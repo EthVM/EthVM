@@ -52,39 +52,39 @@ object BlockStatistics {
     return listOf(
       KeyValue(
         keyBuilder.setName(BlockStatistic.TotalTxs.name).build(),
-        MetricRecord.newBuilder().setIntValue(totalTxs * intMultiplier).build()
+        MetricRecord.newBuilder().`setInt$`(totalTxs * intMultiplier).build()
       ),
       KeyValue(
         keyBuilder.setName(BlockStatistic.NumSuccessfulTxs.name).build(),
-        MetricRecord.newBuilder().setIntValue(numSuccessfulTxs * intMultiplier).build()
+        MetricRecord.newBuilder().`setInt$`(numSuccessfulTxs * intMultiplier).build()
       ),
       KeyValue(
         keyBuilder.setName(BlockStatistic.NumFailedTxs.name).build(),
-        MetricRecord.newBuilder().setIntValue(numFailedTxs * intMultiplier).build()
+        MetricRecord.newBuilder().`setInt$`(numFailedTxs * intMultiplier).build()
       ),
       KeyValue(
         keyBuilder.setName(BlockStatistic.NumPendingTxs.name).build(),
-        MetricRecord.newBuilder().setIntValue(numPendingTxs * intMultiplier).build()
+        MetricRecord.newBuilder().`setInt$`(numPendingTxs * intMultiplier).build()
       ),
       KeyValue(
         keyBuilder.setName(BlockStatistic.TotalDifficulty.name).build(),
-        MetricRecord.newBuilder().setBigIntegerValue(totalDifficulty.times(bigIntMultiplier).unsignedByteBuffer()).build()
+        MetricRecord.newBuilder().setBigInteger(totalDifficulty.times(bigIntMultiplier).unsignedByteBuffer()).build()
       ),
       KeyValue(
         keyBuilder.setName(BlockStatistic.TotalGasPrice.name).build(),
-        MetricRecord.newBuilder().setBigIntegerValue(totalGasPrice.times(bigIntMultiplier).unsignedByteBuffer()).build()
+        MetricRecord.newBuilder().setBigInteger(totalGasPrice.times(bigIntMultiplier).unsignedByteBuffer()).build()
       ),
       KeyValue(
         keyBuilder.setName(BlockStatistic.AvgGasPrice.name).build(),
-        MetricRecord.newBuilder().setBigIntegerValue(avgGasPrice.times(bigIntMultiplier).unsignedByteBuffer()).build()
+        MetricRecord.newBuilder().setBigInteger(avgGasPrice.times(bigIntMultiplier).unsignedByteBuffer()).build()
       ),
       KeyValue(
         keyBuilder.setName(BlockStatistic.TotalTxsFees.name).build(),
-        MetricRecord.newBuilder().setBigIntegerValue(totalTxsFees.times(bigIntMultiplier).unsignedByteBuffer()).build()
+        MetricRecord.newBuilder().setBigInteger(totalTxsFees.times(bigIntMultiplier).unsignedByteBuffer()).build()
       ),
       KeyValue(
         keyBuilder.setName(BlockStatistic.AvgTxsFees.name).build(),
-        MetricRecord.newBuilder().setBigIntegerValue(avgTxsFees.times(bigIntMultiplier).unsignedByteBuffer()).build()
+        MetricRecord.newBuilder().setBigInteger(avgTxsFees.times(bigIntMultiplier).unsignedByteBuffer()).build()
       )
     )
   }

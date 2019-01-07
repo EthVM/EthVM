@@ -2,6 +2,7 @@ package io.enkrypt.kafka.streams.processors.block
 
 import io.enkrypt.avro.common.ContractType
 import io.enkrypt.common.extensions.data20
+import io.enkrypt.common.extensions.data32
 import io.enkrypt.common.extensions.ether
 import io.enkrypt.common.extensions.gwei
 import io.enkrypt.common.extensions.hexBuffer
@@ -68,6 +69,10 @@ class ContractChainEventsTest : BehaviorSpec() {
         val block = bc.createBlock()
         val chainEvents = ChainEvents.forBlock(block)
 
+        val blockHeader = block.getHeader()
+        val timestamp = blockHeader.getTimestamp()
+        val blockHash = blockHeader.getHash()
+
         then("there should be 3 chain events") {
           chainEvents.size shouldBe 3
         }
@@ -83,7 +88,10 @@ class ContractChainEventsTest : BehaviorSpec() {
           chainEvents[1] shouldBe fungibleTransfer(
             Bob.address.data20()!!,
             Coinbase.address.data20()!!,
-            block.txFees()[0].unsignedByteBuffer()!!
+            block.txFees()[0].unsignedByteBuffer()!!,
+            timestamp = timestamp,
+            blockHash = blockHash,
+            txHash = tx.hash.data32()
           )
         }
 
@@ -91,7 +99,7 @@ class ContractChainEventsTest : BehaviorSpec() {
           chainEvents[2] shouldBe contractCreate(
             ContractType.GENERIC,
             Bob.address.data20()!!,
-            block.getHeader().getHash(),
+            blockHeader.getHash(),
             block.getTransactions().first().getHash(),
             contractAddress!!,
             contract.bin.hexBuffer()!!
@@ -106,6 +114,10 @@ class ContractChainEventsTest : BehaviorSpec() {
 
         val block = bc.createBlock()
         val chainEvents = ChainEvents.forBlock(block)
+
+        val blockHeader = block.getHeader()
+        val timestamp = blockHeader.getTimestamp()
+        val blockHash = blockHeader.getHash()
 
         then("there should be 4 chain events") {
           chainEvents.size shouldBe 4
@@ -122,7 +134,10 @@ class ContractChainEventsTest : BehaviorSpec() {
           chainEvents[1] shouldBe fungibleTransfer(
             Bob.address.data20()!!,
             Coinbase.address.data20()!!,
-            block.txFees()[0].unsignedByteBuffer()!!
+            block.txFees()[0].unsignedByteBuffer()!!,
+            timestamp = timestamp,
+            blockHash = blockHash,
+            txHash = tx.hash.data32()
           )
         }
 
@@ -141,22 +156,29 @@ class ContractChainEventsTest : BehaviorSpec() {
           chainEvents[3] shouldBe fungibleTransfer(
             Bob.address.data20()!!,
             contractAddress!!,
-            10.gwei().unsignedByteBuffer()!!
+            10.gwei().unsignedByteBuffer()!!,
+            timestamp = timestamp,
+            blockHash = blockHash,
+            txHash = tx.hash.data32()
           )
         }
       }
 
       `when`("we ask it to self destruct") {
 
-        val tx = bc.submitContract(Bob, contract, value = 35.gwei())
-        val contractAddress = tx.contractAddress.data20()!!
+        val createTx = bc.submitContract(Bob, contract, value = 35.gwei())
+        val contractAddress = createTx.contractAddress.data20()!!
 
         bc.createBlock()
 
-        bc.callFunction(Bob, contractAddress, contract, "destroy")
+        val destroyTx = bc.callFunction(Bob, contractAddress, contract, "destroy")
 
         val block = bc.createBlock()
         val chainEvents = ChainEvents.forBlock(block)
+
+        val blockHeader = block.getHeader()
+        val timestamp = blockHeader.getTimestamp()
+        val blockHash = blockHeader.getHash()
 
         then("there should be 4 chain events") {
           chainEvents.size shouldBe 4
@@ -173,7 +195,10 @@ class ContractChainEventsTest : BehaviorSpec() {
           chainEvents[1] shouldBe fungibleTransfer(
             Bob.address.data20()!!,
             Coinbase.address.data20()!!,
-            block.txFees()[0].unsignedByteBuffer()!!
+            block.txFees()[0].unsignedByteBuffer()!!,
+            timestamp = timestamp,
+            blockHash = blockHash,
+            txHash = destroyTx.hash.data32()
           )
         }
 
@@ -189,7 +214,10 @@ class ContractChainEventsTest : BehaviorSpec() {
           chainEvents[3] shouldBe fungibleTransfer(
             contractAddress,
             Bob.address.data20()!!,
-            35.gwei().unsignedByteBuffer()!!
+            35.gwei().unsignedByteBuffer()!!,
+            timestamp = timestamp,
+            blockHash = blockHash,
+            txHash = destroyTx.hash.data32()
           )
         }
       }

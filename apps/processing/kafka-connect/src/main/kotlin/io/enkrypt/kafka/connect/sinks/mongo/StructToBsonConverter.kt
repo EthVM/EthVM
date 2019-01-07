@@ -142,7 +142,7 @@ object TypeMappings {
       "tokenId" to UBigInt
     ),
     "metric" to mapOf(
-      "bigIntegerValue" to UBigInt
+      "bigInteger" to UBigInt
     ),
     "contract" to mapOf(
       "address" to Hex,
