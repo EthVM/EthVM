@@ -15,6 +15,7 @@ import io.enkrypt.avro.processing.ChainEventType
 import io.enkrypt.avro.processing.ContractCreateRecord
 import io.enkrypt.avro.processing.ContractDestroyRecord
 import io.enkrypt.avro.processing.TokenTransferRecord
+import io.enkrypt.avro.processing.TokenTransferType
 import io.enkrypt.common.extensions.bigInteger
 import io.enkrypt.common.extensions.data20
 import io.enkrypt.common.extensions.isSuccess
@@ -67,7 +68,8 @@ object ChainEvents {
     blockHash: Data32? = null,
     txHash: Data32? = null,
     txIndex: Int? = 0,
-    internalTxIdx: Int? = null
+    internalTxIdx: Int? = null,
+    transferType: TokenTransferType = TokenTransferType.ETHER
   ) =
     ChainEventRecord.newBuilder()
       .setReverse(reverse)
@@ -79,6 +81,7 @@ object ChainEvents {
           .setTxHash(txHash)
           .setTxIndex(txIndex!!)
           .setInternalTxIdx(internalTxIdx)
+          .setTransferType(transferType)
           .setContract(contract)
           .setFrom(from)
           .setTo(to)
@@ -86,7 +89,20 @@ object ChainEvents {
           .build()
       ).build()
 
-  fun nonFungibleTransfer(
+  fun erc20Transfer(
+    from: Data20,
+    to: Data20,
+    amount: ByteBuffer,
+    reverse: Boolean = false,
+    contract: Data20? = null,
+    timestamp: Long? = null,
+    blockHash: Data32? = null,
+    txHash: Data32? = null,
+    txIndex: Int? = 0,
+    internalTxIdx: Int? = null
+  ) = fungibleTransfer(from, to, amount, reverse, contract, timestamp, blockHash, txHash, txIndex, internalTxIdx, TokenTransferType.ERC20)
+
+  fun erc721Transfer(
     contract: Data20,
     from: Data20,
     to: Data20,
@@ -108,6 +124,7 @@ object ChainEvents {
           .setTxHash(txHash)
           .setTxIndex(txIndex!!)
           .setInternalTxIdx(internalTxIdx)
+          .setTransferType(TokenTransferType.ERC721)
           .setContract(contract)
           .setFrom(from)
           .setTo(to)
@@ -284,14 +301,16 @@ object ChainEvents {
           erc20Transfer
             .filter { it.amount.bigInteger() != BigInteger.ZERO }
             .fold({ Unit }, {
-              events += fungibleTransfer(it.from, it.to, it.amount, reverse, to
-                ?: receipt.getContractAddress(), timestamp, blockHash, txHash, txIdx)
+              events +=
+                erc20Transfer(it.from, it.to, it.amount, reverse, to
+                  ?: receipt.getContractAddress(), timestamp, blockHash, txHash, txIdx)
             })
 
           erc721Transfer
             .fold({ Unit }, {
-              events += nonFungibleTransfer(to
-                ?: receipt.getContractAddress(), it.from, it.to, it.tokenId, reverse, timestamp, blockHash, txHash, txIdx)
+              events +=
+                erc721Transfer(to
+                  ?: receipt.getContractAddress(), it.from, it.to, it.tokenId, reverse, timestamp, blockHash, txHash, txIdx)
             })
         })
     }

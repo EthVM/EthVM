@@ -10,7 +10,7 @@ import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.blockReward
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.contractCreate
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.fungibleTransfer
-import io.enkrypt.kafka.streams.processors.block.ChainEvents.nonFungibleTransfer
+import io.enkrypt.kafka.streams.processors.block.ChainEvents.erc721Transfer
 import io.enkrypt.kafka.streams.util.StandaloneBlockchain
 import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Alice
 import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Bob
@@ -123,7 +123,7 @@ class ERC721ChainEventsTest : BehaviorSpec() {
         }
 
         then("there should a token transfer to token from Bob to Alice") {
-          chainEvents[2] shouldBe nonFungibleTransfer(
+          chainEvents[2] shouldBe erc721Transfer(
             contractAddress,
             Bob.address.data20()!!,
             Alice.address.data20()!!,
@@ -159,7 +159,7 @@ class ERC721ChainEventsTest : BehaviorSpec() {
         }
 
         then("there should a token transfer to token from Alice to Terence") {
-          chainEvents[2] shouldBe nonFungibleTransfer(
+          chainEvents[2] shouldBe erc721Transfer(
             contractAddress,
             Alice.address.data20()!!,
             Terence.address.data20()!!,
@@ -196,7 +196,7 @@ class ERC721ChainEventsTest : BehaviorSpec() {
         }
 
         then("there should a token transfer to token from Terence to Bob") {
-          chainEvents[2] shouldBe nonFungibleTransfer(
+          chainEvents[2] shouldBe erc721Transfer(
             contractAddress,
             Terence.address.data20()!!,
             Bob.address.data20()!!,

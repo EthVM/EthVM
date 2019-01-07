@@ -20,12 +20,18 @@ protocol Processing {
     bytes hash;
   }
 
+  enum TokenTransferType {
+    ETHER, ERC20, ERC721
+  }
+
   record TokenTransferRecord {
 
     io.enkrypt.avro.common.Data32 blockHash;
     io.enkrypt.avro.common.Data32 txHash;
     int txIndex;
     union { null, int } internalTxIdx;
+
+    TokenTransferType transferType = "ETHER";
 
     io.enkrypt.avro.common.Data20 from;
     io.enkrypt.avro.common.Data20 to;
