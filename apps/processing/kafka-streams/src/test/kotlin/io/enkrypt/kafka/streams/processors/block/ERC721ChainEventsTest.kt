@@ -1,7 +1,7 @@
 package io.enkrypt.kafka.streams.processors.block
 
 import io.enkrypt.avro.common.ContractType
-import io.enkrypt.avro.processing.TokenTransferType
+import io.enkrypt.avro.processing.BalanceType
 import io.enkrypt.common.extensions.data20
 import io.enkrypt.common.extensions.data32
 import io.enkrypt.common.extensions.ether
@@ -77,7 +77,7 @@ class ERC721ChainEventsTest : BehaviorSpec() {
             timestamp = timestamp,
             blockHash = blockHash,
             txHash = txHash,
-            transferType = TokenTransferType.ETHER
+            transferType = BalanceType.ETHER
           )
         }
 
@@ -138,7 +138,7 @@ class ERC721ChainEventsTest : BehaviorSpec() {
             timestamp = timestamp,
             blockHash = blockHash,
             txHash = txHash,
-            transferType = TokenTransferType.ETHER
+            transferType = BalanceType.ETHER
           )
         }
 
@@ -186,7 +186,7 @@ class ERC721ChainEventsTest : BehaviorSpec() {
             timestamp = timestamp,
             blockHash = blockHash,
             txHash = txHash,
-            transferType = TokenTransferType.ETHER
+            transferType = BalanceType.ETHER
           )
         }
 
@@ -235,7 +235,7 @@ class ERC721ChainEventsTest : BehaviorSpec() {
             timestamp = timestamp,
             blockHash = blockHash,
             txHash = txHash,
-            transferType = TokenTransferType.ETHER
+            transferType = BalanceType.ETHER
           )
         }
 

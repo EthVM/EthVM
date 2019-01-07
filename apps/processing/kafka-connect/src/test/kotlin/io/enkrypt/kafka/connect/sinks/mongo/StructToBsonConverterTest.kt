@@ -298,11 +298,11 @@ class StructToBsonConverterTest : BehaviorSpec() {
       val bigIntegerValue = 14239384537412981.toBigInteger()
 
       val record = MetricRecord.newBuilder()
-        .setIntValue(intValue)
-        .setLongValue(longValue)
-        .setFloatValue(floatValue)
-        .setDoubleValue(doubleValue)
-        .setBigIntegerValue(bigIntegerValue.unsignedByteBuffer())
+        .`setInt$`(intValue)
+        .`setLong$`(longValue)
+        .`setFloat$`(floatValue)
+        .`setDouble$`(doubleValue)
+        .setBigInteger(bigIntegerValue.unsignedByteBuffer())
         .build()
 
       `when`("we convert it to bson") {

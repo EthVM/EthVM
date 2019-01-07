@@ -20,7 +20,7 @@ protocol Processing {
     bytes hash;
   }
 
-  enum TokenTransferType {
+  enum BalanceType {
     ETHER, ERC20, ERC721
   }
 
@@ -31,7 +31,7 @@ protocol Processing {
     int txIndex;
     union { null, int } internalTxIdx;
 
-    TokenTransferType transferType = "ETHER";
+    BalanceType transferType = "ETHER";
 
     io.enkrypt.avro.common.Data20 from;
     io.enkrypt.avro.common.Data20 to;
@@ -45,6 +45,7 @@ protocol Processing {
 
   record TokenBalanceKeyRecord {
 
+    BalanceType balanceType = "ETHER";
     union { null, io.enkrypt.avro.common.Data20 } contract = null;
     union { null, io.enkrypt.avro.common.Data20 } address = null;
     union { null, bytes } tokenId = null;

@@ -10,6 +10,7 @@ import io.enkrypt.avro.capture.TransactionRecord
 import io.enkrypt.avro.common.ContractType
 import io.enkrypt.avro.common.Data20
 import io.enkrypt.avro.common.Data32
+import io.enkrypt.avro.processing.BalanceType
 import io.enkrypt.avro.processing.ChainEventRecord
 import io.enkrypt.avro.processing.ChainEventType
 import io.enkrypt.avro.processing.ContractCreateRecord
@@ -69,7 +70,7 @@ object ChainEvents {
     txHash: Data32? = null,
     txIndex: Int? = 0,
     internalTxIdx: Int? = null,
-    transferType: TokenTransferType = TokenTransferType.ETHER
+    transferType: BalanceType = BalanceType.ETHER
   ) =
     ChainEventRecord.newBuilder()
       .setReverse(reverse)
@@ -100,7 +101,7 @@ object ChainEvents {
     txHash: Data32? = null,
     txIndex: Int? = 0,
     internalTxIdx: Int? = null
-  ) = fungibleTransfer(from, to, amount, reverse, contract, timestamp, blockHash, txHash, txIndex, internalTxIdx, TokenTransferType.ERC20)
+  ) = fungibleTransfer(from, to, amount, reverse, contract, timestamp, blockHash, txHash, txIndex, internalTxIdx, BalanceType.ERC20)
 
   fun erc721Transfer(
     contract: Data20,
@@ -124,7 +125,7 @@ object ChainEvents {
           .setTxHash(txHash)
           .setTxIndex(txIndex!!)
           .setInternalTxIdx(internalTxIdx)
-          .setTransferType(TokenTransferType.ERC721)
+          .setTransferType(BalanceType.ERC721)
           .setContract(contract)
           .setFrom(from)
           .setTo(to)

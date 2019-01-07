@@ -181,6 +181,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
 
         val toBalance = KeyValue(
           TokenBalanceKeyRecord.newBuilder()
+            .setBalanceType(transfer.getTransferType())
             .setContract(contract)
             .setAddress(to)
             .build(),
@@ -211,6 +212,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
 
         KeyValue(
           TokenBalanceKeyRecord.newBuilder()
+            .setBalanceType(transfer.getTransferType())
             .setContract(contract)
             .setTokenId(tokenId)
             .build(),

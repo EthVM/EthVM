@@ -3,6 +3,7 @@ package io.enkrypt.kafka.streams.utils
 import arrow.core.Option
 import io.enkrypt.avro.common.Data20
 import io.enkrypt.avro.common.Data32
+import io.enkrypt.avro.processing.BalanceType
 import io.enkrypt.avro.processing.TokenTransferRecord
 import io.enkrypt.avro.processing.TokenTransferType
 import io.enkrypt.common.extensions.setTokenId
@@ -28,7 +29,7 @@ object ERC721Abi : AbstractAbi(Paths.get(ERC721Abi::class.java.getResource("/abi
         .map { it.decode(data, topics.map { it.bytes() }.toTypedArray()) }
         .map { values ->
           TokenTransferRecord.newBuilder()
-            .setTransferType(TokenTransferType.ERC721)
+            .setTransferType(BalanceType.ERC721)
             .setFrom(Data20(values[0] as ByteArray))
             .setTo(Data20(values[1] as ByteArray))
             .setTokenId(values[2] as BigInteger)
