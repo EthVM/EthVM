@@ -10,8 +10,8 @@ export class LastBlockInfoMixin extends Vue {
       block: null,
       seconds: 0,
       secondsInterval: null,
-      dataRecieved: false,
-      loading: this.$i18n.t('message.load')
+      isLoaded: false,
+      loadingMessage: this.$i18n.t('message.load')
     }
   }
 
@@ -19,15 +19,18 @@ export class LastBlockInfoMixin extends Vue {
   created() {
     const lastBlock = this.$store.getters.getBlocks[0]
     if (lastBlock) {
-      this.setBlock(this.$store.getters.getBlocks[0])
+      this.setBlock(lastBlock)
       this.startCount()
     }
   }
 
   mounted() {
     this.$eventHub.$on(Events.newBlock, _block => {
-      this.setBlock(this.$store.getters.getBlocks[0])
-      this.startCount()
+      const lastBlock = this.$store.getters.getBlocks[0]
+      if (lastBlock) {
+        this.setBlock(lastBlock)
+        this.startCount()
+      }
     })
   }
 
@@ -38,27 +41,32 @@ export class LastBlockInfoMixin extends Vue {
 
   // Computed
   get latestBlockNumber(): string {
-    return this.dataRecieved ? this.block.getNumber().toString() : this.loading
+    return this.isLoaded ? this.block.getNumber().toString() : this.loadingMessage
   }
 
   get latestHashRate(): string {
-    return this.dataRecieved ? this.getRoundNumber(this.getAvgHashRate(this.$store.getters.getBlocks).toString()).toString() : this.loading
+    return this.isLoaded ? this.getRoundNumber(this.getAvgHashRate(this.$store.getters.getBlocks).toString()).toString() : this.loadingMessage
   }
 
   get latestDifficulty(): string {
-    return this.dataRecieved ? this.getRoundNumber(this.getTHs(this.block.getDifficulty())).toString() : this.loading
+    if (this.isLoaded) {
+      const difficulty = this.block.getDifficulty()
+      const ths = this.getTHs(difficulty)
+      return this.getRoundNumber(ths).toString()
+    }
+    return this.loadingMessage
   }
 
   get latestBlockSuccessTxs(): string {
-    return this.dataRecieved ? this.block.getStats().successfulTxs.toString() : this.loading
+    return this.isLoaded ? this.block.getStats().successfulTxs.toString() : this.loadingMessage
   }
 
   get latestBlockFailedTxs(): string {
-    return this.dataRecieved ? this.block.getStats().failedTxs.toString() : this.loading
+    return this.isLoaded ? this.block.getStats().failedTxs.toString() : this.loadingMessage
   }
 
   get latestBlockPendingTxs(): string {
-    return this.dataRecieved ? this.block.getStats().pendingTxs.toString() : this.loading
+    return this.isLoaded ? this.block.getStats().pendingTxs.toString() : this.loadingMessage
   }
 
   get secSinceLastBlock(): string {
@@ -66,25 +74,28 @@ export class LastBlockInfoMixin extends Vue {
   }
 
   // Methods
-  setBlock(newBlock: Block) {
-    this.dataRecieved = true
-    this.block = newBlock
+  setBlock(block: Block) {
+    this.isLoaded = true
+    this.block = block
   }
 
-  getAvgHashRate(blocks: Block[]) {
+  getAvgHashRate(blocks: Block[] = []) {
     let avg = new BN(0)
     if (!blocks || blocks.length == 0) {
       return avg.toNumber()
     }
+
     blocks.forEach(block => {
       const stats = block.getStats()
       const blockTime = stats.processingTimeMs
       avg = avg.plus(new BN(blockTime))
     })
+
     avg = avg.dividedBy(blocks.length)
     if (avg.isZero) {
       return avg.toNumber()
     }
+
     const difficulty = blocks[0].getDifficulty()
     return new BN(difficulty)
       .dividedBy(avg)
@@ -92,8 +103,8 @@ export class LastBlockInfoMixin extends Vue {
       .toNumber()
   }
 
-  getTHs(_num: string) {
-    return new BN(_num).dividedBy('1e12').toNumber()
+  getTHs(num: string): number {
+    return new BN(num).dividedBy('1e12').toNumber()
   }
 
   startCount() {
@@ -102,23 +113,23 @@ export class LastBlockInfoMixin extends Vue {
     }, 1000)
   }
 
-  getRoundNumber(newNumber, round) {
+  getRoundNumber(number, round: number = 2) {
     if (!round) {
       round = 2
     }
-    const n = new BN(newNumber)
+    const n = new BN(number)
     return n.decimalPlaces(round).toString()
   }
 
-  getShortValue(newValue, isBool) {
-    const length = newValue.length
+  getShortValue(value: string = '', isBool: any) {
+    const length = value.length
     let isShort = false
     if (length > 8) {
-      newValue = newValue.slice(0, 8) + '...'
+      value = value.slice(0, 8) + '...'
       isShort = true
     }
     if (!isBool) {
-      return newValue
+      return value
     }
     return isShort
   }
