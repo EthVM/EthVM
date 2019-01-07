@@ -44,8 +44,7 @@ import ChartLiveTxFees from '@app/components/charts/live/ChartLiveTxFees.vue'
 import TableBlocks from '@app/components/tables/TableBlocks.vue'
 import TableTransactions from '@app/components/tables/TableTransactions.vue'
 import { LastBlockInfoMixin } from '@app/components/mixins'
-import { Block, Tx, PendingTx } from '@app/models'
-import { Getter } from 'vuex-class'
+import { Block } from '@app/models'
 
 const MAX_ITEMS = 20
 
@@ -63,10 +62,10 @@ export default class PageHome extends Mixins(LastBlockInfoMixin) {
   blocks: Block[]
 
   created() {
-    this.blocks = this.getBlocks
+    this.blocks = this.$store.getters.getBlocks
     this.$eventHub.$on(Events.newBlock, _block => {
       if (Visibility.state() === 'visible') {
-        this.blocks = this.getBlocks.slice(0, MAX_ITEMS)
+        this.blocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
       }
     })
   }
@@ -76,8 +75,8 @@ export default class PageHome extends Mixins(LastBlockInfoMixin) {
   }
 
   get txs() {
-    if (this.getTxs.length) {
-      return this.getTxs.slice(0, MAX_ITEMS)
+    if (this.$store.getters.getTxs.length) {
+      return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
     }
     return []
   }

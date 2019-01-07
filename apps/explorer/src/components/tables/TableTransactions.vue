@@ -83,7 +83,7 @@ export default class TableTransactions extends Vue {
         }
       ],
       color: 'grey',
-      defaultTitle: his.$i18n.t('title.lastTxs')
+      defaultTitle: this.$i18n.t('title.lastTxs')
     }
   }
 

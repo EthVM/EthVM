@@ -1,8 +1,9 @@
-import { Events as sEvents } from 'ethvm-common'
+import { Events } from 'ethvm-common'
 import { Block } from '@app/models'
-import bn from 'bignumber.js'
-import Vue from 'vue'
+import BN from 'bignumber.js'
+import { Component, Vue } from 'vue-property-decorator'
 
+@Component
 export class LastBlockInfoMixin extends Vue {
   data() {
     return {
@@ -14,6 +15,7 @@ export class LastBlockInfoMixin extends Vue {
     }
   }
 
+  // Lifecycle
   created() {
     const lastBlock = this.$store.getters.getBlocks[0]
     if (lastBlock) {
@@ -23,7 +25,7 @@ export class LastBlockInfoMixin extends Vue {
   }
 
   mounted() {
-    this.$eventHub.$on(sEvents.newBlock, _block => {
+    this.$eventHub.$on(Events.newBlock, _block => {
       this.setBlock(this.$store.getters.getBlocks[0])
       this.startCount()
     })
@@ -31,7 +33,7 @@ export class LastBlockInfoMixin extends Vue {
 
   beforeDestroy() {
     clearInterval(this.secondsInterval)
-    this.$eventHub.$off([sEvents.pastBlocksR, sEvents.newBlock])
+    this.$eventHub.$off([Events.pastBlocksR, Events.newBlock])
   }
 
   // Computed
@@ -70,28 +72,28 @@ export class LastBlockInfoMixin extends Vue {
   }
 
   getAvgHashRate(blocks: Block[]) {
-    let avg = new bn(0)
+    let avg = new BN(0)
     if (!blocks || blocks.length == 0) {
       return avg.toNumber()
     }
     blocks.forEach(block => {
       const stats = block.getStats()
       const blockTime = stats.processingTimeMs
-      avg = avg.plus(new bn(blockTime))
+      avg = avg.plus(new BN(blockTime))
     })
     avg = avg.dividedBy(blocks.length)
     if (avg.isZero) {
       return avg.toNumber()
     }
     const difficulty = blocks[0].getDifficulty()
-    return new bn(difficulty)
+    return new BN(difficulty)
       .dividedBy(avg)
       .dividedBy('1e12')
       .toNumber()
   }
 
   getTHs(_num: string) {
-    return new bn(_num).dividedBy('1e12').toNumber()
+    return new BN(_num).dividedBy('1e12').toNumber()
   }
 
   startCount() {
@@ -104,7 +106,7 @@ export class LastBlockInfoMixin extends Vue {
     if (!round) {
       round = 2
     }
-    const n = new bn(newNumber)
+    const n = new BN(newNumber)
     return n.decimalPlaces(round).toString()
   }
 
