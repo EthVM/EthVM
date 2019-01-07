@@ -1,4 +1,4 @@
-import { shallowMount, createLocalVue, mount } from '@vue/test-utils'
+/*import { shallowMount, createLocalVue, mount } from '@vue/test-utils'
 import TxDetail from '@/components/blocks/largeBlocks/txDetail.vue'
 import store from '@app/states'
 import copyToClipComponent from '@app/components/blocks/smallBlocks/copyToClipComponent.vue'
@@ -60,3 +60,4 @@ describe('tx detail.vue', () => {
     expect(wrapper.vm.$data.items[0].detail).toMatch('f1b7e1da6c42730780a7393c8ab7a57ad0649222f07c7a1abc90d8246053074b')
   })
 })
+*/

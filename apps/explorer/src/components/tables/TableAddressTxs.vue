@@ -14,7 +14,9 @@
               <input :placeholder="$t('search.addressTx')" v-model="searchInput" class="width: 100%" />
             </v-card>
           </v-flex>
-          <v-flex xs7 sm3 md2 pl-0> <v-btn depressed outline class="primary--text text-capitalize ml-0 lineGrey" @click="searching">Search</v-btn> </v-flex>
+          <v-flex xs7 sm3 md2 pl-0>
+            <v-btn depressed outline class="primary--text text-capitalize ml-0 lineGrey" @click="searching">{{ $t('search.title') }}</v-btn>
+          </v-flex>
         </v-layout>
       </v-flex>
       <v-spacer></v-spacer>
@@ -41,7 +43,7 @@
       </v-flex>
     </v-layout>
     <!-- Tx Table Header -->
-    <block-address-tx-table :transactions="filteredTxs" :account="address" :filter="selectedTx" :total="getTotal" :type="isPending"></block-address-tx-table>
+    <table-address-tx-row :transactions="filteredTxs" :account="address" :filter="selectedTx" :total="getTotal" :type="isPending" />
     <!-- End Tx Table Header -->
   </v-card>
 </template>
@@ -49,10 +51,20 @@
 <script lang="ts">
 /*Techinically a smart component this one shoule implelemetn infinite scrool and data filtering */
 
-import Vue from 'vue'
-export default Vue.extend({
-  name: 'TableTransactions',
-  props: ['address', 'transactions', 'isPending'],
+import TableAddressTxRow from '@app/components/tables/TableAddressTxRow'
+import { Tx } from '@app/models'
+import { Vue, Component, Prop } from 'vue-property-decorator'
+
+@Component({
+  components: {
+    TableAddressTxRow
+  }
+})
+export default class TableAddressTxs extends Vue {
+  @Prop(String) address!: string
+  @Prop(Array) transactions!: Tx[]
+  @Prop(Boolean) isPending!: boolean
+
   data() {
     return {
       searchInput: '',
@@ -79,64 +91,68 @@ export default Vue.extend({
       recievedTx: false,
       filtered: this.transactions
     }
-  },
+  }
+
   mounted() {
     this.getTxsType()
-  },
-  methods: {
-    getTxsType() {
-      let i
-      for (i = 0; i < this.transactions.length; i++) {
-        if (
-          this.transactions[i]
-            .getFrom()
-            .toString()
-            .toLowerCase() === this.address.toLowerCase()
-        ) {
-          this.outTx.push(this.transactions[i])
-        } else {
-          this.inTx.push(this.transactions[i])
-        }
-      }
-      this.recievedTx = true
-    },
-    searching() {},
-    setSelectedTxs() {
-      if (this.transactions) {
-        if (!this.recievedTx) {
-          this.getTxsType()
-        }
-        if (this.selectedTx === 0) {
-          this.filtered = this.transactions
-        }
-        if (this.selectedTx === 2) {
-          this.filtered = this.outTx
-        }
-        if (this.selectedTx === 1) {
-          this.filtered = this.inTx
-        }
+  }
+
+  // Methods
+  getTxsType() {
+    for (let i = 0; i < this.transactions.length; i++) {
+      if (
+        this.transactions[i]
+          .getFrom()
+          .toString()
+          .toLowerCase() === this.address.toLowerCase()
+      ) {
+        this.outTx.push(this.transactions[i])
+      } else {
+        this.inTx.push(this.transactions[i])
       }
     }
-  },
-  computed: {
-    selectedTx() {
-      return this.selected.value
-    },
-    filteredTxs() {
-      return this.filtered
-    },
-    getTotal() {
-      if (this.transactions) {
-        if (this.selected.value === 0) {
-          return this.transactions.length
-        }
-        if (this.selected.value === 1) {
-          return this.inTx.length
-        }
-        return this.outTx.length
+    this.recievedTx = true
+  }
+
+  searching() {}
+
+  setSelectedTxs() {
+    if (this.transactions) {
+      if (!this.recievedTx) {
+        this.getTxsType()
       }
-      return 0
+      if (this.selectedTx === 0) {
+        this.filtered = this.transactions
+      }
+      if (this.selectedTx === 2) {
+        this.filtered = this.outTx
+      }
+      if (this.selectedTx === 1) {
+        this.filtered = this.inTx
+      }
     }
   }
-})
+
+  // computed
+  get selectedTx() {
+    return this.selected.value
+  }
+
+  get filteredTxs() {
+    return this.filtered
+  }
+
+  get getTotal() {
+    if (this.transactions) {
+      if (this.selected.value === 0) {
+        return this.transactions.length
+      }
+      if (this.selected.value === 1) {
+        return this.inTx.length
+      }
+      return this.outTx.length
+    }
+    return 0
+  }
+}
 </script>

@@ -1,102 +1,136 @@
-import { Events as sEvents } from 'ethvm-common'
+import { Events } from 'ethvm-common'
 import { Block } from '@app/models'
-import bn from 'bignumber.js'
-import stringConcat from '@app/components/mixins/mixin-number-string-concat'
-export const lastBlockInfo = {
-  mixins: [stringConcat],
+import BN from 'bignumber.js'
+import { Component, Vue } from 'vue-property-decorator'
+
+@Component
+export class LastBlockInfoMixin extends Vue {
   data() {
     return {
       block: null,
       seconds: 0,
       secondsInterval: null,
-      dataRecieved: false,
-      loading: this.$i18n.t('message.load')
+      isLoaded: false,
+      loadingMessage: this.$i18n.t('message.load')
     }
-  },
+  }
 
-  computed: {
-    latestBlockNumber():string {
-      return this.dataRecieved ? this.block.getNumber().toString() : this.loading
-    },
-
-    latestHashRate():string {
-      return this.dataRecieved ? this.getRoundNumber(this.getAvgHashRate(this.$store.getters.getBlocks).toString()).toString() : this.loading
-    },
-
-    latestDifficulty():string {
-      return this.dataRecieved ? this.getRoundNumber(this.getTHs(this.block.getDifficulty())).toString() : this.loading
-    },
-
-    latestBlockSuccessTxs():string {
-      return this.dataRecieved ? this.block.getStats().successfulTxs.toString() : this.loading
-    },
-
-    latestBlockFailedTxs():string {
-      return this.dataRecieved ? this.block.getStats().failedTxs.toString() : this.loading
-    },
-
-    latestBlockPendingTxs():string {
-      return this.dataRecieved ? this.block.getStats().pendingTxs.toString() : this.loading
-    },
-
-    secSinceLastBlock():string {
-      return this.seconds.toString()
-    }
-  },
+  // Lifecycle
   created() {
     const lastBlock = this.$store.getters.getBlocks[0]
     if (lastBlock) {
-      this.setBlock(this.$store.getters.getBlocks[0])
+      this.setBlock(lastBlock)
       this.startCount()
     }
-  },
+  }
+
   mounted() {
-    this.$eventHub.$on(sEvents.newBlock, _block => {
-      this.setBlock(this.$store.getters.getBlocks[0])
-      this.startCount()
+    this.$eventHub.$on(Events.newBlock, _block => {
+      const lastBlock = this.$store.getters.getBlocks[0]
+      if (lastBlock) {
+        this.setBlock(lastBlock)
+        this.startCount()
+      }
     })
-  },
+  }
 
   beforeDestroy() {
     clearInterval(this.secondsInterval)
-    this.$eventHub.$off([sEvents.pastBlocksR, sEvents.newBlock])
-  },
+    this.$eventHub.$off([Events.pastBlocksR, Events.newBlock])
+  }
 
-  methods: {
-    setBlock(newBlock: Block) {
-      this.dataRecieved = true
-      this.block = newBlock
-    },
+  // Computed
+  get latestBlockNumber(): string {
+    return this.isLoaded ? this.block.getNumber().toString() : this.loadingMessage
+  }
 
-    getAvgHashRate(blocks: Block[]) {
-      let avg = new bn(0)
-      if (!blocks || blocks.length == 0) {
-        return avg.toNumber()
-      }
-      blocks.forEach(block => {
-        const stats = block.getStats()
-        const blockTime = stats.processingTimeMs
-        avg = avg.plus(new bn(blockTime))
-      })
-      avg = avg.dividedBy(blocks.length)
-      if (avg.isZero) {
-        return avg.toNumber()
-      }
-      const difficulty = blocks[0].getDifficulty()
-      return new bn(difficulty)
-        .dividedBy(avg)
-        .dividedBy('1e12')
-        .toNumber()
-    },
+  get latestHashRate(): string {
+    return this.isLoaded ? this.getRoundNumber(this.getAvgHashRate(this.$store.getters.getBlocks).toString()).toString() : this.loadingMessage
+  }
 
-    getTHs(_num: string) {
-      return new bn(_num).dividedBy('1e12').toNumber()
-    },
-
-    startCount() {
-      this.secondsInterval = setInterval(() => {
-        this.seconds = Math.ceil((new Date().getTime() - this.block.getTimestamp()) / 1000)
-      }, 1000)
+  get latestDifficulty(): string {
+    if (this.isLoaded) {
+      const difficulty = this.block.getDifficulty()
+      const ths = this.getTHs(difficulty)
+      return this.getRoundNumber(ths).toString()
     }
+    return this.loadingMessage
+  }
+
+  get latestBlockSuccessTxs(): string {
+    return this.isLoaded ? this.block.getStats().successfulTxs.toString() : this.loadingMessage
+  }
+
+  get latestBlockFailedTxs(): string {
+    return this.isLoaded ? this.block.getStats().failedTxs.toString() : this.loadingMessage
+  }
+
+  get latestBlockPendingTxs(): string {
+    return this.isLoaded ? this.block.getStats().pendingTxs.toString() : this.loadingMessage
+  }
+
+  get secSinceLastBlock(): string {
+    return this.seconds.toString()
+  }
+
+  // Methods
+  setBlock(block: Block) {
+    this.isLoaded = true
+    this.block = block
+  }
+
+  getAvgHashRate(blocks: Block[] = []) {
+    let avg = new BN(0)
+    if (!blocks || blocks.length == 0) {
+      return avg.toNumber()
+    }
+
+    blocks.forEach(block => {
+      const stats = block.getStats()
+      const blockTime = stats.processingTimeMs
+      avg = avg.plus(new BN(blockTime))
+    })
+
+    avg = avg.dividedBy(blocks.length)
+    if (avg.isZero) {
+      return avg.toNumber()
+    }
+
+    const difficulty = blocks[0].getDifficulty()
+    return new BN(difficulty)
+      .dividedBy(avg)
+      .dividedBy('1e12')
+      .toNumber()
+  }
+
+  getTHs(num: string): number {
+    return new BN(num).dividedBy('1e12').toNumber()
+  }
+
+  startCount() {
+    this.secondsInterval = setInterval(() => {
+      this.seconds = Math.ceil((new Date().getTime() - this.block.getTimestamp()) / 1000)
+    }, 1000)
+  }
+
+  getRoundNumber(number, round: number = 2) {
+    if (!round) {
+      round = 2
+    }
+    const n = new BN(number)
+    return n.decimalPlaces(round).toString()
+  }
+
+  getShortValue(value: string = '', isBool: any) {
+    const length = value.length
+    let isShort = false
+    if (length > 8) {
+      value = value.slice(0, 8) + '...'
+      isShort = true
+    }
+    if (!isBool) {
+      return value
+    }
+    return isShort
   }
 }

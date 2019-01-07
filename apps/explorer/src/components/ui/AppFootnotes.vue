@@ -16,21 +16,13 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Footnote } from '@app/components/props'
 
-/* Footnote arrya example:
-  footnotes: [
-    {
-      color: 'primary',
-      text: 'some text',
-      icon: 'fa fa-clock'
-    }
-  ] */
-
-@Component({
-  props: ['footnotes']
-})
+@Component
 export default class BlockComponent extends Vue {
+  @Prop(Array) footnotes!: Footnote[]
+
   getColor(note): string {
     return note.color
   }

@@ -1,28 +1,28 @@
 <template>
   <v-container grid-list-lg class="mb-0">
-    <app-bread-crumbs :newItems="getItems"></app-bread-crumbs>
+    <app-bread-crumbs :new-items="getItems"></app-bread-crumbs>
     <v-layout row wrap justify-start class="mb-4">
       <v-flex v-if="blockMined" xs12>
-        <app-detail
+        <app-block-detail
           :block="block"
           :uncles="uncles"
-          :isNotMinedBlock="isNotMinedBlock"
-          :isMined="true"
-        ></app-detail>
+          :is-not-mined-block="isNotMinedBlock"
+          :is-mined="true"
+        ></app-block-detail>
       </v-flex>
       <v-flex v-else xs12>
-        <app-detail :isMined="false" :isNotMinedBlock="isNotMinedBlock" :prev="getPrev()"></app-detail>
+        <app-block-detail :is-mined="false" :is-not-mined-block="isNotMinedBlock" :prev="getPrev()"></app-block-detail>
       </v-flex>
     </v-layout>
     <v-layout row wrap justify-start class="mb-4">
       <v-flex v-if="blockMined" xs12>
-        <table-transactions
+        <table-txs
           v-if="transactions.length > 0"
           :transactions="transactions"
-          :frameTxs="true"
-          :tableTitle="$t('title.blockTx')"
+          :frame-txs="true"
+          :table-title="$t('title.blockTx')"
           class="mt-3"
-        ></table-transactions>
+        ></table-txs>
         <v-card v-else flat color="white">
           <v-layout column align-center justify-center ma-3>
             <v-icon
@@ -45,24 +45,23 @@
 <script lang="ts">
 import { common } from '@app/helpers'
 import { Block, Tx } from '@app/models'
-import { Events as sEvents } from 'ethvm-common'
+import { Events } from 'ethvm-common'
 import store from '@app/states'
-import Vue from 'vue'
 import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
-import TableTransactions from '@app/components/tables/TableTransactions.vue'
-import AppDetails from '@app/components/ui/AppDetails.vue'
-export default Vue.extend({
-  name: 'Block',
-  props: {
-    blockRef: {
-      type: String
-    }
-  },
+import TableTxs from '@app/components/tables/TableTxs.vue'
+import AppBlockDetail from '@app/components/ui/AppBlockDetail.vue'
+import { Vue, Component, Prop } from 'vue-property-decorator'
+
+@Component({
   components: {
     AppBreadCrumbs,
-    TableTransactions,
-    AppDetails
-  },
+    TableTxs,
+    AppBlockDetail
+  }
+})
+export default class PageDetailsBlock extends Vue {
+  @Prop({ type: String }) blockRef!: string
+
   data() {
     return {
       common,
@@ -73,7 +72,7 @@ export default Vue.extend({
       unixtimestamp: null,
       timestamp: null,
       transactions: [],
-      transactionLoading: Boolean,
+      transactionLoading: boolean,
       isNotMinedBlock: false,
       items: [
         {
@@ -86,55 +85,14 @@ export default Vue.extend({
           disabled: true
         }
       ],
-      details: []
+      details: [],
+      lastMinedBlock: null
     }
-  },
-  methods: {
-    setRawBlock(result) {
-      this.block = new Block(result)
-      this.setBlock()
-    },
-    setBlock() {
-      this.uncles = this.block.getUncles()
-      if (!this.bNum) {
-        this.bNum = this.block.getNumber()
-      }
-      this.$socket.emit(
-        sEvents.getBlockTransactions,
-        {
-          hash: this.block.getHash().replace('0x', '')
-        },
-        (err, data) => {
-          this.transactionLoading = false
-          this.transactions = data.map(_tx => {
-            return new Tx(_tx)
-          })
-        }
-      )
-    },
-    getPrev() {
-      return this.bNum - 1
-    }
-  },
-  computed: {
-    getItems() {
-      if (this.bNum) {
-        this.items[1].text = this.$i18n.t('title.blockN') + ' ' + this.bNum
-      }
-      return this.items
-    },
-    isUncle() {
-      if (this.block && this.block.getIsUncle()) {
-        return true
-      }
-      return false
-    },
-    blockMined() {
-      return this.block
-    }
-  },
+  }
+
   mounted() {
     this.transactionLoading = true
+
     /* Get Block Data: */
     if (this.$store.getters.getBlocks.length > 0) {
       this.lastMinedBlock = this.$store.getters.getBlocks[0]
@@ -142,12 +100,13 @@ export default Vue.extend({
         this.isNotMinedBlock = true
       }
     }
-    this.$eventHub.$on(sEvents.newBlock, _block => {
+
+    this.$eventHub.$on(Events.newBlock, _block => {
       if (this.$store.getters.getBlocks.length > 0) {
         this.lastMinedBlock = this.$store.getters.getBlocks[0]
         if (Number(this.lastMinedBlock.block.number) == Number(this.blockRef)) {
           this.$socket.emit(
-            sEvents.getBlockByNumber,
+            Events.getBlockByNumber,
             {
               number: Number(this.blockRef)
             },
@@ -163,9 +122,10 @@ export default Vue.extend({
         }
       }
     })
+
     if (this.blockRef.includes('0x')) {
       this.$socket.emit(
-        sEvents.getBlock,
+        Events.getBlock,
         {
           hash: this.blockRef.replace('0x', '')
         },
@@ -178,7 +138,7 @@ export default Vue.extend({
     } else {
       this.bNum = Number(this.blockRef)
       this.$socket.emit(
-        sEvents.getBlockByNumber,
+        Events.getBlockByNumber,
         {
           number: Number(this.blockRef)
         },
@@ -190,5 +150,52 @@ export default Vue.extend({
       )
     }
   }
-})
+
+  // Methods
+  setRawBlock(result) {
+    this.block = new Block(result)
+    this.setBlock()
+  }
+
+  setBlock() {
+    this.uncles = this.block.getUncles()
+
+    if (!this.bNum) {
+      this.bNum = this.block.getNumber()
+    }
+
+    this.$socket.emit(
+      Events.getBlockTransactions,
+      {
+        hash: this.block.getHash().replace('0x', '')
+      },
+      (err, data) => {
+        this.transactionLoading = false
+        this.transactions = data.map(_tx => {
+          return new Tx(_tx)
+        })
+      }
+    )
+  }
+
+  getPrev() {
+    return this.bNum - 1
+  }
+
+  // computed
+  get getItems() {
+    if (this.bNum) {
+      this.items[1].text = this.$i18n.t('title.blockN') + ' ' + this.bNum
+    }
+    return this.items
+  }
+
+  get isUncle() {
+    return this.block && this.block.getIsUncle()
+  }
+
+  get blockMined() {
+    return this.block
+  }
+}
 </script>

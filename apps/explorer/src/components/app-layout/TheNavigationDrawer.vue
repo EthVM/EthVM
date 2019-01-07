@@ -43,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import AppSearch from '@app/components/smart-components/AppSearch.vue'
+import AppSearch from '@app/components/ui/AppSearch.vue'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({

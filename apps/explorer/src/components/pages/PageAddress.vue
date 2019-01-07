@@ -1,8 +1,8 @@
 <template>
   <v-container grid-list-lg class="mb-0">
-    <bread-crumbs :newItems="items"></bread-crumbs>
+    <app-bread-crumbs :new-items="items"></app-bread-crumbs>
     <v-layout row wrap justify-start class="mb-4">
-      <v-flex xs12> <address-detail :account="account"></address-detail> </v-flex>
+      <v-flex xs12> <app-address-detail :account="account"></app-address-detail> </v-flex>
     </v-layout>
     <!-- End Address Details -->
     <!-- Tab Menu -->
@@ -27,24 +27,24 @@
       <v-tabs-items v-model="activeTab" style="border-top: 1px solid #efefef">
         <!-- Transactions -->
         <v-tab-item value="tab-0">
-          <block-address-tx v-if="account.txs" :address="account.address" :transactions="account.txs"></block-address-tx>
-          <error-no-data v-else></error-no-data>
+          <table-address-txs v-if="account.txs" :address="account.address" :transactions="account.txs"></table-address-txs>
+          <app-error-no-data v-else></app-error-no-data>
         </v-tab-item>
         <!-- Tokens -->
         <v-tab-item value="tab-1">
           <div v-if="!tokenError">
-            <div v-if="tokensLoaded"><block-token-tracker :tokens="account.tokens" :holder="account.address"></block-token-tracker></div>
+            <div v-if="tokensLoaded"><app-token-tracker :tokens="account.tokens" :holder="account.address"></app-token-tracker></div>
             <v-card flat v-else class="loading-tokens">
               <i class="fa fa-spinner fa-pulse fa-4x fa-fw"></i> <span class="sr-only">{{ $t('message.load') }}</span>
             </v-card>
           </div>
-          <error-no-data v-else></error-no-data>
+          <app-error-no-data v-else></app-error-no-data>
         </v-tab-item>
         <!-- End Tokens -->
         <!-- Pending Transactions -->
         <v-tab-item value="tab-2">
-          <block-address-tx v-if="account.pendingTxs" :address="account" :transactions="account.pendingTxs" :isPending="true"></block-address-tx>
-          <error-no-data v-else></error-no-data>
+          <table-address-txs v-if="account.pendingTxs" :address="account" :transactions="account.pendingTxs" :is-pending="true"></table-address-txs>
+          <app-error-no-data v-else></app-error-no-data>
         </v-tab-item>
         <v-tab-item v-if="account.isMiner" value="tab-3">
           <!-- Mining History This are temp strings (no need to implement yet) -->
@@ -89,14 +89,31 @@ import bn from 'bignumber.js'
 import blockies from 'ethereum-blockies'
 import ethUnits from 'ethereumjs-units'
 import { Tx, Account, PendingTx } from '@app/models'
-import { Events as sEvents } from 'ethvm-common'
-import Vue from 'vue'
+import { Events } from 'ethvm-common'
+import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
+import AppAddressDetail from '@app/components/ui/AppAddressDetail.vue'
+// import AppTokenTracker from '@app/components/ui/AppTokenTracker.vue'
+import TableAddressTxs from '@app/components/tables/TableAddressTxs.vue'
+import AppErrorNoData from '@app/components/ui/AppErrorNoData.vue'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
 const MAX_ITEMS = 20
 
-export default Vue.extend({
-  name: 'FrameAccount',
-  props: ['address', 'tokens', 'txs', 'pendingTxs'],
+@Component({
+  components: {
+    AppBreadCrumbs,
+    AppAddressDetail,
+    // AppTokenTracker,
+    TableAddressTxs
+    // AppErrorNoData
+  }
+})
+export default class PageAddress extends Vue {
+  @Prop({ type: String, default: '' }) address!: string
+  @Prop({ type: Array, default: () => [] }) tokens!: any
+  @Prop({ type: Array, default: () => [] }) txs!: Tx[]
+  @Prop({ type: Array, default: () => [] }) pendingTxs!: PendingTx[]
+
   data() {
     return {
       account: {
@@ -135,6 +152,7 @@ export default Vue.extend({
         }
       ],
       activeTab: 'tab-0',
+      addressTabs: [],
       tokensLoaded: false,
       tokenError: false,
       usdValue: {
@@ -143,11 +161,12 @@ export default Vue.extend({
         }
       }
     }
-  },
+  }
+
   created() {
     /* Geting Address Balance: */
     this.$socket.emit(
-      sEvents.getAccount,
+      Events.getAccount,
       {
         address: this.address.replace('0x', '')
       },
@@ -159,9 +178,10 @@ export default Vue.extend({
         }
       }
     )
+
     /* Getting Token Balances: */
     this.$socket.emit(
-      sEvents.getTokenBalance,
+      Events.getTokenBalance,
       {
         address: this.address
       },
@@ -174,9 +194,10 @@ export default Vue.extend({
         }
       }
     )
+
     /* Getting Total Number of Tx: */
     this.$socket.emit(
-      sEvents.getTotalTxs,
+      Events.getTotalTxs,
       {
         address: this.address.replace('0x', '')
       },
@@ -184,9 +205,10 @@ export default Vue.extend({
         this.account.totalTxs = result
       }
     )
+
     /*Getting USD Values: */
     this.$socket.emit(
-      sEvents.getExchangeRates,
+      Events.getExchangeRates,
       {
         symbol: 'ETH',
         to: 'USD'
@@ -195,9 +217,10 @@ export default Vue.extend({
         this.account.ethusd = result.price
       }
     )
+
     /*Getting Address Transactions: */
     this.$socket.emit(
-      sEvents.getAddressTxs,
+      Events.getAddressTxs,
       {
         address: this.address.replace('0x', ''),
         limit: 10,
@@ -211,9 +234,10 @@ export default Vue.extend({
         this.account.txs = txs
       }
     )
+
     /*Getting Address Pending Transactions: */
     this.$socket.emit(
-      sEvents.pendingTxsAddress,
+      Events.pendingTxsAddress,
       {
         address: this.address.replace('0x', ''),
         limit: 10,
@@ -227,27 +251,28 @@ export default Vue.extend({
         this.account.pendingTxs = pTxs
       }
     )
-  },
-  methods: {
-    /*Checking of address is Miner? --> add new tab for the menu*/
-    setTabs() {
-      if (this.account.isMiner) {
-        const newTab = {
-          id: '3',
-          title: this.$i18n.t('tabs.miningH'),
-          isActive: false
-        }
-        this.addressTabs.push(newTab)
+  }
+
+  // Methods
+
+  /*Checking of address is Miner? --> add new tab for the menu*/
+  setTabs() {
+    if (this.account.isMiner) {
+      const newTab = {
+        id: '3',
+        title: this.$i18n.t('tabs.miningH'),
+        isActive: false
       }
-      if (this.account.conCreator) {
-        const newTab = {
-          id: '4',
-          title: this.$i18n.t('tabs.contracts'),
-          isActive: false
-        }
-        this.addressTabs.push(newTab)
+      this.addressTabs.push(newTab)
+    }
+    if (this.account.conCreator) {
+      const newTab = {
+        id: '4',
+        title: this.$i18n.t('tabs.contracts'),
+        isActive: false
       }
+      this.addressTabs.push(newTab)
     }
   }
-})
+}
 </script>

@@ -55,7 +55,7 @@ Chart.defaults.doughnut.animation = Object.assign(Chart.defaults.doughnut.animat
 })
 
 export default Vue.extend({
-  name: 'vue-chart',
+  name: 'VueChart',
   props: {
     type: {
       required: true,

@@ -8,7 +8,7 @@
           <v-card-title class="title font-weight-medium">{{ $t('title.address') }}:</v-card-title>
         </v-flex>
         <v-flex xs12>
-          <p class="break-string">{{ address - QR }}</p>
+          <p class="break-string">{{ addressQR }}</p>
         </v-flex>
       </v-layout>
     </v-card>
@@ -16,30 +16,20 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 import VueQr from 'vue-qr'
 
 @Component({
   components: {
     VueQr
-  },
-  props: {
-    addressQR: {
-      type: String
-    },
-    large: {
-      type: Boolean,
-      deafult: false
-    }
   }
 })
 export default class AppAddressQR extends Vue {
-  addressQR: string
-  data() {
-    return {
-      dialog: false
-    }
-  }
+  @Prop({ type: String, default: '' }) addressQR!: string
+  @Prop({ type: Boolean, default: false }) large!: boolean
+
+  dialog: boolean = false
+
   get getQR() {
     if (this.addressQR) {
       return this.addressQR.toLowerCase()

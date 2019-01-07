@@ -3,7 +3,7 @@ module.exports = {
   env: {
     node: true
   },
-  extends: ['plugin:vue/essential', '@vue/prettier', '@vue/typescript'],
+  extends: ['plugin:vue/essential', 'plugin:vue/strongly-recommended', '@vue/prettier', '@vue/typescript'],
   rules: {
     curly: 'error',
     'no-console': 'error',
@@ -13,7 +13,9 @@ module.exports = {
     'generator-star-spacing': 'off',
     semi: 'off',
     'prefer-const': 'error',
-    'no-var': 'error'
+    'no-var': 'error',
+    'vue/no-unused-vars': 'error',
+    'vue/require-default-prop': 'off'
   },
   parserOptions: {
     parser: 'typescript-eslint-parser'

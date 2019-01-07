@@ -9,7 +9,8 @@
 /* To use a scatter chart, data must be passed as objects containing X and Y properties */
 
 import Vue from 'vue'
-import { Events as sEvents } from 'ethvm-common'
+import { Events } from 'ethvm-common'
+
 const newOptions = {
   title: {
     text: 'Pending Tx'
@@ -50,7 +51,7 @@ const newOptions = {
 }
 const MAX_ITEMS = 10
 export default Vue.extend({
-  name: 'pendingTxsChart',
+  name: 'PendingTxsChart',
   data() {
     return {
       chartData: {},
@@ -67,11 +68,11 @@ export default Vue.extend({
   },
   created() {
     this.chartData = this.initData
-    this.$eventHub.$on(sEvents.pastBlocksR, () => {
+    this.$eventHub.$on(Events.pastBlocksR, () => {
       this.chartData = this.initData
       this.redraw = true
     })
-    this.$eventHub.$on(sEvents.newBlock, _block => {
+    this.$eventHub.$on(Events.newBlock, _block => {
       if (this.chartData.datasets[0]) {
         this.redraw = false
         if (!_block.getIsUncle()) {
@@ -90,8 +91,8 @@ export default Vue.extend({
     })
   },
   beforeDestroy() {
-    this.$eventHub.$off(sEvents.pastBlocksR)
-    this.$eventHub.$off(sEvents.newBlock)
+    this.$eventHub.$off(Events.pastBlocksR)
+    this.$eventHub.$off(Events.newBlock)
   },
   computed: {
     initData() {

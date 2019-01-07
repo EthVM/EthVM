@@ -5,9 +5,7 @@
         <v-card-title class="title font-weight-bold">{{ getTitle }}</v-card-title>
       </v-flex>
       <v-flex hidden-sm-and-down md4 order-xs2>
-        <v-layout justify-end>
-          <app-footnotes :footnotes="footnote"/>
-        </v-layout>
+        <v-layout justify-end> <app-footnotes :footnotes="footnote" /> </v-layout>
       </v-flex>
     </v-layout>
     <v-layout v-else row wrap align-center pb-1>
@@ -15,18 +13,11 @@
         <v-card-title class="title font-weight-bold">{{ $t('title.lastBlock') }}</v-card-title>
       </v-flex>
       <v-flex hidden-sm-and-down md4 order-md2>
-        <v-layout justify-center>
-          <app-footnotes :footnotes="footnote"/>
-        </v-layout>
+        <v-layout justify-center> <app-footnotes :footnotes="footnote" /> </v-layout>
       </v-flex>
       <v-flex d-flex xs4 md1 order-xs2 order-md3>
         <v-layout justify-end>
-          <v-btn
-            outline
-            color="secondary"
-            class="text-capitalize"
-            to="/blocks"
-          >{{ $t('bttn.viewAll') }}</v-btn>
+          <v-btn outline color="secondary" class="text-capitalize" to="/blocks">{{ $t('bttn.viewAll') }}</v-btn>
         </v-layout>
       </v-flex>
     </v-layout>
@@ -53,8 +44,8 @@
       <v-layout column fill-height v-scroll:#scroll-target style="margin-right: 1px" class="mb-1">
         <v-flex xs12>
           <transition-group name="list" tag="p">
-            <v-card v-for="block in blocks" class="transparent" flat v-bind:key="block.getHash()">
-              <table-blocks-row :block="block"></table-blocks-row>
+            <v-card v-for="block in blocks" class="transparent" flat :key="block.getHash()">
+              <table-blocks-row :block="block" />
               <v-divider class="mb-2 mt-2"></v-divider>
             </v-card>
           </transition-group>
@@ -70,28 +61,22 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 import AppFootnotes from '@app/components/ui/AppFootnotes.vue'
 import TableBlocksRow from '@app/components/tables/TableBlocksRow.vue'
-export default Vue.extend({
-  name: 'TableBlocks',
-  props: {
-    frameBlocks: {
-      type: Boolean,
-      default: true
-    },
-    showStyle: {
-      type: String,
-      default: ''
-    },
-    blocks: {
-      type: Array
-    }
-  },
+import { Block } from '@app/models'
+
+@Component({
   components: {
     AppFootnotes,
     TableBlocksRow
-  },
+  }
+})
+export default class TableBlocks extends Vue {
+  @Prop({ type: Boolean, default: true }) frameBlocks!: boolean
+  @Prop({ type: String, default: 'true' }) showStyle!: string
+  @Prop({ type: Array, default: [] }) blocks!: Block[]
+
   data() {
     return {
       footnote: [
@@ -107,18 +92,19 @@ export default Vue.extend({
         }
       ]
     }
-  },
-
-  computed: {
-    getStyle() {
-      return this.showStyle
-    },
-    getTitle() {
-      return this.frameBlocks ? this.$i18n.t('title.blocks') : this.$i18n.t('title.uncles')
-    },
-    getBlockType() {
-      return this.frameBlocks ? true : false
-    }
   }
-})
+
+  // Computed
+  get getStyle() {
+    return this.showStyle
+  }
+
+  get getTitle() {
+    return this.frameBlocks ? this.$i18n.t('title.blocks') : this.$i18n.t('title.uncles')
+  }
+
+  get getBlockType() {
+    return this.frameBlocks
+  }
+}
 </script>

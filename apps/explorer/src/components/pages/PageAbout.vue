@@ -1,6 +1,6 @@
 <template>
   <v-container grid-list-lg class="mb-0">
-    <app-bread-crumbs :newItems="items"></app-bread-crumbs>
+    <app-bread-crumbs :new-items="items"></app-bread-crumbs>
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
         <v-card color="white" flat :class="{ 'pa-1': $vuetify.breakpoint.xsOnly, 'pa-3': $vuetify.breakpoint.smOnly, 'pa-5': $vuetify.breakpoint.mdAndUp }">
@@ -23,8 +23,8 @@
                 </v-flex>
                 <v-flex xs12 sm6 md3>
                   <v-card-actions> <v-icon class="primary--text pl-2 fab fa-twitter" large></v-icon> </v-card-actions>
-                  <v-card-title class="title pb-1">{{ $t('social.tweeter') }}</v-card-title>
-                  <v-card-text>{{ $t('about.tweeter') }}.</v-card-text>
+                  <v-card-title class="title pb-1">{{ $t('social.twitter') }}</v-card-title>
+                  <v-card-text>{{ $t('about.twitter') }}.</v-card-text>
                 </v-flex>
                 <v-flex xs12 sm6 md3>
                   <v-card-actions> <v-icon class="primary--text pl-2 fab fa-reddit" large></v-icon> </v-card-actions>

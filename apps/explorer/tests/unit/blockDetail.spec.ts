@@ -1,4 +1,4 @@
-import { shallowMount, createLocalVue, mount } from '@vue/test-utils'
+/*import { shallowMount, createLocalVue, mount } from '@vue/test-utils'
 import BlockDetail from '@/components/blocks/largeBlocks/blockDetail.vue'
 import store from '@app/states'
 import copyToClipComponent from '@app/components/blocks/smallBlocks/copyToClipComponent.vue'
@@ -67,4 +67,4 @@ describe.skip('blockDetail.vue', () => {
     })
     expect(wrapper.isVueInstance()).toBeTruthy()
   })
-})
+}) */

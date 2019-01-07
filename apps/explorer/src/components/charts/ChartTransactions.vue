@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Events as sEvents } from 'ethvm-common'
+import { Events } from 'ethvm-common'
 import BN from 'bignumber.js'
 import AppChart from '@app/components/ui/AppChart.vue'
 
@@ -50,11 +50,11 @@ export default Vue.extend({
   },
   created() {
     this.chartData = this.initData
-    this.$eventHub.$on(sEvents.pastBlocksR, () => {
+    this.$eventHub.$on(Events.pastBlocksR, () => {
       this.chartData = this.initData
       this.redraw = true
     })
-    this.$eventHub.$on(sEvents.newBlock, _block => {
+    this.$eventHub.$on(Events.newBlock, _block => {
       if (this.chartData.datasets[0]) {
         this.redraw = false
         if (!_block.getIsUncle()) {
@@ -70,8 +70,8 @@ export default Vue.extend({
     })
   },
   beforeDestroy() {
-    this.$eventHub.$off(sEvents.pastBlocksR)
-    this.$eventHub.$off(sEvents.newBlock)
+    this.$eventHub.$off(Events.pastBlocksR)
+    this.$eventHub.$off(Events.newBlock)
   },
   computed: {
     initData() {

@@ -1,4 +1,4 @@
-import { shallowMount, createLocalVue, mount } from '@vue/test-utils'
+/*import { shallowMount, createLocalVue, mount } from '@vue/test-utils'
 import blockLastTransactions from '@/components/blocks/largeBlocks/lastTransactions.vue'
 import blockLastBlock from '@/components/blocks/smallBlocks/lastBlock.vue'
 import successfulTxSmallBlock from '@app/components/blocks/smallBlocks/successfulTxSmallBlock.vue'
@@ -60,3 +60,4 @@ describe('lastTransactions.vue', () => {
     expect(wrapper.text()).toMatch('a971748c4c493bc96c7d490e1789481e1e96bb10')
   })
 })
+*/

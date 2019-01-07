@@ -1,40 +1,40 @@
 <template>
   <v-container grid-list-lg class="mt-0">
-    <app-bread-crumbs :newItems="items"></app-bread-crumbs>
+    <app-bread-crumbs :new-items="items"></app-bread-crumbs>
     <v-layout row wrap justify-space-between mb-4>
-      <v-flex xs12 md6 lg3> <app-info-card :title="$t('smlBlock.last')" :value="latestBlockNumber" colorType="primary" backType="last-block" /> </v-flex>
+      <v-flex xs12 md6 lg3> <app-info-card :title="$t('smlBlock.last')" :value="latestBlockNumber" color-type="primary" back-type="last-block" /> </v-flex>
       <v-flex xs12 md6 lg3>
-        <app-info-card :title="$t('smlBlock.success')" :value="latestBlockSuccessTxs" colorType="txSuccess" backType="success-txs" />
+        <app-info-card :title="$t('smlBlock.success')" :value="latestBlockSuccessTxs" color-type="txSuccess" back-type="success-txs" />
       </v-flex>
-      <v-flex xs12 md6 lg3> <app-info-card :title="$t('smlBlock.failed')" :value="latestBlockFailedTxs" colorType="error" backType="failed-txs" /> </v-flex>
+      <v-flex xs12 md6 lg3> <app-info-card :title="$t('smlBlock.failed')" :value="latestBlockFailedTxs" color-type="error" back-type="failed-txs" /> </v-flex>
       <v-flex xs12 md6 lg3>
-        <app-info-card :title="$t('smlBlock.pending')" :value="latestBlockPendingTxs" colorType="success" backType="time-since"></app-info-card>
+        <app-info-card :title="$t('smlBlock.pending')" :value="latestBlockPendingTxs" color-type="success" back-type="time-since"></app-info-card>
       </v-flex>
     </v-layout>
     <v-layout row justify-center mb-4>
-      <v-flex xs12> <table-transactions :transactions="txs" :frameTxs="true"></table-transactions> </v-flex>
+      <v-flex xs12> <table-txs :transactions="txs" :frame-txs="true" /> </v-flex>
     </v-layout>
   </v-container>
 </template>
 
 <script lang="ts">
-import { Events as sEvents } from 'ethvm-common'
-import TableTransactions from '@app/components/tables/TableTransactions.vue'
-import AppInfoCard from '@app/components/ui/AppInfoCard.vue'
 import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
-import { lastBlockInfo } from '@app/components/mixins/mixin-last-block-stats'
-import Vue from 'vue'
-import { Component, Prop, Provide, Mixins } from 'vue-property-decorator'
+import AppInfoCard from '@app/components/ui/AppInfoCard.vue'
+import TableTxs from '@app/components/tables/TableTxs.vue'
+import { Events } from 'ethvm-common'
+import { LastBlockInfoMixin } from '@app/components/mixins'
+import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
+
 const MAX_ITEMS = 20
 
 @Component({
   components: {
     AppBreadCrumbs,
     AppInfoCard,
-    TableTransactions
+    TableTxs
   }
 })
-export default class PageTransactions extends Mixins(lastBlockInfo) {
+export default class PageTransactions extends Mixins(LastBlockInfoMixin) {
   data() {
     return {
       items: [
@@ -45,14 +45,14 @@ export default class PageTransactions extends Mixins(lastBlockInfo) {
       ]
     }
   }
+
   get txs() {
-    let tx
-    tx = this.$store.getters.getTxs
-    this.$eventHub.$on(sEvents.newTx, _transactions => {
-      tx = this.$store.getters.getTxs
-      return tx.slice(0, MAX_ITEMS)
+    let txs = this.$store.getters.getTxs || []
+    this.$eventHub.$on(Events.newTx, _transactions => {
+      txs = this.$store.getters.getTxs || []
+      return txs.slice(0, MAX_ITEMS)
     })
-    return tx.slice(0, MAX_ITEMS)
+    return txs.slice(0, MAX_ITEMS)
   }
 }
 </script>

@@ -6,12 +6,7 @@
       </v-flex>
       <v-flex xs4 v-if="!frameTxs">
         <v-layout justify-end>
-          <v-btn
-            outline
-            color="secondary"
-            class="text-capitalize"
-            to="/transactions"
-          >{{ $t('bttn.viewAll') }}</v-btn>
+          <v-btn outline color="secondary" class="text-capitalize" to="/transactions">{{ $t('bttn.viewAll') }}</v-btn>
         </v-layout>
       </v-flex>
     </v-layout>
@@ -37,17 +32,11 @@
       </v-layout>
     </v-card>
     <!-- End Table Header -->
-    <v-card
-      v-if="transactions.length > 0"
-      flat
-      id="scroll-target"
-      :style="getStyle"
-      class="scroll-y pt-0 pb-0"
-    >
+    <v-card v-if="transactions.length > 0" flat id="scroll-target" :style="getStyle" class="scroll-y pt-0 pb-0">
       <v-layout column fill-height v-scroll:#scroll-target style="margin-right: 1px" class="mb-1">
         <v-flex xs12>
-          <v-card v-for="tx in transactions" class="transparent" flat v-bind:key="tx.getHash()">
-            <table-transactions-row :tx="tx" :isPending="pending"/>
+          <v-card v-for="tx in transactions" class="transparent" flat :key="tx.getHash()">
+            <table-txs-row :tx="tx" :is-pending="pending" />
             <v-divider class="mb-2 mt-2"></v-divider>
           </v-card>
         </v-flex>
@@ -55,10 +44,7 @@
     </v-card>
     <div v-else>
       <v-card flat class="mt-3 mb-3">
-        <v-card-text
-          v-if="!pending"
-          class="text-xs-center text-muted"
-        >{{ $t('message.noTxHistory') }}</v-card-text>
+        <v-card-text v-if="!pending" class="text-xs-center text-muted">{{ $t('message.noTxHistory') }}</v-card-text>
         <v-card-text v-else class="text-xs-center text-muted">{{ $t('message.noPending') }}</v-card-text>
       </v-card>
     </div>
@@ -66,21 +52,21 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
 import AppFootnotes from '@app/components/ui/AppFootnotes.vue'
-import TableTransactionsRow from '@app/components/tables/TableTransactionsRow.vue'
-import { Component, Prop } from 'vue-property-decorator'
+import TableTxsRow from '@app/components/tables/TableTxsRow.vue'
+import { Tx } from '@app/models'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({
   components: {
-    TableTransactionsRow
+    TableTxsRow
   }
 })
-export default class TableTransactions extends Vue {
-  @Prop(Boolean) pending: boolean
-  @Prop(Boolean) frameTxs: boolean
-  @Prop(String) showStyle: string
-  @Prop(Array) transactions: any
+export default class TableTxs extends Vue {
+  @Prop(Boolean) pending!: boolean
+  @Prop(Boolean) frameTxs!: boolean
+  @Prop(String) showStyle!: string
+  @Prop(Array) transactions!: Tx[]
 
   data() {
     return {
@@ -100,6 +86,7 @@ export default class TableTransactions extends Vue {
       defaultTitle: this.$i18n.t('title.lastTxs')
     }
   }
+
   get getStyle() {
     return this.showStyle
   }

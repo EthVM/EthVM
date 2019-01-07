@@ -29,7 +29,7 @@
       <v-card flat id="scroll-target" style="max-height: 800px" class="scroll-y pt-0 pb-0">
         <v-layout column fill-height v-scroll:#scroll-target class="pt-1" style="margin-right: 1px">
           <v-flex xs12>
-            <v-card v-for="tx in transactions" class="transparent pb-1" flat v-bind:key="tx.getHash()">
+            <v-card v-for="tx in transactions" class="transparent pb-1" flat :key="tx.getHash()">
               <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
                 <v-flex d-flex xs6 sm8 md5 pr-3>
                   <div v-if="!type">
@@ -154,10 +154,7 @@ export default Vue.extend({
   methods: {
     getType(tx) {
       // @ts-ignore
-      if (tx.getFrom().toLowerCase() === this.account.toLowerCase()) {
-        return true
-      }
-      return false
+      return tx.getFrom().toLowerCase() === this.account.toLowerCase()
     },
     getShortEthValue(newEthValue, isBool) {
       const length = newEthValue.length
@@ -195,5 +192,5 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="less">
-@import '~lessPath/sunil/blocks/largeBlocks/addressTxTable.less';
+// @import '~lessPath/sunil/blocks/largeBlocks/addressTxTable.less';
 </style>

@@ -1,35 +1,21 @@
 <template>
   <v-tabs v-model="active" dark color="white" slider-color="primary" show-arrows>
-    <v-tab v-for="(item, index) in tabs" class="grey--text" active-class="primary--text" :href="'#tab-' + item" :key="index" v-on:click="setActive(item)">{{
+    <v-tab v-for="(item, index) in tabs" class="grey--text" active-class="primary--text" :href="'#tab-' + item" :key="index" @click="setActive(item)">{{
       item.title
     }}</v-tab>
   </v-tabs>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Tab } from '@app/components/props'
 
-@Component({
-  props: ['tabs']
-})
+@Component
 export default class AppTabs extends Vue {
-  /* Tabs Object Array Example:
-    tabs: [
-      {
-        id: 0,
-        title: 'title1',
-        isActive: true
-      },
-      {
-        id: '1'
-        title: 'title2',
-        isActive: false
-      } ..
-    ]
-   End Example */
+  @Prop(Array) tabs!: Tab[]
+
   setActive(tab) {
-    let i
-    for (i = 0; i < this.tabs.length; i++) {
+    for (let i = 0; i < this.tabs.length; i++) {
       this.tabs[i].isActive = false
     }
     tab.isActive = true
