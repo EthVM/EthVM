@@ -26,7 +26,7 @@
     <!-- End Last Blocks -->
     <!-- Last Txs -->
     <v-layout row wrap justify-center mb-4>
-      <v-flex xs12> <table-transactions v-if="txs" :transactions="txs" show-style="max-height: 590px" /> </v-flex>
+      <v-flex xs12> <table-txs v-if="txs" :transactions="txs" show-style="max-height: 590px" /> </v-flex>
     </v-layout>
     <!-- End Last Txs -->
   </v-container>
@@ -42,7 +42,7 @@ import AppInfoCard from '@app/components/ui/AppInfoCard.vue'
 import ChartLiveTx from '@app/components/charts/live/ChartLiveTx.vue'
 import ChartLiveTxFees from '@app/components/charts/live/ChartLiveTxFees.vue'
 import TableBlocks from '@app/components/tables/TableBlocks.vue'
-import TableTransactions from '@app/components/tables/TableTransactions.vue'
+import TableTxs from '@app/components/tables/TableTxs.vue'
 import { LastBlockInfoMixin } from '@app/components/mixins'
 import { Block } from '@app/models'
 
@@ -52,7 +52,7 @@ const MAX_ITEMS = 20
   components: {
     AppBreadCrumbs,
     TableBlocks,
-    TableTransactions,
+    TableTxs,
     AppInfoCard,
     ChartLiveTx,
     ChartLiveTxFees

@@ -62,7 +62,7 @@ import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import { Block } from '@app/models'
 
 @Component
-export default class TableBlocks extends Mixins(StringConcatMixin) {
+export default class TableBlocksRow extends Mixins(StringConcatMixin) {
   @Prop(Object) block!: Block
 
   hasUncles(block) {

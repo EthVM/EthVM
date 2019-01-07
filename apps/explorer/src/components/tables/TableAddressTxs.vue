@@ -43,7 +43,7 @@
       </v-flex>
     </v-layout>
     <!-- Tx Table Header -->
-    <table-address-tx :transactions="filteredTxs" :account="address" :filter="selectedTx" :total="getTotal" :type="isPending"></table-address-tx>
+    <table-address-tx-row :transactions="filteredTxs" :account="address" :filter="selectedTx" :total="getTotal" :type="isPending" />
     <!-- End Tx Table Header -->
   </v-card>
 </template>
@@ -51,13 +51,13 @@
 <script lang="ts">
 /*Techinically a smart component this one shoule implelemetn infinite scrool and data filtering */
 
-import TableAddressTx from '@app/components/tables/TableAddressTx'
+import TableAddressTxRow from '@app/components/tables/TableAddressTxRow'
 import { Tx } from '@app/models'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({
   components: {
-    TableAddressTx
+    TableAddressTxRow
   }
 })
 export default class TableAddressTxs extends Vue {

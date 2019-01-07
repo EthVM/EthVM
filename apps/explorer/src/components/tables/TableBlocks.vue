@@ -45,7 +45,7 @@
         <v-flex xs12>
           <transition-group name="list" tag="p">
             <v-card v-for="block in blocks" class="transparent" flat :key="block.getHash()">
-              <table-blocks-row :block="block"></table-blocks-row>
+              <table-blocks-row :block="block" />
               <v-divider class="mb-2 mt-2"></v-divider>
             </v-card>
           </transition-group>

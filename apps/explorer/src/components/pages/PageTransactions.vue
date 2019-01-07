@@ -12,18 +12,18 @@
       </v-flex>
     </v-layout>
     <v-layout row justify-center mb-4>
-      <v-flex xs12> <table-transactions :transactions="txs" :frame-txs="true"></table-transactions> </v-flex>
+      <v-flex xs12> <table-txs :transactions="txs" :frame-txs="true" /> </v-flex>
     </v-layout>
   </v-container>
 </template>
 
 <script lang="ts">
-import { Events as sEvents } from 'ethvm-common'
-import TableTransactions from '@app/components/tables/TableTransactions.vue'
-import AppInfoCard from '@app/components/ui/AppInfoCard.vue'
 import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
+import AppInfoCard from '@app/components/ui/AppInfoCard.vue'
+import TableTxs from '@app/components/tables/TableTxs.vue'
+import { Events } from 'ethvm-common'
 import { LastBlockInfoMixin } from '@app/components/mixins'
-import { Vue, Component, Prop, Provide, Mixins } from 'vue-property-decorator'
+import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 
 const MAX_ITEMS = 20
 
@@ -31,7 +31,7 @@ const MAX_ITEMS = 20
   components: {
     AppBreadCrumbs,
     AppInfoCard,
-    TableTransactions
+    TableTxs
   }
 })
 export default class PageTransactions extends Mixins(LastBlockInfoMixin) {
@@ -47,12 +47,12 @@ export default class PageTransactions extends Mixins(LastBlockInfoMixin) {
   }
 
   get txs() {
-    let tx = this.$store.getters.getTxs
-    this.$eventHub.$on(sEvents.newTx, _transactions => {
-      tx = this.getTxs
-      return tx.slice(0, MAX_ITEMS)
+    let txs = this.$store.getters.getTxs || []
+    this.$eventHub.$on(Events.newTx, _transactions => {
+      txs = this.$store.getters.getTxs || []
+      return txs.slice(0, MAX_ITEMS)
     })
-    return tx.slice(0, MAX_ITEMS)
+    return txs.slice(0, MAX_ITEMS)
   }
 }
 </script>

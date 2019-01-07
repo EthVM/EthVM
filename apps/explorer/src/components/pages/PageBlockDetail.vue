@@ -9,13 +9,7 @@
     </v-layout>
     <v-layout row wrap justify-start class="mb-4">
       <v-flex v-if="blockMined" xs12>
-        <table-transactions
-          v-if="transactions.length > 0"
-          :transactions="transactions"
-          :frame-txs="true"
-          :table-title="$t('title.blockTx')"
-          class="mt-3"
-        ></table-transactions>
+        <table-txs v-if="transactions.length > 0" :transactions="transactions" :frame-txs="true" :table-title="$t('title.blockTx')" class="mt-3"></table-txs>
         <v-card v-else flat color="white">
           <v-layout column align-center justify-center ma-3>
             <v-icon v-if="transactionLoading" class="text-xs-center fa fa-spinner fa-pulse fa-4x fa-fw primary--text" large></v-icon>
@@ -34,14 +28,14 @@ import { Block, Tx } from '@app/models'
 import { Events } from 'ethvm-common'
 import store from '@app/states'
 import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
-import TableTransactions from '@app/components/tables/TableTransactions.vue'
+import TableTxs from '@app/components/tables/TableTxs.vue'
 import AppBlockDetail from '@app/components/ui/AppBlockDetail.vue'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({
   components: {
     AppBreadCrumbs,
-    TableTransactions,
+    TableTxs,
     AppBlockDetail
   }
 })

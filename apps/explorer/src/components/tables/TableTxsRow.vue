@@ -68,7 +68,7 @@ import { Tx } from '@app/models/Tx'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 
 @Component
-export default class TableBlocks extends Mixins(StringConcatMixin) {
+export default class TableTxsRow extends Mixins(StringConcatMixin) {
   @Prop(Tx) tx!: Tx
   @Prop({ type: Boolean, default: false }) isPending
 }

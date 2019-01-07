@@ -36,7 +36,7 @@
       <v-layout column fill-height v-scroll:#scroll-target style="margin-right: 1px" class="mb-1">
         <v-flex xs12>
           <v-card v-for="tx in transactions" class="transparent" flat :key="tx.getHash()">
-            <table-transactions-row :tx="tx" :is-pending="pending" />
+            <table-txs-row :tx="tx" :is-pending="pending" />
             <v-divider class="mb-2 mt-2"></v-divider>
           </v-card>
         </v-flex>
@@ -53,16 +53,16 @@
 
 <script lang="ts">
 import AppFootnotes from '@app/components/ui/AppFootnotes.vue'
-import TableTransactionsRow from '@app/components/tables/TableTransactionsRow.vue'
+import TableTxsRow from '@app/components/tables/TableTxsRow.vue'
 import { Tx } from '@app/models'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({
   components: {
-    TableTransactionsRow
+    TableTxsRow
   }
 })
-export default class TableTransactions extends Vue {
+export default class TableTxs extends Vue {
   @Prop(Boolean) pending!: boolean
   @Prop(Boolean) frameTxs!: boolean
   @Prop(String) showStyle!: string
