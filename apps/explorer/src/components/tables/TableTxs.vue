@@ -4,7 +4,7 @@
       <v-flex xs8>
         <v-card-title class="title font-weight-bold">{{ getTitle }}</v-card-title>
       </v-flex>
-      <v-flex xs4 v-if="!pageTxs">
+      <v-flex xs4 v-if="pageType == 'home'">
         <v-layout justify-end>
           <v-btn outline color="secondary" class="text-capitalize" to="/transactions">{{ $t('bttn.viewAll') }}</v-btn>
         </v-layout>
@@ -63,7 +63,6 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
   }
 })
 export default class TableTxs extends Vue {
-  @Prop(Boolean) pageTxs!: boolean
   @Prop(String) pageType: string
   @Prop(String) showStyle!: string
   @Prop(Array) transactions!: Tx[]

@@ -26,7 +26,7 @@
     <!-- End Last Blocks -->
     <!-- Last Txs -->
     <v-layout row wrap justify-center mb-4>
-      <v-flex xs12> <table-txs v-if="txs" :transactions="txs" show-style="max-height: 590px" /> </v-flex>
+      <v-flex xs12> <table-txs v-if="txs" :transactions="txs" show-style="max-height: 590px" page-type="home" /> </v-flex>
     </v-layout>
     <!-- End Last Txs -->
   </v-container>
