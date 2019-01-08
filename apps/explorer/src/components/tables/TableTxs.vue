@@ -6,7 +6,7 @@
       </v-flex>
       <v-flex xs4 v-if="pageType == 'home'">
         <v-layout justify-end>
-          <v-btn outline color="secondary" class="text-capitalize" to="/transactions">{{ $t('bttn.viewAll') }}</v-btn>
+          <v-btn outline color="secondary" class="text-capitalize" to="/txs">{{ $t('bttn.viewAll') }}</v-btn>
         </v-layout>
       </v-flex>
     </v-layout>

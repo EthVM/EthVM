@@ -34,7 +34,7 @@ const MAX_ITEMS = 20
     TableTxs
   }
 })
-export default class PageTransactions extends Mixins(LastBlockInfoMixin) {
+export default class PageTxs extends Mixins(LastBlockInfoMixin) {
   data() {
     return {
       items: [

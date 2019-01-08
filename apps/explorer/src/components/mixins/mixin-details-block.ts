@@ -49,17 +49,17 @@ export class BlockDetailsMixin extends Vue {
         link: '/block/' + block.getParentHash()
       }
     ]
-    if (!block.getIsUncle()) {
-      const item = {
-        title: this.$i18n.t('title.tx'),
-        detail: block.getTransactionCount()
-      }
-      this.details.push(item)
-    }
+
     if (block.getIsUncle()) {
       const item = {
         title: this.$i18n.t('title.position'),
         detail: block.getPosition()
+      }
+      this.details.push(item)
+    } else {
+      const item = {
+        title: this.$i18n.t('title.tx'),
+        detail: block.getTransactionCount()
       }
       this.details.push(item)
     }
@@ -88,6 +88,7 @@ export class BlockDetailsMixin extends Vue {
         detail: block.getExtraData().toString()
       }
     ]
+
     if (!block.getIsUncle()) {
       const newItems = [
         {

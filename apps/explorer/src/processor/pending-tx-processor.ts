@@ -10,7 +10,7 @@ const dedup = (tx: PendingTx, pTxs: PendingTx[]): PendingTx[] => {
 }
 
 export const processPendingTxs = (tx: PendingTx, pTxs: PendingTx[]): PendingTx[] => {
-  pTxs = dedup(tx, pTxs)
-  pTxs.unshift(tx)
-  return pTxs
+  const txs = dedup(tx, pTxs)
+  txs.unshift(tx)
+  return txs
 }

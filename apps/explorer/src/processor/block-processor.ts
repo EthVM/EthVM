@@ -20,7 +20,7 @@ const dedup = (block: Block, pastBlocks: Block[]): Block[] => {
 }
 
 export const processBlocks = (block: Block, pastBlocks: Block[]): Block[] => {
-  pastBlocks = dedup(block, pastBlocks)
-  pastBlocks.unshift(block)
-  return pastBlocks
+  const blocks = dedup(block, pastBlocks)
+  blocks.unshift(block)
+  return blocks
 }

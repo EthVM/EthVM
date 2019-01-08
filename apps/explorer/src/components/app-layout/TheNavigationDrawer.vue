@@ -89,11 +89,11 @@ export default class TheNavigationDrawer extends Vue {
           links: [
             {
               text: this.$i18n.t('title.mined'),
-              routerLink: '/transactions'
+              routerLink: '/txs'
             },
             {
               text: this.$i18n.t('title.pending'),
-              routerLink: '/pending-transactions'
+              routerLink: '/pending-txs'
             }
           ]
         },

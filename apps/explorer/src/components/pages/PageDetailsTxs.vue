@@ -44,7 +44,7 @@ export default class PageDetailsTxs extends Mixins(TxDetailsMixin) {
         {
           text: this.$i18n.t('title.tx'),
           disabled: false,
-          link: '/transactions'
+          link: '/txs'
         },
         {
           text: this.$i18n.t('common.tx') + ': ' + this.txHash,
@@ -54,6 +54,8 @@ export default class PageDetailsTxs extends Mixins(TxDetailsMixin) {
       detailsType: 'tx'
     }
   }
+
+  // Lifecycle
   created() {
     /* Get Tx Info */
     this.$socket.emit(
@@ -72,6 +74,8 @@ export default class PageDetailsTxs extends Mixins(TxDetailsMixin) {
       }
     )
   }
+
+  // Computed
   get tx() {
     return this.transaction
   }

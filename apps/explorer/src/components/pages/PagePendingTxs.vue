@@ -21,7 +21,7 @@ const MAX_ITEMS = 20
     TableTxs
   }
 })
-export default class PagePendingTransactions extends Vue {
+export default class PagePendingTxs extends Vue {
   data() {
     return {
       items: [
