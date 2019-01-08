@@ -68,41 +68,33 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
 import AppCopyToClip from '@app/components/ui/AppCopyToClip.vue'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
-export default Vue.extend({
-  name: 'AppListDetails',
-  props: {
-    items: {
-      type: Array,
-      default: null
-    },
-    moreItems: {
-      type: Array,
-      default: true
-    }
-  },
+@Component({
   components: {
     AppCopyToClip
-  },
+  }
+})
+export default class AppListDetails extends Vue {
+  @Prop(Array) items!: Array
+  @Prop(Array) moreItems!: Array
+
   data() {
     return {
       showMore: false,
       dialog: false
     }
-  },
-  methods: {
-    setView() {
-      this.showMore = !this.showMore
-    }
-  },
-  computed: {
-    more() {
-      return this.showMore
-    }
   }
-})
+  //Methods:
+  setView() {
+    this.showMore = !this.showMore
+  }
+
+  //Computed:
+  get more() {
+    return this.showMore
+  }
+}
 </script>
 
-<style scoped lang="css"></style>

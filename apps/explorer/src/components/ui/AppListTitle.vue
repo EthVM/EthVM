@@ -2,7 +2,7 @@
   <v-layout wrap row align-center justify-start pb-1>
     <v-flex xs12 v-if="listType != 'block'" pr-4 pl-4>
       <v-layout row wrap align-center justify-start>
-        <v-card-title class="title font-weight-bold pl-4">{{ getTitle }}</v-card-title>
+        <v-card-title class="title font-weight-bold pl-4">{{ title }}</v-card-title>
       </v-layout>
     </v-flex>
     <!-- WIP <v-flex xs12 v-else>
@@ -52,18 +52,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
-export default Vue.extend({
-  name: 'AppListTitle',
-  props: {
-    listType: {
-      type: String
-    },
-    blockNumber: {
-      type: Number
-    }
-  },
+@Component
+export default class AppListTitle extends Vue {
+  @Prop(String) listType!: string
+  @Prop(Number) blockNumber!: number
 
   data() {
     return {
@@ -73,18 +67,17 @@ export default Vue.extend({
         uncle: this.$i18n.t('title.uncleDetail')
       }
     }
-  },
-  methods: {
-    setView() {
-      this.showMore = !this.showMore
-    }
-  },
-  computed: {
-    getTitle() {
-      return this.titles[this.listType] || this.$i18n.t('title.uncleDetail')
-    }
   }
-})
+
+  //Methods:
+  setView() {
+    this.showMore = !this.showMore
+  }
+
+  //Computed:
+  get title() {
+    return this.titles[this.listType] || this.$i18n.t('title.uncleDetail')
+  }
+}
 </script>
 
-<style scoped lang="css"></style>
