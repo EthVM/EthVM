@@ -1,14 +1,9 @@
-type itemProcessor<T> = (item: T, items: T[]) => T[]
+type ItemProcessor<T> = (item: T, items: T[]) => T[]
 
 export class FIFO<T> {
-  private arr: T[]
-  private limit: number
-  private readonly processor: itemProcessor<T>
+  private arr: T[] = []
 
-  constructor(_limit: number, _processor: itemProcessor<T>) {
-    this.arr = []
-    this.limit = _limit
-    this.processor = _processor
+  constructor(private readonly limit: number, private readonly processor: ItemProcessor<T>) {
   }
 
   public items(): T[] {

@@ -70,8 +70,6 @@ const lineOptions = {
   scaleShowLabels: false
 }
 
-import { common } from '@app/helpers'
-
 @Component({
   components: {
     AppChart

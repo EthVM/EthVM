@@ -49,7 +49,6 @@
 </template>
 
 <script lang="ts">
-import { common } from '@app/helpers'
 import NumberFormatter from 'number-formatter'
 import AppAddressQr from '@app/components/ui/AppAddressQr.vue'
 import AppBlockies from '@app/components/ui/AppBlockies.vue'

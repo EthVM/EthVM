@@ -1,4 +1,4 @@
-import { FIFO } from '@app/helpers'
+import { FIFO } from '@app/states/utils'
 import { Block, Tx, PendingTx, Uncle } from '@app/models'
 
 export interface StateLayout {

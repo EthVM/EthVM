@@ -84,7 +84,6 @@
 </template>
 
 <script lang="ts">
-import { common } from '@app/helpers'
 import bn from 'bignumber.js'
 import blockies from 'ethereum-blockies'
 import ethUnits from 'ethereumjs-units'
