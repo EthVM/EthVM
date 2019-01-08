@@ -72,6 +72,7 @@ export default class AppListDetails extends Vue {
       dialog: false
     }
   }
+
   //Methods:
   setView() {
     this.showMore = !this.showMore
@@ -81,6 +82,7 @@ export default class AppListDetails extends Vue {
   get more() {
     return this.showMore
   }
+
   get message() {
     return this.detailsType == 'notMined' ? this.$i18n.t('message.notMined') : this.$i18n.t('message.load')
   }

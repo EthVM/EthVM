@@ -95,13 +95,16 @@ export class TxDetailsMixin extends Vue {
       }
     ]
   }
+
   // Computed:
   get txDetails(): Detail[] {
     return this.details
   }
+
   get txMoreDetails(): Detail[] {
     return this.moreDetails
   }
+
   get formatTime(): string {
     return new Date(this.timestmp).toString()
   }

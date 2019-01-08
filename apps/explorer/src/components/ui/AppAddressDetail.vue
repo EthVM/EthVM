@@ -6,8 +6,8 @@
         <v-flex xs12 pb-0>
           <v-layout row align-center justify-start>
             <v-card-title class="title font-weight-bold">{{ $t('title.address') }}</v-card-title>
-            <v-chip v-if="account.isMiner" color="txSuccess" text-color="white" small>Miner</v-chip>
-            <v-chip v-if="account.conCreator" color="success" text-color="white" small>Contract Creator</v-chip>
+            <v-chip v-if="account.isMiner" color="txSuccess" text-color="white" small>{{ $t('block.miner') }}</v-chip>
+            <v-chip v-if="account.conCreator" color="success" text-color="white" small>{{ $t('addrOverview.creator') }}</v-chip>
           </v-layout>
         </v-flex>
         <v-flex xs12 pt-0>

@@ -61,7 +61,7 @@ export default class AppSearch extends Vue {
     }
   }
 
-  /* Search Method : */
+  // Methods
   search() {
     this.$socket.emit(
       Events.search,

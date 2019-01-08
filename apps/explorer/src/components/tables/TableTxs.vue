@@ -90,6 +90,7 @@ export default class TableTxs extends Vue {
     }
   }
 
+  // Computed
   get getStyle() {
     return this.showStyle
   }
@@ -99,7 +100,7 @@ export default class TableTxs extends Vue {
   }
 
   get pending() {
-    return this.pageType == 'pending' ? true : false
+    return this.pageType == 'pending'
   }
 }
 </script>

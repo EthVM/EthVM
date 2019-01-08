@@ -59,7 +59,7 @@ import { BlockDetailsTitle } from '@app/components/props'
 @Component
 export default class AppListTitle extends Vue {
   @Prop(String) listType!: string
-  @Prop(BlockDetailsTitle) blockDetails!: BlockDetailsTitle
+  @Prop(Object) blockDetails!: BlockDetailsTitle
 
   data() {
     return {
@@ -80,9 +80,11 @@ export default class AppListTitle extends Vue {
   get next() {
     return this.blockDetails.next
   }
+
   get hasUncles() {
     return this.blockDetails.mined && this.blockDetails.hasUncles
   }
+
   get block() {
     return this.blockDetails
   }

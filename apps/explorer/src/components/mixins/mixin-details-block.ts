@@ -4,6 +4,7 @@ import { common } from '@app/helpers'
 import { Block } from '@app/models'
 import { Component, Vue } from 'vue-property-decorator'
 import { Detail } from '@app/components/props'
+
 @Component
 export class BlockDetailsMixin extends Vue {
   details = []

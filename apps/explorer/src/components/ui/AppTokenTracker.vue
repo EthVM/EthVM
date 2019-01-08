@@ -70,7 +70,7 @@ export default class AppTokenTracker extends Vue {
     }
   }
 
-  // Computed
+  // Methods
   /*Calculates total number of tokens: */
   getTotalTokens() {
     let totalToken = this.totalTokens
