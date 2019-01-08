@@ -2,7 +2,7 @@
   <v-container grid-list-lg class="mb-0">
     <app-bread-crumbs :new-items="items"></app-bread-crumbs>
     <v-layout row justify-center mb-4>
-      <v-flex xs12> <table-txs :transactions="txs" :frame-txs="true" :pending="true"/></v-flex>
+      <v-flex xs12> <table-txs :transactions="txs" :frame-txs="true" page-type="pending" /> </v-flex>
     </v-layout>
   </v-container>
 </template>

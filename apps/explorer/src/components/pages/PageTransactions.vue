@@ -12,7 +12,7 @@
       </v-flex>
     </v-layout>
     <v-layout row justify-center mb-4>
-      <v-flex xs12> <table-txs :transactions="txs" :frame-txs="true" /> </v-flex>
+      <v-flex xs12> <table-txs :transactions="txs" :frame-txs="true" page-type="tx" /> </v-flex>
     </v-layout>
   </v-container>
 </template>

@@ -63,7 +63,6 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
   }
 })
 export default class TableTxs extends Vue {
-  @Prop(Boolean) pending!: boolean
   @Prop(Boolean) pageTxs!: boolean
   @Prop(String) pageType: string
   @Prop(String) showStyle!: string
@@ -98,6 +97,10 @@ export default class TableTxs extends Vue {
 
   get getTitle() {
     return this.titles[this.pageType] || this.titles['tx']
+  }
+
+  get pending() {
+    return this.pageType == 'pending' ? true : false
   }
 }
 </script>
