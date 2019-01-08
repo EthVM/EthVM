@@ -3,23 +3,23 @@ import { CacheRepository } from '@app/server/repositories'
 import { Account, Tx } from 'ethvm-common'
 
 export interface AccountsService {
-  getTxs(hash: string, limit: number, page: number): Promise<Tx[]>
   getAccount(hash: string): Promise<Account | null>
-  getTotalTxs(hash: string): Promise<number>
+  getAccountTxs(hash: string, limit: number, page: number): Promise<Tx[]>
+  getAccountTotalTxs(hash: string): Promise<number>
 }
 
 export class AccountsServiceImpl implements AccountsService {
   constructor(private readonly addressRepository: AccountsRepository, private readonly cacheRepository: CacheRepository) {}
 
-  public getTxs(hash: string, limit: number, page: number): Promise<Tx[]> {
-    return this.addressRepository.getTxs(hash, limit, page)
-  }
-
   public getAccount(hash: string): Promise<Account | null> {
     return this.addressRepository.getAccount(hash)
   }
 
-  public getTotalTxs(hash: string): Promise<number> {
-    return this.addressRepository.getTotalTxs(hash)
+  public getAccountTxs(hash: string, limit: number, page: number): Promise<Tx[]> {
+    return this.addressRepository.getAccountTxs(hash, limit, page)
+  }
+
+  public getAccountTotalTxs(hash: string): Promise<number> {
+    return this.addressRepository.getAccountTotalTxs(hash)
   }
 }

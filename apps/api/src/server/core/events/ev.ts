@@ -9,7 +9,7 @@ const Events = {
   pastBlocks: 'get-past-blocks',
   getBalance: 'get-balance',
   getTokenBalance: 'get-tokens-balance',
-  getTotalTxs: 'get-total-txs',
+  getTotalTxs: 'get-account-total-txs',
   getTicker: 'getTicker',
   getTxs: 'get-txs',
   getTx: 'get-tx',

@@ -4,13 +4,13 @@ import Router from 'vue-router'
 //Import route layouts components:
 import PageHome from '@/components/pages/PageHome.vue'
 import PageBlocks from '@/components/pages/PageBlocks.vue'
-//import PageAddress from '@/components/pages/PageAddress.vue'
-import PageTransactions from '@/components/pages/PageTransactions.vue'
-import PagePendingTransactions from '@/components/pages/PagePendingTransactions.vue'
+import PageTxs from '@/components/pages/PageTxs.vue'
+import PagePendingTxs from '@/components/pages/PagePendingTxs.vue'
 import PageAbout from '@/components/pages/PageAbout.vue'
 import PageUncles from '@/components/pages/PageUncles.vue'
 import PageDetailsBlock from '@/components/pages/PageDetailsBlock.vue'
 import PageDetailsTxs from '@/components/pages/PageDetailsTxs.vue'
+
 Vue.use(Router)
 
 export default new Router({
@@ -20,24 +20,19 @@ export default new Router({
       component: PageHome,
       name: 'home'
     },
-    /*{
-      path: '/address/:param',
-      component: PageAddress,
-      name: 'address'
-    }, */
     {
       path: '/blocks',
       component: PageBlocks,
       name: 'blocks'
     },
     {
-      path: '/transactions',
-      component: PageTransactions,
+      path: '/txs',
+      component: PageTxs,
       name: 'transactions'
     },
     {
-      path: '/pending-transactions',
-      component: PagePendingTransactions,
+      path: '/pending-txs',
+      component: PagePendingTxs,
       name: 'pending'
     },
     {

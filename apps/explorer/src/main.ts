@@ -1,4 +1,5 @@
 import App from '@app/App.vue'
+import { EthvmSocketIoApi, VueEthvmApi } from '@app/api'
 
 import router from '@app/router'
 import store from '@app/states'
@@ -6,7 +7,7 @@ import i18n from '@app/translations'
 import io from 'socket.io-client'
 import VTooltip from 'v-tooltip'
 import Vue from 'vue'
-import infiniteScroll from 'vue-infinite-scroll'
+import InfiniteScroll from 'vue-infinite-scroll'
 import VueSocketio from 'vue-socket.io'
 import VueTimeago from 'vue-timeago'
 import Vuetify from 'vuetify'
@@ -14,9 +15,13 @@ import 'vuetify/dist/vuetify.min.css'
 
 // Vue modules configuration
 Vue.use(VTooltip)
+
 Vue.prototype.$eventHub = new Vue()
 Vue.config.productionTip = false
-Vue.use(VueSocketio, io(process.env.VUE_APP_SOCKET_URL + ':' + process.env.VUE_APP_SOCKET_PORT), store)
+
+Vue.use(VueSocketio, io(process.env.VUE_APP_API_ENDPOINT), store)
+Vue.use(VueEthvmApi, new EthvmSocketIoApi(process.env.VUE_APP_API_ENDPOINT))
+
 Vue.use(VueTimeago, {
   name: 'timeago',
   locale: 'en-US',
@@ -24,7 +29,9 @@ Vue.use(VueTimeago, {
     'en-US': require('date-fns/locale/en')
   }
 })
-Vue.use(infiniteScroll)
+
+Vue.use(InfiniteScroll)
+
 Vue.use(Vuetify, {
   theme: {
     // used -->
@@ -48,7 +55,8 @@ Vue.use(Vuetify, {
     // background: String(colors.grey.darken3)
   }
 })
-new Vue({
+
+const v = new Vue({
   el: '#app',
   store,
   router,
@@ -59,3 +67,4 @@ new Vue({
     App
   }
 })
+

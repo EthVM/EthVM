@@ -3,24 +3,12 @@ import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
 import { Account, Tx } from 'ethvm-common'
 
 export interface AccountsRepository {
-  getTxs(hash: string, limit: number, page: number): Promise<Tx[]>
   getAccount(hash: string): Promise<Account | null>
-  getTotalTxs(hash: string): Promise<number>
+  getAccountTxs(hash: string, limit: number, page: number): Promise<Tx[]>
+  getAccountTotalTxs(hash: string): Promise<number>
 }
 
 export class MongoAccountsRepository extends BaseMongoDbRepository implements AccountsRepository {
-  public getTotalTxs(hash: string): Promise<number> {
-    return this.db
-      .collection(MongoEthVM.collections.blocks)
-      .countDocuments({ $or: [{ 'transactions.from': hash }, { 'transactions.to': hash }] })
-      .then(resp => {
-        if (!resp) {
-          return 0
-        }
-        return resp
-      })
-  }
-
   public getAccount(hash: string): Promise<Account | null> {
     return this.db
       .collection(MongoEthVM.collections.accounts)
@@ -33,7 +21,7 @@ export class MongoAccountsRepository extends BaseMongoDbRepository implements Ac
       })
   }
 
-  public getTxs(hash: string, limit: number, page: number): Promise<Tx[]> {
+  public getAccountTxs(hash: string, limit: number, page: number): Promise<Tx[]> {
     const start = page * limit
     return this.db
       .collection(MongoEthVM.collections.transactions)
@@ -45,6 +33,18 @@ export class MongoAccountsRepository extends BaseMongoDbRepository implements Ac
       .then(resp => {
         if (!resp) {
           return []
+        }
+        return resp
+      })
+  }
+
+  public getAccountTotalTxs(hash: string): Promise<number> {
+    return this.db
+      .collection(MongoEthVM.collections.blocks)
+      .countDocuments({ $or: [{ 'transactions.from': hash }, { 'transactions.to': hash }] })
+      .then(resp => {
+        if (!resp) {
+          return 0
         }
         return resp
       })

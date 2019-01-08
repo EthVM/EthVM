@@ -88,7 +88,7 @@ const toTx = (tx: any): Tx => {
   }
 
   t.status = tx.status
-  
+
   if (tx.data) {
     t.data = tx.data.buffer
   }
