@@ -1,9 +1,9 @@
 <template>
   <v-container v-if="transaction != null" grid-list-lg class="mb-0">
     <app-bread-crumbs :newItems="items"></app-bread-crumbs>
-    <v-layout row wrap justify-start class="mb-4" v-if="getTxs">
+    <v-layout row wrap justify-start class="mb-4" v-if="tx">
       <v-flex xs12>
-        <app-list-details :items="getDetails" :moreItems="getMoreDetails">
+        <app-list-details :items="txDetails" :moreItems="txMoreDetails">
           <app-list-title slot="details-title" listType="tx"></app-list-title>
         </app-list-details>
       </v-flex>
@@ -19,23 +19,24 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
 import { Tx } from '@app/models'
 import { Events as sEvents } from 'ethvm-common'
 import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
 import AppListDetails from '@app/components/ui/AppListDetails.vue'
 import AppListTitle from '@app/components/ui/AppListTitle.vue'
-import { txDetails } from '@app/components/mixins/mixin-details-txs'
+import { TxDetailsMixin } from '@app/components/mixins/mixin-details-txs'
+import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 
-export default Vue.extend({
-  name: 'tx-Detail',
-  props: ['txHash'],
+@Component({
   components: {
     AppBreadCrumbs,
     AppListDetails,
     AppListTitle
-  },
-  mixins: [txDetails],
+  }
+})
+export default class PageDetailsTxs extends Mixins(TxDetailsMixin) {
+  @Prop({ type: String }) txHash!: string
+
   data() {
     return {
       transaction: null,
@@ -51,7 +52,7 @@ export default Vue.extend({
         }
       ]
     }
-  },
+  }
   created() {
     /* Get Tx Info */
     this.$socket.emit(
@@ -69,11 +70,9 @@ export default Vue.extend({
         }
       }
     )
-  },
-  computed: {
-    getTxs() {
-      return this.transaction
-    }
   }
-})
+  get tx() {
+    return this.transaction
+  }
+}
 </script>
