@@ -66,7 +66,7 @@ function _validateInt(value) {
 }
 
 function processValue(value, validation) {
-  console.log("validation",validation)
+  console.log('validation', validation)
   const { range, type } = validation
 
   /* eslint-disable no-restricted-globals */
