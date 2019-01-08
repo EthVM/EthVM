@@ -20,7 +20,7 @@
     "tokenDetail": "Token Details",
     "txDetail": "Transaction Details",
     "overview": "Overview",
-    "blockTx": "Block Transactions",
+    "blockTxs": "Block Transactions",
     "lastBlock": "Last Blocks",
     "lastTxs": "Last Transactions",
     "kb": "Knowledge Base",
@@ -79,7 +79,9 @@
     "noTxHistory": "There is no transaction history",
     "noTxInBlock": "This block does not have any transactions",
     "noPending": "There are no pending transactions",
-    "load": "Loading ..."
+    "load": "Loading",
+    "loadingBlockTx": "Loading block transactions",
+    "notMined": "This block has not been mined yet"
   },
   "block": {
     "height": "Height",
@@ -99,9 +101,7 @@
     "recRoot": "Receipts Root",
     "uncReward": "Reward",
     "sha": "SHA3",
-    "uncle": "Uncle",
-    "loadingBlockTx": "Loading Block transactions...",
-    "notMined": "This Block has not been mined yet..."
+    "uncle": "Uncle"
   },
   "addrOverview": {
     "balance": "Ether Balance",

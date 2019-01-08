@@ -1,10 +1,14 @@
 <template>
   <v-container v-if="transaction != null" grid-list-lg class="mb-0">
-    <app-bread-crumbs :newItems="items"></app-bread-crumbs>
+    <app-bread-crumbs :new-items="items"></app-bread-crumbs>
     <v-layout row wrap justify-start class="mb-4" v-if="tx">
       <v-flex xs12>
-        <app-list-details :items="txDetails" :moreItems="txMoreDetails">
-          <app-list-title slot="details-title" listType="tx"></app-list-title>
+        <app-list-details
+          :items="txDetails"
+          :more-items="txMoreDetails"
+          :details-type="detailsType"
+        >
+          <app-list-title slot="details-title" :list-type="detailsType"></app-list-title>
         </app-list-details>
       </v-flex>
     </v-layout>
@@ -50,7 +54,8 @@ export default class PageDetailsTxs extends Mixins(TxDetailsMixin) {
           text: this.$i18n.t('common.tx') + ': ' + this.txHash,
           disabled: true
         }
-      ]
+      ],
+      detailsType: 'tx'
     }
   }
   created() {

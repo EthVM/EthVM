@@ -1,9 +1,9 @@
 <template>
   <v-app style="background: #f3f4f8;">
-    <the-navigation-drawer/>
+    <the-navigation-drawer />
     <v-content>
       <router-view></router-view>
-      <the-footer/>
+      <the-footer />
     </v-content>
   </v-app>
 </template>

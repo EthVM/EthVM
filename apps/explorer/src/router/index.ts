@@ -9,7 +9,7 @@ import PageTransactions from '@/components/pages/PageTransactions.vue'
 import PagePendingTransactions from '@/components/pages/PagePendingTransactions.vue'
 import PageAbout from '@/components/pages/PageAbout.vue'
 import PageUncles from '@/components/pages/PageUncles.vue'
-//import PageDetailsBlock from '@/components/pages/PageDetailsBlock.vue'
+import PageDetailsBlock from '@/components/pages/PageDetailsBlock.vue'
 import PageDetailsTxs from '@/components/pages/PageDetailsTxs.vue'
 Vue.use(Router)
 
@@ -50,12 +50,12 @@ export default new Router({
       component: PageUncles,
       name: 'uncles'
     },
-    /*{
-      path: '/block/:param',
+    {
+      path: '/block/:blockRef',
       component: PageDetailsBlock,
       name: 'block',
       props: true
-    }, */
+    },
     {
       path: '/tx/:txHash',
       component: PageDetailsTxs,

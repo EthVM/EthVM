@@ -4,9 +4,14 @@
       <v-flex xs8>
         <v-card-title class="title font-weight-bold">{{ getTitle }}</v-card-title>
       </v-flex>
-      <v-flex xs4 v-if="!frameTxs">
+      <v-flex xs4 v-if="!pageTxs">
         <v-layout justify-end>
-          <v-btn outline color="secondary" class="text-capitalize" to="/transactions">{{ $t('bttn.viewAll') }}</v-btn>
+          <v-btn
+            outline
+            color="secondary"
+            class="text-capitalize"
+            to="/transactions"
+          >{{ $t('bttn.viewAll') }}</v-btn>
         </v-layout>
       </v-flex>
     </v-layout>
@@ -32,11 +37,17 @@
       </v-layout>
     </v-card>
     <!-- End Table Header -->
-    <v-card v-if="transactions.length > 0" flat id="scroll-target" :style="getStyle" class="scroll-y pt-0 pb-0">
+    <v-card
+      v-if="transactions.length > 0"
+      flat
+      id="scroll-target"
+      :style="getStyle"
+      class="scroll-y pt-0 pb-0"
+    >
       <v-layout column fill-height v-scroll:#scroll-target style="margin-right: 1px" class="mb-1">
         <v-flex xs12>
           <v-card v-for="tx in transactions" class="transparent" flat :key="tx.getHash()">
-            <table-txs-row :tx="tx" :is-pending="pending" />
+            <table-txs-row :tx="tx" :is-pending="pending"/>
             <v-divider class="mb-2 mt-2"></v-divider>
           </v-card>
         </v-flex>
@@ -44,7 +55,10 @@
     </v-card>
     <div v-else>
       <v-card flat class="mt-3 mb-3">
-        <v-card-text v-if="!pending" class="text-xs-center text-muted">{{ $t('message.noTxHistory') }}</v-card-text>
+        <v-card-text
+          v-if="!pending"
+          class="text-xs-center text-muted"
+        >{{ $t('message.noTxHistory') }}</v-card-text>
         <v-card-text v-else class="text-xs-center text-muted">{{ $t('message.noPending') }}</v-card-text>
       </v-card>
     </div>
@@ -64,7 +78,8 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 })
 export default class TableTxs extends Vue {
   @Prop(Boolean) pending!: boolean
-  @Prop(Boolean) frameTxs!: boolean
+  @Prop(Boolean) pageTxs!: boolean
+  @Prop(String) pageType: string
   @Prop(String) showStyle!: string
   @Prop(Array) transactions!: Tx[]
 
@@ -83,7 +98,11 @@ export default class TableTxs extends Vue {
         }
       ],
       color: 'grey',
-      defaultTitle: this.$i18n.t('title.lastTxs')
+      titles: {
+        tx: this.$i18n.t('title.lastTxs'),
+        pending: this.$i18n.t('title.pending'),
+        block: this.$i18n.t('title.blockTxs')
+      }
     }
   }
 
@@ -92,7 +111,7 @@ export default class TableTxs extends Vue {
   }
 
   get getTitle() {
-    return this.pending ? this.$i18n.t('title.pending') : this.defaultTitle
+    return this.titles[this.pageType] || this.titles['tx']
   }
 }
 </script>

@@ -1,15 +1,12 @@
 import { Tx } from '@app/models'
 import { Component, Vue } from 'vue-property-decorator'
+import { Detail } from '@app/components/props'
 
 @Component
 export class TxDetailsMixin extends Vue {
-  data() {
-    return {
-      details: Array,
-      moreDetails: Array,
-      timestmp: ''
-    }
-  }
+  details = []
+  moreDetails = []
+  timestmp = ''
 
   //Methods:
   getStringStatus(isBool: boolean) {
@@ -32,18 +29,17 @@ export class TxDetailsMixin extends Vue {
         copy: true,
         link: '/address/' + tx.getContractAddress()
       }
-    } else {
-      return {
-        title: this.$i18n.t('tx.to'),
-        detail: tx.getTo(),
-        copy: true,
-        link: '/address/' + tx.getTo()
-      }
+    }
+    return {
+      title: this.$i18n.t('tx.to'),
+      detail: tx.getTo(),
+      copy: true,
+      link: '/address/' + tx.getTo()
     }
   }
 
   setDetails(tx: Tx) {
-    this.timestamp = tx.getTimestamp()
+    this.timestmp = tx.getTimestamp().toString()
     this.details = [
       {
         title: this.$i18n.t('common.hash'),
@@ -100,14 +96,13 @@ export class TxDetailsMixin extends Vue {
     ]
   }
   // Computed:
-  get txDetails(): Array {
+  get txDetails(): Detail[] {
     return this.details
   }
-  get txMoreDetails(): Array {
-    console.log(this.moreDetails)
+  get txMoreDetails(): Detail[] {
     return this.moreDetails
   }
-  get formatTime(): Date {
-    return new Date(this.timestamp).toString()
+  get formatTime(): string {
+    return new Date(this.timestmp).toString()
   }
 }

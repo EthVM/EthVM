@@ -16,3 +16,17 @@ export interface Tab {
   title: string
   isActive: boolean
 }
+
+export interface Detail {
+  title: string
+  detail: string
+  copy: boolean
+  link: string
+}
+
+export interface BlockDetailsTitle {
+  mined: boolean
+  next?: string
+  prev?: string
+  uncles?: string[]
+}
