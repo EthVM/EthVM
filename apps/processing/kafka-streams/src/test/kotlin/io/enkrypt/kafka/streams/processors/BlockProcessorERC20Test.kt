@@ -3,6 +3,8 @@ package io.enkrypt.kafka.streams.processors
 import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.common.ContractType
+import io.enkrypt.avro.processing.BalanceType
+import io.enkrypt.avro.processing.BalanceType.ERC20
 import io.enkrypt.common.extensions.AvroHelpers.contractCreation
 import io.enkrypt.common.extensions.AvroHelpers.contractKey
 import io.enkrypt.common.extensions.AvroHelpers.tokenBalance
@@ -20,12 +22,12 @@ import io.enkrypt.kafka.streams.models.StaticAddresses.EtherZero
 import io.enkrypt.kafka.streams.util.KafkaStreamsTestListener
 import io.enkrypt.kafka.streams.util.KafkaUtil.readContractCreation
 import io.enkrypt.kafka.streams.util.KafkaUtil.readFungibleTokenMovement
-import io.enkrypt.kafka.streams.util.SolidityContract
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Alice
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Bob
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Coinbase
-import io.enkrypt.kafka.streams.util.TestContracts
+import io.enkrypt.testing.SolidityContract
+import io.enkrypt.testing.StandaloneBlockchain
+import io.enkrypt.testing.StandaloneBlockchain.Companion.Alice
+import io.enkrypt.testing.StandaloneBlockchain.Companion.Bob
+import io.enkrypt.testing.StandaloneBlockchain.Companion.Coinbase
+import io.enkrypt.testing.TestContracts
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
 import org.apache.kafka.streams.TopologyTestDriver
@@ -104,7 +106,7 @@ class BlockProcessorERC20Test : BehaviorSpec() {
 
         then("there should be a token movement assigning tokens to the creator address") {
           val record = readFungibleTokenMovement(testDriver)!!
-          record.key() shouldBe tokenKey(Bob.address.data20(), contractAddress)
+          record.key() shouldBe tokenKey(Bob.address.data20(), contractAddress, balanceType = ERC20)
           record.value() shouldBe tokenBalance(10_000.ether().byteBuffer())
         }
       }
@@ -145,7 +147,7 @@ class BlockProcessorERC20Test : BehaviorSpec() {
 
         then("there should be a token movement assigning tokens to Alice") {
           val record = readFungibleTokenMovement(testDriver)!!
-          record.key() shouldBe tokenKey(Alice.address.data20(), contractAddress)
+          record.key() shouldBe tokenKey(Alice.address.data20(), contractAddress, balanceType = ERC20)
           record.value() shouldBe tokenBalance(1.ether().byteBuffer())
         }
       }

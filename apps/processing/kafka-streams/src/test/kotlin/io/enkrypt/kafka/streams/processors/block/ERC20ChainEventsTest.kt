@@ -15,12 +15,12 @@ import io.enkrypt.kafka.streams.models.StaticAddresses.EtherZero
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.blockReward
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.contractCreate
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.fungibleTransfer
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Alice
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Bob
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Coinbase
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Terence
-import io.enkrypt.kafka.streams.util.TestContracts
+import io.enkrypt.testing.StandaloneBlockchain
+import io.enkrypt.testing.StandaloneBlockchain.Companion.Alice
+import io.enkrypt.testing.StandaloneBlockchain.Companion.Bob
+import io.enkrypt.testing.StandaloneBlockchain.Companion.Coinbase
+import io.enkrypt.testing.StandaloneBlockchain.Companion.Terence
+import io.enkrypt.testing.TestContracts
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
 

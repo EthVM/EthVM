@@ -7,8 +7,8 @@ import io.confluent.kafka.serializers.KafkaAvroSerializerConfig
 import io.enkrypt.common.extensions.data20
 import io.enkrypt.common.extensions.gwei
 import io.enkrypt.common.extensions.keyRecord
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Coinbase
+import io.enkrypt.testing.StandaloneBlockchain
+import io.enkrypt.testing.StandaloneBlockchain.Companion.Coinbase
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.koin.dsl.module.module
 import org.koin.standalone.StandAloneContext.startKoin

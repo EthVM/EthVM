@@ -1,4 +1,4 @@
-package io.enkrypt.kafka.streams.util
+package io.enkrypt.testing
 
 import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.common.Data20

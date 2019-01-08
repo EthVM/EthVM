@@ -10,11 +10,11 @@ import io.enkrypt.common.extensions.txFees
 import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.blockReward
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.fungibleTransfer
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Alice
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Bob
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Coinbase
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Terence
+import io.enkrypt.testing.StandaloneBlockchain
+import io.enkrypt.testing.StandaloneBlockchain.Companion.Alice
+import io.enkrypt.testing.StandaloneBlockchain.Companion.Bob
+import io.enkrypt.testing.StandaloneBlockchain.Companion.Coinbase
+import io.enkrypt.testing.StandaloneBlockchain.Companion.Terence
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec

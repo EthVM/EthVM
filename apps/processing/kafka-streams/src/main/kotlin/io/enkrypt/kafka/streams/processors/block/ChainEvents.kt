@@ -348,7 +348,7 @@ object ChainEvents {
 
     // simple ether transfer
     if (!(from == null || to == null || value.capacity() == 0)) {
-      events += fungibleTransfer(from, to, value, reverse, null, timestamp, txHash, blockHash, txIdx, internalTxIdx)
+      events += fungibleTransfer(from, to, value, reverse, null, timestamp, blockHash, txHash, txIdx, internalTxIdx)
     }
 
     // contract creation

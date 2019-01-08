@@ -6,12 +6,12 @@ import io.enkrypt.common.extensions.ether
 import io.enkrypt.common.extensions.gwei
 import io.enkrypt.common.extensions.keyRecord
 import io.enkrypt.common.extensions.mwei
-import io.enkrypt.kafka.streams.util.SolidityContract
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Alice
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Bob
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Terence
-import io.enkrypt.kafka.streams.util.TestContracts
+import io.enkrypt.testing.SolidityContract
+import io.enkrypt.testing.StandaloneBlockchain
+import io.enkrypt.testing.StandaloneBlockchain.Companion.Alice
+import io.enkrypt.testing.StandaloneBlockchain.Companion.Bob
+import io.enkrypt.testing.StandaloneBlockchain.Companion.Terence
+import io.enkrypt.testing.TestContracts
 import org.ethereum.crypto.ECKey
 import java.math.BigInteger
 

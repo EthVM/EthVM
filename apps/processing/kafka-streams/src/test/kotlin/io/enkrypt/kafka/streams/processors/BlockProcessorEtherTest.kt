@@ -15,10 +15,10 @@ import io.enkrypt.kafka.streams.di.TestModules.testConfig
 import io.enkrypt.kafka.streams.di.TestModules.testDrivers
 import io.enkrypt.kafka.streams.util.KafkaStreamsTestListener
 import io.enkrypt.kafka.streams.util.KafkaUtil.readFungibleTokenMovement
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Alice
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Bob
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Coinbase
+import io.enkrypt.testing.StandaloneBlockchain
+import io.enkrypt.testing.StandaloneBlockchain.Companion.Alice
+import io.enkrypt.testing.StandaloneBlockchain.Companion.Bob
+import io.enkrypt.testing.StandaloneBlockchain.Companion.Coinbase
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
 import org.apache.kafka.streams.TopologyTestDriver

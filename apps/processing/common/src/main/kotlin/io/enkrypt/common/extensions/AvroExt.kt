@@ -7,6 +7,7 @@ import io.enkrypt.avro.capture.TransactionRecord
 import io.enkrypt.avro.common.ContractType
 import io.enkrypt.avro.common.Data20
 import io.enkrypt.avro.common.Data32
+import io.enkrypt.avro.processing.BalanceType
 import io.enkrypt.avro.processing.ContractCreateRecord
 import io.enkrypt.avro.processing.ContractDestroyRecord
 import io.enkrypt.avro.processing.ContractKeyRecord
@@ -65,8 +66,9 @@ object AvroHelpers {
       .setNumber(number)
       .build()
 
-  fun tokenKey(address: Data20? = null, contract: Data20? = null, tokenId: ByteBuffer? = null) =
+  fun tokenKey(address: Data20? = null, contract: Data20? = null, tokenId: ByteBuffer? = null, balanceType: BalanceType = BalanceType.ETHER) =
     TokenBalanceKeyRecord.newBuilder()
+      .setBalanceType(balanceType)
       .setAddress(address)
       .setContract(contract)
       .setTokenId(tokenId)

@@ -3,6 +3,8 @@ package io.enkrypt.kafka.streams.processors
 import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.common.ContractType
+import io.enkrypt.avro.processing.BalanceType
+import io.enkrypt.avro.processing.BalanceType.ERC721
 import io.enkrypt.common.extensions.AvroHelpers.contractCreation
 import io.enkrypt.common.extensions.AvroHelpers.contractKey
 import io.enkrypt.common.extensions.AvroHelpers.tokenBalance
@@ -22,13 +24,13 @@ import io.enkrypt.kafka.streams.util.KafkaStreamsTestListener
 import io.enkrypt.kafka.streams.util.KafkaUtil.readBalance
 import io.enkrypt.kafka.streams.util.KafkaUtil.readContractCreation
 import io.enkrypt.kafka.streams.util.KafkaUtil.readFungibleTokenMovement
-import io.enkrypt.kafka.streams.util.SolidityContract
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Alice
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Bob
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Coinbase
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Terence
-import io.enkrypt.kafka.streams.util.TestContracts
+import io.enkrypt.testing.SolidityContract
+import io.enkrypt.testing.StandaloneBlockchain
+import io.enkrypt.testing.StandaloneBlockchain.Companion.Alice
+import io.enkrypt.testing.StandaloneBlockchain.Companion.Bob
+import io.enkrypt.testing.StandaloneBlockchain.Companion.Coinbase
+import io.enkrypt.testing.StandaloneBlockchain.Companion.Terence
+import io.enkrypt.testing.TestContracts
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
 import org.apache.kafka.streams.TopologyTestDriver
@@ -131,7 +133,7 @@ class BlockProcessorERC721Test : BehaviorSpec() {
 
         then("there should be a token balance assigning token 1 to Bob") {
           val record = readBalance(testDriver)!!
-          record.key() shouldBe tokenKey(contract = contractAddress, tokenId = 1.toBigInteger().unsignedByteBuffer())
+          record.key() shouldBe tokenKey(contract = contractAddress, tokenId = 1.toBigInteger().unsignedByteBuffer(), balanceType = ERC721)
           record.value() shouldBe tokenBalance(address = Bob.address.data20())
         }
 
@@ -149,7 +151,7 @@ class BlockProcessorERC721Test : BehaviorSpec() {
 
         then("there should be a token balance assigning token 2 to Alice") {
           val record = readBalance(testDriver)!!
-          record.key() shouldBe tokenKey(contract = contractAddress, tokenId = 2.toBigInteger().unsignedByteBuffer())
+          record.key() shouldBe tokenKey(contract = contractAddress, tokenId = 2.toBigInteger().unsignedByteBuffer(), balanceType = ERC721)
           record.value() shouldBe tokenBalance(address = Alice.address.data20())
         }
 
@@ -167,7 +169,7 @@ class BlockProcessorERC721Test : BehaviorSpec() {
 
         then("there should be a token balance assigning token 3 to Terence") {
           val record = readBalance(testDriver)!!
-          record.key() shouldBe tokenKey(contract = contractAddress, tokenId = 3.toBigInteger().unsignedByteBuffer())
+          record.key() shouldBe tokenKey(contract = contractAddress, tokenId = 3.toBigInteger().unsignedByteBuffer(), balanceType = ERC721)
           record.value() shouldBe tokenBalance(address = Terence.address.data20())
         }
       }
@@ -202,7 +204,7 @@ class BlockProcessorERC721Test : BehaviorSpec() {
 
         then("there should be a token balance assigning token 2 to Terence") {
           val record = readBalance(testDriver)!!
-          record.key() shouldBe tokenKey(contract = contractAddress, tokenId = 2.toBigInteger().unsignedByteBuffer())
+          record.key() shouldBe tokenKey(contract = contractAddress, tokenId = 2.toBigInteger().unsignedByteBuffer(), balanceType = ERC721)
           record.value() shouldBe tokenBalance(address = Terence.address.data20())
         }
       }

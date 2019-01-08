@@ -12,11 +12,11 @@ import io.enkrypt.kafka.streams.processors.block.ChainEvents.blockReward
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.contractCreate
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.contractDestroy
 import io.enkrypt.kafka.streams.processors.block.ChainEvents.fungibleTransfer
-import io.enkrypt.kafka.streams.util.SolidityContract
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Bob
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Coinbase
-import io.enkrypt.kafka.streams.util.TestContracts
+import io.enkrypt.testing.SolidityContract
+import io.enkrypt.testing.StandaloneBlockchain
+import io.enkrypt.testing.StandaloneBlockchain.Companion.Bob
+import io.enkrypt.testing.StandaloneBlockchain.Companion.Coinbase
+import io.enkrypt.testing.TestContracts
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
 

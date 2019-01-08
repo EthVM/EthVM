@@ -22,11 +22,11 @@ import io.enkrypt.kafka.streams.util.KafkaStreamsTestListener
 import io.enkrypt.kafka.streams.util.KafkaUtil.readContractCreation
 import io.enkrypt.kafka.streams.util.KafkaUtil.readContractDestruction
 import io.enkrypt.kafka.streams.util.KafkaUtil.readFungibleTokenMovement
-import io.enkrypt.kafka.streams.util.SolidityContract
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Alice
-import io.enkrypt.kafka.streams.util.StandaloneBlockchain.Companion.Coinbase
-import io.enkrypt.kafka.streams.util.TestContracts
+import io.enkrypt.testing.SolidityContract
+import io.enkrypt.testing.StandaloneBlockchain
+import io.enkrypt.testing.StandaloneBlockchain.Companion.Alice
+import io.enkrypt.testing.StandaloneBlockchain.Companion.Coinbase
+import io.enkrypt.testing.TestContracts
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec
 import org.apache.kafka.streams.TopologyTestDriver

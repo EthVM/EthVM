@@ -44,8 +44,7 @@ dependencies {
   implementation("io.arrow-kt:arrow-core:0.8.1")
 
   // Testing
+  testImplementation(project(":testing"))
   testImplementation("org.apache.kafka:kafka-streams-test-utils:2.1.0")
-  testImplementation("org.koin:koin-test:1.0.2")
-  testImplementation("io.kotlintest:kotlintest-runner-junit5:3.1.11")
-  testImplementation("io.mockk:mockk:1.8.13")
+
 }
