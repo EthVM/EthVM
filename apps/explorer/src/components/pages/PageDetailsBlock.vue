@@ -3,25 +3,15 @@
     <app-bread-crumbs :new-items="getItems"></app-bread-crumbs>
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
-        <app-list-details
-          :items="blockDetails"
-          :moreItems="blockMoreDetails"
-          :detailsType="getBlockType"
-        >
-          <app-list-title slot="details-title" :listType="getBlockType" :blockDetails="blockTitle"></app-list-title>
+        <app-list-details :items="blockDetails" :more-items="blockMoreDetails" :details-type="getBlockType">
+          <app-list-title slot="details-title" :list-type="getBlockType" :block-details="blockTitle"></app-list-title>
         </app-list-details>
       </v-flex>
     </v-layout>
     <!-- Mined Block, txs table -->
     <v-layout row wrap justify-start class="mb-4">
       <v-flex v-if="blockType == 'block'" xs12>
-        <table-txs
-          v-if="transactions"
-          :transactions="transactions"
-          :frame-txs="true"
-          :table-title="$t('title.blockTx')"
-          class="mt-3"
-        ></table-txs>
+        <table-txs v-if="transactions" :transactions="transactions" :frame-txs="true" :table-title="$t('title.blockTx')" class="mt-3"></table-txs>
         <v-card v-else flat color="white">
           <v-layout v-if="transactionLoading" column align-center justify-center pa-4>
             <v-icon class="text-xs-center fa fa-spinner fa-pulse fa-4x fa-fw primary--text" large></v-icon>

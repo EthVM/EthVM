@@ -11,9 +11,7 @@
         <!-- Previous Block -->
         <v-flex xs3 sm2 md1>
           <v-layout align-center justify-start>
-            <v-btn flat color="primary" class="black--text" icon :to="blockDetails.prev">
-              <v-icon>fas fa-angle-left</v-icon>
-            </v-btn>
+            <v-btn flat color="primary" class="black--text" icon :to="blockDetails.prev"> <v-icon>fas fa-angle-left</v-icon> </v-btn>
           </v-layout>
         </v-flex>
         <!-- Title -->
@@ -45,9 +43,7 @@
         <!-- Next Block -->
         <v-flex v-if="blockDetails.next" xs3 sm2 md1>
           <v-layout align-center justify-end>
-            <v-btn flat color="primary" class="black--text" icon :to="next">
-              <v-icon>fas fa-angle-right</v-icon>
-            </v-btn>
+            <v-btn flat color="primary" class="black--text" icon :to="next"> <v-icon>fas fa-angle-right</v-icon> </v-btn>
           </v-layout>
         </v-flex>
       </v-layout>
@@ -82,7 +78,6 @@ export default class AppListTitle extends Vue {
   }
 
   get next() {
-    console.log(this.blockDetails.next)
     return this.blockDetails.next
   }
 }

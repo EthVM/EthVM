@@ -3,11 +3,7 @@
     <app-bread-crumbs :new-items="items"></app-bread-crumbs>
     <v-layout row wrap justify-start class="mb-4" v-if="tx">
       <v-flex xs12>
-        <app-list-details
-          :items="txDetails"
-          :more-items="txMoreDetails"
-          :details-type="detailsType"
-        >
+        <app-list-details :items="txDetails" :more-items="txMoreDetails" :details-type="detailsType">
           <app-list-title slot="details-title" :list-type="detailsType"></app-list-title>
         </app-list-details>
       </v-flex>
