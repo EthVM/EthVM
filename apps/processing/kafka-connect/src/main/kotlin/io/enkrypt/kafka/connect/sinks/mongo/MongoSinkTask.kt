@@ -3,7 +3,6 @@ package io.enkrypt.kafka.connect.sinks.mongo
 import com.mongodb.MongoClient
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
-import com.mongodb.client.model.DeleteManyModel
 import com.mongodb.client.model.DeleteOneModel
 import com.mongodb.client.model.ReplaceOneModel
 import com.mongodb.client.model.ReplaceOptions
@@ -29,13 +28,11 @@ import org.apache.kafka.connect.data.Schema
 import org.apache.kafka.connect.data.Struct
 import org.apache.kafka.connect.sink.SinkRecord
 import org.apache.kafka.connect.sink.SinkTask
-import org.bson.BsonArray
 import org.bson.BsonDecimal128
 import org.bson.BsonDocument
 import org.bson.BsonString
 import org.bson.Document
 import org.bson.types.Decimal128
-import java.nio.ByteBuffer
 import kotlin.system.measureTimeMillis
 
 class MongoSinkTask : SinkTask() {
@@ -142,99 +139,60 @@ enum class KafkaTopics(
 
     require(record.keySchema().type() == Schema.Type.STRUCT) { "Key schema must be a struct" }
 
-    var blockWrites = listOf<WriteModel<BsonDocument>>()
-    var txWrites = listOf<WriteModel<BsonDocument>>()
-    var uncleWrites = listOf<WriteModel<BsonDocument>>()
-
     val blockNumber = (record.key() as Struct).getBytes("number").unsignedBigInteger()
     val blockNumberBson = BsonDecimal128(Decimal128(blockNumber.toBigDecimal()))
 
     val blockFilter = BsonDocument().apply { append("_id", blockNumberBson) }
 
-    if (record.value() == null) {
+    val blockWrite = when (record.value()) {
+      null -> DeleteOneModel<BsonDocument>(blockFilter)
+      else -> {
+        require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
+        val valueBson = StructToBsonConverter.convert(record.value() as Struct, "block")
+        ReplaceOneModel(blockFilter, valueBson, MongoSinkTask.replaceOptions)
+      }
 
-      // tombstone received so we need to delete the block
-      blockWrites += DeleteOneModel(blockFilter)
-
-      // delete transactions as-well
-      val txsFilter = BsonDocument().apply { append("blockNumber", blockNumberBson) }
-      txWrites += DeleteManyModel(txsFilter)
-
-      // delete the uncles
-      val unclesFilter = BsonDocument().apply { append("blockNumber", blockNumberBson) }
-      uncleWrites += DeleteManyModel(unclesFilter)
-
-    } else {
-
-      require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
-
-      // write the block
-
-      val valueBson = StructToBsonConverter.convert(record.value() as Struct, "block")
-      blockWrites += ReplaceOneModel(blockFilter, valueBson, MongoSinkTask.replaceOptions)
-
-      // write the uncles
-
-      val uncles = valueBson.getArray("uncles", BsonArray())
-
-      uncles
-        .map { it as BsonDocument }
-        .map { uncle ->
-
-          uncleWrites += ReplaceOneModel(
-            BsonDocument().apply {
-              append("_id", uncle["hash"])
-              append("blockNumber", blockNumberBson)
-            },
-            uncle.apply {
-              append("_id", uncle["hash"])
-              append("blockNumber", blockNumberBson)
-            },
-            MongoSinkTask.replaceOptions
-          )
-
-        }
-
-      // write the transactions
-
-      val txs = valueBson.getArray("transactions", BsonArray())
-      val txReceipts = valueBson.getArray("transactionReceipts", BsonArray())
-
-      valueBson.remove("transactionReceipts") // we are going to embed them inside their respective transactions
-
-      txWrites += txs.zip(txReceipts)
-        .map { (tx, receipt) -> Pair(tx as BsonDocument, receipt as BsonDocument) }
-        .map { (tx, receipt) ->
-
-          val txHash = tx.getString("hash")
-
-          // drop and replace
-
-          val update = UpdateOneModel<BsonDocument>(
-            Document(mapOf(
-              "from" to tx.getString("from"),
-              "nonce" to tx.getDecimal128("nonce"))
-            ),
-            Document(mapOf(
-              "\$set" to mapOf("replacedBy" to txHash),
-              "\$unset" to mapOf("blockNumber" to 1)
-            ))
-          )
-
-          val doc = tx
-            .append("blockNumber", blockNumberBson)
-            .append("receipt", receipt)
-
-          val replace = ReplaceOneModel(org.bson.BsonDocument("_id", txHash), doc, MongoSinkTask.replaceOptions)
-
-          listOf(update, replace)
-        }.flatten()
     }
 
-    mapOf(
-      MongoCollections.Blocks to blockWrites,
-      MongoCollections.Transactions to txWrites,
-      MongoCollections.Uncles to uncleWrites)
+    mapOf(MongoCollections.Blocks to listOf(blockWrite))
+  }),
+
+  Transactions("transactions", { record: SinkRecord ->
+
+    require(record.keySchema().type() == Schema.Type.STRUCT) { "Key schema must be a struct" }
+
+    val key = StructToBsonConverter.convert(record.key(), "transactionKey")
+    val idFilter = BsonDocument("_id", key["txHash"])
+
+    val txWrites = when (record.value()) {
+      null -> listOf(DeleteOneModel<BsonDocument>(idFilter))
+      else -> {
+
+        val value = StructToBsonConverter.convert(record.value(), "transaction")
+        listOf(ReplaceOneModel(idFilter, value, MongoSinkTask.replaceOptions))
+
+      }
+    }
+
+    mapOf(MongoCollections.Transactions to txWrites)
+  }),
+
+  Uncles("uncles", { record: SinkRecord ->
+
+    require(record.keySchema().type() == Schema.Type.STRUCT) { "Key schema must be a struct" }
+
+    val key = StructToBsonConverter.convert(record.key(), "uncleKey")
+    val idFilter = BsonDocument("_id", key["uncleHash"])
+
+    val uncleWrites = when (record.value()) {
+      null -> listOf(DeleteOneModel<BsonDocument>(idFilter))
+      else -> {
+        val value = StructToBsonConverter.convert(record.value(), "blockHeader")
+        listOf(ReplaceOneModel(idFilter, value, MongoSinkTask.replaceOptions))
+      }
+    }
+
+    mapOf(MongoCollections.Uncles to uncleWrites)
   }),
 
   TokenTransfers("token-transfers", { record: SinkRecord ->

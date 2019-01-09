@@ -16,7 +16,6 @@ import io.enkrypt.avro.processing.ChainEventType
 import io.enkrypt.avro.processing.ContractCreateRecord
 import io.enkrypt.avro.processing.ContractDestroyRecord
 import io.enkrypt.avro.processing.TokenTransferRecord
-import io.enkrypt.avro.processing.TokenTransferType
 import io.enkrypt.common.extensions.bigInteger
 import io.enkrypt.common.extensions.data20
 import io.enkrypt.common.extensions.isSuccess
