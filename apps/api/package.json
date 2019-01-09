@@ -30,11 +30,6 @@
     "test:cov": "jest --coverage --config jest.unit.json",
     "prettier": "prettier --write 'src/**/*.ts'"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn format"
-    }
-  },
   "dependencies": {
     "@enkrypt.io/ethereumjs-vm": "^2.3.3",
     "@types/jest": "^23.3.10",
@@ -74,7 +69,6 @@
     "@types/redis": "^2.8.8",
     "@types/socket.io": "^2.0.2",
     "chai": "^4.2.0",
-    "husky": "^1.2.1",
     "jest": "^23.6.0",
     "jest-environment-node": "^23.4.0",
     "mocha": "^5.2.0",
