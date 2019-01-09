@@ -33,9 +33,8 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Provide, Mixins } from 'vue-property-decorator'
+import { Vue, Component, Mixins } from 'vue-property-decorator'
 import { Events } from 'ethvm-common'
-import BN from 'bignumber.js'
 import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
 import AppInfoCard from '@app/components/ui/AppInfoCard.vue'
 import ChartLiveTx from '@app/components/charts/live/ChartLiveTx.vue'
@@ -44,7 +43,6 @@ import TableBlocks from '@app/components/tables/TableBlocks.vue'
 import TableTxs from '@app/components/tables/TableTxs.vue'
 import { LastBlockInfoMixin } from '@app/components/mixins'
 import { Block, Tx } from '@app/models'
-import { TranslateResult } from 'vue-i18n'
 
 const MAX_ITEMS = 20
 

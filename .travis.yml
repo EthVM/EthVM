@@ -42,15 +42,15 @@ matrix:
     #   language: node_js
     #   node_js:
     #     - "10"
-    -
-      env:
-        - ID=explorer/unit-tests
-        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/explorer
-        - INSTALL='yarn install'
-        - ACTION='yarn test:unit'
-      language: node_js
-      node_js:
-        - "10"
+    # -
+    #   env:
+    #     - ID=explorer/unit-tests
+    #     - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/explorer
+    #     - INSTALL='yarn install'
+    #     - ACTION='yarn test:unit'
+    #   language: node_js
+    #   node_js:
+    #     - "10"
     -
       env:
         - ID=bolt/unit-tests
