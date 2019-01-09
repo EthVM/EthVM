@@ -32,7 +32,8 @@
       </v-layout>
     </v-card>
     <!-- End Table Header -->
-    <v-card v-if="transactions.length > 0" flat id="scroll-target" :style="getStyle" class="scroll-y pt-0 pb-0">
+    <app-info-load v-if="loading"></app-info-load>
+    <v-card v-else flat id="scroll-target" :style="getStyle" class="scroll-y pt-0 pb-0">
       <v-layout column fill-height v-scroll:#scroll-target style="margin-right: 1px" class="mb-1">
         <v-flex xs12>
           <v-card v-for="tx in transactions" class="transparent" flat :key="tx.getHash()">
@@ -42,23 +43,28 @@
         </v-flex>
       </v-layout>
     </v-card>
-    <div v-else>
+    <!-- Hadle error - No Txs History
+   <div v-else>
       <v-card flat class="mt-3 mb-3">
-        <v-card-text v-if="!pending" class="text-xs-center text-muted">{{ $t('message.noTxHistory') }}</v-card-text>
+        <v-card-text
+          v-if="!pending"
+          class="text-xs-center text-muted"
+        >{{ $t('message.noTxHistory') }}</v-card-text>
         <v-card-text v-else class="text-xs-center text-muted">{{ $t('message.noPending') }}</v-card-text>
       </v-card>
-    </div>
+    </div>-->
   </v-card>
 </template>
 
 <script lang="ts">
-import AppFootnotes from '@app/components/ui/AppFootnotes.vue'
+import AppInfoLoad from '@app/components/ui/AppInfoLoad.vue'
 import TableTxsRow from '@app/components/tables/TableTxsRow.vue'
 import { Tx } from '@app/models'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({
   components: {
+    AppInfoLoad,
     TableTxsRow
   }
 })
@@ -66,6 +72,7 @@ export default class TableTxs extends Vue {
   @Prop(String) pageType: string
   @Prop(String) showStyle!: string
   @Prop(Array) transactions!: Tx[]
+  @Prop({ type: Boolean, defualt: true }) loading: boolean
 
   data() {
     return {
@@ -81,7 +88,6 @@ export default class TableTxs extends Vue {
           icon: 'fa fa-times-circle'
         }
       ],
-      color: 'grey',
       titles: {
         tx: this.$i18n.t('title.lastTxs'),
         pending: this.$i18n.t('title.pending'),
@@ -91,15 +97,15 @@ export default class TableTxs extends Vue {
   }
 
   // Computed
-  get getStyle() {
+  get getStyle(): string {
     return this.showStyle
   }
 
-  get getTitle() {
+  get getTitle(): string {
     return this.titles[this.pageType] || this.titles['tx']
   }
 
-  get pending() {
+  get pending(): boolean {
     return this.pageType == 'pending'
   }
 }

@@ -3,7 +3,6 @@ import io from 'socket.io-client'
 import { EthvmApi } from '@app/api'
 
 export class EthvmSocketIoApi implements EthvmApi {
-
   private readonly io: SocketIOClient.Socket
 
   constructor(readonly endpoint: string) {
@@ -25,5 +24,4 @@ export class EthvmSocketIoApi implements EthvmApi {
   getBlocksMined(address: string, limit: number, page: number): Promise<Block[]> {
     return Promise.resolve([])
   }
-
 }

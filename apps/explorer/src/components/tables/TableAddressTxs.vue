@@ -22,7 +22,9 @@
       <v-spacer></v-spacer>
       <v-flex d-flex xs12 sm4 md3>
         <v-layout row align-center justify-start fill-height height="40px">
-          <v-flex> <p class="pr-2 ma-0">{{ $t('filter.view') }}:</p> </v-flex>
+          <v-flex>
+            <p class="pr-2 ma-0">{{ $t('filter.view') }}:</p>
+          </v-flex>
           <v-flex>
             <v-card flat style="border: solid 1px #efefef; padding-top: 1px;" height="36px" class="pl-2">
               <v-select

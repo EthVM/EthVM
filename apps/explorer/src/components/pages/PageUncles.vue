@@ -2,7 +2,7 @@
   <v-container grid-list-lg class="mb-0">
     <app-bread-crumbs :new-items="items"></app-bread-crumbs>
     <v-layout row wrap justify-center mb-4>
-      <v-flex xs12> <table-blocks :max-blocks="true" :blocks="getuncles" :frame-blocks="false"></table-blocks> </v-flex>
+      <v-flex xs12> <table-blocks :blocks="uncles" page-type="uncles" :loading="uncleLoad"></table-blocks> </v-flex>
     </v-layout>
   </v-container>
 </template>
@@ -26,33 +26,21 @@ const MAX_ITEMS = 50
 export default class PageUncles extends Vue {
   data() {
     return {
-      uncles: [],
       items: [
         {
           text: this.$i18n.t('title.uncles'),
           disabled: true
         }
-      ],
-      maxItems: MAX_ITEMS
+      ]
     }
   }
 
-  created() {
-    this.uncles = this.$store.getters.getUncles
-    this.$eventHub.$on(Events.newUncle, _uncle => {
-      if (Visibility.state() === 'visible') {
-        this.uncles = this.$store.getters.getUncles
-      }
-    })
-  }
-
-  beforeDestroy() {
-    this.$eventHub.$off(Events.newUncle)
-  }
-
   // Computed
-  get getuncles() {
-    return this.uncles.slice(0, this.maxItems)
+  get uncles() {
+    return this.$store.getters.getUncles.slice(0, MAX_ITEMS)
+  }
+  get uncleLoad(): boolean {
+    return this.uncles.length > 0 ? false : true
   }
 }
 </script>

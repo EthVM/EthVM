@@ -16,13 +16,12 @@
       </v-flex>
     </v-layout>
     <v-layout row wrap justify-center mb-4>
-      <v-flex xs12> <table-blocks v-if="blocks" :blocks="blocks"></table-blocks> </v-flex>
+      <v-flex xs12> <table-blocks :loading="blocksLoad" :blocks="blocks"></table-blocks> </v-flex>
     </v-layout>
   </v-container>
 </template>
 
 <script lang="ts">
-import Visibility from 'visibilityjs'
 import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
 import AppInfoCard from '@app/components/ui/AppInfoCard.vue'
 import TableBlocks from '@app/components/tables/TableBlocks.vue'
@@ -44,7 +43,6 @@ const MAX_ITEMS = 50
 export default class PageBlocks extends mixins(LastBlockInfoMixin) {
   data() {
     return {
-      blocks: [],
       items: [
         {
           text: this.$i18n.t('title.blocks'),
@@ -54,21 +52,12 @@ export default class PageBlocks extends mixins(LastBlockInfoMixin) {
     }
   }
 
-  created() {
-    this.blocks = this.$store.getters.getBlocks
-    this.$eventHub.$on(Events.newBlock, _block => {
-      if (Visibility.state() === 'visible') {
-        this.blocks = this.getBlocks
-      }
-    })
+  get blocks(): Block[] {
+    return this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
   }
 
-  beforeDestroy() {
-    this.$eventHub.$off(Events.newBlock)
-  }
-
-  get getBlocks() {
-    return this.blocks.slice(0, MAX_ITEMS)
+  get blocksLoad(): boolean {
+    return this.blocks.length > 0 ? false : true
   }
 }
 </script>

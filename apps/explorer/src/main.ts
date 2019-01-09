@@ -67,4 +67,3 @@ const v = new Vue({
     App
   }
 })
-

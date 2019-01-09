@@ -1,11 +1,11 @@
 <template>
   <v-card color="white" flat class="pt-3 pr-4 pl-4 mt-0">
-    <v-layout v-if="showStyle == ''" row wrap align-center pb-1>
+    <v-layout v-if="pageType != 'home'" row wrap align-center pb-1>
       <v-flex d-flex xs12 sm8 order-xs1>
         <v-card-title class="title font-weight-bold">{{ getTitle }}</v-card-title>
       </v-flex>
       <v-flex hidden-sm-and-down md4 order-xs2>
-        <v-layout justify-end> <app-footnotes :footnotes="footnote" /> </v-layout>
+        <v-layout justify-end> <app-footnotes :footnotes="footnotes" /> </v-layout>
       </v-flex>
     </v-layout>
     <v-layout v-else row wrap align-center pb-1>
@@ -13,7 +13,7 @@
         <v-card-title class="title font-weight-bold">{{ $t('title.lastBlock') }}</v-card-title>
       </v-flex>
       <v-flex hidden-sm-and-down md4 order-md2>
-        <v-layout justify-center> <app-footnotes :footnotes="footnote" /> </v-layout>
+        <v-layout justify-center> <app-footnotes :footnotes="footnotes" /> </v-layout>
       </v-flex>
       <v-flex d-flex xs4 md1 order-xs2 order-md3>
         <v-layout justify-end>
@@ -40,7 +40,8 @@
       </v-layout>
     </v-card>
     <!-- End Table Header -->
-    <v-card v-if="blocks" flat id="scroll-target" :style="getStyle" class="scroll-y pt-0 pb-0">
+    <app-info-load v-if="loading"></app-info-load>
+    <v-card v-else flat id="scroll-target" :style="getStyle" class="scroll-y pt-0 pb-0">
       <v-layout column fill-height v-scroll:#scroll-target style="margin-right: 1px" class="mb-1">
         <v-flex xs12>
           <transition-group name="list" tag="p">
@@ -52,31 +53,38 @@
         </v-flex>
       </v-layout>
     </v-card>
-    <div v-else>
+    <!-- Handle if error from server
+      <div v-else>
       <v-card flat mb-4>
         <v-card-text class="text-xs-center text-muted">{{ $t('message.error') }}</v-card-text>
       </v-card>
     </div>
+    -->
   </v-card>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import AppInfoLoad from '@app/components/ui/AppInfoLoad.vue'
 import AppFootnotes from '@app/components/ui/AppFootnotes.vue'
 import TableBlocksRow from '@app/components/tables/TableBlocksRow.vue'
 import { Block } from '@app/models'
+import { Footnote } from '@app/components/props'
 
 @Component({
   components: {
     AppFootnotes,
+    AppInfoLoad,
     TableBlocksRow
   }
 })
 export default class TableBlocks extends Vue {
-  @Prop({ type: Boolean, default: true }) frameBlocks!: boolean
+  @Prop({ type: String, default: 'blocks' }) pageType!: string
   @Prop({ type: String, default: 'true' }) showStyle!: string
   @Prop({ type: Array, default: [] }) blocks!: Block[]
+  @Prop({ type: Boolean, defualt: true }) loading: boolean
 
+  /* Data: */
   data() {
     return {
       footnote: [
@@ -90,21 +98,29 @@ export default class TableBlocks extends Vue {
           text: this.$i18n.t('footnote.failed'),
           icon: 'fa fa-circle'
         }
-      ]
+      ],
+      titles: {
+        blocks: this.$i18n.t('title.blocks'),
+        uncle: this.$i18n.t('title.uncles')
+      }
     }
   }
 
-  // Computed
-  get getStyle() {
+  /* Computed: */
+  get getStyle(): string {
     return this.showStyle
   }
 
-  get getTitle() {
-    return this.frameBlocks ? this.$i18n.t('title.blocks') : this.$i18n.t('title.uncles')
+  get getTitle(): string {
+    return this.titles[this.pageType]
   }
 
-  get getBlockType() {
+  get getBlockType(): boolean {
     return this.frameBlocks
+  }
+
+  get footnotes(): Footnote[] {
+    return this.footnote
   }
 }
 </script>

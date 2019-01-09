@@ -25,7 +25,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 export default class App extends Vue {
   created() {
     this.$options.sockets.connect = () => {
-      if (!this.pageName || this.pageName === 'blocks' || this.pageName === 'transactions') {
+      if (this.pageName === 'home' || this.pageName === 'blocks' || this.pageName === 'transactions') {
         this.setPastData()
       } else {
         setTimeout(() => {
@@ -98,11 +98,7 @@ export default class App extends Vue {
 
   // Computed
   get pageName() {
-    return this.$route.params.pageName
-  }
-
-  get param() {
-    return this.$route.params.param
+    return this.$route.name
   }
 
   get holder() {

@@ -3,8 +3,7 @@ type ItemProcessor<T> = (item: T, items: T[]) => T[]
 export class FIFO<T> {
   private arr: T[] = []
 
-  constructor(private readonly limit: number, private readonly processor: ItemProcessor<T>) {
-  }
+  constructor(private readonly limit: number, private readonly processor: ItemProcessor<T>) {}
 
   public items(): T[] {
     return this.arr

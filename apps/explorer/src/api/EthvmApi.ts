@@ -1,7 +1,6 @@
 import { Account, Block, Uncle, Tx, PendingTx, Statistic } from 'ethvm-common'
 
 export interface EthvmApi {
-
   // Blocks
   getBlocks(limit: number, page: number): Promise<Block[]>
   getBlock(hash: string): Promise<Block | null>

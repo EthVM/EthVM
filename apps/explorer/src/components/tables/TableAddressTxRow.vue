@@ -5,9 +5,7 @@
       <v-card-text class="text-xs-center secondary--text">{{ getText }}</v-card-text>
     </v-card>
     <v-card v-else color="white" flat class="pt-0 pb-2">
-      <v-layout justify-end class="pb-1">
-        <footnote :footnotes="footnote"></footnote>
-      </v-layout>
+      <v-layout justify-end class="pb-1"> <footnote :footnotes="footnote"></footnote> </v-layout>
       <!-- Table Header -->
       <v-card color="primary" flat class="white--text pl-3 pr-1" height="40px">
         <v-layout align-center justify-start row fill-height pr-3>
@@ -32,56 +30,34 @@
         <v-layout column fill-height v-scroll:#scroll-target class="pt-1" style="margin-right: 1px">
           <v-flex xs12>
             <v-card v-for="tx in transactions" class="transparent pb-1" flat :key="tx.getHash()">
-              <v-layout
-                grid-list-xs
-                row
-                wrap
-                align-center
-                justify-start
-                fill-height
-                pl-3
-                pr-2
-                pt-2
-                pb-1
-              >
+              <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
                 <v-flex d-flex xs6 sm8 md5 pr-3>
                   <div v-if="!type">
-                    <v-icon v-if="getType(tx)" class="fas fa-circle warning--text pr-3" small/>
-                    <v-icon v-else class="fas fa-circle success--text pr-3" small/>
+                    <v-icon v-if="getType(tx)" class="fas fa-circle warning--text pr-3" small />
+                    <v-icon v-else class="fas fa-circle success--text pr-3" small />
                   </div>
                   <v-layout row wrap align-center pb-1>
                     <v-flex d-flex xs12 pb-2>
-                      <router-link
-                        class="primary--text text-truncate font-italic psmall"
-                        :to="'/tx/' + tx.getHash()"
-                      >{{ tx.getHash() }}</router-link>
+                      <router-link class="primary--text text-truncate font-italic psmall" :to="'/tx/' + tx.getHash()">{{ tx.getHash() }}</router-link>
                     </v-flex>
                     <v-flex hidden-xs-and-down sm12 pt-0>
                       <v-layout row pl-2>
                         <p class="text-truncate info--text mb-0">
                           {{ $t('tx.from') }}:
-                          <router-link
-                            :to="'/address/' + tx.getFrom().toString()"
-                            class="secondary--text font-italic font-weight-regular"
-                          >{{ tx.getFrom().toString() }}</router-link>
+                          <router-link :to="'/address/' + tx.getFrom().toString()" class="secondary--text font-italic font-weight-regular">{{
+                            tx.getFrom().toString()
+                          }}</router-link>
                         </p>
                         <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
-                        <p
-                          class="text-truncate info--text font-weight-thin mb-0"
-                          v-if="tx.getContractAddress()"
-                        >
+                        <p class="text-truncate info--text font-weight-thin mb-0" v-if="tx.getContractAddress()">
                           {{ $t('tx.contract') }}:
-                          <router-link
-                            class="secondary--text font-italic font-weight-regular"
-                            :to="'/address/' + tx.getContractAddress()"
-                          >{{ tx.getContractAddress() }}</router-link>
+                          <router-link class="secondary--text font-italic font-weight-regular" :to="'/address/' + tx.getContractAddress()">{{
+                            tx.getContractAddress()
+                          }}</router-link>
                         </p>
                         <p class="text-truncate info--text font-weight-thin mb-0" v-else>
                           <strong>{{ $t('tx.to') }}:</strong>
-                          <router-link
-                            class="secondary--text font-italic font-weight-regular"
-                            :to="'/address/' + tx.getTo()"
-                          >{{ tx.getTo() }}</router-link>
+                          <router-link class="secondary--text font-italic font-weight-regular" :to="'/address/' + tx.getTo()">{{ tx.getTo() }}</router-link>
                         </p>
                       </v-layout>
                     </v-flex>
@@ -105,13 +81,13 @@
                       <span>{{ tx.getValue().toEth() }}</span>
                     </v-tooltip>
                     {{
-                    getShortEthValue(
-                    tx
-                    .getValue()
-                    .toEth()
-                    .toString(),
-                    false
-                    )
+                      getShortEthValue(
+                        tx
+                          .getValue()
+                          .toEth()
+                          .toString(),
+                        false
+                      )
                     }}
                   </p>
                 </v-flex>
@@ -122,11 +98,7 @@
                   <p class="text-truncate black--text mb-0">{{ tx.getGasPrice() }}</p>
                 </v-flex>
                 <v-flex hidden-xs-only sm1>
-                  <v-icon
-                    v-if="tx.getStatus()"
-                    small
-                    class="txSuccess--text"
-                  >fa fa-check-circle {{ log(tx) }}</v-icon>
+                  <v-icon v-if="tx.getStatus()" small class="txSuccess--text">fa fa-check-circle {{ log(tx) }}</v-icon>
                   <v-icon v-else small class="txFail--text">fa fa-times-circle {{ log(tx) }}</v-icon>
                 </v-flex>
               </v-layout>
@@ -185,8 +157,7 @@ export default class TableAddressTxRow extends Vue {
     return isShort
   }
 
-  log(tx) {
-  }
+  log(tx) {}
 
   // Computed
   getText() {
