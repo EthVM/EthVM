@@ -1,5 +1,19 @@
 #!/usr/bin/env bash
 
+# Give script sane defaults
+set -o errexit
+# set -o nounset
+# set -o xtrace
+# set -o verbose
+
+# Export common vars
+ORG="${ORG:-enkryptio}"
+
+ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
+APPS_PATH="${ROOT_DIR}/apps"
+DOCKER_IMAGES_PATH="${ROOT_DIR}/docker/images"
+PROJECTS_PATH="${SCRIPT_DIR}/projects.meta.json"
+
 # ensure checks that whe have corresponding utilities installed
 ensure() {
   if ! [ -x "$(command -v jq)" ]; then
@@ -37,5 +51,14 @@ ensure() {
 prop() {
   local path=${1}
   local key=${2:-'version'}
-  grep ${key} ${path} | cut -d '=' -f2
+  grep ${key} ${path} | cut -d '=' -f2 | sed "s/'/ /g"
+}
+
+# to_version - tries to find the version, depending on the extension name
+to_version() {
+  if [[ "$1" =~ \.properties$ ]]; then
+    echo $(prop "$1")
+  else
+    echo $(jq -r '.version' "$1")
+  fi
 }

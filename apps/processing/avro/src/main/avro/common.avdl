@@ -1,0 +1,14 @@
+@namespace("io.enkrypt.avro.common")
+protocol Common {
+
+  fixed Data1(1);
+  fixed Data8(8);
+  fixed Data20(20);
+  fixed Data32(32);
+  fixed Data256(256);
+
+  enum ContractType {
+    GENERIC, ERC20, ERC721
+  }
+
+}

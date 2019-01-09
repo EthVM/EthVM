@@ -1,0 +1,167 @@
+@namespace("io.enkrypt.avro.processing")
+protocol Processing {
+
+  import idl "common.avdl";
+  import idl "capture.avdl";
+
+  record ReorgKeyRecord {
+
+    union { null, io.enkrypt.avro.common.Data32 } blockHash = null;
+    union { null, io.enkrypt.avro.common.Data32 } txHash = null;
+    union { null, io.enkrypt.avro.common.Data20 } address = null;
+
+    union { null, bytes } blockNumber = null;
+    union { null, bytes } nonce = null;
+    union { null, string } name = null;
+
+  }
+
+  record TokenTransferKeyRecord {
+    bytes hash;
+  }
+
+  enum BalanceType {
+    ETHER, ERC20, ERC721
+  }
+
+  record TokenTransferRecord {
+
+    io.enkrypt.avro.common.Data32 blockHash;
+    io.enkrypt.avro.common.Data32 txHash;
+    int txIndex;
+    union { null, int } internalTxIdx;
+
+    BalanceType transferType = "ETHER";
+
+    io.enkrypt.avro.common.Data20 from;
+    io.enkrypt.avro.common.Data20 to;
+
+    union { null, io.enkrypt.avro.common.Data20 } contract = null;
+
+    union { null, bytes } amount = null;
+    union { null, bytes } tokenId = null;
+    union { null, long } timestamp = null;                        // block timestamp in seconds since epoch
+  }
+
+  record TokenBalanceKeyRecord {
+
+    BalanceType balanceType = "ETHER";
+    union { null, io.enkrypt.avro.common.Data20 } contract = null;
+    union { null, io.enkrypt.avro.common.Data20 } address = null;
+    union { null, bytes } tokenId = null;
+
+  }
+
+  record TokenBalanceRecord {
+
+    union { null, bytes } amount = null;
+    union { null, io.enkrypt.avro.common.Data20 } address = null;
+
+  }
+
+// contracts
+
+  record ContractKeyRecord {
+    io.enkrypt.avro.common.Data20 address;
+  }
+
+  record ContractCreateRecord {
+    io.enkrypt.avro.common.ContractType type;
+    io.enkrypt.avro.common.Data20 creator;
+    io.enkrypt.avro.common.Data32 txHash;
+    io.enkrypt.avro.common.Data32 blockHash;
+    io.enkrypt.avro.common.Data20 address;
+    bytes data;
+  }
+
+  record ContractDestroyRecord {
+    io.enkrypt.avro.common.Data32 txHash;
+    io.enkrypt.avro.common.Data32 blockHash;
+    io.enkrypt.avro.common.Data20 address;
+  }
+
+  enum ChainEventType {
+    PREMINE_BALANCE,
+    BLOCK_REWARD,
+    TOKEN_TRANSFER,
+    CONTRACT_CREATE,
+    CONTRACT_DESTROY
+  }
+
+  record ChainEventRecord {
+
+    ChainEventType `type`;
+
+    boolean reverse = false;
+
+    union { io.enkrypt.avro.capture.PremineBalanceRecord, io.enkrypt.avro.capture.BlockRewardRecord, TokenTransferRecord, ContractCreateRecord, ContractDestroyRecord } value;
+    union { null, io.enkrypt.avro.common.Data32 } txHash = null;
+  }
+
+  record ContractLogoRecord {
+    union { null, string } src;
+    union { null, string } width;
+    union { null, string } height;
+  }
+
+  record ContractSupportRecord {
+    union { null, string } email;
+    union { null, string } url;
+  }
+
+  record ContractSocialRecord {
+    union { null, string } blog;
+    union { null, string } chat;
+    union { null, string } facebook;
+    union { null, string } forum;
+    union { null, string } github;
+    union { null, string } gitter;
+    union { null, string } instagram;
+    union { null, string } linkedin;
+    union { null, string } reddit;
+    union { null, string } slack;
+    union { null, string } telegram;
+    union { null, string } twitter;
+    union { null, string } youtube;
+  }
+
+  record ContractMetadataRecord {
+
+    string name;
+    string symbol;
+    bytes address;
+    int decimals;
+
+    union { null, string } ens_address;
+    union { null, io.enkrypt.avro.common.ContractType } type;
+    union { null, ContractLogoRecord } logo;
+    union { null, ContractSupportRecord } support;
+    union { null, ContractSocialRecord } social;
+    union { null, string } website;
+
+  }
+
+// block events
+
+  record BlockChainEventsRecord {
+    array<ChainEventRecord> events;
+  }
+
+// metrics
+
+  record MetricKeyRecord {
+    long `date`;
+    string name;
+  }
+
+  record MetricRecord {
+
+    union { null, int } `int` = null;
+    union { null, long } `long` = null;
+    union { null, float } `float` = null;
+    union { null, double } `double` = null;
+    union { null, bytes } `bigInteger` = null;
+
+  }
+
+}

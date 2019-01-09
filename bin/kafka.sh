@@ -1,14 +1,6 @@
 #!/usr/bin/env bash
 
-# Give script sane defaults
-set -o errexit
-set -o nounset
-# set -o xtrace
-# set -o verbose
-
-# Useful VARS
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 
 # import utils
 source ${SCRIPT_DIR}/utils.sh
@@ -16,7 +8,7 @@ source ${SCRIPT_DIR}/utils.sh
 # verify we have required utilities installed
 ensure
 
-# kafka_usage - prints monkey subcommand usage
+# kafka_usage - prints kafka subcommand usage
 kafka_usage() {
   echo ""
   echo "Utility to manipulate Kafka."
@@ -32,9 +24,16 @@ kafka_usage() {
   echo ""
 }
 
+read_version() {
+  local raw_version_path=$(jq -car '.projects[] | select(.id=="kafka-ethvm-utils") | .version' $PROJECTS_PATH)
+  local version_path=$(eval "echo -e ${raw_version_path}")
+  echo $(to_version "${version_path}")
+}
+
 # create_topics - create EthVM Kafka topics
 create_topics() {
-  docker run --rm --network ethvm_back -e KAFKA_BROKERS=1 enkryptio/kafka-ethvm-init:0.1.0
+  local version=$(read_version)
+  docker run --rm --network ethvm_back -e KAFKA_BROKERS=1 enkryptio/kafka-ethvm-utils:${version} create-topics
 }
 
 # list_topics - lists registered Kafka topics
@@ -47,12 +46,11 @@ list_topics() {
 
 run() {
   local command="${1:-false}"
-  local action="${2:-false}"
 
   case "${command}" in
-    create-topics) create_topics "${action}" ;;
-    list-topics)   list_topics               ;;
-    help|*)        kafka_usage; exit 0       ;;
+    create-topics) create_topics       ;;
+    list-topics)   list_topics         ;;
+    help|*)        kafka_usage; exit 0 ;;
   esac
 }
 run "$@"

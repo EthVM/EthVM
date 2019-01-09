@@ -1,14 +1,6 @@
 #!/usr/bin/env bash
 
-# Give script sane defaults
-set -o errexit
-set -o nounset
-# set -o xtrace
-# set -o verbose
-
-# Useful VARS
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 
 # import utils
 source ${SCRIPT_DIR}/utils.sh
@@ -16,7 +8,7 @@ source ${SCRIPT_DIR}/utils.sh
 # verify we have required utilities installed
 ensure
 
-# kafka_usage - prints monkey subcommand usage
+# kafka_usage - prints kafka subcommand usage
 kafka_usage() {
   echo ""
   echo "Utility to manipulate MongoDB."
@@ -36,7 +28,10 @@ kafka_usage() {
 init() {
   docker-compose exec -T mongodb mongo --eval "rs.initiate()"
   sleep 5
-  docker run --rm --network ethvm_back -e MONGODB_URL='mongodb://mongodb:27017/ethvm_local' enkryptio/mongodb-ethvm-init:0.1.0
+  local raw_version_path=$(jq -car '.projects[] | select(.id=="mongodb-ethvm-utils") | .version' $PROJECTS_PATH)
+  local version_path=$(eval "echo -e ${raw_version_path}")
+  local version=$(to_version "${version_path}")
+  docker run --rm --network ethvm_back -e MONGODB_URL='mongodb://mongodb:27017/ethvm_local' enkryptio/mongodb-ethvm-utils:${version}
 }
 
 # create_dump - creates a MongoDB dump file
@@ -51,9 +46,6 @@ create_dump() {
 bootstrap() {
   docker-compose exec mongodb sh -c "mongorestore --archive=\"/datasets/mainnet_sample.mongo.archive\""
 }
-
-# reset_topics - reset registered Kafka topics (if any)
-# reset_topics() {}
 
 run() {
   local command="${1:-false}"

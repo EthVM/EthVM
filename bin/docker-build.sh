@@ -1,20 +1,6 @@
 #!/usr/bin/env bash
 
-# Give script sane defaults
-set -o errexit
-set -o nounset
-# set -o xtrace
-# set -o verbose
-
-# Useful VARS
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
-
-# DEFAULT VARS
-ORG="${ORG:-enkryptio}"
-APPS_PATH="${ROOT_DIR}/apps"
-DOCKER_IMAGES_PATH="${ROOT_DIR}/docker/images"
-PROJECTS_PATH="${SCRIPT_DIR}/projects.meta.json"
 
 # import utils
 source ${SCRIPT_DIR}/utils.sh
@@ -43,15 +29,6 @@ usage() {
   echo ""
   echo "Images:"
   echo "    $(jq -r '[.projects[].id] | join(", ")' $PROJECTS_PATH)"
-}
-
-# to_version - tries to find the version, depending on the extension name
-to_version() {
-  if [[ "$1" =~ \.properties$ ]]; then
-    echo $(prop "$1")
-  else
-    echo $(jq -r '.version' "$1")
-  fi
 }
 
 # build - builds docker images

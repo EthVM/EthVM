@@ -1,0 +1,143 @@
+# This is a RocksDB option file.
+#
+# For detailed file format spec, please refer to the example file
+# in examples/rocksdb_option_file_example.ini
+#
+
+[Version]
+  rocksdb_version=5.9.2
+  options_file_version=1.1
+
+[DBOptions]
+  advise_random_on_open=true
+  use_adaptive_mutex=false
+  allow_mmap_reads=false
+  allow_fallocate=true
+  bytes_per_sync=0
+  use_direct_io_for_flush_and_compaction=false
+  skip_stats_update_on_db_open=false
+  create_if_missing=true
+  manifest_preallocation_size=4194304
+  manual_wal_flush=false
+  create_missing_column_families=false
+  stats_dump_period_sec=600
+  allow_2pc=false
+  error_if_exists=false
+  allow_ingest_behind=false
+  allow_mmap_writes=false
+  is_fd_close_on_exec=true
+  max_total_wal_size=0
+  paranoid_checks=true
+  max_background_jobs=2
+  new_table_reader_for_compaction_inputs=false
+  random_access_max_buffer_size=1048576
+  use_fsync=false
+  max_background_compactions=0
+  base_background_compactions=-1
+  enable_thread_tracking=false
+  max_log_file_size=0
+  log_file_time_to_roll=0
+  preserve_deletes=false
+  compaction_readahead_size=0
+  max_background_flushes=1
+  max_file_opening_threads=16
+  avoid_flush_during_recovery=false
+  table_cache_numshardbits=6
+  db_write_buffer_size=0
+  delayed_write_rate=16777216
+  seq_per_batch=false
+  skip_log_error_on_recovery=false
+  enable_pipelined_write=false
+  keep_log_file_num=1000
+  recycle_log_file_num=0
+  db_log_dir=
+  wal_dir=database/block-summaries
+  max_subcompactions=1
+  use_direct_reads=false
+  WAL_size_limit_MB=0
+  delete_obsolete_files_period_micros=21600000000
+  WAL_ttl_seconds=0
+  fail_if_options_file_error=false
+  write_thread_slow_yield_usec=3
+  dump_malloc_stats=false
+  allow_concurrent_memtable_write=true
+  max_open_files=32
+  max_manifest_file_size=18446744073709551615
+  writable_file_max_buffer_size=1048576
+  enable_write_thread_adaptive_yield=true
+  write_thread_max_yield_usec=100
+  wal_recovery_mode=kPointInTimeRecovery
+  access_hint_on_compaction_start=NORMAL
+  info_log_level=INFO_LEVEL
+  wal_bytes_per_sync=0
+  avoid_flush_during_shutdown=false
+  concurrent_prepare=false
+  
+
+[CFOptions "default"]
+  report_bg_io_stats=false
+  memtable_prefix_bloom_size_ratio=0.000000
+  inplace_update_num_locks=10000
+  compaction_style=kCompactionStyleLevel
+  inplace_update_support=false
+  level_compaction_dynamic_level_bytes=true
+  optimize_filters_for_hits=false
+  paranoid_file_checks=false
+  force_consistency_checks=false
+  memtable_insert_with_hint_prefix_extractor=nullptr
+  comparator=leveldb.BytewiseComparator
+  soft_pending_compaction_bytes_limit=68719476736
+  hard_pending_compaction_bytes_limit=274877906944
+  disable_auto_compactions=false
+  max_compaction_bytes=1677721600
+  write_buffer_size=67108864
+  level0_file_num_compaction_trigger=4
+  level0_slowdown_writes_trigger=20
+  memtable_huge_page_size=0
+  bloom_locality=0
+  prefix_extractor=rocksdb.FixedPrefix.16
+  min_write_buffer_number_to_merge=1
+  num_levels=7
+  target_file_size_multiplier=1
+  target_file_size_base=67108864
+  merge_operator=nullptr
+  arena_block_size=8388608
+  max_write_buffer_number=2
+  max_successive_merges=0
+  table_factory=BlockBasedTable
+  max_bytes_for_level_base=268435456
+  compaction_options_fifo={allow_compaction=false;max_table_files_size=1073741824;ttl=0;}
+  max_bytes_for_level_multiplier=10.000000
+  compression_per_level=
+  max_bytes_for_level_multiplier_additional=1:1:1:1:1:1:1
+  max_sequential_skip_in_iterations=8
+  compression=kLZ4Compression
+  max_write_buffer_number_to_maintain=0
+  bottommost_compression=kZSTD
+  memtable_factory=SkipListFactory
+  compaction_filter_factory=nullptr
+  compaction_filter=nullptr
+  level0_stop_writes_trigger=36
+  compaction_pri=kByCompensatedSize
+  
+[TableOptions/BlockBasedTable "default"]
+  read_amp_bytes_per_bit=0
+  format_version=0
+  whole_key_filtering=true
+  filter_policy=nullptr
+  verify_compression=false
+  block_size_deviation=10
+  block_size=4096
+  partition_filters=false
+  checksum=kCRC32c
+  hash_index_allow_collision=true
+  index_block_restart_interval=1
+  block_restart_interval=16
+  no_block_cache=false
+  pin_l0_filter_and_index_blocks_in_cache=false
+  cache_index_and_filter_blocks_with_high_priority=false
+  metadata_block_size=4096
+  cache_index_and_filter_blocks=false
+  index_type=kBinarySearch
+  flush_block_policy_factory=FlushBlockBySizePolicyFactory
+  
