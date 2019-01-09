@@ -21,14 +21,6 @@ import 'vuetify/dist/vuetify.min.css'
   }
 })
 export default class App extends Vue {
-  // Computed
-  get pageName() {
-    return this.$route.name
-  }
-
-  get holder() {
-    return this.$route.params.holder
-  }
 }
 </script>
 

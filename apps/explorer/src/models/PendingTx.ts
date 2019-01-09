@@ -1,5 +1,4 @@
 import { EthValue } from '@app/models'
-import { mappers } from '@app/models/helpers'
 import { PendingTx as RawPendingTx } from 'ethvm-common'
 
 export class PendingTx {
@@ -65,7 +64,7 @@ export class PendingTx {
 
   public getValue(): EthValue {
     if (!this.cache.ethValue) {
-      this.cache.ethValue = mappers.EthValue(this.pTx.value)
+      this.cache.ethValue = new EthValue(this.pTx.value)
     }
     return this.cache.ethValue
   }

@@ -100,7 +100,7 @@
 
 <script lang="ts">
 import { mappers } from '@app/models/helpers'
-import { Block, Tx, Uncle } from '@app/models'
+import { Block, Tx, Uncle, WeiValue } from '@app/models'
 import store from '@app/states'
 import ethUnits from 'ethereumjs-units'
 import Bn from 'bignumber.js'
@@ -151,11 +151,11 @@ export default class AppBlockDetail extends Vue {
       },
       {
         title: this.$i18n.t('block.reward'),
-        detail: mappers.WeiValue(this.block.getMinerReward()).toEthFormated() + '  ' + this.$i18n.t('common.eth')
+        detail: new WeiValue(this.block.getMinerReward()).toEthFormated() + '  ' + this.$i18n.t('common.eth')
       },
       {
         title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward'),
-        detail: mappers.WeiValue(this.block.getUncleReward()).toEthFormated() + ' ' + this.$i18n.t('common.eth')
+        detail: new WeiValue(this.block.getUncleReward()).toEthFormated() + ' ' + this.$i18n.t('common.eth')
       },
       {
         title: this.$i18n.t('block.pHash'),

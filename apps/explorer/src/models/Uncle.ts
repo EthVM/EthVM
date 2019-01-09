@@ -1,5 +1,4 @@
 import { Hash, Hex } from '@app/models'
-import { mappers } from '@app/models/helpers'
 import { Uncle as RawUncle } from 'ethvm-common'
 
 export class Uncle {
@@ -88,21 +87,21 @@ export class Uncle {
 
   public getStateRoot(): Hash {
     if (!this.cache.stateRoot) {
-      this.cache.stateRoot = mappers.Hex(this.uncle.stateRoot)
+      this.cache.stateRoot = new Hex(this.uncle.stateRoot)
     }
     return this.cache.stateRoot
   }
 
   public getTransactionsRoot(): Hash {
     if (!this.cache.transactionsRoot) {
-      this.cache.transactionsRoot = mappers.Hash(this.uncle.transactionsRoot)
+      this.cache.transactionsRoot = new Hash(this.uncle.transactionsRoot)
     }
     return this.cache.transactionsRoot
   }
 
   public getReceiptsRoot(): Hash {
     if (!this.cache.receiptsRoot) {
-      this.cache.receiptsRoot = mappers.Hash(this.uncle.receiptsRoot)
+      this.cache.receiptsRoot = new Hash(this.uncle.receiptsRoot)
     }
     return this.cache.receiptsRoot
   }
@@ -134,14 +133,14 @@ export class Uncle {
 
   public getMixHash(): Hash {
     if (!this.cache.mixHash) {
-      this.cache.mixHash = mappers.Hash(this.uncle.mixHash)
+      this.cache.mixHash = new Hash(this.uncle.mixHash)
     }
     return this.cache.mixHash
   }
 
   public getExtraData(): Hex {
     if (!this.cache.extraData) {
-      this.cache.extraData = mappers.Hex(this.uncle.extraData)
+      this.cache.extraData = new Hex(this.uncle.extraData)
     }
     return this.cache.extraData
   }

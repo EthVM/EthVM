@@ -1,13 +1,11 @@
-import { Account as AccountLayout } from 'ethvm-common'
+import { Account as RawAccount } from 'ethvm-common'
 
 export class Account {
   public readonly id: string
-  private readonly address: AccountLayout
   private cache: any
 
-  constructor(address: AccountLayout) {
+  constructor(private readonly address: RawAccount) {
     this.cache = {}
-    this.address = address
     this.id = address.address
   }
 
