@@ -1,7 +1,7 @@
-import { FIFO } from '@app/states/utils'
+import { FIFO } from '@app/store/utils'
 import { Block, Tx, PendingTx, Uncle } from '@app/models'
-import { processBlocks, processTxs, processPendingTxs, processUncles } from '@app/states/processors'
-import { StateLayout } from '@app/states/layouts'
+import { processBlocks, processTxs, processPendingTxs, processUncles } from '@app/store/processors'
+import { StateLayout } from '@app/store/layouts'
 
 const State: StateLayout = {
   txs: new FIFO<Tx>(parseInt(process.env.VUE_APP_MAX_TX_IN_MEMORY), processTxs),

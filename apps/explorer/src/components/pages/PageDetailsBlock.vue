@@ -28,7 +28,7 @@
 import { mappers } from '@app/models/helpers'
 import { Block, Tx } from '@app/models'
 import { Events } from 'ethvm-common'
-import store from '@app/states'
+import store from '@app/store'
 import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
 import TableTxs from '@app/components/tables/TableTxs.vue'
 import AppListDetails from '@app/components/ui/AppListDetails.vue'

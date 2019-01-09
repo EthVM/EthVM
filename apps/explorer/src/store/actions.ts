@@ -1,6 +1,6 @@
 import { Events, defaultRooms } from 'ethvm-common'
 import { Block, Tx, PendingTx, Uncle } from '@app/models'
-import { EventLayout } from '@app/states/layouts'
+import { EventLayout } from '@app/store/layouts'
 
 const socket_socketNewblock = function({ commit }, raw: EventLayout | EventLayout[]) {
   const evs = !Array.isArray(raw) ? [raw] : raw

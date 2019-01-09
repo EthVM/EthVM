@@ -1,7 +1,7 @@
-import Actions from '@app/states/actions'
-import Getters from '@app/states/getters'
-import Mutations from '@app/states/mutations'
-import State from '@app/states/state'
+import Actions from '@app/store/actions'
+import Getters from '@app/store/getters'
+import Mutations from '@app/store/mutations'
+import State from '@app/store/state'
 
 import Vue from 'vue'
 import Vuex from 'vuex'

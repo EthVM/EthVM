@@ -101,7 +101,7 @@
 <script lang="ts">
 import { mappers } from '@app/models/helpers'
 import { Block, Tx, Uncle, WeiValue } from '@app/models'
-import store from '@app/states'
+import store from '@app/store'
 import ethUnits from 'ethereumjs-units'
 import Bn from 'bignumber.js'
 import { Vue, Component, Prop } from 'vue-property-decorator'

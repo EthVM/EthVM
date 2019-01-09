@@ -1,5 +1,5 @@
 import { Block, Tx, PendingTx, Uncle } from '@app/models'
-import { StateLayout } from '@app/states/layouts'
+import { StateLayout } from '@app/store/layouts'
 
 export default {
   all: (state: StateLayout): StateLayout => state,

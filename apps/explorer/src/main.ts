@@ -2,7 +2,7 @@ import App from '@app/App.vue'
 import { EthvmSocketIoApi, VueEthvmApi } from '@app/api'
 
 import router from '@app/router'
-import store from '@app/states'
+import store from '@app/store'
 import i18n from '@app/translations'
 import io from 'socket.io-client'
 import VTooltip from 'v-tooltip'
