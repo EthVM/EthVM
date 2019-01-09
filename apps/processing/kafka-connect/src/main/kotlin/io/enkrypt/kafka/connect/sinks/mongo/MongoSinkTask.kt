@@ -5,7 +5,6 @@ import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.DeleteManyModel
 import com.mongodb.client.model.DeleteOneModel
-import com.mongodb.client.model.InsertOneModel
 import com.mongodb.client.model.ReplaceOneModel
 import com.mongodb.client.model.ReplaceOptions
 import com.mongodb.client.model.UpdateOneModel
@@ -16,6 +15,7 @@ import io.enkrypt.common.extensions.unsignedBigInteger
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Blocks
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Accounts
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Transactions
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Uncles
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Contracts
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Balances
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.PendingTransactions
@@ -60,6 +60,7 @@ class MongoSinkTask : SinkTask() {
       Blocks to db.getCollection(Blocks.id, clazz),
       Accounts to db.getCollection(Accounts.id, clazz),
       Transactions to db.getCollection(Transactions.id, clazz),
+      Uncles to db.getCollection(Uncles.id, clazz),
       Contracts to db.getCollection(Contracts.id, clazz),
       TokenTransfers to db.getCollection(TokenTransfers.id, clazz),
       Balances to db.getCollection(Balances.id, clazz),
@@ -79,9 +80,16 @@ class MongoSinkTask : SinkTask() {
     logger.info { "Processing ${records.size} records" }
 
     val elapsedMs = measureTimeMillis {
+
       var batch = mapOf<MongoCollections, List<WriteModel<BsonDocument>>>()
 
-      records.forEach { r -> batch += KafkaTopics.forTopic(r.topic())(r) }
+      records.forEach { record ->
+        KafkaTopics.forTopic(record.topic())(record)
+          .forEach { (collection, writes) ->
+            val mergedWrites = batch.getOrDefault(collection, emptyList()) + writes
+            batch += collection to mergedWrites
+          }
+      }
 
       batch
         .filterValues { it.isNotEmpty() }
@@ -115,6 +123,7 @@ enum class MongoCollections(val id: String) {
   Blocks("blocks"),
   BlockStatistics("block_statistics"),
   Accounts("accounts"),
+  Uncles("uncles"),
   Transactions("transactions"),
   Contracts("contracts"),
   TokenTransfers("token_transfers"),
@@ -135,6 +144,7 @@ enum class KafkaTopics(
 
     var blockWrites = listOf<WriteModel<BsonDocument>>()
     var txWrites = listOf<WriteModel<BsonDocument>>()
+    var uncleWrites = listOf<WriteModel<BsonDocument>>()
 
     val blockNumber = (record.key() as Struct).getBytes("number").unsignedBigInteger()
     val blockNumberBson = BsonDecimal128(Decimal128(blockNumber.toBigDecimal()))
@@ -143,24 +153,54 @@ enum class KafkaTopics(
 
     if (record.value() == null) {
 
-      // tombstone received so we need to delete
+      // tombstone received so we need to delete the block
       blockWrites += DeleteOneModel(blockFilter)
 
       // delete transactions as-well
       val txsFilter = BsonDocument().apply { append("blockNumber", blockNumberBson) }
       txWrites += DeleteManyModel(txsFilter)
+
+      // delete the uncles
+      val unclesFilter = BsonDocument().apply { append("blockNumber", blockNumberBson) }
+      uncleWrites += DeleteManyModel(unclesFilter)
+
     } else {
 
       require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
 
+      // write the block
+
       val valueBson = StructToBsonConverter.convert(record.value() as Struct, "block")
+      blockWrites += ReplaceOneModel(blockFilter, valueBson, MongoSinkTask.replaceOptions)
+
+      // write the uncles
+
+      val uncles = valueBson.getArray("uncles", BsonArray())
+
+      uncles
+        .map { it as BsonDocument }
+        .map { uncle ->
+
+          uncleWrites += ReplaceOneModel(
+            BsonDocument().apply {
+              append("_id", uncle["hash"])
+              append("blockNumber", blockNumberBson)
+            },
+            uncle.apply {
+              append("_id", uncle["hash"])
+              append("blockNumber", blockNumberBson)
+            },
+            MongoSinkTask.replaceOptions
+          )
+
+        }
+
+      // write the transactions
 
       val txs = valueBson.getArray("transactions", BsonArray())
       val txReceipts = valueBson.getArray("transactionReceipts", BsonArray())
 
       valueBson.remove("transactionReceipts") // we are going to embed them inside their respective transactions
-
-      blockWrites += ReplaceOneModel(blockFilter, valueBson, MongoSinkTask.replaceOptions)
 
       txWrites += txs.zip(txReceipts)
         .map { (tx, receipt) -> Pair(tx as BsonDocument, receipt as BsonDocument) }
@@ -191,7 +231,10 @@ enum class KafkaTopics(
         }.flatten()
     }
 
-    mapOf(MongoCollections.Blocks to blockWrites, MongoCollections.Transactions to txWrites)
+    mapOf(
+      MongoCollections.Blocks to blockWrites,
+      MongoCollections.Transactions to txWrites,
+      MongoCollections.Uncles to uncleWrites)
   }),
 
   TokenTransfers("token-transfers", { record: SinkRecord ->
@@ -216,7 +259,7 @@ enum class KafkaTopics(
           append("_id", id)
         }
 
-      InsertOneModel(model)
+      ReplaceOneModel(BsonDocument("_id", id), model, MongoSinkTask.replaceOptions)
     }
 
     mapOf(MongoCollections.TokenTransfers to writes)

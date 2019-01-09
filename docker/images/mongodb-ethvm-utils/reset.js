@@ -5,6 +5,7 @@ const collections = [
   'transactions',
   'contract',
   'balances',
+  "uncles",
   'accounts',
   "token_transfers",
   'pending',
