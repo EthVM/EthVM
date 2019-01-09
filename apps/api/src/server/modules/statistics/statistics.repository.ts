@@ -3,7 +3,7 @@ import { Statistic } from 'ethvm-common'
 
 export interface StatisticsRepository {
   getAverageTotalDifficulty(start: Date, end: Date): Promise<Statistic[]>
-  getAveragegasPrice(start: Date, end: Date): Promise<Statistic[]>
+  getAverageGasPrice(start: Date, end: Date): Promise<Statistic[]>
   getAverageTxFee(start: Date, end: Date): Promise<Statistic[]>
   getAverageSuccessfullTx(start: Date, end: Date): Promise<Statistic[]>
   getAverageFailedTx(start: Date, end: Date): Promise<Statistic[]>
@@ -21,7 +21,7 @@ export class MongoStatisticsRepository extends BaseMongoDbRepository implements 
       })
   }
 
-  public getAveragegasPrice(start: Date, end: Date): Promise<Statistic[]> {
+  public getAverageGasPrice(start: Date, end: Date): Promise<Statistic[]> {
     return this.db
       .collection(MongoEthVM.collections.statistics)
       .find({ $and: [{ name: 'avg_gas_price' }, { date: { $gte: start } }, { date: { $lte: end } }] })

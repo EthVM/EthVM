@@ -74,7 +74,7 @@ export default class AppSearch extends Vue {
             case 0:
               {
                 this.$router.push({
-                  path: '/transaction/0x' + this.searchInput
+                  path: '/tx/0x' + this.searchInput
                 })
               }
               break
