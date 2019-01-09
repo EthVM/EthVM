@@ -1,15 +1,13 @@
-import { common } from '@app/helpers'
 import { EthValue } from '@app/models'
-import { PendingTx as PendingTxLayout } from 'ethvm-common'
+import { mappers } from '@app/models/helpers'
+import { PendingTx as RawPendingTx } from 'ethvm-common'
 
 export class PendingTx {
   public readonly id: string
-  private readonly pTx: PendingTxLayout
   private cache: any
 
-  constructor(pTx: PendingTxLayout) {
+  constructor(private readonly pTx: RawPendingTx) {
     this.cache = {}
-    this.pTx = pTx
   }
 
   public getID(): string {
@@ -67,7 +65,7 @@ export class PendingTx {
 
   public getValue(): EthValue {
     if (!this.cache.ethValue) {
-      this.cache.ethValue = common.EthValue(this.pTx.value)
+      this.cache.ethValue = mappers.EthValue(this.pTx.value)
     }
     return this.cache.ethValue
   }

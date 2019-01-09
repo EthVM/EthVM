@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { common } from '@app/helpers'
+import { mappers } from '@app/models/helpers'
 import { Block, Tx } from '@app/models'
 import { Events } from 'ethvm-common'
 import store from '@app/states'
@@ -49,7 +49,7 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
 
   data() {
     return {
-      common,
+      mappers,
       store,
       block: null,
       blockNumber: null,

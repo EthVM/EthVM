@@ -1,15 +1,13 @@
-import { common } from '@app/helpers'
 import { EthValue, Hash, Hex, Tx } from '@app/models'
-import { Block as BlockLayout, BlockStats } from 'ethvm-common'
+import { mappers } from '@app/models/helpers'
+import { Block as RawBlock, BlockStats } from 'ethvm-common'
 
 export class Block {
   public readonly id: string
-  private readonly block: BlockLayout
   private cache: any
 
-  constructor(block: BlockLayout) {
+  constructor(private readonly block: RawBlock) {
     this.cache = {}
-    this.block = block
     this.id = this.block.hash
   }
 
@@ -89,7 +87,7 @@ export class Block {
 
   // public getMixHash(): Hash {
   //   if (!this.cache.mixHash) {
-  //     this.cache.mixHash = common.Hash(this.block.mixHash)
+  //     this.cache.mixHash = mappers.Hash(this.block.mixHash)
   //   }
   //   return this.cache.mixHash
   // }
@@ -103,14 +101,14 @@ export class Block {
 
   public getLogsBloom(): Hex {
     if (!this.cache.logsBloom) {
-      this.cache.logsBloom = common.Hex(this.block.header.logsBloom)
+      this.cache.logsBloom = mappers.Hex(this.block.header.logsBloom)
     }
     return this.cache.logsBloom
   }
 
   public getStateRoot(): Hash {
     if (!this.cache.stateRoot) {
-      this.cache.stateRoot = common.Hex(this.block.header.stateRoot)
+      this.cache.stateRoot = mappers.Hex(this.block.header.stateRoot)
     }
     return this.cache.stateRoot
   }
@@ -124,7 +122,7 @@ export class Block {
 
   public getMinerBalance(): EthValue {
     if (!this.cache.minerBalance) {
-      this.cache.minerBalance = common.EthValue(this.block.header.rewards[this.block.header.miner])
+      this.cache.minerBalance = mappers.EthValue(this.block.header.rewards[this.block.header.miner])
     }
     return this.cache.minerBalance
   }
@@ -146,9 +144,9 @@ export class Block {
   public getExtraData(): Hex {
     if (!this.cache.extraData) {
       if (this.block.header.extraData) {
-        this.cache.extraData = common.Hex(this.block.header.extraData)
+        this.cache.extraData = mappers.Hex(this.block.header.extraData)
       } else {
-        this.cache.extraData = common.Hex(Buffer.from('0'))
+        this.cache.extraData = mappers.Hex(Buffer.from('0'))
       }
     }
     return this.cache.extraData
@@ -156,7 +154,7 @@ export class Block {
 
   // public getSize(): HexNumber {
   //   if (!this.cache.size) {
-  //     this.cache.size = common.HexNumber(this.block.header.)
+  //     this.cache.size = mappers.HexNumber(this.block.header.)
   //   }
   //   return this.cache.size
   // }
@@ -184,14 +182,14 @@ export class Block {
 
   public getTransactionsRoot(): Hash {
     if (!this.cache.transactionsRoot) {
-      this.cache.transactionsRoot = common.Hash(this.block.header.transactionsRoot)
+      this.cache.transactionsRoot = mappers.Hash(this.block.header.transactionsRoot)
     }
     return this.cache.transactionsRoot
   }
 
   public getReceiptsRoot(): Hash {
     if (!this.cache.receiptsRoot) {
-      this.cache.receiptsRoot = common.Hash(this.block.header.receiptsRoot)
+      this.cache.receiptsRoot = mappers.Hash(this.block.header.receiptsRoot)
     }
     return this.cache.receiptsRoot
   }

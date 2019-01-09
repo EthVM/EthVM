@@ -1,15 +1,13 @@
-import { common } from '@app/helpers'
 import { EthValue } from '@app/models'
+import { mappers } from '@app/models/helpers'
 import { Tx as TxLayout } from 'ethvm-common'
 
 export class Tx {
   public readonly id: string
-  private readonly tx: TxLayout
   private cache: any
 
-  constructor(tx: TxLayout) {
+  constructor(private readonly tx: TxLayout) {
     this.cache = {}
-    this.tx = tx
     this.id = this.tx.hash
   }
 
@@ -62,21 +60,21 @@ export class Tx {
 
   // public getFromBalance(): EthValue {
   //   if (!this.cache.fromBalance) {
-  //     this.cache.fromBalance = common.EthValue(this.tx.fromBalance)
+  //     this.cache.fromBalance = mappers.EthValue(this.tx.fromBalance)
   //   }
   //   return this.cache.fromBalance
   // }
 
   // public getToBalance(): EthValue {
   //   if (!this.cache.ethValue) {
-  //     this.cache.ethValue = common.EthValue(this.tx.toBalance)
+  //     this.cache.ethValue = mappers.EthValue(this.tx.toBalance)
   //   }
   //   return this.cache.ethValue
   // }
 
   // public getCumulativeGasUsed(): HexNumber {
   //   if (!this.cache.cumulativeGasUsed) {
-  //     this.cache.cumulativeGasUsed = common.HexNumber(this.tx.cumulativeGasUsed)
+  //     this.cache.cumulativeGasUsed = mappers.HexNumber(this.tx.cumulativeGasUsed)
   //   }
   //   return this.cache.cumulativeGasUsed
   // }
@@ -92,7 +90,7 @@ export class Tx {
 
   // public getLogsBloom(): Hex {
   //   if (!this.cache.logsBloom) {
-  //     this.cache.logsBloom = common.Hex(this.tx.logsBloom)
+  //     this.cache.logsBloom = mappers.Hex(this.tx.logsBloom)
   //   }
   //   return this.cache.logsBloom
   // }
@@ -113,7 +111,7 @@ export class Tx {
 
   // public getInput(): Hex {
   //   if (!this.cache.input) {
-  //     this.cache.input = common.Hex(this.tx.input)
+  //     this.cache.input = mappers.Hex(this.tx.input)
   //   }
   //   return this.cache.input
   // }
@@ -127,7 +125,7 @@ export class Tx {
 
   public getValue(): EthValue {
     if (!this.cache.ethValue) {
-      this.cache.ethValue = common.EthValue(this.tx.value)
+      this.cache.ethValue = mappers.EthValue(this.tx.value)
     }
     return this.cache.ethValue
   }

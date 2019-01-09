@@ -1,6 +1,6 @@
 import { Address, EthValue, Hash, Hex, HexNumber, HexTime, WeiValue } from '@app/models'
 
-const common = {
+const mappers = {
   Hash: (hash: Buffer): Hash => new Hash(hash),
   EthValue: (value: Buffer): EthValue => new EthValue(value),
   HexNumber: (value: Buffer): HexNumber => new HexNumber(value),
@@ -16,4 +16,4 @@ const common = {
   WeiValue: (value: number): WeiValue => new WeiValue(value)
 }
 
-export { common }
+export { mappers }

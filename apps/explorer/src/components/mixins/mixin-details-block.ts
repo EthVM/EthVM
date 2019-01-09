@@ -1,6 +1,6 @@
 import ethUnits from 'ethereumjs-units'
 import Bn from 'bignumber.js'
-import { common } from '@app/helpers'
+import { mappers } from '@app/models/helpers'
 import { Block } from '@app/models'
 import { Component, Vue } from 'vue-property-decorator'
 import { Detail } from '@app/components/props'
@@ -37,11 +37,11 @@ export class BlockDetailsMixin extends Vue {
       },
       {
         title: this.$i18n.t('block.reward'),
-        detail: common.WeiValue(block.getMinerReward()).toEthFormated() + '  ' + this.$i18n.t('common.eth')
+        detail: mappers.WeiValue(block.getMinerReward()).toEthFormated() + '  ' + this.$i18n.t('common.eth')
       },
       {
         title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward'),
-        detail: common.WeiValue(block.getUncleReward()).toEthFormated() + ' ' + this.$i18n.t('common.eth')
+        detail: mappers.WeiValue(block.getUncleReward()).toEthFormated() + ' ' + this.$i18n.t('common.eth')
       },
       {
         title: this.$i18n.t('block.pHash'),

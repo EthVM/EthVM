@@ -1,15 +1,13 @@
-import { common } from '@app/helpers'
 import { Hash, Hex } from '@app/models'
-import { Uncle as UncleLayout } from 'ethvm-common'
+import { mappers } from '@app/models/helpers'
+import { Uncle as RawUncle } from 'ethvm-common'
 
 export class Uncle {
   public readonly id: string
-  private readonly uncle: UncleLayout
   private cache: any
 
-  constructor(uncle: UncleLayout) {
+  constructor(private readonly uncle: RawUncle) {
     this.cache = {}
-    this.uncle = uncle
     this.id = this.uncle.hash
   }
 
@@ -90,21 +88,21 @@ export class Uncle {
 
   public getStateRoot(): Hash {
     if (!this.cache.stateRoot) {
-      this.cache.stateRoot = common.Hex(this.uncle.stateRoot)
+      this.cache.stateRoot = mappers.Hex(this.uncle.stateRoot)
     }
     return this.cache.stateRoot
   }
 
   public getTransactionsRoot(): Hash {
     if (!this.cache.transactionsRoot) {
-      this.cache.transactionsRoot = common.Hash(this.uncle.transactionsRoot)
+      this.cache.transactionsRoot = mappers.Hash(this.uncle.transactionsRoot)
     }
     return this.cache.transactionsRoot
   }
 
   public getReceiptsRoot(): Hash {
     if (!this.cache.receiptsRoot) {
-      this.cache.receiptsRoot = common.Hash(this.uncle.receiptsRoot)
+      this.cache.receiptsRoot = mappers.Hash(this.uncle.receiptsRoot)
     }
     return this.cache.receiptsRoot
   }
@@ -136,14 +134,14 @@ export class Uncle {
 
   public getMixHash(): Hash {
     if (!this.cache.mixHash) {
-      this.cache.mixHash = common.Hash(this.uncle.mixHash)
+      this.cache.mixHash = mappers.Hash(this.uncle.mixHash)
     }
     return this.cache.mixHash
   }
 
   public getExtraData(): Hex {
     if (!this.cache.extraData) {
-      this.cache.extraData = common.Hex(this.uncle.extraData)
+      this.cache.extraData = mappers.Hex(this.uncle.extraData)
     }
     return this.cache.extraData
   }
@@ -155,6 +153,7 @@ export class Uncle {
     }
     return this.cache.getMinerReward
   }
+
   public getTotalReward(): number {
     if (!this.cache.getTotalReward) {
       let total = 0
