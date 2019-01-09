@@ -26,10 +26,8 @@ import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
 import AppInfoCard from '@app/components/ui/AppInfoCard.vue'
 import TableBlocks from '@app/components/tables/TableBlocks.vue'
 import { LastBlockInfoMixin } from '@app/components/mixins'
-import { Events } from 'ethvm-common'
 import { Block } from '@app/models'
-import { Vue, Component } from 'vue-property-decorator'
-import { mixins } from 'vue-class-component'
+import { Vue, Component, Mixins } from 'vue-property-decorator'
 
 const MAX_ITEMS = 50
 
@@ -40,7 +38,7 @@ const MAX_ITEMS = 50
     AppInfoCard
   }
 })
-export default class PageBlocks extends mixins(LastBlockInfoMixin) {
+export default class PageBlocks extends Mixins(LastBlockInfoMixin) {
   data() {
     return {
       items: [
@@ -52,6 +50,7 @@ export default class PageBlocks extends mixins(LastBlockInfoMixin) {
     }
   }
 
+  // Computed
   get blocks(): Block[] {
     return this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
   }

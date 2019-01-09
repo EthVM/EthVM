@@ -49,8 +49,6 @@
 import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
 import { Component, Vue } from 'vue-property-decorator'
 
-const MAX_ITEMS = 20
-
 @Component({
   components: {
     AppBreadCrumbs

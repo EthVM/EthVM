@@ -84,9 +84,6 @@
 </template>
 
 <script lang="ts">
-import bn from 'bignumber.js'
-import blockies from 'ethereum-blockies'
-import ethUnits from 'ethereumjs-units'
 import { Tx, Account, PendingTx } from '@app/models'
 import { Events } from 'ethvm-common'
 import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
@@ -95,8 +92,6 @@ import AppAddressDetail from '@app/components/ui/AppAddressDetail.vue'
 import TableAddressTxs from '@app/components/tables/TableAddressTxs.vue'
 import AppErrorNoData from '@app/components/ui/AppErrorNoData.vue'
 import { Vue, Component, Prop } from 'vue-property-decorator'
-
-const MAX_ITEMS = 20
 
 @Component({
   components: {

@@ -8,19 +8,12 @@
         </app-list-details>
       </v-flex>
     </v-layout>
-    <!--
-      Get Sub Tx
-      <div v-if>
-        <h4>Sub Transactions</h4>
-        <block-last-transactions :tx="transactions"></block-last-transactions>
-      </div>
-    -->
   </v-container>
 </template>
 
 <script lang="ts">
 import { Tx } from '@app/models'
-import { Events as sEvents } from 'ethvm-common'
+import { Events } from 'ethvm-common'
 import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
 import AppListDetails from '@app/components/ui/AppListDetails.vue'
 import AppListTitle from '@app/components/ui/AppListTitle.vue'
@@ -59,7 +52,7 @@ export default class PageDetailsTxs extends Mixins(TxDetailsMixin) {
   created() {
     /* Get Tx Info */
     this.$socket.emit(
-      sEvents.getTx,
+      Events.getTx,
       {
         hash: this.txHash.replace('0x', '')
       },
