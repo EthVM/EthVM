@@ -1,14 +1,9 @@
 #!/usr/bin/env bash
 
 # Give script sane defaults
-set -o errexit
-# set -o nounset
-# set -o xtrace
-# set -o verbose
+set +o nounset
 
-# Useful VARS
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 
 # import utils
 source ${SCRIPT_DIR}/utils.sh
@@ -53,7 +48,7 @@ up() {
   esac
 }
 
-# up - spins up a clean dev environment (but it will not run eth client, neither bolt in order to control the flow of data)
+# up - spins up a clean dev environment (but it will not run eth client, neither kafka-streams in order to control the flow of data)
 up_default() {
   echo -e "Starting up containers...\n"
   docker-compose up -d --build
@@ -64,17 +59,31 @@ up_default() {
   echo -e "Creating kafka topics...\n"
   ${SCRIPT_DIR}/kafka.sh create-topics
 
-  echo "Initialisation of mongo...\n"
+  echo -e "Initialisation of mongo...\n"
   ${SCRIPT_DIR}/mongo.sh init
+
+  echo -e "Initialising avro...\n"
+  ${SCRIPT_DIR}/avro.sh build
+
+  echo -e "Initialising kafka connect...\n"
+  ${SCRIPT_DIR}/kafka-connect.sh build-connector
+
+  echo "Waiting 30 seconds for kafka-connect to restart"
+  sleep 30
+
+  echo "Registering sinks and sources into kafka connect..."
+  ${SCRIPT_DIR}/kafka-connect.sh register-sinks
+  ${SCRIPT_DIR}/kafka-connect.sh register-sources
 }
 
 # up_full - spins up a full automated environment where everything is going to run on docker
 #           Keep in mind that this mode can hog your machine
 up_full() {
-  up
+  echo "To be finished and tested properly..."
+  # up
 
-  echo "Starting up extra containers: ethereumj, bolt"
-  ${DOCKER_COMPOSE} -f docker-compose.extra.yaml up -d --build
+  # echo "Starting up extra containers: ethereumj, kafka-streams"
+  # ${DOCKER_COMPOSE} -f docker-compose.extra.yaml up -d --build
 }
 
 # up - spins up a dev environment with a fixed dataset ready to be used on frontend

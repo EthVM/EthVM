@@ -29,8 +29,8 @@ module "mongo" {
   chain     = "${var.chain}"
 }
 
-module "bolt" {
-  source    = "./bolt"
+module "kafka-streams" {
+  source    = "./kafka-streams"
   namespace = "${var.namespace}"
 }
 

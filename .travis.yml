@@ -53,10 +53,17 @@ matrix:
         - "10"
     -
       env:
-        - ID=bolt/unit-tests
-        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/bolt
+        - ID=processing/lint
+        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/processing
         - INSTALL=''
-        - ACTION='./gradlew --no-daemon test'
+        - ACTION='./gradlew --no-daemon :ktlintCheck'
+      language: generic
+    -
+      env:
+        - ID=processing/kafka-streams/unit-tests
+        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/processing
+        - INSTALL=''
+        - ACTION='./gradlew --no-daemon :kafka-streams:test'
       language: generic
 
 before_install:

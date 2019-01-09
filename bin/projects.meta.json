@@ -7,16 +7,16 @@
       "version": "${APPS_PATH}/api/package.json"
     },
     {
-      "id": "bolt",
-      "dockerfile": "${APPS_PATH}/bolt/Dockerfile",
-      "context": "${APPS_PATH}/bolt/",
-      "version": "${APPS_PATH}/bolt/version.properties"
+      "id": "kafka-streams",
+      "dockerfile": "${APPS_PATH}/kafka-streams/Dockerfile",
+      "context": "${APPS_PATH}/kafka-streams/",
+      "version": "${APPS_PATH}/kafka-streams/version.properties"
     },
     {
       "id": "ethereumj",
       "dockerfile": "${APPS_PATH}/ethereumj/Dockerfile",
       "context": "${APPS_PATH}/ethereumj/",
-      "version": "${APPS_PATH}/ethereumj/version.properties"
+      "version": "${APPS_PATH}/ethereumj/ethereumj-core/src/main/resources/version.properties"
     },
     {
       "id": "explorer",
@@ -29,12 +29,6 @@
       "dockerfile": "${DOCKER_IMAGES_PATH}/kafka-connect/Dockerfile",
       "context": "${DOCKER_IMAGES_PATH}/kafka-connect/",
       "version": "${DOCKER_IMAGES_PATH}/kafka-connect/version.properties"
-    },
-    {
-      "id": "kafka-connect-ethvm-utils",
-      "dockerfile": "${DOCKER_IMAGES_PATH}/kafka-connect-ethvm-utils/Dockerfile",
-      "context": "${DOCKER_IMAGES_PATH}/kafka-connect-ethvm-utils/",
-      "version": "${DOCKER_IMAGES_PATH}/kafka-connect-ethvm-utils/version.properties"
     },
     {
       "id": "kafka-ethvm-utils",
