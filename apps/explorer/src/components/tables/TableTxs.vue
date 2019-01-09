@@ -44,7 +44,7 @@
       </v-layout>
     </v-card>
     <!-- Hadle error - No Txs History
-   <div v-else>
+    <div v-else>
       <v-card flat class="mt-3 mb-3">
         <v-card-text
           v-if="!pending"

@@ -8,12 +8,10 @@
 </template>
 
 <script lang="ts">
-import Visibility from 'visibilityjs'
 import { Events } from 'ethvm-common'
-import BN from 'bignumber.js'
 import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
 import TableBlocks from '@app/components/tables/TableBlocks.vue'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 
 const MAX_ITEMS = 50
 

@@ -22,7 +22,7 @@ import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
 import AppInfoCard from '@app/components/ui/AppInfoCard.vue'
 import TableTxs from '@app/components/tables/TableTxs.vue'
 import { LastBlockInfoMixin } from '@app/components/mixins'
-import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
+import { Vue, Component, Mixins } from 'vue-property-decorator'
 import { Tx } from '@app/models'
 
 @Component({
