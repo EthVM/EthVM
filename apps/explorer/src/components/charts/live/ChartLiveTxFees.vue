@@ -14,61 +14,12 @@
 </template>
 
 <script lang="ts">
-import { Events as sEvents } from 'ethvm-common'
-import BN from 'bignumber.js'
+import { Events } from 'ethvm-common'
 import AppChart from '@app/components/ui/AppChart.vue'
 import ethUnits from 'ethereumjs-units'
 import { Vue, Component } from 'vue-property-decorator'
 
-const title = 'Average Tx Costs'
-const description = 'Average transaction fees and average gas price in the last 10 blocks'
 const MAX_ITEMS = 10
-const lineOptions = {
-  title: {
-    text: 'Average Tx Fees',
-    lineHeight: 1
-  },
-  responsive: true,
-  scales: {
-    yAxes: [
-      {
-        position: 'left',
-        id: 'y-axis-1',
-        ticks: {
-          beginAtZero: true
-        },
-        gridLines: {
-          color: 'rgba(0, 0, 0, 0)'
-        },
-        scaleLabel: {
-          display: true,
-          labelString: 'Tx Fees ETH'
-        }
-      },
-      {
-        id: 'y-axis-2',
-        position: 'right',
-        ticks: {
-          beginAtZero: true
-        },
-        gridLines: {
-          color: 'rgba(0, 0, 0, 0)'
-        },
-        scaleLabel: {
-          display: true,
-          labelString: ' Gas Price GWEI'
-        }
-      }
-    ],
-    xAxes: [
-      {
-        display: false
-      }
-    ]
-  },
-
-  scaleShowLabels: false
-}
 
 @Component({
   components: {
@@ -79,10 +30,55 @@ export default class ChartLiveTxFees extends Vue {
   data() {
     return {
       chartData: {},
-      chartOptions: lineOptions,
+      chartOptions: {
+        title: {
+          text: this.$i18n.t('charts.avgTitle'),
+          lineHeight: 1
+        },
+        responsive: true,
+        scales: {
+          yAxes: [
+            {
+              position: 'left',
+              id: 'y-axis-1',
+              ticks: {
+                beginAtZero: true
+              },
+              gridLines: {
+                color: 'rgba(0, 0, 0, 0)'
+              },
+              scaleLabel: {
+                display: true,
+                labelString: this.$i18n.t('charts.txFees')
+              }
+            },
+            {
+              id: 'y-axis-2',
+              position: 'right',
+              ticks: {
+                beginAtZero: true
+              },
+              gridLines: {
+                color: 'rgba(0, 0, 0, 0)'
+              },
+              scaleLabel: {
+                display: true,
+                labelString: this.$i18n.t('charts.gasPrice')
+              }
+            }
+          ],
+          xAxes: [
+            {
+              display: false
+            }
+          ]
+        },
+
+        scaleShowLabels: false
+      },
       redraw: false,
-      newTitle: title,
-      newDescription: description,
+      newTitle: this.$i18n.t('charts.avgTxCost'),
+      newDescription: this.$i18n.t('charts.avgDescription'),
       footnote: [
         {
           color: 'txFail',
@@ -98,13 +94,14 @@ export default class ChartLiveTxFees extends Vue {
     }
   }
 
+  // Lifecycle
   created() {
     this.chartData = this.initData
-    this.$eventHub.$on(sEvents.pastBlocksR, () => {
+    this.$eventHub.$on(Events.pastBlocksR, () => {
       this.chartData = this.initData
       this.redraw = true
     })
-    this.$eventHub.$on(sEvents.newBlock, _block => {
+    this.$eventHub.$on(Events.newBlock, _block => {
       if (this.chartData.datasets[0]) {
         this.redraw = false
         if (!_block.getIsUncle()) {
@@ -121,10 +118,11 @@ export default class ChartLiveTxFees extends Vue {
   }
 
   beforeDestroy() {
-    this.$eventHub.$off(sEvents.pastBlocksR)
-    this.$eventHub.$off(sEvents.newBlock)
+    this.$eventHub.$off(Events.pastBlocksR)
+    this.$eventHub.$off(Events.newBlock)
   }
 
+  // Computed
   get initData() {
     const data = {
       labels: [],
@@ -142,7 +140,7 @@ export default class ChartLiveTxFees extends Vue {
       labels: data.labels,
       datasets: [
         {
-          label: 'Avg Tx Fees (ETH)',
+          label: this.$i18n.t('footnote.aveTxFees'),
           borderColor: '#40ce9c',
           backgroundColor: '#40ce9c',
           data: data.avgFees,
@@ -150,7 +148,7 @@ export default class ChartLiveTxFees extends Vue {
           fill: false
         },
         {
-          label: 'Avg Gas Price (GWEI)',
+          label: this.$i18n.t('footnote.aveGasPrice'),
           borderColor: '#eea66b',
           backgroundColor: '#eea56b',
           data: data.avgPrice,

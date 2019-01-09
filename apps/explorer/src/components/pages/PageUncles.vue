@@ -2,7 +2,7 @@
   <v-container grid-list-lg class="mb-0">
     <app-bread-crumbs :new-items="items"></app-bread-crumbs>
     <v-layout row wrap justify-center mb-4>
-      <v-flex xs12> <table-blocks :blocks="uncles" page-type="uncles" :loading="uncleLoad"></table-blocks> </v-flex>
+      <v-flex xs12> <table-blocks :blocks="uncles" page-type="uncles" :loading="uncleLoad" /> </v-flex>
     </v-layout>
   </v-container>
 </template>
@@ -35,12 +35,30 @@ export default class PageUncles extends Vue {
     }
   }
 
+  // Lifecycle
+  created() {
+    this.$socket.emit(
+      Events.getUncles,
+      {
+        limit: 100,
+        page: 0
+      },
+      (err, uncles) => {
+        this.$store.commit(Events.newUncle, uncles)
+        if (uncles && uncles.length > 0) {
+          this.$eventHub.$emit(Events.newUncle)
+        }
+      }
+    )
+  }
+
   // Computed
   get uncles() {
     return this.$store.getters.getUncles.slice(0, MAX_ITEMS)
   }
+
   get uncleLoad(): boolean {
-    return this.uncles.length > 0 ? false : true
+    return this.uncles.length == 0
   }
 }
 </script>

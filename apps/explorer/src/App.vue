@@ -2,19 +2,17 @@
   <v-app style="background: #f3f4f8;">
     <the-navigation-drawer />
     <v-content>
-      <router-view></router-view>
+      <router-view />
       <the-footer />
     </v-content>
   </v-app>
 </template>
 
 <script lang="ts">
-import 'vuetify/dist/vuetify.min.css'
-import { Block, Tx, PendingTx } from '@app/models'
-import { Events } from 'ethvm-common'
 import TheNavigationDrawer from '@app/components/app-layout/TheNavigationDrawer.vue'
 import TheFooter from '@app/components/app-layout/TheFooter.vue'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
+import 'vuetify/dist/vuetify.min.css'
 
 @Component({
   components: {
@@ -23,79 +21,6 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
   }
 })
 export default class App extends Vue {
-  created() {
-    this.$options.sockets.connect = () => {
-      if (this.pageName === 'home' || this.pageName === 'blocks' || this.pageName === 'transactions') {
-        this.setPastData()
-      } else {
-        setTimeout(() => {
-          this.setPastData()
-        }, 1000)
-      }
-    }
-  }
-
-  // Methods
-  setPastData() {
-    this.$socket.emit(
-      Events.pastTxs,
-      {
-        limit: 100,
-        page: 0
-      },
-      (err, txs) => {
-        this.$store.commit(Events.newTx, txs)
-        if (txs && txs.length > 0) {
-          this.$eventHub.$emit(Events.pastTxsR)
-          this.$eventHub.$emit(Events.newTx, new Tx(txs[0]))
-        }
-      }
-    )
-
-    this.$socket.emit(
-      Events.pastBlocks,
-      {
-        limit: 100,
-        page: 0
-      },
-      (err, blocks) => {
-        this.$store.commit(Events.newBlock, blocks)
-        if (blocks && blocks.length > 0) {
-          this.$eventHub.$emit(Events.newBlock, new Block(blocks[0]))
-          this.$eventHub.$emit(Events.pastBlocksR)
-        }
-      }
-    )
-
-    this.$socket.emit(
-      Events.pendingTxs,
-      {
-        limit: 100,
-        page: 0
-      },
-      (err, pTxs) => {
-        this.$store.commit(Events.newPendingTx, pTxs)
-        if (pTxs && pTxs.length > 0) {
-          this.$eventHub.$emit(Events.newPendingTx)
-        }
-      }
-    )
-
-    this.$socket.emit(
-      Events.getUncles,
-      {
-        limit: 100,
-        page: 0
-      },
-      (err, uncles) => {
-        this.$store.commit(Events.newUncle, uncles)
-        if (uncles && uncles.length > 0) {
-          this.$eventHub.$emit(Events.newUncle)
-        }
-      }
-    )
-  }
-
   // Computed
   get pageName() {
     return this.$route.name

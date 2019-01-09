@@ -82,7 +82,7 @@ export default class TableBlocks extends Vue {
   @Prop({ type: String, default: 'blocks' }) pageType!: string
   @Prop({ type: String, default: 'true' }) showStyle!: string
   @Prop({ type: Array, default: [] }) blocks!: Block[]
-  @Prop({ type: Boolean, defualt: true }) loading: boolean
+  @Prop({ type: Boolean, default: true }) loading: boolean
 
   /* Data: */
   data() {

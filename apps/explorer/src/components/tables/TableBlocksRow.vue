@@ -66,10 +66,7 @@ export default class TableBlocksRow extends Mixins(StringConcatMixin) {
   @Prop(Object) block!: Block
 
   hasUncles(block) {
-    if (block.getType() == 'block') {
-      return block.getUncles.length > 0
-    }
-    return false
+    return block.getType() == 'block' && block.getUncles.length > 0
   }
 }
 </script>

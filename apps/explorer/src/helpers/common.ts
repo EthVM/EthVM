@@ -1,19 +1,19 @@
 import { Address, EthValue, Hash, Hex, HexNumber, HexTime, WeiValue } from '@app/models'
 
 const common = {
-  Hash: (_hash: Buffer): Hash => new Hash(_hash),
-  EthValue: (_value: Buffer): EthValue => new EthValue(_value),
-  HexNumber: (_value: Buffer): HexNumber => new HexNumber(_value),
-  Address: (_add: Buffer): Address => new Address(_add),
-  AddressFromHex: (_add: string): Address => new Address(Buffer.from(_add.toLowerCase().replace('0x', ''), 'hex')),
-  Hex: (_hex: Buffer): Hex => new Hex(_hex),
-  HexTime: (_time: Buffer): HexTime => new HexTime(_time),
-  HexToBuffer: (_hex: string): Buffer => {
-    _hex = _hex.substr(0, 2) === '0x' ? _hex.substr(2) : _hex
-    _hex = _hex.length % 2 ? '0' + _hex : _hex
-    return Buffer.from(_hex, 'hex')
+  Hash: (hash: Buffer): Hash => new Hash(hash),
+  EthValue: (value: Buffer): EthValue => new EthValue(value),
+  HexNumber: (value: Buffer): HexNumber => new HexNumber(value),
+  Address: (address: Buffer): Address => new Address(address),
+  AddressFromHex: (address: string): Address => new Address(Buffer.from(address.toLowerCase().replace('0x', ''), 'hex')),
+  Hex: (hex: Buffer): Hex => new Hex(hex),
+  HexTime: (time: Buffer): HexTime => new HexTime(time),
+  HexToBuffer: (hex: string): Buffer => {
+    hex = hex.substr(0, 2) === '0x' ? hex.substr(2) : hex
+    hex = hex.length % 2 ? '0' + hex : hex
+    return Buffer.from(hex, 'hex')
   },
-  WeiValue: (_value: number): WeiValue => new WeiValue(_value)
+  WeiValue: (value: number): WeiValue => new WeiValue(value)
 }
 
 export { common }

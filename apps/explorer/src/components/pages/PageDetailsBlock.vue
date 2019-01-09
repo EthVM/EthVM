@@ -11,7 +11,7 @@
     <!-- Mined Block, txs table -->
     <v-layout row wrap justify-start class="mb-4">
       <v-flex v-if="blockType == 'block'" xs12>
-        <table-txs v-if="transactions" :transactions="transactions" :frame-txs="true" :page-type="blockType" class="mt-3"></table-txs>
+        <table-txs v-if="transactions" :transactions="transactions" :frame-txs="true" :page-type="blockType" class="mt-3" />
         <v-card v-else flat color="white">
           <v-layout v-if="transactionLoading" column align-center justify-center pa-4>
             <v-icon class="text-xs-center fa fa-spinner fa-pulse fa-4x fa-fw primary--text" large></v-icon>
@@ -79,6 +79,7 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
   // Lifecycle:
   mounted() {
     this.getBlock()
+
     if (this.$store.getters.getBlocks.length > 0) {
       const lastMinedBlock = this.$store.getters.getBlocks[0]
       if (lastMinedBlock.getNumber() >= this.blockNumber) {
@@ -90,7 +91,6 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
     }
 
     this.$eventHub.$on(Events.newBlock, _block => {
-      this.blockInfo
       if (this.$store.getters.getBlocks.length > 0) {
         const lastMinedBlock = this.$store.getters.getBlocks[0]
         if (lastMinedBlock.getNumber() == Number(this.blockRef) || lastMinedBlock.getHash() == this.blockRef) {
@@ -113,7 +113,7 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
           if (result) {
             this.setRawBlock(result)
           } else {
-            //block does not exhist and since prop is hash, there is now way to find previous reference --> Error This Block Does not exhist
+            //block does not exist and since prop is hash, there is now way to find previous reference --> Error This Block Does not exist
           }
         }
       )
@@ -153,9 +153,11 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
     this.blockInfo.prev = this.previousBlock()
     this.setDetails(this.block)
     this.setMore(this.block)
+
     if (!this.blockNumber) {
       this.blockNumber = this.block.getNumber()
     }
+
     if (this.block.getIsUncle()) {
       this.blockType = 'uncle'
     } else {

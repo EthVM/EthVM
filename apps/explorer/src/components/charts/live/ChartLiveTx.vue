@@ -19,57 +19,7 @@ import AppChart from '@app/components/ui/AppChart.vue'
 import { Vue, Component } from 'vue-property-decorator'
 
 const MAX_ITEMS = 10
-const title = 'Tx Summary'
-const description = 'Number of successful, failed, and pending transactions that have occured in the last 10 blocks'
 
-const barOptions = {
-  title: {
-    text: 'Transactions (Last 10 blocks)'
-  },
-  responsive: true,
-  scales: {
-    yAxes: [
-      {
-        id: 'y-axis-1',
-        stacked: false,
-        ticks: {
-          beginAtZero: true
-        },
-        gridLines: {
-          color: 'rgba(0, 0, 0, 0)'
-        },
-        scaleLabel: {
-          display: true,
-          labelString: 'Sucessfull and Failed Tx '
-        }
-      },
-      {
-        id: 'y-axis-2',
-        position: 'right',
-        stacked: false,
-        ticks: {
-          beginAtZero: true
-        },
-        gridLines: {
-          color: 'rgba(0, 0, 0, 0)'
-        },
-        scaleLabel: {
-          display: true,
-          labelString: 'Pending Tx'
-        }
-      }
-    ],
-    xAxes: [
-      {
-        stacked: false,
-        display: false,
-        categoryPercentage: 0.7
-      }
-    ]
-  },
-
-  barShowLabels: true
-}
 @Component({
   components: {
     AppChart
@@ -79,10 +29,57 @@ export default class ChartLiveTransactions extends Vue {
   data() {
     return {
       chartData: {},
-      chartOptions: barOptions,
+      chartOptions: {
+        title: {
+          text: this.$i18n.t('charts.title')
+        },
+        responsive: true,
+        scales: {
+          yAxes: [
+            {
+              id: 'y-axis-1',
+              stacked: false,
+              ticks: {
+                beginAtZero: true
+              },
+              gridLines: {
+                color: 'rgba(0, 0, 0, 0)'
+              },
+              scaleLabel: {
+                display: true,
+                labelString: this.$i18n.t('charts.labelString')
+              }
+            },
+            {
+              id: 'y-axis-2',
+              position: 'right',
+              stacked: false,
+              ticks: {
+                beginAtZero: true
+              },
+              gridLines: {
+                color: 'rgba(0, 0, 0, 0)'
+              },
+              scaleLabel: {
+                display: true,
+                labelString: 'Pending Tx'
+              }
+            }
+          ],
+          xAxes: [
+            {
+              stacked: false,
+              display: false,
+              categoryPercentage: 0.7
+            }
+          ]
+        },
+
+        barShowLabels: true
+      },
       redraw: false,
-      newTitle: title,
-      newDescription: description,
+      newTitle: this.$i18n.t('charts.txSummary'),
+      newDescription: this.$i18n.t('charts.liveDescription'),
       footnote: [
         {
           color: 'txSuccess',
@@ -103,6 +100,7 @@ export default class ChartLiveTransactions extends Vue {
     }
   }
 
+  // Lifecycle
   created() {
     this.chartData = this.initData
     this.$eventHub.$on(sEvents.pastBlocksR, () => {
@@ -124,10 +122,13 @@ export default class ChartLiveTransactions extends Vue {
       }
     })
   }
+
   beforeDestroy() {
     this.$eventHub.$off(sEvents.pastBlocksR)
     this.$eventHub.$off(sEvents.newBlock)
   }
+
+  // Computed
   get initData() {
     const data = {
       labels: [],
@@ -135,6 +136,7 @@ export default class ChartLiveTransactions extends Vue {
       fData: [],
       pData: []
     }
+
     const latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
     latestBlocks.forEach(_block => {
       data.labels.unshift(_block.getNumber())
@@ -143,6 +145,7 @@ export default class ChartLiveTransactions extends Vue {
       data.fData.unshift(new BN(_tempD.failedTxs).toNumber())
       data.pData.unshift(new BN(0).toNumber()) //pending tx ev
     })
+
     return {
       labels: data.labels,
       datasets: [
@@ -156,13 +159,13 @@ export default class ChartLiveTransactions extends Vue {
           yAxisID: 'y-axis-2'
         },
         {
-          label: 'Sucessfull',
+          label: this.$i18n.t('footnote.success'),
           backgroundColor: '#40ce9c',
           data: data.sData,
           yAxisID: 'y-axis-1'
         },
         {
-          label: 'Failed',
+          label: this.$i18n.t('footnote.failed'),
           backgroundColor: '#fe136c',
           data: data.fData,
           yAxisID: 'y-axis-1'

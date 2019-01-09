@@ -167,6 +167,17 @@
     "in": "In",
     "out": "Out"
   },
+  "charts": {
+    "txSummary": "Tx Summary",
+    "avgTxCost": "Average Tx Costs",
+    "title": "Transactions (Last 10 blocks)",
+    "avgTitle": "Average Tx Fees",
+    "liveDescription": "Number of successful, failed, and pending transactions that have occured in the last 10 blocks",
+    "avgDescription": "Average transaction fees and average gas price in the last 10 blocks",
+    "labelString": "Sucessfull and Failed Tx ",
+    "txFees": "Tx Fees ETH",
+    "gasPrice": " Gas Price GWEI"
+  },
   "footer": {
     "discover": "Discover",
     "privPolicy": "Privacy Policy",

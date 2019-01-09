@@ -72,7 +72,7 @@ export default class TableTxs extends Vue {
   @Prop(String) pageType: string
   @Prop(String) showStyle!: string
   @Prop(Array) transactions!: Tx[]
-  @Prop({ type: Boolean, defualt: true }) loading: boolean
+  @Prop({ type: Boolean, default: true }) loading: boolean
 
   data() {
     return {

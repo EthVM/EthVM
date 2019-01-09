@@ -134,7 +134,7 @@ export default class TheNavigationDrawer extends Vue {
   }
 
   checkLinkPath(link) {
-    return this.getCurrPath() == link ? true : false
+    return this.getCurrPath() == link
   }
 
   checkPath(links) {

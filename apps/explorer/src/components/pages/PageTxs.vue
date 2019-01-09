@@ -44,11 +44,13 @@ export default class PageTxs extends Mixins(LastBlockInfoMixin) {
     }
   }
 
+  // Computed
   get txs(): Tx[] {
     return this.$store.getters.getTxs
   }
+
   get txsLoad(): boolean {
-    return this.txs.length > 0 ? false : true
+    return this.txs.length == 0
   }
 }
 </script>

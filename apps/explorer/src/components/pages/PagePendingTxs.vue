@@ -12,6 +12,7 @@ import TableTxs from '@app/components/tables/TableTxs.vue'
 import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
 import { Vue, Component } from 'vue-property-decorator'
 import { Tx } from '@app/models'
+import { Events } from 'ethvm-common'
 
 @Component({
   components: {
@@ -31,11 +32,30 @@ export default class PagePendingTxs extends Vue {
     }
   }
 
+  // Lifecycle
+  created() {
+    this.$socket.emit(
+      Events.pendingTxs,
+      {
+        limit: 100,
+        page: 0
+      },
+      (err, pTxs) => {
+        this.$store.commit(Events.newPendingTx, pTxs)
+        if (pTxs && pTxs.length > 0) {
+          this.$eventHub.$emit(Events.newPendingTx)
+        }
+      }
+    )
+  }
+
+  // Computed
   get txs(): Tx[] {
     return this.$store.getters.getPendingTxs
   }
+
   get txsLoad(): boolean {
-    return this.txs.length > 0 ? false : true
+    return this.txs.length === 0
   }
 }
 </script>

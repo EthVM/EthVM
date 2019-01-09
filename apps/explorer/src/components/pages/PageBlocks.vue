@@ -57,7 +57,7 @@ export default class PageBlocks extends mixins(LastBlockInfoMixin) {
   }
 
   get blocksLoad(): boolean {
-    return this.blocks.length > 0 ? false : true
+    return this.blocks.length === 0
   }
 }
 </script>
