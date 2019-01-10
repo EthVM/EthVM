@@ -20,8 +20,8 @@
             </v-flex>
           </v-layout>
         </v-list-tile>
-        <v-slide-y-transition group>
-          <v-list-tile v-if="more" v-for="(item, count) in moreItems" :key="count" :class="[count % 2 == 0 ? 'background: white' : 'background: tableGrey']">
+        <v-slide-y-transition group v-if="more">
+          <v-list-tile v-for="(item, count) in moreItems" :key="count" :class="[count % 2 == 0 ? 'background: white' : 'background: tableGrey']">
             <v-layout align-center justify-start row fill-height class="pa-3">
               <v-flex xs4 sm3 md2>
                 <v-list-tile-title class="info--text font-weight-medium">{{ item.title }}</v-list-tile-title>

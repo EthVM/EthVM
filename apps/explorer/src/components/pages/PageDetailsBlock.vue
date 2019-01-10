@@ -3,16 +3,16 @@
     <app-bread-crumbs :new-items="items"></app-bread-crumbs>
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
-        <app-list-details :items="blockDetails" :more-items="blockMoreDetails" :details-type="blockType" :loading="blockLoad">
+        <app-list-details :items="blockDetails" :more-items="blockMoreDetails" :details-type="blockType" :loading="blockLoading">
           <app-list-title slot="details-title" :list-type="blockType" :block-details="blockInfo"></app-list-title>
         </app-list-details>
       </v-flex>
     </v-layout>
     <!-- Mined Block, txs table -->
     <v-layout v-if="blockType == 'block' && blockInfo.mined" row wrap justify-start class="mb-4">
-      <v-flex v-if="!txs && !txsLoad" xs12>
-        <table-txs v-if="txs" :transactions="txs" :frame-txs="true" :page-type="blockType" :loading="txsLoad" class="mt-3" />
-        <v-card v-if="txs && txsLoad" flat color="white">
+      <v-flex v-if="!txs && !txsLoading" xs12>
+        <table-txs v-if="txs" :transactions="txs" :frame-txs="true" :page-type="blockType" :loading="txsLoading" class="mt-3" />
+        <v-card v-if="txs && txsLoading" flat color="white">
           <v-card-text class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }}</v-card-text>
         </v-card>
       </v-flex>
@@ -21,10 +21,8 @@
 </template>
 
 <script lang="ts">
-import { mappers } from '@app/models/helpers'
 import { Block, Tx } from '@app/models'
 import { Events } from 'ethvm-common'
-import store from '@app/store'
 import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
 import TableTxs from '@app/components/tables/TableTxs.vue'
 import AppListDetails from '@app/components/ui/AppListDetails.vue'
@@ -43,23 +41,23 @@ import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
   @Prop({ type: String }) blockRef!: string
 
-  block = undefined
-  blockLoad = true
-  txs = undefined
-  txsLoad = true
-  blockN = undefined
+  blockLoading = true
+  txsLoading = true
+
+  blockType = 'block'
+  block = null
+  blockN = null
   blockInfo = {
     mined: null,
     next: null,
     prev: null,
     uncles: null
   }
-  blockType = 'block'
+
+  txs = null
 
   data() {
     return {
-      mappers,
-      store,
       items: [
         {
           text: this.$i18n.t('title.blocks'),
@@ -169,7 +167,7 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
 
   setRawBlock(result) {
     this.block = new Block(result)
-    this.blockLoad = false
+    this.blockLoading = false
     this.blockInfo.mined = true
     this.setBlock()
   }
@@ -190,7 +188,7 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
           hash: this.block.getHash().replace('0x', '')
         },
         (err, data) => {
-          this.txsLoad = false
+          this.txsLoading = false
           this.txs = data.map(_tx => {
             return new Tx(_tx)
           })
