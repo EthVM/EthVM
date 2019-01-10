@@ -1,32 +1,31 @@
 <template>
   <v-container grid-list-lg class="mb-0">
-    <app-bread-crumbs :new-items="getItems"></app-bread-crumbs>
+    hellos
+    <app-bread-crumbs :new-items="items"></app-bread-crumbs>
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
         <app-list-details
           :items="blockDetails"
           :more-items="blockMoreDetails"
-          :details-type="getBlockType"
+          :details-type="blockType"
+          :loading="blockLoad"
         >
-          <app-list-title
-            slot="details-title"
-            :list-type="getBlockType"
-            :block-details="blockTitle"
-          ></app-list-title>
+          <app-list-title slot="details-title" :list-type="blockType" :block-details="blockInfo"></app-list-title>
         </app-list-details>
       </v-flex>
     </v-layout>
     <!-- Mined Block, txs table -->
-    <v-layout v-if="blockType == 'block' && isMined" row wrap justify-start class="mb-4">
-      <v-flex  v-if="!txs && txsLoading" xs12>
+    <v-layout v-if="blockType == 'block' && blockInfo.mined" row wrap justify-start class="mb-4">
+      <v-flex v-if="!txs && !txsLoad" xs12>
         <table-txs
           v-if="txs"
           :transactions="txs"
           :frame-txs="true"
           :page-type="blockType"
+          :loading="txsLoad"
           class="mt-3"
         />
-        <v-card v-if="txs && !txsLoading"  flat color="white">
+        <v-card v-if="txs && txsLoad" flat color="white">
           <v-card-text class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }}</v-card-text>
         </v-card>
       </v-flex>
@@ -57,16 +56,16 @@ import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
   @Prop({ type: String }) blockRef!: string
 
-  blockNumber
   block
-  blockLoading = true
+  blockLoad = true
   txs
-  txsLoading = true
+  txsLoad = true
+  blockN
   blockInfo = {
-        mined: null,
-        next: null,
-        prev: null,
-        uncles: null
+    mined: null,
+    next: null,
+    prev: null,
+    uncles: null
   }
   blockType = 'block'
 
@@ -90,21 +89,25 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
   /* Lifecycle: */
   created() {
     /* Case 1:  No Data in store --> need data for last block in case curr block was not mined*/
-    if(this.$store.getters.getBlocks.length === 0) {
+    if (this.$store.getters.getBlocks.length === 0) {
       this.getBlocks()
     }
   }
 
   mounted() {
     /* Case 2:  Data in store*/
-    if(this.blockRefference) {
-      this.checkBlockRef() ? this.getBlockByHash(): this.getBlockByNumber()
+    if (this.blockRef) {
+      this.checkBlockRef() ? this.getBlockByHash() : this.getBlockByNumber()
+    }
+    if (this.blockN) {
+      this.items[1].text = this.$i18n.t('title.blockN') + ' ' + this.blockN
     }
 
     /* Block was not mined --> wait to be mined */
     this.$eventHub.$on(Events.newBlock, _block => {
       if (this.$store.getters.getBlocks.length > 0) {
         const lastMinedBlock = this.$store.getters.getBlocks[0]
+        console
         if (lastMinedBlock.getNumber() == Number(this.blockRef) || lastMinedBlock.getHash() == this.blockRef) {
           this.block = lastMinedBlock
           this.blockInfo.mined = true
@@ -113,10 +116,10 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
         }
       }
     })
+}
+  beforeDestroy() {
+    this.stopBlockCheck()
   }
-   beforeDestroy() {
-     this.stopBlockCheck()
-   }
 
   // Methods:
   stopBlockCheck() {
@@ -156,27 +159,21 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
   }
 
   getBlockByNumber() {
-    this.blockNumber = Number(this.blockRef)
-    this.blockInfo.prev = this.previousBlock()
-        this.$socket.emit(
-          Events.getBlockByNumber,
-          {
-            number: Number(this.blockRef)
-          },
-          (error, result) => {
-            console.log("here")
-            console.log(result)
-            if (result) {
-              this.setRawBlock(result)
-            }
-            else {
-              this.blockInfo.mined = false
-            }
-          }
-        )
+    this.blockN = Number(this.blockRef)
+    this.$socket.emit(
+      Events.getBlockByNumber,
+      {
+        number: Number(this.blockRef)
+      },
+      (error, result) => {
+        if (result) {
+          this.setRawBlock(result)
+        } else {
+          this.blockInfo.mined = false
+        }
+      }
+    )
   }
-
-
 
   checkBlockRef(): boolean {
     return this.blockRef.includes('0x')
@@ -184,21 +181,17 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
 
   setRawBlock(result) {
     this.block = new Block(result)
-    if (!this.blockNumber){
-      this.blockNumber = this.block.getNumber()
-    }
+    this.blockLoad = false
+    this.blockInfo.mined = true
     this.setBlock()
   }
 
   setBlock() {
-    this.blockLoading = false
     this.blockInfo.uncles = this.block.getUncles()
-    this.blockInfo.mined = true
-    this.blockInfo.next = this.nextBlock()
-    this.blockInfo.prev = this.previousBlock()
+    this.blockInfo.next = this.nextBlock
+    this.blockInfo.prev = this.previousBlock
     this.setDetails(this.block)
     this.setMore(this.block)
-
 
     if (this.block.getIsUncle()) {
       this.blockType = 'uncle'
@@ -209,8 +202,8 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
           hash: this.block.getHash().replace('0x', '')
         },
         (err, data) => {
-          this.txsLoading = false
-          this.txs= data.map(_tx => {
+          this.txsLoad = false
+          this.txs = data.map(_tx => {
             return new Tx(_tx)
           })
         }
@@ -218,38 +211,14 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
     }
   }
 
-  nextBlock(): String {
-    const next = this.block.getNumber() + 1
-    return '/block/' + next.toString()
+  /* Computed: */
+
+  get nextBlock(): String {
+    return '/block/'+(this.blockN +1).toString
   }
 
-  previousBlock(): String {
-    return this.block ? '/block/' + (this.block.getNumber() - 1).toString() : '/block/' + this.prev.toString()
-  }
-
-  // Computed:
-  get getItems() {
-    if (this.blockNumber) {
-      this.items[1].text = this.$i18n.t('title.blockN') + ' ' + this.blockNumber
-    }
-    return this.items
-  }
-
-  get blockTitle() {
-    return this.blockInfo
-  }
-
-  get getBlockType() {
-    return this.blockType
-  }
-
-  get isMined() {
-    return this.blockInfo.mined
-  }
-
-  get blockRefference() {
-    console.log(this.blockRef)
-    return this.blockRef
+  get previousBlock(): String {
+    return '/block/'+(this.blockN - 1).toString
   }
 }
 </script>

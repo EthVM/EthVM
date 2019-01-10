@@ -74,7 +74,7 @@ export default class PageDetailsTxs extends Mixins(TxDetailsMixin) {
   }
 
   // Computed
-  get tx() {
+  get tx(): Tx {
     return this.transaction
   }
 }

@@ -10,7 +10,7 @@
       <v-layout row wrap align-center justify-start>
         <!-- Previous Block -->
         <v-flex xs3 sm2 md1>
-          <v-layout v-if="block.prev" align-center justify-start>
+          <v-layout v-if="prevBlock" align-center justify-start>
             <v-btn flat color="primary" class="black--text" icon :to="block.prev"> <v-icon>fas fa-angle-left</v-icon> </v-btn>
           </v-layout>
         </v-flex>
@@ -27,7 +27,7 @@
                 <v-card-title class="title font-weight-bold">{{ $t('title.uncles') }}:</v-card-title>
                 <v-divider class="lineGrey"></v-divider>
                 <v-list>
-                  <v-list-tile v-for="(uncle, index) in block.uncles" :key="index">
+                  <v-list-tile v-for="(uncle, index) in uncles" :key="index">
                     <v-layout row justify-start align-center fill-height>
                       <v-card-title class="info--text pr-0 pl-0">{{ $t('common.hash') }}:</v-card-title>
                       <v-card-text class="text-truncate">
@@ -41,9 +41,9 @@
           </v-layout>
         </v-flex>
         <!-- Next Block -->
-        <v-flex v-if="block.next" xs3 sm2 md1>
+        <v-flex v-if="nextBlock" xs3 sm2 md1>
           <v-layout align-center justify-end>
-            <v-btn flat color="primary" class="black--text" icon :to="next"> <v-icon>fas fa-angle-right</v-icon> </v-btn>
+            <v-btn flat color="primary" class="black--text" icon :to="nextBlock"> <v-icon>fas fa-angle-right</v-icon> </v-btn>
           </v-layout>
         </v-flex>
       </v-layout>
@@ -59,7 +59,11 @@ import { BlockDetailsTitle } from '@app/components/props'
 @Component
 export default class AppListTitle extends Vue {
   @Prop(String) listType!: string
-  @Prop(Object) blockDetails!: BlockDetailsTitle
+  @Prop(String) nextBlock!: string
+  @Prop(String) prevBlock!: string
+  @Prop(Boolean) mined!: boolean
+  @Prop(Array) uncles!: string[]
+
 
   data() {
     return {
@@ -77,16 +81,9 @@ export default class AppListTitle extends Vue {
     return this.titles[this.listType] || this.$i18n.t('title.uncleDetail')
   }
 
-  get next() {
-    return this.blockDetails.next
-  }
 
   get hasUncles() {
-    return this.blockDetails.mined && this.blockDetails.hasUncles
-  }
-
-  get block() {
-    return this.blockDetails
+    return this.mined && this.uncles
   }
 }
 </script>

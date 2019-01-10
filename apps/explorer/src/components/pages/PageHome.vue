@@ -84,10 +84,7 @@ export default class PageHome extends Mixins(LastBlockInfoMixin) {
         page: 0
       },
       (err, txs) => {
-         console.log("getting txs")
         this.$store.commit(Events.newTx, txs)
-
-          console.log(txs)
         if (txs && txs.length > 0) {
           this.$eventHub.$emit(Events.pastTxsR)
           this.$eventHub.$emit(Events.newTx, new Tx(txs[0]))
@@ -96,9 +93,9 @@ export default class PageHome extends Mixins(LastBlockInfoMixin) {
     )
   }
 
+
   /* Computed: */
   get txs(): Tx[] {
-    console.log (this.$store.getters.getTxs.slice(0, MAX_ITEMS))
     return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
   }
 

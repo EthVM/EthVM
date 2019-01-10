@@ -49,11 +49,11 @@
 </template>
 
 <script lang="ts">
-import NumberFormatter from 'number-formatter'
+import { StringConcatMixin } from '@app/components/mixins'
 import AppAddressQr from '@app/components/ui/AppAddressQr.vue'
 import AppBlockies from '@app/components/ui/AppBlockies.vue'
 import AppCopyToClip from '@app/components/ui/AppCopyToClip.vue'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop, Mixins} from 'vue-property-decorator'
 
 @Component({
   components: {
@@ -62,7 +62,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
     AppCopyToClip
   }
 })
-export default class AppAddressDetail extends Vue {
+export default class AppAddressDetail extends Mixins(StringConcatMixin){
   @Prop(Object) account: any
 
   data() {
@@ -74,15 +74,15 @@ export default class AppAddressDetail extends Vue {
 
   // Computed
   get formatEthBalance() {
-    return NumberFormatter('#,##0.##', this.account.balance)
+    return this.getRoundNumber(this.account.balance)
   }
 
   get formatUSDBalance() {
-    return NumberFormatter('#,##0.##', this.account.balance * this.account.ethusd)
+    return this.getRoundNumber(this.account.balance * this.account.ethusd)
   }
 
   get formatEthUSD() {
-    return NumberFormatter('#,##0.##', this.account.ethusd)
+    return this.getRoundNumber(this.account.ethusd)
   }
 }
 </script>

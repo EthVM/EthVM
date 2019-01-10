@@ -76,7 +76,7 @@ export default class AppListDetails extends Vue {
     return {
       showMore: false,
       dialog: false,
-      message: {
+      messages: {
         block: this.$i18n.t('message.notMined'),
         tx: this.$i18n.t('message.noTx'),
       }
@@ -94,7 +94,7 @@ export default class AppListDetails extends Vue {
   }
 
   get message() {
-    return this.message[this.detailsType]
+    return this.messages[this.detailsType]
   }
 }
 </script>
