@@ -2,7 +2,7 @@
   <v-card color="white" flat class="pt-3">
     <slot name="details-title"></slot>
     <v-divider class="lineGrey"></v-divider>
-    <div v-if="items">
+    <div v-if="!loading">
       <v-list>
         <v-list-tile v-for="(item, index) in items" :key="index" :class="[index % 2 == 0 ? 'background: white' : 'background: tableGrey']">
           <v-layout align-center justify-start row fill-height class="pa-3">
@@ -44,20 +44,25 @@
       <v-btn v-if="!more" @click="setView()" flat block class="secondary"> <v-icon class="fa fa-angle-down white--text"></v-icon> </v-btn>
       <v-btn v-else @click="setView()" flat block class="secondary"> <v-icon class="fa fa-angle-up white--text"></v-icon> </v-btn>
     </div>
+    <div v-else>
+      <app-info-load v-if="loading"/>
     <v-layout v-else column align-center justify-center ma-3>
       <v-card-title class="primary--text text-xs-center body-2 pb-4">{{ message }}</v-card-title>
       <v-icon class="fa fa-spinner fa-pulse fa-4x fa-fw primary--text" large></v-icon>
     </v-layout>
+    </div>
   </v-card>
 </template>
 
 <script lang="ts">
+import AppInfoLoad from '@app/components/ui/AppInfoLoad.vue'
 import AppCopyToClip from '@app/components/ui/AppCopyToClip.vue'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Detail } from '@app/components/props'
 
 @Component({
   components: {
+    AppInfoLoad,
     AppCopyToClip
   }
 })
@@ -65,11 +70,16 @@ export default class AppListDetails extends Vue {
   @Prop(Array) items!: Detail[]
   @Prop(Array) moreItems!: Detail[]
   @Prop(String) detailsType!: string
+  @Prop({type: Boolean, default: true }) loading!: boolean
 
   data() {
     return {
       showMore: false,
-      dialog: false
+      dialog: false,
+      message: {
+        block: this.$i18n.t('message.notMined'),
+        tx: this.$i18n.t('message.noTx'),
+      }
     }
   }
 
@@ -84,7 +94,7 @@ export default class AppListDetails extends Vue {
   }
 
   get message() {
-    return this.detailsType == 'notMined' ? this.$i18n.t('message.notMined') : this.$i18n.t('message.load')
+    return this.message[this.detailsType]
   }
 }
 </script>

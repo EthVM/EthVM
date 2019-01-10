@@ -81,7 +81,8 @@
     "noPending": "There are no pending transactions",
     "load": "Loading",
     "loadingBlockTx": "Loading block transactions",
-    "notMined": "This block has not been mined yet"
+    "notMined": "This block has not been mined yet",
+    "noTx": "This Transaction does not exist"
   },
   "block": {
     "height": "Height",

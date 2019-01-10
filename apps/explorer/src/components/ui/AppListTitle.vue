@@ -10,7 +10,7 @@
       <v-layout row wrap align-center justify-start>
         <!-- Previous Block -->
         <v-flex xs3 sm2 md1>
-          <v-layout align-center justify-start>
+          <v-layout v-if="block.prev" align-center justify-start>
             <v-btn flat color="primary" class="black--text" icon :to="block.prev"> <v-icon>fas fa-angle-left</v-icon> </v-btn>
           </v-layout>
         </v-flex>

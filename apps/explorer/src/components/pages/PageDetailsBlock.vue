@@ -3,21 +3,31 @@
     <app-bread-crumbs :new-items="getItems"></app-bread-crumbs>
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
-        <app-list-details :items="blockDetails" :more-items="blockMoreDetails" :details-type="getBlockType">
-          <app-list-title slot="details-title" :list-type="getBlockType" :block-details="blockTitle"></app-list-title>
+        <app-list-details
+          :items="blockDetails"
+          :more-items="blockMoreDetails"
+          :details-type="getBlockType"
+        >
+          <app-list-title
+            slot="details-title"
+            :list-type="getBlockType"
+            :block-details="blockTitle"
+          ></app-list-title>
         </app-list-details>
       </v-flex>
     </v-layout>
     <!-- Mined Block, txs table -->
-    <v-layout row wrap justify-start class="mb-4">
-      <v-flex v-if="blockType == 'block'" xs12>
-        <table-txs v-if="transactions" :transactions="transactions" :frame-txs="true" :page-type="blockType" class="mt-3" />
-        <v-card v-else flat color="white">
-          <v-layout v-if="transactionLoading" column align-center justify-center pa-4>
-            <v-icon class="text-xs-center fa fa-spinner fa-pulse fa-4x fa-fw primary--text" large></v-icon>
-            <v-card-text class="text-xs-center text-muted">{{ $t('message.loadingBlockTx') }}</v-card-text>
-          </v-layout>
-          <v-card-text v-else class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }}</v-card-text>
+    <v-layout v-if="blockType == 'block' && isMined" row wrap justify-start class="mb-4">
+      <v-flex  v-if="!txs && txsLoading" xs12>
+        <table-txs
+          v-if="txs"
+          :transactions="txs"
+          :frame-txs="true"
+          :page-type="blockType"
+          class="mt-3"
+        />
+        <v-card v-if="txs && !txsLoading"  flat color="white">
+          <v-card-text class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }}</v-card-text>
         </v-card>
       </v-flex>
     </v-layout>
@@ -47,14 +57,23 @@ import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
   @Prop({ type: String }) blockRef!: string
 
+  blockNumber
+  block
+  blockLoading = true
+  txs
+  txsLoading = true
+  blockInfo = {
+        mined: null,
+        next: null,
+        prev: null,
+        uncles: null
+  }
+  blockType = 'block'
+
   data() {
     return {
       mappers,
       store,
-      block: null,
-      blockNumber: null,
-      transactions: null,
-      transactionLoading: Boolean,
       items: [
         {
           text: this.$i18n.t('title.blocks'),
@@ -65,88 +84,114 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
           text: '',
           disabled: true
         }
-      ],
-      blockInfo: {
-        mined: null,
-        next: null,
-        prev: null,
-        uncles: null
-      },
-      blockType: 'block'
+      ]
+    }
+  }
+  /* Lifecycle: */
+  created() {
+    /* Case 1:  No Data in store --> need data for last block in case curr block was not mined*/
+    if(this.$store.getters.getBlocks.length === 0) {
+      this.getBlocks()
     }
   }
 
-  // Lifecycle:
   mounted() {
-    this.getBlock()
-
-    if (this.$store.getters.getBlocks.length > 0) {
-      const lastMinedBlock = this.$store.getters.getBlocks[0]
-      if (lastMinedBlock.getNumber() >= this.blockNumber) {
-        this.blockInfo.mined = true
-        this.getBlock()
-      } else {
-        this.blockInfo.mined = false
-      }
+    /* Case 2:  Data in store*/
+    if(this.blockRefference) {
+      this.checkBlockRef() ? this.getBlockByHash(): this.getBlockByNumber()
     }
 
+    /* Block was not mined --> wait to be mined */
     this.$eventHub.$on(Events.newBlock, _block => {
       if (this.$store.getters.getBlocks.length > 0) {
         const lastMinedBlock = this.$store.getters.getBlocks[0]
         if (lastMinedBlock.getNumber() == Number(this.blockRef) || lastMinedBlock.getHash() == this.blockRef) {
           this.block = lastMinedBlock
+          this.blockInfo.mined = true
           this.setBlock()
+          this.stopBlockCheck()
         }
       }
     })
   }
+   beforeDestroy() {
+     this.stopBlockCheck()
+   }
 
   // Methods:
-  getBlock() {
-    if (this.blockRef.includes('0x')) {
-      this.$socket.emit(
-        Events.getBlock,
-        {
-          hash: this.blockRef.replace('0x', '')
-        },
-        (error, result) => {
-          if (result) {
-            this.setRawBlock(result)
-          } else {
-            //block does not exist and since prop is hash, there is now way to find previous reference --> Error This Block Does not exist
-          }
-        }
-      )
-    } else {
-      this.blockNumber = Number(this.blockRef)
-      if (this.$store.getters.getBlocks.length > 0) {
-        const lastMinedBlock = this.$store.getters.getBlocks[0]
-        if (lastMinedBlock.getNumber() >= this.blockNumber) {
-          this.$socket.emit(
-            Events.getBlockByNumber,
-            {
-              number: Number(this.blockRef)
-            },
-            (error, result) => {
-              if (result) {
-                this.setRawBlock(result)
-              }
-            }
-          )
-        } else {
-          this.blockInfo.mined = false
-          this.blockInfo.prev = this.previousBlock()
+  stopBlockCheck() {
+    this.$eventHub.$off(Events.newBlock)
+  }
+  getBlocks() {
+    this.$socket.emit(
+      Events.pastBlocks,
+      {
+        limit: 1,
+        page: 0
+      },
+      (err, blocks) => {
+        this.$store.commit(Events.newBlock, blocks)
+        if (blocks && blocks.length > 0) {
+          this.$eventHub.$emit(Events.pastBlocksR)
+          this.$eventHub.$emit(Events.newBlock, new Block(blocks[0]))
         }
       }
-    }
+    )
+  }
+  getBlockByHash() {
+    this.$socket.emit(
+      Events.getBlock,
+      {
+        hash: this.blockRef.replace('0x', '')
+      },
+      (error, result) => {
+        if (result) {
+          this.setRawBlock(result)
+        } else {
+          this.blockInfo.mined = false
+          //block does not exist and since prop is hash, there is now way to find previous reference --> Error This Block Does not exist
+        }
+      }
+    )
+  }
+
+  getBlockByNumber() {
+    this.blockNumber = Number(this.blockRef)
+    this.blockInfo.prev = this.previousBlock()
+        this.$socket.emit(
+          Events.getBlockByNumber,
+          {
+            number: Number(this.blockRef)
+          },
+          (error, result) => {
+            console.log("here")
+            console.log(result)
+            if (result) {
+              this.setRawBlock(result)
+            }
+            else {
+              this.blockInfo.mined = false
+            }
+          }
+        )
+  }
+
+
+
+  checkBlockRef(): boolean {
+    return this.blockRef.includes('0x')
   }
 
   setRawBlock(result) {
     this.block = new Block(result)
+    if (!this.blockNumber){
+      this.blockNumber = this.block.getNumber()
+    }
     this.setBlock()
   }
 
   setBlock() {
+    this.blockLoading = false
     this.blockInfo.uncles = this.block.getUncles()
     this.blockInfo.mined = true
     this.blockInfo.next = this.nextBlock()
@@ -154,22 +199,18 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
     this.setDetails(this.block)
     this.setMore(this.block)
 
-    if (!this.blockNumber) {
-      this.blockNumber = this.block.getNumber()
-    }
 
     if (this.block.getIsUncle()) {
       this.blockType = 'uncle'
     } else {
-      this.transactionLoading = true
       this.$socket.emit(
         Events.getBlockTransactions,
         {
           hash: this.block.getHash().replace('0x', '')
         },
         (err, data) => {
-          this.transactionLoading = false
-          this.transactions = data.map(_tx => {
+          this.txsLoading = false
+          this.txs= data.map(_tx => {
             return new Tx(_tx)
           })
         }
@@ -204,6 +245,11 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
 
   get isMined() {
     return this.blockInfo.mined
+  }
+
+  get blockRefference() {
+    console.log(this.blockRef)
+    return this.blockRef
   }
 }
 </script>
