@@ -29,13 +29,13 @@
       <v-flex xs12 md4>
         <v-card class="primary white--text pl-2" flat>
           <v-card-text class="pb-0">{{ $t('addrOverview.balance') }}</v-card-text>
-          <v-card-title class="headline text-truncate">{{ formatEthBalance }} {{ $t('common.eth') }}</v-card-title>
+          <v-card-title class="headline text-truncate">{{ getRoundNumber(this.account.balance) }} {{ $t('common.eth') }}</v-card-title>
         </v-card>
       </v-flex>
       <v-flex xs12 md4>
         <v-card class="error white--text pl-2" flat>
-          <v-card-text class="pb-0">{{ $t('addrOverview.usd') }} (1{{ $t('common.eth') }} = ${{ formatEthUSD }})</v-card-text>
-          <v-card-title class="headline text-truncate">${{ formatUSDBalance }}</v-card-title>
+          <v-card-text class="pb-0">{{ $t('addrOverview.usd') }} (1{{ $t('common.eth') }} = ${{ getRoundNumber(this.account.ethusd)}})</v-card-text>
+          <v-card-title class="headline text-truncate">${{ getRoundNumber(this.account.balance * this.account.ethusd)}}</v-card-title>
         </v-card>
       </v-flex>
       <v-flex xs12 md4>
@@ -64,25 +64,5 @@ import { Vue, Component, Prop, Mixins} from 'vue-property-decorator'
 })
 export default class AppAddressDetail extends Mixins(StringConcatMixin){
   @Prop(Object) account: any
-
-  data() {
-    return {
-      showMore: false,
-      domainName: ''
-    }
-  }
-
-  // Computed
-  get formatEthBalance() {
-    return this.getRoundNumber(this.account.balance)
-  }
-
-  get formatUSDBalance() {
-    return this.getRoundNumber(this.account.balance * this.account.ethusd)
-  }
-
-  get formatEthUSD() {
-    return this.getRoundNumber(this.account.ethusd)
-  }
 }
 </script>
