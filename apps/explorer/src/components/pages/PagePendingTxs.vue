@@ -35,7 +35,7 @@ export default class PagePendingTxs extends Vue {
   // Lifecycle
   created() {
     this.$socket.emit(
-      Events.pendingTxs,
+      Events.getPendingTxs,
       {
         limit: 100,
         page: 0

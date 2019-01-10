@@ -10,10 +10,10 @@ export class EthvmSocketIoApi implements EthvmApi {
   }
 
   // Blocks
-  getBlocks(limit: number, page: number): Promise<Block[]> {
+  getBlocks(limit: number = 100, page: number = 0): Promise<Block[]> {
     return new Promise((resolve, reject) => {
       this.io.emit(
-        Events.pastBlocks,
+        Events.getBlocks,
         {
           limit,
           page
@@ -46,25 +46,80 @@ export class EthvmSocketIoApi implements EthvmApi {
   }
 
   getBlockByNumber(no: number): Promise<Block | null> {
-    return Promise.resolve(null)
+    return new Promise((resolve, reject) => {
+      this.io.emit(
+        Events.getBlockByNumber,
+        {
+          no
+        },
+        (err, result) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(result)
+        }
+      )
+    })
   }
 
-  getBlocksMined(address: string, limit: number, page: number): Promise<Block[]> {
-    return Promise.resolve([])
+  getBlocksMined(address: string, limit: number = 100, page: number = 0): Promise<Block[]> {
+    return new Promise((resolve, reject) => {
+      this.io.emit(
+        Events.getBlocksMined,
+        {
+          address: address.replace('0x', ''),
+          limit,
+          page
+        },
+        (err, result) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(result)
+        }
+      )
+    })
   }
 
   // Uncles
-  getUncles(limit: number, page: number): Promise<Uncle[]> {
-    throw new Error('Method not implemented.')
+  getUncles(limit: number = 100, page: number = 0): Promise<Uncle[]> {
+    return new Promise((resolve, reject) => {
+      this.io.emit(
+        Events.getUncles,
+        {
+          limit,
+          page
+        },
+        (err, result) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(result)
+        }
+      )
+    })
   }
 
   getUncle(hash: string): Promise<Uncle | null> {
-    throw new Error('Method not implemented.')
+    return new Promise((resolve, reject) => {
+      this.io.emit(
+        Events.getUncle,
+        {
+          hash: hash.replace('0x', '')
+        },
+        (err, result) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(result)
+        }
+      )
+    })
   }
 
   // Txs
   getTx(hash: string): Promise<Tx | null> {
-    return new Promise((reject, resolve) => {
+    return new Promise((resolve, reject) => {
       this.io.emit(
         Events.getTx,
         {
@@ -80,10 +135,10 @@ export class EthvmSocketIoApi implements EthvmApi {
     })
   }
 
-  getTxs(limit: number, page: number): Promise<Tx[]> {
-    return new Promise((reject, resolve) => {
+  getTxs(limit: number = 100, page: number = 0): Promise<Tx[]> {
+    return new Promise((resolve, reject) => {
       this.io.emit(
-        Events.pastTxs,
+        Events.getTxs,
         {
           limit,
           page
@@ -99,11 +154,24 @@ export class EthvmSocketIoApi implements EthvmApi {
   }
 
   getBlockTxs(hash: string): Promise<Tx[]> {
-    throw new Error('Method not implemented.')
+    return new Promise((resolve, reject) => {
+      this.io.emit(
+        Events.getBlockTxs,
+        {
+          hash: hash.replace('0x', '')
+        },
+        (err, result) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(result)
+        }
+      )
+    })
   }
 
-  getTxsOfAddress(hash: string, limit: number, page: number): Promise<Tx[]> {
-    return new Promise((reject, resolve) => {
+  getTxsOfAddress(hash: string, limit: number = 100, page: number = 0): Promise<Tx[]> {
+    return new Promise((resolve, reject) => {
       this.io.emit(
         Events.getAddressTxs,
         {
@@ -122,12 +190,41 @@ export class EthvmSocketIoApi implements EthvmApi {
   }
 
   // Pending Txs
-  getPendingTxs(limit: number, page: number): Promise<PendingTx[]> {
-    throw new Error('Method not implemented.')
+  getPendingTxs(limit: number = 100, page: number = 0): Promise<PendingTx[]> {
+    return new Promise((resolve, reject) => {
+      this.io.emit(
+        Events.getPendingTxs,
+        {
+          limit,
+          page
+        },
+        (err, result) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(result)
+        }
+      )
+    })
   }
 
-  getPendingTxsOfAddress(hash: string, limit: number, page: number): Promise<PendingTx[]> {
-    throw new Error('Method not implemented.')
+  getPendingTxsOfAddress(hash: string, limit: number = 100, page: number = 0): Promise<PendingTx[]> {
+    return new Promise((resolve, reject) => {
+      this.io.emit(
+        Events.getPendingTxsOfAddress,
+        {
+          address: hash.replace('0x', ''),
+          limit,
+          page
+        },
+        (err, result) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(result)
+        }
+      )
+    })
   }
 
   // Statistics
@@ -153,7 +250,7 @@ export class EthvmSocketIoApi implements EthvmApi {
 
   // Accounts
   getAccount(hash: string): Promise<Account | null> {
-    return new Promise((reject, resolve) => {
+    return new Promise((resolve, reject) => {
       this.io.emit(
         Events.getAccount,
         {
@@ -174,12 +271,25 @@ export class EthvmSocketIoApi implements EthvmApi {
   }
 
   getAccountTotalTxs(hash: string): Promise<number> {
-    throw new Error('Method not implemented.')
+    return new Promise((resolve, reject) => {
+      this.io.emit(
+        Events.getAccountTotalTxs,
+        {
+          hash: hash.replace('0x', '')
+        },
+        (err, result) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(result)
+        }
+      )
+    })
   }
 
   // Search
   search(input: string): Promise<any> {
-    return new Promise((reject, resolve) => {
+    return new Promise((resolve, reject) => {
       this.io.emit(
         Events.search,
         {

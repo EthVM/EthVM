@@ -13,7 +13,7 @@ const getTxsEvent: SocketEvent = {
     }
   },
 
-  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<any[]> => server.txsService.getTxs(payload.limit, payload.page)
+  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Tx[]> => server.txsService.getTxs(payload.limit, payload.page)
 }
 
 export default getTxsEvent

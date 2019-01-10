@@ -1,6 +1,5 @@
 <template>
   <v-container grid-list-lg class="mb-0">
-    hellos
     <app-bread-crumbs :new-items="items"></app-bread-crumbs>
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
@@ -44,11 +43,11 @@ import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
   @Prop({ type: String }) blockRef!: string
 
-  block
+  block = undefined
   blockLoad = true
-  txs
+  txs = undefined
   txsLoad = true
-  blockN
+  blockN = undefined
   blockInfo = {
     mined: null,
     next: null,
@@ -76,7 +75,7 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
   }
   /* Lifecycle: */
   created() {
-    /* Case 1:  No Data in store --> need data for last block in case curr block was not mined*/
+    /* Case 1:  No Data in store --> need data for last block in case curr block was not mined */
     if (this.$store.getters.getBlocks.length === 0) {
       this.getBlocks()
     }
@@ -95,7 +94,6 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
     this.$eventHub.$on(Events.newBlock, _block => {
       if (this.$store.getters.getBlocks.length > 0) {
         const lastMinedBlock = this.$store.getters.getBlocks[0]
-        console
         if (lastMinedBlock.getNumber() == Number(this.blockRef) || lastMinedBlock.getHash() == this.blockRef) {
           this.block = lastMinedBlock
           this.blockInfo.mined = true
@@ -105,6 +103,7 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
       }
     })
   }
+
   beforeDestroy() {
     this.stopBlockCheck()
   }
@@ -113,9 +112,10 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
   stopBlockCheck() {
     this.$eventHub.$off(Events.newBlock)
   }
+
   getBlocks() {
     this.$socket.emit(
-      Events.pastBlocks,
+      Events.getBlocks,
       {
         limit: 1,
         page: 0
@@ -185,7 +185,7 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
       this.blockType = 'uncle'
     } else {
       this.$socket.emit(
-        Events.getBlockTransactions,
+        Events.getBlockTxs,
         {
           hash: this.block.getHash().replace('0x', '')
         },

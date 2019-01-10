@@ -1,4 +1,4 @@
-import App from '@app/App.vue'
+import App from '@app/components/App.vue'
 import { EthvmSocketIoApi, VueEthvmApi } from '@app/api'
 
 import router from '@app/router'
@@ -20,7 +20,7 @@ Vue.prototype.$eventHub = new Vue()
 Vue.config.productionTip = false
 
 Vue.use(VueSocketio, io(process.env.VUE_APP_API_ENDPOINT), store)
-//Vue.use(VueEthvmApi, new EthvmSocketIoApi(process.env.VUE_APP_API_ENDPOINT))
+Vue.use(VueEthvmApi, new EthvmSocketIoApi(process.env.VUE_APP_API_ENDPOINT))
 
 Vue.use(VueTimeago, {
   name: 'timeago',

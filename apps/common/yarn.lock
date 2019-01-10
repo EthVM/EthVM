@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@types/node@^10.12.16":
-  version "10.12.17"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.17.tgz#7040565b2c93d59325a68fa69073e754a7eda93a"
-  integrity sha512-umSCRkjWH70uNzFiOof5yxCqrMXIBJ9UJJUzbEsmtWt8apURQh06pylGMqnhdjHGJSeoBrhzk+mibu6NgL1oBA==
+"@types/node@^10.12.18":
+  version "10.12.18"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.18.tgz#1d3ca764718915584fcd9f6344621b7672665c67"
+  integrity sha512-fh+pAqt4xRzPfqA6eh3Z2y6fyZavRIumvjhaCL753+TVkGKGhpPeyrJG2JftD0T9q4GF00KjefsQ+PQNDdWQaQ==
 
 base64-js@^1.0.2:
   version "1.3.0"
@@ -77,18 +77,14 @@ process@~0.5.1:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/process/-/process-0.5.2.tgz#1638d8a8e34c2f440a91db95ab9aeb677fc185cf"
 
-ts-interface-builder@^0.1.7:
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/ts-interface-builder/-/ts-interface-builder-0.1.7.tgz#5391f0f209b028a91eb14603c4b07fc2b4ad63b7"
-  integrity sha512-TOWTdXjViNqLkVMJ8wwhjNFtPGN6SfktTySgpE4YeDt26/iwQu6OMCBGsXCkpTVs9jvp7BBpOLjaDNoWgJ3QxQ==
+ts-interface-builder@^0.1.8:
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/ts-interface-builder/-/ts-interface-builder-0.1.8.tgz#0bd5a7d8d24f46c12b1dcdf81c44dd7704e7a11b"
+  integrity sha512-uUKE9+XTRfSp8X/LLfnqnS2uI2ReS77GxFE1aD4Y7BIBXpuuYKIJbWjGWTuFU8PdLhFSam8wYP1HmY4nbcqv+g==
   dependencies:
     commander "^2.12.2"
     fs-extra "^4.0.3"
     typescript "^2.6.2"
-
-tsc@^1.20150623.0:
-  version "1.20150623.0"
-  resolved "https://registry.yarnpkg.com/tsc/-/tsc-1.20150623.0.tgz#4ebc3c774e169148cbc768a7342533f082c7a6e5"
 
 typescript@^2.6.2:
   version "2.9.2"

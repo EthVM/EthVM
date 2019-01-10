@@ -1,10 +1,10 @@
 import { Block, Tx, PendingTx, Uncle } from '@app/models'
-import { StateLayout } from '@app/store/layouts'
+import { State } from '@app/store/state'
 
 export default {
-  all: (state: StateLayout): StateLayout => state,
-  getBlocks: (state: StateLayout): Block[] => state.blocks.items(),
-  getUncles: (state: StateLayout): Uncle[] => state.uncles.items(),
-  getTxs: (state: StateLayout): Tx[] => state.txs.items(),
-  getPendingTxs: (state: StateLayout): PendingTx[] => state.pendingTxs.items()
+  all: (state: State): State => state,
+  getBlocks: (state: State): Block[] => state.blocks.items(),
+  getUncles: (state: State): Uncle[] => state.uncles.items(),
+  getTxs: (state: State): Tx[] => state.txs.items(),
+  getPendingTxs: (state: State): PendingTx[] => state.pendingTxs.items()
 }

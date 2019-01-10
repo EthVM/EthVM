@@ -5,7 +5,7 @@ import { Statistic } from 'ethvm-common'
 
 export interface StatisticsService {
   getAverageTotalDifficulty(duration: string): Promise<Statistic[]>
-  getAveragegasPrice(duration: string): Promise<Statistic[]>
+  getAverageGasPrice(duration: string): Promise<Statistic[]>
   getAverageTxFee(duration: string): Promise<Statistic[]>
   getAverageSuccessfullTx(duration: string): Promise<Statistic[]>
   getAvgFailedTxStats(duration: string): Promise<Statistic[]>
@@ -19,9 +19,9 @@ export class StatisticsServiceImpl implements StatisticsService {
     return this.statisticsRepository.getAverageTotalDifficulty(from, to)
   }
 
-  public getAveragegasPrice(duration: string): Promise<Statistic[]> {
+  public getAverageGasPrice(duration: string): Promise<Statistic[]> {
     const { from, to } = toDatePeriods(duration)
-    return this.statisticsRepository.getAveragegasPrice(from, to)
+    return this.statisticsRepository.getAverageGasPrice(from, to)
   }
 
   public getAverageTxFee(duration: string): Promise<Statistic[]> {

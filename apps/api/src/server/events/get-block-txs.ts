@@ -4,7 +4,7 @@ import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/serv
 import { Events, Tx } from 'ethvm-common'
 
 const getBlockTxsEvent: SocketEvent = {
-  id: Events.getBlockTransactions,
+  id: Events.getBlockTxs,
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = blockTxsPayloadValidator(payload) as boolean
 

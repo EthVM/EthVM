@@ -37,8 +37,8 @@ import { Vue, Component, Mixins } from 'vue-property-decorator'
 import { Events } from 'ethvm-common'
 import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
 import AppInfoCard from '@app/components/ui/AppInfoCard.vue'
-import ChartLiveTx from '@app/components/charts/live/ChartLiveTx.vue'
-import ChartLiveTxFees from '@app/components/charts/live/ChartLiveTxFees.vue'
+import ChartLiveTx from '@app/components/charts/ChartLiveTx.vue'
+import ChartLiveTxFees from '@app/components/charts/ChartLiveTxFees.vue'
 import TableBlocks from '@app/components/tables/TableBlocks.vue'
 import TableTxs from '@app/components/tables/TableTxs.vue'
 import { LastBlockInfoMixin } from '@app/components/mixins'
@@ -62,7 +62,7 @@ export default class PageHome extends Mixins(LastBlockInfoMixin) {
   // Lifecycle
   created() {
     this.$socket.emit(
-      Events.pastBlocks,
+      Events.getBlocks,
       {
         limit: 20,
         page: 0
@@ -77,7 +77,7 @@ export default class PageHome extends Mixins(LastBlockInfoMixin) {
     )
 
     this.$socket.emit(
-      Events.pastTxs,
+      Events.getTxs,
       {
         limit: 20,
         page: 0

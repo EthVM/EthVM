@@ -2,14 +2,14 @@ import { Account, Block, Uncle, Tx, PendingTx, Statistic } from 'ethvm-common'
 
 export interface EthvmApi {
   // Blocks
-  getBlocks(limit: number, page: number): Promise<Block[]>
   getBlock(hash: string): Promise<Block | null>
+  getBlocks(limit: number, page: number): Promise<Block[]>
   getBlockByNumber(no: number): Promise<Block | null>
   getBlocksMined(address: string, limit: number, page: number): Promise<Block[]>
 
   // Uncles
-  getUncles(limit: number, page: number): Promise<Uncle[]>
   getUncle(hash: string): Promise<Uncle | null>
+  getUncles(limit: number, page: number): Promise<Uncle[]>
 
   // Txs
   getTx(hash: string): Promise<Tx | null>

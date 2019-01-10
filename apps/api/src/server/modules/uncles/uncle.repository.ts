@@ -3,11 +3,23 @@ import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
 import { Uncle } from 'ethvm-common'
 
 export interface UnclesRepository {
-  getUncles(limit: number, page: number): Promise<Uncle[]>
   getUncle(hash: string): Promise<Uncle | null>
+  getUncles(limit: number, page: number): Promise<Uncle[]>
 }
 
 export class MongoUncleRepository extends BaseMongoDbRepository implements UnclesRepository {
+  public getUncle(hash: string): Promise<Uncle | null> {
+    return this.db
+      .collection(MongoEthVM.collections.uncles)
+      .findOne({ hash })
+      .then(resp => {
+        if (!resp) {
+          return {}
+        }
+        return toUncle(resp)
+      })
+  }
+
   public getUncles(limit: number, page: number): Promise<Uncle[]> {
     return this.db
       .collection(MongoEthVM.collections.uncles)
@@ -26,18 +38,6 @@ export class MongoUncleRepository extends BaseMongoDbRepository implements Uncle
           u.unshift(tu)
         })
         return u
-      })
-  }
-
-  public getUncle(hash: string): Promise<Uncle | null> {
-    return this.db
-      .collection(MongoEthVM.collections.uncles)
-      .findOne({ hash })
-      .then(resp => {
-        if (!resp) {
-          return {}
-        }
-        return toUncle(resp)
       })
   }
 }

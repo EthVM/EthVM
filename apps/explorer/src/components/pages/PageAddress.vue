@@ -191,7 +191,7 @@ export default class PageAddress extends Vue {
 
     /* Getting Total Number of Tx: */
     this.$socket.emit(
-      Events.getTotalTxs,
+      Events.getAccountTotalTxs,
       {
         address: this.address.replace('0x', '')
       },
@@ -231,7 +231,7 @@ export default class PageAddress extends Vue {
 
     /*Getting Address Pending Transactions: */
     this.$socket.emit(
-      Events.pendingTxsAddress,
+      Events.getPendingTxsOfAddress,
       {
         address: this.address.replace('0x', ''),
         limit: 10,

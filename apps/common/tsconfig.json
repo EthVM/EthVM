@@ -7,5 +7,7 @@
     "strict": true,
     "esModuleInterop": true,
     "types": ["node"]
-  }
+  },
+  "exclude": ["node_modules"],
+  "include": ["."]
 }
