@@ -45,6 +45,7 @@ dependencies {
 
   // Testing
   testImplementation(project(":testing"))
+  testImplementation("io.kotlintest:kotlintest-runner-junit5:3.1.11")
+  testImplementation("io.mockk:mockk:1.8.13")
   testImplementation("org.apache.kafka:kafka-streams-test-utils:2.1.0")
-
 }
