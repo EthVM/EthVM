@@ -65,8 +65,7 @@ export default class PageDetailsTxs extends Mixins(TxDetailsMixin) {
           this.txLoad = false
           //this.setMore(this.transaction)
           /* Method to get Subtransactions: */
-        }
-        else {
+        } else {
           this.txLoad = false
         }
       }

@@ -45,11 +45,11 @@
       <v-btn v-else @click="setView()" flat block class="secondary"> <v-icon class="fa fa-angle-up white--text"></v-icon> </v-btn>
     </div>
     <div v-else>
-      <app-info-load v-if="loading"/>
-    <v-layout v-else column align-center justify-center ma-3>
-      <v-card-title class="primary--text text-xs-center body-2 pb-4">{{ message }}</v-card-title>
-      <v-icon class="fa fa-spinner fa-pulse fa-4x fa-fw primary--text" large></v-icon>
-    </v-layout>
+      <app-info-load v-if="loading" />
+      <v-layout v-else column align-center justify-center ma-3>
+        <v-card-title class="primary--text text-xs-center body-2 pb-4">{{ message }}</v-card-title>
+        <v-icon class="fa fa-spinner fa-pulse fa-4x fa-fw primary--text" large></v-icon>
+      </v-layout>
     </div>
   </v-card>
 </template>
@@ -70,7 +70,7 @@ export default class AppListDetails extends Vue {
   @Prop(Array) items!: Detail[]
   @Prop(Array) moreItems!: Detail[]
   @Prop(String) detailsType!: string
-  @Prop({type: Boolean, default: true }) loading!: boolean
+  @Prop({ type: Boolean, default: true }) loading!: boolean
 
   data() {
     return {
@@ -78,7 +78,7 @@ export default class AppListDetails extends Vue {
       dialog: false,
       messages: {
         block: this.$i18n.t('message.notMined'),
-        tx: this.$i18n.t('message.noTx'),
+        tx: this.$i18n.t('message.noTx')
       }
     }
   }

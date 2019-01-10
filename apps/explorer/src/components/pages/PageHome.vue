@@ -77,7 +77,6 @@ export default class PageHome extends Mixins(LastBlockInfoMixin) {
     )
 
     this.$socket.emit(
-
       Events.pastTxs,
       {
         limit: 20,
@@ -92,7 +91,6 @@ export default class PageHome extends Mixins(LastBlockInfoMixin) {
       }
     )
   }
-
 
   /* Computed: */
   get txs(): Tx[] {

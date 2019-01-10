@@ -64,7 +64,6 @@ export default class AppListTitle extends Vue {
   @Prop(Boolean) mined!: boolean
   @Prop(Array) uncles!: string[]
 
-
   data() {
     return {
       titles: {
@@ -80,7 +79,6 @@ export default class AppListTitle extends Vue {
   get title() {
     return this.titles[this.listType] || this.$i18n.t('title.uncleDetail')
   }
-
 
   get hasUncles() {
     return this.mined && this.uncles

@@ -20,8 +20,7 @@ import 'vuetify/dist/vuetify.min.css'
     TheFooter
   }
 })
-export default class App extends Vue {
-}
+export default class App extends Vue {}
 </script>
 
 <style scoped lang="css">

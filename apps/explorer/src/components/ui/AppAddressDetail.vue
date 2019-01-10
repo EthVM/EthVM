@@ -34,8 +34,8 @@
       </v-flex>
       <v-flex xs12 md4>
         <v-card class="error white--text pl-2" flat>
-          <v-card-text class="pb-0">{{ $t('addrOverview.usd') }} (1{{ $t('common.eth') }} = ${{ getRoundNumber(this.account.ethusd)}})</v-card-text>
-          <v-card-title class="headline text-truncate">${{ getRoundNumber(this.account.balance * this.account.ethusd)}}</v-card-title>
+          <v-card-text class="pb-0">{{ $t('addrOverview.usd') }} (1{{ $t('common.eth') }} = ${{ getRoundNumber(this.account.ethusd) }})</v-card-text>
+          <v-card-title class="headline text-truncate">${{ getRoundNumber(this.account.balance * this.account.ethusd) }}</v-card-title>
         </v-card>
       </v-flex>
       <v-flex xs12 md4>
@@ -53,7 +53,7 @@ import { StringConcatMixin } from '@app/components/mixins'
 import AppAddressQr from '@app/components/ui/AppAddressQr.vue'
 import AppBlockies from '@app/components/ui/AppBlockies.vue'
 import AppCopyToClip from '@app/components/ui/AppCopyToClip.vue'
-import { Vue, Component, Prop, Mixins} from 'vue-property-decorator'
+import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 
 @Component({
   components: {
@@ -62,7 +62,7 @@ import { Vue, Component, Prop, Mixins} from 'vue-property-decorator'
     AppCopyToClip
   }
 })
-export default class AppAddressDetail extends Mixins(StringConcatMixin){
+export default class AppAddressDetail extends Mixins(StringConcatMixin) {
   @Prop(Object) account: any
 }
 </script>
