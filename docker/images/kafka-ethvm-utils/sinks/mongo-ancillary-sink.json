@@ -1,8 +1,8 @@
 {
-  "name": "enkryptio-mongo-sink",
+  "name": "enkryptio-mongo-ancillary-sink",
   "config": {
     "connector.class": "io.enkrypt.kafka.connect.sinks.mongo.MongoSinkConnector",
-    "topics": "blocks,transactions,uncles,contract-creations,contract-destructions,contract-metadata,balances,block-statistics,pending-transactions,token-transfers",
+    "topics": "transactions,uncles,contract-creations,contract-destructions,contract-metadata,balances,block-statistics,pending-transactions,token-transfers",
     "tasks.max": 4,
     "key.converter": "io.confluent.connect.avro.AvroConverter",
     "key.converter.schema.registry.url": "http://kafka-schema-registry:8081",

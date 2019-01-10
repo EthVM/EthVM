@@ -104,7 +104,6 @@ class BlockProcessor : AbstractKafkaProcessor() {
               if (reverse) null else uncle
             )
           }
-
       }.to(
         Topics.Uncles,
         Produced.with(Serdes.UncleKey(), Serdes.BlockHeader())
@@ -199,9 +198,8 @@ class BlockProcessor : AbstractKafkaProcessor() {
           TokenTransferKeyRecord.newBuilder()
             .setHash(hash.byteBuffer())
             .build(),
-          if (reverse) null else transfer    // send a tombstone to remove the entry if this is being reversed
+          if (reverse) null else transfer // send a tombstone to remove the entry if this is being reversed
         )
-
       }.to(
         Topics.TokenTransfers,
         Produced.with(Serdes.TokenTransferKey(), Serdes.TokenTransfer())
@@ -286,7 +284,6 @@ class BlockProcessor : AbstractKafkaProcessor() {
       )
 
     //
-
 
     // contract creations
 

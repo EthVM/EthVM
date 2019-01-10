@@ -1,4 +1,4 @@
-version: "3.6"
+version: "2.4"
 
 networks:
   web:
@@ -17,6 +17,7 @@ volumes:
   zookeeper-volume:
 
 services:
+
   traefik:
     image: traefik:${TRAEFIK_VERSION}-alpine
     restart: unless-stopped
@@ -107,6 +108,7 @@ services:
       - "traefik.frontend.rule=Host:mongo.ethvm.${DOMAIN}"
       - "traefik.port=27017"
       - "traefik.backend=mongodb"
+    mem_limit: 4g
 
   zookeeper:
     image: confluentinc/cp-zookeeper:${CP_VERSION}
@@ -121,6 +123,7 @@ services:
       ZOOKEEPER_SERVER_ID: 1
       ZOOKEEPER_SERVERS: "server.1=zookeeper:2888:3888"
       ZOOKEEPER_CLIENT_PORT: 2181
+    mem_limit: 512m
 
   kafka-1:
     image: confluentinc/cp-kafka:${CP_VERSION}
@@ -146,6 +149,8 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
       KAFKA_MESSAGE_MAX_BYTES: "2000000000"
+    mem_limit: 4g
+
 
   kafka-schema-registry:
     image: confluentinc/cp-schema-registry:${CP_VERSION}
@@ -170,6 +175,8 @@ services:
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
       SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: "INFO"
       SCHEMA_REGISTRY_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR"
+    mem_limit: 512m
+
 
   kafka-connect:
     image: confluentinc/cp-kafka-connect:${CP_VERSION}
@@ -212,6 +219,8 @@ services:
       CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
       CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
       CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/enkryptio
+    mem_limit: 4g
+
 
   # ----------------------------------------
   # Helpers (Components that assists in dev)

@@ -151,7 +151,6 @@ enum class KafkaTopics(
         val valueBson = StructToBsonConverter.convert(record.value() as Struct, "block")
         ReplaceOneModel(blockFilter, valueBson, MongoSinkTask.replaceOptions)
       }
-
     }
 
     mapOf(MongoCollections.Blocks to listOf(blockWrite))
@@ -170,7 +169,6 @@ enum class KafkaTopics(
 
         val value = StructToBsonConverter.convert(record.value(), "transaction")
         listOf(ReplaceOneModel(idFilter, value, MongoSinkTask.replaceOptions))
-
       }
     }
 
@@ -208,7 +206,6 @@ enum class KafkaTopics(
       // remove
       val filter = BsonDocument("_id", id)
       DeleteOneModel<BsonDocument>(filter)
-
     } else {
 
       val model = StructToBsonConverter

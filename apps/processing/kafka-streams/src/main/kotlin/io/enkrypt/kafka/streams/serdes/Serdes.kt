@@ -104,5 +104,4 @@ object Serdes : KoinComponent {
   fun BlockHeader() = SpecificAvroSerde<BlockHeaderRecord>(registryClient).apply {
     configure(config, false)
   }
-
 }
