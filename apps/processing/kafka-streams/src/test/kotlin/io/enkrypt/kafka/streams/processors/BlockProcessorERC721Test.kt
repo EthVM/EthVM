@@ -3,7 +3,6 @@ package io.enkrypt.kafka.streams.processors
 import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.common.ContractType
-import io.enkrypt.avro.processing.BalanceType
 import io.enkrypt.avro.processing.BalanceType.ERC721
 import io.enkrypt.common.extensions.AvroHelpers.contractCreation
 import io.enkrypt.common.extensions.AvroHelpers.contractKey

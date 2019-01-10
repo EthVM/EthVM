@@ -12,7 +12,6 @@ import io.enkrypt.avro.processing.TokenTransferKeyRecord
 import io.enkrypt.avro.processing.TokenTransferRecord
 import io.enkrypt.common.extensions.byteArray
 import io.enkrypt.common.extensions.byteBuffer
-import io.enkrypt.common.extensions.hex
 import io.enkrypt.common.extensions.isFungible
 import io.enkrypt.common.extensions.isNonFungible
 import io.enkrypt.common.extensions.unsignedBigInteger
@@ -145,9 +144,8 @@ class BlockProcessor : AbstractKafkaProcessor() {
           TokenTransferKeyRecord.newBuilder()
             .setHash(hash.byteBuffer())
             .build(),
-          if (reverse) null else transfer    // send a tombstone to remove the entry if this is being reversed
+          if (reverse) null else transfer // send a tombstone to remove the entry if this is being reversed
         )
-
       }.to(
         Topics.TokenTransfers,
         Produced.with(Serdes.TokenTransferKey(), Serdes.TokenTransfer())
@@ -232,7 +230,6 @@ class BlockProcessor : AbstractKafkaProcessor() {
       )
 
     //
-
 
     // contract creations
 

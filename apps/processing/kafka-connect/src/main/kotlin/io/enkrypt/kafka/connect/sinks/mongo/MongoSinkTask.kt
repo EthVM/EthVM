@@ -35,7 +35,6 @@ import org.bson.BsonDocument
 import org.bson.BsonString
 import org.bson.Document
 import org.bson.types.Decimal128
-import java.nio.ByteBuffer
 import kotlin.system.measureTimeMillis
 
 class MongoSinkTask : SinkTask() {
@@ -163,7 +162,6 @@ enum class KafkaTopics(
       // delete the uncles
       val unclesFilter = BsonDocument().apply { append("blockNumber", blockNumberBson) }
       uncleWrites += DeleteManyModel(unclesFilter)
-
     } else {
 
       require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
@@ -192,7 +190,6 @@ enum class KafkaTopics(
             },
             MongoSinkTask.replaceOptions
           )
-
         }
 
       // write the transactions
@@ -250,7 +247,6 @@ enum class KafkaTopics(
       // remove
       val filter = BsonDocument("_id", id)
       DeleteOneModel<BsonDocument>(filter)
-
     } else {
 
       val model = StructToBsonConverter
