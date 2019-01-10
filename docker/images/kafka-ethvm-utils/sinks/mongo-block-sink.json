@@ -10,6 +10,6 @@
     "value.converter": "io.confluent.connect.avro.AvroConverter",
     "value.converter.schemas.enable": true,
     "value.converter.schema.registry.url": "http://kafka-schema-registry:8081",
-    "mongo.uri": "mongodb://mongodb:27017/ethvm_local?w=1&journal=true"
+    "mongo.uri": "mongodb://mongodb:27017/ethvm_local?w=1&journal=true&maxIdleTimeMS=60000"
   }
 }
