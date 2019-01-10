@@ -4,7 +4,7 @@ import { PendingTx } from 'ethvm-common'
 
 export interface PendingTxRepository {
   getPendingTxs(limit: number, page: number): Promise<PendingTx[]>
-  getTxsOfAddress(hash: string, limit: number, page: number): Promise<PendingTx[]>
+  getPendingTxsOfAddress(hash: string, limit: number, page: number): Promise<PendingTx[]>
 }
 
 export class MongoPendingTxRepository extends BaseMongoDbRepository implements PendingTxRepository {
@@ -29,7 +29,7 @@ export class MongoPendingTxRepository extends BaseMongoDbRepository implements P
       })
   }
 
-  public getTxsOfAddress(hash: string, limit: number, page: number): Promise<PendingTx[]> {
+  public getPendingTxsOfAddress(hash: string, limit: number, page: number): Promise<PendingTx[]> {
     const start = page * limit
     return this.db
       .collection(MongoEthVM.collections.pendingTxs)
