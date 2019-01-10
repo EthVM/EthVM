@@ -1,5 +1,6 @@
 import { Scalar } from '@nestjs/graphql'
 import { Kind } from 'graphql'
+import { GraphQLError } from 'graphql/error'
 
 @Scalar('Date')
 export class DateScalar {
@@ -17,6 +18,6 @@ export class DateScalar {
     if (ast.kind === Kind.INT) {
       return parseInt(ast.value, 10) // ast value is always in string format
     }
-    return null
+    return GraphQLError('Should be INT')
   }
 }
