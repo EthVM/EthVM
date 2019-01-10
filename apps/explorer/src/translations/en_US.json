@@ -129,14 +129,15 @@
     "supply": "Total Supply",
     "totalHold": "Total Holders",
     "symbol": "Symbol",
-    "transfers": "Total Transfers",
+    "transfers": "Transfers",
     "value": "Value",
     "decimal": "Decimals",
     "number": "Total Number of Tokens",
     "totalUSD": "Total USD Value",
     "name": "Name",
     "usdValue": "USD Value",
-    "amount": "Amount"
+    "amount": "Amount",
+    "price": "Price"
   },
   "gas": {
     "limit": "Gas Limit",
