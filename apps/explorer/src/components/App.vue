@@ -9,8 +9,8 @@
 </template>
 
 <script lang="ts">
-import TheNavigationDrawer from '@app/components/app-layout/TheNavigationDrawer.vue'
-import TheFooter from '@app/components/app-layout/TheFooter.vue'
+import TheNavigationDrawer from '@app/components/core/layout/TheNavigationDrawer.vue'
+import TheFooter from '@app/components/core/layout/TheFooter.vue'
 import { Vue, Component } from 'vue-property-decorator'
 import 'vuetify/dist/vuetify.min.css'
 
