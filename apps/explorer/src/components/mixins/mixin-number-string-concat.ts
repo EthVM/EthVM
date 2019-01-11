@@ -15,8 +15,8 @@ export class StringConcatMixin extends Vue {
   getShortValue(newValue, isBool) {
     const length = newValue.length
     let isShort = false
-    if (length > 8) {
-      newValue = newValue.slice(0, 8) + '...'
+    if (length > 10) {
+      newValue = newValue.slice(0, 10) + '...'
       isShort = true
     }
     if (!isBool) {

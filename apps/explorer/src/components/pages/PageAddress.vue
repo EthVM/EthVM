@@ -95,8 +95,50 @@ export default class PageAddress extends Vue {
   pendingError = false
 
   /*Tokens: */
-  tokens = []
-  tokensLoad = true
+
+    /*Tokens: */
+    tokens = [{
+      symbol: 'ABC',
+      name: "ABC Token",
+      balance: 23000,
+      decimals: 10,
+      usdValue: 2.0,
+      address: '0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8 '
+    },
+    {
+      symbol: 'ABC',
+      name: "ABC Token",
+      balance: 23000000,
+      decimals: 10,
+      usdValue: 2.0,
+      address: '0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8 '
+    },
+    {
+      symbol: 'ABC',
+      name: "ABC Token",
+      balance: 230,
+      decimals: 10,
+      usdValue: 2.0,
+      address: '0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8 '
+    },
+    {
+      symbol: 'ABC',
+      name: "ABC Token",
+      balance: 23000000000000000000,
+      decimals: 10,
+      usdValue: 2.0,
+      address: '0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8 '
+    },
+    {
+      symbol: 'ABC',
+      name: "ABC Token",
+      balance: 230000,
+      decimals: 10,
+      usdValue: 2.0,
+      address: '0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8 '
+    }]
+
+  tokensLoad = false
   tokensError = false
 
   /* USD */

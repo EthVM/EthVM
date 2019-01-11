@@ -133,7 +133,7 @@
     "transfers": "Transfers",
     "value": "Value",
     "decimal": "Decimals",
-    "number": "Total Number of Tokens",
+    "number": "Total Tokens Owned",
     "totalUSD": "Total USD Value",
     "name": "Name",
     "usdValue": "USD Value",
