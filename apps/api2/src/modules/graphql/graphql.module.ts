@@ -14,6 +14,7 @@ import { join } from 'path'
           typePaths: ['./src/**/*.graphql'],
           resolvers: { JSON: GraphQLJSON, Decimal: DecimalScalar, Buffer: BufferScalar },
           cacheControl: true,
+          installSubscriptionHandlers: true,
           cors: true,
           definitions: {
             path: join(process.cwd(), 'src/modules/graphql/schema.ts'),

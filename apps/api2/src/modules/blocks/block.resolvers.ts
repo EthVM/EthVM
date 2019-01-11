@@ -1,6 +1,8 @@
-import { Args, Query, Resolver } from '@nestjs/graphql'
+import { Args, Query, Resolver, Subscription } from '@nestjs/graphql'
 import { BlockService } from './block.service'
+import { PubSub } from 'graphql-subscriptions'
 
+const pubSub = new PubSub()
 @Resolver('Block')
 export class BlockResolvers {
   constructor(private readonly blockService: BlockService) {}
@@ -14,5 +16,13 @@ export class BlockResolvers {
   async block(@Args('hash') hash: string) {
     const entities = await this.blockService.getBlock(hash)
     return entities
+  }
+
+  @Subscription()
+  newBlock() {
+    return {
+      //TODO publish newBlock from mongo
+      subscribe: () => pubSub.asyncIterator('newBlock')
+    }
   }
 }

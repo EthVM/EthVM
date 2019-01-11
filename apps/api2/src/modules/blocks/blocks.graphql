@@ -3,6 +3,10 @@ type Query {
   block(hash: String): Block
 }
 
+type Subscription {
+    newBlock: [Block]
+  }
+
 type Block {
   number: Int
   hash: String
