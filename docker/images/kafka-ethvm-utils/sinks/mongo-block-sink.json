@@ -1,15 +1,15 @@
 {
-  "name": "enkryptio-mongo-sink",
+  "name": "enkryptio-mongo-block-sink",
   "config": {
     "connector.class": "io.enkrypt.kafka.connect.sinks.mongo.MongoSinkConnector",
-    "topics": "blocks,contract-creations,contract-destructions,contract-metadata,balances,block-statistics,pending-transactions,token-transfers",
-    "tasks.max": 4,
+    "topics": "blocks",
+    "tasks.max": 1,
     "key.converter": "io.confluent.connect.avro.AvroConverter",
     "key.converter.schema.registry.url": "http://kafka-schema-registry:8081",
     "key.converter.schemas.enable": true,
     "value.converter": "io.confluent.connect.avro.AvroConverter",
     "value.converter.schemas.enable": true,
     "value.converter.schema.registry.url": "http://kafka-schema-registry:8081",
-    "mongo.uri": "mongodb://mongodb:27017/ethvm_local?w=1&journal=true"
+    "mongo.uri": "mongodb://mongodb:27017/ethvm_local?w=1&journal=true&maxIdleTimeMS=60000"
   }
 }

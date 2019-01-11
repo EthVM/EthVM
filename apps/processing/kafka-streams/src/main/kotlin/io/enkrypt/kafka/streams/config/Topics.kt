@@ -3,6 +3,8 @@ package io.enkrypt.kafka.streams.config
 object Topics {
 
   const val Blocks = "blocks"
+  const val Transactions = "transactions"
+  const val Uncles = "uncles"
   const val BlockMetrics = "block-metrics"
   const val BlockStatistics = "block-statistics"
 

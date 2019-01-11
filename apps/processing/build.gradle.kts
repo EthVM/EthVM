@@ -1,17 +1,13 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+  val ktlintVersion = "6.3.1"
+
   base
   kotlin("jvm") version "1.3.10" apply false
-  id("org.jlleitschuh.gradle.ktlint") version "6.3.1" apply false
+  id("org.jlleitschuh.gradle.ktlint") version ktlintVersion apply false
+  id("org.jlleitschuh.gradle.ktlint-idea") version ktlintVersion apply true
   id("com.jfrog.bintray") version "1.8.4" apply false
-}
-
-apply(plugin = "org.jlleitschuh.gradle.ktlint-idea")
-subprojects {
-  if (name == "kafka-connect" || name == "kafka-streams") {
-    plugins.apply("org.jlleitschuh.gradle.ktlint")
-  }
 }
 
 allprojects {
@@ -20,7 +16,6 @@ allprojects {
 
   repositories {
     mavenLocal()
-    mavenCentral()
     jcenter()
     maven("https://jitpack.io")
     maven("https://packages.confluent.io/maven/")
@@ -31,6 +26,12 @@ allprojects {
 
   tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
+  }
+
+  ext {
+    set("ethereumj-version", "1.10.0.1")
+    set("kotlintest-version", "3.1.11")
+    set("mockk-version", "1.8.13")
   }
 
 }

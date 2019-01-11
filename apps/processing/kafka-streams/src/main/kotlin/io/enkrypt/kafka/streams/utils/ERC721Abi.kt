@@ -5,7 +5,6 @@ import io.enkrypt.avro.common.Data20
 import io.enkrypt.avro.common.Data32
 import io.enkrypt.avro.processing.BalanceType
 import io.enkrypt.avro.processing.TokenTransferRecord
-import io.enkrypt.avro.processing.TokenTransferType
 import io.enkrypt.common.extensions.setTokenId
 import java.math.BigInteger
 import java.nio.file.Paths

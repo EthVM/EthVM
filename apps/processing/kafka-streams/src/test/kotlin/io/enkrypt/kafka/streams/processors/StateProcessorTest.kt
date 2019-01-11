@@ -37,7 +37,6 @@ class StateProcessorTest : BehaviorSpec() {
     val testDriver = kc.get<TopologyTestDriver>(name = "stateProcessorDriver")
 
     val tbf = kc.get<ConsumerRecordFactory<TokenBalanceKeyRecord, TokenBalanceRecord>>("fungibleMovementRecordFactory")
-    val bc = kc.get<StandaloneBlockchain>()
 
     given("an initial set of ether balances") {
 
@@ -95,16 +94,16 @@ class StateProcessorTest : BehaviorSpec() {
       }
     }
 
-    given("an initial set of ERC20 token balances") {
-      TODO()
-    }
-
-    given("an initial set of ERC721 token balances") {
-      TODO()
-    }
-
-    given("an initial set of metrics") {
-      TODO()
-    }
+//    given("an initial set of ERC20 token balances") {
+//      TODO()
+//    }
+//
+//    given("an initial set of ERC721 token balances") {
+//      TODO()
+//    }
+//
+//    given("an initial set of metrics") {
+//      TODO()
+//    }
   }
 }

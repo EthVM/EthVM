@@ -2,6 +2,9 @@ package io.enkrypt.kafka.streams.processors
 
 import io.enkrypt.avro.capture.BlockRewardRecord
 import io.enkrypt.avro.capture.PremineBalanceRecord
+import io.enkrypt.avro.capture.TransactionKeyRecord
+import io.enkrypt.avro.capture.TransactionRecord
+import io.enkrypt.avro.capture.UncleKeyRecord
 import io.enkrypt.avro.processing.ChainEventType
 import io.enkrypt.avro.processing.ContractCreateRecord
 import io.enkrypt.avro.processing.ContractDestroyRecord
@@ -12,7 +15,6 @@ import io.enkrypt.avro.processing.TokenTransferKeyRecord
 import io.enkrypt.avro.processing.TokenTransferRecord
 import io.enkrypt.common.extensions.byteArray
 import io.enkrypt.common.extensions.byteBuffer
-import io.enkrypt.common.extensions.hex
 import io.enkrypt.common.extensions.isFungible
 import io.enkrypt.common.extensions.isNonFungible
 import io.enkrypt.common.extensions.unsignedBigInteger
@@ -57,6 +59,57 @@ class BlockProcessor : AbstractKafkaProcessor() {
     val blockStream = builder
       .stream(Topics.Blocks, Consumed.with(Serdes.BlockKey(), Serdes.Block()))
       .peek { k, _ -> logger.info { "Processing block number = ${k.getNumber().unsignedBigInteger()}" } }
+
+    // extract transactions and publish to their own topic
+
+    blockStream
+      .flatMap { _, block ->
+
+        val txs = block.getTransactions()
+        val receipts = block.getTransactionReceipts()
+
+        val reverse = block.getReverse()
+
+        txs.zip(receipts)
+          .map { (tx, receipt) ->
+            KeyValue(
+              TransactionKeyRecord.newBuilder()
+                .setTxHash(tx.getHash())
+                .build(),
+              if (reverse) null else TransactionRecord.newBuilder(tx)
+                .setBlockNumber(block.getHeader().getNumber())
+                .setReceipt(receipt)
+                .build()
+            )
+          }
+      }.to(
+        Topics.Transactions,
+        Produced.with(Serdes.TransactionKey(), Serdes.Transaction())
+      )
+
+    // uncles
+
+    blockStream
+      .flatMap { _, block ->
+
+        val reverse = block.getReverse()
+
+        block.getUncles()
+          .map { uncle ->
+            KeyValue(
+              UncleKeyRecord
+                .newBuilder()
+                .setUncleHash(uncle.getHash())
+                .build(),
+              if (reverse) null else uncle
+            )
+          }
+      }.to(
+        Topics.Uncles,
+        Produced.with(Serdes.UncleKey(), Serdes.BlockHeader())
+      )
+
+    //
 
     val chainEvents = blockStream
       .transform(
@@ -145,9 +198,8 @@ class BlockProcessor : AbstractKafkaProcessor() {
           TokenTransferKeyRecord.newBuilder()
             .setHash(hash.byteBuffer())
             .build(),
-          if (reverse) null else transfer    // send a tombstone to remove the entry if this is being reversed
+          if (reverse) null else transfer // send a tombstone to remove the entry if this is being reversed
         )
-
       }.to(
         Topics.TokenTransfers,
         Produced.with(Serdes.TokenTransferKey(), Serdes.TokenTransfer())
@@ -232,7 +284,6 @@ class BlockProcessor : AbstractKafkaProcessor() {
       )
 
     //
-
 
     // contract creations
 
