@@ -94,7 +94,8 @@ object TypeMappings {
     "v" to UBigInt,
     "r" to Hex,
     "s" to Hex,
-    "creates" to Hex
+    "creates" to Hex,
+    "receipt" to txReceipts
   )
 
   val blockHeader = mapOf(
@@ -116,6 +117,13 @@ object TypeMappings {
 
   val mappings = mapOf(
     "transaction" to txConversions,
+    "transactionKey" to mapOf(
+      "txHash" to Hex
+    ),
+    "uncleKey" to mapOf(
+      "uncleHash" to Hex
+    ),
+    "blockHeader" to blockHeader,
     "block" to mapOf(
       "header" to blockHeader,
       "transactions" to txConversions,

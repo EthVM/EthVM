@@ -7,8 +7,12 @@ protocol Capture {
     bytes number;
   }
 
+  record UncleKeyRecord {
+    io.enkrypt.avro.common.Data32 uncleHash;
+  }
+
   record TransactionKeyRecord {
-    bytes hash;
+    io.enkrypt.avro.common.Data32 txHash;
   }
 
   record LogRecord {
@@ -102,6 +106,8 @@ protocol Capture {
     union { null, bytes } raw = null;                               // raw rlp transaction data
 
     union { null, long } timestamp = null;                        // block timestamp in seconds since epoch
+
+    union { null, TransactionReceiptRecord } receipt = null;      // optional embedded receipt
   }
 
   record BlockRewardRecord {

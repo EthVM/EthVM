@@ -2,8 +2,12 @@ package io.enkrypt.kafka.streams.serdes
 
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
+import io.enkrypt.avro.capture.BlockHeaderRecord
 import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
+import io.enkrypt.avro.capture.TransactionKeyRecord
+import io.enkrypt.avro.capture.TransactionRecord
+import io.enkrypt.avro.capture.UncleKeyRecord
 import io.enkrypt.avro.processing.BlockChainEventsRecord
 import io.enkrypt.avro.processing.ContractCreateRecord
 import io.enkrypt.avro.processing.ContractDestroyRecord
@@ -82,6 +86,22 @@ object Serdes : KoinComponent {
   }
 
   fun BlockChainEvents() = SpecificAvroSerde<BlockChainEventsRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun TransactionKey() = SpecificAvroSerde<TransactionKeyRecord>(registryClient).apply {
+    configure(config, true)
+  }
+
+  fun Transaction() = SpecificAvroSerde<TransactionRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun UncleKey() = SpecificAvroSerde<UncleKeyRecord>(registryClient).apply {
+    configure(config, true)
+  }
+
+  fun BlockHeader() = SpecificAvroSerde<BlockHeaderRecord>(registryClient).apply {
     configure(config, false)
   }
 }

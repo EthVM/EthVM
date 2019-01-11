@@ -32,6 +32,8 @@ ensure_kafka_connect() {
 create_topics() {
   echo "===> Create Kafka topics (if necessary) ..."
   kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 1  --topic blocks --config retention.ms=-1 --config cleanup.policy=compact
+  kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 12 --topic transactions --config retention.ms=-1 --config cleanup.policy=compact
+  kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 12 --topic uncles --config retention.ms=-1 --config cleanup.policy=compact
   kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 12 --topic block-metrics --config retention.ms=-1 --config cleanup.policy=compact
   kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 12 --topic block-statistics --config retention.ms=-1 --config cleanup.policy=compact
 
@@ -39,7 +41,7 @@ create_topics() {
   kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 12 --topic contract-destructions --config retention.ms=-1 --config cleanup.policy=compact
   kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 12 --topic contract-creations --config retention.ms=-1 --config cleanup.policy=compact
 
-kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 12 --topic token-transfers --config retention.ms=-1
+  kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 12 --topic token-transfers --config retention.ms=-1
   kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 12 --topic fungible-token-movements --config retention.ms=-1
   kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 12 --topic balances --config retention.ms=-1 --config cleanup.policy=compact
 
@@ -63,7 +65,8 @@ register_eth_list_source() {
 
 register_mongo_sink() {
   echo "===> Registering MongoDB sink ..."
-  curl_register /data/sinks/mongo-sink.json
+  curl_register /data/sinks/mongo-block-sink.json
+  curl_register /data/sinks/mongo-ancillary-sink.json
 }
 
 run() {

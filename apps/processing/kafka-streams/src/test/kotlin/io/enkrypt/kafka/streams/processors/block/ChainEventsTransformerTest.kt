@@ -138,9 +138,9 @@ class ChainEventsTransformerTest : BehaviorSpec() {
       }
     }
 
-    given("a chain of contract related transactions") {
-
-      TODO()
-    }
+//    given("a chain of contract related transactions") {
+//
+//      TODO()
+//    }
   }
 }

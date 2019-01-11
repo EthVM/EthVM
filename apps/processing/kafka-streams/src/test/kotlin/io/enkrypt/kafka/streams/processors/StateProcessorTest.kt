@@ -95,16 +95,16 @@ class StateProcessorTest : BehaviorSpec() {
       }
     }
 
-    given("an initial set of ERC20 token balances") {
-      TODO()
-    }
-
-    given("an initial set of ERC721 token balances") {
-      TODO()
-    }
-
-    given("an initial set of metrics") {
-      TODO()
-    }
+//    given("an initial set of ERC20 token balances") {
+//      TODO()
+//    }
+//
+//    given("an initial set of ERC721 token balances") {
+//      TODO()
+//    }
+//
+//    given("an initial set of metrics") {
+//      TODO()
+//    }
   }
 }
