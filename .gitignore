@@ -28,5 +28,6 @@ package-lock.json
 dist/
 tmp/
 datasets/dumps/
+out/
 
 .gradle

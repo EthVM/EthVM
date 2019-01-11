@@ -196,7 +196,7 @@ services:
     ports:
       - 8083:8083
     volumes:
-      - ./apps/processing/kafka-connect/libs:/usr/share/enkryptio
+      - ./out/kafka-connect/:/usr/share/enkryptio
     labels:
       - "traefik.enable=true"
       - "traefik.default.protocol=http"
