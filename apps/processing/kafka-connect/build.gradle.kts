@@ -22,7 +22,6 @@ dependencies {
 
   // Kotlin
   implementation(kotlin("stdlib"))
-  implementation(kotlin("reflect"))
 
   // Modules deps
   implementation(project(":common"))
@@ -46,8 +45,8 @@ dependencies {
   implementation("com.beust:klaxon:3.0.5")
 
   // Tests
-  testImplementation("io.kotlintest:kotlintest-runner-junit5:3.1.11")
-  testImplementation("io.mockk:mockk:1.8.13")
+  testImplementation("io.kotlintest:kotlintest-runner-junit5:${ext.get("kotlintest-version") as String}")
+  testImplementation("io.mockk:mockk:${ext.get("mockk-version") as String}")
   testImplementation("org.apache.kafka:connect-api:2.1.0")
 }
 

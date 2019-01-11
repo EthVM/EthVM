@@ -19,14 +19,13 @@ project.java.sourceSets["main"].java {
 dependencies {
   // Kotlin
   implementation(kotlin("stdlib"))
-  implementation(kotlin("reflect"))
 
   // Avro
   implementation(project(":common"))
   implementation(project(":avro"))
 
   // Ethereumj
-  implementation(group = "io.enkrypt", name = "ethereumj-core", version = "1.10.0.0-SNAPSHOT") {
+  implementation(group = "io.enkrypt", name = "ethereumj-core", version = (ext.get("ethereumj-version") as String)) {
     exclude(group = "io.enkrypt.ethvm", module = "avro-entities")
     exclude(group = "org.ethereum", module = "rocksdbjni")
   }
@@ -45,7 +44,7 @@ dependencies {
 
   // Testing
   testImplementation(project(":testing"))
-  testImplementation("io.kotlintest:kotlintest-runner-junit5:3.1.11")
-  testImplementation("io.mockk:mockk:1.8.13")
+  testImplementation("io.kotlintest:kotlintest-runner-junit5:${ext.get("kotlintest-version") as String}")
+  testImplementation("io.mockk:mockk:${ext.get("mockk-version") as String}")
   testImplementation("org.apache.kafka:kafka-streams-test-utils:2.1.0")
 }
