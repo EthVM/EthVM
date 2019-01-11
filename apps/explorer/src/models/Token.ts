@@ -18,7 +18,6 @@
 //     return this.cache.symbol
 //   }
 
-
 //   public getCreator(): string {
 //     if (!this.cache.creator) {
 //       this.cache.symbol = '0x'+this.token.creator
@@ -70,5 +69,3 @@
 //     this.token.holder = _holder
 //   }
 // }
-
-

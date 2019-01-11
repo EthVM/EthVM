@@ -2,15 +2,15 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 //Import route layouts components:
-import PageHome from '@/components/pages/PageHome.vue'
-import PageBlocks from '@/components/pages/PageBlocks.vue'
-import PageTxs from '@/components/pages/PageTxs.vue'
-import PagePendingTxs from '@/components/pages/PagePendingTxs.vue'
-import PageAbout from '@/components/pages/PageAbout.vue'
-import PageUncles from '@/components/pages/PageUncles.vue'
-import PageDetailsBlock from '@/components/pages/PageDetailsBlock.vue'
-import PageDetailsTxs from '@/components/pages/PageDetailsTxs.vue'
-import PageAddress from '@/components/pages/PageAddress.vue'
+import PageHome from '@/components/home/pages/PageHome.vue'
+import PageBlocks from '@/components/blocks/pages/PageBlocks.vue'
+import PageTxs from '@/components/txs/pages/PageTxs.vue'
+import PagePendingTxs from '@/components/pending-txs/pages/PagePendingTxs.vue'
+import PageAbout from '@/components/about/pages/PageAbout.vue'
+import PageUncles from '@/components/uncles/pages/PageUncles.vue'
+import PageDetailsBlock from '@/components/blocks/pages/PageDetailsBlock.vue'
+import PageDetailsTxs from '@/components/txs/pages/PageDetailsTxs.vue'
+import PageAddress from '@/components/addresses/pages/PageAddress.vue'
 Vue.use(Router)
 
 export default new Router({
