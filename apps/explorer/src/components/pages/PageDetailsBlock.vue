@@ -3,12 +3,7 @@
     <app-bread-crumbs :new-items="items"></app-bread-crumbs>
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
-        <app-list-details
-          :items="blockDetails"
-          :more-items="blockMoreDetails"
-          :details-type="blockType"
-          :loading="blockLoad"
-        >
+        <app-list-details :items="blockDetails" :more-items="blockMoreDetails" :details-type="blockType" :loading="blockLoad">
           <app-list-title slot="details-title" :list-type="blockType" :block-details="blockInfo"></app-list-title>
         </app-list-details>
       </v-flex>
@@ -16,14 +11,7 @@
     <!-- Mined Block, txs table -->
     <v-layout v-if="blockType == 'block' && blockInfo.mined" row wrap justify-start class="mb-4">
       <v-flex v-if="!txs && !txsLoad" xs12>
-        <table-txs
-          v-if="txs"
-          :transactions="txs"
-          :frame-txs="true"
-          :page-type="blockType"
-          :loading="txsLoad"
-          class="mt-3"
-        />
+        <table-txs v-if="txs" :transactions="txs" :frame-txs="true" :page-type="blockType" :loading="txsLoad" class="mt-3" />
         <v-card v-if="txs && txsLoad" flat color="white">
           <v-card-text class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }}</v-card-text>
         </v-card>
@@ -115,7 +103,7 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
         }
       }
     })
-}
+  }
   beforeDestroy() {
     this.stopBlockCheck()
   }
@@ -213,11 +201,11 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
   /* Computed: */
 
   get nextBlock(): String {
-    return '/block/'+(this.blockN +1).toString
+    return '/block/' + (this.blockN + 1).toString
   }
 
   get previousBlock(): String {
-    return '/block/'+(this.blockN - 1).toString
+    return '/block/' + (this.blockN - 1).toString
   }
 }
 </script>

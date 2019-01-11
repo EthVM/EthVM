@@ -2,53 +2,46 @@
   <v-container grid-list-lg class="mb-0">
     <app-bread-crumbs :new-items="items"></app-bread-crumbs>
     <v-layout row wrap justify-start class="mb-4">
-      <v-flex xs12> <app-address-detail :account="account" :typeAddrs="detailsType"></app-address-detail> </v-flex>
+      <v-flex xs12> <app-address-detail :account="account" :type-addrs="detailsType"></app-address-detail> </v-flex>
     </v-layout>
     <app-tabs :tabs="pageTabs">
       <!-- Tokens -->
-      <v-tab-item slot="tabs-item" value="tab-1">
-          <table-tokens :tokens="tokens" :loading="tokensLoad" :error="tokensError"/>
-        </v-tab-item> -->
-        <!-- Mined Blocks -->
-         <v-tab-item slot="tabs-item" v-if="account.isMiner" value="tab-3">
-            <table-blocks :blocks="blocks" :loading="blocksLoad" :page-type="detailsType" />
-        </v-tab-item>
+      <v-tab-item slot="tabs-item" value="tab-1"> <table-tokens :tokens="tokens" :loading="tokensLoad" :error="tokensError" /> </v-tab-item> -->
+      <!-- Mined Blocks -->
+      <v-tab-item slot="tabs-item" v-if="account.isMiner" value="tab-3">
+        <table-blocks :blocks="blocks" :loading="blocksLoad" :page-type="detailsType" />
+      </v-tab-item>
 
-        <v-tab-item v-if="account.conCreator" value="tab-4">
-          <!-- Contract Creator (no need to implement yet) -->
-          <v-card>
-            <ul>
-              <li>Name:</li>
-              <li>TWN</li>
-              <li>Balance:</li>
-              <li>20,930 TWN</li>
-              <li>Value:</li>
-              <li>$0.00</li>
-              <li>ERC 20 Contract:</li>
-              <li>0x045619099665fc6f661b1745e5350290ceb933f</li>
-            </ul>
-          </v-card>
-        </v-tab-item>
+      <v-tab-item v-if="account.conCreator" value="tab-4">
+        <!-- Contract Creator (no need to implement yet) -->
+        <v-card>
+          <ul>
+            <li>Name:</li>
+            <li>TWN</li>
+            <li>Balance:</li>
+            <li>20,930 TWN</li>
+            <li>Value:</li>
+            <li>$0.00</li>
+            <li>ERC 20 Contract:</li>
+            <li>0x045619099665fc6f661b1745e5350290ceb933f</li>
+          </ul>
+        </v-card>
+      </v-tab-item>
     </app-tabs>
 
-
-   <!-- Transactions
+    <!-- Transactions
         <v-tab-item value="tab-0">
           <table-address-txs v-if="account.txs" :address="account.address" :transactions="account.txs"></table-address-txs>
           <app-error-no-data v-else></app-error-no-data>
         </v-tab-item> -->
 
-        <!-- Pending Transactions
+    <!-- Pending Transactions
         <v-tab-item value="tab-2">
           <table-address-txs v-if="account.pendingTxs" :address="account" :transactions="account.pendingTxs" :is-pending="true"></table-address-txs>
           <app-error-no-data v-else></app-error-no-data>
         </v-tab-item> -->
 
-
-        <!-- End Mining History  -->
-
-
-
+    <!-- End Mining History  -->
 
     <!-- End Address Details -->
     <!-- Tab Menu -->
@@ -82,34 +75,34 @@ export default class PageAddress extends Vue {
   @Prop({ type: String, default: '' }) address!: string
 
   detailsType = 'address'
-  account= {
-        address: this.address,
-        balance: 0,
-        balanceUSD: 0,
-        ethusd: 0,
-        totalTxs: 0,
-        isMiner: true,
-        conCreator: false
+  account = {
+    address: this.address,
+    balance: 0,
+    balanceUSD: 0,
+    ethusd: 0,
+    totalTxs: 0,
+    isMiner: true,
+    conCreator: false
   }
   /*Transactions: */
   txs = []
-  txsLoad= true
-  txsError= false
+  txsLoad = true
+  txsError = false
 
   /*Pending: */
-  pending= []
-  pendingLoad= true
-  pendingError= false
+  pending = []
+  pendingLoad = true
+  pendingError = false
 
   /*Tokens: */
-  tokens=[]
-  tokensLoad= true
-  tokensError= false
+  tokens = []
+  tokensLoad = true
+  tokensError = false
 
   /* USD */
-  usdValue= {
+  usdValue = {
     ETH: {
-    value: 0
+      value: 0
     }
   }
   /* Blocks: */
@@ -146,7 +139,7 @@ export default class PageAddress extends Vue {
           title: this.$i18n.t('tabs.pending'),
           isActive: false
         }
-      ],
+      ]
     }
   }
 
@@ -222,7 +215,6 @@ export default class PageAddress extends Vue {
       }
     )
 
-
     /*Getting Address Pending Transactions: */
     this.$socket.emit(
       Events.getPendingTxsOfAddress,
@@ -245,15 +237,14 @@ export default class PageAddress extends Vue {
       on blocks load --> blockLoad = false
     */
 
-   /* Call to check if contract creator, and get list of contracts
+    /* Call to check if contract creator, and get list of contracts
       if (creator) --> account.conCreator = true
       on contracts load --> contractLoad = false
     */
   }
 
   mounted() {
-
-    if(this.account.isMiner || this.account.conCreator){
+    if (this.account.isMiner || this.account.conCreator) {
       this.setTabs()
     }
   }

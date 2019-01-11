@@ -5,9 +5,7 @@
         <v-card-title class="title font-weight-bold">{{ getTitle }}</v-card-title>
       </v-flex>
       <v-flex hidden-sm-and-down md4 order-xs2>
-        <v-layout justify-end>
-          <app-footnotes :footnotes="footnotes"/>
-        </v-layout>
+        <v-layout justify-end> <app-footnotes :footnotes="footnotes" /> </v-layout>
       </v-flex>
     </v-layout>
     <v-layout v-else row wrap align-center pb-1>
@@ -15,18 +13,11 @@
         <v-card-title class="title font-weight-bold">{{ $t('title.lastBlock') }}</v-card-title>
       </v-flex>
       <v-flex hidden-sm-and-down md4 order-md2>
-        <v-layout justify-center>
-          <app-footnotes :footnotes="footnotes"/>
-        </v-layout>
+        <v-layout justify-center> <app-footnotes :footnotes="footnotes" /> </v-layout>
       </v-flex>
       <v-flex d-flex xs4 md1 order-xs2 order-md3>
         <v-layout justify-end>
-          <v-btn
-            outline
-            color="secondary"
-            class="text-capitalize"
-            to="/blocks"
-          >{{ $t('bttn.viewAll') }}</v-btn>
+          <v-btn outline color="secondary" class="text-capitalize" to="/blocks">{{ $t('bttn.viewAll') }}</v-btn>
         </v-layout>
       </v-flex>
     </v-layout>
@@ -49,15 +40,15 @@
       </v-layout>
     </v-card>
     <!-- End Table Header -->
-    <app-error-no-data v-if="error"/>
+    <app-error-no-data v-if="error" />
     <div v-else>
-      <app-info-load v-if="loading "></app-info-load>
+      <app-info-load v-if="loading"></app-info-load>
       <v-card v-else flat id="scroll-target" :style="getStyle" class="scroll-y pt-0 pb-0">
         <v-layout column fill-height v-scroll:#scroll-target style="margin-right: 1px" class="mb-1">
           <v-flex xs12>
             <transition-group name="list" tag="p">
               <v-card v-for="block in blocks" class="transparent" flat :key="block.getHash()">
-                <table-blocks-row :block="block" :pageType="pageType"/>
+                <table-blocks-row :block="block" :page-type="pageType" />
                 <v-divider class="mb-2 mt-2"></v-divider>
               </v-card>
             </transition-group>

@@ -64,7 +64,7 @@ import { Block } from '@app/models'
 @Component
 export default class TableBlocksRow extends Mixins(StringConcatMixin) {
   @Prop(Object) block!: Block
-  @Prop({type: String, defualt: 'home'}) pageType!: string
+  @Prop({ type: String, defualt: 'home' }) pageType!: string
 
   hasUncles(block) {
     return block.getType() == 'block' && block.getUncles.length > 0

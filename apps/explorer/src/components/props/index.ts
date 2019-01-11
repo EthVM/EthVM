@@ -32,20 +32,20 @@ export interface BlockDetailsTitle {
 }
 
 export interface Account {
-    address: string,
-    balance: number,
-    balanceUSD: number,
-    ethusd: number,
-    totalTxs: number,
-    isMiner:boolean,
-    conCreator: boolean
+  address: string
+  balance: number
+  balanceUSD: number
+  ethusd: number
+  totalTxs: number
+  isMiner: boolean
+  conCreator: boolean
 }
-export interface Token{
-  symbol: string,
-  name: string,
-  balance: number,
-  decimals: number,
-  usdValue: number,
+export interface Token {
+  symbol: string
+  name: string
+  balance: number
+  decimals: number
+  usdValue: number
   address?: string
 }
 export interface crap {
