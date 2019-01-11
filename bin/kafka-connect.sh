@@ -30,7 +30,10 @@ build_connector() {
   local kafka_connect_dir=$(cd ${processing_dir}/kafka-connect; pwd)
 
   echo "Building connector..."
-  (cd ${processing_dir}; ./gradlew kafka-connect:buildConnectJar)
+  (cd ${processing_dir}; ./gradlew kafka-connect:shadowJar)
+
+  echo "Copying connector jar to out/ dir..."
+  (cd ${kafka_connect_dir}/build/libs/; mkdir -p ${ROOT_DIR}/out/kafka-connect/; cp kafka-connect-*.jar ${ROOT_DIR}/out/kafka-connect/)
 
   echo "Restarting kafka connect (if running)..."
   (cd ${ROOT_DIR}; docker-compose restart kafka-connect)
