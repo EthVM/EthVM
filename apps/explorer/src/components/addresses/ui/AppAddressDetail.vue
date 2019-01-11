@@ -54,7 +54,7 @@ import AppAddressQr from '@app/components/addresses/ui/AppAddressQr.vue'
 import AppBlockies from '@app/components/addresses/ui/AppBlockies.vue'
 import AppCopyToClip from '@app/components/core/ui/AppCopyToClip.vue'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
-
+import { Account } from '@app/components/addresses/props'
 @Component({
   components: {
     AppAddressQr,
@@ -63,7 +63,7 @@ import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
   }
 })
 export default class AppAddressDetail extends Mixins(StringConcatMixin) {
-  @Prop(Object) account: any
+  @Prop(Object) account: Account
   @Prop({ type: String, default: 'address' }) typeAddrs!: string
 
   data() {

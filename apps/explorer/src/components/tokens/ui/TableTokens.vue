@@ -40,7 +40,7 @@
         <v-card v-if="tokens.length === 0" flat>
           <p>{{ $t('tokens.empty') }}</p>
         </v-card>
-        <div v-else v-for="token in tokens" :key="token"><table-tokens-row :token="token" :holder="holder" /></div>
+        <div v-else v-for="(token, index) in tokens" :key="index"><table-tokens-row :token="token" :holder="holder" /></div>
       </div>
     </div>
   </v-card>
@@ -90,7 +90,7 @@ export default class TableTokens extends Mixins(StringConcatMixin) {
   get getTotalUSDValue(): string {
     let totalUsdVal = 0
     this.tokens.forEach(token => {
-      totalUsdVal += this.getBalance(token.balance, token.decimals) * token.USDValue
+      totalUsdVal += this.getBalance(token.balance, token.decimals) * token.usdValue
     })
     return this.getRoundNumber(totalUsdVal)
   }
