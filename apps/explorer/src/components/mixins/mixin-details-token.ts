@@ -17,7 +17,8 @@ export class TokenDetailsMixin extends Vue {
       },
       {
         title: this.$i18n.t('addrOverview.creator'),
-        detail: token.getContract()
+        detail: token.getContract(),
+        link: '/contract/' + token.getContract()
       },
       {
         title: this.$i18n.t('token.price'),
@@ -45,7 +46,8 @@ export class TokenDetailsMixin extends Vue {
         },
         {
           title: this.$i18n.t('token.holder'),
-          detail: token.getHolder()
+          detail: token.getHolder(),
+          link: '/address/' + token.getHolder()
         }
       ]
       holderInfo.forEach(i => {

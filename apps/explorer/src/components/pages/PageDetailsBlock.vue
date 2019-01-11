@@ -3,16 +3,28 @@
     <app-bread-crumbs :new-items="items"></app-bread-crumbs>
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
-        <app-list-details :items="blockDetails" :more-items="blockMoreDetails" :details-type="blockType" :loading="blockLoading">
+        <app-list-details
+          :items="blockDetails"
+          :more-items="blockMoreDetails"
+          :details-type="blockType"
+          :loading="blockLoad"
+        >
           <app-list-title slot="details-title" :list-type="blockType" :block-details="blockInfo"></app-list-title>
         </app-list-details>
       </v-flex>
     </v-layout>
     <!-- Mined Block, txs table -->
     <v-layout v-if="blockType == 'block' && blockInfo.mined" row wrap justify-start class="mb-4">
-      <v-flex v-if="!txs && !txsLoading" xs12>
-        <table-txs v-if="txs" :transactions="txs" :frame-txs="true" :page-type="blockType" :loading="txsLoading" class="mt-3" />
-        <v-card v-if="txs && txsLoading" flat color="white">
+      <v-flex v-if="!txs && !txsLoad" xs12>
+        <table-txs
+          v-if="txs"
+          :transactions="txs"
+          :frame-txs="true"
+          :page-type="blockType"
+          :loading="txsLoad"
+          class="mt-3"
+        />
+        <v-card v-if="txs && txsLoad" flat color="white">
           <v-card-text class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }}</v-card-text>
         </v-card>
       </v-flex>
@@ -21,8 +33,10 @@
 </template>
 
 <script lang="ts">
+import { mappers } from '@app/models/helpers'
 import { Block, Tx } from '@app/models'
 import { Events } from 'ethvm-common'
+import store from '@app/store'
 import AppBreadCrumbs from '@app/components/ui/AppBreadCrumbs.vue'
 import TableTxs from '@app/components/tables/TableTxs.vue'
 import AppListDetails from '@app/components/ui/AppListDetails.vue'
@@ -41,23 +55,23 @@ import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
   @Prop({ type: String }) blockRef!: string
 
-  blockLoading = true
-  txsLoading = true
-
-  blockType = 'block'
-  block = null
-  blockN = null
+  block
+  blockLoad = true
+  txs
+  txsLoad = true
+  blockN
   blockInfo = {
     mined: null,
     next: null,
     prev: null,
     uncles: null
   }
-
-  txs = null
+  blockType = 'block'
 
   data() {
     return {
+      mappers,
+      store,
       items: [
         {
           text: this.$i18n.t('title.blocks'),
@@ -73,7 +87,7 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
   }
   /* Lifecycle: */
   created() {
-    /* Case 1:  No Data in store --> need data for last block in case curr block was not mined */
+    /* Case 1:  No Data in store --> need data for last block in case curr block was not mined*/
     if (this.$store.getters.getBlocks.length === 0) {
       this.getBlocks()
     }
@@ -92,6 +106,7 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
     this.$eventHub.$on(Events.newBlock, _block => {
       if (this.$store.getters.getBlocks.length > 0) {
         const lastMinedBlock = this.$store.getters.getBlocks[0]
+        console
         if (lastMinedBlock.getNumber() == Number(this.blockRef) || lastMinedBlock.getHash() == this.blockRef) {
           this.block = lastMinedBlock
           this.blockInfo.mined = true
@@ -100,8 +115,7 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
         }
       }
     })
-  }
-
+}
   beforeDestroy() {
     this.stopBlockCheck()
   }
@@ -110,10 +124,9 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
   stopBlockCheck() {
     this.$eventHub.$off(Events.newBlock)
   }
-
   getBlocks() {
     this.$socket.emit(
-      Events.getBlocks,
+      Events.pastBlocks,
       {
         limit: 1,
         page: 0
@@ -167,7 +180,7 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
 
   setRawBlock(result) {
     this.block = new Block(result)
-    this.blockLoading = false
+    this.blockLoad = false
     this.blockInfo.mined = true
     this.setBlock()
   }
@@ -183,12 +196,12 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
       this.blockType = 'uncle'
     } else {
       this.$socket.emit(
-        Events.getBlockTxs,
+        Events.getBlockTransactions,
         {
           hash: this.block.getHash().replace('0x', '')
         },
         (err, data) => {
-          this.txsLoading = false
+          this.txsLoad = false
           this.txs = data.map(_tx => {
             return new Tx(_tx)
           })
@@ -200,11 +213,11 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
   /* Computed: */
 
   get nextBlock(): String {
-    return '/block/' + (this.blockN + 1).toString
+    return '/block/'+(this.blockN +1).toString
   }
 
   get previousBlock(): String {
-    return '/block/' + (this.blockN - 1).toString
+    return '/block/'+(this.blockN - 1).toString
   }
 }
 </script>

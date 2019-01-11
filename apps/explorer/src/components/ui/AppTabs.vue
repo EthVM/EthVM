@@ -1,9 +1,26 @@
 <template>
-  <v-tabs v-model="active" dark color="white" slider-color="primary" show-arrows>
-    <v-tab v-for="(item, index) in tabs" class="grey--text" active-class="primary--text" :href="'#tab-' + item" :key="index" @click="setActive(item)">{{
-      item.title
-    }}</v-tab>
-  </v-tabs>
+     <v-card color="white" flat>
+      <v-tabs
+        v-model="activeTab"
+        color="white"
+        show-arrows
+        :class="{ 'pl-0 pr-0': $vuetify.breakpoint.smAndDown, 'pl-3 pr-3': $vuetify.breakpoint.mdAndUp, 'pt-2': $vuetify.breakpoint.mdAndUp }"
+      >
+        <v-tab
+          v-for="item in tabs"
+          class="info--text text-capitalize pb-2 tab-opacity"
+          active-class="primary--text "
+          :key="item.id"
+          :href="'#tab-' + item.id"
+          ripple
+          >{{ item.title }}</v-tab
+        >
+        <v-tabs-slider color="primary" class="mb-0" style="height: 4px;"></v-tabs-slider>
+      </v-tabs>
+      <v-tabs-items v-model="activeTab" style="border-top: 1px solid #efefef">
+        <slot name="tabs-item"></slot>
+      </v-tabs-items>
+    </v-card> 
 </template>
 
 <script lang="ts">
@@ -14,11 +31,6 @@ import { Tab } from '@app/components/props'
 export default class AppTabs extends Vue {
   @Prop(Array) tabs!: Tab[]
 
-  setActive(tab) {
-    for (let i = 0; i < this.tabs.length; i++) {
-      this.tabs[i].isActive = false
-    }
-    tab.isActive = true
-  }
+  activeTab = 'tab-0'
 }
 </script>

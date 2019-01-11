@@ -5,9 +5,9 @@
       <v-layout wrap column fill-height pl-2>
         <v-flex xs12 pb-0>
           <v-layout row align-center justify-start>
-            <v-card-title class="title font-weight-bold">{{ $t('title.address') }}</v-card-title>
-            <v-chip v-if="account.isMiner" color="txSuccess" text-color="white" small>{{ $t('block.miner') }}</v-chip>
-            <v-chip v-if="account.conCreator" color="success" text-color="white" small>{{ $t('addrOverview.creator') }}</v-chip>
+            <v-card-title class="title font-weight-bold">{{ title }}</v-card-title>
+            <v-chip v-if="typeAddrs=== 'address' && account.isMiner" color="txSuccess" text-color="white" small>{{ $t('block.miner') }}</v-chip>
+            <v-chip v-if="typeAddrs=== 'address' && account.conCreator" color="success" text-color="white" small>{{ $t('addrOverview.creator') }}</v-chip>
           </v-layout>
         </v-flex>
         <v-flex xs12 pt-0>
@@ -64,5 +64,21 @@ import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 })
 export default class AppAddressDetail extends Mixins(StringConcatMixin) {
   @Prop(Object) account: any
+  @Prop({type: String, default: 'address'}) typeAddrs!: string
+
+
+  data(){
+    return {
+      titles: {
+        address: this.$i18n.t('title.address'),
+        contract: this.$i18n.t('tx.contract')
+      }
+    }
+  }
+
+  /* Computed: */
+  get title(): string{
+    return this.titles[this.typeAddrs]
+  }
 }
 </script>

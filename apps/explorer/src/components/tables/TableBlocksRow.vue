@@ -8,15 +8,15 @@
         <router-link class="black--text pb-1" :to="'/uncle/' + block.getHash()">{{ block.getNumber() }}</router-link>
       </v-flex>
       <v-flex xs12 sm7 md6 lass="pr-0" order-xs3 order-sm2>
-        <p v-if="block.getType() == 'block'" class="text-truncate info--text psmall mb-0 pb-2">
+        <p v-if="block.getType() == 'block'" class="text-truncate info--text psmall mb-0 pb-0">
           {{ $t('common.hash') }}:
           <router-link class="primary--text font-italic font-weight-regular" :to="'/block/' + block.getHash()">{{ block.getHash() }}</router-link>
         </p>
-        <p v-else class="text-truncate info--text psmall mb-0 pb-2">
+        <p v-else class="text-truncate info--text psmall mb-0 pb-0">
           {{ $t('common.hash') }}:
           <router-link class="primary--text font-italic font-weight-regular" :to="'/uncle/' + block.getHash()">{{ block.getHash() }}</router-link>
         </p>
-        <p class="text-truncate info--text mb-0">
+        <p v-if="pageType != 'address'" class="text-truncate info--text mb-0 pt-2">
           {{ $t('block.miner') }}:
           <router-link :to="'/address/' + block.getMiner().toString()" class="secondary--text font-italic font-weight-regular">{{
             block.getMiner().toString()
@@ -64,6 +64,7 @@ import { Block } from '@app/models'
 @Component
 export default class TableBlocksRow extends Mixins(StringConcatMixin) {
   @Prop(Object) block!: Block
+  @Prop({type: String, defualt: 'home'}) pageType!: string
 
   hasUncles(block) {
     return block.getType() == 'block' && block.getUncles.length > 0

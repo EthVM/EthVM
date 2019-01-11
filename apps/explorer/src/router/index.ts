@@ -10,7 +10,7 @@ import PageAbout from '@/components/pages/PageAbout.vue'
 import PageUncles from '@/components/pages/PageUncles.vue'
 import PageDetailsBlock from '@/components/pages/PageDetailsBlock.vue'
 import PageDetailsTxs from '@/components/pages/PageDetailsTxs.vue'
-
+import PageAddress from '@/components/pages/PageAddress.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -55,6 +55,12 @@ export default new Router({
       path: '/tx/:txHash',
       component: PageDetailsTxs,
       name: 'transaction',
+      props: true
+    },
+    {
+      path: '/address/:address',
+      component: PageAddress,
+      name: 'address',
       props: true
     }
   ],
