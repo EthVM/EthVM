@@ -228,24 +228,89 @@ export class EthvmSocketIoApi implements EthvmApi {
   }
 
   // Statistics
-  getAverageTotalDifficulty(start: Date, end: Date): Promise<Statistic[]> {
-    throw new Error('Method not implemented.')
+  getAverageTotalDifficulty(duration: string): Promise<Statistic[]> {
+    return new Promise((resolve, reject) => {
+      this.io.emit(
+        Events.getAvgTotalDifficultyStats,
+        {
+          duration
+        },
+        (err, result) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(result)
+        }
+      )
+    })
   }
 
-  getAverageGasPrice(start: Date, end: Date): Promise<Statistic[]> {
-    throw new Error('Method not implemented.')
+  getAverageGasPrice(duration: string): Promise<Statistic[]> {
+    return new Promise((resolve, reject) => {
+      this.io.emit(
+        Events.getAvgGasPriceStats,
+        {
+          duration
+        },
+        (err, result) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(result)
+        }
+      )
+    })
   }
 
-  getAverageTxFee(start: Date, end: Date): Promise<Statistic[]> {
-    throw new Error('Method not implemented.')
+  getAverageTxFee(duration: string): Promise<Statistic[]> {
+    return new Promise((resolve, reject) => {
+      this.io.emit(
+        Events.getAvgTxFeeStats,
+        {
+          duration
+        },
+        (err, result) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(result)
+        }
+      )
+    })
   }
 
-  getAverageSuccessfullTx(start: Date, end: Date): Promise<Statistic[]> {
-    throw new Error('Method not implemented.')
+  getAverageSuccessfullTx(duration: string): Promise<Statistic[]> {
+    return new Promise((resolve, reject) => {
+      this.io.emit(
+        Events.getAvgSuccessfullTxStats,
+        {
+          duration
+        },
+        (err, result) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(result)
+        }
+      )
+    })
   }
 
-  getAverageFailedTx(start: Date, end: Date): Promise<Statistic[]> {
-    throw new Error('Method not implemented.')
+  getAverageFailedTx(duration: string): Promise<Statistic[]> {
+    return new Promise((resolve, reject) => {
+      this.io.emit(
+        Events.getAvgFailedTxStats,
+        {
+          duration
+        },
+        (err, result) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(result)
+        }
+      )
+    })
   }
 
   // Accounts

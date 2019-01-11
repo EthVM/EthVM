@@ -25,11 +25,11 @@ export interface EthvmApi {
   // TODO
 
   // Statistics
-  getAverageTotalDifficulty(start: Date, end: Date): Promise<Statistic[]>
-  getAverageGasPrice(start: Date, end: Date): Promise<Statistic[]>
-  getAverageTxFee(start: Date, end: Date): Promise<Statistic[]>
-  getAverageSuccessfullTx(start: Date, end: Date): Promise<Statistic[]>
-  getAverageFailedTx(start: Date, end: Date): Promise<Statistic[]>
+  getAverageTotalDifficulty(duration: string): Promise<Statistic[]>
+  getAverageGasPrice(duration: string): Promise<Statistic[]>
+  getAverageTxFee(duration: string): Promise<Statistic[]>
+  getAverageSuccessfullTx(duration: string): Promise<Statistic[]>
+  getAverageFailedTx(duration: string): Promise<Statistic[]>
 
   // Accounts
   getAccount(hash: string): Promise<Account | null>
