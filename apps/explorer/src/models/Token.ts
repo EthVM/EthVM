@@ -11,48 +11,42 @@
 //     this.id = token.address
 //   }
 
-//   public getSymbol() {
+//   public getSymbol(): string {
 //     if (!this.cache.symbol) {
 //       this.cache.symbol = this.token.symbol
 //     }
 //     return this.cache.symbol
 //   }
 
-//   public getHexAddress() {
-//     if (!this.cache.hexAddress) {
-//       this.cache.hexAddress = '0x' + this.address
-//     }
-//     return this.cache.hexAddress
-//   }
 
-//   public getCreator() {
+//   public getCreator(): string {
 //     if (!this.cache.creator) {
 //       this.cache.symbol = '0x'+this.token.creator
 //     }
 //     return this.cache.creator
 //   }
 
-//   public getDecimals() {
+//   public getDecimals(): number {
 //     if (!this.cache.decimals) {
 //       this.cache.decimals = this.token.decimals
 //     }
 //     return this.cache.decimals
 //   }
-//   public getTotalHolders() {
+//   public getTotalHolders(): number {
 //     if(!this.cache.totalHolders) {
 //       this.cache.totalHolders = this.token.totalHolders
 //     }
 //     return this.cache.totalHodlers
 //   }
 
-//   public getTotalSupply() {
+//   public getTotalSupply(): number {
 //     if(!this.cache.totalSupply) {
 //       this.cache.totalSupply = this.token.totalSupply
 //     }
 //     return this.cache.totalSupply
 //   }
 
-//   public getTotalTransfers() {
+//   public getTotalTransfers(): number {
 //     if(!this.cache.totalTrasfers) {
 //       this.cache.totalTransfers = this.token.totalTransfers
 //     }
@@ -60,7 +54,7 @@
 //   }
 
 //   /* Price : */
-//   public getPrice() {
+//   public getPrice(): number {
 //     return this.token.price
 //   }
 
@@ -68,7 +62,7 @@
 //     this.token.price = _price
 //   }
 
-//   public getHolder() {
+//   public getHolder(): string {
 //     return this.token.holder
 //   }
 
