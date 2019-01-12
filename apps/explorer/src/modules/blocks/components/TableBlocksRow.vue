@@ -57,9 +57,9 @@
 </template>
 
 <script lang="ts">
-import { StringConcatMixin } from '@app/components/core/mixins'
+import { StringConcatMixin } from '@app/core/components/mixins'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
-import { Block } from '@app/models'
+import { Block } from '@app/core/models'
 
 @Component
 export default class TableBlocksRow extends Mixins(StringConcatMixin) {

@@ -15,7 +15,7 @@
 <script lang="ts">
 import { Events } from 'ethvm-common'
 import BN from 'bignumber.js'
-import AppChart from '@app/components/core/ui/AppChart.vue'
+import AppChart from '@app/core/components/ui/AppChart.vue'
 import { Vue, Component } from 'vue-property-decorator'
 
 const MAX_ITEMS = 10
