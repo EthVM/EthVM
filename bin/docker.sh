@@ -50,6 +50,10 @@ up() {
 
 # up - spins up a clean dev environment (but it will not run eth client, neither kafka-streams in order to control the flow of data)
 up_default() {
+  echo -e "Building helper docker images...\n"
+  ${SCRIPT_DIR}/docker-build.sh build mongodb-ethvm-utils
+  ${SCRIPT_DIR}/docker-build.sh build kafka-ethvm-utils
+
   echo -e "Starting up containers...\n"
   docker-compose up -d --build
 
