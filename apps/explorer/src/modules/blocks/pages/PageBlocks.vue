@@ -52,7 +52,7 @@ export default class PageBlocks extends Mixins(LastBlockInfoMixin) {
 
   // Computed
   get blocks(): Block[] {
-    return this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
+    return this.$store.getters.blocks.slice(0, MAX_ITEMS)
   }
 
   get blocksLoad(): boolean {

@@ -52,7 +52,7 @@ export default class PageUncles extends Vue {
 
   // Computed
   get uncles() {
-    return this.$store.getters.getUncles.slice(0, MAX_ITEMS)
+    return this.$store.getters.uncles.slice(0, MAX_ITEMS)
   }
 
   get uncleLoad(): boolean {

@@ -2,7 +2,7 @@ import { Events, defaultRooms } from 'ethvm-common'
 import { Block, Tx, PendingTx, Uncle } from '@app/core/models'
 import { EventLayout } from '@app/core/store/layouts'
 
-const socket_socketNewblock = function({ commit }, raw: EventLayout | EventLayout[]) {
+const socket_Newblock = function({ commit }, raw: EventLayout | EventLayout[]) {
   const evs = !Array.isArray(raw) ? [raw] : raw
   evs.forEach(ev => {
     commit(Events.newBlock, ev.value)
@@ -10,7 +10,7 @@ const socket_socketNewblock = function({ commit }, raw: EventLayout | EventLayou
   })
 }
 
-const socket_socketNewuncle = function({ commit }, raw: EventLayout | EventLayout[]) {
+const socket_Newuncle = function({ commit }, raw: EventLayout | EventLayout[]) {
   const evs = !Array.isArray(raw) ? [raw] : raw
   evs.forEach(ev => {
     commit(Events.newUncle, ev.value)
@@ -18,7 +18,7 @@ const socket_socketNewuncle = function({ commit }, raw: EventLayout | EventLayou
   })
 }
 
-const socket_socketNewtx = function({ commit }, raw: EventLayout | EventLayout[]) {
+const socket_Newtx = function({ commit }, raw: EventLayout | EventLayout[]) {
   const evs = !Array.isArray(raw) ? [raw] : raw
   evs.forEach(ev => {
     commit(Events.newTx, ev.value)
@@ -26,7 +26,7 @@ const socket_socketNewtx = function({ commit }, raw: EventLayout | EventLayout[]
   })
 }
 
-const socket_socketNewptx = function({ commit }, raw: EventLayout | EventLayout[]) {
+const socket_Newptx = function({ commit }, raw: EventLayout | EventLayout[]) {
   const evs = !Array.isArray(raw) ? [raw] : raw
   evs.forEach(event => {
     commit(Events.newPendingTx, event.value)
@@ -35,14 +35,14 @@ const socket_socketNewptx = function({ commit }, raw: EventLayout | EventLayout[
 }
 
 // eslint-disable-next-line
-const socket_socketConnect = function({}) {
+const socket_connect = function({}) {
   this._vm.$socket.emit(Events.join, { rooms: defaultRooms })
 }
 
 export default {
-  socket_socketNewblock,
-  socket_socketNewtx,
-  socket_socketNewptx,
-  socket_socketNewuncle,
-  socket_socketConnect
+  socket_Newblock,
+  socket_Newtx,
+  socket_Newptx,
+  socket_Newuncle,
+  socket_connect
 }

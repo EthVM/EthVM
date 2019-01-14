@@ -94,11 +94,11 @@ export default class PageHome extends Mixins(LastBlockInfoMixin) {
 
   /* Computed: */
   get txs(): Tx[] {
-    return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
+    return this.$store.getters.txs.slice(0, MAX_ITEMS)
   }
 
   get blocks(): Block[] {
-    return this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
+    return this.$store.getters.blocks.slice(0, MAX_ITEMS)
   }
 
   get blocksLoading(): boolean {

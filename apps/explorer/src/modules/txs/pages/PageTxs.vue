@@ -46,7 +46,7 @@ export default class PageTxs extends Mixins(LastBlockInfoMixin) {
 
   // Computed
   get txs(): Tx[] {
-    return this.$store.getters.getTxs
+    return this.$store.getters.txs
   }
 
   get txsLoad(): boolean {

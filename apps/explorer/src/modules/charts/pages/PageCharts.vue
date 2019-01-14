@@ -132,8 +132,8 @@ export default class PageCharts extends Vue {
 
   // Computed
   get txs() {
-    if (this.$store.getters.getTxs.length) {
-      return this.$store.getters.getTxs.slice(0, MAX_ITEMS)
+    if (this.$store.getters.txs.length) {
+      return this.$store.getters.txs.slice(0, MAX_ITEMS)
     }
     return []
   }

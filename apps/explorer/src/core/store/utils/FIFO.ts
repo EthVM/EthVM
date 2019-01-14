@@ -1,4 +1,4 @@
-type ItemProcessor<T> = (item: T, items: T[]) => T[]
+import { ItemProcessor } from '@app/core/store/utils'
 
 export class FIFO<T> {
   private arr: T[] = []

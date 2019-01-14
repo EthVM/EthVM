@@ -129,7 +129,7 @@ export default class ChartLiveTxFees extends Vue {
       avgFees: [],
       avgPrice: []
     }
-    const latestBlocks = this.$store.getters.getBlocks.slice(0, MAX_ITEMS)
+    const latestBlocks = this.$store.getters.blocks.slice(0, MAX_ITEMS)
     latestBlocks.forEach(_block => {
       data.labels.unshift(_block.getNumber())
       const _tempD = _block.getStats()
