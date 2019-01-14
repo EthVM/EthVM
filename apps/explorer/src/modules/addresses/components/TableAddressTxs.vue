@@ -53,7 +53,7 @@
 <script lang="ts">
 /*Techinically a smart component this one shoule implelemetn infinite scrool and data filtering */
 
-import TableAddressTxRow from '@app/modules/addresses/components/TableAddressTxRow'
+import TableAddressTxRow from '@app/modules/addresses/components/TableAddressTxRow.vue'
 import { Tx } from '@app/core/models'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
