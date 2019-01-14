@@ -1,13 +1,14 @@
 import App from '@app/modules/App.vue'
-import { EthvmSocketIoApi } from '@app/core/api'
-import { VueEthvmApi } from '@app/core/plugins'
+// import { EthvmSocketIoApi } from '@app/core/api'
+// import { VueEthvmApi } from '@app/core/plugins'
 import router from '@app/core/router'
 import store from '@app/core/store'
 import i18n from '@app/translations'
 import VTooltip from 'v-tooltip'
 import Vue from 'vue'
 import InfiniteScroll from 'vue-infinite-scroll'
-import { VueSocketIOPlugin } from '@app/core/plugins/socketio'
+// import { VueSocketIOPlugin } from '@app/core/plugins/socketio'
+import VueSocketIO from 'vue-socket.io'
 import VueTimeago from 'vue-timeago'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
@@ -18,15 +19,19 @@ Vue.use(VTooltip)
 Vue.prototype.$eventHub = new Vue()
 Vue.config.productionTip = false
 
-Vue.use(VueSocketIOPlugin, {
-  connection: process.env.VUE_APP_API_ENDPOINT,
-  vuex: {
-    store,
-    actionPrefix: 'socket_',
-    mutationPrefix: 'socket_'
-  }
-})
-Vue.use(VueEthvmApi, new EthvmSocketIoApi(process.env.VUE_APP_API_ENDPOINT))
+
+// TODO: Once models has been migrated use this version of Vue SocketIO
+// Vue.use(VueSocketIOPlugin, {
+//   connection: process.env.VUE_APP_API_ENDPOINT,
+//   vuex: {
+//     store,
+//     actionPrefix: 'socket_',
+//     mutationPrefix: 'socket_'
+//   }
+// })
+//Vue.use(VueEthvmApi, new EthvmSocketIoApi(process.env.VUE_APP_API_ENDPOINT))
+
+Vue.use(VueSocketIO, process.env.VUE_APP_API_ENDPOINT, store)
 
 Vue.use(VueTimeago, {
   name: 'timeago',

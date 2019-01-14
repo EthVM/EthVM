@@ -1,7 +1,7 @@
 import { Events, SocketDefaultRooms, SocketEvent } from 'ethvm-common'
 import { Block, Tx, PendingTx, Uncle } from '@app/core/models'
 
-const socket_Newblock = function({ commit }, raw: SocketEvent | SocketEvent[]) {
+const socket_socketNewblock = function({ commit }, raw: SocketEvent | SocketEvent[]) {
   const evs = !Array.isArray(raw) ? [raw] : raw
   evs.forEach(ev => {
     commit(Events.newBlock, ev.value)
@@ -9,7 +9,7 @@ const socket_Newblock = function({ commit }, raw: SocketEvent | SocketEvent[]) {
   })
 }
 
-const socket_Newuncle = function({ commit }, raw: SocketEvent | SocketEvent[]) {
+const socket_socketNewuncle = function({ commit }, raw: SocketEvent | SocketEvent[]) {
   const evs = !Array.isArray(raw) ? [raw] : raw
   evs.forEach(ev => {
     commit(Events.newUncle, ev.value)
@@ -17,7 +17,7 @@ const socket_Newuncle = function({ commit }, raw: SocketEvent | SocketEvent[]) {
   })
 }
 
-const socket_Newtx = function({ commit }, raw: SocketEvent | SocketEvent[]) {
+const socket_socketNewtx = function({ commit }, raw: SocketEvent | SocketEvent[]) {
   const evs = !Array.isArray(raw) ? [raw] : raw
   evs.forEach(ev => {
     commit(Events.newTx, ev.value)
@@ -25,7 +25,7 @@ const socket_Newtx = function({ commit }, raw: SocketEvent | SocketEvent[]) {
   })
 }
 
-const socket_Newptx = function({ commit }, raw: SocketEvent | SocketEvent[]) {
+const socket_socketNewptx = function({ commit }, raw: SocketEvent | SocketEvent[]) {
   const evs = !Array.isArray(raw) ? [raw] : raw
   evs.forEach(event => {
     commit(Events.newPendingTx, event.value)
@@ -34,14 +34,14 @@ const socket_Newptx = function({ commit }, raw: SocketEvent | SocketEvent[]) {
 }
 
 // eslint-disable-next-line
-const socket_connect = function({}) {
+const socket_socketConnect = function({}) {
   this._vm.$socket.emit(Events.join, { rooms: SocketDefaultRooms })
 }
 
 export default {
-  socket_Newblock,
-  socket_Newtx,
-  socket_Newptx,
-  socket_Newuncle,
-  socket_connect
+  socket_socketNewblock,
+  socket_socketNewtx,
+  socket_socketNewptx,
+  socket_socketNewuncle,
+  socket_socketConnect
 }
