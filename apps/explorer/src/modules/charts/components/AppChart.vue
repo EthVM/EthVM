@@ -8,7 +8,9 @@
       </v-tooltip>
     </v-card-title>
     <v-divider></v-divider>
-    <v-img class="pl-4 pt-4"> <app-footnotes :footnotes="footnoteArr"></app-footnotes> </v-img>
+    <v-layout align-center justify-end row fill-height>
+     <app-footnotes :footnotes="footnoteArr"/>
+    </v-layout>
     <canvas ref="chart" :width="width" :height="height"></canvas>
   </v-card>
 </template>
@@ -16,7 +18,8 @@
 <script lang="ts">
 import Chart from 'chart.js'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
-import Vue from 'vue'
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { Footnote  } from '@app/core/components/props'
 
 Chart.defaults.global = Object.assign(Chart.defaults.global, {
   defaultFontFamily: "'Open Sans', 'sans-serif'",
@@ -54,65 +57,56 @@ Chart.defaults.doughnut.animation = Object.assign(Chart.defaults.doughnut.animat
   animateRotate: true
 })
 
-export default Vue.extend({
-  name: 'VueChart',
-  props: {
-    type: {
-      required: true,
-      type: String
-    },
-    data: {
-      required: true,
-      type: [Object, Array]
-    },
-    redraw: Boolean,
-    options: Object,
-    width: Number,
-    height: Number,
-    chartTitle: String,
-    chartDescription: String,
-    footnoteArr: Array
-  },
+@Component({
   components: {
-    AppFootnotes
-  },
-  data() {
-    return {}
-  },
+     AppFootnotes
+  }
+})
+export default class AppChart extends Vue {
+  @Prop({type: String, required: true }) type!: string
+  @Prop({type: Object, required: true}) data: object[]
+  @Prop({type: Boolean }) redraw!: boolean
+  @Prop({type: Object}) options!: object
+  @Prop({type: Number}) width!: number
+  @Prop({type: Number}) height!: number
+  @Prop({type: String}) chartTitle!: string
+  @Prop({type: String}) chartDescription!: string
+  @Prop({type:Array}) footnoteArr!: Footnote[]
 
-  watch: {
-    'data.labels'() {
-      this.chart.update()
-    },
-    'data.datasets'() {
-      if (this.redraw) {
+  /*LifeCycle: */
+  mounted() {
+    this.createChart()
+  }
+  beforeDestroy() {
+    this.chart.destroy()
+  }
+
+  /* Watchers: */
+
+  @Watch('data.labels')
+  onDataLabelsChanged():void {
+    this.chart.update()
+  }
+
+  @Watch('data.datasets')
+  onDataDatasetsChanged(): void {
+    if (this.redraw) {
         this.chart.destroy()
         this.createChart()
       } else {
         this.chart.update()
       }
-    }
-  },
-  methods: {
-    createChart() {
-      // @ts-ignore
-      this.chart = new Chart(this.$refs.chart, {
-        // @ts-ignore
-        type: this.type,
-        // @ts-ignore
-        data: this.data,
-        // @ts-ignore
-        options: this.options
-      })
-    }
-  },
-  mounted() {
-    this.createChart()
-  },
-  beforeDestroy() {
-    this.chart.destroy()
   }
-})
+
+  /*Methods: */
+  createChart() {
+    this.chart = new Chart(this.$refs.chart, {
+        type: this.type,
+        data: this.data,
+        options: this.options
+    })
+  }
+}
 </script>
 
 <style scoped lang="css"></style>
