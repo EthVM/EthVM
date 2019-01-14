@@ -21,13 +21,15 @@
 </template>
 
 <script lang="ts">
-import { Block, Tx } from '@app/core/models'
+import { Block, Tx, WeiValue } from '@app/core/models'
 import { Events } from 'ethvm-common'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppListDetails from '@app/core/components/ui/AppListDetails.vue'
 import AppListTitle from '@app/core/components/ui/AppListTitle.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
-import { BlockDetailsMixin } from '@app/core/components/mixins/mixin-details-block'
+import { Detail } from '@app/core/components/props'
+import ethUnits from 'ethereumjs-units'
+import Bn from 'bignumber.js'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 
 @Component({
@@ -38,14 +40,14 @@ import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
     TableTxs
   }
 })
-export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
+export default class PageDetailsBlock extends Vue {
   @Prop({ type: String }) blockRef!: string
 
-  block
   blockLoad = true
-  txs
   txsLoad = true
-  blockN
+
+  block = null
+  blockN = null
   blockInfo = {
     mined: null,
     next: null,
@@ -53,6 +55,11 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
     uncles: null
   }
   blockType = 'block'
+
+  txs = []
+  details = []
+  moreDetails = []
+  timestmp = ''
 
   data() {
     return {
@@ -72,7 +79,7 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
   /* Lifecycle: */
   created() {
     /* Case 1:  No Data in store --> need data for last block in case curr block was not mined*/
-    if (this.$store.getters.getBlocks.length === 0) {
+    if (this.$store.getters.blocks.length === 0) {
       this.getBlocks()
     }
   }
@@ -88,8 +95,8 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
 
     /* Block was not mined --> wait to be mined */
     this.$eventHub.$on(Events.newBlock, _block => {
-      if (this.$store.getters.getBlocks.length > 0) {
-        const lastMinedBlock = this.$store.getters.getBlocks[0]
+      if (this.$store.getters.blocks.length > 0) {
+        const lastMinedBlock = this.$store.getters.blocks[0]
         console
         if (lastMinedBlock.getNumber() == Number(this.blockRef) || lastMinedBlock.getHash() == this.blockRef) {
           this.block = lastMinedBlock
@@ -197,6 +204,120 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
     }
   }
 
+  setDetails(block: Block) {
+    this.timestmp = block.getTimestamp().toString()
+
+    this.details = [
+      {
+        title: this.$i18n.t('block.height'),
+        detail: block.getNumber()
+      },
+      {
+        title: this.$i18n.t('common.hash'),
+        detail: block.getHash(),
+        copy: true
+      },
+      {
+        title: this.$i18n.t('block.miner'),
+        detail: block.getMiner(),
+        link: '/address/' + block.getMiner(),
+        copy: true
+      },
+      {
+        title: this.$i18n.t('common.timestmp'),
+        detail: this.formatTime
+      },
+      {
+        title: this.$i18n.t('block.reward'),
+        detail: new WeiValue(block.getMinerReward()).toEthFormated() + '  ' + this.$i18n.t('common.eth')
+      },
+      {
+        title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward'),
+        detail: new WeiValue(block.getUncleReward()).toEthFormated() + ' ' + this.$i18n.t('common.eth')
+      },
+      {
+        title: this.$i18n.t('block.pHash'),
+        detail: block.getParentHash(),
+        link: '/block/' + block.getParentHash()
+      }
+    ]
+
+    if (block.getIsUncle()) {
+      const item = {
+        title: this.$i18n.t('title.position'),
+        detail: block.getPosition()
+      }
+      this.details.push(item)
+    } else {
+      const item = {
+        title: this.$i18n.t('title.tx'),
+        detail: block.getTransactionCount()
+      }
+      this.details.push(item)
+    }
+  }
+
+  setMore(block: Block) {
+    this.moreDetails = [
+      {
+        title: this.$i18n.t('block.diff'),
+        detail: block.getDifficulty()
+      },
+      {
+        title: this.$i18n.t('block.totalDiff'),
+        detail: block.getTotalDifficulty()
+      },
+      {
+        title: this.$i18n.t('block.nonce'),
+        detail: block.getNonce()
+      },
+      {
+        title: this.$i18n.t('block.root'),
+        detail: block.getStateRoot().toString()
+      },
+      {
+        title: this.$i18n.t('block.data'),
+        detail: block.getExtraData().toString()
+      }
+    ]
+
+    if (!block.getIsUncle()) {
+      const newItems = [
+        {
+          title: this.$i18n.t('block.fees'),
+          detail: ethUnits.convert(new Bn(block.getTxFees()), 'wei', 'eth') + ' ' + this.$i18n.t('common.eth')
+        },
+        {
+          title: this.$i18n.t('gas.limit'),
+          detail: block.getGasLimit()
+        },
+        {
+          title: this.$i18n.t('gas.used'),
+          detail: block.getGasUsed()
+        },
+        {
+          title: this.$i18n.t('block.logs'),
+          detail: block.getLogsBloom().toString()
+        },
+        {
+          title: this.$i18n.t('block.txRoot'),
+          detail: block.getTransactionsRoot().toString()
+        },
+        {
+          title: this.$i18n.t('block.recRoot'),
+          detail: block.getReceiptsRoot().toString()
+        },
+        {
+          title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.sha'),
+          detail: block.getSha3Uncles()
+        }
+      ]
+      newItems.forEach(i => {
+        this.moreDetails.push(i)
+      })
+    }
+  }
+
   /* Computed: */
 
   get nextBlock(): String {
@@ -205,6 +326,18 @@ export default class PageDetailsBlock extends Mixins(BlockDetailsMixin) {
 
   get previousBlock(): String {
     return '/block/' + (this.blockN - 1).toString
+  }
+
+  get blockDetails(): Detail[] {
+    return this.details
+  }
+
+  get blockMoreDetails(): Detail[] {
+    return this.moreDetails
+  }
+
+  get formatTime(): string {
+    return new Date(this.timestmp).toString()
   }
 }
 </script>
