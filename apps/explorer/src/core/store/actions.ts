@@ -1,8 +1,7 @@
-import { Events, defaultRooms } from 'ethvm-common'
+import { Events, SocketDefaultRooms, SocketEvent } from 'ethvm-common'
 import { Block, Tx, PendingTx, Uncle } from '@app/core/models'
-import { EventLayout } from '@app/core/store/layouts'
 
-const socket_Newblock = function({ commit }, raw: EventLayout | EventLayout[]) {
+const socket_Newblock = function({ commit }, raw: SocketEvent | SocketEvent[]) {
   const evs = !Array.isArray(raw) ? [raw] : raw
   evs.forEach(ev => {
     commit(Events.newBlock, ev.value)
@@ -10,7 +9,7 @@ const socket_Newblock = function({ commit }, raw: EventLayout | EventLayout[]) {
   })
 }
 
-const socket_Newuncle = function({ commit }, raw: EventLayout | EventLayout[]) {
+const socket_Newuncle = function({ commit }, raw: SocketEvent | SocketEvent[]) {
   const evs = !Array.isArray(raw) ? [raw] : raw
   evs.forEach(ev => {
     commit(Events.newUncle, ev.value)
@@ -18,7 +17,7 @@ const socket_Newuncle = function({ commit }, raw: EventLayout | EventLayout[]) {
   })
 }
 
-const socket_Newtx = function({ commit }, raw: EventLayout | EventLayout[]) {
+const socket_Newtx = function({ commit }, raw: SocketEvent | SocketEvent[]) {
   const evs = !Array.isArray(raw) ? [raw] : raw
   evs.forEach(ev => {
     commit(Events.newTx, ev.value)
@@ -26,7 +25,7 @@ const socket_Newtx = function({ commit }, raw: EventLayout | EventLayout[]) {
   })
 }
 
-const socket_Newptx = function({ commit }, raw: EventLayout | EventLayout[]) {
+const socket_Newptx = function({ commit }, raw: SocketEvent | SocketEvent[]) {
   const evs = !Array.isArray(raw) ? [raw] : raw
   evs.forEach(event => {
     commit(Events.newPendingTx, event.value)
@@ -36,7 +35,7 @@ const socket_Newptx = function({ commit }, raw: EventLayout | EventLayout[]) {
 
 // eslint-disable-next-line
 const socket_connect = function({}) {
-  this._vm.$socket.emit(Events.join, { rooms: defaultRooms })
+  this._vm.$socket.emit(Events.join, { rooms: SocketDefaultRooms })
 }
 
 export default {

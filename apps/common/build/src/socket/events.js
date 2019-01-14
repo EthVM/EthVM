@@ -46,3 +46,4 @@ exports.Events = {
     getAvgSuccessfullTxStats: "get-average-successfull-tx-stats",
     getAvgFailedTxStats: "get-average-successfull-tx-stats"
 };
+exports.SocketDefaultRooms = ["blocks", "txs", "uncles", "pendingTxs"];

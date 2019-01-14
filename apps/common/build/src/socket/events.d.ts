@@ -1,3 +1,8 @@
+export interface SocketEvent {
+    op: 'insert' | 'delete' | 'replace' | 'updated' | 'invalidate';
+    key: any;
+    value: any;
+}
 export declare const Events: {
     join: string;
     leave: string;
@@ -33,3 +38,4 @@ export declare const Events: {
     getAvgSuccessfullTxStats: string;
     getAvgFailedTxStats: string;
 };
+export declare const SocketDefaultRooms: string[];

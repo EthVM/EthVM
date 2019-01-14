@@ -1,3 +1,9 @@
+export interface SocketEvent {
+  op: 'insert' | 'delete' | 'replace' | 'updated' | 'invalidate'
+  key: any
+  value: any
+}
+
 export const Events = {
   // Generic
   join: "join",
@@ -55,3 +61,4 @@ export const Events = {
   getAvgFailedTxStats: "get-average-successfull-tx-stats"
 }
 
+export const SocketDefaultRooms = ["blocks", "txs", "uncles", "pendingTxs"]

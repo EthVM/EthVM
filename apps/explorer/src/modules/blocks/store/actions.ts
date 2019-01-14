@@ -1,8 +1,7 @@
-import { Events } from 'ethvm-common'
+import { Events, SocketEvent } from 'ethvm-common'
 import { Block } from '@app/core/models'
-import { EventLayout } from '@app/core/store/layouts'
 
-const socket_socketNewblock = function({ commit }, raw: EventLayout | EventLayout[]) {
+const socket_socketNewblock = function({ commit }, raw: SocketEvent | SocketEvent[]) {
   const evs = !Array.isArray(raw) ? [raw] : raw
   evs.forEach(ev => {
     commit(Events.newBlock, ev.value)
