@@ -1,22 +1,17 @@
 export interface Uncle {
-  parentHash?: string
-  sha3Uncles?: string
-  uncleHeight?: number
-  blockHeight?: number
-  position?: number
-  hash?: string
-  timestamp?: number
-  nonce?: string
-  miner?: string
-  rewards?: any
-  difficulty?: number
-  totalDifficulty?: number
-  stateRoot?: Buffer
-  transactionsRoot?: Buffer
-  receiptsRoot?: Buffer
-  logsBloom?: Buffer
-  gasLimit?: number
-  gasUsed?: number
-  mixHash?: Buffer
-  extraData?: Buffer
+  number: Buffer
+  hash: string
+  parentHash: string
+  nonce: string
+  sha3Uncles: string
+  logsBloom: string
+  transactionsRoot: string
+  stateRoot: string
+  receiptsRoot: string
+  author: string
+  difficulty: Buffer
+  extraData: string
+  gasLimit: Buffer
+  gasUsed: Buffer
+  timestamp: number
 }
