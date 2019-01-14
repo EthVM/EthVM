@@ -58,7 +58,7 @@ import TableAddressTxs from '@app/components/addresses/ui/TableAddressTxs.vue'
 import TableTokens from '@app/components/tokens/ui/TableTokens.vue'
 import TableBlocks from '@app/components/blocks/ui/TableBlocks.vue'
 import { Vue, Component, Prop } from 'vue-property-decorator'
-
+import { AccountInfo } from '@app/components/addresses/props'
 /*  NOTES:
 This componet should convvert wei values (address balance) to ETH, should be added after Buffer object implementation  */
 
@@ -76,16 +76,9 @@ export default class PageAddress extends Vue {
   @Prop({ type: String, default: '' }) address!: string
 
   detailsType = 'address'
-  account = {
-    address: this.address,
-    balance: 0,
-    balanceUSD: 0,
-    ethusd: 0,
-    totalTxs: 0,
-    isMiner: true,
-    conCreator: false
-  }
+  account = new AccountInfo(this.address, this.detailsType)
   /*Transactions: */
+
   txs = []
   txsLoad = true
   txsError = false
@@ -98,50 +91,8 @@ export default class PageAddress extends Vue {
   /*Tokens: */
 
   /*Tokens: */
-  tokens = [
-    {
-      symbol: 'ABC',
-      name: 'ABC Token',
-      balance: 23000,
-      decimals: 10,
-      usdValue: 2.0,
-      address: '0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8 '
-    },
-    {
-      symbol: 'ABC',
-      name: 'ABC Token',
-      balance: 23000000,
-      decimals: 10,
-      usdValue: 2.0,
-      address: '0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8 '
-    },
-    {
-      symbol: 'ABC',
-      name: 'ABC Token',
-      balance: 230,
-      decimals: 10,
-      usdValue: 2.0,
-      address: '0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8 '
-    },
-    {
-      symbol: 'ABC',
-      name: 'ABC Token',
-      balance: 23000000000000000000,
-      decimals: 10,
-      usdValue: 2.0,
-      address: '0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8 '
-    },
-    {
-      symbol: 'ABC',
-      name: 'ABC Token',
-      balance: 230000,
-      decimals: 10,
-      usdValue: 2.0,
-      address: '0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8 '
-    }
-  ]
-
-  tokensLoad = false
+  tokens = []
+  tokensLoad = true
   tokensError = false
 
   /* USD */
@@ -196,10 +147,9 @@ export default class PageAddress extends Vue {
         address: this.address.replace('0x', '')
       },
       (err, result) => {
-        const addr = new Account(result)
         if (!err && result) {
-          const balance = addr.getBalance()
-          this.account.balance = balance
+          const addr = new Account(result)
+          this.account.setBalance(addr.getBalance())
         }
       }
     )
