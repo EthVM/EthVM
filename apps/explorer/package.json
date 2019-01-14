@@ -21,7 +21,7 @@
     "date-fns": "^1.30.1",
     "ethereum-blockies": "^0.1.1",
     "ethereumjs-abi": "^0.6.5",
-    "ethereumjs-account": "^2.0.5",
+    "ethereumjs-account": "^3.0.0",
     "ethereumjs-units": "^0.2.0",
     "ethvm-common": "file:./../common",
     "number-formatter": "^1.2.0",
