@@ -1,0 +1,41 @@
+export interface SocketEvent {
+    op: 'insert' | 'delete' | 'replace' | 'updated' | 'invalidate';
+    key: any;
+    value: any;
+}
+export declare const Events: {
+    join: string;
+    leave: string;
+    newTx: string;
+    newPendingTx: string;
+    newBlock: string;
+    newUncle: string;
+    pastTxsR: string;
+    pastBlocksR: string;
+    getAccount: string;
+    getAccountTotalTxs: string;
+    getBlock: string;
+    getBlocks: string;
+    getBlocksMined: string;
+    getBlockByNumber: string;
+    getTx: string;
+    getTxs: string;
+    getBlockTxs: string;
+    getAddressTxs: string;
+    getPendingTxs: string;
+    getPendingTxsOfAddress: string;
+    getUncle: string;
+    getUncles: string;
+    getExchangeRates: string;
+    getCurrentStateRoot: string;
+    getBalance: string;
+    getTokenBalance: string;
+    ethCall: string;
+    search: string;
+    getAvgTotalDifficultyStats: string;
+    getAvgGasPriceStats: string;
+    getAvgTxFeeStats: string;
+    getAvgSuccessfullTxStats: string;
+    getAvgFailedTxStats: string;
+};
+export declare const SocketDefaultRooms: string[];

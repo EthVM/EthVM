@@ -1,18 +1,19 @@
 import Vue from 'vue'
-import { EthvmApi } from '@app/api'
+import { EthvmApi } from '@app/core/api'
+import io from 'socket.io-client'
 
 declare module 'vue/types/vue' {
   interface Vue {
-    $socket: any
-    $eventHub: any
+    $socket: SocketIOClient.Socket
+    $eventHub: Vue
     $api: EthvmApi
   }
 }
 
 declare module 'vue/types/options' {
   interface ComponentOptions<V extends Vue> {
-    $socket?: any
-    $eventHub?: any
+    $socket?: SocketIOClient.Socket
+    $eventHub?: Vue
     $api?: EthvmApi
   }
 }
