@@ -17,7 +17,7 @@ export class LastBlockInfoMixin extends Vue {
 
   // Lifecycle
   created() {
-    const lastBlock = this.$store.getters.getBlocks[0]
+    const lastBlock = this.$store.getters.blocks[0]
     if (lastBlock) {
       this.setBlock(lastBlock)
       this.startCount()
@@ -26,7 +26,7 @@ export class LastBlockInfoMixin extends Vue {
 
   mounted() {
     this.$eventHub.$on(Events.newBlock, _block => {
-      const lastBlock = this.$store.getters.getBlocks[0]
+      const lastBlock = this.$store.getters.blocks[0]
       if (lastBlock) {
         this.setBlock(lastBlock)
         this.startCount()
@@ -45,7 +45,7 @@ export class LastBlockInfoMixin extends Vue {
   }
 
   get latestHashRate(): string {
-    return this.isLoaded ? this.getRoundNumber(this.getAvgHashRate(this.$store.getters.getBlocks).toString()).toString() : this.loadingMessage
+    return this.isLoaded ? this.getRoundNumber(this.getAvgHashRate(this.$store.getters.blocks).toString()).toString() : this.loadingMessage
   }
 
   get latestDifficulty(): string {
