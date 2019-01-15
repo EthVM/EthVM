@@ -12,7 +12,6 @@ import io.enkrypt.kafka.streams.di.Modules
 import io.enkrypt.kafka.streams.di.TestModules
 import io.enkrypt.kafka.streams.util.KafkaStreamsTestListener
 import io.enkrypt.kafka.streams.util.KafkaUtil.readBalances
-import io.enkrypt.testing.StandaloneBlockchain
 import io.enkrypt.testing.StandaloneBlockchain.Companion.Alice
 import io.enkrypt.testing.StandaloneBlockchain.Companion.Bob
 import io.enkrypt.testing.StandaloneBlockchain.Companion.Terence
