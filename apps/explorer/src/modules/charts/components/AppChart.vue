@@ -88,7 +88,7 @@
   })
   export default class AppChart extends Vue {
     @Prop ({type: Boolean, default: false}) liveChart!: boolean
-    @@Prop({ type: String, required: true}) chartID!: string
+    @Prop({ type: String, required: true}) chartID!: string
     @Prop({
       type: String,
       required: true
@@ -162,6 +162,4 @@
   }
 </script>
 
-<style scoped lang="css">
 
-</style>
