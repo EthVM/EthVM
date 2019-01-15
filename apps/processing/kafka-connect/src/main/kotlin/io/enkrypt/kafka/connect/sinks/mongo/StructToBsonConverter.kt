@@ -4,9 +4,10 @@ import arrow.core.Option
 import io.enkrypt.common.extensions.bigInteger
 import io.enkrypt.common.extensions.hex
 import io.enkrypt.common.extensions.unsignedBigInteger
-import io.enkrypt.kafka.connect.sinks.mongo.ConversionType.BigInt
-import io.enkrypt.kafka.connect.sinks.mongo.ConversionType.Hex
-import io.enkrypt.kafka.connect.sinks.mongo.ConversionType.UBigInt
+import io.enkrypt.kafka.connect.sinks.mongo.TypeMappings.ConversionType.BigInt
+import io.enkrypt.kafka.connect.sinks.mongo.TypeMappings.ConversionType.Hex
+import io.enkrypt.kafka.connect.sinks.mongo.TypeMappings.ConversionType.Ignore
+import io.enkrypt.kafka.connect.sinks.mongo.TypeMappings.ConversionType.UBigInt
 import org.apache.kafka.connect.data.Schema
 import org.apache.kafka.connect.data.Schema.Type.ARRAY
 import org.apache.kafka.connect.data.Schema.Type.BOOLEAN
@@ -36,15 +37,16 @@ import org.bson.BsonValue
 import org.bson.types.Decimal128
 import java.nio.ByteBuffer
 
-enum class ConversionType {
-  Hex,
-  UBigInt,
-  BigInt
-}
-
 object TypeMappings {
 
-  val internalTx = mapOf(
+  enum class ConversionType {
+    Hex,
+    UBigInt,
+    BigInt,
+    Ignore,
+  }
+
+  private val internalTx = mapOf(
     "hash" to Hex,
     "nonce" to UBigInt,
     "parentHash" to Hex,
@@ -61,7 +63,7 @@ object TypeMappings {
     "creates" to Hex
   )
 
-  val txReceipts = mapOf(
+  private val txReceipt = mapOf(
     "blockHash" to Hex,
     "blockNumber" to UBigInt,
     "transactionHash" to Hex,
@@ -79,7 +81,7 @@ object TypeMappings {
     "deletedAccounts" to Hex
   )
 
-  val txConversions = mapOf(
+  private val tx = mapOf(
     "hash" to Hex,
     "nonce" to UBigInt,
     "blockHash" to Hex,
@@ -95,10 +97,11 @@ object TypeMappings {
     "r" to Hex,
     "s" to Hex,
     "creates" to Hex,
-    "receipt" to txReceipts
+    "receipt" to txReceipt,
+    "raw" to Ignore
   )
 
-  val blockHeader = mapOf(
+  private val blockHeader = mapOf(
     "number" to UBigInt,
     "hash" to Hex,
     "parentHash" to Hex,
@@ -112,11 +115,12 @@ object TypeMappings {
     "difficulty" to UBigInt,
     "extraData" to Hex,
     "gasLimit" to UBigInt,
-    "gasUsed" to UBigInt
+    "gasUsed" to UBigInt,
+    "raw" to Ignore
   )
 
-  val mappings = mapOf(
-    "transaction" to txConversions,
+  private val mappings = mapOf(
+    "transaction" to tx,
     "transactionKey" to mapOf(
       "txHash" to Hex
     ),
@@ -126,17 +130,17 @@ object TypeMappings {
     "blockHeader" to blockHeader,
     "block" to mapOf(
       "header" to blockHeader,
-      "transactions" to txConversions,
-      "transactionReceipts" to txReceipts,
+      "transactions" to tx,
+      "transactionReceipts" to txReceipt,
       "unclesHash" to Hex,
       "uncles" to blockHeader,
       "rewards" to mapOf(
         "address" to Hex
       ),
-      "premineBalances" to mapOf(
-        "address" to Hex
-      ),
-      "totalDifficulty" to UBigInt
+      "premineBalances" to Ignore,
+      "totalDifficulty" to UBigInt,
+      "reverse" to Ignore,
+      "raw" to Ignore
     ),
     "balanceId" to mapOf(
       "contract" to Hex,
@@ -233,11 +237,14 @@ object StructToBsonConverter {
             val fieldName = field.name()
             val fieldPath = TypeMappings.buildFieldPath(path, fieldName)
 
+            val conversion = conversionMap[fieldPath]
+            if (conversion == Ignore) {
+              return@forEach
+            }
+
             var bsonValue = convertField(field.schema(), fieldPath, struct.get(field), allowNulls)
 
             if (bsonValue != null) {
-
-              val conversion = conversionMap[fieldPath]
 
               if (bsonValue.isBinary && conversion != null) {
 
@@ -247,6 +254,7 @@ object StructToBsonConverter {
                   Hex -> BsonString(bytes.hex())
                   UBigInt -> BsonDecimal128(Decimal128(bytes.unsignedBigInteger().toBigDecimal()))
                   BigInt -> BsonDecimal128(Decimal128(bytes.bigInteger()!!.toBigDecimal()))
+                  else -> throw IllegalStateException("Illegal conversion value!")
                 }
               }
 
