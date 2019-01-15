@@ -12,7 +12,6 @@ import com.mongodb.client.model.WriteModel
 import io.enkrypt.common.extensions.hex
 import io.enkrypt.common.extensions.unsignedBigInteger
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Blocks
-import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Accounts
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Transactions
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Uncles
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Contracts
@@ -55,7 +54,6 @@ class MongoSinkTask : SinkTask() {
     val clazz = BsonDocument::class.java
     collections = mapOf<MongoCollections, MongoCollection<BsonDocument>>(
       Blocks to db.getCollection(Blocks.id, clazz),
-      Accounts to db.getCollection(Accounts.id, clazz),
       Transactions to db.getCollection(Transactions.id, clazz),
       Uncles to db.getCollection(Uncles.id, clazz),
       Contracts to db.getCollection(Contracts.id, clazz),
@@ -119,7 +117,6 @@ class MongoSinkTask : SinkTask() {
 enum class MongoCollections(val id: String) {
   Blocks("blocks"),
   BlockStatistics("block_statistics"),
-  Accounts("accounts"),
   Uncles("uncles"),
   Transactions("transactions"),
   Contracts("contracts"),
