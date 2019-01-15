@@ -19,7 +19,9 @@ export default class EventEmitter {
    */
   addListener(event, callback, component) {
     if (typeof callback === 'function') {
-      if (!this.listeners.has(event)) this.listeners.set(event, [])
+      if (!this.listeners.has(event)) {
+        this.listeners.set(event, [])
+      }
       this.listeners.get(event).push({ callback, component })
     } else {
       throw new Error(`callback must be a function`)
@@ -65,8 +67,8 @@ export default class EventEmitter {
    */
   dispatchStore(event, args) {
     if (this.store && this.store._actions) {
-      for (let key in this.store._actions) {
-        let action = key.split('/').pop()
+      for (const key in this.store._actions) {
+        const action = key.split('/').pop()
 
         if (action === this.actionPrefix + event) {
           this.store.dispatch(key, args)
@@ -74,8 +76,8 @@ export default class EventEmitter {
       }
 
       if (this.mutationPrefix) {
-        for (let key in this.store._mutations) {
-          let mutation = key.split('/').pop()
+        for (const key in this.store._mutations) {
+          const mutation = key.split('/').pop()
 
           if (mutation === this.mutationPrefix + event) {
             this.store.commit(key, args)

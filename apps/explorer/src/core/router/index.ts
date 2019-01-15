@@ -67,9 +67,8 @@ export default new Router({
       path: '/charts',
       component: PageCharts,
       name: 'charts',
-      props:true
+      props: true
     }
-
   ],
   mode: 'history'
 })

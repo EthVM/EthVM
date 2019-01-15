@@ -8,40 +8,40 @@ export class AccountInfo {
   private creator?: boolean
   private typeAddrs?: string
 
-  constructor( _address: string, _type: string) {
-   this.address = _address
-   this.typeAddrs = _type
-   this.balance = 0
-   this.balanceUSD = 0
-   this.ethusd = 0
-   this.totalTxs= 0
-   this.miner = false
-   this.creator = false
+  constructor(_address: string, _type: string) {
+    this.address = _address
+    this.typeAddrs = _type
+    this.balance = 0
+    this.balanceUSD = 0
+    this.ethusd = 0
+    this.totalTxs = 0
+    this.miner = false
+    this.creator = false
   }
   /*Getters: */
-  public getAddress():string {
+  public getAddress(): string {
     return this.address
   }
-  public getType(): string{
+  public getType(): string {
     return this.typeAddrs
   }
-  public getBalance():number {
+  public getBalance(): number {
     return this.balance
   }
 
-  public getUSD():number {
+  public getUSD(): number {
     return this.balanceUSD
   }
 
-  public getEthPrice(): number{
+  public getEthPrice(): number {
     return this.ethusd
   }
 
-  public getTotalTxs(): number{
+  public getTotalTxs(): number {
     return this.totalTxs
   }
 
-  public isMiner(): boolean{
+  public isMiner(): boolean {
     return this.miner
   }
   public isCreator(): boolean {
@@ -53,24 +53,22 @@ export class AccountInfo {
     this.balance = _balance
   }
 
-  public setUSD(_usd:number) {
+  public setUSD(_usd: number) {
     this.balanceUSD = _usd
   }
-  public setMiner(_value: boolean){
+  public setMiner(_value: boolean) {
     this.miner = _value
   }
 
-  public setEthPrice(ethPrice: number){
+  public setEthPrice(ethPrice: number) {
     this.ethusd = ethPrice
   }
 
-  public setTotalTxs(_total: number){
+  public setTotalTxs(_total: number) {
     this.totalTxs = _total
   }
 
   public setCreator(_value: boolean) {
     this.creator = _value
   }
-
-
 }

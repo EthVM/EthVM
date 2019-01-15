@@ -19,7 +19,6 @@ Vue.use(VTooltip)
 Vue.prototype.$eventHub = new Vue()
 Vue.config.productionTip = false
 
-
 // TODO: Once models has been migrated use this version of Vue SocketIO
 // Vue.use(VueSocketIOPlugin, {
 //   connection: process.env.VUE_APP_API_ENDPOINT,

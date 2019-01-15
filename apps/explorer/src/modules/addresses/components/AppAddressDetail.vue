@@ -1,4 +1,3 @@
-
 <template>
   <v-card color="white" flat class="pt-3 pr-3 pl-3">
     <v-layout row grid-list-lg align-center pb-1>
@@ -8,13 +7,17 @@
           <v-layout row align-center justify-start>
             <v-card-title class="title font-weight-bold">{{ title }}</v-card-title>
             <v-chip v-if="this.account.getType() === 'address' && account.isMiner()" color="txSuccess" text-color="white" small>{{ $t('block.miner') }}</v-chip>
-            <v-chip v-if="this.account.getType()=== 'address' && account.isCreator()" color="success" text-color="white" small>{{ $t('addrOverview.creator') }}</v-chip>
+            <v-chip v-if="this.account.getType() === 'address' && account.isCreator()" color="success" text-color="white" small>{{
+              $t('addrOverview.creator')
+            }}</v-chip>
           </v-layout>
         </v-flex>
         <v-flex xs12 pt-0>
           <v-layout row wrap align-center justify-start>
             <v-card-title class="text-truncate">{{ account.getAddress() }}</v-card-title>
-            <v-flex hidden-xs-only pl-0> <app-copy-to-clip v-if="$vuetify.breakpoint.smAndUp" :value-to-copy="account.getAddress()"></app-copy-to-clip> </v-flex>
+            <v-flex hidden-xs-only pl-0>
+              <app-copy-to-clip v-if="$vuetify.breakpoint.smAndUp" :value-to-copy="account.getAddress()"></app-copy-to-clip>
+            </v-flex>
           </v-layout>
         </v-flex>
       </v-layout>
