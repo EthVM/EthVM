@@ -155,11 +155,12 @@
     "pending": "Pending Tx"
   },
   "tabs": {
-    "txH": "Transaction History",
+    "txH": "Transactions History",
     "tokens": "Tokens",
     "pending": "Pending Transactions",
     "miningH": "Mining History",
-    "contracts": "Contracts"
+    "contracts": "Contracts",
+    "live": "Live Data"
   },
   "bttn": {
     "more": "More",

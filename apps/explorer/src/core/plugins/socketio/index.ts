@@ -40,9 +40,8 @@ export class VueSocketIO {
       return connection
     } else if (typeof connection === 'string') {
       return (this.io = SocketIO(connection))
-    } else {
-      throw new Error('Unsupported connection type')
     }
+    throw new Error('Unsupported connection type')
   }
 }
 

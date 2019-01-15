@@ -3,7 +3,9 @@ export default {
    *  Assign runtime callbacks
    */
   beforeCreate() {
-    if (!this.sockets) this.sockets = {}
+    if (!this.sockets) {
+      this.sockets = {}
+    }
 
     this.sockets.subscribe = (event, callback) => {
       this.$vueSocketIo.emitter.addListener(event, callback, this)

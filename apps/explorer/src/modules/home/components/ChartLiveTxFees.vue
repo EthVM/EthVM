@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import { Events } from 'ethvm-common'
-import AppChart from '@app/core/components/ui/AppChart.vue'
+import AppChart from '@app/modules/charts/components/AppChart.vue'
 import ethUnits from 'ethereumjs-units'
 import { Vue, Component } from 'vue-property-decorator'
 

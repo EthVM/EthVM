@@ -33,9 +33,12 @@ export default class VueSocketIOListener {
    */
   register() {
     this.io.onevent = packet => {
+      // eslint-disable-next-line prefer-const
       let [event, ...args] = packet.data
 
-      if (args.length === 1) args = args[0]
+      if (args.length === 1) {
+        args = args[0]
+      }
 
       this.onEvent(event, args)
     }
