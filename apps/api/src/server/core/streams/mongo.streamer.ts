@@ -17,7 +17,7 @@ export class MongoStreamer implements Streamer {
     const intervalMs = 1000
 
     this.blocksReader = new MongoCollectionChangeStreamReader(db.collection(MongoEthVM.collections.blocks), intervalMs, 'block', emitter)
-    this.accountsReader = new MongoCollectionChangeStreamReader(db.collection(MongoEthVM.collections.accounts), intervalMs, 'account', emitter)
+    this.accountsReader = new MongoCollectionChangeStreamReader(db.collection(MongoEthVM.collections.balances), intervalMs, 'account', emitter)
     this.pendingTxReader = new MongoCollectionChangeStreamReader(db.collection(MongoEthVM.collections.pendingTxs), intervalMs, 'pendingTx', emitter)
 
     await this.blocksReader.start()

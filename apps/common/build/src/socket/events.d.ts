@@ -31,6 +31,7 @@ export declare const Events: {
     getCurrentStateRoot: string;
     getTokenBalance: string;
     ethCall: string;
+    getAddressTokenTransfers: string;
     search: string;
     getAvgTotalDifficultyStats: string;
     getAvgGasPriceStats: string;

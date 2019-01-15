@@ -37,6 +37,8 @@ exports.Events = {
     getCurrentStateRoot: "get-current-state-root",
     getTokenBalance: "get-tokens-balance",
     ethCall: "eth-call",
+    // Tokens
+    getAddressTokenTransfers: "get-address-token-transfers",
     // Search
     search: "search",
     // Stats

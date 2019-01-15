@@ -12,9 +12,9 @@ import { MongoTxsRepository, TxsServiceImpl } from '@app/server/modules/txs'
 import { MongoUncleRepository, UnclesServiceImpl } from '@app/server/modules/uncles'
 import { VmEngine, VmServiceImpl } from '@app/server/modules/vm'
 import { RedisCacheRepository } from '@app/server/repositories'
-import * as EventEmitter from 'eventemitter3'
 import * as Redis from 'ioredis'
 import { MongoClient } from 'mongodb'
+import { MongoTokensRepository, TokensServiceImpl } from './server/modules/tokens'
 
 async function bootstrapServer() {
   logger.debug('bootstrapper -> Bootstraping ethvm-socket-server!')
@@ -37,10 +37,6 @@ async function bootstrapServer() {
   const socketRows = config.get('data_stores.redis.socket_rows')
   const ds = new RedisCacheRepository(redis, socketRows)
   await ds.initialize().catch(() => process.exit(-1))
-
-  // Create block event emmiter
-  logger.debug('bootstrapper -> Initializing event emitter')
-  const emitter = new EventEmitter()
 
   // Create Blockchain data store
   logger.debug('bootstrapper -> Connecting MongoDB')
@@ -88,6 +84,10 @@ async function bootstrapServer() {
   const exchangeRepository = new CoinMarketCapRepository(ds)
   const exchangeService = new ExchangeServiceImpl(exchangeRepository, ds)
 
+  // Tokens
+  const tokensRepository = new MongoTokensRepository(db)
+  const tokensService = new TokensServiceImpl(tokensRepository)
+
   // Vm
   const vmService = new VmServiceImpl(vme)
 
@@ -110,6 +110,7 @@ async function bootstrapServer() {
     pendingTxService,
     exchangeService,
     searchService,
+    tokensService,
     vmService,
     streamer
   )

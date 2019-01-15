@@ -11,7 +11,7 @@ export class BalancesServiceImpl implements BalancesService {
   constructor(private readonly balancesRepository: BalancesRepository, private readonly vme: VmEngine) {}
 
   public getAddressBalance(hash: string): Promise<AddressBalance | null> {
-    return this.balancesRepository.getAccount(hash)
+    return this.balancesRepository.getAddressBalance(hash)
   }
 
   public getAddressTokenBalance(address: string): Promise<any> {

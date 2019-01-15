@@ -369,6 +369,18 @@ const ExchangeRateSchema = {
   additionalProperties: false
 }
 
+const TokensTransferSchema = {
+  $id: 'https://ethvm.com/blocksmined.payload.schema.json',
+  $schema: 'http://json-schema.org/draft-07/schema#',
+  type: 'object',
+  properties: {
+    address: addressSchema,
+    limit: limitSchema,
+    page: pageSchema
+  },
+  additionalProperties: false
+}
+
 // Compile schemas
 const balancePayloadValidator = ajv.compile(BalancePayloadSchema)
 const blockTxsPayloadValidator = ajv.compile(BlockTxsPayloadSchema)
@@ -387,6 +399,7 @@ const pastBlockPayloadValidator = ajv.compile(PastBlocksSchema)
 const blockMinedPayloadValidator = ajv.compile(BlocksMinedSchema)
 const exchangeRatePayloadValidator = ajv.compile(ExchangeRateSchema)
 const pendingTxsPayloadValidator = ajv.compile(TxsPayloadSchema)
+const tokenTransferPayloadValidator = ajv.compile(TokensTransferSchema)
 
 export {
   balancePayloadValidator,
@@ -405,5 +418,6 @@ export {
   searchpayloadValidator,
   blockByNumberPayloadValidator,
   pastBlockPayloadValidator,
-  pendingTxsPayloadValidator
+  pendingTxsPayloadValidator,
+  tokenTransferPayloadValidator
 }

@@ -14,7 +14,7 @@ export class MongoUncleRepository extends BaseMongoDbRepository implements Uncle
       .findOne({ hash })
       .then(resp => {
         if (!resp) {
-          return {}
+          return null
         }
         return toUncle(resp)
       })

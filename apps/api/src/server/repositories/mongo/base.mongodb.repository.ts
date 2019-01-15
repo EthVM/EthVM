@@ -8,7 +8,9 @@ export const MongoEthVM = {
     transactions: 'transactions',
     uncles: 'uncles',
     pendingTxs: 'pending_transactions',
-    statistics: 'block_statistics'
+    statistics: 'block_statistics',
+    contracts: 'contracts',
+    tokenTransfers: 'token_transfers'
   }
 }
 

@@ -14,7 +14,7 @@ const getBalanceEvent: SocketEvent = {
     }
   },
 
-  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: BalancePayload): Promise<any> => server.vmService.getAddressTokenBalance(payload.address)
+  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: BalancePayload): Promise<any> => server.balancesService.getAddressTokenBalance(payload.address)
 }
 
 export default getBalanceEvent

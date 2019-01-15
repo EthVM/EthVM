@@ -8,6 +8,7 @@ export interface PendingTxService {
 
 export class PendingTxServiceImpl implements PendingTxService {
   constructor(private readonly pendingTxRepository: PendingTxRepository) {}
+
   public getPendingTxs(limit: number, page: number): Promise<PendingTx[]> {
     return this.pendingTxRepository.getPendingTxs(limit, page)
   }

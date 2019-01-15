@@ -17,9 +17,10 @@ export const Events = {
   pastTxsR: "PAST_TXS_RECEIVED",
   pastBlocksR: "PAST_BLOCKS_RECEIVED",
 
-  // Balances
+  // Addresses
   getAddressBalance: "get-address-balance",
   getAddressTokenBalance: "get-address-token-balance",
+  getAddressTokenTransfers: "get-address-token-transfers",
 
   // Blocks
   getBlock: "get-block",
@@ -48,7 +49,6 @@ export const Events = {
   // Vm
   getCurrentStateRoot: "get-current-state-root",
   getTokenBalance: "get-tokens-balance",
-  ethCall:"eth-call",
 
   // Search
   search: "search",

@@ -20,6 +20,7 @@ import { ExchangeService } from '@app/server/modules/exchanges'
 import { PendingTxService } from '@app/server/modules/pending-txs'
 import { SearchService } from '@app/server/modules/search'
 import { StatisticsService } from '@app/server/modules/statistics'
+import { TokensService } from '@app/server/modules/tokens'
 import { TxsService } from '@app/server/modules/txs'
 import { UnclesService } from '@app/server/modules/uncles'
 import { VmService } from '@app/server/modules/vm'
@@ -69,6 +70,7 @@ export class EthVMServer {
     public readonly pendingTxService: PendingTxService,
     public readonly exchangesService: ExchangeService,
     public readonly searchService: SearchService,
+    public readonly tokensService: TokensService,
     public readonly vmService: VmService,
     private readonly streamer: Streamer
   ) {}
@@ -165,14 +167,6 @@ export class EthVMServer {
     logger.info(`EthVMServer - onBlockEvent / Op: ${op} - Number: ${key} - Hash: ${block.hash}`)
 
     if (op !== 'delete') {
-      if (value && value.header && value.header.stateRoot) {
-        try {
-          this.vmService.setStateRoot(block.header.stateRoot)
-        } catch (e) {
-          logger.error(`EthVMServer - onBlockEvent  / setStateRoot err : ${e},  `)
-        }
-      }
-
       const txs = value.transactions || []
       if (txs.length > 0) {
         txs.forEach(tx => {

@@ -14,7 +14,7 @@ const getAvgGasPriceStats: SocketEvent = {
   },
 
   onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: StatsPayload): Promise<Statistic[]> =>
-    server.statisticsService.getAveragegasPrice(payload.duration)
+    server.statisticsService.getAverageGasPrice(payload.duration)
 }
 
 export default getAvgGasPriceStats

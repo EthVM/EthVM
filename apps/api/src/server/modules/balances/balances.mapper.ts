@@ -1,6 +1,7 @@
-import { Account } from 'ethvm-common'
+import { AddressBalance } from 'ethvm-common'
 
-const toBalance = (a: any): Account => {
+const toBalance = (a: any): AddressBalance => {
+  a.amount = a.amount.bytes
   return a
 }
 
