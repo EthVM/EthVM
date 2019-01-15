@@ -46,4 +46,5 @@ export interface Block {
   uncles: Uncle[]
   unclesHash: string
   rewards: Reward[]
+  stats: BlockStats
 }
