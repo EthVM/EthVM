@@ -135,10 +135,12 @@ object TypeMappings {
       "unclesHash" to Hex,
       "uncles" to blockHeader,
       "rewards" to mapOf(
-        "address" to Hex
+        "address" to Hex,
+        "reward" to UBigInt
       ),
       "premineBalances" to Ignore,
       "totalDifficulty" to UBigInt,
+      "numPendingTxs" to Ignore,
       "reverse" to Ignore,
       "raw" to Ignore
     ),
