@@ -1,5 +1,4 @@
 import { PendingTxRepository } from '@app/server/modules/pending-txs'
-import { CacheRepository } from '@app/server/repositories'
 import { PendingTx } from 'ethvm-common'
 
 export interface PendingTxService {
@@ -8,7 +7,7 @@ export interface PendingTxService {
 }
 
 export class PendingTxServiceImpl implements PendingTxService {
-  constructor(private readonly pendingTxRepository: PendingTxRepository, private readonly cacheRepository: CacheRepository) {}
+  constructor(private readonly pendingTxRepository: PendingTxRepository) {}
   public getPendingTxs(limit: number, page: number): Promise<PendingTx[]> {
     return this.pendingTxRepository.getPendingTxs(limit, page)
   }

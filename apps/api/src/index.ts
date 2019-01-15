@@ -82,30 +82,30 @@ async function bootstrapServer() {
 
   // Blocks
   const blocksRepository = new MongoBlockRepository(db)
-  const blockService = new BlocksServiceImpl(blocksRepository, ds)
+  const blockService = new BlocksServiceImpl(blocksRepository)
 
   // Uncles
   const unclesRepository = new MongoUncleRepository(db)
-  const uncleService = new UnclesServiceImpl(unclesRepository, ds)
+  const uncleService = new UnclesServiceImpl(unclesRepository)
 
   // Adress
   const addressRepository = new MongoAccountsRepository(db)
-  const addressService = new AccountsServiceImpl(addressRepository, ds)
+  const addressService = new AccountsServiceImpl(addressRepository)
 
   // Adress
   const pendingTxRepository = new MongoPendingTxRepository(db)
-  const pendingTxService = new PendingTxServiceImpl(pendingTxRepository, ds)
+  const pendingTxService = new PendingTxServiceImpl(pendingTxRepository)
 
   // Txs
   const txsRepository = new MongoTxsRepository(db)
-  const txsService = new TxsServiceImpl(txsRepository, ds)
+  const txsService = new TxsServiceImpl(txsRepository)
 
   // Search
-  const searchService = new SearchServiceImpl(txsRepository, addressRepository, blocksRepository, ds)
+  const searchService = new SearchServiceImpl(txsRepository, addressRepository, blocksRepository)
 
   // Charts
   const statisticsRepository = new MongoStatisticsRepository(db)
-  const statisticsService = new StatisticsServiceImpl(statisticsRepository, ds)
+  const statisticsService = new StatisticsServiceImpl(statisticsRepository)
 
   // Exchanges
   const exchangeRepository = new CoinMarketCapRepository(ds)

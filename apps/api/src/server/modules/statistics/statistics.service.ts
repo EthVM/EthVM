@@ -1,6 +1,5 @@
 import { toDatePeriods } from '@app/server/core/utils'
 import { StatisticsRepository } from '@app/server/modules/statistics'
-import { CacheRepository } from '@app/server/repositories'
 import { Statistic } from 'ethvm-common'
 
 export interface StatisticsService {
@@ -12,7 +11,7 @@ export interface StatisticsService {
 }
 
 export class StatisticsServiceImpl implements StatisticsService {
-  constructor(private readonly statisticsRepository: StatisticsRepository, private readonly cacheRepository: CacheRepository) {}
+  constructor(private readonly statisticsRepository: StatisticsRepository) {}
 
   public getAverageTotalDifficulty(duration: string): Promise<Statistic[]> {
     const { from, to } = toDatePeriods(duration)

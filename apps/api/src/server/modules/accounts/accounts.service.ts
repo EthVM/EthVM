@@ -1,5 +1,4 @@
 import { AccountsRepository } from '@app/server/modules/accounts'
-import { CacheRepository } from '@app/server/repositories'
 import { Account, Tx } from 'ethvm-common'
 
 export interface AccountsService {
@@ -9,7 +8,7 @@ export interface AccountsService {
 }
 
 export class AccountsServiceImpl implements AccountsService {
-  constructor(private readonly addressRepository: AccountsRepository, private readonly cacheRepository: CacheRepository) {}
+  constructor(private readonly addressRepository: AccountsRepository) {}
 
   public getAccount(hash: string): Promise<Account | null> {
     return this.addressRepository.getAccount(hash)

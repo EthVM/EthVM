@@ -1,5 +1,4 @@
 import { MongoUncleRepository } from '@app/server/modules/uncles'
-import { CacheRepository } from '@app/server/repositories'
 import { Uncle } from 'ethvm-common'
 
 export interface UnclesService {
@@ -8,7 +7,7 @@ export interface UnclesService {
 }
 
 export class UnclesServiceImpl implements UnclesService {
-  constructor(private readonly uncleRepository: MongoUncleRepository, private readonly cacheRepository: CacheRepository) {}
+  constructor(private readonly uncleRepository: MongoUncleRepository) {}
 
   public getUncles(limit: number, page: number): Promise<Uncle[]> {
     return this.uncleRepository.getUncles(limit, page)

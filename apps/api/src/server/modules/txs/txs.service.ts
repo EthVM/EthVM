@@ -1,5 +1,4 @@
 import { TxsRepository } from '@app/server/modules/txs'
-import { CacheRepository } from '@app/server/repositories'
 import { Tx } from 'ethvm-common'
 
 export interface TxsService {
@@ -10,7 +9,7 @@ export interface TxsService {
 }
 
 export class TxsServiceImpl implements TxsService {
-  constructor(private readonly txsRepository: TxsRepository, private readonly cacheRepository: CacheRepository) {}
+  constructor(private readonly txsRepository: TxsRepository) {}
 
   public getTxs(limit: number, page: number): Promise<Tx[]> {
     return this.txsRepository.getTxs(limit, page)
