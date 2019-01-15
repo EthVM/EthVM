@@ -176,7 +176,7 @@ describe('ethvm-server-events', () => {
       ]
 
       for (const input of inputs) {
-        const data = await callEvent(Events.getBalance, input, client)
+        const data = await callEvent(Events.getAddressTokenBalance, input, client)
         expect(data).to.eq(10)
       }
     })
@@ -203,7 +203,7 @@ describe('ethvm-server-events', () => {
 
       for (const input of inputs) {
         try {
-          const data = await callEvent(Events.getBalance, input, client)
+          const data = await callEvent(Events.getAddressTokenBalance, input, client)
         } catch (e) {
           expect(e).to.be.eql(errors.BAD_REQUEST)
           expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
@@ -312,7 +312,7 @@ describe('ethvm-server-events', () => {
         }
       ]
       for (const input of inputs) {
-        const data = await callEvent(Events.getAccount, input, client)
+        const data = await callEvent(Events.getAddressTokenBalance, input, client)
         expect(data.balance).to.equal(4500000000000000000)
       }
     })
@@ -339,7 +339,7 @@ describe('ethvm-server-events', () => {
 
       for (const input of inputs) {
         try {
-          const data = await callEvent(Events.getAccount, input, client)
+          const data = await callEvent(Events.getAddressTokenBalance, input, client)
         } catch (e) {
           expect(e).to.be.eql(errors.BAD_REQUEST)
           expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
@@ -348,7 +348,7 @@ describe('ethvm-server-events', () => {
     })
   })
 
-  describe('getAccountTotalTxs', () => {
+  describe('getAddressTotalTxs', () => {
     it('should return Promise<number>', async () => {
       const inputs = [
         {
@@ -357,7 +357,7 @@ describe('ethvm-server-events', () => {
       ]
 
       for (const input of inputs) {
-        const data = await callEvent(Events.getAccountTotalTxs, input, client)
+        const data = await callEvent(Events.getAddressTotalTxs, input, client)
         expect(data).to.equal(151)
 
       }
@@ -385,7 +385,7 @@ describe('ethvm-server-events', () => {
 
       for (const input of inputs) {
         try {
-          const data = await callEvent(Events.getAccountTotalTxs, input, client)
+          const data = await callEvent(Events.getAddressTotalTxs, input, client)
         } catch (e) {
           expect(e).to.be.eql(errors.BAD_REQUEST)
           expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)

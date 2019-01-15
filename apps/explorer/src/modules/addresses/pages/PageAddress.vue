@@ -142,7 +142,7 @@ export default class PageAddress extends Vue {
   created() {
     /* Geting Address : */
     this.$socket.emit(
-      Events.getAccount,
+      Events.getAddressBalance,
       {
         address: this.address.replace('0x', '')
       },
@@ -172,7 +172,7 @@ export default class PageAddress extends Vue {
 
     /* Getting Total Number of Tx: */
     this.$socket.emit(
-      Events.getAccountTotalTxs,
+      Events.getAddressTotalTxs,
       {
         address: this.address.replace('0x', '')
       },

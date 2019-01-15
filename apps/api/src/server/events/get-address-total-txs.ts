@@ -3,8 +3,8 @@ import { totalTxsPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
 import { Events } from 'ethvm-common'
 
-const getAccountTotalTxsEvent: SocketEvent = {
-  id: Events.getAccountTotalTxs,
+const getAddressTotalTxsEvent: SocketEvent = {
+  id: Events.getAddressTotalTxs,
 
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = totalTxsPayloadValidator(payload) as boolean
@@ -15,7 +15,7 @@ const getAccountTotalTxsEvent: SocketEvent = {
   },
 
   onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: TotalTxsPayload): Promise<number> =>
-    server.accountsService.getAccountTotalTxs(payload.address)
+    server.txsService.getAddressTotalTxs(payload.address)
 }
 
-export default getAccountTotalTxsEvent
+export default getAddressTotalTxsEvent

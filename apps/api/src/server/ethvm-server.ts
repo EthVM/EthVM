@@ -14,7 +14,7 @@ import {
   TxsPayload
 } from '@app/server/core/payloads'
 import { Streamer, StreamingEvent } from '@app/server/core/streams'
-import { AccountsService } from '@app/server/modules/accounts'
+import { BalancesService } from '@app/server/modules/balances'
 import { BlocksService } from '@app/server/modules/blocks'
 import { ExchangeService } from '@app/server/modules/exchanges'
 import { PendingTxService } from '@app/server/modules/pending-txs'
@@ -63,7 +63,7 @@ export class EthVMServer {
   constructor(
     public readonly blockService: BlocksService,
     public readonly uncleService: UnclesService,
-    public readonly accountsService: AccountsService,
+    public readonly balancesService: BalancesService,
     public readonly txsService: TxsService,
     public readonly statisticsService: StatisticsService,
     public readonly pendingTxService: PendingTxService,

@@ -11,9 +11,9 @@ exports.Events = {
     newUncle: "NEW_UNCLE",
     pastTxsR: "PAST_TXS_RECEIVED",
     pastBlocksR: "PAST_BLOCKS_RECEIVED",
-    // Accounts
-    getAccount: "get-account",
-    getAccountTotalTxs: "get-total-txs",
+    // Balances
+    getAddressBalance: "get-address-balance",
+    getAddressTokenBalance: "get-address-token-balance",
     // Blocks
     getBlock: "get-block",
     getBlocks: "get-blocks",
@@ -24,6 +24,7 @@ exports.Events = {
     getTxs: "get-txs",
     getBlockTxs: "get-block-txs",
     getAddressTxs: "get-address-txs",
+    getAddressTotalTxs: "get-address-total-txs",
     // PendingTxs
     getPendingTxs: "get-pending-txs",
     getPendingTxsOfAddress: "get-address-pending-txs",
@@ -34,7 +35,6 @@ exports.Events = {
     getExchangeRates: "get-exchange-rates",
     // Vm
     getCurrentStateRoot: "get-current-state-root",
-    getBalance: "get-balance",
     getTokenBalance: "get-tokens-balance",
     ethCall: "eth-call",
     // Search

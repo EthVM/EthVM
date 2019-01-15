@@ -1,6 +1,9 @@
 import { Account, Block, Uncle, Tx, PendingTx, Statistic } from 'ethvm-common'
 
 export interface EthvmApi {
+  // Balances
+  getAddressBalance(hash: string): Promise<Account | null>
+
   // Blocks
   getBlock(hash: string): Promise<Block | null>
   getBlocks(limit: number, page: number): Promise<Block[]>
@@ -16,6 +19,7 @@ export interface EthvmApi {
   getTxs(limit: number, page: number): Promise<Tx[]>
   getBlockTxs(hash: string): Promise<Tx[]>
   getTxsOfAddress(hash: string, limit: number, page: number): Promise<Tx[]>
+  getAddressTotalTxs(hash: string): Promise<number>
 
   // Pending Txs
   getPendingTxs(limit: number, page: number): Promise<PendingTx[]>
@@ -30,11 +34,6 @@ export interface EthvmApi {
   getAverageTxFee(duration: string): Promise<Statistic[]>
   getAverageSuccessfullTx(duration: string): Promise<Statistic[]>
   getAverageFailedTx(duration: string): Promise<Statistic[]>
-
-  // Accounts
-  getAccount(hash: string): Promise<Account | null>
-  getAccountTxs(hash: string, limit: number, page: number): Promise<Tx[]>
-  getAccountTotalTxs(hash: string): Promise<number>
 
   // Search
   search(hash: string): Promise<any>

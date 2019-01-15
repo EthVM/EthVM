@@ -12,8 +12,8 @@ export declare const Events: {
     newUncle: string;
     pastTxsR: string;
     pastBlocksR: string;
-    getAccount: string;
-    getAccountTotalTxs: string;
+    getAddressBalance: string;
+    getAddressTokenBalance: string;
     getBlock: string;
     getBlocks: string;
     getBlocksMined: string;
@@ -22,13 +22,13 @@ export declare const Events: {
     getTxs: string;
     getBlockTxs: string;
     getAddressTxs: string;
+    getAddressTotalTxs: string;
     getPendingTxs: string;
     getPendingTxsOfAddress: string;
     getUncle: string;
     getUncles: string;
     getExchangeRates: string;
     getCurrentStateRoot: string;
-    getBalance: string;
     getTokenBalance: string;
     ethCall: string;
     search: string;

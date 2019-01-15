@@ -1,25 +1,9 @@
 /// <reference types="node" />
+import { Uncle } from './uncle';
+import { Tx } from './tx';
 export interface SmallBlock {
     number: number;
     hash: string;
-}
-export interface Header {
-    parentHash: string;
-    sha3Uncles?: string;
-    timestamp?: number;
-    nonce?: string;
-    miner: string;
-    rewards: any;
-    difficulty?: number;
-    totalDifficulty?: number;
-    stateRoot: Buffer;
-    transactionsRoot?: Buffer;
-    receiptsRoot: Buffer;
-    logsBloom?: Buffer;
-    gasLimit?: number;
-    gasUsed?: number;
-    mixHash?: Buffer;
-    extraData?: Buffer;
 }
 export interface BlockStats {
     successfulTxs?: number;
@@ -33,11 +17,31 @@ export interface BlockStats {
     totalGasPrice?: number;
     totalTxsFees?: number;
 }
+export interface Reward {
+    address: string;
+    reward: Buffer;
+}
 export interface Block {
-    number: number;
+    number: Buffer;
     hash: string;
-    header: Header;
+    parentHash: string;
+    nonce: string;
+    sha3Uncles: string;
+    logsBloom: string;
+    transactionsRoot: string;
+    stateRoot: string;
+    receiptsRoot: string;
+    author: string;
+    difficulty: Buffer;
+    extraData: string;
+    gasLimit: string;
+    gasUsed: string;
+    timestamp: number;
+    mixHash: Buffer;
+    totalDifficulty: Buffer;
+    transactions: Tx[];
+    uncles: Uncle[];
+    unclesHash: string;
+    rewards: Reward[];
     stats: BlockStats;
-    transactions?: string[];
-    uncles?: string[];
 }

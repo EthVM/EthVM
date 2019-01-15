@@ -126,52 +126,6 @@ const config = convict({
           env: 'ETHVM_ETH_VM_ENGINE_GAS_LIMIT'
         }
       }
-    },
-    trie_db: {
-      redis: {
-        host: {
-          default: 'localhost',
-          format: String,
-          env: 'ETHVM_ETH_TRIE_DB_REDIS_HOST'
-        },
-        port: {
-          default: 6379,
-          format: 'port',
-          env: 'ETHVM_ETH_TRIE_DB_REDIS_PORT'
-        },
-        db: {
-          default: 1,
-          format: Number,
-          env: 'ETHVM_ETH_TRIE_DB_REDIS_DB'
-        }
-      }
-    }
-  },
-
-  streamer: {
-    kafka: {
-      group_id: {
-        default: 'server-consumer',
-        format: String,
-        env: 'ETHVM_STREAMER_KAFKA_GROUP_ID'
-      },
-      brokers: {
-        default: 'kafka:9092',
-        format: String,
-        env: 'ETHVM_STREAMER_KAFKA_BROKERS'
-      },
-      topics: {
-        blocks: {
-          default: 'blocks',
-          format: String,
-          env: 'ETHVM_STREAMER_KAFKA_TOPICS_BLOCKS'
-        },
-        pending_txs: {
-          default: 'pending-txs',
-          format: String,
-          env: 'ETHVM_STREAMER_KAFKA_TOPICS_PENDING_TXS'
-        }
-      }
     }
   }
 })

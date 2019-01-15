@@ -9,6 +9,24 @@ export class EthvmSocketIoApi implements EthvmApi {
     this.io = io(endpoint)
   }
 
+  // Balances
+  getAddressBalance(hash: string): Promise<Account | null> {
+    return new Promise((resolve, reject) => {
+      this.io.emit(
+        Events.getAddressBalance,
+        {
+          address: hash.replace('0x', '')
+        },
+        (err, result) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(result)
+        }
+      )
+    })
+  }
+
   // Blocks
   getBlocks(limit: number = 100, page: number = 0): Promise<Block[]> {
     return new Promise((resolve, reject) => {
@@ -189,6 +207,23 @@ export class EthvmSocketIoApi implements EthvmApi {
     })
   }
 
+  getAddressTotalTxs(hash: string): Promise<number> {
+    return new Promise((resolve, reject) => {
+      this.io.emit(
+        Events.getAddressTotalTxs,
+        {
+          hash: hash.replace('0x', '')
+        },
+        (err, result) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(result)
+        }
+      )
+    })
+  }
+
   // Pending Txs
   getPendingTxs(limit: number = 100, page: number = 0): Promise<PendingTx[]> {
     return new Promise((resolve, reject) => {
@@ -302,45 +337,6 @@ export class EthvmSocketIoApi implements EthvmApi {
         Events.getAvgFailedTxStats,
         {
           duration
-        },
-        (err, result) => {
-          if (err) {
-            reject(err)
-          }
-          resolve(result)
-        }
-      )
-    })
-  }
-
-  // Accounts
-  getAccount(hash: string): Promise<Account | null> {
-    return new Promise((resolve, reject) => {
-      this.io.emit(
-        Events.getAccount,
-        {
-          address: hash.replace('0x', '')
-        },
-        (err, result) => {
-          if (err) {
-            reject(err)
-          }
-          resolve(result)
-        }
-      )
-    })
-  }
-
-  getAccountTxs(hash: string, limit: number = 0, page: number = 0): Promise<Tx[]> {
-    throw new Error('Method not implemented.')
-  }
-
-  getAccountTotalTxs(hash: string): Promise<number> {
-    return new Promise((resolve, reject) => {
-      this.io.emit(
-        Events.getAccountTotalTxs,
-        {
-          hash: hash.replace('0x', '')
         },
         (err, result) => {
           if (err) {
