@@ -8,6 +8,7 @@
       :chart-description="newDescription"
       :redraw="redraw"
       :footnote-arr="footnote"
+      :live-chart="true"
     ></app-chart>
   </v-layout>
 </template>

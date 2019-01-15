@@ -9,6 +9,7 @@
       :chart-description="newDescription"
       unfilled="true"
       :footnote-arr="footnote"
+      :live-chart="true"
     ></app-chart>
   </v-layout>
 </template>
