@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { Uncle } from './uncle';
 import { Tx } from './tx';
 export interface SmallBlock {
@@ -19,10 +18,10 @@ export interface BlockStats {
 }
 export interface Reward {
     address: string;
-    reward: Buffer;
+    reward: string;
 }
 export interface Header {
-    number: Buffer;
+    number: string;
     hash: string;
     parentHash: string;
     nonce: string;
@@ -32,7 +31,7 @@ export interface Header {
     stateRoot: string;
     receiptsRoot: string;
     author: string;
-    difficulty: Buffer;
+    difficulty: string;
     extraData: string;
     gasLimit: string;
     gasUsed: string;
@@ -40,7 +39,7 @@ export interface Header {
 }
 export interface Block {
     header: Header;
-    totalDifficulty: Buffer;
+    totalDifficulty: string;
     transactions: Tx[];
     uncles: Uncle[];
     unclesHash: string;

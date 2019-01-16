@@ -26,7 +26,7 @@ export class MongoBlockRepository extends BaseMongoDbRepository implements Block
     return this.db
       .collection(MongoEthVM.collections.blocks)
       .find()
-      .sort({ number: -1 })
+      .sort({ 'header.number': -1 })
       .skip(page)
       .limit(limit)
       .toArray()
@@ -35,9 +35,7 @@ export class MongoBlockRepository extends BaseMongoDbRepository implements Block
         if (!resp) {
           return b
         }
-        resp.forEach(block => {
-          b.unshift(toBlock(block))
-        })
+        resp.forEach(block => b.unshift(toBlock(block)))
         return b
       })
   }

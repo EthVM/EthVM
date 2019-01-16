@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { Block, Tx, WeiValue } from '@app/core/models'
+import { Block, Uncle, Tx, WeiValue } from '@app/core/models'
 import { Events } from 'ethvm-common'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppListDetails from '@app/core/components/ui/AppListDetails.vue'
@@ -119,7 +119,7 @@ export default class PageDetailsBlock extends Vue {
 
   getBlocks() {
     this.$socket.emit(
-      Events.pastBlocks,
+      Events.getBlocks,
       {
         limit: 1,
         page: 0
@@ -186,7 +186,7 @@ export default class PageDetailsBlock extends Vue {
     this.setDetails(this.block)
     this.setMore(this.block)
 
-    if (this.block.getIsUncle()) {
+    if (this.block.isUncle()) {
       this.blockType = 'uncle'
     } else {
       this.$socket.emit(
@@ -204,23 +204,23 @@ export default class PageDetailsBlock extends Vue {
     }
   }
 
-  setDetails(block: Block) {
-    this.timestmp = block.getTimestamp().toString()
+  setDetails(elem: Block | Uncle) {
+    this.timestmp = elem.getTimestamp().toString()
 
     this.details = [
       {
         title: this.$i18n.t('block.height'),
-        detail: block.getNumber()
+        detail: elem.getNumber()
       },
       {
         title: this.$i18n.t('common.hash'),
-        detail: block.getHash(),
+        detail: elem.getHash(),
         copy: true
       },
       {
         title: this.$i18n.t('block.miner'),
-        detail: block.getMiner(),
-        link: '/address/' + block.getMiner(),
+        detail: elem.getMiner(),
+        link: '/address/' + elem.getMiner(),
         copy: true
       },
       {
@@ -229,26 +229,28 @@ export default class PageDetailsBlock extends Vue {
       },
       {
         title: this.$i18n.t('block.reward'),
-        detail: new WeiValue(block.getMinerReward()).toEthFormated() + '  ' + this.$i18n.t('common.eth')
+        detail: new WeiValue(elem.getMinerReward()).toEthFormated() + '  ' + this.$i18n.t('common.eth')
       },
       {
         title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward'),
-        detail: new WeiValue(block.getUncleReward()).toEthFormated() + ' ' + this.$i18n.t('common.eth')
+        detail: new WeiValue(elem.getUncleReward()).toEthFormated() + ' ' + this.$i18n.t('common.eth')
       },
       {
         title: this.$i18n.t('block.pHash'),
-        detail: block.getParentHash(),
-        link: '/block/' + block.getParentHash()
+        detail: elem.getParentHash(),
+        link: '/block/' + elem.getParentHash()
       }
     ]
 
-    if (block.getIsUncle()) {
+    if (elem.isUncle()) {
+      const uncle = elem as Uncle
       const item = {
         title: this.$i18n.t('title.position'),
-        detail: block.getPosition()
+        detail: uncle.getPosition()
       }
       this.details.push(item)
     } else {
+      const block = elem as Block
       const item = {
         title: this.$i18n.t('title.tx'),
         detail: block.getTransactionCount()
@@ -257,31 +259,32 @@ export default class PageDetailsBlock extends Vue {
     }
   }
 
-  setMore(block: Block) {
+  setMore(elem: Block | Uncle) {
     this.moreDetails = [
       {
         title: this.$i18n.t('block.diff'),
-        detail: block.getDifficulty()
+        detail: elem.getDifficulty()
       },
       {
         title: this.$i18n.t('block.totalDiff'),
-        detail: block.getTotalDifficulty()
+        detail: elem.getTotalDifficulty()
       },
       {
         title: this.$i18n.t('block.nonce'),
-        detail: block.getNonce()
+        detail: elem.getNonce()
       },
       {
         title: this.$i18n.t('block.root'),
-        detail: block.getStateRoot().toString()
+        detail: elem.getStateRoot()
       },
       {
         title: this.$i18n.t('block.data'),
-        detail: block.getExtraData().toString()
+        detail: elem.getExtraData()
       }
     ]
 
-    if (!block.getIsUncle()) {
+    if (!elem.isUncle()) {
+      const block = elem as Block
       const newItems = [
         {
           title: this.$i18n.t('block.fees'),
@@ -289,32 +292,30 @@ export default class PageDetailsBlock extends Vue {
         },
         {
           title: this.$i18n.t('gas.limit'),
-          detail: block.getGasLimit()
+          detail: block.getGasLimit().toNumber()
         },
         {
           title: this.$i18n.t('gas.used'),
-          detail: block.getGasUsed()
+          detail: block.getGasUsed().toNumber()
         },
         {
           title: this.$i18n.t('block.logs'),
-          detail: block.getLogsBloom().toString()
+          detail: block.getLogsBloom()
         },
         {
           title: this.$i18n.t('block.txRoot'),
-          detail: block.getTransactionsRoot().toString()
+          detail: block.getTransactionsRoot()
         },
         {
           title: this.$i18n.t('block.recRoot'),
-          detail: block.getReceiptsRoot().toString()
+          detail: block.getReceiptsRoot()
         },
         {
           title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.sha'),
           detail: block.getSha3Uncles()
         }
       ]
-      newItems.forEach(i => {
-        this.moreDetails.push(i)
-      })
+      newItems.forEach(i => this.moreDetails.push(i))
     }
   }
 

@@ -3,16 +3,16 @@ import { toUncle } from '@app/server/modules/uncles'
 import { Block } from 'ethvm-common'
 
 const toBlock = (block: any): Block => {
-  block.header.number = Buffer.from(block.header.number.bytes)
-  block.header.difficulty = Buffer.from(block.header.difficulty.bytes)
-  block.header.gasLimit = Buffer.from(block.header.gasLimit.bytes)
-  block.header.gasUsed = Buffer.from(block.header.gasUsed.bytes)
-  block.totalDifficulty = Buffer.from(block.totalDifficulty.bytes)
+  block.header.number = block.header.number.toString()
+  block.header.difficulty = block.header.difficulty.toString()
+  block.header.gasLimit = block.header.gasLimit.toString()
+  block.header.gasUsed = block.header.gasUsed.toString()
+  block.totalDifficulty = block.totalDifficulty.toString()
 
   if (block.rewards) {
     const rewards: any = []
     block.rewards.forEach(r => {
-      r.reward = Buffer.from(r.reward.bytes)
+      r.reward = r.reward.toString()
       rewards.push(r)
     })
     block.rewards = rewards

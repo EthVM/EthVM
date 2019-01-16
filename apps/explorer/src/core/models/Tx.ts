@@ -1,5 +1,6 @@
 import { EthValue } from '@app/core/models'
 import { Tx as RawTx } from 'ethvm-common'
+import BN from 'bignumber.js'
 
 export class Tx {
   public readonly id: string
@@ -19,31 +20,20 @@ export class Tx {
   }
 
   public getTo(): string {
-    if (!this.cache.to) {
-      this.cache.to = '0x' + this.tx.to
-    }
-    return this.cache.to
+    return this.tx.to ? '0x' + this.tx.to : ''
   }
 
   public getFrom(): string {
-    if (!this.cache.from) {
-      this.cache.from = '0x' + this.tx.from
-    }
-    return this.cache.from
+    return '0x' + this.tx.from
   }
 
+  // TODO: Optimize Decimal128
   public getGasUsed(): number {
-    if (!this.cache.gasUsed) {
-      this.cache.gasUsed = this.tx.gasUsed
-    }
-    return this.cache.gasUsed
+    return 0
   }
 
   public getBlockHash(): string {
-    if (!this.cache.blcokHash) {
-      this.cache.blcokHash = '0x' + this.tx.blockHash
-    }
-    return this.cache.blcokHash
+    return '0x' + this.tx.blockHash
   }
 
   public getBlockNumber(): number {
@@ -51,48 +41,12 @@ export class Tx {
   }
 
   public geTransactionIndex(): number {
-    if (!this.cache.transactionIndex) {
-      this.cache.transactionIndex = this.tx.index
-    }
-    return this.cache.transactionIndex
+    return this.tx.transactionIndex
   }
-
-  // public getFromBalance(): EthValue {
-  //   if (!this.cache.fromBalance) {
-  //     this.cache.fromBalance = new EthValue(this.tx.fromBalance)
-  //   }
-  //   return this.cache.fromBalance
-  // }
-
-  // public getToBalance(): EthValue {
-  //   if (!this.cache.ethValue) {
-  //     this.cache.ethValue = new EthValue(this.tx.toBalance)
-  //   }
-  //   return this.cache.ethValue
-  // }
-
-  // public getCumulativeGasUsed(): HexNumber {
-  //   if (!this.cache.cumulativeGasUsed) {
-  //     this.cache.cumulativeGasUsed = new HexNumber(this.tx.cumulativeGasUsed)
-  //   }
-  //   return this.cache.cumulativeGasUsed
-  // }
 
   public getContractAddress(): string {
-    if (!this.cache.contractAddress) {
-      if (this.tx.contractAddress) {
-        this.cache.contractAddress = '0x' + this.tx.contractAddress
-      }
-    }
-    return this.cache.contractAddress
+    return this.tx.contractAddress ? '0x' + this.tx.contractAddress : ''
   }
-
-  // public getLogsBloom(): Hex {
-  //   if (!this.cache.logsBloom) {
-  //     this.cache.logsBloom = new Hex(this.tx.logsBloom)
-  //   }
-  //   return this.cache.logsBloom
-  // }
 
   public getGas(): number {
     if (!this.cache.gas) {
@@ -108,18 +62,8 @@ export class Tx {
     return this.cache.gasPrice
   }
 
-  // public getInput(): Hex {
-  //   if (!this.cache.input) {
-  //     this.cache.input = new Hex(this.tx.input)
-  //   }
-  //   return this.cache.input
-  // }
-
   public getNonce(): string {
-    if (!this.cache.nonce) {
-      this.cache.nonce = this.tx.nonce
-    }
-    return this.cache.nonce
+    return this.tx.nonce
   }
 
   public getValue(): EthValue {
@@ -154,14 +98,7 @@ export class Tx {
     return this.tx.status
   }
 
-  // public isPending(): boolean {
-  //   return this.tx.pending
-  // }
-
   public getTimestamp(): Date {
-    if (!this.cache.timestamp) {
-      this.cache.timestamp = new Date(this.tx.timestamp * 1000)
-    }
-    return new Date(this.cache.timestamp * 1000)
+    return new Date(this.tx.timestamp * 1000)
   }
 }

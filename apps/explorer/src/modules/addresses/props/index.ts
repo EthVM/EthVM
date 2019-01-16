@@ -18,6 +18,7 @@ export class AccountInfo {
     this.miner = false
     this.creator = false
   }
+
   /*Getters: */
   public getAddress(): string {
     return this.address

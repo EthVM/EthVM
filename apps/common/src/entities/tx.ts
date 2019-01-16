@@ -24,8 +24,8 @@ export interface TxReceipt {
   blockHash: string
   transactionHash: string
   transactionIndex: number
-  cumulativeGasUsed: Buffer
-  gasUsed: Buffer
+  cumulativeGasUsed: string
+  gasUsed: string
   logsBloom: string
   status: string
   error: string
@@ -33,14 +33,16 @@ export interface TxReceipt {
 
 export interface Tx {
   hash: string
-  nonce: Buffer
+  nonce: string
   blockHash: string
+  blockNumber: string
   transactionIndex: number
   from: string
   to: string
-  value: Buffer
-  gasPrice: Buffer
-  gas: Buffer
+  value: string
+  gasPrice: string
+  gas: string
+  input: string
   v: Buffer
   r: string
   s: string

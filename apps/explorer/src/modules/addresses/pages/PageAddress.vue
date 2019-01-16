@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import { Tx, Account, PendingTx } from '@app/core/models'
+import { Tx, PendingTx } from '@app/core/models'
 import { Events } from 'ethvm-common'
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
@@ -59,8 +59,8 @@ import TableTokens from '@app/modules/tokens/components/TableTokens.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { AccountInfo } from '@app/modules/addresses/props'
-/*  NOTES:
-This componet should convvert wei values (address balance) to ETH, should be added after Buffer object implementation  */
+
+/*  NOTES: This componet should convvert wei values (address balance) to ETH, should be added after Buffer object implementation  */
 
 @Component({
   components: {
@@ -77,6 +77,7 @@ export default class PageAddress extends Vue {
 
   detailsType = 'address'
   account = new AccountInfo(this.address, this.detailsType)
+
   /*Transactions: */
 
   txs = []
@@ -148,8 +149,7 @@ export default class PageAddress extends Vue {
       },
       (err, result) => {
         if (!err && result) {
-          const addr = new Account(result)
-          this.account.setBalance(addr.getBalance())
+          this.account.setBalance(result.balance)
         }
       }
     )
@@ -177,7 +177,7 @@ export default class PageAddress extends Vue {
         address: this.address.replace('0x', '')
       },
       (err, result) => {
-        this.account.totalTxs = result
+        this.account.setTotalTxs(result)
       }
     )
 
@@ -189,7 +189,7 @@ export default class PageAddress extends Vue {
         to: 'USD'
       },
       (err, result) => {
-        this.account.ethusd = result.price
+        this.account.setUSD(result.price)
       }
     )
 
@@ -203,9 +203,7 @@ export default class PageAddress extends Vue {
       },
       (err, result) => {
         const txs = []
-        result.forEach(element => {
-          txs.push(new Tx(element))
-        })
+        result.forEach(element => txs.push(new Tx(element)))
         this.account.txs = txs
       }
     )

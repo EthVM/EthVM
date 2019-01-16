@@ -1,4 +1,4 @@
-import { Hash, Hex } from '@app/core/models'
+import { Hex } from '@app/core/models'
 import { Uncle as RawUncle } from 'ethvm-common'
 
 export class Uncle {
@@ -10,19 +10,28 @@ export class Uncle {
     this.id = this.uncle.hash
   }
 
+  public isUncle(): boolean {
+    return true
+  }
+
   public getId(): string {
     return this.id
   }
 
+  // TODO: Fix Decimal128
   public getNumber(): number {
-    return this.uncle.uncleHeight
+    // return this.uncle.number
+    return 0
   }
 
   public getBlockHeight(): number {
-    return this.uncle.blockHeight
+    // return this.uncle.blockHeight
+    return 0
   }
+
   public getPosition(): number {
-    return this.uncle.position
+    // return this.uncle.position
+    return 0
   }
 
   public getType(): string {
@@ -30,31 +39,15 @@ export class Uncle {
   }
 
   public getParentHash(): string {
-    if (!this.cache.parentHash) {
-      this.cache.parentHash = '0x' + this.uncle.parentHash
-    }
-    return this.cache.parentHash
+    return '0x' + this.uncle.parentHash
   }
 
   public getHash(): string {
-    if (!this.cache.hash) {
-      this.cache.hash = '0x' + this.uncle.hash
-    }
-    return this.cache.hash
+    return '0x' + this.uncle.hash
   }
 
   public getTimestamp(): Date {
-    if (!this.cache.timestamp) {
-      this.cache.timestamp = this.uncle.timestamp
-    }
-    return new Date(this.cache.timestamp * 1000)
-  }
-
-  public getIsUncle(): boolean {
-    if (!this.cache.getIsUncle) {
-      this.cache.getIsUncle = true
-    }
-    return this.cache.getIsUncle
+    return new Date(this.uncle.timestamp * 1000)
   }
 
   public getNonce(): Hex {
@@ -65,17 +58,16 @@ export class Uncle {
   }
 
   public getMiner(): string {
-    if (!this.cache.miner) {
-      this.cache.miner = '0x' + this.uncle.miner
-    }
-    return this.cache.miner
+    return '0x' + this.uncle.author
   }
 
+  // TODO: Optimize Decimal128
   public getTotalDifficulty(): number {
-    if (!this.cache.totalDifficulty) {
-      this.cache.totalDifficulty = this.uncle.totalDifficulty
-    }
-    return this.cache.totalDifficulty
+    // if (!this.cache.totalDifficulty) {
+    //   this.cache.totalDifficulty = this.uncle.totalDifficulty
+    // }
+    // return this.cache.totalDifficulty
+    return 0
   }
 
   public getDifficulty(): number {
@@ -85,87 +77,69 @@ export class Uncle {
     return this.cache.difficulty
   }
 
-  public getStateRoot(): Hash {
-    if (!this.cache.stateRoot) {
-      this.cache.stateRoot = new Hex(this.uncle.stateRoot)
-    }
-    return this.cache.stateRoot
+  public getStateRoot(): string {
+    return this.uncle.stateRoot ? '0x' + this.uncle.stateRoot : ''
   }
 
-  public getTransactionsRoot(): Hash {
-    if (!this.cache.transactionsRoot) {
-      this.cache.transactionsRoot = new Hash(this.uncle.transactionsRoot)
-    }
-    return this.cache.transactionsRoot
+  public getTransactionsRoot(): string {
+    return this.uncle.transactionsRoot ? '0x' + this.uncle.transactionsRoot : ''
   }
 
-  public getReceiptsRoot(): Hash {
-    if (!this.cache.receiptsRoot) {
-      this.cache.receiptsRoot = new Hash(this.uncle.receiptsRoot)
-    }
-    return this.cache.receiptsRoot
+  public getReceiptsRoot(): string {
+    return this.uncle.receiptsRoot ? '0x' + this.cache.receiptsRoot : ''
   }
 
-  public getLogsBloom(): Hex {
-    if (!this.cache.logsBloom) {
-      this.cache.logsBloom = this.uncle.logsBloom
-    }
-    return this.cache.logsBloom
+  public getLogsBloom(): string {
+    return this.uncle.logsBloom ? '0x' + this.uncle.logsBloom : ''
   }
 
+  // TODO: Decimal128
   public getGasLimit(): number {
-    if (!this.cache.gasLimit) {
-      this.cache.garLimit = this.uncle.gasLimit
-    }
-    return this.cache.garLimit
+    // return this.uncle.gasLimit
+    return 0
   }
 
-  public getHasUncle(): boolean {
-    return false
-  }
-
+  // TODO: Decimal128
   public getGasUsed(): number {
-    if (!this.cache.gasUsed) {
-      this.cache.gasUsed = this.uncle.gasUsed
-    }
-    return this.cache.gasUsed
+    // return this.uncle.gasUsed
+    return 0
   }
 
-  public getExtraData(): Hex {
-    if (!this.cache.extraData) {
-      this.cache.extraData = new Hex(this.uncle.extraData)
-    }
-    return this.cache.extraData
+  public getExtraData(): string {
+    return this.uncle.extraData ? '0x' + this.uncle.extraData : ''
   }
 
   public getMinerReward(): number {
-    const rewards = this.uncle.rewards
-    if (!this.cache.getMinerReward) {
-      this.cache.getMinerReward = rewards[this.uncle.miner]
-    }
-    return this.cache.getMinerReward
+    // const rewards = this.uncle.rewards
+    // if (!this.cache.getMinerReward) {
+    //   this.cache.getMinerReward = rewards[this.uncle.miner]
+    // }
+    // return this.cache.getMinerReward
+    return 0
   }
 
   public getTotalReward(): number {
-    if (!this.cache.getTotalReward) {
-      let total = 0
-      for (const address in this.uncle.rewards) {
-        total = this.uncle.rewards[address] + total
-      }
-      this.cache.getTotalReward = total
-    }
-    return this.cache.getTotalReward
+    // if (!this.cache.getTotalReward) {
+    //   let total = 0
+    //   for (const address in this.uncle.rewards) {
+    //     total = this.uncle.rewards[address] + total
+    //   }
+    //   this.cache.getTotalReward = total
+    // }
+    // return this.cache.getTotalReward
+    return 0
   }
 
   // uncle reward =  total reward - block reward
   public getUncleReward(): number {
-    if (!this.cache.getReward) {
-      let total = 0
-      for (const address in this.uncle.rewards) {
-        total = this.uncle.rewards[address] + total
-      }
-      this.cache.getReward = total - this.uncle.rewards[this.uncle.miner]
-    }
-    return this.cache.getReward
+    // if (!this.cache.getReward) {
+    //   let total = 0
+    //   for (const address in this.uncle.rewards) {
+    //     total = this.uncle.rewards[address] + total
+    //   }
+    //   this.cache.getReward = total - this.uncle.rewards[this.uncle.miner]
+    // }
+    // return this.cache.getReward
+    return 0
   }
 }

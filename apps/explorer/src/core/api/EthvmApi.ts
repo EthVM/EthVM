@@ -1,8 +1,8 @@
-import { Account, Block, Uncle, Tx, PendingTx, Statistic } from 'ethvm-common'
+import { AddressBalance, Block, Uncle, Tx, PendingTx, Statistic } from 'ethvm-common'
 
 export interface EthvmApi {
   // Balances
-  getAddressBalance(hash: string): Promise<Account | null>
+  getAddressBalance(hash: string): Promise<AddressBalance | null>
 
   // Blocks
   getBlock(hash: string): Promise<Block | null>

@@ -1,4 +1,4 @@
-import { Account, Block, Events, PendingTx, Statistic, Tx, Uncle } from 'ethvm-common'
+import { AddressBalance, Block, Events, PendingTx, Statistic, Tx, Uncle } from 'ethvm-common'
 import io from 'socket.io-client'
 import { EthvmApi } from '@app/core/api'
 
@@ -10,7 +10,7 @@ export class EthvmSocketIoApi implements EthvmApi {
   }
 
   // Balances
-  getAddressBalance(hash: string): Promise<Account | null> {
+  getAddressBalance(hash: string): Promise<AddressBalance | null> {
     return new Promise((resolve, reject) => {
       this.io.emit(
         Events.getAddressBalance,

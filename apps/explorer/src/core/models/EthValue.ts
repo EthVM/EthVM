@@ -5,9 +5,15 @@ import NumberFormatter from 'number-formatter'
 export class EthValue {
   public value: string
 
-  constructor(_value: Buffer) {
-    this.value = '0x' + Buffer.from(_value).toString('hex')
-    this.value = this.value === '0x' ? '0x0' : this.value
+  constructor(_value: Buffer | string) {
+    if (_value instanceof Buffer) {
+      this.value = '0x' + Buffer.from(_value).toString('hex')
+      this.value = this.value === '0x' ? '0x0' : this.value
+    }
+
+    if (typeof _value  === 'string') {
+      this.value = _value
+    }
   }
 
   public toEth(): number {

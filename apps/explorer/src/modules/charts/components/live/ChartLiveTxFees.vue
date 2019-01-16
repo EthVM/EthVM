@@ -105,7 +105,7 @@ export default class ChartLiveTxFees extends Vue {
     this.$eventHub.$on(Events.newBlock, _block => {
       if (this.chartData.datasets[0]) {
         this.redraw = false
-        if (!_block.getIsUncle()) {
+        if (!_block.isUncle()) {
           const _tempD = _block.getStats()
           this.chartData.labels.push(_block.getNumber())
           this.chartData.labels.shift()
