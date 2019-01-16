@@ -1,18 +1,18 @@
 <template>
   <v-container grid-list-lg class="mb-0">
     <app-bread-crumbs :new-items="crumbs"></app-bread-crumbs>
-    <chart-block-diff v-if="chartID === 'block_difficulty_history'"/>
-    <chart-block-time v-if="chartID === 'block_time_history'"/>
-    <chart-block-size v-if="chartID === 'block_size_history'"/>
-    <chart-gas-limit v-if="chartID === 'gas_limit_history'"/>
-    <chart-gas-price v-if="chartID === 'gas_price_history'"/>
-    <chart-hash-rate v-if="chartID === 'hash_rate_history'"/>
-    <chart-mining-reward v-if="chartID === 'miner_rewards_history'"/>
-    <chart-top-miners v-if="chartID === 'top_miners_history'"/>
-    <chart-tx-fail v-if="chartID === 'tx_fail_history'"/>
-    <chart-tx-success v-if="chartID === 'tx_success_history'"/>
-    <chart-tx-fees v-if="chartID === 'tx_fees_history'"/>
-    <chart-uncles-number v-if="chartID === 'uncle_number_history'"/>
+    <chart-block-diff v-if="chartID === 'block_difficulty_history'" />
+    <chart-block-time v-if="chartID === 'block_time_history'" />
+    <chart-block-size v-if="chartID === 'block_size_history'" />
+    <chart-gas-limit v-if="chartID === 'gas_limit_history'" />
+    <chart-gas-price v-if="chartID === 'gas_price_history'" />
+    <chart-hash-rate v-if="chartID === 'hash_rate_history'" />
+    <chart-mining-reward v-if="chartID === 'miner_rewards_history'" />
+    <chart-top-miners v-if="chartID === 'top_miners_history'" />
+    <chart-tx-fail v-if="chartID === 'tx_fail_history'" />
+    <chart-tx-success v-if="chartID === 'tx_success_history'" />
+    <chart-tx-fees v-if="chartID === 'tx_fees_history'" />
+    <chart-uncles-number v-if="chartID === 'uncle_number_history'" />
   </v-container>
 </template>
 
@@ -51,19 +51,18 @@ const MAX_ITEMS = 20
   }
 })
 export default class PageChartId extends Vue {
-
   get crumbs() {
-    return  [
-        {
-          text: this.$i18n.t('title.charts'),
-          disabled: false,
-          link: '/charts'
-        },
-        {
-          text: this.chartID,
-          disabled: true
-        }
-      ]
+    return [
+      {
+        text: this.$i18n.t('title.charts'),
+        disabled: false,
+        link: '/charts'
+      },
+      {
+        text: this.chartID,
+        disabled: true
+      }
+    ]
   }
   get chartID() {
     return this.$route.params.chartID
