@@ -1,7 +1,7 @@
 import { BalancePayload } from '@app/server/core/payloads'
 import { balancePayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
-import { Account, Events } from 'ethvm-common'
+import { AddressBalance, Events } from 'ethvm-common'
 
 const getAddressBalance: SocketEvent = {
   id: Events.getAddressBalance,
@@ -13,7 +13,7 @@ const getAddressBalance: SocketEvent = {
     }
   },
 
-  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: BalancePayload): Promise<Account | null> =>
+  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: BalancePayload): Promise<AddressBalance | null> =>
     server.balancesService.getAddressBalance(payload.address)
 }
 
