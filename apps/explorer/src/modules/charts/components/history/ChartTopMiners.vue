@@ -20,8 +20,8 @@
   }
 
   const DES = {
-    BEGIN: 'Top Miners history in Ethereum blockchain since the begining.',
-    OTHER: 'Top Miners history  in Ethereum blockchain in last '
+    BEGIN: 'Top Miners in Ethereum blockchain since the begining.',
+    OTHER: 'Top Miners in Ethereum blockchain in last '
   }
 
   @Component({
