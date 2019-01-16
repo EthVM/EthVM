@@ -11,6 +11,7 @@ import PageDetailsBlock from '@app/modules/blocks/pages/PageDetailsBlock.vue'
 import PageDetailsTxs from '@app/modules/txs/pages/PageDetailsTxs.vue'
 import PageAddress from '@app/modules/addresses/pages/PageAddress.vue'
 import PageCharts from '@app/modules/charts/pages/PageCharts.vue'
+import PageChartId from '@app/modules/charts/pages/PageChartId.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -67,6 +68,12 @@ export default new Router({
       path: '/charts',
       component: PageCharts,
       name: 'charts',
+      props: true
+    },
+    {
+      path: '/chart/:chartID',
+      component: PageChartId,
+      name: 'chart',
       props: true
     }
   ],

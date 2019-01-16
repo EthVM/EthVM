@@ -18,8 +18,8 @@
         </v-layout>
         <!-- Charts -->
         <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6><!-- Pending Txs Chart --></v-flex>
-          <v-flex xs12 md6><!-- Gas Price --></v-flex>
+          <v-flex xs12 md6> <chart-live-tx /> </v-flex>
+          <v-flex xs12 md6> <chart-live-tx-fees /> </v-flex>
         </v-layout>
         <v-layout row wrap justify-center mb-4>
           <v-flex xs12 md6><!-- Average Block Time --></v-flex>
@@ -69,6 +69,8 @@
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppInfoCard from '@app/core/components/ui/AppInfoCard.vue'
+import ChartLiveTx from '@app/modules/charts/components/live/ChartLiveTx.vue'
+import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees.vue'
 import { LastBlockInfoMixin } from '@app/core/components/mixins'
 
 import { Vue, Component, Mixins } from 'vue-property-decorator'
@@ -79,7 +81,9 @@ const MAX_ITEMS = 20
   components: {
     AppBreadCrumbs,
     AppTabs,
-    AppInfoCard
+    AppInfoCard,
+    ChartLiveTx,
+    ChartLiveTxFees
   }
 })
 export default class PageCharts extends Mixins(LastBlockInfoMixin) {

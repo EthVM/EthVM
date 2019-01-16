@@ -10,13 +10,14 @@
           </v-tooltip>
         </v-card-title>
       </v-flex>
-      <v-flex xs4>
-        <!--
-        <v-layout align-center justify-end fill-height>
-          <v-btn flat color="secondary" class="text-capitalize" to="/blocks">{{ $t('bttn.more') }} <v-icon right>fas fa-angle-right</v-icon></v-btn>
-        </v-layout> -->
-        <v-layout row align-center justify-end fill-height>
-          <v-btn-toggle depressed v-model="toggleData" primary>
+      <v-flex xs4 v-if="!liveChart">
+        <v-layout v-if="getPageType() === 'charts'" align-center justify-end fill-height>
+          <v-btn flat color="secondary" class="text-capitalize" :to="'/chart/' + chartID"
+            >{{ $t('bttn.more') }} <v-icon right>fas fa-angle-right</v-icon></v-btn
+          >
+        </v-layout>
+        <v-layout v-else row align-center justify-end fill-height>
+          <v-btn-toggle depressed v-model="toggleData" class="primary">
             <v-btn flat :value="0" small>All</v-btn>
             <v-btn flat :value="1" small>1D</v-btn>
             <v-btn flat :value="2" small>1W</v-btn>
@@ -79,15 +80,46 @@ Chart.defaults.doughnut.animation = Object.assign(Chart.defaults.doughnut.animat
   }
 })
 export default class AppChart extends Vue {
-  @Prop({ type: String, required: true }) type!: string
-  @Prop({ type: Object, required: true }) data: object[]
-  @Prop({ type: Boolean }) redraw!: boolean
-  @Prop({ type: Object }) options!: object
-  @Prop({ type: Number }) width!: number
-  @Prop({ type: Number }) height!: number
-  @Prop({ type: String }) chartTitle!: string
-  @Prop({ type: String }) chartDescription!: string
-  @Prop({ type: Array }) footnoteArr!: Footnote[]
+  @Prop({ type: Boolean, default: false }) liveChart!: boolean
+  @Prop({ type: String, required: true }) chartID!: string
+  @Prop({
+    type: String,
+    required: true
+  })
+  type!: string
+  @Prop({
+    type: Object,
+    required: true
+  })
+  data: object[]
+  @Prop({
+    type: Boolean
+  })
+  redraw!: boolean
+  @Prop({
+    type: Object
+  })
+  options!: object
+  @Prop({
+    type: Number
+  })
+  width!: number
+  @Prop({
+    type: Number
+  })
+  height!: number
+  @Prop({
+    type: String
+  })
+  chartTitle!: string
+  @Prop({
+    type: String
+  })
+  chartDescription!: string
+  @Prop({
+    type: Array
+  })
+  footnoteArr!: Footnote[]
 
   toggleData = 1
   /*LifeCycle: */
@@ -123,7 +155,9 @@ export default class AppChart extends Vue {
       options: this.options
     })
   }
+
+  getPageType(): string {
+    return this.$route.name
+  }
 }
 </script>
-
-<style scoped lang="css"></style>
