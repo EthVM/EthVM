@@ -131,13 +131,6 @@ export class Uncle {
     return this.cache.gasUsed
   }
 
-  public getMixHash(): Hash {
-    if (!this.cache.mixHash) {
-      this.cache.mixHash = new Hash(this.uncle.mixHash)
-    }
-    return this.cache.mixHash
-  }
-
   public getExtraData(): Hex {
     if (!this.cache.extraData) {
       this.cache.extraData = new Hex(this.uncle.extraData)

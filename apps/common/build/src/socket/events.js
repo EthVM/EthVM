@@ -11,9 +11,10 @@ exports.Events = {
     newUncle: "NEW_UNCLE",
     pastTxsR: "PAST_TXS_RECEIVED",
     pastBlocksR: "PAST_BLOCKS_RECEIVED",
-    // Balances
+    // Addresses
     getAddressBalance: "get-address-balance",
     getAddressTokenBalance: "get-address-token-balance",
+    getAddressTokenTransfers: "get-address-token-transfers",
     // Blocks
     getBlock: "get-block",
     getBlocks: "get-blocks",
@@ -36,9 +37,6 @@ exports.Events = {
     // Vm
     getCurrentStateRoot: "get-current-state-root",
     getTokenBalance: "get-tokens-balance",
-    ethCall: "eth-call",
-    // Tokens
-    getAddressTokenTransfers: "get-address-token-transfers",
     // Search
     search: "search",
     // Stats

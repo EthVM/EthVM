@@ -84,13 +84,6 @@ export class Block {
     return this.cache.nonce
   }
 
-  // public getMixHash(): Hash {
-  //   if (!this.cache.mixHash) {
-  //     this.cache.mixHash = new Hash(this.block.mixHash)
-  //   }
-  //   return this.cache.mixHash
-  // }
-
   public getSha3Uncles(): string {
     if (!this.cache.sha3Uncles) {
       this.cache.sha3Uncles = '0x' + this.block.header.sha3Uncles

@@ -1,4 +1,4 @@
-import { AddressBalance, Block, Tx } from 'ethvm-common'
+import { Account, Block, Tx } from 'ethvm-common'
 
 export enum SearchType {
   Transaction,
@@ -9,7 +9,7 @@ export enum SearchType {
 
 export interface Search {
   type: SearchType
-  address?: AddressBalance | null
+  address?: Account | null
   block?: Block | null
   tx?: Tx | null
 }

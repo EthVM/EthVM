@@ -21,7 +21,7 @@ export interface Reward {
     address: string;
     reward: Buffer;
 }
-export interface Block {
+export interface Header {
     number: Buffer;
     hash: string;
     parentHash: string;
@@ -37,7 +37,9 @@ export interface Block {
     gasLimit: string;
     gasUsed: string;
     timestamp: number;
-    mixHash: Buffer;
+}
+export interface Block {
+    header: Header;
     totalDifficulty: Buffer;
     transactions: Tx[];
     uncles: Uncle[];
