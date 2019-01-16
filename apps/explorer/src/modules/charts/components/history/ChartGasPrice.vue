@@ -4,7 +4,6 @@
 </template>
 
 <script lang="ts">
-  import BN from 'bignumber.js'
   import AppChart from '@app/modules/charts/components/AppChart.vue'
   import {
     Vue,
