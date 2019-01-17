@@ -82,10 +82,8 @@ import AppInfoCard from '@app/core/components/ui/AppInfoCard.vue'
 import ChartLiveTx from '@app/modules/charts/components/live/ChartLiveTx.vue'
 import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees.vue'
 import { LastBlockInfoMixin } from '@app/core/components/mixins'
-import id from '@app/modules/charts/helpers/index.ts'
+import ChartTypes from '@app/modules/charts/helpers/index.ts'
 import { Vue, Component, Mixins } from 'vue-property-decorator'
-
-const MAX_ITEMS = 20
 
 @Component({
   components: {
@@ -97,7 +95,8 @@ const MAX_ITEMS = 20
   }
 })
 export default class PageCharts extends Mixins(LastBlockInfoMixin) {
-  ID = id
+  ID = ChartTypes
+
   data() {
     return {
       crumbs: [

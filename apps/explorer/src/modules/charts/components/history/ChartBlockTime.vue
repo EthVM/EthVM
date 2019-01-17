@@ -9,8 +9,7 @@
     :redraw="redraw"
     unfilled="true"
     @timeFrame="setTimeFrame"
-  >
-  </app-chart>
+  />
 </template>
 
 <script lang="ts">
@@ -18,6 +17,7 @@ import AppChart from '@app/modules/charts/components/AppChart.vue'
 import { Vue, Component } from 'vue-property-decorator'
 import ethUnits from 'ethereumjs-units'
 import id from '@app/modules/charts/helpers'
+import { Events } from 'ethvm-common'
 
 /* Time Variables: */
 const STATES = ['ALL', 'YEAR', 'MONTH', 'DAY']
@@ -71,13 +71,14 @@ export default class ChartBlockSize extends Vue {
       ]
     }
   }
+
   /*Computed: */
   get chartData() {
     const newLabels = []
     const newPoints = []
-    this.$socket.emit('getAverageBlockTime', STATES[this.timeFrame], (err, result) => {
+    this.$socket.emit(Events.getAverageBlockTimeStats, STATES[this.timeFrame], (err, result) => {
       if (!err && result) {
-        result.forEach(function(block) {
+        result.forEach(block => {
           newPoints.push(block.reduction)
           newLabels.push(block.group)
         })
@@ -97,6 +98,7 @@ export default class ChartBlockSize extends Vue {
       ]
     }
   }
+
   get description(): string {
     return this.timeFrame === 0 ? DES.BEGIN : DES.OTHER + STATES[this.timeFrame]
   }

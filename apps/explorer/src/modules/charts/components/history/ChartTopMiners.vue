@@ -8,14 +8,14 @@
     :options="chartOptions"
     :redraw="redraw"
     unfilled="true"
-  >
-  </app-chart>
+  />
 </template>
 
 <script lang="ts">
 import AppChart from '@app/modules/charts/components/AppChart.vue'
 import { Vue, Component } from 'vue-property-decorator'
 import ethUnits from 'ethereumjs-units'
+import { Events } from 'ethvm-common'
 
 /* Time Variables: */
 const STATES = {
@@ -52,6 +52,7 @@ export default class ChartBlockSize extends Vue {
     },
     cutoutPercentage: 40
   }
+
   /*Computed: */
   get chartData() {
     const newLabels = []
@@ -59,12 +60,13 @@ export default class ChartBlockSize extends Vue {
 
     this.$socket.emit('getTopMiners', this.timeFrame, (err, result) => {
       if (!err && result) {
-        result.forEach(function(block) {
+        result.forEach(block => {
           newPoints.push(block.reduction)
           newLabels.push(block.group)
         })
       }
     })
+
     return {
       labels: newLabels,
       datasets: [
@@ -79,6 +81,7 @@ export default class ChartBlockSize extends Vue {
       ]
     }
   }
+
   get description(): string {
     return this.timeFrame === STATES.ALL ? DES.BEGIN : DES.OTHER + this.timeFrame
   }

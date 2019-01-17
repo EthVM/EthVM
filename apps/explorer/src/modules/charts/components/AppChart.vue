@@ -26,7 +26,7 @@
       </v-flex>
     </v-layout>
     <v-divider></v-divider>
-    <v-layout align-center justify-end row fill-height v-if="footnoteArr"> <app-footnotes :footnotes="footnoteArr" /> </v-layout>
+    <v-layout align-center justify-end row fill-height v-if="footnotes"> <app-footnotes :footnotes="footnotes" /> </v-layout>
     <canvas v-if="data" ref="chart" :width="width" :height="height"></canvas>
   </v-card>
 </template>
@@ -81,14 +81,14 @@ Chart.defaults.doughnut.animation = Object.assign(Chart.defaults.doughnut.animat
 export default class AppChart extends Vue {
   @Prop({ type: Boolean, default: false }) liveChart!: boolean
   @Prop({ type: String, required: true }) type!: string
-  @Prop({ type: Object, required: true }) data: object[]
+  @Prop({ type: Object, required: true }) data!: any[]
   @Prop({ type: Boolean }) redraw!: boolean
   @Prop({ type: Object }) options!: object
   @Prop({ type: Number }) width!: number
   @Prop({ type: Number }) height!: number
   @Prop({ type: String }) chartTitle!: string
   @Prop({ type: String }) chartDescription!: string
-  @Prop({ type: Array }) footnoteArr?: Footnote[]
+  @Prop({ type: Array }) footnotes?: Footnote[]
 
   toggleData = 1
 

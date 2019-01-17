@@ -8,8 +8,7 @@
     :redraw="redraw"
     unfilled="true"
     @timeFrame="setTimeFrame"
-  >
-  </app-chart>
+  />
 </template>
 
 <script lang="ts">
@@ -90,6 +89,7 @@ export default class ChartBlockDiff extends Vue {
       ]
     }
   }
+
   get description(): string {
     return this.timeFrame === 0 ? DES.BEGIN : DES.OTHER + STATES[this.timeFrame]
   }
@@ -101,7 +101,7 @@ export default class ChartBlockDiff extends Vue {
   }
 
   setData(): void {
-    this.$socket.emit(Events.getAvgTotalDifficultyStats, { duration: STATES[this.timeFrame] }, (err, result) => {
+    this.$socket.emit(Events.getAverageTotalDifficultyStats, { duration: STATES[this.timeFrame] }, (err, result) => {
       if (!err && result) {
         result.forEach(point => {
           this.newPoints.push({

@@ -31,9 +31,7 @@ import ChartTxSuccess from '@app/modules/charts/components/history/ChartTxSucces
 import ChartTxFees from '@app/modules/charts/components/history/ChartTxFees.vue'
 import ChartUnclesNumber from '@app/modules/charts/components/history/ChartUnclesNumber.vue'
 import { Vue, Component } from 'vue-property-decorator'
-import id from '@app/modules/charts/helpers'
-
-const MAX_ITEMS = 20
+import ChartTypes from '@app/modules/charts/helpers'
 
 @Component({
   components: {
@@ -51,8 +49,10 @@ const MAX_ITEMS = 20
     ChartUnclesNumber
   }
 })
-export default class PageChartID extends Vue {
-  ID = id
+export default class PageDetailsChart extends Vue {
+  ID = ChartTypes
+
+  // Computed
   get crumbs() {
     return [
       {
@@ -66,6 +66,7 @@ export default class PageChartID extends Vue {
       }
     ]
   }
+
   get chartID() {
     return this.$route.params.chartID
   }
