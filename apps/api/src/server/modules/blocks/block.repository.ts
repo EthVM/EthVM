@@ -13,7 +13,7 @@ export class MongoBlockRepository extends BaseMongoDbRepository implements Block
   public getBlock(hash: string): Promise<Block | null> {
     return this.db
       .collection(MongoEthVM.collections.blocks)
-      .findOne({ hash })
+      .findOne({ 'header.hash': hash })
       .then(resp => {
         if (!resp) {
           return null
@@ -43,7 +43,7 @@ export class MongoBlockRepository extends BaseMongoDbRepository implements Block
   public getBlockByNumber(no: number): Promise<Block | null> {
     return this.db
       .collection(MongoEthVM.collections.blocks)
-      .findOne({ number: no })
+      .findOne({ 'header.number': no })
       .then(resp => {
         if (!resp) {
           return null

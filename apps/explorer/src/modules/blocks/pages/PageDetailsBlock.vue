@@ -1,6 +1,6 @@
 <template>
   <v-container grid-list-lg class="mb-0">
-    <app-bread-crumbs :new-items="breadcrumbs" />
+    <app-bread-crumbs :new-items="crumbs" />
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
         <app-list-details :items="blockDetails" :more-items="blockMoreDetails" :details-type="listType" :loading="loading">
@@ -9,7 +9,7 @@
       </v-flex>
     </v-layout>
     <!-- Mined Block, txs table -->
-    <v-layout row wrap justify-start class="mb-4">
+    <v-layout row wrap justify-start class="mb-4" v-if="!loading">
       <v-flex v-if="txs" xs12>
         <table-txs v-if="txs" :transactions="txs" :frame-txs="true" :page-type="listType" :loading="loading" class="mt-3" />
         <v-card v-if="txs.length === 0" flat color="white">
@@ -47,23 +47,24 @@ export default class PageDetailsBlock extends Vue {
   @Prop({ type: String }) blockRef!: string
 
   loading = true
+  error = false
   listType = 'block'
 
   block = null
   blockInfo = {
     next: null,
-    prev: null,
-    uncles: null
+    prev: null
   }
 
   txs = []
+  uncles = []
   details = []
   moreDetails = []
   timestamp = ''
 
   data() {
     return {
-      breadcrumbs: [
+      crumbs: [
         {
           text: this.$i18n.t('title.blocks'),
           disabled: false,
@@ -79,14 +80,16 @@ export default class PageDetailsBlock extends Vue {
 
   // Lifecycle
   created() {
+    const ref = this.blockRef
+
     // 1. Check that current block ref is valid one
-    if (!eth.isValidHash(this.blockRef)) {
-      // TODO: Display error
+    if (!eth.isValidHash(ref) && !eth.isValidBlockNumber(ref)) {
+      this.error = true
       return
     }
 
     // 2. Check that we have our block in the store
-    const block = this.$store.getters.blockByHash(this.blockRef)
+    const block = eth.isValidHash(ref) ? this.$store.getters.blockByHash(ref) : this.$store.getters.blockByNumber(Number(ref))
 
     // 3. Depending on previous state, we display directly or not
     if (block) {
@@ -97,58 +100,37 @@ export default class PageDetailsBlock extends Vue {
   }
 
   // Methods:
-  fetchBlock() {}
+  fetchBlock() {
+    const event = eth.isValidHash(this.blockRef) ? Events.getBlock : Events.getBlockByNumber
+    const payload = eth.isValidHash(this.blockRef) ? { hash: this.blockRef.replace('0x', '') } : { number: Number(this.blockRef) }
 
-  // getBlockByHash() {
-  //   this.$socket.emit(
-  //     Events.getBlock,
-  //     {
-  //       hash: this.blockRef.replace('0x', '')
-  //     },
-  //     (error, result) => {
-  //       // if (result) {
-  //       //   this.setRawBlock(result)
-  //       // } else {
-  //       //   this.blockInfo.mined = false
-  //       //   //block does not exist and since prop is hash, there is now way to find previous reference --> Error This Block Does not exist
-  //       // }
-  //     }
-  //   )
-  // }
-
-  // getBlockByNumber() {
-  //   this.$socket.emit(
-  //     Events.getBlockByNumber,
-  //     {
-  //       number: Number(this.blockRef)
-  //     },
-  //     (error, result) => {
-  //       // if (result) {
-  //       //   this.setRawBlock(result)
-  //       // } else {
-  //       //   this.blockInfo.mined = false
-  //       // }
-  //     }
-  //   )
-  // }
+    this.$socket.emit(event, payload, (error, result) => {
+      if (error || !result) {
+        this.error = true
+        return
+      }
+      this.setBlockInfo(new Block(result))
+    })
+  }
 
   setBlockInfo(block: Block) {
     this.block = block
 
-    this.blockInfo.uncles = this.block.getUncles()
     this.blockInfo.next = this.block.getNumber() + 1
     this.blockInfo.prev = this.block.getNumber() === 0 ? 0 : this.block.getNumber() - 1
 
-    this.breadcrumbs[1].text = this.$i18n.t('title.blockN') + ' ' + this.block.getNumber()
+    this.crumbs[1].text = this.$i18n.t('title.blockN') + ' ' + this.block.getNumber()
+
+    this.timestamp = block.getTimestamp().toString()
     this.setDetails(this.block)
     this.setMore(this.block)
     this.txs = this.block.getTxs()
+    this.uncles = this.block.getUncles()
 
     this.loading = false
   }
 
   setDetails(elem: Block) {
-    this.timestamp = elem.getTimestamp().toString()
     this.details = [
       {
         title: this.$i18n.t('block.height'),
