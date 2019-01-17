@@ -1,18 +1,30 @@
 <template>
   <v-container grid-list-lg class="mb-0">
-    <app-bread-crumbs :new-items="items"></app-bread-crumbs>
+    <app-bread-crumbs :new-items="breadcrumbs"/>
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
-        <app-list-details :items="blockDetails" :more-items="blockMoreDetails" :details-type="blockType" :loading="blockLoad">
-          <app-list-title slot="details-title" :list-type="blockType" :block-details="blockInfo"></app-list-title>
+        <app-list-details
+          :items="blockDetails"
+          :more-items="blockMoreDetails"
+          :details-type="listType"
+          :loading="loading"
+        >
+          <app-list-title slot="details-title" :list-type="listType" :block-details="blockInfo"/>
         </app-list-details>
       </v-flex>
     </v-layout>
     <!-- Mined Block, txs table -->
-    <v-layout v-if="blockType == 'block' && blockInfo.mined" row wrap justify-start class="mb-4">
-      <v-flex v-if="!txs && !txsLoad" xs12>
-        <table-txs v-if="txs" :transactions="txs" :frame-txs="true" :page-type="blockType" :loading="txsLoad" class="mt-3" />
-        <v-card v-if="txs && txsLoad" flat color="white">
+    <v-layout row wrap justify-start class="mb-4">
+      <v-flex v-if="txs" xs12>
+        <table-txs
+          v-if="txs"
+          :transactions="txs"
+          :frame-txs="true"
+          :page-type="listType"
+          :loading="loading"
+          class="mt-3"
+        />
+        <v-card v-if="txs.length === 0" flat color="white">
           <v-card-text class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }}</v-card-text>
         </v-card>
       </v-flex>
@@ -30,7 +42,10 @@ import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { Detail } from '@app/core/components/props'
 import ethUnits from 'ethereumjs-units'
 import Bn from 'bignumber.js'
+import { eth } from '@app/core/helper'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
+
+// TODO: Display error message if block is not valid or doesn't exist
 
 @Component({
   components: {
@@ -43,18 +58,15 @@ import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 export default class PageDetailsBlock extends Vue {
   @Prop({ type: String }) blockRef!: string
 
-  blockLoad = true
-  txsLoad = true
+  loading = true
+  listType = 'block'
 
   block = null
-  blockN = null
   blockInfo = {
-    mined: null,
     next: null,
     prev: null,
     uncles: null
   }
-  blockType = 'block'
 
   txs = []
   details = []
@@ -63,7 +75,7 @@ export default class PageDetailsBlock extends Vue {
 
   data() {
     return {
-      items: [
+      breadcrumbs: [
         {
           text: this.$i18n.t('title.blocks'),
           disabled: false,
@@ -79,135 +91,79 @@ export default class PageDetailsBlock extends Vue {
 
   // Lifecycle
   created() {
-    /* Case 1:  No Data in store --> need data for last block in case curr block was not mined*/
-    if (this.$store.getters.blocks.length === 0) {
-      this.getBlocks()
-    }
-  }
-
-  mounted() {
-    /* Case 2:  Data in store*/
-    if (this.blockRef) {
-      this.checkBlockRef() ? this.getBlockByHash() : this.getBlockByNumber()
-    }
-    if (this.blockN) {
-      this.items[1].text = this.$i18n.t('title.blockN') + ' ' + this.blockN
+    // 1. Check that current block ref is valid one
+    if (!eth.isValidHash(this.blockRef)) {
+      // TODO: Display error
+      console.error('Block ref is not a valid one!')
+      return
     }
 
-    /* Block was not mined --> wait to be mined */
-    this.$eventHub.$on(Events.newBlock, _block => {
-      if (this.$store.getters.blocks.length > 0) {
-        const lastMinedBlock = this.$store.getters.blocks[0]
-        console
-        if (lastMinedBlock.getNumber() == Number(this.blockRef) || lastMinedBlock.getHash() == this.blockRef) {
-          this.block = lastMinedBlock
-          this.blockInfo.mined = true
-          this.setBlock()
-          this.stopBlockCheck()
-        }
-      }
-    })
-  }
+    // 2. Check that we have our block in the store
+    const block = this.$store.getters.blockByHash(this.blockRef)
 
-  beforeDestroy() {
-    this.stopBlockCheck()
+    // 3. Depending on previous state, we display directly or not
+    if (block) {
+      this.setBlockInfo(block)
+    } else {
+      this.fetchBlock()
+    }
   }
 
   // Methods:
-  stopBlockCheck() {
-    this.$eventHub.$off(Events.newBlock)
+  fetchBlock() {
+    console.log('Fetching block')
   }
 
-  getBlocks() {
-    this.$socket.emit(
-      Events.getBlocks,
-      {
-        limit: 1,
-        page: 0
-      },
-      (err, blocks) => {
-        this.$store.commit(Events.newBlock, blocks)
-        if (blocks && blocks.length > 0) {
-          this.$eventHub.$emit(Events.pastBlocksR)
-          this.$eventHub.$emit(Events.newBlock, new Block(blocks[0]))
-        }
-      }
-    )
-  }
+  // getBlockByHash() {
+  //   this.$socket.emit(
+  //     Events.getBlock,
+  //     {
+  //       hash: this.blockRef.replace('0x', '')
+  //     },
+  //     (error, result) => {
+  //       // if (result) {
+  //       //   this.setRawBlock(result)
+  //       // } else {
+  //       //   this.blockInfo.mined = false
+  //       //   //block does not exist and since prop is hash, there is now way to find previous reference --> Error This Block Does not exist
+  //       // }
+  //     }
+  //   )
+  // }
 
-  getBlockByHash() {
-    this.$socket.emit(
-      Events.getBlock,
-      {
-        hash: this.blockRef.replace('0x', '')
-      },
-      (error, result) => {
-        if (result) {
-          this.setRawBlock(result)
-        } else {
-          this.blockInfo.mined = false
-          //block does not exist and since prop is hash, there is now way to find previous reference --> Error This Block Does not exist
-        }
-      }
-    )
-  }
+  // getBlockByNumber() {
+  //   this.$socket.emit(
+  //     Events.getBlockByNumber,
+  //     {
+  //       number: Number(this.blockRef)
+  //     },
+  //     (error, result) => {
+  //       // if (result) {
+  //       //   this.setRawBlock(result)
+  //       // } else {
+  //       //   this.blockInfo.mined = false
+  //       // }
+  //     }
+  //   )
+  // }
 
-  getBlockByNumber() {
-    this.blockN = Number(this.blockRef)
-    this.$socket.emit(
-      Events.getBlockByNumber,
-      {
-        number: Number(this.blockRef)
-      },
-      (error, result) => {
-        if (result) {
-          this.setRawBlock(result)
-        } else {
-          this.blockInfo.mined = false
-        }
-      }
-    )
-  }
+  setBlockInfo(block: Block) {
+    this.block = block
 
-  checkBlockRef(): boolean {
-    return this.blockRef.includes('0x')
-  }
-
-  setRawBlock(result) {
-    this.block = new Block(result)
-    this.blockLoad = false
-    this.blockInfo.mined = true
-    this.setBlock()
-  }
-
-  setBlock() {
     this.blockInfo.uncles = this.block.getUncles()
-    this.blockInfo.next = this.nextBlock
-    this.blockInfo.prev = this.previousBlock
+    this.blockInfo.next = this.block.getNumber() + 1
+    this.blockInfo.prev = this.block.getNumber() === 0 ? 0 : this.block.getNumber() - 1
+
+    this.breadcrumbs[1].text = this.$i18n.t('title.blockN') + ' ' + this.block.getNumber()
     this.setDetails(this.block)
     this.setMore(this.block)
+    this.txs = this.block.getTxs()
 
-    if (this.block.isUncle()) {
-      this.blockType = 'uncle'
-    } else {
-      this.$socket.emit(
-        Events.getBlockTxs,
-        {
-          hash: this.block.getHash().replace('0x', '')
-        },
-        (err, data) => {
-          this.txsLoad = false
-          this.txs = data.map(_tx => {
-            return new Tx(_tx)
-          })
-        }
-      )
-    }
+    this.loading = false
   }
 
-  setDetails(elem: Block | Uncle) {
+  setDetails(elem: Block) {
     this.timestamp = elem.getTimestamp().toString()
-
     this.details = [
       {
         title: this.$i18n.t('block.height'),
@@ -230,7 +186,7 @@ export default class PageDetailsBlock extends Vue {
       },
       {
         title: this.$i18n.t('block.reward'),
-        detail: elem.getMinerReward().toEthFormated() + '  ' + this.$i18n.t('common.eth')
+        detail: elem.getMinerReward().toEthFormated() + ' ' + this.$i18n.t('common.eth')
       },
       {
         title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward'),
@@ -240,27 +196,15 @@ export default class PageDetailsBlock extends Vue {
         title: this.$i18n.t('block.pHash'),
         detail: elem.getParentHash().toString(),
         link: '/block/' + elem.getParentHash().toString()
+      },
+      {
+        title: this.$i18n.t('title.tx'),
+        detail: elem.getTransactionCount()
       }
     ]
-
-    if (elem.isUncle()) {
-      const uncle = elem as Uncle
-      const item = {
-        title: this.$i18n.t('title.position'),
-        detail: uncle.getPosition()
-      }
-      this.details.push(item)
-    } else {
-      const block = elem as Block
-      const item = {
-        title: this.$i18n.t('title.tx'),
-        detail: block.getTransactionCount()
-      }
-      this.details.push(item)
-    }
   }
 
-  setMore(elem: Block | Uncle) {
+  setMore(elem: Block) {
     this.moreDetails = [
       {
         title: this.$i18n.t('block.diff'),
@@ -272,62 +216,55 @@ export default class PageDetailsBlock extends Vue {
       },
       {
         title: this.$i18n.t('block.nonce'),
-        detail: elem.getNonce()
+        detail: elem.getNonce().toString()
       },
       {
         title: this.$i18n.t('block.root'),
-        detail: elem.getStateRoot()
+        detail: elem.getStateRoot().toString()
       },
       {
         title: this.$i18n.t('block.data'),
-        detail: elem.getExtraData()
+        detail: elem.getExtraData().toString()
+      },
+      {
+        title: this.$i18n.t('block.fees'),
+        detail: elem.getTxFees().toEth() + ' ' + this.$i18n.t('common.eth')
+      },
+      {
+        title: this.$i18n.t('gas.limit'),
+        detail: elem.getGasLimit().toNumber()
+      },
+      {
+        title: this.$i18n.t('gas.used'),
+        detail: elem.getGasUsed().toNumber()
+      },
+      {
+        title: this.$i18n.t('block.logs'),
+        detail: elem.getLogsBloom().toString()
+      },
+      {
+        title: this.$i18n.t('block.txRoot'),
+        detail: elem.getTransactionsRoot().toString()
+      },
+      {
+        title: this.$i18n.t('block.recRoot'),
+        detail: elem.getReceiptsRoot().toString()
+      },
+      {
+        title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.sha'),
+        detail: elem.getSha3Uncles().toString()
       }
     ]
-
-    if (!elem.isUncle()) {
-      const block = elem as Block
-      const newItems = [
-        {
-          title: this.$i18n.t('block.fees'),
-          detail: ethUnits.convert(new Bn(block.getTxFees()), 'wei', 'eth') + ' ' + this.$i18n.t('common.eth')
-        },
-        {
-          title: this.$i18n.t('gas.limit'),
-          detail: block.getGasLimit().toNumber()
-        },
-        {
-          title: this.$i18n.t('gas.used'),
-          detail: block.getGasUsed().toNumber()
-        },
-        {
-          title: this.$i18n.t('block.logs'),
-          detail: block.getLogsBloom()
-        },
-        {
-          title: this.$i18n.t('block.txRoot'),
-          detail: block.getTransactionsRoot()
-        },
-        {
-          title: this.$i18n.t('block.recRoot'),
-          detail: block.getReceiptsRoot()
-        },
-        {
-          title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.sha'),
-          detail: block.getSha3Uncles().toString()
-        }
-      ]
-      newItems.forEach(i => this.moreDetails.push(i))
-    }
   }
 
   // Computed:
 
   get nextBlock(): String {
-    return '/block/' + (this.blockN + 1).toString
+    return '/block/' + this.blockInfo.next
   }
 
   get previousBlock(): String {
-    return '/block/' + (this.blockN - 1).toString
+    return '/block/' + this.blockInfo.prev
   }
 
   get blockDetails(): Detail[] {

@@ -1,14 +1,12 @@
 import { EthValue } from '@app/core/models'
 import { Tx as RawTx } from 'ethvm-common'
-import BN from 'bignumber.js'
 
 export class Tx {
   public readonly id: string
-  private cache: any
+  private cache: any = {}
 
   constructor(private readonly tx: RawTx) {
-    this.cache = {}
-    this.id = this.tx.hash
+    this.id = this.tx.hash.startsWith('0x') ? this.tx.hash : '0x' + this.tx.hash
   }
 
   public getId(): string {

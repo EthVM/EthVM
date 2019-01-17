@@ -1,4 +1,4 @@
-import { EthValue, HexNumber, Hex, Hash } from '@app/core/models'
+import { EthValue, HexNumber, Hex, Hash, Tx } from '@app/core/models'
 import BN from 'bignumber.js'
 import { Block as RawBlock, BlockStats, Reward } from 'ethvm-common'
 
@@ -7,7 +7,7 @@ export class Block {
   private cache: any = {}
 
   constructor(private readonly block: RawBlock) {
-    this.id = this.block.header.hash
+    this.id = this.block.header.hash.startsWith('0x') ? this.block.header.hash : '0x' + this.block.header.hash
   }
 
   public getId(): string {
@@ -105,8 +105,11 @@ export class Block {
     return this.cache.totalDifficulty
   }
 
-  public getExtraData(): string {
-    return this.block.header.extraData ? this.block.header.extraData : ''
+  public getExtraData(): Hex {
+    if (!this.cache.extraData) {
+      this.cache.extraData = new Hex(this.block.header.extraData)
+    }
+    return this.cache.extraData
   }
 
   public getGasLimit(): HexNumber {
@@ -141,8 +144,11 @@ export class Block {
     return this.cache.receiptsRoot
   }
 
-  public getTxFees(): number {
-    return this.block.stats.totalTxsFees
+  public getTxFees(): EthValue {
+    if (!this.cache.totalTxsFees) {
+      this.cache.totalTxsFees = new EthValue(this.block.stats.totalTxsFees)
+    }
+    return this.cache.totalTxsFees
   }
 
   public getRewards(): Reward[] {
@@ -177,6 +183,14 @@ export class Block {
       this.cache.getTotalReward = new EthValue(total.toString())
     }
     return this.cache.getTotalReward
+  }
+
+  public getTxs(): Tx[] {
+    if (!this.cache.txs) {
+      const rawTxs = this.block.transactions || []
+      this.cache.txs = rawTxs.map(rawTx => new Tx(rawTx))
+    }
+    return this.cache.txs
   }
 
   public getStats(): BlockStats {
