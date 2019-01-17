@@ -1,8 +1,18 @@
 export class Hex {
-  public hexString: string
+  private hexString: string
 
-  constructor(_hex: Buffer) {
-    this.hexString = '0x' + Buffer.from(_hex).toString('hex')
+  constructor(raw: Buffer | string) {
+    if (raw instanceof Buffer) {
+      this.hexString = '0x' + Buffer.from(raw).toString('hex')
+      return
+    }
+
+    if (typeof raw === 'string') {
+      this.hexString = raw.startsWith('0x') ? raw : '0x' + raw
+      return
+    }
+
+    this.hexString = '0x0'
   }
 
   public toString(): string {

@@ -1,9 +1,19 @@
 export class Hash {
-  public hash: string
+  private hash: string
 
-  constructor(_hash: Buffer) {
-    this.hash = '0x' + Buffer.from(_hash).toString('hex')
-    this.hash = this.hash === '0x' ? '0x0' : this.hash
+  constructor(raw: Buffer | string) {
+    if (raw instanceof Buffer) {
+      this.hash = '0x' + Buffer.from(raw).toString('hex')
+      this.hash = this.hash === '0x' ? '0x0' : this.hash
+      return
+    }
+
+    if (typeof raw === 'string') {
+      this.hash = raw.startsWith('0x') ? raw : '0x' + raw
+      return
+    }
+
+    this.hash = '0x0'
   }
 
   public toString(): string {

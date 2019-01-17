@@ -1,9 +1,9 @@
-import { EthValue } from '@app/core/models'
-import { Block as RawBlock, BlockStats, Reward } from 'ethvm-common'
+import { EthValue, HexNumber, Hex, Hash } from '@app/core/models'
 import BN from 'bignumber.js'
+import { Block as RawBlock, BlockStats, Reward } from 'ethvm-common'
 
 export class Block {
-  public readonly id: string
+  private readonly id: string
   private cache: any = {}
 
   constructor(private readonly block: RawBlock) {
@@ -48,40 +48,59 @@ export class Block {
     return this.block.transactions ? this.block.transactions.length : 0
   }
 
-  public getParentHash(): string {
-    return '0x' + this.block.header.parentHash
+  public getParentHash(): Hex {
+    if (!this.cache.parentHash) {
+      this.cache.parentHash = new Hex(this.block.header.parentHash)
+    }
+    return this.cache.parentHash
   }
 
-  public getNonce(): string {
-    return this.block.header.nonce
+  // TODO; Review value
+  public getNonce(): Hex {
+    if (!this.cache.nonce) {
+      this.cache.nonce = new Hex(this.block.header.nonce)
+    }
+    return this.cache.nonce
   }
 
-  public getSha3Uncles(): string {
-    return '0x' + this.block.header.sha3Uncles
+  public getSha3Uncles(): Hex {
+    if (!this.cache.sha3Uncles) {
+      this.cache.sha3Uncles = new Hex(this.block.header.sha3Uncles)
+    }
+    return this.cache.sha3Uncles
   }
 
-  public getLogsBloom(): string {
-    return '0x' + this.block.header.logsBloom
+  public getLogsBloom(): Hex {
+    if (!this.cache.logsBloom) {
+      this.cache.logsBloom = new Hex(this.block.header.logsBloom)
+    }
+    return this.cache.logsBloom
   }
 
-  public getStateRoot(): string {
-    return '0x' + this.block.header.stateRoot
+  public getStateRoot(): Hex {
+    if (!this.cache.stateRoot) {
+      this.cache.stateRoot = new Hex(this.block.header.stateRoot)
+    }
+    return this.cache.stateRoot
   }
 
-  public getMiner(): string {
-    return '0x' + this.block.header.author
+  public getMiner(): Hex {
+    if (!this.cache.miner) {
+      this.cache.miner = new Hex(this.block.header.author)
+    }
+    return this.cache.miner
   }
 
-  public getDifficulty(): number {
+  public getDifficulty(): HexNumber {
     if (!this.cache.difficulty) {
-      this.cache.difficulty = new BN(this.block.header.difficulty).toNumber()
+      this.cache.difficulty = new HexNumber(this.block.header.difficulty)
     }
     return this.cache.difficulty
   }
 
-  public getTotalDifficulty(): number {
+  public getTotalDifficulty(): HexNumber {
     if (!this.cache.totalDifficulty) {
-      this.cache.totalDifficulty = new BN(this.block.totalDifficulty).toNumber()
+      this.cache.totalDifficulty = new HexNumber(this.block.totalDifficulty)
     }
     return this.cache.totalDifficulty
   }
@@ -90,16 +109,16 @@ export class Block {
     return this.block.header.extraData ? this.block.header.extraData : ''
   }
 
-  public getGasLimit(): number {
+  public getGasLimit(): HexNumber {
     if (!this.cache.gasLimit) {
-      this.cache.garLimit = new BN(this.block.header.gasUsed).toNumber()
+      this.cache.garLimit = new HexNumber(this.block.header.gasUsed)
     }
     return this.cache.garLimit
   }
 
-  public getGasUsed(): number {
+  public getGasUsed(): HexNumber {
     if (!this.cache.gasUsed) {
-      this.cache.gasUsed = new BN(this.block.header.gasUsed).toNumber()
+      this.cache.gasUsed = new HexNumber(this.block.header.gasUsed)
     }
     return this.cache.gasUsed
   }
@@ -108,12 +127,18 @@ export class Block {
     return new Date(this.block.header.timestamp * 1000)
   }
 
-  public getTransactionsRoot(): string {
-    return this.block.header.transactionsRoot ? '0x' + this.block.header.transactionsRoot : ''
+  public getTransactionsRoot(): Hash {
+    if (!this.cache.transactionsRoot) {
+      this.cache.transactionsRoot = new Hash(this.block.header.transactionsRoot)
+    }
+    return this.cache.transactionsRoot
   }
 
-  public getReceiptsRoot(): string {
-    return this.block.header.receiptsRoot ? '0x' + this.block.header.receiptsRoot : ''
+  public getReceiptsRoot(): Hash {
+    if (!this.cache.receiptsRoot) {
+      this.cache.receiptsRoot = new Hash(this.block.header.receiptsRoot)
+    }
+    return this.cache.receiptsRoot
   }
 
   public getTxFees(): number {
@@ -127,7 +152,7 @@ export class Block {
   public getMinerReward(): EthValue {
     if (!this.cache.minerReward) {
       const rewards = this.getRewards()
-      const rawReward = rewards.length > 1 ? rewards[0].reward : '0'
+      const rawReward = rewards.length > 0 ? rewards[0].reward : '0'
       this.cache.minerReward = new EthValue(rawReward)
     }
     return this.cache.minerReward
@@ -146,7 +171,8 @@ export class Block {
     if (!this.cache.getTotalReward) {
       let total = new BN(0)
       for (const i in this.getRewards()) {
-        total = total.plus(new BN(this.block.rewards[i].reward))
+        const rawReward = this.block.rewards[i].reward || '0'
+        total = total.plus(new BN(rawReward))
       }
       this.cache.getTotalReward = new EthValue(total.toString())
     }

@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { Block, Uncle, Tx, WeiValue } from '@app/core/models'
+import { Block, Uncle, Tx, EthValue } from '@app/core/models'
 import { Events } from 'ethvm-common'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppListDetails from '@app/core/components/ui/AppListDetails.vue'
@@ -59,7 +59,7 @@ export default class PageDetailsBlock extends Vue {
   txs = []
   details = []
   moreDetails = []
-  timestmp = ''
+  timestamp = ''
 
   data() {
     return {
@@ -76,7 +76,8 @@ export default class PageDetailsBlock extends Vue {
       ]
     }
   }
-  /* Lifecycle: */
+
+  // Lifecycle
   created() {
     /* Case 1:  No Data in store --> need data for last block in case curr block was not mined*/
     if (this.$store.getters.blocks.length === 0) {
@@ -190,7 +191,7 @@ export default class PageDetailsBlock extends Vue {
       this.blockType = 'uncle'
     } else {
       this.$socket.emit(
-        Events.getBlockTransactions,
+        Events.getBlockTxs,
         {
           hash: this.block.getHash().replace('0x', '')
         },
@@ -205,7 +206,7 @@ export default class PageDetailsBlock extends Vue {
   }
 
   setDetails(elem: Block | Uncle) {
-    this.timestmp = elem.getTimestamp().toString()
+    this.timestamp = elem.getTimestamp().toString()
 
     this.details = [
       {
@@ -219,8 +220,8 @@ export default class PageDetailsBlock extends Vue {
       },
       {
         title: this.$i18n.t('block.miner'),
-        detail: elem.getMiner(),
-        link: '/address/' + elem.getMiner(),
+        detail: elem.getMiner().toString(),
+        link: '/address/' + elem.getMiner().toString(),
         copy: true
       },
       {
@@ -229,16 +230,16 @@ export default class PageDetailsBlock extends Vue {
       },
       {
         title: this.$i18n.t('block.reward'),
-        detail: new WeiValue(elem.getMinerReward()).toEthFormated() + '  ' + this.$i18n.t('common.eth')
+        detail: elem.getMinerReward().toEthFormated() + '  ' + this.$i18n.t('common.eth')
       },
       {
         title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward'),
-        detail: new WeiValue(elem.getUncleReward()).toEthFormated() + ' ' + this.$i18n.t('common.eth')
+        detail: elem.getUncleReward().toEthFormated() + ' ' + this.$i18n.t('common.eth')
       },
       {
         title: this.$i18n.t('block.pHash'),
-        detail: elem.getParentHash(),
-        link: '/block/' + elem.getParentHash()
+        detail: elem.getParentHash().toString(),
+        link: '/block/' + elem.getParentHash().toString()
       }
     ]
 
@@ -263,11 +264,11 @@ export default class PageDetailsBlock extends Vue {
     this.moreDetails = [
       {
         title: this.$i18n.t('block.diff'),
-        detail: elem.getDifficulty()
+        detail: elem.getDifficulty().toNumber()
       },
       {
         title: this.$i18n.t('block.totalDiff'),
-        detail: elem.getTotalDifficulty()
+        detail: elem.getTotalDifficulty().toNumber()
       },
       {
         title: this.$i18n.t('block.nonce'),
@@ -312,14 +313,14 @@ export default class PageDetailsBlock extends Vue {
         },
         {
           title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.sha'),
-          detail: block.getSha3Uncles()
+          detail: block.getSha3Uncles().toString()
         }
       ]
       newItems.forEach(i => this.moreDetails.push(i))
     }
   }
 
-  /* Computed: */
+  // Computed:
 
   get nextBlock(): String {
     return '/block/' + (this.blockN + 1).toString
@@ -338,7 +339,7 @@ export default class PageDetailsBlock extends Vue {
   }
 
   get formatTime(): string {
-    return new Date(this.timestmp).toString()
+    return new Date(this.timestamp).toString()
   }
 }
 </script>

@@ -1,5 +1,5 @@
 export interface Uncle {
-  number: Buffer
+  number: string
   hash: string
   parentHash: string
   nonce: string
@@ -9,9 +9,9 @@ export interface Uncle {
   stateRoot: string
   receiptsRoot: string
   author: string
-  difficulty: Buffer
+  difficulty: string
   extraData: string
-  gasLimit: Buffer
-  gasUsed: Buffer
+  gasLimit: string
+  gasUsed: string
   timestamp: number
 }

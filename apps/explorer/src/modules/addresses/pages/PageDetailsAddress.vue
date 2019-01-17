@@ -72,14 +72,13 @@ import { AccountInfo } from '@app/modules/addresses/props'
     AppTabs
   }
 })
-export default class PageAddress extends Vue {
+export default class PageDetailsAddress extends Vue {
   @Prop({ type: String, default: '' }) address!: string
 
   detailsType = 'address'
   account = new AccountInfo(this.address, this.detailsType)
 
   /*Transactions: */
-
   txs = []
   txsLoad = true
   txsError = false
@@ -88,8 +87,6 @@ export default class PageAddress extends Vue {
   pending = []
   pendingLoad = true
   pendingError = false
-
-  /*Tokens: */
 
   /*Tokens: */
   tokens = []
@@ -102,6 +99,7 @@ export default class PageAddress extends Vue {
       value: 0
     }
   }
+
   /* Blocks: */
   blocks = []
   blocksLoad = true
@@ -163,9 +161,9 @@ export default class PageAddress extends Vue {
       (err, result) => {
         if (result !== '0x') {
           this.account.tokens = result
-          this.tokensLoaded = true
+          this.tokensLoad = true
         } else {
-          this.tokenError = true
+          this.tokensError = true
         }
       }
     )
