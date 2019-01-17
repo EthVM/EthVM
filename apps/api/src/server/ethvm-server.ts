@@ -101,7 +101,6 @@ export class EthVMServer {
 
     logger.debug('EthVMServer - start() / Registering streamer events')
     this.streamer.addListener('block', this.onBlockEvent)
-    this.streamer.addListener('account', this.onAccountEvent)
     this.streamer.addListener('pendingTx', this.onPendingTxEvent)
 
     logger.debug('EthVMServer - start() / Starting to listen socket events on SocketIO')
@@ -164,7 +163,7 @@ export class EthVMServer {
     const { op, key, value } = event
     const block = value as Block
 
-    logger.info(`EthVMServer - onBlockEvent / Op: ${op} - Number: ${key} - Hash: ${block.hash}`)
+    logger.info(`EthVMServer - onBlockEvent / Op: ${op} - Number: ${key} - Hash: ${block.header.hash}`)
 
     if (op !== 'delete') {
       const txs = value.transactions || []
@@ -181,12 +180,6 @@ export class EthVMServer {
     }
 
     this.io.to('blocks').emit('newBlock', event)
-  }
-
-  private onAccountEvent = (event: StreamingEvent): void => {
-    const { op, key, value } = event
-
-    logger.info(`EthVMServer - onAccountEvent / Op: ${op} - Address: ${key}`)
   }
 
   private onPendingTxEvent = (event: StreamingEvent): void => {

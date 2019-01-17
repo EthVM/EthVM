@@ -34,8 +34,7 @@ async function bootstrapServer() {
     host: config.get('data_stores.redis.host'),
     port: config.get('data_stores.redis.port')
   })
-  const socketRows = config.get('data_stores.redis.socket_rows')
-  const ds = new RedisCacheRepository(redis, socketRows)
+  const ds = new RedisCacheRepository(redis)
   await ds.initialize().catch(() => process.exit(-1))
 
   // Create Blockchain data store

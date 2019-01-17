@@ -74,11 +74,6 @@ const config = convict({
         default: 0,
         format: Number,
         env: 'ETHVM_DATA_STORE_REDIS_DB'
-      },
-      socket_rows: {
-        default: 64,
-        format: 'int',
-        env: 'ETHVM_DATA_STORE_REDIS_SOCKET_ROWS'
       }
     }
   },
