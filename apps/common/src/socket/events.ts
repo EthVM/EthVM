@@ -63,7 +63,8 @@ export const Events = {
   getAverageBlockTimeStats: "get-average-block-time-stats",
   getAverageNumberOfUnclesStats: "get-average-number-of-uncles",
   getAverageHashRateStats: "get-average-hash-rate-stats",
-  getAverageMinerRewardsStats: "get-average-miner-rewards-stats"
+  getAverageMinerRewardsStats: "get-average-miner-rewards-stats",
+  getAverageTotalTxs: "get-average-total-txs-stats"
 }
 
 export const SocketDefaultRooms = ["blocks", "txs", "uncles", "pendingTxs"]
