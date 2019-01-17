@@ -3,17 +3,21 @@ import ethUnits from 'ethereumjs-units'
 import NumberFormatter from 'number-formatter'
 
 export class EthValue {
-  public value: string
+  private value: string | number
 
-  constructor(_value: Buffer | string) {
-    if (_value instanceof Buffer) {
-      this.value = '0x' + Buffer.from(_value).toString('hex')
+  constructor(raw: Buffer | string | number) {
+    if (raw instanceof Buffer) {
+      this.value = '0x' + Buffer.from(raw).toString('hex')
       this.value = this.value === '0x' ? '0x0' : this.value
+      return
     }
 
-    if (typeof _value  === 'string') {
-      this.value = _value
+    if (typeof raw  === 'string' || typeof raw === 'number') {
+      this.value = raw
+      return
     }
+
+    this.value = '0'
   }
 
   public toEth(): number {
@@ -28,11 +32,14 @@ export class EthValue {
     return ethUnits.convert(new Bn(this.value).toFixed(), 'wei', 'gwei')
   }
 
-  public toString(): string {
-    return this.value
-  }
-
   public toEthFormated(): number {
     return NumberFormatter('#,##0.##', ethUnits.convert(new Bn(this.value).toFixed(), 'wei', 'eth'))
+  }
+
+  public toString(): string {
+    if (typeof this.value === 'number') {
+      return this.value.toString()
+    }
+    return this.value
   }
 }
