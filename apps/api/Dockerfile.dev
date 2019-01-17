@@ -34,6 +34,9 @@ USER node
 # Copy
 COPY . .
 
+# Remove cached node_modules
+RUN rm -rf /var/api/node_modules
+
 # Expose
 EXPOSE 3000
 CMD yarn install && yarn start:dev
