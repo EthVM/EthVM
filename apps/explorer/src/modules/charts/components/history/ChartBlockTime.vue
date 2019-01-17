@@ -1,13 +1,14 @@
 <template>
   <app-chart
     type="line"
-    :chart-id="id"
+    :chart-id="ID"
     :chart-title="title"
     :chart-description="description"
     :data="chartData"
     :options="chartOptions"
     :redraw="redraw"
     unfilled="true"
+    @timeFrame = "setTimeFrame"
   >
   </app-chart>
 </template>
@@ -16,14 +17,11 @@
 import AppChart from '@app/modules/charts/components/AppChart.vue'
 import { Vue, Component } from 'vue-property-decorator'
 import ethUnits from 'ethereumjs-units'
+import id from '@app/modules/charts/helpers'
 
 /* Time Variables: */
-const STATES = {
-  ALL: 'ALL',
-  YEAR: 'YEAR',
-  MONTH: 'MONTH',
-  DAY: 'DAY'
-}
+const STATES = ['ALL', 'YEAR', 'MONTH', 'DAY']
+
 
 const DES = {
   BEGIN: 'Average block time history in Ethereum blockchain since the begining.',
@@ -36,10 +34,10 @@ const DES = {
   }
 })
 export default class ChartBlockSize extends Vue {
-  id = 'block_time_history'
+  ID = id.blockTime
   title = 'Average Block Time'
   redraw = false
-  timeFrame = STATES.DAY
+  timeFrame = 1
   chartOptions = {
     title: {
       text: 'Average Block Time',
@@ -78,7 +76,7 @@ export default class ChartBlockSize extends Vue {
   get chartData() {
     const newLabels = []
     const newPoints = []
-    this.$socket.emit('getAverageBlockTime', this.timeFrame, (err, result) => {
+    this.$socket.emit('getAverageBlockTime', STATES[this.timeFrame], (err, result) => {
       if (!err && result) {
         result.forEach(function(block) {
           newPoints.push(block.reduction)
@@ -101,7 +99,12 @@ export default class ChartBlockSize extends Vue {
     }
   }
   get description(): string {
-    return this.timeFrame === STATES.ALL ? DES.BEGIN : DES.OTHER + this.timeFrame
+    return this.timeFrame === 0? DES.BEGIN : DES.OTHER + STATES[this.timeFrame]
+  }
+
+  /*Methods: */
+  setTimeFrame(_value: number): void {
+    this.timeFrame = _value
   }
 }
 </script>

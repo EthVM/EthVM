@@ -79,7 +79,7 @@ export default class ChartBlockSize extends Vue {
     const newLabels = []
     const newPoints = []
 
-    this.$socket.emit('getAvgTxFeeStats', this.timeFrame, (err, result) => {
+    this.$socket.emit(Events('getAvgTxFeeStats', this.timeFrame), (err, result) => {
       if (!err && result) {
         result.forEach(function(block) {
           newPoints.push(block.reduction)

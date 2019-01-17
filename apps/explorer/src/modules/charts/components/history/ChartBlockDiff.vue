@@ -1,13 +1,13 @@
 <template>
   <app-chart
     type="line"
-    :chart-id="id"
     :chart-title="title"
     :chart-description="description"
     :data="chartData"
     :options="chartOptions"
     :redraw="redraw"
     unfilled="true"
+    @timeFrame = "setTimeFrame"
   >
   </app-chart>
 </template>
@@ -16,14 +16,11 @@
 import AppChart from '@app/modules/charts/components/AppChart.vue'
 import { Vue, Component } from 'vue-property-decorator'
 import ethUnits from 'ethereumjs-units'
+import { Events } from 'ethvm-common'
+import id from '@app/modules/charts/helpers'
 
 /* Time Variables: */
-const STATES = {
-  ALL: 'ALL',
-  YEAR: 'YEAR',
-  MONTH: 'MONTH',
-  DAY: 'DAY'
-}
+const STATES = ['ALL', 'DAY', 'MONTH', 'YEAR']
 
 const DES = {
   BEGIN: 'Average block difficulty history in Ethereum blockchain since the begining.',
@@ -36,10 +33,10 @@ const DES = {
   }
 })
 export default class ChartBlockDiff extends Vue {
-  id = 'block_difficulty_history'
+  ID = id.difficulty
   title = 'Average Block Difficulty'
-  redraw = false
-  timeFrame = STATES.DAY
+  redraw = true
+  timeFrame = 1
   chartOptions = {
     title: {
       text: 'Average Block Difficulty',
@@ -74,27 +71,21 @@ export default class ChartBlockDiff extends Vue {
       ]
     }
   }
+  newLabels = []
+  newPoints = []
+
   /*Computed: */
   get chartData() {
-    const newLabels = []
-    const newPoints = []
+    console.log("points", this.newPoints)
 
-    this.$socket.emit('getAverageTotalDifficulty', this.timeFrame, (err, result) => {
-      if (!err && result) {
-        result.forEach(function(block) {
-          newPoints.push(block.reduction)
-          newLabels.push(block.group)
-        })
-      }
-    })
     return {
-      labels: newLabels,
+      labels: this.newLabels,
       datasets: [
         {
           label: 'Average Block Difficulty',
           borderColor: '#20c0c7',
           backgroundColor: '#20c0c7',
-          data: newPoints,
+          data: this.newPoints,
           yAxisID: 'y-axis-1',
           fill: false
         }
@@ -102,7 +93,28 @@ export default class ChartBlockDiff extends Vue {
     }
   }
   get description(): string {
-    return this.timeFrame === STATES.ALL ? DES.BEGIN : DES.OTHER + this.timeFrame
+    return this.timeFrame === 0? DES.BEGIN : DES.OTHER + STATES[this.timeFrame]
+  }
+
+   /*Methods: */
+  setTimeFrame(_value: number): void {
+    this.timeFrame = _value
+    this.setData()
+  }
+
+  setData(): void {
+    console.log(STATES[this.timeFrame] )
+    this.$socket.emit(Events.getAvgTotalDifficultyStats, {"duration": STATES[this.timeFrame] }, (err, result) => {
+      if (!err && result) {
+        console.log("getting data", result)
+        result.forEach(point =>{
+          this.newPoints.push({
+            x: point.date,
+            y: point.value})
+          this.newLabels.push(point.name)
+        })
+      }
+    })
   }
 }
 </script>

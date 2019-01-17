@@ -18,8 +18,10 @@
         </v-layout>
         <!-- Charts -->
         <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6> <chart-live-tx /> </v-flex>
-          <v-flex xs12 md6> <chart-live-tx-fees /> </v-flex>
+
+      <v-flex xs12 md6> <chart-live-tx /> </v-flex>
+      <v-flex xs12 md6> <chart-live-tx-fees /> </v-flex>
+
         </v-layout>
         <v-layout row wrap justify-center mb-4>
           <v-flex xs12 md6><!-- Average Block Time --></v-flex>
@@ -44,11 +46,19 @@
       <!-- Blocks -->
       <v-tab-item slot="tabs-item" value="tab-2">
         <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6><!-- Average Block Time --></v-flex>
+          <v-flex xs12 md6>
+                  <v-img :src="require('@/assets/chart.png')"  contain class="ma-4"></v-img>
+  <v-btn flat color="secondary" class="text-capitalize" :to="'/chart/' + ID.blockTime"
+            >{{ $t('bttn.more') }} <v-icon right>fas fa-angle-right</v-icon></v-btn
+          >
+          </v-flex>
           <v-flex xs12 md6><!-- Average Block Size --></v-flex>
         </v-layout>
         <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6><!-- Historic difficulty --></v-flex>
+          <v-flex xs12 md6> <v-img :src="require('@/assets/chart.png')"  contain class="ma-4"></v-img>
+  <v-btn flat color="secondary" class="text-capitalize" :to="'/chart/' + ID.difficulty"
+            >{{ $t('bttn.more') }} <v-icon right>fas fa-angle-right</v-icon></v-btn
+          ></v-flex>
         </v-layout>
       </v-tab-item>
       <!-- Mining -->
@@ -72,7 +82,7 @@ import AppInfoCard from '@app/core/components/ui/AppInfoCard.vue'
 import ChartLiveTx from '@app/modules/charts/components/live/ChartLiveTx.vue'
 import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees.vue'
 import { LastBlockInfoMixin } from '@app/core/components/mixins'
-
+import id from '@app/modules/charts/helpers/index.ts'
 import { Vue, Component, Mixins } from 'vue-property-decorator'
 
 const MAX_ITEMS = 20
@@ -87,6 +97,7 @@ const MAX_ITEMS = 20
   }
 })
 export default class PageCharts extends Mixins(LastBlockInfoMixin) {
+  ID = id
   data() {
     return {
       crumbs: [
