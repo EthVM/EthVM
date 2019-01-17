@@ -8,7 +8,7 @@
     :options="chartOptions"
     :redraw="redraw"
     unfilled="true"
-    @timeFrame = "setTimeFrame"
+    @timeFrame="setTimeFrame"
   >
   </app-chart>
 </template>
@@ -21,7 +21,6 @@ import id from '@app/modules/charts/helpers'
 
 /* Time Variables: */
 const STATES = ['ALL', 'YEAR', 'MONTH', 'DAY']
-
 
 const DES = {
   BEGIN: 'Average block time history in Ethereum blockchain since the begining.',
@@ -99,7 +98,7 @@ export default class ChartBlockSize extends Vue {
     }
   }
   get description(): string {
-    return this.timeFrame === 0? DES.BEGIN : DES.OTHER + STATES[this.timeFrame]
+    return this.timeFrame === 0 ? DES.BEGIN : DES.OTHER + STATES[this.timeFrame]
   }
 
   /*Methods: */

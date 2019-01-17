@@ -18,10 +18,8 @@
         </v-layout>
         <!-- Charts -->
         <v-layout row wrap justify-center mb-4>
-
-      <v-flex xs12 md6> <chart-live-tx /> </v-flex>
-      <v-flex xs12 md6> <chart-live-tx-fees /> </v-flex>
-
+          <v-flex xs12 md6> <chart-live-tx /> </v-flex>
+          <v-flex xs12 md6> <chart-live-tx-fees /> </v-flex>
         </v-layout>
         <v-layout row wrap justify-center mb-4>
           <v-flex xs12 md6><!-- Average Block Time --></v-flex>
@@ -47,18 +45,20 @@
       <v-tab-item slot="tabs-item" value="tab-2">
         <v-layout row wrap justify-center mb-4>
           <v-flex xs12 md6>
-                  <v-img :src="require('@/assets/chart.png')"  contain class="ma-4"></v-img>
-  <v-btn flat color="secondary" class="text-capitalize" :to="'/chart/' + ID.blockTime"
-            >{{ $t('bttn.more') }} <v-icon right>fas fa-angle-right</v-icon></v-btn
-          >
+            <v-img :src="require('@/assets/chart.png')" contain class="ma-4"></v-img>
+            <v-btn flat color="secondary" class="text-capitalize" :to="'/chart/' + ID.blockTime"
+              >{{ $t('bttn.more') }} <v-icon right>fas fa-angle-right</v-icon></v-btn
+            >
           </v-flex>
           <v-flex xs12 md6><!-- Average Block Size --></v-flex>
         </v-layout>
         <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6> <v-img :src="require('@/assets/chart.png')"  contain class="ma-4"></v-img>
-  <v-btn flat color="secondary" class="text-capitalize" :to="'/chart/' + ID.difficulty"
-            >{{ $t('bttn.more') }} <v-icon right>fas fa-angle-right</v-icon></v-btn
-          ></v-flex>
+          <v-flex xs12 md6>
+            <v-img :src="require('@/assets/chart.png')" contain class="ma-4"></v-img>
+            <v-btn flat color="secondary" class="text-capitalize" :to="'/chart/' + ID.difficulty"
+              >{{ $t('bttn.more') }} <v-icon right>fas fa-angle-right</v-icon></v-btn
+            ></v-flex
+          >
         </v-layout>
       </v-tab-item>
       <!-- Mining -->

@@ -3,7 +3,6 @@ import { State } from '@app/core/store/state'
 import { Tx as RawTx, Block as RawBlock, PendingTx as RawPendingTx, Uncle as RawUncle } from 'ethvm-common'
 
 const NEW_BLOCK = (state: State, raw: RawBlock | RawBlock[]) => {
-  console.log('NEW_BLOCK: ', raw)
   const blocks = !Array.isArray(raw) ? [raw] : raw
   blocks.forEach(block => state.blocks.add(new Block(block)))
 }

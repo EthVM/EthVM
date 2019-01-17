@@ -142,7 +142,6 @@ export default class ChartLiveTransactions extends Vue {
     latestBlocks.forEach(_block => {
       data.labels.unshift(_block.getNumber())
       const _tempD = _block.getStats()
-      console.log(_tempD)
       data.sData.unshift(new BN(_tempD.successfulTxs).toNumber())
       data.fData.unshift(new BN(_tempD.failedTxs).toNumber())
       data.pData.unshift(new BN(0).toNumber()) //pending tx ev

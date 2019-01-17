@@ -13,14 +13,14 @@
       <v-flex xs4 v-if="!liveChart">
         <v-layout row align-center justify-end fill-height>
           <v-toolbar flat color="transparent">
-             <v-layout align-center justify-end>
-          <v-btn-toggle depressed v-model="toggleData"  mandatory >
-            <v-btn flat :value="0" @click="request()" active-class="active-button white--text" small>All</v-btn>
-            <v-btn flat :value="1" @click="request()" active-class="active-button white--text" small>1D</v-btn>
-            <v-btn flat :value="2" @click="request()" active-class="active-button white--text" small>1M</v-btn>
-            <v-btn flat :value="3" @click="request()" active-class="active-button white--text" small>1Y</v-btn>
-          </v-btn-toggle>
-             </v-layout>
+            <v-layout align-center justify-end>
+              <v-btn-toggle depressed v-model="toggleData" mandatory>
+                <v-btn flat :value="0" @click="request()" active-class="active-button white--text" small>All</v-btn>
+                <v-btn flat :value="1" @click="request()" active-class="active-button white--text" small>1D</v-btn>
+                <v-btn flat :value="2" @click="request()" active-class="active-button white--text" small>1M</v-btn>
+                <v-btn flat :value="3" @click="request()" active-class="active-button white--text" small>1Y</v-btn>
+              </v-btn-toggle>
+            </v-layout>
           </v-toolbar>
         </v-layout>
       </v-flex>
@@ -80,44 +80,15 @@ Chart.defaults.doughnut.animation = Object.assign(Chart.defaults.doughnut.animat
 })
 export default class AppChart extends Vue {
   @Prop({ type: Boolean, default: false }) liveChart!: boolean
-  @Prop({
-    type: String,
-    required: true
-  })
-  type!: string
-  @Prop({
-    type: Object,
-    required: true
-  })
-  data: object[]
-  @Prop({
-    type: Boolean
-  })
-  redraw!: boolean
-  @Prop({
-    type: Object
-  })
-  options!: object
-  @Prop({
-    type: Number
-  })
-  width!: number
-  @Prop({
-    type: Number
-  })
-  height!: number
-  @Prop({
-    type: String
-  })
-  chartTitle!: string
-  @Prop({
-    type: String
-  })
-  chartDescription!: string
-  @Prop({
-    type: Array
-  })
-  footnoteArr?: Footnote[]
+  @Prop({ type: String, required: true }) type!: string
+  @Prop({ type: Object, required: true }) data: object[]
+  @Prop({ type: Boolean }) redraw!: boolean
+  @Prop({ type: Object }) options!: object
+  @Prop({ type: Number }) width!: number
+  @Prop({ type: Number }) height!: number
+  @Prop({ type: String }) chartTitle!: string
+  @Prop({ type: String }) chartDescription!: string
+  @Prop({ type: Array }) footnoteArr?: Footnote[]
 
   toggleData = 1
 
@@ -130,7 +101,6 @@ export default class AppChart extends Vue {
     this.chart.destroy()
   }
 
-
   /* Watchers: */
   @Watch('data.labels')
   onDataLabelsChanged(): void {
@@ -140,7 +110,6 @@ export default class AppChart extends Vue {
   @Watch('data.datasets')
   onDataDatasetsChanged(): void {
     if (this.redraw) {
-      console.log("heeeee")
       this.chart.destroy()
       this.createChart()
     } else {

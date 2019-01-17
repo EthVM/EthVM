@@ -12,7 +12,7 @@ export class EthValue {
       return
     }
 
-    if (typeof raw  === 'string' || typeof raw === 'number') {
+    if (typeof raw === 'string' || typeof raw === 'number') {
       this.value = raw
       return
     }

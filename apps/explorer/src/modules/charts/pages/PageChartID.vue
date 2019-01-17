@@ -3,7 +3,7 @@
     <app-bread-crumbs :new-items="crumbs"></app-bread-crumbs>
     <chart-block-diff v-if="chartID === ID.difficulty" />
     <chart-block-time v-if="chartID === ID.blockTime" />
-    <chart-block-size v-if="chartID ===  ID.blockSize" />
+    <chart-block-size v-if="chartID === ID.blockSize" />
     <chart-gas-limit v-if="chartID === ID.gasLimit" />
     <chart-gas-price v-if="chartID === ID.gasPrice" />
     <chart-hash-rate v-if="chartID === ID.hashRate" />

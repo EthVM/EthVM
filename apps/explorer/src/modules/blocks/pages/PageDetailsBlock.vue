@@ -1,29 +1,17 @@
 <template>
   <v-container grid-list-lg class="mb-0">
-    <app-bread-crumbs :new-items="breadcrumbs"/>
+    <app-bread-crumbs :new-items="breadcrumbs" />
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
-        <app-list-details
-          :items="blockDetails"
-          :more-items="blockMoreDetails"
-          :details-type="listType"
-          :loading="loading"
-        >
-          <app-list-title slot="details-title" :list-type="listType" :block-details="blockInfo"/>
+        <app-list-details :items="blockDetails" :more-items="blockMoreDetails" :details-type="listType" :loading="loading">
+          <app-list-title slot="details-title" :list-type="listType" :block-details="blockInfo" />
         </app-list-details>
       </v-flex>
     </v-layout>
     <!-- Mined Block, txs table -->
     <v-layout row wrap justify-start class="mb-4">
       <v-flex v-if="txs" xs12>
-        <table-txs
-          v-if="txs"
-          :transactions="txs"
-          :frame-txs="true"
-          :page-type="listType"
-          :loading="loading"
-          class="mt-3"
-        />
+        <table-txs v-if="txs" :transactions="txs" :frame-txs="true" :page-type="listType" :loading="loading" class="mt-3" />
         <v-card v-if="txs.length === 0" flat color="white">
           <v-card-text class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }}</v-card-text>
         </v-card>
@@ -94,7 +82,6 @@ export default class PageDetailsBlock extends Vue {
     // 1. Check that current block ref is valid one
     if (!eth.isValidHash(this.blockRef)) {
       // TODO: Display error
-      console.error('Block ref is not a valid one!')
       return
     }
 
@@ -110,9 +97,7 @@ export default class PageDetailsBlock extends Vue {
   }
 
   // Methods:
-  fetchBlock() {
-    console.log('Fetching block')
-  }
+  fetchBlock() {}
 
   // getBlockByHash() {
   //   this.$socket.emit(
