@@ -67,7 +67,7 @@ export default class TableBlocksRow extends Mixins(StringConcatMixin) {
   @Prop({ type: String, default: 'home' }) pageType!: string
 
   hasUncles(block) {
-    return block.getType() == 'block' && block.getUncles.length > 0
+    return block.getType() == 'block' && block.getUncles().length > 0
   }
 }
 </script>
