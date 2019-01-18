@@ -15,6 +15,7 @@ import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Blocks
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Transactions
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Uncles
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Contracts
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.BlockMetrics
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Balances
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.PendingTransactions
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.TokenTransfers
@@ -60,6 +61,7 @@ class MongoSinkTask : SinkTask() {
       TokenTransfers to db.getCollection(TokenTransfers.id, clazz),
       Balances to db.getCollection(Balances.id, clazz),
       PendingTransactions to db.getCollection(PendingTransactions.id, clazz),
+      BlockMetrics to db.getCollection(BlockMetrics.id, clazz),
       AggregateBlockMetrics to db.getCollection(AggregateBlockMetrics.id, clazz)
     )
   }
@@ -122,6 +124,7 @@ enum class MongoCollections(val id: String) {
   Contracts("contracts"),
   TokenTransfers("token_transfers"),
   Balances("balances"),
+  BlockMetrics("block_metrics"),
   PendingTransactions("pending_transactions")
 }
 
@@ -390,18 +393,19 @@ enum class KafkaTopics(
     if (record.value() == null) {
 
       // tombstone received so we need to delete
-      writes += UpdateOneModel(idFilter, Document(mapOf("\$unset" to "metrics")))
+      writes += DeleteOneModel(idFilter)
+
     } else {
 
       require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
 
       val struct = record.value() as org.apache.kafka.connect.data.Struct
-      val bson = BsonDocument("\$set", BsonDocument("metrics", StructToBsonConverter.convert(struct, "block-metrics")))
+      val bson = BsonDocument("\$set", StructToBsonConverter.convert(struct, "block-metrics"))
 
       writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
     }
 
-    mapOf(MongoCollections.Blocks to writes)
+    mapOf(MongoCollections.BlockMetrics to writes)
   }),
 
   AggregateBlockMetrics("aggregate-block-metrics-by-day", { record: SinkRecord ->
