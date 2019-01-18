@@ -131,7 +131,7 @@ object TypeMappings {
     "block" to mapOf(
       "header" to blockHeader,
       "transactions" to tx,
-      "transactionReceipts" to txReceipt,
+      "transactionReceipts" to Ignore,
       "unclesHash" to Hex,
       "uncles" to blockHeader,
       "rewards" to mapOf(
