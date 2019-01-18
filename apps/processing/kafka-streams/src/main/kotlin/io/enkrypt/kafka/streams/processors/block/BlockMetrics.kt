@@ -8,13 +8,14 @@ import io.enkrypt.common.extensions.bigInteger
 import io.enkrypt.common.extensions.isSuccess
 import io.enkrypt.common.extensions.unsignedBigInteger
 import io.enkrypt.common.extensions.unsignedByteBuffer
-import io.enkrypt.kafka.streams.models.BlockStatistic
 import org.apache.kafka.streams.KeyValue
 import java.math.BigInteger
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
+
+
 
 object BlockMetrics {
 
@@ -102,39 +103,39 @@ object BlockMetrics {
 
     return listOf(
       KeyValue(
-        keyBuilder.setName(BlockStatistic.TotalTxs.name).build(),
+        keyBuilder.setName("TotalTxs").build(),
         MetricRecord.newBuilder().`setInt$`(totalTxs * intMultiplier).build()
       ),
       KeyValue(
-        keyBuilder.setName(BlockStatistic.NumSuccessfulTxs.name).build(),
+        keyBuilder.setName("NumSuccessfulTxs").build(),
         MetricRecord.newBuilder().`setInt$`(numSuccessfulTxs * intMultiplier).build()
       ),
       KeyValue(
-        keyBuilder.setName(BlockStatistic.NumFailedTxs.name).build(),
+        keyBuilder.setName("NumFailedTxs").build(),
         MetricRecord.newBuilder().`setInt$`(numFailedTxs * intMultiplier).build()
       ),
       KeyValue(
-        keyBuilder.setName(BlockStatistic.NumPendingTxs.name).build(),
+        keyBuilder.setName("NumPendingTxs").build(),
         MetricRecord.newBuilder().`setInt$`(numPendingTxs * intMultiplier).build()
       ),
       KeyValue(
-        keyBuilder.setName(BlockStatistic.TotalDifficulty.name).build(),
+        keyBuilder.setName("TotalDifficulty").build(),
         MetricRecord.newBuilder().setBigInteger(totalDifficulty.times(bigIntMultiplier).unsignedByteBuffer()).build()
       ),
       KeyValue(
-        keyBuilder.setName(BlockStatistic.TotalGasPrice.name).build(),
+        keyBuilder.setName("TotalGasPrice").build(),
         MetricRecord.newBuilder().setBigInteger(totalGasPrice.times(bigIntMultiplier).unsignedByteBuffer()).build()
       ),
       KeyValue(
-        keyBuilder.setName(BlockStatistic.AvgGasPrice.name).build(),
+        keyBuilder.setName("AvgGasPrice").build(),
         MetricRecord.newBuilder().setBigInteger(avgGasPrice.times(bigIntMultiplier).unsignedByteBuffer()).build()
       ),
       KeyValue(
-        keyBuilder.setName(BlockStatistic.TotalTxsFees.name).build(),
+        keyBuilder.setName("TotalTxsFees").build(),
         MetricRecord.newBuilder().setBigInteger(totalTxFees.times(bigIntMultiplier).unsignedByteBuffer()).build()
       ),
       KeyValue(
-        keyBuilder.setName(BlockStatistic.AvgTxsFees.name).build(),
+        keyBuilder.setName("AvgTxsFees").build(),
         MetricRecord.newBuilder().setBigInteger(avgTxFees.times(bigIntMultiplier).unsignedByteBuffer()).build()
       )
     )
