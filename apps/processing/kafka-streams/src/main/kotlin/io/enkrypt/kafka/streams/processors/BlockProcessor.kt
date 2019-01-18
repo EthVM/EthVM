@@ -331,7 +331,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
 
     blockStream
       .flatMap { _, block -> BlockStatistics.forBlock(block) }
-      .to(Topics.BlockMetrics, Produced.with(Serdes.MetricKey(), Serdes.Metric()))
+      .to(Topics.BlockMetricsByDay, Produced.with(Serdes.MetricKey(), Serdes.Metric()))
 
     // Generate the topology
     return builder.build()

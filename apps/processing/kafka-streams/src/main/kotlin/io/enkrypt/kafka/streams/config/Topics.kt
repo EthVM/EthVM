@@ -5,8 +5,9 @@ object Topics {
   const val Blocks = "blocks"
   const val Transactions = "transactions"
   const val Uncles = "uncles"
-  const val BlockMetrics = "block-metrics"
-  const val BlockStatistics = "block-statistics"
+
+  const val BlockMetricsByDay = "block-metrics-by-day"
+  const val AggregateBlocksMetricsByDay = "aggregate-block-metrics-by-day"
 
   const val TokenTransfers = "token-transfers"
   const val FungibleTokenMovements = "fungible-token-movements"

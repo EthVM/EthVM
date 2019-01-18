@@ -10,7 +10,7 @@ const collections = [
   "token_transfers",
   'pending',
   'pending_transactions',
-  'statistics'
+  'aggregate_block_metrics'
 ];
 
 collections.forEach(name => db[name].drop());

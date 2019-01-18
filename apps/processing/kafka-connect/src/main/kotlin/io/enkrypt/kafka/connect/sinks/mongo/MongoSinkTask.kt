@@ -18,7 +18,7 @@ import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Contracts
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Balances
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.PendingTransactions
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.TokenTransfers
-import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.BlockStatistics
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.AggregateBlockMetrics
 import io.enkrypt.kafka.connect.utils.Versions
 import mu.KotlinLogging
 import org.apache.kafka.clients.consumer.OffsetAndMetadata
@@ -60,7 +60,7 @@ class MongoSinkTask : SinkTask() {
       TokenTransfers to db.getCollection(TokenTransfers.id, clazz),
       Balances to db.getCollection(Balances.id, clazz),
       PendingTransactions to db.getCollection(PendingTransactions.id, clazz),
-      BlockStatistics to db.getCollection(BlockStatistics.id, clazz)
+      AggregateBlockMetrics to db.getCollection(AggregateBlockMetrics.id, clazz)
     )
   }
 
@@ -116,7 +116,7 @@ class MongoSinkTask : SinkTask() {
 
 enum class MongoCollections(val id: String) {
   Blocks("blocks"),
-  BlockStatistics("block_statistics"),
+  AggregateBlockMetrics("aggregate_block_metrics"),
   Uncles("uncles"),
   Transactions("transactions"),
   Contracts("contracts"),
@@ -377,7 +377,7 @@ enum class KafkaTopics(
     mapOf(MongoCollections.PendingTransactions to writes)
   }),
 
-  BlockStatistics("block-statistics", { record: SinkRecord ->
+  AggregateBlockMetrics("aggregate-block-metrics-by-day", { record: SinkRecord ->
 
     require(record.keySchema().type() == Schema.Type.STRUCT) { "Key schema must be a struct" }
 
@@ -403,7 +403,7 @@ enum class KafkaTopics(
       writes += ReplaceOneModel(idFilter, bson, MongoSinkTask.replaceOptions)
     }
 
-    mapOf(MongoCollections.BlockStatistics to writes)
+    mapOf(MongoCollections.AggregateBlockMetrics to writes)
   });
 
   companion object {
