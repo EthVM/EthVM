@@ -53,7 +53,6 @@ export class MongoStatisticsRepository extends BaseMongoDbRepository implements 
       .sort({ date: -1 })
       .toArray()
       .then(resp => {
-        console.log('Current event: ',  event, ' start: ', start, ' end: ', end, ' Result: ', resp)
         if (!resp) {
           return []
         }
