@@ -60,7 +60,8 @@ object TypeMappings {
     "from" to Hex,
     "to" to Hex,
     "input" to Hex,
-    "creates" to Hex
+    "creates" to Hex,
+    "raw" to Ignore
   )
 
   private val txReceipt = mapOf(
@@ -78,7 +79,8 @@ object TypeMappings {
     "logsBloom" to Hex,
     "status" to Hex,
     "internalTxs" to internalTx,
-    "deletedAccounts" to Hex
+    "deletedAccounts" to Hex,
+    "raw" to Ignore
   )
 
   private val tx = mapOf(
