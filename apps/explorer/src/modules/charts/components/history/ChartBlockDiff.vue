@@ -111,7 +111,7 @@ export default class ChartBlockDiff extends Vue {
    /*Methods: */
   setTimeFrame(_value: number): void {
     this.timeFrame = _value
-    if(this.DATA[this.timeFrame].state) {
+    if(this.DATA[this.timeFrame].points) {
       this.setData(_value)
     }
   }

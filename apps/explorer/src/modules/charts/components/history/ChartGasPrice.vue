@@ -34,7 +34,7 @@ export default class ChartGasPrice extends Vue {
 
   id = 'gas_price_history'
   title = 'Average Gas Price History'
-  redraw = false
+  redraw = true
   timeFrame = 1
   chartOptions = {
     title: {
@@ -91,7 +91,6 @@ export default class ChartGasPrice extends Vue {
 
   /*Computed: */
   get chartData() {
-    console.log(this.DATA[this.timeFrame].points.length)
     return {
       labels: this.DATA[this.timeFrame].labels,
       datasets: [
@@ -109,13 +108,12 @@ export default class ChartGasPrice extends Vue {
    /*Methods: */
   setTimeFrame(_value: number): void {
     this.timeFrame = _value
-    if(this.DATA[this.timeFrame].state) {
+    if(this.DATA[this.timeFrame].points) {
       this.setData(_value)
     }
   }
 
   setData(_state: number): void {
-    console.log("Requesting",  _state)
     this.$socket.emit( Events.getAverageGasPriceStats, {"duration": this.DATA[_state].state }, (err, result) => {
       console.log("error in data request: "+ _state, err)
       console.log("result in data request: "+_state, result)
@@ -124,7 +122,7 @@ export default class ChartGasPrice extends Vue {
           this.DATA[_state].points.push({
             x: point.date,
             y: point.value})
-          this.DATA[_state].labels.push(point.name)
+          this.DATA[_state].labels.push('label')
         })
       }
     })

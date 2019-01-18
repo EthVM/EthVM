@@ -15,10 +15,10 @@
           <v-toolbar flat color="transparent">
             <v-layout align-center justify-end>
               <v-btn-toggle depressed v-model="toggleData" mandatory>
-                <v-btn flat :value="0" @click="request()" active-class="active-button white--text" small>All</v-btn>
-                <v-btn flat :value="1" @click="request()" active-class="active-button white--text" small>1D</v-btn>
-                <v-btn flat :value="2" @click="request()" active-class="active-button white--text" small>1M</v-btn>
-                <v-btn flat :value="3" @click="request()" active-class="active-button white--text" small>1Y</v-btn>
+                <v-btn flat :value="0" active-class="active-button white--text" small>All</v-btn>
+                <v-btn flat :value="1" active-class="active-button white--text" small>1D</v-btn>
+                <v-btn flat :value="2" active-class="active-button white--text" small>1M</v-btn>
+                <v-btn flat :value="3" active-class="active-button white--text" small>1Y</v-btn>
               </v-btn-toggle>
             </v-layout>
           </v-toolbar>
@@ -97,8 +97,12 @@ export default class AppChart extends Vue {
   toggleData = 1
 
   /*LifeCycle: */
-  mounted() {
-    this.request()
+  created() {
+     this.$emit('timeFrame', this.toggleData)
+     if(!this.height) {
+       this.height = 100
+       this.width = 100
+     }
   }
   beforeDestroy() {
     if(this.chart){
@@ -107,36 +111,30 @@ export default class AppChart extends Vue {
   }
 
   /* Watchers: */
-  @Watch('data.labels')
-  onDataLabelsChanged(): void {
-    this.chart.update()
-  }
 
-  @Watch('data.datasets.data')
-  onDataDatasetsChanged(): void {
+  @Watch('data')
+  onDataChanged(): void {
     if (this.redraw) {
-      this.chart.destroy()
+      if (this.chart) {
+        this.chart.destroy()
+      }
       this.createChart()
     } else {
       this.chart.update()
     }
   }
-
+  @Watch('toggleData')
+  onTogleDataChanged(newVal: number, oldVal: number): void{
+    this.$emit('timeFrame', newVal)
+  }
   /*Methods: */
   createChart(): void {
+    console.log(this.data.datasets)
     this.chart = new Chart(this.$refs.chart, {
       type: this.type,
       data: this.data,
       options: this.options
     })
-  }
-
-  getPageType(): string {
-    return this.$route.name
-  }
-
-  request(): void {
-    this.$emit('timeFrame', this.toggleData)
   }
 }
 </script>
