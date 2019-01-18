@@ -44,7 +44,7 @@ exports.Events = {
     getAverageGasPriceStats: "get-average-gas-price-stats",
     getAverageTxFeeStats: "get-average-tx-fee-stats",
     getAverageSuccessfullTxStats: "get-average-successfull-tx-stats",
-    getAverageFailedTxStats: "get-average-successfull-tx-stats",
+    getAverageFailedTxStats: "get-average-failedtx-stats",
     getAverageBlockSizeStats: "get-average-block-size-stats",
     getAverageBlockTimeStats: "get-average-block-time-stats",
     getAverageNumberOfUnclesStats: "get-average-number-of-uncles",

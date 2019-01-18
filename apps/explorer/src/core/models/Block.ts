@@ -7,7 +7,7 @@ export class Block {
   private cache: any = {}
 
   constructor(private readonly block: RawBlock) {
-    this.id = this.block.header.hash.startsWith('0x') ? this.block.header.hash : '0x' + this.block.header.hash
+    this.id = new Hex(this.block.header.hash).toString()
   }
 
   public getId(): string {
@@ -55,7 +55,6 @@ export class Block {
     return this.cache.parentHash
   }
 
-  // TODO; Review value
   public getNonce(): Hex {
     if (!this.cache.nonce) {
       this.cache.nonce = new Hex(this.block.header.nonce)

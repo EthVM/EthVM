@@ -1,12 +1,13 @@
-import { EthValue } from '@app/core/models'
+import { EthValue, Hex, HexNumber, TxReceipt } from '@app/core/models'
 import { Tx as RawTx } from 'ethvm-common'
+import BN from 'bignumber.js'
 
 export class Tx {
   public readonly id: string
   private cache: any = {}
 
   constructor(private readonly tx: RawTx) {
-    this.id = this.tx.hash.startsWith('0x') ? this.tx.hash : '0x' + this.tx.hash
+    this.id = new Hex(this.tx.hash).toString()
   }
 
   public getId(): string {
@@ -17,51 +18,18 @@ export class Tx {
     return '0x' + this.tx.hash
   }
 
-  public getTo(): string {
-    return this.tx.to ? '0x' + this.tx.to : ''
-  }
-
-  public getFrom(): string {
-    return '0x' + this.tx.from
-  }
-
-  // TODO: Optimize Decimal128
-  public getGasUsed(): number {
-    return 0
-  }
-
-  public getBlockHash(): string {
-    return '0x' + this.tx.blockHash
-  }
-
-  public getBlockNumber(): number {
-    return this.tx.blockNumber
-  }
-
-  public geTransactionIndex(): number {
-    return this.tx.transactionIndex
-  }
-
-  public getContractAddress(): string {
-    return this.tx.contractAddress ? '0x' + this.tx.contractAddress : ''
-  }
-
-  public getGas(): number {
-    if (!this.cache.gas) {
-      this.cache.gas = this.tx.gasUsed
+  public getFrom(): Hex {
+    if (!this.cache.from) {
+      this.cache.from = new Hex(this.tx.from)
     }
-    return this.cache.gas
+    return this.cache.from
   }
 
-  public getGasPrice(): number {
-    if (!this.cache.gasPrice) {
-      this.cache.gasPrice = this.tx.gasPrice
+  public getTo(): Hex {
+    if (!this.cache.to) {
+      this.cache.to = new Hex(this.tx.to || '')
     }
-    return this.cache.gasPrice
-  }
-
-  public getNonce(): string {
-    return this.tx.nonce
+    return this.cache.to
   }
 
   public getValue(): EthValue {
@@ -71,32 +39,78 @@ export class Tx {
     return this.cache.ethValue
   }
 
-  public getV(): number {
-    if (!this.cache.v) {
-      this.cache.v = this.tx.v
+  public getGasUsed(): HexNumber {
+    if (!this.cache.gasUsed) {
+      const receipt = this.getReceipt()
+      this.cache.gasUsed = receipt.getGasUsed()
     }
-    return this.cache.v
+    return this.cache.gasUsed
   }
 
-  public getR(): number {
-    if (!this.cache.r) {
-      this.cache.r = this.tx.r
+  public getGasPrice(): HexNumber {
+    if (!this.cache.gasPrice) {
+      this.cache.gasPrice = new HexNumber(this.tx.gasPrice)
     }
-    return this.cache.r
+    return this.cache.gasPrice
   }
 
-  public getS(): number {
-    if (!this.cache.s) {
-      this.cache.s = this.tx.s
+  public getBlockHash(): Hex {
+    if (!this.cache.blockHash) {
+      const receipt = this.getReceipt()
+      this.cache.blockHash = receipt.getBlockHash()
     }
-    return this.cache.s
+    return this.cache.blockHash
+  }
+
+  public getBlockNumber(): number {
+    if (!this.cache.blockNumber) {
+      this.cache.blockNumber = new BN(this.tx.blockNumber).toNumber()
+    }
+    return this.cache.blockNumber
+  }
+
+  public geTransactionIndex(): number {
+    return this.tx.transactionIndex
+  }
+
+  public getContractAddress(): Hex {
+    if (!this.cache.contractAddress) {
+      const receipt = this.getReceipt()
+      this.cache.contractAddress = receipt.getContractAddress()
+    }
+    return this.cache.contractAddress
+  }
+
+  public getGas(): HexNumber {
+    if (!this.cache.gas) {
+      this.cache.gas = new Hex(this.tx.gas)
+    }
+    return this.cache.gas
+  }
+
+  public getNonce(): Hex {
+    if (!this.cache.nonce) {
+      this.cache.nonce = new Hex(this.tx.nonce)
+    }
+    return this.cache.nonce
   }
 
   public getStatus(): boolean {
-    return this.tx.status
+    if (!this.cache.status) {
+      const receipt = this.getReceipt()
+      this.cache.status = receipt.getStatus()
+    }
+    return this.cache.status
   }
 
   public getTimestamp(): Date {
     return new Date(this.tx.timestamp * 1000)
+  }
+
+  public getReceipt(): TxReceipt {
+    if (!this.cache.txReceipt) {
+      this.cache.txReceipt = new TxReceipt(this.tx.receipt)
+    }
+    return this.cache.txReceipt
   }
 }

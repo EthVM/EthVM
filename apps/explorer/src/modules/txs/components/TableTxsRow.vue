@@ -10,20 +10,20 @@
             <v-layout row pl-2>
               <p class="text-truncate info--text mb-0">
                 {{ $t('tx.from') }}:
-                <router-link :to="'/address/' + tx.getFrom()" class="secondary--text font-italic font-weight-regular">{{
+                <router-link :to="'/address/' + tx.getFrom().toString()" class="secondary--text font-italic font-weight-regular">{{
                   tx.getFrom().toString()
                 }}</router-link>
               </p>
               <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
               <p class="text-truncate info--text font-weight-thin mb-0" v-if="tx.getContractAddress()">
                 {{ $t('tx.contract') }}:
-                <router-link class="secondary--text font-italic font-weight-regular" :to="'/address/' + tx.getContractAddress()">{{
-                  tx.getContractAddress()
+                <router-link class="secondary--text font-italic font-weight-regular" :to="'/address/' + tx.getContractAddress().toString()">{{
+                  tx.getContractAddress().toString()
                 }}</router-link>
               </p>
               <p class="text-truncate info--text font-weight-thin mb-0" v-else>
                 <strong>{{ $t('tx.to') }}:</strong>
-                <router-link class="secondary--text font-italic font-weight-regular" :to="'/address/' + tx.getTo()">{{ tx.getTo() }}</router-link>
+                <router-link class="secondary--text font-italic font-weight-regular" :to="'/address/' + tx.getTo().toString()">{{ tx.getTo().toString() }}</router-link>
               </p>
             </v-layout>
           </v-flex>
@@ -48,10 +48,10 @@
         </p>
       </v-flex>
       <v-flex hidden-sm-and-down md2>
-        <p class="black--text text-truncate mb-0">{{ tx.getGasUsed() }}</p>
+        <p class="black--text text-truncate mb-0">{{ tx.getGasUsed().toNumber() }}</p>
       </v-flex>
       <v-flex hidden-sm-and-down md2>
-        <p class="text-truncate black--text mb-0">{{ tx.getGasPrice() }}</p>
+        <p class="text-truncate black--text mb-0">{{ tx.getGasPrice().toNumber() }}</p>
       </v-flex>
       <v-flex hidden-xs-only v-if="!isPending" sm1>
         <v-icon v-if="tx.getStatus()" small class="txSuccess--text">fa fa-check-circle</v-icon>

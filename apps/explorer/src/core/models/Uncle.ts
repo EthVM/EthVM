@@ -7,7 +7,7 @@ export class Uncle {
   private cache: any = {}
 
   constructor(private readonly uncle: RawUncle) {
-    this.id = this.uncle.hash
+    this.id = new Hex(this.uncle.hash).toString()
   }
 
   public getId(): string {

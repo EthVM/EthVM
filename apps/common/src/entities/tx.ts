@@ -25,6 +25,7 @@ export interface TxReceipt {
   transactionHash: string
   transactionIndex: number
   cumulativeGasUsed: string
+  contractAddress: string
   gasUsed: string
   logsBloom: string
   status: string
