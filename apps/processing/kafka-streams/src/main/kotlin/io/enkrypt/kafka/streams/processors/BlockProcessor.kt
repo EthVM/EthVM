@@ -1,6 +1,5 @@
 package io.enkrypt.kafka.streams.processors
 
-import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRewardRecord
 import io.enkrypt.avro.capture.PremineBalanceRecord
 import io.enkrypt.avro.capture.TransactionKeyRecord
@@ -10,7 +9,6 @@ import io.enkrypt.avro.processing.ChainEventType
 import io.enkrypt.avro.processing.ContractCreateRecord
 import io.enkrypt.avro.processing.ContractDestroyRecord
 import io.enkrypt.avro.processing.ContractKeyRecord
-import io.enkrypt.avro.processing.MetricKeyRecord
 import io.enkrypt.avro.processing.TokenBalanceKeyRecord
 import io.enkrypt.avro.processing.TokenBalanceRecord
 import io.enkrypt.avro.processing.TokenTransferKeyRecord
@@ -340,7 +338,6 @@ class BlockProcessor : AbstractKafkaProcessor() {
     blockStream
       .flatMap { _, block -> BlockMetrics.forAggregation(block, BlockMetrics.forBlock(block)) }
       .to(Topics.BlockMetricsByDay, Produced.with(Serdes.MetricKey(), Serdes.Metric()))
-
 
     // Generate the topology
     return builder.build()

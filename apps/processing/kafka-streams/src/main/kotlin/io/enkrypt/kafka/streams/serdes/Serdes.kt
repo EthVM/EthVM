@@ -58,7 +58,7 @@ object Serdes : KoinComponent {
     configure(config, false)
   }
 
-  fun BlockMetrics() =  SpecificAvroSerde<BlockMetricsRecord>(registryClient).apply {
+  fun BlockMetrics() = SpecificAvroSerde<BlockMetricsRecord>(registryClient).apply {
     configure(config, false)
   }
 

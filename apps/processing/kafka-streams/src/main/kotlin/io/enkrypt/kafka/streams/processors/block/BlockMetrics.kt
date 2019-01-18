@@ -9,7 +9,6 @@ import io.enkrypt.common.extensions.isSuccess
 import io.enkrypt.common.extensions.unsignedBigInteger
 import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.kafka.streams.models.BlockStatistic
-import io.enkrypt.kafka.streams.models.BlockStatistics
 import org.apache.kafka.streams.KeyValue
 import java.math.BigInteger
 import java.time.Instant

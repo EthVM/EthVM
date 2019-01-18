@@ -391,7 +391,6 @@ enum class KafkaTopics(
 
       // tombstone received so we need to delete
       writes += UpdateOneModel(idFilter, Document(mapOf("\$unset" to "metrics")))
-
     } else {
 
       require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
@@ -403,7 +402,6 @@ enum class KafkaTopics(
     }
 
     mapOf(MongoCollections.Blocks to writes)
-
   }),
 
   AggregateBlockMetrics("aggregate-block-metrics-by-day", { record: SinkRecord ->
