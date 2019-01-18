@@ -49,10 +49,11 @@ export class MongoStatisticsRepository extends BaseMongoDbRepository implements 
   private retrieveFromMongo(event: string, start: Date, end: Date): Promise<Statistic[]> {
     return this.db
       .collection(MongoEthVM.collections.statistics)
-      .find({ $and: [{ name: event }, { date: { $gte: start } }, { date: { $lte: end } }] })
+      .find({ $and: [{ name: event }, { date: { $gte: start.getTime() } }, { date: { $lte: end.getTime() } }] })
       .sort({ date: -1 })
       .toArray()
       .then(resp => {
+        console.log('Current event: ',  event, ' start: ', start, ' end: ', end, ' Result: ', resp)
         if (!resp) {
           return []
         }
