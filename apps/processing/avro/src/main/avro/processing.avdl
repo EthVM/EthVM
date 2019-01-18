@@ -149,6 +149,18 @@ protocol Processing {
 
 // metrics
 
+  record BlockMetricsRecord {
+    int totalTxs = 0;
+    int numSuccessfulTxs = 0;
+    int numFailedTxs = 0;
+    int numPendingTxs = 0;
+    bytes totalDifficulty;
+    bytes totalGasPrice;
+    bytes avgGasPrice;
+    bytes totalTxFees;
+    bytes avgTxFees;
+  }
+
   record MetricKeyRecord {
     long `date`;
     string name;

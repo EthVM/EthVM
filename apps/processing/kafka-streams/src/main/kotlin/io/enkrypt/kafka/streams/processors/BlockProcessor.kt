@@ -1,5 +1,6 @@
 package io.enkrypt.kafka.streams.processors
 
+import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRewardRecord
 import io.enkrypt.avro.capture.PremineBalanceRecord
 import io.enkrypt.avro.capture.TransactionKeyRecord
@@ -9,6 +10,7 @@ import io.enkrypt.avro.processing.ChainEventType
 import io.enkrypt.avro.processing.ContractCreateRecord
 import io.enkrypt.avro.processing.ContractDestroyRecord
 import io.enkrypt.avro.processing.ContractKeyRecord
+import io.enkrypt.avro.processing.MetricKeyRecord
 import io.enkrypt.avro.processing.TokenBalanceKeyRecord
 import io.enkrypt.avro.processing.TokenBalanceRecord
 import io.enkrypt.avro.processing.TokenTransferKeyRecord
@@ -20,7 +22,7 @@ import io.enkrypt.common.extensions.isNonFungible
 import io.enkrypt.common.extensions.unsignedBigInteger
 import io.enkrypt.common.extensions.unsignedBytes
 import io.enkrypt.kafka.streams.config.Topics
-import io.enkrypt.kafka.streams.processors.block.BlockStatistics
+import io.enkrypt.kafka.streams.processors.block.BlockMetrics
 import io.enkrypt.kafka.streams.processors.block.ChainEventsTransformer
 import io.enkrypt.kafka.streams.serdes.Serdes
 import mu.KotlinLogging
@@ -327,11 +329,18 @@ class BlockProcessor : AbstractKafkaProcessor() {
         )
       }.to(Topics.ContractDestructions, Produced.with(Serdes.ContractKey(), Serdes.ContractDestroy()))
 
-    // statistics
+    // metrics
 
     blockStream
-      .flatMap { _, block -> BlockStatistics.forBlock(block) }
+      .mapValues { block -> BlockMetrics.forBlock(block) }
+      .to(Topics.BlockMetricsByBlock, Produced.with(Serdes.BlockKey(), Serdes.BlockMetrics()))
+
+    // TODO refactor to avoid re-calculation of metrics
+
+    blockStream
+      .flatMap { _, block -> BlockMetrics.forAggregation(block, BlockMetrics.forBlock(block)) }
       .to(Topics.BlockMetricsByDay, Produced.with(Serdes.MetricKey(), Serdes.Metric()))
+
 
     // Generate the topology
     return builder.build()

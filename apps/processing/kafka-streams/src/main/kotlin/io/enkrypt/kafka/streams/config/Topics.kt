@@ -6,6 +6,7 @@ object Topics {
   const val Transactions = "transactions"
   const val Uncles = "uncles"
 
+  const val BlockMetricsByBlock = "block-metrics-by-block"
   const val BlockMetricsByDay = "block-metrics-by-day"
   const val AggregateBlocksMetricsByDay = "aggregate-block-metrics-by-day"
 

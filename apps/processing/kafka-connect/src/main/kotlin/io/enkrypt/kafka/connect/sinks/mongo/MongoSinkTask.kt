@@ -377,6 +377,35 @@ enum class KafkaTopics(
     mapOf(MongoCollections.PendingTransactions to writes)
   }),
 
+  BlockMetricsByBlock("block-metrics-by-block", { record: SinkRecord ->
+
+    require(record.keySchema().type() == Schema.Type.STRUCT) { "Key schema must be a struct" }
+
+    var writes = listOf<WriteModel<BsonDocument>>()
+
+    val blockNumber = (record.key() as Struct).getBytes("number").unsignedBigInteger()
+    val blockNumberBson = BsonDecimal128(Decimal128(blockNumber.toBigDecimal()))
+    val idFilter = BsonDocument("_id", blockNumberBson)
+
+    if (record.value() == null) {
+
+      // tombstone received so we need to delete
+      writes += UpdateOneModel(idFilter, Document(mapOf("\$unset" to "metrics")))
+
+    } else {
+
+      require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
+
+      val struct = record.value() as org.apache.kafka.connect.data.Struct
+      val bson = BsonDocument("\$set", BsonDocument("metrics", StructToBsonConverter.convert(struct, "block-metrics")))
+
+      writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
+    }
+
+    mapOf(MongoCollections.Blocks to writes)
+
+  }),
+
   AggregateBlockMetrics("aggregate-block-metrics-by-day", { record: SinkRecord ->
 
     require(record.keySchema().type() == Schema.Type.STRUCT) { "Key schema must be a struct" }
