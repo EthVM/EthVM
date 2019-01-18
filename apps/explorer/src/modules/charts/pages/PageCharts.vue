@@ -22,53 +22,64 @@
           <v-flex xs12 md6> <chart-live-tx-fees /> </v-flex>
         </v-layout>
         <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6><!-- Average Block Time --></v-flex>
-          <v-flex xs12 md6><!-- Difficulty --></v-flex>
+          <v-flex xs12 md6><!-- Live Block Time --></v-flex>
+          <v-flex xs12 md6><!-- Live Difficulty --></v-flex>
         </v-layout>
       </v-tab-item>
       <!-- Transactions-->
       <v-tab-item slot="tabs-item" value="tab-1">
         <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6><!-- Average Gas Price --></v-flex>
-          <v-flex xs12 md6><!-- Average Gas Limit --></v-flex>
+          <v-flex xs12 md6>
+            <app-chart-link :title="$t('charts.avgGasPrice')" :chartID="ID.gasPrice"/>
+          </v-flex>
+          <v-flex xs12 md6>
+            <app-chart-link :title="$t('charts.avgGasLimit')" :chartID="ID.gasLimit"/>
+          </v-flex>
         </v-layout>
         <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6><!-- Average Tx Fees --></v-flex>
+          <v-flex xs12 md6>
+            <app-chart-link :title="$t('charts.avgTxFees')" :chartID="ID.txFees"/>
+            </v-flex>
           <v-flex xs12 md6><!-- Pending Txs --></v-flex>
         </v-layout>
         <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6><!-- Sucessful Txs --></v-flex>
-          <v-flex xs12 md6><!--Failed Txs --></v-flex>
+          <v-flex xs12 md6>
+              <app-chart-link :title="$t('charts.avgTxSuccess')" :chartID="ID.txSuccess"/>
+          </v-flex>
+          <v-flex xs12 md6>
+            <app-chart-link :title="$t('charts.avgTxFail')" :chartID="ID.txFail"/>
+          </v-flex>
         </v-layout>
       </v-tab-item>
       <!-- Blocks -->
       <v-tab-item slot="tabs-item" value="tab-2">
         <v-layout row wrap justify-center mb-4>
           <v-flex xs12 md6>
-            <v-img :src="require('@/assets/chart.png')" contain class="ma-4"></v-img>
-            <v-btn flat color="secondary" class="text-capitalize" :to="'/chart/' + ID.blockTime"
-              >{{ $t('bttn.more') }} <v-icon right>fas fa-angle-right</v-icon></v-btn
-            >
+             <app-chart-link :title="$t('charts.avgBlockTime')" :chartID="ID.blockTime"/>
           </v-flex>
-          <v-flex xs12 md6><!-- Average Block Size --></v-flex>
+          <v-flex xs12 md6>
+            <app-chart-link :title="$t('charts.avgBlockDiff')" :chartID="ID.difficulty"/>
+          </v-flex>
         </v-layout>
         <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6>
-            <v-img :src="require('@/assets/chart.png')" contain class="ma-4"></v-img>
-            <v-btn flat color="secondary" class="text-capitalize" :to="'/chart/' + ID.difficulty"
-              >{{ $t('bttn.more') }} <v-icon right>fas fa-angle-right</v-icon></v-btn
-            ></v-flex
-          >
+           <v-flex xs12 md6><!-- Average Block Size --></v-flex>
         </v-layout>
       </v-tab-item>
       <!-- Mining -->
       <v-tab-item slot="tabs-item" value="tab-3">
         <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6><!-- Hash Rate --></v-flex>
-          <v-flex xs12 md6><!-- Mining rewards --></v-flex>
+          <v-flex xs12 md6>
+            <app-chart-link :title="$t('charts.avgHashRate')" :chartID="ID.hashRate"/>
+          </v-flex>
+          <v-flex xs12 md6>
+            <app-chart-link :title="$t('charts.avgMiningReward')" :chartID="ID.minerReward"/>
+          </v-flex>
         </v-layout>
         <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6><!-- Historic top Miners --></v-flex>
+          <v-flex xs12 md6>
+            <app-chart-link :title="$t('charts.topMiners')" :chartID="ID.topMiners"/>
+          </v-flex>
+          <v-flex xs12 md6><!--  --></v-flex>
         </v-layout>
       </v-tab-item>
     </app-tabs>
@@ -78,6 +89,7 @@
 <script lang="ts">
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
+import AppChartLink from '@app/modules/charts/components/AppChartLink.vue'
 import AppInfoCard from '@app/core/components/ui/AppInfoCard.vue'
 import ChartLiveTx from '@app/modules/charts/components/live/ChartLiveTx.vue'
 import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees.vue'
@@ -88,6 +100,7 @@ import { Vue, Component, Mixins } from 'vue-property-decorator'
 @Component({
   components: {
     AppBreadCrumbs,
+    AppChartLink,
     AppTabs,
     AppInfoCard,
     ChartLiveTx,

@@ -8,6 +8,7 @@
     :options="chartOptions"
     :redraw="redraw"
     unfilled="true"
+    @timeFrame = "setTimeFrame"
   />
 </template>
 
@@ -18,12 +19,6 @@ import ethUnits from 'ethereumjs-units'
 import { Events } from 'ethvm-common'
 
 /* Time Variables: */
-const STATES = {
-  ALL: 'ALL',
-  YEAR: 'YEAR',
-  MONTH: 'MONTH',
-  DAY: 'DAY'
-}
 
 const DES = {
   BEGIN: 'Average gas price history in Ethereum blockchain since the begining ',
@@ -36,10 +31,11 @@ const DES = {
   }
 })
 export default class ChartGasPrice extends Vue {
+
   id = 'gas_price_history'
   title = 'Average Gas Price History'
   redraw = false
-  timeFrame = STATES.DAY
+  timeFrame = 1
   chartOptions = {
     title: {
       text: 'Average Gas Limit',
@@ -74,37 +70,67 @@ export default class ChartGasPrice extends Vue {
       ]
     }
   }
+  DATA = [
+  { state: "ALL",
+    points: [],
+    labels: []
+  }, {
+    state: "DAY",
+    points: [],
+    labels: []
+  },{
+    state: "MONTH",
+    points: [],
+    labels: []
+  }, {
+    state: "YEAR",
+    points: [],
+    labels: []
+  } ]
+
 
   /*Computed: */
   get chartData() {
-    const newLabels = []
-    const newPoints = []
-
-    this.$socket.emit(Events.getAverageGasPriceStats, this.timeFrame, (err, result) => {
-      if (!err && result) {
-        result.forEach(block => {
-          newPoints.push(block.reduction)
-          newLabels.push(block.group)
-        })
-      }
-    })
+    console.log(this.DATA[this.timeFrame].points.length)
     return {
-      labels: newLabels,
+      labels: this.DATA[this.timeFrame].labels,
       datasets: [
         {
-          label: 'Average Gas Price (GWEI',
+          label: 'Average Gas Price (GWEI)',
           borderColor: '#20c0c7',
           backgroundColor: '#20c0c7',
-          data: newPoints,
+          data: this.DATA[this.timeFrame].points,
           yAxisID: 'y-axis-1',
           fill: false
         }
       ]
     }
   }
+   /*Methods: */
+  setTimeFrame(_value: number): void {
+    this.timeFrame = _value
+    if(this.DATA[this.timeFrame].state) {
+      this.setData(_value)
+    }
+  }
 
+  setData(_state: number): void {
+    console.log("Requesting",  _state)
+    this.$socket.emit( Events.getAverageGasPriceStats, {"duration": this.DATA[_state].state }, (err, result) => {
+      console.log("error in data request: "+ _state, err)
+      console.log("result in data request: "+_state, result)
+      if (!err && result) {
+        result.forEach(point =>{
+          this.DATA[_state].points.push({
+            x: point.date,
+            y: point.value})
+          this.DATA[_state].labels.push(point.name)
+        })
+      }
+    })
+  }
   get description(): string {
-    return this.timeFrame === STATES.ALL ? DES.BEGIN : DES.OTHER + this.timeFrame
+    return this.timeFrame === 0? DES.BEGIN : DES.OTHER + this.DATA[this.timeFrame].state
   }
 }
 </script>

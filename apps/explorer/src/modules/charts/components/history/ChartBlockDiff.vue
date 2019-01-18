@@ -7,8 +7,9 @@
     :options="chartOptions"
     :redraw="redraw"
     unfilled="true"
-    @timeFrame="setTimeFrame"
-  />
+    @timeFrame = "setTimeFrame"
+  >
+  </app-chart>
 </template>
 
 <script lang="ts">
@@ -19,8 +20,6 @@ import { Events } from 'ethvm-common'
 import id from '@app/modules/charts/helpers'
 
 /* Time Variables: */
-const STATES = ['ALL', 'DAY', 'MONTH', 'YEAR']
-
 const DES = {
   BEGIN: 'Average block difficulty history in Ethereum blockchain since the begining.',
   OTHER: 'Average block difficulty history in Ethereum blockchain in last '
@@ -70,45 +69,64 @@ export default class ChartBlockDiff extends Vue {
       ]
     }
   }
-  newLabels = []
-  newPoints = []
+  DATA = [
+  { state: "ALL",
+    points: [],
+    labels: []
+  }, {
+    state: "DAY",
+    points: [],
+    labels: []
+  },{
+    state: "MONTH",
+    points: [],
+    labels: []
+  }, {
+    state: "YEAR",
+    points: [],
+    labels: []
+  } ]
 
   /*Computed: */
   get chartData() {
+    console.log(this.DATA[this.timeFrame].points.length)
     return {
-      labels: this.newLabels,
+      labels: this.DATA[this.timeFrame].labels,
       datasets: [
         {
           label: 'Average Block Difficulty',
           borderColor: '#20c0c7',
           backgroundColor: '#20c0c7',
-          data: this.newPoints,
+          data: this.DATA[this.timeFrame].points,
           yAxisID: 'y-axis-1',
           fill: false
         }
       ]
     }
   }
-
   get description(): string {
-    return this.timeFrame === 0 ? DES.BEGIN : DES.OTHER + STATES[this.timeFrame]
+    return this.timeFrame === 0? DES.BEGIN : DES.OTHER + this.DATA[this.timeFrame].state
   }
 
-  /*Methods: */
+   /*Methods: */
   setTimeFrame(_value: number): void {
     this.timeFrame = _value
-    this.setData()
+    if(this.DATA[this.timeFrame].state) {
+      this.setData(_value)
+    }
   }
 
-  setData(): void {
-    this.$socket.emit(Events.getAverageTotalDifficultyStats, { duration: STATES[this.timeFrame] }, (err, result) => {
+  setData(_state: number): void {
+    console.log("Requesting",  _state)
+    this.$socket.emit(Events.getAverageTotalDifficultyStats, {"duration": this.DATA[_state].state }, (err, result) => {
+      console.log("error in data request: ", err)
+      console.log("result in data request: ", result)
       if (!err && result) {
-        result.forEach(point => {
-          this.newPoints.push({
+        result.forEach(point =>{
+          this.DATA[_state].points.push({
             x: point.date,
-            y: point.value
-          })
-          this.newLabels.push(point.name)
+            y: point.value})
+          this.DATA[_state].labels.push(point.name)
         })
       }
     })

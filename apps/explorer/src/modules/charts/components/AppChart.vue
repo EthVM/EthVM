@@ -27,16 +27,18 @@
     </v-layout>
     <v-divider></v-divider>
     <v-layout align-center justify-end row fill-height v-if="footnotes"> <app-footnotes :footnotes="footnotes" /> </v-layout>
-    <canvas v-if="data" ref="chart" :width="width" :height="height"></canvas>
+    <app-info-load v-if="data.datasets[0].data.length === 0"/>
+    <canvas v-else ref="chart" :width="width" :height="height"/>
   </v-card>
 </template>
 
 <script lang="ts">
 import Chart from 'chart.js'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
+import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { Footnote } from '@app/core/components/props'
-
+import {ChartData} from '@app/modules/charts/props'
 Chart.defaults.global = Object.assign(Chart.defaults.global, {
   defaultFontFamily: "'Open Sans', 'sans-serif'",
   defaultFontStyle: '200'
@@ -75,13 +77,14 @@ Chart.defaults.doughnut.animation = Object.assign(Chart.defaults.doughnut.animat
 
 @Component({
   components: {
-    AppFootnotes
+    AppFootnotes,
+    AppInfoLoad
   }
 })
 export default class AppChart extends Vue {
   @Prop({ type: Boolean, default: false }) liveChart!: boolean
   @Prop({ type: String, required: true }) type!: string
-  @Prop({ type: Object, required: true }) data!: any[]
+  @Prop({ type: Object, required: true }) data!: ChartData[]
   @Prop({ type: Boolean }) redraw!: boolean
   @Prop({ type: Object }) options!: object
   @Prop({ type: Number }) width!: number
@@ -89,16 +92,18 @@ export default class AppChart extends Vue {
   @Prop({ type: String }) chartTitle!: string
   @Prop({ type: String }) chartDescription!: string
   @Prop({ type: Array }) footnotes?: Footnote[]
+  @Prop({ type: Boolean }) dataLoading?: boolean
 
   toggleData = 1
 
   /*LifeCycle: */
   mounted() {
-    this.createChart()
     this.request()
   }
   beforeDestroy() {
-    this.chart.destroy()
+    if(this.chart){
+       this.chart.destroy()
+    }
   }
 
   /* Watchers: */
@@ -107,7 +112,7 @@ export default class AppChart extends Vue {
     this.chart.update()
   }
 
-  @Watch('data.datasets')
+  @Watch('data.datasets.data')
   onDataDatasetsChanged(): void {
     if (this.redraw) {
       this.chart.destroy()

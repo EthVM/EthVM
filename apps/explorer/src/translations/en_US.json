@@ -180,7 +180,17 @@
     "avgDescription": "Average transaction fees and average gas price in the last 10 blocks",
     "labelString": "Sucessfull and Failed Tx ",
     "txFees": "Tx Fees ETH",
-    "gasPrice": " Gas Price GWEI"
+    "avgGasPrice": "Average Gas Price",
+    "avgGasLimit": "Average Gas Price",
+    "avgBlockDiff": "Average Block Difficulty",
+    "avgBlockSize": "Average Block Size",
+    "avgBlockTime": "Average Block Time",
+    "avgTxFees": "Average Transactions Fees",
+    "avgTxSuccess": "Average Number of Successfull Transactions",
+    "avgTxFail": "Average Number of Failed Transactions",
+    "avgHashRate": "Average Hash Rate",
+    "avgMiningReward": "Average Mining Rewards",
+    "topMiners": "Top Miners"
   },
   "footer": {
     "discover": "Discover",
