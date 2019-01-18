@@ -27,8 +27,8 @@
     </v-layout>
     <v-divider></v-divider>
     <v-layout align-center justify-end row fill-height v-if="footnotes"> <app-footnotes :footnotes="footnotes" /> </v-layout>
-    <app-info-load v-if="data.datasets[0].data.length === 0"/>
-    <canvas v-else ref="chart" :width="width" :height="height"/>
+    <app-info-load v-if="data.datasets[0].data.length === 0" />
+    <canvas v-else ref="chart" :width="width" :height="height" />
   </v-card>
 </template>
 
@@ -38,7 +38,7 @@ import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { Footnote } from '@app/core/components/props'
-import {ChartData} from '@app/modules/charts/props'
+import { ChartData } from '@app/modules/charts/props'
 Chart.defaults.global = Object.assign(Chart.defaults.global, {
   defaultFontFamily: "'Open Sans', 'sans-serif'",
   defaultFontStyle: '200'
@@ -98,15 +98,15 @@ export default class AppChart extends Vue {
 
   /*LifeCycle: */
   created() {
-     this.$emit('timeFrame', this.toggleData)
-     if(!this.height) {
-       this.height = 100
-       this.width = 100
-     }
+    this.$emit('timeFrame', this.toggleData)
+    if (!this.height) {
+      this.height = 100
+      this.width = 100
+    }
   }
   beforeDestroy() {
-    if(this.chart){
-       this.chart.destroy()
+    if (this.chart) {
+      this.chart.destroy()
     }
   }
 
@@ -123,13 +123,14 @@ export default class AppChart extends Vue {
       this.chart.update()
     }
   }
+
   @Watch('toggleData')
-  onTogleDataChanged(newVal: number, oldVal: number): void{
+  onTogleDataChanged(newVal: number, oldVal: number): void {
     this.$emit('timeFrame', newVal)
   }
+
   /*Methods: */
   createChart(): void {
-    console.log(this.data.datasets)
     this.chart = new Chart(this.$refs.chart, {
       type: this.type,
       data: this.data,

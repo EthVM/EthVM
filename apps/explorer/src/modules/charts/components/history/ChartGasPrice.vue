@@ -8,7 +8,7 @@
     :options="chartOptions"
     :redraw="redraw"
     unfilled="true"
-    @timeFrame = "setTimeFrame"
+    @timeFrame="setTimeFrame"
   />
 </template>
 
@@ -31,7 +31,6 @@ const DES = {
   }
 })
 export default class ChartGasPrice extends Vue {
-
   id = 'gas_price_history'
   title = 'Average Gas Price History'
   redraw = true
@@ -71,23 +70,23 @@ export default class ChartGasPrice extends Vue {
     }
   }
   DATA = [
-  { state: "ALL",
-    points: [],
-    labels: []
-  }, {
-    state: "DAY",
-    points: [],
-    labels: []
-  },{
-    state: "MONTH",
-    points: [],
-    labels: []
-  }, {
-    state: "YEAR",
-    points: [],
-    labels: []
-  } ]
-
+    { state: 'ALL', points: [], labels: [] },
+    {
+      state: 'DAY',
+      points: [],
+      labels: []
+    },
+    {
+      state: 'MONTH',
+      points: [],
+      labels: []
+    },
+    {
+      state: 'YEAR',
+      points: [],
+      labels: []
+    }
+  ]
 
   /*Computed: */
   get chartData() {
@@ -105,30 +104,29 @@ export default class ChartGasPrice extends Vue {
       ]
     }
   }
-   /*Methods: */
+  /*Methods: */
   setTimeFrame(_value: number): void {
     this.timeFrame = _value
-    if(this.DATA[this.timeFrame].points) {
+    if (this.DATA[this.timeFrame].points) {
       this.setData(_value)
     }
   }
 
   setData(_state: number): void {
-    this.$socket.emit( Events.getAverageGasPriceStats, {"duration": this.DATA[_state].state }, (err, result) => {
-      console.log("error in data request: "+ _state, err)
-      console.log("result in data request: "+_state, result)
+    this.$socket.emit(Events.getAverageGasPriceStats, { duration: this.DATA[_state].state }, (err, result) => {
       if (!err && result) {
-        result.forEach(point =>{
+        result.forEach(point => {
           this.DATA[_state].points.push({
             x: point.date,
-            y: point.value})
+            y: point.value
+          })
           this.DATA[_state].labels.push('label')
         })
       }
     })
   }
   get description(): string {
-    return this.timeFrame === 0? DES.BEGIN : DES.OTHER + this.DATA[this.timeFrame].state
+    return this.timeFrame === 0 ? DES.BEGIN : DES.OTHER + this.DATA[this.timeFrame].state
   }
 }
 </script>
