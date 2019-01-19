@@ -23,7 +23,9 @@
               </p>
               <p class="text-truncate info--text font-weight-thin mb-0" v-else>
                 <strong>{{ $t('tx.to') }}:</strong>
-                <router-link class="secondary--text font-italic font-weight-regular" :to="'/address/' + tx.getTo().toString()">{{ tx.getTo().toString() }}</router-link>
+                <router-link class="secondary--text font-italic font-weight-regular" :to="'/address/' + tx.getTo().toString()">{{
+                  tx.getTo().toString()
+                }}</router-link>
               </p>
             </v-layout>
           </v-flex>

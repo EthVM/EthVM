@@ -35,7 +35,9 @@
     "timestmp": "Timestamp",
     "gwei": "GWEI",
     "more": "More",
-    "tx": "Tx"
+    "tx": "Tx",
+    "sucessfull": "Sucessful",
+    "failed": "Failed"
   },
   "subTitle": {
     "home": "Welcome to Ethereum Virtual Machine",

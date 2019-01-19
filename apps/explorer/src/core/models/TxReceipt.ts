@@ -46,6 +46,7 @@ export class TxReceipt {
     if (!this.cache.contractAddress) {
       this.cache.contractAddress = new Hex(this.receipt.contractAddress || '')
     }
+    return this.cache.contractAddress
   }
 
   public getStatus(): string {

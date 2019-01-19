@@ -22,4 +22,8 @@ export class Hex {
   public toBuffer(): Buffer {
     return Buffer.from(this.hexString.substring(2), 'hex')
   }
+
+  public isEmpty(): boolean {
+    return this.hexString === '0x0' || this.hexString === '0x'
+  }
 }

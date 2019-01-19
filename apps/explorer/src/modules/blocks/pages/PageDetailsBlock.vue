@@ -62,22 +62,6 @@ export default class PageDetailsBlock extends Vue {
   moreDetails = []
   timestamp = ''
 
-  data() {
-    return {
-      crumbs: [
-        {
-          text: this.$i18n.t('title.blocks'),
-          disabled: false,
-          link: '/blocks'
-        },
-        {
-          text: '',
-          disabled: true
-        }
-      ]
-    }
-  }
-
   // Lifecycle
   created() {
     const ref = this.blockRef
@@ -244,6 +228,20 @@ export default class PageDetailsBlock extends Vue {
 
   get formatTime(): string {
     return new Date(this.timestamp).toString()
+  }
+
+  get crumbs() {
+    return [
+      {
+        text: this.$i18n.t('title.blocks'),
+        disabled: false,
+        link: '/blocks'
+      },
+      {
+        text: '',
+        disabled: true
+      }
+    ]
   }
 }
 </script>

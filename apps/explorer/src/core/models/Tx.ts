@@ -15,7 +15,7 @@ export class Tx {
   }
 
   public getHash(): string {
-    return '0x' + this.tx.hash
+    return this.id
   }
 
   public getFrom(): Hex {
@@ -64,7 +64,7 @@ export class Tx {
 
   public getBlockNumber(): number {
     if (!this.cache.blockNumber) {
-      this.cache.blockNumber = new BN(this.tx.blockNumber).toNumber()
+      this.cache.blockNumber = new HexNumber(this.tx.blockNumber).toNumber()
     }
     return this.cache.blockNumber
   }
@@ -83,9 +83,13 @@ export class Tx {
 
   public getGas(): HexNumber {
     if (!this.cache.gas) {
-      this.cache.gas = new Hex(this.tx.gas)
+      this.cache.gas = new HexNumber(this.tx.gas)
     }
     return this.cache.gas
+  }
+
+  public getTxCost(): EthValue {
+    return new EthValue(this.getGasPrice().toNumber() * this.getGasUsed().toNumber())
   }
 
   public getNonce(): Hex {

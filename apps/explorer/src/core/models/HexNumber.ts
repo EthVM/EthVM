@@ -18,7 +18,7 @@ export class HexNumber {
     this.value = '0'
   }
 
-  public toNumber(): string {
+  public toNumber(): number {
     return new Bn(this.value).toFixed()
   }
 

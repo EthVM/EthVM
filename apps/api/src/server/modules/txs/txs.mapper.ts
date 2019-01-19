@@ -16,6 +16,7 @@ const toTx = (tx: any): Tx => {
   tx.gas = tx.gas.toString()
   tx.v = tx.v.toString()
   tx.value = tx.value.toString()
+  tx.blockNumber = tx.blockNumber.toString()
   tx.receipt = toTxReceipt(tx.receipt)
 
   return tx

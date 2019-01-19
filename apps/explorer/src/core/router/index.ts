@@ -54,7 +54,7 @@ export default new Router({
       props: true
     },
     {
-      path: '/tx/:txHash',
+      path: '/tx/:txRef',
       component: PageDetailsTxs,
       name: 'transaction',
       props: true

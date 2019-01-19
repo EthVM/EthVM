@@ -1,7 +1,7 @@
 <template>
   <v-card color="white" flat class="pt-3">
-    <slot name="details-title"></slot>
-    <v-divider class="lineGrey"></v-divider>
+    <slot name="details-title" />
+    <v-divider class="lineGrey" />
     <div v-if="!loading">
       <v-list>
         <v-list-tile v-for="(item, index) in items" :key="index" :class="[index % 2 == 0 ? 'background: white' : 'background: tableGrey']">
@@ -28,7 +28,7 @@
               </v-flex>
               <v-flex xs7 sm8 md9>
                 <v-list-tile-title v-if="!item.link" class="text-muted text-truncate">
-                  {{ item.detail }} <timeago v-if="item.title == $t('common.timestmp')" :datetime="block.getTimestamp()" :auto-update="10"></timeago>
+                  {{ item.detail }} <timeago v-if="item.title == $t('common.timestmp')" :datetime="block.getTimestamp()" :auto-update="10" />
                 </v-list-tile-title>
                 <router-link v-else :to="item.link">
                   <v-list-tile-title class="text-truncate">{{ item.detail }}</v-list-tile-title>
@@ -48,7 +48,7 @@
       <app-info-load v-if="loading" />
       <v-layout v-else column align-center justify-center ma-3>
         <v-card-title class="primary--text text-xs-center body-2 pb-4">{{ message }}</v-card-title>
-        <v-icon class="fa fa-spinner fa-pulse fa-4x fa-fw primary--text" large></v-icon>
+        <v-icon class="fa fa-spinner fa-pulse fa-4x fa-fw primary--text" large />
       </v-layout>
     </div>
   </v-card>
@@ -72,16 +72,8 @@ export default class AppListDetails extends Vue {
   @Prop(String) detailsType!: string
   @Prop({ type: Boolean, default: true }) loading!: boolean
 
-  data() {
-    return {
-      showMore: false,
-      dialog: false,
-      messages: {
-        block: this.$i18n.t('message.notMined'),
-        tx: this.$i18n.t('message.noTx')
-      }
-    }
-  }
+  showMore = false
+  dialog = false
 
   //Methods:
   setView() {
@@ -91,6 +83,13 @@ export default class AppListDetails extends Vue {
   //Computed:
   get more() {
     return this.showMore
+  }
+
+  get messages() {
+    return {
+      block: this.$i18n.t('message.notMined'),
+      tx: this.$i18n.t('message.noTx')
+    }
   }
 
   get message() {
