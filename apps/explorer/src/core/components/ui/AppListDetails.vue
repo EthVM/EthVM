@@ -16,7 +16,7 @@
               </router-link>
             </v-flex>
             <v-flex xs1>
-              <v-list-tile-action v-if="item.copy"> <app-copy-to-clip :value-to-copy="item.detail"></app-copy-to-clip> </v-list-tile-action>
+              <v-list-tile-action v-if="item.copy"> <app-copy-to-clip :value-to-copy="item.detail" /> </v-list-tile-action>
             </v-flex>
           </v-layout>
         </v-list-tile>
@@ -35,14 +35,16 @@
                 </router-link>
               </v-flex>
               <v-flex xs1>
-                <v-list-tile-action v-if="item.copy"> <app-copy-to-clip :value-to-copy="item.detail"></app-copy-to-clip> </v-list-tile-action>
+                <v-list-tile-action v-if="item.copy"> <app-copy-to-clip :value-to-copy="item.detail" /> </v-list-tile-action>
               </v-flex>
             </v-layout>
           </v-list-tile>
         </v-slide-y-transition>
       </v-list>
-      <v-btn v-if="!more" @click="setView()" flat block class="secondary"> <v-icon class="fa fa-angle-down white--text"></v-icon> </v-btn>
-      <v-btn v-else @click="setView()" flat block class="secondary"> <v-icon class="fa fa-angle-up white--text"></v-icon> </v-btn>
+      <div v-if="hideMore">
+        <v-btn v-if="!more" @click="setView()" flat block class="secondary"> <v-icon class="fa fa-angle-down white--text"></v-icon> </v-btn>
+        <v-btn v-else @click="setView()" flat block class="secondary"> <v-icon class="fa fa-angle-up white--text"></v-icon> </v-btn>
+      </div>
     </div>
     <div v-else>
       <app-info-load v-if="loading" />
@@ -67,10 +69,13 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
   }
 })
 export default class AppListDetails extends Vue {
+  @Prop({ type: Boolean, default: true }) loading!: boolean
+
+  @Prop(String) detailsType!: string
   @Prop(Array) items!: Detail[]
   @Prop(Array) moreItems!: Detail[]
-  @Prop(String) detailsType!: string
-  @Prop({ type: Boolean, default: true }) loading!: boolean
+
+  @Prop({ type: Boolean, default: false }) hideMore!: boolean
 
   showMore = false
   dialog = false
