@@ -266,7 +266,7 @@ export class EthvmSocketIoApi implements EthvmApi {
   getAverageTotalDifficulty(duration: string): Promise<Statistic[]> {
     return new Promise((resolve, reject) => {
       this.io.emit(
-        Events.getAvgTotalDifficultyStats,
+        Events.getAverageTotalDifficultyStats,
         {
           duration
         },
@@ -283,7 +283,7 @@ export class EthvmSocketIoApi implements EthvmApi {
   getAverageGasPrice(duration: string): Promise<Statistic[]> {
     return new Promise((resolve, reject) => {
       this.io.emit(
-        Events.getAvgGasPriceStats,
+        Events.getAverageGasPriceStats,
         {
           duration
         },
@@ -300,7 +300,7 @@ export class EthvmSocketIoApi implements EthvmApi {
   getAverageTxFee(duration: string): Promise<Statistic[]> {
     return new Promise((resolve, reject) => {
       this.io.emit(
-        Events.getAvgTxFeeStats,
+        Events.getAverageTxFeeStats,
         {
           duration
         },
@@ -317,7 +317,7 @@ export class EthvmSocketIoApi implements EthvmApi {
   getAverageSuccessfullTx(duration: string): Promise<Statistic[]> {
     return new Promise((resolve, reject) => {
       this.io.emit(
-        Events.getAvgSuccessfullTxStats,
+        Events.getAverageSuccessfullTxStats,
         {
           duration
         },
@@ -334,7 +334,7 @@ export class EthvmSocketIoApi implements EthvmApi {
   getAverageFailedTx(duration: string): Promise<Statistic[]> {
     return new Promise((resolve, reject) => {
       this.io.emit(
-        Events.getAvgFailedTxStats,
+        Events.getAverageFailedTxStats,
         {
           duration
         },
