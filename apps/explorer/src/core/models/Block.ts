@@ -34,7 +34,7 @@ export class Block {
   }
 
   public getHash(): string {
-    return '0x' + this.block.header.hash
+    return this.id
   }
 
   public getNumber(): number {

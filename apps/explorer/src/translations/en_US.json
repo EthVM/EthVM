@@ -36,6 +36,7 @@
     "gwei": "GWEI",
     "more": "More",
     "tx": "Tx",
+    "uncle": "Uncle",
     "sucessfull": "Sucessful",
     "failed": "Failed"
   },

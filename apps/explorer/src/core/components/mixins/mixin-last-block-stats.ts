@@ -36,7 +36,7 @@ export class LastBlockInfoMixin extends Vue {
 
   beforeDestroy() {
     clearInterval(this.secondsInterval)
-    this.$eventHub.$off([Events.pastBlocksR, Events.newBlock])
+    this.$eventHub.$off([Events.newBlock])
   }
 
   // Computed
@@ -96,7 +96,7 @@ export class LastBlockInfoMixin extends Vue {
       return avg.toNumber()
     }
 
-    const difficulty = blocks[0].getDifficulty()
+    const difficulty = blocks[0].getDifficulty().toNumber()
     return new BN(difficulty)
       .dividedBy(avg)
       .dividedBy('1e12')

@@ -1,6 +1,6 @@
 <template>
   <v-container grid-list-lg class="mb-0">
-    <app-bread-crumbs :new-items="items"></app-bread-crumbs>
+    <app-bread-crumbs :new-items="crumbs" />
     <v-layout row wrap justify-center mb-4>
       <v-flex xs12> <table-blocks :blocks="uncles" page-type="uncles" :loading="uncleLoad" /> </v-flex>
     </v-layout>
@@ -22,16 +22,6 @@ const MAX_ITEMS = 50
   }
 })
 export default class PageUncles extends Vue {
-  data() {
-    return {
-      items: [
-        {
-          text: this.$i18n.t('title.uncles'),
-          disabled: true
-        }
-      ]
-    }
-  }
 
   // Lifecycle
   created() {
@@ -57,6 +47,15 @@ export default class PageUncles extends Vue {
 
   get uncleLoad(): boolean {
     return this.uncles.length == 0
+  }
+
+  get crumbs() {
+    return [
+      {
+        text: this.$i18n.t('title.uncles'),
+        disabled: true
+      }
+    ]
   }
 }
 </script>

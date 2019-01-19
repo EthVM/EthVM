@@ -12,6 +12,7 @@ import PageDetailsTxs from '@app/modules/txs/pages/PageDetailsTxs.vue'
 import PageDetailsAddress from '@app/modules/addresses/pages/PageDetailsAddress.vue'
 import PageCharts from '@app/modules/charts/pages/PageCharts.vue'
 import PageDetailsChart from '@app/modules/charts/pages/PageDetailsChart.vue'
+import PageDetailsUncle from '@app/modules/uncles/pages/PageDetailsUncle.vue'
 
 Vue.use(Router)
 
@@ -28,9 +29,21 @@ export default new Router({
       name: 'blocks'
     },
     {
+      path: '/block/:blockRef',
+      component: PageDetailsBlock,
+      name: 'block',
+      props: true
+    },
+    {
       path: '/txs',
       component: PageTxs,
       name: 'transactions'
+    },
+    {
+      path: '/tx/:txRef',
+      component: PageDetailsTxs,
+      name: 'transaction',
+      props: true
     },
     {
       path: '/pending-txs',
@@ -48,15 +61,9 @@ export default new Router({
       name: 'uncles'
     },
     {
-      path: '/block/:blockRef',
-      component: PageDetailsBlock,
-      name: 'block',
-      props: true
-    },
-    {
-      path: '/tx/:txRef',
-      component: PageDetailsTxs,
-      name: 'transaction',
+      path: '/uncle/:uncleRef',
+      component: PageDetailsUncle,
+      name: 'uncle',
       props: true
     },
     {

@@ -22,6 +22,10 @@ export class Uncle {
     return 'uncle'
   }
 
+  public getHash(): string {
+    return this.id
+  }
+
   public getNumber(): number {
     if (!this.cache.number) {
       this.cache.number = new BN(this.uncle.number).toNumber()
@@ -48,10 +52,6 @@ export class Uncle {
     return this.cache.parentHash
   }
 
-  public getHash(): string {
-    return '0x' + this.uncle.hash
-  }
-
   public getTimestamp(): Date {
     return new Date(this.uncle.timestamp * 1000)
   }
@@ -70,6 +70,27 @@ export class Uncle {
     return this.cache.miner
   }
 
+  public getSha3Uncles(): Hex {
+    if (!this.cache.sha3Uncles) {
+      this.cache.sha3Uncles = new Hex(this.uncle.sha3Uncles)
+    }
+    return this.cache.sha3Uncles
+  }
+
+  public getGasLimit(): HexNumber {
+    if (!this.cache.gasLimit) {
+      this.cache.garLimit = new HexNumber(this.uncle.gasUsed)
+    }
+    return this.cache.garLimit
+  }
+
+  public getGasUsed(): HexNumber {
+    if (!this.cache.gasUsed) {
+      this.cache.gasUsed = new HexNumber(this.uncle.gasUsed)
+    }
+    return this.cache.gasUsed
+  }
+
   // TODO: Add field to new entities
   public getTotalDifficulty(): HexNumber {
     // if (!this.cache.totalDifficulty) {
@@ -79,21 +100,25 @@ export class Uncle {
     return new HexNumber('0')
   }
 
-  // TODO; Add field to new entities
   public getDifficulty(): HexNumber {
-    // if (!this.cache.difficulty) {
-    //   this.cache.difficulty = this.uncle.difficulty
-    // }
-    // return this.cache.difficulty
-    return new HexNumber('0')
+    if (!this.cache.difficulty) {
+      this.cache.difficulty = this.uncle.difficulty
+    }
+    return this.cache.difficulty
   }
 
-  public getStateRoot(): string {
-    return this.uncle.stateRoot ? '0x' + this.uncle.stateRoot : ''
+  public getStateRoot(): Hex {
+    if (!this.cache.stateRoot) {
+      this.cache.stateRoot = new Hex(this.uncle.stateRoot)
+    }
+    return this.cache.stateRoot
   }
 
-  public getExtraData(): string {
-    return this.uncle.extraData ? '0x' + this.uncle.extraData : ''
+  public getExtraData(): Hex {
+    if (!this.cache.extraData) {
+      this.cache.extraData = new Hex(this.uncle.extraData)
+    }
+    return this.cache.extraData
   }
 
   // TODO; Add field to new entities

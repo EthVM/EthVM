@@ -1,6 +1,6 @@
 <template>
   <v-container grid-list-lg class="mb-0">
-    <app-bread-crumbs :new-items="items"></app-bread-crumbs>
+    <app-bread-crumbs :new-items="crumbs" />
     <v-layout row wrap justify-space-between mb-4>
       <v-flex xs12 sm6 md3>
         <app-info-card :title="$t('smlBlock.last')" :value="latestBlockNumber" color-type="primary white--text" back-type="last-block" />
@@ -16,7 +16,7 @@
       </v-flex>
     </v-layout>
     <v-layout row wrap justify-center mb-4>
-      <v-flex xs12> <table-blocks :loading="blocksLoad" :blocks="blocks"></table-blocks> </v-flex>
+      <v-flex xs12> <table-blocks :loading="blocksLoad" :blocks="blocks" /> </v-flex>
     </v-layout>
   </v-container>
 </template>
@@ -39,16 +39,6 @@ const MAX_ITEMS = 50
   }
 })
 export default class PageBlocks extends Mixins(LastBlockInfoMixin) {
-  data() {
-    return {
-      items: [
-        {
-          text: this.$i18n.t('title.blocks'),
-          disabled: true
-        }
-      ]
-    }
-  }
 
   // Computed
   get blocks(): Block[] {
@@ -57,6 +47,15 @@ export default class PageBlocks extends Mixins(LastBlockInfoMixin) {
 
   get blocksLoad(): boolean {
     return this.blocks.length === 0
+  }
+
+  get crumbs() {
+    return [
+      {
+        text: this.$i18n.t('title.blocks'),
+        disabled: true
+      }
+    ]
   }
 }
 </script>

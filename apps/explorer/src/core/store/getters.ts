@@ -15,6 +15,7 @@ export default {
 
   // Uncles
   uncles: (state: State): Uncle[] => state.uncles.items(),
+  uncleByHash: (state: State) => (id: string): Uncle | null => state.uncles.items().find(uncle => uncle.getId() === id),
 
   // PendingTxs
   pendingTxs: (state: State): PendingTx[] => state.pendingTxs.items()
