@@ -24,7 +24,7 @@ export class MongoUncleRepository extends BaseMongoDbRepository implements Uncle
     return this.db
       .collection(MongoEthVM.collections.uncles)
       .find()
-      .sort({ _id: -1 })
+      .sort({ number: -1 })
       .skip(page)
       .limit(limit)
       .toArray()
