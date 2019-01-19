@@ -1,17 +1,17 @@
 <template>
-  <v-btn icon> <v-icon class="fa fa-copy secondary--text" @click="copyToClip(valueToCopy)"></v-icon> </v-btn>
+  <v-btn icon @click="copy(valueToCopy)"> <v-icon class="fa fa-copy secondary--text" /> </v-btn>
 </template>
 
 <script lang="ts">
-import copyClip from 'clipboard-copy'
+import clipboardCopy from 'clipboard-copy'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component
 export default class AppCopyToClip extends Vue {
   @Prop(String) valueToCopy!: string
 
-  copyToClip(newVar) {
-    const status = copyClip(newVar)
+  copy(value) {
+    const status = clipboardCopy(value)
   }
 }
 </script>
