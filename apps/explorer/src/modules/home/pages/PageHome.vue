@@ -1,20 +1,8 @@
 <template>
   <v-container grid-list-lg class="mb-0">
     <app-bread-crumbs />
-    <v-layout row wrap justify-space-between mb-4>
-      <v-flex xs12 sm6 md3>
-        <app-info-card :title="$t('smlBlock.last')" :value="latestBlockNumber" color-type="primary" back-type="last-block"/>
-      </v-flex>
-      <v-flex xs12 sm6 md3>
-        <app-info-card :title="$t('smlBlock.time')" :value="secSinceLastBlock" color-type="success" back-type="time-since" metrics="sec" />
-      </v-flex>
-      <v-flex xs12 sm6 md3>
-        <app-info-card :title="$t('smlBlock.hashR')" :value="latestHashRate" color-type="warning" back-type="hash-rate" metrics="Th/s" />
-      </v-flex>
-      <v-flex xs12 sm6 md3>
-        <app-info-card :title="$t('smlBlock.diff')" :value="latestDifficulty" color-type="error" back-type="difficulty" metrics="Th" />
-      </v-flex>
-    </v-layout>
+    <!-- Info Cards Stats -->
+    <app-info-card-group />
     <!-- Charts -->
     <v-layout row wrap justify-center mb-4>
       <v-flex xs12 md6> <chart-live-tx /> </v-flex>
@@ -37,12 +25,11 @@
 <script lang="ts">
 import { Events } from 'ethvm-common'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-import AppInfoCard from '@app/core/components/ui/AppInfoCard.vue'
+import AppInfoCardGroup from '@app/core/components/ui/AppInfoCardGroup.vue'
 import ChartLiveTx from '@app/modules/charts/components/live/ChartLiveTx.vue'
 import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
-import { LastBlockInfoMixin } from '@app/core/components/mixins'
 import { Block, Tx } from '@app/core/models'
 import { Vue, Component, Mixins } from 'vue-property-decorator'
 
@@ -51,14 +38,14 @@ const MAX_ITEMS = 20
 @Component({
   components: {
     AppBreadCrumbs,
+    AppInfoCardGroup,
     TableBlocks,
     TableTxs,
-    AppInfoCard,
     ChartLiveTx,
     ChartLiveTxFees
   }
 })
-export default class PageHome extends Mixins(LastBlockInfoMixin) {
+export default class PageHome extends Vue {
   tableStyle = 'max-height: 590px'
 
   // Lifecycle

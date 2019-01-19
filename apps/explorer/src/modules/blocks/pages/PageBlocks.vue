@@ -1,20 +1,7 @@
 <template>
   <v-container grid-list-lg class="mb-0">
     <app-bread-crumbs :new-items="crumbs" />
-    <v-layout row wrap justify-space-between mb-4>
-      <v-flex xs12 sm6 md3>
-        <app-info-card :title="$t('smlBlock.last')" :value="latestBlockNumber" color-type="primary white--text" back-type="last-block" />
-      </v-flex>
-      <v-flex xs12 sm6 md3>
-        <app-info-card :title="$t('smlBlock.time')" :value="secSinceLastBlock" color-type="success white--text" back-type="time-since" metrics="sec" />
-      </v-flex>
-      <v-flex xs12 sm6 md3>
-        <app-info-card :title="$t('smlBlock.hashR')" :value="latestHashRate" color-type="warning white--text" back-type="hash-rate" metrics="Th/s" />
-      </v-flex>
-      <v-flex xs12 sm6 md3>
-        <app-info-card :title="$t('smlBlock.diff')" :value="latestDifficulty" color-type="error white--text" back-type="difficulty" metrics="Th" />
-      </v-flex>
-    </v-layout>
+    <app-info-card-group />
     <v-layout row wrap justify-center mb-4>
       <v-flex xs12> <table-blocks :loading="blocksLoad" :blocks="blocks" /> </v-flex>
     </v-layout>
@@ -23,9 +10,8 @@
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-import AppInfoCard from '@app/core/components/ui/AppInfoCard.vue'
+import AppInfoCardGroup from '@app/core/components/ui/AppInfoCardGroup.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
-import { LastBlockInfoMixin } from '@app/core/components/mixins'
 import { Block } from '@app/core/models'
 import { Vue, Component, Mixins } from 'vue-property-decorator'
 
@@ -35,11 +21,10 @@ const MAX_ITEMS = 50
   components: {
     AppBreadCrumbs,
     TableBlocks,
-    AppInfoCard
+    AppInfoCardGroup
   }
 })
-export default class PageBlocks extends Mixins(LastBlockInfoMixin) {
-
+export default class PageBlocks extends Vue {
   // Computed
   get blocks(): Block[] {
     return this.$store.getters.blocks.slice(0, MAX_ITEMS)

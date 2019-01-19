@@ -22,7 +22,6 @@ const MAX_ITEMS = 50
   }
 })
 export default class PageUncles extends Vue {
-
   // Lifecycle
   created() {
     this.$socket.emit(
