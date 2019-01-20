@@ -17,6 +17,7 @@ import io.enkrypt.avro.processing.ContractCreateRecord
 import io.enkrypt.avro.processing.ContractDestroyRecord
 import io.enkrypt.avro.processing.TokenTransferRecord
 import io.enkrypt.common.extensions.bigInteger
+import io.enkrypt.common.extensions.byteBuffer
 import io.enkrypt.common.extensions.data20
 import io.enkrypt.common.extensions.isSuccess
 import io.enkrypt.common.extensions.txFee
@@ -250,7 +251,7 @@ object ChainEvents {
     val from = tx.getFrom()
     val to = tx.getTo()
     val value = tx.getValue()
-    val data = tx.getInput()
+    val data = tx.getInput() ?: (ByteArray(0).byteBuffer()!!)
 
     // tx fee
     val txFee = (receipt.getGasUsed().unsignedBigInteger()!! * tx.getGasPrice().bigInteger()!!).unsignedByteBuffer()!!
@@ -266,6 +267,8 @@ object ChainEvents {
 
     // contract creation
     if (tx.getCreates() != null) {
+
+      // TODO it is possible for the input data to be empty when a contract is created before homestead, clarify and enforce this logic based on network config
 
       val (contractType, _) = StandardTokenDetector.detect(data)
       events += contractCreate(contractType, from, blockHash, txHash, tx.getCreates(), data, reverse)
@@ -343,7 +346,7 @@ object ChainEvents {
     val from = internalTx.getFrom()
     val to = internalTx.getTo()
     val value = internalTx.getValue()
-    val data = internalTx.getInput()
+    val data = internalTx.getInput() ?: ByteArray(0).byteBuffer()!!
 
     // simple ether transfer
     if (!(from == null || to == null || value.capacity() == 0)) {
@@ -353,7 +356,7 @@ object ChainEvents {
     // contract creation
     if (internalTx.getCreates() != null) {
       val (contractType, _) = StandardTokenDetector.detect(data)
-      events += contractCreate(contractType, from, blockHash, txHash, tx.getCreates(), data, reverse)
+      events += contractCreate(contractType, from, blockHash, txHash, internalTx.getCreates(), data, reverse)
     }
 
     return events
