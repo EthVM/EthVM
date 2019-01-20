@@ -38,6 +38,13 @@ export class Tx {
     return this.cache.ethValue
   }
 
+  public getGas(): HexNumber {
+    if (!this.cache.gas) {
+      this.cache.gas = new HexNumber(this.tx.gas)
+    }
+    return this.cache.gas
+  }
+
   public getGasUsed(): HexNumber {
     if (!this.cache.gasUsed) {
       const receipt = this.getReceipt()
@@ -46,9 +53,9 @@ export class Tx {
     return this.cache.gasUsed
   }
 
-  public getGasPrice(): HexNumber {
+  public getGasPrice(): EthValue {
     if (!this.cache.gasPrice) {
-      this.cache.gasPrice = new HexNumber(this.tx.gasPrice)
+      this.cache.gasPrice = new EthValue(this.tx.gasPrice)
     }
     return this.cache.gasPrice
   }
@@ -80,15 +87,8 @@ export class Tx {
     return this.cache.contractAddress
   }
 
-  public getGas(): HexNumber {
-    if (!this.cache.gas) {
-      this.cache.gas = new HexNumber(this.tx.gas)
-    }
-    return this.cache.gas
-  }
-
   public getTxCost(): EthValue {
-    return new EthValue(this.getGasPrice().toNumber() * this.getGasUsed().toNumber())
+    return new EthValue(this.getGasPrice().toWei() * this.getGasUsed().toNumber())
   }
 
   public getNonce(): Hex {

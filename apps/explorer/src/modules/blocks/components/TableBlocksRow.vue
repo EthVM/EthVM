@@ -1,20 +1,13 @@
 <template>
   <v-container pa-0 ma-0>
     <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
-      <v-flex xs6 sm2 order-xs1 v-if="block.getType() == 'block'">
+      <v-flex xs6 sm2 order-xs1>
         <router-link class="black--text pb-1" :to="'/block/' + block.getHash()">{{ block.getNumber() }}</router-link>
       </v-flex>
-      <v-flex xs6 sm2 order-xs1 v-if="block.getType() == 'uncle'">
-        <router-link class="black--text pb-1" :to="'/uncle/' + block.getHash()">{{ block.getNumber() }}</router-link>
-      </v-flex>
       <v-flex xs12 sm7 md6 lass="pr-0" order-xs3 order-sm2>
-        <p v-if="block.getType() == 'block'" class="text-truncate info--text psmall mb-0 pb-0">
+        <p class="text-truncate info--text psmall mb-0 pb-0">
           {{ $t('common.hash') }}:
           <router-link class="primary--text font-italic font-weight-regular" :to="'/block/' + block.getHash()">{{ block.getHash() }}</router-link>
-        </p>
-        <p v-else class="text-truncate info--text psmall mb-0 pb-0">
-          {{ $t('common.hash') }}:
-          <router-link class="primary--text font-italic font-weight-regular" :to="'/uncle/' + block.getHash()">{{ block.getHash() }}</router-link>
         </p>
         <p v-if="pageType != 'address'" class="text-truncate info--text mb-0 pt-2">
           {{ $t('block.miner') }}:
@@ -23,12 +16,9 @@
           }}</router-link>
         </p>
       </v-flex>
-      <v-flex v-if="block.getType() == 'block'" hidden-sm-and-down md2 order-xs4 order-sm3>
-        <p class="txSuccess--text mb-0 psmall">{{ block.getStats().successfulTxs }}</p>
-        <p class="txFail--text mb-0">{{ block.getStats().failedTxs }}</p>
-      </v-flex>
-      <v-flex v-if="block.getType() == 'uncle'" hidden-sm-and-down md2 order-xs4 order-sm3>
-        <p class="txSuccess--text mb-0 psmall">{{ block.getPosition() }}</p>
+      <v-flex hidden-sm-and-down md2 order-xs4 order-sm3>
+        <p class="txSuccess--text mb-0 psmall">{{ successfulTxs() }}</p>
+        <p class="txFail--text mb-0">{{ failedTxs() }}</p>
       </v-flex>
       <v-flex d-flex xs6 sm3 md2 order-xs2 order-md4>
         <p class="text-truncate black--text align-center mb-0">
@@ -44,14 +34,14 @@
       <v-flex d-flex hidden-xs-only sm2 pt-0 pr-0> <v-img v-if="hasUncles(block)" :src="require('@/assets/uncle.png')" height="30px" contain /> </v-flex>
       <v-flex xs12 sm7 md6>
         <v-card flat color="uncleGrey">
-          <v-card-title class="pt-1 font-weight-medium">Uncles:</v-card-title>
-          <v-card-text v-for="(uncle, index) in block.getUncles" :key="index" class="text-truncate info--text">
+          <v-card-title class="pt-1 font-weight-medium">{{ $t('title.uncles') }}:</v-card-title>
+          <v-card-text v-for="(uncle, index) in block.getUncles()" :key="index" class="text-truncate info--text">
             {{ $t('common.hash') }}:
-            <router-link :to="'/block/' + uncle.unclesHash">{{ uncle.unclesHash }}</router-link>
+            <router-link :to="'/uncle/' + uncle.getHash()">{{ uncle.getHash() }}</router-link>
           </v-card-text>
         </v-card>
       </v-flex>
-      <v-flex hidden-xs-only sm3 md4></v-flex>
+      <v-flex hidden-xs-only sm3 md4 />
     </v-layout>
   </v-container>
 </template>
@@ -63,11 +53,21 @@ import { Block } from '@app/core/models'
 
 @Component
 export default class TableBlocksRow extends Mixins(StringConcatMixin) {
-  @Prop(Object) block!: Block
   @Prop({ type: String, default: 'home' }) pageType!: string
+  @Prop(Object) block!: Block
 
+  // Methods
   hasUncles(block) {
-    return block.getType() == 'block' && block.getUncles().length > 0
+    return block.getUncles().length > 0
+  }
+
+  successfulTxs() {
+    return this.block.getTxs().filter(t => t.getStatus() === true).length
+  }
+
+  failedTxs() {
+    const failed = this.block.getTxs().length - this.successfulTxs()
+    return failed < 0 ? 0 : failed
   }
 }
 </script>

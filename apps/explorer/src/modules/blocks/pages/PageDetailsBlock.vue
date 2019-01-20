@@ -126,6 +126,12 @@ export default class PageDetailsBlock extends Vue {
         copy: true
       },
       {
+        title: this.$i18n.t('block.pHash'),
+        detail: elem.getParentHash().toString(),
+        link: '/block/' + elem.getParentHash().toString(),
+        copy: true
+      },
+      {
         title: this.$i18n.t('block.miner'),
         detail: elem.getMiner().toString(),
         link: '/address/' + elem.getMiner().toString(),
@@ -142,11 +148,6 @@ export default class PageDetailsBlock extends Vue {
       {
         title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward'),
         detail: elem.getUncleReward().toEthFormated() + ' ' + this.$i18n.t('common.eth')
-      },
-      {
-        title: this.$i18n.t('block.pHash'),
-        detail: elem.getParentHash().toString(),
-        link: '/block/' + elem.getParentHash().toString()
       },
       {
         title: this.$i18n.t('title.tx'),

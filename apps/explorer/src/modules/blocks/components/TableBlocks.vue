@@ -27,11 +27,8 @@
         <v-flex xs6 sm2 md3 lg2>
           <h5>{{ $t('tableHeader.blockN') }}</h5>
         </v-flex>
-        <v-spacer></v-spacer>
-        <v-flex v-if="!getBlockType" hidden-sm-and-down md2>
-          <h5>{{ $t('title.position') }}</h5>
-        </v-flex>
-        <v-flex v-else hidden-sm-and-down md2>
+        <v-spacer />
+        <v-flex hidden-sm-and-down md2>
           <h5>{{ $t('tableHeader.txs') }}</h5>
         </v-flex>
         <v-flex xs6 sm3 md2>
@@ -42,14 +39,14 @@
     <!-- End Table Header -->
     <app-error-no-data v-if="error" />
     <div v-else>
-      <app-info-load v-if="loading"></app-info-load>
+      <app-info-load v-if="loading" />
       <v-card v-else flat id="scroll-target" :style="getStyle" class="scroll-y pt-0 pb-0">
         <v-layout column fill-height v-scroll:#scroll-target style="margin-right: 1px" class="mb-1">
           <v-flex xs12>
             <transition-group name="list" tag="p">
               <v-card v-for="block in blocks" class="transparent" flat :key="block.getHash()">
                 <table-blocks-row :block="block" :page-type="pageType" />
-                <v-divider class="mb-2 mt-2"></v-divider>
+                <v-divider class="mb-2 mt-2" />
               </v-card>
             </transition-group>
           </v-flex>
@@ -77,34 +74,12 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
   }
 })
 export default class TableBlocks extends Vue {
-  @Prop({ type: String, default: 'blocks' }) pageType!: string
-  @Prop({ type: String, default: '' }) showStyle!: string
-  @Prop({ type: Array, default: [] }) blocks!: Block[]
   @Prop({ type: Boolean, default: true }) loading: boolean
   @Prop({ type: Boolean, default: false }) error: boolean
 
-  /* Data: */
-  data() {
-    return {
-      footnote: [
-        {
-          color: 'txSuccess',
-          text: this.$i18n.t('footnote.success'),
-          icon: 'fa fa-circle'
-        },
-        {
-          color: 'txFail',
-          text: this.$i18n.t('footnote.failed'),
-          icon: 'fa fa-circle'
-        }
-      ],
-      titles: {
-        blocks: this.$i18n.t('title.blocks'),
-        uncle: this.$i18n.t('title.uncles'),
-        address: this.$i18n.t('title.minedBlocks')
-      }
-    }
-  }
+  @Prop({ type: String, default: 'blocks' }) pageType!: string
+  @Prop({ type: String, default: '' }) showStyle!: string
+  @Prop(Array) blocks!: Block[]
 
   /* Computed: */
   get getStyle(): string {
@@ -112,15 +87,26 @@ export default class TableBlocks extends Vue {
   }
 
   get getTitle(): string {
-    return this.titles[this.pageType]
+    const titles = {
+      blocks: this.$i18n.t('title.blocks'),
+      address: this.$i18n.t('title.minedBlocks')
+    }
+    return titles[this.pageType]
   }
 
-  get getBlockType(): boolean {
-    return this.frameBlocks
-  }
-
-  get footnotes(): Footnote[] {
-    return this.footnote
+  get footnotes() {
+    return [
+      {
+        color: 'txSuccess',
+        text: this.$i18n.t('footnote.success'),
+        icon: 'fa fa-circle'
+      },
+      {
+        color: 'txFail',
+        text: this.$i18n.t('footnote.failed'),
+        icon: 'fa fa-circle'
+      }
+    ]
   }
 }
 </script>

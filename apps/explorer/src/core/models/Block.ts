@@ -1,4 +1,4 @@
-import { EthValue, HexNumber, Hex, Hash, Tx } from '@app/core/models'
+import { EthValue, HexNumber, Hex, Hash, Tx, Uncle } from '@app/core/models'
 import BN from 'bignumber.js'
 import { Block as RawBlock, BlockStats, Reward } from 'ethvm-common'
 
@@ -22,15 +22,12 @@ export class Block {
     return 'block'
   }
 
-  public getUncles(): string[] {
-    if (!this.cache.getUncles) {
-      const uncles = []
-      if (this.block.uncles) {
-        this.block.uncles.forEach(b => uncles.push('0x' + b.hash))
-      }
-      this.cache.getUncles = uncles
+  public getUncles(): Uncle[] {
+    if (!this.cache.uncles) {
+      const rawUncles = this.block.uncles || []
+      this.cache.uncles = rawUncles.map(rawUncle => new Uncle(rawUncle))
     }
-    return this.cache.getUncles
+    return this.cache.uncles
   }
 
   public getHash(): string {

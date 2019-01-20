@@ -32,13 +32,13 @@
       </v-layout>
     </v-card>
     <!-- End Table Header -->
-    <app-info-load v-if="loading"></app-info-load>
+    <app-info-load v-if="loading" />
     <v-card v-else flat id="scroll-target" :style="getStyle" class="scroll-y pt-0 pb-0">
       <v-layout column fill-height v-scroll:#scroll-target style="margin-right: 1px" class="mb-1">
         <v-flex xs12>
           <v-card v-for="tx in transactions" class="transparent" flat :key="tx.getHash()">
             <table-txs-row :tx="tx" :is-pending="pending" />
-            <v-divider class="mb-2 mt-2"></v-divider>
+            <v-divider class="mb-2 mt-2" />
           </v-card>
         </v-flex>
       </v-layout>
@@ -59,7 +59,7 @@
 <script lang="ts">
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import TableTxsRow from '@app/modules/txs/components/TableTxsRow.vue'
-import { Tx } from '@app/core/models'
+import { PendingTx, Tx } from '@app/core/models'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({
@@ -69,36 +69,37 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
   }
 })
 export default class TableTxs extends Vue {
+  @Prop({ type: Boolean, default: true }) loading: boolean
   @Prop(String) pageType: string
   @Prop(String) showStyle!: string
-  @Prop(Array) transactions!: Tx[]
-  @Prop({ type: Boolean, default: true }) loading: boolean
-
-  data() {
-    return {
-      footnote: [
-        {
-          color: 'success',
-          text: this.$i18n.t('footnote.success'),
-          icon: 'fa-check-circle'
-        },
-        {
-          color: 'warning',
-          text: this.$i18n.t('footnote.failed'),
-          icon: 'fa fa-times-circle'
-        }
-      ],
-      titles: {
-        tx: this.$i18n.t('title.lastTxs'),
-        pending: this.$i18n.t('title.pending'),
-        block: this.$i18n.t('title.blockTxs')
-      }
-    }
-  }
+  @Prop(Array) transactions!: Tx[] | PendingTx[]
 
   // Computed
+  get footnote() {
+    return [
+      {
+        color: 'success',
+        text: this.$i18n.t('footnote.success'),
+        icon: 'fa-check-circle'
+      },
+      {
+        color: 'warning',
+        text: this.$i18n.t('footnote.failed'),
+        icon: 'fa fa-times-circle'
+      }
+    ]
+  }
+
   get getStyle(): string {
     return this.showStyle
+  }
+
+  get titles() {
+    return {
+      tx: this.$i18n.t('title.lastTxs'),
+      pending: this.$i18n.t('title.pending'),
+      block: this.$i18n.t('title.blockTxs')
+    }
   }
 
   get getTitle(): string {

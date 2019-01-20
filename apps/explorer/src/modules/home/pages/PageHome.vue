@@ -33,7 +33,7 @@ import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { Block, Tx } from '@app/core/models'
 import { Vue, Component, Mixins } from 'vue-property-decorator'
 
-const MAX_ITEMS = 20
+const MAX_ITEMS = 50
 
 @Component({
   components: {
@@ -53,7 +53,7 @@ export default class PageHome extends Vue {
     this.$socket.emit(
       Events.getBlocks,
       {
-        limit: 20,
+        limit: MAX_ITEMS,
         page: 0
       },
       (err, blocks) => {
@@ -68,7 +68,7 @@ export default class PageHome extends Vue {
     this.$socket.emit(
       Events.getTxs,
       {
-        limit: 20,
+        limit: MAX_ITEMS,
         page: 0
       },
       (err, txs) => {

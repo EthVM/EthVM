@@ -3,7 +3,7 @@
     <app-bread-crumbs :new-items="crumbs" />
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
-        <app-list-details :items="uncleDetails" :hide-more-btn="hideMore" :details-type="listType" :loading="loading">
+        <app-list-details :items="uncleDetails" :hide-more="hideMore" :details-type="listType" :loading="loading">
           <app-list-title slot="details-title" :list-type="listType" />
         </app-list-details>
       </v-flex>

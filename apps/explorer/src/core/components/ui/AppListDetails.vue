@@ -41,7 +41,7 @@
           </v-list-tile>
         </v-slide-y-transition>
       </v-list>
-      <div v-if="hideMore">
+      <div v-if="!hideMore">
         <v-btn v-if="!more" @click="setView()" flat block class="secondary"> <v-icon class="fa fa-angle-down white--text"></v-icon> </v-btn>
         <v-btn v-else @click="setView()" flat block class="secondary"> <v-icon class="fa fa-angle-up white--text"></v-icon> </v-btn>
       </div>

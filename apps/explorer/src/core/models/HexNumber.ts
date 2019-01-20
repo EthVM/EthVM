@@ -19,7 +19,7 @@ export class HexNumber {
   }
 
   public toNumber(): number {
-    return new Bn(this.value).toFixed()
+    return Number(new Bn(this.value).toFixed())
   }
 
   public toIntNumber(): number {

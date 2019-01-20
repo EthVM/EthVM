@@ -89,6 +89,11 @@ export default class PageDetailsTxs extends Vue {
   setDetails(tx: Tx) {
     this.details = [
       {
+        title: this.$i18n.t('tableHeader.blockN'),
+        detail: tx.getBlockNumber(),
+        link: '/block/' + tx.getBlockHash().toString()
+      },
+      {
         title: this.$i18n.t('common.hash'),
         detail: tx.getHash(),
         copy: true
@@ -120,11 +125,6 @@ export default class PageDetailsTxs extends Vue {
   setMore(tx: Tx) {
     this.moreDetails = [
       {
-        title: this.$i18n.t('tableHeader.blockN'),
-        detail: tx.getBlockNumber(),
-        link: '/block/' + tx.getBlockHash().toString()
-      },
-      {
         title: this.$i18n.t('gas.limit'),
         detail: tx.getGas().toNumber()
       },
@@ -134,11 +134,11 @@ export default class PageDetailsTxs extends Vue {
       },
       {
         title: this.$i18n.t('gas.price'),
-        detail: tx.getGasPrice().toNumber()
+        detail: tx.getGasPrice().toGWei() + ' ' + this.$i18n.t('common.gwei')
       },
       {
         title: this.$i18n.t('tx.cost'),
-        detail: this.tx.getTxCost().toWei() + ' ' + this.$i18n.t('common.eth')
+        detail: this.tx.getTxCost().toEth() + ' ' + this.$i18n.t('common.eth')
       }
     ]
   }
