@@ -4,18 +4,7 @@
     <app-tabs :tabs="pageTabs">
       <!-- Live Data-->
       <v-tab-item slot="tabs-item" value="tab-0">
-        <v-layout row wrap justify-space-between mb-4>
-          <v-flex xs12 sm6 md3><app-info-card :title="$t('smlBlock.last')" :value="latestBlockNumber" color-type="primary" back-type="last-block"/></v-flex>
-          <v-flex xs12 sm6 md3
-            ><app-info-card :title="$t('smlBlock.time')" :value="secSinceLastBlock" color-type="success" back-type="time-since" metrics="sec"
-          /></v-flex>
-          <v-flex xs12 sm6 md3
-            ><app-info-card :title="$t('smlBlock.hashR')" :value="latestHashRate" color-type="warning" back-type="hash-rate" metrics="Th/s"
-          /></v-flex>
-          <v-flex xs12 sm6 md3
-            ><app-info-card :title="$t('smlBlock.diff')" :value="latestDifficulty" color-type="error" back-type="difficulty" metrics="Th"
-          /></v-flex>
-        </v-layout>
+        <app-card-stats-group />
         <!-- Charts -->
         <v-layout row wrap justify-center mb-4>
           <v-flex xs12 md6> <chart-live-tx /> </v-flex>
@@ -70,10 +59,9 @@
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppChartLink from '@app/modules/charts/components/AppChartLink.vue'
-import AppInfoCard from '@app/core/components/ui/AppInfoCard.vue'
+import AppCardStatsGroup from '@app/core/components/ui/AppCardStatsGroup.vue'
 import ChartLiveTx from '@app/modules/charts/components/live/ChartLiveTx.vue'
 import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees.vue'
-import { LastBlockInfoMixin } from '@app/core/components/mixins'
 import ChartTypes from '@app/modules/charts/helpers/index.ts'
 import { Vue, Component, Mixins } from 'vue-property-decorator'
 
@@ -82,12 +70,12 @@ import { Vue, Component, Mixins } from 'vue-property-decorator'
     AppBreadCrumbs,
     AppChartLink,
     AppTabs,
-    AppInfoCard,
+    AppCardStatsGroup,
     ChartLiveTx,
     ChartLiveTxFees
   }
 })
-export default class PageCharts extends Mixins(LastBlockInfoMixin) {
+export default class PageCharts extends Vue {
   ID = ChartTypes
 
   data() {

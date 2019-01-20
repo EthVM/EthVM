@@ -1,7 +1,7 @@
 <template>
   <v-container grid-list-lg class="mt-0">
     <app-bread-crumbs :new-items="crumbs" />
-    <app-info-card-group :type="txs" />
+    <app-card-stats-group type="txs" />
     <v-layout row justify-center mb-4>
       <v-flex xs12> <table-txs :transactions="txs" page-type="tx" :loading="txsLoad" /> </v-flex>
     </v-layout>
@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-import AppInfoCardGroup from '@app/core/components/ui/AppInfoCardGroup.vue'
+import AppCardStatsGroup from '@app/core/components/ui/AppCardStatsGroup.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { Vue, Component, Mixins } from 'vue-property-decorator'
 import { Tx } from '@app/core/models'
@@ -18,7 +18,7 @@ import { Tx } from '@app/core/models'
 @Component({
   components: {
     AppBreadCrumbs,
-    AppInfoCardGroup,
+    AppCardStatsGroup,
     TableTxs
   }
 })

@@ -32,16 +32,16 @@
       </v-flex>
       <v-flex d-flex xs6 sm3 md2 order-xs2 order-md4>
         <p class="text-truncate black--text align-center mb-0">
-          <v-tooltip v-if="getShortValue(block.getTotalReward().toEth(), true)" bottom>
+          <v-tooltip v-if="!isShortValue(block.getTotalReward().toEth())" bottom>
             <v-icon slot="activator" dark small>fa fa-question-circle info--text</v-icon>
             <span>{{ block.getTotalReward().toEth() }}</span>
           </v-tooltip>
-          {{ getShortValue(block.getTotalReward().toEth(), false) }}
+          {{ getShortValue(block.getTotalReward().toEth()) }}
         </p>
       </v-flex>
     </v-layout>
     <v-layout row v-if="hasUncles(block)" pl-3 pr-2 pt-0 pb-1>
-      <v-flex d-flex hidden-xs-only sm2 pt-0 pr-0> <v-img v-if="hasUncles(block)" :src="require('@/assets/uncle.png')" height="30px" contain></v-img> </v-flex>
+      <v-flex d-flex hidden-xs-only sm2 pt-0 pr-0> <v-img v-if="hasUncles(block)" :src="require('@/assets/uncle.png')" height="30px" contain /> </v-flex>
       <v-flex xs12 sm7 md6>
         <v-card flat color="uncleGrey">
           <v-card-title class="pt-1 font-weight-medium">Uncles:</v-card-title>

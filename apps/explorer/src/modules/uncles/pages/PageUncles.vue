@@ -2,7 +2,7 @@
   <v-container grid-list-lg class="mb-0">
     <app-bread-crumbs :new-items="crumbs" />
     <v-layout row wrap justify-center mb-4>
-      <v-flex xs12> <table-blocks :blocks="uncles" page-type="uncles" :loading="uncleLoad" /> </v-flex>
+      <v-flex xs12> <table-uncles :uncles="uncles" page-type="uncles" :loading="uncleLoad" /> </v-flex>
     </v-layout>
   </v-container>
 </template>
@@ -10,7 +10,7 @@
 <script lang="ts">
 import { Events } from 'ethvm-common'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
+import TableUncles from '@app/modules/uncles/components/TableUncles.vue'
 import { Vue, Component } from 'vue-property-decorator'
 
 const MAX_ITEMS = 50
@@ -18,7 +18,7 @@ const MAX_ITEMS = 50
 @Component({
   components: {
     AppBreadCrumbs,
-    TableBlocks
+    TableUncles
   }
 })
 export default class PageUncles extends Vue {

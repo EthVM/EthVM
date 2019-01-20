@@ -1,6 +1,6 @@
 <template>
   <v-container grid-list-lg class="mb-0">
-    <app-bread-crumbs :new-items="items"></app-bread-crumbs>
+    <app-bread-crumbs :new-items="crumbs" />
     <v-layout row justify-center mb-4>
       <v-flex xs12> <table-txs :transactions="txs" page-type="pending" :loading="txsLoad" /> </v-flex>
     </v-layout>
@@ -21,16 +21,6 @@ import { Events } from 'ethvm-common'
   }
 })
 export default class PagePendingTxs extends Vue {
-  data() {
-    return {
-      items: [
-        {
-          text: this.$i18n.t('title.pending'),
-          disabled: true
-        }
-      ]
-    }
-  }
 
   // Lifecycle
   created() {
@@ -56,6 +46,15 @@ export default class PagePendingTxs extends Vue {
 
   get txsLoad(): boolean {
     return this.txs.length === 0
+  }
+
+  get crumbs() {
+    return [
+      {
+        text: this.$i18n.t('title.pending'),
+        disabled: true
+      }
+    ]
   }
 }
 </script>

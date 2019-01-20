@@ -1,6 +1,6 @@
 <template>
   <v-container grid-list-lg class="mb-0">
-    <app-bread-crumbs :new-items="items"></app-bread-crumbs>
+    <app-bread-crumbs :new-items="crumbs" />
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
         <v-card color="white" flat :class="{ 'pa-1': $vuetify.breakpoint.xsOnly, 'pa-3': $vuetify.breakpoint.smOnly, 'pa-5': $vuetify.breakpoint.mdAndUp }">
@@ -55,15 +55,15 @@ import { Component, Vue } from 'vue-property-decorator'
   }
 })
 export default class PageAbout extends Vue {
-  data() {
-    return {
-      items: [
+
+  // Computed
+  get crumbs() {
+    return [
         {
           text: this.$i18n.t('title.about'),
           disabled: true
         }
       ]
-    }
   }
 }
 </script>

@@ -79,7 +79,7 @@ export class Uncle {
 
   public getGasLimit(): HexNumber {
     if (!this.cache.gasLimit) {
-      this.cache.garLimit = new HexNumber(this.uncle.gasUsed)
+      this.cache.garLimit = new HexNumber(this.uncle.gasLimit)
     }
     return this.cache.garLimit
   }

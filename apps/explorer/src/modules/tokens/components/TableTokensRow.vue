@@ -12,14 +12,14 @@
       </v-flex>
       <v-flex hidden-xs-only sm3>
         <h5>
-          <v-tooltip v-if="getShortValue(getRoundNumber(balance(token.balance, token.decimals) * token.usdValue), true)" bottom>
+          <v-tooltip v-if="!isShortValue(getRoundNumber(balance(token.balance, token.decimals) * token.usdValue))" bottom>
             <v-icon slot="activator" dark small>fa fa-question-circle info--text</v-icon>
             <span
-              >${{ getShortValue(getRoundNumber(balance(token.balance, token.decimals) * token.usdValue), true) }} (@ ${{ getRoundNumber(token.usdValue) }} per
+              >${{ getShortValue(getRoundNumber(balance(token.balance, token.decimals) * token.usdValue)) }} (@ ${{ getRoundNumber(token.usdValue) }} per
               {{ token.symbol }})</span
             >
           </v-tooltip>
-          {{ getShortValue(getRoundNumber(balance(token.balance, token.decimals) * token.usdValue), false) }} (@ ${{ getRoundNumber(token.usdValue) }} per
+          {{ getShortValue(getRoundNumber(balance(token.balance, token.decimals) * token.usdValue)) }} (@ ${{ getRoundNumber(token.usdValue) }} per
           {{ token.symbol }})
         </h5>
       </v-flex>

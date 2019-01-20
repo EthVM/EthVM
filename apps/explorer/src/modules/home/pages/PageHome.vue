@@ -2,7 +2,7 @@
   <v-container grid-list-lg class="mb-0">
     <app-bread-crumbs />
     <!-- Info Cards Stats -->
-    <app-info-card-group />
+    <app-card-stats-group />
     <!-- Charts -->
     <v-layout row wrap justify-center mb-4>
       <v-flex xs12 md6> <chart-live-tx /> </v-flex>
@@ -25,7 +25,7 @@
 <script lang="ts">
 import { Events } from 'ethvm-common'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-import AppInfoCardGroup from '@app/core/components/ui/AppInfoCardGroup.vue'
+import AppCardStatsGroup from '@app/core/components/ui/AppCardStatsGroup.vue'
 import ChartLiveTx from '@app/modules/charts/components/live/ChartLiveTx.vue'
 import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
@@ -38,7 +38,7 @@ const MAX_ITEMS = 20
 @Component({
   components: {
     AppBreadCrumbs,
-    AppInfoCardGroup,
+    AppCardStatsGroup,
     TableBlocks,
     TableTxs,
     ChartLiveTx,

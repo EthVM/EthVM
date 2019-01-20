@@ -4,24 +4,15 @@ import { Component, Vue } from 'vue-property-decorator'
 @Component
 export class StringConcatMixin extends Vue {
   // Methods
-  getRoundNumber(newNumber, round) {
-    if (!round) {
-      round = 2
-    }
-    const n = new BN(newNumber)
-    return n.decimalPlaces(round).toString()
+  getRoundNumber(newNumber, round = 2) {
+    return new BN(newNumber).decimalPlaces(round).toString()
   }
 
-  getShortValue(newValue, isBool) {
-    const length = newValue.length
-    let isShort = false
-    if (length > 10) {
-      newValue = newValue.slice(0, 10) + '...'
-      isShort = true
-    }
-    if (!isBool) {
-      return newValue
-    }
-    return isShort
+  isShortValue(rawStr = ''): boolean {
+    return rawStr.length < 10
+  }
+
+  getShortValue(rawStr): string {
+    return this.isShortValue(rawStr) ? rawStr : rawStr.slice(0, 10) + '...'
   }
 }

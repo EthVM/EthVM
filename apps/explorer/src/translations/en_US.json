@@ -63,7 +63,8 @@
     "reward": "Reward",
     "txN": "Transaction #",
     "limit": "Limit",
-    "gas": "Gas"
+    "gas": "Gas",
+    "blockHeight": "Block Height #"
   },
   "filter": {
     "view": "View",

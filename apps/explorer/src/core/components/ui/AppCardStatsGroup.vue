@@ -50,12 +50,6 @@ export default class AppInfoCardGroup extends Vue {
   seconds = 0
   secondsInterval = null
 
-  data() {
-    return {
-      loadingMessage: this.$i18n.t('message.load')
-    }
-  }
-
   // Lifecycle
   created() {
     const lastBlock = this.$store.getters.blocks[0]
@@ -120,30 +114,25 @@ export default class AppInfoCardGroup extends Vue {
     }, 1000)
   }
 
-  getRoundNumber(number, round: number = 2) {
-    if (!round) {
-      round = 2
-    }
-    const n = new BN(number)
-    return n.decimalPlaces(round).toString()
+  getRoundNumber(newNumber, round = 2) {
+    return new BN(newNumber).decimalPlaces(round).toString()
   }
 
-  getShortValue(value: string = '', isBool: any) {
-    const length = value.length
-    let isShort = false
-    if (length > 8) {
-      value = value.slice(0, 8) + '...'
-      isShort = true
-    }
-    if (!isBool) {
-      return value
-    }
-    return isShort
+  isShortValue(rawStr = ''): boolean {
+    return rawStr.length < 10
+  }
+
+  getShortValue(rawStr): string {
+    return this.isShortValue(rawStr) ? rawStr : rawStr.slice(0, 10) + '...'
   }
 
   // Computed
   get currentType() {
     return this.type
+  }
+
+  get loadingMessage() {
+    return this.$i18n.t('message.load').toString()
   }
 
   get latestBlockNumber(): string {

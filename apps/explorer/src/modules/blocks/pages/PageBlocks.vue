@@ -1,7 +1,7 @@
 <template>
   <v-container grid-list-lg class="mb-0">
     <app-bread-crumbs :new-items="crumbs" />
-    <app-info-card-group />
+    <app-card-stats-group />
     <v-layout row wrap justify-center mb-4>
       <v-flex xs12> <table-blocks :loading="blocksLoad" :blocks="blocks" /> </v-flex>
     </v-layout>
@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-import AppInfoCardGroup from '@app/core/components/ui/AppInfoCardGroup.vue'
+import AppCardStatsGroup from '@app/core/components/ui/AppCardStatsGroup.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
 import { Block } from '@app/core/models'
 import { Vue, Component, Mixins } from 'vue-property-decorator'
@@ -21,7 +21,7 @@ const MAX_ITEMS = 50
   components: {
     AppBreadCrumbs,
     TableBlocks,
-    AppInfoCardGroup
+    AppCardStatsGroup
   }
 })
 export default class PageBlocks extends Vue {

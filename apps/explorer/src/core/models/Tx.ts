@@ -102,7 +102,7 @@ export class Tx {
   public getStatus(): boolean {
     if (!this.cache.status) {
       const receipt = this.getReceipt()
-      this.cache.status = receipt.getStatus()
+      this.cache.status = receipt.hasError()
     }
     return this.cache.status
   }
