@@ -42,7 +42,6 @@
       </v-card>
     </div>
     <app-error-no-data v-else />
-
   </v-card>
 </template>
 

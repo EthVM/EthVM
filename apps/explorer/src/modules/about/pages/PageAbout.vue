@@ -55,15 +55,14 @@ import { Component, Vue } from 'vue-property-decorator'
   }
 })
 export default class PageAbout extends Vue {
-
   // Computed
   get crumbs() {
     return [
-        {
-          text: this.$i18n.t('title.about'),
-          disabled: true
-        }
-      ]
+      {
+        text: this.$i18n.t('title.about'),
+        disabled: true
+      }
+    ]
   }
 }
 </script>

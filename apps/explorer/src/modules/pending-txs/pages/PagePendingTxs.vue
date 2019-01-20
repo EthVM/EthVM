@@ -21,7 +21,6 @@ import { Events } from 'ethvm-common'
   }
 })
 export default class PagePendingTxs extends Vue {
-
   // Lifecycle
   created() {
     this.$socket.emit(
