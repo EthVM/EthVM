@@ -1,71 +1,75 @@
-//import { Token } from 'ethvm-common'
+import { Hex } from '@app/core/models'
+// import { Token as RawToken } from 'ethvm-common'
 
-// export class Token {
-//   public readonly id: string
-//   private cache: any
-//   private price: number
-//   private holder?: string
+export class Token {
+  public readonly id: string
+  private cache: any = {}
 
-//   constructor(private readonly token: Token) {
-//     this.cache = {}
-//     this.id = token.address
-//   }
+  private price: number
+  private holder?: string
 
-//   public getSymbol(): string {
-//     if (!this.cache.symbol) {
-//       this.cache.symbol = this.token.symbol
-//     }
-//     return this.cache.symbol
-//   }
+  constructor(private readonly token: Token) {
+    this.id = '' //token.address
+  }
 
-//   public getCreator(): string {
-//     if (!this.cache.creator) {
-//       this.cache.symbol = '0x'+this.token.creator
-//     }
-//     return this.cache.creator
-//   }
+  public getContractAddress(): Hex {
+    return new Hex('0')
+  }
 
-//   public getDecimals(): number {
-//     if (!this.cache.decimals) {
-//       this.cache.decimals = this.token.decimals
-//     }
-//     return this.cache.decimals
-//   }
-//   public getTotalHolders(): number {
-//     if(!this.cache.totalHolders) {
-//       this.cache.totalHolders = this.token.totalHolders
-//     }
-//     return this.cache.totalHodlers
-//   }
+  public getSymbol(): string {
+    // if (!this.cache.symbol) {
+    //   this.cache.symbol = this.token.symbol
+    // }
+    return this.cache.symbol
+  }
 
-//   public getTotalSupply(): number {
-//     if(!this.cache.totalSupply) {
-//       this.cache.totalSupply = this.token.totalSupply
-//     }
-//     return this.cache.totalSupply
-//   }
+  public getCreator(): string {
+    // if (!this.cache.creator) {
+    //   this.cache.symbol = '0x' + this.token.creator
+    // }
+    return this.cache.creator
+  }
 
-//   public getTotalTransfers(): number {
-//     if(!this.cache.totalTrasfers) {
-//       this.cache.totalTransfers = this.token.totalTransfers
-//     }
-//     return this.cache.totalTransfers
-//   }
+  public getDecimals(): number {
+    // if (!this.cache.decimals) {
+    //   this.cache.decimals = this.token.decimals
+    // }
+    return this.cache.decimals
+  }
+  public getTotalHolders(): number {
+    // if(!this.cache.totalHolders) {
+    //   this.cache.totalHolders = this.token.totalHolders
+    // }
+    return this.cache.totalHodlers
+  }
 
-//   /* Price : */
-//   public getPrice(): number {
-//     return this.token.price
-//   }
+  public getTotalSupply(): number {
+    // if(!this.cache.totalSupply) {
+    //   this.cache.totalSupply = this.token.totalSupply
+    // }
+    return this.cache.totalSupply
+  }
 
-//   public setPrice(_price: number) {
-//     this.token.price = _price
-//   }
+  public getTotalTransfers(): number {
+    // if(!this.cache.totalTrasfers) {
+    //   this.cache.totalTransfers = this.token.totalTransfers
+    // }
+    return this.cache.totalTransfers
+  }
 
-//   public getHolder(): string {
-//     return this.token.holder
-//   }
+  public getPrice(): number {
+    return this.token.price
+  }
 
-//   public setHolder(_holder: string) {
-//     this.token.holder = _holder
-//   }
-// }
+  public setPrice(_price: number) {
+    this.token.price = _price
+  }
+
+  public getHolder(): string {
+    return this.token.holder
+  }
+
+  public setHolder(_holder: string) {
+    this.token.holder = _holder
+  }
+}

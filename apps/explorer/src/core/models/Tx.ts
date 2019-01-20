@@ -1,6 +1,5 @@
 import { EthValue, Hex, HexNumber, TxReceipt } from '@app/core/models'
 import { Tx as RawTx } from 'ethvm-common'
-import BN from 'bignumber.js'
 
 export class Tx {
   public readonly id: string

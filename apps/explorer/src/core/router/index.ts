@@ -13,6 +13,7 @@ import PageDetailsAddress from '@app/modules/addresses/pages/PageDetailsAddress.
 import PageCharts from '@app/modules/charts/pages/PageCharts.vue'
 import PageDetailsChart from '@app/modules/charts/pages/PageDetailsChart.vue'
 import PageDetailsUncle from '@app/modules/uncles/pages/PageDetailsUncle.vue'
+import PageTokens from '@app/modules/tokens/pages/PageTokens.vue'
 
 Vue.use(Router)
 
@@ -51,11 +52,6 @@ export default new Router({
       name: 'pending'
     },
     {
-      path: '/about',
-      component: PageAbout,
-      name: 'about'
-    },
-    {
       path: '/uncles',
       component: PageUncles,
       name: 'uncles'
@@ -83,6 +79,16 @@ export default new Router({
       component: PageDetailsChart,
       name: 'chartID',
       props: true
+    },
+    {
+      path: '/tokens',
+      component: PageTokens,
+      name: 'tokens'
+    },
+    {
+      path: '/about',
+      component: PageAbout,
+      name: 'about'
     }
   ],
   mode: 'history'
