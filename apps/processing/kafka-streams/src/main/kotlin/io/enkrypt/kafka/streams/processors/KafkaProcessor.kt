@@ -1,5 +1,6 @@
 package io.enkrypt.kafka.streams.processors
 
+import io.enkrypt.common.config.NetConfig
 import io.enkrypt.kafka.streams.config.AppConfig
 import mu.KLogger
 import org.apache.kafka.streams.KafkaStreams
@@ -17,6 +18,8 @@ abstract class AbstractKafkaProcessor : KafkaProcessor, KoinComponent {
 
   protected val appConfig: AppConfig by inject()
   protected val baseKafkaProps: Properties by inject(name = "baseKafkaStreamsConfig")
+
+  protected val netConfig: NetConfig by inject()
 
   protected abstract val id: String
   protected abstract val logger: KLogger

@@ -6,6 +6,7 @@ import io.enkrypt.avro.common.Data32
 import io.enkrypt.avro.processing.BlockChainEventsRecord
 import io.enkrypt.avro.processing.ChainEventRecord
 import io.enkrypt.avro.processing.ReorgKeyRecord
+import io.enkrypt.common.config.NetConfig
 import io.enkrypt.common.extensions.bigInteger
 import io.enkrypt.common.extensions.unsignedBigInteger
 import io.enkrypt.common.extensions.unsignedByteBuffer
@@ -21,7 +22,8 @@ import org.apache.kafka.streams.state.Stores
 import java.math.BigInteger
 import java.nio.ByteBuffer
 
-class ChainEventsTransformer(private val unitTesting: Boolean = false) : Transformer<BlockKeyRecord?, BlockRecord?, KeyValue<BlockKeyRecord, ChainEventRecord>> {
+class ChainEventsTransformer(private val netConfig: NetConfig,
+                             private val unitTesting: Boolean = false) : Transformer<BlockKeyRecord?, BlockRecord?, KeyValue<BlockKeyRecord, ChainEventRecord>> {
 
   companion object {
 
@@ -129,7 +131,7 @@ class ChainEventsTransformer(private val unitTesting: Boolean = false) : Transfo
       return
     }
 
-    val chainEvents = ChainEvents.forBlock(block)
+    val chainEvents = ChainEvents.forBlock(block, netConfig)
 
     val chainEventsRecord = BlockChainEventsRecord
       .newBuilder()

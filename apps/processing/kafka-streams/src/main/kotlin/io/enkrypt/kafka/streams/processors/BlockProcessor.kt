@@ -113,7 +113,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
 
     val chainEvents = blockStream
       .transform(
-        TransformerSupplier { ChainEventsTransformer(appConfig.unitTesting) },
+        TransformerSupplier { ChainEventsTransformer(netConfig, appConfig.unitTesting) },
         *ChainEventsTransformer.STORE_NAMES
       )
 
@@ -163,12 +163,12 @@ class BlockProcessor : AbstractKafkaProcessor() {
         Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance())
       )
 
-    val chainEventsStream = chainEvents
+    val tokenTransfersStream = chainEvents
       .filter { _, e -> e.getType() == ChainEventType.TOKEN_TRANSFER }
 
     // publish all transfer events for entry into mongo
 
-    chainEventsStream
+    tokenTransfersStream
       .map { _, v ->
 
         val reverse = v.getReverse()
@@ -207,7 +207,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
 
     // publish fungible token movements for aggregation
 
-    chainEventsStream
+    tokenTransfersStream
       .filter { _, e -> (e.getValue() as TokenTransferRecord).isFungible() }
       .flatMap { _, v ->
 
@@ -250,7 +250,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
 
     // publish non fungible token balances
 
-    chainEventsStream
+    tokenTransfersStream
       .filter { _, e -> (e.getValue() as TokenTransferRecord).isNonFungible() }
       .map { _, v ->
 

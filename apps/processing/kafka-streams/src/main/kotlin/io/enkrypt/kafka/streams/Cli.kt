@@ -4,6 +4,7 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
+import io.enkrypt.common.config.NetConfig
 import io.enkrypt.kafka.streams.config.AppConfig
 import io.enkrypt.kafka.streams.config.KafkaConfig
 import io.enkrypt.kafka.streams.di.Modules.kafkaStreams
@@ -12,6 +13,7 @@ import io.enkrypt.kafka.streams.processors.KafkaProcessor
 import io.enkrypt.kafka.streams.processors.StateProcessor
 import org.koin.dsl.module.module
 import org.koin.standalone.StandAloneContext.startKoin
+import java.lang.IllegalArgumentException
 
 class Cli : CliktCommand() {
 
@@ -42,6 +44,11 @@ class Cli : CliktCommand() {
     envvar = "KAFKA_STREAMS_RESET"
   ).int().default(DEFAULT_STREAMS_RESET)
 
+  private val networkConfig: String by option(
+    help = "The network config to use, one of: mainnet, testnet, ropsten",
+    envvar = "ENKRYPTIO_NET_CONFIG"
+  ).default("mainnet")
+
   // DI
 
   private val configModule = module {
@@ -56,6 +63,16 @@ class Cli : CliktCommand() {
     }
 
     single { AppConfig(false, get()) }
+
+    single {
+      when(networkConfig) {
+        "mainnet" -> NetConfig.mainnet
+        "testnet" -> NetConfig.testnet
+        "ropsten" -> NetConfig.ropsten
+        else -> throw IllegalArgumentException("Unrecognised network config name: $networkConfig")
+      }
+    }
+
   }
 
   override fun run() {

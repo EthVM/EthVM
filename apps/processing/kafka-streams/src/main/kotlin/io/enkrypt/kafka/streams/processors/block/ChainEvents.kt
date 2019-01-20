@@ -16,6 +16,7 @@ import io.enkrypt.avro.processing.ChainEventType
 import io.enkrypt.avro.processing.ContractCreateRecord
 import io.enkrypt.avro.processing.ContractDestroyRecord
 import io.enkrypt.avro.processing.TokenTransferRecord
+import io.enkrypt.common.config.NetConfig
 import io.enkrypt.common.extensions.bigInteger
 import io.enkrypt.common.extensions.byteBuffer
 import io.enkrypt.common.extensions.data20
@@ -168,9 +169,10 @@ object ChainEvents {
           .build()
       ).build()
 
-  fun forBlock(block: BlockRecord): List<ChainEventRecord> {
+  fun forBlock(block: BlockRecord, netConfig: NetConfig = NetConfig.mainnet): List<ChainEventRecord> {
 
     val premineEvents = forPremineBalances(block)
+
     val (totalTxFees, transactionEvents) = forTransactions(block)
     val blockRewardEvents = forBlockRewards(block, totalTxFees)
 

@@ -59,7 +59,7 @@ protocol Processing {
 
   }
 
-// contracts
+  // contracts
 
   record ContractKeyRecord {
     io.enkrypt.avro.common.Data20 address;
@@ -80,9 +80,15 @@ protocol Processing {
     io.enkrypt.avro.common.Data20 address;
   }
 
+  record DaoHfBalanceTransferRecord {
+    io.enkrypt.avro.common.Data20 from;
+    io.enkrypt.avro.common.Data20 to;
+  }
+
   enum ChainEventType {
     PREMINE_BALANCE,
     BLOCK_REWARD,
+    DAO_HF_BALANCE_TRANSFER,
     TOKEN_TRANSFER,
     CONTRACT_CREATE,
     CONTRACT_DESTROY
@@ -94,7 +100,7 @@ protocol Processing {
 
     boolean reverse = false;
 
-    union { io.enkrypt.avro.capture.PremineBalanceRecord, io.enkrypt.avro.capture.BlockRewardRecord, TokenTransferRecord, ContractCreateRecord, ContractDestroyRecord } value;
+    union { io.enkrypt.avro.capture.PremineBalanceRecord, io.enkrypt.avro.capture.BlockRewardRecord, TokenTransferRecord, ContractCreateRecord, ContractDestroyRecord, DaoHfBalanceTransferRecord } value;
     union { null, io.enkrypt.avro.common.Data32 } txHash = null;
   }
 
