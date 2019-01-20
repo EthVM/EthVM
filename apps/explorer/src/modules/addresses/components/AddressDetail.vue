@@ -1,7 +1,7 @@
 <template>
   <v-card color="white" flat class="pt-3 pr-3 pl-3">
     <v-layout row grid-list-lg align-center pb-1>
-      <app-blockies :address="account.getAddress()"></app-blockies>
+      <blockies :address="account.getAddress()" />
       <v-layout wrap column fill-height pl-2>
         <v-flex xs12 pb-0>
           <v-layout row align-center justify-start>
@@ -15,19 +15,17 @@
         <v-flex xs12 pt-0>
           <v-layout row wrap align-center justify-start>
             <v-card-title class="text-truncate">{{ account.getAddress() }}</v-card-title>
-            <v-flex hidden-xs-only pl-0>
-              <app-copy-to-clip v-if="$vuetify.breakpoint.smAndUp" :value-to-copy="account.getAddress()"></app-copy-to-clip>
-            </v-flex>
+            <v-flex hidden-xs-only pl-0> <app-copy-to-clip v-if="$vuetify.breakpoint.smAndUp" :value-to-copy="account.getAddress()" /> </v-flex>
           </v-layout>
         </v-flex>
       </v-layout>
       <v-flex hidden-xs-only fill-height mr-3>
-        <v-layout justify-end> <app-address-qr :address-qr="account.getAddress()" :large="true"></app-address-qr> </v-layout>
+        <v-layout justify-end> <address-qr :address-qr="account.getAddress()" :large="true" /> </v-layout>
       </v-flex>
     </v-layout>
     <v-layout hidden-sm-and-up align-center justify-space-around row fill-height pa-2>
-      <app-copy-to-clip :value-to-copy="account.getAddress()"></app-copy-to-clip>
-      <app-address-qr :address-qr="account.getAddress()"></app-address-qr>
+      <app-copy-to-clip :value-to-copy="account.getAddress()" />
+      <address-qr :address-qr="account.getAddress()" />
     </v-layout>
     <v-layout row wrap justify-space-between mb-4>
       <v-flex xs12 md4>
@@ -54,33 +52,29 @@
 
 <script lang="ts">
 import { StringConcatMixin } from '@app/core/components/mixins'
-import AppAddressQr from '@app/modules/addresses/components/AppAddressQr.vue'
-import AppBlockies from '@app/modules/addresses/components/AppBlockies.vue'
+import AddressQr from '@app/modules/addresses/components/AddressQr.vue'
+import Blockies from '@app/modules/addresses/components/Blockies.vue'
 import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
 import { AccountInfo } from '@app/modules/addresses/props'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
+
 @Component({
   components: {
-    AppAddressQr,
-    AppBlockies,
+    AddressQr,
+    Blockies,
     AppCopyToClip
   }
 })
-export default class AppAddressDetail extends Mixins(StringConcatMixin) {
+export default class AddressDetail extends Mixins(StringConcatMixin) {
   @Prop(Object) account: AccountInfo
-
-  data() {
-    return {
-      titles: {
-        address: this.$i18n.t('title.address'),
-        contract: this.$i18n.t('tx.contract')
-      }
-    }
-  }
 
   /* Computed: */
   get title(): string {
-    return this.titles[this.account.getType()]
+    const titles = {
+      address: this.$i18n.t('title.address'),
+      contract: this.$i18n.t('tx.contract')
+    }
+    return titles[this.account.getType()]
   }
 }
 </script>

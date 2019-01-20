@@ -7,7 +7,7 @@ import createIcon from '@app/modules/addresses/helpers/blockies'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 @Component
-export default class AppBlockies extends Vue {
+export default class Blockies extends Vue {
   @Prop({ type: String, default: '' }) address!: string
   @Prop({ type: String, default: '50px' }) width!: string
   @Prop({ type: String, default: '50px' }) height!: string

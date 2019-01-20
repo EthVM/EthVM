@@ -24,7 +24,7 @@ import VueQr from 'vue-qr'
     VueQr
   }
 })
-export default class AppAddressQR extends Vue {
+export default class AddressQR extends Vue {
   @Prop({ type: String, default: '' }) addressQR!: string
   @Prop({ type: Boolean, default: false }) large!: boolean
 

@@ -1,19 +1,20 @@
 <template>
   <v-container grid-list-lg class="mb-0">
-    <app-bread-crumbs :new-items="items"></app-bread-crumbs>
+    <app-bread-crumbs :new-items="crumbs" />
     <v-layout row wrap justify-start class="mb-4">
-      <v-flex xs12> <app-address-detail :account="account" :type-addrs="detailsType"></app-address-detail> </v-flex>
+      <v-flex xs12> <address-detail :account="account" :type-addrs="detailsType" /> </v-flex>
     </v-layout>
     <app-tabs :tabs="pageTabs">
       <!-- Tokens -->
       <v-tab-item slot="tabs-item" value="tab-1"> <table-tokens :tokens="tokens" :loading="tokensLoad" :error="tokensError" /> </v-tab-item> -->
+
       <!-- Mined Blocks -->
       <v-tab-item slot="tabs-item" v-if="account.isMiner" value="tab-3">
         <table-blocks :blocks="blocks" :loading="blocksLoad" :page-type="detailsType" />
       </v-tab-item>
 
-      <v-tab-item v-if="account.conCreator" value="tab-4">
-        <!-- Contract Creator (no need to implement yet) -->
+      <!-- Contract Creator (no need to implement yet) -->
+      <!-- <v-tab-item v-if="account.conCreator" value="tab-4">
         <v-card>
           <ul>
             <li>Name:</li>
@@ -26,25 +27,20 @@
             <li>0x045619099665fc6f661b1745e5350290ceb933f</li>
           </ul>
         </v-card>
-      </v-tab-item>
-    </app-tabs>
+      </v-tab-item> -->
 
-    <!-- Transactions
+      <!-- Transactions
         <v-tab-item value="tab-0">
           <table-address-txs v-if="account.txs" :address="account.address" :transactions="account.txs"></table-address-txs>
           <app-error-no-data v-else></app-error-no-data>
         </v-tab-item> -->
 
-    <!-- Pending Transactions
+      <!-- Pending Transactions
         <v-tab-item value="tab-2">
           <table-address-txs v-if="account.pendingTxs" :address="account" :transactions="account.pendingTxs" :is-pending="true"></table-address-txs>
           <app-error-no-data v-else></app-error-no-data>
         </v-tab-item> -->
-
-    <!-- End Mining History  -->
-
-    <!-- End Address Details -->
-    <!-- Tab Menu -->
+    </app-tabs>
   </v-container>
 </template>
 
@@ -53,7 +49,7 @@ import { Tx, PendingTx } from '@app/core/models'
 import { Events } from 'ethvm-common'
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-import AppAddressDetail from '@app/modules/addresses/components/AppAddressDetail.vue'
+import AddressDetail from '@app/modules/addresses/components/AddressDetail.vue'
 import TableAddressTxs from '@app/modules/addresses/components/TableAddressTxs.vue'
 import TableTokens from '@app/modules/tokens/components/TableTokens.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
@@ -65,7 +61,7 @@ import { AccountInfo } from '@app/modules/addresses/props'
 @Component({
   components: {
     AppBreadCrumbs,
-    AppAddressDetail,
+    AddressDetail,
     TableTokens,
     TableAddressTxs,
     TableBlocks,
@@ -112,7 +108,7 @@ export default class PageDetailsAddress extends Vue {
 
   data() {
     return {
-      items: [
+      crumbs: [
         {
           text: this.$i18n.t('title.address'),
           disabled: true
@@ -252,6 +248,7 @@ export default class PageDetailsAddress extends Vue {
       }
       this.pageTabs.push(newTab)
     }
+
     if (this.account.conCreator) {
       const newTab = {
         id: '4',
