@@ -394,7 +394,6 @@ enum class KafkaTopics(
 
       // tombstone received so we need to delete
       writes += DeleteOneModel(idFilter)
-
     } else {
 
       require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }

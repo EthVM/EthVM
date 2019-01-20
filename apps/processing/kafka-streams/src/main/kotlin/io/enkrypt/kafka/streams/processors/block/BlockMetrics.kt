@@ -15,8 +15,6 @@ import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
 
-
-
 object BlockMetrics {
 
   fun forBlock(block: BlockRecord): BlockMetricsRecord {
