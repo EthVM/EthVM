@@ -73,7 +73,7 @@ class StateProcessor : AbstractKafkaProcessor() {
     // Metrics
 
     val blockMetricsStream = builder
-      .stream(Topics.BlockMetrics, Consumed.with(Serdes.MetricKey(), Serdes.Metric()))
+      .stream(Topics.BlockMetricsByDay, Consumed.with(Serdes.MetricKey(), Serdes.Metric()))
 
     val blockMetricsByDayCount = blockMetricsStream
       .groupByKey(Grouped.with(Serdes.MetricKey(), Serdes.Metric()))
@@ -141,7 +141,7 @@ class StateProcessor : AbstractKafkaProcessor() {
         },
         Materialized.with(Serdes.MetricKey(), Serdes.Metric())
       ).toStream()
-      .to(Topics.BlockStatistics, Produced.with(Serdes.MetricKey(), Serdes.Metric()))
+      .to(Topics.AggregateBlocksMetricsByDay, Produced.with(Serdes.MetricKey(), Serdes.Metric()))
 
     // Generate the topology
     return builder.build()

@@ -38,8 +38,8 @@ object Modules {
             Pair(Topics.FungibleTokenMovements, TokenBalanceRecord.`SCHEMA$`),
             Pair("${Topics.FungibleTokenMovements}-key", TokenBalanceKeyRecord.`SCHEMA$`),
 
-            Pair(Topics.BlockMetrics, MetricRecord.`SCHEMA$`),
-            Pair("${Topics.BlockMetrics}-key", MetricKeyRecord.`SCHEMA$`),
+            Pair(Topics.BlockMetricsByDay, MetricRecord.`SCHEMA$`),
+            Pair("${Topics.BlockMetricsByDay}-key", MetricKeyRecord.`SCHEMA$`),
 
             Pair(Topics.ContractCreations, ContractCreateRecord.`SCHEMA$`),
             Pair("${Topics.ContractCreations}-key", ContractKeyRecord.`SCHEMA$`),

@@ -146,6 +146,13 @@ object TypeMappings {
       "reverse" to Ignore,
       "raw" to Ignore
     ),
+    "block-metrics" to mapOf(
+      "totalDifficulty" to UBigInt,
+      "totalGasPrice" to UBigInt,
+      "avgGasPrice" to UBigInt,
+      "totalTxFees" to UBigInt,
+      "avgTxFees" to UBigInt
+    ),
     "balanceId" to mapOf(
       "contract" to Hex,
       "address" to Hex,

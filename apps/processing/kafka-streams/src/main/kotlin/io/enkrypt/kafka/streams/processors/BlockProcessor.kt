@@ -20,7 +20,7 @@ import io.enkrypt.common.extensions.isNonFungible
 import io.enkrypt.common.extensions.unsignedBigInteger
 import io.enkrypt.common.extensions.unsignedBytes
 import io.enkrypt.kafka.streams.config.Topics
-import io.enkrypt.kafka.streams.processors.block.BlockStatistics
+import io.enkrypt.kafka.streams.processors.block.BlockMetrics
 import io.enkrypt.kafka.streams.processors.block.ChainEventsTransformer
 import io.enkrypt.kafka.streams.serdes.Serdes
 import mu.KotlinLogging
@@ -327,11 +327,17 @@ class BlockProcessor : AbstractKafkaProcessor() {
         )
       }.to(Topics.ContractDestructions, Produced.with(Serdes.ContractKey(), Serdes.ContractDestroy()))
 
-    // statistics
+    // metrics
 
     blockStream
-      .flatMap { _, block -> BlockStatistics.forBlock(block) }
-      .to(Topics.BlockMetrics, Produced.with(Serdes.MetricKey(), Serdes.Metric()))
+      .mapValues { block -> BlockMetrics.forBlock(block) }
+      .to(Topics.BlockMetricsByBlock, Produced.with(Serdes.BlockKey(), Serdes.BlockMetrics()))
+
+    // TODO refactor to avoid re-calculation of metrics
+
+    blockStream
+      .flatMap { _, block -> BlockMetrics.forAggregation(block, BlockMetrics.forBlock(block)) }
+      .to(Topics.BlockMetricsByDay, Produced.with(Serdes.MetricKey(), Serdes.Metric()))
 
     // Generate the topology
     return builder.build()
