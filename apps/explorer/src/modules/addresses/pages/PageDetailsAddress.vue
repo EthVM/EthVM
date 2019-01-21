@@ -68,7 +68,7 @@ import TableTokens from '@app/modules/tokens/components/TableTokens.vue'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { eth, TinySM, State } from '@app/core/helper'
 import { AccountInfo } from '@app/modules/addresses/props'
-import { resolve } from 'path';
+import { resolve } from 'path'
 
 const MAX_ITEMS = 10
 
@@ -167,12 +167,12 @@ export default class PageDetailsAddress extends Vue {
           // Get Address Balance
           const addressBalancePromise = new Promise((resolve, reject) => {
             this.$socket.emit(
-            Events.getAddressBalance,
-            {
-              address: this.addressRef.replace('0x', '')
-            },
-            (err, result) => err ? reject(err) : resolve(result)
-          )
+              Events.getAddressBalance,
+              {
+                address: this.addressRef.replace('0x', '')
+              },
+              (err, result) => (err ? reject(err) : resolve(result))
+            )
           })
 
           // Get contract metadata (if applicable)
@@ -182,7 +182,7 @@ export default class PageDetailsAddress extends Vue {
               {
                 address: this.addressRef.replace('0x', '')
               },
-              (err, result) => err ? reject(err) : resolve(result)
+              (err, result) => (err ? reject(err) : resolve(result))
             )
           })
 
@@ -194,7 +194,7 @@ export default class PageDetailsAddress extends Vue {
                 symbol: 'ETH',
                 to: 'USD'
               },
-              (err, result) => err || !result ? reject(err) : resolve(result)
+              (err, result) => (err || !result ? reject(err) : resolve(result))
             )
           })
 
@@ -205,20 +205,20 @@ export default class PageDetailsAddress extends Vue {
               {
                 address: this.addressRef.replace('0x', '')
               },
-              (err, result) => err ? reject(err) : resolve(result)
+              (err, result) => (err ? reject(err) : resolve(result))
             )
           })
 
           Promise.all([addressBalancePromise, contractPromise, exchangeRatePromise, totalTxsPromise])
-          .then((res: any[]) => {
-            this.account.balance = res[0] ? new EthValue(res[0].amount) : new EthValue(0)
-            this.account.type = res[1] ? CONTRACT_DETAIL_TYPE : ADDRESS_DETAIL_TYPE
-            this.account.exchangeRate.USD = res[2].price
-            this.account.totalTxs = res[3] ? res[3] : 0
+            .then((res: any[]) => {
+              this.account.balance = res[0] ? new EthValue(res[0].amount) : new EthValue(0)
+              this.account.type = res[1] ? CONTRACT_DETAIL_TYPE : ADDRESS_DETAIL_TYPE
+              this.account.exchangeRate.USD = res[2].price
+              this.account.totalTxs = res[3] ? res[3] : 0
 
-            this.sm.transition('success')
-          })
-          .catch(err => this.sm.transition('error'))
+              this.sm.transition('success')
+            })
+            .catch(err => this.sm.transition('error'))
         }
       },
       {
@@ -273,8 +273,6 @@ export default class PageDetailsAddress extends Vue {
 
           // 2. Disable global loading
           this.loading = false
-
-          console.error('Error!')
         }
       }
     ])
@@ -292,7 +290,6 @@ export default class PageDetailsAddress extends Vue {
   // Methods
 
   fetchData() {
-
     // Getting Token Balances
     // this.$socket.emit(
     //   Events.getTokenBalance,
@@ -308,12 +305,10 @@ export default class PageDetailsAddress extends Vue {
     //     }
     //   }
     // )
-
     /* Call to check if miner, and get Blocks
       if (miner) --> account.isMiner = true
       on blocks load --> blockLoad = false
     */
-
     /* Call to check if contract creator, and get list of contracts
       if (creator) --> account.conCreator = true
       on contracts load --> contractLoad = false

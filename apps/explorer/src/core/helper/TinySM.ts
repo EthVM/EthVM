@@ -1,11 +1,10 @@
 export interface State {
-  name: string,
-  enter: () => void,
+  name: string
+  enter: () => void
   exit?: () => void
 }
 
 export class TinySM {
-
   private states: State[]
   private currentState: State = null
 
