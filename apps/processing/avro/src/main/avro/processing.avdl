@@ -83,6 +83,7 @@ protocol Processing {
   record DaoHfBalanceTransferRecord {
     io.enkrypt.avro.common.Data20 from;
     io.enkrypt.avro.common.Data20 to;
+    bytes amount;
   }
 
   enum ChainEventType {

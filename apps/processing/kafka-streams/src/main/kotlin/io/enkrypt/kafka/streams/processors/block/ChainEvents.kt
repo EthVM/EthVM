@@ -15,6 +15,7 @@ import io.enkrypt.avro.processing.ChainEventRecord
 import io.enkrypt.avro.processing.ChainEventType
 import io.enkrypt.avro.processing.ContractCreateRecord
 import io.enkrypt.avro.processing.ContractDestroyRecord
+import io.enkrypt.avro.processing.DaoHfBalanceTransferRecord
 import io.enkrypt.avro.processing.TokenTransferRecord
 import io.enkrypt.common.config.NetConfig
 import io.enkrypt.common.extensions.bigInteger
@@ -54,6 +55,17 @@ object ChainEvents {
         BlockRewardRecord.newBuilder()
           .setAddress(address)
           .setReward(reward)
+          .build()
+      ).build()
+
+  fun daoHfBalanceTransfer(from: Data20, to: Data20, reverse: Boolean) =
+    ChainEventRecord.newBuilder()
+      .setReverse(reverse)
+      .setType(ChainEventType.DAO_HF_BALANCE_TRANSFER)
+      .setValue(
+        DaoHfBalanceTransferRecord.newBuilder()
+          .setFrom(from)
+          .setTo(to)
           .build()
       ).build()
 
@@ -172,11 +184,12 @@ object ChainEvents {
   fun forBlock(block: BlockRecord, netConfig: NetConfig = NetConfig.mainnet): List<ChainEventRecord> {
 
     val premineEvents = forPremineBalances(block)
+    val hardForkEvents = netConfig.chainConfigForBlock(block).hardForkEvents(block)
 
     val (totalTxFees, transactionEvents) = forTransactions(block)
     val blockRewardEvents = forBlockRewards(block, totalTxFees)
 
-    val events = premineEvents + blockRewardEvents + transactionEvents
+    val events = premineEvents + hardForkEvents + blockRewardEvents + transactionEvents
 
     // return the events in reverse order if we are reversing the block
     return if (block.getReverse()) events.asReversed() else events
