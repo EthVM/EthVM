@@ -21,5 +21,5 @@ export class AccountInfo {
 
   public type: string
 
-  constructor(public address: string) {}
+  constructor(public readonly address: string) {}
 }

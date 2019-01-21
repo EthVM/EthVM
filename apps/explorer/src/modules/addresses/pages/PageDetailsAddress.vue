@@ -9,27 +9,38 @@
 
       <app-tabs :tabs="tabs">
         <!-- Transactions -->
-        <v-tab-item value="tab-0">
+        <v-tab-item slot="tabs-item" value="tab-0">
           <table-address-txs v-if="!txsError" :loading="txsLoading" :address="account.address" :transactions="account.txs" />
           <app-error-no-data v-else />
         </v-tab-item>
+        <!-- End Transactions -->
 
         <!-- Tokens -->
         <v-tab-item slot="tabs-item" value="tab-1">
-          <table-tokens v-if="!tokensError" :tokens="account.tokens" :loading="tokensLoading" :error="tokensError" />
+          <table-tokens v-if="!tokensError" :loading="tokensLoading" :tokens="account.tokens" :error="tokensError" />
           <app-error-no-data v-else />
         </v-tab-item>
+        <!-- End Tokens -->
 
         <!-- Pending Transactions -->
-        <v-tab-item value="tab-2">
-          <table-address-txs v-if="!pendingTxsError" :address="account" :transactions="account.pendingTxs" :is-pending="true" />
+        <v-tab-item slot="tabs-item" value="tab-2">
+          <table-address-txs
+            v-if="!pendingTxsError"
+            :loading="pendingTxsLoading"
+            :address="account.address"
+            :transactions="account.pendingTxs"
+            :is-pending="true"
+          />
           <app-error-no-data v-else />
         </v-tab-item>
+        <!-- End Pending Transactions -->
 
         <!-- Mined Blocks -->
         <v-tab-item slot="tabs-item" v-if="account.isMiner" value="tab-3">
-          <table-blocks v-if="!minerBlocksError" :blocks="blocks" :loading="minerBlocksLoading" :page-type="detailsType" />
+          <table-blocks v-if="!minerBlocksError" :loading="minerBlocksLoading" :blocks="blocks" :page-type="detailsType" />
+          <app-error-no-data v-else />
         </v-tab-item>
+        <!-- End Mined Blocks -->
 
         <!-- Contract Creator (no need to implement yet) -->
         <!-- <v-tab-item v-if="account.conCreator" value="tab-4">
@@ -54,6 +65,8 @@
     </div>
   </v-container>
 </template>
+
+// TODO: Finish proper implementation of Table-Address-Txs or reuse from Txs our Table-Txs
 
 <script lang="ts">
 import { EthValue, Tx, PendingTx } from '@app/core/models'
@@ -216,7 +229,7 @@ export default class PageDetailsAddress extends Vue {
               this.account.exchangeRate.USD = res[2].price
               this.account.totalTxs = res[3] ? res[3] : 0
 
-              this.sm.transition('success')
+              this.sm.transition('load-complementary-info')
             })
             .catch(err => this.sm.transition('error'))
         }
@@ -224,35 +237,82 @@ export default class PageDetailsAddress extends Vue {
       {
         name: 'load-complementary-info',
         enter: () => {
-          // Getting Address Transactions
-          this.$socket.emit(
-            Events.getAddressTxs,
-            {
-              address: this.addressRef.replace('0x', ''),
-              limit: MAX_ITEMS,
-              page: 0
-            },
-            (err, result) => {
-              const txs = []
-              result.forEach(element => txs.unshift(new Tx(element)))
-              this.account.txs = txs
-            }
-          )
+          // Get Address Transactions
+          const addressTxsPromise = new Promise((resolve, reject) => {
+            this.$socket.emit(
+              Events.getAddressTxs,
+              {
+                address: this.addressRef.replace('0x', ''),
+                limit: MAX_ITEMS,
+                page: 0
+              },
+              (err, result) => (err ? reject(err) : resolve(result))
+            )
+          })
 
-          // Getting Address Pending Transactions
-          this.$socket.emit(
-            Events.getPendingTxsOfAddress,
-            {
-              address: this.addressRef.replace('0x', ''),
-              limit: MAX_ITEMS,
-              page: 0
-            },
-            (err, result) => {
+          // Getting Token Balances
+          // this.$socket.emit(
+          //   Events.getTokenBalance,
+          //   {
+          //     address: this.addressRef.replace('0x', '')
+          //   },
+          //   (err, result) => {
+          //     if (result !== '0x') {
+          //       this.tokens = result
+          //       this.tokensLoad = true
+          //     } else {
+          //       this.tokensError = true
+          //     }
+          //   }
+          // )
+
+          // Get Address Pending Transactions
+          const addressPendingTxsPromise = new Promise((resolve, reject) => {
+            this.$socket.emit(
+              Events.getPendingTxsOfAddress,
+              {
+                address: this.addressRef.replace('0x', ''),
+                limit: MAX_ITEMS,
+                page: 0
+              },
+              (err, result) => (err ? reject(err) : resolve(result))
+            )
+          })
+
+          // Get Mined Blocks
+          const minedBlocksPromise = new Promise((resolve, reject) => {
+            this.$socket.emit(
+              Events.getBlocksMined,
+              {
+                address: this.addressRef.replace('0x', ''),
+                limit: MAX_ITEMS,
+                page: 0
+              },
+              (err, result) => (err ? reject(err) : resolve(result))
+            )
+          })
+
+          Promise.all([addressTxsPromise, addressPendingTxsPromise, minedBlocksPromise])
+            .then((res: any[]) => {
+              // console.log('Complementary info: ', res)
+
+              // Txs
+              const txs = []
+              res[0].forEach(raw => txs.unshift(new Tx(raw)))
+              this.account.txs = txs
+              this.txsLoading = false
+
+              // Pending Txs
               const pTxs = []
-              result.forEach(element => pTxs.unshift(new PendingTx(element)))
+              res[1].forEach(raw => pTxs.unshift(new PendingTx(raw)))
               this.account.pendingTxs = pTxs
-            }
-          )
+              // this.pendingTxsLoading = false
+
+              // Mined Blocks
+
+              this.sm.transition('success')
+            })
+            .catch(err => this.sm.transition('error'))
         }
       },
       {
@@ -281,40 +341,7 @@ export default class PageDetailsAddress extends Vue {
     this.sm.transition('initial')
   }
 
-  // mounted() {
-  //   if (this.account.miner || this.account.creator) {
-  //     this.setTabs()
-  //   }
-  // }
-
   // Methods
-
-  fetchData() {
-    // Getting Token Balances
-    // this.$socket.emit(
-    //   Events.getTokenBalance,
-    //   {
-    //     address: this.addressRef.replace('0x', '')
-    //   },
-    //   (err, result) => {
-    //     if (result !== '0x') {
-    //       this.tokens = result
-    //       this.tokensLoad = true
-    //     } else {
-    //       this.tokensError = true
-    //     }
-    //   }
-    // )
-    /* Call to check if miner, and get Blocks
-      if (miner) --> account.isMiner = true
-      on blocks load --> blockLoad = false
-    */
-    /* Call to check if contract creator, and get list of contracts
-      if (creator) --> account.conCreator = true
-      on contracts load --> contractLoad = false
-    */
-  }
-
   updateTabs() {
     if (this.account.miner) {
       const newTab = {

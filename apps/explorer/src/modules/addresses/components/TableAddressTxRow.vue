@@ -5,7 +5,7 @@
       <v-card-text class="text-xs-center secondary--text">{{ getText }}</v-card-text>
     </v-card>
     <v-card v-else color="white" flat class="pt-0 pb-2">
-      <v-layout justify-end class="pb-1"> <footnote :footnotes="footnote"></footnote> </v-layout>
+      <!-- <v-layout justify-end class="pb-1"> <app-footnote :footnotes="footnote" /> </v-layout> -->
       <!-- Table Header -->
       <v-card color="primary" flat class="white--text pl-3 pr-1" height="40px">
         <v-layout align-center justify-start row fill-height pr-3>
@@ -49,15 +49,17 @@
                           }}</router-link>
                         </p>
                         <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
-                        <p class="text-truncate info--text font-weight-thin mb-0" v-if="tx.getContractAddress()">
+                        <p class="text-truncate info--text font-weight-thin mb-0" v-if="!tx.getContractAddress().isEmpty()">
                           {{ $t('tx.contract') }}:
-                          <router-link class="secondary--text font-italic font-weight-regular" :to="'/address/' + tx.getContractAddress()">{{
-                            tx.getContractAddress()
+                          <router-link class="secondary--text font-italic font-weight-regular" :to="'/address/' + tx.getContractAddress().toString()">{{
+                            tx.getContractAddress().toString()
                           }}</router-link>
                         </p>
                         <p class="text-truncate info--text font-weight-thin mb-0" v-else>
                           <strong>{{ $t('tx.to') }}:</strong>
-                          <router-link class="secondary--text font-italic font-weight-regular" :to="'/address/' + tx.getTo()">{{ tx.getTo() }}</router-link>
+                          <router-link class="secondary--text font-italic font-weight-regular" :to="'/address/' + tx.getTo().toString()">{{
+                            tx.getTo().toString()
+                          }}</router-link>
                         </p>
                       </v-layout>
                     </v-flex>
@@ -92,17 +94,17 @@
                   </p>
                 </v-flex>
                 <v-flex hidden-sm-and-down md2>
-                  <p class="black--text text-truncate mb-0">{{ tx.getGasUsed() }}</p>
+                  <p class="black--text text-truncate mb-0">{{ tx.getGasUsed().toNumber() }}</p>
                 </v-flex>
                 <v-flex hidden-sm-and-down md2>
-                  <p class="text-truncate black--text mb-0">{{ tx.getGasPrice() }}</p>
+                  <p class="text-truncate black--text mb-0">{{ tx.getGasPrice().toGWei() }}</p>
                 </v-flex>
                 <v-flex hidden-xs-only sm1>
                   <v-icon v-if="tx.getStatus()" small class="txSuccess--text">fa fa-check-circle {{ log(tx) }}</v-icon>
                   <v-icon v-else small class="txFail--text">fa fa-times-circle {{ log(tx) }}</v-icon>
                 </v-flex>
               </v-layout>
-              <v-divider></v-divider>
+              <v-divider />
             </v-card>
           </v-flex>
         </v-layout>
@@ -116,8 +118,8 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component
 export default class TableAddressTxRow extends Vue {
+  @Prop({ type: String, required: true }) account!: string
   @Prop(Array) transactions!: any[]
-  @Prop({ type: Object, required: true }) account!: any
   @Prop({ type: Number, default: 0 }) filter!: number
   @Prop({ type: Number, default: 0 }) total!: number
   @Prop({ type: Boolean, default: false }) type!: boolean
@@ -141,7 +143,7 @@ export default class TableAddressTxRow extends Vue {
 
   // Methods
   getType(tx) {
-    return tx.getFrom().toLowerCase() === this.account.toLowerCase()
+    return tx.getFrom() === this.account
   }
 
   getShortEthValue(newEthValue, isBool) {
@@ -180,7 +182,3 @@ export default class TableAddressTxRow extends Vue {
   }
 }
 </script>
-
-<style scoped lang="less">
-// @import '~lessPath/sunil/blocks/largeBlocks/addressTxTable.less';
-</style>

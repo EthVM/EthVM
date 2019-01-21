@@ -15,11 +15,11 @@
         ripple
         >{{ item.title }}</v-tab
       >
-      <v-tabs-slider color="primary" class="mb-0" style="height: 4px;"></v-tabs-slider>
+      <v-tabs-slider color="primary" class="mb-0" style="height: 4px;" />
     </v-tabs>
     <v-tabs-items v-model="activeTab" style="border-top: 1px solid #efefef">
-      <v-container grid-list-sm class="mb-0"> <slot name="tabs-item"></slot></v-container
-    ></v-tabs-items>
+      <v-container grid-list-sm class="mb-0"> <slot name="tabs-item"/></v-container>
+    </v-tabs-items>
   </v-card>
 </template>
 

@@ -18,7 +18,7 @@
         </v-flex>
       </v-layout>
       <v-flex hidden-xs-only fill-height mr-3>
-        <v-layout justify-end> <address-qr :address-qr="account.address" :large="true" /> </v-layout>
+        <v-layout justify-end> <address-qr :address="account.address" :large="true" /> </v-layout>
       </v-flex>
     </v-layout>
     <v-layout hidden-sm-and-up align-center justify-space-around row fill-height pa-2>
@@ -72,7 +72,6 @@ export default class AddressDetail extends Mixins(StringConcatMixin) {
       address: this.$i18n.t('title.address'),
       contract: this.$i18n.t('title.contract')
     }
-    // console.log(this.account.type)
     return titles[this.account.type]
   }
 }

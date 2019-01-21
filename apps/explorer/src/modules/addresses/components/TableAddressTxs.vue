@@ -2,7 +2,8 @@
   <v-card color="white" flat v-if="transactions" class="pl-3 pr-3 pt-2 pb-0">
     <!-- Tx Header -->
     <v-layout align-center justify-space-between wrap row fill-height>
-      <v-flex d-flex xs12 sm6 md4>
+      <!-- Search Box -->
+      <!-- <v-flex d-flex xs12 sm6 md4>
         <v-layout row align-center justify-start fill-height height="40px">
           <v-flex xs7 sm9 md10 pr-0>
             <v-card
@@ -18,8 +19,10 @@
             <v-btn depressed outline class="primary--text text-capitalize ml-0 lineGrey" @click="searching">{{ $t('search.title') }}</v-btn>
           </v-flex>
         </v-layout>
-      </v-flex>
-      <v-spacer></v-spacer>
+      </v-flex> -->
+      <!-- End Search Box -->
+      <v-spacer />
+      <!-- Tx Input Filter -->
       <v-flex d-flex xs12 sm4 md3>
         <v-layout row align-center justify-start fill-height height="40px">
           <v-flex>
@@ -38,27 +41,29 @@
                 item-value="value"
                 height="32px"
                 @click="setSelectedTxs"
-              ></v-select>
+              />
             </v-card>
           </v-flex>
+          <!-- End Tx Input Filter -->
         </v-layout>
       </v-flex>
     </v-layout>
-    <!-- Tx Table Header -->
-    <table-address-tx-row :transactions="filteredTxs" :account="address" :filter="selectedTx" :total="getTotal" :type="isPending" />
-    <!-- End Tx Table Header -->
+    <!-- Tx Table Content -->
+    <table-address-tx-row v-if="!loading" :transactions="filteredTxs" :account="address" :filter="selectedTx" :total="getTotal" :type="isPending" />
+    <app-info-load v-else />
+    <!-- End Tx Table Content -->
   </v-card>
 </template>
 
 <script lang="ts">
-/*Techinically a smart component this one shoule implelemetn infinite scrool and data filtering */
-
+import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import TableAddressTxRow from '@app/modules/addresses/components/TableAddressTxRow.vue'
 import { Tx } from '@app/core/models'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({
   components: {
+    AppInfoLoad,
     TableAddressTxRow
   }
 })
@@ -66,32 +71,20 @@ export default class TableAddressTxs extends Vue {
   @Prop(String) address!: string
   @Prop(Array) transactions!: Tx[]
   @Prop(Boolean) isPending!: boolean
+  @Prop({ type: Boolean, default: true }) loading!: boolean
+
+  searchInput = ''
+  inTx = []
+  outTx = []
+  receivedTxs = false
+  filtered = this.transactions
 
   data() {
     return {
-      searchInput: '',
       selected: {
         text: this.$i18n.t('filter.all'),
         value: 0
-      },
-      options: [
-        {
-          text: this.$i18n.t('filter.all'),
-          value: 0
-        },
-        {
-          text: this.$i18n.t('filter.in'),
-          value: 1
-        },
-        {
-          text: this.$i18n.t('filter.out'),
-          value: 2
-        }
-      ],
-      inTx: [],
-      outTx: [],
-      recievedTx: false,
-      filtered: this.transactions
+      }
     }
   }
 
@@ -101,26 +94,22 @@ export default class TableAddressTxs extends Vue {
 
   // Methods
   getTxsType() {
-    for (let i = 0; i < this.transactions.length; i++) {
-      if (
-        this.transactions[i]
-          .getFrom()
-          .toString()
-          .toLowerCase() === this.address.toLowerCase()
-      ) {
-        this.outTx.push(this.transactions[i])
+    this.transactions.forEach(tx => {
+      const from = tx.getFrom().toString()
+      if (from === this.address) {
+        this.outTx.push(tx)
       } else {
-        this.inTx.push(this.transactions[i])
+        this.inTx.push(tx)
       }
-    }
-    this.recievedTx = true
+    })
+    this.receivedTxs = true
   }
 
   searching() {}
 
   setSelectedTxs() {
     if (this.transactions) {
-      if (!this.recievedTx) {
+      if (!this.receivedTxs) {
         this.getTxsType()
       }
       if (this.selectedTx === 0) {
@@ -155,6 +144,23 @@ export default class TableAddressTxs extends Vue {
       return this.outTx.length
     }
     return 0
+  }
+
+  get options() {
+    return [
+      {
+        text: this.$i18n.t('filter.all'),
+        value: 0
+      },
+      {
+        text: this.$i18n.t('filter.in'),
+        value: 1
+      },
+      {
+        text: this.$i18n.t('filter.out'),
+        value: 2
+      }
+    ]
   }
 }
 </script>

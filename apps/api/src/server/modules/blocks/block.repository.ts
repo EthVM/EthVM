@@ -55,7 +55,7 @@ export class MongoBlockRepository extends BaseMongoDbRepository implements Block
   public getBlocksMined(address: string, limit: number, page: number): Promise<SmallBlock[]> {
     return this.db
       .collection(MongoEthVM.collections.blocks)
-      .find({ 'header.miner': address })
+      .find({ 'header.author': address })
       .project({ hash: 1, number: 1 })
       .sort({ number: -1 })
       .skip(page)
@@ -66,9 +66,7 @@ export class MongoBlockRepository extends BaseMongoDbRepository implements Block
         if (!resp) {
           return b
         }
-        resp.forEach(block => {
-          b.push(block)
-        })
+        resp.forEach(block => b.push(block))
         return b
       })
   }
