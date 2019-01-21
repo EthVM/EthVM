@@ -118,7 +118,9 @@ object TypeMappings {
     "extraData" to Hex,
     "gasLimit" to UBigInt,
     "gasUsed" to UBigInt,
-    "raw" to Ignore
+    "raw" to Ignore,
+    "uncleReward" to UBigInt,
+    "blockNumber" to UBigInt
   )
 
   private val mappings = mapOf(

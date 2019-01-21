@@ -138,6 +138,10 @@ protocol Capture {
 
     long timestamp;                                               // the unix timestamp for when the block was collated
 
+    union { null, bytes } blockNumber = null;                     // block number this header relates to when an uncle
+    union { null, int } uncleIndex = null;                        // index in the uncles array of this header if it was included in the uncles list
+    union { null, bytes } uncleReward = null;                     // block reward for inclusion of this uncle header
+
     union { null, bytes } raw = null;                             // raw block data
   }
 
