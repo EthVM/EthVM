@@ -7,7 +7,7 @@
         <v-flex xs12> <address-detail :account="account" :type-addrs="detailsType" /> </v-flex>
       </v-layout>
 
-      <app-tabs :tabs="pageTabs">
+      <app-tabs :tabs="tabs">
         <!-- Transactions -->
         <v-tab-item value="tab-0">
           <table-address-txs v-if="!txsError" :loading="txsLoading" :address="account.address" :transactions="account.txs" />
@@ -28,7 +28,7 @@
 
         <!-- Mined Blocks -->
         <v-tab-item slot="tabs-item" v-if="account.isMiner" value="tab-3">
-          <table-blocks v-if="!minerminerBlocksError" :blocks="blocks" :loading="minerBlocksLoading" :page-type="detailsType" />
+          <table-blocks v-if="!minerBlocksError" :blocks="blocks" :loading="minerBlocksLoading" :page-type="detailsType" />
         </v-tab-item>
 
         <!-- Contract Creator (no need to implement yet) -->
@@ -120,7 +120,7 @@ export default class PageDetailsAddress extends Vue {
 
   data() {
     return {
-      pageTabs: [
+      tabs: [
         {
           id: '0',
           title: this.$i18n.t('tabs.txH'),
@@ -322,7 +322,7 @@ export default class PageDetailsAddress extends Vue {
         title: this.$i18n.t('tabs.miningH'),
         isActive: false
       }
-      this.pageTabs.push(newTab)
+      this.tabs.push(newTab)
     }
 
     if (this.account.creator) {
@@ -331,7 +331,7 @@ export default class PageDetailsAddress extends Vue {
         title: this.$i18n.t('tabs.contracts'),
         isActive: false
       }
-      this.pageTabs.push(newTab)
+      this.tabs.push(newTab)
     }
   }
 
