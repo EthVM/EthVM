@@ -117,7 +117,7 @@ open class DaoHardForkConfig(override val constants: ChainConstants = ChainConst
       ).build()
 }
 
-open class Eip150HardForkConfig(private val parent: ChainConfig) : DaoHardForkConfig() {
+open class Eip150HardForkConfig(val parent: ChainConfig) : DaoHardForkConfig() {
   override val constants = parent.constants
   override fun eip161(): Boolean = parent.eip161()
   override fun eip198(): Boolean = parent.eip161()
@@ -167,6 +167,8 @@ interface NetConfig {
 
   fun chainConfigForBlock(block: BlockRecord): ChainConfig
 
+  fun chainConfigForBlock(number: BigInteger): ChainConfig
+
   companion object {
 
     val mainnet = BaseNetConfig(
@@ -211,12 +213,12 @@ class BaseNetConfig(configs: List<Pair<Long, ChainConfig>>) : NetConfig {
     // TODO enforce that block numbers are increasing
   }
 
-  override fun chainConfigForBlock(block: BlockRecord): ChainConfig {
+  override fun chainConfigForBlock(block: BlockRecord): ChainConfig =
+    chainConfigForBlock(block.getHeader().getNumber().unsignedBigInteger()!!)
 
-    val blockNumber = block.getHeader().getNumber().unsignedBigInteger()!!
-
+  override fun chainConfigForBlock(number: BigInteger): ChainConfig {
     var idx = 0
-    while (blockNumber >= blockNumbers[idx]) {
+    while ((idx < blockNumbers.size - 1) && number >= blockNumbers[idx]) {
       idx += 1
     }
     return chainConfigs[idx]
