@@ -5,7 +5,7 @@
         <v-card-title class="title font-weight-bold ">{{ title }}</v-card-title>
       </v-flex>
       <v-flex xs4 pb-0>
-        <v-btn flat color="secondary" class="text-capitalize" :to="'/chart/' + chartID">{{ $t('bttn.more') }} <v-icon right>fas fa-angle-right</v-icon></v-btn>
+        <v-btn flat color="secondary" class="text-capitalize" :to="'/chart/' + chartId">{{ $t('bttn.more') }} <v-icon right>fas fa-angle-right</v-icon></v-btn>
       </v-flex>
     </v-layout>
 
@@ -19,6 +19,6 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 @Component
 export default class AppChartLink extends Vue {
   @Prop({ type: String, required: true }) title!: string
-  @Prop({ type: String, required: true }) chartID!: string
+  @Prop({ type: String, required: true }) chartId!: string
 }
 </script>

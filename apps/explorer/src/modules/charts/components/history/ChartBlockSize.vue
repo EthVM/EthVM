@@ -1,13 +1,13 @@
 <template>
   <app-chart
     type="line"
-    :chart-id="id"
     :chart-title="title"
     :chart-description="description"
     :data="chartData"
     :options="chartOptions"
     :redraw="redraw"
     unfilled="true"
+    @timeFrame="setTimeFrame"
   />
 </template>
 
@@ -16,14 +16,6 @@ import AppChart from '@app/modules/charts/components/AppChart.vue'
 import { Vue, Component } from 'vue-property-decorator'
 import { Events } from 'ethvm-common'
 import ethUnits from 'ethereumjs-units'
-
-/* Time Variables: */
-const STATES = {
-  ALL: 'ALL',
-  YEAR: 'YEAR',
-  MONTH: 'MONTH',
-  DAY: 'DAY'
-}
 
 const DES = {
   BEGIN: 'Average block size history in Ethereum blockchain since the begining.',
@@ -36,10 +28,9 @@ const DES = {
   }
 })
 export default class ChartBlockSize extends Vue {
-  id = 'block_size_history'
   title = 'Average Block Size'
   redraw = false
-  timeFrame = STATES.DAY
+  timeFrame = 1
   chartOptions = {
     title: {
       text: 'Average Block Size',
@@ -74,28 +65,22 @@ export default class ChartBlockSize extends Vue {
       ]
     }
   }
-
+  DATA = [
+    { state: 'ALL', points: [], labels: [] },
+    { state: 'WEEK', points: [], labels: [] },
+    { state: 'MONTH', points: [], labels: [] },
+    { state: 'YEAR', points: [], labels: [] }
+  ]
   /*Computed: */
   get chartData() {
-    const newLabels = []
-    const newPoints = []
-
-    this.$socket.emit(Events.getAverageBlockSizeStats, this.timeFrame, (err, result) => {
-      if (!err && result) {
-        result.forEach(block => {
-          newPoints.push(block.reduction)
-          newLabels.push(block.group)
-        })
-      }
-    })
     return {
-      labels: newLabels,
+      labels: this.DATA[this.timeFrame].labels,
       datasets: [
         {
           label: 'Average Block Size',
           borderColor: '#20c0c7',
           backgroundColor: '#20c0c7',
-          data: newPoints,
+          data: this.DATA[this.timeFrame].points,
           yAxisID: 'y-axis-1',
           fill: false
         }
@@ -103,8 +88,31 @@ export default class ChartBlockSize extends Vue {
     }
   }
 
+  /*Computed: */
   get description(): string {
-    return this.timeFrame === STATES.ALL ? DES.BEGIN : DES.OTHER + this.timeFrame
+    return this.timeFrame === 0 ? DES.BEGIN : DES.OTHER + this.DATA[this.timeFrame].state
+  }
+
+  /*Methods: */
+  setTimeFrame(_value: number): void {
+    this.timeFrame = _value
+    if (this.DATA[this.timeFrame].points) {
+      this.setData(_value)
+    }
+  }
+
+  setData(_state: number): void {
+    this.$socket.emit(Events.getAverageBlockSizeStats, { duration: this.DATA[_state].state }, (err, result) => {
+      if (!err && result) {
+        result.forEach(point => {
+          this.DATA[_state].points.push({
+            x: point.date,
+            y: point.value
+          })
+          this.DATA[_state].labels.push(point.name)
+        })
+      }
+    })
   }
 }
 </script>

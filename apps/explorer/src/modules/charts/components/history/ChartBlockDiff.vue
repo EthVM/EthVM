@@ -17,7 +17,6 @@ import AppChart from '@app/modules/charts/components/AppChart.vue'
 import { Vue, Component } from 'vue-property-decorator'
 import ethUnits from 'ethereumjs-units'
 import { Events } from 'ethvm-common'
-import id from '@app/modules/charts/helpers'
 
 /* Time Variables: */
 const DES = {
@@ -31,7 +30,6 @@ const DES = {
   }
 })
 export default class ChartBlockDiff extends Vue {
-  ID = id.difficulty
   title = 'Average Block Difficulty'
   redraw = true
   timeFrame = 1
@@ -69,27 +67,15 @@ export default class ChartBlockDiff extends Vue {
       ]
     }
   }
-  DATA = [
+ DATA = [
     { state: 'ALL', points: [], labels: [] },
-    {
-      state: 'DAY',
-      points: [],
-      labels: []
-    },
-    {
-      state: 'MONTH',
-      points: [],
-      labels: []
-    },
-    {
-      state: 'YEAR',
-      points: [],
-      labels: []
-    }
+    { state: 'WEEK', points: [], labels: [] },
+    { state: 'MONTH', points: [], labels: [] },
+    { state: 'YEAR', points: [], labels: [] }
   ]
-
   /*Computed: */
   get chartData() {
+
     return {
       labels: this.DATA[this.timeFrame].labels,
       datasets: [
@@ -104,7 +90,7 @@ export default class ChartBlockDiff extends Vue {
       ]
     }
   }
-
+  /*Computed: */
   get description(): string {
     return this.timeFrame === 0 ? DES.BEGIN : DES.OTHER + this.DATA[this.timeFrame].state
   }
@@ -132,3 +118,5 @@ export default class ChartBlockDiff extends Vue {
   }
 }
 </script>
+
+

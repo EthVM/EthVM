@@ -1,7 +1,6 @@
 <template>
   <app-chart
     type="line"
-    :chart-id="id"
     :chart-title="title"
     :chart-description="description"
     :data="chartData"
@@ -31,7 +30,6 @@ const DES = {
   }
 })
 export default class ChartGasPrice extends Vue {
-  id = 'gas_price_history'
   title = 'Average Gas Price History'
   redraw = true
   timeFrame = 1
@@ -71,21 +69,9 @@ export default class ChartGasPrice extends Vue {
   }
   DATA = [
     { state: 'ALL', points: [], labels: [] },
-    {
-      state: 'DAY',
-      points: [],
-      labels: []
-    },
-    {
-      state: 'MONTH',
-      points: [],
-      labels: []
-    },
-    {
-      state: 'YEAR',
-      points: [],
-      labels: []
-    }
+    { state: 'WEEK', points: [], labels: [] },
+    { state: 'MONTH', points: [], labels: [] },
+    { state: 'YEAR', points: [], labels: [] }
   ]
 
   /*Computed: */
@@ -94,7 +80,7 @@ export default class ChartGasPrice extends Vue {
       labels: this.DATA[this.timeFrame].labels,
       datasets: [
         {
-          label: 'Average Gas Price (GWEI)',
+          label: 'Gas Price (GWEI)',
           borderColor: '#20c0c7',
           backgroundColor: '#20c0c7',
           data: this.DATA[this.timeFrame].points,
@@ -107,24 +93,24 @@ export default class ChartGasPrice extends Vue {
   /*Methods: */
   setTimeFrame(_value: number): void {
     this.timeFrame = _value
-    if (this.DATA[this.timeFrame].points) {
+    if (this.DATA[this.timeFrame].points.length === 0) {
       this.setData(_value)
     }
   }
 
   setData(_state: number): void {
     this.$socket.emit(Events.getAverageGasPriceStats, { duration: this.DATA[_state].state }, (err, result) => {
+      console.log("result: ", result)
+      console.log("error: ", err)
       if (!err && result) {
         result.forEach(point => {
-          this.DATA[_state].points.push({
-            x: point.date,
-            y: point.value
-          })
-          this.DATA[_state].labels.push('label')
+          this.DATA[_state].points.push(point.value)
+          this.DATA[_state].labels.push(point.date)
         })
       }
     })
   }
+  /*Computed: */
   get description(): string {
     return this.timeFrame === 0 ? DES.BEGIN : DES.OTHER + this.DATA[this.timeFrame].state
   }

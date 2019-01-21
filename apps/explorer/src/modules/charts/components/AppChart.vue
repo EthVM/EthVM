@@ -16,7 +16,7 @@
             <v-layout align-center justify-end>
               <v-btn-toggle depressed v-model="toggleData" mandatory>
                 <v-btn flat :value="0" active-class="active-button white--text" small>All</v-btn>
-                <v-btn flat :value="1" active-class="active-button white--text" small>1D</v-btn>
+                <v-btn flat :value="1" active-class="active-button white--text" small>1W</v-btn>
                 <v-btn flat :value="2" active-class="active-button white--text" small>1M</v-btn>
                 <v-btn flat :value="3" active-class="active-button white--text" small>1Y</v-btn>
               </v-btn-toggle>
@@ -27,8 +27,10 @@
     </v-layout>
     <v-divider></v-divider>
     <v-layout align-center justify-end row fill-height v-if="footnotes"> <app-footnotes :footnotes="footnotes" /> </v-layout>
-    <app-info-load v-if="data.datasets[0].data.length === 0" />
-    <canvas v-else ref="chart" :width="width" :height="height" />
+    <app-info-load v-show="this.data && this.data.datasets[0].data.length == 0" />
+    <div v-show="this.data && this.data.datasets[0].data.length != 0">
+      <canvas ref="chart" />
+    </div>
   </v-card>
 </template>
 
@@ -39,6 +41,7 @@ import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { Footnote } from '@app/core/components/props'
 import { ChartData } from '@app/modules/charts/props'
+
 Chart.defaults.global = Object.assign(Chart.defaults.global, {
   defaultFontFamily: "'Open Sans', 'sans-serif'",
   defaultFontStyle: '200'
@@ -84,24 +87,20 @@ Chart.defaults.doughnut.animation = Object.assign(Chart.defaults.doughnut.animat
 export default class AppChart extends Vue {
   @Prop({ type: Boolean, default: false }) liveChart!: boolean
   @Prop({ type: String, required: true }) type!: string
-  @Prop({ type: Object, required: true }) data!: ChartData[]
+  @Prop({ type: Object, required: true }) data!: ChartData
   @Prop({ type: Boolean }) redraw!: boolean
   @Prop({ type: Object }) options!: object
-  @Prop({ type: Number }) width!: number
-  @Prop({ type: Number }) height!: number
   @Prop({ type: String }) chartTitle!: string
   @Prop({ type: String }) chartDescription!: string
   @Prop({ type: Array }) footnotes?: Footnote[]
   @Prop({ type: Boolean }) dataLoading?: boolean
 
   toggleData = 1
-
+  updateChart = false
   /*LifeCycle: */
   created() {
-    this.$emit('timeFrame', this.toggleData)
-    if (!this.height) {
-      this.height = 100
-      this.width = 100
+    if(!this.liveChart){
+      this.$emit('timeFrame', this.toggleData)
     }
   }
   beforeDestroy() {
@@ -111,11 +110,12 @@ export default class AppChart extends Vue {
   }
 
   /* Watchers: */
-
   @Watch('data')
   onDataChanged(): void {
+    console.log("onDataChanged: ", this.data)
     if (this.redraw) {
       if (this.chart) {
+        console.log("chart exhists, destroying")
         this.chart.destroy()
       }
       this.createChart()
@@ -129,8 +129,21 @@ export default class AppChart extends Vue {
     this.$emit('timeFrame', newVal)
   }
 
+  /*Computed: */
+  get rendered(): boolean {
+    if(this.data) {
+      return this.data && this.data.datasets[0].data.length != 0
+    }
+    else {
+      return false
+    }
+  }
+
   /*Methods: */
   createChart(): void {
+    console.log("new chart Hello")
+    console.log("data: ", this.data)
+    console.log("length: ", this.data.datasets[0].data.length)
     this.chart = new Chart(this.$refs.chart, {
       type: this.type,
       data: this.data,
