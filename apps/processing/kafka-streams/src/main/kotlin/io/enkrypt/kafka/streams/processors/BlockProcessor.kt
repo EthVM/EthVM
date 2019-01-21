@@ -1,5 +1,6 @@
 package io.enkrypt.kafka.streams.processors
 
+import io.enkrypt.avro.capture.BlockHeaderRecord
 import io.enkrypt.avro.capture.BlockRewardRecord
 import io.enkrypt.avro.capture.PremineBalanceRecord
 import io.enkrypt.avro.capture.TransactionKeyRecord
@@ -20,6 +21,7 @@ import io.enkrypt.common.extensions.byteBuffer
 import io.enkrypt.common.extensions.isFungible
 import io.enkrypt.common.extensions.isNonFungible
 import io.enkrypt.common.extensions.unsignedBigInteger
+import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.common.extensions.unsignedBytes
 import io.enkrypt.kafka.streams.config.Topics
 import io.enkrypt.kafka.streams.processors.block.BlockMetrics
@@ -33,6 +35,7 @@ import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.Produced
 import org.apache.kafka.streams.kstream.TransformerSupplier
+import java.math.BigInteger
 import java.security.MessageDigest
 import java.util.Properties
 
@@ -89,21 +92,45 @@ class BlockProcessor : AbstractKafkaProcessor() {
         Produced.with(Serdes.TransactionKey(), Serdes.Transaction())
       )
 
-    // uncles
+    // extract uncles and publish to their own topic
 
     blockStream
       .flatMap { _, block ->
 
         val reverse = block.getReverse()
 
+        // a miner can appear multiple times within the rewards list so we need to aggregate
+
+        val rewardsListByAddress = block.getRewards()
+          .map { Pair(it.getAddress(), it.getReward().unsignedBigInteger()!!) }
+          .groupBy { it.first }
+
+        val rewardsCountByAuthor = rewardsListByAddress
+          .mapValues { it.value.size }
+          .toMap()
+
+        val rewardsByAddress = rewardsListByAddress
+          .entries.map { (address, list) -> address to list.map { it.second }.fold(BigInteger.ZERO) { memo, next -> memo + next } }
+          .toMap()
+
         block.getUncles()
-          .map { uncle ->
+          .mapIndexed { idx, uncle ->
+
+            val author = uncle.getAuthor()
+
+            val uncleReward = rewardsByAddress[author]!! / rewardsCountByAuthor[author]!!.toBigInteger()
+
             KeyValue(
               UncleKeyRecord
                 .newBuilder()
                 .setUncleHash(uncle.getHash())
                 .build(),
-              if (reverse) null else uncle
+              if (reverse) null
+              else BlockHeaderRecord.newBuilder(uncle)
+                .setBlockNumber(block.getHeader().getNumber())
+                .setUncleReward(uncleReward.unsignedByteBuffer())
+                .setUncleIndex(idx)
+                .build()
             )
           }
       }.to(
