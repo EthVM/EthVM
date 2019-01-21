@@ -4,6 +4,10 @@ import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.processing.TokenBalanceKeyRecord
 import io.enkrypt.avro.processing.TokenBalanceRecord
+import io.enkrypt.common.config.BaseNetConfig
+import io.enkrypt.common.config.ByzantiumConfig
+import io.enkrypt.common.config.DaoHardForkConfig
+import io.enkrypt.common.config.NetConfig
 import io.enkrypt.common.extensions.data20
 import io.enkrypt.common.extensions.ether
 import io.enkrypt.common.extensions.gwei
@@ -28,6 +32,8 @@ object TestModules {
 
   val testConfig = module {
 
+    single<NetConfig> { BaseNetConfig(0L to ByzantiumConfig(DaoHardForkConfig())) }
+
     single {
       KafkaConfig(
         "dummy:1234",
@@ -49,7 +55,6 @@ object TestModules {
         Alice.address.data20() to 1000.ether(),
         Terence.address.data20() to 1000.ether()
       )
-
       val bcConfig = StandaloneBlockchain.Config(
         gasLimit = 250_000,             // Enough to cover most transactions
         gasPrice = 100.gwei().toLong(), // Value chosen to speedup a little bit tests

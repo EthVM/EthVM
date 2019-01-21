@@ -5,10 +5,12 @@ import io.enkrypt.avro.capture.PremineBalanceRecord
 import io.enkrypt.avro.capture.TransactionKeyRecord
 import io.enkrypt.avro.capture.TransactionRecord
 import io.enkrypt.avro.capture.UncleKeyRecord
+import io.enkrypt.avro.processing.BalanceType
 import io.enkrypt.avro.processing.ChainEventType
 import io.enkrypt.avro.processing.ContractCreateRecord
 import io.enkrypt.avro.processing.ContractDestroyRecord
 import io.enkrypt.avro.processing.ContractKeyRecord
+import io.enkrypt.avro.processing.DaoHfBalanceTransferRecord
 import io.enkrypt.avro.processing.TokenBalanceKeyRecord
 import io.enkrypt.avro.processing.TokenBalanceRecord
 import io.enkrypt.avro.processing.TokenTransferKeyRecord
@@ -20,7 +22,7 @@ import io.enkrypt.common.extensions.isNonFungible
 import io.enkrypt.common.extensions.unsignedBigInteger
 import io.enkrypt.common.extensions.unsignedBytes
 import io.enkrypt.kafka.streams.config.Topics
-import io.enkrypt.kafka.streams.processors.block.BlockStatistics
+import io.enkrypt.kafka.streams.processors.block.BlockMetrics
 import io.enkrypt.kafka.streams.processors.block.ChainEventsTransformer
 import io.enkrypt.kafka.streams.serdes.Serdes
 import mu.KotlinLogging
@@ -113,7 +115,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
 
     val chainEvents = blockStream
       .transform(
-        TransformerSupplier { ChainEventsTransformer(appConfig.unitTesting) },
+        TransformerSupplier { ChainEventsTransformer(netConfig, appConfig.unitTesting) },
         *ChainEventsTransformer.STORE_NAMES
       )
 
@@ -135,6 +137,46 @@ class BlockProcessor : AbstractKafkaProcessor() {
             .setAmount(if (reverse) amount.negate().byteBuffer() else amount.byteBuffer())
             .build()
         )
+      }.to(
+        Topics.FungibleTokenMovements,
+        Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance())
+      )
+
+    // DAO Hard fork
+
+    chainEvents
+      .filter { _, v -> v.getType() == ChainEventType.DAO_HF_BALANCE_TRANSFER }
+      .flatMap { _, v ->
+
+        val reverse = v.getReverse()
+        val transferRecord = v.getValue() as DaoHfBalanceTransferRecord
+
+        val from = transferRecord.getFrom()
+        val to = transferRecord.getTo()
+        val amount = transferRecord.getAmount().unsignedBigInteger()!!
+        val balanceType = BalanceType.ETHER
+
+        val fromBalance = KeyValue(
+          TokenBalanceKeyRecord.newBuilder()
+            .setBalanceType(balanceType)
+            .setAddress(from)
+            .build(),
+          TokenBalanceRecord.newBuilder()
+            .setAmount(if (reverse) amount.byteBuffer() else amount.negate().byteBuffer())
+            .build()
+        )
+
+        val toBalance = KeyValue(
+          TokenBalanceKeyRecord.newBuilder()
+            .setBalanceType(balanceType)
+            .setAddress(to)
+            .build(),
+          TokenBalanceRecord.newBuilder()
+            .setAmount(if (reverse) amount.negate().byteBuffer() else amount.byteBuffer())
+            .build()
+        )
+
+        listOf(fromBalance, toBalance)
       }.to(
         Topics.FungibleTokenMovements,
         Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance())
@@ -163,12 +205,12 @@ class BlockProcessor : AbstractKafkaProcessor() {
         Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance())
       )
 
-    val chainEventsStream = chainEvents
+    val tokenTransfersStream = chainEvents
       .filter { _, e -> e.getType() == ChainEventType.TOKEN_TRANSFER }
 
     // publish all transfer events for entry into mongo
 
-    chainEventsStream
+    tokenTransfersStream
       .map { _, v ->
 
         val reverse = v.getReverse()
@@ -207,7 +249,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
 
     // publish fungible token movements for aggregation
 
-    chainEventsStream
+    tokenTransfersStream
       .filter { _, e -> (e.getValue() as TokenTransferRecord).isFungible() }
       .flatMap { _, v ->
 
@@ -223,6 +265,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
 
         val fromBalance = KeyValue(
           TokenBalanceKeyRecord.newBuilder()
+            .setBalanceType(transfer.getTransferType())
             .setContract(contract)
             .setAddress(from)
             .build(),
@@ -250,7 +293,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
 
     // publish non fungible token balances
 
-    chainEventsStream
+    tokenTransfersStream
       .filter { _, e -> (e.getValue() as TokenTransferRecord).isNonFungible() }
       .map { _, v ->
 
@@ -327,11 +370,17 @@ class BlockProcessor : AbstractKafkaProcessor() {
         )
       }.to(Topics.ContractDestructions, Produced.with(Serdes.ContractKey(), Serdes.ContractDestroy()))
 
-    // statistics
+    // metrics
 
     blockStream
-      .flatMap { _, block -> BlockStatistics.forBlock(block) }
-      .to(Topics.BlockMetrics, Produced.with(Serdes.MetricKey(), Serdes.Metric()))
+      .mapValues { block -> BlockMetrics.forBlock(block) }
+      .to(Topics.BlockMetricsByBlock, Produced.with(Serdes.BlockKey(), Serdes.BlockMetrics()))
+
+    // TODO refactor to avoid re-calculation of metrics
+
+    blockStream
+      .flatMap { _, block -> BlockMetrics.forAggregation(block, BlockMetrics.forBlock(block)) }
+      .to(Topics.BlockMetricsByDay, Produced.with(Serdes.MetricKey(), Serdes.Metric()))
 
     // Generate the topology
     return builder.build()

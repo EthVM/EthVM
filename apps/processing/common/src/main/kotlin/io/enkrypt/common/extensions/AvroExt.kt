@@ -34,10 +34,7 @@ fun TokenTransferRecord.Builder.setAmount(amount: BigInteger) =
 fun TokenTransferRecord.Builder.setTokenId(tokenId: BigInteger) =
   this.setTokenId(tokenId.unsignedByteBuffer())
 
-fun TransactionReceiptRecord.isSuccess(): Boolean {
-  val status = this.getStatus().byteArray()
-  return status != null && status.size == 1 && status[0].toInt() == 1
-}
+fun TransactionReceiptRecord.isSuccess(): Boolean = this.getError().isEmpty()
 
 fun BlockRecord.txFees(): List<BigInteger> =
   this.getTransactions().zip(this.getTransactionReceipts())

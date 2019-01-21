@@ -9,6 +9,8 @@ import io.enkrypt.avro.capture.TransactionKeyRecord
 import io.enkrypt.avro.capture.TransactionRecord
 import io.enkrypt.avro.capture.UncleKeyRecord
 import io.enkrypt.avro.processing.BlockChainEventsRecord
+import io.enkrypt.avro.processing.BlockMetricsRecord
+import io.enkrypt.avro.processing.ChainEventRecord
 import io.enkrypt.avro.processing.ContractCreateRecord
 import io.enkrypt.avro.processing.ContractDestroyRecord
 import io.enkrypt.avro.processing.ContractKeyRecord
@@ -57,6 +59,10 @@ object Serdes : KoinComponent {
     configure(config, false)
   }
 
+  fun BlockMetrics() = SpecificAvroSerde<BlockMetricsRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
   fun MetricKey() = SpecificAvroSerde<MetricKeyRecord>(registryClient).apply {
     configure(config, true)
   }
@@ -86,6 +92,10 @@ object Serdes : KoinComponent {
   }
 
   fun BlockChainEvents() = SpecificAvroSerde<BlockChainEventsRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun ChainEvent() = SpecificAvroSerde<ChainEventRecord>(registryClient).apply {
     configure(config, false)
   }
 

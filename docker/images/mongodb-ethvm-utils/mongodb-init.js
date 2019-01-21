@@ -9,7 +9,8 @@ const collections = [
   "balances",
   "token_transfers",
   "pending_transactions",
-  "block_statistics"
+  "block_metrics",
+  "aggregate_block_metrics"
 ];
 
 collections.forEach(name => db.createCollection(name));
@@ -28,7 +29,7 @@ const indexes = {
     {key: { balanceType: 1 }}
   ],
 
-  block_statistics: [
+  aggregate_block_metrics: [
     {key: {name: 1}},
     {key: {date: 1}},
     {key: {date: 1, name: 1}, options: {unique: true}}
