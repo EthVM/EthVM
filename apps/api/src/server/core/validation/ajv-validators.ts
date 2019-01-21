@@ -6,7 +6,7 @@ import { isValidAddress } from 'ethereumjs-util'
 const PAGINATION_SIZE = 100
 
 const ROOMS = ['blocks', 'txs', 'pendingTxs', 'uncles']
-const PERIODS = ['ALL', 'YEAR', 'MONTH', 'DAY']
+const PERIODS = ['ALL', 'YEAR', 'MONTH', 'WEEK']
 
 const EXCHANGE_TO = ['USD']
 const EXCHANGE_FROM = [
