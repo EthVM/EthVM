@@ -13,20 +13,20 @@ const toBlock = (block: any): Block => {
     const rewards: any = []
     block.rewards.forEach(r => {
       r.reward = r.reward.toString()
-      rewards.push(r)
+      rewards.unshift(r)
     })
     block.rewards = rewards
   }
 
   if (block.transactions) {
     const txs: any = []
-    block.transactions.forEach(tx => txs.push(toTx(tx)))
+    block.transactions.forEach(tx => txs.unshift(toTx(tx)))
     block.transactions = txs
   }
 
   if (block.uncles) {
     const uncles: any = []
-    block.uncles.forEach(u => uncles.push(toUncle(u)))
+    block.uncles.forEach(u => uncles.unshift(toUncle(u)))
     block.uncles = uncles
   }
 

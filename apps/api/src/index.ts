@@ -4,17 +4,18 @@ import { NullStreamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
 import { BalancesServiceImpl, MongoBalancesRepository } from '@app/server/modules/balances'
 import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blocks'
+import { ContractsServiceImpl, MongoContractsRepository } from '@app/server/modules/contracts'
 import { CoinMarketCapRepository, ExchangeServiceImpl } from '@app/server/modules/exchanges'
 import { MongoPendingTxRepository, PendingTxServiceImpl } from '@app/server/modules/pending-txs'
 import { SearchServiceImpl } from '@app/server/modules/search'
 import { MongoStatisticsRepository, StatisticsServiceImpl } from '@app/server/modules/statistics'
+import { MongoTokensRepository, TokensServiceImpl } from '@app/server/modules/tokens'
 import { MongoTxsRepository, TxsServiceImpl } from '@app/server/modules/txs'
 import { MongoUncleRepository, UnclesServiceImpl } from '@app/server/modules/uncles'
 import { VmEngine, VmServiceImpl } from '@app/server/modules/vm'
 import { RedisCacheRepository } from '@app/server/repositories'
 import * as Redis from 'ioredis'
 import { MongoClient } from 'mongodb'
-import { MongoTokensRepository, TokensServiceImpl } from './server/modules/tokens'
 
 async function bootstrapServer() {
   logger.debug('bootstrapper -> Bootstraping ethvm-socket-server!')
@@ -60,6 +61,10 @@ async function bootstrapServer() {
   const blocksRepository = new MongoBlockRepository(db)
   const blockService = new BlocksServiceImpl(blocksRepository)
 
+  // Contracts
+  const contractsRepository = new MongoContractsRepository(db)
+  const contracsService = new ContractsServiceImpl(contractsRepository)
+
   // Uncles
   const unclesRepository = new MongoUncleRepository(db)
   const uncleService = new UnclesServiceImpl(unclesRepository)
@@ -102,6 +107,7 @@ async function bootstrapServer() {
   logger.debug('bootstrapper -> Initializing server')
   const server = new EthVMServer(
     blockService,
+    contracsService,
     uncleService,
     balancesService,
     txsService,

@@ -15,6 +15,7 @@ export declare const Events: {
     getAddressBalance: string;
     getAddressTokenBalance: string;
     getAddressTokenTransfers: string;
+    getContract: string;
     getBlock: string;
     getBlocks: string;
     getBlocksMined: string;

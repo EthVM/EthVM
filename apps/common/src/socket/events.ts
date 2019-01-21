@@ -22,6 +22,9 @@ export const Events = {
   getAddressTokenBalance: "get-address-token-balance",
   getAddressTokenTransfers: "get-address-token-transfers",
 
+  // Contracts
+  getContract: "get-contract",
+
   // Blocks
   getBlock: "get-block",
   getBlocks: "get-blocks",

@@ -7,7 +7,6 @@ const getAverageTotalDifficulty: SocketEvent = {
   id: Events.getAverageTotalDifficultyStats,
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = chartPayloadValidator(payload) as boolean
-    console.log("valid: ", valid)
     return {
       valid,
       errors: [] // TODO: Map properly the error

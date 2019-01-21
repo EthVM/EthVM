@@ -63,7 +63,7 @@ export default new Router({
       props: true
     },
     {
-      path: '/address/:address',
+      path: '/address/:addressRef',
       component: PageDetailsAddress,
       name: 'address',
       props: true

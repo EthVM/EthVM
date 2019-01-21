@@ -5,11 +5,11 @@ export const MongoEthVM = {
   collections: {
     balances: 'balances',
     blocks: 'blocks',
+    contracts: 'contracts',
     transactions: 'transactions',
     uncles: 'uncles',
     pendingTxs: 'pending_transactions',
     statistics: 'block_statistics',
-    contracts: 'contracts',
     tokenTransfers: 'token_transfers'
   }
 }

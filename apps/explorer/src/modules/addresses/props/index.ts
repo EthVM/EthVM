@@ -1,75 +1,25 @@
+import { Block, PendingTx, Tx, EthValue } from '@app/core/models'
+
 export class AccountInfo {
-  private address: string
-  private balance?: number
-  private balanceUSD?: number
-  private ethusd?: number
-  private totalTxs?: number
-  private miner?: boolean
-  private creator?: boolean
-  private typeAddrs?: string
+  public balance: EthValue = new EthValue(0)
+  public exchangeRate?: any = { USD: 0 }
 
-  constructor(_address: string, _type: string) {
-    this.address = _address
-    this.typeAddrs = _type
-    this.balance = 0
-    this.balanceUSD = 0
-    this.ethusd = 0
-    this.totalTxs = 0
-    this.miner = false
-    this.creator = false
-  }
+  public blocks: Block[] = []
+  public minerBlocks: Block[] = []
 
-  /*Getters: */
-  public getAddress(): string {
-    return this.address
-  }
-  public getType(): string {
-    return this.typeAddrs
-  }
-  public getBalance(): number {
-    return this.balance
-  }
+  public txs: Tx[] = []
+  public totalTxs: number = 0
 
-  public getUSD(): number {
-    return this.balanceUSD
-  }
+  public pendingTxs: PendingTx[] = []
 
-  public getEthPrice(): number {
-    return this.ethusd
-  }
+  public tokens: any[] = []
 
-  public getTotalTxs(): number {
-    return this.totalTxs
-  }
+  public contracts: any[] = []
+  public creator: boolean = false
 
-  public isMiner(): boolean {
-    return this.miner
-  }
-  public isCreator(): boolean {
-    return this.creator
-  }
+  public miner: boolean = false
 
-  /* Setters: */
-  public setBalance(_balance: number) {
-    this.balance = _balance
-  }
+  public type: string
 
-  public setUSD(_usd: number) {
-    this.balanceUSD = _usd
-  }
-  public setMiner(_value: boolean) {
-    this.miner = _value
-  }
-
-  public setEthPrice(ethPrice: number) {
-    this.ethusd = ethPrice
-  }
-
-  public setTotalTxs(_total: number) {
-    this.totalTxs = _total
-  }
-
-  public setCreator(_value: boolean) {
-    this.creator = _value
-  }
+  constructor(public address: string) {}
 }

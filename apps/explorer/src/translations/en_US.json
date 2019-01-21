@@ -25,7 +25,8 @@
     "lastTxs": "Last Transactions",
     "kb": "Knowledge Base",
     "position": "Position",
-    "minedBlocks": "Mined Blocks"
+    "minedBlocks": "Mined Blocks",
+    "contract": "Contract"
   },
   "common": {
     "address": "Address",
