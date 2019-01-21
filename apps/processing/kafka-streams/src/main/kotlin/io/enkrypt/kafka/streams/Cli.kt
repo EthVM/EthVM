@@ -64,7 +64,7 @@ class Cli : CliktCommand() {
 
     single { AppConfig(false, get()) }
 
-    single {
+    single<NetConfig> {
       when (networkConfig) {
         "mainnet" -> NetConfig.mainnet
         "testnet" -> NetConfig.testnet
