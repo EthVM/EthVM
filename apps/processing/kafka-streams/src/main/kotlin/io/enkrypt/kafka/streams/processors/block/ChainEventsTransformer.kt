@@ -22,8 +22,10 @@ import org.apache.kafka.streams.state.Stores
 import java.math.BigInteger
 import java.nio.ByteBuffer
 
-class ChainEventsTransformer(private val netConfig: NetConfig,
-                             private val unitTesting: Boolean = false) : Transformer<BlockKeyRecord?, BlockRecord?, KeyValue<BlockKeyRecord, ChainEventRecord>> {
+class ChainEventsTransformer(
+  private val netConfig: NetConfig,
+  private val unitTesting: Boolean = false
+) : Transformer<BlockKeyRecord?, BlockRecord?, KeyValue<BlockKeyRecord, ChainEventRecord>> {
 
   companion object {
 

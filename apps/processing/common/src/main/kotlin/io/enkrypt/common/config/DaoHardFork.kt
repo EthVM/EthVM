@@ -192,5 +192,4 @@ object DaoHardFork {
     "bb9bc244d798123fde783fcc1c72d3bb8c189413".hexData20(),
     "807640a13483f8ac783c557fcdf27be11ea4ac7a".hexData20()
   ).toSet()
-
 }

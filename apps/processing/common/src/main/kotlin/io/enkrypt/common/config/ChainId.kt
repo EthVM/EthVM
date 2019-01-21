@@ -17,5 +17,4 @@ enum class ChainId(val number: Int) {
   GethPrivateChains(1337),
   Görli(6284),
   Stureby(314158)
-
 }

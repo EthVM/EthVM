@@ -6,12 +6,7 @@ import io.enkrypt.avro.processing.TokenBalanceKeyRecord
 import io.enkrypt.avro.processing.TokenBalanceRecord
 import io.enkrypt.common.config.BaseNetConfig
 import io.enkrypt.common.config.ByzantiumConfig
-import io.enkrypt.common.config.ConstantinopleConfig
 import io.enkrypt.common.config.DaoHardForkConfig
-import io.enkrypt.common.config.Eip150HardForkConfig
-import io.enkrypt.common.config.Eip160HardForkConfig
-import io.enkrypt.common.config.FrontierConfig
-import io.enkrypt.common.config.HomesteadConfig
 import io.enkrypt.common.config.NetConfig
 import io.enkrypt.common.extensions.data20
 import io.enkrypt.common.extensions.ether
@@ -60,7 +55,6 @@ object TestModules {
         Alice.address.data20() to 1000.ether(),
         Terence.address.data20() to 1000.ether()
       )
-
       val bcConfig = StandaloneBlockchain.Config(
         gasLimit = 250_000,             // Enough to cover most transactions
         gasPrice = 100.gwei().toLong(), // Value chosen to speedup a little bit tests

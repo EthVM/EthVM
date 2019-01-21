@@ -6,7 +6,6 @@ import io.enkrypt.avro.capture.TransactionKeyRecord
 import io.enkrypt.avro.capture.TransactionRecord
 import io.enkrypt.avro.capture.UncleKeyRecord
 import io.enkrypt.avro.processing.BalanceType
-import io.enkrypt.avro.processing.ChainEventRecord
 import io.enkrypt.avro.processing.ChainEventType
 import io.enkrypt.avro.processing.ContractCreateRecord
 import io.enkrypt.avro.processing.ContractDestroyRecord
@@ -16,7 +15,6 @@ import io.enkrypt.avro.processing.TokenBalanceKeyRecord
 import io.enkrypt.avro.processing.TokenBalanceRecord
 import io.enkrypt.avro.processing.TokenTransferKeyRecord
 import io.enkrypt.avro.processing.TokenTransferRecord
-import io.enkrypt.common.config.DaoHardFork
 import io.enkrypt.common.extensions.byteArray
 import io.enkrypt.common.extensions.byteBuffer
 import io.enkrypt.common.extensions.isFungible
@@ -33,10 +31,8 @@ import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Consumed
-import org.apache.kafka.streams.kstream.Joined
 import org.apache.kafka.streams.kstream.Produced
 import org.apache.kafka.streams.kstream.TransformerSupplier
-import org.apache.kafka.streams.kstream.ValueJoiner
 import java.security.MessageDigest
 import java.util.Properties
 
@@ -181,7 +177,6 @@ class BlockProcessor : AbstractKafkaProcessor() {
         )
 
         listOf(fromBalance, toBalance)
-
       }.to(
         Topics.FungibleTokenMovements,
         Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance())

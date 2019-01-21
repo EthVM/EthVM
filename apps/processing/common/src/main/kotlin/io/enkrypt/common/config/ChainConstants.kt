@@ -43,7 +43,5 @@ data class ChainConstants(
     )
 
     val daoHardFork = homestead
-
   }
-
 }

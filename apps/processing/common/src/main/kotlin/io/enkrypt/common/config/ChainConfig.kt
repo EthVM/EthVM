@@ -6,7 +6,6 @@ import io.enkrypt.avro.processing.ChainEventRecord
 import io.enkrypt.avro.processing.ChainEventType
 import io.enkrypt.avro.processing.DaoHfBalanceTransferRecord
 import io.enkrypt.common.extensions.ether
-import io.enkrypt.common.extensions.hexData20
 import io.enkrypt.common.extensions.unsignedBigInteger
 import io.enkrypt.common.extensions.unsignedByteBuffer
 import java.math.BigInteger
@@ -81,7 +80,6 @@ interface ChainConfig {
    * EIP1014: https://github.com/ethereum/EIPs/issues/1014
    */
   fun eip1014(): Boolean = false
-
 }
 
 open class OlympicConfig(override val constants: ChainConstants = ChainConstants.olympic) : ChainConfig
@@ -98,10 +96,10 @@ open class DaoHardForkConfig(override val constants: ChainConstants = ChainConst
   private val daoBalances = DaoHardFork.balances
 
   override fun hardForkEvents(block: BlockRecord): List<ChainEventRecord> =
-    if(block.getHeader().getNumber().unsignedBigInteger() != forkBlockNumber) {
+    if (block.getHeader().getNumber().unsignedBigInteger() != forkBlockNumber) {
       emptyList()
     } else {
-      daoBalances.map{ (address, balance) -> daoHfBalanceTransfer(address, withdrawAccount, balance, block.getReverse()) }
+      daoBalances.map { (address, balance) -> daoHfBalanceTransfer(address, withdrawAccount, balance, block.getReverse()) }
     }
 
   private fun daoHfBalanceTransfer(from: Data20, to: Data20, balance: BigInteger, reverse: Boolean) =
@@ -125,16 +123,16 @@ open class Eip150HardForkConfig(val parent: ChainConfig) : DaoHardForkConfig() {
   override fun eip213(): Boolean = parent.eip161()
 }
 
-open class Eip160HardForkConfig(parent: ChainConfig): Eip150HardForkConfig(parent) {
+open class Eip160HardForkConfig(parent: ChainConfig) : Eip150HardForkConfig(parent) {
   override fun eip161() = true
   override fun chainId(): Int = ChainId.MainNet.number
 }
 
-open class RopstenConfig(parent: ChainConfig): Eip160HardForkConfig(parent) {
+open class RopstenConfig(parent: ChainConfig) : Eip160HardForkConfig(parent) {
   override fun chainId(): Int = ChainId.Ropsten.number
 }
 
-open class ByzantiumConfig(parent: ChainConfig): Eip160HardForkConfig(parent) {
+open class ByzantiumConfig(parent: ChainConfig) : Eip160HardForkConfig(parent) {
 
   override val constants = parent.constants.copy(
     blockReward = 3.ether()
@@ -147,7 +145,6 @@ open class ByzantiumConfig(parent: ChainConfig): Eip160HardForkConfig(parent) {
   override fun eip213(): Boolean = true
   override fun eip214(): Boolean = true
   override fun eip658(): Boolean = true
-
 }
 
 open class ConstantinopleConfig(parent: ChainConfig) : ByzantiumConfig(parent) {
@@ -160,7 +157,6 @@ open class ConstantinopleConfig(parent: ChainConfig) : ByzantiumConfig(parent) {
   override fun eip145() = true
   override fun eip1283() = true
   override fun eip1014() = true
-
 }
 
 interface NetConfig {
@@ -194,7 +190,6 @@ interface NetConfig {
     )
 
     // TODO add support for other networks
-
   }
 }
 
@@ -217,5 +212,4 @@ class BaseNetConfig(vararg configs: Pair<Long, ChainConfig>) : NetConfig {
     }
     return chainConfigs[idx]
   }
-
 }

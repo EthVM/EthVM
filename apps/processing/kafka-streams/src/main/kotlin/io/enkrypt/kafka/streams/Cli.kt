@@ -65,14 +65,13 @@ class Cli : CliktCommand() {
     single { AppConfig(false, get()) }
 
     single {
-      when(networkConfig) {
+      when (networkConfig) {
         "mainnet" -> NetConfig.mainnet
         "testnet" -> NetConfig.testnet
         "ropsten" -> NetConfig.ropsten
         else -> throw IllegalArgumentException("Unrecognised network config name: $networkConfig")
       }
     }
-
   }
 
   override fun run() {
