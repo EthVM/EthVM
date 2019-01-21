@@ -4,6 +4,15 @@ import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.processing.TokenBalanceKeyRecord
 import io.enkrypt.avro.processing.TokenBalanceRecord
+import io.enkrypt.common.config.BaseNetConfig
+import io.enkrypt.common.config.ByzantiumConfig
+import io.enkrypt.common.config.ConstantinopleConfig
+import io.enkrypt.common.config.DaoHardForkConfig
+import io.enkrypt.common.config.Eip150HardForkConfig
+import io.enkrypt.common.config.Eip160HardForkConfig
+import io.enkrypt.common.config.FrontierConfig
+import io.enkrypt.common.config.HomesteadConfig
+import io.enkrypt.common.config.NetConfig
 import io.enkrypt.common.extensions.data20
 import io.enkrypt.common.extensions.ether
 import io.enkrypt.common.extensions.gwei
@@ -27,6 +36,8 @@ import java.util.Properties
 object TestModules {
 
   val testConfig = module {
+
+    single<NetConfig> { BaseNetConfig(0L to ByzantiumConfig(DaoHardForkConfig())) }
 
     single {
       KafkaConfig(

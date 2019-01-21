@@ -172,7 +172,6 @@ interface NetConfig {
   companion object {
 
     val mainnet = BaseNetConfig(
-      listOf(
         0L to FrontierConfig(),
         1_150_000L to HomesteadConfig(),
         1_920_000L to DaoHardForkConfig(),
@@ -180,23 +179,18 @@ interface NetConfig {
         2_675_000L to Eip160HardForkConfig(DaoHardForkConfig()),
         4_370_000L to ByzantiumConfig(DaoHardForkConfig()),
         7_080_000L to ConstantinopleConfig(DaoHardForkConfig())
-      )
     )
 
     val ropsten = BaseNetConfig(
-      listOf(
         0L to HomesteadConfig(),
         10L to RopstenConfig(HomesteadConfig()),
         1_700_000L to RopstenConfig(ByzantiumConfig(DaoHardForkConfig())),
         4_230_000L to RopstenConfig(ConstantinopleConfig(DaoHardForkConfig()))
-      )
     )
 
     val testnet = BaseNetConfig(
-      listOf(
         0L to FrontierConfig(),
         1_500_000L to HomesteadConfig()
-      )
     )
 
     // TODO add support for other networks
@@ -204,7 +198,7 @@ interface NetConfig {
   }
 }
 
-class BaseNetConfig(configs: List<Pair<Long, ChainConfig>>) : NetConfig {
+class BaseNetConfig(vararg configs: Pair<Long, ChainConfig>) : NetConfig {
 
   private val blockNumbers = configs.map { it.first.toBigInteger() }
   private val chainConfigs = configs.map { it.second }

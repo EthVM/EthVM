@@ -99,7 +99,7 @@ class BlockProcessorERC20Test : BehaviorSpec() {
 
         then("there should be a token movement deducting tokens from the zero address") {
           val record = readFungibleTokenMovement(testDriver)!!
-          record.key() shouldBe tokenKey(EtherZero, contractAddress)
+          record.key() shouldBe tokenKey(EtherZero, contractAddress, balanceType = ERC20)
           record.value() shouldBe tokenBalance(10_000.ether().negate().byteBuffer())
         }
 
@@ -140,7 +140,7 @@ class BlockProcessorERC20Test : BehaviorSpec() {
 
         then("there should be a token movement deducting tokens from Bob") {
           val record = readFungibleTokenMovement(testDriver)!!
-          record.key() shouldBe tokenKey(Bob.address.data20(), contractAddress)
+          record.key() shouldBe tokenKey(Bob.address.data20(), contractAddress, balanceType = ERC20)
           record.value() shouldBe tokenBalance(1.ether().negate().byteBuffer())
         }
 
