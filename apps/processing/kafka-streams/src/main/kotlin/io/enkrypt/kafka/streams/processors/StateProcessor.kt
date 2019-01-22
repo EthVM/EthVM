@@ -78,7 +78,6 @@ class StateProcessor : AbstractKafkaProcessor() {
           .build()
       }
       .to(Topics.Balances, Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance()))
-
   }
 
   private fun buildMetricsTopology(builder: StreamsBuilder) {

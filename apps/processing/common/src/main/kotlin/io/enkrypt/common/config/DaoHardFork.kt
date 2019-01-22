@@ -73,5 +73,4 @@ object DaoHardFork {
   )
 
   val withdrawAccount = "bf4ed7b27f1d666546e30d74d50d173d20bca754".hexData20()
-
 }
