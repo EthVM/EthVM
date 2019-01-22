@@ -111,14 +111,14 @@ export default class ChartLiveTransactions extends Vue {
     this.$eventHub.$on(Events.newBlock, _block => {
       if (this.chartData.datasets[0]) {
         this.redraw = false
-        const _tempD = _block.getStats()
+        const stats = _block.getStats()
         this.chartData.labels.push(_block.getNumber())
         this.chartData.labels.shift()
         this.chartData.datasets[0].data.push(0) //pending tx ev
         this.chartData.datasets[0].data.shift()
-        this.chartData.datasets[1].data.push(_tempD.successfulTxs)
+        this.chartData.datasets[1].data.push(stats.successfulTxs)
         this.chartData.datasets[1].data.shift()
-        this.chartData.datasets[2].data.push(_tempD.failedTxs)
+        this.chartData.datasets[2].data.push(stats.failedTxs)
         this.chartData.datasets[2].data.shift()
       }
     })
@@ -141,9 +141,9 @@ export default class ChartLiveTransactions extends Vue {
     const latestBlocks = this.$store.getters.blocks.slice(0, MAX_ITEMS)
     latestBlocks.forEach(_block => {
       data.labels.unshift(_block.getNumber())
-      const _tempD = _block.getStats()
-      data.sData.unshift(new BN(_tempD.successfulTxs).toNumber())
-      data.fData.unshift(new BN(_tempD.failedTxs).toNumber())
+      const stats = _block.getStats()
+      data.sData.unshift(new BN(stats.successfulTxs).toNumber())
+      data.fData.unshift(new BN(stats.failedTxs).toNumber())
       data.pData.unshift(new BN(0).toNumber()) //pending tx ev
     })
 

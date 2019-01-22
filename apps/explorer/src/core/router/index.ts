@@ -75,9 +75,9 @@ export default new Router({
       props: true
     },
     {
-      path: '/chart/:chartID',
+      path: '/chart/:chartRef',
       component: PageDetailsChart,
-      name: 'chartID',
+      name: 'chart-detail',
       props: true
     },
     {

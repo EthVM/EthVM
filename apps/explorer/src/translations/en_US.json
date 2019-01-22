@@ -184,7 +184,6 @@
     "liveDescription": "Number of successful, failed, and pending transactions that have occured in the last 10 blocks",
     "avgDescription": "Average transaction fees and average gas price in the last 10 blocks",
     "labelString": "Sucessfull and Failed Tx ",
-    "txFees": "Tx Fees ETH",
     "avgGasPrice": "Average Gas Price",
     "avgGasLimit": "Average Gas Limit",
     "avgBlockDiff": "Average Block Difficulty",
@@ -195,7 +194,19 @@
     "avgTxFail": "Average Number of Failed Transactions",
     "avgHashRate": "Average Hash Rate",
     "avgMiningReward": "Average Mining Rewards",
-    "topMiners": "Top Miners"
+
+    "block-difficulty-history": "Average Block Difficulty",
+    "block-time-history": "Average Block Time",
+    "block-size-history": "Average Block Size",
+    "gas-limit-history": "Average Gas Limit",
+    "gas-price-history": "Average Gas Price",
+    "hash-rate-history": "Average Hash Rate",
+    "miner-rewards-history": "Average Mining Rewards",
+    "top-miners-history": "Top Miners",
+    "tx-fail-history": "Average Number of Failed Transactionsy",
+    "tx-success-history": "Average Number of Successfull Transactions",
+    "tx-fees-history": "Tx Fees ETH",
+    "uncle-number-history": "Average Number of Uncles"
   },
   "footer": {
     "discover": "Discover",

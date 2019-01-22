@@ -15,7 +15,11 @@ export const toDatePeriods = (duration: string) => {
       from = new Date(to.getFullYear(), to.getMonth())
       break
     case 'WEEK':
-      from = new Date(to.getDate() - 7)
+      from = new Date()
+      from.setDate(to.getDate() - 7)
+      break
+    case 'DAY':
+      from = new Date()
       break
     default:
       throw new Error('Invalid range specified')

@@ -106,12 +106,12 @@ export default class ChartLiveTxFees extends Vue {
       if (this.chartData.datasets[0]) {
         this.redraw = false
         if (!_block.isUncle()) {
-          const _tempD = _block.getStats()
+          const stats = _block.getStats()
           this.chartData.labels.push(_block.getNumber())
           this.chartData.labels.shift()
-          this.chartData.datasets[0].data.push(ethUnits.convert(_tempD.avgTxsFees, 'wei', 'eth'))
+          this.chartData.datasets[0].data.push(ethUnits.convert(stats.avgTxsFees, 'wei', 'eth'))
           this.chartData.datasets[0].data.shift()
-          this.chartData.datasets[1].data.push(ethUnits.convert(_tempD.avgGasPrice, 'wei', 'gwei'))
+          this.chartData.datasets[1].data.push(ethUnits.convert(stats.avgGasPrice, 'wei', 'gwei'))
           this.chartData.datasets[1].data.shift()
         }
       }
@@ -133,9 +133,9 @@ export default class ChartLiveTxFees extends Vue {
     const latestBlocks = this.$store.getters.blocks.slice(0, MAX_ITEMS)
     latestBlocks.forEach(_block => {
       data.labels.unshift(_block.getNumber())
-      const _tempD = _block.getStats()
-      data.avgFees.unshift(ethUnits.convert(_tempD.avgTxsFees, 'wei', 'eth'))
-      data.avgPrice.unshift(ethUnits.convert(_tempD.avgGasPrice, 'wei', 'gwei'))
+      const stats = _block.getStats()
+      data.avgFees.unshift(ethUnits.convert(stats.avgTxsFees, 'wei', 'eth'))
+      data.avgPrice.unshift(ethUnits.convert(stats.avgGasPrice, 'wei', 'gwei'))
     })
     return {
       labels: data.labels,

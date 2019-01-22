@@ -8,17 +8,14 @@
       <v-flex xs12 md6> <chart-live-tx /> </v-flex>
       <v-flex xs12 md6> <chart-live-tx-fees /> </v-flex>
     </v-layout>
-    <!-- End Charts -->
     <!-- Last Blocks -->
     <v-layout row wrap justify-center mb-4>
       <v-flex xs12> <table-blocks :max-blocks="true" :blocks="blocks" :loading="blocksLoading" :show-style="tableStyle" page-type="home" /> </v-flex>
     </v-layout>
-    <!-- End Last Blocks -->
     <!-- Last Txs -->
     <v-layout row wrap justify-center mb-4>
       <v-flex xs12> <table-txs :transactions="txs" :loading="txsLoading" :show-style="tableStyle" page-type="home" /> </v-flex>
     </v-layout>
-    <!-- End Last Txs -->
   </v-container>
 </template>
 

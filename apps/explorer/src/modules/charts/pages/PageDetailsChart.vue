@@ -1,18 +1,18 @@
 <template>
   <v-container grid-list-lg class="mb-0">
-    <app-bread-crumbs :new-items="crumbs"></app-bread-crumbs>
-    <chart-block-diff v-if="chartID === ID.difficulty" />
-    <chart-block-time v-if="chartID === ID.blockTime" />
-    <chart-block-size v-if="chartID === ID.blockSize" />
-    <chart-gas-limit v-if="chartID === ID.gasLimit" />
-    <chart-gas-price v-if="chartID === ID.gasPrice" />
-    <chart-hash-rate v-if="chartID === ID.hashRate" />
-    <chart-mining-reward v-if="chartID === ID.minerReward" />
-    <chart-top-miners v-if="chartID === ID.topMiners" />
-    <chart-tx-fail v-if="chartID === ID.txFail" />
-    <chart-tx-success v-if="chartID === ID.txSuccess" />
-    <chart-tx-fees v-if="chartID === ID.txFees" />
-    <chart-uncles-number v-if="chartID === ID.uncles" />
+    <app-bread-crumbs :new-items="crumbs" />
+    <chart-block-diff v-if="chartId === ChartType.difficulty" />
+    <chart-block-time v-if="chartId === ChartType.blockTime" />
+    <chart-block-size v-if="chartId === ChartType.blockSize" />
+    <chart-gas-limit v-if="chartId === ChartType.gasLimit" />
+    <chart-gas-price v-if="chartId === ChartType.gasPrice" />
+    <chart-hash-rate v-if="chartId === ChartType.hashRate" />
+    <chart-mining-reward v-if="chartId === ChartType.minerReward" />
+    <chart-top-miners v-if="chartId === ChartType.topMiners" />
+    <chart-tx-fail v-if="chartId === ChartType.txFail" />
+    <chart-tx-success v-if="chartId === ChartType.txSuccess" />
+    <chart-tx-fees v-if="chartId === ChartType.txFees" />
+    <chart-uncles-number v-if="chartId === ChartType.uncles" />
   </v-container>
 </template>
 
@@ -50,7 +50,7 @@ import { ChartTypes } from '@app/modules/charts/helpers'
   }
 })
 export default class PageDetailsChart extends Vue {
-  ID = ChartTypes
+  ChartType = ChartTypes
 
   // Computed
   get crumbs() {
@@ -61,14 +61,14 @@ export default class PageDetailsChart extends Vue {
         link: '/charts'
       },
       {
-        text: this.chartID,
+        text: this.$i18n.t('charts.' + this.chartId),
         disabled: true
       }
     ]
   }
 
-  get chartID() {
-    return this.$route.params.chartID
+  get chartId() {
+    return this.$route.params.chartRef
   }
 }
 </script>

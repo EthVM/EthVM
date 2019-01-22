@@ -18,7 +18,7 @@
                 <v-btn flat :value="0" active-class="active-button white--text" small>All</v-btn>
                 <v-btn flat :value="1" active-class="active-button white--text" small>1W</v-btn>
                 <v-btn flat :value="2" active-class="active-button white--text" small>1M</v-btn>
-                <!--<v-btn flat :value="3" active-class="active-button white--text" small>1Y</v-btn> -->
+                <v-btn flat :value="3" active-class="active-button white--text" small>1Y</v-btn>
               </v-btn-toggle>
             </v-layout>
           </v-toolbar>
@@ -27,8 +27,8 @@
     </v-layout>
     <v-divider></v-divider>
     <v-layout align-center justify-end row fill-height v-if="footnotes"> <app-footnotes :footnotes="footnotes" /> </v-layout>
-    <app-info-load v-show="this.data && this.data.datasets[0].data.length == 0" />
-    <div v-show="this.data && this.data.datasets[0].data.length != 0"><canvas ref="chart" /></div>
+    <app-info-load v-show="data && data.datasets && data.datasets[0].data.length === 0" />
+    <div v-show="data && data.datasets && data.datasets[0].data.length !== 0"><canvas ref="chart" /></div>
   </v-card>
 </template>
 
@@ -102,6 +102,7 @@ export default class AppChart extends Vue {
       this.$emit('timeFrame', this.toggleData)
     }
   }
+
   beforeDestroy() {
     if (this.chart) {
       this.chart.destroy()
@@ -117,6 +118,9 @@ export default class AppChart extends Vue {
       }
       this.createChart()
     } else {
+      if (!this.chart) {
+        this.createChart()
+      }
       this.chart.update()
     }
   }
