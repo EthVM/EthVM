@@ -63,7 +63,7 @@ import AppCardStatsGroup from '@app/core/components/ui/AppCardStatsGroup.vue'
 import ChartLiveTx from '@app/modules/charts/components/live/ChartLiveTx.vue'
 import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees.vue'
 import ChartTypes from '@app/modules/charts/helpers/index.ts'
-import { Vue, Component, Mixins } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 
 @Component({
   components: {

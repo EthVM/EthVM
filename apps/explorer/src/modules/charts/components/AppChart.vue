@@ -28,9 +28,7 @@
     <v-divider></v-divider>
     <v-layout align-center justify-end row fill-height v-if="footnotes"> <app-footnotes :footnotes="footnotes" /> </v-layout>
     <app-info-load v-show="this.data && this.data.datasets[0].data.length == 0" />
-    <div v-show="this.data && this.data.datasets[0].data.length != 0">
-      <canvas ref="chart" />
-    </div>
+    <div v-show="this.data && this.data.datasets[0].data.length != 0"><canvas ref="chart" /></div>
   </v-card>
 </template>
 
@@ -97,9 +95,10 @@ export default class AppChart extends Vue {
 
   toggleData = 1
   updateChart = false
+
   /*LifeCycle: */
   created() {
-    if(!this.liveChart){
+    if (!this.liveChart) {
       this.$emit('timeFrame', this.toggleData)
     }
   }
@@ -112,10 +111,8 @@ export default class AppChart extends Vue {
   /* Watchers: */
   @Watch('data')
   onDataChanged(): void {
-    console.log("onDataChanged: ", this.data)
     if (this.redraw) {
       if (this.chart) {
-        console.log("chart exhists, destroying")
         this.chart.destroy()
       }
       this.createChart()
@@ -128,7 +125,6 @@ export default class AppChart extends Vue {
   onTogleDataChanged(newVal: number, oldVal: number): void {
     this.$emit('timeFrame', newVal)
   }
-
 
   /*Methods: */
   createChart(): void {

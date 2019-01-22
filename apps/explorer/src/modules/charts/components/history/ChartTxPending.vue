@@ -15,7 +15,6 @@
 import AppChart from '@app/modules/charts/components/AppChart.vue'
 import { ChartMixin } from '@app/modules/charts/mixins'
 import { Vue, Component, Mixins } from 'vue-property-decorator'
-import ethUnits from 'ethereumjs-units'
 import { Events } from 'ethvm-common'
 
 /* Time Variables: */
@@ -28,8 +27,9 @@ import { Events } from 'ethvm-common'
 export default class ChartGasPrice extends Mixins(ChartMixin) {
   title = 'Number of Pending Transactions History'
   labelString = 'Pending Transactions'
+
   //Temp Event
-  newEvent = Events.getPeningStats
+  newEvent = Events.getPendingStats
 
   created() {
     this.setTitle(this.title)

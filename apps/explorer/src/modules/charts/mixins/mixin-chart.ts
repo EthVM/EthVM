@@ -65,13 +65,16 @@ export class ChartMixin extends Vue {
       ]
     }
   }
+
   /*Methods: */
   setTitle(_title: string): void {
     this.chartTitle = _title
   }
+
   setLabel(_label: string): void {
     this.chartLabel = _label
   }
+
   setEvent(_event): void {
     this.chartEvent = _event
   }
@@ -84,7 +87,6 @@ export class ChartMixin extends Vue {
   }
 
   setData(_state: number): void {
-    console.log("setting data: ", this.chartTitle)
     this.$socket.emit(this.chartEvent, { duration: this.DATA[_state].state }, (err, result) => {
       if (!err && result) {
         result.forEach(point => {
@@ -94,6 +96,7 @@ export class ChartMixin extends Vue {
       }
     })
   }
+
   /*Computed: */
   get description(): string {
     return this.timeFrame === 0 ? this.chartTitle + DES.BEGIN : this.chartTitle + DES.OTHER + this.DATA[this.timeFrame].state

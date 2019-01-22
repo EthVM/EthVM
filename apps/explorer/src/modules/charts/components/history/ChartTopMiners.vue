@@ -14,8 +14,6 @@
 <script lang="ts">
 import AppChart from '@app/modules/charts/components/AppChart.vue'
 import { Vue, Component } from 'vue-property-decorator'
-import ethUnits from 'ethereumjs-units'
-import { Events } from 'ethvm-common'
 
 /* Time Variables: */
 const STATES = {

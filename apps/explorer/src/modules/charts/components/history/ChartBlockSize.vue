@@ -15,7 +15,6 @@
 import AppChart from '@app/modules/charts/components/AppChart.vue'
 import { Vue, Component } from 'vue-property-decorator'
 import { Events } from 'ethvm-common'
-import ethUnits from 'ethereumjs-units'
 
 const DES = {
   BEGIN: 'Average block size history in Ethereum blockchain since the begining.',
@@ -71,6 +70,7 @@ export default class ChartBlockSize extends Vue {
     { state: 'MONTH', points: [], labels: [] },
     { state: 'YEAR', points: [], labels: [] }
   ]
+
   /*Computed: */
   get chartData() {
     return {

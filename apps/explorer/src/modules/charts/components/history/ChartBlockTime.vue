@@ -12,7 +12,6 @@
   />
 </template>
 
-
 <script lang="ts">
 import AppChart from '@app/modules/charts/components/AppChart.vue'
 import { ChartMixin } from '@app/modules/charts/mixins'
@@ -40,4 +39,3 @@ export default class ChartGasPrice extends Mixins(ChartMixin) {
   }
 }
 </script>
-
