@@ -37,6 +37,15 @@ class StateProcessor : AbstractKafkaProcessor() {
     // Create stream builder
     val builder = StreamsBuilder()
 
+    buildBalancesTopology(builder)
+    buildMetricsTopology(builder)
+
+    // Generate the topology
+    return builder.build()
+  }
+
+  private fun buildBalancesTopology(builder: StreamsBuilder) {
+
     val fungibleBalances = builder
       .stream(
         Topics.FungibleTokenMovements,
@@ -70,6 +79,9 @@ class StateProcessor : AbstractKafkaProcessor() {
       }
       .to(Topics.Balances, Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance()))
 
+  }
+
+  private fun buildMetricsTopology(builder: StreamsBuilder) {
     // Metrics
 
     val blockMetricsStream = builder
@@ -142,8 +154,5 @@ class StateProcessor : AbstractKafkaProcessor() {
         Materialized.with(Serdes.MetricKey(), Serdes.Metric())
       ).toStream()
       .to(Topics.AggregateBlocksMetricsByDay, Produced.with(Serdes.MetricKey(), Serdes.Metric()))
-
-    // Generate the topology
-    return builder.build()
   }
 }
