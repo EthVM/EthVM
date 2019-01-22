@@ -186,7 +186,7 @@
     "labelString": "Sucessfull and Failed Tx ",
     "txFees": "Tx Fees ETH",
     "avgGasPrice": "Average Gas Price",
-    "avgGasLimit": "Average Gas Price",
+    "avgGasLimit": "Average Gas Limit",
     "avgBlockDiff": "Average Block Difficulty",
     "avgBlockSize": "Average Block Size",
     "avgBlockTime": "Average Block Time",

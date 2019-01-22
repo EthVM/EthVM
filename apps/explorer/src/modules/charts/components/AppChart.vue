@@ -18,7 +18,7 @@
                 <v-btn flat :value="0" active-class="active-button white--text" small>All</v-btn>
                 <v-btn flat :value="1" active-class="active-button white--text" small>1W</v-btn>
                 <v-btn flat :value="2" active-class="active-button white--text" small>1M</v-btn>
-                <v-btn flat :value="3" active-class="active-button white--text" small>1Y</v-btn>
+                <!--<v-btn flat :value="3" active-class="active-button white--text" small>1Y</v-btn> -->
               </v-btn-toggle>
             </v-layout>
           </v-toolbar>
@@ -129,21 +129,9 @@ export default class AppChart extends Vue {
     this.$emit('timeFrame', newVal)
   }
 
-  /*Computed: */
-  get rendered(): boolean {
-    if(this.data) {
-      return this.data && this.data.datasets[0].data.length != 0
-    }
-    else {
-      return false
-    }
-  }
 
   /*Methods: */
   createChart(): void {
-    console.log("new chart Hello")
-    console.log("data: ", this.data)
-    console.log("length: ", this.data.datasets[0].data.length)
     this.chart = new Chart(this.$refs.chart, {
       type: this.type,
       data: this.data,
