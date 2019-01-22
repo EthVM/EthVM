@@ -32,6 +32,7 @@ object BlockMetrics {
 
     var totalGasPrice = BigInteger.ZERO
     var totalTxsFees = BigInteger.ZERO
+    var totalGasLimit = BigInteger.ZERO
 
     transactions
       .zip(receipts)
@@ -40,16 +41,22 @@ object BlockMetrics {
         totalInternalTxs += receipt.getInternalTxs().size
         if (receipt.isSuccess()) numSuccessfulTxs += 1 else numFailedTxs += 1
 
-        totalGasPrice = totalGasPrice.add(tx.getGasPrice().bigInteger())
-        totalTxsFees = totalTxsFees.add(tx.getGasPrice().bigInteger())
+        totalGasLimit += tx.getGas().unsignedBigInteger()!!
+        totalGasPrice += tx.getGasPrice().unsignedBigInteger()!!
+        totalTxsFees += tx.getGasPrice().unsignedBigInteger()!!
       }
 
     var avgGasPrice = BigInteger.ZERO
     var avgTxsFees = BigInteger.ZERO
+    var avgGasLimit = BigInteger.ZERO
 
     if (totalTxs > 0) {
-      avgGasPrice = totalGasPrice.divide(totalTxs.toBigInteger())
-      avgTxsFees = totalTxsFees.divide(totalTxs.toBigInteger())
+
+      val totalTxsBigInt = totalTxs.toBigInteger()
+
+      avgGasLimit = totalGasLimit / totalTxsBigInt
+      avgGasPrice = totalGasPrice / totalTxsBigInt
+      avgTxsFees = totalTxsFees / totalTxsBigInt
     }
 
     return BlockMetricsRecord.newBuilder()
@@ -59,6 +66,7 @@ object BlockMetrics {
       .setNumPendingTxs(numPendingTxs)
       .setTotalDifficulty(totalDifficulty.unsignedByteBuffer())
       .setTotalGasPrice(totalGasPrice.unsignedByteBuffer())
+      .setAvgGasLimit(avgGasLimit.unsignedByteBuffer())
       .setAvgGasPrice(avgGasPrice.unsignedByteBuffer())
       .setTotalTxFees(totalTxsFees.unsignedByteBuffer())
       .setAvgTxFees(avgTxsFees.unsignedByteBuffer())
@@ -95,6 +103,7 @@ object BlockMetrics {
     val numPendingTxs = metrics.getNumPendingTxs()
     val totalDifficulty = metrics.getTotalDifficulty().unsignedBigInteger()!!
     val totalGasPrice = metrics.getTotalGasPrice().unsignedBigInteger()!!
+    val avgGasLimit = metrics.getAvgGasLimit().unsignedBigInteger()!!
     val avgGasPrice = metrics.getAvgGasPrice().unsignedBigInteger()!!
     val totalTxFees = metrics.getTotalTxFees().unsignedBigInteger()!!
     val avgTxFees = metrics.getAvgTxFees().unsignedBigInteger()!!
@@ -123,6 +132,10 @@ object BlockMetrics {
       KeyValue(
         keyBuilder.setName("TotalGasPrice").build(),
         MetricRecord.newBuilder().setBigInteger(totalGasPrice.times(bigIntMultiplier).unsignedByteBuffer()).build()
+      ),
+      KeyValue(
+        keyBuilder.setName("AvgGasLimit").build(),
+        MetricRecord.newBuilder().setBigInteger(avgGasLimit.times(bigIntMultiplier).unsignedByteBuffer()).build()
       ),
       KeyValue(
         keyBuilder.setName("AvgGasPrice").build(),

@@ -163,6 +163,7 @@ protocol Processing {
     int numPendingTxs = 0;
     bytes totalDifficulty;
     bytes totalGasPrice;
+    bytes avgGasLimit;
     bytes avgGasPrice;
     bytes totalTxFees;
     bytes avgTxFees;
