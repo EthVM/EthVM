@@ -31,7 +31,7 @@ import ChartTxSuccess from '@app/modules/charts/components/history/ChartTxSucces
 import ChartTxFees from '@app/modules/charts/components/history/ChartTxFees.vue'
 import ChartUnclesNumber from '@app/modules/charts/components/history/ChartUnclesNumber.vue'
 import { Vue, Component } from 'vue-property-decorator'
-import ChartTypes from '@app/modules/charts/helpers'
+import { ChartTypes } from '@app/modules/charts/helpers'
 
 @Component({
   components: {

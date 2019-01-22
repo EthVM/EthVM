@@ -14,7 +14,7 @@
 <script lang="ts">
 import AppChart from '@app/modules/charts/components/AppChart.vue'
 import { ChartMixin } from '@app/modules/charts/mixins'
-import { Vue, Component, Mixins } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { Events } from 'ethvm-common'
 
 /* Time Variables: */
