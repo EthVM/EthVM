@@ -29,13 +29,13 @@
       <v-flex xs12 md4>
         <v-card class="primary white--text pl-2" flat>
           <v-card-text class="pb-0">{{ $t('addrOverview.balance') }}</v-card-text>
-          <v-card-title class="headline text-truncate">{{ getRoundNumber(account.balance) }} {{ $t('common.eth') }}</v-card-title>
+          <v-card-title class="headline text-truncate">{{ account.balance.toEth() }} {{ $t('common.eth') }}</v-card-title>
         </v-card>
       </v-flex>
       <v-flex xs12 md4>
         <v-card class="error white--text pl-2" flat>
           <v-card-text class="pb-0">{{ $t('addrOverview.usd') }} (1{{ $t('common.eth') }} = ${{ getRoundNumber(account.exchangeRate.USD) }})</v-card-text>
-          <v-card-title class="headline text-truncate">${{ getRoundNumber(account.balance * account.exchangeRate.USD) }}</v-card-title>
+          <v-card-title class="headline text-truncate">${{ getRoundNumber(account.balance.toEth() * account.exchangeRate.USD) }}</v-card-title>
         </v-card>
       </v-flex>
       <v-flex xs12 md4>
