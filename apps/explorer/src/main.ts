@@ -1,172 +1,37 @@
-import App from '@app/App.vue'
-
-import router from '@app/router'
-import store from '@app/states'
+import App from '@app/modules/App.vue'
+// import { EthvmSocketIoApi } from '@app/core/api'
+// import { VueEthvmApi } from '@app/core/plugins'
+import router from '@app/core/router'
+import store from '@app/core/store'
 import i18n from '@app/translations'
-import io from 'socket.io-client'
 import VTooltip from 'v-tooltip'
 import Vue from 'vue'
-import infiniteScroll from 'vue-infinite-scroll'
-import VueSocketio from 'vue-socket.io'
+import InfiniteScroll from 'vue-infinite-scroll'
+// import { VueSocketIOPlugin } from '@app/core/plugins/socketio'
+import VueSocketIO from 'vue-socket.io'
 import VueTimeago from 'vue-timeago'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 
-// EthVM Frames
-// Main ----
-import navigation from '@app/components/blocks/navigationDrawer/nav.vue'
-import frameHome from '@app/components/frames/home.vue'
-import frameBlocks from '@app/components/frames/blocks.vue'
-import frameUncles from '@app/components/frames/uncles.vue'
-
-import frameTxs from '@app/components/frames/transactions.vue'
-import framePending from '@app/components/frames/pendingTxs.vue'
-import frameAbout from '@app/components/frames/about.vue'
-
-// Detail Frames -----
-import frameBlockDetail from '@app/components/frames/blockDetail.vue'
-import frameUncleDetail from '@app/components/frames/uncleDetail.vue'
-import frameTxDetail from '@app/components/frames/txDetail.vue'
-import frameTokenDetail from '@app/components/frames/tokenDetail.vue'
-import frameAddress from '@app/components/frames/address.vue'
-
-// Header ----------------------
-import blockHeader from '@app/components/blocks/header/header.vue'
-import mobileMenu from '@app/components/blocks/header/mobileMenu.vue'
-
-// SMALL BLOCKS ----------------------
-// Parent Small Block Component:
-import blockComponent from '@app/components/blocks/smallBlocks/component.vue'
-import footnote from '@app/components/blocks/smallBlocks/footnote.vue'
-import blockies from '@app/components/blocks/smallBlocks/blockies.vue'
-import addressQR from '@app/components/blocks/smallBlocks/qrComponent.vue'
-import errorNoData from '@app/components/blocks/smallBlocks/errorNoData.vue'
-import breadCrumbs from '@app/components/blocks/smallBlocks/breadcrumbs.vue'
-
-// Search Block:
-import blockSearch from '@app/components/blocks/smallBlocks/search.vue'
-import tabComponent from '@app/components/blocks/smallBlocks/tabComponent.vue'
-import copyToClipComponent from '@app/components/blocks/smallBlocks/copyToClipComponent.vue'
-
-// Home Page Small Blocks:
-import blockLastBlock from '@app/components/blocks/smallBlocks/lastBlock.vue'
-import blockDifficulty from '@app/components/blocks/smallBlocks/difficulty.vue'
-import blockHashRate from '@app/components/blocks/smallBlocks/hashRate.vue'
-import blockTimeSinceLastBlock from '@app/components/blocks/smallBlocks/timeSinceLastBlock.vue'
-
-// Transactions Page Small Blocks:
-import successfulTxSmallBlock from '@app/components/blocks/smallBlocks/successfulTxSmallBlock.vue'
-import failedTxSmallBlock from '@app/components/blocks/smallBlocks/failedTxSmallBlock.vue'
-import pendingTxSmallBlock from '@app/components/blocks/smallBlocks/pendingTxSmallBlock.vue'
-
-// LARGE BLOCKS ----------------------
-import blockLatestBlocks from '@app/components/blocks/largeBlocks/latestBlocks.vue'
-import blockLatestUncles from '@app/components/blocks/largeBlocks/latestUncles.vue'
-import blockLastTransactions from '@app/components/blocks/largeBlocks/lastTransactions.vue'
-import blockAddressTxTable from '@app/components/blocks/largeBlocks/addressTxTable.vue'
-import blockAbout from '@app/components/blocks/largeBlocks/about.vue'
-import blockBlockDetail from '@app/components/blocks/largeBlocks/blockDetail.vue'
-import addressDetail from '@app/components/blocks/largeBlocks/addressDetail.vue'
-import blockaddressTx from '@app/components/blocks/largeBlocks/addressTx.vue'
-import blockTxDetail from '@app/components/blocks/largeBlocks/txDetail.vue'
-import blockTokenTracker from '@app/components/blocks/largeBlocks/tokenTracker.vue'
-import blockTokenDetail from '@app/components/blocks/largeBlocks/blockTokenDetail.vue'
-
-// Charts ----------------------
-import vueChart from '@app/components/blocks/smallBlocks/charts/vuechart.vue'
-import barChartLastTenBlocksTx from '@app/components/blocks/smallBlocks/charts/barchartlast10blockstx.vue'
-import lineChartAveTxFees from '@app/components/blocks/smallBlocks/charts/linechartavetxfees.vue'
-import frameCharts from '@app/components/frames/charts.vue'
-import blockLastTenBlocksTx from '@app/components/blocks/smallBlocks/charts/lastTenBlocksTx.vue'
-import topMinersChart from '@app/components/blocks/smallBlocks/charts/topMiners.vue'
-import accountsCreated from '@app/components/blocks/smallBlocks/charts/accountsCreated.vue'
-import avgBlockSize from '@app/components/blocks/smallBlocks/charts/aveBlockSize.vue'
-import avgGasLimit from '@app/components/blocks/smallBlocks/charts/aveGasLimit.vue'
-import avgTxFee from '@app/components/blocks/smallBlocks/charts/aveTxFees.vue'
-
-// Footer ----------------------
-import blockFooter from '@app/components/blocks/footer/footer.vue'
-
-// Vue
-// Main ----
-Vue.component('navigation', navigation)
-Vue.component('frame-home', frameHome)
-Vue.component('frame-blocks', frameBlocks)
-Vue.component('frame-uncles', frameUncles)
-
-Vue.component('frame-txs', frameTxs)
-Vue.component('frame-pending', framePending)
-Vue.component('frame-about', frameAbout)
-
-// Detail Frames -----
-Vue.component('frame-block-detail', frameBlockDetail)
-Vue.component('frame-uncle-detail', frameUncleDetail)
-Vue.component('frame-tx-detail', frameTxDetail)
-Vue.component('frame-token-detail', frameTokenDetail)
-Vue.component('frame-address', frameAddress)
-
-// Header ----------------------
-Vue.component('block-header', blockHeader)
-Vue.component('mobile-menu', mobileMenu)
-
-// SMALL BLOCKS ----------------------
-// Parent Small Block Component:
-Vue.component('block-component', blockComponent)
-Vue.component('footnote', footnote)
-Vue.component('blockies', blockies)
-Vue.component('address-qr', addressQR)
-Vue.component('error-no-data', errorNoData)
-Vue.component('bread-crumbs', breadCrumbs)
-
-// Search Block:
-Vue.component('block-search', blockSearch)
-Vue.component('tab-component', tabComponent)
-Vue.component('copy-to-clip-component', copyToClipComponent)
-
-// Home Page Small Blocks:
-Vue.component('block-last-block', blockLastBlock)
-Vue.component('block-difficulty', blockDifficulty)
-Vue.component('block-hash-rate', blockHashRate)
-Vue.component('block-time-since-last-block', blockTimeSinceLastBlock)
-
-// Transactions Page Small Blocks:
-Vue.component('successful-tx-small-block', successfulTxSmallBlock)
-Vue.component('failed-tx-small-block', failedTxSmallBlock)
-Vue.component('pending-tx-small-block', pendingTxSmallBlock)
-
-// LARGE BLOCKS ----------------------
-Vue.component('block-latest-blocks', blockLatestBlocks)
-Vue.component('block-latest-uncles', blockLatestUncles)
-Vue.component('block-last-transactions', blockLastTransactions)
-Vue.component('block-address-tx-table', blockAddressTxTable)
-Vue.component('block-about', blockAbout)
-Vue.component('block-block-detail', blockBlockDetail)
-Vue.component('address-detail', addressDetail)
-Vue.component('block-address-tx', blockaddressTx)
-Vue.component('block-tx-detail', blockTxDetail)
-Vue.component('block-token-tracker', blockTokenTracker)
-Vue.component('block-token-detail', blockTokenDetail)
-
-// Charts ----------------------
-Vue.component('vue-chart', vueChart)
-Vue.component('bar-chart-last-ten-blocks-tx', barChartLastTenBlocksTx)
-Vue.component('line-chart-ave-tx-fees', lineChartAveTxFees)
-Vue.component('frame-charts', frameCharts)
-Vue.component('block-last-ten-blocks-tx', blockLastTenBlocksTx)
-Vue.component('top-miners-chart', topMinersChart)
-Vue.component('account-created-chart', accountsCreated)
-Vue.component('block-size-chart', avgBlockSize)
-Vue.component('gas-limit-chart', avgGasLimit)
-Vue.component('tx-fee-chart', avgTxFee)
-
-// Footer ----------------------
-Vue.component('block-footer', blockFooter)
-
 // Vue modules configuration
 Vue.use(VTooltip)
+
 Vue.prototype.$eventHub = new Vue()
 Vue.config.productionTip = false
-Vue.use(VueSocketio, io(process.env.VUE_APP_SOCKET_URL + ':' + process.env.VUE_APP_SOCKET_PORT), store)
+
+// TODO: Once models has been migrated use this version of Vue SocketIO
+// Vue.use(VueSocketIOPlugin, {
+//   connection: process.env.VUE_APP_API_ENDPOINT,
+//   vuex: {
+//     store,
+//     actionPrefix: 'socket_',
+//     mutationPrefix: 'socket_'
+//   }
+// })
+//Vue.use(VueEthvmApi, new EthvmSocketIoApi(process.env.VUE_APP_API_ENDPOINT))
+
+Vue.use(VueSocketIO, process.env.VUE_APP_API_ENDPOINT, store)
+
 Vue.use(VueTimeago, {
   name: 'timeago',
   locale: 'en-US',
@@ -174,7 +39,9 @@ Vue.use(VueTimeago, {
     'en-US': require('date-fns/locale/en')
   }
 })
-Vue.use(infiniteScroll)
+
+Vue.use(InfiniteScroll)
+
 Vue.use(Vuetify, {
   theme: {
     // used -->
@@ -198,7 +65,8 @@ Vue.use(Vuetify, {
     // background: String(colors.grey.darken3)
   }
 })
-new Vue({
+
+const v = new Vue({
   el: '#app',
   store,
   router,

@@ -4,7 +4,7 @@ import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/serv
 import { Events, Statistic } from 'ethvm-common'
 
 const getAvgTxFeeStats: SocketEvent = {
-  id: Events.getAvgTxFeeStats,
+  id: Events.getAverageTxFeeStats,
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = chartPayloadValidator(payload) as boolean
     return {

@@ -14,6 +14,9 @@ USER node
 # Copy
 COPY . .
 
+# Remove cached node_modules
+RUN rm -rf /var/explorer/node_modules
+
 # Expose
 EXPOSE 8080
 CMD yarn install && yarn start:dev

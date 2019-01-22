@@ -5,8 +5,9 @@ import { Tx } from 'ethvm-common'
 export interface TxsRepository {
   getTx(hash: string): Promise<Tx | null>
   getTxs(limit: number, page: number): Promise<Tx[]>
-  getBlockTxs(hash: string): Promise<Tx[]>
+  getTxsOfBlock(hash: string): Promise<Tx[]>
   getTxsOfAddress(hash: string, limit: number, page: number): Promise<Tx[]>
+  getAddressTotalTxs(hash: string): Promise<number>
 }
 
 export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepository {
@@ -31,7 +32,7 @@ export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepo
       })
   }
 
-  public getBlockTxs(hash: string): Promise<Tx[]> {
+  public getTxsOfBlock(hash: string): Promise<Tx[]> {
     return this.db
       .collection(MongoEthVM.collections.transactions)
       .find({ blockHash: hash })
@@ -41,9 +42,7 @@ export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepo
         if (!resp) {
           return t
         }
-        resp.forEach(tx => {
-          t.push(toTx(tx))
-        })
+        resp.forEach(tx => t.push(toTx(tx)))
         return t
       })
   }
@@ -78,6 +77,18 @@ export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepo
           t.push(toTx(tx))
         })
         return t
+      })
+  }
+
+  public getAddressTotalTxs(hash: string): Promise<number> {
+    return this.db
+      .collection(MongoEthVM.collections.transactions)
+      .countDocuments({ $or: [{ from: hash }, { to: hash }] })
+      .then(resp => {
+        if (!resp) {
+          return 0
+        }
+        return resp
       })
   }
 }

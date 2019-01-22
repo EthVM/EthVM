@@ -15,15 +15,15 @@ matrix:
       language: node_js
       node_js:
         - "10"
-    -
-      env:
-        - ID=api/unit-tests
-        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/api
-        - INSTALL='yarn install'
-        - ACTION='yarn test:unit'
-      language: node_js
-      node_js:
-        - "10"
+    # -
+    #   env:
+    #     - ID=api/unit-tests
+    #     - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/api
+    #     - INSTALL='yarn install'
+    #     - ACTION='yarn test:unit'
+    #   language: node_js
+    #   node_js:
+    #     - "10"
     # -
     #   env:
     #     - ID=api/e2e-tests
@@ -42,15 +42,15 @@ matrix:
     #   language: node_js
     #   node_js:
     #     - "10"
-    -
-      env:
-        - ID=explorer/unit-tests
-        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/explorer
-        - INSTALL='yarn install'
-        - ACTION='yarn test:unit'
-      language: node_js
-      node_js:
-        - "10"
+    # -
+    #   env:
+    #     - ID=explorer/unit-tests
+    #     - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/explorer
+    #     - INSTALL='yarn install'
+    #     - ACTION='yarn test:unit'
+    #   language: node_js
+    #   node_js:
+    #     - "10"
     -
       env:
         - ID=processing/lint

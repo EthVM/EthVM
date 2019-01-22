@@ -1,67 +1,63 @@
 import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
 import { Statistic } from 'ethvm-common'
+import { toStatistic } from '@app/server/modules/statistics'
 
 export interface StatisticsRepository {
+  getAverageTotalTxs(start: Date, end: Date): Promise<Statistic[]>
+  getAverageSuccessfullTxs(start: Date, end: Date): Promise<Statistic[]>
   getAverageTotalDifficulty(start: Date, end: Date): Promise<Statistic[]>
-  getAveragegasPrice(start: Date, end: Date): Promise<Statistic[]>
+  getAverageFailedTxs(start: Date, end: Date): Promise<Statistic[]>
+  getTotalGasPrice(start: Date, end: Date): Promise<Statistic[]>
+  getAverageGasPrice(start: Date, end: Date): Promise<Statistic[]>
+  getTotalTxsFees(start: Date, end: Date): Promise<Statistic[]>
   getAverageTxFee(start: Date, end: Date): Promise<Statistic[]>
-  getAverageSuccessfullTx(start: Date, end: Date): Promise<Statistic[]>
-  getAverageFailedTx(start: Date, end: Date): Promise<Statistic[]>
 }
 
 export class MongoStatisticsRepository extends BaseMongoDbRepository implements StatisticsRepository {
-  public getAverageTotalDifficulty(start: Date, end: Date): Promise<Statistic[]> {
-    return this.db
-      .collection(MongoEthVM.collections.statistics)
-      .find({ $and: [{ name: 'avg_total_difficulty' }, { date: { $gte: start } }, { date: { $lte: end } }] })
-      .sort({ _id: -1 })
-      .toArray()
-      .then(resp => {
-        return resp
-      })
+  public getAverageTotalTxs(start: Date, end: Date): Promise<Statistic[]> {
+    return this.retrieveFromMongo('TotalTxs', start, end)
   }
 
-  public getAveragegasPrice(start: Date, end: Date): Promise<Statistic[]> {
-    return this.db
-      .collection(MongoEthVM.collections.statistics)
-      .find({ $and: [{ name: 'avg_gas_price' }, { date: { $gte: start } }, { date: { $lte: end } }] })
-      .sort({ _id: -1 })
-      .toArray()
-      .then(resp => {
-        return resp
-      })
+  public getAverageSuccessfullTxs(start: Date, end: Date): Promise<Statistic[]> {
+    return this.retrieveFromMongo('NumSuccessfulTxs', start, end)
+  }
+
+  public getAverageFailedTxs(start: Date, end: Date): Promise<Statistic[]> {
+    return this.retrieveFromMongo('NumFailedTxs', start, end)
+  }
+
+  public getAverageTotalDifficulty(start: Date, end: Date): Promise<Statistic[]> {
+    return this.retrieveFromMongo('TotalDifficulty', start, end)
+  }
+
+  public getTotalGasPrice(start: Date, end: Date): Promise<Statistic[]> {
+    return this.retrieveFromMongo('TotalGasPrice', start, end)
+  }
+
+  public getAverageGasPrice(start: Date, end: Date): Promise<Statistic[]> {
+    return this.retrieveFromMongo('AvgGasPrice', start, end)
+  }
+
+  public getTotalTxsFees(start: Date, end: Date): Promise<Statistic[]> {
+    return this.retrieveFromMongo('TotalTxsFees', start, end)
   }
 
   public getAverageTxFee(start: Date, end: Date): Promise<Statistic[]> {
-    return this.db
-      .collection(MongoEthVM.collections.statistics)
-      .find({ $and: [{ name: 'avg_txs_fees' }, { date: { $gte: start } }, { date: { $lte: end } }] })
-      .sort({ _id: -1 })
-      .toArray()
-      .then(resp => {
-        return resp
-      })
+    return this.retrieveFromMongo('AvgTxsFees', start, end)
   }
 
-  public getAverageSuccessfullTx(start: Date, end: Date): Promise<Statistic[]> {
+  private retrieveFromMongo(event: string, start: Date, end: Date): Promise<Statistic[]> {
     return this.db
       .collection(MongoEthVM.collections.statistics)
-      .find({ $and: [{ name: 'avg_successful_txs' }, { date: { $gte: start } }, { date: { $lte: end } }] })
-      .sort({ _id: -1 })
+      .find({ $and: [{ name: event }, { date: { $gte: start.getTime() } }, { date: { $lte: end.getTime() } }] })
+      .sort({ date: -1 })
       .toArray()
       .then(resp => {
-        return resp
-      })
-  }
+        if (!resp) {
+          return []
+        }
 
-  public getAverageFailedTx(start: Date, end: Date): Promise<Statistic[]> {
-    return this.db
-      .collection(MongoEthVM.collections.statistics)
-      .find({ $and: [{ name: 'avg_failed_txs' }, { date: { $gte: start } }, { date: { $lte: end } }] })
-      .sort({ _id: -1 })
-      .toArray()
-      .then(resp => {
-        return resp
+        return resp.map(r => toStatistic(r))
       })
   }
 }

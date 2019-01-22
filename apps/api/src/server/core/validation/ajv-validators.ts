@@ -6,7 +6,7 @@ import { isValidAddress } from 'ethereumjs-util'
 const PAGINATION_SIZE = 100
 
 const ROOMS = ['blocks', 'txs', 'pendingTxs', 'uncles']
-const PERIODS = ['ALL', 'YEAR', 'MONTH', 'DAY']
+const PERIODS = ['ALL', 'YEAR', 'MONTH', 'WEEK']
 
 const EXCHANGE_TO = ['USD']
 const EXCHANGE_FROM = [
@@ -324,18 +324,6 @@ const TxsPayloadSchema = {
     limit: limitSchema,
     page: pageSchema
   },
-  required: ['address'],
-  additionalProperties: false
-}
-
-const PastTxsSchema = {
-  $id: 'https://ethvm.com/pasttxs.payload.schema.json',
-  $schema: 'http://json-schema.org/draft-07/schema#',
-  type: 'object',
-  properties: {
-    limit: limitSchema,
-    page: pageSchema
-  },
   additionalProperties: false
 }
 
@@ -381,6 +369,29 @@ const ExchangeRateSchema = {
   additionalProperties: false
 }
 
+const TokensTransferSchema = {
+  $id: 'https://ethvm.com/blocksmined.payload.schema.json',
+  $schema: 'http://json-schema.org/draft-07/schema#',
+  type: 'object',
+  properties: {
+    address: addressSchema,
+    limit: limitSchema,
+    page: pageSchema
+  },
+  additionalProperties: false
+}
+
+const ContractSchema = {
+  $id: 'https://ethvm.com/contracts.schema.json',
+  $schema: 'http://json-schema.org/draft-07/schema#',
+  type: 'object',
+  properties: {
+    address: addressSchema
+  },
+  required: ['address'],
+  additionalProperties: false
+}
+
 // Compile schemas
 const balancePayloadValidator = ajv.compile(BalancePayloadSchema)
 const blockTxsPayloadValidator = ajv.compile(BlockTxsPayloadSchema)
@@ -395,10 +406,12 @@ const tokensBalancePayloadValidator = ajv.compile(TokensBalancePayloadSchema)
 const txPayloadValidator = ajv.compile(TxPayloadSchema)
 const txsPayloadValidator = ajv.compile(TxsPayloadSchema)
 const totalTxsPayloadValidator = ajv.compile(TotalTxsPayloadSchema)
-const pastTxsPayloadValidator = ajv.compile(PastTxsSchema)
 const pastBlockPayloadValidator = ajv.compile(PastBlocksSchema)
 const blockMinedPayloadValidator = ajv.compile(BlocksMinedSchema)
 const exchangeRatePayloadValidator = ajv.compile(ExchangeRateSchema)
+const pendingTxsPayloadValidator = ajv.compile(TxsPayloadSchema)
+const tokenTransferPayloadValidator = ajv.compile(TokensTransferSchema)
+const contractSchemaPayloadValidator = ajv.compile(ContractSchema)
 
 export {
   balancePayloadValidator,
@@ -412,10 +425,12 @@ export {
   txPayloadValidator,
   txsPayloadValidator,
   totalTxsPayloadValidator,
-  pastTxsPayloadValidator,
   exchangeRatePayloadValidator,
   blockMinedPayloadValidator,
   searchpayloadValidator,
   blockByNumberPayloadValidator,
-  pastBlockPayloadValidator
+  pastBlockPayloadValidator,
+  pendingTxsPayloadValidator,
+  tokenTransferPayloadValidator,
+  contractSchemaPayloadValidator
 }

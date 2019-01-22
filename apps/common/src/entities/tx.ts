@@ -20,29 +20,33 @@ export interface Trace {
   nonce?: Buffer
 }
 
+export interface TxReceipt {
+  blockHash: string
+  transactionHash: string
+  transactionIndex: number
+  cumulativeGasUsed: string
+  contractAddress: string
+  gasUsed: string
+  logsBloom: string
+  status: string
+  error: string
+}
+
 export interface Tx {
-  blockHash?: string
-  blockNumber?: number
-  hash?: string
-  timestamp?: number
-  index?: number
-  nonce?: string
-  from?: string
-  to?: string
-  contractAddress?: string
-  status?: boolean
-  data?: Buffer
-  fee?: number
-  logs?: Log
-  result?: boolean
-  gasPrice?: number
-  gasLimit?: number
-  gasUsed?: number
-  gasRefund?: number
-  gasLeftover?: number
-  traces?: Trace[]
-  v?: number
-  r?: number
-  s?: number
-  value?: Buffer
+  hash: string
+  nonce: string
+  blockHash: string
+  blockNumber: string
+  transactionIndex: number
+  from: string
+  to: string
+  value: string
+  gasPrice: string
+  gas: string
+  input: string
+  v: Buffer
+  r: string
+  s: string
+  timestamp: number
+  receipt: TxReceipt
 }

@@ -1,4 +1,4 @@
-import { Token } from '@app/server/modules/token'
+import { Token } from '@app/server/modules/tokens'
 import BigNumber from 'bignumber.js'
 import * as abi from 'ethereumjs-abi'
 import * as jayson from 'jayson/promise'

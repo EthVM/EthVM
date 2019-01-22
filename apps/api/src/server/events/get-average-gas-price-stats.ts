@@ -4,7 +4,7 @@ import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/serv
 import { Events, Statistic } from 'ethvm-common'
 
 const getAvgGasPriceStats: SocketEvent = {
-  id: Events.getAvgGasPriceStats,
+  id: Events.getAverageGasPriceStats,
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = chartPayloadValidator(payload) as boolean
     return {
@@ -14,7 +14,7 @@ const getAvgGasPriceStats: SocketEvent = {
   },
 
   onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: StatsPayload): Promise<Statistic[]> =>
-    server.statisticsService.getAveragegasPrice(payload.duration)
+    server.statisticsService.getAverageGasPrice(payload.duration)
 }
 
 export default getAvgGasPriceStats

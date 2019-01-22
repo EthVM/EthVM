@@ -1,34 +1,24 @@
 import config from '@app/config'
 import { logger } from '@app/logger'
-import { MongoStreamer } from '@app/server/core/streams'
+import { NullStreamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
-import { AccountsServiceImpl, MongoAccountsRepository } from '@app/server/modules/accounts'
+import { BalancesServiceImpl, MongoBalancesRepository } from '@app/server/modules/balances'
 import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blocks'
+import { ContractsServiceImpl, MongoContractsRepository } from '@app/server/modules/contracts'
 import { CoinMarketCapRepository, ExchangeServiceImpl } from '@app/server/modules/exchanges'
 import { MongoPendingTxRepository, PendingTxServiceImpl } from '@app/server/modules/pending-txs'
 import { SearchServiceImpl } from '@app/server/modules/search'
 import { MongoStatisticsRepository, StatisticsServiceImpl } from '@app/server/modules/statistics'
+import { MongoTokensRepository, TokensServiceImpl } from '@app/server/modules/tokens'
 import { MongoTxsRepository, TxsServiceImpl } from '@app/server/modules/txs'
 import { MongoUncleRepository, UnclesServiceImpl } from '@app/server/modules/uncles'
-import { RedisTrieDb, VmEngine, VmRunner, VmServiceImpl } from '@app/server/modules/vm'
+import { VmEngine, VmServiceImpl } from '@app/server/modules/vm'
 import { RedisCacheRepository } from '@app/server/repositories'
-import * as EventEmitter from 'eventemitter3'
 import * as Redis from 'ioredis'
 import { MongoClient } from 'mongodb'
 
 async function bootstrapServer() {
   logger.debug('bootstrapper -> Bootstraping ethvm-socket-server!')
-
-  // Create TrieDB
-  logger.debug('bootstrapper -> Initializing TrieDB')
-  const trieOpts = {
-    host: config.get('eth.trie_db.redis.host'),
-    port: config.get('eth.trie_db.redis.port'),
-    db: config.get('eth.trie_db.redis.db'),
-    rpcHost: config.get('eth.rpc.host'),
-    rpcPort: config.get('eth.rpc.port')
-  }
-  const trieDb = new RedisTrieDb(trieOpts)
 
   // Create VmEngine
   logger.debug('bootstrapper -> Initializing VmEngine')
@@ -39,31 +29,14 @@ async function bootstrapServer() {
   }
   const vme = new VmEngine(vmeOpts)
 
-  // Create VmRunner
-  logger.debug('bootstrapper -> Initializing VmRunner')
-  const gasLimit = config.get('eth.vm.engine.gas_limit')
-  const vmr = new VmRunner(trieDb, gasLimit)
-
   // Create Cache data store
   logger.info('bootstrapper -> Initializing redis cache data store')
   const redis = new Redis({
     host: config.get('data_stores.redis.host'),
     port: config.get('data_stores.redis.port')
   })
-  const socketRows = config.get('data_stores.redis.socket_rows')
-  const ds = new RedisCacheRepository(redis, socketRows)
+  const ds = new RedisCacheRepository(redis)
   await ds.initialize().catch(() => process.exit(-1))
-
-  // Set default state block to VmRunner
-  const blocks = await ds.getBlocks()
-  const configStateRoot = config.get('eth.state_root')
-  const hasStateRoot = blocks && blocks[0] && blocks[0].header.stateRoot
-  const stateRoot = hasStateRoot ? Buffer.from(blocks[0].header.stateRoot!!) : Buffer.from(configStateRoot, 'hex')
-  vmr.setStateRoot(stateRoot)
-
-  // Create block event emmiter
-  logger.debug('bootstrapper -> Initializing event emitter')
-  const emitter = new EventEmitter()
 
   // Create Blockchain data store
   logger.debug('bootstrapper -> Connecting MongoDB')
@@ -80,57 +53,69 @@ async function bootstrapServer() {
   // Create services
   // ---------------
 
+  // Balances
+  const balancesRepository = new MongoBalancesRepository(db)
+  const balancesService = new BalancesServiceImpl(balancesRepository, vme)
+
   // Blocks
   const blocksRepository = new MongoBlockRepository(db)
-  const blockService = new BlocksServiceImpl(blocksRepository, ds)
+  const blockService = new BlocksServiceImpl(blocksRepository)
+
+  // Contracts
+  const contractsRepository = new MongoContractsRepository(db)
+  const contracsService = new ContractsServiceImpl(contractsRepository)
 
   // Uncles
   const unclesRepository = new MongoUncleRepository(db)
-  const uncleService = new UnclesServiceImpl(unclesRepository, ds)
+  const uncleService = new UnclesServiceImpl(unclesRepository)
 
-  // Adress
-  const addressRepository = new MongoAccountsRepository(db)
-  const addressService = new AccountsServiceImpl(addressRepository, ds)
-
-  // Adress
+  // Pending Txs
   const pendingTxRepository = new MongoPendingTxRepository(db)
-  const pendingTxService = new PendingTxServiceImpl(pendingTxRepository, ds)
+  const pendingTxService = new PendingTxServiceImpl(pendingTxRepository)
 
   // Txs
   const txsRepository = new MongoTxsRepository(db)
-  const txsService = new TxsServiceImpl(txsRepository, ds)
+  const txsService = new TxsServiceImpl(txsRepository)
 
   // Search
-  const searchService = new SearchServiceImpl(txsRepository, addressRepository, blocksRepository, ds)
+  const searchService = new SearchServiceImpl(txsRepository, balancesRepository, blocksRepository)
 
   // Charts
   const statisticsRepository = new MongoStatisticsRepository(db)
-  const statisticsService = new StatisticsServiceImpl(statisticsRepository, ds)
+  const statisticsService = new StatisticsServiceImpl(statisticsRepository)
 
   // Exchanges
   const exchangeRepository = new CoinMarketCapRepository(ds)
   const exchangeService = new ExchangeServiceImpl(exchangeRepository, ds)
 
+  // Tokens
+  const tokensRepository = new MongoTokensRepository(db)
+  const tokensService = new TokensServiceImpl(tokensRepository)
+
   // Vm
-  const vmService = new VmServiceImpl(vme, vmr)
+  const vmService = new VmServiceImpl(vme)
 
   // Create streamer
   // ---------------
-  logger.debug('bootstrapper -> Initializing streamer')
-  const streamer = new MongoStreamer(db, emitter)
-  await streamer.initialize()
+  // TODO: Restore proper MongoStreamer when we have intelligent notification of events in Kafka
+  // logger.debug('bootstrapper -> Initializing streamer')
+  // const streamer = new MongoStreamer(db, emitter)
+  // await streamer.initialize()
+  const streamer = new NullStreamer()
 
   // Create server
   logger.debug('bootstrapper -> Initializing server')
   const server = new EthVMServer(
     blockService,
+    contracsService,
     uncleService,
-    addressService,
+    balancesService,
     txsService,
     statisticsService,
     pendingTxService,
     exchangeService,
     searchService,
+    tokensService,
     vmService,
     streamer
   )

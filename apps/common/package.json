@@ -6,16 +6,16 @@
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "clean": "rm -rf ./build"
   },
   "dependencies": {
     "bson": "^4.0.1",
     "global": "^4.3.2",
-    "ts-interface-builder": "^0.1.7",
-    "tsc": "^1.20150623.0",
+    "ts-interface-builder": "^0.1.8",
     "typescript": "^3.2.2"
   },
   "devDependencies": {
-    "@types/node": "^10.12.16"
+    "@types/node": "^10.12.18"
   }
 }

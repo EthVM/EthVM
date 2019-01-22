@@ -8,11 +8,18 @@ export const toDatePeriods = (duration: string) => {
     case 'ALL':
       from = new Date(1970, 0, 1) // Far away date, we support different networks
       break
+    case 'YEAR':
+      from = new Date(to.getFullYear(), 0, 1)
+      break
     case 'MONTH':
       from = new Date(to.getFullYear(), to.getMonth())
       break
     case 'WEEK':
-      from = new Date(to.getDate() - 7)
+      from = new Date()
+      from.setDate(to.getDate() - 7)
+      break
+    case 'DAY':
+      from = new Date()
       break
     default:
       throw new Error('Invalid range specified')

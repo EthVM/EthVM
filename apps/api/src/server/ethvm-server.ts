@@ -14,12 +14,14 @@ import {
   TxsPayload
 } from '@app/server/core/payloads'
 import { Streamer, StreamingEvent } from '@app/server/core/streams'
-import { AccountsService } from '@app/server/modules/accounts'
+import { BalancesService } from '@app/server/modules/balances'
 import { BlocksService } from '@app/server/modules/blocks'
+import { ContractsService } from '@app/server/modules/contracts'
 import { ExchangeService } from '@app/server/modules/exchanges'
 import { PendingTxService } from '@app/server/modules/pending-txs'
 import { SearchService } from '@app/server/modules/search'
 import { StatisticsService } from '@app/server/modules/statistics'
+import { TokensService } from '@app/server/modules/tokens'
 import { TxsService } from '@app/server/modules/txs'
 import { UnclesService } from '@app/server/modules/uncles'
 import { VmService } from '@app/server/modules/vm'
@@ -62,13 +64,15 @@ export class EthVMServer {
 
   constructor(
     public readonly blockService: BlocksService,
+    public readonly contractsService: ContractsService,
     public readonly uncleService: UnclesService,
-    public readonly accountsService: AccountsService,
+    public readonly balancesService: BalancesService,
     public readonly txsService: TxsService,
     public readonly statisticsService: StatisticsService,
     public readonly pendingTxService: PendingTxService,
     public readonly exchangesService: ExchangeService,
     public readonly searchService: SearchService,
+    public readonly tokensService: TokensService,
     public readonly vmService: VmService,
     private readonly streamer: Streamer
   ) {}
@@ -99,7 +103,6 @@ export class EthVMServer {
 
     logger.debug('EthVMServer - start() / Registering streamer events')
     this.streamer.addListener('block', this.onBlockEvent)
-    this.streamer.addListener('account', this.onAccountEvent)
     this.streamer.addListener('pendingTx', this.onPendingTxEvent)
 
     logger.debug('EthVMServer - start() / Starting to listen socket events on SocketIO')
@@ -162,17 +165,9 @@ export class EthVMServer {
     const { op, key, value } = event
     const block = value as Block
 
-    logger.info(`EthVMServer - onBlockEvent / Op: ${op} - Number: ${key} - Hash: ${block.hash}`)
+    logger.info(`EthVMServer - onBlockEvent / Op: ${op} - Number: ${key} - Hash: ${block.header.hash}`)
 
     if (op !== 'delete') {
-      if (value && value.header && value.header.stateRoot) {
-        try {
-          this.vmService.setStateRoot(block.header.stateRoot)
-        } catch (e) {
-          logger.error(`EthVMServer - onBlockEvent  / setStateRoot err : ${e},  `)
-        }
-      }
-
       const txs = value.transactions || []
       if (txs.length > 0) {
         txs.forEach(tx => {
@@ -187,12 +182,6 @@ export class EthVMServer {
     }
 
     this.io.to('blocks').emit('newBlock', event)
-  }
-
-  private onAccountEvent = (event: StreamingEvent): void => {
-    const { op, key, value } = event
-
-    logger.info(`EthVMServer - onAccountEvent / Op: ${op} - Address: ${key}`)
   }
 
   private onPendingTxEvent = (event: StreamingEvent): void => {

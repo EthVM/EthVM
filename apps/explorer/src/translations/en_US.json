@@ -20,11 +20,13 @@
     "tokenDetail": "Token Details",
     "txDetail": "Transaction Details",
     "overview": "Overview",
-    "blockTx": "Block Transactions",
+    "blockTxs": "Block Transactions",
     "lastBlock": "Last Blocks",
     "lastTxs": "Last Transactions",
     "kb": "Knowledge Base",
-    "position": "Position"
+    "position": "Position",
+    "minedBlocks": "Mined Blocks",
+    "contract": "Contract"
   },
   "common": {
     "address": "Address",
@@ -34,7 +36,10 @@
     "timestmp": "Timestamp",
     "gwei": "GWEI",
     "more": "More",
-    "tx": "Tx"
+    "tx": "Tx",
+    "uncle": "Uncle",
+    "sucessfull": "Sucessful",
+    "failed": "Failed"
   },
   "subTitle": {
     "home": "Welcome to Ethereum Virtual Machine",
@@ -49,6 +54,7 @@
     "txDetail": "Ethereum transaction overview"
   },
   "search": {
+    "title": "Search",
     "default": "Search Block / Address / Tx",
     "addressTx": "Tx Hash/Address"
   },
@@ -58,16 +64,15 @@
     "reward": "Reward",
     "txN": "Transaction #",
     "limit": "Limit",
-    "gas": "Gas"
+    "gas": "Gas",
+    "blockHeight": "Block Height #"
   },
-
   "filter": {
     "view": "View",
     "all": "All",
     "out": "Outgoing",
     "in": "Incoming"
   },
-
   "message": {
     "error": "Oops something went wrong, no data from server :(",
     "txAll": "This address does not have any transaction history",
@@ -80,9 +85,11 @@
     "noTxHistory": "There is no transaction history",
     "noTxInBlock": "This block does not have any transactions",
     "noPending": "There are no pending transactions",
-    "load": "Loading ..."
+    "load": "Loading",
+    "loadingBlockTx": "Loading block transactions",
+    "notMined": "This block has not been mined yet",
+    "noTx": "This Transaction does not exist"
   },
-
   "block": {
     "height": "Height",
     "miner": "Miner",
@@ -101,11 +108,8 @@
     "recRoot": "Receipts Root",
     "uncReward": "Reward",
     "sha": "SHA3",
-    "uncle": "Uncle",
-    "loadingBlockTx": "Loading Block transactions...",
-    "notMined": "This Block has not been mined yet..."
+    "uncle": "Uncle"
   },
-
   "addrOverview": {
     "balance": "Ether Balance",
     "usd": "USD Value",
@@ -117,7 +121,6 @@
     "uncles": "Uncles",
     "and": "and"
   },
-
   "tx": {
     "from": "From",
     "to": "To",
@@ -126,26 +129,27 @@
     "block": "Block #",
     "cost": "Tx Cost"
   },
-
   "token": {
     "holder": "Holder",
     "balance": "Balance",
     "supply": "Total Supply",
     "totalHold": "Total Holders",
     "symbol": "Symbol",
-    "transfers": "Total Transfers",
+    "transfers": "Transfers",
     "value": "Value",
     "decimal": "Decimals",
-    "number": "Total Number of Tokens",
-    "totalUSD": "Total USD Value"
+    "number": "Total Tokens Owned",
+    "totalUSD": "Total USD Value",
+    "name": "Name",
+    "usdValue": "USD Value",
+    "amount": "Amount",
+    "price": "Price"
   },
-
   "gas": {
     "limit": "Gas Limit",
     "used": "Gas Used",
     "price": "Gas Price"
   },
-
   "smlBlock": {
     "last": "Last Block #",
     "time": "Since Last Block",
@@ -155,41 +159,93 @@
     "failed": "Failed Tx",
     "pending": "Pending Tx"
   },
-
   "tabs": {
-    "txH": "Transaction History",
+    "txH": "Transactions History",
     "tokens": "Tokens",
     "pending": "Pending Transactions",
     "miningH": "Mining History",
-    "contracts": "Contracts"
+    "contracts": "Contracts",
+    "live": "Live Data"
   },
-
   "bttn": {
     "more": "More",
     "less": "Less",
     "viewAll": "View All"
   },
-
   "type": {
     "in": "In",
     "out": "Out"
   },
+  "charts": {
+    "txSummary": "Tx Summary",
+    "avgTxCost": "Average Tx Costs",
+    "title": "Transactions (Last 10 blocks)",
+    "avgTitle": "Average Tx Fees",
+    "liveDescription": "Number of successful, failed, and pending transactions that have occured in the last 10 blocks",
+    "avgDescription": "Average transaction fees and average gas price in the last 10 blocks",
+    "labelString": "Sucessfull and Failed Tx ",
+    "avgGasPrice": "Average Gas Price",
+    "avgGasLimit": "Average Gas Limit",
+    "avgBlockDiff": "Average Block Difficulty",
+    "avgBlockSize": "Average Block Size",
+    "avgBlockTime": "Average Block Time",
+    "avgTxFees": "Average Transactions Fees",
+    "avgTxSuccess": "Average Number of Successfull Transactions",
+    "avgTxFail": "Average Number of Failed Transactions",
+    "avgHashRate": "Average Hash Rate",
+    "avgMiningReward": "Average Mining Rewards",
 
+    "block-difficulty-history": "Average Block Difficulty",
+    "block-time-history": "Average Block Time",
+    "block-size-history": "Average Block Size",
+    "gas-limit-history": "Average Gas Limit",
+    "gas-price-history": "Average Gas Price",
+    "hash-rate-history": "Average Hash Rate",
+    "miner-rewards-history": "Average Mining Rewards",
+    "top-miners-history": "Top Miners",
+    "tx-fail-history": "Average Number of Failed Transactionsy",
+    "tx-success-history": "Average Number of Successfull Transactions",
+    "tx-fees-history": "Tx Fees ETH",
+    "uncle-number-history": "Average Number of Uncles"
+  },
   "footer": {
-    "dicover": "Discover",
+    "discover": "Discover",
     "privPolicy": "Privacy Policy",
     "donate": "Donate",
     "btc": "BTC",
     "ens": "mewtopia.eth",
-    "copy": "Copyright 2018 All rights reserved by ",
-    "enkrypt": "enKrypt LLC"
+    "copy": "Copyright 2019 All rights reserved by ",
+    "enkrypt": "enKrypt LLC",
+    "copyEthAddress": "Copy ETH address",
+    "copyBtcAddress": "Copy BTC address"
   },
-
   "footnote": {
     "success": "Successful",
     "failed": "Failed",
     "pending": "Pending",
-    "aveTxFees": "avg Tx Fees (ETH)",
-    "aveGasPrice": "avg Gas Price (GWEI)"
+    "aveTxFees": "Avg Tx Fees (ETH)",
+    "aveGasPrice": "Avg Gas Price (GWEI)"
+  },
+  "about": {
+    "title": "What is EthVM?",
+    "text": "EthVM project is brought to you by kvhnuke,  founder of MyEtherWallet and enKrypt. EthVM is a free and open source interface for exploring and evaluting real time Ethereum blocks, transactions and more. This software is under MIT License.",
+    "git": "If you want to contribute, make a request on GitHub.",
+    "medium": "If you want to listen/share our awesome thoughts check our medium account.",
+    "twitter": "Talk to us on Twitter.",
+    "reddit": "Visit our reddit thread."
+  },
+  "social": {
+    "git": "GitHub",
+    "medium": "Medium",
+    "twitter": "Twitter",
+    "reddit": "Reddit"
+  },
+  "disclaimer": {
+    "title": "Disclaimer",
+    "text": "MIT License Copyright © 2017-2018 enKrypt LLC Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.",
+    "mit": "THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+  },
+  "tokens": {
+    "empty": "No tokens"
   }
 }

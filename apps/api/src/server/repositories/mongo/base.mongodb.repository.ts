@@ -3,12 +3,15 @@ import { Db } from 'mongodb'
 
 export const MongoEthVM = {
   collections: {
-    accounts: 'accounts',
+    balances: 'balances',
     blocks: 'blocks',
+    blockMetrics: 'block_metrics',
+    contracts: 'contracts',
     transactions: 'transactions',
     uncles: 'uncles',
     pendingTxs: 'pending_transactions',
-    statistics: 'statistics'
+    statistics: 'aggregate_block_metrics',
+    tokenTransfers: 'token_transfers'
   }
 }
 

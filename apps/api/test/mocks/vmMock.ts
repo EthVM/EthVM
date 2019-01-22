@@ -1,4 +1,4 @@
-import { Token } from '@app/server/modules/token'
+import { Token } from '@app/server/modules/tokens'
 import { VmService } from '@app/server/modules/vm'
 
 export class VmServiceImpl implements VmService {
