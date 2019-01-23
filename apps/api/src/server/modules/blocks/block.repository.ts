@@ -1,12 +1,12 @@
 import { toBlock } from '@app/server/modules/blocks'
 import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
-import { Block, SmallBlock } from 'ethvm-common'
+import { Block } from 'ethvm-common'
 
 export interface BlocksRepository {
   getBlock(hash: string): Promise<Block | null>
   getBlocks(limit: number, page: number): Promise<Block[]>
   getBlockByNumber(no: number): Promise<Block | null>
-  getBlocksMined(address: string, limit: number, page: number): Promise<SmallBlock[]>
+  getBlocksMined(address: string, limit: number, page: number): Promise<Block[]>
 }
 
 export class MongoBlockRepository extends BaseMongoDbRepository implements BlocksRepository {
@@ -52,21 +52,20 @@ export class MongoBlockRepository extends BaseMongoDbRepository implements Block
       })
   }
 
-  public getBlocksMined(address: string, limit: number, page: number): Promise<SmallBlock[]> {
+  public getBlocksMined(address: string, limit: number, page: number): Promise<Block[]> {
     return this.db
       .collection(MongoEthVM.collections.blocks)
       .find({ 'header.author': address })
-      .project({ hash: 1, number: 1 })
       .sort({ number: -1 })
       .skip(page)
       .limit(limit)
       .toArray()
       .then(resp => {
-        const b: SmallBlock[] = []
+        const b: Block[] = []
         if (!resp) {
           return b
         }
-        resp.forEach(block => b.push(block))
+        resp.forEach(block => b.unshift(toBlock(block)))
         return b
       })
   }
