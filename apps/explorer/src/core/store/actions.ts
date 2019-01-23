@@ -4,38 +4,40 @@ import { Block, Tx, PendingTx, Uncle } from '@app/core/models'
 const socket_socketNewblock = function({ commit }, raw: SocketEvent | SocketEvent[]) {
   const evs = !Array.isArray(raw) ? [raw] : raw
   evs.forEach(ev => {
-    commit(Events.newBlock, ev.value)
-    this._vm.$eventHub.$emit(Events.newBlock, new Block(ev.value))
+    commit(Events.NEW_BLOCK, ev.value)
+    this._vm.$eventHub.$emit(Events.NEW_BLOCK, new Block(ev.value))
   })
 }
 
 const socket_socketNewuncle = function({ commit }, raw: SocketEvent | SocketEvent[]) {
   const evs = !Array.isArray(raw) ? [raw] : raw
   evs.forEach(ev => {
-    commit(Events.newUncle, ev.value)
-    this._vm.$eventHub.$emit(Events.newUncle, new Uncle(ev.value))
+    commit(Events.NEW_UNCLE, ev.value)
+    this._vm.$eventHub.$emit(Events.NEW_UNCLE, new Uncle(ev.value))
   })
 }
 
 const socket_socketNewtx = function({ commit }, raw: SocketEvent | SocketEvent[]) {
   const evs = !Array.isArray(raw) ? [raw] : raw
   evs.forEach(ev => {
-    commit(Events.newTx, ev.value)
-    this._vm.$eventHub.$emit(Events.newTx, new Tx(ev.value))
+    commit(Events.NEW_TX, ev.value)
+    this._vm.$eventHub.$emit(Events.NEW_TX, new Tx(ev.value))
   })
 }
 
 const socket_socketNewptx = function({ commit }, raw: SocketEvent | SocketEvent[]) {
   const evs = !Array.isArray(raw) ? [raw] : raw
   evs.forEach(event => {
-    commit(Events.newPendingTx, event.value)
-    this._vm.$eventHub.$emit(Events.newPendingTx, new PendingTx(event.value))
+    commit(Events.NEW_PENDING_TX, event.value)
+    this._vm.$eventHub.$emit(Events.NEW_PENDING_TX, new PendingTx(event.value))
   })
 }
 
 // eslint-disable-next-line
 const socket_socketConnect = function({}) {
+  console.log('Establishing socket connection to default rooms...')
   this._vm.$socket.emit(Events.join, { rooms: SocketDefaultRooms })
+  console.log('Joined to SocketDefaultRooms!')
 }
 
 export default {

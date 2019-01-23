@@ -108,7 +108,7 @@ export default class ChartLiveTransactions extends Vue {
       this.chartData = this.initData
       this.redraw = true
     })
-    this.$eventHub.$on(Events.newBlock, _block => {
+    this.$eventHub.$on(Events.NEW_BLOCK, _block => {
       if (this.chartData.datasets[0]) {
         this.redraw = false
         const stats = _block.getStats()
@@ -126,7 +126,7 @@ export default class ChartLiveTransactions extends Vue {
 
   beforeDestroy() {
     this.$eventHub.$off(Events.pastBlocksR)
-    this.$eventHub.$off(Events.newBlock)
+    this.$eventHub.$off(Events.NEW_BLOCK)
   }
 
   // Computed
