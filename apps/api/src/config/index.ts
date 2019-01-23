@@ -105,7 +105,7 @@ const config = convict({
         },
         tokens_smart_contract: {
           address: {
-            default: '0xbe1ecf8e340f13071761e0eef054d9a511e1cb56',
+            default: '0x2783c0A4Bfd3721961653a9e9939Fc63687bf07f',
             format: String,
             env: 'ETHVM_ETH_VM_ENGINE_TOKENS_SMART_CONTRACT_ADDRESS'
           }

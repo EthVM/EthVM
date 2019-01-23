@@ -25,8 +25,8 @@ export class VmEngine {
     address = address.startsWith('0x') ? address : '0x' + address
 
     return new Promise(async (resolve, reject) => {
-      const argss = ['address', 'uint32', 'uint32']
-      const vals = [address, 4, 0]
+      const argss = ['address', 'bool', 'bool', 'bool', 'uint256']
+      const vals = [address, true, true, true, 0]
       const encoded = this.encodeCall('getAllBalance', argss, vals)
 
       try {
