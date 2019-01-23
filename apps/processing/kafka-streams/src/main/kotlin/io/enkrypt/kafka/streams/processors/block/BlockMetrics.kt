@@ -5,6 +5,7 @@ import io.enkrypt.avro.processing.BlockMetricsRecord
 import io.enkrypt.avro.processing.MetricKeyRecord
 import io.enkrypt.avro.processing.MetricRecord
 import io.enkrypt.common.extensions.bigInteger
+import io.enkrypt.common.extensions.byteBuffer
 import io.enkrypt.common.extensions.isSuccess
 import io.enkrypt.common.extensions.unsignedBigInteger
 import io.enkrypt.common.extensions.unsignedByteBuffer
@@ -61,6 +62,7 @@ object BlockMetrics {
 
     return BlockMetricsRecord.newBuilder()
       .setTotalTxs(totalTxs)
+      .setNumUncles(block.getUncles().size)
       .setNumSuccessfulTxs(numSuccessfulTxs)
       .setNumFailedTxs(numFailedTxs)
       .setNumPendingTxs(numPendingTxs)
@@ -97,6 +99,7 @@ object BlockMetrics {
       .newBuilder()
       .setDate(startOfDayEpoch)
 
+    val numUncles = metrics.getNumUncles()
     val totalTxs = metrics.getTotalTxs()
     val numSuccessfulTxs = metrics.getNumSuccessfulTxs()
     val numFailedTxs = metrics.getNumFailedTxs()
@@ -110,44 +113,52 @@ object BlockMetrics {
 
     return listOf(
       KeyValue(
+        keyBuilder.setName("AvgNumUncles").build(),
+        MetricRecord.newBuilder().`setInt$`(numUncles * intMultiplier).build()
+      ),
+      KeyValue(
         keyBuilder.setName("TotalTxs").build(),
+        MetricRecord.newBuilder().`setLong$`(totalTxs.toLong() * intMultiplier).build()
+      ),
+      KeyValue(
+        keyBuilder.setName("AvgTxs").build(),
         MetricRecord.newBuilder().`setInt$`(totalTxs * intMultiplier).build()
       ),
       KeyValue(
-        keyBuilder.setName("NumSuccessfulTxs").build(),
+        keyBuilder.setName("AvgSuccessfulTxs").build(),
         MetricRecord.newBuilder().`setInt$`(numSuccessfulTxs * intMultiplier).build()
       ),
       KeyValue(
-        keyBuilder.setName("NumFailedTxs").build(),
+        keyBuilder.setName("AvgFailedTxs").build(),
         MetricRecord.newBuilder().`setInt$`(numFailedTxs * intMultiplier).build()
       ),
       KeyValue(
-        keyBuilder.setName("NumPendingTxs").build(),
+        keyBuilder.setName("AvgPendingTxs").build(),
         MetricRecord.newBuilder().`setInt$`(numPendingTxs * intMultiplier).build()
       ),
       KeyValue(
         keyBuilder.setName("TotalDifficulty").build(),
-        MetricRecord.newBuilder().setBigInteger(totalDifficulty.times(bigIntMultiplier).unsignedByteBuffer()).build()
+        MetricRecord.newBuilder().setBigInteger(totalDifficulty.times(bigIntMultiplier).byteBuffer()).build()
       ),
       KeyValue(
         keyBuilder.setName("TotalGasPrice").build(),
-        MetricRecord.newBuilder().setBigInteger(totalGasPrice.times(bigIntMultiplier).unsignedByteBuffer()).build()
-      ),
-      KeyValue(
-        keyBuilder.setName("AvgGasLimit").build(),
-        MetricRecord.newBuilder().setBigInteger(avgGasLimit.times(bigIntMultiplier).unsignedByteBuffer()).build()
+        MetricRecord.newBuilder().setBigInteger(totalGasPrice.times(bigIntMultiplier).byteBuffer()).build()
       ),
       KeyValue(
         keyBuilder.setName("AvgGasPrice").build(),
-        MetricRecord.newBuilder().setBigInteger(avgGasPrice.times(bigIntMultiplier).unsignedByteBuffer()).build()
+        MetricRecord.newBuilder().setBigInteger(avgGasPrice.times(bigIntMultiplier).byteBuffer()).build()
+      ),
+      KeyValue(
+        keyBuilder.setName("AvgGasLimit").build(),
+        MetricRecord.newBuilder().setBigInteger(avgGasLimit.times(bigIntMultiplier).byteBuffer()).build()
       ),
       KeyValue(
         keyBuilder.setName("TotalTxsFees").build(),
-        MetricRecord.newBuilder().setBigInteger(totalTxFees.times(bigIntMultiplier).unsignedByteBuffer()).build()
+        MetricRecord.newBuilder().setBigInteger(totalTxFees.times(bigIntMultiplier).byteBuffer()).build()
       ),
       KeyValue(
         keyBuilder.setName("AvgTxsFees").build(),
-        MetricRecord.newBuilder().setBigInteger(avgTxFees.times(bigIntMultiplier).unsignedByteBuffer()).build()
+        MetricRecord.newBuilder().setBigInteger(avgTxFees.times(bigIntMultiplier).byteBuffer()).build()
       )
     )
   }

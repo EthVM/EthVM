@@ -161,6 +161,7 @@ protocol Processing {
     int numSuccessfulTxs = 0;
     int numFailedTxs = 0;
     int numPendingTxs = 0;
+    int numUncles = 0;
     bytes totalDifficulty;
     bytes totalGasPrice;
     bytes avgGasLimit;
