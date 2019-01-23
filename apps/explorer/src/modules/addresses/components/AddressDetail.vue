@@ -1,23 +1,24 @@
 <template>
-  <v-card color="white" flat class="pt-3 pr-3 pl-3">
+  <v-card color="white" flat class="pt-3 pr-2 pl-2">
     <v-layout row grid-list-lg align-center pb-1>
-        <blockies :address="account.address" />
-        <v-layout wrap column fill-height pl-2>
-          <v-flex xs12 pb-0>
-            <v-layout row align-center justify-start >
-              <v-card-title class="title font-weight-bold">{{ title }}</v-card-title>
-              <v-chip v-if="account.type === 'address' && account.isMiner" color="txSuccess" text-color="white" small>{{ $t('block.miner') }}</v-chip>
-              <v-chip v-if="account.type === 'address' && account.isCreator" color="success" text-color="white" small>{{ $t('addrOverview.creator') }}</v-chip>
-            </v-layout>
-          </v-flex>
-          <v-flex xs12 pt-0>
-            <v-layout row align-center justify-start>
-              <v-card-text class="text-truncate pt-0">{{ account.address }}
-               <app-copy-to-clip v-if="$vuetify.breakpoint.smAndUp" :value-to-copy="account.address" />
-              </v-card-text>
-            </v-layout>
-          </v-flex>
-        </v-layout>
+      <blockies :address="account.address" pl-3 />
+      <v-layout wrap column fill-height pl-2>
+        <v-flex xs12 pb-0>
+          <v-layout row align-center justify-start>
+            <v-card-title class="title font-weight-bold">{{ title }}</v-card-title>
+            <v-chip v-if="account.type === 'address' && account.isMiner" color="txSuccess" text-color="white" small>{{ $t('block.miner') }}</v-chip>
+            <v-chip v-if="account.type === 'address' && account.isCreator" color="success" text-color="white" small>{{ $t('addrOverview.creator') }}</v-chip>
+          </v-layout>
+        </v-flex>
+        <v-flex xs12 pt-0>
+          <v-layout row align-center justify-start>
+            <v-card-text class="text-truncate pt-0"
+              >{{ account.address }}
+              <app-copy-to-clip v-if="$vuetify.breakpoint.smAndUp" :value-to-copy="account.address" />
+            </v-card-text>
+          </v-layout>
+        </v-flex>
+      </v-layout>
       <v-flex hidden-xs-only fill-height mr-3>
         <v-layout justify-end> <address-qr :address="account.address" :large="true" /> </v-layout>
       </v-flex>

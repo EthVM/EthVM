@@ -53,5 +53,6 @@ export default class Blockies extends Vue {
   min-width: 50px;
   height: 100%;
   margin: 5px;
+  margin-left: 20px;
 }
 </style>

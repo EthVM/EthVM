@@ -1,5 +1,5 @@
 <template>
-  <v-card color="white" flat class="pt-3 pr-4 pl-4 pb-2">
+  <v-card color="white" flat class="pt-3 pr-2 pl-2 pb-2">
     <v-layout row wrap align-center pb-1>
       <v-flex xs8>
         <v-card-title class="title font-weight-bold">{{ getTitle }}</v-card-title>

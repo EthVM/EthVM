@@ -1,5 +1,5 @@
 <template>
-  <v-card color="white" flat v-if="transactions" class="pl-3 pr-3 pt-2 pb-0">
+  <v-card color="white" flat v-if="transactions" class="pt-3 pr-2 pl-2">
     <!-- Tx Header -->
     <v-layout align-center justify-space-between wrap row fill-height>
       <!-- Search Box -->

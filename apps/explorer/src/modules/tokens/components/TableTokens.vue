@@ -1,5 +1,5 @@
 <template>
-  <v-card color="white" flat v-if="tokens" class="pl-3 pr-3 pt-2 pb-0">
+  <v-card color="white" flat v-if="tokens" class="pt-3 pr-2 pl-2 pb-0">
     <v-layout row wrap justify-space-between mb-4>
       <v-flex xs12 sm6>
         <v-card class="primary white--text pl-2" flat>
