@@ -9,7 +9,7 @@
 
       <app-tabs :tabs="tabs">
         <!-- Transactions -->
-        <v-tab-item slot="tabs-item" value="tab-0" class="pa-0">
+        <v-tab-item slot="tabs-item" value="tab-0">
           <table-address-txs v-if="!txsError" :loading="txsLoading" :address="account.address" :transactions="account.txs" />
           <app-error-no-data v-else />
         </v-tab-item>

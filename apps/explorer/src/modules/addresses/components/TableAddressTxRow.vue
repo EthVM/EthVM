@@ -1,18 +1,17 @@
 <template>
-  <div class="last-transactions">
+  <div>
     <!-- If no Transactions: -->
     <v-card v-if="total == 0" flat>
       <v-card-text class="text-xs-center secondary--text">{{ getText }}</v-card-text>
     </v-card>
     <v-card v-else color="white" flat class="pt-0 pb-2">
-      <!-- <v-layout justify-end class="pb-1"> <app-footnote :footnotes="footnote" /> </v-layout> -->
       <!-- Table Header -->
       <v-card color="primary" flat class="white--text pl-3 pr-1" height="40px">
         <v-layout align-center justify-start row fill-height pr-3>
-          <v-flex xs6 sm8 md5 pl-3>
-            <h5 class="pl-4">{{ $t('tableHeader.txN') }}</h5>
+          <v-flex xs9 sm9 md5 pl-3>
+            <h5>{{ $t('tableHeader.txN') }}</h5>
           </v-flex>
-          <v-flex xs6 sm3 md2>
+          <v-flex xs3 sm2 md2>
             <h5>{{ $t('common.eth') }}</h5>
           </v-flex>
           <v-flex hidden-sm-and-down md2>
@@ -31,31 +30,26 @@
           <v-flex xs12>
             <v-card v-for="tx in transactions" class="transparent pb-1" flat :key="tx.getHash()">
               <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
-                <v-flex d-flex xs6 sm8 md5 pr-3>
-                  <div v-if="!type">
-                    <v-icon v-if="getType(tx)" class="fas fa-circle warning--text pr-3" small />
-                    <v-icon v-else class="fas fa-circle success--text pr-3" small />
-                  </div>
+                <v-flex d-flex xs9 sm9 md5 pr-3>
                   <v-layout row wrap align-center pb-1>
                     <v-flex d-flex xs12 pb-2>
                       <router-link class="primary--text text-truncate font-italic psmall" :to="'/tx/' + tx.getHash()">{{ tx.getHash() }}</router-link>
                     </v-flex>
                     <v-flex hidden-xs-and-down sm12 pt-0>
                       <v-layout row pl-2>
-                        <p class="text-truncate info--text mb-0">
+                        <p v-if="!getType(tx)" class="text-truncate info--text mb-0">
                           {{ $t('tx.from') }}:
                           <router-link :to="'/address/' + tx.getFrom().toString()" class="secondary--text font-italic font-weight-regular">{{
                             tx.getFrom().toString()
                           }}</router-link>
                         </p>
-                        <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
-                        <p class="text-truncate info--text font-weight-thin mb-0" v-if="!tx.getContractAddress().isEmpty()">
+                        <p class="text-truncate info--text font-weight-thin mb-0" v-if="getType(tx) && !tx.getContractAddress().isEmpty()">
                           {{ $t('tx.contract') }}:
                           <router-link class="secondary--text font-italic font-weight-regular" :to="'/address/' + tx.getContractAddress().toString()">{{
                             tx.getContractAddress().toString()
                           }}</router-link>
                         </p>
-                        <p class="text-truncate info--text font-weight-thin mb-0" v-else>
+                        <p class="text-truncate info--text font-weight-thin mb-0" v-if="getType(tx) && tx.getContractAddress().isEmpty()">
                           <strong>{{ $t('tx.to') }}:</strong>
                           <router-link class="secondary--text font-italic font-weight-regular" :to="'/address/' + tx.getTo().toString()">{{
                             tx.getTo().toString()
@@ -65,7 +59,7 @@
                     </v-flex>
                   </v-layout>
                 </v-flex>
-                <v-flex d-flex xs6 sm3 md2>
+                <v-flex d-flex xs3 sm2 md2 pr-0>
                   <v-layout
                     align-center
                     row
@@ -78,9 +72,9 @@
                       )
                     "
                   >
-                    <p :class="[tx.getStatus() ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">{{ getShortValue(tx.getValue().toEth()) }}</p>
+                    <p :class="[!getType(tx) ? 'success--text mb-0' : 'error--text mb-0']">{{ getShortValue(tx.getValue().toEth()) }}</p>
                     <v-tooltip bottom>
-                      <v-icon slot="activator" small class="white--text text-xs-center">fa fa-question-circle</v-icon>
+                      <v-icon slot="activator" small class="info--text text-xs-center ml-1">fa fa-question-circle</v-icon>
                       <span>{{
                         formatStr(
                           tx
@@ -91,7 +85,7 @@
                       }}</span>
                     </v-tooltip>
                   </v-layout>
-                  <p v-else :class="[tx.getStatus() ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">{{ tx.getValue().toEth() }}</p>
+                  <p v-else :class="[!getType(tx) ? 'success--text mb-0' : 'warning--text mb-0']">{{ tx.getValue().toEth() }}</p>
                 </v-flex>
                 <v-flex hidden-sm-and-down md2>
                   <p class="black--text text-truncate mb-0">{{ tx.getGasUsed().toNumber() }}</p>
@@ -125,26 +119,14 @@ export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
   @Prop({ type: Number, default: 0 }) total!: number
   @Prop({ type: Boolean, default: false }) type!: boolean
 
-  data() {
-    return {
-      footnote: [
-        {
-          color: 'success',
-          text: this.$i18n.t('type.in'),
-          icon: 'fa fa-circle'
-        },
-        {
-          color: 'warning',
-          text: this.$i18n.t('type.out'),
-          icon: 'fa fa-circle'
-        }
-      ]
-    }
-  }
-
   // Methods
   getType(tx): boolean {
-    return tx.getFrom() === this.account
+    return (
+      tx
+        .getFrom()
+        .toString()
+        .toUpperCase() === this.account.toUpperCase()
+    )
   }
 
   log(tx) {}

@@ -76,7 +76,6 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 export default class TableBlocks extends Vue {
   @Prop({ type: Boolean, default: true }) loading: boolean
   @Prop({ type: Boolean, default: false }) error: boolean
-
   @Prop({ type: String, default: 'blocks' }) pageType!: string
   @Prop({ type: String, default: '' }) showStyle!: string
   @Prop(Array) blocks!: Block[]

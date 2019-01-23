@@ -21,8 +21,10 @@
         </v-layout>
       </v-flex> -->
       <!-- End Search Box -->
-      <v-spacer />
       <!-- Tx Input Filter -->
+      <v-flex d-flex xs12 sm8 md7>
+        <v-layout justify-start class="pl-3"><app-footnotes :footnotes="footnote"/></v-layout>
+      </v-flex>
       <v-flex d-flex xs12 sm4 md3>
         <v-layout row align-center justify-start fill-height height="40px">
           <v-flex>
@@ -57,6 +59,7 @@
 
 <script lang="ts">
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
+import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import TableAddressTxRow from '@app/modules/addresses/components/TableAddressTxRow.vue'
 import { Tx } from '@app/core/models'
 import { Vue, Component, Prop } from 'vue-property-decorator'
@@ -64,6 +67,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 @Component({
   components: {
     AppInfoLoad,
+    AppFootnotes,
     TableAddressTxRow
   }
 })
@@ -159,6 +163,20 @@ export default class TableAddressTxs extends Vue {
       {
         text: this.$i18n.t('filter.out'),
         value: 2
+      }
+    ]
+  }
+  get footnote() {
+    return [
+      {
+        color: 'success',
+        text: this.$i18n.t('filter.in'),
+        icon: 'fa fa-circle'
+      },
+      {
+        color: 'error',
+        text: this.$i18n.t('filter.out'),
+        icon: 'fa fa-circle'
       }
     ]
   }
