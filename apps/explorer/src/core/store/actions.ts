@@ -35,9 +35,7 @@ const socket_socketNewptx = function({ commit }, raw: SocketEvent | SocketEvent[
 
 // eslint-disable-next-line
 const socket_socketConnect = function({}) {
-  console.log('Establishing socket connection to default rooms...')
   this._vm.$socket.emit(Events.join, { rooms: SocketDefaultRooms })
-  console.log('Joined to SocketDefaultRooms!')
 }
 
 export default {

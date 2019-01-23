@@ -1,6 +1,6 @@
 import config from '@app/config'
 import { logger } from '@app/logger'
-import { MongoStreamer } from '@app/server/core/streams'
+import { NullStreamer, MongoStreamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
 import { BalancesServiceImpl, MongoBalancesRepository } from '@app/server/modules/balances'
 import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blocks'
@@ -99,8 +99,9 @@ async function bootstrapServer() {
   // Create streamer
   // ---------------
   logger.debug('bootstrapper -> Initializing streamer')
-  const streamer = new MongoStreamer(db, new EventEmitter())
-  await streamer.initialize()
+  // const streamer = new MongoStreamer(db, new EventEmitter())
+  // await streamer.initialize()
+  const streamer = new NullStreamer()
 
   // Create server
   logger.debug('bootstrapper -> Initializing server')
