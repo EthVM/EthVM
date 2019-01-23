@@ -131,31 +131,8 @@ export default class PageDetailsAddress extends Vue {
   // State Machine (not needed to be reactive, this is why we use undefined instead of null)
   sm: TinySM = undefined
 
-  data() {
-    return {
-      tabs: [
-        {
-          id: '0',
-          title: this.$i18n.t('tabs.txH'),
-          isActive: true
-        },
-        {
-          id: '1',
-          title: this.$i18n.t('tabs.tokens'),
-          isActive: false
-        },
-        {
-          id: '2',
-          title: this.$i18n.t('tabs.pending'),
-          isActive: false
-        }
-      ]
-    }
-  }
-
-  created() {
+  mounted() {
     const ref = this.addressRef
-
     // 1. Create State Machine
     this.sm = new TinySM([
       {
@@ -341,8 +318,35 @@ export default class PageDetailsAddress extends Vue {
     this.sm.transition('initial')
   }
 
-  // Methods
-  updateTabs() {
+
+
+  // Computed
+  get crumbs() {
+    return [
+      {
+        text: this.$i18n.t('title.address'),
+        disabled: true
+      }
+    ]
+  }
+  get tabs() {
+    const tabs =  [
+        {
+          id: '0',
+          title: this.$i18n.t('tabs.txH'),
+          isActive: true
+        },
+        {
+          id: '1',
+          title: this.$i18n.t('tabs.tokens'),
+          isActive: false
+        },
+        {
+          id: '2',
+          title: this.$i18n.t('tabs.pending'),
+          isActive: false
+        }
+      ]
     if (this.account.miner) {
       const newTab = {
         id: '3',
@@ -360,16 +364,7 @@ export default class PageDetailsAddress extends Vue {
       }
       this.tabs.push(newTab)
     }
-  }
-
-  // Computed
-  get crumbs() {
-    return [
-      {
-        text: this.$i18n.t('title.address'),
-        disabled: true
-      }
-    ]
+    return tabs
   }
 }
 </script>
