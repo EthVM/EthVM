@@ -44,7 +44,7 @@ object BlockMetrics {
 
         totalGasLimit += tx.getGas().unsignedBigInteger()!!
         totalGasPrice += tx.getGasPrice().unsignedBigInteger()!!
-        totalTxsFees += tx.getGasPrice().unsignedBigInteger()!!
+        totalTxsFees += receipt.getGasUsed().unsignedBigInteger()!! * tx.getGasPrice().unsignedBigInteger()!!
       }
 
     var avgGasPrice = BigInteger.ZERO
@@ -117,10 +117,8 @@ object BlockMetrics {
     val numPendingTxs = metrics.getNumPendingTxs()
     val avgMinerReward = metrics.getAvgMinerReward().unsignedBigInteger()!!
     val totalDifficulty = metrics.getTotalDifficulty().unsignedBigInteger()!!
-    val totalGasPrice = metrics.getTotalGasPrice().unsignedBigInteger()!!
     val avgGasLimit = metrics.getAvgGasLimit().unsignedBigInteger()!!
     val avgGasPrice = metrics.getAvgGasPrice().unsignedBigInteger()!!
-    val totalTxFees = metrics.getTotalTxFees().unsignedBigInteger()!!
     val avgTxFees = metrics.getAvgTxFees().unsignedBigInteger()!!
 
     return listOf(
@@ -153,20 +151,12 @@ object BlockMetrics {
         MetricRecord.newBuilder().setBigInteger(totalDifficulty.times(bigIntMultiplier).byteBuffer()).build()
       ),
       KeyValue(
-        keyBuilder.setName("AvgTotalGasPricePerBlock").build(),
-        MetricRecord.newBuilder().setBigInteger(totalGasPrice.times(bigIntMultiplier).byteBuffer()).build()
-      ),
-      KeyValue(
         keyBuilder.setName("AvgGasPricePerBlock").build(),
         MetricRecord.newBuilder().setBigInteger(avgGasPrice.times(bigIntMultiplier).byteBuffer()).build()
       ),
       KeyValue(
         keyBuilder.setName("AvgGasLimitPerBlock").build(),
         MetricRecord.newBuilder().setBigInteger(avgGasLimit.times(bigIntMultiplier).byteBuffer()).build()
-      ),
-      KeyValue(
-        keyBuilder.setName("AvgTotalTxsFeesPerBlock").build(),
-        MetricRecord.newBuilder().setBigInteger(totalTxFees.times(bigIntMultiplier).byteBuffer()).build()
       ),
       KeyValue(
         keyBuilder.setName("AvgTxFeePerBlock").build(),
