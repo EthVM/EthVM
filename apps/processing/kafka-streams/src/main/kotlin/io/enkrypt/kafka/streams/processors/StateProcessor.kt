@@ -97,7 +97,7 @@ class StateProcessor : AbstractKafkaProcessor() {
         Materialized.with(Serdes.MetricKey(), Serdes.Metric())
       )
       .toStream()
-      .filter{ k, _ -> k.getDate() > 0}   // initial entry is emitted for 0 which we want to discard
+      .filter { k, _ -> k.getDate() > 0 } // initial entry is emitted for 0 which we want to discard
       .to(Topics.AggregateBlocksMetricsByDay, Produced.with(Serdes.MetricKey(), Serdes.Metric()))
 
     // Average metrics
@@ -120,7 +120,7 @@ class StateProcessor : AbstractKafkaProcessor() {
         this::average,
         Materialized.with(Serdes.MetricKey(), Serdes.Metric())
       ).toStream()
-      .filter{ k, _ -> k.getDate() > 0}   // initial entry is emitted for 0 which we want to discard
+      .filter { k, _ -> k.getDate() > 0 } // initial entry is emitted for 0 which we want to discard
       .to(Topics.AggregateBlocksMetricsByDay, Produced.with(Serdes.MetricKey(), Serdes.Metric()))
   }
 
