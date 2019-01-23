@@ -104,10 +104,14 @@ class StateProcessor : AbstractKafkaProcessor() {
 
     val avgMetricsGrouped = blockMetricsByDay
       .filter { k, _ -> k.getName().startsWith("Avg") }
-      .filter(this::noNegativeValuesFilter)   // negative values are used to reverse the effect of a block
       .groupByKey(Grouped.with(Serdes.MetricKey(), Serdes.Metric()))
 
-    val avgMetricsCount = avgMetricsGrouped
+    // TODO it may be possible to use a reduce to filter out negatives in the count and would be less expensive
+
+    val avgMetricsCount = blockMetricsByDay
+      .filter { k, _ -> k.getName().startsWith("Avg") }
+      .filter(this::noNegativeValuesFilter)   // negative values are used to reverse the effect of a block
+      .groupByKey(Grouped.with(Serdes.MetricKey(), Serdes.Metric()))
       .count(Materialized.with(Serdes.MetricKey(), KafkaSerdes.Long()))
 
     avgMetricsGrouped
@@ -159,7 +163,7 @@ class StateProcessor : AbstractKafkaProcessor() {
 
     if (metric.getBigInteger() != null) {
       val value = metric.getBigInteger().bigInteger()!!
-      return value < BigInteger.ZERO
+      return value >= BigInteger.ZERO
     }
 
     return true
