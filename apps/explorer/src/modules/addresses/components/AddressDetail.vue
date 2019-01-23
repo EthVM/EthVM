@@ -29,9 +29,9 @@
       <v-flex xs12 md4>
         <v-card class="primary white--text pl-2" flat>
           <v-card-text class="pb-0">{{ $t('addrOverview.balance') }}</v-card-text>
-          <v-layout align-center  row v-if="!isShortValue(account.balance.toEth().toString())">
-             <v-card-title class="headline text-truncate pr-1">{{ getShortValue(account.balance.toEth()) }} {{ $t('common.eth') }} </v-card-title>
-            <v-tooltip  bottom>
+          <v-layout align-center row v-if="!isShortValue(account.balance.toEth().toString())">
+            <v-card-title class="headline text-truncate pr-1">{{ getShortValue(account.balance.toEth()) }} {{ $t('common.eth') }} </v-card-title>
+            <v-tooltip bottom>
               <v-icon slot="activator" small class="white--text text-xs-center">fa fa-question-circle</v-icon>
               <span>{{ formatStr(account.balance.toEth().toString()) }} {{ $t('common.eth') }}</span>
             </v-tooltip>
@@ -48,7 +48,7 @@
       <v-flex xs12 md4>
         <v-card class="warning white--text pl-2" flat>
           <v-card-text class="pb-0">{{ $t('addrOverview.txN') }}</v-card-text>
-          <v-card-title class="headline">{{formatStr(account.totalTxs.toString()) }}</v-card-title>
+          <v-card-title class="headline">{{ formatStr(account.totalTxs.toString()) }}</v-card-title>
         </v-card>
       </v-flex>
     </v-layout>

@@ -12,7 +12,10 @@ BN.config({ FORMAT: format })
 export class StringConcatMixin extends Vue {
   // Methods
   getRoundNumber(newNumber, round = 2) {
-    return new BN(newNumber).decimalPlaces(round).toFormat().toString()
+    return new BN(newNumber)
+      .decimalPlaces(round)
+      .toFormat()
+      .toString()
   }
 
   isShortValue(rawStr = ''): boolean {
