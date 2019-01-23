@@ -1,6 +1,6 @@
 import config from '@app/config'
 import { logger } from '@app/logger'
-import { NullStreamer } from '@app/server/core/streams'
+import { NullStreamer, MongoStreamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
 import { BalancesServiceImpl, MongoBalancesRepository } from '@app/server/modules/balances'
 import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blocks'
@@ -14,6 +14,7 @@ import { MongoTxsRepository, TxsServiceImpl } from '@app/server/modules/txs'
 import { MongoUncleRepository, UnclesServiceImpl } from '@app/server/modules/uncles'
 import { VmEngine, VmServiceImpl } from '@app/server/modules/vm'
 import { RedisCacheRepository } from '@app/server/repositories'
+import * as EventEmitter from 'eventemitter3'
 import * as Redis from 'ioredis'
 import { MongoClient } from 'mongodb'
 
@@ -97,9 +98,8 @@ async function bootstrapServer() {
 
   // Create streamer
   // ---------------
-  // TODO: Restore proper MongoStreamer when we have intelligent notification of events in Kafka
-  // logger.debug('bootstrapper -> Initializing streamer')
-  // const streamer = new MongoStreamer(db, emitter)
+  logger.debug('bootstrapper -> Initializing streamer')
+  // const streamer = new MongoStreamer(db, new EventEmitter())
   // await streamer.initialize()
   const streamer = new NullStreamer()
 
