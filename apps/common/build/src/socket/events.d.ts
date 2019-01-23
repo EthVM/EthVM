@@ -6,10 +6,11 @@ export interface SocketEvent {
 export declare const Events: {
     join: string;
     leave: string;
-    newTx: string;
-    newPendingTx: string;
-    newBlock: string;
-    newUncle: string;
+    NEW_BLOCK: string;
+    NEW_PENDING_TX: string;
+    NEW_BLOCK_STAT: string;
+    NEW_TX: string;
+    NEW_UNCLE: string;
     pastTxsR: string;
     pastBlocksR: string;
     getAddressBalance: string;

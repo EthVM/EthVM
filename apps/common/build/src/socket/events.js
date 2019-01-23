@@ -5,10 +5,11 @@ exports.Events = {
     join: "join",
     leave: "leave",
     // Ouputs
-    newTx: "NEW_TX",
-    newPendingTx: "NEW_PENDING_TX",
-    newBlock: "NEW_BLOCK",
-    newUncle: "NEW_UNCLE",
+    NEW_BLOCK: "NEW_BLOCK",
+    NEW_PENDING_TX: "NEW_PENDING_TX",
+    NEW_BLOCK_STAT: "NEW_BLOCKSTAT",
+    NEW_TX: "NEW_TX",
+    NEW_UNCLE: "NEW_UNCLE",
     pastTxsR: "PAST_TXS_RECEIVED",
     pastBlocksR: "PAST_BLOCKS_RECEIVED",
     // Addresses
@@ -54,4 +55,4 @@ exports.Events = {
     getAverageMinerRewardsStats: "get-average-miner-rewards-stats",
     getAverageTotalTxs: "get-average-total-txs-stats"
 };
-exports.SocketDefaultRooms = ["blocks", "txs", "uncles", "pendingTxs"];
+exports.SocketDefaultRooms = ["blocks", "pendingTxs", "blockStat"];

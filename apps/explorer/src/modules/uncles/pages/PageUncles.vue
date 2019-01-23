@@ -31,9 +31,9 @@ export default class PageUncles extends Vue {
         page: 0
       },
       (err, uncles) => {
-        this.$store.commit(Events.newUncle, uncles)
+        this.$store.commit(Events.NEW_UNCLE, uncles)
         if (uncles && uncles.length > 0) {
-          this.$eventHub.$emit(Events.newUncle)
+          this.$eventHub.$emit(Events.NEW_UNCLE)
         }
       }
     )

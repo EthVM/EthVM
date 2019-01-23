@@ -5,16 +5,18 @@ export interface SmallBlock {
     hash: string;
 }
 export interface BlockStats {
-    successfulTxs?: number;
-    failedTxs?: number;
-    pendingTxs?: number;
-    processingTimeMs?: number;
-    txs?: number;
-    internalTxs?: number;
-    avgGasPrice?: number;
-    avgTxsFees?: number;
-    totalGasPrice?: number;
-    totalTxsFees?: number;
+    hash: string;
+    avgGasPrice: string;
+    avgTxsFees: string;
+    numFailedTxs: number;
+    numPendingTxs: number;
+    numSuccessfulTxs: number;
+    totalDifficulty: string;
+    difficulty: string;
+    processingTimeMs: number;
+    totalGasPrice: string;
+    totalTxsFees: string;
+    totalTxs: number;
 }
 export interface Reward {
     address: string;

@@ -30,9 +30,9 @@ export default class PagePendingTxs extends Vue {
         page: 0
       },
       (err, pTxs) => {
-        this.$store.commit(Events.newPendingTx, pTxs)
+        this.$store.commit(Events.NEW_PENDING_TX, pTxs)
         if (pTxs && pTxs.length > 0) {
-          this.$eventHub.$emit(Events.newPendingTx)
+          this.$eventHub.$emit(Events.NEW_PENDING_TX)
         }
       }
     )
