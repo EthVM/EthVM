@@ -15,7 +15,7 @@ export class BalancesServiceImpl implements BalancesService {
   }
 
   public getAddressTokenBalance(address: string): Promise<any> {
-    return this.vme.getBalance(address)
+    return this.vme.getTokensBalance(address)
   }
 
 }
