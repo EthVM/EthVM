@@ -13,6 +13,7 @@ export interface StatisticsRepository {
   getTotalTxsFees(start: Date, end: Date): Promise<Statistic[]>
   getAverageTxFee(start: Date, end: Date): Promise<Statistic[]>
   getAverageMinerReward(start: Date, end: Date): Promise<Statistic[]>
+  getAverageBlockTime(start: Date, end: Date): Promise<Statistic[]>
 }
 
 export class MongoStatisticsRepository extends BaseMongoDbRepository implements StatisticsRepository {
@@ -55,6 +56,10 @@ export class MongoStatisticsRepository extends BaseMongoDbRepository implements 
 
   public getAverageMinerReward(start: Date, end: Date): Promise<Statistic[]> {
     return this.retrieveFromMongo('AvgMinerRewardPerBlock', start, end)
+  }
+
+  public getAverageBlockTime(start: Date, end: Date): Promise<Statistic[]> {
+    return this.retrieveFromMongo('AvgBlockTime', start, end)
   }
 
   private retrieveFromMongo(event: string, start: Date, end: Date): Promise<Statistic[]> {

@@ -25,7 +25,7 @@ import { Events } from 'ethvm-common'
     AppChart
   }
 })
-export default class ChartGasPrice extends Mixins(ChartMixin) {
+export default class ChartBlockTime extends Mixins(ChartMixin) {
   title = 'Average Block Time history'
   labelString = 'Average Block time (sec)'
   //Temp Event String

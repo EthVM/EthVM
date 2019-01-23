@@ -83,6 +83,7 @@ object BlockMetrics {
       .setAvgGasPrice(avgGasPrice.unsignedByteBuffer())
       .setTotalTxFees(totalTxsFees.unsignedByteBuffer())
       .setAvgTxFees(avgTxsFees.unsignedByteBuffer())
+      .setBlockTime(block.getBlockTime())
       .build()
   }
 
@@ -122,6 +123,10 @@ object BlockMetrics {
     val avgTxFees = metrics.getAvgTxFees().unsignedBigInteger()!!
 
     return listOf(
+      KeyValue(
+        keyBuilder.setName("AvgBlockTime").build(),
+        MetricRecord.newBuilder().`setLong$`(block.getBlockTime() ?: 0L).build()
+      ),
       KeyValue(
         keyBuilder.setName("AvgMinerRewardPerBlock").build(),
         MetricRecord.newBuilder().setBigInteger(avgMinerReward.times(bigIntMultiplier).byteBuffer()).build()
