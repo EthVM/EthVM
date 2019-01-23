@@ -43,6 +43,7 @@ exports.Events = {
     search: "search",
     // Stats
     getAverageTotalDifficultyStats: "get-average-difficulty-stats",
+    getAverageGasLimitStats: "get-average-gas-limit-stats",
     getAverageGasPriceStats: "get-average-gas-price-stats",
     getAverageTxFeeStats: "get-average-tx-fee-stats",
     getAverageSuccessfullTxStats: "get-average-successfull-tx-stats",

@@ -34,6 +34,7 @@ export declare const Events: {
     getTokenBalance: string;
     search: string;
     getAverageTotalDifficultyStats: string;
+    getAverageGasLimitStats: string;
     getAverageGasPriceStats: string;
     getAverageTxFeeStats: string;
     getAverageSuccessfullTxStats: string;

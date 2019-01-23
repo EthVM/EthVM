@@ -93,7 +93,7 @@ object BlockMetrics {
 
     val instant = Instant.ofEpochSecond(block.getHeader().getTimestamp())
     val dateTime = ZonedDateTime.ofInstant(instant, ZoneOffset.UTC)
-    val startOfDayEpoch = dateTime.truncatedTo(ChronoUnit.DAYS).toInstant().epochSecond
+    val startOfDayEpoch = dateTime.truncatedTo(ChronoUnit.DAYS).toInstant().toEpochMilli()
 
     val keyBuilder = MetricKeyRecord
       .newBuilder()
@@ -113,51 +113,47 @@ object BlockMetrics {
 
     return listOf(
       KeyValue(
-        keyBuilder.setName("AvgNumUncles").build(),
-        MetricRecord.newBuilder().`setInt$`(numUncles * intMultiplier).build()
+        keyBuilder.setName("AvgUnclesPerBlock").build(),
+        MetricRecord.newBuilder().`setFloat$`(numUncles.toFloat() * intMultiplier).build()
       ),
       KeyValue(
-        keyBuilder.setName("TotalTxs").build(),
-        MetricRecord.newBuilder().`setLong$`(totalTxs.toLong() * intMultiplier).build()
+        keyBuilder.setName("AvgTxsPerBlock").build(),
+        MetricRecord.newBuilder().`setFloat$`(totalTxs.toFloat() * intMultiplier).build()
       ),
       KeyValue(
-        keyBuilder.setName("AvgTxs").build(),
-        MetricRecord.newBuilder().`setInt$`(totalTxs * intMultiplier).build()
+        keyBuilder.setName("AvgSuccessfulTxsPerBlock").build(),
+        MetricRecord.newBuilder().`setFloat$`(numSuccessfulTxs.toFloat() * intMultiplier).build()
       ),
       KeyValue(
-        keyBuilder.setName("AvgSuccessfulTxs").build(),
-        MetricRecord.newBuilder().`setInt$`(numSuccessfulTxs * intMultiplier).build()
-      ),
-      KeyValue(
-        keyBuilder.setName("AvgFailedTxs").build(),
-        MetricRecord.newBuilder().`setInt$`(numFailedTxs * intMultiplier).build()
+        keyBuilder.setName("AvgFailedTxsPerBlock").build(),
+        MetricRecord.newBuilder().`setFloat$`(numFailedTxs.toFloat() * intMultiplier).build()
       ),
       KeyValue(
         keyBuilder.setName("AvgPendingTxs").build(),
-        MetricRecord.newBuilder().`setInt$`(numPendingTxs * intMultiplier).build()
+        MetricRecord.newBuilder().`setFloat$`(numPendingTxs.toFloat() * intMultiplier).build()
       ),
       KeyValue(
-        keyBuilder.setName("TotalDifficulty").build(),
+        keyBuilder.setName("AvgTotalDifficulty").build(),
         MetricRecord.newBuilder().setBigInteger(totalDifficulty.times(bigIntMultiplier).byteBuffer()).build()
       ),
       KeyValue(
-        keyBuilder.setName("TotalGasPrice").build(),
+        keyBuilder.setName("AvgTotalGasPricePerBlock").build(),
         MetricRecord.newBuilder().setBigInteger(totalGasPrice.times(bigIntMultiplier).byteBuffer()).build()
       ),
       KeyValue(
-        keyBuilder.setName("AvgGasPrice").build(),
+        keyBuilder.setName("AvgGasPricePerBlock").build(),
         MetricRecord.newBuilder().setBigInteger(avgGasPrice.times(bigIntMultiplier).byteBuffer()).build()
       ),
       KeyValue(
-        keyBuilder.setName("AvgGasLimit").build(),
+        keyBuilder.setName("AvgGasLimitPerBlock").build(),
         MetricRecord.newBuilder().setBigInteger(avgGasLimit.times(bigIntMultiplier).byteBuffer()).build()
       ),
       KeyValue(
-        keyBuilder.setName("TotalTxsFees").build(),
+        keyBuilder.setName("AvgTotalTxsFeesPerBlock").build(),
         MetricRecord.newBuilder().setBigInteger(totalTxFees.times(bigIntMultiplier).byteBuffer()).build()
       ),
       KeyValue(
-        keyBuilder.setName("AvgTxsFees").build(),
+        keyBuilder.setName("AvgTxFeePerBlock").build(),
         MetricRecord.newBuilder().setBigInteger(avgTxFees.times(bigIntMultiplier).byteBuffer()).build()
       )
     )

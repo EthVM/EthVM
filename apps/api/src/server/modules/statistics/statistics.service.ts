@@ -9,6 +9,7 @@ export interface StatisticsService {
   getAverageFailedTxs(duration: string): Promise<Statistic[]>
   getTotalGasPrice(duration: string): Promise<Statistic[]>
   getAverageGasPrice(duration: string): Promise<Statistic[]>
+  getAverageGasLimit(duration: string): Promise<Statistic[]>
   getTotalTxsFees(duration: string): Promise<Statistic[]>
   getAverageTxFee(duration: string): Promise<Statistic[]>
 }
@@ -24,7 +25,7 @@ export class StatisticsServiceImpl implements StatisticsService {
 
   getAverageSuccessfullTxs(duration: string): Promise<Statistic[]> {
     const { from, to } = toDatePeriods(duration)
-    return this.statisticsRepository.getAverageSuccessfullTxs(from, to)
+    return this.statisticsRepository.getAverageSuccessfulTxs(from, to)
   }
 
   getAverageTotalDifficulty(duration: string): Promise<Statistic[]> {
@@ -45,6 +46,11 @@ export class StatisticsServiceImpl implements StatisticsService {
   getAverageGasPrice(duration: string): Promise<Statistic[]> {
     const { from, to } = toDatePeriods(duration)
     return this.statisticsRepository.getAverageGasPrice(from, to)
+  }
+
+  getAverageGasLimit(duration: string): Promise<Statistic[]> {
+    const { from, to } = toDatePeriods(duration)
+    return this.statisticsRepository.getAverageGasLimit(from, to)
   }
 
   getTotalTxsFees(duration: string): Promise<Statistic[]> {
