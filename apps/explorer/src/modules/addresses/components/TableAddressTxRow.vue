@@ -66,32 +66,32 @@
                   </v-layout>
                 </v-flex>
                 <v-flex d-flex xs6 sm3 md2>
-                  <p :class="[tx.getStatus() ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">
-                    <v-tooltip
-                      v-if="
-                        getShortEthValue(
-                          tx
-                            .getValue()
-                            .toEth()
-                            .toString(),
-                          true
-                        )
-                      "
-                      bottom
-                    >
-                      <v-icon slot="activator" dark small>fa fa-question-circle info--text</v-icon>
-                      <span>{{ tx.getValue().toEth() }}</span>
-                    </v-tooltip>
-                    {{
-                      getShortEthValue(
+                  <v-layout
+                    align-center
+                    row
+                    v-if="
+                      !isShortValue(
                         tx
                           .getValue()
                           .toEth()
-                          .toString(),
-                        false
+                          .toString()
                       )
-                    }}
-                  </p>
+                    "
+                  >
+                    <p :class="[tx.getStatus() ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">{{ getShortValue(tx.getValue().toEth()) }}</p>
+                    <v-tooltip bottom>
+                      <v-icon slot="activator" small class="white--text text-xs-center">fa fa-question-circle</v-icon>
+                      <span>{{
+                        formatStr(
+                          tx
+                            .getValue()
+                            .toEth()
+                            .toString()
+                        )
+                      }}</span>
+                    </v-tooltip>
+                  </v-layout>
+                  <p v-else :class="[tx.getStatus() ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">{{ tx.getValue().toEth() }}</p>
                 </v-flex>
                 <v-flex hidden-sm-and-down md2>
                   <p class="black--text text-truncate mb-0">{{ tx.getGasUsed().toNumber() }}</p>
@@ -114,10 +114,11 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
+import { StringConcatMixin } from '@app/core/components/mixins'
 
 @Component
-export default class TableAddressTxRow extends Vue {
+export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
   @Prop({ type: String, required: true }) account!: string
   @Prop(Array) transactions!: any[]
   @Prop({ type: Number, default: 0 }) filter!: number
@@ -142,27 +143,14 @@ export default class TableAddressTxRow extends Vue {
   }
 
   // Methods
-  getType(tx) {
+  getType(tx): boolean {
     return tx.getFrom() === this.account
-  }
-
-  getShortEthValue(newEthValue, isBool) {
-    const length = newEthValue.length
-    let isShort = false
-    if (length > 8) {
-      newEthValue = newEthValue.slice(0, 8) + '...'
-      isShort = true
-    }
-    if (!isBool) {
-      return newEthValue
-    }
-    return isShort
   }
 
   log(tx) {}
 
   // Computed
-  getText() {
+  getText(): string {
     if (!this.isPending) {
       if (this.filter === 0) {
         return this.$i18n.t('message.txAll')
@@ -171,13 +159,11 @@ export default class TableAddressTxRow extends Vue {
       }
       return this.$i18n.t('message.txOut')
     }
-
     if (this.filter === '2') {
       return this.$i18n.t('message.txPen')
     } else if (this.filter === '1') {
       return this.$i18n.t('message.txPenIn')
     }
-
     return this.$i18n.t('message.txPenOut')
   }
 }
