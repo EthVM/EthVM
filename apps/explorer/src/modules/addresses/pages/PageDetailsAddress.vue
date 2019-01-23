@@ -37,7 +37,7 @@
 
         <!-- Mined Blocks -->
         <v-tab-item slot="tabs-item" v-if="account.isMiner" value="tab-3">
-          <table-blocks v-if="!minerBlocksError" :loading="minerBlocksLoading" :blocks="blocks" :page-type="detailsType" />
+          <table-blocks v-if="!minerBlocksError" :loading="minerBlocksLoading" :blocks="account.minedBlocks" :page-type="detailsType" />
           <app-error-no-data v-else />
         </v-tab-item>
         <!-- End Mined Blocks -->

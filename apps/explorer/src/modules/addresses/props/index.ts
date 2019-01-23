@@ -5,7 +5,7 @@ export class AccountInfo {
   public exchangeRate?: any = { USD: 0 }
 
   public blocks: Block[] = []
-  public minerBlocks: Block[] = []
+  public minedBlocks: Block[] = []
 
   public txs: Tx[] = []
   public totalTxs: number = 0
