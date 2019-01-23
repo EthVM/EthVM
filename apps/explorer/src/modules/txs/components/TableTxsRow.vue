@@ -34,7 +34,7 @@
       <v-flex d-flex sm3 md2>
         <p v-if="$vuetify.breakpoint.xsOnly" class="text-truncate info--text">Amount:</p>
         <p :class="[tx.getStatus() ? 'txSuccess--text' : 'txFail--text']">
-          <v-tooltip v-if="isShortValue(tx.getValue())" bottom>
+          <v-tooltip v-if="isShortValue(tx.getValue().toEth())" bottom>
             <v-icon slot="activator" dark small>fa fa-question-circle info--text</v-icon>
             <span>{{ tx.getValue().toEth() }}</span>
           </v-tooltip>

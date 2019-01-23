@@ -20,6 +20,9 @@ export class StringConcatMixin extends Vue {
   }
 
   getShortValue(rawStr): string {
-    return this.isShortValue(rawStr) ? rawStr.toFormat() : rawStr.toFormat().slice(0, 10) + '...'
+    return this.isShortValue(rawStr) ? this.formatStr(rawStr) : this.formatStr(rawStr).slice(0, 10) + '...'
+  }
+  formatStr(rawStr): string {
+    return new BN(rawStr).toFormat().toString()
   }
 }
