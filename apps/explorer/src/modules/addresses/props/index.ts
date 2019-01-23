@@ -10,14 +10,21 @@ export class AccountInfo {
   public txs: Tx[] = []
   public totalTxs: number = 0
 
+  public intTxs: Tx[] = []
+  public totalInTxs: number = 0
+
+  public outTxs: Tx[] = []
+  public totalOutTxs: number = 0
+
   public pendingTxs: PendingTx[] = []
+  public totalpendingTxs: number = 0
 
   public tokens: any[] = []
 
   public contracts: any[] = []
   public creator: boolean = false
 
-  public miner: boolean = false
+  public isMiner: boolean = false
 
   public type: string
 

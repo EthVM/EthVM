@@ -10,7 +10,7 @@
       <app-tabs :tabs="tabs">
         <!-- Transactions -->
         <v-tab-item slot="tabs-item" value="tab-0">
-          <table-address-txs v-if="!txsError" :loading="txsLoading" :address="account.address" :transactions="account.txs" />
+          <table-address-txs v-if="!txsError" :loading="txsLoading" :address="account.address" :txs="account.txs" :totalTxs="account.totalTxs" />
           <app-error-no-data v-else />
         </v-tab-item>
         <!-- End Transactions -->
@@ -28,7 +28,7 @@
             v-if="!pendingTxsError"
             :loading="pendingTxsLoading"
             :address="account.address"
-            :transactions="account.pendingTxs"
+            :txs="account.pendingTxs"
             :is-pending="true"
           />
           <app-error-no-data v-else />
@@ -378,13 +378,13 @@ export default class PageDetailsAddress extends Vue {
         isActive: false
       }
     ]
-    if (this.account.miner) {
+    if (this.account.isMiner) {
       const newTab = {
         id: '3',
         title: this.$i18n.t('tabs.miningH'),
         isActive: false
       }
-      this.tabs.push(newTab)
+      tabs.push(newTab)
     }
 
     if (this.account.creator) {
@@ -393,7 +393,7 @@ export default class PageDetailsAddress extends Vue {
         title: this.$i18n.t('tabs.contracts'),
         isActive: false
       }
-      this.tabs.push(newTab)
+      tabs.push(newTab)
     }
     return tabs
   }
