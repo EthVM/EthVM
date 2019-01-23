@@ -60,12 +60,23 @@ object BlockMetrics {
       avgTxsFees = totalTxsFees / totalTxsBigInt
     }
 
+    val blockRewards = block.getRewards()
+
+    val avgMinerReward = when (blockRewards.size) {
+      0 -> BigInteger.ZERO
+      else -> blockRewards
+        .map { it.getReward().unsignedBigInteger()!! }
+        .fold(BigInteger.ZERO) { memo, next -> memo + next }
+        .divide(block.getRewards().size.toBigInteger())
+    }
+
     return BlockMetricsRecord.newBuilder()
       .setTotalTxs(totalTxs)
       .setNumUncles(block.getUncles().size)
       .setNumSuccessfulTxs(numSuccessfulTxs)
       .setNumFailedTxs(numFailedTxs)
       .setNumPendingTxs(numPendingTxs)
+      .setAvgMinerReward(avgMinerReward.unsignedByteBuffer())
       .setTotalDifficulty(totalDifficulty.unsignedByteBuffer())
       .setTotalGasPrice(totalGasPrice.unsignedByteBuffer())
       .setAvgGasLimit(avgGasLimit.unsignedByteBuffer())
@@ -104,6 +115,7 @@ object BlockMetrics {
     val numSuccessfulTxs = metrics.getNumSuccessfulTxs()
     val numFailedTxs = metrics.getNumFailedTxs()
     val numPendingTxs = metrics.getNumPendingTxs()
+    val avgMinerReward = metrics.getAvgMinerReward().unsignedBigInteger()!!
     val totalDifficulty = metrics.getTotalDifficulty().unsignedBigInteger()!!
     val totalGasPrice = metrics.getTotalGasPrice().unsignedBigInteger()!!
     val avgGasLimit = metrics.getAvgGasLimit().unsignedBigInteger()!!
@@ -112,6 +124,10 @@ object BlockMetrics {
     val avgTxFees = metrics.getAvgTxFees().unsignedBigInteger()!!
 
     return listOf(
+      KeyValue(
+        keyBuilder.setName("AvgMinerRewardPerBlock").build(),
+        MetricRecord.newBuilder().setBigInteger(avgMinerReward.times(bigIntMultiplier).byteBuffer()).build()
+      ),
       KeyValue(
         keyBuilder.setName("AvgUnclesPerBlock").build(),
         MetricRecord.newBuilder().`setFloat$`(numUncles.toFloat() * intMultiplier).build()

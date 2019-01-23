@@ -25,7 +25,7 @@ import { Events } from 'ethvm-common'
 export default class ChartGasPrice extends Mixins(ChartMixin) {
   title = 'Average Mining Rewards History'
   labelString = 'Average mining rewards'
-  newEvent = Events.getAverageGasPriceStats
+  newEvent = Events.getAverageMinerRewardsStats
 
   created() {
     this.setTitle(this.title)

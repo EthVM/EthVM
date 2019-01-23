@@ -168,6 +168,7 @@ protocol Processing {
     bytes avgGasPrice;
     bytes totalTxFees;
     bytes avgTxFees;
+    bytes avgMinerReward;
   }
 
   record MetricKeyRecord {
