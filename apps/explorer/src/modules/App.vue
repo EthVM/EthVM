@@ -2,7 +2,7 @@
   <v-app style="background: #f3f4f8;">
     <the-navigation-drawer />
     <v-content>
-      <router-view :key="$route.path"/>
+      <router-view :key="$route.path" />
       <the-footer />
     </v-content>
   </v-app>

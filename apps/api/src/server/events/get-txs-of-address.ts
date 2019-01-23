@@ -15,7 +15,7 @@ const getAddressTxsEvent: SocketEvent = {
   },
 
   onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: TxsPayload): Promise<Tx[]> =>
-    server.txsService.getTxsOfAddress(payload.address, payload.limit, payload.page)
+    server.txsService.getTxsOfAddress(payload.address, payload.filter, payload.limit, payload.page)
 }
 
 export default getAddressTxsEvent

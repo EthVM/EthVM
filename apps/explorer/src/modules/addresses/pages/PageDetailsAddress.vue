@@ -69,7 +69,7 @@
 // TODO: Finish proper implementation of Table-Address-Txs or reuse from Txs our Table-Txs
 
 <script lang="ts">
-import { EthValue, Tx, PendingTx } from '@app/core/models'
+import { Block, EthValue, Tx, PendingTx } from '@app/core/models'
 import { Events } from 'ethvm-common'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
@@ -199,13 +199,15 @@ export default class PageDetailsAddress extends Vue {
             )
           })
 
-          Promise.all([addressBalancePromise, contractPromise, exchangeRatePromise, totalTxsPromise])
+          Promise.all(
+            // If one promise fails, we still continue processing every entry (and for those failed we receive undefined)
+            [addressBalancePromise, contractPromise, exchangeRatePromise, totalTxsPromise].map(p => p.catch(() => undefined))
+          )
             .then((res: any[]) => {
               this.account.balance = res[0] ? new EthValue(res[0].amount) : new EthValue(0)
               this.account.type = res[1] ? CONTRACT_DETAIL_TYPE : ADDRESS_DETAIL_TYPE
               this.account.exchangeRate.USD = res[2].price
               this.account.totalTxs = res[3] ? res[3] : 0
-
               this.sm.transition('load-complementary-info')
             })
             .catch(err => this.sm.transition('error'))
@@ -221,27 +223,27 @@ export default class PageDetailsAddress extends Vue {
               {
                 address: this.addressRef.replace('0x', ''),
                 limit: MAX_ITEMS,
-                page: 0
+                page: 0,
+                filter: 'all' // TODO @Olga: Possible values: in, out, all (if not specified all is taken)
               },
               (err, result) => (err ? reject(err) : resolve(result))
             )
           })
 
-          // Getting Token Balances
-          // this.$socket.emit(
-          //   Events.getTokenBalance,
-          //   {
-          //     address: this.addressRef.replace('0x', '')
-          //   },
-          //   (err, result) => {
-          //     if (result !== '0x') {
-          //       this.tokens = result
-          //       this.tokensLoad = true
-          //     } else {
-          //       this.tokensError = true
-          //     }
-          //   }
-          // )
+          // Get Total Token Balances
+          // TODO @Olga: Not working I need to take a look on vm service and ask Kosala
+          this.$socket.emit(
+            Events.getTokenBalance,
+            {
+              address: this.addressRef.replace('0x', '')
+            },
+            (err, result) => {
+              // console.log('Token balance: ', result)
+            }
+          )
+
+          // Get Tokens Transfers
+          // TODO: I need to prepare a bigger dataset in order to have in our db a couple of those
 
           // Get Address Pending Transactions
           const addressPendingTxsPromise = new Promise((resolve, reject) => {
@@ -249,8 +251,9 @@ export default class PageDetailsAddress extends Vue {
               Events.getPendingTxsOfAddress,
               {
                 address: this.addressRef.replace('0x', ''),
+                page: 0,
                 limit: MAX_ITEMS,
-                page: 0
+                filter: 'all' // TODO @Olga: Possible values: in, out, all (if not specified all is taken)
               },
               (err, result) => (err ? reject(err) : resolve(result))
             )
@@ -262,30 +265,60 @@ export default class PageDetailsAddress extends Vue {
               Events.getBlocksMined,
               {
                 address: this.addressRef.replace('0x', ''),
-                limit: MAX_ITEMS,
-                page: 0
+                page: 0,
+                limit: MAX_ITEMS
               },
               (err, result) => (err ? reject(err) : resolve(result))
             )
           })
 
-          Promise.all([addressTxsPromise, addressPendingTxsPromise, minedBlocksPromise])
-            .then((res: any[]) => {
-              // console.log('Complementary info: ', res)
+          // Get contracts created by
+          const contractsCreatedBy = new Promise((resolve, reject) => {
+            this.$socket.emit(
+              'getContractsCreatedBy', // TODO: Create proper Events (not done yet as we're improving commons)
+              {
+                address: this.addressRef.replace('0x', ''),
+                page: 0,
+                limit: MAX_ITEMS
+              },
+              (err, result) => (err ? reject(err) : resolve(result))
+            )
+          })
 
+          Promise.all([addressTxsPromise, addressPendingTxsPromise, minedBlocksPromise, contractsCreatedBy].map(p => p.catch(() => undefined)))
+            .then((res: any[]) => {
               // Txs
+              const rawTxs = res[0] || []
               const txs = []
-              res[0].forEach(raw => txs.unshift(new Tx(raw)))
+              rawTxs.forEach(raw => txs.unshift(new Tx(raw)))
               this.account.txs = txs
               this.txsLoading = false
 
               // Pending Txs
+              const rawPtxs = res[1] || []
               const pTxs = []
-              res[1].forEach(raw => pTxs.unshift(new PendingTx(raw)))
+              rawPtxs.forEach(raw => pTxs.unshift(new PendingTx(raw)))
               this.account.pendingTxs = pTxs
-              // this.pendingTxsLoading = false
+              this.pendingTxsLoading = false
 
               // Mined Blocks
+              const rawMinedBlocks = res[2] || []
+              const minedBlocks = []
+              rawMinedBlocks.forEach(raw => minedBlocks.unshift(new Block(raw)))
+              this.account.minedBlocks = minedBlocks
+              this.minerBlocksLoading = false
+              if (rawMinedBlocks.length > 0) {
+                this.account.isMiner = true
+              }
+
+              // Contract Creator
+              const rawContractCreated = res[3] || []
+              const contractsCreated = []
+              contractsCreated.forEach(raw => rawContractCreated.unshift(raw)) // TODO: Update contract model
+              this.account.created = contractsCreated
+              if (rawContractCreated.length > 0) {
+                this.account.isCreator = true
+              }
 
               this.sm.transition('success')
             })
@@ -318,8 +351,6 @@ export default class PageDetailsAddress extends Vue {
     this.sm.transition('initial')
   }
 
-
-
   // Computed
   get crumbs() {
     return [
@@ -330,23 +361,23 @@ export default class PageDetailsAddress extends Vue {
     ]
   }
   get tabs() {
-    const tabs =  [
-        {
-          id: '0',
-          title: this.$i18n.t('tabs.txH'),
-          isActive: true
-        },
-        {
-          id: '1',
-          title: this.$i18n.t('tabs.tokens'),
-          isActive: false
-        },
-        {
-          id: '2',
-          title: this.$i18n.t('tabs.pending'),
-          isActive: false
-        }
-      ]
+    const tabs = [
+      {
+        id: '0',
+        title: this.$i18n.t('tabs.txH'),
+        isActive: true
+      },
+      {
+        id: '1',
+        title: this.$i18n.t('tabs.tokens'),
+        isActive: false
+      },
+      {
+        id: '2',
+        title: this.$i18n.t('tabs.pending'),
+        isActive: false
+      }
+    ]
     if (this.account.miner) {
       const newTab = {
         id: '3',

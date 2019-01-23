@@ -21,27 +21,19 @@ export class VmEngine {
     this.client = jayson.Client.https(this.opts.rpcUrl)
   }
 
-  public getAccount(): Promise<any> {
-    return this.client.request('eth_getKeyValue', [this.opts.account])
-  }
+  public getTokensBalance(address: string): Promise<Token[]> {
+    address = address.startsWith('0x') ? address : '0x' + address
 
-  public getBalance(address: string): Promise<any> {
-    return this.client.request('eth_getBalance', [address, 'latest'])
-  }
-
-  public getTokens(address: string): Promise<Token[]> {
     return new Promise(async (resolve, reject) => {
       const argss = ['address', 'uint32', 'uint32']
       const vals = [address, 4, 0]
-
       const encoded = this.encodeCall('getAllBalance', argss, vals)
 
       try {
         const payload = [{ to: this.opts.tokensAddress.address, data: encoded }, 'latest']
-
         const response = await this.client.request('eth_call', payload)
+        const tokens = this.decode(response.result)
 
-        const tokens = this.decode(response.result || [])
         resolve(tokens)
       } catch (err) {
         reject(err)

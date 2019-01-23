@@ -15,7 +15,7 @@ const getAddressPendingTxsEvent: SocketEvent = {
   },
 
   onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: TxsPayload): Promise<PendingTx[]> =>
-    server.pendingTxService.getPendingTxsOfAddress(payload.address, payload.limit, payload.page)
+    server.pendingTxService.getPendingTxsOfAddress(payload.address, payload.filter, payload.limit, payload.page)
 }
 
 export default getAddressPendingTxsEvent
