@@ -27,6 +27,7 @@ const MAX_ITEMS = 50
 export default class PageBlocks extends Vue {
   // Computed
   get blocks(): Block[] {
+    console.log(this.$store.getters.blocks.slice(0, MAX_ITEMS))
     return this.$store.getters.blocks.slice(0, MAX_ITEMS)
   }
 

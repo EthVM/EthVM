@@ -11,6 +11,8 @@ import InfiniteScroll from 'vue-infinite-scroll'
 import VueSocketIO from 'vue-socket.io'
 import VueTimeago from 'vue-timeago'
 import Vuetify from 'vuetify'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 import 'vuetify/dist/vuetify.min.css'
 
 // Vue modules configuration
@@ -65,6 +67,9 @@ Vue.use(Vuetify, {
     // background: String(colors.grey.darken3)
   }
 })
+
+// See: https://www.npmjs.com/package/vue-axios //
+Vue.use(VueAxios, axios)
 
 const v = new Vue({
   el: '#app',

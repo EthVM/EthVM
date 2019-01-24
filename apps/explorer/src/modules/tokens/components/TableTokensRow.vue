@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <router-link :to="'/token/' + token.address + '/holder=' + holder" v-if="token.balance != 0">
     <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-2>
       <v-flex xs6 sm2>
@@ -45,3 +45,4 @@ export default class TableTokensRow extends Mixins(StringConcatMixin) {
   }
 }
 </script>
+ -->

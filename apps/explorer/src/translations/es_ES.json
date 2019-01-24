@@ -56,7 +56,10 @@
     "reward": "Recompensa",
     "txN": "Transacción #",
     "limit": "Limite",
-    "gas": "Gas"
+    "gas": "Gas",
+    "token": "Acuñar",
+    "price": "Precio",
+    "marketCap": "Tapa Del Mercado"
   },
   "filter": {
     "view": "Ver",

@@ -100,7 +100,8 @@ export default class TheNavigationDrawer extends Vue {
         {
           header: {
             text: this.$i18n.t('title.tokens'),
-            icon: 'fab fa-ethereum'
+            icon: 'fab fa-ethereum',
+            routerLink: '/tokens'
           },
           links: [
             {
