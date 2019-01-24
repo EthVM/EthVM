@@ -37,13 +37,13 @@ export declare const Events: {
     getAverageGasLimitStats: string;
     getAverageGasPriceStats: string;
     getAverageTxFeeStats: string;
-    getAverageSuccessfullTxStats: string;
-    getAverageFailedTxStats: string;
+    getSuccessfulTxStats: string;
+    getFailedTxStats: string;
+    getTxStats: string;
     getAverageBlockSizeStats: string;
     getAverageBlockTimeStats: string;
     getAverageNumberOfUnclesStats: string;
     getAverageHashRateStats: string;
     getAverageMinerRewardsStats: string;
-    getAverageTotalTxs: string;
 };
 export declare const SocketDefaultRooms: string[];

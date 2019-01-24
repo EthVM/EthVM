@@ -190,8 +190,8 @@
     "avgBlockSize": "Average Block Size",
     "avgBlockTime": "Average Block Time",
     "avgTxFees": "Average Transactions Fees",
-    "avgTxSuccess": "Average Number of Successfull Transactions",
-    "avgTxFail": "Average Number of Failed Transactions",
+    "txSuccess": "Number of Successful Transactions",
+    "txFail": "Number of Failed Transactions",
     "avgHashRate": "Average Hash Rate",
     "avgMiningReward": "Average Mining Rewards",
 
@@ -203,8 +203,8 @@
     "hash-rate-history": "Average Hash Rate",
     "miner-rewards-history": "Average Mining Rewards",
     "top-miners-history": "Top Miners",
-    "tx-fail-history": "Average Number of Failed Transactionsy",
-    "tx-success-history": "Average Number of Successfull Transactions",
+    "tx-fail-history": "Number of Failed Transactions",
+    "tx-success-history": "Number of Successful Transactions",
     "tx-fees-history": "Tx Fees ETH",
     "uncle-number-history": "Average Number of Uncles"
   },

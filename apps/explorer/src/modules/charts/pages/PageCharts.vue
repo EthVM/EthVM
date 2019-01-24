@@ -26,8 +26,8 @@
           <v-flex xs12 md6><!-- Pending Txs --></v-flex>
         </v-layout>
         <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6> <app-chart-link :title="$t('charts.avgTxSuccess')" :chart-id="ID.txSuccess" /> </v-flex>
-          <v-flex xs12 md6> <app-chart-link :title="$t('charts.avgTxFail')" :chart-id="ID.txFail" /> </v-flex>
+          <v-flex xs12 md6> <app-chart-link :title="$t('charts.txSuccess')" :chart-id="ID.txSuccess" /> </v-flex>
+          <v-flex xs12 md6> <app-chart-link :title="$t('charts.txFail')" :chart-id="ID.txFail" /> </v-flex>
         </v-layout>
       </v-tab-item>
       <!-- Blocks -->

@@ -136,15 +136,15 @@ object BlockMetrics {
         MetricRecord.newBuilder().`setFloat$`(numUncles.toFloat() * intMultiplier).build()
       ),
       KeyValue(
-        keyBuilder.setName("AvgTxsPerBlock").build(),
+        keyBuilder.setName("TotalTxs").build(),
         MetricRecord.newBuilder().`setFloat$`(totalTxs.toFloat() * intMultiplier).build()
       ),
       KeyValue(
-        keyBuilder.setName("AvgSuccessfulTxsPerBlock").build(),
+        keyBuilder.setName("TotalSuccessfulTxs").build(),
         MetricRecord.newBuilder().`setFloat$`(numSuccessfulTxs.toFloat() * intMultiplier).build()
       ),
       KeyValue(
-        keyBuilder.setName("AvgFailedTxsPerBlock").build(),
+        keyBuilder.setName("TotalFailedTxs").build(),
         MetricRecord.newBuilder().`setFloat$`(numFailedTxs.toFloat() * intMultiplier).build()
       ),
       KeyValue(

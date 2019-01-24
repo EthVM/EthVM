@@ -3,10 +3,10 @@ import { Statistic } from 'ethvm-common'
 import { toStatistic } from '@app/server/modules/statistics'
 
 export interface StatisticsRepository {
-  getAverageTotalTxs(start: Date, end: Date): Promise<Statistic[]>
-  getAverageSuccessfulTxs(start: Date, end: Date): Promise<Statistic[]>
+  getTotalTxs(start: Date, end: Date): Promise<Statistic[]>
+  getTotalSuccessfulTxs(start: Date, end: Date): Promise<Statistic[]>
   getAverageTotalDifficulty(start: Date, end: Date): Promise<Statistic[]>
-  getAverageFailedTxs(start: Date, end: Date): Promise<Statistic[]>
+  getTotalFailedTxs(start: Date, end: Date): Promise<Statistic[]>
   getTotalGasPrice(start: Date, end: Date): Promise<Statistic[]>
   getAverageGasLimit(start: Date, end: Date): Promise<Statistic[]>
   getAverageGasPrice(start: Date, end: Date): Promise<Statistic[]>
@@ -18,16 +18,16 @@ export interface StatisticsRepository {
 
 export class MongoStatisticsRepository extends BaseMongoDbRepository implements StatisticsRepository {
 
-  public getAverageTotalTxs(start: Date, end: Date): Promise<Statistic[]> {
-    return this.retrieveFromMongo('AvgTotalTxsPerBlock', start, end)
+  public getTotalTxs(start: Date, end: Date): Promise<Statistic[]> {
+    return this.retrieveFromMongo('TotalTxs', start, end)
   }
 
-  public getAverageSuccessfulTxs(start: Date, end: Date): Promise<Statistic[]> {
-    return this.retrieveFromMongo('AvgSuccessfulTxsPerBlock', start, end)
+  public getTotalSuccessfulTxs(start: Date, end: Date): Promise<Statistic[]> {
+    return this.retrieveFromMongo('TotalSuccessfulTxs', start, end)
   }
 
-  public getAverageFailedTxs(start: Date, end: Date): Promise<Statistic[]> {
-    return this.retrieveFromMongo('AvgFailedTxsPerBlock', start, end)
+  public getTotalFailedTxs(start: Date, end: Date): Promise<Statistic[]> {
+    return this.retrieveFromMongo('TotalFailedTxs', start, end)
   }
 
   public getAverageTotalDifficulty(start: Date, end: Date): Promise<Statistic[]> {

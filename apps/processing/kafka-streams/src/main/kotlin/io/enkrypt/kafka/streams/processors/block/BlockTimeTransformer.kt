@@ -73,6 +73,10 @@ class BlockTimeTransformer(
     blockTimesStore.put(key.getNumber(), block.getHeader().getTimestamp())
 
     val blockNumber = key.getNumber().unsignedBigInteger()!!
+
+    // genesis block throws off calculation at the start
+    if(blockNumber < 2.toBigInteger()) return KeyValue(key, block)
+
     val prevBlockNumber = blockNumber - BigInteger.ONE
 
     val prevTimestamp = blockTimesStore.get(prevBlockNumber.unsignedByteBuffer())

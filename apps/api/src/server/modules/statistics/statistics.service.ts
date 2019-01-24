@@ -3,10 +3,10 @@ import { StatisticsRepository } from '@app/server/modules/statistics'
 import { Statistic } from 'ethvm-common'
 
 export interface StatisticsService {
-  getAverageTotalTxs(duration: string): Promise<Statistic[]>
-  getAverageSuccessfullTxs(duration: string): Promise<Statistic[]>
+  getTotalTxs(duration: string): Promise<Statistic[]>
+  getTotalSuccessfulTxs(duration: string): Promise<Statistic[]>
+  getTotalFailedTxs(duration: string): Promise<Statistic[]>
   getAverageTotalDifficulty(duration: string): Promise<Statistic[]>
-  getAverageFailedTxs(duration: string): Promise<Statistic[]>
   getTotalGasPrice(duration: string): Promise<Statistic[]>
   getAverageGasPrice(duration: string): Promise<Statistic[]>
   getAverageGasLimit(duration: string): Promise<Statistic[]>
@@ -20,24 +20,24 @@ export class StatisticsServiceImpl implements StatisticsService {
 
   constructor(private readonly statisticsRepository: StatisticsRepository) {}
 
-  getAverageTotalTxs(duration: string): Promise<Statistic[]> {
+  getTotalTxs(duration: string): Promise<Statistic[]> {
     const { from, to } = toDatePeriods(duration)
-    return this.statisticsRepository.getAverageTotalTxs(from, to)
+    return this.statisticsRepository.getTotalTxs(from, to)
   }
 
-  getAverageSuccessfullTxs(duration: string): Promise<Statistic[]> {
+  getTotalSuccessfulTxs(duration: string): Promise<Statistic[]> {
     const { from, to } = toDatePeriods(duration)
-    return this.statisticsRepository.getAverageSuccessfulTxs(from, to)
+    return this.statisticsRepository.getTotalSuccessfulTxs(from, to)
+  }
+
+  getTotalFailedTxs(duration: string): Promise<Statistic[]> {
+    const { from, to } = toDatePeriods(duration)
+    return this.statisticsRepository.getTotalFailedTxs(from, to)
   }
 
   getAverageTotalDifficulty(duration: string): Promise<Statistic[]> {
     const { from, to } = toDatePeriods(duration)
     return this.statisticsRepository.getAverageTotalDifficulty(from, to)
-  }
-
-  getAverageFailedTxs(duration: string): Promise<Statistic[]> {
-    const { from, to } = toDatePeriods(duration)
-    return this.statisticsRepository.getAverageFailedTxs(from, to)
   }
 
   getTotalGasPrice(duration: string): Promise<Statistic[]> {

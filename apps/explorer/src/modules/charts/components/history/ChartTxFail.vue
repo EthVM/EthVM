@@ -22,10 +22,11 @@ import { Events } from 'ethvm-common'
     AppChart
   }
 })
-export default class ChartGasPrice extends Mixins(ChartMixin) {
-  title = 'Average Failed Transactions History'
+export default class ChartTxFail extends Mixins(ChartMixin) {
+
+  title = 'Failed Transactions History'
   labelString = 'Transactions Failed'
-  newEvent = Events.getAverageFailedTxStats
+  newEvent = Events.getFailedTxStats
 
   created() {
     this.setTitle(this.title)
