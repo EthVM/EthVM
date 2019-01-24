@@ -14,6 +14,7 @@ export interface StatisticsService {
   getAverageTxFee(duration: string): Promise<Statistic[]>
   getAverageMinerReward(duration: string): Promise<Statistic[]>
   getAverageBlockTime(duration: string): Promise<Statistic[]>
+  getAverageHashRate(duration: string): Promise<Statistic[]>
 }
 
 export class StatisticsServiceImpl implements StatisticsService {
@@ -73,6 +74,11 @@ export class StatisticsServiceImpl implements StatisticsService {
   getAverageBlockTime(duration: string): Promise<Statistic[]> {
     const { from, to } = toDatePeriods(duration)
     return this.statisticsRepository.getAverageBlockTime(from, to)
+  }
+
+  getAverageHashRate(duration: string): Promise<Statistic[]> {
+    const { from, to } = toDatePeriods(duration)
+    return this.statisticsRepository.getAverageHashRate(from, to)
   }
 
 }

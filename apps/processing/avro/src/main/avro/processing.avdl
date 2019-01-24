@@ -168,7 +168,6 @@ protocol Processing {
     bytes avgGasPrice;
     bytes totalTxFees;
     bytes avgTxFees;
-    bytes avgMinerReward;
     union { null, long } blockTime = null;
   }
 

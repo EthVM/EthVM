@@ -60,23 +60,12 @@ object BlockMetrics {
       avgTxsFees = totalTxsFees / totalTxsBigInt
     }
 
-    val blockRewards = block.getRewards()
-
-    val avgMinerReward = when (blockRewards.size) {
-      0 -> BigInteger.ZERO
-      else -> blockRewards
-        .map { it.getReward().unsignedBigInteger()!! }
-        .fold(BigInteger.ZERO) { memo, next -> memo + next }
-        .divide(block.getRewards().size.toBigInteger())
-    }
-
     return BlockMetricsRecord.newBuilder()
       .setTotalTxs(totalTxs)
       .setNumUncles(block.getUncles().size)
       .setNumSuccessfulTxs(numSuccessfulTxs)
       .setNumFailedTxs(numFailedTxs)
       .setNumPendingTxs(numPendingTxs)
-      .setAvgMinerReward(avgMinerReward.unsignedByteBuffer())
       .setDifficulty(difficulty.unsignedByteBuffer())
       .setTotalGasPrice(totalGasPrice.unsignedByteBuffer())
       .setAvgGasLimit(avgGasLimit.unsignedByteBuffer())
@@ -111,25 +100,21 @@ object BlockMetrics {
       .newBuilder()
       .setDate(startOfDayEpoch)
 
+    val difficulty = block.getHeader().getDifficulty().unsignedBigInteger()!!
+
     val numUncles = metrics.getNumUncles()
     val totalTxs = metrics.getTotalTxs()
     val numSuccessfulTxs = metrics.getNumSuccessfulTxs()
     val numFailedTxs = metrics.getNumFailedTxs()
     val numPendingTxs = metrics.getNumPendingTxs()
-    val avgMinerReward = metrics.getAvgMinerReward().unsignedBigInteger()!!
-    val difficulty = metrics.getDifficulty().unsignedBigInteger()!!
     val avgGasLimit = metrics.getAvgGasLimit().unsignedBigInteger()!!
     val avgGasPrice = metrics.getAvgGasPrice().unsignedBigInteger()!!
     val avgTxFees = metrics.getAvgTxFees().unsignedBigInteger()!!
 
-    return listOf(
+    var list = listOf(
       KeyValue(
         keyBuilder.setName("AvgBlockTime").build(),
         MetricRecord.newBuilder().`setLong$`(block.getBlockTime() ?: 0L).build()
-      ),
-      KeyValue(
-        keyBuilder.setName("AvgMinerRewardPerBlock").build(),
-        MetricRecord.newBuilder().setBigInteger(avgMinerReward.times(bigIntMultiplier).byteBuffer()).build()
       ),
       KeyValue(
         keyBuilder.setName("AvgUnclesPerBlock").build(),
@@ -137,15 +122,15 @@ object BlockMetrics {
       ),
       KeyValue(
         keyBuilder.setName("TotalTxs").build(),
-        MetricRecord.newBuilder().`setFloat$`(totalTxs.toFloat() * intMultiplier).build()
+        MetricRecord.newBuilder().`setInt$`(totalTxs * intMultiplier).build()
       ),
       KeyValue(
         keyBuilder.setName("TotalSuccessfulTxs").build(),
-        MetricRecord.newBuilder().`setFloat$`(numSuccessfulTxs.toFloat() * intMultiplier).build()
+        MetricRecord.newBuilder().`setInt$`(numSuccessfulTxs * intMultiplier).build()
       ),
       KeyValue(
         keyBuilder.setName("TotalFailedTxs").build(),
-        MetricRecord.newBuilder().`setFloat$`(numFailedTxs.toFloat() * intMultiplier).build()
+        MetricRecord.newBuilder().`setInt$`(numFailedTxs * intMultiplier).build()
       ),
       KeyValue(
         keyBuilder.setName("AvgPendingTxs").build(),
@@ -168,5 +153,21 @@ object BlockMetrics {
         MetricRecord.newBuilder().setBigInteger(avgTxFees.times(bigIntMultiplier).byteBuffer()).build()
       )
     )
+
+    val blockTime = block.getBlockTime()
+
+    val hashRate = when (blockTime) {
+      null -> null
+      else -> difficulty.toDouble() / block.getBlockTime()
+    }
+
+    if (hashRate != null) {
+      list += KeyValue(
+        keyBuilder.setName("AvgHashRate").build(),
+        MetricRecord.newBuilder().`setDouble$`(hashRate).build()
+      )
+    }
+
+    return list
   }
 }

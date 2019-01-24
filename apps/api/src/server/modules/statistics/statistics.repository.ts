@@ -14,6 +14,7 @@ export interface StatisticsRepository {
   getAverageTxFee(start: Date, end: Date): Promise<Statistic[]>
   getAverageMinerReward(start: Date, end: Date): Promise<Statistic[]>
   getAverageBlockTime(start: Date, end: Date): Promise<Statistic[]>
+  getAverageHashRate(start: Date, end: Date): Promise<Statistic[]>
 }
 
 export class MongoStatisticsRepository extends BaseMongoDbRepository implements StatisticsRepository {
@@ -60,6 +61,10 @@ export class MongoStatisticsRepository extends BaseMongoDbRepository implements 
 
   public getAverageBlockTime(start: Date, end: Date): Promise<Statistic[]> {
     return this.retrieveFromMongo('AvgBlockTime', start, end)
+  }
+
+  public getAverageHashRate(start: Date, end: Date): Promise<Statistic[]> {
+    return this.retrieveFromMongo('AvgHashRate', start, end)
   }
 
   private retrieveFromMongo(event: string, start: Date, end: Date): Promise<Statistic[]> {
