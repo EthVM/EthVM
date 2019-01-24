@@ -157,6 +157,7 @@ protocol Processing {
 // metrics
 
   record BlockMetricsRecord {
+    io.enkrypt.avro.common.Data32 hash;
     int totalTxs = 0;
     int numSuccessfulTxs = 0;
     int numFailedTxs = 0;

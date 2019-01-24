@@ -149,6 +149,8 @@ object TypeMappings {
       "raw" to Ignore
     ),
     "block-metrics" to mapOf(
+      "hash" to Hex,
+      "difficulty" to UBigInt,
       "totalDifficulty" to UBigInt,
       "totalGasPrice" to UBigInt,
       "avgGasPrice" to UBigInt,

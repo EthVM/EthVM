@@ -60,7 +60,7 @@ export default class AppInfoCardGroup extends Vue {
   }
 
   mounted() {
-    this.$eventHub.$on(Events.newBlock, _block => {
+    this.$eventHub.$on(Events.NEW_BLOCK, _block => {
       const lastBlock = this.$store.getters.blocks[0]
       if (lastBlock) {
         this.setBlock(lastBlock)
@@ -71,7 +71,7 @@ export default class AppInfoCardGroup extends Vue {
 
   beforeDestroy() {
     clearInterval(this.secondsInterval)
-    this.$eventHub.$off([Events.newBlock])
+    this.$eventHub.$off([Events.NEW_BLOCK])
   }
 
   // Lifecycle

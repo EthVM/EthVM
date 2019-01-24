@@ -9,7 +9,6 @@
     "start:dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "clean": "rm -rf dist/",
-    "external": "node external/",
     "lint": "vue-cli-service lint --no-fix",
     "lint:fix": "vue-cli-service lint"
   },
@@ -59,7 +58,7 @@
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
     "lint-staged": "^8.1.0",
-    "prettier": "1.15.3",
+    "prettier": "1.16.1",
     "tslint-config-prettier": "^1.17.0",
     "typescript": "^3.2.2",
     "vue-template-compiler": "^2.5.21"

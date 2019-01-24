@@ -61,6 +61,7 @@ object BlockMetrics {
     }
 
     return BlockMetricsRecord.newBuilder()
+      .setHash(block.getHeader().getHash())
       .setTotalTxs(totalTxs)
       .setNumUncles(block.getUncles().size)
       .setNumSuccessfulTxs(numSuccessfulTxs)
