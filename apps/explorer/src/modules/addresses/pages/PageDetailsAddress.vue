@@ -10,7 +10,7 @@
       <app-tabs :tabs="tabs">
         <!-- Transactions -->
         <v-tab-item slot="tabs-item" value="tab-0">
-          <table-address-txs v-if="!txsError" :loading="txsLoading" :address="account.address" :txs="account.txs" :totalTxs="account.totalTxs" />
+          <table-address-txs v-if="!txsError" :loading="txsLoading" :address="account.address" :txs="account.txs" :totalTxs="account.totalTxs" :inTxs="account.inTxs" :totalinTxs="account.inTxs.length" :outTxs="account.outTxs" :totalOutTxs="account.outTxs.length" />
           <app-error-no-data v-else />
         </v-tab-item>
         <!-- End Transactions -->
@@ -230,6 +230,31 @@ export default class PageDetailsAddress extends Vue {
             )
           })
 
+          const addressInTxsPromise = new Promise((resolve, reject) => {
+            this.$socket.emit(
+              Events.getAddressTxs,
+              {
+                address: this.addressRef.replace('0x', ''),
+                limit: MAX_ITEMS,
+                page: 0,
+                filter: 'in' // TODO @Olga: Possible values: in, out, all (if not specified all is taken)
+              },
+              (err, result) => (err ? reject(err) : resolve(result))
+            )
+          })
+          const addressOutTxsPromise = new Promise((resolve, reject) => {
+            this.$socket.emit(
+              Events.getAddressTxs,
+              {
+                address: this.addressRef.replace('0x', ''),
+                limit: MAX_ITEMS,
+                page: 0,
+                filter: 'out' // TODO @Olga: Possible values: in, out, all (if not specified all is taken)
+              },
+              (err, result) => (err ? reject(err) : resolve(result))
+            )
+          })
+
           // Get Total Token Balances
           // TODO @Olga: Not working I need to take a look on vm service and ask Kosala
           this.$socket.emit(
@@ -285,24 +310,34 @@ export default class PageDetailsAddress extends Vue {
             )
           })
 
-          Promise.all([addressTxsPromise, addressPendingTxsPromise, minedBlocksPromise, contractsCreatedBy].map(p => p.catch(() => undefined)))
+          Promise.all([addressTxsPromise, addressInTxsPromise, addressOutTxsPromise, addressPendingTxsPromise, minedBlocksPromise, contractsCreatedBy].map(p => p.catch(() => undefined)))
             .then((res: any[]) => {
               // Txs
               const rawTxs = res[0] || []
               const txs = []
               rawTxs.forEach(raw => txs.unshift(new Tx(raw)))
               this.account.txs = txs
+              //In
+              const rawInTxs = res[1] || []
+              const inTxs = []
+              rawInTxs.forEach(raw => inTxs.unshift(new Tx(raw)))
+              this.account.inTxs = inTxs
+              //Out
+              const rawOutTxs = res[2] || []
+              const outTxs = []
+              rawOutTxs.forEach(raw => outTxs.unshift(new Tx(raw)))
+              this.account.outTxs = outTxs
               this.txsLoading = false
 
               // Pending Txs
-              const rawPtxs = res[1] || []
+              const rawPtxs = res[3] || []
               const pTxs = []
               rawPtxs.forEach(raw => pTxs.unshift(new PendingTx(raw)))
               this.account.pendingTxs = pTxs
               this.pendingTxsLoading = false
 
               // Mined Blocks
-              const rawMinedBlocks = res[2] || []
+              const rawMinedBlocks = res[4] || []
               const minedBlocks = []
               rawMinedBlocks.forEach(raw => minedBlocks.unshift(new Block(raw)))
               this.account.minedBlocks = minedBlocks
@@ -312,7 +347,7 @@ export default class PageDetailsAddress extends Vue {
               }
 
               // Contract Creator
-              const rawContractCreated = res[3] || []
+              const rawContractCreated = res[5] || []
               const contractsCreated = []
               contractsCreated.forEach(raw => rawContractCreated.unshift(raw)) // TODO: Update contract model
               this.account.created = contractsCreated
