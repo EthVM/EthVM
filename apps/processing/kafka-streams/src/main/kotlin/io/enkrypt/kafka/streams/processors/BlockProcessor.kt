@@ -65,7 +65,8 @@ class BlockProcessor : AbstractKafkaProcessor() {
 
     val blockStream = builder
       .stream(Topics.Blocks, Consumed.with(Serdes.BlockKey(), Serdes.Block()))
-      .transform(   // calculate block time
+      // calculate block time
+      .transform(
         TransformerSupplier { BlockTimeTransformer(appConfig.unitTesting) },
         *BlockTimeTransformer.STORE_NAMES
       )

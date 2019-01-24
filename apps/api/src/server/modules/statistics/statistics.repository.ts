@@ -5,7 +5,7 @@ import { toStatistic } from '@app/server/modules/statistics'
 export interface StatisticsRepository {
   getTotalTxs(start: Date, end: Date): Promise<Statistic[]>
   getTotalSuccessfulTxs(start: Date, end: Date): Promise<Statistic[]>
-  getAverageTotalDifficulty(start: Date, end: Date): Promise<Statistic[]>
+  getAverageDifficulty(start: Date, end: Date): Promise<Statistic[]>
   getTotalFailedTxs(start: Date, end: Date): Promise<Statistic[]>
   getTotalGasPrice(start: Date, end: Date): Promise<Statistic[]>
   getAverageGasLimit(start: Date, end: Date): Promise<Statistic[]>
@@ -30,8 +30,8 @@ export class MongoStatisticsRepository extends BaseMongoDbRepository implements 
     return this.retrieveFromMongo('TotalFailedTxs', start, end)
   }
 
-  public getAverageTotalDifficulty(start: Date, end: Date): Promise<Statistic[]> {
-    return this.retrieveFromMongo('AvgTotalDifficulty', start, end)
+  public getAverageDifficulty(start: Date, end: Date): Promise<Statistic[]> {
+    return this.retrieveFromMongo('AvgDifficulty', start, end)
   }
 
   public getTotalGasPrice(start: Date, end: Date): Promise<Statistic[]> {
