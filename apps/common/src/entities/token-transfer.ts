@@ -4,6 +4,6 @@ export interface TokenTransfer {
   transferType: string
   from: string
   to: string
-  amount: Buffer
+  amount: string
   timestamp: number
 }

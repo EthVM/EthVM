@@ -1,11 +1,11 @@
 import { BlocksRepository } from '@app/server/modules/blocks'
-import { Block, SmallBlock } from 'ethvm-common'
+import { Block } from 'ethvm-common'
 
 export interface BlocksService {
   getBlocks(limit: number, page: number): Promise<Block[]>
   getBlock(hash: string): Promise<Block | null>
   getBlockByNumber(no: number): Promise<Block | null>
-  getBlocksMined(address: string, limit: number, page: number): Promise<SmallBlock[]>
+  getBlocksMined(address: string, limit: number, page: number): Promise<Block[]>
 }
 
 export class BlocksServiceImpl implements BlocksService {
@@ -23,7 +23,7 @@ export class BlocksServiceImpl implements BlocksService {
     return this.blocksRepository.getBlockByNumber(no)
   }
 
-  public getBlocksMined(address: string, limit: number, page: number): Promise<SmallBlock[]> {
+  public getBlocksMined(address: string, limit: number, page: number): Promise<Block[]> {
     return this.blocksRepository.getBlocksMined(address, limit, page)
   }
 }

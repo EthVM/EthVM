@@ -6,7 +6,7 @@ export interface TxsRepository {
   getTx(hash: string): Promise<Tx | null>
   getTxs(limit: number, page: number): Promise<Tx[]>
   getTxsOfBlock(hash: string): Promise<Tx[]>
-  getTxsOfAddress(hash: string, limit: number, page: number): Promise<Tx[]>
+  getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<Tx[]>
   getAddressTotalTxs(hash: string): Promise<number>
 }
 
@@ -25,9 +25,7 @@ export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepo
         if (!resp) {
           return t
         }
-        resp.forEach(tx => {
-          t.push(toTx(tx))
-        })
+        resp.forEach(tx => t.push(toTx(tx)))
         return t
       })
   }
@@ -59,11 +57,23 @@ export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepo
       })
   }
 
-  public getTxsOfAddress(hash: string, limit: number, page: number): Promise<Tx[]> {
+  public getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<Tx[]> {
     const start = page * limit
+    let find
+    switch (filter) {
+      case 'in':
+        find = { from: hash }
+        break
+      case 'out':
+        find = { to: hash }
+        break
+      default:
+        find = { $or: [{ from: hash }, { to: hash }] }
+        break
+    }
     return this.db
       .collection(MongoEthVM.collections.transactions)
-      .find({ $or: [{ from: hash }, { to: hash }] })
+      .find(find)
       .sort({ timestamp: -1 })
       .skip(start)
       .limit(limit)
@@ -73,9 +83,7 @@ export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepo
         if (!resp) {
           return t
         }
-        resp.forEach(tx => {
-          t.push(toTx(tx))
-        })
+        resp.forEach(tx => t.push(toTx(tx)))
         return t
       })
   }

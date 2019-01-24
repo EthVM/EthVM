@@ -174,7 +174,7 @@ const JoinLeavePayloadSchema = {
     rooms: {
       $id: '/properties/rooms',
       type: 'array',
-      items: { type: 'string', enum: ROOMS },
+      items: { type: 'string', enum: [ROOMS] },
       uniqueItems: true,
       minItems: 1
     }
@@ -321,6 +321,12 @@ const TxsPayloadSchema = {
   type: 'object',
   properties: {
     address: addressSchema,
+    filter: {
+      $id: '/properties/limit',
+      type: 'string',
+      enum: ['in', 'out', 'all'],
+      default: 'all'
+    },
     limit: limitSchema,
     page: pageSchema
   },
@@ -386,7 +392,9 @@ const ContractSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   type: 'object',
   properties: {
-    address: addressSchema
+    address: addressSchema,
+    limit: limitSchema,
+    page: pageSchema
   },
   required: ['address'],
   additionalProperties: false

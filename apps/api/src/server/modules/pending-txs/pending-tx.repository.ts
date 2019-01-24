@@ -4,7 +4,7 @@ import { PendingTx } from 'ethvm-common'
 
 export interface PendingTxRepository {
   getPendingTxs(limit: number, page: number): Promise<PendingTx[]>
-  getPendingTxsOfAddress(hash: string, limit: number, page: number): Promise<PendingTx[]>
+  getPendingTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<PendingTx[]>
 }
 
 export class MongoPendingTxRepository extends BaseMongoDbRepository implements PendingTxRepository {
@@ -29,11 +29,23 @@ export class MongoPendingTxRepository extends BaseMongoDbRepository implements P
       })
   }
 
-  public getPendingTxsOfAddress(hash: string, limit: number, page: number): Promise<PendingTx[]> {
+  public getPendingTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<PendingTx[]> {
     const start = page * limit
+    let find
+    switch (filter) {
+      case 'in':
+        find = { from: hash }
+        break
+      case 'out':
+        find = { to: hash }
+        break
+      default:
+        find = { $or: [{ from: hash }, { to: hash }] }
+        break
+    }
     return this.db
       .collection(MongoEthVM.collections.pendingTxs)
-      .find({ $or: [{ from: hash }, { to: hash }] })
+      .find(find)
       .sort({ transactionIndex: -1 })
       .skip(start)
       .limit(limit)
@@ -43,9 +55,7 @@ export class MongoPendingTxRepository extends BaseMongoDbRepository implements P
         if (!resp) {
           return t
         }
-        resp.forEach(tx => {
-          t.push(toPendingTx(tx))
-        })
+        resp.forEach(tx => t.push(toPendingTx(tx)))
         return t
       })
   }

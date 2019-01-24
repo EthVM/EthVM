@@ -22,11 +22,12 @@ export class MongoBlockMetricsRepository extends BaseMongoDbRepository implement
   }
 
   getBlockStats(limit: number, page: number): Promise<BlockStats[]> {
+    const start = page * limit
     return this.db
       .collection(MongoEthVM.collections.blockMetrics)
       .find()
       .sort({ '_id': -1 })
-      .skip(page)
+      .skip(start)
       .limit(limit)
       .toArray()
       .then(resp => {

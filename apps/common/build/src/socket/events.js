@@ -16,8 +16,10 @@ exports.Events = {
     getAddressBalance: "get-address-balance",
     getAddressTokenBalance: "get-address-token-balance",
     getAddressTokenTransfers: "get-address-token-transfers",
+    getAddressAmountTokensOwned: "get-address-amount-tokens-owned",
     // Contracts
     getContract: "get-contract",
+    getContractsCreatedBy: "getContractsCreatedBy",
     // Blocks
     getBlock: "get-block",
     getBlocks: "get-blocks",
@@ -37,9 +39,6 @@ exports.Events = {
     getUncles: "get-uncles",
     // Exchange
     getExchangeRates: "get-exchange-rates",
-    // Vm
-    getCurrentStateRoot: "get-current-state-root",
-    getTokenBalance: "get-tokens-balance",
     // Search
     search: "search",
     // Stats

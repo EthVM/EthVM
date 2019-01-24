@@ -21,11 +21,12 @@ export class MongoUncleRepository extends BaseMongoDbRepository implements Uncle
   }
 
   public getUncles(limit: number, page: number): Promise<Uncle[]> {
+    const start = page * limit
     return this.db
       .collection(MongoEthVM.collections.uncles)
       .find()
       .sort({ number: -1 })
-      .skip(page)
+      .skip(start)
       .limit(limit)
       .toArray()
       .then(resp => {

@@ -4,44 +4,46 @@
 
     <div v-if="!loading">
       <v-layout row wrap justify-start class="mb-4">
-        <v-flex xs12> <address-detail :account="account" :type-addrs="detailsType" /> </v-flex>
+        <v-flex xs12>
+          <address-detail :account="account" :type-addrs="detailsType" />
+        </v-flex>
       </v-layout>
 
       <app-tabs :tabs="tabs">
         <!-- Transactions -->
         <v-tab-item slot="tabs-item" value="tab-0">
-          <table-address-txs v-if="!txsError" :loading="txsLoading" :address="account.address" :transactions="account.txs" />
+          <table-address-txs
+            v-if="!txsError"
+            :loading="txsLoading"
+            :address="account.address"
+            :txs="account.txs"
+            :total-txs="account.totalTxs"
+            :in-txs="[]"
+            :totalin-txs="0"
+            :out-txs="[]"
+            :total-out-txs="0"
+          />
           <app-error-no-data v-else />
         </v-tab-item>
         <!-- End Transactions -->
-
         <!-- Tokens -->
         <v-tab-item slot="tabs-item" value="tab-1">
           <table-tokens v-if="!tokensError" :loading="tokensLoading" :tokens="account.tokens" :error="tokensError" />
           <app-error-no-data v-else />
         </v-tab-item>
         <!-- End Tokens -->
-
         <!-- Pending Transactions -->
         <v-tab-item slot="tabs-item" value="tab-2">
-          <table-address-txs
-            v-if="!pendingTxsError"
-            :loading="pendingTxsLoading"
-            :address="account.address"
-            :transactions="account.pendingTxs"
-            :is-pending="true"
-          />
+          <table-address-txs v-if="!pendingTxsError" :loading="pendingTxsLoading" :address="account.address" :txs="account.pendingTxs" :is-pending="true" />
           <app-error-no-data v-else />
         </v-tab-item>
         <!-- End Pending Transactions -->
-
         <!-- Mined Blocks -->
         <v-tab-item slot="tabs-item" v-if="account.isMiner" value="tab-3">
-          <table-blocks v-if="!minerBlocksError" :loading="minerBlocksLoading" :blocks="blocks" :page-type="detailsType" />
+          <table-blocks v-if="!minerBlocksError" :loading="minerBlocksLoading" :blocks="account.minedBlocks" :page-type="detailsType" />
           <app-error-no-data v-else />
         </v-tab-item>
         <!-- End Mined Blocks -->
-
         <!-- Contract Creator (no need to implement yet) -->
         <!-- <v-tab-item v-if="account.conCreator" value="tab-4">
         <v-card>
@@ -56,7 +58,7 @@
             <li>0x045619099665fc6f661b1745e5350290ceb933f</li>
           </ul>
         </v-card>
-      </v-tab-item>-->
+        </v-tab-item>-->
       </app-tabs>
     </div>
     <div v-else>
@@ -69,7 +71,7 @@
 // TODO: Finish proper implementation of Table-Address-Txs or reuse from Txs our Table-Txs
 
 <script lang="ts">
-import { EthValue, Tx, PendingTx } from '@app/core/models'
+import { Block, EthValue, Tx, PendingTx } from '@app/core/models'
 import { Events } from 'ethvm-common'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
@@ -131,31 +133,8 @@ export default class PageDetailsAddress extends Vue {
   // State Machine (not needed to be reactive, this is why we use undefined instead of null)
   sm: TinySM = undefined
 
-  data() {
-    return {
-      tabs: [
-        {
-          id: '0',
-          title: this.$i18n.t('tabs.txH'),
-          isActive: true
-        },
-        {
-          id: '1',
-          title: this.$i18n.t('tabs.tokens'),
-          isActive: false
-        },
-        {
-          id: '2',
-          title: this.$i18n.t('tabs.pending'),
-          isActive: false
-        }
-      ]
-    }
-  }
-
-  created() {
+  mounted() {
     const ref = this.addressRef
-
     // 1. Create State Machine
     this.sm = new TinySM([
       {
@@ -222,12 +201,18 @@ export default class PageDetailsAddress extends Vue {
             )
           })
 
-          Promise.all([addressBalancePromise, contractPromise, exchangeRatePromise, totalTxsPromise])
+          Promise.all(
+            // If one promise fails, we still continue processing every entry (and for those failed we receive undefined)
+            [addressBalancePromise, contractPromise, exchangeRatePromise, totalTxsPromise].map(p => p.catch(() => undefined))
+          )
             .then((res: any[]) => {
               this.account.balance = res[0] ? new EthValue(res[0].amount) : new EthValue(0)
               this.account.type = res[1] ? CONTRACT_DETAIL_TYPE : ADDRESS_DETAIL_TYPE
               this.account.exchangeRate.USD = res[2].price
               this.account.totalTxs = res[3] ? res[3] : 0
+
+              this.error = false
+              this.loading = false
 
               this.sm.transition('load-complementary-info')
             })
@@ -238,33 +223,18 @@ export default class PageDetailsAddress extends Vue {
         name: 'load-complementary-info',
         enter: () => {
           // Get Address Transactions
-          const addressTxsPromise = new Promise((resolve, reject) => {
+          const addressTxsPromise = this.loadTx()
+
+          // Get Tokens Owned
+          const totalTokensOwnedPromise = new Promise((resolve, reject) => {
             this.$socket.emit(
-              Events.getAddressTxs,
+              Events.getAddressTokenBalance,
               {
-                address: this.addressRef.replace('0x', ''),
-                limit: MAX_ITEMS,
-                page: 0
+                address: this.addressRef.replace('0x', '')
               },
               (err, result) => (err ? reject(err) : resolve(result))
             )
           })
-
-          // Getting Token Balances
-          // this.$socket.emit(
-          //   Events.getTokenBalance,
-          //   {
-          //     address: this.addressRef.replace('0x', '')
-          //   },
-          //   (err, result) => {
-          //     if (result !== '0x') {
-          //       this.tokens = result
-          //       this.tokensLoad = true
-          //     } else {
-          //       this.tokensError = true
-          //     }
-          //   }
-          // )
 
           // Get Address Pending Transactions
           const addressPendingTxsPromise = new Promise((resolve, reject) => {
@@ -272,8 +242,9 @@ export default class PageDetailsAddress extends Vue {
               Events.getPendingTxsOfAddress,
               {
                 address: this.addressRef.replace('0x', ''),
+                page: 0,
                 limit: MAX_ITEMS,
-                page: 0
+                filter: 'all' // TODO @Olga: Possible values: in, out, all (if not specified all is taken)
               },
               (err, result) => (err ? reject(err) : resolve(result))
             )
@@ -285,30 +256,67 @@ export default class PageDetailsAddress extends Vue {
               Events.getBlocksMined,
               {
                 address: this.addressRef.replace('0x', ''),
-                limit: MAX_ITEMS,
-                page: 0
+                page: 0,
+                limit: MAX_ITEMS
               },
               (err, result) => (err ? reject(err) : resolve(result))
             )
           })
 
-          Promise.all([addressTxsPromise, addressPendingTxsPromise, minedBlocksPromise])
-            .then((res: any[]) => {
-              // console.log('Complementary info: ', res)
+          // Get contracts created by
+          const contractsCreatedBy = new Promise((resolve, reject) => {
+            this.$socket.emit(
+              Events.getContractsCreatedBy,
+              {
+                address: this.addressRef.replace('0x', ''),
+                page: 0,
+                limit: MAX_ITEMS
+              },
+              (err, result) => (err ? reject(err) : resolve(result))
+            )
+          })
 
+          Promise.all(
+            [addressTxsPromise, totalTokensOwnedPromise, addressPendingTxsPromise, minedBlocksPromise, contractsCreatedBy].map(p => p.catch(() => undefined))
+          )
+            .then((res: any[]) => {
               // Txs
+              const rawTxs = res[0] || []
               const txs = []
-              res[0].forEach(raw => txs.unshift(new Tx(raw)))
+              rawTxs.forEach(raw => txs.unshift(new Tx(raw)))
               this.account.txs = txs
               this.txsLoading = false
 
+              // Tokens
+              this.account.tokens = res[1] || []
+              this.account.tokensOwned = this.account.tokens.length
+              this.tokensLoading = false
+
               // Pending Txs
+              const rawPtxs = res[2] || []
               const pTxs = []
-              res[1].forEach(raw => pTxs.unshift(new PendingTx(raw)))
+              rawPtxs.forEach(raw => pTxs.unshift(new PendingTx(raw)))
               this.account.pendingTxs = pTxs
-              // this.pendingTxsLoading = false
+              this.pendingTxsLoading = false
 
               // Mined Blocks
+              const rawMinedBlocks = res[3] || []
+              const minedBlocks = []
+              rawMinedBlocks.forEach(raw => minedBlocks.unshift(new Block(raw)))
+              this.account.minedBlocks = minedBlocks
+              this.minerBlocksLoading = false
+              if (rawMinedBlocks.length > 0) {
+                this.account.isMiner = true
+              }
+
+              // Contract Creator
+              const rawContractCreated = res[4] || []
+              const contractsCreated = []
+              contractsCreated.forEach(raw => rawContractCreated.unshift(raw))
+              this.account.contracts = contractsCreated
+              if (rawContractCreated.length > 0) {
+                this.account.isCreator = true
+              }
 
               this.sm.transition('success')
             })
@@ -341,25 +349,20 @@ export default class PageDetailsAddress extends Vue {
     this.sm.transition('initial')
   }
 
-  // Methods
-  updateTabs() {
-    if (this.account.miner) {
-      const newTab = {
-        id: '3',
-        title: this.$i18n.t('tabs.miningH'),
-        isActive: false
-      }
-      this.tabs.push(newTab)
-    }
-
-    if (this.account.creator) {
-      const newTab = {
-        id: '4',
-        title: this.$i18n.t('tabs.contracts'),
-        isActive: false
-      }
-      this.tabs.push(newTab)
-    }
+  // Method:
+  loadTx(page = 0, limit = MAX_ITEMS, filter = 'all'): Promise<Tx[]> {
+    return new Promise((resolve, reject) => {
+      this.$socket.emit(
+        Events.getAddressTxs,
+        {
+          address: this.addressRef.replace('0x', ''),
+          page,
+          limit,
+          filter
+        },
+        (err, result) => (err ? reject(err) : resolve(result))
+      )
+    })
   }
 
   // Computed
@@ -370,6 +373,43 @@ export default class PageDetailsAddress extends Vue {
         disabled: true
       }
     ]
+  }
+  get tabs() {
+    const tabs = [
+      {
+        id: '0',
+        title: this.$i18n.t('tabs.txH'),
+        isActive: true
+      },
+      {
+        id: '1',
+        title: this.$i18n.t('tabs.tokens'),
+        isActive: false
+      },
+      {
+        id: '2',
+        title: this.$i18n.t('tabs.pending'),
+        isActive: false
+      }
+    ]
+    if (this.account.isMiner) {
+      const newTab = {
+        id: '3',
+        title: this.$i18n.t('tabs.miningH'),
+        isActive: false
+      }
+      tabs.push(newTab)
+    }
+
+    if (this.account.isCreator) {
+      const newTab = {
+        id: '4',
+        title: this.$i18n.t('tabs.contracts'),
+        isActive: false
+      }
+      tabs.push(newTab)
+    }
+    return tabs
   }
 }
 </script>
