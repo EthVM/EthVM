@@ -29,17 +29,7 @@
           </v-flex>
           <v-flex>
             <v-card flat style="border: solid 1px #efefef; padding-top: 1px;" height="36px" class="pl-2">
-              <v-select
-                solo
-                flat
-                hide-details
-                v-model="selected"
-                class="primary body-1"
-                :items="options"
-                item-text="text"
-                item-value="value"
-                height="32px"
-              />
+              <v-select solo flat hide-details v-model="selected" class="primary body-1" :items="options" item-text="text" item-value="value" height="32px" />
             </v-card>
           </v-flex>
           <!-- End Tx Input Filter -->
@@ -50,12 +40,7 @@
       </v-flex>
 
       <v-flex v-if="length > 1">
-        <v-pagination
-        v-model="page"
-        flat
-        :length="length"
-        :total-visible="5"
-        />
+        <v-pagination v-model="page" flat :length="length" :total-visible="5" />
       </v-flex>
     </v-layout>
     <!-- Tx Table Content -->
@@ -83,31 +68,31 @@ const MAX_TXS = 5
 export default class TableAddressTxs extends Vue {
   @Prop(String) address!: string
   @Prop(Array) txs!: Tx[]
-  @Prop({type: Number, default: 0}) totalTxs!: number
+  @Prop({ type: Number, default: 0 }) totalTxs!: number
   @Prop(Array) inTxs!: Tx[]
-  @Prop({type: Number, default: 0}) totalIn!: number
-  @Prop(Array) outTxs!: Tx []
-  @Prop({type: Number, default: 0}) totalOut!: number
-  @Prop({type: Boolean, default: false}) isPending!: boolean
+  @Prop({ type: Number, default: 0 }) totalIn!: number
+  @Prop(Array) outTxs!: Tx[]
+  @Prop({ type: Number, default: 0 }) totalOut!: number
+  @Prop({ type: Boolean, default: false }) isPending!: boolean
   @Prop({ type: Boolean, default: true }) loading!: boolean
 
   filtered = this.txs.slice(0, MAX_TXS)
-  page=1
-  selected=0
+  page = 1
+  selected = 0
   pageLength = this.totalTxs
 
   /*Watch: */
   @Watch('selected')
   onSelectedChanged(newVal: number, oldVal: number): void {
-    if(newVal === 0) {
+    if (newVal === 0) {
       this.filtered = this.txs
       this.pageLength = this.totalTxs
     }
-    if(newVal === 1) {
+    if (newVal === 1) {
       this.filtered = []
       this.pageLength = this.totalIn
     }
-    if(newVal === 2) {
+    if (newVal === 2) {
       this.filtered = []
       this.pageLength = this.totalOut
     }
@@ -115,16 +100,16 @@ export default class TableAddressTxs extends Vue {
 
   @Watch('page')
   onPageChanged(newVal: number, oldVal: number): void {
-    const s = (newVal-1)*MAX_TXS
-    const e = newVal*MAX_TXS
-    if(this.selectedTx === 0) {
-      this.filtered = this.txs.slice(s,e)
+    const s = (newVal - 1) * MAX_TXS
+    const e = newVal * MAX_TXS
+    if (this.selectedTx === 0) {
+      this.filtered = this.txs.slice(s, e)
     }
-    if(this.selectedTx === 1) {
-      this.filtered = this.inTxs.slice(s,e)
+    if (this.selectedTx === 1) {
+      this.filtered = this.inTxs.slice(s, e)
     }
-    if(this.selectedTx === 2) {
-      this.filtered = this.outTxs.slice(s,e)
+    if (this.selectedTx === 2) {
+      this.filtered = this.outTxs.slice(s, e)
     }
   }
 
@@ -138,7 +123,7 @@ export default class TableAddressTxs extends Vue {
   }
 
   get getTotal(): number {
-    return this.filtered? this.filtered.length : 0
+    return this.filtered ? this.filtered.length : 0
   }
 
   get options() {
@@ -172,7 +157,7 @@ export default class TableAddressTxs extends Vue {
     ]
   }
   get length(): number {
-    return Math.ceil(this.pageLength/MAX_TXS)
+    return Math.ceil(this.pageLength / MAX_TXS)
   }
 }
 </script>

@@ -23,11 +23,12 @@ export class MongoBlockRepository extends BaseMongoDbRepository implements Block
   }
 
   public getBlocks(limit: number, page: number): Promise<Block[]> {
+    const start = page * limit
     return this.db
       .collection(MongoEthVM.collections.blocks)
       .find()
       .sort({ 'header.number': -1 })
-      .skip(page)
+      .skip(start)
       .limit(limit)
       .toArray()
       .then(resp => {

@@ -37,17 +37,20 @@
                     <v-layout row pl-2>
                       <p v-if="!getType(tx)" class="text-truncate info--text mb-0">
                         {{ $t('tx.from') }}:
-                        <router-link :to="'/address/' + tx.getFrom().toString()" class="secondary--text font-italic font-weight-regular">{{ tx.getFrom().toString() }}
+                        <router-link :to="'/address/' + tx.getFrom().toString()" class="secondary--text font-italic font-weight-regular"
+                          >{{ tx.getFrom().toString() }}
                         </router-link>
                       </p>
                       <p class="text-truncate info--text font-weight-thin mb-0" v-if="getType(tx) && !tx.getContractAddress().isEmpty()">
                         {{ $t('tx.contract') }}:
-                        <router-link class="secondary--text font-italic font-weight-regular" :to="'/address/' + tx.getContractAddress().toString()">{{ tx.getContractAddress().toString() }}
+                        <router-link class="secondary--text font-italic font-weight-regular" :to="'/address/' + tx.getContractAddress().toString()"
+                          >{{ tx.getContractAddress().toString() }}
                         </router-link>
                       </p>
                       <p class="text-truncate info--text font-weight-thin mb-0" v-if="getType(tx) && tx.getContractAddress().isEmpty()">
                         <strong>{{ $t('tx.to') }}:</strong>
-                        <router-link class="secondary--text font-italic font-weight-regular" :to="'/address/' + tx.getTo().toString()">{{ tx.getTo().toString() }}
+                        <router-link class="secondary--text font-italic font-weight-regular" :to="'/address/' + tx.getTo().toString()"
+                          >{{ tx.getTo().toString() }}
                         </router-link>
                       </p>
                     </v-layout>
@@ -55,25 +58,29 @@
                 </v-layout>
               </v-flex>
               <v-flex d-flex xs3 sm2 md2 pr-0>
-                <v-layout align-center row v-if="
-                        !isShortValue(
-                          tx
-                            .getValue()
-                            .toEth()
-                            .toString()
-                        )
-                      ">
+                <v-layout
+                  align-center
+                  row
+                  v-if="
+                    !isShortValue(
+                      tx
+                        .getValue()
+                        .toEth()
+                        .toString()
+                    )
+                  "
+                >
                   <p :class="[!getType(tx) ? 'success--text mb-0' : 'error--text mb-0']">{{ getShortValue(tx.getValue().toEth()) }}</p>
                   <v-tooltip bottom>
                     <v-icon slot="activator" small class="info--text text-xs-center ml-1">fa fa-question-circle</v-icon>
                     <span>{{
-                          formatStr(
-                            tx
-                              .getValue()
-                              .toEth()
-                              .toString()
-                          )
-                        }}</span>
+                      formatStr(
+                        tx
+                          .getValue()
+                          .toEth()
+                          .toString()
+                      )
+                    }}</span>
                   </v-tooltip>
                 </v-layout>
                 <p v-else :class="[!getType(tx) ? 'success--text mb-0' : 'error--text mb-0']">{{ tx.getValue().toEth() }}</p>
@@ -98,65 +105,61 @@
 </template>
 
 <script lang="ts">
-  import {
-    Vue,
-    Component,
-    Prop,
-    Mixins
-  } from 'vue-property-decorator'
-  import {
-    StringConcatMixin
-  } from '@app/core/components/mixins'
+import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
+import { StringConcatMixin } from '@app/core/components/mixins'
 
-  @Component
-  export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
-    @Prop({
-      type: String,
-      required: true
-    }) account!: string
-    @Prop(Array) transactions!: any[]
-    @Prop({
-      type: Number,
-      default: 0
-    }) filter!: number
-    @Prop({
-      type: Number,
-      default: 0
-    }) total!: number
-    @Prop({
-      type: Boolean,
-      default: false
-    }) type!: boolean
+@Component
+export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
+  @Prop({
+    type: String,
+    required: true
+  })
+  account!: string
+  @Prop(Array) transactions!: any[]
+  @Prop({
+    type: Number,
+    default: 0
+  })
+  filter!: number
+  @Prop({
+    type: Number,
+    default: 0
+  })
+  total!: number
+  @Prop({
+    type: Boolean,
+    default: false
+  })
+  type!: boolean
 
-    // Methods
-    getType(tx): boolean {
-      return (
-        tx
+  // Methods
+  getType(tx): boolean {
+    return (
+      tx
         .getFrom()
         .toString()
         .toUpperCase() === this.account.toUpperCase()
-      )
-    }
-
-    log(tx) {}
-
-
-    // Computed
-    get text(): string {
-      if (!this.isPending) {
-        if (this.filter === 0) {
-          return this.$i18n.t('message.txAll')
-        } else if (this.filter === 1) {
-          return this.$i18n.t('message.txIn')
-        }
-        return this.$i18n.t('message.txOut')
-      }
-      if (this.filter === '2') {
-        return this.$i18n.t('message.txPen')
-      } else if (this.filter === '1') {
-        return this.$i18n.t('message.txPenIn')
-      }
-      return this.$i18n.t('message.txPenOut')
-    }
+    )
   }
+
+  log(tx) {}
+
+  // Computed
+  get text(): string {
+    if (!this.isPending) {
+      if (this.filter === 0) {
+        return this.$i18n.t('message.txAll')
+      } else if (this.filter === 1) {
+        return this.$i18n.t('message.txIn')
+      }
+      return this.$i18n.t('message.txOut')
+    }
+    if (this.filter === '2') {
+      return this.$i18n.t('message.txPen')
+    } else if (this.filter === '1') {
+      return this.$i18n.t('message.txPenIn')
+    }
+    return this.$i18n.t('message.txPenOut')
+  }
+}
 </script>

@@ -1,20 +1,20 @@
-import { exchangeRatePayloadValidator } from '@app/server/core/validation'
+import { balancePayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
 import { Events } from 'ethvm-common'
 
-const getExchangeRatesEvent: SocketEvent = {
-  id: Events.getExchangeRates,
+const getAddressTokenBalance: SocketEvent = {
+  id: Events.getAddressTokenBalance,
 
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
-    const valid = exchangeRatePayloadValidator(payload) as boolean
+    const valid = balancePayloadValidator(payload) as boolean
     return {
       valid,
-      errors: []
+      errors: [] // TODO: Map properly the error
     }
   },
 
   onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<any> =>
-    server.exchangesService.getExchangeRate(payload.symbol, payload.to)
+    server.tokensService.getAddressTokenBalance(payload.address)
 }
 
-export default getExchangeRatesEvent
+export default getAddressTokenBalance

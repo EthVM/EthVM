@@ -1,4 +1,3 @@
-import { TxsPayload } from '@app/server/core/payloads'
 import { txsPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
 import { Events, Tx } from 'ethvm-common'
@@ -14,7 +13,7 @@ const getAddressTxsEvent: SocketEvent = {
     }
   },
 
-  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: TxsPayload): Promise<Tx[]> =>
+  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Tx[]> =>
     server.txsService.getTxsOfAddress(payload.address, payload.filter, payload.limit, payload.page)
 }
 

@@ -1,4 +1,4 @@
-import { Token } from '@app/server/modules/tokens'
+import { Token } from 'ethvm-common'
 import BigNumber from 'bignumber.js'
 import * as abi from 'ethereumjs-abi'
 import * as jayson from 'jayson/promise'
@@ -21,7 +21,7 @@ export class VmEngine {
     this.client = jayson.Client.https(this.opts.rpcUrl)
   }
 
-  public getTokensBalance(address: string): Promise<Token[]> {
+  public async getAllTokens(address: string): Promise<Token[]> {
     address = address.startsWith('0x') ? address : '0x' + address
 
     return new Promise(async (resolve, reject) => {
@@ -33,12 +33,16 @@ export class VmEngine {
         const payload = [{ to: this.opts.tokensAddress.address, data: encoded }, 'latest']
         const response = await this.client.request('eth_call', payload)
         const tokens = this.decode(response.result)
-
-        resolve(tokens)
+        resolve(tokens.filter(t => t.balance && t.balance !== '0'))
       } catch (err) {
         reject(err)
       }
     })
+  }
+
+  public async getAddressAmountTokensOwned(address: string): Promise<number> {
+    const tokens = await this.getAllTokens(address)
+    return Promise.resolve(tokens.length)
   }
 
   private encodeCall(name: string, args: string[] = [], rawValues: any[] = []): string {

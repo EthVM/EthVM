@@ -20,10 +20,11 @@ export class MongoContractsRepository extends BaseMongoDbRepository implements C
   }
 
   public getContractsCreatedBy(hash: string, limit: number, page: number): Promise<Contract[]> {
+    const start = page * limit
     return this.db
       .collection(MongoEthVM.collections.contracts)
       .find({ creator: hash })
-      .skip(page)
+      .skip(start)
       .limit(limit)
       .toArray()
       .then(resp => {

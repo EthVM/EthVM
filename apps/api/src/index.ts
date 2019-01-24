@@ -12,7 +12,7 @@ import { MongoStatisticsRepository, StatisticsServiceImpl } from '@app/server/mo
 import { MongoTokensRepository, TokensServiceImpl } from '@app/server/modules/tokens'
 import { MongoTxsRepository, TxsServiceImpl } from '@app/server/modules/txs'
 import { MongoUncleRepository, UnclesServiceImpl } from '@app/server/modules/uncles'
-import { VmEngine, VmServiceImpl } from '@app/server/modules/vm'
+import { VmEngine } from '@app/server/modules/vm'
 import { RedisCacheRepository } from '@app/server/repositories'
 import * as EventEmitter from 'eventemitter3'
 import * as Redis from 'ioredis'
@@ -56,7 +56,7 @@ async function bootstrapServer() {
 
   // Balances
   const balancesRepository = new MongoBalancesRepository(db)
-  const balancesService = new BalancesServiceImpl(balancesRepository, vme)
+  const balancesService = new BalancesServiceImpl(balancesRepository)
 
   // Blocks
   const blocksRepository = new MongoBlockRepository(db)
@@ -91,10 +91,7 @@ async function bootstrapServer() {
 
   // Tokens
   const tokensRepository = new MongoTokensRepository(db)
-  const tokensService = new TokensServiceImpl(tokensRepository)
-
-  // Vm
-  const vmService = new VmServiceImpl(vme)
+  const tokensService = new TokensServiceImpl(tokensRepository, vme)
 
   // Create streamer
   // ---------------
@@ -116,7 +113,6 @@ async function bootstrapServer() {
     exchangeService,
     searchService,
     tokensService,
-    vmService,
     streamer
   )
   await server.start()
