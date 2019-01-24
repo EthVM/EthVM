@@ -64,7 +64,10 @@ class BlockTimeTransformer(
       return null
     }
 
-    blockTimesStore.put(key.getNumber(), block.getHeader().getTimestamp())
+    val timestamp = block.getHeader().getTimestamp()
+    checkNotNull(timestamp) { "block cannot have a null timestamp" }
+
+    blockTimesStore.put(key.getNumber(), timestamp)
 
     val blockNumber = key.getNumber().unsignedBigInteger()!!
 
@@ -72,17 +75,18 @@ class BlockTimeTransformer(
     if (blockNumber < 2.toBigInteger()) return KeyValue(key, block)
 
     val prevBlockNumber = blockNumber - BigInteger.ONE
-
     val prevTimestamp = blockTimesStore.get(prevBlockNumber.unsignedByteBuffer())
 
     // TODO add cleanup of older state after a certain number of blocks
 
     return when (prevTimestamp) {
-      null -> KeyValue(key, block)
+      null -> {
+        KeyValue(key, block)
+      }
       else -> KeyValue(
         key,
         BlockRecord.newBuilder(block)
-          .setBlockTime(block.getHeader().getTimestamp() - prevTimestamp)
+          .setBlockTime(timestamp - prevTimestamp)
           .build()
       )
     }
