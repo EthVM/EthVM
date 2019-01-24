@@ -1,4 +1,4 @@
-import { Token } from '@app/server/modules/tokens'
+import { Token } from 'ethvm-common'
 import BigNumber from 'bignumber.js'
 import * as abi from 'ethereumjs-abi'
 import * as jayson from 'jayson/promise'
@@ -21,32 +21,28 @@ export class VmEngine {
     this.client = jayson.Client.https(this.opts.rpcUrl)
   }
 
-  public getAccount(): Promise<any> {
-    return this.client.request('eth_getKeyValue', [this.opts.account])
-  }
+  public async getAllTokens(address: string): Promise<Token[]> {
+    address = address.startsWith('0x') ? address : '0x' + address
 
-  public getBalance(address: string): Promise<any> {
-    return this.client.request('eth_getBalance', [address, 'latest'])
-  }
-
-  public getTokens(address: string): Promise<Token[]> {
     return new Promise(async (resolve, reject) => {
-      const argss = ['address', 'uint32', 'uint32']
-      const vals = [address, 4, 0]
-
+      const argss = ['address', 'bool', 'bool', 'bool', 'uint256']
+      const vals = [address, true, true, true, 0]
       const encoded = this.encodeCall('getAllBalance', argss, vals)
 
       try {
         const payload = [{ to: this.opts.tokensAddress.address, data: encoded }, 'latest']
-
         const response = await this.client.request('eth_call', payload)
-
-        const tokens = this.decode(response.result || [])
-        resolve(tokens)
+        const tokens = this.decode(response.result)
+        resolve(tokens.filter(t => t.balance && t.balance !== '0'))
       } catch (err) {
         reject(err)
       }
     })
+  }
+
+  public async getAddressAmountTokensOwned(address: string): Promise<number> {
+    const tokens = await this.getAllTokens(address)
+    return Promise.resolve(tokens.length)
   }
 
   private encodeCall(name: string, args: string[] = [], rawValues: any[] = []): string {

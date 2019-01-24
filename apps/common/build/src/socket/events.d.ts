@@ -16,7 +16,9 @@ export declare const Events: {
     getAddressBalance: string;
     getAddressTokenBalance: string;
     getAddressTokenTransfers: string;
+    getAddressAmountTokensOwned: string;
     getContract: string;
+    getContractsCreatedBy: string;
     getBlock: string;
     getBlocks: string;
     getBlocksMined: string;
@@ -31,8 +33,6 @@ export declare const Events: {
     getUncle: string;
     getUncles: string;
     getExchangeRates: string;
-    getCurrentStateRoot: string;
-    getTokenBalance: string;
     search: string;
     getAverageTotalDifficultyStats: string;
     getAverageGasPriceStats: string;

@@ -3,7 +3,7 @@ import { PendingTx } from 'ethvm-common'
 
 export interface PendingTxService {
   getPendingTxs(limit: number, page: number): Promise<PendingTx[]>
-  getPendingTxsOfAddress(hash: string, limit: number, page: number): Promise<PendingTx[]>
+  getPendingTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<PendingTx[]>
 }
 
 export class PendingTxServiceImpl implements PendingTxService {
@@ -13,7 +13,7 @@ export class PendingTxServiceImpl implements PendingTxService {
     return this.pendingTxRepository.getPendingTxs(limit, page)
   }
 
-  public getPendingTxsOfAddress(hash: string, limit: number = 10, page: number = 0): Promise<PendingTx[]> {
-    return this.pendingTxRepository.getPendingTxsOfAddress(hash, limit, page)
+  public getPendingTxsOfAddress(hash: string, filter: string, limit: number = 10, page: number = 0): Promise<PendingTx[]> {
+    return this.pendingTxRepository.getPendingTxsOfAddress(hash, filter, limit, page)
   }
 }

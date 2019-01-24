@@ -1,5 +1,5 @@
 <template>
-  <v-card color="white" flat v-if="transactions" class="pl-3 pr-3 pt-2 pb-0">
+  <v-card color="white" flat class="pt-3 pr-2 pl-2">
     <!-- Tx Header -->
     <v-layout align-center justify-space-between wrap row fill-height>
       <!-- Search Box -->
@@ -21,7 +21,6 @@
         </v-layout>
       </v-flex> -->
       <!-- End Search Box -->
-      <v-spacer />
       <!-- Tx Input Filter -->
       <v-flex d-flex xs12 sm4 md3>
         <v-layout row align-center justify-start fill-height height="40px">
@@ -30,22 +29,18 @@
           </v-flex>
           <v-flex>
             <v-card flat style="border: solid 1px #efefef; padding-top: 1px;" height="36px" class="pl-2">
-              <v-select
-                solo
-                flat
-                hide-details
-                v-model="selected.value"
-                class="primary body-1"
-                :items="options"
-                item-text="text"
-                item-value="value"
-                height="32px"
-                @click="setSelectedTxs"
-              />
+              <v-select solo flat hide-details v-model="selected" class="primary body-1" :items="options" item-text="text" item-value="value" height="32px" />
             </v-card>
           </v-flex>
           <!-- End Tx Input Filter -->
         </v-layout>
+      </v-flex>
+      <v-flex d-flex xs12 sm8 md7>
+        <v-layout justify-start class="pl-3"><app-footnotes :footnotes="footnote"/></v-layout>
+      </v-flex>
+
+      <v-flex v-if="length > 1">
+        <v-pagination v-model="page" flat :length="length" :total-visible="5" />
       </v-flex>
     </v-layout>
     <!-- Tx Table Content -->
@@ -57,93 +52,78 @@
 
 <script lang="ts">
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
+import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import TableAddressTxRow from '@app/modules/addresses/components/TableAddressTxRow.vue'
 import { Tx } from '@app/core/models'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 
+const MAX_TXS = 5
 @Component({
   components: {
     AppInfoLoad,
+    AppFootnotes,
     TableAddressTxRow
   }
 })
 export default class TableAddressTxs extends Vue {
   @Prop(String) address!: string
-  @Prop(Array) transactions!: Tx[]
-  @Prop(Boolean) isPending!: boolean
+  @Prop(Array) txs!: Tx[]
+  @Prop({ type: Number, default: 0 }) totalTxs!: number
+  @Prop(Array) inTxs!: Tx[]
+  @Prop({ type: Number, default: 0 }) totalIn!: number
+  @Prop(Array) outTxs!: Tx[]
+  @Prop({ type: Number, default: 0 }) totalOut!: number
+  @Prop({ type: Boolean, default: false }) isPending!: boolean
   @Prop({ type: Boolean, default: true }) loading!: boolean
 
-  searchInput = ''
-  inTx = []
-  outTx = []
-  receivedTxs = false
-  filtered = this.transactions
+  filtered = this.txs.slice(0, MAX_TXS)
+  page = 1
+  selected = 0
+  pageLength = this.totalTxs
 
-  data() {
-    return {
-      selected: {
-        text: this.$i18n.t('filter.all'),
-        value: 0
-      }
+  /*Watch: */
+  @Watch('selected')
+  onSelectedChanged(newVal: number, oldVal: number): void {
+    if (newVal === 0) {
+      this.filtered = this.txs
+      this.pageLength = this.totalTxs
+    }
+    if (newVal === 1) {
+      this.filtered = []
+      this.pageLength = this.totalIn
+    }
+    if (newVal === 2) {
+      this.filtered = []
+      this.pageLength = this.totalOut
     }
   }
 
-  mounted() {
-    this.getTxsType()
-  }
-
-  // Methods
-  getTxsType() {
-    this.transactions.forEach(tx => {
-      const from = tx.getFrom().toString()
-      if (from === this.address) {
-        this.outTx.push(tx)
-      } else {
-        this.inTx.push(tx)
-      }
-    })
-    this.receivedTxs = true
-  }
-
-  searching() {}
-
-  setSelectedTxs() {
-    if (this.transactions) {
-      if (!this.receivedTxs) {
-        this.getTxsType()
-      }
-      if (this.selectedTx === 0) {
-        this.filtered = this.transactions
-      }
-      if (this.selectedTx === 2) {
-        this.filtered = this.outTx
-      }
-      if (this.selectedTx === 1) {
-        this.filtered = this.inTx
-      }
+  @Watch('page')
+  onPageChanged(newVal: number, oldVal: number): void {
+    const s = (newVal - 1) * MAX_TXS
+    const e = newVal * MAX_TXS
+    if (this.selectedTx === 0) {
+      this.filtered = this.txs.slice(s, e)
+    }
+    if (this.selectedTx === 1) {
+      this.filtered = this.inTxs.slice(s, e)
+    }
+    if (this.selectedTx === 2) {
+      this.filtered = this.outTxs.slice(s, e)
     }
   }
 
-  // computed
-  get selectedTx() {
-    return this.selected.value
+  /* Computed: */
+  get selectedTx(): number {
+    return this.selected
   }
 
   get filteredTxs() {
     return this.filtered
   }
 
-  get getTotal() {
-    if (this.transactions) {
-      if (this.selected.value === 0) {
-        return this.transactions.length
-      }
-      if (this.selected.value === 1) {
-        return this.inTx.length
-      }
-      return this.outTx.length
-    }
-    return 0
+  get getTotal(): number {
+    return this.filtered ? this.filtered.length : 0
   }
 
   get options() {
@@ -161,6 +141,23 @@ export default class TableAddressTxs extends Vue {
         value: 2
       }
     ]
+  }
+  get footnote() {
+    return [
+      {
+        color: 'success',
+        text: this.$i18n.t('filter.in'),
+        icon: 'fa fa-circle'
+      },
+      {
+        color: 'error',
+        text: this.$i18n.t('filter.out'),
+        icon: 'fa fa-circle'
+      }
+    ]
+  }
+  get length(): number {
+    return Math.ceil(this.pageLength / MAX_TXS)
   }
 }
 </script>

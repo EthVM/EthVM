@@ -2,17 +2,6 @@ import config from '@app/config'
 import { Callback } from '@app/interfaces'
 import { logger } from '@app/logger'
 import { errors } from '@app/server/core/exceptions'
-import {
-  AddressTxsPagesPayload,
-  BalancePayload,
-  BlocksTxsPayload,
-  EthCallPayload,
-  ExchangeRatePayload,
-  JoinLeavePayload,
-  StatsPayload,
-  TokensBalancePayload,
-  TxsPayload
-} from '@app/server/core/payloads'
 import { Streamer, StreamingEvent } from '@app/server/core/streams'
 import { BalancesService } from '@app/server/modules/balances'
 import { toBlockMetrics } from '@app/server/modules/block-metrics'
@@ -25,24 +14,12 @@ import { StatisticsService } from '@app/server/modules/statistics'
 import { TokensService } from '@app/server/modules/tokens'
 import { TxsService } from '@app/server/modules/txs'
 import { UnclesService } from '@app/server/modules/uncles'
-import { VmService } from '@app/server/modules/vm'
 import { Block, Events, Tx } from 'ethvm-common'
 import * as fs from 'fs'
 import * as http from 'http'
 import * as SocketIO from 'socket.io'
 
-export type SocketEventPayload =
-  | AddressTxsPagesPayload
-  | BalancePayload
-  | BlocksTxsPayload
-  | Buffer
-  | StatsPayload
-  | EthCallPayload
-  | ExchangeRatePayload
-  | JoinLeavePayload
-  | TokensBalancePayload
-  | TxsPayload
-  | any
+export type SocketEventPayload = any
 
 export type SocketEventResponse = Block | Block[] | Tx | Tx[] | number | any
 
@@ -74,7 +51,6 @@ export class EthVMServer {
     public readonly exchangesService: ExchangeService,
     public readonly searchService: SearchService,
     public readonly tokensService: TokensService,
-    public readonly vmService: VmService,
     private readonly streamer: Streamer
   ) {}
 
