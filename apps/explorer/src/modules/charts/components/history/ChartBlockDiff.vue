@@ -26,7 +26,7 @@ import { Events } from 'ethvm-common'
 export default class ChartGasPrice extends Mixins(ChartMixin) {
   title = 'Average Block Difficulty History'
   labelString = 'Average Block Difficulty'
-  newEvent = Events.getAverageTotalDifficultyStats
+  newEvent = Events.getAverageDifficultyStats
 
   created() {
     this.setTitle(this.title)

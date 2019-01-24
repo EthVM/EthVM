@@ -162,7 +162,7 @@ protocol Processing {
     int numFailedTxs = 0;
     int numPendingTxs = 0;
     int numUncles = 0;
-    bytes totalDifficulty;
+    bytes difficulty;
     bytes totalGasPrice;
     bytes avgGasLimit;
     bytes avgGasPrice;

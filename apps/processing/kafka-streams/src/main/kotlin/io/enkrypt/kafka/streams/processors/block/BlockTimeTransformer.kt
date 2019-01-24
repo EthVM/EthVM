@@ -2,12 +2,6 @@ package io.enkrypt.kafka.streams.processors.block
 
 import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
-import io.enkrypt.avro.common.Data32
-import io.enkrypt.avro.processing.BlockChainEventsRecord
-import io.enkrypt.avro.processing.ChainEventRecord
-import io.enkrypt.avro.processing.ReorgKeyRecord
-import io.enkrypt.common.config.NetConfig
-import io.enkrypt.common.extensions.bigInteger
 import io.enkrypt.common.extensions.unsignedBigInteger
 import io.enkrypt.common.extensions.unsignedByteBuffer
 import mu.KotlinLogging
@@ -75,7 +69,7 @@ class BlockTimeTransformer(
     val blockNumber = key.getNumber().unsignedBigInteger()!!
 
     // genesis block throws off calculation at the start
-    if(blockNumber < 2.toBigInteger()) return KeyValue(key, block)
+    if (blockNumber < 2.toBigInteger()) return KeyValue(key, block)
 
     val prevBlockNumber = blockNumber - BigInteger.ONE
 
@@ -83,7 +77,7 @@ class BlockTimeTransformer(
 
     // TODO add cleanup of older state after a certain number of blocks
 
-    return when(prevTimestamp) {
+    return when (prevTimestamp) {
       null -> KeyValue(key, block)
       else -> KeyValue(
         key,
@@ -92,7 +86,6 @@ class BlockTimeTransformer(
           .build()
       )
     }
-
   }
 
   override fun close() {
