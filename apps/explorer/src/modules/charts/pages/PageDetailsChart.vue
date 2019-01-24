@@ -7,8 +7,6 @@
     <chart-gas-limit v-if="chartId === ChartType.gasLimit" />
     <chart-gas-price v-if="chartId === ChartType.gasPrice" />
     <chart-hash-rate v-if="chartId === ChartType.hashRate" />
-    <chart-mining-reward v-if="chartId === ChartType.minerReward" />
-    <chart-top-miners v-if="chartId === ChartType.topMiners" />
     <chart-tx-fail v-if="chartId === ChartType.txFail" />
     <chart-tx-success v-if="chartId === ChartType.txSuccess" />
     <chart-tx-fees v-if="chartId === ChartType.txFees" />
@@ -41,8 +39,6 @@ import { ChartTypes } from '@app/modules/charts/helpers'
     ChartGasLimit,
     ChartGasPrice,
     ChartHashRate,
-    ChartMiningReward,
-    ChartTopMiners,
     ChartTxFail,
     ChartTxSuccess,
     ChartTxFees,

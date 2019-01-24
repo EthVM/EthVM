@@ -44,10 +44,8 @@
       <v-tab-item slot="tabs-item" value="tab-3">
         <v-layout row wrap justify-center mb-4>
           <v-flex xs12 md6> <app-chart-link :title="$t('charts.avgHashRate')" :chart-id="ID.hashRate" /> </v-flex>
-          <v-flex xs12 md6> <app-chart-link :title="$t('charts.avgMiningReward')" :chart-id="ID.minerReward" /> </v-flex>
         </v-layout>
         <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6> <app-chart-link :title="$t('charts.topMiners')" :chart-id="ID.topMiners" /> </v-flex>
           <v-flex xs12 md6><!--  --></v-flex>
         </v-layout>
       </v-tab-item>
