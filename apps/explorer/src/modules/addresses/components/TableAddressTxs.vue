@@ -49,7 +49,7 @@
         <v-layout justify-start class="pl-3"><app-footnotes :footnotes="footnote"/></v-layout>
       </v-flex>
 
-      <v-flex v-if="getTotal > 0">
+      <v-flex v-if="length > 1">
         <v-pagination
         v-model="page"
         flat
@@ -91,7 +91,7 @@ export default class TableAddressTxs extends Vue {
   @Prop({type: Boolean, default: false}) isPending!: boolean
   @Prop({ type: Boolean, default: true }) loading!: boolean
 
-  filtered = this.txs
+  filtered = this.txs.slice(0, MAX_TXS)
   page=1
   selected=0
   pageLength = this.totalTxs
@@ -115,13 +115,21 @@ export default class TableAddressTxs extends Vue {
 
   @Watch('page')
   onPageChanged(newVal: number, oldVal: number): void {
-    if (page === 1) {
-      this.filtred.s
+    const s = (newVal-1)*MAX_TXS
+    const e = newVal*MAX_TXS
+    if(this.selectedTx === 0) {
+      this.filtered = this.txs.slice(s,e)
+    }
+    if(this.selectedTx === 1) {
+      this.filtered = this.inTxs.slice(s,e)
+    }
+    if(this.selectedTx === 2) {
+      this.filtered = this.outTxs.slice(s,e)
     }
   }
 
   /* Computed: */
-  get selectedTx() {
+  get selectedTx(): number {
     return this.selected
   }
 
@@ -129,7 +137,7 @@ export default class TableAddressTxs extends Vue {
     return this.filtered
   }
 
-  get getTotal() {
+  get getTotal(): number {
     return this.filtered? this.filtered.length : 0
   }
 
@@ -163,8 +171,8 @@ export default class TableAddressTxs extends Vue {
       }
     ]
   }
-  get length() {
-    return Math.ceil(this.pageLength/this.MAX_TXS)
+  get length(): number {
+    return Math.ceil(this.pageLength/MAX_TXS)
   }
 }
 </script>
