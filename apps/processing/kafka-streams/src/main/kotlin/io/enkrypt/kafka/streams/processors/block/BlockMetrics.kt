@@ -5,6 +5,7 @@ import io.enkrypt.avro.processing.BlockMetricsRecord
 import io.enkrypt.avro.processing.MetricKeyRecord
 import io.enkrypt.avro.processing.MetricRecord
 import io.enkrypt.common.extensions.bigInteger
+import io.enkrypt.common.extensions.byteBuffer
 import io.enkrypt.common.extensions.isSuccess
 import io.enkrypt.common.extensions.unsignedBigInteger
 import io.enkrypt.common.extensions.unsignedByteBuffer
@@ -23,7 +24,6 @@ object BlockMetrics {
     val receipts = block.getTransactionReceipts()
 
     val difficulty = block.getHeader().getDifficulty().bigInteger()
-    val totalDifficulty = block.getTotalDifficulty().bigInteger()
     val numPendingTxs = block.getNumPendingTxs()
     val totalTxs = receipts.size
 
@@ -33,6 +33,7 @@ object BlockMetrics {
 
     var totalGasPrice = BigInteger.ZERO
     var totalTxsFees = BigInteger.ZERO
+    var totalGasLimit = BigInteger.ZERO
 
     transactions
       .zip(receipts)
@@ -41,30 +42,38 @@ object BlockMetrics {
         totalInternalTxs += receipt.getInternalTxs().size
         if (receipt.isSuccess()) numSuccessfulTxs += 1 else numFailedTxs += 1
 
-        totalGasPrice = totalGasPrice.add(tx.getGasPrice().bigInteger())
-        totalTxsFees = totalTxsFees.add(tx.getGasPrice().bigInteger())
+        totalGasLimit += tx.getGas().unsignedBigInteger()!!
+        totalGasPrice += tx.getGasPrice().unsignedBigInteger()!!
+        totalTxsFees += receipt.getGasUsed().unsignedBigInteger()!! * tx.getGasPrice().unsignedBigInteger()!!
       }
 
     var avgGasPrice = BigInteger.ZERO
     var avgTxsFees = BigInteger.ZERO
+    var avgGasLimit = BigInteger.ZERO
 
     if (totalTxs > 0) {
-      avgGasPrice = totalGasPrice.divide(totalTxs.toBigInteger())
-      avgTxsFees = totalTxsFees.divide(totalTxs.toBigInteger())
+
+      val totalTxsBigInt = totalTxs.toBigInteger()
+
+      avgGasLimit = totalGasLimit / totalTxsBigInt
+      avgGasPrice = totalGasPrice / totalTxsBigInt
+      avgTxsFees = totalTxsFees / totalTxsBigInt
     }
 
     return BlockMetricsRecord.newBuilder()
       .setHash(block.getHeader().getHash())
       .setTotalTxs(totalTxs)
+      .setNumUncles(block.getUncles().size)
       .setNumSuccessfulTxs(numSuccessfulTxs)
       .setNumFailedTxs(numFailedTxs)
       .setNumPendingTxs(numPendingTxs)
       .setDifficulty(difficulty.unsignedByteBuffer())
-      .setTotalDifficulty(totalDifficulty.unsignedByteBuffer())
       .setTotalGasPrice(totalGasPrice.unsignedByteBuffer())
+      .setAvgGasLimit(avgGasLimit.unsignedByteBuffer())
       .setAvgGasPrice(avgGasPrice.unsignedByteBuffer())
       .setTotalTxFees(totalTxsFees.unsignedByteBuffer())
       .setAvgTxFees(avgTxsFees.unsignedByteBuffer())
+      .setBlockTime(block.getBlockTime())
       .build()
   }
 
@@ -86,59 +95,80 @@ object BlockMetrics {
 
     val instant = Instant.ofEpochSecond(block.getHeader().getTimestamp())
     val dateTime = ZonedDateTime.ofInstant(instant, ZoneOffset.UTC)
-    val startOfDayEpoch = dateTime.truncatedTo(ChronoUnit.DAYS).toInstant().epochSecond
+    val startOfDayEpoch = dateTime.truncatedTo(ChronoUnit.DAYS).toInstant().toEpochMilli()
 
     val keyBuilder = MetricKeyRecord
       .newBuilder()
       .setDate(startOfDayEpoch)
 
+    val difficulty = block.getHeader().getDifficulty().unsignedBigInteger()!!
+
+    val numUncles = metrics.getNumUncles()
     val totalTxs = metrics.getTotalTxs()
     val numSuccessfulTxs = metrics.getNumSuccessfulTxs()
     val numFailedTxs = metrics.getNumFailedTxs()
     val numPendingTxs = metrics.getNumPendingTxs()
-    val totalDifficulty = metrics.getTotalDifficulty().unsignedBigInteger()!!
-    val totalGasPrice = metrics.getTotalGasPrice().unsignedBigInteger()!!
+    val avgGasLimit = metrics.getAvgGasLimit().unsignedBigInteger()!!
     val avgGasPrice = metrics.getAvgGasPrice().unsignedBigInteger()!!
-    val totalTxFees = metrics.getTotalTxFees().unsignedBigInteger()!!
     val avgTxFees = metrics.getAvgTxFees().unsignedBigInteger()!!
 
-    return listOf(
+    var list = listOf(
+      KeyValue(
+        keyBuilder.setName("AvgBlockTime").build(),
+        MetricRecord.newBuilder().`setLong$`(block.getBlockTime() ?: 0L).build()
+      ),
+      KeyValue(
+        keyBuilder.setName("AvgUnclesPerBlock").build(),
+        MetricRecord.newBuilder().`setFloat$`(numUncles.toFloat() * intMultiplier).build()
+      ),
       KeyValue(
         keyBuilder.setName("TotalTxs").build(),
         MetricRecord.newBuilder().`setInt$`(totalTxs * intMultiplier).build()
       ),
       KeyValue(
-        keyBuilder.setName("NumSuccessfulTxs").build(),
+        keyBuilder.setName("TotalSuccessfulTxs").build(),
         MetricRecord.newBuilder().`setInt$`(numSuccessfulTxs * intMultiplier).build()
       ),
       KeyValue(
-        keyBuilder.setName("NumFailedTxs").build(),
+        keyBuilder.setName("TotalFailedTxs").build(),
         MetricRecord.newBuilder().`setInt$`(numFailedTxs * intMultiplier).build()
       ),
       KeyValue(
-        keyBuilder.setName("NumPendingTxs").build(),
-        MetricRecord.newBuilder().`setInt$`(numPendingTxs * intMultiplier).build()
+        keyBuilder.setName("AvgPendingTxs").build(),
+        MetricRecord.newBuilder().`setFloat$`(numPendingTxs.toFloat() * intMultiplier).build()
       ),
       KeyValue(
-        keyBuilder.setName("TotalDifficulty").build(),
-        MetricRecord.newBuilder().setBigInteger(totalDifficulty.times(bigIntMultiplier).unsignedByteBuffer()).build()
+        keyBuilder.setName("AvgDifficulty").build(),
+        MetricRecord.newBuilder().setBigInteger(difficulty.times(bigIntMultiplier).byteBuffer()).build()
       ),
       KeyValue(
-        keyBuilder.setName("TotalGasPrice").build(),
-        MetricRecord.newBuilder().setBigInteger(totalGasPrice.times(bigIntMultiplier).unsignedByteBuffer()).build()
+        keyBuilder.setName("AvgGasPricePerBlock").build(),
+        MetricRecord.newBuilder().setBigInteger(avgGasPrice.times(bigIntMultiplier).byteBuffer()).build()
       ),
       KeyValue(
-        keyBuilder.setName("AvgGasPrice").build(),
-        MetricRecord.newBuilder().setBigInteger(avgGasPrice.times(bigIntMultiplier).unsignedByteBuffer()).build()
+        keyBuilder.setName("AvgGasLimitPerBlock").build(),
+        MetricRecord.newBuilder().setBigInteger(avgGasLimit.times(bigIntMultiplier).byteBuffer()).build()
       ),
       KeyValue(
-        keyBuilder.setName("TotalTxsFees").build(),
-        MetricRecord.newBuilder().setBigInteger(totalTxFees.times(bigIntMultiplier).unsignedByteBuffer()).build()
-      ),
-      KeyValue(
-        keyBuilder.setName("AvgTxsFees").build(),
-        MetricRecord.newBuilder().setBigInteger(avgTxFees.times(bigIntMultiplier).unsignedByteBuffer()).build()
+        keyBuilder.setName("AvgTxFeePerBlock").build(),
+        MetricRecord.newBuilder().setBigInteger(avgTxFees.times(bigIntMultiplier).byteBuffer()).build()
       )
     )
+
+    val blockTime = block.getBlockTime()
+
+    val hashRate = when (blockTime) {
+      null -> null
+      else -> difficulty.toDouble() / block.getBlockTime()
+    }
+
+    if (hashRate != null) {
+      list += KeyValue(
+        keyBuilder.setName("AvgHashRate").build(),
+        MetricRecord.newBuilder().`setDouble$`(hashRate).build()
+      )
+    }
+
+    return list
   }
 }

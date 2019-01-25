@@ -162,12 +162,14 @@ protocol Processing {
     int numSuccessfulTxs = 0;
     int numFailedTxs = 0;
     int numPendingTxs = 0;
-    bytes totalDifficulty;
+    int numUncles = 0;
     bytes difficulty;
     bytes totalGasPrice;
+    bytes avgGasLimit;
     bytes avgGasPrice;
     bytes totalTxFees;
     bytes avgTxFees;
+    union { null, long } blockTime = null;
   }
 
   record MetricKeyRecord {

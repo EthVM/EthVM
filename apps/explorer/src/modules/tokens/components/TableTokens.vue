@@ -9,7 +9,7 @@
         :custom-sort="customSort"
         class="elevation-1"
       >
-        <v-progress-linear slot="progress" color="blue" indeterminate></v-progress-linear>
+        <v-progress-linear slot="progress" color="blue" indeterminate />
         <template slot="items" slot-scope="props">
           <td>{{ props.item.name }}</td>
           <td class="">{{ props.item.price.rate }}</td>
@@ -84,7 +84,7 @@ export default class TableTokens extends Vue {
         value: 'name'
       },
       {
-        text: this.$i18n.t('tableHeader.price'), 
+        text: this.$i18n.t('tableHeader.price'),
         value: 'price'
       },
       {

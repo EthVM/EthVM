@@ -57,7 +57,7 @@ import TableAddressTxRow from '@app/modules/addresses/components/TableAddressTxR
 import { Tx } from '@app/core/models'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 
-const MAX_TXS = 5
+const MAX_TXS = 10
 @Component({
   components: {
     AppInfoLoad,
@@ -102,6 +102,8 @@ export default class TableAddressTxs extends Vue {
   onPageChanged(newVal: number, oldVal: number): void {
     const s = (newVal - 1) * MAX_TXS
     const e = newVal * MAX_TXS
+    //TO DO: IF TXS.LENGTH < s emit to get more data
+
     if (this.selectedTx === 0) {
       this.filtered = this.txs.slice(s, e)
     }

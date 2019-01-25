@@ -10,7 +10,7 @@
       unfilled="true"
       :footnote-arr="footnote"
       :live-chart="true"
-    ></app-chart>
+    />
   </v-layout>
 </template>
 
@@ -28,72 +28,8 @@ const MAX_ITEMS = 10
   }
 })
 export default class ChartLiveTxFees extends Vue {
-  data() {
-    return {
-      chartData: {},
-      chartOptions: {
-        title: {
-          text: this.$i18n.t('charts.avgTitle'),
-          lineHeight: 1
-        },
-        responsive: true,
-        scales: {
-          yAxes: [
-            {
-              position: 'left',
-              id: 'y-axis-1',
-              ticks: {
-                beginAtZero: true
-              },
-              gridLines: {
-                color: 'rgba(0, 0, 0, 0)'
-              },
-              scaleLabel: {
-                display: true,
-                labelString: this.$i18n.t('charts.txFees')
-              }
-            },
-            {
-              id: 'y-axis-2',
-              position: 'right',
-              ticks: {
-                beginAtZero: true
-              },
-              gridLines: {
-                color: 'rgba(0, 0, 0, 0)'
-              },
-              scaleLabel: {
-                display: true,
-                labelString: this.$i18n.t('charts.gasPrice')
-              }
-            }
-          ],
-          xAxes: [
-            {
-              display: false
-            }
-          ]
-        },
-
-        scaleShowLabels: false
-      },
-      redraw: false,
-      newTitle: this.$i18n.t('charts.avgTxCost'),
-      newDescription: this.$i18n.t('charts.avgDescription'),
-      footnote: [
-        {
-          color: 'txFail',
-          text: this.$i18n.t('footnote.aveTxFees'),
-          icon: 'fa fa-circle'
-        },
-        {
-          color: 'txPen',
-          text: this.$i18n.t('footnote.aveGasPrice'),
-          icon: 'fa fa-circle'
-        }
-      ]
-    }
-  }
+  chartData: any = {}
+  redraw = false
 
   // Lifecycle
   created() {
@@ -158,6 +94,78 @@ export default class ChartLiveTxFees extends Vue {
         }
       ]
     }
+  }
+
+  get chartOptions() {
+    return {
+      title: {
+        text: this.$i18n.t('charts.avgTitle'),
+        lineHeight: 1
+      },
+      responsive: true,
+      scales: {
+        yAxes: [
+          {
+            position: 'left',
+            id: 'y-axis-1',
+            ticks: {
+              beginAtZero: true
+            },
+            gridLines: {
+              color: 'rgba(0, 0, 0, 0)'
+            },
+            scaleLabel: {
+              display: true,
+              labelString: this.$i18n.t('charts.txFees')
+            }
+          },
+          {
+            id: 'y-axis-2',
+            position: 'right',
+            ticks: {
+              beginAtZero: true
+            },
+            gridLines: {
+              color: 'rgba(0, 0, 0, 0)'
+            },
+            scaleLabel: {
+              display: true,
+              labelString: this.$i18n.t('charts.avgGasPrice')
+            }
+          }
+        ],
+        xAxes: [
+          {
+            display: false
+          }
+        ]
+      },
+
+      scaleShowLabels: false
+    }
+  }
+
+  get newTitle() {
+    return this.$i18n.t('charts.avgTxCost')
+  }
+
+  get newDescription() {
+    return this.$i18n.t('charts.avgDescription')
+  }
+
+  get footnote() {
+    return [
+      {
+        color: 'txFail',
+        text: this.$i18n.t('footnote.aveTxFees'),
+        icon: 'fa fa-circle'
+      },
+      {
+        color: 'txPen',
+        text: this.$i18n.t('footnote.aveGasPrice'),
+        icon: 'fa fa-circle'
+      }
+    ]
   }
 }
 </script>

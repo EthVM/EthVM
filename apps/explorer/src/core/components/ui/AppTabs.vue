@@ -18,7 +18,7 @@
       <v-tabs-slider color="primary" class="mb-0" style="height: 4px;" />
     </v-tabs>
     <v-tabs-items v-model="activeTab" style="border-top: 1px solid #efefef">
-      <v-container grid-list-xs class="mb-0 pa-1"> <slot name="tabs-item"/></v-container>
+      <v-container grid-list-xs class="mb-0 pa-2"> <slot name="tabs-item"/></v-container>
     </v-tabs-items>
   </v-card>
 </template>

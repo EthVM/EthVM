@@ -37,6 +37,7 @@ abstract class AbstractKafkaProcessor : KafkaProcessor, KoinComponent {
 
       if (cleanUp) {
         // remove local streams state
+        logger.info { "Cleaning local state" }
         cleanUp()
       }
 

@@ -1,15 +1,10 @@
 import { Component, Vue } from 'vue-property-decorator'
 
-const DES = {
-  BEGIN: ' in Ethereum blockchain since the begining ',
-  OTHER: ' in Ethereum blockchain in last '
-}
-
 @Component
 export class ChartMixin extends Vue {
   chartTitle = ''
   chartLabel = ''
-  chartEvent
+  chartEvent = null
   redraw = true
   timeFrame = 1
   chartOptions = {
@@ -42,12 +37,6 @@ export class ChartMixin extends Vue {
       ]
     }
   }
-  DATA = [
-    { state: 'ALL', points: [], labels: [] },
-    { state: 'WEEK', points: [], labels: [] },
-    { state: 'MONTH', points: [], labels: [] },
-    { state: 'YEAR', points: [], labels: [] }
-  ]
 
   /*Computed: */
   get chartData() {
@@ -66,7 +55,7 @@ export class ChartMixin extends Vue {
     }
   }
 
-  /*Methods: */
+  /* Methods: */
   setTitle(_title: string): void {
     this.chartTitle = _title
   }
@@ -97,8 +86,19 @@ export class ChartMixin extends Vue {
     })
   }
 
-  /*Computed: */
+  /* Computed: */
   get description(): string {
-    return this.timeFrame === 0 ? this.chartTitle + DES.BEGIN : this.chartTitle + DES.OTHER + this.DATA[this.timeFrame].state
+    return this.timeFrame === 0
+      ? this.$i18n.t('charts.avg') + this.chartTitle + this.$i18n.t('charts.captions.all')
+      : this.$i18n.t('charts.avg') + this.chartTitle + this.$i18n.t('charts.captions.other') + this.DATA[this.timeFrame].cap
+  }
+
+  get DATA() {
+    return [
+      { state: 'ALL', cap: this.$i18n.t('charts.states.all'), points: [], labels: [] },
+      { state: 'WEEK', cap: this.$i18n.t('charts.states.week'), points: [], labels: [] },
+      { state: 'MONTH', cap: this.$i18n.t('charts.states.month'), points: [], labels: [] },
+      { state: 'YEAR', cap: this.$i18n.t('charts.states.year'), points: [], labels: [] }
+    ]
   }
 }

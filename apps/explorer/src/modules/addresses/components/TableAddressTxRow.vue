@@ -110,27 +110,11 @@ import { StringConcatMixin } from '@app/core/components/mixins'
 
 @Component
 export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
-  @Prop({
-    type: String,
-    required: true
-  })
-  account!: string
+  @Prop({ type: String, required: true }) account!: string
   @Prop(Array) transactions!: any[]
-  @Prop({
-    type: Number,
-    default: 0
-  })
-  filter!: number
-  @Prop({
-    type: Number,
-    default: 0
-  })
-  total!: number
-  @Prop({
-    type: Boolean,
-    default: false
-  })
-  type!: boolean
+  @Prop({ type: Number, default: 0 }) filter!: number
+  @Prop({ type: Number, default: 0 }) total!: number
+  @Prop({ type: Boolean, default: false }) type!: boolean
 
   // Methods
   getType(tx): boolean {

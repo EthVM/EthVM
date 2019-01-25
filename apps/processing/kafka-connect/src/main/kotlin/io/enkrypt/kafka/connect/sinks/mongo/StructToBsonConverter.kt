@@ -155,7 +155,8 @@ object TypeMappings {
       "totalGasPrice" to UBigInt,
       "avgGasPrice" to UBigInt,
       "totalTxFees" to UBigInt,
-      "avgTxFees" to UBigInt
+      "avgTxFees" to UBigInt,
+      "avgGasLimit" to UBigInt
     ),
     "balanceId" to mapOf(
       "contract" to Hex,
@@ -169,7 +170,7 @@ object TypeMappings {
       "tokenId" to UBigInt
     ),
     "metric" to mapOf(
-      "bigInteger" to UBigInt
+      "bigInteger" to BigInt
     ),
     "contract" to mapOf(
       "address" to Hex,
