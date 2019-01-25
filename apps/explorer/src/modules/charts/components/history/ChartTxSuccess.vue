@@ -26,13 +26,16 @@ export default class ChartTxSuccess extends Mixins(ChartMixin) {
   labelString = 'Successful Transactions'
   newEvent = Events.getSuccessfulTxStats
 
+  // Lifecycle
   created() {
     this.setTitle(this.title)
     this.setLabel(this.labelString)
     this.setEvent(this.newEvent)
   }
+
+  // Computed
   get title() {
-    return this.$i18n.t('charts.txSuccess')
+    return this.$i18n.t('charts.txSuccess').toString()
   }
 }
 </script>

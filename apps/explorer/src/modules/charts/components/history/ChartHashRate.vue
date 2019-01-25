@@ -28,13 +28,16 @@ export default class ChartGasPrice extends Mixins(ChartMixin) {
   labelString = 'Average Hash Rate'
   newEvent = Events.getAverageHashRateStats
 
+  // Lifecycle
   created() {
     this.setTitle(this.title)
     this.setLabel(this.labelString)
     this.setEvent(this.newEvent)
   }
+
+  // Computed
   get title() {
-    return this.$i18n.t('charts.avgHashRate')
+    return this.$i18n.t('charts.avgHashRate').toString()
   }
 }
 </script>

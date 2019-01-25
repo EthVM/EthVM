@@ -27,13 +27,16 @@ export default class ChartGasPrice extends Mixins(ChartMixin) {
   labelString = 'Average Block Difficulty'
   newEvent = Events.getAverageDifficultyStats
 
+  // Lifecycle
   created() {
     this.setTitle(this.title)
     this.setLabel(this.labelString)
     this.setEvent(this.newEvent)
   }
+
+  // Computed
   get title() {
-    return this.$i18n.t('charts.avgBlockDiff')
+    return this.$i18n.t('charts.avgBlockDiff').toString()
   }
 }
 </script>

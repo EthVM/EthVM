@@ -29,11 +29,7 @@ export interface EthvmApi {
   // TODO
 
   // Statistics
-  getAverageTotalDifficulty(duration: string): Promise<Statistic[]>
-  getAverageGasPrice(duration: string): Promise<Statistic[]>
-  getAverageTxFee(duration: string): Promise<Statistic[]>
-  getAverageSuccessfullTx(duration: string): Promise<Statistic[]>
-  getAverageFailedTx(duration: string): Promise<Statistic[]>
+  // TODO
 
   // Search
   search(hash: string): Promise<any>

@@ -26,13 +26,16 @@ export default class ChartTxFail extends Mixins(ChartMixin) {
   labelString = 'Transactions Failed'
   newEvent = Events.getFailedTxStats
 
+  // Lifecycle
   created() {
     this.setTitle(this.title)
     this.setLabel(this.labelString)
     this.setEvent(this.newEvent)
   }
+
+  // Computed
   get title() {
-    return this.$i18n.t('charts.txFail')
+    return this.$i18n.t('charts.txFail').toString()
   }
 }
 </script>
