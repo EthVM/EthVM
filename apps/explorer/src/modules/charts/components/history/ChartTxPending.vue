@@ -25,7 +25,6 @@ import { Events } from 'ethvm-common'
   }
 })
 export default class ChartGasPrice extends Mixins(ChartMixin) {
-  title = 'Number of Pending Transactions History'
   labelString = 'Pending Transactions'
 
   //Temp Event
@@ -35,6 +34,10 @@ export default class ChartGasPrice extends Mixins(ChartMixin) {
     this.setTitle(this.title)
     this.setLabel(this.labelString)
     this.setEvent(this.newEvent)
+  }
+
+  get title() {
+    return this.$i18n.t('charts.txPending')
   }
 }
 </script>

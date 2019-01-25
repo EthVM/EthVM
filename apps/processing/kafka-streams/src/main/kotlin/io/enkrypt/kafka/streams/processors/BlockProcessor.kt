@@ -25,6 +25,7 @@ import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.common.extensions.unsignedBytes
 import io.enkrypt.kafka.streams.config.Topics
 import io.enkrypt.kafka.streams.processors.block.BlockMetrics
+import io.enkrypt.kafka.streams.processors.block.BlockTimeTransformer
 import io.enkrypt.kafka.streams.processors.block.ChainEventsTransformer
 import io.enkrypt.kafka.streams.serdes.Serdes
 import mu.KotlinLogging
@@ -59,11 +60,17 @@ class BlockProcessor : AbstractKafkaProcessor() {
     val builder = StreamsBuilder().apply {
       addStateStore(ChainEventsTransformer.chainEventsStore(appConfig.unitTesting))
       addStateStore(ChainEventsTransformer.indexStore(appConfig.unitTesting))
+      addStateStore(BlockTimeTransformer.blockTimesStore(appConfig.unitTesting))
     }
 
     val blockStream = builder
       .stream(Topics.Blocks, Consumed.with(Serdes.BlockKey(), Serdes.Block()))
-      .peek { k, _ -> logger.info { "Processing block number = ${k.getNumber().unsignedBigInteger()}" } }
+      // calculate block time
+      .transform(
+        TransformerSupplier { BlockTimeTransformer(appConfig.unitTesting) },
+        *BlockTimeTransformer.STORE_NAMES
+      )
+      .peek { k, v -> logger.info { "Processing block number = ${k.getNumber().unsignedBigInteger()}" } }
 
     // extract transactions and publish to their own topic
 

@@ -143,6 +143,7 @@ protocol Capture {
     union { null, bytes } uncleReward = null;                     // block reward for inclusion of this uncle header
 
     union { null, bytes } raw = null;                             // raw block data
+
   }
 
   record PremineBalanceRecord {
@@ -170,6 +171,8 @@ protocol Capture {
     array<PremineBalanceRecord> premineBalances = [];             // premine balances from genesis block
 
     union { null, bytes } raw = null;                             // raw block data
+
+    union { null, long } blockTime = null;                        //
   }
 
 }
