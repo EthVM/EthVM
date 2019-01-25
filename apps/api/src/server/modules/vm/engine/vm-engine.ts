@@ -90,9 +90,9 @@ export class VmEngine {
       offset -= sizeHex(20)
 
       token.addr = '0x' + hex.substr(offset, sizeHex(20))
-      offset -= sizeHex(8)
+      offset -= sizeHex(1)
 
-      token.decimals = new BigNumber('0x' + hex.substr(offset, sizeHex(8))).toNumber()
+      token.decimals = new BigNumber('0x' + hex.substr(offset, sizeHex(1))).toNumber()
       offset -= sizeHex(32)
 
       token.balance = new BigNumber('0x' + hex.substr(offset, sizeHex(32))).toFixed()

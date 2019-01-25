@@ -40,7 +40,7 @@
         <v-card v-if="tokens.length === 0" flat>
           <p>{{ $t('tokens.empty') }}</p>
         </v-card>
-        <div v-else v-for="(token, index) in tokens" :key="index"><table-tokens-row :token="token" :holder="holder" /></div>
+        <div v-else v-for="(token, index) in tokens" :key="index"><table-address-tokens-row :token="token" :holder="holder" /></div>
       </div>
     </div>
   </v-card>
@@ -49,7 +49,7 @@
 <script lang="ts">
 import AppErrorNoData from '@app/core/components/ui/AppErrorNoData.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
-import TableTokensRow from '@app/modules/tokens/components/TableTokensRow.vue'
+import TableAddressTokensRow from '@app/modules/tokens/components/TableAddressTokensRow.vue'
 import BN from 'bignumber.js'
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Token } from '@app/modules/tokens/props'
@@ -59,10 +59,10 @@ import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
   components: {
     AppErrorNoData,
     AppInfoLoad,
-    TableTokensRow
+    TableAddressTokensRow
   }
 })
-export default class TableTokens extends Mixins(StringConcatMixin) {
+export default class TableAddressTokens extends Mixins(StringConcatMixin) {
   @Prop(Array) tokens!: Token[]
   @Prop(String) holder!: string
   @Prop({ type: Boolean, default: true }) loading!: boolean
