@@ -27,14 +27,16 @@ export default class ChartGasLimit extends Mixins(ChartMixin) {
   //Temp event --> not yet implemented
   newEvent = Events.getAverageGasLimitStats
 
+  // Lifecycle
   created() {
     this.setTitle(this.title)
     this.setLabel(this.labelString)
     this.setEvent(this.newEvent)
   }
 
+  // Computed
   get title() {
-    return this.$i18n.t('charts.avgGasLimit')
+    return this.$i18n.t('charts.avgGasLimit').toString()
   }
 }
 </script>

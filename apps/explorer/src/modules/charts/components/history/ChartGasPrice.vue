@@ -26,13 +26,16 @@ export default class ChartGasPrice extends Mixins(ChartMixin) {
   labelString = 'Average Gas Price (wei)'
   newEvent = Events.getAverageGasPriceStats
 
+  // Lifecycle
   created() {
     this.setTitle(this.title)
     this.setLabel(this.labelString)
     this.setEvent(this.newEvent)
   }
+
+  // Computed
   get title(): string {
-    return this.$i18n.t('charts.avgGasPrice ')
+    return this.$i18n.t('charts.avgGasPrice ').toString()
   }
 }
 </script>

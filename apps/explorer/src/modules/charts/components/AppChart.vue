@@ -90,6 +90,7 @@ export default class AppChart extends Vue {
 
   toggleData = 1
   updateChart = false
+  chart = null
 
   /*LifeCycle: */
   created() {
@@ -126,7 +127,7 @@ export default class AppChart extends Vue {
   }
 
   /*Methods: */
-  createChart(): void {
+  createChart() {
     this.chart = new Chart(this.$refs.chart, {
       type: this.type,
       data: this.data,

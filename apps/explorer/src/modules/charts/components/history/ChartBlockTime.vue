@@ -29,13 +29,16 @@ export default class ChartBlockTime extends Mixins(ChartMixin) {
   //Temp Event String
   newEvent = Events.getAverageBlockTimeStats
 
+  // Lifecycle
   created() {
     this.setTitle(this.title)
     this.setLabel(this.labelString)
     this.setEvent(this.newEvent)
   }
+
+  // Computed
   get title() {
-    return this.$i18n.t('charts.avgBlockTime')
+    return this.$i18n.t('charts.avgBlockTime').toString()
   }
 }
 </script>

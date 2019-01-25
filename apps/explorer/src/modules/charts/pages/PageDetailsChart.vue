@@ -22,8 +22,6 @@ import ChartBlockTime from '@app/modules/charts/components/history/ChartBlockTim
 import ChartGasLimit from '@app/modules/charts/components/history/ChartGasLimit.vue'
 import ChartGasPrice from '@app/modules/charts/components/history/ChartGasPrice.vue'
 import ChartHashRate from '@app/modules/charts/components/history/ChartHashRate.vue'
-import ChartMiningReward from '@app/modules/charts/components/history/ChartMiningReward.vue'
-import ChartTopMiners from '@app/modules/charts/components/history/ChartTopMiners.vue'
 import ChartTxFail from '@app/modules/charts/components/history/ChartTxFail.vue'
 import ChartTxSuccess from '@app/modules/charts/components/history/ChartTxSuccess.vue'
 import ChartTxFees from '@app/modules/charts/components/history/ChartTxFees.vue'

@@ -25,9 +25,11 @@ import { Events } from 'ethvm-common'
 export default class ChartGasPrice extends Mixins(ChartMixin) {
   title = 'Average Number of Uncles History'
   labelString = 'Uncles'
+
   //Temp event:
   newEvent = Events.getUnclesStats
 
+  // Lifecycle
   created() {
     this.setTitle(this.title)
     this.setLabel(this.labelString)
