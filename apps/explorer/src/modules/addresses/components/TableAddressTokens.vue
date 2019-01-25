@@ -49,10 +49,9 @@
 <script lang="ts">
 import AppErrorNoData from '@app/core/components/ui/AppErrorNoData.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
-import TableAddressTokensRow from '@app/modules/tokens/components/TableAddressTokensRow.vue'
+import TableAddressTokensRow from '@app/modules/addresses/components/TableAddressTokensRow.vue'
 import BN from 'bignumber.js'
 import { StringConcatMixin } from '@app/core/components/mixins'
-import { Token } from '@app/modules/tokens/props'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 
 @Component({
@@ -63,7 +62,7 @@ import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
   }
 })
 export default class TableAddressTokens extends Mixins(StringConcatMixin) {
-  @Prop(Array) tokens!: Token[]
+  @Prop(Array) tokens!: any[]
   @Prop(String) holder!: string
   @Prop({ type: Boolean, default: true }) loading!: boolean
   @Prop({ type: Boolean, default: true }) error!: boolean

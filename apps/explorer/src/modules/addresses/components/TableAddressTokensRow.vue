@@ -31,11 +31,10 @@
 import BN from 'bignumber.js'
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
-import { Token } from '@app/modules/tokens/props'
 
 @Component
 export default class TableAddressTokensRow extends Mixins(StringConcatMixin) {
-  @Prop(Object) token!: Token
+  @Prop(Object) token!: any
   @Prop(String) holder!: string
 
   /*Methods: */
