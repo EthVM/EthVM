@@ -65,7 +65,10 @@
     "txN": "Transaction #",
     "limit": "Limit",
     "gas": "Gas",
-    "blockHeight": "Block Height #"
+    "blockHeight": "Block Height #",
+    "token": "Token",
+    "price": "Price",
+    "marketCap": "Market Cap"
   },
   "filter": {
     "view": "View",
@@ -181,19 +184,20 @@
     "avgTxCost": "Average Tx Costs",
     "title": "Transactions (Last 10 blocks)",
     "avgTitle": "Average Tx Fees",
-    "liveDescription": "Number of successful, failed, and pending transactions that have occured in the last 10 blocks",
+    "liveDescription": "Number of successful, failed, and pending transactions in the last 10 blocks",
     "avgDescription": "Average transaction fees and average gas price in the last 10 blocks",
     "labelString": "Sucessfull and Failed Tx ",
-    "avgGasPrice": "Average Gas Price",
-    "avgGasLimit": "Average Gas Limit",
-    "avgBlockDiff": "Average Block Difficulty",
-    "avgBlockSize": "Average Block Size",
-    "avgBlockTime": "Average Block Time",
-    "avgTxFees": "Average Transactions Fees",
-    "avgTxSuccess": "Average Number of Successfull Transactions",
-    "avgTxFail": "Average Number of Failed Transactions",
-    "avgHashRate": "Average Hash Rate",
-    "avgMiningReward": "Average Mining Rewards",
+    "avgGasPrice": "Gas Price",
+    "avgGasLimit": "Gas Limit",
+    "avgBlockDiff": "Block Difficulty",
+    "avgBlockSize": "Block Size",
+    "avgBlockTime": "Block Time",
+    "txFees": "Transactions Fees",
+    "txSuccess": "Successful Transactions",
+    "txFail": "Failed Transactions",
+    "txPending": "Pending Transactions",
+    "avgHashRate": "Hash Rate",
+    "avg": "Average ",
 
     "block-difficulty-history": "Average Block Difficulty",
     "block-time-history": "Average Block Time",
@@ -203,10 +207,27 @@
     "hash-rate-history": "Average Hash Rate",
     "miner-rewards-history": "Average Mining Rewards",
     "top-miners-history": "Top Miners",
-    "tx-fail-history": "Average Number of Failed Transactionsy",
-    "tx-success-history": "Average Number of Successfull Transactions",
+    "tx-fail-history": "Number of Failed Transactions",
+    "tx-success-history": "Number of Successful Transactions",
     "tx-fees-history": "Tx Fees ETH",
-    "uncle-number-history": "Average Number of Uncles"
+    "uncle-number-history": "Average Number of Uncles",
+    "states": {
+      "all": "All",
+      "week": "week",
+      "month": "month",
+      "day": "day",
+      "year": "year"
+    },
+    "options": {
+      "d": "1D",
+      "w": "1W",
+      "m": "1M",
+      "all": "ALL"
+    },
+    "captions": {
+      "all": " in Ethereum blockchain since the begining ",
+      "other": " in Ethereum blockchain in last "
+    }
   },
   "footer": {
     "discover": "Discover",

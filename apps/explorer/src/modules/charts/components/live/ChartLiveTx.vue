@@ -9,7 +9,7 @@
       :redraw="redraw"
       :footnote-arr="footnote"
       :live-chart="true"
-    ></app-chart>
+    />
   </v-layout>
 </template>
 
@@ -27,79 +27,8 @@ const MAX_ITEMS = 10
   }
 })
 export default class ChartLiveTransactions extends Vue {
-  data() {
-    return {
-      chartData: {},
-      chartOptions: {
-        title: {
-          text: this.$i18n.t('charts.title')
-        },
-        responsive: true,
-        scales: {
-          yAxes: [
-            {
-              id: 'y-axis-1',
-              stacked: false,
-              ticks: {
-                beginAtZero: true
-              },
-              gridLines: {
-                color: 'rgba(0, 0, 0, 0)'
-              },
-              scaleLabel: {
-                display: true,
-                labelString: this.$i18n.t('charts.labelString')
-              }
-            },
-            {
-              id: 'y-axis-2',
-              position: 'right',
-              stacked: false,
-              ticks: {
-                beginAtZero: true
-              },
-              gridLines: {
-                color: 'rgba(0, 0, 0, 0)'
-              },
-              scaleLabel: {
-                display: true,
-                labelString: 'Pending Tx'
-              }
-            }
-          ],
-          xAxes: [
-            {
-              stacked: false,
-              display: false,
-              categoryPercentage: 0.7
-            }
-          ]
-        },
-
-        barShowLabels: true
-      },
-      redraw: false,
-      newTitle: this.$i18n.t('charts.txSummary'),
-      newDescription: this.$i18n.t('charts.liveDescription'),
-      footnote: [
-        {
-          color: 'txSuccess',
-          text: this.$i18n.t('footnote.success'),
-          icon: 'fa fa-circle'
-        },
-        {
-          color: 'txFail',
-          text: this.$i18n.t('footnote.failed'),
-          icon: 'fa fa-circle'
-        },
-        {
-          color: 'txPen',
-          text: this.$i18n.t('footnote.pending'),
-          icon: 'fa fa-circle'
-        }
-      ]
-    }
-  }
+  chartData: any = {}
+  redraw = false
 
   // Lifecycle
   created() {
@@ -112,13 +41,15 @@ export default class ChartLiveTransactions extends Vue {
       if (this.chartData.datasets[0]) {
         this.redraw = false
         const stats = _block.getStats()
+        const successfulTxs = stats.successfulTxs
+        const failedTxs = stats.failedTxs
         this.chartData.labels.push(_block.getNumber())
         this.chartData.labels.shift()
         this.chartData.datasets[0].data.push(0) //pending tx ev
         this.chartData.datasets[0].data.shift()
-        this.chartData.datasets[1].data.push(stats.successfulTxs)
+        this.chartData.datasets[1].data.push(successfulTxs)
         this.chartData.datasets[1].data.shift()
-        this.chartData.datasets[2].data.push(stats.failedTxs)
+        this.chartData.datasets[2].data.push(failedTxs)
         this.chartData.datasets[2].data.shift()
       }
     })
@@ -172,6 +103,83 @@ export default class ChartLiveTransactions extends Vue {
           yAxisID: 'y-axis-1'
         }
       ]
+    }
+  }
+
+  get footnote() {
+    return [
+      {
+        color: 'txSuccess',
+        text: this.$i18n.t('footnote.success'),
+        icon: 'fa fa-circle'
+      },
+      {
+        color: 'txFail',
+        text: this.$i18n.t('footnote.failed'),
+        icon: 'fa fa-circle'
+      },
+      {
+        color: 'txPen',
+        text: this.$i18n.t('footnote.pending'),
+        icon: 'fa fa-circle'
+      }
+    ]
+  }
+
+  get newTitle() {
+    return this.$i18n.t('charts.txSummary')
+  }
+
+  get newDescription() {
+    return this.$i18n.t('charts.liveDescription')
+  }
+
+  get chartOptions() {
+    return {
+      title: {
+        text: this.$i18n.t('charts.title')
+      },
+      responsive: true,
+      scales: {
+        yAxes: [
+          {
+            id: 'y-axis-1',
+            stacked: false,
+            ticks: {
+              beginAtZero: true
+            },
+            gridLines: {
+              color: 'rgba(0, 0, 0, 0)'
+            },
+            scaleLabel: {
+              display: true,
+              labelString: this.$i18n.t('charts.labelString')
+            }
+          },
+          {
+            id: 'y-axis-2',
+            position: 'right',
+            stacked: false,
+            ticks: {
+              beginAtZero: true
+            },
+            gridLines: {
+              color: 'rgba(0, 0, 0, 0)'
+            },
+            scaleLabel: {
+              display: true,
+              labelString: 'Pending Tx'
+            }
+          }
+        ],
+        xAxes: [
+          {
+            stacked: false,
+            display: false,
+            categoryPercentage: 0.7
+          }
+        ]
+      }
     }
   }
 }

@@ -1,98 +1,115 @@
 <template>
-  <v-card color="white" flat v-if="tokens" class="pt-3 pr-2 pl-2 pb-0">
-    <v-layout row wrap justify-space-between mb-4>
-      <v-flex xs12 sm6>
-        <v-card class="primary white--text pl-2" flat>
-          <v-card-text class="pb-0">{{ $t('token.number') }}</v-card-text>
-          <v-card-title class="headline text-truncate">{{ totalTokens }}</v-card-title>
-        </v-card>
-      </v-flex>
-      <v-flex xs12 sm6>
-        <v-card class="success white--text pl-2" flat>
-          <v-card-text class="pb-0">{{ $t('token.totalUSD') }}</v-card-text>
-          <v-card-title class="headline text-truncate">${{ getTotalUSDValue }}</v-card-title>
-        </v-card>
-      </v-flex>
-    </v-layout>
-    <!-- Table Header -->
-    <v-card color="info" flat class="white--text pl-3 pr-1 mb-1" height="40px">
-      <v-layout align-center justify-start row fill-height pr-3>
-        <v-flex xs6 sm2>
-          <h5>{{ $t('token.symbol') }}</h5>
-        </v-flex>
-        <v-flex hidden-xs-only sm4 md3>
-          <h5>{{ $t('token.name') }}</h5>
-        </v-flex>
-        <v-flex xs6 sm3 md4>
-          <h5>{{ $t('token.amount') }}</h5>
-        </v-flex>
-        <v-flex hidden-xs-only sm3>
-          <h5>{{ $t('token.usdValue') }}</h5>
-        </v-flex>
-      </v-layout>
-    </v-card>
-    <!-- End Table Header -->
-    <app-error-no-data v-if="error"></app-error-no-data>
-    <!-- Tokens List -->
-    <div v-else>
-      <app-info-load v-if="loading"></app-info-load>
-      <div v-else>
-        <v-card v-if="tokens.length === 0" flat>
-          <p>{{ $t('tokens.empty') }}</p>
-        </v-card>
-        <div v-else v-for="(token, index) in tokens" :key="index"><table-tokens-row :token="token" :holder="holder" /></div>
-      </div>
-    </div>
-  </v-card>
+  <v-layout row wrap justify-center mb-4>
+    <v-flex xs12>
+      <v-data-table
+        :headers="headers"
+        :items="tokens"
+        :must-sort="true"
+        :pagination.sync="sortBy"
+        :custom-sort="customSort"
+        class="elevation-1"
+      >
+        <v-progress-linear slot="progress" color="blue" indeterminate />
+        <template slot="items" slot-scope="props">
+          <td>{{ props.item.name }}</td>
+          <td class="">{{ props.item.price.rate }}</td>
+          <td class="">{{ props.item.price.diff }}</td>
+          <td class="">{{ props.item.volume }}</td>
+          <td class="text-xs-right">{{ props.item.price.marketCapUsd }}</td>
+        </template>
+      </v-data-table>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script lang="ts">
-import AppErrorNoData from '@app/core/components/ui/AppErrorNoData.vue'
-import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
-import TableTokensRow from '@app/modules/tokens/components/TableTokensRow.vue'
-import BN from 'bignumber.js'
-import { StringConcatMixin } from '@app/core/components/mixins'
-import { Token } from '@app/modules/tokens/props'
-import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'vue-property-decorator'
 
-@Component({
-  components: {
-    AppErrorNoData,
-    AppInfoLoad,
-    TableTokensRow
-  }
-})
-export default class TableTokens extends Mixins(StringConcatMixin) {
-  @Prop(Array) tokens!: Token[]
-  @Prop(String) holder!: string
-  @Prop({ type: Boolean, default: true }) loading!: boolean
-  @Prop({ type: Boolean, default: true }) error!: boolean
+@Component
+export default class TableTokens extends Vue {
+  @Prop(Array) tokens!: Array<Object>
 
-  placeholder = 'Search Tokens Symbol/Name'
-
-  /* Methods: */
-  getBalance(value, decimals) {
-    const n = new BN(value)
-    return n.div(new BN(10).pow(decimals)).toFixed()
+  // See https://vuetifyjs.com/en/components/data-tables (pagination.sync) //
+  sortBy = {
+    descending: true,
+    rowsPerPage: 10,
+    sortBy: 'marketCap'
   }
 
-  /*Computed: */
-  get totalTokens(): number {
-    let totalToken = 0
-    this.tokens.forEach(token => {
-      if (token.balance != 0) {
-        totalToken++
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
+  /**
+   * Handle the sorting of items within a Vuetify v-data-table.
+   * See: https://vuetifyjs.com/en/components/data-tables (custom-sort)
+   */
+  customSort(items, index, isDescending) {
+    items.sort((a, b) => {
+      switch (index) {
+        case 'marketCap':
+          return isDescending ? b.price.marketCapUsd - a.price.marketCapUsd : a.price.marketCapUsd - b.price.marketCapUsd
+        case 'price':
+          return isDescending ? b.price.rate - a.price.rate : a.price.rate - b.price.rate
+        case 'volume':
+          return isDescending ? b.volume - a.volume : a.volume - b.volume
+        case 'change':
+          return isDescending ? b.price.diff - a.price.diff : a.price.diff - b.price.diff
       }
     })
-    return totalToken
+
+    return items
   }
 
-  get getTotalUSDValue(): string {
-    let totalUsdVal = 0
-    this.tokens.forEach(token => {
-      totalUsdVal += this.getBalance(token.balance, token.decimals) * token.usdValue
-    })
-    return this.getRoundNumber(totalUsdVal)
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
+
+  /**
+   * Headers object required for Vuetify data table.
+   * See: https://vuetifyjs.com/en/components/data-tables
+   *
+   * @return {Array} - Header values. See description.
+   */
+  get headers() {
+    return [
+      {
+        text: this.$i18n.t('tableHeader.token'),
+        align: 'left',
+        sortable: false,
+        value: 'name'
+      },
+      {
+        text: this.$i18n.t('tableHeader.price'),
+        value: 'price'
+      },
+      {
+        text: '%Change',
+        value: 'change'
+      },
+      {
+        text: 'Volume (24H)',
+        value: 'volume'
+      },
+      {
+        text: this.$i18n.t('tableHeader.marketCap'),
+        value: 'marketCap',
+        align: 'right'
+      }
+    ]
+  }
+
+  /**
+   * Determines whether or not the tokens object has been loaded/populated
+   *
+   * @return {Boolean}
+   */
+  get isTokensLoading(): boolean {
+    return this.tokens.length === 0
   }
 }
 </script>

@@ -28,7 +28,7 @@
         <!-- End Transactions -->
         <!-- Tokens -->
         <v-tab-item slot="tabs-item" value="tab-1">
-          <table-tokens v-if="!tokensError" :loading="tokensLoading" :tokens="account.tokens" :error="tokensError" />
+          <table-address-tokens v-if="!tokensError" :loading="tokensLoading" :tokens="account.tokens" :error="tokensError" />
           <app-error-no-data v-else />
         </v-tab-item>
         <!-- End Tokens -->
@@ -79,7 +79,7 @@ import AddressDetail from '@app/modules/addresses/components/AddressDetail.vue'
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import TableAddressTxs from '@app/modules/addresses/components/TableAddressTxs.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
-import TableTokens from '@app/modules/tokens/components/TableTokens.vue'
+import TableAddressTokens from '@app/modules/addresses/components/TableAddressTokens.vue'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { eth, TinySM, State } from '@app/core/helper'
 import { AccountInfo } from '@app/modules/addresses/props'
@@ -98,7 +98,7 @@ const CONTRACT_DETAIL_TYPE = 'contract'
     AddressDetail,
     TableAddressTxs,
     TableBlocks,
-    TableTokens
+    TableAddressTokens
   }
 })
 export default class PageDetailsAddress extends Vue {

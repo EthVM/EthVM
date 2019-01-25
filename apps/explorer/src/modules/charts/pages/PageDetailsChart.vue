@@ -7,8 +7,6 @@
     <chart-gas-limit v-if="chartId === ChartType.gasLimit" />
     <chart-gas-price v-if="chartId === ChartType.gasPrice" />
     <chart-hash-rate v-if="chartId === ChartType.hashRate" />
-    <chart-mining-reward v-if="chartId === ChartType.minerReward" />
-    <chart-top-miners v-if="chartId === ChartType.topMiners" />
     <chart-tx-fail v-if="chartId === ChartType.txFail" />
     <chart-tx-success v-if="chartId === ChartType.txSuccess" />
     <chart-tx-fees v-if="chartId === ChartType.txFees" />
@@ -24,8 +22,6 @@ import ChartBlockTime from '@app/modules/charts/components/history/ChartBlockTim
 import ChartGasLimit from '@app/modules/charts/components/history/ChartGasLimit.vue'
 import ChartGasPrice from '@app/modules/charts/components/history/ChartGasPrice.vue'
 import ChartHashRate from '@app/modules/charts/components/history/ChartHashRate.vue'
-import ChartMiningReward from '@app/modules/charts/components/history/ChartMiningReward.vue'
-import ChartTopMiners from '@app/modules/charts/components/history/ChartTopMiners.vue'
 import ChartTxFail from '@app/modules/charts/components/history/ChartTxFail.vue'
 import ChartTxSuccess from '@app/modules/charts/components/history/ChartTxSuccess.vue'
 import ChartTxFees from '@app/modules/charts/components/history/ChartTxFees.vue'
@@ -41,8 +37,6 @@ import { ChartTypes } from '@app/modules/charts/helpers'
     ChartGasLimit,
     ChartGasPrice,
     ChartHashRate,
-    ChartMiningReward,
-    ChartTopMiners,
     ChartTxFail,
     ChartTxSuccess,
     ChartTxFees,

@@ -42,16 +42,17 @@ exports.Events = {
     // Search
     search: "search",
     // Stats
-    getAverageTotalDifficultyStats: "get-average-difficulty-stats",
+    getAverageDifficultyStats: "get-average-difficulty-stats",
+    getAverageGasLimitStats: "get-average-gas-limit-stats",
     getAverageGasPriceStats: "get-average-gas-price-stats",
     getAverageTxFeeStats: "get-average-tx-fee-stats",
-    getAverageSuccessfullTxStats: "get-average-successfull-tx-stats",
-    getAverageFailedTxStats: "get-average-failedtx-stats",
+    getSuccessfulTxStats: "get-successful-tx-stats",
+    getFailedTxStats: "get-failed-tx-stats",
+    getTxStats: "get-tx-stats",
     getAverageBlockSizeStats: "get-average-block-size-stats",
     getAverageBlockTimeStats: "get-average-block-time-stats",
     getAverageNumberOfUnclesStats: "get-average-number-of-uncles",
     getAverageHashRateStats: "get-average-hash-rate-stats",
-    getAverageMinerRewardsStats: "get-average-miner-rewards-stats",
-    getAverageTotalTxs: "get-average-total-txs-stats"
+    getAverageMinerRewardsStats: "get-average-miner-rewards-stats"
 };
 exports.SocketDefaultRooms = ["blocks", "pendingTxs", "blockStat"];

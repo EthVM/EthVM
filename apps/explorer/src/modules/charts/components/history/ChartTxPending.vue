@@ -17,24 +17,27 @@ import { ChartMixin } from '@app/modules/charts/mixins'
 import { Component, Mixins } from 'vue-property-decorator'
 import { Events } from 'ethvm-common'
 
-/* Time Variables: */
-
 @Component({
   components: {
     AppChart
   }
 })
 export default class ChartGasPrice extends Mixins(ChartMixin) {
-  title = 'Number of Pending Transactions History'
   labelString = 'Pending Transactions'
 
   //Temp Event
-  newEvent = Events.getPendingStats
+  newEvent = Events.getPendingTxs
 
+  // Lifecycle
   created() {
     this.setTitle(this.title)
     this.setLabel(this.labelString)
     this.setEvent(this.newEvent)
+  }
+
+  // Computed
+  get title() {
+    return this.$i18n.t('charts.txPending').toString()
   }
 }
 </script>
