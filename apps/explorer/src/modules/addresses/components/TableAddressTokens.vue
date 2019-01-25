@@ -77,21 +77,16 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
 
   /*Computed: */
   get totalTokens(): number {
-    let totalToken = 0
-    this.tokens.forEach(token => {
-      if (token.balance != 0) {
-        totalToken++
-      }
-    })
-    return totalToken
+    return this.tokens.length
   }
 
   get getTotalUSDValue(): string {
-    let totalUsdVal = 0
-    this.tokens.forEach(token => {
-      totalUsdVal += this.getBalance(token.balance, token.decimals) * token.usdValue
-    })
-    return this.getRoundNumber(totalUsdVal)
+    // let totalUsdVal = 0
+    // this.tokens.forEach(token => {
+    //   totalUsdVal += this.getBalance(token.balance, token.decimals) * token.usdValue
+    // })
+    // return this.getRoundNumber(totalUsdVal)
+    return '0'
   }
 }
 </script>

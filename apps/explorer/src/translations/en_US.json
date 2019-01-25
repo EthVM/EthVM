@@ -65,7 +65,10 @@
     "txN": "Transaction #",
     "limit": "Limit",
     "gas": "Gas",
-    "blockHeight": "Block Height #"
+    "blockHeight": "Block Height #",
+    "token": "Token",
+    "price": "Price",
+    "marketCap": "Market Cap"
   },
   "filter": {
     "view": "View",
