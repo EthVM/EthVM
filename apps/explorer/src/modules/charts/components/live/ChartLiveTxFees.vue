@@ -130,7 +130,7 @@ export default class ChartLiveTxFees extends Vue {
             },
             scaleLabel: {
               display: true,
-              labelString: this.$i18n.t('charts.aveGasPrice')
+              labelString: this.$i18n.t('charts.avgGasPrice')
             }
           }
         ],
