@@ -1,10 +1,3 @@
-export interface Breadcumb {
-  text?: string
-  disabled?: boolean
-  icon?: string
-  link?: string
-}
-
 export interface Footnote {
   color?: string
   text?: string

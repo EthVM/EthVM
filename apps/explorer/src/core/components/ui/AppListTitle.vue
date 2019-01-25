@@ -64,20 +64,16 @@ export default class AppListTitle extends Vue {
   @Prop(Boolean) mined!: boolean
   @Prop(Array) uncles!: string[]
 
-  data() {
-    return {
-      titles: {
-        tx: this.$i18n.t('title.txDetail'),
-        block: this.$i18n.t('title.blockDetail'),
-        uncle: this.$i18n.t('title.uncleDetail')
-      },
-      dialog: false
-    }
-  }
+  dialog = false
 
   //Computed:
   get title() {
-    return this.titles[this.listType] || this.$i18n.t('title.uncleDetail')
+    const titles = {
+      tx: this.$i18n.t('title.txDetail'),
+      block: this.$i18n.t('title.blockDetail'),
+      uncle: this.$i18n.t('title.uncleDetail')
+    }
+    return titles[this.listType] || this.$i18n.t('title.uncleDetail')
   }
 
   get hasUncles() {
