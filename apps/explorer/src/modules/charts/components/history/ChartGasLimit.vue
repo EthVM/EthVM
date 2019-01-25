@@ -23,7 +23,6 @@ import { Events } from 'ethvm-common'
   }
 })
 export default class ChartGasLimit extends Mixins(ChartMixin) {
-  title = 'Average Gas Limit History'
   labelString = 'Average Gas Limit (wei)'
   //Temp event --> not yet implemented
   newEvent = Events.getAverageGasLimitStats
@@ -32,6 +31,10 @@ export default class ChartGasLimit extends Mixins(ChartMixin) {
     this.setTitle(this.title)
     this.setLabel(this.labelString)
     this.setEvent(this.newEvent)
+  }
+
+  get title() {
+    return this.$i18n.t('charts.avgGasLimit')
   }
 }
 </script>

@@ -21,13 +21,13 @@
           <v-flex xs12 md6> <app-chart-link :title="$t('charts.avgGasPrice')" :chart-id="ID.gasPrice" /> </v-flex>
           <v-flex xs12 md6> <app-chart-link :title="$t('charts.avgGasLimit')" :chart-id="ID.gasLimit" /> </v-flex>
         </v-layout>
-        <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6> <app-chart-link :title="$t('charts.avgTxFees')" :chart-id="ID.txFees" /> </v-flex>
-          <v-flex xs12 md6><!-- Pending Txs --></v-flex>
-        </v-layout>
-        <v-layout row wrap justify-center mb-4>
+         <v-layout row wrap justify-center mb-4>
           <v-flex xs12 md6> <app-chart-link :title="$t('charts.txSuccess')" :chart-id="ID.txSuccess" /> </v-flex>
           <v-flex xs12 md6> <app-chart-link :title="$t('charts.txFail')" :chart-id="ID.txFail" /> </v-flex>
+        </v-layout>
+        <v-layout row wrap justify-center mb-4>
+          <v-flex xs12 md6> <app-chart-link :title="$t('charts.txFees')" :chart-id="ID.txFees" /> </v-flex>
+          <v-flex xs12 md6><!-- Pending Txs --></v-flex>
         </v-layout>
       </v-tab-item>
       <!-- Blocks -->
@@ -44,8 +44,6 @@
       <v-tab-item slot="tabs-item" value="tab-3">
         <v-layout row wrap justify-center mb-4>
           <v-flex xs12 md6> <app-chart-link :title="$t('charts.avgHashRate')" :chart-id="ID.hashRate" /> </v-flex>
-        </v-layout>
-        <v-layout row wrap justify-center mb-4>
           <v-flex xs12 md6><!--  --></v-flex>
         </v-layout>
       </v-tab-item>

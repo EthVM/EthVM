@@ -1,7 +1,6 @@
 <template>
   <app-chart
     type="line"
-    :chart-id="ID"
     :chart-title="title"
     :chart-description="description"
     :data="chartData"
@@ -26,7 +25,6 @@ import { Events } from 'ethvm-common'
   }
 })
 export default class ChartBlockTime extends Mixins(ChartMixin) {
-  title = 'Average Block Time history'
   labelString = 'Average Block time (sec)'
   //Temp Event String
   newEvent = Events.getAverageBlockTimeStats
@@ -35,6 +33,9 @@ export default class ChartBlockTime extends Mixins(ChartMixin) {
     this.setTitle(this.title)
     this.setLabel(this.labelString)
     this.setEvent(this.newEvent)
+  }
+  get title() {
+    return this.$i18n.t('charts.avgBlockTime')
   }
 }
 </script>

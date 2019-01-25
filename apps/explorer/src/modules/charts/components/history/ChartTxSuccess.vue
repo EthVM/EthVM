@@ -23,7 +23,6 @@ import { Events } from 'ethvm-common'
   }
 })
 export default class ChartTxSuccess extends Mixins(ChartMixin) {
-  title = 'Successful Transactions History'
   labelString = 'Successful Transactions'
   newEvent = Events.getSuccessfulTxStats
 
@@ -31,6 +30,9 @@ export default class ChartTxSuccess extends Mixins(ChartMixin) {
     this.setTitle(this.title)
     this.setLabel(this.labelString)
     this.setEvent(this.newEvent)
+  }
+   get title() {
+    return this.$i18n.t('charts.txSuccess')
   }
 }
 </script>

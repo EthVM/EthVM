@@ -42,12 +42,6 @@ export class ChartMixin extends Vue {
       ]
     }
   }
-  DATA = [
-    { state: 'ALL', points: [], labels: [] },
-    { state: 'WEEK', points: [], labels: [] },
-    { state: 'MONTH', points: [], labels: [] },
-    { state: 'YEAR', points: [], labels: [] }
-  ]
 
   /*Computed: */
   get chartData() {
@@ -89,6 +83,7 @@ export class ChartMixin extends Vue {
   setData(_state: number): void {
     this.$socket.emit(this.chartEvent, { duration: this.DATA[_state].state }, (err, result) => {
       if (!err && result) {
+        console.log(result)
         result.forEach(point => {
           this.DATA[_state].points.push(point.value)
           this.DATA[_state].labels.push(point.date)
@@ -99,6 +94,15 @@ export class ChartMixin extends Vue {
 
   /*Computed: */
   get description(): string {
-    return this.timeFrame === 0 ? this.chartTitle + DES.BEGIN : this.chartTitle + DES.OTHER + this.DATA[this.timeFrame].state
+    return this.timeFrame === 0 ? this.$i18n.t("charts.avg") + this.chartTitle + this.$i18n.t("charts.captions.all") : this.$i18n.t("charts.avg") + this.chartTitle + this.$i18n.t("charts.captions.other")+ this.DATA[this.timeFrame].cap
+  }
+
+  get DATA() {
+    return [
+      { state: "ALL", cap: this.$i18n.t('charts.states.all'), points: [], labels: [] },
+      { state: "WEEK", cap: this.$i18n.t('charts.states.week'), points: [], labels: [] },
+      { state: "MONTH", cap: this.$i18n.t('charts.states.month'), points: [], labels: [] },
+      { state: "YEAR", cap: this.$i18n.t('charts.states.year'), points: [], labels: [] }
+    ]
   }
 }
