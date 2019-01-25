@@ -1,5 +1,6 @@
 package io.enkrypt.kafka.streams.processors
 
+import io.enkrypt.avro.processing.AddressTxCountRecord
 import io.enkrypt.avro.processing.MetricKeyRecord
 import io.enkrypt.avro.processing.MetricRecord
 import io.enkrypt.avro.processing.TokenBalanceRecord
@@ -40,9 +41,26 @@ class StateProcessor : AbstractKafkaProcessor() {
 
     buildBalancesTopology(builder)
     buildMetricsTopology(builder)
+    buildAddressMetadataTopology(builder)
 
     // Generate the topology
     return builder.build()
+  }
+
+  private fun buildAddressMetadataTopology(builder: StreamsBuilder) {
+
+    val events = builder.stream(
+      Topics.AddressTxEvents,
+      Consumed.with(Serdes.AddressTxCountKey(), KafkaSerdes.ByteBuffer())
+    )
+
+    events
+      .groupByKey(Grouped.with(Serdes.AddressTxCountKey(), KafkaSerdes.ByteBuffer()))
+      .count(Materialized.with(Serdes.AddressTxCountKey(), KafkaSerdes.Long()))
+      .toStream()
+      .mapValues { v -> AddressTxCountRecord.newBuilder().setCount(v).build() }
+      .to(Topics.AddressTxCounts, Produced.with(Serdes.AddressTxCountKey(), Serdes.AddressTxCount()))
+
   }
 
   private fun buildBalancesTopology(builder: StreamsBuilder) {

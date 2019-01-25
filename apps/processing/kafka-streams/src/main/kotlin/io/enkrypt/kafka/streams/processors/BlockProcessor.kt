@@ -6,6 +6,8 @@ import io.enkrypt.avro.capture.PremineBalanceRecord
 import io.enkrypt.avro.capture.TransactionKeyRecord
 import io.enkrypt.avro.capture.TransactionRecord
 import io.enkrypt.avro.capture.UncleKeyRecord
+import io.enkrypt.avro.processing.AddressTxCountKeyRecord
+import io.enkrypt.avro.processing.AddressTxCountType
 import io.enkrypt.avro.processing.BalanceType
 import io.enkrypt.avro.processing.ChainEventType
 import io.enkrypt.avro.processing.ContractCreateRecord
@@ -37,10 +39,14 @@ import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.Produced
 import org.apache.kafka.streams.kstream.TransformerSupplier
 import java.math.BigInteger
+import java.nio.ByteBuffer
 import java.security.MessageDigest
 import java.util.Properties
+import org.apache.kafka.common.serialization.Serdes as KafkaSerdes
 
 class BlockProcessor : AbstractKafkaProcessor() {
+
+  val emptyByteBuffer = ByteBuffer.allocate(0)
 
   override val id: String = "block-processor"
 
@@ -176,6 +182,32 @@ class BlockProcessor : AbstractKafkaProcessor() {
         Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance())
       )
 
+    chainEvents
+      .filter { _, v -> v.getType() == ChainEventType.PREMINE_BALANCE }
+      .flatMap { _, v ->
+
+        val reverse = v.getReverse()
+        val premineBalance = v.getValue() as PremineBalanceRecord
+
+        listOf(
+          KeyValue(
+            AddressTxCountKeyRecord.newBuilder()
+              .setAddress(premineBalance.getAddress())
+              .setType(AddressTxCountType.TO)
+              .build(),
+            if (reverse) null else emptyByteBuffer     // just a marker to allow for counting
+          ),
+          KeyValue(
+            AddressTxCountKeyRecord.newBuilder()
+              .setAddress(premineBalance.getAddress())
+              .setType(AddressTxCountType.TOTAL)
+              .build(),
+            if (reverse) null else emptyByteBuffer     // just a marker to allow for counting
+          )
+        )
+
+      }.to(Topics.AddressTxEvents, Produced.with(Serdes.AddressTxCountKey(), KafkaSerdes.ByteBuffer()))
+
     // DAO Hard fork
 
     chainEvents
@@ -280,6 +312,47 @@ class BlockProcessor : AbstractKafkaProcessor() {
         Topics.TokenTransfers,
         Produced.with(Serdes.TokenTransferKey(), Serdes.TokenTransfer())
       )
+
+    chainEvents
+      // only ether transfers for now
+      .filter { _, v -> v.getType() == ChainEventType.TOKEN_TRANSFER && (v.getValue() as TokenTransferRecord).getContract() == null }
+      .flatMap { _, v ->
+
+        val reverse = v.getReverse()
+        val transfer = v.getValue() as TokenTransferRecord
+
+        listOf(
+          KeyValue(
+            AddressTxCountKeyRecord.newBuilder()
+              .setAddress(transfer.getFrom())
+              .setType(AddressTxCountType.FROM)
+              .build(),
+            if (reverse) null else emptyByteBuffer     // just a marker to allow for counting
+          ),
+          KeyValue(
+            AddressTxCountKeyRecord.newBuilder()
+              .setAddress(transfer.getTo())
+              .setType(AddressTxCountType.TO)
+              .build(),
+            if (reverse) null else emptyByteBuffer     // just a marker to allow for counting
+          ),
+          KeyValue(
+            AddressTxCountKeyRecord.newBuilder()
+              .setAddress(transfer.getFrom())
+              .setType(AddressTxCountType.TOTAL)
+              .build(),
+            if (reverse) null else emptyByteBuffer     // just a marker to allow for counting
+          ),
+          KeyValue(
+            AddressTxCountKeyRecord.newBuilder()
+              .setAddress(transfer.getTo())
+              .setType(AddressTxCountType.TOTAL)
+              .build(),
+            if (reverse) null else emptyByteBuffer     // just a marker to allow for counting
+          )
+        )
+
+      }.to(Topics.AddressTxEvents, Produced.with(Serdes.AddressTxCountKey(), KafkaSerdes.ByteBuffer()))
 
     // publish fungible token movements for aggregation
 

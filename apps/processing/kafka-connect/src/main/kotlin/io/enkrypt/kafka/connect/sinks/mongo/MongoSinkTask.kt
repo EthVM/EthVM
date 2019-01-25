@@ -20,6 +20,7 @@ import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Balances
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.PendingTransactions
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.TokenTransfers
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.AggregateBlockMetrics
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.AccountMetadata
 import io.enkrypt.kafka.connect.utils.Versions
 import mu.KotlinLogging
 import org.apache.kafka.clients.consumer.OffsetAndMetadata
@@ -30,6 +31,7 @@ import org.apache.kafka.connect.sink.SinkRecord
 import org.apache.kafka.connect.sink.SinkTask
 import org.bson.BsonDecimal128
 import org.bson.BsonDocument
+import org.bson.BsonInt64
 import org.bson.BsonString
 import org.bson.Document
 import org.bson.types.Decimal128
@@ -62,7 +64,8 @@ class MongoSinkTask : SinkTask() {
       Balances to db.getCollection(Balances.id, clazz),
       PendingTransactions to db.getCollection(PendingTransactions.id, clazz),
       BlockMetrics to db.getCollection(BlockMetrics.id, clazz),
-      AggregateBlockMetrics to db.getCollection(AggregateBlockMetrics.id, clazz)
+      AggregateBlockMetrics to db.getCollection(AggregateBlockMetrics.id, clazz),
+      AccountMetadata to db.getCollection(AccountMetadata.id, clazz)
     )
   }
 
@@ -125,7 +128,8 @@ enum class MongoCollections(val id: String) {
   TokenTransfers("token_transfers"),
   Balances("balances"),
   BlockMetrics("block_metrics"),
-  PendingTransactions("pending_transactions")
+  PendingTransactions("pending_transactions"),
+  AccountMetadata("account_metadata")
 }
 
 typealias SinkRecordToBsonFn = (record: SinkRecord) -> Map<MongoCollections, List<WriteModel<BsonDocument>>>
@@ -434,6 +438,39 @@ enum class KafkaTopics(
     }
 
     mapOf(MongoCollections.AggregateBlockMetrics to writes)
+  }),
+
+  AddressTxCounts("address-tx-counts", { record: SinkRecord ->
+
+    require(record.keySchema().type() == Schema.Type.STRUCT) { "Key schema must be a struct" }
+
+    var writes = listOf<WriteModel<BsonDocument>>()
+
+    val keyBson = StructToBsonConverter.convert(record.key() as Struct, "accountTxCountKey")
+    val idFilter = BsonDocument().apply { append("_id", keyBson.get("address")) }
+
+    if (record.value() == null) {
+
+      // tombstone received so we need to delete
+      writes += DeleteOneModel(idFilter)
+
+    } else {
+
+      require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
+      val struct = StructToBsonConverter.convert(record.value() as Struct)
+      val count = struct.getInt64("count").longValue()
+
+      val bson = when (keyBson.getString("type").value) {
+        "FROM" -> Document(mapOf("\$set" to mapOf("fromTxCount" to count)))
+        "TO" -> Document(mapOf("\$set" to mapOf("toTxCount" to count)))
+        "TOTAL" -> Document(mapOf("\$set" to mapOf("totalTxCount" to count)))
+        else -> throw IllegalStateException("Unexpected value")
+      }
+
+      writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
+    }
+
+    mapOf(MongoCollections.AccountMetadata to writes)
   });
 
   companion object {

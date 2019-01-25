@@ -187,4 +187,19 @@ protocol Processing {
 
   }
 
+  // address metadata
+
+  enum AddressTxCountType {
+    FROM, TO, TOTAL
+  }
+
+  record AddressTxCountKeyRecord {
+    io.enkrypt.avro.common.Data20 address;
+    AddressTxCountType type;
+  }
+
+  record AddressTxCountRecord {
+    long count;
+  }
+
 }
