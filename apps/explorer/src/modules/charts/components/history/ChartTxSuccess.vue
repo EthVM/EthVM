@@ -31,7 +31,7 @@ export default class ChartTxSuccess extends Mixins(ChartMixin) {
     this.setLabel(this.labelString)
     this.setEvent(this.newEvent)
   }
-   get title() {
+  get title() {
     return this.$i18n.t('charts.txSuccess')
   }
 }

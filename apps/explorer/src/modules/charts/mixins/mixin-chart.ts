@@ -1,15 +1,10 @@
 import { Component, Vue } from 'vue-property-decorator'
 
-const DES = {
-  BEGIN: ' in Ethereum blockchain since the begining ',
-  OTHER: ' in Ethereum blockchain in last '
-}
-
 @Component
 export class ChartMixin extends Vue {
   chartTitle = ''
   chartLabel = ''
-  chartEvent
+  chartEvent = null
   redraw = true
   timeFrame = 1
   chartOptions = {
@@ -60,7 +55,7 @@ export class ChartMixin extends Vue {
     }
   }
 
-  /*Methods: */
+  /* Methods: */
   setTitle(_title: string): void {
     this.chartTitle = _title
   }
@@ -83,7 +78,6 @@ export class ChartMixin extends Vue {
   setData(_state: number): void {
     this.$socket.emit(this.chartEvent, { duration: this.DATA[_state].state }, (err, result) => {
       if (!err && result) {
-        console.log(result)
         result.forEach(point => {
           this.DATA[_state].points.push(point.value)
           this.DATA[_state].labels.push(point.date)
@@ -92,17 +86,19 @@ export class ChartMixin extends Vue {
     })
   }
 
-  /*Computed: */
+  /* Computed: */
   get description(): string {
-    return this.timeFrame === 0 ? this.$i18n.t("charts.avg") + this.chartTitle + this.$i18n.t("charts.captions.all") : this.$i18n.t("charts.avg") + this.chartTitle + this.$i18n.t("charts.captions.other")+ this.DATA[this.timeFrame].cap
+    return this.timeFrame === 0
+      ? this.$i18n.t('charts.avg') + this.chartTitle + this.$i18n.t('charts.captions.all')
+      : this.$i18n.t('charts.avg') + this.chartTitle + this.$i18n.t('charts.captions.other') + this.DATA[this.timeFrame].cap
   }
 
   get DATA() {
     return [
-      { state: "ALL", cap: this.$i18n.t('charts.states.all'), points: [], labels: [] },
-      { state: "WEEK", cap: this.$i18n.t('charts.states.week'), points: [], labels: [] },
-      { state: "MONTH", cap: this.$i18n.t('charts.states.month'), points: [], labels: [] },
-      { state: "YEAR", cap: this.$i18n.t('charts.states.year'), points: [], labels: [] }
+      { state: 'ALL', cap: this.$i18n.t('charts.states.all'), points: [], labels: [] },
+      { state: 'WEEK', cap: this.$i18n.t('charts.states.week'), points: [], labels: [] },
+      { state: 'MONTH', cap: this.$i18n.t('charts.states.month'), points: [], labels: [] },
+      { state: 'YEAR', cap: this.$i18n.t('charts.states.year'), points: [], labels: [] }
     ]
   }
 }

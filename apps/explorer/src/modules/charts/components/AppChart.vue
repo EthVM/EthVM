@@ -10,9 +10,9 @@
           <v-toolbar flat color="transparent">
             <v-layout align-center justify-end>
               <v-btn-toggle depressed v-model="toggleData" mandatory>
-                <v-btn flat :value="0" active-class="active-button white--text" small>{{$t('charts.options.all')}}</v-btn>
-                <v-btn flat :value="1" active-class="active-button white--text" small>{{$t('charts.options.w')}}</v-btn>
-                <v-btn flat :value="2" active-class="active-button white--text" small>{{$t('charts.options.m')}}</v-btn>
+                <v-btn flat :value="0" active-class="active-button white--text" small>{{ $t('charts.options.all') }}</v-btn>
+                <v-btn flat :value="1" active-class="active-button white--text" small>{{ $t('charts.options.w') }}</v-btn>
+                <v-btn flat :value="2" active-class="active-button white--text" small>{{ $t('charts.options.m') }}</v-btn>
                 <!--<v-btn flat :value="3" active-class="active-button white--text" small>1Y</v-btn> -->
               </v-btn-toggle>
             </v-layout>

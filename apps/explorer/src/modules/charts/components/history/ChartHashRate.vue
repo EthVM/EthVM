@@ -33,7 +33,7 @@ export default class ChartGasPrice extends Mixins(ChartMixin) {
     this.setLabel(this.labelString)
     this.setEvent(this.newEvent)
   }
-   get title() {
+  get title() {
     return this.$i18n.t('charts.avgHashRate')
   }
 }
