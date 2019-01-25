@@ -8,7 +8,7 @@
         <h5>{{ token.name }}</h5>
       </v-flex>
       <v-flex xs6 sm3 md4>
-        <h5>{{ balance(token.balance, token.decimals)}}</h5>
+        <h5>{{ balance(token.balance, token.decimals) }}</h5>
       </v-flex>
       <v-flex hidden-xs-only sm3>
         <h5>
@@ -41,7 +41,10 @@ export default class TableAddressTokensRow extends Mixins(StringConcatMixin) {
   /*Methods: */
   balance(value, decimals) {
     const n = new BN(value)
-    return n.div(new BN(10).pow(decimals)).toFixed().toString()
+    return n
+      .div(new BN(10).pow(decimals))
+      .toFixed()
+      .toString()
   }
 }
 </script>

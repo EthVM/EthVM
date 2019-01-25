@@ -31,12 +31,14 @@ export default class AppBreadCrumbs extends Vue {
 
   // Computed
   get crumbs() {
-    return [{
-      text: 'Home',
-      disabled: true,
-      icon: 'fa fa-home',
-      link: '/'
-    }]
+    return [
+      {
+        text: 'Home',
+        disabled: true,
+        icon: 'fa fa-home',
+        link: '/'
+      }
+    ]
   }
 }
 </script>

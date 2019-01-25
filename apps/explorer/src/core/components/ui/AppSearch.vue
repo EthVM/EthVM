@@ -54,7 +54,6 @@ import { Component, Vue } from 'vue-property-decorator'
   }
 })
 export default class AppSearch extends Vue {
-
   searchInput = ''
   input = ''
 
