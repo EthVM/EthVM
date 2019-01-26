@@ -35,7 +35,7 @@
     "opt-cli": "^1.6.0",
     "ora": "^3.0.0",
     "prettier": "1.16.1",
-    "ts-node": "^7.0.1",
+    "ts-node": "^8.0.2",
     "tslint": "^5.12.1",
     "tslint-config-prettier": "^1.17.0",
     "tslint-consistent-codestyle": "^1.15.0",
