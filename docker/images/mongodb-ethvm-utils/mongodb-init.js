@@ -10,7 +10,8 @@ const collections = [
   "token_transfers",
   "pending_transactions",
   "block_metrics",
-  "aggregate_block_metrics"
+  "aggregate_block_metrics",
+  "exchange_rates"
 ];
 
 collections.forEach(name => db.createCollection(name));

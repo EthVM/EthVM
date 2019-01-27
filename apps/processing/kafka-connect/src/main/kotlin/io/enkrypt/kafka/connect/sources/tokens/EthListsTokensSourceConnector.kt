@@ -64,8 +64,7 @@ class EthListsTokensSourceConnector : SourceConnector() {
 
     const val TOKENS_URL_CONFIG = "tokens.url"
     const val TOKENS_URL_DOC = "Url of json file from which to download info"
-    const val TOKENS_DEFAULT_URL =
-      "https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/tokens/eth/tokens-eth.min.json"
+    const val TOKENS_DEFAULT_URL = "https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/tokens/eth/tokens-eth.min.json"
 
     const val SYNC_INTERVAL_CONFIG = "sync.interval"
     const val SYNC_INTERVAL_DOC = "How often to check for updates in seconds"

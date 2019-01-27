@@ -27,8 +27,7 @@ class EthListsTokensSourceTask : SourceTask() {
   override fun start(props: MutableMap<String, String>?) {
     topic = EthListsTokensSourceConnector.Config.topic(props!!)
     url = EthListsTokensSourceConnector.Config.tokensUrl(props)
-    syncIntervalSeconds =
-      EthListsTokensSourceConnector.Config.syncInterval(props)
+    syncIntervalSeconds = EthListsTokensSourceConnector.Config.syncInterval(props)
   }
 
   override fun stop() {

@@ -11,15 +11,7 @@ import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.WriteModel
 import io.enkrypt.common.extensions.hex
 import io.enkrypt.common.extensions.unsignedBigInteger
-import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Blocks
-import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Transactions
-import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Uncles
-import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Contracts
-import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.BlockMetrics
-import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Balances
-import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.PendingTransactions
-import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.TokenTransfers
-import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.AggregateBlockMetrics
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.*
 import io.enkrypt.kafka.connect.utils.Versions
 import mu.KotlinLogging
 import org.apache.kafka.clients.consumer.OffsetAndMetadata
@@ -62,7 +54,8 @@ class MongoSinkTask : SinkTask() {
       Balances to db.getCollection(Balances.id, clazz),
       PendingTransactions to db.getCollection(PendingTransactions.id, clazz),
       BlockMetrics to db.getCollection(BlockMetrics.id, clazz),
-      AggregateBlockMetrics to db.getCollection(AggregateBlockMetrics.id, clazz)
+      AggregateBlockMetrics to db.getCollection(AggregateBlockMetrics.id, clazz),
+      ExchangeRates to db.getCollection(ExchangeRates.id, clazz)
     )
   }
 
@@ -125,7 +118,8 @@ enum class MongoCollections(val id: String) {
   TokenTransfers("token_transfers"),
   Balances("balances"),
   BlockMetrics("block_metrics"),
-  PendingTransactions("pending_transactions")
+  PendingTransactions("pending_transactions"),
+  ExchangeRates("exchange_rates")
 }
 
 typealias SinkRecordToBsonFn = (record: SinkRecord) -> Map<MongoCollections, List<WriteModel<BsonDocument>>>
@@ -246,7 +240,7 @@ enum class KafkaTopics(
       writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
     }
 
-    mapOf(MongoCollections.Contracts to writes)
+    mapOf(Contracts to writes)
   }),
 
   ContractDestructions("contract-destructions", { record: SinkRecord ->
@@ -277,7 +271,7 @@ enum class KafkaTopics(
       writes += UpdateOneModel(idFilter, bson)
     }
 
-    mapOf(MongoCollections.Contracts to writes)
+    mapOf(Contracts to writes)
   }),
 
   ContractMetadata("contract-metadata", { record: SinkRecord ->
@@ -318,7 +312,7 @@ enum class KafkaTopics(
       writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
     }
 
-    mapOf(MongoCollections.Contracts to writes)
+    mapOf(Contracts to writes)
   }),
 
   Balances("balances", { record: SinkRecord ->
@@ -404,7 +398,7 @@ enum class KafkaTopics(
       writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
     }
 
-    mapOf(MongoCollections.BlockMetrics to writes)
+    mapOf(BlockMetrics to writes)
   }),
 
   AggregateBlockMetrics("aggregate-block-metrics-by-day", { record: SinkRecord ->
@@ -434,6 +428,23 @@ enum class KafkaTopics(
     }
 
     mapOf(MongoCollections.AggregateBlockMetrics to writes)
+  }),
+
+  ExchangeRates("exchange-rates", { record: SinkRecord ->
+
+    require(record.keySchema().type() == Schema.Type.STRUCT) { "Key schema must be a struct" }
+    require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
+
+    var writes = listOf<WriteModel<BsonDocument>>()
+
+    val idBson = StructToBsonConverter.convert(record.key() as Struct, "symbol")
+
+    val struct = record.value() as org.apache.kafka.connect.data.Struct
+    val bson = BsonDocument("\$set", StructToBsonConverter.convert(struct))
+
+    writes += UpdateOneModel(idBson, bson, MongoSinkTask.updateOptions)
+
+    mapOf(MongoCollections.ExchangeRates to writes)
   });
 
   companion object {

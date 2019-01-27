@@ -2,7 +2,6 @@ package io.enkrypt.kafka.streams.di
 
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
 import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient
-import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
 import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.processing.ContractCreateRecord
@@ -26,7 +25,7 @@ object Modules {
 
     val config = get<AppConfig>()
 
-    single<SchemaRegistryClient> {
+    single {
       when (config.unitTesting) {
         false -> CachedSchemaRegistryClient(config.kafka.schemaRegistryUrl, 100)
         true -> MockSchemaRegistryClient().apply {
