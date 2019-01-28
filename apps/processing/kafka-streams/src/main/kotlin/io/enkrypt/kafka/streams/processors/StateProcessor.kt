@@ -79,8 +79,6 @@ class StateProcessor : AbstractKafkaProcessor() {
             .build()
       )
     }.to(Topics.ContractCreatorList, Produced.with(Serdes.AddressMetadataKey(), Serdes.AddressMetadata()))
-
-
   }
 
   private fun buildBalancesTopology(builder: StreamsBuilder) {

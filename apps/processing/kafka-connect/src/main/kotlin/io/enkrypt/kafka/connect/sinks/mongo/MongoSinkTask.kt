@@ -31,7 +31,6 @@ import org.apache.kafka.connect.sink.SinkRecord
 import org.apache.kafka.connect.sink.SinkTask
 import org.bson.BsonDecimal128
 import org.bson.BsonDocument
-import org.bson.BsonInt64
 import org.bson.BsonString
 import org.bson.Document
 import org.bson.types.Decimal128
@@ -459,7 +458,6 @@ enum class KafkaTopics(
       }
 
       writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
-
     } else {
 
       require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
@@ -496,7 +494,6 @@ enum class KafkaTopics(
       }
 
       writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
-
     } else {
 
       val bson = when (keyBson.getString("type").value) {
@@ -527,7 +524,6 @@ enum class KafkaTopics(
       }
 
       writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
-
     } else {
 
       val bson = when (keyBson.getString("type").value) {

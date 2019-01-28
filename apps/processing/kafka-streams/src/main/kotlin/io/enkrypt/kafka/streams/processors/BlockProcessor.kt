@@ -214,17 +214,16 @@ class BlockProcessor : AbstractKafkaProcessor() {
               .setAddress(premineBalance.getAddress())
               .setType(AddressMetadataType.TO)
               .build(),
-            if (reverse) null else emptyByteBuffer     // just a marker to allow for counting
+            if (reverse) null else emptyByteBuffer // just a marker to allow for counting
           ),
           KeyValue(
             AddressMetadataKeyRecord.newBuilder()
               .setAddress(premineBalance.getAddress())
               .setType(AddressMetadataType.TOTAL)
               .build(),
-            if (reverse) null else emptyByteBuffer     // just a marker to allow for counting
+            if (reverse) null else emptyByteBuffer // just a marker to allow for counting
           )
         )
-
       }.to(Topics.AddressTxEvents, Produced.with(Serdes.AddressMetadataKey(), KafkaSerdes.ByteBuffer()))
 
     // DAO Hard fork
@@ -346,31 +345,30 @@ class BlockProcessor : AbstractKafkaProcessor() {
               .setAddress(transfer.getFrom())
               .setType(AddressMetadataType.FROM)
               .build(),
-            if (reverse) null else emptyByteBuffer     // just a marker to allow for counting
+            if (reverse) null else emptyByteBuffer // just a marker to allow for counting
           ),
           KeyValue(
             AddressMetadataKeyRecord.newBuilder()
               .setAddress(transfer.getTo())
               .setType(AddressMetadataType.TO)
               .build(),
-            if (reverse) null else emptyByteBuffer     // just a marker to allow for counting
+            if (reverse) null else emptyByteBuffer // just a marker to allow for counting
           ),
           KeyValue(
             AddressMetadataKeyRecord.newBuilder()
               .setAddress(transfer.getFrom())
               .setType(AddressMetadataType.TOTAL)
               .build(),
-            if (reverse) null else emptyByteBuffer     // just a marker to allow for counting
+            if (reverse) null else emptyByteBuffer // just a marker to allow for counting
           ),
           KeyValue(
             AddressMetadataKeyRecord.newBuilder()
               .setAddress(transfer.getTo())
               .setType(AddressMetadataType.TOTAL)
               .build(),
-            if (reverse) null else emptyByteBuffer     // just a marker to allow for counting
+            if (reverse) null else emptyByteBuffer // just a marker to allow for counting
           )
         )
-
       }.to(Topics.AddressTxEvents, Produced.with(Serdes.AddressMetadataKey(), KafkaSerdes.ByteBuffer()))
 
     // publish fungible token movements for aggregation
