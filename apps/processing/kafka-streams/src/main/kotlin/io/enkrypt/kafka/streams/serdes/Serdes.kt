@@ -8,8 +8,8 @@ import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.capture.TransactionKeyRecord
 import io.enkrypt.avro.capture.TransactionRecord
 import io.enkrypt.avro.capture.UncleKeyRecord
-import io.enkrypt.avro.processing.AddressTxCountKeyRecord
-import io.enkrypt.avro.processing.AddressTxCountRecord
+import io.enkrypt.avro.processing.AddressMetadataKeyRecord
+import io.enkrypt.avro.processing.AddressMetadataRecord
 import io.enkrypt.avro.processing.BlockChainEventsRecord
 import io.enkrypt.avro.processing.BlockMetricsRecord
 import io.enkrypt.avro.processing.ChainEventRecord
@@ -117,11 +117,11 @@ object Serdes : KoinComponent {
     configure(config, false)
   }
 
-  fun AddressTxCountKey() = SpecificAvroSerde<AddressTxCountKeyRecord>(registryClient).apply {
+  fun AddressMetadataKey() = SpecificAvroSerde<AddressMetadataKeyRecord>(registryClient).apply {
     configure(config, true)
   }
 
-  fun AddressTxCount() = SpecificAvroSerde<AddressTxCountRecord>(registryClient).apply {
+  fun AddressMetadata() = SpecificAvroSerde<AddressMetadataRecord>(registryClient).apply {
     configure(config, false)
   }
 }

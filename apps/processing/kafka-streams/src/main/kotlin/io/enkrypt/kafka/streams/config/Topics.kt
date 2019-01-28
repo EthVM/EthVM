@@ -19,4 +19,7 @@ object Topics {
 
   const val AddressTxEvents = "address-tx-events"
   const val AddressTxCounts = "address-tx-counts"
+
+  const val MinerList = "miner-list"
+  const val ContractCreatorList = "contract-creator-list"
 }

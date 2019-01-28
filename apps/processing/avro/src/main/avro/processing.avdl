@@ -189,17 +189,18 @@ protocol Processing {
 
   // address metadata
 
-  enum AddressTxCountType {
-    FROM, TO, TOTAL
+  enum AddressMetadataType {
+    FROM, TO, TOTAL, MINER, CONTRACT_CREATOR
   }
 
-  record AddressTxCountKeyRecord {
+  record AddressMetadataKeyRecord {
     io.enkrypt.avro.common.Data20 address;
-    AddressTxCountType type;
+    AddressMetadataType type;
   }
 
-  record AddressTxCountRecord {
-    long count;
+  record AddressMetadataRecord {
+    union { null, long } count = null;
+    union { null, boolean } flag = null;
   }
 
 }

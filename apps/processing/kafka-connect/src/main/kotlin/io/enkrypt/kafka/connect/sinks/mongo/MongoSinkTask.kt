@@ -451,8 +451,14 @@ enum class KafkaTopics(
 
     if (record.value() == null) {
 
-      // tombstone received so we need to delete
-      writes += DeleteOneModel(idFilter)
+      val bson = when (keyBson.getString("type").value) {
+        "FROM" -> Document(mapOf("\$unset" to "fromTxCount"))
+        "TO" -> Document(mapOf("\$unset" to "toTxCount"))
+        "TOTAL" -> Document(mapOf("\$unset" to "totalTxCount"))
+        else -> throw IllegalStateException("Unexpected type value")
+      }
+
+      writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
 
     } else {
 
@@ -464,7 +470,69 @@ enum class KafkaTopics(
         "FROM" -> Document(mapOf("\$set" to mapOf("fromTxCount" to count)))
         "TO" -> Document(mapOf("\$set" to mapOf("toTxCount" to count)))
         "TOTAL" -> Document(mapOf("\$set" to mapOf("totalTxCount" to count)))
-        else -> throw IllegalStateException("Unexpected value")
+        else -> throw IllegalStateException("Unexpected type value")
+      }
+
+      writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
+    }
+
+    mapOf(MongoCollections.AccountMetadata to writes)
+  }),
+
+  MinerList("miner-list", { record: SinkRecord ->
+
+    require(record.keySchema().type() == Schema.Type.STRUCT) { "Key schema must be a struct" }
+
+    var writes = listOf<WriteModel<BsonDocument>>()
+
+    val keyBson = StructToBsonConverter.convert(record.key() as Struct, "accountTxCountKey")
+    val idFilter = BsonDocument().apply { append("_id", keyBson.get("address")) }
+
+    if (record.value() == null) {
+
+      val bson = when (keyBson.getString("type").value) {
+        "MINER" -> Document(mapOf("\$unset" to "isMiner"))
+        else -> throw IllegalStateException("Unexpected type value")
+      }
+
+      writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
+
+    } else {
+
+      val bson = when (keyBson.getString("type").value) {
+        "MINER" -> Document(mapOf("\$set" to mapOf("isMiner" to true)))
+        else -> throw IllegalStateException("Unexpected type value")
+      }
+
+      writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
+    }
+
+    mapOf(MongoCollections.AccountMetadata to writes)
+  }),
+
+  ContractCreator("contract-creator-list", { record: SinkRecord ->
+
+    require(record.keySchema().type() == Schema.Type.STRUCT) { "Key schema must be a struct" }
+
+    var writes = listOf<WriteModel<BsonDocument>>()
+
+    val keyBson = StructToBsonConverter.convert(record.key() as Struct, "accountTxCountKey")
+    val idFilter = BsonDocument().apply { append("_id", keyBson.get("address")) }
+
+    if (record.value() == null) {
+
+      val bson = when (keyBson.getString("type").value) {
+        "CONTRACT_CREATOR" -> Document(mapOf("\$unset" to "isContractCreator"))
+        else -> throw IllegalStateException("Unexpected type value")
+      }
+
+      writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
+
+    } else {
+
+      val bson = when (keyBson.getString("type").value) {
+        "CONTRACT_CREATOR" -> Document(mapOf("\$set" to mapOf("isContractCreator" to true)))
+        else -> throw IllegalStateException("Unexpected type value")
       }
 
       writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
