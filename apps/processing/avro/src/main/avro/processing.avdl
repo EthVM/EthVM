@@ -187,4 +187,20 @@ protocol Processing {
 
   }
 
+  //
+  record ProcessingMetadataKeyRecord {
+    string name;
+  }
+
+  record ProcessingMetadataRecord {
+    union { null, string } `string` = null;
+    union { null, boolean } `boolean` = null;
+    union { null, int } `int` = null;
+    union { null, long } `long` = null;
+    union { null, float } `float` = null;
+    union { null, double } `double` = null;
+    union { null, bytes } `bigInteger` = null;
+  }
+
 }
+

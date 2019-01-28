@@ -1,16 +1,17 @@
 // create collections
 
 const collections = [
-  "web3_blocks",
-  "blocks",
-  "transactions",
-  "contracts",
-  "uncles",
-  "balances",
-  "token_transfers",
-  "pending_transactions",
-  "block_metrics",
-  "aggregate_block_metrics"
+  'processing_metadata',
+  'web3_blocks',
+  'blocks',
+  'transactions',
+  'contracts',
+  'uncles',
+  'balances',
+  'token_transfers',
+  'pending_transactions',
+  'block_metrics',
+  'aggregate_block_metrics'
 ];
 
 collections.forEach(name => db.createCollection(name));

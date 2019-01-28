@@ -31,6 +31,7 @@ ensure_kafka_connect() {
 
 create_topics() {
   echo "===> Create Kafka topics (if necessary) ..."
+  kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 1  --topic processing-metadata --config retention.ms=-1 --config cleanup.policy=compact
   kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 1  --topic blocks --config retention.ms=-1 --config cleanup.policy=compact
   kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 12 --topic transactions --config retention.ms=-1 --config cleanup.policy=compact
   kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 12 --topic uncles --config retention.ms=-1 --config cleanup.policy=compact

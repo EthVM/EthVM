@@ -172,6 +172,9 @@ object TypeMappings {
     "metric" to mapOf(
       "bigInteger" to BigInt
     ),
+    "processingMetadata" to mapOf(
+      "bigInteger" to BigInt
+    ),
     "contract" to mapOf(
       "address" to Hex,
       "blockHash" to Hex,
