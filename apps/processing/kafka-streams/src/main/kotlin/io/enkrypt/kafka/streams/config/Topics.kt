@@ -17,6 +17,5 @@ object Topics {
   const val ContractCreations = "contract-creations"
   const val ContractDestructions = "contract-destructions"
 
-  const val CoinGeckoExchangeRates = "coingecko-exchange-rates"
   const val ExchangeRates = "exchange-rates"
 }

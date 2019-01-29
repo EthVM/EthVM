@@ -312,7 +312,7 @@ enum class KafkaTopics(
       writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
     }
 
-    mapOf(Contracts to writes)
+    mapOf(Contracts to listOf<WriteModel<BsonDocument>>())
   }),
 
   Balances("balances", { record: SinkRecord ->

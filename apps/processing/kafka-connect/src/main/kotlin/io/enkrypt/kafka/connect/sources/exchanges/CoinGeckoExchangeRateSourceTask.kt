@@ -14,7 +14,7 @@ import java.time.temporal.ChronoUnit
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KProperty
 
-class ExchangeRatesSourceTask : SourceTask() {
+class CoinGeckoExchangeRateSourceTask : SourceTask() {
 
   private val klaxon = Klaxon()
     .propertyStrategy(object : PropertyStrategy {
@@ -66,12 +66,13 @@ class ExchangeRatesSourceTask : SourceTask() {
     } while (raw.isNotEmpty())
 
     val records = rates.map { e ->
+      val symbolKey = SymbolKey(e.id)
       SourceRecord(
         sourcePartition,
         sourceOffset,
         topic,
-        ExchangeRateMetadataKeySchema,
-        ExchangeRateKey(e.id).toStruct(),
+        SymbolKeyMetadataSchema,
+        symbolKey.toStruct(),
         ExchangeRateMetadataSchema,
         e.toStruct()
       )
@@ -91,8 +92,8 @@ class ExchangeRatesSourceTask : SourceTask() {
 
     val SLEEP: Long = TimeUnit.MINUTES.toMillis(1)
 
-    val ExchangeRateMetadataKeySchema: SchemaBuilder = SchemaBuilder(Schema.Type.STRUCT)
-      .name("io.enkrypt.avro.exchange.ExchangeRateKeyRecord")
+    val SymbolKeyMetadataSchema: SchemaBuilder = SchemaBuilder(Schema.Type.STRUCT)
+      .name("io.enkrypt.avro.exchange.SymbolKeyRecord")
       .field("symbol", Schema.STRING_SCHEMA)
 
     val ExchangeRateMetadataSchema: SchemaBuilder = SchemaBuilder(Schema.Type.STRUCT)
@@ -115,13 +116,13 @@ class ExchangeRatesSourceTask : SourceTask() {
       .field("total_supply", Schema.OPTIONAL_INT64_SCHEMA)
       .field("last_updated", Schema.OPTIONAL_STRING_SCHEMA)
 
-    data class ExchangeRateKey(
+    data class SymbolKey(
       val symbol: String
     ) {
 
       fun toStruct(): Struct =
-        Struct(ExchangeRateMetadataKeySchema).apply {
-          put("symbol", symbol)
+        Struct(SymbolKeyMetadataSchema).apply {
+          put("symbol", symbol.toLowerCase())
         }
     }
 

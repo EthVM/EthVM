@@ -24,7 +24,7 @@ class ExchangeRatesSourceConnector : SourceConnector() {
 
   override fun version() = Versions.CURRENT
 
-  override fun taskClass(): Class<out Task> = ExchangeRatesSourceTask::class.java
+  override fun taskClass(): Class<out Task> = CoinGeckoExchangeRateSourceTask::class.java
 
   override fun config(): ConfigDef = ConfigDef().apply {
 
@@ -51,7 +51,7 @@ class ExchangeRatesSourceConnector : SourceConnector() {
 
     const val TOPIC_CONFIG = "topic"
     const val TOPIC_CONFIG_DOC = "Topic into which to publish exchange rates"
-    const val TOPIC_CONFIG_DEFAULT = "coingecko-exchange-rates"
+    const val TOPIC_CONFIG_DEFAULT = "raw-exchange-rates"
 
     const val SYNC_INTERVAL_CONFIG = "sync.interval"
     const val SYNC_INTERVAL_DOC = "How often to check for updates in seconds"

@@ -10,12 +10,14 @@ import io.enkrypt.avro.capture.TransactionRecord
 import io.enkrypt.avro.capture.UncleKeyRecord
 import io.enkrypt.avro.exchange.ExchangeRateKeyRecord
 import io.enkrypt.avro.exchange.ExchangeRateRecord
+import io.enkrypt.avro.exchange.SymbolKeyRecord
 import io.enkrypt.avro.processing.BlockChainEventsRecord
 import io.enkrypt.avro.processing.BlockMetricsRecord
 import io.enkrypt.avro.processing.ChainEventRecord
 import io.enkrypt.avro.processing.ContractCreateRecord
 import io.enkrypt.avro.processing.ContractDestroyRecord
 import io.enkrypt.avro.processing.ContractKeyRecord
+import io.enkrypt.avro.processing.ContractMetadataRecord
 import io.enkrypt.avro.processing.MetricKeyRecord
 import io.enkrypt.avro.processing.MetricRecord
 import io.enkrypt.avro.processing.ReorgKeyRecord
@@ -117,7 +119,11 @@ object Serdes : KoinComponent {
     configure(config, false)
   }
 
-  fun ExchangeRateKey() = SpecificAvroSerde<ExchangeRateKeyRecord>(registryClient).apply {
+  fun ContractMetadata() = SpecificAvroSerde<ContractMetadataRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun SymbolKey() = SpecificAvroSerde<SymbolKeyRecord>(registryClient).apply {
     configure(config, true)
   }
 

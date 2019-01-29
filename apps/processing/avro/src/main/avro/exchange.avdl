@@ -1,7 +1,7 @@
 @namespace("io.enkrypt.avro.exchange")
 protocol Exchange {
 
-  record ExchangeRateKeyRecord {
+  record SymbolKeyRecord {
     string symbol;
   }
 

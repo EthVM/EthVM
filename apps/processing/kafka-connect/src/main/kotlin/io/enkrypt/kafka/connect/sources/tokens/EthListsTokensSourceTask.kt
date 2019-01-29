@@ -48,7 +48,7 @@ class EthListsTokensSourceTask : SourceTask() {
 
     val result = entries?.map { e ->
 
-      val key = Struct(contractKeySchema).apply {
+      val key = Struct(ContractKeySchema).apply {
         put("address", Hex.decode(e.address.substring(2)))
       }
 
@@ -56,9 +56,9 @@ class EthListsTokensSourceTask : SourceTask() {
         sourcePartition,
         emptyMap<String, Any>(),
         topic,
-        contractKeySchema,
+        ContractKeySchema,
         key,
-        contractMetadataSchema,
+        ContractMetadataSchema,
         e.toStruct()
       )
     } ?: emptyList()
@@ -77,12 +77,12 @@ class EthListsTokensSourceTask : SourceTask() {
 
   companion object {
 
-    val contractKeySchema: Schema = SchemaBuilder(Schema.Type.STRUCT)
+    val ContractKeySchema: Schema = SchemaBuilder(Schema.Type.STRUCT)
       .name("io.enkrypt.avro.common.ContractKeyRecord")
       .field("address", Schema.BYTES_SCHEMA)
       .build()
 
-    val logoSchema: Schema = SchemaBuilder(Schema.Type.STRUCT)
+    val LogoSchema: Schema = SchemaBuilder(Schema.Type.STRUCT)
       .name("io.enkrypt.avro.common.ContractLogoRecord")
       .optional()
       .field("src", Schema.OPTIONAL_STRING_SCHEMA)
@@ -91,14 +91,14 @@ class EthListsTokensSourceTask : SourceTask() {
       .field("ipfs_hash", Schema.OPTIONAL_STRING_SCHEMA)
       .build()
 
-    val supportSchema: Schema = SchemaBuilder(Schema.Type.STRUCT)
+    val SupportSchema: Schema = SchemaBuilder(Schema.Type.STRUCT)
       .name("io.enkrypt.avro.common.ContractSupportRecord")
       .optional()
       .field("email", Schema.OPTIONAL_STRING_SCHEMA)
       .field("url", Schema.OPTIONAL_STRING_SCHEMA)
       .build()
 
-    val socialSchema: Schema = SchemaBuilder(Schema.Type.STRUCT)
+    val SocialSchema: Schema = SchemaBuilder(Schema.Type.STRUCT)
       .name("io.enkrypt.avro.common.ContractSocialRecord")
       .optional()
       .field("blog", Schema.OPTIONAL_STRING_SCHEMA)
@@ -116,7 +116,7 @@ class EthListsTokensSourceTask : SourceTask() {
       .field("youtube", Schema.OPTIONAL_STRING_SCHEMA)
       .build()
 
-    val contractMetadataSchema = SchemaBuilder(Schema.Type.STRUCT)
+    val ContractMetadataSchema = SchemaBuilder(Schema.Type.STRUCT)
       .name("io.enkrypt.avro.common.ContractMetadataRecord")
       .field("name", Schema.STRING_SCHEMA)
       .field("symbol", Schema.STRING_SCHEMA)
@@ -125,9 +125,9 @@ class EthListsTokensSourceTask : SourceTask() {
       .field("ens_address", Schema.OPTIONAL_STRING_SCHEMA)
       .field("type", Schema.OPTIONAL_STRING_SCHEMA)
       .field("website", Schema.OPTIONAL_STRING_SCHEMA)
-      .field("logo", logoSchema)
-      .field("support", supportSchema)
-      .field("social", socialSchema)
+      .field("logo", LogoSchema)
+      .field("support", SupportSchema)
+      .field("social", SocialSchema)
   }
 }
 
@@ -136,7 +136,7 @@ data class ContractLogo(val src: String?, val width: String?, val height: String
   // TODO add ipfs hash
 
   fun toStruct(): Struct =
-    Struct(EthListsTokensSourceTask.logoSchema).apply {
+    Struct(EthListsTokensSourceTask.LogoSchema).apply {
       put("src", src)
       put("width", width)
       put("height", height)
@@ -146,7 +146,7 @@ data class ContractLogo(val src: String?, val width: String?, val height: String
 data class ContractSupport(val email: String?, val url: String?) {
 
   fun toStruct(): Struct =
-    Struct(EthListsTokensSourceTask.supportSchema).apply {
+    Struct(EthListsTokensSourceTask.SupportSchema).apply {
       put("email", email)
       put("url", url)
     }
@@ -169,7 +169,7 @@ data class ContractSocial(
 ) {
 
   fun toStruct(): Struct =
-    Struct(EthListsTokensSourceTask.socialSchema).apply {
+    Struct(EthListsTokensSourceTask.SocialSchema).apply {
       put("blog", blog)
       put("chat", chat)
       put("facebook", facebook)
@@ -200,7 +200,7 @@ data class ContractMetadata(
 ) {
 
   fun toStruct(): Struct =
-    Struct(EthListsTokensSourceTask.contractMetadataSchema).apply {
+    Struct(EthListsTokensSourceTask.ContractMetadataSchema).apply {
       put("name", name)
       put("symbol", symbol)
       put("address", Hex.decode(address.substring(2)))
