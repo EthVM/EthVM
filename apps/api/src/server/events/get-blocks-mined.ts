@@ -1,6 +1,7 @@
+import { removePrefix } from '@app/server/core/utils'
 import { blockMinedPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
-import { Events, Block } from 'ethvm-common'
+import { Block, Events } from 'ethvm-common'
 
 const getBlocksMinedEvent: SocketEvent = {
   id: Events.getBlocksMined,
@@ -12,6 +13,6 @@ const getBlocksMinedEvent: SocketEvent = {
     }
   },
   onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Block[]> =>
-    server.blockService.getBlocksMined(payload.address, payload.limit, payload.page)
+    server.blockService.getBlocksMined(removePrefix(payload.address), payload.limit, payload.page)
 }
 export default getBlocksMinedEvent

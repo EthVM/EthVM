@@ -1,3 +1,4 @@
+import { removePrefix } from '@app/server/core/utils'
 import { balancePayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
 import { Events } from 'ethvm-common'
@@ -14,7 +15,7 @@ const getAddressTokenBalance: SocketEvent = {
   },
 
   onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<any> =>
-    server.tokensService.getAddressTokenBalance(payload.address)
+    server.tokensService.getAddressTokenBalance(removePrefix(payload.address))
 }
 
 export default getAddressTokenBalance
