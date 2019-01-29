@@ -23,7 +23,6 @@ import { Events } from 'ethvm-common'
   }
 })
 export default class ChartGasPrice extends Mixins(ChartMixin) {
-
   //Temp event:
   newEvent = Events.getUnclesStats
 
@@ -41,6 +40,5 @@ export default class ChartGasPrice extends Mixins(ChartMixin) {
   get labelString(): string {
     return this.$i18n.t('charts.uncle-number-history').toString()
   }
-
 }
 </script>

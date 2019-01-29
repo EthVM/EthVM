@@ -17,21 +17,17 @@ export class ChartMixin extends Vue {
           ticks: {
             beginAtZero: true,
             callback: function(value) {
-              var ranges = [
-                { divider: 1e9, suffix: 'B' },
-                { divider: 1e6, suffix: 'M' },
-                { divider: 1e3, suffix: 'k' }
-              ];
+              const ranges = [{ divider: 1e9, suffix: 'B' }, { divider: 1e6, suffix: 'M' }, { divider: 1e3, suffix: 'k' }]
               function formatNumber(n) {
-                 for (var i = 0; i < ranges.length; i++) {
-                    if (n >= ranges[i].divider) {
-                       return (n / ranges[i].divider).toString() + ranges[i].suffix;
-                    }
-                 }
-                 return n;
+                for (let i = 0; i < ranges.length; i++) {
+                  if (n >= ranges[i].divider) {
+                    return (n / ranges[i].divider).toString() + ranges[i].suffix
+                  }
+                }
+                return n
               }
-              return  formatNumber(value);
-           }
+              return formatNumber(value)
+            }
           },
           gridLines: {
             color: 'rgba(0, 0, 0, 0)'
@@ -54,12 +50,11 @@ export class ChartMixin extends Vue {
     }
   }
   DATA = [
-      { state: 'ALL',  points: [], labels: [] },
-      { state: 'WEEK', points: [], labels: [] },
-      { state: 'MONTH', points: [], labels: [] },
-      { state: 'YEAR', points: [], labels: [] }
-    ]
-
+    { state: 'ALL', points: [], labels: [] },
+    { state: 'WEEK', points: [], labels: [] },
+    { state: 'MONTH', points: [], labels: [] },
+    { state: 'YEAR', points: [], labels: [] }
+  ]
 
   /* Methods: */
   setTitle(_title: string): void {
@@ -87,7 +82,7 @@ export class ChartMixin extends Vue {
         result.forEach(point => {
           this.DATA[_state].points.push(point.value)
           this.DATA[_state].labels.push(point.date)
-         // console.log(point.date.toDate())
+          // console.log(point.date.toDate())
         })
       }
     })
@@ -117,10 +112,11 @@ export class ChartMixin extends Vue {
   }
 
   get cap(): string[] {
-    return [ this.$i18n.t('charts.states.all').toString(),
-      this.$i18n.t('charts.states.week').toString() ,
-      this.$i18n.t('charts.states.month').toString() ,
-      this.$i18n.t('charts.states.year').toString() ,
+    return [
+      this.$i18n.t('charts.states.all').toString(),
+      this.$i18n.t('charts.states.week').toString(),
+      this.$i18n.t('charts.states.month').toString(),
+      this.$i18n.t('charts.states.year').toString()
     ]
   }
 }

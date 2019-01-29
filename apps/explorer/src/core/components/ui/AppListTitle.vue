@@ -18,7 +18,7 @@
         <v-flex xs6 sm8 md10 pl-0>
           <v-layout row wrap align-center justify-start pl-0>
             <v-card-title class="title font-weight-bold">{{ titles.block }}</v-card-title>
-            <v-dialog v-if="hasUncles " v-model="dialog" max-width="700">
+            <v-dialog v-if="hasUncles" v-model="dialog" max-width="700">
               <v-btn round outline slot="activator" color="primary" class="text-capitalize" small>
                 {{ $t('title.uncles') }}
                 <v-icon right>fa fa-angle-right</v-icon>
@@ -67,13 +67,12 @@ export default class AppListTitle extends Vue {
   dialog = false
 
   //Computed:
-  get title():string {
-    console.log("hello")
-    return titles[this.listType] || this.titles[0]
+  get title(): string {
+    return this.titles[this.listType] || this.titles[0]
   }
 
   get titles() {
-    return  {
+    return {
       tx: this.$i18n.t('title.txDetail'),
       block: this.$i18n.t('title.blockDetail'),
       uncle: this.$i18n.t('title.uncleDetail')
@@ -81,7 +80,7 @@ export default class AppListTitle extends Vue {
   }
 
   get hasUncles(): boolean {
-    return this.mined && this.uncles
+    return this.mined && this.uncles != null && this.uncles.length > 0
   }
 }
 </script>

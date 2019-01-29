@@ -38,7 +38,6 @@ export default class ChartGasPrice extends Mixins(ChartMixin) {
   }
   get labelString(): string {
     return this.$i18n.t('charts.gas-price-history').toString()
-
   }
 }
 </script>

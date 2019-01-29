@@ -42,7 +42,6 @@ export default class ChartBlockTime extends Mixins(ChartMixin) {
 
   get labelString(): string {
     return this.$i18n.t('charts.block-time-history').toString()
-
   }
 }
 </script>

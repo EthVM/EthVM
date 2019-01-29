@@ -37,10 +37,8 @@ export default class ChartGasLimit extends Mixins(ChartMixin) {
     return this.$i18n.t('charts.avgGasLimit').toString()
   }
 
-
   get labelString(): string {
     return this.$i18n.t('charts.gas-limit-history').toString()
-
   }
 }
 </script>
