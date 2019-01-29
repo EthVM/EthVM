@@ -1,11 +1,11 @@
 import config from '@app/config'
 import { logger } from '@app/logger'
-import { NullStreamer, MongoStreamer } from '@app/server/core/streams'
+import { NullStreamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
 import { BalancesServiceImpl, MongoBalancesRepository } from '@app/server/modules/balances'
 import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blocks'
 import { ContractsServiceImpl, MongoContractsRepository } from '@app/server/modules/contracts'
-import { CoinMarketCapRepository, ExchangeServiceImpl } from '@app/server/modules/exchanges'
+import { CoinGeckoRepository, ExchangeServiceImpl } from '@app/server/modules/exchanges'
 import { MongoPendingTxRepository, PendingTxServiceImpl } from '@app/server/modules/pending-txs'
 import { SearchServiceImpl } from '@app/server/modules/search'
 import { MongoStatisticsRepository, StatisticsServiceImpl } from '@app/server/modules/statistics'
@@ -13,9 +13,6 @@ import { MongoTokensRepository, TokensServiceImpl } from '@app/server/modules/to
 import { MongoTxsRepository, TxsServiceImpl } from '@app/server/modules/txs'
 import { MongoUncleRepository, UnclesServiceImpl } from '@app/server/modules/uncles'
 import { VmEngine } from '@app/server/modules/vm'
-import { RedisCacheRepository } from '@app/server/repositories'
-import * as EventEmitter from 'eventemitter3'
-import * as Redis from 'ioredis'
 import { MongoClient } from 'mongodb'
 
 async function bootstrapServer() {
@@ -29,15 +26,6 @@ async function bootstrapServer() {
     account: config.get('eth.vm.engine.account')
   }
   const vme = new VmEngine(vmeOpts)
-
-  // Create Cache data store
-  logger.info('bootstrapper -> Initializing redis cache data store')
-  const redis = new Redis({
-    host: config.get('data_stores.redis.host'),
-    port: config.get('data_stores.redis.port')
-  })
-  const ds = new RedisCacheRepository(redis)
-  await ds.initialize().catch(() => process.exit(-1))
 
   // Create Blockchain data store
   logger.debug('bootstrapper -> Connecting MongoDB')
@@ -86,8 +74,8 @@ async function bootstrapServer() {
   const statisticsService = new StatisticsServiceImpl(statisticsRepository)
 
   // Exchanges
-  const exchangeRepository = new CoinMarketCapRepository(ds)
-  const exchangeService = new ExchangeServiceImpl(exchangeRepository, ds)
+  const exchangeRepository = new CoinGeckoRepository()
+  const exchangeService = new ExchangeServiceImpl(exchangeRepository)
 
   // Tokens
   const tokensRepository = new MongoTokensRepository(db)
