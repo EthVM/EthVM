@@ -66,7 +66,7 @@ export default class PageDetailsTxs extends Vue {
     this.$socket.emit(
       Events.getTx,
       {
-        hash: this.txRef.replace('0x', '')
+        hash: this.txRef
       },
       (error, data) => {
         if (error || !data) {

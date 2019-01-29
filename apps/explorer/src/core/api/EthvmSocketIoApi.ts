@@ -15,7 +15,7 @@ export class EthvmSocketIoApi implements EthvmApi {
       this.io.emit(
         Events.getAddressBalance,
         {
-          address: hash.replace('0x', '')
+          address: hash
         },
         (err, result) => {
           if (err) {
@@ -51,7 +51,7 @@ export class EthvmSocketIoApi implements EthvmApi {
       this.io.emit(
         Events.getBlock,
         {
-          hash: hash.replace('0x', '')
+          hash
         },
         (err, result) => {
           if (err) {
@@ -85,7 +85,7 @@ export class EthvmSocketIoApi implements EthvmApi {
       this.io.emit(
         Events.getBlocksMined,
         {
-          address: address.replace('0x', ''),
+          address,
           limit,
           page
         },
@@ -123,7 +123,7 @@ export class EthvmSocketIoApi implements EthvmApi {
       this.io.emit(
         Events.getUncle,
         {
-          hash: hash.replace('0x', '')
+          hash
         },
         (err, result) => {
           if (err) {
@@ -141,7 +141,7 @@ export class EthvmSocketIoApi implements EthvmApi {
       this.io.emit(
         Events.getTx,
         {
-          hash: hash.replace('0x', '')
+          hash
         },
         (err, result) => {
           if (err) {
@@ -176,7 +176,7 @@ export class EthvmSocketIoApi implements EthvmApi {
       this.io.emit(
         Events.getBlockTxs,
         {
-          hash: hash.replace('0x', '')
+          hash
         },
         (err, result) => {
           if (err) {
@@ -193,7 +193,7 @@ export class EthvmSocketIoApi implements EthvmApi {
       this.io.emit(
         Events.getAddressTxs,
         {
-          address: hash.replace('0x', ''),
+          address: hash,
           limit,
           page
         },
@@ -212,7 +212,7 @@ export class EthvmSocketIoApi implements EthvmApi {
       this.io.emit(
         Events.getAddressTotalTxs,
         {
-          hash: hash.replace('0x', '')
+          hash
         },
         (err, result) => {
           if (err) {
@@ -248,7 +248,7 @@ export class EthvmSocketIoApi implements EthvmApi {
       this.io.emit(
         Events.getPendingTxsOfAddress,
         {
-          address: hash.replace('0x', ''),
+          address: hash,
           limit,
           page
         },

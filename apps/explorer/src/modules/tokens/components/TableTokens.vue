@@ -1,14 +1,7 @@
 <template>
   <v-layout row wrap justify-center mb-4>
     <v-flex xs12>
-      <v-data-table
-        :headers="headers"
-        :items="tokens"
-        :must-sort="true"
-        :pagination.sync="sortBy"
-        :custom-sort="customSort"
-        class="elevation-1"
-      >
+      <v-data-table :headers="headers" :items="tokens" :must-sort="true" :pagination.sync="sortBy" :custom-sort="customSort" class="elevation-1">
         <v-progress-linear slot="progress" color="blue" indeterminate />
         <template slot="items" slot-scope="props">
           <td><router-link :to="tokenLink(props.item.address)">{{ props.item.name }}</router-link></td>

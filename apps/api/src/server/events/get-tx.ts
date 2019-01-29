@@ -1,3 +1,4 @@
+import { removePrefix } from '@app/server/core/utils'
 import { txPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
 import { Events, Tx } from 'ethvm-common'
@@ -13,7 +14,7 @@ const getTxEvent: SocketEvent = {
     }
   },
 
-  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Tx | null> => server.txsService.getTx(payload.hash)
+  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Tx | null> => server.txsService.getTx(removePrefix(payload.hash))
 }
 
 export default getTxEvent

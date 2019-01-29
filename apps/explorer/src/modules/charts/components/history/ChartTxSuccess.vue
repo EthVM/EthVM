@@ -23,7 +23,6 @@ import { Events } from 'ethvm-common'
   }
 })
 export default class ChartTxSuccess extends Mixins(ChartMixin) {
-  labelString = 'Successful Transactions'
   newEvent = Events.getSuccessfulTxStats
 
   // Lifecycle
@@ -34,8 +33,11 @@ export default class ChartTxSuccess extends Mixins(ChartMixin) {
   }
 
   // Computed
-  get title() {
+  get title(): string {
     return this.$i18n.t('charts.txSuccess').toString()
+  }
+  get labelString(): string {
+    return this.$i18n.t('charts.tx-success-history').toString()
   }
 }
 </script>

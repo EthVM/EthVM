@@ -1,3 +1,4 @@
+import { removePrefix } from '@app/server/core/utils'
 import { contractSchemaPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
 import { Contract, Events } from 'ethvm-common'
@@ -13,7 +14,8 @@ const getContractEvent: SocketEvent = {
     }
   },
 
-  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Contract | null> => server.contractsService.getContract(payload.address)
+  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Contract | null> =>
+    server.contractsService.getContract(removePrefix(payload.address))
 }
 
 export default getContractEvent

@@ -25,7 +25,6 @@ import { Events } from 'ethvm-common'
   }
 })
 export default class ChartBlockTime extends Mixins(ChartMixin) {
-  labelString = 'Average Block time (sec)'
   //Temp Event String
   newEvent = Events.getAverageBlockTimeStats
 
@@ -39,6 +38,10 @@ export default class ChartBlockTime extends Mixins(ChartMixin) {
   // Computed
   get title() {
     return this.$i18n.t('charts.avgBlockTime').toString()
+  }
+
+  get labelString(): string {
+    return this.$i18n.t('charts.block-time-history').toString()
   }
 }
 </script>
