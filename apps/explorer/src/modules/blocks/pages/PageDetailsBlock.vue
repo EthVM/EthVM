@@ -87,7 +87,7 @@ export default class PageDetailsBlock extends Vue {
   // Methods:
   fetchBlock() {
     const event = eth.isValidHash(this.blockRef) ? Events.getBlock : Events.getBlockByNumber
-    const payload = eth.isValidHash(this.blockRef) ? { hash: this.blockRef.replace('0x', '') } : { number: Number(this.blockRef) }
+    const payload = eth.isValidHash(this.blockRef) ? { hash: this.blockRef } : { number: Number(this.blockRef) }
 
     this.$socket.emit(event, payload, (error, result) => {
       if (error || !result) {
