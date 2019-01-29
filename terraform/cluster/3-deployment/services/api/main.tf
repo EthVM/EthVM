@@ -77,16 +77,6 @@ resource "kubernetes_deployment" "api_deployment" {
             name  = "ETHVM_MONGO_DB_NAME"
             value = "${var.chain}"
           }
-
-          env {
-            name  = "ETHVM_DATA_STORE_REDIS_HOST"
-            value = "redis"
-          }
-
-          env {
-            name  = "ETHVM_ETH_TRIE_DB_REDIS_HOST"
-            value = "redis"
-          }
         }
       }
     }
