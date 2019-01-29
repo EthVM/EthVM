@@ -38,7 +38,7 @@
     "more": "More",
     "tx": "Tx",
     "uncle": "Uncle",
-    "sucessfull": "Sucessful",
+    "successful": "Successful",
     "failed": "Failed"
   },
   "subTitle": {
@@ -186,7 +186,7 @@
     "avgTitle": "Average Tx Fees",
     "liveDescription": "Number of successful, failed, and pending transactions in the last 10 blocks",
     "avgDescription": "Average transaction fees and average gas price in the last 10 blocks",
-    "labelString": "Sucessfull and Failed Tx ",
+    "labelString": "Successful and Failed Tx ",
     "avgGasPrice": "Gas Price",
     "avgGasLimit": "Gas Limit",
     "avgBlockDiff": "Block Difficulty",
