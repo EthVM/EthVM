@@ -4,7 +4,7 @@
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
         <app-list-details :items="blockDetails" :more-items="blockMoreDetails" :details-type="listType" :loading="loading">
-          <app-list-title slot="details-title" :list-type="listType" :block-details="blockInfo" />
+          <app-list-title slot="details-title" :list-type="listType" :block-details="blockInfo" :nextBlock="nextBlock" :prevBlock="previousBlock"/>
         </app-list-details>
       </v-flex>
     </v-layout>
@@ -53,7 +53,8 @@ export default class PageDetailsBlock extends Vue {
   block = null
   blockInfo = {
     next: null,
-    prev: null
+    prev: null,
+    mined: false
   }
 
   txs = []
@@ -99,11 +100,9 @@ export default class PageDetailsBlock extends Vue {
 
   setBlockInfo(block: Block) {
     this.block = block
-
+    this.blockInfo.mined= true
     this.blockInfo.next = this.block.getNumber() + 1
     this.blockInfo.prev = this.block.getNumber() === 0 ? 0 : this.block.getNumber() - 1
-
-    this.crumbs[1].text = this.$i18n.t('title.blockN') + ' ' + this.block.getNumber()
 
     this.timestamp = block.getTimestamp().toString()
     this.setDetails(this.block)
@@ -212,11 +211,29 @@ export default class PageDetailsBlock extends Vue {
   // Computed:
 
   get nextBlock(): String {
-    return '/block/' + this.blockInfo.next
+    if (this.blockInfo.mined) {
+      return  '/block/' + this.blockInfo.next
+    }
+    else {
+      if (!this.$route.params.blockRef.includes('0x')) {
+        const next = Number(this.$route.params.blockRef) + 1
+        return '/block/' + next
+      }
+      return ''
+    }
   }
 
   get previousBlock(): String {
-    return '/block/' + this.blockInfo.prev
+    if (this.blockInfo.mined) {
+      return  '/block/' + this.blockInfo.prev
+    }
+    else {
+      if (!this.$route.params.blockRef.includes('0x')) {
+        const prev = Number(this.$route.params.blockRef) - 1
+        return '/block/' + prev
+      }
+      return ''
+    }
   }
 
   get blockDetails(): Detail[] {
@@ -239,7 +256,7 @@ export default class PageDetailsBlock extends Vue {
         link: '/blocks'
       },
       {
-        text: '',
+        text: this.$i18n.t('title.blockN') + ' ' + this.$route.params.blockRef,
         disabled: true
       }
     ]

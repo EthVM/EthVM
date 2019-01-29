@@ -10,15 +10,15 @@
       <v-layout row wrap align-center justify-start>
         <!-- Previous Block -->
         <v-flex xs3 sm2 md1>
-          <v-layout v-if="prevBlock" align-center justify-start>
-            <v-btn flat color="primary" class="black--text" icon :to="block.prev"> <v-icon>fas fa-angle-left</v-icon> </v-btn>
+          <v-layout v-if="prevBlock != ''" align-center justify-start>
+            <v-btn flat color="primary" class="black--text" icon :to="prevBlock"> <v-icon>fas fa-angle-left</v-icon> </v-btn>
           </v-layout>
         </v-flex>
         <!-- Title -->
         <v-flex xs6 sm8 md10 pl-0>
           <v-layout row wrap align-center justify-start pl-0>
             <v-card-title class="title font-weight-bold">{{ titles.block }}</v-card-title>
-            <v-dialog v-if="hasUncles" v-model="dialog" max-width="700">
+            <v-dialog v-if="hasUncles " v-model="dialog" max-width="700">
               <v-btn round outline slot="activator" color="primary" class="text-capitalize" small>
                 {{ $t('title.uncles') }}
                 <v-icon right>fa fa-angle-right</v-icon>
@@ -41,7 +41,7 @@
           </v-layout>
         </v-flex>
         <!-- Next Block -->
-        <v-flex v-if="nextBlock" xs3 sm2 md1>
+        <v-flex v-if="nextBlock != ''" xs3 sm2 md1>
           <v-layout align-center justify-end>
             <v-btn flat color="primary" class="black--text" icon :to="nextBlock"> <v-icon>fas fa-angle-right</v-icon> </v-btn>
           </v-layout>
@@ -67,16 +67,20 @@ export default class AppListTitle extends Vue {
   dialog = false
 
   //Computed:
-  get title() {
-    const titles = {
+  get title():string {
+    console.log("hello")
+    return titles[this.listType] || this.titles[0]
+  }
+
+  get titles() {
+    return  {
       tx: this.$i18n.t('title.txDetail'),
       block: this.$i18n.t('title.blockDetail'),
       uncle: this.$i18n.t('title.uncleDetail')
     }
-    return titles[this.listType] || this.$i18n.t('title.uncleDetail')
   }
 
-  get hasUncles() {
+  get hasUncles(): boolean {
     return this.mined && this.uncles
   }
 }
