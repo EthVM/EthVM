@@ -40,7 +40,6 @@
     "ethereumjs-account": "^2.0.5",
     "ethvm-common": "file:./../common",
     "eventemitter3": "^3.1.0",
-    "ioredis": "^4.3.0",
     "jayson": "^2.1.0",
     "lodash": "^4.17.11",
     "lru-cache": "^5.1.1",
@@ -56,7 +55,6 @@
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
-    "@types/ioredis": "^4.0.4",
     "@types/json-schema": "^7.0.1",
     "@types/lodash": "^4.14.119",
     "@types/lru-cache": "^4.1.1",
@@ -65,7 +63,6 @@
     "@types/node": "^10.12.17",
     "@types/node-fetch": "^2.1.4",
     "@types/pino": "^5.8.3",
-    "@types/redis": "^2.8.8",
     "@types/socket.io": "^2.0.2",
     "chai": "^4.2.0",
     "jest": "^23.6.0",
