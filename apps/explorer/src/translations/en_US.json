@@ -197,7 +197,7 @@
     "txFail": "Failed Transactions",
     "txPending": "Pending Transactions",
     "avgHashRate": "Hash Rate",
-    "avg": "Average ",
+    "totalUncles": "Uncles per Day",
 
     "block-difficulty-history": "Average Block Difficulty",
     "block-time-history": "Average Block Time",
@@ -210,7 +210,8 @@
     "tx-fail-history": "Number of Failed Transactions",
     "tx-success-history": "Number of Successful Transactions",
     "tx-fees-history": "Tx Fees ETH",
-    "uncle-number-history": "Average Number of Uncles",
+    "tx-pending-history": "Average Number of pending transactions",
+    "uncle-number-history": "Total Number of Uncles per Day",
     "states": {
       "all": "All",
       "week": "week",
@@ -225,8 +226,8 @@
       "all": "ALL"
     },
     "captions": {
-      "all": " in Ethereum blockchain since the begining ",
-      "other": " in Ethereum blockchain in last "
+      "all": " in the Ethereum blockchain since the begining ",
+      "other": " in the Ethereum blockchain in last "
     }
   },
   "footer": {

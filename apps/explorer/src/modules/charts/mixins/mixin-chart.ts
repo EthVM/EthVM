@@ -15,7 +15,23 @@ export class ChartMixin extends Vue {
           position: 'left',
           id: 'y-axis-1',
           ticks: {
-            beginAtZero: true
+            beginAtZero: true,
+            callback: function(value) {
+              var ranges = [
+                { divider: 1e9, suffix: 'B' },
+                { divider: 1e6, suffix: 'M' },
+                { divider: 1e3, suffix: 'k' }
+              ];
+              function formatNumber(n) {
+                 for (var i = 0; i < ranges.length; i++) {
+                    if (n >= ranges[i].divider) {
+                       return (n / ranges[i].divider).toString() + ranges[i].suffix;
+                    }
+                 }
+                 return n;
+              }
+              return  formatNumber(value);
+           }
           },
           gridLines: {
             color: 'rgba(0, 0, 0, 0)'
@@ -31,29 +47,19 @@ export class ChartMixin extends Vue {
           type: 'time',
           distribution: 'series',
           ticks: {
-            source: 'labels'
+            source: 'auto'
           }
         }
       ]
     }
   }
+  DATA = [
+      { state: 'ALL',  points: [], labels: [] },
+      { state: 'WEEK', points: [], labels: [] },
+      { state: 'MONTH', points: [], labels: [] },
+      { state: 'YEAR', points: [], labels: [] }
+    ]
 
-  /*Computed: */
-  get chartData() {
-    return {
-      labels: this.DATA[this.timeFrame].labels,
-      datasets: [
-        {
-          label: this.chartLabel,
-          borderColor: '#20c0c7',
-          backgroundColor: '#20c0c7',
-          data: this.DATA[this.timeFrame].points,
-          yAxisID: 'y-axis-1',
-          fill: false
-        }
-      ]
-    }
-  }
 
   /* Methods: */
   setTitle(_title: string): void {
@@ -81,24 +87,40 @@ export class ChartMixin extends Vue {
         result.forEach(point => {
           this.DATA[_state].points.push(point.value)
           this.DATA[_state].labels.push(point.date)
+         // console.log(point.date.toDate())
         })
       }
     })
   }
 
   /* Computed: */
-  get description(): string {
-    return this.timeFrame === 0
-      ? this.$i18n.t('charts.avg') + this.chartTitle + this.$i18n.t('charts.captions.all')
-      : this.$i18n.t('charts.avg') + this.chartTitle + this.$i18n.t('charts.captions.other') + this.DATA[this.timeFrame].cap
+  get chartData() {
+    return {
+      labels: this.DATA[this.timeFrame].labels,
+      datasets: [
+        {
+          label: this.chartLabel,
+          borderColor: '#20c0c7',
+          backgroundColor: '#20c0c7',
+          data: this.DATA[this.timeFrame].points,
+          yAxisID: 'y-axis-1',
+          fill: false
+        }
+      ]
+    }
   }
 
-  get DATA() {
-    return [
-      { state: 'ALL', cap: this.$i18n.t('charts.states.all'), points: [], labels: [] },
-      { state: 'WEEK', cap: this.$i18n.t('charts.states.week'), points: [], labels: [] },
-      { state: 'MONTH', cap: this.$i18n.t('charts.states.month'), points: [], labels: [] },
-      { state: 'YEAR', cap: this.$i18n.t('charts.states.year'), points: [], labels: [] }
+  get description(): string {
+    return this.timeFrame === 0
+      ? this.chartLabel + this.$i18n.t('charts.captions.all')
+      : this.chartLabel + this.$i18n.t('charts.captions.other') + this.cap[this.timeFrame]
+  }
+
+  get cap(): string[] {
+    return [ this.$i18n.t('charts.states.all').toString(),
+      this.$i18n.t('charts.states.week').toString() ,
+      this.$i18n.t('charts.states.month').toString() ,
+      this.$i18n.t('charts.states.year').toString() ,
     ]
   }
 }

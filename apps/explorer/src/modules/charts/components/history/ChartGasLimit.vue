@@ -23,8 +23,6 @@ import { Events } from 'ethvm-common'
   }
 })
 export default class ChartGasLimit extends Mixins(ChartMixin) {
-  labelString = 'Average Gas Limit (wei)'
-  //Temp event --> not yet implemented
   newEvent = Events.getAverageGasLimitStats
 
   // Lifecycle
@@ -37,6 +35,12 @@ export default class ChartGasLimit extends Mixins(ChartMixin) {
   // Computed
   get title() {
     return this.$i18n.t('charts.avgGasLimit').toString()
+  }
+
+
+  get labelString(): string {
+    return this.$i18n.t('charts.gas-limit-history').toString()
+
   }
 }
 </script>

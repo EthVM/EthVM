@@ -22,8 +22,7 @@ import { Events } from 'ethvm-common'
     AppChart
   }
 })
-export default class ChartGasPrice extends Mixins(ChartMixin) {
-  labelString = 'Pending Transactions'
+export default class ChartTxPending extends Mixins(ChartMixin) {
 
   //Temp Event
   newEvent = Events.getPendingTxs
@@ -38,6 +37,10 @@ export default class ChartGasPrice extends Mixins(ChartMixin) {
   // Computed
   get title() {
     return this.$i18n.t('charts.txPending').toString()
+  }
+
+  get labelString(): string {
+    return this.$i18n.t('charts.tx-pending-history').toString()
   }
 }
 </script>

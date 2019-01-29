@@ -23,7 +23,6 @@ import { Events } from 'ethvm-common'
   }
 })
 export default class ChartGasPrice extends Mixins(ChartMixin) {
-  labelString = 'Average Gas Price (wei)'
   newEvent = Events.getAverageGasPriceStats
 
   // Lifecycle
@@ -36,6 +35,10 @@ export default class ChartGasPrice extends Mixins(ChartMixin) {
   // Computed
   get title(): string {
     return this.$i18n.t('charts.avgGasPrice ').toString()
+  }
+  get labelString(): string {
+    return this.$i18n.t('charts.gas-price-history').toString()
+
   }
 }
 </script>
