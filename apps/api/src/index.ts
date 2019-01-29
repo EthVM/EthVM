@@ -1,7 +1,8 @@
 import config from '@app/config'
 import { logger } from '@app/logger'
-import { NullStreamer, MongoStreamer } from '@app/server/core/streams'
+import { NullStreamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
+import { AddressesServiceImpl, MongoAddressesRepository } from '@app/server/modules/addresses'
 import { BalancesServiceImpl, MongoBalancesRepository } from '@app/server/modules/balances'
 import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blocks'
 import { ContractsServiceImpl, MongoContractsRepository } from '@app/server/modules/contracts'
@@ -14,7 +15,6 @@ import { MongoTxsRepository, TxsServiceImpl } from '@app/server/modules/txs'
 import { MongoUncleRepository, UnclesServiceImpl } from '@app/server/modules/uncles'
 import { VmEngine } from '@app/server/modules/vm'
 import { RedisCacheRepository } from '@app/server/repositories'
-import * as EventEmitter from 'eventemitter3'
 import * as Redis from 'ioredis'
 import { MongoClient } from 'mongodb'
 
@@ -53,6 +53,10 @@ async function bootstrapServer() {
 
   // Create services
   // ---------------
+
+  // Addresses
+  const addressesRepository = new MongoAddressesRepository(db)
+  const addressesService = new AddressesServiceImpl(addressesRepository)
 
   // Balances
   const balancesRepository = new MongoBalancesRepository(db)
@@ -103,6 +107,7 @@ async function bootstrapServer() {
   // Create server
   logger.debug('bootstrapper -> Initializing server')
   const server = new EthVMServer(
+    addressesService,
     blockService,
     contracsService,
     uncleService,
