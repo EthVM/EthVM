@@ -14,6 +14,7 @@ import PageCharts from '@app/modules/charts/pages/PageCharts.vue'
 import PageDetailsChart from '@app/modules/charts/pages/PageDetailsChart.vue'
 import PageDetailsUncle from '@app/modules/uncles/pages/PageDetailsUncle.vue'
 import PageTokens from '@app/modules/tokens/pages/PageTokens.vue'
+import PageDetailsToken from '@app/modules/tokens/pages/PageDetailsToken.vue'
 
 Vue.use(Router)
 
@@ -84,6 +85,12 @@ export default new Router({
       path: '/tokens',
       component: PageTokens,
       name: 'tokens'
+    },
+    {
+      path: '/token/:addressRef',
+      component: PageDetailsToken,
+      name: 'token-detail',
+      props: true
     },
     {
       path: '/about',

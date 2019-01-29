@@ -26,7 +26,8 @@
     "kb": "Knowledge Base",
     "position": "Position",
     "minedBlocks": "Mined Blocks",
-    "contract": "Contract"
+    "contract": "Contract",
+    "links": "Links"
   },
   "common": {
     "address": "Address",
