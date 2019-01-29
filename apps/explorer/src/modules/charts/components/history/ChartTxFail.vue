@@ -23,7 +23,6 @@ import { Events } from 'ethvm-common'
   }
 })
 export default class ChartTxFail extends Mixins(ChartMixin) {
-  labelString = 'Transactions Failed'
   newEvent = Events.getFailedTxStats
 
   // Lifecycle
@@ -36,6 +35,9 @@ export default class ChartTxFail extends Mixins(ChartMixin) {
   // Computed
   get title() {
     return this.$i18n.t('charts.txFail').toString()
+  }
+  get labelString(): string {
+    return this.$i18n.t('charts.tx-fail-history').toString()
   }
 }
 </script>

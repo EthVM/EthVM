@@ -22,8 +22,7 @@ import { Events } from 'ethvm-common'
     AppChart
   }
 })
-export default class ChartGasPrice extends Mixins(ChartMixin) {
-  labelString = 'Transactions Fees'
+export default class ChartTxFees extends Mixins(ChartMixin) {
   newEvent = Events.getAverageTxFeeStats
 
   // Lifecycle
@@ -36,6 +35,9 @@ export default class ChartGasPrice extends Mixins(ChartMixin) {
   // Computed
   get title() {
     return this.$i18n.t('charts.txFees').toString()
+  }
+  get labelString(): string {
+    return this.$i18n.t('charts.tx-fees-history').toString()
   }
 }
 </script>

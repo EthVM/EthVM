@@ -23,9 +23,6 @@ import { Events } from 'ethvm-common'
   }
 })
 export default class ChartGasPrice extends Mixins(ChartMixin) {
-  title = 'Average Number of Uncles History'
-  labelString = 'Uncles'
-
   //Temp event:
   newEvent = Events.getUnclesStats
 
@@ -34,6 +31,14 @@ export default class ChartGasPrice extends Mixins(ChartMixin) {
     this.setTitle(this.title)
     this.setLabel(this.labelString)
     this.setEvent(this.newEvent)
+  }
+
+  // Computed
+  get title(): string {
+    return this.$i18n.t('charts.totalUncles').toString()
+  }
+  get labelString(): string {
+    return this.$i18n.t('charts.uncle-number-history').toString()
   }
 }
 </script>
