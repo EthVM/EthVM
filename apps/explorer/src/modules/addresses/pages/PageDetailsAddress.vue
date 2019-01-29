@@ -161,7 +161,7 @@ export default class PageDetailsAddress extends Vue {
             this.$socket.emit(
               Events.getAddressBalance,
               {
-                address: this.addressRef.replace('0x', '')
+                address: this.addressRef
               },
               (err, result) => (err ? reject(err) : resolve(result))
             )
@@ -172,7 +172,7 @@ export default class PageDetailsAddress extends Vue {
             this.$socket.emit(
               Events.getContract,
               {
-                address: this.addressRef.replace('0x', '')
+                address: this.addressRef
               },
               (err, result) => (err ? reject(err) : resolve(result))
             )
@@ -195,7 +195,7 @@ export default class PageDetailsAddress extends Vue {
             this.$socket.emit(
               Events.getAddressTotalTxs,
               {
-                address: this.addressRef.replace('0x', '')
+                address: this.addressRef
               },
               (err, result) => (err ? reject(err) : resolve(result))
             )
@@ -230,7 +230,7 @@ export default class PageDetailsAddress extends Vue {
             this.$socket.emit(
               Events.getAddressTokenBalance,
               {
-                address: this.addressRef.replace('0x', '')
+                address: this.addressRef
               },
               (err, result) => (err ? reject(err) : resolve(result))
             )
@@ -241,7 +241,7 @@ export default class PageDetailsAddress extends Vue {
             this.$socket.emit(
               Events.getPendingTxsOfAddress,
               {
-                address: this.addressRef.replace('0x', ''),
+                address: this.addressRef,
                 page: 0,
                 limit: MAX_ITEMS,
                 filter: 'all' // TODO @Olga: Possible values: in, out, all (if not specified all is taken)
@@ -255,7 +255,7 @@ export default class PageDetailsAddress extends Vue {
             this.$socket.emit(
               Events.getBlocksMined,
               {
-                address: this.addressRef.replace('0x', ''),
+                address: this.addressRef,
                 page: 0,
                 limit: MAX_ITEMS
               },
@@ -268,7 +268,7 @@ export default class PageDetailsAddress extends Vue {
             this.$socket.emit(
               Events.getContractsCreatedBy,
               {
-                address: this.addressRef.replace('0x', ''),
+                address: this.addressRef,
                 page: 0,
                 limit: MAX_ITEMS
               },
@@ -355,7 +355,7 @@ export default class PageDetailsAddress extends Vue {
       this.$socket.emit(
         Events.getAddressTxs,
         {
-          address: this.addressRef.replace('0x', ''),
+          address: this.addressRef,
           page,
           limit,
           filter
