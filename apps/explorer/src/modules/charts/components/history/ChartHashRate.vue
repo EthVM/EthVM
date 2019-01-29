@@ -24,8 +24,7 @@ import { Events } from 'ethvm-common'
     AppChart
   }
 })
-export default class ChartGasPrice extends Mixins(ChartMixin) {
-  labelString = 'Average Hash Rate'
+export default class ChartHashRate extends Mixins(ChartMixin) {
   newEvent = Events.getAverageHashRateStats
 
   // Lifecycle
@@ -38,6 +37,9 @@ export default class ChartGasPrice extends Mixins(ChartMixin) {
   // Computed
   get title() {
     return this.$i18n.t('charts.avgHashRate').toString()
+  }
+  get labelString(): string {
+    return this.$i18n.t('charts.hash-rate-history').toString()
   }
 }
 </script>

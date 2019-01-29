@@ -1,3 +1,4 @@
+import { removePrefix } from '@app/server/core/utils'
 import { blockPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
 import { Block, Events } from 'ethvm-common'
@@ -13,7 +14,7 @@ const getBlockEvent: SocketEvent = {
     }
   },
 
-  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Block | null> => server.blockService.getBlock(payload.hash)
+  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Block | null> => server.blockService.getBlock(removePrefix(payload.hash))
 }
 
 export default getBlockEvent

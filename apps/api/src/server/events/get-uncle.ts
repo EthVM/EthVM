@@ -1,3 +1,4 @@
+import { removePrefix } from '@app/server/core/utils'
 import { blockPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
 import { Events, Uncle } from 'ethvm-common'
@@ -13,7 +14,7 @@ const getUncleEvent: SocketEvent = {
     }
   },
 
-  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Uncle | null> => server.uncleService.getUncle(payload.hash)
+  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Uncle | null> => server.uncleService.getUncle(removePrefix(payload.hash))
 }
 
 export default getUncleEvent

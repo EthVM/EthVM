@@ -1,5 +1,5 @@
+import { logger } from '@app/logger'
 import { ExchangeRepository } from '@app/server/modules/exchanges'
-import { CacheRepository } from '@app/server/repositories'
 import { Quote } from 'ethvm-common'
 
 export interface ExchangeService {
@@ -7,18 +7,10 @@ export interface ExchangeService {
 }
 
 export class ExchangeServiceImpl implements ExchangeService {
-  constructor(readonly exchangeRepository: ExchangeRepository, readonly cacheRepository: CacheRepository) {}
+  constructor(readonly exchangeRepository: ExchangeRepository) {}
 
   public getExchangeRate(token: string, to: string): Promise<Quote> {
-    return new Promise(resolve => {
-      this.cacheRepository
-        .getQuote(token, to)
-        .then(q => resolve(q))
-        .catch(err => {
-          this.exchangeRepository.fetchAll().then(bool => {
-            this.cacheRepository.getQuote(token, to).then(q => resolve(q))
-          })
-        })
-    })
+    logger.info('ExchangeService - GetExchangeRate / Token: ', token, ' To: ', to)
+    return this.exchangeRepository.getQuote(token, to)
   }
 }
