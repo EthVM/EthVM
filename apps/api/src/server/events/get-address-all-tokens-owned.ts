@@ -1,10 +1,10 @@
 import { removePrefix } from '@app/server/core/utils'
 import { balancePayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
-import { Events } from 'ethvm-common'
+import { Events, Token } from 'ethvm-common'
 
-const getAddressTokenBalance: SocketEvent = {
-  id: Events.getAddressTokenBalance,
+const getAddressAllTokensOwned: SocketEvent = {
+  id: Events.getAddressAllTokensOwned,
 
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = balancePayloadValidator(payload) as boolean
@@ -14,8 +14,8 @@ const getAddressTokenBalance: SocketEvent = {
     }
   },
 
-  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<any> =>
-    server.tokensService.getAddressTokenBalance(removePrefix(payload.address))
+  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Token[]> =>
+    server.tokensService.getAddressAllTokensOwned(removePrefix(payload.address))
 }
 
-export default getAddressTokenBalance
+export default getAddressAllTokensOwned
