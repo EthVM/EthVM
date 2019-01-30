@@ -1,4 +1,3 @@
-import { logger } from '@app/logger'
 import { Quote } from 'ethvm-common'
 import fetch from 'node-fetch'
 
@@ -16,7 +15,6 @@ export class CoinGeckoRepository implements ExchangeRepository {
     return fetch(API_URL)
       .then(res => res.json())
       .then(res => {
-        logger.info('CoinGeckoRepository - Response: ', res)
         return {
           to,
           price: res['ethereum']['usd'],
