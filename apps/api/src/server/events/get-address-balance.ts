@@ -5,6 +5,7 @@ import { AddressBalance, Events } from 'ethvm-common'
 
 const getAddressBalance: SocketEvent = {
   id: Events.getAddressBalance,
+
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = balancePayloadValidator(payload) as boolean
     return {

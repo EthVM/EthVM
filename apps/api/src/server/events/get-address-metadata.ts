@@ -5,6 +5,7 @@ import { AddressMetadata, Events } from 'ethvm-common'
 
 const getAddressMetadata: SocketEvent = {
   id: Events.getAddressMetadata,
+
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = balancePayloadValidator(payload) as boolean
     return {

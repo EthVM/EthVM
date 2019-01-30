@@ -21,7 +21,7 @@ export class VmEngine {
     this.client = jayson.Client.https(this.opts.rpcUrl)
   }
 
-  public async getAllTokens(address: string): Promise<Token[]> {
+  public async getAddressAllTokensOwned(address: string): Promise<Token[]> {
     address = address.startsWith('0x') ? address : '0x' + address
 
     return new Promise(async (resolve, reject) => {
@@ -41,7 +41,7 @@ export class VmEngine {
   }
 
   public async getAddressAmountTokensOwned(address: string): Promise<number> {
-    const tokens = await this.getAllTokens(address)
+    const tokens = await this.getAddressAllTokensOwned(address)
     return Promise.resolve(tokens.length)
   }
 

@@ -1,10 +1,10 @@
 import { TokensRepository } from '@app/server/modules/tokens'
-import { TokenTransfer } from 'ethvm-common'
+import { Token, TokenTransfer } from 'ethvm-common'
 import { VmEngine } from '@app/server/modules/vm'
 
 export interface TokensService {
   getAddressTokenTransfers(address: string, filter: string, limit: number, page: number): Promise<TokenTransfer[]>
-  getAddressTokenBalance(address: string): Promise<any>
+  getAddressAllTokensOwned(address: string): Promise<Token[]>
   getAddressAmountTokensOwned(address: string): Promise<number>
 }
 
@@ -16,8 +16,8 @@ export class TokensServiceImpl implements TokensService {
     return this.tokensRepository.getAddressTokenTransfers(address, filter, limit, page)
   }
 
-  public getAddressTokenBalance(address: string): Promise<any> {
-    return this.vme.getAllTokens(address)
+  public getAddressAllTokensOwned(address: string): Promise<Token[]> {
+    return this.vme.getAddressAllTokensOwned(address)
   }
 
   public getAddressAmountTokensOwned(address: string): Promise<number> {

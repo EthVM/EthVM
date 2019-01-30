@@ -14,7 +14,7 @@ const getAddressAmountTokensOwned: SocketEvent = {
     }
   },
 
-  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<any> =>
+  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<number> =>
     server.tokensService.getAddressAmountTokensOwned(removePrefix(payload.address))
 }
 
