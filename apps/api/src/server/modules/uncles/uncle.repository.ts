@@ -5,6 +5,7 @@ import { Uncle } from 'ethvm-common'
 export interface UnclesRepository {
   getUncle(hash: string): Promise<Uncle | null>
   getUncles(limit: number, page: number): Promise<Uncle[]>
+  getTotalNumberOfUncles(): Promise<number>
 }
 
 export class MongoUncleRepository extends BaseMongoDbRepository implements UnclesRepository {
@@ -40,5 +41,9 @@ export class MongoUncleRepository extends BaseMongoDbRepository implements Uncle
         })
         return u
       })
+  }
+
+  public getTotalNumberOfUncles(): Promise<number> {
+    return this.db.collection(MongoEthVM.collections.uncles).estimatedDocumentCount()
   }
 }

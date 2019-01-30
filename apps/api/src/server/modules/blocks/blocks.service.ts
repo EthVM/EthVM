@@ -6,6 +6,7 @@ export interface BlocksService {
   getBlock(hash: string): Promise<Block | null>
   getBlockByNumber(no: number): Promise<Block | null>
   getBlocksMined(address: string, limit: number, page: number): Promise<Block[]>
+  getTotalNumberOfBlocks(): Promise<number>
 }
 
 export class BlocksServiceImpl implements BlocksService {
@@ -25,5 +26,9 @@ export class BlocksServiceImpl implements BlocksService {
 
   public getBlocksMined(address: string, limit: number, page: number): Promise<Block[]> {
     return this.blocksRepository.getBlocksMined(address, limit, page)
+  }
+
+  public getTotalNumberOfBlocks(): Promise<number> {
+    return this.blocksRepository.getTotalNumberOfBlocks()
   }
 }

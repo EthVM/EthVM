@@ -21,62 +21,62 @@ export class StatisticsServiceImpl implements StatisticsService {
 
   constructor(private readonly statisticsRepository: StatisticsRepository) {}
 
-  getTotalTxs(duration: string): Promise<Statistic[]> {
+  public getTotalTxs(duration: string): Promise<Statistic[]> {
     const { from, to } = toDatePeriods(duration)
     return this.statisticsRepository.getTotalTxs(from, to)
   }
 
-  getTotalSuccessfulTxs(duration: string): Promise<Statistic[]> {
+  public getTotalSuccessfulTxs(duration: string): Promise<Statistic[]> {
     const { from, to } = toDatePeriods(duration)
     return this.statisticsRepository.getTotalSuccessfulTxs(from, to)
   }
 
-  getTotalFailedTxs(duration: string): Promise<Statistic[]> {
+  public getTotalFailedTxs(duration: string): Promise<Statistic[]> {
     const { from, to } = toDatePeriods(duration)
     return this.statisticsRepository.getTotalFailedTxs(from, to)
   }
 
-  getAverageDifficulty(duration: string): Promise<Statistic[]> {
+  public getAverageDifficulty(duration: string): Promise<Statistic[]> {
     const { from, to } = toDatePeriods(duration)
     return this.statisticsRepository.getAverageDifficulty(from, to)
   }
 
-  getTotalGasPrice(duration: string): Promise<Statistic[]> {
+  public getTotalGasPrice(duration: string): Promise<Statistic[]> {
     const { from, to } = toDatePeriods(duration)
     return this.statisticsRepository.getTotalGasPrice(from, to)
   }
 
-  getAverageGasPrice(duration: string): Promise<Statistic[]> {
+  public getAverageGasPrice(duration: string): Promise<Statistic[]> {
     const { from, to } = toDatePeriods(duration)
     return this.statisticsRepository.getAverageGasPrice(from, to)
   }
 
-  getAverageGasLimit(duration: string): Promise<Statistic[]> {
+  public getAverageGasLimit(duration: string): Promise<Statistic[]> {
     const { from, to } = toDatePeriods(duration)
     return this.statisticsRepository.getAverageGasLimit(from, to)
   }
 
-  getTotalTxsFees(duration: string): Promise<Statistic[]> {
+  public getTotalTxsFees(duration: string): Promise<Statistic[]> {
     const { from, to } = toDatePeriods(duration)
     return this.statisticsRepository.getTotalTxsFees(from, to)
   }
 
-  getAverageTxFee(duration: string): Promise<Statistic[]> {
+  public getAverageTxFee(duration: string): Promise<Statistic[]> {
     const { from, to } = toDatePeriods(duration)
     return this.statisticsRepository.getAverageTxFee(from, to)
   }
 
-  getAverageMinerReward(duration: string): Promise<Statistic[]> {
+  public getAverageMinerReward(duration: string): Promise<Statistic[]> {
     const { from, to } = toDatePeriods(duration)
     return this.statisticsRepository.getAverageMinerReward(from, to)
   }
 
-  getAverageBlockTime(duration: string): Promise<Statistic[]> {
+  public getAverageBlockTime(duration: string): Promise<Statistic[]> {
     const { from, to } = toDatePeriods(duration)
     return this.statisticsRepository.getAverageBlockTime(from, to)
   }
 
-  getAverageHashRate(duration: string): Promise<Statistic[]> {
+  public getAverageHashRate(duration: string): Promise<Statistic[]> {
     const { from, to } = toDatePeriods(duration)
     return this.statisticsRepository.getAverageHashRate(from, to)
   }

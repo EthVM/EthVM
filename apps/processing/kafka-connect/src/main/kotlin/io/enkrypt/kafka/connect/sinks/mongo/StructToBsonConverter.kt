@@ -188,6 +188,9 @@ object TypeMappings {
       "to" to Hex,
       "amount" to UBigInt,
       "tokenId" to UBigInt
+    ),
+    "accountTxCountKey" to mapOf(
+      "address" to Hex
     )
   )
 

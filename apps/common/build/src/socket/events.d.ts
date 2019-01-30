@@ -17,12 +17,14 @@ export declare const Events: {
     getAddressTokenBalance: string;
     getAddressTokenTransfers: string;
     getAddressAmountTokensOwned: string;
+    getAddressMetadata: string;
     getContract: string;
     getContractsCreatedBy: string;
     getBlock: string;
     getBlocks: string;
     getBlocksMined: string;
     getBlockByNumber: string;
+    getTotalNumberOfBlocks: string;
     getTx: string;
     getTxs: string;
     getBlockTxs: string;
@@ -30,8 +32,11 @@ export declare const Events: {
     getAddressTotalTxs: string;
     getPendingTxs: string;
     getPendingTxsOfAddress: string;
+    getTotalNumberOfPendingTxs: string;
+    getNumberOfPendingTxsOfAddress: string;
     getUncle: string;
     getUncles: string;
+    getTotalNumberOfUncles: string;
     getExchangeRates: string;
     search: string;
     getAverageDifficultyStats: string;
