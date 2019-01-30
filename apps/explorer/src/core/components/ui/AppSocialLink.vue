@@ -1,5 +1,5 @@
 <template>
-  <i aria-hidden="true" class="v-icon secondary--text fab ${icons[name]} pr-2 material-icons theme--light"/>
+  <i aria-hidden="true" class="v-icon secondary--text fab ${icons[name]} pr-2 material-icons theme--light" />
 </template>
 
 <script lang="ts">

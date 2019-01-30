@@ -2,7 +2,6 @@
   <!-- <app-list-details :items="contractDetails" :details-type="listType" :loading="isLoading" hideMore>
   </app-list-details> -->
   <v-card color="white" flat class="pt-3">
-
     <!-- Loaded -->
     <div v-if="!isLoading">
       <v-card-title class="title font-weight-bold pl-4">{{ token.name }} ({{ token.symbol }})</v-card-title>
@@ -20,7 +19,7 @@
               </router-link>
             </v-flex>
           </v-layout>
-        </v-list-tile>      
+        </v-list-tile>
       </v-list>
     </div>
     <!-- End Loaded -->
@@ -34,7 +33,6 @@
       </v-layout>
     </div>
     <!-- End Not Loaded -->
-
   </v-card>
 </template>
 
@@ -152,7 +150,9 @@ export default class TableTokens extends Vue {
             if (url === null || url === '') {
               return ''
             }
-            return `<a href="${ url }" target="_BLANK"><i aria-hidden="true" class="v-icon secondary--text ${ icons[name] } pr-2 material-icons theme--light"></i></a>`
+            return `<a href="${url}" target="_BLANK"><i aria-hidden="true" class="v-icon secondary--text ${
+              icons[name]
+            } pr-2 material-icons theme--light"></i></a>`
           })
           .reduce((a, b) => {
             return `${a}${b}`
