@@ -5,6 +5,7 @@ import { Block, Events } from 'ethvm-common'
 
 const getBlocksMinedEvent: SocketEvent = {
   id: Events.getBlocksMined,
+
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = blockMinedPayloadValidator(payload) as boolean
     return {

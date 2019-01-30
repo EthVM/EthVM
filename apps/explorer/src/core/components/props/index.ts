@@ -23,3 +23,10 @@ export interface BlockDetailsTitle {
   prev?: string
   uncles?: string[]
 }
+
+export interface Crumb {
+  text: string
+  disabled: boolean
+  icon?: string
+  link?: string
+}

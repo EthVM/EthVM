@@ -7,6 +7,7 @@ export interface BlocksRepository {
   getBlocks(limit: number, page: number): Promise<Block[]>
   getBlockByNumber(no: number): Promise<Block | null>
   getBlocksMined(address: string, limit: number, page: number): Promise<Block[]>
+  getTotalNumberOfBlocks(): Promise<number>
 }
 
 export class MongoBlockRepository extends BaseMongoDbRepository implements BlocksRepository {
@@ -69,5 +70,9 @@ export class MongoBlockRepository extends BaseMongoDbRepository implements Block
         resp.forEach(block => b.unshift(toBlock(block)))
         return b
       })
+  }
+
+  public getTotalNumberOfBlocks(): Promise<number> {
+    return this.db.collection(MongoEthVM.collections.blocks).estimatedDocumentCount()
   }
 }

@@ -14,11 +14,18 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
-
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { Crumb } from '@app/core/components/props'
 @Component
 export default class AppBreadCrumbs extends Vue {
-  @Prop(Array) newItems!: any[]
+  @Prop(Array) newItems!: Crumb[]
+
+  crumbs = []
+
+  //Lifecycle:
+  created() {
+    this.crumbs.push(this.home)
+  }
 
   mounted() {
     if (this.newItems) {
@@ -30,15 +37,14 @@ export default class AppBreadCrumbs extends Vue {
   }
 
   // Computed
-  get crumbs() {
-    return [
-      {
-        text: 'Home',
-        disabled: true,
-        icon: 'fa fa-home',
-        link: '/'
-      }
-    ]
+  get home(): Crumb {
+    const crumbHome = {
+      text: this.$i18n.t('title.home'),
+      disabled: true,
+      icon: 'fa fa-home',
+      link: '/'
+    }
+    return crumbHome
   }
 }
 </script>

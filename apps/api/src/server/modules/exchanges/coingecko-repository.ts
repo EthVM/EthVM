@@ -1,4 +1,3 @@
-import { logger } from '@app/logger'
 import { Quote } from 'ethvm-common'
 import fetch from 'node-fetch'
 
@@ -10,19 +9,17 @@ export interface ExchangeRepository {
 }
 
 export class CoinGeckoRepository implements ExchangeRepository {
-  constructor() {}
 
   public getQuote(token: string, to: string): Promise<Quote> {
     return fetch(API_URL)
       .then(res => res.json())
       .then(res => {
-        logger.info('CoinGeckoRepository - Response: ', res)
         return {
           to,
-          price: res['ethereum']['usd'],
-          vol_24h: res['usd_24h_vol'],
-          last_update: res['last_updated_at']
-        } as Quote
+          price: res.ethereum.usd,
+          vol_24h: res.usd_24h_vol,
+          last_update: res.last_updated_at
+        }
       })
   }
 }
