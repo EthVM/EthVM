@@ -11,7 +11,17 @@ import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.WriteModel
 import io.enkrypt.common.extensions.hex
 import io.enkrypt.common.extensions.unsignedBigInteger
-import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.*
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Blocks
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Transactions
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Uncles
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Contracts
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.BlockMetrics
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Balances
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.PendingTransactions
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.TokenTransfers
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.AggregateBlockMetrics
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.AccountMetadata
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.ExchangeRates
 import io.enkrypt.kafka.connect.utils.Versions
 import mu.KotlinLogging
 import org.apache.kafka.clients.consumer.OffsetAndMetadata
@@ -55,6 +65,7 @@ class MongoSinkTask : SinkTask() {
       PendingTransactions to db.getCollection(PendingTransactions.id, clazz),
       BlockMetrics to db.getCollection(BlockMetrics.id, clazz),
       AggregateBlockMetrics to db.getCollection(AggregateBlockMetrics.id, clazz),
+      AccountMetadata to db.getCollection(AccountMetadata.id, clazz),
       ExchangeRates to db.getCollection(ExchangeRates.id, clazz)
     )
   }
@@ -119,6 +130,7 @@ enum class MongoCollections(val id: String) {
   Balances("balances"),
   BlockMetrics("block_metrics"),
   PendingTransactions("pending_transactions"),
+  AccountMetadata("account_metadata"),
   ExchangeRates("exchange_rates")
 }
 
@@ -428,6 +440,104 @@ enum class KafkaTopics(
     }
 
     mapOf(MongoCollections.AggregateBlockMetrics to writes)
+  }),
+
+  AddressTxCounts("address-tx-counts", { record: SinkRecord ->
+
+    require(record.keySchema().type() == Schema.Type.STRUCT) { "Key schema must be a struct" }
+
+    var writes = listOf<WriteModel<BsonDocument>>()
+
+    val keyBson = StructToBsonConverter.convert(record.key() as Struct, "accountTxCountKey")
+    val idFilter = BsonDocument().apply { append("_id", keyBson.get("address")) }
+
+    if (record.value() == null) {
+
+      val bson = when (keyBson.getString("type").value) {
+        "FROM" -> Document(mapOf("\$unset" to "fromTxCount"))
+        "TO" -> Document(mapOf("\$unset" to "toTxCount"))
+        "TOTAL" -> Document(mapOf("\$unset" to "totalTxCount"))
+        else -> throw IllegalStateException("Unexpected type value")
+      }
+
+      writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
+    } else {
+
+      require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
+      val struct = StructToBsonConverter.convert(record.value() as Struct)
+      val count = struct.getInt64("count").longValue()
+
+      val bson = when (keyBson.getString("type").value) {
+        "FROM" -> Document(mapOf("\$set" to mapOf("fromTxCount" to count)))
+        "TO" -> Document(mapOf("\$set" to mapOf("toTxCount" to count)))
+        "TOTAL" -> Document(mapOf("\$set" to mapOf("totalTxCount" to count)))
+        else -> throw IllegalStateException("Unexpected type value")
+      }
+
+      writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
+    }
+
+    mapOf(MongoCollections.AccountMetadata to writes)
+  }),
+
+  MinerList("miner-list", { record: SinkRecord ->
+
+    require(record.keySchema().type() == Schema.Type.STRUCT) { "Key schema must be a struct" }
+
+    var writes = listOf<WriteModel<BsonDocument>>()
+
+    val keyBson = StructToBsonConverter.convert(record.key() as Struct, "accountTxCountKey")
+    val idFilter = BsonDocument().apply { append("_id", keyBson.get("address")) }
+
+    if (record.value() == null) {
+
+      val bson = when (keyBson.getString("type").value) {
+        "MINER" -> Document(mapOf("\$unset" to "isMiner"))
+        else -> throw IllegalStateException("Unexpected type value")
+      }
+
+      writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
+    } else {
+
+      val bson = when (keyBson.getString("type").value) {
+        "MINER" -> Document(mapOf("\$set" to mapOf("isMiner" to true)))
+        else -> throw IllegalStateException("Unexpected type value")
+      }
+
+      writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
+    }
+
+    mapOf(MongoCollections.AccountMetadata to writes)
+  }),
+
+  ContractCreator("contract-creator-list", { record: SinkRecord ->
+
+    require(record.keySchema().type() == Schema.Type.STRUCT) { "Key schema must be a struct" }
+
+    var writes = listOf<WriteModel<BsonDocument>>()
+
+    val keyBson = StructToBsonConverter.convert(record.key() as Struct, "accountTxCountKey")
+    val idFilter = BsonDocument().apply { append("_id", keyBson.get("address")) }
+
+    if (record.value() == null) {
+
+      val bson = when (keyBson.getString("type").value) {
+        "CONTRACT_CREATOR" -> Document(mapOf("\$unset" to "isContractCreator"))
+        else -> throw IllegalStateException("Unexpected type value")
+      }
+
+      writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
+    } else {
+
+      val bson = when (keyBson.getString("type").value) {
+        "CONTRACT_CREATOR" -> Document(mapOf("\$set" to mapOf("isContractCreator" to true)))
+        else -> throw IllegalStateException("Unexpected type value")
+      }
+
+      writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
+    }
+
+    mapOf(MongoCollections.AccountMetadata to writes)
   }),
 
   ExchangeRates("exchange-rates", { record: SinkRecord ->

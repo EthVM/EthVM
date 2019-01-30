@@ -23,8 +23,7 @@ import { Events } from 'ethvm-common'
     AppChart
   }
 })
-export default class ChartGasPrice extends Mixins(ChartMixin) {
-  labelString = 'Average Block Difficulty'
+export default class ChartBlockDiff extends Mixins(ChartMixin) {
   newEvent = Events.getAverageDifficultyStats
 
   // Lifecycle
@@ -35,8 +34,11 @@ export default class ChartGasPrice extends Mixins(ChartMixin) {
   }
 
   // Computed
-  get title() {
+  get title(): string {
     return this.$i18n.t('charts.avgBlockDiff').toString()
+  }
+  get labelString(): string {
+    return this.$i18n.t('charts.block-difficulty-history').toString()
   }
 }
 </script>

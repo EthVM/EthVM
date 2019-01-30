@@ -8,9 +8,10 @@ import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.capture.TransactionKeyRecord
 import io.enkrypt.avro.capture.TransactionRecord
 import io.enkrypt.avro.capture.UncleKeyRecord
-import io.enkrypt.avro.exchange.ExchangeRateKeyRecord
 import io.enkrypt.avro.exchange.ExchangeRateRecord
 import io.enkrypt.avro.exchange.SymbolKeyRecord
+import io.enkrypt.avro.processing.AddressMetadataKeyRecord
+import io.enkrypt.avro.processing.AddressMetadataRecord
 import io.enkrypt.avro.processing.BlockChainEventsRecord
 import io.enkrypt.avro.processing.BlockMetricsRecord
 import io.enkrypt.avro.processing.ChainEventRecord
@@ -120,6 +121,14 @@ object Serdes : KoinComponent {
   }
 
   fun ContractMetadata() = SpecificAvroSerde<ContractMetadataRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun AddressMetadataKey() = SpecificAvroSerde<AddressMetadataKeyRecord>(registryClient).apply {
+    configure(config, true)
+  }
+
+  fun AddressMetadata() = SpecificAvroSerde<AddressMetadataRecord>(registryClient).apply {
     configure(config, false)
   }
 

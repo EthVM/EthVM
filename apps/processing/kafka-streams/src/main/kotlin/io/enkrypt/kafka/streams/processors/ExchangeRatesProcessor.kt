@@ -69,5 +69,4 @@ class ExchangeRatesProcessor : AbstractKafkaProcessor() {
     // Generate the topology
     return builder.build()
   }
-
 }

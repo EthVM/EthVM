@@ -1,6 +1,5 @@
-import { isBuffer, isValidHash } from '@app/server/core/utils'
+import { isBuffer, isValidAddress, isValidHash } from '@app/server/core/utils'
 import * as Ajv from 'ajv'
-import { isValidAddress } from 'ethereumjs-util'
 
 // Define some constants
 const PAGINATION_SIZE = 100
@@ -118,8 +117,10 @@ require('ajv-keywords')(ajv, ['instanceof']) // tslint:disable-line no-var-requi
 
 // Create custom data types
 ajv.addKeyword('address', {
-  validate: (schema, data) => {
-    data = '0x' + data
+  validate: (schema, data: string) => {
+    if (!data.startsWith('0x')) {
+      data = '0x' + data
+    }
     return isValidAddress(data)
   },
   errors: false

@@ -1,9 +1,8 @@
-import { isValidHash } from '@app/server/core/utils'
+import { isValidAddress, isValidHash } from '@app/server/core/utils'
 import { BalancesRepository } from '@app/server/modules/balances'
 import { BlocksRepository } from '@app/server/modules/blocks'
 import { Search, SearchType } from '@app/server/modules/search'
 import { TxsRepository } from '@app/server/modules/txs'
-import { isValidAddress } from 'ethereumjs-util'
 
 export interface SearchService {
   search(hash: string): Promise<Search>

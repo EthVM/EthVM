@@ -10,7 +10,6 @@ networks:
         - subnet: 172.25.0.0/24
 
 volumes:
-  redis-volume:
   mongodb-volume:
   ethereumj-volume:
   kafka-volume-1:
@@ -61,7 +60,6 @@ services:
       - ./apps/api:/var/api
       - ./apps/common:/var/common
     depends_on:
-      - redis
       - mongodb
     networks:
       - back
@@ -73,26 +71,6 @@ services:
       - "traefik.frontend.passHostHeader=true"
       - "traefik.backend=api"
       - "traefik.port=3000"
-    environment:
-      - ETHVM_DATA_STORE_REDIS_HOST=redis
-      - ETHVM_ETH_TRIE_DB_REDIS_HOST=redis
-    cpu_shares: 512
-
-  redis:
-    image: redis:${REDIS_VERSION}-alpine
-    restart: unless-stopped
-    volumes:
-      - redis-volume:/data
-    networks:
-      - back
-    ports:
-      - 6379:6379
-    labels:
-      - "traefik.enable=true"
-      - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:redis.ethvm.${DOMAIN}"
-      - "traefik.port=6379"
-      - "traefik.backend=redis"
     cpu_shares: 512
 
   mongodb:

@@ -66,7 +66,7 @@ export default class PageDetailsUncle extends Vue {
     this.$socket.emit(
       Events.getUncle,
       {
-        hash: this.uncleRef.replace('0x', '')
+        hash: this.uncleRef
       },
       (error, data) => {
         if (error || !data) {

@@ -79,8 +79,8 @@ class Cli : CliktCommand() {
     startKoin(listOf(configModule, kafkaStreams))
 
     listOf<KafkaProcessor>(
-//      BlockProcessor(),
-//      StateProcessor(),
+      BlockProcessor(),
+      StateProcessor(),
       ExchangeRatesProcessor()
     ).forEach {
       it.buildTopology()

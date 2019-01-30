@@ -17,5 +17,11 @@ object Topics {
   const val ContractCreations = "contract-creations"
   const val ContractDestructions = "contract-destructions"
 
+  const val AddressTxEvents = "address-tx-events"
+  const val AddressTxCounts = "address-tx-counts"
+
+  const val MinerList = "miner-list"
+  const val ContractCreatorList = "contract-creator-list"
+
   const val ExchangeRates = "exchange-rates"
 }

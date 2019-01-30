@@ -54,7 +54,7 @@ class CoinGeckoExchangeRateSourceTask : SourceTask() {
     val sourcePartition = mapOf("url" to COINGECKO_API_URL)
     val sourceOffset = emptyMap<String, Any>()
 
-    var rates: List<ExchangeRate> = emptyList()
+    val rates: MutableList<ExchangeRate> = mutableListOf()
 
     var page = 1
     do {
@@ -126,48 +126,46 @@ class CoinGeckoExchangeRateSourceTask : SourceTask() {
         }
     }
 
+    data class ExchangeRate(
+      val id: String,
+      val symbol: String,
+      val name: String,
+      val image: String,
+      val current_price: Double? = -1.0,
+      val market_cap: Double? = -1.0,
+      val market_cap_rank: Int? = -1,
+      val total_volume: Double? = -1.0,
+      val high_24h: Double? = -1.0,
+      val low_24h: Double? = -1.0,
+      val price_change_24h: Double? = -1.0,
+      val price_change_percentage_24h: Double? = -1.0,
+      val market_cap_change_24h: Double? = -1.0,
+      val market_cap_change_percentage_24h: Double? = -1.0,
+      val circulating_supply: String? = "",
+      val total_supply: Long? = -1,
+      val last_updated: String? = ""
+    ) {
+
+      fun toStruct(): Struct =
+        Struct(ExchangeRateMetadataSchema).apply {
+          put("id", id)
+          put("symbol", symbol)
+          put("name", name)
+          put("image", image)
+          put("current_price", current_price)
+          put("market_cap", market_cap)
+          put("market_cap_rank", market_cap_rank)
+          put("total_volume", total_volume)
+          put("high_24h", high_24h)
+          put("low_24h", low_24h)
+          put("price_change_24h", price_change_24h)
+          put("price_change_percentage_24h", price_change_percentage_24h)
+          put("market_cap_change_24h", market_cap_change_24h)
+          put("market_cap_change_percentage_24h", market_cap_change_percentage_24h)
+          put("circulating_supply", circulating_supply)
+          put("total_supply", total_supply)
+          put("last_updated", last_updated)
+        }
+    }
   }
-
-  data class ExchangeRate(
-    val id: String,
-    val symbol: String,
-    val name: String,
-    val image: String,
-    val current_price: Double? = -1.0,
-    val market_cap: Double? = -1.0,
-    val market_cap_rank: Int? = -1,
-    val total_volume: Double? = -1.0,
-    val high_24h: Double? = -1.0,
-    val low_24h: Double? = -1.0,
-    val price_change_24h: Double? = -1.0,
-    val price_change_percentage_24h: Double? = -1.0,
-    val market_cap_change_24h: Double? = -1.0,
-    val market_cap_change_percentage_24h: Double? = -1.0,
-    val circulating_supply: String? = "",
-    val total_supply: Long? = -1,
-    val last_updated: String? = ""
-  ) {
-
-    fun toStruct(): Struct =
-      Struct(ExchangeRateMetadataSchema).apply {
-        put("id", id)
-        put("symbol", symbol)
-        put("name", name)
-        put("image", image)
-        put("current_price", current_price)
-        put("market_cap", market_cap)
-        put("market_cap_rank", market_cap_rank)
-        put("total_volume", total_volume)
-        put("high_24h", high_24h)
-        put("low_24h", low_24h)
-        put("price_change_24h", price_change_24h)
-        put("price_change_percentage_24h", price_change_percentage_24h)
-        put("market_cap_change_24h", market_cap_change_24h)
-        put("market_cap_change_percentage_24h", market_cap_change_percentage_24h)
-        put("circulating_supply", circulating_supply)
-        put("total_supply", total_supply)
-        put("last_updated", last_updated)
-      }
-  }
-
 }
