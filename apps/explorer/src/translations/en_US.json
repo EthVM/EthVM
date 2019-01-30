@@ -27,7 +27,12 @@
     "position": "Position",
     "minedBlocks": "Mined Blocks",
     "contract": "Contract",
-    "links": "Links"
+    "links": "Links",
+    "price": "Price",
+    "marketCap": "Market Cap",
+    "decimals": "Decimals",
+    "website": "Website",
+    "support": "Support"
   },
   "common": {
     "address": "Address",

@@ -10,6 +10,7 @@
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppListDetails from '@app/core/components/ui/AppListDetails.vue'
 import AppListTitle from '@app/core/components/ui/AppListTitle.vue'
+import AppSocialLink from '@app/core/components/ui/AppSocialLink.vue'
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { Events } from 'ethvm-common'
 import { Detail } from '@app/core/components/props'
@@ -69,14 +70,55 @@ export default class PageDetailsToken extends Vue {
   */
 
   get contractDetails(): Detail[] {
+    if (this.isLoadingDetails) return []
+    const icons = {
+      blog: 'fab fa-ethereum',
+      chat: 'fab fa-ethereum',
+      facebook: 'fab fa-facebook',
+      forum: 'fas fa-comments',
+      github: 'fab fa-github',
+      gitter: 'fab fa-gitter',
+      instagram: 'fab fa-instagram',
+      linkedin: 'fab fa-linkedin',
+      reddit: 'fab fa-reddit',
+      slack: 'fab fa-slack',
+      telegram: 'fab fa-telegram',
+      twitter: 'fab fa-twitter',
+      youtube: 'fab fa-youtube'
+    }
     return [
       {
         title: this.$i18n.t('title.contract'),
-        detail: this.addressRef
+        detail: this.addressRef,
+        link: `/address/${this.addressRef}`
+      },
+      {
+        title: this.$i18n.t('title.decimals'),
+        detail: this.contract.metadata.decimals
+      },
+      {
+        title: this.$i18n.t('title.price'),
+        detail: ''
+      },
+      {
+        title: this.$i18n.t('title.website'),
+        detail: `<a href="${this.contract.metadata.website}" target="_BLANK">${this.contract.metadata.website}</a>`,
+        html: true
+      },
+      {
+        title: this.$i18n.t('title.support'),
+        detail: `<a href="mailto:${this.contract.metadata.support.email}" target="_BLANK">${this.contract.metadata.support.email}</a>`,
+        html: true
       },
       {
         title: this.$i18n.t('title.links'),
-        detail: '<h1>Test</h1>'
+        detail: Object.entries(this.contract.metadata.social).map(obj => {
+          let name = obj[0]
+          let url = obj[1]
+          if (url === null || url === '') return ''
+          return `<a href="${url}" target="_BLANK"><i aria-hidden="true" class="v-icon secondary--text ${icons[name]} pr-2 material-icons theme--light"></i></a>`
+        }).reduce((a, b) => { return `${a}${b}` }),
+        html: true
       }
     ]
   }

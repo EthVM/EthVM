@@ -13,8 +13,9 @@ export interface Tab {
 export interface Detail {
   title: string
   detail: string
-  copy: boolean
   link: string
+  copy: boolean
+  html: boolean
 }
 
 export interface BlockDetailsTitle {
