@@ -1,6 +1,6 @@
 import { TokensRepository } from '@app/server/modules/tokens'
-import { Token, TokenTransfer } from 'ethvm-common'
 import { VmEngine } from '@app/server/modules/vm'
+import { Token, TokenTransfer } from 'ethvm-common'
 
 export interface TokensService {
   getAddressTokenTransfers(address: string, filter: string, limit: number, page: number): Promise<TokenTransfer[]>

@@ -1,6 +1,6 @@
-import { Token } from 'ethvm-common'
 import BigNumber from 'bignumber.js'
 import * as abi from 'ethereumjs-abi'
+import { Token } from 'ethvm-common'
 import * as jayson from 'jayson/promise'
 import * as utils from 'web3-utils'
 

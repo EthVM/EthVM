@@ -9,7 +9,6 @@ export interface ExchangeRepository {
 }
 
 export class CoinGeckoRepository implements ExchangeRepository {
-  constructor() {}
 
   public getQuote(token: string, to: string): Promise<Quote> {
     return fetch(API_URL)
@@ -17,10 +16,10 @@ export class CoinGeckoRepository implements ExchangeRepository {
       .then(res => {
         return {
           to,
-          price: res['ethereum']['usd'],
-          vol_24h: res['usd_24h_vol'],
-          last_update: res['last_updated_at']
-        } as Quote
+          price: res.ethereum.usd,
+          vol_24h: res.usd_24h_vol,
+          last_update: res.last_updated_at
+        }
       })
   }
 }
