@@ -1,282 +1,168 @@
-import { AddressBalance, Block, Events, PendingTx, Statistic, Tx, Uncle } from 'ethvm-common'
-import io from 'socket.io-client'
 import { EthvmApi } from '@app/core/api'
+import { AddressBalance, AddressMetadata, Block, Contract, Events, PendingTx, Quote, Statistic, TokenTransfer, Tx, Token, Uncle } from 'ethvm-common'
 
 export class EthvmSocketIoApi implements EthvmApi {
-  private readonly io: SocketIOClient.Socket
+  constructor(private readonly io: SocketIOClient.Socket) {}
 
-  constructor(readonly endpoint: string) {
-    this.io = io(endpoint)
+  // ------------------------------------------------------------------------------------
+  // Address
+  // ------------------------------------------------------------------------------------
+
+  getAddressBalance(address: string): Promise<AddressBalance | null> {
+    return this.promisify(Events.getAddressBalance, { address })
   }
 
-  // Balances
-  getAddressBalance(hash: string): Promise<AddressBalance | null> {
-    return new Promise((resolve, reject) => {
-      this.io.emit(
-        Events.getAddressBalance,
-        {
-          address: hash
-        },
-        (err, result) => {
-          if (err) {
-            reject(err)
-          }
-          resolve(result)
-        }
-      )
-    })
+  getAddressMetadata(address: string): Promise<AddressMetadata | null> {
+    return this.promisify(Events.getAddressMetadata, { address })
   }
 
+  getAddressAllTokensOwned(address: string): Promise<Token[]> {
+    return this.promisify(Events.getAddressAllTokensOwned, { address })
+  }
+
+  getAddressAmountTokensOwned(address: string): Promise<number> {
+    return this.promisify(Events.getAddressAmountTokensOwned, { address })
+  }
+
+  getAddressTokensTransfers(address: string, filter: string = 'all', limit: number = 100, page: number = 0): Promise<TokenTransfer[]> {
+    return this.promisify(Events.getAddressTokenTransfers, { address, filter, limit, page })
+  }
+
+  // ------------------------------------------------------------------------------------
   // Blocks
-  getBlocks(limit: number = 100, page: number = 0): Promise<Block[]> {
-    return new Promise((resolve, reject) => {
-      this.io.emit(
-        Events.getBlocks,
-        {
-          limit,
-          page
-        },
-        (err, result) => {
-          if (err) {
-            reject(err)
-          }
-          resolve(result)
-        }
-      )
-    })
-  }
+  // ------------------------------------------------------------------------------------
 
   getBlock(hash: string): Promise<Block | null> {
-    return new Promise((resolve, reject) => {
-      this.io.emit(
-        Events.getBlock,
-        {
-          hash
-        },
-        (err, result) => {
-          if (err) {
-            reject(err)
-          }
-          resolve(result)
-        }
-      )
-    })
+    return this.promisify(Events.getBlock, { hash })
+  }
+
+  getBlocks(limit: number = 100, page: number = 0): Promise<Block[]> {
+    return this.promisify(Events.getBlocks, { limit, page })
   }
 
   getBlockByNumber(no: number): Promise<Block | null> {
-    return new Promise((resolve, reject) => {
-      this.io.emit(
-        Events.getBlockByNumber,
-        {
-          no
-        },
-        (err, result) => {
-          if (err) {
-            reject(err)
-          }
-          resolve(result)
-        }
-      )
-    })
+    return this.promisify(Events.getBlockByNumber, { no })
   }
 
-  getBlocksMined(address: string, limit: number = 100, page: number = 0): Promise<Block[]> {
-    return new Promise((resolve, reject) => {
-      this.io.emit(
-        Events.getBlocksMined,
-        {
-          address,
-          limit,
-          page
-        },
-        (err, result) => {
-          if (err) {
-            reject(err)
-          }
-          resolve(result)
-        }
-      )
-    })
+  getBlocksMinedOfAddress(address: string, limit: number = 100, page: number = 0): Promise<Block[]> {
+    return this.promisify(Events.getBlocksMined, { address, limit, page })
   }
 
-  // Uncles
-  getUncles(limit: number = 100, page: number = 0): Promise<Uncle[]> {
-    return new Promise((resolve, reject) => {
-      this.io.emit(
-        Events.getUncles,
-        {
-          limit,
-          page
-        },
-        (err, result) => {
-          if (err) {
-            reject(err)
-          }
-          resolve(result)
-        }
-      )
-    })
+  // ------------------------------------------------------------------------------------
+  // Contracts
+  // ------------------------------------------------------------------------------------
+
+  getContract(address: string): Promise<Contract | null> {
+    return this.promisify(Events.getContract, { address })
   }
 
-  getUncle(hash: string): Promise<Uncle | null> {
-    return new Promise((resolve, reject) => {
-      this.io.emit(
-        Events.getUncle,
-        {
-          hash
-        },
-        (err, result) => {
-          if (err) {
-            reject(err)
-          }
-          resolve(result)
-        }
-      )
-    })
+  getContractsCreatedBy(address: string): Promise<Contract[]> {
+    return this.promisify(Events.getContractsCreatedBy, { address })
   }
 
+  // ------------------------------------------------------------------------------------
+  // Exchanges
+  // ------------------------------------------------------------------------------------
+
+  getExchangeRateQuote(symbol: string, to: string): Promise<Quote> {
+    return this.promisify(Events.getExchangeRates, { symbol, to })
+  }
+
+  // ------------------------------------------------------------------------------------
+  // Pending Txs
+  // ------------------------------------------------------------------------------------
+
+  getPendingTxs(limit: number = 100, page: number = 0): Promise<PendingTx[]> {
+    return this.promisify(Events.getPendingTxs, { limit, page })
+  }
+
+  getPendingTxsOfAddress(address: string, filter = 'all', limit: number = 100, page: number = 0): Promise<PendingTx[]> {
+    return this.promisify(Events.getPendingTxsOfAddress, { address, filter, limit, page })
+  }
+
+  // ------------------------------------------------------------------------------------
   // Txs
+  // ------------------------------------------------------------------------------------
+
   getTx(hash: string): Promise<Tx | null> {
-    return new Promise((resolve, reject) => {
-      this.io.emit(
-        Events.getTx,
-        {
-          hash
-        },
-        (err, result) => {
-          if (err) {
-            reject(err)
-          }
-          resolve(result)
-        }
-      )
-    })
+    return this.promisify(Events.getTx, { hash })
   }
 
   getTxs(limit: number = 100, page: number = 0): Promise<Tx[]> {
-    return new Promise((resolve, reject) => {
-      this.io.emit(
-        Events.getTxs,
-        {
-          limit,
-          page
-        },
-        (err, result) => {
-          if (err) {
-            reject(err)
-          }
-          resolve(result)
-        }
-      )
-    })
+    return this.promisify(Events.getTxs, { limit, page })
   }
 
-  getBlockTxs(hash: string): Promise<Tx[]> {
-    return new Promise((resolve, reject) => {
-      this.io.emit(
-        Events.getBlockTxs,
-        {
-          hash
-        },
-        (err, result) => {
-          if (err) {
-            reject(err)
-          }
-          resolve(result)
-        }
-      )
-    })
+  getTxsOfBlock(hash: string): Promise<Tx[]> {
+    return this.promisify(Events.getBlockTxs, { hash })
   }
 
-  getTxsOfAddress(hash: string, limit: number = 100, page: number = 0): Promise<Tx[]> {
-    return new Promise((resolve, reject) => {
-      this.io.emit(
-        Events.getAddressTxs,
-        {
-          address: hash,
-          limit,
-          page
-        },
-        (err, result) => {
-          if (err) {
-            reject(err)
-          }
-          resolve(result)
-        }
-      )
-    })
+  getTxsOfAddress(address: string, filter: string = 'all', limit: number = 100, page: number = 0): Promise<Tx[]> {
+    return this.promisify(Events.getAddressTxs, { address, filter, limit, page })
   }
 
-  getAddressTotalTxs(hash: string): Promise<number> {
-    return new Promise((resolve, reject) => {
-      this.io.emit(
-        Events.getAddressTotalTxs,
-        {
-          hash
-        },
-        (err, result) => {
-          if (err) {
-            reject(err)
-          }
-          resolve(result)
-        }
-      )
-    })
+  // ------------------------------------------------------------------------------------
+  // Uncles
+  // ------------------------------------------------------------------------------------
+
+  getUncles(limit: number = 100, page: number = 0): Promise<Uncle[]> {
+    return this.promisify(Events.getUncles, { limit, page })
   }
 
-  // Pending Txs
-  getPendingTxs(limit: number = 100, page: number = 0): Promise<PendingTx[]> {
-    return new Promise((resolve, reject) => {
-      this.io.emit(
-        Events.getPendingTxs,
-        {
-          limit,
-          page
-        },
-        (err, result) => {
-          if (err) {
-            reject(err)
-          }
-          resolve(result)
-        }
-      )
-    })
+  getUncle(hash: string): Promise<Uncle | null> {
+    return this.promisify(Events.getUncle, { hash })
   }
 
-  getPendingTxsOfAddress(hash: string, limit: number = 100, page: number = 0): Promise<PendingTx[]> {
-    return new Promise((resolve, reject) => {
-      this.io.emit(
-        Events.getPendingTxsOfAddress,
-        {
-          address: hash,
-          limit,
-          page
-        },
-        (err, result) => {
-          if (err) {
-            reject(err)
-          }
-          resolve(result)
-        }
-      )
-    })
+  // ------------------------------------------------------------------------------------
+  // Statistics
+  // ------------------------------------------------------------------------------------
+
+  getAverageBlockTimeStats(duration: string): Promise<Statistic[]> {
+    return this.promisify(Events.getAverageBlockTimeStats, { duration })
   }
 
-  // Search
+  getAverageDifficultyStats(duration: string): Promise<Statistic[]> {
+    return this.promisify(Events.getAverageDifficultyStats, { duration })
+  }
+
+  getAverageGasLimitStats(duration: string): Promise<Statistic[]> {
+    return this.promisify(Events.getAverageGasLimitStats, { duration })
+  }
+
+  getAverageGasPriceStats(duration: string): Promise<Statistic[]> {
+    return this.promisify(Events.getAverageGasPriceStats, { duration })
+  }
+
+  getAverageHashRateStats(duration: string): Promise<Statistic[]> {
+    return this.promisify(Events.getAverageHashRateStats, { duration })
+  }
+
+  getAverageMinerRewardsStats(duration: string): Promise<Statistic[]> {
+    return this.promisify(Events.getAverageMinerRewardsStats, { duration })
+  }
+
+  getAverageTxFeeStats(duration: string): Promise<Statistic[]> {
+    return this.promisify(Events.getAverageTxFeeStats, { duration })
+  }
+
+  getFailedTxStats(duration: string): Promise<Statistic[]> {
+    return this.promisify(Events.getFailedTxStats, { duration })
+  }
+
+  getSuccessfulTxStats(duration: string): Promise<Statistic[]> {
+    return this.promisify(Events.getSuccessfulTxStats, { duration })
+  }
+
+  // ------------------------------------------------------------------------------------
+  // Uncles
+  // ------------------------------------------------------------------------------------
+
   search(input: string): Promise<any> {
+    return this.promisify(Events.search, { hash: input })
+  }
+
+  private promisify(event: string, payload: any): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.io.emit(
-        Events.search,
-        {
-          hash: input
-        },
-        (err, result) => {
-          if (err) {
-            reject(err)
-          }
-          resolve(result)
-        }
-      )
+      this.io.emit(event, payload, (err, result) => (err ? reject(err) : resolve(result)))
     })
   }
 }
