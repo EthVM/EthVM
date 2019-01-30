@@ -121,7 +121,7 @@ export default class PageDetailsToken extends Vue {
     Old
   ===================================================================================
   */
-  
+
   // // Methods:
   // setDetails(token: Token) {
   //   this.details = [

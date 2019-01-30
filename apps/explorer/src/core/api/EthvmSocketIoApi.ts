@@ -2,6 +2,7 @@ import { EthvmApi } from '@app/core/api'
 import { AddressBalance, AddressMetadata, Block, Contract, Events, PendingTx, Quote, Statistic, TokenTransfer, Tx, Token, Uncle } from 'ethvm-common'
 
 export class EthvmSocketIoApi implements EthvmApi {
+
   constructor(private readonly io: SocketIOClient.Socket) {}
 
   // ------------------------------------------------------------------------------------
@@ -24,8 +25,12 @@ export class EthvmSocketIoApi implements EthvmApi {
     return this.promisify(Events.getAddressAmountTokensOwned, { address })
   }
 
-  getAddressTokensTransfers(address: string, filter: string = 'all', limit: number = 100, page: number = 0): Promise<TokenTransfer[]> {
-    return this.promisify(Events.getAddressTokenTransfers, { address, filter, limit, page })
+  getAddressTokenTransfers(address: string, limit: number = 100, page: number = 0): Promise<TokenTransfer[]> {
+    return this.promisify(Events.getAddressTokenTransfers, { address, limit, page })
+  }
+
+  getAddressTokenTransfersByHolder(address: string, holder: string, filter: string = 'all', limit: number = 100, page: number = 0): Promise<TokenTransfer[]> {
+    return this.promisify(Events.getAddressTokenTransfersByHolder, { address, holder, filter, limit, page })
   }
 
   // ------------------------------------------------------------------------------------

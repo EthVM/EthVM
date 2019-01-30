@@ -16,8 +16,10 @@ export declare const Events: {
     getAddressBalance: string;
     getAddressTokenBalance: string;
     getAddressTokenTransfers: string;
+    getAddressTokenTransfersByHolder: string;
     getAddressAmountTokensOwned: string;
     getAddressMetadata: string;
+    getAddressAllTokensOwned: string;
     getContract: string;
     getContractsCreatedBy: string;
     getBlock: string;

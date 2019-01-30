@@ -16,8 +16,10 @@ exports.Events = {
     getAddressBalance: "get-address-balance",
     getAddressTokenBalance: "get-address-token-balance",
     getAddressTokenTransfers: "get-address-token-transfers",
+    getAddressTokenTransfersByHolder: "get-address-token-transfers-by-holder",
     getAddressAmountTokensOwned: "get-address-amount-tokens-owned",
     getAddressMetadata: "get-address-metadata",
+    getAddressAllTokensOwned: "get-address-all-tokens-owned",
     // Contracts
     getContract: "get-contract",
     getContractsCreatedBy: "getContractsCreatedBy",

@@ -1,4 +1,5 @@
 export interface TokenTransfer {
+    contract: string;
     blockHash: string;
     txIndex: number;
     transferType: string;
