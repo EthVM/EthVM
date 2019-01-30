@@ -4,6 +4,7 @@ import { Events, Statistic } from 'ethvm-common'
 
 const getAvgGasLimitStats: SocketEvent = {
   id: Events.getAverageGasLimitStats,
+
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = chartPayloadValidator(payload) as boolean
     return {

@@ -1,5 +1,8 @@
 package io.enkrypt.kafka.streams.processors
 
+import io.enkrypt.avro.processing.AddressMetadataKeyRecord
+import io.enkrypt.avro.processing.AddressMetadataRecord
+import io.enkrypt.avro.processing.AddressMetadataType
 import io.enkrypt.avro.processing.MetricKeyRecord
 import io.enkrypt.avro.processing.MetricRecord
 import io.enkrypt.avro.processing.TokenBalanceRecord
@@ -9,6 +12,7 @@ import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.kafka.streams.config.Topics
 import io.enkrypt.kafka.streams.serdes.Serdes
 import mu.KotlinLogging
+import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
@@ -40,9 +44,41 @@ class StateProcessor : AbstractKafkaProcessor() {
 
     buildBalancesTopology(builder)
     buildMetricsTopology(builder)
+    buildAddressMetadataTopology(builder)
 
     // Generate the topology
     return builder.build()
+  }
+
+  private fun buildAddressMetadataTopology(builder: StreamsBuilder) {
+
+    val events = builder.stream(
+      Topics.AddressTxEvents,
+      Consumed.with(Serdes.AddressMetadataKey(), KafkaSerdes.ByteBuffer())
+    )
+
+    events
+      .groupByKey(Grouped.with(Serdes.AddressMetadataKey(), KafkaSerdes.ByteBuffer()))
+      .count(Materialized.with(Serdes.AddressMetadataKey(), KafkaSerdes.Long()))
+      .toStream()
+      .mapValues { v -> AddressMetadataRecord.newBuilder().setCount(v).build() }
+      .to(Topics.AddressTxCounts, Produced.with(Serdes.AddressMetadataKey(), Serdes.AddressMetadata()))
+
+    builder.stream(
+      Topics.ContractCreations,
+      Consumed.with(Serdes.ContractKey(), Serdes.ContractCreate())
+    ).map { k, v ->
+      KeyValue(
+        AddressMetadataKeyRecord.newBuilder()
+          .setAddress(k.getAddress())
+          .setType(AddressMetadataType.CONTRACT_CREATOR)
+          .build(),
+        if (v == null) null else
+          AddressMetadataRecord.newBuilder()
+            .setFlag(true)
+            .build()
+      )
+    }.to(Topics.ContractCreatorList, Produced.with(Serdes.AddressMetadataKey(), Serdes.AddressMetadata()))
   }
 
   private fun buildBalancesTopology(builder: StreamsBuilder) {

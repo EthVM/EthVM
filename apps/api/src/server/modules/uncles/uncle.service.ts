@@ -4,6 +4,7 @@ import { Uncle } from 'ethvm-common'
 export interface UnclesService {
   getUncles(limit: number, page: number): Promise<Uncle[]>
   getUncle(hash: string): Promise<Uncle | null>
+  getTotalNumberOfUncles(): Promise<number>
 }
 
 export class UnclesServiceImpl implements UnclesService {
@@ -15,5 +16,9 @@ export class UnclesServiceImpl implements UnclesService {
 
   public getUncle(hash: string): Promise<Uncle | null> {
     return this.uncleRepository.getUncle(hash)
+  }
+
+  public getTotalNumberOfUncles(): Promise<number> {
+    return this.uncleRepository.getTotalNumberOfUncles()
   }
 }

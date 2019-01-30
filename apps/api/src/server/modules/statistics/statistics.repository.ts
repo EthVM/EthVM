@@ -1,6 +1,6 @@
+import { toStatistic } from '@app/server/modules/statistics'
 import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
 import { Statistic } from 'ethvm-common'
-import { toStatistic } from '@app/server/modules/statistics'
 
 export interface StatisticsRepository {
   getTotalTxs(start: Date, end: Date): Promise<Statistic[]>

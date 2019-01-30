@@ -9,6 +9,8 @@ export class AccountInfo {
 
   public txs: Tx[] = []
   public totalTxs: number = 0
+  public toTxCount: number = 0
+  public fromTxCount: number = 0
   public txsFilter = 'all'
 
   public pendingTxs: PendingTx[] = []
