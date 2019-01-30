@@ -30,7 +30,7 @@ export class EthvmSocketIoApi implements EthvmApi {
   }
 
   getAddressTokenTransfersByHolder(address: string, holder: string, filter: string = 'all', limit: number = 100, page: number = 0): Promise<TokenTransfer[]> {
-    return this.promisify(Events.getAddressTokenTransfers, { address, holder, filter, limit, page })
+    return this.promisify(Events.getAddressTokenTransfersByHolder, { address, holder, filter, limit, page })
   }
 
   // ------------------------------------------------------------------------------------
