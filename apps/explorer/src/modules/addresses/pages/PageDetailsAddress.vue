@@ -72,7 +72,7 @@
 
 <script lang="ts">
 import { Block, EthValue, Tx, PendingTx } from '@app/core/models'
-import { Events } from 'ethvm-common'
+import { Events, Contract } from 'ethvm-common'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AddressDetail from '@app/modules/addresses/components/AddressDetail.vue'
@@ -157,55 +157,15 @@ export default class PageDetailsAddress extends Vue {
       {
         name: 'load-basic-info',
         enter: () => {
-          // Get Address Metadata
-          const addressMetadataPromise = new Promise((resolve, reject) => {
-            this.$socket.emit(
-              Events.getAddressMetadata,
-              {
-                address: this.addressRef
-              },
-              (err, result) => (err ? reject(err) : resolve(result))
-            )
-          })
+          const addressMetadata = this.$api.getAddressMetadata(this.addressRef)
+          const addressBalance = this.$api.getAddressBalance(this.addressRef)
+          const contract = this.$api.getContract(this.addressRef)
+          const exchangeRate = this.$api.getExchangeRateQuote('ETH', 'USD')
 
-          // Get Address Balance
-          const addressBalancePromise = new Promise((resolve, reject) => {
-            this.$socket.emit(
-              Events.getAddressBalance,
-              {
-                address: this.addressRef
-              },
-              (err, result) => (err ? reject(err) : resolve(result))
-            )
-          })
+          // If one promise fails, we still continue processing every entry (and for those failed we receive undefined)
+          const promises = [addressMetadata, addressBalance, contract, exchangeRate].map(p => p.catch(() => undefined))
 
-          // Get contract metadata (if applicable)
-          const contractPromise = new Promise((resolve, reject) => {
-            this.$socket.emit(
-              Events.getContract,
-              {
-                address: this.addressRef
-              },
-              (err, result) => (err ? reject(err) : resolve(result))
-            )
-          })
-
-          // Get USD exchange rate
-          const exchangeRatePromise = new Promise((resolve, reject) => {
-            this.$socket.emit(
-              Events.getExchangeRates,
-              {
-                symbol: 'ETH',
-                to: 'USD'
-              },
-              (err, result) => (err || !result ? reject(err) : resolve(result))
-            )
-          })
-
-          Promise.all(
-            // If one promise fails, we still continue processing every entry (and for those failed we receive undefined)
-            [addressMetadataPromise, addressBalancePromise, contractPromise, exchangeRatePromise].map(p => p.catch(() => undefined))
-          )
+          Promise.all(promises)
             .then((res: any[]) => {
               // Address Metadata
               const addressMetadata = res[0] || {}
@@ -230,78 +190,26 @@ export default class PageDetailsAddress extends Vue {
       {
         name: 'load-complementary-info',
         enter: () => {
-          // Get Address Transactions
-          const addressTxsPromise = this.loadTx()
+          const addressTxs = this.fetchTxs()
+          const addressPendingTxs = this.fetchPendingTxs()
+          const minedBlocks = this.account.isMiner ? this.fetchMinedBlocks() : Promise.resolve([])
+          const contractsCreated = this.account.isCreator ? this.fetchContractsCreated() : Promise.resolve([])
 
-          // Get Address Pending Transactions
-          const addressPendingTxsPromise = new Promise((resolve, reject) => {
-            this.$socket.emit(
-              Events.getPendingTxsOfAddress,
-              {
-                address: this.addressRef,
-                page: 0,
-                limit: MAX_ITEMS,
-                filter: 'all' // TODO @Olga: Possible values: in, out, all (if not specified all is taken)
-              },
-              (err, result) => (err ? reject(err) : resolve(result))
-            )
-          })
+          // If one promise fails, we still continue processing every entry (and for those failed we receive undefined)
+          const promises = [addressTxs, addressPendingTxs, minedBlocks, contractsCreated].map(p => p.catch(() => undefined))
 
-          // Get Mined Blocks
-          const minedBlocksPromise = new Promise((resolve, reject) => {
-            if (!this.account.isMiner) {
-              resolve([])
-              return
-            }
-            this.$socket.emit(
-              Events.getBlocksMined,
-              {
-                address: this.addressRef,
-                page: 0,
-                limit: MAX_ITEMS
-              },
-              (err, result) => (err ? reject(err) : resolve(result))
-            )
-          })
-
-          // Get contracts created by
-          const contractsCreatedBy = new Promise((resolve, reject) => {
-            if (!this.account.isCreator) {
-              resolve([])
-              return
-            }
-            this.$socket.emit(
-              Events.getContractsCreatedBy,
-              {
-                address: this.addressRef,
-                page: 0,
-                limit: MAX_ITEMS
-              },
-              (err, result) => (err ? reject(err) : resolve(result))
-            )
-          })
-
-          Promise.all([addressTxsPromise, addressPendingTxsPromise, minedBlocksPromise, contractsCreatedBy].map(p => p.catch(() => undefined)))
+          Promise.all(promises)
             .then((res: any[]) => {
               // Txs
-              const rawTxs = res[0] || []
-              const txs = []
-              rawTxs.forEach(raw => txs.unshift(new Tx(raw)))
-              this.account.txs = txs
+              this.account.txs = res[0] || []
               this.txsLoading = false
 
               // Pending Txs
-              const rawPtxs = res[1] || []
-              const pTxs = []
-              rawPtxs.forEach(raw => pTxs.unshift(new PendingTx(raw)))
-              this.account.pendingTxs = pTxs
+              this.account.pendingTxs = res[1] || []
               this.pendingTxsLoading = false
 
               // Mined Blocks
-              const rawMinedBlocks = res[2] || []
-              const minedBlocks = []
-              rawMinedBlocks.forEach(raw => minedBlocks.unshift(new Block(raw)))
-              this.account.minedBlocks = minedBlocks
+              this.account.minedBlocks = res[2] || []
               this.minerBlocksLoading = false
 
               // Contract Creator
@@ -318,18 +226,11 @@ export default class PageDetailsAddress extends Vue {
       {
         name: 'load-token-complementary-info',
         enter: () => {
-          // Get Tokens Owned
-          const totalTokensOwnedPromise = new Promise((resolve, reject) => {
-            this.$socket.emit(
-              Events.getAddressTokenBalance,
-              {
-                address: this.addressRef
-              },
-              (err, result) => (err ? reject(err) : resolve(result))
-            )
-          })
+          const totalTokensOwned = this.$api.getAddressAllTokensOwned(this.addressRef)
 
-          Promise.all([totalTokensOwnedPromise].map(p => p.catch(() => undefined)))
+          const promises = [totalTokensOwned].map(p => p.catch(() => undefined))
+
+          Promise.all(promises)
             .then((res: any[]) => {
               // Tokens
               this.account.tokens = res[0] || []
@@ -366,19 +267,20 @@ export default class PageDetailsAddress extends Vue {
   }
 
   // Method:
-  loadTx(page = 0, limit = MAX_ITEMS, filter = 'all'): Promise<Tx[]> {
-    return new Promise((resolve, reject) => {
-      this.$socket.emit(
-        Events.getAddressTxs,
-        {
-          address: this.addressRef,
-          page,
-          limit,
-          filter
-        },
-        (err, result) => (err ? reject(err) : resolve(result))
-      )
-    })
+  fetchTxs(page = 0, limit = MAX_ITEMS, filter = 'all'): Promise<Tx[]> {
+    return this.$api.getTxsOfAddress(this.addressRef, filter, limit, page).then(raw => raw.map(rawTx => new Tx(rawTx)))
+  }
+
+  fetchPendingTxs(page = 0, limit = MAX_ITEMS, filter = 'all'): Promise<PendingTx[]> {
+    return this.$api.getPendingTxsOfAddress(this.addressRef, filter, limit, page).then(raw => raw.map(rawPTx => new PendingTx(rawPTx)))
+  }
+
+  fetchMinedBlocks(page = 0, limit = MAX_ITEMS): Promise<Block[]> {
+    return this.$api.getBlocksMinedOfAddress(this.addressRef, limit, page).then(raw => raw.map(rawBlock => new Block(rawBlock)))
+  }
+
+  fetchContractsCreated(page = 0, limit = MAX_ITEMS): Promise<Contract[]> {
+    return this.$api.getContractsCreatedBy(this.addressRef, limit, page)
   }
 
   // Computed
@@ -390,6 +292,7 @@ export default class PageDetailsAddress extends Vue {
       }
     ]
   }
+
   get tabs() {
     const tabs = [
       {
@@ -425,6 +328,7 @@ export default class PageDetailsAddress extends Vue {
       }
       tabs.push(newTab)
     }
+
     return tabs
   }
 }
