@@ -7,13 +7,12 @@
         <v-list-tile v-for="(item, index) in items" :key="index" :class="[index % 2 == 0 ? 'background: white' : 'background: tableGrey']">
           <v-layout align-center justify-start row fill-height class="pa-3">
             <v-flex xs4 sm3 md2>
-              <v-list-tile-title class="info--text font-weight-medium">{{ item.title }}</v-list-tile-title>
+              <v-list-tile-title class="info--text font-weight-medium" v-html="item.title"></v-list-tile-title>
             </v-flex>
             <v-flex xs7 sm8 md9>
-              <v-list-tile-title v-if="!item.link && !item.html" class="text-muted text-truncate">{{ item.detail }}</v-list-tile-title>
-              <v-list-tile-title v-else-if="!item.link && item.html" v-html="item.detail"></v-list-tile-title>
+              <v-list-tile-title v-if="!item.link" class="text-muted text-truncate" v-html="item.detail"></v-list-tile-title>
               <router-link v-else :to="item.link">
-                <v-list-tile-title class="text-truncate">{{ item.detail }}</v-list-tile-title>
+                <v-list-tile-title class="text-truncate" v-html="item.detail"></v-list-tile-title>
               </router-link>
             </v-flex>
             <v-flex xs1>
@@ -25,14 +24,14 @@
           <v-list-tile v-for="(item, count) in moreItems" :key="count" :class="[count % 2 == 0 ? 'background: white' : 'background: tableGrey']">
             <v-layout align-center justify-start row fill-height class="pa-3">
               <v-flex xs4 sm3 md2>
-                <v-list-tile-title class="info--text font-weight-medium">{{ item.title }}</v-list-tile-title>
+                <v-list-tile-title class="info--text font-weight-medium" v-html="item.title"></v-list-tile-title>
               </v-flex>
               <v-flex xs7 sm8 md9>
                 <v-list-tile-title v-if="!item.link" class="text-muted text-truncate">
                   {{ item.detail }} <timeago v-if="item.title == $t('common.timestmp')" :datetime="block.getTimestamp()" :auto-update="10" />
                 </v-list-tile-title>
                 <router-link v-else :to="item.link">
-                  <v-list-tile-title class="text-truncate">{{ item.detail }}</v-list-tile-title>
+                  <v-list-tile-title class="text-truncate" v-html="item.detail"></v-list-tile-title>
                 </router-link>
               </v-flex>
               <v-flex xs1>

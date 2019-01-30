@@ -32,7 +32,8 @@
     "marketCap": "Market Cap",
     "decimals": "Decimals",
     "website": "Website",
-    "support": "Support"
+    "support": "Support",
+    "supply": "Total Supply"
   },
   "common": {
     "address": "Address",

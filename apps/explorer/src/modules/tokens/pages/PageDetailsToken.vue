@@ -1,16 +1,13 @@
 <template>
   <v-container grid-list-lg class="mb-0">
-    <app-list-details :items="contractDetails" :details-type="listType" :loading="isLoadingDetails">
-        <!-- <app-list-title slot="details-title" :list-type="listType" /> -->
-    </app-list-details>
+    <details-list-tokens :contract="contract" :token="token"></details-list-tokens>
   </v-container>
 </template>
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-import AppListDetails from '@app/core/components/ui/AppListDetails.vue'
-import AppListTitle from '@app/core/components/ui/AppListTitle.vue'
 import AppSocialLink from '@app/core/components/ui/AppSocialLink.vue'
+import DetailsListTokens from '@app/modules/tokens/components/DetailsListTokens.vue'
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { Events } from 'ethvm-common'
 import { Detail } from '@app/core/components/props'
@@ -19,17 +16,15 @@ import { Token } from '@app/core/models'
 @Component({
   components: {
     AppBreadCrumbs,
-    AppListDetails,
-    AppListTitle
+    DetailsListTokens
   }
 })
 export default class PageDetailsToken extends Vue {
   @Prop({ type: String }) addressRef!: string
   address = ''
   contract = {}
-  listType = 'tx'
-  details = []
-  holder = ''
+  tokens = {}
+  token = {}
 
   /*
   ===================================================================================
@@ -41,7 +36,12 @@ export default class PageDetailsToken extends Vue {
     try {
       this.address = this.addressRef.replace('0x', '')
       this.contract = await this.fetchContractDetails()
-      console.log(this.contract)
+      this.tokens = await this.fetchTokens()
+      this.token = this.tokens.find(obj => {
+        return obj.address === this.addressRef
+      })
+      // console.log('t', this.token)
+      // console.log(this.contract)
     } catch (e) {
       // handle error accordingly
     }
@@ -63,73 +63,33 @@ export default class PageDetailsToken extends Vue {
     })
   }
 
+  /**
+   * GET and return a JSON array of ETH-based tokens
+   *
+   * @return {Array} - Array of ETH Tokens.
+   */
+  fetchTokens() {
+    return new Promise((resolve, reject) => {
+      this.$http
+        .get('http://api.ethplorer.io/getTop?apiKey=freekey&criteria=cap')
+        .then(response => {
+          resolve(response.data.tokens)
+        })
+        .catch(err => {
+          reject(err)
+        })
+    })
+  }
+
   /*
   ===================================================================================
     Computed Values
   ===================================================================================
   */
 
-  get contractDetails(): Detail[] {
-    if (this.isLoadingDetails) return []
-    const icons = {
-      blog: 'fab fa-ethereum',
-      chat: 'fab fa-ethereum',
-      facebook: 'fab fa-facebook',
-      forum: 'fas fa-comments',
-      github: 'fab fa-github',
-      gitter: 'fab fa-gitter',
-      instagram: 'fab fa-instagram',
-      linkedin: 'fab fa-linkedin',
-      reddit: 'fab fa-reddit',
-      slack: 'fab fa-slack',
-      telegram: 'fab fa-telegram',
-      twitter: 'fab fa-twitter',
-      youtube: 'fab fa-youtube'
-    }
-    return [
-      {
-        title: this.$i18n.t('title.contract'),
-        detail: this.addressRef,
-        link: `/address/${this.addressRef}`
-      },
-      {
-        title: this.$i18n.t('title.decimals'),
-        detail: this.contract.metadata.decimals
-      },
-      {
-        title: this.$i18n.t('title.price'),
-        detail: ''
-      },
-      {
-        title: this.$i18n.t('title.website'),
-        detail: `<a href="${this.contract.metadata.website}" target="_BLANK">${this.contract.metadata.website}</a>`,
-        html: true
-      },
-      {
-        title: this.$i18n.t('title.support'),
-        detail: `<a href="mailto:${this.contract.metadata.support.email}" target="_BLANK">${this.contract.metadata.support.email}</a>`,
-        html: true
-      },
-      {
-        title: this.$i18n.t('title.links'),
-        detail: Object.entries(this.contract.metadata.social).map(obj => {
-          let name = obj[0]
-          let url = obj[1]
-          if (url === null || url === '') return ''
-          return `<a href="${url}" target="_BLANK"><i aria-hidden="true" class="v-icon secondary--text ${icons[name]} pr-2 material-icons theme--light"></i></a>`
-        }).reduce((a, b) => { return `${a}${b}` }),
-        html: true
-      }
-    ]
-  }
-
-  get isLoadingDetails(): boolean {
-    return Object.keys(this.contract).length === 0
-  }
-
   /*
   ===================================================================================
-    Ol
+    Old
   ===================================================================================
   */
   

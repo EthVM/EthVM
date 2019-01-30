@@ -15,7 +15,6 @@ export interface Detail {
   detail: string
   link: string
   copy: boolean
-  html: boolean
 }
 
 export interface BlockDetailsTitle {
