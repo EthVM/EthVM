@@ -6,7 +6,8 @@ export interface EthvmApi {
   getAddressMetadata(address: string): Promise<AddressMetadata | null>
   getAddressAllTokensOwned(address: string): Promise<Token[]>
   getAddressAmountTokensOwned(address: string): Promise<number>
-  getAddressTokensTransfers(address: string, filter: string, limit: number, page: number): Promise<TokenTransfer[]>
+  getAddressTokenTransfers(address: string, limit: number, page: number): Promise<TokenTransfer[]>
+  getAddressTokenTransfersByHolder(address: string, holder: string, filter: string, limit: number, page: number): Promise<TokenTransfer[]>
 
   // Blocks
   getBlock(hash: string): Promise<Block | null>

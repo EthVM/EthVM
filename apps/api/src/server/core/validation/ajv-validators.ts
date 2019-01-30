@@ -8,108 +8,7 @@ const ROOMS = ['blocks', 'txs', 'pendingTxs', 'uncles']
 const PERIODS = ['ALL', 'YEAR', 'MONTH', 'WEEK']
 
 const EXCHANGE_TO = ['USD']
-const EXCHANGE_FROM = [
-  'BTC',
-  'LTC',
-  'XRP',
-  'NXT',
-  'DOGE',
-  'DGB',
-  'RDD',
-  'DASH',
-  'MONA',
-  'MAID',
-  'XMR',
-  'BCN',
-  'BTS',
-  'BTCD',
-  'XLM',
-  'EMC',
-  'XVG',
-  'USDT',
-  'XEM',
-  'ETH',
-  'SC',
-  'REP',
-  'DCR',
-  'PIVX',
-  'LSK',
-  'DGD',
-  'STEEM',
-  'WAVES',
-  'ARDR',
-  'ETC',
-  'STRAT',
-  'NEO',
-  'XZC',
-  'ZEC',
-  'GNT',
-  'MKR',
-  'KMD',
-  'NANO',
-  'ARK',
-  'QTUM',
-  'BAT',
-  'ZEN',
-  'AE',
-  'ETP',
-  'MIOTA',
-  'BNT',
-  'GXS',
-  'FUN',
-  'PAY',
-  'SNT',
-  'EOS',
-  'MCO',
-  'GAS',
-  'PPT',
-  'OMG',
-  'BCH',
-  'BNB',
-  'BTM',
-  'DCN',
-  'ZRX',
-  'HSR',
-  'NAS',
-  'WTC',
-  'LRC',
-  'TRX',
-  'MANA',
-  'LINK',
-  'KNC',
-  'KIN',
-  'ADA',
-  'XTZ',
-  'RHOC',
-  'CNX',
-  'AION',
-  'BTG',
-  'KCS',
-  'NULS',
-  'ICX',
-  'POWR',
-  'QASH',
-  'BCD',
-  'CMT',
-  'ELF',
-  'WAX',
-  'XIN',
-  'MOAC',
-  'IOST',
-  'THETA',
-  'ZIL',
-  'ELA',
-  'HT',
-  'TUSD',
-  'ONT',
-  'BTCP',
-  'DROP',
-  'NPXS',
-  'WAN',
-  'MITH',
-  'HOT',
-  'VET'
-]
+const EXCHANGE_FROM = ['ETH']
 
 // Create Ajv
 const ajv = new Ajv()
@@ -163,6 +62,13 @@ const pageSchema = {
   $id: '/properties/limit',
   type: 'number',
   default: 0
+}
+
+const filterSchema = {
+  $id: '/properties/limit',
+  type: 'string',
+  enum: ['in', 'out', 'all'],
+  default: 'all'
 }
 
 // Schemas definitions
@@ -322,12 +228,7 @@ const TxsPayloadSchema = {
   type: 'object',
   properties: {
     address: addressSchema,
-    filter: {
-      $id: '/properties/limit',
-      type: 'string',
-      enum: ['in', 'out', 'all'],
-      default: 'all'
-    },
+    filter: filterSchema,
     limit: limitSchema,
     page: pageSchema
   },
@@ -377,11 +278,13 @@ const ExchangeRateSchema = {
 }
 
 const TokensTransferSchema = {
-  $id: 'https://ethvm.com/blocksmined.payload.schema.json',
+  $id: 'https://ethvm.com/tokentransfers.payload.schema.json',
   $schema: 'http://json-schema.org/draft-07/schema#',
   type: 'object',
   properties: {
     address: addressSchema,
+    holder: addressSchema,
+    filter: filterSchema,
     limit: limitSchema,
     page: pageSchema
   },
