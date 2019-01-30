@@ -13,6 +13,8 @@ import { Events } from 'ethvm-common'
 import { Detail } from '@app/core/components/props'
 import { Token } from '@app/core/models'
 
+const MAX_ITEMS = 10
+
 @Component({
   components: {
     AppBreadCrumbs,
@@ -25,6 +27,7 @@ export default class PageDetailsToken extends Vue {
   contract = {}
   tokens = {}
   token = {}
+  tokenTransfers = []
 
   /*
   ===================================================================================
@@ -40,9 +43,13 @@ export default class PageDetailsToken extends Vue {
       this.token = this.tokens.find(obj => {
         return obj.address === this.addressRef
       })
+      console.log('eyy')
+      this.tokenTransfers = await this.fetchAddressTokensTransfers()
       // console.log('t', this.token)
       // console.log(this.contract)
+      console.log('t', this.tokenTransfers)
     } catch (e) {
+      console.log('e', e)
       // handle error accordingly
     }
   }
@@ -59,7 +66,29 @@ export default class PageDetailsToken extends Vue {
    */
   fetchContractDetails() {
     return new Promise((resolve, reject) => {
-      this.$socket.emit(Events.getContract, { address: this.address }, (err, result) => (err ? reject(err) : resolve(result)))
+      return this.$api.getContract(this.addressRef)
+        .then(result => {
+          resolve(result)
+        })
+        .catch(e => {
+          reject(e)
+        })
+    })
+  }
+
+  /**
+   */
+  fetchAddressTokensTransfers(page = 0, limit = MAX_ITEMS, filter = 'all') {
+    return new Promise((resolve, reject) => {
+      this.$socket.emit(Events.getAddressTokensTransfers, { address: this.addressRef, filter: filter, limit: limit, page: page }, (err, result) => (err ? reject(err) : resolve(result)))
+      // return this.$api.getAddressTokensTransfers(this.addressRef, filter, limit, page)
+      //   .then(result => {
+      //     resolve(result)
+      //   })
+      //   .catch(e => {
+      //     console.log('dsdsd', e)
+      //     reject(e)
+      //   })
     })
   }
 
