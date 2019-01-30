@@ -187,4 +187,20 @@ protocol Processing {
 
   }
 
+  // address metadata
+
+  enum AddressMetadataType {
+    FROM, TO, TOTAL, MINER, CONTRACT_CREATOR
+  }
+
+  record AddressMetadataKeyRecord {
+    io.enkrypt.avro.common.Data20 address;
+    AddressMetadataType type;
+  }
+
+  record AddressMetadataRecord {
+    union { null, long } count = null;
+    union { null, boolean } flag = null;
+  }
+
 }
