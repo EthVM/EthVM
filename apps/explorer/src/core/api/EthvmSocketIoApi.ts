@@ -2,6 +2,7 @@ import { EthvmApi } from '@app/core/api'
 import { AddressBalance, AddressMetadata, Block, Contract, Events, PendingTx, Quote, Statistic, TokenTransfer, Tx, Token, Uncle } from 'ethvm-common'
 
 export class EthvmSocketIoApi implements EthvmApi {
+
   constructor(private readonly io: SocketIOClient.Socket) {}
 
   // ------------------------------------------------------------------------------------
@@ -48,6 +49,10 @@ export class EthvmSocketIoApi implements EthvmApi {
     return this.promisify(Events.getBlocksMined, { address, limit, page })
   }
 
+  getTotalNumberOfBlocks(): Promise<number> {
+    return this.promisify(Events.getTotalNumberOfBlocks, {})
+  }
+
   // ------------------------------------------------------------------------------------
   // Contracts
   // ------------------------------------------------------------------------------------
@@ -80,6 +85,14 @@ export class EthvmSocketIoApi implements EthvmApi {
     return this.promisify(Events.getPendingTxsOfAddress, { address, filter, limit, page })
   }
 
+  getNumberOfPendingTxsOfAddress(address: string): Promise<number> {
+    return this.promisify(Events.getNumberOfPendingTxsOfAddress, { address })
+  }
+
+  getTotalNumberOfPendingTxs(): Promise<number> {
+    return this.promisify(Events.getTotalNumberOfPendingTxs, {})
+  }
+
   // ------------------------------------------------------------------------------------
   // Txs
   // ------------------------------------------------------------------------------------
@@ -110,6 +123,10 @@ export class EthvmSocketIoApi implements EthvmApi {
 
   getUncle(hash: string): Promise<Uncle | null> {
     return this.promisify(Events.getUncle, { hash })
+  }
+
+  getTotalNumberOfUncles(): Promise<number> {
+    return this.promisify(Events.getTotalNumberOfUncles, {})
   }
 
   // ------------------------------------------------------------------------------------

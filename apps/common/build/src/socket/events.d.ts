@@ -24,6 +24,7 @@ export declare const Events: {
     getBlocks: string;
     getBlocksMined: string;
     getBlockByNumber: string;
+    getTotalNumberOfBlocks: string;
     getTx: string;
     getTxs: string;
     getBlockTxs: string;
@@ -31,8 +32,11 @@ export declare const Events: {
     getAddressTotalTxs: string;
     getPendingTxs: string;
     getPendingTxsOfAddress: string;
+    getTotalNumberOfPendingTxs: string;
+    getNumberOfPendingTxsOfAddress: string;
     getUncle: string;
     getUncles: string;
+    getTotalNumberOfUncles: string;
     getExchangeRates: string;
     search: string;
     getAverageDifficultyStats: string;

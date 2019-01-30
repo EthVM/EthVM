@@ -13,6 +13,7 @@ export interface EthvmApi {
   getBlocks(limit: number, page: number): Promise<Block[]>
   getBlockByNumber(no: number): Promise<Block | null>
   getBlocksMinedOfAddress(address: string, limit: number, page: number): Promise<Block[]>
+  getTotalNumberOfBlocks(): Promise<number>
 
   // Contracts
   getContract(address: string): Promise<Contract | null>
@@ -24,6 +25,8 @@ export interface EthvmApi {
   // Pending Txs
   getPendingTxs(limit: number, page: number): Promise<PendingTx[]>
   getPendingTxsOfAddress(address: string, filter: string, limit: number, page: number): Promise<PendingTx[]>
+  getNumberOfPendingTxsOfAddress(address: string): Promise<number>
+  getTotalNumberOfPendingTxs(): Promise<number>
 
   // Txs
   getTx(hash: string): Promise<Tx | null>
@@ -34,6 +37,7 @@ export interface EthvmApi {
   // Uncles
   getUncle(hash: string): Promise<Uncle | null>
   getUncles(limit: number, page: number): Promise<Uncle[]>
+  getTotalNumberOfUncles(): Promise<number>
 
   // Statistics
   getAverageBlockTimeStats(duration: string): Promise<Statistic[]>

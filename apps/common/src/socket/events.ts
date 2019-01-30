@@ -36,6 +36,7 @@ export const Events = {
   getBlocks: "get-blocks",
   getBlocksMined: "get-blocks-mined",
   getBlockByNumber: "get-block-by-number",
+  getTotalNumberOfBlocks: "get-total-number-of-blocks",
 
   // Txs
   getTx: "get-tx",
@@ -47,10 +48,13 @@ export const Events = {
   // PendingTxs
   getPendingTxs:"get-pending-txs",
   getPendingTxsOfAddress: "get-address-pending-txs",
+  getTotalNumberOfPendingTxs: "get-total-number-of-pending-txs",
+  getNumberOfPendingTxsOfAddress: "get-number-of-pending-txs-of-address",
 
   // Uncles
   getUncle:"get-uncle",
   getUncles:"get-uncles",
+  getTotalNumberOfUncles: "get-total-number-of-uncles",
 
   // Exchange
   getExchangeRates: "get-exchange-rates",

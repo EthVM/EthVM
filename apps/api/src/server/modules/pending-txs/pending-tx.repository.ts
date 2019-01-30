@@ -5,6 +5,8 @@ import { PendingTx } from 'ethvm-common'
 export interface PendingTxRepository {
   getPendingTxs(limit: number, page: number): Promise<PendingTx[]>
   getPendingTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<PendingTx[]>
+  getNumberOfPendingTxsOfAddress(address: string)
+  getTotalNumberOfPendingTxs(): Promise<number>
 }
 
 export class MongoPendingTxRepository extends BaseMongoDbRepository implements PendingTxRepository {
@@ -58,5 +60,16 @@ export class MongoPendingTxRepository extends BaseMongoDbRepository implements P
         resp.forEach(tx => t.push(toPendingTx(tx)))
         return t
       })
+  }
+
+  public getNumberOfPendingTxsOfAddress(address: string): Promise<number> {
+    return this.db
+    .collection(MongoEthVM.collections.pendingTxs)
+    .find( {_id: address })
+    .count()
+  }
+
+  public getTotalNumberOfPendingTxs(): Promise<number> {
+    return this.db.collection(MongoEthVM.collections.pendingTxs).estimatedDocumentCount()
   }
 }
