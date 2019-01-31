@@ -1,14 +1,14 @@
 <template>
   <v-container grid-list-lg class="mb-0">
     <app-bread-crumbs :new-items="crumbs" />
-    <v-layout v-if="!error && tx" row wrap justify-start class="mb-4" >
+    <v-layout v-if="!error && tx" row wrap justify-start class="mb-4">
       <v-flex xs12>
         <app-list-details :items="txDetails" :more-items="txMoreDetails" :details-type="listType" :loading="loading">
           <app-list-title slot="details-title" :list-type="listType" />
         </app-list-details>
       </v-flex>
     </v-layout>
-    <app-error v-else :pageType="listType" :reference="txRef"/>
+    <app-error v-else :page-type="listType" :reference="txRef" />
   </v-container>
 </template>
 

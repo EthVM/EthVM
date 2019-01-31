@@ -19,7 +19,6 @@
     <!-- Start Rows -->
     <v-card color="white" v-for="tx in transfers" class="transparent" flat :key="tx.getHash()">
       <v-layout align-center justify-start row fill-height pr-3>
-
         <!-- Column 1 -->
         <v-flex xs6 sm8 md5>
           <v-flex d-flex xs12 pb-2>
@@ -62,12 +61,10 @@
           <p>{{ tx.getValue().toEth() }}</p>
         </v-flex>
         <!-- End Column 3 -->
-
       </v-layout>
       <v-divider class="mb-2 mt-2" />
     </v-card>
     <!-- End Rows -->
-
   </div>
 </template>
 

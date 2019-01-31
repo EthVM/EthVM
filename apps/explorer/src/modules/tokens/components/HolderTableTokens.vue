@@ -19,7 +19,6 @@
     <!-- Start Rows -->
     <v-card color="white" v-for="holder in holders" class="transparent" flat :key="holder.address">
       <v-layout align-center justify-start row fill-height pr-3>
-
         <!-- Column 1 -->
         <v-flex xs6 sm8 md5>
           <router-link class="primary--text text-truncate font-italic psmall pb-0 ml-2" :to="'/address/' + holder.address">
@@ -39,12 +38,10 @@
           <p class="mb-0 ml-2">{{ holder.share }}%</p>
         </v-flex>
         <!-- End Column 3 -->
-
       </v-layout>
       <v-divider class="mb-2" />
     </v-card>
     <!-- End Rows -->
-
   </div>
 </template>
 

@@ -41,7 +41,7 @@
         </v-layout>
       </v-card>
     </div>
-    <app-error v-else :serverError="error" />
+    <app-error v-else :server-error="error" />
   </v-card>
 </template>
 

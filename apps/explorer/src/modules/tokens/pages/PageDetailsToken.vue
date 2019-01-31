@@ -1,6 +1,5 @@
 <template>
   <v-container grid-list-lg>
-
     <!--
     =====================================================================================
       HOLDER DETAILS
@@ -21,7 +20,7 @@
       <div v-if="!isLoading">
         <app-bread-crumbs :new-items="crumbs" v-if="!isLoading" />
         <details-list-tokens :contract="contract" :token="token" class="mb-5" />
-        <details-tabs-tokens :transfers="temporaryTokenTransfers" :holders="tokenHolders"/>
+        <details-tabs-tokens :transfers="temporaryTokenTransfers" :holders="tokenHolders" />
       </div>
       <!-- End Loaded -->
       <!-- Not Loaded -->
@@ -32,8 +31,7 @@
         </v-layout>
       </div>
       <!-- End Not Loaded -->
-     </div>
-
+    </div>
   </v-container>
 </template>
 
@@ -88,7 +86,7 @@ export default class PageDetailsToken extends Vue {
       this.tokenTransfers = await this.fetchAddressTokensTransfers()
       this.tokenHolders = await this.fetchTopTokenHolders()
     } catch (e) {
-      console.log('e', e)
+      //console.log('e', e)
       // handle error accordingly
     }
   }
@@ -101,12 +99,13 @@ export default class PageDetailsToken extends Vue {
 
   /**
    * Retrieve contract details for a the given token contract address.
-   * 
+   *
    * @return {Object} - Contract details and metadata
    */
   fetchContractDetails() {
     return new Promise((resolve, reject) => {
-      return this.$api.getContract(this.addressRef)
+      return this.$api
+        .getContract(this.addressRef)
         .then(result => {
           resolve(result)
         })
@@ -123,7 +122,8 @@ export default class PageDetailsToken extends Vue {
    */
   fetchAddressTokensTransfers(page = 0, limit = MAX_ITEMS) {
     return new Promise((resolve, reject) => {
-      return this.$api.getAddressTokenTransfers(this.addressRef, limit, page)
+      return this.$api
+        .getAddressTokenTransfers(this.addressRef, limit, page)
         .then(result => {
           resolve(result)
         })
@@ -168,17 +168,16 @@ export default class PageDetailsToken extends Vue {
         })
     })
   }
-  
 
   /*
   ===================================================================================
     Computed Values
   ===================================================================================
   */
- 
+
   /**
    * Use txs in Vuex until api returns valid data.
-   * 
+   *
    * @return {Tx[]} - Array of recent transactions
    */
   get temporaryTokenTransfers(): Tx[] {
@@ -255,7 +254,7 @@ export default class PageDetailsToken extends Vue {
     Old
   ===================================================================================
   */
-  
+
   // // Methods:
   // setDetails(token: Token) {
   //   this.details = [

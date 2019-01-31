@@ -1,6 +1,5 @@
 <template>
   <app-tabs :tabs="tabs">
-
     <!-- Transfers -->
     <v-tab-item slot="tabs-item" value="tab-0">
       <transfer-table-tokens :transfers="transfers" />
@@ -12,7 +11,6 @@
       <holder-table-tokens :holders="holders" />
     </v-tab-item>
     <!-- End Holders -->
-
   </app-tabs>
 </template>
 

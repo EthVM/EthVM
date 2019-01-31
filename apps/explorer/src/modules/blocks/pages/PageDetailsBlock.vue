@@ -17,7 +17,7 @@
         </v-card>
       </v-flex>
     </v-layout>
-    <app-error v-else :pageType="listType" :reference="blockRef" />
+    <app-error v-else :page-type="listType" :reference="blockRef" />
   </v-container>
 </template>
 

@@ -37,7 +37,7 @@
       </v-layout>
     </v-card>
     <!-- End Table Header -->
-    <app-error v-if="error" :serverError="error" />
+    <app-error v-if="error" :server-error="error" />
     <div v-else>
       <app-info-load v-if="loading" />
       <v-card v-else flat id="scroll-target" :style="getStyle" class="scroll-y pt-0 pb-0">

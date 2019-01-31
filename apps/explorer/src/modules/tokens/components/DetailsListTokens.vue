@@ -17,7 +17,6 @@
         </v-layout>
       </v-list-tile>
     </v-list>
-  </div>
   </v-card>
 </template>
 
@@ -51,7 +50,7 @@ export default class DetailsListTokens extends Vue {
    * Properly format the Details[] array for the details table
    */
   get details(): Detail[] {
-     const icons = {
+    const icons = {
       blog: 'fab fa-ethereum',
       chat: 'fab fa-ethereum',
       facebook: 'fab fa-facebook',

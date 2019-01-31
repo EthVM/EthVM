@@ -32,7 +32,7 @@
       </v-layout>
     </v-card>
     <!-- End Table Header -->
-    <app-error v-if="error" :serverError="error"></app-error>
+    <app-error v-if="error" :server-error="error"></app-error>
     <!-- Tokens List -->
     <div v-else>
       <app-info-load v-if="loading"></app-info-load>

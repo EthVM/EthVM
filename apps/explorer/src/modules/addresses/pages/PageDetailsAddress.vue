@@ -59,8 +59,7 @@
       </app-tabs>
     </div>
     <app-info-load v-if="loading && !error" />
-    <app-error v-else  :reference="addressRef" pageType='address' />
-    </div>
+    <app-error v-else :reference="addressRef" page-type="address" />
   </v-container>
 </template>
 
@@ -245,10 +244,8 @@ export default class PageDetailsAddress extends Vue {
       {
         name: 'error',
         enter: () => {
-          console.log('error')
           // 1. Set global error to error
           this.error = true
-          console.log(this.error)
 
           // 2. Disable global loading
           this.loading = false
@@ -347,24 +344,24 @@ export default class PageDetailsAddress extends Vue {
         isActive: false
       }
     ]
-    if(!this.loading && !this.error) {
-    if (this.account.isMiner ) {
-      const newTab = {
-        id: '3',
-        title: this.$i18n.t('tabs.miningH'),
-        isActive: false
+    if (!this.loading && !this.error) {
+      if (this.account.isMiner) {
+        const newTab = {
+          id: '3',
+          title: this.$i18n.t('tabs.miningH'),
+          isActive: false
+        }
+        tabs.push(newTab)
       }
-      tabs.push(newTab)
-    }
 
-    if (this.account.isCreator) {
-      const newTab = {
-        id: '4',
-        title: this.$i18n.t('tabs.contracts'),
-        isActive: false
+      if (this.account.isCreator) {
+        const newTab = {
+          id: '4',
+          title: this.$i18n.t('tabs.contracts'),
+          isActive: false
+        }
+        tabs.push(newTab)
       }
-      tabs.push(newTab)
-    }
     }
 
     return tabs
