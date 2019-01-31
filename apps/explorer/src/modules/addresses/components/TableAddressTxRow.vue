@@ -133,10 +133,10 @@ export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
     const mesg = [this.$i18n.t('message.txAll'), this.$i18n.t('message.txIn'), this.$i18n.t('message.txOut')]
     const penMesg = [this.$i18n.t('message.txPen'), this.$i18n.t('message.txPenIn'), this.$i18n.t('message.txPenOut')]
     if (!this.type) {
-      return mesg[this.filter]
+      return mesg[this.filter].toString()
     }
 
-    return penMesg[this.filter]
+    return penMesg[this.filter].toString()
   }
 }
 </script>
