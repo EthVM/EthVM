@@ -8,7 +8,7 @@
     -->
 
     <div v-if="isHolder">
-      <h1>TODO</h1>
+      
     </div>
 
     <!--
@@ -81,16 +81,28 @@ export default class PageDetailsToken extends Vue {
       this.isHolder = true
     }
 
-    try {
-      this.address = this.addressRef.replace('0x', '')
-      this.contract = await this.fetchContractDetails()
-      this.token = await this.fetchTokenDetails()
-      this.tokenTransfers = await this.fetchAddressTokensTransfers()
-      this.tokenHolders = await this.fetchTopTokenHolders()
-    } catch (e) {
-      console.log('e', e)
-      // handle error accordingly
-    }
+    this.address = this.addressRef.replace('0x', '')
+    const contractPromise = this.fetchContractDetails()
+    const tokenPromise = this.fetchTokenDetails()
+    const tokenTransfersPromise = this.fetchAddressTokensTransfers()
+    const tokenHoldersPromise = this.fetchTopTokenHolders()
+
+    Promise.all([
+      contractPromise,
+      tokenPromise,
+      tokenTransfersPromise,
+      tokenHoldersPromise
+    ])
+    .then(([contract, token, tokenTransfers, tokenHolders]) => {
+      this.contract = contract
+      this.token = token
+      this.tokenTransfers = tokenTransfers
+      this.tokenHolders = tokenHolders
+    })
+    .catch(e => {
+      // Handle error accordingly
+      console.log(e)
+    })
   }
 
   /*
