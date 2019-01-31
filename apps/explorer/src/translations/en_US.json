@@ -75,7 +75,10 @@
     "blockHeight": "Block Height #",
     "token": "Token",
     "price": "Price",
-    "marketCap": "Market Cap"
+    "marketCap": "Market Cap",
+    "age": "Age",
+    "quantity": "Quantity",
+    "percentage": "Percentage"
   },
   "filter": {
     "view": "View",
@@ -153,7 +156,8 @@
     "name": "Name",
     "usdValue": "USD Value",
     "amount": "Amount",
-    "price": "Price"
+    "price": "Price",
+    "owner": "Owner"
   },
   "gas": {
     "limit": "Gas Limit",

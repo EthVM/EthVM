@@ -3,7 +3,7 @@
     <v-flex xs12>
       <v-data-table :headers="headers" :items="tokens" :must-sort="true" :pagination.sync="sortBy" :custom-sort="customSort" class="elevation-1">
         <v-progress-linear slot="progress" color="blue" indeterminate />
-        <template slot="items" slot-scope="props">
+        <template slot="items" slot-scope="props" v-if="props.item.name !== 'Ethereum'">
           <td>
             <router-link :to="tokenLink(props.item.address)">{{ props.item.name }}</router-link>
           </td>

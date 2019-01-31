@@ -1,38 +1,23 @@
 <template>
-  <!-- <app-list-details :items="contractDetails" :details-type="listType" :loading="isLoading" hideMore>
-  </app-list-details> -->
   <v-card color="white" flat class="pt-3">
-    <!-- Loaded -->
-    <div v-if="!isLoading">
-      <v-card-title class="title font-weight-bold pl-4">{{ token.name }} ({{ token.symbol }})</v-card-title>
-      <v-divider class="lineGrey" />
-      <v-list>
-        <v-list-tile v-for="(item, index) in details" :key="index">
-          <v-layout align-center justify-start row fill-height class="pa-3">
-            <v-flex xs4 sm3 md2>
-              <v-list-tile-title class="info--text font-weight-medium" v-html="item.title"></v-list-tile-title>
-            </v-flex>
-            <v-flex xs7 sm8 md9>
-              <v-list-tile-title v-if="!item.link" class="text-muted text-truncate" v-html="item.detail"></v-list-tile-title>
-              <router-link v-else :to="item.link">
-                <v-list-tile-title class="text-truncate" v-html="item.detail"></v-list-tile-title>
-              </router-link>
-            </v-flex>
-          </v-layout>
-        </v-list-tile>
-      </v-list>
-    </div>
-    <!-- End Loaded -->
-
-    <!-- Not Loaded -->
-    <div v-else>
-      <app-info-load v-if="isLoading" />
-      <v-layout v-else column align-center justify-center ma-3>
-        <v-card-title class="primary--text text-xs-center body-2 pb-4">Loading...</v-card-title>
-        <v-icon class="fa fa-spinner fa-pulse fa-4x fa-fw primary--text" large />
-      </v-layout>
-    </div>
-    <!-- End Not Loaded -->
+    <v-card-title class="title font-weight-bold pl-4">{{ token.name }} ({{ token.symbol }})</v-card-title>
+    <v-divider class="lineGrey" />
+    <v-list>
+      <v-list-tile v-for="(item, index) in details" :key="index">
+        <v-layout align-center justify-start row fill-height class="pa-3">
+          <v-flex xs4 sm3 md2>
+            <v-list-tile-title class="info--text font-weight-medium" v-html="item.title"></v-list-tile-title>
+          </v-flex>
+          <v-flex xs7 sm8 md9>
+            <v-list-tile-title v-if="!item.link" class="text-muted text-truncate" v-html="item.detail"></v-list-tile-title>
+            <router-link v-else :to="item.link">
+              <v-list-tile-title class="text-truncate" v-html="item.detail"></v-list-tile-title>
+            </router-link>
+          </v-flex>
+        </v-layout>
+      </v-list-tile>
+    </v-list>
+  </div>
   </v-card>
 </template>
 
@@ -50,7 +35,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
     AppListTitle
   }
 })
-export default class TableTokens extends Vue {
+export default class DetailsListTokens extends Vue {
   @Prop(Object) contract: Object<any>
   @Prop(Object) token: Object<any>
 
@@ -63,40 +48,10 @@ export default class TableTokens extends Vue {
   */
 
   /**
-   * Determines whether or not the contract object has been loaded/populated
-   *
-   * @return {Boolean}
-   */
-  get isContractLoading(): boolean {
-    return Object.keys(this.contract).length === 0
-  }
-
-  /**
-   * Determines whether or not the token object has been loaded/populated
-   *
-   * @return {Boolean}
-   */
-  get isTokenLoading(): boolean {
-    return Object.keys(this.token).length === 0
-  }
-
-  /**
-   * Determines whether or not all of the required objects have been loaded/populated
-   *
-   * @return {Boolean}
-   */
-  get isLoading(): boolean {
-    return this.isContractLoading || this.isTokenLoading
-  }
-
-  /**
    * Properly format the Details[] array for the details table
    */
   get details(): Detail[] {
-    if (this.isLoading) {
-      return []
-    }
-    const icons = {
+     const icons = {
       blog: 'fab fa-ethereum',
       chat: 'fab fa-ethereum',
       facebook: 'fab fa-facebook',
@@ -118,20 +73,29 @@ export default class TableTokens extends Vue {
         link: `/address/${this.token.address}`
       },
       {
-        title: this.$i18n.t('title.decimals'),
-        detail: this.contract.metadata.decimals
+        title: this.$i18n.t('token.owner'),
+        detail: this.token.owner,
+        link: `/address/${this.token.owner}`
+      },
+      {
+        title: this.$i18n.t('title.supply'),
+        detail: this.token.totalSupply
+      },
+      {
+        title: this.$i18n.t('title.price'),
+        detail: `$${this.token.price.rate} (${this.token.price.diff}%)`
       },
       {
         title: this.$i18n.t('title.marketCap'),
         detail: `$${this.token.price.marketCapUsd}`
       },
       {
-        title: this.$i18n.t('title.supply'),
-        detail: this.token.availableSupply
+        title: this.$i18n.t('token.totalHold'),
+        detail: `${this.token.holdersCount}`
       },
       {
-        title: this.$i18n.t('title.price'),
-        detail: `$${this.token.price.rate} (${this.token.price.diff}%)`
+        title: this.$i18n.t('title.decimals'),
+        detail: this.contract.metadata.decimals
       },
       {
         title: this.$i18n.t('title.website'),

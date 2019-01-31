@@ -1,6 +1,39 @@
 <template>
-  <v-container grid-list-lg class="mb-0">
-    <details-list-tokens :contract="contract" :token="token"></details-list-tokens>
+  <v-container grid-list-lg>
+
+    <!--
+    =====================================================================================
+      HOLDER DETAILS
+    =====================================================================================
+    -->
+
+    <div v-if="isHolder">
+      <h1>TODO</h1>
+    </div>
+
+    <!--
+      =====================================================================================
+        BASIC DETAILS
+      =====================================================================================
+    -->
+    <div v-else>
+      <!-- Loaded -->
+      <div v-if="!isLoading">
+        <app-bread-crumbs :new-items="crumbs" v-if="!isLoading" />
+        <details-list-tokens :contract="contract" :token="token" class="mb-5" />
+        <details-tabs-tokens :transfers="temporaryTokenTransfers" :holders="tokenHolders"/>
+      </div>
+      <!-- End Loaded -->
+      <!-- Not Loaded -->
+      <div v-else>
+        <v-layout column align-center justify-center ma-3>
+          <v-card-title class="primary--text text-xs-center body-2 pb-4">Loading...</v-card-title>
+          <v-icon class="fa fa-spinner fa-pulse fa-4x fa-fw primary--text" large />
+        </v-layout>
+      </div>
+      <!-- End Not Loaded -->
+     </div>
+
   </v-container>
 </template>
 
@@ -8,26 +41,29 @@
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppSocialLink from '@app/core/components/ui/AppSocialLink.vue'
 import DetailsListTokens from '@app/modules/tokens/components/DetailsListTokens.vue'
+import DetailsTabsTokens from '@app/modules/tokens/components/DetailsTabsTokens.vue'
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { Events } from 'ethvm-common'
 import { Detail } from '@app/core/components/props'
-import { Token } from '@app/core/models'
+import { Token, Tx } from '@app/core/models'
 
 const MAX_ITEMS = 10
 
 @Component({
   components: {
     AppBreadCrumbs,
-    DetailsListTokens
+    DetailsListTokens,
+    DetailsTabsTokens
   }
 })
 export default class PageDetailsToken extends Vue {
   @Prop({ type: String }) addressRef!: string
   address = ''
   contract = {}
-  tokens = {}
   token = {}
   tokenTransfers = []
+  tokenHolders = []
+  isHolder = false
 
   /*
   ===================================================================================
@@ -35,19 +71,22 @@ export default class PageDetailsToken extends Vue {
   ===================================================================================
   */
 
+  /**
+   * TODO: Promise.all()
+   */
   async mounted() {
+    const query = this.$route.query
+
+    if (query.holder) {
+      this.isHolder = true
+    }
+
     try {
       this.address = this.addressRef.replace('0x', '')
       this.contract = await this.fetchContractDetails()
-      this.tokens = await this.fetchTokens()
-      this.token = this.tokens.find(obj => {
-        return obj.address === this.addressRef
-      })
-      console.log('eyy')
+      this.token = await this.fetchTokenDetails()
       this.tokenTransfers = await this.fetchAddressTokensTransfers()
-      // console.log('t', this.token)
-      // console.log(this.contract)
-      console.log('t', this.tokenTransfers)
+      this.tokenHolders = await this.fetchTopTokenHolders()
     } catch (e) {
       console.log('e', e)
       // handle error accordingly
@@ -62,6 +101,7 @@ export default class PageDetailsToken extends Vue {
 
   /**
    * Retrieve contract details for a the given token contract address.
+   * 
    * @return {Object} - Contract details and metadata
    */
   fetchContractDetails() {
@@ -77,32 +117,33 @@ export default class PageDetailsToken extends Vue {
   }
 
   /**
+   * Retrieve array of token transfers for a given token contract address.
+   *
+   * @return {Array} - Array of token transfers
    */
-  fetchAddressTokensTransfers(page = 0, limit = MAX_ITEMS, filter = 'all') {
+  fetchAddressTokensTransfers(page = 0, limit = MAX_ITEMS) {
     return new Promise((resolve, reject) => {
-      this.$socket.emit(Events.getAddressTokensTransfers, { address: this.addressRef, filter: filter, limit: limit, page: page }, (err, result) => (err ? reject(err) : resolve(result)))
-      // return this.$api.getAddressTokensTransfers(this.addressRef, filter, limit, page)
-      //   .then(result => {
-      //     resolve(result)
-      //   })
-      //   .catch(e => {
-      //     console.log('dsdsd', e)
-      //     reject(e)
-      //   })
+      return this.$api.getAddressTokenTransfers(this.addressRef, limit, page)
+        .then(result => {
+          resolve(result)
+        })
+        .catch(e => {
+          reject(e)
+        })
     })
   }
 
   /**
-   * GET and return a JSON array of ETH-based tokens
+   * GET and return a JSON details object for a particular token address
    *
-   * @return {Array} - Array of ETH Tokens.
+   * @return {Array} - Token details
    */
-  fetchTokens() {
+  fetchTokenDetails() {
     return new Promise((resolve, reject) => {
       this.$http
-        .get('http://api.ethplorer.io/getTop?apiKey=freekey&criteria=cap')
+        .get(`http://api.ethplorer.io/getTokenInfo/${this.addressRef}?apiKey=freekey&additional=image`)
         .then(response => {
-          resolve(response.data.tokens)
+          resolve(response.data)
         })
         .catch(err => {
           reject(err)
@@ -110,18 +151,111 @@ export default class PageDetailsToken extends Vue {
     })
   }
 
+  /**
+   * GET and return a JSON array of top holders for a particular token address
+   *
+   * @return {Array} - Array of holders
+   */
+  fetchTopTokenHolders() {
+    return new Promise((resolve, reject) => {
+      this.$http
+        .get(`http://api.ethplorer.io/getTopTokenHolders/${this.addressRef}?apiKey=freekey`)
+        .then(response => {
+          resolve(response.data.holders)
+        })
+        .catch(err => {
+          reject(err)
+        })
+    })
+  }
+  
+
   /*
   ===================================================================================
     Computed Values
   ===================================================================================
   */
+ 
+  /**
+   * Use txs in Vuex until api returns valid data.
+   * 
+   * @return {Tx[]} - Array of recent transactions
+   */
+  get temporaryTokenTransfers(): Tx[] {
+    return this.$store.getters.txs
+  }
+
+  /**
+   * Returns breadcrumbs entry for this particular view.
+   * Required for AppBreadCrumbs
+   *
+   * @return {Array} - Breadcrumb entry. See description.
+   */
+  get crumbs() {
+    return [
+      {
+        text: this.$i18n.t('title.tokens'),
+        link: '/tokens',
+        disabled: false
+      },
+      {
+        text: this.token.symbol,
+        disabled: false
+      }
+    ]
+  }
+
+  /**
+   * Determines whether or not the contract object has been loaded/populated
+   *
+   * @return {Boolean}
+   */
+  get isContractLoading(): boolean {
+    return Object.keys(this.contract).length === 0
+  }
+
+  /**
+   * Determines whether or not the token object has been loaded/populated
+   *
+   * @return {Boolean}
+   */
+  get isTokenLoading(): boolean {
+    return Object.keys(this.token).length === 0
+  }
+
+  /**
+   * Determines whether or not the transfers object has been loaded/populated
+   *
+   * @return {Boolean}
+   */
+  get isTransfersLoading(): boolean {
+    return this.temporaryTokenTransfers.length === 0
+  }
+
+  /**
+   * Determines whether or not the holders object has been loaded/populated
+   *
+   * @return {Boolean}
+   */
+  get isHoldersLoading(): boolean {
+    return this.tokenHolders.length === 0
+  }
+
+  /**
+   * Determines whether or not all of the required objects have been loaded/populated
+   *
+   * @return {Boolean}
+   */
+  get isLoading(): boolean {
+    return this.isContractLoading || this.isTokenLoading || this.isTransfersLoading || this.isHoldersLoading
+  }
 
   /*
   ===================================================================================
     Old
   ===================================================================================
   */
-
+  
   // // Methods:
   // setDetails(token: Token) {
   //   this.details = [
