@@ -32,6 +32,8 @@ RUN tar -xvf kafka-streams.tar && \
   chmod +x /usr/bin/dumb-init && \
   rm -rf kafka-streams.tar
 
+VOLUME ["/tmp/kafka-streams"]
+
 # Define entry
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
