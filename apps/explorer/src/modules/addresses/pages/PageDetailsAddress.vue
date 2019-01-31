@@ -65,8 +65,6 @@
   </v-container>
 </template>
 
-// TODO: Finish proper implementation of Table-Address-Txs or reuse from Txs our Table-Txs
-
 <script lang="ts">
 import { Block, EthValue, Tx, PendingTx } from '@app/core/models'
 import { Events, Contract } from 'ethvm-common'
@@ -165,13 +163,12 @@ export default class PageDetailsAddress extends Vue {
 
           Promise.all(promises)
             .then((res: any[]) => {
-              // Address Metadata
-              const addressMetadata = res[0] || {}
-              this.account.isCreator = addressMetadata.isContractCreator || false
-              this.account.isMiner = addressMetadata.isMiner || false
-              this.account.totalTxs = addressMetadata.totalTxCount || 0
-              this.account.toTxCount = addressMetadata.toTxCount || 0
-              this.account.fromTxCount = addressMetadata.fromTxCount || 0
+              const metadata = res[0] || {}
+              this.account.isCreator = metadata.isContractCreator || false
+              this.account.isMiner = metadata.isMiner || false
+              this.account.totalTxs = metadata.totalTxCount || 0
+              this.account.toTxCount = metadata.toTxCount || 0
+              this.account.fromTxCount = metadata.fromTxCount || 0
               this.account.balance = res[1] ? new EthValue(res[1].amount) : new EthValue(0)
               this.account.type = res[2] ? CONTRACT_DETAIL_TYPE : ADDRESS_DETAIL_TYPE
               this.account.exchangeRate.USD = res[3].price
@@ -210,10 +207,7 @@ export default class PageDetailsAddress extends Vue {
               this.minerBlocksLoading = false
 
               // Contract Creator
-              const rawContractCreated = res[3] || []
-              const contractsCreated = []
-              contractsCreated.forEach(raw => rawContractCreated.unshift(raw))
-              this.account.contracts = contractsCreated
+              this.account.contracts = res[3] || []
 
               this.sm.transition('load-token-complementary-info')
             })
@@ -229,7 +223,6 @@ export default class PageDetailsAddress extends Vue {
 
           Promise.all(promises)
             .then((res: any[]) => {
-              // Tokens
               this.account.tokens = res[0] || []
               this.account.tokensOwned = this.account.tokens.length
               this.tokensLoading = false
@@ -265,15 +258,15 @@ export default class PageDetailsAddress extends Vue {
 
   // Method:
   fetchTxs(page = this.txsPage, limit = MAX_ITEMS, filter = this.txsFilter): Promise<Tx[]> {
-    return this.$api.getTxsOfAddress(this.addressRef, filter, limit, page).then(raw => raw.map(rawTx => new Tx(rawTx)))
+    return this.$api.getTxsOfAddress(this.addressRef, filter, limit, page)
   }
 
   fetchPendingTxs(page = 0, limit = MAX_ITEMS, filter = 'all'): Promise<PendingTx[]> {
-    return this.$api.getPendingTxsOfAddress(this.addressRef, filter, limit, page).then(raw => raw.map(rawPTx => new PendingTx(rawPTx)))
+    return this.$api.getPendingTxsOfAddress(this.addressRef, filter, limit, page)
   }
 
   fetchMinedBlocks(page = 0, limit = MAX_ITEMS): Promise<Block[]> {
-    return this.$api.getBlocksMinedOfAddress(this.addressRef, limit, page).then(raw => raw.map(rawBlock => new Block(rawBlock)))
+    return this.$api.getBlocksMinedOfAddress(this.addressRef, limit, page)
   }
 
   fetchContractsCreated(page = 0, limit = MAX_ITEMS): Promise<Contract[]> {
@@ -313,14 +306,13 @@ export default class PageDetailsAddress extends Vue {
 
   // Computed
   get totalFilter() {
-    if (this.txsFilter === 'all') {
-      return this.account.totalTxs
-    }
-    if (this.txsFilter === 'in') {
-      return this.account.toTxCount
-    }
-    if (this.txsFilter === 'out') {
-      return this.account.fromTxCount
+    switch (this.txsFilter) {
+      case 'all':
+        return this.account.totalTxs
+      case 'in':
+        return this.account.toTxCount
+      case 'out':
+        return this.account.fromTxCount
     }
   }
 
@@ -351,6 +343,7 @@ export default class PageDetailsAddress extends Vue {
         isActive: false
       }
     ]
+
     if (this.account.isMiner) {
       const newTab = {
         id: '3',
@@ -368,6 +361,7 @@ export default class PageDetailsAddress extends Vue {
       }
       tabs.push(newTab)
     }
+
     return tabs
   }
 }

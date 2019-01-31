@@ -24,19 +24,12 @@ const MAX_ITEMS = 50
 export default class PageUncles extends Vue {
   // Lifecycle
   created() {
-    this.$socket.emit(
-      Events.getUncles,
-      {
-        limit: 100,
-        page: 0
-      },
-      (err, uncles) => {
-        this.$store.commit(Events.NEW_UNCLE, uncles)
-        if (uncles && uncles.length > 0) {
-          this.$eventHub.$emit(Events.NEW_UNCLE)
-        }
+    this.$api.getUncles(MAX_ITEMS, 0).then(uncles => {
+      this.$store.commit(Events.NEW_UNCLE, uncles)
+      if (uncles && uncles.length > 0) {
+        this.$eventHub.$emit(Events.NEW_UNCLE)
       }
-    )
+    })
   }
 
   // Computed
