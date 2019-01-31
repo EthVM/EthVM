@@ -37,7 +37,7 @@
       </v-layout>
     </v-card>
     <!-- End Table Header -->
-    <app-error-no-data v-if="error" />
+    <app-error v-if="error" :serverError="error" />
     <div v-else>
       <app-info-load v-if="loading" />
       <v-card v-else flat id="scroll-target" :style="getStyle" class="scroll-y pt-0 pb-0">
@@ -57,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import AppErrorNoData from '@app/core/components/ui/AppErrorNoData.vue'
+import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import TableBlocksRow from '@app/modules/blocks/components/TableBlocksRow.vue'
@@ -67,7 +67,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({
   components: {
-    AppErrorNoData,
+    AppError,
     AppFootnotes,
     AppInfoLoad,
     TableBlocksRow

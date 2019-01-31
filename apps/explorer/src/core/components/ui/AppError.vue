@@ -8,7 +8,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component
-export default class AppErrorNoData extends Vue {
+export default class AppError extends Vue {
   @Prop(String) pageType!: string
   @Prop(String) reference!: string
   @Prop({type: Boolean, default: false}) serverError!: boolean

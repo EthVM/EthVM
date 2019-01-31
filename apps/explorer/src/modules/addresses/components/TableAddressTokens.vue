@@ -32,7 +32,7 @@
       </v-layout>
     </v-card>
     <!-- End Table Header -->
-    <app-error-no-data v-if="error"></app-error-no-data>
+    <app-error v-if="error" :serverError="error"></app-error>
     <!-- Tokens List -->
     <div v-else>
       <app-info-load v-if="loading"></app-info-load>
@@ -47,7 +47,7 @@
 </template>
 
 <script lang="ts">
-import AppErrorNoData from '@app/core/components/ui/AppErrorNoData.vue'
+import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import TableAddressTokensRow from '@app/modules/addresses/components/TableAddressTokensRow.vue'
 import BN from 'bignumber.js'
@@ -56,7 +56,7 @@ import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 
 @Component({
   components: {
-    AppErrorNoData,
+    AppError,
     AppInfoLoad,
     TableAddressTokensRow
   }
