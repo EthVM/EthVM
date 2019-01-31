@@ -47,35 +47,21 @@ export default class PageHome extends Vue {
 
   // Lifecycle
   created() {
-    this.$socket.emit(
-      Events.getBlocks,
-      {
-        limit: MAX_ITEMS,
-        page: 0
-      },
-      (err, blocks) => {
-        this.$store.commit(Events.NEW_BLOCK, blocks)
-        if (blocks && blocks.length > 0) {
-          this.$eventHub.$emit(Events.pastBlocksR)
-          this.$eventHub.$emit(Events.NEW_BLOCK, new Block(blocks[0]))
-        }
+    this.$api.getBlocks(MAX_ITEMS, 0).then(blocks => {
+      this.$store.commit(Events.NEW_BLOCK, blocks)
+      if (blocks && blocks.length > 0) {
+        this.$eventHub.$emit(Events.pastBlocksR)
+        this.$eventHub.$emit(Events.NEW_BLOCK, new Block(blocks[0]))
       }
-    )
+    })
 
-    this.$socket.emit(
-      Events.getTxs,
-      {
-        limit: MAX_ITEMS,
-        page: 0
-      },
-      (err, txs) => {
-        this.$store.commit(Events.NEW_TX, txs)
-        if (txs && txs.length > 0) {
-          this.$eventHub.$emit(Events.pastTxsR)
-          this.$eventHub.$emit(Events.NEW_TX, new Tx(txs[0]))
-        }
+    this.$api.getTxs(MAX_ITEMS, 0).then(txs => {
+      this.$store.commit(Events.NEW_TX, txs)
+      if (txs && txs.length > 0) {
+        this.$eventHub.$emit(Events.pastTxsR)
+        this.$eventHub.$emit(Events.NEW_TX, new Tx(txs[0]))
       }
-    )
+    })
   }
 
   /* Computed: */

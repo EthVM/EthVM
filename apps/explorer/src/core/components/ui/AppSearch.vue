@@ -59,42 +59,34 @@ export default class AppSearch extends Vue {
 
   // Methods
   search() {
-    this.$socket.emit(
-      Events.search,
-      {
-        hash: this.searchInput
-      },
-      (error, result) => {
-        if (result) {
-          switch (result.type) {
-            case 0:
-              {
-                this.$router.push({
-                  path: '/tx/0x' + this.searchInput
-                })
-              }
-              break
-            case 1:
-              {
-                this.$router.push({
-                  path: '/address/0x' + this.searchInput
-                })
-              }
-              break
-            case 2:
-              {
-                this.$router.push({
-                  path: '/block/0x' + this.searchInput
-                })
-              }
-              break
-            case 3: {
-              // search not found mess
-            }
+    this.$api.search(this.searchInput).then(res => {
+      switch (result.type) {
+        case 0:
+          {
+            this.$router.push({
+              path: '/tx/0x' + this.searchInput
+            })
           }
+          break
+        case 1:
+          {
+            this.$router.push({
+              path: '/address/0x' + this.searchInput
+            })
+          }
+          break
+        case 2:
+          {
+            this.$router.push({
+              path: '/block/0x' + this.searchInput
+            })
+          }
+          break
+        case 3: {
+          // search not found mess
         }
       }
-    )
+    })
   }
 }
 </script>

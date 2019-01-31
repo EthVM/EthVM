@@ -1,5 +1,6 @@
 import { EthvmApi } from '@app/core/api'
-import { AddressBalance, AddressMetadata, Block, Contract, Events, PendingTx, Quote, Statistic, TokenTransfer, Tx, Token, Uncle } from 'ethvm-common'
+import { Block, PendingTx, Tx, Uncle } from '@app/core/models'
+import { AddressBalance, AddressMetadata, Contract, Events, Quote, Statistic, Token, TokenTransfer } from 'ethvm-common'
 
 export class EthvmSocketIoApi implements EthvmApi {
   constructor(private readonly io: SocketIOClient.Socket) {}
@@ -8,23 +9,23 @@ export class EthvmSocketIoApi implements EthvmApi {
   // Address
   // ------------------------------------------------------------------------------------
 
-  getAddressBalance(address: string): Promise<AddressBalance | null> {
+  public getAddressBalance(address: string): Promise<AddressBalance | null> {
     return this.promisify(Events.getAddressBalance, { address })
   }
 
-  getAddressMetadata(address: string): Promise<AddressMetadata | null> {
+  public getAddressMetadata(address: string): Promise<AddressMetadata | null> {
     return this.promisify(Events.getAddressMetadata, { address })
   }
 
-  getAddressAllTokensOwned(address: string): Promise<Token[]> {
+  public getAddressAllTokensOwned(address: string): Promise<Token[]> {
     return this.promisify(Events.getAddressAllTokensOwned, { address })
   }
 
-  getAddressAmountTokensOwned(address: string): Promise<number> {
+  public getAddressAmountTokensOwned(address: string): Promise<number> {
     return this.promisify(Events.getAddressAmountTokensOwned, { address })
   }
 
-  getAddressTokensTransfers(address: string, filter: string = 'all', limit: number = 100, page: number = 0): Promise<TokenTransfer[]> {
+  public getAddressTokensTransfers(address: string, filter: string = 'all', limit: number = 100, page: number = 0): Promise<TokenTransfer[]> {
     return this.promisify(Events.getAddressTokenTransfers, { address, filter, limit, page })
   }
 
@@ -32,23 +33,23 @@ export class EthvmSocketIoApi implements EthvmApi {
   // Blocks
   // ------------------------------------------------------------------------------------
 
-  getBlock(hash: string): Promise<Block | null> {
-    return this.promisify(Events.getBlock, { hash })
+  public getBlock(hash: string): Promise<Block | null> {
+    return this.promisify(Events.getBlock, { hash }).then(raw => (raw !== null ? new Block(raw) : null))
   }
 
-  getBlocks(limit: number = 100, page: number = 0): Promise<Block[]> {
-    return this.promisify(Events.getBlocks, { limit, page })
+  public getBlocks(limit: number = 100, page: number = 0): Promise<Block[]> {
+    return this.promisify(Events.getBlocks, { limit, page }).then(raw => raw.map(rawBlock => new Block(rawBlock)))
   }
 
-  getBlockByNumber(no: number): Promise<Block | null> {
-    return this.promisify(Events.getBlockByNumber, { no })
+  public getBlockByNumber(no: number): Promise<Block | null> {
+    return this.promisify(Events.getBlockByNumber, { no }).then(raw => (raw !== null ? new Block(raw) : null))
   }
 
-  getBlocksMinedOfAddress(address: string, limit: number = 100, page: number = 0): Promise<Block[]> {
-    return this.promisify(Events.getBlocksMined, { address, limit, page })
+  public getBlocksMinedOfAddress(address: string, limit: number = 100, page: number = 0): Promise<Block[]> {
+    return this.promisify(Events.getBlocksMined, { address, limit, page }).then(raw => raw.map(rawBlock => new Block(rawBlock)))
   }
 
-  getTotalNumberOfBlocks(): Promise<number> {
+  public getTotalNumberOfBlocks(): Promise<number> {
     return this.promisify(Events.getTotalNumberOfBlocks, {})
   }
 
@@ -56,11 +57,11 @@ export class EthvmSocketIoApi implements EthvmApi {
   // Contracts
   // ------------------------------------------------------------------------------------
 
-  getContract(address: string): Promise<Contract | null> {
+  public getContract(address: string): Promise<Contract | null> {
     return this.promisify(Events.getContract, { address })
   }
 
-  getContractsCreatedBy(address: string): Promise<Contract[]> {
+  public getContractsCreatedBy(address: string): Promise<Contract[]> {
     return this.promisify(Events.getContractsCreatedBy, { address })
   }
 
@@ -68,7 +69,7 @@ export class EthvmSocketIoApi implements EthvmApi {
   // Exchanges
   // ------------------------------------------------------------------------------------
 
-  getExchangeRateQuote(symbol: string, to: string): Promise<Quote> {
+  public getExchangeRateQuote(symbol: string, to: string): Promise<Quote> {
     return this.promisify(Events.getExchangeRates, { symbol, to })
   }
 
@@ -76,19 +77,19 @@ export class EthvmSocketIoApi implements EthvmApi {
   // Pending Txs
   // ------------------------------------------------------------------------------------
 
-  getPendingTxs(limit: number = 100, page: number = 0): Promise<PendingTx[]> {
-    return this.promisify(Events.getPendingTxs, { limit, page })
+  public getPendingTxs(limit: number = 100, page: number = 0): Promise<PendingTx[]> {
+    return this.promisify(Events.getPendingTxs, { limit, page }).then(raw => raw.map(rawPTx => new PendingTx(rawPTx)))
   }
 
-  getPendingTxsOfAddress(address: string, filter = 'all', limit: number = 100, page: number = 0): Promise<PendingTx[]> {
-    return this.promisify(Events.getPendingTxsOfAddress, { address, filter, limit, page })
+  public getPendingTxsOfAddress(address: string, filter = 'all', limit: number = 100, page: number = 0): Promise<PendingTx[]> {
+    return this.promisify(Events.getPendingTxsOfAddress, { address, filter, limit, page }).then(raw => raw.map(rawPTx => new PendingTx(rawPTx)))
   }
 
-  getNumberOfPendingTxsOfAddress(address: string): Promise<number> {
+  public getNumberOfPendingTxsOfAddress(address: string): Promise<number> {
     return this.promisify(Events.getNumberOfPendingTxsOfAddress, { address })
   }
 
-  getTotalNumberOfPendingTxs(): Promise<number> {
+  public getTotalNumberOfPendingTxs(): Promise<number> {
     return this.promisify(Events.getTotalNumberOfPendingTxs, {})
   }
 
@@ -96,35 +97,35 @@ export class EthvmSocketIoApi implements EthvmApi {
   // Txs
   // ------------------------------------------------------------------------------------
 
-  getTx(hash: string): Promise<Tx | null> {
-    return this.promisify(Events.getTx, { hash })
+  public getTx(hash: string): Promise<Tx | null> {
+    return this.promisify(Events.getTx, { hash }).then(raw => (raw !== null ? new Tx(raw) : null))
   }
 
-  getTxs(limit: number = 100, page: number = 0): Promise<Tx[]> {
-    return this.promisify(Events.getTxs, { limit, page })
+  public getTxs(limit: number = 100, page: number = 0): Promise<Tx[]> {
+    return this.promisify(Events.getTxs, { limit, page }).then(raw => raw.map(rawTx => new Tx(rawTx)))
   }
 
-  getTxsOfBlock(hash: string): Promise<Tx[]> {
-    return this.promisify(Events.getBlockTxs, { hash })
+  public getTxsOfBlock(hash: string): Promise<Tx[]> {
+    return this.promisify(Events.getBlockTxs, { hash }).then(raw => raw.map(rawTx => new Tx(rawTx)))
   }
 
-  getTxsOfAddress(address: string, filter: string = 'all', limit: number = 100, page: number = 0): Promise<Tx[]> {
-    return this.promisify(Events.getAddressTxs, { address, filter, limit, page })
+  public getTxsOfAddress(address: string, filter: string = 'all', limit: number = 100, page: number = 0): Promise<Tx[]> {
+    return this.promisify(Events.getAddressTxs, { address, filter, limit, page }).then(raw => raw.map(rawTx => new Tx(rawTx)))
   }
 
   // ------------------------------------------------------------------------------------
   // Uncles
   // ------------------------------------------------------------------------------------
 
-  getUncles(limit: number = 100, page: number = 0): Promise<Uncle[]> {
-    return this.promisify(Events.getUncles, { limit, page })
+  public getUncles(limit: number = 100, page: number = 0): Promise<Uncle[]> {
+    return this.promisify(Events.getUncles, { limit, page }).then(raw => raw.map(rawUncle => new Uncle(rawUncle)))
   }
 
-  getUncle(hash: string): Promise<Uncle | null> {
-    return this.promisify(Events.getUncle, { hash })
+  public getUncle(hash: string): Promise<Uncle | null> {
+    return this.promisify(Events.getUncle, { hash }).then(raw => (raw !== null ? new Uncle(raw) : null))
   }
 
-  getTotalNumberOfUncles(): Promise<number> {
+  public getTotalNumberOfUncles(): Promise<number> {
     return this.promisify(Events.getTotalNumberOfUncles, {})
   }
 
@@ -132,47 +133,47 @@ export class EthvmSocketIoApi implements EthvmApi {
   // Statistics
   // ------------------------------------------------------------------------------------
 
-  getAverageBlockTimeStats(duration: string): Promise<Statistic[]> {
+  public getAverageBlockTimeStats(duration: string): Promise<Statistic[]> {
     return this.promisify(Events.getAverageBlockTimeStats, { duration })
   }
 
-  getAverageDifficultyStats(duration: string): Promise<Statistic[]> {
+  public getAverageDifficultyStats(duration: string): Promise<Statistic[]> {
     return this.promisify(Events.getAverageDifficultyStats, { duration })
   }
 
-  getAverageGasLimitStats(duration: string): Promise<Statistic[]> {
+  public getAverageGasLimitStats(duration: string): Promise<Statistic[]> {
     return this.promisify(Events.getAverageGasLimitStats, { duration })
   }
 
-  getAverageGasPriceStats(duration: string): Promise<Statistic[]> {
+  public getAverageGasPriceStats(duration: string): Promise<Statistic[]> {
     return this.promisify(Events.getAverageGasPriceStats, { duration })
   }
 
-  getAverageHashRateStats(duration: string): Promise<Statistic[]> {
+  public getAverageHashRateStats(duration: string): Promise<Statistic[]> {
     return this.promisify(Events.getAverageHashRateStats, { duration })
   }
 
-  getAverageMinerRewardsStats(duration: string): Promise<Statistic[]> {
+  public getAverageMinerRewardsStats(duration: string): Promise<Statistic[]> {
     return this.promisify(Events.getAverageMinerRewardsStats, { duration })
   }
 
-  getAverageTxFeeStats(duration: string): Promise<Statistic[]> {
+  public getAverageTxFeeStats(duration: string): Promise<Statistic[]> {
     return this.promisify(Events.getAverageTxFeeStats, { duration })
   }
 
-  getFailedTxStats(duration: string): Promise<Statistic[]> {
+  public getFailedTxStats(duration: string): Promise<Statistic[]> {
     return this.promisify(Events.getFailedTxStats, { duration })
   }
 
-  getSuccessfulTxStats(duration: string): Promise<Statistic[]> {
+  public getSuccessfulTxStats(duration: string): Promise<Statistic[]> {
     return this.promisify(Events.getSuccessfulTxStats, { duration })
   }
 
   // ------------------------------------------------------------------------------------
-  // Uncles
+  // Search
   // ------------------------------------------------------------------------------------
 
-  search(input: string): Promise<any> {
+  public search(input: string): Promise<any> {
     return this.promisify(Events.search, { hash: input })
   }
 

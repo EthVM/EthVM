@@ -86,16 +86,8 @@ export default class PageDetailsBlock extends Vue {
 
   // Methods:
   fetchBlock() {
-    const event = eth.isValidHash(this.blockRef) ? Events.getBlock : Events.getBlockByNumber
-    const payload = eth.isValidHash(this.blockRef) ? { hash: this.blockRef } : { number: Number(this.blockRef) }
-
-    this.$socket.emit(event, payload, (error, result) => {
-      if (error || !result) {
-        this.error = true
-        return
-      }
-      this.setBlockInfo(new Block(result))
-    })
+    const promise = eth.isValidHash(this.blockRef) ? this.$api.getBlock(this.blockRef) : this.$api.getBlockByNumber(Number(this.blockRef))
+    promise.then(block => this.setBlockInfo(block)).catch(err => (this.error = true))
   }
 
   setBlockInfo(block: Block) {
