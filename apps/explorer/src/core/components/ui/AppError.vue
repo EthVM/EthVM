@@ -16,15 +16,15 @@ export default class AppError extends Vue {
   //Computed:
   get messg(): string {
     console.log(this.reference)
-    return this.serverError ? this.$i18n.t('message.error').toString() : (this.$i18n.t('message.notValid') + this.types.address + ': ' + this.reference).toString()
+    return this.serverError ? this.$i18n.t('message.error').toString() : (this.$i18n.t('message.notValid') + this.types[this.pageType]+ ' ' + this.$i18n.t('common.hash').toLowerCase() + ' : ' + this.reference).toString()
   }
 
   get types(): Object {
     return {
       address: this.$i18n.t('title.address').toLowerCase(),
       token: this.$i18n.t('tableHeader.token').toLowerCase(),
-      block: this.$i18n.t('title.block').toLowerCase(),
-      txs: this.$i18n.t("kb.txs.term").toLowerCase()
+      block: this.$i18n.t('kb.block.term').toLowerCase(),
+      tx: this.$i18n.t('kb.txs.term').toLowerCase()
     }
   }
 
