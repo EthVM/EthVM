@@ -32,9 +32,9 @@
                     <v-card-text class="text-xs-left">{{ $t('about.twitter') }}.</v-card-text>
                   </button>
                 </v-flex>
-                <v-flex xs12 sm6 md3 >
+                <v-flex xs12 sm6 md3>
                   <button href="https://www.reddit.com/r/ethvm">
-                    <v-layout justify-start pl-3><v-icon class="primary--text pl-2 fab fa-reddit text-xs-left" large ></v-icon></v-layout>
+                    <v-layout justify-start pl-3><v-icon class="primary--text pl-2 fab fa-reddit text-xs-left" large></v-icon></v-layout>
                     <v-card-title class="title pb-1" href="https://www.reddit.com/r/ethvm">{{ $t('social.reddit') }}</v-card-title>
                     <v-card-text class="text-xs-left">{{ $t('about.reddit') }}</v-card-text>
                   </button>

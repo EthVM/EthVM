@@ -38,10 +38,10 @@
       <v-flex xs12>
         <v-layout row wrap align-end>
           <v-flex xs12 md4>
-            <v-layout  justify-start row class="pl-3 pb-1"><app-footnotes :footnotes="footnote"/></v-layout>
+            <v-layout justify-start row class="pl-3 pb-1"><app-footnotes :footnotes="footnote"/></v-layout>
           </v-flex>
           <v-flex xs12 md8>
-             <v-layout v-if="pages > 1" justify-end row class="pb-2"><v-pagination v-model="page" flat :length="pages" :total-visible="7"/></v-layout>
+            <v-layout v-if="pages > 1" justify-end row class="pb-2"><v-pagination v-model="page" flat :length="pages" :total-visible="7"/></v-layout>
           </v-flex>
         </v-layout>
       </v-flex>
@@ -71,14 +71,14 @@ const MAX_TXS = 10
 })
 export default class TableAddressTxs extends Vue {
   @Prop(String) address!: string
-  @Prop({type: Array, default: []}) txs!: Tx[]
+  @Prop({ type: Array, default: [] }) txs!: Tx[]
   @Prop({ type: Number, default: 0 }) totalTxs!: number
   @Prop({ type: Boolean, default: false }) isPending!: boolean
   @Prop({ type: Boolean, default: true }) loading!: boolean
 
   page = 1
   selected = 0
-  filter = ['all','in','out']
+  filter = ['all', 'in', 'out']
 
   /*Watch: */
   @Watch('selected')
@@ -89,7 +89,7 @@ export default class TableAddressTxs extends Vue {
 
   @Watch('page')
   onPageChanged(newVal: number, oldVal: number): void {
-    this.$emit('filter', this.filter[this.selected], (newVal-1))
+    this.$emit('filter', this.filter[this.selected], newVal - 1)
   }
 
   /* Computed: */

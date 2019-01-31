@@ -17,8 +17,6 @@ import PageTokens from '@app/modules/tokens/pages/PageTokens.vue'
 import PageKnowledgeBase from '@app/modules/other/pages/PageKnowledgeBase.vue'
 import PagePrivacyPolicy from '@app/modules/other/pages/PagePrivacyPolicy.vue'
 
-
-
 Vue.use(Router)
 
 export default new Router({

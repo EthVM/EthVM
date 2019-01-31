@@ -287,37 +287,39 @@ export default class PageDetailsAddress extends Vue {
   }
 
   updateTxs(): void {
-    this.fetchTxs().then((res) => {
-      this.account.txs = res
-      this.txsLoading = false
-      console.log(this.account.txs)
-    }, (err) => {
-      this.txsError = true
-    })
+    this.fetchTxs().then(
+      res => {
+        this.account.txs = res
+        this.txsLoading = false
+      },
+      err => {
+        this.txsError = true
+      }
+    )
   }
 
   //Watch
   @Watch('txsFilter')
   onTxsFilterChanged(newVal: number, oldVal: number): void {
-    if(newVal) {
+    if (newVal) {
       this.updateTxs()
     }
   }
 
   @Watch('txsPage')
   onTxsPageChanged(newVal: number, oldVal: number): void {
-      this.updateTxs()
+    this.updateTxs()
   }
 
   // Computed
   get totalFilter() {
-    if(this.txsFilter === 'all') {
-     return this.account.totalTxs
+    if (this.txsFilter === 'all') {
+      return this.account.totalTxs
     }
-    if(this.txsFilter === 'in') {
+    if (this.txsFilter === 'in') {
       return this.account.toTxCount
     }
-    if(this.txsFilter === 'out') {
+    if (this.txsFilter === 'out') {
       return this.account.fromTxCount
     }
   }
@@ -368,6 +370,5 @@ export default class PageDetailsAddress extends Vue {
     }
     return tabs
   }
-
 }
 </script>

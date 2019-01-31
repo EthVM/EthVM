@@ -6,7 +6,7 @@
         <v-card color="white" flat :class="{ 'pa-1': $vuetify.breakpoint.xsOnly, 'pa-3': $vuetify.breakpoint.smOnly, 'pa-5': $vuetify.breakpoint.mdAndUp }">
           <v-layout wrap grid-list-sm align-center column fill-height pa-2>
             <v-flex xs12 align-self-start>
-              <v-card-title class="display-1 font-weight-bold pb-1">{{$t('footer.privPolicy')}}</v-card-title>
+              <v-card-title class="display-1 font-weight-bold pb-1">{{ $t('footer.privPolicy') }}</v-card-title>
               <v-card-text>This is a Privacy Policy blah blah, waiting to get it</v-card-text>
             </v-flex>
           </v-layout>

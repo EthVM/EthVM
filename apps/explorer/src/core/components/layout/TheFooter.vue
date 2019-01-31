@@ -10,7 +10,7 @@
           <a href="/privacy_policy">
             <v-card-text class="pt-0 pb-3 black--text">{{ $t('footer.privPolicy') }}</v-card-text>
           </a>
-           <a href="/knowledge_base">
+          <a href="/knowledge_base">
             <v-card-text class="pt-0 pb-3 black--text">{{ $t('title.kb') }}</v-card-text>
           </a>
         </v-card>

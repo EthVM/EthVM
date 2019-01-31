@@ -130,15 +130,13 @@ export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
 
   // Computed
   get text(): string {
-    const mesg = [ this.$i18n.t('message.txAll'), this.$i18n.t('message.txIn'), this.$i18n.t('message.txOut') ]
+    const mesg = [this.$i18n.t('message.txAll'), this.$i18n.t('message.txIn'), this.$i18n.t('message.txOut')]
     const penMesg = [this.$i18n.t('message.txPen'), this.$i18n.t('message.txPenIn'), this.$i18n.t('message.txPenOut')]
     if (!this.type) {
       return mesg[this.filter]
     }
-    else {
-      return penMesg[this.filter]
-    }
-  }
 
+    return penMesg[this.filter]
+  }
 }
 </script>

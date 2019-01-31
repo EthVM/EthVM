@@ -9,9 +9,9 @@
               <v-card-title class="display-1 font-weight-bold pb-1">{{ $t('title.terms') }}</v-card-title>
             </v-flex>
             <v-flex xs12>
-               <v-layout v-for="term in terms" row wrap justify-start pa-2>
-                <v-card-title class="title pb-0">{{$t(term.term)}}</v-card-title>
-                <v-card-text class="pt-2">{{$t(term.def)}}</v-card-text>
+              <v-layout v-for="term in terms" row wrap justify-start pa-2 :key="$t(term.term)">
+                <v-card-title class="title pb-0">{{ $t(term.term) }}</v-card-title>
+                <v-card-text class="pt-2">{{ $t(term.def) }}</v-card-text>
               </v-layout>
             </v-flex>
           </v-layout>
