@@ -33,7 +33,7 @@
     {
       "id": "kafka-streams",
       "dockerfile": "${APPS_PATH}/processing/kafka-streams/Dockerfile",
-      "context": "${APPS_PATH}/processing/kafka-streams",
+      "context": "${APPS_PATH}/processing",
       "version": "${APPS_PATH}/processing/version.properties"
     },
     {
