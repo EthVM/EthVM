@@ -4,6 +4,6 @@ data class KafkaConfig(
   val bootstrapServers: String,
   val startingOffset: String,
   val transactionalId: String,
-  val schemaRegistryUrl: String
+  val schemaRegistryUrl: String,
   val streamsStateDir: String
 )
