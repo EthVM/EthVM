@@ -18,6 +18,9 @@ volumes:
   kafka-streams:
     external: true
 
+  mongodb:
+    external: true
+
 services:
 
   zookeeper:
@@ -162,9 +165,11 @@ services:
     networks:
       - backend
     volumes:
-      - kafka-streams:/tmp/kafka-streams
+      - kafka-streams:/var/lib/kafka-streams
     environment:
-      JAVA_OPTS: '-server -Xss8m -Xmx2G -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:+UseG1GC -XX:-OmitStackTraceInFastThrow -Dkafka.enabled=true -Dkafka.schemaRegistryUrl=http://kafka-schema-registry:8081 -Dkafka.bootstrapServers=kafka:9092'
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      KAFKA_SCHEMA_REGISTRY_URL: http://kafka-schema-registry:8081
+      KAFKA_STREAMS_STATE_DIR: /var/lib/kafka-streams
     deploy:
       resources:
         limits:
@@ -180,3 +185,86 @@ services:
       restart_policy:
         condition: on-failure
 
+  mongodb:
+    image: enkryptio/mongodb-dev:4.0
+    volumes:
+      - mongodb:/data/db
+    networks:
+      - backend
+    command: "mongod --bind_ip 0.0.0.0 --replSet rs0 --quiet --slowms 10000"
+    deploy:
+      resources:
+        limits:
+          cpus: '3.0'
+          memory: 6G
+        reservations:
+          cpus: '2.0'
+          memory: 4G
+      placement:
+        constraints:
+          - node.role == worker
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  mongodb-setup:
+    image: enkryptio/mongodb-ethvm-utils:0.2.0
+    depends_on:
+      - mongodb
+    networks:
+      - backend
+    command: "mongod --bind_ip 0.0.0.0 --replSet rs0 --quiet --slowms 10000"
+    environment:
+      MONGODB_URL: mongodb://mongodb/ethvm_development
+    deploy:
+      placement:
+        constraints:
+          - node.role == worker
+      replicas: 0
+      restart_policy:
+        condition: none
+
+  kafka-connect:
+    image: enkryptio/kafka-connect:0.3.0
+    depends_on:
+      - zookeeper
+      - kafka
+      - mongodb
+      - kafka-schema-registry
+    networks:
+      - backend
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: kafka:9092
+      CONNECT_REST_PORT: 8083
+      CONNECT_GROUP_ID: "kafka-connect-avro"
+      CONNECT_CONFIG_STORAGE_TOPIC: "kafka-connect-avro-config"
+      CONNECT_OFFSET_STORAGE_TOPIC: "kafka-connect-avro-offsets"
+      CONNECT_OFFSET_COMMIT_INTERVAL_MS: 1000
+      CONNECT_STATUS_STORAGE_TOPIC: "kafka-connect-avro-status"
+      CONNECT_KEY_CONVERTER: "io.confluent.connect.avro.AvroConverter"
+      CONNECT_VALUE_CONVERTER: "io.confluent.connect.avro.AvroConverter"
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: "http://kafka-schema-registry:8081"
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: "http://kafka-schema-registry:8081"
+      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_REST_ADVERTISED_HOST_NAME: "kafka-connect"
+      CONNECT_LOG4J_ROOT_LOGLEVEL: "INFO"
+      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR"
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/enkryptio
+    deploy:
+      resources:
+        limits:
+          cpus: '3.0'
+          memory: 6G
+        reservations:
+          cpus: '2.0'
+          memory: 4G
+      placement:
+        constraints:
+          - node.role == worker
+      replicas: 1
+      restart_policy:
+        condition: on-failure

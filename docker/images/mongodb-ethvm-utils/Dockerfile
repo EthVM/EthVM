@@ -10,4 +10,4 @@ RUN chmod +x /usr/bin/mongodb-ethvm-init.sh
 
 COPY mongodb-init.js /mongodb-init.js
 
-CMD ["mongodb-ethvm-init.sh"]
+ENTRYPOINT ["mongodb-ethvm-init.sh"]

@@ -20,9 +20,9 @@
     },
     {
       "id": "kafka-connect",
-      "dockerfile": "${DOCKER_IMAGES_PATH}/kafka-connect/Dockerfile",
-      "context": "${DOCKER_IMAGES_PATH}/kafka-connect/",
-      "version": "${DOCKER_IMAGES_PATH}/kafka-connect/version.properties"
+      "dockerfile": "${APPS_PATH}/processing/kafka-connect/Dockerfile",
+      "context": "${APPS_PATH}/processing",
+      "version": "${APPS_PATH}/processing/version.properties"
     },
     {
       "id": "kafka-ethvm-utils",
