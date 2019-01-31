@@ -1,4 +1,5 @@
-import { AddressBalance, AddressMetadata, Block, Contract, PendingTx, Quote, Statistic, TokenTransfer, Tx, Token, Uncle } from 'ethvm-common'
+import { Block, PendingTx, Tx, Uncle } from '@app/core/models'
+import { AddressBalance, AddressMetadata, Contract, Quote, Statistic, Token, TokenTransfer } from 'ethvm-common'
 
 export interface EthvmApi {
   // Address

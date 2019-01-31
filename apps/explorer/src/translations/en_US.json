@@ -33,7 +33,8 @@
     "decimals": "Decimals",
     "website": "Website",
     "support": "Support",
-    "supply": "Total Supply"
+    "supply": "Total Supply",
+    "terms": "Blockchain Terms"
   },
   "common": {
     "address": "Address",
@@ -280,5 +281,139 @@
   },
   "tokens": {
     "empty": "No tokens"
+  },
+  "kb":{
+    "acc": {
+      "term": "Account",
+      "def": "Entry on the blockchain ledger that contains data about the state of that account. In the case of a currency system, it's the information about funds available."
+    },
+    "addr": {
+      "term": "Address",
+      "def": "String of alphanumeric characters that represents a particular user's hashed public key. Addresses are used to send and receive transactions on the blockchain. The address points to an account."
+    },
+    "block": {
+      "term": "Block",
+      "def": "Package of data that holds a number of recent transactions and the previous block's (\"parent\" block) hash. Thus, every block points to a previous block, creating an immutable chain."
+    },
+    "blockchain": {
+      "term": "Blockchain",
+      "def": "Distributed ledger that records data in packages called blocks. The blocks are connected together using cryptographic technology, making them unchangeable after being added to the chain."
+    },
+    "casper": {
+      "term": "Casper",
+      "def": "Specific type of proof of stake consensus protocol based on security deposits placed by nodes to confirm blocks. Casper is the protocol that should go into effect when Ethereum blockchain transitions to proof of stake."
+    },
+      "consensus":  {
+      "term": "Consensus",
+      "def": "Agreement among the nodes of the decentralized network about the state of the network."
+    },
+    "dao": {
+      "term": "DAO",
+      "def": "Abbreviation for Decentralized Autonomous Organization – an organization that is run without direct human oversight, governed by a set of unalterable rules enforced through the blockchain."
+    },
+    "dapp": {
+      "term": "dApp",
+      "def": "Abbreviation for decentralized application. dApps are applications that are open-source, not controlled by any centralized entity, enabling direct interaction between users without a trusted third party."
+    },
+    "decentralization": {
+      "term": "Decentralization",
+      "def": "Redestribution of power and functions away from a central authority to eliminate third-party control and tampering."
+    },
+    "signature": {
+      "term": "Digital signature",
+      "def": "Algorithm which allows a user to produce a specific string of data using their private key. This string, along with the corresponding public key and the signed document, can be used to verify that the document was signed by the owner of the key and that it was not changed after signing."
+    },
+    "doubleSpend": {
+      "term": "Double spend",
+      "def": "Occurs when a user sends a transaction to purchase coins, and then creates another transaction to send the SAME coins to themselves. This requires creating two blocks at the same level, resulting in a deliberate blockchain fork. "
+    },
+    "encrypt": {
+      "term": "Encryption",
+      "def": "The process of turning plain text into ciphertext using a data \"key\". After encryption, ciphertext looks like a random sequnce of bits. The reverse process is decryption."
+    },
+    "ens": {
+      "term": "ENS",
+      "def": "Ethereum Name Service – registers plain text names that correspond to cryptographic wallet addresses, for greater security and ease of use."
+    },
+    "eth": {
+      "term": "Ether",
+      "def": "Cryptographic currency of the Ethereum blockchain, used to pay transaction fees (gas) on the network. The short code for Ether is ETH."
+    },
+    "ethreum": {
+      "term": "Ethereum",
+      "def": "Decentralized blockchain platform enabled with a software language for building applications and creating contracts. Ethereum is the network, Ether is the token."
+    },
+    "evm": {
+      "term": "EVM",
+      "def": "Ethereum Virtual Machine – the decentralized computing code at the core of the Ethereum platform. Each validating node has its own isolated implementation of EVM which allows it to achieve consensus."
+    },
+    "fork": {
+      "term": "Fork",
+      "def": "Accidental or deliberate creation of an alternative version of the blockchain by generating two blocks from the same parent block. This can result either in abandonment of one of the chains (through consensus) or both chains going forward operating independently."
+    },
+    "gas": {
+      "term": "Gas",
+      "def": "The fee for executing a transaction or contract on the Ethereum network, paid in ETH. For this reason, a user must have a small amount of ETH available in the account before sending any transactions."
+    },
+    "hash": {
+      "term": "Hash",
+      "def": "Function or algorithm by which a file is processed into a small piece of data that looks like random bytes. Importantly, the hash is unique but always the same for a specific document. However, changing even one character in the document will completely randomize the hash."
+    },
+    "messg": {
+      "term": "Message",
+      "def": "Data transfer mechanism used for communication between contracts."
+    },
+    "mining": {
+      "term": "Mining",
+      "def": "Computing process by which transactions are verified and new blocks are added to the blockchain. Verified blocks are rewarded with a certain amount of cryptocurrency and the block's transaction fees, which means that mining is also the way more cryptocurrency is \"created\"."
+    },
+    "nonce": {
+      "term": "Nonce",
+      "def": "Number Used Once – a string of data generated and used just once as unique identifier for a new block in the blockchain."
+    },
+    "ommer": {
+      "term": "Ommer",
+      "def": "Gender-neutral alternative to Uncle, used interchangeably in blockchain."
+    },
+    "oracle": {
+      "term": "Oracles",
+      "def": "Products that can bring real-world data onto the blockchain for execution of smart contracts that are dependent on outside conditions – such as game scores for sports betting."
+    },
+    "privKey":{
+      "term": "Private key",
+      "def": "Alphanumeric string associated with an account and known only by the owner of the account. Cryptographically paired with public key for executing transactions."
+    },
+    "pos": {
+      "term": "Proof of stake",
+      "def": "Low-cost, low-energy alternative to proof of work. Validation of new blocks is allocated to users that hold the most stake (the highest amount of Ether) in the network. The Ethereum blockchain is expected to transition to a proof of stake algorithm Casper in the near future."
+    },
+    "pow": {
+      "term": "Proof of work",
+      "def": "Consensus algorithm that depends on using a high amount of computing power and energy for mining new blocks. A validator node must solve complex mathematical problems and present the result as proof of that work in order to qualify for block validation. This is the current consensus algorithm for Ethereum."
+    },
+    "pubKey": {
+      "term": "Public key",
+      "def": "Alphanumeric string derived from private key and used publicly to provide other users with an address for sending transactions. "
+    },
+    "contract": {
+      "term": "Smart contract",
+      "def": "Computer protocol that digitally enforces contracts such that they are automatically executed on the blockchain when contract conditions are met. These conditions can require input from oracles."
+    },
+    "state": {
+      "term": "State",
+      "def": "All balances and data on the blockchain at a particular point in time."
+    },
+    "txs": {
+      "term": "Transaction",
+      "def": "Any action taking place on the blockchain. Usually, sending currency or tokens to another address; other examples include entering and executing smart contracts, registering domain names, fulfilling trade orders."
+    },
+    "uncle": {
+      "term": "Uncle",
+      "def": "Because miners may not be fully synchronized at all times, some blocks will be mined that are not on the longest chain. These end up being \"sibling\" blocks to the \"parent\" block which continues the blockchain. On Ethereum, uncle (or ommer) blocks are still rewarded, but at a lower rate."
+    },
+    "valid": {
+      "term": "Validators",
+      "def": "Nodes that make up a decentralized network and maintain consensus by validating new blocks broadcasted by miners. "
+    }
   }
 }
