@@ -23,7 +23,7 @@
     <v-card flat id="scroll-target" style="max-height: 800px" class="scroll-y pt-0 pb-0">
       <v-layout column fill-height v-scroll:#scroll-target class="pt-1" style="margin-right: 1px">
         <v-flex xs12>
-          <v-card v-if="total == 0" flat>
+          <v-card v-if="transactions.length == 0" flat>
             <v-card-text class="text-xs-center secondary--text">{{ text }}</v-card-text>
           </v-card>
           <v-card v-else v-for="tx in transactions" class="transparent pb-1" flat :key="tx.getHash()">
@@ -61,6 +61,7 @@
                 <v-layout
                   align-center
                   row
+                  pl-2
                   v-if="
                     !isShortValue(
                       tx
@@ -83,7 +84,7 @@
                     }}</span>
                   </v-tooltip>
                 </v-layout>
-                <p v-else :class="[!getType(tx) ? 'success--text mb-0' : 'error--text mb-0']">{{ tx.getValue().toEth() }}</p>
+                <p v-else :class="[!getType(tx) ? 'success--text mb-0 ' : 'error--text mb-0 ']">{{ tx.getValue().toEth() }}</p>
               </v-flex>
               <v-flex hidden-sm-and-down md2>
                 <p class="black--text text-truncate mb-0">{{ tx.getGasUsed().toNumber() }}</p>
@@ -113,7 +114,6 @@ export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
   @Prop({ type: String, required: true }) account!: string
   @Prop(Array) transactions!: any[]
   @Prop({ type: Number, default: 0 }) filter!: number
-  @Prop({ type: Number, default: 0 }) total!: number
   @Prop({ type: Boolean, default: false }) type!: boolean
 
   // Methods
@@ -130,20 +130,13 @@ export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
 
   // Computed
   get text(): string {
-    if (!this.isPending) {
-      if (this.filter === 0) {
-        return this.$i18n.t('message.txAll')
-      } else if (this.filter === 1) {
-        return this.$i18n.t('message.txIn')
-      }
-      return this.$i18n.t('message.txOut')
+    const mesg = [this.$i18n.t('message.txAll'), this.$i18n.t('message.txIn'), this.$i18n.t('message.txOut')]
+    const penMesg = [this.$i18n.t('message.txPen'), this.$i18n.t('message.txPenIn'), this.$i18n.t('message.txPenOut')]
+    if (!this.type) {
+      return mesg[this.filter]
     }
-    if (this.filter === '2') {
-      return this.$i18n.t('message.txPen')
-    } else if (this.filter === '1') {
-      return this.$i18n.t('message.txPenIn')
-    }
-    return this.$i18n.t('message.txPenOut')
+
+    return penMesg[this.filter]
   }
 }
 </script>

@@ -63,19 +63,10 @@ export default class PageDetailsTxs extends Vue {
 
   //Methods:
   fetchTx() {
-    this.$socket.emit(
-      Events.getTx,
-      {
-        hash: this.txRef
-      },
-      (error, data) => {
-        if (error || !data) {
-          this.error = true
-          return
-        }
-        this.setTxInfo(new Tx(data))
-      }
-    )
+    this.$api
+      .getTx(this.txRef)
+      .then(tx => this.setTxInfo(tx))
+      .catch(err => (this.error = true))
   }
 
   setTxInfo(tx: Tx) {

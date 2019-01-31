@@ -1,4 +1,5 @@
-import { AddressBalance, AddressMetadata, Block, Contract, PendingTx, Quote, Statistic, TokenTransfer, Tx, Token, Uncle } from 'ethvm-common'
+import { Block, PendingTx, Tx, Uncle } from '@app/core/models'
+import { AddressBalance, AddressMetadata, Contract, Quote, Statistic, Token, TokenTransfer } from 'ethvm-common'
 
 export interface EthvmApi {
   // Address
@@ -6,7 +7,8 @@ export interface EthvmApi {
   getAddressMetadata(address: string): Promise<AddressMetadata | null>
   getAddressAllTokensOwned(address: string): Promise<Token[]>
   getAddressAmountTokensOwned(address: string): Promise<number>
-  getAddressTokensTransfers(address: string, filter: string, limit: number, page: number): Promise<TokenTransfer[]>
+  getAddressTokenTransfers(address: string, limit: number, page: number): Promise<TokenTransfer[]>
+  getAddressTokenTransfersByHolder(address: string, holder: string, filter: string, limit: number, page: number): Promise<TokenTransfer[]>
 
   // Blocks
   getBlock(hash: string): Promise<Block | null>

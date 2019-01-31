@@ -23,19 +23,12 @@ import { Events } from 'ethvm-common'
 export default class PagePendingTxs extends Vue {
   // Lifecycle
   created() {
-    this.$socket.emit(
-      Events.getPendingTxs,
-      {
-        limit: 100,
-        page: 0
-      },
-      (err, pTxs) => {
-        this.$store.commit(Events.NEW_PENDING_TX, pTxs)
-        if (pTxs && pTxs.length > 0) {
-          this.$eventHub.$emit(Events.NEW_PENDING_TX)
-        }
+    this.$api.getPendingTxs(100, 0).then(pTxs => {
+      this.$store.commit(Events.NEW_PENDING_TX, pTxs)
+      if (pTxs && pTxs.length > 0) {
+        this.$eventHub.$emit(Events.NEW_PENDING_TX)
       }
-    )
+    })
   }
 
   // Computed

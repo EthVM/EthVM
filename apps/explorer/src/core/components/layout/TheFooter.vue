@@ -7,8 +7,12 @@
           <a href="/about">
             <v-card-text class="pt-0 pb-3 black--text">{{ $t('title.about') }}</v-card-text>
           </a>
-          <v-card-text class="pt-0 pb-3">{{ $t('footer.privPolicy') }}</v-card-text>
-          <v-card-text class="pt-0 pb-3">{{ $t('title.kb') }}</v-card-text>
+          <a href="/privacy_policy">
+            <v-card-text class="pt-0 pb-3 black--text">{{ $t('footer.privPolicy') }}</v-card-text>
+          </a>
+          <a href="/knowledge_base">
+            <v-card-text class="pt-0 pb-3 black--text">{{ $t('title.kb') }}</v-card-text>
+          </a>
         </v-card>
       </v-flex>
       <v-flex xs12 sm8 md6>
@@ -48,10 +52,10 @@
         <v-layout column justify-end fill-height>
           <v-flex xs12>
             <v-layout row justify-end pt-3>
-              <v-btn href="https://www.facebook.com/enKryptIO/" icon> <v-icon class="fab fa-facebook-f grey--text"></v-icon> </v-btn>
-              <v-btn href="https://twitter.com/enkryptio" icon> <v-icon class="fab fa-twitter grey--text"></v-icon> </v-btn>
+              <v-btn href="https://www.reddit.com/r/ethvm" icon> <v-icon class="fab fa-reddit grey--text"></v-icon> </v-btn>
+              <v-btn href="https://twitter.com/Eth_VM" icon> <v-icon class="fab fa-twitter grey--text"></v-icon> </v-btn>
               <v-btn href="https://github.com/enKryptIO" icon> <v-icon class="fab fa-github grey--text"></v-icon> </v-btn>
-              <v-btn href="https://github.com/enKryptIO" icon> <v-icon class="fab fa-medium-m grey--text"></v-icon> </v-btn>
+              <v-btn href="https://medium.com/@myetherwallet" icon> <v-icon class="fab fa-medium-m grey--text"></v-icon> </v-btn>
             </v-layout>
           </v-flex>
           <v-spacer></v-spacer>

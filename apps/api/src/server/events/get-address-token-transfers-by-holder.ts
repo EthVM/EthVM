@@ -1,10 +1,10 @@
 import { removePrefix } from '@app/server/core/utils'
 import { genericPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
-import { Events } from 'ethvm-common'
+import { Events, TokenTransfer } from 'ethvm-common'
 
-const getAddressAmountTokensOwned: SocketEvent = {
-  id: Events.getAddressAmountTokensOwned,
+const getAddressTokenTransfersByHolder: SocketEvent = {
+  id: Events.getAddressTokenTransfersByHolder,
 
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = genericPayloadValidator(payload) as boolean
@@ -14,8 +14,8 @@ const getAddressAmountTokensOwned: SocketEvent = {
     }
   },
 
-  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<number> =>
-    server.tokensService.getAddressAmountTokensOwned(removePrefix(payload.address))
+  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<TokenTransfer[]> =>
+    server.tokensService.getAddressTokenTransfersByHolder(removePrefix(payload.address), removePrefix(payload.holder), payload.filter, payload.limit, payload.page)
 }
 
-export default getAddressAmountTokensOwned
+export default getAddressTokenTransfersByHolder

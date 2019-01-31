@@ -35,17 +35,21 @@
           <!-- End Tx Input Filter -->
         </v-layout>
       </v-flex>
-      <v-flex d-flex xs12 sm8 md7>
-        <v-layout justify-start class="pl-3"><app-footnotes :footnotes="footnote"/></v-layout>
-      </v-flex>
-
-      <v-flex v-if="length > 1">
-        <v-pagination v-model="page" flat :length="length" :total-visible="5" />
+      <v-flex xs12>
+        <v-layout row wrap align-end>
+          <v-flex xs12 md4>
+            <v-layout justify-start row class="pl-3 pb-1"><app-footnotes :footnotes="footnote"/></v-layout>
+          </v-flex>
+          <v-flex xs12 md8>
+            <v-layout v-if="pages > 1" justify-end row class="pb-2"><v-pagination v-model="page" flat :length="pages" :total-visible="7"/></v-layout>
+          </v-flex>
+        </v-layout>
       </v-flex>
     </v-layout>
     <!-- Tx Table Content -->
-    <table-address-tx-row v-if="!loading" :transactions="filteredTxs" :account="address" :filter="selectedTx" :total="getTotal" :type="isPending" />
+    <table-address-tx-row v-if="!loading" :transactions="txs" :account="address" :filter="selected" :type="isPending" />
     <app-info-load v-else />
+    <v-layout v-if="pages > 1" justify-end row class="pb-2"><v-pagination v-model="page" flat :length="pages" :total-visible="7"/></v-layout>
     <!-- End Tx Table Content -->
   </v-card>
 </template>
@@ -67,67 +71,28 @@ const MAX_TXS = 10
 })
 export default class TableAddressTxs extends Vue {
   @Prop(String) address!: string
-  @Prop(Array) txs!: Tx[]
+  @Prop({ type: Array, default: [] }) txs!: Tx[]
   @Prop({ type: Number, default: 0 }) totalTxs!: number
-  @Prop(Array) inTxs!: Tx[]
-  @Prop({ type: Number, default: 0 }) totalIn!: number
-  @Prop(Array) outTxs!: Tx[]
-  @Prop({ type: Number, default: 0 }) totalOut!: number
   @Prop({ type: Boolean, default: false }) isPending!: boolean
   @Prop({ type: Boolean, default: true }) loading!: boolean
 
-  filtered = this.txs.slice(0, MAX_TXS)
   page = 1
   selected = 0
-  pageLength = this.totalTxs
+  filter = ['all', 'in', 'out']
 
   /*Watch: */
   @Watch('selected')
   onSelectedChanged(newVal: number, oldVal: number): void {
-    if (newVal === 0) {
-      this.filtered = this.txs
-      this.pageLength = this.totalTxs
-    }
-    if (newVal === 1) {
-      this.filtered = []
-      this.pageLength = this.totalIn
-    }
-    if (newVal === 2) {
-      this.filtered = []
-      this.pageLength = this.totalOut
-    }
+    this.page = 1
+    this.$emit('filter', this.filter[newVal], 0)
   }
 
   @Watch('page')
   onPageChanged(newVal: number, oldVal: number): void {
-    const s = (newVal - 1) * MAX_TXS
-    const e = newVal * MAX_TXS
-    //TO DO: IF TXS.LENGTH < s emit to get more data
-
-    if (this.selectedTx === 0) {
-      this.filtered = this.txs.slice(s, e)
-    }
-    if (this.selectedTx === 1) {
-      this.filtered = this.inTxs.slice(s, e)
-    }
-    if (this.selectedTx === 2) {
-      this.filtered = this.outTxs.slice(s, e)
-    }
+    this.$emit('filter', this.filter[this.selected], newVal - 1)
   }
 
   /* Computed: */
-  get selectedTx(): number {
-    return this.selected
-  }
-
-  get filteredTxs() {
-    return this.filtered
-  }
-
-  get getTotal(): number {
-    return this.filtered ? this.filtered.length : 0
-  }
-
   get options() {
     return [
       {
@@ -158,8 +123,8 @@ export default class TableAddressTxs extends Vue {
       }
     ]
   }
-  get length(): number {
-    return Math.ceil(this.pageLength / MAX_TXS)
+  get pages(): number {
+    return Math.ceil(this.totalTxs / MAX_TXS)
   }
 }
 </script>
