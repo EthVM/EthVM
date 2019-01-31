@@ -17,11 +17,8 @@
             :loading="txsLoading"
             :address="account.address"
             :txs="account.txs"
-            :total-txs="account.totalTxs"
-            :in-txs="[]"
-            :totalin-txs="0"
-            :out-txs="[]"
-            :total-out-txs="0"
+            :total-txs="totalFilter"
+            @filter="setFilterTxs"
           />
           <app-error-no-data v-else />
         </v-tab-item>
@@ -80,7 +77,7 @@ import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import TableAddressTxs from '@app/modules/addresses/components/TableAddressTxs.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
 import TableAddressTokens from '@app/modules/addresses/components/TableAddressTokens.vue'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { eth, TinySM, State } from '@app/core/helper'
 import { AccountInfo } from '@app/modules/addresses/props'
 import { resolve } from 'path'
@@ -107,12 +104,13 @@ export default class PageDetailsAddress extends Vue {
   detailsType = null
   error = false
   loading = true
-
   account: AccountInfo = null
 
   /*Transactions: */
   txsLoading = true
   txsError = false
+  txsPage = 0
+  txsFilter = 'all'
 
   /* Pending Txs: */
   pendingTxsLoading = true
@@ -174,7 +172,6 @@ export default class PageDetailsAddress extends Vue {
               this.account.totalTxs = addressMetadata.totalTxCount || 0
               this.account.toTxCount = addressMetadata.toTxCount || 0
               this.account.fromTxCount = addressMetadata.fromTxCount || 0
-
               this.account.balance = res[1] ? new EthValue(res[1].amount) : new EthValue(0)
               this.account.type = res[2] ? CONTRACT_DETAIL_TYPE : ADDRESS_DETAIL_TYPE
               this.account.exchangeRate.USD = res[3].price
@@ -267,7 +264,7 @@ export default class PageDetailsAddress extends Vue {
   }
 
   // Method:
-  fetchTxs(page = 0, limit = MAX_ITEMS, filter = 'all'): Promise<Tx[]> {
+  fetchTxs(page = this.txsPage, limit = MAX_ITEMS, filter = this.txsFilter): Promise<Tx[]> {
     return this.$api.getTxsOfAddress(this.addressRef, filter, limit, page).then(raw => raw.map(rawTx => new Tx(rawTx)))
   }
 
@@ -283,7 +280,48 @@ export default class PageDetailsAddress extends Vue {
     return this.$api.getContractsCreatedBy(this.addressRef, limit, page)
   }
 
+  setFilterTxs(_filter: string, _page: number): void {
+    this.txsFilter = _filter
+    this.txsPage = _page
+    this.txsLoading = true
+  }
+
+  updateTxs(): void {
+    this.fetchTxs().then((res) => {
+      this.account.txs = res
+      this.txsLoading = false
+      console.log(this.account.txs)
+    }, (err) => {
+      this.txsError = true
+    })
+  }
+
+  //Watch
+  @Watch('txsFilter')
+  onTxsFilterChanged(newVal: number, oldVal: number): void {
+    if(newVal) {
+      this.updateTxs()
+    }
+  }
+
+  @Watch('txsPage')
+  onTxsPageChanged(newVal: number, oldVal: number): void {
+      this.updateTxs()
+  }
+
   // Computed
+  get totalFilter() {
+    if(this.txsFilter === 'all') {
+     return this.account.totalTxs
+    }
+    if(this.txsFilter === 'in') {
+      return this.account.toTxCount
+    }
+    if(this.txsFilter === 'out') {
+      return this.account.fromTxCount
+    }
+  }
+
   get crumbs() {
     return [
       {
@@ -328,8 +366,8 @@ export default class PageDetailsAddress extends Vue {
       }
       tabs.push(newTab)
     }
-
     return tabs
   }
+
 }
 </script>
