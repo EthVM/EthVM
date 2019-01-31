@@ -1,0 +1,47 @@
+<template>
+  <v-container grid-list-lg class="mb-0">
+    <app-bread-crumbs :new-items="crumbs" />
+    <v-layout row wrap justify-start class="mb-4">
+      <v-flex xs12>
+        <v-card color="white" flat :class="{ 'pa-1': $vuetify.breakpoint.xsOnly, 'pa-3': $vuetify.breakpoint.smOnly, 'pa-5': $vuetify.breakpoint.mdAndUp }">
+          <v-layout wrap grid-list-sm align-center column fill-height pa-2>
+            <v-flex xs12 align-self-start>
+              <v-card-title class="display-1 font-weight-bold pb-1">{{ $t('title.terms') }}</v-card-title>
+            </v-flex>
+            <v-flex xs12>
+              <v-layout v-for="term in terms" row wrap justify-start pa-2 :key="$t(term.term)">
+                <v-card-title class="title pb-0">{{ $t(term.term) }}</v-card-title>
+                <v-card-text class="pt-2">{{ $t(term.def) }}</v-card-text>
+              </v-layout>
+            </v-flex>
+          </v-layout>
+        </v-card>
+      </v-flex>
+    </v-layout>
+  </v-container>
+</template>
+
+<script lang="ts">
+import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
+import { Component, Vue } from 'vue-property-decorator'
+
+@Component({
+  components: {
+    AppBreadCrumbs
+  }
+})
+export default class PageKnowledgeBase extends Vue {
+  // Computed
+  get crumbs() {
+    return [
+      {
+        text: this.$i18n.t('title.kb'),
+        disabled: true
+      }
+    ]
+  }
+  get terms() {
+    return this.$i18n.t('kb')
+  }
+}
+</script>

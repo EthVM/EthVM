@@ -12,24 +12,32 @@
             <v-flex xs12>
               <v-layout row wrap justify-start>
                 <v-flex xs12 sm6 md3>
-                  <v-card-actions> <v-icon class="primary--text pl-2 fab fa-github" large></v-icon> </v-card-actions>
-                  <v-card-title class="title pb-1">{{ $t('social.git') }}</v-card-title>
-                  <v-card-text>{{ $t('about.git') }}</v-card-text>
+                  <button href="https://github.com/enKryptIO">
+                    <v-layout justify-start pl-3><v-icon class="primary--text pl-2 fab fa-github" large></v-icon></v-layout>
+                    <v-card-title class="title pb-1 ">{{ $t('social.git') }}</v-card-title>
+                    <v-card-text class="text-xs-left">{{ $t('about.git') }}</v-card-text>
+                  </button>
                 </v-flex>
                 <v-flex xs12 sm6 md3>
-                  <v-card-actions> <v-icon class="primary--text pl-2 fab fa-medium-m" large></v-icon> </v-card-actions>
-                  <v-card-title class="title pb-1">{{ $t('social.medium') }}</v-card-title>
-                  <v-card-text>{{ $t('about.medium') }}</v-card-text>
+                  <button href="https://medium.com/@myetherwallet">
+                    <v-layout justify-start pl-3><v-icon class="primary--text pl-2 fab fa-medium-m" large></v-icon></v-layout>
+                    <v-card-title class="title pb-1">{{ $t('social.medium') }}</v-card-title>
+                    <v-card-text class="text-xs-left">{{ $t('about.medium') }}</v-card-text>
+                  </button>
                 </v-flex>
                 <v-flex xs12 sm6 md3>
-                  <v-card-actions> <v-icon class="primary--text pl-2 fab fa-twitter" large></v-icon> </v-card-actions>
-                  <v-card-title class="title pb-1">{{ $t('social.twitter') }}</v-card-title>
-                  <v-card-text>{{ $t('about.twitter') }}.</v-card-text>
+                  <button href="https://twitter.com/Eth_VM">
+                    <v-layout justify-start pl-3><v-icon class="primary--text pl-2 fab fa-twitter" large></v-icon></v-layout>
+                    <v-card-title class="title pb-1">{{ $t('social.twitter') }}</v-card-title>
+                    <v-card-text class="text-xs-left">{{ $t('about.twitter') }}.</v-card-text>
+                  </button>
                 </v-flex>
                 <v-flex xs12 sm6 md3>
-                  <v-card-actions> <v-icon class="primary--text pl-2 fab fa-reddit" large></v-icon> </v-card-actions>
-                  <v-card-title class="title pb-1">{{ $t('social.reddit') }}</v-card-title>
-                  <v-card-text>{{ $t('about.reddit') }}</v-card-text>
+                  <button href="https://www.reddit.com/r/ethvm">
+                    <v-layout justify-start pl-3><v-icon class="primary--text pl-2 fab fa-reddit text-xs-left" large></v-icon></v-layout>
+                    <v-card-title class="title pb-1" href="https://www.reddit.com/r/ethvm">{{ $t('social.reddit') }}</v-card-title>
+                    <v-card-text class="text-xs-left">{{ $t('about.reddit') }}</v-card-text>
+                  </button>
                 </v-flex>
               </v-layout>
             </v-flex>

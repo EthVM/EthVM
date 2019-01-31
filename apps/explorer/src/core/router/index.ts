@@ -5,7 +5,7 @@ import PageHome from '@app/modules/home/pages/PageHome.vue'
 import PageBlocks from '@app/modules/blocks/pages/PageBlocks.vue'
 import PageTxs from '@app/modules/txs/pages/PageTxs.vue'
 import PagePendingTxs from '@app/modules/pending-txs/pages/PagePendingTxs.vue'
-import PageAbout from '@app/modules/about/pages/PageAbout.vue'
+import PageAbout from '@app/modules/other/pages/PageAbout.vue'
 import PageUncles from '@app/modules/uncles/pages/PageUncles.vue'
 import PageDetailsBlock from '@app/modules/blocks/pages/PageDetailsBlock.vue'
 import PageDetailsTxs from '@app/modules/txs/pages/PageDetailsTxs.vue'
@@ -14,6 +14,8 @@ import PageCharts from '@app/modules/charts/pages/PageCharts.vue'
 import PageDetailsChart from '@app/modules/charts/pages/PageDetailsChart.vue'
 import PageDetailsUncle from '@app/modules/uncles/pages/PageDetailsUncle.vue'
 import PageTokens from '@app/modules/tokens/pages/PageTokens.vue'
+import PageKnowledgeBase from '@app/modules/other/pages/PageKnowledgeBase.vue'
+import PagePrivacyPolicy from '@app/modules/other/pages/PagePrivacyPolicy.vue'
 
 Vue.use(Router)
 
@@ -89,6 +91,16 @@ export default new Router({
       path: '/about',
       component: PageAbout,
       name: 'about'
+    },
+    {
+      path: '/privacy_policy',
+      component: PagePrivacyPolicy,
+      name: 'privacy'
+    },
+    {
+      path: '/knowledge_base',
+      component: PageKnowledgeBase,
+      name: 'kb'
     }
   ],
   mode: 'history'
