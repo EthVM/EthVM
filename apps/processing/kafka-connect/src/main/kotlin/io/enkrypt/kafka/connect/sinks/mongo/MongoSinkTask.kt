@@ -11,16 +11,17 @@ import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.WriteModel
 import io.enkrypt.common.extensions.hex
 import io.enkrypt.common.extensions.unsignedBigInteger
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.AccountMetadata
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.AggregateBlockMetrics
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Balances
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.BlockMetrics
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Blocks
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Contracts
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.PendingTransactions
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.TokenExchangeRates
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.TokenTransfers
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Transactions
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Uncles
-import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Contracts
-import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.BlockMetrics
-import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Balances
-import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.PendingTransactions
-import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.TokenTransfers
-import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.AggregateBlockMetrics
-import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.AccountMetadata
 import io.enkrypt.kafka.connect.utils.Versions
 import mu.KotlinLogging
 import org.apache.kafka.clients.consumer.OffsetAndMetadata
@@ -64,7 +65,8 @@ class MongoSinkTask : SinkTask() {
       PendingTransactions to db.getCollection(PendingTransactions.id, clazz),
       BlockMetrics to db.getCollection(BlockMetrics.id, clazz),
       AggregateBlockMetrics to db.getCollection(AggregateBlockMetrics.id, clazz),
-      AccountMetadata to db.getCollection(AccountMetadata.id, clazz)
+      AccountMetadata to db.getCollection(AccountMetadata.id, clazz),
+      TokenExchangeRates to db.getCollection(TokenExchangeRates.id, clazz)
     )
   }
 
@@ -80,7 +82,7 @@ class MongoSinkTask : SinkTask() {
 
     val elapsedMs = measureTimeMillis {
 
-      var batch = mapOf<MongoCollections, List<WriteModel<BsonDocument>>>()
+      val batch = mutableMapOf<MongoCollections, List<WriteModel<BsonDocument>>>()
 
       records.forEach { record ->
         KafkaTopics.forTopic(record.topic())(record)
@@ -94,10 +96,10 @@ class MongoSinkTask : SinkTask() {
         .filterValues { it.isNotEmpty() }
         .forEach { (collectionId, writes) ->
 
-          val collection = collections[collectionId]!!
+          val collection = collections.getValue(collectionId)
           val bulkWrite = collection.bulkWrite(writes)
 
-          logger.debug {
+          logger.info {
             "Bulk write complete. Collection = $collectionId, inserts = ${bulkWrite.insertedCount}, " +
               "updates = ${bulkWrite.modifiedCount}, upserts = ${bulkWrite.upserts.size}, " +
               "deletes = ${bulkWrite.deletedCount}"
@@ -128,7 +130,8 @@ enum class MongoCollections(val id: String) {
   Balances("balances"),
   BlockMetrics("block_metrics"),
   PendingTransactions("pending_transactions"),
-  AccountMetadata("account_metadata")
+  AccountMetadata("account_metadata"),
+  TokenExchangeRates("token_exchange_rates")
 }
 
 typealias SinkRecordToBsonFn = (record: SinkRecord) -> Map<MongoCollections, List<WriteModel<BsonDocument>>>
@@ -169,7 +172,6 @@ enum class KafkaTopics(
     val txWrites = when (record.value()) {
       null -> listOf(DeleteOneModel<BsonDocument>(idFilter))
       else -> {
-
         val value = StructToBsonConverter.convert(record.value(), "transaction")
         listOf(ReplaceOneModel(idFilter, value, MongoSinkTask.replaceOptions))
       }
@@ -200,24 +202,27 @@ enum class KafkaTopics(
 
     require(record.keySchema().type() == Schema.Type.STRUCT) { "Key schema must be a struct" }
 
-    var writes = listOf<WriteModel<BsonDocument>>()
+    val writes = mutableListOf<WriteModel<BsonDocument>>()
 
     val id = StructToBsonConverter.convert(record.key() as Struct, "tokenTransfer")
 
-    writes += if (record.value() == null) {
+    writes += when {
+      record.value() == null -> {
 
-      // remove
-      val filter = BsonDocument("_id", id)
-      DeleteOneModel<BsonDocument>(filter)
-    } else {
+        // remove
+        val filter = BsonDocument("_id", id)
+        DeleteOneModel<BsonDocument>(filter)
+      }
+      else -> {
 
-      val model = StructToBsonConverter
-        .convert(record.value(), "tokenTransfer")
-        .apply {
-          append("_id", id)
-        }
+        val model = StructToBsonConverter
+          .convert(record.value(), "tokenTransfer")
+          .apply {
+            append("_id", id)
+          }
 
-      ReplaceOneModel(BsonDocument("_id", id), model, MongoSinkTask.replaceOptions)
+        ReplaceOneModel(BsonDocument("_id", id), model, MongoSinkTask.replaceOptions)
+      }
     }
 
     mapOf(MongoCollections.TokenTransfers to writes)
@@ -227,128 +232,137 @@ enum class KafkaTopics(
 
     require(record.keySchema().type() == Schema.Type.STRUCT) { "Key schema must be a struct" }
 
-    var writes = listOf<WriteModel<BsonDocument>>()
+    val writes = mutableListOf<WriteModel<BsonDocument>>()
 
     val address = (record.key() as Struct).getBytes("address")
     val addressBson = BsonString(address.hex())
 
     val idFilter = BsonDocument().apply { append("_id", addressBson) }
 
-    if (record.value() == null) {
+    when {
+      record.value() == null -> {
 
-      // TODO determine how to handle tombstones in light of merging with data from ethlists
-    } else {
-
-      require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
-
-      val struct = record.value() as Struct
-      val bson = BsonDocument().apply {
-        append("\$set", StructToBsonConverter.convert(struct, "contract"))
+        // TODO determine how to handle tombstones in light of merging with data from ethlists
       }
+      else -> {
 
-      writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
+        require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
+
+        val struct = record.value() as Struct
+        val bson = BsonDocument().apply {
+          append("\$set", StructToBsonConverter.convert(struct, "contract"))
+        }
+
+        writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
+      }
     }
 
-    mapOf(MongoCollections.Contracts to writes)
+    mapOf(Contracts to writes)
   }),
 
   ContractDestructions("contract-destructions", { record: SinkRecord ->
 
     require(record.keySchema().type() == Schema.Type.STRUCT) { "Key schema must be a struct" }
 
-    var writes = listOf<WriteModel<BsonDocument>>()
+    val writes = mutableListOf<WriteModel<BsonDocument>>()
 
     val address = (record.key() as Struct).getBytes("address")
     val addressBson = BsonString(address.hex())
 
     val idFilter = BsonDocument().apply { append("_id", addressBson) }
 
-    if (record.value() == null) {
-
-      // tombstone received so we need unset the suicide in the contract object
-      writes += UpdateOneModel(idFilter, Document(mapOf("\$unset" to "destructed")))
-    } else {
-
-      require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
-
-      val struct = record.value() as Struct
-
-      val bson = BsonDocument().apply {
-        append("\$set", BsonDocument().apply { append("destructed", StructToBsonConverter.convert(struct, "contract")) })
+    when {
+      record.value() == null -> {
+        // tombstone received so we need unset the suicide in the contract object
+        writes += UpdateOneModel(idFilter, Document(mapOf("\$unset" to "destructed")))
       }
+      else -> {
 
-      writes += UpdateOneModel(idFilter, bson)
+        require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
+
+        val struct = record.value() as Struct
+
+        val bson = BsonDocument().apply {
+          append("\$set", BsonDocument().apply { append("destructed", StructToBsonConverter.convert(struct, "contract")) })
+        }
+
+        writes += UpdateOneModel(idFilter, bson)
+      }
     }
 
-    mapOf(MongoCollections.Contracts to writes)
+    mapOf(Contracts to writes)
   }),
 
   ContractMetadata("contract-metadata", { record: SinkRecord ->
 
     require(record.keySchema().type() == Schema.Type.STRUCT) { "Key schema must be a struct" }
 
-    var writes = listOf<WriteModel<BsonDocument>>()
+    val writes = mutableListOf<WriteModel<BsonDocument>>()
 
     val address = (record.key() as Struct).getBytes("address")
     val addressBson = BsonString(address.hex())
 
     val idFilter = BsonDocument().apply { append("_id", addressBson) }
 
-    if (record.value() == null) {
-
-      // tombstone received so we need to delete
-      writes += UpdateOneModel(idFilter, Document(mapOf("\$unset" to "metadata")))
-    } else {
-
-      require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
-
-      val struct = record.value() as Struct
-      val metadataBson = StructToBsonConverter.convert(struct, "contract")
-
-      val typeBson = metadataBson.remove("type")
-      metadataBson.remove("address")
-
-      val bsonValue = BsonDocument().apply {
-        append("address", addressBson)
-        append("type", typeBson)
-        append("metadata", metadataBson)
+    when {
+      record.value() == null -> {
+        // tombstone received so we need to delete
+        writes += UpdateOneModel(idFilter, Document(mapOf("\$unset" to "metadata")))
       }
+      else -> {
 
-      val bson = BsonDocument().apply {
-        append("\$set", bsonValue)
+        require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
+
+        val struct = record.value() as Struct
+        val metadataBson = StructToBsonConverter.convert(struct, "contract")
+
+        val typeBson = metadataBson.remove("type")
+        metadataBson.remove("address")
+
+        val bsonValue = BsonDocument().apply {
+          append("address", addressBson)
+          append("type", typeBson)
+          append("metadata", metadataBson)
+        }
+
+        val bson = BsonDocument().apply {
+          append("\$set", bsonValue)
+        }
+
+        writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
       }
-
-      writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
     }
 
-    mapOf(MongoCollections.Contracts to writes)
+    mapOf(Contracts to writes)
   }),
 
   Balances("balances", { record: SinkRecord ->
 
     require(record.keySchema().type() == Schema.Type.STRUCT) { "Key schema must be a struct" }
 
-    var writes = listOf<WriteModel<BsonDocument>>()
+    val writes = mutableListOf<WriteModel<BsonDocument>>()
 
     val idBson = StructToBsonConverter.convert(record.key() as Struct, "balanceId")
     val idFilter = BsonDocument().apply { append("_id", idBson) }
 
-    if (record.value() == null) {
+    when {
+      record.value() == null -> {
+        // tombstone received so we need to delete
+        writes += DeleteOneModel(idFilter)
+      }
+      else -> {
 
-      // tombstone received so we need to delete
-      writes += DeleteOneModel(idFilter)
-    } else {
+        require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
 
-      require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
+        val struct = record.value() as Struct
 
-      val struct = record.value() as Struct
+        var bson = StructToBsonConverter.convert(struct, "balance")
 
-      var bson = StructToBsonConverter.convert(struct, "balance")
+        // combine with id fields so we can query on them later
+        idBson.forEach { k, v -> bson = bson.append(k, v) }
 
-      // combine with id fields so we can query on them later
-      idBson.forEach { k, v -> bson = bson.append(k, v) }
-
-      writes += ReplaceOneModel(idFilter, bson, MongoSinkTask.replaceOptions)
+        writes += ReplaceOneModel(idFilter, bson, MongoSinkTask.replaceOptions)
+      }
     }
 
     mapOf(MongoCollections.Balances to writes)
@@ -358,26 +372,28 @@ enum class KafkaTopics(
 
     require(record.keySchema().type() == Schema.Type.STRUCT) { "Key schema must be a struct" }
 
-    var writes = listOf<WriteModel<BsonDocument>>()
+    val writes = mutableListOf<WriteModel<BsonDocument>>()
 
     val idBson = StructToBsonConverter.convert(record.key() as Struct, "transactionId")
     val idFilter = BsonDocument().apply { append("_id", idBson) }
 
-    if (record.value() == null) {
+    when {
+      record.value() == null -> {
+        // tombstone received so we need to delete
+        writes += DeleteOneModel(idFilter)
+      }
+      else -> {
 
-      // tombstone received so we need to delete
-      writes += DeleteOneModel(idFilter)
-    } else {
+        require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
 
-      require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
+        val struct = record.value() as Struct
+        var bson = StructToBsonConverter.convert(struct, "transaction")
 
-      val struct = record.value() as Struct
-      var bson = StructToBsonConverter.convert(struct, "transaction")
+        // combine with id fields so we can query on them later
+        idBson.forEach { k, v -> bson = bson.append(k, v) }
 
-      // combine with id fields so we can query on them later
-      idBson.forEach { k, v -> bson = bson.append(k, v) }
-
-      writes += ReplaceOneModel(idFilter, bson, MongoSinkTask.replaceOptions)
+        writes += ReplaceOneModel(idFilter, bson, MongoSinkTask.replaceOptions)
+      }
     }
 
     mapOf(MongoCollections.PendingTransactions to writes)
@@ -387,53 +403,57 @@ enum class KafkaTopics(
 
     require(record.keySchema().type() == Schema.Type.STRUCT) { "Key schema must be a struct" }
 
-    var writes = listOf<WriteModel<BsonDocument>>()
+    val writes = mutableListOf<WriteModel<BsonDocument>>()
 
     val blockNumber = (record.key() as Struct).getBytes("number").unsignedBigInteger()
     val blockNumberBson = BsonDecimal128(Decimal128(blockNumber.toBigDecimal()))
     val idFilter = BsonDocument("_id", blockNumberBson)
 
-    if (record.value() == null) {
+    when {
+      record.value() == null -> {
+        // tombstone received so we need to delete
+        writes += DeleteOneModel(idFilter)
+      }
+      else -> {
 
-      // tombstone received so we need to delete
-      writes += DeleteOneModel(idFilter)
-    } else {
+        require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
 
-      require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
+        val struct = record.value() as Struct
+        val bson = BsonDocument("\$set", StructToBsonConverter.convert(struct, "block-metrics"))
 
-      val struct = record.value() as org.apache.kafka.connect.data.Struct
-      val bson = BsonDocument("\$set", StructToBsonConverter.convert(struct, "block-metrics"))
-
-      writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
+        writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
+      }
     }
 
-    mapOf(MongoCollections.BlockMetrics to writes)
+    mapOf(BlockMetrics to writes)
   }),
 
   AggregateBlockMetrics("aggregate-block-metrics-by-day", { record: SinkRecord ->
 
     require(record.keySchema().type() == Schema.Type.STRUCT) { "Key schema must be a struct" }
 
-    var writes = listOf<WriteModel<BsonDocument>>()
+    val writes = mutableListOf<WriteModel<BsonDocument>>()
 
     val idBson = StructToBsonConverter.convert(record.key() as Struct, "metricId")
     val idFilter = BsonDocument().apply { append("_id", idBson) }
 
-    if (record.value() == null) {
+    when {
+      record.value() == null -> {
+        // tombstone received so we need to delete
+        writes += DeleteOneModel(idFilter)
+      }
+      else -> {
 
-      // tombstone received so we need to delete
-      writes += DeleteOneModel(idFilter)
-    } else {
+        require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
 
-      require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
+        val struct = record.value() as Struct
+        var bson = StructToBsonConverter.convert(struct, "metric", false)
 
-      val struct = record.value() as org.apache.kafka.connect.data.Struct
-      var bson = StructToBsonConverter.convert(struct, "metric", false)
+        // combine with id fields so we can query on them later
+        idBson.forEach { k, v -> bson = bson.append(k, v) }
 
-      // combine with id fields so we can query on them later
-      idBson.forEach { k, v -> bson = bson.append(k, v) }
-
-      writes += ReplaceOneModel(idFilter, bson, MongoSinkTask.replaceOptions)
+        writes += ReplaceOneModel(idFilter, bson, MongoSinkTask.replaceOptions)
+      }
     }
 
     mapOf(MongoCollections.AggregateBlockMetrics to writes)
@@ -443,35 +463,38 @@ enum class KafkaTopics(
 
     require(record.keySchema().type() == Schema.Type.STRUCT) { "Key schema must be a struct" }
 
-    var writes = listOf<WriteModel<BsonDocument>>()
+    val writes = mutableListOf<WriteModel<BsonDocument>>()
 
     val keyBson = StructToBsonConverter.convert(record.key() as Struct, "accountTxCountKey")
     val idFilter = BsonDocument().apply { append("_id", keyBson.get("address")) }
 
-    if (record.value() == null) {
+    when {
+      record.value() == null -> {
 
-      val bson = when (keyBson.getString("type").value) {
-        "FROM" -> Document(mapOf("\$unset" to "fromTxCount"))
-        "TO" -> Document(mapOf("\$unset" to "toTxCount"))
-        "TOTAL" -> Document(mapOf("\$unset" to "totalTxCount"))
-        else -> throw IllegalStateException("Unexpected type value")
+        val bson = when (keyBson.getString("type").value) {
+          "FROM" -> Document(mapOf("\$unset" to "fromTxCount"))
+          "TO" -> Document(mapOf("\$unset" to "toTxCount"))
+          "TOTAL" -> Document(mapOf("\$unset" to "totalTxCount"))
+          else -> throw IllegalStateException("Unexpected type value")
+        }
+
+        writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
       }
+      else -> {
 
-      writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
-    } else {
+        require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
+        val struct = StructToBsonConverter.convert(record.value() as Struct)
+        val count = struct.getInt64("count").longValue()
 
-      require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
-      val struct = StructToBsonConverter.convert(record.value() as Struct)
-      val count = struct.getInt64("count").longValue()
+        val bson = when (keyBson.getString("type").value) {
+          "FROM" -> Document(mapOf("\$set" to mapOf("fromTxCount" to count)))
+          "TO" -> Document(mapOf("\$set" to mapOf("toTxCount" to count)))
+          "TOTAL" -> Document(mapOf("\$set" to mapOf("totalTxCount" to count)))
+          else -> throw IllegalStateException("Unexpected type value")
+        }
 
-      val bson = when (keyBson.getString("type").value) {
-        "FROM" -> Document(mapOf("\$set" to mapOf("fromTxCount" to count)))
-        "TO" -> Document(mapOf("\$set" to mapOf("toTxCount" to count)))
-        "TOTAL" -> Document(mapOf("\$set" to mapOf("totalTxCount" to count)))
-        else -> throw IllegalStateException("Unexpected type value")
+        writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
       }
-
-      writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
     }
 
     mapOf(MongoCollections.AccountMetadata to writes)
@@ -481,27 +504,30 @@ enum class KafkaTopics(
 
     require(record.keySchema().type() == Schema.Type.STRUCT) { "Key schema must be a struct" }
 
-    var writes = listOf<WriteModel<BsonDocument>>()
+    val writes = mutableListOf<WriteModel<BsonDocument>>()
 
     val keyBson = StructToBsonConverter.convert(record.key() as Struct, "accountTxCountKey")
-    val idFilter = BsonDocument().apply { append("_id", keyBson.get("address")) }
+    val idFilter = BsonDocument().apply { append("_id", keyBson["address"]) }
 
-    if (record.value() == null) {
+    when {
+      record.value() == null -> {
 
-      val bson = when (keyBson.getString("type").value) {
-        "MINER" -> Document(mapOf("\$unset" to "isMiner"))
-        else -> throw IllegalStateException("Unexpected type value")
+        val bson = when (keyBson.getString("type").value) {
+          "MINER" -> Document(mapOf("\$unset" to "isMiner"))
+          else -> throw IllegalStateException("Unexpected type value")
+        }
+
+        writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
       }
+      else -> {
 
-      writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
-    } else {
+        val bson = when (keyBson.getString("type").value) {
+          "MINER" -> Document(mapOf("\$set" to mapOf("isMiner" to true)))
+          else -> throw IllegalStateException("Unexpected type value")
+        }
 
-      val bson = when (keyBson.getString("type").value) {
-        "MINER" -> Document(mapOf("\$set" to mapOf("isMiner" to true)))
-        else -> throw IllegalStateException("Unexpected type value")
+        writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
       }
-
-      writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
     }
 
     mapOf(MongoCollections.AccountMetadata to writes)
@@ -511,30 +537,58 @@ enum class KafkaTopics(
 
     require(record.keySchema().type() == Schema.Type.STRUCT) { "Key schema must be a struct" }
 
-    var writes = listOf<WriteModel<BsonDocument>>()
+    val writes = mutableListOf<WriteModel<BsonDocument>>()
 
     val keyBson = StructToBsonConverter.convert(record.key() as Struct, "accountTxCountKey")
-    val idFilter = BsonDocument().apply { append("_id", keyBson.get("address")) }
+    val idFilter = BsonDocument().apply { append("_id", keyBson["address"]) }
 
-    if (record.value() == null) {
+    when {
+      record.value() == null -> {
 
-      val bson = when (keyBson.getString("type").value) {
-        "CONTRACT_CREATOR" -> Document(mapOf("\$unset" to "isContractCreator"))
-        else -> throw IllegalStateException("Unexpected type value")
+        val bson = when (keyBson.getString("type").value) {
+          "CONTRACT_CREATOR" -> Document(mapOf("\$unset" to "isContractCreator"))
+          else -> throw IllegalStateException("Unexpected type value")
+        }
+
+        writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
       }
+      else -> {
 
-      writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
-    } else {
+        val bson = when (keyBson.getString("type").value) {
+          "CONTRACT_CREATOR" -> Document(mapOf("\$set" to mapOf("isContractCreator" to true)))
+          else -> throw IllegalStateException("Unexpected type value")
+        }
 
-      val bson = when (keyBson.getString("type").value) {
-        "CONTRACT_CREATOR" -> Document(mapOf("\$set" to mapOf("isContractCreator" to true)))
-        else -> throw IllegalStateException("Unexpected type value")
+        writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
       }
-
-      writes += UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions)
     }
 
     mapOf(MongoCollections.AccountMetadata to writes)
+  }),
+
+  TokenExchangeRates("token-exchange-rates", { record: SinkRecord ->
+
+    require(record.keySchema().type() == Schema.Type.STRUCT) { "Key schema must be a struct" }
+
+    val key = record.key() as Struct
+    val value = record.value()
+
+    val idBson = StructToBsonConverter.convert(key, "symbol")
+    val idFilter = BsonDocument().apply { append("_id", idBson["symbol"]) }
+
+    val writes: List<WriteModel<BsonDocument>> = when (value) {
+      null -> listOf(DeleteOneModel(idFilter))
+      else -> {
+        require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
+
+        val bsonValue = StructToBsonConverter.convert(value as Struct, "exchangeRate")
+        val bson = BsonDocument("\$set", bsonValue)
+
+        listOf(UpdateOneModel(idFilter, bson, MongoSinkTask.updateOptions))
+      }
+    }
+
+    mapOf(MongoCollections.TokenExchangeRates to writes)
   });
 
   companion object {

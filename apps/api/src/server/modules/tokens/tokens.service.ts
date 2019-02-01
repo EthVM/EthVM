@@ -1,12 +1,13 @@
 import { TokensRepository } from '@app/server/modules/tokens'
 import { VmEngine } from '@app/server/modules/vm'
-import { Token, TokenTransfer } from 'ethvm-common'
+import { Token, TokenTransfer, TokenExchangeRate } from 'ethvm-common'
 
 export interface TokensService {
   getAddressTokenTransfers(address: string, limit: number, page: number): Promise<TokenTransfer[]>
   getAddressTokenTransfersByHolder(address: string, holder: string, filter: string, limit: number, page: number): Promise<TokenTransfer[]>
   getAddressAllTokensOwned(address: string): Promise<Token[]>
   getAddressAmountTokensOwned(address: string): Promise<number>
+  getTokenExchangeRates(limit: number, page: number): Promise<TokenExchangeRate[]>
 }
 
 export class TokensServiceImpl implements TokensService {
@@ -27,5 +28,9 @@ export class TokensServiceImpl implements TokensService {
 
   public getAddressAmountTokensOwned(address: string): Promise<number> {
     return this.vme.getAddressAmountTokensOwned(address)
+  }
+
+  public getTokenExchangeRates(limit: number, page: number): Promise<TokenExchangeRate[]> {
+    return this.tokensRepository.getTokenExchangeRates(limit, page)
   }
 }

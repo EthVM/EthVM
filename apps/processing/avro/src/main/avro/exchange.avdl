@@ -1,0 +1,29 @@
+@namespace("io.enkrypt.avro.exchange")
+protocol Exchange {
+
+  record SymbolKeyRecord {
+    string symbol;
+  }
+
+  record ExchangeRateRecord {
+    string id;
+    string symbol;
+    string name;
+    string image;
+    union { null, bytes } address;
+    union { null, double } current_price;
+    union { null, double } market_cap;
+    union { null, int } market_cap_rank;
+    union { null, double } total_volume;
+    union { null, double } high_24h;
+    union { null, double } low_24h;
+    union { null, double} price_change_24h;
+    union { null, double } price_change_percentage_24h;
+    union { null, double } market_cap_change_24h;
+    union { null, double } market_cap_change_percentage_24h;
+    union { null, string } circulating_supply;
+    union { null, long } total_supply;
+    union { null, string } last_updated;
+  }
+
+}

@@ -11,6 +11,7 @@ const collections = [
   "pending_transactions",
   "block_metrics",
   "aggregate_block_metrics",
+  "token_exchange_rates",
   "account_metadata"
 ];
 

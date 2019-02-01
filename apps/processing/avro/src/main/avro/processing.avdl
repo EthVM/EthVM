@@ -109,6 +109,7 @@ protocol Processing {
     union { null, string } src;
     union { null, string } width;
     union { null, string } height;
+    union { null, string } ipfs_hash;
   }
 
   record ContractSupportRecord {
@@ -140,7 +141,7 @@ protocol Processing {
     int decimals;
 
     union { null, string } ens_address;
-    union { null, io.enkrypt.avro.common.ContractType } type;
+    union { null, string, io.enkrypt.avro.common.ContractType } type;
     union { null, ContractLogoRecord } logo;
     union { null, ContractSupportRecord } support;
     union { null, ContractSocialRecord } social;

@@ -55,12 +55,17 @@ create_topics() {
   kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 12 --topic miner-list --config retention.ms=-1 --config cleanup.policy=compact
   kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 12 --topic contract-creator-list --config retention.ms=-1 --config cleanup.policy=compact
 
+  kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 1  --topic eth-tokens-list --config cleanup.policy=compact
+  kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 1  --topic eth-tokens-list-by-symbol --config retention.ms=-1 --config cleanup.policy=compact
+  kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 1  --topic raw-exchange-rates --config cleanup.policy=compact
+  kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 1  --topic token-exchange-rates --config retention.ms=-1 --config cleanup.policy=compact
 }
 
 reset_topics() {
   echo "===> Reset Kafka topics (if necessary) ..."
   kafka-streams-application-reset --zookeeper $ZOOKEEPER_URL --bootstrap-servers $KAFKA_BOOTSTRAP_URL --application-id block-processor --input-topics blocks
   kafka-streams-application-reset --zookeeper $ZOOKEEPER_URL --bootstrap-servers $KAFKA_BOOTSTRAP_URL --application-id state-processor --input-topics account-state
+  kafka-streams-application-reset --zookeeper $ZOOKEEPER_URL --bootstrap-servers $KAFKA_BOOTSTRAP_URL --application-id exchange-rates-processor --input-topics token-exchange-rates
 }
 
 curl_register() {
@@ -70,6 +75,11 @@ curl_register() {
 register_eth_list_source() {
   echo "===> Registering ETH lists source ..."
   curl_register /data/sources/eth-lists-source.json
+}
+
+register_exchange_rates_source() {
+  echo "===> Registering Exchange Rates source ..."
+  curl_register /data/sources/exchange-rates-source.json
 }
 
 register_mongo_sink() {
@@ -82,10 +92,10 @@ run() {
   local command="${1:-""}"
 
   case ${command} in
-    create-topics)    ensure_zookeeper; ensure_kafka; create_topics    ;;
-    reset-topics)     ensure_zookeeper; ensure_kafka; reset_topics     ;;
-    register-sources) ensure_kafka_connect; register_eth_list_source   ;;
-    register-sinks)   ensure_kafka_connect; register_mongo_sink        ;;
+    create-topics)    ensure_zookeeper; ensure_kafka; create_topics                                  ;;
+    reset-topics)     ensure_zookeeper; ensure_kafka; reset_topics                                   ;;
+    register-sources) ensure_kafka_connect; register_eth_list_source; register_exchange_rates_source ;;
+    register-sinks)   ensure_kafka_connect; register_mongo_sink                                      ;;
   esac
 }
 run "$@"

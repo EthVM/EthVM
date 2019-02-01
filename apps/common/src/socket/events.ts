@@ -60,6 +60,7 @@ export const Events = {
 
   // Exchange
   getExchangeRates: "get-exchange-rates",
+  getTokenExchangeRates: "get-token-exchange-rates",
 
   // Search
   search: "search",

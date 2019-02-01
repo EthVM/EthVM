@@ -492,7 +492,10 @@ class BlockProcessor : AbstractKafkaProcessor() {
             destroy
           }
         )
-      }.to(Topics.ContractDestructions, Produced.with(Serdes.ContractKey(), Serdes.ContractDestroy()))
+      }.to(
+        Topics.ContractDestructions,
+        Produced.with(Serdes.ContractKey(), Serdes.ContractDestroy())
+      )
 
     // metrics
 
@@ -504,7 +507,10 @@ class BlockProcessor : AbstractKafkaProcessor() {
 
     blockStream
       .flatMap { _, block -> BlockMetrics.forAggregation(block, BlockMetrics.forBlock(block)) }
-      .to(Topics.BlockMetricsByDay, Produced.with(Serdes.MetricKey(), Serdes.Metric()))
+      .to(
+        Topics.BlockMetricsByDay,
+        Produced.with(Serdes.MetricKey(), Serdes.Metric())
+      )
 
     // Generate the topology
     return builder.build()
