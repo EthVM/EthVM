@@ -126,6 +126,9 @@ export default class PageDetailsToken extends Vue {
     }
   }
 
+  /**
+   * Fetch all data required for a "basic" load
+   */
   fetchNormalData() {
     return new Promise((resolve, reject) => {
       const contractPromise = this.fetchContractDetails()
@@ -155,6 +158,9 @@ export default class PageDetailsToken extends Vue {
     })
   }
 
+  /**
+   * Fetch all data required for a "holder" view
+   */
   fetchHolderData() {
     return new Promise((resolve, reject) => {
       const query = this.$route.query
