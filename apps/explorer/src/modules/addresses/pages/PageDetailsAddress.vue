@@ -2,7 +2,7 @@
   <v-container grid-list-lg class="mb-0">
     <app-bread-crumbs :new-items="crumbs" />
 
-    <div v-if="!loading">
+    <div v-if="!loading && !error">
       <v-layout row wrap justify-start class="mb-4">
         <v-flex xs12>
           <address-detail :account="account" :type-addrs="detailsType" />
@@ -20,25 +20,25 @@
             :total-txs="totalFilter"
             @filter="setFilterTxs"
           />
-          <app-error-no-data v-else />
+          <app-error :server-error="txsError" v-else />
         </v-tab-item>
         <!-- End Transactions -->
         <!-- Tokens -->
         <v-tab-item slot="tabs-item" value="tab-1">
           <table-address-tokens v-if="!tokensError" :loading="tokensLoading" :tokens="account.tokens" :error="tokensError" />
-          <app-error-no-data v-else />
+          <app-error :server-error="tokensError" v-else />
         </v-tab-item>
         <!-- End Tokens -->
         <!-- Pending Transactions -->
         <v-tab-item slot="tabs-item" value="tab-2">
           <table-address-txs v-if="!pendingTxsError" :loading="pendingTxsLoading" :address="account.address" :txs="account.pendingTxs" :is-pending="true" />
-          <app-error-no-data v-else />
+          <app-error :server-error="pendingTxsError" v-else />
         </v-tab-item>
         <!-- End Pending Transactions -->
         <!-- Mined Blocks -->
         <v-tab-item slot="tabs-item" v-if="account.isMiner" value="tab-3">
           <table-blocks v-if="!minerBlocksError" :loading="minerBlocksLoading" :blocks="account.minedBlocks" :page-type="detailsType" />
-          <app-error-no-data v-else />
+          <app-error :server-error="minerBlocksError" v-else />
         </v-tab-item>
         <!-- End Mined Blocks -->
         <!-- Contract Creator (no need to implement yet) -->
@@ -58,10 +58,8 @@
         </v-tab-item>-->
       </app-tabs>
     </div>
-    <div v-else>
-      <app-info-load v-if="loading" />
-      <app-error-no-data v-else-if="error" />
-    </div>
+    <app-info-load v-if="loading && !error" />
+    <app-error v-else :reference="addressRef" page-type="address" />
   </v-container>
 </template>
 
@@ -70,6 +68,7 @@ import { Block, EthValue, Tx, PendingTx } from '@app/core/models'
 import { Events, Contract } from 'ethvm-common'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
+import AppError from '@app/core/components/ui/AppError.vue'
 import AddressDetail from '@app/modules/addresses/components/AddressDetail.vue'
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import TableAddressTxs from '@app/modules/addresses/components/TableAddressTxs.vue'
@@ -89,6 +88,7 @@ const CONTRACT_DETAIL_TYPE = 'contract'
   components: {
     AppInfoLoad,
     AppBreadCrumbs,
+    AppError,
     AppTabs,
     AddressDetail,
     TableAddressTxs,
@@ -102,6 +102,7 @@ export default class PageDetailsAddress extends Vue {
   detailsType = null
   error = false
   loading = true
+  validHash = true
   account: AccountInfo = null
 
   /*Transactions: */
@@ -343,23 +344,24 @@ export default class PageDetailsAddress extends Vue {
         isActive: false
       }
     ]
-
-    if (this.account.isMiner) {
-      const newTab = {
-        id: '3',
-        title: this.$i18n.t('tabs.miningH'),
-        isActive: false
+    if (!this.loading && !this.error) {
+      if (this.account.isMiner) {
+        const newTab = {
+          id: '3',
+          title: this.$i18n.t('tabs.miningH'),
+          isActive: false
+        }
+        tabs.push(newTab)
       }
-      tabs.push(newTab)
-    }
 
-    if (this.account.isCreator) {
-      const newTab = {
-        id: '4',
-        title: this.$i18n.t('tabs.contracts'),
-        isActive: false
+      if (this.account.isCreator) {
+        const newTab = {
+          id: '4',
+          title: this.$i18n.t('tabs.contracts'),
+          isActive: false
+        }
+        tabs.push(newTab)
       }
-      tabs.push(newTab)
     }
 
     return tabs

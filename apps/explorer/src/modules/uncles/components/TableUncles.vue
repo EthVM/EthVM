@@ -41,12 +41,12 @@
         </v-layout>
       </v-card>
     </div>
-    <app-error-no-data v-else />
+    <app-error v-else :server-error="error" />
   </v-card>
 </template>
 
 <script lang="ts">
-import AppErrorNoData from '@app/core/components/ui/AppErrorNoData.vue'
+import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import TableUnclesRow from '@app/modules/uncles/components/TableUnclesRow.vue'
@@ -56,7 +56,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({
   components: {
-    AppErrorNoData,
+    AppError,
     AppFootnotes,
     AppInfoLoad,
     TableUnclesRow
