@@ -26,6 +26,7 @@ import io.enkrypt.avro.processing.TokenBalanceKeyRecord
 import io.enkrypt.avro.processing.TokenBalanceRecord
 import io.enkrypt.avro.processing.TokenTransferKeyRecord
 import io.enkrypt.avro.processing.TokenTransferRecord
+import io.enkrypt.avro.tokens.EthTokenListsKeyRecord
 import io.enkrypt.kafka.streams.config.KafkaConfig
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
@@ -138,5 +139,9 @@ object Serdes : KoinComponent {
 
   fun ExchangeRate() = SpecificAvroSerde<ExchangeRateRecord>(registryClient).apply {
     configure(config, false)
+  }
+
+  fun EthTokenListsKey() = SpecificAvroSerde<EthTokenListsKeyRecord>(registryClient).apply {
+    configure(config, true)
   }
 }

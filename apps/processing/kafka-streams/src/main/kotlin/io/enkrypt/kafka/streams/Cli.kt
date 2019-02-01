@@ -9,6 +9,7 @@ import io.enkrypt.kafka.streams.config.AppConfig
 import io.enkrypt.kafka.streams.config.KafkaConfig
 import io.enkrypt.kafka.streams.di.Modules.kafkaStreams
 import io.enkrypt.kafka.streams.processors.BlockProcessor
+import io.enkrypt.kafka.streams.processors.EthTokensProcessor
 import io.enkrypt.kafka.streams.processors.ExchangeRatesProcessor
 import io.enkrypt.kafka.streams.processors.KafkaProcessor
 import io.enkrypt.kafka.streams.processors.StateProcessor
@@ -81,6 +82,7 @@ class Cli : CliktCommand() {
     listOf<KafkaProcessor>(
       BlockProcessor(),
       StateProcessor(),
+      EthTokensProcessor(),
       ExchangeRatesProcessor()
     ).forEach {
       it.buildTopology()

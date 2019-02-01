@@ -10,6 +10,7 @@ protocol Exchange {
     string symbol;
     string name;
     string image;
+    union { null, bytes } address;
     union { null, double } current_price;
     union { null, double } market_cap;
     union { null, int } market_cap_rank;

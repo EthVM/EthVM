@@ -2,6 +2,7 @@ package io.enkrypt.kafka.streams.processors
 
 import io.enkrypt.avro.exchange.ExchangeRateRecord
 import io.enkrypt.avro.exchange.SymbolKeyRecord
+import io.enkrypt.avro.processing.ContractMetadataRecord
 import io.enkrypt.common.extensions.isValid
 import io.enkrypt.kafka.streams.config.Topics
 import io.enkrypt.kafka.streams.serdes.Serdes
@@ -12,6 +13,7 @@ import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.Materialized
+import org.apache.kafka.streams.kstream.Produced
 import java.util.Properties
 
 class ExchangeRatesProcessor : AbstractKafkaProcessor() {
@@ -23,10 +25,6 @@ class ExchangeRatesProcessor : AbstractKafkaProcessor() {
       putAll(baseKafkaProps.toMap())
       put(StreamsConfig.APPLICATION_ID_CONFIG, id)
       put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 1)
-
-      put("schema.registry.url", appConfig.kafka.schemaRegistryUrl)
-      put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.SymbolKey().javaClass)
-      put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.ExchangeRate().javaClass)
     }
 
   override val logger: KLogger = KotlinLogging.logger {}
@@ -37,34 +35,30 @@ class ExchangeRatesProcessor : AbstractKafkaProcessor() {
     val builder = StreamsBuilder()
 
     // Listen to raw contract-metadata and convert the key to use symbol
-    builder
-      .stream(
-        "contract-metadata",
-        Consumed.with(Serdes.ContractKey(), Serdes.ContractMetadata())
-      )
-      .selectKey { _, v -> SymbolKeyRecord(v.getSymbol().toLowerCase()) }
-      .to("eth-lists-metadata")
-
-    val ethListsMetadataStream = builder
-      .table(
-        "eth-lists-metadata",
+    val ethTokensStream = builder
+      .table<SymbolKeyRecord, ContractMetadataRecord>(
+        Topics.EthTokensListBySymbol,
         Consumed.with(Serdes.SymbolKey(), Serdes.ContractMetadata())
       )
 
-    // Listen to raw exchange rates topic and match those with symbol
+    // Listen to raw exchange rates topic and match those with symbol and write to tokens-exchange-rate
     builder
       .table<SymbolKeyRecord, ExchangeRateRecord>(
-        "raw-exchange-rates",
+        Topics.RawExchangeRates,
         Consumed.with(Serdes.SymbolKey(), Serdes.ExchangeRate())
       )
       .filter { _, v -> v.isValid() }
       .join(
-        ethListsMetadataStream,
-        { v1, _ -> v1 },
+        ethTokensStream,
+        { rate, token -> rate.apply { if (token.getAddress() != null) setAddress(token.getAddress()) } },
         Materialized.with(Serdes.SymbolKey(), Serdes.ExchangeRate())
       )
       .toStream()
-      .to(Topics.ExchangeRates)
+      .filter { _, v -> v.getAddress() != null }
+      .to(
+        Topics.TokenExchangeRates,
+        Produced.with(Serdes.SymbolKey(), Serdes.ExchangeRate())
+      )
 
     // Generate the topology
     return builder.build()

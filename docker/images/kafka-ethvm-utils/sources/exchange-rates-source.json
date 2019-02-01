@@ -2,6 +2,7 @@
   "name": "enkryptio-exchange-rates-source",
   "config": {
     "connector.class": "io.enkrypt.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector",
-    "tasks.max": 1
+    "tasks.max": 1,
+    "sync.interval": 21600
   }
 }

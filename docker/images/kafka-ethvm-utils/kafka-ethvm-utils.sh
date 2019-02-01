@@ -55,16 +55,17 @@ create_topics() {
   kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 12 --topic miner-list --config retention.ms=-1 --config cleanup.policy=compact
   kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 12 --topic contract-creator-list --config retention.ms=-1 --config cleanup.policy=compact
 
+  kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 1  --topic eth-tokens-list --config cleanup.policy=compact
+  kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 1  --topic eth-tokens-list-by-symbol --config retention.ms=-1 --config cleanup.policy=compact
   kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 1  --topic raw-exchange-rates --config cleanup.policy=compact
-  kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 1  --topic eth-lists-metadata --config retention.ms=-1 --config cleanup.policy=compact
-  kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 1  --topic exchange-rates --config retention.ms=-1 --config cleanup.policy=compact
+  kafka-topics --create --if-not-exists --zookeeper $ZOOKEEPER_URL --replication-factor $KAFKA_REPLICATION_FACTOR --partitions 1  --topic token-exchange-rates --config retention.ms=-1 --config cleanup.policy=compact
 }
 
 reset_topics() {
   echo "===> Reset Kafka topics (if necessary) ..."
   kafka-streams-application-reset --zookeeper $ZOOKEEPER_URL --bootstrap-servers $KAFKA_BOOTSTRAP_URL --application-id block-processor --input-topics blocks
   kafka-streams-application-reset --zookeeper $ZOOKEEPER_URL --bootstrap-servers $KAFKA_BOOTSTRAP_URL --application-id state-processor --input-topics account-state
-  kafka-streams-application-reset --zookeeper $ZOOKEEPER_URL --bootstrap-servers $KAFKA_BOOTSTRAP_URL --application-id exchange-rates-processor --input-topics exchange-rates
+  kafka-streams-application-reset --zookeeper $ZOOKEEPER_URL --bootstrap-servers $KAFKA_BOOTSTRAP_URL --application-id exchange-rates-processor --input-topics token-exchange-rates
 }
 
 curl_register() {

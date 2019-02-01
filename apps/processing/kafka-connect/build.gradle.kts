@@ -29,8 +29,8 @@ dependencies {
 
   // Kafka
   compileOnly("org.apache.kafka:connect-api:2.1.0")
-  implementation("io.confluent:kafka-schema-registry-client:5.0.1")
-  implementation("io.confluent:kafka-connect-avro-converter:5.0.1")
+  implementation("io.confluent:kafka-schema-registry-client:5.1.0")
+  implementation("io.confluent:kafka-connect-avro-converter:5.1.0")
 
   // Mongo
   implementation("org.mongodb:mongodb-driver:3.9.1")

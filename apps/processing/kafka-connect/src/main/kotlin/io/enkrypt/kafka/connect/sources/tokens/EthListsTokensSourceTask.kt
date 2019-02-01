@@ -20,7 +20,7 @@ class EthListsTokensSourceTask : SourceTask() {
   private lateinit var url: String
   private var syncIntervalSeconds: Int = -1
 
-  private var lastSyncAt: Instant? = null
+  private var lastSyncAt: Instant? = Instant.EPOCH
 
   override fun version() = Versions.CURRENT
 
@@ -41,49 +41,45 @@ class EthListsTokensSourceTask : SourceTask() {
       return emptyList()
     }
 
-    val inputStream = URL(url).openStream()
-    val entries = klaxon.parseArray<ContractMetadata>(inputStream)
-
     val sourcePartition = mapOf("url" to url)
+    val sourceOffset = emptyMap<String, Any>()
 
-    val result = entries?.map { e ->
+    val inputStream = URL(url).openStream()
+    val entries = klaxon.parseArray<ContractMetadata>(inputStream) ?: emptyList()
 
-      val key = Struct(ContractKeySchema).apply {
+    val records = entries.dropWhile { it.address.isEmpty() }.map { e ->
+
+      val key = Struct(EthTokenKeySchema).apply {
         put("address", Hex.decode(e.address.substring(2)))
       }
 
       SourceRecord(
         sourcePartition,
-        emptyMap<String, Any>(),
+        sourceOffset,
         topic,
-        ContractKeySchema,
+        EthTokenKeySchema,
         key,
         ContractMetadataSchema,
         e.toStruct()
       )
-    } ?: emptyList()
+    }
 
     lastSyncAt = Instant.now()
 
-    return result
+    return records
   }
 
-  private fun shouldSync(): Boolean =
-    if (lastSyncAt == null) {
-      true
-    } else {
-      ChronoUnit.SECONDS.between(lastSyncAt, Instant.now()) > syncIntervalSeconds
-    }
+  private fun shouldSync(): Boolean = ChronoUnit.SECONDS.between(lastSyncAt, Instant.now()) > syncIntervalSeconds
 
   companion object {
 
-    val ContractKeySchema: Schema = SchemaBuilder(Schema.Type.STRUCT)
-      .name("io.enkrypt.avro.common.ContractKeyRecord")
+    val EthTokenKeySchema: Schema = SchemaBuilder.struct()
+      .name("io.enkrypt.avro.tokens.EthTokenListsKeyRecord")
       .field("address", Schema.BYTES_SCHEMA)
       .build()
 
-    val LogoSchema: Schema = SchemaBuilder(Schema.Type.STRUCT)
-      .name("io.enkrypt.avro.common.ContractLogoRecord")
+    val LogoSchema: Schema = SchemaBuilder.struct()
+      .name("io.enkrypt.avro.processing.ContractLogoRecord")
       .optional()
       .field("src", Schema.OPTIONAL_STRING_SCHEMA)
       .field("width", Schema.OPTIONAL_STRING_SCHEMA)
@@ -91,15 +87,15 @@ class EthListsTokensSourceTask : SourceTask() {
       .field("ipfs_hash", Schema.OPTIONAL_STRING_SCHEMA)
       .build()
 
-    val SupportSchema: Schema = SchemaBuilder(Schema.Type.STRUCT)
-      .name("io.enkrypt.avro.common.ContractSupportRecord")
+    val SupportSchema: Schema = SchemaBuilder.struct()
+      .name("io.enkrypt.avro.processing.ContractSupportRecord")
       .optional()
       .field("email", Schema.OPTIONAL_STRING_SCHEMA)
       .field("url", Schema.OPTIONAL_STRING_SCHEMA)
       .build()
 
-    val SocialSchema: Schema = SchemaBuilder(Schema.Type.STRUCT)
-      .name("io.enkrypt.avro.common.ContractSocialRecord")
+    val SocialSchema: Schema = SchemaBuilder.struct()
+      .name("io.enkrypt.avro.processing.ContractSocialRecord")
       .optional()
       .field("blog", Schema.OPTIONAL_STRING_SCHEMA)
       .field("chat", Schema.OPTIONAL_STRING_SCHEMA)
@@ -116,100 +112,101 @@ class EthListsTokensSourceTask : SourceTask() {
       .field("youtube", Schema.OPTIONAL_STRING_SCHEMA)
       .build()
 
-    val ContractMetadataSchema = SchemaBuilder(Schema.Type.STRUCT)
-      .name("io.enkrypt.avro.common.ContractMetadataRecord")
+    val ContractMetadataSchema: Schema = SchemaBuilder.struct()
+      .name("io.enkrypt.avro.processing.ContractMetadataRecord")
       .field("name", Schema.STRING_SCHEMA)
       .field("symbol", Schema.STRING_SCHEMA)
       .field("address", Schema.BYTES_SCHEMA)
       .field("decimals", Schema.INT32_SCHEMA)
       .field("ens_address", Schema.OPTIONAL_STRING_SCHEMA)
       .field("type", Schema.OPTIONAL_STRING_SCHEMA)
-      .field("website", Schema.OPTIONAL_STRING_SCHEMA)
       .field("logo", LogoSchema)
       .field("support", SupportSchema)
       .field("social", SocialSchema)
+      .field("website", Schema.OPTIONAL_STRING_SCHEMA)
+  }
+
+  data class ContractLogo(
+    val src: String? = "",
+    private val width: Int? = 0,
+    private val height: Int? = 0
+  ) {
+
+    fun toStruct(): Struct =
+      Struct(EthListsTokensSourceTask.LogoSchema).apply {
+        put("src", src)
+      }
+  }
+
+  data class ContractSupport(val email: String?, val url: String?) {
+
+    fun toStruct(): Struct =
+      Struct(EthListsTokensSourceTask.SupportSchema).apply {
+        put("email", email)
+        put("url", url)
+      }
+  }
+
+  data class ContractSocial(
+    val blog: String?,
+    val chat: String?,
+    val facebook: String?,
+    val forum: String?,
+    val github: String?,
+    val gitter: String?,
+    val instagram: String?,
+    val linkedin: String?,
+    val reddit: String?,
+    val slack: String?,
+    val telegram: String?,
+    val twitter: String?,
+    val youtube: String?
+  ) {
+
+    fun toStruct(): Struct =
+      Struct(EthListsTokensSourceTask.SocialSchema).apply {
+        put("blog", blog)
+        put("chat", chat)
+        put("facebook", facebook)
+        put("forum", forum)
+        put("github", github)
+        put("gitter", gitter)
+        put("instagram", instagram)
+        put("linkedin", linkedin)
+        put("reddit", reddit)
+        put("slack", slack)
+        put("telegram", telegram)
+        put("twitter", twitter)
+        put("youtube", youtube)
+      }
+  }
+
+  data class ContractMetadata(
+    val name: String,
+    val symbol: String,
+    val address: String,
+    val decimals: Int,
+    val ens_address: String?,
+    val type: String?,
+    val website: String?,
+    val logo: ContractLogo?,
+    val support: ContractSupport?,
+    val social: ContractSocial?
+  ) {
+
+    fun toStruct(): Struct =
+      Struct(EthListsTokensSourceTask.ContractMetadataSchema).apply {
+        put("name", name)
+        put("symbol", symbol)
+        put("address", Hex.decode(address.substring(2)))
+        put("decimals", decimals)
+        put("ens_address", ens_address)
+        put("type", type)
+        put("logo", logo?.toStruct())
+        put("support", support?.toStruct())
+        put("social", social?.toStruct())
+        put("website", website)
+      }
   }
 }
 
-data class ContractLogo(val src: String?, val width: String?, val height: String?) {
-
-  // TODO add ipfs hash
-
-  fun toStruct(): Struct =
-    Struct(EthListsTokensSourceTask.LogoSchema).apply {
-      put("src", src)
-      put("width", width)
-      put("height", height)
-    }
-}
-
-data class ContractSupport(val email: String?, val url: String?) {
-
-  fun toStruct(): Struct =
-    Struct(EthListsTokensSourceTask.SupportSchema).apply {
-      put("email", email)
-      put("url", url)
-    }
-}
-
-data class ContractSocial(
-  val blog: String?,
-  val chat: String?,
-  val facebook: String?,
-  val forum: String?,
-  val github: String?,
-  val gitter: String?,
-  val instagram: String?,
-  val linkedin: String?,
-  val reddit: String?,
-  val slack: String?,
-  val telegram: String?,
-  val twitter: String?,
-  val youtube: String?
-) {
-
-  fun toStruct(): Struct =
-    Struct(EthListsTokensSourceTask.SocialSchema).apply {
-      put("blog", blog)
-      put("chat", chat)
-      put("facebook", facebook)
-      put("forum", forum)
-      put("github", github)
-      put("gitter", gitter)
-      put("instagram", instagram)
-      put("linkedin", linkedin)
-      put("reddit", reddit)
-      put("slack", slack)
-      put("telegram", telegram)
-      put("twitter", twitter)
-      put("youtube", youtube)
-    }
-}
-
-data class ContractMetadata(
-  val name: String,
-  val symbol: String,
-  val address: String,
-  val decimals: Int,
-  val ens_address: String?,
-  val type: String?,
-  val website: String?,
-//  val logo: ContractLogo?,
-  val support: ContractSupport?,
-  val social: ContractSocial?
-) {
-
-  fun toStruct(): Struct =
-    Struct(EthListsTokensSourceTask.ContractMetadataSchema).apply {
-      put("name", name)
-      put("symbol", symbol)
-      put("address", Hex.decode(address.substring(2)))
-      put("decimals", decimals)
-      put("ens_address", ens_address)
-      put("type", type)
-//      put("logo", logo?.toStruct())
-      put("support", support?.toStruct())
-      put("social", social?.toStruct())
-      put("website", website)
-    }
-}

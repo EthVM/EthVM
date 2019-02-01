@@ -14,6 +14,7 @@ object Topics {
   const val FungibleTokenMovements = "fungible-token-movements"
   const val Balances = "balances"
 
+  const val ContractMetadata = "contract-metadata"
   const val ContractCreations = "contract-creations"
   const val ContractDestructions = "contract-destructions"
 
@@ -23,5 +24,9 @@ object Topics {
   const val MinerList = "miner-list"
   const val ContractCreatorList = "contract-creator-list"
 
-  const val ExchangeRates = "exchange-rates"
+  const val EthTokensList = "eth-tokens-list"
+  const val EthTokensListBySymbol = "eth-tokens-list-by-symbol"
+
+  const val RawExchangeRates = "raw-exchange-rates"
+  const val TokenExchangeRates = "token-exchange-rates"
 }

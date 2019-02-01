@@ -102,6 +102,7 @@ class CoinGeckoExchangeRateSourceTask : SourceTask() {
       .field("symbol", Schema.STRING_SCHEMA)
       .field("name", Schema.STRING_SCHEMA)
       .field("image", Schema.STRING_SCHEMA)
+      .field("address", Schema.OPTIONAL_BYTES_SCHEMA)
       .field("current_price", Schema.OPTIONAL_FLOAT64_SCHEMA)
       .field("market_cap", Schema.OPTIONAL_FLOAT64_SCHEMA)
       .field("market_cap_rank", Schema.OPTIONAL_INT32_SCHEMA)
@@ -122,7 +123,7 @@ class CoinGeckoExchangeRateSourceTask : SourceTask() {
 
       fun toStruct(): Struct =
         Struct(SymbolKeyMetadataSchema).apply {
-          put("symbol", symbol.toLowerCase())
+          put("symbol", symbol.toUpperCase().trim())
         }
     }
 
