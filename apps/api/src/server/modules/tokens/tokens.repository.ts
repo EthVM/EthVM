@@ -75,7 +75,7 @@ export class MongoTokensRepository extends BaseMongoDbRepository implements Toke
         if (!resp) {
           return r
         }
-        resp.forEach(e => r.unshift(toTokenExchangeRate(e)))
+        resp.forEach(e => r.push(toTokenExchangeRate(e)))
         return r
       })
 
