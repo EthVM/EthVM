@@ -1,6 +1,6 @@
 <template>
   <v-card color="white" flat class="pt-3">
-    <v-card-title class="title font-weight-bold pl-4">{{ token.name }} ({{ token.symbol }})</v-card-title>
+    <v-card-title class="title font-weight-bold pl-4">{{ token.name }} ({{ token.symbol }}) - Filtered by Holder</v-card-title>
     <v-divider class="lineGrey" />
     <v-list>
       <v-list-tile v-for="(item, index) in details" :key="index">
@@ -17,6 +17,7 @@
         </v-layout>
       </v-list-tile>
     </v-list>
+  </div>
   </v-card>
 </template>
 
@@ -37,6 +38,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 export default class DetailsListTokens extends Vue {
   @Prop(Object) contract: Object<any>
   @Prop(Object) token: Object<any>
+  @Prop(Object) holder: Object<any>
 
   listType = 'tx'
 
@@ -67,61 +69,40 @@ export default class DetailsListTokens extends Vue {
     }
     return [
       {
+        title: this.$i18n.t('token.holder'),
+        detail: this.$route.query.holder,
+        link: `/address/${this.$route.query.holder}`
+      },
+      {
         title: this.$i18n.t('title.contract'),
         detail: this.token.address,
         link: `/address/${this.token.address}`
       },
       {
-        title: this.$i18n.t('token.owner'),
-        detail: this.token.owner,
-        link: `/address/${this.token.owner}`
+        title: this.$i18n.t('token.balance'),
+        detail: this.holder.tokens[0].balance
       },
       {
-        title: this.$i18n.t('title.supply'),
-        detail: this.token.totalSupply
+        title: `${this.$i18n.t('token.balance')} (USD)`,
+        detail: this.balanceUsd
       },
       {
-        title: this.$i18n.t('title.price'),
-        detail: `$${this.token.price.rate} (${this.token.price.diff}%)`
+        title: this.$i18n.t('token.transfers'),
+        detail: this.holder.countTxs
       },
       {
         title: this.$i18n.t('title.marketCap'),
         detail: `$${this.token.price.marketCapUsd}`
       },
       {
-        title: this.$i18n.t('token.totalHold'),
-        detail: `${this.token.holdersCount}`
-      },
-      {
         title: this.$i18n.t('title.decimals'),
         detail: this.contract.metadata.decimals
-      },
-      {
-        title: this.$i18n.t('title.website'),
-        detail: `<a href="${this.contract.metadata.website}" target="_BLANK">${this.contract.metadata.website}</a>`
-      },
-      {
-        title: this.$i18n.t('title.support'),
-        detail: `<a href="mailto:${this.contract.metadata.support.email}" target="_BLANK">${this.contract.metadata.support.email}</a>`
-      },
-      {
-        title: this.$i18n.t('title.links'),
-        detail: Object.entries(this.contract.metadata.social)
-          .map(obj => {
-            const name = obj[0]
-            const url = obj[1]
-            if (url === null || url === '') {
-              return ''
-            }
-            return `<a href="${url}" target="_BLANK"><i aria-hidden="true" class="v-icon secondary--text ${
-              icons[name]
-            } pr-2 material-icons theme--light"></i></a>`
-          })
-          .reduce((a, b) => {
-            return `${a}${b}`
-          })
       }
     ]
+  }
+
+  get balanceUsd() {
+    return this.token.price.rate * this.holder.tokens[0].balance
   }
 }
 </script>

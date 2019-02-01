@@ -3,7 +3,6 @@ import { Block, PendingTx, Tx, Uncle } from '@app/core/models'
 import { AddressBalance, AddressMetadata, Contract, Events, Quote, Statistic, Token, TokenTransfer, TokenExchangeRate } from 'ethvm-common'
 
 export class EthvmSocketIoApi implements EthvmApi {
-
   constructor(private readonly io: SocketIOClient.Socket) {}
 
   // ------------------------------------------------------------------------------------
