@@ -23,6 +23,7 @@ export interface EthvmApi {
 
   // Exchanges
   getExchangeRateQuote(symbol: string, to: string): Promise<Quote>
+  getTokenExchangeRates(limit: number, page: number): Promise<TokenExchangeRate>
 
   // Pending Txs
   getPendingTxs(limit: number, page: number): Promise<PendingTx[]>

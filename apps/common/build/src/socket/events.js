@@ -46,6 +46,7 @@ exports.Events = {
     getTotalNumberOfUncles: "get-total-number-of-uncles",
     // Exchange
     getExchangeRates: "get-exchange-rates",
+    getTokenExchangeRates: "get-token-exchange-rates",
     // Search
     search: "search",
     // Stats

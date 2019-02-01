@@ -40,6 +40,7 @@ export declare const Events: {
     getUncles: string;
     getTotalNumberOfUncles: string;
     getExchangeRates: string;
+    getTokenExchangeRates: string;
     search: string;
     getAverageDifficultyStats: string;
     getAverageGasLimitStats: string;

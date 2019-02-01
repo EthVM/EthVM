@@ -1,10 +1,3 @@
-export interface ExchangeRate {
-  symbol: string
-  rank?: number | null
-  quotes: Quote[]
-  total_supply: number | null
-}
-
 export interface Quote {
   to: string
   price: string
