@@ -1,12 +1,10 @@
 <template>
   <app-tabs :tabs="tabs">
-
     <!-- Transfers -->
     <v-tab-item slot="tabs-item" value="tab-0">
       <transfer-table-tokens-holder :transfers="transfers" />
     </v-tab-item>
     <!-- End Transfers -->
-
   </app-tabs>
 </template>
 
@@ -22,7 +20,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
   }
 })
 export default class DetailsTabsTokensHolder extends Vue {
-  @Prop(Array) transfers: array
+  @Prop(Array) transfers: Array<any>
   @Prop(String) addressRef: string
 
   activeTab = 0

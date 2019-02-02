@@ -65,7 +65,7 @@ export default class PageDetailsUncle extends Vue {
   fetchUncle() {
     this.$api
       .getUncle(this.uncleRef)
-      .then(raw => this.setUncleInfo(new Uncle(raw)))
+      .then(uncle => this.setUncleInfo(uncle))
       .catch(err => (this.error = true))
   }
 

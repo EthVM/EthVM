@@ -22,7 +22,7 @@ import { Events } from 'ethvm-common'
     AppChart
   }
 })
-export default class ChartGasPrice extends Mixins(ChartMixin) {
+export default class ChartUnclesNumber extends Mixins(ChartMixin) {
   //Temp event:
   newEvent = Events.getUnclesStats
 

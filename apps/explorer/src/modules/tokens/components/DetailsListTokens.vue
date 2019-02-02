@@ -35,8 +35,8 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
   }
 })
 export default class DetailsListTokens extends Vue {
-  @Prop(Object) contract: Object<any>
-  @Prop(Object) token: Object<any>
+  @Prop(Object) contract: any
+  @Prop(Object) token: any
 
   listType = 'tx'
 
@@ -67,45 +67,45 @@ export default class DetailsListTokens extends Vue {
     }
     return [
       {
-        title: this.$i18n.t('title.contract'),
+        title: this.$i18n.t('title.contract').toString(),
         detail: this.token.address,
         link: `/address/${this.token.address}`
       },
       {
-        title: this.$i18n.t('token.owner'),
+        title: this.$i18n.t('token.owner').toString(),
         detail: this.token.owner,
         link: `/address/${this.token.owner}`
       },
       {
-        title: this.$i18n.t('title.supply'),
+        title: this.$i18n.t('title.supply').toString(),
         detail: this.token.totalSupply
       },
       {
-        title: this.$i18n.t('title.price'),
+        title: this.$i18n.t('title.price').toString(),
         detail: `$${this.token.price.rate} (${this.token.price.diff}%)`
       },
       {
-        title: this.$i18n.t('title.marketCap'),
+        title: this.$i18n.t('title.marketCap').toString(),
         detail: `$${this.token.price.marketCapUsd}`
       },
       {
-        title: this.$i18n.t('token.totalHold'),
+        title: this.$i18n.t('token.totalHold').toString(),
         detail: `${this.token.holdersCount}`
       },
       {
-        title: this.$i18n.t('title.decimals'),
+        title: this.$i18n.t('title.decimals').toString(),
         detail: this.contract.metadata.decimals
       },
       {
-        title: this.$i18n.t('title.website'),
+        title: this.$i18n.t('title.website').toString(),
         detail: `<a href="${this.contract.metadata.website}" target="_BLANK">${this.contract.metadata.website}</a>`
       },
       {
-        title: this.$i18n.t('title.support'),
+        title: this.$i18n.t('title.support').toString(),
         detail: `<a href="mailto:${this.contract.metadata.support.email}" target="_BLANK">${this.contract.metadata.support.email}</a>`
       },
       {
-        title: this.$i18n.t('title.links'),
+        title: this.$i18n.t('title.links').toString(),
         detail: Object.entries(this.contract.metadata.social)
           .map(obj => {
             const name = obj[0]

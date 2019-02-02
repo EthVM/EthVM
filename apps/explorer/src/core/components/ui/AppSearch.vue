@@ -60,7 +60,7 @@ export default class AppSearch extends Vue {
   // Methods
   search() {
     this.$api.search(this.searchInput).then(res => {
-      switch (result.type) {
+      switch (res.type) {
         case 0:
           {
             this.$router.push({

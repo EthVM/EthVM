@@ -17,7 +17,6 @@
         </v-layout>
       </v-list-tile>
     </v-list>
-  </div>
   </v-card>
 </template>
 
@@ -36,9 +35,9 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
   }
 })
 export default class DetailsListTokens extends Vue {
-  @Prop(Object) contract: Object<any>
-  @Prop(Object) token: Object<any>
-  @Prop(Object) holder: Object<any>
+  @Prop(Object) contract: any
+  @Prop(Object) token: any
+  @Prop(Object) holder: any
 
   listType = 'tx'
 
@@ -69,33 +68,33 @@ export default class DetailsListTokens extends Vue {
     }
     return [
       {
-        title: this.$i18n.t('token.holder'),
+        title: this.$i18n.t('token.holder').toString(),
         detail: this.$route.query.holder,
         link: `/address/${this.$route.query.holder}`
       },
       {
-        title: this.$i18n.t('title.contract'),
+        title: this.$i18n.t('title.contract').toString(),
         detail: this.token.address,
         link: `/address/${this.token.address}`
       },
       {
-        title: this.$i18n.t('token.balance'),
+        title: this.$i18n.t('token.balance').toString(),
         detail: this.holder.tokens[0].balance
       },
       {
-        title: `${this.$i18n.t('token.balance')} (USD)`,
+        title: `${this.$i18n.t('token.balance').toString()} (USD)`,
         detail: this.balanceUsd
       },
       {
-        title: this.$i18n.t('token.transfers'),
+        title: this.$i18n.t('token.transfers').toString(),
         detail: this.holder.countTxs
       },
       {
-        title: this.$i18n.t('title.marketCap'),
+        title: this.$i18n.t('title.marketCap').toString(),
         detail: `$${this.token.price.marketCapUsd}`
       },
       {
-        title: this.$i18n.t('title.decimals'),
+        title: this.$i18n.t('title.decimals').toString(),
         detail: this.contract.metadata.decimals
       }
     ]

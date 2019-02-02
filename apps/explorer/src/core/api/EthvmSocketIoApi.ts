@@ -77,7 +77,7 @@ export class EthvmSocketIoApi implements EthvmApi {
     return this.promisify(Events.getExchangeRates, { symbol, to })
   }
 
-  public getTokenExchangeRates(limit: number = 100, page: number = 0): Promise<TokenExchangeRate[]> {
+  public getTokenExchangeRates(limit: number, page: number): Promise<TokenExchangeRate[]> {
     return this.promisify(Events.getTokenExchangeRates, { limit, page })
   }
 

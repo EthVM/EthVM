@@ -143,7 +143,7 @@ export default class TheNavigationDrawer extends Vue {
     return this.getCurrPath() == _name
   }
 
-  checkPath(links: Array) {
+  checkPath(links: any[]) {
     for (let i = 0; i < links.length; i++) {
       if (this.checkLinkPath(links[i].name)) {
         return true

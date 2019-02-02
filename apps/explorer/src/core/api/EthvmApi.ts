@@ -1,5 +1,5 @@
 import { Block, PendingTx, Tx, Uncle } from '@app/core/models'
-import { AddressBalance, AddressMetadata, Contract, Quote, Statistic, Token, TokenTransfer } from 'ethvm-common'
+import { AddressBalance, AddressMetadata, Contract, Quote, Statistic, Token, TokenTransfer, TokenExchangeRate } from 'ethvm-common'
 
 export interface EthvmApi {
   // Address
@@ -23,7 +23,7 @@ export interface EthvmApi {
 
   // Exchanges
   getExchangeRateQuote(symbol: string, to: string): Promise<Quote>
-  getTokenExchangeRates(limit: number, page: number): Promise<TokenExchangeRate>
+  getTokenExchangeRates(limit: number, page: number): Promise<TokenExchangeRate[]>
 
   // Pending Txs
   getPendingTxs(limit: number, page: number): Promise<PendingTx[]>

@@ -1,14 +1,9 @@
 <template>
   <div>
-
     <!-- Pagination -->
     <v-layout row fill-height align-center justify-space-between>
       <div v-html="paginationText" class="ml-2"></div>
-      <v-pagination
-        v-model="page"
-        :length="numPages"
-        class="mt-2 mb-2">
-      </v-pagination>
+      <v-pagination v-model="page" :length="numPages" class="mt-2 mb-2"> </v-pagination>
     </v-layout>
     <!-- End Pagination -->
 
@@ -122,7 +117,7 @@ export default class TransferTableTokens extends Vue {
    * @return {String} - Pagination text
    */
   get paginationText() {
-    const start = ((this.page - 1) * MAX_ITEMS) + 1
+    const start = (this.page - 1) * MAX_ITEMS + 1
     const end = start + this.transfersPage.length - 1
     return `Showing results ${start} - ${end} of ${this.transfers.length}`
   }
