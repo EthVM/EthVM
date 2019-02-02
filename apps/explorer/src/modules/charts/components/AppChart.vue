@@ -64,7 +64,7 @@ Chart.defaults.global.layout = Object.assign(Chart.defaults.global.layout, {
 
 Chart.defaults.global.elements.point = Object.assign(Chart.defaults.global.elements.point, {
   hoverRadius: 6,
-  borderWidth: 2
+  borderWidth: 1
 })
 
 Chart.defaults.doughnut.animation = Object.assign(Chart.defaults.doughnut.animation, {

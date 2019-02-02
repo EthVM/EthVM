@@ -57,24 +57,6 @@ const config = convict({
         format: String,
         env: 'ETHVM_MONGO_DB_NAME'
       }
-    },
-
-    redis: {
-      host: {
-        default: 'localhost',
-        format: String,
-        env: 'ETHVM_DATA_STORE_REDIS_HOST'
-      },
-      port: {
-        default: 6379,
-        format: 'port',
-        env: 'ETHVM_DATA_STORE_REDIS_PORT'
-      },
-      db: {
-        default: 0,
-        format: Number,
-        env: 'ETHVM_DATA_STORE_REDIS_DB'
-      }
     }
   },
 

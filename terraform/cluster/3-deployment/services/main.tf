@@ -18,11 +18,6 @@ module "kafka-schema-registry" {
   namespace = "${var.namespace}"
 }
 
-module "redis" {
-  source    = "./redis"
-  namespace = "${var.namespace}"
-}
-
 module "mongo" {
   source    = "./mongo"
   namespace = "${var.namespace}"

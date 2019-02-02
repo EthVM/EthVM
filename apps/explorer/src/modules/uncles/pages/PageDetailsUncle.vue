@@ -63,19 +63,10 @@ export default class PageDetailsUncle extends Vue {
 
   //Methods:
   fetchUncle() {
-    this.$socket.emit(
-      Events.getUncle,
-      {
-        hash: this.uncleRef.replace('0x', '')
-      },
-      (error, data) => {
-        if (error || !data) {
-          this.error = true
-          return
-        }
-        this.setUncleInfo(new Uncle(data))
-      }
-    )
+    this.$api
+      .getUncle(this.uncleRef)
+      .then(uncle => this.setUncleInfo(uncle))
+      .catch(err => (this.error = true))
   }
 
   setUncleInfo(uncle: Uncle) {

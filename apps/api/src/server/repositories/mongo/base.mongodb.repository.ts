@@ -11,7 +11,9 @@ export const MongoEthVM = {
     uncles: 'uncles',
     pendingTxs: 'pending_transactions',
     statistics: 'aggregate_block_metrics',
-    tokenTransfers: 'token_transfers'
+    tokenTransfers: 'token_transfers',
+    accountMetadata: 'account_metadata',
+    tokenExchangeRates: 'token_exchange_rates'
   }
 }
 

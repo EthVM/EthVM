@@ -191,6 +191,13 @@ object TypeMappings {
       "to" to Hex,
       "amount" to UBigInt,
       "tokenId" to UBigInt
+    ),
+    "accountTxCountKey" to mapOf(
+      "address" to Hex
+    ),
+    "exchangeRate" to mapOf(
+      "id" to Ignore,
+      "address" to Hex
     )
   )
 
@@ -199,7 +206,7 @@ object TypeMappings {
   @Suppress("UNCHECKED_CAST")
   private fun buildConversionMappings(conversions: Map<String, Any>, path: String? = null): Set<Pair<String, ConversionType>> {
 
-    var results = setOf<Pair<String, ConversionType>>()
+    val results = mutableSetOf<Pair<String, ConversionType>>()
 
     conversions.entries
       .forEach { (key, value) ->

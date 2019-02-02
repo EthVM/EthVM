@@ -13,8 +13,8 @@ export interface Tab {
 export interface Detail {
   title: string
   detail: string
-  copy: boolean
-  link: string
+  link?: string
+  copy?: boolean
 }
 
 export interface BlockDetailsTitle {
@@ -22,4 +22,11 @@ export interface BlockDetailsTitle {
   next?: string
   prev?: string
   uncles?: string[]
+}
+
+export interface Crumb {
+  text: string
+  disabled: boolean
+  icon?: string
+  link?: string
 }

@@ -1,15 +1,15 @@
 <template>
   <v-container grid-list-lg class="mb-0">
     <app-bread-crumbs :new-items="crumbs" />
-    <v-layout row wrap justify-start class="mb-4">
+    <v-layout v-if="!error" row wrap justify-start class="mb-4">
       <v-flex xs12>
         <app-list-details :items="blockDetails" :more-items="blockMoreDetails" :details-type="listType" :loading="loading">
-          <app-list-title slot="details-title" :list-type="listType" :block-details="blockInfo" />
+          <app-list-title slot="details-title" :list-type="listType" :block-details="blockInfo" :next-block="nextBlock" :prev-block="previousBlock" />
         </app-list-details>
       </v-flex>
     </v-layout>
     <!-- Mined Block, txs table -->
-    <v-layout row wrap justify-start class="mb-4" v-if="!loading">
+    <v-layout row wrap justify-start class="mb-4" v-if="!loading && !error">
       <v-flex v-if="txs" xs12>
         <table-txs v-if="txs" :transactions="txs" :frame-txs="true" :page-type="listType" :loading="loading" class="mt-3" />
         <v-card v-if="txs.length === 0" flat color="white">
@@ -17,6 +17,7 @@
         </v-card>
       </v-flex>
     </v-layout>
+    <app-error v-else :page-type="listType" :reference="blockRef" />
   </v-container>
 </template>
 
@@ -24,6 +25,7 @@
 import { Block, Uncle, Tx, EthValue } from '@app/core/models'
 import { Events } from 'ethvm-common'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
+import AppError from '@app/core/components/ui/AppError.vue'
 import AppListDetails from '@app/core/components/ui/AppListDetails.vue'
 import AppListTitle from '@app/core/components/ui/AppListTitle.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
@@ -38,6 +40,7 @@ import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 @Component({
   components: {
     AppBreadCrumbs,
+    AppError,
     AppListDetails,
     AppListTitle,
     TableTxs
@@ -53,7 +56,8 @@ export default class PageDetailsBlock extends Vue {
   block = null
   blockInfo = {
     next: null,
-    prev: null
+    prev: null,
+    mined: false
   }
 
   txs = []
@@ -85,25 +89,15 @@ export default class PageDetailsBlock extends Vue {
 
   // Methods:
   fetchBlock() {
-    const event = eth.isValidHash(this.blockRef) ? Events.getBlock : Events.getBlockByNumber
-    const payload = eth.isValidHash(this.blockRef) ? { hash: this.blockRef.replace('0x', '') } : { number: Number(this.blockRef) }
-
-    this.$socket.emit(event, payload, (error, result) => {
-      if (error || !result) {
-        this.error = true
-        return
-      }
-      this.setBlockInfo(new Block(result))
-    })
+    const promise = eth.isValidHash(this.blockRef) ? this.$api.getBlock(this.blockRef) : this.$api.getBlockByNumber(Number(this.blockRef))
+    promise.then(block => this.setBlockInfo(block)).catch(err => (this.error = true))
   }
 
   setBlockInfo(block: Block) {
     this.block = block
-
+    this.blockInfo.mined = true
     this.blockInfo.next = this.block.getNumber() + 1
     this.blockInfo.prev = this.block.getNumber() === 0 ? 0 : this.block.getNumber() - 1
-
-    this.crumbs[1].text = this.$i18n.t('title.blockN') + ' ' + this.block.getNumber()
 
     this.timestamp = block.getTimestamp().toString()
     this.setDetails(this.block)
@@ -212,11 +206,27 @@ export default class PageDetailsBlock extends Vue {
   // Computed:
 
   get nextBlock(): String {
-    return '/block/' + this.blockInfo.next
+    if (this.blockInfo.mined) {
+      return '/block/' + this.blockInfo.next
+    }
+
+    if (!this.$route.params.blockRef.includes('0x')) {
+      const next = Number(this.$route.params.blockRef) + 1
+      return '/block/' + next
+    }
+    return ''
   }
 
   get previousBlock(): String {
-    return '/block/' + this.blockInfo.prev
+    if (this.blockInfo.mined) {
+      return '/block/' + this.blockInfo.prev
+    }
+
+    if (!this.$route.params.blockRef.includes('0x')) {
+      const prev = Number(this.$route.params.blockRef) - 1
+      return '/block/' + prev
+    }
+    return ''
   }
 
   get blockDetails(): Detail[] {
@@ -239,7 +249,7 @@ export default class PageDetailsBlock extends Vue {
         link: '/blocks'
       },
       {
-        text: '',
+        text: this.$i18n.t('title.blockN') + ' ' + this.$route.params.blockRef,
         disabled: true
       }
     ]

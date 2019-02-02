@@ -8,12 +8,17 @@ import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.capture.TransactionKeyRecord
 import io.enkrypt.avro.capture.TransactionRecord
 import io.enkrypt.avro.capture.UncleKeyRecord
+import io.enkrypt.avro.exchange.ExchangeRateRecord
+import io.enkrypt.avro.exchange.SymbolKeyRecord
+import io.enkrypt.avro.processing.AddressMetadataKeyRecord
+import io.enkrypt.avro.processing.AddressMetadataRecord
 import io.enkrypt.avro.processing.BlockChainEventsRecord
 import io.enkrypt.avro.processing.BlockMetricsRecord
 import io.enkrypt.avro.processing.ChainEventRecord
 import io.enkrypt.avro.processing.ContractCreateRecord
 import io.enkrypt.avro.processing.ContractDestroyRecord
 import io.enkrypt.avro.processing.ContractKeyRecord
+import io.enkrypt.avro.processing.ContractMetadataRecord
 import io.enkrypt.avro.processing.MetricKeyRecord
 import io.enkrypt.avro.processing.MetricRecord
 import io.enkrypt.avro.processing.ReorgKeyRecord
@@ -21,6 +26,7 @@ import io.enkrypt.avro.processing.TokenBalanceKeyRecord
 import io.enkrypt.avro.processing.TokenBalanceRecord
 import io.enkrypt.avro.processing.TokenTransferKeyRecord
 import io.enkrypt.avro.processing.TokenTransferRecord
+import io.enkrypt.avro.tokens.EthTokenListsKeyRecord
 import io.enkrypt.kafka.streams.config.KafkaConfig
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
@@ -113,5 +119,29 @@ object Serdes : KoinComponent {
 
   fun BlockHeader() = SpecificAvroSerde<BlockHeaderRecord>(registryClient).apply {
     configure(config, false)
+  }
+
+  fun ContractMetadata() = SpecificAvroSerde<ContractMetadataRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun AddressMetadataKey() = SpecificAvroSerde<AddressMetadataKeyRecord>(registryClient).apply {
+    configure(config, true)
+  }
+
+  fun AddressMetadata() = SpecificAvroSerde<AddressMetadataRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun SymbolKey() = SpecificAvroSerde<SymbolKeyRecord>(registryClient).apply {
+    configure(config, true)
+  }
+
+  fun ExchangeRate() = SpecificAvroSerde<ExchangeRateRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun EthTokenListsKey() = SpecificAvroSerde<EthTokenListsKeyRecord>(registryClient).apply {
+    configure(config, true)
   }
 }

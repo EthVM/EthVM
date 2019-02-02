@@ -3,6 +3,7 @@ import { Callback } from '@app/interfaces'
 import { logger } from '@app/logger'
 import { errors } from '@app/server/core/exceptions'
 import { Streamer, StreamingEvent } from '@app/server/core/streams'
+import { AddressesService } from '@app/server/modules/addresses'
 import { BalancesService } from '@app/server/modules/balances'
 import { toBlockMetrics } from '@app/server/modules/block-metrics'
 import { BlocksService, toBlock } from '@app/server/modules/blocks'
@@ -41,6 +42,7 @@ export class EthVMServer {
   private readonly events: Map<string, SocketEvent> = new Map()
 
   constructor(
+    public readonly addressesService: AddressesService,
     public readonly blockService: BlocksService,
     public readonly contractsService: ContractsService,
     public readonly uncleService: UnclesService,

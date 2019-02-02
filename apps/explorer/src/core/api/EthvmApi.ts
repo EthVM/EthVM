@@ -1,35 +1,57 @@
-import { AddressBalance, Block, Uncle, Tx, PendingTx, Statistic } from 'ethvm-common'
+import { Block, PendingTx, Tx, Uncle } from '@app/core/models'
+import { AddressBalance, AddressMetadata, Contract, Quote, Statistic, Token, TokenTransfer, TokenExchangeRate } from 'ethvm-common'
 
 export interface EthvmApi {
-  // Balances
-  getAddressBalance(hash: string): Promise<AddressBalance | null>
+  // Address
+  getAddressBalance(address: string): Promise<AddressBalance | null>
+  getAddressMetadata(address: string): Promise<AddressMetadata | null>
+  getAddressAllTokensOwned(address: string): Promise<Token[]>
+  getAddressAmountTokensOwned(address: string): Promise<number>
+  getAddressTokenTransfers(address: string, limit: number, page: number): Promise<TokenTransfer[]>
+  getAddressTokenTransfersByHolder(address: string, holder: string, filter: string, limit: number, page: number): Promise<TokenTransfer[]>
 
   // Blocks
   getBlock(hash: string): Promise<Block | null>
   getBlocks(limit: number, page: number): Promise<Block[]>
   getBlockByNumber(no: number): Promise<Block | null>
-  getBlocksMined(address: string, limit: number, page: number): Promise<Block[]>
+  getBlocksMinedOfAddress(address: string, limit: number, page: number): Promise<Block[]>
+  getTotalNumberOfBlocks(): Promise<number>
 
-  // Uncles
-  getUncle(hash: string): Promise<Uncle | null>
-  getUncles(limit: number, page: number): Promise<Uncle[]>
+  // Contracts
+  getContract(address: string): Promise<Contract | null>
+  getContractsCreatedBy(address: string, limit: number, page: number): Promise<Contract[]>
+
+  // Exchanges
+  getExchangeRateQuote(symbol: string, to: string): Promise<Quote>
+  getTokenExchangeRates(limit: number, page: number): Promise<TokenExchangeRate[]>
+
+  // Pending Txs
+  getPendingTxs(limit: number, page: number): Promise<PendingTx[]>
+  getPendingTxsOfAddress(address: string, filter: string, limit: number, page: number): Promise<PendingTx[]>
+  getNumberOfPendingTxsOfAddress(address: string): Promise<number>
+  getTotalNumberOfPendingTxs(): Promise<number>
 
   // Txs
   getTx(hash: string): Promise<Tx | null>
   getTxs(limit: number, page: number): Promise<Tx[]>
-  getBlockTxs(hash: string): Promise<Tx[]>
-  getTxsOfAddress(hash: string, limit: number, page: number): Promise<Tx[]>
-  getAddressTotalTxs(hash: string): Promise<number>
+  getTxsOfBlock(hash: string): Promise<Tx[]>
+  getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<Tx[]>
 
-  // Pending Txs
-  getPendingTxs(limit: number, page: number): Promise<PendingTx[]>
-  getPendingTxsOfAddress(hash: string, limit: number, page: number): Promise<PendingTx[]>
-
-  // Exchanges
-  // TODO
+  // Uncles
+  getUncle(hash: string): Promise<Uncle | null>
+  getUncles(limit: number, page: number): Promise<Uncle[]>
+  getTotalNumberOfUncles(): Promise<number>
 
   // Statistics
-  // TODO
+  getAverageBlockTimeStats(duration: string): Promise<Statistic[]>
+  getAverageDifficultyStats(duration: string): Promise<Statistic[]>
+  getAverageGasLimitStats(duration: string): Promise<Statistic[]>
+  getAverageGasPriceStats(duration: string): Promise<Statistic[]>
+  getAverageHashRateStats(duration: string): Promise<Statistic[]>
+  getAverageMinerRewardsStats(duration: string): Promise<Statistic[]>
+  getAverageTxFeeStats(duration: string): Promise<Statistic[]>
+  getFailedTxStats(duration: string): Promise<Statistic[]>
+  getSuccessfulTxStats(duration: string): Promise<Statistic[]>
 
   // Search
   search(hash: string): Promise<any>

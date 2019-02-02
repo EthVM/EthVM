@@ -1,4 +1,5 @@
-import { txsPayloadValidator } from '@app/server/core/validation'
+import { removePrefix } from '@app/server/core/utils'
+import { genericPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
 import { Events, Tx } from 'ethvm-common'
 
@@ -6,7 +7,7 @@ const getAddressTxsEvent: SocketEvent = {
   id: Events.getAddressTxs,
 
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
-    const valid = txsPayloadValidator(payload) as boolean
+    const valid = genericPayloadValidator(payload) as boolean
     return {
       valid,
       errors: [] // TODO: Map properly the error
@@ -14,7 +15,7 @@ const getAddressTxsEvent: SocketEvent = {
   },
 
   onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Tx[]> =>
-    server.txsService.getTxsOfAddress(payload.address, payload.filter, payload.limit, payload.page)
+    server.txsService.getTxsOfAddress(removePrefix(payload.address), payload.filter, payload.limit, payload.page)
 }
 
 export default getAddressTxsEvent

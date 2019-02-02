@@ -1,4 +1,4 @@
-version: "2.4"
+version: '2.4'
 
 networks:
   web:
@@ -10,7 +10,6 @@ networks:
         - subnet: 172.25.0.0/24
 
 volumes:
-  redis-volume:
   mongodb-volume:
   ethereumj-volume:
   kafka-volume-1:
@@ -61,7 +60,6 @@ services:
       - ./apps/api:/var/api
       - ./apps/common:/var/common
     depends_on:
-      - redis
       - mongodb
     networks:
       - back
@@ -73,26 +71,6 @@ services:
       - "traefik.frontend.passHostHeader=true"
       - "traefik.backend=api"
       - "traefik.port=3000"
-    environment:
-      - ETHVM_DATA_STORE_REDIS_HOST=redis
-      - ETHVM_ETH_TRIE_DB_REDIS_HOST=redis
-    cpu_shares: 512
-
-  redis:
-    image: redis:${REDIS_VERSION}-alpine
-    restart: unless-stopped
-    volumes:
-      - redis-volume:/data
-    networks:
-      - back
-    ports:
-      - 6379:6379
-    labels:
-      - "traefik.enable=true"
-      - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:redis.ethvm.${DOMAIN}"
-      - "traefik.port=6379"
-      - "traefik.backend=redis"
     cpu_shares: 512
 
   mongodb:
@@ -155,7 +133,6 @@ services:
       KAFKA_MESSAGE_MAX_BYTES: "2000000000"
     mem_limit: 4g
 
-
   kafka-schema-registry:
     image: confluentinc/cp-schema-registry:${CP_VERSION}
     restart: unless-stopped
@@ -181,7 +158,6 @@ services:
       SCHEMA_REGISTRY_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR"
     mem_limit: 512m
     cpu_shares: 512
-
 
   kafka-connect:
     image: confluentinc/cp-kafka-connect:${CP_VERSION}
@@ -225,101 +201,3 @@ services:
       CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
       CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/enkryptio
     mem_limit: 4g
-
-
-  # ----------------------------------------
-  # Helpers (Components that assists in dev)
-  # ----------------------------------------
-
-  kafka-rest-proxy:
-    image: confluentinc/cp-kafka-rest:${CP_VERSION}
-    networks:
-      - back
-    ports:
-      - 8082:8082
-    environment:
-      KAFKA_REST_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_REST_LISTENERS: http://0.0.0.0:8082/
-      KAFKA_REST_SCHEMA_REGISTRY_URL: http://kafka-schema-registry:8081/
-      KAFKA_REST_HOST_NAME: kafka-rest-proxy
-      KAFKA_REST_BOOTSTRAP_SERVERS: PLAINTEXT://kafka-1:9091
-    depends_on:
-      - zookeeper
-      - kafka-1
-      - kafka-schema-registry
-    cpu_shares: 256
-
-  kafka-topics-ui:
-    image: landoop/kafka-topics-ui:${KAFKA_UI_VERSION}
-    networks:
-      - back
-    ports:
-      - "8000:8000"
-    environment:
-      KAFKA_REST_PROXY_URL: "http://kafka-rest-proxy:8082/"
-      PROXY: "true"
-    depends_on:
-      - zookeeper
-      - kafka-1
-      - kafka-schema-registry
-      - kafka-rest-proxy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:kafka-ui.ethvm.${DOMAIN}"
-      - "traefik.frontend.passHostHeader=true"
-      - "traefik.backend=kafka-topics-ui"
-      - "traefik.port=8000"
-    cpu_shares: 256
-
-  kafka-connect-ui:
-    image: landoop/kafka-connect-ui:${KAFKA_UI_VERSION}
-    networks:
-      - back
-    ports:
-      - 8003:8000
-    environment:
-      CONNECT_URL: "http://kafka-connect:8083/"
-      PROXY: "true"
-    depends_on:
-      - kafka-connect
-    labels:
-      - "traefik.enable=true"
-      - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:kafka-connect-ui.ethvm.${DOMAIN}"
-      - "traefik.frontend.passHostHeader=true"
-      - "traefik.backend=kafka-connect-ui"
-      - "traefik.port=8003"
-    cpu_shares: 256
-
-  zoonavigator-api:
-    image: elkozmon/zoonavigator-api:${ZOONAVIGATOR_VERSION}
-    networks:
-      - back
-    environment:
-      SERVER_HTTP_PORT: 9000
-    depends_on:
-      - zookeeper
-    cpu_shares: 256
-
-  zoonavigator-web:
-    image: elkozmon/zoonavigator-web:${ZOONAVIGATOR_VERSION}
-    networks:
-      - back
-    ports:
-      - 8004:8000
-    environment:
-      API_HOST: "zoonavigator-api"
-      API_PORT: 9000
-    links:
-      - zoonavigator-api
-    depends_on:
-      - zoonavigator-api
-    labels:
-      - "traefik.enable=true"
-      - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:zookeeper-ui.ethvm.${DOMAIN}"
-      - "traefik.frontend.passHostHeader=true"
-      - "traefik.backend=zoonavigator-api"
-      - "traefik.port=8004"
-    cpu_shares: 256

@@ -7,6 +7,7 @@ import io.enkrypt.avro.capture.TransactionRecord
 import io.enkrypt.avro.common.ContractType
 import io.enkrypt.avro.common.Data20
 import io.enkrypt.avro.common.Data32
+import io.enkrypt.avro.exchange.ExchangeRateRecord
 import io.enkrypt.avro.processing.BalanceType
 import io.enkrypt.avro.processing.ContractCreateRecord
 import io.enkrypt.avro.processing.ContractDestroyRecord
@@ -50,6 +51,8 @@ fun BlockRecord.keyRecord(): BlockKeyRecord =
 
 fun TransactionRecord.txFee(receipt: TransactionReceiptRecord): BigInteger =
   getGasPrice().unsignedBigInteger()!! * receipt.getGasUsed().unsignedBigInteger()!!
+
+fun ExchangeRateRecord.isValid() = !(this.marketCap == -1.0 || this.marketCapRank == -1)
 
 object AvroHelpers {
 

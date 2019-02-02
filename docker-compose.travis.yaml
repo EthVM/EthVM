@@ -1,18 +1,9 @@
-version: '3.6'
+version: '2.4'
 
 volumes:
-  redis-volume:
   mongodb-volume:
 
 services:
-
-  redis:
-    image: redis:${REDIS_VERSION}-alpine
-    restart: unless-stopped
-    volumes:
-      - redis-volume:/data
-    ports:
-      - 6379:6379
 
   mongodb:
     image: enkryptio/mongodb-dev:${MONGODB_VERSION}
