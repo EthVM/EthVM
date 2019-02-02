@@ -1,0 +1,117 @@
+topics:
+
+  - name: blocks
+    replicationFactor: 1
+    partitions: 1
+    config:
+      retention.ms: -1
+      cleanup.policy: compact
+
+  - name: uncles
+    replicationFactor: 1
+    partitions: 12
+    config:
+      retention.ms: -1
+      cleanup.policy: compact
+
+  - name: transactions
+    replicationFactor: 1
+    partitions: 12
+    config:
+      retention.ms: -1
+      cleanup.policy: compact
+
+  - name: contract-metadata
+    replicationFactor: 1
+    partitions: 12
+    config:
+      retention.ms: -1
+      cleanup.policy: compact
+
+  - name: contract-destructions
+    replicationFactor: 1
+    partitions: 12
+    config:
+      retention.ms: -1
+      cleanup.policy: compact
+
+  - name: contract-creations
+    replicationFactor: 1
+    partitions: 12
+    config:
+      retention.ms: -1
+      cleanup.policy: compact
+
+  - name: token-transfers
+    replicationFactor: 1
+    partitions: 12
+    config:
+      retention.ms: -1
+
+  - name: fungible-token-movements
+    replicationFactor: 1
+    partitions: 12
+    config:
+      retention.ms: -1
+
+  - name: balances
+    replicationFactor: 1
+    partitions: 12
+    config:
+      retention.ms: -1
+      cleanup.policy: compact
+
+  - name: pending-transactions
+    replicationFactor: 1
+    partitions: 12
+    config:
+      retention.ms: -1
+      cleanup.policy: compact
+
+  - name: address-tx-events
+    replicationFactor: 1
+    partitions: 12
+    config:
+      retention.ms: -1
+
+  - name: address-tx-counts
+    replicationFactor: 1
+    partitions: 12
+    config:
+      retention.ms: -1
+
+  - name: miner-list
+    replicationFactor: 1
+    partitions: 12
+    config:
+      retention.ms: -1
+      cleanup.policy: compact
+
+  - name: contract-creator-list
+    replicationFactor: 1
+    partitions: 12
+    config:
+      retention.ms: -1
+      cleanup.policy: compact
+
+  - name: block-metrics-by-block
+    replicationFactor: 1
+    partitions: 12
+    config:
+      retention.ms: -1
+      cleanup.policy: compact
+
+  - name: block-metrics-by-day
+    replicationFactor: 1
+    partitions: 12
+    config:
+      retention.ms: -1
+      cleanup.policy: compact
+
+  - name: aggregate-block-metrics-by-day
+    replicationFactor: 1
+    partitions: 12
+    config:
+      retention.ms: -1
+      cleanup.policy: compact
+

@@ -1,0 +1,235 @@
+version: '3.6'
+
+networks:
+
+  backend:
+    external: true
+
+volumes:
+
+  kafka:
+    external: true
+
+  zookeeper:
+    external: true
+
+  ethereumj:
+    external: true
+
+  kafka-streams:
+    external: true
+
+  mongodb:
+    external: true
+
+services:
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:5.0.1
+    volumes:
+      - zookeeper:/var/lib/zookeeper
+    networks:
+      - backend
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_SERVERS: "server.1=zookeeper:2888:3888"
+      ZOOKEEPER_CLIENT_PORT: 2181
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '1.0'
+          memory: 2G
+      placement:
+        constraints:
+          - node.role == worker
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  kafka:
+    image: confluentinc/cp-kafka:5.0.1
+    depends_on:
+      - zookeeper
+    networks:
+      - backend
+    volumes:
+      - kafka:/var/lib/kafka
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: "kafka"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka:9092"
+      KAFKA_ZOOKEEPER_CONNECT:
+      KAFKA_BROKER_ID: 1
+      KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+      CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
+      KAFKA_MESSAGE_MAX_BYTES: "2000000000"
+    deploy:
+      resources:
+        limits:
+          cpus: '3.0'
+          memory: 6G
+        reservations:
+          cpus: '2.0'
+          memory: 4G
+      placement:
+        constraints:
+          - node.role == worker
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  kafka-schema-registry:
+    image: confluentinc/cp-schema-registry:5.0.1
+    depends_on:
+      - zookeeper
+      - kafka
+    networks:
+      - backend
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "PLAINTEXT://${KAFKA_BOOTSTRAP_SERVERS}"
+      SCHEMA_REGISTRY_HOST_NAME: kafka-schema-registry
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+      SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: "INFO"
+      SCHEMA_REGISTRY_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR"
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 1G
+        reservations:
+          cpus: '1.0'
+          memory: 512M
+      placement:
+        constraints:
+          - node.role == worker
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  ethereumj:
+    image: enkryptio/ethereumj:develop
+    depends_on:
+      - kafka
+      - zookeeper
+      - kafka-schema-registry
+    networks:
+      - backend
+    volumes:
+      - ethereumj:/data
+    environment:
+      JAVA_OPTS: '-server -Xss8m -Xmx2G -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:+UseG1GC -XX:-OmitStackTraceInFastThrow -Dkafka.enabled=true -Dkafka.schemaRegistryUrl=${KAFKA_SCHEMA_REGISTRY_URL} -Dkafka.bootstrapServers=${KAFKA_BOOTSTRAP_SERVERS}'
+    deploy:
+      resources:
+        limits:
+          cpus: '3.0'
+          memory: 4G
+        reservations:
+          cpus: '2.0'
+          memory: 2G
+      placement:
+        constraints:
+          - node.role == worker
+      replicas: 0
+      restart_policy:
+        condition: on-failure
+
+  kafka-streams:
+    image: enkryptio/kafka-streams:0.3.0
+    depends_on:
+      - kafka
+      - zookeeper
+      - kafka-schema-registry
+    networks:
+      - backend
+    volumes:
+      - kafka-streams:/var/lib/kafka-streams
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS:
+      KAFKA_SCHEMA_REGISTRY_URL:
+      KAFKA_STREAMS_STATE_DIR: /var/lib/kafka-streams
+    deploy:
+      resources:
+        limits:
+          cpus: '3.0'
+          memory: 4G
+        reservations:
+          cpus: '2.0'
+          memory: 2G
+      placement:
+        constraints:
+          - node.role == worker
+      replicas: 0
+      restart_policy:
+        condition: on-failure
+
+  mongodb:
+    image: enkryptio/mongodb-dev:4.0.5
+    volumes:
+      - mongodb:/data/db
+    networks:
+      - backend
+    deploy:
+      resources:
+        limits:
+          cpus: '3.0'
+          memory: 6G
+        reservations:
+          cpus: '2.0'
+          memory: 4G
+      placement:
+        constraints:
+          - node.role == worker
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  kafka-connect:
+    image: enkryptio/kafka-connect:0.3.0
+    depends_on:
+      - zookeeper
+      - kafka
+      - mongodb
+      - kafka-schema-registry
+    networks:
+      - backend
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP_SERVERS}
+      CONNECT_REST_PORT: 8083
+      CONNECT_GROUP_ID: "kafka-connect-avro"
+      CONNECT_CONFIG_STORAGE_TOPIC: "kafka-connect-avro-config"
+      CONNECT_OFFSET_STORAGE_TOPIC: "kafka-connect-avro-offsets"
+      CONNECT_OFFSET_COMMIT_INTERVAL_MS: 1000
+      CONNECT_STATUS_STORAGE_TOPIC: "kafka-connect-avro-status"
+      CONNECT_KEY_CONVERTER: "io.confluent.connect.avro.AvroConverter"
+      CONNECT_VALUE_CONVERTER: "io.confluent.connect.avro.AvroConverter"
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: ${KAFKA_SCHEMA_REGISTRY_URL}
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: ${KAFKA_SCHEMA_REGISTRY_URL}
+      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_REST_ADVERTISED_HOST_NAME: "kafka-connect"
+      CONNECT_LOG4J_ROOT_LOGLEVEL: "INFO"
+      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR"
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/enkryptio
+    deploy:
+      resources:
+        limits:
+          cpus: '3.0'
+          memory: 6G
+        reservations:
+          cpus: '2.0'
+          memory: 4G
+      placement:
+        constraints:
+          - node.role == worker
+      replicas: 1
+      restart_policy:
+        condition: on-failure

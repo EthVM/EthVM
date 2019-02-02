@@ -25,6 +25,12 @@
       "version": "${APPS_PATH}/processing/version.properties"
     },
     {
+      "id": "ethvm-utils",
+      "dockerfile": "${DOCKER_IMAGES_PATH}/ethvm-utils/Dockerfile",
+      "context": "${DOCKER_IMAGES_PATH}/ethvm-utils",
+      "version": "${DOCKER_IMAGES_PATH}/ethvm-utils/version.properties"
+    },
+    {
       "id": "kafka-ethvm-utils",
       "dockerfile": "${DOCKER_IMAGES_PATH}/kafka-ethvm-utils/Dockerfile",
       "context": "${DOCKER_IMAGES_PATH}/kafka-ethvm-utils",

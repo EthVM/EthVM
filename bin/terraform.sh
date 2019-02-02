@@ -3,7 +3,7 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # import utils
-source ${SCRIPT_DIR}/utils.sh
+source ${SCRIPT_DIR}/env.sh
 
 # monkey_usage - prints monkey subcommand usage
 terraform_usage() {
