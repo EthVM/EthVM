@@ -1,4 +1,4 @@
-version: '3.6'
+version: '2.4'
 
 volumes:
   mongodb-volume:
