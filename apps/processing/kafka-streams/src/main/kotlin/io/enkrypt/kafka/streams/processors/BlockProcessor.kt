@@ -77,7 +77,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
         TransformerSupplier { BlockTimeTransformer(appConfig.unitTesting) },
         *BlockTimeTransformer.STORE_NAMES
       )
-      .peek { k, v -> logger.info { "Processing block number = ${k.getNumber().unsignedBigInteger()}" } }
+      .peek { k, _ -> logger.info { "Processing block number = ${k.getNumber().unsignedBigInteger()}" } }
 
     // extract transactions and publish to their own topic
 

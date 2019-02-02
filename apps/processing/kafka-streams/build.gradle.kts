@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
   application
   kotlin("jvm")
@@ -32,15 +30,15 @@ dependencies {
 
   // Kafka
   implementation("org.apache.kafka:kafka-streams:2.1.0")
-  implementation("io.confluent:kafka-streams-avro-serde:5.0.1")
+  implementation("io.confluent:kafka-streams-avro-serde:5.1.0")
 
   // Utils
-  implementation("com.github.ajalt:clikt:1.5.0")
+  implementation("com.github.ajalt:clikt:1.6.0")
   implementation("ch.qos.logback:logback-classic:1.2.3")
   implementation("io.github.microutils:kotlin-logging:1.6.10")
-  implementation("joda-time:joda-time:2.10")
+  implementation("joda-time:joda-time:2.10.1")
   implementation("org.koin:koin-core:1.0.2")
-  implementation("io.arrow-kt:arrow-core:0.8.1")
+  implementation("io.arrow-kt:arrow-core:0.8.2")
 
   // Testing
   testImplementation(project(":testing"))
