@@ -1,22 +1,13 @@
 {
   "groups": {
     "common": {
-      "packages": [
-        "apps/common/package.json"
-      ]
+      "packages": ["apps/common/package.json"]
     },
-    "frontend": {
-      "packages": [
-        "apps/explorer/package.json"
-      ]
+    "explorer": {
+      "packages": ["apps/explorer/package.json"]
     },
-    "backend": {
-      "packages": []
-    },
-    "utils": {
-      "packages": [
-        "bin/monkey/package.json"
-      ]
+    "api": {
+      "packages": ["apps/api/package.json"]
     }
   }
 }
