@@ -29,7 +29,7 @@ allprojects {
   }
 
   ext {
-    set("ethereumj-version", "1.10.0.1")
+    set("ethereumj-version", "1.12.0.1")
     set("kotlintest-version", "3.2.1")
     set("mockk-version", "1.9")
   }
