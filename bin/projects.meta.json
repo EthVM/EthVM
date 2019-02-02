@@ -31,12 +31,6 @@
       "version": "${DOCKER_IMAGES_PATH}/ethvm-utils/version.properties"
     },
     {
-      "id": "kafka-ethvm-utils",
-      "dockerfile": "${DOCKER_IMAGES_PATH}/kafka-ethvm-utils/Dockerfile",
-      "context": "${DOCKER_IMAGES_PATH}/kafka-ethvm-utils",
-      "version": "${DOCKER_IMAGES_PATH}/kafka-ethvm-utils/version.properties"
-    },
-    {
       "id": "kafka-streams",
       "dockerfile": "${APPS_PATH}/processing/kafka-streams/Dockerfile",
       "context": "${APPS_PATH}/processing",
@@ -47,12 +41,6 @@
       "dockerfile": "${DOCKER_IMAGES_PATH}/mongodb-dev/Dockerfile",
       "context": "${DOCKER_IMAGES_PATH}/mongodb-dev",
       "version": "${DOCKER_IMAGES_PATH}/mongodb-dev/version.properties"
-    },
-    {
-      "id": "mongodb-ethvm-utils",
-      "dockerfile": "${DOCKER_IMAGES_PATH}/mongodb-ethvm-utils/Dockerfile",
-      "context": "${DOCKER_IMAGES_PATH}/mongodb-ethvm-utils/",
-      "version": "${DOCKER_IMAGES_PATH}/mongodb-ethvm-utils/version.properties"
     },
     {
       "id": "mongodb-install",
