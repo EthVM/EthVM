@@ -5,6 +5,12 @@ networks:
   backend:
     external: true
 
+  loki:
+    external: true
+
+  traefik:
+    external: true
+
 volumes:
 
   kafka:
@@ -20,6 +26,9 @@ volumes:
     external: true
 
   mongodb:
+    external: true
+
+  traefik:
     external: true
 
 services:
@@ -123,14 +132,14 @@ services:
     volumes:
       - ethereumj:/data
     environment:
-      JAVA_OPTS: '-server -Xss8m -Xmx2G -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:+UseG1GC -XX:-OmitStackTraceInFastThrow -Dkafka.enabled=true -Dkafka.schemaRegistryUrl=${KAFKA_SCHEMA_REGISTRY_URL} -Dkafka.bootstrapServers=${KAFKA_BOOTSTRAP_SERVERS}'
+      JAVA_OPTS: '-server -Xss8m -Xmx2G -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:+UseG1GC -XX:-OmitStackTraceInFastThrow -Dkafka.enabled=true -Dkafka.schemaRegistryUrl=${KAFKA_SCHEMA_REGISTRY_URL} -Dkafka.bootstrapServers=${KAFKA_BOOTSTRAP_SERVERS} -Ddatabase.dir=/data/db'
     deploy:
       resources:
         limits:
-          cpus: '3.0'
+          cpus: '4.0'
           memory: 4G
         reservations:
-          cpus: '2.0'
+          cpus: '3.0'
           memory: 2G
       placement:
         constraints:
@@ -169,7 +178,7 @@ services:
         condition: on-failure
 
   mongodb:
-    image: enkryptio/mongodb-dev:4.0.5
+    image: enkryptio/mongodb-dev:4.0.5.2
     volumes:
       - mongodb:/data/db
     networks:
@@ -177,11 +186,11 @@ services:
     deploy:
       resources:
         limits:
+          cpus: '4.0'
+          memory: 8G
+        reservations:
           cpus: '3.0'
           memory: 6G
-        reservations:
-          cpus: '2.0'
-          memory: 4G
       placement:
         constraints:
           - node.role == worker
@@ -233,3 +242,61 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
+
+
+  traefik:
+    image: enkryptio/traefik:0.1.2
+    networks:
+      - backend
+      - traefik
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - traefik:/var/lib/traefik
+    deploy:
+      resources:
+        limits:
+          cpus: '3.0'
+          memory: 6G
+        reservations:
+          cpus: '2.0'
+          memory: 4G
+      placement:
+        constraints:
+          - node.role == manager
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+#  api:
+#    image: enkryptio/api:0.1.0
+#    depends_on:
+#      - mongodb
+#    networks:
+#      - backend
+#    environment:
+#      ETHVM_MONGO_DB_URL: ${MONGO_URL}
+#      ETHVM_MONGO_DB_NAME: ${MONGO_DB}
+#      ETHVM_ETH_RPC_HOST: 0.0.0.0
+#      NODE_ENV: production
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '3.0'
+#          memory: 6G
+#        reservations:
+#          cpus: '2.0'
+#          memory: 4G
+#      placement:
+#        constraints:
+#          - node.role == worker
+#      replicas: 1
+#      restart_policy:
+#        condition: on-failure
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.default.protocol=http"
+#      - "traefik.frontend.rule=Host:api.ethvm.${DOMAIN}"
+#      - "traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://ethvm.${DOMAIN}||Access-Control-Allow-Credentials:true"
+#      - "traefik.frontend.passHostHeader=true"
+#      - "traefik.backend=api"
+#      - "traefik.port=3000"

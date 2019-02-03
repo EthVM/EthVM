@@ -9,7 +9,7 @@ import io.enkrypt.common.extensions.setTokenId
 import java.math.BigInteger
 import java.nio.file.Paths
 
-object ERC721Abi : AbstractAbi(Paths.get(ERC721Abi::class.java.getResource("/abi/erc721.json").toURI())) {
+object ERC721Abi : AbstractAbi(ERC721Abi::class.java.getResourceAsStream("/abi/erc721.json")) {
 
   private const val EVENT_TRANSFER = "Transfer"
   private const val EVENT_APPROVAL = "Approval"

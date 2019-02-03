@@ -32,8 +32,8 @@ ensure_replicaset() {
 
   ensure_mongo "$@"
 
-  echo "Initialising replica set: ${MONGO_URL}"
-  mongo ${MONGO_URL} --eval "rs.initiate()"
+  echo "Initialising replica set"
+  mongo ${MONGO_URL} < ${MONGO_DIR}/replica-set.js
 } >&2
 
 

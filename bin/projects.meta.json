@@ -53,6 +53,12 @@
       "dockerfile": "${DOCKER_IMAGES_PATH}/zookeeper/Dockerfile",
       "context": "${DOCKER_IMAGES_PATH}/zookeeper/",
       "version": "${DOCKER_IMAGES_PATH}/zookeeper/version.properties"
+    },
+    {
+      "id": "traefik",
+      "dockerfile": "${DOCKER_IMAGES_PATH}/traefik/Dockerfile",
+      "context": "${DOCKER_IMAGES_PATH}/traefik/",
+      "version": "${DOCKER_IMAGES_PATH}/traefik/version.properties"
     }
   ]
 }

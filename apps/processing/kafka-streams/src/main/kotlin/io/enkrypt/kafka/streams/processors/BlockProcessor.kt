@@ -32,6 +32,7 @@ import io.enkrypt.kafka.streams.processors.block.BlockTimeTransformer
 import io.enkrypt.kafka.streams.processors.block.ChainEventsTransformer
 import io.enkrypt.kafka.streams.serdes.Serdes
 import mu.KotlinLogging
+import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
@@ -57,6 +58,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
       put(StreamsConfig.APPLICATION_ID_CONFIG, id)
       put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 1)
       put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 1000L)
+      put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 2000000000)
     }
 
   override val logger = KotlinLogging.logger {}
