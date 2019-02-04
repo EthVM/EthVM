@@ -1,15 +1,15 @@
 import { toBlockMetrics } from '@app/server/modules/block-metrics'
 import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
-import { BlockStats } from "ethvm-common"
+import { BlockMetrics } from "ethvm-common"
 
 export interface BlockMetricsRepository {
-  getBlockStat(hash: string): Promise<BlockStats | null>
-  getBlockStats(limit: number, page: number): Promise<BlockStats[]>
+  getBlockMetric(hash: string): Promise<BlockMetrics | null>
+  getBlockMetrics(limit: number, page: number): Promise<BlockMetrics[]>
 }
 
 export class MongoBlockMetricsRepository extends BaseMongoDbRepository implements BlockMetricsRepository {
 
-  public getBlockStat(hash: string): Promise<BlockStats | null> {
+  public getBlockMetric(hash: string): Promise<BlockMetrics | null> {
     return this.db
       .collection(MongoEthVM.collections.blockMetrics)
       .findOne({ hash })
@@ -21,7 +21,7 @@ export class MongoBlockMetricsRepository extends BaseMongoDbRepository implement
       })
   }
 
-  public getBlockStats(limit: number, page: number): Promise<BlockStats[]> {
+  public getBlockMetrics(limit: number, page: number): Promise<BlockMetrics[]> {
     const start = page * limit
     return this.db
       .collection(MongoEthVM.collections.blockMetrics)
@@ -31,7 +31,7 @@ export class MongoBlockMetricsRepository extends BaseMongoDbRepository implement
       .limit(limit)
       .toArray()
       .then(resp => {
-        const b: BlockStats[] = []
+        const b: BlockMetrics[] = []
         if (!resp) {
           return b
         }

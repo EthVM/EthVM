@@ -5,6 +5,7 @@ import { EthVMServer } from '@app/server/ethvm-server'
 import { AddressesServiceImpl, MongoAddressesRepository } from '@app/server/modules/addresses'
 import { BalancesServiceImpl, MongoBalancesRepository } from '@app/server/modules/balances'
 import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blocks'
+import { BlockMetricsServiceImpl, MongoBlockMetricsRepository } from '@app/server/modules/block-metrics'
 import { ContractsServiceImpl, MongoContractsRepository } from '@app/server/modules/contracts'
 import { CoinGeckoRepository, ExchangeServiceImpl } from '@app/server/modules/exchanges'
 import { MongoPendingTxRepository, PendingTxServiceImpl } from '@app/server/modules/pending-txs'
@@ -55,6 +56,9 @@ async function bootstrapServer() {
   const blocksRepository = new MongoBlockRepository(db)
   const blockService = new BlocksServiceImpl(blocksRepository)
 
+  const blockMetricsRepository = new MongoBlockMetricsRepository(db)
+  const blockMetricsService = new BlockMetricsServiceImpl(blockMetricsRepository)
+
   // Contracts
   const contractsRepository = new MongoContractsRepository(db)
   const contracsService = new ContractsServiceImpl(contractsRepository)
@@ -98,6 +102,7 @@ async function bootstrapServer() {
   const server = new EthVMServer(
     addressesService,
     blockService,
+    blockMetricsService,
     contracsService,
     uncleService,
     balancesService,
