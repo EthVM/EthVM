@@ -144,7 +144,7 @@ services:
       placement:
         constraints:
           - node.role == worker
-      replicas: 0
+      replicas: 1
       restart_policy:
         condition: on-failure
 
@@ -173,7 +173,7 @@ services:
       placement:
         constraints:
           - node.role == worker
-      replicas: 0
+      replicas: 1
       restart_policy:
         condition: on-failure
 
@@ -252,6 +252,10 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - traefik:/var/lib/traefik
+    ports:
+      - 80
+      - 443
+      - 8080
     deploy:
       resources:
         limits:
@@ -267,36 +271,69 @@ services:
       restart_policy:
         condition: on-failure
 
-#  api:
-#    image: enkryptio/api:0.1.0
-#    depends_on:
-#      - mongodb
-#    networks:
-#      - backend
-#    environment:
-#      ETHVM_MONGO_DB_URL: ${MONGO_URL}
-#      ETHVM_MONGO_DB_NAME: ${MONGO_DB}
-#      ETHVM_ETH_RPC_HOST: 0.0.0.0
-#      NODE_ENV: production
-#    deploy:
-#      resources:
-#        limits:
-#          cpus: '3.0'
-#          memory: 6G
-#        reservations:
-#          cpus: '2.0'
-#          memory: 4G
-#      placement:
-#        constraints:
-#          - node.role == worker
-#      replicas: 1
-#      restart_policy:
-#        condition: on-failure
-#    labels:
-#      - "traefik.enable=true"
-#      - "traefik.default.protocol=http"
-#      - "traefik.frontend.rule=Host:api.ethvm.${DOMAIN}"
-#      - "traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://ethvm.${DOMAIN}||Access-Control-Allow-Credentials:true"
-#      - "traefik.frontend.passHostHeader=true"
-#      - "traefik.backend=api"
-#      - "traefik.port=3000"
+  api:
+    image: enkryptio/api:0.1.0
+    depends_on:
+      - mongodb
+    networks:
+      - backend
+      - traefik
+    environment:
+      ETHVM_MONGO_DB_URL: ${MONGO_URL}
+      ETHVM_MONGO_DB_NAME: ${MONGO_DB}
+      ETHVM_ETH_RPC_HOST: 0.0.0.0
+      NODE_ENV: development
+    deploy:
+      resources:
+        limits:
+          cpus: '3.0'
+          memory: 6G
+        reservations:
+          cpus: '2.0'
+          memory: 4G
+      placement:
+        constraints:
+          - node.role == worker
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.default.protocol=http"
+      - "traefik.frontend.rule=Host:api.${DOMAIN}"
+      - "traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://${DOMAIN}||Access-Control-Allow-Credentials:true"
+      - "traefik.frontend.passHostHeader=true"
+      - "traefik.backend=api"
+      - "traefik.port=3000"
+
+  explorer:
+    image: enkryptio/explorer:0.1.0
+    networks:
+      - traefik
+    environment:
+      NODE_ENV: development
+      VUE_ENV: development
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '1.0'
+          memory: 1G
+      placement:
+        constraints:
+          - node.role == worker
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    labels:
+      - 'traefik.enable=true'
+      - "traefik.docker.network=traefik"
+      - 'traefik.default.protocol=http'
+      - 'traefik.frontend.rule=Host:${DOMAIN}'
+      - 'traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:*||Access-Control-Allow-Credentials:true'
+      - 'traefik.frontend.passHostHeader=true'
+      - 'traefik.backend=explorer'
+      - 'traefik.port=8080'
