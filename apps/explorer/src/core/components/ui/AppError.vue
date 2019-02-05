@@ -17,15 +17,37 @@ export default class AppError extends Vue {
   get messg(): string {
     return this.serverError
       ? this.$i18n.t('message.error').toString()
-      : (this.$i18n.t('message.notValid') + this.types[this.pageType] + ' ' + this.$i18n.t('common.hash').toLowerCase() + ' : ' + this.reference).toString()
+      : (
+          this.$i18n.t('message.notValid') +
+          this.types[this.pageType] +
+          ' ' +
+          this.$i18n
+            .t('common.hash')
+            .toString()
+            .toLowerCase() +
+          ' : ' +
+          this.reference
+        ).toString()
   }
 
   get types(): Object {
     return {
-      address: this.$i18n.t('title.address').toLowerCase(),
-      token: this.$i18n.t('tableHeader.token').toLowerCase(),
-      block: this.$i18n.t('kb.block.term').toLowerCase(),
-      tx: this.$i18n.t('kb.txs.term').toLowerCase()
+      address: this.$i18n
+        .t('title.address')
+        .toString()
+        .toLowerCase(),
+      token: this.$i18n
+        .t('tableHeader.token')
+        .toString()
+        .toLowerCase(),
+      block: this.$i18n
+        .t('kb.block.term')
+        .toString()
+        .toLowerCase(),
+      tx: this.$i18n
+        .t('kb.txs.term')
+        .toString()
+        .toLowerCase()
     }
   }
 }

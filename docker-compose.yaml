@@ -1,4 +1,4 @@
-version: "2.4"
+version: '2.4'
 
 networks:
   web:
@@ -78,12 +78,13 @@ services:
     restart: unless-stopped
     volumes:
       - mongodb-volume:/data/db
+      - ./docker/config/mongo/mongod.conf:/etc/mongod.conf
       - ./datasets:/datasets
     networks:
       - back
     ports:
       - 27017:27017
-    command: "mongod --bind_ip 0.0.0.0 --replSet rs0 --quiet --slowms 10000"
+    command: "mongod --config /etc/mongod.conf --bind_ip 0.0.0.0 --replSet rs0 --quiet --slowms 10000"
     labels:
       - "traefik.enable=true"
       - "traefik.default.protocol=http"
@@ -133,7 +134,6 @@ services:
       KAFKA_MESSAGE_MAX_BYTES: "2000000000"
     mem_limit: 4g
 
-
   kafka-schema-registry:
     image: confluentinc/cp-schema-registry:${CP_VERSION}
     restart: unless-stopped
@@ -159,7 +159,6 @@ services:
       SCHEMA_REGISTRY_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR"
     mem_limit: 512m
     cpu_shares: 512
-
 
   kafka-connect:
     image: confluentinc/cp-kafka-connect:${CP_VERSION}
@@ -204,10 +203,9 @@ services:
       CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/enkryptio
     mem_limit: 4g
 
-
-  # ----------------------------------------
-  # Helpers (Components that assists in dev)
-  # ----------------------------------------
+  # ///////////////////////////////////////////////////////
+  # Extra Tools (Useful for debugging and helping on Kafka)
+  # ///////////////////////////////////////////////////////
 
   kafka-rest-proxy:
     image: confluentinc/cp-kafka-rest:${CP_VERSION}
@@ -222,7 +220,6 @@ services:
       KAFKA_REST_HOST_NAME: kafka-rest-proxy
       KAFKA_REST_BOOTSTRAP_SERVERS: PLAINTEXT://kafka-1:9091
     depends_on:
-      - zookeeper
       - kafka-1
       - kafka-schema-registry
     cpu_shares: 256
@@ -237,7 +234,6 @@ services:
       KAFKA_REST_PROXY_URL: "http://kafka-rest-proxy:8082/"
       PROXY: "true"
     depends_on:
-      - zookeeper
       - kafka-1
       - kafka-schema-registry
       - kafka-rest-proxy
@@ -301,3 +297,28 @@ services:
       - "traefik.backend=zoonavigator-api"
       - "traefik.port=8004"
     cpu_shares: 256
+
+  ksql-server:
+    image: confluentinc/cp-ksql-server:${CP_VERSION}
+    networks:
+      - back
+    ports:
+      - 8088:8088
+    depends_on:
+      - kafka-1
+      - kafka-schema-registry
+    environment:
+      KSQL_BOOTSTRAP_SERVERS: kafka-1:9091
+      KSQL_LISTENERS: http://0.0.0.0:8088/
+      KSQL_KSQL_SERVICE_ID: ksql_service_1
+      KSQL_SCHEMA_REGISTRY_URL: http://kafka-schema-registry:8081/
+    mem_limit: 4g
+
+  ksql-cli:
+    image: confluentinc/cp-ksql-cli:${CP_VERSION}
+    networks:
+      - back
+    depends_on:
+      - ksql-server
+    tty: true
+    entrypoint: /bin/bash

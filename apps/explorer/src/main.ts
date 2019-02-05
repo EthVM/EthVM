@@ -9,7 +9,6 @@ import io from 'socket.io-client'
 import VTooltip from 'v-tooltip'
 import Vue from 'vue'
 import VueAxios from 'vue-axios'
-import InfiniteScroll from 'vue-infinite-scroll'
 import VueSocketIO from 'vue-socket.io'
 import VueTimeago from 'vue-timeago'
 import Vuetify from 'vuetify'
@@ -32,8 +31,6 @@ Vue.use(VueTimeago, {
     'en-US': require('date-fns/locale/en')
   }
 })
-
-Vue.use(InfiniteScroll)
 
 Vue.use(Vuetify, {
   theme: {

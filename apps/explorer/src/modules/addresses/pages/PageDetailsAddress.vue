@@ -58,7 +58,7 @@
         </v-tab-item>-->
       </app-tabs>
     </div>
-    <app-info-load v-if="loading && !error" />
+    <app-info-load v-else-if="loading && !error" />
     <app-error v-else :reference="addressRef" page-type="address" />
   </v-container>
 </template>

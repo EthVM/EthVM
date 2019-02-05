@@ -65,18 +65,20 @@ class CoinGeckoExchangeRateSourceTask : SourceTask() {
       page = page.inc()
     } while (raw.isNotEmpty())
 
-    val records = rates.map { e ->
-      val symbolKey = SymbolKey(e.id)
-      SourceRecord(
-        sourcePartition,
-        sourceOffset,
-        topic,
-        SymbolKeyMetadataSchema,
-        symbolKey.toStruct(),
-        ExchangeRateMetadataSchema,
-        e.toStruct()
-      )
-    }
+    val records = rates
+      .dropWhile { it.symbol.isEmpty() }
+      .map { e ->
+        val symbolKey = SymbolKey(e.symbol.trim())
+        SourceRecord(
+          sourcePartition,
+          sourceOffset,
+          topic,
+          SymbolKeyMetadataSchema,
+          symbolKey.toStruct(),
+          ExchangeRateMetadataSchema,
+          e.toStruct()
+        )
+      }
 
     lastSyncAt = Instant.now()
 

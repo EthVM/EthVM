@@ -32,7 +32,7 @@
 
 <script lang="ts">
 import AppInfoCard from '@app/core/components/ui/AppInfoCard.vue'
-import { Events } from 'ethvm-common'
+import { Events, BlockMetrics } from 'ethvm-common'
 import { Block } from '@app/core/models'
 import BN from 'bignumber.js'
 import { Component, Prop, Vue } from 'vue-property-decorator'
@@ -45,25 +45,25 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 export default class AppInfoCardGroup extends Vue {
   @Prop({ type: String, default: 'generic' }) type!: string
 
-  loading = true
-  block = null
-  seconds = 0
+  loading: boolean = true
+  blockMetric: BlockMetrics = null
+  seconds: number = 0
   secondsInterval = null
 
   // Lifecycle
   created() {
-    const lastBlock = this.$store.getters.blocks[0]
-    if (lastBlock) {
-      this.setBlock(lastBlock)
+    const lastBlockMetric = this.$store.getters.blockMetrics[0]
+    if (lastBlockMetric) {
+      this.setBlockMetric(lastBlockMetric)
       this.startCount()
     }
   }
 
   mounted() {
-    this.$eventHub.$on(Events.NEW_BLOCK, _block => {
-      const lastBlock = this.$store.getters.blocks[0]
-      if (lastBlock) {
-        this.setBlock(lastBlock)
+    this.$eventHub.$on(Events.NEW_BLOCK_METRIC, _ => {
+      const lastBlockMetric = this.$store.getters.blockMetrics[0]
+      if (lastBlockMetric) {
+        this.setBlockMetric(lastBlockMetric)
         this.startCount()
       }
     })
@@ -71,33 +71,29 @@ export default class AppInfoCardGroup extends Vue {
 
   beforeDestroy() {
     clearInterval(this.secondsInterval)
-    this.$eventHub.$off([Events.NEW_BLOCK])
+    this.$eventHub.$off([Events.NEW_BLOCK_METRIC])
   }
 
   // Lifecycle
-  setBlock(block: Block) {
-    this.block = block
+  setBlockMetric(bm: BlockMetrics) {
+    this.blockMetric = bm
     this.loading = false
   }
 
-  getAvgHashRate(blocks: Block[] = []) {
+  getAvgHashRate(bms: BlockMetrics[] = []) {
     let avg = new BN(0)
-    if (!blocks || blocks.length == 0) {
+    if (!bms || bms.length === 0) {
       return avg.toNumber()
     }
 
-    blocks.forEach(block => {
-      const stats = block.getStats()
-      const blockTime = stats.processingTimeMs
-      avg = avg.plus(new BN(blockTime))
-    })
+    bms.forEach(bm => (avg = avg.plus(new BN(bm.blockTime))))
 
-    avg = avg.dividedBy(blocks.length)
+    avg = avg.dividedBy(bms.length)
     if (avg.isZero) {
       return avg.toNumber()
     }
 
-    const difficulty = blocks[0].getDifficulty().toNumber()
+    const difficulty = bms[0].difficulty
     return new BN(difficulty)
       .dividedBy(avg)
       .dividedBy('1e12')
@@ -110,7 +106,7 @@ export default class AppInfoCardGroup extends Vue {
 
   startCount() {
     this.secondsInterval = setInterval(() => {
-      this.seconds = Math.ceil((new Date().getTime() - this.block.getTimestamp()) / 1000)
+      this.seconds = Math.ceil((new Date().getTime() - this.blockMetric.timestamp) / 1000)
     }, 1000)
   }
 
@@ -136,16 +132,16 @@ export default class AppInfoCardGroup extends Vue {
   }
 
   get latestBlockNumber(): string {
-    return !this.loading ? this.block.getNumber().toString() : this.loadingMessage
+    return !this.loading ? this.blockMetric.number : this.loadingMessage
   }
 
   get latestHashRate(): string {
-    return !this.loading ? this.getRoundNumber(this.getAvgHashRate(this.$store.getters.blocks).toString()).toString() : this.loadingMessage
+    return !this.loading ? this.getRoundNumber(this.getAvgHashRate(this.$store.getters.blockMetrics).toString()).toString() : this.loadingMessage
   }
 
   get latestDifficulty(): string {
     if (!this.loading) {
-      const difficulty = this.block.getDifficulty()
+      const difficulty = this.blockMetric.difficulty
       const ths = this.getTHs(difficulty)
       return this.getRoundNumber(ths).toString()
     }
@@ -153,15 +149,15 @@ export default class AppInfoCardGroup extends Vue {
   }
 
   get latestBlockSuccessTxs(): string {
-    return !this.loading ? this.block.getStats().successfulTxs.toString() : this.loadingMessage
+    return !this.loading ? this.blockMetric.numSuccessfulTxs.toString() : this.loadingMessage
   }
 
   get latestBlockFailedTxs(): string {
-    return !this.loading ? this.block.getStats().failedTxs.toString() : this.loadingMessage
+    return !this.loading ? this.blockMetric.numFailedTxs.toString() : this.loadingMessage
   }
 
   get latestBlockPendingTxs(): string {
-    return !this.loading ? this.block.getStats().pendingTxs.toString() : this.loadingMessage
+    return !this.loading ? this.blockMetric.numPendingTxs.toString() : this.loadingMessage
   }
 
   get secSinceLastBlock(): string {

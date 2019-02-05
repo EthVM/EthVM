@@ -8,7 +8,7 @@ export declare const Events: {
     leave: string;
     NEW_BLOCK: string;
     NEW_PENDING_TX: string;
-    NEW_BLOCK_STAT: string;
+    NEW_BLOCK_METRIC: string;
     NEW_TX: string;
     NEW_UNCLE: string;
     pastTxsR: string;
@@ -27,6 +27,8 @@ export declare const Events: {
     getBlocksMined: string;
     getBlockByNumber: string;
     getTotalNumberOfBlocks: string;
+    getBlockMetric: string;
+    getBlockMetrics: string;
     getTx: string;
     getTxs: string;
     getBlockTxs: string;

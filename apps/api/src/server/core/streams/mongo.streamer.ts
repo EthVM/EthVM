@@ -6,8 +6,8 @@ import { ChangeStream, Collection, Cursor, Db } from 'mongodb'
 
 export class MongoStreamer implements Streamer {
   private blocksReader: MongoCollectionChangeStreamReader
-  private blockStatsReader: MongoCollectionChangeStreamReader
   private pendingTxReader: MongoCollectionChangeStreamReader
+  private blockMetricsReader: MongoCollectionChangeStreamReader
 
   constructor(private readonly db: Db, private readonly emitter: EventEmitter) {}
 
@@ -15,13 +15,13 @@ export class MongoStreamer implements Streamer {
     const { db, emitter } = this
     const intervalMs = 1000
 
-    this.blocksReader = new MongoCollectionChangeStreamReader(db.collection(MongoEthVM.collections.blocks), intervalMs, 'block', emitter)
-    this.blockStatsReader = new MongoCollectionChangeStreamReader(db.collection(MongoEthVM.collections.blocks), intervalMs, 'blockStat', emitter)
-    this.pendingTxReader = new MongoCollectionChangeStreamReader(db.collection(MongoEthVM.collections.pendingTxs), intervalMs, 'pendingTx', emitter)
+    this.blocksReader = new MongoCollectionChangeStreamReader(db.collection(MongoEthVM.collections.blocks), intervalMs, 'blocks', emitter)
+    this.pendingTxReader = new MongoCollectionChangeStreamReader(db.collection(MongoEthVM.collections.pendingTxs), intervalMs, 'pending-txs', emitter)
+    this.blockMetricsReader = new MongoCollectionChangeStreamReader(db.collection(MongoEthVM.collections.blocks), intervalMs, 'block-metrics', emitter)
 
     await this.blocksReader.start()
-    await this.blockStatsReader.start()
     await this.pendingTxReader.start()
+    await this.blockMetricsReader.start()
 
     return true
   }

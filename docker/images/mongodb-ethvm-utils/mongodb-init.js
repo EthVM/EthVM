@@ -60,7 +60,7 @@ function createIndexes(collectionId) { indexes[collectionId].forEach(params => d
 
 createIndexes('blocks');
 createIndexes('balances');
-createIndexes('block_statistics');
+createIndexes('aggregate_block_metrics');
 createIndexes('contracts');
 createIndexes('token_transfers');
 createIndexes('transactions');

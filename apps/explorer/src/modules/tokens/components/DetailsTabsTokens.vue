@@ -8,7 +8,7 @@
 
     <!-- Holders -->
     <v-tab-item slot="tabs-item" value="tab-1">
-      <holder-table-tokens :holders="holders" :addressRef="addressRef" />
+      <holder-table-tokens :holders="holders" :address-ref="addressRef" />
     </v-tab-item>
     <!-- End Holders -->
   </app-tabs>

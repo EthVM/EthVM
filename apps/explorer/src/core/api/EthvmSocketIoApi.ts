@@ -1,6 +1,6 @@
 import { EthvmApi } from '@app/core/api'
 import { Block, PendingTx, Tx, Uncle } from '@app/core/models'
-import { AddressBalance, AddressMetadata, Contract, Events, Quote, Statistic, Token, TokenTransfer, TokenExchangeRate } from 'ethvm-common'
+import { AddressBalance, AddressMetadata, BlockMetrics, Contract, Events, Quote, Statistic, Token, TokenTransfer, TokenExchangeRate } from 'ethvm-common'
 
 export class EthvmSocketIoApi implements EthvmApi {
   constructor(private readonly io: SocketIOClient.Socket) {}
@@ -58,6 +58,18 @@ export class EthvmSocketIoApi implements EthvmApi {
   }
 
   // ------------------------------------------------------------------------------------
+  // Blocks
+  // ------------------------------------------------------------------------------------
+
+  public getBlockMetric(hash: string): Promise<BlockMetrics | null> {
+    return this.promisify(Events.getBlockMetric, {})
+  }
+
+  public getBlockMetrics(limit: number, page: number): Promise<BlockMetrics[]> {
+    return this.promisify(Events.getBlockMetrics, { limit, page })
+  }
+
+  // ------------------------------------------------------------------------------------
   // Contracts
   // ------------------------------------------------------------------------------------
 
@@ -77,7 +89,7 @@ export class EthvmSocketIoApi implements EthvmApi {
     return this.promisify(Events.getExchangeRates, { symbol, to })
   }
 
-  public getTokenExchangeRates(limit: number = 100, page: number = 0): Promise<TokenExchangeRate[]> {
+  public getTokenExchangeRates(limit: number, page: number): Promise<TokenExchangeRate[]> {
     return this.promisify(Events.getTokenExchangeRates, { limit, page })
   }
 

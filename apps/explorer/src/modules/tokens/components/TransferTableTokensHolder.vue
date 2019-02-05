@@ -1,14 +1,9 @@
 <template>
   <div>
-
     <!-- Pagination -->
     <v-layout row fill-height align-center justify-space-between>
       <div v-html="paginationText" class="ml-2"></div>
-      <v-pagination
-        v-model="page"
-        :length="numPages"
-        class="mt-2 mb-2">
-      </v-pagination>
+      <v-pagination v-model="page" :length="numPages" class="mt-2 mb-2"> </v-pagination>
     </v-layout>
     <!-- End Pagination -->
 
@@ -31,7 +26,6 @@
     <!-- Start Rows -->
     <v-card color="white" v-for="tx in transfersPage" class="transparent" flat :key="tx.transactionHash">
       <v-layout align-center justify-start row fill-height pr-3>
-
         <!-- Column 1 -->
         <v-flex xs6 sm8 md5>
           <v-flex d-flex xs12 pb-2>
@@ -68,17 +62,16 @@
           <p>{{ tx.value }}</p>
         </v-flex>
         <!-- End Column 3 -->
-
       </v-layout>
       <v-divider class="mb-2 mt-2" />
     </v-card>
     <!-- End Rows -->
-
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Tx } from '@app/core/models'
 
 const MAX_ITEMS = 10
 
@@ -118,7 +111,7 @@ export default class TransferTableTokensHolder extends Vue {
    * @return {String} - Pagination text
    */
   get paginationText() {
-    const start = ((this.page - 1) * MAX_ITEMS) + 1
+    const start = (this.page - 1) * MAX_ITEMS + 1
     const end = start + this.transfersPage.length - 1
     return `Showing results ${start} - ${end} of ${this.transfers.length}`
   }

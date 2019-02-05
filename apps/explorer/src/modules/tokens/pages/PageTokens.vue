@@ -17,7 +17,7 @@ import { Component, Vue } from 'vue-property-decorator'
   }
 })
 export default class PageTokens extends Vue {
-  tokens = []
+  tokens: any = []
 
   /*
   ===================================================================================

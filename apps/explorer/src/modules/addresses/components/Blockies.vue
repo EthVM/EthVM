@@ -40,9 +40,11 @@ export default class Blockies extends Vue {
       size: 8,
       scale: 8
     }).toDataURL()
-    this.$refs.identicon.style.width = this.width
-    this.$refs.identicon.style.height = this.height
-    this.$refs.identicon.style.backgroundImage = `url('${data}')`
+    const identicon = this.$refs.identicon as any
+    const style = identicon.style as any
+    style.width = this.width
+    style.height = this.height
+    style.backgroundImage = `url('${data}')`
   }
 }
 </script>

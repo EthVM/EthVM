@@ -176,7 +176,7 @@ export default class PageDetailsTxs extends Vue {
     return [
       {
         text: this.$i18n.t('title.tx'),
-        disabled: <boolean>false,
+        disabled: false,
         link: '/txs'
       },
       {

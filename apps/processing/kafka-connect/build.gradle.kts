@@ -1,9 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import com.jfrog.bintray.gradle.BintrayExtension
-import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
-import org.gradle.plugins.ide.idea.model.IdeaModel
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import sun.tools.jar.resources.jar
 
 plugins {
   `java-library`
@@ -39,7 +35,7 @@ dependencies {
   implementation("org.web3j:parity:4.0.3")
 
   // Utils
-  implementation("io.arrow-kt:arrow-core:0.8.1")
+  implementation("io.arrow-kt:arrow-core:0.8.2")
   implementation("ch.qos.logback:logback-classic:1.2.3")
   implementation("io.github.microutils:kotlin-logging:1.6.22")
   implementation("com.beust:klaxon:3.0.5")
