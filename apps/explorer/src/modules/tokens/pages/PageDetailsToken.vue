@@ -80,11 +80,11 @@ export default class PageDetailsToken extends Vue {
   address = '' // TEMP: Formatted address with "0x" removed from beginning
   contract: any = {} // Contract details object
   token: any = {} // Token details object
-  tokenTransfers: any = [] // Array of token transfers
-  tokenHolders: any = [] // Array of token holders
+  tokenTransfers: any[] = [] // Array of token transfers
+  tokenHolders: any[] = [] // Array of token holders
   isHolder = false // Whether or not "holder" is included in query params to display view accordingly
   holderAddress: any = '' // Address of current token holder, if applicable
-  holderTransactions: any = [] // Transactions for a particular holder address
+  holderTransactions: any[] = [] // Transactions for a particular holder address
   holderInfo: any = {} // Balance/information for a particular holder address
   hasError = false // Boolean whether or not page has errors to display
   error = '' // Error message
@@ -148,8 +148,8 @@ export default class PageDetailsToken extends Vue {
         .then(([contract, token, tokenTransfers, tokenHolders]) => {
           this.contract = contract
           this.token = token
-          this.tokenTransfers = tokenTransfers
-          this.tokenHolders = tokenHolders
+          this.tokenTransfers = tokenTransfers as any[]
+          this.tokenHolders = tokenHolders as any[]
           resolve()
         })
         .catch(e => {
@@ -176,7 +176,7 @@ export default class PageDetailsToken extends Vue {
 
       Promise.all(promises)
         .then(([holderTransactions, holderInfo]) => {
-          this.holderTransactions = holderTransactions
+          this.holderTransactions = holderTransactions as any[]
           this.holderInfo = holderInfo
           // console.log(this.holderInfo)
           resolve()
