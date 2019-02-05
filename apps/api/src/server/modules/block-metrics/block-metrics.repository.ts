@@ -13,12 +13,7 @@ export class MongoBlockMetricsRepository extends BaseMongoDbRepository implement
     return this.db
       .collection(MongoEthVM.collections.blockMetrics)
       .findOne({ hash })
-      .then(resp => {
-        if (!resp) {
-          return null
-        }
-        return toBlockMetrics(resp)
-      })
+      .then(resp => resp ? toBlockMetrics(resp) : null)
   }
 
   public getBlockMetrics(limit: number, page: number): Promise<BlockMetrics[]> {

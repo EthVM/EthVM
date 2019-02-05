@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { Events } from 'ethvm-common'
+import { Events, BlockMetrics } from 'ethvm-common'
 import AppChart from '@app/modules/charts/components/AppChart.vue'
 import ethUnits from 'ethereumjs-units'
 import { Vue, Component } from 'vue-property-decorator'
@@ -27,7 +27,7 @@ const MAX_ITEMS = 10
 })
 export default class ChartLiveTxFees extends Vue {
   redraw = true
-  DATA = {
+  data = {
     labels: [],
     avgFees: [],
     avgPrice: []
@@ -36,52 +36,49 @@ export default class ChartLiveTxFees extends Vue {
   // Lifecycle
 
   created() {
-    this.getPastData(MAX_ITEMS)
+    this.getBlockMetrics(MAX_ITEMS)
   }
 
   mounted() {
-    this.$eventHub.$on(Events.NEW_BLOCK, _block => {
+    this.$eventHub.$on(Events.NEW_BLOCK_METRIC, (bm: BlockMetrics) => {
       this.redraw = false
-      const lastBlock = 1
-      this.getPastData(lastBlock)
+      this.fillChartData(bm)
     })
   }
 
   beforeDestroy() {
-    this.$eventHub.$off(Events.NEW_BLOCK)
+    this.$eventHub.$off(Events.NEW_BLOCK_METRIC)
   }
 
   // Methods
+  getBlockMetrics(max: number) {
+    this.$api.getBlockMetrics(max, 0).then(bms => this.fillChartData(bms))
+  }
 
-  getPastData(_items: number): void {
-    this.$socket.emit(Events.getBlockMetrics, { limit: _items, page: 0 }, (err, result) => {
-      if (!err && result) {
-        result.forEach(_block => {
-          this.DATA.labels.push('block_number')
-          this.DATA.avgFees.push(_block.avgTxFees)
-          this.DATA.avgPrice.push(_block.avgGasPrice)
-        })
-        if (this.DATA.labels.length > MAX_ITEMS) {
-          this.DATA.labels.pop()
-          this.DATA.avgFees.pop()
-          this.DATA.avgPrice.pop()
-        }
+  fillChartData(bms: BlockMetrics[] | BlockMetrics) {
+    bms = !Array.isArray(bms) ? [bms] : bms
+    bms.forEach(bm => {
+      this.data.labels.push(bm.number)
+      this.data.avgFees.push(bm.avgTxFees)
+      this.data.avgPrice.push(bm.avgGasPrice)
+      if (this.data.labels.length > MAX_ITEMS) {
+        this.data.labels.pop()
+        this.data.avgFees.pop()
+        this.data.avgPrice.pop()
       }
     })
   }
 
-  setTicks() {}
-
   // Computed
   get chartData() {
     return {
-      labels: this.DATA.labels,
+      labels: this.data.labels,
       datasets: [
         {
           label: this.$i18n.t('footnote.aveTxFees'),
           borderColor: '#40ce9c',
           backgroundColor: '#40ce9c',
-          data: this.DATA.avgFees,
+          data: this.data.avgFees,
           yAxisID: 'y-axis-1',
           fill: false
         },
@@ -89,7 +86,7 @@ export default class ChartLiveTxFees extends Vue {
           label: this.$i18n.t('footnote.aveGasPrice'),
           borderColor: '#eea66b',
           backgroundColor: '#eea56b',
-          data: this.DATA.avgPrice,
+          data: this.data.avgPrice,
           yAxisID: 'y-axis-2',
           fill: false
         }
