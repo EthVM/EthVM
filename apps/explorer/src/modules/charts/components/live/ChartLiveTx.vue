@@ -1,5 +1,4 @@
 <template>
-  <v-layout column justify-center>
     <app-chart
       type="bar"
       :data="chartData"
@@ -10,7 +9,6 @@
       :footnote-arr="footnote"
       :live-chart="true"
     />
-  </v-layout>
 </template>
 
 <script lang="ts">
@@ -27,65 +25,64 @@ const MAX_ITEMS = 10
   }
 })
 export default class ChartLiveTransactions extends Vue {
-  chartData: any = {}
-  redraw = false
+  redraw = true
+  DATA = {
+    labels: [],
+    sTxs: [],
+    fTxs: [],
+    pTxs: []
+  }
 
   // Lifecycle
   created() {
-    this.chartData = this.initData
-    this.$eventHub.$on(Events.pastBlocksR, () => {
-      this.chartData = this.initData
-      this.redraw = true
-    })
+    this.getPastData(MAX_ITEMS)
+  }
+
+  mounted() {
+
     this.$eventHub.$on(Events.NEW_BLOCK, _block => {
-      if (this.chartData.datasets[0]) {
-        this.redraw = false
-        const stats = _block.getStats()
-        const successfulTxs = stats.successfulTxs
-        const failedTxs = stats.failedTxs
-        this.chartData.labels.push(_block.getNumber())
-        this.chartData.labels.shift()
-        this.chartData.datasets[0].data.push(0) //pending tx ev
-        this.chartData.datasets[0].data.shift()
-        this.chartData.datasets[1].data.push(successfulTxs)
-        this.chartData.datasets[1].data.shift()
-        this.chartData.datasets[2].data.push(failedTxs)
-        this.chartData.datasets[2].data.shift()
-      }
+      this.redraw = false
+      const lastBlock = 1
+      this.getPastData(lastBlock)
     })
   }
 
   beforeDestroy() {
-    this.$eventHub.$off(Events.pastBlocksR)
     this.$eventHub.$off(Events.NEW_BLOCK)
   }
 
-  // Computed
-  get initData() {
-    const data = {
-      labels: [],
-      sData: [],
-      fData: [],
-      pData: []
-    }
+  //Methods:
+  getPastData(_items: number): void {
 
-    const latestBlocks = this.$store.getters.blocks.slice(0, MAX_ITEMS)
-    latestBlocks.forEach(_block => {
-      data.labels.unshift(_block.getNumber())
-      const stats = _block.getStats()
-      data.sData.unshift(new BN(stats.successfulTxs).toNumber())
-      data.fData.unshift(new BN(stats.failedTxs).toNumber())
-      data.pData.unshift(new BN(0).toNumber()) //pending tx ev
+    this.$socket.emit(Events.getBlockMetrics, { limit: _items , page: 0 }, (err, result) => {
+      if (!err && result) {
+        result.forEach(_block => {
+          //console.log(_block.number)
+          this.DATA.labels.push('_block.number')
+          this.DATA.sTxs.push(_block.numSuccessfulTxs)
+          this.DATA.fTxs.push(_block.numFailedTxs)
+          this.DATA.pTxs.push(_block.numPendingTxs)
+        })
+        if (this.DATA.labels.length > MAX_ITEMS ) {
+          this.DATA.labels.pop()
+          this.DATA.sTxs.pop()
+          this.DATA.fTxs.pop()
+          this.DATA.pTxs.pop()
+        }
+      }
     })
+  }
 
+  // Computed
+  get chartData() {
     return {
-      labels: data.labels,
+      labels: this.DATA.labels,
       datasets: [
         {
           label: 'Pending',
           backgroundColor: '#eea66b',
           borderColor: '#eea66b',
-          data: data.pData,
+          data: this.DATA.pTxs,
           type: 'line',
           fill: false,
           yAxisID: 'y-axis-2'
@@ -93,13 +90,13 @@ export default class ChartLiveTransactions extends Vue {
         {
           label: this.$i18n.t('footnote.success'),
           backgroundColor: '#40ce9c',
-          data: data.sData,
+          data: this.DATA.sTxs,
           yAxisID: 'y-axis-1'
         },
         {
           label: this.$i18n.t('footnote.failed'),
           backgroundColor: '#fe136c',
-          data: data.fData,
+          data: this.DATA.fTxs,
           yAxisID: 'y-axis-1'
         }
       ]
@@ -146,14 +143,26 @@ export default class ChartLiveTransactions extends Vue {
             id: 'y-axis-1',
             stacked: false,
             ticks: {
-              beginAtZero: true
+              beginAtZero: true,
+              callback: function(value) {
+              const ranges = [{ divider: 1e9, suffix: 'B' }, { divider: 1e6, suffix: 'M' }, { divider: 1e3, suffix: 'k' }]
+              function formatNumber(n) {
+                for (let i = 0; i < ranges.length; i++) {
+                  if (n >= ranges[i].divider) {
+                    return (n / ranges[i].divider).toString() + ranges[i].suffix
+                  }
+                }
+                return n
+              }
+              return formatNumber(value)
+            }
             },
             gridLines: {
               color: 'rgba(0, 0, 0, 0)'
             },
             scaleLabel: {
               display: true,
-              labelString: this.$i18n.t('charts.labelString')
+              labelString: this.$i18n.t('charts.sfTxsLabel')
             }
           },
           {
@@ -161,14 +170,26 @@ export default class ChartLiveTransactions extends Vue {
             position: 'right',
             stacked: false,
             ticks: {
-              beginAtZero: true
+              beginAtZero: true,
+              callback: function(value) {
+              const ranges = [{ divider: 1e9, suffix: 'B' }, { divider: 1e6, suffix: 'M' }, { divider: 1e3, suffix: 'k' }]
+              function formatNumber(n) {
+                for (let i = 0; i < ranges.length; i++) {
+                  if (n >= ranges[i].divider) {
+                    return (n / ranges[i].divider).toString() + ranges[i].suffix
+                  }
+                }
+                return n
+              }
+              return formatNumber(value)
+            }
             },
             gridLines: {
               color: 'rgba(0, 0, 0, 0)'
             },
             scaleLabel: {
               display: true,
-              labelString: 'Pending Tx'
+              labelString: this.$i18n.t('charts.penTxsLabel')
             }
           }
         ],
