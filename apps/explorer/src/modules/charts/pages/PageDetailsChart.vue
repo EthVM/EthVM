@@ -10,7 +10,7 @@
     <chart-tx-fail v-if="chartId === ChartType.txFail" />
     <chart-tx-success v-if="chartId === ChartType.txSuccess" />
     <chart-tx-fees v-if="chartId === ChartType.txFees" />
-    <chart-uncles-number v-if="chartId === ChartType.uncles" />
+    <!--<chart-uncles-number v-if="chartId === ChartType.uncles" />-->
   </v-container>
 </template>
 
