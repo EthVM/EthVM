@@ -24,6 +24,7 @@ object BlockMetrics {
     val receipts = block.getTransactionReceipts()
 
     val difficulty = block.getHeader().getDifficulty().bigInteger()
+    val totalDifficulty = block.getTotalDifficulty().bigInteger()
     val numPendingTxs = block.getNumPendingTxs()
     val totalTxs = receipts.size
 
@@ -62,12 +63,14 @@ object BlockMetrics {
 
     return BlockMetricsRecord.newBuilder()
       .setHash(block.getHeader().getHash())
+      .setNumber(block.getHeader().getNumber())
       .setTotalTxs(totalTxs)
       .setNumUncles(block.getUncles().size)
       .setNumSuccessfulTxs(numSuccessfulTxs)
       .setNumFailedTxs(numFailedTxs)
       .setNumPendingTxs(numPendingTxs)
       .setDifficulty(difficulty.unsignedByteBuffer())
+      .setTotalDifficulty(totalDifficulty.unsignedByteBuffer())
       .setTotalGasPrice(totalGasPrice.unsignedByteBuffer())
       .setAvgGasLimit(avgGasLimit.unsignedByteBuffer())
       .setAvgGasPrice(avgGasPrice.unsignedByteBuffer())

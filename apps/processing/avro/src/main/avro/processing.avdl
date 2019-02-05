@@ -159,12 +159,14 @@ protocol Processing {
 
   record BlockMetricsRecord {
     io.enkrypt.avro.common.Data32 hash;
+    bytes number;
     int totalTxs = 0;
     int numSuccessfulTxs = 0;
     int numFailedTxs = 0;
     int numPendingTxs = 0;
     int numUncles = 0;
     bytes difficulty;
+    bytes totalDifficulty;
     bytes totalGasPrice;
     bytes avgGasLimit;
     bytes avgGasPrice;
