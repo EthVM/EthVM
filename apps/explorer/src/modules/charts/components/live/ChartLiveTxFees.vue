@@ -1,15 +1,15 @@
 <template>
-    <app-chart
-      type="line"
-      :data="chartData"
-      :options="chartOptions"
-      :redraw="redraw"
-      :chart-title="newTitle"
-      :chart-description="newDescription"
-      unfilled="true"
-      :footnote-arr="footnote"
-      :live-chart="true"
-    />
+  <app-chart
+    type="line"
+    :data="chartData"
+    :options="chartOptions"
+    :redraw="redraw"
+    :chart-title="newTitle"
+    :chart-description="newDescription"
+    unfilled="true"
+    :footnote-arr="footnote"
+    :live-chart="true"
+  />
 </template>
 
 <script lang="ts">
@@ -40,7 +40,6 @@ export default class ChartLiveTxFees extends Vue {
   }
 
   mounted() {
-
     this.$eventHub.$on(Events.NEW_BLOCK, _block => {
       this.redraw = false
       const lastBlock = 1
@@ -55,15 +54,14 @@ export default class ChartLiveTxFees extends Vue {
   // Methods
 
   getPastData(_items: number): void {
-    this.$socket.emit(Events.getBlockMetrics, { limit: _items , page: 0 }, (err, result) => {
+    this.$socket.emit(Events.getBlockMetrics, { limit: _items, page: 0 }, (err, result) => {
       if (!err && result) {
         result.forEach(_block => {
-          console.log(_block)
           this.DATA.labels.push('block_number')
           this.DATA.avgFees.push(_block.avgTxFees)
           this.DATA.avgPrice.push(_block.avgGasPrice)
         })
-        if (this.DATA.labels.length > MAX_ITEMS ) {
+        if (this.DATA.labels.length > MAX_ITEMS) {
           this.DATA.labels.pop()
           this.DATA.avgFees.pop()
           this.DATA.avgPrice.pop()
@@ -72,9 +70,7 @@ export default class ChartLiveTxFees extends Vue {
     })
   }
 
-  setTicks() {
-
-  }
+  setTicks() {}
 
   // Computed
   get chartData() {
@@ -116,17 +112,17 @@ export default class ChartLiveTxFees extends Vue {
             ticks: {
               beginAtZero: true,
               callback: function(value) {
-              const ranges = [{ divider: 1e9, suffix: 'B' }, { divider: 1e6, suffix: 'M' }, { divider: 1e3, suffix: 'k' }]
-              function formatNumber(n) {
-                for (let i = 0; i < ranges.length; i++) {
-                  if (n >= ranges[i].divider) {
-                    return (n / ranges[i].divider).toString() + ranges[i].suffix
+                const ranges = [{ divider: 1e9, suffix: 'B' }, { divider: 1e6, suffix: 'M' }, { divider: 1e3, suffix: 'k' }]
+                function formatNumber(n) {
+                  for (let i = 0; i < ranges.length; i++) {
+                    if (n >= ranges[i].divider) {
+                      return (n / ranges[i].divider).toString() + ranges[i].suffix
+                    }
                   }
+                  return n
                 }
-                return n
+                return formatNumber(value)
               }
-              return formatNumber(value)
-            }
             },
             gridLines: {
               color: 'rgba(0, 0, 0, 0)'
@@ -142,17 +138,17 @@ export default class ChartLiveTxFees extends Vue {
             ticks: {
               beginAtZero: true,
               callback: function(value) {
-              const ranges = [{ divider: 1e9, suffix: 'B' }, { divider: 1e6, suffix: 'M' }, { divider: 1e3, suffix: 'k' }]
-              function formatNumber(n) {
-                for (let i = 0; i < ranges.length; i++) {
-                  if (n >= ranges[i].divider) {
-                    return (n / ranges[i].divider).toString() + ranges[i].suffix
+                const ranges = [{ divider: 1e9, suffix: 'B' }, { divider: 1e6, suffix: 'M' }, { divider: 1e3, suffix: 'k' }]
+                function formatNumber(n) {
+                  for (let i = 0; i < ranges.length; i++) {
+                    if (n >= ranges[i].divider) {
+                      return (n / ranges[i].divider).toString() + ranges[i].suffix
+                    }
                   }
+                  return n
                 }
-                return n
+                return formatNumber(value)
               }
-              return formatNumber(value)
-            }
             },
             gridLines: {
               color: 'rgba(0, 0, 0, 0)'

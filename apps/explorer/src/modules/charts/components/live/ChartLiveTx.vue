@@ -1,14 +1,14 @@
 <template>
-    <app-chart
-      type="bar"
-      :data="chartData"
-      :options="chartOptions"
-      :chart-title="newTitle"
-      :chart-description="newDescription"
-      :redraw="redraw"
-      :footnote-arr="footnote"
-      :live-chart="true"
-    />
+  <app-chart
+    type="bar"
+    :data="chartData"
+    :options="chartOptions"
+    :chart-title="newTitle"
+    :chart-description="newDescription"
+    :redraw="redraw"
+    :footnote-arr="footnote"
+    :live-chart="true"
+  />
 </template>
 
 <script lang="ts">
@@ -39,7 +39,6 @@ export default class ChartLiveTransactions extends Vue {
   }
 
   mounted() {
-
     this.$eventHub.$on(Events.NEW_BLOCK, _block => {
       this.redraw = false
       const lastBlock = 1
@@ -53,8 +52,7 @@ export default class ChartLiveTransactions extends Vue {
 
   //Methods:
   getPastData(_items: number): void {
-
-    this.$socket.emit(Events.getBlockMetrics, { limit: _items , page: 0 }, (err, result) => {
+    this.$socket.emit(Events.getBlockMetrics, { limit: _items, page: 0 }, (err, result) => {
       if (!err && result) {
         result.forEach(_block => {
           //console.log(_block.number)
@@ -63,7 +61,7 @@ export default class ChartLiveTransactions extends Vue {
           this.DATA.fTxs.push(_block.numFailedTxs)
           this.DATA.pTxs.push(_block.numPendingTxs)
         })
-        if (this.DATA.labels.length > MAX_ITEMS ) {
+        if (this.DATA.labels.length > MAX_ITEMS) {
           this.DATA.labels.pop()
           this.DATA.sTxs.pop()
           this.DATA.fTxs.pop()
@@ -145,17 +143,17 @@ export default class ChartLiveTransactions extends Vue {
             ticks: {
               beginAtZero: true,
               callback: function(value) {
-              const ranges = [{ divider: 1e9, suffix: 'B' }, { divider: 1e6, suffix: 'M' }, { divider: 1e3, suffix: 'k' }]
-              function formatNumber(n) {
-                for (let i = 0; i < ranges.length; i++) {
-                  if (n >= ranges[i].divider) {
-                    return (n / ranges[i].divider).toString() + ranges[i].suffix
+                const ranges = [{ divider: 1e9, suffix: 'B' }, { divider: 1e6, suffix: 'M' }, { divider: 1e3, suffix: 'k' }]
+                function formatNumber(n) {
+                  for (let i = 0; i < ranges.length; i++) {
+                    if (n >= ranges[i].divider) {
+                      return (n / ranges[i].divider).toString() + ranges[i].suffix
+                    }
                   }
+                  return n
                 }
-                return n
+                return formatNumber(value)
               }
-              return formatNumber(value)
-            }
             },
             gridLines: {
               color: 'rgba(0, 0, 0, 0)'
@@ -172,17 +170,17 @@ export default class ChartLiveTransactions extends Vue {
             ticks: {
               beginAtZero: true,
               callback: function(value) {
-              const ranges = [{ divider: 1e9, suffix: 'B' }, { divider: 1e6, suffix: 'M' }, { divider: 1e3, suffix: 'k' }]
-              function formatNumber(n) {
-                for (let i = 0; i < ranges.length; i++) {
-                  if (n >= ranges[i].divider) {
-                    return (n / ranges[i].divider).toString() + ranges[i].suffix
+                const ranges = [{ divider: 1e9, suffix: 'B' }, { divider: 1e6, suffix: 'M' }, { divider: 1e3, suffix: 'k' }]
+                function formatNumber(n) {
+                  for (let i = 0; i < ranges.length; i++) {
+                    if (n >= ranges[i].divider) {
+                      return (n / ranges[i].divider).toString() + ranges[i].suffix
+                    }
                   }
+                  return n
                 }
-                return n
+                return formatNumber(value)
               }
-              return formatNumber(value)
-            }
             },
             gridLines: {
               color: 'rgba(0, 0, 0, 0)'

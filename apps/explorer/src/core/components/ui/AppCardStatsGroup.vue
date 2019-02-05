@@ -33,7 +33,7 @@
 <script lang="ts">
 import AppInfoCard from '@app/core/components/ui/AppInfoCard.vue'
 import { Events, BlockMetrics } from 'ethvm-common'
-import { Block, BlockMetrics } from '@app/core/models'
+import { Block } from '@app/core/models'
 import BN from 'bignumber.js'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 
@@ -63,9 +63,9 @@ export default class AppInfoCardGroup extends Vue {
     this.$eventHub.$on(Events.NEW_BLOCK_METRIC, bm => {
       const lastBlockMetric = this.$store.getters.blockMetrics[0]
       if (lastBlockMetric) {
-      this.setBlockMetric(lastBlockMetric)
-      this.startCount()
-    }
+        this.setBlockMetric(lastBlockMetric)
+        this.startCount()
+      }
     })
   }
 
@@ -151,7 +151,7 @@ export default class AppInfoCardGroup extends Vue {
   }
 
   get latestBlockSuccessTxs(): string {
-    return !this.loading ? this.blockMetric.successfulTxs: this.loadingMessage
+    return !this.loading ? this.blockMetric.successfulTxs : this.loadingMessage
   }
 
   get latestBlockFailedTxs(): string {

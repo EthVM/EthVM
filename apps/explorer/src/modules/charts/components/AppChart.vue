@@ -6,16 +6,16 @@
         <v-card-text class="pt-0 pb-0 info--text caption">{{ chartDescription }}</v-card-text>
       </v-flex>
       <v-flex xs12 v-if="!liveChart" pt-0>
-          <v-toolbar flat color="transparent" height="40" >
-            <v-layout align-center justify-end>
-              <v-btn-toggle depressed v-model="toggleData" mandatory>
-                <v-btn flat :value="0" active-class="active-button white--text" small>{{ $t('charts.options.all') }}</v-btn>
-                <v-btn flat :value="1" active-class="active-button white--text" small>{{ $t('charts.options.w') }}</v-btn>
-                <v-btn flat :value="2" active-class="active-button white--text" small>{{ $t('charts.options.m') }}</v-btn>
-                <!--<v-btn flat :value="3" active-class="active-button white--text" small>1Y</v-btn> -->
-              </v-btn-toggle>
-            </v-layout>
-          </v-toolbar>
+        <v-toolbar flat color="transparent" height="40">
+          <v-layout align-center justify-end>
+            <v-btn-toggle depressed v-model="toggleData" mandatory>
+              <v-btn flat :value="0" active-class="active-button white--text" small>{{ $t('charts.options.all') }}</v-btn>
+              <v-btn flat :value="1" active-class="active-button white--text" small>{{ $t('charts.options.w') }}</v-btn>
+              <v-btn flat :value="2" active-class="active-button white--text" small>{{ $t('charts.options.m') }}</v-btn>
+              <!--<v-btn flat :value="3" active-class="active-button white--text" small>1Y</v-btn> -->
+            </v-btn-toggle>
+          </v-layout>
+        </v-toolbar>
       </v-flex>
     </v-layout>
     <v-divider></v-divider>
