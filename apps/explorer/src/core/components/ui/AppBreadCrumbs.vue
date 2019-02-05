@@ -69,8 +69,9 @@ export default class AppBreadCrumbs extends Vue {
   */
 
   get home(): Crumb {
-    const crumbHome = {
-      text: this.$i18n.t('title.home'),
+    const text = `${this.$i18n.t('title.home')}`
+    const crumbHome: Crumb = {
+      text: text,
       disabled: true,
       icon: 'fa fa-home',
       link: '/'
