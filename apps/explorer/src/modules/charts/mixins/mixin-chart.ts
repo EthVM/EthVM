@@ -82,7 +82,6 @@ export class ChartMixin extends Vue {
         result.forEach(point => {
           this.DATA[_state].points.push(point.value)
           this.DATA[_state].labels.push(point.date)
-          // console.log(point.date.toDate())
         })
       }
     })

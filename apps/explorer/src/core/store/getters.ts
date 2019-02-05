@@ -1,5 +1,6 @@
-import { Block, BlockMetrics, Tx, PendingTx, Uncle } from '@app/core/models'
+import { Block, PendingTx, Tx, Uncle } from '@app/core/models'
 import { State } from '@app/core/store/state'
+import { BlockMetrics } from 'ethvm-common'
 
 export default {
   all: (state: State): State => state,

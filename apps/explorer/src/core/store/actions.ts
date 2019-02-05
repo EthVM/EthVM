@@ -17,6 +17,14 @@ const socket_socketNewptx = function({ commit }, raw: SocketEvent | SocketEvent[
   })
 }
 
+const socket_socketNewblockmetrics = function({ commit }, raw: SocketEvent | SocketEvent[]) {
+  const evs = !Array.isArray(raw) ? [raw] : raw
+  evs.forEach(ev => {
+    commit(Events.NEW_BLOCK_METRIC, ev.value)
+    this._vm.$eventHub.$emit(Events.NEW_BLOCK_METRIC, ev.value)
+  })
+}
+
 // eslint-disable-next-line
 const socket_socketConnect = function({}) {
   this._vm.$socket.emit(Events.join, { rooms: SocketDefaultRooms })
@@ -25,5 +33,6 @@ const socket_socketConnect = function({}) {
 export default {
   socket_socketNewblock,
   socket_socketNewptx,
+  socket_socketNewblockmetrics,
   socket_socketConnect
 }

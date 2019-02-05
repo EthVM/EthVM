@@ -34,13 +34,12 @@ export default class ChartLiveTxFees extends Vue {
   }
 
   // Lifecycle
-
   created() {
-    this.getBlockMetrics(MAX_ITEMS)
+    this.fillChartData(this.$store.getters.blockMetrics)
   }
 
   mounted() {
-    this.$eventHub.$on(Events.NEW_BLOCK_METRIC, (bm: BlockMetrics) => {
+    this.$eventHub.$on(Events.NEW_BLOCK_METRIC, (bm: BlockMetrics[] | BlockMetrics) => {
       this.redraw = false
       this.fillChartData(bm)
     })
@@ -51,11 +50,7 @@ export default class ChartLiveTxFees extends Vue {
   }
 
   // Methods
-  getBlockMetrics(max: number) {
-    this.$api.getBlockMetrics(max, 0).then(bms => this.fillChartData(bms))
-  }
-
-  fillChartData(bms: BlockMetrics[] | BlockMetrics) {
+  fillChartData(bms: BlockMetrics[] | BlockMetrics = []) {
     bms = !Array.isArray(bms) ? [bms] : bms
     bms.forEach(bm => {
       this.data.labels.push(bm.number)
