@@ -22,12 +22,38 @@ export default class AppBreadCrumbs extends Vue {
 
   crumbs = []
 
-  //Lifecycle:
-  created() {
+  /*
+  ===================================================================================
+    Lifecycle
+  ===================================================================================
+  */
+
+  mounted() {
+    this.prepareBreadcrumbs()
+  }
+
+  @Watch('newItems')
+  onNewItemsChange() {
+    this.prepareBreadcrumbs()
+  }
+
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
+  prepareBreadcrumbs() {
+    this.setHome()
+    this.addNewItems()
+  }
+
+  setHome() {
+    this.crumbs = []
     this.crumbs.push(this.home)
   }
 
-  mounted() {
+  addNewItems() {
     if (this.newItems) {
       this.crumbs[0].disabled = false
       for (const i in this.newItems) {
@@ -36,7 +62,12 @@ export default class AppBreadCrumbs extends Vue {
     }
   }
 
-  // Computed
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
+
   get home(): Crumb {
     const crumbHome = {
       text: this.$i18n.t('title.home'),

@@ -3,6 +3,16 @@
 
     <!--
     =====================================================================================
+      ERROR
+    =====================================================================================
+    -->
+
+    <div v-if="hasError">
+      <h1>ERROR: {{ error }}</h1>
+    </div>
+
+    <!--
+    =====================================================================================
       HOLDER DETAILS
     =====================================================================================
     -->
@@ -14,7 +24,7 @@
         <details-tabs-tokens-holder :transfers="holderTransactions" :addressRef="addressRef"/>
       </div>
       <div v-else>
-        <v-layout column align-center justify-center ma-3>
+        <v-layout v-if="!hasError" column align-center justify-center ma-3>
           <v-card-title class="primary--text text-xs-center body-2 pb-4">Loading...</v-card-title>
           <v-icon class="fa fa-spinner fa-pulse fa-4x fa-fw primary--text" large />
         </v-layout>
@@ -22,9 +32,9 @@
     </div>
 
     <!--
-      =====================================================================================
-        BASIC DETAILS
-      =====================================================================================
+    =====================================================================================
+      BASIC DETAILS
+    =====================================================================================
     -->
     <div v-else>
       <!-- Loaded -->
@@ -36,7 +46,7 @@
       <!-- End Loaded -->
       <!-- Not Loaded -->
       <div v-else>
-        <v-layout column align-center justify-center ma-3>
+        <v-layout v-if="!hasError" column align-center justify-center ma-3>
           <v-card-title class="primary--text text-xs-center body-2 pb-4">Loading...</v-card-title>
           <v-icon class="fa fa-spinner fa-pulse fa-4x fa-fw primary--text" large />
         </v-layout>
@@ -82,10 +92,12 @@ export default class PageDetailsToken extends Vue {
   holderAddress = '' // Address of current token holder, if applicable
   holderTransactions = [] // Transactions for a particular holder address
   holderInfo = {} // Balance/information for a particular holder address
+  hasError = false // Boolean whether or not page has errors to display
+  error = '' // Error message
 
   /*
   ===================================================================================
-    Mounted
+    Lifecycle
   ===================================================================================
   */
 
@@ -119,10 +131,10 @@ export default class PageDetailsToken extends Vue {
     const query = this.$route.query
     this.isHolder = false
 
-    await this.fetchNormalData()
+    this.fetchNormalData()
 
     if (query.holder) {
-      await this.fetchHolderData()
+      this.fetchHolderData()
     }
   }
 
@@ -153,7 +165,8 @@ export default class PageDetailsToken extends Vue {
         })
         .catch(e => {
           // Handle error accordingly
-          reject(e)
+          this.hasError = true
+          this.error = 'Error loading data'
         })
     })
   }
@@ -184,7 +197,8 @@ export default class PageDetailsToken extends Vue {
         })
         .catch(e => {
           // Handle error accordingly
-          reject(e)
+          this.hasError = true
+          this.error = 'Error loading data'
         })
     })
   }
@@ -196,7 +210,7 @@ export default class PageDetailsToken extends Vue {
    */
   fetchContractDetails() {
     return new Promise((resolve, reject) => {
-      return this.$api.getContract(this.addressRef)
+      this.$api.getContract(this.addressRef)
         .then(result => {
           resolve(result)
         })
@@ -213,7 +227,7 @@ export default class PageDetailsToken extends Vue {
    */
   fetchAddressTokensTransfers(page = 0, limit = MAX_ITEMS) {
     return new Promise((resolve, reject) => {
-      return this.$api.getAddressTokenTransfers(this.addressRef, limit, page)
+      this.$api.getAddressTokenTransfers(this.addressRef, limit, page)
         .then(result => {
           resolve(result)
         })
@@ -233,6 +247,9 @@ export default class PageDetailsToken extends Vue {
       this.$http
         .get(`http://api.ethplorer.io/getTokenInfo/${this.addressRef}?apiKey=freekey&additional=image`)
         .then(response => {
+          if (response.data.error) {
+            return reject(response.data.error.message)
+          }
           resolve(response.data)
         })
         .catch(err => {
@@ -251,6 +268,9 @@ export default class PageDetailsToken extends Vue {
       this.$http
         .get(`http://api.ethplorer.io/getTopTokenHolders/${this.addressRef}?apiKey=freekey`)
         .then(response => {
+          if (response.data.error) {
+            return reject(response.data.error.message)
+          }
           resolve(response.data.holders)
         })
         .catch(err => {
@@ -269,6 +289,9 @@ export default class PageDetailsToken extends Vue {
       this.$http
         .get(`http://api.ethplorer.io/getAddressInfo/${this.holderAddress}?apiKey=freekey&token=${this.addressRef}`)
         .then(response => {
+          if (response.data.error) {
+            return reject(response.data.error.message)
+          }
           resolve(response.data)
         })
         .catch(err => {
@@ -287,6 +310,9 @@ export default class PageDetailsToken extends Vue {
       this.$http
         .get(`http://api.ethplorer.io/getAddressHistory/${this.holderAddress}?apiKey=freekey&token=${this.addressRef}&type=transfer`)
         .then(response => {
+          if (response.data.error) {
+            return reject(response.data.error.message)
+          }
           resolve(response.data.operations)
         })
         .catch(err => {
