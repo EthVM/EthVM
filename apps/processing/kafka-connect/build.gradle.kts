@@ -25,8 +25,8 @@ dependencies {
 
   // Kafka
   compileOnly("org.apache.kafka:connect-api:2.1.0")
-  implementation("io.confluent:kafka-schema-registry-client:5.0.1")
-  implementation("io.confluent:kafka-connect-avro-converter:5.0.1")
+  implementation("io.confluent:kafka-schema-registry-client:5.1.0")
+  implementation("io.confluent:kafka-connect-avro-converter:5.1.0")
 
   // Mongo
   implementation("org.mongodb:mongodb-driver:3.9.1")
@@ -35,7 +35,7 @@ dependencies {
   implementation("org.web3j:parity:4.0.3")
 
   // Utils
-  implementation("io.arrow-kt:arrow-core:0.8.1")
+  implementation("io.arrow-kt:arrow-core:0.8.2")
   implementation("ch.qos.logback:logback-classic:1.2.3")
   implementation("io.github.microutils:kotlin-logging:1.6.22")
   implementation("com.beust:klaxon:3.0.5")

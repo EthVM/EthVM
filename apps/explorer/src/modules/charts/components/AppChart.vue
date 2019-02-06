@@ -1,23 +1,21 @@
 <template>
-  <v-card color="white" flat class="mb-3">
-    <v-layout align-end row wrap mr-2 ml-2 mb-0>
-      <v-flex xs12 md8>
+  <v-card color="white" flat class="mb-3 pa-1">
+    <v-layout align-end row wrap mb-0>
+      <v-flex xs12>
         <v-card-title class="title font-weight-bold pb-1">{{ chartTitle }}</v-card-title>
-        <v-card-text class="pt-0 info--text caption">{{ chartDescription }}</v-card-text>
+        <v-card-text class="pt-0 pb-0 info--text caption">{{ chartDescription }}</v-card-text>
       </v-flex>
-      <v-flex xs12 md4 v-if="!liveChart">
-        <v-layout row align-center justify-end fill-height>
-          <v-toolbar flat color="transparent">
-            <v-layout align-center justify-end>
-              <v-btn-toggle depressed v-model="toggleData" mandatory>
-                <v-btn flat :value="0" active-class="active-button white--text" small>{{ $t('charts.options.all') }}</v-btn>
-                <v-btn flat :value="1" active-class="active-button white--text" small>{{ $t('charts.options.w') }}</v-btn>
-                <v-btn flat :value="2" active-class="active-button white--text" small>{{ $t('charts.options.m') }}</v-btn>
-                <!--<v-btn flat :value="3" active-class="active-button white--text" small>1Y</v-btn> -->
-              </v-btn-toggle>
-            </v-layout>
-          </v-toolbar>
-        </v-layout>
+      <v-flex xs12 v-if="!liveChart" pt-0>
+        <v-toolbar flat color="transparent" height="40">
+          <v-layout align-center justify-end>
+            <v-btn-toggle depressed v-model="toggleData" mandatory>
+              <v-btn flat :value="0" active-class="active-button white--text" small>{{ $t('charts.options.all') }}</v-btn>
+              <v-btn flat :value="1" active-class="active-button white--text" small>{{ $t('charts.options.w') }}</v-btn>
+              <v-btn flat :value="2" active-class="active-button white--text" small>{{ $t('charts.options.m') }}</v-btn>
+              <!--<v-btn flat :value="3" active-class="active-button white--text" small>1Y</v-btn> -->
+            </v-btn-toggle>
+          </v-layout>
+        </v-toolbar>
       </v-flex>
     </v-layout>
     <v-divider></v-divider>
@@ -96,6 +94,11 @@ export default class AppChart extends Vue {
   created() {
     if (!this.liveChart) {
       this.$emit('timeFrame', this.toggleData)
+    }
+  }
+  mounted() {
+    if (this.data && this.data.datasets && this.data.datasets[0].data.length !== 0) {
+      this.createChart()
     }
   }
 

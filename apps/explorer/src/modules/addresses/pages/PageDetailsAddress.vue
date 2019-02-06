@@ -2,7 +2,7 @@
   <v-container grid-list-lg class="mb-0">
     <app-bread-crumbs :new-items="crumbs" />
 
-    <div v-if="!loading">
+    <div v-if="!loading && !error">
       <v-layout row wrap justify-start class="mb-4">
         <v-flex xs12>
           <address-detail :account="account" :type-addrs="detailsType" />
@@ -17,31 +17,28 @@
             :loading="txsLoading"
             :address="account.address"
             :txs="account.txs"
-            :total-txs="account.totalTxs"
-            :in-txs="[]"
-            :totalin-txs="0"
-            :out-txs="[]"
-            :total-out-txs="0"
+            :total-txs="totalFilter"
+            @filter="setFilterTxs"
           />
-          <app-error-no-data v-else />
+          <app-error :server-error="txsError" v-else />
         </v-tab-item>
         <!-- End Transactions -->
         <!-- Tokens -->
         <v-tab-item slot="tabs-item" value="tab-1">
           <table-address-tokens v-if="!tokensError" :loading="tokensLoading" :tokens="account.tokens" :error="tokensError" />
-          <app-error-no-data v-else />
+          <app-error :server-error="tokensError" v-else />
         </v-tab-item>
         <!-- End Tokens -->
         <!-- Pending Transactions -->
         <v-tab-item slot="tabs-item" value="tab-2">
           <table-address-txs v-if="!pendingTxsError" :loading="pendingTxsLoading" :address="account.address" :txs="account.pendingTxs" :is-pending="true" />
-          <app-error-no-data v-else />
+          <app-error :server-error="pendingTxsError" v-else />
         </v-tab-item>
         <!-- End Pending Transactions -->
         <!-- Mined Blocks -->
         <v-tab-item slot="tabs-item" v-if="account.isMiner" value="tab-3">
           <table-blocks v-if="!minerBlocksError" :loading="minerBlocksLoading" :blocks="account.minedBlocks" :page-type="detailsType" />
-          <app-error-no-data v-else />
+          <app-error :server-error="minerBlocksError" v-else />
         </v-tab-item>
         <!-- End Mined Blocks -->
         <!-- Contract Creator (no need to implement yet) -->
@@ -61,26 +58,23 @@
         </v-tab-item>-->
       </app-tabs>
     </div>
-    <div v-else>
-      <app-info-load v-if="loading" />
-      <app-error-no-data v-else-if="error" />
-    </div>
+    <app-info-load v-else-if="loading && !error" />
+    <app-error v-else :reference="addressRef" page-type="address" />
   </v-container>
 </template>
 
-// TODO: Finish proper implementation of Table-Address-Txs or reuse from Txs our Table-Txs
-
 <script lang="ts">
 import { Block, EthValue, Tx, PendingTx } from '@app/core/models'
-import { Events } from 'ethvm-common'
+import { Events, Contract } from 'ethvm-common'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
+import AppError from '@app/core/components/ui/AppError.vue'
 import AddressDetail from '@app/modules/addresses/components/AddressDetail.vue'
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import TableAddressTxs from '@app/modules/addresses/components/TableAddressTxs.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
 import TableAddressTokens from '@app/modules/addresses/components/TableAddressTokens.vue'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { eth, TinySM, State } from '@app/core/helper'
 import { AccountInfo } from '@app/modules/addresses/props'
 import { resolve } from 'path'
@@ -94,6 +88,7 @@ const CONTRACT_DETAIL_TYPE = 'contract'
   components: {
     AppInfoLoad,
     AppBreadCrumbs,
+    AppError,
     AppTabs,
     AddressDetail,
     TableAddressTxs,
@@ -107,12 +102,14 @@ export default class PageDetailsAddress extends Vue {
   detailsType = null
   error = false
   loading = true
-
+  validHash = true
   account: AccountInfo = null
 
   /*Transactions: */
   txsLoading = true
   txsError = false
+  txsPage = 0
+  txsFilter = 'all'
 
   /* Pending Txs: */
   pendingTxsLoading = true
@@ -157,64 +154,22 @@ export default class PageDetailsAddress extends Vue {
       {
         name: 'load-basic-info',
         enter: () => {
-          // Get Address Metadata
-          const addressMetadataPromise = new Promise((resolve, reject) => {
-            this.$socket.emit(
-              Events.getAddressMetadata,
-              {
-                address: this.addressRef
-              },
-              (err, result) => (err ? reject(err) : resolve(result))
-            )
-          })
+          const addressMetadata = this.$api.getAddressMetadata(this.addressRef)
+          const addressBalance = this.$api.getAddressBalance(this.addressRef)
+          const contract = this.$api.getContract(this.addressRef)
+          const exchangeRate = this.$api.getExchangeRateQuote('ETH', 'USD')
 
-          // Get Address Balance
-          const addressBalancePromise = new Promise((resolve, reject) => {
-            this.$socket.emit(
-              Events.getAddressBalance,
-              {
-                address: this.addressRef
-              },
-              (err, result) => (err ? reject(err) : resolve(result))
-            )
-          })
+          // If one promise fails, we still continue processing every entry (and for those failed we receive undefined)
+          const promises = [addressMetadata, addressBalance, contract, exchangeRate].map(p => p.catch(() => undefined))
 
-          // Get contract metadata (if applicable)
-          const contractPromise = new Promise((resolve, reject) => {
-            this.$socket.emit(
-              Events.getContract,
-              {
-                address: this.addressRef
-              },
-              (err, result) => (err ? reject(err) : resolve(result))
-            )
-          })
-
-          // Get USD exchange rate
-          const exchangeRatePromise = new Promise((resolve, reject) => {
-            this.$socket.emit(
-              Events.getExchangeRates,
-              {
-                symbol: 'ETH',
-                to: 'USD'
-              },
-              (err, result) => (err || !result ? reject(err) : resolve(result))
-            )
-          })
-
-          Promise.all(
-            // If one promise fails, we still continue processing every entry (and for those failed we receive undefined)
-            [addressMetadataPromise, addressBalancePromise, contractPromise, exchangeRatePromise].map(p => p.catch(() => undefined))
-          )
+          Promise.all(promises)
             .then((res: any[]) => {
-              // Address Metadata
-              const addressMetadata = res[0] || {}
-              this.account.isCreator = addressMetadata.isContractCreator || false
-              this.account.isMiner = addressMetadata.isMiner || false
-              this.account.totalTxs = addressMetadata.totalTxCount || 0
-              this.account.toTxCount = addressMetadata.toTxCount || 0
-              this.account.fromTxCount = addressMetadata.fromTxCount || 0
-
+              const metadata = res[0] || {}
+              this.account.isCreator = metadata.isContractCreator || false
+              this.account.isMiner = metadata.isMiner || false
+              this.account.totalTxs = metadata.totalTxCount || 0
+              this.account.toTxCount = metadata.toTxCount || 0
+              this.account.fromTxCount = metadata.fromTxCount || 0
               this.account.balance = res[1] ? new EthValue(res[1].amount) : new EthValue(0)
               this.account.type = res[2] ? CONTRACT_DETAIL_TYPE : ADDRESS_DETAIL_TYPE
               this.account.exchangeRate.USD = res[3].price
@@ -230,85 +185,30 @@ export default class PageDetailsAddress extends Vue {
       {
         name: 'load-complementary-info',
         enter: () => {
-          // Get Address Transactions
-          const addressTxsPromise = this.loadTx()
+          const addressTxs = this.fetchTxs()
+          const addressPendingTxs = this.fetchPendingTxs()
+          const minedBlocks = this.account.isMiner ? this.fetchMinedBlocks() : Promise.resolve([])
+          const contractsCreated = this.account.isCreator ? this.fetchContractsCreated() : Promise.resolve([])
 
-          // Get Address Pending Transactions
-          const addressPendingTxsPromise = new Promise((resolve, reject) => {
-            this.$socket.emit(
-              Events.getPendingTxsOfAddress,
-              {
-                address: this.addressRef,
-                page: 0,
-                limit: MAX_ITEMS,
-                filter: 'all' // TODO @Olga: Possible values: in, out, all (if not specified all is taken)
-              },
-              (err, result) => (err ? reject(err) : resolve(result))
-            )
-          })
+          // If one promise fails, we still continue processing every entry (and for those failed we receive undefined)
+          const promises = [addressTxs, addressPendingTxs, minedBlocks, contractsCreated].map(p => p.catch(() => undefined))
 
-          // Get Mined Blocks
-          const minedBlocksPromise = new Promise((resolve, reject) => {
-            if (!this.account.isMiner) {
-              resolve([])
-              return
-            }
-            this.$socket.emit(
-              Events.getBlocksMined,
-              {
-                address: this.addressRef,
-                page: 0,
-                limit: MAX_ITEMS
-              },
-              (err, result) => (err ? reject(err) : resolve(result))
-            )
-          })
-
-          // Get contracts created by
-          const contractsCreatedBy = new Promise((resolve, reject) => {
-            if (!this.account.isCreator) {
-              resolve([])
-              return
-            }
-            this.$socket.emit(
-              Events.getContractsCreatedBy,
-              {
-                address: this.addressRef,
-                page: 0,
-                limit: MAX_ITEMS
-              },
-              (err, result) => (err ? reject(err) : resolve(result))
-            )
-          })
-
-          Promise.all([addressTxsPromise, addressPendingTxsPromise, minedBlocksPromise, contractsCreatedBy].map(p => p.catch(() => undefined)))
+          Promise.all(promises)
             .then((res: any[]) => {
               // Txs
-              const rawTxs = res[0] || []
-              const txs = []
-              rawTxs.forEach(raw => txs.unshift(new Tx(raw)))
-              this.account.txs = txs
+              this.account.txs = res[0] || []
               this.txsLoading = false
 
               // Pending Txs
-              const rawPtxs = res[1] || []
-              const pTxs = []
-              rawPtxs.forEach(raw => pTxs.unshift(new PendingTx(raw)))
-              this.account.pendingTxs = pTxs
+              this.account.pendingTxs = res[1] || []
               this.pendingTxsLoading = false
 
               // Mined Blocks
-              const rawMinedBlocks = res[2] || []
-              const minedBlocks = []
-              rawMinedBlocks.forEach(raw => minedBlocks.unshift(new Block(raw)))
-              this.account.minedBlocks = minedBlocks
+              this.account.minedBlocks = res[2] || []
               this.minerBlocksLoading = false
 
               // Contract Creator
-              const rawContractCreated = res[3] || []
-              const contractsCreated = []
-              contractsCreated.forEach(raw => rawContractCreated.unshift(raw))
-              this.account.contracts = contractsCreated
+              this.account.contracts = res[3] || []
 
               this.sm.transition('load-token-complementary-info')
             })
@@ -318,20 +218,12 @@ export default class PageDetailsAddress extends Vue {
       {
         name: 'load-token-complementary-info',
         enter: () => {
-          // Get Tokens Owned
-          const totalTokensOwnedPromise = new Promise((resolve, reject) => {
-            this.$socket.emit(
-              Events.getAddressTokenBalance,
-              {
-                address: this.addressRef
-              },
-              (err, result) => (err ? reject(err) : resolve(result))
-            )
-          })
+          const totalTokensOwned = this.$api.getAddressAllTokensOwned(this.addressRef)
 
-          Promise.all([totalTokensOwnedPromise].map(p => p.catch(() => undefined)))
+          const promises = [totalTokensOwned].map(p => p.catch(() => undefined))
+
+          Promise.all(promises)
             .then((res: any[]) => {
-              // Tokens
               this.account.tokens = res[0] || []
               this.account.tokensOwned = this.account.tokens.length
               this.tokensLoading = false
@@ -366,22 +258,65 @@ export default class PageDetailsAddress extends Vue {
   }
 
   // Method:
-  loadTx(page = 0, limit = MAX_ITEMS, filter = 'all'): Promise<Tx[]> {
-    return new Promise((resolve, reject) => {
-      this.$socket.emit(
-        Events.getAddressTxs,
-        {
-          address: this.addressRef,
-          page,
-          limit,
-          filter
-        },
-        (err, result) => (err ? reject(err) : resolve(result))
-      )
-    })
+  fetchTxs(page = this.txsPage, limit = MAX_ITEMS, filter = this.txsFilter): Promise<Tx[]> {
+    return this.$api.getTxsOfAddress(this.addressRef, filter, limit, page)
+  }
+
+  fetchPendingTxs(page = 0, limit = MAX_ITEMS, filter = 'all'): Promise<PendingTx[]> {
+    return this.$api.getPendingTxsOfAddress(this.addressRef, filter, limit, page)
+  }
+
+  fetchMinedBlocks(page = 0, limit = MAX_ITEMS): Promise<Block[]> {
+    return this.$api.getBlocksMinedOfAddress(this.addressRef, limit, page)
+  }
+
+  fetchContractsCreated(page = 0, limit = MAX_ITEMS): Promise<Contract[]> {
+    return this.$api.getContractsCreatedBy(this.addressRef, limit, page)
+  }
+
+  setFilterTxs(_filter: string, _page: number): void {
+    this.txsFilter = _filter
+    this.txsPage = _page
+    this.txsLoading = true
+  }
+
+  updateTxs(): void {
+    this.fetchTxs().then(
+      res => {
+        this.account.txs = res
+        this.txsLoading = false
+      },
+      err => {
+        this.txsError = true
+      }
+    )
+  }
+
+  //Watch
+  @Watch('txsFilter')
+  onTxsFilterChanged(newVal: number, oldVal: number): void {
+    if (newVal) {
+      this.updateTxs()
+    }
+  }
+
+  @Watch('txsPage')
+  onTxsPageChanged(newVal: number, oldVal: number): void {
+    this.updateTxs()
   }
 
   // Computed
+  get totalFilter() {
+    switch (this.txsFilter) {
+      case 'all':
+        return this.account.totalTxs
+      case 'in':
+        return this.account.toTxCount
+      case 'out':
+        return this.account.fromTxCount
+    }
+  }
+
   get crumbs() {
     return [
       {
@@ -390,6 +325,7 @@ export default class PageDetailsAddress extends Vue {
       }
     ]
   }
+
   get tabs() {
     const tabs = [
       {
@@ -408,23 +344,26 @@ export default class PageDetailsAddress extends Vue {
         isActive: false
       }
     ]
-    if (this.account.isMiner) {
-      const newTab = {
-        id: '3',
-        title: this.$i18n.t('tabs.miningH'),
-        isActive: false
+    if (!this.loading && !this.error) {
+      if (this.account.isMiner) {
+        const newTab = {
+          id: '3',
+          title: this.$i18n.t('tabs.miningH'),
+          isActive: false
+        }
+        tabs.push(newTab)
       }
-      tabs.push(newTab)
+
+      if (this.account.isCreator) {
+        const newTab = {
+          id: '4',
+          title: this.$i18n.t('tabs.contracts'),
+          isActive: false
+        }
+        tabs.push(newTab)
+      }
     }
 
-    if (this.account.isCreator) {
-      const newTab = {
-        id: '4',
-        title: this.$i18n.t('tabs.contracts'),
-        isActive: false
-      }
-      tabs.push(newTab)
-    }
     return tabs
   }
 }

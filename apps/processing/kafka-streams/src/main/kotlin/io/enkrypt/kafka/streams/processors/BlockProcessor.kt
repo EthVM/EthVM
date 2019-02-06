@@ -79,7 +79,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
         TransformerSupplier { BlockTimeTransformer(appConfig.unitTesting) },
         *BlockTimeTransformer.STORE_NAMES
       )
-      .peek { k, v -> logger.info { "Processing block number = ${k.getNumber().unsignedBigInteger()}" } }
+      .peek { k, _ -> logger.info { "Processing block number = ${k.getNumber().unsignedBigInteger()}" } }
 
     // extract transactions and publish to their own topic
 
@@ -494,7 +494,10 @@ class BlockProcessor : AbstractKafkaProcessor() {
             destroy
           }
         )
-      }.to(Topics.ContractDestructions, Produced.with(Serdes.ContractKey(), Serdes.ContractDestroy()))
+      }.to(
+        Topics.ContractDestructions,
+        Produced.with(Serdes.ContractKey(), Serdes.ContractDestroy())
+      )
 
     // metrics
 
@@ -506,7 +509,10 @@ class BlockProcessor : AbstractKafkaProcessor() {
 
     blockStream
       .flatMap { _, block -> BlockMetrics.forAggregation(block, BlockMetrics.forBlock(block)) }
-      .to(Topics.BlockMetricsByDay, Produced.with(Serdes.MetricKey(), Serdes.Metric()))
+      .to(
+        Topics.BlockMetricsByDay,
+        Produced.with(Serdes.MetricKey(), Serdes.Metric())
+      )
 
     // Generate the topology
     return builder.build()

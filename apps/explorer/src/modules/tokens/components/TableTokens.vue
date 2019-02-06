@@ -3,8 +3,10 @@
     <v-flex xs12>
       <v-data-table :headers="headers" :items="tokens" :must-sort="true" :pagination.sync="sortBy" :custom-sort="customSort" class="elevation-1">
         <v-progress-linear slot="progress" color="blue" indeterminate />
-        <template slot="items" slot-scope="props">
-          <td>{{ props.item.name }}</td>
+        <template slot="items" slot-scope="props" v-if="props.item.name !== 'Ethereum'">
+          <td>
+            <router-link :to="tokenLink(props.item.address)">{{ props.item.name }}</router-link>
+          </td>
           <td class="">{{ props.item.price.rate }}</td>
           <td class="">{{ props.item.price.diff }}</td>
           <td class="">{{ props.item.volume }}</td>
@@ -54,6 +56,10 @@ export default class TableTokens extends Vue {
     })
 
     return items
+  }
+
+  tokenLink(tokenAddress) {
+    return `/token/${tokenAddress}`
   }
 
   /*

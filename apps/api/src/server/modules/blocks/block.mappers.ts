@@ -30,19 +30,6 @@ const toBlock = (block: any): Block => {
     block.uncles = uncles
   }
 
-  // TODO: Convert proper stats once they're restored
-  block.stats = {}
-  block.stats.successfulTxs = 0
-  block.stats.failedTxs = 0
-  block.stats.pendingTxs = 0
-  block.stats.processingTimeMs = 0
-  block.stats.txs = 0
-  block.stats.internalTxs = 0
-  block.stats.avgGasPrice = 0
-  block.stats.avgTxsFees = 0
-  block.stats.totalGasPrice = 0
-  block.stats.totalTxsFees = 0
-
   return block
 }
 

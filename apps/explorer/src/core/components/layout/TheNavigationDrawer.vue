@@ -22,7 +22,7 @@
           </v-list-tile>
           <v-list-tile v-for="(link, j) in item.links" v-if="link.routerLink" :to="link.routerLink" :key="j">
             <v-list-tile-content>
-              <v-list-tile-title :class="[checkLinkPath(link.routerLink) ? 'white--text ml-5 pl-2' : 'nav--text ml-5 pl-2']">{{ link.text }}</v-list-tile-title>
+              <v-list-tile-title :class="[checkLinkPath(link.name) ? 'white--text ml-5 pl-2' : 'nav--text ml-5 pl-2']">{{ link.text }}</v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
         </v-list-group>
@@ -73,11 +73,13 @@ export default class TheNavigationDrawer extends Vue {
           links: [
             {
               text: this.$i18n.t('title.viewAll'),
-              routerLink: '/blocks'
+              routerLink: '/blocks',
+              name: 'blocks'
             },
             {
               text: this.$i18n.t('title.uncles'),
-              routerLink: '/uncles'
+              routerLink: '/uncles',
+              name: 'uncles'
             }
           ]
         },
@@ -89,11 +91,13 @@ export default class TheNavigationDrawer extends Vue {
           links: [
             {
               text: this.$i18n.t('title.mined'),
-              routerLink: '/txs'
+              routerLink: '/txs',
+              name: 'transactions'
             },
             {
               text: this.$i18n.t('title.pending'),
-              routerLink: '/pending-txs'
+              routerLink: '/pending-txs',
+              name: 'pending'
             }
           ]
         },
@@ -127,21 +131,21 @@ export default class TheNavigationDrawer extends Vue {
   }
 
   // Methods
-  getCurrPath() {
-    let currPath = '/'
-    if (this.$route.params.pageName) {
-      currPath += this.$route.params.pageName
+  getCurrPath(): string {
+    let currPath = ''
+    if (this.$route.name) {
+      currPath = this.$route.name
     }
     return currPath
   }
 
-  checkLinkPath(link) {
-    return this.getCurrPath() == link
+  checkLinkPath(_name: string) {
+    return this.getCurrPath() == _name
   }
 
-  checkPath(links) {
+  checkPath(links: any[]) {
     for (let i = 0; i < links.length; i++) {
-      if (this.checkLinkPath(links[i].routerLink)) {
+      if (this.checkLinkPath(links[i].name)) {
         return true
       }
     }

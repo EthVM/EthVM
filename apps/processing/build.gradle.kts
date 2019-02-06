@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-  val ktlintVersion = "6.3.1"
+  val ktlintVersion = "7.0.0"
 
   base
   kotlin("jvm") version "1.3.10" apply false
@@ -29,9 +29,9 @@ allprojects {
   }
 
   ext {
-    set("ethereumj-version", "1.10.0.1")
-    set("kotlintest-version", "3.1.11")
-    set("mockk-version", "1.8.13")
+    set("ethereumj-version", "1.12.0.1")
+    set("kotlintest-version", "3.2.1")
+    set("mockk-version", "1.9")
   }
 
 }

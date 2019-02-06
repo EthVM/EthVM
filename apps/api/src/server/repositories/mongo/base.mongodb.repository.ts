@@ -12,7 +12,8 @@ export const MongoEthVM = {
     pendingTxs: 'pending_transactions',
     statistics: 'aggregate_block_metrics',
     tokenTransfers: 'token_transfers',
-    accountMetadata: 'account_metadata'
+    accountMetadata: 'account_metadata',
+    tokenExchangeRates: 'token_exchange_rates'
   }
 }
 

@@ -35,7 +35,7 @@ ensure_kafka_connect() {
 curl_register() {
 
   local FILE=${1}
-  curl -v -s -H "Content-Type: application/json" -X POST -d @${FILE} ${KAFKA_CONNECT_URL}/connectors
+  curl -s -H "Content-Type: application/json" -X POST -d @${FILE} ${KAFKA_CONNECT_URL}/connectors
 
 } >&2
 

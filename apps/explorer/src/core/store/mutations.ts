@@ -1,29 +1,35 @@
-import { Block, Tx, PendingTx, Uncle } from '@app/core/models'
+import { Block, PendingTx, Tx, Uncle } from '@app/core/models'
 import { State } from '@app/core/store/state'
-import { Tx as RawTx, Block as RawBlock, PendingTx as RawPendingTx, Uncle as RawUncle } from 'ethvm-common'
+import { BlockMetrics } from 'ethvm-common'
 
-const NEW_BLOCK = (state: State, raw: RawBlock | RawBlock[]) => {
+const NEW_BLOCK = (state: State, raw: Block | Block[]) => {
   const blocks = !Array.isArray(raw) ? [raw] : raw
-  blocks.forEach(block => state.blocks.add(new Block(block)))
+  blocks.forEach(block => state.blocks.add(block))
 }
 
-const NEW_TX = (state: State, raw: RawTx | RawTx[]) => {
+const NEW_BLOCK_METRIC = (state: State, raw: BlockMetrics | BlockMetrics[]) => {
+  const bms = !Array.isArray(raw) ? [raw] : raw
+  bms.forEach(bm => state.blockMetrics.add(bm))
+}
+
+const NEW_TX = (state: State, raw: Tx | Tx[]) => {
   const txs = !Array.isArray(raw) ? [raw] : raw
-  txs.forEach(tx => state.txs.add(new Tx(tx)))
+  txs.forEach(tx => state.txs.add(tx))
 }
 
-const NEW_PENDING_TX = (state: State, raw: RawPendingTx | RawPendingTx[]) => {
+const NEW_PENDING_TX = (state: State, raw: PendingTx | PendingTx[]) => {
   const pTxs = !Array.isArray(raw) ? [raw] : raw
-  pTxs.forEach(pTx => state.pendingTxs.add(new PendingTx(pTx)))
+  pTxs.forEach(pTx => state.pendingTxs.add(pTx))
 }
 
-const NEW_UNCLE = (state: State, raw: RawUncle | RawUncle[]) => {
+const NEW_UNCLE = (state: State, raw: Uncle | Uncle[]) => {
   const uncles = !Array.isArray(raw) ? [raw] : raw
-  uncles.forEach(uncle => state.uncles.add(new Uncle(uncle)))
+  uncles.forEach(uncle => state.uncles.add(uncle))
 }
 
 export default {
   NEW_BLOCK,
+  NEW_BLOCK_METRIC,
   NEW_TX,
   NEW_UNCLE,
   NEW_PENDING_TX

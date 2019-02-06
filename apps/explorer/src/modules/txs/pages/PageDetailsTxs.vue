@@ -1,18 +1,20 @@
 <template>
-  <v-container v-if="transaction != null" grid-list-lg class="mb-0">
+  <v-container grid-list-lg class="mb-0">
     <app-bread-crumbs :new-items="crumbs" />
-    <v-layout row wrap justify-start class="mb-4" v-if="tx">
+    <v-layout v-if="!error && tx" row wrap justify-start class="mb-4">
       <v-flex xs12>
         <app-list-details :items="txDetails" :more-items="txMoreDetails" :details-type="listType" :loading="loading">
           <app-list-title slot="details-title" :list-type="listType" />
         </app-list-details>
       </v-flex>
     </v-layout>
+    <app-error v-else :page-type="listType" :reference="txRef" />
   </v-container>
 </template>
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
+import AppError from '@app/core/components/ui/AppError.vue'
 import AppListDetails from '@app/core/components/ui/AppListDetails.vue'
 import AppListTitle from '@app/core/components/ui/AppListTitle.vue'
 import { Events } from 'ethvm-common'
@@ -24,6 +26,7 @@ import { Detail } from '@app/core/components/props'
 @Component({
   components: {
     AppBreadCrumbs,
+    AppError,
     AppListDetails,
     AppListTitle
   }
@@ -63,19 +66,10 @@ export default class PageDetailsTxs extends Vue {
 
   //Methods:
   fetchTx() {
-    this.$socket.emit(
-      Events.getTx,
-      {
-        hash: this.txRef
-      },
-      (error, data) => {
-        if (error || !data) {
-          this.error = true
-          return
-        }
-        this.setTxInfo(new Tx(data))
-      }
-    )
+    this.$api
+      .getTx(this.txRef)
+      .then(tx => this.setTxInfo(tx))
+      .catch(err => (this.error = true))
   }
 
   setTxInfo(tx: Tx) {
@@ -182,7 +176,7 @@ export default class PageDetailsTxs extends Vue {
     return [
       {
         text: this.$i18n.t('title.tx'),
-        disabled: <boolean>false,
+        disabled: false,
         link: '/txs'
       },
       {

@@ -115,3 +115,28 @@ topics:
       retention.ms: -1
       cleanup.policy: compact
 
+  - name: eth-tokens-list
+    replicationFactor: 1
+    partitions: 1
+    config:
+      cleanup.policy: compact
+
+  - name: eth-tokens-list-by-symbol
+    replicationFactor: 1
+    partitions: 1
+    config:
+      retention.ms: -1
+      cleanup.policy: compact
+
+  - name: raw-exchange-rates
+    replicationFactor: 1
+    partitions: 1
+    config:
+      cleanup.policy: compact
+
+  - name: token-exchange-rates
+    replicationFactor: 1
+    partitions: 1
+    config:
+      retention.ms: -1
+      cleanup.policy: compact

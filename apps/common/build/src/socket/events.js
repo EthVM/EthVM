@@ -7,7 +7,7 @@ exports.Events = {
     // Ouputs
     NEW_BLOCK: "NEW_BLOCK",
     NEW_PENDING_TX: "NEW_PENDING_TX",
-    NEW_BLOCK_STAT: "NEW_BLOCKSTAT",
+    NEW_BLOCK_METRIC: "NEW_BLOCK_METRIC",
     NEW_TX: "NEW_TX",
     NEW_UNCLE: "NEW_UNCLE",
     pastTxsR: "PAST_TXS_RECEIVED",
@@ -16,8 +16,10 @@ exports.Events = {
     getAddressBalance: "get-address-balance",
     getAddressTokenBalance: "get-address-token-balance",
     getAddressTokenTransfers: "get-address-token-transfers",
+    getAddressTokenTransfersByHolder: "get-address-token-transfers-by-holder",
     getAddressAmountTokensOwned: "get-address-amount-tokens-owned",
     getAddressMetadata: "get-address-metadata",
+    getAddressAllTokensOwned: "get-address-all-tokens-owned",
     // Contracts
     getContract: "get-contract",
     getContractsCreatedBy: "getContractsCreatedBy",
@@ -26,6 +28,10 @@ exports.Events = {
     getBlocks: "get-blocks",
     getBlocksMined: "get-blocks-mined",
     getBlockByNumber: "get-block-by-number",
+    getTotalNumberOfBlocks: "get-total-number-of-blocks",
+    // Blocks Metrics
+    getBlockMetric: "get-block-metric",
+    getBlockMetrics: "get-block-metrics",
     // Txs
     getTx: "get-tx",
     getTxs: "get-txs",
@@ -35,11 +41,15 @@ exports.Events = {
     // PendingTxs
     getPendingTxs: "get-pending-txs",
     getPendingTxsOfAddress: "get-address-pending-txs",
+    getTotalNumberOfPendingTxs: "get-total-number-of-pending-txs",
+    getNumberOfPendingTxsOfAddress: "get-number-of-pending-txs-of-address",
     // Uncles
     getUncle: "get-uncle",
     getUncles: "get-uncles",
+    getTotalNumberOfUncles: "get-total-number-of-uncles",
     // Exchange
     getExchangeRates: "get-exchange-rates",
+    getTokenExchangeRates: "get-token-exchange-rates",
     // Search
     search: "search",
     // Stats
@@ -56,4 +66,4 @@ exports.Events = {
     getAverageHashRateStats: "get-average-hash-rate-stats",
     getAverageMinerRewardsStats: "get-average-miner-rewards-stats"
 };
-exports.SocketDefaultRooms = ["blocks", "pendingTxs", "blockStat"];
+exports.SocketDefaultRooms = ["blocks", "pending-txs", "block-metrics"];

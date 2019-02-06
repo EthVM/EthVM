@@ -12,7 +12,7 @@ export const Events = {
   // Ouputs
   NEW_BLOCK: "NEW_BLOCK",
   NEW_PENDING_TX: "NEW_PENDING_TX",
-  NEW_BLOCK_STAT: "NEW_BLOCKSTAT",
+  NEW_BLOCK_METRIC: "NEW_BLOCK_METRIC",
 
   NEW_TX: "NEW_TX",
   NEW_UNCLE: "NEW_UNCLE",
@@ -24,8 +24,10 @@ export const Events = {
   getAddressBalance: "get-address-balance",
   getAddressTokenBalance: "get-address-token-balance",
   getAddressTokenTransfers: "get-address-token-transfers",
+  getAddressTokenTransfersByHolder: "get-address-token-transfers-by-holder",
   getAddressAmountTokensOwned: "get-address-amount-tokens-owned",
   getAddressMetadata: "get-address-metadata",
+  getAddressAllTokensOwned: "get-address-all-tokens-owned",
 
   // Contracts
   getContract: "get-contract",
@@ -36,6 +38,11 @@ export const Events = {
   getBlocks: "get-blocks",
   getBlocksMined: "get-blocks-mined",
   getBlockByNumber: "get-block-by-number",
+  getTotalNumberOfBlocks: "get-total-number-of-blocks",
+
+  // Blocks Metrics
+  getBlockMetric: "get-block-metric",
+  getBlockMetrics: "get-block-metrics",
 
   // Txs
   getTx: "get-tx",
@@ -47,13 +54,17 @@ export const Events = {
   // PendingTxs
   getPendingTxs:"get-pending-txs",
   getPendingTxsOfAddress: "get-address-pending-txs",
+  getTotalNumberOfPendingTxs: "get-total-number-of-pending-txs",
+  getNumberOfPendingTxsOfAddress: "get-number-of-pending-txs-of-address",
 
   // Uncles
   getUncle:"get-uncle",
   getUncles:"get-uncles",
+  getTotalNumberOfUncles: "get-total-number-of-uncles",
 
   // Exchange
   getExchangeRates: "get-exchange-rates",
+  getTokenExchangeRates: "get-token-exchange-rates",
 
   // Search
   search: "search",
@@ -74,4 +85,4 @@ export const Events = {
 
 }
 
-export const SocketDefaultRooms = ["blocks", "pendingTxs", "blockStat"]
+export const SocketDefaultRooms = ["blocks", "pending-txs", "block-metrics"]

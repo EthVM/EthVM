@@ -1,0 +1,305 @@
+{
+	"info": {
+		"_postman_id": "be36e873-8ffd-43ff-90d4-58218224ef2f",
+		"name": "Kafka Connect API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Connectors",
+			"item": [
+				{
+					"name": "/connectors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{SERVER}}/connectors",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/connectors",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"hdfs-sink-connector\",\n    \"config\": {\n        \"connector.class\": \"io.confluent.connect.hdfs.HdfsSinkConnector\",\n        \"tasks.max\": \"10\",\n        \"topics\": \"test-topic\",\n        \"hdfs.url\": \"hdfs://fakehost:9000\",\n        \"hadoop.conf.dir\": \"/opt/hadoop/conf\",\n        \"hadoop.home\": \"/opt/hadoop\",\n        \"flush.size\": \"100\",\n        \"rotate.interval.ms\": \"1000\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{SERVER}}/connectors",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/connectors/{connector-name}",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{SERVER}}/connectors/hdfs-sink-connector",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"connectors",
+								"hdfs-sink-connector"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/connectors/{connector-name}/config",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{SERVER}}/connectors/hdfs-sink-connector/config",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"connectors",
+								"hdfs-sink-connector",
+								"config"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/connectors/{connector-name}/config",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"hdfs-sink-connector\",\n    \"config\": {\n        \"connector.class\": \"io.confluent.connect.hdfs.HdfsSinkConnector\",\n        \"tasks.max\": \"10\",\n        \"topics\": \"test-topic\",\n        \"hdfs.url\": \"hdfs://fakehost:9000\",\n        \"hadoop.conf.dir\": \"/opt/hadoop/conf\",\n        \"hadoop.home\": \"/opt/hadoop\",\n        \"flush.size\": \"100\",\n        \"rotate.interval.ms\": \"1000\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{SERVER}}/connectors/hdfs-sink-connector/config",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"connectors",
+								"hdfs-sink-connector",
+								"config"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/connectors/{connector-name}/status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{SERVER}}/connectors/hdfs-sink-connector/status",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"connectors",
+								"hdfs-sink-connector",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/connectors/{connector-name}/restart",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{SERVER}}/connectors/hdfs-sink-connector/restart",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"connectors",
+								"hdfs-sink-connector",
+								"restart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/connectors/hdfs-sink-connector/put",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{SERVER}}/connectors/hdfs-sink-connector/put",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"connectors",
+								"hdfs-sink-connector",
+								"put"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/connectors/hdfs-sink-connector/resume",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{SERVER}}/connectors/hdfs-sink-connector/resume",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"connectors",
+								"hdfs-sink-connector",
+								"resume"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/connectors/{connector-name}",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{SERVER}}/connectors/hdfs-sink-connector",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"connectors",
+								"hdfs-sink-connector"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tasks",
+			"item": []
+		}
+	]
+}

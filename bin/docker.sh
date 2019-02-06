@@ -49,7 +49,7 @@ up() {
 up_default() {
 
   echo -e "Building utility docker images...\n"
-  ${SCRIPT_DIR}/docker-build.sh build ethvm-utils
+  ${SCRIPT_DIR}/docker-build.sh build ethvm-utils mongodb-dev
 
   echo -e "Starting up containers...\n"
   docker-compose up -d --build

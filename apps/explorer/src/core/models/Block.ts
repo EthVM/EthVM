@@ -1,6 +1,6 @@
 import { EthValue, HexNumber, Hex, Hash, Tx, Uncle } from '@app/core/models'
 import BN from 'bignumber.js'
-import { Block as RawBlock, BlockStats, Reward } from 'ethvm-common'
+import { Block as RawBlock, Reward } from 'ethvm-common'
 
 export class Block {
   private readonly id: string
@@ -142,7 +142,9 @@ export class Block {
 
   public getTxFees(): EthValue {
     if (!this.cache.totalTxsFees) {
-      this.cache.totalTxsFees = new EthValue(this.block.stats.totalTxsFees)
+      const txs = this.getTxs()
+      const txsCost = txs.map(tx => tx.getTxCost().toGWei()).reduceRight((acc, value) => acc + value)
+      this.cache.totalTxsFees = new EthValue(txsCost)
     }
     return this.cache.totalTxsFees
   }
@@ -184,9 +186,5 @@ export class Block {
       this.cache.txs = rawTxs.map(rawTx => new Tx(rawTx))
     }
     return this.cache.txs
-  }
-
-  public getStats(): BlockStats {
-    return this.block.stats
   }
 }
