@@ -16,7 +16,8 @@
       "id": "explorer",
       "dockerfile": "${APPS_PATH}/explorer/Dockerfile",
       "context": "${APPS_PATH}/",
-      "version": "${APPS_PATH}/explorer/package.json"
+      "version": "${APPS_PATH}/explorer/package.json",
+      "targets": ["development", "staging", "production"]
     },
     {
       "id": "kafka-connect",

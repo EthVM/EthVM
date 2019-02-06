@@ -7,6 +7,9 @@
   "scripts": {
     "start:dev": "vue-cli-service serve",
     "build": "vue-cli-service --mode production build",
+    "build:production": "yarn build",
+    "build:development": "vue-cli-service --mode development build",
+    "build:staging": "vue-cli-service --mode staging build",
     "clean": "rm -rf dist/",
     "lint": "vue-cli-service lint --no-fix",
     "lint:fix": "vue-cli-service lint"

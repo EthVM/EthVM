@@ -1,6 +1,12 @@
 const path = require('path')
 
 module.exports = {
+  chainWebpack: config => {
+    config.plugin('html').tap(args => {
+      args[0].hash = true
+      return args
+    })
+  },
   configureWebpack: {
     resolve: {
       extensions: ['.ts', '.vue', '.json'],
