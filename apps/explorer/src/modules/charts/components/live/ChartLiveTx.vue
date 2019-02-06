@@ -35,7 +35,7 @@ export default class ChartLiveTransactions extends Vue {
 
   // Lifecycle
   created() {
-    this.fillChartData(this.$store.getters.blockMetrics)
+    this.fillChartData(this.$store.getters.blockMetrics.slice(0, MAX_ITEMS))
   }
 
   mounted() {

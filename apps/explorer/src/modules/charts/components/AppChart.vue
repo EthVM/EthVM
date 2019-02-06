@@ -96,6 +96,11 @@ export default class AppChart extends Vue {
       this.$emit('timeFrame', this.toggleData)
     }
   }
+  mounted() {
+    if (this.data && this.data.datasets && this.data.datasets[0].data.length !== 0) {
+      this.createChart()
+    }
+  }
 
   beforeDestroy() {
     if (this.chart) {

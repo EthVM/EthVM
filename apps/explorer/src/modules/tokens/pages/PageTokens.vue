@@ -28,6 +28,7 @@ export default class PageTokens extends Vue {
   async mounted() {
     try {
       this.tokens = await this.fetchTokens()
+      // this.tokens = await this.fetchTokenExchangeRates()
     } catch (e) {
       // handle error accordingly
     }
@@ -53,6 +54,24 @@ export default class PageTokens extends Vue {
         })
         .catch(err => {
           reject(err)
+        })
+    })
+  }
+
+  /**
+   * GET and return JSON array of tokens and their corresponding information
+   *
+   * @return {Array} - Array of tokens
+   */
+  fetchTokenExchangeRates() {
+    return new Promise((resolve, reject) => {
+      this.$api
+        .getTokenExchangeRates(99999, 0)
+        .then(result => {
+          resolve(result)
+        })
+        .catch(e => {
+          reject(e)
         })
     })
   }
