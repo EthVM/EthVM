@@ -1,2 +1,2 @@
 export * from '@app/server/modules/exchanges/exchange.service'
-export * from '@app/server/modules/exchanges/coingecko-repository'
+export * from '@app/server/modules/exchanges/exchange.repository'

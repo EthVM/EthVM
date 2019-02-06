@@ -4,10 +4,10 @@ import { NullStreamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
 import { AddressesServiceImpl, MongoAddressesRepository } from '@app/server/modules/addresses'
 import { BalancesServiceImpl, MongoBalancesRepository } from '@app/server/modules/balances'
-import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blocks'
 import { BlockMetricsServiceImpl, MongoBlockMetricsRepository } from '@app/server/modules/block-metrics'
+import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blocks'
 import { ContractsServiceImpl, MongoContractsRepository } from '@app/server/modules/contracts'
-import { CoinGeckoRepository, ExchangeServiceImpl } from '@app/server/modules/exchanges'
+import { ExchangeRepositoryImpl, ExchangeServiceImpl } from '@app/server/modules/exchanges'
 import { MongoPendingTxRepository, PendingTxServiceImpl } from '@app/server/modules/pending-txs'
 import { SearchServiceImpl } from '@app/server/modules/search'
 import { MongoStatisticsRepository, StatisticsServiceImpl } from '@app/server/modules/statistics'
@@ -83,12 +83,12 @@ async function bootstrapServer() {
   const statisticsService = new StatisticsServiceImpl(statisticsRepository)
 
   // Exchanges
-  const exchangeRepository = new CoinGeckoRepository()
+  const exchangeRepository = new ExchangeRepositoryImpl(db)
   const exchangeService = new ExchangeServiceImpl(exchangeRepository)
 
   // Tokens
   const tokensRepository = new MongoTokensRepository(db)
-  const tokensService = new TokensServiceImpl(tokensRepository, vme)
+  const tokensService = new TokensServiceImpl(tokensRepository, exchangeRepository, vme)
 
   // Create streamer
   // ---------------

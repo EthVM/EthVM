@@ -344,6 +344,7 @@ export default class PageDetailsAddress extends Vue {
         isActive: false
       }
     ]
+
     if (!this.loading && !this.error) {
       if (this.account.isMiner) {
         const newTab = {

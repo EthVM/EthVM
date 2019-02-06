@@ -14,7 +14,7 @@ const getTokenExchangeRates: SocketEvent = {
   },
 
   onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<TokenExchangeRate[]> =>
-    server.tokensService.getTokenExchangeRates(payload.limit, payload.page)
+    server.exchangesService.getTokenExchangeRates(payload.limit, payload.page)
 }
 
 export default getTokenExchangeRates
