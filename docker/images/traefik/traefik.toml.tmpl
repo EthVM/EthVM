@@ -8,15 +8,22 @@ logLevel = "{{ .Env.LOG_LEVEL }}"
 defaultEntryPoints = ["https", "http"]
 
 [entryPoints]
+
+  [entryPoints.traefik]
+  address = ":8080"
+  compress = true
+
   [entryPoints.http]
   address = ":80"
   compress = true
     [entryPoints.http.redirect]
     entrypoint = "https"
+
   [entryPoints.https]
   address = ":443"
   compress = true
-  [entryPoints.https.tls]
+
+    [entryPoints.https.tls]
 
 [retry]
 
@@ -51,4 +58,4 @@ entryPoint = "https"
 [api]
 entryPoint = "traefik"
 dashboard = true
-debug = true
+debug = false
