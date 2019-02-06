@@ -21,7 +21,7 @@
     <v-divider></v-divider>
     <v-layout align-center justify-end row fill-height v-if="footnotes"> <app-footnotes :footnotes="footnotes" /> </v-layout>
     <app-info-load v-show="data && data.datasets && data.datasets[0].data.length === 0" />
-    <div v-show="data && data.datasets && data.datasets[0].data.length !== 0"><canvas ref="chart"/></div>
+    <div v-show="data && data.datasets && data.datasets[0].data.length !== 0"><canvas ref="chart" /></div>
   </v-card>
 </template>
 
@@ -97,7 +97,7 @@ export default class AppChart extends Vue {
     }
   }
   mounted() {
-    if(this.data && this.data.datasets && this.data.datasets[0].data.length !== 0){
+    if (this.data && this.data.datasets && this.data.datasets[0].data.length !== 0) {
       this.createChart()
     }
   }
@@ -107,7 +107,6 @@ export default class AppChart extends Vue {
       this.chart.destroy()
     }
   }
-
 
   /* Watchers: */
   @Watch('data')
