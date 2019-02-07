@@ -1,4 +1,4 @@
-import { TokenTransfer, TokenExchangeRate } from 'ethvm-common'
+import { TokenExchangeRate, TokenTransfer } from 'ethvm-common'
 
 const toTokenTransfer = (t: any): TokenTransfer => {
   t.amount = Buffer.from(t.amount.bytes)
