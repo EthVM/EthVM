@@ -61,6 +61,12 @@ const filterSchema = {
   default: 'all'
 }
 
+const idSchema = {
+  $id: '/properties/id',
+  type: 'string',
+  enum: ['syncing']
+}
+
 // Schemas definitions
 
 const JoinLeavePayloadSchema = {
@@ -95,7 +101,8 @@ const GenericPayloadSchema = {
     },
     filter: filterSchema,
     limit: limitSchema,
-    page: pageSchema
+    page: pageSchema,
+    id: idSchema
   },
   additionalProperties: false
 }

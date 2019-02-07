@@ -24,12 +24,10 @@ const MAX_ITEMS = 10
   }
 })
 export default class App extends Vue {
-
   // Lifecyle
   created() {
     // Load initial processing status
     this.$api.getProcessingMetadata('syncing').then(ev => {
-      const syncing = ev.value
       // TODO: Display accordingly UI
     })
 

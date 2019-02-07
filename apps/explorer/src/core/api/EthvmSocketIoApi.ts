@@ -212,8 +212,8 @@ export class EthvmSocketIoApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
   // Processing Metadata
   // ------------------------------------------------------------------------------------
-  public getProcessingMetadata(id: string): Promise<ProcessingMetadata> {
-    return this.promisify(Events.getProcessingMetadata, { id })
+  public getProcessingMetadata(ev: string): Promise<ProcessingMetadata | null> {
+    return this.promisify(Events.getProcessingMetadata, { id: ev })
   }
 
   // ------------------------------------------------------------------------------------

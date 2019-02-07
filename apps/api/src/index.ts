@@ -1,6 +1,6 @@
 import config from '@app/config'
 import { logger } from '@app/logger'
-import { NullStreamer } from '@app/server/core/streams'
+import { MongoStreamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
 import { AddressesServiceImpl, MongoAddressesRepository } from '@app/server/modules/addresses'
 import { BalancesServiceImpl, MongoBalancesRepository } from '@app/server/modules/balances'
@@ -16,6 +16,7 @@ import { MongoTokensRepository, TokensServiceImpl } from '@app/server/modules/to
 import { MongoTxsRepository, TxsServiceImpl } from '@app/server/modules/txs'
 import { MongoUncleRepository, UnclesServiceImpl } from '@app/server/modules/uncles'
 import { VmEngine } from '@app/server/modules/vm'
+import * as EventEmitter from 'eventemitter3'
 import { MongoClient } from 'mongodb'
 
 async function bootstrapServer() {
@@ -95,9 +96,7 @@ async function bootstrapServer() {
   // Create streamer
   // ---------------
   logger.debug('bootstrapper -> Initializing streamer')
-  // const streamer = new MongoStreamer(db, new EventEmitter())
-  // await streamer.initialize()
-  const streamer = new NullStreamer()
+  const streamer = new MongoStreamer(db, new EventEmitter())
 
   // Create server
   logger.debug('bootstrapper -> Initializing server')

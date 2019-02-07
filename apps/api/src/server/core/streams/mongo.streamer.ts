@@ -2,17 +2,17 @@ import { logger } from '@app/logger'
 import { Streamer, StreamingEvent } from '@app/server/core/streams/streamer'
 import { toProcessingMetadata } from '@app/server/modules/processing-metadata'
 import { MongoEthVM } from '@app/server/repositories'
-import { SocketRooms } from 'ethvm-common'
-import EventEmitter from 'eventemitter3'
+import { SocketEvent, SocketRooms } from 'ethvm-common'
+import * as EventEmitter from 'eventemitter3'
 import { ChangeStream, Collection, Cursor, Db } from 'mongodb'
 
 const INTERNAL_PROCESSING_METADATA_EVENT = 'internal-processing-metadata-event'
 
 export class MongoStreamer implements Streamer {
-  private blocksReader: MongoChangeStreamReader
-  private pendingTxReader: MongoChangeStreamReader
-  private blockMetricsReader: MongoChangeStreamReader
-  private processingMetadataReader: MongoChangeStreamReader
+  private blocksReader: ChangeStreamReader
+  private pendingTxReader: ChangeStreamReader
+  private blockMetricsReader: ChangeStreamReader
+  private processingMetadataReader: ChangeStreamReader
 
   constructor(private readonly db: Db, private readonly emitter: EventEmitter) {}
 
@@ -21,7 +21,9 @@ export class MongoStreamer implements Streamer {
     const { Blocks, PendingTxs, BlockMetrics, ProcessingMetadata } = SocketRooms
 
     // Register internal processing metadata event (so we can turn on/off remaining events)
-    const checkSyncingStatusFn = (event: StreamingEvent) => {
+    emitter.addListener(INTERNAL_PROCESSING_METADATA_EVENT, (event: SocketEvent) => {
+      logger.info(`MongoStreamer - CheckSyncingStatusFn() / Procesing new Processing Metadata internal event with key: ${event.key}`)
+
       if (event.key === 'syncing') {
         const status = event.value.boolean
         if (status) {
@@ -29,30 +31,34 @@ export class MongoStreamer implements Streamer {
         } else {
           this.enableEventsStreaming()
         }
-        this.emitter.emit(ProcessingMetadata, event)
+
+        emitter.emit(ProcessingMetadata, event)
       }
-    }
-    this.emitter.addListener(INTERNAL_PROCESSING_METADATA_EVENT, checkSyncingStatusFn)
+    })
 
     // Create stream readers
-    this.blocksReader = new MongoChangeStreamReader(db.collection(MongoEthVM.collections.blocks), Blocks, emitter)
-    this.pendingTxReader = new MongoChangeStreamReader(db.collection(MongoEthVM.collections.pendingTxs), PendingTxs, emitter)
-    this.blockMetricsReader = new MongoChangeStreamReader(db.collection(MongoEthVM.collections.blocks), BlockMetrics, emitter)
-    this.processingMetadataReader = new MongoChangeStreamReader(
+    logger.info('MongoStreamer - initialize() / Generating stream readers')
+    this.blocksReader = new ChangeStreamReader(db.collection(MongoEthVM.collections.blocks), Blocks, emitter)
+    this.pendingTxReader = new ChangeStreamReader(db.collection(MongoEthVM.collections.pendingTxs), PendingTxs, emitter)
+    this.blockMetricsReader = new ChangeStreamReader(db.collection(MongoEthVM.collections.blocks), BlockMetrics, emitter)
+    this.processingMetadataReader = new ChangeStreamReader(
       db.collection(MongoEthVM.collections.processingMetadata),
       INTERNAL_PROCESSING_METADATA_EVENT,
       emitter
     )
 
     // Start only processing metadata reader to listen for events
+    logger.info('MongoStreamer - initialize() / Enabling Processing Metadata streamer')
     await this.processingMetadataReader.start()
 
     // Check initial syncing state
+    logger.info('MongoStreamer - initialize() / Checking status of syncing')
     const syncStatus = await this.db
       .collection(MongoEthVM.collections.processingMetadata)
       .findOne({ _id: 'syncing' })
-      .then(res => toProcessingMetadata(res))
+      .then(res => res ? toProcessingMetadata(res) : { value: true })
     const isSyncing = syncStatus.value
+    logger.info(`MongoStreamer - initialize() / Current syncing status is: ${isSyncing}`)
 
     // Enable / Disable accordingly
     if (isSyncing) {
@@ -73,35 +79,45 @@ export class MongoStreamer implements Streamer {
   }
 
   private async enableEventsStreaming() {
+    logger.info('MongoStreamer - enableEventsStreaming() / Enabling streaming events')
     this.blocksReader.start()
     this.pendingTxReader.start()
     this.blockMetricsReader.start()
   }
 
   private async disableEventsStreaming() {
+    logger.info('MongoStreamer - disableEventsStreaming() / Disabling streaming events')
     this.blocksReader.stop()
     this.pendingTxReader.stop()
     this.blockMetricsReader.stop()
   }
 }
 
-class MongoChangeStreamReader {
+class ChangeStreamReader {
   private changeStream: ChangeStream
   private cursor: Cursor<any>
 
   constructor(private readonly collection: Collection, private readonly eventType: string, private readonly emitter: EventEmitter) {}
 
   public start() {
+    logger.info(`MongoChangeStreamReader - start() / Starting to listen change events on: ${this.eventType}`)
     const changeStream = (this.changeStream = this.collection.watch([], { fullDocument: 'updateLookup' }))
     this.cursor = changeStream.stream()
     this.pull()
   }
 
-  public async pull() {
+  public async stop() {
+    logger.info(`MongoChangeStreamReader - start() / Stopping to listen change events on: ${this.eventType}`)
+    if (this.changeStream) {
+      await this.changeStream.close()
+    }
+  }
+
+  private async pull() {
     const { cursor, eventType, emitter } = this
 
     try {
-      logger.info('Attempting to pull', eventType)
+      logger.info('MongoChangeStreamReader - pull() / Waiting for event:', eventType)
 
       while (!cursor.isClosed()) {
         const next = await cursor.next()
@@ -113,18 +129,11 @@ class MongoChangeStreamReader {
             key: documentKey._id,
             value: fullDocument
           }
-
           emitter.emit(eventType, event)
         }
       }
     } catch (e) {
-      logger.error('Failed to pull', this.eventType, e)
-    }
-  }
-
-  public async stop() {
-    if (this.changeStream) {
-      await this.changeStream.close()
+      logger.error('MongoChangeStreamReader - pull() / Failed to pull', this.eventType, ' with error:', e)
     }
   }
 }

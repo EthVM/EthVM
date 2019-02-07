@@ -2,13 +2,13 @@ import { ProcessingMetadataRepository } from '@app/server/modules/processing-met
 import { ProcessingMetadata } from 'ethvm-common'
 
 export interface ProcessingMetadataService {
-  getMetadata(id: string): Promise<ProcessingMetadata>
+  getMetadata(id: string): Promise<ProcessingMetadata | null>
 }
 
 export class ProcessingMetadataServiceImpl implements ProcessingMetadataService {
   constructor(private readonly processingRepository: ProcessingMetadataRepository) {}
 
-  public getMetadata(id: string): Promise<any> {
+  public getMetadata(id: string): Promise<ProcessingMetadata | null> {
     return this.processingRepository.getMetadata(id)
   }
 }

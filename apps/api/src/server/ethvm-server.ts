@@ -84,6 +84,7 @@ export class EthVMServer {
     })
 
     logger.debug('EthVMServer - start() / Registering streamer events')
+    await this.streamer.initialize()
     this.streamer.addListener(SocketRooms.Blocks, this.onBlockEvent)
     this.streamer.addListener(SocketRooms.PendingTxs, this.onPendingTxEvent)
     this.streamer.addListener(SocketRooms.BlockMetrics, this.onBlockMetricsEvent)
@@ -163,7 +164,7 @@ export class EthVMServer {
 
   private onProcessingMetadataEvent = (event: StreamingEvent): void => {
     const { op, key, value } = event
-    logger.info(`EthVMServer - onProcessingMetadataEvent / Op: ${op} - Key: ${value.key} - Value: ${value.hash}`)
+    logger.info(`EthVMServer - onProcessingMetadataEvent / Op: ${op} - Key: ${key}`)
     const processingMetadataEvent: StreamingEvent = { op, key, value: toProcessingMetadata(value) }
     this.io.to(SocketRooms.ProcessingMetadata).emit(Events.NEW_PROCESSING_METADATA, processingMetadataEvent)
   }
