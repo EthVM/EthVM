@@ -1,13 +1,14 @@
-import { BlockStats } from 'ethvm-common'
+import { BlockMetrics } from 'ethvm-common'
 
-const toBlockMetrics = (stat: any): BlockStats => {
-  stat.avgGasPrice = stat.avgGasPrice.toString()
-  stat.avgTxFees = stat.avgTxFees.toString()
-  stat.totalDifficulty = stat.totalDifficulty.toString()
-  stat.difficulty = stat.difficulty.toString()
-  stat.totalGasPrice = stat.totalGasPrice.toString()
-  stat.totalTxFees = stat.totalTxFees.toString()
-  return stat
+const toBlockMetrics = (bm: any): BlockMetrics => {
+  bm.number = bm.number.toString()
+  bm.avgGasPrice = bm.avgGasPrice.toString()
+  bm.avgTxFees = bm.avgTxFees.toString()
+  bm.totalDifficulty = bm.totalDifficulty.toString()
+  bm.difficulty = bm.difficulty.toString()
+  bm.totalGasPrice = bm.totalGasPrice.toString()
+  bm.totalTxFees = bm.totalTxFees.toString()
+  return bm
 }
 
 export { toBlockMetrics }

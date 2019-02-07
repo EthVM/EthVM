@@ -78,12 +78,13 @@ services:
     restart: unless-stopped
     volumes:
       - mongodb-volume:/data/db
+      - ./docker/config/mongo/mongod.conf:/etc/mongod.conf
       - ./datasets:/datasets
     networks:
       - back
     ports:
       - 27017:27017
-    command: "mongod --bind_ip 0.0.0.0 --replSet rs0 --quiet --slowms 10000"
+    command: "mongod --config /etc/mongod.conf --bind_ip 0.0.0.0 --replSet rs0 --quiet --slowms 10000"
     labels:
       - "traefik.enable=true"
       - "traefik.default.protocol=http"
@@ -201,3 +202,123 @@ services:
       CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
       CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/enkryptio
     mem_limit: 4g
+
+  # ///////////////////////////////////////////////////////
+  # Extra Tools (Useful for debugging and helping on Kafka)
+  # ///////////////////////////////////////////////////////
+
+  kafka-rest-proxy:
+    image: confluentinc/cp-kafka-rest:${CP_VERSION}
+    networks:
+      - back
+    ports:
+      - 8082:8082
+    environment:
+      KAFKA_REST_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_REST_LISTENERS: http://0.0.0.0:8082/
+      KAFKA_REST_SCHEMA_REGISTRY_URL: http://kafka-schema-registry:8081/
+      KAFKA_REST_HOST_NAME: kafka-rest-proxy
+      KAFKA_REST_BOOTSTRAP_SERVERS: PLAINTEXT://kafka-1:9091
+    depends_on:
+      - kafka-1
+      - kafka-schema-registry
+    cpu_shares: 256
+
+  kafka-topics-ui:
+    image: landoop/kafka-topics-ui:${KAFKA_UI_VERSION}
+    networks:
+      - back
+    ports:
+      - "8000:8000"
+    environment:
+      KAFKA_REST_PROXY_URL: "http://kafka-rest-proxy:8082/"
+      PROXY: "true"
+    depends_on:
+      - kafka-1
+      - kafka-schema-registry
+      - kafka-rest-proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.frontend.rule=Host:kafka-ui.ethvm.${DOMAIN}"
+      - "traefik.frontend.passHostHeader=true"
+      - "traefik.backend=kafka-topics-ui"
+      - "traefik.port=8000"
+    cpu_shares: 256
+
+  kafka-connect-ui:
+    image: landoop/kafka-connect-ui:${KAFKA_UI_VERSION}
+    networks:
+      - back
+    ports:
+      - 8003:8000
+    environment:
+      CONNECT_URL: "http://kafka-connect:8083/"
+      PROXY: "true"
+    depends_on:
+      - kafka-connect
+    labels:
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.frontend.rule=Host:kafka-connect-ui.ethvm.${DOMAIN}"
+      - "traefik.frontend.passHostHeader=true"
+      - "traefik.backend=kafka-connect-ui"
+      - "traefik.port=8003"
+    cpu_shares: 256
+
+  zoonavigator-api:
+    image: elkozmon/zoonavigator-api:${ZOONAVIGATOR_VERSION}
+    networks:
+      - back
+    environment:
+      SERVER_HTTP_PORT: 9000
+    depends_on:
+      - zookeeper
+    cpu_shares: 256
+
+  zoonavigator-web:
+    image: elkozmon/zoonavigator-web:${ZOONAVIGATOR_VERSION}
+    networks:
+      - back
+    ports:
+      - 8004:8000
+    environment:
+      API_HOST: "zoonavigator-api"
+      API_PORT: 9000
+    links:
+      - zoonavigator-api
+    depends_on:
+      - zoonavigator-api
+    labels:
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.frontend.rule=Host:zookeeper-ui.ethvm.${DOMAIN}"
+      - "traefik.frontend.passHostHeader=true"
+      - "traefik.backend=zoonavigator-api"
+      - "traefik.port=8004"
+    cpu_shares: 256
+
+  ksql-server:
+    image: confluentinc/cp-ksql-server:${CP_VERSION}
+    networks:
+      - back
+    ports:
+      - 8088:8088
+    depends_on:
+      - kafka-1
+      - kafka-schema-registry
+    environment:
+      KSQL_BOOTSTRAP_SERVERS: kafka-1:9091
+      KSQL_LISTENERS: http://0.0.0.0:8088/
+      KSQL_KSQL_SERVICE_ID: ksql_service_1
+      KSQL_SCHEMA_REGISTRY_URL: http://kafka-schema-registry:8081/
+    mem_limit: 4g
+
+  ksql-cli:
+    image: confluentinc/cp-ksql-cli:${CP_VERSION}
+    networks:
+      - back
+    depends_on:
+      - ksql-server
+    tty: true
+    entrypoint: /bin/bash

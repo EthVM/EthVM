@@ -150,6 +150,7 @@ object TypeMappings {
     ),
     "block-metrics" to mapOf(
       "hash" to Hex,
+      "number" to UBigInt,
       "difficulty" to UBigInt,
       "totalDifficulty" to UBigInt,
       "totalGasPrice" to UBigInt,

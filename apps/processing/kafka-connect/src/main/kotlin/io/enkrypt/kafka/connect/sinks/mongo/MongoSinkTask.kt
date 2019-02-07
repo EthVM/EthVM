@@ -42,7 +42,7 @@ class MongoSinkTask : SinkTask() {
 
   private val logger = KotlinLogging.logger {}
 
-  private var client: MongoClient? = null
+  private lateinit var client: MongoClient
   private lateinit var db: MongoDatabase
   private lateinit var collections: Map<MongoCollections, MongoCollection<BsonDocument>>
 
@@ -52,8 +52,9 @@ class MongoSinkTask : SinkTask() {
 
     val uri = MongoSinkConnector.Config.mongoUri(props)
     val databaseName = uri.database ?: throw IllegalArgumentException("Mongo URI does not contain a database name!")
+
     client = MongoClient(uri)
-    db = client!!.getDatabase(databaseName)
+    db = client.getDatabase(databaseName)
 
     val clazz = BsonDocument::class.java
     collections = mapOf<MongoCollections, MongoCollection<BsonDocument>>(
@@ -73,18 +74,18 @@ class MongoSinkTask : SinkTask() {
   }
 
   override fun stop() {
-    client?.close()
+    client.close()
   }
 
   override fun put(records: MutableCollection<SinkRecord>) {
 
     // TODO use mongo transactions
 
-    logger.info { "Processing ${records.size} records" }
-
     val elapsedMs = measureTimeMillis {
 
       val batch = mutableMapOf<MongoCollections, List<WriteModel<BsonDocument>>>()
+
+      logger.info { "Processing ${batch.size} records" }
 
       records.forEach { record ->
         KafkaTopics.forTopic(record.topic())(record)
@@ -96,15 +97,21 @@ class MongoSinkTask : SinkTask() {
 
       batch
         .filterValues { it.isNotEmpty() }
-        .forEach { (collectionId, writes) ->
-
+        .map { (collectionId, writes) -> Pair(collectionId, writes.chunked(200)) }
+        .forEach { pair ->
+          val collectionId = pair.first
           val collection = collections.getValue(collectionId)
-          val bulkWrite = collection.bulkWrite(writes)
+          val chunks = pair.second
 
-          logger.info {
-            "Bulk write complete. Collection = $collectionId, inserts = ${bulkWrite.insertedCount}, " +
-              "updates = ${bulkWrite.modifiedCount}, upserts = ${bulkWrite.upserts.size}, " +
-              "deletes = ${bulkWrite.deletedCount}"
+          logger.info { "Processing $collectionId collection with ${chunks.size} chunks" }
+
+          chunks.forEach {
+            val bulkWrite = collection.bulkWrite(it)
+            logger.info {
+              "Chunk write complete. Collection = $collectionId, inserts = ${bulkWrite.insertedCount}, " +
+                "updates = ${bulkWrite.modifiedCount}, upserts = ${bulkWrite.upserts.size}, " +
+                "deletes = ${bulkWrite.deletedCount}"
+            }
           }
         }
     }

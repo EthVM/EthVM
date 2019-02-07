@@ -1,6 +1,7 @@
 export * from "./src/entities/address-balance";
 export * from "./src/entities/address-metadata";
 export * from "./src/entities/block";
+export * from './src/entities/block-metrics';
 export * from "./src/entities/contract";
 export * from "./src/entities/pending-tx";
 export * from "./src/entities/quote";
