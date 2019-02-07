@@ -1,11 +1,10 @@
-import { toTokenTransfer, toTokenExchangeRate } from '@app/server/modules/tokens'
+import { toTokenTransfer } from '@app/server/modules/tokens'
 import { BaseMongoDbRepository, MongoEthVM } from '@app/server/repositories'
-import { TokenTransfer, TokenExchangeRate } from 'ethvm-common'
+import { TokenTransfer } from 'ethvm-common'
 
 export interface TokensRepository {
   getAddressTokenTransfers(address: string, limit: number, page: number): Promise<TokenTransfer[]>
   getAddressTokenTransfersByHolder(address: string, holder: string, filter: string, limit: number, page: number): Promise<TokenTransfer[]>
-  getTokenExchangeRates(limit: number, page: number): Promise<TokenExchangeRate[]>
 }
 
 export class MongoTokensRepository extends BaseMongoDbRepository implements TokensRepository {
@@ -59,26 +58,6 @@ export class MongoTokensRepository extends BaseMongoDbRepository implements Toke
         resp.forEach(tx => t.unshift(toTokenTransfer(tx)))
         return t
       })
-  }
-
-  public getTokenExchangeRates(limit: number, page: number): Promise<TokenExchangeRate[]> {
-    const start = page * limit
-    return this.db
-      .collection(MongoEthVM.collections.tokenExchangeRates)
-      .find({})
-      .sort({ timestamp: -1, market_cap_rank: 1 })
-      .skip(start)
-      .limit(limit)
-      .toArray()
-      .then(resp => {
-        const r : TokenExchangeRate[] = []
-        if (!resp) {
-          return r
-        }
-        resp.forEach(e => r.push(toTokenExchangeRate(e)))
-        return r
-      })
-
   }
 
 }

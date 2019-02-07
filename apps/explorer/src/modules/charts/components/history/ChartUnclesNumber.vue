@@ -25,7 +25,6 @@ import { Events } from 'ethvm-common'
 export default class ChartUnclesNumber extends Mixins(ChartMixin) {
   // This event is waiting for emplementations, right now this is a temp event to avoid errors
 
-
   newEvent = Events.getSuccessfulTxStats
 
   // Lifecycle

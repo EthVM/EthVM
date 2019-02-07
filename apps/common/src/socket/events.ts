@@ -12,7 +12,7 @@ export const Events = {
   // Ouputs
   NEW_BLOCK: "NEW_BLOCK",
   NEW_PENDING_TX: "NEW_PENDING_TX",
-  NEW_BLOCK_STAT: "NEW_BLOCKSTAT",
+  NEW_BLOCK_METRIC: "NEW_BLOCK_METRIC",
 
   NEW_TX: "NEW_TX",
   NEW_UNCLE: "NEW_UNCLE",
@@ -39,6 +39,10 @@ export const Events = {
   getBlocksMined: "get-blocks-mined",
   getBlockByNumber: "get-block-by-number",
   getTotalNumberOfBlocks: "get-total-number-of-blocks",
+
+  // Blocks Metrics
+  getBlockMetric: "get-block-metric",
+  getBlockMetrics: "get-block-metrics",
 
   // Txs
   getTx: "get-tx",
@@ -81,4 +85,4 @@ export const Events = {
 
 }
 
-export const SocketDefaultRooms = ["blocks", "pendingTxs", "blockStat"]
+export const SocketDefaultRooms = ["blocks", "pending-txs", "block-metrics"]

@@ -1,9 +1,10 @@
+import { removePrefix } from '@app/server/core/utils'
 import { genericPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
-import { Events, TokenExchangeRate } from 'ethvm-common'
+import { BlockMetrics, Events } from 'ethvm-common'
 
-const getTokenExchangeRates: SocketEvent = {
-  id: Events.getTokenExchangeRates,
+const getBlockMetric: SocketEvent = {
+  id: Events.getBlockMetric,
 
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = genericPayloadValidator(payload) as boolean
@@ -13,8 +14,8 @@ const getTokenExchangeRates: SocketEvent = {
     }
   },
 
-  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<TokenExchangeRate[]> =>
-    server.exchangesService.getTokenExchangeRates(payload.limit, payload.page)
+  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<BlockMetrics | null> =>
+    server.blockMetricsService.getBlockMetric(removePrefix(payload.hash))
 }
 
-export default getTokenExchangeRates
+export default getBlockMetric

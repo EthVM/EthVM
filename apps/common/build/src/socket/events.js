@@ -7,7 +7,7 @@ exports.Events = {
     // Ouputs
     NEW_BLOCK: "NEW_BLOCK",
     NEW_PENDING_TX: "NEW_PENDING_TX",
-    NEW_BLOCK_STAT: "NEW_BLOCKSTAT",
+    NEW_BLOCK_METRIC: "NEW_BLOCK_METRIC",
     NEW_TX: "NEW_TX",
     NEW_UNCLE: "NEW_UNCLE",
     pastTxsR: "PAST_TXS_RECEIVED",
@@ -29,6 +29,9 @@ exports.Events = {
     getBlocksMined: "get-blocks-mined",
     getBlockByNumber: "get-block-by-number",
     getTotalNumberOfBlocks: "get-total-number-of-blocks",
+    // Blocks Metrics
+    getBlockMetric: "get-block-metric",
+    getBlockMetrics: "get-block-metrics",
     // Txs
     getTx: "get-tx",
     getTxs: "get-txs",
@@ -63,4 +66,4 @@ exports.Events = {
     getAverageHashRateStats: "get-average-hash-rate-stats",
     getAverageMinerRewardsStats: "get-average-miner-rewards-stats"
 };
-exports.SocketDefaultRooms = ["blocks", "pendingTxs", "blockStat"];
+exports.SocketDefaultRooms = ["blocks", "pending-txs", "block-metrics"];

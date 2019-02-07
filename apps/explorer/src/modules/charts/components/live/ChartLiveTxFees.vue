@@ -1,21 +1,19 @@
 <template>
-  <v-layout column justify-center>
-    <app-chart
-      type="line"
-      :data="chartData"
-      :options="chartOptions"
-      :redraw="redraw"
-      :chart-title="newTitle"
-      :chart-description="newDescription"
-      unfilled="true"
-      :footnote-arr="footnote"
-      :live-chart="true"
-    />
-  </v-layout>
+  <app-chart
+    type="line"
+    :data="chartData"
+    :options="chartOptions"
+    :redraw="redraw"
+    :chart-title="newTitle"
+    :chart-description="newDescription"
+    unfilled="true"
+    :footnote-arr="footnote"
+    :live-chart="true"
+  />
 </template>
 
 <script lang="ts">
-import { Events } from 'ethvm-common'
+import { Events, BlockMetrics } from 'ethvm-common'
 import AppChart from '@app/modules/charts/components/AppChart.vue'
 import ethUnits from 'ethereumjs-units'
 import { Vue, Component } from 'vue-property-decorator'
@@ -28,59 +26,54 @@ const MAX_ITEMS = 10
   }
 })
 export default class ChartLiveTxFees extends Vue {
-  chartData: any = {}
-  redraw = false
+  redraw = true
+  data = {
+    labels: [],
+    avgFees: [],
+    avgPrice: []
+  }
 
   // Lifecycle
   created() {
-    this.chartData = this.initData
-    this.$eventHub.$on(Events.pastBlocksR, () => {
-      this.chartData = this.initData
-      this.redraw = true
-    })
-    this.$eventHub.$on(Events.NEW_BLOCK, _block => {
-      if (this.chartData.datasets[0]) {
-        this.redraw = false
-        if (!_block.isUncle()) {
-          const stats = _block.getStats()
-          this.chartData.labels.push(_block.getNumber())
-          this.chartData.labels.shift()
-          this.chartData.datasets[0].data.push(ethUnits.convert(stats.avgTxsFees, 'wei', 'eth'))
-          this.chartData.datasets[0].data.shift()
-          this.chartData.datasets[1].data.push(ethUnits.convert(stats.avgGasPrice, 'wei', 'gwei'))
-          this.chartData.datasets[1].data.shift()
-        }
-      }
+    this.fillChartData(this.$store.getters.blockMetrics.slice(0, MAX_ITEMS))
+  }
+
+  mounted() {
+    this.$eventHub.$on(Events.NEW_BLOCK_METRIC, (bm: BlockMetrics[] | BlockMetrics) => {
+      this.redraw = false
+      this.fillChartData(bm)
     })
   }
 
   beforeDestroy() {
-    this.$eventHub.$off(Events.pastBlocksR)
-    this.$eventHub.$off(Events.NEW_BLOCK)
+    this.$eventHub.$off(Events.NEW_BLOCK_METRIC)
+  }
+
+  // Methods
+  fillChartData(bms: BlockMetrics[] | BlockMetrics = []) {
+    bms = !Array.isArray(bms) ? [bms] : bms
+    bms.forEach(bm => {
+      this.data.labels.push(bm.number)
+      this.data.avgFees.push(bm.avgTxFees)
+      this.data.avgPrice.push(bm.avgGasPrice)
+      if (this.data.labels.length > MAX_ITEMS) {
+        this.data.labels.pop()
+        this.data.avgFees.pop()
+        this.data.avgPrice.pop()
+      }
+    })
   }
 
   // Computed
-  get initData() {
-    const data = {
-      labels: [],
-      avgFees: [],
-      avgPrice: []
-    }
-    const latestBlocks = this.$store.getters.blocks.slice(0, MAX_ITEMS)
-    latestBlocks.forEach(_block => {
-      data.labels.unshift(_block.getNumber())
-      const stats = _block.getStats()
-      data.avgFees.unshift(ethUnits.convert(stats.avgTxsFees, 'wei', 'eth'))
-      data.avgPrice.unshift(ethUnits.convert(stats.avgGasPrice, 'wei', 'gwei'))
-    })
+  get chartData() {
     return {
-      labels: data.labels,
+      labels: this.data.labels,
       datasets: [
         {
           label: this.$i18n.t('footnote.aveTxFees'),
           borderColor: '#40ce9c',
           backgroundColor: '#40ce9c',
-          data: data.avgFees,
+          data: this.data.avgFees,
           yAxisID: 'y-axis-1',
           fill: false
         },
@@ -88,7 +81,7 @@ export default class ChartLiveTxFees extends Vue {
           label: this.$i18n.t('footnote.aveGasPrice'),
           borderColor: '#eea66b',
           backgroundColor: '#eea56b',
-          data: data.avgPrice,
+          data: this.data.avgPrice,
           yAxisID: 'y-axis-2',
           fill: false
         }
@@ -109,7 +102,19 @@ export default class ChartLiveTxFees extends Vue {
             position: 'left',
             id: 'y-axis-1',
             ticks: {
-              beginAtZero: true
+              beginAtZero: true,
+              callback: function(value) {
+                const ranges = [{ divider: 1e9, suffix: 'B' }, { divider: 1e6, suffix: 'M' }, { divider: 1e3, suffix: 'k' }]
+                function formatNumber(n) {
+                  for (let i = 0; i < ranges.length; i++) {
+                    if (n >= ranges[i].divider) {
+                      return (n / ranges[i].divider).toString() + ranges[i].suffix
+                    }
+                  }
+                  return n
+                }
+                return formatNumber(value)
+              }
             },
             gridLines: {
               color: 'rgba(0, 0, 0, 0)'
@@ -123,7 +128,19 @@ export default class ChartLiveTxFees extends Vue {
             id: 'y-axis-2',
             position: 'right',
             ticks: {
-              beginAtZero: true
+              beginAtZero: true,
+              callback: function(value) {
+                const ranges = [{ divider: 1e9, suffix: 'B' }, { divider: 1e6, suffix: 'M' }, { divider: 1e3, suffix: 'k' }]
+                function formatNumber(n) {
+                  for (let i = 0; i < ranges.length; i++) {
+                    if (n >= ranges[i].divider) {
+                      return (n / ranges[i].divider).toString() + ranges[i].suffix
+                    }
+                  }
+                  return n
+                }
+                return formatNumber(value)
+              }
             },
             gridLines: {
               color: 'rgba(0, 0, 0, 0)'
@@ -140,7 +157,6 @@ export default class ChartLiveTxFees extends Vue {
           }
         ]
       },
-
       scaleShowLabels: false
     }
   }

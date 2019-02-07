@@ -5,7 +5,7 @@ import { errors } from '@app/server/core/exceptions'
 import { Streamer, StreamingEvent } from '@app/server/core/streams'
 import { AddressesService } from '@app/server/modules/addresses'
 import { BalancesService } from '@app/server/modules/balances'
-import { toBlockMetrics } from '@app/server/modules/block-metrics'
+import { BlockMetricsService, toBlockMetrics } from '@app/server/modules/block-metrics'
 import { BlocksService, toBlock } from '@app/server/modules/blocks'
 import { ContractsService } from '@app/server/modules/contracts'
 import { ExchangeService } from '@app/server/modules/exchanges'
@@ -44,6 +44,7 @@ export class EthVMServer {
   constructor(
     public readonly addressesService: AddressesService,
     public readonly blockService: BlocksService,
+    public readonly blockMetricsService: BlockMetricsService,
     public readonly contractsService: ContractsService,
     public readonly uncleService: UnclesService,
     public readonly balancesService: BalancesService,
@@ -81,9 +82,9 @@ export class EthVMServer {
     })
 
     logger.debug('EthVMServer - start() / Registering streamer events')
-    this.streamer.addListener('block', this.onBlockEvent)
-    this.streamer.addListener('pendingTx', this.onPendingTxEvent)
-    this.streamer.addListener('blockStat', this.onBlockStatEvent)
+    this.streamer.addListener('blocks', this.onBlockEvent)
+    this.streamer.addListener('pending-txs', this.onPendingTxEvent)
+    this.streamer.addListener('block-metrics', this.onBlockStatEvent)
 
     logger.debug('EthVMServer - start() / Starting to listen socket events on SocketIO')
     this.io.on('connection', (socket: SocketIO.Socket): void => this.registerSocketEventsOnConnection(socket))
@@ -153,7 +154,7 @@ export class EthVMServer {
 
     const blockStatEvent: StreamingEvent = { op, key, value: toBlockMetrics(value) }
 
-    this.io.to('blocks').emit(Events.NEW_BLOCK_STAT, blockStatEvent)
+    this.io.to('blocks').emit(Events.NEW_BLOCK_METRIC, blockStatEvent)
   }
 
   private onPendingTxEvent = (event: StreamingEvent): void => {

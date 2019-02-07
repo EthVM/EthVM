@@ -6,21 +6,6 @@ export interface SmallBlock {
   hash: string
 }
 
-export interface BlockStats {
-  hash: string
-  avgGasPrice: string
-  avgTxsFees: string
-  numFailedTxs: number
-  numPendingTxs: number
-  numSuccessfulTxs: number
-  totalDifficulty: string
-  difficulty: string
-  processingTimeMs: number
-  totalGasPrice: string
-  totalTxsFees: string
-  totalTxs: number
-}
-
 export interface Reward {
   address: string
   reward: string
@@ -51,5 +36,4 @@ export interface Block {
   uncles: Uncle[]
   unclesHash: string
   rewards: Reward[]
-  stats: BlockStats
 }

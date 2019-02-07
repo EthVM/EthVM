@@ -1,6 +1,6 @@
-import { SocketDefaultRooms } from 'ethvm-common'
 import { isValidAddress, isValidHash } from '@app/server/core/utils'
 import * as Ajv from 'ajv'
+import { SocketDefaultRooms } from 'ethvm-common'
 
 // Define some constants
 const PAGINATION_SIZE = 100

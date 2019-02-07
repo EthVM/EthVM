@@ -64,6 +64,8 @@ object BlockMetrics {
     return BlockMetricsRecord.newBuilder()
       .setHash(block.getHeader().getHash())
       .setNumber(block.getHeader().getNumber())
+      .setBlockTime(block.getBlockTime())
+      .setTimestamp(block.getHeader().getTimestamp())
       .setTotalTxs(totalTxs)
       .setNumUncles(block.getUncles().size)
       .setNumSuccessfulTxs(numSuccessfulTxs)
@@ -76,7 +78,6 @@ object BlockMetrics {
       .setAvgGasPrice(avgGasPrice.unsignedByteBuffer())
       .setTotalTxFees(totalTxsFees.unsignedByteBuffer())
       .setAvgTxFees(avgTxsFees.unsignedByteBuffer())
-      .setBlockTime(block.getBlockTime())
       .build()
   }
 

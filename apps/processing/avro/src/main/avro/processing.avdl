@@ -160,6 +160,8 @@ protocol Processing {
   record BlockMetricsRecord {
     io.enkrypt.avro.common.Data32 hash;
     bytes number;
+    union { null, long } blockTime = null;
+    long timestamp;
     int totalTxs = 0;
     int numSuccessfulTxs = 0;
     int numFailedTxs = 0;
@@ -172,7 +174,6 @@ protocol Processing {
     bytes avgGasPrice;
     bytes totalTxFees;
     bytes avgTxFees;
-    union { null, long } blockTime = null;
   }
 
   record MetricKeyRecord {
