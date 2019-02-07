@@ -9,6 +9,7 @@ import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blo
 import { ContractsServiceImpl, MongoContractsRepository } from '@app/server/modules/contracts'
 import { ExchangeRepositoryImpl, ExchangeServiceImpl } from '@app/server/modules/exchanges'
 import { MongoPendingTxRepository, PendingTxServiceImpl } from '@app/server/modules/pending-txs'
+import { MongoProcessingMetadataRepository, ProcessingMetadataServiceImpl } from '@app/server/modules/processing-metadata'
 import { SearchServiceImpl } from '@app/server/modules/search'
 import { MongoStatisticsRepository, StatisticsServiceImpl } from '@app/server/modules/statistics'
 import { MongoTokensRepository, TokensServiceImpl } from '@app/server/modules/tokens'
@@ -32,10 +33,7 @@ async function bootstrapServer() {
   // Create Blockchain data store
   logger.debug('bootstrapper -> Connecting MongoDB')
   const mongoUrl = config.get('data_stores.mongo_db.url')
-  const client = await MongoClient.connect(
-    mongoUrl,
-    { useNewUrlParser: true }
-  ).catch(() => process.exit(-1))
+  const client = await MongoClient.connect(mongoUrl, { useNewUrlParser: true }).catch(() => process.exit(-1))
 
   logger.debug('bootstrapper -> Selecting MongoDB database')
   const dbName = config.get('data_stores.mongo_db.db')
@@ -90,6 +88,10 @@ async function bootstrapServer() {
   const tokensRepository = new MongoTokensRepository(db)
   const tokensService = new TokensServiceImpl(tokensRepository, exchangeRepository, vme)
 
+  // Processing Metadata Service
+  const processingMetadataRepository = new MongoProcessingMetadataRepository(db)
+  const processingMetadataService = new ProcessingMetadataServiceImpl(processingMetadataRepository)
+
   // Create streamer
   // ---------------
   logger.debug('bootstrapper -> Initializing streamer')
@@ -112,6 +114,7 @@ async function bootstrapServer() {
     exchangeService,
     searchService,
     tokensService,
+    processingMetadataService,
     streamer
   )
   await server.start()

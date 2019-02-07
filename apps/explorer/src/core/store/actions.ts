@@ -1,4 +1,4 @@
-import { Events, SocketDefaultRooms, SocketEvent } from 'ethvm-common'
+import { Events, SocketRooms, SocketEvent } from 'ethvm-common'
 import { Block, PendingTx } from '@app/core/models'
 
 const socket_socketNewblock = function({ commit }, raw: SocketEvent | SocketEvent[]) {
@@ -27,7 +27,7 @@ const socket_socketNewblockmetrics = function({ commit }, raw: SocketEvent | Soc
 
 // eslint-disable-next-line
 const socket_socketConnect = function({}) {
-  this._vm.$socket.emit(Events.join, { rooms: SocketDefaultRooms })
+  this._vm.$socket.emit(Events.join, { rooms: SocketRooms.DefaultRooms })
 }
 
 export default {

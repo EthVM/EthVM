@@ -24,8 +24,15 @@ const MAX_ITEMS = 10
   }
 })
 export default class App extends Vue {
+
   // Lifecyle
   created() {
+    // Load initial processing status
+    this.$api.getProcessingMetadata('syncing').then(ev => {
+      const syncing = ev.value
+      // TODO: Display accordingly UI
+    })
+
     // Preload some previous block metrics
     this.$api.getBlockMetrics(MAX_ITEMS, 0).then(bms => {
       if (bms && bms.length > 0) {

@@ -1,6 +1,18 @@
 import { EthvmApi } from '@app/core/api'
 import { Block, PendingTx, Tx, Uncle } from '@app/core/models'
-import { AddressBalance, AddressMetadata, BlockMetrics, Contract, Events, Quote, Statistic, Token, TokenTransfer, TokenExchangeRate } from 'ethvm-common'
+import {
+  AddressBalance,
+  AddressMetadata,
+  BlockMetrics,
+  Contract,
+  Events,
+  Quote,
+  Statistic,
+  Token,
+  TokenTransfer,
+  TokenExchangeRate,
+  ProcessingMetadata
+} from 'ethvm-common'
 
 export class EthvmSocketIoApi implements EthvmApi {
   constructor(private readonly io: SocketIOClient.Socket) {}
@@ -197,6 +209,16 @@ export class EthvmSocketIoApi implements EthvmApi {
     return this.promisify(Events.search, { hash: input })
   }
 
+  // ------------------------------------------------------------------------------------
+  // Processing Metadata
+  // ------------------------------------------------------------------------------------
+  public getProcessingMetadata(id: string): Promise<ProcessingMetadata> {
+    return this.promisify(Events.getProcessingMetadata, { id })
+  }
+
+  // ------------------------------------------------------------------------------------
+  // Private Methods
+  // ------------------------------------------------------------------------------------
   private promisify(event: string, payload: any): Promise<any> {
     return new Promise((resolve, reject) => {
       this.io.emit(event, payload, (err, result) => (err ? reject(err) : resolve(result)))
