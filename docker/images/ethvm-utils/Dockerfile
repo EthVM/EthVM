@@ -9,7 +9,7 @@ ENV KAFKA_ZOOKEEPER_CONNECT zookeeper:2181
 ENV KAFKA_BOOTSTRAP_SERVERS kafka:9092
 ENV KAFKA_SCHEMA_REGISTRY http://kafka-schema-registry:8081
 ENV KAFKA_CONNECT_URL http://kafka-connect:8083
-ENV MONGO_URL mongo://mongo/ethvm_local
+ENV MONGO_URL mongodb://mongo/ethvm_local
 
 LABEL name="kafka" version=${KAFKA_VERSION}
 LABEL name="mongodb" version="4.0.5-r0"

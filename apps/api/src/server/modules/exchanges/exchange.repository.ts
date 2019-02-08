@@ -49,7 +49,7 @@ export class ExchangeRepositoryImpl extends BaseMongoDbRepository implements Exc
   public getTokenExchangeRate(symbol: string): Promise<TokenExchangeRate | null> {
     return this.db
       .collection(MongoEthVM.collections.tokenExchangeRates)
-      .findOne({ symbol })
+      .findOne({ _id: symbol })
       .then(res => (res ? toTokenExchangeRate(res) : null))
   }
 

@@ -40,7 +40,6 @@ up() {
   case "$type" in
     default) down; up_default ;;
     simple)  down; up_simple  ;;
-    full)    down; up_full    ;;
     *)       invalid          ;;
   esac
 }
@@ -70,28 +69,18 @@ up_default() {
   ${SCRIPT_DIR}/ethvm-utils.sh kafka-connect init
 }
 
-# up_full - spins up a full automated environment where everything is going to run on docker
-#           Keep in mind that this mode can hog your machine
-up_full() {
-  echo "To be finished and tested properly..."
-  # up
-
-  # echo "Starting up extra containers: ethereumj, kafka-streams"
-  # ${DOCKER_COMPOSE} -f docker-compose.extra.yaml up -d --build
-}
-
 # up - spins up a dev environment with a fixed dataset ready to be used on frontend
 up_simple() {
+  echo -e "Building utility docker images...\n"
+  ${SCRIPT_DIR}/docker-build.sh build ethvm-utils mongodb-dev
+
   echo "Starting up containers: traefik, mongo, explorer and api"
   docker-compose up -d --build traefik mongodb explorer api
 
-  echo -e "\nWaiting 10 seconds to allow previous docker containers initialisation...\n"
   sleep 10
 
-  echo "Initialisation of mongo"
-  ${SCRIPT_DIR}/mongo.sh init
-
   echo "Importing bootstraped db to mongo..."
+  ${SCRIPT_DIR}/mongo.sh init
   ${SCRIPT_DIR}/mongo.sh bootstrap
 }
 
