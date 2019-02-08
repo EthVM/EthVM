@@ -1,10 +1,10 @@
 <template>
   <v-app style="background: #f3f4f8;">
-    <the-navigation-drawer />
+    <the-navigation-drawer/>
     <v-content>
-      <app-sync-message />
-      <router-view :key="$route.path" />
-      <the-footer />
+      <app-sync-message v-if="isSyncing"/>
+      <router-view :key="$route.path"/>
+      <the-footer/>
     </v-content>
   </v-app>
 </template>
@@ -27,12 +27,12 @@ const MAX_ITEMS = 10
   }
 })
 export default class App extends Vue {
+  syncing = false
+
   // Lifecyle
   created() {
     // Load initial processing status
-    this.$api.getProcessingMetadata('syncing').then(ev => {
-      // TODO: Display accordingly UI
-    })
+    this.$api.getProcessingMetadata('syncing').then(ev => (this.syncing = ev.value))
 
     // Preload some previous block metrics
     this.$api.getBlockMetrics(MAX_ITEMS, 0).then(bms => {
@@ -41,6 +41,11 @@ export default class App extends Vue {
         this.$eventHub.$emit(Events.NEW_BLOCK_METRIC, bms)
       }
     })
+  }
+
+  // Computed
+  get isSyncing() {
+    return this.syncing
   }
 }
 </script>
