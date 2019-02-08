@@ -50,7 +50,8 @@ Vue.use(Vuetify, {
     tableGrey: '#fbfcfe',
     tabActive: '#3844b8',
     uncleGrey: '#eff1f6',
-    sync: '#ffe7d6'
+    sync: '#ffe7d6',
+    bttnGrey: '#dee5f0'
 
     // used -->
     // background: String(colors.grey.darken3)
