@@ -1,3 +1,4 @@
+/// <reference types="node" />
 export interface PendingTx {
     hash?: string;
     nonce: string;

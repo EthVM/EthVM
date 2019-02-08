@@ -10,12 +10,13 @@ import { BlocksService, toBlock } from '@app/server/modules/blocks'
 import { ContractsService } from '@app/server/modules/contracts'
 import { ExchangeService } from '@app/server/modules/exchanges'
 import { PendingTxService, toPendingTx } from '@app/server/modules/pending-txs'
+import { ProcessingMetadataService, toProcessingMetadata } from '@app/server/modules/processing-metadata'
 import { SearchService } from '@app/server/modules/search'
 import { StatisticsService } from '@app/server/modules/statistics'
 import { TokensService } from '@app/server/modules/tokens'
 import { TxsService } from '@app/server/modules/txs'
 import { UnclesService } from '@app/server/modules/uncles'
-import { Block, Events, Tx } from 'ethvm-common'
+import { Block, Events, SocketRooms, Tx } from 'ethvm-common'
 import * as fs from 'fs'
 import * as http from 'http'
 import * as SocketIO from 'socket.io'
@@ -54,6 +55,7 @@ export class EthVMServer {
     public readonly exchangesService: ExchangeService,
     public readonly searchService: SearchService,
     public readonly tokensService: TokensService,
+    public readonly processingMetadataService: ProcessingMetadataService,
     private readonly streamer: Streamer
   ) {}
 
@@ -82,9 +84,11 @@ export class EthVMServer {
     })
 
     logger.debug('EthVMServer - start() / Registering streamer events')
-    this.streamer.addListener('blocks', this.onBlockEvent)
-    this.streamer.addListener('pending-txs', this.onPendingTxEvent)
-    this.streamer.addListener('block-metrics', this.onBlockStatEvent)
+    await this.streamer.initialize()
+    this.streamer.addListener(SocketRooms.Blocks, this.onBlockEvent)
+    this.streamer.addListener(SocketRooms.PendingTxs, this.onPendingTxEvent)
+    this.streamer.addListener(SocketRooms.BlockMetrics, this.onBlockMetricsEvent)
+    this.streamer.addListener(SocketRooms.ProcessingMetadata, this.onProcessingMetadataEvent)
 
     logger.debug('EthVMServer - start() / Starting to listen socket events on SocketIO')
     this.io.on('connection', (socket: SocketIO.Socket): void => this.registerSocketEventsOnConnection(socket))
@@ -139,31 +143,29 @@ export class EthVMServer {
 
   private onBlockEvent = (event: StreamingEvent): void => {
     const { op, key, value } = event
-
     logger.info(`EthVMServer - onBlockEvent / Op: ${op} - Number: ${key} - Hash: ${value.header.hash}`)
-
     const blockEvent: StreamingEvent = { op, key, value: toBlock(value) }
-
-    this.io.to('blocks').emit(Events.NEW_BLOCK, blockEvent)
+    this.io.to(SocketRooms.Blocks).emit(Events.NEW_BLOCK, blockEvent)
   }
 
-  private onBlockStatEvent = (event: StreamingEvent): void => {
+  private onBlockMetricsEvent = (event: StreamingEvent): void => {
     const { op, key, value } = event
-
     logger.info(`EthVMServer - onBlockStatEvent / Op: ${op} - Number: ${key} - Stat: ${value}`)
-
     const blockStatEvent: StreamingEvent = { op, key, value: toBlockMetrics(value) }
-
-    this.io.to('blocks').emit(Events.NEW_BLOCK_METRIC, blockStatEvent)
+    this.io.to(SocketRooms.BlockMetrics).emit(Events.NEW_BLOCK_METRIC, blockStatEvent)
   }
 
   private onPendingTxEvent = (event: StreamingEvent): void => {
     const { op, key, value } = event
-
     logger.info(`EthVMServer - onPendingTxEvent / Op: ${op} - Hash: ${value.hash}`)
-
     const pendingTxEvent: StreamingEvent = { op, key, value: toPendingTx(value) }
+    this.io.to(SocketRooms.PendingTxs).emit(Events.NEW_PENDING_TX, pendingTxEvent)
+  }
 
-    this.io.to('pendingTxs').emit(Events.NEW_PENDING_TX, pendingTxEvent)
+  private onProcessingMetadataEvent = (event: StreamingEvent): void => {
+    const { op, key, value } = event
+    logger.info(`EthVMServer - onProcessingMetadataEvent / Op: ${op} - Key: ${key}`)
+    const processingMetadataEvent: StreamingEvent = { op, key, value: toProcessingMetadata(value) }
+    this.io.to(SocketRooms.ProcessingMetadata).emit(Events.NEW_PROCESSING_METADATA, processingMetadataEvent)
   }
 }

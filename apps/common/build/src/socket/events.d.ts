@@ -9,6 +9,7 @@ export declare const Events: {
     NEW_BLOCK: string;
     NEW_PENDING_TX: string;
     NEW_BLOCK_METRIC: string;
+    NEW_PROCESSING_METADATA: string;
     NEW_TX: string;
     NEW_UNCLE: string;
     pastTxsR: string;
@@ -56,5 +57,12 @@ export declare const Events: {
     getAverageNumberOfUnclesStats: string;
     getAverageHashRateStats: string;
     getAverageMinerRewardsStats: string;
+    getProcessingMetadata: string;
 };
-export declare const SocketDefaultRooms: string[];
+export declare const SocketRooms: {
+    DefaultRooms: string[];
+    Blocks: string;
+    PendingTxs: string;
+    BlockMetrics: string;
+    ProcessingMetadata: string;
+};

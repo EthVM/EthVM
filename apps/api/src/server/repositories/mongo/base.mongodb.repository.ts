@@ -13,7 +13,8 @@ export const MongoEthVM = {
     statistics: 'aggregate_block_metrics',
     tokenTransfers: 'token_transfers',
     accountMetadata: 'account_metadata',
-    tokenExchangeRates: 'token_exchange_rates'
+    tokenExchangeRates: 'token_exchange_rates',
+    processingMetadata: 'processing_metadata'
   }
 }
 

@@ -1,6 +1,6 @@
 import { isValidAddress, isValidHash } from '@app/server/core/utils'
 import * as Ajv from 'ajv'
-import { SocketDefaultRooms } from 'ethvm-common'
+import { SocketRooms } from 'ethvm-common'
 
 // Define some constants
 const PAGINATION_SIZE = 100
@@ -61,6 +61,12 @@ const filterSchema = {
   default: 'all'
 }
 
+const idSchema = {
+  $id: '/properties/id',
+  type: 'string',
+  enum: ['syncing']
+}
+
 // Schemas definitions
 
 const JoinLeavePayloadSchema = {
@@ -71,7 +77,7 @@ const JoinLeavePayloadSchema = {
     rooms: {
       $id: '/properties/rooms',
       type: 'array',
-      items: { type: 'string', enum: SocketDefaultRooms },
+      items: { type: 'string', enum: SocketRooms.DefaultRooms },
       uniqueItems: true,
       minItems: 1
     }
@@ -95,7 +101,8 @@ const GenericPayloadSchema = {
     },
     filter: filterSchema,
     limit: limitSchema,
-    page: pageSchema
+    page: pageSchema,
+    id: idSchema
   },
   additionalProperties: false
 }
