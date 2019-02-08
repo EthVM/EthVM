@@ -105,6 +105,14 @@ export class EthvmSocketIoApi implements EthvmApi {
     return this.promisify(Events.getTokenExchangeRates, { limit, page })
   }
 
+  public getTokenExchangeRateBySymbol(symbol: string): Promise<TokenExchangeRate | null> {
+    return this.promisify(Events.getTokenExchangeRateBySymbol, { symbol })
+  }
+
+  public getTokenExchangeRateByAddress(address: string): Promise<TokenExchangeRate | null> {
+    return this.promisify(Events.getTokenExchangeRateByAddress, { address })
+  }
+
   // ------------------------------------------------------------------------------------
   // Pending Txs
   // ------------------------------------------------------------------------------------
