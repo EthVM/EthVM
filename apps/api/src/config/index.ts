@@ -2,8 +2,8 @@ import * as convict from 'convict'
 
 const config = convict({
   env: {
-    default: 'dev',
-    format: ['production', 'dev', 'test'],
+    default: 'development',
+    format: ['production', 'development', 'test'],
     env: 'NODE_ENV'
   },
 

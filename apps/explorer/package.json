@@ -7,6 +7,9 @@
   "scripts": {
     "start:dev": "vue-cli-service serve",
     "build": "vue-cli-service --mode production build",
+    "build:production": "yarn build",
+    "build:development": "vue-cli-service --mode development build",
+    "build:staging": "vue-cli-service --mode staging build",
     "clean": "rm -rf dist/",
     "lint": "vue-cli-service lint --no-fix",
     "lint:fix": "vue-cli-service lint"
@@ -18,7 +21,7 @@
     "clipboard-copy": "^2.0.1",
     "date-fns": "^1.30.1",
     "ethereumjs-units": "^0.2.0",
-    "ethvm-common": "file:./../common",
+    "ethvm-common": "file:../common",
     "number-formatter": "^1.2.0",
     "socket.io-client": "^2.2.0",
     "v-tooltip": "^2.0.0-rc.33",

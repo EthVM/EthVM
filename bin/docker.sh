@@ -6,10 +6,7 @@ set +o nounset
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # import utils
-source ${SCRIPT_DIR}/utils.sh
-
-# verify we have required utilities installed
-ensure
+source ${SCRIPT_DIR}/env.sh
 
 # docker_usage - prints docker subcommand usage
 docker_usage() {
@@ -50,34 +47,27 @@ up() {
 
 # up - spins up a clean dev environment (but it will not run eth client, neither kafka-streams in order to control the flow of data)
 up_default() {
-  echo -e "Building helper docker images...\n"
-  ${SCRIPT_DIR}/docker-build.sh build mongodb-ethvm-utils
-  ${SCRIPT_DIR}/docker-build.sh build kafka-ethvm-utils
+
+  echo -e "Building utility docker images...\n"
+  ${SCRIPT_DIR}/docker-build.sh build ethvm-utils mongodb-dev
 
   echo -e "Starting up containers...\n"
   docker-compose up -d --build
 
-  echo -e "Waiting 15 seconds to allow previous docker services initialisation..."
-  sleep 15
+  echo -e "Initialising kafka...\n"
+  ${SCRIPT_DIR}/ethvm-utils.sh kafka init
 
-  echo -e "Creating kafka topics...\n"
-  ${SCRIPT_DIR}/kafka.sh create-topics
+  echo -e "Initialising mongo...\n"
+  ${SCRIPT_DIR}/ethvm-utils.sh mongo init
 
-  echo -e "Initialisation of mongo...\n"
-  ${SCRIPT_DIR}/mongo.sh init
-
-  echo -e "Initialising avro...\n"
+  echo -e "Re-building avro models...\n"
   ${SCRIPT_DIR}/avro.sh build
 
-  echo -e "Initialising kafka connect...\n"
+  echo -e "Re-building kafka connect connector...\n"
   ${SCRIPT_DIR}/kafka-connect.sh build-connector
 
-  echo "Waiting 30 seconds for kafka-connect to restart"
-  sleep 30
-
   echo "Registering sinks and sources into kafka connect..."
-  ${SCRIPT_DIR}/kafka-connect.sh register-sinks
-  ${SCRIPT_DIR}/kafka-connect.sh register-sources
+  ${SCRIPT_DIR}/ethvm-utils.sh kafka-connect init
 }
 
 # up_full - spins up a full automated environment where everything is going to run on docker
