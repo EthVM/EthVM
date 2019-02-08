@@ -54,6 +54,7 @@ services:
       placement:
         constraints:
           - node.role == worker
+          - node.labels.io.enkrypt.nodeType != ethereumj
       replicas: 1
       restart_policy:
         condition: on-failure
@@ -89,6 +90,7 @@ services:
       placement:
         constraints:
           - node.role == worker
+          - node.labels.io.enkrypt.nodeType != ethereumj
       replicas: 1
       restart_policy:
         condition: on-failure
@@ -117,31 +119,32 @@ services:
       placement:
         constraints:
           - node.role == worker
+          - node.labels.io.enkrypt.nodeType != ethereumj
       replicas: 1
       restart_policy:
         condition: on-failure
 
   ethereumj:
-    image: enkryptio/ethereumj:develop
+    image: enkryptio/ethereumj:1.12.0.1
     networks:
       - backend
     volumes:
-      - ethereumj:/data/db/backup
+      - ethereumj:/backup
     environment:
-      JAVA_OPTS: '-server -Xss8m -Xms6G -Xmx8G -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:+UseG1GC -XX:-OmitStackTraceInFastThrow -Dkafka.enabled=true -Dkafka.schemaRegistryUrl=http://kafka-schema-registry:8081 -Dkafka.bootstrapServers=kafka:9092 -Ddatabase.dir=/data/db -Dcache.stateCacheSize=1024 -Dcache.blockQueueSize=256 -Dcache.headerQueueSize=64 -Dkafka.enabled=false -Ddatabase.fromBackup=true -Ddatabase.backupDir=/backup'
+      JAVA_OPTS: '-server -Xss32m -Xms12G -Xmx24G -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:+UseG1GC -XX:-OmitStackTraceInFastThrow -Dkafka.enabled=true -Dkafka.schemaRegistryUrl=${KAFKA_SCHEMA_REGISTRY_URL} -Dkafka.bootstrapServers=${KAFKA_BOOTSTRAP_SERVERS} -Ddatabase.dir=/data/db -Dcache.stateCacheSize=4096 -Dcache.blockQueueSize=256 -Dcache.headerQueueSize=64 -Ddatabase.fromBackup=true -Ddatabase.backupDir=/backup'
     deploy:
       resources:
         limits:
-          cpus: '4.0'
-          memory: 4G
+          cpus: '10.0'
+          memory: 30G
         reservations:
-          cpus: '3.0'
-          memory: 2G
+          cpus: '8.0'
+          memory: 24G
       placement:
         constraints:
           - node.role == worker
           - node.labels.io.enkrypt.nodeType == ethereumj
-      replicas: 1
+      replicas: 0
       restart_policy:
         condition: on-failure
 
@@ -170,7 +173,8 @@ services:
       placement:
         constraints:
           - node.role == worker
-      replicas: 1
+          - node.labels.io.enkrypt.nodeType != ethereumj
+      replicas: 0
       restart_policy:
         condition: on-failure
 
@@ -180,6 +184,8 @@ services:
       - mongodb:/data/db
     networks:
       - backend
+    environment:
+      MONGO_WIRED_TIGER_CACHE_SIZE: 12000
     deploy:
       resources:
         limits:
@@ -191,6 +197,7 @@ services:
       placement:
         constraints:
           - node.role == worker
+          - node.labels.io.enkrypt.nodeType != ethereumj
       replicas: 1
       restart_policy:
         condition: on-failure
@@ -236,101 +243,102 @@ services:
       placement:
         constraints:
           - node.role == worker
+          - node.labels.io.enkrypt.nodeType != ethereumj
       replicas: 1
       restart_policy:
         condition: on-failure
 
 
-  traefik:
-    image: enkryptio/traefik:0.1.2
-    networks:
-      - backend
-      - traefik
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - traefik:/var/lib/traefik
-    ports:
-      - 80
-      - 443
-      - 8080
-    environment:
-      DEBUG: false
-      LOG_LEVEL: INFO
-    deploy:
-      resources:
-        limits:
-          cpus: '3.0'
-          memory: 6G
-        reservations:
-          cpus: '2.0'
-          memory: 4G
-      placement:
-        constraints:
-          - node.role == manager
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-
-  api:
-    image: enkryptio/api:0.1.0
-    depends_on:
-      - mongodb
-    networks:
-      - backend
-      - traefik
-    environment:
-      ETHVM_MONGO_DB_URL: ${MONGO_URL}
-      ETHVM_MONGO_DB_NAME: ${MONGO_DB}
-      ETHVM_ETH_RPC_HOST: 0.0.0.0
-      NODE_ENV: development
-    deploy:
-      resources:
-        limits:
-          cpus: '3.0'
-          memory: 6G
-        reservations:
-          cpus: '2.0'
-          memory: 4G
-      placement:
-        constraints:
-          - node.role == worker
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=traefik"
-      - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:api.${DOMAIN}"
-      - "traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:https://${DOMAIN}||Access-Control-Allow-Credentials:true"
-      - "traefik.frontend.passHostHeader=true"
-      - "traefik.backend=api"
-      - "traefik.port=3000"
-
-  explorer:
-    image: enkryptio/explorer:0.1.0-development
-    networks:
-      - traefik
-    deploy:
-      resources:
-        limits:
-          cpus: '2.0'
-          memory: 2G
-        reservations:
-          cpus: '1.0'
-          memory: 1G
-      placement:
-        constraints:
-          - node.role == worker
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-    labels:
-      - 'traefik.enable=true'
-      - "traefik.docker.network=traefik"
-      - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:${DOMAIN}'
-      - 'traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:*||Access-Control-Allow-Credentials:true'
-      - 'traefik.frontend.passHostHeader=true'
-      - 'traefik.backend=explorer'
-      - 'traefik.port=80'
+#  traefik:
+#    image: enkryptio/traefik:0.1.2
+#    networks:
+#      - backend
+#      - traefik
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#      - traefik:/var/lib/traefik
+#    ports:
+#      - 80
+#      - 443
+#      - 8080
+#    environment:
+#      DEBUG: false
+#      LOG_LEVEL: INFO
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '3.0'
+#          memory: 6G
+#        reservations:
+#          cpus: '2.0'
+#          memory: 4G
+#      placement:
+#        constraints:
+#          - node.role == manager
+#      replicas: 1
+#      restart_policy:
+#        condition: on-failure
+#
+#  api:
+#    image: enkryptio/api:0.1.0
+#    depends_on:
+#      - mongodb
+#    networks:
+#      - backend
+#      - traefik
+#    environment:
+#      ETHVM_MONGO_DB_URL: ${MONGO_URL}
+#      ETHVM_MONGO_DB_NAME: ${MONGO_DB}
+#      ETHVM_ETH_RPC_HOST: 0.0.0.0
+#      NODE_ENV: development
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '3.0'
+#          memory: 6G
+#        reservations:
+#          cpus: '2.0'
+#          memory: 4G
+#      placement:
+#        constraints:
+#          - node.role == worker
+#      replicas: 1
+#      restart_policy:
+#        condition: on-failure
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.docker.network=traefik"
+#      - "traefik.default.protocol=http"
+#      - "traefik.frontend.rule=Host:api.${DOMAIN}"
+#      - "traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:https://${DOMAIN}||Access-Control-Allow-Credentials:true"
+#      - "traefik.frontend.passHostHeader=true"
+#      - "traefik.backend=api"
+#      - "traefik.port=3000"
+#
+#  explorer:
+#    image: enkryptio/explorer:0.1.0-development
+#    networks:
+#      - traefik
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '2.0'
+#          memory: 2G
+#        reservations:
+#          cpus: '1.0'
+#          memory: 1G
+#      placement:
+#        constraints:
+#          - node.role == worker
+#      replicas: 1
+#      restart_policy:
+#        condition: on-failure
+#    labels:
+#      - 'traefik.enable=true'
+#      - "traefik.docker.network=traefik"
+#      - 'traefik.default.protocol=http'
+#      - 'traefik.frontend.rule=Host:${DOMAIN}'
+#      - 'traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:*||Access-Control-Allow-Credentials:true'
+#      - 'traefik.frontend.passHostHeader=true'
+#      - 'traefik.backend=explorer'
+#      - 'traefik.port=80'
