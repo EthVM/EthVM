@@ -54,19 +54,23 @@ class CoinGeckoExchangeRateSourceTask : SourceTask() {
     val sourcePartition = mapOf("url" to COINGECKO_API_URL)
     val sourceOffset = emptyMap<String, Any>()
 
+    // Obtain from CoinGecko
     val rates: MutableList<ExchangeRate> = mutableListOf()
-
     var page = 1
     do {
       val api = COINGECKO_API_URL.replace("{PAGE}", page.toString())
       val stream = URL(api).openStream()
-      val raw = klaxon.parseArray<ExchangeRate>(stream) ?: emptyList()
+      val raw = klaxon.parseArray<ExchangeRate>(stream)?.filter { it.isValid() } ?: emptyList()
       rates += raw
       page = page.inc()
     } while (raw.isNotEmpty())
 
-    val records = rates
-      .dropWhile { it.symbol.isEmpty() }
+    // Filter by symbol (NOTE: There are repeating symbols, we need to ensure we have an unique id to properly filter)
+    // Temporary solution: Remove repeating symbols
+    val repeatedSymbols: List<ExchangeRate> = rates.groupBy { it.symbol }.filterValues { it.size > 1 }.flatMap { it.value }
+    val filteredRates = rates.filterNot { repeatedSymbols.contains(it) }
+
+    val records = filteredRates
       .map { e ->
         val symbolKey = SymbolKey(e.symbol.trim())
         SourceRecord(
@@ -148,6 +152,8 @@ class CoinGeckoExchangeRateSourceTask : SourceTask() {
       val total_supply: Long? = -1,
       val last_updated: String? = ""
     ) {
+
+      fun isValid(): Boolean = market_cap != -1.0 && price_change_percentage_24h != -1.0 && total_volume != -1.0 && current_price != -1.0
 
       fun toStruct(): Struct =
         Struct(ExchangeRateMetadataSchema).apply {

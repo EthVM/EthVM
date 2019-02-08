@@ -51,6 +51,8 @@ exports.Events = {
     // Exchange
     getExchangeRates: "get-exchange-rates",
     getTokenExchangeRates: "get-token-exchange-rates",
+    getTokenExchangeRateBySymbol: "get-token-exchange-rate-by-symbol",
+    getTokenExchangeRateByAddress: "get-token-exchange-rate-by-address",
     // Search
     search: "search",
     // Stats

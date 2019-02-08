@@ -102,7 +102,11 @@ const GenericPayloadSchema = {
     filter: filterSchema,
     limit: limitSchema,
     page: pageSchema,
-    id: idSchema
+    id: idSchema,
+    symbol: {
+      $id: '/properties/string',
+      type: 'string'
+    }
   },
   additionalProperties: false
 }
