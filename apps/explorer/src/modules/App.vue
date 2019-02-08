@@ -2,6 +2,7 @@
   <v-app style="background: #f3f4f8;">
     <the-navigation-drawer />
     <v-content>
+      <app-sync-message />
       <router-view :key="$route.path" />
       <the-footer />
     </v-content>
@@ -9,6 +10,7 @@
 </template>
 
 <script lang="ts">
+import AppSyncMessage from '@app/core/components/ui/AppSyncMessage.vue'
 import TheNavigationDrawer from '@app/core/components/layout/TheNavigationDrawer.vue'
 import TheFooter from '@app/core/components/layout/TheFooter.vue'
 import { Vue, Component } from 'vue-property-decorator'
@@ -19,6 +21,7 @@ const MAX_ITEMS = 10
 
 @Component({
   components: {
+    AppSyncMessage,
     TheNavigationDrawer,
     TheFooter
   }
