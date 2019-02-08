@@ -1,11 +1,12 @@
 <template>
   <v-card transparent flat width="350">
+
     <v-layout row align-center justify-space-around fill-height pa-3>
 
       <button flat class="bttnGrey info--text text-capitalize bttn" small>{{ $t('bttn.first') }}</button>
       <button flat class="bttnGrey info--text text-capitalize bttn" small><v-icon class="secondary--text" small>fas fa-angle-left</v-icon> </button>
       <div class="page-input">
-        <v-text-field v-model="pageInput" :mask="inputMask" :placeholder="newPH" :rulles="validate" class="centered-input body-1 secondary--text"></v-text-field>
+        <v-text-field v-model="pageInput" :mask="inputMask" :placeholder="newPH" :rulles="inputRulles" class="centered-input body-1 secondary--text"></v-text-field>
       </div>
       <p class="total-text info--text">out of {{total}} </p>
       <button flat class="bttnGrey info--text text-capitalize bttn" small><v-icon class="secondary--text" small>fas fa-angle-right</v-icon> </button>
@@ -17,35 +18,47 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
-import debounce from 'lodash.debounce'
+import _debounce from 'lodash.debounce'
 @Component
 export default class AppPaginate extends Vue {
   //@Prop(Number) total!: button
 
-  pageInput
+
   total = 10000
   page = 1
+  pageInput = this.page
+  validInput = true
 
   //Methods
 
-  validate(_page: number):boolean {
-    return (this.page > 0 && this.page <= this.total) ? true : false
+  valid(_page: number): boolean {
+    return (_page > 0 && _page <= this.total) ? true : false
+  }
+
+  setPage(): void {
+    if(this.valid(this.pageInput)){
+        this.page = this.pageInput
+    }
   }
 
   // Watch
   @Watch('pageInput')
   onPageInputChanged(newVal: number, oldVal: number): void {
-    let newPage = this._debounce(newVal, 1000)
-    console.log(newPage)
+    let setNewPage = _debounce(this.setPage, 1500)
+    setNewPage()
   }
 
-
+  @Watch('page')
+  onPageChanged(newVal: number, oldVal: number): void {
+    this.$emit('page',  newVal - 1)
+  }
 
   //Computed
-  get validate() {
-    let a = (this.page > 0 && this.page <= this.total) ? true : "invalid page Number"
-    console.log(a)
-    return a
+  get inputRulles() {
+    return [
+      (input) => !!input || 'Page is required',
+      (input) => this.valid(input) || "Invalid page number"
+    ]
   }
 
   get inputMask(): string {
@@ -71,7 +84,7 @@ export default class AppPaginate extends Vue {
 }
 
 .page-input{
-  width: 40px;
+  width: 1000px;
 }
 
 .centered-input input {
