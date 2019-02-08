@@ -17,13 +17,14 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import debounce from 'lodash.debounce'
 @Component
 export default class AppPaginate extends Vue {
   //@Prop(Number) total!: button
 
-  pageInput = 10000
+  pageInput
   total = 10000
-  currPage = 1
+  page = 1
 
   //Methods
 
@@ -38,9 +39,7 @@ export default class AppPaginate extends Vue {
     console.log(newPage)
   }
 
-  mounted() {
 
-  }
 
   //Computed
   get validate() {
