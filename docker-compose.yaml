@@ -131,7 +131,6 @@ services:
       CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
     mem_limit: 4g
 
-
   kafka-schema-registry:
     image: confluentinc/cp-schema-registry:${CP_VERSION}
     restart: unless-stopped

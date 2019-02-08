@@ -1,5 +1,16 @@
 import { Block, PendingTx, Tx, Uncle } from '@app/core/models'
-import { AddressBalance, AddressMetadata, BlockMetrics, Contract, Quote, Statistic, Token, TokenTransfer, TokenExchangeRate } from 'ethvm-common'
+import {
+  AddressBalance,
+  AddressMetadata,
+  BlockMetrics,
+  Contract,
+  Quote,
+  Statistic,
+  Token,
+  TokenTransfer,
+  TokenExchangeRate,
+  ProcessingMetadata
+} from 'ethvm-common'
 
 export interface EthvmApi {
   // Address
@@ -59,4 +70,7 @@ export interface EthvmApi {
 
   // Search
   search(hash: string): Promise<any>
+
+  // Processing Metadata
+  getProcessingMetadata(id: string): Promise<ProcessingMetadata | null>
 }

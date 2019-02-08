@@ -1,20 +1,22 @@
 import config from '@app/config'
 import { logger } from '@app/logger'
-import { NullStreamer } from '@app/server/core/streams'
+import { MongoStreamer } from '@app/server/core/streams'
 import { EthVMServer } from '@app/server/ethvm-server'
 import { AddressesServiceImpl, MongoAddressesRepository } from '@app/server/modules/addresses'
 import { BalancesServiceImpl, MongoBalancesRepository } from '@app/server/modules/balances'
-import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blocks'
 import { BlockMetricsServiceImpl, MongoBlockMetricsRepository } from '@app/server/modules/block-metrics'
+import { BlocksServiceImpl, MongoBlockRepository } from '@app/server/modules/blocks'
 import { ContractsServiceImpl, MongoContractsRepository } from '@app/server/modules/contracts'
-import { CoinGeckoRepository, ExchangeServiceImpl } from '@app/server/modules/exchanges'
+import { ExchangeRepositoryImpl, ExchangeServiceImpl } from '@app/server/modules/exchanges'
 import { MongoPendingTxRepository, PendingTxServiceImpl } from '@app/server/modules/pending-txs'
+import { MongoProcessingMetadataRepository, ProcessingMetadataServiceImpl } from '@app/server/modules/processing-metadata'
 import { SearchServiceImpl } from '@app/server/modules/search'
 import { MongoStatisticsRepository, StatisticsServiceImpl } from '@app/server/modules/statistics'
 import { MongoTokensRepository, TokensServiceImpl } from '@app/server/modules/tokens'
 import { MongoTxsRepository, TxsServiceImpl } from '@app/server/modules/txs'
 import { MongoUncleRepository, UnclesServiceImpl } from '@app/server/modules/uncles'
 import { VmEngine } from '@app/server/modules/vm'
+import * as EventEmitter from 'eventemitter3'
 import { MongoClient } from 'mongodb'
 
 async function bootstrapServer() {
@@ -32,10 +34,7 @@ async function bootstrapServer() {
   // Create Blockchain data store
   logger.debug('bootstrapper -> Connecting MongoDB')
   const mongoUrl = config.get('data_stores.mongo_db.url')
-  const client = await MongoClient.connect(
-    mongoUrl,
-    { useNewUrlParser: true }
-  ).catch(() => process.exit(-1))
+  const client = await MongoClient.connect(mongoUrl, { useNewUrlParser: true }).catch(() => process.exit(-1))
 
   logger.debug('bootstrapper -> Selecting MongoDB database')
   const dbName = config.get('data_stores.mongo_db.db')
@@ -83,19 +82,21 @@ async function bootstrapServer() {
   const statisticsService = new StatisticsServiceImpl(statisticsRepository)
 
   // Exchanges
-  const exchangeRepository = new CoinGeckoRepository()
+  const exchangeRepository = new ExchangeRepositoryImpl(db)
   const exchangeService = new ExchangeServiceImpl(exchangeRepository)
 
   // Tokens
   const tokensRepository = new MongoTokensRepository(db)
-  const tokensService = new TokensServiceImpl(tokensRepository, vme)
+  const tokensService = new TokensServiceImpl(tokensRepository, exchangeRepository, vme)
+
+  // Processing Metadata Service
+  const processingMetadataRepository = new MongoProcessingMetadataRepository(db)
+  const processingMetadataService = new ProcessingMetadataServiceImpl(processingMetadataRepository)
 
   // Create streamer
   // ---------------
   logger.debug('bootstrapper -> Initializing streamer')
-  // const streamer = new MongoStreamer(db, new EventEmitter())
-  // await streamer.initialize()
-  const streamer = new NullStreamer()
+  const streamer = new MongoStreamer(db, new EventEmitter())
 
   // Create server
   logger.debug('bootstrapper -> Initializing server')
@@ -112,6 +113,7 @@ async function bootstrapServer() {
     exchangeService,
     searchService,
     tokensService,
+    processingMetadataService,
     streamer
   )
   await server.start()

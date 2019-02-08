@@ -140,3 +140,10 @@ topics:
     config:
       retention.ms: -1
       cleanup.policy: compact
+
+  - name: processing-metadata
+    replicationFactor: 1
+    partitions: 1
+    config:
+      retention.ms: -1
+      cleanup.policy: compact

@@ -1,9 +1,9 @@
 import { genericPayloadValidator } from '@app/server/core/validation'
 import { EthVMServer, SocketEvent, SocketEventValidationResult } from '@app/server/ethvm-server'
-import { Events, TokenExchangeRate } from 'ethvm-common'
+import { Events, ProcessingMetadata } from 'ethvm-common'
 
-const getTokenExchangeRates: SocketEvent = {
-  id: Events.getTokenExchangeRates,
+const getProcessingMetadata: SocketEvent = {
+  id: Events.getProcessingMetadata,
 
   onValidate: (server: EthVMServer, socket: SocketIO.Socket, payload: any): SocketEventValidationResult => {
     const valid = genericPayloadValidator(payload) as boolean
@@ -13,8 +13,8 @@ const getTokenExchangeRates: SocketEvent = {
     }
   },
 
-  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<TokenExchangeRate[]> =>
-    server.exchangesService.getTokenExchangeRates(payload.limit, payload.page)
+  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<ProcessingMetadata | null> =>
+    server.processingMetadataService.getMetadata(payload.id)
 }
 
-export default getTokenExchangeRates
+export default getProcessingMetadata
