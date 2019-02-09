@@ -58,7 +58,7 @@ export class EthvmSocketIoApi implements EthvmApi {
   }
 
   public getBlockByNumber(no: number): Promise<Block | null> {
-    return this.promisify(Events.getBlockByNumber, { no }).then(raw => (raw !== null ? new Block(raw) : null))
+    return this.promisify(Events.getBlockByNumber, { number: no }).then(raw => (raw !== null ? new Block(raw) : null))
   }
 
   public getBlocksMinedOfAddress(address: string, limit: number = 100, page: number = 0): Promise<Block[]> {
