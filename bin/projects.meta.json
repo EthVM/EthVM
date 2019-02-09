@@ -16,31 +16,32 @@
       "id": "explorer",
       "dockerfile": "${APPS_PATH}/explorer/Dockerfile",
       "context": "${APPS_PATH}/",
-      "version": "${APPS_PATH}/explorer/package.json"
+      "version": "${APPS_PATH}/explorer/package.json",
+      "targets": ["development", "staging", "production"]
     },
     {
       "id": "kafka-connect",
-      "dockerfile": "${DOCKER_IMAGES_PATH}/kafka-connect/Dockerfile",
-      "context": "${DOCKER_IMAGES_PATH}/kafka-connect/",
-      "version": "${DOCKER_IMAGES_PATH}/kafka-connect/version.properties"
+      "dockerfile": "${APPS_PATH}/processing/kafka-connect/Dockerfile",
+      "context": "${APPS_PATH}/processing",
+      "version": "${APPS_PATH}/processing/version.properties"
     },
     {
-      "id": "kafka-ethvm-utils",
-      "dockerfile": "${DOCKER_IMAGES_PATH}/kafka-ethvm-utils/Dockerfile",
-      "context": "${DOCKER_IMAGES_PATH}/kafka-ethvm-utils",
-      "version": "${DOCKER_IMAGES_PATH}/kafka-ethvm-utils/version.properties"
+      "id": "ethvm-utils",
+      "dockerfile": "${DOCKER_IMAGES_PATH}/ethvm-utils/Dockerfile",
+      "context": "${DOCKER_IMAGES_PATH}/ethvm-utils",
+      "version": "${DOCKER_IMAGES_PATH}/ethvm-utils/version.properties"
+    },
+    {
+      "id": "kafka-streams",
+      "dockerfile": "${APPS_PATH}/processing/kafka-streams/Dockerfile",
+      "context": "${APPS_PATH}/processing",
+      "version": "${APPS_PATH}/processing/version.properties"
     },
     {
       "id": "mongodb-dev",
       "dockerfile": "${DOCKER_IMAGES_PATH}/mongodb-dev/Dockerfile",
       "context": "${DOCKER_IMAGES_PATH}/mongodb-dev",
       "version": "${DOCKER_IMAGES_PATH}/mongodb-dev/version.properties"
-    },
-    {
-      "id": "mongodb-ethvm-utils",
-      "dockerfile": "${DOCKER_IMAGES_PATH}/mongodb-ethvm-utils/Dockerfile",
-      "context": "${DOCKER_IMAGES_PATH}/mongodb-ethvm-utils/",
-      "version": "${DOCKER_IMAGES_PATH}/mongodb-ethvm-utils/version.properties"
     },
     {
       "id": "mongodb-install",
@@ -53,6 +54,12 @@
       "dockerfile": "${DOCKER_IMAGES_PATH}/zookeeper/Dockerfile",
       "context": "${DOCKER_IMAGES_PATH}/zookeeper/",
       "version": "${DOCKER_IMAGES_PATH}/zookeeper/version.properties"
+    },
+    {
+      "id": "traefik",
+      "dockerfile": "${DOCKER_IMAGES_PATH}/traefik/Dockerfile",
+      "context": "${DOCKER_IMAGES_PATH}/traefik/",
+      "version": "${DOCKER_IMAGES_PATH}/traefik/version.properties"
     }
   ]
 }

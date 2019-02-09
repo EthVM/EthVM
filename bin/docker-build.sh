@@ -3,7 +3,7 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # import utils
-source ${SCRIPT_DIR}/utils.sh
+source ${SCRIPT_DIR}/env.sh
 
 # verify we have required utilities installed
 ensure
@@ -37,9 +37,27 @@ build() {
   local dockerfile=$(eval echo -e $(jq -r '.dockerfile' <<< "$1"))
   local context=$(eval echo -e $(jq -r '.context' <<< "$1"))
   local raw_version=$(eval echo -e $(jq -r '.version' <<< "$1"))
+  local targets=$(eval echo -e $(jq -r '.targets[]?' <<< "$1"))
   local version=$(to_version "${raw_version}")
 
-  docker build -t "${ORG}/${name}:${version}" -f "${dockerfile}" "${context}"
+  if [[ ! -z "${targets}" ]]; then
+
+    for target in ${targets}
+    do
+
+      echo "Building target ${target}"
+
+      cmd="build -t ${ORG}/${name}:${version}-${target} -f ${dockerfile} --build-arg TARGET=${target}"
+      docker ${cmd} ${context}
+    done
+
+  else
+
+    cmd="build -t ${ORG}/${name}:${version} -f ${dockerfile}"
+    docker ${cmd} ${context}
+
+  fi
+
 }
 
 # push - sends the built docker image to the registered registry
@@ -47,8 +65,22 @@ push() {
   local name=$(jq -r '.id' <<< "$1")
   local raw_version=$(eval echo -e $(jq -r '.version' <<< "$1"))
   local version=$(to_version $raw_version)
+  local targets=$(eval echo -e $(jq -r '.targets[]?' <<< "$1"))
 
-  docker push "${ORG}/${name}:${version}"
+  if [[ ! -z "${targets}" ]]; then
+
+    for target in ${targets}
+    do
+      echo "Pushing target ${target}"
+      cmd="push ${ORG}/${name}:${version}-${target}"
+      docker ${cmd}
+    done
+
+  else
+      cmd="push ${ORG}/${name}:${version}"
+      docker ${cmd}
+  fi
+
 }
 
 process_subcommand() {

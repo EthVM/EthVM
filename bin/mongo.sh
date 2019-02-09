@@ -3,7 +3,7 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # import utils
-source ${SCRIPT_DIR}/utils.sh
+source ${SCRIPT_DIR}/env.sh
 
 # verify we have required utilities installed
 ensure
@@ -24,14 +24,15 @@ kafka_usage() {
   echo ""
 }
 
-# init - lists registered Kafka topics
-init() {
-  docker-compose exec -T mongodb mongo --eval "rs.initiate()"
-  sleep 5
-  local raw_version_path=$(jq -car '.projects[] | select(.id=="mongodb-ethvm-utils") | .version' $PROJECTS_PATH)
+read_version() {
+  local raw_version_path=$(jq -car '.projects[] | select(.id=="ethvm-utils") | .version' $PROJECTS_PATH)
   local version_path=$(eval "echo -e ${raw_version_path}")
-  local version=$(to_version "${version_path}")
-  docker run --rm --network ethvm_back -e MONGODB_URL='mongodb://mongodb:27017/ethvm_local' enkryptio/mongodb-ethvm-utils:${version}
+  echo $(to_version "${version_path}")
+}
+
+init() {
+  local version=$(read_version)
+  docker run --rm --network ethvm_back -e MONGO_URL=mongodb://mongodb:27017/ethvm_local enkryptio/ethvm-utils:${version} mongo init
 }
 
 # create_dump - creates a MongoDB dump file

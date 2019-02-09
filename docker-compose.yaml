@@ -78,13 +78,11 @@ services:
     restart: unless-stopped
     volumes:
       - mongodb-volume:/data/db
-      - ./docker/config/mongo/mongod.conf:/etc/mongod.conf
       - ./datasets:/datasets
     networks:
       - back
     ports:
       - 27017:27017
-    command: "mongod --config /etc/mongod.conf --bind_ip 0.0.0.0 --replSet rs0 --quiet --slowms 10000"
     labels:
       - "traefik.enable=true"
       - "traefik.default.protocol=http"
@@ -123,7 +121,7 @@ services:
     environment:
       KAFKA_ADVERTISED_HOST_NAME: "kafka-1"
       KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka-1:9091"
-      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_ZOOKEEPER_CONNECT:
       KAFKA_BROKER_ID: 1
       KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
@@ -131,7 +129,6 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
-      KAFKA_MESSAGE_MAX_BYTES: "2000000000"
     mem_limit: 4g
 
   kafka-schema-registry:
@@ -190,8 +187,8 @@ services:
       CONNECT_STATUS_STORAGE_TOPIC: "kafka-connect-avro-status"
       CONNECT_KEY_CONVERTER: "io.confluent.connect.avro.AvroConverter"
       CONNECT_VALUE_CONVERTER: "io.confluent.connect.avro.AvroConverter"
-      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: "http://kafka-schema-registry:8081"
-      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: "http://kafka-schema-registry:8081"
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: ${KAFKA_SCHEMA_REGISTRY_URL}
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: ${KAFKA_SCHEMA_REGISTRY_URL}
       CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_REST_ADVERTISED_HOST_NAME: "kafka-connect"
@@ -214,11 +211,11 @@ services:
     ports:
       - 8082:8082
     environment:
-      KAFKA_REST_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_REST_ZOOKEEPER_CONNECT: ${KAFKA_ZOOKEEPER_CONNECT}
       KAFKA_REST_LISTENERS: http://0.0.0.0:8082/
-      KAFKA_REST_SCHEMA_REGISTRY_URL: http://kafka-schema-registry:8081/
+      KAFKA_REST_SCHEMA_REGISTRY_URL: ${KAFKA_SCHEMA_REGISTRY_URL}
       KAFKA_REST_HOST_NAME: kafka-rest-proxy
-      KAFKA_REST_BOOTSTRAP_SERVERS: PLAINTEXT://kafka-1:9091
+      KAFKA_REST_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP_SERVERS}
     depends_on:
       - kafka-1
       - kafka-schema-registry

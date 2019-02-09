@@ -20,6 +20,7 @@ import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Contracts
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.PendingTransactions
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.TokenExchangeRates
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.TokenTransfers
+import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.ProcessingMetadata
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Transactions
 import io.enkrypt.kafka.connect.sinks.mongo.MongoCollections.Uncles
 import io.enkrypt.kafka.connect.utils.Versions
@@ -66,6 +67,7 @@ class MongoSinkTask : SinkTask() {
       PendingTransactions to db.getCollection(PendingTransactions.id, clazz),
       BlockMetrics to db.getCollection(BlockMetrics.id, clazz),
       AggregateBlockMetrics to db.getCollection(AggregateBlockMetrics.id, clazz),
+      ProcessingMetadata to db.getCollection(ProcessingMetadata.id, clazz),
       AccountMetadata to db.getCollection(AccountMetadata.id, clazz),
       TokenExchangeRates to db.getCollection(TokenExchangeRates.id, clazz)
     )
@@ -137,6 +139,7 @@ enum class MongoCollections(val id: String) {
   Balances("balances"),
   BlockMetrics("block_metrics"),
   PendingTransactions("pending_transactions"),
+  ProcessingMetadata("processing_metadata"),
   AccountMetadata("account_metadata"),
   TokenExchangeRates("token_exchange_rates")
 }
@@ -464,6 +467,32 @@ enum class KafkaTopics(
     }
 
     mapOf(MongoCollections.AggregateBlockMetrics to writes)
+  }),
+
+  ProcessingMetdata("processing-metadata", { record: SinkRecord ->
+
+    require(record.keySchema().type() == Schema.Type.STRUCT) { "Key schema must be a struct" }
+
+    var writes = listOf<WriteModel<BsonDocument>>()
+
+    val idBson = StructToBsonConverter.convert(record.key() as Struct, "").getString("name")
+    val idFilter = BsonDocument().apply { append("_id", idBson) }
+
+    if (record.value() == null) {
+
+      // tombstone received so we need to delete
+      writes += DeleteOneModel(idFilter)
+    } else {
+
+      require(record.valueSchema().type() == Schema.Type.STRUCT) { "Value schema must be a struct" }
+
+      val struct = record.value() as Struct
+      var bson = StructToBsonConverter.convert(struct, "processingMetadata")
+
+      writes += ReplaceOneModel(idFilter, bson, MongoSinkTask.replaceOptions)
+    }
+
+    mapOf(MongoCollections.ProcessingMetadata to writes)
   }),
 
   AddressTxCounts("address-tx-counts", { record: SinkRecord ->

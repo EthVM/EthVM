@@ -10,6 +10,7 @@ export interface ExchangeRepository {
   getQuote(token: string, to: string): Promise<Quote>
   getTokenExchangeRates(limit: number, page: number): Promise<TokenExchangeRate[]>
   getTokenExchangeRate(symbol: string): Promise<TokenExchangeRate | null>
+  getTokenExchangeRateByAddress(address: string): Promise<TokenExchangeRate | null>
 }
 
 export class ExchangeRepositoryImpl extends BaseMongoDbRepository implements ExchangeRepository {
@@ -48,7 +49,14 @@ export class ExchangeRepositoryImpl extends BaseMongoDbRepository implements Exc
   public getTokenExchangeRate(symbol: string): Promise<TokenExchangeRate | null> {
     return this.db
       .collection(MongoEthVM.collections.tokenExchangeRates)
-      .findOne({ symbol })
+      .findOne({ _id: symbol })
+      .then(res => (res ? toTokenExchangeRate(res) : null))
+  }
+
+  public getTokenExchangeRateByAddress(address: string): Promise<TokenExchangeRate | null> {
+    return this.db
+      .collection(MongoEthVM.collections.tokenExchangeRates)
+      .findOne({ address })
       .then(res => (res ? toTokenExchangeRate(res) : null))
   }
 }
