@@ -1,17 +1,15 @@
 <template>
-  <v-card transparent flat width="350">
+  <v-card transparent flat width="360">
 
     <v-layout row align-center justify-space-around fill-height pa-3>
-
-      <button flat class="bttnGrey info--text text-capitalize bttn" small>{{ $t('bttn.first') }}</button>
-      <button flat class="bttnGrey info--text text-capitalize bttn" small><v-icon class="secondary--text" small>fas fa-angle-left</v-icon> </button>
+      <v-btn flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('first')" small>{{ $t('bttn.first') }}</v-btn>
+      <v-btn flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('prev')"small><v-icon class="secondary--text" small>fas fa-angle-left</v-icon> </v-btn>
       <div class="page-input">
-        <v-text-field v-model="pageInput" :mask="inputMask" :placeholder="newPH" :rulles="inputRulles" class="centered-input body-1 secondary--text"></v-text-field>
+        <v-text-field v-model="pageInput" :mask="inputMask" :placeholder="newPH" :error="!valid(pageInput)" :class="validClass" ></v-text-field>
       </div>
       <p class="total-text info--text">out of {{total}} </p>
-      <button flat class="bttnGrey info--text text-capitalize bttn" small><v-icon class="secondary--text" small>fas fa-angle-right</v-icon> </button>
-      <button flat class="bttnGrey info--text text-capitalize bttn" small>{{ $t('bttn.last') }}</button>
-
+      <v-btn flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('next')" small><v-icon class="secondary--text" small>fas fa-angle-right</v-icon> </v-btn>
+      <v-btn flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('last')" small>{{ $t('bttn.last') }}</v-btn>
     </v-layout>
   </v-card>
 </template>
@@ -21,13 +19,12 @@ import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import _debounce from 'lodash.debounce'
 @Component
 export default class AppPaginate extends Vue {
-  //@Prop(Number) total!: button
+  @Prop(Number) total!: number
 
-
-  total = 10000
   page = 1
   pageInput = this.page
-  validInput = true
+  validClass = 'center-input body-1 secondary--text'
+  invalidClass = 'center-input body-1 error--text'
 
   //Methods
 
@@ -41,25 +38,44 @@ export default class AppPaginate extends Vue {
     }
   }
 
+  setPageOnClick(_value: string): void {
+    switch(_value){
+      case 'first':
+        this.page = 1
+        break
+      case 'prev':
+        if(this.valid(this.page - 1)) {
+          this.page -= 1
+        }
+        break
+      case 'next':
+        if(this.valid(this.page + 1)){
+          this.page +=1
+        }
+        break
+      case 'last':
+        this.page = this.total
+        break
+      default:
+        break
+    }
+    this.pageInput = this.page
+  }
+
   // Watch
   @Watch('pageInput')
   onPageInputChanged(newVal: number, oldVal: number): void {
-    let setNewPage = _debounce(this.setPage, 1500)
+    let setNewPage = _debounce(this.setPage, 500)
     setNewPage()
   }
 
   @Watch('page')
   onPageChanged(newVal: number, oldVal: number): void {
+    console.log(newVal)
     this.$emit('page',  newVal - 1)
   }
 
   //Computed
-  get inputRulles() {
-    return [
-      (input) => !!input || 'Page is required',
-      (input) => this.valid(input) || "Invalid page number"
-    ]
-  }
 
   get inputMask(): string {
     let mask = "#"
@@ -78,16 +94,17 @@ export default class AppPaginate extends Vue {
 
 <style scoped lang="css">
 
-.bttn{
-  width: 48px;
-  height: 32px;
+.v-btn {
+  height: 30px;
+  min-width: 45px;
+  margin: 0
 }
 
 .page-input{
-  width: 1000px;
+  width: 45px;
 }
 
-.centered-input input {
+.center-input {
   text-align: center
 }
 

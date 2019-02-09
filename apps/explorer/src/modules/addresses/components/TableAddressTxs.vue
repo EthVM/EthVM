@@ -42,7 +42,7 @@
           </v-flex>
           <v-flex xs12 md8>
             <!-- <v-layout v-if="pages > 1" justify-end row class="pb-2"><v-pagination v-model="page" flat :length="pages" :total-visible="7"/></v-layout> -->
-            <app-paginate />
+            <app-paginate :page="page" :total="pages" @newPage="setPage"/>
           </v-flex>
         </v-layout>
       </v-flex>
@@ -83,6 +83,11 @@ export default class TableAddressTxs extends Vue {
   selected = 0
   filter = ['all', 'in', 'out']
 
+  /*Methods: */
+  setPage(_value: number): void{
+    this.page = _value
+  }
+
   /*Watch: */
   @Watch('selected')
   onSelectedChanged(newVal: number, oldVal: number): void {
@@ -92,6 +97,7 @@ export default class TableAddressTxs extends Vue {
 
   @Watch('page')
   onPageChanged(newVal: number, oldVal: number): void {
+    console.log
     this.$emit('filter', this.filter[this.selected], newVal - 1)
   }
 
