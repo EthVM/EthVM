@@ -20,14 +20,7 @@ export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepo
       .skip(start)
       .limit(limit)
       .toArray()
-      .then(resp => {
-        const t: Tx[] = []
-        if (!resp) {
-          return t
-        }
-        resp.forEach(tx => t.push(toTx(tx)))
-        return t
-      })
+      .then(resp => resp ? resp.map(tx => toTx(tx)) : [])
   }
 
   public getTxsOfBlock(hash: string): Promise<Tx[]> {
@@ -35,26 +28,14 @@ export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepo
       .collection(MongoEthVM.collections.transactions)
       .find({ blockHash: hash })
       .toArray()
-      .then(resp => {
-        const t: Tx[] = []
-        if (!resp) {
-          return t
-        }
-        resp.forEach(tx => t.push(toTx(tx)))
-        return t
-      })
+      .then(resp => resp ? resp.map(tx => toTx(tx)) : [])
   }
 
   public getTx(hash: string): Promise<Tx | null> {
     return this.db
       .collection(MongoEthVM.collections.transactions)
       .findOne({ hash })
-      .then(resp => {
-        if (!resp) {
-          return null
-        }
-        return toTx(resp)
-      })
+      .then(resp => resp ? toTx(resp) : null)
   }
 
   public getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<Tx[]> {
@@ -78,25 +59,13 @@ export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepo
       .skip(start)
       .limit(limit)
       .toArray()
-      .then(resp => {
-        const t: Tx[] = []
-        if (!resp) {
-          return t
-        }
-        resp.forEach(tx => t.push(toTx(tx)))
-        return t
-      })
+      .then(resp => resp ? resp.map(tx => toTx(tx)) : [])
   }
 
   public getAddressTotalTxs(hash: string): Promise<number> {
     return this.db
       .collection(MongoEthVM.collections.transactions)
       .countDocuments({ $or: [{ from: hash }, { to: hash }] })
-      .then(resp => {
-        if (!resp) {
-          return 0
-        }
-        return resp
-      })
+      .then(resp => resp ? resp : 0)
   }
 }

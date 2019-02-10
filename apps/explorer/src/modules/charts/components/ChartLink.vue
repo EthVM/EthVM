@@ -16,7 +16,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component
-export default class AppChartLink extends Vue {
+export default class ChartLink extends Vue {
   @Prop({ type: String, required: true }) title!: string
   @Prop({ type: String, required: true }) chartId!: string
 }

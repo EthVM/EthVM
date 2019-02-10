@@ -73,12 +73,6 @@ export class MongoStatisticsRepository extends BaseMongoDbRepository implements 
       .find({ $and: [{ name: event }, { date: { $gte: start.getTime() } }, { date: { $lte: end.getTime() } }] })
       .sort({ date: -1 })
       .toArray()
-      .then(resp => {
-        if (!resp) {
-          return []
-        }
-
-        return resp.map(r => toStatistic(r))
-      })
+      .then(resp => resp ? resp.map(r => toStatistic(r)) : [])
   }
 }

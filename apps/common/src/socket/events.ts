@@ -18,9 +18,6 @@ export const Events = {
   NEW_TX: "NEW_TX",
   NEW_UNCLE: "NEW_UNCLE",
 
-  pastTxsR: "PAST_TXS_RECEIVED",
-  pastBlocksR: "PAST_BLOCKS_RECEIVED",
-
   // Addresses
   getAddressBalance: "get-address-balance",
   getAddressTokenBalance: "get-address-token-balance",

@@ -17,7 +17,7 @@ export interface State {
   uncles: FIFO<Uncle>
 }
 
-export const StateImpl: State = {
+export const FIFOState: State = {
   blocks: new FIFO<Block>(MAX_BLOCKS, processBlocks),
   blockMetrics: new FIFO<BlockMetrics>(MAX_BLOCKS_METRICS, processBlockMetrics),
   txs: new FIFO<Tx>(MAX_TXS, processTxs),

@@ -11,11 +11,6 @@ export class MongoBalancesRepository extends BaseMongoDbRepository implements Ba
     return this.db
       .collection(MongoEthVM.collections.balances)
       .findOne({ address: hash })
-      .then(resp => {
-        if (!resp) {
-          return null
-        }
-        return toBalance(resp)
-      })
+      .then(resp => resp ? toBalance(resp) : null)
   }
 }

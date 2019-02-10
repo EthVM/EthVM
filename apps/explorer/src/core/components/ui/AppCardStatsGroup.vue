@@ -52,7 +52,7 @@ export default class AppInfoCardGroup extends Vue {
 
   // Lifecycle
   created() {
-    const lastBlockMetric = this.$store.getters.blockMetrics[0]
+    const lastBlockMetric = this.$store.getters.blockMetrics.top()
     if (lastBlockMetric) {
       this.setBlockMetric(lastBlockMetric)
       this.startCount()
@@ -61,7 +61,7 @@ export default class AppInfoCardGroup extends Vue {
 
   mounted() {
     this.$eventHub.$on(Events.NEW_BLOCK_METRIC, _ => {
-      const lastBlockMetric = this.$store.getters.blockMetrics[0]
+      const lastBlockMetric = this.$store.getters.blockMetrics.top()
       if (lastBlockMetric) {
         this.setBlockMetric(lastBlockMetric)
         this.startCount()
@@ -136,7 +136,7 @@ export default class AppInfoCardGroup extends Vue {
   }
 
   get latestHashRate(): string {
-    return !this.loading ? this.getRoundNumber(this.getAvgHashRate(this.$store.getters.blockMetrics).toString()).toString() : this.loadingMessage
+    return !this.loading ? this.getRoundNumber(this.getAvgHashRate(this.$store.getters.blockMetrics.items()).toString()).toString() : this.loadingMessage
   }
 
   get latestDifficulty(): string {
