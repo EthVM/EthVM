@@ -26,32 +26,32 @@
 </template>
 
 <script lang="ts">
-import Chart from 'chart.js'
+import ChartJs from 'chart.js'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { Footnote } from '@app/core/components/props'
 import { ChartData } from '@app/modules/charts/props'
 
-Chart.defaults.global = Object.assign(Chart.defaults.global, {
+ChartJs.defaults.global = Object.assign(ChartJs.defaults.global, {
   defaultFontFamily: "'Open Sans', 'sans-serif'",
   defaultFontStyle: '200'
 })
 
-Chart.defaults.global.title = Object.assign(Chart.defaults.global.title, {
+ChartJs.defaults.global.title = Object.assign(ChartJs.defaults.global.title, {
   display: false
 })
 
-Chart.defaults.global.tooltips = Object.assign(Chart.defaults.global.tooltips, {
+ChartJs.defaults.global.tooltips = Object.assign(ChartJs.defaults.global.tooltips, {
   titleFontStyle: '400',
   backgroundColor: '#686868'
 })
 
-Chart.defaults.global.legend = Object.assign(Chart.defaults.global.legend, {
+ChartJs.defaults.global.legend = Object.assign(ChartJs.defaults.global.legend, {
   display: false
 })
 
-Chart.defaults.global.layout = Object.assign(Chart.defaults.global.layout, {
+ChartJs.defaults.global.layout = Object.assign(ChartJs.defaults.global.layout, {
   padding: {
     left: 5,
     right: 5,
@@ -60,12 +60,12 @@ Chart.defaults.global.layout = Object.assign(Chart.defaults.global.layout, {
   }
 })
 
-Chart.defaults.global.elements.point = Object.assign(Chart.defaults.global.elements.point, {
+ChartJs.defaults.global.elements.point = Object.assign(ChartJs.defaults.global.elements.point, {
   hoverRadius: 6,
   borderWidth: 1
 })
 
-Chart.defaults.doughnut.animation = Object.assign(Chart.defaults.doughnut.animation, {
+ChartJs.defaults.doughnut.animation = Object.assign(ChartJs.defaults.doughnut.animation, {
   animateRotate: true
 })
 
@@ -131,7 +131,7 @@ export default class AppChart extends Vue {
 
   /*Methods: */
   createChart() {
-    this.chart = new Chart(this.$refs.chart, {
+    this.chart = new ChartJs(this.$refs.chart, {
       type: this.type,
       data: this.data,
       options: this.options

@@ -11,12 +11,7 @@ export class MongoContractsRepository extends BaseMongoDbRepository implements C
     return this.db
       .collection(MongoEthVM.collections.contracts)
       .findOne({ '_id': hash })
-      .then(resp => {
-        if (!resp) {
-          return null
-        }
-        return resp
-      })
+      .then(resp => resp ? resp : null)
   }
 
   public getContractsCreatedBy(hash: string, limit: number, page: number): Promise<Contract[]> {
@@ -27,11 +22,6 @@ export class MongoContractsRepository extends BaseMongoDbRepository implements C
       .skip(start)
       .limit(limit)
       .toArray()
-      .then(resp => {
-        if (!resp) {
-          return []
-        }
-        return resp
-      })
+      .then(resp => resp ? resp : [])
   }
 }

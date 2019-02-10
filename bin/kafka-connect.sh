@@ -3,7 +3,7 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # import utils
-source ${SCRIPT_DIR}/utils.sh
+source ${SCRIPT_DIR}/env.sh
 
 # verify we have required utilities installed
 ensure
@@ -45,17 +45,6 @@ read_version() {
   echo $(to_version "${version_path}")
 }
 
-# register_sinks  - lists registered Kafka topics
-register_sinks () {
-  local version=$(read_version)
-  docker run --rm --network ethvm_back enkryptio/kafka-ethvm-utils:${version} register-sinks
-}
-
-register_sources() {
-  local version=$(read_version)
-  docker run --rm --network ethvm_back enkryptio/kafka-ethvm-utils:${version} register-sources
-}
-
 reset() {
   docker-compose exec kafka-1 sh -c "kafka-consumer-groups --bootstrap-server kafka-1:9091 --execute --reset-offsets --group connect-enkryptio-mongo-sink --to-earliest --all-topics"
 }
@@ -65,8 +54,6 @@ run() {
 
   case "${command}" in
     build-connector)   build_connector             ;;
-    register-sinks)    register_sinks              ;;
-    register-sources)  register_sources            ;;
     reset)             reset                       ;;
     help|*)            kafka_connect_usage; exit 0 ;;
   esac

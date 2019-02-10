@@ -1,6 +1,7 @@
 import { Block, PendingTx, Tx, Uncle } from '@app/core/models'
 import { State } from '@app/core/store/state'
 import { BlockMetrics } from 'ethvm-common'
+import { FIFO } from '@app/core/store/utils'
 
 export default {
   all: (state: State): State => state,
@@ -11,7 +12,7 @@ export default {
   blockByNumber: (state: State) => (n: number): Block | null => state.blocks.items().find(block => block.getNumber() === n),
 
   // Block Metrics
-  blockMetrics: (state: State): BlockMetrics[] => state.blockMetrics.items(),
+  blockMetrics: (state: State): FIFO<BlockMetrics> => state.blockMetrics,
 
   // Txs
   txs: (state: State): Tx[] => state.txs.items(),

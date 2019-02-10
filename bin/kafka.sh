@@ -3,7 +3,7 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # import utils
-source ${SCRIPT_DIR}/utils.sh
+source ${SCRIPT_DIR}/env.sh
 
 # verify we have required utilities installed
 ensure
@@ -33,7 +33,10 @@ read_version() {
 # create_topics - create EthVM Kafka topics
 create_topics() {
   local version=$(read_version)
-  docker run --rm --network ethvm_back -e KAFKA_BROKERS=1 enkryptio/kafka-ethvm-utils:${version} create-topics
+  docker run --rm --network ethvm_back \
+    -e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 \
+    -e KAFKA_BOOTSTRAP_SERVERS=kafka-1:9091 \
+    enkryptio/ethvm-utils:${version} ensure-topics
 }
 
 # list_topics - lists registered Kafka topics
@@ -51,7 +54,7 @@ run() {
   local command="${1:-false}"
 
   case "${command}" in
-    create-topics) create_topics       ;;
+    ensure-topics) create_topics       ;;
     list-topics)   list_topics         ;;
     reset-streams)  reset_streams      ;;
     help|*)        kafka_usage; exit 0 ;;

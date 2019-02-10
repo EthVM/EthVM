@@ -1,0 +1,61 @@
+################################################################
+# Global configuration
+################################################################
+
+debug = {{ .Env.DEBUG }}
+logLevel = "{{ .Env.LOG_LEVEL }}"
+
+defaultEntryPoints = ["https", "http"]
+
+[entryPoints]
+
+  [entryPoints.traefik]
+  address = ":8080"
+  compress = true
+
+  [entryPoints.http]
+  address = ":80"
+  compress = true
+    [entryPoints.http.redirect]
+    entrypoint = "https"
+
+  [entryPoints.https]
+  address = ":443"
+  compress = true
+
+    [entryPoints.https.tls]
+
+[retry]
+
+################################################################
+# Docker configuration backend
+################################################################
+
+[docker]
+endpoint = "unix:///var/run/docker.sock"
+watch = true
+exposedByDefault = false
+swarmMode = {{ .Env.SWARM_MODE }}
+
+################################################################
+# Let's encrypt
+################################################################
+
+[acme]
+email = "{{ .Env.ACME_EMAIL }}"
+storage = "{{ .Env.ACME_STORAGE }}"
+onHostRule = true
+acmeLogging = true
+entryPoint = "https"
+
+  [acme.httpChallenge]
+  entryPoint = "http"
+
+################################################################
+# Traefik dashboard
+################################################################
+
+[api]
+entryPoint = "traefik"
+dashboard = true
+debug = false

@@ -39,7 +39,8 @@ object TestModules {
         "dummy:1234",
         "earliest",
         "transaction-1",
-        "http://foo.com"
+        "http://foo.com",
+        "/tmp/kafka-streams"
       )
     }
 

@@ -50,7 +50,6 @@ export default class PageHome extends Vue {
     this.$api.getBlocks(MAX_ITEMS, 0).then(blocks => {
       this.$store.commit(Events.NEW_BLOCK, blocks)
       if (blocks && blocks.length > 0) {
-        this.$eventHub.$emit(Events.pastBlocksR)
         this.$eventHub.$emit(Events.NEW_BLOCK, blocks[0])
       }
     })
@@ -58,7 +57,6 @@ export default class PageHome extends Vue {
     this.$api.getTxs(MAX_ITEMS, 0).then(txs => {
       this.$store.commit(Events.NEW_TX, txs)
       if (txs && txs.length > 0) {
-        this.$eventHub.$emit(Events.pastTxsR)
         this.$eventHub.$emit(Events.NEW_TX, txs[0])
       }
     })

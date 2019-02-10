@@ -9,7 +9,7 @@ import io.enkrypt.common.extensions.setAmount
 import java.math.BigInteger
 import java.nio.file.Paths
 
-object ERC20Abi : AbstractAbi(Paths.get(ERC20Abi::class.java.getResource("/abi/erc20.json").toURI())) {
+object ERC20Abi : AbstractAbi(ERC20Abi::class.java.getResourceAsStream("/abi/erc20.json")) {
 
   private const val FUNCTION_TOTAL_SUPPLY = "totalSupply"
   private const val FUNCTION_BALANCE_OF = "balanceOf"

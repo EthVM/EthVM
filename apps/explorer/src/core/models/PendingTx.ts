@@ -1,42 +1,46 @@
-import { EthValue } from '@app/core/models'
+import { EthValue, Hex } from '@app/core/models'
 import { PendingTx as RawPendingTx } from 'ethvm-common'
 
 export class PendingTx {
   public readonly id: string
-  private cache: any
+  private cache: any = {}
 
   constructor(private readonly pTx: RawPendingTx) {
-    this.cache = {}
+    this.id = new Hex(this.pTx.hash).toString()
   }
 
-  public getID(): string {
+  public getId(): string {
     return this.pTx.hash
   }
 
   public getHash(): string {
-    if (!this.cache.to) {
-      this.cache.to = '' // TODO get from mongo
-    }
-    return this.cache.to
+    return this.id
   }
 
-  public getTo(): string {
-    if (!this.cache.to) {
-      this.cache.to = this.pTx.to
-    }
-    return this.cache.to
-  }
-
-  public getFrom(): string {
+  public getFrom(): Hex {
     if (!this.cache.from) {
-      this.cache.from = this.pTx.from
+      this.cache.from = new Hex(this.pTx.from)
     }
     return this.cache.from
   }
 
-  public getGasPrice(): number {
+  public getTo(): Hex {
+    if (!this.cache.to) {
+      this.cache.to = new Hex(this.pTx.to || '')
+    }
+    return this.cache.to
+  }
+
+  public getValue(): EthValue {
+    if (!this.cache.ethValue) {
+      this.cache.ethValue = new EthValue(this.pTx.value)
+    }
+    return this.cache.ethValue
+  }
+
+  public getGasPrice(): EthValue {
     if (!this.cache.gasPrice) {
-      this.cache.gasPrice = this.pTx.gasPrice
+      this.cache.gasPrice = new EthValue(this.pTx.gasPrice)
     }
     return this.cache.gasPrice
   }
@@ -55,38 +59,14 @@ export class PendingTx {
     return this.cache.contractAddress
   }
 
-  public getNonce(): string {
+  public getNonce(): Hex {
     if (!this.cache.nonce) {
-      this.cache.nonce = this.pTx.nonce
+      this.cache.nonce = new Hex(this.pTx.nonce)
     }
-    return this.cache.hexNumber
+    return this.cache.nonce
   }
 
-  public getValue(): EthValue {
-    if (!this.cache.ethValue) {
-      this.cache.ethValue = new EthValue(this.pTx.value)
-    }
-    return this.cache.ethValue
-  }
-
-  public getV(): number {
-    if (!this.cache.v) {
-      this.cache.v = this.pTx.v
-    }
-    return this.cache.v
-  }
-
-  public getR(): number {
-    if (!this.cache.r) {
-      this.cache.r = this.pTx.r
-    }
-    return this.cache.r
-  }
-
-  public getS(): number {
-    if (!this.cache.s) {
-      this.cache.s = this.pTx.s
-    }
-    return this.cache.s
+  public getTimestamp(): Date {
+    return new Date(this.pTx.timestamp * 1000)
   }
 }

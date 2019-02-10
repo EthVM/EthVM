@@ -1,6 +1,18 @@
 import { EthvmApi } from '@app/core/api'
 import { Block, PendingTx, Tx, Uncle } from '@app/core/models'
-import { AddressBalance, AddressMetadata, BlockMetrics, Contract, Events, Quote, Statistic, Token, TokenTransfer, TokenExchangeRate } from 'ethvm-common'
+import {
+  AddressBalance,
+  AddressMetadata,
+  BlockMetrics,
+  Contract,
+  Events,
+  Quote,
+  Statistic,
+  Token,
+  TokenTransfer,
+  TokenExchangeRate,
+  ProcessingMetadata
+} from 'ethvm-common'
 
 export class EthvmSocketIoApi implements EthvmApi {
   constructor(private readonly io: SocketIOClient.Socket) {}
@@ -46,7 +58,7 @@ export class EthvmSocketIoApi implements EthvmApi {
   }
 
   public getBlockByNumber(no: number): Promise<Block | null> {
-    return this.promisify(Events.getBlockByNumber, { no }).then(raw => (raw !== null ? new Block(raw) : null))
+    return this.promisify(Events.getBlockByNumber, { number: no }).then(raw => (raw !== null ? new Block(raw) : null))
   }
 
   public getBlocksMinedOfAddress(address: string, limit: number = 100, page: number = 0): Promise<Block[]> {
@@ -91,6 +103,14 @@ export class EthvmSocketIoApi implements EthvmApi {
 
   public getTokenExchangeRates(limit: number, page: number): Promise<TokenExchangeRate[]> {
     return this.promisify(Events.getTokenExchangeRates, { limit, page })
+  }
+
+  public getTokenExchangeRateBySymbol(symbol: string): Promise<TokenExchangeRate | null> {
+    return this.promisify(Events.getTokenExchangeRateBySymbol, { symbol })
+  }
+
+  public getTokenExchangeRateByAddress(address: string): Promise<TokenExchangeRate | null> {
+    return this.promisify(Events.getTokenExchangeRateByAddress, { address })
   }
 
   // ------------------------------------------------------------------------------------
@@ -197,6 +217,16 @@ export class EthvmSocketIoApi implements EthvmApi {
     return this.promisify(Events.search, { hash: input })
   }
 
+  // ------------------------------------------------------------------------------------
+  // Processing Metadata
+  // ------------------------------------------------------------------------------------
+  public getProcessingMetadata(ev: string): Promise<ProcessingMetadata | null> {
+    return this.promisify(Events.getProcessingMetadata, { id: ev })
+  }
+
+  // ------------------------------------------------------------------------------------
+  // Private Methods
+  // ------------------------------------------------------------------------------------
   private promisify(event: string, payload: any): Promise<any> {
     return new Promise((resolve, reject) => {
       this.io.emit(event, payload, (err, result) => (err ? reject(err) : resolve(result)))

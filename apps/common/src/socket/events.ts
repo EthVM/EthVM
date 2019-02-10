@@ -13,12 +13,10 @@ export const Events = {
   NEW_BLOCK: "NEW_BLOCK",
   NEW_PENDING_TX: "NEW_PENDING_TX",
   NEW_BLOCK_METRIC: "NEW_BLOCK_METRIC",
+  NEW_PROCESSING_METADATA: 'NEW_PROCESSING_METADATA',
 
   NEW_TX: "NEW_TX",
   NEW_UNCLE: "NEW_UNCLE",
-
-  pastTxsR: "PAST_TXS_RECEIVED",
-  pastBlocksR: "PAST_BLOCKS_RECEIVED",
 
   // Addresses
   getAddressBalance: "get-address-balance",
@@ -65,6 +63,8 @@ export const Events = {
   // Exchange
   getExchangeRates: "get-exchange-rates",
   getTokenExchangeRates: "get-token-exchange-rates",
+  getTokenExchangeRateBySymbol: "get-token-exchange-rate-by-symbol",
+  getTokenExchangeRateByAddress: "get-token-exchange-rate-by-address",
 
   // Search
   search: "search",
@@ -81,8 +81,16 @@ export const Events = {
   getAverageBlockTimeStats: "get-average-block-time-stats",
   getAverageNumberOfUnclesStats: "get-average-number-of-uncles",
   getAverageHashRateStats: "get-average-hash-rate-stats",
-  getAverageMinerRewardsStats: "get-average-miner-rewards-stats"
+  getAverageMinerRewardsStats: "get-average-miner-rewards-stats",
 
+  // Processing Metadata
+  getProcessingMetadata: "get-processing-metadata"
 }
 
-export const SocketDefaultRooms = ["blocks", "pending-txs", "block-metrics"]
+export const SocketRooms = {
+  DefaultRooms: ["blocks", "pending-txs", "block-metrics", "processing-metadata"],
+  Blocks: 'blocks',
+  PendingTxs: 'pending-txs',
+  BlockMetrics: 'block-metrics',
+  ProcessingMetadata: 'processing-metadata'
+}

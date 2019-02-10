@@ -79,7 +79,8 @@
     "marketCap": "Market Cap",
     "age": "Age",
     "quantity": "Quantity",
-    "percentage": "Percentage"
+    "percentage": "Percentage",
+    "unclePosition": "Uncle Position"
   },
   "filter": {
     "view": "View",

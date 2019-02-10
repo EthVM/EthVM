@@ -3,12 +3,14 @@ package io.enkrypt.kafka.streams.utils
 import arrow.core.Option
 import io.enkrypt.avro.common.Data32
 import io.enkrypt.common.extensions.byteBuffer
+import org.apache.commons.compress.utils.IOUtils
 import org.ethereum.solidity.Abi
+import java.io.InputStream
 import java.nio.ByteBuffer
 import java.nio.file.Files
 import java.nio.file.Path
 
-abstract class AbstractAbi protected constructor(path: Path) {
+abstract class AbstractAbi protected constructor(input: InputStream) {
 
   private val abi: Abi
 
@@ -19,7 +21,7 @@ abstract class AbstractAbi protected constructor(path: Path) {
     try {
 
       // load in the abi
-      val json = String(Files.readAllBytes(path))
+      val json = String(IOUtils.toByteArray(input))
       this.abi = Abi.fromJson(json)
 
       // index the functions

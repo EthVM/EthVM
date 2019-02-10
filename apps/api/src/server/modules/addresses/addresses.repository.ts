@@ -10,11 +10,6 @@ export class MongoAddressesRepository extends BaseMongoDbRepository implements A
     return this.db
       .collection(MongoEthVM.collections.accountMetadata)
       .findOne({ _id: hash })
-      .then(resp => {
-        if (!resp) {
-          return null
-        }
-        return resp
-      })
+      .then(resp => resp ? resp : null)
   }
 }
