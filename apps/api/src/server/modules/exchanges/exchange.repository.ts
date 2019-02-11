@@ -36,14 +36,7 @@ export class ExchangeRepositoryImpl extends BaseMongoDbRepository implements Exc
       .skip(start)
       .limit(limit)
       .toArray()
-      .then(resp => {
-        const r: TokenExchangeRate[] = []
-        if (!resp) {
-          return r
-        }
-        resp.forEach(e => r.push(toTokenExchangeRate(e)))
-        return r
-      })
+      .then(resp => resp ? resp.map(e => toTokenExchangeRate(e)) : [])
   }
 
   public getTokenExchangeRate(symbol: string): Promise<TokenExchangeRate | null> {

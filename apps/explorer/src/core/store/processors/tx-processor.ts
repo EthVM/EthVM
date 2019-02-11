@@ -11,6 +11,6 @@ const dedup = (tx: Tx, pastTxs: Tx[]): Tx[] => {
 
 export const processTxs = (tx: Tx, pastTxs: Tx[]): Tx[] => {
   const txs = dedup(tx, pastTxs)
-  txs.unshift(tx)
+  txs.push(tx)
   return txs
 }

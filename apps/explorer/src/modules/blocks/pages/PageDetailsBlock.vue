@@ -17,7 +17,7 @@
         </v-card>
       </v-flex>
     </v-layout>
-    <app-error v-else :page-type="listType" :reference="blockRef" />
+    <app-error v-if="error" :page-type="listType" :reference="blockRef" />
   </v-container>
 </template>
 
@@ -34,8 +34,6 @@ import ethUnits from 'ethereumjs-units'
 import Bn from 'bignumber.js'
 import { eth } from '@app/core/helper'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
-
-// TODO: Display error message if block is not valid or doesn't exist
 
 @Component({
   components: {
@@ -73,6 +71,7 @@ export default class PageDetailsBlock extends Vue {
     // 1. Check that current block ref is valid one
     if (!eth.isValidHash(ref) && !eth.isValidBlockNumber(ref)) {
       this.error = true
+      this.loading = false
       return
     }
 

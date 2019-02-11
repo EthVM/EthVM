@@ -12,8 +12,6 @@ export declare const Events: {
     NEW_PROCESSING_METADATA: string;
     NEW_TX: string;
     NEW_UNCLE: string;
-    pastTxsR: string;
-    pastBlocksR: string;
     getAddressBalance: string;
     getAddressTokenBalance: string;
     getAddressTokenTransfers: string;

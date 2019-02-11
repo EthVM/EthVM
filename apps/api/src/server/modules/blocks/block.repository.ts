@@ -15,12 +15,7 @@ export class MongoBlockRepository extends BaseMongoDbRepository implements Block
     return this.db
       .collection(MongoEthVM.collections.blocks)
       .findOne({ 'header.hash': hash })
-      .then(resp => {
-        if (!resp) {
-          return null
-        }
-        return toBlock(resp)
-      })
+      .then(resp => resp ? toBlock(resp) : null)
   }
 
   public getBlocks(limit: number, page: number): Promise<Block[]> {
@@ -32,44 +27,26 @@ export class MongoBlockRepository extends BaseMongoDbRepository implements Block
       .skip(start)
       .limit(limit)
       .toArray()
-      .then(resp => {
-        const b: Block[] = []
-        if (!resp) {
-          return b
-        }
-        resp.forEach(block => b.unshift(toBlock(block)))
-        return b
-      })
+      .then(resp => resp ? resp.map(block => toBlock(block)) : [])
   }
 
   public getBlockByNumber(no: number): Promise<Block | null> {
     return this.db
       .collection(MongoEthVM.collections.blocks)
       .findOne({ 'header.number': no })
-      .then(resp => {
-        if (!resp) {
-          return null
-        }
-        return toBlock(resp)
-      })
+      .then(resp => resp ? toBlock(resp) : null)
   }
 
   public getBlocksMined(address: string, limit: number, page: number): Promise<Block[]> {
+    const start = page * limit
     return this.db
       .collection(MongoEthVM.collections.blocks)
       .find({ 'header.author': address })
       .sort({ number: -1 })
-      .skip(page)
+      .skip(start)
       .limit(limit)
       .toArray()
-      .then(resp => {
-        const b: Block[] = []
-        if (!resp) {
-          return b
-        }
-        resp.forEach(block => b.unshift(toBlock(block)))
-        return b
-      })
+      .then(resp => resp ? resp.map(block => toBlock(block)) : [])
   }
 
   public getTotalNumberOfBlocks(): Promise<number> {

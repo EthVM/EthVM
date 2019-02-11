@@ -1,22 +1,24 @@
 export interface Log {
     address: string;
-    topics: Buffer[];
-    data: Buffer;
+    data: string;
+    topics: string[];
 }
-export interface Trace {
-    parentHash?: string;
-    hash?: string;
-    opcode?: string;
-    deep?: number;
-    index?: number;
-    rejected?: boolean;
-    from?: string;
-    to?: string;
-    value?: Buffer;
-    data?: Buffer;
-    gas?: number;
-    gasPrice?: number;
-    nonce?: Buffer;
+export interface InternalTx {
+    nonce: string;
+    parentHash: string;
+    blockHash: string;
+    blockNumber: string;
+    transactionIndex: number;
+    internalTransactionIndex: number;
+    from: string;
+    to: string;
+    value: string;
+    gasPrice: string;
+    gas: string;
+    input: string;
+    creates: string;
+    depth: number;
+    rejected: boolean;
 }
 export interface TxReceipt {
     blockHash: string;
@@ -25,9 +27,11 @@ export interface TxReceipt {
     cumulativeGasUsed: string;
     contractAddress: string;
     gasUsed: string;
+    logs: Log[];
     logsBloom: string;
     status: string;
     error: string;
+    internalTxs: InternalTx[];
 }
 export interface Tx {
     hash: string;

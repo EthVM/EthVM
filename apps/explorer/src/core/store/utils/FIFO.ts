@@ -1,4 +1,4 @@
-import { ItemProcessor } from '@app/core/store/utils'
+import { ItemProcessor } from '@app/core/store/processors'
 
 export class FIFO<T> {
   private arr: T[] = []
@@ -18,6 +18,11 @@ export class FIFO<T> {
 
   public top(): T {
     return this.arr[0]
+  }
+
+  public end(): T {
+    const last = this.arr.length > 0 ? this.arr.length - 1 : 0
+    return this.arr[last]
   }
 
   public remove(index: number) {
