@@ -52,11 +52,9 @@ export class PendingTx {
     return this.cache.gasLimit
   }
 
+  // TODO: Add proper contract address
   public getContractAddress(): string {
-    if (!this.cache.contractAddress) {
-      this.cache.contractAddress = this.pTx.contractAddress
-    }
-    return this.cache.contractAddress
+    return ''
   }
 
   public getNonce(): Hex {
