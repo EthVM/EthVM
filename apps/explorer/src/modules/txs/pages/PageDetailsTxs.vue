@@ -1,7 +1,7 @@
 <template>
   <v-container grid-list-lg class="mb-0">
     <app-bread-crumbs :new-items="crumbs" />
-    <v-layout v-if="!error && tx" row wrap justify-start class="mb-4">
+    <v-layout v-if="!error" row wrap justify-start class="mb-4">
       <v-flex xs12>
         <app-list-details :items="txDetails" :more-items="txMoreDetails" :details-type="listType" :loading="loading">
           <app-list-title slot="details-title" :list-type="listType" />
@@ -50,6 +50,7 @@ export default class PageDetailsTxs extends Vue {
     // 1. Check that current tx ref is valid one
     if (!eth.isValidHash(ref)) {
       this.error = true
+      this.loading = false
       return
     }
 
