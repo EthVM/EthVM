@@ -276,13 +276,12 @@ object StructToBsonConverter {
               if (bsonValue.isBinary && conversion != null) {
 
                 val bytes = (bsonValue as BsonBinary).data
-
-                bsonValue = when (conversion) {
-                  Hex -> BsonString(bytes.hex())
-                  UBigInt -> BsonDecimal128(Decimal128(bytes.unsignedBigInteger().toBigDecimal()))
-                  BigInt -> BsonDecimal128(Decimal128(bytes.bigInteger()!!.toBigDecimal()))
-                  else -> throw IllegalStateException("Illegal conversion value!")
-                }
+                  bsonValue = when (conversion) {
+                    Hex -> BsonString(bytes.hex())
+                    UBigInt -> BsonString(bytes.unsignedBigInteger().toString())
+                    BigInt -> BsonString(bytes.bigInteger().toString())
+                    else -> throw IllegalStateException("Illegal conversion value!")
+                  }
               }
 
               doc.append(fieldName, bsonValue)

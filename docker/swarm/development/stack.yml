@@ -131,7 +131,7 @@ services:
     volumes:
       - ethereumj:/backup
     environment:
-      JAVA_OPTS: '-server -Xss32m -Xms12G -Xmx24G -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:+UseG1GC -XX:-OmitStackTraceInFastThrow -Dkafka.enabled=true -Dkafka.schemaRegistryUrl=${KAFKA_SCHEMA_REGISTRY_URL} -Dkafka.bootstrapServers=${KAFKA_BOOTSTRAP_SERVERS} -Ddatabase.dir=/data/db -Dcache.stateCacheSize=4096 -Dcache.blockQueueSize=256 -Dcache.headerQueueSize=64 -Ddatabase.fromBackup=true -Ddatabase.backupDir=/backup'
+      JAVA_OPTS: '-server -Xss32m -Xms24G -Xmx24G -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:+UseG1GC -XX:PermSize=512m -XX:MaxGCPauseMillis=200 -XX:ParallelGCThreads=20 -XX:ConcGCThreads=5 -XX:InitiatingHeapOccupancyPercent=70 -XX:-OmitStackTraceInFastThrow -Dkafka.enabled=true -Dkafka.schemaRegistryUrl=${KAFKA_SCHEMA_REGISTRY_URL} -Dkafka.bootstrapServers=${KAFKA_BOOTSTRAP_SERVERS} -Ddatabase.dir=/data/db -Dcache.stateCacheSize=4096 -Dcache.blockQueueSize=256 -Dcache.headerQueueSize=64 -Ddatabase.fromBackup=true -Ddatabase.backupDir=/backup'
     deploy:
       resources:
         limits:

@@ -46,7 +46,7 @@ list_topics() {
 
 # TODO: reset_topics - reset registered Kafka topics (if any)
 reset_streams() {
-  docker-compose exec kafka-1 sh -c "kafka-streams-application-reset --zookeeper zookeeper:2181 --bootstrap-servers kafka-1:9091 --application-id blocks-processor --input-topics blocks,pending-transactions"
+  docker-compose exec kafka-1 sh -c "kafka-streams-application-reset --zookeeper zookeeper:2181 --bootstrap-servers kafka-1:9091 --application-id block-processor --input-topics blocks,pending-transactions"
   docker-compose exec kafka-1 sh -c "kafka-streams-application-reset --zookeeper zookeeper:2181 --bootstrap-servers kafka-1:9091 --application-id state-processor --input-topics fungible-token-movements,block-metrics-by-day,contract-creations,contract-destructions"
 }
 

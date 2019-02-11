@@ -1,8 +1,10 @@
 package io.enkrypt.kafka.connect.sinks.mongo
 
+
 import com.mongodb.MongoClient
+import com.mongodb.MongoClientURI
+import com.mongodb.MongoSocketException
 import com.mongodb.client.MongoCollection
-import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.DeleteOneModel
 import com.mongodb.client.model.ReplaceOneModel
 import com.mongodb.client.model.ReplaceOptions
@@ -27,6 +29,8 @@ import io.enkrypt.kafka.connect.utils.Versions
 import mu.KotlinLogging
 import org.apache.kafka.clients.consumer.OffsetAndMetadata
 import org.apache.kafka.common.TopicPartition
+import org.apache.kafka.common.errors.DisconnectException
+import org.apache.kafka.common.errors.RetriableException
 import org.apache.kafka.connect.data.Schema
 import org.apache.kafka.connect.data.Struct
 import org.apache.kafka.connect.sink.SinkRecord
@@ -42,19 +46,32 @@ class MongoSinkTask : SinkTask() {
 
   private val logger = KotlinLogging.logger {}
 
-  private lateinit var client: MongoClient
-  private lateinit var db: MongoDatabase
-  private lateinit var collections: Map<MongoCollections, MongoCollection<BsonDocument>>
+  private lateinit var uri: MongoClientURI
+
+  private var client: MongoClient? = null
+  private var collections: Map<MongoCollections, MongoCollection<BsonDocument>> = emptyMap()
+
+  private var backoffTimeoutMs: Long? = null
 
   override fun version() = Versions.CURRENT
 
   override fun start(props: MutableMap<String, String>) {
+    this.uri = MongoClientURI(MongoSinkConnector.Config.mongoUri(props))
+    ensureClient()
+  }
 
-    val uri = MongoSinkConnector.Config.mongoUri(props)
+  override fun stop() {
+    client?.close()
+  }
+
+  private fun ensureClient() {
+
+    if (client != null) return
+
     val databaseName = uri.database ?: throw IllegalArgumentException("Mongo URI does not contain a database name!")
 
     client = MongoClient(uri)
-    db = client.getDatabase(databaseName)
+    val db = client!!.getDatabase(databaseName)
 
     val clazz = BsonDocument::class.java
     collections = mapOf<MongoCollections, MongoCollection<BsonDocument>>(
@@ -71,52 +88,81 @@ class MongoSinkTask : SinkTask() {
       AccountMetadata to db.getCollection(AccountMetadata.id, clazz),
       TokenExchangeRates to db.getCollection(TokenExchangeRates.id, clazz)
     )
+
   }
 
-  override fun stop() {
-    client.close()
-  }
-
+  @Throws(RetriableException::class)
   override fun put(records: MutableCollection<SinkRecord>) {
 
-    // TODO use mongo transactions
+    try {
 
-    val elapsedMs = measureTimeMillis {
+      ensureClient()
 
-      val batch = mutableMapOf<MongoCollections, List<WriteModel<BsonDocument>>>()
+      // TODO use mongo transactions
 
-      logger.info { "Processing ${batch.size} records" }
+      val elapsedMs = measureTimeMillis {
 
-      records.forEach { record ->
-        KafkaTopics.forTopic(record.topic())(record)
-          .forEach { (collection, writes) ->
-            val mergedWrites = batch.getOrDefault(collection, emptyList()) + writes
-            batch += collection to mergedWrites
+        val batch = mutableMapOf<MongoCollections, List<WriteModel<BsonDocument>>>()
+
+        logger.info { "Processing ${batch.size} records" }
+
+        records.forEach { record ->
+          KafkaTopics.forTopic(record.topic())(record)
+            .forEach { (collection, writes) ->
+              val mergedWrites = batch.getOrDefault(collection, emptyList()) + writes
+              batch += collection to mergedWrites
+            }
+        }
+
+        batch
+          .filterValues { it.isNotEmpty() }
+          .map { (collectionId, writes) -> Pair(collectionId, writes.chunked(50)) }
+          .forEach { pair ->
+            val collectionId = pair.first
+            val collection = collections.getValue(collectionId)
+            val chunks = pair.second
+
+            logger.info { "Processing $collectionId collection with ${chunks.size} chunks" }
+
+            chunks.forEach {
+              val bulkWrite = collection.bulkWrite(it)
+              logger.info {
+                "Chunk write complete. Collection = $collectionId, inserts = ${bulkWrite.insertedCount}, " +
+                  "updates = ${bulkWrite.modifiedCount}, upserts = ${bulkWrite.upserts.size}, " +
+                  "deletes = ${bulkWrite.deletedCount}"
+              }
+            }
           }
       }
 
-      batch
-        .filterValues { it.isNotEmpty() }
-        .map { (collectionId, writes) -> Pair(collectionId, writes.chunked(200)) }
-        .forEach { pair ->
-          val collectionId = pair.first
-          val collection = collections.getValue(collectionId)
-          val chunks = pair.second
+      logger.info { "Batch processing completed in $elapsedMs ms" }
 
-          logger.info { "Processing $collectionId collection with ${chunks.size} chunks" }
+    } catch (e: MongoSocketException) {
 
-          chunks.forEach {
-            val bulkWrite = collection.bulkWrite(it)
-            logger.info {
-              "Chunk write complete. Collection = $collectionId, inserts = ${bulkWrite.insertedCount}, " +
-                "updates = ${bulkWrite.modifiedCount}, upserts = ${bulkWrite.upserts.size}, " +
-                "deletes = ${bulkWrite.deletedCount}"
-            }
-          }
-        }
+      // cleanup
+      client?.close()
+      client = null
+
+      // determine retry timeout
+
+      var backoffTimeoutMs = (this.backoffTimeoutMs ?: 1000L) * 2
+
+      if(backoffTimeoutMs > 30000) {
+        // cap at 30 seconds
+        backoffTimeoutMs = 30000
+      }
+
+      logger.warn { "Mongo socket exception detected. Waitin for $backoffTimeoutMs ms before retrying" }
+
+      // configure a delay before retry occurs
+      context.timeout(backoffTimeoutMs)
+
+      // record for next time
+      this.backoffTimeoutMs = backoffTimeoutMs
+
+      // instance of a retryable exception
+      throw DisconnectException(e)
     }
-
-    logger.info { "Batch processing completed in $elapsedMs ms" }
   }
 
   override fun flush(currentOffsets: MutableMap<TopicPartition, OffsetAndMetadata>?) {
@@ -126,6 +172,7 @@ class MongoSinkTask : SinkTask() {
 
     val updateOptions: UpdateOptions = UpdateOptions().upsert(true)
     val replaceOptions: ReplaceOptions = ReplaceOptions().upsert(true)
+
   }
 }
 
@@ -366,12 +413,18 @@ enum class KafkaTopics(
 
         val struct = record.value() as Struct
 
-        var bson = StructToBsonConverter.convert(struct, "balance")
+        try {
+          var bson = StructToBsonConverter.convert(struct, "balance")
 
-        // combine with id fields so we can query on them later
-        idBson.forEach { k, v -> bson = bson.append(k, v) }
 
-        writes += ReplaceOneModel(idFilter, bson, MongoSinkTask.replaceOptions)
+          // combine with id fields so we can query on them later
+          idBson.forEach { k, v -> bson = bson.append(k, v) }
+
+          writes += ReplaceOneModel(idFilter, bson, MongoSinkTask.replaceOptions)
+        } catch (e: NumberFormatException) {
+          System.err.println("Number format exception. Key = $idBson, value = ${record.value()}")
+          throw e
+        }
       }
     }
 

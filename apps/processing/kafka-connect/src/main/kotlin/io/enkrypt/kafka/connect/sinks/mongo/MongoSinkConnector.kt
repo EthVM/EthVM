@@ -45,9 +45,8 @@ class MongoSinkConnector : SinkConnector() {
     const val MONGO_URI_DOC = "Mongo uri for connecting to the mongo instance"
     const val MONGO_DEFAULT_URI_VALUE = "mongodb://localhost:27017/kafka"
 
-    fun mongoUri(props: MutableMap<String, String>): MongoClientURI {
-      val uri = props[MONGO_URI_CONFIG] ?: MONGO_DEFAULT_URI_VALUE
-      return MongoClientURI(uri).also { if (it.database == null) throw IllegalArgumentException("Mongo URI does not contain a database name!") }
+    fun mongoUri(props: MutableMap<String, String>): String {
+      return props[MONGO_URI_CONFIG] ?: MONGO_DEFAULT_URI_VALUE
     }
   }
 }
