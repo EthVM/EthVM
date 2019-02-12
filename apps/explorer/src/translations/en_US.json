@@ -90,6 +90,7 @@
   },
   "message": {
     "error": "Oops something went wrong, no data from server :(",
+    "err": "Error",
     "txAll": "This address does not have any transaction history",
     "txIn": "This address does not have incoming transactions",
     "txOut": "This address does not have outgoing transactions",
@@ -105,7 +106,8 @@
     "notMined": "This block has not been mined yet",
     "noTx": "This Transaction does not exist",
     "notValid": "This is not a valid ",
-    "sync": "We are synchronizing with the Blockchain. Some features might not work correctly."
+    "sync": "We are synchronizing with the Blockchain. Some features might not work correctly.",
+    "invalidAddress": "Invalid Address"
   },
   "block": {
     "height": "Height",
