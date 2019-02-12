@@ -311,7 +311,7 @@ export default class PageDetailsToken extends Vue {
         .getTokenExchangeRateByAddress(this.addressRef)
         .then(response => {
           if (response === null) {
-            reject('Invalid Address')
+            reject(this.$i18n.t('message.invalidAddress').toString())
           }
           resolve(response)
         })

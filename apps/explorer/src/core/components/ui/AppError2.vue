@@ -22,7 +22,7 @@ export default class AppError extends Vue {
   @Prop(String) message: string
 
   get errorText() {
-    return this.$i18n.t('message.err')
+    return this.$i18n.t('message.err').toString()
   }
 }
 </script>
