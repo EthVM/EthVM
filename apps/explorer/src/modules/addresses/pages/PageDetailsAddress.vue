@@ -37,7 +37,15 @@
         <!-- End Pending Transactions -->
         <!-- Mined Blocks -->
         <v-tab-item slot="tabs-item" v-if="account.isMiner" value="tab-3">
-          <table-blocks v-if="!minerBlocksError" :loading="minerBlocksLoading" :blocks="account.minedBlocks" :page-type="detailsType" :totalBlocks="minedTotal" :maxItems="max" @getBlockPage="setMinedPage"/>
+          <table-blocks
+            v-if="!minerBlocksError"
+            :loading="minerBlocksLoading"
+            :blocks="account.minedBlocks"
+            :page-type="detailsType"
+            :total-blocks="minedTotal"
+            :max-items="max"
+            @getBlockPage="setMinedPage"
+          />
           <app-error :server-error="minerBlocksError" v-else />
         </v-tab-item>
         <!-- End Mined Blocks -->

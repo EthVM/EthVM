@@ -5,8 +5,7 @@
         <v-card-title class="title font-weight-bold pb-1">{{ $t('title.uncles') }}</v-card-title>
       </v-flex>
       <v-flex xs12 sm6 v-if="pages > 1">
-        <v-layout justify-end class="pb-1 pr-2 pl-2"><app-paginate :total="pages" @newPage="setPage" :newPage="page"/>
-        </v-layout>
+        <v-layout justify-end class="pb-1 pr-2 pl-2"><app-paginate :total="pages" @newPage="setPage" :new-page="page" /> </v-layout>
       </v-flex>
     </v-layout>
 
@@ -41,8 +40,7 @@
           </v-flex>
         </v-layout>
       </v-card>
-      <v-layout justify-end v-if="pages > 1" class="pr-2 pl-2"><app-paginate :total="pages" @newPage="setPage" :newPage="page"/>
-      </v-layout>
+      <v-layout justify-end v-if="pages > 1" class="pr-2 pl-2"><app-paginate :total="pages" @newPage="setPage" :new-page="page" /> </v-layout>
     </div>
     <app-error v-else :server-error="error" />
   </v-card>
@@ -76,7 +74,7 @@ export default class TableUncles extends Vue {
   @Prop(Number) maxItems!: number
 
   pageType = 'uncles'
-  page=1
+  page = 1
 
   /*Methods: */
   setPage(_value: number): void {
@@ -86,7 +84,7 @@ export default class TableUncles extends Vue {
   /*Watch: */
   @Watch('page')
   onPageChanged(newVal: number, oldVal: number): void {
-    this.$emit('getUnclePage',  newVal - 1)
+    this.$emit('getUnclePage', newVal - 1)
   }
   /* Computed: */
   get style(): string {

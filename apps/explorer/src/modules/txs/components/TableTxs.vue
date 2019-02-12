@@ -10,9 +10,9 @@
           <v-btn outline color="secondary" class="text-capitalize" to="/txs">{{ $t('bttn.viewAll') }}</v-btn>
         </v-layout>
       </v-flex>
-      <v-flex v-else xs12 sm7 md6 >
-        <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2" >
-          <app-paginate :total="pages" @newPage="setPage" :newPage="page"/>
+      <v-flex v-else xs12 sm7 md6>
+        <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2">
+          <app-paginate :total="pages" @newPage="setPage" :new-page="page" />
         </v-layout>
       </v-flex>
     </v-layout>
@@ -48,8 +48,8 @@
           </v-card>
         </v-flex>
       </v-layout>
-      <v-layout  v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2" >
-        <app-paginate :total="pages" @newPage="setPage" :newPage="page"/>
+      <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2">
+        <app-paginate :total="pages" @newPage="setPage" :new-page="page" />
       </v-layout>
     </v-card>
     <!-- Hadle error - No Txs History
@@ -96,7 +96,7 @@ export default class TableTxs extends Vue {
   /* Watch: */
   @Watch('page')
   onPageChanged(newVal: number, oldVal: number): void {
-    this.$emit('getTxsPage',  newVal - 1)
+    this.$emit('getTxsPage', newVal - 1)
   }
 
   /* Computed: */

@@ -37,13 +37,13 @@
       </v-flex>
       <v-flex xs12>
         <v-layout row wrap align-end>
-          <v-flex sm4 md3 hidden-xs-only >
-            <v-layout justify-start row class="pl-3 pb-1"><app-footnotes :footnotes="footnote" /></v-layout>
+          <v-flex sm4 md3 hidden-xs-only>
+            <v-layout justify-start row class="pl-3 pb-1"><app-footnotes :footnotes="footnote"/></v-layout>
           </v-flex>
-          <v-spacer/>
-          <v-flex xs12 sm7 md6 >
+          <v-spacer />
+          <v-flex xs12 sm7 md6>
             <v-layout justify-end row class="pb-1 pr-2 pl-2" v-if="pages > 1">
-              <app-paginate :total="pages" @newPage="setPage" :newPage="page"/>
+              <app-paginate :total="pages" @newPage="setPage" :new-page="page" />
             </v-layout>
           </v-flex>
         </v-layout>
@@ -52,9 +52,9 @@
     <!-- Tx Table Content -->
     <table-address-tx-row v-if="!loading" :transactions="txs" :account="address" :filter="selected" :type="isPending" />
     <app-info-load v-else />
-      <v-layout justify-end row class="pb-1 pr-2 pl-2" v-if="pages > 1">
-        <app-paginate :total="pages" @newPage="setPage" :newPage="page"/>
-      </v-layout>
+    <v-layout justify-end row class="pb-1 pr-2 pl-2" v-if="pages > 1">
+      <app-paginate :total="pages" @newPage="setPage" :new-page="page" />
+    </v-layout>
   </v-card>
 </template>
 
@@ -85,7 +85,6 @@ export default class TableAddressTxs extends Vue {
   page = 1
   selected = 0
   filter = ['all', 'in', 'out']
-
 
   /*Methods: */
   setPage(_value: number): void {

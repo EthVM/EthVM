@@ -11,7 +11,17 @@
     <!-- Mined Block, txs table -->
     <v-layout row wrap justify-start class="mb-4" v-if="!loading && !error">
       <v-flex v-if="txs" xs12>
-        <table-txs v-if="txs" :transactions="txsPage" :frame-txs="true" :page-type="listType" :loading="loading" class="mt-3" :maxItems="max" :totalTxs="totalTxs" @getTxsPage="setPageTxs"/>
+        <table-txs
+          v-if="txs"
+          :transactions="txsPage"
+          :frame-txs="true"
+          :page-type="listType"
+          :loading="loading"
+          class="mt-3"
+          :max-items="max"
+          :total-txs="totalTxs"
+          @getTxsPage="setPageTxs"
+        />
         <v-card v-if="txs.length === 0" flat color="white">
           <v-card-text class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }}</v-card-text>
         </v-card>
@@ -91,10 +101,10 @@ export default class PageDetailsBlock extends Vue {
   }
 
   // Methods:
-  setPageTxs(_page: number):void {
-    let start = (_page - 1) * this.max
-    let end =  (start + this.max)
-    this.txsPage = this.txs.slice( start, end)
+  setPageTxs(_page: number): void {
+    const start = (_page - 1) * this.max
+    const end = start + this.max
+    this.txsPage = this.txs.slice(start, end)
   }
   fetchBlock() {
     const promise = eth.isValidHash(this.blockRef) ? this.$api.getBlock(this.blockRef) : this.$api.getBlockByNumber(Number(this.blockRef))

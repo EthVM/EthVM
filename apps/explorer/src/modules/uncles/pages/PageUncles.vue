@@ -3,7 +3,7 @@
     <app-bread-crumbs :new-items="crumbs" />
     <v-layout row wrap justify-center mb-4>
       <v-flex xs12>
-        <table-uncles :uncles="uncles" page-type="uncles" :loading="loading" :totalUncles="total" @getUnclePage="getPage" :maxItems="max"/>
+        <table-uncles :uncles="uncles" page-type="uncles" :loading="loading" :total-uncles="total" @getUnclePage="getPage" :max-items="max" />
       </v-flex>
     </v-layout>
   </v-container>
@@ -32,33 +32,36 @@ export default class PageUncles extends Vue {
 
   // Lifecycle
   mounted() {
-    this.fetchTotalUncles().then(res => {
-      this.total = res
-    },
-    err => {
-      this.total = 0
-    })
+    this.fetchTotalUncles().then(
+      res => {
+        this.total = res
+      },
+      err => {
+        this.total = 0
+      }
+    )
     this.getPage(0)
   }
-
 
   // Methods
   getPage(_page): void {
     this.loading = true
-    this.fetchUncles(_page).then(res => {
-      this.uncles = (res)
-      this.loading = false
-    },
-    err => {
-      this.error=true
-    })
+    this.fetchUncles(_page).then(
+      res => {
+        this.uncles = res
+        this.loading = false
+      },
+      err => {
+        this.error = true
+      }
+    )
   }
   fetchUncles(page: number): Promise<Uncle[]> {
     return this.$api.getUncles(this.max, page)
   }
 
   fetchTotalUncles(): Promise<number> {
-     return this.$api.getTotalNumberOfUncles()
+    return this.$api.getTotalNumberOfUncles()
   }
 
   // Computed

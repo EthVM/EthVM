@@ -4,7 +4,7 @@
     <app-card-stats-group />
     <v-layout row wrap justify-center mb-4>
       <v-flex xs12>
-        <table-blocks :loading="loading" :blocks="blocks" :totalBlocks="total" :maxItems="max" @getBlockPage="getPage"/>
+        <table-blocks :loading="loading" :blocks="blocks" :total-blocks="total" :max-items="max" @getBlockPage="getPage" />
       </v-flex>
     </v-layout>
   </v-container>
@@ -17,7 +17,7 @@ import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
 import { Block } from '@app/core/models'
 import { Vue, Component, Mixins } from 'vue-property-decorator'
 
-const  MAX_ITEMS = 50
+const MAX_ITEMS = 50
 
 @Component({
   components: {
@@ -32,15 +32,16 @@ export default class PageBlocks extends Vue {
   error = false
   total = 0
 
-
   // Lifecycle
   mounted() {
-    this.fetchTotalBlocks().then(res => {
-      this.total = res
-    },
-    err => {
-      this.total = 0
-    })
+    this.fetchTotalBlocks().then(
+      res => {
+        this.total = res
+      },
+      err => {
+        this.total = 0
+      }
+    )
     this.getPage(0)
   }
 
@@ -50,19 +51,20 @@ export default class PageBlocks extends Vue {
   }
 
   fetchTotalBlocks(): Promise<number> {
-     return this.$api.getTotalNumberOfBlocks()
+    return this.$api.getTotalNumberOfBlocks()
   }
 
-  getPage(_page: number):void {
+  getPage(_page: number): void {
     this.loading = true
     this.fetchBlocks(_page).then(
-    res => {
-      this.loading = false
-      this.blocks = res
-    },
-    err => {
-      this.error=true
-    })
+      res => {
+        this.loading = false
+        this.blocks = res
+      },
+      err => {
+        this.error = true
+      }
+    )
   }
   // Computed
   get crumbs() {
