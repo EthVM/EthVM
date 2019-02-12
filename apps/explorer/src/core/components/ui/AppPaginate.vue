@@ -1,6 +1,7 @@
 <template>
-  <v-card transparent flat width="360">
-    <v-layout row align-center justify-space-around fill-height pa-3>
+  <v-card transparent flat min-width="240" max-width="320">
+    <v-container grid-list-xs pa-1>
+    <v-layout row align-center justify-space-between fill-height pa-1>
       <v-btn flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('first')" small>{{ $t('bttn.first') }}</v-btn>
       <v-btn flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('prev')" small
         ><v-icon class="secondary--text" small>fas fa-angle-left</v-icon>
@@ -8,12 +9,13 @@
       <div class="page-input">
         <v-text-field v-model="pageInput" :mask="inputMask" :placeholder="newPH" :error="!valid(pageInput)" :class="validClass"></v-text-field>
       </div>
-      <p class="total-text info--text">out of {{ total }}</p>
+      <p class="info--text">out of {{ total }}</p>
       <v-btn flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('next')" small
         ><v-icon class="secondary--text" small>fas fa-angle-right</v-icon>
       </v-btn>
       <v-btn flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('last')" small>{{ $t('bttn.last') }}</v-btn>
     </v-layout>
+    </v-container>
   </v-card>
 </template>
 
@@ -22,8 +24,9 @@ import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import _debounce from 'lodash.debounce'
 @Component
 export default class AppPaginate extends Vue {
-  @Prop(Number) total!: number
+  //@Prop(Number) total!: number
 
+  total = 9
   page = 1
   pageInput = this.page
   validClass = 'center-input body-1 secondary--text'
@@ -98,20 +101,17 @@ export default class AppPaginate extends Vue {
 
 .v-btn {
   height: 30px;
-  min-width: 45px;
+  min-width: 20px;
   margin: 0
 }
 
 .page-input{
-  width: 45px;
-}
-
-.center-input {
-  text-align: center
+  width: 80px;
 }
 
 p {
   margin: 0;
   padding: 0;
 }
+
 </style>
