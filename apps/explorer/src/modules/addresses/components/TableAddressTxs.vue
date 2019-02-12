@@ -52,8 +52,9 @@
     <!-- Tx Table Content -->
     <table-address-tx-row v-if="!loading" :transactions="txs" :account="address" :filter="selected" :type="isPending" />
     <app-info-load v-else />
-    <v-layout v-if="pages > 1" justify-end row class="pb-2"><v-pagination v-model="page" flat :length="pages" :total-visible="7"/></v-layout>
-    <!-- End Tx Table Content -->
+      <v-layout justify-end row class="pb-1 pr-2 pl-2" v-if="pages > 1">
+        <app-paginate :total="pages" @newPage="setPage" :newPage="page"/>
+      </v-layout>
   </v-card>
 </template>
 

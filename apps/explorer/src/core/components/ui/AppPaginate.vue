@@ -31,15 +31,6 @@ export default class AppPaginate extends Vue {
   validClass = 'center-input body-1 secondary--text'
   invalidClass = 'center-input body-1 error--text'
 
-
-  //Lifecycle:
-
-  mounted() {
-    if(this.newPage === 1){
-      this.page = 1
-      this.pageInput = 1
-    }
-  }
   //Methods
 
   valid(_page: number): boolean {
@@ -90,9 +81,8 @@ export default class AppPaginate extends Vue {
 
   @Watch('newPage')
   onNewPageChanged(newVal: number, oldVal: number): void {
-    if (this.newPage === 1) {
-      this.page = 1
-      this.pageInput = 1
+    if (this.newPage != this.page) {
+      this.pageInput = this.newPage
     }
   }
 
