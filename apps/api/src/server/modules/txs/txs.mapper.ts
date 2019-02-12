@@ -1,4 +1,20 @@
-import { Tx, TxReceipt } from 'ethvm-common'
+import { Tx, TxReceipt, InternalTx } from 'ethvm-common'
+
+const toInternalTx = (tx: any): InternalTx => {
+  if (tx.nonce) {
+    tx.nonce = tx.nonce.toString()
+  }
+  if (tx.value) {
+    tx.value = tx.value.toString()
+  }
+  if (tx.gasPrice) {
+    tx.gasPrice = tx.gasPrice.toString()
+  }
+  if (tx.gas) {
+    tx.gas = tx.gas.toString()
+  }
+  return tx
+}
 
 const toTxReceipt = (receipt: any): TxReceipt => {
   if (receipt.cumulativeGasUsed) {
@@ -6,6 +22,9 @@ const toTxReceipt = (receipt: any): TxReceipt => {
   }
   if (receipt.gasUsed) {
     receipt.gasUsed = receipt.gasUsed.toString()
+  }
+  if (receipt.internalTxs) {
+    receipt.internalTxs = receipt.internalTxs.map(itx => toInternalTx(itx))
   }
   return receipt
 }

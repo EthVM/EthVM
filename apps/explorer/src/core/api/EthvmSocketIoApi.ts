@@ -74,7 +74,7 @@ export class EthvmSocketIoApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
 
   public getBlockMetric(hash: string): Promise<BlockMetrics | null> {
-    return this.promisify(Events.getBlockMetric, {})
+    return this.promisify(Events.getBlockMetric, { hash })
   }
 
   public getBlockMetrics(limit: number, page: number): Promise<BlockMetrics[]> {
