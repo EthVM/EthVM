@@ -39,6 +39,7 @@ export default class AppPaginate extends Vue {
 
   setPage(): void {
     if (this.valid(this.pageInput)) {
+      console.log(this.pageInput)
       this.page = this.pageInput
     }
   }
