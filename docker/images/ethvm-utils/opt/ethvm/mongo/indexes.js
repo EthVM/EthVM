@@ -2,6 +2,7 @@ const indexes = {
 
   blocks: [
     {key: {'header.hash': 1}, options: {unique: true}},
+    {key: {'header.number': 1}},
     {key: {'header.author': 1}},
     {key: {'header.timestamp': 1}},
     {key: { totalDifficulty: 1 }}
@@ -32,7 +33,10 @@ const indexes = {
 
   transactions: [
     {key: {blockHash: 1}},
-    {key: {blockNumber: 1}}
+    {key: {blockNumber: 1}},
+    {key: {from: 1}},
+    {key: {to: 1}},
+    {key: {timestamp: 1}}
   ]
 
 };
