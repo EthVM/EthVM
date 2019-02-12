@@ -1,10 +1,10 @@
 <template>
   <v-app style="background: #f3f4f8;">
-    <the-navigation-drawer />
+    <the-navigation-drawer/>
     <v-content>
-      <app-sync-message v-if="isSyncing" />
-      <router-view :key="$route.path" />
-      <the-footer />
+      <app-sync-message v-if="isSyncing"/>
+      <router-view :key="$route.path"/>
+      <the-footer/>
     </v-content>
   </v-app>
 </template>
@@ -36,10 +36,8 @@ export default class App extends Vue {
 
     // Preload some previous block metrics
     this.$api.getBlockMetrics(MAX_ITEMS, 0).then(bms => {
-      if (bms && bms.length > 0) {
-        bms.forEach(bm => this.$store.commit(Events.NEW_BLOCK_METRIC, bms))
-        this.$eventHub.$emit(Events.NEW_BLOCK_METRIC, bms)
-      }
+      this.$store.commit(Events.NEW_BLOCK_METRIC, bms)
+      this.$eventHub.$emit(Events.NEW_BLOCK_METRIC, bms)
     })
   }
 
