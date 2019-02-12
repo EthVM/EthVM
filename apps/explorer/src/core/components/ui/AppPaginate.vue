@@ -79,12 +79,10 @@ export default class AppPaginate extends Vue {
   @Watch('page')
   onPageChanged(newVal: number, oldVal: number): void {
     this.$emit('newPage', newVal)
-    console.log('pagination page change', typeof  newVal)
   }
 
   @Watch('newPage')
   onNewPageChanged(newVal: number, oldVal: number): void {
-    console.log('old: ', oldVal, 'new: ', newVal)
     if (this.newPage != this.page) {
       this.pageInput = this.newPage
     }
