@@ -1,63 +1,65 @@
 <template>
   <v-container grid-list-lg>
+    <app-bread-crumbs :new-items="crumbs" />
     <!--
     =====================================================================================
-      ERROR
+      BASIC VIEW
+
+      Will show details if URL does NOT include query param "holder"
+      Shows details pertinent to the token as a whole, with no holder-specific information
     =====================================================================================
     -->
-    <div v-if="hasError">
-      <h1>ERROR: {{ error }}</h1>
+    <div v-if="!isHolder">
+      <token-details-list
+        :address-ref="addressRef"
+        :contract-details="contractDetails"
+        :token-details="tokenDetails"
+        :is-loading="isTokenDetailsListLoading"
+        :error="errorTokenDetailsList"
+      />
+      <token-details-tabs
+        :address-ref="addressRef"
+        :token-transfers="tokenTransfers"
+        :token-holders="tokenHolders"
+        :is-token-transfers-loading="isTokenTransfersLoading"
+        :is-token-holders-loading="isTokenHoldersLoading"
+        :error-token-transfers="errorTokenTransfersTab"
+        :error-token-holders="errorTokenHoldersTab"
+      />
     </div>
     <!--
     =====================================================================================
-      HOLDER DETAILS
+      HOLDER VIEW
+
+      Will show details if the URL DOES include query param "holder"
+      Shows holder details pertaining to particular token contract
     =====================================================================================
     -->
     <div v-if="isHolder">
-      <div v-if="!isLoading && !isHolderDetailsLoading">
-        <app-bread-crumbs :new-items="crumbs" />
-        <details-list-tokens-holder :contract="contract" :token="token" :holder="holderInfo" class="mb-5" />
-        <details-tabs-tokens-holder :transfers="holderTransactions" :address-ref="addressRef" />
-      </div>
-      <div v-else>
-        <v-layout v-if="!hasError" column align-center justify-center ma-3>
-          <v-card-title class="primary--text text-xs-center body-2 pb-4">Loading...</v-card-title>
-          <v-icon class="fa fa-spinner fa-pulse fa-4x fa-fw primary--text" large />
-        </v-layout>
-      </div>
-    </div>
-    <!--
-    =====================================================================================
-      BASIC DETAILS
-    =====================================================================================
-    -->
-    <div v-else>
-      <!-- Loaded -->
-      <div v-if="!isLoading">
-        <app-bread-crumbs :new-items="crumbs" />
-        <details-list-tokens :contract="contract" :token="token" class="mb-5" />
-        <details-tabs-tokens :transfers="temporaryTokenTransfers" :holders="tokenHolders" :address-ref="addressRef" />
-      </div>
-      <!-- End Loaded -->
-      <!-- Not Loaded -->
-      <div v-else>
-        <v-layout v-if="!hasError" column align-center justify-center ma-3>
-          <v-card-title class="primary--text text-xs-center body-2 pb-4">Loading...</v-card-title>
-          <v-icon class="fa fa-spinner fa-pulse fa-4x fa-fw primary--text" large />
-        </v-layout>
-      </div>
-      <!-- End Not Loaded -->
+      <holder-details-list
+        :address-ref="addressRef"
+        :contract-details="contractDetails"
+        :token-details="tokenDetails"
+        :holder-details="holderDetails"
+        :is-loading="isHolderDetailsListLoading"
+        :error="errorTokenDetailsList"
+      />
+      <holder-details-tabs
+        :address-ref="addressRef"
+        :holder-transfers="holderTransfers"
+        :is-holder-transfers-loading="isHolderTransfersLoading"
+        :error-holder-transfers="errorHolderTransfers"
+      />
     </div>
   </v-container>
 </template>
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-import AppSocialLink from '@app/core/components/ui/AppSocialLink.vue'
-import DetailsListTokens from '@app/modules/tokens/components/DetailsListTokens.vue'
-import DetailsListTokensHolder from '@app/modules/tokens/components/DetailsListTokensHolder.vue'
-import DetailsTabsTokens from '@app/modules/tokens/components/DetailsTabsTokens.vue'
-import DetailsTabsTokensHolder from '@app/modules/tokens/components/DetailsTabsTokensHolder.vue'
+import TokenDetailsList from '@app/modules/tokens/components/TokenDetailsList.vue'
+import TokenDetailsTabs from '@app/modules/tokens/components/TokenDetailsTabs.vue'
+import HolderDetailsList from '@app/modules/tokens/components/HolderDetailsList.vue'
+import HolderDetailsTabs from '@app/modules/tokens/components/HolderDetailsTabs.vue'
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 import { Events } from 'ethvm-common'
 import { Detail } from '@app/core/components/props'
@@ -68,26 +70,36 @@ const MAX_ITEMS = 10
 @Component({
   components: {
     AppBreadCrumbs,
-    DetailsListTokens,
-    DetailsListTokensHolder,
-    DetailsTabsTokens,
-    DetailsTabsTokensHolder
+    TokenDetailsList,
+    TokenDetailsTabs,
+    HolderDetailsList,
+    HolderDetailsTabs
   }
 })
 export default class PageDetailsToken extends Vue {
   @Prop({ type: String }) addressRef!: string
 
   address = '' // TEMP: Formatted address with "0x" removed from beginning
-  contract: any = {} // Contract details object
-  token: any = {} // Token details object
+
+  // Basic //
+  contractDetails: any = {} // Contract details object
+  tokenDetails: any = {} // Token details object
   tokenTransfers: any[] = [] // Array of token transfers
   tokenHolders: any[] = [] // Array of token holders
+  isTokenTransfersLoading = true // Can technically be empty array, so must be manually set
+  isTokenHoldersLoading = true // Can technically be empty array, so must be manually set
+  errorTokenDetailsList = '' // Error string pertaining to the TokenDetailsList component
+  errorTokenTransfersTab = '' // Error string pertaining to the TokenDetailsTabs -> Transfers component
+  errorTokenHoldersTab = '' // Error string pertaining to the TokenDetailsTabs -> Holders component
+
+  // Holder //
   isHolder = false // Whether or not "holder" is included in query params to display view accordingly
   holderAddress: any = '' // Address of current token holder, if applicable
-  holderTransactions: any[] = [] // Transactions for a particular holder address
-  holderInfo: any = {} // Balance/information for a particular holder address
-  hasError = false // Boolean whether or not page has errors to display
-  error = '' // Error message
+  holderDetails: any = {} // Balance/information for a particular holder address
+  holderTransfers: any[] = [] // Transactions for a particular holder address
+  isHolderTransfersLoading = true // Can technically be empty array, so must be manually set
+  errorHolderDetailsList = '' // Error string pertaining to the HolderDetailsList component
+  errorHolderTransfers = '' // Error string pertaining to the HolderDetailsTabs component
 
   /*
   ===================================================================================
@@ -95,99 +107,189 @@ export default class PageDetailsToken extends Vue {
   ===================================================================================
   */
 
-  mounted() {
-    this.fetchData()
+  /**
+   * Fetch all data relevant to the view.
+   * Additional data will be loaded/displayed if "holder" is included in the query parameters.
+   * Data is loaded in an async/await fashion for proper error handling.
+   */
+  async mounted() {
+    const query = this.$route.query
+
+    if (query.holder) {
+      this.isHolder = true
+      await this.loadBasicData()
+      await this.loadHolderData()
+    } else {
+      await this.loadBasicData()
+    }
   }
 
+  /**
+   * Watch $route/parameter changes.
+   * If route updates with query param "holder", then fetch additional information
+   * for that holder address.
+   */
   @Watch('$route', { deep: true })
   onRouteChange() {
     const query = this.$route.query
     if (query.holder) {
-      this.fetchHolderData()
+      this.loadHolderData()
     } else {
       this.isHolder = false
-      this.holderTransactions = []
-      this.holderInfo = {}
+      this.holderAddress = ''
+      this.holderDetails = {}
+      this.holderTransfers = []
+      this.isHolderTransfersLoading = false
     }
+    window.scrollTo(0, 0)
   }
 
   /*
   ===================================================================================
-    Methods
+    Methods - Load Data - Basic View
   ===================================================================================
   */
 
   /**
-   * Fetch all data relevant to the view. Data will be different if "holder"
-   * is included in the query parameters..
+   * Perform each method to load data required for every "basic view" component
    */
-  async fetchData() {
-    const query = this.$route.query
-    this.isHolder = false
+  loadBasicData() {
+    return new Promise((resolve, reject) => {
+      const tokenDetailsListPromise = this.loadTokenDetailsList()
+      const tokenDetailsTabsTransfersPromise = this.loadTokenDetailsTabsTransfers()
+      const tokenDetailsTabsHoldersPromise = this.loadTokenDetailsTabsHolders()
+      const promises = [tokenDetailsListPromise, tokenDetailsTabsTransfersPromise, tokenDetailsTabsHoldersPromise]
 
-    this.fetchNormalData()
-
-    if (query.holder) {
-      this.fetchHolderData()
-    }
+      Promise.all(promises).then(resolve)
+    })
   }
 
   /**
-   * Fetch all data required for a "basic" load
+   * Load all data required and handle errors for TokenDetailsList component
    */
-  fetchNormalData() {
+  loadTokenDetailsList() {
     return new Promise((resolve, reject) => {
-      const contractPromise = this.fetchContractDetails()
-      const tokenPromise = this.fetchTokenDetails()
-      const tokenTransfersPromise = this.fetchAddressTokensTransfers()
-      const tokenHoldersPromise = this.fetchTopTokenHolders()
-
-      const promises = [contractPromise, tokenPromise, tokenTransfersPromise, tokenHoldersPromise]
+      const contractDetailsPromise = this.fetchContractDetails()
+      const tokenDetailsPromise = this.fetchTokenDetails()
+      const promises = [contractDetailsPromise, tokenDetailsPromise]
 
       Promise.all(promises)
-        .then(([contract, token, tokenTransfers, tokenHolders]) => {
-          this.contract = contract
-          this.token = token
+        .then(([contractDetails, tokenDetails]) => {
+          this.contractDetails = contractDetails as any
+          this.tokenDetails = tokenDetails as any
+          resolve()
+        })
+        .catch(e => {
+          this.errorTokenDetailsList = `${e}`
+          resolve()
+        })
+    })
+  }
+
+  /**
+   * Load all data required and handle errors for the TokenDetailsTabs -> Transfers component
+   */
+  loadTokenDetailsTabsTransfers() {
+    return new Promise((resolve, reject) => {
+      const tokenTransfersPromise = this.fetchTokenTransfers()
+      const promises = [tokenTransfersPromise]
+
+      Promise.all(promises)
+        .then(([tokenTransfers]) => {
           this.tokenTransfers = tokenTransfers as any[]
+          resolve()
+        })
+        .catch(e => {
+          this.errorTokenTransfersTab = `${e}`
+          resolve()
+        })
+    })
+  }
+
+  /**
+   * Load all data required and handle errors for the TokenDetailsTabs -> Holders component
+   */
+  loadTokenDetailsTabsHolders() {
+    return new Promise((resolve, reject) => {
+      const tokenHoldersPromise = this.fetchTokenHolders()
+
+      Promise.all([tokenHoldersPromise])
+        .then(([tokenHolders]) => {
           this.tokenHolders = tokenHolders as any[]
           resolve()
         })
         .catch(e => {
-          // Handle error accordingly
-          this.hasError = true
-          this.error = 'Error loading data'
+          this.errorTokenHoldersTab = `${e}`
+          resolve()
+        })
+    })
+  }
+
+  /*
+  ===================================================================================
+    Methods - Fetch Data - Holder View
+  ===================================================================================
+  */
+
+  /**
+   * Load additional data required for a "holder view" load
+   */
+  loadHolderData() {
+    return new Promise((resolve, reject) => {
+      const query = this.$route.query
+      this.isHolder = true
+      this.holderAddress = query.holder
+      this.holderDetails = {}
+      this.holderTransfers = []
+      this.isHolderTransfersLoading = true
+
+      const holderDetailsListPromise = this.loadHolderDetailsList()
+      const holderDetailsTabsTransactionsPromise = this.loadHolderDetailsTabsTransactions()
+      const promises = [holderDetailsListPromise, holderDetailsTabsTransactionsPromise]
+
+      Promise.all(promises).then(resolve)
+    })
+  }
+
+  /**
+   * Load all data required and handle errors for the HolderDetailsList component
+   */
+  loadHolderDetailsList() {
+    return new Promise((resolve, reject) => {
+      const holderDetailsPromise = this.fetchHolderDetails()
+
+      Promise.all([holderDetailsPromise])
+        .then(([holderDetails]) => {
+          this.holderDetails = holderDetails as any
+        })
+        .catch(e => {
+          this.errorHolderDetailsList = `${e}`
         })
     })
   }
 
   /**
-   * Fetch all data required for a "holder" view
+   * Load all data required and handle errors for the HolderDetailsTabs -> Transactions component
    */
-  fetchHolderData() {
+  loadHolderDetailsTabsTransactions() {
     return new Promise((resolve, reject) => {
-      const query = this.$route.query
-      this.isHolder = true
-      this.holderAddress = query.holder
+      const holderTransfersPromise = this.fetchHolderTransfers()
 
-      const holderTransactionsPromise = this.fetchHolderTransactions()
-      const holderInfoPromise = this.fetchHolderInfo()
-
-      const promises = [holderTransactionsPromise, holderInfoPromise]
-
-      Promise.all(promises)
-        .then(([holderTransactions, holderInfo]) => {
-          this.holderTransactions = holderTransactions as any[]
-          this.holderInfo = holderInfo
-          // console.log(this.holderInfo)
-          resolve()
+      Promise.all([holderTransfersPromise])
+        .then(([holderTransfers]) => {
+          this.holderTransfers = holderTransfers as any[]
         })
         .catch(e => {
-          // Handle error accordingly
-          this.hasError = true
-          this.error = 'Error loading data'
+          this.errorHolderTransfers = `${e}`
         })
     })
   }
+
+  /*
+  ===================================================================================
+    Methods - Fetch Data - Individual Calls
+  ===================================================================================
+  */
 
   /**
    * Retrieve contract details for a the given token contract address.
@@ -195,34 +297,7 @@ export default class PageDetailsToken extends Vue {
    * @return {Object} - Contract details and metadata
    */
   fetchContractDetails() {
-    return new Promise((resolve, reject) => {
-      this.$api
-        .getContract(this.addressRef)
-        .then(result => {
-          resolve(result)
-        })
-        .catch(e => {
-          reject(e)
-        })
-    })
-  }
-
-  /**
-   * Retrieve array of token transfers for a given token contract address.
-   *
-   * @return {Array} - Array of token transfers
-   */
-  fetchAddressTokensTransfers(page = 0, limit = MAX_ITEMS) {
-    return new Promise((resolve, reject) => {
-      this.$api
-        .getAddressTokenTransfers(this.addressRef, limit, page)
-        .then(result => {
-          resolve(result)
-        })
-        .catch(e => {
-          reject(e)
-        })
-    })
+    return this.$api.getContract(this.addressRef)
   }
 
   /**
@@ -232,15 +307,57 @@ export default class PageDetailsToken extends Vue {
    */
   fetchTokenDetails() {
     return new Promise((resolve, reject) => {
-      this.$http
-        .get(`http://api.ethplorer.io/getTokenInfo/${this.addressRef}?apiKey=freekey&additional=image`)
+      this.$api
+        .getTokenExchangeRateByAddress(this.addressRef)
         .then(response => {
+          if (response === null) {
+            reject('Invalid Address')
+          }
+          resolve(response)
+        })
+        .catch(e => {
+          reject(e)
+        })
+    })
+  }
+
+  // /**
+  //  * Retrieve array of token transfers for a given token contract address.
+  //  *
+  //  * @return {Array} - Array of token transfers
+  //  */
+  // fetchTokenTransfers(page = 0, limit = MAX_ITEMS) {
+  //   return new Promise((resolve, reject) => {
+  //     this.$api
+  //       .getAddressTokenTransfers(this.addressRef, limit, page)
+  //       .then(result => {
+  //         resolve(result)
+  //       })
+  //       .catch(e => {
+  //         reject(e)
+  //       })
+  //   })
+  // }
+
+  /**
+   * Fetch latest [10] token transfers for a particular token contract
+   *
+   * @return {Array} - Array of token transfers/info
+   */
+  fetchTokenTransfers() {
+    return new Promise((resolve, reject) => {
+      this.isTokenTransfersLoading = true
+      this.$http
+        .get(`http://api.ethplorer.io/getTokenHistory/${this.addressRef}?apiKey=freekey&type=transfer&limit=10`)
+        .then(response => {
+          this.isTokenTransfersLoading = false
           if (response.data.error) {
             return reject(response.data.error.message)
           }
-          resolve(response.data)
+          resolve(response.data.operations)
         })
         .catch(err => {
+          this.isTokenTransfersLoading = false
           reject(err)
         })
     })
@@ -251,17 +368,20 @@ export default class PageDetailsToken extends Vue {
    *
    * @return {Array} - Array of holders
    */
-  fetchTopTokenHolders() {
+  fetchTokenHolders() {
     return new Promise((resolve, reject) => {
+      this.isTokenHoldersLoading = true
       this.$http
         .get(`http://api.ethplorer.io/getTopTokenHolders/${this.addressRef}?apiKey=freekey`)
         .then(response => {
+          this.isTokenHoldersLoading = false
           if (response.data.error) {
             return reject(response.data.error.message)
           }
           resolve(response.data.holders)
         })
         .catch(err => {
+          this.isTokenHoldersLoading = false
           reject(err)
         })
     })
@@ -272,7 +392,7 @@ export default class PageDetailsToken extends Vue {
    *
    * @return {Object} - Information object
    */
-  fetchHolderInfo() {
+  fetchHolderDetails() {
     return new Promise((resolve, reject) => {
       this.$http
         .get(`http://api.ethplorer.io/getAddressInfo/${this.holderAddress}?apiKey=freekey&token=${this.addressRef}`)
@@ -293,17 +413,20 @@ export default class PageDetailsToken extends Vue {
    *
    * @return {Array} - Array of transactions
    */
-  fetchHolderTransactions() {
+  fetchHolderTransfers() {
     return new Promise((resolve, reject) => {
+      this.isHolderTransfersLoading = true
       this.$http
         .get(`http://api.ethplorer.io/getAddressHistory/${this.holderAddress}?apiKey=freekey&token=${this.addressRef}&type=transfer`)
         .then(response => {
+          this.isHolderTransfersLoading = false
           if (response.data.error) {
             return reject(response.data.error.message)
           }
           resolve(response.data.operations)
         })
         .catch(err => {
+          this.isHolderTransfersLoading = false
           reject(err)
         })
     })
@@ -311,18 +434,9 @@ export default class PageDetailsToken extends Vue {
 
   /*
   ===================================================================================
-    Computed Values
+    Computed Values - Crumbs
   ===================================================================================
   */
-
-  /**
-   * Use txs in Vuex until api returns valid data.
-   *
-   * @return {Tx[]} - Array of recent transactions
-   */
-  get temporaryTokenTransfers(): Tx[] {
-    return this.$store.getters.txs
-  }
 
   /**
    * Returns breadcrumbs entry for this particular view.
@@ -331,176 +445,103 @@ export default class PageDetailsToken extends Vue {
    * @return {Array} - Breadcrumb entry. See description.
    */
   get crumbs() {
-    let crumbs
-    if (this.isHolder) {
-      crumbs = [
-        {
-          text: this.$i18n.t('title.tokens'),
-          link: '/tokens',
-          disabled: false
-        },
-        {
-          text: this.token.symbol,
-          link: `/token/${this.addressRef}`,
-          disabled: false
-        },
-        {
-          text: this.holderAddress,
-          link: '',
-          disabled: true
-        }
-      ]
-    } else {
-      crumbs = [
-        {
-          text: this.$i18n.t('title.tokens'),
-          link: '/tokens',
-          disabled: false
-        },
-        {
-          text: this.token.symbol,
-          link: `/token/${this.addressRef}`,
-          disabled: true
-        }
-      ]
-    }
-    return crumbs
+    return this.isHolder ? this.crumbsHolder : this.crumbsBasic
   }
 
   /**
-   * Determines whether or not the contract object has been loaded/populated
+   * Returns breadcrumbs for "holder" view
    *
-   * @return {Boolean}
+   * @return {Array} - Breadcrumb entry. See description.
    */
-  get isContractLoading(): boolean {
-    return Object.keys(this.contract).length === 0
+  get crumbsBasic() {
+    return [
+      {
+        text: this.$i18n.t('title.tokens'),
+        link: '/tokens',
+        disabled: false
+      },
+      {
+        text: this.isTokenDetailsLoading ? this.addressRef : this.tokenDetails.symbol.toUpperCase(),
+        link: `/token/${this.addressRef}`,
+        disabled: true
+      }
+    ]
   }
 
   /**
-   * Determines whether or not the token object has been loaded/populated
+   * Returns breadcrumbs for "basic" view
    *
-   * @return {Boolean}
+   * @return {Array} - Breadcrumb entry. See description.
    */
-  get isTokenLoading(): boolean {
-    return Object.keys(this.token).length === 0
-  }
-
-  /**
-   * Determines whether or not the transfers object has been loaded/populated
-   *
-   * @return {Boolean}
-   */
-  get isTransfersLoading(): boolean {
-    return this.temporaryTokenTransfers.length === 0
-  }
-
-  /**
-   * Determines whether or not the holders object has been loaded/populated
-   *
-   * @return {Boolean}
-   */
-  get isHoldersLoading(): boolean {
-    return this.tokenHolders.length === 0
-  }
-
-  /**
-   * Determines whether or not the holders transactions object has been loaded/populated
-   *
-   * @return {Boolean}
-   */
-  get isHolderTransactionsLoading(): boolean {
-    return this.holderTransactions.length === 0
-  }
-
-  /**
-   * Determines whether or not the holder info object has been loaded/populated
-   *
-   * @return {Boolean}
-   */
-  get isHolderInfoLoading(): boolean {
-    return Object.keys(this.holderInfo).length === 0
-  }
-
-  /**
-   * Determines whether or not all of the required objects have been loaded/populated
-   *
-   * @return {Boolean}
-   */
-  get isLoading(): boolean {
-    return this.isContractLoading || this.isTokenLoading || this.isTransfersLoading || this.isHoldersLoading
-  }
-
-  /**
-   * Determines whether or not all of the required/additional holder objects have been loaded/populated
-   *
-   * @return {Boolean}
-   */
-  get isHolderDetailsLoading(): boolean {
-    return this.isHolderTransactionsLoading || this.isHolderInfoLoading
+  get crumbsHolder() {
+    return [
+      {
+        text: this.$i18n.t('title.tokens').toString(),
+        link: '/tokens',
+        disabled: false
+      },
+      {
+        text: this.isTokenDetailsLoading ? this.addressRef : this.tokenDetails.symbol.toUpperCase(),
+        link: `/token/${this.addressRef}`,
+        disabled: false
+      },
+      {
+        text: this.holderAddress,
+        link: '',
+        disabled: true
+      }
+    ]
   }
 
   /*
   ===================================================================================
-    Old
+    Computed Values - isLoading
   ===================================================================================
   */
 
-  // // Methods:
-  // setDetails(token: Token) {
-  //   this.details = [
-  //     {
-  //       title: this.$i18n.t('token.symbol'),
-  //       detail: token.getSymbol()
-  //     },
-  //     // {
-  //     //   title: this.$i18n.t('addrOverview.creator'),
-  //     //   detail: token.getContract(),
-  //     //   link: '/contract/' + token.getContract()
-  //     // },
-  //     {
-  //       title: this.$i18n.t('token.price'),
-  //       detail: token.getPrice(),
-  //       copy: true
-  //     },
-  //     // {
-  //     //   title: this.$i18n.t('token.transfers'),
-  //     //   detail: token.getTransfers()
-  //     // },
-  //     {
-  //       title: this.$i18n.t('token.decimals'),
-  //       detail: token.getDecimals()
-  //     }
-  //   ]
-  //   if (this.holder !== '') {
-  //     const holderInfo = [
-  //       // {
-  //       //   title: this.$i18n.t('token.totalUSD'),
-  //       //   details: token.getBalance() * token.getPrice()
-  //       // },
-  //       // {
-  //       //   title: this.$i18n.t('token.balance'),
-  //       //   detail: token.getBalance()
-  //       // },
-  //       {
-  //         title: this.$i18n.t('token.holder'),
-  //         detail: token.getHolder(),
-  //         link: '/address/' + token.getHolder()
-  //       }
-  //     ]
-  //     holderInfo.forEach(i => this.details.unshift(i))
-  //   } else {
-  //     const tokenInfo = [
-  //       {
-  //         title: this.$i18n.t('token.totalHold'),
-  //         detail: token.getTotalHolders()
-  //       },
-  //       {
-  //         title: this.$i18n.t('token.supply'),
-  //         detail: token.getTotalSupply()
-  //       }
-  //     ]
-  //     tokenInfo.forEach(i => this.details.push(i))
-  //   }
-  // }
+  /**
+   * Determines whether or not the contractDetails object has been loaded/populated
+   *
+   * @return {Boolean}
+   */
+  get isContractDetailsLoading(): boolean {
+    return Object.keys(this.contractDetails).length === 0
+  }
+
+  /**
+   * Determines whether or not the tokenDetails object has been loaded/populated
+   *
+   * @return {Boolean}
+   */
+  get isTokenDetailsLoading(): boolean {
+    return Object.keys(this.tokenDetails).length === 0
+  }
+
+  /**
+   * Determines whether or not the holderDetails object has been loaded/populated
+   *
+   * @return {Boolean}
+   */
+  get isHolderDetailsLoading(): boolean {
+    return Object.keys(this.holderDetails).length === 0
+  }
+
+  /**
+   * Determines whether or not all of the required objects for the TokenDetailsList component are loaded
+   *
+   * @return {Boolean}
+   */
+  get isTokenDetailsListLoading(): boolean {
+    return this.isContractDetailsLoading || this.isTokenDetailsLoading
+  }
+
+  /**
+   * Determines whether or not all of required objects for the HolderDetailsList component are loaded
+   *
+   * @return {Boolean}
+   */
+  get isHolderDetailsListLoading(): boolean {
+    return this.isTokenDetailsListLoading || this.isHolderDetailsLoading
+  }
 }
 </script>

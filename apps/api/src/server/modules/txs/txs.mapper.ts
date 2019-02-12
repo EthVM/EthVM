@@ -1,4 +1,4 @@
-import { Tx, TxReceipt, InternalTx } from 'ethvm-common'
+import { InternalTx, Tx, TxReceipt } from 'ethvm-common'
 
 const toInternalTx = (tx: any): InternalTx => {
   if (tx.nonce) {

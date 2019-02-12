@@ -153,6 +153,10 @@ export class EthvmSocketIoApi implements EthvmApi {
     return this.promisify(Events.getAddressTxs, { address, filter, limit, page }).then(raw => raw.map(rawTx => new Tx(rawTx)))
   }
 
+  public getTotalNumberOfTxs(): Promise<number> {
+    return this.promisify(Events.getTotalNumberOfTxs, {})
+  }
+
   // ------------------------------------------------------------------------------------
   // Uncles
   // ------------------------------------------------------------------------------------

@@ -21,7 +21,7 @@ export class MongoTokensRepository extends BaseMongoDbRepository implements Toke
       .then(resp => resp ? resp.map(tx => toTokenTransfer(tx)) : [])
   }
 
-  public getAddressTokenTransfersByHolder(address: string, holder: string, filter: string, limit: number, page: number): Promise<any[]> {
+  public getAddressTokenTransfersByHolder(address: string, holder: string, filter: string, limit: number, page: number): Promise<TokenTransfer[]> {
     const start = page * limit
     let find
     switch (filter) {

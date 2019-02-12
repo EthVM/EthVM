@@ -8,6 +8,7 @@ export interface TxsRepository {
   getTxsOfBlock(hash: string): Promise<Tx[]>
   getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<Tx[]>
   getAddressTotalTxs(hash: string): Promise<number>
+  getTotalNumberOfTxs(): Promise<number>
 }
 
 export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepository {
@@ -67,5 +68,11 @@ export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepo
       .collection(MongoEthVM.collections.transactions)
       .countDocuments({ $or: [{ from: hash }, { to: hash }] })
       .then(resp => resp ? resp : 0)
+  }
+
+  public getTotalNumberOfTxs(): Promise<number> {
+    return this.db
+      .collection(MongoEthVM.collections.transactions)
+      .estimatedDocumentCount()
   }
 }
