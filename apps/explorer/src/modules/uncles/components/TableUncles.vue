@@ -1,11 +1,12 @@
 <template>
-  <v-card color="white" flat class="pt-3 pr-4 pl-4 mt-0">
-    <v-layout row wrap align-center pb-1>
-      <v-flex d-flex xs12 sm8 order-xs1>
-        <v-card-title class="title font-weight-bold">{{ $t('title.uncles') }}</v-card-title>
+  <v-card color="white" flat class="pt-3 pr-2 pl-2 mt-0">
+    <v-layout align-end justify-space-between row wrap fill-height pb-1>
+      <v-flex xs12 sm6>
+        <v-card-title class="title font-weight-bold pb-1">{{ $t('title.uncles') }}</v-card-title>
       </v-flex>
-      <v-flex hidden-sm-and-down md4 order-xs2>
-        <v-layout justify-end> <app-footnotes :footnotes="footnotes" /> </v-layout>
+      <v-flex xs12 sm6 v-if="pages > 1">
+        <v-layout justify-end class="pb-1 pr-2 pl-2"><app-paginate :total="pages" @newPage="setPage" :newPage="page"/>
+        </v-layout>
       </v-flex>
     </v-layout>
 
@@ -40,6 +41,8 @@
           </v-flex>
         </v-layout>
       </v-card>
+      <v-layout justify-end v-if="pages > 1" class="pr-2 pl-2"><app-paginate :total="pages" @newPage="setPage" :newPage="page"/>
+      </v-layout>
     </div>
     <app-error v-else :server-error="error" />
   </v-card>
@@ -49,16 +52,18 @@
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableUnclesRow from '@app/modules/uncles/components/TableUnclesRow.vue'
 import { Uncle } from '@app/core/models'
 import { Footnote } from '@app/core/components/props'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 
 @Component({
   components: {
     AppError,
     AppFootnotes,
     AppInfoLoad,
+    AppPaginate,
     TableUnclesRow
   }
 })
@@ -67,9 +72,22 @@ export default class TableUncles extends Vue {
   @Prop({ type: Array, default: [] }) uncles!: Uncle[]
   @Prop({ type: Boolean, default: true }) loading: boolean
   @Prop({ type: Boolean, default: false }) error: boolean
+  @Prop({ type: Number, default: 0 }) totalUncles!: number
+  @Prop(Number) maxItems!: number
 
   pageType = 'uncles'
+  page=1
 
+  /*Methods: */
+  setPage(_value: number): void {
+    this.page = _value
+  }
+
+  /*Watch: */
+  @Watch('page')
+  onPageChanged(newVal: number, oldVal: number): void {
+    this.$emit('getUnclePage',  newVal - 1)
+  }
   /* Computed: */
   get style(): string {
     return this.showStyle
@@ -88,6 +106,9 @@ export default class TableUncles extends Vue {
         icon: 'fa fa-circle'
       }
     ]
+  }
+  get pages(): number {
+    return this.totalUncles ? Math.ceil(this.totalUncles / this.maxItems) : 0
   }
 }
 </script>

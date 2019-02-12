@@ -38,7 +38,7 @@
       <v-flex xs12>
         <v-layout row wrap align-end>
           <v-flex sm4 md3 hidden-xs-only >
-            <v-layout justify-start row class="pl-3 pb-1"><app-footnotes :footnotes="footnote"/></v-layout>
+            <v-layout justify-start row class="pl-3 pb-1"><app-footnotes :footnotes="footnote" /></v-layout>
           </v-flex>
           <v-spacer/>
           <v-flex xs12 sm7 md6 >
