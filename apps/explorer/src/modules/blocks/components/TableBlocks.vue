@@ -1,11 +1,11 @@
 <template>
   <v-card color="white" flat class="pt-3 pr-2 pl-2 mt-0">
     <v-layout v-if="pageType != 'home'" align-end justify-space-between row wrap fill-height pb-1>
-      <v-flex xs12 sm5 md2>
+      <v-flex xs12 sm5 md3>
         <v-card-title class="title font-weight-bold pb-1">{{ getTitle }}</v-card-title>
       </v-flex>
       <v-spacer/>
-      <v-flex hidden-sm-and-down md4 >
+      <v-flex hidden-sm-and-down md3 >
         <v-layout justify-end pb-1> <app-footnotes :footnotes="footnotes" /> </v-layout>
       </v-flex>
       <v-flex xs12 sm7 md6 v-if="pages > 1">

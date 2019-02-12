@@ -37,7 +37,7 @@
         <!-- End Pending Transactions -->
         <!-- Mined Blocks -->
         <v-tab-item slot="tabs-item" v-if="account.isMiner" value="tab-3">
-          <table-blocks v-if="!minerBlocksError" :loading="minerBlocksLoading" :blocks="account.minedBlocks" :page-type="detailsType" />
+          <table-blocks v-if="!minerBlocksError" :loading="minerBlocksLoading" :blocks="account.minedBlocks" :page-type="detailsType" :totalBlocks="minedTotal" :maxItems="max" @getBlockPage="setMinedPage"/>
           <app-error :server-error="minerBlocksError" v-else />
         </v-tab-item>
         <!-- End Mined Blocks -->
@@ -99,7 +99,7 @@ const CONTRACT_DETAIL_TYPE = 'contract'
 export default class PageDetailsAddress extends Vue {
   @Prop({ type: String, default: '' }) addressRef!: string
 
-  detailsType = null
+  detailsType = 'address'
   error = false
   loading = true
   validHash = true
@@ -122,6 +122,8 @@ export default class PageDetailsAddress extends Vue {
   /* Miner Blocks: */
   minerBlocksLoading = true
   minerBlocksError = false
+  minedPage = 0
+  minedTotal = 20
 
   /* Contracts: */
   contractsLoading = true
@@ -266,7 +268,7 @@ export default class PageDetailsAddress extends Vue {
     return this.$api.getPendingTxsOfAddress(this.addressRef, filter, limit, page)
   }
 
-  fetchMinedBlocks(page = 0, limit = MAX_ITEMS): Promise<Block[]> {
+  fetchMinedBlocks(page = this.minedPage, limit = MAX_ITEMS): Promise<Block[]> {
     return this.$api.getBlocksMinedOfAddress(this.addressRef, limit, page)
   }
 
@@ -280,6 +282,11 @@ export default class PageDetailsAddress extends Vue {
     this.txsLoading = true
   }
 
+  setMinedPage(_page: number): void {
+    this.minedPage = _page
+    this.minerBlocksLoading = true
+  }
+
   updateTxs(): void {
     this.fetchTxs().then(
       res => {
@@ -288,6 +295,18 @@ export default class PageDetailsAddress extends Vue {
       },
       err => {
         this.txsError = true
+      }
+    )
+  }
+
+  updateMined(): void {
+    this.fetchMinedBlocks().then(
+      res => {
+        this.account.minedBlocks = res
+        this.minerBlocksLoading = false
+      },
+      err => {
+        this.minerBlocksError = true
       }
     )
   }
@@ -305,8 +324,16 @@ export default class PageDetailsAddress extends Vue {
     this.updateTxs()
   }
 
+  @Watch('minedPage')
+  onMinedPageChanged(newVal: number, oldVal: number): void {
+    this.updateMined()
+  }
+
   // Computed
-  get totalFilter() {
+  get max(): number {
+    return MAX_ITEMS
+  }
+  get totalFilter(): number {
     switch (this.txsFilter) {
       case 'all':
         return this.account.totalTxs

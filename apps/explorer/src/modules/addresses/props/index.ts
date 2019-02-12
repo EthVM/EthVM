@@ -6,6 +6,7 @@ export class AccountInfo {
 
   public blocks: Block[] = []
   public minedBlocks: Block[] = []
+  public totalMinedBlocks: number = 0
 
   public txs: Tx[] = []
   public totalTxs: number = 0
