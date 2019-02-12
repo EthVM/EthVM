@@ -1,12 +1,18 @@
 <template>
   <v-card color="white" flat class="pt-3 pr-2 pl-2 pb-2">
     <v-layout row wrap align-center pb-1>
-      <v-flex xs8>
+      <v-flex xs4 md5>
         <v-card-title class="title font-weight-bold">{{ getTitle }}</v-card-title>
       </v-flex>
+      <v-spacer />
       <v-flex xs4 v-if="pageType == 'home'">
         <v-layout justify-end>
           <v-btn outline color="secondary" class="text-capitalize" to="/txs">{{ $t('bttn.viewAll') }}</v-btn>
+        </v-layout>
+      </v-flex>
+      <v-flex v-else xs12 sm7 md6 >
+        <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2" >
+          <app-paginate :total="pages" @newPage="setPage" :newPage="page"/>
         </v-layout>
       </v-flex>
     </v-layout>
@@ -42,6 +48,9 @@
           </v-card>
         </v-flex>
       </v-layout>
+      <v-layout  v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2" >
+        <app-paginate :total="pages" @newPage="setPage" :newPage="page"/>
+      </v-layout>
     </v-card>
     <!-- Hadle error - No Txs History
     <div v-else>
@@ -58,13 +67,15 @@
 
 <script lang="ts">
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableTxsRow from '@app/modules/txs/components/TableTxsRow.vue'
 import { PendingTx, Tx } from '@app/core/models'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 
 @Component({
   components: {
     AppInfoLoad,
+    AppPaginate,
     TableTxsRow
   }
 })
@@ -73,8 +84,22 @@ export default class TableTxs extends Vue {
   @Prop(String) pageType: string
   @Prop(String) showStyle!: string
   @Prop(Array) transactions!: Tx[] | PendingTx[]
+  @Prop({ type: Number, default: 0 }) totalTxs: number
+  @Prop(Number) maxItems!: number
+  page = 1
 
-  // Computed
+  /*Methods: */
+  setPage(_value: number): void {
+    this.page = _value
+  }
+
+  /* Watch: */
+  @Watch('page')
+  onPageChanged(newVal: number, oldVal: number): void {
+    this.$emit('getTxsPage',  newVal - 1)
+  }
+
+  /* Computed: */
   get footnote() {
     return [
       {
@@ -108,6 +133,9 @@ export default class TableTxs extends Vue {
 
   get pending(): boolean {
     return this.pageType == 'pending'
+  }
+  get pages(): number {
+    return this.totalTxs ? Math.ceil(this.totalTxs / this.maxItems) : 0
   }
 }
 </script>
