@@ -34,7 +34,7 @@ We welcome every kind of contribution, so, please see [CONTRIBUTING](.github/CON
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+This project is licensed under the SSPL License - see the [LICENSE.md](LICENSE.md) file for details ([or read it here online](https://www.mongodb.com/licensing/server-side-public-license)).
 
 <div align="center">
   <img src="https://forthebadge.com/images/badges/built-with-love.svg" alt="built with love by enKryptIO team" />
