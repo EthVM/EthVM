@@ -1,7 +1,7 @@
 <template>
-  <v-card transparent flat min-width="240" max-width="320">
+  <v-card transparent flat min-width="240" max-width="340">
     <v-container grid-list-xs pa-1>
-    <v-layout row align-center justify-space-between fill-height pa-1>
+    <v-layout row align-center justify-end fill-height>
       <v-btn flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('first')" small>{{ $t('bttn.first') }}</v-btn>
       <v-btn flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('prev')" small
         ><v-icon class="secondary--text" small>fas fa-angle-left</v-icon>
@@ -24,14 +24,22 @@ import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import _debounce from 'lodash.debounce'
 @Component
 export default class AppPaginate extends Vue {
-  //@Prop(Number) total!: number
-
-  total = 9
+  @Prop(Number) total: number
+  @Prop(Number) newPage: number
   page = 1
   pageInput = this.page
   validClass = 'center-input body-1 secondary--text'
   invalidClass = 'center-input body-1 error--text'
 
+
+  //Lifecycle:
+
+  mounted() {
+    if(this.newPage === 1){
+      this.page = 1
+      this.pageInput = 1
+    }
+  }
   //Methods
 
   valid(_page: number): boolean {
@@ -55,7 +63,7 @@ export default class AppPaginate extends Vue {
         }
         break
       case 'next':
-        if (this.valid(this.page + 1)) {
+        if (this.valid(this.page+1)) {
           this.page += 1
         }
         break
@@ -77,8 +85,17 @@ export default class AppPaginate extends Vue {
 
   @Watch('page')
   onPageChanged(newVal: number, oldVal: number): void {
-    this.$emit('page', newVal - 1)
+      this.$emit('newPage', newVal)
   }
+
+  @Watch('newPage')
+  onNewPageChanged(newVal: number, oldVal: number): void {
+    if (this.newPage === 1) {
+      this.page = 1
+      this.pageInput = 1
+    }
+  }
+
 
   //Computed
 
@@ -94,6 +111,8 @@ export default class AppPaginate extends Vue {
     const place = this.page.toString()
     return place
   }
+
+
 }
 </script>
 
@@ -102,7 +121,7 @@ export default class AppPaginate extends Vue {
 .v-btn {
   height: 30px;
   min-width: 20px;
-  margin: 0
+  margin: 5px;
 }
 
 .page-input{

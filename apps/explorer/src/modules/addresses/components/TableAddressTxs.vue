@@ -37,12 +37,14 @@
       </v-flex>
       <v-flex xs12>
         <v-layout row wrap align-end>
-          <v-flex xs12 md4>
+          <v-flex sm4 md3 hidden-xs-only >
             <v-layout justify-start row class="pl-3 pb-1"><app-footnotes :footnotes="footnote"/></v-layout>
           </v-flex>
-          <v-flex xs12 md8>
-            <!-- <v-layout v-if="pages > 1" justify-end row class="pb-2"><v-pagination v-model="page" flat :length="pages" :total-visible="7"/></v-layout> -->
-            <app-paginate :page="page" :total="pages" @newPage="setPage" />
+          <v-spacer/>
+          <v-flex xs12 sm7 md6 >
+            <v-layout justify-end row class="pb-1 pr-2 pl-2" v-if="pages > 1">
+              <app-paginate :total="pages" @newPage="setPage" :newPage="page"/>
+            </v-layout>
           </v-flex>
         </v-layout>
       </v-flex>
@@ -82,6 +84,7 @@ export default class TableAddressTxs extends Vue {
   page = 1
   selected = 0
   filter = ['all', 'in', 'out']
+
 
   /*Methods: */
   setPage(_value: number): void {
