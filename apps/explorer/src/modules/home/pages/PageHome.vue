@@ -47,19 +47,8 @@ export default class PageHome extends Vue {
 
   // Lifecycle
   created() {
-    this.$api.getBlocks(MAX_ITEMS, 0).then(blocks => {
-      this.$store.commit(Events.NEW_BLOCK, blocks)
-      if (blocks && blocks.length > 0) {
-        this.$eventHub.$emit(Events.NEW_BLOCK, blocks[0])
-      }
-    })
-
-    this.$api.getTxs(MAX_ITEMS, 0).then(txs => {
-      this.$store.commit(Events.NEW_TX, txs)
-      if (txs && txs.length > 0) {
-        this.$eventHub.$emit(Events.NEW_TX, txs[0])
-      }
-    })
+    this.$api.getBlocks(MAX_ITEMS, 0).then(blocks => this.$store.commit(Events.NEW_BLOCK, blocks))
+    this.$api.getTxs(MAX_ITEMS, 0).then(txs => this.$store.commit(Events.NEW_TX, txs))
   }
 
   /* Computed: */
