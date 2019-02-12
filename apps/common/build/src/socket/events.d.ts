@@ -33,6 +33,7 @@ export declare const Events: {
     getBlockTxs: string;
     getAddressTxs: string;
     getAddressTotalTxs: string;
+    getTotalNumberOfTxs: string;
     getPendingTxs: string;
     getPendingTxsOfAddress: string;
     getTotalNumberOfPendingTxs: string;
