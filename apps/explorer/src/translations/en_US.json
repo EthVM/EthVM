@@ -188,7 +188,9 @@
   "bttn": {
     "more": "More",
     "less": "Less",
-    "viewAll": "View All"
+    "viewAll": "View All",
+    "first": "First",
+    "last": "Last"
   },
   "type": {
     "in": "In",

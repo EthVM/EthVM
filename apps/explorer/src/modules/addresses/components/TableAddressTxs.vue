@@ -37,11 +37,14 @@
       </v-flex>
       <v-flex xs12>
         <v-layout row wrap align-end>
-          <v-flex xs12 md4>
+          <v-flex sm4 md3 hidden-xs-only>
             <v-layout justify-start row class="pl-3 pb-1"><app-footnotes :footnotes="footnote"/></v-layout>
           </v-flex>
-          <v-flex xs12 md8>
-            <v-layout v-if="pages > 1" justify-end row class="pb-2"><v-pagination v-model="page" flat :length="pages" :total-visible="7"/></v-layout>
+          <v-spacer />
+          <v-flex xs12 sm7 md6>
+            <v-layout justify-end row class="pb-1 pr-2 pl-2" v-if="pages > 1">
+              <app-paginate :total="pages" @newPage="setPage" :new-page="page" />
+            </v-layout>
           </v-flex>
         </v-layout>
       </v-flex>
@@ -49,14 +52,16 @@
     <!-- Tx Table Content -->
     <table-address-tx-row v-if="!loading" :transactions="txs" :account="address" :filter="selected" :type="isPending" />
     <app-info-load v-else />
-    <v-layout v-if="pages > 1" justify-end row class="pb-2"><v-pagination v-model="page" flat :length="pages" :total-visible="7"/></v-layout>
-    <!-- End Tx Table Content -->
+    <v-layout justify-end row class="pb-1 pr-2 pl-2" v-if="pages > 1">
+      <app-paginate :total="pages" @newPage="setPage" :new-page="page" />
+    </v-layout>
   </v-card>
 </template>
 
 <script lang="ts">
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableAddressTxRow from '@app/modules/addresses/components/TableAddressTxRow.vue'
 import { Tx } from '@app/core/models'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
@@ -66,6 +71,7 @@ const MAX_TXS = 10
   components: {
     AppInfoLoad,
     AppFootnotes,
+    AppPaginate,
     TableAddressTxRow
   }
 })
@@ -79,6 +85,11 @@ export default class TableAddressTxs extends Vue {
   page = 1
   selected = 0
   filter = ['all', 'in', 'out']
+
+  /*Methods: */
+  setPage(_value: number): void {
+    this.page = _value
+  }
 
   /*Watch: */
   @Watch('selected')
