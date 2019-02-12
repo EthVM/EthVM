@@ -40,8 +40,8 @@ export default class AppPaginate extends Vue {
   }
 
   setPage(): void {
-    if (this.valid(this.pageInput)) {
-      this.page = this.pageInput
+    if (this.valid(parseInt(this.pageInput, 10))) {
+      this.page = parseInt(this.pageInput, 10)
     }
   }
 
@@ -71,7 +71,7 @@ export default class AppPaginate extends Vue {
 
   // Watch
   @Watch('pageInput')
-  onPageInputChanged(newVal: number, oldVal: number): void {
+  onPageInputChanged(newVal: string, oldVal: string): void {
     const setNewPage = _debounce(this.setPage, 500)
     setNewPage()
   }
@@ -79,10 +79,12 @@ export default class AppPaginate extends Vue {
   @Watch('page')
   onPageChanged(newVal: number, oldVal: number): void {
     this.$emit('newPage', newVal)
+    console.log('pagination page change', typeof  newVal)
   }
 
   @Watch('newPage')
   onNewPageChanged(newVal: number, oldVal: number): void {
+    console.log('old: ', oldVal, 'new: ', newVal)
     if (this.newPage != this.page) {
       this.pageInput = this.newPage
     }
