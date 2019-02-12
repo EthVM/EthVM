@@ -15,8 +15,10 @@
           <v-tooltip v-if="!isShortValue(getRoundNumber(balance(token.balance, token.decimals) * token.currentPrice), 5)" bottom>
             <v-icon slot="activator" dark small>fa fa-question-circle info--text</v-icon>
             <span
-              >${{ getShortValue(getRoundNumber(balance(token.balance, token.decimals) * token.currentPrice), 5) }} (@ ${{ getRoundNumber(token.currentPrice) }} per
-              {{ token.symbol }})</span
+              >${{ getShortValue(getRoundNumber(balance(token.balance, token.decimals) * token.currentPrice), 5) }} (@ ${{
+                getRoundNumber(token.currentPrice)
+              }}
+              per {{ token.symbol }})</span
             >
           </v-tooltip>
           {{ getShortValue(getRoundNumber(balance(token.balance, token.decimals) * token.currentPrice)) }} (@ ${{ getRoundNumber(token.currentPrice) }} per

@@ -41,7 +41,7 @@
           <p>{{ $t('tokens.empty') }}</p>
         </v-card>
         <div v-else v-for="(token, index) in tokens" :key="index">
-          <table-address-tokens-row :token="token" :holder="holder"/>
+          <table-address-tokens-row :token="token" :holder="holder" />
         </div>
       </div>
     </div>
