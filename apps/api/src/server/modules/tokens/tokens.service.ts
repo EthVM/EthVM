@@ -27,11 +27,15 @@ export class TokensServiceImpl implements TokensService {
     return this.tokensRepository.getAddressTokenTransfersByHolder(address, holder, filter, limit, page)
   }
 
-  public getAddressAllTokensOwned(address: string): Promise<Token[]> {
-    return this.vme.getAddressAllTokensOwned(address).then(res => {
-      res.forEach(token => this.exchangeRepository.getTokenExchangeRate(token.symbol).then(rate => (token.currentPrice = rate ? rate.current_price : 0)))
-      return res
-    })
+  public async getAddressAllTokensOwned(address: string): Promise<Token[]> {
+    const tokens = await this.vme.getAddressAllTokensOwned(address)
+    return Promise.all(
+      tokens.map(async token => {
+        const rate = await this.exchangeRepository.getTokenExchangeRateByAddress(token.addr.replace('0x', ''))
+        token.currentPrice = rate ? rate.current_price : 0
+        return token
+      })
+    )
   }
 
   public getAddressAmountTokensOwned(address: string): Promise<number> {
