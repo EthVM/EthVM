@@ -3,7 +3,9 @@
     <app-bread-crumbs :new-items="crumbs" />
     <app-card-stats-group type="txs" />
     <v-layout row justify-center mb-4>
-      <v-flex xs12> <table-txs :transactions="txs" page-type="tx" :loading="loading" :max-items="max" :total-txs="total" @getTxsPage="getPage" /> </v-flex>
+      <v-flex xs12>
+        <table-txs :transactions="txs" page-type="tx" :loading="loading" :max-items="max" :total-txs="total" @getTxsPage="getPage" />
+      </v-flex>
     </v-layout>
   </v-container>
 </template>
@@ -32,13 +34,14 @@ export default class PageTxs extends Vue {
 
   // Lifecycle
   mounted() {
-    // this.fetchTotalTxs().then(res => {
-    //   this.total = res
-    // },
-    // err => {
-    //   this.total = 0
-    // })
-    this.total = 1000
+    this.fetchTotalTxs().then(
+      res => {
+        this.total = res
+      },
+      err => {
+        this.total = 0
+      }
+    )
     this.getPage(0)
   }
 
@@ -47,9 +50,9 @@ export default class PageTxs extends Vue {
     return this.$api.getTxs(this.max, page)
   }
 
-  // fetchTotalTxs(): Promise<number> {
-  //    //return this.$api.getTotalNumberOfTxs()
-  // }
+  fetchTotalTxs(): Promise<number> {
+    return this.$api.getTotalNumberOfTxs()
+  }
 
   getPage(_page: number): void {
     this.loading = true
