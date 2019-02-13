@@ -4,15 +4,7 @@
     <app-card-stats-group type="txs" />
     <v-layout row justify-center mb-4>
       <v-flex xs12>
-        <table-txs 
-          :transactions="txs"
-          page-type="tx" 
-          :loading="isLoading"
-          :max-items="maxItems"
-          :total-txs="totalTx"
-          :error="error"
-          @getTxsPage="getPage" 
-        />
+        <table-txs :transactions="txs" page-type="tx" :loading="isLoading" :max-items="maxItems" :total-txs="totalTx" :error="error" @getTxsPage="getPage" />
       </v-flex>
     </v-layout>
   </v-container>
@@ -52,7 +44,7 @@ export default class PageTxs extends Vue {
         this.totalTx = res
       },
       err => {
-        this.total = 0
+        this.totalTx = 0
       }
     )
     this.getPage(0)
