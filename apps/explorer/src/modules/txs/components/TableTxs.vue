@@ -58,8 +58,8 @@
       TABLE BODY
     =====================================================================================
     -->
-    <v-card flat v-if="!hasError">
-      <v-layout column fill-height class="mb-1">
+    <v-card flat v-if="!hasError" id="scroll-target" :style="getStyle" class="scroll-y" style="overflow-x: hidden">
+      <v-layout column fill-height class="mb-1" v-scroll:#scroll-target>
         <v-flex xs12 v-if="!loading">
           <v-card v-for="tx in transactions" class="transparent" flat :key="tx.getHash()">
             <table-txs-row :tx="tx" :is-pending="pending" />

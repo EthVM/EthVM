@@ -48,6 +48,7 @@ export default class PageTxs extends Vue {
       }
     )
     this.getPage(0)
+    window.scrollTo(0, 0)
   }
 
   /*
