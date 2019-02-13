@@ -18,9 +18,6 @@ export const Events = {
   NEW_TX: "NEW_TX",
   NEW_UNCLE: "NEW_UNCLE",
 
-  pastTxsR: "PAST_TXS_RECEIVED",
-  pastBlocksR: "PAST_BLOCKS_RECEIVED",
-
   // Addresses
   getAddressBalance: "get-address-balance",
   getAddressTokenBalance: "get-address-token-balance",
@@ -51,6 +48,7 @@ export const Events = {
   getBlockTxs: "get-block-txs",
   getAddressTxs: "get-address-txs",
   getAddressTotalTxs: "get-address-total-txs",
+  getTotalNumberOfTxs: "get-total-number-of-txs",
 
   // PendingTxs
   getPendingTxs:"get-pending-txs",
@@ -66,6 +64,8 @@ export const Events = {
   // Exchange
   getExchangeRates: "get-exchange-rates",
   getTokenExchangeRates: "get-token-exchange-rates",
+  getTokenExchangeRateBySymbol: "get-token-exchange-rate-by-symbol",
+  getTokenExchangeRateByAddress: "get-token-exchange-rate-by-address",
 
   // Search
   search: "search",

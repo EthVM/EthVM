@@ -1,14 +1,17 @@
+import { TxReceipt } from './tx'
+
 export interface PendingTx {
-  hash?: string
+  hash: string
   nonce: string
   from: string
   to: string
-  contractAddress: string
-  value: Buffer
-  data: Buffer
+  value: string
   gasPrice: number
   gasLimit: number
+  input: string
   v: number
-  r: number
-  s: number
+  r: string
+  s: string
+  timestamp: number
+  receipt: TxReceipt
 }

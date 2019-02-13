@@ -47,6 +47,7 @@ export default class PageDetailsUncle extends Vue {
     // 1. Check that current uncle ref is valid one
     if (!eth.isValidHash(ref)) {
       this.error = true
+      this.loading = false
       return
     }
 
@@ -79,13 +80,26 @@ export default class PageDetailsUncle extends Vue {
   setDetails(uncle: Uncle) {
     this.details = [
       {
-        title: this.$i18n.t('tableHeader.blockN'),
+        title: this.$i18n.t('tableHeader.blockHeight'),
         detail: uncle.getNumber()
+      },
+      {
+        title: this.$i18n.t('tableHeader.unclePosition'),
+        detail: uncle.getPosition()
+      },
+      {
+        title: this.$i18n.t('tableHeader.blockN'),
+        detail: uncle.getBlockHeight(),
+        link: '/block/' + uncle.getBlockHeight()
       },
       {
         title: this.$i18n.t('common.hash'),
         detail: uncle.getHash(),
         copy: true
+      },
+      {
+        title: this.$i18n.t('block.pHash'),
+        detail: uncle.getParentHash()
       },
       {
         title: this.$i18n.t('block.miner'),

@@ -18,17 +18,10 @@ export class MongoTokensRepository extends BaseMongoDbRepository implements Toke
       .skip(start)
       .limit(limit)
       .toArray()
-      .then(resp => {
-        const t: TokenTransfer[] = []
-        if (!resp) {
-          return t
-        }
-        resp.forEach(tx => t.unshift(toTokenTransfer(tx)))
-        return t
-      })
+      .then(resp => resp ? resp.map(tx => toTokenTransfer(tx)) : [])
   }
 
-  public getAddressTokenTransfersByHolder(address: string, holder: string, filter: string, limit: number, page: number): Promise<any[]> {
+  public getAddressTokenTransfersByHolder(address: string, holder: string, filter: string, limit: number, page: number): Promise<TokenTransfer[]> {
     const start = page * limit
     let find
     switch (filter) {
@@ -50,14 +43,7 @@ export class MongoTokensRepository extends BaseMongoDbRepository implements Toke
       .skip(start)
       .limit(limit)
       .toArray()
-      .then(resp => {
-        const t: TokenTransfer[] = []
-        if (!resp) {
-          return t
-        }
-        resp.forEach(tx => t.unshift(toTokenTransfer(tx)))
-        return t
-      })
+      .then(resp => resp ? resp.map(tx => toTokenTransfer(tx)) : [])
   }
 
 }

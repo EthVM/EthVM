@@ -77,7 +77,6 @@ import TableAddressTokens from '@app/modules/addresses/components/TableAddressTo
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { eth, TinySM, State } from '@app/core/helper'
 import { AccountInfo } from '@app/modules/addresses/props'
-import { resolve } from 'path'
 
 const MAX_ITEMS = 10
 

@@ -1,7 +1,10 @@
 export interface Uncle {
-  number: string
   hash: string
+  number: string
   parentHash: string
+  blockNumber: string
+  uncleIndex: number
+  uncleReward: string
   nonce: string
   sha3Uncles: string
   logsBloom: string

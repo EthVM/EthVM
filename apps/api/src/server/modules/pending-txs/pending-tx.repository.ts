@@ -19,16 +19,7 @@ export class MongoPendingTxRepository extends BaseMongoDbRepository implements P
       .skip(start)
       .limit(limit)
       .toArray()
-      .then(resp => {
-        const t: PendingTx[] = []
-        if (!resp) {
-          return t
-        }
-        resp.forEach(tx => {
-          t.push(toPendingTx(tx))
-        })
-        return t
-      })
+      .then(resp => resp ? resp.map(tx => toPendingTx(tx)) : [])
   }
 
   public getPendingTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<PendingTx[]> {
@@ -52,14 +43,7 @@ export class MongoPendingTxRepository extends BaseMongoDbRepository implements P
       .skip(start)
       .limit(limit)
       .toArray()
-      .then(resp => {
-        const t: PendingTx[] = []
-        if (!resp) {
-          return t
-        }
-        resp.forEach(tx => t.push(toPendingTx(tx)))
-        return t
-      })
+      .then(resp => resp ? resp.map(tx => toPendingTx(tx)) : [])
   }
 
   public getNumberOfPendingTxsOfAddress(address: string): Promise<number> {

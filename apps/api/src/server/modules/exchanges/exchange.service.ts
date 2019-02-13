@@ -5,6 +5,7 @@ export interface ExchangeService {
   getExchangeRate(token: string, to: string): Promise<Quote>
   getTokenExchangeRates(limit: number, page: number): Promise<TokenExchangeRate[]>
   getTokenExchangeRate(symbol: string): Promise<TokenExchangeRate | null>
+  getTokenExchangeRateByAddress(address: string): Promise<TokenExchangeRate | null>
 }
 
 export class ExchangeServiceImpl implements ExchangeService {
@@ -20,5 +21,9 @@ export class ExchangeServiceImpl implements ExchangeService {
 
   public getTokenExchangeRate(symbol: string): Promise<TokenExchangeRate | null> {
     return this.exchangeRepository.getTokenExchangeRate(symbol)
+  }
+
+  public getTokenExchangeRateByAddress(address: string): Promise<TokenExchangeRate | null> {
+    return this.exchangeRepository.getTokenExchangeRateByAddress(address)
   }
 }

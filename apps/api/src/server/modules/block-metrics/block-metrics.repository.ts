@@ -25,13 +25,6 @@ export class MongoBlockMetricsRepository extends BaseMongoDbRepository implement
       .skip(start)
       .limit(limit)
       .toArray()
-      .then(resp => {
-        const b: BlockMetrics[] = []
-        if (!resp) {
-          return b
-        }
-        resp.forEach(stat => b.unshift(toBlockMetrics(stat)))
-        return b
-      })
+      .then(resp => resp ? resp.map(stat => toBlockMetrics(stat)) : [])
   }
 }

@@ -11,6 +11,6 @@ const dedup = (uncle: Uncle, uncles: Uncle[]): Uncle[] => {
 
 export const processUncles = (uncle: Uncle, uncles: Uncle[]): Uncle[] => {
   uncles = dedup(uncle, uncles)
-  uncles.unshift(uncle)
+  uncles.push(uncle)
   return uncles
 }

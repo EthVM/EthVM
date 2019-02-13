@@ -39,6 +39,8 @@ export interface EthvmApi {
   // Exchanges
   getExchangeRateQuote(symbol: string, to: string): Promise<Quote>
   getTokenExchangeRates(limit: number, page: number): Promise<TokenExchangeRate[]>
+  getTokenExchangeRateBySymbol(symbol: string): Promise<TokenExchangeRate | null>
+  getTokenExchangeRateByAddress(address: string): Promise<TokenExchangeRate | null>
 
   // Pending Txs
   getPendingTxs(limit: number, page: number): Promise<PendingTx[]>
@@ -51,6 +53,7 @@ export interface EthvmApi {
   getTxs(limit: number, page: number): Promise<Tx[]>
   getTxsOfBlock(hash: string): Promise<Tx[]>
   getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<Tx[]>
+  getTotalNumberOfTxs(): Promise<number>
 
   // Uncles
   getUncle(hash: string): Promise<Uncle | null>

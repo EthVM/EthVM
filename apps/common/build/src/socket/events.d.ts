@@ -12,8 +12,6 @@ export declare const Events: {
     NEW_PROCESSING_METADATA: string;
     NEW_TX: string;
     NEW_UNCLE: string;
-    pastTxsR: string;
-    pastBlocksR: string;
     getAddressBalance: string;
     getAddressTokenBalance: string;
     getAddressTokenTransfers: string;
@@ -35,6 +33,7 @@ export declare const Events: {
     getBlockTxs: string;
     getAddressTxs: string;
     getAddressTotalTxs: string;
+    getTotalNumberOfTxs: string;
     getPendingTxs: string;
     getPendingTxsOfAddress: string;
     getTotalNumberOfPendingTxs: string;
@@ -44,6 +43,8 @@ export declare const Events: {
     getTotalNumberOfUncles: string;
     getExchangeRates: string;
     getTokenExchangeRates: string;
+    getTokenExchangeRateBySymbol: string;
+    getTokenExchangeRateByAddress: string;
     search: string;
     getAverageDifficultyStats: string;
     getAverageGasLimitStats: string;

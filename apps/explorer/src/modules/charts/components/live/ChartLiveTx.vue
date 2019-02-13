@@ -35,7 +35,7 @@ export default class ChartLiveTransactions extends Vue {
 
   // Lifecycle
   created() {
-    this.fillChartData(this.$store.getters.blockMetrics.slice(0, MAX_ITEMS))
+    this.fillChartData(this.$store.getters.blockMetrics.items().slice(0, MAX_ITEMS))
   }
 
   mounted() {
@@ -53,10 +53,10 @@ export default class ChartLiveTransactions extends Vue {
   fillChartData(bms: BlockMetrics[] | BlockMetrics = []) {
     bms = !Array.isArray(bms) ? [bms] : bms
     bms.forEach(bm => {
-      this.data.labels.push(bm.number)
-      this.data.sTxs.push(bm.numSuccessfulTxs)
-      this.data.fTxs.push(bm.numFailedTxs)
-      this.data.pTxs.push(bm.numPendingTxs)
+      this.data.labels.unshift(bm.number)
+      this.data.sTxs.unshift(bm.numSuccessfulTxs)
+      this.data.fTxs.unshift(bm.numFailedTxs)
+      this.data.pTxs.unshift(bm.numPendingTxs)
       if (this.data.labels.length > MAX_ITEMS) {
         this.data.labels.pop()
         this.data.sTxs.pop()

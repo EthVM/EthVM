@@ -58,7 +58,7 @@ export class EthvmSocketIoApi implements EthvmApi {
   }
 
   public getBlockByNumber(no: number): Promise<Block | null> {
-    return this.promisify(Events.getBlockByNumber, { no }).then(raw => (raw !== null ? new Block(raw) : null))
+    return this.promisify(Events.getBlockByNumber, { number: no }).then(raw => (raw !== null ? new Block(raw) : null))
   }
 
   public getBlocksMinedOfAddress(address: string, limit: number = 100, page: number = 0): Promise<Block[]> {
@@ -74,7 +74,7 @@ export class EthvmSocketIoApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
 
   public getBlockMetric(hash: string): Promise<BlockMetrics | null> {
-    return this.promisify(Events.getBlockMetric, {})
+    return this.promisify(Events.getBlockMetric, { hash })
   }
 
   public getBlockMetrics(limit: number, page: number): Promise<BlockMetrics[]> {
@@ -103,6 +103,14 @@ export class EthvmSocketIoApi implements EthvmApi {
 
   public getTokenExchangeRates(limit: number, page: number): Promise<TokenExchangeRate[]> {
     return this.promisify(Events.getTokenExchangeRates, { limit, page })
+  }
+
+  public getTokenExchangeRateBySymbol(symbol: string): Promise<TokenExchangeRate | null> {
+    return this.promisify(Events.getTokenExchangeRateBySymbol, { symbol })
+  }
+
+  public getTokenExchangeRateByAddress(address: string): Promise<TokenExchangeRate | null> {
+    return this.promisify(Events.getTokenExchangeRateByAddress, { address })
   }
 
   // ------------------------------------------------------------------------------------
@@ -143,6 +151,10 @@ export class EthvmSocketIoApi implements EthvmApi {
 
   public getTxsOfAddress(address: string, filter: string = 'all', limit: number = 100, page: number = 0): Promise<Tx[]> {
     return this.promisify(Events.getAddressTxs, { address, filter, limit, page }).then(raw => raw.map(rawTx => new Tx(rawTx)))
+  }
+
+  public getTotalNumberOfTxs(): Promise<number> {
+    return this.promisify(Events.getTotalNumberOfTxs, {})
   }
 
   // ------------------------------------------------------------------------------------

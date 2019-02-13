@@ -19,15 +19,11 @@ const toBlock = (block: any): Block => {
   }
 
   if (block.transactions) {
-    const txs: any = []
-    block.transactions.forEach(tx => txs.unshift(toTx(tx)))
-    block.transactions = txs
+    block.transactions = block.transactions.map(tx => toTx(tx))
   }
 
   if (block.uncles) {
-    const uncles: any = []
-    block.uncles.forEach(u => uncles.unshift(toUncle(u)))
-    block.uncles = uncles
+    block.uncles = block.uncles.map(u => toUncle(u))
   }
 
   return block
