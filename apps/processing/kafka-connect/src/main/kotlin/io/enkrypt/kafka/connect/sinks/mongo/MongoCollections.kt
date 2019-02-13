@@ -37,7 +37,5 @@ enum class MongoCollections(val id: String) {
     )
 
     fun forTopic(topic: String): MongoCollections? = collectionsByTopic[topic]
-
   }
-
 }

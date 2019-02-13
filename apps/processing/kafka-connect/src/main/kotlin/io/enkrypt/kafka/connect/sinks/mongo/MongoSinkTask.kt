@@ -33,7 +33,7 @@ class MongoSinkTask : SinkTask() {
     this.client = MongoClients.create(uri)
     writer.start(client, connectionString)
 
-    logger.info{ "Started" }
+    logger.info { "Started" }
   }
 
   override fun open(partitions: MutableCollection<TopicPartition>) {
@@ -54,8 +54,7 @@ class MongoSinkTask : SinkTask() {
 
       // reset backoff
       backoffMs = null
-
-    } catch(e: RetriableException) {
+    } catch (e: RetriableException) {
 
       // set timeout
       val backoffMs = this.backoffMs ?: initialBackoffMs
@@ -65,14 +64,13 @@ class MongoSinkTask : SinkTask() {
 
       // increment for next timeout
       this.backoffMs = backoffMs * 2
-      if(this.backoffMs!! > maxBackoffMs) {
+      if (this.backoffMs!! > maxBackoffMs) {
         this.backoffMs = maxBackoffMs
       }
 
       // re-throw
       throw e
     }
-
   }
 
   override fun stop() {
@@ -81,6 +79,4 @@ class MongoSinkTask : SinkTask() {
 
     logger.info { "Stopped" }
   }
-
-
 }

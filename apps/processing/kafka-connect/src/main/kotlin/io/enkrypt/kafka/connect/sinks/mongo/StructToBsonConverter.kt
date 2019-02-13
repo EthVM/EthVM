@@ -26,7 +26,6 @@ import org.apache.kafka.connect.data.Struct
 import org.bson.BsonArray
 import org.bson.BsonBinary
 import org.bson.BsonBoolean
-import org.bson.BsonDecimal128
 import org.bson.BsonDocument
 import org.bson.BsonDouble
 import org.bson.BsonInt32
@@ -34,7 +33,6 @@ import org.bson.BsonInt64
 import org.bson.BsonNull
 import org.bson.BsonString
 import org.bson.BsonValue
-import org.bson.types.Decimal128
 import java.nio.ByteBuffer
 
 object TypeMappings {

@@ -29,7 +29,6 @@ class MongoSinkConnector : SinkConnector() {
   override fun config(): ConfigDef = ConfigDef().apply {
 
     define(Config.MONGO_URI_CONFIG, STRING, MONGO_DEFAULT_URI_VALUE, HIGH, Config.MONGO_URI_DOC)
-
   }
 
   object Config {

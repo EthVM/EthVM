@@ -35,10 +35,10 @@ class MongoWriter {
   private lateinit var executor: ExecutorService
 
   fun addTopics(topics: Set<String>) {
-    logger.info{ "Adding topics: $topics" }
+    logger.info { "Adding topics: $topics" }
     collections = collections + topics
-      .map{ MongoCollections.forTopic(it)!! }
-      .map{ it to db.getCollection(it.id, BsonDocument::class.java)}
+      .map { MongoCollections.forTopic(it)!! }
+      .map { it to db.getCollection(it.id, BsonDocument::class.java) }
   }
 
   fun start(client: MongoClient, connectionString: ConnectionString) {
@@ -51,9 +51,9 @@ class MongoWriter {
 
     val currentInFlight =
       records.chunked(recordBatchSize)
-      .map{ batch ->
+      .map { batch ->
 
-        if(batchesInFlight.get() == maxBatchesInFlight) {
+        if (batchesInFlight.get() == maxBatchesInFlight) {
           wait(30, TimeUnit.SECONDS)
         }
 
@@ -61,10 +61,9 @@ class MongoWriter {
         batchesInFlight.incrementAndGet()
       }.lastOrNull()
 
-    if(currentInFlight != null) {
+    if (currentInFlight != null) {
       logger.trace { "${records.size} records accepted, requests in flight = $currentInFlight" }
     }
-
   }
 
   private fun wait(timeout: Long, unit: TimeUnit) {
@@ -77,26 +76,24 @@ class MongoWriter {
     do {
       Thread.sleep(intervalMs)
       elapsedMs += intervalMs
-    } while(batchesInFlight.get() == maxBatchesInFlight && elapsedMs < timeoutMs)
+    } while (batchesInFlight.get() == maxBatchesInFlight && elapsedMs < timeoutMs)
 
-    if(batchesInFlight.get() == maxBatchesInFlight) {
+    if (batchesInFlight.get() == maxBatchesInFlight) {
       throw RetriableException(TimeoutException("In flight requests has not reduced during configured wait time of $timeoutMs"))
     }
-
   }
 
   fun flush() {
     try {
-      logger.trace{ "Flushing" }
-      pendingWrites.forEach{ it.get(10, TimeUnit.SECONDS) }
-      logger.trace{ "Flush completed without exceptions" }
+      logger.trace { "Flushing" }
+      pendingWrites.forEach { it.get(10, TimeUnit.SECONDS) }
+      logger.trace { "Flush completed without exceptions" }
     } catch (e: ExecutionException) {
 
-      when(e.cause) {
+      when (e.cause) {
         is MongoSocketException -> throw RetriableException("Mongo disconnect", e)
         else -> throw ConnectException("Terminal Write failure", e)
       }
-
     } catch (e: TimeoutException) {
       throw RetriableException("Write timeout", e)
     } catch (e: InterruptedException) {
@@ -147,7 +144,6 @@ class MongoWriter {
                 "del = ${bulkWrite.deletedCount}"
             }
           }
-
         }
 
       // reduce the number of inflight requests
@@ -155,7 +151,6 @@ class MongoWriter {
 
       return records.size
     }
-
   }
 
   companion object {
@@ -166,9 +161,5 @@ class MongoWriter {
 
     fun chunkSizeFor(collectionId: MongoCollections, defaultSize: Int = 100) =
       chunkSizeMap.getOrDefault(collectionId, defaultSize)
-
   }
 }
-
-
-

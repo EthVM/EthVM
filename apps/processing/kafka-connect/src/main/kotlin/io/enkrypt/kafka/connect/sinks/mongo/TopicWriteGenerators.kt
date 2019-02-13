@@ -242,7 +242,6 @@ enum class TopicWriteGenerators(
         try {
           var bson = StructToBsonConverter.convert(struct, "balance")
 
-
           // combine with id fields so we can query on them later
           idBson.forEach { k, v -> bson = bson.append(k, v) }
 
@@ -514,5 +513,4 @@ enum class TopicWriteGenerators(
     val updateOptions: UpdateOptions = UpdateOptions().upsert(true)
     val replaceOptions: ReplaceOptions = ReplaceOptions().upsert(true)
   }
-
 }
