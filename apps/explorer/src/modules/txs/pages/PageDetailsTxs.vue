@@ -300,7 +300,7 @@ export default class PageDetailsTxs extends Vue {
   }
 
   /**
-   * Determines whether or not the tx object has been loaded/populated
+   * Determines whether or not the tx object has been loaded/populated.
    *
    * @return {Boolean}
    */
