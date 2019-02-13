@@ -17,7 +17,7 @@
       </v-flex>
       <v-flex v-else xs12 sm7 md6>
         <v-layout v-if="pages > 1 && !hasError" justify-end row class="pb-1 pr-2 pl-2">
-          <app-paginate :total="pages" @newPage="setPage" :new-page="page" />
+          <app-paginate :total="pages" @newPage="setPage" :new-page="page" :hasInput="false" :hasLast="false"/>
         </v-layout>
       </v-flex>
     </v-layout>
@@ -66,7 +66,7 @@
             <v-divider class="mb-2 mt-2" />
           </v-card>
           <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2">
-            <app-paginate :total="pages" @newPage="setPage" :new-page="page" />
+            <app-paginate :total="pages" @newPage="setPage" :new-page="page" :hasInput="false" :hasLast="false"/>
           </v-layout>
         </v-flex>
         <v-flex xs12 v-if="loading">

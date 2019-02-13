@@ -6,14 +6,15 @@
         <v-btn flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('prev')" small
           ><v-icon class="secondary--text" small>fas fa-angle-left</v-icon>
         </v-btn>
-        <div class="page-input">
+        <div v-if="hasInput" class="page-input">
           <v-text-field v-model="pageInput" :mask="inputMask" :placeholder="newPH" :error="!valid(pageInput)" :class="validClass"></v-text-field>
         </div>
+        <p v-else class="info--text pr-1">{{pageInput}}</p>
         <p class="info--text">out of {{ total }}</p>
         <v-btn flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('next')" small
           ><v-icon class="secondary--text" small>fas fa-angle-right</v-icon>
         </v-btn>
-        <v-btn flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('last')" small>{{ $t('bttn.last') }}</v-btn>
+        <v-btn v-if="hasLast" flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('last')" small>{{ $t('bttn.last') }}</v-btn>
       </v-layout>
     </v-container>
   </v-card>
@@ -27,6 +28,9 @@ import _debounce from 'lodash.debounce'
 export default class AppPaginate extends Vue {
   @Prop(Number) total: number
   @Prop(Number) newPage: number
+  @Prop({type: Boolean, default:true}) hasLast: boolean
+  @Prop({type: Boolean, default:true}) hasInput: boolean
+
 
   page = 1
   pageInput = this.page
