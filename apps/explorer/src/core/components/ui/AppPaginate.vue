@@ -33,7 +33,7 @@ export default class AppPaginate extends Vue {
 
 
   page = 1
-  pageInput = this.page
+  pageInput = this.page.toString()
   validClass = 'center-input body-1 secondary--text'
   invalidClass = 'center-input body-1 error--text'
 
@@ -70,7 +70,7 @@ export default class AppPaginate extends Vue {
       default:
         break
     }
-    this.pageInput = this.page
+    this.pageInput = this.page.toString()
   }
 
   // Watch
@@ -88,7 +88,7 @@ export default class AppPaginate extends Vue {
   @Watch('newPage')
   onNewPageChanged(newVal: number, oldVal: number): void {
     if (this.newPage != this.page) {
-      this.pageInput = this.newPage
+      this.pageInput = this.newPage.toString()
     }
   }
 
