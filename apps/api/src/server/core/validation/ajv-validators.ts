@@ -42,9 +42,12 @@ const hashSchema = {
   type: 'string',
   hash: true
 }
+
 const limitSchema = {
   $id: '/properties/limit',
   type: 'number',
+  minimum: 0,
+  maximum: PAGINATION_SIZE,
   default: PAGINATION_SIZE
 }
 
@@ -65,6 +68,16 @@ const idSchema = {
   $id: '/properties/id',
   type: 'string',
   enum: ['syncing']
+}
+
+const numberSchema = {
+  $id: '/properties/number',
+  type: 'number'
+}
+
+const stringSchema = {
+  $id: '/properties/string',
+  type: 'string'
 }
 
 // Schemas definitions
@@ -95,18 +108,15 @@ const GenericPayloadSchema = {
     address: addressSchema,
     holder: addressSchema,
     hash: hashSchema,
-    number: {
-      $id: '/properties/number',
-      type: 'number'
-    },
+    number: numberSchema,
+
     filter: filterSchema,
     limit: limitSchema,
     page: pageSchema,
+    from: numberSchema,
+
     id: idSchema,
-    symbol: {
-      $id: '/properties/string',
-      type: 'string'
-    }
+    symbol: stringSchema
   },
   additionalProperties: false
 }
