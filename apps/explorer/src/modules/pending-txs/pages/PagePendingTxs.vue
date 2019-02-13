@@ -33,7 +33,7 @@ const MAX_ITEMS = 50
   }
 })
 export default class PagePendingTxs extends Vue {
-  pendingTxs: Tx[] = []
+  pendingTxs: PendingTx[] = []
   totalTx = 0
   isLoading = true
   error = ''
@@ -71,7 +71,7 @@ export default class PagePendingTxs extends Vue {
       res => {
         this.commitPendingTx(res)
         this.isLoading = false
-        this.pendingTxs = res
+        this.pendingTxs = res as PendingTx[]
       },
       err => {
         this.error = `${JSON.stringify(err)}`
