@@ -1,6 +1,5 @@
 package io.enkrypt.kafka.connect.sinks.mongo
 
-import com.mongodb.MongoClientURI
 import io.enkrypt.kafka.connect.sinks.mongo.MongoSinkConnector.Config.MONGO_DEFAULT_URI_VALUE
 import io.enkrypt.kafka.connect.utils.Versions
 import org.apache.kafka.common.config.ConfigDef
@@ -20,7 +19,6 @@ class MongoSinkConnector : SinkConnector() {
   }
 
   override fun stop() {
-    // TODO determine if we need to do anything here
   }
 
   override fun taskClass(): Class<out Task> = MongoSinkTask::class.java
@@ -30,13 +28,8 @@ class MongoSinkConnector : SinkConnector() {
 
   override fun config(): ConfigDef = ConfigDef().apply {
 
-    define(
-      Config.MONGO_URI_CONFIG,
-      STRING,
-      MONGO_DEFAULT_URI_VALUE,
-      HIGH,
-      Config.MONGO_URI_DOC
-    )
+    define(Config.MONGO_URI_CONFIG, STRING, MONGO_DEFAULT_URI_VALUE, HIGH, Config.MONGO_URI_DOC)
+
   }
 
   object Config {

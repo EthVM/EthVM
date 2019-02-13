@@ -29,7 +29,7 @@ dependencies {
   implementation("io.confluent:kafka-connect-avro-converter:5.1.0")
 
   // Mongo
-  implementation("org.mongodb:mongodb-driver:3.9.1")
+  implementation("org.mongodb:mongodb-driver-sync:3.10.1")
 
   // Web3
   implementation("org.web3j:parity:4.0.3")

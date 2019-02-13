@@ -55,6 +55,7 @@ ensure_indexes() {
 
 init() {
   ensure_replicaset
+  sleep 10
   ensure_collections
   ensure_indexes
 } >&2
