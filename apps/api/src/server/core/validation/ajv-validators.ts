@@ -54,6 +54,7 @@ const limitSchema = {
 const pageSchema = {
   $id: '/properties/limit',
   type: 'number',
+  minimum: 0,
   default: 0
 }
 
@@ -72,12 +73,21 @@ const idSchema = {
 
 const numberSchema = {
   $id: '/properties/number',
-  type: 'number'
+  type: 'number',
+  minimum: -1,
+  default: -1
 }
 
 const stringSchema = {
   $id: '/properties/string',
   type: 'string'
+}
+
+const orderSchema = {
+  $id: '/properties/string',
+  type: 'string',
+  enum: ['asc', 'desc'],
+  default: 'desc'
 }
 
 // Schemas definitions
@@ -113,7 +123,9 @@ const GenericPayloadSchema = {
     filter: filterSchema,
     limit: limitSchema,
     page: pageSchema,
-    from: numberSchema,
+    fromBlock: numberSchema,
+    fromUncle: numberSchema,
+    order: orderSchema,
 
     id: idSchema,
     symbol: stringSchema

@@ -4,7 +4,7 @@ import { Block } from 'ethvm-common'
 
 export interface BlocksRepository {
   getBlock(hash: string): Promise<Block | null>
-  getBlocks(limit: number, page: number): Promise<Block[]>
+  getBlocks(limit: number, page: number, fromBlock: number): Promise<Block[]>
   getBlockByNumber(no: number): Promise<Block | null>
   getBlocksMined(address: string, limit: number, page: number): Promise<Block[]>
   getTotalNumberOfBlocks(): Promise<number>
@@ -18,13 +18,14 @@ export class MongoBlockRepository extends BaseMongoDbRepository implements Block
       .then(resp => resp ? toBlock(resp) : null)
   }
 
-  public getBlocks(limit: number, page: number): Promise<Block[]> {
-    const start = page * limit
+  public async getBlocks(limit: number, page: number, fromBlock: number = -1): Promise<Block[]> {
+    const offset = fromBlock !== -1 ? fromBlock : await this.getTotalNumberOfBlocks()
+    const start = offset - (page * limit)
+
     return this.db
       .collection(MongoEthVM.collections.blocks)
-      .find()
+      .find({ 'header.number': {$lt: start} })
       .sort({ 'header.number': -1 })
-      .skip(start)
       .limit(limit)
       .toArray()
       .then(resp => resp ? resp.map(block => toBlock(block)) : [])

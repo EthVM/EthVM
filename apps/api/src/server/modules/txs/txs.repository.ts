@@ -4,7 +4,7 @@ import { Tx } from 'ethvm-common'
 
 export interface TxsRepository {
   getTx(hash: string): Promise<Tx | null>
-  getTxs(limit: number, page: number): Promise<Tx[]>
+  getTxs(limit: number, order: string, fromBlock: number): Promise<Tx[]>
   getTxsOfBlock(hash: string): Promise<Tx[]>
   getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<Tx[]>
   getAddressTotalTxs(hash: string): Promise<number>
@@ -12,13 +12,14 @@ export interface TxsRepository {
 }
 
 export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepository {
-  public getTxs(limit: number, page: number): Promise<Tx[]> {
-    const start = page * limit
+  public getTxs(limit: number, order: string = 'desc', fromBlock: number = -1): Promise<Tx[]> {
+    const sort = order === 'desc' ? '$lt' : '$gt'
+    const find = fromBlock !== -1 ? { blockNumber: {sort: fromBlock} } : {}
+
     return this.db
       .collection(MongoEthVM.collections.transactions)
-      .find()
-      .sort({ _id: -1, index: 1 })
-      .skip(start)
+      .find(find)
+      .sort({ blockNumber: -1, index: -1 })
       .limit(limit)
       .toArray()
       .then(resp => resp ? resp.map(tx => toTx(tx)) : [])
