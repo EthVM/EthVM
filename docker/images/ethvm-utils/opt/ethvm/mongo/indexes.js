@@ -27,8 +27,10 @@ const indexes = {
 
   token_transfers: [
     {key: {transferType: 1}},
+    {key: {contract: 1}},
     {key: {from: 1}},
-    {key: {to: 1}}
+    {key: {to: 1}},
+    {key: {timestamp: 1}}
   ],
 
   token_exchange_rates: [
@@ -38,7 +40,7 @@ const indexes = {
   ],
 
   transactions: [
-    {key: {blockHash: 1}},
+    {key: {blockHash: 1}, options: {unique: true}},
     {key: {blockNumber: 1}},
     {key: {from: 1}},
     {key: {to: 1}},
