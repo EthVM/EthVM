@@ -13,12 +13,7 @@ export class MongoUncleRepository extends BaseMongoDbRepository implements Uncle
     return this.db
       .collection(MongoEthVM.collections.uncles)
       .findOne({ hash })
-      .then(resp => {
-        if (!resp) {
-          return null
-        }
-        return toUncle(resp)
-      })
+      .then(resp => resp ? toUncle(resp) : null)
   }
 
   public getUncles(limit: number, page: number): Promise<Uncle[]> {
@@ -26,21 +21,11 @@ export class MongoUncleRepository extends BaseMongoDbRepository implements Uncle
     return this.db
       .collection(MongoEthVM.collections.uncles)
       .find()
-      .sort({ number: -1 })
+      .sort({ blockNumber: -1 })
       .skip(start)
       .limit(limit)
       .toArray()
-      .then(resp => {
-        const u: Uncle[] = []
-        if (!resp) {
-          return u
-        }
-        resp.forEach(uncle => {
-          const tu = toUncle(uncle)
-          u.unshift(tu)
-        })
-        return u
-      })
+      .then(resp => resp ? resp.map(uncle => toUncle(uncle)) : [])
   }
 
   public getTotalNumberOfUncles(): Promise<number> {

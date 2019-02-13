@@ -35,7 +35,7 @@ export default class ChartLiveTxFees extends Vue {
 
   // Lifecycle
   created() {
-    this.fillChartData(this.$store.getters.blockMetrics.slice(0, MAX_ITEMS))
+    this.fillChartData(this.$store.getters.blockMetrics.items().slice(0, MAX_ITEMS))
   }
 
   mounted() {
@@ -53,9 +53,9 @@ export default class ChartLiveTxFees extends Vue {
   fillChartData(bms: BlockMetrics[] | BlockMetrics = []) {
     bms = !Array.isArray(bms) ? [bms] : bms
     bms.forEach(bm => {
-      this.data.labels.push(bm.number)
-      this.data.avgFees.push(bm.avgTxFees)
-      this.data.avgPrice.push(bm.avgGasPrice)
+      this.data.labels.unshift(bm.number)
+      this.data.avgFees.unshift(bm.avgTxFees)
+      this.data.avgPrice.unshift(bm.avgGasPrice)
       if (this.data.labels.length > MAX_ITEMS) {
         this.data.labels.pop()
         this.data.avgFees.pop()

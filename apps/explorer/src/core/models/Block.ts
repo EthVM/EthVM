@@ -1,4 +1,4 @@
-import { EthValue, HexNumber, Hex, Hash, Tx, Uncle } from '@app/core/models'
+import { EthValue, Hash, Hex, HexNumber, Tx, Uncle } from '@app/core/models'
 import BN from 'bignumber.js'
 import { Block as RawBlock, Reward } from 'ethvm-common'
 
@@ -12,14 +12,6 @@ export class Block {
 
   public getId(): string {
     return this.id
-  }
-
-  public isUncle(): boolean {
-    return false
-  }
-
-  public getType(): string {
-    return 'block'
   }
 
   public getUncles(): Uncle[] {

@@ -53,6 +53,7 @@ export interface EthvmApi {
   getTxs(limit: number, page: number): Promise<Tx[]>
   getTxsOfBlock(hash: string): Promise<Tx[]>
   getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<Tx[]>
+  getTotalNumberOfTxs(): Promise<number>
 
   // Uncles
   getUncle(hash: string): Promise<Uncle | null>

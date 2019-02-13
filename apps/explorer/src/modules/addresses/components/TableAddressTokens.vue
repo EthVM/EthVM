@@ -10,7 +10,7 @@
       <v-flex xs12 sm6>
         <v-card class="success white--text pl-2" flat>
           <v-card-text class="pb-0">{{ $t('token.totalUSD') }}</v-card-text>
-          <v-card-title class="headline text-truncate">${{ getTotalUSDValue }}</v-card-title>
+          <v-card-title class="headline text-truncate">${{ getTotalMonetaryValue }}</v-card-title>
         </v-card>
       </v-flex>
     </v-layout>
@@ -40,7 +40,9 @@
         <v-card v-if="tokens.length === 0" flat>
           <p>{{ $t('tokens.empty') }}</p>
         </v-card>
-        <div v-else v-for="(token, index) in tokens" :key="index"><table-address-tokens-row :token="token" :holder="holder" /></div>
+        <div v-else v-for="(token, index) in tokens" :key="index">
+          <table-address-tokens-row :token="token" :holder="holder" />
+        </div>
       </div>
     </div>
   </v-card>
@@ -70,9 +72,8 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
   placeholder = 'Search Tokens Symbol/Name'
 
   /* Methods: */
-  getBalance(value, decimals) {
-    const n = new BN(value)
-    return n.div(new BN(10).pow(decimals)).toFixed()
+  getBalance(value, decimals): BN {
+    return new BN(value).div(new BN(10).pow(decimals))
   }
 
   /*Computed: */
@@ -80,13 +81,17 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
     return this.tokens.length
   }
 
-  get getTotalUSDValue(): string {
-    // let totalUsdVal = 0
-    // this.tokens.forEach(token => {
-    //   totalUsdVal += this.getBalance(token.balance, token.decimals) * token.usdValue
-    // })
-    // return this.getRoundNumber(totalUsdVal)
-    return '0'
+  get getTotalMonetaryValue(): string {
+    if (!this.tokens || this.tokens.length === 0) {
+      return '0'
+    }
+
+    const amount = this.tokens
+      .map(token => this.getBalance(token.balance, token.decimals).multipliedBy(new BN(token.currentPrice)))
+      .reduceRight((acc, val) => acc.plus(val))
+      .toFixed()
+
+    return this.getShortValue(amount)
   }
 }
 </script>

@@ -74,7 +74,7 @@ export class EthvmSocketIoApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
 
   public getBlockMetric(hash: string): Promise<BlockMetrics | null> {
-    return this.promisify(Events.getBlockMetric, {})
+    return this.promisify(Events.getBlockMetric, { hash })
   }
 
   public getBlockMetrics(limit: number, page: number): Promise<BlockMetrics[]> {
@@ -151,6 +151,10 @@ export class EthvmSocketIoApi implements EthvmApi {
 
   public getTxsOfAddress(address: string, filter: string = 'all', limit: number = 100, page: number = 0): Promise<Tx[]> {
     return this.promisify(Events.getAddressTxs, { address, filter, limit, page }).then(raw => raw.map(rawTx => new Tx(rawTx)))
+  }
+
+  public getTotalNumberOfTxs(): Promise<number> {
+    return this.promisify(Events.getTotalNumberOfTxs, {})
   }
 
   // ------------------------------------------------------------------------------------

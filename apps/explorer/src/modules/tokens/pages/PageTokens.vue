@@ -1,7 +1,7 @@
 <template>
   <v-container grid-list-lg class="mb-0">
     <app-bread-crumbs :new-items="crumbs" />
-    <table-tokens :tokens="tokens" />
+    <table-tokens :tokens="tokens" :is-loading="isLoading" />
   </v-container>
 </template>
 
@@ -17,7 +17,9 @@ import { Component, Vue } from 'vue-property-decorator'
   }
 })
 export default class PageTokens extends Vue {
-  tokens: any = []
+  tokens: any = [] // Array of tokens for table display
+  hasError = false // Boolean flag to determine whether or not there is an error to display
+  error = '' // Error message
 
   /*
   ===================================================================================
@@ -25,38 +27,38 @@ export default class PageTokens extends Vue {
   ===================================================================================
   */
 
-  async mounted() {
-    try {
-      this.tokens = await this.fetchTokens()
-      // this.tokens = await this.fetchTokenExchangeRates()
-    } catch (e) {
-      // handle error accordingly
-    }
+  mounted() {
+    this.fetchData()
   }
 
   /*
   ===================================================================================
-    Methods
+    Methods - Load Data
   ===================================================================================
   */
 
   /**
-   * GET and return a JSON array of ETH-based tokens
-   *
-   * @return {Array} - Array of ETH Tokens.
+   * Fetch all data relevant to the view.
    */
-  fetchTokens() {
-    return new Promise((resolve, reject) => {
-      this.$http
-        .get('http://api.ethplorer.io/getTop?apiKey=freekey&criteria=cap')
-        .then(response => {
-          resolve(response.data.tokens)
-        })
-        .catch(err => {
-          reject(err)
-        })
-    })
+  fetchData() {
+    const tokenPromise = this.fetchTokenExchangeRates()
+    const promises = [tokenPromise]
+
+    Promise.all(promises)
+      .then(([tokens]) => {
+        this.tokens = tokens as any[]
+      })
+      .catch(e => {
+        this.hasError = true
+        this.error = e
+      })
   }
+
+  /*
+  ===================================================================================
+    Methods - Fetch Data - Individual Calls
+  ===================================================================================
+  */
 
   /**
    * GET and return JSON array of tokens and their corresponding information
@@ -95,6 +97,15 @@ export default class PageTokens extends Vue {
         disabled: true
       }
     ]
+  }
+
+  /**
+   * Determines whether or not all of the required objects have been loaded/populated
+   *
+   * @return {Boolean}
+   */
+  get isLoading() {
+    return this.tokens.length === 0
   }
 }
 </script>

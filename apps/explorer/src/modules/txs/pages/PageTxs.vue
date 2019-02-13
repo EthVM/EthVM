@@ -3,7 +3,9 @@
     <app-bread-crumbs :new-items="crumbs" />
     <app-card-stats-group type="txs" />
     <v-layout row justify-center mb-4>
-      <v-flex xs12> <table-txs :transactions="txs" page-type="tx" :loading="txsLoad" /> </v-flex>
+      <v-flex xs12>
+        <table-txs :transactions="txs" page-type="tx" :loading="loading" :max-items="max" :total-txs="total" @getTxsPage="getPage" />
+      </v-flex>
     </v-layout>
   </v-container>
 </template>
@@ -15,6 +17,8 @@ import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { Vue, Component, Mixins } from 'vue-property-decorator'
 import { Tx } from '@app/core/models'
 
+const MAX_ITEMS = 50
+
 @Component({
   components: {
     AppBreadCrumbs,
@@ -23,6 +27,46 @@ import { Tx } from '@app/core/models'
   }
 })
 export default class PageTxs extends Vue {
+  txs: Tx[] = []
+  total = 0
+  loading = true
+  error = false
+
+  // Lifecycle
+  mounted() {
+    this.fetchTotalTxs().then(
+      res => {
+        this.total = res
+      },
+      err => {
+        this.total = 0
+      }
+    )
+    this.getPage(0)
+  }
+
+  // Methods
+  fetchTxs(page: number): Promise<Tx[]> {
+    return this.$api.getTxs(this.max, page)
+  }
+
+  fetchTotalTxs(): Promise<number> {
+    return this.$api.getTotalNumberOfTxs()
+  }
+
+  getPage(_page: number): void {
+    this.loading = true
+    this.fetchTxs(_page).then(
+      res => {
+        this.loading = false
+        this.txs = res
+      },
+      err => {
+        this.error = true
+      }
+    )
+  }
+
   // Computed
   get crumbs() {
     return [
@@ -33,12 +77,8 @@ export default class PageTxs extends Vue {
     ]
   }
 
-  get txs(): Tx[] {
-    return this.$store.getters.txs
-  }
-
-  get txsLoad(): boolean {
-    return this.txs.length == 0
+  get max(): number {
+    return MAX_ITEMS
   }
 }
 </script>

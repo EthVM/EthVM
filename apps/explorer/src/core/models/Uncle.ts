@@ -14,14 +14,6 @@ export class Uncle {
     return this.id
   }
 
-  public isUncle(): boolean {
-    return true
-  }
-
-  public getType(): string {
-    return 'uncle'
-  }
-
   public getHash(): string {
     return this.id
   }
@@ -33,16 +25,15 @@ export class Uncle {
     return this.cache.number
   }
 
-  // TODO; Review value
   public getBlockHeight(): number {
-    // return this.uncle.blockHeight
-    return 0
+    if (!this.cache.blockHeight) {
+      this.cache.blockHeight = new BN(this.uncle.blockNumber).toNumber()
+    }
+    return this.cache.blockHeight
   }
 
-  // TODO; Review value
   public getPosition(): number {
-    // return this.uncle.position
-    return 0
+    return this.uncle.uncleIndex
   }
 
   public getParentHash(): Hex {
@@ -91,15 +82,6 @@ export class Uncle {
     return this.cache.gasUsed
   }
 
-  // TODO: Add field to new entities
-  public getTotalDifficulty(): HexNumber {
-    // if (!this.cache.totalDifficulty) {
-    //   this.cache.totalDifficulty = this.uncle.totalDifficulty
-    // }
-    // return this.cache.totalDifficulty
-    return new HexNumber('0')
-  }
-
   public getDifficulty(): HexNumber {
     if (!this.cache.difficulty) {
       this.cache.difficulty = this.uncle.difficulty
@@ -121,39 +103,14 @@ export class Uncle {
     return this.cache.extraData
   }
 
-  // TODO; Add field to new entities
-  public getMinerReward(): EthValue {
-    // const rewards = this.uncle.rewards
-    // if (!this.cache.getMinerReward) {
-    //   this.cache.getMinerReward = rewards[this.uncle.miner]
-    // }
-    // return this.cache.getMinerReward
-    return new EthValue(0)
-  }
-
-  // TODO; Add field to new entities
   public getTotalReward(): EthValue {
-    // if (!this.cache.getTotalReward) {
-    //   let total = 0
-    //   for (const address in this.uncle.rewards) {
-    //     total = this.uncle.rewards[address] + total
-    //   }
-    //   this.cache.getTotalReward = total
-    // }
-    // return this.cache.getTotalReward
-    return new EthValue('0')
+    return this.getUncleReward()
   }
 
-  // TODO; Add field to new entities
   public getUncleReward(): EthValue {
-    // if (!this.cache.getReward) {
-    //   let total = 0
-    //   for (const address in this.uncle.rewards) {
-    //     total = this.uncle.rewards[address] + total
-    //   }
-    //   this.cache.getReward = total - this.uncle.rewards[this.uncle.miner]
-    // }
-    // return this.cache.getReward
-    return new EthValue(0)
+    if (!this.cache.uncleReward) {
+      this.cache.uncleReward = new EthValue(this.uncle.uncleReward || 0)
+    }
+    return this.cache.uncleReward
   }
 }

@@ -11,8 +11,6 @@ exports.Events = {
     NEW_PROCESSING_METADATA: 'NEW_PROCESSING_METADATA',
     NEW_TX: "NEW_TX",
     NEW_UNCLE: "NEW_UNCLE",
-    pastTxsR: "PAST_TXS_RECEIVED",
-    pastBlocksR: "PAST_BLOCKS_RECEIVED",
     // Addresses
     getAddressBalance: "get-address-balance",
     getAddressTokenBalance: "get-address-token-balance",
@@ -39,6 +37,7 @@ exports.Events = {
     getBlockTxs: "get-block-txs",
     getAddressTxs: "get-address-txs",
     getAddressTotalTxs: "get-address-total-txs",
+    getTotalNumberOfTxs: "get-total-number-of-txs",
     // PendingTxs
     getPendingTxs: "get-pending-txs",
     getPendingTxsOfAddress: "get-address-pending-txs",

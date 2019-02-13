@@ -36,10 +36,8 @@ export default class App extends Vue {
 
     // Preload some previous block metrics
     this.$api.getBlockMetrics(MAX_ITEMS, 0).then(bms => {
-      if (bms && bms.length > 0) {
-        bms.forEach(bm => this.$store.commit(Events.NEW_BLOCK_METRIC, bms))
-        this.$eventHub.$emit(Events.NEW_BLOCK_METRIC, bms)
-      }
+      this.$store.commit(Events.NEW_BLOCK_METRIC, bms)
+      this.$eventHub.$emit(Events.NEW_BLOCK_METRIC, bms)
     })
   }
 

@@ -1,11 +1,17 @@
 <template>
   <v-card color="white" flat class="pt-3 pr-2 pl-2 mt-0">
-    <v-layout v-if="pageType != 'home'" row wrap align-center pb-1>
-      <v-flex d-flex xs12 sm8 order-xs1>
-        <v-card-title class="title font-weight-bold">{{ getTitle }}</v-card-title>
+    <v-layout v-if="pageType != 'home'" align-end justify-space-between row wrap fill-height pb-1>
+      <v-flex xs12 sm5 md3>
+        <v-card-title class="title font-weight-bold pb-1">{{ getTitle }}</v-card-title>
       </v-flex>
-      <v-flex hidden-sm-and-down md4 order-xs2>
-        <v-layout justify-end> <app-footnotes :footnotes="footnotes" /> </v-layout>
+      <v-spacer />
+      <v-flex hidden-sm-and-down md3>
+        <v-layout justify-end pb-1> <app-footnotes :footnotes="footnotes" /> </v-layout>
+      </v-flex>
+      <v-flex xs12 sm7 md6 v-if="pages > 1">
+        <v-layout justify-end row class="pb-1 pr-2 pl-2">
+          <app-paginate :total="pages" @newPage="setPage" :new-page="page" />
+        </v-layout>
       </v-flex>
     </v-layout>
     <v-layout v-else row wrap align-center pb-1>
@@ -52,6 +58,9 @@
           </v-flex>
         </v-layout>
       </v-card>
+      <v-layout v-if="pageType != 'home' && pages > 1" justify-end row class="pb-1 pr-2 pl-2">
+        <app-paginate :total="pages" @newPage="setPage" :new-page="page" />
+      </v-layout>
     </div>
   </v-card>
 </template>
@@ -60,16 +69,20 @@
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableBlocksRow from '@app/modules/blocks/components/TableBlocksRow.vue'
 import { Block } from '@app/core/models'
 import { Footnote } from '@app/core/components/props'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+
+const MAX_TXS = 10
 
 @Component({
   components: {
     AppError,
     AppFootnotes,
     AppInfoLoad,
+    AppPaginate,
     TableBlocksRow
   }
 })
@@ -79,6 +92,20 @@ export default class TableBlocks extends Vue {
   @Prop({ type: String, default: 'blocks' }) pageType!: string
   @Prop({ type: String, default: '' }) showStyle!: string
   @Prop(Array) blocks!: Block[]
+  @Prop({ type: Number, default: 0 }) totalBlocks!: number
+  @Prop(Number) maxItems!: number
+  page = 1
+
+  /*Methods: */
+  setPage(_value: number): void {
+    this.page = _value
+  }
+
+  /* Watch: */
+  @Watch('page')
+  onPageChanged(newVal: number, oldVal: number): void {
+    this.$emit('getBlockPage', newVal - 1)
+  }
 
   /* Computed: */
   get getStyle(): string {
@@ -106,6 +133,9 @@ export default class TableBlocks extends Vue {
         icon: 'fa fa-circle'
       }
     ]
+  }
+  get pages(): number {
+    return this.totalBlocks ? Math.ceil(this.totalBlocks / this.maxItems) : 0
   }
 }
 </script>
