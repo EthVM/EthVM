@@ -47,16 +47,16 @@ export default class PageTxs extends Vue {
 
   // Methods
   fetchTxs(page: number): Promise<Tx[]> {
-    return this.$api.getTxs(this.max, page)
+    return this.$api.getTxs(this.max, 'desc', -1)
   }
 
   fetchTotalTxs(): Promise<number> {
     return this.$api.getTotalNumberOfTxs()
   }
 
-  getPage(_page: number): void {
+  getPage(page: number): void {
     this.loading = true
-    this.fetchTxs(_page).then(
+    this.fetchTxs(page).then(
       res => {
         this.loading = false
         this.txs = res

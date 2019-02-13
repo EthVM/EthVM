@@ -53,8 +53,8 @@ export class EthvmSocketIoApi implements EthvmApi {
     return this.promisify(Events.getBlock, { hash }).then(raw => (raw !== null ? new Block(raw) : null))
   }
 
-  public getBlocks(limit: number = 100, page: number = 0): Promise<Block[]> {
-    return this.promisify(Events.getBlocks, { limit, page }).then(raw => raw.map(rawBlock => new Block(rawBlock)))
+  public getBlocks(limit: number = 100, page: number = 0, fromBlock: number = -1): Promise<Block[]> {
+    return this.promisify(Events.getBlocks, { limit, page, fromBlock }).then(raw => raw.map(rawBlock => new Block(rawBlock)))
   }
 
   public getBlockByNumber(no: number): Promise<Block | null> {
@@ -141,8 +141,8 @@ export class EthvmSocketIoApi implements EthvmApi {
     return this.promisify(Events.getTx, { hash }).then(raw => (raw !== null ? new Tx(raw) : null))
   }
 
-  public getTxs(limit: number = 100, page: number = 0): Promise<Tx[]> {
-    return this.promisify(Events.getTxs, { limit, page }).then(raw => raw.map(rawTx => new Tx(rawTx)))
+  public getTxs(limit: number = 100, order: string = 'desc', fromBlock: number = -1): Promise<Tx[]> {
+    return this.promisify(Events.getTxs, { limit,  order, fromBlock }).then(raw => raw.map(rawTx => new Tx(rawTx)))
   }
 
   public getTxsOfBlock(hash: string): Promise<Tx[]> {
@@ -161,8 +161,8 @@ export class EthvmSocketIoApi implements EthvmApi {
   // Uncles
   // ------------------------------------------------------------------------------------
 
-  public getUncles(limit: number = 100, page: number = 0): Promise<Uncle[]> {
-    return this.promisify(Events.getUncles, { limit, page }).then(raw => raw.map(rawUncle => new Uncle(rawUncle)))
+  public getUncles(limit: number = 100, page: number = 0, fromUncle: number = -1): Promise<Uncle[]> {
+    return this.promisify(Events.getUncles, { limit, page, fromUncle }).then(raw => raw.map(rawUncle => new Uncle(rawUncle)))
   }
 
   public getUncle(hash: string): Promise<Uncle | null> {

@@ -86,6 +86,7 @@ export default class TableTxs extends Vue {
   @Prop(Array) transactions!: Tx[] | PendingTx[]
   @Prop({ type: Number, default: 0 }) totalTxs: number
   @Prop(Number) maxItems!: number
+
   page = 1
 
   /*Methods: */
@@ -134,6 +135,7 @@ export default class TableTxs extends Vue {
   get pending(): boolean {
     return this.pageType == 'pending'
   }
+
   get pages(): number {
     return this.totalTxs ? Math.ceil(this.totalTxs / this.maxItems) : 0
   }

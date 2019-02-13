@@ -26,6 +26,8 @@ const MAX_ITEMS = 50
 })
 export default class PageUncles extends Vue {
   uncles: Uncle[] = []
+  firstLoad: boolean = true
+  from: number = -1
   total = 0
   loading = true
   error = false
@@ -44,11 +46,15 @@ export default class PageUncles extends Vue {
   }
 
   // Methods
-  getPage(_page): void {
+  getPage(page): void {
     this.loading = true
-    this.fetchUncles(_page).then(
+    this.fetchUncles(page).then(
       res => {
         this.uncles = res
+        if (!this.firstLoad) {
+          this.from = this.uncles.length > 0 ? this.uncles[0].getBlockHeight() : -1
+          this.firstLoad = false
+        }
         this.loading = false
       },
       err => {
@@ -57,7 +63,7 @@ export default class PageUncles extends Vue {
     )
   }
   fetchUncles(page: number): Promise<Uncle[]> {
-    return this.$api.getUncles(this.max, page)
+    return this.$api.getUncles(this.max, page, this.from)
   }
 
   fetchTotalUncles(): Promise<number> {

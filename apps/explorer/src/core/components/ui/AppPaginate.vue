@@ -35,18 +35,18 @@ export default class AppPaginate extends Vue {
 
   //Methods
 
-  valid(_page: number): boolean {
-    return _page > 0 && _page <= this.total ? true : false
+  valid(page: number): boolean {
+    return page > 0 && page <= this.total
   }
 
   setPage(): void {
-    if (this.valid(parseInt(this.pageInput, 10))) {
-      this.page = parseInt(this.pageInput, 10)
+    if (this.valid(parseInt(String(this.pageInput), 10))) {
+      this.page = parseInt(String(this.pageInput), 10)
     }
   }
 
-  setPageOnClick(_value: string): void {
-    switch (_value) {
+  setPageOnClick(value: string): void {
+    switch (value) {
       case 'first':
         this.page = 1
         break
