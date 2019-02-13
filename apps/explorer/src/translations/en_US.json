@@ -104,10 +104,11 @@
     "load": "Loading",
     "loadingBlockTx": "Loading block transactions",
     "notMined": "This block has not been mined yet",
-    "noTx": "This Transaction does not exist",
+    "noTx": "This transaction does not exist",
     "notValid": "This is not a valid ",
     "sync": "We are synchronizing with the Blockchain. Some features might not work correctly.",
-    "invalidAddress": "Invalid Address"
+    "invalidAddress": "Invalid Address",
+    "invalidHash": "Invalid Hash"
   },
   "block": {
     "height": "Height",
