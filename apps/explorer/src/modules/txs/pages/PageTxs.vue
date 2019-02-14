@@ -70,7 +70,7 @@ export default class PageTxs extends Vue {
     this.fetchTxs(page).then(
       res => {
         this.isLoading = false
-        this.txs = res as Tx[]
+        this.txs = res
       },
       err => {
         this.error = this.$i18n.t('message.noTxHistory').toString()
