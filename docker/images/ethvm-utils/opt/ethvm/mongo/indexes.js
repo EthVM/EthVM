@@ -40,7 +40,7 @@ const indexes = {
   ],
 
   transactions: [
-    {key: {blockHash: 1}, options: {unique: true}},
+    {key: {blockHash: 1}},
     {key: {blockNumber: 1}},
     {key: {from: 1}},
     {key: {to: 1}},
