@@ -142,7 +142,7 @@ export class EthvmSocketIoApi implements EthvmApi {
   }
 
   public getTxs(limit: number = 100, order: string = 'desc', fromBlock: number = -1): Promise<Tx[]> {
-    return this.promisify(Events.getTxs, { limit,  order, fromBlock }).then(raw => raw.map(rawTx => new Tx(rawTx)))
+    return this.promisify(Events.getTxs, { limit, order, fromBlock }).then(raw => raw.map(rawTx => new Tx(rawTx)))
   }
 
   public getTxsOfBlock(hash: string): Promise<Tx[]> {

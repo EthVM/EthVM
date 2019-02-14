@@ -1,3 +1,4 @@
+/// <reference types="node" />
 export interface Log {
     address: string;
     data: string;
