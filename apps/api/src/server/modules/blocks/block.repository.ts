@@ -24,7 +24,7 @@ export class MongoBlockRepository extends BaseMongoDbRepository implements Block
 
     return this.db
       .collection(MongoEthVM.collections.blocks)
-      .find({ 'header.number': {$lt: start} })
+      .find({ 'header.number': {$lte: start} })
       .sort({ 'header.number': -1 })
       .limit(limit)
       .toArray()

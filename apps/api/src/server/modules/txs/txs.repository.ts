@@ -13,8 +13,8 @@ export interface TxsRepository {
 
 export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepository {
   public getTxs(limit: number, order: string = 'desc', fromBlock: number = -1): Promise<Tx[]> {
-    const sort = order === 'desc' ? '$lt' : '$gt'
-    const find = fromBlock !== -1 ? { blockNumber: {sort: fromBlock} } : {}
+    const sort = order === 'desc' ? '$lte' : '$gte'
+    const find = fromBlock !== -1 ? { blockNumber: {[sort]: fromBlock} } : {}
 
     return this.db
       .collection(MongoEthVM.collections.transactions)

@@ -108,8 +108,6 @@ import { Block } from '@app/core/models'
 import { Footnote } from '@app/core/components/props'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 
-const MAX_TXS = 10
-
 @Component({
   components: {
     AppError,
@@ -120,7 +118,7 @@ const MAX_TXS = 10
   }
 })
 export default class TableBlocks extends Vue {
-  @Prop({ type: Boolean, default: true }) loading: boolean
+  @Prop({ type: Boolean, default: true }) loading!: boolean
   @Prop({ type: String, default: 'blocks' }) pageType!: string
   @Prop({ type: String, default: '' }) showStyle!: string
   @Prop(Array) blocks!: Block[]
@@ -132,7 +130,7 @@ export default class TableBlocks extends Vue {
 
   /*
   ===================================================================================
-    Lifecycle
+    Watch
   ===================================================================================
   */
 

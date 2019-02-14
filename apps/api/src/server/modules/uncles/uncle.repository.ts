@@ -22,7 +22,7 @@ export class MongoUncleRepository extends BaseMongoDbRepository implements Uncle
 
     return this.db
       .collection(MongoEthVM.collections.uncles)
-      .find({ number: {$lt: start} })
+      .find({ number: {$lte: start} })
       .sort({ blockNumber: -1, number: -1 })
       .limit(limit)
       .toArray()

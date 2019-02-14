@@ -28,8 +28,12 @@ const MAX_ITEMS = 50
 })
 export default class PageTxs extends Vue {
   txs: Tx[] = []
+  from: number = -1
+  order = 'desc'
+  page = 0
   totalTx = 0
   isLoading = true
+  firstLoad = true
   error = ''
 
   /*
@@ -47,7 +51,7 @@ export default class PageTxs extends Vue {
         this.totalTx = 0
       }
     )
-    this.getPage(0)
+    this.getPage(this.page)
     window.scrollTo(0, 0)
   }
 
@@ -58,7 +62,18 @@ export default class PageTxs extends Vue {
   */
 
   fetchTxs(page: number): Promise<Tx[]> {
-    return this.$api.getTxs(this.maxItems, page)
+    if (this.firstLoad) {
+      this.from = -1
+      this.order = 'desc'
+      this.firstLoad = false
+    } else {
+      console.log('Txs length:', this.txs.length)
+      this.from = page > this.page ? this.txs[this.txs.length - 1].getBlockNumber() : this.txs[0].getBlockNumber()
+    }
+    this.page = page
+
+    console.log('Order:', this.order, ' From:', this.from, 'Page:', this.page)
+    return this.$api.getTxs(this.maxItems, this.order, this.from)
   }
 
   fetchTotalTxs(): Promise<number> {

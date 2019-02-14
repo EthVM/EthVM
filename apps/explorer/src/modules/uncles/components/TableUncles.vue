@@ -76,17 +76,33 @@ export default class TableUncles extends Vue {
   pageType = 'uncles'
   page = 1
 
-  /*Methods: */
-  setPage(_value: number): void {
-    this.page = _value
-  }
+  /*
+  ===================================================================================
+    Watch
+  ===================================================================================
+  */
 
-  /*Watch: */
   @Watch('page')
   onPageChanged(newVal: number, oldVal: number): void {
     this.$emit('getUnclePage', newVal - 1)
   }
-  /* Computed: */
+
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
+  setPage(_value: number): void {
+    this.page = _value
+  }
+
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
+
   get style(): string {
     return this.showStyle
   }
@@ -105,6 +121,7 @@ export default class TableUncles extends Vue {
       }
     ]
   }
+
   get pages(): number {
     return this.totalUncles ? Math.ceil(this.totalUncles / this.maxItems) : 0
   }
