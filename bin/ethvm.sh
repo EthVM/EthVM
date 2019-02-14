@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VERSION='0.1.0'
+VERSION='0.1.1'
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -20,7 +20,7 @@ usage() {
   echo ""
   echo "EthVM CLI."
   echo ""
-  echo "Find more information at: https://github.com/enKryptIO/ethvm/wiki/EthVM-CLI"
+  echo "Find more information at: https://github.com/EthVM/ethvm/wiki/EthVM-CLI"
   echo ""
   echo "Usage:"
   echo "  ethvm [COMMAND] [ARGS...]"
@@ -31,7 +31,6 @@ usage() {
   echo "  docker-build | db                Build and upload different docker images used in this project."
   echo "  help                             Print version information and exit."
   echo "  mongo | mdb                      Utility to operate with MongoDB."
-  echo "  monkey | m                       Utility to generate random transactions to a RPC endpoint."
   echo "  kafka | k                        Utility to operate with Kafka."
   echo "  kafka-connect | kc               Utility to operate with Kafka Connect."
   echo "  terraform | tf                   Utility to operate with Terraform."

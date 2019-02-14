@@ -1,0 +1,20 @@
+storage:
+  dbPath: "/data/db"
+  directoryPerDB: true
+  journal:
+    enabled: true
+  wiredTiger:
+    engineConfig:
+      cacheSizeGB: {{ atoi .Env.MONGO_WIRED_TIGER_CACHE_SIZE }}
+systemLog:
+  timeStampFormat: iso8601-utc
+processManagement:
+  fork: false
+net:
+  bindIp: "{{ .Env.MONGO_BIND_IP }}"
+  port: 27017
+  wireObjectCheck : false
+  unixDomainSocket:
+    enabled : false
+replication:
+  replSetName: "{{ .Env.MONGO_REPL_SET }}"
