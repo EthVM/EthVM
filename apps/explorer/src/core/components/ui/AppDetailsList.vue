@@ -9,25 +9,31 @@
 
     =====================================================================================
     -->
-    <div v-if="isLoading">
+    <div v-if="isLoading && !hasError">
       <v-card-title class="title font-weight-bold pl-4">
         <div style="width: 300px; height: 20px; background: #e6e6e6; border-radius: 2px;"></div>
       </v-card-title>
     </div>
     <div v-else>
-      <v-card-title class="title font-weight-bold pl-4" v-html="title"></v-card-title>
-      <v-divider class="lineGrey" />
+      <slot name="title">
+        <div v-if="!hasError">
+          <v-card-title class="title font-weight-bold pl-4" v-html="title"></v-card-title>
+          <v-divider class="lineGrey" />
+        </div>
+      </slot>
     </div>
     <!--
     =====================================================================================
 
-      LOADING
+      LOADING/ERROR
 
       If isLoading, show v-progress-linear bar
+      If hasError, show AppError
 
     =====================================================================================
     -->
-    <v-progress-linear color="blue" indeterminate v-if="isLoading" />
+    <v-progress-linear color="blue" indeterminate v-if="isLoading && !hasError" />
+    <app-error :has-error="hasError" :message="error" class="mb-4" />
     <!--
     =====================================================================================
 
@@ -41,12 +47,13 @@
 
     =====================================================================================
     -->
-    <v-list-tile v-for="(item, index) in details" :key="index">
+    <v-list-tile v-if="!hasError" v-for="(item, index) in details" :key="index">
       <v-layout align-center justify-start row fill-height class="pa-3">
         <!-- Detail Title -->
         <v-flex xs4 sm3 md2>
           <div class="info--text font-weight-medium" v-html="item.title" />
         </v-flex>
+        <!-- End Detail Title -->
         <!-- Detail Info -->
         <v-flex xs7 sm8 md9>
           <div v-if="isLoading">
@@ -62,6 +69,7 @@
         <v-flex xs1>
           <v-list-tile-action v-if="item.copy"> <app-copy-to-clip :value-to-copy="item.detail" /> </v-list-tile-action>
         </v-flex>
+        <!-- End Detail Info -->
       </v-layout>
     </v-list-tile>
   </v-card>
@@ -70,16 +78,23 @@
 <script lang="ts">
 import { Detail } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import AppError from '@app/core/components/ui/AppError2.vue'
 import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
 
 @Component({
   components: {
+    AppError,
     AppCopyToClip
   }
 })
 export default class AppDetailsList extends Vue {
-  @Prop(String) title: string
+  @Prop(String) title!: string
   @Prop(Array) details: Detail[]
   @Prop(Boolean) isLoading: boolean
+  @Prop(String) error: string
+
+  get hasError(): boolean {
+    return this.error !== ''
+  }
 }
 </script>

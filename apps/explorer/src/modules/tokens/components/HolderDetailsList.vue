@@ -1,19 +1,16 @@
 <template>
   <div>
-    <app-error :has-error="hasError" :message="error" class="mb-4" />
-    <app-details-list v-if="!hasError" :title="title" :details="details" :is-loading="isLoading" class="mb-4" />
+    <app-details-list :title="title" :details="details" :is-loading="isLoading" :error="error" class="mb-4" />
   </div>
 </template>
 
 <script lang="ts">
 import { Detail } from '@app/core/components/props'
 import { Component, Vue, Prop } from 'vue-property-decorator'
-import AppError from '@app/core/components/ui/AppError2.vue'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 
 @Component({
   components: {
-    AppError,
     AppDetailsList
   }
 })
@@ -30,16 +27,6 @@ export default class HolderDetailsList extends Vue {
     Computed Values
   ===================================================================================
   */
-
-  /**
-   * Determines whether or not component has an error.
-   * If error property is empty string, there is no error.
-   *
-   * @return {Boolean} - Whether or not error exists
-   */
-  get hasError(): boolean {
-    return this.error !== ''
-  }
 
   /**
    * Create properly-formatted title from tokenDetails

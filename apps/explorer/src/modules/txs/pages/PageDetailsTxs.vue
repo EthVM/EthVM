@@ -3,8 +3,7 @@
     <app-bread-crumbs :new-items="crumbs" />
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
-        <app-error :has-error="hasError" :message="error" class="mb-4" />
-        <app-details-list v-if="!hasError" :title="title" :details="txDetails" :is-loading="isLoading" />
+        <app-details-list :title="title" :details="txDetails" :is-loading="isLoading" :error="error" />
       </v-flex>
     </v-layout>
   </v-container>
@@ -12,7 +11,6 @@
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-import AppError from '@app/core/components/ui/AppError2.vue'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import { Events } from 'ethvm-common'
 import { eth } from '@app/core/helper'
@@ -23,7 +21,6 @@ import { Detail } from '@app/core/components/props'
 @Component({
   components: {
     AppBreadCrumbs,
-    AppError,
     AppDetailsList
   }
 })
@@ -117,16 +114,6 @@ export default class PageDetailsTxs extends Vue {
     Computed Values
   ===================================================================================
   */
-
-  /**
-   * Determines whether or not component has an error.
-   * If error property is empty string, there is no error.
-   *
-   * @return {Boolean} - Whether or not error exists
-   */
-  get hasError(): boolean {
-    return this.error !== ''
-  }
 
   /**
    * Create properly-formatted title from tokenDetails

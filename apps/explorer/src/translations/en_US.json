@@ -108,7 +108,9 @@
     "notValid": "This is not a valid ",
     "sync": "We are synchronizing with the Blockchain. Some features might not work correctly.",
     "invalidAddress": "Invalid Address",
-    "invalidHash": "Invalid Hash"
+    "invalidHash": "Invalid Hash",
+    "invalidBlock": "Invalid Block",
+    "invalidToken": "Invalid Token Address"
   },
   "block": {
     "height": "Height",
