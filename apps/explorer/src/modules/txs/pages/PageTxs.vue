@@ -67,12 +67,9 @@ export default class PageTxs extends Vue {
       this.order = 'desc'
       this.firstLoad = false
     } else {
-      console.log('Txs length:', this.txs.length)
       this.from = page > this.page ? this.txs[this.txs.length - 1].getBlockNumber() : this.txs[0].getBlockNumber()
     }
     this.page = page
-
-    console.log('Order:', this.order, ' From:', this.from, 'Page:', this.page)
     return this.$api.getTxs(this.maxItems, this.order, this.from)
   }
 
