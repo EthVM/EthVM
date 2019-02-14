@@ -2,8 +2,8 @@
 2018/11/26-11:58:55.990387 7f3950227700 Git sha rocksdb_build_git_sha:
 2018/11/26-11:58:55.990389 7f3950227700 Compile date Dec 19 2017
 2018/11/26-11:58:55.990391 7f3950227700 DB SUMMARY
-2018/11/26-11:58:55.990405 7f3950227700 SST files in database/block-summaries dir, Total Num: 0, files: 
-2018/11/26-11:58:55.990407 7f3950227700 Write Ahead Log file in database/block-summaries: 
+2018/11/26-11:58:55.990405 7f3950227700 SST files in database/block-executionSummaries dir, Total Num: 0, files:
+2018/11/26-11:58:55.990407 7f3950227700 Write Ahead Log file in database/block-executionSummaries:
 2018/11/26-11:58:55.990409 7f3950227700                         Options.error_if_exists: 0
 2018/11/26-11:58:55.990410 7f3950227700                       Options.create_if_missing: 1
 2018/11/26-11:58:55.990411 7f3950227700                         Options.paranoid_checks: 1
@@ -23,8 +23,8 @@
 2018/11/26-11:58:55.990421 7f3950227700                        Options.use_direct_reads: 0
 2018/11/26-11:58:55.990422 7f3950227700                        Options.use_direct_io_for_flush_and_compaction: 0
 2018/11/26-11:58:55.990423 7f3950227700          Options.create_missing_column_families: 0
-2018/11/26-11:58:55.990424 7f3950227700                              Options.db_log_dir: 
-2018/11/26-11:58:55.990424 7f3950227700                                 Options.wal_dir: database/block-summaries
+2018/11/26-11:58:55.990424 7f3950227700                              Options.db_log_dir:
+2018/11/26-11:58:55.990424 7f3950227700                                 Options.wal_dir: database/block-executionSummaries
 2018/11/26-11:58:55.990425 7f3950227700                Options.table_cache_numshardbits: 6
 2018/11/26-11:58:55.990426 7f3950227700                      Options.max_subcompactions: 1
 2018/11/26-11:58:55.990427 7f3950227700                  Options.max_background_flushes: 1
@@ -76,7 +76,7 @@
 2018/11/26-11:58:55.990468 7f3950227700 	ZSTDNotFinal supported: 1
 2018/11/26-11:58:55.990469 7f3950227700 	ZSTD supported: 1
 2018/11/26-11:58:55.990470 7f3950227700 Fast CRC32 supported: Not supported on x86
-2018/11/26-11:58:55.990504 7f3950227700 [db/db_impl_open.cc:227] Creating manifest 1 
+2018/11/26-11:58:55.990504 7f3950227700 [db/db_impl_open.cc:227] Creating manifest 1
 2018/11/26-11:58:56.003001 7f3950227700 [db/version_set.cc:2835] Recovering from manifest file: MANIFEST-000001
 2018/11/26-11:58:56.003081 7f3950227700 [db/column_family.cc:413] --------------- Options for column family [default]:
 2018/11/26-11:58:56.003084 7f3950227700               Options.comparator: leveldb.BytewiseComparator
@@ -160,7 +160,7 @@
 2018/11/26-11:58:56.003215 7f3950227700 Options.compaction_options_fifo.max_table_files_size: 1073741824
 2018/11/26-11:58:56.003216 7f3950227700 Options.compaction_options_fifo.allow_compaction: 0
 2018/11/26-11:58:56.003218 7f3950227700 Options.compaction_options_fifo.ttl: 0
-2018/11/26-11:58:56.003219 7f3950227700                   Options.table_properties_collectors: 
+2018/11/26-11:58:56.003219 7f3950227700                   Options.table_properties_collectors:
 2018/11/26-11:58:56.003220 7f3950227700                   Options.inplace_update_support: 0
 2018/11/26-11:58:56.003221 7f3950227700                 Options.inplace_update_num_locks: 10000
 2018/11/26-11:58:56.003223 7f3950227700               Options.memtable_prefix_bloom_size_ratio: 0.000000
@@ -171,7 +171,7 @@
 2018/11/26-11:58:56.003229 7f3950227700                Options.paranoid_file_checks: 0
 2018/11/26-11:58:56.003231 7f3950227700                Options.force_consistency_checks: 0
 2018/11/26-11:58:56.003232 7f3950227700                Options.report_bg_io_stats: 0
-2018/11/26-11:58:56.003273 7f3950227700 [db/version_set.cc:3100] Recovered from manifest file:database/block-summaries/MANIFEST-000001 succeeded,manifest_file_number is 1, next_file_number is 3, last_sequence is 0, log_number is 0,prev_log_number is 0,max_column_family is 0
+2018/11/26-11:58:56.003273 7f3950227700 [db/version_set.cc:3100] Recovered from manifest file:database/block-executionSummaries/MANIFEST-000001 succeeded,manifest_file_number is 1, next_file_number is 3, last_sequence is 0, log_number is 0,prev_log_number is 0,max_column_family is 0
 2018/11/26-11:58:56.003276 7f3950227700 [db/version_set.cc:3108] Column family [default] (ID 0), log number is 0
 2018/11/26-11:58:56.010690 7f3950227700 [db/db_impl_open.cc:1150] DB pointer 0x7f394922b700
 2018/11/26-12:00:19.611487 7f38a068b700 [db/db_impl.cc:234] Shutdown: canceling all background work

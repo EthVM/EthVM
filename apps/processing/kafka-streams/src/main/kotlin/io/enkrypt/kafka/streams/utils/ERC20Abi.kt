@@ -7,7 +7,6 @@ import io.enkrypt.avro.processing.BalanceType
 import io.enkrypt.avro.processing.TokenTransferRecord
 import io.enkrypt.common.extensions.setAmount
 import java.math.BigInteger
-import java.nio.file.Paths
 
 object ERC20Abi : AbstractAbi(ERC20Abi::class.java.getResourceAsStream("/abi/erc20.json")) {
 

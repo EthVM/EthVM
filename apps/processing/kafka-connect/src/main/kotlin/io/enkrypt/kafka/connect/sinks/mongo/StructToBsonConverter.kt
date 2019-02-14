@@ -26,7 +26,6 @@ import org.apache.kafka.connect.data.Struct
 import org.bson.BsonArray
 import org.bson.BsonBinary
 import org.bson.BsonBoolean
-import org.bson.BsonDecimal128
 import org.bson.BsonDocument
 import org.bson.BsonDouble
 import org.bson.BsonInt32
@@ -34,7 +33,6 @@ import org.bson.BsonInt64
 import org.bson.BsonNull
 import org.bson.BsonString
 import org.bson.BsonValue
-import org.bson.types.Decimal128
 import java.nio.ByteBuffer
 
 object TypeMappings {
@@ -276,13 +274,12 @@ object StructToBsonConverter {
               if (bsonValue.isBinary && conversion != null) {
 
                 val bytes = (bsonValue as BsonBinary).data
-
-                bsonValue = when (conversion) {
-                  Hex -> BsonString(bytes.hex())
-                  UBigInt -> BsonDecimal128(Decimal128(bytes.unsignedBigInteger().toBigDecimal()))
-                  BigInt -> BsonDecimal128(Decimal128(bytes.bigInteger()!!.toBigDecimal()))
-                  else -> throw IllegalStateException("Illegal conversion value!")
-                }
+                  bsonValue = when (conversion) {
+                    Hex -> BsonString(bytes.hex())
+                    UBigInt -> BsonString(bytes.unsignedBigInteger().toString())
+                    BigInt -> BsonString(bytes.bigInteger().toString())
+                    else -> throw IllegalStateException("Illegal conversion value!")
+                  }
               }
 
               doc.append(fieldName, bsonValue)

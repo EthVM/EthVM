@@ -51,7 +51,7 @@
   keep_log_file_num=1000
   recycle_log_file_num=0
   db_log_dir=
-  wal_dir=database/block-summaries
+  wal_dir=database/block-executionSummaries
   max_subcompactions=1
   use_direct_reads=false
   WAL_size_limit_MB=0
@@ -72,7 +72,7 @@
   wal_bytes_per_sync=0
   avoid_flush_during_shutdown=false
   concurrent_prepare=false
-  
+
 
 [CFOptions "default"]
   report_bg_io_stats=false
@@ -119,7 +119,7 @@
   compaction_filter=nullptr
   level0_stop_writes_trigger=36
   compaction_pri=kByCompensatedSize
-  
+
 [TableOptions/BlockBasedTable "default"]
   read_amp_bytes_per_bit=0
   format_version=0
@@ -140,4 +140,4 @@
   cache_index_and_filter_blocks=false
   index_type=kBinarySearch
   flush_block_policy_factory=FlushBlockBySizePolicyFactory
-  
+
