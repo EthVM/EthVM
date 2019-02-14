@@ -15,10 +15,6 @@ volumes:
   kafka-volume-1:
   zookeeper-volume:
 
-  paritydb:
-    external: true
-
-
 services:
 
   traefik:
