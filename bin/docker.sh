@@ -17,7 +17,7 @@ docker_usage() {
   echo "  ethvm docker [COMMAND] [ARGS...]"
   echo ""
   echo "Commands:"
-  echo "  up      [full|simple|default]   Create and start docker containers."
+  echo "  up           [simple|default]   Create and start docker containers."
   echo "  start                           Start stopped docker containers."
   echo "  stop                            Stop docker containers."
   echo "  down                            Stop and remove docker containers, networks, images, and volumes."

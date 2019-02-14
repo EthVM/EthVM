@@ -17,9 +17,9 @@ kafka_usage() {
   echo "  ethvm kafka [COMMAND]"
   echo ""
   echo "Commands:"
-  echo "  create-topics                       Create EthVM Kafka topics."
-  echo "  list-topics                         List registered Kafka topics."
-  echo "  reset-topics                        Resets Kafka topics."
+  echo "  create-topics                       Creates EthVM Kafka topics."
+  echo "  list-topics                         List current registered Kafka topics."
+  echo "  reset-topics                        Resets registered Kafka topics to have offset 0."
   echo "  help                                Print the help information and exit."
   echo ""
 }
