@@ -3,7 +3,15 @@
     <app-bread-crumbs :new-items="crumbs" />
     <v-layout row justify-center mb-4>
       <v-flex xs12>
-        <table-txs :transactions="pendingTxs" page-type="pending" :loading="loading" :max-items="max" :total-txs="total" @getTxsPage="getPage" />
+        <table-txs
+          :transactions="pendingTxs"
+          page-type="pending"
+          :loading="isLoading"
+          :max-items="maxItems"
+          :total-txs="totalTx"
+          :error="error"
+          @getTxsPage="getPage"
+        />
       </v-flex>
     </v-layout>
   </v-container>
@@ -25,64 +33,79 @@ const MAX_ITEMS = 50
   }
 })
 export default class PagePendingTxs extends Vue {
-  pendingTxs: Tx[] = []
-  total = 0
-  loading = true
-  error = false
+  pendingTxs: PendingTx[] = []
+  totalTx = 0
+  isLoading = true
+  error = ''
 
-  // Lifecycle
+  /*
+  ===================================================================================
+    Lifecycle
+  ===================================================================================
+  */
+
   created() {
-    this.fetchPendingTxs(0).then(
-      pTxs => {
-        this.$store.commit(Events.NEW_PENDING_TX, pTxs)
-        if (pTxs && pTxs.length > 0) {
-          this.$eventHub.$emit(Events.NEW_PENDING_TX)
-        }
-        this.pendingTxs = pTxs
-        this.loading = false
-      },
-      err => {
-        this.error = true
-      }
-    )
+    this.getPage(0)
   }
 
-  // Lifecycle
   mounted() {
     this.fetchTotalPendingTxs().then(
       res => {
-        this.total = res
+        this.totalTx = res
       },
       err => {
-        this.total = 0
+        this.totalTx = 0
       }
     )
   }
 
-  // Methods
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
 
   getPage(_page: number): void {
-    this.loading = true
+    this.isLoading = true
     this.fetchPendingTxs(_page).then(
       res => {
-        this.loading = false
-        this.pendingTxs = res
+        this.commitPendingTx(res)
+        this.isLoading = false
+        this.pendingTxs = res as PendingTx[]
       },
       err => {
-        this.error = true
+        this.error = `${JSON.stringify(err)}`
       }
     )
   }
 
   fetchPendingTxs(page: number): Promise<PendingTx[]> {
-    return this.$api.getPendingTxs(this.max, page)
+    return this.$api.getPendingTxs(this.maxItems, page)
   }
 
   fetchTotalPendingTxs(): Promise<number> {
     return this.$api.getTotalNumberOfPendingTxs()
   }
 
-  // Computed
+  /**
+   * After fetching PendingTx[] from API, commit to vuex
+   * and emit event.
+   *
+   * @param  {PendingTx[]} pendingTx - Array of PendingTx[] obtained from API
+   */
+  commitPendingTx(pendingTx) {
+    this.$store.commit(Events.NEW_PENDING_TX, pendingTx)
+    if (pendingTx && pendingTx.length > 0) {
+      this.$eventHub.$emit(Events.NEW_PENDING_TX)
+    }
+  }
+
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
+
   // No Need to ber reactive yet, needs update button on update
   // get pendingTxs(): PendingTx[] {
   //   return this.$store.getters.pendingTxs
@@ -97,7 +120,7 @@ export default class PagePendingTxs extends Vue {
     ]
   }
 
-  get max(): number {
+  get maxItems(): number {
     return MAX_ITEMS
   }
 }

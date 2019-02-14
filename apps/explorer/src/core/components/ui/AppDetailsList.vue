@@ -59,6 +59,9 @@
             </router-link>
           </div>
         </v-flex>
+        <v-flex xs1>
+          <v-list-tile-action v-if="item.copy"> <app-copy-to-clip :value-to-copy="item.detail" /> </v-list-tile-action>
+        </v-flex>
       </v-layout>
     </v-list-tile>
   </v-card>
@@ -67,8 +70,13 @@
 <script lang="ts">
 import { Detail } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
 
-@Component
+@Component({
+  components: {
+    AppCopyToClip
+  }
+})
 export default class AppDetailsList extends Vue {
   @Prop(String) title: string
   @Prop(Array) details: Detail[]

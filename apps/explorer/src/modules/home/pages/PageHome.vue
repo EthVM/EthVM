@@ -10,11 +10,15 @@
     </v-layout>
     <!-- Last Blocks -->
     <v-layout row wrap justify-center mb-4>
-      <v-flex xs12> <table-blocks :max-blocks="true" :blocks="blocks" :loading="blocksLoading" :show-style="tableStyle" page-type="home" /> </v-flex>
+      <v-flex xs12>
+        <table-blocks :max-blocks="true" :blocks="blocks" :loading="blocksLoading" :show-style="tableStyle" :error="errorTableBlocks" page-type="home" />
+      </v-flex>
     </v-layout>
     <!-- Last Txs -->
     <v-layout row wrap justify-center mb-4>
-      <v-flex xs12> <table-txs :transactions="txs" :loading="txsLoading" :show-style="tableStyle" page-type="home" /> </v-flex>
+      <v-flex xs12>
+        <table-txs :transactions="txs" :loading="txsLoading" :show-style="tableStyle" page-type="home" :error="errorTableTxs" :max-items="maxItems" />
+      </v-flex>
     </v-layout>
   </v-container>
 </template>
@@ -44,14 +48,66 @@ const MAX_ITEMS = 50
 })
 export default class PageHome extends Vue {
   tableStyle = 'max-height: 590px'
+  errorTableTxs = ''
+  errorTableBlocks = ''
 
-  // Lifecycle
+  /*
+  ===================================================================================
+    Lifecycle
+  ===================================================================================
+  */
+
   created() {
-    this.$api.getBlocks(MAX_ITEMS, 0).then(blocks => this.$store.commit(Events.NEW_BLOCK, blocks))
-    this.$api.getTxs(MAX_ITEMS, 0).then(txs => this.$store.commit(Events.NEW_TX, txs))
+    this.loadData()
   }
 
-  /* Computed: */
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
+  loadData() {
+    this.loadTxs()
+    this.loadBlocks()
+  }
+
+  loadTxs() {
+    this.fetchTxs().then(
+      res => {
+        this.$store.commit(Events.NEW_TX, res)
+      },
+      err => {
+        this.errorTableTxs = this.$i18n.t('message.error').toString()
+      }
+    )
+  }
+
+  loadBlocks() {
+    this.fetchBlocks().then(
+      res => {
+        this.$store.commit(Events.NEW_BLOCK, res)
+      },
+      err => {
+        this.errorTableBlocks = this.$i18n.t('message.error').toString()
+      }
+    )
+  }
+
+  fetchTxs(): Promise<Tx[]> {
+    return this.$api.getTxs(MAX_ITEMS, 0)
+  }
+
+  fetchBlocks(): Promise<Block[]> {
+    return this.$api.getBlocks(MAX_ITEMS, 0)
+  }
+
+  /*
+  ===================================================================================
+    Computed
+  ===================================================================================
+  */
+
   get txs(): Tx[] {
     return this.$store.getters.txs.slice(0, MAX_ITEMS)
   }
@@ -66,6 +122,10 @@ export default class PageHome extends Vue {
 
   get txsLoading(): boolean {
     return this.txs.length === 0
+  }
+
+  get maxItems(): number {
+    return MAX_ITEMS
   }
 }
 </script>

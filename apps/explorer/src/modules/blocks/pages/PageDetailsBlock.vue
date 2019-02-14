@@ -20,6 +20,7 @@
           class="mt-3"
           :max-items="max"
           :total-txs="totalTxs"
+          :error="''"
           @getTxsPage="setPageTxs"
         />
         <v-card v-if="txs.length === 0" flat color="white">

@@ -4,7 +4,7 @@
     <app-card-stats-group type="txs" />
     <v-layout row justify-center mb-4>
       <v-flex xs12>
-        <table-txs :transactions="txs" page-type="tx" :loading="loading" :max-items="max" :total-txs="total" @getTxsPage="getPage" />
+        <table-txs :transactions="txs" page-type="tx" :loading="isLoading" :max-items="maxItems" :total-txs="totalTx" :error="error" @getTxsPage="getPage" />
       </v-flex>
     </v-layout>
   </v-container>
@@ -28,26 +28,37 @@ const MAX_ITEMS = 50
 })
 export default class PageTxs extends Vue {
   txs: Tx[] = []
-  total = 0
-  loading = true
-  error = false
+  totalTx = 0
+  isLoading = true
+  error = ''
 
-  // Lifecycle
+  /*
+  ===================================================================================
+    Lifecycle
+  ===================================================================================
+  */
+
   mounted() {
     this.fetchTotalTxs().then(
       res => {
-        this.total = res
+        this.totalTx = res
       },
       err => {
-        this.total = 0
+        this.totalTx = 0
       }
     )
     this.getPage(0)
+    window.scrollTo(0, 0)
   }
 
-  // Methods
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
   fetchTxs(page: number): Promise<Tx[]> {
-    return this.$api.getTxs(this.max, 'desc', -1)
+    return this.$api.getTxs(this.maxItems, page)
   }
 
   fetchTotalTxs(): Promise<number> {
@@ -55,19 +66,24 @@ export default class PageTxs extends Vue {
   }
 
   getPage(page: number): void {
-    this.loading = true
+    this.isLoading = true
     this.fetchTxs(page).then(
       res => {
-        this.loading = false
+        this.isLoading = false
         this.txs = res
       },
       err => {
-        this.error = true
+        this.error = this.$i18n.t('message.noTxHistory').toString()
       }
     )
   }
 
-  // Computed
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
+
   get crumbs() {
     return [
       {
@@ -77,7 +93,7 @@ export default class PageTxs extends Vue {
     ]
   }
 
-  get max(): number {
+  get maxItems(): number {
     return MAX_ITEMS
   }
 }

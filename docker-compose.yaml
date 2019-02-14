@@ -83,12 +83,6 @@ services:
       - back
     ports:
       - 27017:27017
-    labels:
-      - "traefik.enable=true"
-      - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:mongo.ethvm.${DOMAIN}"
-      - "traefik.port=27017"
-      - "traefik.backend=mongodb"
     mem_limit: 4g
 
   zookeeper:
