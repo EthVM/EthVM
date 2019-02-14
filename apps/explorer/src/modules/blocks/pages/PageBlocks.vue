@@ -4,7 +4,7 @@
     <app-card-stats-group />
     <v-layout row wrap justify-center mb-4>
       <v-flex xs12>
-        <table-blocks :loading="loading" :blocks="blocks" :total-blocks="total" :max-items="max" @getBlockPage="getPage" />
+        <table-blocks :loading="isLoading" :blocks="blocks" :total-blocks="total" :max-items="max" :error="error" @getBlockPage="getPage" />
       </v-flex>
     </v-layout>
   </v-container>
@@ -28,11 +28,16 @@ const MAX_ITEMS = 50
 })
 export default class PageBlocks extends Vue {
   blocks: Block[] = []
-  loading = true
-  error = false
+  isLoading = true
+  error = ''
   total = 0
 
-  // Lifecycle
+  /*
+  ===================================================================================
+    Lifecycle
+  ===================================================================================
+  */
+
   mounted() {
     this.fetchTotalBlocks().then(
       res => {
@@ -43,9 +48,15 @@ export default class PageBlocks extends Vue {
       }
     )
     this.getPage(0)
+    window.scrollTo(0, 0)
   }
 
-  // Methods
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
   fetchBlocks(page: number): Promise<Block[]> {
     return this.$api.getBlocks(this.max, page)
   }
@@ -54,19 +65,25 @@ export default class PageBlocks extends Vue {
     return this.$api.getTotalNumberOfBlocks()
   }
 
-  getPage(_page: number): void {
-    this.loading = true
-    this.fetchBlocks(_page).then(
+  getPage(page: number): void {
+    this.isLoading = true
+    this.fetchBlocks(page).then(
       res => {
-        this.loading = false
+        this.isLoading = false
         this.blocks = res
       },
       err => {
-        this.error = true
+        this.error = this.$i18n.t('message.error').toString()
       }
     )
   }
-  // Computed
+
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
+
   get crumbs() {
     return [
       {

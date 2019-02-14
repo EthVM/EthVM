@@ -11,7 +11,7 @@
     <!-- Last Blocks -->
     <v-layout row wrap justify-center mb-4>
       <v-flex xs12>
-        <table-blocks :max-blocks="true" :blocks="blocks" :loading="blocksLoading" :show-style="tableStyle" page-type="home" />
+        <table-blocks :max-blocks="true" :blocks="blocks" :loading="blocksLoading" :show-style="tableStyle" :error="errorTableBlocks" page-type="home" />
       </v-flex>
     </v-layout>
     <!-- Last Txs -->
