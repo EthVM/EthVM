@@ -24,8 +24,8 @@ export class MongoBlockRepository extends BaseMongoDbRepository implements Block
 
     return this.db
       .collection(MongoEthVM.collections.blocks)
-      .find({ 'header.number': {$lte: start} })
-      .sort({ 'header.number': -1 })
+      .find({ _id: {$lte: start} })
+      .sort({ _id: -1 })
       .limit(limit)
       .toArray()
       .then(resp => resp ? resp.map(block => toBlock(block)) : [])
@@ -34,7 +34,7 @@ export class MongoBlockRepository extends BaseMongoDbRepository implements Block
   public getBlockByNumber(no: number): Promise<Block | null> {
     return this.db
       .collection(MongoEthVM.collections.blocks)
-      .findOne({ 'header.number': no })
+      .findOne({ _id: no })
       .then(resp => resp ? toBlock(resp) : null)
   }
 

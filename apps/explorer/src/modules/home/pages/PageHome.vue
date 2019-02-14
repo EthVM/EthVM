@@ -95,11 +95,11 @@ export default class PageHome extends Vue {
   }
 
   fetchTxs(): Promise<Tx[]> {
-    return this.$api.getTxs(MAX_ITEMS, 0)
+    return this.$api.getTxs(MAX_ITEMS, 'desc', -1)
   }
 
   fetchBlocks(): Promise<Block[]> {
-    return this.$api.getBlocks(MAX_ITEMS, 0)
+    return this.$api.getBlocks(MAX_ITEMS, 0, -1)
   }
 
   /*
