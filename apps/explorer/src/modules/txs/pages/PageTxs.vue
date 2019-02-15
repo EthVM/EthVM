@@ -4,7 +4,7 @@
     <app-card-stats-group type="txs" />
     <v-layout row justify-center mb-4>
       <v-flex xs12>
-        <table-txs :transactions="txs" page-type="tx" :loading="isLoading" :max-items="maxItems" :total-txs="totalTx" :error="error" @getTxsPage="getPage" />
+        <table-txs :transactions="txs" page-type="tx" :loading="isLoading" :max-items="maxItems" :total-txs="totalTxs" :error="error" @getTxsPage="getPage" />
       </v-flex>
     </v-layout>
   </v-container>
@@ -16,6 +16,7 @@ import AppCardStatsGroup from '@app/core/components/ui/AppCardStatsGroup.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { Vue, Component, Mixins } from 'vue-property-decorator'
 import { Tx } from '@app/core/models'
+import { rejects } from 'assert'
 
 const MAX_ITEMS = 50
 
@@ -28,10 +29,12 @@ const MAX_ITEMS = 50
 })
 export default class PageTxs extends Vue {
   txs: Tx[] = []
+  totalTxs = 0
+
+  pages: number[] = []
   from: number = -1
-  order = 'desc'
   page = 0
-  totalTx = 0
+
   isLoading = true
   firstLoad = true
   error = ''
@@ -45,13 +48,17 @@ export default class PageTxs extends Vue {
   mounted() {
     this.fetchTotalTxs().then(
       res => {
-        this.totalTx = res
+        this.totalTxs = res
       },
       err => {
-        this.totalTx = 0
+        this.totalTxs = 0
       }
     )
-    this.getPage(0)
+    this.getPage(0).then(res => {
+      const first = this.txs.length > 0 ? this.txs[0].getBlockNumber() : -1
+      this.pages.push(first)
+      this.firstLoad = false
+    })
     window.scrollTo(0, 0)
   }
 
@@ -61,45 +68,45 @@ export default class PageTxs extends Vue {
   ===================================================================================
   */
 
-  fetchTxs(page: number): Promise<Tx[]> {
-    if (this.firstLoad) {
-      this.from = -1
-      this.order = 'desc'
-      this.firstLoad = false
-    } else {
-      this.from = page > this.page ? this.txs[this.txs.length - 1].getBlockNumber() : this.txs[0].getBlockNumber()
-      // console.log(
-      //   'From: ',
-      //   this.from,
-      //   'page > this.page: ',
-      //   page > this.page,
-      //   this.txs[0].getBlockNumber(),
-      //   this.txs[this.txs.length - 1].getBlockNumber(),
-      //   'PageTxs > fetchTxs'
-      // )
+  fetchTxs(newPage: number): Promise<Tx[]> {
+    if (!this.firstLoad) {
+      const length = this.txs.length
+      const first = length > 0 ? this.txs[0].getBlockNumber() : -1
+      const last = length > 0 ? this.txs[length - 1].getBlockNumber() : -1
+
+      if (newPage > this.page) {
+        this.pages.push(first)
+        this.from = last
+      } else {
+        this.from = this.pages.pop()
+      }
     }
-    this.page = page
-    return this.$api.getTxs(this.maxItems, this.order, this.from)
+
+    this.page = newPage
+
+    return this.$api.getTxs(this.maxItems, 'desc', this.from)
   }
 
   fetchTotalTxs(): Promise<number> {
     return this.$api.getTotalNumberOfTxs()
   }
 
-  getPage(page: number): void {
-    if (!this.firstLoad && page === this.page) {
-      return
-    }
+  getPage(page: number): Promise<boolean> {
     this.isLoading = true
-    this.fetchTxs(page).then(
-      res => {
-        this.isLoading = false
-        this.txs = res
-      },
-      err => {
-        this.error = this.$i18n.t('message.noTxHistory').toString()
-      }
-    )
+    return new Promise((resolve, reject) => {
+      this.fetchTxs(page).then(
+        res => {
+          this.isLoading = false
+          this.txs = res
+          resolve(true)
+        },
+        err => {
+          this.error = this.$i18n.t('message.noTxHistory').toString()
+          Promise.resolve(false)
+          reject()
+        }
+      )
+    })
   }
 
   /*

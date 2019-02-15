@@ -19,7 +19,7 @@ export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepo
     return this.db
       .collection(MongoEthVM.collections.transactions)
       .find(find)
-      .sort({ blockNumber: -1, index: -1 })
+      .sort({ blockNumber: -1, index: -1, timestamp: -1 })
       .limit(limit)
       .toArray()
       .then(resp => resp ? resp.map(tx => toTx(tx)) : [])
