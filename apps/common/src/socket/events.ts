@@ -47,7 +47,6 @@ export const Events = {
   getTxs: "get-txs",
   getBlockTxs: "get-block-txs",
   getAddressTxs: "get-address-txs",
-  getAddressTotalTxs: "get-address-total-txs",
   getTotalNumberOfTxs: "get-total-number-of-txs",
 
   // PendingTxs

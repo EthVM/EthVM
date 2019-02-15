@@ -348,52 +348,6 @@ describe('ethvm-server-events', () => {
     })
   })
 
-  describe('getAddressTotalTxs', () => {
-    it('should return Promise<number>', async () => {
-      const inputs = [
-        {
-          address: '0000000000000000000000000000000000000000'
-        }
-      ]
-
-      for (const input of inputs) {
-        const data = await callEvent(Events.getAddressTotalTxs, input, client)
-        expect(data).to.equal(151)
-
-      }
-    })
-
-    it('should return err ', async () => {
-      const inputs = [
-        '',
-        '0x',
-        '0x0',
-        10,
-        {},
-        {
-          address: '0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238'
-        },
-        {
-          address: '0xd9ea042ad059033ba3c3be79f4081244f183bf03',
-          limit: '1',
-          page: 1
-        },
-        {
-          number: 1
-        }
-      ]
-
-      for (const input of inputs) {
-        try {
-          const data = await callEvent(Events.getAddressTotalTxs, input, client)
-        } catch (e) {
-          expect(e).to.be.eql(errors.BAD_REQUEST)
-          expect(e).to.not.be.equal(errors.INTERNAL_SERVER_ERROR)
-        }
-      }
-    })
-  })
-
   describe('getTxs', () => {
     it('should return Promise<Tx[]>', async () => {
       const inputs = [

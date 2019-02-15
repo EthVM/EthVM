@@ -139,6 +139,12 @@ export default class PageDetailsAddress extends Vue {
   // State Machine (not needed to be reactive, this is why we use undefined instead of null)
   sm: TinySM = undefined
 
+  /*
+  ===================================================================================
+    Lifecycle
+  ===================================================================================
+  */
+
   mounted() {
     const ref = this.addressRef
 
@@ -266,7 +272,12 @@ export default class PageDetailsAddress extends Vue {
     this.sm.transition('initial')
   }
 
-  // Method:
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
   fetchTxs(page = this.txsPage, limit = MAX_ITEMS, filter = this.txsFilter): Promise<Tx[]> {
     return this.$api.getTxsOfAddress(this.addressRef, filter, limit, page)
   }
@@ -318,7 +329,12 @@ export default class PageDetailsAddress extends Vue {
     )
   }
 
-  //Watch
+  /*
+  ===================================================================================
+    Watch
+  ===================================================================================
+  */
+
   @Watch('txsFilter')
   onTxsFilterChanged(newVal: number, oldVal: number): void {
     if (newVal) {
@@ -336,10 +352,16 @@ export default class PageDetailsAddress extends Vue {
     this.updateMined()
   }
 
-  // Computed
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
+
   get max(): number {
     return MAX_ITEMS
   }
+
   get totalFilter(): number {
     switch (this.txsFilter) {
       case 'all':
