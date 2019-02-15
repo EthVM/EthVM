@@ -74,7 +74,7 @@ export default class TableUncles extends Vue {
   @Prop(Number) maxItems!: number
 
   pageType = 'uncles'
-  page = 1
+  page = 0
 
   /*
   ===================================================================================
@@ -84,7 +84,7 @@ export default class TableUncles extends Vue {
 
   @Watch('page')
   onPageChanged(newVal: number, oldVal: number): void {
-    this.$emit('getUnclePage', newVal - 1)
+    this.$emit('getUnclePage', newVal)
   }
 
   /*

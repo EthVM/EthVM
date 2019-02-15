@@ -26,12 +26,12 @@ import _debounce from 'lodash.debounce'
 
 @Component
 export default class AppPaginate extends Vue {
-  @Prop(Number) total: number
-  @Prop(Number) newPage: number
-  @Prop(Number) currentPage: number
-  @Prop({ type: Boolean, default: true }) hasFirst: boolean
-  @Prop({ type: Boolean, default: true }) hasLast: boolean
-  @Prop({ type: Boolean, default: true }) hasInput: boolean
+  @Prop(Number) total!: number
+  @Prop(Number) newPage!: number
+  @Prop(Number) currentPage!: number
+  @Prop({ type: Boolean, default: true }) hasFirst!: boolean
+  @Prop({ type: Boolean, default: true }) hasLast!: boolean
+  @Prop({ type: Boolean, default: true }) hasInput!: boolean
 
   page = 0
   pageInput = '1'
@@ -66,7 +66,6 @@ export default class AppPaginate extends Vue {
   @Watch('page')
   onPageChanged(newVal: number, oldVal: number): void {
     this.pageInput = this.transformPageToPageInput()
-    console.log(this.page, 'AppPaginate > onPageChanged')
     this.$emit('newPage', this.page)
   }
 
@@ -112,7 +111,7 @@ export default class AppPaginate extends Vue {
    * @return {Boolean}
    */
   isValid(page: number): boolean {
-    return page >= 0 && page <= this.total - 1
+    return page >= 0 && page <= this.total
   }
 
   /**

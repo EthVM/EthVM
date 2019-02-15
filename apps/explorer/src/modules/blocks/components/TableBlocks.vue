@@ -124,9 +124,9 @@ export default class TableBlocks extends Vue {
   @Prop(Array) blocks!: Block[]
   @Prop({ type: Number, default: 0 }) totalBlocks!: number
   @Prop({ type: Number, default: 20 }) maxItems!: number
-  @Prop(String) error: string
+  @Prop(String) error!: string
 
-  page = 1
+  page = 0
 
   /*
   ===================================================================================
@@ -136,7 +136,7 @@ export default class TableBlocks extends Vue {
 
   @Watch('page')
   onPageChanged(newVal: number, oldVal: number): void {
-    this.$emit('getBlockPage', newVal - 1)
+    this.$emit('getBlockPage', newVal)
   }
 
   /*
@@ -191,6 +191,7 @@ export default class TableBlocks extends Vue {
       }
     ]
   }
+
   get pages(): number {
     return this.totalBlocks ? Math.ceil(this.totalBlocks / this.maxItems) : 0
   }

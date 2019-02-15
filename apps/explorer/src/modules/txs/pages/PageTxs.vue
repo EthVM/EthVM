@@ -67,9 +67,16 @@ export default class PageTxs extends Vue {
       this.order = 'desc'
       this.firstLoad = false
     } else {
-      // Aldo: look here //
       this.from = page > this.page ? this.txs[this.txs.length - 1].getBlockNumber() : this.txs[0].getBlockNumber()
-      console.log('From: ', this.from, 'page > this.page: ', page > this.page, this.txs[0].getBlockNumber(), this.txs[this.txs.length - 1].getBlockNumber(), 'PageTxs > fetchTxs')
+      // console.log(
+      //   'From: ',
+      //   this.from,
+      //   'page > this.page: ',
+      //   page > this.page,
+      //   this.txs[0].getBlockNumber(),
+      //   this.txs[this.txs.length - 1].getBlockNumber(),
+      //   'PageTxs > fetchTxs'
+      // )
     }
     this.page = page
     return this.$api.getTxs(this.maxItems, this.order, this.from)
@@ -83,13 +90,11 @@ export default class PageTxs extends Vue {
     if (!this.firstLoad && page === this.page) {
       return
     }
-    console.log(page, 'PageTxs > getPage')
     this.isLoading = true
     this.fetchTxs(page).then(
       res => {
         this.isLoading = false
         this.txs = res
-        console.log('getpage: ', this.txs[0])
       },
       err => {
         this.error = this.$i18n.t('message.noTxHistory').toString()
