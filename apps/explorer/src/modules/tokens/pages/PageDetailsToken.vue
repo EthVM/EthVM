@@ -180,7 +180,7 @@ export default class PageDetailsToken extends Vue {
           resolve()
         })
         .catch(e => {
-          this.errorTokenDetailsList = `${e}`
+          this.errorTokenDetailsList = this.$i18n.t('message.invalidToken').toString()
           resolve()
         })
     })
@@ -200,7 +200,7 @@ export default class PageDetailsToken extends Vue {
           resolve()
         })
         .catch(e => {
-          this.errorTokenTransfersTab = `${e}`
+          this.errorTokenTransfersTab = '' // 0 transfers is not an 'error'
           resolve()
         })
     })
@@ -219,7 +219,7 @@ export default class PageDetailsToken extends Vue {
           resolve()
         })
         .catch(e => {
-          this.errorTokenHoldersTab = `${e}`
+          this.errorTokenHoldersTab = '' // 0 holders is not an 'error'
           resolve()
         })
     })
@@ -263,7 +263,7 @@ export default class PageDetailsToken extends Vue {
           this.holderDetails = holderDetails as any
         })
         .catch(e => {
-          this.errorHolderDetailsList = `${e}`
+          this.errorHolderDetailsList = '' // Any address can be "legitimate" just might not have details
         })
     })
   }
@@ -280,7 +280,7 @@ export default class PageDetailsToken extends Vue {
           this.holderTransfers = holderTransfers as any[]
         })
         .catch(e => {
-          this.errorHolderTransfers = `${e}`
+          this.errorHolderTransfers = this.$i18n.t('message.noTxHistory').toString()
         })
     })
   }

@@ -1,22 +1,34 @@
 <template>
   <v-container grid-list-lg class="mb-0">
     <app-bread-crumbs :new-items="crumbs" />
-    <v-layout v-if="!error" row wrap justify-start class="mb-4">
+    <!--
+    =====================================================================================
+      DETAILS LIST
+    =====================================================================================
+    -->
+    <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
-        <app-list-details :items="blockDetails" :more-items="blockMoreDetails" :details-type="listType" :loading="loading">
-          <app-list-title slot="details-title" :list-type="listType" :block-details="blockInfo" :next-block="nextBlock" :prev-block="previousBlock" />
-        </app-list-details>
+        <app-details-list :details="blockDetails" :is-loading="isLoading" class="mb-4" :error="error" :max-items="8">
+          <template v-slot:title>
+            <block-details-title :next-block="nextBlock" :prev-block="previousBlock" :uncles="uncles" />
+            <v-divider class="lineGrey" />
+          </template>
+        </app-details-list>
       </v-flex>
     </v-layout>
-    <!-- Mined Block, txs table -->
-    <v-layout row wrap justify-start class="mb-4" v-if="!loading && !error">
+    <!--
+    =====================================================================================
+      TX TABLE
+    =====================================================================================
+    -->
+    <v-layout row wrap justify-start class="mb-4" v-if="!hasError">
       <v-flex v-if="txs" xs12>
         <table-txs
           v-if="txs"
           :transactions="txsPage"
           :frame-txs="true"
           :page-type="listType"
-          :loading="loading"
+          :loading="isLoading"
           class="mt-3"
           :max-items="max"
           :total-txs="totalTxs"
@@ -28,7 +40,6 @@
         </v-card>
       </v-flex>
     </v-layout>
-    <app-error v-if="error" :page-type="listType" :reference="blockRef" />
   </v-container>
 </template>
 
@@ -39,7 +50,9 @@ import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppListDetails from '@app/core/components/ui/AppListDetails.vue'
 import AppListTitle from '@app/core/components/ui/AppListTitle.vue'
+import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
+import BlockDetailsTitle from '@app/modules/blocks/components/BlockDetailsTitle.vue'
 import { Detail } from '@app/core/components/props'
 import ethUnits from 'ethereumjs-units'
 import Bn from 'bignumber.js'
@@ -54,17 +67,18 @@ const MAX_TXS = 10
     AppError,
     AppListDetails,
     AppListTitle,
-    TableTxs
+    TableTxs,
+    AppDetailsList,
+    BlockDetailsTitle
   }
 })
 export default class PageDetailsBlock extends Vue {
   @Prop({ type: String }) blockRef!: string
 
-  loading = true
-  error = false
+  error = ''
   listType = 'block'
 
-  block = null
+  block = {} as Block
   blockInfo = {
     next: null,
     prev: null,
@@ -79,14 +93,18 @@ export default class PageDetailsBlock extends Vue {
   moreDetails = []
   timestamp = ''
 
-  // Lifecycle
+  /*
+  ===================================================================================
+    Lifecycle
+  ===================================================================================
+  */
+
   created() {
     const ref = this.blockRef
 
     // 1. Check that current block ref is valid one
     if (!eth.isValidHash(ref) && !eth.isValidBlockNumber(ref)) {
-      this.error = true
-      this.loading = false
+      this.error = this.$i18n.t('message.invalidHash').toString()
       return
     }
 
@@ -99,17 +117,34 @@ export default class PageDetailsBlock extends Vue {
     } else {
       this.fetchBlock()
     }
+
+    window.scrollTo(0, 0)
   }
 
-  // Methods:
-  setPageTxs(_page: number): void {
-    const start = (_page - 1) * this.max
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
+  setPageTxs(page: number): void {
+    const start = (page - 1) * this.max
     const end = start + this.max
     this.txsPage = this.txs.slice(start, end)
   }
   fetchBlock() {
     const promise = eth.isValidHash(this.blockRef) ? this.$api.getBlock(this.blockRef) : this.$api.getBlockByNumber(Number(this.blockRef))
-    promise.then(block => this.setBlockInfo(block)).catch(err => (this.error = true))
+    promise
+      .then(block => {
+        if (block === null) {
+          this.error = `${this.$i18n.t('message.invalidBlock').toString()}: ${this.blockRef}`
+          return
+        }
+        this.setBlockInfo(block)
+      })
+      .catch(err => {
+        this.error = `${this.$i18n.t('message.invalidBlock').toString()}: ${this.blockRef}`
+      })
   }
 
   setBlockInfo(block: Block) {
@@ -119,112 +154,174 @@ export default class PageDetailsBlock extends Vue {
     this.blockInfo.prev = this.block.getNumber() === 0 ? 0 : this.block.getNumber() - 1
 
     this.timestamp = block.getTimestamp().toString()
-    this.setDetails(this.block)
-    this.setMore(this.block)
     this.txs = this.block.getTxs()
     this.totalTxs = this.block.getTransactionCount()
     this.setPageTxs(1)
     this.uncles = this.block.getUncles()
-
-    this.loading = false
   }
 
-  setDetails(elem: Block) {
-    this.details = [
-      {
-        title: this.$i18n.t('block.height'),
-        detail: elem.getNumber()
-      },
-      {
-        title: this.$i18n.t('common.hash'),
-        detail: elem.getHash(),
-        copy: true
-      },
-      {
-        title: this.$i18n.t('block.pHash'),
-        detail: elem.getParentHash().toString(),
-        link: '/block/' + elem.getParentHash().toString(),
-        copy: true
-      },
-      {
-        title: this.$i18n.t('block.miner'),
-        detail: elem.getMiner().toString(),
-        link: '/address/' + elem.getMiner().toString(),
-        copy: true
-      },
-      {
-        title: this.$i18n.t('common.timestmp'),
-        detail: this.formatTime
-      },
-      {
-        title: this.$i18n.t('block.reward'),
-        detail: elem.getMinerReward().toEthFormated() + ' ' + this.$i18n.t('common.eth')
-      },
-      {
-        title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward'),
-        detail: elem.getUncleReward().toEthFormated() + ' ' + this.$i18n.t('common.eth')
-      },
-      {
-        title: this.$i18n.t('title.tx'),
-        detail: elem.getTransactionCount()
-      }
-    ]
-  }
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
 
-  setMore(elem: Block) {
-    this.moreDetails = [
-      {
-        title: this.$i18n.t('block.diff'),
-        detail: elem.getDifficulty().toNumber()
-      },
-      {
-        title: this.$i18n.t('block.totalDiff'),
-        detail: elem.getTotalDifficulty().toNumber()
-      },
-      {
-        title: this.$i18n.t('block.nonce'),
-        detail: elem.getNonce().toString()
-      },
-      {
-        title: this.$i18n.t('block.root'),
-        detail: elem.getStateRoot().toString()
-      },
-      {
-        title: this.$i18n.t('block.data'),
-        detail: elem.getExtraData().toString()
-      },
-      {
-        title: this.$i18n.t('block.fees'),
-        detail: elem.getTxFees().toEth() + ' ' + this.$i18n.t('common.eth')
-      },
-      {
-        title: this.$i18n.t('gas.limit'),
-        detail: elem.getGasLimit().toNumber()
-      },
-      {
-        title: this.$i18n.t('gas.used'),
-        detail: elem.getGasUsed().toNumber()
-      },
-      {
-        title: this.$i18n.t('block.logs'),
-        detail: elem.getLogsBloom().toString()
-      },
-      {
-        title: this.$i18n.t('block.txRoot'),
-        detail: elem.getTransactionsRoot().toString()
-      },
-      {
-        title: this.$i18n.t('block.recRoot'),
-        detail: elem.getReceiptsRoot().toString()
-      },
-      {
-        title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.sha'),
-        detail: elem.getSha3Uncles().toString()
-      }
-    ]
+  get blockDetails(): Detail[] {
+    let details
+    if (this.isLoading) {
+      details = [
+        {
+          title: this.$i18n.t('block.height')
+        },
+        {
+          title: this.$i18n.t('common.hash')
+        },
+        {
+          title: this.$i18n.t('block.pHash')
+        },
+        {
+          title: this.$i18n.t('block.miner')
+        },
+        {
+          title: this.$i18n.t('common.timestmp')
+        },
+        {
+          title: this.$i18n.t('block.reward')
+        },
+        {
+          title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward')
+        },
+        {
+          title: this.$i18n.t('title.tx')
+        },
+        {
+          title: this.$i18n.t('block.diff')
+        },
+        {
+          title: this.$i18n.t('block.totalDiff')
+        },
+        {
+          title: this.$i18n.t('block.nonce')
+        },
+        {
+          title: this.$i18n.t('block.root')
+        },
+        {
+          title: this.$i18n.t('block.data')
+        },
+        {
+          title: this.$i18n.t('block.fees')
+        },
+        {
+          title: this.$i18n.t('gas.limit')
+        },
+        {
+          title: this.$i18n.t('gas.used')
+        },
+        {
+          title: this.$i18n.t('block.logs')
+        },
+        {
+          title: this.$i18n.t('block.txRoot')
+        },
+        {
+          title: this.$i18n.t('block.recRoot')
+        },
+        {
+          title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.sha')
+        }
+      ]
+    } else {
+      details = [
+        {
+          title: this.$i18n.t('block.height'),
+          detail: this.block.getNumber()
+        },
+        {
+          title: this.$i18n.t('common.hash'),
+          detail: this.block.getHash(),
+          copy: true
+        },
+        {
+          title: this.$i18n.t('block.pHash'),
+          detail: this.block.getParentHash().toString(),
+          link: '/block/' + this.block.getParentHash().toString(),
+          copy: true
+        },
+        {
+          title: this.$i18n.t('block.miner'),
+          detail: this.block.getMiner().toString(),
+          link: '/address/' + this.block.getMiner().toString(),
+          copy: true
+        },
+        {
+          title: this.$i18n.t('common.timestmp'),
+          detail: this.formatTime
+        },
+        {
+          title: this.$i18n.t('block.reward'),
+          detail: this.block.getMinerReward().toEthFormated() + ' ' + this.$i18n.t('common.eth')
+        },
+        {
+          title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward'),
+          detail: this.block.getUncleReward().toEthFormated() + ' ' + this.$i18n.t('common.eth')
+        },
+        {
+          title: this.$i18n.t('title.tx'),
+          detail: this.block.getTransactionCount()
+        },
+        {
+          title: this.$i18n.t('block.diff'),
+          detail: this.block.getDifficulty().toNumber()
+        },
+        {
+          title: this.$i18n.t('block.totalDiff'),
+          detail: this.block.getTotalDifficulty().toNumber()
+        },
+        {
+          title: this.$i18n.t('block.nonce'),
+          detail: this.block.getNonce().toString()
+        },
+        {
+          title: this.$i18n.t('block.root'),
+          detail: this.block.getStateRoot().toString()
+        },
+        {
+          title: this.$i18n.t('block.data'),
+          detail: this.block.getExtraData().toString()
+        },
+        {
+          title: this.$i18n.t('block.fees'),
+          detail: this.block.getTxFees().toEth() + ' ' + this.$i18n.t('common.eth')
+        },
+        {
+          title: this.$i18n.t('gas.limit'),
+          detail: this.block.getGasLimit().toNumber()
+        },
+        {
+          title: this.$i18n.t('gas.used'),
+          detail: this.block.getGasUsed().toNumber()
+        },
+        {
+          title: this.$i18n.t('block.logs'),
+          detail: this.block.getLogsBloom().toString()
+        },
+        {
+          title: this.$i18n.t('block.txRoot'),
+          detail: this.block.getTransactionsRoot().toString()
+        },
+        {
+          title: this.$i18n.t('block.recRoot'),
+          detail: this.block.getReceiptsRoot().toString()
+        },
+        {
+          title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.sha'),
+          detail: this.block.getSha3Uncles().toString()
+        }
+      ]
+    }
+    return details
   }
-
-  // Computed:
 
   get nextBlock(): String {
     if (this.blockInfo.mined) {
@@ -250,14 +347,6 @@ export default class PageDetailsBlock extends Vue {
     return ''
   }
 
-  get blockDetails(): Detail[] {
-    return this.details
-  }
-
-  get blockMoreDetails(): Detail[] {
-    return this.moreDetails
-  }
-
   get formatTime(): string {
     return new Date(this.timestamp).toString()
   }
@@ -278,6 +367,19 @@ export default class PageDetailsBlock extends Vue {
 
   get max(): number {
     return MAX_TXS
+  }
+
+  /**
+   * Determines whether or not the block object has been loaded/populated.
+   *
+   * @return {Boolean}
+   */
+  get isLoading(): boolean {
+    return Object.keys(this.block).length === 0
+  }
+
+  get hasError(): boolean {
+    return this.error !== ''
   }
 }
 </script>

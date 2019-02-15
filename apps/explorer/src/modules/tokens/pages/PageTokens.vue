@@ -10,6 +10,8 @@ import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import TableTokens from '@app/modules/tokens/components/TableTokens.vue'
 import { Component, Vue } from 'vue-property-decorator'
 
+const MAX_ITEMS = 10
+
 @Component({
   components: {
     AppBreadCrumbs,
@@ -18,7 +20,6 @@ import { Component, Vue } from 'vue-property-decorator'
 })
 export default class PageTokens extends Vue {
   tokens: any = [] // Array of tokens for table display
-  hasError = false // Boolean flag to determine whether or not there is an error to display
   error = '' // Error message
 
   /*
@@ -49,8 +50,7 @@ export default class PageTokens extends Vue {
         this.tokens = tokens as any[]
       })
       .catch(e => {
-        this.hasError = true
-        this.error = e
+        this.error = this.$i18n.t('message.error').toString()
       })
   }
 
@@ -62,13 +62,14 @@ export default class PageTokens extends Vue {
 
   /**
    * GET and return JSON array of tokens and their corresponding information
+   * TEMP: Static/hard-coded page/limit
    *
    * @return {Array} - Array of tokens
    */
   fetchTokenExchangeRates() {
     return new Promise((resolve, reject) => {
       this.$api
-        .getTokenExchangeRates(99999, 0)
+        .getTokenExchangeRates(100, 0)
         .then(result => {
           resolve(result)
         })
@@ -106,6 +107,16 @@ export default class PageTokens extends Vue {
    */
   get isLoading() {
     return this.tokens.length === 0
+  }
+
+  /**
+   * Determines whether or not component has an error.
+   * If error property is empty string, there is no error.
+   *
+   * @return {Boolean} - Whether or not error exists
+   */
+  get hasError() {
+    return this.error !== ''
   }
 }
 </script>
