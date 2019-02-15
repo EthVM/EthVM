@@ -8,7 +8,7 @@
     -->
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
-        <app-details-list :details="blockDetails" :is-loading="isLoading" class="mb-4" :error="error">
+        <app-details-list :details="blockDetails" :is-loading="isLoading" class="mb-4" :error="error" :max-items="8">
           <template v-slot:title>
             <block-details-title :next-block="nextBlock" :prev-block="previousBlock" :uncles="uncles" />
             <v-divider class="lineGrey" />
