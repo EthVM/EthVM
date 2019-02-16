@@ -26,7 +26,7 @@ export class VmEngine {
 
     return new Promise(async (resolve, reject) => {
       const argss = ['address', 'bool', 'bool', 'bool', 'uint256']
-      const vals = [address, true, true, true, 0]
+      const vals = [address, true, false, false, 0]
       const encoded = this.encodeCall('getAllBalance', argss, vals)
 
       try {
