@@ -104,7 +104,7 @@ import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableBlocksRow from '@app/modules/blocks/components/TableBlocksRow.vue'
-import { Block } from '@app/core/models'
+import { Block, SimpleBlock } from '@app/core/models'
 import { Footnote } from '@app/core/components/props'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 
@@ -121,7 +121,7 @@ export default class TableBlocks extends Vue {
   @Prop({ type: Boolean, default: true }) loading!: boolean
   @Prop({ type: String, default: 'blocks' }) pageType!: string
   @Prop({ type: String, default: '' }) showStyle!: string
-  @Prop(Array) blocks!: Block[]
+  @Prop(Array) blocks!: Block[] | SimpleBlock[]
   @Prop({ type: Number, default: 0 }) totalBlocks!: number
   @Prop({ type: Number, default: 20 }) maxItems!: number
   @Prop(String) error!: string

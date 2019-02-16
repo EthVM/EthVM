@@ -1,17 +1,17 @@
 import { EthvmApi } from '@app/core/api'
-import { Block, PendingTx, Tx, Uncle } from '@app/core/models'
+import { Block, PendingTx, SimpleBlock, Tx, Uncle } from '@app/core/models'
 import {
   AddressBalance,
   AddressMetadata,
   BlockMetrics,
   Contract,
   Events,
+  ProcessingMetadata,
   Quote,
   Statistic,
   Token,
-  TokenTransfer,
   TokenExchangeRate,
-  ProcessingMetadata
+  TokenTransfer
 } from 'ethvm-common'
 
 export class EthvmSocketIoApi implements EthvmApi {
@@ -53,8 +53,8 @@ export class EthvmSocketIoApi implements EthvmApi {
     return this.promisify(Events.getBlock, { hash }).then(raw => (raw !== null ? new Block(raw) : null))
   }
 
-  public getBlocks(limit: number = 100, page: number = 0, fromBlock: number = -1): Promise<Block[]> {
-    return this.promisify(Events.getBlocks, { limit, page, fromBlock }).then(raw => raw.map(rawBlock => new Block(rawBlock)))
+  public getBlocks(format: string = 'simple', limit: number = 100, page: number = 0, fromBlock: number = -1): Promise<Block[] | SimpleBlock[]> {
+    return this.promisify(Events.getBlocks, { format, limit, page, fromBlock }).then(raw => raw.map(rawBlock => format === 'full' ? new Block(rawBlock) : new SimpleBlock(rawBlock)))
   }
 
   public getBlockByNumber(no: number): Promise<Block | null> {

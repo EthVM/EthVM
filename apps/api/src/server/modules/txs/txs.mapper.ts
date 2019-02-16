@@ -41,4 +41,11 @@ const toTx = (tx: any): Tx => {
   return tx
 }
 
-export { toTx }
+const toSimpleTx = (tx: any): Tx => {
+  const sTx : any = {}
+  sTx.hash = tx.hash
+  sTx.receipt = toTxReceipt(tx.receipt)
+  return sTx
+}
+
+export { toTx, toSimpleTx }

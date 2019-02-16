@@ -15,6 +15,11 @@ export const MongoEthVM = {
     accountMetadata: 'account_metadata',
     tokenExchangeRates: 'token_exchange_rates',
     processingMetadata: 'processing_metadata'
+  },
+  projections: {
+    blocks: {
+      simple: { 'header.number': 1, 'header.hash': 1, 'header.author': 1, 'rewards': 1, 'transactions': 1 }
+    }
   }
 }
 
