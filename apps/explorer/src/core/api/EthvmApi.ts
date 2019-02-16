@@ -1,4 +1,4 @@
-import { Block, PendingTx, SimpleBlock, Tx, Uncle } from '@app/core/models'
+import { Block, PendingTx, SimpleBlock, SimpleTx, Tx, Uncle } from '@app/core/models'
 import {
   AddressBalance,
   AddressMetadata,
@@ -50,7 +50,7 @@ export interface EthvmApi {
 
   // Txs
   getTx(hash: string): Promise<Tx | null>
-  getTxs(limit: number, order: string, fromBlock: number): Promise<Tx[]>
+  getTxs(format: string, limit: number, order: string, fromBlock: number): Promise<Tx[] | SimpleTx[]>
   getTxsOfBlock(hash: string): Promise<Tx[]>
   getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<Tx[]>
   getTotalNumberOfTxs(): Promise<number>

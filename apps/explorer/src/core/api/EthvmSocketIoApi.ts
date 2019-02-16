@@ -1,5 +1,5 @@
 import { EthvmApi } from '@app/core/api'
-import { Block, PendingTx, SimpleBlock, Tx, Uncle } from '@app/core/models'
+import { Block, PendingTx, SimpleBlock, SimpleTx, Tx, Uncle } from '@app/core/models'
 import {
   AddressBalance,
   AddressMetadata,
@@ -54,7 +54,9 @@ export class EthvmSocketIoApi implements EthvmApi {
   }
 
   public getBlocks(format: string = 'simple', limit: number = 100, page: number = 0, fromBlock: number = -1): Promise<Block[] | SimpleBlock[]> {
-    return this.promisify(Events.getBlocks, { format, limit, page, fromBlock }).then(raw => raw.map(rawBlock => format === 'full' ? new Block(rawBlock) : new SimpleBlock(rawBlock)))
+    return this.promisify(Events.getBlocks, { format, limit, page, fromBlock }).then(raw =>
+      raw.map(rawBlock => (format === 'full' ? new Block(rawBlock) : new SimpleBlock(rawBlock)))
+    )
   }
 
   public getBlockByNumber(no: number): Promise<Block | null> {
@@ -141,8 +143,10 @@ export class EthvmSocketIoApi implements EthvmApi {
     return this.promisify(Events.getTx, { hash }).then(raw => (raw !== null ? new Tx(raw) : null))
   }
 
-  public getTxs(limit: number = 100, order: string = 'desc', fromBlock: number = -1): Promise<Tx[]> {
-    return this.promisify(Events.getTxs, { limit, order, fromBlock }).then(raw => raw.map(rawTx => new Tx(rawTx)))
+  public getTxs(format: string, limit: number = 100, order: string = 'desc', fromBlock: number = -1): Promise<Tx[] | SimpleTx[]> {
+    return this.promisify(Events.getTxs, { format, limit, order, fromBlock }).then(raw =>
+      raw.map(rawTx => (format !== 'simple' ? new Tx(rawTx) : new SimpleTx(rawTx)))
+    )
   }
 
   public getTxsOfBlock(hash: string): Promise<Tx[]> {

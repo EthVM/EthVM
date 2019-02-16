@@ -1,4 +1,4 @@
-import { toTx, toSimpleTx } from '@app/server/modules/txs'
+import { toSimpleTx, toTx } from '@app/server/modules/txs'
 import { toUncle } from '@app/server/modules/uncles'
 import { Block } from 'ethvm-common'
 

@@ -18,7 +18,7 @@ export class MongoBlockRepository extends BaseMongoDbRepository implements Block
       .then(resp => resp ? toBlock(resp) : null)
   }
 
-  public async getBlocks(format: string = 'simple', limit: number, page: number, fromBlock: number = -1): Promise<Block[]> {
+  public async getBlocks(format: string = 'full', limit: number, page: number, fromBlock: number = -1): Promise<Block[]> {
     const offset = fromBlock !== -1 ? fromBlock : await this.getTotalNumberOfBlocks()
     const start = offset - (page * limit)
     const projection = format === 'simple' ? MongoEthVM.projections.blocks.simple : {}

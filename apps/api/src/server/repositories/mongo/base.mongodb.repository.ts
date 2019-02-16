@@ -18,7 +18,10 @@ export const MongoEthVM = {
   },
   projections: {
     blocks: {
-      simple: { 'header.number': 1, 'header.hash': 1, 'header.author': 1, 'rewards': 1, 'transactions': 1 }
+      simple: { 'header.number': 1, 'header.hash': 1, 'header.author': 1, rewards: 1, transactions: 1 }
+    },
+    txs: {
+      simple: { hash: 1, blockNumber: 1, blockHash: 1, from: 1, to: 1, value: 1, gas: 1, gasPrice: 1, timestamp: 1, receipt: 1 }
     }
   }
 }

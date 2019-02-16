@@ -31,7 +31,7 @@ import ChartLiveTx from '@app/modules/charts/components/live/ChartLiveTx.vue'
 import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
-import { Block, Tx, SimpleBlock } from '@app/core/models'
+import { Block, Tx, SimpleBlock, SimpleTx } from '@app/core/models'
 import { Vue, Component, Mixins } from 'vue-property-decorator'
 
 const MAX_ITEMS = 50
@@ -94,8 +94,8 @@ export default class PageHome extends Vue {
     )
   }
 
-  fetchTxs(): Promise<Tx[]> {
-    return this.$api.getTxs(MAX_ITEMS, 'desc', -1)
+  fetchTxs(): Promise<Tx[] | SimpleTx[]> {
+    return this.$api.getTxs('simple', MAX_ITEMS, 'desc', -1)
   }
 
   fetchBlocks(): Promise<Block[] | SimpleBlock[]> {

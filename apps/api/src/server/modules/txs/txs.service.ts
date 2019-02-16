@@ -2,7 +2,7 @@ import { TxsRepository } from '@app/server/modules/txs'
 import { Tx } from 'ethvm-common'
 
 export interface TxsService {
-  getTxs(limit: number, order: string, fromBlock: number): Promise<Tx[]>
+  getTxs(format: string, limit: number, order: string, fromBlock: number): Promise<Tx[]>
   getTx(hash: string): Promise<Tx | null>
   getTxsOfBlock(hash: string): Promise<Tx[]>
   getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<Tx[]>
@@ -12,8 +12,8 @@ export interface TxsService {
 export class TxsServiceImpl implements TxsService {
   constructor(private readonly txsRepository: TxsRepository) {}
 
-  public getTxs(limit: number, order: string, fromBlock: number): Promise<Tx[]> {
-    return this.txsRepository.getTxs(limit, order, fromBlock)
+  public getTxs(format: string, limit: number, order: string, fromBlock: number): Promise<Tx[]> {
+    return this.txsRepository.getTxs(format, limit, order, fromBlock)
   }
 
   public getTx(hash: string): Promise<Tx | null> {
