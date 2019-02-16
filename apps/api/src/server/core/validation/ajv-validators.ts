@@ -90,6 +90,13 @@ const orderSchema = {
   default: 'desc'
 }
 
+const formatSchema = {
+  $id: '/properties/string',
+  type: 'string',
+  enum: ['simple', 'full'],
+  default: 'simple'
+}
+
 // Schemas definitions
 
 const JoinLeavePayloadSchema = {
@@ -126,6 +133,7 @@ const GenericPayloadSchema = {
     fromBlock: numberSchema,
     fromUncle: numberSchema,
     order: orderSchema,
+    format: formatSchema,
 
     id: idSchema,
     symbol: stringSchema

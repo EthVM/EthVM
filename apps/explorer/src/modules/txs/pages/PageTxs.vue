@@ -15,7 +15,7 @@ import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppCardStatsGroup from '@app/core/components/ui/AppCardStatsGroup.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { Vue, Component, Mixins } from 'vue-property-decorator'
-import { Tx } from '@app/core/models'
+import { Tx, SimpleTx } from '@app/core/models'
 import { rejects } from 'assert'
 
 const MAX_ITEMS = 50
@@ -28,7 +28,7 @@ const MAX_ITEMS = 50
   }
 })
 export default class PageTxs extends Vue {
-  txs: Tx[] = []
+  txs: SimpleTx[] = []
   totalTxs = 0
 
   pages: number[] = []
@@ -68,7 +68,7 @@ export default class PageTxs extends Vue {
   ===================================================================================
   */
 
-  fetchTxs(newPage: number): Promise<Tx[]> {
+  fetchTxs(newPage: number): Promise<Tx[] | SimpleTx[]> {
     if (!this.firstLoad) {
       const length = this.txs.length
       const first = length > 0 ? this.txs[0].getBlockNumber() : -1
@@ -84,7 +84,7 @@ export default class PageTxs extends Vue {
 
     this.page = newPage
 
-    return this.$api.getTxs(this.maxItems, 'desc', this.from)
+    return this.$api.getTxs('simple', this.maxItems, 'desc', this.from)
   }
 
   fetchTotalTxs(): Promise<number> {
@@ -95,7 +95,7 @@ export default class PageTxs extends Vue {
     this.isLoading = true
     return new Promise((resolve, reject) => {
       this.fetchTxs(page).then(
-        res => {
+        (res: SimpleTx[]) => {
           this.isLoading = false
           this.txs = res
           resolve(true)

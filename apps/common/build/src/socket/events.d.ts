@@ -7,6 +7,7 @@ export declare const Events: {
     join: string;
     leave: string;
     NEW_BLOCK: string;
+    NEW_SIMPLE_BLOCK: string;
     NEW_PENDING_TX: string;
     NEW_BLOCK_METRIC: string;
     NEW_PROCESSING_METADATA: string;
@@ -32,7 +33,6 @@ export declare const Events: {
     getTxs: string;
     getBlockTxs: string;
     getAddressTxs: string;
-    getAddressTotalTxs: string;
     getTotalNumberOfTxs: string;
     getPendingTxs: string;
     getPendingTxsOfAddress: string;

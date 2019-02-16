@@ -100,7 +100,7 @@
 import AppError from '@app/core/components/ui/AppError2.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableTxsRow from '@app/modules/txs/components/TableTxsRow.vue'
-import { PendingTx, Tx } from '@app/core/models'
+import { PendingTx, Tx, SimpleTx } from '@app/core/models'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 
 @Component({
@@ -114,7 +114,7 @@ export default class TableTxs extends Vue {
   @Prop({ type: Boolean, default: true }) loading: boolean
   @Prop(String) pageType: string
   @Prop(String) showStyle!: string
-  @Prop(Array) transactions!: Tx[] | PendingTx[]
+  @Prop(Array) transactions!: Tx[] | PendingTx[] | SimpleTx[]
   @Prop({ type: Number, default: 0 }) totalTxs: number
   @Prop(Number) maxItems!: number
   @Prop(String) error: string

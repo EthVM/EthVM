@@ -31,7 +31,7 @@ import ChartLiveTx from '@app/modules/charts/components/live/ChartLiveTx.vue'
 import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
-import { Block, Tx } from '@app/core/models'
+import { Block, Tx, SimpleBlock, SimpleTx } from '@app/core/models'
 import { Vue, Component, Mixins } from 'vue-property-decorator'
 
 const MAX_ITEMS = 50
@@ -86,7 +86,7 @@ export default class PageHome extends Vue {
   loadBlocks() {
     this.fetchBlocks().then(
       res => {
-        this.$store.commit(Events.NEW_BLOCK, res)
+        this.$store.commit(Events.NEW_SIMPLE_BLOCK, res)
       },
       err => {
         this.errorTableBlocks = this.$i18n.t('message.error').toString()
@@ -94,12 +94,12 @@ export default class PageHome extends Vue {
     )
   }
 
-  fetchTxs(): Promise<Tx[]> {
-    return this.$api.getTxs(MAX_ITEMS, 'desc', -1)
+  fetchTxs(): Promise<Tx[] | SimpleTx[]> {
+    return this.$api.getTxs('simple', MAX_ITEMS, 'desc', -1)
   }
 
-  fetchBlocks(): Promise<Block[]> {
-    return this.$api.getBlocks(MAX_ITEMS, 0, -1)
+  fetchBlocks(): Promise<Block[] | SimpleBlock[]> {
+    return this.$api.getBlocks('simple', MAX_ITEMS, 0, -1)
   }
 
   /*
@@ -112,8 +112,8 @@ export default class PageHome extends Vue {
     return this.$store.getters.txs.slice(0, MAX_ITEMS)
   }
 
-  get blocks(): Block[] {
-    return this.$store.getters.blocks.slice(0, MAX_ITEMS)
+  get blocks(): SimpleBlock[] {
+    return this.$store.getters.simpleBlocks.slice(0, MAX_ITEMS)
   }
 
   get blocksLoading(): boolean {
