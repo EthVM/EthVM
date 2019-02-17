@@ -386,9 +386,9 @@ enum class TopicWriteGenerators(
       record.value() == null -> {
 
         val bson = when (keyBson.getString("type").value) {
-          "FROM" -> Document(mapOf("\$unset" to "fromTxCount"))
-          "TO" -> Document(mapOf("\$unset" to "toTxCount"))
-          "TOTAL" -> Document(mapOf("\$unset" to "totalTxCount"))
+          "OUT_TX_COUNT" -> Document(mapOf("\$unset" to "outTxCount"))
+          "IN_TX_COUNT" -> Document(mapOf("\$unset" to "inTxCount"))
+          "TOTAL_TX_COUNT" -> Document(mapOf("\$unset" to "totalTxCount"))
           else -> throw IllegalStateException("Unexpected type value")
         }
 
@@ -401,9 +401,9 @@ enum class TopicWriteGenerators(
         val count = struct.getInt64("count").longValue()
 
         val bson = when (keyBson.getString("type").value) {
-          "FROM" -> Document(mapOf("\$set" to mapOf("fromTxCount" to count)))
-          "TO" -> Document(mapOf("\$set" to mapOf("toTxCount" to count)))
-          "TOTAL" -> Document(mapOf("\$set" to mapOf("totalTxCount" to count)))
+          "OUT_TX_COUNT" -> Document(mapOf("\$set" to mapOf("outTxCount" to count)))
+          "IN_TX_COUNT" -> Document(mapOf("\$set" to mapOf("inTxCount" to count)))
+          "TOTAL_TX_COUNT" -> Document(mapOf("\$set" to mapOf("totalTxCount" to count)))
           else -> throw IllegalStateException("Unexpected type value")
         }
 

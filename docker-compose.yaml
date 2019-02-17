@@ -317,3 +317,18 @@ services:
       - ksql-server
     tty: true
     entrypoint: /bin/bash
+
+  verifier:
+    build:
+      context: ./apps/verifier
+    networks:
+      - back
+    depends_on:
+      - mongodb
+      - kafka-schema-registry
+    volumes:
+      - ./apps/verifier:/usr/src/app
+      - ./apps/common:/usr/src/common
+    command: sh -c "yarn install && yarn start verify"
+    environment:
+      KAFKA_AVRO_LOG_LEVEL: debug
