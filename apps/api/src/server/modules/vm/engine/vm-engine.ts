@@ -1,13 +1,12 @@
 import BigNumber from 'bignumber.js'
 import * as abi from 'ethereumjs-abi'
 import { Token } from 'ethvm-common'
-import * as jayson from 'jayson/promise'
+import fetch from 'node-fetch'
 import * as utils from 'web3-utils'
 
 export interface VmEngineOptions {
   rpcUrl: string
   tokensAddress: Contract
-  account: string
 }
 
 export interface Contract {
@@ -15,29 +14,43 @@ export interface Contract {
 }
 
 export class VmEngine {
-  private readonly client: jayson.Client
 
   constructor(private readonly opts: VmEngineOptions) {
-    this.client = jayson.Client.https(this.opts.rpcUrl)
   }
 
   public async getAddressAllTokensOwned(address: string): Promise<Token[]> {
     address = address.startsWith('0x') ? address : '0x' + address
 
-    return new Promise(async (resolve, reject) => {
-      const argss = ['address', 'bool', 'bool', 'bool', 'uint256']
-      const vals = [address, true, false, false, 0]
-      const encoded = this.encodeCall('getAllBalance', argss, vals)
+    const method = 'getAllBalance'
+    const keys = [
+      'address', // Address we are checking tokens for
+      'bool',    // decode name
+      'bool',    // decode website
+      'bool',    // decode email
+      'uint256'  // num of tokens to retrieve (0: all)
+    ]
+    const values = [address, true, false, false, 0]
+    const encoded = this.encodeCall(method, keys, values)
 
-      try {
-        const payload = [{ to: this.opts.tokensAddress.address, data: encoded }, 'latest']
-        const response = await this.client.request('eth_call', payload)
-        const tokens = this.decode(response.result)
-        resolve(tokens.filter(t => t.balance && t.balance !== '0'))
-      } catch (err) {
-        reject(err)
+    const request = {
+      jsonrpc: "2.0",
+      id: 1,
+      method: 'eth_call',
+      params: [{ to: this.opts.tokensAddress.address, data: encoded }, 'latest']
+    }
+
+    return fetch(
+      this.opts.rpcUrl,
+      {
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(request)
       }
-    })
+    )
+    .then(res => res.json())
+    .then(json => this.decode(json.result))
+    .then(tokens => tokens.filter(t => t.balance && t.balance !== '0'))
+    .catch(e => [])
   }
 
   public async getAddressAmountTokensOwned(address: string): Promise<number> {
