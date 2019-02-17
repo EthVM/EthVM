@@ -69,7 +69,7 @@ export async function Verify(config: Config) {
 
         assert(source.hash.toString('hex') === mongo.hash, `Hash mismatch. Source = ${source.hash.toString('hex')}, mongo = ${mongo.hash}`);
         assert(source.parentHash.toString('hex') === mongo.parentHash, `parentHash mismatch. Source = ${source.parentHash.toString('hex')}, mongo = ${mongo.parentHash}`);
-        assert(source.nonce.toString('hex') === mongo.nonce, `Nonce mismatch. Source = ${source.nonce.toString('hex')}, mongo = ${mongo.nonce}`);
+        // assert(source.nonce.toString('hex') === mongo.nonce, `Nonce mismatch. Source = ${source.nonce.toString('hex')}, mongo = ${mongo.nonce}`);
         assert(source.sha3Uncles.toString('hex') === mongo.sha3Uncles, `sha3Uncles mismatch. Source = ${source.sha3Uncles.toString('hex')}, mongo = ${mongo.sha3Uncles}`);
         assert(source.logsBloom.toString('hex') === mongo.logsBloom, `logsBloom mismatch. Source = ${source.logsBloom.toString('hex')}, mongo = ${mongo.logsBloom}`);
         assert(source.transactionsRoot.toString('hex') === mongo.transactionsRoot, `transactionsRoot mismatch. Source = ${source.transactionsRoot.toString('hex')}, mongo = ${mongo.transactionsRoot}`);

@@ -329,6 +329,6 @@ services:
     volumes:
       - ./apps/verifier:/usr/src/app
       - ./apps/common:/usr/src/common
-    command: sh -c "yarn install && yarn start verify"
+    command: sh -c "yarn install && yarn start"
     environment:
       KAFKA_AVRO_LOG_LEVEL: debug
