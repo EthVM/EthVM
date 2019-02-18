@@ -3,7 +3,7 @@
     <app-bread-crumbs :new-items="crumbs" />
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
-         <app-details-list :title="title" :details="uncleDetails" :is-loading="isLoading" :error="error" />
+        <app-details-list :title="title" :details="uncleDetails" :is-loading="isLoading" :error="error" />
       </v-flex>
     </v-layout>
   </v-container>
