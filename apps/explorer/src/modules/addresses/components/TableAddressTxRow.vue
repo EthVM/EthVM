@@ -20,7 +20,12 @@
         </v-flex>
       </v-layout>
     </v-card>
-    <v-card flat id="scroll-target" style="max-height: 800px" class="scroll-y pt-0 pb-0">
+    <v-card flat v-if="isSyncing && type">
+      <v-layout row align-center justify-center fill-height>
+        <v-card-title class="text-xs-center pt-5 pb-5">{{ $t('message.syncPendingTxs') }}</v-card-title>
+      </v-layout>
+    </v-card>
+    <v-card v-else flat id="scroll-target" style="max-height: 800px" class="scroll-y pt-0 pb-0">
       <v-layout column fill-height v-scroll:#scroll-target class="pt-1" style="margin-right: 1px">
         <v-flex xs12>
           <v-card v-if="transactions.length == 0" flat>
@@ -137,6 +142,10 @@ export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
     }
 
     return penMesg[this.filter].toString()
+  }
+
+  get isSyncing() {
+    return this.$store.getters.syncing
   }
 }
 </script>

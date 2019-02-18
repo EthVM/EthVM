@@ -58,6 +58,12 @@
       TABLE BODY
     =====================================================================================
     -->
+    <v-card flat v-if="isSyncing && pending">
+      <v-layout row align-center justify-center fill-height>
+        <v-card-title class="text-xs-center pt-5 pb-5">{{ $t('message.syncPendingTxs') }}</v-card-title>
+      </v-layout>
+    </v-card>
+    <div v-else>
     <v-card flat v-if="!hasError" id="scroll-target" :style="getStyle" class="scroll-y" style="overflow-x: hidden">
       <v-layout column fill-height class="mb-1" v-scroll:#scroll-target>
         <v-flex xs12 v-if="!loading">
@@ -93,6 +99,7 @@
         </v-flex>
       </v-layout>
     </v-card>
+    </div>
   </v-card>
 </template>
 
@@ -120,12 +127,17 @@ export default class TableTxs extends Vue {
   @Prop(String) error: string
 
   page = 1
+  sync = false
 
   /*
   ===================================================================================
     Lifecycle
   ===================================================================================
   */
+  mounted() {
+    this.$api.getProcessingMetadata('syncing').then(ev => (this.sync = ev ? ev.value : true))
+
+  }
 
   @Watch('page')
   onPageChanged(newVal: number, oldVal: number): void {
@@ -154,6 +166,10 @@ export default class TableTxs extends Vue {
    *
    * @return {Boolean} - Whether or not error exists
    */
+
+  get isSyncing() {
+    return this.$store.getters.syncing
+  }
   get hasError(): boolean {
     return this.error !== ''
   }

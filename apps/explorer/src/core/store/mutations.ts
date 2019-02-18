@@ -27,10 +27,15 @@ const NEW_UNCLE = (state: State, raw: Uncle | Uncle[]) => {
   uncles.forEach(uncle => state.uncles.add(uncle))
 }
 
+const NEW_SYNC = (state: State, sync: boolean) => {
+  state.syncing = sync
+}
+
 export default {
   NEW_BLOCK,
   NEW_BLOCK_METRIC,
   NEW_TX,
   NEW_UNCLE,
-  NEW_PENDING_TX
+  NEW_PENDING_TX,
+  NEW_SYNC
 }

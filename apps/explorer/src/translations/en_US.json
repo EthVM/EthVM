@@ -107,7 +107,8 @@
     "noTx": "This Transaction does not exist",
     "notValid": "This is not a valid ",
     "sync": "We are synchronizing with the Blockchain. Some features might not work correctly.",
-    "invalidAddress": "Invalid Address"
+    "invalidAddress": "Invalid Address",
+    "syncPendingTxs": "There are no pending transactions while synchronizing with the Blockchain."
   },
   "block": {
     "height": "Height",

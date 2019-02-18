@@ -23,7 +23,7 @@
               <v-list-tile-title>{{ item.header.text }}</v-list-tile-title>
             </v-layout>
           </v-list-tile>
-          <v-list-tile v-for="(link, j) in item.links" v-if="link.routerLink" :to="link.routerLink" :key="j">
+          <v-list-tile v-for="(link, j) in item.links" :to="link.routerLink" :key="j">
             <v-list-tile-content>
               <v-list-tile-title :class="[checkLinkPath(link.name) ? 'white--text ml-5 pl-2' : 'nav--text ml-5 pl-2']">{{ link.text }}</v-list-tile-title>
             </v-list-tile-content>
