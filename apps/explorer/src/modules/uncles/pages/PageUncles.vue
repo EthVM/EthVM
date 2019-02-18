@@ -3,7 +3,7 @@
     <app-bread-crumbs :new-items="crumbs" />
     <v-layout row wrap justify-center mb-4>
       <v-flex xs12>
-        <table-uncles :uncles="uncles" page-type="uncles" :loading="loading" :total-uncles="total" @getUnclePage="getPage" :max-items="max" />
+        <table-uncles :uncles="uncles" page-type="uncles" :loading="isLoading" :total-uncles="total" @getUnclePage="getPage" :max-items="max" :error="error" />
       </v-flex>
     </v-layout>
   </v-container>
@@ -28,9 +28,9 @@ export default class PageUncles extends Vue {
   uncles: Uncle[] = []
   from: number = -1
   firstLoad: boolean = true
-  loading = true
+  isLoading = true
   total = 0
-  error = false
+  error = ''
 
   /*
   ===================================================================================
@@ -57,7 +57,7 @@ export default class PageUncles extends Vue {
   */
 
   getPage(page): void {
-    this.loading = true
+    this.isLoading = true
     this.fetchUncles(page).then(
       res => {
         this.uncles = res
@@ -65,10 +65,10 @@ export default class PageUncles extends Vue {
           this.from = this.uncles.length > 0 ? this.uncles[0].getBlockHeight() : -1
           this.firstLoad = false
         }
-        this.loading = false
+        this.isLoading = false
       },
       err => {
-        this.error = true
+        this.error = 'error'
       }
     )
   }

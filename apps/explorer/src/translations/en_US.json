@@ -110,7 +110,8 @@
     "invalidAddress": "Invalid Address",
     "invalidHash": "Invalid Hash",
     "invalidBlock": "Invalid Block",
-    "invalidToken": "Invalid Token Address"
+    "invalidToken": "Invalid Token Address",
+    "invalidUncle": "Invalid Uncle"
   },
   "block": {
     "height": "Height",

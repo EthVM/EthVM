@@ -3,9 +3,7 @@
     <app-bread-crumbs :new-items="crumbs" />
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
-        <app-list-details :items="uncleDetails" :hide-more="hideMore" :details-type="listType" :loading="loading">
-          <app-list-title slot="details-title" :list-type="listType" />
-        </app-list-details>
+        <app-details-list :title="title" :details="uncleDetails" :is-loading="isLoading" :error="error" />
       </v-flex>
     </v-layout>
   </v-container>
@@ -13,7 +11,7 @@
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-import AppListDetails from '@app/core/components/ui/AppListDetails.vue'
+import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import AppListTitle from '@app/core/components/ui/AppListTitle.vue'
 import { Events } from 'ethvm-common'
 import { eth } from '@app/core/helper'
@@ -24,30 +22,28 @@ import { Detail } from '@app/core/components/props'
 @Component({
   components: {
     AppBreadCrumbs,
-    AppListDetails,
-    AppListTitle
+    AppDetailsList
   }
 })
 export default class PageDetailsUncle extends Vue {
   @Prop({ type: String }) uncleRef!: string
 
-  loading = true
-  error = false
-  listType = 'uncle'
-  hideMore = true
-
-  uncle = null
-  details = []
+  uncle = {} as Uncle
   timestamp = ''
+  error = ''
 
-  // Lifecycle
+  /*
+  ===================================================================================
+    Lifecycle
+  ===================================================================================
+  */
+
   created() {
     const ref = this.uncleRef
 
     // 1. Check that current uncle ref is valid one
     if (!eth.isValidHash(ref)) {
-      this.error = true
-      this.loading = false
+      this.error = this.$i18n.t('message.invalidHash').toString()
       return
     }
 
@@ -62,83 +58,154 @@ export default class PageDetailsUncle extends Vue {
     }
   }
 
-  //Methods:
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
   fetchUncle() {
     this.$api
       .getUncle(this.uncleRef)
-      .then(uncle => this.setUncleInfo(uncle))
-      .catch(err => (this.error = true))
+      .then(uncle => {
+        if (uncle === null) {
+          this.error = this.$i18n.t('message.invalidUncle').toString()
+          return
+        }
+        this.setUncleInfo(uncle)
+      })
+      .catch(err => (this.error = this.$i18n.t('message.invalidUncle').toString()))
   }
 
   setUncleInfo(uncle: Uncle) {
     this.uncle = uncle
     this.timestamp = this.uncle.getTimestamp().toString()
-    this.setDetails(this.uncle)
-    this.loading = false
   }
 
-  setDetails(uncle: Uncle) {
-    this.details = [
-      {
-        title: this.$i18n.t('tableHeader.blockHeight'),
-        detail: uncle.getNumber()
-      },
-      {
-        title: this.$i18n.t('tableHeader.unclePosition'),
-        detail: uncle.getPosition()
-      },
-      {
-        title: this.$i18n.t('tableHeader.blockN'),
-        detail: uncle.getBlockHeight(),
-        link: '/block/' + uncle.getBlockHeight()
-      },
-      {
-        title: this.$i18n.t('common.hash'),
-        detail: uncle.getHash(),
-        copy: true
-      },
-      {
-        title: this.$i18n.t('block.pHash'),
-        detail: uncle.getParentHash()
-      },
-      {
-        title: this.$i18n.t('block.miner'),
-        detail: uncle.getMiner().toString(),
-        link: '/address/' + uncle.getMiner().toString(),
-        copy: true
-      },
-      {
-        title: this.$i18n.t('common.timestmp'),
-        detail: this.formatTime
-      },
-      {
-        title: this.$i18n.t('block.pHash'),
-        detail: uncle.getParentHash().toString()
-      },
-      {
-        title: this.$i18n.t('block.sha'),
-        detail: uncle.getSha3Uncles().toString()
-      },
-      {
-        title: this.$i18n.t('gas.limit'),
-        detail: uncle.getGasLimit().toNumber()
-      },
-      {
-        title: this.$i18n.t('gas.used'),
-        detail: uncle.getGasUsed().toNumber()
-      }
-    ]
+  /*
+  ===================================================================================
+    Computed
+  ===================================================================================
+  */
+
+  /**
+   * Return the title for the details list.
+   *
+   * @return {String}
+   */
+  get title(): string {
+    return this.$i18n.t('title.uncleDetail').toString()
   }
 
-  // Computed
+  /**
+   * Return properly formatted Details[] array for the details table.
+   * If the data hasn't been loaded yet, then only include the titles in the details.
+   *
+   * @return {Detail[]}
+   */
   get uncleDetails(): Detail[] {
-    return this.details
+    let details
+    if (this.isLoading) {
+      details = [
+        {
+          title: this.$i18n.t('tableHeader.blockHeight')
+        },
+        {
+          title: this.$i18n.t('tableHeader.unclePosition')
+        },
+        {
+          title: this.$i18n.t('tableHeader.blockN')
+        },
+        {
+          title: this.$i18n.t('common.hash')
+        },
+        {
+          title: this.$i18n.t('block.pHash')
+        },
+        {
+          title: this.$i18n.t('block.miner')
+        },
+        {
+          title: this.$i18n.t('common.timestmp')
+        },
+        {
+          title: this.$i18n.t('block.pHash')
+        },
+        {
+          title: this.$i18n.t('block.sha')
+        },
+        {
+          title: this.$i18n.t('gas.limit')
+        },
+        {
+          title: this.$i18n.t('gas.used')
+        }
+      ]
+    } else {
+      details = [
+        {
+          title: this.$i18n.t('tableHeader.blockHeight'),
+          detail: this.uncle.getNumber()
+        },
+        {
+          title: this.$i18n.t('tableHeader.unclePosition'),
+          detail: this.uncle.getPosition()
+        },
+        {
+          title: this.$i18n.t('tableHeader.blockN'),
+          detail: this.uncle.getBlockHeight(),
+          link: '/block/' + this.uncle.getBlockHeight()
+        },
+        {
+          title: this.$i18n.t('common.hash'),
+          detail: this.uncle.getHash(),
+          copy: true
+        },
+        {
+          title: this.$i18n.t('block.pHash'),
+          detail: this.uncle.getParentHash()
+        },
+        {
+          title: this.$i18n.t('block.miner'),
+          detail: this.uncle.getMiner().toString(),
+          link: '/address/' + this.uncle.getMiner().toString(),
+          copy: true
+        },
+        {
+          title: this.$i18n.t('common.timestmp'),
+          detail: this.formatTime
+        },
+        {
+          title: this.$i18n.t('block.pHash'),
+          detail: this.uncle.getParentHash().toString()
+        },
+        {
+          title: this.$i18n.t('block.sha'),
+          detail: this.uncle.getSha3Uncles().toString()
+        },
+        {
+          title: this.$i18n.t('gas.limit'),
+          detail: this.uncle.getGasLimit().toNumber()
+        },
+        {
+          title: this.$i18n.t('gas.used'),
+          detail: this.uncle.getGasUsed().toNumber()
+        }
+      ]
+    }
+    return details
   }
 
   get formatTime(): string {
     return new Date(this.timestamp).toString()
   }
 
+  /**
+   * Returns breadcrumbs entry for this particular view.
+   * Required for AppBreadCrumbs
+   *
+   * @return {Array} - Breadcrumb entry. See description.
+   */
   get crumbs() {
     return [
       {
@@ -151,6 +218,25 @@ export default class PageDetailsUncle extends Vue {
         disabled: true
       }
     ]
+  }
+
+  /**
+   * Determines whether or not the uncle object has been loaded/populated.
+   *
+   * @return {Boolean}
+   */
+  get isLoading(): boolean {
+    return Object.keys(this.uncle).length === 0
+  }
+
+  /**
+   * Determines whether or not component has an error.
+   * If error property is empty string, there is no error.
+   *
+   * @return {Boolean} - Whether or not error exists
+   */
+  get hasError(): boolean {
+    return this.error !== ''
   }
 }
 </script>

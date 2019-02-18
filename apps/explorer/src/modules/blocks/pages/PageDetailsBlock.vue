@@ -351,6 +351,12 @@ export default class PageDetailsBlock extends Vue {
     return new Date(this.timestamp).toString()
   }
 
+  /**
+   * Returns breadcrumbs entry for this particular view.
+   * Required for AppBreadCrumbs
+   *
+   * @return {Array} - Breadcrumb entry. See description.
+   */
   get crumbs() {
     return [
       {
@@ -378,6 +384,12 @@ export default class PageDetailsBlock extends Vue {
     return Object.keys(this.block).length === 0
   }
 
+  /**
+   * Determines whether or not component has an error.
+   * If error property is empty string, there is no error.
+   *
+   * @return {Boolean} - Whether or not error exists
+   */
   get hasError(): boolean {
     return this.error !== ''
   }
