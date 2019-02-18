@@ -9,7 +9,6 @@ const MAX_TXS = parseInt(process.env.VUE_APP_MAX_TX_IN_MEMORY)
 const MAX_PENDING_TXS = parseInt(process.env.VUE_APP_MAX_PTX_IN_MEMORY)
 const MAX_UNCLES = parseInt(process.env.VUE_APP_MAX_UNCLE_IN_MEMORY)
 
-
 export interface State {
   blocks: FIFO<Block>
   blockMetrics: FIFO<BlockMetrics>

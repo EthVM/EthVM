@@ -64,41 +64,41 @@
       </v-layout>
     </v-card>
     <div v-else>
-    <v-card flat v-if="!hasError" id="scroll-target" :style="getStyle" class="scroll-y" style="overflow-x: hidden">
-      <v-layout column fill-height class="mb-1" v-scroll:#scroll-target>
-        <v-flex xs12 v-if="!loading">
-          <v-card v-for="tx in transactions" class="transparent" flat :key="tx.getHash()">
-            <table-txs-row :tx="tx" :is-pending="pending" />
-            <v-divider class="mb-2 mt-2" />
-          </v-card>
-          <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2">
-            <app-paginate :total="pages" @newPage="setPage" :new-page="page" :has-input="false" :has-last="false" />
-          </v-layout>
-        </v-flex>
-        <v-flex xs12 v-if="loading">
-          <div v-for="i in maxItems" :key="i">
-            <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
-              <v-flex xs6 sm8 md5>
-                <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
-              </v-flex>
-              <v-flex hidden-xs-only sm3 md2>
-                <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
-              </v-flex>
-              <v-flex hidden-sm-and-down md2>
-                <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
-              </v-flex>
-              <v-flex hidden-sm-and-down md2>
-                <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
-              </v-flex>
-              <v-flex hidden-xs-only v-if="!pending" sm1>
-                <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
-              </v-flex>
+      <v-card flat v-if="!hasError" id="scroll-target" :style="getStyle" class="scroll-y" style="overflow-x: hidden">
+        <v-layout column fill-height class="mb-1" v-scroll:#scroll-target>
+          <v-flex xs12 v-if="!loading">
+            <v-card v-for="tx in transactions" class="transparent" flat :key="tx.getHash()">
+              <table-txs-row :tx="tx" :is-pending="pending" />
+              <v-divider class="mb-2 mt-2" />
+            </v-card>
+            <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2">
+              <app-paginate :total="pages" @newPage="setPage" :new-page="page" :has-input="false" :has-last="false" />
             </v-layout>
-            <v-divider class="mb-2 mt-2" />
-          </div>
-        </v-flex>
-      </v-layout>
-    </v-card>
+          </v-flex>
+          <v-flex xs12 v-if="loading">
+            <div v-for="i in maxItems" :key="i">
+              <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
+                <v-flex xs6 sm8 md5>
+                  <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+                </v-flex>
+                <v-flex hidden-xs-only sm3 md2>
+                  <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+                </v-flex>
+                <v-flex hidden-sm-and-down md2>
+                  <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+                </v-flex>
+                <v-flex hidden-sm-and-down md2>
+                  <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+                </v-flex>
+                <v-flex hidden-xs-only v-if="!pending" sm1>
+                  <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+                </v-flex>
+              </v-layout>
+              <v-divider class="mb-2 mt-2" />
+            </div>
+          </v-flex>
+        </v-layout>
+      </v-card>
     </div>
   </v-card>
 </template>
@@ -136,7 +136,6 @@ export default class TableTxs extends Vue {
   */
   mounted() {
     this.$api.getProcessingMetadata('syncing').then(ev => (this.sync = ev ? ev.value : true))
-
   }
 
   @Watch('page')

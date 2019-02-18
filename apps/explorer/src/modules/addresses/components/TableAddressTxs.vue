@@ -50,6 +50,7 @@
       </v-flex>
     </v-layout>
     <!-- Tx Table Content -->
+
     <table-address-tx-row v-if="!loading" :transactions="txs" :account="address" :filter="selected" :type="isPending" />
     <app-info-load v-else />
     <v-layout justify-end row class="pb-1 pr-2 pl-2" v-if="pages > 1">
