@@ -233,7 +233,7 @@ services:
       - 9991:9991
       - 9102:9102
     environment:
-      LICENSE_URL: "Obtain your license URL here: https://www.landoop.com/downloads/lenses/ and paste the value here"
+      LICENSE_URL: "${LENSES_LICENSE_URL}"
       LENSES_PORT: 9991
       LENSES_KAFKA_BROKERS: "PLAINTEXT://kafka-1:9091"
       LENSES_ZOOKEEPER_HOSTS: |
