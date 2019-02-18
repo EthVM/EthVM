@@ -94,10 +94,12 @@ services:
         ipv4_address: 172.25.0.103
     ports:
       - 2181:2181
+      - 9585:9585
     environment:
       ZOOKEEPER_SERVER_ID: 1
       ZOOKEEPER_SERVERS: "server.1=zookeeper:2888:3888"
       ZOOKEEPER_CLIENT_PORT: 2181
+      KAFKA_JMX_PORT: 9585
     mem_limit: 512m
 
   kafka-1:
@@ -112,6 +114,7 @@ services:
         ipv4_address: 172.25.0.104
     ports:
       - 9091:9091
+      - 9586:9586
     environment:
       KAFKA_ADVERTISED_HOST_NAME: "kafka-1"
       KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka-1:9091"
@@ -122,7 +125,8 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
-      CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
+      CONFLUENT_SUPPORT_METRICS_ENABLE: "true"
+      KAFKA_JMX_PORT: 9586
     mem_limit: 4g
 
   kafka-schema-registry:
@@ -136,6 +140,7 @@ services:
         ipv4_address: 172.25.0.107
     ports:
       - 8081:8081
+      - 9587:9587
     labels:
       - "traefik.enable=true"
       - "traefik.default.protocol=http"
@@ -148,6 +153,7 @@ services:
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
       SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: "INFO"
       SCHEMA_REGISTRY_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR"
+      KAFKA_JMX_PORT: 9587
     mem_limit: 512m
     cpu_shares: 512
 
@@ -163,131 +169,36 @@ services:
       - back
     ports:
       - 8083:8083
+      - 9588:9588
     volumes:
       - ./out/kafka-connect/:/usr/share/enkryptio
-    labels:
-      - "traefik.enable=true"
-      - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:kafka-connect.ethvm.${DOMAIN}"
-      - "traefik.port=8083"
-      - "traefik.backend=kafka-connect"
     environment:
       CONNECT_BOOTSTRAP_SERVERS: kafka-1:9091
-      CONNECT_REST_PORT: 8083
-      CONNECT_GROUP_ID: "kafka-connect-avro"
-      CONNECT_CONFIG_STORAGE_TOPIC: "kafka-connect-avro-config"
-      CONNECT_OFFSET_STORAGE_TOPIC: "kafka-connect-avro-offsets"
-      CONNECT_OFFSET_COMMIT_INTERVAL_MS: 1000
-      CONNECT_STATUS_STORAGE_TOPIC: "kafka-connect-avro-status"
-      CONNECT_KEY_CONVERTER: "io.confluent.connect.avro.AvroConverter"
-      CONNECT_VALUE_CONVERTER: "io.confluent.connect.avro.AvroConverter"
-      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: ${KAFKA_SCHEMA_REGISTRY_URL}
-      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: ${KAFKA_SCHEMA_REGISTRY_URL}
-      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_REST_ADVERTISED_HOST_NAME: "kafka-connect"
-      CONNECT_LOG4J_ROOT_LOGLEVEL: "INFO"
-      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,io.enkrypt.kafka.connect=TRACE"
+      CONNECT_REST_PORT: 8083
+      CONNECT_GROUP_ID: "ethvm-kafka-connect"
+      CONNECT_STATUS_STORAGE_TOPIC: "ethvm-storage-topic"
+      CONNECT_CONFIG_STORAGE_TOPIC: "ethvm-storage-config"
+      CONNECT_OFFSET_STORAGE_TOPIC: "ethvm-storage-offsets"
       CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: "1"
       CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
       CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_OFFSET_COMMIT_INTERVAL_MS: 1000
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: ${KAFKA_SCHEMA_REGISTRY_URL}
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: ${KAFKA_SCHEMA_REGISTRY_URL}
+      CONNECT_KEY_CONVERTER: "io.confluent.connect.avro.AvroConverter"
+      CONNECT_VALUE_CONVERTER: "io.confluent.connect.avro.AvroConverter"
+      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_LOG4J_ROOT_LOGLEVEL: "INFO"
+      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,io.enkrypt.kafka.connect=TRACE"
       CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/enkryptio
+      KAFKA_JMX_PORT: 9588
     mem_limit: 4g
 
   # ///////////////////////////////////////////////////////
   # Extra Tools (Useful for debugging and helping on Kafka)
   # ///////////////////////////////////////////////////////
-
-  kafka-rest-proxy:
-    image: confluentinc/cp-kafka-rest:${CP_VERSION}
-    networks:
-      - back
-    ports:
-      - 8082:8082
-    environment:
-      KAFKA_REST_ZOOKEEPER_CONNECT: ${KAFKA_ZOOKEEPER_CONNECT}
-      KAFKA_REST_LISTENERS: http://0.0.0.0:8082/
-      KAFKA_REST_SCHEMA_REGISTRY_URL: ${KAFKA_SCHEMA_REGISTRY_URL}
-      KAFKA_REST_HOST_NAME: kafka-rest-proxy
-      KAFKA_REST_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP_SERVERS}
-    depends_on:
-      - kafka-1
-      - kafka-schema-registry
-    cpu_shares: 256
-
-  kafka-topics-ui:
-    image: landoop/kafka-topics-ui:${KAFKA_UI_VERSION}
-    networks:
-      - back
-    ports:
-      - "8000:8000"
-    environment:
-      KAFKA_REST_PROXY_URL: "http://kafka-rest-proxy:8082/"
-      PROXY: "true"
-    depends_on:
-      - kafka-1
-      - kafka-schema-registry
-      - kafka-rest-proxy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:kafka-ui.ethvm.${DOMAIN}"
-      - "traefik.frontend.passHostHeader=true"
-      - "traefik.backend=kafka-topics-ui"
-      - "traefik.port=8000"
-    cpu_shares: 256
-
-  kafka-connect-ui:
-    image: landoop/kafka-connect-ui:${KAFKA_UI_VERSION}
-    networks:
-      - back
-    ports:
-      - 8003:8000
-    environment:
-      CONNECT_URL: "http://kafka-connect:8083/"
-      PROXY: "true"
-    depends_on:
-      - kafka-connect
-    labels:
-      - "traefik.enable=true"
-      - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:kafka-connect-ui.ethvm.${DOMAIN}"
-      - "traefik.frontend.passHostHeader=true"
-      - "traefik.backend=kafka-connect-ui"
-      - "traefik.port=8003"
-    cpu_shares: 256
-
-  zoonavigator-api:
-    image: elkozmon/zoonavigator-api:${ZOONAVIGATOR_VERSION}
-    networks:
-      - back
-    environment:
-      SERVER_HTTP_PORT: 9000
-    depends_on:
-      - zookeeper
-    cpu_shares: 256
-
-  zoonavigator-web:
-    image: elkozmon/zoonavigator-web:${ZOONAVIGATOR_VERSION}
-    networks:
-      - back
-    ports:
-      - 8004:8000
-    environment:
-      API_HOST: "zoonavigator-api"
-      API_PORT: 9000
-    links:
-      - zoonavigator-api
-    depends_on:
-      - zoonavigator-api
-    labels:
-      - "traefik.enable=true"
-      - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:zookeeper-ui.ethvm.${DOMAIN}"
-      - "traefik.frontend.passHostHeader=true"
-      - "traefik.backend=zoonavigator-api"
-      - "traefik.port=8004"
-    cpu_shares: 256
 
   ksql-server:
     image: confluentinc/cp-ksql-server:${CP_VERSION}
@@ -302,7 +213,7 @@ services:
       KSQL_BOOTSTRAP_SERVERS: kafka-1:9091
       KSQL_LISTENERS: http://0.0.0.0:8088/
       KSQL_KSQL_SERVICE_ID: ksql_service_1
-      KSQL_SCHEMA_REGISTRY_URL: http://kafka-schema-registry:8081/
+      KSQL_SCHEMA_REGISTRY_URL: ${KAFKA_SCHEMA_REGISTRY_URL}
     mem_limit: 4g
 
   ksql-cli:
@@ -313,3 +224,39 @@ services:
       - ksql-server
     tty: true
     entrypoint: /bin/bash
+
+  lenses:
+    image: landoop/lenses:2.1
+    networks:
+      - back
+    ports:
+      - 9991:9991
+      - 9102:9102
+    environment:
+      LICENSE_URL: "${LENSES_LICENSE_URL}"
+      LENSES_PORT: 9991
+      LENSES_KAFKA_BROKERS: "PLAINTEXT://kafka-1:9091"
+      LENSES_ZOOKEEPER_HOSTS: |
+        [ { url:"zookeeper:2181", jmx:"zookeeper:9585" } ]
+      LENSES_SCHEMA_REGISTRY_URLS: |
+        [ { url:"http://kafka-schema-registry:8081", jmx:"kafka-schema-registry:9587" } ]
+      LENSES_CONNECT_CLUSTERS: |
+        [
+          {
+            name:"ethvm",
+            urls: [ {url:"http://kafka-connect:8083", jmx:"kafka-connect:9588"} ],
+            statuses:"ethvm-storage-topic",
+            configs:"ethvm-storage-config",
+            offsets:"ethvm-storage-offsets"
+          }
+        ]
+      LENSES_SECURITY_MODE: BASIC
+      LENSES_SECURITY_GROUPS: |
+        [
+          { "name": "adminGroup", "roles": ["Admin"] }
+        ]
+      LENSES_SECURITY_USERS: |
+        [
+          { "username": "admin", "password": "admin", "displayname": "Lenses Admin", "groups": ["adminGroup"] }
+        ]
+    cpu_shares: 512

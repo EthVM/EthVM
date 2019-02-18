@@ -61,23 +61,6 @@ const config = convict({
   },
 
   eth: {
-    rpc: {
-      host: {
-        default: 'localhost',
-        format: String,
-        env: 'ETHVM_ETH_RPC_HOST'
-      },
-      port: {
-        default: 8545,
-        format: 'port',
-        env: 'ETHVM_RPC_ETH_PORT'
-      }
-    },
-    state_root: {
-      default: 'd7f8974fb5ac78d9ac099b9ad5018bedc2ce0a72dad1827a1709da30580f0544',
-      format: String,
-      env: 'ETHVM_ETH_STATE_ROOT'
-    },
     vm: {
       engine: {
         rpc_url: {
@@ -91,16 +74,6 @@ const config = convict({
             format: String,
             env: 'ETHVM_ETH_VM_ENGINE_TOKENS_SMART_CONTRACT_ADDRESS'
           }
-        },
-        account: {
-          default: '0x2a65aca4d5fc5b5c859090a6c34d164135398226',
-          format: String,
-          env: 'ETHVM_ETH_VM_ENGINE_ACCOUNT_ADDRESS'
-        },
-        gas_limit: {
-          default: '0x4c4b40', // 50000000
-          format: String,
-          env: 'ETHVM_ETH_VM_ENGINE_GAS_LIMIT'
         }
       }
     }
