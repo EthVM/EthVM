@@ -43,7 +43,7 @@
           <v-spacer />
           <v-flex xs12 sm7 md6>
             <v-layout justify-end row class="pb-1 pr-2 pl-2" v-if="pages > 1">
-              <app-paginate :total="pages" @newPage="setPage" :new-page="page" />
+              <app-paginate :total="pages" @newPage="setPage" :new-page="page" :has-first="false" :has-last="false" :has-input="false" />
             </v-layout>
           </v-flex>
         </v-layout>
@@ -54,7 +54,7 @@
     <table-address-tx-row v-if="!loading" :transactions="txs" :account="address" :filter="selected" :type="isPending" />
     <app-info-load v-else />
     <v-layout justify-end row class="pb-1 pr-2 pl-2" v-if="pages > 1">
-      <app-paginate :total="pages" @newPage="setPage" :new-page="page" />
+      <app-paginate :total="pages" @newPage="setPage" :new-page="page" :has-first="false" :has-last="false" :has-input="false" />
     </v-layout>
   </v-card>
 </template>
@@ -68,6 +68,7 @@ import { Tx } from '@app/core/models'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 
 const MAX_TXS = 10
+
 @Component({
   components: {
     AppInfoLoad,
@@ -83,28 +84,43 @@ export default class TableAddressTxs extends Vue {
   @Prop({ type: Boolean, default: false }) isPending!: boolean
   @Prop({ type: Boolean, default: true }) loading!: boolean
 
-  page = 1
+  page = 0
   selected = 0
   filter = ['all', 'in', 'out']
 
-  /*Methods: */
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
   setPage(_value: number): void {
     this.page = _value
   }
 
-  /*Watch: */
+  /*
+  ===================================================================================
+    Watch
+  ===================================================================================
+  */
+
   @Watch('selected')
   onSelectedChanged(newVal: number, oldVal: number): void {
-    this.page = 1
+    this.page = 0
     this.$emit('filter', this.filter[newVal], 0)
   }
 
   @Watch('page')
   onPageChanged(newVal: number, oldVal: number): void {
-    this.$emit('filter', this.filter[this.selected], newVal - 1)
+    this.$emit('filter', this.filter[this.selected], newVal)
   }
 
-  /* Computed: */
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
+
   get options() {
     return [
       {
@@ -121,6 +137,7 @@ export default class TableAddressTxs extends Vue {
       }
     ]
   }
+
   get footnote() {
     return [
       {
@@ -135,6 +152,7 @@ export default class TableAddressTxs extends Vue {
       }
     ]
   }
+
   get pages(): number {
     return Math.ceil(this.totalTxs / MAX_TXS)
   }

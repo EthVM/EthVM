@@ -12,7 +12,7 @@ export interface Tab {
 
 export interface Detail {
   title: string
-  detail: string
+  detail?: string
   link?: string
   copy?: boolean
 }

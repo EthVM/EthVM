@@ -7,8 +7,6 @@ import org.apache.commons.compress.utils.IOUtils
 import org.ethereum.solidity.Abi
 import java.io.InputStream
 import java.nio.ByteBuffer
-import java.nio.file.Files
-import java.nio.file.Path
 
 abstract class AbstractAbi protected constructor(input: InputStream) {
 

@@ -65,12 +65,12 @@
 
 <script lang="ts">
 import { StringConcatMixin } from '@app/core/components/mixins'
-import { Tx } from '@app/core/models'
+import { Tx, SimpleTx } from '@app/core/models'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 
 @Component
 export default class TableTxsRow extends Mixins(StringConcatMixin) {
-  @Prop(Tx) tx!: Tx
+  @Prop(Object) tx!: Tx | SimpleTx
   @Prop({ type: Boolean, default: false }) isPending
 }
 </script>

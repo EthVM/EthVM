@@ -130,6 +130,7 @@ class ChainEventsTransformer(
     if (chainEventsStore.get(blockHashKey) != null) {
       // we have already processed this block, do nothing
       logger.warn { "Ignoring block ${blockNumber.unsignedBigInteger()}, already processed" }
+      putHighestBlockNumber(blockNumber)
       return
     }
 

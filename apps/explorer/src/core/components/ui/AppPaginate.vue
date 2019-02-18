@@ -2,12 +2,12 @@
   <v-card transparent flat min-width="240" max-width="340">
     <v-container grid-list-xs pa-1>
       <v-layout row align-center justify-end fill-height>
-        <v-btn flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('first')" small>{{ $t('bttn.first') }}</v-btn>
+        <v-btn v-if="hasFirst" flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('first')" small>{{ $t('bttn.first') }}</v-btn>
         <v-btn flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('prev')" small
           ><v-icon class="secondary--text" small>fas fa-angle-left</v-icon>
         </v-btn>
         <div v-if="hasInput" class="page-input">
-          <v-text-field v-model="pageInput" :mask="inputMask" :placeholder="newPH" :error="!valid(pageInput)" :class="validClass"></v-text-field>
+          <v-text-field v-model="pageInput" :mask="inputMask" :placeholder="newPH" :error="!isValid(pageInput)" :class="validClass"></v-text-field>
         </div>
         <p v-else class="info--text pr-1">{{ pageInput }}</p>
         <p class="info--text">out of {{ total }}</p>
@@ -26,72 +26,135 @@ import _debounce from 'lodash.debounce'
 
 @Component
 export default class AppPaginate extends Vue {
-  @Prop(Number) total: number
-  @Prop(Number) newPage: number
-  @Prop({ type: Boolean, default: true }) hasLast: boolean
-  @Prop({ type: Boolean, default: true }) hasInput: boolean
+  @Prop(Number) total!: number
+  @Prop(Number) newPage!: number
+  @Prop(Number) currentPage!: number
+  @Prop({ type: Boolean, default: true }) hasFirst!: boolean
+  @Prop({ type: Boolean, default: true }) hasLast!: boolean
+  @Prop({ type: Boolean, default: true }) hasInput!: boolean
 
-  page = 1
-  pageInput = this.page.toString()
+  page = 0
+  pageInput = '1'
   validClass = 'center-input body-1 secondary--text'
   invalidClass = 'center-input body-1 error--text'
 
-  //Methods
+  /*
+  ===================================================================================
+    Watch
+  ===================================================================================
+  */
 
-  valid(_page: number): boolean {
-    return _page > 0 && _page <= this.total ? true : false
-  }
-
-  setPage(): void {
-    if (this.valid(parseInt(this.pageInput, 10))) {
-      this.page = parseInt(this.pageInput, 10)
+  /**
+   * When this.currentPage changes (updated via a prop from parent component),
+   * update this.page with the corresponding value.
+   * This is done in order to sync the displayed this.pageInput value on multiple components
+   * that may be in the same view.
+   * However, this can trigger the @onPageChanged event on other AppPaginate components,
+   * so care must be taken in parent components in order not to fetch the same data twice.
+   */
+  @Watch('currentPage')
+  onCurrentPageChanged(newVal: number, oldVal: number) {
+    if (this.currentPage !== this.page) {
+      this.page = this.currentPage
     }
   }
 
-  setPageOnClick(_value: string): void {
-    switch (_value) {
-      case 'first':
-        this.page = 1
-        break
-      case 'prev':
-        if (this.valid(this.page - 1)) {
-          this.page -= 1
-        }
-        break
-      case 'next':
-        if (this.valid(this.page + 1)) {
-          this.page += 1
-        }
-        break
-      case 'last':
-        this.page = this.total
-        break
-      default:
-        break
-    }
-    this.pageInput = this.page.toString()
+  /**
+   * When this.page changes, emit event with the new this.page value.
+   * Also, ensure that this.pageInput is properly transformed for display.
+   */
+  @Watch('page')
+  onPageChanged(newVal: number, oldVal: number): void {
+    this.pageInput = this.transformPageToPageInput()
+    this.$emit('newPage', this.page)
   }
 
-  // Watch
+  /**
+   * When this.pageInput changes, properly transform and update thus.page.
+   */
   @Watch('pageInput')
   onPageInputChanged(newVal: string, oldVal: string): void {
     const setNewPage = _debounce(this.setPage, 500)
     setNewPage()
   }
 
-  @Watch('page')
-  onPageChanged(newVal: number, oldVal: number): void {
-    this.$emit('newPage', newVal)
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
+  /**
+   * Transform the "zero-based" value of this.page into
+   * a human-readable string that starts from 1 as opposed to 0
+   *
+   * @return {String}
+   */
+  transformPageToPageInput(): string {
+    return (this.page + 1).toString()
   }
 
-  @Watch('newPage')
-  onNewPageChanged(newVal: number, oldVal: number): void {
-    if (this.newPage != this.page) {
-      this.pageInput = this.newPage.toString()
+  /**
+   * Transform the human-reable value of this.pageInput into
+   * an "zero-based" number that starts from 0 as opposed to 1
+   *
+   * @return {Number}
+   */
+  transformPageInputToPage(): number {
+    return parseInt(String(this.pageInput), 10) - 1
+  }
+
+  /**
+   * Determine if an given @number is within the valid page range.
+   *
+   * @page {Number} - Page number to be validated
+   * @return {Boolean}
+   */
+  isValid(page: number): boolean {
+    return page >= 0 && page <= this.total
+  }
+
+  /**
+   * When attempting to manually set the the page number via this.pageInput,
+   * confirm that the transformed value of this.page is valid.
+   * I.E. this.pageInput === 1 --> desiredPage === 0 --> this.isValid --> this.page === 0
+   */
+  setPage() {
+    const desiredPage = this.transformPageInputToPage()
+    if (this.isValid(desiredPage)) {
+      this.page = desiredPage
     }
   }
 
-  //Computed
+  /**
+   * Set this.page to the correct value based on passed string.
+   *
+   * @param {String} value
+   */
+  setPageOnClick(value: string): void {
+    switch (value) {
+      case 'first':
+        this.page = 0
+        break
+      case 'prev':
+        this.page = Math.max(0, this.page - 1)
+        break
+      case 'next':
+        this.page = Math.min(this.total - 1, this.page + 1)
+        break
+      case 'last':
+        this.page = this.total - 1
+        break
+      default:
+        break
+    }
+  }
+
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
 
   get inputMask(): string {
     let mask = '#'

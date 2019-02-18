@@ -1,4 +1,4 @@
-import { Block, PendingTx, Tx, Uncle } from '@app/core/models'
+import { Block, PendingTx, SimpleBlock, Tx, Uncle } from '@app/core/models'
 import { processBlockMetrics, processBlocks, processPendingTxs, processTxs, processUncles } from '@app/core/store/processors'
 import { FIFO } from '@app/core/store/utils'
 import { BlockMetrics } from 'ethvm-common'
@@ -11,6 +11,7 @@ const MAX_UNCLES = parseInt(process.env.VUE_APP_MAX_UNCLE_IN_MEMORY)
 
 export interface State {
   blocks: FIFO<Block>
+  simpleBlocks: FIFO<SimpleBlock>
   blockMetrics: FIFO<BlockMetrics>
   txs: FIFO<Tx>
   pendingTxs: FIFO<PendingTx>
@@ -19,7 +20,8 @@ export interface State {
 }
 
 export const FIFOState: State = {
-  blocks: new FIFO<Block>(MAX_BLOCKS, processBlocks),
+  blocks: new FIFO<Block>(MAX_BLOCKS, processBlocks as any),
+  simpleBlocks: new FIFO<SimpleBlock>(MAX_BLOCKS, processBlocks as any),
   blockMetrics: new FIFO<BlockMetrics>(MAX_BLOCKS_METRICS, processBlockMetrics),
   txs: new FIFO<Tx>(MAX_TXS, processTxs),
   pendingTxs: new FIFO<PendingTx>(MAX_PENDING_TXS, processPendingTxs),

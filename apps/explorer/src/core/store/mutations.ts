@@ -1,10 +1,15 @@
-import { Block, PendingTx, Tx, Uncle } from '@app/core/models'
+import { Block, PendingTx, Tx, Uncle, SimpleBlock } from '@app/core/models'
 import { State } from '@app/core/store/state'
 import { BlockMetrics } from 'ethvm-common'
 
 const NEW_BLOCK = (state: State, raw: Block | Block[]) => {
   const blocks = !Array.isArray(raw) ? [raw] : raw
   blocks.forEach(block => state.blocks.add(block))
+}
+
+const NEW_SIMPLE_BLOCK = (state: State, raw: SimpleBlock | SimpleBlock[]) => {
+  const blocks = !Array.isArray(raw) ? [raw] : raw
+  blocks.forEach(block => state.simpleBlocks.add(block))
 }
 
 const NEW_BLOCK_METRIC = (state: State, raw: BlockMetrics | BlockMetrics[]) => {
@@ -33,6 +38,7 @@ const NEW_SYNC = (state: State, sync: boolean) => {
 
 export default {
   NEW_BLOCK,
+  NEW_SIMPLE_BLOCK,
   NEW_BLOCK_METRIC,
   NEW_TX,
   NEW_UNCLE,

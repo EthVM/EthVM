@@ -11,6 +11,7 @@ export const Events = {
 
   // Ouputs
   NEW_BLOCK: "NEW_BLOCK",
+  NEW_SIMPLE_BLOCK: "NEW_SIMPLE_BLOCK",
   NEW_PENDING_TX: "NEW_PENDING_TX",
   NEW_BLOCK_METRIC: "NEW_BLOCK_METRIC",
   NEW_PROCESSING_METADATA: 'NEW_PROCESSING_METADATA',
@@ -47,7 +48,6 @@ export const Events = {
   getTxs: "get-txs",
   getBlockTxs: "get-block-txs",
   getAddressTxs: "get-address-txs",
-  getAddressTotalTxs: "get-address-total-txs",
   getTotalNumberOfTxs: "get-total-number-of-txs",
 
   // PendingTxs

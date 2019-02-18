@@ -55,7 +55,7 @@ class ExchangeRatesSourceConnector : SourceConnector() {
 
     const val SYNC_INTERVAL_CONFIG = "sync.interval"
     const val SYNC_INTERVAL_DOC = "How often to check for updates in seconds"
-    val SYNC_INTERVAL_DEFAULT = TimeUnit.MINUTES.toSeconds(1L).toInt() // every 1 hours
+    val SYNC_INTERVAL_DEFAULT = TimeUnit.HOURS.toSeconds(1L).toInt() // every 1 hour
 
     fun topic(props: MutableMap<String, String>) = props[TOPIC_CONFIG] ?: TOPIC_CONFIG_DEFAULT
 

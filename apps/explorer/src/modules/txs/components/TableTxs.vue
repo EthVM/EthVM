@@ -17,7 +17,7 @@
       </v-flex>
       <v-flex v-else xs12 sm7 md6>
         <v-layout v-if="pages > 1 && !hasError" justify-end row class="pb-1 pr-2 pl-2">
-          <app-paginate :total="pages" @newPage="setPage" :new-page="page" :has-input="false" :has-last="false" />
+          <app-paginate :total="pages" @newPage="setPage" :new-page="page" :has-first="false" :has-last="false" :has-input="false" />
         </v-layout>
       </v-flex>
     </v-layout>
@@ -107,7 +107,7 @@
 import AppError from '@app/core/components/ui/AppError2.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableTxsRow from '@app/modules/txs/components/TableTxsRow.vue'
-import { PendingTx, Tx } from '@app/core/models'
+import { PendingTx, Tx, SimpleTx } from '@app/core/models'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 
 @Component({
@@ -121,26 +121,23 @@ export default class TableTxs extends Vue {
   @Prop({ type: Boolean, default: true }) loading: boolean
   @Prop(String) pageType: string
   @Prop(String) showStyle!: string
-  @Prop(Array) transactions!: Tx[] | PendingTx[]
+  @Prop(Array) transactions!: Tx[] | PendingTx[] | SimpleTx[]
   @Prop({ type: Number, default: 0 }) totalTxs: number
   @Prop(Number) maxItems!: number
   @Prop(String) error: string
 
   page = 1
-  sync = false
 
   /*
   ===================================================================================
     Lifecycle
   ===================================================================================
   */
-  mounted() {
-    this.$api.getProcessingMetadata('syncing').then(ev => (this.sync = ev ? ev.value : true))
-  }
+
 
   @Watch('page')
   onPageChanged(newVal: number, oldVal: number): void {
-    this.$emit('getTxsPage', newVal - 1)
+    this.$emit('getTxsPage', this.page)
   }
 
   /*
@@ -149,8 +146,8 @@ export default class TableTxs extends Vue {
   ===================================================================================
   */
 
-  setPage(_value: number): void {
-    this.page = _value
+  setPage(value: number): void {
+    this.page = value
   }
 
   /*
@@ -207,6 +204,7 @@ export default class TableTxs extends Vue {
   get pending(): boolean {
     return this.pageType == 'pending'
   }
+
   get pages(): number {
     return this.totalTxs ? Math.ceil(this.totalTxs / this.maxItems) : 0
   }

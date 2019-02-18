@@ -1,15 +1,15 @@
-import { Block, PendingTx, Tx, Uncle } from '@app/core/models'
+import { Block, PendingTx, SimpleBlock, SimpleTx, Tx, Uncle } from '@app/core/models'
 import {
   AddressBalance,
   AddressMetadata,
   BlockMetrics,
   Contract,
+  ProcessingMetadata,
   Quote,
   Statistic,
   Token,
-  TokenTransfer,
   TokenExchangeRate,
-  ProcessingMetadata
+  TokenTransfer
 } from 'ethvm-common'
 
 export interface EthvmApi {
@@ -23,7 +23,7 @@ export interface EthvmApi {
 
   // Blocks
   getBlock(hash: string): Promise<Block | null>
-  getBlocks(limit: number, page: number): Promise<Block[]>
+  getBlocks(format: string, limit: number, page: number, fromBlock: number): Promise<Block[] | SimpleBlock[]>
   getBlockByNumber(no: number): Promise<Block | null>
   getBlocksMinedOfAddress(address: string, limit: number, page: number): Promise<Block[]>
   getTotalNumberOfBlocks(): Promise<number>
@@ -50,14 +50,14 @@ export interface EthvmApi {
 
   // Txs
   getTx(hash: string): Promise<Tx | null>
-  getTxs(limit: number, page: number): Promise<Tx[]>
+  getTxs(format: string, limit: number, order: string, fromBlock: number): Promise<Tx[] | SimpleTx[]>
   getTxsOfBlock(hash: string): Promise<Tx[]>
   getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<Tx[]>
   getTotalNumberOfTxs(): Promise<number>
 
   // Uncles
   getUncle(hash: string): Promise<Uncle | null>
-  getUncles(limit: number, page: number): Promise<Uncle[]>
+  getUncles(limit: number, page: number, fromUncle: number): Promise<Uncle[]>
   getTotalNumberOfUncles(): Promise<number>
 
   // Statistics

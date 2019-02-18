@@ -3,7 +3,7 @@
     <app-bread-crumbs :new-items="crumbs" />
     <v-layout row wrap justify-center mb-4>
       <v-flex xs12>
-        <table-uncles :uncles="uncles" page-type="uncles" :loading="loading" :total-uncles="total" @getUnclePage="getPage" :max-items="max" />
+        <table-uncles :uncles="uncles" page-type="uncles" :loading="isLoading" :total-uncles="total" @getUnclePage="getPage" :max-items="max" :error="error" />
       </v-flex>
     </v-layout>
   </v-container>
@@ -26,11 +26,18 @@ const MAX_ITEMS = 50
 })
 export default class PageUncles extends Vue {
   uncles: Uncle[] = []
+  from: number = -1
+  firstLoad: boolean = true
+  isLoading = true
   total = 0
-  loading = true
-  error = false
+  error = ''
 
-  // Lifecycle
+  /*
+  ===================================================================================
+    Lifecycle
+  ===================================================================================
+  */
+
   mounted() {
     this.fetchTotalUncles().then(
       res => {
@@ -43,28 +50,43 @@ export default class PageUncles extends Vue {
     this.getPage(0)
   }
 
-  // Methods
-  getPage(_page): void {
-    this.loading = true
-    this.fetchUncles(_page).then(
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
+  getPage(page): void {
+    this.isLoading = true
+    this.fetchUncles(page).then(
       res => {
         this.uncles = res
-        this.loading = false
+        if (this.firstLoad) {
+          this.from = this.uncles.length > 0 ? this.uncles[0].getBlockHeight() : -1
+          this.firstLoad = false
+        }
+        this.isLoading = false
       },
       err => {
-        this.error = true
+        this.error = 'error'
       }
     )
   }
+
   fetchUncles(page: number): Promise<Uncle[]> {
-    return this.$api.getUncles(this.max, page)
+    return this.$api.getUncles(this.max, page, this.from)
   }
 
   fetchTotalUncles(): Promise<number> {
     return this.$api.getTotalNumberOfUncles()
   }
 
-  // Computed
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
+
   get crumbs() {
     return [
       {
@@ -73,6 +95,7 @@ export default class PageUncles extends Vue {
       }
     ]
   }
+
   get max(): number {
     return MAX_ITEMS
   }

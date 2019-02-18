@@ -1,20 +1,17 @@
 <template>
   <div>
-    <app-error :has-error="hasError" :message="error" class="mb-4" />
-    <app-details-list v-if="!hasError" :title="title" :details="details" :is-loading="isLoading" class="mb-4" />
+    <app-details-list :title="title" :details="details" :is-loading="isLoading" :error="error" class="mb-4" />
   </div>
 </template>
 
 <script lang="ts">
 import { Detail } from '@app/core/components/props'
 import { Component, Vue, Prop } from 'vue-property-decorator'
-import AppError from '@app/core/components/ui/AppError2.vue'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import { Hex } from '@app/core/models'
 
 @Component({
   components: {
-    AppError,
     AppDetailsList
   }
 })
@@ -32,22 +29,12 @@ export default class TokenDetailsList extends Vue {
   */
 
   /**
-   * Determines whether or not component has an error.
-   * If error property is empty string, there is no error.
-   *
-   * @return {Boolean} - Whether or not error exists
-   */
-  get hasError(): boolean {
-    return this.error !== ''
-  }
-
-  /**
    * Create properly-formatted title from tokenDetails
    *
    * @return {String} - Title for details list
    */
   get title() {
-    if (this.isLoading || this.hasError) {
+    if (this.isLoading || this.error !== '') {
       return ''
     }
     return `<img src="${this.tokenDetails.image}" class="mr-2" style="width: 25px" /> ${this.tokenDetails.name} (${this.tokenDetails.symbol.toUpperCase()})`

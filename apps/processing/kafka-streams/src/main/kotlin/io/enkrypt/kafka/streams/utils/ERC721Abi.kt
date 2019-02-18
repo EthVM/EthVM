@@ -7,7 +7,6 @@ import io.enkrypt.avro.processing.BalanceType
 import io.enkrypt.avro.processing.TokenTransferRecord
 import io.enkrypt.common.extensions.setTokenId
 import java.math.BigInteger
-import java.nio.file.Paths
 
 object ERC721Abi : AbstractAbi(ERC721Abi::class.java.getResourceAsStream("/abi/erc721.json")) {
 
