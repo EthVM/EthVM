@@ -1,36 +1,73 @@
 <template>
   <v-container grid-list-lg class="mb-0">
     <app-bread-crumbs :new-items="crumbs" />
-    <app-info-load v-if="loading && !error" />
-    <!--
-    =====================================================================================
-      ADDRESS DETAILS
 
-      This section shows all of the data loaded from "load-basic-info"
-      It will load as soon as that particular information has been retrieved.
-    -->
-    <v-layout v-if="!loading && !error" row wrap justify-start class="mb-4">
-      <v-flex xs12>
-        <address-detail :account="account" :type-addrs="detailsType" />
-      </v-flex>
-    </v-layout>
-    <!--
-    =====================================================================================
-      ADDRESS TABS
+    <div v-if="!loading && !error">
+      <v-layout row wrap justify-start class="mb-4">
+        <v-flex xs12>
+          <address-detail :account="account" :type-addrs="detailsType" />
+        </v-flex>
+      </v-layout>
 
-      This section includes all of the "additional" information loaded other than
-      (and including) data loaded from "load-basic-info".
-    =====================================================================================
-    -->
-    <address-tabs 
-      v-if="!loading && !error" 
-      :is-account-loading="loading" 
-      :is-txs-loading="txsLoading" 
-      :account="account" 
-      :txs-filter="txsFilter"
-      :txs-page="txsPage"
-       @setFilterTxs="setFilterTxs" 
-    />
+      <app-tabs :tabs="tabs">
+        <!-- Transactions -->
+        <v-tab-item slot="tabs-item" value="tab-0">
+          <table-address-txs
+            v-if="!txsError"
+            :loading="txsLoading"
+            :address="account.address"
+            :txs="account.txs"
+            :total-txs="totalFilter"
+            @filter="setFilterTxs"
+          />
+          <app-error :server-error="txsError" v-else />
+        </v-tab-item>
+        <!-- End Transactions -->
+        <!-- Tokens -->
+        <v-tab-item slot="tabs-item" value="tab-1">
+          <table-address-tokens v-if="!tokensError" :loading="tokensLoading" :tokens="account.tokens" :error="tokensError" />
+          <app-error :server-error="tokensError" v-else />
+        </v-tab-item>
+        <!-- End Tokens -->
+        <!-- Pending Transactions -->
+        <v-tab-item slot="tabs-item" value="tab-2">
+          <table-address-txs v-if="!pendingTxsError" :loading="pendingTxsLoading" :address="account.address" :txs="account.pendingTxs" :is-pending="true" />
+          <app-error :server-error="pendingTxsError" v-else />
+        </v-tab-item>
+        <!-- End Pending Transactions -->
+        <!-- Mined Blocks -->
+        <v-tab-item slot="tabs-item" v-if="account.isMiner" value="tab-3">
+          <table-blocks
+            v-if="!minerBlocksError"
+            :loading="minerBlocksLoading"
+            :blocks="account.minedBlocks"
+            :page-type="detailsType"
+            :total-blocks="minedTotal"
+            :max-items="max"
+            @getBlockPage="setMinedPage"
+          />
+          <app-error :server-error="minerBlocksError" v-else />
+        </v-tab-item>
+        <!-- End Mined Blocks -->
+        <!-- Contract Creator (no need to implement yet) -->
+        <!-- <v-tab-item v-if="account.conCreator" value="tab-4">
+        <v-card>
+          <ul>
+            <li>Name:</li>
+            <li>TWN</li>
+            <li>Balance:</li>
+            <li>20,930 TWN</li>
+            <li>Value:</li>
+            <li>$0.00</li>
+            <li>ERC 20 Contract:</li>
+            <li>0x045619099665fc6f661b1745e5350290ceb933f</li>
+          </ul>
+        </v-card>
+        </v-tab-item>-->
+      </app-tabs>
+    </div>
+    <app-info-load v-else-if="loading && !error" />
+    <app-error v-else :reference="addressRef" page-type="address" />
   </v-container>
 </template>
 
@@ -48,7 +85,6 @@ import TableAddressTokens from '@app/modules/addresses/components/TableAddressTo
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { eth, TinySM, State } from '@app/core/helper'
 import { AccountInfo } from '@app/modules/addresses/props'
-import AddressTabs from '@app/modules/addresses/components/AddressTabs.vue'
 
 const MAX_ITEMS = 10
 
@@ -64,8 +100,7 @@ const CONTRACT_DETAIL_TYPE = 'contract'
     AddressDetail,
     TableAddressTxs,
     TableBlocks,
-    TableAddressTokens,
-    AddressTabs
+    TableAddressTokens
   }
 })
 export default class PageDetailsAddress extends Vue {
@@ -260,7 +295,6 @@ export default class PageDetailsAddress extends Vue {
   }
 
   setFilterTxs(_filter: string, _page: number): void {
-    console.log('PageDetailsAddress', _filter, _page)
     this.txsFilter = _filter
     this.txsPage = _page
     this.txsLoading = true
@@ -328,15 +362,66 @@ export default class PageDetailsAddress extends Vue {
     return MAX_ITEMS
   }
 
-  
+  get totalFilter(): number {
+    switch (this.txsFilter) {
+      case 'all':
+        return this.account.totalTxs
+      case 'in':
+        return this.account.toTxCount
+      case 'out':
+        return this.account.fromTxCount
+    }
+  }
 
   get crumbs() {
     return [
       {
-        text: `${this.$i18n.t('title.address').toString()}: ${this.addressRef}`,
+        text: this.$i18n.t('title.address'),
         disabled: true
       }
     ]
+  }
+
+  get tabs() {
+    const tabs = [
+      {
+        id: '0',
+        title: this.$i18n.t('tabs.txH'),
+        isActive: true
+      },
+      {
+        id: '1',
+        title: this.$i18n.t('tabs.tokens'),
+        isActive: false
+      },
+      {
+        id: '2',
+        title: this.$i18n.t('tabs.pending'),
+        isActive: false
+      }
+    ]
+
+    if (!this.loading && !this.error) {
+      if (this.account.isMiner) {
+        const newTab = {
+          id: '3',
+          title: this.$i18n.t('tabs.miningH'),
+          isActive: false
+        }
+        tabs.push(newTab)
+      }
+
+      if (this.account.isCreator) {
+        const newTab = {
+          id: '4',
+          title: this.$i18n.t('tabs.contracts'),
+          isActive: false
+        }
+        tabs.push(newTab)
+      }
+    }
+
+    return tabs
   }
 }
 </script>

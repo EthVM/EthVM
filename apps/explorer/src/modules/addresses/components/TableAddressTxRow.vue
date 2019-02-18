@@ -111,7 +111,7 @@ import { StringConcatMixin } from '@app/core/components/mixins'
 
 @Component
 export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
-  @Prop({ type: String, required: true }) account!: string
+  @Prop({ type: String, required: true }) address!: string
   @Prop(Array) transactions!: any[]
   @Prop({ type: Number, default: 0 }) filter!: number
   @Prop({ type: Boolean, default: false }) type!: boolean
@@ -122,7 +122,7 @@ export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
       tx
         .getFrom()
         .toString()
-        .toUpperCase() === this.account.toUpperCase()
+        .toUpperCase() === this.address.toUpperCase()
     )
   }
 

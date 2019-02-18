@@ -1,26 +1,7 @@
 <template>
   <v-card color="white" flat class="pt-3 pr-2 pl-2">
     <!-- Tx Header -->
-    <v-layout align-center justify-space-between wrap row fill-height>
-      <!-- Search Box -->
-      <!-- <v-flex d-flex xs12 sm6 md4>
-        <v-layout row align-center justify-start fill-height height="40px">
-          <v-flex xs7 sm9 md10 pr-0>
-            <v-card
-              flat
-              style="border-top: solid 1px #efefef; border-left: solid 1px #efefef; border-bottom: solid 1px #efefef;"
-              height="36px"
-              class="pr-3 pl-3 pt-2"
-            >
-              <input :placeholder="$t('search.addressTx')" v-model="searchInput" class="width: 100%" />
-            </v-card>
-          </v-flex>
-          <v-flex xs7 sm3 md2 pl-0>
-            <v-btn depressed outline class="primary--text text-capitalize ml-0 lineGrey" @click="searching">{{ $t('search.title') }}</v-btn>
-          </v-flex>
-        </v-layout>
-      </v-flex> -->
-      <!-- End Search Box -->
+    <v-layout align-center justify-space-between wrap row fill-height class="mb-2">
       <!-- Tx Input Filter -->
       <v-flex d-flex xs12 sm4 md3>
         <v-layout row align-center justify-start fill-height height="40px">
@@ -43,17 +24,17 @@
           <v-spacer />
           <v-flex xs12 sm7 md6>
             <v-layout justify-end row class="pb-1 pr-2 pl-2" v-if="pages > 1">
-              <app-paginate :total="pages" @newPage="setPage" :new-page="page" :has-first="false" :has-last="false" :has-input="false" />
+              <app-paginate :total="pages" @newPage="setPage" :current-page="txsPage" :has-first="false" :has-last="false" :has-input="false" />
             </v-layout>
           </v-flex>
         </v-layout>
       </v-flex>
     </v-layout>
     <!-- Tx Table Content -->
-    <table-address-tx-row v-if="!loading" :transactions="txs" :account="address" :filter="selected" :type="isPending" />
+    <table-address-tx-row v-if="!loading" :transactions="txs" :address="address" :filter="selected" :type="isPending" />
     <app-info-load v-else />
     <v-layout justify-end row class="pb-1 pr-2 pl-2" v-if="pages > 1">
-      <app-paginate :total="pages" @newPage="setPage" :new-page="page" :has-first="false" :has-last="false" :has-input="false" />
+      <app-paginate :total="pages" @newPage="setPage" :current-page="txsPage" :has-first="false" :has-last="false" :has-input="false" />
     </v-layout>
   </v-card>
 </template>
@@ -80,10 +61,10 @@ export default class TableAddressTxs extends Vue {
   @Prop(String) address!: string
   @Prop({ type: Array, default: [] }) txs!: Tx[]
   @Prop({ type: Number, default: 0 }) totalTxs!: number
+  @Prop({ type: Number, default: 0 }) txsPage: number
   @Prop({ type: Boolean, default: false }) isPending!: boolean
   @Prop({ type: Boolean, default: true }) loading!: boolean
 
-  page = 0
   selected = 0
   filter = ['all', 'in', 'out']
 
@@ -94,7 +75,8 @@ export default class TableAddressTxs extends Vue {
   */
 
   setPage(_value: number): void {
-    this.page = _value
+    console.log('TableAddressTxs', _value)
+    this.$emit('filter', this.filter[this.selected], _value)
   }
 
   /*
@@ -109,10 +91,11 @@ export default class TableAddressTxs extends Vue {
     this.$emit('filter', this.filter[newVal], 0)
   }
 
-  @Watch('page')
-  onPageChanged(newVal: number, oldVal: number): void {
-    this.$emit('filter', this.filter[this.selected], newVal)
-  }
+  // @Watch('page')
+  // onPageChanged(newVal: number, oldVal: number): void {
+  //   console.log('TableAddressTxs', this.page)
+  //   this.$emit('filter', this.filter[this.selected], this.page)
+  // }
 
   /*
   ===================================================================================

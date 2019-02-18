@@ -111,7 +111,7 @@ export default class AppPaginate extends Vue {
    * @return {Boolean}
    */
   isValid(page: number): boolean {
-    return page >= 0 && page <= this.total
+    return page >= 0 && page <= this.total - 1
   }
 
   /**
