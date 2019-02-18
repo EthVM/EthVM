@@ -1,0 +1,15 @@
+{
+  "name": "enkryptio-mongo-secondary-sink",
+  "config": {
+    "connector.class": "io.enkrypt.kafka.connect.sinks.mongo.MongoSinkConnector",
+    "topics": "contract-creations,contract-destructions,contract-metadata,balances,block-metrics-by-block,aggregate-block-metrics-by-day,pending-transactions,token-transfers,address-tx-counts,miner-list,contract-creator-list,token-exchange-rates,processing-metadata",
+    "tasks.max": 2,
+    "key.converter": "io.confluent.connect.avro.AvroConverter",
+    "key.converter.schema.registry.url": "{{ .Env.KAFKA_SCHEMA_REGISTRY_URL }}",
+    "key.converter.schemas.enable": true,
+    "value.converter": "io.confluent.connect.avro.AvroConverter",
+    "value.converter.schemas.enable": true,
+    "value.converter.schema.registry.url": "{{ .Env.KAFKA_SCHEMA_REGISTRY_URL }}",
+    "mongo.uri": "{{ .Env.MONGO_URL }}"
+  }
+}

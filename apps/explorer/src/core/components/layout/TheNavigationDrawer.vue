@@ -1,12 +1,15 @@
 <template>
   <div id="nav">
     <v-navigation-drawer v-model="drawer" fixed floating class="primary elevation-3 pt-3" app width="260">
-      <v-img :src="require('@/assets/logo-white.png')" height="50px" contain class="ma-4"></v-img>
+      <v-layout align-end justify-start row>
+        <v-img :src="require('@/assets/logo-white.png')" height="50px" max-width="130px" contain class="mb-4 mt-4 ml-2"></v-img>
+        <v-img :src="require('@/assets/alpha.png')" height="18px" max-width="50px" contain class="mb-4 pl-1"></v-img>
+      </v-layout>
       <v-list class="pa-0" two-line v-for="(item, index) in items" :key="index" v-model="item.active">
         <v-list-tile v-if="!item.links" class="nav--text" :to="item.header.routerLink" active-class="white--text accent" :prepend-icon="item.header.icon">
           <v-layout row align-center justify-start fill-height>
             <v-list-tile-action>
-              <v-icon class="mr-2 ml-3">{{ item.header.icon }}</v-icon>
+              <v-icon class="mr-2 ml-3" small>{{ item.header.icon }}</v-icon>
             </v-list-tile-action>
             <v-list-tile-title>{{ item.header.text }}</v-list-tile-title>
           </v-layout>
@@ -15,7 +18,7 @@
           <v-list-tile slot="activator">
             <v-layout row align-center justify-start fill-height>
               <v-list-tile-action>
-                <v-icon class="mr-2 ml-3">{{ item.header.icon }}</v-icon>
+                <v-icon class="mr-2 ml-3" small>{{ item.header.icon }}</v-icon>
               </v-list-tile-action>
               <v-list-tile-title>{{ item.header.text }}</v-list-tile-title>
             </v-layout>
