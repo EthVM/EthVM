@@ -8,6 +8,8 @@ import io.enkrypt.kafka.connect.sinks.mongo.TypeMappings.ConversionType.BigInt
 import io.enkrypt.kafka.connect.sinks.mongo.TypeMappings.ConversionType.Hex
 import io.enkrypt.kafka.connect.sinks.mongo.TypeMappings.ConversionType.Ignore
 import io.enkrypt.kafka.connect.sinks.mongo.TypeMappings.ConversionType.UBigInt
+import io.enkrypt.kafka.connect.sinks.mongo.TypeMappings.ConversionType.Int64
+import io.enkrypt.kafka.connect.sinks.mongo.TypeMappings.ConversionType.UInt64
 import org.apache.kafka.connect.data.Schema
 import org.apache.kafka.connect.data.Schema.Type.ARRAY
 import org.apache.kafka.connect.data.Schema.Type.BOOLEAN
@@ -41,6 +43,8 @@ object TypeMappings {
     Hex,
     UBigInt,
     BigInt,
+    UInt64,
+    Int64,
     Ignore,
   }
 
@@ -85,7 +89,7 @@ object TypeMappings {
     "hash" to Hex,
     "nonce" to UBigInt,
     "blockHash" to Hex,
-    "blockNumber" to UBigInt,
+    "blockNumber" to UInt64,
     "transactionIndex" to UBigInt,
     "value" to UBigInt,
     "gasPrice" to UBigInt,
@@ -102,7 +106,7 @@ object TypeMappings {
   )
 
   private val blockHeader = mapOf(
-    "number" to UBigInt,
+    "number" to UInt64,
     "hash" to Hex,
     "parentHash" to Hex,
     "nonce" to Hex,
@@ -118,7 +122,7 @@ object TypeMappings {
     "gasUsed" to UBigInt,
     "raw" to Ignore,
     "uncleReward" to UBigInt,
-    "blockNumber" to UBigInt
+    "blockNumber" to UInt64
   )
 
   private val mappings = mapOf(
@@ -148,7 +152,7 @@ object TypeMappings {
     ),
     "block-metrics" to mapOf(
       "hash" to Hex,
-      "number" to UBigInt,
+      "number" to UInt64,
       "difficulty" to UBigInt,
       "totalDifficulty" to UBigInt,
       "totalGasPrice" to UBigInt,
@@ -278,6 +282,8 @@ object StructToBsonConverter {
                     Hex -> BsonString(bytes.hex())
                     UBigInt -> BsonString(bytes.unsignedBigInteger().toString())
                     BigInt -> BsonString(bytes.bigInteger().toString())
+                    UInt64 -> BsonInt64(bytes.unsignedBigInteger().longValueExact())
+                    Int64 -> BsonInt64(bytes.bigInteger()!!.longValueExact())
                     else -> throw IllegalStateException("Illegal conversion value!")
                   }
               }

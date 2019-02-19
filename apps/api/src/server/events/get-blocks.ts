@@ -14,7 +14,7 @@ const pastBlocksEvent: SocketEvent = {
   },
 
   // TODO: Remove calculation of stats
-  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Block[]> => server.blockService.getBlocks(payload.limit, payload.page)
+  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Block[]> => server.blockService.getBlocks(payload.format, payload.limit, payload.page, payload.fromBlock)
 }
 
 export default pastBlocksEvent

@@ -13,7 +13,7 @@ const getUnclesEvent: SocketEvent = {
     }
   },
 
-  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Uncle[]> => server.uncleService.getUncles(payload.limit, payload.page)
+  onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload: any): Promise<Uncle[]> => server.uncleService.getUncles(payload.limit, payload.page, payload.fromUncle)
 }
 
 export default getUnclesEvent

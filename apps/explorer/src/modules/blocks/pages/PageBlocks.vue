@@ -14,8 +14,8 @@
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppCardStatsGroup from '@app/core/components/ui/AppCardStatsGroup.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
-import { Block } from '@app/core/models'
-import { Vue, Component, Mixins } from 'vue-property-decorator'
+import { Block, SimpleBlock } from '@app/core/models'
+import { Vue, Component, Mixins, Watch } from 'vue-property-decorator'
 
 const MAX_ITEMS = 50
 
@@ -27,8 +27,10 @@ const MAX_ITEMS = 50
   }
 })
 export default class PageBlocks extends Vue {
-  blocks: Block[] = []
+  blocks: SimpleBlock[] = []
+  from: number = -1
   isLoading = true
+  firstLoad = true
   error = ''
   total = 0
 
@@ -57,8 +59,8 @@ export default class PageBlocks extends Vue {
   ===================================================================================
   */
 
-  fetchBlocks(page: number): Promise<Block[]> {
-    return this.$api.getBlocks(this.max, page)
+  fetchBlocks(page: number): Promise<Block[] | SimpleBlock[]> {
+    return this.$api.getBlocks('simple', this.max, page, this.from)
   }
 
   fetchTotalBlocks(): Promise<number> {
@@ -68,9 +70,13 @@ export default class PageBlocks extends Vue {
   getPage(page: number): void {
     this.isLoading = true
     this.fetchBlocks(page).then(
-      res => {
-        this.isLoading = false
+      (res: SimpleBlock[]) => {
         this.blocks = res
+        if (this.firstLoad) {
+          this.from = this.blocks.length > 0 ? this.blocks[0].getNumber() : -1
+          this.firstLoad = false
+        }
+        this.isLoading = false
       },
       err => {
         this.error = this.$i18n.t('message.error').toString()

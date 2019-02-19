@@ -108,7 +108,7 @@
     "notValid": "This is not a valid ",
     "sync": "We are synchronizing with the Blockchain. Some features might not work correctly.",
     "invalidAddress": "Invalid Address",
-    "invalidHash": "Invalid Hash"
+    "syncPendingTxs": "There are no pending transactions while synchronizing with the Blockchain."
   },
   "block": {
     "height": "Height",

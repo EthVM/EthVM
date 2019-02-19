@@ -26,8 +26,7 @@ async function bootstrapServer() {
   logger.debug('bootstrapper -> Initializing VmEngine')
   const vmeOpts = {
     rpcUrl: config.get('eth.vm.engine.rpc_url'),
-    tokensAddress: config.get('eth.vm.engine.tokens_smart_contract'),
-    account: config.get('eth.vm.engine.account')
+    tokensAddress: config.get('eth.vm.engine.tokens_smart_contract')
   }
   const vme = new VmEngine(vmeOpts)
 

@@ -1,6 +1,6 @@
-import { Block } from '@app/core/models'
+import { Block, SimpleBlock } from '@app/core/models'
 
-const dedup = (block: Block, pastBlocks: Block[]): Block[] => {
+const dedup = (block: Block | SimpleBlock, pastBlocks: Block[] | SimpleBlock[]): Block[] | SimpleBlock[] => {
   for (let i = 0; i < pastBlocks.length; i++) {
     if (block.getId() === pastBlocks[i].getId()) {
       pastBlocks.splice(i, 1)
@@ -9,8 +9,8 @@ const dedup = (block: Block, pastBlocks: Block[]): Block[] => {
   return pastBlocks
 }
 
-export const processBlocks = (block: Block, pastBlocks: Block[]): Block[] => {
-  const blocks = dedup(block, pastBlocks)
-  blocks.push(block)
-  return blocks
+export const processBlocks = (block: Block | SimpleBlock, pastBlocks: Block[] | SimpleBlock[]): Block[] | SimpleBlock[] => {
+  pastBlocks = dedup(block, pastBlocks)
+  pastBlocks.push(block as any)
+  return pastBlocks
 }

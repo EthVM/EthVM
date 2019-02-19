@@ -53,10 +53,22 @@ export default class TokenDetailsTabs extends Vue {
   ===================================================================================
   */
 
+  /**
+   * Determines whether or not component has an error.
+   * If error property is empty string, there is no error.
+   *
+   * @return {Boolean} - Whether or not error exists
+   */
   get hasErrorTokenTransfers(): boolean {
     return this.errorTokenTransfers !== ''
   }
 
+  /**
+   * Determines whether or not component has an error.
+   * If error property is empty string, there is no error.
+   *
+   * @return {Boolean} - Whether or not error exists
+   */
   get hasErrorTokenHolders(): boolean {
     return this.errorTokenHolders !== ''
   }

@@ -4,7 +4,7 @@ import { Uncle } from 'ethvm-common'
 
 export interface UnclesRepository {
   getUncle(hash: string): Promise<Uncle | null>
-  getUncles(limit: number, page: number): Promise<Uncle[]>
+  getUncles(limit: number, page: number, fromUncle: number): Promise<Uncle[]>
   getTotalNumberOfUncles(): Promise<number>
 }
 
@@ -16,13 +16,14 @@ export class MongoUncleRepository extends BaseMongoDbRepository implements Uncle
       .then(resp => resp ? toUncle(resp) : null)
   }
 
-  public getUncles(limit: number, page: number): Promise<Uncle[]> {
-    const start = page * limit
+  public async getUncles(limit: number, page: number, fromUncle: number = -1): Promise<Uncle[]> {
+    const offset = fromUncle !== -1 ? fromUncle : await this.getTotalNumberOfUncles()
+    const start = offset - (page * limit)
+
     return this.db
       .collection(MongoEthVM.collections.uncles)
-      .find()
-      .sort({ blockNumber: -1 })
-      .skip(start)
+      .find({ number: {$lte: start} })
+      .sort({ blockNumber: -1, number: -1 })
       .limit(limit)
       .toArray()
       .then(resp => resp ? resp.map(uncle => toUncle(uncle)) : [])

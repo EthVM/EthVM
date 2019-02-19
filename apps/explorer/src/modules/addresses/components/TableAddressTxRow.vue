@@ -20,7 +20,12 @@
         </v-flex>
       </v-layout>
     </v-card>
-    <v-card flat id="scroll-target" style="max-height: 800px" class="scroll-y pt-0 pb-0">
+    <v-card flat v-if="isSyncing && type">
+      <v-layout row align-center justify-center fill-height>
+        <v-card-title class="text-xs-center pt-5 pb-5">{{ $t('message.syncPendingTxs') }}</v-card-title>
+      </v-layout>
+    </v-card>
+    <v-card v-else flat id="scroll-target" style="max-height: 800px" class="scroll-y pt-0 pb-0">
       <v-layout column fill-height v-scroll:#scroll-target class="pt-1" style="margin-right: 1px">
         <v-flex xs12>
           <v-card v-if="transactions.length == 0" flat>
@@ -71,7 +76,7 @@
                     )
                   "
                 >
-                  <p :class="[!getType(tx) ? 'success--text mb-0' : 'error--text mb-0']">{{ getShortValue(tx.getValue().toEth()) }}</p>
+                  <p :class="[!getType(tx) ? 'success--text mb-0' : 'error--text mb-0']">{{ getSign(tx) }}{{ getShortValue(tx.getValue().toEth()) }}</p>
                   <v-tooltip bottom>
                     <v-icon slot="activator" small class="info--text text-xs-center ml-1">fa fa-question-circle</v-icon>
                     <span>{{
@@ -84,7 +89,7 @@
                     }}</span>
                   </v-tooltip>
                 </v-layout>
-                <p v-else :class="[!getType(tx) ? 'success--text mb-0 ' : 'error--text mb-0 ']">{{ tx.getValue().toEth() }}</p>
+                <p v-else :class="[!getType(tx) ? 'success--text mb-0 ' : 'error--text mb-0 ']">{{ getSign(tx) }}{{ tx.getValue().toEth() }}</p>
               </v-flex>
               <v-flex hidden-sm-and-down md2>
                 <p class="black--text text-truncate mb-0">{{ tx.getGasUsed().toNumber() }}</p>
@@ -125,6 +130,9 @@ export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
         .toUpperCase() === this.account.toUpperCase()
     )
   }
+  getSign(tx): string {
+    return this.getType(tx) ? '-' : '+'
+  }
 
   log(tx) {}
 
@@ -137,6 +145,10 @@ export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
     }
 
     return penMesg[this.filter].toString()
+  }
+
+  get isSyncing() {
+    return this.$store.getters.syncing
   }
 }
 </script>

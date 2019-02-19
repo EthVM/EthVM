@@ -27,12 +27,10 @@ const MAX_ITEMS = 10
   }
 })
 export default class App extends Vue {
-  syncing = false
-
   // Lifecyle
   created() {
     // Load initial processing status
-    this.$api.getProcessingMetadata('syncing').then(ev => (this.syncing = ev ? ev.value : true))
+    this.$api.getProcessingMetadata('syncing').then(ev => this.$store.commit('NEW_SYNC', ev ? ev.value : true))
 
     // Preload some previous block metrics
     this.$api.getBlockMetrics(MAX_ITEMS, 0).then(bms => {
@@ -43,7 +41,7 @@ export default class App extends Vue {
 
   // Computed
   get isSyncing() {
-    return this.syncing
+    return this.$store.getters.syncing
   }
 }
 </script>
