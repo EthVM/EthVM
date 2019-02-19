@@ -87,7 +87,6 @@
         </v-flex>
       </v-card>
     </v-card>
-    <!-- <app-info-load v-else /> -->
     <v-layout justify-end row class="pb-1 pr-2 pl-2" v-if="pages > 1">
       <app-paginate :total="pages" @newPage="setPage" :new-page="page" :has-first="false" :has-last="false" :has-input="false" />
     </v-layout>

@@ -58,41 +58,48 @@
       TABLE BODY
     =====================================================================================
     -->
-    <v-card flat v-if="!hasError" id="scroll-target" :style="getStyle" class="scroll-y" style="overflow-x: hidden">
-      <v-layout column fill-height class="mb-1" v-scroll:#scroll-target>
-        <v-flex xs12 v-if="!loading">
-          <v-card v-for="tx in transactions" class="transparent" flat :key="tx.getHash()">
-            <table-txs-row :tx="tx" :is-pending="pending" />
-            <v-divider class="mb-2 mt-2" />
-          </v-card>
-          <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2">
-            <app-paginate :total="pages" @newPage="setPage" :current-page="page" :has-first="false" :has-last="false" :has-input="false" />
-          </v-layout>
-        </v-flex>
-        <v-flex xs12 v-if="loading">
-          <div v-for="i in maxItems" :key="i">
-            <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
-              <v-flex xs6 sm8 md5>
-                <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
-              </v-flex>
-              <v-flex hidden-xs-only sm3 md2>
-                <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
-              </v-flex>
-              <v-flex hidden-sm-and-down md2>
-                <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
-              </v-flex>
-              <v-flex hidden-sm-and-down md2>
-                <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
-              </v-flex>
-              <v-flex hidden-xs-only v-if="!pending" sm1>
-                <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
-              </v-flex>
-            </v-layout>
-            <v-divider class="mb-2 mt-2" />
-          </div>
-        </v-flex>
+    <v-card flat v-if="isSyncing && pending">
+      <v-layout row align-center justify-center fill-height>
+        <v-card-title class="text-xs-center pt-5 pb-5">{{ $t('message.syncPendingTxs') }}</v-card-title>
       </v-layout>
     </v-card>
+    <div v-else>
+      <v-card flat v-if="!hasError" id="scroll-target" :style="getStyle" class="scroll-y" style="overflow-x: hidden">
+        <v-layout column fill-height class="mb-1" v-scroll:#scroll-target>
+          <v-flex xs12 v-if="!loading">
+            <v-card v-for="tx in transactions" class="transparent" flat :key="tx.getHash()">
+              <table-txs-row :tx="tx" :is-pending="pending" />
+              <v-divider class="mb-2 mt-2" />
+            </v-card>
+            <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2">
+              <app-paginate :total="pages" @newPage="setPage" :new-page="page" :has-input="false" :has-last="false" />
+            </v-layout>
+          </v-flex>
+          <v-flex xs12 v-if="loading">
+            <div v-for="i in maxItems" :key="i">
+              <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
+                <v-flex xs6 sm8 md5>
+                  <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+                </v-flex>
+                <v-flex hidden-xs-only sm3 md2>
+                  <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+                </v-flex>
+                <v-flex hidden-sm-and-down md2>
+                  <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+                </v-flex>
+                <v-flex hidden-sm-and-down md2>
+                  <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+                </v-flex>
+                <v-flex hidden-xs-only v-if="!pending" sm1>
+                  <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+                </v-flex>
+              </v-layout>
+              <v-divider class="mb-2 mt-2" />
+            </div>
+          </v-flex>
+        </v-layout>
+      </v-card>
+    </div>
   </v-card>
 </template>
 
@@ -119,7 +126,7 @@ export default class TableTxs extends Vue {
   @Prop(Number) maxItems!: number
   @Prop(String) error: string
 
-  page = 0
+  page = 1
 
   /*
   ===================================================================================
@@ -154,6 +161,10 @@ export default class TableTxs extends Vue {
    *
    * @return {Boolean} - Whether or not error exists
    */
+
+  get isSyncing() {
+    return this.$store.getters.syncing
+  }
   get hasError(): boolean {
     return this.error !== ''
   }

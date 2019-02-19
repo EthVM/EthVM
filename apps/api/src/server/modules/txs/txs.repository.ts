@@ -46,10 +46,10 @@ export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepo
     let find
     switch (filter) {
       case 'in':
-        find = { from: hash }
+        find = { to: hash }
         break
       case 'out':
-        find = { to: hash }
+        find = { from: hash }
         break
       default:
         find = { $or: [{ from: hash }, { to: hash }] }

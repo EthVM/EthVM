@@ -16,6 +16,7 @@ export interface State {
   txs: FIFO<Tx>
   pendingTxs: FIFO<PendingTx>
   uncles: FIFO<Uncle>
+  syncing: boolean
 }
 
 export const FIFOState: State = {
@@ -24,5 +25,6 @@ export const FIFOState: State = {
   blockMetrics: new FIFO<BlockMetrics>(MAX_BLOCKS_METRICS, processBlockMetrics),
   txs: new FIFO<Tx>(MAX_TXS, processTxs),
   pendingTxs: new FIFO<PendingTx>(MAX_PENDING_TXS, processPendingTxs),
-  uncles: new FIFO<Uncle>(MAX_UNCLES, processUncles)
+  uncles: new FIFO<Uncle>(MAX_UNCLES, processUncles),
+  syncing: false
 }
