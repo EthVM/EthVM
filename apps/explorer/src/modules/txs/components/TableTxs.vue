@@ -134,7 +134,6 @@ export default class TableTxs extends Vue {
   ===================================================================================
   */
 
-
   @Watch('page')
   onPageChanged(newVal: number, oldVal: number): void {
     this.$emit('getTxsPage', this.page)

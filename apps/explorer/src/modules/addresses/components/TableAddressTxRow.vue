@@ -76,7 +76,7 @@
                     )
                   "
                 >
-                  <p :class="[!getType(tx) ? 'success--text mb-0' : 'error--text mb-0']">{{getSign(tx)}}{{ getShortValue(tx.getValue().toEth()) }}</p>
+                  <p :class="[!getType(tx) ? 'success--text mb-0' : 'error--text mb-0']">{{ getSign(tx) }}{{ getShortValue(tx.getValue().toEth()) }}</p>
                   <v-tooltip bottom>
                     <v-icon slot="activator" small class="info--text text-xs-center ml-1">fa fa-question-circle</v-icon>
                     <span>{{
@@ -89,7 +89,7 @@
                     }}</span>
                   </v-tooltip>
                 </v-layout>
-                <p v-else :class="[!getType(tx) ? 'success--text mb-0 ' : 'error--text mb-0 ']">{{getSign(tx)}}{{ tx.getValue().toEth() }}</p>
+                <p v-else :class="[!getType(tx) ? 'success--text mb-0 ' : 'error--text mb-0 ']">{{ getSign(tx) }}{{ tx.getValue().toEth() }}</p>
               </v-flex>
               <v-flex hidden-sm-and-down md2>
                 <p class="black--text text-truncate mb-0">{{ tx.getGasUsed().toNumber() }}</p>
