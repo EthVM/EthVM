@@ -36,20 +36,17 @@
       <!-- End Transactions -->
       <!-- Tokens -->
       <v-tab-item slot="tabs-item" value="tab-1">
-        <table-address-tokens v-if="!hasTokensError" :loading="tokensLoading" :tokens="account.tokens" :error="tokensError" />
-        <app-error :has-error="hasTokensError" :message="tokensError" v-else />
+        <table-address-tokens :loading="tokensLoading" :tokens="account.tokens" :error="tokensError" />
       </v-tab-item>
       <!-- End Tokens -->
       <!-- Pending Transactions -->
       <v-tab-item slot="tabs-item" value="tab-2">
-        <table-address-txs v-if="!hasPendingTxsError" :loading="pendingTxsLoading" :address="account.address" :txs="account.pendingTxs" :is-pending="true" />
-        <app-error :has-error="hasPendingTxsError" :message="pendingTxsError" v-else />
+        <table-address-txs :loading="pendingTxsLoading" :address="account.address" :txs="account.pendingTxs" :is-pending="true" :error="pendingTxsError" />
       </v-tab-item>
       <!-- End Pending Transactions -->
       <!-- Mined Blocks -->
       <v-tab-item slot="tabs-item" v-if="account.isMiner" value="tab-3">
         <table-blocks
-          v-if="!hasMinerBlocksError"
           :loading="minerBlocksLoading"
           :blocks="account.minedBlocks"
           :page-type="detailsType"
@@ -58,7 +55,6 @@
           :error="minerBlocksError"
           @getBlockPage="setMinedPage"
         />
-        <!-- <app-error :has-error="hasMinerBlocksError" :message="minerBlocksError" v-else /> -->
       </v-tab-item>
       <!-- End Mined Blocks -->
       <!-- Contract Creator (no need to implement yet) -->
@@ -77,7 +73,6 @@
       </v-card>
       </v-tab-item>-->
     </app-tabs>
-
   </v-container>
 </template>
 
@@ -322,7 +317,7 @@ export default class PageDetailsAddress extends Vue {
         this.txsLoading = false
       },
       err => {
-        this.txsError = true
+        this.txsError = this.$i18n.t('message.invalidAddress').toString()
       }
     )
   }
@@ -334,7 +329,7 @@ export default class PageDetailsAddress extends Vue {
         this.minerBlocksLoading = false
       },
       err => {
-        this.minerBlocksError = true
+        this.minerBlocksError = this.$i18n.t('message.error').toString()
       }
     )
   }

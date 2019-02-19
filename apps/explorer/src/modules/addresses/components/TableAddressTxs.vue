@@ -64,7 +64,6 @@
           </v-flex>
         </v-layout>
       </v-card>
-
       <table-address-tx-row v-if="!loading" :transactions="txs" :account="address" :filter="selected" :type="isPending" />
       <v-card v-if="loading" color="white" flat class="pt-0 pb-2">
         <v-flex xs12>
@@ -130,10 +129,6 @@ export default class TableAddressTxs extends Vue {
     Methods
   ===================================================================================
   */
- 
-  mounted() {
-    console.log(this.txs)
-  }
 
   setPage(_value: number): void {
     this.page = _value

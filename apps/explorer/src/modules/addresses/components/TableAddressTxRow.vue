@@ -1,4 +1,4 @@
-<template> 
+<template>
   <v-card flat id="scroll-target" style="max-height: 800px" class="scroll-y pt-0 pb-0">
     <v-layout column fill-height v-scroll:#scroll-target class="pt-1" style="margin-right: 1px">
       <v-flex xs12>

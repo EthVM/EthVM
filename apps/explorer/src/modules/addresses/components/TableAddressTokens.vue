@@ -1,5 +1,17 @@
 <template>
   <v-card color="white" flat v-if="tokens" class="pt-3 pr-2 pl-2 pb-0">
+    <!--
+    =====================================================================================
+      LOADING / ERROR
+    =====================================================================================
+    -->
+    <v-progress-linear color="blue" indeterminate v-if="loading" class="mt-0" />
+    <app-error :has-error="hasError" :message="error" />
+    <!--
+    =====================================================================================
+      TABLE / TAB
+    =====================================================================================
+    -->
     <v-layout row wrap justify-space-between mb-4>
       <v-flex xs12 sm6>
         <v-card class="primary white--text pl-2" flat>
@@ -37,7 +49,7 @@
     <app-info-load v-if="loading"></app-info-load>
     <div v-else>
       <v-card v-if="tokens.length === 0" flat>
-        <p>{{ $t('tokens.empty') }}</p>
+        <v-card-text class="text-xs-center secondary--text">{{ $t('tokens.empty') }}</v-card-text>
       </v-card>
       <div v-else v-for="(token, index) in tokens" :key="index">
         <table-address-tokens-row :token="token" :holder="holder" />
@@ -47,7 +59,7 @@
 </template>
 
 <script lang="ts">
-import AppError from '@app/core/components/ui/AppError.vue'
+import AppError from '@app/core/components/ui/AppError2.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import TableAddressTokensRow from '@app/modules/addresses/components/TableAddressTokensRow.vue'
 import BN from 'bignumber.js'
@@ -65,16 +77,30 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
   @Prop(Array) tokens!: any[]
   @Prop(String) holder!: string
   @Prop({ type: Boolean, default: true }) loading!: boolean
-  @Prop({ type: Boolean, default: true }) error!: boolean
+  @Prop(String) error: string
 
   placeholder = 'Search Tokens Symbol/Name'
 
-  /* Methods: */
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
   getBalance(value, decimals): BN {
     return new BN(value).div(new BN(10).pow(decimals))
   }
 
-  /*Computed: */
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
+
+  get hasError(): boolean {
+    return this.error !== ''
+  }
+
   get totalTokens(): number {
     return this.tokens.length
   }
