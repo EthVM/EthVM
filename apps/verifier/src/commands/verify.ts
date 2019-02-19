@@ -99,9 +99,9 @@ export async function Verify(config: Config) {
 
           const mongoTx = mongo[idx];
 
-          assert(sourceTx.hash.toString('hex') === mongoTx.hash, `hash mismatch. Source = ${sourceTx.hash.toString('hex')}, mongo = ${mongoTx.hash}`);
-          assert(sourceTx.nonce.toString('hex') === mongoTx.nonce, `Nonce mismatch. Source = ${sourceTx.nonce.toString('hex')}, mongo = ${mongoTx.nonce}`);
-          assert(sourceTx.blockHash.toString('hex') === mongoTx.blockHash, `blockHash mismatch. Source = ${sourceTx.blockHash.toString('hex')}, mongo = ${mongoTx.blockHash}`);
+          assert(sourceTx.hash.toString('hex') === mongoTx.hash, `Tx hash mismatch. Source = ${sourceTx.hash.toString('hex')}, mongo = ${mongoTx.hash}`);
+          // assert(sourceTx.nonce.toString('hex') === mongoTx.nonce, `Tx nonce mismatch. Source = ${sourceTx.nonce.toString('hex')}, mongo = ${mongoTx.nonce}`);
+          assert(sourceTx.blockHash.toString('hex') === mongoTx.blockHash, `Tx blockHash mismatch. Source = ${sourceTx.blockHash.toString('hex')}, mongo = ${mongoTx.blockHash}`);
 
 
         });
