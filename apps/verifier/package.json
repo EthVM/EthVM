@@ -15,9 +15,7 @@
     "avsc": "~5.4.7",
     "mongodb": "~3.1.13",
     "rxjs": "~6.4.0",
-    "rxjs-stream": "~3.0.1",
-    "node-biginteger": "~0.0.10",
-    "long": "~4.0.0"
+    "rxjs-stream": "~3.0.1"
   },
   "devDependencies": {
     "@types/commander": "^2.12.2",

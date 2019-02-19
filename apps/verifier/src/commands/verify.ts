@@ -8,9 +8,6 @@ import { BlockRecord } from '@app/models/block-record'
 
 import assert from 'assert'
 
-import BigInteger from 'node-biginteger'
-import Long from 'long';
-
 interface Tuple<A, B> {
   first: A,
   second: B
@@ -22,8 +19,6 @@ export async function Verify(config: Config) {
 
   const mongo = new MongoConnector(config)
   await mongo.init()
-
-
 
   let expectedNumber = 0
 
