@@ -32,17 +32,15 @@
       </v-layout>
     </v-card>
     <!-- End Table Header -->
-    <app-error v-if="error" :server-error="error"></app-error>
+    <!-- <app-error v-if="error" :server-error="error"></app-error> -->
     <!-- Tokens List -->
+    <app-info-load v-if="loading"></app-info-load>
     <div v-else>
-      <app-info-load v-if="loading"></app-info-load>
-      <div v-else>
-        <v-card v-if="tokens.length === 0" flat>
-          <p>{{ $t('tokens.empty') }}</p>
-        </v-card>
-        <div v-else v-for="(token, index) in tokens" :key="index">
-          <table-address-tokens-row :token="token" :holder="holder" />
-        </div>
+      <v-card v-if="tokens.length === 0" flat>
+        <p>{{ $t('tokens.empty') }}</p>
+      </v-card>
+      <div v-else v-for="(token, index) in tokens" :key="index">
+        <table-address-tokens-row :token="token" :holder="holder" />
       </div>
     </div>
   </v-card>
