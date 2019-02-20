@@ -203,31 +203,6 @@ class BlockProcessor : AbstractKafkaProcessor() {
         Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance())
       )
 
-    chainEvents
-      .filter { _, v -> v.getType() == ChainEventType.PREMINE_BALANCE }
-      .flatMap { _, v ->
-
-        val reverse = v.getReverse()
-        val premineBalance = v.getValue() as PremineBalanceRecord
-
-        listOf(
-          KeyValue(
-            AddressMetadataKeyRecord.newBuilder()
-              .setAddress(premineBalance.getAddress())
-              .setType(AddressMetadataType.TO)
-              .build(),
-            if (reverse) null else emptyByteBuffer // just a marker to allow for counting
-          ),
-          KeyValue(
-            AddressMetadataKeyRecord.newBuilder()
-              .setAddress(premineBalance.getAddress())
-              .setType(AddressMetadataType.TOTAL)
-              .build(),
-            if (reverse) null else emptyByteBuffer // just a marker to allow for counting
-          )
-        )
-      }.to(Topics.AddressTxEvents, Produced.with(Serdes.AddressMetadataKey(), KafkaSerdes.ByteBuffer()))
-
     // DAO Hard fork
 
     chainEvents
@@ -335,8 +310,10 @@ class BlockProcessor : AbstractKafkaProcessor() {
 
     chainEvents
       // only ether transfers for now
-      .filter { _, v -> v.getType() == ChainEventType.TOKEN_TRANSFER && (v.getValue() as TokenTransferRecord).getContract() == null }
-      .flatMap { _, v ->
+      .filter { _, v ->
+        v.getType() == ChainEventType.TOKEN_TRANSFER &&
+        (v.getValue() as TokenTransferRecord).getTransferType() == BalanceType.ETHER
+      }.flatMap { _, v ->
 
         val reverse = v.getReverse()
         val transfer = v.getValue() as TokenTransferRecord
@@ -345,28 +322,28 @@ class BlockProcessor : AbstractKafkaProcessor() {
           KeyValue(
             AddressMetadataKeyRecord.newBuilder()
               .setAddress(transfer.getFrom())
-              .setType(AddressMetadataType.FROM)
+              .setType(AddressMetadataType.OUT_TX_COUNT)
               .build(),
             if (reverse) null else emptyByteBuffer // just a marker to allow for counting
           ),
           KeyValue(
             AddressMetadataKeyRecord.newBuilder()
               .setAddress(transfer.getTo())
-              .setType(AddressMetadataType.TO)
+              .setType(AddressMetadataType.IN_TX_COUNT)
               .build(),
             if (reverse) null else emptyByteBuffer // just a marker to allow for counting
           ),
           KeyValue(
             AddressMetadataKeyRecord.newBuilder()
               .setAddress(transfer.getFrom())
-              .setType(AddressMetadataType.TOTAL)
+              .setType(AddressMetadataType.TOTAL_TX_COUNT)
               .build(),
             if (reverse) null else emptyByteBuffer // just a marker to allow for counting
           ),
           KeyValue(
             AddressMetadataKeyRecord.newBuilder()
               .setAddress(transfer.getTo())
-              .setType(AddressMetadataType.TOTAL)
+              .setType(AddressMetadataType.TOTAL_TX_COUNT)
               .build(),
             if (reverse) null else emptyByteBuffer // just a marker to allow for counting
           )

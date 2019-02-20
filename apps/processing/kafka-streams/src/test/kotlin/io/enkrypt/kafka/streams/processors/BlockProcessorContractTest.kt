@@ -3,6 +3,7 @@ package io.enkrypt.kafka.streams.processors
 import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.common.ContractType
+import io.enkrypt.avro.processing.BalanceType
 import io.enkrypt.common.extensions.AvroHelpers.contractCreation
 import io.enkrypt.common.extensions.AvroHelpers.contractDestruction
 import io.enkrypt.common.extensions.AvroHelpers.contractKey
@@ -72,13 +73,13 @@ class BlockProcessorContractTest : BehaviorSpec() {
 
         then("there should be a token movement deducting the tx fee from the sender") {
           val record = readFungibleTokenMovement(testDriver)!!
-          record.key() shouldBe tokenKey(Alice.address.data20())
+          record.key() shouldBe tokenKey(Alice.address.data20(), balanceType = BalanceType.FEE)
           record.value() shouldBe tokenBalance(9076900.gwei().negate().byteBuffer())
         }
 
         then("there should be a token movement adding the tx fee to the miner") {
           val record = readFungibleTokenMovement(testDriver)!!
-          record.key() shouldBe tokenKey(Coinbase.address.data20())
+          record.key() shouldBe tokenKey(Coinbase.address.data20(), balanceType = BalanceType.FEE)
           record.value() shouldBe tokenBalance(9076900.gwei().byteBuffer())
         }
 
@@ -114,13 +115,13 @@ class BlockProcessorContractTest : BehaviorSpec() {
 
         then("there should be a token movement deducting the tx fee from the sender") {
           val record = readFungibleTokenMovement(testDriver)!!
-          record.key() shouldBe tokenKey(Alice.address.data20())
+          record.key() shouldBe tokenKey(Alice.address.data20(), balanceType = BalanceType.FEE)
           record.value() shouldBe tokenBalance(1319.microEther().negate().byteBuffer())
         }
 
         then("there should be a token movement adding the tx fee to the miner") {
           val record = readFungibleTokenMovement(testDriver)!!
-          record.key() shouldBe tokenKey(Coinbase.address.data20())
+          record.key() shouldBe tokenKey(Coinbase.address.data20(), balanceType = BalanceType.FEE)
           record.value() shouldBe tokenBalance(1319.microEther().byteBuffer())
         }
 

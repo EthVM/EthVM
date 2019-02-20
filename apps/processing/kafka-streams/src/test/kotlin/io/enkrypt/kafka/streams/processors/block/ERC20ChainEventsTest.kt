@@ -72,7 +72,7 @@ class ERC20ChainEventsTest : BehaviorSpec() {
           )
         }
 
-        then("there should be a transaction fee ether transfer") {
+        then("there should be a transaction fee") {
           chainEvents[1] shouldBe fungibleTransfer(
             Bob.address.data20()!!,
             Coinbase.address.data20()!!,
@@ -80,7 +80,7 @@ class ERC20ChainEventsTest : BehaviorSpec() {
             timestamp = timestamp,
             blockHash = blockHash,
             txHash = createTx.hash.data32(),
-            transferType = BalanceType.ETHER
+            transferType = BalanceType.FEE
           )
         }
 
@@ -131,7 +131,7 @@ class ERC20ChainEventsTest : BehaviorSpec() {
           )
         }
 
-        then("there should be a transaction fee ether transfer") {
+        then("there should be a transaction fee") {
           chainEvents[1] shouldBe fungibleTransfer(
             Bob.address.data20()!!,
             Coinbase.address.data20()!!,
@@ -139,7 +139,7 @@ class ERC20ChainEventsTest : BehaviorSpec() {
             timestamp = timestamp,
             blockHash = blockHash,
             txHash = transferTx.hash.data32(),
-            transferType = BalanceType.ETHER
+            transferType = BalanceType.FEE
           )
         }
 
@@ -197,7 +197,7 @@ class ERC20ChainEventsTest : BehaviorSpec() {
           )
         }
 
-        then("there should be a transaction fee ether transfer") {
+        then("there should be a transaction fee") {
           chainEvents[1] shouldBe fungibleTransfer(
             Terence.address.data20()!!,
             Coinbase.address.data20()!!,
@@ -205,7 +205,7 @@ class ERC20ChainEventsTest : BehaviorSpec() {
             timestamp = timestamp,
             blockHash = blockHash,
             txHash = txHash,
-            transferType = BalanceType.ETHER
+            transferType = BalanceType.FEE
           )
         }
 
@@ -253,7 +253,7 @@ class ERC20ChainEventsTest : BehaviorSpec() {
           )
         }
 
-        then("there should be a transaction fee ether transfer") {
+        then("there should be a transaction fee") {
           chainEvents[1] shouldBe fungibleTransfer(
             Terence.address.data20()!!,
             Coinbase.address.data20()!!,
@@ -261,7 +261,7 @@ class ERC20ChainEventsTest : BehaviorSpec() {
             timestamp = timestamp,
             blockHash = blockHash,
             txHash = txHash,
-            transferType = BalanceType.ETHER
+            transferType = BalanceType.FEE
           )
         }
 

@@ -48,7 +48,7 @@ export interface Tx {
   gasPrice: string
   gas: string
   input: string
-  v: Buffer
+  v: string
   r: string
   s: string
   timestamp: number

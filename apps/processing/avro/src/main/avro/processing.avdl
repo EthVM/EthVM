@@ -21,7 +21,7 @@ protocol Processing {
   }
 
   enum BalanceType {
-    ETHER, ERC20, ERC721
+    ETHER, ERC20, ERC721, FEE
   }
 
   record TokenTransferRecord {
@@ -210,7 +210,7 @@ protocol Processing {
   // address metadata
 
   enum AddressMetadataType {
-    FROM, TO, TOTAL, MINER, CONTRACT_CREATOR
+    OUT_TX_COUNT, IN_TX_COUNT, TOTAL_TX_COUNT, MINER, CONTRACT_CREATOR
   }
 
   record AddressMetadataKeyRecord {
