@@ -75,6 +75,7 @@
     "limit": "Limit",
     "gas": "Gas",
     "blockHeight": "Block Height #",
+    "uncleHeight": "Uncle Height #",
     "token": "Token",
     "price": "Price",
     "marketCap": "Market Cap",
