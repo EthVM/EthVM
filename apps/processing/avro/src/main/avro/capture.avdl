@@ -52,6 +52,56 @@ protocol Capture {
 
   }
 
+  record TraceRewardActionRecord {
+    io.enkrypt.avro.common.Data20 author;
+    bytes value;
+    string rewardType;
+  }
+
+  record TraceCallActionRecord {
+    string callType;
+    io.enkrypt.avro.common.Data20 from;
+    union { null, io.enkrypt.avro.common.Data20 } to = null;
+    bytes gas;
+    union { null, bytes } input = null;
+    bytes value;
+  }
+
+  record TraceCreateActionRecord {
+    io.enkrypt.avro.common.Data20 from;
+    bytes gas;
+    bytes value;
+    bytes init;
+  }
+
+  record TraceDestroyActionRecord {
+    io.enkrypt.avro.common.Data20 address;
+    bytes balance;
+    io.enkrypt.avro.common.Data20 refundAddress;
+  }
+
+  record TraceResultRecord {
+    union{ null, io.enkrypt.avro.common.Data20 } address = null;
+    union { null, bytes } code = null;
+    bytes gasUsed;
+    union { null, bytes } output = null;
+  }
+
+  record TraceRecord {
+
+    union { TraceRewardActionRecord, TraceCallActionRecord, TraceCreateActionRecord, TraceDestroyActionRecord } action;
+    union { null, string } `error` = null;
+    union { null, TraceResultRecord } result = null;
+    int subtraces;
+    array<int> traceAddress;
+    string type;
+    io.enkrypt.avro.common.Data32 blockHash;
+    bytes blockNumber;
+    io.enkrypt.avro.common.Data32 transactionHash;
+    int transactionPosition;
+
+  }
+
   record TransactionReceiptRecord {
 
     union { null, io.enkrypt.avro.common.Data32 } blockHash = null;         // hash of the block where this transaction was in
@@ -70,12 +120,8 @@ protocol Capture {
 
     union { null, io.enkrypt.avro.common.Data32 } root = null;              // Merkle root of the state trie after the transaction has been executed (optional after Byzantium hard fork EIP609)
     union { null, bytes } status = null;                                    // Quantity - 0x0 indicates transaction failure , 0x1 indicates transaction success. Set for blocks mined after Byzantium hard fork EIP609, null before.
-    union { null, string } `error` = null;
 
-    array<InternalTransactionRecord> internalTxs = [];
-    array<io.enkrypt.avro.common.Data20> deletedAccounts = [];              // contract suicides
-
-    union { null, bytes } raw = null;                                       // raw rlp transaction data
+    array<TraceRecord> traces;
   }
 
   record TransactionRecord {
@@ -96,13 +142,13 @@ protocol Capture {
 
     union { null, bytes } input = null;                             // the data send along with the transaction.
 
-    io.enkrypt.avro.common.Data1 v;                                 // integer - the standardised V field of the signature
+    long v;                                                         // integer - the standardised V field of the signature
     bytes r;                                                        // integer
     bytes s;                                                        // integer
 
     union { null, io.enkrypt.avro.common.Data20 } creates = null;  // created contract hash
 
-    union { null, int } chainId = null;                             // chain id of the transaction, if any
+    union { null, long } chainId = null;                           // chain id of the transaction, if any
     union { null, bytes } raw = null;                               // raw rlp transaction data
 
     union { null, long } timestamp = null;                        // block timestamp in seconds since epoch
@@ -137,6 +183,7 @@ protocol Capture {
     bytes gasUsed;                                                // the total used gas by all transactions in this block
 
     long timestamp;                                               // the unix timestamp for when the block was collated
+    long size;
 
     union { null, bytes } blockNumber = null;                     // block number this header relates to when an uncle
     union { null, int } uncleIndex = null;                        // index in the uncles array of this header if it was included in the uncles list
@@ -158,19 +205,13 @@ protocol Capture {
     bytes totalDifficulty;                                        // integer of the total difficulty of the chain until this block
 
     array<TransactionRecord> transactions = [];                   // array of transaction objects
-    array<TransactionReceiptRecord> transactionReceipts = [];     // array of transaction receipts
 
-    io.enkrypt.avro.common.Data32 unclesHash;                     // hash of uncles
+    io.enkrypt.avro.common.Data32 sha3Uncles;                     // hash of uncles
+    array<io.enkrypt.avro.common.Data32> uncleHashes;              // each uncle hash
     array<BlockHeaderRecord> uncles = [];                         // array of uncle headers
-
-    array<BlockRewardRecord> rewards = [];                        // coinbase and uncle rewards
 
     boolean reverse = false;                                      // whether this block summary should be applied or reversed from cumulative state
     int numPendingTxs = 0;                                        // count as of time of processing
-
-    array<PremineBalanceRecord> premineBalances = [];             // premine balances from genesis block
-
-    union { null, bytes } raw = null;                             // raw block data
 
     union { null, long } blockTime = null;                        //
   }

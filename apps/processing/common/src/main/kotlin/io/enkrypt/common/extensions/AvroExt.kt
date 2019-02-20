@@ -35,11 +35,18 @@ fun TokenTransferRecord.Builder.setAmount(amount: BigInteger) =
 fun TokenTransferRecord.Builder.setTokenId(tokenId: BigInteger) =
   this.setTokenId(tokenId.unsignedByteBuffer())
 
-fun TransactionReceiptRecord.isSuccess(): Boolean = this.getError().isEmpty()
+fun TransactionReceiptRecord.isSuccess(): Boolean {
+  // TODO fix me
+  return false
+}
 
-fun BlockRecord.txFees(): List<BigInteger> =
-  this.getTransactions().zip(this.getTransactionReceipts())
-    .map { (tx, r) -> tx.getGasPrice().unsignedBigInteger()!! * r.getGasUsed().unsignedBigInteger()!! }
+fun BlockRecord.txFees(): List<BigInteger> {
+  // TODO fix me
+//  this.getTransactions().zip(this.getTransactionReceipts())
+//    .map { (tx, r) -> tx.getGasPrice().unsignedBigInteger()!! * r.getGasUsed().unsignedBigInteger()!! }
+  return emptyList()
+}
+
 
 fun BlockRecord.totalTxFees(): BigInteger = this.txFees()
   .fold(0.toBigInteger()) { memo, next -> memo + next }

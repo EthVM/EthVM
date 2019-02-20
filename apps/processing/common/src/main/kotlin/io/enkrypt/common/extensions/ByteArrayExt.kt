@@ -7,8 +7,10 @@ import io.enkrypt.avro.common.Data32
 import io.enkrypt.avro.common.Data8
 import org.ethereum.util.ByteUtil
 import org.spongycastle.util.BigIntegers
+import java.io.ByteArrayOutputStream
 import java.math.BigInteger
 import java.nio.ByteBuffer
+import java.util.zip.GZIPOutputStream
 
 fun ByteArray?.data1(): Data1? = if (this == null) null else Data1(this)
 fun ByteArray?.data8(): Data8? = if (this == null) null else Data8(this)
@@ -65,4 +67,21 @@ fun ByteArray.indexByteArrayOf(pattern: ByteArray): Int {
   }
 
   return -1
+}
+
+
+fun ByteArray?.gzip(threshold: Int): ByteArray? {
+
+  if(this == null || this.size < threshold) {
+    return this
+  }
+
+
+  val bytesOut = ByteArrayOutputStream()
+  val gzipOut = GZIPOutputStream(bytesOut)
+  gzipOut.write(this)
+  gzipOut.flush()
+  gzipOut.close()
+
+  return bytesOut.toByteArray()
 }

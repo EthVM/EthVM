@@ -14,3 +14,5 @@ fun String.hexData8() = Data8(ByteUtil.hexStringToBytes(this))
 fun String.hexData20() = Data20(ByteUtil.hexStringToBytes(this))
 fun String.hexData32() = Data32(ByteUtil.hexStringToBytes(this))
 fun String.hexData256() = Data256(ByteUtil.hexStringToBytes(this))
+
+fun String.hexToUBigInteger() = this.hexBuffer().unsignedBigInteger()
