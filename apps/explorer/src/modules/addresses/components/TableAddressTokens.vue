@@ -59,7 +59,7 @@
 </template>
 
 <script lang="ts">
-import AppError from '@app/core/components/ui/AppError2.vue'
+import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import TableAddressTokensRow from '@app/modules/addresses/components/TableAddressTokensRow.vue'
 import BN from 'bignumber.js'

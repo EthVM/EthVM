@@ -27,11 +27,17 @@
     -->
     <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px" style="margin-right: 1px">
       <v-layout align-center justify-start row fill-height pr-3>
-        <v-flex xs6 sm2 md3 lg2>
+        <v-flex xs6 sm2 md2>
           <h5>{{ $t('tableHeader.blockHeight') }}</h5>
         </v-flex>
+        <v-flex xs6 sm2 md2>
+          <h5>{{ $t('title.uncleNumber') }}</h5>
+        </v-flex>
+        <v-flex sm5 md5 hidden-sm-and-down>
+          <h5>{{ $t('title.uncleDetail') }}</h5>
+        </v-flex>
         <v-spacer />
-        <v-flex hidden-sm-and-down md2>
+        <v-flex hidden-sm-and-down md1>
           <h5>{{ $t('title.position') }}</h5>
         </v-flex>
         <v-flex xs6 sm3 md2>
@@ -80,7 +86,7 @@
 </template>
 
 <script lang="ts">
-import AppError from '@app/core/components/ui/AppError2.vue'
+import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'

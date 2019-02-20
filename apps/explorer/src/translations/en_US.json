@@ -4,6 +4,7 @@
     "blocks": "Blocks",
     "viewAll": "View All",
     "uncles": "Uncles",
+    "uncleNumber": "Uncle Number",
     "tx": "Transactions",
     "pending": "Pending Transactions",
     "mined": "Mined Transactions",

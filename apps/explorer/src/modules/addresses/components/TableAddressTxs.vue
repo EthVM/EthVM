@@ -103,7 +103,7 @@
 </template>
 
 <script lang="ts">
-import AppError from '@app/core/components/ui/AppError2.vue'
+import AppError from '@app/core/components/ui/AppError.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableAddressTxRow from '@app/modules/addresses/components/TableAddressTxRow.vue'

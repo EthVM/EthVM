@@ -1,10 +1,13 @@
 <template>
   <v-container pa-0 ma-0>
     <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
-      <v-flex xs6 sm2 order-xs1>
-        <router-link class="black--text pb-1" :to="'/uncle/' + uncle.getHash()">{{ uncle.getBlockHeight() }}</router-link>
+      <v-flex xs3 sm2 order-xs1>
+        <router-link class="black--text pb-1" :to="'/block/' + uncle.getBlockHeight()">{{ uncle.getBlockHeight() }}</router-link>
       </v-flex>
-      <v-flex xs12 sm7 md6 lass="pr-0" order-xs3 order-sm2>
+      <v-flex xs3 sm2 order-xs1>
+        <router-link class="black--text pb-1" :to="'/uncle/' + uncle.getHash()">{{ uncle.getNumber() }}</router-link>
+      </v-flex>
+      <v-flex xs12 sm5 md5 class="pr-0" order-xs3 order-sm2>
         <p class="text-truncate info--text psmall mb-0 pb-0">
           {{ $t('common.hash') }}:
           <router-link class="primary--text font-italic font-weight-regular" :to="'/uncle/' + uncle.getHash()">{{ uncle.getHash() }}</router-link>
@@ -16,7 +19,7 @@
           }}</router-link>
         </p>
       </v-flex>
-      <v-flex hidden-sm-and-down md2 order-xs4 order-sm3>
+      <v-flex hidden-sm-and-down md1 order-xs4 order-sm3>
         <p class="txSuccess--text mb-0 psmall">{{ uncle.getPosition() }}</p>
       </v-flex>
       <v-flex d-flex xs6 sm3 md2 order-xs2 order-md4>

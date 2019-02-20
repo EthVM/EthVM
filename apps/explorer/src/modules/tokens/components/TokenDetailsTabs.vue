@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
-import AppError from '@app/core/components/ui/AppError2.vue'
+import AppError from '@app/core/components/ui/AppError.vue'
 import TokenTableTransfers from '@app/modules/tokens/components/TokenTableTransfers.vue'
 import TokenTableHolders from '@app/modules/tokens/components/TokenTableHolders.vue'
 import { Tx } from '@app/core/models'
