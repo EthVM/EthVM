@@ -1,25 +1,5 @@
 <template>
   <v-card color="white" flat class="pt-0 pb-2">
-    <!-- Table Header -->
-    <v-card color="primary" flat class="white--text pl-3 pr-1" height="40px">
-      <v-layout align-center justify-start row fill-height pr-3>
-        <v-flex xs9 sm9 md5 pl-3>
-          <h5>{{ $t('tableHeader.txN') }}</h5>
-        </v-flex>
-        <v-flex xs3 sm2 md2>
-          <h5>{{ $t('common.eth') }}</h5>
-        </v-flex>
-        <v-flex hidden-sm-and-down md2>
-          <h5>{{ $t('gas.limit') }}</h5>
-        </v-flex>
-        <v-flex hidden-sm-and-down md2>
-          <h5>{{ $t('common.gwei') }}</h5>
-        </v-flex>
-        <v-flex hidden-xs-only sm1>
-          <h5>{{ $t('common.status') }}</h5>
-        </v-flex>
-      </v-layout>
-    </v-card>
     <v-card flat v-if="isSyncing && type">
       <v-layout row align-center justify-center fill-height>
         <v-card-title class="text-xs-center pt-5 pb-5">{{ $t('message.syncPendingTxs') }}</v-card-title>
