@@ -1,12 +1,11 @@
-import convict from 'convict';
+import convict from 'convict'
 
 const schema = {
-
   kafka: {
     bootstrapServers: {
       doc: 'List of kafka servers',
       default: 'kafka-1:9091',
-      env: "KAFKA_BOOTSTRAP_SERVERS"
+      env: 'KAFKA_BOOTSTRAP_SERVERS'
     },
     schemaRegistryUrl: {
       doc: 'Schema registry url',
@@ -22,40 +21,35 @@ const schema = {
       env: 'MONGO_URI'
     }
   }
-
 }
 
 export interface KafkaConfig {
-
-  bootstrapServers: string;
-  schemaRegistryUrl: string;
-
+  bootstrapServers: string
+  schemaRegistryUrl: string
 }
 
 export interface MongoConfig {
-  url: string;
+  url: string
 }
 
 export class Config {
-
-  private config: convict.Config<any>;
+  private config: convict.Config<any>
 
   constructor() {
-    this.config = convict(schema);
+    this.config = convict(schema)
   }
 
   load(overrides: any) {
-    const { config } = this;
-    config.load(overrides);
-    config.validate({ allowed: 'strict' });
+    const { config } = this
+    config.load(overrides)
+    config.validate({ allowed: 'strict' })
   }
 
   get kafka(): KafkaConfig {
-    return this.config.get('kafka');
+    return this.config.get('kafka')
   }
 
   get mongo(): MongoConfig {
     return this.config.get('mongo')
   }
-
 }

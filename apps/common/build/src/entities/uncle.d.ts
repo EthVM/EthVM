@@ -1,6 +1,6 @@
 export interface Uncle {
     hash: string;
-    number: string;
+    number: number;
     parentHash: string;
     blockNumber: string;
     uncleIndex: number;

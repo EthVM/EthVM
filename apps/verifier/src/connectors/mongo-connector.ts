@@ -1,23 +1,22 @@
 import { Config } from '@app/config'
+import { Block, Header, Tx } from 'ethvm-common'
 import { Collection, Cursor, Db, MongoClient } from 'mongodb'
 import { empty, from, Observable } from 'rxjs'
-import { Block, Header, Tx } from 'ethvm-common'
 import { concatMap, expand } from 'rxjs/operators'
 
 export class MongoConnector {
-
-  private readonly client: MongoClient;
-  private readonly dbName: string;
+  private readonly client: MongoClient
+  private readonly dbName: string
 
   private db: Db
 
   constructor(config: Config) {
-    const { url } = config.mongo;
+    const { url } = config.mongo
 
     // quick hack for getting database name from the url
-    this.dbName = url.split('?')[0].split('/')[3];
+    this.dbName = url.split('?')[0].split('/')[3]
 
-    this.client = new MongoClient(url, { useNewUrlParser: true });
+    this.client = new MongoClient(url, { useNewUrlParser: true })
   }
 
   async init(): Promise<void> {
@@ -27,15 +26,15 @@ export class MongoConnector {
   }
 
   private get blocksCollection(): Collection<Block> {
-    return this.db.collection<Block>('blocks');
+    return this.db.collection<Block>('blocks')
   }
 
   private get unclesCollection(): Collection<Header> {
-    return this.db.collection<Header>('uncles');
+    return this.db.collection<Header>('uncles')
   }
 
   private get transactionsCollection(): Collection<Tx> {
-    return this.db.collection<Tx>('transactions');
+    return this.db.collection<Tx>('transactions')
   }
 
   async blocks(filter: any, sort?: any): Promise<Block[]> {
@@ -46,21 +45,14 @@ export class MongoConnector {
   }
 
   blocks$(): Observable<Block> {
-    const cursor = this.blocksCollection
-      .find()
-      .batchSize(50)
+    const cursor = this.blocksCollection.find().batchSize(50)
 
-    return this.cursor$(cursor);
+    return this.cursor$(cursor)
   }
 
-  private cursor$ <T> (cursor: Cursor<T>): Observable<T> {
-
-    const next$ = () => from(cursor.hasNext())
-      .pipe(
-        concatMap(x => x ? from(<Promise<T>> cursor.next()) : empty()),
-      )
+  private cursor$<T>(cursor: Cursor<T>): Observable<T> {
+    const next$ = () => from(cursor.hasNext()).pipe(concatMap(x => (x ? from(<Promise<T>>cursor.next()) : empty())))
 
     return next$().pipe(expand(() => next$()))
   }
-
 }
