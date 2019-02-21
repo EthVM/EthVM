@@ -18,21 +18,31 @@ PROJECTS_PATH="${SCRIPT_DIR}/projects.meta.json"
 ensure() {
   if ! [ -x "$(command -v jq)" ]; then
     >&2 echo "jq is necessary to be installed to run this script!"
+    >&2 echo "For installation instructions, please visit: https://stedolan.github.io/jq/download/"
     exit 1
   fi
 
   if ! [ -x "$(command -v docker)" ]; then
     >&2 echo "docker is necessary to be installed to run this script!"
+    >&2 echo "For installation instructions, please visit: https://docs.docker.com/install/"
     exit 1
   fi
 
   if ! [ -x "$(command -v docker-compose)" ]; then
     >&2 echo "docker-compose is necessary to be installed to run this script!"
+    >&2 echo "For installation instructions, please visit: https://docs.docker.com/compose/install/"
     exit 1
   fi
 
   if ! [ -x "$(command -v yarn)" ]; then
     >&2 echo "yarn is necessary to be installed to run this script!"
+    >&2 echo "For installation instructions, please visit: https://yarnpkg.com/lang/en/docs/install/"
+    exit 1
+  fi
+
+  if ! [ -x "$(command -v aws)" ]; then
+    >&2 echo "awscli is necessary to be installed to run this script!"
+    >&2 echo "For installation instructions, please visit: https://github.com/aws/aws-cli"
     exit 1
   fi
 
@@ -41,8 +51,8 @@ ensure() {
     exit 1
   fi
 
-  if ! [ -x "$(command -v git-lfs)" ]; then
-    >&2 echo "git-lfs is necessary to be installed to run this script!"
+  if ! [ -x "$(command -v md5sum)" ]; then
+    >&2 echo "md5sum is necessary to be installed to run this script!"
     exit 1
   fi
 }

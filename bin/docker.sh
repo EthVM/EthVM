@@ -50,8 +50,11 @@ up_default() {
   echo -e "Building utility docker images...\n"
   ${SCRIPT_DIR}/docker-build.sh build ethvm-utils mongodb-dev
 
-  echo -e "Starting up containers...\n"
-  docker-compose up -d --build
+  echo -e "Building containers..."
+  docker-compose build
+
+  echo -e "Starting up containers: traefik, api, explorer, mongodb, zookeeper kafka-1 kafka-schema-registry kafka-connect \n"
+  docker-compose up -d traefik api explorer mongodb zookeeper kafka-1 kafka-schema-registry kafka-connect
 
   echo -e "Initialising kafka...\n"
   ${SCRIPT_DIR}/ethvm-utils.sh kafka init
@@ -71,12 +74,16 @@ up_default() {
 
 # up - spins up a dev environment with a fixed dataset ready to be used on frontend
 up_simple() {
+  echo -e "Checking if there's a new available dataset to download..."
+  ${SCRIPT_DIR}/mongo.sh fetch
+
   echo -e "Building utility docker images...\n"
   ${SCRIPT_DIR}/docker-build.sh build ethvm-utils mongodb-dev
 
   echo "Starting up containers: traefik, mongo, explorer and api"
   docker-compose up -d --build traefik mongodb explorer api
 
+  # Give time to breathe
   sleep 10
 
   echo "Importing bootstraped db to mongo..."

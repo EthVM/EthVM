@@ -83,7 +83,6 @@ services:
       - back
     ports:
       - 27017:27017
-    mem_limit: 4g
 
   zookeeper:
     image: confluentinc/cp-zookeeper:${CP_VERSION}
