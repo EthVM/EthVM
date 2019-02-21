@@ -47,7 +47,6 @@
 import { Block, Uncle, Tx, EthValue } from '@app/core/models'
 import { Events } from 'ethvm-common'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-import AppError from '@app/core/components/ui/AppError.vue'
 import AppListDetails from '@app/core/components/ui/AppListDetails.vue'
 import AppListTitle from '@app/core/components/ui/AppListTitle.vue'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
@@ -64,7 +63,6 @@ const MAX_TXS = 10
 @Component({
   components: {
     AppBreadCrumbs,
-    AppError,
     AppListDetails,
     AppListTitle,
     TableTxs,
