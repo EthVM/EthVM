@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="'/token/' + token.address + '/holder=' + holder" v-if="token.balance != 0">
+  <router-link :to="tokenLink" v-if="token.balance != 0">
     <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-2>
       <v-flex xs6 sm2>
         <h5>{{ token.symbol }}</h5>
@@ -39,13 +39,28 @@ export default class TableAddressTokensRow extends Mixins(StringConcatMixin) {
   @Prop(Object) token!: any
   @Prop(String) holder!: string
 
-  /*Methods: */
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
   balance(value, decimals) {
     const n = new BN(value)
     return n
       .div(new BN(10).pow(decimals))
       .toFixed()
       .toString()
+  }
+
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
+
+  get tokenLink():string {
+    return `/token/${this.token.addr}?holder=${this.holder}`
   }
 }
 </script>

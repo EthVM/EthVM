@@ -36,7 +36,7 @@
       <!-- End Transactions -->
       <!-- Tokens -->
       <v-tab-item slot="tabs-item" value="tab-1">
-        <table-address-tokens :loading="tokensLoading" :tokens="account.tokens" :error="tokensError" />
+        <table-address-tokens :loading="tokensLoading" :tokens="account.tokens" :holder="account.address" :error="tokensError" />
       </v-tab-item>
       <!-- End Tokens -->
       <!-- Pending Transactions -->
@@ -81,7 +81,7 @@ import { Block, EthValue, Tx, PendingTx } from '@app/core/models'
 import { Events, Contract } from 'ethvm-common'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-import AppError from '@app/core/components/ui/AppError2.vue'
+import AppError from '@app/core/components/ui/AppError.vue'
 import AddressDetail from '@app/modules/addresses/components/AddressDetail.vue'
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import TableAddressTxs from '@app/modules/addresses/components/TableAddressTxs.vue'
