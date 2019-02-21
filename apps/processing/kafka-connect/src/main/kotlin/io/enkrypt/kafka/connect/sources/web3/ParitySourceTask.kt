@@ -3,6 +3,7 @@ package io.enkrypt.kafka.connect.sources.web3
 import io.confluent.connect.avro.AvroData
 import io.confluent.connect.avro.AvroDataConfig
 import io.confluent.connect.avro.AvroDataConfig.ENHANCED_AVRO_SCHEMA_SUPPORT_CONFIG
+import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
 import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.common.extensions.unsignedBigInteger

@@ -1,6 +1,6 @@
 package io.enkrypt.kafka.connect.extensions
 
-import io.enkrypt.common.extensions.hexToUBigInteger
+import io.enkrypt.common.extensions.hexUBigInteger
 import org.web3j.protocol.Web3jService
 import org.web3j.protocol.core.DefaultBlockParameter
 import org.web3j.protocol.core.Request
@@ -32,8 +32,8 @@ class JsonRpc2_0ParityExtended(web3jService: Web3jService?) : JsonRpc2_0Parity(w
 
 fun EthSyncing.Syncing.syncRanges(previous: EthSyncing.Syncing, batchSize: BigInteger): List<ClosedRange<BigInteger>> {
 
-  var start = previous.currentBlock.hexToUBigInteger()!!
-  val end = this.currentBlock.hexToUBigInteger()!!
+  var start = previous.currentBlock.hexUBigInteger()!!
+  val end = this.currentBlock.hexUBigInteger()!!
 
   if(start > BigInteger.ZERO) start += BigInteger.ONE
 

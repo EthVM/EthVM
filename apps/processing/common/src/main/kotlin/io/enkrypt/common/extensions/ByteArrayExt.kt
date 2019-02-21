@@ -1,33 +1,39 @@
 package io.enkrypt.common.extensions
 
-import io.enkrypt.avro.common.Data1
-import io.enkrypt.avro.common.Data20
-import io.enkrypt.avro.common.Data256
-import io.enkrypt.avro.common.Data32
-import io.enkrypt.avro.common.Data8
-import org.ethereum.util.ByteUtil
-import org.spongycastle.util.BigIntegers
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.io.PushbackInputStream
 import java.math.BigInteger
 import java.nio.ByteBuffer
+import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
+import org.apache.commons.codec.binary.Hex as ApacheHex
 
-fun ByteArray?.data1(): Data1? = if (this == null) null else Data1(this)
-fun ByteArray?.data8(): Data8? = if (this == null) null else Data8(this)
-fun ByteArray?.data20(): Data20? = if (this == null) null else Data20(this)
-fun ByteArray?.data32(): Data32? = if (this == null) null else Data32(this)
-fun ByteArray?.data256(): Data256? = if (this == null) null else Data256(this)
+fun ByteArray?.fixed(size: Int): ByteArray? {
+  return if(this == null) {
+    this
+  } else {
+    require(this.size == size) { "Must be of size $size"}
+    this
+  }
+}
 
-fun ByteArray?.hex(): String? = ByteUtil.toHexString(this)
+fun ByteArray?.fixed1(): ByteArray? = if (this == null) null else this.fixed(1)
+fun ByteArray?.fixed8(): ByteArray? = if (this == null) null else this.fixed(8)
+fun ByteArray?.data20(): ByteArray? = if (this == null) null else this.fixed(20)
+fun ByteArray?.data32(): ByteArray? = if (this == null) null else this.fixed(32)
+fun ByteArray?.data256(): ByteArray? = if (this == null) null else this.fixed(256)
+
+fun ByteArray?.hex(): String? = if(this != null ) ApacheHex.encodeHexString(this) else this
 
 fun ByteArray?.bigInteger(): BigInteger? = BigInteger(this)
 
-fun ByteArray?.unsignedBigInteger(): BigInteger = if (this == null || this.isEmpty()) BigInteger.ZERO else BigIntegers.fromUnsignedByteArray(this)
+fun ByteArray?.unsignedBigInteger(): BigInteger = if (this == null || this.isEmpty()) BigInteger.ZERO else BigInteger(1, this)
 
-fun ByteArray?.byteBuffer(): ByteBuffer? = if (this != null) ByteBuffer.wrap(this) else null
+fun ByteArray?.byteBuffer(): ByteBuffer? = if (this != null) ByteBuffer.wrap(this) else this
 
 /**
- * Search the data for the first occurrence of the byte array pattern.
+ * Search the fixed for the first occurrence of the byte array pattern.
  */
 fun ByteArray.indexByteArrayOf(pattern: ByteArray): Int {
 
@@ -70,12 +76,11 @@ fun ByteArray.indexByteArrayOf(pattern: ByteArray): Int {
 }
 
 
-fun ByteArray?.gzip(threshold: Int): ByteArray? {
+fun ByteArray?.compress(threshold: Int): ByteArray? {
 
   if(this == null || this.size < threshold) {
     return this
   }
-
 
   val bytesOut = ByteArrayOutputStream()
   val gzipOut = GZIPOutputStream(bytesOut)
@@ -84,4 +89,27 @@ fun ByteArray?.gzip(threshold: Int): ByteArray? {
   gzipOut.close()
 
   return bytesOut.toByteArray()
+}
+
+fun ByteArray?.decompress(): ByteArray? {
+
+  if(this == null || this.size < 2) {
+    return this
+  }
+
+  val input = ByteArrayInputStream(this)
+
+  val pb = PushbackInputStream(input, 2) //we need a pushbackstream to look ahead
+  val signature = ByteArray(2)
+
+  val len = pb.read(signature) //read the signature
+  pb.unread(signature, 0, len) //push back the signature to the stream
+
+  //check if matches standard gzip magic number
+  return if (signature[0] == 0x1f.toByte() && signature[1] == 0x8b.toByte()) {
+    GZIPInputStream(pb).readBytes()
+  } else {
+    this
+  }
+
 }

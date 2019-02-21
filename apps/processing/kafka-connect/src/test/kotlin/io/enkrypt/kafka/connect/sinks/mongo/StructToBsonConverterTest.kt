@@ -12,7 +12,7 @@ import io.enkrypt.avro.processing.MetricKeyRecord
 import io.enkrypt.avro.processing.MetricRecord
 import io.enkrypt.avro.processing.TokenBalanceKeyRecord
 import io.enkrypt.avro.processing.TokenBalanceRecord
-import io.enkrypt.common.extensions.hexData20
+import io.enkrypt.common.extensions.hexBuffer20
 import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
@@ -330,7 +330,7 @@ class StructToBsonConverterTest : BehaviorSpec() {
       val amount = 123814982.toBigInteger()
 
       val record = TokenBalanceRecord.newBuilder()
-        .setAddress(address.hexData20())
+        .setAddress(address.hexBuffer20())
         .setAmount(amount.unsignedByteBuffer())
         .build()
 
@@ -357,8 +357,8 @@ class StructToBsonConverterTest : BehaviorSpec() {
       val tokenId = 12381298.toBigInteger()
 
       val record = TokenBalanceKeyRecord.newBuilder()
-        .setAddress(address.hexData20())
-        .setContract(contract.hexData20())
+        .setAddress(address.hexBuffer20())
+        .setContract(contract.hexBuffer20())
         .setTokenId(tokenId.unsignedByteBuffer())
         .build()
 

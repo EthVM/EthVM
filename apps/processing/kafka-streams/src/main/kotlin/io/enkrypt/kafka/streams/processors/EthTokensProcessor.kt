@@ -1,10 +1,10 @@
 package io.enkrypt.kafka.streams.processors
 
-import io.enkrypt.avro.common.Data20
 import io.enkrypt.avro.exchange.SymbolKeyRecord
 import io.enkrypt.avro.processing.ContractKeyRecord
 import io.enkrypt.avro.processing.ContractMetadataRecord
 import io.enkrypt.avro.tokens.EthTokenListsKeyRecord
+import io.enkrypt.common.extensions.fixed20
 import io.enkrypt.kafka.streams.config.Topics
 import io.enkrypt.kafka.streams.serdes.Serdes
 import mu.KLogger
@@ -43,7 +43,7 @@ class EthTokensProcessor : AbstractKafkaProcessor() {
 
     // Send directly to contract-metadata topic to be processed in contracts
     ethTokensStream
-      .selectKey { k, _ -> ContractKeyRecord(Data20(k.getAddress().array())) }
+      .selectKey { k, _ -> ContractKeyRecord(k.getAddress().fixed20()) }
       .to(
         Topics.ContractMetadata,
         Produced.with(Serdes.ContractKey(), Serdes.ContractMetadata())

@@ -1,7 +1,6 @@
 package io.enkrypt.common.config
 
 import io.enkrypt.avro.capture.BlockRecord
-import io.enkrypt.avro.common.Data20
 import io.enkrypt.avro.processing.ChainEventRecord
 import io.enkrypt.avro.processing.ChainEventType
 import io.enkrypt.avro.processing.DaoHfBalanceTransferRecord
@@ -99,20 +98,24 @@ open class DaoHardForkConfig(override val constants: ChainConstants = ChainConst
     if (block.getHeader().getNumber().unsignedBigInteger() != forkBlockNumber) {
       emptyList()
     } else {
-      daoBalances.map { (address, balance) -> daoHfBalanceTransfer(address, withdrawAccount, balance, block.getReverse()) }
-    }
+      daoBalances.map { (address, balance) ->
 
-  private fun daoHfBalanceTransfer(from: Data20, to: Data20, balance: BigInteger, reverse: Boolean) =
-    ChainEventRecord.newBuilder()
-      .setReverse(reverse)
-      .setType(ChainEventType.DAO_HF_BALANCE_TRANSFER)
-      .setValue(
-        DaoHfBalanceTransferRecord.newBuilder()
-          .setFrom(from)
-          .setTo(to)
-          .setAmount(balance.unsignedByteBuffer())
-          .build()
-      ).build()
+        ChainEventRecord.newBuilder()
+          .setReverse(block.getReverse())
+          .setTimestamp(block.getHeader().getTimestamp())
+          .setBlockHash(block.getHeader().getHash())
+          .setType(ChainEventType.DAO_HF_BALANCE_TRANSFER)
+          .setValue(
+            DaoHfBalanceTransferRecord.newBuilder()
+              .setFrom(address)
+              .setTo(withdrawAccount)
+              .setAmount(balance.unsignedByteBuffer())
+              .build()
+          ).build()
+
+      }
+
+    }
 }
 
 open class Eip150HardForkConfig(val parent: ChainConfig) : DaoHardForkConfig() {
@@ -159,7 +162,13 @@ open class ConstantinopleConfig(parent: ChainConfig) : ByzantiumConfig(parent) {
   override fun eip1014() = true
 }
 
+open class PetersburgConfig(parent: ChainConfig) : ConstantinopleConfig(parent) {
+  override fun eip1283() = false
+}
+
 interface NetConfig {
+
+  val genesis: GenesisFile
 
   fun chainConfigForBlock(block: BlockRecord): ChainConfig
 
@@ -168,32 +177,32 @@ interface NetConfig {
   companion object {
 
     val mainnet = BaseNetConfig(
-        0L to FrontierConfig(),
-        1_150_000L to HomesteadConfig(),
-        1_920_000L to DaoHardForkConfig(),
-        2_463_000L to Eip150HardForkConfig(DaoHardForkConfig()),
-        2_675_000L to Eip160HardForkConfig(DaoHardForkConfig()),
-        4_370_000L to ByzantiumConfig(DaoHardForkConfig()),
-        7_080_000L to ConstantinopleConfig(DaoHardForkConfig())
+      Genesis.Frontier,
+      0L to FrontierConfig(),
+      1_150_000L to HomesteadConfig(),
+      1_920_000L to DaoHardForkConfig(),
+      2_463_000L to Eip150HardForkConfig(DaoHardForkConfig()),
+      2_675_000L to Eip160HardForkConfig(DaoHardForkConfig()),
+      4_370_000L to ByzantiumConfig(DaoHardForkConfig()),
+      7_280_000L to PetersburgConfig(DaoHardForkConfig())
     )
 
     val ropsten = BaseNetConfig(
-        0L to HomesteadConfig(),
-        10L to RopstenConfig(HomesteadConfig()),
-        1_700_000L to RopstenConfig(ByzantiumConfig(DaoHardForkConfig())),
-        4_230_000L to RopstenConfig(ConstantinopleConfig(DaoHardForkConfig()))
-    )
-
-    val testnet = BaseNetConfig(
-        0L to FrontierConfig(),
-        1_500_000L to HomesteadConfig()
+      Genesis.Ropsten,
+      0L to HomesteadConfig(),
+      10L to RopstenConfig(HomesteadConfig()),
+      1_700_000L to RopstenConfig(ByzantiumConfig(DaoHardForkConfig())),
+      4_230_000L to RopstenConfig(ConstantinopleConfig(DaoHardForkConfig())),
+      4_939_394L to RopstenConfig(PetersburgConfig(DaoHardForkConfig()))
     )
 
     // TODO add support for other networks
   }
 }
 
-class BaseNetConfig(vararg configs: Pair<Long, ChainConfig>) : NetConfig {
+class BaseNetConfig(genesis: Genesis, vararg configs: Pair<Long, ChainConfig>) : NetConfig {
+
+  override val genesis: GenesisFile = genesis.load()
 
   private val blockNumbers = configs.map { it.first.toBigInteger() }
   private val chainConfigs = configs.map { it.second }

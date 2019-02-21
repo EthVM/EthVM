@@ -1,8 +1,9 @@
 package io.enkrypt.kafka.streams.processors
 
 import io.enkrypt.avro.capture.BlockHeaderRecord
+import io.enkrypt.avro.capture.BlockKeyRecord
+import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.capture.BlockRewardRecord
-import io.enkrypt.avro.capture.PremineBalanceRecord
 import io.enkrypt.avro.capture.TransactionKeyRecord
 import io.enkrypt.avro.capture.TransactionRecord
 import io.enkrypt.avro.capture.UncleKeyRecord
@@ -10,21 +11,23 @@ import io.enkrypt.avro.processing.AddressMetadataKeyRecord
 import io.enkrypt.avro.processing.AddressMetadataRecord
 import io.enkrypt.avro.processing.AddressMetadataType
 import io.enkrypt.avro.processing.BalanceType
+import io.enkrypt.avro.processing.ChainEventRecord
 import io.enkrypt.avro.processing.ChainEventType
 import io.enkrypt.avro.processing.ContractCreateRecord
 import io.enkrypt.avro.processing.ContractDestroyRecord
 import io.enkrypt.avro.processing.ContractKeyRecord
 import io.enkrypt.avro.processing.DaoHfBalanceTransferRecord
+import io.enkrypt.avro.processing.PremineBalanceRecord
 import io.enkrypt.avro.processing.TokenBalanceKeyRecord
 import io.enkrypt.avro.processing.TokenBalanceRecord
 import io.enkrypt.avro.processing.TokenTransferKeyRecord
 import io.enkrypt.avro.processing.TokenTransferRecord
+import io.enkrypt.avro.processing.TxFeeRecord
 import io.enkrypt.common.extensions.byteArray
 import io.enkrypt.common.extensions.byteBuffer
 import io.enkrypt.common.extensions.isFungible
 import io.enkrypt.common.extensions.isNonFungible
 import io.enkrypt.common.extensions.unsignedBigInteger
-import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.common.extensions.unsignedBytes
 import io.enkrypt.kafka.streams.config.Topics
 import io.enkrypt.kafka.streams.processors.block.BlockMetrics
@@ -40,7 +43,6 @@ import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.Produced
 import org.apache.kafka.streams.kstream.TransformerSupplier
-import java.math.BigInteger
 import java.nio.ByteBuffer
 import java.security.MessageDigest
 import java.util.Properties
@@ -84,93 +86,14 @@ class BlockProcessor : AbstractKafkaProcessor() {
     // extract transactions and publish to their own topic
 
     blockStream
-      .flatMap { _, block ->
-
-        val txs = block.getTransactions()
-        val receipts = block.getTransactionReceipts()
-
-        val reverse = block.getReverse()
-
-        txs.zip(receipts)
-          .map { (tx, receipt) ->
-            KeyValue(
-              TransactionKeyRecord.newBuilder()
-                .setTxHash(tx.getHash())
-                .build(),
-              if (reverse) null else TransactionRecord.newBuilder(tx)
-                .setBlockNumber(block.getHeader().getNumber())
-                .setReceipt(receipt)
-                .build()
-            )
-          }
-      }.to(
-        Topics.Transactions,
-        Produced.with(Serdes.TransactionKey(), Serdes.Transaction())
-      )
+      .flatMap(this::extractTransactions)
+      .to(Topics.Transactions, Produced.with(Serdes.TransactionKey(), Serdes.Transaction()))
 
     // extract uncles and publish to their own topic
 
     blockStream
-      .flatMap { _, block ->
-
-        val reverse = block.getReverse()
-
-        // a miner can appear multiple times within the rewards list so we need to aggregate
-
-        val rewardsListByAddress = block.getRewards()
-          .map { Pair(it.getAddress(), it.getReward().unsignedBigInteger()!!) }
-          .groupBy { it.first }
-
-        val rewardsCountByAuthor = rewardsListByAddress
-          .mapValues { it.value.size }
-          .toMap()
-
-        val rewardsByAddress = rewardsListByAddress
-          .entries.map { (address, list) -> address to list.map { it.second }.fold(BigInteger.ZERO) { memo, next -> memo + next } }
-          .toMap()
-
-        block.getUncles()
-          .mapIndexed { idx, uncle ->
-
-            val author = uncle.getAuthor()
-
-            val uncleReward = rewardsByAddress[author]!! / rewardsCountByAuthor[author]!!.toBigInteger()
-
-            KeyValue(
-              UncleKeyRecord
-                .newBuilder()
-                .setUncleHash(uncle.getHash())
-                .build(),
-              if (reverse) null
-              else BlockHeaderRecord.newBuilder(uncle)
-                .setBlockNumber(block.getHeader().getNumber())
-                .setUncleReward(uncleReward.unsignedByteBuffer())
-                .setUncleIndex(idx)
-                .build()
-            )
-          }
-      }.to(
-        Topics.Uncles,
-        Produced.with(Serdes.UncleKey(), Serdes.BlockHeader())
-      )
-
-    // track miners
-
-    blockStream
-      .flatMap { _, v ->
-        v.getRewards().map {
-          KeyValue(
-            AddressMetadataKeyRecord.newBuilder()
-              .setAddress(it.getAddress())
-              .setType(AddressMetadataType.MINER)
-              .build(),
-            if (v.getReverse()) null else
-              AddressMetadataRecord.newBuilder()
-                .setFlag(true)
-                .build()
-          )
-        }
-      }.to(Topics.MinerList, Produced.with(Serdes.AddressMetadataKey(), Serdes.AddressMetadata()))
+      .flatMap(this::extractUncles)
+      .to(Topics.Uncles, Produced.with(Serdes.UncleKey(), Serdes.BlockHeader()))
 
     //
 
@@ -179,6 +102,27 @@ class BlockProcessor : AbstractKafkaProcessor() {
         TransformerSupplier { ChainEventsTransformer(netConfig, appConfig.unitTesting) },
         *ChainEventsTransformer.STORE_NAMES
       )
+
+    // track miners
+
+    chainEvents
+      .filter { _, event -> event.getType() == ChainEventType.REWARD }
+      .map { _, event ->
+
+        val reverse = event.getReverse()
+        val value = event.getValue() as BlockRewardRecord
+
+        KeyValue(
+          AddressMetadataKeyRecord.newBuilder()
+            .setAddress(value.getAuthor())
+            .setType(AddressMetadataType.MINER)
+            .build(),
+          if (reverse) null else
+            AddressMetadataRecord.newBuilder()
+              .setFlag(true)
+              .build()
+        )
+      }.to(Topics.MinerList, Produced.with(Serdes.AddressMetadataKey(), Serdes.AddressMetadata()))
 
     // premine balances
 
@@ -207,69 +151,27 @@ class BlockProcessor : AbstractKafkaProcessor() {
 
     chainEvents
       .filter { _, v -> v.getType() == ChainEventType.DAO_HF_BALANCE_TRANSFER }
-      .flatMap { _, v ->
-
-        val reverse = v.getReverse()
-        val transferRecord = v.getValue() as DaoHfBalanceTransferRecord
-
-        val from = transferRecord.getFrom()
-        val to = transferRecord.getTo()
-        val amount = transferRecord.getAmount().unsignedBigInteger()!!
-        val balanceType = BalanceType.ETHER
-
-        val fromBalance = KeyValue(
-          TokenBalanceKeyRecord.newBuilder()
-            .setBalanceType(balanceType)
-            .setAddress(from)
-            .build(),
-          TokenBalanceRecord.newBuilder()
-            .setAmount(if (reverse) amount.byteBuffer() else amount.negate().byteBuffer())
-            .build()
-        )
-
-        val toBalance = KeyValue(
-          TokenBalanceKeyRecord.newBuilder()
-            .setBalanceType(balanceType)
-            .setAddress(to)
-            .build(),
-          TokenBalanceRecord.newBuilder()
-            .setAmount(if (reverse) amount.negate().byteBuffer() else amount.byteBuffer())
-            .build()
-        )
-
-        listOf(fromBalance, toBalance)
-      }.to(
-        Topics.FungibleTokenMovements,
-        Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance())
-      )
+      .flatMap(this::generateHardForkBalanceMovements)
+      .to(Topics.FungibleTokenMovements, Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance()))
 
     // block rewards
 
     chainEvents
-      .filter { _, v -> v.getType() == ChainEventType.BLOCK_REWARD }
-      .map { _, v ->
+      .filter { _, v -> v.getType() == ChainEventType.REWARD }
+      .flatMap(this::generateRewardBalanceMovements)
+      .to(Topics.FungibleTokenMovements, Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance()))
 
-        val reverse = v.getReverse()
-        val reward = v.getValue() as BlockRewardRecord
-        val amount = reward.getReward().unsignedBigInteger()!!
+    // tx fees
 
-        KeyValue(
-          TokenBalanceKeyRecord.newBuilder()
-            .setAddress(reward.getAddress())
-            .build(),
-          TokenBalanceRecord.newBuilder()
-            .setAmount(if (reverse) amount.negate().byteBuffer() else amount.byteBuffer())
-            .build()
-        )
-      }.to(
-        Topics.FungibleTokenMovements,
-        Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance())
-      )
+    chainEvents
+      .filter { _, v -> v.getType() == ChainEventType.TX_FEE }
+      .flatMap(this::generateTxFeeBalanceMovements)
+      .to(Topics.FungibleTokenMovements, Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance()))
+
+    //
 
     val tokenTransfersStream = chainEvents
       .filter { _, e -> e.getType() == ChainEventType.TOKEN_TRANSFER }
-
-    // publish all transfer events for entry into mongo
 
     tokenTransfersStream
       .map { _, v ->
@@ -277,30 +179,8 @@ class BlockProcessor : AbstractKafkaProcessor() {
         val reverse = v.getReverse()
         val transfer = v.getValue() as TokenTransferRecord
 
-        // need to create a unique key for the transfer event
-
-        val md = MessageDigest.getInstance("SHA-256")
-
-        val keyComponents = listOf(
-          transfer.getBlockHash().bytes(),
-          transfer.getTxHash().bytes(),
-          transfer.getTxIndex().toBigInteger().unsignedBytes(),
-          transfer.getContract()?.bytes() ?: ByteArray(0),
-          (transfer.getInternalTxIdx() ?: 0).toBigInteger().unsignedBytes(),
-          transfer.getFrom().bytes(),
-          transfer.getTo().bytes(),
-          transfer.getTokenId()?.byteArray() ?: ByteArray(0),
-          transfer.getAmount()?.byteArray() ?: ByteArray(0)
-        )
-
-        keyComponents.forEach { md.update(it) }
-
-        val hash = md.digest()
-
         KeyValue(
-          TokenTransferKeyRecord.newBuilder()
-            .setHash(hash.byteBuffer())
-            .build(),
+          generateTokenTransferKey(v),
           if (reverse) null else transfer // send a tombstone to remove the entry if this is being reversed
         )
       }.to(
@@ -308,11 +188,13 @@ class BlockProcessor : AbstractKafkaProcessor() {
         Produced.with(Serdes.TokenTransferKey(), Serdes.TokenTransfer())
       )
 
+    // summary info
+
     chainEvents
       // only ether transfers for now
       .filter { _, v ->
         v.getType() == ChainEventType.TOKEN_TRANSFER &&
-        (v.getValue() as TokenTransferRecord).getTransferType() == BalanceType.ETHER
+          (v.getValue() as TokenTransferRecord).getTransferType() == BalanceType.ETHER
       }.flatMap { _, v ->
 
         val reverse = v.getReverse()
@@ -452,7 +334,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
         )
       }.to(Topics.ContractCreations, Produced.with(Serdes.ContractKey(), Serdes.ContractCreate()))
 
-    // contract suicides
+    // contract destruction
 
     chainEvents
       .filter { _, e -> e.getType() == ChainEventType.CONTRACT_DESTROY }
@@ -493,6 +375,195 @@ class BlockProcessor : AbstractKafkaProcessor() {
 
     // Generate the topology
     return builder.build()
+  }
+
+  private fun extractTransactions(@Suppress("UNUSED_PARAMETER") key: BlockKeyRecord, block: BlockRecord): List<KeyValue<TransactionKeyRecord, TransactionRecord?>> {
+
+    val txs = block.getTransactions()
+    val reverse = block.getReverse()
+
+    return txs.map { tx ->
+      KeyValue(
+        TransactionKeyRecord.newBuilder()
+          .setTxHash(tx.getHash())
+          .build(),
+        if (reverse) null else tx
+      )
+    }
+
+  }
+
+  private fun extractUncles(@Suppress("UNUSED_PARAMETER") key: BlockKeyRecord, block: BlockRecord): List<KeyValue<UncleKeyRecord, BlockHeaderRecord?>> {
+    val reverse = block.getReverse()
+
+    return block.getUncles()
+      .mapIndexed { idx, uncle ->
+
+        KeyValue(
+          UncleKeyRecord
+            .newBuilder()
+            .setUncleHash(uncle.getHash())
+            .build(),
+          if (reverse) null
+          else BlockHeaderRecord.newBuilder(uncle)
+            .setBlockNumber(block.getHeader().getNumber())
+            .setUncleIndex(idx)
+            .build()
+
+        )
+      }
+  }
+
+  private fun generateHardForkBalanceMovements(@Suppress("UNUSED_PARAMETER") key: BlockKeyRecord, event: ChainEventRecord): List<KeyValue<TokenBalanceKeyRecord, TokenBalanceRecord?>> {
+
+    val reverse = event.getReverse()
+    val transferRecord = event.getValue() as DaoHfBalanceTransferRecord
+
+    val from = transferRecord.getFrom()
+    val to = transferRecord.getTo()
+    val amount = transferRecord.getAmount().unsignedBigInteger()!!
+    val balanceType = BalanceType.ETHER
+
+    val fromBalance = KeyValue(
+      TokenBalanceKeyRecord.newBuilder()
+        .setBalanceType(balanceType)
+        .setAddress(from)
+        .build(),
+      TokenBalanceRecord.newBuilder()
+        .setAmount(if (reverse) amount.byteBuffer() else amount.negate().byteBuffer())
+        .build()
+    )
+
+    val toBalance = KeyValue(
+      TokenBalanceKeyRecord.newBuilder()
+        .setBalanceType(balanceType)
+        .setAddress(to)
+        .build(),
+      TokenBalanceRecord.newBuilder()
+        .setAmount(if (reverse) amount.negate().byteBuffer() else amount.byteBuffer())
+        .build()
+    )
+
+    return listOf(fromBalance, toBalance)
+
+  }
+
+  private fun generateRewardBalanceMovements(@Suppress("UNUSED_PARAMETER") key: BlockKeyRecord, event: ChainEventRecord): List<KeyValue<TokenBalanceKeyRecord, TokenBalanceRecord?>> {
+
+    val reverse = event.getReverse()
+    val reward = event.getValue() as BlockRewardRecord
+
+    val author = reward.getAuthor()
+    val amount = reward.getValue().unsignedBigInteger()!!
+
+    // we need to re-serialise the amount as a signed big integer for aggregations later
+
+    return listOf(
+
+      KeyValue(
+        TokenBalanceKeyRecord.newBuilder()
+          .setBalanceType(BalanceType.ETHER)
+          .setAddress(author)
+          .build(),
+        TokenBalanceRecord.newBuilder()
+          .setAmount(if (reverse) amount.negate().byteBuffer() else amount.byteBuffer())
+          .build()
+      ),
+
+      // track reward
+
+      KeyValue(
+        TokenBalanceKeyRecord.newBuilder()
+          .setBalanceType(BalanceType.REWARD)
+          .setAddress(author)
+          .build(),
+        TokenBalanceRecord.newBuilder()
+          .setAmount(if (reverse) amount.negate().byteBuffer() else amount.byteBuffer())
+          .build()
+      )
+
+    )
+  }
+
+  private fun generateTxFeeBalanceMovements(key: BlockKeyRecord, event: ChainEventRecord): List<KeyValue<TokenBalanceKeyRecord, TokenBalanceRecord>> {
+
+    val reverse = event.getReverse()
+    val fee = event.getValue() as TxFeeRecord
+
+    val from = fee.getFrom()
+    val amount = fee.getAmount().unsignedBigInteger()!!
+    val miner = fee.getMiner()
+
+    // we need to re-serialise the amount as a signed big integer for aggregations later
+
+    return listOf(
+
+      // deduct ether from sender
+
+      KeyValue(
+        TokenBalanceKeyRecord.newBuilder()
+          .setBalanceType(BalanceType.ETHER)
+          .setAddress(from)
+          .build(),
+        TokenBalanceRecord.newBuilder()
+          .setAmount(if (reverse) amount.byteBuffer() else amount.negate().byteBuffer())
+          .build()
+      ),
+
+      // add ether to miner
+
+      KeyValue(
+        TokenBalanceKeyRecord.newBuilder()
+          .setBalanceType(BalanceType.ETHER)
+          .setAddress(miner)
+          .build(),
+        TokenBalanceRecord.newBuilder()
+          .setAmount(if (reverse) amount.negate().byteBuffer() else amount.byteBuffer())
+          .build()
+      ),
+
+      // add to miner's tx fees count
+
+      KeyValue(
+        TokenBalanceKeyRecord.newBuilder()
+          .setBalanceType(BalanceType.TX_FEE)
+          .setAddress(miner)
+          .build(),
+        TokenBalanceRecord.newBuilder()
+          .setAmount(if (reverse) amount.negate().byteBuffer() else amount.byteBuffer())
+          .build()
+      )
+
+    )
+
+  }
+
+  private fun generateTokenTransferKey(event: ChainEventRecord): TokenTransferKeyRecord {
+
+    val transfer = event.getValue() as TokenTransferRecord
+
+    // need to create a unique key for the transfer event
+
+    val md = MessageDigest.getInstance("SHA-256")
+
+    val keyComponents = listOf(
+      event.getBlockHash().byteArray(),
+      event.getTxHash().byteArray(),
+      event.getTxIndex().toBigInteger().unsignedBytes(),
+      transfer.getContract()?.byteArray() ?: ByteArray(0),
+      transfer.getFrom().byteArray(),
+      transfer.getTo().byteArray(),
+      transfer.getTokenId()?.byteArray() ?: ByteArray(0),
+      transfer.getAmount()?.byteArray() ?: ByteArray(0)
+    )
+
+    keyComponents.forEach { md.update(it) }
+
+    val hash = md.digest()
+
+    return TokenTransferKeyRecord.newBuilder()
+      .setHash(hash.byteBuffer())
+      .build()
   }
 
   override fun start(cleanUp: Boolean) {

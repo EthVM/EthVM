@@ -98,7 +98,7 @@ contract IERC721Receiver {
      * @param operator The address which called `safeTransferFrom` function
      * @param from The address which previously owned the token
      * @param tokenId The NFT identifier which is being transferred
-     * @param data Additional data with no specified format
+     * @param fixed Additional fixed with no specified format
      * @return `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`
      */
     function onERC721Received(address operator, address from, uint256 tokenId, bytes data) public returns (bytes4);
@@ -348,7 +348,7 @@ contract ERC721 is ERC165, IERC721 {
      * @param from current owner of the token
      * @param to address to receive the ownership of the given token ID
      * @param tokenId uint256 ID of the token to be transferred
-     * @param _data bytes data to send along with a safe transfer check
+     * @param _data bytes fixed to send along with a safe transfer check
      */
     function safeTransferFrom(address from, address to, uint256 tokenId, bytes _data) public {
         transferFrom(from, to, tokenId);
@@ -451,7 +451,7 @@ contract ERC721 is ERC165, IERC721 {
      * @param from address representing the previous owner of the given token ID
      * @param to target address that will receive the tokens
      * @param tokenId uint256 ID of the token to be transferred
-     * @param _data bytes optional data to send along with the call
+     * @param _data bytes optional fixed to send along with the call
      * @return whether the call correctly returned the expected magic value
      */
     function _checkOnERC721Received(address from, address to, uint256 tokenId, bytes _data) internal returns (bool) {
@@ -604,7 +604,7 @@ contract ERC721Enumerable is ERC165, ERC721, IERC721Enumerable {
     }
 
     /**
-     * @dev Private function to add a token to this extension's ownership-tracking data structures.
+     * @dev Private function to add a token to this extension's ownership-tracking fixed structures.
      * @param to address representing the new owner of the given token ID
      * @param tokenId uint256 ID of the token to be added to the tokens list of the given address
      */
@@ -614,7 +614,7 @@ contract ERC721Enumerable is ERC165, ERC721, IERC721Enumerable {
     }
 
     /**
-     * @dev Private function to add a token to this extension's token tracking data structures.
+     * @dev Private function to add a token to this extension's token tracking fixed structures.
      * @param tokenId uint256 ID of the token to be added to the tokens list
      */
     function _addTokenToAllTokensEnumeration(uint256 tokenId) private {
@@ -623,7 +623,7 @@ contract ERC721Enumerable is ERC165, ERC721, IERC721Enumerable {
     }
 
     /**
-     * @dev Private function to remove a token from this extension's ownership-tracking data structures. Note that
+     * @dev Private function to remove a token from this extension's ownership-tracking fixed structures. Note that
      * while the token is not assigned a new owner, the _ownedTokensIndex mapping is _not_ updated: this allows for
      * gas optimizations e.g. when performing a transfer operation (avoiding double writes).
      * This has O(1) time complexity, but alters the order of the _ownedTokens array.
@@ -653,7 +653,7 @@ contract ERC721Enumerable is ERC165, ERC721, IERC721Enumerable {
     }
 
     /**
-     * @dev Private function to remove a token from this extension's token tracking data structures.
+     * @dev Private function to remove a token from this extension's token tracking fixed structures.
      * This has O(1) time complexity, but alters the order of the _allTokens array.
      * @param tokenId uint256 ID of the token to be removed from the tokens list
      */

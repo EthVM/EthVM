@@ -1,7 +1,6 @@
 package io.enkrypt.kafka.streams.utils
 
 import arrow.core.Option
-import io.enkrypt.avro.common.Data32
 import io.enkrypt.common.extensions.byteBuffer
 import org.apache.commons.compress.utils.IOUtils
 import org.ethereum.solidity.Abi
@@ -53,8 +52,8 @@ abstract class AbstractAbi protected constructor(input: InputStream) {
     return Option.fromNullable(functionMap[key])
   }
 
-  fun matchEvent(topics: List<Data32>): Option<Abi.Event> =
+  fun matchEvent(topics: List<ByteBuffer>): Option<Abi.Event> =
     if (topics.isEmpty()) Option.empty() else matchEvent(topics[0])
 
-  fun matchEvent(word: Data32): Option<Abi.Event> = Option.fromNullable(eventMap[word.bytes().byteBuffer()])
+  fun matchEvent(word: ByteBuffer): Option<Abi.Event> = Option.fromNullable(eventMap[word])
 }

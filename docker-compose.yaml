@@ -16,11 +16,13 @@ volumes:
   zookeeper-volume:
 
   parity-volume:
-    driver: local
-    driver_opts:
-      o: "uid=1000"
-      type: tmpfs
-      device: tmpfs
+    external: true
+#    driver: local
+#    driver_opts:
+#      o: "size=10g,uid=1000"
+#      type: tmpfs
+#      device: tmpfs
+
 
 services:
 
@@ -219,20 +221,20 @@ services:
   # Extra Tools (Useful for debugging and helping on Kafka)
   # ///////////////////////////////////////////////////////
 
-  # verifier:
-  #   build:
-  #     context: ./apps/verifier
-  #   networks:
-  #     - back
-  #   depends_on:
-  #     - mongodb
-  #     - kafka-schema-registry
-  #   volumes:
-  #     - ./apps/verifier:/usr/src/app
-  #     - ./apps/common:/usr/src/common
-  #   command: sh -c "yarn install && yarn start verify"
-  #   environment:
-  #     KAFKA_AVRO_LOG_LEVEL: debug
+#  verifier:
+#     build:
+#       context: ./apps/verifier
+#     networks:
+#       - back
+#     depends_on:
+#       - mongodb
+#       - kafka-schema-registry
+#     volumes:
+#       - ./apps/verifier:/usr/src/app
+#       - ./apps/common:/usr/src/common
+#     command: sh -c "yarn install && yarn start kafka"
+#     environment:
+#       KAFKA_AVRO_LOG_LEVEL: debug
 
   ksql-server:
     image: confluentinc/cp-ksql-server:${CP_VERSION}

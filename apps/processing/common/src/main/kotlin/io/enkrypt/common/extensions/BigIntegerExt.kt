@@ -1,6 +1,5 @@
 package io.enkrypt.common.extensions
 
-import org.ethereum.util.ByteUtil
 import java.math.BigInteger
 import java.nio.ByteBuffer
 
@@ -50,6 +49,4 @@ fun BigInteger?.unsignedBytes(numBytes: Int): ByteArray? =
 
 fun BigInteger?.byteBuffer(): ByteBuffer = ByteBuffer.wrap((this ?: BigInteger.ZERO).toByteArray())
 
-fun BigInteger?.unsignedByteBuffer() = if (this != null) ByteBuffer.wrap(this.unsignedBytes()) else null
-
-fun BigInteger?.unsignedHex() = if(this != null) ByteUtil.toHexString(this.unsignedBytes()) else null
+fun BigInteger?.unsignedByteBuffer() = if (this != null) this.unsignedBytes().byteBuffer() else null

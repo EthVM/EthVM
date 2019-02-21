@@ -15,7 +15,7 @@ export KAFKA_CONNECT_DIR="${ROOT_DIR}/kafka-connect"
 
 ensure_kafka_connect() {
 
-  local TIMEOUT=${1:-30}
+  local TIMEOUT=${1:-60}
   local HOST=$(echo ${KAFKA_CONNECT_URL} | awk -F[/:] '{print $4}')
 
   # TODO extract port

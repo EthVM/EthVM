@@ -1,22 +1,23 @@
 package io.enkrypt.common.extensions
 
-import io.enkrypt.avro.common.Data1
-import io.enkrypt.avro.common.Data20
-import io.enkrypt.avro.common.Data256
-import io.enkrypt.avro.common.Data32
-import io.enkrypt.avro.common.Data8
-import org.ethereum.util.ByteUtil
-import java.io.ByteArrayOutputStream
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.nio.ByteBuffer
-import java.util.zip.GZIPOutputStream
 
-fun ByteBuffer?.data1(): Data1? = if (this == null) null else Data1(this.byteArray())
-fun ByteBuffer?.data8(): Data8? = if (this == null) null else Data8(this.byteArray())
-fun ByteBuffer?.data20(): Data20? = if (this == null) null else Data20(this.byteArray())
-fun ByteBuffer?.data32(): Data32? = if (this == null) null else Data32(this.byteArray())
-fun ByteBuffer?.data256(): Data256? = if (this == null) null else Data256(this.byteArray())
+fun ByteBuffer?.fixed(capacity: Int): ByteBuffer? {
+  return if(this == null) {
+    this
+  } else {
+    require(this.capacity() == capacity) { "Must have capacity $capacity" }
+    return this
+  }
+}
+
+fun ByteBuffer?.fixed1(): ByteBuffer? = if (this == null) null else this.fixed(1)
+fun ByteBuffer?.fixed8(): ByteBuffer? = if (this == null) null else this.fixed(8)
+fun ByteBuffer?.fixed20(): ByteBuffer? = if (this == null) null else this.fixed(20)
+fun ByteBuffer?.fixed32(): ByteBuffer? = if (this == null) null else this.fixed(32)
+fun ByteBuffer?.fixed256(): ByteBuffer? = if (this == null) null else this.fixed(256)
 
 fun ByteBuffer?.byteArray(): ByteArray? {
   if (this == null) {
@@ -59,13 +60,24 @@ fun ByteBuffer?.hex(): String? {
   }
   val arr = ByteArray(remaining()).also { get(it) }
   position(0)
-  return ByteUtil.toHexString(arr)
+  return arr.hex()
 }
 
 
-fun ByteBuffer?.gzip(threshold: Int): ByteBuffer? {
-  if(this == null || this.capacity() < threshold) {
-    return null
+fun ByteBuffer?.compress(threshold: Int): ByteBuffer? {
+  return if(this == null || this.capacity() < threshold) {
+    return this
+  } else {
+    ByteBuffer.wrap(this.byteArray().compress(threshold))
   }
-  return ByteBuffer.wrap(this.byteArray().gzip(threshold))
 }
+
+fun ByteBuffer?.decompress(): ByteBuffer? {
+  return if(this == null) {
+    this
+  } else {
+    ByteBuffer.wrap(this.byteArray().decompress())
+  }
+}
+
+

@@ -8,80 +8,51 @@ protocol Capture {
   }
 
   record UncleKeyRecord {
-    io.enkrypt.avro.common.Data32 uncleHash;
+    bytes uncleHash;
   }
 
   record TransactionKeyRecord {
-    io.enkrypt.avro.common.Data32 txHash;
+    bytes txHash;
   }
 
   record LogRecord {
 
-    io.enkrypt.avro.common.Data20 address;
+    bytes address;
     bytes data;
-    array<io.enkrypt.avro.common.Data32> topics = [];
-
-  }
-
-  record InternalTransactionRecord {
-
-    bytes nonce;                                                    // integer the number of transactions made by the sender prior to this one.
-
-    union { null, io.enkrypt.avro.common.Data32 } blockHash = null; // hash of the block where this transaction was in
-    union { null, bytes } blockNumber = null;                       // integer block number where this transaction was in
-    union { null, int } transactionIndex = null;                    // integer of the transactions index position in the block
-    union { null, int } internalTransactionIndex = null;            // integer of the internal transaction index within the transaction
-
-    io.enkrypt.avro.common.Data20 from;                             // address of the sender
-    union { null, io.enkrypt.avro.common.Data20 } to = null;        // address of the receiver. null when its a contract creation transaction.
-
-    bytes value;                                                    // value transferred in Wei.
-    bytes gasPrice;                                                 // gas price provided by the sender in Wei.
-    bytes gas;                                                      // gas provided by the sender.
-
-    union { null, bytes } input = null;                             // the data send along with the transaction.
-
-    union { null, io.enkrypt.avro.common.Data20 } creates = null;   // created contract hash
-    union { null, int } chainId = null;                             // chain id of the transaction, if any
-    union { null, bytes } raw = null;                               // raw transaction data
-
-    int depth;
-    boolean rejected;
-    union { null, string } note = null;
-    union { null, bytes } parentHash = null;
+    array<bytes> topics = [];
 
   }
 
   record TraceRewardActionRecord {
-    io.enkrypt.avro.common.Data20 author;
+    bytes author;
     bytes value;
     string rewardType;
   }
 
   record TraceCallActionRecord {
     string callType;
-    io.enkrypt.avro.common.Data20 from;
-    union { null, io.enkrypt.avro.common.Data20 } to = null;
+    bytes from;
+    union { null, bytes } to = null;
     bytes gas;
     union { null, bytes } input = null;
     bytes value;
   }
 
   record TraceCreateActionRecord {
-    io.enkrypt.avro.common.Data20 from;
+    bytes from;
     bytes gas;
     bytes value;
     bytes init;
   }
 
   record TraceDestroyActionRecord {
-    io.enkrypt.avro.common.Data20 address;
+    bytes address;
     bytes balance;
-    io.enkrypt.avro.common.Data20 refundAddress;
+    bytes refundAddress;
   }
 
   record TraceResultRecord {
-    union{ null, io.enkrypt.avro.common.Data20 } address = null;
+    union{ null, bytes } address = null;
     union { null, bytes } code = null;
     bytes gasUsed;
     union { null, bytes } output = null;
@@ -95,30 +66,30 @@ protocol Capture {
     int subtraces;
     array<int> traceAddress;
     string type;
-    io.enkrypt.avro.common.Data32 blockHash;
+    bytes blockHash;
     bytes blockNumber;
-    io.enkrypt.avro.common.Data32 transactionHash;
+    bytes transactionHash;
     int transactionPosition;
 
   }
 
   record TransactionReceiptRecord {
 
-    union { null, io.enkrypt.avro.common.Data32 } blockHash = null;         // hash of the block where this transaction was in
+    union { null, bytes } blockHash = null;         // hash of the block where this transaction was in
     union { null, bytes } blockNumber = null;                               // integer block number where this transaction was in
 
-    union { null, io.enkrypt.avro.common.Data32 } transactionHash = null;   // hash of the transaction this receipt is for
+    union { null, bytes } transactionHash = null;   // hash of the transaction this receipt is for
     union { null, int } transactionIndex = null;                            // integer of the transactions index position in the block
 
-    union { null, io.enkrypt.avro.common.Data20 } contractAddress = null;   // The contract address created, if the transaction was a contract creation, otherwise null.
+    union { null, bytes } contractAddress = null;   // The contract address created, if the transaction was a contract creation, otherwise null.
 
     bytes cumulativeGasUsed;                                                // The total amount of gas used when this transaction was executed in the block.
     bytes gasUsed;                                                          // The amount of gas used by this specific transaction alone.
 
     array<LogRecord> logs = [];                                             // Array of log objects, which this transaction generated.
-    io.enkrypt.avro.common.Data256 logsBloom;                               // A bloom filter of logs/events generated by contracts during transaction execution. Used to efficiently rule out transactions without expected logs.
+    bytes logsBloom;                               // A bloom filter of logs/events generated by contracts during transaction execution. Used to efficiently rule out transactions without expected logs.
 
-    union { null, io.enkrypt.avro.common.Data32 } root = null;              // Merkle root of the state trie after the transaction has been executed (optional after Byzantium hard fork EIP609)
+    union { null, bytes } root = null;              // Merkle root of the state trie after the transaction has been executed (optional after Byzantium hard fork EIP609)
     union { null, bytes } status = null;                                    // Quantity - 0x0 indicates transaction failure , 0x1 indicates transaction success. Set for blocks mined after Byzantium hard fork EIP609, null before.
 
     array<TraceRecord> traces;
@@ -126,15 +97,15 @@ protocol Capture {
 
   record TransactionRecord {
 
-    io.enkrypt.avro.common.Data32 hash;                             // hash of the transaction.
+    bytes hash;                             // hash of the transaction.
     bytes nonce;                                                    // integer the number of transactions made by the sender prior to this one.
 
-    union { null, io.enkrypt.avro.common.Data32 } blockHash = null; // hash of the block where this transaction was in
+    union { null, bytes } blockHash = null; // hash of the block where this transaction was in
     union { null, bytes } blockNumber = null;                       // integer block number where this transaction was in
     union { null, int } transactionIndex = null;                    // integer of the transactions index position in the block, null when it's pending
 
-    io.enkrypt.avro.common.Data20 from;                             // address of the sender
-    union { null, io.enkrypt.avro.common.Data20 } to = null;        // address of the receiver. null when its a contract creation transaction.
+    bytes from;                             // address of the sender
+    union { null, bytes } to = null;        // address of the receiver. null when its a contract creation transaction.
 
     bytes value;                                                    // value transferred in Wei.
     bytes gasPrice;                                                 // gas price provided by the sender in Wei.
@@ -146,7 +117,7 @@ protocol Capture {
     bytes r;                                                        // integer
     bytes s;                                                        // integer
 
-    union { null, io.enkrypt.avro.common.Data20 } creates = null;  // created contract hash
+    union { null, bytes } creates = null;  // created contract hash
 
     union { null, long } chainId = null;                           // chain id of the transaction, if any
     union { null, bytes } raw = null;                               // raw rlp transaction data
@@ -156,25 +127,20 @@ protocol Capture {
     union { null, TransactionReceiptRecord } receipt = null;      // optional embedded receipt
   }
 
-  record BlockRewardRecord {
-    io.enkrypt.avro.common.Data20 address;
-    bytes reward;
-  }
-
   record BlockHeaderRecord {
 
     union { null, bytes } number = null;                          // The block number. null when its pending block
 
-    io.enkrypt.avro.common.Data32 hash;                           // hash of the block. null when its pending block
-    io.enkrypt.avro.common.Data32 parentHash;                     // hash of the parent block
-    union { null, io.enkrypt.avro.common.Data8 } nonce;           // hash of the generated proof-of-work. null when its pending block. Missing in case of PoA.
-    io.enkrypt.avro.common.Data32 sha3Uncles;                     // SHA3 of the uncles data in the block
-    io.enkrypt.avro.common.Data256 logsBloom;                     // the bloom filter for the logs of the block. null when its pending block
-    io.enkrypt.avro.common.Data32 transactionsRoot;               // the root of the transaction trie of the block
-    io.enkrypt.avro.common.Data32 stateRoot;                      // the root of the final state trie of the block
-    io.enkrypt.avro.common.Data32 receiptsRoot;                   // the root of the receipts trie of the block
+    bytes hash;                           // hash of the block. null when its pending block
+    bytes parentHash;                     // hash of the parent block
+    union { null, bytes } nonce;           // hash of the generated proof-of-work. null when its pending block. Missing in case of PoA.
+    bytes sha3Uncles;                     // SHA3 of the uncles data in the block
+    bytes logsBloom;                     // the bloom filter for the logs of the block. null when its pending block
+    bytes transactionsRoot;               // the root of the transaction trie of the block
+    bytes stateRoot;                      // the root of the final state trie of the block
+    bytes receiptsRoot;                   // the root of the receipts trie of the block
 
-    io.enkrypt.avro.common.Data20 @aliases(["miner"]) author;     // the address of the author of the block (the beneficiary to whom the mining rewards were given)
+    bytes @aliases(["miner"]) author;     // the address of the author of the block (the beneficiary to whom the mining rewards were given)
 
     bytes difficulty;                                             // integer of the difficulty for this block
     union { null, bytes } extraData = null;                       // the ‘extra data’ field of this block
@@ -193,9 +159,10 @@ protocol Capture {
 
   }
 
-  record PremineBalanceRecord {
-    io.enkrypt.avro.common.Data20 address;
-    bytes balance;
+  record BlockRewardRecord {
+    string rewardType;
+    bytes author;
+    bytes value;
   }
 
   record BlockRecord {
@@ -203,12 +170,13 @@ protocol Capture {
     BlockHeaderRecord header;
 
     bytes totalDifficulty;                                        // integer of the total difficulty of the chain until this block
-
     array<TransactionRecord> transactions = [];                   // array of transaction objects
 
-    io.enkrypt.avro.common.Data32 sha3Uncles;                     // hash of uncles
-    array<io.enkrypt.avro.common.Data32> uncleHashes;              // each uncle hash
+    bytes sha3Uncles;                     // hash of uncles
+    array<bytes> uncleHashes;              // each uncle hash
     array<BlockHeaderRecord> uncles = [];                         // array of uncle headers
+
+    array<BlockRewardRecord> rewards = [];
 
     boolean reverse = false;                                      // whether this block summary should be applied or reversed from cumulative state
     int numPendingTxs = 0;                                        // count as of time of processing

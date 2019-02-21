@@ -125,7 +125,7 @@ enum class TopicWriteGenerators(
     when {
       record.value() == null -> {
 
-        // TODO determine how to handle tombstones in light of merging with data from ethlists
+        // TODO determine how to handle tombstones in light of merging with fixed from ethlists
       }
       else -> {
 

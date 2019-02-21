@@ -2,10 +2,9 @@ package io.enkrypt.kafka.connect.sources.web3
 
 import arrow.core.Tuple3
 import io.enkrypt.avro.capture.BlockRecord
-import io.enkrypt.common.extensions.hexToUBigInteger
+import io.enkrypt.common.extensions.hexUBigInteger
 import io.enkrypt.kafka.connect.extensions.JsonRpc2_0ParityExtended
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import mu.KotlinLogging
 import org.web3j.protocol.core.DefaultBlockParameter
 import java.math.BigInteger
@@ -28,7 +27,7 @@ class ParitySyncManager(val parity: JsonRpc2_0ParityExtended, synced: BigInteger
     subscription = parity
       .newHeadsNotifications()
       .map { it.params.result }
-      .map { it.number.hexToUBigInteger()!! to it.hash }
+      .map { it.number.hexUBigInteger()!! to it.hash }
       .buffer(1000, TimeUnit.MILLISECONDS, 128)
       .subscribe { heads ->
 
@@ -107,11 +106,11 @@ class ParitySyncManager(val parity: JsonRpc2_0ParityExtended, synced: BigInteger
 
   private fun fetchRange(range: ClosedRange<BigInteger>): List<BlockData> {
 
-    logger.info { "Fetching block data. Start = ${range.start}, end = ${range.endInclusive}" }
+    logger.info { "Fetching block fixed. Start = ${range.start}, end = ${range.endInclusive}" }
 
     // force into long for iteration
 
-    val longRange = range.start.longValueExact() until range.endInclusive.longValueExact()
+    val longRange = LongRange(range.start.longValueExact(), range.endInclusive.longValueExact())
 
     val futures = longRange.map { blockNumber ->
 
@@ -140,7 +139,7 @@ class ParitySyncManager(val parity: JsonRpc2_0ParityExtended, synced: BigInteger
       BlockData(block, uncles, receipts, traces)
     }
 
-    logger.info { "Finished syncing block data. Start = ${range.start}, end = ${range.endInclusive}" }
+    logger.info { "Finished syncing block fixed. Start = ${range.start}, end = ${range.endInclusive}" }
 
     return result
 
