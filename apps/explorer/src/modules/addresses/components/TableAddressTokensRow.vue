@@ -59,7 +59,7 @@ export default class TableAddressTokensRow extends Mixins(StringConcatMixin) {
   ===================================================================================
   */
 
-  get tokenLink():string {
+  get tokenLink(): string {
     return `/token/${this.token.addr}?holder=${this.holder}`
   }
 }
