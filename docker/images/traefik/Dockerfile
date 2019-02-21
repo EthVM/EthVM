@@ -8,8 +8,6 @@ ENV DEBUG true
 ENV LOG_LEVEL DEBUG
 ENV SWARM_MODE true
 
-
-
 # Install dockerize
 
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \

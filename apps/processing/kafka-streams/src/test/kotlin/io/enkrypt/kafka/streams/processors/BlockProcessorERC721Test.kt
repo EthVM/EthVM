@@ -3,6 +3,7 @@ package io.enkrypt.kafka.streams.processors
 import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.common.ContractType
+import io.enkrypt.avro.processing.BalanceType
 import io.enkrypt.avro.processing.BalanceType.ERC721
 import io.enkrypt.common.extensions.AvroHelpers.contractCreation
 import io.enkrypt.common.extensions.AvroHelpers.contractKey
@@ -75,13 +76,13 @@ class BlockProcessorERC721Test : BehaviorSpec() {
 
         then("there should be a token movement deducting the tx fee from the sender") {
           val record = readFungibleTokenMovement(testDriver)!!
-          record.key() shouldBe tokenKey(Bob.address.data20())
+          record.key() shouldBe tokenKey(Bob.address.data20(), balanceType = BalanceType.FEE)
           record.value() shouldBe tokenBalance(294265.microEther().negate().byteBuffer())
         }
 
         then("there should be a token movement adding the tx fee to the miner") {
           val record = readFungibleTokenMovement(testDriver)!!
-          record.key() shouldBe tokenKey(Coinbase.address.data20())
+          record.key() shouldBe tokenKey(Coinbase.address.data20(), balanceType = BalanceType.FEE)
           record.value() shouldBe tokenBalance(294265.microEther().byteBuffer())
         }
 
@@ -120,13 +121,13 @@ class BlockProcessorERC721Test : BehaviorSpec() {
 
         then("there should be a token movement deducting the first tx fee from the sender") {
           val record = readFungibleTokenMovement(testDriver)!!
-          record.key() shouldBe tokenKey(Bob.address.data20())
+          record.key() shouldBe tokenKey(Bob.address.data20(), balanceType = BalanceType.FEE)
           record.value() shouldBe tokenBalance(15867200.gwei().negate().byteBuffer())
         }
 
         then("there should be a token movement adding the first tx fee to the miner") {
           val record = readFungibleTokenMovement(testDriver)!!
-          record.key() shouldBe tokenKey(Coinbase.address.data20())
+          record.key() shouldBe tokenKey(Coinbase.address.data20(), balanceType = BalanceType.FEE)
           record.value() shouldBe tokenBalance(15867200.gwei().byteBuffer())
         }
 
@@ -138,13 +139,13 @@ class BlockProcessorERC721Test : BehaviorSpec() {
 
         then("there should be a token movement deducting the second tx fee from the sender") {
           val record = readFungibleTokenMovement(testDriver)!!
-          record.key() shouldBe tokenKey(Bob.address.data20())
+          record.key() shouldBe tokenKey(Bob.address.data20(), balanceType = BalanceType.FEE)
           record.value() shouldBe tokenBalance(15867200.gwei().negate().byteBuffer())
         }
 
         then("there should be a token movement adding the second tx fee to the miner") {
           val record = readFungibleTokenMovement(testDriver)!!
-          record.key() shouldBe tokenKey(Coinbase.address.data20())
+          record.key() shouldBe tokenKey(Coinbase.address.data20(), balanceType = BalanceType.FEE)
           record.value() shouldBe tokenBalance(15867200.gwei().byteBuffer())
         }
 
@@ -156,13 +157,13 @@ class BlockProcessorERC721Test : BehaviorSpec() {
 
         then("there should be a token movement deducting the third tx fee from the sender") {
           val record = readFungibleTokenMovement(testDriver)!!
-          record.key() shouldBe tokenKey(Bob.address.data20())
+          record.key() shouldBe tokenKey(Bob.address.data20(), balanceType = BalanceType.FEE)
           record.value() shouldBe tokenBalance(15867200.gwei().negate().byteBuffer())
         }
 
         then("there should be a token movement adding the third tx fee to the miner") {
           val record = readFungibleTokenMovement(testDriver)!!
-          record.key() shouldBe tokenKey(Coinbase.address.data20())
+          record.key() shouldBe tokenKey(Coinbase.address.data20(), balanceType = BalanceType.FEE)
           record.value() shouldBe tokenBalance(15867200.gwei().byteBuffer())
         }
 
@@ -191,13 +192,13 @@ class BlockProcessorERC721Test : BehaviorSpec() {
 
         then("there should be a token movement deducting the tx fee from the sender") {
           val record = readFungibleTokenMovement(testDriver)!!
-          record.key() shouldBe tokenKey(Alice.address.data20())
+          record.key() shouldBe tokenKey(Alice.address.data20(), balanceType = BalanceType.FEE)
           record.value() shouldBe tokenBalance(5797.microEther().negate().byteBuffer())
         }
 
         then("there should be a token movement adding the tx fee to the miner") {
           val record = readFungibleTokenMovement(testDriver)!!
-          record.key() shouldBe tokenKey(Coinbase.address.data20())
+          record.key() shouldBe tokenKey(Coinbase.address.data20(), balanceType = BalanceType.FEE)
           record.value() shouldBe tokenBalance(5797.microEther().byteBuffer())
         }
 

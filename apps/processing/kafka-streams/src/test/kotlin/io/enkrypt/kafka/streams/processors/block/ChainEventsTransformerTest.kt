@@ -2,6 +2,7 @@ package io.enkrypt.kafka.streams.processors.block
 
 import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
+import io.enkrypt.avro.processing.BalanceType
 import io.enkrypt.common.extensions.AvroHelpers.tokenBalance
 import io.enkrypt.common.extensions.AvroHelpers.tokenKey
 import io.enkrypt.common.extensions.byteBuffer
@@ -77,22 +78,22 @@ class ChainEventsTransformerTest : BehaviorSpec() {
           movements shouldContainAll listOf(
             // block one
             Pair(tokenKey(Coinbase.address.data20()), tokenBalance(3.ether().byteBuffer())),
-            Pair(tokenKey(Bob.address.data20()), tokenBalance(2100.microEther().negate().byteBuffer())),
-            Pair(tokenKey(Coinbase.address.data20()), tokenBalance(2100.microEther().byteBuffer())),
+            Pair(tokenKey(Bob.address.data20(), balanceType = BalanceType.FEE), tokenBalance(2100.microEther().negate().byteBuffer())),
+            Pair(tokenKey(Coinbase.address.data20(), balanceType = BalanceType.FEE), tokenBalance(2100.microEther().byteBuffer())),
             Pair(tokenKey(Bob.address.data20()), tokenBalance(1.ether().negate().byteBuffer())),
             Pair(tokenKey(Alice.address.data20()), tokenBalance(1.ether().byteBuffer())),
 
             // block two
             Pair(tokenKey(Coinbase.address.data20()), tokenBalance(3.ether().byteBuffer())),
-            Pair(tokenKey(Alice.address.data20()), tokenBalance(2100.microEther().negate().byteBuffer())),
-            Pair(tokenKey(Coinbase.address.data20()), tokenBalance(2100.microEther().byteBuffer())),
+            Pair(tokenKey(Alice.address.data20(), balanceType = BalanceType.FEE), tokenBalance(2100.microEther().negate().byteBuffer())),
+            Pair(tokenKey(Coinbase.address.data20(), balanceType = BalanceType.FEE), tokenBalance(2100.microEther().byteBuffer())),
             Pair(tokenKey(Alice.address.data20()), tokenBalance(2.ether().negate().byteBuffer())),
             Pair(tokenKey(Terence.address.data20()), tokenBalance(2.ether().byteBuffer())),
 
             // block three
             Pair(tokenKey(Coinbase.address.data20()), tokenBalance(3.ether().byteBuffer())),
-            Pair(tokenKey(Terence.address.data20()), tokenBalance(2100.microEther().negate().byteBuffer())),
-            Pair(tokenKey(Coinbase.address.data20()), tokenBalance(2100.microEther().byteBuffer())),
+            Pair(tokenKey(Terence.address.data20(), balanceType = BalanceType.FEE), tokenBalance(2100.microEther().negate().byteBuffer())),
+            Pair(tokenKey(Coinbase.address.data20(), balanceType = BalanceType.FEE), tokenBalance(2100.microEther().byteBuffer())),
             Pair(tokenKey(Terence.address.data20()), tokenBalance(5.ether().negate().byteBuffer())),
             Pair(tokenKey(Bob.address.data20()), tokenBalance(5.ether().byteBuffer()))
           )
@@ -106,15 +107,15 @@ class ChainEventsTransformerTest : BehaviorSpec() {
           movements shouldContainAll listOf(
             // block two
             Pair(tokenKey(Coinbase.address.data20()), tokenBalance(3.ether().negate().byteBuffer())),
-            Pair(tokenKey(Alice.address.data20()), tokenBalance(2100.microEther().byteBuffer())),
-            Pair(tokenKey(Coinbase.address.data20()), tokenBalance(2100.microEther().negate().byteBuffer())),
+            Pair(tokenKey(Alice.address.data20(), balanceType = BalanceType.FEE), tokenBalance(2100.microEther().byteBuffer())),
+            Pair(tokenKey(Coinbase.address.data20(), balanceType = BalanceType.FEE), tokenBalance(2100.microEther().negate().byteBuffer())),
             Pair(tokenKey(Alice.address.data20()), tokenBalance(2.ether().byteBuffer())),
             Pair(tokenKey(Terence.address.data20()), tokenBalance(2.ether().negate().byteBuffer())),
 
             // block three
             Pair(tokenKey(Coinbase.address.data20()), tokenBalance(3.ether().negate().byteBuffer())),
-            Pair(tokenKey(Terence.address.data20()), tokenBalance(2100.microEther().byteBuffer())),
-            Pair(tokenKey(Coinbase.address.data20()), tokenBalance(2100.microEther().negate().byteBuffer())),
+            Pair(tokenKey(Terence.address.data20(), balanceType = BalanceType.FEE), tokenBalance(2100.microEther().byteBuffer())),
+            Pair(tokenKey(Coinbase.address.data20(), balanceType = BalanceType.FEE), tokenBalance(2100.microEther().negate().byteBuffer())),
             Pair(tokenKey(Terence.address.data20()), tokenBalance(5.ether().byteBuffer())),
             Pair(tokenKey(Bob.address.data20()), tokenBalance(5.ether().negate().byteBuffer()))
           )

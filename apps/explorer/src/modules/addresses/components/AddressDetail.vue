@@ -27,10 +27,17 @@
       <app-copy-to-clip :value-to-copy="account.address" />
       <address-qr :address-qr="account.address" />
     </v-layout>
+    <!--
+    =====================================================================================
+      BLOCKS
+    =====================================================================================
+    -->
     <v-layout row wrap justify-space-between mb-4>
+      <!-- Ether Balance -->
       <v-flex xs12 md4>
         <v-card class="primary white--text pl-2" flat>
           <v-card-text class="pb-0">{{ $t('addrOverview.balance') }}</v-card-text>
+          <!-- isShortValue -->
           <v-layout align-center row v-if="!isShortValue(account.balance.toEth().toString())">
             <v-card-title class="headline text-truncate pr-1">{{ getShortValue(account.balance.toEth()) }} {{ $t('common.eth') }} </v-card-title>
             <v-tooltip bottom>
@@ -38,21 +45,27 @@
               <span>{{ formatStr(account.balance.toEth().toString()) }} {{ $t('common.eth') }}</span>
             </v-tooltip>
           </v-layout>
+          <!-- !isShortValue -->
           <v-card-title v-else class="headline text-truncate">{{ account.balance.toEth() }} {{ $t('common.eth') }}</v-card-title>
         </v-card>
       </v-flex>
+      <!-- End Ether Balance -->
+      <!-- USD Value -->
       <v-flex xs12 md4>
         <v-card class="error white--text pl-2" flat>
           <v-card-text class="pb-0">{{ $t('addrOverview.usd') }} (1{{ $t('common.eth') }} = ${{ getRoundNumber(account.exchangeRate.USD) }})</v-card-text>
           <v-card-title class="headline text-truncate">${{ getRoundNumber(account.balance.toEth() * account.exchangeRate.USD) }}</v-card-title>
         </v-card>
       </v-flex>
+      <!-- End USD Value -->
+      <!-- Number of TX -->
       <v-flex xs12 md4>
         <v-card class="warning white--text pl-2" flat>
           <v-card-text class="pb-0">{{ $t('addrOverview.txN') }}</v-card-text>
           <v-card-title class="headline">{{ formatStr(account.totalTxs.toString()) }}</v-card-title>
         </v-card>
       </v-flex>
+      <!-- End Number of Tx -->
     </v-layout>
   </v-card>
 </template>

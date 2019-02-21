@@ -1,6 +1,7 @@
 package io.enkrypt.kafka.streams.processors.block
 
 import io.enkrypt.avro.common.ContractType
+import io.enkrypt.avro.processing.BalanceType
 import io.enkrypt.common.extensions.data20
 import io.enkrypt.common.extensions.data32
 import io.enkrypt.common.extensions.ether
@@ -91,7 +92,8 @@ class ContractChainEventsTest : BehaviorSpec() {
             block.txFees()[0].unsignedByteBuffer()!!,
             timestamp = timestamp,
             blockHash = blockHash,
-            txHash = tx.hash.data32()
+            txHash = tx.hash.data32(),
+            transferType = BalanceType.FEE
           )
         }
 
@@ -130,14 +132,15 @@ class ContractChainEventsTest : BehaviorSpec() {
           )
         }
 
-        then("there should be a transaction fee ether transfer") {
+        then("there should be a transaction fee") {
           chainEvents[1] shouldBe fungibleTransfer(
             Bob.address.data20()!!,
             Coinbase.address.data20()!!,
             block.txFees()[0].unsignedByteBuffer()!!,
             timestamp = timestamp,
             blockHash = blockHash,
-            txHash = tx.hash.data32()
+            txHash = tx.hash.data32(),
+            transferType = BalanceType.FEE
           )
         }
 
@@ -191,14 +194,15 @@ class ContractChainEventsTest : BehaviorSpec() {
           )
         }
 
-        then("there should be a transaction fee ether transfer") {
+        then("there should be a transaction fee") {
           chainEvents[1] shouldBe fungibleTransfer(
             Bob.address.data20()!!,
             Coinbase.address.data20()!!,
             block.txFees()[0].unsignedByteBuffer()!!,
             timestamp = timestamp,
             blockHash = blockHash,
-            txHash = destroyTx.hash.data32()
+            txHash = destroyTx.hash.data32(),
+            transferType = BalanceType.FEE
           )
         }
 
