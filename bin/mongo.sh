@@ -9,7 +9,7 @@ source ${SCRIPT_DIR}/env.sh
 ensure
 
 # Define variables
-DATASET="ethereum_mainnet.mongo.archive"
+DATASET="ethereum_mainnet.500k.mongo.archive"
 
 # kafka_usage - prints kafka subcommand usage
 kafka_usage() {
@@ -55,6 +55,7 @@ bootstrap() {
 # fetch - grabs a concrete dataset from S3 storage
 fetch() {
   echo "Checking current dataset..."
+  mkdir -p ${ROOT_DIR}/datasets
   [[ -f ${ROOT_DIR}/datasets/${DATASET} ]] && cd ${ROOT_DIR}/datasets/ && aws s3 cp s3://ethvm/${DATASET}.md5 - | md5sum --check -
   [[ $? -ne 0 ]] && aws s3 cp s3://ethvm/${DATASET} ${ROOT_DIR}/datasets/${DATASET} || echo "You're using latest dataset version!"
 }
