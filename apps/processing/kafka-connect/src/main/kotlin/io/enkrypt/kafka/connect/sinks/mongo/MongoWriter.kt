@@ -31,14 +31,14 @@ class MongoWriter {
   private var collections: Map<MongoCollections, MongoCollection<BsonDocument>> = emptyMap()
   private var pendingWrites: List<Future<Void>> = emptyList()
 
-  private lateinit var db: MongoDatabase
-  private lateinit var executor: ExecutorService
+  private var db: MongoDatabase? = null
+  private var executor: ExecutorService? = null
 
   fun addTopics(topics: Set<String>) {
     logger.info { "Adding topics: $topics" }
     collections = collections + topics
       .map { MongoCollections.forTopic(it)!! }
-      .map { it to db.getCollection(it.id, BsonDocument::class.java) }
+      .map { it to db!!.getCollection(it.id, BsonDocument::class.java) }
   }
 
   fun start(client: MongoClient, connectionString: ConnectionString) {
@@ -57,7 +57,7 @@ class MongoWriter {
           wait(30, TimeUnit.SECONDS)
         }
 
-        executor.submit(BulkWriteTask(batch))
+        executor!!.submit(BulkWriteTask(batch))
         batchesInFlight.incrementAndGet()
       }.lastOrNull()
 
@@ -104,8 +104,8 @@ class MongoWriter {
   }
 
   fun stop() {
-    executor.shutdown()
-    executor.awaitTermination(30, TimeUnit.SECONDS)
+    executor?.shutdown()
+    executor?.awaitTermination(30, TimeUnit.SECONDS)
     logger.info { "Stopped" }
   }
 

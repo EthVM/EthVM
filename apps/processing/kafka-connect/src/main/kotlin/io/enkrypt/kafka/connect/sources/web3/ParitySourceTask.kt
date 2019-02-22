@@ -27,10 +27,6 @@ class ParitySourceTask : SourceTask() {
 
   private val logger = KotlinLogging.logger {}
 
-  private val queueSize = 1024
-  private val pollTimeoutMs = 1000L
-  private val queueCheckIntervalMs = 10L
-
   private lateinit var wsUrl: String
   private lateinit var blocksTopic: String
 
@@ -39,25 +35,14 @@ class ParitySourceTask : SourceTask() {
   private lateinit var blockKeyConnectSchema: Schema
   private lateinit var blockValueConnectSchema: Schema
 
-  private lateinit var blockNumber: AtomicInteger
-
-  private lateinit var queue: ArrayBlockingQueue<SourceRecord>
-
   private lateinit var syncManager: ParitySyncManager
-
-  @Volatile
-  private var error: Throwable? = null
 
   @Volatile
   private var web3: JsonRpc2_0ParityExtended? = null
 
   override fun version(): String = Versions.CURRENT
 
-  override fun start(props: MutableMap<String, String>?) {
-
-    queue = ArrayBlockingQueue(queueSize)
-
-    val registryUrl = ParitySourceConnector.Config.schemaRegistryUrl(props!!)
+  override fun start(props: MutableMap<String, String>) {
 
     blocksTopic = ParitySourceConnector.Config.blocksTopic(props)
 
@@ -79,7 +64,7 @@ class ParitySourceTask : SourceTask() {
 
   private fun connect() {
 
-    logger.info { "Connecting to $wsUrl" }
+    logger.debug { "Connecting to $wsUrl" }
 
     val wsService = WebSocketService(wsUrl, false)
     wsService.connect()
@@ -87,16 +72,15 @@ class ParitySourceTask : SourceTask() {
     this.web3 = JsonRpc2_0ParityExtended(wsService)
 
     val blockNumber = recoverBlockNumber()
-    logger.info{ "Recovered block number: $blockNumber"}
+    logger.debug { "Recovered block number: $blockNumber" }
     syncManager = ParitySyncManager(web3!!, blockNumber)
   }
 
   private fun recoverBlockNumber(): BigInteger {
 
-
     val sourcePartition = context
       .offsetStorageReader()
-      .offset(mapOf("topic" to blocksTopic))
+      .offset(mapOf("wsUrl" to wsUrl))
 
     logger.info { "Source partition: $sourcePartition"}
 
@@ -113,13 +97,19 @@ class ParitySourceTask : SourceTask() {
   }
 
   override fun stop() {
-    web3?.shutdown()
+    logger.debug { "Stopping" }
+
     syncManager.stop()
+    web3?.shutdown()
+
+    logger.debug{ "Stopped" }
   }
 
   override fun poll(): MutableList<SourceRecord> {
 
-    logger.info { "Polling" }
+    context
+
+    logger.debug { "Polling" }
 
     val blockRecords = syncManager.poll(10, TimeUnit.SECONDS)
 
@@ -136,7 +126,7 @@ class ParitySourceTask : SourceTask() {
             .build()
         ).value()
 
-        val source = mapOf("topic" to blocksTopic)
+        val source = mapOf("wsUrl" to wsUrl)
         val offset = mapOf("number" to number.unsignedBigInteger()!!.longValueExact())
 
         val value = avroData.toConnectData(BlockRecord.`SCHEMA$`, record).value()
@@ -144,9 +134,7 @@ class ParitySourceTask : SourceTask() {
         SourceRecord(source, offset, blocksTopic, blockKeyConnectSchema, key, blockValueConnectSchema, value)
       }
 
-    logger.info { "Polled ${blockRecords.size} block records" }
-
-    Thread.sleep(1000)
+    logger.debug { "Polled ${blockRecords.size} block records" }
 
     return sourceRecords.toMutableList()
   }

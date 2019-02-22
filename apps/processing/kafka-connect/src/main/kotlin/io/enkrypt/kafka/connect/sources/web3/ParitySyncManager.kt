@@ -5,20 +5,21 @@ import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.common.extensions.hexUBigInteger
 import io.enkrypt.kafka.connect.extensions.JsonRpc2_0ParityExtended
 import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import mu.KotlinLogging
 import org.web3j.protocol.core.DefaultBlockParameter
 import java.math.BigInteger
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicLong
 
 class ParitySyncManager(val parity: JsonRpc2_0ParityExtended, synced: BigInteger) {
 
   private val logger = KotlinLogging.logger {}
 
   private val executor = Executors.newSingleThreadExecutor()
-  private val fetchQueue = ArrayBlockingQueue<List<BlockData>>(30)
+
+  private val fetchRanges = ArrayBlockingQueue<ClosedRange<BigInteger>>(20)
 
   private var historicFetchComplete = false
   private var subscription: Disposable
@@ -30,9 +31,11 @@ class ParitySyncManager(val parity: JsonRpc2_0ParityExtended, synced: BigInteger
 
     subscription = parity
       .newHeadsNotifications()
+      .observeOn(Schedulers.single())
       .map { it.params.result }
       .map { it.number.hexUBigInteger()!! to it.hash }
       .buffer(1000, TimeUnit.MILLISECONDS, 128)
+      .onBackpressureBuffer()
       .subscribe { heads ->
 
         if (heads.isNotEmpty()) {
@@ -48,17 +51,15 @@ class ParitySyncManager(val parity: JsonRpc2_0ParityExtended, synced: BigInteger
             // Ranges are inclusive so we add one to the start when we are finished
 
             rangesFor(synced, start)
-              .forEach { range -> executor.submit { fetchQueue.add(fetchRange(range)) } }
+              .forEach { range -> fetchRanges.put(range) }
 
             historicFetchComplete = true
             start += BigInteger.ONE
 
           }
 
-          executor.submit { fetchQueue.add(fetchRange(start.rangeTo(end))) }
-
+          executor.submit { fetchRanges.put(start.rangeTo(end)) }
         }
-
       }
   }
 
@@ -130,39 +131,46 @@ class ParitySyncManager(val parity: JsonRpc2_0ParityExtended, synced: BigInteger
 
   fun poll(timeout: Long, unit: TimeUnit): List<BlockRecord.Builder> {
 
-    val lists = mutableListOf<List<BlockData>>()
+    val ranges = mutableListOf<ClosedRange<BigInteger>>()
 
     val timeoutMs = unit.toMillis(timeout)
     val startedMs = System.currentTimeMillis()
     var elapsedMs = 0L
 
-    while (elapsedMs < timeoutMs && fetchQueue.drainTo(lists) == 0) {
+    while (elapsedMs < timeoutMs && fetchRanges.drainTo(ranges) == 0) {
       Thread.sleep(1000)
       elapsedMs = System.currentTimeMillis() - startedMs
     }
 
-    return lists.map { list ->
-      list.map { blockData ->
+    return ranges
+      .map{ executor.submit<List<BlockData>> { fetchRange(it) } }
+      .map{ it.get(timeout, unit) }
+      .map{ blocks ->
 
-        // we track the sequence of block numbers to identify any gap in retrieval
-        val number = blockData.block.number
-        val expectedNumber = blockNumber + BigInteger.ONE
+        blocks.map { blockData ->
 
-        require(number == expectedNumber) { "Sequence gap detected. Expected $expectedNumber, received $number" }
+          // we track the sequence of block numbers to identify any gap in retrieval
+          val number = blockData.block.number
+          val expectedNumber = blockNumber + BigInteger.ONE
 
-        blockNumber = number
+          require(number == expectedNumber) { "Sequence gap detected. Expected $expectedNumber, received $number" }
 
-        // convert to block record
-        blockData.toBlockRecord()
-      }
-    }.flatten()
+          blockNumber = number
+
+          // convert to block record
+          blockData.toBlockRecord()
+
+        }
+
+      }.flatten()
 
   }
 
-  fun stop() {
+  fun stop(timeout: Long = 60, unit: TimeUnit = TimeUnit.SECONDS) {
     subscription.dispose()
+    executor.shutdownNow()
+    executor.awaitTermination(timeout, unit)
   }
-
 
 }
 
