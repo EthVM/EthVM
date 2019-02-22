@@ -11,7 +11,7 @@
       </v-flex>
       <v-flex xs12 sm6 v-if="pages > 1">
         <v-layout justify-end class="pb-1 pr-2 pl-2">
-          <app-paginate :total="pages" @newPage="setPage" :current-page="page" :hasInput="false" :hasFirst="false" :hasLast="false" />
+          <app-paginate :total="pages" @newPage="setPage" :current-page="page" :has-input="false" :has-first="false" :has-last="false" />
         </v-layout>
       </v-flex>
     </v-layout>
@@ -75,7 +75,7 @@
         </v-flex>
         <v-flex xs12>
           <v-layout justify-end v-if="pages > 1" class="pr-2 pl-2">
-            <app-paginate :total="pages" @newPage="setPage" :current-page="page" :hasInput="false" :hasFirst="false" :hasLast="false" />
+            <app-paginate :total="pages" @newPage="setPage" :current-page="page" :has-input="false" :has-first="false" :has-last="false" />
           </v-layout>
         </v-flex>
       </v-layout>
