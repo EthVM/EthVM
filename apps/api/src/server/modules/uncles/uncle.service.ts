@@ -5,6 +5,7 @@ export interface UnclesService {
   getUncles(limit: number, page: number, fromUncle: number): Promise<Uncle[]>
   getUncle(hash: string): Promise<Uncle | null>
   getTotalNumberOfUncles(): Promise<number>
+  getLatestUncleBlockNumber(): Promise<number>
 }
 
 export class UnclesServiceImpl implements UnclesService {
@@ -20,5 +21,9 @@ export class UnclesServiceImpl implements UnclesService {
 
   public getTotalNumberOfUncles(): Promise<number> {
     return this.uncleRepository.getTotalNumberOfUncles()
+  }
+
+  public getLatestUncleBlockNumber(): Promise<number> {
+    return this.uncleRepository.getLatestUncleBlockNumber()
   }
 }

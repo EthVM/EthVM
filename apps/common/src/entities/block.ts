@@ -12,7 +12,7 @@ export interface Reward {
 }
 
 export interface Header {
-  number: string
+  number: number
   hash: string
   parentHash: string
   nonce: string

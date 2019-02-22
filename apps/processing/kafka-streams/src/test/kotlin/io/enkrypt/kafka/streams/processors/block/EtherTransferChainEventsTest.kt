@@ -73,7 +73,7 @@ class EtherTransferChainEventsTest : BehaviorSpec() {
             timestamp = timestamp,
             blockHash = blockHash,
             txHash = txZero.hash.data32(),
-            transferType = BalanceType.ETHER,
+            transferType = BalanceType.FEE,
             txIndex = 0
           ) // tx fee
           chainEvents[2] shouldBe fungibleTransfer(
@@ -96,7 +96,7 @@ class EtherTransferChainEventsTest : BehaviorSpec() {
             timestamp = timestamp,
             blockHash = blockHash,
             txHash = txOne.hash.data32(),
-            transferType = BalanceType.ETHER,
+            transferType = BalanceType.FEE,
             txIndex = 1
           ) // tx fee
           chainEvents[4] shouldBe fungibleTransfer(
@@ -119,7 +119,7 @@ class EtherTransferChainEventsTest : BehaviorSpec() {
             timestamp = timestamp,
             blockHash = blockHash,
             txHash = txTwo.hash.data32(),
-            transferType = BalanceType.ETHER,
+            transferType = BalanceType.FEE,
             txIndex = 2
           ) // tx fee
           chainEvents[6] shouldBe fungibleTransfer(
@@ -151,11 +151,11 @@ class EtherTransferChainEventsTest : BehaviorSpec() {
 
           reversedChainEvents shouldContainExactly listOf(
             blockReward(Coinbase.address.data20()!!, 3.ether().unsignedByteBuffer()!!, true),
-            fungibleTransfer(Bob.address.data20()!!, Coinbase.address.data20()!!, 21000.gwei().unsignedByteBuffer()!!, true, null, timestamp, blockHash, txZero.hash.data32(), 0, transferType = BalanceType.ETHER),
+            fungibleTransfer(Bob.address.data20()!!, Coinbase.address.data20()!!, 21000.gwei().unsignedByteBuffer()!!, true, null, timestamp, blockHash, txZero.hash.data32(), 0, transferType = BalanceType.FEE),
             fungibleTransfer(Bob.address.data20()!!, Alice.address.data20()!!, 50.gwei().unsignedByteBuffer()!!, true, null, timestamp, blockHash, txZero.hash.data32(), 0, transferType = BalanceType.ETHER),
-            fungibleTransfer(Alice.address.data20()!!, Coinbase.address.data20()!!, 21000.gwei().unsignedByteBuffer()!!, true, null, timestamp, blockHash, txOne.hash.data32(), 1, transferType = BalanceType.ETHER),
+            fungibleTransfer(Alice.address.data20()!!, Coinbase.address.data20()!!, 21000.gwei().unsignedByteBuffer()!!, true, null, timestamp, blockHash, txOne.hash.data32(), 1, transferType = BalanceType.FEE),
             fungibleTransfer(Alice.address.data20()!!, Terence.address.data20()!!, 25.gwei().unsignedByteBuffer()!!, true, null, timestamp, blockHash, txOne.hash.data32(), 1, transferType = BalanceType.ETHER),
-            fungibleTransfer(Terence.address.data20()!!, Coinbase.address.data20()!!, 21000.gwei().unsignedByteBuffer()!!, true, null, timestamp, blockHash, txTwo.hash.data32(), 2, transferType = BalanceType.ETHER),
+            fungibleTransfer(Terence.address.data20()!!, Coinbase.address.data20()!!, 21000.gwei().unsignedByteBuffer()!!, true, null, timestamp, blockHash, txTwo.hash.data32(), 2, transferType = BalanceType.FEE),
             fungibleTransfer(Terence.address.data20()!!, Bob.address.data20()!!, 125.gwei().unsignedByteBuffer()!!, true, null, timestamp, blockHash, txTwo.hash.data32(), 2, transferType = BalanceType.ETHER)
           ).asReversed()
         }
@@ -197,7 +197,7 @@ class EtherTransferChainEventsTest : BehaviorSpec() {
             timestamp = timestamp,
             blockHash = blockHash,
             txHash = txZero.hash.data32(),
-            transferType = BalanceType.ETHER,
+            transferType = BalanceType.FEE,
             txIndex = 0
           ) // tx fee
         }
@@ -210,7 +210,7 @@ class EtherTransferChainEventsTest : BehaviorSpec() {
             timestamp = timestamp,
             blockHash = blockHash,
             txHash = txOne.hash.data32(),
-            transferType = BalanceType.ETHER,
+            transferType = BalanceType.FEE,
             txIndex = 1
           ) // tx fee
         }
@@ -236,7 +236,7 @@ class EtherTransferChainEventsTest : BehaviorSpec() {
             timestamp = timestamp,
             blockHash = blockHash,
             txHash = txTwo.hash.data32(),
-            transferType = BalanceType.ETHER,
+            transferType = BalanceType.FEE,
             txIndex = 2
           ) // tx fee
         }

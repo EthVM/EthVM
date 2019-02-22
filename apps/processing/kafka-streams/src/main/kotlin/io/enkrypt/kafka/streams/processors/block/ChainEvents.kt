@@ -270,14 +270,14 @@ object ChainEvents {
 
     // tx fee
     val txFee = (receipt.getGasUsed().unsignedBigInteger()!! * tx.getGasPrice().bigInteger()!!).unsignedByteBuffer()!!
-    events += fungibleTransfer(from, miner, txFee, reverse, null, timestamp, blockHash, txHash, txIdx)
+    events = events + fungibleTransfer(from, miner, txFee, reverse, null, timestamp, blockHash, txHash, txIdx, null, BalanceType.FEE)
 
     // short circuit if the tx was not successful
     if (!receipt.isSuccess()) return events
 
     // simple ether transfer
     if (!(from == null || to == null || value.capacity() == 0)) {
-      events += fungibleTransfer(from, to, value, reverse, null, timestamp, blockHash, txHash, txIdx)
+      events = events + fungibleTransfer(from, to, value, reverse, null, timestamp, blockHash, txHash, txIdx)
     }
 
     // contract creation
@@ -286,17 +286,17 @@ object ChainEvents {
       // TODO it is possible for the input data to be empty when a contract is created before homestead, clarify and enforce this logic based on network config
 
       val (contractType, _) = StandardTokenDetector.detect(data)
-      events += contractCreate(contractType, from, blockHash, txHash, tx.getCreates(), data, reverse)
+      events = events + contractCreate(contractType, from, blockHash, txHash, tx.getCreates(), data, reverse)
 
       // some ether may have also been sent
       if (value.capacity() > 0) {
-        events += fungibleTransfer(from, tx.getCreates(), value, reverse, null, timestamp, blockHash, txHash, txIdx)
+        events = events + fungibleTransfer(from, tx.getCreates(), value, reverse, null, timestamp, blockHash, txHash, txIdx)
       }
     }
 
     // contract suicides
     receipt.getDeletedAccounts()
-      .forEach { events += contractDestroy(blockHash, txHash, it, reverse) }
+      .forEach { events = events + contractDestroy(blockHash, txHash, it, reverse) }
 
     // token transfers
 
@@ -319,23 +319,21 @@ object ChainEvents {
           erc20Transfer
             .filter { it.amount.bigInteger() != BigInteger.ZERO }
             .fold({ Unit }, {
-              events +=
-                erc20Transfer(it.from, it.to, it.amount, reverse, to
-                  ?: receipt.getContractAddress(), timestamp, blockHash, txHash, txIdx)
+              events = events + erc20Transfer(it.from, it.to, it.amount, reverse, to
+                ?: receipt.getContractAddress(), timestamp, blockHash, txHash, txIdx)
             })
 
           erc721Transfer
             .fold({ Unit }, {
-              events +=
-                erc721Transfer(to
-                  ?: receipt.getContractAddress(), it.from, it.to, it.tokenId, reverse, timestamp, blockHash, txHash, txIdx)
+              events = events + erc721Transfer(to
+                ?: receipt.getContractAddress(), it.from, it.to, it.tokenId, reverse, timestamp, blockHash, txHash, txIdx)
             })
         })
     }
 
     // internal transactions
 
-    events += receipt.getInternalTxs()
+    events = events + receipt.getInternalTxs()
       .filter { !it.getRejected() }
       .map { forInternalTransaction(block, tx, it) }
       .flatten()
@@ -365,13 +363,13 @@ object ChainEvents {
 
     // simple ether transfer
     if (!(from == null || to == null || value.capacity() == 0)) {
-      events += fungibleTransfer(from, to, value, reverse, null, timestamp, blockHash, txHash, txIdx, internalTxIdx)
+      events = events + fungibleTransfer(from, to, value, reverse, null, timestamp, blockHash, txHash, txIdx, internalTxIdx)
     }
 
     // contract creation
     if (internalTx.getCreates() != null) {
       val (contractType, _) = StandardTokenDetector.detect(data)
-      events += contractCreate(contractType, from, blockHash, txHash, internalTx.getCreates(), data, reverse)
+      events = events + contractCreate(contractType, from, blockHash, txHash, internalTx.getCreates(), data, reverse)
     }
 
     return events

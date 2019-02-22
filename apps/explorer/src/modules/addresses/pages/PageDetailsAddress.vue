@@ -36,7 +36,7 @@
       <!-- End Transactions -->
       <!-- Tokens -->
       <v-tab-item slot="tabs-item" value="tab-1">
-        <table-address-tokens :loading="tokensLoading" :tokens="account.tokens" :error="tokensError" />
+        <table-address-tokens :loading="tokensLoading" :tokens="account.tokens" :holder="account.address" :error="tokensError" />
       </v-tab-item>
       <!-- End Tokens -->
       <!-- Pending Transactions -->
