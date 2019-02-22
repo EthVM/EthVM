@@ -60,7 +60,7 @@ export class MongoUncleRepository extends BaseMongoDbRepository implements Uncle
    * where n is the specified limit, and MongoDB only needs to store n items in memory.
    */
   public async getLatestUncleBlockNumber(): Promise<number> {
-    let result = await this.db
+    const result = await this.db
       .collection(MongoEthVM.collections.uncles)
       .find()
       .sort({ blockNumber: -1, number: -1 })
