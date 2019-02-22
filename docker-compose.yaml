@@ -16,12 +16,11 @@ volumes:
   zookeeper-volume:
 
   parity-volume:
-    external: true
-#    driver: local
-#    driver_opts:
-#      o: "size=10g,uid=1000"
-#      type: tmpfs
-#      device: tmpfs
+    driver: local
+    driver_opts:
+      o: "size=10g,uid=1000"
+      type: tmpfs
+      device: tmpfs
 
 
 services:
@@ -37,6 +36,7 @@ services:
       - 8546:8546
       - 30303:30303
     command: --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts *
+    cpu_shares: 2048
 
   traefik:
     image: traefik:${TRAEFIK_VERSION}-alpine
@@ -104,6 +104,7 @@ services:
       - back
     ports:
       - 27017:27017
+    cpu_shares: 4000
     mem_limit: 4g
 
   zookeeper:
@@ -215,6 +216,7 @@ services:
       CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,io.enkrypt.kafka.connect=TRACE,org.web3j.protocol.websocket.WebSocketService=WARN"
       CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/enkryptio
       KAFKA_JMX_PORT: 9588
+    cpu_shares: 2048
     mem_limit: 4g
 
   # ///////////////////////////////////////////////////////
@@ -236,30 +238,30 @@ services:
 #     environment:
 #       KAFKA_AVRO_LOG_LEVEL: debug
 
-  ksql-server:
-    image: confluentinc/cp-ksql-server:${CP_VERSION}
-    networks:
-      - back
-    ports:
-      - 8088:8088
-    depends_on:
-      - kafka-1
-      - kafka-schema-registry
-    environment:
-      KSQL_BOOTSTRAP_SERVERS: kafka-1:9091
-      KSQL_LISTENERS: http://0.0.0.0:8088/
-      KSQL_KSQL_SERVICE_ID: ksql_service_1
-      KSQL_SCHEMA_REGISTRY_URL: ${KAFKA_SCHEMA_REGISTRY_URL}
-    mem_limit: 4g
-
-  ksql-cli:
-    image: confluentinc/cp-ksql-cli:${CP_VERSION}
-    networks:
-      - back
-    depends_on:
-      - ksql-server
-    tty: true
-    entrypoint: /bin/bash
+#  ksql-server:
+#    image: confluentinc/cp-ksql-server:${CP_VERSION}
+#    networks:
+#      - back
+#    ports:
+#      - 8088:8088
+#    depends_on:
+#      - kafka-1
+#      - kafka-schema-registry
+#    environment:
+#      KSQL_BOOTSTRAP_SERVERS: kafka-1:9091
+#      KSQL_LISTENERS: http://0.0.0.0:8088/
+#      KSQL_KSQL_SERVICE_ID: ksql_service_1
+#      KSQL_SCHEMA_REGISTRY_URL: ${KAFKA_SCHEMA_REGISTRY_URL}
+#    mem_limit: 4g
+#
+#  ksql-cli:
+#    image: confluentinc/cp-ksql-cli:${CP_VERSION}
+#    networks:
+#      - back
+#    depends_on:
+#      - ksql-server
+#    tty: true
+#    entrypoint: /bin/bash
 
   lenses:
     image: landoop/lenses:2.1
