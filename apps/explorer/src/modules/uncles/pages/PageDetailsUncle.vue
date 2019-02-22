@@ -108,7 +108,7 @@ export default class PageDetailsUncle extends Vue {
     if (this.isLoading) {
       details = [
         {
-          title: this.$i18n.t('tableHeader.blockHeight')
+          title: this.$i18n.t('tableHeader.uncleHeight')
         },
         {
           title: this.$i18n.t('tableHeader.unclePosition')
@@ -144,7 +144,7 @@ export default class PageDetailsUncle extends Vue {
     } else {
       details = [
         {
-          title: this.$i18n.t('tableHeader.blockHeight'),
+          title: this.$i18n.t('tableHeader.uncleHeight'),
           detail: this.uncle.getNumber()
         },
         {

@@ -47,13 +47,16 @@
       <!-- Table Header -->
       <v-card color="primary" flat class="white--text pl-3 pr-1" height="40px">
         <v-layout align-center justify-start row fill-height pr-3>
-          <v-flex xs9 sm9 md5 pl-3>
+          <v-flex xs3 sm3 md1 pl-3>
+            <h5>{{ $t('tableHeader.blockN') }}</h5>
+          </v-flex>
+          <v-flex xs7 sm6 md6>
             <h5>{{ $t('tableHeader.txN') }}</h5>
           </v-flex>
-          <v-flex xs3 sm2 md2>
+          <v-flex xs2 sm2 md1>
             <h5>{{ $t('common.eth') }}</h5>
           </v-flex>
-          <v-flex hidden-sm-and-down md2>
+          <v-flex hidden-sm-and-down md1>
             <h5>{{ $t('gas.limit') }}</h5>
           </v-flex>
           <v-flex hidden-sm-and-down md2>
@@ -69,16 +72,22 @@
         <v-flex xs12>
           <div v-for="i in maxTxs" :key="i">
             <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
-              <v-flex xs6 sm2 order-xs1>
+              <v-flex xs3 sm3 md1 pl-3>
                 <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
               </v-flex>
-              <v-flex xs12 sm7 md6>
+              <v-flex xs7 sm6 md6>
                 <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
               </v-flex>
-              <v-flex hidden-sm-and-down md2 order-xs4 order-sm3>
+              <v-flex xs2 sm2 md1>
                 <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
               </v-flex>
-              <v-flex d-flex xs6 sm3 md2 order-xs2 order-md4>
+              <v-flex hidden-sm-and-down md1>
+                <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+              </v-flex>
+              <v-flex hidden-sm-and-down md2>
+                <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+              </v-flex>
+              <v-flex hidden-xs-only sm1>
                 <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
               </v-flex>
             </v-layout>

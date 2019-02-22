@@ -52,6 +52,7 @@
           :page-type="detailsType"
           :total-blocks="minedTotal"
           :max-items="max"
+          :simple-pagination="true"
           :error="minerBlocksError"
           @getBlockPage="setMinedPage"
         />

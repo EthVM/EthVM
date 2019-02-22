@@ -29,11 +29,17 @@
     -->
     <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px" style="margin-right: 1px">
       <v-layout align-center justify-start row fill-height pr-3>
-        <v-flex xs6 sm2 md3 lg2>
+        <v-flex xs6 sm2 md2>
           <h5>{{ $t('tableHeader.blockHeight') }}</h5>
         </v-flex>
+        <v-flex xs6 sm2 md2>
+          <h5>{{ $t('title.uncleNumber') }}</h5>
+        </v-flex>
+        <v-flex sm5 md5 hidden-sm-and-down>
+          <h5>{{ $t('title.uncleDetail') }}</h5>
+        </v-flex>
         <v-spacer />
-        <v-flex hidden-sm-and-down md2>
+        <v-flex hidden-sm-and-down md1>
           <h5>{{ $t('title.position') }}</h5>
         </v-flex>
         <v-flex xs6 sm3 md2>
@@ -56,14 +62,17 @@
         </v-flex>
         <v-flex xs12 v-if="loading">
           <div v-for="i in maxItems" :key="i">
-            <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
-              <v-flex xs6 sm2 order-xs1>
+            <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
+              <v-flex xs3 sm2 order-xs1>
                 <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
               </v-flex>
-              <v-flex xs12 sm7 md6 lass="pr-0" order-xs3 order-sm2>
+              <v-flex xs3 sm2 order-xs1>
                 <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
               </v-flex>
-              <v-flex hidden-sm-and-down md2 order-xs4 order-sm3>
+              <v-flex xs12 sm5 md5 class="pr-0" order-xs3 order-sm2>
+                <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+              </v-flex>
+              <v-flex hidden-sm-and-down md1 order-xs4 order-sm3>
                 <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
               </v-flex>
               <v-flex d-flex xs6 sm3 md2 order-xs2 order-md4>
