@@ -38,7 +38,9 @@
         <v-flex xs4>
           <v-layout grid-list-xs row align-center justify-start fill-height >
             <v-img :src="token.image" height="25px" max-width="25px" contain class="ml-4 mr-4"/>
-            <p class="black--text text-truncate mb-0">{{ token.name }}({{token.symbol}})</p>
+            <p class="black--text text-truncate mb-0">{{ token.name }}</p>
+            <p class="black--text text-uppercase mb-0 pl-1">({{token.symbol}})</p>
+
           </v-layout>
         </v-flex>
         <v-flex xs2>

@@ -83,10 +83,15 @@
     "unclePosition": "Uncle Position"
   },
   "filter": {
+    "f": "Filter",
     "view": "View",
     "all": "All",
     "out": "Outgoing",
-    "in": "Incoming"
+    "in": "Incoming",
+    "token": {
+      "high": "High to Low",
+      "low": "Low to High"
+    }
   },
   "message": {
     "error": "Oops something went wrong, no data from server :(",
@@ -165,7 +170,7 @@
     "amount": "Amount",
     "price": "Price",
     "owner": "Owner",
-    "change": "%Change(24H)",
+    "change": "%Change (24H)",
     "volume": "Volume",
     "cap": "Market Cap"
   },

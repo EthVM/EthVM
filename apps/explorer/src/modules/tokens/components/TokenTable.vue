@@ -31,25 +31,33 @@
         TABLE HEADER
       =====================================================================================
       -->
-    <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px">
+      <v-layout>
+        <v-flex hidden-xs-only sm12>
+    <v-card v-if="!hasError" color="info" flat class="white--text pl-4 pr-1" height="40px">
       <v-layout align-center justify-start row fill-height pr-3>
-        <v-flex xs4>
-          <h5>Token Name</h5>
+        <v-flex hidden-xs-only sm4 pl-4 ml-2>
+          <h5 class="pl-4">{{ $t('token.name') }}</h5>
         </v-flex>
-        <v-flex xs2>
-          <h5>Price</h5>
+        <v-flex hidden-xs-only sm2>
+          <h5>{{ $t('token.price') }}</h5>
         </v-flex>
-        <v-flex xs2>
-          <h5>%Change(24H)</h5>
+        <v-flex hidden-xs-only sm2 pl-0>
+          <h5>{{ $t('token.change') }}</h5>
         </v-flex>
-        <v-flex xs2>
+        <v-flex hidden-xs-only sm2>
           <h5>{{ $t('token.volume')}}</h5>
         </v-flex>
-        <v-flex xs2>
-          <h5>Market Cap</h5>
+        <v-flex hidden-xs-only sm2>
+          <h5>{{ $t('token.cap') }}</h5>
         </v-flex>
+
       </v-layout>
     </v-card>
+        </v-flex>
+        <v-flex hidden-sm-and-up xs12 mr-1 ml-1>
+          <token-filter/>
+        </v-flex>
+      </v-layout>
     <!--
       =====================================================================================
         TABLE BODY
@@ -79,6 +87,7 @@
 <script lang="ts">
   import AppError from '@app/core/components/ui/AppError2.vue'
   import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+  import TokenFilter from '@app/modules/tokens/components/TokenFilter.vue'
   import TokenTableRowLoading from '@app/modules/tokens/components/TokenTableRowLoading.vue'
   import TokenTableRow from '@app/modules/tokens/components/TokenTableRow.vue'
   import { TokenExchange} from '@app/modules/tokens/props'
@@ -99,6 +108,7 @@
     components: {
       AppError,
       AppPaginate,
+      TokenFilter,
       TokenTableRow,
       TokenTableRowLoading
     }
@@ -161,3 +171,5 @@
     }
   }
 </script>
+
+
