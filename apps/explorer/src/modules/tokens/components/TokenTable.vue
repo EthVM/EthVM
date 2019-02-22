@@ -13,7 +13,7 @@
         </v-layout>
       </v-flex>
       <v-spacer />
-      <v-flex v-if="pages > 1 && !hasError" xs12 sm7 md6>
+      <v-flex hidden-xs-only v-if="pages > 1 && !hasError" sm7 md6>
         <!-- <v-layout justify-end row class="pb-1 pr-2 pl-2">
           <app-paginate :total="pages" @newPage="setPage" :new-page="page" />
         </v-layout> -->
@@ -64,8 +64,8 @@
       =====================================================================================
       -->
 
-    <v-card flat v-if="!hasError" id="scroll-target" class="scroll-y" style="overflow-x: hidden">
-      <v-layout column fill-height class="mb-1" v-scroll:#scroll-target>
+    <v-card flat v-if="!hasError" >
+      <v-layout column fill-height class="mb-1">
         <v-flex xs12 v-if="!loading">
               <div v-for="token in tokens" class="transparent" flat :key="token._id">
                 <token-table-row :token="token"/>
