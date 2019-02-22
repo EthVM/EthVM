@@ -11,6 +11,7 @@ import java.math.BigInteger
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicLong
 
 class ParitySyncManager(val parity: JsonRpc2_0ParityExtended, synced: BigInteger) {
 
@@ -20,10 +21,13 @@ class ParitySyncManager(val parity: JsonRpc2_0ParityExtended, synced: BigInteger
   private val fetchQueue = ArrayBlockingQueue<List<BlockData>>(30)
 
   private var historicFetchComplete = false
-
   private var subscription: Disposable
 
+  // used to identify any gaps when syncing
+  private var blockNumber = if (synced == BigInteger.ZERO) BigInteger.ONE.negate() else synced
+
   init {
+
     subscription = parity
       .newHeadsNotifications()
       .map { it.params.result }
@@ -31,22 +35,27 @@ class ParitySyncManager(val parity: JsonRpc2_0ParityExtended, synced: BigInteger
       .buffer(1000, TimeUnit.MILLISECONDS, 128)
       .subscribe { heads ->
 
-        if(heads.isNotEmpty()) {
+        if (heads.isNotEmpty()) {
 
-          if(!historicFetchComplete) {
+          // possible during a fork where older block numbers are re-published so we find the max and min within the batch
 
-            rangesFor(synced, heads.first().first)
-              .forEach{ range -> executor.submit { fetchQueue.add(fetchRange(range)) } }
+          var start = heads.minBy { it.first }!!.first
+          val end = heads.maxBy { it.first }!!.first
+
+          if (!historicFetchComplete) {
+
+            // if we have yet to do a historic load we do that first
+            // Ranges are inclusive so we add one to the start when we are finished
+
+            rangesFor(synced, start)
+              .forEach { range -> executor.submit { fetchQueue.add(fetchRange(range)) } }
 
             historicFetchComplete = true
+            start += BigInteger.ONE
 
-          } else {
-
-            val start = heads.first().first
-            val end = heads.last().first
-
-            executor.submit{ fetchQueue.add(fetchRange(start.rangeTo(end))) }
           }
+
+          executor.submit { fetchQueue.add(fetchRange(start.rangeTo(end))) }
 
         }
 
@@ -76,32 +85,6 @@ class ParitySyncManager(val parity: JsonRpc2_0ParityExtended, synced: BigInteger
     }
 
     return ranges
-  }
-
-  private fun fetchOlderBlocks(syncedUntil: BigInteger, end: BigInteger, batchSize: Int = 128) {
-
-    val start =
-      if (syncedUntil > BigInteger.ZERO)
-        syncedUntil + BigInteger.ONE
-      else
-        syncedUntil
-
-    var ranges = emptyList<ClosedRange<BigInteger>>()
-
-    val batchSizeBigInt = batchSize.toBigInteger()
-    var batchStart = start
-
-    while (batchStart < end) {
-
-      var batchEnd = batchStart + batchSizeBigInt
-      if (batchEnd > end) batchEnd = end
-
-      ranges = ranges + batchStart.rangeTo(batchEnd)
-      batchStart += (batchSizeBigInt + BigInteger.ONE)
-    }
-
-    ranges.forEach{ range -> fetchQueue.add(fetchRange(range)) }
-
   }
 
   private fun fetchRange(range: ClosedRange<BigInteger>): List<BlockData> {
@@ -158,7 +141,21 @@ class ParitySyncManager(val parity: JsonRpc2_0ParityExtended, synced: BigInteger
       elapsedMs = System.currentTimeMillis() - startedMs
     }
 
-    return lists.map { list -> list.map { blockData -> blockData.toBlockRecord() } }.flatten()
+    return lists.map { list ->
+      list.map { blockData ->
+
+        // we track the sequence of block numbers to identify any gap in retrieval
+        val number = blockData.block.number
+        val expectedNumber = blockNumber + BigInteger.ONE
+
+        require(number == expectedNumber) { "Sequence gap detected. Expected $expectedNumber, received $number" }
+
+        blockNumber = number
+
+        // convert to block record
+        blockData.toBlockRecord()
+      }
+    }.flatten()
 
   }
 

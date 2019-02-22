@@ -54,7 +54,7 @@ typealias BalanceStream = KStream<TokenBalanceKeyRecord, TokenBalanceRecord>
 
 class BlockProcessor : AbstractKafkaProcessor() {
 
-  val emptyByteBuffer = ByteBuffer.allocate(0)
+  private val emptyByteBuffer = ByteBuffer.allocate(0)
 
   override val id: String = "block-processor"
 
