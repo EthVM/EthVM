@@ -1,14 +1,12 @@
 <template>
   <v-container grid-list-lg class="mb-0">
-    <app-bread-crumbs :new-items="crumbs" />
-    <!-- <table-tokens :tokens="tokens" :is-loading="isLoading" /> -->
-    <token-table/>
+    <app-bread-crumbs :new-items="crumbs" /> hello
+    <token-table :tokens="tokens"  :loading="isLoading"/>
   </v-container>
 </template>
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-import TableTokens from '@app/modules/tokens/components/TableTokens.vue'
 import TokenTable from '@app/modules/tokens/components/TokenTable.vue'
 import { Component, Vue } from 'vue-property-decorator'
 
@@ -17,7 +15,7 @@ const MAX_ITEMS = 10
 @Component({
   components: {
     AppBreadCrumbs,
-    TableTokens,
+
     TokenTable
   }
 })
@@ -51,6 +49,7 @@ export default class PageTokens extends Vue {
     Promise.all(promises)
       .then(([tokens]) => {
         this.tokens = tokens as any[]
+        console.log(this.tokens)
       })
       .catch(e => {
         this.error = this.$i18n.t('message.error').toString()

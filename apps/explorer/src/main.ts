@@ -43,7 +43,7 @@ Vue.use(Vuetify, {
     error: '#fe8778',
     info: '#8391a8',
     nav: '#a0a8fd',
-    txSuccess: '#40ce9c',
+    txSuccess: '#00b173',
     txFail: '#fe1377',
     txPen: '#eea66b',
     lineGrey: '#efefef',
@@ -51,7 +51,8 @@ Vue.use(Vuetify, {
     tabActive: '#3844b8',
     uncleGrey: '#eff1f6',
     sync: '#ffe7d6',
-    bttnGrey: '#dee5f0'
+    bttnGrey: '#dee5f0',
+
 
     // used -->
     // background: String(colors.grey.darken3)

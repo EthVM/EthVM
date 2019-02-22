@@ -9,14 +9,14 @@
       <v-flex xs12 sm4 md6>
         <v-layout row align-end justify-start>
           <v-card-title class="title font-weight-bold">{{ $t('title.tokens') }}</v-card-title>
-          <v-card-title class="info--text">(Total: {{totalTokens}} Tokens)</v-card-title>
+          <v-card-title class="info--text">(Total: {{totalTokens}} {{ $t('title.tokens') }})</v-card-title>
         </v-layout>
       </v-flex>
       <v-spacer />
       <v-flex v-if="pages > 1 && !hasError" xs12 sm7 md6>
-        <v-layout justify-end row class="pb-1 pr-2 pl-2">
+        <!-- <v-layout justify-end row class="pb-1 pr-2 pl-2">
           <app-paginate :total="pages" @newPage="setPage" :new-page="page" />
-        </v-layout>
+        </v-layout> -->
       </v-flex>
     </v-layout>
     <!--
@@ -25,7 +25,7 @@
       =====================================================================================
       -->
     <v-progress-linear color="blue" indeterminate v-if="loading && !hasError" class="mt-0" />
-    <app-error :has-error="hasError" :message="error" class="mb-4" />
+    <!-- <app-error v-if="hasError" :has-error="hasError" :message="error" class="mb-4" /> -->
     <!--
       =====================================================================================
         TABLE HEADER
@@ -33,21 +33,19 @@
       -->
     <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px">
       <v-layout align-center justify-start row fill-height pr-3>
-        <v-flex xs1>
-        </v-flex>
-        <v-flex xs2>
+        <v-flex xs4>
           <h5>Token Name</h5>
         </v-flex>
         <v-flex xs2>
           <h5>Price</h5>
         </v-flex>
-        <v-flex xs1>
+        <v-flex xs2>
           <h5>%Change(24H)</h5>
         </v-flex>
-        <v-flex xs3>
+        <v-flex xs2>
           <h5>Volume</h5>
         </v-flex>
-        <v-flex xs3>
+        <v-flex xs2>
           <h5>Market Cap</h5>
         </v-flex>
       </v-layout>
@@ -58,18 +56,17 @@
       =====================================================================================
       -->
 
-    <v-card flat v-if="!hasError" id="scroll-target" :style="getStyle" class="scroll-y" style="overflow-x: hidden">
+    <v-card flat v-if="!hasError" id="scroll-target" class="scroll-y" style="overflow-x: hidden">
       <v-layout column fill-height class="mb-1" v-scroll:#scroll-target>
-        <!-- <v-flex xs12 v-if="!loading">
-              <v-card v-for="tx in transactions" class="transparent" flat :key="tx.getHash()">
-                <table-txs-row :tx="tx" :is-pending="pending" />
-                <v-divider class="mb-2 mt-2" />
+        <v-flex xs12 v-if="!loading">
+              <v-card v-for="token in tokens" class="transparent" flat :key="token._id">
+                <token-table-row :token="token"/>
               </v-card>
-              <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2">
+              <!-- <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2">
                 <app-paginate :total="pages" @newPage="setPage" :new-page="page" :has-input="false" :has-last="false" />
-              </v-layout>
-            </v-flex> -->
-        <v-flex xs12 v-if="loading">
+              </v-layout> -->
+        </v-flex>
+        <v-flex xs12 v-else>
           <div v-for="i in maxItems" :key=i>
             <token-table-row-loading/>
           </div>
@@ -83,6 +80,9 @@
   import AppError from '@app/core/components/ui/AppError2.vue'
   import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
   import TokenTableRowLoading from '@app/modules/tokens/components/TokenTableRowLoading.vue'
+  import TokenTableRow from '@app/modules/tokens/components/TokenTableRow.vue'
+  import { TokenExchange} from '@app/modules/tokens/props'
+
   import {
     PendingTx,
     Tx,
@@ -99,19 +99,17 @@
     components: {
       AppError,
       AppPaginate,
+      TokenTableRow,
       TokenTableRowLoading
     }
   })
-  export default class TableTxs extends Vue {
-    // @Prop({ type: Boolean, default: true }) loading: boolean
-    // @Prop(String) pageType: string
-    // @Prop(String) showStyle!: string
+  export default class TokenTable extends Vue {
+    @Prop({ type: Boolean, default: true }) loading: boolean
     // @Prop(Array) transactions!: Tx[] | PendingTx[] | SimpleTx[]
     // @Prop({ type: Number, default: 0 }) totalTxs: number
     // @Prop(Number) maxItems!: number
     // @Prop(String) error: string
-
-    loading = true
+    @Prop(Array)tokens!: TokenExchange[]
     hasError = false
     maxItems = 10
     totalTokens = 100
