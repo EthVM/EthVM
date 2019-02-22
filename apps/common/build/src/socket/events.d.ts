@@ -43,6 +43,7 @@ export declare const Events: {
     getTotalNumberOfUncles: string;
     getExchangeRates: string;
     getTokenExchangeRates: string;
+    getTotalNumberOfTokenExchangeRates: string;
     getTokenExchangeRateBySymbol: string;
     getTokenExchangeRateByAddress: string;
     search: string;

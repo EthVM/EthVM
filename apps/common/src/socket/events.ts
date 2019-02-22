@@ -64,6 +64,7 @@ export const Events = {
   // Exchange
   getExchangeRates: "get-exchange-rates",
   getTokenExchangeRates: "get-token-exchange-rates",
+  getTotalNumberOfTokenExchangeRates: 'get-total-number-of-token-exchange-rates',
   getTokenExchangeRateBySymbol: "get-token-exchange-rate-by-symbol",
   getTokenExchangeRateByAddress: "get-token-exchange-rate-by-address",
 

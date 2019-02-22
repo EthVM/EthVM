@@ -84,7 +84,7 @@
 </template>
 
 <script lang="ts">
-import AppError from '@app/core/components/ui/AppError2.vue'
+import AppError from '@app/core/components/ui/AppError.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TokenFilter from '@app/modules/tokens/components/TokenFilter.vue'
 import TokenTableRowLoading from '@app/modules/tokens/components/TokenTableRowLoading.vue'
