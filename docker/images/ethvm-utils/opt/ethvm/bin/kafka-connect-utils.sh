@@ -49,8 +49,7 @@ register_sources() {
 register_sinks() {
   echo "===> Registering MongoDB sink ..."
   ensure_kafka_connect
-  curl_register ${KAFKA_CONNECT_DIR}/sinks/mongo-primary-sink.json
-  curl_register ${KAFKA_CONNECT_DIR}/sinks/mongo-secondary-sink.json
+  curl_register ${KAFKA_CONNECT_DIR}/sinks/mongo-sink.json
 } >&2
 
 init() {

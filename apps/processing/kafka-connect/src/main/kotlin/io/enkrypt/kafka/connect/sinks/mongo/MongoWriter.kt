@@ -24,8 +24,8 @@ class MongoWriter {
 
   private val logger = KotlinLogging.logger {}
 
-  private val recordBatchSize = 100
-  private val maxBatchesInFlight = 10
+  private val recordBatchSize = 50
+  private val maxBatchesInFlight = 5
   private val batchesInFlight = AtomicInteger(0)
 
   private var collections: Map<MongoCollections, MongoCollection<BsonDocument>> = emptyMap()
@@ -54,7 +54,7 @@ class MongoWriter {
       .map { batch ->
 
         if (batchesInFlight.get() == maxBatchesInFlight) {
-          wait(30, TimeUnit.SECONDS)
+          wait(60, TimeUnit.SECONDS)
         }
 
         executor!!.submit(BulkWriteTask(batch))
