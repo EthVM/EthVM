@@ -66,6 +66,6 @@ export class MongoUncleRepository extends BaseMongoDbRepository implements Uncle
       .sort({ blockNumber: -1, number: -1 })
       .limit(1)
       .toArray()
-    return result ? parseInt(result[0].number) : 0
+    return result ? parseInt(result[0].blockNumber) : 0
   }
 }
