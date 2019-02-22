@@ -15,7 +15,14 @@
       </v-flex>
       <v-flex xs12 sm7 md6 v-if="pages > 1 && !hasError">
         <v-layout justify-end row class="pb-1 pr-2 pl-2">
-          <app-paginate :total="pages" @newPage="setPage" :new-page="page" />
+          <app-paginate
+            :total="pages"
+            @newPage="setPage"
+            :new-page="page"
+            :has-input="!simplePagination"
+            :has-first="!simplePagination"
+            :has-last="!simplePagination"
+          />
         </v-layout>
       </v-flex>
     </v-layout>
@@ -71,7 +78,14 @@
             <v-divider class="mb-2 mt-2" />
           </v-card>
           <v-layout v-if="pageType != 'home' && pages > 1" justify-end row class="pb-1 pr-2 pl-2">
-            <app-paginate :total="pages" @newPage="setPage" :new-page="page" />
+            <app-paginate
+              :total="pages"
+              @newPage="setPage"
+              :new-page="page"
+              :has-input="!simplePagination"
+              :has-first="!simplePagination"
+              :has-last="!simplePagination"
+            />
           </v-layout>
         </v-flex>
         <v-flex xs12 v-if="loading">
@@ -124,6 +138,7 @@ export default class TableBlocks extends Vue {
   @Prop(Array) blocks!: Block[] | SimpleBlock[]
   @Prop({ type: Number, default: 0 }) totalBlocks!: number
   @Prop({ type: Number, default: 20 }) maxItems!: number
+  @Prop({ type: Boolean, default: false }) simplePagination: boolean
   @Prop(String) error!: string
 
   page = 0
