@@ -39,6 +39,7 @@ export interface EthvmApi {
   // Exchanges
   getExchangeRateQuote(symbol: string, to: string): Promise<Quote>
   getTokenExchangeRates(limit: number, page: number): Promise<TokenExchangeRate[]>
+  getTotalNumberOfTokenExchangeRates(): Promise<number>
   getTokenExchangeRateBySymbol(symbol: string): Promise<TokenExchangeRate | null>
   getTokenExchangeRateByAddress(address: string): Promise<TokenExchangeRate | null>
 

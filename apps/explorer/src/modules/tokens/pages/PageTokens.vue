@@ -1,7 +1,7 @@
 <template>
   <v-container grid-list-lg class="mb-0">
-    <app-bread-crumbs :new-items="crumbs" /> hello
-    <token-table :tokens="tokens"  :loading="isLoading"/>
+    <app-bread-crumbs :new-items="crumbs" />
+    <token-table :tokens="tokens" :total-tokens="total" :loading="isLoading" />
   </v-container>
 </template>
 
@@ -10,18 +10,19 @@ import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import TokenTable from '@app/modules/tokens/components/TokenTable.vue'
 import { Component, Vue } from 'vue-property-decorator'
 
-const MAX_ITEMS = 10
+const MAX_ITEMS = 100
 
 @Component({
   components: {
     AppBreadCrumbs,
-
     TokenTable
   }
 })
 export default class PageTokens extends Vue {
   tokens: any = [] // Array of tokens for table display
-  error = '' // Error message
+  total = 0 // Total number of tokens
+  isLoading = true
+  error = ''
 
   /*
   ===================================================================================
@@ -30,7 +31,9 @@ export default class PageTokens extends Vue {
   */
 
   mounted() {
-    this.fetchData()
+    this.fetchTotalTokens().then(res => (this.total = res), err => (this.total = 0))
+    this.getPage(0)
+    window.scrollTo(0, 0)
   }
 
   /*
@@ -40,45 +43,29 @@ export default class PageTokens extends Vue {
   */
 
   /**
-   * Fetch all data relevant to the view.
-   */
-  fetchData() {
-    const tokenPromise = this.fetchTokenExchangeRates()
-    const promises = [tokenPromise]
-
-    Promise.all(promises)
-      .then(([tokens]) => {
-        this.tokens = tokens as any[]
-        console.log(this.tokens)
-      })
-      .catch(e => {
-        this.error = this.$i18n.t('message.error').toString()
-      })
-  }
-
-  /*
-  ===================================================================================
-    Methods - Fetch Data - Individual Calls
-  ===================================================================================
-  */
-
-  /**
    * GET and return JSON array of tokens and their corresponding information
-   * TEMP: Static/hard-coded page/limit
    *
    * @return {Array} - Array of tokens
    */
-  fetchTokenExchangeRates() {
-    return new Promise((resolve, reject) => {
-      this.$api
-        .getTokenExchangeRates(100, 0)
-        .then(result => {
-          resolve(result)
-        })
-        .catch(e => {
-          reject(e)
-        })
-    })
+  fetchTokenExchangeRates(page: number) {
+    return this.$api.getTokenExchangeRates(MAX_ITEMS, page)
+  }
+
+  fetchTotalTokens(): Promise<number> {
+    return this.$api.getTotalNumberOfTokenExchangeRates()
+  }
+
+  getPage(page: number): void {
+    this.isLoading = true
+    this.fetchTokenExchangeRates(page).then(
+      res => {
+        this.tokens = res
+        this.isLoading = false
+      },
+      err => {
+        this.error = this.$i18n.t('message.error').toString()
+      }
+    )
   }
 
   /*
@@ -100,15 +87,6 @@ export default class PageTokens extends Vue {
         disabled: true
       }
     ]
-  }
-
-  /**
-   * Determines whether or not all of the required objects have been loaded/populated
-   *
-   * @return {Boolean}
-   */
-  get isLoading() {
-    return this.tokens.length === 0
   }
 
   /**

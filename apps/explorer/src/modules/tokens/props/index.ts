@@ -1,7 +1,7 @@
 export interface TokenExchange {
   address: string
   circulating_supply?: string
-  current_price? : number
+  current_price?: number
   high_24h?: number
   image: string
   last_updated?: string

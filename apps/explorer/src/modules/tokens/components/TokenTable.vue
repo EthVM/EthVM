@@ -9,14 +9,14 @@
       <v-flex xs12 sm4 md6>
         <v-layout row align-end justify-start>
           <v-card-title class="title font-weight-bold">{{ $t('title.tokens') }}</v-card-title>
-          <v-card-title class="info--text">(Total: {{totalTokens}} {{ $t('title.tokens') }})</v-card-title>
+          <v-card-title class="info--text">(Total: {{ totalTokens }} {{ $t('title.tokens') }})</v-card-title>
         </v-layout>
       </v-flex>
       <v-spacer />
       <v-flex hidden-xs-only v-if="pages > 1 && !hasError" sm7 md6>
-        <!-- <v-layout justify-end row class="pb-1 pr-2 pl-2">
+        <v-layout justify-end row class="pb-1 pr-2 pl-2">
           <app-paginate :total="pages" @newPage="setPage" :new-page="page" />
-        </v-layout> -->
+        </v-layout>
       </v-flex>
     </v-layout>
     <!--
@@ -31,52 +31,51 @@
         TABLE HEADER
       =====================================================================================
       -->
-      <v-layout>
-        <v-flex hidden-xs-only sm12>
-    <v-card v-if="!hasError" color="info" flat class="white--text pl-4 pr-1" height="40px">
-      <v-layout align-center justify-start row fill-height pr-3>
-        <v-flex hidden-xs-only sm4 pl-4 ml-2>
-          <h5 class="pl-4">{{ $t('token.name') }}</h5>
-        </v-flex>
-        <v-flex hidden-xs-only sm2>
-          <h5>{{ $t('token.price') }}</h5>
-        </v-flex>
-        <v-flex hidden-xs-only sm2 pl-0>
-          <h5>{{ $t('token.change') }}</h5>
-        </v-flex>
-        <v-flex hidden-xs-only sm2>
-          <h5>{{ $t('token.volume')}}</h5>
-        </v-flex>
-        <v-flex hidden-xs-only sm2>
-          <h5>{{ $t('token.cap') }}</h5>
-        </v-flex>
-
-      </v-layout>
-    </v-card>
-        </v-flex>
-        <v-flex hidden-sm-and-up xs12 mr-1 ml-1>
-          <token-filter/>
-        </v-flex>
-      </v-layout>
+    <v-layout>
+      <v-flex hidden-xs-only sm12>
+        <v-card v-if="!hasError" color="info" flat class="white--text pl-4 pr-1" height="40px">
+          <v-layout align-center justify-start row fill-height pr-3>
+            <v-flex hidden-xs-only sm4 pl-4 ml-2>
+              <h5 class="pl-4">{{ $t('token.name') }}</h5>
+            </v-flex>
+            <v-flex hidden-xs-only sm2>
+              <h5>{{ $t('token.price') }}</h5>
+            </v-flex>
+            <v-flex hidden-xs-only sm2 pl-0>
+              <h5>{{ $t('token.change') }}</h5>
+            </v-flex>
+            <v-flex hidden-xs-only sm2>
+              <h5>{{ $t('token.volume') }}</h5>
+            </v-flex>
+            <v-flex hidden-xs-only sm2>
+              <h5>{{ $t('token.cap') }}</h5>
+            </v-flex>
+          </v-layout>
+        </v-card>
+      </v-flex>
+      <v-flex hidden-sm-and-up xs12 mr-1 ml-1>
+        <token-filter />
+      </v-flex>
+    </v-layout>
     <!--
       =====================================================================================
         TABLE BODY
       =====================================================================================
       -->
 
-    <v-card flat v-if="!hasError" >
+    <v-card flat v-if="!hasError">
       <v-layout column fill-height class="mb-1">
         <v-flex xs12 v-if="!loading">
-              <div v-for="token in tokens" class="transparent" flat :key="token._id">
-                <token-table-row :token="token"/>
-              </div>
-              <!-- <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2">
-                <app-paginate :total="pages" @newPage="setPage" :new-page="page" :has-input="false" :has-last="false" />
-              </v-layout> -->
+          <div v-for="token in tokens" class="transparent" flat :key="token._id">
+            <token-table-row :token="token" />
+          </div>
+          <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2">
+            <app-paginate :total="pages" @newPage="setPage" :new-page="page" />
+          </v-layout>
         </v-flex>
         <v-flex xs12 v-else>
-          <div v-for="i in maxItems" :key=i>
-            <token-table-row-loading/>
+          <div v-for="i in maxItems" :key="i">
+            <token-table-row-loading />
           </div>
         </v-flex>
       </v-layout>
@@ -85,91 +84,73 @@
 </template>
 
 <script lang="ts">
-  import AppError from '@app/core/components/ui/AppError2.vue'
-  import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
-  import TokenFilter from '@app/modules/tokens/components/TokenFilter.vue'
-  import TokenTableRowLoading from '@app/modules/tokens/components/TokenTableRowLoading.vue'
-  import TokenTableRow from '@app/modules/tokens/components/TokenTableRow.vue'
-  import { TokenExchange} from '@app/modules/tokens/props'
+import AppError from '@app/core/components/ui/AppError2.vue'
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+import TokenFilter from '@app/modules/tokens/components/TokenFilter.vue'
+import TokenTableRowLoading from '@app/modules/tokens/components/TokenTableRowLoading.vue'
+import TokenTableRow from '@app/modules/tokens/components/TokenTableRow.vue'
+import { TokenExchange } from '@app/modules/tokens/props'
 
-  import {
-    PendingTx,
-    Tx,
-    SimpleTx
-  } from '@app/core/models'
-  import {
-    Vue,
-    Component,
-    Prop,
-    Watch
-  } from 'vue-property-decorator'
+import { PendingTx, Tx, SimpleTx } from '@app/core/models'
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 
-  @Component({
-    components: {
-      AppError,
-      AppPaginate,
-      TokenFilter,
-      TokenTableRow,
-      TokenTableRowLoading
-    }
-  })
-  export default class TokenTable extends Vue {
-    @Prop({ type: Boolean, default: true }) loading: boolean
-    // @Prop(Array) transactions!: Tx[] | PendingTx[] | SimpleTx[]
-    // @Prop({ type: Number, default: 0 }) totalTxs: number
-    // @Prop(Number) maxItems!: number
-    // @Prop(String) error: string
-    @Prop(Array)tokens!: TokenExchange[]
-    hasError = false
-    maxItems = 10
-    totalTokens = 100
+@Component({
+  components: {
+    AppError,
+    AppPaginate,
+    TokenFilter,
+    TokenTableRow,
+    TokenTableRowLoading
+  }
+})
+export default class TokenTable extends Vue {
+  @Prop({ type: Boolean, default: true }) loading: boolean
+  @Prop(Array) tokens!: TokenExchange[]
+  @Prop({ type: Number, default: 0 }) totalTokens: number
+  // @Prop(Number) maxItems!: number
+  // @Prop(String) error: string
+  hasError = false
+  maxItems = 10
 
-    /*
+  /*
     ===================================================================================
       Lifecycle
     ===================================================================================
     */
 
-    // @Watch('page')
-    // onPageChanged(newVal: number, oldVal: number): void {
-    //   this.$emit('getTxsPage', this.page)
-    // }
+  // @Watch('page')
+  // onPageChanged(newVal: number, oldVal: number): void {
+  //   this.$emit('getTxsPage', this.page)
+  // }
 
-    /*
+  /*
     ===================================================================================
       Methods
     ===================================================================================
     */
 
-    // setPage(value: number): void {
-    //   this.page = value
-    // }
+  // setPage(value: number): void {
+  //   this.page = value
+  // }
 
-    /*
+  /*
     ===================================================================================
       Computed Values
     ===================================================================================
     */
 
-    /**
-     * Determines whether or not component has an error.
-     * If error property is empty string, there is no error.
-     *
-     * @return {Boolean} - Whether or not error exists
-     */
+  /**
+   * Determines whether or not component has an error.
+   * If error property is empty string, there is no error.
+   *
+   * @return {Boolean} - Whether or not error exists
+   */
+  // get hasError(): boolean {
+  //   return this.error !== ''
+  // }
 
-    // get isSyncing() {
-    //   return this.$store.getters.syncing
-    // }
-    // get hasError(): boolean {
-    //   return this.error !== ''
-    // }
-
-
-    get pages(): number {
-      return this.totalTokens ? Math.ceil(this.totalTokens / this.maxItems) : 0
-    }
+  get pages(): number {
+    return this.totalTokens ? Math.ceil(this.totalTokens / this.maxItems) : 0
   }
+}
 </script>
-
-

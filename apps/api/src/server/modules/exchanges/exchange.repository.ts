@@ -9,6 +9,7 @@ const API_URL =
 export interface ExchangeRepository {
   getQuote(token: string, to: string): Promise<Quote>
   getTokenExchangeRates(limit: number, page: number): Promise<TokenExchangeRate[]>
+  getTotalNumberOfTokenExchangeRates(): Promise<number>
   getTokenExchangeRate(symbol: string): Promise<TokenExchangeRate | null>
   getTokenExchangeRateByAddress(address: string): Promise<TokenExchangeRate | null>
 }
@@ -36,7 +37,11 @@ export class ExchangeRepositoryImpl extends BaseMongoDbRepository implements Exc
       .skip(start)
       .limit(limit)
       .toArray()
-      .then(resp => resp ? resp.map(e => toTokenExchangeRate(e)) : [])
+      .then(resp => (resp ? resp.map(e => toTokenExchangeRate(e)) : []))
+  }
+
+  public getTotalNumberOfTokenExchangeRates(): Promise<number> {
+    return this.db.collection(MongoEthVM.collections.tokenExchangeRates).estimatedDocumentCount()
   }
 
   public getTokenExchangeRate(symbol: string): Promise<TokenExchangeRate | null> {

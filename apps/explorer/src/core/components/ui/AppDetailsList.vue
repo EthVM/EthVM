@@ -49,9 +49,11 @@
 
     =====================================================================================
     -->
-    <v-list-tile v-if="!hasError" v-for="(item, index) in basicDetails" :key="calculateKey(index)">
-      <app-details-list-row :detail="item" :is-loading="isLoading" />
-    </v-list-tile>
+    <div v-if="!hasError">
+      <v-list-tile v-for="(item, index) in basicDetails" :key="calculateKey(index)">
+        <app-details-list-row :detail="item" :is-loading="isLoading" />
+      </v-list-tile>
+    </div>
     <!--
     =====================================================================================
 

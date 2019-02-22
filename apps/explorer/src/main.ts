@@ -54,7 +54,6 @@ Vue.use(Vuetify, {
     bttnGrey: '#dee5f0',
     bttnToken: '#b4bfd2'
 
-
     // used -->
     // background: String(colors.grey.darken3)
   }

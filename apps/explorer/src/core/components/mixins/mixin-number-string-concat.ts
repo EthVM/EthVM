@@ -13,7 +13,7 @@ export class StringConcatMixin extends Vue {
   // Methods
   getRoundNumber(newNumber) {
     let round = 7
-    if(newNumber > 1) {
+    if (newNumber > 1) {
       round = 2
     }
     return new BN(newNumber)
@@ -35,11 +35,14 @@ export class StringConcatMixin extends Vue {
     return new BN(rawStr).toFormat().toString()
   }
 
-  getInt(newNum:  number): string {
-    return new BN(newNum).dp(0, 6).toFormat().toString()
+  getInt(newNum: number): string {
+    return new BN(newNum)
+      .dp(0, 6)
+      .toFormat()
+      .toString()
   }
 
-  getPercent(newNum:  number): string {
+  getPercent(newNum: number): string {
     return new BN(newNum).dp(2).toString()
   }
 }
