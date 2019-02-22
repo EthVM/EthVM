@@ -18,25 +18,34 @@ export class MongoUncleRepository extends BaseMongoDbRepository implements Uncle
   }
 
   public async getUncles(limit: number, page: number, fromUncle: number = -1): Promise<Uncle[]> {
-    /**
-     * Total number of Uncles is not necessarily equal the highest block number of uncles in the DB.
-     * E.G. getTotalNumberOfUncles returns 10879, but the number of the first entry I see
-     * in the DB is number: 105019 blockNumber: 105021. Highest is 127405.
-     */  
-    const offset = fromUncle !== -1 ? fromUncle : await this.getLatestUncleBlockNumber() 
-    // const offset = fromUncle !== -1 ? fromUncle : await this.getTotalNumberOfUncles()    
-    const skip = page * limit
-    // const start = offset - (page * limit)
+    // Issues to solve:
+    //   1) We need to store the count of uncles in processing
+    //   2) With that we can proceed with the same process as we're doing with Blocks
+    // For now we are resorting to the well known skip, limit calls (but it will cause issues if you go very far)
 
+    const offset = fromUncle !== -1 ? fromUncle : await this.getLatestUncleBlockNumber()
+    const skip = page * limit
     return this.db
       .collection(MongoEthVM.collections.uncles)
-      // .find({ number: {$lte: start} })
       .find({ number: {$lte: offset} })
       .sort({ blockNumber: -1, number: -1 })
       .skip(skip)
       .limit(limit)
       .toArray()
       .then(resp => resp ? resp.map(uncle => toUncle(uncle)) : [])
+
+
+    // Here I left original implementation:
+    // const offset = fromUncle !== -1 ? fromUncle : await this.getLatestUncleBlockNumber()
+    // const start = offset - (page * limit)
+
+    // return this.db
+    //   .collection(MongoEthVM.collections.uncles)
+    //   .find({ number: {$lte: start} })
+    //   .sort({ blockNumber: -1, number: -1 })
+    //   .limit(limit)
+    //   .toArray()
+    //   .then(resp => resp ? resp.map(uncle => toUncle(uncle)) : [])
   }
 
   public getTotalNumberOfUncles(): Promise<number> {
@@ -45,9 +54,9 @@ export class MongoUncleRepository extends BaseMongoDbRepository implements Uncle
 
   /**
    * Should still be pretty efficient. From Mongo Docs:
-   * 
-   * When a $sort immediately precedes a $limit, the optimizer can coalesce the $limit into the $sort. 
-   * This allows the sort operation to only maintain the top n results as it progresses, 
+   *
+   * When a $sort immediately precedes a $limit, the optimizer can coalesce the $limit into the $sort.
+   * This allows the sort operation to only maintain the top n results as it progresses,
    * where n is the specified limit, and MongoDB only needs to store n items in memory.
    */
   public async getLatestUncleBlockNumber(): Promise<number> {
@@ -57,6 +66,6 @@ export class MongoUncleRepository extends BaseMongoDbRepository implements Uncle
       .sort({ blockNumber: -1, number: -1 })
       .limit(1)
       .toArray()
-    return result ? parseInt(result[0].blockNumber) : 0
+    return result ? parseInt(result[0].number) : 0
   }
 }
