@@ -158,13 +158,16 @@
     "transfers": "Transfers",
     "value": "Value",
     "decimal": "Decimals",
-    "number": "Total Tokens Owned",
+    "number": "Total Tokens: ",
     "totalUSD": "Total USD Value",
-    "name": "Name",
+    "name": "Token Name",
     "usdValue": "USD Value",
     "amount": "Amount",
     "price": "Price",
-    "owner": "Owner"
+    "owner": "Owner",
+    "change": "%Change(24H)",
+    "volume": "Volume",
+    "cap": "Market Cap"
   },
   "gas": {
     "limit": "Gas Limit",

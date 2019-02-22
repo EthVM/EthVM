@@ -43,7 +43,7 @@
           <h5>%Change(24H)</h5>
         </v-flex>
         <v-flex xs2>
-          <h5>Volume</h5>
+          <h5>{{ $t('token.volume')}}</h5>
         </v-flex>
         <v-flex xs2>
           <h5>Market Cap</h5>
@@ -59,9 +59,9 @@
     <v-card flat v-if="!hasError" id="scroll-target" class="scroll-y" style="overflow-x: hidden">
       <v-layout column fill-height class="mb-1" v-scroll:#scroll-target>
         <v-flex xs12 v-if="!loading">
-              <v-card v-for="token in tokens" class="transparent" flat :key="token._id">
+              <div v-for="token in tokens" class="transparent" flat :key="token._id">
                 <token-table-row :token="token"/>
-              </v-card>
+              </div>
               <!-- <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2">
                 <app-paginate :total="pages" @newPage="setPage" :new-page="page" :has-input="false" :has-last="false" />
               </v-layout> -->
