@@ -35,22 +35,24 @@
     -->
     <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px">
       <v-layout align-center justify-start row fill-height pr-3>
-        <v-flex xs6 sm8 md5>
+        <v-flex xs3 sm3 md1 pl-3>
+          <h5>{{ $t('tableHeader.blockN') }}</h5>
+        </v-flex>
+        <v-flex xs7 sm6 md6>
           <h5>{{ $t('tableHeader.txN') }}</h5>
         </v-flex>
-        <v-flex hidden-xs-only sm3 md2>
+        <v-flex xs2 sm2 md1>
           <h5>{{ $t('common.eth') }}</h5>
         </v-flex>
-        <v-flex hidden-sm-and-down md2>
+        <v-flex hidden-sm-and-down md1>
           <h5>{{ $t('gas.limit') }}</h5>
         </v-flex>
         <v-flex hidden-sm-and-down md2>
           <h5>{{ $t('common.gwei') }}</h5>
         </v-flex>
-        <v-flex hidden-xs-only v-if="!pending" sm1>
+        <v-flex hidden-xs-only sm1>
           <h5>{{ $t('common.status') }}</h5>
         </v-flex>
-        <v-flex v-else hidden-xs-and-up></v-flex>
       </v-layout>
     </v-card>
     <!--
@@ -78,19 +80,22 @@
           <v-flex xs12 v-if="loading">
             <div v-for="i in maxItems" :key="i">
               <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
-                <v-flex xs6 sm8 md5>
+                <v-flex xs3 sm3 md1 pl-3>
                   <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
                 </v-flex>
-                <v-flex hidden-xs-only sm3 md2>
+                <v-flex xs7 sm6 md6>
+                  <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+                </v-flex>
+                <v-flex xs2 sm2 md1>
+                  <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+                </v-flex>
+                <v-flex hidden-sm-and-down md1>
                   <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
                 </v-flex>
                 <v-flex hidden-sm-and-down md2>
                   <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
                 </v-flex>
-                <v-flex hidden-sm-and-down md2>
-                  <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
-                </v-flex>
-                <v-flex hidden-xs-only v-if="!pending" sm1>
+                <v-flex hidden-xs-only sm1>
                   <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
                 </v-flex>
               </v-layout>
@@ -104,7 +109,7 @@
 </template>
 
 <script lang="ts">
-import AppError from '@app/core/components/ui/AppError2.vue'
+import AppError from '@app/core/components/ui/AppError.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableTxsRow from '@app/modules/txs/components/TableTxsRow.vue'
 import { PendingTx, Tx, SimpleTx } from '@app/core/models'

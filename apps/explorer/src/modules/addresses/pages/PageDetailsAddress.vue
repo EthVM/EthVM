@@ -1,73 +1,79 @@
 <template>
   <v-container grid-list-lg class="mb-0">
     <app-bread-crumbs :new-items="crumbs" />
+    <app-info-load v-if="loading && !hasError" />
+    <app-error :has-error="hasError" :message="error" />
+    <!--
+    =====================================================================================
+      ADDRESS DETAILS
 
-    <div v-if="!loading && !error">
-      <v-layout row wrap justify-start class="mb-4">
-        <v-flex xs12>
-          <address-detail :account="account" :type-addrs="detailsType" />
-        </v-flex>
-      </v-layout>
-
-      <app-tabs :tabs="tabs">
-        <!-- Transactions -->
-        <v-tab-item slot="tabs-item" value="tab-0">
-          <table-address-txs
-            v-if="!txsError"
-            :loading="txsLoading"
-            :address="account.address"
-            :txs="account.txs"
-            :total-txs="totalFilter"
-            @filter="setFilterTxs"
-          />
-          <app-error :server-error="txsError" v-else />
-        </v-tab-item>
-        <!-- End Transactions -->
-        <!-- Tokens -->
-        <v-tab-item slot="tabs-item" value="tab-1">
-          <table-address-tokens v-if="!tokensError" :loading="tokensLoading" :tokens="account.tokens" :error="tokensError" />
-          <app-error :server-error="tokensError" v-else />
-        </v-tab-item>
-        <!-- End Tokens -->
-        <!-- Pending Transactions -->
-        <v-tab-item slot="tabs-item" value="tab-2">
-          <table-address-txs v-if="!pendingTxsError" :loading="pendingTxsLoading" :address="account.address" :txs="account.pendingTxs" :is-pending="true" />
-          <app-error :server-error="pendingTxsError" v-else />
-        </v-tab-item>
-        <!-- End Pending Transactions -->
-        <!-- Mined Blocks -->
-        <v-tab-item slot="tabs-item" v-if="account.isMiner" value="tab-3">
-          <table-blocks
-            v-if="!minerBlocksError"
-            :loading="minerBlocksLoading"
-            :blocks="account.minedBlocks"
-            :page-type="detailsType"
-            :total-blocks="minedTotal"
-            :max-items="max"
-            @getBlockPage="setMinedPage"
-          />
-          <app-error :server-error="minerBlocksError" v-else />
-        </v-tab-item>
-        <!-- End Mined Blocks -->
-        <!-- Contract Creator (no need to implement yet) -->
-        <!-- <v-tab-item v-if="account.conCreator" value="tab-4">
-        <v-card>
-          <ul>
-            <li>Name:</li>
-            <li>TWN</li>
-            <li>Balance:</li>
-            <li>20,930 TWN</li>
-            <li>Value:</li>
-            <li>$0.00</li>
-            <li>ERC 20 Contract:</li>
-            <li>0x045619099665fc6f661b1745e5350290ceb933f</li>
-          </ul>
-        </v-card>
-        </v-tab-item>-->
-      </app-tabs>
-    </div>
-    <app-info-load v-else-if="loading && !error" />
-    <app-error v-else :reference="addressRef" page-type="address" />
+      This section shows all of the data loaded from "load-basic-info"
+      It will load as soon as that particular information has been retrieved.
+    =====================================================================================
+    -->
+    <v-layout v-if="!loading && !hasError" row wrap justify-start class="mb-4">
+      <v-flex xs12>
+        <address-detail :account="account" :type-addrs="detailsType" />
+      </v-flex>
+    </v-layout>
+    <!--
+    =====================================================================================
+      ADDRESS TABS
+    =====================================================================================
+    -->
+    <app-tabs v-if="!loading && !hasError" :tabs="tabs">
+      <!-- Transactions -->
+      <v-tab-item slot="tabs-item" value="tab-0">
+        <table-address-txs
+          :loading="txsLoading"
+          :address="account.address"
+          :txs="account.txs"
+          :total-txs="totalFilter"
+          :error="txsError"
+          @filter="setFilterTxs"
+        />
+      </v-tab-item>
+      <!-- End Transactions -->
+      <!-- Tokens -->
+      <v-tab-item slot="tabs-item" value="tab-1">
+        <table-address-tokens :loading="tokensLoading" :tokens="account.tokens" :holder="account.address" :error="tokensError" />
+      </v-tab-item>
+      <!-- End Tokens -->
+      <!-- Pending Transactions -->
+      <v-tab-item slot="tabs-item" value="tab-2">
+        <table-address-txs :loading="pendingTxsLoading" :address="account.address" :txs="account.pendingTxs" :is-pending="true" :error="pendingTxsError" />
+      </v-tab-item>
+      <!-- End Pending Transactions -->
+      <!-- Mined Blocks -->
+      <v-tab-item slot="tabs-item" v-if="account.isMiner" value="tab-3">
+        <table-blocks
+          :loading="minerBlocksLoading"
+          :blocks="account.minedBlocks"
+          :page-type="detailsType"
+          :total-blocks="minedTotal"
+          :max-items="max"
+          :simple-pagination="true"
+          :error="minerBlocksError"
+          @getBlockPage="setMinedPage"
+        />
+      </v-tab-item>
+      <!-- End Mined Blocks -->
+      <!-- Contract Creator (no need to implement yet) -->
+      <!-- <v-tab-item v-if="account.conCreator" value="tab-4">
+      <v-card>
+        <ul>
+          <li>Name:</li>
+          <li>TWN</li>
+          <li>Balance:</li>
+          <li>20,930 TWN</li>
+          <li>Value:</li>
+          <li>$0.00</li>
+          <li>ERC 20 Contract:</li>
+          <li>0x045619099665fc6f661b1745e5350290ceb933f</li>
+        </ul>
+      </v-card>
+      </v-tab-item>-->
+    </app-tabs>
   </v-container>
 </template>
 
@@ -107,34 +113,34 @@ export default class PageDetailsAddress extends Vue {
   @Prop({ type: String, default: '' }) addressRef!: string
 
   detailsType = 'address'
-  error = false
+  error = ''
   loading = true
   validHash = true
   account: AccountInfo = null
 
   /*Transactions: */
   txsLoading = true
-  txsError = false
+  txsError = ''
   txsPage = 0
   txsFilter = 'all'
 
   /* Pending Txs: */
   pendingTxsLoading = true
-  pendingTxsError = false
+  pendingTxsError = ''
 
   /* Tokens: */
   tokensLoading = true
-  tokensError = false
+  tokensError = ''
 
   /* Miner Blocks: */
   minerBlocksLoading = true
-  minerBlocksError = false
+  minerBlocksError = ''
   minedPage = 0
   minedTotal = 20
 
   /* Contracts: */
   contractsLoading = true
-  contractsError = false
+  contractsError = ''
 
   // State Machine (not needed to be reactive, this is why we use undefined instead of null)
   sm: TinySM = undefined
@@ -189,7 +195,7 @@ export default class PageDetailsAddress extends Vue {
               this.account.type = res[2] ? CONTRACT_DETAIL_TYPE : ADDRESS_DETAIL_TYPE
               this.account.exchangeRate.USD = res[3].price
 
-              this.error = false
+              this.error = ''
               this.loading = false
 
               this.sm.transition('load-complementary-info')
@@ -250,7 +256,7 @@ export default class PageDetailsAddress extends Vue {
         name: 'success',
         enter: () => {
           // 1. Disable global error
-          this.error = false
+          this.error = ''
 
           // 2. Disable global loading
           this.loading = false
@@ -260,7 +266,7 @@ export default class PageDetailsAddress extends Vue {
         name: 'error',
         enter: () => {
           // 1. Set global error to error
-          this.error = true
+          this.error = this.$i18n.t('message.invalidAddress').toString()
 
           // 2. Disable global loading
           this.loading = false
@@ -312,7 +318,7 @@ export default class PageDetailsAddress extends Vue {
         this.txsLoading = false
       },
       err => {
-        this.txsError = true
+        this.txsError = this.$i18n.t('message.invalidAddress').toString()
       }
     )
   }
@@ -324,7 +330,7 @@ export default class PageDetailsAddress extends Vue {
         this.minerBlocksLoading = false
       },
       err => {
-        this.minerBlocksError = true
+        this.minerBlocksError = this.$i18n.t('message.error').toString()
       }
     )
   }
@@ -358,6 +364,30 @@ export default class PageDetailsAddress extends Vue {
   ===================================================================================
   */
 
+  get hasError(): boolean {
+    return this.error !== ''
+  }
+
+  get hasTxsError(): boolean {
+    return this.txsError !== ''
+  }
+
+  get hasPendingTxsError(): boolean {
+    return this.pendingTxsError !== ''
+  }
+
+  get hasTokensError(): boolean {
+    return this.tokensError !== ''
+  }
+
+  get hasMinerBlocksError(): boolean {
+    return this.minerBlocksError !== ''
+  }
+
+  get hasContractsError(): boolean {
+    return this.contractsError !== ''
+  }
+
   get max(): number {
     return MAX_ITEMS
   }
@@ -376,7 +406,7 @@ export default class PageDetailsAddress extends Vue {
   get crumbs() {
     return [
       {
-        text: this.$i18n.t('title.address'),
+        text: `${this.$i18n.t('title.address').toString()}: ${this.addressRef}`,
         disabled: true
       }
     ]

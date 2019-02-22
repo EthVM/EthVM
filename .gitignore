@@ -1,6 +1,7 @@
 # OSX
 .DS_Store
 
+# Other
 database*
 logs
 state
@@ -11,8 +12,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 /test/unit/coverage/
-
-# npm
 package-lock.json
 
 # Editor directories and files
@@ -27,7 +26,8 @@ package-lock.json
 # Project
 dist/
 tmp/
-datasets/dumps/
+datasets/
 out/
 
+# Gradle
 .gradle

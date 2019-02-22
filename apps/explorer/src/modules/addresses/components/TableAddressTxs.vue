@@ -1,26 +1,19 @@
 <template>
-  <v-card color="white" flat class="pt-3 pr-2 pl-2">
+  <v-card color="white" flat class="pr-2 pl-2">
+    <!--
+    =====================================================================================
+      LOADING / ERROR
+    =====================================================================================
+    -->
+    <v-progress-linear color="blue" indeterminate v-if="loading" class="mt-0" />
+    <app-error :has-error="hasError" :message="error" />
+    <!--
+    =====================================================================================
+      TABLE / TAB
+    =====================================================================================
+    -->
     <!-- Tx Header -->
     <v-layout align-center justify-space-between wrap row fill-height>
-      <!-- Search Box -->
-      <!-- <v-flex d-flex xs12 sm6 md4>
-        <v-layout row align-center justify-start fill-height height="40px">
-          <v-flex xs7 sm9 md10 pr-0>
-            <v-card
-              flat
-              style="border-top: solid 1px #efefef; border-left: solid 1px #efefef; border-bottom: solid 1px #efefef;"
-              height="36px"
-              class="pr-3 pl-3 pt-2"
-            >
-              <input :placeholder="$t('search.addressTx')" v-model="searchInput" class="width: 100%" />
-            </v-card>
-          </v-flex>
-          <v-flex xs7 sm3 md2 pl-0>
-            <v-btn depressed outline class="primary--text text-capitalize ml-0 lineGrey" @click="searching">{{ $t('search.title') }}</v-btn>
-          </v-flex>
-        </v-layout>
-      </v-flex> -->
-      <!-- End Search Box -->
       <!-- Tx Input Filter -->
       <v-flex d-flex xs12 sm4 md3>
         <v-layout row align-center justify-start fill-height height="40px">
@@ -35,7 +28,7 @@
           <!-- End Tx Input Filter -->
         </v-layout>
       </v-flex>
-      <v-flex xs12>
+      <v-flex xs12 mb-2>
         <v-layout row wrap align-end>
           <v-flex sm4 md3 hidden-xs-only>
             <v-layout justify-start row class="pl-3 pb-1"><app-footnotes :footnotes="footnote"/></v-layout>
@@ -50,9 +43,59 @@
       </v-flex>
     </v-layout>
     <!-- Tx Table Content -->
-
-    <table-address-tx-row v-if="!loading" :transactions="txs" :account="address" :filter="selected" :type="isPending" />
-    <app-info-load v-else />
+    <v-card color="white" flat class="pt-0 pb-2">
+      <!-- Table Header -->
+      <v-card color="primary" flat class="white--text pl-3 pr-1" height="40px">
+        <v-layout align-center justify-start row fill-height pr-3>
+          <v-flex xs3 sm3 md1 pl-3>
+            <h5>{{ $t('tableHeader.blockN') }}</h5>
+          </v-flex>
+          <v-flex xs7 sm6 md6>
+            <h5>{{ $t('tableHeader.txN') }}</h5>
+          </v-flex>
+          <v-flex xs2 sm2 md1>
+            <h5>{{ $t('common.eth') }}</h5>
+          </v-flex>
+          <v-flex hidden-sm-and-down md1>
+            <h5>{{ $t('gas.limit') }}</h5>
+          </v-flex>
+          <v-flex hidden-sm-and-down md2>
+            <h5>{{ $t('common.gwei') }}</h5>
+          </v-flex>
+          <v-flex hidden-xs-only sm1>
+            <h5>{{ $t('common.status') }}</h5>
+          </v-flex>
+        </v-layout>
+      </v-card>
+      <table-address-tx-row v-if="!loading" :transactions="txs" :account="address" :filter="selected" :type="isPending" />
+      <v-card v-if="loading" color="white" flat class="pt-0 pb-2">
+        <v-flex xs12>
+          <div v-for="i in maxTxs" :key="i">
+            <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
+              <v-flex xs3 sm3 md1 pl-3>
+                <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+              </v-flex>
+              <v-flex xs7 sm6 md6>
+                <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+              </v-flex>
+              <v-flex xs2 sm2 md1>
+                <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+              </v-flex>
+              <v-flex hidden-sm-and-down md1>
+                <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+              </v-flex>
+              <v-flex hidden-sm-and-down md2>
+                <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+              </v-flex>
+              <v-flex hidden-xs-only sm1>
+                <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+              </v-flex>
+            </v-layout>
+            <v-divider class="mb-2 mt-2" />
+          </div>
+        </v-flex>
+      </v-card>
+    </v-card>
     <v-layout justify-end row class="pb-1 pr-2 pl-2" v-if="pages > 1">
       <app-paginate :total="pages" @newPage="setPage" :new-page="page" :has-first="false" :has-last="false" :has-input="false" />
     </v-layout>
@@ -60,7 +103,7 @@
 </template>
 
 <script lang="ts">
-import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
+import AppError from '@app/core/components/ui/AppError.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableAddressTxRow from '@app/modules/addresses/components/TableAddressTxRow.vue'
@@ -71,7 +114,7 @@ const MAX_TXS = 10
 
 @Component({
   components: {
-    AppInfoLoad,
+    AppError,
     AppFootnotes,
     AppPaginate,
     TableAddressTxRow
@@ -83,6 +126,7 @@ export default class TableAddressTxs extends Vue {
   @Prop({ type: Number, default: 0 }) totalTxs!: number
   @Prop({ type: Boolean, default: false }) isPending!: boolean
   @Prop({ type: Boolean, default: true }) loading!: boolean
+  @Prop(String) error: string
 
   page = 0
   selected = 0
@@ -120,6 +164,14 @@ export default class TableAddressTxs extends Vue {
     Computed Values
   ===================================================================================
   */
+
+  get hasError(): boolean {
+    return this.error !== ''
+  }
+
+  get maxTxs(): number {
+    return MAX_TXS
+  }
 
   get options() {
     return [

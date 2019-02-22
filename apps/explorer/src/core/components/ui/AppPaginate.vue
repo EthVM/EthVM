@@ -7,7 +7,7 @@
           ><v-icon class="secondary--text" small>fas fa-angle-left</v-icon>
         </v-btn>
         <div v-if="hasInput" class="page-input">
-          <v-text-field v-model="pageInput" :mask="inputMask" :placeholder="newPH" :error="!isValid(pageInput)" :class="validClass"></v-text-field>
+          <v-text-field v-model="pageInput" :mask="inputMask" :placeholder="newPH" :error="!isValidPageInput(pageInput)" :class="validClass"></v-text-field>
         </div>
         <p v-else class="info--text pr-1">{{ pageInput }}</p>
         <p class="info--text">out of {{ total }}</p>
@@ -110,18 +110,28 @@ export default class AppPaginate extends Vue {
    * @page {Number} - Page number to be validated
    * @return {Boolean}
    */
-  isValid(page: number): boolean {
-    return page >= 0 && page <= this.total
+  isValidPage(page: number): boolean {
+    return page >= 0 && page <= this.lastPage
+  }
+
+  /**
+   * Determine if an given @number is within the valid page range.
+   *
+   * @pageInput {Number} - PageInput number to be validated
+   * @return {Boolean}
+   */
+  isValidPageInput(pageInput: number): boolean {
+    return pageInput >= 1 && pageInput <= this.total
   }
 
   /**
    * When attempting to manually set the the page number via this.pageInput,
    * confirm that the transformed value of this.page is valid.
-   * I.E. this.pageInput === 1 --> desiredPage === 0 --> this.isValid --> this.page === 0
+   * I.E. this.pageInput === 1 --> desiredPage === 0 --> this.isValidPage --> this.page === 0
    */
   setPage() {
     const desiredPage = this.transformPageInputToPage()
-    if (this.isValid(desiredPage)) {
+    if (this.isValidPage(desiredPage) && desiredPage !== this.page) {
       this.page = desiredPage
     }
   }
@@ -140,10 +150,10 @@ export default class AppPaginate extends Vue {
         this.page = Math.max(0, this.page - 1)
         break
       case 'next':
-        this.page = Math.min(this.total - 1, this.page + 1)
+        this.page = Math.min(this.lastPage - 1, this.page + 1)
         break
       case 'last':
-        this.page = this.total - 1
+        this.page = this.lastPage
         break
       default:
         break
@@ -155,6 +165,10 @@ export default class AppPaginate extends Vue {
     Computed Values
   ===================================================================================
   */
+
+  get lastPage(): number {
+    return this.total - 1
+  }
 
   get inputMask(): string {
     let mask = '#'

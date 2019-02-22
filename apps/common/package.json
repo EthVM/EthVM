@@ -7,7 +7,8 @@
   "types": "build/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "clean": "rm -rf ./build"
+    "clean": "rm -rf ./build",
+    "rebuild": "yarn clean && yarn build"
   },
   "dependencies": {
     "bson": "^4.0.1",

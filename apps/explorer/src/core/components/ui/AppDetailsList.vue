@@ -79,7 +79,7 @@
 <script lang="ts">
 import { Detail } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import AppError from '@app/core/components/ui/AppError2.vue'
+import AppError from '@app/core/components/ui/AppError.vue'
 import AppDetailsListRow from '@app/core/components/ui/AppDetailsListRow.vue'
 
 @Component({
