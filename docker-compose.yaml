@@ -17,11 +17,10 @@ volumes:
   zookeeper-volume:
 
   parity-volume:
-    driver: local
+    driver: local-persist
     driver_opts:
-      o: "size=10g,uid=1000"
-      type: tmpfs
-      device: volume
+      name: "paritydb"
+      mountpoint: "/var/lib/parity"
 
 services:
 
@@ -35,7 +34,7 @@ services:
       - 8545:8545
       - 8546:8546
       - 30303:30303
-    command: --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --max-peers 0
+    command: --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts *
     cpu_shares: 2048
 
   traefik:

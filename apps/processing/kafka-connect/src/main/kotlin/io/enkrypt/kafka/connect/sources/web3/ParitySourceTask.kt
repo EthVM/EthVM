@@ -111,7 +111,7 @@ class ParitySourceTask : SourceTask() {
 
     logger.debug { "Polling" }
 
-    val blockRecords = syncManager.poll(10, TimeUnit.SECONDS)
+    val blockRecords = syncManager.poll(30, TimeUnit.SECONDS)
 
     val sourceRecords = blockRecords
       .map { it.build() }
