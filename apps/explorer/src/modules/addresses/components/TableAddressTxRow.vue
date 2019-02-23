@@ -5,15 +5,38 @@
         <v-card-title class="text-xs-center pt-5 pb-5">{{ $t('message.syncPendingTxs') }}</v-card-title>
       </v-layout>
     </v-card>
-    <v-card v-else flat id="scroll-target" style="max-height: 800px" class="scroll-y pt-0 pb-0">
-      <v-layout column fill-height v-scroll:#scroll-target class="pt-1" style="margin-right: 1px">
+    <v-card v-else flat id="scroll-target" class=" pt-0 pb-0">
+      <v-layout column fill-height class="pt-1" style="margin-right: 1px">
         <v-flex xs12>
           <v-card v-if="transactions.length == 0" flat>
             <v-card-text class="text-xs-center secondary--text">{{ text }}</v-card-text>
           </v-card>
           <v-card v-else v-for="tx in transactions" class="transparent pb-1" flat :key="tx.getHash()">
             <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
-              <v-flex d-flex xs9 sm9 md5 pr-3>
+              <!--
+              =====================================================================================
+                  BLOCK NUMBER / HASH
+
+                  Responsive Tally:
+                  XS: 3/12 (3)
+                  SM: 3/12 (3)
+                  MD: 1/12 (1)
+              =====================================================================================
+              -->
+              <v-flex xs3 sm3 md1 pr-1>
+                <router-link class="primary--text text-truncate font-italic psmall" :to="'/block/' + tx.getBlockHash()">{{ tx.getBlockNumber() }}</router-link>
+              </v-flex>
+              <!--
+              =====================================================================================
+                TRANSACTION # / HASH
+
+                Responsive Tally:
+                XS: 10/12 (7)
+                SM: 9/12 (6)
+                MD: 7/12 (6)
+              =====================================================================================
+              -->
+              <v-flex d-flex xs7 sm6 md6 pr-3>
                 <v-layout row wrap align-center pb-1>
                   <v-flex d-flex xs12 pb-2>
                     <router-link class="primary--text text-truncate font-italic psmall" :to="'/tx/' + tx.getHash()">{{ tx.getHash() }}</router-link>
@@ -42,7 +65,17 @@
                   </v-flex>
                 </v-layout>
               </v-flex>
-              <v-flex d-flex xs3 sm2 md2 pr-0>
+              <!--
+              =====================================================================================
+                ETH VALUE
+
+                Responsive Tally:
+                XS: 12/12 (2)
+                SM: 11/12 (2)
+                MD: 8/12 (1)
+              =====================================================================================
+              -->
+              <v-flex d-flex xs2 sm2 md1 pr-0>
                 <v-layout
                   align-center
                   row
@@ -58,7 +91,9 @@
                 >
                   <p :class="[!getType(tx) ? 'success--text mb-0' : 'error--text mb-0']">{{ getSign(tx) }}{{ getShortValue(tx.getValue().toEth()) }}</p>
                   <v-tooltip bottom>
-                    <v-icon slot="activator" small class="info--text text-xs-center ml-1">fa fa-question-circle</v-icon>
+                    <template #activator="data">
+                      <v-icon v-on="data.on" small class="info--text text-xs-center ml-1">fa fa-question-circle</v-icon>
+                    </template>
                     <span>{{
                       formatStr(
                         tx
@@ -71,12 +106,42 @@
                 </v-layout>
                 <p v-else :class="[!getType(tx) ? 'success--text mb-0 ' : 'error--text mb-0 ']">{{ getSign(tx) }}{{ tx.getValue().toEth() }}</p>
               </v-flex>
-              <v-flex hidden-sm-and-down md2>
+              <!--
+              =====================================================================================
+                GAS
+
+                Responsive Tally:
+                XS: 12/12 (0)
+                SM: 11/12 (0)
+                MD: 9/12 (1)
+              =====================================================================================
+              -->
+              <v-flex hidden-sm-and-down md1>
                 <p class="black--text text-truncate mb-0">{{ tx.getGasUsed().toNumber() }}</p>
               </v-flex>
+              <!--
+              =====================================================================================
+                GWEI
+
+                Responsive Tally:
+                XS: 12/12 (0)
+                SM: 11/12 (0)
+                MD: 11/12 (2)
+              =====================================================================================
+              -->
               <v-flex hidden-sm-and-down md2>
                 <p class="text-truncate black--text mb-0">{{ tx.getGasPrice().toGWei() }}</p>
               </v-flex>
+              <!--
+              =====================================================================================
+                STATUS
+
+                Responsive Tally:
+                XS: 12/12 (0)
+                SM: 12/12 (1)
+                MD: 12/12 (1)
+              =====================================================================================
+              -->
               <v-flex hidden-xs-only sm1>
                 <v-icon v-if="tx.getStatus()" small class="txSuccess--text">fa fa-check-circle {{ log(tx) }}</v-icon>
                 <v-icon v-else small class="txFail--text">fa fa-times-circle {{ log(tx) }}</v-icon>

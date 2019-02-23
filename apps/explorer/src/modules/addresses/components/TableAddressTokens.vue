@@ -9,10 +9,10 @@
     <app-error :has-error="hasError" :message="error" />
     <!--
     =====================================================================================
-      TABLE / TAB
+      INFO BOXES
     =====================================================================================
     -->
-    <v-layout row wrap justify-space-between mb-4>
+    <v-layout v-if="!loading" row wrap justify-space-between mb-3>
       <v-flex xs12 sm6>
         <v-card class="primary white--text pl-2" flat>
           <v-card-text class="pb-0">{{ $t('token.number') }}</v-card-text>
@@ -25,9 +25,18 @@
           <v-card-title class="headline text-truncate">${{ getTotalMonetaryValue }}</v-card-title>
         </v-card>
       </v-flex>
+      <v-flex xs12>
+        <v-layout justify-end row class="pr-2 pl-2" v-if="totalPages > 1">
+          <app-paginate :total="totalPages" :current-page="page" @newPage="setPage" />
+        </v-layout>
+      </v-flex>
     </v-layout>
-    <!-- Table Header -->
-    <v-card color="info" flat class="white--text pl-3 pr-1 mb-1" height="40px">
+    <!--
+    =====================================================================================
+      TABLE HEADER
+    =====================================================================================
+    -->
+    <v-card color="primary" flat class="white--text pl-3 pr-1 mb-1" height="40px">
       <v-layout align-center justify-start row fill-height pr-3>
         <v-flex xs6 sm2>
           <h5>{{ $t('token.symbol') }}</h5>
@@ -43,33 +52,62 @@
         </v-flex>
       </v-layout>
     </v-card>
-    <!-- End Table Header -->
-    <!-- <app-error v-if="error" :server-error="error"></app-error> -->
-    <!-- Tokens List -->
-    <app-info-load v-if="loading"></app-info-load>
-    <div v-else>
-      <v-card v-if="tokens.length === 0" flat>
+    <!--
+    =====================================================================================
+      TABLE BODY
+    =====================================================================================
+    -->
+    <div v-if="loading">
+      <v-flex xs12>
+        <div v-for="i in maxItems" :key="i">
+          <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
+            <v-flex xs6 sm2>
+              <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+            </v-flex>
+            <v-flex hidden-xs-only sm4 md3>
+              <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+            </v-flex>
+            <v-flex xs6 sm3 md4>
+              <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+            </v-flex>
+            <v-flex idden-xs-only sm3>
+              <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+            </v-flex>
+          </v-layout>
+          <v-divider class="mb-2 mt-2" />
+        </div>
+      </v-flex>
+    </div>
+    <div v-if="!loading">
+      <v-card v-if="totalTokens === 0" flat>
         <v-card-text class="text-xs-center secondary--text">{{ $t('tokens.empty') }}</v-card-text>
       </v-card>
-      <div v-else v-for="(token, index) in tokens" :key="index">
+      <div v-if="totalTokens > 0" v-for="(token, index) in tokensPage" :key="index">
         <table-address-tokens-row :token="token" :holder="holder" />
       </div>
+      <v-layout v-if="totalTokens > 0" justify-end row class="pb-1 pr-2 pl-2">
+        <app-paginate :total="totalPages" :current-page="page" @newPage="setPage" />
+      </v-layout>
     </div>
   </v-card>
 </template>
 
 <script lang="ts">
-import AppError from '@app/core/components/ui/AppError2.vue'
+import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableAddressTokensRow from '@app/modules/addresses/components/TableAddressTokensRow.vue'
 import BN from 'bignumber.js'
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 
+const MAX_ITEMS = 10
+
 @Component({
   components: {
     AppError,
     AppInfoLoad,
+    AppPaginate,
     TableAddressTokensRow
   }
 })
@@ -80,6 +118,7 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
   @Prop(String) error: string
 
   placeholder = 'Search Tokens Symbol/Name'
+  page = 0 // Current pagintion page
 
   /*
   ===================================================================================
@@ -91,16 +130,57 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
     return new BN(value).div(new BN(10).pow(decimals))
   }
 
+  /**
+   * Upon page update from AppPagination, set page equal to pagination page.
+   */
+  setPage(page: number): void {
+    this.page = page
+  }
+
   /*
   ===================================================================================
     Computed Values
   ===================================================================================
   */
 
+  /**
+   * @return {Number} - MAX_ITEMS per pagination page
+   */
+  get maxItems(): number {
+    return MAX_ITEMS
+  }
+
+  /**
+   * @return {Number} - Total number of pagination pages
+   */
+  get totalPages(): number {
+    return this.totalTokens > 0 ? Math.ceil(this.totalTokens / this.maxItems) : 0
+  }
+
+  /**
+   * The tokens array is retrieved in its entirety. In order to correctly paginate the results,
+   * the array must be sliced according to the current page number.
+   *
+   * @return {Array} - Current "page" of tokens results
+   */
+  get tokensPage(): Array<any> {
+    const start = this.page * this.maxItems
+    const end = start + this.maxItems
+    return this.tokens.slice(start, end)
+  }
+
+  /**
+   * If the error string is empty, there is no error.
+   *
+   * @return {Boolean} - Whether or not there is an error.
+   */
   get hasError(): boolean {
     return this.error !== ''
   }
 
+  /**
+   * @return - Total number of tokens
+   */
   get totalTokens(): number {
     return this.tokens.length
   }

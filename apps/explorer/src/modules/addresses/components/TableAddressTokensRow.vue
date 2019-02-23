@@ -1,19 +1,21 @@
 <template>
-  <router-link :to="'/token/' + token.address + '/holder=' + holder" v-if="token.balance != 0">
-    <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-2>
+  <router-link :to="tokenLink" v-if="token.balance != 0">
+    <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2>
       <v-flex xs6 sm2>
-        <h5>{{ token.symbol }}</h5>
+        <p class="primary--text text-truncate font-italic psmall mb-0 pb-0">{{ token.symbol }}</p>
       </v-flex>
       <v-flex hidden-xs-only sm4 md3>
-        <h5>{{ token.name }}</h5>
+        <p class="info--text font-weight-thin mb-0">{{ token.name }}</p>
       </v-flex>
       <v-flex xs6 sm3 md4>
-        <h5>{{ balance(token.balance, token.decimals) }}</h5>
+        <p class="info--text font-weight-thin mb-0">{{ balance(token.balance, token.decimals) }}</p>
       </v-flex>
       <v-flex hidden-xs-only sm3>
-        <h5>
+        <p class="info--text font-weight-thin mb-0">
           <v-tooltip v-if="!isShortValue(getRoundNumber(balance(token.balance, token.decimals) * token.currentPrice), 5)" bottom>
-            <v-icon slot="activator" dark small>fa fa-question-circle info--text</v-icon>
+            <template #activator="data">
+              <v-icon v-on="data.on" small class="info--text text-xs-center">fa fa-question-circle</v-icon>
+            </template>
             <span
               >${{ getShortValue(getRoundNumber(balance(token.balance, token.decimals) * token.currentPrice), 5) }} (@ ${{
                 getRoundNumber(token.currentPrice)
@@ -23,9 +25,10 @@
           </v-tooltip>
           {{ getShortValue(getRoundNumber(balance(token.balance, token.decimals) * token.currentPrice)) }} (@ ${{ getRoundNumber(token.currentPrice) }} per
           {{ token.symbol }})
-        </h5>
+        </p>
       </v-flex>
     </v-layout>
+    <v-divider />
   </router-link>
 </template>
 
@@ -39,13 +42,28 @@ export default class TableAddressTokensRow extends Mixins(StringConcatMixin) {
   @Prop(Object) token!: any
   @Prop(String) holder!: string
 
-  /*Methods: */
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
   balance(value, decimals) {
     const n = new BN(value)
     return n
       .div(new BN(10).pow(decimals))
       .toFixed()
       .toString()
+  }
+
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
+
+  get tokenLink(): string {
+    return `/token/${this.token.addr}?holder=${this.holder}`
   }
 }
 </script>

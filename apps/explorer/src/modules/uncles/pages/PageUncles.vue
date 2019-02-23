@@ -3,7 +3,16 @@
     <app-bread-crumbs :new-items="crumbs" />
     <v-layout row wrap justify-center mb-4>
       <v-flex xs12>
-        <table-uncles :uncles="uncles" page-type="uncles" :loading="isLoading" :total-uncles="total" @getUnclePage="getPage" :max-items="max" :error="error" />
+        <table-uncles
+          :uncles="uncles"
+          page-type="uncles"
+          :page="page"
+          :loading="isLoading"
+          :total-uncles="total"
+          @getUnclePage="getPage"
+          :max-items="max"
+          :error="error"
+        />
       </v-flex>
     </v-layout>
   </v-container>
@@ -27,6 +36,7 @@ const MAX_ITEMS = 50
 export default class PageUncles extends Vue {
   uncles: Uncle[] = []
   from: number = -1
+  page = 0
   firstLoad: boolean = true
   isLoading = true
   total = 0
@@ -57,6 +67,11 @@ export default class PageUncles extends Vue {
   */
 
   getPage(page): void {
+    // Don't want to fetch same page twice from pagination event //
+    if (!this.firstLoad && this.isLoading) {
+      return
+    }
+    this.page = page
     this.isLoading = true
     this.fetchUncles(page).then(
       res => {
