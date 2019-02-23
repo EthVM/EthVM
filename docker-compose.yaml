@@ -10,6 +10,7 @@ networks:
         - subnet: 172.25.0.0/24
 
 volumes:
+
   mongodb-volume:
   ethereumj-volume:
   kafka-volume-1:
@@ -20,8 +21,7 @@ volumes:
     driver_opts:
       o: "size=10g,uid=1000"
       type: tmpfs
-      device: tmpfs
-
+      device: volume
 
 services:
 
@@ -35,7 +35,7 @@ services:
       - 8545:8545
       - 8546:8546
       - 30303:30303
-    command: --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts *
+    command: --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --max-peers 0
     cpu_shares: 2048
 
   traefik:
