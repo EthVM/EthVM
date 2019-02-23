@@ -150,7 +150,7 @@ export default class AppPaginate extends Vue {
         this.page = Math.max(0, this.page - 1)
         break
       case 'next':
-        this.page = Math.min(this.lastPage - 1, this.page + 1)
+        this.page = Math.min(this.lastPage, this.page + 1)
         break
       case 'last':
         this.page = this.lastPage

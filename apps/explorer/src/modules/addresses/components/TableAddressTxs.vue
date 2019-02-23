@@ -36,7 +36,7 @@
           <v-spacer />
           <v-flex xs12 sm7 md6>
             <v-layout justify-end row class="pb-1 pr-2 pl-2" v-if="pages > 1">
-              <app-paginate :total="pages" @newPage="setPage" :new-page="page" :has-first="false" :has-last="false" :has-input="false" />
+              <app-paginate :total="pages" @newPage="setPage" :current-page="page" :has-first="false" :has-last="false" :has-input="false" />
             </v-layout>
           </v-flex>
         </v-layout>
@@ -97,7 +97,7 @@
       </v-card>
     </v-card>
     <v-layout justify-end row class="pb-1 pr-2 pl-2" v-if="pages > 1">
-      <app-paginate :total="pages" @newPage="setPage" :new-page="page" :has-first="false" :has-last="false" :has-input="false" />
+      <app-paginate :total="pages" @newPage="setPage" :current-page="page" :has-first="false" :has-last="false" :has-input="false" />
     </v-layout>
   </v-card>
 </template>
@@ -127,8 +127,8 @@ export default class TableAddressTxs extends Vue {
   @Prop({ type: Boolean, default: false }) isPending!: boolean
   @Prop({ type: Boolean, default: true }) loading!: boolean
   @Prop(String) error: string
+  @Prop({ type: Number, default: 0 }) page: number
 
-  page = 0
   selected = 0
   filter = ['all', 'in', 'out']
 
@@ -138,8 +138,8 @@ export default class TableAddressTxs extends Vue {
   ===================================================================================
   */
 
-  setPage(_value: number): void {
-    this.page = _value
+  setPage(page: number): void {
+    this.$emit('filter', this.filter[this.selected], page)
   }
 
   /*
@@ -150,13 +150,7 @@ export default class TableAddressTxs extends Vue {
 
   @Watch('selected')
   onSelectedChanged(newVal: number, oldVal: number): void {
-    this.page = 0
     this.$emit('filter', this.filter[newVal], 0)
-  }
-
-  @Watch('page')
-  onPageChanged(newVal: number, oldVal: number): void {
-    this.$emit('filter', this.filter[this.selected], newVal)
   }
 
   /*
