@@ -47,8 +47,7 @@ export class Tx {
 
   public getGasUsed(): HexNumber {
     if (!this.cache.gasUsed) {
-      const receipt = this.getReceipt()
-      this.cache.gasUsed = receipt.getGasUsed()
+      this.cache.gasUsed = new HexNumber(this.tx.receipt.gasUsed)
     }
     return this.cache.gasUsed
   }
@@ -62,17 +61,13 @@ export class Tx {
 
   public getBlockHash(): Hex {
     if (!this.cache.blockHash) {
-      const receipt = this.getReceipt()
-      this.cache.blockHash = receipt.getBlockHash()
+      this.cache.blockHash = new Hex(this.tx.blockHash)
     }
     return this.cache.blockHash
   }
 
   public getBlockNumber(): number {
-    if (!this.cache.blockNumber) {
-      this.cache.blockNumber = new HexNumber(this.tx.blockNumber).toNumber()
-    }
-    return this.cache.blockNumber
+    return Number(this.tx.blockNumber)
   }
 
   public geTransactionIndex(): number {
@@ -106,14 +101,14 @@ export class Tx {
     return this.cache.status
   }
 
-  public getTimestamp(): Date {
-    return new Date(this.tx.timestamp * 1000)
-  }
-
   public getReceipt(): TxReceipt {
     if (!this.cache.txReceipt) {
       this.cache.txReceipt = new TxReceipt(this.tx.receipt)
     }
     return this.cache.txReceipt
+  }
+
+  public getTimestamp(): Date {
+    return new Date(this.tx.timestamp * 1000)
   }
 }

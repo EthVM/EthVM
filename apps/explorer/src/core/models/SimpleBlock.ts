@@ -63,8 +63,9 @@ export class SimpleBlock {
 
   public getTotalReward(): EthValue {
     if (!this.cache.getTotalReward) {
-      let total = new BN(0)
-      this.getRewards().forEach(r => (total = total.plus(new BN(r.reward || 0))))
+      const total = this.getRewards()
+        .map(r => r.value)
+        .reduce((acc, value) => acc.plus(value), new BN(0))
       this.cache.getTotalReward = new EthValue(total.toString())
     }
     return this.cache.getTotalReward
