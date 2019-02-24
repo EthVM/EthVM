@@ -50,7 +50,7 @@ object TypeMappings {
 
   private val traces = mapOf(
     "blockHash" to Hex,
-    "blockNumber" to UBigInt,
+    "blockNumber" to UInt64,
     "transactionHash" to Hex,
     "action" to mapOf (
       "TraceCallActionRecord" to mapOf (
@@ -83,7 +83,7 @@ object TypeMappings {
   private val txReceipt = mapOf(
     "root" to Hex,
     "blockHash" to Hex,
-    "blockNumber" to UBigInt,
+    "blockNumber" to UInt64,
     "transactionHash" to Hex,
     "contractAddress" to Hex,
     "gasUsed" to UBigInt,
@@ -91,6 +91,7 @@ object TypeMappings {
     "logs" to mapOf(
       "address" to Hex,
       "fixed" to Hex,
+      "data" to Hex,
       "topics" to Hex
     ),
     "logsBloom" to Hex,
@@ -309,7 +310,7 @@ object StructToBsonConverter {
   private fun convertField(schema: Schema, path: String, value: Any?, allowNulls: Boolean = false): BsonValue? {
     val type = schema.type()
     return when (type) {
-      in Schema.Type.values().filterNot { it == STRUCT || it == ARRAY || it == MAP } -> convertField(value, BASIC_CONVERTERS[type]!!, allowNulls)
+      in Schema.Type.values().filterNot { it == STRUCT || it == ARRAY || it == MAP } -> convertField(value, BASIC_CONVERTERS.getValue(type), allowNulls)
       ARRAY -> convertArray(schema, path, value)
       STRUCT -> convert(value, path, allowNulls)
       else -> throw IllegalArgumentException("Unhandled Schema type: $type")
