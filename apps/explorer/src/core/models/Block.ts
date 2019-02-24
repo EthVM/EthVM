@@ -146,9 +146,8 @@ export class Block {
 
   public getTxFees(): EthValue {
     if (!this.cache.totalTxsFees) {
-      const txs = this.getTxs()
-      const txsCost = txs.length > 0 ? txs.map(tx => tx.getTxCost().toGWei()).reduceRight((acc, value) => acc + value) : 0
-      this.cache.totalTxsFees = new EthValue(txsCost)
+      const txsCost = this.getTxs().map(tx => tx.getTxCost().toGWei()).reduce((acc, value) => acc.plus(value), new BN(0))
+      this.cache.totalTxsFees = new EthValue(txsCost.toString())
     }
     return this.cache.totalTxsFees
   }
