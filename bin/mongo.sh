@@ -56,8 +56,8 @@ bootstrap() {
 fetch() {
   echo "Checking current dataset..."
   mkdir -p ${ROOT_DIR}/datasets
-  [[ -f ${ROOT_DIR}/datasets/${DATASET} ]] && cd ${ROOT_DIR}/datasets/ && aws s3 cp s3://ethvm/${DATASET}.md5 - | md5sum --check -
-  [[ $? -ne 0 ]] && aws s3 cp s3://ethvm/${DATASET} ${ROOT_DIR}/datasets/${DATASET} || echo "You're using latest dataset version!"
+  [[ -f ${ROOT_DIR}/datasets/${DATASET} ]] && cd ${ROOT_DIR}/datasets/ && aws s3 cp s3://ethvm/datasets/${DATASET}.md5 - | md5sum --check -
+  [[ $? -ne 0 ]] && aws s3 cp s3://ethvm/datasets/${DATASET} ${ROOT_DIR}/datasets/${DATASET} || echo "You're using latest dataset version!"
 }
 
 run() {
