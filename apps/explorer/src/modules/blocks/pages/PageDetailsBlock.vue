@@ -199,6 +199,9 @@ export default class PageDetailsBlock extends Vue {
           title: this.$i18n.t('block.totalDiff')
         },
         {
+          title: this.$i18n.t('block.size')
+        },
+        {
           title: this.$i18n.t('block.nonce')
         },
         {
@@ -275,6 +278,10 @@ export default class PageDetailsBlock extends Vue {
         {
           title: this.$i18n.t('block.totalDiff'),
           detail: this.block.getTotalDifficulty().toNumber()
+        },
+        {
+          title: this.$i18n.t('block.size'),
+          detail: this.block.getSize().toString() + ' ' + this.$i18n.t('block.bytes')
         },
         {
           title: this.$i18n.t('block.nonce'),

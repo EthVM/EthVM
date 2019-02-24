@@ -130,7 +130,8 @@
     "recRoot": "Receipts Root",
     "uncReward": "Reward",
     "sha": "SHA3",
-    "uncle": "Uncle"
+    "uncle": "Uncle",
+    "bytes": "Bytes"
   },
   "addrOverview": {
     "balance": "Ether Balance",

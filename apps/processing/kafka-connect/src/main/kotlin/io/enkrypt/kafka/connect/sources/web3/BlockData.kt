@@ -24,6 +24,7 @@ import org.web3j.protocol.core.methods.response.Log
 import org.web3j.protocol.core.methods.response.Transaction
 import org.web3j.protocol.core.methods.response.TransactionReceipt
 import org.web3j.protocol.parity.methods.response.Trace
+import org.web3j.utils.Numeric
 
 data class BlockData(val block: EthBlock.Block,
                      val uncles: List<EthBlock.Block>,
@@ -53,7 +54,7 @@ fun EthBlock.Block.toBlockHeaderRecord(builder: BlockHeaderRecord.Builder): Bloc
     .setGasLimit(gasLimit.unsignedByteBuffer())
     .setGasUsed(gasUsed.unsignedByteBuffer())
     .setTimestamp(timestamp.longValueExact())
-    .setSize(0) // TODO fix size decoding
+    .setSize(Numeric.decodeQuantity(sizeRaw ?: "0x0").longValueExact())
 
 
 fun EthBlock.Block.toBlockRecord(builder: BlockRecord.Builder,
