@@ -12,16 +12,14 @@ networks:
 volumes:
 
   mongodb-volume:
-  ethereumj-volume:
   kafka-volume-1:
   zookeeper-volume:
 
   parity-volume:
-    driver: local
+    driver: local-persist
     driver_opts:
-      o: "size=10g,uid=1000"
-      type: tmpfs
-      device: volume
+      name: "paritydb"
+      mountpoint: "/var/lib/parity"
 
 services:
 
