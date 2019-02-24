@@ -139,7 +139,7 @@ fun TransactionReceipt.toTransactionReceiptRecord(builder: TransactionReceiptRec
     .setLogsBloom(logsBloom.hexBuffer256())
     .setRoot(if (root != null) root.hexBuffer32() else null)
     .setStatus(if (status != null) status.hexBuffer() else null)
-    .setTraces(traces.map{ it.toTraceRecord(this, TraceRecord.newBuilder()).build() })
+    .setTraces(traces.map{ it.toTraceRecord(TraceRecord.newBuilder()).build() })
 
 fun Log.toLogRecord(builder: LogRecord.Builder): LogRecord.Builder =
   builder
@@ -147,7 +147,7 @@ fun Log.toLogRecord(builder: LogRecord.Builder): LogRecord.Builder =
     .setData(data.hexBuffer())
     .setTopics(topics.map { it.hexBuffer32() })
 
-fun Trace.toTraceRecord(receipt: TransactionReceipt, builder: TraceRecord.Builder): TraceRecord.Builder {
+fun Trace.toTraceRecord(builder: TraceRecord.Builder): TraceRecord.Builder {
 
   val action = this.action
 

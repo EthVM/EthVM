@@ -52,7 +52,7 @@ class ChainEventsTransformer(
     }
   }
 
-  private val forkLength = 256 // roughly 1 hour of blocks
+  private val historySize = 100000 //
 
   private lateinit var context: ProcessorContext
 
@@ -271,7 +271,7 @@ class ChainEventsTransformer(
    */
   private fun cleanupState(highestBlockNumber: BigInteger) {
 
-    var blockNumber = highestBlockNumber - forkLength.toBigInteger()
+    var blockNumber = highestBlockNumber - historySize.toBigInteger()
 
     var stop: Boolean
 

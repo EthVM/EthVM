@@ -157,7 +157,7 @@ enum class TopicWriteGenerators(
     when {
       record.value() == null -> {
         // tombstone received so we need unset the suicide in the contract object
-        writes += UpdateOneModel(idFilter, Document(mapOf("\$unset" to "destructed")))
+        writes += UpdateOneModel(idFilter, Document(mapOf("\$unset" to mapOf("destructed" to ""))))
       }
       else -> {
 
@@ -190,7 +190,7 @@ enum class TopicWriteGenerators(
     when {
       record.value() == null -> {
         // tombstone received so we need to delete
-        writes += UpdateOneModel(idFilter, Document(mapOf("\$unset" to "metadata")))
+        writes += UpdateOneModel(idFilter, Document(mapOf("\$unset" to mapOf("metadata" to ""))))
       }
       else -> {
 
@@ -386,9 +386,9 @@ enum class TopicWriteGenerators(
       record.value() == null -> {
 
         val bson = when (keyBson.getString("type").value) {
-          "OUT_TX_COUNT" -> Document(mapOf("\$unset" to "outTxCount"))
-          "IN_TX_COUNT" -> Document(mapOf("\$unset" to "inTxCount"))
-          "TOTAL_TX_COUNT" -> Document(mapOf("\$unset" to "totalTxCount"))
+          "OUT_TX_COUNT" -> Document(mapOf("\$unset" to mapOf("outTxCount" to "")))
+          "IN_TX_COUNT" -> Document(mapOf("\$unset" to mapOf("inTxCount" to "")))
+          "TOTAL_TX_COUNT" -> Document(mapOf("\$unset" to mapOf("totalTxCount" to "")))
           else -> throw IllegalStateException("Unexpected type value")
         }
 
@@ -427,7 +427,7 @@ enum class TopicWriteGenerators(
       record.value() == null -> {
 
         val bson = when (keyBson.getString("type").value) {
-          "MINER" -> Document(mapOf("\$unset" to "isMiner"))
+          "MINER" -> Document(mapOf("\$unset" to mapOf("isMiner" to "")))
           else -> throw IllegalStateException("Unexpected type value")
         }
 
@@ -460,7 +460,7 @@ enum class TopicWriteGenerators(
       record.value() == null -> {
 
         val bson = when (keyBson.getString("type").value) {
-          "CONTRACT_CREATOR" -> Document(mapOf("\$unset" to "isContractCreator"))
+          "CONTRACT_CREATOR" -> Document(mapOf("\$unset" to mapOf("isContractCreator" to "")))
           else -> throw IllegalStateException("Unexpected type value")
         }
 

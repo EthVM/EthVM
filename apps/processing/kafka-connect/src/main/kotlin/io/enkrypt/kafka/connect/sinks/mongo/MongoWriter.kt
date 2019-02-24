@@ -29,7 +29,7 @@ class MongoWriter {
   private val batchesInFlight = AtomicInteger(0)
 
   private var collections: Map<MongoCollections, MongoCollection<BsonDocument>> = emptyMap()
-  private var pendingWrites: List<Future<Void>> = emptyList()
+  private var pendingWrites: List<Future<*>> = emptyList()
 
   private var db: MongoDatabase? = null
   private var executor: ExecutorService? = null
@@ -57,7 +57,7 @@ class MongoWriter {
           wait(60, TimeUnit.SECONDS)
         }
 
-        executor!!.submit(BulkWriteTask(batch))
+        pendingWrites = pendingWrites + executor!!.submit(BulkWriteTask(batch))
         batchesInFlight.incrementAndGet()
       }.lastOrNull()
 
