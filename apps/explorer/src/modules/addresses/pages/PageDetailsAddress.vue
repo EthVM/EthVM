@@ -30,6 +30,7 @@
           :txs="account.txs"
           :total-txs="totalFilter"
           :error="txsError"
+          :page="txsPage"
           @filter="setFilterTxs"
         />
       </v-tab-item>

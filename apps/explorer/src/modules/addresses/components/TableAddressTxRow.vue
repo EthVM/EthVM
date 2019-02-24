@@ -5,8 +5,8 @@
         <v-card-title class="text-xs-center pt-5 pb-5">{{ $t('message.syncPendingTxs') }}</v-card-title>
       </v-layout>
     </v-card>
-    <v-card v-else flat id="scroll-target" style="max-height: 800px" class="scroll-y pt-0 pb-0">
-      <v-layout column fill-height v-scroll:#scroll-target class="pt-1" style="margin-right: 1px">
+    <v-card v-else flat id="scroll-target" class=" pt-0 pb-0">
+      <v-layout column fill-height class="pt-1" style="margin-right: 1px">
         <v-flex xs12>
           <v-card v-if="transactions.length == 0" flat>
             <v-card-text class="text-xs-center secondary--text">{{ text }}</v-card-text>
