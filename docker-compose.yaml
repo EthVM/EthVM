@@ -33,7 +33,7 @@ services:
       - 8545:8545
       - 8546:8546
       - 30303:30303
-    command: --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts *
+    command: --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
     cpu_shares: 2048
 
   traefik:
@@ -102,6 +102,8 @@ services:
       - back
     ports:
       - 27017:27017
+    cpu_shares: 4000
+    mem_limit: 4g
 
   zookeeper:
     image: confluentinc/cp-zookeeper:${CP_VERSION}
