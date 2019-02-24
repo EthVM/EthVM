@@ -11,7 +11,6 @@ enum class Genesis(val filename: String) {
     val input = Genesis::class.java.getResourceAsStream("/genesis/$filename.json")
     return Klaxon().parse<GenesisFile>(input)!!
   }
-
 }
 
 class GenesisFile(val alloc: Map<String, String>)

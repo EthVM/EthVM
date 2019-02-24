@@ -26,15 +26,15 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt
 import org.web3j.protocol.parity.methods.response.Trace
 import org.web3j.utils.Numeric
 
-data class BlockData(val block: EthBlock.Block,
-                     val uncles: List<EthBlock.Block>,
-                     val receipts: List<TransactionReceipt>?,
-                     val traces: List<Trace>?) {
-
+data class BlockData(
+  val block: EthBlock.Block,
+  val uncles: List<EthBlock.Block>,
+  val receipts: List<TransactionReceipt>?,
+  val traces: List<Trace>?
+) {
 
   fun toBlockRecord(): BlockRecord.Builder =
     block.toBlockRecord(BlockRecord.newBuilder(), uncles, receipts, traces)
-
 }
 
 fun EthBlock.Block.toBlockHeaderRecord(builder: BlockHeaderRecord.Builder): BlockHeaderRecord.Builder =
@@ -56,23 +56,24 @@ fun EthBlock.Block.toBlockHeaderRecord(builder: BlockHeaderRecord.Builder): Bloc
     .setTimestamp(timestamp.longValueExact())
     .setSize(Numeric.decodeQuantity(sizeRaw ?: "0x0").longValueExact())
 
-
-fun EthBlock.Block.toBlockRecord(builder: BlockRecord.Builder,
-                                 uncles: List<EthBlock.Block>,
-                                 receipts: List<TransactionReceipt>?,
-                                 traces: List<Trace>?): BlockRecord.Builder {
+fun EthBlock.Block.toBlockRecord(
+  builder: BlockRecord.Builder,
+  uncles: List<EthBlock.Block>,
+  receipts: List<TransactionReceipt>?,
+  traces: List<Trace>?
+): BlockRecord.Builder {
 
   val receiptsByTxHash = receipts?.map { it.transactionHash to it }?.toMap() ?: emptyMap()
   val tracesByTxHash = traces?.groupBy { it.transactionHash } ?: emptyMap()
   val txs = transactions.map { it.get() as Transaction }
 
   val rewards = traces?.filter { it.type == "reward" }
-    ?.map{ it.action as Trace.RewardAction }
+    ?.map { it.action as Trace.RewardAction }
     ?.map {
       BlockRewardRecord.newBuilder()
-        .setAuthor(it.getAuthor().hexBuffer())
-        .setRewardType(it.getRewardType())
-        .setValue(it.getValue().unsignedByteBuffer())
+        .setAuthor(it.author.hexBuffer())
+        .setRewardType(it.rewardType)
+        .setValue(it.value.unsignedByteBuffer())
         .build()
     } ?: emptyList()
 
@@ -116,12 +117,11 @@ fun Transaction.toTransactionRecord(builder: TransactionRecord.Builder, blockTim
     .setS(s.hexBuffer())
     .setCreates(if (creates != null) creates.hexBuffer20() else null)
     .setChainId(chainId)
-    .setTimestamp(blockTimestamp)
-    .setReceipt(receipt.toTransactionReceiptRecord(TransactionReceiptRecord.newBuilder(), traces).build())
+    .setTimestamp(blockTimestamp).receipt = receipt.toTransactionReceiptRecord(TransactionReceiptRecord.newBuilder(), traces).build()
 
   if (input != null) {
     // we compress if the input fixed is 1 Kb or more as some blocks later in the chain have nonsense inputs which are very large and most repeat themselves
-    builder.setInput(input.hexBuffer().compress(1024))
+    builder.input = input.hexBuffer().compress(1024)
   }
 
   return builder
@@ -140,7 +140,7 @@ fun TransactionReceipt.toTransactionReceiptRecord(builder: TransactionReceiptRec
     .setLogsBloom(logsBloom.hexBuffer256())
     .setRoot(if (root != null) root.hexBuffer32() else null)
     .setStatus(if (status != null) status.hexBuffer() else null)
-    .setTraces(traces.map{ it.toTraceRecord(TraceRecord.newBuilder()).build() })
+    .setTraces(traces.map { it.toTraceRecord(TraceRecord.newBuilder()).build() })
 
 fun Log.toLogRecord(builder: LogRecord.Builder): LogRecord.Builder =
   builder
@@ -152,14 +152,14 @@ fun Trace.toTraceRecord(builder: TraceRecord.Builder): TraceRecord.Builder {
 
   val action = this.action
 
-  val actionRecord = when(action) {
+  val actionRecord = when (action) {
 
     is Trace.CallAction -> TraceCallActionRecord.newBuilder()
       .setCallType(action.callType)
       .setFrom(action.from.hexBuffer20())
-      .setTo(if(action.to != null) action.to.hexBuffer20() else null)
+      .setTo(if (action.to != null) action.to.hexBuffer20() else null)
       .setGas(action.gas.unsignedByteBuffer())
-      .setInput(if(action.input != null) action.input.hexBuffer().compress(1024) else null)
+      .setInput(if (action.input != null) action.input.hexBuffer().compress(1024) else null)
       .setValue(action.value.unsignedByteBuffer())
       .build()
 
@@ -188,20 +188,19 @@ fun Trace.toTraceRecord(builder: TraceRecord.Builder): TraceRecord.Builder {
   return builder
     .setAction(actionRecord)
     .setError(error)
-    .setResult(if(result != null) result.toTraceResultRecord(TraceResultRecord.newBuilder()).build() else null)
+    .setResult(if (result != null) result.toTraceResultRecord(TraceResultRecord.newBuilder()).build() else null)
     .setSubtraces(subtraces.intValueExact())
-    .setTraceAddress(traceAddress.map{ it.intValueExact() })
+    .setTraceAddress(traceAddress.map { it.intValueExact() })
     .setType(type)
     .setBlockHash(blockHash.hexBuffer32())
     .setBlockNumber(blockNumber.unsignedByteBuffer())
     .setTransactionHash(transactionHash.hexBuffer32())
     .setTransactionPosition(transactionPosition.intValueExact())
-
 }
 
 fun Trace.Result.toTraceResultRecord(builder: TraceResultRecord.Builder): TraceResultRecord.Builder =
   builder
-    .setAddress(if(address != null) address.hexBuffer20() else null)
-    .setCode(if(code != null) code.hexBuffer() else null)
+    .setAddress(if (address != null) address.hexBuffer20() else null)
+    .setCode(if (code != null) code.hexBuffer() else null)
     .setGasUsed(gasUsed.unsignedByteBuffer())
-    .setOutput(if(output != null) output.hexBuffer() else null)
+    .setOutput(if (output != null) output.hexBuffer() else null)

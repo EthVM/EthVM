@@ -26,8 +26,6 @@ class JsonRpc2_0ParityExtended(web3jService: Web3jService?) : JsonRpc2_0Parity(w
       ParityBlockReceiptsResponse::class.java
     )
   }
-
-
 }
 
 fun EthSyncing.Syncing.syncRanges(previous: EthSyncing.Syncing, batchSize: BigInteger): List<ClosedRange<BigInteger>> {
@@ -35,22 +33,20 @@ fun EthSyncing.Syncing.syncRanges(previous: EthSyncing.Syncing, batchSize: BigIn
   var start = previous.currentBlock.hexUBigInteger()!!
   val end = this.currentBlock.hexUBigInteger()!!
 
-  if(start > BigInteger.ZERO) start += BigInteger.ONE
+  if (start > BigInteger.ZERO) start += BigInteger.ONE
 
   var ranges = emptyList<ClosedRange<BigInteger>>()
 
   var batchStart = start
 
-  while(batchStart < end) {
+  while (batchStart < end) {
 
     var batchEnd = batchStart + batchSize
-    if(batchEnd > end) batchEnd = end
+    if (batchEnd > end) batchEnd = end
 
     ranges = ranges + batchStart.rangeTo(batchEnd)
     batchStart += (batchSize + BigInteger.ONE)
   }
 
   return ranges
-
 }
-

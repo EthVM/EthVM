@@ -8,19 +8,18 @@ val emptyByteArray = ByteArray(0)
 fun String.hexBytes(): ByteArray =
   run {
 
-    var str = if(this.startsWith("0x")) {
+    var str = if (this.startsWith("0x")) {
       this.replace("0x", "")
     } else {
       this
     }
 
-    if(str.length % 2 == 1) {
+    if (str.length % 2 == 1) {
       str = "0$str"
     }
 
     Hex.decodeHex(str)
   }
-
 
 fun String.hexBuffer() = this.hexBytes().byteBuffer()
 
@@ -34,5 +33,3 @@ fun String.hexBuffer32() = this.hexFixedBuffer(32)
 fun String.hexBuffer256() = this.hexFixedBuffer(256)
 
 fun String.hexUBigInteger() = this.hexBuffer().unsignedBigInteger()
-
-

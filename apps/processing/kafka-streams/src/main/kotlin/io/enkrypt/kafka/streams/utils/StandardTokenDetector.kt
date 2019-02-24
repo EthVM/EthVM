@@ -8,7 +8,6 @@ import io.enkrypt.kafka.streams.utils.TokenContract.Companion.NAME
 import io.enkrypt.kafka.streams.utils.TokenContract.Companion.SYMBOL
 import io.enkrypt.kafka.streams.utils.TokenContract.Companion.TOTAL_SUPPLY
 import org.ethereum.crypto.HashUtil
-import java.io.InputStream
 import java.nio.ByteBuffer
 
 /**

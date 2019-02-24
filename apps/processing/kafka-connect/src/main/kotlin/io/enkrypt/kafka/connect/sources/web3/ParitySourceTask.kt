@@ -108,7 +108,6 @@ class ParitySourceTask : SourceTask() {
         false -> offlineSync(lastBlockNumber, fetchQueue!!)
         true -> liveSync(lastBlockNumber, fetchQueue!!)
       }
-
     } catch (ex: Exception) {
 
       when (ex) {
@@ -116,7 +115,7 @@ class ParitySourceTask : SourceTask() {
 
           var connectDelayMs = (this.connectDelayMs ?: 1000) * 2
 
-          if(connectDelayMs > 30000) {
+          if (connectDelayMs > 30000) {
             connectDelayMs = 30000
           }
 
@@ -126,9 +125,7 @@ class ParitySourceTask : SourceTask() {
         }
         else -> throw ex
       }
-
     }
-
   }
 
   private fun blockNumberOffset(): BigInteger? {
@@ -147,14 +144,12 @@ class ParitySourceTask : SourceTask() {
 
         val numberMinusForkProtection = number - 256
         if (numberMinusForkProtection < 0) null else number.toBigInteger()
-
       }
       else -> throw IllegalStateException("Unexpected value returned: $number")
     }
-
   }
 
-  private fun offlineSync(blockNumberOffset: BigInteger?, rangeQueue: ArrayBlockingQueue<ClosedRange<BigInteger>>) : Disposable {
+  private fun offlineSync(blockNumberOffset: BigInteger?, rangeQueue: ArrayBlockingQueue<ClosedRange<BigInteger>>): Disposable {
 
     val latestBlockNumber = parity!!.ethBlockNumber().send().blockNumber
 
@@ -174,7 +169,6 @@ class ParitySourceTask : SourceTask() {
           }
         }
       )
-
   }
 
   private fun liveSync(blockNumberOffset: BigInteger?, rangeQueue: ArrayBlockingQueue<ClosedRange<BigInteger>>): Disposable {
@@ -212,7 +206,6 @@ class ParitySourceTask : SourceTask() {
 
               historicFetchComplete = true
               start += BigInteger.ONE
-
             }
 
             rangeQueue.put(start.rangeTo(end))
@@ -225,7 +218,6 @@ class ParitySourceTask : SourceTask() {
           }
         }
       )
-
   }
 
   override fun stop() {
@@ -281,9 +273,7 @@ class ParitySourceTask : SourceTask() {
 
             // convert to block record
             blockData.toBlockRecord().build()
-
           }
-
         }.flatten()
         .map { record ->
 
@@ -302,19 +292,17 @@ class ParitySourceTask : SourceTask() {
           val value = avroData.toConnectData(BlockRecord.`SCHEMA$`, record).value()
 
           SourceRecord(source, offset, blocksTopic, blockKeyConnectSchema, key, blockValueConnectSchema, value)
-
         }
 
       logger.debug { "Polled ${sourceRecords.size} records" }
 
       return sourceRecords.toMutableList()
-
     } catch (ex: Exception) {
 
       parity?.shutdown()
       parity = null
 
-      return when(ex) {
+      return when (ex) {
 
         // return an empty list as we can try another poll
         is RetriableException -> mutableListOf()
@@ -326,9 +314,7 @@ class ParitySourceTask : SourceTask() {
         // otherwise rethrow
         else -> throw ex
       }
-
     }
-
   }
 
   private fun fetchRange(range: ClosedRange<BigInteger>): List<BlockData> {
@@ -369,7 +355,6 @@ class ParitySourceTask : SourceTask() {
     logger.info { "Finished fetching blocks . Start = ${range.start}, end = ${range.endInclusive}" }
 
     return result
-
   }
 
   private fun rangesFor(syncedUntil: BigInteger, end: BigInteger, batchSize: Int = 128): List<ClosedRange<BigInteger>> {

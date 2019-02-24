@@ -156,7 +156,6 @@ class BlockProcessor : AbstractKafkaProcessor() {
     blocks
       .flatMap { _, block -> BlockMetrics.forAggregation(block, BlockMetrics.forBlock(block)) }
       .to(Topics.BlockMetricsByDay, Produced.with(Serdes.MetricKey(), Serdes.Metric()))
-
   }
 
   private fun contractDestructions(chainEvents: ChainEventStream) =
@@ -318,8 +317,6 @@ class BlockProcessor : AbstractKafkaProcessor() {
           )
         )
       }.to(Topics.AddressTxEvents, Produced.with(Serdes.AddressMetadataKey(), KafkaSerdes.ByteBuffer()))
-
-
   }
 
   private fun persistTokenTransferEvents(tokenTransferEvents: ChainEventStream) {
@@ -338,7 +335,6 @@ class BlockProcessor : AbstractKafkaProcessor() {
         Topics.TokenTransfers,
         Produced.with(Serdes.TokenTransferKey(), Serdes.TokenTransfer())
       )
-
   }
 
   private fun etherMovementsForTxFees(chainEvents: ChainEventStream) =
@@ -394,7 +390,6 @@ class BlockProcessor : AbstractKafkaProcessor() {
           )
 
         )
-
       }.to(Topics.FungibleTokenMovements, Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance()))
 
   private fun etherMovementsForRewards(chainEvents: ChainEventStream) =
@@ -434,10 +429,8 @@ class BlockProcessor : AbstractKafkaProcessor() {
           )
 
         )
-
       }
       .to(Topics.FungibleTokenMovements, Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance()))
-
 
   private fun etherMovementsForDaoHardFork(chainEvents: ChainEventStream) =
     chainEvents
@@ -473,7 +466,6 @@ class BlockProcessor : AbstractKafkaProcessor() {
         )
 
         listOf(fromBalance, toBalance)
-
       }.to(Topics.FungibleTokenMovements, Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance()))
 
   private fun etherMovementsForPremineBalance(chainEvents: ChainEventStream) =
@@ -498,7 +490,6 @@ class BlockProcessor : AbstractKafkaProcessor() {
         Produced.with(Serdes.TokenBalanceKey(), Serdes.TokenBalance())
       )
 
-
   private fun extractTransactions(blocks: BlockStream) =
     blocks.flatMap { _, block ->
 
@@ -513,9 +504,7 @@ class BlockProcessor : AbstractKafkaProcessor() {
           if (reverse) null else tx
         )
       }
-
     }.to(Topics.Transactions, Produced.with(Serdes.TransactionKey(), Serdes.Transaction()))
-
 
   private fun extractUncles(blocks: BlockStream) =
     blocks.flatMap { _, block ->
@@ -559,7 +548,6 @@ class BlockProcessor : AbstractKafkaProcessor() {
               .build()
         )
       }.to(Topics.MinerList, Produced.with(Serdes.AddressMetadataKey(), Serdes.AddressMetadata()))
-
 
   private fun generateTokenTransferKey(event: ChainEventRecord): TokenTransferKeyRecord {
 

@@ -4,14 +4,8 @@ import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.capture.TransactionReceiptRecord
 import io.enkrypt.avro.capture.TransactionRecord
-import io.enkrypt.avro.common.ContractType
 import io.enkrypt.avro.exchange.ExchangeRateRecord
-import io.enkrypt.avro.processing.BalanceType
-import io.enkrypt.avro.processing.ContractCreateRecord
-import io.enkrypt.avro.processing.ContractDestroyRecord
-import io.enkrypt.avro.processing.ContractKeyRecord
 import io.enkrypt.avro.processing.TokenBalanceKeyRecord
-import io.enkrypt.avro.processing.TokenBalanceRecord
 import io.enkrypt.avro.processing.TokenTransferRecord
 import java.math.BigInteger
 import java.nio.ByteBuffer
@@ -45,7 +39,6 @@ fun BlockRecord.txFees(): List<BigInteger> {
   return emptyList()
 }
 
-
 fun BlockRecord.totalTxFees(): BigInteger = this.txFees()
   .fold(0.toBigInteger()) { memo, next -> memo + next }
 
@@ -70,5 +63,4 @@ object AvroHelpers {
     BlockKeyRecord.newBuilder()
       .setNumber(number)
       .build()
-
 }

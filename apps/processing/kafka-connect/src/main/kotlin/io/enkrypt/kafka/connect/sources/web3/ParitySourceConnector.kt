@@ -64,6 +64,5 @@ class ParitySourceConnector : SourceConnector() {
 
     fun schemaRegistryUrl(props: MutableMap<String, String>) =
       props.getOrDefault(SCHEMA_REGISTRY_URL_CONFIG, SCHEMA_REGISTRY_URL_DEFAULT)
-
   }
 }
