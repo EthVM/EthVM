@@ -1,7 +1,30 @@
 <template>
   <v-container pa-0 ma-0>
     <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
-      <v-flex d-flex xs12 sm8 md5 pr-3>
+      <!--
+      =====================================================================================
+          BLOCK NUMBER / HASH
+
+          Responsive Tally:
+          XS: 3/12 (3)
+          SM: 3/12 (3)
+          MD: 1/12 (1)
+      =====================================================================================
+      -->
+      <v-flex xs3 sm3 md1 pr-1>
+        <router-link class="primary--text text-truncate font-italic psmall" :to="'/block/' + tx.getBlockHash()">{{ tx.getBlockNumber() }}</router-link>
+      </v-flex>
+      <!--
+      =====================================================================================
+        TRANSACTION # / HASH
+
+        Responsive Tally:
+        XS: 10/12 (7)
+        SM: 9/12 (6)
+        MD: 7/12 (6)
+      =====================================================================================
+      -->
+      <v-flex d-flex xs7 sm6 md6 pr-3>
         <v-layout row wrap align-center pb-1>
           <v-flex d-flex xs12 pb-2>
             <router-link class="primary--text text-truncate font-italic psmall" :to="'/tx/' + tx.getHash()">{{ tx.getHash() }}</router-link>
@@ -31,7 +54,17 @@
           </v-flex>
         </v-layout>
       </v-flex>
-      <v-flex d-flex sm3 md2>
+      <!--
+      =====================================================================================
+        ETH VALUE
+
+        Responsive Tally:
+        XS: 12/12 (2)
+        SM: 11/12 (2)
+        MD: 8/12 (1)
+      =====================================================================================
+      -->
+      <v-flex d-flex xs2 sm2 md1 pr-0>
         <p v-if="$vuetify.breakpoint.xsOnly" class="text-truncate info--text">Amount:</p>
         <p :class="[tx.getStatus() ? 'txSuccess--text' : 'txFail--text']">
           <v-tooltip v-if="isShortValue(tx.getValue().toEth())" bottom>
@@ -48,12 +81,42 @@
           }}
         </p>
       </v-flex>
-      <v-flex hidden-sm-and-down md2>
+      <!--
+      =====================================================================================
+        GAS
+
+        Responsive Tally:
+        XS: 12/12 (0)
+        SM: 11/12 (0)
+        MD: 9/12 (1)
+      =====================================================================================
+      -->
+      <v-flex hidden-sm-and-down md1>
         <p class="black--text text-truncate mb-0">{{ tx.getGas().toNumber() }}</p>
       </v-flex>
+      <!--
+      =====================================================================================
+        GWEI
+
+        Responsive Tally:
+        XS: 12/12 (0)
+        SM: 11/12 (0)
+        MD: 11/12 (2)
+      =====================================================================================
+      -->
       <v-flex hidden-sm-and-down md2>
         <p class="text-truncate black--text mb-0">{{ tx.getGasPrice().toGWei() }}</p>
       </v-flex>
+      <!--
+      =====================================================================================
+        STATUS
+
+        Responsive Tally:
+        XS: 12/12 (0)
+        SM: 12/12 (1)
+        MD: 12/12 (1)
+      =====================================================================================
+      -->
       <v-flex hidden-xs-only v-if="!isPending" sm1>
         <v-icon v-if="tx.getStatus()" small class="txSuccess--text">fa fa-check-circle</v-icon>
         <v-icon v-else small class="txFail--text">fa fa-times-circle</v-icon>
