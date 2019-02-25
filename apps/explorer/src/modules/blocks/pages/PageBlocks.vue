@@ -4,7 +4,7 @@
     <app-card-stats-group />
     <v-layout row wrap justify-center mb-4>
       <v-flex xs12>
-        <table-blocks :loading="isLoading" :blocks="blocks" :total-blocks="total" :max-items="max" :error="error" @getBlockPage="getPage" />
+        <table-blocks :loading="isLoading" :blocks="blocks" :total-blocks="total" :max-items="max" :error="error" :page="page" @getBlockPage="getPage" />
       </v-flex>
     </v-layout>
   </v-container>
@@ -33,6 +33,7 @@ export default class PageBlocks extends Vue {
   firstLoad = true
   error = ''
   total = 0
+  page = 0
 
   /*
   ===================================================================================
@@ -50,7 +51,7 @@ export default class PageBlocks extends Vue {
       }
     )
     this.getPage(0)
-    window.scrollTo(0, 0)
+    // window.scrollTo(0, 0)
   }
 
   /*
@@ -68,6 +69,11 @@ export default class PageBlocks extends Vue {
   }
 
   getPage(page: number): void {
+    // Don't want to fetch same page twice from pagination event //
+    if (!this.firstLoad && this.isLoading) {
+      return
+    }
+    this.page = page
     this.isLoading = true
     this.fetchBlocks(page).then(
       (res: SimpleBlock[]) => {
