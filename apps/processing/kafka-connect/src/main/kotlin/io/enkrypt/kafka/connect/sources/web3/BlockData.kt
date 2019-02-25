@@ -25,6 +25,7 @@ import org.web3j.protocol.core.methods.response.Transaction
 import org.web3j.protocol.core.methods.response.TransactionReceipt
 import org.web3j.protocol.parity.methods.response.Trace
 import org.web3j.utils.Numeric
+import java.math.BigInteger
 
 data class BlockData(
   val block: EthBlock.Block,
@@ -67,15 +68,26 @@ fun EthBlock.Block.toBlockRecord(
   val tracesByTxHash = traces?.groupBy { it.transactionHash } ?: emptyMap()
   val txs = transactions.map { it.get() as Transaction }
 
-  val rewards = traces?.filter { it.type == "reward" }
+  val rewards = traces
+    ?.filter { it.type == "reward" }
     ?.map { it.action as Trace.RewardAction }
-    ?.map {
+    ?.groupBy { it.author to it.rewardType }
+    ?.map { (key, rewards) ->
+
+      val totalReward = rewards.fold(BigInteger.ZERO) { memo, action -> memo + action.value }
+
       BlockRewardRecord.newBuilder()
-        .setAuthor(it.author.hexBuffer())
-        .setRewardType(it.rewardType)
-        .setValue(it.value.unsignedByteBuffer())
+        .setAuthor(key.first.hexBuffer())
+        .setRewardType(key.second)
+        .setValue(totalReward.unsignedByteBuffer())
         .build()
+
     } ?: emptyList()
+
+  val uncleRewardsByAuthor = rewards
+    .filter { it.getRewardType() == "uncle" }
+    .groupBy { it.getAuthor() }
+    .mapValues { (_, v) -> v.first().getValue() }
 
   return builder
     .setHeader(toBlockHeaderRecord(BlockHeaderRecord.newBuilder()).build())
@@ -84,7 +96,10 @@ fun EthBlock.Block.toBlockRecord(
     .setUncleHashes(this.uncles.map { it.hexBuffer32() })
     .setUncles(
       uncles.map { uncle ->
-        uncle.toBlockHeaderRecord(BlockHeaderRecord.newBuilder()).build()
+        uncle
+          .toBlockHeaderRecord(BlockHeaderRecord.newBuilder())
+          .setUncleReward(uncleRewardsByAuthor[uncle.author.hexBuffer20()])
+          .build()
       }
     )
     .setRewards(rewards)

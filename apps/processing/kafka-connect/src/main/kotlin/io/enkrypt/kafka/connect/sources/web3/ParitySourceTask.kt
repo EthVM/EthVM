@@ -6,7 +6,6 @@ import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.common.extensions.hexUBigInteger
 import io.enkrypt.common.extensions.unsignedBigInteger
-import io.enkrypt.kafka.connect.extensions.JsonRpc2_0ParityExtended
 import io.enkrypt.kafka.connect.utils.Versions
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
@@ -16,6 +15,7 @@ import org.apache.kafka.connect.data.Schema
 import org.apache.kafka.connect.errors.RetriableException
 import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTask
+import org.java_websocket.exceptions.WebsocketNotConnectedException
 import org.web3j.protocol.core.DefaultBlockParameter
 import org.web3j.protocol.exceptions.ClientConnectionException
 import org.web3j.protocol.websocket.WebSocketService
@@ -196,6 +196,7 @@ class ParitySourceTask : SourceTask() {
       },
       { throwable ->
         subscriptionException = when (throwable) {
+          is WebsocketNotConnectedException -> RetriableException(throwable)
           is ClientConnectionException -> RetriableException(throwable)
           else -> throwable
         }
