@@ -4,7 +4,16 @@
     <app-card-stats-group type="txs" />
     <v-layout row justify-center mb-4>
       <v-flex xs12>
-        <table-txs :transactions="txs" page-type="tx" :loading="isLoading" :max-items="maxItems" :total-txs="totalTxs" :error="error" @getTxsPage="getPage" />
+        <table-txs
+          :transactions="txs"
+          page-type="tx"
+          :loading="isLoading"
+          :max-items="maxItems"
+          :total-txs="totalTxs"
+          :page="page"
+          :error="error"
+          @getTxsPage="getPage"
+        />
       </v-flex>
     </v-layout>
   </v-container>
