@@ -19,6 +19,7 @@ import org.apache.kafka.connect.source.SourceTask
 import org.web3j.protocol.core.DefaultBlockParameter
 import org.web3j.protocol.exceptions.ClientConnectionException
 import org.web3j.protocol.websocket.WebSocketService
+import java.io.IOException
 import java.math.BigInteger
 import java.net.ConnectException
 import java.util.concurrent.ArrayBlockingQueue
@@ -51,7 +52,7 @@ class ParitySourceTask : SourceTask() {
 
   private var subscription: Disposable? = null
 
-  private var lastBlockNumber: BigInteger? = null
+  private var blockNumberOffset: BigInteger? = null
   private var subscriptionException: Throwable? = null
 
   override fun version(): String = Versions.CURRENT
@@ -99,36 +100,32 @@ class ParitySourceTask : SourceTask() {
 
       parity = JsonRpc2_0ParityExtended(wsService)
 
-      lastBlockNumber = blockNumberOffset()
-      logger.info { "Block offset $lastBlockNumber" }
+      blockNumberOffset = blockNumberOffset()
 
-      val isSyncing = parity!!.ethSyncing().send().isSyncing
-
-      subscription = when (isSyncing) {
-        false -> offlineSync(lastBlockNumber, fetchQueue!!)
-        true -> liveSync(lastBlockNumber, fetchQueue!!)
-      }
+      subscription = sync(parity!!, blockNumberOffset, fetchQueue!!)
 
     } catch (ex: Exception) {
 
       when (ex) {
-        is ConnectException -> {
-
-          var connectDelayMs = (this.connectDelayMs ?: 1000) * 2
-
-          if(connectDelayMs > 30000) {
-            connectDelayMs = 30000
-          }
-
-          this.connectDelayMs = connectDelayMs
-
-          throw RetriableException(ex)
-        }
+        is IOException -> throwRetriable(ex)
+        is ConnectException -> throw RetriableException(ex)
         else -> throw ex
       }
 
     }
 
+  }
+
+  private fun throwRetriable(ex: Exception) {
+    var connectDelayMs = (this.connectDelayMs ?: 1000) * 2
+
+    if (connectDelayMs > 30000) {
+      connectDelayMs = 30000
+    }
+
+    this.connectDelayMs = connectDelayMs
+
+    throw RetriableException(ex)
   }
 
   private fun blockNumberOffset(): BigInteger? {
@@ -154,77 +151,56 @@ class ParitySourceTask : SourceTask() {
 
   }
 
-  private fun offlineSync(blockNumberOffset: BigInteger?, rangeQueue: ArrayBlockingQueue<ClosedRange<BigInteger>>) : Disposable {
+  private fun sync(parity: JsonRpc2_0ParityExtended, blockNumberOffset: BigInteger?, rangeQueue: ArrayBlockingQueue<ClosedRange<BigInteger>>): Disposable {
 
-    val latestBlockNumber = parity!!.ethBlockNumber().send().blockNumber
-
-    logger.info { "offline syncing - block number offset: $blockNumberOffset, latest block number = $latestBlockNumber" }
-
-    val start = blockNumberOffset ?: BigInteger.ZERO
-
-    return Observable
-      .fromIterable(rangesFor(start, latestBlockNumber))
-      .observeOn(Schedulers.single())
-      .subscribe(
-        { range -> rangeQueue.put(range) },
-        { throwable ->
-          subscriptionException = when (throwable) {
-            is ClientConnectionException -> RetriableException(throwable)
-            else -> throwable
-          }
-        }
-      )
-
-  }
-
-  private fun liveSync(blockNumberOffset: BigInteger?, rangeQueue: ArrayBlockingQueue<ClosedRange<BigInteger>>): Disposable {
-
-    logger.info { "live syncing - block number offset: $blockNumberOffset" }
-
-    var historicFetchComplete = false
+    logger.info { "Syncing - block number offset: $blockNumberOffset" }
 
     val historicBlockStart = blockNumberOffset ?: BigInteger.ZERO
 
-    return parity!!
-      .newHeadsNotifications()
-      .observeOn(Schedulers.single())
-      .map { it.params.result }
-      .map { it.number.hexUBigInteger()!! to it.hash }
-      .buffer(1000, TimeUnit.MILLISECONDS, 128)
-      .onBackpressureBuffer()
+    return Observable.merge(
+      Observable.fromArray(listOf(Pair(BigInteger.ONE.negate(), ""))),
+      parity.newHeadsNotifications()
+        .map { it.params.result }
+        .map { it.number.hexUBigInteger()!! to it.hash }
+        .buffer(1000, TimeUnit.MILLISECONDS, 128)
+        .onBackpressureBuffer()
+        .toObservable()
+    ).observeOn(Schedulers.single())
       .subscribe(
-        { heads ->
+      { heads ->
 
-          if (heads.isNotEmpty()) {
+        if (heads.isNotEmpty()) {
 
-            // possible during a fork where older block numbers are re-published so we find the max and min within the batch
+          // possible during a fork where older block numbers are re-published so we find the max and min within the batch
 
-            var start = heads.minBy { it.first }!!.first
-            val end = heads.maxBy { it.first }!!.first
+          var start = heads.minBy { it.first }!!.first
+          val end = heads.maxBy { it.first }!!.first
 
-            if (!historicFetchComplete) {
+          if (start == BigInteger.ONE.negate()) {
 
-              // if we have yet to do a historic load we do that first
-              // Ranges are inclusive so we add one to the start when we are finished
+            val latestBlockNumber = parity.ethBlockNumber().send().blockNumber
 
-              rangesFor(historicBlockStart, start)
-                .forEach { range -> rangeQueue.put(range) }
+            logger.info { "loading historic blocks. Start = $historicBlockStart, end = $latestBlockNumber" }
 
-              historicFetchComplete = true
-              start += BigInteger.ONE
+            // first we do a historic load
 
-            }
+            rangesFor(historicBlockStart, latestBlockNumber)
+              .forEach { range -> rangeQueue.put(range) }
 
-            rangeQueue.put(start.rangeTo(end))
+            start += BigInteger.ONE
+
           }
-        },
-        { throwable ->
-          subscriptionException = when (throwable) {
-            is ClientConnectionException -> RetriableException(throwable)
-            else -> throwable
-          }
+
+          rangeQueue.put(start.rangeTo(end))
         }
-      )
+      },
+      { throwable ->
+        subscriptionException = when (throwable) {
+          is ClientConnectionException -> RetriableException(throwable)
+          else -> throwable
+        }
+      }
+    )
 
   }
 
@@ -273,11 +249,11 @@ class ParitySourceTask : SourceTask() {
 
             // we track the sequence of block numbers to identify any gap in retrieval
             val number = blockData.block.number
-            val expectedNumber = (lastBlockNumber ?: BigInteger.ONE.negate()) + BigInteger.ONE
+            val expectedNumber = (blockNumberOffset ?: BigInteger.ONE.negate()) + BigInteger.ONE
 
             require(number == expectedNumber) { "Sequence gap detected. Expected $expectedNumber, received $number" }
 
-            lastBlockNumber = number
+            blockNumberOffset = number
 
             // convert to block record
             blockData.toBlockRecord().build()
@@ -314,7 +290,7 @@ class ParitySourceTask : SourceTask() {
       parity?.shutdown()
       parity = null
 
-      return when(ex) {
+      return when (ex) {
 
         // return an empty list as we can try another poll
         is RetriableException -> mutableListOf()
