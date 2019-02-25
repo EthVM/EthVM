@@ -110,7 +110,8 @@
     "notValid": "This is not a valid ",
     "sync": "We are synchronizing with the Blockchain. Some features might not work correctly.",
     "invalidAddress": "Invalid Address",
-    "syncPendingTxs": "There are no pending transactions while synchronizing with the Blockchain."
+    "syncPendingTxs": "There are no pending transactions while synchronizing with the Blockchain.",
+    "notFound": "Oops! Page Not Found :("
   },
   "block": {
     "height": "Height",
@@ -195,7 +196,8 @@
     "less": "Less",
     "viewAll": "View All",
     "first": "First",
-    "last": "Last"
+    "last": "Last",
+    "backHome": "Go Back Home"
   },
   "type": {
     "in": "In",
