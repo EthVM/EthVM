@@ -52,21 +52,21 @@ object TypeMappings {
     "blockHash" to Hex,
     "blockNumber" to UInt64,
     "transactionHash" to Hex,
-    "action" to mapOf (
-      "TraceCallActionRecord" to mapOf (
+    "action" to mapOf(
+      "TraceCallActionRecord" to mapOf(
         "from" to Hex,
         "to" to Hex,
         "gas" to UBigInt,
         "input" to Hex,
         "value" to UBigInt
       ),
-      "TraceCreateActionRecord" to mapOf (
+      "TraceCreateActionRecord" to mapOf(
         "from" to Hex,
         "gas" to UBigInt,
         "value" to UBigInt,
         "init" to Hex
       ),
-      "TraceDestroyActionRecord" to mapOf (
+      "TraceDestroyActionRecord" to mapOf(
         "address" to Hex,
         "balance" to UBigInt,
         "refundAddress" to Hex

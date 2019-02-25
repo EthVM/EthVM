@@ -5,7 +5,7 @@ import java.math.BigInteger
 import java.nio.ByteBuffer
 
 fun ByteBuffer?.fixed(capacity: Int): ByteBuffer? {
-  return if(this == null) {
+  return if (this == null) {
     this
   } else {
     require(this.capacity() == capacity) { "Must have capacity $capacity" }
@@ -63,9 +63,8 @@ fun ByteBuffer?.hex(): String? {
   return arr.hex()
 }
 
-
 fun ByteBuffer?.compress(threshold: Int): ByteBuffer? {
-  return if(this == null || this.capacity() < threshold) {
+  return if (this == null || this.capacity() < threshold) {
     return this
   } else {
     ByteBuffer.wrap(this.byteArray().compress(threshold))
@@ -73,11 +72,9 @@ fun ByteBuffer?.compress(threshold: Int): ByteBuffer? {
 }
 
 fun ByteBuffer?.decompress(): ByteBuffer? {
-  return if(this == null) {
+  return if (this == null) {
     this
   } else {
     ByteBuffer.wrap(this.byteArray().decompress())
   }
 }
-
-

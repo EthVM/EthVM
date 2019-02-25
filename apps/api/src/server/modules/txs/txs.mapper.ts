@@ -1,4 +1,4 @@
-import { Tx, TxReceipt, Trace } from 'ethvm-common'
+import { Trace, Tx, TxReceipt } from 'ethvm-common'
 
 const toTrace = (trace: any): Trace => {
   return trace

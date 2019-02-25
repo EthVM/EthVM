@@ -112,9 +112,7 @@ open class DaoHardForkConfig(override val constants: ChainConstants = ChainConst
               .setAmount(balance.unsignedByteBuffer())
               .build()
           ).build()
-
       }
-
     }
 }
 

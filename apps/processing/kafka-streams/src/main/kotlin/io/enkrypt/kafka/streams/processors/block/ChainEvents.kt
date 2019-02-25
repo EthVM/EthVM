@@ -27,7 +27,6 @@ import io.enkrypt.kafka.streams.utils.ERC20Abi
 import io.enkrypt.kafka.streams.utils.ERC721Abi
 import io.enkrypt.kafka.streams.utils.StandardTokenDetector
 import java.math.BigInteger
-import java.nio.ByteBuffer
 
 object ChainEvents {
 
@@ -87,7 +86,6 @@ object ChainEvents {
         .build()
     }
 
-
   private fun forTransaction(block: BlockRecord, tx: TransactionRecord): List<ChainEventRecord> {
 
     val reverse = block.getReverse()
@@ -128,8 +126,6 @@ object ChainEvents {
               (tx.getGasPrice().unsignedBigInteger()!! * receipt.getGasUsed().unsignedBigInteger()!!).unsignedByteBuffer()
             ).build()
         ).build()
-
-
   }
 
   private fun forLog(tx: TransactionRecord, log: LogRecord, timestamp: Long, reverse: Boolean): List<ChainEventRecord> {
@@ -173,7 +169,6 @@ object ChainEvents {
                     .setAmount(it.amount)
                     .build()
                 ).build()
-
           })
 
         erc721Transfer
@@ -196,7 +191,6 @@ object ChainEvents {
                     .setTokenId(it.tokenId)
                     .build()
                 ).build()
-
           })
       })
 
@@ -241,7 +235,6 @@ object ChainEvents {
                   .build()
               ).build()
         }
-
       }
 
       is TraceCreateActionRecord -> {
@@ -290,9 +283,7 @@ object ChainEvents {
                   .setAmount(value.unsignedByteBuffer())
                   .build()
               ).build()
-
         }
-
       }
       is TraceDestroyActionRecord -> {
 
@@ -333,7 +324,6 @@ object ChainEvents {
             ).build()
 
         )
-
       }
 
       else -> {
@@ -342,5 +332,4 @@ object ChainEvents {
 
     return result
   }
-
 }
