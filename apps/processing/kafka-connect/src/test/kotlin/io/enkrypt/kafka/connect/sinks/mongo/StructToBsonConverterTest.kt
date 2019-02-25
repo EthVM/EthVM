@@ -3,7 +3,6 @@ package io.enkrypt.kafka.connect.sinks.mongo
 import io.confluent.connect.avro.AvroConverter
 import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient
 import io.confluent.kafka.serializers.KafkaAvroSerializer
-import io.enkrypt.avro.capture.BlockHeaderRecord
 import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.capture.LogRecord

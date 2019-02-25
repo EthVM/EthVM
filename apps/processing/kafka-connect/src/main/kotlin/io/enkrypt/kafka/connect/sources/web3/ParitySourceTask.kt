@@ -37,7 +37,6 @@ class ParitySourceTask : SourceTask() {
   @Volatile
   private var blockSyncManager: ParityBlockSyncManager? = null
 
-
   private var blockNumberOffset: BigInteger? = null
 
   override fun version(): String = Versions.CURRENT
@@ -85,7 +84,6 @@ class ParitySourceTask : SourceTask() {
 
       // reset reconnect logic
       connectDelayMs = null
-
     } catch (ex: Exception) {
 
       when (ex) {
@@ -93,9 +91,7 @@ class ParitySourceTask : SourceTask() {
         is ConnectException -> throw RetriableException(ex)
         else -> throw ex
       }
-
     }
-
   }
 
   private fun throwRetriable(ex: Exception) {
@@ -126,13 +122,10 @@ class ParitySourceTask : SourceTask() {
 
         val numberMinusForkProtection = number - 256
         if (numberMinusForkProtection < 0) null else number.toBigInteger()
-
       }
       else -> throw IllegalStateException("Unexpected value returned: $number")
     }
-
   }
-
 
   override fun stop() {
     logger.debug { "Stopping" }
@@ -184,13 +177,12 @@ class ParitySourceTask : SourceTask() {
 
       logger.debug { "Polled ${sourceRecords.size} records" }
 
-      if(sourceRecords.isEmpty()) {
+      if (sourceRecords.isEmpty()) {
         // sleep for a second if nothing was found
         Thread.sleep(1000)
       }
 
       return sourceRecords.toMutableList()
-
     } catch (ex: Exception) {
 
       blockSyncManager?.stop()
@@ -209,9 +201,6 @@ class ParitySourceTask : SourceTask() {
         // otherwise rethrow
         else -> throw ex
       }
-
     }
-
   }
-
 }

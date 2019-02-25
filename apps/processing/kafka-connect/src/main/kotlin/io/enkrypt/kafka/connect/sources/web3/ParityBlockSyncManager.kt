@@ -12,8 +12,10 @@ import java.math.BigInteger
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.TimeUnit
 
-class ParityBlockSyncManager(private val parity: JsonRpc2_0ParityExtended,
-                             blockNumberOffset: BigInteger?) {
+class ParityBlockSyncManager(
+  private val parity: JsonRpc2_0ParityExtended,
+  blockNumberOffset: BigInteger?
+) {
 
   private val logger = KotlinLogging.logger {}
   private val rangeQueue = ArrayBlockingQueue<ClosedRange<BigInteger>>(20)
@@ -60,7 +62,6 @@ class ParityBlockSyncManager(private val parity: JsonRpc2_0ParityExtended,
                 .forEach { range -> rangeQueue.put(range) }
 
               start += BigInteger.ONE
-
             }
 
             rangeQueue.put(start.rangeTo(end))
@@ -68,7 +69,6 @@ class ParityBlockSyncManager(private val parity: JsonRpc2_0ParityExtended,
         },
         { throwable -> error = throwable }
       )
-
   }
 
   fun stop() {
@@ -80,7 +80,7 @@ class ParityBlockSyncManager(private val parity: JsonRpc2_0ParityExtended,
     // re-throw error if one has occurred
 
     val error = this.error
-    if(error != null) {
+    if (error != null) {
       throw error
     }
 
@@ -90,10 +90,9 @@ class ParityBlockSyncManager(private val parity: JsonRpc2_0ParityExtended,
     rangeQueue.drainTo(ranges)
 
     return ranges
-      .map{ range -> fetchRange(range) }
+      .map { range -> fetchRange(range) }
       .flatten()
-      .map{ it.toBlockRecord().build() }
-
+      .map { it.toBlockRecord().build() }
   }
 
   private fun fetchRange(range: ClosedRange<BigInteger>): List<BlockData> {
@@ -134,7 +133,6 @@ class ParityBlockSyncManager(private val parity: JsonRpc2_0ParityExtended,
     logger.info { "Finished fetching blocks . Start = ${range.start}, end = ${range.endInclusive}" }
 
     return result
-
   }
 
   private fun rangesFor(syncedUntil: BigInteger, end: BigInteger, batchSize: Int = 128): List<ClosedRange<BigInteger>> {
@@ -161,5 +159,4 @@ class ParityBlockSyncManager(private val parity: JsonRpc2_0ParityExtended,
 
     return ranges
   }
-
 }

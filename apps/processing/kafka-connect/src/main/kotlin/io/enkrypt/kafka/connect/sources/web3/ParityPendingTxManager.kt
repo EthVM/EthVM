@@ -22,19 +22,22 @@ class ParityPendingTxManager(private val parity: JsonRpc2_0ParityExtended) {
   fun poll(): Pair<List<Transaction>, List<String>> {
 
     val error = this.error
-    if(error != null) {
+    if (error != null) {
       throw error
     }
 
     val changesList = mutableListOf<Pair<List<Transaction>, List<Transaction>>>()
     changes.drainTo(changesList)
 
-    return changes
-      .map{ (insertions, deletions) ->
+//    return changes
+//      .map { (insertions, deletions) ->
+//        Pair(
+//          insertions.map { it.toTransactionRecord(TransactionRecord.newBuilder(), -1L, null, emptyList()).build() },
+//          emptyList<String>()
+//        )
+//      }
 
-        Pair(insertions.map { it.toTransactionRecord().build() })
-
-      }
+    return Pair(emptyList(), emptyList())
   }
 
   fun stop() {
@@ -68,8 +71,8 @@ class ParityPendingTxManager(private val parity: JsonRpc2_0ParityExtended) {
           }
 
         state
-          .forEach{ (hash, tx) ->
-            if(!txsByHash.containsKey(hash)) {
+          .forEach { (hash, tx) ->
+            if (!txsByHash.containsKey(hash)) {
               newState = newState - hash
               deleted = deleted + tx
             }
@@ -78,13 +81,9 @@ class ParityPendingTxManager(private val parity: JsonRpc2_0ParityExtended) {
         changes.put(Pair(inserted, deleted))
 
         executor.schedule(Fetch(newState), 1, TimeUnit.SECONDS)
-
       } catch (throwable: Throwable) {
         error = throwable
       }
-
     }
   }
-
-
 }

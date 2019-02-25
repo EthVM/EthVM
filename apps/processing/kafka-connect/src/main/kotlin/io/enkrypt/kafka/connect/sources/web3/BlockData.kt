@@ -81,7 +81,6 @@ fun EthBlock.Block.toBlockRecord(
         .setRewardType(key.second)
         .setValue(totalReward.unsignedByteBuffer())
         .build()
-
     } ?: emptyList()
 
   val uncleRewardsByAuthor = rewards
