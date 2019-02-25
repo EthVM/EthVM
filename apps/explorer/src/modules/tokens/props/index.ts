@@ -18,3 +18,8 @@ export interface TokenExchange {
   total_volume?: number
   _id: string
 }
+
+export interface TokenFilter {
+  category: string,
+  filter: string
+}

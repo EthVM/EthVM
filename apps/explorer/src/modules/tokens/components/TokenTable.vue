@@ -91,7 +91,7 @@
         </v-card>
       </v-flex>
       <v-flex hidden-sm-and-up xs12 mr-1 ml-1>
-        <token-filter />
+        <token-filter @filterMobile="selectFilter"/>
       </v-flex>
     </v-layout>
     <!--
@@ -163,7 +163,7 @@
     }) totalTokens: number
     @Prop(String) error: string
 
-    maxItems = 10
+    maxItems = 50
     page = 1
     selectedFilter = 0
     filter = [{
@@ -203,11 +203,15 @@
       ===================================================================================
       */
 
-    // @Watch('page')
-    // onPageChanged(newVal: number, oldVal: number): void {
-    //   this.$emit('getTxsPage', this.page)
-    // }
+    @Watch('page')
+    onPageChanged(newVal: number, oldVal: number): void {
+      this.$emit('getTokens', this.filter[this.selectedFilter], newVal )
+    }
 
+    @Watch('selectedFilter')
+    onSelectedFilterChanged(newVal: number, oldVal: number): void {
+      this.$emit('getTokens', this.filter[newVal], this.page)
+    }
     /*
       ===================================================================================
         Methods
