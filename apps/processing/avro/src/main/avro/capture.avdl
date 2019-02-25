@@ -177,7 +177,6 @@ protocol Capture {
     array<BlockHeaderRecord> uncles = [];                         // array of uncle headers
 
     array<BlockRewardRecord> rewards = [];
-    union { null, bytes } totalTxFees = null;
 
     boolean reverse = false;                                      // whether this block summary should be applied or reversed from cumulative state
     int numPendingTxs = 0;                                        // count as of time of processing
