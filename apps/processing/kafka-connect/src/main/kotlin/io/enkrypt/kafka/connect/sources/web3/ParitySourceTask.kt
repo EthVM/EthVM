@@ -6,7 +6,6 @@ import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.common.extensions.hexUBigInteger
 import io.enkrypt.common.extensions.unsignedBigInteger
-import io.enkrypt.kafka.connect.extensions.JsonRpc2_0ParityExtended
 import io.enkrypt.kafka.connect.utils.Versions
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
@@ -26,7 +25,6 @@ import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-// @Alpha - Not ready for prime time
 class ParitySourceTask : SourceTask() {
 
   private val logger = KotlinLogging.logger {}
@@ -257,6 +255,7 @@ class ParitySourceTask : SourceTask() {
       }
 
       val sourceRecords = ranges
+        .asSequence()
         .map { executor.submit<List<BlockData>> { fetchRange(it) } }
         .map { it.get(30, TimeUnit.SECONDS) }
         .map { blocks ->
@@ -293,6 +292,7 @@ class ParitySourceTask : SourceTask() {
 
           SourceRecord(source, offset, blocksTopic, blockKeyConnectSchema, key, blockValueConnectSchema, value)
         }
+        .toList()
 
       logger.debug { "Polled ${sourceRecords.size} records" }
 
