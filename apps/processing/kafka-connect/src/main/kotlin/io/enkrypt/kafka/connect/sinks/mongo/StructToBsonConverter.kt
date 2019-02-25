@@ -287,17 +287,11 @@ object StructToBsonConverter {
 
             if (bsonValue != null) {
 
-              if (bsonValue.isBinary && conversion != null) {
-
-                val bytes = (bsonValue as BsonBinary).data
-                  bsonValue = when (conversion) {
-                    Hex -> BsonString(bytes.hex())
-                    UBigInt -> BsonString(bytes.unsignedBigInteger().toString())
-                    BigInt -> BsonString(bytes.bigInteger().toString())
-                    UInt64 -> BsonInt64(bytes.unsignedBigInteger().longValueExact())
-                    Int64 -> BsonInt64(bytes.bigInteger()!!.longValueExact())
-                    else -> throw IllegalStateException("Illegal conversion value!")
-                  }
+              if (conversion != null) {
+                when {
+                  bsonValue.isBinary -> { bsonValue = toTypeConversion(conversion, bsonValue) }
+                  bsonValue.isArray -> { bsonValue = BsonArray((bsonValue as BsonArray).values.map { v -> toTypeConversion(conversion, v) }) }
+                }
               }
 
               doc.append(fieldName, bsonValue)
@@ -306,6 +300,19 @@ object StructToBsonConverter {
 
           doc
         })
+
+  private fun toTypeConversion(conversion: TypeMappings.ConversionType, value: BsonValue): BsonValue? {
+    if (!value.isBinary) return value
+    val bytes = (value as BsonBinary).data
+    return when (conversion) {
+      Hex -> BsonString(bytes.hex())
+      UBigInt -> BsonString(bytes.unsignedBigInteger().toString())
+      BigInt -> BsonString(bytes.bigInteger().toString())
+      UInt64 -> BsonInt64(bytes.unsignedBigInteger().longValueExact())
+      Int64 -> BsonInt64(bytes.bigInteger()!!.longValueExact())
+      else -> throw IllegalStateException("Illegal conversion value!")
+    }
+  }
 
   private fun convertField(schema: Schema, path: String, value: Any?, allowNulls: Boolean = false): BsonValue? {
     val type = schema.type()

@@ -3,8 +3,6 @@ package io.enkrypt.common.extensions
 import org.apache.commons.codec.binary.Hex
 import java.nio.ByteBuffer
 
-val emptyByteArray = ByteArray(0)
-
 fun String.hexBytes(): ByteArray =
   run {
 
@@ -22,10 +20,7 @@ fun String.hexBytes(): ByteArray =
   }
 
 fun String.hexBuffer() = this.hexBytes().byteBuffer()
-
-fun String.hexFixedBuffer(length: Int): ByteBuffer {
-  return this.hexBuffer().fixed(length)!!
-}
+fun String.hexFixedBuffer(length: Int): ByteBuffer = this.hexBuffer().fixed(length)!!
 
 fun String.hexBuffer8() = this.hexFixedBuffer(8)
 fun String.hexBuffer20() = this.hexFixedBuffer(20)
