@@ -50,7 +50,7 @@ fun EthBlock.Block.toBlockHeaderRecord(builder: BlockHeaderRecord.Builder): Bloc
     .setReceiptsRoot(receiptsRoot.hexBuffer32())
     .setAuthor(author.hexBuffer20())
     .setDifficulty(difficulty.unsignedByteBuffer())
-    .setExtraData(if (extraData != null) extraData.hexBuffer() else null)
+    .setExtraData(extraData?.hexBuffer())
     .setGasLimit(gasLimit.unsignedByteBuffer())
     .setGasUsed(gasUsed.unsignedByteBuffer())
     .setTimestamp(timestamp.longValueExact())
@@ -100,7 +100,12 @@ fun EthBlock.Block.toBlockRecord(
     )
 }
 
-fun Transaction.toTransactionRecord(builder: TransactionRecord.Builder, blockTimestamp: Long, receipt: TransactionReceipt, traces: List<Trace>): TransactionRecord.Builder {
+fun Transaction.toTransactionRecord(
+  builder: TransactionRecord.Builder,
+  blockTimestamp: Long,
+  receipt: TransactionReceipt,
+  traces: List<Trace>
+): TransactionRecord.Builder {
   builder
     .setBlockHash(blockHash.hexBuffer32())
     .setHash(hash.hexBuffer32())
@@ -108,14 +113,14 @@ fun Transaction.toTransactionRecord(builder: TransactionRecord.Builder, blockTim
     .setBlockNumber(blockNumber.unsignedByteBuffer())
     .setNonce(nonce.unsignedByteBuffer())
     .setFrom(from.hexBuffer20())
-    .setTo(if (to != null) to.hexBuffer20() else null)
+    .setTo(to?.hexBuffer20())
     .setValue(value.unsignedByteBuffer())
     .setGasPrice(gasPrice.unsignedByteBuffer())
     .setGas(gas.unsignedByteBuffer())
     .setV(v)
     .setR(r.hexBuffer())
     .setS(s.hexBuffer())
-    .setCreates(if (creates != null) creates.hexBuffer20() else null)
+    .setCreates(creates?.hexBuffer20())
     .setChainId(chainId)
     .setTimestamp(blockTimestamp).receipt = receipt.toTransactionReceiptRecord(TransactionReceiptRecord.newBuilder(), traces).build()
 
@@ -133,13 +138,13 @@ fun TransactionReceipt.toTransactionReceiptRecord(builder: TransactionReceiptRec
     .setBlockNumber(blockNumber.unsignedByteBuffer())
     .setTransactionHash(transactionHash.hexBuffer32())
     .setTransactionIndex(transactionIndex.intValueExact())
-    .setContractAddress(if (contractAddress != null) contractAddress.hexBuffer20() else null)
+    .setContractAddress(contractAddress?.hexBuffer20())
     .setCumulativeGasUsed(cumulativeGasUsed.unsignedByteBuffer())
     .setGasUsed(gasUsed.unsignedByteBuffer())
     .setLogs(logs.map { it.toLogRecord(LogRecord.newBuilder()).build() })
     .setLogsBloom(logsBloom.hexBuffer256())
-    .setRoot(if (root != null) root.hexBuffer32() else null)
-    .setStatus(if (status != null) status.hexBuffer() else null)
+    .setRoot(root?.hexBuffer32())
+    .setStatus(status?.hexBuffer())
     .setTraces(traces.map { it.toTraceRecord(TraceRecord.newBuilder()).build() })
 
 fun Log.toLogRecord(builder: LogRecord.Builder): LogRecord.Builder =
@@ -157,9 +162,9 @@ fun Trace.toTraceRecord(builder: TraceRecord.Builder): TraceRecord.Builder {
     is Trace.CallAction -> TraceCallActionRecord.newBuilder()
       .setCallType(action.callType)
       .setFrom(action.from.hexBuffer20())
-      .setTo(if (action.to != null) action.to.hexBuffer20() else null)
+      .setTo(action.to?.hexBuffer20())
       .setGas(action.gas.unsignedByteBuffer())
-      .setInput(if (action.input != null) action.input.hexBuffer().compress(1024) else null)
+      .setInput(action.input?.hexBuffer().compress(1024))
       .setValue(action.value.unsignedByteBuffer())
       .build()
 
@@ -188,7 +193,7 @@ fun Trace.toTraceRecord(builder: TraceRecord.Builder): TraceRecord.Builder {
   return builder
     .setAction(actionRecord)
     .setError(error)
-    .setResult(if (result != null) result.toTraceResultRecord(TraceResultRecord.newBuilder()).build() else null)
+    .setResult(result?.toTraceResultRecord(TraceResultRecord.newBuilder())?.build())
     .setSubtraces(subtraces.intValueExact())
     .setTraceAddress(traceAddress.map { it.intValueExact() })
     .setType(type)
@@ -200,7 +205,7 @@ fun Trace.toTraceRecord(builder: TraceRecord.Builder): TraceRecord.Builder {
 
 fun Trace.Result.toTraceResultRecord(builder: TraceResultRecord.Builder): TraceResultRecord.Builder =
   builder
-    .setAddress(if (address != null) address.hexBuffer20() else null)
-    .setCode(if (code != null) code.hexBuffer() else null)
+    .setAddress(address?.hexBuffer20())
+    .setCode(code?.hexBuffer())
     .setGasUsed(gasUsed.unsignedByteBuffer())
-    .setOutput(if (output != null) output.hexBuffer() else null)
+    .setOutput(output?.hexBuffer())

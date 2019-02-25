@@ -14,7 +14,6 @@ import org.apache.kafka.common.config.ConfigDef
 import org.apache.kafka.connect.connector.Task
 import org.apache.kafka.connect.source.SourceConnector
 
-// @Alpha - Not ready for prime time
 class ParitySourceConnector : SourceConnector() {
 
   private lateinit var config: MutableMap<String, String>
