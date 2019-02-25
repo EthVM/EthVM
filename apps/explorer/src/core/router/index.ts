@@ -19,7 +19,6 @@ import PageKnowledgeBase from '@app/modules/other/pages/PageKnowledgeBase.vue'
 import PagePrivacyPolicy from '@app/modules/other/pages/PagePrivacyPolicy.vue'
 import PageNotFound from '@app/modules/other/pages/PageNotFound.vue'
 
-
 Vue.use(Router)
 
 export default new Router({

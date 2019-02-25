@@ -5,7 +5,7 @@
         <v-img :src="require('@/assets/not-found.png')" min-width="300px" min-height="50px" contain></v-img>
       </v-flex>
       <v-flex xs12>
-        <h5 class="text-xs-center headline mb-3">{{ $t('message.notFound')}} </h5>
+        <h5 class="text-xs-center headline mb-3">{{ $t('message.notFound') }}</h5>
       </v-flex>
       <v-flex xs12>
         <v-btn color="secondary" depressed class="text-capitalize mt-4" to="/">{{ $t('bttn.backHome') }}</v-btn>
@@ -20,5 +20,3 @@ import { Component, Vue } from 'vue-property-decorator'
 @Component
 export default class PageNotFound extends Vue {}
 </script>
-
-
