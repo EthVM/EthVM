@@ -9,6 +9,7 @@
           :loading="isLoading"
           :max-items="maxItems"
           :total-txs="totalTx"
+          :page="page"
           :error="error"
           @getTxsPage="getPage"
         />
@@ -37,6 +38,7 @@ export default class PagePendingTxs extends Vue {
   totalTx = 0
   isLoading = true
   error = ''
+  page = 0
 
   /*
   ===================================================================================
@@ -65,9 +67,10 @@ export default class PagePendingTxs extends Vue {
   ===================================================================================
   */
 
-  getPage(_page: number): void {
+  getPage(page: number): void {
     this.isLoading = true
-    this.fetchPendingTxs(_page).then(
+    this.page = page
+    this.fetchPendingTxs(page).then(
       res => {
         this.commitPendingTx(res)
         this.isLoading = false
