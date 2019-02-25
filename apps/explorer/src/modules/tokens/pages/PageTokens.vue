@@ -1,7 +1,7 @@
 <template>
   <v-container grid-list-lg class="mb-0">
     <app-bread-crumbs :new-items="crumbs" />
-    <token-table :tokens="tokens" :total-tokens="total" :loading="isLoading" />
+    <token-table :tokens="tokens" :total-tokens="total" :loading="isLoading" :error="error"/>
   </v-container>
 </template>
 
