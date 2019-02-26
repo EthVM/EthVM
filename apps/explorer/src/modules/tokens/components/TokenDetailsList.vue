@@ -8,8 +8,8 @@
 import { Detail } from '@app/core/components/props'
 import { Component, Vue, Prop, Mixins } from 'vue-property-decorator'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
+import { StringConcatMixin } from '@app/core/components/mixins'
 import { Hex } from '@app/core/models'
-import { StringConcatMixin } from '@app/core/components/mixins';
 
 @Component({
   components: {
