@@ -1,16 +1,17 @@
 <template>
   <v-container grid-list-lg class="mb-0">
     <app-bread-crumbs :new-items="crumbs" />
-    <token-table :tokens="tokens" :total-tokens="total" :loading="isLoading" />
+    <token-table :tokens="tokens" :total-tokens="total" :loading="isLoading" :error="error" @getTokens="updateRes"/>
   </v-container>
 </template>
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import TokenTable from '@app/modules/tokens/components/TokenTable.vue'
+import { TokenFilter } from '@app/modules/tokens/props'
 import { Component, Vue } from 'vue-property-decorator'
 
-const MAX_ITEMS = 100
+const MAX_ITEMS = 50
 
 @Component({
   components: {
@@ -66,6 +67,10 @@ export default class PageTokens extends Vue {
         this.error = this.$i18n.t('message.error').toString()
       }
     )
+  }
+  updateRes(_filter: TokenFilter, _page: number): void {
+    console.log("NewFilter / Page : ", _page, _filter)
+    this.getPage(_page)
   }
 
   /*
