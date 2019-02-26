@@ -62,13 +62,14 @@ export class SimpleBlock {
   }
 
   public getTotalReward(): EthValue {
-    if (!this.cache.getTotalReward) {
-      const total = this.getRewards()
+    if (!this.cache.minerReward) {
+      const rawReward = this.getRewards()
+        .filter(r => r.rewardType === 'block')
         .map(r => r.value)
-        .reduce((acc, value) => acc.plus(value), new BN(0))
-      this.cache.getTotalReward = new EthValue(total.toString())
+        .reduce((acc, value: any) => value, 0)
+      this.cache.minerReward = new EthValue(rawReward)
     }
-    return this.cache.getTotalReward
+    return this.cache.minerReward
   }
 
   public getTxs(): Tx[] {
