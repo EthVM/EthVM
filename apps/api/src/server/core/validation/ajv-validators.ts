@@ -61,7 +61,7 @@ const pageSchema = {
 const filterSchema = {
   $id: '/properties/limit',
   type: 'string',
-  enum: ['in', 'out', 'all'],
+  enum: ['in', 'out', 'all', 'price_high', 'price_low', 'volume_high', 'volume_low', 'market_cap_high', 'market_cap_low', 'market_cap_rank'],
   default: 'all'
 }
 

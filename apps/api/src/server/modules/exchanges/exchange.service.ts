@@ -3,7 +3,7 @@ import { Quote, TokenExchangeRate } from 'ethvm-common'
 
 export interface ExchangeService {
   getExchangeRate(token: string, to: string): Promise<Quote>
-  getTokenExchangeRates(limit: number, page: number): Promise<TokenExchangeRate[]>
+  getTokenExchangeRates(filter: string, limit: number, page: number): Promise<TokenExchangeRate[]>
   getTotalNumberOfTokenExchangeRates(): Promise<number>
   getTokenExchangeRate(symbol: string): Promise<TokenExchangeRate | null>
   getTokenExchangeRateByAddress(address: string): Promise<TokenExchangeRate | null>
@@ -16,8 +16,8 @@ export class ExchangeServiceImpl implements ExchangeService {
     return this.exchangeRepository.getQuote(token, to)
   }
 
-  public getTokenExchangeRates(limit: number, page: number): Promise<TokenExchangeRate[]> {
-    return this.exchangeRepository.getTokenExchangeRates(limit, page)
+  public getTokenExchangeRates(filter: string, limit: number, page: number): Promise<TokenExchangeRate[]> {
+    return this.exchangeRepository.getTokenExchangeRates(filter, limit, page)
   }
 
   public getTotalNumberOfTokenExchangeRates(): Promise<number> {
