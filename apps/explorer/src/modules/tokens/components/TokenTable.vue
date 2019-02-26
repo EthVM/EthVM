@@ -15,7 +15,7 @@
       <v-spacer />
       <v-flex xs12 v-if="pages > 1 && !hasError" sm7 md6>
         <v-layout justify-end row class="pb-1 pr-2 pl-2">
-          <app-paginate :total="pages" @newPage="setPage"  :currentPage="currPage" />
+          <app-paginate :total="pages" @newPage="setPage" :current-page="currPage" />
         </v-layout>
       </v-flex>
     </v-layout>
@@ -106,7 +106,7 @@
             <token-table-row :token="token" />
           </div>
           <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2">
-            <app-paginate :total="pages" @newPage="setPage"  :currentPage="currPage" />
+            <app-paginate :total="pages" @newPage="setPage" :current-page="currPage" />
           </v-layout>
         </v-flex>
         <v-flex xs12 v-else>
@@ -165,7 +165,6 @@ export default class TokenTable extends Vue {
 
   @Watch('selectedFilter')
   onSelectedFilterChanged(newVal: number, oldVal: number): void {
-    console.log("Sending Filter: ", newVal)
     this.$emit('getTokens', this.page, newVal)
   }
 

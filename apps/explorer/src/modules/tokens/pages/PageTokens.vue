@@ -26,7 +26,6 @@ export default class PageTokens extends Vue {
   error = ''
   filterValues = ['price_high', 'price_low', 'volume_high', 'volume_low', 'market_cap_high', 'market_cap_low']
 
-
   /*
   ===================================================================================
     Mounted
@@ -64,7 +63,6 @@ export default class PageTokens extends Vue {
     this.fetchTokenExchangeRates(page, this.filterValues[filter]).then(
       res => {
         this.tokens = res
-        console.log(this.tokens)
         this.isLoading = false
       },
       err => {
@@ -72,7 +70,6 @@ export default class PageTokens extends Vue {
       }
     )
   }
-
 
   /*
   ===================================================================================
