@@ -49,8 +49,8 @@
 
     =====================================================================================
     -->
-    <v-list-tile v-if="!hasError" v-for="(item, index) in basicDetails" :key="calculateKey(index)">
-      <app-details-list-row :detail="item" :is-loading="isLoading" />
+    <v-list-tile v-if="!hasError" v-for="(item, index) in basicDetails" :key="calculateKey(index)" :class="[getColor(index)? '': 'tableGrey']">
+      <app-details-list-row :detail="item" :is-loading="isLoading" :index="index"/>
     </v-list-tile>
     <!--
     =====================================================================================
@@ -63,8 +63,8 @@
     =====================================================================================
     -->
     <v-slide-y-transition group v-if="!hasError && showMore">
-      <v-list-tile v-for="(item, index) in moreDetails" :key="calculateKey(index)">
-        <app-details-list-row :detail="item" :is-loading="isLoading" />
+      <v-list-tile v-for="(item, index) in moreDetails" :key="calculateKey(index)" :class="[getColor(index)? '': 'tableGrey']">
+        <app-details-list-row :detail="item" :is-loading="isLoading" :index="index"/>
       </v-list-tile>
     </v-slide-y-transition>
     <div v-if="hasMore && !isLoading">
@@ -163,6 +163,9 @@ export default class AppDetailsList extends Vue {
    */
   get hasMore(): boolean {
     return this.moreDetails.length > 0
+  }
+ getColor(_index:number): boolean {
+    return (_index % 2) === 0
   }
 }
 </script>

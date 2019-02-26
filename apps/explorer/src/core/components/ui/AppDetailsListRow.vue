@@ -39,3 +39,4 @@ export default class AppDetailsListRow extends Vue {
   @Prop(Boolean) isLoading: boolean
 }
 </script>
+
