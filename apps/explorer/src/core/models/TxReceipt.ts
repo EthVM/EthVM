@@ -52,8 +52,4 @@ export class TxReceipt {
   public getStatus(): string {
     return this.receipt.status
   }
-
-  public hasError(): boolean {
-    return this.receipt.error !== '' || this.receipt.error != undefined || this.receipt.error != null
-  }
 }

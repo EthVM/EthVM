@@ -74,7 +74,7 @@ export class SimpleTx {
   public getStatus(): boolean {
     if (!this.cache.status) {
       const receipt = this.getReceipt()
-      this.cache.status = receipt.hasError()
+      this.cache.status = false
     }
     return this.cache.status
   }

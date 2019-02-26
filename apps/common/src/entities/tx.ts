@@ -26,6 +26,7 @@ export interface TxReceipt {
   logs: Log[]
   logsBloom: string
   traces: Trace[]
+  status: any
 }
 
 export interface Tx {
