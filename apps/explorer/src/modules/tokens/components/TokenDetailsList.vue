@@ -25,11 +25,6 @@ export default class TokenDetailsList extends  Mixins(StringConcatMixin) {
   @Prop(Boolean) isLoading: boolean
   @Prop(String) error: string
 
-  mounted() {
-    console.log("contract: ", this.contractDetails)
-    console.log("token: ", this.tokenDetails)
-  }
-
   /*
   ===================================================================================
     Computed Values

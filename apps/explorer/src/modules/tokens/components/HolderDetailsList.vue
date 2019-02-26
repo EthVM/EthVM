@@ -6,15 +6,17 @@
 
 <script lang="ts">
 import { Detail } from '@app/core/components/props'
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop, Mixins } from 'vue-property-decorator'
+import { StringConcatMixin } from '@app/core/components/mixins'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
+import BN from 'bignumber.js'
 
 @Component({
   components: {
     AppDetailsList
   }
 })
-export default class HolderDetailsList extends Vue {
+export default class HolderDetailsList extends Mixins(StringConcatMixin) {
   @Prop(String) addressRef: string // Token contract address
   @Prop(Object) contractDetails: any
   @Prop(Object) tokenDetails: any
@@ -91,16 +93,18 @@ export default class HolderDetailsList extends Vue {
         {
           title: this.$i18n.t('token.holder').toString(),
           detail: this.$route.query.holder,
-          link: `/address/${this.$route.query.holder}`
+          link: `/address/${this.$route.query.holder}`,
+          copy: true
         },
         {
           title: this.$i18n.t('title.contract').toString(),
-          detail: this.tokenDetails.address,
-          link: `/address/${this.tokenDetails.address}`
+          detail: '0x'+this.tokenDetails.address,
+          link: `/address/0x${this.tokenDetails.address}`,
+          copy: true
         },
         {
           title: this.$i18n.t('token.balance').toString(),
-          detail: this.holderDetails.tokens ? this.holderDetails.tokens[0].balance : 'N/A'
+          detail: this.holderDetails.tokens ? `${this.balance} (${this.tokenDetails.symbol.toUpperCase()})` : 'N/A'
         },
         {
           title: `${this.$i18n.t('token.balance').toString()} (USD)`,
@@ -111,8 +115,9 @@ export default class HolderDetailsList extends Vue {
           detail: this.holderDetails.countTxs
         },
         {
-          title: this.$i18n.t('title.marketCap').toString(),
-          detail: `$${this.tokenDetails.current_price}`
+          title: this.$i18n.t('title.price').toString(),
+          detail: `$${this.getRoundNumber(this.tokenDetails.current_price)}`,
+          priceChange: this.getPriceChange()
         },
         {
           title: this.$i18n.t('title.decimals').toString(),
@@ -123,8 +128,21 @@ export default class HolderDetailsList extends Vue {
     return details
   }
 
+
   get balanceUsd() {
-    return this.holderDetails.tokens ? this.tokenDetails.current_price * this.holderDetails.tokens[0].balance : 'N/A'
+    const n = new BN(this.holderDetails.tokens[0].balance).div(new BN(10).pow(this.contractDetails.metadata.decimals)).multipliedBy(this.tokenDetails.current_price)
+    return this.holderDetails.tokens ? '$'+this.getRoundNumber(n): 'N/A'
+  }
+
+  get balance(): string{
+    const n = new BN(this.holderDetails.tokens[0].balance)
+    return this.getRoundNumber(n
+      .div(new BN(10).pow(this.contractDetails.metadata.decimals)))
+  }
+
+  //Methods:
+  getPriceChange(): string {
+    return this.tokenDetails.price_change_percentage_24h > 0 ? '+' + this.getPercent(this.tokenDetails.price_change_percentage_24h) : this.getPercent(this.tokenDetails.price_change_percentage_24h)
   }
 }
 </script>

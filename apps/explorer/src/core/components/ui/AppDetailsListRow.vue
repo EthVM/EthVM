@@ -53,7 +53,6 @@
 
     //Computed:
     get hasPercentage(): boolean {
-      console.log(this.detail.priceChange)
       return this.detail.priceChange ? true : false
     }
 
