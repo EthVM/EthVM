@@ -27,34 +27,21 @@ fun TokenTransferRecord.Builder.setAmount(amount: BigInteger) =
 fun TokenTransferRecord.Builder.setTokenId(tokenId: BigInteger) =
   this.setTokenId(tokenId.unsignedByteBuffer())
 
-fun TransactionReceiptRecord.isSuccess(): Boolean {
-  // TODO fix me
-  return false
-}
-
-fun BlockRecord.txFees(): List<BigInteger> {
-  // TODO fix me
-//  this.getTransactions().zip(this.getTransactionReceipts())
-//    .map { (tx, r) -> tx.getGasPrice().unsignedBigInteger()!! * r.getGasUsed().unsignedBigInteger()!! }
-  return emptyList()
-}
-
-fun BlockRecord.totalTxFees(): BigInteger = this.txFees()
-  .fold(0.toBigInteger()) { memo, next -> memo + next }
-
-fun BlockRecord.keyRecord(): BlockKeyRecord =
-  BlockKeyRecord.newBuilder()
-    .setNumber(getHeader().getNumber())
-    .build()
-
-fun TransactionRecord.txFee(receipt: TransactionReceiptRecord): BigInteger =
-  getGasPrice().unsignedBigInteger()!! * receipt.getGasUsed().unsignedBigInteger()!!
-
 fun ExchangeRateRecord.isValid() = !(this.marketCap == -1.0 || this.marketCapRank == -1)
 
-object AvroHelpers {
+fun TransactionReceiptRecord.isSuccessful(): Boolean {
 
-  fun blockKey(number: Long) = blockKey(number.toBigInteger())
+  val parentCalls = getTraces()
+    .filter { t -> t.getType() != "reward" && t.getTraceAddress().isEmpty() }
+
+  require(parentCalls.size == 1) { "Expected 1 parent call, found ${parentCalls.size}" }
+
+  val error = parentCalls.first().getError()
+
+  return error == null || error.isEmpty()
+}
+
+object AvroHelpers {
 
   fun blockKey(number: BigInteger): BlockKeyRecord =
     blockKey(number.unsignedByteBuffer())
