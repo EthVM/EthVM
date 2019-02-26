@@ -12,7 +12,7 @@ dependencies {
 
   implementation(project(":avro"))
 
-  implementation(group = "org.ethereum", name = "ethereumj-core", version = "1.9.+")
+  implementation("com.beust:klaxon:5.0.1")
   implementation("commons-codec:commons-codec:1.11")
 
   implementation("io.kotlintest:kotlintest-runner-junit5:${ext.get("kotlintest-version") as String}")

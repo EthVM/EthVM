@@ -1,4 +1,0 @@
-[submodule "apps/ethereumj"]
-	path = apps/ethereumj
-	url = git@github.com:enKryptIO/ethereumj.git
-	branch = develop

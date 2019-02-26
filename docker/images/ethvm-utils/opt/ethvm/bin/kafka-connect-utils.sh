@@ -15,7 +15,7 @@ export KAFKA_CONNECT_DIR="${ROOT_DIR}/kafka-connect"
 
 ensure_kafka_connect() {
 
-  local TIMEOUT=${1:-30}
+  local TIMEOUT=${1:-60}
   local HOST=$(echo ${KAFKA_CONNECT_URL} | awk -F[/:] '{print $4}')
 
   # TODO extract port
@@ -44,13 +44,13 @@ register_sources() {
   ensure_kafka_connect
   curl_register ${KAFKA_CONNECT_DIR}/sources/eth-lists-source.json
   curl_register ${KAFKA_CONNECT_DIR}/sources/exchange-rates-source.json
+  curl_register ${KAFKA_CONNECT_DIR}/sources/parity-source.json
 } >&2
 
 register_sinks() {
   echo "===> Registering MongoDB sink ..."
   ensure_kafka_connect
-  curl_register ${KAFKA_CONNECT_DIR}/sinks/mongo-primary-sink.json
-  curl_register ${KAFKA_CONNECT_DIR}/sinks/mongo-secondary-sink.json
+  curl_register ${KAFKA_CONNECT_DIR}/sinks/mongo-sink.json
 } >&2
 
 init() {

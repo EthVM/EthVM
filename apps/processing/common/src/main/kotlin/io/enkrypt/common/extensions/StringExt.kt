@@ -1,16 +1,30 @@
 package io.enkrypt.common.extensions
 
-import io.enkrypt.avro.common.Data1
-import io.enkrypt.avro.common.Data20
-import io.enkrypt.avro.common.Data256
-import io.enkrypt.avro.common.Data32
-import io.enkrypt.avro.common.Data8
-import org.ethereum.util.ByteUtil
+import org.apache.commons.codec.binary.Hex
+import java.nio.ByteBuffer
 
-fun String?.hexBuffer() = if (this != null) ByteUtil.hexStringToBytes(this).byteBuffer() else null
+fun String.hexBytes(): ByteArray =
+  run {
 
-fun String.hexData1() = Data1(ByteUtil.hexStringToBytes(this))
-fun String.hexData8() = Data8(ByteUtil.hexStringToBytes(this))
-fun String.hexData20() = Data20(ByteUtil.hexStringToBytes(this))
-fun String.hexData32() = Data32(ByteUtil.hexStringToBytes(this))
-fun String.hexData256() = Data256(ByteUtil.hexStringToBytes(this))
+    var str = if (this.startsWith("0x")) {
+      this.replace("0x", "")
+    } else {
+      this
+    }
+
+    if (str.length % 2 == 1) {
+      str = "0$str"
+    }
+
+    Hex.decodeHex(str)
+  }
+
+fun String.hexBuffer() = this.hexBytes().byteBuffer()
+fun String.hexFixedBuffer(length: Int): ByteBuffer = this.hexBuffer().fixed(length)!!
+
+fun String.hexBuffer8() = this.hexFixedBuffer(8)
+fun String.hexBuffer20() = this.hexFixedBuffer(20)
+fun String.hexBuffer32() = this.hexFixedBuffer(32)
+fun String.hexBuffer256() = this.hexFixedBuffer(256)
+
+fun String.hexUBigInteger() = this.hexBuffer().unsignedBigInteger()

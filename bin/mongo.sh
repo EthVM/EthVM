@@ -9,7 +9,7 @@ source ${SCRIPT_DIR}/env.sh
 ensure
 
 # Define variables
-DATASET="ethereum_mainnet.130k.mongo.archive"
+DATASET="ethereum_mainnet.130k.parity.mongo.archive"
 
 # kafka_usage - prints kafka subcommand usage
 kafka_usage() {

@@ -6,7 +6,7 @@ import { Streamer, StreamingEvent } from '@app/server/core/streams'
 import { AddressesService } from '@app/server/modules/addresses'
 import { BalancesService } from '@app/server/modules/balances'
 import { BlockMetricsService, toBlockMetrics } from '@app/server/modules/block-metrics'
-import { BlocksService, toBlock } from '@app/server/modules/blocks'
+import { BlocksService, toSimpleBlock } from '@app/server/modules/blocks'
 import { ContractsService } from '@app/server/modules/contracts'
 import { ExchangeService } from '@app/server/modules/exchanges'
 import { PendingTxService, toPendingTx } from '@app/server/modules/pending-txs'
@@ -144,7 +144,7 @@ export class EthVMServer {
   private onBlockEvent = (event: StreamingEvent): void => {
     const { op, key, value } = event
     logger.info(`EthVMServer - onBlockEvent / Op: ${op} - Number: ${key} - Hash: ${value.header.hash}`)
-    const blockEvent: StreamingEvent = { op, key, value: toBlock(value) }
+    const blockEvent: StreamingEvent = { op, key, value: toSimpleBlock(value) }
     this.io.to(SocketRooms.Blocks).emit(Events.NEW_BLOCK, blockEvent)
   }
 

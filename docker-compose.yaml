@@ -10,12 +10,36 @@ networks:
         - subnet: 172.25.0.0/24
 
 volumes:
+
   mongodb-volume:
-  ethereumj-volume:
   kafka-volume-1:
   zookeeper-volume:
 
+  parity-volume:
+    # Note:
+    # If you're on Linux, use local-persist instead of a regular docker volume
+    # This allows to persist downloaded blockchain data.
+    # More info: https://github.com/CWSpear/local-persist
+    #
+    # driver: local-persist
+    # driver_opts:
+    #   name: "paritydb"
+    #   mountpoint: "${PARITY_VOLUME_MOUNTPOINT}"
+
 services:
+
+  parity:
+    image: parity/parity:v2.3.3
+    networks:
+      - back
+    volumes:
+      - parity-volume:/home/parity/.local/share/io.parity.ethereum/
+    ports:
+      - 8545:8545
+      - 8546:8546
+      - 30303:30303
+    command: --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
+    cpu_shares: 2048
 
   traefik:
     image: traefik:${TRAEFIK_VERSION}-alpine
@@ -83,6 +107,7 @@ services:
       - back
     ports:
       - 27017:27017
+    cpu_shares: 4000
 
   zookeeper:
     image: confluentinc/cp-zookeeper:${CP_VERSION}
@@ -190,29 +215,30 @@ services:
       CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_LOG4J_ROOT_LOGLEVEL: "INFO"
-      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,io.enkrypt.kafka.connect=TRACE"
+      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,io.enkrypt.kafka.connect=TRACE,org.web3j.protocol.websocket.WebSocketService=WARN"
       CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/enkryptio
       KAFKA_JMX_PORT: 9588
+    cpu_shares: 3000
     mem_limit: 4g
 
   # ///////////////////////////////////////////////////////
   # Extra Tools (Useful for debugging and helping on Kafka)
   # ///////////////////////////////////////////////////////
 
-  # verifier:
-  #   build:
-  #     context: ./apps/verifier
-  #   networks:
-  #     - back
-  #   depends_on:
-  #     - mongodb
-  #     - kafka-schema-registry
-  #   volumes:
-  #     - ./apps/verifier:/usr/src/app
-  #     - ./apps/common:/usr/src/common
-  #   command: sh -c "yarn install && yarn start verify"
-  #   environment:
-  #     KAFKA_AVRO_LOG_LEVEL: debug
+  verifier:
+    build:
+      context: ./apps/verifier
+    networks:
+      - back
+    depends_on:
+      - mongodb
+      - kafka-schema-registry
+    volumes:
+      - ./apps/verifier:/usr/src/app
+      - ./apps/common:/usr/src/common
+    command: sh -c "yarn install && yarn start kafka"
+    environment:
+      KAFKA_AVRO_LOG_LEVEL: debug
 
   ksql-server:
     image: confluentinc/cp-ksql-server:${CP_VERSION}

@@ -14,14 +14,6 @@ export class Block {
     return this.id
   }
 
-  public getUncles(): Uncle[] {
-    if (!this.cache.uncles) {
-      const rawUncles = this.block.uncles || []
-      this.cache.uncles = rawUncles.map(rawUncle => new Uncle(rawUncle))
-    }
-    return this.cache.uncles
-  }
-
   public getHash(): string {
     return this.id
   }
@@ -31,10 +23,6 @@ export class Block {
       this.cache.number = new BN(this.block.header.number).toNumber()
     }
     return this.cache.number
-  }
-
-  public getTransactionCount(): number {
-    return this.block.transactions ? this.block.transactions.length : 0
   }
 
   public getParentHash(): Hex {
@@ -65,11 +53,25 @@ export class Block {
     return this.cache.logsBloom
   }
 
+  public getTransactionsRoot(): Hash {
+    if (!this.cache.transactionsRoot) {
+      this.cache.transactionsRoot = new Hash(this.block.header.transactionsRoot)
+    }
+    return this.cache.transactionsRoot
+  }
+
   public getStateRoot(): Hex {
     if (!this.cache.stateRoot) {
       this.cache.stateRoot = new Hex(this.block.header.stateRoot)
     }
     return this.cache.stateRoot
+  }
+
+  public getReceiptsRoot(): Hash {
+    if (!this.cache.receiptsRoot) {
+      this.cache.receiptsRoot = new Hash(this.block.header.receiptsRoot)
+    }
+    return this.cache.receiptsRoot
   }
 
   public getMiner(): Hex {
@@ -86,13 +88,6 @@ export class Block {
     return this.cache.difficulty
   }
 
-  public getTotalDifficulty(): HexNumber {
-    if (!this.cache.totalDifficulty) {
-      this.cache.totalDifficulty = new HexNumber(this.block.totalDifficulty)
-    }
-    return this.cache.totalDifficulty
-  }
-
   public getExtraData(): Hex {
     if (!this.cache.extraData) {
       this.cache.extraData = new Hex(this.block.header.extraData)
@@ -102,7 +97,7 @@ export class Block {
 
   public getGasLimit(): HexNumber {
     if (!this.cache.gasLimit) {
-      this.cache.garLimit = new HexNumber(this.block.header.gasUsed)
+      this.cache.garLimit = new HexNumber(this.block.header.gasLimit)
     }
     return this.cache.garLimit
   }
@@ -114,29 +109,47 @@ export class Block {
     return this.cache.gasUsed
   }
 
+  public getSize(): number {
+    return this.block.header.size
+  }
+
   public getTimestamp(): Date {
     return new Date(this.block.header.timestamp * 1000)
   }
 
-  public getTransactionsRoot(): Hash {
-    if (!this.cache.transactionsRoot) {
-      this.cache.transactionsRoot = new Hash(this.block.header.transactionsRoot)
+  public getTotalDifficulty(): HexNumber {
+    if (!this.cache.totalDifficulty) {
+      this.cache.totalDifficulty = new HexNumber(this.block.totalDifficulty)
     }
-    return this.cache.transactionsRoot
+    return this.cache.totalDifficulty
   }
 
-  public getReceiptsRoot(): Hash {
-    if (!this.cache.receiptsRoot) {
-      this.cache.receiptsRoot = new Hash(this.block.header.receiptsRoot)
+  public getTxs(): Tx[] {
+    if (!this.cache.txs) {
+      const rawTxs = this.block.transactions || []
+      this.cache.txs = rawTxs.map(rawTx => new Tx(rawTx))
     }
-    return this.cache.receiptsRoot
+    return this.cache.txs
+  }
+
+  public getUncles(): Uncle[] {
+    if (!this.cache.uncles) {
+      const rawUncles = this.block.uncles || []
+      this.cache.uncles = rawUncles.map(rawUncle => new Uncle(rawUncle))
+    }
+    return this.cache.uncles
+  }
+
+  public getTransactionCount(): number {
+    return this.block.transactions ? this.block.transactions.length : 0
   }
 
   public getTxFees(): EthValue {
     if (!this.cache.totalTxsFees) {
-      const txs = this.getTxs()
-      const txsCost = txs.length > 0 ? txs.map(tx => tx.getTxCost().toGWei()).reduceRight((acc, value) => acc + value) : 0
-      this.cache.totalTxsFees = new EthValue(txsCost)
+      const txsCost = this.getTxs()
+        .map(tx => tx.getTxCost().toWei())
+        .reduce((acc, value) => acc.plus(value), new BN(0))
+      this.cache.totalTxsFees = new EthValue(txsCost.toString())
     }
     return this.cache.totalTxsFees
   }
@@ -147,8 +160,10 @@ export class Block {
 
   public getMinerReward(): EthValue {
     if (!this.cache.minerReward) {
-      const rewards = this.getRewards()
-      const rawReward = rewards.length > 0 ? rewards[0].reward : '0'
+      const rawReward = this.getRewards()
+        .filter(r => r.rewardType === 'block')
+        .map(r => r.value)
+        .reduce((acc, value: any) => value, 0)
       this.cache.minerReward = new EthValue(rawReward)
     }
     return this.cache.minerReward
@@ -156,8 +171,10 @@ export class Block {
 
   public getUncleReward(): EthValue {
     if (!this.cache.uncleReward) {
-      const rewards = this.getRewards()
-      const rawReward = rewards.length > 1 ? rewards[1].reward : '0'
+      const rawReward = this.getRewards()
+        .filter(r => r.rewardType !== 'block')
+        .map(r => r.value)
+        .reduceRight((acc, value: any) => value, 0)
       this.cache.uncleReward = new EthValue(rawReward)
     }
     return this.cache.uncleReward
@@ -165,18 +182,11 @@ export class Block {
 
   public getTotalReward(): EthValue {
     if (!this.cache.getTotalReward) {
-      let total = new BN(0)
-      this.getRewards().forEach(r => (total = total.plus(new BN(r.reward || 0))))
+      const total = this.getRewards()
+        .map(r => r.value)
+        .reduce((acc, value) => acc.plus(value), new BN(0))
       this.cache.getTotalReward = new EthValue(total.toString())
     }
     return this.cache.getTotalReward
-  }
-
-  public getTxs(): Tx[] {
-    if (!this.cache.txs) {
-      const rawTxs = this.block.transactions || []
-      this.cache.txs = rawTxs.map(rawTx => new Tx(rawTx))
-    }
-    return this.cache.txs
   }
 }

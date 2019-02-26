@@ -4,26 +4,21 @@ export interface Log {
   topics: string[]
 }
 
-export interface InternalTx {
-  nonce: string
-  parentHash: string
+export interface Trace {
   blockHash: string
-  blockNumber: string
-  transactionIndex: number
-  internalTransactionIndex: number
-  from: string
-  to: string
-  value: string
-  gasPrice: string
-  gas: string
-  input: string
-  creates: string
-  depth: number
-  rejected: boolean
+  blockNumber: number
+  transactionHash: string
+  transactionPosition: number
+  action: any[]
+  result: any
+  error: any
+  subtraces: number
+  type: string
 }
 
 export interface TxReceipt {
   blockHash: string
+  blockNumber: number
   transactionHash: string
   transactionIndex: number
   cumulativeGasUsed: string
@@ -31,16 +26,15 @@ export interface TxReceipt {
   gasUsed: string
   logs: Log[]
   logsBloom: string
+  traces: Trace[]
   status: string
-  error: string
-  internalTxs: InternalTx[]
 }
 
 export interface Tx {
   hash: string
   nonce: string
   blockHash: string
-  blockNumber: string
+  blockNumber: number
   transactionIndex: number
   from: string
   to: string
@@ -48,7 +42,7 @@ export interface Tx {
   gasPrice: string
   gas: string
   input: string
-  v: string
+  v: number
   r: string
   s: string
   timestamp: number

@@ -1,14 +1,10 @@
 import { Uncle } from './uncle'
 import { Tx } from './tx'
 
-export interface SmallBlock {
-  number: number
-  hash: string
-}
-
 export interface Reward {
+  rewardType: string
   address: string
-  reward: string
+  value: string
 }
 
 export interface Header {
@@ -26,6 +22,7 @@ export interface Header {
   extraData: string
   gasLimit: string
   gasUsed: string
+  size: number
   timestamp: number
 }
 

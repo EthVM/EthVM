@@ -1,12 +1,14 @@
 package io.enkrypt.kafka.streams.utils
 
 import arrow.core.Option
-import io.enkrypt.avro.common.Data20
-import io.enkrypt.avro.common.Data32
 import io.enkrypt.avro.processing.BalanceType
 import io.enkrypt.avro.processing.TokenTransferRecord
+import io.enkrypt.common.extensions.byteArray
+import io.enkrypt.common.extensions.byteBuffer
+import io.enkrypt.common.extensions.fixed20
 import io.enkrypt.common.extensions.setTokenId
 import java.math.BigInteger
+import java.nio.ByteBuffer
 
 object ERC721Abi : AbstractAbi(ERC721Abi::class.java.getResourceAsStream("/abi/erc721.json")) {
 
@@ -17,19 +19,19 @@ object ERC721Abi : AbstractAbi(ERC721Abi::class.java.getResourceAsStream("/abi/e
 
   override fun functions(): Set<String> = emptySet()
 
-  fun decodeTransferEvent(data: ByteArray, topics: List<Data32>): Option<TokenTransferRecord.Builder> {
+  fun decodeTransferEvent(data: ByteArray, topics: List<ByteBuffer>): Option<TokenTransferRecord.Builder> {
 
     return if (topics.size != 4) {
       Option.empty()
     } else {
 
       this.matchEvent(topics[0])
-        .map { it.decode(data, topics.map { it.bytes() }.toTypedArray()) }
+        .map { it.decode(data, topics.map { it.byteArray() }.toTypedArray()) }
         .map { values ->
           TokenTransferRecord.newBuilder()
             .setTransferType(BalanceType.ERC721)
-            .setFrom(Data20(values[0] as ByteArray))
-            .setTo(Data20(values[1] as ByteArray))
+            .setFrom((values[0] as ByteArray).byteBuffer().fixed20())
+            .setTo((values[1] as ByteArray).byteBuffer().fixed20())
             .setTokenId(values[2] as BigInteger)
         }
     }

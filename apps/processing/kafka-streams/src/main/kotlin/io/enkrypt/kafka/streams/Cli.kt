@@ -51,7 +51,7 @@ class Cli : CliktCommand() {
   ).int().default(DEFAULT_STREAMS_RESET)
 
   private val networkConfig: String by option(
-    help = "The network config to use, one of: mainnet, testnet, ropsten",
+    help = "The network config to use, one of: mainnet, ropsten",
     envvar = "ENKRYPTIO_NET_CONFIG"
   ).default("mainnet")
 
@@ -74,7 +74,6 @@ class Cli : CliktCommand() {
     single<NetConfig> {
       when (networkConfig) {
         "mainnet" -> NetConfig.mainnet
-        "testnet" -> NetConfig.testnet
         "ropsten" -> NetConfig.ropsten
         else -> throw IllegalArgumentException("Unrecognised network config name: $networkConfig")
       }

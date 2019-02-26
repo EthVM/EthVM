@@ -53,16 +53,12 @@ export class SimpleTx {
   }
 
   public getBlockNumber(): number {
-    if (!this.cache.blockNumber) {
-      this.cache.blockNumber = new HexNumber(this.tx.blockNumber).toNumber()
-    }
-    return this.cache.blockNumber
+    return this.tx.blockNumber
   }
 
   public getBlockHash(): Hex {
     if (!this.cache.blockHash) {
-      const receipt = this.getReceipt()
-      this.cache.blockHash = receipt.getBlockHash()
+      this.cache.blockHash = new Hex(this.tx.blockHash)
     }
     return this.cache.blockHash
   }
@@ -78,7 +74,7 @@ export class SimpleTx {
   public getStatus(): boolean {
     if (!this.cache.status) {
       const receipt = this.getReceipt()
-      this.cache.status = receipt.hasError()
+      this.cache.status = true
     }
     return this.cache.status
   }

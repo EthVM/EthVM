@@ -24,21 +24,21 @@ class MongoWriter {
 
   private val logger = KotlinLogging.logger {}
 
-  private val recordBatchSize = 100
-  private val maxBatchesInFlight = 10
+  private val recordBatchSize = 50
+  private val maxBatchesInFlight = 5
   private val batchesInFlight = AtomicInteger(0)
 
   private var collections: Map<MongoCollections, MongoCollection<BsonDocument>> = emptyMap()
-  private var pendingWrites: List<Future<Void>> = emptyList()
+  private var pendingWrites: List<Future<*>> = emptyList()
 
-  private lateinit var db: MongoDatabase
-  private lateinit var executor: ExecutorService
+  private var db: MongoDatabase? = null
+  private var executor: ExecutorService? = null
 
   fun addTopics(topics: Set<String>) {
     logger.info { "Adding topics: $topics" }
     collections = collections + topics
       .map { MongoCollections.forTopic(it)!! }
-      .map { it to db.getCollection(it.id, BsonDocument::class.java) }
+      .map { it to db!!.getCollection(it.id, BsonDocument::class.java) }
   }
 
   fun start(client: MongoClient, connectionString: ConnectionString) {
@@ -54,10 +54,10 @@ class MongoWriter {
       .map { batch ->
 
         if (batchesInFlight.get() == maxBatchesInFlight) {
-          wait(30, TimeUnit.SECONDS)
+          wait(60, TimeUnit.SECONDS)
         }
 
-        executor.submit(BulkWriteTask(batch))
+        pendingWrites = pendingWrites + executor!!.submit(BulkWriteTask(batch))
         batchesInFlight.incrementAndGet()
       }.lastOrNull()
 
@@ -104,8 +104,8 @@ class MongoWriter {
   }
 
   fun stop() {
-    executor.shutdown()
-    executor.awaitTermination(30, TimeUnit.SECONDS)
+    executor?.shutdown()
+    executor?.awaitTermination(30, TimeUnit.SECONDS)
     logger.info { "Stopped" }
   }
 
