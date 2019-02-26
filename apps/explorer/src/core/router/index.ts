@@ -17,6 +17,7 @@ import PageTokens from '@app/modules/tokens/pages/PageTokens.vue'
 import PageDetailsToken from '@app/modules/tokens/pages/PageDetailsToken.vue'
 import PageKnowledgeBase from '@app/modules/other/pages/PageKnowledgeBase.vue'
 import PagePrivacyPolicy from '@app/modules/other/pages/PagePrivacyPolicy.vue'
+import PageNotFound from '@app/modules/other/pages/PageNotFound.vue'
 
 Vue.use(Router)
 
@@ -108,6 +109,15 @@ export default new Router({
       path: '/knowledge_base',
       component: PageKnowledgeBase,
       name: 'kb'
+    },
+    {
+      path: '/404',
+      component: PageNotFound,
+      name: 'notFound'
+    },
+    {
+      path: '*',
+      redirect: '/404'
     }
   ],
   mode: 'history'
