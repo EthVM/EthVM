@@ -15,6 +15,7 @@ export interface Detail {
   detail?: string
   link?: string
   copy?: boolean
+  priceChange?: string
 }
 
 export interface BlockDetailsTitle {

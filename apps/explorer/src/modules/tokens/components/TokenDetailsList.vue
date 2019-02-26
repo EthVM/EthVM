@@ -6,8 +6,9 @@
 
 <script lang="ts">
 import { Detail } from '@app/core/components/props'
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop, Mixins } from 'vue-property-decorator'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
+import { StringConcatMixin } from '@app/core/components/mixins'
 import { Hex } from '@app/core/models'
 
 @Component({
@@ -15,12 +16,19 @@ import { Hex } from '@app/core/models'
     AppDetailsList
   }
 })
-export default class TokenDetailsList extends Vue {
+
+
+export default class TokenDetailsList extends  Mixins(StringConcatMixin) {
   @Prop(String) addressRef: string // Token contract address
   @Prop(Object) contractDetails: any
   @Prop(Object) tokenDetails: any
   @Prop(Boolean) isLoading: boolean
   @Prop(String) error: string
+
+  mounted() {
+    console.log("contract: ", this.contractDetails)
+    console.log("token: ", this.tokenDetails)
+  }
 
   /*
   ===================================================================================
@@ -99,24 +107,21 @@ export default class TokenDetailsList extends Vue {
         {
           title: this.$i18n.t('title.contract').toString(),
           detail: new Hex(this.tokenDetails.address).toString(),
-          link: this.tokenDetails ? `/address/${new Hex(this.tokenDetails.address).toString()}` : ''
-        },
-        {
-          title: this.$i18n.t('token.owner').toString(),
-          detail: this.tokenDetails.owner ? this.tokenDetails.owner : 'REQUIRED DATA',
-          link: `/address/${this.tokenDetails.owner}`
+          link: this.tokenDetails ? `/address/${new Hex(this.tokenDetails.address).toString()}` : '',
+          copy: true
         },
         {
           title: this.$i18n.t('title.supply').toString(),
-          detail: this.tokenDetails.total_supply
+          detail: this.formatStr(this.tokenDetails.total_supply.toString())
         },
         {
           title: this.$i18n.t('title.price').toString(),
-          detail: `$${this.tokenDetails.current_price} (${this.tokenDetails.price_change_percentage_24h}%)`
+          detail: `$${this.getRoundNumber(this.tokenDetails.current_price)}`,
+          priceChange: this.getPriceChange()
         },
         {
           title: this.$i18n.t('title.marketCap').toString(),
-          detail: `$${this.tokenDetails.market_cap}`
+          detail: `$${this.getInt(this.tokenDetails.market_cap)}`
         },
         {
           title: this.$i18n.t('token.totalHold').toString(),
@@ -143,7 +148,7 @@ export default class TokenDetailsList extends Vue {
               if (url === null || url === '') {
                 return ''
               }
-              return `<a href="${url}" target="_BLANK"><i aria-hidden="true" class="v-icon secondary--text ${
+              return `<a href="${url}" target="_BLANK"><i aria-hidden="true" class="v-icon primary--text ${
                 icons[name]
               } pr-2 material-icons theme--light"></i></a>`
             })
@@ -155,5 +160,11 @@ export default class TokenDetailsList extends Vue {
     }
     return details
   }
+
+  //Methods:
+  getPriceChange(): string {
+    return this.tokenDetails.price_change_percentage_24h > 0 ? '+' + this.getPercent(this.tokenDetails.price_change_percentage_24h) : this.getPercent(this.tokenDetails.price_change_percentage_24h)
+  }
+
 }
 </script>
