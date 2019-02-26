@@ -1,9 +1,6 @@
 package io.enkrypt.kafka.streams.processors.block
 
 import io.enkrypt.avro.capture.BlockRecord
-import io.enkrypt.avro.capture.TraceCallActionRecord
-import io.enkrypt.avro.capture.TraceCreateActionRecord
-import io.enkrypt.avro.capture.TraceDestroyActionRecord
 import io.enkrypt.avro.processing.BlockMetricsRecord
 import io.enkrypt.avro.processing.MetricKeyRecord
 import io.enkrypt.avro.processing.MetricRecord
@@ -42,7 +39,7 @@ object BlockMetrics {
 
         val receipt = tx.getReceipt()
 
-        if(receipt.isSuccessful())
+        if (receipt.isSuccessful())
           numSuccessfulTxs += 1
         else
           numFailedTxs += 1

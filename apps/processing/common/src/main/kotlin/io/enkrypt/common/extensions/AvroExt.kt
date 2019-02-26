@@ -1,9 +1,7 @@
 package io.enkrypt.common.extensions
 
 import io.enkrypt.avro.capture.BlockKeyRecord
-import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.capture.TransactionReceiptRecord
-import io.enkrypt.avro.capture.TransactionRecord
 import io.enkrypt.avro.exchange.ExchangeRateRecord
 import io.enkrypt.avro.processing.TokenBalanceKeyRecord
 import io.enkrypt.avro.processing.TokenTransferRecord

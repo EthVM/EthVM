@@ -18,7 +18,6 @@ import io.enkrypt.common.extensions.hexBuffer20
 import io.enkrypt.common.extensions.hexBuffer256
 import io.enkrypt.common.extensions.hexBuffer32
 import io.enkrypt.common.extensions.hexBuffer8
-import io.enkrypt.common.extensions.unsignedBigInteger
 import io.enkrypt.common.extensions.unsignedByteBuffer
 import org.web3j.protocol.core.methods.response.EthBlock
 import org.web3j.protocol.core.methods.response.Log
@@ -175,9 +174,9 @@ fun TransactionReceipt.toTransactionReceiptRecord(builder: TransactionReceiptRec
         .map { t -> t.action }
         .map { action ->
           when (action) {
-            is Trace.CallAction -> if(action.value > BigInteger.ZERO) 1 else 0
-            is Trace.CreateAction -> if(action.value > BigInteger.ZERO) 1 else 0
-            is Trace.SuicideAction -> if(action.balance > BigInteger.ZERO) 1 else 0
+            is Trace.CallAction -> if (action.value > BigInteger.ZERO) 1 else 0
+            is Trace.CreateAction -> if (action.value > BigInteger.ZERO) 1 else 0
+            is Trace.SuicideAction -> if (action.balance > BigInteger.ZERO) 1 else 0
             else -> 0
           }
         }.sum()
