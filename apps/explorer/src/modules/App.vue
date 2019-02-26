@@ -17,7 +17,7 @@ import TheNavigationDrawer from '@app/core/components/layout/TheNavigationDrawer
 import TheFooter from '@app/core/components/layout/TheFooter.vue'
 import { Vue, Component } from 'vue-property-decorator'
 import { Events } from 'ethvm-common'
-import storePack from 'store';
+import storePack from 'store'
 
 import 'vuetify/dist/vuetify.min.css'
 
