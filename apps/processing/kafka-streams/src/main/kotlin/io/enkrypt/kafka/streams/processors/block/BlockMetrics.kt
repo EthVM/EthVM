@@ -1,6 +1,8 @@
 package io.enkrypt.kafka.streams.processors.block
 
 import io.enkrypt.avro.capture.BlockRecord
+import io.enkrypt.avro.capture.TraceCallActionRecord
+import io.enkrypt.avro.capture.TraceRewardActionRecord
 import io.enkrypt.avro.processing.BlockMetricsRecord
 import io.enkrypt.avro.processing.MetricKeyRecord
 import io.enkrypt.avro.processing.MetricRecord
@@ -40,8 +42,19 @@ object BlockMetrics {
 
         val receipt = tx.getReceipt()
 
-        // TODO fix me
-//        totalInternalTxs += receipt.getInternalTxs().size
+        /**
+         * https://ethereum.stackexchange.com/questions/6429/normal-transactions-vs-internal-transactions-in-etherscan
+         *
+         * Internal transactions, despite the name (which isn't part of the yellowpaper; it's a convention people have settled on)
+         * aren't actual transactions, and aren't included directly in the blockchain; they're value transfers that were initiated
+         * by executing a contract.
+         */
+
+        totalInternalTxs += receipt.getTraces()
+          .filter { t -> t.getAction() is TraceCallActionRecord }
+          .filter { t -> (t.getAction() as TraceCallActionRecord).getValue().unsignedBigInteger()!! > BigInteger.ZERO }
+          .count()
+
         if (receipt.isSuccess()) numSuccessfulTxs += 1 else numFailedTxs += 1
 
         totalGasLimit += tx.getGas().unsignedBigInteger()!!
