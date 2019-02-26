@@ -47,10 +47,6 @@ export class MongoStreamer implements Streamer {
       emitter
     )
 
-    // Start only processing metadata reader to listen for events
-    logger.info('MongoStreamer - initialize() / Enabling Processing Metadata streamer')
-    await this.processingMetadataReader.start()
-
     // Check initial syncing state
     logger.info('MongoStreamer - initialize() / Checking status of syncing')
     const syncStatus = await this.db
@@ -66,6 +62,9 @@ export class MongoStreamer implements Streamer {
     } else {
       this.enableEventsStreaming()
     }
+
+    logger.info('MongoStreamer - initialize() / Enabling Processing Metadata streamer')
+    this.processingMetadataReader.start()
 
     return Promise.resolve(true)
   }
