@@ -1,6 +1,5 @@
 package io.enkrypt.kafka.connect.sources.web3
 
-import io.enkrypt.avro.capture.TransactionRecord
 import org.web3j.protocol.core.methods.response.Transaction
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.Executors
