@@ -213,11 +213,9 @@ export default class PageDetailsToken extends Vue {
     return new Promise((resolve, reject) => {
       const tokenHoldersPromise = this.fetchTokenHolders()
 
-
       Promise.all([tokenHoldersPromise])
         .then(([tokenHolders]) => {
           this.tokenHolders = tokenHolders as any[]
-          console.log(this.tokenHolders.length)
           resolve()
         })
         .catch(e => {

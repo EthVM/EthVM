@@ -16,9 +16,7 @@ import { Hex } from '@app/core/models'
     AppDetailsList
   }
 })
-
-
-export default class TokenDetailsList extends  Mixins(StringConcatMixin) {
+export default class TokenDetailsList extends Mixins(StringConcatMixin) {
   @Prop(String) addressRef: string // Token contract address
   @Prop(Object) contractDetails: any
   @Prop(Object) tokenDetails: any
@@ -158,8 +156,9 @@ export default class TokenDetailsList extends  Mixins(StringConcatMixin) {
 
   //Methods:
   getPriceChange(): string {
-    return this.tokenDetails.price_change_percentage_24h > 0 ? '+' + this.getPercent(this.tokenDetails.price_change_percentage_24h) : this.getPercent(this.tokenDetails.price_change_percentage_24h)
+    return this.tokenDetails.price_change_percentage_24h > 0
+      ? '+' + this.getPercent(this.tokenDetails.price_change_percentage_24h)
+      : this.getPercent(this.tokenDetails.price_change_percentage_24h)
   }
-
 }
 </script>

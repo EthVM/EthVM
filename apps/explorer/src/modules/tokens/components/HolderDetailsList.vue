@@ -98,7 +98,7 @@ export default class HolderDetailsList extends Mixins(StringConcatMixin) {
         },
         {
           title: this.$i18n.t('title.contract').toString(),
-          detail: '0x'+this.tokenDetails.address,
+          detail: '0x' + this.tokenDetails.address,
           link: `/address/0x${this.tokenDetails.address}`,
           copy: true
         },
@@ -128,21 +128,23 @@ export default class HolderDetailsList extends Mixins(StringConcatMixin) {
     return details
   }
 
-
   get balanceUsd() {
-    const n = new BN(this.holderDetails.tokens[0].balance).div(new BN(10).pow(this.contractDetails.metadata.decimals)).multipliedBy(this.tokenDetails.current_price)
-    return this.holderDetails.tokens ? '$'+this.getRoundNumber(n): 'N/A'
+    const n = new BN(this.holderDetails.tokens[0].balance)
+      .div(new BN(10).pow(this.contractDetails.metadata.decimals))
+      .multipliedBy(this.tokenDetails.current_price)
+    return this.holderDetails.tokens ? '$' + this.getRoundNumber(n) : 'N/A'
   }
 
-  get balance(): string{
+  get balance(): string {
     const n = new BN(this.holderDetails.tokens[0].balance)
-    return this.getRoundNumber(n
-      .div(new BN(10).pow(this.contractDetails.metadata.decimals)))
+    return this.getRoundNumber(n.div(new BN(10).pow(this.contractDetails.metadata.decimals)))
   }
 
   //Methods:
   getPriceChange(): string {
-    return this.tokenDetails.price_change_percentage_24h > 0 ? '+' + this.getPercent(this.tokenDetails.price_change_percentage_24h) : this.getPercent(this.tokenDetails.price_change_percentage_24h)
+    return this.tokenDetails.price_change_percentage_24h > 0
+      ? '+' + this.getPercent(this.tokenDetails.price_change_percentage_24h)
+      : this.getPercent(this.tokenDetails.price_change_percentage_24h)
   }
 }
 </script>
