@@ -6,7 +6,7 @@ import io.enkrypt.avro.processing.MetricKeyRecord
 import io.enkrypt.avro.processing.MetricRecord
 import io.enkrypt.common.extensions.bigInteger
 import io.enkrypt.common.extensions.byteBuffer
-import io.enkrypt.common.extensions.isSuccess
+import io.enkrypt.common.extensions.isSuccessful
 import io.enkrypt.common.extensions.unsignedBigInteger
 import io.enkrypt.common.extensions.unsignedByteBuffer
 import org.apache.kafka.streams.KeyValue
@@ -29,7 +29,6 @@ object BlockMetrics {
 
     var numSuccessfulTxs = 0
     var numFailedTxs = 0
-    var totalInternalTxs = 0
 
     var totalGasPrice = BigInteger.ZERO
     var totalTxsFees = BigInteger.ZERO
@@ -40,9 +39,10 @@ object BlockMetrics {
 
         val receipt = tx.getReceipt()
 
-        // TODO fix me
-//        totalInternalTxs += receipt.getInternalTxs().size
-        if (receipt.isSuccess()) numSuccessfulTxs += 1 else numFailedTxs += 1
+        if (receipt.isSuccessful())
+          numSuccessfulTxs += 1
+        else
+          numFailedTxs += 1
 
         totalGasLimit += tx.getGas().unsignedBigInteger()!!
         totalGasPrice += tx.getGasPrice().unsignedBigInteger()!!
