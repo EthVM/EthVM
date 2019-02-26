@@ -44,29 +44,28 @@
                 <v-flex>
                   <v-layout align-start justify-center column>
                     <v-btn flat icon @click="selectFilter(0)">
-                      <v-icon :class="[isActive(0)? 'white--text':'bttnToken--text']" small>fas fa-caret-up</v-icon>
+                      <v-icon :class="[isActive(0) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-up</v-icon>
                     </v-btn>
                     <v-btn flat icon @click="selectFilter(1)">
-                      <v-icon :class="[isActive(1)? 'white--text':'bttnToken--text']" small>fas fa-caret-down</v-icon>
+                      <v-icon :class="[isActive(1) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-down</v-icon>
                     </v-btn>
                   </v-layout>
                 </v-flex>
               </v-layout>
             </v-flex>
             <v-flex hidden-xs-only sm2 pl-0>
-                <h5>{{ $t('token.change') }}</h5>
+              <h5>{{ $t('token.change') }}</h5>
             </v-flex>
             <v-flex hidden-xs-only sm2>
-
               <v-layout align-center justify-start row pl-2>
                 <h5 class="pr-1">{{ $t('token.volume') }}</h5>
                 <v-flex>
                   <v-layout align-start justify-center column>
                     <v-btn flat icon @click="selectFilter(2)">
-                      <v-icon :class="[isActive(2)? 'white--text':'bttnToken--text']" small>fas fa-caret-up</v-icon>
+                      <v-icon :class="[isActive(2) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-up</v-icon>
                     </v-btn>
                     <v-btn flat icon @click="selectFilter(3)">
-                      <v-icon :class="[isActive(3)? 'white--text':'bttnToken--text']" small>fas fa-caret-down</v-icon>
+                      <v-icon :class="[isActive(3) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-down</v-icon>
                     </v-btn>
                   </v-layout>
                 </v-flex>
@@ -78,10 +77,10 @@
                 <v-flex>
                   <v-layout align-start justify-center column>
                     <v-btn flat icon @click="selectFilter(4)">
-                      <v-icon :class="[isActive(4)? 'white--text':'bttnToken--text']" small>fas fa-caret-up</v-icon>
+                      <v-icon :class="[isActive(4) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-up</v-icon>
                     </v-btn>
                     <v-btn flat icon @click="selectFilter(5)">
-                      <v-icon :class="[isActive(5)? 'white--text':'bttnToken--text']" small>fas fa-caret-down</v-icon>
+                      <v-icon :class="[isActive(5) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-down</v-icon>
                     </v-btn>
                   </v-layout>
                 </v-flex>
@@ -91,7 +90,7 @@
         </v-card>
       </v-flex>
       <v-flex hidden-sm-and-up xs12 mr-1 ml-1>
-        <token-filter @filterMobile="selectFilter"/>
+        <token-filter @filterMobile="selectFilter" />
       </v-flex>
     </v-layout>
     <!--
@@ -121,141 +120,127 @@
 </template>
 
 <script lang="ts">
-  import AppError from '@app/core/components/ui/AppError.vue'
-  import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
-  import TokenFilter from '@app/modules/tokens/components/TokenFilter.vue'
-  import TokenTableRowLoading from '@app/modules/tokens/components/TokenTableRowLoading.vue'
-  import TokenTableRow from '@app/modules/tokens/components/TokenTableRow.vue'
-  import {
-    TokenExchange
-  } from '@app/modules/tokens/props'
+import AppError from '@app/core/components/ui/AppError.vue'
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+import TokenFilter from '@app/modules/tokens/components/TokenFilter.vue'
+import TokenTableRowLoading from '@app/modules/tokens/components/TokenTableRowLoading.vue'
+import TokenTableRow from '@app/modules/tokens/components/TokenTableRow.vue'
+import { TokenExchange } from '@app/modules/tokens/props'
 
-  import {
-    PendingTx,
-    Tx,
-    SimpleTx
-  } from '@app/core/models'
-  import {
-    Vue,
-    Component,
-    Prop,
-    Watch
-  } from 'vue-property-decorator'
+import { PendingTx, Tx, SimpleTx } from '@app/core/models'
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 
-  @Component({
-    components: {
-      AppError,
-      AppPaginate,
-      TokenFilter,
-      TokenTableRow,
-      TokenTableRowLoading
+@Component({
+  components: {
+    AppError,
+    AppPaginate,
+    TokenFilter,
+    TokenTableRow,
+    TokenTableRowLoading
+  }
+})
+export default class TokenTable extends Vue {
+  @Prop({ type: Boolean, default: true }) loading!: boolean
+  @Prop(Array) tokens!: TokenExchange[]
+  @Prop({ type: Number, default: 0 }) totalTokens: number
+  @Prop({ type: Number, default: 0 }) page: number
+  @Prop(String) error: string
+
+  maxItems = 50
+  selectedFilter = 0
+  filter = [
+    {
+      _id: 0,
+      category: 'price',
+      filter: 'high'
+    },
+    {
+      _id: 1,
+      category: 'price',
+      filter: 'low'
+    },
+    {
+      _id: 2,
+      category: 'volume',
+      filter: 'high'
+    },
+    {
+      _id: 3,
+      category: 'volume',
+      filter: 'low'
+    },
+    {
+      _id: 4,
+      category: 'cap',
+      filter: 'high'
+    },
+    {
+      _id: 5,
+      category: 'cap',
+      filter: 'low'
     }
-  })
-  export default class TokenTable extends Vue {
-    @Prop({
-      type: Boolean,
-      default: true
-    }) loading: boolean
-    @Prop(Array) tokens!: TokenExchange[]
-    @Prop({
-      type: Number,
-      default: 0
-    }) totalTokens: number
-    @Prop(String) error: string
+  ]
 
-    maxItems = 50
-    page = 1
-    selectedFilter = 0
-    filter = [{
-        _id: 0,
-        category: 'price',
-        filter: 'high'
-      },
-      {
-        _id: 1,
-        category: 'price',
-        filter: 'low'
-      },
-      {
-        _id: 2,
-        category: 'volume',
-        filter: 'high'
-      },
-      {
-        _id: 3,
-        category: 'volume',
-        filter: 'low'
-      },
-      {
-        _id: 4,
-        category: 'cap',
-        filter: 'high'
-      },
-      {
-        _id: 5,
-        category: 'cap',
-        filter: 'low'
-      }
-    ]
-    /*
+  /*
       ===================================================================================
         Lifecycle
       ===================================================================================
-      */
+    */
 
-    @Watch('page')
-    onPageChanged(newVal: number, oldVal: number): void {
-      this.$emit('getTokens', this.filter[this.selectedFilter], newVal )
-    }
+  @Watch('page')
+  onPageChanged(newVal: number, oldVal: number): void {
+    this.$emit('getTokens', this.filter[this.selectedFilter], newVal)
+  }
 
-    @Watch('selectedFilter')
-    onSelectedFilterChanged(newVal: number, oldVal: number): void {
-      this.$emit('getTokens', this.filter[newVal], this.page)
-    }
-    /*
+  @Watch('selectedFilter')
+  onSelectedFilterChanged(newVal: number, oldVal: number): void {
+    this.$emit('getTokens', this.filter[newVal], this.page)
+  }
+
+  /*
       ===================================================================================
         Methods
       ===================================================================================
-      */
+  */
 
-    setPage(value: number): void {
-      this.page = value
-    }
+  setPage(value: number): void {
+    this.page = value
+  }
 
-    selectFilter(_value: number): void {
-      this.selectedFilter = _value
-    }
-    isActive(_value: number): boolean {
-      return this.selectedFilter === _value
-    }
-    /*
+  selectFilter(_value: number): void {
+    this.selectedFilter = _value
+  }
+
+  isActive(_value: number): boolean {
+    return this.selectedFilter === _value
+  }
+
+  /*
       ===================================================================================
         Computed Values
       ===================================================================================
-      */
+  */
 
-    /**
-     * Determines whether or not component has an error.
-     * If error property is empty string, there is no error.
-     *
-     * @return {Boolean} - Whether or not error exists
-     */
-    get hasError(): boolean {
-     return this.error !== ''
-    }
-
-    get pages(): number {
-      return this.totalTokens ? Math.ceil(this.totalTokens / this.maxItems) : 0
-    }
-
+  /**
+   * Determines whether or not component has an error.
+   * If error property is empty string, there is no error.
+   *
+   * @return {Boolean} - Whether or not error exists
+   */
+  get hasError(): boolean {
+    return this.error !== ''
   }
+
+  get pages(): number {
+    return this.totalTokens ? Math.ceil(this.totalTokens / this.maxItems) : 0
+  }
+}
 </script>
 
 <style scoped lang="css">
-  .v-btn.v-btn--flat.v-btn--icon {
-    height: 12px;
-    width: 12px;
-    margin: 0;
-  }
+.v-btn.v-btn--flat.v-btn--icon {
+  height: 12px;
+  width: 12px;
+  margin: 0;
+}
 </style>
-

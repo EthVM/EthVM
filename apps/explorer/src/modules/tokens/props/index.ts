@@ -20,6 +20,6 @@ export interface TokenExchange {
 }
 
 export interface TokenFilter {
-  category: string,
+  category: string
   filter: string
 }

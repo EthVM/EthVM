@@ -1,7 +1,7 @@
 <template>
   <v-container grid-list-lg class="mb-0">
     <app-bread-crumbs :new-items="crumbs" />
-    <token-table :tokens="tokens" :total-tokens="total" :loading="isLoading" :error="error" @getTokens="updateRes"/>
+    <token-table :tokens="tokens" :total-tokens="total" :loading="isLoading" :error="error" :page="page" @getTokens="updateRes" />
   </v-container>
 </template>
 
@@ -20,9 +20,11 @@ const MAX_ITEMS = 50
   }
 })
 export default class PageTokens extends Vue {
-  tokens: any = [] // Array of tokens for table display
-  total = 0 // Total number of tokens
+  tokens: any = []
+  total = 0
   isLoading = true
+  page = 0
+  filter = 'market_cap_high'
   error = ''
 
   /*
@@ -49,7 +51,7 @@ export default class PageTokens extends Vue {
    * @return {Array} - Array of tokens
    */
   fetchTokenExchangeRates(page: number) {
-    return this.$api.getTokenExchangeRates(MAX_ITEMS, page)
+    return this.$api.getTokenExchangeRates(this.filter, MAX_ITEMS, page)
   }
 
   fetchTotalTokens(): Promise<number> {
@@ -58,6 +60,7 @@ export default class PageTokens extends Vue {
 
   getPage(page: number): void {
     this.isLoading = true
+    this.page = page
     this.fetchTokenExchangeRates(page).then(
       res => {
         this.tokens = res
@@ -68,9 +71,10 @@ export default class PageTokens extends Vue {
       }
     )
   }
-  updateRes(_filter: TokenFilter, _page: number): void {
-    console.log("NewFilter / Page : ", _page, _filter)
-    this.getPage(_page)
+
+  updateRes(filter: TokenFilter, page: number): void {
+    // console.log('Current filter:', this.filter, ' Page: ', this.page)
+    this.getPage(page)
   }
 
   /*
