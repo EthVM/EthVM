@@ -10,7 +10,7 @@
             <v-flex xs8 pr-0 pt-0>
               <v-layout row wrap align-end justify-start pl-2>
                 <p class="black--text text-uppercase font-weight-medium mb-0 pr-1">{{ token.symbol }} -</p>
-                <p class="black--text text-truncate mb-0 font-weight-medium">{{ token.name }}</p>
+                <p class="black--text font-weight-medium mb-0 pr-1">{{ token.name }}</p>
               </v-layout>
               <v-layout row align-end justify-start pl-2>
                 <p class="black--text text-truncate mb-0 pr-1">${{ price }}</p>
@@ -25,7 +25,7 @@
               </v-layout>
             </v-flex>
             <v-flex xs2>
-              <v-btn outline small fab color="bttnToken" :to="'/token/0x' + token.address">
+              <v-btn outline small fab color="bttnToken" :to="tokenLink">
                 <v-icon class="bttnToken--text fas fa-chevron-right" small />
               </v-btn>
             </v-flex>
@@ -38,7 +38,7 @@
             <v-flex xs4>
               <v-layout grid-list-xs row align-center justify-start fill-height>
                 <v-img :src="token.image" height="25px" max-width="25px" contain class="ml-4 mr-4" />
-                <p class="black--text text-truncate mb-0">{{ token.name }}</p>
+                <router-link class="black--text" :to="tokenLink">{{ token.name }}</router-link>
                 <p class="black--text text-uppercase mb-0 pl-1">({{ token.symbol }})</p>
               </v-layout>
             </v-flex>
@@ -108,6 +108,10 @@ export default class TokenTableRow extends Mixins(StringConcatMixin) {
       return 'null'
     }
     return this.token.price_change_percentage_24h > 0 ? '+' : ''
+  }
+
+  get tokenLink():string {
+    return `/token/0x${this.token.address}`
   }
 }
 </script>
