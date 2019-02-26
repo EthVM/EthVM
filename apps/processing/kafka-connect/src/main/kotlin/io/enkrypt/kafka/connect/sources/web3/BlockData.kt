@@ -74,7 +74,9 @@ fun EthBlock.Block.toBlockRecord(
     ?.groupBy { it.author to it.rewardType }
     ?.map { (key, rewards) ->
 
-      val totalReward = rewards.fold(BigInteger.ZERO) { memo, action -> memo + action.value }
+      val reward = rewards.fold(BigInteger.ZERO) { memo, action -> memo + action.value }
+      val totalTxFees = txs.map { tx -> tx.gasPrice * receiptsByTxHash.getValue(tx.hash).gasUsed }.fold(BigInteger.ZERO) { acc, action -> acc + action }
+      val totalReward = reward + totalTxFees
 
       BlockRewardRecord.newBuilder()
         .setAuthor(key.first.hexBuffer())

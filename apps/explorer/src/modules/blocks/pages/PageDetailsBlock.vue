@@ -261,11 +261,11 @@ export default class PageDetailsBlock extends Vue {
         },
         {
           title: this.$i18n.t('block.reward'),
-          detail: this.block.getMinerReward().toEthFormated() + ' ' + this.$i18n.t('common.eth')
+          detail: this.block.getMinerReward().toEth() + ' ' + this.$i18n.t('common.eth')
         },
         {
           title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward'),
-          detail: this.block.getUncleReward().toEthFormated() + ' ' + this.$i18n.t('common.eth')
+          detail: this.block.getUncleReward().toEth() + ' ' + this.$i18n.t('common.eth')
         },
         {
           title: this.$i18n.t('title.tx'),
