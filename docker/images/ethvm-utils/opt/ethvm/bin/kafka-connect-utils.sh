@@ -44,6 +44,7 @@ register_sources() {
   ensure_kafka_connect
   curl_register ${KAFKA_CONNECT_DIR}/sources/eth-lists-source.json
   curl_register ${KAFKA_CONNECT_DIR}/sources/exchange-rates-source.json
+  curl_register ${KAFKA_CONNECT_DIR}/sources/parity-source.json
 } >&2
 
 register_sinks() {
