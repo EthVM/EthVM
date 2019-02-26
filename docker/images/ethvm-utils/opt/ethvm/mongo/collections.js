@@ -2,7 +2,6 @@
 // create collections
 
 const collections = [
-  "web3_blocks",
   "blocks",
   "transactions",
   "contracts",

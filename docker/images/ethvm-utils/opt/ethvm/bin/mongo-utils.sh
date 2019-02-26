@@ -15,7 +15,7 @@ export MONGO_DIR="${ROOT_DIR}/mongo"
 
 ensure_mongo() {
 
-  local TIMEOUT=${1:-30}
+  local TIMEOUT=${1:-60}
   local HOST=$(echo ${MONGO_URL} | awk -F[/:] '{print $4}')
 
   # Wait until mongo logs that it's ready (or timeout after 60s)

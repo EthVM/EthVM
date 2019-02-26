@@ -21,12 +21,11 @@ object BlockMetrics {
   fun forBlock(block: BlockRecord): BlockMetricsRecord {
 
     val transactions = block.getTransactions()
-    val receipts = block.getTransactionReceipts()
 
     val difficulty = block.getHeader().getDifficulty().bigInteger()
     val totalDifficulty = block.getTotalDifficulty().bigInteger()
     val numPendingTxs = block.getNumPendingTxs()
-    val totalTxs = receipts.size
+    val totalTxs = transactions.size
 
     var numSuccessfulTxs = 0
     var numFailedTxs = 0
@@ -37,10 +36,12 @@ object BlockMetrics {
     var totalGasLimit = BigInteger.ZERO
 
     transactions
-      .zip(receipts)
-      .forEach { (tx, receipt) ->
+      .forEach { tx ->
 
-        totalInternalTxs += receipt.getInternalTxs().size
+        val receipt = tx.getReceipt()
+
+        // TODO fix me
+//        totalInternalTxs += receipt.getInternalTxs().size
         if (receipt.isSuccess()) numSuccessfulTxs += 1 else numFailedTxs += 1
 
         totalGasLimit += tx.getGas().unsignedBigInteger()!!
@@ -167,7 +168,7 @@ object BlockMetrics {
     }
 
     if (hashRate != null) {
-      list += KeyValue(
+      list = list + KeyValue(
         keyBuilder.setName("AvgHashRate").build(),
         MetricRecord.newBuilder().`setDouble$`(hashRate).build()
       )

@@ -48,41 +48,55 @@ object TypeMappings {
     Ignore,
   }
 
-  private val internalTx = mapOf(
-    "hash" to Hex,
-    "nonce" to UBigInt,
-    "parentHash" to Hex,
+  private val traces = mapOf(
     "blockHash" to Hex,
-    "blockNumber" to UBigInt,
-    "transactionIndex" to UBigInt,
-    "internalTransactionIndex" to UBigInt,
-    "value" to UBigInt,
-    "gasPrice" to UBigInt,
-    "gas" to UBigInt,
-    "from" to Hex,
-    "to" to Hex,
-    "input" to Hex,
-    "creates" to Hex,
-    "raw" to Ignore
+    "blockNumber" to UInt64,
+    "transactionHash" to Hex,
+    "action" to mapOf(
+      "TraceCallActionRecord" to mapOf(
+        "from" to Hex,
+        "to" to Hex,
+        "gas" to UBigInt,
+        "input" to Hex,
+        "value" to UBigInt
+      ),
+      "TraceCreateActionRecord" to mapOf(
+        "from" to Hex,
+        "gas" to UBigInt,
+        "value" to UBigInt,
+        "init" to Hex
+      ),
+      "TraceDestroyActionRecord" to mapOf(
+        "address" to Hex,
+        "balance" to UBigInt,
+        "refundAddress" to Hex
+      )
+    ),
+    "result" to mapOf(
+      "address" to Hex,
+      "code" to Hex,
+      "gasUsed" to UBigInt,
+      "output" to Hex
+    )
   )
 
   private val txReceipt = mapOf(
+    "root" to Hex,
     "blockHash" to Hex,
-    "blockNumber" to UBigInt,
+    "blockNumber" to UInt64,
     "transactionHash" to Hex,
     "contractAddress" to Hex,
     "gasUsed" to UBigInt,
     "cumulativeGasUsed" to UBigInt,
     "logs" to mapOf(
       "address" to Hex,
+      "fixed" to Hex,
       "data" to Hex,
       "topics" to Hex
     ),
     "logsBloom" to Hex,
     "status" to Hex,
-    "internalTxs" to internalTx,
-    "deletedAccounts" to Hex,
-    "raw" to Ignore
+    "traces" to traces
   )
 
   private val tx = mapOf(
@@ -137,18 +151,16 @@ object TypeMappings {
     "block" to mapOf(
       "header" to blockHeader,
       "transactions" to tx,
-      "transactionReceipts" to Ignore,
-      "unclesHash" to Hex,
       "uncles" to blockHeader,
       "rewards" to mapOf(
-        "address" to Hex,
-        "reward" to UBigInt
+        "author" to Hex,
+        "value" to UBigInt
       ),
-      "premineBalances" to Ignore,
       "totalDifficulty" to UBigInt,
+      "uncleHashes" to Ignore,
       "numPendingTxs" to Ignore,
       "reverse" to Ignore,
-      "raw" to Ignore
+      "sha3Uncles" to Ignore
     ),
     "block-metrics" to mapOf(
       "hash" to Hex,
@@ -183,7 +195,7 @@ object TypeMappings {
       "blockHash" to Hex,
       "txHash" to Hex,
       "creator" to Hex,
-      "data" to Hex
+      "fixed" to Hex
     ),
     "tokenTransfer" to mapOf(
       "hash" to Hex,
@@ -275,17 +287,11 @@ object StructToBsonConverter {
 
             if (bsonValue != null) {
 
-              if (bsonValue.isBinary && conversion != null) {
-
-                val bytes = (bsonValue as BsonBinary).data
-                  bsonValue = when (conversion) {
-                    Hex -> BsonString(bytes.hex())
-                    UBigInt -> BsonString(bytes.unsignedBigInteger().toString())
-                    BigInt -> BsonString(bytes.bigInteger().toString())
-                    UInt64 -> BsonInt64(bytes.unsignedBigInteger().longValueExact())
-                    Int64 -> BsonInt64(bytes.bigInteger()!!.longValueExact())
-                    else -> throw IllegalStateException("Illegal conversion value!")
-                  }
+              if (conversion != null) {
+                when {
+                  bsonValue.isBinary -> { bsonValue = toTypeConversion(conversion, bsonValue) }
+                  bsonValue.isArray -> { bsonValue = BsonArray((bsonValue as BsonArray).values.map { v -> toTypeConversion(conversion, v) }) }
+                }
               }
 
               doc.append(fieldName, bsonValue)
@@ -295,10 +301,23 @@ object StructToBsonConverter {
           doc
         })
 
+  private fun toTypeConversion(conversion: TypeMappings.ConversionType, value: BsonValue): BsonValue? {
+    if (!value.isBinary) return value
+    val bytes = (value as BsonBinary).data
+    return when (conversion) {
+      Hex -> BsonString(bytes.hex())
+      UBigInt -> BsonString(bytes.unsignedBigInteger().toString())
+      BigInt -> BsonString(bytes.bigInteger().toString())
+      UInt64 -> BsonInt64(bytes.unsignedBigInteger().longValueExact())
+      Int64 -> BsonInt64(bytes.bigInteger()!!.longValueExact())
+      else -> throw IllegalStateException("Illegal conversion value!")
+    }
+  }
+
   private fun convertField(schema: Schema, path: String, value: Any?, allowNulls: Boolean = false): BsonValue? {
     val type = schema.type()
     return when (type) {
-      in Schema.Type.values().filterNot { it == STRUCT || it == ARRAY || it == MAP } -> convertField(value, BASIC_CONVERTERS[type]!!, allowNulls)
+      in Schema.Type.values().filterNot { it == STRUCT || it == ARRAY || it == MAP } -> convertField(value, BASIC_CONVERTERS.getValue(type), allowNulls)
       ARRAY -> convertArray(schema, path, value)
       STRUCT -> convert(value, path, allowNulls)
       else -> throw IllegalArgumentException("Unhandled Schema type: $type")

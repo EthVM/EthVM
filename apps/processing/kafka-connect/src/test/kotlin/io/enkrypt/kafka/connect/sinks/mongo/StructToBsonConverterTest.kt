@@ -5,6 +5,10 @@ import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient
 import io.confluent.kafka.serializers.KafkaAvroSerializer
 import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
+import io.enkrypt.avro.capture.LogRecord
+import io.enkrypt.avro.capture.TransactionKeyRecord
+import io.enkrypt.avro.capture.TransactionReceiptRecord
+import io.enkrypt.avro.capture.TransactionRecord
 import io.enkrypt.avro.processing.ContractCreateRecord
 import io.enkrypt.avro.processing.ContractDestroyRecord
 import io.enkrypt.avro.processing.ContractKeyRecord
@@ -12,7 +16,8 @@ import io.enkrypt.avro.processing.MetricKeyRecord
 import io.enkrypt.avro.processing.MetricRecord
 import io.enkrypt.avro.processing.TokenBalanceKeyRecord
 import io.enkrypt.avro.processing.TokenBalanceRecord
-import io.enkrypt.common.extensions.hexData20
+import io.enkrypt.common.extensions.hexBuffer
+import io.enkrypt.common.extensions.hexBuffer20
 import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
@@ -32,7 +37,7 @@ import java.nio.ByteBuffer
 
 class StructToBsonConverterTest : BehaviorSpec() {
 
-  val schemaRegistryClient = MockSchemaRegistryClient().apply {
+  private val schemaRegistryClient = MockSchemaRegistryClient().apply {
 
     val subjectsWithSchemas = listOf(
 
@@ -49,7 +54,10 @@ class StructToBsonConverterTest : BehaviorSpec() {
       Pair("contract-creations-key", ContractKeyRecord.`SCHEMA$`),
 
       Pair("contract-destructions", ContractDestroyRecord.`SCHEMA$`),
-      Pair("contract-destructions-key", ContractKeyRecord.`SCHEMA$`)
+      Pair("contract-destructions-key", ContractKeyRecord.`SCHEMA$`),
+
+      Pair("transactions-key", TransactionKeyRecord.`SCHEMA$`),
+      Pair("transactions", TransactionRecord.`SCHEMA$`)
     )
 
     subjectsWithSchemas.forEach { (subject, schema) -> register(subject, schema) }
@@ -330,7 +338,7 @@ class StructToBsonConverterTest : BehaviorSpec() {
       val amount = 123814982.toBigInteger()
 
       val record = TokenBalanceRecord.newBuilder()
-        .setAddress(address.hexData20())
+        .setAddress(address.hexBuffer20())
         .setAmount(amount.unsignedByteBuffer())
         .build()
 
@@ -357,8 +365,8 @@ class StructToBsonConverterTest : BehaviorSpec() {
       val tokenId = 12381298.toBigInteger()
 
       val record = TokenBalanceKeyRecord.newBuilder()
-        .setAddress(address.hexData20())
-        .setContract(contract.hexData20())
+        .setAddress(address.hexBuffer20())
+        .setContract(contract.hexBuffer20())
         .setTokenId(tokenId.unsignedByteBuffer())
         .build()
 
@@ -375,6 +383,57 @@ class StructToBsonConverterTest : BehaviorSpec() {
 
         then("the relevant fields should be converted to Decimal128") {
           bson.getDecimal128("tokenId").value shouldBe tokenId.toDecimal128()
+        }
+      }
+    }
+
+    given("a tx record") {
+
+      val n = 123456789.toBigInteger()
+      val hash = "3a1fba5abd9d41457944e91ed097e039b7b12d3d7ba324a3f422db2277a48e28"
+      val address = "689c56aef474df92d44a1b70850f808488f9769c"
+      val data = "123c56aef474df92d44a1b70850f808488f9233c7c1ab412354b"
+      val topic = "123c56aef474df92d44a1b70850f808488f9233c123456bac"
+
+      val logs = mutableListOf<LogRecord>(
+        LogRecord.newBuilder()
+          .setAddress(address.hexBuffer20())
+          .setData(data.hexBuffer())
+          .setTopics(mutableListOf(topic.hexBuffer()))
+          .build()
+      )
+
+      val receipt = TransactionReceiptRecord.newBuilder()
+        .setBlockHash(hash.hexBuffer())
+        .setTransactionHash(hash.hexBuffer())
+        .setLogs(logs)
+        .setGasUsed(123.toBigInteger().unsignedByteBuffer())
+        .setCumulativeGasUsed(123.toBigInteger().unsignedByteBuffer())
+        .setLogsBloom(data.hexBuffer())
+        .setTraces(mutableListOf())
+        .build()
+
+      val record = TransactionRecord.newBuilder()
+        .setHash(hash.hexBuffer())
+        .setNonce(123.toBigInteger().unsignedByteBuffer())
+        .setFrom(address.hexBuffer20())
+        .setValue(123.toBigInteger().unsignedByteBuffer())
+        .setGasPrice(123.toBigInteger().unsignedByteBuffer())
+        .setGas(123.toBigInteger().unsignedByteBuffer())
+        .setV(1L)
+        .setR(123.toBigInteger().unsignedByteBuffer())
+        .setS(123.toBigInteger().unsignedByteBuffer())
+        .setReceipt(receipt)
+        .build()
+
+      `when`("we convert it to bson") {
+
+        val avro = avroSerializer.serialize("transactions", record)
+        val struct = avroConverter.toConnectData("transactions", avro).value()
+        val bson = StructToBsonConverter.convert(struct, "transaction")
+
+        then("the relevant fields should be converted to hex") {
+          bson["receipt"] shouldNotBe null
         }
       }
     }
