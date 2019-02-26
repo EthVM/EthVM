@@ -54,7 +54,6 @@ services:
       placement:
         constraints:
           - node.role == worker
-          - node.labels.io.enkrypt.nodeType != ethereumj
       replicas: 1
       restart_policy:
         condition: on-failure
@@ -82,15 +81,14 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '3.0'
-          memory: 6G
+          cpus: '4.0'
+          memory: 8G
         reservations:
-          cpus: '2.0'
+          cpus: '3.0'
           memory: 4G
       placement:
         constraints:
           - node.role == worker
-          - node.labels.io.enkrypt.nodeType != ethereumj
       replicas: 1
       restart_policy:
         condition: on-failure
@@ -124,30 +122,6 @@ services:
       restart_policy:
         condition: on-failure
 
-  ethereumj:
-    image: enkryptio/ethereumj:1.12.0.1
-    networks:
-      - backend
-    volumes:
-      - ethereumj:/backup
-    environment:
-      JAVA_OPTS: '-server -Xss32m -Xms24G -Xmx24G -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:+UseG1GC -XX:PermSize=512m -XX:MaxGCPauseMillis=200 -XX:ParallelGCThreads=20 -XX:ConcGCThreads=5 -XX:InitiatingHeapOccupancyPercent=70 -XX:-OmitStackTraceInFastThrow -Dkafka.enabled=true -Dkafka.schemaRegistryUrl=${KAFKA_SCHEMA_REGISTRY_URL} -Dkafka.bootstrapServers=${KAFKA_BOOTSTRAP_SERVERS} -Ddatabase.dir=/data/db -Dcache.stateCacheSize=4096 -Dcache.blockQueueSize=256 -Dcache.headerQueueSize=64 -Ddatabase.fromBackup=true -Ddatabase.backupDir=/backup'
-    deploy:
-      resources:
-        limits:
-          cpus: '10.0'
-          memory: 30G
-        reservations:
-          cpus: '8.0'
-          memory: 24G
-      placement:
-        constraints:
-          - node.role == worker
-          - node.labels.io.enkrypt.nodeType == ethereumj
-      replicas: 0
-      restart_policy:
-        condition: on-failure
-
   kafka-streams:
     image: enkryptio/kafka-streams:0.3.0
     depends_on:
@@ -173,7 +147,6 @@ services:
       placement:
         constraints:
           - node.role == worker
-          - node.labels.io.enkrypt.nodeType != ethereumj
       replicas: 0
       restart_policy:
         condition: on-failure
@@ -189,15 +162,14 @@ services:
     deploy:
       resources:
         limits:
+          cpus: '5.0'
+          memory: 10G
+        reservations:
           cpus: '4.0'
           memory: 8G
-        reservations:
-          cpus: '3.0'
-          memory: 6G
       placement:
         constraints:
           - node.role == worker
-          - node.labels.io.enkrypt.nodeType != ethereumj
       replicas: 1
       restart_policy:
         condition: on-failure
@@ -235,15 +207,14 @@ services:
     deploy:
       resources:
         limits:
+          cpus: '4.0'
+          memory: 8G
+        reservations:
           cpus: '3.0'
           memory: 6G
-        reservations:
-          cpus: '2.0'
-          memory: 4G
       placement:
         constraints:
           - node.role == worker
-          - node.labels.io.enkrypt.nodeType != ethereumj
       replicas: 1
       restart_policy:
         condition: on-failure

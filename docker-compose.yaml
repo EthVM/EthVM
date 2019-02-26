@@ -103,7 +103,6 @@ services:
     ports:
       - 27017:27017
     cpu_shares: 4000
-    # mem_limit: 4g
 
   zookeeper:
     image: confluentinc/cp-zookeeper:${CP_VERSION}
