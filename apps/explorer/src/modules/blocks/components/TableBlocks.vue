@@ -18,7 +18,7 @@
           <app-paginate
             :total="pages"
             @newPage="setPage"
-            :new-page="page"
+            :current-page="page"
             :has-input="!simplePagination"
             :has-first="!simplePagination"
             :has-last="!simplePagination"
@@ -81,7 +81,7 @@
             <app-paginate
               :total="pages"
               @newPage="setPage"
-              :new-page="page"
+              :current-page="page"
               :has-input="!simplePagination"
               :has-first="!simplePagination"
               :has-last="!simplePagination"
@@ -140,19 +140,7 @@ export default class TableBlocks extends Vue {
   @Prop({ type: Number, default: 20 }) maxItems!: number
   @Prop({ type: Boolean, default: false }) simplePagination: boolean
   @Prop(String) error!: string
-
-  page = 0
-
-  /*
-  ===================================================================================
-    Watch
-  ===================================================================================
-  */
-
-  @Watch('page')
-  onPageChanged(newVal: number, oldVal: number): void {
-    this.$emit('getBlockPage', newVal)
-  }
+  @Prop({ type: Number, default: 0 }) page: number
 
   /*
   ===================================================================================
@@ -160,8 +148,8 @@ export default class TableBlocks extends Vue {
   ===================================================================================
   */
 
-  setPage(_value: number): void {
-    this.page = _value
+  setPage(page: number): void {
+    this.$emit('getBlockPage', page)
   }
 
   /*

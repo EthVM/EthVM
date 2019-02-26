@@ -17,7 +17,7 @@
       </v-flex>
       <v-flex v-else xs12 sm7 md6>
         <v-layout v-if="pages > 1 && !hasError" justify-end row class="pb-1 pr-2 pl-2">
-          <app-paginate :total="pages" @newPage="setPage" :new-page="page" :has-first="false" :has-last="false" :has-input="false" />
+          <app-paginate :total="pages" @newPage="setPage" :current-page="page" :has-first="false" :has-last="false" :has-input="false" />
         </v-layout>
       </v-flex>
     </v-layout>
@@ -74,7 +74,7 @@
               <v-divider class="mb-2 mt-2" />
             </v-card>
             <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2">
-              <app-paginate :total="pages" @newPage="setPage" :new-page="page" :has-input="false" :has-last="false" />
+              <app-paginate :total="pages" @newPage="setPage" :current-page="page" :has-input="false" :has-first="false" :has-last="false" />
             </v-layout>
           </v-flex>
           <v-flex xs12 v-if="loading">
@@ -130,19 +130,7 @@ export default class TableTxs extends Vue {
   @Prop({ type: Number, default: 0 }) totalTxs: number
   @Prop(Number) maxItems!: number
   @Prop(String) error: string
-
-  page = 1
-
-  /*
-  ===================================================================================
-    Lifecycle
-  ===================================================================================
-  */
-
-  @Watch('page')
-  onPageChanged(newVal: number, oldVal: number): void {
-    this.$emit('getTxsPage', this.page)
-  }
+  @Prop({ type: Number, default: 0 }) page: number
 
   /*
   ===================================================================================
@@ -150,8 +138,8 @@ export default class TableTxs extends Vue {
   ===================================================================================
   */
 
-  setPage(value: number): void {
-    this.page = value
+  setPage(page: number): void {
+    this.$emit('getTxsPage', page)
   }
 
   /*
