@@ -49,7 +49,10 @@ export class TxReceipt {
     return this.cache.contractAddress
   }
 
-  public getStatus(): string {
-    return this.receipt.status
+  public getStatus(): boolean {
+    if (!this.cache.status) {
+      this.cache.status = this.receipt.status ? this.receipt.status === '1' : (this.receipt.traces && this.receipt.traces.length > 0 ? !this.receipt.traces[0].error : true)
+    }
+    return this.cache.status
   }
 }

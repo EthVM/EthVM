@@ -10,6 +10,7 @@ export interface Trace {
     transactionPosition: number;
     action: any[];
     result: any;
+    error: any;
     subtraces: number;
     type: string;
 }
@@ -24,6 +25,7 @@ export interface TxReceipt {
     logs: Log[];
     logsBloom: string;
     traces: Trace[];
+    status: string;
 }
 export interface Tx {
     hash: string;
