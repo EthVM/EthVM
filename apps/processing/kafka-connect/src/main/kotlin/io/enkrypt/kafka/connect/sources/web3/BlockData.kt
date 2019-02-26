@@ -160,6 +160,27 @@ fun TransactionReceipt.toTransactionReceiptRecord(builder: TransactionReceiptRec
     .setRoot(root?.hexBuffer32())
     .setStatus(status?.hexBuffer())
     .setTraces(traces.map { it.toTraceRecord(TraceRecord.newBuilder()).build() })
+    .setNumInternalTxs(
+      /**
+       * https://ethereum.stackexchange.com/questions/6429/normal-transactions-vs-internal-transactions-in-etherscan
+       *
+       * Internal transactions, despite the name (which isn't part of the yellowpaper; it's a convention people have settled on)
+       * aren't actual transactions, and aren't included directly in the blockchain; they're value transfers that were initiated
+       * by executing a contract.
+       */
+      traces
+        .filterNot { t -> t.type == "reward" }
+        .filter { t -> t.traceAddress.isNotEmpty() }
+        .map { t -> t.action }
+        .map { action ->
+          when (action) {
+            is Trace.CallAction -> if (action.value > BigInteger.ZERO) 1 else 0
+            is Trace.CreateAction -> if (action.value > BigInteger.ZERO) 1 else 0
+            is Trace.SuicideAction -> if (action.balance > BigInteger.ZERO) 1 else 0
+            else -> 0
+          }
+        }.sum()
+    )
 
 fun Log.toLogRecord(builder: LogRecord.Builder): LogRecord.Builder =
   builder

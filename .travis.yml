@@ -56,7 +56,7 @@ matrix:
         - ID=processing/lint
         - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/processing
         - INSTALL=''
-        - ACTION='./gradlew --no-daemon :ktlintCheck'
+        - ACTION='./gradlew --no-daemon ktlintCheck'
       language: generic
     -
       env:

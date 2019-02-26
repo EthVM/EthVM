@@ -92,6 +92,7 @@ protocol Capture {
     union { null, bytes } root = null;              // Merkle root of the state trie after the transaction has been executed (optional after Byzantium hard fork EIP609)
     union { null, bytes } status = null;                                    // Quantity - 0x0 indicates transaction failure , 0x1 indicates transaction success. Set for blocks mined after Byzantium hard fork EIP609, null before.
 
+    int numInternalTxs;
     array<TraceRecord> traces;
   }
 
