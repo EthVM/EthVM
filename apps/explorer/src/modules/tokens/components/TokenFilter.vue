@@ -59,26 +59,22 @@ export default class TokenFilter extends Vue {
   get items() {
     return [
       {
+        _id: 0,
         category: this.$i18n.t('token.price'),
         filter: this.$i18n.t('filter.token.high')
       },
       {
+        _id: 1,
         category: this.$i18n.t('token.price'),
         filter: this.$i18n.t('filter.token.low')
       },
       {
-        category: this.$i18n.t('token.volume'),
-        filter: this.$i18n.t('filter.token.high')
-      },
-      {
-        category: this.$i18n.t('token.volume'),
-        filter: this.$i18n.t('filter.token.low')
-      },
-      {
+        _id: 4,
         category: this.$i18n.t('token.cap'),
         filter: this.$i18n.t('filter.token.high')
       },
       {
+        _id: 5,
         category: this.$i18n.t('token.cap'),
         filter: this.$i18n.t('filter.token.low')
       }
@@ -97,7 +93,7 @@ export default class TokenFilter extends Vue {
 
   @Watch('selected')
   onPageChanged(newVal: number, oldVal: number): void {
-    this.$emit('filterMobile', newVal)
+    this.$emit('filterMobile', this.items[newVal]._id)
   }
 }
 </script>
