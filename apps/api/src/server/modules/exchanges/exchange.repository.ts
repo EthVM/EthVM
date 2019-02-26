@@ -33,10 +33,10 @@ export class ExchangeRepositoryImpl extends BaseMongoDbRepository implements Exc
     let sort
     switch (filter) {
       case 'price_high':
-        sort = { price_change_24h: -1 }
+        sort = { current_price: -1 }
         break
       case 'price_low':
-        sort = { price_change_24h: 1 }
+        sort = { current_price: 1 }
         break
       case 'volume_high':
         sort = { total_volume: -1 }
@@ -45,10 +45,10 @@ export class ExchangeRepositoryImpl extends BaseMongoDbRepository implements Exc
         sort = { total_volume: 1 }
         break
       case 'market_cap_high':
-        sort = { market_cap_change_24h: -1 }
+        sort = { market_cap: -1 }
         break
       case 'market_cap_low':
-        sort = { market_cap_change_24h: 1 }
+        sort = { market_cap: 1 }
         break
       case 'market_cap_rank':
       default:

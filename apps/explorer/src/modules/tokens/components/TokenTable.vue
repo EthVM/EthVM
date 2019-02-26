@@ -13,9 +13,9 @@
         </v-layout>
       </v-flex>
       <v-spacer />
-      <v-flex hidden-xs-only v-if="pages > 1 && !hasError" sm7 md6>
+      <v-flex xs12 v-if="pages > 1 && !hasError" sm7 md6>
         <v-layout justify-end row class="pb-1 pr-2 pl-2">
-          <app-paginate :total="pages" @newPage="setPage" :new-page="page" />
+          <app-paginate :total="pages" @newPage="setPage"  :currentPage="currPage" />
         </v-layout>
       </v-flex>
     </v-layout>
@@ -106,7 +106,7 @@
             <token-table-row :token="token" />
           </div>
           <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2">
-            <app-paginate :total="pages" @newPage="setPage" :new-page="page" />
+            <app-paginate :total="pages" @newPage="setPage"  :currentPage="currPage" />
           </v-layout>
         </v-flex>
         <v-flex xs12 v-else>
@@ -148,53 +148,25 @@ export default class TokenTable extends Vue {
 
   maxItems = 50
   selectedFilter = 0
-  filter = [
-    {
-      _id: 0,
-      category: 'price',
-      filter: 'high'
-    },
-    {
-      _id: 1,
-      category: 'price',
-      filter: 'low'
-    },
-    {
-      _id: 2,
-      category: 'volume',
-      filter: 'high'
-    },
-    {
-      _id: 3,
-      category: 'volume',
-      filter: 'low'
-    },
-    {
-      _id: 4,
-      category: 'cap',
-      filter: 'high'
-    },
-    {
-      _id: 5,
-      category: 'cap',
-      filter: 'low'
-    }
-  ]
-
+  currPage = 0
   /*
       ===================================================================================
         Lifecycle
       ===================================================================================
     */
+  mounted() {
+    this.currPage = this.page
+  }
 
-  @Watch('page')
-  onPageChanged(newVal: number, oldVal: number): void {
-    this.$emit('getTokens', this.filter[this.selectedFilter], newVal)
+  @Watch('currPage')
+  onCurrPageChanged(newVal: number, oldVal: number): void {
+    this.$emit('getTokens', newVal, this.selectedFilter)
   }
 
   @Watch('selectedFilter')
   onSelectedFilterChanged(newVal: number, oldVal: number): void {
-    this.$emit('getTokens', this.filter[newVal], this.page)
+    console.log("Sending Filter: ", newVal)
+    this.$emit('getTokens', this.page, newVal)
   }
 
   /*
@@ -204,7 +176,7 @@ export default class TokenTable extends Vue {
   */
 
   setPage(value: number): void {
-    this.page = value
+    this.currPage = value
   }
 
   selectFilter(_value: number): void {
