@@ -44,7 +44,7 @@
 
 <script lang="ts">
 import { Events } from 'ethvm-common'
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 
 @Component({
   props: {
@@ -93,6 +93,13 @@ export default class AppSearch extends Vue {
       }
     })
   }
+  @Watch('searchInput')
+  onSearchInputChange(newVal: string, oldVal: string): void {
+    if (newVal === null || newVal === '') {
+      this.resetValues()
+    }
+  }
+
   resetValues(): void {
     this.isValid = true
   }
