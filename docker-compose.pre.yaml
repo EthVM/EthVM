@@ -16,20 +16,20 @@ volumes:
   zookeeper-volume:
 
   parity-volume:
-    # Note:
-    # If you're on Linux, use local-persist instead of a regular docker volume
-    # This allows to persist downloaded blockchain data.
-    # More info: https://github.com/CWSpear/local-persist
-    #
-    # driver: local-persist
-    # driver_opts:
-    #   name: "paritydb"
-    #   mountpoint: "${PARITY_VOLUME_MOUNTPOINT}"
+#     Note:
+#     If you're on Linux, use local-persist instead of a regular docker volume
+#     This allows to persist downloaded blockchain data.
+#     More info: https://github.com/CWSpear/local-persist
+
+    driver: local-persist
+    driver_opts:
+      name: "parity"
+      mountpoint: "${PARITY_VOLUME_MOUNTPOINT}"
 
 services:
 
   parity:
-    image: parity/parity:v2.3.3
+    image: parity/parity:v2.1.11
     networks:
       - back
     volumes:
@@ -38,8 +38,7 @@ services:
       - 8545:8545
       - 8546:8546
       - 30303:30303
-    command: --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
-    cpu_shares: 2048
+    command: --chain ropsten --tracing on --pruning archive --bootnodes "enode://7778cd2215a3ff83c2191ca2cc303d9be1833e00ff5b945d94b4f256e0435ccda1f6abcb404bdd9862c5c255678a549b427b445991bc4f24fabb8229cbd33673@3.91.179.124:30303,enode://e5bb001edeb2342770bc03d00d89d04ba4536eb6ed82226eeb2206d8a3d511dd1c9cff0c9a09fc6cc0674424ec79a562d409258e9d04e2dc415bc0741bcaa44a@40.115.33.57:30305,enode://1447e19cb570a4d4dcaee418d410a5a242a26e9697a8d40180916576c0b0120b59af1759e4234e1e1f110accfe53566523d8073af30af93bbd3ddc20062a3851@104.248.159.93:30303,enode://15ac307a470b411745a6f10544ed54c0a14ad640b21f04f523e736e732bf709d4e28c2f06526ecabc03eed226b6d9bee8e433883cd20ab6cbd114bab77a8775d@52.176.7.10:30303,enode://e05b76d5f90860f13e066f7d5ae313290276181c48af4d753117ea1fe909a33b295ab37ada51fc0c0a9c8ffe618a0968c4e26f21cdc8a21f184ed7960c347ace@35.224.90.32:30303,enode://f0fa95ee17a42b4cf5fee104c5ad61115ff63b2f720c027b1246188afc93a61ba1d67121ea9ebfa78678e796a562a5d949ed5265549f0a4936b7f3bd8d5d2706@35.170.55.156:30303,enode://6ab5116c43c713096b3b3667ea9a24105bcb860bc81ec36f6b271694b9174bb1721232d56cfd2d9a5aa17fbac552833dec24282cfeb43af6572ae6f9bc157bf4@139.99.122.139:30302,enode://378b35851a8e55ddc607c8dd0b3f809787dd23200fa12fe112966de8ef77bb132b42d7adfa313c293a06ce7e3473495216fcd18cda6ff4814655ae734069be94@51.255.77.89:30302,enode://f0fa95ee17a42b4cf5fee104c5ad61115ff63b2f720c027b1246188afc93a61ba1d67121ea9ebfa78678e796a562a5d949ed5265549f0a4936b7f3bd8d5d2706@35.170.55.156:30303,enode://6ab5116c43c713096b3b3667ea9a24105bcb860bc81ec36f6b271694b9174bb1721232d56cfd2d9a5aa17fbac552833dec24282cfeb43af6572ae6f9bc157bf4@139.99.122.139:30302,enode://378b35851a8e55ddc607c8dd0b3f809787dd23200fa12fe112966de8ef77bb132b42d7adfa313c293a06ce7e3473495216fcd18cda6ff4814655ae734069be94@51.255.77.89:30302" --ws-interface 0.0.0.0 --no-ipc --min-peers 0 --max-peers 0
 
   traefik:
     image: traefik:${TRAEFIK_VERSION}-alpine
@@ -53,7 +52,6 @@ services:
     ports:
       - 80:80
       - 81:81
-    cpu_shares: 256
 
   explorer:
     build:
@@ -73,7 +71,6 @@ services:
       - 'traefik.frontend.passHostHeader=true'
       - 'traefik.backend=explorer'
       - 'traefik.port=8080'
-    cpu_shares: 256
 
   api:
     build:
@@ -95,7 +92,6 @@ services:
       - "traefik.frontend.passHostHeader=true"
       - "traefik.backend=api"
       - "traefik.port=3000"
-    cpu_shares: 512
 
   mongodb:
     image: enkryptio/mongodb-dev:${MONGODB_VERSION}
@@ -107,7 +103,6 @@ services:
       - back
     ports:
       - 27017:27017
-    cpu_shares: 4000
 
   zookeeper:
     image: confluentinc/cp-zookeeper:${CP_VERSION}
@@ -124,7 +119,6 @@ services:
       ZOOKEEPER_SERVERS: "server.1=zookeeper:2888:3888"
       ZOOKEEPER_CLIENT_PORT: 2181
       KAFKA_JMX_PORT: 9585
-    mem_limit: 512m
 
   kafka-1:
     image: confluentinc/cp-kafka:${CP_VERSION}
@@ -150,8 +144,11 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       CONFLUENT_SUPPORT_METRICS_ENABLE: "true"
+      KAFKA_MESSAGE_MAX_BYTES: 52428800
+      KAFKA_REPLICA_FETCH_MAX_BYTES: 52428800
+      KAFKA_PRODUCER_MAX_REQUEST_SIZE: 5048576
+      KAFKA_CONSUMER_MAX_PARTITION_FETCH_BYTES: 52428800
       KAFKA_JMX_PORT: 9586
-    mem_limit: 4g
 
   kafka-schema-registry:
     image: confluentinc/cp-schema-registry:${CP_VERSION}
@@ -178,8 +175,6 @@ services:
       SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: "INFO"
       SCHEMA_REGISTRY_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR"
       KAFKA_JMX_PORT: 9587
-    mem_limit: 512m
-    cpu_shares: 512
 
   kafka-connect:
     image: confluentinc/cp-kafka-connect:${CP_VERSION}
@@ -215,55 +210,34 @@ services:
       CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_LOG4J_ROOT_LOGLEVEL: "INFO"
-      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,io.enkrypt.kafka.connect=TRACE,org.web3j.protocol.websocket.WebSocketService=WARN"
+      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,io.enkrypt.kafka.connect=INFO,org.web3j.protocol.websocket.WebSocketService=WARN"
       CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/enkryptio
+      CONNECT_MAX_REQUEST_SIZE: 52428800
+      CONNECT_PRODUCER_MAX_REQUEST_SIZE: 52428800
+      CONNECT_CONSUMER_MAX_PARTITION_FETCH_BYTES: 52428800
+      KAFKA_MAX_REQUEST_SIZE: 52428800
+      KAFKA_PRODUCER_MAX_REQUEST_SIZE: 52428800
+      KAFKA_CONSUMER_MAX_PARTITION_FETCH_BYTES: 52428800
       KAFKA_JMX_PORT: 9588
-    cpu_shares: 3000
-    mem_limit: 4g
 
   # ///////////////////////////////////////////////////////
   # Extra Tools (Useful for debugging and helping on Kafka)
   # ///////////////////////////////////////////////////////
 
-  verifier:
-    build:
-      context: ./apps/verifier
-    networks:
-      - back
-    depends_on:
-      - mongodb
-      - kafka-schema-registry
-    volumes:
-      - ./apps/verifier:/usr/src/app
-      - ./apps/common:/usr/src/common
-    command: sh -c "yarn install && yarn start kafka"
-    environment:
-      KAFKA_AVRO_LOG_LEVEL: debug
-
-  ksql-server:
-    image: confluentinc/cp-ksql-server:${CP_VERSION}
-    networks:
-      - back
-    ports:
-      - 8088:8088
-    depends_on:
-      - kafka-1
-      - kafka-schema-registry
-    environment:
-      KSQL_BOOTSTRAP_SERVERS: kafka-1:9091
-      KSQL_LISTENERS: http://0.0.0.0:8088/
-      KSQL_KSQL_SERVICE_ID: ksql_service_1
-      KSQL_SCHEMA_REGISTRY_URL: ${KAFKA_SCHEMA_REGISTRY_URL}
-    mem_limit: 4g
-
-  ksql-cli:
-    image: confluentinc/cp-ksql-cli:${CP_VERSION}
-    networks:
-      - back
-    depends_on:
-      - ksql-server
-    tty: true
-    entrypoint: /bin/bash
+#  verifier:
+#    build:
+#      context: ./apps/verifier
+#    networks:
+#      - back
+#    depends_on:
+#      - mongodb
+#      - kafka-schema-registry
+#    volumes:
+#      - ./apps/verifier:/usr/src/app
+#      - ./apps/common:/usr/src/common
+#    command: sh -c "yarn install && yarn start kafka"
+#    environment:
+#      KAFKA_AVRO_LOG_LEVEL: debug
 
   lenses:
     image: landoop/lenses:2.1
