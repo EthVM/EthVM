@@ -52,7 +52,7 @@ class ChainEventsTransformer(
     }
   }
 
-  private val historySize = 100000 //
+  private val historySize = 500000 //
 
   private lateinit var context: ProcessorContext
 

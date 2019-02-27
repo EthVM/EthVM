@@ -1,6 +1,5 @@
 package io.enkrypt.kafka.connect.sources.web3
 
-import arrow.core.Tuple3
 import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.common.extensions.hexUBigInteger
 import io.reactivex.Observable
@@ -8,8 +7,12 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import mu.KotlinLogging
 import org.web3j.protocol.core.DefaultBlockParameter
+import org.web3j.protocol.core.methods.response.EthBlock
+import org.web3j.protocol.parity.methods.response.ParityTracesResponse
 import java.math.BigInteger
 import java.util.concurrent.ArrayBlockingQueue
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 class ParityBlockSyncManager(
@@ -18,7 +21,9 @@ class ParityBlockSyncManager(
 ) {
 
   private val logger = KotlinLogging.logger {}
-  private val rangeQueue = ArrayBlockingQueue<ClosedRange<BigInteger>>(20)
+
+  private val rangeQueue = ArrayBlockingQueue<BlockRecord>(1024 * 5)
+  private val executor = Executors.newSingleThreadExecutor()
 
   private val subscription: Disposable
 
@@ -59,12 +64,15 @@ class ParityBlockSyncManager(
               // first we do a historic load
 
               rangesFor(historicBlockStart, latestBlockNumber)
-                .forEach { range -> rangeQueue.put(range) }
+                .forEach { range ->
+                  executor.submit { fetchRange(range) }
+                }
 
               start += BigInteger.ONE
             }
 
-            rangeQueue.put(start.rangeTo(end))
+            executor.submit { fetchRange(start.rangeTo(end)) }
+
           }
         },
         { throwable -> error = throwable }
@@ -73,9 +81,10 @@ class ParityBlockSyncManager(
 
   fun stop() {
     subscription.dispose()
+    executor.shutdownNow()
   }
 
-  fun poll(): List<BlockRecord> {
+  fun poll(timeout: Long, unit: TimeUnit): List<BlockRecord> {
 
     // re-throw error if one has occurred
 
@@ -84,18 +93,23 @@ class ParityBlockSyncManager(
       throw error
     }
 
-    // drain the fetch ranges and retrieve blocks
+    val batch = mutableListOf<BlockRecord>()
 
-    val ranges = mutableListOf<ClosedRange<BigInteger>>()
-    rangeQueue.drainTo(ranges)
+    val startMs = System.currentTimeMillis()
+    val timeoutMs = unit.toMillis(timeout)
 
-    return ranges
-      .map { range -> fetchRange(range) }
-      .flatten()
-      .map { it.toBlockRecord().build() }
+    while (rangeQueue.drainTo(batch, 32) == 0 && (System.currentTimeMillis() - startMs) < timeoutMs) {
+      Thread.sleep(100)
+    }
+
+    return batch
   }
 
-  private fun fetchRange(range: ClosedRange<BigInteger>): List<BlockData> {
+  fun messageSize(blocks: List<BlockRecord>) {
+    blocks.map { it.getHeader().getSize() }.sum()
+  }
+
+  private fun fetchRange(range: ClosedRange<BigInteger>) {
 
     logger.info { "Fetching blocks. Start = ${range.start}, end = ${range.endInclusive}" }
 
@@ -103,36 +117,48 @@ class ParityBlockSyncManager(
 
     val longRange = LongRange(range.start.longValueExact(), range.endInclusive.longValueExact())
 
-    val futures = longRange.map { blockNumber ->
+    longRange
+      .map { blockNumber ->
 
-      val blockParam = DefaultBlockParameter.valueOf(blockNumber.toBigInteger())
+        val blockParam = DefaultBlockParameter.valueOf(blockNumber.toBigInteger())
 
-      val blockFuture = parity.ethGetBlockByNumber(blockParam, true).sendAsync()
-      val receiptsFuture = parity.parityGetBlockReceipts(blockParam).sendAsync()
-      val tracesFuture = parity.traceBlock(blockParam).sendAsync()
+        val blockFuture = parity.ethGetBlockByNumber(blockParam, true).sendAsync()
+        val receiptsFuture = parity.parityGetBlockReceipts(blockParam).sendAsync()
+        val tracesFuture = parity.traceBlock(blockParam).sendAsync()
 
-      Tuple3(blockFuture, receiptsFuture, tracesFuture)
-    }
+        val unclesFuture: CompletableFuture<List<EthBlock.Block>> = parity
+          .ethGetUncleCountByBlockNumber(blockParam)
+          .sendAsync()
+          .thenCompose { resp ->
 
-    val result = futures.map { (blockFuture, receiptsFuture, tracesFuture) ->
+            val futures = (0 until resp.uncleCount.intValueExact())
+              .map { idx ->
+                parity.ethGetUncleByBlockNumberAndIndex(blockParam, idx.toBigInteger())
+                  .sendAsync()
+              }
 
-      val block = blockFuture.get().block
+            CompletableFuture.allOf(*futures.toTypedArray())
+              .thenApply { futures.map { it.join().block } }
 
-      val uncleFutures = block.uncles.mapIndexed { idx, _ ->
-        parity.ethGetUncleByBlockHashAndIndex(block.hash, idx.toBigInteger()).sendAsync()
-      }
+          }
 
-      val receipts = receiptsFuture.get().receipts
-      val traces = tracesFuture.get().traces
+        CompletableFuture.allOf(blockFuture, receiptsFuture, tracesFuture, unclesFuture)
+          .thenApply {
 
-      val uncles = uncleFutures.map { it.get().block }
+            val block = blockFuture.join().block
+            val receipts = receiptsFuture.join().receipts
+            val traces = tracesFuture.join().traces
 
-      BlockData(block, uncles, receipts, traces)
-    }
+            val uncles = unclesFuture.join()
 
-    logger.info { "Finished fetching blocks . Start = ${range.start}, end = ${range.endInclusive}" }
+            BlockData(block, uncles, receipts, traces)
+              .toBlockRecord()
+              .build()
 
-    return result
+          }
+
+      }.forEach{ future -> rangeQueue.put(future.join()) }
+
   }
 
   private fun rangesFor(syncedUntil: BigInteger, end: BigInteger, batchSize: Int = 128): List<ClosedRange<BigInteger>> {
@@ -159,4 +185,6 @@ class ParityBlockSyncManager(
 
     return ranges
   }
+
+
 }
