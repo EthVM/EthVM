@@ -25,7 +25,9 @@
       <v-flex d-flex xs6 sm3 md2 order-xs2 order-md4>
         <p class="text-truncate black--text align-center mb-0">
           <v-tooltip v-if="!isShortValue(uncle.getTotalReward().toEth())" bottom>
-            <v-icon slot="activator" dark small>fa fa-question-circle info--text</v-icon>
+            <template #activator="data">
+              <v-icon v-on="data.on" dark small>fa fa-question-circle info--text</v-icon>
+            </template>
             <span>{{ uncle.getTotalReward().toEth() }}</span>
           </v-tooltip>
           {{ getShortValue(uncle.getTotalReward().toEth()) }}
