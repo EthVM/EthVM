@@ -1,7 +1,7 @@
 <template>
   <v-layout align-center fill-height justify-end row height="48px" class="pl-1">
     <v-flex xs12 md8>
-      <v-card color="transaprent" flat style="height: 48px; border: solid 1px #efefef;">
+      <v-card flat style="height: 48px; border: solid 1px #efefef;">
         <v-layout align-center justify-end>
           <v-text-field
             v-model="searchInput"
@@ -13,10 +13,11 @@
             flat
             clearable
             spellcheck="false"
-            prepend-inner-icon="fa fa-search grey--text text--lighten-1 pr-4 pl-4"
+            :prepend-inner-icon="getIcon"
             class="ma-0"
             height="46px"
-          ></v-text-field>
+            @click:clear="resetValues"
+          />
           <v-text-field
             dense
             v-if="phText === 'addressTxSearch'"
@@ -30,7 +31,7 @@
             prepend-inner-icon="fa fa-search grey--text text--lighten-1 pr-4 pl-4"
             class="ma-0"
             height="34px"
-          ></v-text-field>
+          />
         </v-layout>
       </v-card>
     </v-flex>
@@ -43,50 +44,79 @@
 
 <script lang="ts">
 import { Events } from 'ethvm-common'
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 
-@Component({
-  props: {
-    phText: {
-      type: String,
-      default: 'default'
-    }
-  }
-})
+@Component
 export default class AppSearch extends Vue {
   searchInput = ''
-  input = ''
+  phText = 'default'
+  isValid = true
 
-  // Methods
+  /*
+  ===================================================================================
+    Watch
+  ===================================================================================
+  */
+
+  @Watch('searchInput')
+  onSearchInputChange(newVal: string, oldVal: string): void {
+    if (newVal === null || newVal === '') {
+      this.resetValues()
+    }
+  }
+
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
   search() {
     this.$api.search(this.searchInput).then(res => {
+      if (res.type != 3) {
+        this.isValid = true
+      }
       switch (res.type) {
         case 0:
           {
             this.$router.push({
-              path: '/tx/0x' + this.searchInput
+              path: '/tx/' + this.searchInput
             })
           }
           break
         case 1:
           {
             this.$router.push({
-              path: '/address/0x' + this.searchInput
+              path: '/address/' + this.searchInput
             })
           }
           break
         case 2:
           {
             this.$router.push({
-              path: '/block/0x' + this.searchInput
+              path: '/block/' + this.searchInput
             })
           }
           break
         case 3: {
-          // search not found mess
+          this.isValid = false
         }
       }
     })
+  }
+
+  resetValues(): void {
+    this.isValid = true
+  }
+
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
+
+  get getIcon(): string {
+    return this.isValid ? 'fa fa-search grey--text text--lighten-1 pr-4 pl-4' : 'fa fa-search error--text pr-4 pl-4'
   }
 }
 </script>
