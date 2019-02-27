@@ -164,8 +164,10 @@ export class EthVMServer {
   private onBlockEvent = (event: StreamingEvent): void => {
     const { op, key, value } = event
     logger.info(`EthVMServer - onBlockEvent / Op: ${op} - Number: ${key} - Hash: ${value.header.hash}`)
-    const blockEvent: StreamingEvent = { op, key, value: toSimpleBlock(value) }
+    const sBlock = toSimpleBlock(value)
+    const blockEvent: StreamingEvent = { op, key, value: sBlock }
     this.io.to(SocketRooms.Blocks).emit(Events.NEW_SIMPLE_BLOCK, blockEvent)
+    sBlock.transactions.forEach(tx => this.onSimpleTxEvent(tx))
   }
 
   private onSimpleTxEvent = (tx: any): void => {
