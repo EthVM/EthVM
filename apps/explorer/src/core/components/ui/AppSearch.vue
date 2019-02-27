@@ -1,7 +1,7 @@
 <template>
   <v-layout align-center fill-height justify-end row height="48px" class="pl-1">
     <v-flex xs12 md8>
-      <v-card color="transaprent" flat style="height: 48px; border: solid 1px #efefef;">
+      <v-card flat style="height: 48px; border: solid 1px #efefef;">
         <v-layout align-center justify-end>
           <v-text-field
             v-model="searchInput"
@@ -13,9 +13,10 @@
             flat
             clearable
             spellcheck="false"
-            prepend-inner-icon="fa fa-search grey--text text--lighten-1 pr-4 pl-4"
+            :prepend-inner-icon="getIcon"
             class="ma-0"
             height="46px"
+            @click:clear="resetValues"
           ></v-text-field>
           <v-text-field
             dense
@@ -55,38 +56,49 @@ import { Component, Vue } from 'vue-property-decorator'
 })
 export default class AppSearch extends Vue {
   searchInput = ''
-  input = ''
+
+  isValid = true
+
 
   // Methods
   search() {
     this.$api.search(this.searchInput).then(res => {
+      if(res.type != 3) {
+        this.isValid = true
+      }
       switch (res.type) {
         case 0:
           {
             this.$router.push({
-              path: '/tx/0x' + this.searchInput
+              path: '/tx/' + this.searchInput
             })
           }
           break
         case 1:
           {
             this.$router.push({
-              path: '/address/0x' + this.searchInput
+              path: '/address/' + this.searchInput
             })
           }
           break
         case 2:
           {
             this.$router.push({
-              path: '/block/0x' + this.searchInput
+              path: '/block/' + this.searchInput
             })
           }
           break
         case 3: {
-          // search not found mess
+          this.isValid = false
         }
       }
     })
+  }
+  resetValues(): void {
+    this.isValid = true
+  }
+  get getIcon(): string {
+    return this.isValid? 'fa fa-search grey--text text--lighten-1 pr-4 pl-4' : 'fa fa-search error--text pr-4 pl-4'
   }
 }
 </script>
