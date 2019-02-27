@@ -41,7 +41,9 @@
           <v-layout align-center row v-if="!isShortValue(account.balance.toEth().toString())">
             <v-card-title class="headline text-truncate pr-1">{{ getShortValue(account.balance.toEth()) }} {{ $t('common.eth') }} </v-card-title>
             <v-tooltip bottom>
-              <v-icon slot="activator" small class="white--text text-xs-center">fa fa-question-circle</v-icon>
+              <template #activator="data">
+                <v-icon v-on="data.on" small class="white--text text-xs-center">fa fa-question-circle</v-icon>
+              </template>
               <span>{{ formatStr(account.balance.toEth().toString()) }} {{ $t('common.eth') }}</span>
             </v-tooltip>
           </v-layout>
