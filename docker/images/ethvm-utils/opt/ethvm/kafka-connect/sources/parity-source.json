@@ -4,6 +4,8 @@
     "connector.class": "io.enkrypt.kafka.connect.sources.web3.ParitySourceConnector",
     "tasks.max": 1,
     "ws.url": "{{ .Env.PARITY_WS_URL }}",
-    "schema.registry.url": "http://kafka-schema-registry:8081"
+    "schema.registry.url": "http://kafka-schema-registry:8081",
+    "producer.max.request.size": 52428800,
+    "max.request.size": 52428800
   }
 }

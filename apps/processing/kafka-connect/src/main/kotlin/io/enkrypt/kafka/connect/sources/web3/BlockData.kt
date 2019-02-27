@@ -142,7 +142,7 @@ fun Transaction.toTransactionRecord(
 
   if (input != null) {
     // we compress if the input fixed is 1 Kb or more as some blocks later in the chain have nonsense inputs which are very large and most repeat themselves
-    builder.input = input.hexBuffer().compress(1024)
+    builder.input = input.hexBuffer().compress(150)
   }
 
   return builder
@@ -201,7 +201,7 @@ fun Trace.toTraceRecord(builder: TraceRecord.Builder): TraceRecord.Builder {
       .setFrom(action.from.hexBuffer20())
       .setTo(action.to?.hexBuffer20())
       .setGas(action.gas.unsignedByteBuffer())
-      .setInput(action.input?.hexBuffer().compress(1024))
+      .setInput(action.input?.hexBuffer().compress(150))
       .setValue(action.value.unsignedByteBuffer())
       .build()
 

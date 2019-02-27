@@ -15,6 +15,7 @@ import java.io.IOException
 import java.math.BigInteger
 import java.net.ConnectException
 import java.util.concurrent.ExecutionException
+import java.util.concurrent.TimeUnit
 
 // @Alpha - Not ready for prime time
 class ParitySourceTask : SourceTask() {
@@ -120,7 +121,7 @@ class ParitySourceTask : SourceTask() {
 
         // we deduct some blocks in case a fork happened whilst the connector was offline
 
-        val numberMinusForkProtection = number - 256
+        val numberMinusForkProtection = number - 1024
         if (numberMinusForkProtection < 0) null else number.toBigInteger()
       }
       else -> throw IllegalStateException("Unexpected value returned: $number")
@@ -147,7 +148,7 @@ class ParitySourceTask : SourceTask() {
       // ensure we are connected or re-connect if necessary
       ensureConnection()
 
-      val blockRecords = blockSyncManager!!.poll()
+      val blockRecords = blockSyncManager!!.poll(5, TimeUnit.SECONDS)
 
       val sourceRecords = blockRecords
         .map { record ->
@@ -176,11 +177,6 @@ class ParitySourceTask : SourceTask() {
         }
 
       logger.debug { "Polled ${sourceRecords.size} records" }
-
-      if (sourceRecords.isEmpty()) {
-        // sleep for a second if nothing was found
-        Thread.sleep(1000)
-      }
 
       return sourceRecords.toMutableList()
     } catch (ex: Exception) {
