@@ -1,7 +1,21 @@
 <template>
   <v-container grid-list-lg class="mb-0">
     <app-bread-crumbs :new-items="crumbs" />
-    <token-table :tokens="tokens" :total-tokens="total" :loading="isLoading" :error="error" :page="page" @getTokens="getTokens" />
+    <v-card v-if="isRopsten" flat :class="{ 'pa-1': $vuetify.breakpoint.xsOnly, 'pa-3': $vuetify.breakpoint.smOnly, 'pa-5': $vuetify.breakpoint.mdAndUp }">
+      <v-layout align-center justify-center column class="mb-4">
+        <v-flex xs12>
+          <v-img :src="require('@/assets/no-data.png')" min-width="250px" min-height="10px" contain></v-img>
+        </v-flex>
+        <v-layout row>
+          <v-spacer />
+          <v-flex xs12 sm9 md7>
+            <v-card-text class="font-weight-thin font-italic text-xs-center">{{ $t('message.noTokensRopsten') }}</v-card-text>
+          </v-flex>
+          <v-spacer />
+        </v-layout>
+      </v-layout>
+    </v-card>
+    <token-table v-else :tokens="tokens" :total-tokens="total" :loading="isLoading" :error="error" :page="page" @getTokens="getTokens" />
   </v-container>
 </template>
 
@@ -19,6 +33,13 @@ const MAX_ITEMS = 50
   }
 })
 export default class PageTokens extends Vue {
+  /*
+  ===================================================================================
+   Since Alpha release is on Ropsten, there are no token prices. Set isRopsten value
+   to true, to display user friendly message
+  ===================================================================================
+  */
+  isRopsten = false
   tokens: any = []
   total = 0
   isLoading = true
@@ -33,8 +54,10 @@ export default class PageTokens extends Vue {
   */
 
   mounted() {
-    this.fetchTotalTokens().then(res => (this.total = res), err => (this.total = 0))
-    this.getTokens(0, 0)
+    if (!this.isRopsten) {
+      this.fetchTotalTokens().then(res => (this.total = res), err => (this.total = 0))
+      this.getTokens(0, 0)
+    }
     window.scrollTo(0, 0)
   }
 

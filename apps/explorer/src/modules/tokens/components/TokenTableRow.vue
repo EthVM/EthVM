@@ -110,7 +110,7 @@ export default class TokenTableRow extends Mixins(StringConcatMixin) {
     return this.token.price_change_percentage_24h > 0 ? '+' : ''
   }
 
-  get tokenLink():string {
+  get tokenLink(): string {
     return `/token/0x${this.token.address}`
   }
 }
