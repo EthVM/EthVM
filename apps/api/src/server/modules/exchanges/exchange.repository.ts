@@ -8,7 +8,8 @@ const API_URL =
 
 export interface ExchangeRepository {
   getQuote(token: string, to: string): Promise<Quote>
-  getTokenExchangeRates(limit: number, page: number): Promise<TokenExchangeRate[]>
+  getTokenExchangeRates(filter: string, limit: number, page: number): Promise<TokenExchangeRate[]>
+  getTotalNumberOfTokenExchangeRates(): Promise<number>
   getTokenExchangeRate(symbol: string): Promise<TokenExchangeRate | null>
   getTokenExchangeRateByAddress(address: string): Promise<TokenExchangeRate | null>
 }
@@ -27,16 +28,45 @@ export class ExchangeRepositoryImpl extends BaseMongoDbRepository implements Exc
       })
   }
 
-  public getTokenExchangeRates(limit: number, page: number): Promise<TokenExchangeRate[]> {
+  public getTokenExchangeRates(filter: string, limit: number, page: number): Promise<TokenExchangeRate[]> {
     const start = page * limit
+    let sort
+    switch (filter) {
+      case 'price_high':
+        sort = { current_price: -1 }
+        break
+      case 'price_low':
+        sort = { current_price: 1 }
+        break
+      case 'volume_high':
+        sort = { total_volume: -1 }
+        break
+      case 'volume_low':
+        sort = { total_volume: 1 }
+        break
+      case 'market_cap_high':
+        sort = { market_cap: -1 }
+        break
+      case 'market_cap_low':
+        sort = { market_cap: 1 }
+        break
+      case 'market_cap_rank':
+      default:
+        sort = { market_cap_rank: 1 }
+        break
+    }
     return this.db
       .collection(MongoEthVM.collections.tokenExchangeRates)
       .find({})
-      .sort({ timestamp: -1, market_cap_rank: 1 })
+      .sort(sort)
       .skip(start)
       .limit(limit)
       .toArray()
-      .then(resp => resp ? resp.map(e => toTokenExchangeRate(e)) : [])
+      .then(resp => (resp ? resp.map(e => toTokenExchangeRate(e)) : []))
+  }
+
+  public getTotalNumberOfTokenExchangeRates(): Promise<number> {
+    return this.db.collection(MongoEthVM.collections.tokenExchangeRates).estimatedDocumentCount()
   }
 
   public getTokenExchangeRate(symbol: string): Promise<TokenExchangeRate | null> {

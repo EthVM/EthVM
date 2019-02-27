@@ -1,26 +1,51 @@
 <template>
   <v-container grid-list-lg class="mb-0">
     <app-bread-crumbs :new-items="crumbs" />
-    <table-tokens :tokens="tokens" :is-loading="isLoading" />
+    <v-card v-if="isRopsten" flat :class="{ 'pa-1': $vuetify.breakpoint.xsOnly, 'pa-3': $vuetify.breakpoint.smOnly, 'pa-5': $vuetify.breakpoint.mdAndUp }">
+      <v-layout align-center justify-center column class="mb-4">
+        <v-flex xs12>
+          <v-img :src="require('@/assets/no-data.png')" min-width="250px" min-height="10px" contain></v-img>
+        </v-flex>
+        <v-layout row>
+          <v-spacer />
+          <v-flex xs12 sm9 md7>
+            <v-card-text class="font-weight-thin font-italic text-xs-center">{{ $t('message.noTokensRopsten') }}</v-card-text>
+          </v-flex>
+          <v-spacer />
+        </v-layout>
+      </v-layout>
+    </v-card>
+    <token-table v-else :tokens="tokens" :total-tokens="total" :loading="isLoading" :error="error" :page="page" @getTokens="getTokens" />
   </v-container>
 </template>
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-import TableTokens from '@app/modules/tokens/components/TableTokens.vue'
+import TokenTable from '@app/modules/tokens/components/TokenTable.vue'
 import { Component, Vue } from 'vue-property-decorator'
 
-const MAX_ITEMS = 10
+const MAX_ITEMS = 50
 
 @Component({
   components: {
     AppBreadCrumbs,
-    TableTokens
+    TokenTable
   }
 })
 export default class PageTokens extends Vue {
-  tokens: any = [] // Array of tokens for table display
-  error = '' // Error message
+  /*
+  ===================================================================================
+   Since Alpha release is on Ropsten, there are no token prices. Set isRopsten value
+   to true, to display user friendly message
+  ===================================================================================
+  */
+  isRopsten = false
+  tokens: any = []
+  total = 0
+  isLoading = true
+  page = 0
+  error = ''
+  filterValues = ['price_high', 'price_low', 'volume_high', 'volume_low', 'market_cap_high', 'market_cap_low']
 
   /*
   ===================================================================================
@@ -29,7 +54,11 @@ export default class PageTokens extends Vue {
   */
 
   mounted() {
-    this.fetchData()
+    if (!this.isRopsten) {
+      this.fetchTotalTokens().then(res => (this.total = res), err => (this.total = 0))
+      this.getTokens(0, 0)
+    }
+    window.scrollTo(0, 0)
   }
 
   /*
@@ -39,44 +68,30 @@ export default class PageTokens extends Vue {
   */
 
   /**
-   * Fetch all data relevant to the view.
-   */
-  fetchData() {
-    const tokenPromise = this.fetchTokenExchangeRates()
-    const promises = [tokenPromise]
-
-    Promise.all(promises)
-      .then(([tokens]) => {
-        this.tokens = tokens as any[]
-      })
-      .catch(e => {
-        this.error = this.$i18n.t('message.error').toString()
-      })
-  }
-
-  /*
-  ===================================================================================
-    Methods - Fetch Data - Individual Calls
-  ===================================================================================
-  */
-
-  /**
    * GET and return JSON array of tokens and their corresponding information
-   * TEMP: Static/hard-coded page/limit
    *
    * @return {Array} - Array of tokens
    */
-  fetchTokenExchangeRates() {
-    return new Promise((resolve, reject) => {
-      this.$api
-        .getTokenExchangeRates(100, 0)
-        .then(result => {
-          resolve(result)
-        })
-        .catch(e => {
-          reject(e)
-        })
-    })
+  fetchTokenExchangeRates(page: number, filter: string) {
+    return this.$api.getTokenExchangeRates(filter, MAX_ITEMS, page)
+  }
+
+  fetchTotalTokens(): Promise<number> {
+    return this.$api.getTotalNumberOfTokenExchangeRates()
+  }
+
+  getTokens(page: number, filter: number): void {
+    this.isLoading = true
+    this.page = page
+    this.fetchTokenExchangeRates(page, this.filterValues[filter]).then(
+      res => {
+        this.tokens = res
+        this.isLoading = false
+      },
+      err => {
+        this.error = this.$i18n.t('message.error').toString()
+      }
+    )
   }
 
   /*
@@ -98,15 +113,6 @@ export default class PageTokens extends Vue {
         disabled: true
       }
     ]
-  }
-
-  /**
-   * Determines whether or not all of the required objects have been loaded/populated
-   *
-   * @return {Boolean}
-   */
-  get isLoading() {
-    return this.tokens.length === 0
   }
 
   /**

@@ -85,10 +85,15 @@
     "unclePosition": "Uncle Position"
   },
   "filter": {
+    "f": "Filter",
     "view": "View",
     "all": "All",
     "out": "Outgoing",
-    "in": "Incoming"
+    "in": "Incoming",
+    "token": {
+      "high": "High to Low",
+      "low": "Low to High"
+    }
   },
   "message": {
     "error": "Oops something went wrong, no data from server :(",
@@ -117,7 +122,8 @@
       "text1": "We're still in our Alpha stage, so some features may not work to their full potential. Reach out to us with any bugs you find at ",
       "text2": ", so we can continue to make EthVM even better!",
       "btn": "Onward!"
-    }
+    },
+    "noTokensRopsten": "EthVM is still in testing, so we're currently showing data from the Ropsten ETH testnet. There are no tokens that have actual value on Ropsten testnet, but all mainnet Ethereum token balances will appear here once we go live."
   },
   "block": {
     "height": "Height",
@@ -168,13 +174,16 @@
     "transfers": "Transfers",
     "value": "Value",
     "decimal": "Decimals",
-    "number": "Total Tokens Owned",
+    "number": "Total Tokens: ",
     "totalUSD": "Total USD Value",
-    "name": "Name",
+    "name": "Token Name",
     "usdValue": "USD Value",
     "amount": "Amount",
     "price": "Price",
-    "owner": "Owner"
+    "owner": "Owner",
+    "change": "%Change (24H)",
+    "volume": "Volume",
+    "cap": "Market Cap"
   },
   "gas": {
     "limit": "Gas Limit",

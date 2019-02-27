@@ -11,9 +11,13 @@ BN.config({ FORMAT: format })
 @Component
 export class StringConcatMixin extends Vue {
   // Methods
-  getRoundNumber(newNumber, round = 2) {
+  getRoundNumber(newNumber) {
+    let round = 7
+    if (newNumber > 1) {
+      round = 2
+    }
     return new BN(newNumber)
-      .decimalPlaces(round)
+      .dp(round)
       .toFormat()
       .toString()
   }
@@ -23,11 +27,22 @@ export class StringConcatMixin extends Vue {
   }
 
   getShortValue(rawStr): string {
-    const _value = this.getRoundNumber(rawStr, 3)
+    const _value = this.getRoundNumber(rawStr)
     return this.isShortValue(_value) ? _value : _value.slice(0, 10) + '...'
   }
 
   formatStr(rawStr): string {
     return new BN(rawStr).toFormat().toString()
+  }
+
+  getInt(newNum: number): string {
+    return new BN(newNum)
+      .dp(0, 6)
+      .toFormat()
+      .toString()
+  }
+
+  getPercent(newNum: number): string {
+    return new BN(newNum).dp(2).toString()
   }
 }
