@@ -40,7 +40,7 @@ export class MongoStreamer implements Streamer {
     logger.info('MongoStreamer - initialize() / Generating stream readers')
     this.blocksReader = new ChangeStreamReader(db.collection(MongoEthVM.collections.blocks), Blocks, emitter)
     this.pendingTxReader = new ChangeStreamReader(db.collection(MongoEthVM.collections.pendingTxs), PendingTxs, emitter)
-    this.blockMetricsReader = new ChangeStreamReader(db.collection(MongoEthVM.collections.blocks), BlockMetrics, emitter)
+    this.blockMetricsReader = new ChangeStreamReader(db.collection(MongoEthVM.collections.blockMetrics), BlockMetrics, emitter)
     this.processingMetadataReader = new ChangeStreamReader(
       db.collection(MongoEthVM.collections.processingMetadata),
       INTERNAL_PROCESSING_METADATA_EVENT,
