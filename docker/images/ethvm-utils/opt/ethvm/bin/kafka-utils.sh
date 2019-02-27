@@ -15,7 +15,7 @@ export KAFKA_DIR="${ROOT_DIR}/kafka"
 export CLASSPATH="${ROOT_DIR}/classpath/*"
 
 ensure_zookeeper() {
-  local TIMEOUT_MS=${1:-30000}
+  local TIMEOUT_MS=${1:-60000}
   java -cp "${CLASSPATH}" \
     io.confluent.admin.utils.cli.ZookeeperReadyCommand ${KAFKA_ZOOKEEPER_CONNECT} ${TIMEOUT_MS}
 } >&2
@@ -24,7 +24,7 @@ ensure_zookeeper() {
 ensure_kafka() {
 
   local MIN_EXPECTED_BROKERS=${1:-1}
-  local TIMEOUT_MS=${2:-30000}
+  local TIMEOUT_MS=${2:-60000}
 
   ensure_zookeeper ${TIMEOUT_MS}
 
@@ -41,7 +41,7 @@ ensure_topics() {
   cd ${ROOT_DIR}
 
   local CREATE_IF_NOT_EXISTS=${1:-true}
-  local TIMEOUT_MS=${2:-30000}
+  local TIMEOUT_MS=${2:-60000}
 
   ensure_kafka 1 ${TIMEOUT_MS}
 

@@ -6,7 +6,7 @@ import io.enkrypt.avro.processing.MetricKeyRecord
 import io.enkrypt.avro.processing.MetricRecord
 import io.enkrypt.common.extensions.bigInteger
 import io.enkrypt.common.extensions.byteBuffer
-import io.enkrypt.common.extensions.isSuccess
+import io.enkrypt.common.extensions.isSuccessful
 import io.enkrypt.common.extensions.unsignedBigInteger
 import io.enkrypt.common.extensions.unsignedByteBuffer
 import org.apache.kafka.streams.KeyValue
@@ -21,27 +21,28 @@ object BlockMetrics {
   fun forBlock(block: BlockRecord): BlockMetricsRecord {
 
     val transactions = block.getTransactions()
-    val receipts = block.getTransactionReceipts()
 
     val difficulty = block.getHeader().getDifficulty().bigInteger()
     val totalDifficulty = block.getTotalDifficulty().bigInteger()
     val numPendingTxs = block.getNumPendingTxs()
-    val totalTxs = receipts.size
+    val totalTxs = transactions.size
 
     var numSuccessfulTxs = 0
     var numFailedTxs = 0
-    var totalInternalTxs = 0
 
     var totalGasPrice = BigInteger.ZERO
     var totalTxsFees = BigInteger.ZERO
     var totalGasLimit = BigInteger.ZERO
 
     transactions
-      .zip(receipts)
-      .forEach { (tx, receipt) ->
+      .forEach { tx ->
 
-        totalInternalTxs += receipt.getInternalTxs().size
-        if (receipt.isSuccess()) numSuccessfulTxs += 1 else numFailedTxs += 1
+        val receipt = tx.getReceipt()
+
+        if (receipt.isSuccessful())
+          numSuccessfulTxs += 1
+        else
+          numFailedTxs += 1
 
         totalGasLimit += tx.getGas().unsignedBigInteger()!!
         totalGasPrice += tx.getGasPrice().unsignedBigInteger()!!
@@ -167,7 +168,7 @@ object BlockMetrics {
     }
 
     if (hashRate != null) {
-      list += KeyValue(
+      list = list + KeyValue(
         keyBuilder.setName("AvgHashRate").build(),
         MetricRecord.newBuilder().`setDouble$`(hashRate).build()
       )

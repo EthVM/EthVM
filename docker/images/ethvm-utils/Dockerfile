@@ -10,6 +10,7 @@ ENV KAFKA_BOOTSTRAP_SERVERS kafka:9092
 ENV KAFKA_SCHEMA_REGISTRY http://kafka-schema-registry:8081
 ENV KAFKA_CONNECT_URL http://kafka-connect:8083
 ENV MONGO_URL mongodb://mongo/ethvm_local
+ENV PARITY_WS_URL ws://parity:8546
 
 LABEL name="kafka" version=${KAFKA_VERSION}
 LABEL name="mongodb" version="4.0.5-r0"
@@ -45,5 +46,6 @@ ENTRYPOINT [ \
   "dockerize", \
   "-template", "/opt/ethvm/kafka:/opt/ethvm/kafka", \
   "-template", "/opt/ethvm/kafka-connect/sinks:/opt/ethvm/kafka-connect/sinks", \
+  "-template", "/opt/ethvm/kafka-connect/sources:/opt/ethvm/kafka-connect/sources", \
   "ethvm-utils.sh" \
 ]

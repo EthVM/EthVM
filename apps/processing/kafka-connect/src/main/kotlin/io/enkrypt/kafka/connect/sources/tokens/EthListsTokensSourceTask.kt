@@ -1,7 +1,7 @@
 package io.enkrypt.kafka.connect.sources.tokens
 
 import com.beust.klaxon.Klaxon
-import io.enkrypt.common.codec.Hex
+import io.enkrypt.common.extensions.hexBytes
 import io.enkrypt.kafka.connect.utils.Versions
 import org.apache.kafka.connect.data.Schema
 import org.apache.kafka.connect.data.SchemaBuilder
@@ -50,7 +50,7 @@ class EthListsTokensSourceTask : SourceTask() {
     val records = entries.dropWhile { it.address.isEmpty() }.map { e ->
 
       val key = Struct(EthTokenKeySchema).apply {
-        put("address", Hex.decode(e.address.substring(2)))
+        put("address", e.address.hexBytes())
       }
 
       SourceRecord(
@@ -198,7 +198,7 @@ class EthListsTokensSourceTask : SourceTask() {
       Struct(EthListsTokensSourceTask.ContractMetadataSchema).apply {
         put("name", name)
         put("symbol", symbol)
-        put("address", Hex.decode(address.substring(2)))
+        put("address", address.hexBytes())
         put("decimals", decimals)
         put("ens_address", ens_address)
         put("type", type)

@@ -2,7 +2,6 @@ package io.enkrypt.kafka.streams.processors.block
 
 import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
-import io.enkrypt.avro.common.Data32
 import io.enkrypt.avro.processing.BlockChainEventsRecord
 import io.enkrypt.avro.processing.ChainEventRecord
 import io.enkrypt.avro.processing.ReorgKeyRecord
@@ -53,7 +52,7 @@ class ChainEventsTransformer(
     }
   }
 
-  private val forkLength = 256 // roughly 1 hour of blocks
+  private val historySize = 100000 //
 
   private lateinit var context: ProcessorContext
 
@@ -190,7 +189,7 @@ class ChainEventsTransformer(
   /**
    * This operation should be in-frequent which is why we currently don't index the tx events
    */
-  private fun reverseTransaction(blockKey: BlockKeyRecord, blockHash: Data32, txHash: Data32) {
+  private fun reverseTransaction(blockKey: BlockKeyRecord, blockHash: ByteBuffer, txHash: ByteBuffer) {
 
     val key = ReorgKeyRecord.newBuilder().setBlockHash(blockHash).build()
     val record = chainEventsStore.get(key)
@@ -272,7 +271,7 @@ class ChainEventsTransformer(
    */
   private fun cleanupState(highestBlockNumber: BigInteger) {
 
-    var blockNumber = highestBlockNumber - forkLength.toBigInteger()
+    var blockNumber = highestBlockNumber - historySize.toBigInteger()
 
     var stop: Boolean
 

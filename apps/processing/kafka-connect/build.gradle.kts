@@ -38,7 +38,7 @@ dependencies {
   implementation("io.arrow-kt:arrow-core:0.8.2")
   implementation("ch.qos.logback:logback-classic:1.2.3")
   implementation("io.github.microutils:kotlin-logging:1.6.22")
-  implementation("com.beust:klaxon:3.0.5")
+  implementation("com.beust:klaxon:5.0.1")
 
   // Tests
   testImplementation("io.kotlintest:kotlintest-runner-junit5:${ext.get("kotlintest-version") as String}")

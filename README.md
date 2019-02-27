@@ -1,7 +1,7 @@
 <div align="center">
   <img src="https://raw.githubusercontent.com/enKryptIO/ethvm/master/.github/assets/logo.png" alt="ethvm-logo">
   <p>:zap::zap::zap: EthVM Project: An Open Source Proccessing Engine and Block Explorer for Ethereum, based on Apache Kafka :zap::zap::zap:</p>
-  <p>Powered by <a href="https://www.typescriptlang.org/">TypeScript</a> / <a href="https://vuejs.org/">VueJS</a> / <a href="https://github.com/socketio/socket.io">Socket.io</a> / <a href="https://kafka.apache.org/">Kafka + Kafka Streams + Kafka Connect</a> / <a href="https://github.com/ethereum/ethereumj">EthereumJ</a> (soon more clients) / <a href="https://github.com/mongodb/mongo">MongoDB</a> 
+  <p>Powered by <a href="https://www.typescriptlang.org/">TypeScript</a> / <a href="https://vuejs.org/">VueJS</a> / <a href="https://github.com/socketio/socket.io">Socket.io</a> / <a href="https://kafka.apache.org/">Kafka + Kafka Streams + Kafka Connect</a> / <a href="https://github.com/paritytech/parity-ethereum">Parity</a> / <a href="https://github.com/mongodb/mongo">MongoDB</a> 
   <p><a href="https://travis-ci.org/enKryptIO/ethvm.svg?branch=develop"><img src="https://travis-ci.org/enKryptIO/ethvm.svg?branch=develop"/></a></p>
 </div>
 
@@ -33,7 +33,7 @@ We have strong foundations on how an Open Source blockchain explorer should be:
 
 ## Getting Started
 
-For more information on how you can setup your environment and start developing on it, we recommend you to visit our [Wiki](https://github.com/enKryptIO/ethvm/wiki/)!
+For more information on how you can setup your environment and start developing on it, we recommend you to visit our [Wiki](https://github.com/EthVM/ethvm/wiki/)!
 
 **NOTE**: Please, don't clone the repository blindly as there are a couple of steps you need to be aware before running the project!
 

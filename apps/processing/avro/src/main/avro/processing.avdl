@@ -6,9 +6,9 @@ protocol Processing {
 
   record ReorgKeyRecord {
 
-    union { null, io.enkrypt.avro.common.Data32 } blockHash = null;
-    union { null, io.enkrypt.avro.common.Data32 } txHash = null;
-    union { null, io.enkrypt.avro.common.Data20 } address = null;
+    union { null, bytes } blockHash = null;
+    union { null, bytes } txHash = null;
+    union { null, bytes } address = null;
 
     union { null, bytes } blockNumber = null;
     union { null, bytes } nonce = null;
@@ -21,22 +21,17 @@ protocol Processing {
   }
 
   enum BalanceType {
-    ETHER, ERC20, ERC721, FEE
+    TX_FEE, REWARD, ETHER, ERC20, ERC721
   }
 
   record TokenTransferRecord {
 
-    io.enkrypt.avro.common.Data32 blockHash;
-    io.enkrypt.avro.common.Data32 txHash;
-    int txIndex;
-    union { null, int } internalTxIdx;
-
     BalanceType transferType = "ETHER";
 
-    io.enkrypt.avro.common.Data20 from;
-    io.enkrypt.avro.common.Data20 to;
+    bytes from;
+    bytes to;
 
-    union { null, io.enkrypt.avro.common.Data20 } contract = null;
+    union { null, bytes } contract = null;
 
     union { null, bytes } amount = null;
     union { null, bytes } tokenId = null;
@@ -46,8 +41,8 @@ protocol Processing {
   record TokenBalanceKeyRecord {
 
     BalanceType balanceType = "ETHER";
-    union { null, io.enkrypt.avro.common.Data20 } contract = null;
-    union { null, io.enkrypt.avro.common.Data20 } address = null;
+    union { null, bytes } contract = null;
+    union { null, bytes } address = null;
     union { null, bytes } tokenId = null;
 
   }
@@ -55,54 +50,70 @@ protocol Processing {
   record TokenBalanceRecord {
 
     union { null, bytes } amount = null;
-    union { null, io.enkrypt.avro.common.Data20 } address = null;
+    union { null, bytes } address = null;
 
   }
 
   // contracts
 
   record ContractKeyRecord {
-    io.enkrypt.avro.common.Data20 address;
+    bytes address;
   }
 
   record ContractCreateRecord {
     io.enkrypt.avro.common.ContractType type;
-    io.enkrypt.avro.common.Data20 creator;
-    io.enkrypt.avro.common.Data32 txHash;
-    io.enkrypt.avro.common.Data32 blockHash;
-    io.enkrypt.avro.common.Data20 address;
+    bytes creator;
+    bytes address;
     bytes data;
   }
 
   record ContractDestroyRecord {
-    io.enkrypt.avro.common.Data32 txHash;
-    io.enkrypt.avro.common.Data32 blockHash;
-    io.enkrypt.avro.common.Data20 address;
+    bytes address;
+    bytes refundAddress;
+    bytes balance;
   }
 
   record DaoHfBalanceTransferRecord {
-    io.enkrypt.avro.common.Data20 from;
-    io.enkrypt.avro.common.Data20 to;
+    bytes from;
+    bytes to;
     bytes amount;
+  }
+
+  record PremineBalanceRecord {
+    bytes address;
+    bytes balance;
+  }
+
+  record TxFeeRecord {
+    bytes from;
+    bytes amount;
+    bytes miner;
   }
 
   enum ChainEventType {
     PREMINE_BALANCE,
-    BLOCK_REWARD,
+    REWARD,
     DAO_HF_BALANCE_TRANSFER,
     TOKEN_TRANSFER,
     CONTRACT_CREATE,
-    CONTRACT_DESTROY
+    CONTRACT_DESTROY,
+    TX_FEE
   }
 
   record ChainEventRecord {
 
+    boolean reverse = false;
+    long timestamp;
+
     ChainEventType `type`;
 
-    boolean reverse = false;
+    union { io.enkrypt.avro.capture.BlockRewardRecord, TxFeeRecord, PremineBalanceRecord, TokenTransferRecord, ContractCreateRecord, ContractDestroyRecord, DaoHfBalanceTransferRecord } value;
 
-    union { io.enkrypt.avro.capture.PremineBalanceRecord, io.enkrypt.avro.capture.BlockRewardRecord, TokenTransferRecord, ContractCreateRecord, ContractDestroyRecord, DaoHfBalanceTransferRecord } value;
-    union { null, io.enkrypt.avro.common.Data32 } txHash = null;
+    union { null, bytes } blockHash = null;
+    union { null, bytes } txHash = null;
+    union { null, int } txIndex = null;
+    union { null, array<int> } traceAddress = null;
+
   }
 
   record ContractLogoRecord {
@@ -158,7 +169,7 @@ protocol Processing {
   // metrics
 
   record BlockMetricsRecord {
-    io.enkrypt.avro.common.Data32 hash;
+    bytes hash;
     bytes number;
     union { null, long } blockTime = null;
     long timestamp;
@@ -214,7 +225,7 @@ protocol Processing {
   }
 
   record AddressMetadataKeyRecord {
-    io.enkrypt.avro.common.Data20 address;
+    bytes address;
     AddressMetadataType type;
   }
 

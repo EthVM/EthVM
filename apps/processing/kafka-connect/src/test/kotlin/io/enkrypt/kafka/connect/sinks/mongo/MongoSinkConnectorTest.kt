@@ -73,7 +73,7 @@ class MongoSinkConnectorTest : BehaviorSpec() {
 
         then("we obtain a correct parsed MongoURI object with default value") {
           mongoUri shouldNotBe null
-          mongoUri.uri shouldBe MongoSinkConnector.Config.MONGO_DEFAULT_URI_VALUE
+          mongoUri shouldBe MongoSinkConnector.Config.MONGO_DEFAULT_URI_VALUE
         }
       }
 
@@ -85,7 +85,7 @@ class MongoSinkConnectorTest : BehaviorSpec() {
 
         then("we obtain a correct parsed MongoURI object with the passed URI") {
           mongoUri shouldNotBe null
-          mongoUri.uri shouldBe "mongodb://localhost:27017/test"
+          mongoUri shouldBe "mongodb://localhost:27017/test"
         }
       }
 
