@@ -17,7 +17,7 @@
             class="ma-0"
             height="46px"
             @click:clear="resetValues"
-          ></v-text-field>
+          />
           <v-text-field
             dense
             v-if="phText === 'addressTxSearch'"
@@ -31,7 +31,7 @@
             prepend-inner-icon="fa fa-search grey--text text--lighten-1 pr-4 pl-4"
             class="ma-0"
             height="34px"
-          ></v-text-field>
+          />
         </v-layout>
       </v-card>
     </v-flex>
@@ -46,20 +46,31 @@
 import { Events } from 'ethvm-common'
 import { Component, Vue, Watch } from 'vue-property-decorator'
 
-@Component({
-  props: {
-    phText: {
-      type: String,
-      default: 'default'
-    }
-  }
-})
+@Component
 export default class AppSearch extends Vue {
   searchInput = ''
-
+  phText = 'default'
   isValid = true
 
-  // Methods
+  /*
+  ===================================================================================
+    Watch
+  ===================================================================================
+  */
+
+  @Watch('searchInput')
+  onSearchInputChange(newVal: string, oldVal: string): void {
+    if (newVal === null || newVal === '') {
+      this.resetValues()
+    }
+  }
+
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
   search() {
     this.$api.search(this.searchInput).then(res => {
       if (res.type != 3) {
@@ -93,16 +104,17 @@ export default class AppSearch extends Vue {
       }
     })
   }
-  @Watch('searchInput')
-  onSearchInputChange(newVal: string, oldVal: string): void {
-    if (newVal === null || newVal === '') {
-      this.resetValues()
-    }
-  }
 
   resetValues(): void {
     this.isValid = true
   }
+
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
+
   get getIcon(): string {
     return this.isValid ? 'fa fa-search grey--text text--lighten-1 pr-4 pl-4' : 'fa fa-search error--text pr-4 pl-4'
   }
