@@ -18,7 +18,7 @@ const NEW_BLOCK_METRIC = (state: State, raw: BlockMetrics | BlockMetrics[]) => {
 }
 
 const NEW_TX = (state: State, raw: Tx | Tx[]) => {
-  const txs = !Array.isArray(raw) ? [raw] : raw
+  const txs = (!Array.isArray(raw) ? [raw] : raw).reverse()
   txs.forEach(tx => state.txs.add(tx))
 }
 
