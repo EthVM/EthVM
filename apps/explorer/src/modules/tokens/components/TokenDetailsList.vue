@@ -28,7 +28,11 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
     Computed Values
   ===================================================================================
   */
-
+  get newdata(): string {
+    console.log(this.tokenDetails)
+    console.log(this.contractDetails)
+    return "hello"
+  }
   /**
    * Create properly-formatted title from tokenDetails
    *
@@ -46,6 +50,7 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
    * If the data hasn't been loaded yet, then only include the titles in the details.
    */
   get details(): Detail[] {
+    let a = this.newdata
     const icons = {
       blog: 'fab fa-ethereum',
       chat: 'fab fa-ethereum',
@@ -68,31 +73,31 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
           title: this.$i18n.t('title.contract').toString()
         },
         {
-          title: this.$i18n.t('token.owner').toString()
+          title: ''
         },
         {
-          title: this.$i18n.t('title.supply').toString()
+          title: ''
         },
         {
-          title: this.$i18n.t('title.price').toString()
+          title: ''
         },
         {
-          title: this.$i18n.t('title.marketCap').toString()
+          title: ''
         },
         {
-          title: this.$i18n.t('token.totalHold').toString()
+          title: ''
         },
         {
-          title: this.$i18n.t('title.decimals').toString()
+          title: ''
         },
         {
-          title: this.$i18n.t('title.website').toString()
+          title: ''
         },
         {
-          title: this.$i18n.t('title.support').toString()
+          title: ''
         },
         {
-          title: this.$i18n.t('title.links').toString()
+          title: ''
         }
       ]
     } else {
@@ -102,37 +107,74 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
           detail: new Hex(this.tokenDetails.address).toString(),
           link: this.tokenDetails ? `/address/${new Hex(this.tokenDetails.address).toString()}` : '',
           copy: true
-        },
-        {
+        }]
+      if (this.tokenDetails.total_supply) {
+        details.push( {
           title: this.$i18n.t('title.supply').toString(),
           detail: this.formatStr(this.tokenDetails.total_supply.toString())
-        },
-        {
+        })
+      }
+      if (this.tokenDetails.circulating_supply) {
+        details.push( {
+          title: this.$i18n.t('token.circSupply').toString(),
+          detail: this.formatStr(this.tokenDetails.circulating_supply.toString())
+        })
+      }
+      if (this.tokenDetails.current_price) {
+        details.push({
           title: this.$i18n.t('title.price').toString(),
           detail: `$${this.getRoundNumber(this.tokenDetails.current_price)}`,
           priceChange: this.getPriceChange()
-        },
-        {
+        })
+      }
+
+      if (this.tokenDetails.market_cap) {
+        details.push({
           title: this.$i18n.t('title.marketCap').toString(),
           detail: `$${this.getInt(this.tokenDetails.market_cap)}`
-        },
-        {
+        })
+      }
+
+      if (this.tokenDetails.total_volume) {
+        details.push({
+          title: this.$i18n.t('token.volume').toString(),
+          detail: `$${this.getInt(this.tokenDetails.total_volume)}`
+        })
+      }
+
+      if (this.tokenDetails.holdersCount) {
+        details.push( {
           title: this.$i18n.t('token.totalHold').toString(),
-          detail: this.tokenDetails.holdersCount ? `${this.tokenDetails.holdersCount}` : 'REQUIRED DATA'
-        },
-        {
+          detail: `${this.tokenDetails.holdersCount}`
+        })
+      }
+      if (this.contractDetails.metadata.decimals) {
+        details.push( {
           title: this.$i18n.t('title.decimals').toString(),
           detail: this.contractDetails.metadata.decimals
-        },
-        {
+        })
+      }
+      if (this.contractDetails.metadata.website) {
+        details.push({
           title: this.$i18n.t('title.website').toString(),
           detail: `<a href="${this.contractDetails.metadata.website}" target="_BLANK">${this.contractDetails.metadata.website}</a>`
-        },
-        {
+        })
+      }
+      if (this.contractDetails.metadata.support.email) {
+        details.push({
           title: this.$i18n.t('title.support').toString(),
           detail: `<a href="mailto:${this.contractDetails.metadata.support.email}" target="_BLANK">${this.contractDetails.metadata.support.email}</a>`
-        },
-        {
+        })
+      }
+
+      if(this.contractDetails.type.string) {
+        details.push({
+          title: this.$i18n.t('token.type').toString(),
+          detail: this.contractDetails.type.string
+        })
+      }
+      if(this.contractDetails.metadata.social) {
+        details.push({
           title: this.$i18n.t('title.links').toString(),
           detail: Object.entries(this.contractDetails.metadata.social)
             .map(obj => {
@@ -148,8 +190,8 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
             .reduce((a, b) => {
               return `${a}${b}`
             })
-        }
-      ]
+        })
+      }
     }
     return details
   }

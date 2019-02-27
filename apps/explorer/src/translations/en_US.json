@@ -174,7 +174,9 @@
     "usdValue": "USD Value",
     "amount": "Amount",
     "price": "Price",
-    "owner": "Owner"
+    "owner": "Owner",
+    "type" : "Type",
+    "circSupply": "Circulating Supply"
   },
   "gas": {
     "limit": "Gas Limit",
