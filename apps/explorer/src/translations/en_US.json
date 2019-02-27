@@ -176,7 +176,8 @@
     "price": "Price",
     "owner": "Owner",
     "type" : "Type",
-    "circSupply": "Circulating Supply"
+    "circSupply": "Circulating Supply",
+    "volume": "Volume"
   },
   "gas": {
     "limit": "Gas Limit",

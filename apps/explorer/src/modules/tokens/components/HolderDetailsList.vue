@@ -113,17 +113,20 @@ export default class HolderDetailsList extends Mixins(StringConcatMixin) {
         {
           title: this.$i18n.t('token.transfers').toString(),
           detail: this.holderDetails.countTxs
-        },
-        {
+        }]
+        if(this.tokenDetails.current_price) {
+          details.push({
           title: this.$i18n.t('title.price').toString(),
           detail: `$${this.getRoundNumber(this.tokenDetails.current_price)}`,
           priceChange: this.getPriceChange()
-        },
-        {
+        })
+        }
+        if(this.contractDetails.metadata.decimals) {
+          details.push({
           title: this.$i18n.t('title.decimals').toString(),
           detail: this.contractDetails.metadata.decimals
+        })
         }
-      ]
     }
     return details
   }
