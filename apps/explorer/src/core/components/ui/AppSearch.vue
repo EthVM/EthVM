@@ -59,11 +59,10 @@ export default class AppSearch extends Vue {
 
   isValid = true
 
-
   // Methods
   search() {
     this.$api.search(this.searchInput).then(res => {
-      if(res.type != 3) {
+      if (res.type != 3) {
         this.isValid = true
       }
       switch (res.type) {
@@ -98,7 +97,7 @@ export default class AppSearch extends Vue {
     this.isValid = true
   }
   get getIcon(): string {
-    return this.isValid? 'fa fa-search grey--text text--lighten-1 pr-4 pl-4' : 'fa fa-search error--text pr-4 pl-4'
+    return this.isValid ? 'fa fa-search grey--text text--lighten-1 pr-4 pl-4' : 'fa fa-search error--text pr-4 pl-4'
   }
 }
 </script>
