@@ -124,6 +124,10 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
           detail: this.formatStr(this.tokenDetails.totalSupply.toString())
         },
         {
+          title: this.$i18n.t('token.circSupply').toString(),
+          detail: this.formatStr(this.tokenDetails.circulatingSupply.toString())
+        },
+        {
           title: this.$i18n.tc('price.name', 2),
           detail: `$${this.tokenDetails.currentPrice}`,
           priceChange: this.getPriceChange()
@@ -131,6 +135,10 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
         {
           title: this.$i18n.t('token.market'),
           detail: `$${this.getRoundNumber(this.tokenDetails.marketCap)}`
+        },
+        {
+          title: this.$i18n.t('token.volume').toString(),
+          detail: `$${this.getInt(this.tokenDetails.totalVolume)}`
         })
 
       if (this.tokenDetails.holdersCount) {
@@ -156,6 +164,13 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
         detailsItems.push({
           title: this.$i18n.t('token.support'),
           detail: `<a href="mailto:${this.contractDetails.metadata.support.email}" target="_BLANK">${this.contractDetails.metadata.support.email}</a>`
+        })
+      }
+
+      if(this.contractDetails.type && this.contractDetails.type.string) {
+        detailsItems.push({
+          title: this.$i18n.t('token.type').toString(),
+          detail: this.contractDetails.type.string
         })
       }
 

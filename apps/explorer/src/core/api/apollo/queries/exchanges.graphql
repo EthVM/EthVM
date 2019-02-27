@@ -85,6 +85,7 @@ query tokenExchangeRateByAddress($address: String!) {
   tokenExchangeRateByAddress(address: $address) {
     id
     address
+    circulatingSupply
     currentPrice
     image
     marketCap
@@ -92,6 +93,7 @@ query tokenExchangeRateByAddress($address: String!) {
     priceChangePercentage24h
     symbol
     totalSupply
+    totalVolume
     owner
     holdersCount
   }
