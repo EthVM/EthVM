@@ -1,4 +1,4 @@
-import { EthValue, Hex, Tx, Uncle } from '@app/core/models'
+import { EthValue, Hex, SimpleTx, Uncle } from '@app/core/models'
 import BN from 'bignumber.js'
 import { Block as RawBlock, Reward } from 'ethvm-common'
 
@@ -62,19 +62,20 @@ export class SimpleBlock {
   }
 
   public getTotalReward(): EthValue {
-    if (!this.cache.getTotalReward) {
-      const total = this.getRewards()
+    if (!this.cache.minerReward) {
+      const rawReward = this.getRewards()
+        .filter(r => r.rewardType === 'block')
         .map(r => r.value)
-        .reduce((acc, value) => acc.plus(value), new BN(0))
-      this.cache.getTotalReward = new EthValue(total.toString())
+        .reduce((acc, value: any) => value, 0)
+      this.cache.minerReward = new EthValue(rawReward)
     }
-    return this.cache.getTotalReward
+    return this.cache.minerReward
   }
 
-  public getTxs(): Tx[] {
+  public getTxs(): SimpleTx[] {
     if (!this.cache.txs) {
       const rawTxs = this.block.transactions || []
-      this.cache.txs = rawTxs.map(rawTx => new Tx(rawTx))
+      this.cache.txs = rawTxs.map(rawTx => new SimpleTx(rawTx))
     }
     return this.cache.txs
   }

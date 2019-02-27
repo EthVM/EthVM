@@ -74,9 +74,20 @@ export class SimpleTx {
   public getStatus(): boolean {
     if (!this.cache.status) {
       const receipt = this.getReceipt()
-      this.cache.status = true
+      this.cache.status = receipt.getStatus()
     }
     return this.cache.status
+  }
+
+  public getGasUsed(): HexNumber {
+    if (!this.cache.gasUsed) {
+      this.cache.gasUsed = new HexNumber(this.tx.receipt.gasUsed)
+    }
+    return this.cache.gasUsed
+  }
+
+  public getTxCost(): EthValue {
+    return new EthValue(this.getGasPrice().toWei() * this.getGasUsed().toNumber())
   }
 
   public getTimestamp(): Date {

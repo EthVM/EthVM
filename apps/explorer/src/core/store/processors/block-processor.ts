@@ -11,6 +11,6 @@ const dedup = (block: Block | SimpleBlock, pastBlocks: Block[] | SimpleBlock[]):
 
 export const processBlocks = (block: Block | SimpleBlock, pastBlocks: Block[] | SimpleBlock[]): Block[] | SimpleBlock[] => {
   pastBlocks = dedup(block, pastBlocks)
-  pastBlocks.push(block as any)
+  pastBlocks.unshift(block as any)
   return pastBlocks
 }

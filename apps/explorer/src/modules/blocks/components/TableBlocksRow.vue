@@ -49,12 +49,12 @@
 <script lang="ts">
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
-import { Block } from '@app/core/models'
+import { Block, SimpleBlock, Tx, SimpleTx } from '@app/core/models'
 
 @Component
 export default class TableBlocksRow extends Mixins(StringConcatMixin) {
   @Prop({ type: String, default: 'home' }) pageType!: string
-  @Prop(Object) block!: Block
+  @Prop(Object) block!: Block | SimpleBlock
 
   // Methods
   hasUncles(block) {
@@ -62,7 +62,8 @@ export default class TableBlocksRow extends Mixins(StringConcatMixin) {
   }
 
   successfulTxs() {
-    return this.block.getTxs().filter(t => t.getStatus() === true).length
+    const txs: any[] = this.block.getTxs()
+    return txs.filter((t: Tx | SimpleTx) => t.getStatus() === true).length
   }
 
   failedTxs() {

@@ -1,15 +1,22 @@
 import { Events, SocketRooms, SocketEvent } from 'ethvm-common'
-import { Block, PendingTx } from '@app/core/models'
+import { SimpleBlock, PendingTx } from '@app/core/models'
 
-const socket_socketNewblock = function({ commit }, raw: SocketEvent | SocketEvent[]) {
+const socket_NEW_SIMPLE_BLOCK = function({ commit }, raw: SocketEvent | SocketEvent[]) {
   const evs = !Array.isArray(raw) ? [raw] : raw
   evs.forEach(ev => {
-    commit(Events.NEW_BLOCK, ev.value)
-    this._vm.$eventHub.$emit(Events.NEW_BLOCK, new Block(ev.value))
+    const sBlock = new SimpleBlock(ev.value)
+
+    commit(Events.NEW_SIMPLE_BLOCK, sBlock)
+    this._vm.$eventHub.$emit(Events.NEW_SIMPLE_BLOCK, sBlock)
+
+    sBlock.getTxs().forEach(tx => {
+      commit(Events.NEW_TX, tx)
+      this._vm.$eventHub.$emit(Events.NEW_TX, tx)
+    })
   })
 }
 
-const socket_socketNewptx = function({ commit }, raw: SocketEvent | SocketEvent[]) {
+const socket_NEW_PENDING_TX = function({ commit }, raw: SocketEvent | SocketEvent[]) {
   const evs = !Array.isArray(raw) ? [raw] : raw
   evs.forEach(ev => {
     commit(Events.NEW_PENDING_TX, ev.value)
@@ -17,7 +24,7 @@ const socket_socketNewptx = function({ commit }, raw: SocketEvent | SocketEvent[
   })
 }
 
-const socket_socketNewblockmetrics = function({ commit }, raw: SocketEvent | SocketEvent[]) {
+const socket_NEW_BLOCK_METRIC = function({ commit }, raw: SocketEvent | SocketEvent[]) {
   const evs = !Array.isArray(raw) ? [raw] : raw
   evs.forEach(ev => {
     commit(Events.NEW_BLOCK_METRIC, ev.value)
@@ -26,13 +33,13 @@ const socket_socketNewblockmetrics = function({ commit }, raw: SocketEvent | Soc
 }
 
 // eslint-disable-next-line
-const socket_socketConnect = function({}) {
+const socket_connect = function({}) {
   this._vm.$socket.emit(Events.join, { rooms: SocketRooms.DefaultRooms })
 }
 
 export default {
-  socket_socketNewblock,
-  socket_socketNewptx,
-  socket_socketNewblockmetrics,
-  socket_socketConnect
+  socket_NEW_SIMPLE_BLOCK,
+  socket_NEW_PENDING_TX,
+  socket_NEW_BLOCK_METRIC,
+  socket_connect
 }

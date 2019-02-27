@@ -11,6 +11,6 @@ const dedup = (blockMetric: BlockMetrics, pastBlockMetrics: BlockMetrics[]): Blo
 
 export const processBlockMetrics = (blockMetric: BlockMetrics, pastBlockMetrics: BlockMetrics[]): BlockMetrics[] => {
   const blocksMetrics = dedup(blockMetric, pastBlockMetrics)
-  blocksMetrics.push(blockMetric)
+  blocksMetrics.unshift(blockMetric)
   return blocksMetrics
 }
