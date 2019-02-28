@@ -1,5 +1,5 @@
 <template>
-  <app-chart
+  <chart
     type="line"
     :chart-title="title"
     :chart-description="description"
@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import AppChart from '@app/modules/charts/components/AppChart.vue'
+import Chart from '@app/modules/charts/components/Chart.vue'
 import { ChartMixin } from '@app/modules/charts/mixins'
 import { Component, Mixins } from 'vue-property-decorator'
 import { Events } from 'ethvm-common'
@@ -21,23 +21,34 @@ import { Events } from 'ethvm-common'
 
 @Component({
   components: {
-    AppChart
+    Chart
   }
 })
 export default class ChartHashRate extends Mixins(ChartMixin) {
   newEvent = Events.getAverageHashRateStats
 
-  // Lifecycle
+  /*
+  ===================================================================================
+    Lifecycle
+  ===================================================================================
+  */
+
   created() {
     this.setTitle(this.title)
     this.setLabel(this.labelString)
     this.setEvent(this.newEvent)
   }
 
-  // Computed
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
+
   get title() {
     return this.$i18n.t('charts.avgHashRate').toString()
   }
+
   get labelString(): string {
     return this.$i18n.t('charts.hash-rate-history').toString()
   }

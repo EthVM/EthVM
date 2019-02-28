@@ -1,5 +1,5 @@
 <template>
-  <app-chart
+  <chart
     type="line"
     :data="chartData"
     :options="chartOptions"
@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { Events, BlockMetrics } from 'ethvm-common'
-import AppChart from '@app/modules/charts/components/AppChart.vue'
+import Chart from '@app/modules/charts/components/Chart.vue'
 import ethUnits from 'ethereumjs-units'
 import { Vue, Component } from 'vue-property-decorator'
 
@@ -22,7 +22,7 @@ const MAX_ITEMS = 10
 
 @Component({
   components: {
-    AppChart
+    Chart
   }
 })
 export default class ChartLiveTxFees extends Vue {
@@ -33,7 +33,12 @@ export default class ChartLiveTxFees extends Vue {
     avgPrice: []
   }
 
-  // Lifecycle
+  /*
+  ===================================================================================
+    Lifecycle
+  ===================================================================================
+  */
+
   created() {
     this.fillChartData(this.$store.getters.blockMetrics.items().slice(0, MAX_ITEMS))
   }
@@ -49,22 +54,32 @@ export default class ChartLiveTxFees extends Vue {
     this.$eventHub.$off(Events.NEW_BLOCK_METRIC)
   }
 
-  // Methods
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
   fillChartData(bms: BlockMetrics[] | BlockMetrics = []) {
     bms = !Array.isArray(bms) ? [bms] : bms
     bms.forEach(bm => {
-      this.data.labels.unshift(bm.number)
-      this.data.avgFees.unshift(bm.avgTxFees)
-      this.data.avgPrice.unshift(bm.avgGasPrice)
+      this.data.labels.push(bm.number)
+      this.data.avgFees.push(bm.avgTxFees)
+      this.data.avgPrice.push(bm.avgGasPrice)
       if (this.data.labels.length > MAX_ITEMS) {
-        this.data.labels.pop()
-        this.data.avgFees.pop()
-        this.data.avgPrice.pop()
+        this.data.labels.shift()
+        this.data.avgFees.shift()
+        this.data.avgPrice.shift()
       }
     })
   }
 
-  // Computed
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
+
   get chartData() {
     return {
       labels: this.data.labels,
