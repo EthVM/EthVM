@@ -13,11 +13,14 @@ module.exports = {
       alias: {
         '@app': path.join(__dirname, '/src/'),
         cssPath: path.join(__dirname, '/src/css'),
-        vue$: 'vue/dist/vue.esm.js'
+        vue$: 'vue/dist/vue.esm.js',
+        vuex$: 'vuex/dist/vuex.esm.js'
       }
     }
   },
+  productionSourceMap: false,
   devServer: {
-    disableHostCheck: true
+    disableHostCheck: true,
+    noInfo: true
   }
 }
