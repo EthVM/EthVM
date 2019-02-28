@@ -63,15 +63,15 @@ export default class ChartLiveTransactions extends Vue {
   fillChartData(bms: BlockMetrics[] | BlockMetrics = []) {
     bms = !Array.isArray(bms) ? [bms] : bms
     bms.forEach(bm => {
-      this.data.labels.unshift(bm.number)
-      this.data.sTxs.unshift(bm.numSuccessfulTxs)
-      this.data.fTxs.unshift(bm.numFailedTxs)
-      this.data.pTxs.unshift(bm.numPendingTxs)
+      this.data.labels.push(bm.number)
+      this.data.sTxs.push(bm.numSuccessfulTxs)
+      this.data.fTxs.push(bm.numFailedTxs)
+      this.data.pTxs.push(bm.numPendingTxs)
       if (this.data.labels.length > MAX_ITEMS) {
-        this.data.labels.pop()
-        this.data.sTxs.pop()
-        this.data.fTxs.pop()
-        this.data.pTxs.pop()
+        this.data.labels.shift()
+        this.data.sTxs.shift()
+        this.data.fTxs.shift()
+        this.data.pTxs.shift()
       }
     })
   }
