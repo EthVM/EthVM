@@ -220,35 +220,35 @@ services:
         condition: on-failure
 
 
-#  traefik:
-#    image: enkryptio/traefik:0.1.2
-#    networks:
-#      - backend
-#      - traefik
-#    volumes:
-#      - /var/run/docker.sock:/var/run/docker.sock
-#      - traefik:/var/lib/traefik
-#    ports:
-#      - 80
-#      - 443
-#      - 8080
-#    environment:
-#      DEBUG: false
-#      LOG_LEVEL: INFO
-#    deploy:
-#      resources:
-#        limits:
-#          cpus: '3.0'
-#          memory: 6G
-#        reservations:
-#          cpus: '2.0'
-#          memory: 4G
-#      placement:
-#        constraints:
-#          - node.role == manager
-#      replicas: 1
-#      restart_policy:
-#        condition: on-failure
+  traefik:
+    image: enkryptio/traefik:0.1.2
+    networks:
+      - back
+      - traefik
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - traefik:/var/lib/traefik
+    ports:
+      - 80
+      - 443
+      - 8080
+    environment:
+      DEBUG: false
+      LOG_LEVEL: INFO
+    deploy:
+      resources:
+        limits:
+          cpus: '3.0'
+          memory: 6G
+        reservations:
+          cpus: '2.0'
+          memory: 4G
+      placement:
+        constraints:
+          - node.role == manager
+      replicas: 1
+      restart_policy:
+        condition: on-failure
 #
 #  api:
 #    image: enkryptio/api:0.1.0

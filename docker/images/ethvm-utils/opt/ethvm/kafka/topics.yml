@@ -6,6 +6,7 @@ topics:
     config:
       retention.ms: -1
       cleanup.policy: compact
+      max.message.bytes: 52428800
 
   - name: uncles
     replicationFactor: 1

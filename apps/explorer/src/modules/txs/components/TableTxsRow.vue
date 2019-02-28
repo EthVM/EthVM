@@ -68,7 +68,9 @@
         <p v-if="$vuetify.breakpoint.xsOnly" class="text-truncate info--text">Amount:</p>
         <p :class="[tx.getStatus() ? 'txSuccess--text' : 'txFail--text']">
           <v-tooltip v-if="isShortValue(tx.getValue().toEth())" bottom>
-            <v-icon slot="activator" dark small>fa fa-question-circle info--text</v-icon>
+            <template #activator="data">
+              <v-icon v-on="data.on" dark small>fa fa-question-circle info--text</v-icon>
+            </template>
             <span>{{ tx.getValue().toEth() }}</span>
           </v-tooltip>
           {{
