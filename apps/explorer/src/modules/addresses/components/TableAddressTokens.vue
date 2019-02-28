@@ -112,10 +112,22 @@ const MAX_ITEMS = 10
   }
 })
 export default class TableAddressTokens extends Mixins(StringConcatMixin) {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop(Array) tokens!: any[]
   @Prop(String) holder!: string
   @Prop({ type: Boolean, default: true }) loading!: boolean
   @Prop(String) error: string
+
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
 
   placeholder = 'Search Tokens Symbol/Name'
   page = 0 // Current pagintion page

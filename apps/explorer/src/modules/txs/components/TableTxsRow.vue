@@ -135,6 +135,12 @@ import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 
 @Component
 export default class TableTxsRow extends Mixins(StringConcatMixin) {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop(Object) tx!: Tx | SimpleTx
   @Prop({ type: Boolean, default: false }) isPending
 }

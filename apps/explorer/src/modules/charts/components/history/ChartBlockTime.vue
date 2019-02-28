@@ -25,6 +25,12 @@ import { Events } from 'ethvm-common'
   }
 })
 export default class ChartBlockTime extends Mixins(ChartMixin) {
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
+
   //Temp Event String
   newEvent = Events.getAverageBlockTimeStats
 

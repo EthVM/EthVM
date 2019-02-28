@@ -55,6 +55,12 @@ import { Block, SimpleBlock, Tx, SimpleTx } from '@app/core/models'
 
 @Component
 export default class TableBlocksRow extends Mixins(StringConcatMixin) {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop({ type: String, default: 'home' }) pageType!: string
   @Prop(Object) block!: Block | SimpleBlock
 

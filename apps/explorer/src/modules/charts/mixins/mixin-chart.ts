@@ -2,6 +2,12 @@ import { Component, Vue } from 'vue-property-decorator'
 
 @Component
 export class ChartMixin extends Vue {
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
+
   chartTitle = ''
   chartLabel = ''
   chartEvent = null
@@ -49,6 +55,7 @@ export class ChartMixin extends Vue {
       ]
     }
   }
+
   DATA = [
     { state: 'ALL', points: [], labels: [] },
     { state: 'WEEK', points: [], labels: [] },

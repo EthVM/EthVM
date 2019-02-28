@@ -23,7 +23,13 @@ import { Events } from 'ethvm-common'
   }
 })
 export default class ChartTxPending extends Mixins(ChartMixin) {
-  //Temp Event
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
+
+  // Temp Event
   newEvent = Events.getPendingTxs
 
   /*

@@ -23,6 +23,12 @@ import { Events } from 'ethvm-common'
   }
 })
 export default class ChartGasLimit extends Mixins(ChartMixin) {
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
+
   newEvent = Events.getAverageGasLimitStats
 
   /*

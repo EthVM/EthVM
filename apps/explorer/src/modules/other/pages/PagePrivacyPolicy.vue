@@ -92,6 +92,12 @@ import { Component, Vue } from 'vue-property-decorator'
   }
 })
 export default class PagePrivacyPolicy extends Vue {
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
+
   email = 'privacy@EthVM.com'
 
   /*

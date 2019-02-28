@@ -39,6 +39,12 @@ import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 
 @Component
 export default class TableAddressTokensRow extends Mixins(StringConcatMixin) {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop(Object) token!: any
   @Prop(String) holder!: string
 

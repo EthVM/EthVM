@@ -123,6 +123,12 @@ import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
   }
 })
 export default class TableTxs extends Vue {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop({ type: Boolean, default: true }) loading: boolean
   @Prop(String) pageType: string
   @Prop(String) showStyle!: string

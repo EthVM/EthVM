@@ -161,6 +161,12 @@ import { StringConcatMixin } from '@app/core/components/mixins'
 
 @Component
 export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop({ type: String, required: true }) account!: string
   @Prop(Array) transactions!: any[]
   @Prop({ type: Number, default: 0 }) filter!: number

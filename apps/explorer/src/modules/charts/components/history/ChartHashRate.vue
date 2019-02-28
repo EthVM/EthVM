@@ -25,6 +25,12 @@ import { Events } from 'ethvm-common'
   }
 })
 export default class ChartHashRate extends Mixins(ChartMixin) {
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
+
   newEvent = Events.getAverageHashRateStats
 
   /*

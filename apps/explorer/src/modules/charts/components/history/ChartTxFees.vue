@@ -23,6 +23,12 @@ import { Events } from 'ethvm-common'
   }
 })
 export default class ChartTxFees extends Mixins(ChartMixin) {
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
+
   newEvent = Events.getAverageTxFeeStats
 
   /*

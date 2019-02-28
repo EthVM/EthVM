@@ -44,6 +44,12 @@ import { Uncle } from '@app/core/models'
 
 @Component
 export default class TableUnclesRow extends Mixins(StringConcatMixin) {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop(Object) uncle!: Uncle
   @Prop({ type: String, default: 'home' }) pageType!: string
 }

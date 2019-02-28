@@ -114,6 +114,12 @@ import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
   }
 })
 export default class TableUncles extends Vue {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop({ type: String, default: '' }) showStyle!: string
   @Prop({ type: Array, default: [] }) uncles!: Uncle[]
   @Prop({ type: Boolean, default: true }) loading: boolean
@@ -122,6 +128,12 @@ export default class TableUncles extends Vue {
   @Prop({ type: Number, default: 0 }) page: number // Page passed from parent view. Syncs pagination components
   @Prop(Number) maxItems!: number
   @Prop(String) error: string
+
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
 
   pageType = 'uncles'
 

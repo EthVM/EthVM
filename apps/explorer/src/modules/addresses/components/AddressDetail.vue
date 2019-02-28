@@ -88,6 +88,12 @@ import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
   }
 })
 export default class AddressDetail extends Mixins(StringConcatMixin) {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop(Object) account: AccountInfo
 
   /*

@@ -76,6 +76,12 @@ ChartJs.defaults.doughnut.animation = Object.assign(ChartJs.defaults.doughnut.an
   }
 })
 export default class AppChart extends Vue {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop({ type: Boolean, default: false }) liveChart!: boolean
   @Prop({ type: String, required: true }) type!: string
   @Prop({ type: Object, required: true }) data!: ChartData
@@ -85,6 +91,12 @@ export default class AppChart extends Vue {
   @Prop({ type: String }) chartDescription!: string
   @Prop({ type: Array }) footnotes?: Footnote[]
   @Prop({ type: Boolean }) dataLoading?: boolean
+
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
 
   toggleData = 1
   updateChart = false

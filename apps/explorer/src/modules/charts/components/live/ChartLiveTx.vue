@@ -25,6 +25,12 @@ const MAX_ITEMS = 10
   }
 })
 export default class ChartLiveTransactions extends Vue {
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
+
   redraw = true
   data = {
     labels: [],

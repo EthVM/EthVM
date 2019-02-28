@@ -121,6 +121,12 @@ const MAX_TXS = 10
   }
 })
 export default class TableAddressTxs extends Vue {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop(String) address!: string
   @Prop({ type: Array, default: [] }) txs!: Tx[]
   @Prop({ type: Number, default: 0 }) totalTxs!: number
@@ -128,6 +134,12 @@ export default class TableAddressTxs extends Vue {
   @Prop({ type: Boolean, default: true }) loading!: boolean
   @Prop(String) error: string
   @Prop({ type: Number, default: 0 }) page: number
+
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
 
   selected = 0
   filter = ['all', 'in', 'out']

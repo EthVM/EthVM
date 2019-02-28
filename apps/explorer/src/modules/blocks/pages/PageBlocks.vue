@@ -27,6 +27,12 @@ const MAX_ITEMS = 50
   }
 })
 export default class PageBlocks extends Vue {
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
+
   blocks: SimpleBlock[] = []
   from: number = -1
   isLoading = true

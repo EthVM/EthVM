@@ -23,6 +23,12 @@ import { Events } from 'ethvm-common'
   }
 })
 export default class ChartTxFail extends Mixins(ChartMixin) {
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
+
   newEvent = Events.getFailedTxStats
 
   /*

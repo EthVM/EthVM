@@ -48,6 +48,12 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component
 export default class BlockDetailsTitle extends Vue {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop(String) nextBlock!: string
   @Prop(String) prevBlock!: string
   @Prop(Boolean) mined!: boolean

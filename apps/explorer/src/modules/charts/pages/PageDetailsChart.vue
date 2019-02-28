@@ -44,6 +44,12 @@ import { ChartTypes } from '@app/modules/charts/helpers'
   }
 })
 export default class PageDetailsChart extends Vue {
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
+
   ChartType = ChartTypes
 
   /*

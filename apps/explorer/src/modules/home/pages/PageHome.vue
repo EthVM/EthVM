@@ -63,6 +63,12 @@ const MAX_ITEMS = 50
   }
 })
 export default class PageHome extends Vue {
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
+
   tableStyle = 'max-height: 590px'
   errorTableTxs = ''
   errorTableBlocks = ''

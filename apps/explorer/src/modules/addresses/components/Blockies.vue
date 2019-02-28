@@ -8,6 +8,12 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 @Component
 export default class Blockies extends Vue {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop({ type: String, default: '' }) address!: string
   @Prop({ type: String, default: '50px' }) width!: string
   @Prop({ type: String, default: '50px' }) height!: string

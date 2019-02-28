@@ -34,6 +34,12 @@ const MAX_ITEMS = 50
   }
 })
 export default class PagePendingTxs extends Vue {
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
+
   pendingTxs: PendingTx[] = []
   totalTx = 0
   isLoading = true

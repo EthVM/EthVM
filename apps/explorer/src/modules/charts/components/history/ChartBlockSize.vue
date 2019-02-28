@@ -23,6 +23,12 @@ import { Events } from 'ethvm-common'
   }
 })
 export default class ChartBlockSize extends Mixins(ChartMixin) {
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
+
   /* Temp Event - Waiting for the event to be implemented, approximate release after 1.01 */
   newEvent = Events.getAverageDifficultyStats
 

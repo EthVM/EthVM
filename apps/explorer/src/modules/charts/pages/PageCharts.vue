@@ -72,6 +72,12 @@ import { Vue, Component } from 'vue-property-decorator'
   }
 })
 export default class PageCharts extends Vue {
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
+
   ID = ChartTypes
 
   data() {
