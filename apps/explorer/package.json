@@ -2,7 +2,7 @@
   "name": "ethvm",
   "version": "0.1.0",
   "description": "EthVM: Open source Ethereum networks explorer",
-  "author": "enKryptIO Team",
+  "author": "EthVM Team",
   "private": true,
   "scripts": {
     "start:dev": "vue-cli-service serve",
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "bignumber.js": "^8.0.2",
+    "bignumber.js": "^8.1.1",
     "canvas-confetti": "^0.1.0",
     "chart.js": "^2.7.3",
     "clipboard-copy": "^3.0.0",
@@ -29,26 +29,26 @@
     "store": "^2.0.12",
     "v-tooltip": "^2.0.0-rc.33",
     "visibilityjs": "^2.0.2",
-    "vue": "^2.6.2",
+    "vue": "^2.6.7",
     "vue-axios": "^2.1.4",
-    "vue-class-component": "^6.3.2",
-    "vue-i18n": "^8.8.0",
+    "vue-class-component": "^7.0.1",
+    "vue-i18n": "^8.8.2",
     "vue-paginate": "^3.6.0",
     "vue-property-decorator": "^7.3.0",
     "vue-qr": "^1.5.2",
     "vue-router": "^3.0.2",
     "vue-timeago": "^5.0.0",
-    "vuetify": "^1.4.4",
+    "vuetify": "^1.5.4",
     "vuex": "^3.1.0",
     "vuex-class": "^0.3.1"
   },
   "devDependencies": {
     "@types/socket.io": "^2.1.2",
     "@types/socket.io-client": "^1.4.32",
-    "@vue/cli-plugin-babel": "^3.4.0",
-    "@vue/cli-plugin-eslint": "^3.4.0",
-    "@vue/cli-plugin-typescript": "^3.4.0",
-    "@vue/cli-service": "^3.4.0",
+    "@vue/cli-plugin-babel": "^3.4.1",
+    "@vue/cli-plugin-eslint": "^3.4.1",
+    "@vue/cli-plugin-typescript": "^3.4.1",
+    "@vue/cli-service": "^3.4.1",
     "@vue/eslint-config-prettier": "^4.0.1",
     "@vue/eslint-config-typescript": "^3.2.0",
     "babel-core": "7.0.0-bridge.0",
@@ -58,11 +58,11 @@
     "prettier": "1.16.4",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.3.1",
-    "vue-template-compiler": "^2.6.2"
+    "vue-template-compiler": "^2.6.7"
   },
   "engines": {
-    "node": ">= 4.0.0",
-    "npm": ">= 3.0.0"
+    "node": ">= 8.0.0",
+    "npm": ">= 5.0.0"
   },
   "browserslist": [
     "> 1%",
