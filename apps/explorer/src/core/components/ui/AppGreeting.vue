@@ -40,7 +40,7 @@ export default class AppGreeting extends Vue {
   //Methods:
   removeDialog(): void {
     this.dialog = false
-    //storePack.set('notFirstTimeVisit', true)
+    storePack.set('notFirstTimeVisit', true)
   }
 
   createAnimation(): void {
