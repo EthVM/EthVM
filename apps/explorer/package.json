@@ -17,6 +17,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "bignumber.js": "^8.0.2",
+    "canvas-confetti": "^0.1.0",
     "chart.js": "^2.7.3",
     "clipboard-copy": "^3.0.0",
     "date-fns": "^1.30.1",
