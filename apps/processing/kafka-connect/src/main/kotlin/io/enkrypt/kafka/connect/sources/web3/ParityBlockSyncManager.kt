@@ -8,7 +8,6 @@ import io.reactivex.schedulers.Schedulers
 import mu.KotlinLogging
 import org.web3j.protocol.core.DefaultBlockParameter
 import org.web3j.protocol.core.methods.response.EthBlock
-import org.web3j.protocol.parity.methods.response.ParityTracesResponse
 import java.math.BigInteger
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.CompletableFuture
@@ -72,7 +71,6 @@ class ParityBlockSyncManager(
             }
 
             executor.submit { fetchRange(start.rangeTo(end)) }
-
           }
         },
         { throwable -> error = throwable }
@@ -139,7 +137,6 @@ class ParityBlockSyncManager(
 
             CompletableFuture.allOf(*futures.toTypedArray())
               .thenApply { futures.map { it.join().block } }
-
           }
 
         CompletableFuture.allOf(blockFuture, receiptsFuture, tracesFuture, unclesFuture)
@@ -154,11 +151,8 @@ class ParityBlockSyncManager(
             BlockData(block, uncles, receipts, traces)
               .toBlockRecord()
               .build()
-
           }
-
-      }.forEach{ future -> rangeQueue.put(future.join()) }
-
+      }.forEach { future -> rangeQueue.put(future.join()) }
   }
 
   private fun rangesFor(syncedUntil: BigInteger, end: BigInteger, batchSize: Int = 128): List<ClosedRange<BigInteger>> {
@@ -185,6 +179,4 @@ class ParityBlockSyncManager(
 
     return ranges
   }
-
-
 }
