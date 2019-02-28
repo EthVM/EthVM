@@ -7,7 +7,7 @@
           ><v-icon class="secondary--text" small>fas fa-angle-left</v-icon>
         </v-btn>
         <div v-if="hasInput" class="page-input">
-          <v-text-field v-model="pageDisplay" :mask="inputMask" :placeholder="pageDisplay" :error="!isValidPageDisplay(pageDisplay)" :class="validClass" />
+          <v-text-field v-model="pageDisplay" :mask="inputMask" :placeholder="pageDisplay" :error="!isValidPageDisplay" :class="validClass" />
         </div>
         <p v-else class="info--text pr-1">{{ pageDisplay }}</p>
         <p class="info--text">out of {{ total }}</p>
@@ -34,8 +34,8 @@ export default class AppPaginate extends Vue {
 
   validClass = 'center-input body-1 secondary--text'
   invalidClass = 'center-input body-1 error--text'
+  isError = false
   pageDisplayUpdateTimeout = null // Timeout object to update page with override of pageDisplay input model
-
   /*
   ===================================================================================
     Methods
@@ -96,16 +96,8 @@ export default class AppPaginate extends Vue {
     return page >= 0 && page <= this.lastPage
   }
 
-  /**
-   * Determine if an given @number is within the valid page range.
-   *
-   * @pageInput {Number} - PageInput number to be validated
-   * @return {Boolean}
-   */
-  isValidPageDisplay(pageDislay: string): boolean {
-    const pageDisplayNumber = parseInt(this.pageDisplay, 10)
-    return pageDisplayNumber >= 1 && pageDisplayNumber <= this.total
-  }
+
+
 
   /*
   ===================================================================================
@@ -121,9 +113,11 @@ export default class AppPaginate extends Vue {
    * to waiting 500ms initially.
    */
   set pageDisplay(pageDisplay: string) {
-    clearTimeout(this.pageDisplayUpdateTimeout)
-    const desiredPage = parseInt(pageDisplay, 10) - 1
+    const desiredPage = parseInt(pageDisplay, 10)-1
+    desiredPage >= 0 && desiredPage<= this.lastPage || !pageDisplay? this.isError = false: this.isError =true
+      clearTimeout(this.pageDisplayUpdateTimeout)
     this.pageDisplayUpdateTimeout = setTimeout(() => {
+      console.log(desiredPage)
       this.setPage(desiredPage)
     }, 500)
   }
@@ -140,6 +134,15 @@ export default class AppPaginate extends Vue {
    */
   get pageDisplay(): string {
     return (this.currentPage + 1).toString()
+  }
+
+  /**
+   * Determine if an given @number is within the valid page range.
+   *
+   * @return {Boolean}
+   */
+  get isValidPageDisplay(): boolean {
+    return !this.isError
   }
 
   /**
