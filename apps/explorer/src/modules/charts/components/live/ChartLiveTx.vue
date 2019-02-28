@@ -1,5 +1,5 @@
 <template>
-  <app-chart
+  <chart
     type="bar"
     :data="chartData"
     :options="chartOptions"
@@ -14,14 +14,14 @@
 <script lang="ts">
 import { Events, BlockMetrics } from 'ethvm-common'
 import BN from 'bignumber.js'
-import AppChart from '@app/modules/charts/components/AppChart.vue'
+import Chart from '@app/modules/charts/components/Chart.vue'
 import { Vue, Component } from 'vue-property-decorator'
 
 const MAX_ITEMS = 10
 
 @Component({
   components: {
-    AppChart
+    Chart
   }
 })
 export default class ChartLiveTransactions extends Vue {
@@ -33,7 +33,12 @@ export default class ChartLiveTransactions extends Vue {
     pTxs: []
   }
 
-  // Lifecycle
+  /*
+  ===================================================================================
+    Lifecycle
+  ===================================================================================
+  */
+
   created() {
     this.fillChartData(this.$store.getters.blockMetrics.items().slice(0, MAX_ITEMS))
   }
@@ -49,7 +54,12 @@ export default class ChartLiveTransactions extends Vue {
     this.$eventHub.$off(Events.NEW_BLOCK_METRIC)
   }
 
-  // Methods
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
   fillChartData(bms: BlockMetrics[] | BlockMetrics = []) {
     bms = !Array.isArray(bms) ? [bms] : bms
     bms.forEach(bm => {
@@ -66,7 +76,12 @@ export default class ChartLiveTransactions extends Vue {
     })
   }
 
-  // Computed
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
+
   get chartData() {
     return {
       labels: this.data.labels,

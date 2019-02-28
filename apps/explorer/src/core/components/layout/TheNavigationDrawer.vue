@@ -133,7 +133,12 @@ export default class TheNavigationDrawer extends Vue {
     }
   }
 
-  // Methods
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
   getCurrPath(): string {
     let currPath = ''
     if (this.$route.name) {
