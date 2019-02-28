@@ -12,11 +12,23 @@ export default class Blockies extends Vue {
   @Prop({ type: String, default: '50px' }) width!: string
   @Prop({ type: String, default: '50px' }) height!: string
 
+  /*
+  ===================================================================================
+    Lifecycle
+  ===================================================================================
+  */
+
   mounted() {
     if (this.address) {
       this.setBlockie()
     }
   }
+
+  /*
+  ===================================================================================
+    Watch Events
+  ===================================================================================
+  */
 
   @Watch('address')
   onAddressChanged() {
@@ -33,7 +45,12 @@ export default class Blockies extends Vue {
     this.setBlockie()
   }
 
-  // Methods
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
   setBlockie() {
     const data = createIcon({
       seed: this.address.toLowerCase(),

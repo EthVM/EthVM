@@ -31,7 +31,12 @@ import { Component, Vue } from 'vue-property-decorator'
   }
 })
 export default class PageKnowledgeBase extends Vue {
-  // Computed
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
+
   get crumbs() {
     return [
       {
@@ -40,6 +45,7 @@ export default class PageKnowledgeBase extends Vue {
       }
     ]
   }
+
   get terms() {
     return this.$i18n.t('kb')
   }

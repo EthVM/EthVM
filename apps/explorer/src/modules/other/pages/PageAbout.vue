@@ -12,7 +12,7 @@
             <v-flex xs12>
               <v-layout row wrap justify-start>
                 <v-flex xs12 sm6 md3>
-                  <button href="https://github.com/enKryptIO">
+                  <button href="https://github.com/EthVM">
                     <v-layout justify-start pl-3><v-icon class="primary--text pl-2 fab fa-github" large></v-icon></v-layout>
                     <v-card-title class="title pb-1 ">{{ $t('social.git') }}</v-card-title>
                     <v-card-text class="text-xs-left">{{ $t('about.git') }}</v-card-text>
@@ -63,7 +63,12 @@ import { Component, Vue } from 'vue-property-decorator'
   }
 })
 export default class PageAbout extends Vue {
-  // Computed
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
+
   get crumbs() {
     return [
       {

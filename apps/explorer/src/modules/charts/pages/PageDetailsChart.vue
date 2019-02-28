@@ -46,7 +46,12 @@ import { ChartTypes } from '@app/modules/charts/helpers'
 export default class PageDetailsChart extends Vue {
   ChartType = ChartTypes
 
-  // Computed
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
+
   get crumbs() {
     return [
       {

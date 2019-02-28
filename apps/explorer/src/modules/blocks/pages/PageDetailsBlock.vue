@@ -130,6 +130,7 @@ export default class PageDetailsBlock extends Vue {
     const end = start + this.max
     this.txsPage = this.txs.slice(start, end)
   }
+
   fetchBlock() {
     const promise = eth.isValidHash(this.blockRef) ? this.$api.getBlock(this.blockRef) : this.$api.getBlockByNumber(Number(this.blockRef))
     promise

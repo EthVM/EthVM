@@ -32,7 +32,12 @@ const MAX_ITEMS = 10
   }
 })
 export default class App extends Vue {
-  // Lifecyle
+  /*
+  ===================================================================================
+    Lifecycle
+  ===================================================================================
+  */
+
   created() {
     // Load initial processing status
     this.$api.getProcessingMetadata('syncing').then(ev => this.$store.commit('NEW_SYNC', ev ? ev.value : true))
@@ -44,13 +49,18 @@ export default class App extends Vue {
     })
   }
 
-  // Computed
+  /*
+  ===================================================================================
+    Computed values
+  ===================================================================================
+  */
+
   get isSyncing() {
     return this.$store.getters.syncing
   }
 
   get appGreet() {
-    return !storePack.get('notFirstTimeVisit') ? true : false
+    return !storePack.get('notFirstTimeVisit')
   }
 }
 </script>

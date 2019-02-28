@@ -58,7 +58,12 @@ export default class TableBlocksRow extends Mixins(StringConcatMixin) {
   @Prop({ type: String, default: 'home' }) pageType!: string
   @Prop(Object) block!: Block | SimpleBlock
 
-  // Methods
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
   hasUncles(block) {
     return block.getUncles().length > 0
   }

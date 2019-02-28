@@ -158,6 +158,7 @@ export default class TableTxs extends Vue {
   get isSyncing() {
     return this.$store.getters.syncing
   }
+
   get hasError(): boolean {
     return this.error !== ''
   }

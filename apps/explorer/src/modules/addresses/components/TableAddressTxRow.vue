@@ -166,7 +166,12 @@ export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
   @Prop({ type: Number, default: 0 }) filter!: number
   @Prop({ type: Boolean, default: false }) type!: boolean
 
-  // Methods
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
   getType(tx): boolean {
     return (
       tx
@@ -175,13 +180,19 @@ export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
         .toUpperCase() === this.account.toUpperCase()
     )
   }
+
   getSign(tx): string {
     return this.getType(tx) ? '-' : '+'
   }
 
   log(tx) {}
 
-  // Computed
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
+
   get text(): string {
     const mesg = [this.$i18n.t('message.txAll'), this.$i18n.t('message.txIn'), this.$i18n.t('message.txOut')]
     const penMesg = [this.$i18n.t('message.txPen'), this.$i18n.t('message.txPenIn'), this.$i18n.t('message.txPenOut')]

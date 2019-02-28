@@ -56,7 +56,12 @@ export class ChartMixin extends Vue {
     { state: 'YEAR', points: [], labels: [] }
   ]
 
-  /* Methods: */
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
   setTitle(_title: string): void {
     this.chartTitle = _title
   }
@@ -87,7 +92,12 @@ export class ChartMixin extends Vue {
     })
   }
 
-  /* Computed: */
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
+
   get chartData() {
     return {
       labels: this.DATA[this.timeFrame].labels,

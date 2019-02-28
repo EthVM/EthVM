@@ -30,6 +30,11 @@ export default class AddressQR extends Vue {
 
   dialog: boolean = false
 
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
   get serialize() {
     return this.address
   }

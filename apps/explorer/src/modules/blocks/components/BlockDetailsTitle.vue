@@ -53,6 +53,12 @@ export default class BlockDetailsTitle extends Vue {
   @Prop(Boolean) mined!: boolean
   @Prop(Array) uncles!: string[]
 
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
+
   get title(): string {
     return this.$i18n.t('title.blockDetail').toString()
   }

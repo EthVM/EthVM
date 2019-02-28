@@ -90,7 +90,12 @@ import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 export default class AddressDetail extends Mixins(StringConcatMixin) {
   @Prop(Object) account: AccountInfo
 
-  /* Computed: */
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
+
   get title(): string {
     const titles = {
       address: this.$i18n.t('title.address'),

@@ -1,5 +1,6 @@
 import { EthvmSocketIoApi } from '@app/core/api'
 import { VueEthvmApi } from '@app/core/plugins'
+import VueSocketIO from '@app/core/plugins/socketio/'
 import router from '@app/core/router'
 import store from '@app/core/store'
 import App from '@app/modules/App.vue'
@@ -9,12 +10,16 @@ import io from 'socket.io-client'
 import VTooltip from 'v-tooltip'
 import Vue from 'vue'
 import VueAxios from 'vue-axios'
-import VueSocketIO from '@app/core/plugins/socketio/'
 import VueTimeago from 'vue-timeago'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 
-// Vue modules configuration
+/*
+  ===================================================================================
+    Vue: Plugins Configuration
+  ===================================================================================
+*/
+
 Vue.use(VTooltip)
 
 Vue.prototype.$eventHub = new Vue()
@@ -61,6 +66,12 @@ Vue.use(Vuetify, {
 
 // See: https://www.npmjs.com/package/vue-axios //
 Vue.use(VueAxios, axios)
+
+/*
+  ===================================================================================
+    Vue: Application Kickstart
+  ===================================================================================
+*/
 
 const v = new Vue({
   el: '#app',

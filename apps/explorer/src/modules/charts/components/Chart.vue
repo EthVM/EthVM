@@ -90,12 +90,18 @@ export default class AppChart extends Vue {
   updateChart = false
   chart = null
 
-  /*LifeCycle: */
+  /*
+  ===================================================================================
+    Lifecycle
+  ===================================================================================
+  */
+
   created() {
     if (!this.liveChart) {
       this.$emit('timeFrame', this.toggleData)
     }
   }
+
   mounted() {
     if (this.data && this.data.datasets && this.data.datasets[0].data.length !== 0) {
       this.createChart()
@@ -108,7 +114,12 @@ export default class AppChart extends Vue {
     }
   }
 
-  /* Watchers: */
+  /*
+  ===================================================================================
+    Watch Events
+  ===================================================================================
+  */
+
   @Watch('data')
   onDataChanged(): void {
     if (this.redraw) {
@@ -129,7 +140,12 @@ export default class AppChart extends Vue {
     this.$emit('timeFrame', newVal)
   }
 
-  /*Methods: */
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
   createChart() {
     this.chart = new ChartJs(this.$refs.chart, {
       type: this.type,
