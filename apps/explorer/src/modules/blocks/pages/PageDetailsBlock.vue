@@ -44,8 +44,7 @@
 </template>
 
 <script lang="ts">
-import { Block, Uncle, Tx, EthValue } from '@app/core/models'
-import { Events } from 'ethvm-common'
+import { Block, Uncle, Tx } from '@app/core/models'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppListDetails from '@app/core/components/ui/AppListDetails.vue'
 import AppListTitle from '@app/core/components/ui/AppListTitle.vue'
@@ -53,10 +52,8 @@ import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import BlockDetailsTitle from '@app/modules/blocks/components/BlockDetailsTitle.vue'
 import { Detail } from '@app/core/components/props'
-import ethUnits from 'ethereumjs-units'
-import Bn from 'bignumber.js'
 import { eth } from '@app/core/helper'
-import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
 const MAX_TXS = 10
 
@@ -367,6 +364,7 @@ export default class PageDetailsBlock extends Vue {
     const end = start + this.max
     return this.txs.slice(start, end)
   }
+
   get formatTime(): string {
     return new Date(this.timestamp).toString()
   }
