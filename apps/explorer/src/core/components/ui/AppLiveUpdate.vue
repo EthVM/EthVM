@@ -1,12 +1,10 @@
 <template>
-
-    <v-btn v-if="update" flat class="update-btn " @click="refresh">
-    <v-layout align-center justify-start row fill-height>
-      <v-card-title class="text-lowercase font-weight-regular">{{formatStr(newTxs.toString())}} {{$t('message.updateTxs')}}</v-card-title>
+    <v-btn v-if="update" block flat class="update-btn" @click="refresh">
+    <v-layout align-center justify-center row wrap fill-height>
+      <p class="text-lowercase font-weight-regular pr-2 mb-0">{{formatStr(newTxs.toString())}} {{$t('message.updateTxs')}}</p>
       <v-icon class="secondary--text" small > fas fa-sync-alt</v-icon>
     </v-layout>
     </v-btn>
-
 </template>
 
 <script lang="ts">
@@ -18,8 +16,8 @@ import { StringConcatMixin } from '@app/core/components/mixins'
 export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
 
   lastBlock: string =  null
-  update = true
-  newTxs = 0
+  update = false
+  newTxs = 1000000
   /*
   ===================================================================================
     Lifecycle
@@ -46,9 +44,11 @@ export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
   */
 
   process(block: BlockMetrics):void {
-    this.update = true
-    this.lastBlock = block.number
-    this.newTxs += block.totalTxs
+    if(this.lastBlock != block.number) {
+      this.update = true
+      this.lastBlock = block.number
+      this.newTxs += block.totalTxs
+    }
   }
 
   refresh(): void {
@@ -63,5 +63,9 @@ export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
 .update-btn{
    border: solid 1px #ffb647;
    background: #ffe7d6;
+   padding: 2px 2px 2px 2px;
+}
+.wrap-text{
+  word-wrap: break-word;
 }
 </style>

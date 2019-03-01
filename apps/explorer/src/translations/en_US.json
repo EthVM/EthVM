@@ -124,7 +124,7 @@
       "btn": "Onward!"
     },
     "noTokensRopsten": "EthVM is still in testing, so we're currently showing data from the Ropsten ETH testnet. There are no tokens that have actual value on Ropsten testnet, but all mainnet Ethereum token balances will appear here once we go live.",
-    "updateTxs": "new transactions have posted"
+    "updateTxs": "new txs"
   },
   "block": {
     "height": "Height",

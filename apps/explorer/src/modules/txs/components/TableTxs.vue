@@ -5,23 +5,32 @@
       TITLE
     =====================================================================================
     -->
-    <v-layout row wrap align-center pb-1>
-      <v-flex xs4 md5>
-        <v-card-title class="title font-weight-bold">{{ getTitle }}</v-card-title>
+    <v-layout row wrap align-end pb-3>
+      <v-flex xs6 sm7 md6 lg5 xl4 pr-0>
+        <v-layout row>
+          <v-card-title class="title font-weight-bold  pr-1 pb-1">{{ getTitle }}</v-card-title>
+          <v-flex hidden-xs-only pr-0 v-if="pageType == 'tx'">
+            <app-live-update @refreshTable="setPage(0)" />
+          </v-flex>
+        </v-layout>
       </v-flex>
-      <v-spacer />
-      <v-flex xs4 v-if="pageType == 'home'">
+      <v-flex xs6 sm5 md6 lg7 xl8 v-if="pageType == 'home'">
         <v-layout justify-end>
           <v-btn outline color="secondary" class="text-capitalize" to="/txs">{{ $t('bttn.viewAll') }}</v-btn>
         </v-layout>
       </v-flex>
-      <v-flex v-else xs12 sm7 md6>
+      <v-flex v-else xs6 sm5 md6 lg7 xl8>
         <v-layout v-if="pages > 1 && !hasError" justify-end row class="pb-1 pr-2 pl-2">
           <app-paginate v-if="isBlockDetail" :total="pages" @newPage="setPage" :current-page="page" />
           <app-paginate v-else :total="pages" @newPage="setPage" :current-page="page" :has-first="false" :has-last="false" :has-input="false" />
         </v-layout>
       </v-flex>
+      <v-flex xs12 hidden-sm-and-up pt-0 v-if="pageType == 'tx'">
+        <app-live-update @refreshTable="setPage(0)" />
+      </v-flex>
+
     </v-layout>
+
     <!--
     =====================================================================================
       LOADING / ERROR
@@ -116,6 +125,7 @@
 <script lang="ts">
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
+import AppLiveUpdate from '@app/core/components/ui/AppLiveUpdate.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableTxsRow from '@app/modules/txs/components/TableTxsRow.vue'
 import { PendingTx, Tx, SimpleTx } from '@app/core/models'
@@ -125,6 +135,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
   components: {
     AppError,
     AppFootnotes,
+    AppLiveUpdate,
     AppPaginate,
     TableTxsRow
   }
