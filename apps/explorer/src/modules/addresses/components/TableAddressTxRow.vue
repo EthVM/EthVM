@@ -18,12 +18,13 @@
                   BLOCK NUMBER / HASH
 
                   Responsive Tally:
-                  XS: 3/12 (3)
-                  SM: 3/12 (3)
+                  XS: 0/12 (0)
+                  SM: 3/12 (0)
                   MD: 1/12 (1)
+                  LG: 1/12 (1)
               =====================================================================================
               -->
-              <v-flex xs3 sm3 md1 pr-1>
+              <v-flex hidden-sm-and-down md1 pr-1>
                 <router-link class="primary--text text-truncate font-italic psmall" :to="'/block/' + tx.getBlockHash()">{{ tx.getBlockNumber() }}</router-link>
               </v-flex>
               <!--
@@ -31,12 +32,13 @@
                 TRANSACTION # / HASH
 
                 Responsive Tally:
-                XS: 10/12 (7)
-                SM: 9/12 (6)
+                XS: 7/12 (7)
+                SM: 6/12 (6)
                 MD: 7/12 (6)
+                LG: 7/12 (6)
               =====================================================================================
               -->
-              <v-flex d-flex xs7 sm6 md6 pr-3>
+              <v-flex d-flex xs7 sm6 pr-3>
                 <v-layout row wrap align-center pb-1>
                   <v-flex d-flex xs12 pb-2>
                     <router-link class="primary--text text-truncate font-italic psmall" :to="'/tx/' + tx.getHash()">{{ tx.getHash() }}</router-link>
@@ -70,12 +72,13 @@
                 ETH VALUE
 
                 Responsive Tally:
-                XS: 12/12 (2)
-                SM: 11/12 (2)
-                MD: 8/12 (1)
+                XS: 12/12 (5)
+                SM: 8/12 (2)
+                MD: 9/12 (2)
+                LG: 8/12 (1)
               =====================================================================================
               -->
-              <v-flex d-flex xs2 sm2 md1 pr-0>
+              <v-flex d-flex xs5 sm2 lg1 pl-0>
                 <v-layout
                   align-center
                   row
@@ -89,7 +92,9 @@
                     )
                   "
                 >
-                  <p :class="[!getType(tx) ? 'success--text mb-0' : 'error--text mb-0']">{{ getSign(tx) }}{{ getShortValue(tx.getValue().toEth()) }}</p>
+                  <p :class="[!getType(tx) ? 'success--text mb-0 text-truncate' : 'error--text mb-0 text-truncate']">
+                    {{ getSign(tx) }}{{ getShortValue(tx.getValue().toEth()) }}
+                  </p>
                   <v-tooltip bottom>
                     <template #activator="data">
                       <v-icon v-on="data.on" small class="info--text text-xs-center ml-1">fa fa-question-circle</v-icon>
@@ -108,16 +113,17 @@
               </v-flex>
               <!--
               =====================================================================================
-                GAS
+                Age
 
                 Responsive Tally:
                 XS: 12/12 (0)
-                SM: 11/12 (0)
-                MD: 9/12 (1)
+                SM: 11/12 (3)
+                MD: 11/12 (2)
+                LG: 10/12 (2)
               =====================================================================================
               -->
-              <v-flex hidden-sm-and-down md1>
-                <p class="black--text text-truncate mb-0">{{ tx.getGasUsed().toNumber() }}</p>
+              <v-flex hidden-xs-only sm3 md2>
+                <p class="black--text text-truncate mb-0"><timeago :datetime="tx.getTimestamp()" :auto-update="60"></timeago></p>
               </v-flex>
               <!--
               =====================================================================================
@@ -126,11 +132,12 @@
                 Responsive Tally:
                 XS: 12/12 (0)
                 SM: 11/12 (0)
-                MD: 11/12 (2)
+                MD: 11/12 (0)
+                LG: 11/12 (1)
               =====================================================================================
               -->
-              <v-flex hidden-sm-and-down md2>
-                <p class="text-truncate black--text mb-0">{{ tx.getGasPrice().toGWei() }}</p>
+              <v-flex hidden-md-and-down lg1>
+                <p class="text-truncate black--text mb-0">{{ getTxFee(tx) }}</p>
               </v-flex>
               <!--
               =====================================================================================
@@ -140,6 +147,7 @@
                 XS: 12/12 (0)
                 SM: 12/12 (1)
                 MD: 12/12 (1)
+                LG: 12/12 (1)
               =====================================================================================
               -->
               <v-flex hidden-xs-only sm1>
@@ -192,6 +200,10 @@ export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
   }
 
   log(tx) {}
+
+  getTxFee(tx): string {
+    return this.getRoundNumber(tx.getTxCost().toEth())
+  }
 
   /*
   ===================================================================================

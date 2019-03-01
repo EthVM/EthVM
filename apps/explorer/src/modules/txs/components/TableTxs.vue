@@ -33,23 +33,25 @@
       TABLE HEADER
     =====================================================================================
     -->
+
     <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px">
       <v-layout align-center justify-start row fill-height pr-3>
-        <v-flex xs3 sm3 md1 pl-3>
+        <v-flex xs4 sm3 md1 pl-3>
           <h5>{{ $t('tableHeader.blockN') }}</h5>
         </v-flex>
-        <v-flex xs7 sm6 md6>
+        <v-flex xs6 sm6 md6>
           <h5>{{ $t('tableHeader.txN') }}</h5>
         </v-flex>
-        <v-flex xs2 sm2 md1>
+        <v-flex hidden-xs-only sm2 md1>
           <h5>{{ $t('common.eth') }}</h5>
         </v-flex>
-        <v-flex hidden-sm-and-down md1>
-          <h5>{{ $t('gas.limit') }}</h5>
-        </v-flex>
         <v-flex hidden-sm-and-down md2>
-          <h5>{{ $t('common.gwei') }}</h5>
+          <h5>{{ $t('tableHeader.age') }}</h5>
         </v-flex>
+        <v-flex hidden-sm-and-down md1>
+          <h5>{{ $t('tx.cost') }}</h5>
+        </v-flex>
+
         <v-flex hidden-xs-only sm1>
           <h5>{{ $t('common.status') }}</h5>
         </v-flex>
@@ -104,12 +106,14 @@
           </v-flex>
         </v-layout>
       </v-card>
+      <v-layout v-if="$vuetify.breakpoint.xsOnly" justify-center pb-1 pt-1> <app-footnotes :footnotes="footnotes" /> </v-layout>
     </div>
   </v-card>
 </template>
 
 <script lang="ts">
 import AppError from '@app/core/components/ui/AppError.vue'
+import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableTxsRow from '@app/modules/txs/components/TableTxsRow.vue'
 import { PendingTx, Tx, SimpleTx } from '@app/core/models'
@@ -118,6 +122,7 @@ import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 @Component({
   components: {
     AppError,
+    AppFootnotes,
     AppPaginate,
     TableTxsRow
   }
@@ -206,6 +211,21 @@ export default class TableTxs extends Vue {
 
   get pages(): number {
     return this.totalTxs ? Math.ceil(this.totalTxs / this.maxItems) : 0
+  }
+
+  get footnotes() {
+    return [
+      {
+        color: 'txSuccess',
+        text: this.$i18n.t('footnote.success'),
+        icon: 'fa fa-circle'
+      },
+      {
+        color: 'txFail',
+        text: this.$i18n.t('footnote.failed'),
+        icon: 'fa fa-circle'
+      }
+    ]
   }
 }
 </script>
