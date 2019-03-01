@@ -28,7 +28,6 @@
       <v-flex xs12 hidden-sm-and-up pt-0 v-if="pageType == 'tx'">
         <app-live-update @refreshTable="setPage(0)" />
       </v-flex>
-
     </v-layout>
 
     <!--
