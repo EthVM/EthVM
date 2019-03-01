@@ -34,7 +34,6 @@
     =====================================================================================
     -->
 
-
     <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px">
       <v-layout align-center justify-start row fill-height pr-3>
         <v-flex xs4 sm3 md1 pl-3>
@@ -46,7 +45,7 @@
         <v-flex hidden-xs-only sm2 md1>
           <h5>{{ $t('common.eth') }}</h5>
         </v-flex>
-         <v-flex hidden-sm-and-down md2>
+        <v-flex hidden-sm-and-down md2>
           <h5>{{ $t('tableHeader.age') }}</h5>
         </v-flex>
         <v-flex hidden-sm-and-down md1>

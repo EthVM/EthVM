@@ -65,13 +65,11 @@
       =====================================================================================
       -->
       <v-flex d-flex xs12 sm2 md1 pr-0>
-        <p v-if="$vuetify.breakpoint.xsOnly" :class="[tx.getStatus() ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">{{$t('tx.amount')}}: {{ getRoundNumber(
-              tx
-                .getValue()
-                .toEth()
-            )
-          }}</p>
-        <p v-else :class="[tx.getStatus() ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">{{
+        <p v-if="$vuetify.breakpoint.xsOnly" :class="[tx.getStatus() ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">
+          {{ $t('tx.amount') }}: {{ getRoundNumber(tx.getValue().toEth()) }}
+        </p>
+        <p v-else :class="[tx.getStatus() ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">
+          {{
             getShortValue(
               tx
                 .getValue()
@@ -85,7 +83,6 @@
             </template>
             <span>{{ tx.getValue().toEth() }}</span>
           </v-tooltip>
-
         </p>
       </v-flex>
       <!--
@@ -99,7 +96,7 @@
       =====================================================================================
       -->
       <v-flex hidden-sm-and-down md2>
-        <p class="text-truncate black--text mb-0"><timeago :datetime="tx.getTimestamp()" :auto-update="60"/></p>
+        <p class="text-truncate black--text mb-0"><timeago :datetime="tx.getTimestamp()" :auto-update="60" /></p>
       </v-flex>
       <!--
       =====================================================================================
@@ -149,7 +146,7 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
   @Prop(Object) tx!: Tx | SimpleTx
   @Prop({ type: Boolean, default: false }) isPending
 
-    /*
+  /*
   ===================================================================================
     Methods
   ===================================================================================
