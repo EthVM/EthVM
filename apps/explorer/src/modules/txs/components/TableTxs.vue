@@ -35,13 +35,13 @@
     -->
     <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px">
       <v-layout align-center justify-start row fill-height pr-3>
-        <v-flex xs3 sm3 md1 pl-3>
+        <v-flex xs4 sm3 md1 pl-3>
           <h5>{{ $t('tableHeader.blockN') }}</h5>
         </v-flex>
-        <v-flex xs7 sm6 md6>
+        <v-flex xs6 sm6 md6>
           <h5>{{ $t('tableHeader.txN') }}</h5>
         </v-flex>
-        <v-flex xs2 sm2 md1>
+        <v-flex hidden-xs-only sm2 md1>
           <h5>{{ $t('common.eth') }}</h5>
         </v-flex>
          <v-flex hidden-sm-and-down md2>

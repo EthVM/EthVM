@@ -11,7 +11,7 @@
           MD: 1/12 (1)
       =====================================================================================
       -->
-      <v-flex xs3 sm3 md1 pr-1>
+      <v-flex xs4 sm3 md1 pr-1>
         <router-link class="primary--text text-truncate font-italic psmall" :to="'/block/' + tx.getBlockHash()">{{ tx.getBlockNumber() }}</router-link>
       </v-flex>
       <!--
@@ -24,7 +24,7 @@
         MD: 7/12 (6)
       =====================================================================================
       -->
-      <v-flex d-flex xs7 sm6 md6 pr-3>
+      <v-flex d-flex xs8 sm6 md6 pr-3>
         <v-layout row wrap align-center pb-1>
           <v-flex d-flex xs12 pb-2>
             <router-link class="primary--text text-truncate font-italic psmall" :to="'/tx/' + tx.getHash()">{{ tx.getHash() }}</router-link>
@@ -64,16 +64,14 @@
         MD: 8/12 (1)
       =====================================================================================
       -->
-      <v-flex d-flex xs2 sm2 md1 pr-0>
-        <p v-if="$vuetify.breakpoint.xsOnly" class="text-truncate info--text">Amount:</p>
-        <p :class="[tx.getStatus() ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">
-          <v-tooltip v-if="isShortValue(tx.getValue().toEth())" bottom>
-            <template #activator="data">
-              <v-icon v-on="data.on" dark small>fa fa-question-circle info--text</v-icon>
-            </template>
-            <span>{{ tx.getValue().toEth() }}</span>
-          </v-tooltip>
-          {{
+      <v-flex d-flex xs12 sm2 md1 pr-0>
+        <p v-if="$vuetify.breakpoint.xsOnly" :class="[tx.getStatus() ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">{{$t('tx.amount')}}: {{ getRoundNumber(
+              tx
+                .getValue()
+                .toEth()
+            )
+          }}</p>
+        <p v-else :class="[tx.getStatus() ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">{{
             getShortValue(
               tx
                 .getValue()
@@ -81,6 +79,13 @@
                 .toString()
             )
           }}
+          <v-tooltip v-if="isShortValue(tx.getValue().toEth())" bottom>
+            <template #activator="data">
+              <v-icon v-on="data.on" dark small>fa fa-question-circle info--text</v-icon>
+            </template>
+            <span>{{ tx.getValue().toEth() }}</span>
+          </v-tooltip>
+
         </p>
       </v-flex>
       <!--
