@@ -26,16 +26,29 @@ import _debounce from 'lodash.debounce'
 
 @Component
 export default class AppPaginate extends Vue {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop(Number) total!: number
   @Prop(Number) currentPage!: number
   @Prop({ type: Boolean, default: true }) hasFirst!: boolean
   @Prop({ type: Boolean, default: true }) hasLast!: boolean
   @Prop({ type: Boolean, default: true }) hasInput!: boolean
 
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
+
   validClass = 'center-input body-1 secondary--text'
   invalidClass = 'center-input body-1 error--text'
   isError = false
   pageDisplayUpdateTimeout = null // Timeout object to update page with override of pageDisplay input model
+
   /*
   ===================================================================================
     Methods
