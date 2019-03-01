@@ -17,7 +17,8 @@
       </v-flex>
       <v-flex v-else xs12 sm7 md6>
         <v-layout v-if="pages > 1 && !hasError" justify-end row class="pb-1 pr-2 pl-2">
-          <app-paginate :total="pages" @newPage="setPage" :current-page="page" :has-first="false" :has-last="false" :has-input="false" />
+          <app-paginate v-if="isBlockDetail" :total="pages" @newPage="setPage" :current-page="page" />
+          <app-paginate v-else :total="pages" @newPage="setPage" :current-page="page" :has-first="false" :has-last="false" :has-input="false" />
         </v-layout>
       </v-flex>
     </v-layout>
@@ -76,7 +77,8 @@
               <v-divider class="mb-2 mt-2" />
             </v-card>
             <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2">
-              <app-paginate :total="pages" @newPage="setPage" :current-page="page" :has-input="false" :has-first="false" :has-last="false" />
+              <app-paginate v-if="isBlockDetail" :total="pages" @newPage="setPage" :current-page="page" />
+              <app-paginate v-else :total="pages" @newPage="setPage" :current-page="page" :has-input="false" :has-first="false" :has-last="false" />
             </v-layout>
           </v-flex>
           <v-flex xs12 v-if="loading">
@@ -117,7 +119,7 @@ import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableTxsRow from '@app/modules/txs/components/TableTxsRow.vue'
 import { PendingTx, Tx, SimpleTx } from '@app/core/models'
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({
   components: {
@@ -134,14 +136,14 @@ export default class TableTxs extends Vue {
   ===================================================================================
   */
 
-  @Prop({ type: Boolean, default: true }) loading: boolean
-  @Prop(String) pageType: string
+  @Prop({ type: Boolean, default: true }) loading!: boolean
+  @Prop(String) pageType!: string
   @Prop(String) showStyle!: string
   @Prop(Array) transactions!: Tx[] | PendingTx[] | SimpleTx[]
-  @Prop({ type: Number, default: 0 }) totalTxs: number
+  @Prop({ type: Number, default: 0 }) totalTxs!: number
   @Prop(Number) maxItems!: number
-  @Prop(String) error: string
-  @Prop({ type: Number, default: 0 }) page: number
+  @Prop(String) error!: string
+  @Prop({ type: Number, default: 0 }) page!: number
 
   /*
   ===================================================================================
@@ -207,6 +209,10 @@ export default class TableTxs extends Vue {
 
   get pending(): boolean {
     return this.pageType == 'pending'
+  }
+
+  get isBlockDetail(): boolean {
+    return this.pageType === 'block'
   }
 
   get pages(): number {

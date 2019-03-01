@@ -25,8 +25,8 @@
       <v-flex v-if="txs" xs12>
         <table-txs
           v-if="txs"
-          :transactions="txsPage"
-          :frame-txs="true"
+          :transactions="txsFiltered"
+          :page="txsPage"
           :page-type="listType"
           :loading="isLoading"
           class="mt-3"
@@ -44,8 +44,7 @@
 </template>
 
 <script lang="ts">
-import { Block, Uncle, Tx, EthValue } from '@app/core/models'
-import { Events } from 'ethvm-common'
+import { Block, Uncle, Tx } from '@app/core/models'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppListDetails from '@app/core/components/ui/AppListDetails.vue'
 import AppListTitle from '@app/core/components/ui/AppListTitle.vue'
@@ -53,10 +52,8 @@ import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import BlockDetailsTitle from '@app/modules/blocks/components/BlockDetailsTitle.vue'
 import { Detail } from '@app/core/components/props'
-import ethUnits from 'ethereumjs-units'
-import Bn from 'bignumber.js'
 import { eth } from '@app/core/helper'
-import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
 const MAX_TXS = 10
 
@@ -97,7 +94,7 @@ export default class PageDetailsBlock extends Vue {
 
   txs = []
   totalTxs = 0
-  txsPage = []
+  txsPage = 0
   uncles = []
   details = []
   moreDetails = []
@@ -138,9 +135,7 @@ export default class PageDetailsBlock extends Vue {
   */
 
   setPageTxs(page: number): void {
-    const start = (page - 1) * this.max
-    const end = start + this.max
-    this.txsPage = this.txs.slice(start, end)
+    this.txsPage = page
   }
 
   fetchBlock() {
@@ -167,13 +162,12 @@ export default class PageDetailsBlock extends Vue {
     this.timestamp = block.getTimestamp().toString()
     this.txs = this.block.getTxs()
     this.totalTxs = this.block.getTransactionCount()
-    this.setPageTxs(1)
     this.uncles = this.block.getUncles()
   }
 
   /*
   ===================================================================================
-    Methods
+    Computed
   ===================================================================================
   */
 
@@ -363,6 +357,12 @@ export default class PageDetailsBlock extends Vue {
       return '/block/' + prev
     }
     return ''
+  }
+
+  get txsFiltered(): Tx[] {
+    const start = this.txsPage * this.max
+    const end = start + this.max
+    return this.txs.slice(start, end)
   }
 
   get formatTime(): string {
