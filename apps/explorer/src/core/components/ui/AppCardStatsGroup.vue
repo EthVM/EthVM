@@ -106,7 +106,7 @@ export default class AppInfoCardGroup extends Vue {
 
   startCount() {
     this.secondsInterval = setInterval(() => {
-      this.seconds = Math.ceil((new Date().getTime() - this.blockMetric.timestamp) / 1000)
+      this.seconds = Math.ceil((new Date().getTime() - this.blockMetric.timestamp * 1000) / 1000)
     }, 1000)
   }
 
