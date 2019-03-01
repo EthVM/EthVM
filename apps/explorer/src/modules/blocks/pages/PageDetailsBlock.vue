@@ -174,7 +174,6 @@ export default class PageDetailsBlock extends Vue {
   ===================================================================================
   */
 
-
   get blockDetails(): Detail[] {
     let details
     if (this.isLoading) {
@@ -364,8 +363,6 @@ export default class PageDetailsBlock extends Vue {
   }
 
   get txsFiltered(): Tx[] {
-        console.log("Block", this.txsPage)
-
     const start = this.txsPage * this.max
     const end = start + this.max
     return this.txs.slice(start, end)
