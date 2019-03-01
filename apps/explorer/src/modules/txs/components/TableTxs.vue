@@ -44,12 +44,13 @@
         <v-flex xs2 sm2 md1>
           <h5>{{ $t('common.eth') }}</h5>
         </v-flex>
+         <v-flex hidden-sm-and-down md2>
+          <h5>{{ $t('tableHeader.age') }}</h5>
+        </v-flex>
         <v-flex hidden-sm-and-down md1>
-          <h5>{{ $t('gas.limit') }}</h5>
+          <h5>{{ $t('tx.cost') }}</h5>
         </v-flex>
-        <v-flex hidden-sm-and-down md2>
-          <h5>{{ $t('common.gwei') }}</h5>
-        </v-flex>
+
         <v-flex hidden-xs-only sm1>
           <h5>{{ $t('common.status') }}</h5>
         </v-flex>

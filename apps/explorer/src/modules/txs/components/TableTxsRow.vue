@@ -85,20 +85,7 @@
       </v-flex>
       <!--
       =====================================================================================
-        GAS
-
-        Responsive Tally:
-        XS: 12/12 (0)
-        SM: 11/12 (0)
-        MD: 9/12 (1)
-      =====================================================================================
-      -->
-      <v-flex hidden-sm-and-down md1>
-        <p class="black--text text-truncate mb-0">{{ tx.getGas().toNumber() }}</p>
-      </v-flex>
-      <!--
-      =====================================================================================
-        GWEI
+        Age
 
         Responsive Tally:
         XS: 12/12 (0)
@@ -107,7 +94,20 @@
       =====================================================================================
       -->
       <v-flex hidden-sm-and-down md2>
-        <p class="text-truncate black--text mb-0">{{ tx.getGasPrice().toGWei() }}</p>
+        <p class="text-truncate black--text mb-0"><timeago :datetime="tx.getTimestamp()" :auto-update="60"/></p>
+      </v-flex>
+      <!--
+      =====================================================================================
+        Tx Fee
+
+        Responsive Tally:
+        XS: 12/12 (0)
+        SM: 11/12 (0)
+        MD: 9/12 (1)
+      =====================================================================================
+      -->
+      <v-flex hidden-sm-and-down md1>
+        <p class="black--text text-truncate mb-0">{{ getTxFee(tx) }}</p>
       </v-flex>
       <!--
       =====================================================================================
@@ -130,7 +130,7 @@
 
 <script lang="ts">
 import { StringConcatMixin } from '@app/core/components/mixins'
-import { Tx, SimpleTx } from '@app/core/models'
+import { Tx, SimpleTx, EthValue } from '@app/core/models'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 
 @Component
@@ -143,5 +143,15 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
 
   @Prop(Object) tx!: Tx | SimpleTx
   @Prop({ type: Boolean, default: false }) isPending
+
+    /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
+  getTxFee(_tx): string {
+    return this.getRoundNumber(new EthValue(_tx.getGasPrice() * _tx.getGasUsed()).toEth())
+  }
 }
 </script>
