@@ -45,7 +45,8 @@ const indexes = {
     {key: {from: 1}},
     {key: {to: 1}},
     {key: {timestamp: 1}},
-    {key: {index: 1}}
+    {key: {index: 1}},
+    {key: { blockNumber: -1, index: -1, timestamp: -1 }}
   ]
 
 };
