@@ -166,7 +166,6 @@
 <script lang="ts">
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import { StringConcatMixin } from '@app/core/components/mixins'
-import { EthValue } from '@app/core/models'
 
 @Component
 export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
@@ -203,7 +202,7 @@ export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
   log(tx) {}
 
   getTxFee(tx): string {
-    return this.getRoundNumber(new EthValue(tx.getGasPrice() * tx.getGasUsed()).toEth())
+    return this.getRoundNumber(tx.getTxCost().toEth())
   }
 
   /*
