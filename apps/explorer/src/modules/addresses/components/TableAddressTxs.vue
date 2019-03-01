@@ -1,5 +1,5 @@
 <template>
-  <v-card color="white" flat class="pr-2 pl-2">
+  <v-card color="white" flat class="pr-2 pl-2 pt-3">
     <!--
     =====================================================================================
       LOADING / ERROR
@@ -47,20 +47,20 @@
       <!-- Table Header -->
       <v-card color="primary" flat class="white--text pl-3 pr-1" height="40px">
         <v-layout align-center justify-start row fill-height pr-3>
-          <v-flex xs3 sm3 md1 pl-3>
+          <v-flex hidden-sm-and-down md1 pl-3>
             <h5>{{ $t('tableHeader.blockN') }}</h5>
           </v-flex>
           <v-flex xs7 sm6 md6>
             <h5>{{ $t('tableHeader.txN') }}</h5>
           </v-flex>
-          <v-flex xs2 sm2 md1>
+          <v-flex xs5 sm2 md2 lg1 pl-0>
             <h5>{{ $t('common.eth') }}</h5>
           </v-flex>
-          <v-flex hidden-sm-and-down md1>
-            <h5>{{ $t('gas.limit') }}</h5>
+          <v-flex hidden-xs-only sm3 md2>
+            <h5>{{ $t('tableHeader.age') }}</h5>
           </v-flex>
-          <v-flex hidden-sm-and-down md2>
-            <h5>{{ $t('common.gwei') }}</h5>
+          <v-flex  hidden-md-and-down lg1>
+            <h5>{{$t('tx.cost') }}</h5>
           </v-flex>
           <v-flex hidden-xs-only sm1>
             <h5>{{ $t('common.status') }}</h5>

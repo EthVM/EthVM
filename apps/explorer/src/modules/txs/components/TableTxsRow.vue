@@ -1,6 +1,6 @@
 <template>
   <v-container pa-0 ma-0>
-    <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
+    <v-layout v-if="txs" grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
       <!--
       =====================================================================================
           BLOCK NUMBER / HASH
@@ -66,7 +66,7 @@
       -->
       <v-flex d-flex xs2 sm2 md1 pr-0>
         <p v-if="$vuetify.breakpoint.xsOnly" class="text-truncate info--text">Amount:</p>
-        <p :class="[tx.getStatus() ? 'txSuccess--text' : 'txFail--text']">
+        <p :class="[tx.getStatus() ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">
           <v-tooltip v-if="isShortValue(tx.getValue().toEth())" bottom>
             <template #activator="data">
               <v-icon v-on="data.on" dark small>fa fa-question-circle info--text</v-icon>
@@ -143,5 +143,10 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
 
   @Prop(Object) tx!: Tx | SimpleTx
   @Prop({ type: Boolean, default: false }) isPending
+
+  get txs(){
+    console.log(this.tx)
+    return true
+  }
 }
 </script>

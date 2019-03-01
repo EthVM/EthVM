@@ -188,7 +188,8 @@
   "gas": {
     "limit": "Gas Limit",
     "used": "Gas Used",
-    "price": "Gas Price"
+    "price": "Gas Price",
+    "fee": "Gas Fee"
   },
   "smlBlock": {
     "last": "Last Block #",
