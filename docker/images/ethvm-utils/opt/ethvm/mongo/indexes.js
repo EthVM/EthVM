@@ -15,8 +15,8 @@ const indexes = {
 
   aggregate_block_metrics: [
     {key: {name: 1}},
-    {key: {date: 1}},
-    {key: {date: 1, name: 1}, options: {unique: true}}
+    {key: {date: -1}},
+    {key: {date: -1, name: 1}, options: {unique: true}}
   ],
 
   contracts: [
