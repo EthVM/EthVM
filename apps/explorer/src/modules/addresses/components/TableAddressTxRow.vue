@@ -1,12 +1,12 @@
 <template>
   <v-card color="white" flat class="pt-0 pb-2">
-    <v-card  flat v-if="isSyncing && type">
+    <v-card flat v-if="isSyncing && type">
       <v-layout row align-center justify-center fill-height>
         <v-card-title class="text-xs-center pt-5 pb-5">{{ $t('message.syncPendingTxs') }}</v-card-title>
       </v-layout>
     </v-card>
     <v-card v-else flat id="scroll-target" class=" pt-0 pb-0">
-      <v-layout v-if="check" column fill-height class="pt-1" style="margin-right: 1px">
+      <v-layout column fill-height class="pt-1" style="margin-right: 1px">
         <v-flex xs12>
           <v-card v-if="transactions.length == 0" flat>
             <v-card-text class="text-xs-center secondary--text">{{ text }}</v-card-text>
@@ -38,7 +38,7 @@
                 LG: 7/12 (6)
               =====================================================================================
               -->
-              <v-flex d-flex xs7 sm6  pr-3>
+              <v-flex d-flex xs7 sm6 pr-3>
                 <v-layout row wrap align-center pb-1>
                   <v-flex d-flex xs12 pb-2>
                     <router-link class="primary--text text-truncate font-italic psmall" :to="'/tx/' + tx.getHash()">{{ tx.getHash() }}</router-link>
@@ -92,7 +92,9 @@
                     )
                   "
                 >
-                  <p :class="[!getType(tx) ? 'success--text mb-0 text-truncate' : 'error--text mb-0 text-truncate']">{{ getSign(tx) }}{{ getShortValue(tx.getValue().toEth()) }}</p>
+                  <p :class="[!getType(tx) ? 'success--text mb-0 text-truncate' : 'error--text mb-0 text-truncate']">
+                    {{ getSign(tx) }}{{ getShortValue(tx.getValue().toEth()) }}
+                  </p>
                   <v-tooltip bottom>
                     <template #activator="data">
                       <v-icon v-on="data.on" small class="info--text text-xs-center ml-1">fa fa-question-circle</v-icon>
@@ -200,9 +202,8 @@ export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
 
   log(tx) {}
 
-  getTxFee(tx):string {
-
-    return this.getRoundNumber(new EthValue(tx.getGasPrice()*tx.getGasUsed()).toEth())
+  getTxFee(tx): string {
+    return this.getRoundNumber(new EthValue(tx.getGasPrice() * tx.getGasUsed()).toEth())
   }
 
   /*
@@ -224,13 +225,5 @@ export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
   get isSyncing() {
     return this.$store.getters.syncing
   }
-
-  get check() {
-    console.log(this.transactions)
-    return true
-  }
-
-
-
 }
 </script>

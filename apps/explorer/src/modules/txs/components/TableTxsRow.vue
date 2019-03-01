@@ -1,6 +1,6 @@
 <template>
   <v-container pa-0 ma-0>
-    <v-layout v-if="txs" grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
+    <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
       <!--
       =====================================================================================
           BLOCK NUMBER / HASH
@@ -143,10 +143,5 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
 
   @Prop(Object) tx!: Tx | SimpleTx
   @Prop({ type: Boolean, default: false }) isPending
-
-  get txs(){
-    console.log(this.tx)
-    return true
-  }
 }
 </script>

@@ -59,8 +59,8 @@
           <v-flex hidden-xs-only sm3 md2>
             <h5>{{ $t('tableHeader.age') }}</h5>
           </v-flex>
-          <v-flex  hidden-md-and-down lg1>
-            <h5>{{$t('tx.cost') }}</h5>
+          <v-flex hidden-md-and-down lg1>
+            <h5>{{ $t('tx.cost') }}</h5>
           </v-flex>
           <v-flex hidden-xs-only sm1>
             <h5>{{ $t('common.status') }}</h5>
