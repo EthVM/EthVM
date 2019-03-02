@@ -36,8 +36,6 @@ export interface SocketEvent {
   onEvent: (server: EthVMServer, socket: SocketIO.Socket, payload?: SocketEventPayload) => Promise<SocketEventResponse>
 }
 
-const n = 143765
-
 export class EthVMServer {
   public io: SocketIO.Server
 
@@ -94,24 +92,6 @@ export class EthVMServer {
 
     logger.debug('EthVMServer - start() / Starting to listen socket events on SocketIO')
     this.io.on('connection', (socket: SocketIO.Socket): void => this.registerSocketEventsOnConnection(socket))
-
-    // TODO: Remove once everything related to realtime events is properly checked
-    // setInterval(async () => {
-    //   console.log('New fake block!')
-    //   const block: any = await this.blockService.getBlockByNumber(143765)
-    //   n += 1
-    //   block.header.number = n
-    //   this.onBlockEvent({ op: 'insert', key: '', value: block})
-
-    //   console.log('New fake txs!')
-    //   const sBlock = toSimpleBlock(block)
-    //   sBlock.transactions.forEach(tx => this.onSimpleTxEvent(tx))
-
-    //   console.log('New fake block metric!')
-    //   const bm: any = await this.blockMetricsService.getBlockMetric(block.header.hash)
-    //   bm.number = String(n)
-    //   this.onBlockMetricsEvent({ op: 'insert', key: '', value: bm})
-    // }, 5000)
   }
 
   public async stop() {
