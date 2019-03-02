@@ -3,6 +3,9 @@ package io.enkrypt.kafka.connect.sources.web3
 import io.enkrypt.kafka.connect.sources.web3.ParitySourceConnector.Config.SCHEMA_REGISTRY_URL_CONFIG
 import io.enkrypt.kafka.connect.sources.web3.ParitySourceConnector.Config.SCHEMA_REGISTRY_URL_DEFAULT
 import io.enkrypt.kafka.connect.sources.web3.ParitySourceConnector.Config.SCHEMA_REGISTRY_URL_DOC
+import io.enkrypt.kafka.connect.sources.web3.ParitySourceConnector.Config.START_BLOCK_CONFIG
+import io.enkrypt.kafka.connect.sources.web3.ParitySourceConnector.Config.START_BLOCK_DEFAULT
+import io.enkrypt.kafka.connect.sources.web3.ParitySourceConnector.Config.START_BLOCK_DOC
 import io.enkrypt.kafka.connect.sources.web3.ParitySourceConnector.Config.TOPIC_BLOCKS_CONFIG
 import io.enkrypt.kafka.connect.sources.web3.ParitySourceConnector.Config.TOPIC_BLOCKS_DEFAULT
 import io.enkrypt.kafka.connect.sources.web3.ParitySourceConnector.Config.TOPIC_BLOCKS_DOC
@@ -39,6 +42,7 @@ class ParitySourceConnector : SourceConnector() {
     define(WS_URL_CONFIG, ConfigDef.Type.STRING, WS_URL_DEFAULT, ConfigDef.Importance.HIGH, WS_URL_DOC)
     define(TOPIC_BLOCKS_CONFIG, ConfigDef.Type.STRING, TOPIC_BLOCKS_DEFAULT, ConfigDef.Importance.HIGH, TOPIC_BLOCKS_DOC)
     define(SCHEMA_REGISTRY_URL_CONFIG, ConfigDef.Type.STRING, SCHEMA_REGISTRY_URL_DEFAULT, ConfigDef.Importance.HIGH, SCHEMA_REGISTRY_URL_DOC)
+    define(START_BLOCK_CONFIG, ConfigDef.Type.INT, START_BLOCK_DEFAULT, ConfigDef.Importance.LOW, START_BLOCK_DOC)
   }
 
   object Config {
@@ -55,11 +59,17 @@ class ParitySourceConnector : SourceConnector() {
     const val SCHEMA_REGISTRY_URL_DEFAULT = "http://kafka-schema-registry:8081"
     const val SCHEMA_REGISTRY_URL_DOC = "The url of the of the kafka schema registry"
 
+    const val START_BLOCK_CONFIG = "sync.startBlock"
+    const val START_BLOCK_DEFAULT = 0
+    const val START_BLOCK_DOC = "Specifies the starting block number from which to sync"
+
     fun name(props: MutableMap<String, String>) = props["name"]!!
 
     fun wsUrl(props: MutableMap<String, String>) = props.getOrDefault(WS_URL_CONFIG, WS_URL_DEFAULT)
 
     fun blocksTopic(props: MutableMap<String, String>) = props.getOrDefault(TOPIC_BLOCKS_CONFIG, TOPIC_BLOCKS_DEFAULT)
+
+    fun startBlockNumber(props: MutableMap<String, String>) = props.getOrDefault(START_BLOCK_CONFIG, START_BLOCK_DEFAULT.toString()).toBigInteger()
 
     fun schemaRegistryUrl(props: MutableMap<String, String>) =
       props.getOrDefault(SCHEMA_REGISTRY_URL_CONFIG, SCHEMA_REGISTRY_URL_DEFAULT)

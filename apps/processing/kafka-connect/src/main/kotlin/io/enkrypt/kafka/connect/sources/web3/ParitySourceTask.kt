@@ -17,13 +17,13 @@ import java.net.ConnectException
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 
-// @Alpha - Not ready for prime time
 class ParitySourceTask : SourceTask() {
 
   private val logger = KotlinLogging.logger {}
 
   private lateinit var wsUrl: String
   private lateinit var blocksTopic: String
+  private lateinit var startBlockNumber: BigInteger
 
   private lateinit var avroData: AvroData
 
@@ -38,18 +38,21 @@ class ParitySourceTask : SourceTask() {
   @Volatile
   private var blockSyncManager: ParityBlockSyncManager? = null
 
-  private var blockNumberOffset: BigInteger? = null
+  private lateinit var blockNumberOffset: BigInteger
 
   override fun version(): String = Versions.CURRENT
 
   override fun start(props: MutableMap<String, String>) {
 
     blocksTopic = ParitySourceConnector.Config.blocksTopic(props)
+    startBlockNumber = ParitySourceConnector.Config.startBlockNumber(props)
 
     avroData = AvroData(10)
 
     blockKeyConnectSchema = avroData.toConnectSchema(BlockKeyRecord.`SCHEMA$`)
     blockValueConnectSchema = avroData.toConnectSchema(BlockRecord.`SCHEMA$`)
+
+    logger.info { "Start block number: $startBlockNumber" }
 
     wsUrl = ParitySourceConnector.Config.wsUrl(props)
   }
@@ -79,7 +82,8 @@ class ParitySourceTask : SourceTask() {
 
       parity = JsonRpc2_0ParityExtended(wsService)
 
-      blockNumberOffset = blockNumberOffset()
+      val blockNumberOffset = blockNumberOffset()
+      this.blockNumberOffset = blockNumberOffset
 
       blockSyncManager = ParityBlockSyncManager(parity!!, blockNumberOffset)
 
@@ -107,22 +111,22 @@ class ParitySourceTask : SourceTask() {
     throw RetriableException(ex)
   }
 
-  private fun blockNumberOffset(): BigInteger? {
+  private fun blockNumberOffset(): BigInteger {
 
     val sourcePartition = context
       .offsetStorageReader()
-      .offset(mapOf("wsUrl" to wsUrl)) ?: return null
+      .offset(mapOf("wsUrl" to wsUrl)) ?: return startBlockNumber
 
     val number = sourcePartition["number"]
 
     return when (number) {
-      null -> null
+      null -> startBlockNumber
       is Long -> {
 
         // we deduct some blocks in case a fork happened whilst the connector was offline
 
         val numberMinusForkProtection = number - 1024
-        if (numberMinusForkProtection < 0) null else number.toBigInteger()
+        if (numberMinusForkProtection < 0) BigInteger.ZERO else number.toBigInteger()
       }
       else -> throw IllegalStateException("Unexpected value returned: $number")
     }
@@ -153,12 +157,6 @@ class ParitySourceTask : SourceTask() {
       val sourceRecords = blockRecords
         .map { record ->
 
-          // we track the sequence of record numbers to identify any gap in retrieval
-          val number = record.getHeader().getNumber().unsignedBigInteger()
-          val expectedNumber = (blockNumberOffset ?: BigInteger.ONE.negate()) + BigInteger.ONE
-
-          require(number == expectedNumber) { "Sequence gap detected. Expected $expectedNumber, received $number" }
-
           val key = avroData.toConnectData(
             BlockKeyRecord.`SCHEMA$`,
             BlockKeyRecord.newBuilder()
@@ -170,8 +168,6 @@ class ParitySourceTask : SourceTask() {
           val offset = mapOf("number" to record.getHeader().getNumber().unsignedBigInteger()!!.longValueExact())
 
           val value = avroData.toConnectData(BlockRecord.`SCHEMA$`, record).value()
-
-          blockNumberOffset = number
 
           SourceRecord(source, offset, blocksTopic, blockKeyConnectSchema, key, blockValueConnectSchema, value)
         }
