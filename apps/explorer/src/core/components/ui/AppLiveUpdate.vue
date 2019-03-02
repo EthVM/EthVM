@@ -1,7 +1,7 @@
 <template>
   <v-btn v-if="update" block flat class="update-btn" @click="refresh">
     <v-layout align-center justify-center row wrap fill-height>
-      <p class="text-lowercase font-weight-regular pr-2 mb-0"> {{ text }}</p>
+      <p class="text-lowercase font-weight-regular pr-2 mb-0">{{ text }}</p>
       <v-icon class="secondary--text" small> fas fa-sync-alt</v-icon>
     </v-layout>
   </v-btn>
@@ -16,7 +16,7 @@ import { StringConcatMixin } from '@app/core/components/mixins'
 export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
   @Prop(String) pageType!: string
 
-   /*
+  /*
   ===================================================================================
     Initial Data
   ===================================================================================
@@ -36,7 +36,6 @@ export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
   mounted() {
     this.$eventHub.$on(Events.NEW_BLOCK_METRIC, _ => {
       const newBlock = this.$store.getters.blockMetrics.top()
-      console.log(newBlock)
       if (newBlock) {
         !this.lastBlock ? (this.lastBlock = newBlock.number) : this.process(newBlock)
       }
@@ -47,7 +46,7 @@ export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
     this.$eventHub.$off([Events.NEW_BLOCK_METRIC])
   }
 
-   /*
+  /*
   ===================================================================================
     Computed
   ===================================================================================
@@ -61,10 +60,10 @@ export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
   }
 
   get text(): string {
-    return this.formatStr(this.newNumber)+' '+this.messages[this.pageType]
+    return this.formatStr(this.newNumber) + ' ' + this.messages[this.pageType]
   }
   get newNumber(): string {
-    return this.pageType === 'blocks'?  this.newBlocks.toString() : this.newTxs.toString()
+    return this.pageType === 'blocks' ? this.newBlocks.toString() : this.newTxs.toString()
   }
 
   /*
@@ -77,19 +76,17 @@ export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
     if (this.lastBlock != block.number) {
       this.update = true
       this.lastBlock = block.number
-      this.newBlocks ++
+      this.newBlocks++
       this.newTxs += block.totalTxs
     }
   }
 
   refresh(): void {
     this.update = false
-    console.log(this.update)
     this.newTxs = 0
     this.newBlocks = 0
     this.$emit('refreshTable')
   }
-
 }
 </script>
 

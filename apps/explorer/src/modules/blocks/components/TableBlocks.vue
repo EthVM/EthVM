@@ -8,9 +8,9 @@
     <v-layout v-if="pageType != 'home'" align-end justify-space-between row wrap fill-height pb-1>
       <v-flex xs12 sm5 md4 class="title-live" pb-0>
         <v-layout align-end justify-start row fill-height>
-            <v-card-title class="title font-weight-bold ">{{ getTitle }}</v-card-title>
-          <v-flex v-if="pageType == 'blocks'" >
-            <app-live-update @refreshTable="setPage(0)" :page-type="pageType"/>
+          <v-card-title class="title font-weight-bold ">{{ getTitle }}</v-card-title>
+          <v-flex v-if="pageType == 'blocks'">
+            <app-live-update @refreshTable="setPage(0)" :page-type="pageType" />
           </v-flex>
         </v-layout>
       </v-flex>
@@ -218,5 +218,4 @@ export default class TableBlocks extends Vue {
 .title-live{
   min-height:60px;
 }
-
 </style>
