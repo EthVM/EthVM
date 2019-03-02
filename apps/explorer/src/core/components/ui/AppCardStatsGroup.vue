@@ -43,7 +43,6 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
   }
 })
 export default class AppInfoCardGroup extends Vue {
-
   /*
   ===================================================================================
     Props
@@ -104,14 +103,15 @@ export default class AppInfoCardGroup extends Vue {
   }
 
   getAvgHashRate(bms: BlockMetrics[] = []) {
-    let avg = new BN(0)
     if (!bms || bms.length === 0) {
-      return avg.toNumber()
+      return new BN(0).toNumber()
     }
 
-    bms.forEach(bm => (avg = avg.plus(new BN(bm.blockTime))))
+    const avg = bms
+      .map(bm => new BN(bm.blockTime))
+      .reduceRight((acc, v) => acc.plus(v), new BN(0))
+      .dividedBy(bms.length)
 
-    avg = avg.dividedBy(bms.length)
     if (avg.isZero) {
       return avg.toNumber()
     }
@@ -121,10 +121,6 @@ export default class AppInfoCardGroup extends Vue {
       .dividedBy(avg)
       .dividedBy('1e12')
       .toNumber()
-  }
-
-  getTHs(num: string): number {
-    return new BN(num).dividedBy('1e12').toNumber()
   }
 
   startCount() {
@@ -169,9 +165,11 @@ export default class AppInfoCardGroup extends Vue {
 
   get latestDifficulty(): string {
     if (!this.loading) {
-      const difficulty = this.blockMetric.difficulty
-      const ths = this.getTHs(difficulty)
-      return this.getRoundNumber(ths).toString()
+      const { difficulty } = this.blockMetric
+      return new BN(difficulty)
+        .dividedBy('1e12')
+        .decimalPlaces(4)
+        .toString()
     }
     return this.loadingMessage
   }
