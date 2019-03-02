@@ -48,6 +48,12 @@ import { Component, Vue, Watch } from 'vue-property-decorator'
 
 @Component
 export default class AppSearch extends Vue {
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
+
   searchInput = ''
   phText = 'default'
   isValid = true

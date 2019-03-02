@@ -58,15 +58,32 @@ import { BlockDetailsTitle } from '@app/core/components/props'
 
 @Component
 export default class AppListTitle extends Vue {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop(String) listType!: string
   @Prop(String) nextBlock!: string
   @Prop(String) prevBlock!: string
   @Prop(Boolean) mined!: boolean
   @Prop(Array) uncles!: string[]
 
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
+
   dialog = false
 
-  //Computed:
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
+
   get title(): string {
     return this.titles[this.listType] || this.titles[0]
   }

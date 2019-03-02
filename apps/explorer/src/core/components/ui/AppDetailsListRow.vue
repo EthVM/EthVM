@@ -35,7 +35,13 @@ import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
   }
 })
 export default class AppDetailsListRow extends Vue {
-  @Prop(Object) detail: Detail
-  @Prop(Boolean) isLoading: boolean
+  /*
+  ===================================================================================
+    Prop
+  ===================================================================================
+  */
+
+  @Prop(Object) detail!: Detail
+  @Prop(Boolean) isLoading!: boolean
 }
 </script>

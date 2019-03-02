@@ -8,7 +8,19 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component
 export default class AppCopyToClip extends Vue {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop(String) valueToCopy!: string
+
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
 
   copy(): void {
     const status = clipboardCopy(this.valueToCopy)

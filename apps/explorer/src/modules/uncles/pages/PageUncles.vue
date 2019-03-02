@@ -39,6 +39,7 @@ export default class PageUncles extends Vue {
     Initial Data
   ===================================================================================
   */
+
   uncles: Uncle[] = []
   from: number = -1
   page = 0

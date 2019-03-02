@@ -43,14 +43,31 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
   }
 })
 export default class AppInfoCardGroup extends Vue {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop({ type: String, default: 'generic' }) type!: string
+
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
 
   loading: boolean = true
   blockMetric: BlockMetrics = null
   seconds: number = 0
   secondsInterval = null
 
-  // Lifecycle
+  /*
+  ===================================================================================
+    Lifecycle
+  ===================================================================================
+  */
+
   created() {
     const lastBlockMetric = this.$store.getters.blockMetrics.top()
     if (lastBlockMetric) {
@@ -74,21 +91,27 @@ export default class AppInfoCardGroup extends Vue {
     this.$eventHub.$off([Events.NEW_BLOCK_METRIC])
   }
 
-  // Lifecycle
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
   setBlockMetric(bm: BlockMetrics) {
     this.blockMetric = bm
     this.loading = false
   }
 
   getAvgHashRate(bms: BlockMetrics[] = []) {
-    let avg = new BN(0)
     if (!bms || bms.length === 0) {
-      return avg.toNumber()
+      return new BN(0).toNumber()
     }
 
-    bms.forEach(bm => (avg = avg.plus(new BN(bm.blockTime))))
+    const avg = bms
+      .map(bm => new BN(bm.blockTime))
+      .reduceRight((acc, v) => acc.plus(v), new BN(0))
+      .dividedBy(bms.length)
 
-    avg = avg.dividedBy(bms.length)
     if (avg.isZero) {
       return avg.toNumber()
     }
@@ -98,10 +121,6 @@ export default class AppInfoCardGroup extends Vue {
       .dividedBy(avg)
       .dividedBy('1e12')
       .toNumber()
-  }
-
-  getTHs(num: string): number {
-    return new BN(num).dividedBy('1e12').toNumber()
   }
 
   startCount() {
@@ -122,7 +141,12 @@ export default class AppInfoCardGroup extends Vue {
     return this.isShortValue(rawStr) ? rawStr : rawStr.slice(0, 10) + '...'
   }
 
-  // Computed
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
+
   get currentType() {
     return this.type
   }
@@ -141,9 +165,11 @@ export default class AppInfoCardGroup extends Vue {
 
   get latestDifficulty(): string {
     if (!this.loading) {
-      const difficulty = this.blockMetric.difficulty
-      const ths = this.getTHs(difficulty)
-      return this.getRoundNumber(ths).toString()
+      const { difficulty } = this.blockMetric
+      return new BN(difficulty)
+        .dividedBy('1e12')
+        .decimalPlaces(4)
+        .toString()
     }
     return this.loadingMessage
   }

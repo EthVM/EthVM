@@ -21,6 +21,12 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
   }
 })
 export default class HolderDetailsTabs extends Vue {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop(String) addressRef: string
   @Prop(Array) holderTransfers: any
   @Prop(Boolean) isHolderTransfersLoading: boolean

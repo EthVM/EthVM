@@ -15,6 +15,12 @@ import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
   }
 })
 export default class HolderDetailsList extends Vue {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop(String) addressRef: string // Token contract address
   @Prop(Object) contractDetails: any
   @Prop(Object) tokenDetails: any

@@ -69,6 +69,12 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
   }
 })
 export default class AppListDetails extends Vue {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop({ type: Boolean, default: true }) loading!: boolean
 
   @Prop(String) detailsType!: string
@@ -77,15 +83,31 @@ export default class AppListDetails extends Vue {
 
   @Prop({ type: Boolean, default: false }) hideMore!: boolean
 
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
+
   showMore = false
   dialog = false
 
-  //Methods:
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
   setView() {
     this.showMore = !this.showMore
   }
 
-  //Computed:
+  /*
+  ===================================================================================
+    Computed
+  ===================================================================================
+  */
+
   get more() {
     return this.showMore
   }

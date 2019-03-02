@@ -7,7 +7,19 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component
 export default class AppBreadCrumbs extends Vue {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop(String) platform: string
+
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
 
   platforms = {
     facebook: 'fa-facebook-official'
