@@ -30,7 +30,7 @@ const indexes = {
     {key: {contract: 1}},
     {key: {from: 1}},
     {key: {to: 1}},
-    {key: {timestamp: 1}}
+    {key: {timestamp: -1}}
   ],
 
   token_exchange_rates: [
@@ -39,15 +39,24 @@ const indexes = {
     {key: {timestamp: 1}}
   ],
 
+  uncles: [
+    {key: {hash: 1}},
+    {key: {blockNumber: -1, number: -1}}
+  ],
+
   transactions: [
     {key: {blockHash: 1}},
     {key: {blockNumber: 1}},
     {key: {hash: 1}},
     {key: {from: 1}},
     {key: {to: 1}},
-    {key: {timestamp: 1}},
-    {key: {index: 1}},
+    {key: {from: 1, to: 1}},
+    {key: {timestamp: -1}},
     {key: { blockNumber: -1, index: -1, timestamp: -1 }}
+  ],
+
+  statistics: [
+    {key: {date: -1}}
   ]
 
 };
