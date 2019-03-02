@@ -89,7 +89,6 @@ import AppDetailsListRow from '@app/core/components/ui/AppDetailsListRow.vue'
   }
 })
 export default class AppDetailsList extends Vue {
-
   /*
   ===================================================================================
     Props

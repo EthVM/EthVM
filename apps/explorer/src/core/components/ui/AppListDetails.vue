@@ -69,7 +69,6 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
   }
 })
 export default class AppListDetails extends Vue {
-
   /*
   ===================================================================================
     Props
