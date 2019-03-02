@@ -6,10 +6,10 @@
     =====================================================================================
     -->
     <v-layout v-if="pageType != 'home'" align-end justify-space-between row wrap fill-height pb-1>
-      <v-flex xs12 sm5 md3>
-        <v-layout row>
-          <v-card-title class="title font-weight-bold pb-1">{{ getTitle }}</v-card-title>
-          <v-flex v-if="pageType == 'blocks'" p>
+      <v-flex xs12 sm5 md4 class="title-live" pb-0>
+        <v-layout align-end justify-start row fill-height>
+            <v-card-title class="title font-weight-bold ">{{ getTitle }}</v-card-title>
+          <v-flex v-if="pageType == 'blocks'" >
             <app-live-update @refreshTable="setPage(0)" :page-type="pageType"/>
           </v-flex>
         </v-layout>
@@ -18,8 +18,8 @@
       <v-flex hidden-sm-and-down md3>
         <v-layout justify-end pb-1> <app-footnotes :footnotes="footnotes" /> </v-layout>
       </v-flex>
-      <v-flex xs12 sm7 md6 v-if="pages > 1 && !hasError">
-        <v-layout justify-end row class="pb-1 pr-2 pl-2">
+      <v-flex xs12 sm7 md5 v-if="pages > 1 && !hasError">
+        <v-layout justify-end row class="pb-2 pr-2 pl-2">
           <app-paginate
             :total="pages"
             @newPage="setPage"
@@ -213,3 +213,10 @@ export default class TableBlocks extends Vue {
   }
 }
 </script>
+
+<style scoped lang="css">
+.title-live{
+  min-height:60px;
+}
+
+</style>

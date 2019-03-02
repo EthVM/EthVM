@@ -15,10 +15,18 @@ import { StringConcatMixin } from '@app/core/components/mixins'
 @Component
 export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
   @Prop(String) pageType!: string
+
+   /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
+
   lastBlock: string = null
   update = false
   newTxs = 0
   newBlocks = 0
+
   /*
   ===================================================================================
     Lifecycle
@@ -28,6 +36,7 @@ export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
   mounted() {
     this.$eventHub.$on(Events.NEW_BLOCK_METRIC, _ => {
       const newBlock = this.$store.getters.blockMetrics.top()
+      console.log(newBlock)
       if (newBlock) {
         !this.lastBlock ? (this.lastBlock = newBlock.number) : this.process(newBlock)
       }
@@ -75,9 +84,11 @@ export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
 
   refresh(): void {
     this.update = false
+    console.log(this.update)
+    this.newTxs = 0
+    this.newBlocks = 0
     this.$emit('refreshTable')
   }
-
 
 }
 </script>
@@ -87,6 +98,7 @@ export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
    border: solid 1px #ffb647;
    background: #ffe7d6;
    padding: 2px 2px 2px 2px;
+   margin: 0px;
 }
 .wrap-text{
   word-wrap: break-word;
