@@ -52,7 +52,7 @@ export class TxReceipt {
   public getStatus(): boolean {
     if (!this.cache.status) {
       this.cache.status = this.receipt.status
-        ? this.receipt.status === '1'
+        ? this.receipt.status === '01'
         : this.receipt.traces && this.receipt.traces.length > 0
         ? !this.receipt.traces[0].error
         : true
