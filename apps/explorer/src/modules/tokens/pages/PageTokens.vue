@@ -33,7 +33,6 @@ const MAX_ITEMS = 50
   }
 })
 export default class PageTokens extends Vue {
-
   /*
   ===================================================================================
     Initial Data
