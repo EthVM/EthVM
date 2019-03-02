@@ -9,8 +9,8 @@
       <v-flex xs6 sm7 md6 lg5 xl4 pr-0>
         <v-layout row>
           <v-card-title class="title font-weight-bold  pr-1 pb-1">{{ getTitle }}</v-card-title>
-          <v-flex hidden-xs-only pr-0 v-if="pageType == 'tx'">
-            <app-live-update @refreshTable="setPage(0)" />
+          <v-flex v-if="pageType == 'tx'" hidden-xs-only pr-0 >
+            <app-live-update @refreshTable="setPage(0)" :page-type="pageType"/>
           </v-flex>
         </v-layout>
       </v-flex>
@@ -26,7 +26,7 @@
         </v-layout>
       </v-flex>
       <v-flex xs12 hidden-sm-and-up pt-0 v-if="pageType == 'tx'">
-        <app-live-update @refreshTable="setPage(0)" />
+        <app-live-update @refreshTable="setPage(0)" :page-type="pageType"/>
       </v-flex>
     </v-layout>
 

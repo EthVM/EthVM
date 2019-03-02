@@ -7,7 +7,12 @@
     -->
     <v-layout v-if="pageType != 'home'" align-end justify-space-between row wrap fill-height pb-1>
       <v-flex xs12 sm5 md3>
-        <v-card-title class="title font-weight-bold pb-1">{{ getTitle }}</v-card-title>
+        <v-layout row>
+          <v-card-title class="title font-weight-bold pb-1">{{ getTitle }}</v-card-title>
+          <v-flex v-if="pageType == 'blocks'" p>
+            <app-live-update @refreshTable="setPage(0)" :page-type="pageType"/>
+          </v-flex>
+        </v-layout>
       </v-flex>
       <v-spacer />
       <v-flex hidden-sm-and-down md3>
@@ -116,6 +121,7 @@
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
+import AppLiveUpdate from '@app/core/components/ui/AppLiveUpdate.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableBlocksRow from '@app/modules/blocks/components/TableBlocksRow.vue'
 import { Block, SimpleBlock } from '@app/core/models'
@@ -127,6 +133,7 @@ import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
     AppError,
     AppFootnotes,
     AppInfoLoad,
+    AppLiveUpdate,
     AppPaginate,
     TableBlocksRow
   }
