@@ -16,6 +16,12 @@ import { Hex } from '@app/core/models'
   }
 })
 export default class TokenDetailsList extends Vue {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop(String) addressRef: string // Token contract address
   @Prop(Object) contractDetails: any
   @Prop(Object) tokenDetails: any

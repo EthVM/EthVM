@@ -39,6 +39,12 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
   }
 })
 export default class TokenDetailsTabs extends Vue {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop(String) addressRef: string
   @Prop(Array) tokenTransfers: any
   @Prop(Array) tokenHolders: any

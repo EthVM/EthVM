@@ -18,8 +18,20 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component
 export default class AppError extends Vue {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop(Boolean) hasError: boolean
   @Prop(String) message: string
+
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
 
   get errorText() {
     return this.$i18n.t('message.err').toString()

@@ -73,15 +73,27 @@ import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 
 @Component
 export default class TokenTableRow extends Mixins(StringConcatMixin) {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop(Object) token: TokenExchange
 
-  //Computed
+  /*
+  ===================================================================================
+    Computed
+  ===================================================================================
+  */
   get price(): string {
     return this.token.current_price ? this.getRoundNumber(this.token.current_price) : '0.00'
   }
+
   get tokenPriceChange(): string {
     return this.changeInPrice != 'null' ? this.changeInPrice + this.getPercent(this.token.price_change_percentage_24h) : '0'
   }
+
   get volume(): string {
     return this.token.total_volume ? this.getInt(this.token.total_volume) : '0'
   }
@@ -89,6 +101,7 @@ export default class TokenTableRow extends Mixins(StringConcatMixin) {
   get marketCap(): string {
     return this.token.market_cap ? this.getInt(this.token.market_cap) : '0.00'
   }
+
   get tokenChangeClass(): string {
     switch (this.changeInPrice) {
       case '+': {

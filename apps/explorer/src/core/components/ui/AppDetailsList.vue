@@ -89,11 +89,24 @@ import AppDetailsListRow from '@app/core/components/ui/AppDetailsListRow.vue'
   }
 })
 export default class AppDetailsList extends Vue {
+
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop(String) title!: string
-  @Prop(Array) details: Detail[]
-  @Prop(Boolean) isLoading: boolean
-  @Prop(String) error: string
-  @Prop({ type: Number, default: 99 }) maxItems
+  @Prop(Array) details!: Detail[]
+  @Prop(Boolean) isLoading!: boolean
+  @Prop(String) error!: string
+  @Prop({ type: Number, default: 99 }) maxItems!: number
+
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
 
   showMore = false // Whether or not to show "more" details
 

@@ -32,6 +32,12 @@ export default class AppBreadCrumbs extends Vue {
     this.prepareBreadcrumbs()
   }
 
+  /*
+  ===================================================================================
+    Watch
+  ===================================================================================
+  */
+
   @Watch('newItems')
   onNewItemsChange() {
     this.prepareBreadcrumbs()

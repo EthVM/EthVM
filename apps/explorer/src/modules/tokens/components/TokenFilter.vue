@@ -53,6 +53,12 @@ import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 
 @Component
 export default class TokenFilter extends Vue {
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
+
   selected = 0
   dialog = false
 
@@ -81,7 +87,12 @@ export default class TokenFilter extends Vue {
     ]
   }
 
-  //Methods:
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
   setSelected(_index: number) {
     this.selected = _index
     this.dialog = false
@@ -90,6 +101,12 @@ export default class TokenFilter extends Vue {
   selectedClass(_index: number) {
     return this.selected === _index ? 'info--text' : 'black--text'
   }
+
+  /*
+  ===================================================================================
+    Watchers
+  ===================================================================================
+  */
 
   @Watch('selected')
   onPageChanged(newVal: number, oldVal: number): void {

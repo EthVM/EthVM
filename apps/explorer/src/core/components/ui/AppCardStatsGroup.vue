@@ -43,14 +43,32 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
   }
 })
 export default class AppInfoCardGroup extends Vue {
+
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop({ type: String, default: 'generic' }) type!: string
+
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
 
   loading: boolean = true
   blockMetric: BlockMetrics = null
   seconds: number = 0
   secondsInterval = null
 
-  // Lifecycle
+  /*
+  ===================================================================================
+    Lifecycle
+  ===================================================================================
+  */
+
   created() {
     const lastBlockMetric = this.$store.getters.blockMetrics.top()
     if (lastBlockMetric) {
@@ -74,7 +92,12 @@ export default class AppInfoCardGroup extends Vue {
     this.$eventHub.$off([Events.NEW_BLOCK_METRIC])
   }
 
-  // Lifecycle
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
   setBlockMetric(bm: BlockMetrics) {
     this.blockMetric = bm
     this.loading = false
@@ -122,7 +145,12 @@ export default class AppInfoCardGroup extends Vue {
     return this.isShortValue(rawStr) ? rawStr : rawStr.slice(0, 10) + '...'
   }
 
-  // Computed
+  /*
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
+
   get currentType() {
     return this.type
   }

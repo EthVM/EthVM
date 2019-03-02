@@ -33,10 +33,17 @@ const MAX_ITEMS = 50
   }
 })
 export default class PageTokens extends Vue {
+
   /*
   ===================================================================================
-   Since Alpha release is on Ropsten, there are no token prices. Set isRopsten value
-   to true, to display user friendly message
+    Initial Data
+  ===================================================================================
+  */
+
+  /*
+  ===================================================================================
+    Since Alpha release is on Ropsten, there are no token prices. Set isRopsten value
+    to true, to display user friendly message
   ===================================================================================
   */
   isRopsten = false
