@@ -43,7 +43,6 @@ class ParitySourceConnector : SourceConnector() {
     define(TOPIC_BLOCKS_CONFIG, ConfigDef.Type.STRING, TOPIC_BLOCKS_DEFAULT, ConfigDef.Importance.HIGH, TOPIC_BLOCKS_DOC)
     define(SCHEMA_REGISTRY_URL_CONFIG, ConfigDef.Type.STRING, SCHEMA_REGISTRY_URL_DEFAULT, ConfigDef.Importance.HIGH, SCHEMA_REGISTRY_URL_DOC)
     define(START_BLOCK_CONFIG, ConfigDef.Type.INT, START_BLOCK_DEFAULT, ConfigDef.Importance.LOW, START_BLOCK_DOC)
-
   }
 
   object Config {
