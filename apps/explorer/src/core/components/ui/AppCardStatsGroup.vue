@@ -111,6 +111,7 @@ export default class AppInfoCardGroup extends Vue {
       .map(bm => new BN(bm.blockTime))
       .reduceRight((acc, v) => acc.plus(v), new BN(0))
       .dividedBy(bms.length)
+      .dividedBy(1000)
 
     if (avg.isZero) {
       return avg.toNumber()
