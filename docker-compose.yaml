@@ -69,8 +69,6 @@ services:
       - 'traefik.enable=true'
       - 'traefik.default.protocol=http'
       - 'traefik.frontend.rule=Host:ethvm.${DOMAIN}'
-      - 'traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:*||Access-Control-Allow-Credentials:true'
-      - 'traefik.frontend.passHostHeader=true'
       - 'traefik.backend=explorer'
       - 'traefik.port=8080'
     cpu_shares: 256
@@ -91,10 +89,12 @@ services:
       - "traefik.enable=true"
       - "traefik.default.protocol=http"
       - "traefik.frontend.rule=Host:api.ethvm.${DOMAIN}"
+      - "traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://ethvm.${DOMAIN}||Access-Control-Allow-Credentials:true"
       - "traefik.frontend.passHostHeader=true"
       - "traefik.backend=api"
       - "traefik.port=3000"
     cpu_shares: 512
+
   mongodb:
     image: enkryptio/mongodb-dev:${MONGODB_VERSION}
     restart: unless-stopped
