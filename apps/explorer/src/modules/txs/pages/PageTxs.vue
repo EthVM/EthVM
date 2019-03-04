@@ -54,7 +54,7 @@ export default class PageTxs extends Vue {
   isLoading = true
   firstLoad = true
   error = ''
-  n=100
+  n = 100
 
   /*
   ===================================================================================

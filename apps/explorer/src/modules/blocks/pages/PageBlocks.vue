@@ -4,7 +4,16 @@
     <app-card-stats-group />
     <v-layout row wrap justify-center mb-4>
       <v-flex xs12>
-        <table-blocks :loading="isLoading" :blocks="blocks" :total-blocks="total" :max-items="max" :error="error" :page="page" @getBlockPage="getPage" @updateTable="initialLoad"/>
+        <table-blocks
+          :loading="isLoading"
+          :blocks="blocks"
+          :total-blocks="total"
+          :max-items="max"
+          :error="error"
+          :page="page"
+          @getBlockPage="getPage"
+          @updateTable="initialLoad"
+        />
       </v-flex>
     </v-layout>
   </v-container>
@@ -57,7 +66,7 @@ export default class PageBlocks extends Vue {
   ===================================================================================
   */
 
-  initialLoad():void {
+  initialLoad(): void {
     this.fetchTotalBlocks().then(
       res => {
         this.total = res

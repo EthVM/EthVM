@@ -165,7 +165,7 @@ export default class TableTxs extends Vue {
     this.$emit('getTxsPage', page)
   }
 
-  updateTable():void {
+  updateTable(): void {
     this.$emit('updateTable')
   }
 

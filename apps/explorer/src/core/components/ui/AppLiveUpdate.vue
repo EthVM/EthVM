@@ -42,7 +42,7 @@ export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
     this.$eventHub.$on(Events.NEW_BLOCK_METRIC, _ => {
       const newBlock = this.$store.getters.blockMetrics.top()
       if (newBlock) {
-      this.process(newBlock)
+        this.process(newBlock)
       }
     })
   }
@@ -83,9 +83,9 @@ export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
   */
 
   process(block: BlockMetrics): void {
-      this.update = true
-      this.newBlocks++
-      this.newTxs += block.totalTxs
+    this.update = true
+    this.newBlocks++
+    this.newTxs += block.totalTxs
   }
 
   refresh(): void {

@@ -165,7 +165,7 @@ export default class TableBlocks extends Vue {
     this.$emit('getBlockPage', page)
   }
 
-  updateTable():void {
+  updateTable(): void {
     this.$emit('updateTable')
   }
   /*
