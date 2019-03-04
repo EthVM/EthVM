@@ -102,43 +102,33 @@ export default class AppInfoCardGroup extends Vue {
     this.loading = false
   }
 
-  getAvgHashRate(bms: BlockMetrics[] = []) {
+  getAvgHashRate(bms: BlockMetrics[] = []): string {
     if (!bms || bms.length === 0) {
-      return new BN(0).toNumber()
+      return new BN(0).toString()
     }
 
     const avg = bms
       .map(bm => new BN(bm.blockTime))
       .reduceRight((acc, v) => acc.plus(v), new BN(0))
       .dividedBy(bms.length)
+      .dividedBy(1000)
 
     if (avg.isZero) {
-      return avg.toNumber()
+      return avg.toString()
     }
 
-    const difficulty = bms[0].difficulty
+    const { difficulty } = bms[0]
     return new BN(difficulty)
-      .dividedBy(avg)
       .dividedBy('1e12')
-      .toNumber()
+      .dividedBy(avg)
+      .decimalPlaces(4)
+      .toString()
   }
 
   startCount() {
     this.secondsInterval = setInterval(() => {
       this.seconds = Math.ceil((new Date().getTime() - this.blockMetric.timestamp * 1000) / 1000)
     }, 1000)
-  }
-
-  getRoundNumber(newNumber, round = 2) {
-    return new BN(newNumber).decimalPlaces(round).toString()
-  }
-
-  isShortValue(rawStr = ''): boolean {
-    return rawStr.length < 10
-  }
-
-  getShortValue(rawStr): string {
-    return this.isShortValue(rawStr) ? rawStr : rawStr.slice(0, 10) + '...'
   }
 
   /*
@@ -160,7 +150,7 @@ export default class AppInfoCardGroup extends Vue {
   }
 
   get latestHashRate(): string {
-    return !this.loading ? this.getRoundNumber(this.getAvgHashRate(this.$store.getters.blockMetrics.items()).toString()).toString() : this.loadingMessage
+    return !this.loading ? this.getAvgHashRate(this.$store.getters.blockMetrics.items()) : this.loadingMessage
   }
 
   get latestDifficulty(): string {
