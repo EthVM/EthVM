@@ -107,19 +107,20 @@ export default class AppInfoCardGroup extends Vue {
       return new BN(0).toString()
     }
 
-    const avgBlockTime = bms
+    const avg = bms
       .map(bm => new BN(bm.blockTime))
       .reduceRight((acc, v) => acc.plus(v), new BN(0))
       .dividedBy(bms.length)
       .dividedBy(1000)
 
-    if (avgBlockTime.isZero) {
-      return avgBlockTime.toString()
+    if (avg.isZero) {
+      return avg.toString()
     }
 
-    const difficulty = bms[0].difficulty
+    const { difficulty } = bms[0]
     return new BN(difficulty)
-      .dividedBy(avgBlockTime)
+      .dividedBy('1e12')
+      .dividedBy(avg)
       .decimalPlaces(4)
       .toString()
   }
@@ -128,14 +129,6 @@ export default class AppInfoCardGroup extends Vue {
     this.secondsInterval = setInterval(() => {
       this.seconds = Math.ceil((new Date().getTime() - this.blockMetric.timestamp * 1000) / 1000)
     }, 1000)
-  }
-
-  isShortValue(rawStr = ''): boolean {
-    return rawStr.length < 10
-  }
-
-  getShortValue(rawStr): string {
-    return this.isShortValue(rawStr) ? rawStr : rawStr.slice(0, 10) + '...'
   }
 
   /*
