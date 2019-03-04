@@ -10,7 +10,7 @@
         <v-layout align-end justify-start row fill-height>
           <v-card-title class="title font-weight-bold ">{{ getTitle }}</v-card-title>
           <v-flex v-if="pageType == 'blocks'">
-            <app-live-update @refreshTable="setPage(0)" :page-type="pageType" />
+            <app-live-update @refreshTable="updateTable" :page-type="pageType" />
           </v-flex>
         </v-layout>
       </v-flex>
@@ -165,6 +165,9 @@ export default class TableBlocks extends Vue {
     this.$emit('getBlockPage', page)
   }
 
+  updateTable():void {
+    this.$emit('updateTable')
+  }
   /*
   ===================================================================================
     Computed Values
