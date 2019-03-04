@@ -9,7 +9,7 @@
       <v-flex xs12 sm5 md4 class="title-live" pb-0>
         <v-layout align-end justify-start row fill-height>
           <v-card-title class="title font-weight-bold ">{{ getTitle }}</v-card-title>
-          <v-flex v-if="pageType == 'blocks'">
+          <v-flex v-if="pageType == 'blocks' && !loading">
             <app-live-update @refreshTable="updateTable" :page-type="pageType" />
           </v-flex>
         </v-layout>

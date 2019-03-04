@@ -28,7 +28,6 @@ export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
   ===================================================================================
   */
 
-  lastBlock: string = null
   update = false
   newTxs = 0
   newBlocks = 0
@@ -43,7 +42,7 @@ export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
     this.$eventHub.$on(Events.NEW_BLOCK_METRIC, _ => {
       const newBlock = this.$store.getters.blockMetrics.top()
       if (newBlock) {
-        !this.lastBlock ? (this.lastBlock = newBlock.number) : this.process(newBlock)
+      this.process(newBlock)
       }
     })
   }
@@ -57,6 +56,10 @@ export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
     Computed
   ===================================================================================
   */
+
+  get initialBlock(): BlockMetrics {
+    return this.$store.getters.blockMetrics.top()
+  }
 
   get messages() {
     return {
@@ -80,12 +83,9 @@ export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
   */
 
   process(block: BlockMetrics): void {
-    if (this.lastBlock != block.number) {
       this.update = true
-      this.lastBlock = block.number
       this.newBlocks++
       this.newTxs += block.totalTxs
-    }
   }
 
   refresh(): void {
