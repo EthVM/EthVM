@@ -14,6 +14,12 @@ import { StringConcatMixin } from '@app/core/components/mixins'
 
 @Component
 export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop(String) pageType!: string
 
   /*
@@ -62,6 +68,7 @@ export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
   get text(): string {
     return this.formatStr(this.newNumber) + ' ' + this.messages[this.pageType]
   }
+
   get newNumber(): string {
     return this.pageType === 'blocks' ? this.newBlocks.toString() : this.newTxs.toString()
   }
@@ -92,11 +99,12 @@ export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
 
 <style scoped lang="css">
 .update-btn{
-   border: solid 1px #ffb647;
-   background: #ffe7d6;
-   padding: 2px 2px 2px 2px;
-   margin: 0px;
+  border: solid 1px #ffb647;
+  background: #ffe7d6;
+  padding: 2px 2px 2px 2px;
+  margin: 0px;
 }
+
 .wrap-text{
   word-wrap: break-word;
 }
