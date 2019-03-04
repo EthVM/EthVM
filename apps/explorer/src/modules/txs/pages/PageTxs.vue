@@ -13,6 +13,7 @@
           :page="page"
           :error="error"
           @getTxsPage="getPage"
+          @updateTable="initialLoad"
         />
       </v-flex>
     </v-layout>
@@ -53,6 +54,7 @@ export default class PageTxs extends Vue {
   isLoading = true
   firstLoad = true
   error = ''
+  n=100
 
   /*
   ===================================================================================
@@ -61,6 +63,17 @@ export default class PageTxs extends Vue {
   */
 
   mounted() {
+    this.initialLoad()
+  }
+
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
+  initialLoad(): void {
+    this.isLoading = true
     this.fetchTotalTxs().then(
       res => {
         this.totalTxs = res
@@ -76,12 +89,6 @@ export default class PageTxs extends Vue {
     })
     window.scrollTo(0, 0)
   }
-
-  /*
-  ===================================================================================
-    Methods
-  ===================================================================================
-  */
 
   fetchTxs(newPage: number): Promise<Tx[] | SimpleTx[]> {
     if (!this.firstLoad) {

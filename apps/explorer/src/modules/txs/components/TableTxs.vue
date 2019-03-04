@@ -10,7 +10,7 @@
         <v-layout align-end justify-start row fill-height>
           <v-card-title class="title font-weight-bold pl-2">{{ getTitle }}</v-card-title>
           <v-flex v-if="pageType == 'tx'" hidden-xs-only pr-0>
-            <app-live-update @refreshTable="setPage(0)" :page-type="pageType" />
+            <app-live-update @refreshTable="updateTable" :page-type="pageType" />
           </v-flex>
         </v-layout>
       </v-flex>
@@ -26,7 +26,7 @@
         </v-layout>
       </v-flex>
       <v-flex xs12 hidden-sm-and-up pt-0 v-if="pageType == 'tx'">
-        <app-live-update @refreshTable="setPage(0)" :page-type="pageType" />
+        <app-live-update @refreshTable="updateTable" :page-type="pageType" />
       </v-flex>
     </v-layout>
 
@@ -163,6 +163,10 @@ export default class TableTxs extends Vue {
 
   setPage(page: number): void {
     this.$emit('getTxsPage', page)
+  }
+
+  updateTable():void {
+    this.$emit('updateTable')
   }
 
   /*
