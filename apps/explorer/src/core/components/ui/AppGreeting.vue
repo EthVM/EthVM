@@ -50,12 +50,11 @@ export default class AppGreeting extends Vue {
   */
 
   mounted() {
-    if(this.greet) {
+    if (this.greet) {
       setTimeout(() => {
-      this.createAnimation()
-    }, 500)
+        this.createAnimation()
+      }, 500)
     }
-
   }
 
   /*
@@ -66,7 +65,7 @@ export default class AppGreeting extends Vue {
 
   removeDialog(): void {
     this.dialog = false
-    //storePack.set('notFirstTimeVisit', true)
+    storePack.set('notFirstTimeVisit', true)
   }
 
   createAnimation(): void {
