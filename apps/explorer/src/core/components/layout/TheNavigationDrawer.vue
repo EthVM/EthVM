@@ -36,8 +36,8 @@
         <v-spacer />
         <v-flex>
           <v-layout align-center justify-end column fill-height pt-4 pb-5>
-            <p class="white--text">{{$t('message.report')}}</p>
-            <v-btn outline color="bttnReport" class="text-capitalize font-weight-regular" :href="'mailto:' + supportEmail">{{$t('bttn.report')}}</v-btn>
+            <p class="white--text">{{ $t('message.report') }}</p>
+            <v-btn outline color="bttnReport" class="text-capitalize font-weight-regular" :href="'mailto:' + supportEmail">{{ $t('bttn.report') }}</v-btn>
           </v-layout>
         </v-flex>
       </v-layout>
@@ -52,139 +52,137 @@
           </v-layout>
         </v-flex>
         <v-spacer></v-spacer>
-        <v-flex xs9 sm7 md6>
-          <app-search /> </v-flex>
+        <v-flex xs9 sm7 md6> <app-search /> </v-flex>
       </v-layout>
     </v-toolbar>
   </div>
 </template>
 
 <script lang="ts">
-  import AppSearch from '@app/core/components/ui/AppSearch.vue'
-  import { NavMenu } from '@app/core/components/props'
-  import {
-    Vue,
-    Component,
-    Prop
-  } from 'vue-property-decorator'
+import AppSearch from '@app/core/components/ui/AppSearch.vue'
+import { NavMenu } from '@app/core/components/props'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
-  @Component({
-    components: {
-      AppSearch
-    }
-  })
-  export default class TheNavigationDrawer extends Vue {
-    /*
+@Component({
+  components: {
+    AppSearch
+  }
+})
+export default class TheNavigationDrawer extends Vue {
+  /*
     ===================================================================================
       Initial Data
     ===================================================================================
     */
 
-    supportEmail = 'support@ethvm.com'
-    drawer = null
-    active = 0
-    sublink = null
+  supportEmail = 'support@ethvm.com'
+  drawer = null
+  active = 0
+  sublink = null
 
-    /*
+  /*
     ===================================================================================
       Computed
     ===================================================================================
     */
 
-    get items(): NavMenu[] {
-      return [{
-          header: {
-            icon: 'fa fa-home',
-            text: this.$i18n.t('title.home'),
-            routerLink: '/'
-          }
-        },
-        {
-          header: {
-            icon: 'fa fa-cubes',
-            text: this.$i18n.t('title.blocks')
-          },
-          links: [{
-              text: this.$i18n.t('title.viewAll'),
-              routerLink: '/blocks',
-              name: 'blocks'
-            },
-            {
-              text: this.$i18n.t('title.uncles'),
-              routerLink: '/uncles',
-              name: 'uncles'
-            }
-          ]
-        },
-        {
-          header: {
-            text: this.$i18n.t('title.tx'),
-            icon: 'fas fa-exchange-alt'
-          },
-          links: [{
-              text: this.$i18n.t('title.mined'),
-              routerLink: '/txs',
-              name: 'transactions'
-            }
-            // {
-            //   text: this.$i18n.t('title.pending'),
-            //   routerLink: '/pending-txs',
-            //   name: 'pending'
-            // }
-          ]
-        },
-        {
-          header: {
-            text: this.$i18n.t('title.tokens'),
-            icon: 'fab fa-ethereum',
-            routerLink: '/tokens'
-          }
-          // links: [
-          //   {
-          //     text: this.$i18n.t('title.tokenCntrc'),
-          //     routerLink: '/tokens'
-          //     // name: '/contracts',
-          //   },
-          //   {
-          //     text: this.$i18n.t('title.tokenPrice20')
-          //     // routerLink: '/prices',
-          //   }
-          // ]
-        },
-        {
-          header: {
-            icon: 'fas fa-chart-pie',
-            text: this.$i18n.t('title.charts'),
-            routerLink: '/charts'
-          }
+  get items(): NavMenu[] {
+    return [
+      {
+        header: {
+          icon: 'fa fa-home',
+          text: this.$i18n.t('title.home'),
+          routerLink: '/'
         }
-      ]
-    }
-    /*
+      },
+      {
+        header: {
+          icon: 'fa fa-cubes',
+          text: this.$i18n.t('title.blocks')
+        },
+        links: [
+          {
+            text: this.$i18n.t('title.viewAll'),
+            routerLink: '/blocks',
+            name: 'blocks'
+          },
+          {
+            text: this.$i18n.t('title.uncles'),
+            routerLink: '/uncles',
+            name: 'uncles'
+          }
+        ]
+      },
+      {
+        header: {
+          text: this.$i18n.t('title.tx'),
+          icon: 'fas fa-exchange-alt'
+        },
+        links: [
+          {
+            text: this.$i18n.t('title.mined'),
+            routerLink: '/txs',
+            name: 'transactions'
+          }
+          // {
+          //   text: this.$i18n.t('title.pending'),
+          //   routerLink: '/pending-txs',
+          //   name: 'pending'
+          // }
+        ]
+      },
+      {
+        header: {
+          text: this.$i18n.t('title.tokens'),
+          icon: 'fab fa-ethereum',
+          routerLink: '/tokens'
+        }
+        // links: [
+        //   {
+        //     text: this.$i18n.t('title.tokenCntrc'),
+        //     routerLink: '/tokens'
+        //     // name: '/contracts',
+        //   },
+        //   {
+        //     text: this.$i18n.t('title.tokenPrice20')
+        //     // routerLink: '/prices',
+        //   }
+        // ]
+      },
+      {
+        header: {
+          icon: 'fas fa-chart-pie',
+          text: this.$i18n.t('title.charts'),
+          routerLink: '/charts'
+        }
+      }
+    ]
+  }
+  /*
     ===================================================================================
       Methods
     ===================================================================================
     */
 
-    getCurrPath(): string {
-      let currPath = ''
-      if (this.$route.name) {
-        currPath = this.$route.name
-      }
-      return currPath
+  getCurrPath(): string {
+    let currPath = ''
+    if (this.$route.name) {
+      currPath = this.$route.name
     }
-
-    checkLinkPath(_name: string) {
-      return this.getCurrPath() == _name
-    }
-
-    checkPath(links: any[]) {
-      for (let i = 0; i < links.length; i++) {
-        if (this.checkLinkPath(links[i].name)) {
-          return true
-        }
-      }
-      return false
-    }
+    return currPath
   }
+
+  checkLinkPath(_name: string) {
+    return this.getCurrPath() == _name
+  }
+
+  checkPath(links: any[]) {
+    for (let i = 0; i < links.length; i++) {
+      if (this.checkLinkPath(links[i].name)) {
+        return true
+      }
+    }
+    return false
+  }
+}
 </script>

@@ -1,4 +1,4 @@
-import { TranslateResult } from 'vue-i18n';
+import { TranslateResult } from 'vue-i18n'
 
 export interface NavMenu {
   header: NavHeader
@@ -6,13 +6,13 @@ export interface NavMenu {
 }
 
 export interface NavLink {
-  text: TranslateResult,
+  text: TranslateResult
   routerLink: string
   name: string
 }
 export interface NavHeader {
-  text: TranslateResult,
-  icon: string,
+  text: TranslateResult
+  icon: string
   routerLink?: string
 }
 
