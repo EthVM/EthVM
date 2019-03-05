@@ -1,3 +1,0 @@
-{
-  "extends": "./apps/explorer/tsconfig.json"
-}
