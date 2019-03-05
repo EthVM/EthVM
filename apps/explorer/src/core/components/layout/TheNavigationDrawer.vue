@@ -7,7 +7,6 @@
             <v-img :src="require('@/assets/logo-white.png')" height="50px" max-width="130px" contain class="mb-4 mt-4 ml-2"></v-img>
             <v-img :src="require('@/assets/alpha.png')" height="18px" max-width="50px" contain class="mb-4 pl-1"></v-img>
           </v-layout>
-
           <v-list class="pa-0" two-line v-for="(item, index) in items" :key="index" v-model="item.active">
             <v-list-tile v-if="!item.links" class="nav--text" :to="item.header.routerLink" active-class="white--text accent" :prepend-icon="item.header.icon">
               <v-layout row align-center justify-start fill-height>
@@ -41,7 +40,6 @@
             <v-btn outline color="bttnReport" class="text-capitalize font-weight-regular" :href="'mailto:' + supportEmail">{{$t('bttn.report')}}</v-btn>
           </v-layout>
         </v-flex>
-
       </v-layout>
     </v-navigation-drawer>
     <v-toolbar color="white" app fixed clipped flat height="77px">
@@ -63,6 +61,7 @@
 
 <script lang="ts">
   import AppSearch from '@app/core/components/ui/AppSearch.vue'
+  import { NavMenu } from '@app/core/components/props'
   import {
     Vue,
     Component,
@@ -75,90 +74,92 @@
     }
   })
   export default class TheNavigationDrawer extends Vue {
-
     /*
     ===================================================================================
-    Initial Data
+      Initial Data
     ===================================================================================
     */
 
     supportEmail = 'support@ethvm.com'
+    drawer = null
+    active = 0
+    sublink = null
 
-    data() {
-      return {
-        drawer: null,
-        active: 0,
-        sublink: null,
-        items: [{
-            header: {
-              icon: 'fa fa-home',
-              text: this.$i18n.t('title.home'),
-              routerLink: '/'
-            }
-          },
-          {
-            header: {
-              icon: 'fa fa-cubes',
-              text: this.$i18n.t('title.blocks')
-            },
-            links: [{
-                text: this.$i18n.t('title.viewAll'),
-                routerLink: '/blocks',
-                name: 'blocks'
-              },
-              {
-                text: this.$i18n.t('title.uncles'),
-                routerLink: '/uncles',
-                name: 'uncles'
-              }
-            ]
-          },
-          {
-            header: {
-              text: this.$i18n.t('title.tx'),
-              icon: 'fas fa-exchange-alt'
-            },
-            links: [{
-                text: this.$i18n.t('title.mined'),
-                routerLink: '/txs',
-                name: 'transactions'
-              }
-              // {
-              //   text: this.$i18n.t('title.pending'),
-              //   routerLink: '/pending-txs',
-              //   name: 'pending'
-              // }
-            ]
-          },
-          {
-            header: {
-              text: this.$i18n.t('title.tokens'),
-              icon: 'fab fa-ethereum',
-              routerLink: '/tokens'
-            }
-            // links: [
-            //   {
-            //     text: this.$i18n.t('title.tokenCntrc'),
-            //     routerLink: '/tokens'
-            //     // routerLink: '/contracts',
-            //   },
-            //   {
-            //     text: this.$i18n.t('title.tokenPrice20')
-            //     // routerLink: '/prices',
-            //   }
-            // ]
-          },
-          {
-            header: {
-              icon: 'fas fa-chart-pie',
-              text: this.$i18n.t('title.charts'),
-              routerLink: '/charts'
-            }
+    /*
+    ===================================================================================
+      Computed
+    ===================================================================================
+    */
+
+    get items(): NavMenu[] {
+      return [{
+          header: {
+            icon: 'fa fa-home',
+            text: this.$i18n.t('title.home'),
+            routerLink: '/'
           }
-        ]
-      }
+        },
+        {
+          header: {
+            icon: 'fa fa-cubes',
+            text: this.$i18n.t('title.blocks')
+          },
+          links: [{
+              text: this.$i18n.t('title.viewAll'),
+              routerLink: '/blocks',
+              name: 'blocks'
+            },
+            {
+              text: this.$i18n.t('title.uncles'),
+              routerLink: '/uncles',
+              name: 'uncles'
+            }
+          ]
+        },
+        {
+          header: {
+            text: this.$i18n.t('title.tx'),
+            icon: 'fas fa-exchange-alt'
+          },
+          links: [{
+              text: this.$i18n.t('title.mined'),
+              routerLink: '/txs',
+              name: 'transactions'
+            }
+            // {
+            //   text: this.$i18n.t('title.pending'),
+            //   routerLink: '/pending-txs',
+            //   name: 'pending'
+            // }
+          ]
+        },
+        {
+          header: {
+            text: this.$i18n.t('title.tokens'),
+            icon: 'fab fa-ethereum',
+            routerLink: '/tokens'
+          }
+          // links: [
+          //   {
+          //     text: this.$i18n.t('title.tokenCntrc'),
+          //     routerLink: '/tokens'
+          //     // name: '/contracts',
+          //   },
+          //   {
+          //     text: this.$i18n.t('title.tokenPrice20')
+          //     // routerLink: '/prices',
+          //   }
+          // ]
+        },
+        {
+          header: {
+            icon: 'fas fa-chart-pie',
+            text: this.$i18n.t('title.charts'),
+            routerLink: '/charts'
+          }
+        }
+      ]
     }
-
     /*
     ===================================================================================
       Methods

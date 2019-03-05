@@ -1,3 +1,21 @@
+import { TranslateResult } from 'vue-i18n';
+
+export interface NavMenu {
+  header: NavHeader
+  links?: NavLink[]
+}
+
+export interface NavLink {
+  text: TranslateResult,
+  routerLink: string
+  name: string
+}
+export interface NavHeader {
+  text: TranslateResult,
+  icon: string,
+  routerLink?: string
+}
+
 export interface Footnote {
   color?: string
   text?: string
