@@ -218,7 +218,7 @@ export default class PageDetailsAddress extends Vue {
             .then((res: any[]) => {
               const metadata = res[0] || {}
               this.account.isCreator = metadata.isContractCreator || false
-              this.account.isMiner = metadata.isMiner || false
+              this.account.isMiner = false // metadata.isMiner || false
               this.account.totalTxs = metadata.totalTxCount || 0
               this.account.fromTxCount = metadata.outTxCount || 0
               this.account.toTxCount = metadata.inTxCount || 0
@@ -241,7 +241,8 @@ export default class PageDetailsAddress extends Vue {
           const addressTxs = this.fetchTxs()
           const addressPendingTxs = this.fetchPendingTxs()
           const minedBlocks = this.account.isMiner ? this.fetchMinedBlocks() : Promise.resolve([])
-          const contractsCreated = this.account.isCreator ? this.fetchContractsCreated() : Promise.resolve([])
+          // TODO: Re-enable whenever contract creator functionality is finished
+          const contractsCreated = Promise.resolve([]) // this.account.isCreator ? this.fetchContractsCreated() : Promise.resolve([])
 
           // If one promise fails, we still continue processing every entry (and for those failed we receive undefined)
           const promises = [addressTxs, addressPendingTxs, minedBlocks, contractsCreated].map(p => p.catch(() => undefined))
