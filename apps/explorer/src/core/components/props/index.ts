@@ -1,6 +1,6 @@
 import { TranslateResult } from 'vue-i18n'
 
-export interface NavMenu {
+export interface NavMenuEntry {
   header: NavHeader
   links?: NavLink[]
 }
@@ -10,6 +10,7 @@ export interface NavLink {
   routerLink: string
   name: string
 }
+
 export interface NavHeader {
   text: TranslateResult
   icon: string
