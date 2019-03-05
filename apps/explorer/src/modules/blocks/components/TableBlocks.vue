@@ -151,9 +151,9 @@ export default class TableBlocks extends Vue {
   @Prop(Array) blocks!: Block[] | SimpleBlock[]
   @Prop({ type: Number, default: 0 }) totalBlocks!: number
   @Prop({ type: Number, default: 20 }) maxItems!: number
-  @Prop({ type: Boolean, default: false }) simplePagination: boolean
+  @Prop({ type: Boolean, default: false }) simplePagination!: boolean
+  @Prop({ type: Number, default: 0 }) page!: number
   @Prop(String) error!: string
-  @Prop({ type: Number, default: 0 }) page: number
 
   /*
   ===================================================================================
@@ -196,16 +196,16 @@ export default class TableBlocks extends Vue {
     return titles[this.pageType]
   }
 
-  get footnotes() {
+  get footnotes(): Footnote[] {
     return [
       {
         color: 'txSuccess',
-        text: this.$i18n.t('footnote.success'),
+        text: this.$i18n.t('footnote.success').toString(),
         icon: 'fa fa-circle'
       },
       {
         color: 'txFail',
-        text: this.$i18n.t('footnote.failed'),
+        text: this.$i18n.t('footnote.failed').toString(),
         icon: 'fa fa-circle'
       }
     ]

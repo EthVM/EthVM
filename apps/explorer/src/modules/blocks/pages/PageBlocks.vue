@@ -24,7 +24,7 @@ import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppCardStatsGroup from '@app/core/components/ui/AppCardStatsGroup.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
 import { Block, SimpleBlock } from '@app/core/models'
-import { Vue, Component, Mixins, Watch } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 
 const MAX_ITEMS = 50
 
@@ -67,14 +67,7 @@ export default class PageBlocks extends Vue {
   */
 
   initialLoad(): void {
-    this.fetchTotalBlocks().then(
-      res => {
-        this.total = res
-      },
-      err => {
-        this.total = 0
-      }
-    )
+    this.fetchTotalBlocks().then(res => (this.total = res), err => (this.total = 0))
     this.getPage(0)
     window.scrollTo(0, 0)
   }
