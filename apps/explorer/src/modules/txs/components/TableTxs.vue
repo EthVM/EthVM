@@ -8,9 +8,9 @@
     <v-layout row wrap align-end pb-3>
       <v-flex xs6 sm7 md6 lg5 xl4 pr-0 pb-0>
         <v-layout align-end justify-start row fill-height>
-          <v-card-title class="title font-weight-bold pl-2">{{ getTitle }}</v-card-title>
-          <v-flex v-if="pageType == 'tx'" hidden-xs-only pr-0>
-            <app-live-update @refreshTable="setPage(0)" :page-type="pageType" />
+          <v-card-title class="title font-weight-bold pl-3 pr-2">{{ getTitle }}</v-card-title>
+          <v-flex v-if="pageType == 'tx' && !loading" hidden-xs-only pr-0>
+            <app-live-update @refreshTable="updateTable" :page-type="pageType" />
           </v-flex>
         </v-layout>
       </v-flex>
@@ -25,8 +25,8 @@
           <app-paginate v-else :total="pages" @newPage="setPage" :current-page="page" :has-first="false" :has-last="false" :has-input="false" />
         </v-layout>
       </v-flex>
-      <v-flex xs12 hidden-sm-and-up pt-0 v-if="pageType == 'tx'">
-        <app-live-update @refreshTable="setPage(0)" :page-type="pageType" />
+      <v-flex xs12 hidden-sm-and-up pt-0 v-if="pageType == 'tx' && !loading">
+        <app-live-update @refreshTable="updateTable" :page-type="pageType" />
       </v-flex>
     </v-layout>
 
@@ -163,6 +163,10 @@ export default class TableTxs extends Vue {
 
   setPage(page: number): void {
     this.$emit('getTxsPage', page)
+  }
+
+  updateTable(): void {
+    this.$emit('updateTable')
   }
 
   /*
