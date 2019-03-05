@@ -1,14 +1,13 @@
 <template>
   <v-dialog v-if="greet" v-model="dialog" width="500">
     <v-card>
-      <canvas id="animate"> </canvas>
+      <canvas id="animate"></canvas>
       <v-card-title class="headline" primary-title>
         {{ $t('message.welcome.title') }}
       </v-card-title>
       <v-card-text>
         {{ $t('message.welcome.text1') }} <a :href="'mailto:' + supportEmail">{{ supportEmail }}</a> {{ $t('message.welcome.text2') }}
       </v-card-text>
-
       <v-card-actions>
         <v-layout align-center justify-center row fill-height>
           <v-btn color="secondary" depressed class="text-capitalize mb-4" @click="removeDialog">
@@ -51,9 +50,11 @@ export default class AppGreeting extends Vue {
   */
 
   mounted() {
-    setTimeout(() => {
-      this.createAnimation()
-    }, 200)
+    if (this.greet) {
+      setTimeout(() => {
+        this.createAnimation()
+      }, 500)
+    }
   }
 
   /*
@@ -78,7 +79,7 @@ export default class AppGreeting extends Vue {
 
     myCanvas.confetti({
       particleCount: 100,
-      spread: 70,
+      spread: 50,
       origin: {
         y: 1
       },
@@ -91,7 +92,7 @@ export default class AppGreeting extends Vue {
 <style scoped lang="css">
 canvas {
   position: absolute;
-  width: 100%;
-  height: 100%;
+  width: 99%;
+  height: 99%;
 }
 </style>
