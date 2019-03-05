@@ -22,7 +22,11 @@
     =====================================================================================
     -->
     <app-tabs v-if="!loading && !hasError" :tabs="tabs">
-      <!-- Transactions -->
+      <!--
+      =====================================================================================
+        TRANSACTIONS TAB
+      =====================================================================================
+      -->
       <v-tab-item slot="tabs-item" value="tab-0">
         <table-address-txs
           :loading="txsLoading"
@@ -34,18 +38,27 @@
           @filter="setFilterTxs"
         />
       </v-tab-item>
-      <!-- End Transactions -->
-      <!-- Tokens -->
+      <!--
+      =====================================================================================
+        TOKENS TAB
+      =====================================================================================
+      -->
       <v-tab-item slot="tabs-item" value="tab-1">
         <table-address-tokens :loading="tokensLoading" :tokens="account.tokens" :holder="account.address" :error="tokensError" />
       </v-tab-item>
-      <!-- End Tokens -->
-      <!-- Pending Transactions -->
+      <!--
+      =====================================================================================
+        PENDING TXS TAB
+      =====================================================================================
+      -->
       <v-tab-item slot="tabs-item" value="tab-2">
         <table-address-txs :loading="pendingTxsLoading" :address="account.address" :txs="account.pendingTxs" :is-pending="true" :error="pendingTxsError" />
       </v-tab-item>
-      <!-- End Pending Transactions -->
-      <!-- Mined Blocks -->
+      <!--
+      =====================================================================================
+        MINED BLOCKS TAB
+      =====================================================================================
+      -->
       <v-tab-item slot="tabs-item" v-if="account.isMiner" value="tab-3">
         <table-blocks
           :loading="minerBlocksLoading"
@@ -59,8 +72,11 @@
           @getBlockPage="setMinedPage"
         />
       </v-tab-item>
-      <!-- End Mined Blocks -->
-      <!-- Contract Creator (no need to implement yet) -->
+      <!--
+      =====================================================================================
+        CONTRACT CREATOR TAB (not implemented yet)
+      =====================================================================================
+      -->
       <!-- <v-tab-item v-if="account.conCreator" value="tab-4">
       <v-card>
         <ul>
@@ -81,7 +97,7 @@
 
 <script lang="ts">
 import { Block, EthValue, Tx, PendingTx } from '@app/core/models'
-import { Events, Contract } from 'ethvm-common'
+import { Contract } from 'ethvm-common'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
@@ -93,6 +109,7 @@ import TableAddressTokens from '@app/modules/addresses/components/TableAddressTo
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { eth, TinySM, State } from '@app/core/helper'
 import { AccountInfo } from '@app/modules/addresses/props'
+import { Crumb, Tab } from '@app/core/components/props'
 
 const MAX_ITEMS = 10
 
@@ -165,7 +182,7 @@ export default class PageDetailsAddress extends Vue {
   ===================================================================================
   */
 
-  mounted() {
+  mounted(): void {
     const ref = this.addressRef
 
     // 1. Create State Machine
@@ -203,9 +220,10 @@ export default class PageDetailsAddress extends Vue {
               this.account.isCreator = metadata.isContractCreator || false
               this.account.isMiner = metadata.isMiner || false
               this.account.totalTxs = metadata.totalTxCount || 0
-              this.account.toTxCount = metadata.toTxCount || 0
-              this.account.fromTxCount = metadata.fromTxCount || 0
-              this.account.balance = res[1] ? new EthValue(res[1].amount) : new EthValue(0)
+              this.account.fromTxCount = metadata.outTxCount || 0
+              this.account.toTxCount = metadata.inTxCount || 0
+
+              this.account.balance = new EthValue(res[1] ? res[1].amount : 0)
               this.account.type = res[2] ? CONTRACT_DETAIL_TYPE : ADDRESS_DETAIL_TYPE
               this.account.exchangeRate.USD = res[3].price
 
@@ -314,14 +332,14 @@ export default class PageDetailsAddress extends Vue {
     return this.$api.getContractsCreatedBy(this.addressRef, limit, page)
   }
 
-  setFilterTxs(_filter: string, _page: number): void {
-    this.txsFilter = _filter
-    this.txsPage = _page
+  setFilterTxs(filter: string, page: number): void {
+    this.txsFilter = filter
+    this.txsPage = page
     this.txsLoading = true
   }
 
-  setMinedPage(_page: number): void {
-    this.minedPage = _page
+  setMinedPage(page: number): void {
+    this.minedPage = page
     this.minerBlocksLoading = true
   }
 
@@ -417,7 +435,7 @@ export default class PageDetailsAddress extends Vue {
     }
   }
 
-  get crumbs() {
+  get crumbs(): Crumb[] {
     return [
       {
         text: `${this.$i18n.t('title.address').toString()}: ${this.addressRef}`,
@@ -426,21 +444,21 @@ export default class PageDetailsAddress extends Vue {
     ]
   }
 
-  get tabs() {
-    const tabs = [
+  get tabs(): Tab[] {
+    const tabs: Tab[] = [
       {
         id: '0',
-        title: this.$i18n.t('tabs.txH'),
+        title: this.$i18n.t('tabs.txH').toString(),
         isActive: true
       },
       {
         id: '1',
-        title: this.$i18n.t('tabs.tokens'),
+        title: this.$i18n.t('tabs.tokens').toString(),
         isActive: false
       },
       {
         id: '2',
-        title: this.$i18n.t('tabs.pending'),
+        title: this.$i18n.t('tabs.pending').toString(),
         isActive: false
       }
     ]
@@ -449,7 +467,7 @@ export default class PageDetailsAddress extends Vue {
       if (this.account.isMiner) {
         const newTab = {
           id: '3',
-          title: this.$i18n.t('tabs.miningH'),
+          title: this.$i18n.t('tabs.miningH').toString(),
           isActive: false
         }
         tabs.push(newTab)
@@ -458,7 +476,7 @@ export default class PageDetailsAddress extends Vue {
       if (this.account.isCreator) {
         const newTab = {
           id: '4',
-          title: this.$i18n.t('tabs.contracts'),
+          title: this.$i18n.t('tabs.contracts').toString(),
           isActive: false
         }
         tabs.push(newTab)
