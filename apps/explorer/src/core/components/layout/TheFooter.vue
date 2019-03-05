@@ -54,7 +54,7 @@
             <v-layout row justify-end pt-3>
               <v-btn href="https://www.reddit.com/r/ethvm" icon> <v-icon class="fab fa-reddit grey--text"></v-icon> </v-btn>
               <v-btn href="https://twitter.com/Eth_VM" icon> <v-icon class="fab fa-twitter grey--text"></v-icon> </v-btn>
-              <v-btn href="https://github.com/enKryptIO" icon> <v-icon class="fab fa-github grey--text"></v-icon> </v-btn>
+              <v-btn href="https://github.com/EthVM" icon> <v-icon class="fab fa-github grey--text"></v-icon> </v-btn>
               <v-btn href="https://medium.com/@myetherwallet" icon> <v-icon class="fab fa-medium-m grey--text"></v-icon> </v-btn>
             </v-layout>
           </v-flex>
@@ -80,7 +80,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
   }
 })
 export default class TheFooter extends Vue {
-  btcAddr: string = '1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9">1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9'
+  btcAddr: string = '1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9'
   ethAddr: string = '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <v-card transparent flat min-width="240" max-width="340">
+  <v-card color="transparent" flat min-width="240" max-width="340">
     <v-container grid-list-xs pa-1>
       <v-layout row align-center justify-end fill-height>
         <v-btn v-if="hasFirst" flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('first')" small>{{ $t('bttn.first') }}</v-btn>

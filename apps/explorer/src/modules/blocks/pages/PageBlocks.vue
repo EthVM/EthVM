@@ -4,7 +4,16 @@
     <app-card-stats-group />
     <v-layout row wrap justify-center mb-4>
       <v-flex xs12>
-        <table-blocks :loading="isLoading" :blocks="blocks" :total-blocks="total" :max-items="max" :error="error" :page="page" @getBlockPage="getPage" />
+        <table-blocks
+          :loading="isLoading"
+          :blocks="blocks"
+          :total-blocks="total"
+          :max-items="max"
+          :error="error"
+          :page="page"
+          @getBlockPage="getPage"
+          @updateTable="initialLoad"
+        />
       </v-flex>
     </v-layout>
   </v-container>
@@ -15,7 +24,7 @@ import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppCardStatsGroup from '@app/core/components/ui/AppCardStatsGroup.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
 import { Block, SimpleBlock } from '@app/core/models'
-import { Vue, Component, Mixins, Watch } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 
 const MAX_ITEMS = 50
 
@@ -48,16 +57,7 @@ export default class PageBlocks extends Vue {
   */
 
   mounted() {
-    this.fetchTotalBlocks().then(
-      res => {
-        this.total = res
-      },
-      err => {
-        this.total = 0
-      }
-    )
-    this.getPage(0)
-    // window.scrollTo(0, 0)
+    this.initialLoad()
   }
 
   /*
@@ -65,6 +65,12 @@ export default class PageBlocks extends Vue {
     Methods
   ===================================================================================
   */
+
+  initialLoad(): void {
+    this.fetchTotalBlocks().then(res => (this.total = res), err => (this.total = 0))
+    this.getPage(0)
+    window.scrollTo(0, 0)
+  }
 
   fetchBlocks(page: number): Promise<Block[] | SimpleBlock[]> {
     return this.$api.getBlocks('simple', this.max, page, this.from)

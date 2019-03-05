@@ -5,21 +5,28 @@
       TITLE
     =====================================================================================
     -->
-    <v-layout row wrap align-center pb-1>
-      <v-flex xs4 md5>
-        <v-card-title class="title font-weight-bold">{{ getTitle }}</v-card-title>
+    <v-layout row wrap align-end pb-3>
+      <v-flex xs6 sm7 md6 lg5 xl4 pr-0 pb-0>
+        <v-layout align-end justify-start row fill-height>
+          <v-card-title class="title font-weight-bold pl-3 pr-2">{{ getTitle }}</v-card-title>
+          <v-flex v-if="pageType == 'tx' && !loading" hidden-xs-only pr-0>
+            <app-live-update @refreshTable="updateTable" :page-type="pageType" />
+          </v-flex>
+        </v-layout>
       </v-flex>
-      <v-spacer />
-      <v-flex xs4 v-if="pageType == 'home'">
+      <v-flex xs6 sm5 md6 lg7 xl8 v-if="pageType == 'home'">
         <v-layout justify-end>
           <v-btn outline color="secondary" class="text-capitalize" to="/txs">{{ $t('bttn.viewAll') }}</v-btn>
         </v-layout>
       </v-flex>
-      <v-flex v-else xs12 sm7 md6>
+      <v-flex v-else xs6 sm5 md6 lg7 xl8>
         <v-layout v-if="pages > 1 && !hasError" justify-end row class="pb-1 pr-2 pl-2">
           <app-paginate v-if="isBlockDetail" :total="pages" @newPage="setPage" :current-page="page" />
           <app-paginate v-else :total="pages" @newPage="setPage" :current-page="page" :has-first="false" :has-last="false" :has-input="false" />
         </v-layout>
+      </v-flex>
+      <v-flex xs12 hidden-sm-and-up pt-0 v-if="pageType == 'tx' && !loading">
+        <app-live-update @refreshTable="updateTable" :page-type="pageType" />
       </v-flex>
     </v-layout>
     <!--
@@ -34,7 +41,6 @@
       TABLE HEADER
     =====================================================================================
     -->
-
     <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px">
       <v-layout align-center justify-start row fill-height pr-3>
         <v-flex xs4 sm3 md1 pl-3>
@@ -116,15 +122,18 @@
 <script lang="ts">
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
+import AppLiveUpdate from '@app/core/components/ui/AppLiveUpdate.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableTxsRow from '@app/modules/txs/components/TableTxsRow.vue'
 import { PendingTx, Tx, SimpleTx } from '@app/core/models'
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Footnote } from '@app/core/components/props'
 
 @Component({
   components: {
     AppError,
     AppFootnotes,
+    AppLiveUpdate,
     AppPaginate,
     TableTxsRow
   }
@@ -155,18 +164,15 @@ export default class TableTxs extends Vue {
     this.$emit('getTxsPage', page)
   }
 
+  updateTable(): void {
+    this.$emit('updateTable')
+  }
+
   /*
   ===================================================================================
     Computed Values
   ===================================================================================
   */
-
-  /**
-   * Determines whether or not component has an error.
-   * If error property is empty string, there is no error.
-   *
-   * @return {Boolean} - Whether or not error exists
-   */
 
   get isSyncing() {
     return this.$store.getters.syncing
@@ -176,35 +182,17 @@ export default class TableTxs extends Vue {
     return this.error !== ''
   }
 
-  get footnote() {
-    return [
-      {
-        color: 'success',
-        text: this.$i18n.t('footnote.success'),
-        icon: 'fa-check-circle'
-      },
-      {
-        color: 'warning',
-        text: this.$i18n.t('footnote.failed'),
-        icon: 'fa fa-times-circle'
-      }
-    ]
-  }
-
   get getStyle(): string {
     return this.showStyle
   }
 
-  get titles() {
-    return {
+  get getTitle(): string {
+    const titles = {
       tx: this.$i18n.t('title.lastTxs'),
       pending: this.$i18n.t('title.pending'),
       block: this.$i18n.t('title.blockTxs')
     }
-  }
-
-  get getTitle(): string {
-    return this.titles[this.pageType] || this.titles['tx']
+    return titles[this.pageType] || titles['tx']
   }
 
   get pending(): boolean {
@@ -219,16 +207,16 @@ export default class TableTxs extends Vue {
     return this.totalTxs ? Math.ceil(this.totalTxs / this.maxItems) : 0
   }
 
-  get footnotes() {
+  get footnotes(): Footnote[] {
     return [
       {
         color: 'txSuccess',
-        text: this.$i18n.t('footnote.success'),
+        text: this.$i18n.t('footnote.success').toString(),
         icon: 'fa fa-circle'
       },
       {
         color: 'txFail',
-        text: this.$i18n.t('footnote.failed'),
+        text: this.$i18n.t('footnote.failed').toString(),
         icon: 'fa fa-circle'
       }
     ]

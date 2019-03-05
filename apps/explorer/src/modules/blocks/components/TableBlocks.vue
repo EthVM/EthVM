@@ -6,15 +6,20 @@
     =====================================================================================
     -->
     <v-layout v-if="pageType != 'home'" align-end justify-space-between row wrap fill-height pb-1>
-      <v-flex xs12 sm5 md3>
-        <v-card-title class="title font-weight-bold pb-1">{{ getTitle }}</v-card-title>
+      <v-flex xs12 sm5 md4 class="title-live" pb-0>
+        <v-layout align-end justify-start row fill-height>
+          <v-card-title class="title font-weight-bold ">{{ getTitle }}</v-card-title>
+          <v-flex v-if="pageType == 'blocks' && !loading">
+            <app-live-update @refreshTable="updateTable" :page-type="pageType" />
+          </v-flex>
+        </v-layout>
       </v-flex>
       <v-spacer />
       <v-flex hidden-sm-and-down md3>
         <v-layout justify-end pb-1> <app-footnotes :footnotes="footnotes" /> </v-layout>
       </v-flex>
-      <v-flex xs12 sm7 md6 v-if="pages > 1 && !hasError">
-        <v-layout justify-end row class="pb-1 pr-2 pl-2">
+      <v-flex xs12 sm7 md5 v-if="pages > 1 && !hasError">
+        <v-layout justify-end row class="pb-2 pr-2 pl-2">
           <app-paginate
             :total="pages"
             @newPage="setPage"
@@ -116,17 +121,19 @@
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
+import AppLiveUpdate from '@app/core/components/ui/AppLiveUpdate.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableBlocksRow from '@app/modules/blocks/components/TableBlocksRow.vue'
 import { Block, SimpleBlock } from '@app/core/models'
 import { Footnote } from '@app/core/components/props'
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({
   components: {
     AppError,
     AppFootnotes,
     AppInfoLoad,
+    AppLiveUpdate,
     AppPaginate,
     TableBlocksRow
   }
@@ -144,9 +151,9 @@ export default class TableBlocks extends Vue {
   @Prop(Array) blocks!: Block[] | SimpleBlock[]
   @Prop({ type: Number, default: 0 }) totalBlocks!: number
   @Prop({ type: Number, default: 20 }) maxItems!: number
-  @Prop({ type: Boolean, default: false }) simplePagination: boolean
+  @Prop({ type: Boolean, default: false }) simplePagination!: boolean
+  @Prop({ type: Number, default: 0 }) page!: number
   @Prop(String) error!: string
-  @Prop({ type: Number, default: 0 }) page: number
 
   /*
   ===================================================================================
@@ -158,6 +165,9 @@ export default class TableBlocks extends Vue {
     this.$emit('getBlockPage', page)
   }
 
+  updateTable(): void {
+    this.$emit('updateTable')
+  }
   /*
   ===================================================================================
     Computed Values
@@ -186,16 +196,16 @@ export default class TableBlocks extends Vue {
     return titles[this.pageType]
   }
 
-  get footnotes() {
+  get footnotes(): Footnote[] {
     return [
       {
         color: 'txSuccess',
-        text: this.$i18n.t('footnote.success'),
+        text: this.$i18n.t('footnote.success').toString(),
         icon: 'fa fa-circle'
       },
       {
         color: 'txFail',
-        text: this.$i18n.t('footnote.failed'),
+        text: this.$i18n.t('footnote.failed').toString(),
         icon: 'fa fa-circle'
       }
     ]
@@ -206,3 +216,9 @@ export default class TableBlocks extends Vue {
   }
 }
 </script>
+
+<style scoped lang="css">
+.title-live{
+  min-height:60px;
+}
+</style>

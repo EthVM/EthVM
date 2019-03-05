@@ -13,6 +13,7 @@
           :page="page"
           :error="error"
           @getTxsPage="getPage"
+          @updateTable="initialLoad"
         />
       </v-flex>
     </v-layout>
@@ -23,9 +24,8 @@
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppCardStatsGroup from '@app/core/components/ui/AppCardStatsGroup.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
-import { Vue, Component, Mixins } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 import { Tx, SimpleTx } from '@app/core/models'
-import { rejects } from 'assert'
 
 const MAX_ITEMS = 50
 
@@ -37,6 +37,12 @@ const MAX_ITEMS = 50
   }
 })
 export default class PageTxs extends Vue {
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
+
   txs: SimpleTx[] = []
   totalTxs = 0
 
@@ -47,6 +53,7 @@ export default class PageTxs extends Vue {
   isLoading = true
   firstLoad = true
   error = ''
+  n = 100
 
   /*
   ===================================================================================
@@ -55,20 +62,7 @@ export default class PageTxs extends Vue {
   */
 
   mounted() {
-    this.fetchTotalTxs().then(
-      res => {
-        this.totalTxs = res
-      },
-      err => {
-        this.totalTxs = 0
-      }
-    )
-    this.getPage(0).then(res => {
-      const first = this.txs.length > 0 ? this.txs[0].getBlockNumber() : -1
-      this.pages.push(first)
-      this.firstLoad = false
-    })
-    window.scrollTo(0, 0)
+    this.initialLoad()
   }
 
   /*
@@ -76,6 +70,17 @@ export default class PageTxs extends Vue {
     Methods
   ===================================================================================
   */
+
+  initialLoad(): void {
+    this.isLoading = true
+    this.fetchTotalTxs().then(res => (this.totalTxs = res), err => (this.totalTxs = 0))
+    this.getPage(0).then(res => {
+      const first = this.txs.length > 0 ? this.txs[0].getBlockNumber() : -1
+      this.pages.push(first)
+      this.firstLoad = false
+    })
+    window.scrollTo(0, 0)
+  }
 
   fetchTxs(newPage: number): Promise<Tx[] | SimpleTx[]> {
     if (!this.firstLoad) {

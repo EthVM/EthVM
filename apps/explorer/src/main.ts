@@ -74,7 +74,7 @@ Vue.use(VueAxios, axios)
   ===================================================================================
 */
 
-const v = new Vue({
+new Vue({
   el: '#app',
   store,
   router,
