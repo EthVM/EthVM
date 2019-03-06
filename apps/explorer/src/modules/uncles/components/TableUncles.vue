@@ -95,18 +95,15 @@
 <script lang="ts">
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
-import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import AppPaginateTwo from '@app/core/components/ui/AppPaginate.vue'
 import TableUnclesRow from '@app/modules/uncles/components/TableUnclesRow.vue'
 import { Uncle } from '@app/core/models'
-import { Footnote } from '@app/core/components/props'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 
 @Component({
   components: {
     AppError,
-    AppFootnotes,
     AppInfoLoad,
     AppPaginate,
     AppPaginateTwo,
@@ -165,21 +162,6 @@ export default class TableUncles extends Vue {
 
   get style(): string {
     return this.showStyle
-  }
-
-  get footnotes() {
-    return [
-      {
-        color: 'txSuccess',
-        text: this.$i18n.t('footnote.success'),
-        icon: 'fa fa-circle'
-      },
-      {
-        color: 'txFail',
-        text: this.$i18n.t('footnote.failed'),
-        icon: 'fa fa-circle'
-      }
-    ]
   }
 
   get pages(): number {
