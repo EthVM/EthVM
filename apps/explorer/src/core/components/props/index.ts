@@ -19,7 +19,7 @@ export interface NavHeader {
 
 export interface Footnote {
   color?: string
-  text?: string
+  text?: TranslateResult
   icon?: string
 }
 
