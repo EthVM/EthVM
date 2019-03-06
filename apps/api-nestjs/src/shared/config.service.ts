@@ -31,8 +31,8 @@ const schema = {
   db: {
     url: {
       doc: 'Mongo url',
-      env: 'PMONGO_URL',
-      default: 'mongodb://localhost:27017/',
+      env: 'MONGO_URL',
+      default: 'mongodb',
       sensitive: true
     }
   },

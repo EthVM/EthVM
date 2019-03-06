@@ -17,7 +17,7 @@ import { join } from 'path'
           installSubscriptionHandlers: true,
           cors: true,
           definitions: {
-            path: join(process.cwd(), 'src/modules/graphql/schema.ts'),
+            path: join(process.cwd(), 'src/graphql/schema.ts'),
             outputAs: 'class'
           },
           context: ({ req, res }) => ({

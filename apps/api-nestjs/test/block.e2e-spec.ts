@@ -1,6 +1,6 @@
 import supertest from 'supertest'
 import { Test } from '@nestjs/testing'
-import { AppModule } from '../src/modules/main/app.module'
+import { AppModule } from '../src/app.module'
 import { INestApplication } from '@nestjs/common'
 
 describe('e2e', () => {
