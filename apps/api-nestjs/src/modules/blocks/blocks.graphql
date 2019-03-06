@@ -1,0 +1,54 @@
+type Query {
+  blocks(limit: Int,page: Int): [Block]
+  block(hash: String): Block
+}
+
+type Subscription {
+    newBlock: [Block]
+  }
+
+type Block {
+  number: Int
+  hash: String
+  header: Header
+  stats: Stats
+  transactions: [String]
+  uncles: [String]
+}
+
+type Header {
+  parentHash: String
+  sha3Uncles: String
+  hash: String
+  number: Int
+  timestamp: Int
+  nonce: String
+  miner: String
+  mixHash: JSON
+  rewards:JSON
+  difficulty: Decimal
+  totalDifficulty: Decimal
+  stateRoot: Buffer
+  transactionsRoot:JSON
+  receiptsRoot:JSON
+  logsBloom:JSON
+  gasLimit:JSON
+  gasUsed:JSON
+  extraData:JSON
+}
+
+type Stats{
+  successfulTxs: Int
+  failedTxs:Int
+  pendingTxs:Int
+  processingTimeMs:Int
+  txs:Int
+  internalTxs:Int
+  totalGasPrice:Int
+  avgGasPrice:Int
+  totalTxsFees:Int
+  avgTxsFees:Int
+}
+
+
+
