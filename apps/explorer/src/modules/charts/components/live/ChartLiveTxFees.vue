@@ -20,8 +20,6 @@ import { Vue, Component } from 'vue-property-decorator'
 import { EthValue } from '@app/core/models'
 import { Footnote } from '@app/core/components/props'
 
-
-
 const MAX_ITEMS = 10
 
 @Component({
@@ -74,8 +72,7 @@ export default class ChartLiveTxFees extends Vue {
     bms = !Array.isArray(bms) ? [bms] : bms
     const blockN = this.$i18n.t('title.blockN')
     bms.forEach(bm => {
-      console.log(bm)
-      this.data.labels.push(blockN+bm.number)
+      this.data.labels.push(blockN + bm.number)
       this.data.avgFees.push(new EthValue(bm.avgTxFees).toEth())
       this.data.avgPrice.push(new EthValue(bm.avgGasPrice).toGWei())
       if (this.data.labels.length > MAX_ITEMS) {

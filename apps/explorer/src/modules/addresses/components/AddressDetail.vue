@@ -38,9 +38,8 @@
         <v-card class="primary white--text pl-2" flat>
           <v-card-text class="pb-0">{{ $t('addrOverview.balance') }}</v-card-text>
           <!-- isShortValue -->
-
-
-            <v-card-title v-if="!isShortValue(account.balance.toEth().toString())" class="headline text-truncate pr-1">{{ getShortValue(account.balance.toEth()) }} {{ $t('common.eth') }}
+          <v-card-title v-if="!isShortValue(account.balance.toEth().toString())" class="headline text-truncate pr-1"
+            >{{ getShortValue(account.balance.toEth()) }} {{ $t('common.eth') }}
             <v-tooltip bottom>
               <template #activator="data">
                 <v-icon v-on="data.on" small class="white--text text-xs-center pl-1">fa fa-question-circle</v-icon>
@@ -50,7 +49,6 @@
           </v-card-title>
           <!-- !isShortValue -->
           <v-card-title v-else class="headline text-truncate">{{ account.balance.toEth() }} {{ $t('common.eth') }}</v-card-title>
-
         </v-card>
       </v-flex>
       <!-- End Ether Balance -->

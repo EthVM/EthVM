@@ -71,7 +71,7 @@ export default class ChartLiveTransactions extends Vue {
     bms = !Array.isArray(bms) ? [bms] : bms
     const blockN = this.$i18n.t('title.blockN')
     bms.forEach(bm => {
-      this.data.labels.push(blockN+bm.number)
+      this.data.labels.push(blockN + bm.number)
       this.data.sTxs.push(bm.numSuccessfulTxs)
       this.data.fTxs.push(bm.numFailedTxs)
       this.data.pTxs.push(bm.numPendingTxs)
