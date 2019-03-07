@@ -1,3 +1,4 @@
+/* tslint:disable */
 export class Block {
     number?: number;
     hash?: string;

@@ -18,6 +18,6 @@ export class DateScalar {
     if (ast.kind === Kind.INT) {
       return parseInt(ast.value, 10) // ast value is always in string format
     }
-    return GraphQLError('Should be INT')
+    return new GraphQLError('Should be INT')
   }
 }
