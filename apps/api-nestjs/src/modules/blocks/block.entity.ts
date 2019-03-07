@@ -25,6 +25,7 @@ export class BlockEntity {
 
   @Column()
   uncles?: string[]
+  
 }
 export interface Header {
   parentHash: string

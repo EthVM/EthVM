@@ -6,6 +6,7 @@ const pubSub = new PubSub()
 @Resolver('Block')
 export class BlockResolvers {
   constructor(private readonly blockService: BlockService) {}
+
   @Query()
   async blocks(@Args('page') page: number, @Args('limit') limit: number) {
     const entities = await this.blockService.getBlocks(limit, page)

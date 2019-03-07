@@ -49,6 +49,3 @@ type Stats{
   totalTxsFees:Int
   avgTxsFees:Int
 }
-
-
-
