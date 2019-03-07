@@ -23,6 +23,7 @@
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import TokenTable from '@app/modules/tokens/components/TokenTable.vue'
 import { Crumb } from '@app/core/components/props'
+import { TokenExchange } from '@app/modules/tokens/props'
 import { Component, Vue } from 'vue-property-decorator'
 
 const MAX_ITEMS = 50
@@ -46,8 +47,8 @@ export default class PageTokens extends Vue {
     to true, to display user friendly message
   ===================================================================================
   */
-  isRopsten = true
-  tokens: any = []
+  isRopsten = false
+  tokens: TokenExchange[] = []
   total = 0
   isLoading = true
   page = 0

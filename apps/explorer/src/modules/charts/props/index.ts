@@ -1,11 +1,11 @@
 export interface ChartData {
-  labels: []
+  labels: any []
   datasets: [
     {
       label: string
       borderColor: string
       backgroundColor: string
-      data: []
+      data: any []
       yAxisID: string
       fill: boolean
     }

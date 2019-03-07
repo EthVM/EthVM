@@ -36,13 +36,6 @@ export interface Detail {
   copy?: boolean
 }
 
-export interface BlockDetailsTitle {
-  mined: boolean
-  next?: string
-  prev?: string
-  uncles?: string[]
-}
-
 export interface Crumb {
   text: string | TranslateResult
   disabled: boolean
