@@ -1,4 +1,4 @@
-import { DecimalScalar } from './decimal.scalar'
+import { DecimalScalar } from '@app/graphql/scalars/decimal.scalar'
 import { Kind } from 'graphql'
 
 const testScalar = new DecimalScalar()

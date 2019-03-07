@@ -1,4 +1,4 @@
-import { DateScalar } from './date.scalar'
+import { DateScalar } from '@app/graphql/scalars/date.scalar'
 import { Kind } from 'graphql'
 
 const testScalar = new DateScalar()

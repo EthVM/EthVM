@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { getRepositoryToken } from '@nestjs/typeorm'
-import { BlockService } from './block.service'
-import { BlockResolvers } from './block.resolvers'
-import { BlockEntity } from './block.entity'
+import { BlockService } from '@app/modules/blocks/block.service'
+import { BlockResolvers } from '@app/modules/blocks/block.resolvers'
+import { BlockEntity } from '@app/modules/blocks/block.entity'
 
 describe('BlockResolver', () => {
   let app: TestingModule
