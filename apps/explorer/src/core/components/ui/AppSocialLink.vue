@@ -13,7 +13,7 @@ export default class AppSocialLink extends Vue {
   ===================================================================================
   */
 
-  @Prop(String) platform: string
+  @Prop(String) platform!: string
 
   /*
   ===================================================================================

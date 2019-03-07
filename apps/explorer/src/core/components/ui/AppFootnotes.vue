@@ -35,7 +35,7 @@ export default class AppFootnotes extends Vue {
   ===================================================================================
   */
 
-  getColor(note): string {
+  getColor(note: Footnote): string {
     return note.color
   }
 }
