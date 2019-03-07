@@ -26,6 +26,7 @@ import AppCardStatsGroup from '@app/core/components/ui/AppCardStatsGroup.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { Vue, Component } from 'vue-property-decorator'
 import { Tx, SimpleTx } from '@app/core/models'
+import { Crumb } from '@app/core/components/props'
 
 const MAX_ITEMS = 50
 
@@ -129,7 +130,7 @@ export default class PageTxs extends Vue {
   ===================================================================================
   */
 
-  get crumbs() {
+  get crumbs(): Crumb[] {
     return [
       {
         text: this.$i18n.t('title.mined'),

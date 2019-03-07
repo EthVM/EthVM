@@ -67,61 +67,61 @@ export default class HolderDetailsList extends Vue {
       twitter: 'fab fa-twitter',
       youtube: 'fab fa-youtube'
     }
-    let details
+    let details: Detail[]
     if (this.isLoading) {
       details = [
         {
-          title: this.$i18n.t('token.holder').toString()
+          title: this.$i18n.t('token.holder')
         },
         {
-          title: this.$i18n.t('title.contract').toString()
+          title: this.$i18n.t('title.contract')
         },
         {
-          title: this.$i18n.t('token.balance').toString()
+          title: this.$i18n.t('token.balance')
         },
         {
-          title: `${this.$i18n.t('token.balance').toString()} (USD)`
+          title: `${this.$i18n.t('token.balance')} (USD)`
         },
         {
-          title: this.$i18n.t('token.transfers').toString()
+          title: this.$i18n.t('token.transfers')
         },
         {
-          title: this.$i18n.t('title.marketCap').toString()
+          title: this.$i18n.t('title.marketCap')
         },
         {
-          title: this.$i18n.t('title.decimals').toString()
+          title: this.$i18n.t('title.decimals')
         }
       ]
     } else {
       details = [
         {
-          title: this.$i18n.t('token.holder').toString(),
+          title: this.$i18n.t('token.holder'),
           detail: this.$route.query.holder,
           link: `/address/${this.$route.query.holder}`
         },
         {
-          title: this.$i18n.t('title.contract').toString(),
+          title: this.$i18n.t('title.contract'),
           detail: this.tokenDetails.address,
           link: `/address/${this.tokenDetails.address}`
         },
         {
-          title: this.$i18n.t('token.balance').toString(),
+          title: this.$i18n.t('token.balance'),
           detail: this.holderDetails.tokens ? this.holderDetails.tokens[0].balance : 'N/A'
         },
         {
-          title: `${this.$i18n.t('token.balance').toString()} (USD)`,
+          title: `${this.$i18n.t('token.balance')} (USD)`,
           detail: this.balanceUsd
         },
         {
-          title: this.$i18n.t('token.transfers').toString(),
+          title: this.$i18n.t('token.transfers'),
           detail: this.holderDetails.countTxs
         },
         {
-          title: this.$i18n.t('title.marketCap').toString(),
+          title: this.$i18n.t('title.marketCap'),
           detail: `$${this.tokenDetails.current_price}`
         },
         {
-          title: this.$i18n.t('title.decimals').toString(),
+          title: this.$i18n.t('title.decimals'),
           detail: this.contractDetails.metadata.decimals
         }
       ]

@@ -97,7 +97,7 @@ export default class AppInfoCardGroup extends Vue {
   ===================================================================================
   */
 
-  setBlockMetric(bm: BlockMetrics) {
+  setBlockMetric(bm: BlockMetrics): void {
     this.blockMetric = bm
     this.loading = false
   }
@@ -125,7 +125,7 @@ export default class AppInfoCardGroup extends Vue {
       .toString()
   }
 
-  startCount() {
+  startCount(): void {
     this.secondsInterval = setInterval(() => {
       this.seconds = Math.ceil((new Date().getTime() - this.blockMetric.timestamp * 1000) / 1000)
     }, 1000)
@@ -137,11 +137,11 @@ export default class AppInfoCardGroup extends Vue {
   ===================================================================================
   */
 
-  get currentType() {
+  get currentType(): string {
     return this.type
   }
 
-  get loadingMessage() {
+  get loadingMessage(): string {
     return this.$i18n.t('message.load').toString()
   }
 

@@ -20,7 +20,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Footnote } from '@app/core/components/props'
 
 @Component
-export default class BlockComponent extends Vue {
+export default class AppFootnotes extends Vue {
   /*
   ===================================================================================
     Props
@@ -35,7 +35,7 @@ export default class BlockComponent extends Vue {
   ===================================================================================
   */
 
-  getColor(note): string {
+  getColor(note: Footnote): string {
     return note.color
   }
 }

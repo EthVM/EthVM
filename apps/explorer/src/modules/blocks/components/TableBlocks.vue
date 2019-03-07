@@ -200,12 +200,12 @@ export default class TableBlocks extends Vue {
     return [
       {
         color: 'txSuccess',
-        text: this.$i18n.t('footnote.success').toString(),
+        text: this.$i18n.t('footnote.success'),
         icon: 'fa fa-circle'
       },
       {
         color: 'txFail',
-        text: this.$i18n.t('footnote.failed').toString(),
+        text: this.$i18n.t('footnote.failed'),
         icon: 'fa fa-circle'
       }
     ]

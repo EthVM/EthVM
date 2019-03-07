@@ -66,82 +66,82 @@ export default class TokenDetailsList extends Vue {
       twitter: 'fab fa-twitter',
       youtube: 'fab fa-youtube'
     }
-    let details
+    let details: Detail[]
     if (this.isLoading) {
       details = [
         {
-          title: this.$i18n.t('title.contract').toString()
+          title: this.$i18n.t('title.contract')
         },
         {
-          title: this.$i18n.t('token.owner').toString()
+          title: this.$i18n.t('token.owner')
         },
         {
-          title: this.$i18n.t('title.supply').toString()
+          title: this.$i18n.t('title.supply')
         },
         {
-          title: this.$i18n.t('title.price').toString()
+          title: this.$i18n.t('title.price')
         },
         {
-          title: this.$i18n.t('title.marketCap').toString()
+          title: this.$i18n.t('title.marketCap')
         },
         {
-          title: this.$i18n.t('token.totalHold').toString()
+          title: this.$i18n.t('token.totalHold')
         },
         {
-          title: this.$i18n.t('title.decimals').toString()
+          title: this.$i18n.t('title.decimals')
         },
         {
-          title: this.$i18n.t('title.website').toString()
+          title: this.$i18n.t('title.website')
         },
         {
-          title: this.$i18n.t('title.support').toString()
+          title: this.$i18n.t('title.support')
         },
         {
-          title: this.$i18n.t('title.links').toString()
+          title: this.$i18n.t('title.links')
         }
       ]
     } else {
       details = [
         {
-          title: this.$i18n.t('title.contract').toString(),
+          title: this.$i18n.t('title.contract'),
           detail: new Hex(this.tokenDetails.address).toString(),
           link: this.tokenDetails ? `/address/${new Hex(this.tokenDetails.address).toString()}` : ''
         },
         {
-          title: this.$i18n.t('token.owner').toString(),
+          title: this.$i18n.t('token.owner'),
           detail: this.tokenDetails.owner ? this.tokenDetails.owner : 'REQUIRED DATA',
           link: `/address/${this.tokenDetails.owner}`
         },
         {
-          title: this.$i18n.t('title.supply').toString(),
+          title: this.$i18n.t('title.supply'),
           detail: this.tokenDetails.total_supply
         },
         {
-          title: this.$i18n.t('title.price').toString(),
+          title: this.$i18n.t('title.price'),
           detail: `$${this.tokenDetails.current_price} (${this.tokenDetails.price_change_percentage_24h}%)`
         },
         {
-          title: this.$i18n.t('title.marketCap').toString(),
+          title: this.$i18n.t('title.marketCap'),
           detail: `$${this.tokenDetails.market_cap}`
         },
         {
-          title: this.$i18n.t('token.totalHold').toString(),
+          title: this.$i18n.t('token.totalHold'),
           detail: this.tokenDetails.holdersCount ? `${this.tokenDetails.holdersCount}` : 'REQUIRED DATA'
         },
         {
-          title: this.$i18n.t('title.decimals').toString(),
+          title: this.$i18n.t('title.decimals'),
           detail: this.contractDetails.metadata.decimals
         },
         {
-          title: this.$i18n.t('title.website').toString(),
+          title: this.$i18n.t('title.website'),
           detail: `<a href="${this.contractDetails.metadata.website}" target="_BLANK">${this.contractDetails.metadata.website}</a>`
         },
         {
-          title: this.$i18n.t('title.support').toString(),
+          title: this.$i18n.t('title.support'),
           detail: `<a href="mailto:${this.contractDetails.metadata.support.email}" target="_BLANK">${this.contractDetails.metadata.support.email}</a>`
         },
         {
-          title: this.$i18n.t('title.links').toString(),
+          title: this.$i18n.t('title.links'),
           detail: Object.entries(this.contractDetails.metadata.social)
             .map(obj => {
               const name = obj[0]

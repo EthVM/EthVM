@@ -7,7 +7,7 @@
     :chart-title="newTitle"
     :chart-description="newDescription"
     unfilled="true"
-    :footnote-arr="footnote"
+    :footnotes="footnote"
     :live-chart="true"
   />
 </template>
@@ -17,6 +17,8 @@ import { Events, BlockMetrics } from 'ethvm-common'
 import Chart from '@app/modules/charts/components/Chart.vue'
 import ethUnits from 'ethereumjs-units'
 import { Vue, Component } from 'vue-property-decorator'
+import { EthValue } from '@app/core/models'
+import { Footnote } from '@app/core/components/props'
 
 const MAX_ITEMS = 10
 
@@ -68,10 +70,11 @@ export default class ChartLiveTxFees extends Vue {
 
   fillChartData(bms: BlockMetrics[] | BlockMetrics = []) {
     bms = !Array.isArray(bms) ? [bms] : bms
+    const blockN = this.$i18n.t('title.blockN')
     bms.forEach(bm => {
-      this.data.labels.push(bm.number)
-      this.data.avgFees.push(bm.avgTxFees)
-      this.data.avgPrice.push(bm.avgGasPrice)
+      this.data.labels.push(blockN + bm.number)
+      this.data.avgFees.push(new EthValue(bm.avgTxFees).toEth())
+      this.data.avgPrice.push(new EthValue(bm.avgGasPrice).toGWei())
       if (this.data.labels.length > MAX_ITEMS) {
         this.data.labels.shift()
         this.data.avgFees.shift()
@@ -190,10 +193,10 @@ export default class ChartLiveTxFees extends Vue {
     return this.$i18n.t('charts.avgDescription')
   }
 
-  get footnote() {
+  get footnote(): Footnote[] {
     return [
       {
-        color: 'txFail',
+        color: 'txSuccess',
         text: this.$i18n.t('footnote.aveTxFees'),
         icon: 'fa fa-circle'
       },

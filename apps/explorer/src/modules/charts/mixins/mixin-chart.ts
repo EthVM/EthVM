@@ -1,3 +1,4 @@
+import { ChartData } from '@app/modules/charts/props'
 import { Component, Vue } from 'vue-property-decorator'
 
 @Component
@@ -105,7 +106,7 @@ export class ChartMixin extends Vue {
   ===================================================================================
   */
 
-  get chartData() {
+  get chartData(): ChartData {
     return {
       labels: this.DATA[this.timeFrame].labels,
       datasets: [

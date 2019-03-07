@@ -28,6 +28,7 @@ import AppError from '@app/core/components/ui/AppError.vue'
 import TokenTableTransfers from '@app/modules/tokens/components/TokenTableTransfers.vue'
 import TokenTableHolders from '@app/modules/tokens/components/TokenTableHolders.vue'
 import { Tx } from '@app/core/models'
+import { Tab } from '@app/core/components/props'
 import { Component, Vue, Prop } from 'vue-property-decorator'
 
 @Component({
@@ -82,7 +83,7 @@ export default class TokenDetailsTabs extends Vue {
   /**
    * Props object to describe tabs for AppTabs component
    */
-  get tabs() {
+  get tabs(): Tab[] {
     const tabs = [
       {
         id: '0',

@@ -108,6 +108,7 @@ import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableAddressTxRow from '@app/modules/addresses/components/TableAddressTxRow.vue'
 import { Tx } from '@app/core/models'
+import { Footnote } from '@app/core/components/props'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 
 const MAX_TXS = 10
@@ -132,8 +133,8 @@ export default class TableAddressTxs extends Vue {
   @Prop({ type: Number, default: 0 }) totalTxs!: number
   @Prop({ type: Boolean, default: false }) isPending!: boolean
   @Prop({ type: Boolean, default: true }) loading!: boolean
-  @Prop(String) error: string
-  @Prop({ type: Number, default: 0 }) page: number
+  @Prop({ type: Number, default: 0 }) page!: number
+  @Prop(String) error!: string
 
   /*
   ===================================================================================
@@ -196,7 +197,7 @@ export default class TableAddressTxs extends Vue {
     ]
   }
 
-  get footnote() {
+  get footnote(): Footnote[] {
     return [
       {
         color: 'success',

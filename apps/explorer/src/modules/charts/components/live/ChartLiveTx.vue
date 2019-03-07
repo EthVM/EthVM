@@ -6,7 +6,7 @@
     :chart-title="newTitle"
     :chart-description="newDescription"
     :redraw="redraw"
-    :footnote-arr="footnote"
+    :footnotes="footnote"
     :live-chart="true"
   />
 </template>
@@ -16,6 +16,7 @@ import { Events, BlockMetrics } from 'ethvm-common'
 import BN from 'bignumber.js'
 import Chart from '@app/modules/charts/components/Chart.vue'
 import { Vue, Component } from 'vue-property-decorator'
+import { Footnote } from '@app/core/components/props'
 
 const MAX_ITEMS = 10
 
@@ -68,8 +69,9 @@ export default class ChartLiveTransactions extends Vue {
 
   fillChartData(bms: BlockMetrics[] | BlockMetrics = []) {
     bms = !Array.isArray(bms) ? [bms] : bms
+    const blockN = this.$i18n.t('title.blockN')
     bms.forEach(bm => {
-      this.data.labels.push(bm.number)
+      this.data.labels.push(blockN + bm.number)
       this.data.sTxs.push(bm.numSuccessfulTxs)
       this.data.fTxs.push(bm.numFailedTxs)
       this.data.pTxs.push(bm.numPendingTxs)
@@ -117,7 +119,7 @@ export default class ChartLiveTransactions extends Vue {
     }
   }
 
-  get footnote() {
+  get footnote(): Footnote[] {
     return [
       {
         color: 'txSuccess',

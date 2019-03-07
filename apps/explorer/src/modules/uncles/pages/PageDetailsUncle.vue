@@ -12,12 +12,11 @@
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
-import AppListTitle from '@app/core/components/ui/AppListTitle.vue'
 import { Events } from 'ethvm-common'
 import { eth } from '@app/core/helper'
 import { Uncle } from '@app/core/models'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
-import { Detail } from '@app/core/components/props'
+import { Detail, Crumb } from '@app/core/components/props'
 
 @Component({
   components: {
@@ -116,7 +115,7 @@ export default class PageDetailsUncle extends Vue {
    * @return {Detail[]}
    */
   get uncleDetails(): Detail[] {
-    let details
+    let details: Detail[]
     if (this.isLoading) {
       details = [
         {
@@ -175,7 +174,7 @@ export default class PageDetailsUncle extends Vue {
         },
         {
           title: this.$i18n.t('block.pHash'),
-          detail: this.uncle.getParentHash()
+          detail: this.uncle.getParentHash().toString()
         },
         {
           title: this.$i18n.t('block.miner'),
@@ -218,7 +217,7 @@ export default class PageDetailsUncle extends Vue {
    *
    * @return {Array} - Breadcrumb entry. See description.
    */
-  get crumbs() {
+  get crumbs(): Crumb[] {
     return [
       {
         text: this.$i18n.t('title.uncles'),

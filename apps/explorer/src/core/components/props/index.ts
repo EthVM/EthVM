@@ -19,32 +19,25 @@ export interface NavHeader {
 
 export interface Footnote {
   color?: string
-  text?: string
+  text?: TranslateResult
   icon?: string
 }
 
 export interface Tab {
   id: string
-  title: string
+  title: TranslateResult
   isActive: boolean
 }
 
 export interface Detail {
-  title: string
-  detail?: string
+  title: TranslateResult
+  detail?: string | number
   link?: string
   copy?: boolean
 }
 
-export interface BlockDetailsTitle {
-  mined: boolean
-  next?: string
-  prev?: string
-  uncles?: string[]
-}
-
 export interface Crumb {
-  text: string
+  text: string | TranslateResult
   disabled: boolean
   icon?: string
   link?: string

@@ -10,8 +10,13 @@ BN.config({ FORMAT: format })
 
 @Component
 export class StringConcatMixin extends Vue {
-  // Methods
-  getRoundNumber(newNumber) {
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
+  getRoundNumber(newNumber): string {
     let round = 7
     if (newNumber > 1) {
       round = 2

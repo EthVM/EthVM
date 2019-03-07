@@ -11,6 +11,7 @@
 import { Vue, Component, Mixins, Prop } from 'vue-property-decorator'
 import { Events, BlockMetrics } from 'ethvm-common'
 import { StringConcatMixin } from '@app/core/components/mixins'
+import { TranslateResult } from 'vue-i18n'
 
 @Component
 export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
