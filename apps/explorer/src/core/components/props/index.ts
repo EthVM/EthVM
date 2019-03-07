@@ -30,8 +30,8 @@ export interface Tab {
 }
 
 export interface Detail {
-  title: string
-  detail?: string
+  title: TranslateResult
+  detail?: string | number
   link?: string
   copy?: boolean
 }

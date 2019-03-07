@@ -183,36 +183,36 @@ export default class PageDetailsTxs extends Vue {
    * If the data hasn't been loaded yet, then only include the titles in the details.
    */
   get txDetails(): Detail[] {
-    let details
+    let details : Detail[]
     if (this.isLoading) {
       details = [
         {
-          title: this.$i18n.t('tableHeader.blockN').toString()
+          title: this.$i18n.t('tableHeader.blockN')
         },
         {
-          title: this.$i18n.t('common.hash').toString()
+          title: this.$i18n.t('common.hash')
         },
         {
-          title: this.$i18n.t('common.timestmp').toString()
+          title: this.$i18n.t('common.timestmp')
         },
         {
-          title: this.$i18n.t('tx.from').toString()
+          title: this.$i18n.t('tx.from')
         },
         {
-          title: this.$i18n.t('tx.amount').toString()
+          title: this.$i18n.t('tx.amount')
         },
         this.toDetail,
         {
-          title: this.$i18n.t('gas.limit').toString()
+          title: this.$i18n.t('gas.limit')
         },
         {
-          title: this.$i18n.t('gas.used').toString()
+          title: this.$i18n.t('gas.used')
         },
         {
-          title: this.$i18n.t('gas.price').toString()
+          title: this.$i18n.t('gas.price')
         },
         {
-          title: this.$i18n.t('tx.cost').toString()
+          title: this.$i18n.t('tx.cost')
         }
       ]
     } else {

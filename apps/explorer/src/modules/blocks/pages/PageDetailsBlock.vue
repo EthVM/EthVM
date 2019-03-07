@@ -46,8 +46,6 @@
 <script lang="ts">
 import { Block, Uncle, Tx } from '@app/core/models'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-import AppListDetails from '@app/core/components/ui/AppListDetails.vue'
-import AppListTitle from '@app/core/components/ui/AppListTitle.vue'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import BlockDetailsTitle from '@app/modules/blocks/components/BlockDetailsTitle.vue'
@@ -60,8 +58,6 @@ const MAX_TXS = 10
 @Component({
   components: {
     AppBreadCrumbs,
-    AppListDetails,
-    AppListTitle,
     TableTxs,
     AppDetailsList,
     BlockDetailsTitle
@@ -96,8 +92,6 @@ export default class PageDetailsBlock extends Vue {
   totalTxs = 0
   txsPage = 0
   uncles = []
-  details = []
-  moreDetails = []
   timestamp = ''
 
   /*
@@ -172,7 +166,7 @@ export default class PageDetailsBlock extends Vue {
   */
 
   get blockDetails(): Detail[] {
-    let details
+    let details : Detail[]
     if (this.isLoading) {
       details = [
         {
