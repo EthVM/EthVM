@@ -81,7 +81,7 @@ up_simple() {
   ${SCRIPT_DIR}/docker-build.sh build ethvm-utils mongodb-dev
 
   echo "Starting up containers: traefik, mongo, explorer and api"
-  docker-compose up -d --build traefik mongodb explorer api
+  docker-compose up -d --build traefik mongodb explorer api api-nestjs
 
   # Give time to breathe
   sleep 10
