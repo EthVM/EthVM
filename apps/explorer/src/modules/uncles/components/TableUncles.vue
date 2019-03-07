@@ -119,12 +119,12 @@ export default class TableUncles extends Vue {
 
   @Prop({ type: String, default: '' }) showStyle!: string
   @Prop({ type: Array, default: [] }) uncles!: Uncle[]
-  @Prop({ type: Boolean, default: true }) loading: boolean
+  @Prop({ type: Boolean, default: true }) loading!: boolean
   // @Prop({ type: Boolean, default: false }) error: boolean
   @Prop({ type: Number, default: 0 }) totalUncles!: number
-  @Prop({ type: Number, default: 0 }) page: number // Page passed from parent view. Syncs pagination components
+  @Prop({ type: Number, default: 0 }) page!: number // Page passed from parent view. Syncs pagination components
   @Prop(Number) maxItems!: number
-  @Prop(String) error: string
+  @Prop(String) error!: string
 
   /*
   ===================================================================================

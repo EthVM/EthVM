@@ -133,8 +133,8 @@ export default class TableAddressTxs extends Vue {
   @Prop({ type: Number, default: 0 }) totalTxs!: number
   @Prop({ type: Boolean, default: false }) isPending!: boolean
   @Prop({ type: Boolean, default: true }) loading!: boolean
-  @Prop(String) error: string
-  @Prop({ type: Number, default: 0 }) page: number
+  @Prop({ type: Number, default: 0 }) page!: number
+  @Prop(String) error!: string
 
   /*
   ===================================================================================
