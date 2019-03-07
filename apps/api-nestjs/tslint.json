@@ -1,55 +1,65 @@
 {
-    "defaultSeverity": "error",
-    "extends": [
-        "tslint:recommended"
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint:recommended"
+  ],
+  "jsRules": {
+    "no-unused-expression": true
+  },
+  "rules": {
+    "eofline": false,
+    "quotemark": [
+      true,
+      "single"
     ],
-    "jsRules": {
-        "no-unused-expression": true
-    },
-    "rules": {
-        "eofline": false,
-        "quotemark": [
-            true,
-            "single"
-        ],
-        "indent": false,
-        "member-access": [
-            false
-        ],
-        "ordered-imports": [
-            false
-        ],
-        "max-line-length": [
-            true,
-            150
-        ],
-        "member-ordering": [
-            false
-        ],
-        "curly": false,
-        "interface-name": [
-            false
-        ],
-        "array-type": [
-            false
-        ],
-        "no-empty-interface": false,
-        "no-empty": false,
-        "arrow-parens": false,
-        "object-literal-sort-keys": false,
-        "no-unused-expression": false,
-        "max-classes-per-file": [
-            false
-        ],
-        "variable-name": [
-            false
-        ],
-        "one-line": [
-            false
-        ],
-        "one-variable-per-declaration": [
-            false
-        ]
-    },
-    "rulesDirectory": []
+    "indent": false,
+    "member-access": [
+      false
+    ],
+    "ordered-imports": [
+      false
+    ],
+    "max-line-length": [
+      true,
+      150
+    ],
+    "member-ordering": [
+      false
+    ],
+    "curly": false,
+    "array-type": [
+      false
+    ],
+    "no-empty-interface": false,
+    "no-empty": false,
+    "arrow-parens": false,
+    "object-literal-sort-keys": false,
+    "max-classes-per-file": false,
+    "variable-name": [
+      false
+    ],
+    "one-line": [
+      false
+    ],
+    "one-variable-per-declaration": [
+      false
+    ],
+    "no-console": [
+      true,
+      "log"
+    ],
+    "no-duplicate-imports": true,
+    "no-duplicate-variable": true,
+    "no-var-keyword": true,
+    "prefer-const": true,
+    "semicolon": [
+      false
+    ],
+    "interface-name": [
+      true,
+      "never-prefix"
+    ],
+    "no-unused-expression": false
+  },
+  "rulesDirectory": []
 }
