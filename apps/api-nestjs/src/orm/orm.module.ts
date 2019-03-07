@@ -8,8 +8,8 @@ import {ConfigService} from "@app/shared/config.service";
         TypeOrmModule.forRootAsync({
             useFactory: async (configService: ConfigService): Promise<ConnectionOptions> => ({
                 type: 'mongodb',
-                host: 'mongodb',
-                port: 27017,
+                host: configService.mongoDb.host,
+                port: configService.mongoDb.port,
                 synchronize: false,
                 entities: ['src/**/**.entity{.ts,.js}'],
                 logging: ['error']

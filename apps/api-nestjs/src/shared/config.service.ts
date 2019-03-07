@@ -42,11 +42,28 @@ const schema = {
       env: 'GRAPHQL_PLAYGROUND',
       default: false
     }
+  },
+  mongodb: {
+    host: {
+      doc: 'MongoDB host',
+      env: 'MONGO_HOST',
+      default: 'mongodb'
+    },
+    port: {
+      doc: 'MongoDB port',
+      env: 'MONGO_PORT',
+      default: 27017
+    }
   }
 }
 
 export interface GraphqlConfig {
   playground: boolean
+}
+
+export interface MongoDbConfig {
+  host: string
+  port: number
 }
 
 @Injectable()
@@ -81,5 +98,9 @@ export class ConfigService {
 
   get graphql(): GraphqlConfig {
     return this.config.get('graphql')
+  }
+
+  get mongoDb(): MongoDbConfig {
+    return this.config.get('mongodb')
   }
 }
