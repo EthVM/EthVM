@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common'
 import { GraphQLModule as ApolloGraphQLModule } from '@nestjs/graphql'
 import * as GraphQLJSON from 'graphql-type-json'
-import { DateScalar } from './scalars/date.scalar'
-import { BufferScalar } from './scalars/buffer.scalar'
-import { DecimalScalar } from './scalars/decimal.scalar'
+import { DateScalar } from '@app/graphql/scalars/date.scalar'
+import { BufferScalar } from '@app/graphql/scalars/buffer.scalar'
+import { DecimalScalar } from '@app/graphql/scalars/decimal.scalar'
 import { join } from 'path'
-import {ConfigService} from "@app/shared/config.service"
+import { ConfigService } from '@app/shared/config.service'
 
 @Module({
   imports: [

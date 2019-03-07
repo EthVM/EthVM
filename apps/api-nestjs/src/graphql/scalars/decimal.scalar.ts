@@ -1,6 +1,6 @@
-import {Scalar} from '@nestjs/graphql'
-import {Kind} from 'graphql'
-import {GraphQLError} from 'graphql/error'
+import { Scalar } from '@nestjs/graphql'
+import { Kind } from 'graphql'
+import { GraphQLError } from 'graphql/error'
 
 @Scalar('Decimal')
 export class DecimalScalar {

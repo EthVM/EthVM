@@ -1,5 +1,5 @@
 import { Args, Query, Resolver, Subscription } from '@nestjs/graphql'
-import { BlockService } from './block.service'
+import { BlockService } from '@app/modules/blocks/block.service'
 import { PubSub } from 'graphql-subscriptions'
 
 const pubSub = new PubSub()

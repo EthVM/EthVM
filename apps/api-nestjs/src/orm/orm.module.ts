@@ -1,7 +1,7 @@
-import {Module} from '@nestjs/common';
-import {TypeOrmModule} from '@nestjs/typeorm';
-import {ConnectionOptions} from 'typeorm';
-import {ConfigService} from "@app/shared/config.service";
+import { Module } from '@nestjs/common'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { ConnectionOptions } from 'typeorm'
+import { ConfigService } from '@app/shared/config.service'
 
 @Module({
     imports: [

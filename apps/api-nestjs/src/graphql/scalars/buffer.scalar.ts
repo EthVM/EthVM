@@ -1,4 +1,4 @@
-import {Scalar} from '@nestjs/graphql'
+import { Scalar } from '@nestjs/graphql'
 
 @Scalar('Buffer')
 export class BufferScalar {

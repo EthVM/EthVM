@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core'
 import { ValidationPipe } from '@nestjs/common'
-import { AppModule } from './app.module'
+import { AppModule } from '@app/app.module'
 
 declare const module: any
 
