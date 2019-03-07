@@ -5,11 +5,15 @@ import { DateScalar } from './scalars/date.scalar'
 import { BufferScalar } from './scalars/buffer.scalar'
 import { DecimalScalar } from './scalars/decimal.scalar'
 import { join } from 'path'
+import {ConfigService} from "@app/shared/config.service"
 
 @Module({
   imports: [
     ApolloGraphQLModule.forRootAsync({
-      useFactory: async (): Promise<any> => {
+      useFactory: async (configService: ConfigService): Promise<any> => {
+
+        const config = configService.graphql;
+
         return {
           typePaths: ['./src/**/*.graphql'],
           resolvers: { JSON: GraphQLJSON, Decimal: DecimalScalar, Buffer: BufferScalar },
@@ -23,9 +27,11 @@ import { join } from 'path'
           context: ({ req, res }) => ({
             request: req,
             response: res
-          })
+          }),
+          ...config
         }
-      }
+      },
+      inject: [ConfigService]
     })
   ],
   providers: [DateScalar]
