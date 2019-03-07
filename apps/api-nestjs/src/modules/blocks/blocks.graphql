@@ -4,8 +4,8 @@ type Query {
 }
 
 type Subscription {
-    newBlock: [Block]
-  }
+  newBlock: [Block]
+}
 
 type Block {
   number: Int
@@ -37,7 +37,7 @@ type Header {
   extraData:JSON
 }
 
-type Stats{
+type Stats {
   successfulTxs: Int
   failedTxs:Int
   pendingTxs:Int
