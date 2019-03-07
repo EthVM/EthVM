@@ -16,11 +16,24 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { Crumb } from '@app/core/components/props'
+
 @Component
 export default class AppBreadCrumbs extends Vue {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
   @Prop(Array) newItems!: Crumb[]
 
-  crumbs = []
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
+
+  crumbs: Crumb[] = []
 
   /*
   ===================================================================================
@@ -49,17 +62,16 @@ export default class AppBreadCrumbs extends Vue {
   ===================================================================================
   */
 
-  prepareBreadcrumbs() {
+  prepareBreadcrumbs(): void {
     this.setHome()
     this.addNewItems()
   }
 
-  setHome() {
-    this.crumbs = []
+  setHome(): void {
     this.crumbs.push(this.home)
   }
 
-  addNewItems() {
+  addNewItems(): void {
     if (this.newItems) {
       this.crumbs[0].disabled = false
       for (const i in this.newItems) {
@@ -75,13 +87,12 @@ export default class AppBreadCrumbs extends Vue {
   */
 
   get home(): Crumb {
-    const crumbHome = {
+    return  {
       text: this.$i18n.t('title.home').toString(),
       disabled: true,
       icon: 'fa fa-home',
       link: '/'
     }
-    return crumbHome
   }
 }
 </script>

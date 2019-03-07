@@ -24,6 +24,7 @@ import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppCardStatsGroup from '@app/core/components/ui/AppCardStatsGroup.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
 import { Block, SimpleBlock } from '@app/core/models'
+import { Crumb } from '@app/core/components/props'
 import { Vue, Component } from 'vue-property-decorator'
 
 const MAX_ITEMS = 50
@@ -108,7 +109,7 @@ export default class PageBlocks extends Vue {
   ===================================================================================
   */
 
-  get crumbs() {
+  get crumbs(): Crumb[] {
     return [
       {
         text: this.$i18n.t('title.blocks'),

@@ -62,7 +62,7 @@ import HolderDetailsList from '@app/modules/tokens/components/HolderDetailsList.
 import HolderDetailsTabs from '@app/modules/tokens/components/HolderDetailsTabs.vue'
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 import { Events } from 'ethvm-common'
-import { Detail } from '@app/core/components/props'
+import { Detail, Crumb } from '@app/core/components/props'
 import { Token, Tx } from '@app/core/models'
 
 const MAX_ITEMS = 10
@@ -462,7 +462,7 @@ export default class PageDetailsToken extends Vue {
    *
    * @return {Array} - Breadcrumb entry. See description.
    */
-  get crumbs() {
+  get crumbs(): Crumb[] {
     return this.isHolder ? this.crumbsHolder : this.crumbsBasic
   }
 
@@ -471,7 +471,7 @@ export default class PageDetailsToken extends Vue {
    *
    * @return {Array} - Breadcrumb entry. See description.
    */
-  get crumbsBasic() {
+  get crumbsBasic(): Crumb[] {
     return [
       {
         text: this.$i18n.t('title.tokens'),
@@ -491,7 +491,7 @@ export default class PageDetailsToken extends Vue {
    *
    * @return {Array} - Breadcrumb entry. See description.
    */
-  get crumbsHolder() {
+  get crumbsHolder(): Crumb[] {
     return [
       {
         text: this.$i18n.t('title.tokens').toString(),

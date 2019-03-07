@@ -44,7 +44,7 @@ export interface BlockDetailsTitle {
 }
 
 export interface Crumb {
-  text: string
+  text: string | TranslateResult
   disabled: boolean
   icon?: string
   link?: string

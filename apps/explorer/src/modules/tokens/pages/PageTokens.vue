@@ -22,6 +22,7 @@
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import TokenTable from '@app/modules/tokens/components/TokenTable.vue'
+import { Crumb } from '@app/core/components/props'
 import { Component, Vue } from 'vue-property-decorator'
 
 const MAX_ITEMS = 50
@@ -112,7 +113,7 @@ export default class PageTokens extends Vue {
    *
    * @return {Array} - Breadcrumb entry. See description.
    */
-  get crumbs() {
+  get crumbs(): Crumb[] {
     return [
       {
         text: this.$i18n.t('title.tokens'),

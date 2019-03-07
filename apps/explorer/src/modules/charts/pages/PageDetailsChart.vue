@@ -28,6 +28,7 @@ import ChartTxFees from '@app/modules/charts/components/history/ChartTxFees.vue'
 import ChartUnclesNumber from '@app/modules/charts/components/history/ChartUnclesNumber.vue'
 import { Vue, Component } from 'vue-property-decorator'
 import { ChartTypes } from '@app/modules/charts/helpers'
+import { Crumb } from '@app/core/components/props'
 
 @Component({
   components: {
@@ -58,7 +59,7 @@ export default class PageDetailsChart extends Vue {
   ===================================================================================
   */
 
-  get crumbs() {
+  get crumbs(): Crumb[] {
     return [
       {
         text: this.$i18n.t('title.charts'),
@@ -72,7 +73,7 @@ export default class PageDetailsChart extends Vue {
     ]
   }
 
-  get chartId() {
+  get chartId(): string {
     return this.$route.params.chartRef
   }
 }

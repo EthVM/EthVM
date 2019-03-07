@@ -49,7 +49,7 @@ import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import BlockDetailsTitle from '@app/modules/blocks/components/BlockDetailsTitle.vue'
-import { Detail } from '@app/core/components/props'
+import { Detail, Crumb } from '@app/core/components/props'
 import { eth } from '@app/core/helper'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
@@ -369,7 +369,7 @@ export default class PageDetailsBlock extends Vue {
    *
    * @return {Array} - Breadcrumb entry. See description.
    */
-  get crumbs() {
+  get crumbs(): Crumb[] {
     return [
       {
         text: this.$i18n.t('title.blocks'),

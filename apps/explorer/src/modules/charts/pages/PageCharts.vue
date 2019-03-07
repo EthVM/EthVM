@@ -86,7 +86,7 @@
     Component
   } from 'vue-property-decorator'
   import {
-    Tab
+    Tab, Crumb
   } from '@app/core/components/props'
 
   @Component({
@@ -108,14 +108,17 @@
 
     ID = ChartTypes
 
-    data() {
-      return {
-        crumbs: [{
+    /*
+    ===================================================================================
+      Computed
+    ===================================================================================
+    */
+
+    get crumbs(): Crumb[] {
+      return [{
           text: this.$i18n.t('title.charts'),
           disabled: true
-        }],
-
-      }
+        }]
     }
     get pageTabs(): Tab[] {
       return [{
