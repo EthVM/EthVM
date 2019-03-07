@@ -166,7 +166,7 @@ export default class PageDetailsBlock extends Vue {
   */
 
   get blockDetails(): Detail[] {
-    let details : Detail[]
+    let details: Detail[]
     if (this.isLoading) {
       details = [
         {

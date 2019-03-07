@@ -183,7 +183,7 @@ export default class PageDetailsTxs extends Vue {
    * If the data hasn't been loaded yet, then only include the titles in the details.
    */
   get txDetails(): Detail[] {
-    let details : Detail[]
+    let details: Detail[]
     if (this.isLoading) {
       details = [
         {

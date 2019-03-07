@@ -102,7 +102,7 @@ export default class TheNavigationDrawer extends Vue {
   ===================================================================================
   */
 
-  supportEmail = 'support@ethvm.com'
+  supportEmail: 'support@ethvm.com'
   drawer = null
   active = 0
   sublink = null

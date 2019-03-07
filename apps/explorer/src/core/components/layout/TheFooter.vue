@@ -80,6 +80,12 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
   }
 })
 export default class TheFooter extends Vue {
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
+
   btcAddr: string = '1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9'
   ethAddr: string = '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
 }
