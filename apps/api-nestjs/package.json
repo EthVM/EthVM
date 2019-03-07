@@ -12,7 +12,7 @@
     "nestjs",
     "ethereum"
   ],
-  "author": "EnKryptIO",
+  "author": "EthVM",
   "license": "MIT",
   "scripts": {
     "format": "prettier --write \"src/**/*.ts\"",
