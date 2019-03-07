@@ -16,7 +16,7 @@ import {ConfigService} from "@app/shared/config.service"
 
         return {
           typePaths: ['./src/**/*.graphql'],
-          resolvers: { JSON: GraphQLJSON, Decimal: DecimalScalar, Buffer: BufferScalar },
+          resolvers: { JSON: GraphQLJSON },
           cacheControl: true,
           installSubscriptionHandlers: true,
           cors: true,
@@ -34,6 +34,6 @@ import {ConfigService} from "@app/shared/config.service"
       inject: [ConfigService]
     })
   ],
-  providers: [DateScalar]
+  providers: [DateScalar, DecimalScalar, BufferScalar]
 })
 export class GraphQLModule {}
