@@ -34,6 +34,7 @@ export interface Detail {
   detail?: string | number
   link?: string
   copy?: boolean
+  txInput?: string[]
 }
 
 export interface Crumb {

@@ -86,9 +86,9 @@ export class Tx {
     return new EthValue(this.getGasPrice().toWei() * this.getGasUsed().toNumber())
   }
 
-  public getNonce(): Hex {
+  public getNonce(): number {
     if (!this.cache.nonce) {
-      this.cache.nonce = new Hex(this.tx.nonce)
+      this.cache.nonce = new HexNumber(this.tx.nonce).toNumber()
     }
     return this.cache.nonce
   }
@@ -111,4 +111,14 @@ export class Tx {
   public getTimestamp(): Date {
     return new Date(this.tx.timestamp * 1000)
   }
+
+  public getInput(): string{
+    if (!this.cache.input) {
+      this.cache.input = this.tx.input
+    }
+    return this.cache.input
+  }
+
+
+
 }
