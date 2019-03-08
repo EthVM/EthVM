@@ -1,14 +1,19 @@
 import { Column } from 'typeorm'
-import { EmbeddedLog } from '@app/orm/embedded-entities/embedded-log'
-import { EmbeddedTrace } from '@app/orm/embedded-entities/embedded-trace'
+import { assignClean } from '@app/shared/utils'
+import { LogEmbedded } from '@app/orm/embedded-entities/log.embedded'
+import { TraceEmbedded } from '@app/orm/embedded-entities/trace.embedded'
 
-export class EmbeddedReceipt {
+export class ReceiptEmbedded {
+
+  constructor(data: any) {
+    assignClean(this, data)
+  }
 
   @Column({type: 'string', readonly: true})
   blockHash: string
 
   @Column({type: 'long', readonly: true})
-  blockNumber: number;
+  blockNumber: number
 
   @Column({type: 'string', readonly: true})
   contractAddress: string
@@ -34,10 +39,10 @@ export class EmbeddedReceipt {
   @Column({type: 'string', readonly: true})
   transactionIndex: string
 
-  @Column(type => EmbeddedLog)
-  logs: EmbeddedLog[];
+  @Column(type => LogEmbedded)
+  logs: LogEmbedded[]
 
-  @Column(type => EmbeddedTrace)
-  traces: EmbeddedTrace[];
+  @Column(type => TraceEmbedded)
+  traces: TraceEmbedded[]
 
 }

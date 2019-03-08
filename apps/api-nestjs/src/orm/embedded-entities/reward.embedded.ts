@@ -1,6 +1,11 @@
 import { Column } from 'typeorm'
+import { assignClean } from '@app/shared/utils'
 
-export class EmbeddedReward {
+export class RewardEmbedded {
+
+  constructor(data: any) {
+    assignClean(this, data)
+  }
 
   @Column({type: 'string', readonly: true})
   author: string

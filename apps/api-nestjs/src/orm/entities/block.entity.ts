@@ -1,8 +1,9 @@
 import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
-import { EmbeddedTx } from '@app/orm/embedded-entities/embedded-tx'
-import { EmbeddedHeader } from '@app/orm/embedded-entities/embedded-header'
-import { EmbeddedReward } from '@app/orm/embedded-entities/embedded-reward'
+import { HeaderEmbedded } from '@app/orm/embedded-entities/header.embedded'
+import { RewardEmbedded } from '@app/orm/embedded-entities/reward.embedded'
+import { TxEmbedded } from '@app/orm/embedded-entities/tx.embedded'
+import { UncleEmbedded } from '@app/orm/embedded-entities/uncle.embedded'
 
 @Entity('blocks')
 export class BlockEntity {
@@ -17,13 +18,16 @@ export class BlockEntity {
   @Column({type: 'string', readonly: true})
   totalDifficulty: string
 
-  @Column(type => EmbeddedHeader)
-  header: EmbeddedHeader
+  @Column(type => HeaderEmbedded)
+  header: HeaderEmbedded
 
-  @Column(type => EmbeddedReward)
-  rewards: EmbeddedReward[]
+  @Column(type => RewardEmbedded)
+  rewards: RewardEmbedded[]
 
-  @Column(type => EmbeddedTx)
-  transactions: EmbeddedTx[]
+  @Column(type => TxEmbedded)
+  transactions: TxEmbedded[]
+
+  @Column(type => UncleEmbedded)
+  uncles: UncleEmbedded[]
 
 }

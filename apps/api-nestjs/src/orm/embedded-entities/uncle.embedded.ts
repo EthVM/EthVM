@@ -1,54 +1,58 @@
 import { Column } from 'typeorm'
-import { EmbeddedReceipt } from '@app/orm/embedded-entities/embedded-receipt'
+import { assignClean } from '@app/shared/utils'
 
-export class EmbeddedTx {
+export class UncleEmbedded {
 
-  @Column({type: 'string', readonly: true})
-  blockHash: string
-
-  @Column({type: 'long', readonly: true})
-  blockNumber: number
+  constructor(data: any) {
+    assignClean(this, data)
+  }
 
   @Column({type: 'string', readonly: true})
-  from: string
+  author: string
 
   @Column({type: 'string', readonly: true})
-  gas: string
+  difficulty: string
 
   @Column({type: 'string', readonly: true})
-  gasPrice: string
+  extraData: string
+
+  @Column({type: 'string', readonly: true})
+  gasLimit: string
+
+  @Column({type: 'string', readonly: true})
+  gasUsed: string
 
   @Column({type: 'string', readonly: true})
   hash: string
 
   @Column({type: 'string', readonly: true})
-  input: string
+  logsBloom: string
 
   @Column({type: 'string', readonly: true})
   nonce: string
 
-  @Column({type: 'string', readonly: true})
-  r: string
+  @Column({type: 'long', readonly: true})
+  number: number
 
   @Column({type: 'string', readonly: true})
-  s: string
+  parentHash: string
+
+  @Column({type: 'string', readonly: true})
+  sha3Uncles: string
+
+  @Column({type: 'long', readonly: true})
+  size: number
+
+  @Column({type: 'string', readonly: true})
+  stateRoot: string
 
   @Column({type: 'long', readonly: true})
   timestamp: number
 
   @Column({type: 'string', readonly: true})
-  to: string
-
-  @Column({type: 'int', readonly: true})
-  transactionIndex: number
-
-  @Column({type: 'long', readonly: true})
-  v: number
+  transactionRoot: string
 
   @Column({type: 'string', readonly: true})
-  value: string
-
-  @Column(type => EmbeddedReceipt)
-  receipt: EmbeddedReceipt
+  uncleReward: string
 
 }
