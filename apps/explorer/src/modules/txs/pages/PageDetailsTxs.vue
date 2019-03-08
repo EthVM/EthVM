@@ -58,9 +58,7 @@ export default class PageDetailsTxs extends Vue {
     // 1. Check that current tx ref is valid one
     if (!eth.isValidHash(ref)) {
       this.error = this.$i18n.t('message.invalidHash').toString()
-
-    }
-    else {
+    } else {
       this.loadTx()
       window.scrollTo(0, 0)
     }
@@ -129,7 +127,6 @@ export default class PageDetailsTxs extends Vue {
    * @return {Tx}
    */
   get tx(): Tx {
-    console.log(this.transaction)
     return this.transaction
   }
 
@@ -260,8 +257,7 @@ export default class PageDetailsTxs extends Vue {
           title: this.$i18n.t('tx.input'),
           detail: '',
           txInput: this.txDataInput
-        },
-
+        }
       ]
     }
 
@@ -308,11 +304,11 @@ export default class PageDetailsTxs extends Vue {
 
   get txDataInput(): string[] {
     let input = ['0x']
-    if (this.tx.getInput()){
+    if (this.tx.getInput()) {
       const sig = '0x' + this.tx.getInput().substr(0, 8)
-      const index = Signatures.results.findIndex(i=> i.hex_signature === sig)
+      const index = Signatures.results.findIndex(i => i.hex_signature === sig)
       input = [`${this.$i18n.t('tx.method')}: ${sig}`]
-      if ( index != -1){
+      if (index != -1) {
         input.unshift(`${this.$i18n.t('tx.func')}: ${Signatures.results[index].text_signature}`)
       }
     }

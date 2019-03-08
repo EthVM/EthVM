@@ -112,13 +112,10 @@ export class Tx {
     return new Date(this.tx.timestamp * 1000)
   }
 
-  public getInput(): string{
+  public getInput(): string {
     if (!this.cache.input) {
       this.cache.input = this.tx.input
     }
     return this.cache.input
   }
-
-
-
 }

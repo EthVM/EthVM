@@ -50,9 +50,9 @@
     =====================================================================================
     -->
     <div v-if="!hasError">
-        <div v-for="(item, index) in basicDetails" :key="calculateKey(index)" :class="[getColor(calculateKey(index)) ? '' : 'tableGrey']">
-          <app-details-list-row :detail="item" :is-loading="isLoading" />
-        </div>
+      <div v-for="(item, index) in basicDetails" :key="calculateKey(index)" :class="[getColor(calculateKey(index)) ? '' : 'tableGrey']">
+        <app-details-list-row :detail="item" :is-loading="isLoading" />
+      </div>
     </div>
     <!--
     =====================================================================================
@@ -133,8 +133,8 @@ export default class AppDetailsList extends Vue {
   }
 
   /**
-  * Sets row color to grey.
-  */
+   * Sets row color to grey.
+   */
   getColor(_index: number): boolean {
     return _index % 2 === 0
   }
@@ -185,7 +185,5 @@ export default class AppDetailsList extends Vue {
   get hasMore(): boolean {
     return this.moreDetails.length > 0
   }
-
-
 }
 </script>
