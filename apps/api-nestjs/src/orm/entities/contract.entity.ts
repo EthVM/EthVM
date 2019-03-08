@@ -12,7 +12,7 @@ export class ContractEntity {
   }
 
   @ObjectIdColumn({name: '_id', type: 'string', readonly: true})
-  number: ObjectID
+  id: ObjectID
 
   @Column({type: 'string'})
   address: string
