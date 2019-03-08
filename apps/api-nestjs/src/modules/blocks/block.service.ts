@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { MongoRepository } from 'typeorm'
 import { BlockEntity } from '@app/orm/entities/block.entity'
 
 @Injectable()
 export class BlockService {
-  constructor(@InjectRepository(BlockEntity) private readonly blockRepository: Repository<BlockEntity>) {}
+  constructor(@InjectRepository(BlockEntity) private readonly blockRepository: MongoRepository<BlockEntity>) {}
 
   async getBlock(hash: string): Promise<BlockEntity> {
-    return this.blockRepository.findOne({ hash: hash })
+    // TODO fix find conditions
+    return this.blockRepository.findOne({where: {hash: hash} })
   }
 
   async getBlocks(limit: number, page: number): Promise<BlockEntity[]> {

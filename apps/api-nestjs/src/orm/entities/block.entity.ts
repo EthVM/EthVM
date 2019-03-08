@@ -1,5 +1,8 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm'
+import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
+import { EmbeddedTx } from '@app/orm/embedded-entities/embedded-tx'
+import { EmbeddedHeader } from '@app/orm/embedded-entities/embedded-header'
+import { EmbeddedReward } from '@app/orm/embedded-entities/embedded-reward'
 
 @Entity('blocks')
 export class BlockEntity {
@@ -8,53 +11,19 @@ export class BlockEntity {
     assignClean(this, data)
   }
 
-  @PrimaryColumn()
-  number: number
+  @ObjectIdColumn({name: '_id', type: 'decimal', readonly: true})
+  number: ObjectID
 
-  @Column()
-  hash: string
+  @Column({type: 'string', readonly: true})
+  totalDifficulty: string
 
-  @Column()
-  header: Header
+  @Column(type => EmbeddedHeader)
+  header: EmbeddedHeader
 
-  @Column()
-  stats: BlockStats
+  @Column(type => EmbeddedReward)
+  rewards: EmbeddedReward[]
 
-  @Column()
-  transactions?: string[]
+  @Column(type => EmbeddedTx)
+  transactions: EmbeddedTx[]
 
-  @Column()
-  uncles?: string[]
-  
-}
-export interface Header {
-  parentHash: string
-  sha3Uncles?: string
-  timestamp?: number
-  nonce?: string
-  miner: string
-  rewards: any
-  difficulty?: number
-  totalDifficulty?: number
-  stateRoot: Buffer
-  transactionsRoot?: Buffer
-  receiptsRoot: Buffer
-  logsBloom?: Buffer
-  gasLimit?: number
-  gasUsed?: number
-  mixHash?: Buffer
-  extraData?: Buffer
-}
-
-export interface BlockStats {
-  successfulTxs?: number
-  failedTxs?: number
-  pendingTxs?: number
-  processingTimeMs?: number
-  txs?: number
-  internalTxs?: number
-  avgGasPrice?: number
-  avgTxsFees?: number
-  totalGasPrice?: number
-  totalTxsFees?: number
 }
