@@ -1,7 +1,7 @@
 import { Column } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
-import { ActionEmbedded } from '@app/orm/embedded-entities/action.embedded'
-import { ResultEmbedded } from '@app/orm/embedded-entities/result.embedded'
+import { ActionEmbedded } from '@app/orm/embedded-entities/block/action.embedded'
+import { ResultEmbedded } from '@app/orm/embedded-entities/block/result.embedded'
 
 export class TraceEmbedded {
 

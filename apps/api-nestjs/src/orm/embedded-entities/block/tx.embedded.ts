@@ -1,6 +1,6 @@
 import { Column } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
-import { ReceiptEmbedded } from '@app/orm/embedded-entities/receipt.embedded'
+import { ReceiptEmbedded } from '@app/orm/embedded-entities/block/receipt.embedded'
 
 export class TxEmbedded {
 
