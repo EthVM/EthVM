@@ -6,14 +6,14 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component
-export default class AppBreadCrumbs extends Vue {
+export default class AppSocialLink extends Vue {
   /*
   ===================================================================================
     Props
   ===================================================================================
   */
 
-  @Prop(String) platform: string
+  @Prop(String) platform!: string
 
   /*
   ===================================================================================

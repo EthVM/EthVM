@@ -4,7 +4,7 @@ export interface TokenExchange {
   current_price?: number
   high_24h?: number
   image: string
-  last_updated?: string
+  last_updated?: string | number
   low_24h?: number
   market_cap?: number
   market_cap_change_24h?: number
@@ -14,9 +14,9 @@ export interface TokenExchange {
   price_change_24h?: number
   price_change_percentage_24h?: number
   symbol: string
-  total_supply: number
+  total_supply?: number
   total_volume?: number
-  _id: string
+  _id?: string
 }
 
 export interface TokenFilter {

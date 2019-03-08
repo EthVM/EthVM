@@ -1,0 +1,12 @@
+{
+  "testEnvironment": "./test/api2-test-environment.js",
+  "rootDir": "..",
+  "moduleNameMapper": {
+    "^@app/(.*)": "<rootDir>/src/$1"
+  },
+  "moduleFileExtensions": ["js", "json", "ts", "node"],
+  "testRegex": ".e2e-spec.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  }
+}

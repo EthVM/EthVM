@@ -449,17 +449,17 @@ export default class PageDetailsAddress extends Vue {
     const tabs: Tab[] = [
       {
         id: '0',
-        title: this.$i18n.t('tabs.txH').toString(),
+        title: this.$i18n.t('tabs.txH'),
         isActive: true
       },
       {
         id: '1',
-        title: this.$i18n.t('tabs.tokens').toString(),
+        title: this.$i18n.t('tabs.tokens'),
         isActive: false
       },
       {
         id: '2',
-        title: this.$i18n.t('tabs.pending').toString(),
+        title: this.$i18n.t('tabs.pending'),
         isActive: false
       }
     ]

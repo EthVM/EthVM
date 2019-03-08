@@ -13,6 +13,7 @@
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import HolderTableTransfers from '@app/modules/tokens/components/HolderTableTransfers.vue'
 import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Tab } from '@app/core/components/props'
 
 @Component({
   components: {
@@ -51,7 +52,8 @@ export default class HolderDetailsTabs extends Vue {
   /**
    * Props object to describe tabs for AppTabs component
    */
-  get tabs() {
+
+  get tabs(): Tab[] {
     const tabs = [
       {
         id: '0',

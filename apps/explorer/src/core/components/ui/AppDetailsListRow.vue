@@ -37,7 +37,7 @@ import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
 export default class AppDetailsListRow extends Vue {
   /*
   ===================================================================================
-    Prop
+    Props
   ===================================================================================
   */
 

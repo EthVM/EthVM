@@ -23,6 +23,7 @@
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
+import { Crumb } from '@app/core/components/props'
 import { Component, Vue } from 'vue-property-decorator'
 
 @Component({
@@ -37,7 +38,7 @@ export default class PageKnowledgeBase extends Vue {
   ===================================================================================
   */
 
-  get crumbs() {
+  get crumbs(): Crumb[] {
     return [
       {
         text: this.$i18n.t('title.kb'),

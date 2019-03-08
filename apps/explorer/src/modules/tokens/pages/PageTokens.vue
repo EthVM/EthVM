@@ -22,6 +22,8 @@
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import TokenTable from '@app/modules/tokens/components/TokenTable.vue'
+import { Crumb } from '@app/core/components/props'
+import { TokenExchange } from '@app/modules/tokens/props'
 import { Component, Vue } from 'vue-property-decorator'
 
 const MAX_ITEMS = 50
@@ -46,7 +48,7 @@ export default class PageTokens extends Vue {
   ===================================================================================
   */
   isRopsten = true
-  tokens: any = []
+  tokens: TokenExchange[] = []
   total = 0
   isLoading = true
   page = 0
@@ -112,7 +114,7 @@ export default class PageTokens extends Vue {
    *
    * @return {Array} - Breadcrumb entry. See description.
    */
-  get crumbs() {
+  get crumbs(): Crumb[] {
     return [
       {
         text: this.$i18n.t('title.tokens'),

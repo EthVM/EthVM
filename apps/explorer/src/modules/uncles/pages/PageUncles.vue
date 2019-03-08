@@ -24,6 +24,7 @@ import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import TableUncles from '@app/modules/uncles/components/TableUncles.vue'
 import { Vue, Component } from 'vue-property-decorator'
 import { Uncle } from '@app/core/models'
+import { Crumb } from '@app/core/components/props'
 
 const MAX_ITEMS = 50
 
@@ -108,7 +109,7 @@ export default class PageUncles extends Vue {
   ===================================================================================
   */
 
-  get crumbs() {
+  get crumbs(): Crumb[] {
     return [
       {
         text: this.$i18n.t('title.uncles'),

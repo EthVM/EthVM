@@ -121,7 +121,7 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
   @Prop(Array) tokens!: any[]
   @Prop(String) holder!: string
   @Prop({ type: Boolean, default: true }) loading!: boolean
-  @Prop(String) error: string
+  @Prop(String) error!: string
 
   /*
   ===================================================================================

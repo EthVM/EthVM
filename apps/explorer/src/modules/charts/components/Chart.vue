@@ -19,7 +19,7 @@
       </v-flex>
     </v-layout>
     <v-divider></v-divider>
-    <v-layout align-center justify-end row fill-height v-if="footnotes"> <app-footnotes :footnotes="footnotes" /> </v-layout>
+    <v-layout align-center justify-end row fill-height v-if="footnotes" pb-3 pt-2> <app-footnotes :footnotes="footnotes" /> </v-layout>
     <app-info-load v-show="data && data.datasets && data.datasets[0].data.length === 0" />
     <div v-show="data && data.datasets && data.datasets[0].data.length !== 0"><canvas ref="chart" /></div>
   </v-card>

@@ -11,8 +11,12 @@
           <v-flex xs12 md6> <chart-live-tx-fees /> </v-flex>
         </v-layout>
         <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6><!-- Live Block Time --></v-flex>
-          <v-flex xs12 md6><!-- Live Difficulty --></v-flex>
+          <v-flex xs12 md6>
+            <!-- Live Block Time -->
+          </v-flex>
+          <v-flex xs12 md6>
+            <!-- Live Difficulty -->
+          </v-flex>
         </v-layout>
       </v-tab-item>
       <!-- Transactions-->
@@ -27,7 +31,9 @@
         </v-layout>
         <v-layout row wrap justify-center mb-4>
           <v-flex xs12 md6> <chart-link :title="$t('charts.txFees')" :chart-id="ID.txFees" /> </v-flex>
-          <v-flex xs12 md6><!-- Pending Txs --></v-flex>
+          <v-flex xs12 md6>
+            <!-- Pending Txs -->
+          </v-flex>
         </v-layout>
       </v-tab-item>
       <!-- Blocks -->
@@ -37,14 +43,18 @@
           <v-flex xs12 md6> <chart-link :title="$t('charts.avgBlockDiff')" :chart-id="ID.difficulty" /> </v-flex>
         </v-layout>
         <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6><!-- Average Block Size --></v-flex>
+          <v-flex xs12 md6>
+            <!-- Average Block Size -->
+          </v-flex>
         </v-layout>
       </v-tab-item>
       <!-- Mining -->
       <v-tab-item slot="tabs-item" value="tab-3">
         <v-layout row wrap justify-center mb-4>
           <v-flex xs12 md6> <chart-link :title="$t('charts.avgHashRate')" :chart-id="ID.hashRate" /> </v-flex>
-          <v-flex xs12 md6><!--  --></v-flex>
+          <v-flex xs12 md6>
+            <!--  -->
+          </v-flex>
         </v-layout>
       </v-tab-item>
     </app-tabs>
@@ -60,6 +70,7 @@ import ChartLiveTx from '@app/modules/charts/components/live/ChartLiveTx.vue'
 import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees.vue'
 import { ChartTypes } from '@app/modules/charts/helpers'
 import { Vue, Component } from 'vue-property-decorator'
+import { Tab, Crumb } from '@app/core/components/props'
 
 @Component({
   components: {
@@ -80,37 +91,44 @@ export default class PageCharts extends Vue {
 
   ID = ChartTypes
 
-  data() {
-    return {
-      crumbs: [
-        {
-          text: this.$i18n.t('title.charts'),
-          disabled: true
-        }
-      ],
-      pageTabs: [
-        {
-          id: '0',
-          title: this.$i18n.t('tabs.live'),
-          isActive: true
-        },
-        {
-          id: '1',
-          title: this.$i18n.t('title.tx'),
-          isActive: false
-        },
-        {
-          id: '2',
-          title: this.$i18n.t('title.blocks'),
-          isActive: false
-        },
-        {
-          id: '3',
-          title: this.$i18n.t('tabs.miningH'),
-          isActive: false
-        }
-      ]
-    }
+  /*
+  ===================================================================================
+    Computed
+  ===================================================================================
+  */
+
+  get crumbs(): Crumb[] {
+    return [
+      {
+        text: this.$i18n.t('title.charts'),
+        disabled: true
+      }
+    ]
+  }
+
+  get pageTabs(): Tab[] {
+    return [
+      {
+        id: '0',
+        title: this.$i18n.t('tabs.live'),
+        isActive: true
+      },
+      {
+        id: '1',
+        title: this.$i18n.t('title.tx'),
+        isActive: false
+      },
+      {
+        id: '2',
+        title: this.$i18n.t('title.blocks'),
+        isActive: false
+      },
+      {
+        id: '3',
+        title: this.$i18n.t('tabs.miningH'),
+        isActive: false
+      }
+    ]
   }
 }
 </script>

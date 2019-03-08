@@ -24,6 +24,7 @@ import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import { Vue, Component } from 'vue-property-decorator'
 import { Tx, PendingTx } from '@app/core/models'
 import { Events } from 'ethvm-common'
+import { Crumb } from '@app/core/components/props'
 
 const MAX_ITEMS = 50
 
@@ -120,7 +121,7 @@ export default class PagePendingTxs extends Vue {
   //   return this.$store.getters.pendingTxs
   // }
 
-  get crumbs() {
+  get crumbs(): Crumb[] {
     return [
       {
         text: this.$i18n.t('title.pending'),

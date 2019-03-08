@@ -48,7 +48,7 @@ import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { Block, Tx, SimpleBlock, SimpleTx } from '@app/core/models'
-import { Vue, Component, Mixins } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 
 const MAX_ITEMS = 50
 
