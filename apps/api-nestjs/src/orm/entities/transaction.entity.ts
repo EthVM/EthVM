@@ -10,7 +10,6 @@ export class TransactionEntity extends TxEmbedded {
     assignClean(this, data)
   }
 
-  // TODO Set id correctly
   @ObjectIdColumn({name: '_id', type: 'string', readonly: true})
   id: ObjectID
 

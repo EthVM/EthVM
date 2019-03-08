@@ -50,7 +50,7 @@ export class UncleEmbedded {
   timestamp: number
 
   @Column({type: 'string', readonly: true})
-  transactionRoot: string
+  transactionsRoot: string
 
   @Column({type: 'string', readonly: true})
   uncleReward: string
