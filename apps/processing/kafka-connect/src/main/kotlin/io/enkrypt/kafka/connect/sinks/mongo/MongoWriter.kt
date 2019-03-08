@@ -24,8 +24,8 @@ class MongoWriter {
 
   private val logger = KotlinLogging.logger {}
 
-  private val recordBatchSize = 200
-  private val maxBatchesInFlight = 20
+  private val recordBatchSize = 50
+  private val maxBatchesInFlight = 5
   private val batchesInFlight = AtomicInteger(0)
 
   private var collections: Map<MongoCollections, MongoCollection<BsonDocument>> = emptyMap()
