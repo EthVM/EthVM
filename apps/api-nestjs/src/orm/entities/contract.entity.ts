@@ -11,7 +11,7 @@ export class ContractEntity {
     assignClean(this, data)
   }
 
-  @ObjectIdColumn({name: '_id', type: 'decimal', readonly: true})
+  @ObjectIdColumn({name: '_id', type: 'string', readonly: true})
   number: ObjectID
 
   @Column({type: 'string'})

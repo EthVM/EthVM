@@ -8,7 +8,7 @@ export class AccountMetadataEntity {
     assignClean(this, data)
   }
 
-  @ObjectIdColumn({name: '_id', type: 'decimal', readonly: true})
+  @ObjectIdColumn({name: '_id', type: 'string', readonly: true})
   id: ObjectID
 
   @Column({type: 'long'})
