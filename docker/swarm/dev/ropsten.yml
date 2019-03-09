@@ -6,7 +6,7 @@ networks:
     external: true
 
   backend:
-    external: true
+    driver: overlay
 
 volumes:
 
@@ -110,7 +110,6 @@ services:
       - mongodb
     networks:
       - backend
-      - traefik
     environment:
       ETHVM_MONGO_DB_URL: "mongodb://mongodb:27017/ethvm_dev?w=1&journal=true&maxIdleTimeMS=60000"
       ETHVM_MONGO_DB_NAME: ethvm_dev
@@ -309,7 +308,6 @@ services:
     volumes:
       - kafka:/var/lib/kafka
     environment:
-      KAFKA_ADVERTISED_HOST_NAME: "kafka-2"
       KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka-2:9092"
       KAFKA_ZOOKEEPER_CONNECT:
       KAFKA_BROKER_ID: 2
@@ -347,7 +345,6 @@ services:
     volumes:
       - kafka:/var/lib/kafka
     environment:
-      KAFKA_ADVERTISED_HOST_NAME: "kafka-3"
       KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka-3:9092"
       KAFKA_ZOOKEEPER_CONNECT:
       KAFKA_BROKER_ID: 3
@@ -486,13 +483,13 @@ services:
       KAFKA_CONSUMER_MAX_PARTITION_FETCH_BYTES: 52428800
       CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/enkryptio
     deploy:
-      resources:
-        limits:
-          cpus: '4.0'
-          memory: G
-        reservations:
-          cpus: '3.0'
-          memory: 10G
+      # resources:
+      #   limits:
+      #     cpus: '4.0'
+      #     memory: G
+      #   reservations:
+      #     cpus: '3.0'
+      #     memory: 10G
       placement:
         constraints:
           - node.role == worker
