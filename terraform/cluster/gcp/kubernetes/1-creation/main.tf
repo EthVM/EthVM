@@ -1,12 +1,12 @@
 # 1 - Create network to run cluster instances
 module "ethvm_network" {
-  source = "../../terraform-modules/gcp/vpc"
+  source = "../../../terraform-modules/gcp/vpc"
   name   = "${var.ntw_name}"
 }
 
 # 2 - Create cluster
 module "ethvm_cluster" {
-  source                   = "../../terraform-modules/gcp/cluster"
+  source                   = "../../../terraform-modules/gcp/cluster"
   zone                     = "${var.zone}"
   name                     = "${var.name}"
   description              = "${var.description}"
@@ -17,7 +17,7 @@ module "ethvm_cluster" {
 
 # 3 - create generic node pool
 module "ethvm_default_np" {
-  source         = "../../terraform-modules/gcp/node-pool"
+  source         = "../../../terraform-modules/gcp/node-pool"
   zone           = "${var.zone}"
   cluster_name   = "${module.ethvm_cluster.name}"
   name           = "${var.generic_np_name}"
@@ -29,7 +29,7 @@ module "ethvm_default_np" {
 
 # 3 - create kafka node pool
 module "ethvm_kafka_np" {
-  source         = "../../terraform-modules/gcp/node-pool"
+  source         = "../../../terraform-modules/gcp/node-pool"
   zone           = "${var.zone}"
   cluster_name   = "${module.ethvm_cluster.name}"
   name           = "${var.kafka_np_name}"
