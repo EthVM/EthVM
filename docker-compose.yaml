@@ -1,8 +1,10 @@
 version: '2.4'
 
 networks:
+
   web:
     external: true
+
   back:
     driver: bridge
     ipam:
@@ -12,7 +14,9 @@ networks:
 volumes:
 
   mongodb-volume:
+
   kafka-volume-1:
+
   zookeeper-volume:
 
   parity-volume:
@@ -28,31 +32,25 @@ volumes:
 
 services:
 
-  parity:
-    image: parity/parity:v2.3.3
-    networks:
-      - back
-    volumes:
-      - parity-volume:/home/parity/.local/share/io.parity.ethereum/
-    ports:
-      - 8545:8545
-      - 8546:8546
-      - 30303:30303
-    command: --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
-    cpu_shares: 2048
+  # ///////////////////////////////////////////////////////
+  # Front Services
+  # ///////////////////////////////////////////////////////
 
   traefik:
-    image: traefik:${TRAEFIK_VERSION}-alpine
+    image: enkryptio/traefik:0.1.3
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./docker/config/traefik/traefik.dev.toml:/etc/traefik/traefik.toml
     networks:
       - web
       - back
     ports:
       - 80:80
       - 81:81
+    environment:
+      DEBUG: 'true'
+      LETS_ENCRYPT_ENABLED:
+      SWARM_MODE: 'false'
     cpu_shares: 256
 
   explorer:
@@ -68,7 +66,7 @@ services:
     labels:
       - 'traefik.enable=true'
       - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:ethvm.${DOMAIN}'
+      - 'traefik.frontend.rule=Host:${DOMAIN}'
       - 'traefik.backend=explorer'
       - 'traefik.port=8080'
     cpu_shares: 256
@@ -119,6 +117,10 @@ services:
     environment:
       GRAPHQL_PLAYGROUND: 'true'
 
+  # ///////////////////////////////////////////////////////
+  # Storage
+  # ///////////////////////////////////////////////////////
+
   mongodb:
     image: enkryptio/mongodb-dev:${MONGODB_VERSION}
     restart: unless-stopped
@@ -130,6 +132,10 @@ services:
     ports:
       - 27017:27017
     cpu_shares: 4000
+
+  # ///////////////////////////////////////////////////////
+  # Processing
+  # ///////////////////////////////////////////////////////
 
   zookeeper:
     image: confluentinc/cp-zookeeper:${CP_VERSION}
@@ -247,46 +253,6 @@ services:
   # Extra Tools (Useful for debugging and helping on Kafka)
   # ///////////////////////////////////////////////////////
 
-  verifier:
-    build:
-      context: ./apps/verifier
-    networks:
-      - back
-    depends_on:
-      - mongodb
-      - kafka-schema-registry
-    volumes:
-      - ./apps/verifier:/usr/src/app
-      - ./apps/common:/usr/src/common
-    command: sh -c "yarn install && yarn start kafka"
-    environment:
-      KAFKA_AVRO_LOG_LEVEL: debug
-
-  ksql-server:
-    image: confluentinc/cp-ksql-server:${CP_VERSION}
-    networks:
-      - back
-    ports:
-      - 8088:8088
-    depends_on:
-      - kafka-1
-      - kafka-schema-registry
-    environment:
-      KSQL_BOOTSTRAP_SERVERS: kafka-1:9091
-      KSQL_LISTENERS: http://0.0.0.0:8088/
-      KSQL_KSQL_SERVICE_ID: ksql_service_1
-      KSQL_SCHEMA_REGISTRY_URL: ${KAFKA_SCHEMA_REGISTRY_URL}
-    mem_limit: 4g
-
-  ksql-cli:
-    image: confluentinc/cp-ksql-cli:${CP_VERSION}
-    networks:
-      - back
-    depends_on:
-      - ksql-server
-    tty: true
-    entrypoint: /bin/bash
-
   lenses:
     image: landoop/lenses:2.1
     networks:
@@ -315,10 +281,36 @@ services:
       LENSES_SECURITY_MODE: BASIC
       LENSES_SECURITY_GROUPS: |
         [
-          { "name": "adminGroup", "roles": ["Admin"] }
+          { "name": "adminGroup", "roles": ["Admin"] },
+          { "name": "readGroup",  "roles": ["Read"] }
         ]
       LENSES_SECURITY_USERS: |
         [
-          { "username": "admin", "password": "admin", "displayname": "Lenses Admin", "groups": ["adminGroup"] }
+          { "username": "admin", "password": "admin", "displayname": "Lenses Admin", "groups": ["adminGroup"] },
+          { "username": "read", "password": "read", "displayname": "Read Only", "groups": ["readGroup"] }
         ]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.frontend.rule=Host:lenses.ethvm.${DOMAIN}"
+      - "traefik.frontend.passHostHeader=true"
+      - "traefik.backend=lenses"
+      - "traefik.port=9991"
     cpu_shares: 512
+
+  # ///////////////////////////////////////////////////////
+  # Etherum Client
+  # ///////////////////////////////////////////////////////
+
+  parity:
+    image: parity/parity:v2.3.3
+    networks:
+      - back
+    volumes:
+      - parity-volume:/home/parity/.local/share/io.parity.ethereum/
+    ports:
+      - 8545:8545
+      - 8546:8546
+      - 30303:30303
+    command: --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
+    cpu_shares: 2048
