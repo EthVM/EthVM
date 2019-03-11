@@ -9,10 +9,10 @@ export class BlockService {
 
   async getBlock(hash: string): Promise<BlockEntity> {
     // TODO fix find conditions
-    return this.blockRepository.findOne({where: {hash: hash} })
+    return this.blockRepository.findOne({where: { hash } })
   }
 
-  async getBlocks(limit: number = 10, page: number = 1): Promise<BlockEntity[]> {
+  async getBlocks(limit: number = 10, page: number = 0): Promise<BlockEntity[]> {
     const skip = page * limit
     return this.blockRepository.find({ take: limit, skip })
   }
