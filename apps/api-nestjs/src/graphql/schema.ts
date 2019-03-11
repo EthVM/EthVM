@@ -1,29 +1,27 @@
 /* tslint:disable */
 export class Block {
+    id?: Decimal;
+    totalDifficulty?: string;
     header?: Header;
     uncles?: Uncle;
-    totalDifficulty?: string;
 }
 
 export class Header {
-    parentHash?: string;
-    sha3Uncles?: string;
+    author?: string;
+    difficulty?: string;
+    extraData?: string;
+    gasLimit?: string;
+    gasUsed?: string;
     hash?: string;
-    number?: number;
-    timestamp?: number;
+    logsBloom?: string;
     nonce?: string;
-    miner?: string;
-    mixHash?: JSON;
-    rewards?: JSON;
-    difficulty?: Decimal;
-    totalDifficulty?: Decimal;
-    stateRoot?: Buffer;
-    transactionsRoot?: JSON;
-    receiptsRoot?: JSON;
-    logsBloom?: JSON;
-    gasLimit?: JSON;
-    gasUsed?: JSON;
-    extraData?: JSON;
+    number?: number;
+    parentHash?: string;
+    receiptsRoot?: string;
+    sha3Uncles?: string;
+    size?: number;
+    stateRoot?: string;
+    timestamp?: number;
 }
 
 export abstract class IQuery {
@@ -34,25 +32,31 @@ export abstract class IQuery {
     abstract temp__(): boolean | Promise<boolean>;
 }
 
-export class Stats {
-    successfulTxs?: number;
-    failedTxs?: number;
-    pendingTxs?: number;
-    processingTimeMs?: number;
-    txs?: number;
-    internalTxs?: number;
-    totalGasPrice?: number;
-    avgGasPrice?: number;
-    totalTxsFees?: number;
-    avgTxsFees?: number;
-}
-
 export abstract class ISubscription {
     abstract newBlock(): Block[] | Promise<Block[]>;
 }
 
 export class Uncle {
+    id?: string;
+    blockNumber?: number;
+    uncleIndex?: number;
+    author?: string;
+    difficulty?: string;
+    extraData?: string;
+    gasLimit?: string;
+    gasUsed?: string;
     hash?: string;
+    logsBloom?: string;
+    nonce?: string;
+    number?: number;
+    parentHash?: string;
+    receiptsRoot?: string;
+    sha3Uncles?: string;
+    size?: number;
+    stateRoot?: string;
+    timestamp?: number;
+    transactionsRoot?: string;
+    uncleReward?: string;
 }
 
 export type Buffer = any;

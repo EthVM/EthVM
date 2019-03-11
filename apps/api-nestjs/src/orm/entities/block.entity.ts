@@ -12,8 +12,8 @@ export class BlockEntity {
     assignClean(this, data)
   }
 
-  @ObjectIdColumn()
-  _id: ObjectID
+  @ObjectIdColumn({name: '_id'})
+  id: ObjectID
 
   @Column({type: 'string', readonly: true})
   totalDifficulty: string
