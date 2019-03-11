@@ -8,9 +8,7 @@ import { MongoConnectionOptions } from 'typeorm/driver/mongodb/MongoConnectionOp
         TypeOrmModule.forRootAsync({
             useFactory: async (configService: ConfigService): Promise<MongoConnectionOptions> => ({
                 type: 'mongodb',
-                host: configService.mongoDb.host,
-                port: configService.mongoDb.port,
-                database: configService.mongoDb.database,
+                url: configService.mongoDb.url,
                 synchronize: false,
                 entities: ['src/**/**.entity{.ts,.js}'],
                 loggerLevel: 'error'
