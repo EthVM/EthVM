@@ -2,7 +2,7 @@ version: '3.6'
 
 networks:
 
-  traefik:
+  proxy:
     external: true
 
   backend:
@@ -11,33 +11,33 @@ networks:
 volumes:
 
   traefik-volume:
-    external: true
+    external: false
 
   zookeeper-1-volume:
-    external: true
+    external: false
   zookeeper-2-volume:
-    external: true
+    external: false
   zookeeper-3-volume:
-    external: true
+    external: false
 
   kafka-1-volume:
-    external: true
+    external: false
   kafka-2-volume:
-    external: true
+    external: false
   kafka-3-volume:
-    external: true
+    external: false
 
   kafka-streams-volume:
-    external: true
+    external: false
 
   kafka-connect-volume:
-    external: true
+    external: false
 
   mongodb-volume:
-    external: true
+    external: false
 
   parity-volume:
-    external: true
+    external: false
 
 services:
 
@@ -48,8 +48,8 @@ services:
   traefik:
     image: enkryptio/traefik:0.1.3
     networks:
+      - proxy
       - backend
-      - traefik
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - traefik-volume:/var/lib/traefik
@@ -73,7 +73,7 @@ services:
       placement:
         constraints:
           - node.role == worker
-      replicas: 1
+      replicas: 0
       restart_policy:
         condition: on-failure
 
@@ -92,7 +92,7 @@ services:
       placement:
         constraints:
           - node.role == worker
-      replicas: 1
+      replicas: 0
       restart_policy:
         condition: on-failure
       labels:
@@ -125,7 +125,7 @@ services:
       placement:
         constraints:
           - node.role == worker
-      replicas: 1
+      replicas: 0
       restart_policy:
         condition: on-failure
       labels:
@@ -162,7 +162,7 @@ services:
         constraints:
           - node.role == worker
           - node.labels.io.ethvm.nodeType == store
-      replicas: 1
+      replicas: 0
       restart_policy:
         condition: on-failure
 
@@ -294,7 +294,7 @@ services:
         constraints:
           - node.role == worker
           - node.labels.io.ethvm.nodeType == processing-worker-1
-      replicas: 1
+      replicas: 0
       restart_policy:
         condition: on-failure
 
@@ -339,7 +339,7 @@ services:
         constraints:
           - node.role == worker
           - node.labels.io.ethvm.nodeType == processing-worker-2
-      replicas: 1
+      replicas: 0
       restart_policy:
         condition: on-failure
 
@@ -384,7 +384,7 @@ services:
         constraints:
           - node.role == worker
           - node.labels.io.ethvm.nodeType == processing-worker-3
-      replicas: 1
+      replicas: 0
       restart_policy:
         condition: on-failure
 
@@ -420,7 +420,7 @@ services:
           - node.labels.io.ethvm.nodeType != processing-worker-2
           - node.labels.io.ethvm.nodeType != processing-worker-3
           - node.labels.io.ethvm.nodeType != store
-      replicas: 1
+      replicas: 0
       restart_policy:
         condition: on-failure
 
@@ -439,7 +439,7 @@ services:
       KAFKA_SCHEMA_REGISTRY_URL:
       KAFKA_STREAMS_STATE_DIR: /var/lib/kafka-streams
     deploy:
-      resources:
+      # resources:
         # limits:
         #   cpus: '3.0'
         #   memory: 4G
@@ -459,7 +459,6 @@ services:
 
   kafka-connect:
     image: enkryptio/kafka-connect:0.3.0
-    restart: unless-stopped
     depends_on:
       - zookeeper-1
       - zookeeper-2
@@ -518,7 +517,7 @@ services:
           - node.labels.io.ethvm.nodeType != processing-worker-2
           - node.labels.io.ethvm.nodeType != processing-worker-3
           - node.labels.io.ethvm.nodeType != store
-      replicas: 1
+      replicas: 0
       restart_policy:
         condition: on-failure
 
@@ -544,7 +543,7 @@ services:
           - node.labels.io.ethvm.nodeType != processing-worker-2
           - node.labels.io.ethvm.nodeType != processing-worker-3
           - node.labels.io.ethvm.nodeType != store
-      replicas: 1
+      replicas: 0
       restart_policy:
         condition: on-failure
 
@@ -596,6 +595,6 @@ services:
           - node.labels.io.ethvm.nodeType != processing-worker-2
           - node.labels.io.ethvm.nodeType != processing-worker-3
           - node.labels.io.ethvm.nodeType != store
-      replicas: 1
+      replicas: 0
       restart_policy:
         condition: on-failure
