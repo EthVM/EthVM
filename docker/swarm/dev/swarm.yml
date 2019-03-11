@@ -46,7 +46,7 @@ services:
   # ///////////////////////////////////////////////////////
 
   traefik:
-    image: enkryptio/traefik:0.1.2
+    image: enkryptio/traefik:0.1.3
     networks:
       - backend
       - traefik
@@ -71,7 +71,7 @@ services:
       #     memory: 4G
       placement:
         constraints:
-          - node.role == manager
+          - node.role == worker
       replicas: 1
       restart_policy:
         condition: on-failure
@@ -94,15 +94,15 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
-    labels:
-      - 'traefik.enable=true'
-      - "traefik.docker.network=traefik"
-      - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:ropsten.ethvm.com'
-      - 'traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:*||Access-Control-Allow-Credentials:true'
-      - 'traefik.frontend.passHostHeader=true'
-      - 'traefik.backend=explorer'
-      - 'traefik.port=80'
+      labels:
+        - 'traefik.enable=true'
+        - "traefik.docker.network=traefik"
+        - 'traefik.default.protocol=http'
+        - 'traefik.frontend.rule=Host:ropsten.ethvm.com'
+        - 'traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:*||Access-Control-Allow-Credentials:true'
+        - 'traefik.frontend.passHostHeader=true'
+        - 'traefik.backend=explorer'
+        - 'traefik.port=80'
 
   api:
     image: enkryptio/api:0.1.0
@@ -127,15 +127,15 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=traefik"
-      - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:api.ropsten.ethvm.com"
-      - "traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:https://ropsten.ethvm.com||Access-Control-Allow-Credentials:true"
-      - "traefik.frontend.passHostHeader=true"
-      - "traefik.backend=api"
-      - "traefik.port=3000"
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik"
+        - "traefik.default.protocol=http"
+        - "traefik.frontend.rule=Host:api.ropsten.ethvm.com"
+        - "traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:https://ropsten.ethvm.com||Access-Control-Allow-Credentials:true"
+        - "traefik.frontend.passHostHeader=true"
+        - "traefik.backend=api"
+        - "traefik.port=3000"
 
   # ///////////////////////////////////////////////////////
   # Storage
@@ -148,7 +148,7 @@ services:
     networks:
       - backend
     environment:
-      MONGO_WIRED_TIGER_CACHE_SIZE: 16
+      MONGO_WIRED_TIGER_CACHE_SIZE: 6
     deploy:
       # resources:
       #   limits:
@@ -190,7 +190,7 @@ services:
       placement:
         constraints:
           - node.role == worker
-          - node.labels.io.ethvm.nodeType == processing-1
+          - node.labels.io.ethvm.nodeType == processing-worker-1
       replicas: 1
       restart_policy:
         condition: on-failure
@@ -216,7 +216,7 @@ services:
       placement:
         constraints:
           - node.role == worker
-          - node.labels.io.ethvm.nodeType == processing-2
+          - node.labels.io.ethvm.nodeType == processing-worker-2
       replicas: 1
       restart_policy:
         condition: on-failure
@@ -242,7 +242,7 @@ services:
       placement:
         constraints:
           - node.role == worker
-          - node.labels.io.ethvm.nodeType == processing-3
+          - node.labels.io.ethvm.nodeType == processing-worker-3
       replicas: 1
       restart_policy:
         condition: on-failure
@@ -261,7 +261,7 @@ services:
         protocol: tcp
         mode: host
     volumes:
-      - kafka:/var/lib/kafka
+      - kafka-1:/var/lib/kafka
     environment:
       HOSTNAME_COMMAND: "docker info | grep ^Name: | cut -d' ' -f 2"
       KAFKA_BROKER_ID: 1
@@ -271,9 +271,9 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
       KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 2
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       CONFLUENT_SUPPORT_METRICS_ENABLE: "true"
       KAFKA_MESSAGE_MAX_BYTES: 52428800
@@ -292,7 +292,7 @@ services:
       placement:
         constraints:
           - node.role == worker
-          - node.labels.io.ethvm.nodeType == processing-1
+          - node.labels.io.ethvm.nodeType == processing-worker-1
       replicas: 1
       restart_policy:
         condition: on-failure
@@ -306,18 +306,26 @@ services:
     networks:
       - backend
     volumes:
-      - kafka:/var/lib/kafka
+      - kafka-2:/var/lib/kafka
     environment:
-      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka-2:9092"
-      KAFKA_ZOOKEEPER_CONNECT:
-      KAFKA_BROKER_ID: 2
+      HOSTNAME_COMMAND: "docker info | grep ^Name: | cut -d' ' -f 2"
+      KAFKA_BROKER_ID: 1
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://:9092,OUTSIDE://_{HOSTNAME_COMMAND}:9094
+      KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:9094
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
       KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
-      CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
-      KAFKA_MESSAGE_MAX_BYTES: "2000000000"
+      CONFLUENT_SUPPORT_METRICS_ENABLE: "true"
+      KAFKA_MESSAGE_MAX_BYTES: 52428800
+      KAFKA_REPLICA_FETCH_MAX_BYTES: 52428800
+      KAFKA_PRODUCER_MAX_REQUEST_SIZE: 5048576
+      KAFKA_CONSUMER_MAX_PARTITION_FETCH_BYTES: 52428800
+      KAFKA_JMX_PORT: 9586
     deploy:
       # resources:
       #   limits:
@@ -329,7 +337,7 @@ services:
       placement:
         constraints:
           - node.role == worker
-          - node.labels.io.ethvm.nodeType == processing-2
+          - node.labels.io.ethvm.nodeType == processing-worker-2
       replicas: 1
       restart_policy:
         condition: on-failure
@@ -343,18 +351,26 @@ services:
     networks:
       - backend
     volumes:
-      - kafka:/var/lib/kafka
+      - kafka-3:/var/lib/kafka
     environment:
-      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka-3:9092"
-      KAFKA_ZOOKEEPER_CONNECT:
-      KAFKA_BROKER_ID: 3
+      HOSTNAME_COMMAND: "docker info | grep ^Name: | cut -d' ' -f 2"
+      KAFKA_BROKER_ID: 1
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://:9092,OUTSIDE://_{HOSTNAME_COMMAND}:9094
+      KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:9094
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
       KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
-      CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
-      KAFKA_MESSAGE_MAX_BYTES: "2000000000"
+      CONFLUENT_SUPPORT_METRICS_ENABLE: "true"
+      KAFKA_MESSAGE_MAX_BYTES: 52428800
+      KAFKA_REPLICA_FETCH_MAX_BYTES: 52428800
+      KAFKA_PRODUCER_MAX_REQUEST_SIZE: 5048576
+      KAFKA_CONSUMER_MAX_PARTITION_FETCH_BYTES: 52428800
+      KAFKA_JMX_PORT: 9586
     deploy:
       # resources:
       #   limits:
@@ -366,7 +382,7 @@ services:
       placement:
         constraints:
           - node.role == worker
-          - node.labels.io.ethvm.nodeType == processing-3
+          - node.labels.io.ethvm.nodeType == processing-worker-3
       replicas: 1
       restart_policy:
         condition: on-failure
@@ -399,9 +415,9 @@ services:
       placement:
         constraints:
           - node.role == worker
-          - node.labels.io.ethvm.nodeType != processing-1
-          - node.labels.io.ethvm.nodeType != processing-2
-          - node.labels.io.ethvm.nodeType != processing-3
+          - node.labels.io.ethvm.nodeType != processing-worker-1
+          - node.labels.io.ethvm.nodeType != processing-worker-2
+          - node.labels.io.ethvm.nodeType != processing-worker-3
           - node.labels.io.ethvm.nodeType != store
       replicas: 1
       restart_policy:
@@ -418,20 +434,24 @@ services:
     volumes:
       - kafka-streams:/var/lib/kafka-streams
     environment:
-      KAFKA_BOOTSTRAP_SERVERS: kafka-1:9091
+      KAFKA_BOOTSTRAP_SERVERS: "kafka-1:9091, kafka-2:9091, kafka-3:9091"
       KAFKA_SCHEMA_REGISTRY_URL:
       KAFKA_STREAMS_STATE_DIR: /var/lib/kafka-streams
     deploy:
       resources:
-        limits:
-          cpus: '3.0'
-          memory: 4G
-        reservations:
-          cpus: '2.0'
-          memory: 2G
+        # limits:
+        #   cpus: '3.0'
+        #   memory: 4G
+        # reservations:
+        #   cpus: '2.0'
+        #   memory: 2G
       placement:
         constraints:
           - node.role == worker
+          - node.labels.io.ethvm.nodeType != processing-worker-1
+          - node.labels.io.ethvm.nodeType != processing-worker-2
+          - node.labels.io.ethvm.nodeType != processing-worker-3
+          - node.labels.io.ethvm.nodeType != store
       replicas: 0
       restart_policy:
         condition: on-failure
@@ -453,7 +473,7 @@ services:
     volumes:
       - kafka-connect:/var/lib/kafka
     environment:
-      CONNECT_BOOTSTRAP_SERVERS: kafka-1:9091
+      CONNECT_BOOTSTRAP_SERVERS: "kafka-1:9091, kafka-2:9091, kafka-3:9091"
       CONNECT_REST_ADVERTISED_HOST_NAME: "kafka-connect"
       CONNECT_REST_PORT: 8083
       CONNECT_GROUP_ID: "ethvm-kafka-connect"
@@ -493,6 +513,10 @@ services:
       placement:
         constraints:
           - node.role == worker
+          - node.labels.io.ethvm.nodeType != processing-worker-1
+          - node.labels.io.ethvm.nodeType != processing-worker-2
+          - node.labels.io.ethvm.nodeType != processing-worker-3
+          - node.labels.io.ethvm.nodeType != store
       replicas: 1
       restart_policy:
         condition: on-failure
@@ -515,6 +539,62 @@ services:
       placement:
         constraints:
           - node.role == worker
+          - node.labels.io.ethvm.nodeType != processing-worker-1
+          - node.labels.io.ethvm.nodeType != processing-worker-2
+          - node.labels.io.ethvm.nodeType != processing-worker-3
+          - node.labels.io.ethvm.nodeType != store
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  # ///////////////////////////////////////////////////////
+  # Cluster Monitoring
+  # ///////////////////////////////////////////////////////
+
+  lenses:
+    image: landoop/lenses:2.1
+    networks:
+      - backend
+    ports:
+      - 9991:9991
+      - 9102:9102
+    environment:
+      LICENSE_URL: "${LENSES_LICENSE_URL}"
+      LENSES_PORT: 9991
+      LENSES_KAFKA_BROKERS: "PLAINTEXT://kafka-1:9091"
+      LENSES_ZOOKEEPER_HOSTS: |
+        [ { url:"zookeeper:2181", jmx:"zookeeper:9585" } ]
+      LENSES_SCHEMA_REGISTRY_URLS: |
+        [ { url:"http://kafka-schema-registry:8081", jmx:"kafka-schema-registry:9587" } ]
+      LENSES_CONNECT_CLUSTERS: |
+        [
+          {
+            name:"ethvm",
+            urls: [ {url:"http://kafka-connect:8083", jmx:"kafka-connect:9588"} ],
+            statuses:"ethvm-storage-topic",
+            configs:"ethvm-storage-config",
+            offsets:"ethvm-storage-offsets"
+          }
+        ]
+      LENSES_SECURITY_MODE: BASIC
+      LENSES_SECURITY_GROUPS: |
+        [
+          { "name": "adminGroup", "roles": ["Admin"] },
+          { "name": "readGroup",  "roles": ["Read"] }
+        ]
+      LENSES_SECURITY_USERS: |
+        [
+          { "username": "admin", "password": "admin", "displayname": "Lenses Admin", "groups": ["adminGroup"] },
+          { "username": "read", "password": "read", "displayname": "Read Only", "groups": ["readGroup"] }
+        ]
+    deploy:
+      placement:
+        constraints:
+          - node.role == worker
+          - node.labels.io.ethvm.nodeType != processing-worker-1
+          - node.labels.io.ethvm.nodeType != processing-worker-2
+          - node.labels.io.ethvm.nodeType != processing-worker-3
+          - node.labels.io.ethvm.nodeType != store
       replicas: 1
       restart_policy:
         condition: on-failure
