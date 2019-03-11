@@ -61,6 +61,7 @@ services:
       DEBUG: "true"
       LOG_LEVEL: INFO
       SWARM_MODE: "true"
+      LETS_ENCRYPT_ENABLED:
     deploy:
       # resources:
       #   limits:
@@ -142,7 +143,7 @@ services:
   # ///////////////////////////////////////////////////////
 
   mongodb:
-    image: enkryptio/mongodb-dev:4.0.5.2
+    image: enkryptio/mongodb:4.0.5.2
     volumes:
       - mongodb:/data/db
     networks:
