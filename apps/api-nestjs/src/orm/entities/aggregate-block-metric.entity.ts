@@ -1,6 +1,11 @@
 import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 
+interface AggregateBlockMetricKeyInterface {
+  date: number
+  name: string
+}
+
 @Entity('aggregate_block_metrics')
 export class AggregateBlockMetricEntity {
 
@@ -8,9 +13,8 @@ export class AggregateBlockMetricEntity {
     assignClean(this, data)
   }
 
-  // TODO set ID correctly
-  @ObjectIdColumn({name: '_id', type: 'decimal', readonly: true})
-  id: ObjectID
+  @ObjectIdColumn({name: '_id', readonly: true})
+  id: AggregateBlockMetricKeyInterface
 
   @Column({type: 'string'})
   bigInteger: string

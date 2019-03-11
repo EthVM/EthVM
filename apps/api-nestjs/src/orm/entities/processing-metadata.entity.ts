@@ -1,6 +1,10 @@
 import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 
+interface ProcessingMetadataKeyInterface {
+  name: string
+}
+
 @Entity('processing_metadata')
 export class ProcessingMetadataEntity {
 
@@ -8,9 +12,8 @@ export class ProcessingMetadataEntity {
     assignClean(this, data)
   }
 
-  // TODO fix ID column nested {name: string}
-  @ObjectIdColumn({name: '_id', type: 'string', readonly: true})
-  id: ObjectID
+  @ObjectIdColumn({name: '_id', readonly: true})
+  id: ProcessingMetadataKeyInterface
 
   @Column({type: 'boolean'})
   boolean: boolean

@@ -2,6 +2,10 @@ import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 import { BalanceType } from '@app/orm/entities/balance.entity'
 
+interface TokenTransferKeyInterface {
+
+}
+
 @Entity('token_transfers')
 export class TokenTransferEntity {
 
@@ -9,9 +13,8 @@ export class TokenTransferEntity {
     assignClean(this, data)
   }
 
-  // TODO Set id correctly nested {hash: bytes}
   @ObjectIdColumn({name: '_id', readonly: true})
-  id: ObjectID
+  id: TokenTransferKeyInterface
 
   @Column({type: 'string'})
   amount: string

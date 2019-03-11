@@ -5,6 +5,11 @@ export enum BalanceType {
   TX_FEE, REWARD, ETHER, ERC20, ERC721
 }
 
+interface BalanceKeyInterface {
+  balanceType: BalanceType
+  address: string
+}
+
 @Entity('balances')
 export class BalanceEntity {
 
@@ -12,9 +17,8 @@ export class BalanceEntity {
     assignClean(this, data)
   }
 
-  // TODO set id correctly
-  @ObjectIdColumn({name: '_id', type: 'decimal', readonly: true})
-  id: ObjectID
+  @ObjectIdColumn({name: '_id', readonly: true})
+  id: BalanceKeyInterface
 
   @Column({type: 'string'})
   address: string
