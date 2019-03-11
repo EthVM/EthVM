@@ -5,7 +5,7 @@ import { RewardEmbedded } from '@app/orm/embedded-entities/block/reward.embedded
 import { TxEmbedded } from '@app/orm/embedded-entities/block/tx.embedded'
 import { UncleEmbedded } from '@app/orm/embedded-entities/block/uncle.embedded'
 
-@Entity('block')
+@Entity('blocks')
 export class BlockEntity {
 
   constructor(data: any) {
@@ -13,7 +13,7 @@ export class BlockEntity {
   }
 
   @ObjectIdColumn()
-  number: any
+  _id: ObjectID
 
   @Column({type: 'string', readonly: true})
   totalDifficulty: string

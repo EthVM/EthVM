@@ -40,7 +40,7 @@ const schema = {
     playground: {
       doc: 'Whether to enable to disable the graphql playground',
       env: 'GRAPHQL_PLAYGROUND',
-      default: false
+      default: true
     }
   },
   mongodb: {

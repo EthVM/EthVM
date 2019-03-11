@@ -1,11 +1,8 @@
 /* tslint:disable */
 export class Block {
-    number?: number;
-    hash?: string;
     header?: Header;
-    stats?: Stats;
-    transactions?: string[];
-    uncles?: string[];
+    uncles?: Uncle;
+    totalDifficulty?: string;
 }
 
 export class Header {
@@ -52,6 +49,10 @@ export class Stats {
 
 export abstract class ISubscription {
     abstract newBlock(): Block[] | Promise<Block[]>;
+}
+
+export class Uncle {
+    hash?: string;
 }
 
 export type Buffer = any;

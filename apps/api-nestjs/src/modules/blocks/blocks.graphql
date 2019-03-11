@@ -8,12 +8,9 @@ type Subscription {
 }
 
 type Block {
-  number: Int
-  hash: String
   header: Header
-  stats: Stats
-  transactions: [String]
-  uncles: [String]
+  uncles: Uncle
+  totalDifficulty: String
 }
 
 type Header {
@@ -48,4 +45,8 @@ type Stats {
   avgGasPrice:Int
   totalTxsFees:Int
   avgTxsFees:Int
+}
+
+type Uncle {
+  hash: String
 }
