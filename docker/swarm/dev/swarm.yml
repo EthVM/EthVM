@@ -176,9 +176,22 @@ services:
       - zookeeper-1-volume:/var/lib/zookeeper
     networks:
       - backend
+    ports:
+      - target: 2181
+        published: 2181
+        protocol: tcp
+        mode: host
+      - target: 2888
+        published: 2888
+        protocol: tcp
+        mode: host
+      - target: 3888
+        published: 3888
+        protocol: tcp
+        mode: host
     environment:
       ZOOKEEPER_SERVER_ID: 1
-      ZOOKEEPER_SERVERS: "server.1=zookeeper-1:2888:3888 server.2=zookeeper-2:2888:3888 server.3=zookeeper-3:2888:3888"
+      ZOOKEEPER_SERVERS: server.1=0.0.0.0:2888:3888;server.2=ethvm_zookeeper-2:2888:3888;server.3=ethvm_zookeeper-3:2888:3888
       ZOOKEEPER_CLIENT_PORT: 2181
     deploy:
       # resources:
@@ -202,9 +215,22 @@ services:
       - zookeeper-2-volume:/var/lib/zookeeper
     networks:
       - backend
+    ports:
+      - target: 2181
+        published: 2181
+        protocol: tcp
+        mode: host
+      - target: 2888
+        published: 2888
+        protocol: tcp
+        mode: host
+      - target: 3888
+        published: 3888
+        protocol: tcp
+        mode: host
     environment:
       ZOOKEEPER_SERVER_ID: 2
-      ZOOKEEPER_SERVERS: "server.1=zookeeper-1:2888:3888 server.2=zookeeper-2:2888:3888 server.3=zookeeper-3:2888:3888"
+      ZOOKEEPER_SERVERS: server.1=ethvm_zookeeper-1:2888:3888;server.2=0.0.0.0:2888:3888;server.3=ethvm_zookeeper-3:2888:3888
       ZOOKEEPER_CLIENT_PORT: 2181
     deploy:
       # resources:
@@ -228,9 +254,22 @@ services:
       - zookeeper-3-volume:/var/lib/zookeeper
     networks:
       - backend
+    ports:
+      - target: 2181
+        published: 2181
+        protocol: tcp
+        mode: host
+      - target: 2888
+        published: 2888
+        protocol: tcp
+        mode: host
+      - target: 3888
+        published: 3888
+        protocol: tcp
+        mode: host
     environment:
       ZOOKEEPER_SERVER_ID: 3
-      ZOOKEEPER_SERVERS: "server.1=zookeeper-1:2888:3888 server.2=zookeeper-2:2888:3888 server.3=zookeeper-3:2888:3888"
+      ZOOKEEPER_SERVERS: server.1=ethvm_zookeeper-1:2888:3888;server.2=ethvm_zookeeper-2:2888:3888;server.3=0.0.0.0:2888:3888
       ZOOKEEPER_CLIENT_PORT: 2181
     deploy:
       # resources:

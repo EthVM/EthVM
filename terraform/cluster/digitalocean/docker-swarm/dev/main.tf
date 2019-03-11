@@ -1,6 +1,30 @@
+# ---------------------------------------
+#   Plugins
+# ---------------------------------------
+
 provider "digitalocean" {
   token = "${var.do_token}"
 }
+
+# ---------------------------------------
+#   Resources
+# ---------------------------------------
+
+resource "digitalocean_tag" "cluster" {
+  name = "ethvm-cluster"
+}
+
+resource "digitalocean_tag" "manager" {
+  name = "manager"
+}
+
+resource "digitalocean_tag" "worker" {
+  name = "worker"
+}
+
+# ---------------------------------------
+#   Modules
+# ---------------------------------------
 
 module "managers" {
   source = "./modules/managers"
@@ -12,7 +36,7 @@ module "managers" {
 
   total_instances = "1"
   user_data       = "${var.user_data}"
-  tags            = "${var.manager_tags}"
+  tags            = ["${digitalocean_tag.cluster.id}", "${digitalocean_tag.manager.id}"]
 
   remote_api_ca          = "${var.remote_api_ca}"
   remote_api_key         = "${var.remote_api_key}"
@@ -22,6 +46,7 @@ module "managers" {
   provision_ssh_key  = "${var.provision_ssh_key}"
   provision_user     = "${var.provision_user}"
   connection_timeout = "${var.connection_timeout}"
+
 }
 
 module "workers" {
@@ -34,7 +59,7 @@ module "workers" {
 
   total_instances = "2"
   user_data       = "${var.user_data}"
-  tags            = "${var.worker_tags}"
+  tags            = ["${digitalocean_tag.cluster.id}", "${digitalocean_tag.worker.id}"]
 
   manager_private_ip = "${element(module.managers.ipv4_addresses_private, 0)}"
   join_token         = "${module.managers.worker_token}"
@@ -55,7 +80,7 @@ module "processing_workers" {
 
   total_instances = "3"
   user_data       = "${var.user_data}"
-  tags            = "${var.worker_tags}"
+  tags            = ["${digitalocean_tag.cluster.id}", "${digitalocean_tag.worker.id}"]
 
   manager_private_ip = "${element(module.managers.ipv4_addresses_private, 0)}"
   join_token         = "${module.managers.worker_token}"
@@ -64,4 +89,12 @@ module "processing_workers" {
   provision_ssh_key  = "${var.provision_ssh_key}"
   provision_user     = "${var.provision_user}"
   connection_timeout = "${var.connection_timeout}"
+}
+
+module "swarm-mode-firewall" {
+  source  = "thojkooi/docker-swarm-firewall/digitalocean"
+  version = "1.0.0"
+
+  cluster_tags        = ["${digitalocean_tag.cluster.id}", "${digitalocean_tag.manager.id}", "${digitalocean_tag.worker.id}"]
+  cluster_droplet_ids = []
 }
