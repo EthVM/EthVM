@@ -14,13 +14,13 @@ export class ContractEntity {
   @ObjectIdColumn({name: '_id', type: 'string', readonly: true})
   id: ObjectID
 
-  @Column({type: 'string'})
+  @Column({type: 'string', readonly: true})
   address: string
 
-  @Column({type: 'string'})
+  @Column({type: 'string', readonly: true})
   creator: string
 
-  @Column({type: 'binary'})
+  @Column({type: 'binary', readonly: true})
   data: Buffer
 
   @Column(type => DestructedEmbedded)

@@ -7,10 +7,10 @@ export class SupportEmbedded {
     assignClean(this, data)
   }
 
-  @Column({type: 'string'})
+  @Column({type: 'string', readonly: true})
   email: string
 
-  @Column({type: 'string'})
+  @Column({type: 'string', readonly: true})
   url: string
 
 }

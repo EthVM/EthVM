@@ -7,13 +7,13 @@ export class DestructedEmbedded {
     assignClean(this, data)
   }
 
-  @Column({type: 'string'})
+  @Column({type: 'string', readonly: true})
   address: string
 
-  @Column({type: 'binary'})
+  @Column({type: 'binary', readonly: true})
   balance: Buffer
 
-  @Column({type: 'binary'})
+  @Column({type: 'binary', readonly: true})
   refundAddress: Buffer
 
 }

@@ -15,28 +15,28 @@ export class ProcessingMetadataEntity {
   @ObjectIdColumn({name: '_id', readonly: true})
   id: ProcessingMetadataKeyInterface
 
-  @Column({type: 'boolean'})
+  @Column({type: 'boolean', readonly: true})
   boolean: boolean
 
-  @Column({type: 'string'})
+  @Column({type: 'string', readonly: true})
   bigInteger: string
 
-  @Column({type: 'double'})
+  @Column({type: 'double', readonly: true})
   double: number
 
-  @Column({type: 'double'})
+  @Column({type: 'double', readonly: true})
   float: number
 
-  @Column({type: 'int'})
+  @Column({type: 'int', readonly: true})
   int: number
 
-  @Column({type: 'long'})
+  @Column({type: 'long', readonly: true})
   long: number
 
-  @Column({type: 'string'})
+  @Column({type: 'string', readonly: true})
   name: string
 
-  @Column({type: 'string'})
+  @Column({type: 'string', readonly: true})
   string: string
 
 }

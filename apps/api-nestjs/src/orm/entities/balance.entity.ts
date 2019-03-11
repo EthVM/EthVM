@@ -20,13 +20,13 @@ export class BalanceEntity {
   @ObjectIdColumn({name: '_id', readonly: true})
   id: BalanceKeyInterface
 
-  @Column({type: 'string'})
+  @Column({type: 'string', readonly: true})
   address: string
 
-  @Column({type: 'string'})
+  @Column({type: 'string', readonly: true})
   amount: string
 
-  @Column({type: 'enum', enum: BalanceType})
+  @Column({type: 'enum', enum: BalanceType, readonly: true})
   balanceType: BalanceType
 
 }

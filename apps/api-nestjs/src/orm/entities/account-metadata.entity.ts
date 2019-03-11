@@ -11,19 +11,19 @@ export class AccountMetadataEntity {
   @ObjectIdColumn({name: '_id', type: 'string', readonly: true})
   id: ObjectID
 
-  @Column({type: 'long'})
+  @Column({type: 'long', readonly: true})
   inTxCount: number
 
-  @Column({type: 'boolean'})
+  @Column({type: 'boolean', readonly: true})
   isContractCreator: boolean
 
-  @Column({type: 'boolean'})
+  @Column({type: 'boolean', readonly: true})
   isMiner: boolean
 
-  @Column({type: 'long'})
+  @Column({type: 'long', readonly: true})
   outTxCount: number
 
-  @Column({type: 'long'})
+  @Column({type: 'long', readonly: true})
   totalTxCount: number
 
 }

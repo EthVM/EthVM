@@ -16,25 +16,25 @@ export class AggregateBlockMetricEntity {
   @ObjectIdColumn({name: '_id', readonly: true})
   id: AggregateBlockMetricKeyInterface
 
-  @Column({type: 'string'})
+  @Column({type: 'string', readonly: true})
   bigInteger: string
 
-  @Column({type: 'long'})
+  @Column({type: 'long', readonly: true})
   date: number
 
-  @Column({type: 'double'})
+  @Column({type: 'double', readonly: true})
   double: number
 
-  @Column({type: 'double'})
+  @Column({type: 'double', readonly: true})
   float: number
 
-  @Column({type: 'int'})
+  @Column({type: 'int', readonly: true})
   int: number
 
-  @Column({type: 'long'})
+  @Column({type: 'long', readonly: true})
   long: number
 
-  @Column({type: 'string'})
+  @Column({type: 'string', readonly: true})
   name: string
 
 }

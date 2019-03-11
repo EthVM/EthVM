@@ -7,7 +7,7 @@ export class LogoEmbedded {
     assignClean(this, data)
   }
 
-  @Column({type: 'string'})
+  @Column({type: 'string', readonly: true})
   src: string
 
 }

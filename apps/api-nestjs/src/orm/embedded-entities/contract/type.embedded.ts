@@ -11,7 +11,7 @@ export class TypeEmbedded {
     assignClean(this, data)
   }
 
-  @Column({type: 'enum', enum: ContractType})
+  @Column({type: 'enum', enum: ContractType, readonly: true})
   string: ContractType
 
 }

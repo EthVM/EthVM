@@ -12,7 +12,7 @@ export class BlockEntity {
     assignClean(this, data)
   }
 
-  @ObjectIdColumn({name: '_id'})
+  @ObjectIdColumn({name: '_id', readonly: true})
   id: ObjectID
 
   @Column({type: 'string', readonly: true})

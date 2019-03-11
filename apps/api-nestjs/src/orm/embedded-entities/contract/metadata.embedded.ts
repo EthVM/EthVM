@@ -10,19 +10,19 @@ export class MetadataEmbedded {
     assignClean(this, data)
   }
 
-  @Column({type: 'int'})
+  @Column({type: 'int', readonly: true})
   decimals: number
 
-  @Column({type: 'string'})
+  @Column({type: 'string', readonly: true})
   ens_address: string
 
-  @Column({type: 'string'})
+  @Column({type: 'string', readonly: true})
   name: string
 
-  @Column({type: 'string'})
+  @Column({type: 'string', readonly: true})
   symbol: string
 
-  @Column({type: 'string'})
+  @Column({type: 'string', readonly: true})
   website: string
 
   @Column(type => LogoEmbedded)
