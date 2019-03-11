@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { MongoRepository } from 'typeorm'
+import { getMongoRepository, MongoRepository } from 'typeorm'
 import { BlockEntity } from '@app/orm/entities/block.entity'
 
 @Injectable()
@@ -15,6 +15,7 @@ export class BlockService {
   async getBlocks(limit: number = 10, page: number = 1): Promise<BlockEntity[]> {
     let s = page * limit
     console.log('Limit', limit, 'Page', page)
-    return this.blockRepository.find({ take: 10 })
+    const blockRepo = getMongoRepository(BlockEntity)
+    return blockRepo.find({ take: 10 })
   }
 }
