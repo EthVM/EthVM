@@ -10,6 +10,7 @@ export class BlockResolvers {
   @Query()
   async blocks(@Args('page') page: number, @Args('limit') limit: number) {
     const entities = await this.blockService.getBlocks(limit, page)
+    console.log('Entities', entities);
     return entities
   }
 

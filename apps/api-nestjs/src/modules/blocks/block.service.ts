@@ -12,8 +12,9 @@ export class BlockService {
     return this.blockRepository.findOne({where: {hash: hash} })
   }
 
-  async getBlocks(limit: number, page: number): Promise<BlockEntity[]> {
+  async getBlocks(limit: number = 10, page: number = 1): Promise<BlockEntity[]> {
     let s = page * limit
-    return this.blockRepository.find({ skip: s, take: limit })
+    console.log('Limit', limit, 'Page', page)
+    return this.blockRepository.find({ take: 10 })
   }
 }

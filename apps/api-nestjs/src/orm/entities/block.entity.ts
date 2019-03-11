@@ -5,15 +5,15 @@ import { RewardEmbedded } from '@app/orm/embedded-entities/block/reward.embedded
 import { TxEmbedded } from '@app/orm/embedded-entities/block/tx.embedded'
 import { UncleEmbedded } from '@app/orm/embedded-entities/block/uncle.embedded'
 
-@Entity('blocks')
+@Entity('block')
 export class BlockEntity {
 
   constructor(data: any) {
     assignClean(this, data)
   }
 
-  @ObjectIdColumn({name: '_id', type: 'decimal', readonly: true})
-  number: ObjectID
+  @ObjectIdColumn()
+  number: any
 
   @Column({type: 'string', readonly: true})
   totalDifficulty: string
