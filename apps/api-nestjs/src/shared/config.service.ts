@@ -40,19 +40,14 @@ const schema = {
     playground: {
       doc: 'Whether to enable to disable the graphql playground',
       env: 'GRAPHQL_PLAYGROUND',
-      default: false
+      default: true
     }
   },
   mongodb: {
-    host: {
-      doc: 'MongoDB host',
-      env: 'MONGO_HOST',
-      default: 'mongodb'
-    },
-    port: {
-      doc: 'MongoDB port',
-      env: 'MONGO_PORT',
-      default: 27017
+    url: {
+      doc: 'MongoDB connection URL',
+      env: 'MONGO_URL',
+      default: 'mongodb://mongodb:27017/ethvm_local'
     }
   }
 }
@@ -62,8 +57,7 @@ export interface GraphqlConfig {
 }
 
 export interface MongoDbConfig {
-  host: string
-  port: number
+  url: string
 }
 
 @Injectable()
