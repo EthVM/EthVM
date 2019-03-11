@@ -10,7 +10,7 @@ import { MongoConnectionOptions } from 'typeorm/driver/mongodb/MongoConnectionOp
                 type: 'mongodb',
                 host: configService.mongoDb.host,
                 port: configService.mongoDb.port,
-                database: 'ethvm_local',
+                database: configService.mongoDb.database,
                 synchronize: false,
                 entities: ['src/**/**.entity{.ts,.js}'],
                 loggerLevel: 'error'
