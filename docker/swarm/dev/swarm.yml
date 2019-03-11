@@ -10,33 +10,33 @@ networks:
 
 volumes:
 
-  traefik:
+  traefik-volume:
     external: true
 
-  zookeeper-1:
+  zookeeper-1-volume:
     external: true
-  zookeeper-2:
+  zookeeper-2-volume:
     external: true
-  zookeeper-3:
-    external: true
-
-  kafka-1:
-    external: true
-  kafka-2:
-    external: true
-  kafka-3:
+  zookeeper-3-volume:
     external: true
 
-  kafka-streams:
+  kafka-1-volume:
+    external: true
+  kafka-2-volume:
+    external: true
+  kafka-3-volume:
     external: true
 
-  kafka-connect:
+  kafka-streams-volume:
     external: true
 
-  mongodb:
+  kafka-connect-volume:
     external: true
 
-  parity:
+  mongodb-volume:
+    external: true
+
+  parity-volume:
     external: true
 
 services:
@@ -52,7 +52,7 @@ services:
       - traefik
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - traefik:/var/lib/traefik
+      - traefik-volume:/var/lib/traefik
     ports:
       - 80
       - 443
@@ -145,7 +145,7 @@ services:
   mongodb:
     image: enkryptio/mongodb:4.0.5.2
     volumes:
-      - mongodb:/data/db
+      - mongodb-volume:/data/db
     networks:
       - backend
     environment:
@@ -173,7 +173,7 @@ services:
   zookeeper-1:
     image: confluentinc/cp-zookeeper:5.0.1
     volumes:
-      - zookeeper-1:/var/lib/zookeeper
+      - zookeeper-1-volume:/var/lib/zookeeper
     networks:
       - backend
     environment:
@@ -199,7 +199,7 @@ services:
   zookeeper-2:
     image: confluentinc/cp-zookeeper:5.0.1
     volumes:
-      - zookeeper-2:/var/lib/zookeeper
+      - zookeeper-2-volume:/var/lib/zookeeper
     networks:
       - backend
     environment:
@@ -225,7 +225,7 @@ services:
   zookeeper-3:
     image: confluentinc/cp-zookeeper:5.0.1
     volumes:
-      - zookeeper-3:/var/lib/zookeeper
+      - zookeeper-3-volume:/var/lib/zookeeper
     networks:
       - backend
     environment:
@@ -262,7 +262,7 @@ services:
         protocol: tcp
         mode: host
     volumes:
-      - kafka-1:/var/lib/kafka
+      - kafka-1-volume:/var/lib/kafka
     environment:
       HOSTNAME_COMMAND: "docker info | grep ^Name: | cut -d' ' -f 2"
       KAFKA_BROKER_ID: 1
@@ -307,7 +307,7 @@ services:
     networks:
       - backend
     volumes:
-      - kafka-2:/var/lib/kafka
+      - kafka-2-volume:/var/lib/kafka
     environment:
       HOSTNAME_COMMAND: "docker info | grep ^Name: | cut -d' ' -f 2"
       KAFKA_BROKER_ID: 1
@@ -352,7 +352,7 @@ services:
     networks:
       - backend
     volumes:
-      - kafka-3:/var/lib/kafka
+      - kafka-3-volume:/var/lib/kafka
     environment:
       HOSTNAME_COMMAND: "docker info | grep ^Name: | cut -d' ' -f 2"
       KAFKA_BROKER_ID: 1
@@ -433,7 +433,7 @@ services:
     networks:
       - backend
     volumes:
-      - kafka-streams:/var/lib/kafka-streams
+      - kafka-streams-volume:/var/lib/kafka-streams
     environment:
       KAFKA_BOOTSTRAP_SERVERS: "kafka-1:9091, kafka-2:9091, kafka-3:9091"
       KAFKA_SCHEMA_REGISTRY_URL:
@@ -472,7 +472,7 @@ services:
     networks:
       - backend
     volumes:
-      - kafka-connect:/var/lib/kafka
+      - kafka-connect-volume:/var/lib/kafka
     environment:
       CONNECT_BOOTSTRAP_SERVERS: "kafka-1:9091, kafka-2:9091, kafka-3:9091"
       CONNECT_REST_ADVERTISED_HOST_NAME: "kafka-connect"
@@ -531,7 +531,7 @@ services:
     networks:
       - backend
     volumes:
-      - parity:/home/parity/.local/share/io.parity.ethereum/
+      - parity-volume:/home/parity/.local/share/io.parity.ethereum/
     ports:
       - 30303:30303
       - 30301:30301
