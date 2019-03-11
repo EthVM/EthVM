@@ -1,4 +1,24 @@
 /* tslint:disable */
+export enum BalanceType {
+    TX_FEE = "TX_FEE",
+    REWARD = "REWARD",
+    ETHER = "ETHER",
+    ERC20 = "ERC20",
+    ERC721 = "ERC721"
+}
+
+export class Balance {
+    id?: BalanceKey;
+    address?: string;
+    amount?: string;
+    balanceType?: BalanceType;
+}
+
+export class BalanceKey {
+    balanceType?: BalanceType;
+    address?: string;
+}
+
 export class Block {
     id?: Decimal;
     totalDifficulty?: string;
@@ -25,6 +45,8 @@ export class Header {
 }
 
 export abstract class IQuery {
+    abstract balances(limit?: number, page?: number): Balance[] | Promise<Balance[]>;
+
     abstract blocks(limit?: number, page?: number): Block[] | Promise<Block[]>;
 
     abstract block(hash?: string): Block | Promise<Block>;

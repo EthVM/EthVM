@@ -1,5 +1,5 @@
 type Query {
-  blocks(limit: Int,page: Int): [Block]
+  blocks(limit: Int, page: Int): [Block]
   block(hash: String): Block
 }
 
