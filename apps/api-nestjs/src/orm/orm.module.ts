@@ -13,7 +13,7 @@ import { MongoConnectionOptions } from 'typeorm/driver/mongodb/MongoConnectionOp
                 database: 'ethvm_local',
                 synchronize: false,
                 entities: ['src/**/**.entity{.ts,.js}'],
-                loggerLevel: 'debug'
+                loggerLevel: 'error'
             }),
             inject: [ConfigService]
         }),
