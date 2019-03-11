@@ -41,7 +41,16 @@ export class BlockMetricEntity {
   @Column({type: 'int'})
   numSuccessfulTxs: number
 
+  @Column({type: 'int'})
+  numUncles: number
+
   @Column({type: 'long'})
   timestamp: number
+
+  @Column({type: 'string'})
+  totalDifficulty: string
+
+  @Column({type: 'int'})
+  totalTxs: number
 
 }

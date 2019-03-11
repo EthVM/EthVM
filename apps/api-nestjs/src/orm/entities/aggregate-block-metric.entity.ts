@@ -8,6 +8,7 @@ export class AggregateBlockMetricEntity {
     assignClean(this, data)
   }
 
+  // TODO set ID correctly
   @ObjectIdColumn({name: '_id', type: 'decimal', readonly: true})
   id: ObjectID
 
