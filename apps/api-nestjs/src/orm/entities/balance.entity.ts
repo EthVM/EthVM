@@ -1,6 +1,10 @@
 import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 
+export enum BalanceType {
+  TX_FEE, REWARD, ETHER, ERC20, ERC721
+}
+
 @Entity('balances')
 export class BalanceEntity {
 
@@ -18,7 +22,7 @@ export class BalanceEntity {
   @Column({type: 'string'})
   amount: string
 
-  @Column({type: 'string'})
-  balanceType: string
+  @Column({type: 'enum', enum: BalanceType})
+  balanceType: BalanceType
 
 }

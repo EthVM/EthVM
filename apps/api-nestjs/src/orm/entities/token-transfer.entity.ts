@@ -8,7 +8,7 @@ export class TokenTransferEntity {
     assignClean(this, data)
   }
 
-  // TODO Set id correctly
+  // TODO Set id correctly nested {hash: bytes}
   @ObjectIdColumn({name: '_id', readonly: true})
   id: ObjectID
 
