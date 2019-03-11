@@ -58,7 +58,7 @@ export class MongoTxsRepository extends BaseMongoDbRepository implements TxsRepo
     return this.db
       .collection(MongoEthVM.collections.transactions)
       .find(find)
-      .sort({ timestamp: -1 })
+      // .sort({ timestamp: -1 })
       .skip(start)
       .limit(limit)
       .toArray()

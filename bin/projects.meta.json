@@ -7,23 +7,11 @@
       "version": "${APPS_PATH}/api/package.json"
     },
     {
-      "id": "ethereumj",
-      "dockerfile": "${APPS_PATH}/ethereumj/Dockerfile",
-      "context": "${APPS_PATH}/ethereumj/",
-      "version": "${APPS_PATH}/ethereumj/ethereumj-core/src/main/resources/version.properties"
-    },
-    {
       "id": "explorer",
       "dockerfile": "${APPS_PATH}/explorer/Dockerfile",
       "context": "${APPS_PATH}/",
       "version": "${APPS_PATH}/explorer/package.json",
       "targets": ["development", "staging", "production"]
-    },
-    {
-      "id": "kafka-connect",
-      "dockerfile": "${APPS_PATH}/processing/kafka-connect/Dockerfile",
-      "context": "${APPS_PATH}/processing",
-      "version": "${APPS_PATH}/processing/version.properties"
     },
     {
       "id": "ethvm-utils",
@@ -42,12 +30,6 @@
       "dockerfile": "${DOCKER_IMAGES_PATH}/mongodb-dev/Dockerfile",
       "context": "${DOCKER_IMAGES_PATH}/mongodb-dev",
       "version": "${DOCKER_IMAGES_PATH}/mongodb-dev/version.properties"
-    },
-    {
-      "id": "mongodb-install",
-      "dockerfile": "${DOCKER_IMAGES_PATH}/mongodb-install/Dockerfile",
-      "context": "${DOCKER_IMAGES_PATH}/mongodb-install/",
-      "version": "${DOCKER_IMAGES_PATH}/mongodb-install/version.properties"
     },
     {
       "id": "zookeeper",
