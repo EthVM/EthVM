@@ -1,7 +1,7 @@
 <div align="center">
   <img src="https://raw.githubusercontent.com/enKryptIO/ethvm/master/.github/assets/logo.png" alt="ethvm-logo">
-  <p>:zap::zap::zap: EthVM Project: An Open Source Proccessing Engine and Block Explorer for Ethereum, based on Apache Kafka :zap::zap::zap:</p>
-  <p>Powered by <a href="https://www.typescriptlang.org/">TypeScript</a> / <a href="https://vuejs.org/">VueJS</a> / <a href="https://github.com/socketio/socket.io">Socket.io</a> / <a href="https://kafka.apache.org/">Kafka + Kafka Streams + Kafka Connect</a> / <a href="https://github.com/paritytech/parity-ethereum">Parity</a> / <a href="https://github.com/mongodb/mongo">MongoDB</a> 
+  <p>:zap: EthVM: An Open Source Proccessing Engine and Block Explorer for Ethereum, based on Apache Kafka :zap:</p>
+  <p>Powered by <a href="https://www.typescriptlang.org/">TypeScript</a> / <a href="https://vuejs.org/">VueJS</a> / <a href="https://github.com/socketio/socket.io">Socket.io</a> / <a href="https://kafka.apache.org/">Apache Kafka</a> / <a href="https://github.com/paritytech/parity-ethereum">Parity</a> / <a href="https://github.com/mongodb/mongo">MongoDB</a> 
   <p><a href="https://travis-ci.org/enKryptIO/ethvm.svg?branch=develop"><img src="https://travis-ci.org/enKryptIO/ethvm.svg?branch=develop"/></a></p>
 </div>
 
@@ -19,17 +19,41 @@
 
 ## Warning
 
-We are on active development! So things may broke or not work as expected and documentation may be deprecated! You have been warned!
+**We are on active development!** 
 
-## Philosophy
+Things may break or not work as expected and documentation may be deprecated! If you detect a bug, please report it on the issues section (but make sure that is not a duplicated one!)
 
-We have strong foundations on how an Open Source blockchain explorer should be:
+You have been warned!
 
-- **Empower the people**: Give people the ability to inspect the Ethereum blockchain easily, pretty much like [Etherscan](https://etherscan.io/) does but without being closed source.
-- **Open source & audit-able**: Having an open source foundation, will guarantee free access to inspect, audit and modify whatever you want or need, without any vendor lock-in.
-- **People are the Priority**: People are the most important & their experience trumps all else. If monetization worsens the experience, we don't do it. (e.g. ads).
-- **A learning experience, too**: We want to educate about Ethereum, security, privacy, the importance of controlling your own keys, how the blockchain works, and how Ethereum and blockchain technologies enable a better world.
-- **Private**: No tracking!!! No emails. No ads. No demographics. We don't even know who / what / where you are.
+## About
+
+### What is EthVM?
+
+EthVM is an open-source Blockchain Explorer focused mainly on [Ethereum](https://www.ethereum.org/) (although other networks and forks will be supported over time) under the [SSPL license](https://www.mongodb.com/licensing/server-side-public-license) (a small variation of the GNU Affero License v3) and written in a mixture of different languages. 
+
+You can use EthVM as a tool to explore your custom private network or the existing public ones or as a ETL (Extract, Transform, Load) platform to perform different analysis on the data. 
+
+Our core infrastructure is based on very common and known programming languages and frameworks:
+
+- [TypeScript](https://www.typescriptlang.org/)
+- [Kotlin](https://kotlinlang.org/)
+- [Apache Kafka](https://kafka.apache.org/) = [Kafka Connect](https://docs.confluent.io/current/connect/index.html) + [Kafka Streams](https://kafka.apache.org/documentation/streams/) + [Kafka Schema Registry](https://docs.confluent.io/current/schema-registry/docs/index.html)
+- [VueJs](https://vuejs.org/)
+- [NestJS](https://nestjs.com/)
+
+We have choosen the above technologies to allow a wider range of people contributing to the project.
+
+### Why Apache Kafka?
+
+As the official website states:
+
+> Kafka is used for building real-time data pipelines and streaming apps. It is horizontally scalable, fault-tolerant, wicked fast, and runs in production in thousands of companies.
+
+<div align="center">
+  <img src="https://kafka.apache.org/images/kafka_diagram.png" alt="Apache Kafka" width="500" />
+</div>
+
+We believe that it fits quite nicely within the needs a Block Explorer typically has. On the other side, and by fully embracing the Kafka ecosystem, we allow to export the processed information very easily to other platforms.
 
 ## Getting Started
 
