@@ -18,7 +18,7 @@
             <v-img :src="require('@/assets/logo-compact.png')" height="70px" max-width="80px" contain class="mb-2 mt-2"></v-img>
             <v-img :src="require('@/assets/alpha.png')" height="18px" max-width="80px" contain class="mb-2"></v-img>
           </v-layout>
-           <v-layout v-else align-end justify-start row >
+          <v-layout v-else align-end justify-start row>
             <v-img :src="require('@/assets/logo-white.png')" height="50px" max-width="130px" contain class="mb-4 mt-4 ml-2"></v-img>
             <v-img :src="require('@/assets/alpha.png')" height="18px" max-width="50px" contain class="mb-4 "></v-img>
           </v-layout>
@@ -29,9 +29,9 @@
           =====================================================================================
           -->
           <v-list class="pa-0" two-line v-for="(item, index) in items" :key="index" v-model="item.active">
-            <v-list-tile v-if="!item.links" class="nav--text pb-1" :to="item.header.routerLink" active-class="white--text accent" >
+            <v-list-tile v-if="!item.links" class="nav--text pb-1" :to="item.header.routerLink" active-class="white--text accent">
               <v-layout row align-center justify-start fill-height>
-                <v-list-tile-action >
+                <v-list-tile-action>
                   <v-icon class="mr-2 ml-2" small>{{ item.header.icon }}</v-icon>
                 </v-list-tile-action>
                 <v-list-tile-content>
@@ -40,22 +40,22 @@
               </v-layout>
             </v-list-tile>
             <v-list-group v-else :class="[checkLinkPath(item.links) ? 'accent white--text' : 'nav--text']" @click="mini = false">
-              <template v-slot:activator >
-                  <v-icon class="ml-4 pl-1 pr-3" small>{{ item.header.icon }}</v-icon>
+              <template v-slot:activator>
+                <v-icon class="ml-4 pl-1 pr-3" small>{{ item.header.icon }}</v-icon>
                 <v-list-tile>
-                    <v-list-tile-content>
-                      <v-list-tile-title>{{ item.header.text }}</v-list-tile-title>
-                    </v-list-tile-content>
+                  <v-list-tile-content>
+                    <v-list-tile-title>{{ item.header.text }}</v-list-tile-title>
+                  </v-list-tile-content>
                 </v-list-tile>
               </template>
               <div v-if="!mini">
-              <v-list-tile v-for="(link, j) in item.links" :to="link.routerLink" :key="j">
-                <v-list-tile-content>
-                  <v-list-tile-title :class="[isCurrentLinkPath(link.name) ? 'white--text ml-5 pl-2' : 'nav--text ml-5 pl-2']">{{
-                    link.text
-                  }}</v-list-tile-title>
-                </v-list-tile-content>
-              </v-list-tile>
+                <v-list-tile v-for="(link, j) in item.links" :to="link.routerLink" :key="j">
+                  <v-list-tile-content>
+                    <v-list-tile-title :class="[isCurrentLinkPath(link.name) ? 'white--text ml-5 pl-2' : 'nav--text ml-5 pl-2']">{{
+                      link.text
+                    }}</v-list-tile-title>
+                  </v-list-tile-content>
+                </v-list-tile>
               </div>
             </v-list-group>
           </v-list>
@@ -66,7 +66,7 @@
           REPORT BUTTON
         =====================================================================================
         -->
-        <v-flex v-if="!mini" >
+        <v-flex v-if="!mini">
           <v-layout align-center justify-end column fill-height pt-4 pb-5>
             <p class="white--text">{{ $t('message.report') }}</p>
             <v-btn outline color="bttnReport" class="text-capitalize font-weight-regular" :href="'mailto:' + supportEmail">{{ $t('bttn.report') }}</v-btn>
@@ -193,16 +193,14 @@ export default class TheNavigationDrawer extends Vue {
   */
 
   setDrawer(): void {
-    if  (this.$vuetify.breakpoint.name === 'lg' || this.$vuetify.breakpoint.name === 'xl') {
+    if (this.$vuetify.breakpoint.name === 'lg' || this.$vuetify.breakpoint.name === 'xl') {
       this.drawer = true
       this.mini = !this.mini
-    }
-    else {
+    } else {
       this.mini = false
       this.drawer = !this.drawer
     }
   }
-
 
   getCurrentPath(): string {
     return this.$route.name ? this.$route.name : ''
@@ -220,6 +218,5 @@ export default class TheNavigationDrawer extends Vue {
     }
     return false
   }
-
 }
 </script>
