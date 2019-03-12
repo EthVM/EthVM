@@ -113,9 +113,6 @@ export class Tx {
   }
 
   public getInput(): string {
-    if (!this.cache.input) {
-      this.cache.input = this.tx.input
-    }
-    return this.cache.input
+    return this.tx.input
   }
 }

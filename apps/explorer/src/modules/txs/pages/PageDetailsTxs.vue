@@ -18,7 +18,6 @@ import { Tx } from '@app/core/models'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import { Detail, Crumb } from '@app/core/components/props'
 import Signatures from '@app/modules/txs/helpers/signatures.json'
-import _ from 'lodash.debounce'
 
 @Component({
   components: {
