@@ -50,6 +50,9 @@ storage = "{{ .Env.ACME_STORAGE }}"
 onHostRule = true
 acmeLogging = true
 entryPoint = "https"
+{{if .Env.LETS_ENCRYPT_STAGING }}
+caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
+{{end}}
 
   [acme.httpChallenge]
   entryPoint = "http"

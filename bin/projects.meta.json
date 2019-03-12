@@ -26,16 +26,10 @@
       "version": "${APPS_PATH}/processing/version.properties"
     },
     {
-      "id": "mongodb-dev",
-      "dockerfile": "${DOCKER_IMAGES_PATH}/mongodb-dev/Dockerfile",
-      "context": "${DOCKER_IMAGES_PATH}/mongodb-dev",
-      "version": "${DOCKER_IMAGES_PATH}/mongodb-dev/version.properties"
-    },
-    {
-      "id": "zookeeper",
-      "dockerfile": "${DOCKER_IMAGES_PATH}/zookeeper/Dockerfile",
-      "context": "${DOCKER_IMAGES_PATH}/zookeeper/",
-      "version": "${DOCKER_IMAGES_PATH}/zookeeper/version.properties"
+      "id": "mongodb",
+      "dockerfile": "${DOCKER_IMAGES_PATH}/mongodb/Dockerfile",
+      "context": "${DOCKER_IMAGES_PATH}/mongodb",
+      "version": "${DOCKER_IMAGES_PATH}/mongodb/version.properties"
     },
     {
       "id": "traefik",

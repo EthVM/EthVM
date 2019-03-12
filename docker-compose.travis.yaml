@@ -6,7 +6,7 @@ volumes:
 services:
 
   mongodb:
-    image: enkryptio/mongodb-dev:${MONGODB_VERSION}
+    image: enkryptio/mongodb:${MONGODB_VERSION}
     restart: unless-stopped
     volumes:
       - mongodb-volume:/data/db

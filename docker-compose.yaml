@@ -19,6 +19,9 @@ volumes:
 
   zookeeper-volume:
 
+  control-center-volume:
+  control-center-config-volume:
+
   parity-volume:
     # Note:
     # If you're on Linux, use local-persist instead of a regular docker volume
@@ -122,7 +125,7 @@ services:
   # ///////////////////////////////////////////////////////
 
   mongodb:
-    image: enkryptio/mongodb-dev:${MONGODB_VERSION}
+    image: enkryptio/mongodb:${MONGODB_VERSION}
     restart: unless-stopped
     volumes:
       - mongodb-volume:/data/db
@@ -297,6 +300,23 @@ services:
       - "traefik.backend=lenses"
       - "traefik.port=9991"
     cpu_shares: 512
+
+  kafka-control-center:
+    image: confluentinc/cp-enterprise-control-center:5.1.2
+    networks:
+      - back
+    ports:
+      - 9021:9021
+    volumes:
+      - control-center-volume:/var/lib/control-center/data
+      - control-center-config-volume:/var/lib/control-center/config
+    environment:
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: kafka-1:9091
+      CONTROL_CENTER_ZOOKEEPER_CONNECT: zookeeper-1:2181
+      CONTROL_CENTER_CONNECT_CLUSTER: http://kafka-connect:8083
+      CONTROL_CENTER_DATA_DIR: /var/lib/control-center/data
+      CONTROL_CENTER_CONFIG_DIR: /var/lib/control-center/config
+      CONTROL_CENTER_REPLICATION_FACTOR: 1
 
   # ///////////////////////////////////////////////////////
   # Etherum Client
