@@ -98,7 +98,7 @@
 <script lang="ts">
 import AppSearch from '@app/core/components/ui/AppSearch.vue'
 import { NavMenuEntry } from '@app/core/components/props'
-import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({
   components: {
