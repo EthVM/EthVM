@@ -1,6 +1,6 @@
 variable "connection_timeout" {
   description = "Timeout for connection to servers"
-  default     = "2m"
+  default     = "5m"
 }
 
 variable "join_token" {

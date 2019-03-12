@@ -91,10 +91,17 @@ module "processing_workers" {
   connection_timeout = "${var.connection_timeout}"
 }
 
-module "swarm-mode-firewall" {
-  source  = "thojkooi/docker-swarm-firewall/digitalocean"
-  version = "1.0.0"
-
+module "swarm-firewall" {
+  source              = "thojkooi/docker-swarm-firewall/digitalocean"
+  version             = "1.0.0"
+  prefix              = "ethvm"
   cluster_tags        = ["${digitalocean_tag.cluster.id}", "${digitalocean_tag.manager.id}", "${digitalocean_tag.worker.id}"]
   cluster_droplet_ids = []
+}
+
+module "default-firewall" {
+    source  = "thojkooi/firewall-rules/digitalocean"
+    version = "1.0.0"
+    prefix  = "ethvm"
+    tags    = ["${digitalocean_tag.cluster.id}"]
 }
