@@ -1,5 +1,5 @@
 type Query {
-  blocks(limit: Int,page: Int): [Block]
+  blocks(limit: Int, page: Int): [Block]
   block(hash: String): Block
 }
 
@@ -8,44 +8,49 @@ type Subscription {
 }
 
 type Block {
-  number: Int
-  hash: String
+  id: Decimal
+  totalDifficulty: String
   header: Header
-  stats: Stats
-  transactions: [String]
-  uncles: [String]
+  uncles: Uncle
 }
 
 type Header {
-  parentHash: String
-  sha3Uncles: String
+  author: String
+  difficulty: String
+  extraData: String
+  gasLimit: String
+  gasUsed: String
   hash: String
-  number: Int
-  timestamp: Int
+  logsBloom: String
   nonce: String
-  miner: String
-  mixHash: JSON
-  rewards:JSON
-  difficulty: Decimal
-  totalDifficulty: Decimal
-  stateRoot: Buffer
-  transactionsRoot:JSON
-  receiptsRoot:JSON
-  logsBloom:JSON
-  gasLimit:JSON
-  gasUsed:JSON
-  extraData:JSON
+  number: Int
+  parentHash: String
+  receiptsRoot: String
+  sha3Uncles: String
+  size: Int
+  stateRoot: String
+  timestamp: Int
 }
 
-type Stats {
-  successfulTxs: Int
-  failedTxs:Int
-  pendingTxs:Int
-  processingTimeMs:Int
-  txs:Int
-  internalTxs:Int
-  totalGasPrice:Int
-  avgGasPrice:Int
-  totalTxsFees:Int
-  avgTxsFees:Int
+type Uncle {
+  id: String
+  blockNumber: Int
+  uncleIndex: Int
+  author: String
+  difficulty: String
+  extraData: String
+  gasLimit: String
+  gasUsed: String
+  hash: String
+  logsBloom: String
+  nonce: String
+  number: Int
+  parentHash: String
+  receiptsRoot: String
+  sha3Uncles: String
+  size: Int
+  stateRoot: String
+  timestamp: Int
+  transactionsRoot: String
+  uncleReward: String
 }
