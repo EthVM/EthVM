@@ -35,6 +35,24 @@ export class Block {
     uncles?: Uncle;
 }
 
+export class BlockMetric {
+    id?: Decimal;
+    avgGasLimit?: string;
+    avgGasPrice?: string;
+    avgTxFees?: string;
+    blockTime?: string;
+    difficulty?: string;
+    hash?: string;
+    number?: number;
+    numFailedTxs?: number;
+    numPendingTxs?: number;
+    numSuccessfulTxs?: number;
+    numUncles?: number;
+    timestamp?: number;
+    totalDifficulty?: string;
+    totalTxs?: number;
+}
+
 export class Header {
     author?: string;
     difficulty?: string;
@@ -57,6 +75,10 @@ export abstract class IQuery {
     abstract accountMetadataByHash(hash: string): AccountMetadata | Promise<AccountMetadata>;
 
     abstract balanceByHash(hash: string): Balance | Promise<Balance>;
+
+    abstract blockMetricByHash(hash?: string): BlockMetric | Promise<BlockMetric>;
+
+    abstract blockMetrics(limit?: number, page?: number): BlockMetric[] | Promise<BlockMetric[]>;
 
     abstract blocks(limit?: number, page?: number): Block[] | Promise<Block[]>;
 

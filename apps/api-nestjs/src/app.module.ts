@@ -5,6 +5,7 @@ import { OrmModule } from '@app/orm/orm.module'
 import { GraphQLModule } from '@app/graphql/graphql.module'
 import { BalanceModule } from '@app/modules/balances/balance.module'
 import { AccountMetadataModule } from '@app/modules/account-metadata/account-metadata.module'
+import { BlockMetricModule } from '@app/modules/block-metrics/block-metric.module'
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { AccountMetadataModule } from '@app/modules/account-metadata/account-met
     OrmModule,
     BlockModule,
     BalanceModule,
-    AccountMetadataModule
+    AccountMetadataModule,
+    BlockMetricModule
   ]
 })
 export class AppModule {}
