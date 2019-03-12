@@ -23,7 +23,7 @@
                 <v-list-tile v-for="(uncle, index) in uncles" :key="index">
                   <v-layout row justify-start align-center fill-height>
                     <v-card-title class="info--text pr-0 pl-0">{{ $t('common.hash') }}:</v-card-title>
-                    <v-card-text class="text-truncate">
+                    <v-card-text class="text-truncate font-mono">
                       <router-link :to="'/uncle/' + uncles[index]">{{ uncles[index] }}</router-link>
                     </v-card-text>
                   </v-layout>

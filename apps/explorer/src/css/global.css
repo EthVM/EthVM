@@ -2,6 +2,7 @@
     font-family: 'Roboto', sans-serif;
 }
 
+
 h2,
 h3 {
     font-weight: 400;
@@ -19,6 +20,12 @@ a:link {
 
 .theme--light.v-icon {
     color: inherit;
+}
+
+/* Mono Spaced Font: */
+
+.font-mono {
+  font-family: 'Roboto Mono', sans-serif;
 }
 
 /* SEARCH COMPONENT: */

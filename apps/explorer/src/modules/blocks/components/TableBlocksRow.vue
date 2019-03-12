@@ -7,11 +7,11 @@
       <v-flex xs12 sm7 md6 lass="pr-0" order-xs3 order-sm2>
         <p class="text-truncate info--text psmall mb-0 pb-0">
           {{ $t('common.hash') }}:
-          <router-link class="primary--text font-italic font-weight-regular" :to="'/block/' + block.getHash()">{{ block.getHash() }}</router-link>
+          <router-link class="primary--text font-mono font-weight-regular" :to="'/block/' + block.getHash()">{{ block.getHash() }}</router-link>
         </p>
         <p v-if="pageType != 'address'" class="text-truncate info--text mb-0 pt-2">
           {{ $t('block.miner') }}:
-          <router-link :to="'/address/' + block.getMiner().toString()" class="secondary--text font-italic font-weight-regular">{{
+          <router-link :to="'/address/' + block.getMiner().toString()" class="secondary--text font-italic font-mono font-weight-regular">{{
             block.getMiner().toString()
           }}</router-link>
         </p>
@@ -39,7 +39,7 @@
           <v-card-title class="pt-1 font-weight-medium pb-2">{{ $t('title.uncles') }}:</v-card-title>
           <v-card-text v-for="(uncle, index) in block.getUncles()" :key="index" class="text-truncate info--text pt-0 pb-2">
             {{ $t('common.hash') }}:
-            <router-link :to="'/uncle/' + uncle.getHash()">{{ uncle.getHash() }}</router-link>
+            <router-link :to="'/uncle/' + uncle.getHash()" class="font-mono">{{ uncle.getHash() }}</router-link>
           </v-card-text>
         </v-card>
       </v-flex>
