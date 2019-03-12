@@ -56,7 +56,7 @@ export class Header {
 export abstract class IQuery {
     abstract accountMetadataByHash(hash: string): AccountMetadata | Promise<AccountMetadata>;
 
-    abstract balances(limit?: number, page?: number): Balance[] | Promise<Balance[]>;
+    abstract balanceByHash(hash: string): Balance | Promise<Balance>;
 
     abstract blocks(limit?: number, page?: number): Block[] | Promise<Block[]>;
 
