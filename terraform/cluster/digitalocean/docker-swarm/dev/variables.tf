@@ -19,7 +19,7 @@ variable "processing_worker_name" {
 
 variable "connection_timeout" {
   description = "Timeout for connection to servers"
-  default     = "2m"
+  default     = "5m"
 }
 
 variable "ssh_keys" {
@@ -75,4 +75,10 @@ variable "remote_api_key" {
 variable "remote_api_certificate" {
   description = "Certificate file path for the docker remote API"
   default     = ""
+}
+
+variable "allowed_inbound_ssh_adresses" {
+  description = "An array of strings containing the IPv4 addresses, IPv6 addresses, IPv4 CIDRs, and/or IPv6 CIDRs from which the inbound SSH traffic will be accepted."
+  type        = "list"
+  default     = ["0.0.0.0/0", "::/0"]
 }

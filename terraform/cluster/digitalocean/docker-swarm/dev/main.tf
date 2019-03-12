@@ -104,4 +104,6 @@ module "default-firewall" {
     version = "1.0.0"
     prefix  = "ethvm"
     tags    = ["${digitalocean_tag.cluster.id}"]
+
+    allowed_inbound_ssh_adresses = ["${var.allowed_inbound_ssh_adresses}"]
 }
