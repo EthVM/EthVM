@@ -34,6 +34,11 @@ volumes:
   kafka-connect-volume:
     external: false
 
+  control-center-volume:
+    external: false
+  control-center-config-volume:
+    external: false
+
   mongodb-volume:
     external: false
 
@@ -100,7 +105,7 @@ services:
         - 'traefik.enable=true'
         - "traefik.docker.network=traefik"
         - 'traefik.default.protocol=http'
-        - 'traefik.frontend.rule=Host:ropsten.ethvm.com'
+        - 'traefik.frontend.rule=Host:dev.ethvm.com'
         - 'traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:*||Access-Control-Allow-Credentials:true'
         - 'traefik.frontend.passHostHeader=true'
         - 'traefik.backend=explorer'
@@ -133,8 +138,8 @@ services:
         - "traefik.enable=true"
         - "traefik.docker.network=traefik"
         - "traefik.default.protocol=http"
-        - "traefik.frontend.rule=Host:api.ropsten.ethvm.com"
-        - "traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:https://ropsten.ethvm.com||Access-Control-Allow-Credentials:true"
+        - "traefik.frontend.rule=Host:api.dev.ethvm.com"
+        - "traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:https://dev.ethvm.com||Access-Control-Allow-Credentials:true"
         - "traefik.frontend.passHostHeader=true"
         - "traefik.backend=api"
         - "traefik.port=3000"
@@ -172,7 +177,7 @@ services:
   # ///////////////////////////////////////////////////////
 
   zookeeper-1:
-    image: confluentinc/cp-zookeeper:5.0.1
+    image: confluentinc/cp-zookeeper:5.1.2
     volumes:
       - zookeeper-1-volume:/var/lib/zookeeper
     networks:
@@ -192,7 +197,7 @@ services:
         mode: host
     environment:
       ZOOKEEPER_SERVER_ID: 1
-      ZOOKEEPER_SERVERS: 0.0.0.0:2888:3888;ethvm_zookeeper-2:2888:3888;ethvm_zookeeper-3:2888:3888
+      ZOOKEEPER_SERVERS: 0.0.0.0:2888:3888;zookeeper-2:2888:3888;zookeeper-3:2888:3888
       ZOOKEEPER_CLIENT_PORT: 2181
     deploy:
       # resources:
@@ -211,7 +216,7 @@ services:
         condition: on-failure
 
   zookeeper-2:
-    image: confluentinc/cp-zookeeper:5.0.1
+    image: confluentinc/cp-zookeeper:5.1.2
     volumes:
       - zookeeper-2-volume:/var/lib/zookeeper
     networks:
@@ -231,7 +236,7 @@ services:
         mode: host
     environment:
       ZOOKEEPER_SERVER_ID: 2
-      ZOOKEEPER_SERVERS: ethvm_zookeeper-1:2888:3888;0.0.0.0:2888:3888;ethvm_zookeeper-3:2888:3888
+      ZOOKEEPER_SERVERS: zookeeper-1:2888:3888;0.0.0.0:2888:3888;zookeeper-3:2888:3888
       ZOOKEEPER_CLIENT_PORT: 2181
     deploy:
       # resources:
@@ -250,7 +255,7 @@ services:
         condition: on-failure
 
   zookeeper-3:
-    image: confluentinc/cp-zookeeper:5.0.1
+    image: confluentinc/cp-zookeeper:5.1.2
     volumes:
       - zookeeper-3-volume:/var/lib/zookeeper
     networks:
@@ -270,7 +275,7 @@ services:
         mode: host
     environment:
       ZOOKEEPER_SERVER_ID: 3
-      ZOOKEEPER_SERVERS: ethvm_zookeeper-1:2888:3888;ethvm_zookeeper-2:2888:3888;0.0.0.0:2888:3888
+      ZOOKEEPER_SERVERS: zookeeper-1:2888:3888;zookeeper-2:2888:3888;0.0.0.0:2888:3888
       ZOOKEEPER_CLIENT_PORT: 2181
     deploy:
       # resources:
@@ -289,29 +294,25 @@ services:
         condition: on-failure
 
   kafka-1:
-    image: confluentinc/cp-kafka:5.0.1
+    image: confluentinc/cp-kafka:5.1.2
     depends_on:
       - zookeeper-1
       - zookeeper-2
       - zookeeper-3
     networks:
       - backend
-    ports:
-      - target: 9094
-        published: 9094
-        protocol: tcp
-        mode: host
     volumes:
       - kafka-1-volume:/var/lib/kafka
     environment:
-      HOSTNAME_COMMAND: "docker info | grep ^Name: | cut -d' ' -f 2"
       KAFKA_BROKER_ID: 1
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: INSIDE://:9092,OUTSIDE://_{HOSTNAME_COMMAND}:9094
-      KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:9094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
       KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
+      KAFKA_AUTO_LEADER_REBALANCE_ENABLE: 'true'
+      KAFKA_MIN_INSYNC_REPLICAS: 2
+      KAFKA_COMPRESSION_TYPE: zstd
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
@@ -334,12 +335,12 @@ services:
         constraints:
           - node.role == worker
           - node.labels.io.ethvm.nodeType == processing-worker-1
-      replicas: 0
+      replicas: 1
       restart_policy:
         condition: on-failure
 
   kafka-2:
-    image: confluentinc/cp-kafka:5.0.1
+    image: confluentinc/cp-kafka:5.1.2
     depends_on:
       - zookeeper-1
       - zookeeper-2
@@ -349,14 +350,15 @@ services:
     volumes:
       - kafka-2-volume:/var/lib/kafka
     environment:
-      HOSTNAME_COMMAND: "docker info | grep ^Name: | cut -d' ' -f 2"
-      KAFKA_BROKER_ID: 1
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: INSIDE://:9092,OUTSIDE://_{HOSTNAME_COMMAND}:9094
-      KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:9094
+      KAFKA_BROKER_ID: 2
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
       KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
+      KAFKA_AUTO_LEADER_REBALANCE_ENABLE: 'true'
+      KAFKA_MIN_INSYNC_REPLICAS: 2
+      KAFKA_COMPRESSION_TYPE: zstd
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
@@ -379,12 +381,12 @@ services:
         constraints:
           - node.role == worker
           - node.labels.io.ethvm.nodeType == processing-worker-2
-      replicas: 0
+      replicas: 1
       restart_policy:
         condition: on-failure
 
   kafka-3:
-    image: confluentinc/cp-kafka:5.0.1
+    image: confluentinc/cp-kafka:5.1.2
     depends_on:
       - zookeeper-1
       - zookeeper-2
@@ -394,14 +396,15 @@ services:
     volumes:
       - kafka-3-volume:/var/lib/kafka
     environment:
-      HOSTNAME_COMMAND: "docker info | grep ^Name: | cut -d' ' -f 2"
-      KAFKA_BROKER_ID: 1
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: INSIDE://:9092,OUTSIDE://_{HOSTNAME_COMMAND}:9094
-      KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:9094
+      KAFKA_BROKER_ID: 3
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
       KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
+      KAFKA_AUTO_LEADER_REBALANCE_ENABLE: 'true'
+      KAFKA_MIN_INSYNC_REPLICAS: 2
+      KAFKA_COMPRESSION_TYPE: zstd
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
@@ -424,12 +427,12 @@ services:
         constraints:
           - node.role == worker
           - node.labels.io.ethvm.nodeType == processing-worker-3
-      replicas: 0
+      replicas: 1
       restart_policy:
         condition: on-failure
 
   kafka-schema-registry:
-    image: confluentinc/cp-schema-registry:5.0.1
+    image: confluentinc/cp-schema-registry:5.1.2
     depends_on:
       - zookeeper-1
       - zookeeper-2
@@ -440,7 +443,7 @@ services:
     networks:
       - backend
     environment:
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "PLAINTEXT://kafka-1:9091"
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://kafka-1:9091,PLAINTEXT://kafka-2:9091,PLAINTEXT://kafka-3:9091
       SCHEMA_REGISTRY_HOST_NAME: kafka-schema-registry
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
       SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: "INFO"
@@ -475,8 +478,8 @@ services:
     volumes:
       - kafka-streams-volume:/var/lib/kafka-streams
     environment:
-      KAFKA_BOOTSTRAP_SERVERS: "kafka-1:9091, kafka-2:9091, kafka-3:9091"
-      KAFKA_SCHEMA_REGISTRY_URL:
+      KAFKA_BOOTSTRAP_SERVERS: kafka-1:9091,kafka-2:9091,kafka-3:9091
+      KAFKA_SCHEMA_REGISTRY_URL: http://kafka-schema-registry:8081
       KAFKA_STREAMS_STATE_DIR: /var/lib/kafka-streams
     deploy:
       # resources:
@@ -498,7 +501,7 @@ services:
         condition: on-failure
 
   kafka-connect:
-    image: confluentinc/cp-kafka-connect:5.0.1
+    image: confluentinc/cp-kafka-connect:5.1.2
     depends_on:
       - zookeeper-1
       - zookeeper-2
@@ -513,7 +516,7 @@ services:
     volumes:
       - kafka-connect-volume:/var/lib/kafka
     environment:
-      CONNECT_BOOTSTRAP_SERVERS: "kafka-1:9091,kafka-2:9091,kafka-3:9091"
+      CONNECT_BOOTSTRAP_SERVERS: kafka-1:9091,kafka-2:9091,kafka-3:9091
       CONNECT_REST_ADVERTISED_HOST_NAME: "kafka-connect"
       CONNECT_REST_PORT: 8083
       CONNECT_GROUP_ID: "ethvm-kafka-connect"
@@ -574,7 +577,7 @@ services:
     ports:
       - 30303:30303
       - 30301:30301
-    command: --chain ropsten --cache-size=4096 --tracing on --pruning archive --no-warp --ws-interface 0.0.0.0 --no-ipc --bootnodes "enode://7778cd2215a3ff83c2191ca2cc303d9be1833e00ff5b945d94b4f256e0435ccda1f6abcb404bdd9862c5c255678a549b427b445991bc4f24fabb8229cbd33673@3.91.179.124:30303,enode://e5bb001edeb2342770bc03d00d89d04ba4536eb6ed82226eeb2206d8a3d511dd1c9cff0c9a09fc6cc0674424ec79a562d409258e9d04e2dc415bc0741bcaa44a@40.115.33.57:30305,enode://1447e19cb570a4d4dcaee418d410a5a242a26e9697a8d40180916576c0b0120b59af1759e4234e1e1f110accfe53566523d8073af30af93bbd3ddc20062a3851@104.248.159.93:30303,enode://15ac307a470b411745a6f10544ed54c0a14ad640b21f04f523e736e732bf709d4e28c2f06526ecabc03eed226b6d9bee8e433883cd20ab6cbd114bab77a8775d@52.176.7.10:30303,enode://e05b76d5f90860f13e066f7d5ae313290276181c48af4d753117ea1fe909a33b295ab37ada51fc0c0a9c8ffe618a0968c4e26f21cdc8a21f184ed7960c347ace@35.224.90.32:30303,enode://f0fa95ee17a42b4cf5fee104c5ad61115ff63b2f720c027b1246188afc93a61ba1d67121ea9ebfa78678e796a562a5d949ed5265549f0a4936b7f3bd8d5d2706@35.170.55.156:30303,enode://6ab5116c43c713096b3b3667ea9a24105bcb860bc81ec36f6b271694b9174bb1721232d56cfd2d9a5aa17fbac552833dec24282cfeb43af6572ae6f9bc157bf4@139.99.122.139:30302,enode://378b35851a8e55ddc607c8dd0b3f809787dd23200fa12fe112966de8ef77bb132b42d7adfa313c293a06ce7e3473495216fcd18cda6ff4814655ae734069be94@51.255.77.89:30302,enode://f0fa95ee17a42b4cf5fee104c5ad61115ff63b2f720c027b1246188afc93a61ba1d67121ea9ebfa78678e796a562a5d949ed5265549f0a4936b7f3bd8d5d2706@35.170.55.156:30303,enode://6ab5116c43c713096b3b3667ea9a24105bcb860bc81ec36f6b271694b9174bb1721232d56cfd2d9a5aa17fbac552833dec24282cfeb43af6572ae6f9bc157bf4@139.99.122.139:30302,enode://378b35851a8e55ddc607c8dd0b3f809787dd23200fa12fe112966de8ef77bb132b42d7adfa313c293a06ce7e3473495216fcd18cda6ff4814655ae734069be94@51.255.77.89:30302,enode://afc1345642b182b8455e89c2913d7393f513e31710c8175eaf288084873dbbce7b3c72cf5729b6e8e941767e7137528eb1406aad6b8b050d8f94dc1b221c2d35@172.31.34.252:30303"
+    command: --chain ropsten --cache-size=4096 --tracing on --pruning archive --no-warp --ws-interface 0.0.0.0 --no-ipc --max-peers 25 --bootnodes "enode://7778cd2215a3ff83c2191ca2cc303d9be1833e00ff5b945d94b4f256e0435ccda1f6abcb404bdd9862c5c255678a549b427b445991bc4f24fabb8229cbd33673@3.91.179.124:30303,enode://e5bb001edeb2342770bc03d00d89d04ba4536eb6ed82226eeb2206d8a3d511dd1c9cff0c9a09fc6cc0674424ec79a562d409258e9d04e2dc415bc0741bcaa44a@40.115.33.57:30305,enode://1447e19cb570a4d4dcaee418d410a5a242a26e9697a8d40180916576c0b0120b59af1759e4234e1e1f110accfe53566523d8073af30af93bbd3ddc20062a3851@104.248.159.93:30303,enode://15ac307a470b411745a6f10544ed54c0a14ad640b21f04f523e736e732bf709d4e28c2f06526ecabc03eed226b6d9bee8e433883cd20ab6cbd114bab77a8775d@52.176.7.10:30303,enode://e05b76d5f90860f13e066f7d5ae313290276181c48af4d753117ea1fe909a33b295ab37ada51fc0c0a9c8ffe618a0968c4e26f21cdc8a21f184ed7960c347ace@35.224.90.32:30303,enode://f0fa95ee17a42b4cf5fee104c5ad61115ff63b2f720c027b1246188afc93a61ba1d67121ea9ebfa78678e796a562a5d949ed5265549f0a4936b7f3bd8d5d2706@35.170.55.156:30303,enode://6ab5116c43c713096b3b3667ea9a24105bcb860bc81ec36f6b271694b9174bb1721232d56cfd2d9a5aa17fbac552833dec24282cfeb43af6572ae6f9bc157bf4@139.99.122.139:30302,enode://378b35851a8e55ddc607c8dd0b3f809787dd23200fa12fe112966de8ef77bb132b42d7adfa313c293a06ce7e3473495216fcd18cda6ff4814655ae734069be94@51.255.77.89:30302,enode://f0fa95ee17a42b4cf5fee104c5ad61115ff63b2f720c027b1246188afc93a61ba1d67121ea9ebfa78678e796a562a5d949ed5265549f0a4936b7f3bd8d5d2706@35.170.55.156:30303,enode://6ab5116c43c713096b3b3667ea9a24105bcb860bc81ec36f6b271694b9174bb1721232d56cfd2d9a5aa17fbac552833dec24282cfeb43af6572ae6f9bc157bf4@139.99.122.139:30302,enode://378b35851a8e55ddc607c8dd0b3f809787dd23200fa12fe112966de8ef77bb132b42d7adfa313c293a06ce7e3473495216fcd18cda6ff4814655ae734069be94@51.255.77.89:30302,enode://afc1345642b182b8455e89c2913d7393f513e31710c8175eaf288084873dbbce7b3c72cf5729b6e8e941767e7137528eb1406aad6b8b050d8f94dc1b221c2d35@172.31.34.252:30303"
     deploy:
       placement:
         constraints:
@@ -591,43 +594,29 @@ services:
   # Cluster Monitoring
   # ///////////////////////////////////////////////////////
 
-  lenses:
-    image: landoop/lenses:2.1
+  kafka-control-center:
+    image: confluentinc/cp-enterprise-control-center:latest
     networks:
       - backend
-    ports:
-      - 9991:9991
-      - 9102:9102
+    volumes:
+      - control-center-volume:/var/lib/control-center/data
+      - control-center-config-volume:/var/lib/control-center/config
     environment:
-      LICENSE_URL: "${LENSES_LICENSE_URL}"
-      LENSES_PORT: 9991
-      LENSES_KAFKA_BROKERS: "PLAINTEXT://kafka-1:9091"
-      LENSES_ZOOKEEPER_HOSTS: |
-        [ { url:"zookeeper:2181", jmx:"zookeeper:9585" } ]
-      LENSES_SCHEMA_REGISTRY_URLS: |
-        [ { url:"http://kafka-schema-registry:8081", jmx:"kafka-schema-registry:9587" } ]
-      LENSES_CONNECT_CLUSTERS: |
-        [
-          {
-            name:"ethvm",
-            urls: [ {url:"http://kafka-connect:8083", jmx:"kafka-connect:9588"} ],
-            statuses:"ethvm-storage-topic",
-            configs:"ethvm-storage-config",
-            offsets:"ethvm-storage-offsets"
-          }
-        ]
-      LENSES_SECURITY_MODE: BASIC
-      LENSES_SECURITY_GROUPS: |
-        [
-          { "name": "adminGroup", "roles": ["Admin"] },
-          { "name": "readGroup",  "roles": ["Read"] }
-        ]
-      LENSES_SECURITY_USERS: |
-        [
-          { "username": "admin", "password": "admin", "displayname": "Lenses Admin", "groups": ["adminGroup"] },
-          { "username": "read", "password": "read", "displayname": "Read Only", "groups": ["readGroup"] }
-        ]
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: kafka-1:9091,kafka-2:9091,kafka-3:9091
+      CONTROL_CENTER_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
+      CONTROL_CENTER_CONNECT_CLUSTER: http://kafka-connect:8083
+      CONTROL_CENTER_DATA_DIR: /var/lib/control-center/data
+      CONTROL_CENTER_CONFIG_DIR: /var/lib/control-center/config
+      CONTROL_CENTER_REPLICATION_FACTOR: 1
     deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik"
+        - "traefik.default.protocol=http"
+        - "traefik.frontend.rule=Host:cc.dev.ethvm.com"
+        - "traefik.frontend.passHostHeader=true"
+        - "traefik.backend=kafka-control-center"
+        - "traefik.port=9021"
       placement:
         constraints:
           - node.role == worker
