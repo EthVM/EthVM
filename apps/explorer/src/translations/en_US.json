@@ -166,7 +166,11 @@
     "contract": "Contract",
     "amount": "Amount",
     "block": "Block #",
-    "cost": "Tx Cost"
+    "cost": "Tx Cost",
+    "nonce": "Nonce",
+    "input": "Input Data",
+    "func": "Function",
+    "method": "Method ID"
   },
   "token": {
     "holder": "Holder",

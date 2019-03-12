@@ -3,7 +3,7 @@
     <app-bread-crumbs :new-items="crumbs" />
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
-        <app-details-list :title="title" :details="txDetails" :is-loading="isLoading" :error="error" />
+        <app-details-list :title="title" :details="txDetails" :is-loading="isLoading" :error="error" :max-items="7" />
       </v-flex>
     </v-layout>
   </v-container>
@@ -17,6 +17,7 @@ import { eth } from '@app/core/helper'
 import { Tx } from '@app/core/models'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import { Detail, Crumb } from '@app/core/components/props'
+import Signatures from '@app/modules/txs/helpers/signatures.json'
 
 @Component({
   components: {
@@ -56,20 +57,10 @@ export default class PageDetailsTxs extends Vue {
     // 1. Check that current tx ref is valid one
     if (!eth.isValidHash(ref)) {
       this.error = this.$i18n.t('message.invalidHash').toString()
-      return
-    }
-
-    // 2. Check that we have our tx in the store
-    const tx = this.$store.getters.txByHash(ref)
-
-    // 3. Depending on previous state, we display directly or not
-    if (tx) {
-      this.setTxInfo(tx)
     } else {
-      this.loadData()
+      this.loadTx()
+      window.scrollTo(0, 0)
     }
-
-    window.scrollTo(0, 0)
   }
 
   /*
@@ -77,13 +68,6 @@ export default class PageDetailsTxs extends Vue {
     Methods
   ===================================================================================
   */
-
-  /**
-   * Load all data required for the view.
-   */
-  loadData() {
-    this.loadTx()
-  }
 
   /**
    * Load/fetch all of the data required to display the Tx details component
@@ -249,6 +233,10 @@ export default class PageDetailsTxs extends Vue {
         },
         this.toDetail,
         {
+          title: this.$i18n.t('tx.cost'),
+          detail: this.tx.getTxCost().toEth() + ' ' + this.$i18n.t('common.eth')
+        },
+        {
           title: this.$i18n.t('gas.limit'),
           detail: this.tx.getGas().toNumber()
         },
@@ -261,11 +249,17 @@ export default class PageDetailsTxs extends Vue {
           detail: this.tx.getGasPrice().toGWei() + ' ' + this.$i18n.t('common.gwei')
         },
         {
-          title: this.$i18n.t('tx.cost'),
-          detail: this.tx.getTxCost().toEth() + ' ' + this.$i18n.t('common.eth')
+          title: this.$i18n.t('tx.nonce'),
+          detail: this.tx.getNonce()
+        },
+        {
+          title: this.$i18n.t('tx.input'),
+          detail: '',
+          txInput: this.txDataInput
         }
       ]
     }
+
     return details
   }
 
@@ -305,6 +299,19 @@ export default class PageDetailsTxs extends Vue {
    */
   get isLoading(): boolean {
     return Object.keys(this.tx).length === 0
+  }
+
+  get txDataInput(): string[] {
+    let input = ['0x']
+    if (this.tx.getInput()) {
+      const sig = '0x' + this.tx.getInput().substr(0, 8)
+      const index = Signatures.results.findIndex(i => i.hex_signature === sig)
+      input = [`${this.$i18n.t('tx.method')}: ${sig}`]
+      if (index != -1) {
+        input.unshift(`${this.$i18n.t('tx.func')}: ${Signatures.results[index].text_signature}`)
+      }
+    }
+    return input
   }
 }
 </script>

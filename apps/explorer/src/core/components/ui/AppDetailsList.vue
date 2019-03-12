@@ -50,9 +50,9 @@
     =====================================================================================
     -->
     <div v-if="!hasError">
-      <v-list-tile v-for="(item, index) in basicDetails" :key="calculateKey(index)">
+      <div v-for="(item, index) in basicDetails" :key="calculateKey(index)" :class="[getColor(calculateKey(index)) ? '' : 'tableGrey']">
         <app-details-list-row :detail="item" :is-loading="isLoading" />
-      </v-list-tile>
+      </div>
     </div>
     <!--
     =====================================================================================
@@ -65,9 +65,9 @@
     =====================================================================================
     -->
     <v-slide-y-transition group v-if="!hasError && showMore">
-      <v-list-tile v-for="(item, index) in moreDetails" :key="calculateKey(index)">
+      <div v-for="(item, index) in moreDetails" :key="calculateKey(index)" :class="[getColor(index) ? '' : 'tableGrey']">
         <app-details-list-row :detail="item" :is-loading="isLoading" />
-      </v-list-tile>
+      </div>
     </v-slide-y-transition>
     <div v-if="hasMore && !isLoading">
       <v-btn v-if="!showMore" @click="setShowMore(true)" flat block class="secondary"> <v-icon class="fa fa-angle-down white--text"></v-icon> </v-btn>
@@ -118,10 +118,10 @@ export default class AppDetailsList extends Vue {
   /**
    * Calculate the key for the v-for directive.
    *
-   * @return {String}
+   * @return {Number}
    */
-  calculateKey(index): string {
-    return `${index + this.maxItems}`
+  calculateKey(index): number {
+    return index + this.maxItems
   }
 
   /**
@@ -130,6 +130,13 @@ export default class AppDetailsList extends Vue {
    */
   setShowMore(bool): void {
     this.showMore = bool
+  }
+
+  /**
+   * Sets row color to grey.
+   */
+  getColor(_index: number): boolean {
+    return _index % 2 === 0
   }
 
   /*
