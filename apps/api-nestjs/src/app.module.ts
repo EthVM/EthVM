@@ -4,6 +4,7 @@ import { SharedModule } from '@app/shared/shared.module'
 import { OrmModule } from '@app/orm/orm.module'
 import { GraphQLModule } from '@app/graphql/graphql.module'
 import { BalanceModule } from '@app/modules/balances/balance.module'
+import { AccountMetadataModule } from '@app/modules/account-metadata/account-metadata.module'
 
 @Module({
   imports: [
@@ -11,7 +12,8 @@ import { BalanceModule } from '@app/modules/balances/balance.module'
     GraphQLModule,
     OrmModule,
     BlockModule,
-    BalanceModule
+    BalanceModule,
+    AccountMetadataModule
   ]
 })
 export class AppModule {}

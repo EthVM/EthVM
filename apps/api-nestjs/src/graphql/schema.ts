@@ -7,6 +7,15 @@ export enum BalanceType {
     ERC721 = "ERC721"
 }
 
+export class AccountMetadata {
+    id?: string;
+    inTxCount?: number;
+    isContractCreator?: boolean;
+    isMiner?: boolean;
+    outTxCount?: number;
+    totalTxCount?: number;
+}
+
 export class Balance {
     id?: BalanceKey;
     address?: string;
@@ -45,6 +54,8 @@ export class Header {
 }
 
 export abstract class IQuery {
+    abstract accountMetadataByHash(hash: string): AccountMetadata | Promise<AccountMetadata>;
+
     abstract balances(limit?: number, page?: number): Balance[] | Promise<Balance[]>;
 
     abstract blocks(limit?: number, page?: number): Block[] | Promise<Block[]>;
