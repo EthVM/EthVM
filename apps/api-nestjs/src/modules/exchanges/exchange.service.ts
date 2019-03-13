@@ -9,12 +9,13 @@ const axios = require('axios')
 
 @Injectable()
 export class ExchangeService {
-  constructor(private readonly configService: ConfigService,
-              @InjectRepository(TokenExchangeRateEntity)
-              private readonly tokenExchangeRateRepository: MongoRepository<TokenExchangeRateEntity>) {}
+  constructor(
+    private readonly configService: ConfigService,
+    @InjectRepository(TokenExchangeRateEntity)
+    private readonly tokenExchangeRateRepository: MongoRepository<TokenExchangeRateEntity>
+  ) {}
 
   async findQuote(token: string, to: string): Promise<QuoteDto> {
-
     const url = this.configService.coinGecko.url
 
     const res = await axios.get(url)
@@ -23,7 +24,7 @@ export class ExchangeService {
       throw new HttpException(res.statusText, res.status)
     }
 
-    const {ethereum} = res.data;
+    const { ethereum } = res.data
 
     return new QuoteDto({
       to,
@@ -31,11 +32,9 @@ export class ExchangeService {
       vol_24h: ethereum.usd_24h_vol,
       last_update: ethereum.last_updated_at
     })
-
   }
 
   async findTokenExchangeRates(sort: string, take: number = 10, page: number = 0): Promise<TokenExchangeRateEntity[]> {
-
     const skip = take * page
     let order
     switch (sort) {
@@ -63,8 +62,7 @@ export class ExchangeService {
         break
     }
 
-    return this.tokenExchangeRateRepository.find({ order, skip, take})
-
+    return this.tokenExchangeRateRepository.find({ order, skip, take })
   }
 
   async countTokenExchangeRates(): Promise<number> {

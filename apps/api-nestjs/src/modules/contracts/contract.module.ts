@@ -4,7 +4,6 @@ import { ContractEntity } from '@app/orm/entities/contract.entity'
 import { ContractService } from '@app/modules/contracts/contract.service'
 import { ContractResolvers } from '@app/modules/contracts/contract.resolvers'
 
-
 @Module({
   imports: [TypeOrmModule.forFeature([ContractEntity])],
   providers: [ContractService, ContractResolvers],

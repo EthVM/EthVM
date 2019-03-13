@@ -7,15 +7,12 @@ export class TokenExchangeRateResolvers {
   constructor(private readonly exchangeService: ExchangeService) {}
 
   @Query()
-  async quote(@Args('token') token: string,
-              @Args('to') to: string) {
+  async quote(@Args('token') token: string, @Args('to') to: string) {
     return await this.exchangeService.findQuote(token, to)
   }
 
   @Query()
-  async tokenExchangeRates(@Args('filter') filter: string,
-                           @Args('limit') limit: number,
-                           @Args('page') page: number) {
+  async tokenExchangeRates(@Args('filter') filter: string, @Args('limit') limit: number, @Args('page') page: number) {
     const entities = await this.exchangeService.findTokenExchangeRates(filter, limit, page)
     return entities.map(e => new TokenExchangeRateDto(e))
   }
@@ -36,5 +33,4 @@ export class TokenExchangeRateResolvers {
     const entity = await this.exchangeService.findTokenExchangeRateByAddress(address)
     return entity ? new TokenExchangeRateDto(entity) : null
   }
-
 }

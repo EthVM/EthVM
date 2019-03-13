@@ -5,10 +5,12 @@ import { InjectRepository } from '@nestjs/typeorm'
 
 @Injectable()
 export class ProcessingMetadataService {
-  constructor(@InjectRepository(ProcessingMetadataEntity)
-              private readonly processingMetadataRepository: MongoRepository<ProcessingMetadataEntity>) {}
+  constructor(
+    @InjectRepository(ProcessingMetadataEntity)
+    private readonly processingMetadataRepository: MongoRepository<ProcessingMetadataEntity>
+  ) {}
 
   async findProcessingMetaDataById(id: string): Promise<ProcessingMetadataEntity | null> {
-    return this.processingMetadataRepository.findOne({ where: {_id: id }})
+    return this.processingMetadataRepository.findOne({ where: { _id: id } })
   }
 }

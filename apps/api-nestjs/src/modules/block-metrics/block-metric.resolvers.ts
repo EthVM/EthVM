@@ -13,10 +13,8 @@ export class BlockMetricResolvers {
   }
 
   @Query()
-  async blockMetrics(@Args('limit') limit: number,
-                     @Args('page') page: number) {
+  async blockMetrics(@Args('limit') limit: number, @Args('page') page: number) {
     const entities = await this.blockMetricService.findBlockMetrics(limit, page)
     return entities.map(e => new BlockMetricDto(e))
   }
-
 }

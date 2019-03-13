@@ -11,8 +11,7 @@ import { ConfigService } from '@app/shared/config.service'
   imports: [
     ApolloGraphQLModule.forRootAsync({
       useFactory: async (configService: ConfigService): Promise<any> => {
-
-        const config = configService.graphql;
+        const config = configService.graphql
 
         return {
           typePaths: ['./src/**/*.graphql'],

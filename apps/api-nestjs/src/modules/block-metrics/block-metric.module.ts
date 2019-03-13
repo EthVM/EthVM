@@ -5,9 +5,8 @@ import { BlockMetricService } from '@app/modules/block-metrics/block-metric.serv
 import { BlockMetricResolvers } from '@app/modules/block-metrics/block-metric.resolvers'
 
 @Module({
-  imports: [ TypeOrmModule.forFeature([BlockMetricEntity]) ],
-  providers: [ BlockMetricService, BlockMetricResolvers ],
+  imports: [TypeOrmModule.forFeature([BlockMetricEntity])],
+  providers: [BlockMetricService, BlockMetricResolvers],
   exports: []
-
 })
 export class BlockMetricModule {}

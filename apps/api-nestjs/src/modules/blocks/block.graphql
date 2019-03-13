@@ -11,12 +11,11 @@ type Subscription {
 }
 
 type Block {
-  id: Decimal
-  totalDifficulty: String
   header: Header
-  rewards: [Reward]
+  totalDifficulty: String
   transactions: [Transaction]
   uncles: [Uncle]
+  rewards: [Reward]
 }
 
 type Header {

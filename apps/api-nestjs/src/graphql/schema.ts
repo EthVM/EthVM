@@ -52,12 +52,11 @@ export class BalanceKey {
 }
 
 export class Block {
-    id?: Decimal;
-    totalDifficulty?: string;
     header?: Header;
-    rewards?: Reward[];
+    totalDifficulty?: string;
     transactions?: Transaction[];
     uncles?: Uncle[];
+    rewards?: Reward[];
 }
 
 export class BlockMetric {

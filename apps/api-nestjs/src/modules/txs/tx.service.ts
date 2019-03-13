@@ -5,9 +5,10 @@ import { MongoRepository } from 'typeorm'
 
 @Injectable()
 export class TxService {
-  constructor(@InjectRepository(TransactionEntity)
-              private readonly transactionRepository: MongoRepository<TransactionEntity>) {
-  }
+  constructor(
+    @InjectRepository(TransactionEntity)
+    private readonly transactionRepository: MongoRepository<TransactionEntity>
+  ) {}
 
   async findTx(hash: string): Promise<TransactionEntity | null> {
     return this.transactionRepository.findOne({ where: { hash } })
@@ -15,7 +16,7 @@ export class TxService {
 
   async findTxs(take: number = 10, order: string = 'desc', fromBlock: number = -1): Promise<TransactionEntity[]> {
     const sort = order === 'desc' ? '$lte' : '$gte'
-    const where = fromBlock !== -1 ? { blockNumber: {[sort]: fromBlock} } : {}
+    const where = fromBlock !== -1 ? { blockNumber: { [sort]: fromBlock } } : {}
 
     return this.transactionRepository.find({
       where,
@@ -25,7 +26,7 @@ export class TxService {
   }
 
   async findTxsForBlock(hash: string): Promise<TransactionEntity[]> {
-    return this.transactionRepository.find({ where: { blockHash: hash }})
+    return this.transactionRepository.find({ where: { blockHash: hash } })
   }
 
   async findTxsForAddress(hash: string, filter?: string, take: number = 10, page: number = 0): Promise<TransactionEntity[]> {
@@ -48,5 +49,4 @@ export class TxService {
   async countTransactions(): Promise<number> {
     return this.transactionRepository.count()
   }
-
 }

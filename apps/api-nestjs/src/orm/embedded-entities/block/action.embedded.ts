@@ -6,7 +6,6 @@ import { TraceDestroyActionRecordEmbedded } from '@app/orm/embedded-entities/blo
 import { TraceRewardActionRecordEmbedded } from '@app/orm/embedded-entities/block/trace-reward-action-record.embedded'
 
 export class ActionEmbedded {
-
   constructor(data: any) {
     assignClean(this, data)
   }
@@ -22,5 +21,4 @@ export class ActionEmbedded {
 
   @Column(type => TraceRewardActionRecordEmbedded)
   TraceRewardActionRecord: TraceRewardActionRecordEmbedded
-
 }

@@ -13,9 +13,7 @@ export class TxResolvers {
   }
 
   @Query()
-  async txs(@Args('limit') limit?: number,
-            @Args('order') order?: string,
-            @Args('fromBlock') fromBlock?: number) {
+  async txs(@Args('limit') limit?: number, @Args('order') order?: string, @Args('fromBlock') fromBlock?: number) {
     const entities = await this.txService.findTxs(limit, order, fromBlock)
     return entities.map(e => new TxDto(e))
   }
@@ -27,10 +25,7 @@ export class TxResolvers {
   }
 
   @Query()
-  async txsForAddress(@Args('hash') hash: string,
-                      @Args('filter') filter?: string,
-                      @Args('limit') limit?: number,
-                      @Args('page') page?: number) {
+  async txsForAddress(@Args('hash') hash: string, @Args('filter') filter?: string, @Args('limit') limit?: number, @Args('page') page?: number) {
     const entities = await this.txService.findTxsForAddress(hash, filter, limit, page)
     return entities.map(e => new TxDto(e))
   }

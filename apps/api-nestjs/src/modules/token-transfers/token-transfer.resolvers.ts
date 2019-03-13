@@ -4,23 +4,22 @@ import { TokenExchangeRateDto } from '@app/modules/exchanges/token-exchange-rate
 
 @Resolver('TokenTransfer')
 export class TokenTransferResolvers {
-  constructor(private readonly tokenTransferService: TokenTransferService) {
-  }
+  constructor(private readonly tokenTransferService: TokenTransferService) {}
 
   @Query()
-  async addressTokenTransfers(@Args('address') address: string,
-                              @Args('limit') limit?: number,
-                              @Args('page') page?: number) {
+  async addressTokenTransfers(@Args('address') address: string, @Args('limit') limit?: number, @Args('page') page?: number) {
     const entities = await this.tokenTransferService.findAddressTokenTransfers(address, limit, page)
     return entities.map(e => new TokenExchangeRateDto(e))
   }
 
   @Query()
-  async addressTokenTransfersByHolder(@Args('address') address: string,
-                                      @Args('holder') holder: string,
-                                      @Args('filter') filter?: string,
-                                      @Args('limit') limit?: number,
-                                      @Args('page') page?: number) {
+  async addressTokenTransfersByHolder(
+    @Args('address') address: string,
+    @Args('holder') holder: string,
+    @Args('filter') filter?: string,
+    @Args('limit') limit?: number,
+    @Args('page') page?: number
+  ) {
     const entities = await this.tokenTransferService.findAddressTokenTransfersByHolder(address, holder, filter, limit, page)
     return entities.map(e => new TokenExchangeRateDto(e))
   }

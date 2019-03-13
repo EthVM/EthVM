@@ -13,11 +13,8 @@ export class ContractResolvers {
   }
 
   @Query()
-  async contractsCreatedBy(@Args('creator') creator: string,
-                           @Args('limit') limit: number,
-                           @Args('page') page: number) {
+  async contractsCreatedBy(@Args('creator') creator: string, @Args('limit') limit: number, @Args('page') page: number) {
     const entities = await this.contractService.findContractsCreatedBy(creator, limit, page)
     return entities.map(e => new ContractDto(e))
   }
-
 }

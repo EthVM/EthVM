@@ -4,6 +4,7 @@ import { PubSub } from 'graphql-subscriptions'
 import { BlockDto } from '@app/modules/blocks/block.dto'
 
 const pubSub = new PubSub()
+
 @Resolver('Block')
 export class BlockResolvers {
   constructor(private readonly blockService: BlockService) {}
@@ -27,9 +28,7 @@ export class BlockResolvers {
   }
 
   @Query()
-  async minedBlocksByAddress(@Args('address') address: string,
-                             @Args('limit') limit: number,
-                             @Args('page') page: number) {
+  async minedBlocksByAddress(@Args('address') address: string, @Args('limit') limit: number, @Args('page') page: number) {
     const entities = await this.blockService.findMinedBlocksByAddress(address, limit, page)
     return entities.map(e => new BlockDto(e))
   }

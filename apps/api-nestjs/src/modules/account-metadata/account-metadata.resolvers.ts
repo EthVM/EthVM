@@ -11,6 +11,4 @@ export class AccountMetadataResolvers {
     const entity = await this.accountMetadataService.findAccountMetadataByHash(hash)
     return entity ? new AccountMetadataDto(entity) : null
   }
-
 }
-

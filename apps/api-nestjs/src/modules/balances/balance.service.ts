@@ -8,6 +8,6 @@ export class BalanceService {
   constructor(@InjectRepository(BalanceEntity) private readonly balanceRepository: MongoRepository<BalanceEntity>) {}
 
   async findBalanceByHash(hash: string): Promise<BalanceEntity | null> {
-    return this.balanceRepository.findOne({where: {address: hash}})
+    return this.balanceRepository.findOne({ where: { address: hash } })
   }
 }

@@ -11,5 +11,4 @@ export class BalanceResolvers {
     const entity = await this.balanceService.findBalanceByHash(hash)
     return entity ? new BalanceDto(entity) : null
   }
-
 }
