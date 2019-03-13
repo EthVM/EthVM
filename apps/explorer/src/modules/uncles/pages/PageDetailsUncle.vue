@@ -170,29 +170,29 @@ export default class PageDetailsUncle extends Vue {
         {
           title: this.$i18n.t('common.hash'),
           detail: this.uncle.getHash(),
-          copy: true
+          copy: true,
+          mono: true
         },
         {
           title: this.$i18n.t('block.pHash'),
-          detail: this.uncle.getParentHash().toString()
+          detail: this.uncle.getParentHash().toString(),
+          mono: true
         },
         {
           title: this.$i18n.t('block.miner'),
           detail: this.uncle.getMiner().toString(),
           link: '/address/' + this.uncle.getMiner().toString(),
-          copy: true
+          copy: true,
+          mono: true
         },
         {
           title: this.$i18n.t('common.timestmp'),
           detail: this.formatTime
         },
         {
-          title: this.$i18n.t('block.pHash'),
-          detail: this.uncle.getParentHash().toString()
-        },
-        {
           title: this.$i18n.t('block.sha'),
-          detail: this.uncle.getSha3Uncles().toString()
+          detail: this.uncle.getSha3Uncles().toString(),
+          mono: true
         },
         {
           title: this.$i18n.t('gas.limit'),

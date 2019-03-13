@@ -18,9 +18,9 @@
         <div v-if="isLoading">
           <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
         </div>
-        <div v-else>
+        <div v-else :class="checkMono()">
           <router-link v-if="detail.link" :to="detail.link">
-            <div class="text-truncate" v-html="detail.detail"></div>
+            <div class="text-truncate " v-html="detail.detail"></div>
           </router-link>
           <div v-else class="text-muted text-truncate" v-html="detail.detail"></div>
         </div>
@@ -63,6 +63,16 @@ export default class AppDetailsListRow extends Vue {
 
   @Prop(Object) detail!: Detail
   @Prop(Boolean) isLoading!: boolean
+
+  /*
+  ===================================================================================
+   Methods
+  ===================================================================================
+  */
+
+  checkMono(): string {
+    return this.detail.mono ? 'font-mono' : ''
+  }
 }
 </script>
 
