@@ -1,0 +1,19 @@
+type Query {
+  addressTokenTransfers(address: String!, limit: Int, page: Int): [TokenTransfer]
+  addressTokenTransfersByHolder(address: String!, holder: String!, filter: String, limit: Int, page: Int): [TokenTransfer]
+}
+
+type TokenTransfer {
+  id: TokenTransferKey
+  amount: String
+  contract: String
+  from: String
+  timestamp: Int
+  to: String
+  tokenId: String
+  transferType: BalanceType
+}
+
+type TokenTransferKey {
+  hash: String
+}

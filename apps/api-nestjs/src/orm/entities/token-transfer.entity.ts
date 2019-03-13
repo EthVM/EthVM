@@ -1,9 +1,9 @@
-import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm'
+import { Column, Entity, ObjectIdColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 import { BalanceType } from '@app/orm/entities/balance.entity'
 
 interface TokenTransferKeyInterface {
-
+  hash: string
 }
 
 @Entity('token_transfers')

@@ -9,6 +9,7 @@ import { BlockMetricModule } from '@app/modules/block-metrics/block-metric.modul
 import { ContractModule } from '@app/modules/contracts/contract.module'
 import { ExchangeModule } from '@app/modules/exchanges/exchange.module'
 import { ProcessingMetadataModule } from '@app/modules/processing-metadata/processing-metadata.module'
+import { TokenTransferModule } from '@app/modules/token-transfers/token-transfer.module'
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { ProcessingMetadataModule } from '@app/modules/processing-metadata/proce
     BlockMetricModule,
     ContractModule,
     ExchangeModule,
-    ProcessingMetadataModule
+    ProcessingMetadataModule,
+    TokenTransferModule
   ]
 })
 export class AppModule {}

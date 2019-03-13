@@ -159,10 +159,6 @@ export abstract class IQuery {
 
     abstract balanceByHash(hash: string): Balance | Promise<Balance>;
 
-    abstract blockMetricByHash(hash?: string): BlockMetric | Promise<BlockMetric>;
-
-    abstract blockMetrics(limit?: number, page?: number): BlockMetric[] | Promise<BlockMetric[]>;
-
     abstract blocks(limit?: number, page?: number): Block[] | Promise<Block[]>;
 
     abstract blockByHash(hash?: string): Block | Promise<Block>;
@@ -172,6 +168,10 @@ export abstract class IQuery {
     abstract minedBlocksByAddress(address?: string, limit?: number, page?: number): Block[] | Promise<Block[]>;
 
     abstract totalNumberOfBlocks(): number | Promise<number>;
+
+    abstract blockMetricByHash(hash?: string): BlockMetric | Promise<BlockMetric>;
+
+    abstract blockMetrics(limit?: number, page?: number): BlockMetric[] | Promise<BlockMetric[]>;
 
     abstract contractByHash(hash?: string): Contract | Promise<Contract>;
 
@@ -188,6 +188,10 @@ export abstract class IQuery {
     abstract tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
 
     abstract processingMetadataById(id: string): ProcessingMetadata | Promise<ProcessingMetadata>;
+
+    abstract addressTokenTransfers(address: string, limit?: number, page?: number): TokenTransfer[] | Promise<TokenTransfer[]>;
+
+    abstract addressTokenTransfersByHolder(address: string, holder: string, filter?: string, limit?: number, page?: number): TokenTransfer[] | Promise<TokenTransfer[]>;
 
     abstract temp__(): boolean | Promise<boolean>;
 }
@@ -271,6 +275,21 @@ export class TokenExchangeRate {
     symbol?: string;
     totalSupply?: number;
     totalVolume?: Decimal;
+}
+
+export class TokenTransfer {
+    id?: TokenTransferKey;
+    amount?: string;
+    contract?: string;
+    from?: string;
+    timestamp?: number;
+    to?: string;
+    tokenId?: string;
+    transferType?: BalanceType;
+}
+
+export class TokenTransferKey {
+    hash?: string;
 }
 
 export class Trace {
