@@ -18,7 +18,7 @@
         <div v-if="isLoading">
           <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
         </div>
-        <div v-else :class="checkMono()">
+        <div v-else :class="isMonoFont()">
           <router-link v-if="detail.link" :to="detail.link">
             <div class="text-truncate " v-html="detail.detail"></div>
           </router-link>
@@ -66,11 +66,11 @@ export default class AppDetailsListRow extends Vue {
 
   /*
   ===================================================================================
-   Methods
+    Methods
   ===================================================================================
   */
 
-  checkMono(): string {
+  isMonoFont(): string {
     return this.detail.mono ? 'font-mono' : ''
   }
 }
