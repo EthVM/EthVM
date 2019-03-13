@@ -10,11 +10,11 @@
       <v-flex xs12 sm5 md5 class="pr-0" order-xs3 order-sm2>
         <p class="text-truncate info--text psmall mb-0 pb-0">
           {{ $t('common.hash') }}:
-          <router-link class="primary--text font-italic font-weight-regular" :to="'/uncle/' + uncle.getHash()">{{ uncle.getHash() }}</router-link>
+          <router-link class="primary--text font-weight-regular font-mono" :to="'/uncle/' + uncle.getHash()">{{ uncle.getHash() }}</router-link>
         </p>
         <p v-if="pageType != 'address'" class="text-truncate info--text mb-0 pt-2">
           {{ $t('block.miner') }}:
-          <router-link :to="'/address/' + uncle.getMiner().toString()" class="secondary--text font-italic font-weight-regular">{{
+          <router-link :to="'/address/' + uncle.getMiner().toString()" class="secondary--text font-mono font-italic font-weight-regular">{{
             uncle.getMiner().toString()
           }}</router-link>
         </p>

@@ -242,19 +242,22 @@ export default class PageDetailsBlock extends Vue {
         {
           title: this.$i18n.t('common.hash'),
           detail: this.block.getHash(),
-          copy: true
+          copy: true,
+          mono: true
         },
         {
           title: this.$i18n.t('block.pHash'),
           detail: this.block.getParentHash().toString(),
           link: '/block/' + this.block.getParentHash().toString(),
-          copy: true
+          copy: true,
+          mono: true
         },
         {
           title: this.$i18n.t('block.miner'),
           detail: this.block.getMiner().toString(),
           link: '/address/' + this.block.getMiner().toString(),
-          copy: true
+          copy: true,
+          mono: true
         },
         {
           title: this.$i18n.t('common.timestmp'),
@@ -286,15 +289,18 @@ export default class PageDetailsBlock extends Vue {
         },
         {
           title: this.$i18n.t('block.nonce'),
-          detail: this.block.getNonce().toString()
+          detail: this.block.getNonce().toString(),
+          mono: true
         },
         {
           title: this.$i18n.t('block.root'),
-          detail: this.block.getStateRoot().toString()
+          detail: this.block.getStateRoot().toString(),
+          mono: true
         },
         {
           title: this.$i18n.t('block.data'),
-          detail: this.block.getExtraData().toString()
+          detail: this.block.getExtraData().toString(),
+          mono: true
         },
         {
           title: this.$i18n.t('block.fees'),
@@ -310,19 +316,23 @@ export default class PageDetailsBlock extends Vue {
         },
         {
           title: this.$i18n.t('block.logs'),
-          detail: this.block.getLogsBloom().toString()
+          detail: this.block.getLogsBloom().toString(),
+          mono: true
         },
         {
           title: this.$i18n.t('block.txRoot'),
-          detail: this.block.getTransactionsRoot().toString()
+          detail: this.block.getTransactionsRoot().toString(),
+          mono: true
         },
         {
           title: this.$i18n.t('block.recRoot'),
-          detail: this.block.getReceiptsRoot().toString()
+          detail: this.block.getReceiptsRoot().toString(),
+          mono: true
         },
         {
           title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.sha'),
-          detail: this.block.getSha3Uncles().toString()
+          detail: this.block.getSha3Uncles().toString(),
+          mono: true
         }
       ]
     }
