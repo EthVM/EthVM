@@ -1,6 +1,7 @@
 import { Args, Query, Resolver, Subscription } from '@nestjs/graphql'
 import { BlockService } from '@app/modules/blocks/block.service'
 import { PubSub } from 'graphql-subscriptions'
+import { BlockDto } from '@app/modules/blocks/block.dto'
 
 const pubSub = new PubSub()
 @Resolver('Block')
@@ -9,13 +10,14 @@ export class BlockResolvers {
 
   @Query()
   async blocks(@Args('page') page: number, @Args('limit') limit: number) {
-    return await this.blockService.getBlocks(limit, page)
+    const entities = await this.blockService.getBlocks(limit, page)
+    return entities.map(e => new BlockDto(e))
   }
 
   @Query()
   async block(@Args('hash') hash: string) {
-    const entities = await this.blockService.getBlock(hash)
-    return entities
+    const entity = await this.blockService.getBlock(hash)
+    return entity ? new BlockDto(entity) : null
   }
 
   @Subscription()
