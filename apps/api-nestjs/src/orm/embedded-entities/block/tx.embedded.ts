@@ -15,6 +15,9 @@ export class TxEmbedded {
   blockNumber: number
 
   @Column({type: 'string', readonly: true})
+  creates: string
+
+  @Column({type: 'string', readonly: true})
   from: string
 
   @Column({type: 'string', readonly: true})

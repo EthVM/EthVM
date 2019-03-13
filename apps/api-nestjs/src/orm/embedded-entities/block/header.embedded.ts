@@ -52,4 +52,7 @@ export class HeaderEmbedded {
   @Column({type: 'long', readonly: true})
   timestamp: number
 
+  @Column({type: 'string', readonly: true})
+  transactionsRoot: string
+
 }
