@@ -12,7 +12,7 @@
         </v-flex>
         <v-flex xs12 pt-0>
           <v-layout row align-center justify-start>
-            <v-card-text class="text-truncate pt-0"
+            <v-card-text class="text-truncate font-mono pt-0"
               >{{ account.address }}
               <app-copy-to-clip v-if="$vuetify.breakpoint.smAndUp" :value-to-copy="account.address" />
             </v-card-text>

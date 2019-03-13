@@ -8,7 +8,7 @@
           <v-card-title class="title font-weight-medium">{{ $t('title.address') }}:</v-card-title>
         </v-flex>
         <v-flex xs12>
-          <p class="break-string">{{ address }}</p>
+          <p class="break-string font-mono">{{ address }}</p>
         </v-flex>
       </v-layout>
     </v-card>
