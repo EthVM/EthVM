@@ -7,6 +7,12 @@ export enum BalanceType {
     ERC721 = "ERC721"
 }
 
+export enum ContractTypeEnum {
+    GENERIC = "GENERIC",
+    ERC20 = "ERC20",
+    ERC721 = "ERC721"
+}
+
 export class AccountMetadata {
     id?: string;
     inTxCount?: number;
@@ -62,6 +68,37 @@ export class BlockMetric {
     totalTxs?: number;
 }
 
+export class Contract {
+    id?: string;
+    address?: string;
+    creator?: string;
+    data?: Buffer;
+    destructed?: ContractDestructed;
+    metadata?: ContractMetadata;
+    type?: ContractType;
+}
+
+export class ContractDestructed {
+    address?: string;
+    balance?: Buffer;
+    refundAddress?: Buffer;
+}
+
+export class ContractMetadata {
+    decimals?: number;
+    ens_address?: string;
+    name?: string;
+    symbol?: string;
+    website?: string;
+    logo?: Logo;
+    social?: Social;
+    support?: Support;
+}
+
+export class ContractType {
+    string?: ContractTypeEnum;
+}
+
 export class Header {
     author?: string;
     difficulty?: string;
@@ -87,6 +124,10 @@ export class Log {
     topics?: string[];
 }
 
+export class Logo {
+    src?: string;
+}
+
 export abstract class IQuery {
     abstract accountMetadataByHash(hash: string): AccountMetadata | Promise<AccountMetadata>;
 
@@ -95,6 +136,10 @@ export abstract class IQuery {
     abstract blockMetricByHash(hash?: string): BlockMetric | Promise<BlockMetric>;
 
     abstract blockMetrics(limit?: number, page?: number): BlockMetric[] | Promise<BlockMetric[]>;
+
+    abstract contractByHash(hash?: string): Contract | Promise<Contract>;
+
+    abstract contractsCreatedBy(creator?: string, limit?: number, page?: number): Contract[] | Promise<Contract[]>;
 
     abstract blocks(limit?: number, page?: number): Block[] | Promise<Block[]>;
 
@@ -137,8 +182,29 @@ export class Reward {
     value?: string;
 }
 
+export class Social {
+    blog?: string;
+    chat?: string;
+    facebook?: string;
+    forum?: string;
+    github?: string;
+    gitter?: string;
+    instagram?: string;
+    linkedin?: string;
+    reddit?: string;
+    slack?: string;
+    telegram?: string;
+    twitter?: string;
+    youtube?: string;
+}
+
 export abstract class ISubscription {
     abstract newBlock(): Block[] | Promise<Block[]>;
+}
+
+export class Support {
+    email?: string;
+    url?: string;
 }
 
 export class Trace {
