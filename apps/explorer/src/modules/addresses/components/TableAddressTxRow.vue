@@ -53,7 +53,9 @@
                       </p>
                       <p class="text-truncate info--text mb-0" v-if="getType(tx) && !tx.getContractAddress().isEmpty()">
                         {{ $t('tx.contract') }}:
-                        <router-link class="secondary--text font-mono font-italic font-weight-regular pr-1" :to="'/address/' + tx.getContractAddress().toString()"
+                        <router-link
+                          class="secondary--text font-mono font-italic font-weight-regular pr-1"
+                          :to="'/address/' + tx.getContractAddress().toString()"
                           >{{ tx.getContractAddress().toString() }}
                         </router-link>
                       </p>

@@ -295,7 +295,7 @@ export default class PageDetailsBlock extends Vue {
         {
           title: this.$i18n.t('block.root'),
           detail: this.block.getStateRoot().toString(),
-          mono:true
+          mono: true
         },
         {
           title: this.$i18n.t('block.data'),
