@@ -1,6 +1,9 @@
 type Query {
   blocks(limit: Int, page: Int): [Block]
-  block(hash: String): Block
+  blockByHash(hash: String): Block
+  blockByNumber(number: Int): Block
+  minedBlocksByAddress(address: String, limit: Int, page: Int): [Block]
+  totalNumberOfBlocks: Int!
 }
 
 type Subscription {

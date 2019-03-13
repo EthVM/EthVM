@@ -98,7 +98,13 @@ export abstract class IQuery {
 
     abstract blocks(limit?: number, page?: number): Block[] | Promise<Block[]>;
 
-    abstract block(hash?: string): Block | Promise<Block>;
+    abstract blockByHash(hash?: string): Block | Promise<Block>;
+
+    abstract blockByNumber(number?: number): Block | Promise<Block>;
+
+    abstract minedBlocksByAddress(address?: string, limit?: number, page?: number): Block[] | Promise<Block[]>;
+
+    abstract totalNumberOfBlocks(): number | Promise<number>;
 
     abstract temp__(): boolean | Promise<boolean>;
 }
@@ -198,9 +204,8 @@ export class Transaction {
 
 export class Uncle {
     id?: string;
-    blockNumber?: number;
-    uncleIndex?: number;
     author?: string;
+    blockNumber?: number;
     difficulty?: string;
     extraData?: string;
     gasLimit?: string;
@@ -216,6 +221,7 @@ export class Uncle {
     stateRoot?: string;
     timestamp?: number;
     transactionsRoot?: string;
+    uncleIndex?: number;
     uncleReward?: string;
 }
 

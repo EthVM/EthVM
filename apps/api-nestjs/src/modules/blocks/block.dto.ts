@@ -5,6 +5,5 @@ export class BlockDto extends Block {
   constructor(data: any) {
     super()
     assignClean(this, data)
-    // TODO add mappers
   }
 }
