@@ -61,7 +61,7 @@
           <v-spacer></v-spacer>
           <v-flex xs12>
             <v-layout align-end justify-end fill-height>
-              <p class="info--text">© {{ $t('footer.copy') }} {{ $t('footer.enkrypt') }}</p>
+              <p class="info--text">© {{ $t('footer.copy') }} {{ $t('footer.mew') }}</p>
             </v-layout>
           </v-flex>
         </v-layout>
