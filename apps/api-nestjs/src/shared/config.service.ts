@@ -49,6 +49,13 @@ const schema = {
       env: 'MONGO_URL',
       default: 'mongodb://mongodb:27017/ethvm_local'
     }
+  },
+  coinGecko: {
+    url: {
+      doc: 'CoinGecko API URL',
+      env: 'COIN_GECKO_API_URL',
+      default: 'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true'
+    }
   }
 }
 
@@ -57,6 +64,10 @@ export interface GraphqlConfig {
 }
 
 export interface MongoDbConfig {
+  url: string
+}
+
+export interface CoinGeckoConfig {
   url: string
 }
 
@@ -96,5 +107,9 @@ export class ConfigService {
 
   get mongoDb(): MongoDbConfig {
     return this.config.get('mongodb')
+  }
+
+  get coinGecko(): CoinGeckoConfig {
+    return this.config.get('coinGecko')
   }
 }

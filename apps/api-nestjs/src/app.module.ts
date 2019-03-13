@@ -7,6 +7,7 @@ import { BalanceModule } from '@app/modules/balances/balance.module'
 import { AccountMetadataModule } from '@app/modules/account-metadata/account-metadata.module'
 import { BlockMetricModule } from '@app/modules/block-metrics/block-metric.module'
 import { ContractModule } from '@app/modules/contracts/contract.module'
+import { ExchangeModule } from '@app/modules/exchanges/exchange.module'
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { ContractModule } from '@app/modules/contracts/contract.module'
     BalanceModule,
     AccountMetadataModule,
     BlockMetricModule,
-    ContractModule
+    ContractModule,
+    ExchangeModule
   ]
 })
 export class AppModule {}

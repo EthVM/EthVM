@@ -13,6 +13,16 @@ export enum ContractTypeEnum {
     ERC721 = "ERC721"
 }
 
+export enum TokenExchangeRateFilter {
+    price_high = "price_high",
+    price_low = "price_low",
+    volume_high = "volume_high",
+    volume_low = "volume_low",
+    market_cap_high = "market_cap_high",
+    market_cap_low = "market_cap_low",
+    market_cap_rank = "market_cap_rank"
+}
+
 export class AccountMetadata {
     id?: string;
     inTxCount?: number;
@@ -137,10 +147,6 @@ export abstract class IQuery {
 
     abstract blockMetrics(limit?: number, page?: number): BlockMetric[] | Promise<BlockMetric[]>;
 
-    abstract contractByHash(hash?: string): Contract | Promise<Contract>;
-
-    abstract contractsCreatedBy(creator?: string, limit?: number, page?: number): Contract[] | Promise<Contract[]>;
-
     abstract blocks(limit?: number, page?: number): Block[] | Promise<Block[]>;
 
     abstract blockByHash(hash?: string): Block | Promise<Block>;
@@ -151,7 +157,28 @@ export abstract class IQuery {
 
     abstract totalNumberOfBlocks(): number | Promise<number>;
 
+    abstract contractByHash(hash?: string): Contract | Promise<Contract>;
+
+    abstract contractsCreatedBy(creator?: string, limit?: number, page?: number): Contract[] | Promise<Contract[]>;
+
+    abstract quote(token: string, to: string): Quote | Promise<Quote>;
+
+    abstract tokenExchangeRates(filter: TokenExchangeRateFilter, limit?: number, page?: number): TokenExchangeRate[] | Promise<TokenExchangeRate[]>;
+
+    abstract totalNumTokenExchangeRates(): number | Promise<number>;
+
+    abstract tokenExchangeRateBySymbol(symbol: string): TokenExchangeRate | Promise<TokenExchangeRate>;
+
+    abstract tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
+
     abstract temp__(): boolean | Promise<boolean>;
+}
+
+export class Quote {
+    to?: string;
+    price?: string;
+    last_update?: Decimal;
+    vol_24h?: string;
 }
 
 export class Receipt {
@@ -205,6 +232,27 @@ export abstract class ISubscription {
 export class Support {
     email?: string;
     url?: string;
+}
+
+export class TokenExchangeRate {
+    id?: string;
+    address?: string;
+    circulatingSupply?: string;
+    currentPrice?: Decimal;
+    high24h?: Decimal;
+    image?: string;
+    lastUpdated?: string;
+    low24h?: Decimal;
+    marketCap?: Decimal;
+    marketCapChange24h?: Decimal;
+    marketCapChangePercentage24h?: Decimal;
+    marketCapRank?: number;
+    name?: string;
+    priceChange24h?: Decimal;
+    priceChangePercentage24h?: Decimal;
+    symbol?: string;
+    totalSupply?: number;
+    totalVolume?: Decimal;
 }
 
 export class Trace {
