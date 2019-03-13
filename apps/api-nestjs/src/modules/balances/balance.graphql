@@ -1,5 +1,5 @@
 type Query {
-  balances(limit: Int, page: Int): [Balance]
+  balanceByHash(hash: String!): Balance
 }
 
 type Balance {

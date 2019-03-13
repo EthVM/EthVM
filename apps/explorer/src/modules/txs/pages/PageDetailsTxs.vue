@@ -150,7 +150,8 @@ export default class PageDetailsTxs extends Vue {
         title: this.$i18n.t('tx.to') + ' ' + this.$i18n.t('tx.contract').toString(),
         detail: this.tx.getContractAddress().toString(),
         copy: true,
-        link: '/address/' + this.tx.getContractAddress().toString()
+        link: '/address/' + this.tx.getContractAddress().toString(),
+        mono: true
       }
     }
 
@@ -158,7 +159,8 @@ export default class PageDetailsTxs extends Vue {
       title: this.$i18n.t('tx.to').toString(),
       detail: this.tx.getTo().toString(),
       copy: true,
-      link: '/address/' + this.tx.getTo().toString()
+      link: '/address/' + this.tx.getTo().toString(),
+      mono: true
     }
   }
 
@@ -209,7 +211,8 @@ export default class PageDetailsTxs extends Vue {
         {
           title: this.$i18n.t('common.hash'),
           detail: this.tx.getHash(),
-          copy: true
+          copy: true,
+          mono: true
         },
         {
           title: this.$i18n.t('common.timestmp'),
@@ -219,7 +222,8 @@ export default class PageDetailsTxs extends Vue {
           title: this.$i18n.t('tx.from'),
           detail: this.tx.getFrom().toString(),
           copy: true,
-          link: '/address/' + this.tx.getFrom().toString()
+          link: '/address/' + this.tx.getFrom().toString(),
+          mono: true
         },
         {
           title: this.$i18n.t('tx.amount'),

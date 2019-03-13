@@ -1,0 +1,19 @@
+type Query {
+  processingMetadataById(id: String!): ProcessingMetadata
+}
+
+type ProcessingMetadata {
+  id: ProcessingMetadataKey
+  boolean: Boolean
+  bigInteger: String
+  double: Decimal
+  float: Decimal
+  int: Int
+  long: Int
+  name: String
+  string: String
+}
+
+type ProcessingMetadataKey {
+  name: String
+}

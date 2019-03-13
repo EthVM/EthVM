@@ -41,25 +41,27 @@
               <v-flex d-flex xs7 sm6 pr-3>
                 <v-layout row wrap align-center pb-1>
                   <v-flex d-flex xs12 pb-2>
-                    <router-link class="primary--text text-truncate font-italic psmall" :to="'/tx/' + tx.getHash()">{{ tx.getHash() }}</router-link>
+                    <router-link class="primary--text text-truncate font-mono psmall" :to="'/tx/' + tx.getHash()">{{ tx.getHash() }}</router-link>
                   </v-flex>
-                  <v-flex hidden-xs-and-down sm12 pt-0>
+                  <v-flex hidden-xs-only sm12 pt-0>
                     <v-layout row pl-2>
                       <p v-if="!getType(tx)" class="text-truncate info--text mb-0">
                         {{ $t('tx.from') }}:
-                        <router-link :to="'/address/' + tx.getFrom().toString()" class="secondary--text font-italic font-weight-regular"
+                        <router-link :to="'/address/' + tx.getFrom().toString()" class="secondary--text font-mono font-italic font-weight-regular pr-1"
                           >{{ tx.getFrom().toString() }}
                         </router-link>
                       </p>
-                      <p class="text-truncate info--text font-weight-thin mb-0" v-if="getType(tx) && !tx.getContractAddress().isEmpty()">
+                      <p class="text-truncate info--text mb-0" v-if="getType(tx) && !tx.getContractAddress().isEmpty()">
                         {{ $t('tx.contract') }}:
-                        <router-link class="secondary--text font-italic font-weight-regular" :to="'/address/' + tx.getContractAddress().toString()"
+                        <router-link
+                          class="secondary--text font-mono font-italic font-weight-regular pr-1"
+                          :to="'/address/' + tx.getContractAddress().toString()"
                           >{{ tx.getContractAddress().toString() }}
                         </router-link>
                       </p>
-                      <p class="text-truncate info--text font-weight-thin mb-0" v-if="getType(tx) && tx.getContractAddress().isEmpty()">
-                        <strong>{{ $t('tx.to') }}:</strong>
-                        <router-link class="secondary--text font-italic font-weight-regular" :to="'/address/' + tx.getTo().toString()"
+                      <p class="text-truncate info--text mb-0 mr-3" v-if="getType(tx) && tx.getContractAddress().isEmpty()">
+                        {{ $t('tx.to') }}:
+                        <router-link class="secondary--text font-mono font-italic font-weight-regular pr-1" :to="'/address/' + tx.getTo().toString()"
                           >{{ tx.getTo().toString() }}
                         </router-link>
                       </p>
