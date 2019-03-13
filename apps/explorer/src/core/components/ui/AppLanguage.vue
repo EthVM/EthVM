@@ -1,11 +1,20 @@
 <template>
-  <v-select
-    v-model="language"
-    :items="items"
-    item-text="name"
-    return-object
-     @change="changeLocale"
-  />
+  <div>
+    <v-layout row align-center justify-end>
+      <v-icon class="fas fa-globe" small/>
+      <v-select
+        v-model="language"
+        :items="items"
+        item-text="name"
+        return-object
+        @change="changeLocale"
+        solo
+        flat
+        class="lang-select"
+      />
+    </v-layout>
+
+  </div>
 </template>
 
 <script lang="ts">
@@ -69,5 +78,8 @@ export default class AppLanguage extends Vue {
 </script>
 
 <style scoped lang="css">
-
+  .lang-select {
+    max-width: 120px;
+    height: 32px;
+  }
 </style>
