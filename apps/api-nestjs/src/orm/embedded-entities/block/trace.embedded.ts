@@ -33,8 +33,9 @@ export class TraceEmbedded {
   @Column({type: 'string', readonly: true})
   type: string
 
-  @Column(type => ActionEmbedded)
-  action: ActionEmbedded
+  // TODO fix error "Cannot read property 'TraceCallActionRecord' of undefined" when using TransactionRepository
+  // @Column(type => ActionEmbedded)
+  // action: ActionEmbedded
 
   @Column(type => ResultEmbedded)
   result: ResultEmbedded

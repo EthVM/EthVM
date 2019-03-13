@@ -10,6 +10,7 @@ import { ContractModule } from '@app/modules/contracts/contract.module'
 import { ExchangeModule } from '@app/modules/exchanges/exchange.module'
 import { ProcessingMetadataModule } from '@app/modules/processing-metadata/processing-metadata.module'
 import { TokenTransferModule } from '@app/modules/token-transfers/token-transfer.module'
+import { TxModule } from '@app/modules/txs/tx.module'
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import { TokenTransferModule } from '@app/modules/token-transfers/token-transfer
     ContractModule,
     ExchangeModule,
     ProcessingMetadataModule,
-    TokenTransferModule
+    TokenTransferModule,
+    TxModule
   ]
 })
 export class AppModule {}
