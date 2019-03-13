@@ -51,6 +51,10 @@
       <v-flex xs12 md4>
         <v-layout column justify-end fill-height>
           <v-flex xs12>
+            <app-language />
+          </v-flex>
+          <v-spacer></v-spacer>
+          <v-flex xs12>
             <v-layout row justify-end pt-3>
               <v-btn href="https://www.reddit.com/r/ethvm" icon> <v-icon class="fab fa-reddit grey--text"></v-icon> </v-btn>
               <v-btn href="https://twitter.com/Eth_VM" icon> <v-icon class="fab fa-twitter grey--text"></v-icon> </v-btn>
@@ -72,11 +76,13 @@
 
 <script lang="ts">
 import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
+import AppLanguage from '@app/core/components/ui/AppLanguage.vue'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({
   components: {
-    AppCopyToClip
+    AppCopyToClip,
+    AppLanguage
   }
 })
 export default class TheFooter extends Vue {
