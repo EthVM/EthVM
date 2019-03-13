@@ -72,7 +72,7 @@ export class EthvmSocketIoApi implements EthvmApi {
   }
 
   // ------------------------------------------------------------------------------------
-  // Blocks
+  // Blocks Metrics
   // ------------------------------------------------------------------------------------
 
   public getBlockMetric(hash: string): Promise<BlockMetrics | null> {
@@ -232,6 +232,7 @@ export class EthvmSocketIoApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
   // Processing Metadata
   // ------------------------------------------------------------------------------------
+
   public getProcessingMetadata(ev: string): Promise<ProcessingMetadata | null> {
     return this.promisify(Events.getProcessingMetadata, { id: ev })
   }

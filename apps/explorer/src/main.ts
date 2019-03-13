@@ -1,19 +1,19 @@
-import { EthvmSocketIoApi } from '@app/core/api'
+import { EthvmSocketIoApi, EthvmApolloApi, EthvmMigrationApi } from '@app/core/api'
 import { VueEthvmApi } from '@app/core/plugins'
 import VueSocketIO from '@app/core/plugins/socketio/'
 import router from '@app/core/router'
 import store from '@app/core/store'
 import App from '@app/modules/App.vue'
 import i18n from '@app/translations'
+import ApolloClient from 'apollo-boost'
 import axios from 'axios'
 import io from 'socket.io-client'
 import VTooltip from 'v-tooltip'
 import Vue from 'vue'
+import VueApollo from 'vue-apollo'
 import VueAxios from 'vue-axios'
 import VueTimeago from 'vue-timeago'
 import Vuetify from 'vuetify'
-import ApolloClient from 'apollo-boost'
-import VueApollo from 'vue-apollo'
 import 'vuetify/dist/vuetify.min.css'
 
 /*
@@ -36,22 +36,31 @@ Vue.prototype.$eventHub = new Vue()
 Vue.config.productionTip = false
 
 // -------------------------------------------------------
-//    APIs: Legacy SocketIO + GraphQL
+//    APIs: Legacy SocketIO + Apollo (GraphQL)
 // -------------------------------------------------------
 
+// Socket
+
 const socket = io(process.env.VUE_APP_API_ENDPOINT)
-Vue.use(VueSocketIO, socket, store)
-Vue.use(VueEthvmApi, new EthvmSocketIoApi(socket))
+
+// Apollo
 
 const apolloClient = new ApolloClient({
   uri: process.env.VUE_APP_API_2_ENDPOINT
 })
-
 const apolloProvider = new VueApollo({
-  defaultClient: apolloClient,
+  defaultClient: apolloClient
 })
 
+// Transition api
+const ethvmApolloApi = new EthvmApolloApi(apolloClient)
+const ethvmSocketIoApi = new EthvmSocketIoApi(socket)
+const api = new EthvmMigrationApi(ethvmApolloApi, ethvmSocketIoApi)
+
+// Install
+Vue.use(VueSocketIO, socket, store)
 Vue.use(VueApollo)
+Vue.use(VueEthvmApi, api)
 
 // -------------------------------------------------------
 //    TimeAgo

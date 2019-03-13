@@ -1,2 +1,5 @@
 export * from '@app/core/api/EthvmApi'
-export * from '@app/core/api/EthvmSocketIoApi'
+export * from '@app/core/api/socketio/EthvmSocketIoApi'
+export * from '@app/core/api/apollo/EthvmApolloApi'
+export * from '@app/core/api/EthvmMigrationApi'
+export * from '@app/core/api/apollo/GraphQLQueries'
