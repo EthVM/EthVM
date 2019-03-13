@@ -4,22 +4,20 @@ import { UncleEmbedded } from '@app/orm/embedded-entities/block/uncle.embedded'
 
 @Entity('uncles')
 export class UncleEntity extends UncleEmbedded {
-
   constructor(data: any) {
     super(data)
     assignClean(this, data)
   }
 
-  @ObjectIdColumn({name: '_id', type: 'string', readonly: true})
+  @ObjectIdColumn({ name: '_id', type: 'string', readonly: true })
   id: ObjectID
 
-  @Column({type: 'long', readonly: true})
+  @Column({ type: 'long', readonly: true })
   blockNumber: number
 
-  @Column({type: 'string', readonly: true})
+  @Column({ type: 'string', readonly: true })
   receiptsRoot: string
 
-  @Column({type: 'int', readonly: true})
+  @Column({ type: 'int', readonly: true })
   uncleIndex: number
-
 }

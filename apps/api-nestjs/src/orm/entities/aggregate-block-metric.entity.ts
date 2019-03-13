@@ -8,33 +8,31 @@ interface AggregateBlockMetricKeyInterface {
 
 @Entity('aggregate_block_metrics')
 export class AggregateBlockMetricEntity {
-
   constructor(data: any) {
     assignClean(this, data)
   }
 
-  @ObjectIdColumn({name: '_id', readonly: true})
+  @ObjectIdColumn({ name: '_id', readonly: true })
   id: AggregateBlockMetricKeyInterface
 
-  @Column({type: 'string', readonly: true})
+  @Column({ type: 'string', readonly: true })
   bigInteger: string
 
-  @Column({type: 'long', readonly: true})
+  @Column({ type: 'long', readonly: true })
   date: number
 
-  @Column({type: 'double', readonly: true})
+  @Column({ type: 'double', readonly: true })
   double: number
 
-  @Column({type: 'double', readonly: true})
+  @Column({ type: 'double', readonly: true })
   float: number
 
-  @Column({type: 'int', readonly: true})
+  @Column({ type: 'int', readonly: true })
   int: number
 
-  @Column({type: 'long', readonly: true})
+  @Column({ type: 'long', readonly: true })
   long: number
 
-  @Column({type: 'string', readonly: true})
+  @Column({ type: 'string', readonly: true })
   name: string
-
 }

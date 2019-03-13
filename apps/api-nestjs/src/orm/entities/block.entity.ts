@@ -7,15 +7,14 @@ import { UncleEmbedded } from '@app/orm/embedded-entities/block/uncle.embedded'
 
 @Entity('blocks')
 export class BlockEntity {
-
   constructor(data: any) {
     assignClean(this, data)
   }
 
-  @ObjectIdColumn({name: '_id', readonly: true})
+  @ObjectIdColumn({ name: '_id', readonly: true })
   id: ObjectID
 
-  @Column({type: 'string', readonly: true})
+  @Column({ type: 'string', readonly: true })
   totalDifficulty: string
 
   @Column(type => HeaderEmbedded)
@@ -29,5 +28,4 @@ export class BlockEntity {
 
   @Column(type => UncleEmbedded)
   uncles: UncleEmbedded[]
-
 }

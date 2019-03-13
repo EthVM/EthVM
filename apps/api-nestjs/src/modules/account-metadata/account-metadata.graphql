@@ -1,0 +1,12 @@
+type Query {
+  accountMetadataByHash(hash: String!): AccountMetadata
+}
+
+type AccountMetadata {
+  id: String
+  inTxCount: Int
+  isContractCreator: Boolean
+  isMiner: Boolean
+  outTxCount: Int
+  totalTxCount: Int
+}
