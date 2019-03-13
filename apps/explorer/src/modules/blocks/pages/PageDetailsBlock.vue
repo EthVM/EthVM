@@ -49,6 +49,7 @@ import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import BlockDetailsTitle from '@app/modules/blocks/components/BlockDetailsTitle.vue'
+import gql from 'graphql-tag'
 import { Detail, Crumb } from '@app/core/components/props'
 import { eth } from '@app/core/helper'
 import { Vue, Component, Prop } from 'vue-property-decorator'
@@ -145,6 +146,24 @@ export default class PageDetailsBlock extends Vue {
       .catch(err => {
         this.error = `${this.$i18n.t('message.invalidBlock').toString()}: ${this.blockRef}`
       })
+
+    this.$apollo.query({
+      query: gql`{ query block (hash: String!) {
+          id
+          header {
+            hash
+            author
+            difficulty
+            extraData
+          }
+        }
+      }`,
+      variables: {
+        hash: this.blockRef
+      }
+    })
+    .then(res => console.log(res))
+    .catch(res => console.error('Apollo error:', res))
   }
 
   setBlockInfo(block: Block) {

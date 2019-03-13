@@ -12,6 +12,8 @@ import Vue from 'vue'
 import VueAxios from 'vue-axios'
 import VueTimeago from 'vue-timeago'
 import Vuetify from 'vuetify'
+import ApolloClient from 'apollo-boost'
+import VueApollo from 'vue-apollo'
 import 'vuetify/dist/vuetify.min.css'
 
 /*
@@ -20,14 +22,40 @@ import 'vuetify/dist/vuetify.min.css'
   ===================================================================================
 */
 
+// -------------------------------------------------------
+//    VTooltip
+// -------------------------------------------------------
+
 Vue.use(VTooltip)
+
+// -------------------------------------------------------
+//    EventHub
+// -------------------------------------------------------
 
 Vue.prototype.$eventHub = new Vue()
 Vue.config.productionTip = false
 
+// -------------------------------------------------------
+//    APIs: Legacy SocketIO + GraphQL
+// -------------------------------------------------------
+
 const socket = io(process.env.VUE_APP_API_ENDPOINT)
 Vue.use(VueSocketIO, socket, store)
 Vue.use(VueEthvmApi, new EthvmSocketIoApi(socket))
+
+const apolloClient = new ApolloClient({
+  uri: process.env.VUE_APP_API_2_ENDPOINT
+})
+
+const apolloProvider = new VueApollo({
+  defaultClient: apolloClient,
+})
+
+Vue.use(VueApollo)
+
+// -------------------------------------------------------
+//    TimeAgo
+// -------------------------------------------------------
 
 Vue.use(VueTimeago, {
   name: 'timeago',
@@ -36,6 +64,10 @@ Vue.use(VueTimeago, {
     'en-US': require('date-fns/locale/en')
   }
 })
+
+// -------------------------------------------------------
+//    Vuetify
+// -------------------------------------------------------
 
 Vue.use(Vuetify, {
   theme: {
@@ -65,7 +97,10 @@ Vue.use(Vuetify, {
   }
 })
 
-// See: https://www.npmjs.com/package/vue-axios //
+// -------------------------------------------------------
+//    Axios
+//    See: https://www.npmjs.com/package/vue-axios
+// -------------------------------------------------------
 Vue.use(VueAxios, axios)
 
 /*
@@ -79,6 +114,7 @@ new Vue({
   store,
   router,
   i18n,
+  apolloProvider,
   template: '<App/>',
   data: {},
   components: {
