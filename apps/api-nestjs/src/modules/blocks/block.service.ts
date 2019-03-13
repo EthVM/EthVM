@@ -8,8 +8,7 @@ export class BlockService {
   constructor(@InjectRepository(BlockEntity) private readonly blockRepository: MongoRepository<BlockEntity>) {}
 
   async getBlock(hash: string): Promise<BlockEntity> {
-    // TODO fix find conditions
-    return this.blockRepository.findOne({where: { hash } })
+    return this.blockRepository.findOne({where: { 'header.hash': hash } })
   }
 
   async getBlocks(limit: number = 10, page: number = 0): Promise<BlockEntity[]> {
