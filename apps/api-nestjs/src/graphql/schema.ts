@@ -138,6 +138,22 @@ export class Logo {
     src?: string;
 }
 
+export class ProcessingMetadata {
+    id?: ProcessingMetadataKey;
+    boolean?: boolean;
+    bigInteger?: string;
+    double?: Decimal;
+    float?: Decimal;
+    int?: number;
+    long?: number;
+    name?: string;
+    string?: string;
+}
+
+export class ProcessingMetadataKey {
+    name?: string;
+}
+
 export abstract class IQuery {
     abstract accountMetadataByHash(hash: string): AccountMetadata | Promise<AccountMetadata>;
 
@@ -170,6 +186,8 @@ export abstract class IQuery {
     abstract tokenExchangeRateBySymbol(symbol: string): TokenExchangeRate | Promise<TokenExchangeRate>;
 
     abstract tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
+
+    abstract processingMetadataById(id: string): ProcessingMetadata | Promise<ProcessingMetadata>;
 
     abstract temp__(): boolean | Promise<boolean>;
 }
