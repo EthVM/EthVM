@@ -21,7 +21,9 @@
 
 **We are on active development!** 
 
-Things may break or not work as expected and documentation may be deprecated! If you detect a bug, please report it on the issues section (but make sure that is not a duplicated one!)
+Things may break or not work as expected and documentation may be deprecated! 
+
+If you detect a bug, please report it on the issues section (but make sure that is not a duplicated one!)
 
 You have been warned!
 
@@ -41,11 +43,11 @@ Our core infrastructure is based on very common and known programming languages 
 - [VueJs](https://vuejs.org/)
 - [NestJS](https://nestjs.com/)
 
-We have choosen the above technologies to allow a wider range of people contributing to the project.
+We have choosen the above technologies to allow a wider range of people contributing to the project regardless the programming level.
 
 ### Why Apache Kafka?
 
-As the official website states:
+As the [official website](https://kafka.apache.org/) states:
 
 > Kafka is used for building real-time data pipelines and streaming apps. It is horizontally scalable, fault-tolerant, wicked fast, and runs in production in thousands of companies.
 
@@ -53,17 +55,30 @@ As the official website states:
   <img src="https://kafka.apache.org/images/kafka_diagram.png" alt="Apache Kafka" width="500" />
 </div>
 
-We believe that it fits quite nicely within the needs a Block Explorer typically has. On the other side, and by fully embracing the Kafka ecosystem, we allow to export the processed information very easily to other platforms.
+We believe that it fits quite nicely within the needs a Block Explorer typically may has. On the other side, and by fully embracing the Kafka ecosystem, we allow to export the processed information very easily to other platforms.
+
+## Roadmap
+
+For now, we are focused on bringing a Beta environment. It will have the following:
+
+- Migration to NestJS API to replace current SocketIO API
+- Migration from MongoDB to Postgres
+- Improvements over processing on Kafka (we want to process the chain as fast as possible and alongside with that, squash some known bugs)
+- Bring a Terraform provider to deploy properly the code on AWS
 
 ## Getting Started
 
 For more information on how you can setup your environment and start developing on it, we recommend you to visit our [Wiki](https://github.com/EthVM/ethvm/wiki/)!
 
-**NOTE**: Please, don't clone the repository blindly as there are a couple of steps you need to be aware before running the project!
+**NOTE**: Please, don't run the code blindly as there are a couple of steps you need to be aware of!
 
 ## Contributing
 
 We welcome every kind of contribution, so, please see [CONTRIBUTING](.github/CONTRIBUTING.md) for more details on how to proceed.
+
+## Stay in touch!
+
+We have created our EthVM - Devs channel on [our Slack](https://join.slack.com/t/myetherwallet/shared_invite/enQtNTc2MjAxMzUxOTc0LWQwNzMzOWEzOGE0NzU2YjcwMDFhMjdlY2YwOWJhMWQ2YzNjZTU5MmFkMTZmYjllZTU1OWVmMmIxM2RkMTgwN2M), feel free to join.
 
 ## License
 
