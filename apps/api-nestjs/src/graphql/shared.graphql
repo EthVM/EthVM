@@ -2,3 +2,5 @@ scalar Date
 scalar JSON
 scalar Decimal
 scalar Buffer
+scalar StatisticValue
+scalar Long
