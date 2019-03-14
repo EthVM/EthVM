@@ -36,6 +36,7 @@ type Receipt {
   logsBloom: String
   numInternalTxs: Int
   root: String
+  status: String
   transactionHash: String
   transactionIndex: String
   logs: [Log]

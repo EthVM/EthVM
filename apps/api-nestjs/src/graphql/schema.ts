@@ -221,6 +221,7 @@ export class Receipt {
     logsBloom?: string;
     numInternalTxs?: number;
     root?: string;
+    status?: string;
     transactionHash?: string;
     transactionIndex?: string;
     logs?: Log[];
