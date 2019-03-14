@@ -6,7 +6,7 @@
         v-model="language"
         :items="items"
         item-text="name"
-        return-object
+        item-value="_id"
         @change="changeLocale"
         solo
         flat
@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import { TranslateResult } from 'vue-i18n'
+import storePack from 'store'
 
 @Component
 export default class AppLanguage extends Vue {
@@ -41,7 +41,7 @@ export default class AppLanguage extends Vue {
       name: "Espanol"
   }]
 
-  language = this.items[0]
+  language = 'en_US'
 
 
   /*
@@ -51,13 +51,20 @@ export default class AppLanguage extends Vue {
   */
 
   created() {
-    //Get Local Storage Langauge
-    //Set Language
-    //this.language = local storage
-    //his.$i18n.locale = language
+    if(storePack.get('language')){
+      this.$i18n.locale =  storePack.get('language')
+      this. language = storePack.get('language')
+    }
   }
+  /*
+  ===================================================================================
+    Computed
+  ===================================================================================
+  */
 
-
+  get appLang() {
+    return storePack.get('language')
+  }
 
   /*
   ===================================================================================
@@ -66,13 +73,10 @@ export default class AppLanguage extends Vue {
   */
 
   changeLocale(): void {
-    //this.$i18n.locale =  this.language._id
-    //NOTE: commit to local store selected language
-    //Scroll to top?
+    this.$i18n.locale =  this.language
+    storePack.set('language', this.language)
+    window.scrollTo(0,0)
   }
-
-
-
 
 }
 </script>
