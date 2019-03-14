@@ -12,6 +12,7 @@ export class BlockService {
   }
 
   async findBlocks(limit: number = 10, page: number = 0): Promise<BlockEntity[]> {
+    // TODO update to include fromBlock offset and add order DESC - cannot order by nested property with typeorm mongodb
     const skip = page * limit
     return this.blockRepository.find({ take: limit, skip })
   }
