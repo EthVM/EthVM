@@ -1,19 +1,9 @@
 <template>
   <div>
     <v-layout row align-center justify-end>
-      <v-icon class="fas fa-globe" small/>
-      <v-select
-        v-model="language"
-        :items="items"
-        item-text="name"
-        item-value="_id"
-        @change="changeLocale"
-        solo
-        flat
-        class="lang-select"
-      />
+      <v-icon class="fas fa-globe" small />
+      <v-select v-model="language" :items="items" item-text="name" item-value="_id" @change="changeLocale" solo flat class="lang-select" />
     </v-layout>
-
   </div>
 </template>
 
@@ -23,26 +13,15 @@ import storePack from 'store'
 
 @Component
 export default class AppLanguage extends Vue {
-
   /*
   ===================================================================================
     Initial Data
   ===================================================================================
   */
 
-  items = [
-    { _id: 'en_US',
-      name: "English"
-    },
-    { _id: 'ru_RU',
-      name: "Russian"
-    },
-    { _id: 'es_ES',
-      name: "Espanol"
-  }]
+  items = [{ _id: 'en_US', name: 'English' }, { _id: 'ru_RU', name: 'Russian' }, { _id: 'es_ES', name: 'Espanol' }]
 
   language = 'en_US'
-
 
   /*
   ===================================================================================
@@ -51,9 +30,9 @@ export default class AppLanguage extends Vue {
   */
 
   created() {
-    if(storePack.get('language')){
-      this.$i18n.locale =  storePack.get('language')
-      this. language = storePack.get('language')
+    if (storePack.get('language')) {
+      this.$i18n.locale = storePack.get('language')
+      this.language = storePack.get('language')
     }
   }
   /*
@@ -73,17 +52,16 @@ export default class AppLanguage extends Vue {
   */
 
   changeLocale(): void {
-    this.$i18n.locale =  this.language
+    this.$i18n.locale = this.language
     storePack.set('language', this.language)
-    window.scrollTo(0,0)
+    window.scrollTo(0, 0)
   }
-
 }
 </script>
 
 <style scoped lang="css">
-  .lang-select {
-    max-width: 120px;
-    height: 32px;
-  }
+.lang-select {
+  max-width: 120px;
+  height: 32px;
+}
 </style>

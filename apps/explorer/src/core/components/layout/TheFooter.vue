@@ -13,7 +13,7 @@
       -->
       <v-flex xs12 sm3 :class="flexClass">
         <v-card flat>
-          <v-layout row pa-0 align-center >
+          <v-layout row pa-0 align-center>
             <v-card-title class="title font-weight-bold pb-4">{{ $t('footer.discover') }}</v-card-title>
             <v-flex hidden-sm-and-up pa-0>
               <app-language />
@@ -44,30 +44,34 @@
         <v-card flat>
           <v-layout row pa-0 align-center>
             <v-card-title class="title font-weight-bold pb-4">{{ $t('footer.donate') }}</v-card-title>
-             <v-flex hidden-xs-only hidden-md-and-up pa-0>
+            <v-flex hidden-xs-only hidden-md-and-up pa-0>
               <app-language />
             </v-flex>
           </v-layout>
-          <v-layout row wrap justify-start >
-
-              <v-btn outline color="secondary" class="text-lowercase font-weight-regular donation-btn"  :to="'/address/'+ethAddr">
-                <v-icon class="secondary--text fab fa-ethereum pr-2" />
-                {{ $t('common.eth') }} - {{ $t('footer.ens') }}
-              </v-btn>
-              <v-layout reverse>
-                <app-copy-to-clip :value-to-copy="ethAddr"></app-copy-to-clip>
-                <v-card-text class="pl-0 secondary--text">{{ $t('footer.copyEthAddress') }}</v-card-text>
-              </v-layout>
+          <v-layout row wrap justify-start>
+            <v-btn outline color="secondary" class="text-lowercase font-weight-regular donation-btn" :to="'/address/' + ethAddr">
+              <v-icon class="secondary--text fab fa-ethereum pr-2" />
+              {{ $t('common.eth') }} - {{ $t('footer.ens') }}
+            </v-btn>
+            <v-layout reverse>
+              <app-copy-to-clip :value-to-copy="ethAddr"></app-copy-to-clip>
+              <v-card-text class="pl-0 secondary--text">{{ $t('footer.copyEthAddress') }}</v-card-text>
+            </v-layout>
           </v-layout>
           <v-layout row wrap justify-start>
-              <v-btn outline color="secondary" class="text-lowercase font-weight-regular donation-btn" href="https://www.blockchain.com/btc/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9">
-                <v-icon class="secondary--text fab fa-btc pr-2"/>
-                {{ $t('footer.btc') }} - blockchain.com
-              </v-btn>
-              <v-layout reverse>
-                <app-copy-to-clip :value-to-copy="btcAddr"></app-copy-to-clip>
-                <v-card-text class="pl-0 secondary--text">{{ $t('footer.copyBtcAddress') }}</v-card-text>
-              </v-layout>
+            <v-btn
+              outline
+              color="secondary"
+              class="text-lowercase font-weight-regular donation-btn"
+              href="https://www.blockchain.com/btc/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
+            >
+              <v-icon class="secondary--text fab fa-btc pr-2" />
+              {{ $t('footer.btc') }} - blockchain.com
+            </v-btn>
+            <v-layout reverse>
+              <app-copy-to-clip :value-to-copy="btcAddr"></app-copy-to-clip>
+              <v-card-text class="pl-0 secondary--text">{{ $t('footer.copyBtcAddress') }}</v-card-text>
+            </v-layout>
           </v-layout>
         </v-card>
       </v-flex>
@@ -81,7 +85,7 @@
         MD: 14/12 (4)
       =====================================================================================
       -->
-      <v-flex xs12 md4  :class="flexClass">
+      <v-flex xs12 md4 :class="flexClass">
         <v-layout column justify-end fill-height>
           <v-flex hidden-sm-and-down xs12>
             <app-language />
@@ -132,15 +136,14 @@ export default class TheFooter extends Vue {
     Computed
   ===================================================================================
   */
-  get flexClass():string {
-    return (this.$vuetify.breakpoint.name  ==='sm' || this.$vuetify.breakpoint.name  ==='xs') ? 'pa-1': 'pa-3'
+  get flexClass(): string {
+    return this.$vuetify.breakpoint.name === 'sm' || this.$vuetify.breakpoint.name === 'xs' ? 'pa-1' : 'pa-3'
   }
-
 }
 </script>
 
 <style scoped lang="css">
-  .donation-btn {
-    width: 200px;
-  }
+.donation-btn {
+  width: 200px;
+}
 </style>
