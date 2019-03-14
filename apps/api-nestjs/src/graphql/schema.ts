@@ -62,7 +62,7 @@ export class AddressBalance {
 export class AggregateBlockMetric {
     id?: AggregateBlockMetricKey;
     bigInteger?: string;
-    date?: Date;
+    date?: Long;
     double?: number;
     float?: number;
     int?: number;
@@ -71,7 +71,7 @@ export class AggregateBlockMetric {
 }
 
 export class AggregateBlockMetricKey {
-    date?: Date;
+    date?: Long;
     name?: string;
 }
 
@@ -192,6 +192,12 @@ export class ProcessingMetadataKey {
 export abstract class IQuery {
     abstract accountMetadataByHash(hash: string): AccountMetadata | Promise<AccountMetadata>;
 
+    abstract balanceByHash(hash: string): Balance | Promise<Balance>;
+
+    abstract blockMetricByHash(hash?: string): BlockMetric | Promise<BlockMetric>;
+
+    abstract blockMetrics(limit?: number, page?: number): BlockMetric[] | Promise<BlockMetric[]>;
+
     abstract blocks(limit?: number, page?: number): Block[] | Promise<Block[]>;
 
     abstract blockByHash(hash?: string): Block | Promise<Block>;
@@ -201,12 +207,6 @@ export abstract class IQuery {
     abstract minedBlocksByAddress(address?: string, limit?: number, page?: number): Block[] | Promise<Block[]>;
 
     abstract totalNumberOfBlocks(): number | Promise<number>;
-
-    abstract blockMetricByHash(hash?: string): BlockMetric | Promise<BlockMetric>;
-
-    abstract blockMetrics(limit?: number, page?: number): BlockMetric[] | Promise<BlockMetric[]>;
-
-    abstract balanceByHash(hash: string): Balance | Promise<Balance>;
 
     abstract contractByHash(hash?: string): Contract | Promise<Contract>;
 
@@ -334,7 +334,7 @@ export class Social {
 }
 
 export class Statistic {
-    date?: Date;
+    date?: Long;
     value?: StatisticValue;
 }
 
@@ -472,4 +472,5 @@ export type Buffer = any;
 export type Date = any;
 export type Decimal = any;
 export type JSON = any;
+export type Long = any;
 export type StatisticValue = any;

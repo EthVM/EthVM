@@ -7,6 +7,7 @@ import { DecimalScalar } from '@app/graphql/scalars/decimal.scalar'
 import { join } from 'path'
 import { ConfigService } from '@app/shared/config.service'
 import { StatisticValueScalar } from '@app/graphql/scalars/statistic-value.scalar'
+import { LongScalar } from '@app/graphql/scalars/long.scalar'
 
 @Module({
   imports: [
@@ -34,6 +35,6 @@ import { StatisticValueScalar } from '@app/graphql/scalars/statistic-value.scala
       inject: [ConfigService]
     })
   ],
-  providers: [DateScalar, DecimalScalar, BufferScalar, StatisticValueScalar]
+  providers: [DateScalar, DecimalScalar, BufferScalar, StatisticValueScalar, LongScalar]
 })
 export class GraphQLModule {}

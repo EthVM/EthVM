@@ -22,14 +22,14 @@ enum Duration {
 }
 
 type Statistic {
-  date: Date
+  date: Long
   value: StatisticValue
 }
 
 type AggregateBlockMetric {
   id: AggregateBlockMetricKey
   bigInteger: String
-  date: Date
+  date: Long
   double: Float
   float: Float
   int: Int
@@ -38,6 +38,6 @@ type AggregateBlockMetric {
 }
 
 type AggregateBlockMetricKey {
-  date: Date
+  date: Long
   name: String
 }
