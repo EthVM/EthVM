@@ -8,8 +8,10 @@ async function bootstrap() {
 
   const config = app.get(ConfigService)
   const { host, port } = config
+
   app.enableCors()
   app.useGlobalPipes(new ValidationPipe())
+
   await app.listen(port, host)
 }
 bootstrap()
