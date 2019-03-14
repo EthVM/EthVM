@@ -42,7 +42,7 @@
     "ave-tx-fees": "Avg Tx Fees (ETH)",
     "total": "Total Txs",
     "success": "Successful Tx | Successful Txs",
-    "failed": "Failed Tx| Successful Txs",
+    "failed": "Failed Tx | Failed Txs",
     "for-tx": "For Tx",
     "cost": "Tx Cost",
     "root": "Transactions Root",
@@ -172,7 +172,8 @@
     "welcome": {
       "title": "Welcome to EthVM!",
       "text1": "We're still in our Alpha stage, so some features may not work to their full potential. Reach out to us with any bugs you find at ",
-      "text2": ", so we can continue to make EthVM even better!"
+      "text2": ", so we can continue to make EthVM even better!",
+      "btn": "Onward!"
     },
     "ropsten-no-token": "EthVM is still in testing, so we're currently showing data from the Ropsten ETH testnet. There are no tokens that have actual value on Ropsten testnet, but all mainnet Ethereum token balances will appear here once we go live.",
     "report": "Find any bugs or have suggestions?",
@@ -258,7 +259,6 @@
   "btn": {
     "view-all": "View All",
     "more": "More",
-    "onward": "Onward!",
     "less": "Less",
     "first": "First",
     "last": "Last",

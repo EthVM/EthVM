@@ -88,7 +88,7 @@ export default class AppBreadCrumbs extends Vue {
 
   get home(): Crumb {
     return {
-      text: 'title.home',
+      text: 'home',
       disabled: true,
       icon: 'fa fa-home',
       link: '/'
