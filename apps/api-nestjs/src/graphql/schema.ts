@@ -21,6 +21,13 @@ export enum Duration {
     DAY = "DAY"
 }
 
+export enum SearchType {
+    Transaction = "Transaction",
+    Address = "Address",
+    Block = "Block",
+    None = "None"
+}
+
 export enum TokenExchangeRateFilter {
     price_high = "price_high",
     price_low = "price_low",
@@ -45,6 +52,11 @@ export class Action {
     TraceCreateActionRecord?: TraceCreateActionRecord;
     TraceDestroyActionRecord?: TraceDestroyActionRecord;
     TraceRewardActionRecord?: TraceRewardActionRecord;
+}
+
+export class AddressBalance {
+    address?: string;
+    balance?: Decimal;
 }
 
 export class AggregateBlockMetric {
@@ -180,12 +192,6 @@ export class ProcessingMetadataKey {
 export abstract class IQuery {
     abstract accountMetadataByHash(hash: string): AccountMetadata | Promise<AccountMetadata>;
 
-    abstract balanceByHash(hash: string): Balance | Promise<Balance>;
-
-    abstract blockMetricByHash(hash?: string): BlockMetric | Promise<BlockMetric>;
-
-    abstract blockMetrics(limit?: number, page?: number): BlockMetric[] | Promise<BlockMetric[]>;
-
     abstract blocks(limit?: number, page?: number): Block[] | Promise<Block[]>;
 
     abstract blockByHash(hash?: string): Block | Promise<Block>;
@@ -195,6 +201,12 @@ export abstract class IQuery {
     abstract minedBlocksByAddress(address?: string, limit?: number, page?: number): Block[] | Promise<Block[]>;
 
     abstract totalNumberOfBlocks(): number | Promise<number>;
+
+    abstract blockMetricByHash(hash?: string): BlockMetric | Promise<BlockMetric>;
+
+    abstract blockMetrics(limit?: number, page?: number): BlockMetric[] | Promise<BlockMetric[]>;
+
+    abstract balanceByHash(hash: string): Balance | Promise<Balance>;
 
     abstract contractByHash(hash?: string): Contract | Promise<Contract>;
 
@@ -211,6 +223,8 @@ export abstract class IQuery {
     abstract tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
 
     abstract processingMetadataById(id: string): ProcessingMetadata | Promise<ProcessingMetadata>;
+
+    abstract search(hash: string): Search | Promise<Search>;
 
     abstract totalTxs(duration: Duration): Statistic[] | Promise<Statistic[]>;
 
@@ -294,6 +308,13 @@ export class Reward {
     author?: string;
     rewardType?: string;
     value?: string;
+}
+
+export class Search {
+    type?: SearchType;
+    address?: AddressBalance;
+    block?: Block;
+    tx?: Transaction;
 }
 
 export class Social {

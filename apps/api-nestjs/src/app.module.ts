@@ -13,6 +13,7 @@ import { TokenTransferModule } from '@app/modules/token-transfers/token-transfer
 import { TxModule } from '@app/modules/txs/tx.module'
 import { UncleModule } from '@app/modules/uncles/uncle.module'
 import { StatisticModule } from '@app/modules/statistics/statistic.module'
+import { SearchModule } from '@app/modules/search/search.module'
 
 @Module({
   imports: [
@@ -29,7 +30,8 @@ import { StatisticModule } from '@app/modules/statistics/statistic.module'
     TokenTransferModule,
     TxModule,
     UncleModule,
-    StatisticModule
+    StatisticModule,
+    SearchModule
   ]
 })
 export class AppModule {}
