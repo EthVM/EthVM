@@ -1,7 +1,7 @@
-import { Balance } from '@app/graphql/schema'
+import { Search } from '@app/graphql/schema'
 import { assignClean } from '@app/shared/utils'
 
-export class BalanceDto extends Balance {
+export class SearchDto extends Search {
   constructor(data: any) {
     super()
     assignClean(this, data)

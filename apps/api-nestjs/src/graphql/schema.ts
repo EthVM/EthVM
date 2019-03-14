@@ -13,6 +13,21 @@ export enum ContractTypeEnum {
     ERC721 = "ERC721"
 }
 
+export enum Duration {
+    ALL = "ALL",
+    YEAR = "YEAR",
+    MONTH = "MONTH",
+    WEEK = "WEEK",
+    DAY = "DAY"
+}
+
+export enum SearchType {
+    Transaction = "Transaction",
+    Address = "Address",
+    Block = "Block",
+    None = "None"
+}
+
 export enum TokenExchangeRateFilter {
     price_high = "price_high",
     price_low = "price_low",
@@ -37,6 +52,27 @@ export class Action {
     TraceCreateActionRecord?: TraceCreateActionRecord;
     TraceDestroyActionRecord?: TraceDestroyActionRecord;
     TraceRewardActionRecord?: TraceRewardActionRecord;
+}
+
+export class AddressBalance {
+    address?: string;
+    balance?: Decimal;
+}
+
+export class AggregateBlockMetric {
+    id?: AggregateBlockMetricKey;
+    bigInteger?: string;
+    date?: Long;
+    double?: number;
+    float?: number;
+    int?: number;
+    long?: number;
+    name?: string;
+}
+
+export class AggregateBlockMetricKey {
+    date?: Long;
+    name?: string;
 }
 
 export class Balance {
@@ -188,6 +224,32 @@ export abstract class IQuery {
 
     abstract processingMetadataById(id: string): ProcessingMetadata | Promise<ProcessingMetadata>;
 
+    abstract search(hash: string): Search | Promise<Search>;
+
+    abstract totalTxs(duration: Duration): Statistic[] | Promise<Statistic[]>;
+
+    abstract totalSuccessfulTxs(duration: Duration): Statistic[] | Promise<Statistic[]>;
+
+    abstract averageDifficulty(duration: Duration): Statistic[] | Promise<Statistic[]>;
+
+    abstract totalFailedTxs(duration: Duration): Statistic[] | Promise<Statistic[]>;
+
+    abstract totalGasPrice(duration: Duration): Statistic[] | Promise<Statistic[]>;
+
+    abstract averageGasLimit(duration: Duration): Statistic[] | Promise<Statistic[]>;
+
+    abstract averageGasPrice(duration: Duration): Statistic[] | Promise<Statistic[]>;
+
+    abstract totalTxsFees(duration: Duration): Statistic[] | Promise<Statistic[]>;
+
+    abstract averageTxFee(duration: Duration): Statistic[] | Promise<Statistic[]>;
+
+    abstract averageMinerReward(duration: Duration): Statistic[] | Promise<Statistic[]>;
+
+    abstract averageBlockTime(duration: Duration): Statistic[] | Promise<Statistic[]>;
+
+    abstract averageHashRate(duration: Duration): Statistic[] | Promise<Statistic[]>;
+
     abstract addressTokenTransfers(address: string, limit?: number, page?: number): TokenTransfer[] | Promise<TokenTransfer[]>;
 
     abstract addressTokenTransfersByHolder(address: string, holder: string, filter?: string, limit?: number, page?: number): TokenTransfer[] | Promise<TokenTransfer[]>;
@@ -201,6 +263,14 @@ export abstract class IQuery {
     abstract txsForAddress(hash: string, filter?: string, limit?: number, page?: number): Transaction[] | Promise<Transaction[]>;
 
     abstract totalNumberOfTransactions(): number | Promise<number>;
+
+    abstract uncleByHash(hash: string): Uncle | Promise<Uncle>;
+
+    abstract uncles(limit?: number, page?: number, fromUncle?: number): Uncle[] | Promise<Uncle[]>;
+
+    abstract totalNumberOfUncles(): number | Promise<number>;
+
+    abstract latestUncleBlockNumber(): number | Promise<number>;
 
     abstract temp__(): boolean | Promise<boolean>;
 }
@@ -241,6 +311,13 @@ export class Reward {
     value?: string;
 }
 
+export class Search {
+    type?: SearchType;
+    address?: AddressBalance;
+    block?: Block;
+    tx?: Transaction;
+}
+
 export class Social {
     blog?: string;
     chat?: string;
@@ -255,6 +332,11 @@ export class Social {
     telegram?: string;
     twitter?: string;
     youtube?: string;
+}
+
+export class Statistic {
+    date?: Long;
+    value?: StatisticValue;
 }
 
 export abstract class ISubscription {
@@ -391,3 +473,5 @@ export type Buffer = any;
 export type Date = any;
 export type Decimal = any;
 export type JSON = any;
+export type Long = any;
+export type StatisticValue = any;

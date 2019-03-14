@@ -6,6 +6,7 @@ import { TxResolvers } from '@app/modules/txs/tx.resolvers'
 
 @Module({
   imports: [TypeOrmModule.forFeature([TransactionEntity])],
-  providers: [TxService, TxResolvers]
+  providers: [TxService, TxResolvers],
+  exports: [TxService]
 })
 export class TxModule {}

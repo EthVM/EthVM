@@ -1,0 +1,22 @@
+type Query {
+  search(hash: String!): Search
+}
+
+type Search {
+  type: SearchType
+  address: AddressBalance
+  block: Block
+  tx: Transaction
+}
+
+enum SearchType {
+  Transaction,
+  Address,
+  Block,
+  None
+}
+
+type AddressBalance {
+  address: String
+  balance: Decimal
+}

@@ -1,4 +1,4 @@
-import { Entity, ObjectID, ObjectIdColumn } from 'typeorm'
+import { Entity, ObjectIdColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 import { TxEmbedded } from '@app/orm/embedded-entities/block/tx.embedded'
 
@@ -10,5 +10,5 @@ export class TransactionEntity extends TxEmbedded {
   }
 
   @ObjectIdColumn({ name: '_id', type: 'string', readonly: true })
-  id: ObjectID
+  id: string
 }

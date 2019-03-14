@@ -55,7 +55,7 @@ As the [official website](https://kafka.apache.org/) states:
   <img src="https://kafka.apache.org/images/kafka_diagram.png" alt="Apache Kafka" width="500" />
 </div>
 
-We believe that it fits quite nicely within the needs a Block Explorer typically may has. On the other side, and by fully embracing the Kafka ecosystem, we allow to export the processed information very easily to other platforms.
+We believe that it fits quite nicely within the needs that a Block Explorer typically may have. On the other side, and by fully embracing the Kafka ecosystem, we allow to export the processed information very easily to other platforms.
 
 ## Roadmap
 
@@ -68,7 +68,7 @@ For now, we are focused on bringing a Beta environment. It will have the followi
 
 ## Getting Started
 
-For more information on how you can setup your environment and start developing on it, we recommend you to visit our [Wiki](https://github.com/EthVM/ethvm/wiki/)!
+For more information on how you can setup your environment and start developing, we recommend you to visit our [Wiki](https://github.com/EthVM/ethvm/wiki/)!
 
 **NOTE**: Please, don't run the code blindly as there are a couple of steps you need to be aware of!
 
@@ -78,7 +78,7 @@ We welcome every kind of contribution, so, please see [CONTRIBUTING](.github/CON
 
 ## Stay in touch!
 
-We have created our EthVM - Devs channel on [our Slack](https://join.slack.com/t/myetherwallet/shared_invite/enQtNTc2MjAxMzUxOTc0LWQwNzMzOWEzOGE0NzU2YjcwMDFhMjdlY2YwOWJhMWQ2YzNjZTU5MmFkMTZmYjllZTU1OWVmMmIxM2RkMTgwN2M), feel free to join.
+We have created our `#EthVM - Devs` channel in on [our Slack](https://myetherwallet.slack.com/), feel free to join (our use this [invite link](https://join.slack.com/t/myetherwallet/shared_invite/enQtNTc2MjAxMzUxOTc0LWQwNzMzOWEzOGE0NzU2YjcwMDFhMjdlY2YwOWJhMWQ2YzNjZTU5MmFkMTZmYjllZTU1OWVmMmIxM2RkMTgwN2M))
 
 ## License
 
