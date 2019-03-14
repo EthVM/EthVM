@@ -8,13 +8,14 @@ import { TxService } from '@app/modules/txs/tx.service'
 
 @Injectable()
 export class SearchService {
-  constructor(private readonly blockService: BlockService,
-              private readonly balanceService: BalanceService,
-              private readonly txService: TxService,
-              private readonly ethService: EthService) {}
+  constructor(
+    private readonly blockService: BlockService,
+    private readonly balanceService: BalanceService,
+    private readonly txService: TxService,
+    private readonly ethService: EthService
+  ) {}
 
   async search(hash: string): Promise<SearchDto | null> {
-
     const s: SearchDto = { type: SearchType.None }
 
     const hashWith0x = this.convertToHashWith0x(hash)
@@ -45,12 +46,11 @@ export class SearchService {
     }
 
     return s
-
   }
 
   private convertToHashWith0x(hash: string): string {
-    let hashWth0x = ''
-    hash.slice(0, 2) === '0x' ? (hashWth0x = hash.replace('0x', '')) : (hashWth0x = '0x' + hash)
-    return hashWth0x
+    let hashWith0x = ''
+    hash.slice(0, 2) === '0x' ? (hashWith0x = hash.replace('0x', '')) : (hashWith0x = '0x' + hash)
+    return hashWith0x
   }
 }

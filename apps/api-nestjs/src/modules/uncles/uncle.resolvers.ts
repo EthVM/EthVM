@@ -13,9 +13,7 @@ export class UncleResolvers {
   }
 
   @Query()
-  async uncles(@Args('limit') limit?: number,
-               @Args('page') page?: number,
-               @Args('fromUncle') fromUncle?: number) {
+  async uncles(@Args('limit') limit?: number, @Args('page') page?: number, @Args('fromUncle') fromUncle?: number) {
     const entities = await this.uncleService.findUncles(limit, page, fromUncle)
     return entities.map(e => new UncleDto(e))
   }

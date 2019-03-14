@@ -6,11 +6,7 @@ import { BalanceModule } from '@app/modules/balances/balance.module'
 import { SearchResolvers } from '@app/modules/search/search.resolvers'
 
 @Module({
-  imports: [
-    BlockModule,
-    TxModule,
-    BalanceModule
-  ],
-  providers: [SearchService, SearchResolvers],
+  imports: [BlockModule, TxModule, BalanceModule],
+  providers: [SearchService, SearchResolvers]
 })
 export class SearchModule {}

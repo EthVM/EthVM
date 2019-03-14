@@ -17,11 +17,9 @@ export class StatisticValueScalar {
   parseLiteral(ast) {
     if (ast.kind === Kind.INT) {
       return parseInt(ast.value, 10) // ast value is always in string format
-    }
-    else if (ast.kind === Kind.STRING) {
+    } else if (ast.kind === Kind.STRING) {
       return ast.value
-    }
-    else if (ast.kind === Kind.FLOAT) {
+    } else if (ast.kind === Kind.FLOAT) {
       return parseFloat(ast.value)
     }
     return new GraphQLError('Should be INT or STRING or FLOAT')

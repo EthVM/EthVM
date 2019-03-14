@@ -71,10 +71,7 @@ export class StatisticService {
   }
 
   private retrieveFromMongo(event: EventType, start: Date, end: Date): Promise<AggregateBlockMetricEntity[]> {
-
     const where = { $and: [{ name: event }, { date: { $gte: start.getTime() } }, { date: { $lte: end.getTime() } }] }
-
     return this.statisticRepository.find({ where, order: { date: -1 } })
-
   }
 }

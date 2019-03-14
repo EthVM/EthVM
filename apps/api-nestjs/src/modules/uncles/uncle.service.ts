@@ -5,11 +5,10 @@ import { MongoRepository } from 'typeorm'
 
 @Injectable()
 export class UncleService {
-  constructor(@InjectRepository(UncleEntity) private readonly uncleRepository: MongoRepository<UncleEntity>) {
-  }
+  constructor(@InjectRepository(UncleEntity) private readonly uncleRepository: MongoRepository<UncleEntity>) {}
 
   async findUncleByHash(hash: string): Promise<UncleEntity | null> {
-    return this.uncleRepository.findOne({where: {hash}})
+    return this.uncleRepository.findOne({ where: { hash } })
   }
 
   async findUncles(take: number = 10, page?: number, fromUncle?: number): Promise<UncleEntity[]> {
@@ -17,10 +16,10 @@ export class UncleService {
     //   1) We need to store the count of uncles in processing
     //   2) With that we can proceed with the same process as we're doing with Blocks
     // For now we are resorting to the well known skip, limit calls (but it will cause issues if you go very far)
-    const offset = (fromUncle && fromUncle !== -1) ? fromUncle : await this.findLatestUncleBlockNumber()
+    const offset = fromUncle && fromUncle !== -1 ? fromUncle : await this.findLatestUncleBlockNumber()
     const skip = page * take
     return this.uncleRepository.find({
-      where: { number: {$lte: offset} },
+      where: { number: { $lte: offset } },
       skip,
       take,
       order: { blockNumber: -1, number: -1 }
@@ -32,8 +31,7 @@ export class UncleService {
   }
 
   async findLatestUncleBlockNumber(): Promise<number> {
-    const latest = await this.uncleRepository.find({order: {blockNumber: -1, number: -1}, take: 1})
-    return (latest && latest.length) ? latest[0].blockNumber : 0
+    const latest = await this.uncleRepository.find({ order: { blockNumber: -1, number: -1 }, take: 1 })
+    return latest && latest.length ? latest[0].blockNumber : 0
   }
-
 }
