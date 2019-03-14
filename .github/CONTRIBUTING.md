@@ -1,8 +1,6 @@
 # Contributing
 
-Contributions to this project are very **welcome** and will be fully **credited**.
-
-You're encouraged to question everything about the project but, please, do it with respect and good manners (see our [Code of Contuct](.github/CODE_OF_CONDUCT.md) for more information).
+Contributions to this project are very **welcomed** and will be fully **credited**.
 
 We accept contributions via Pull Requests on [Github](https://github.com/EthVM/ethvm).
 
