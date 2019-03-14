@@ -12,6 +12,7 @@ import { ProcessingMetadataModule } from '@app/modules/processing-metadata/proce
 import { TokenTransferModule } from '@app/modules/token-transfers/token-transfer.module'
 import { TxModule } from '@app/modules/txs/tx.module'
 import { UncleModule } from '@app/modules/uncles/uncle.module'
+import { StatisticModule } from '@app/modules/statistics/statistic.module'
 
 @Module({
   imports: [
@@ -27,7 +28,8 @@ import { UncleModule } from '@app/modules/uncles/uncle.module'
     ProcessingMetadataModule,
     TokenTransferModule,
     TxModule,
-    UncleModule
+    UncleModule,
+    StatisticModule
   ]
 })
 export class AppModule {}
