@@ -1,4 +1,4 @@
-import { EthvmApi, GraphQLQueries } from '@app/core/api'
+import { EthvmApi } from '@app/core/api'
 import { Block, PendingTx, SimpleBlock, SimpleTx, Tx, Uncle } from '@app/core/models'
 import { ApolloClient } from 'apollo-boost'
 import {
@@ -23,11 +23,44 @@ export class EthvmApolloApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
 
   public getAddressBalance(address: string): Promise<AddressBalance> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: gql`
+          query balanceByHash(address: String!) {
+            balanceByHash(hash: $address) {
+              id
+              address
+              amount
+            }
+          }
+        `,
+        variables: {
+          address: address.replace('0x', '')
+        }
+      })
+      .then(res => res.data.accountMetadataByHash)
   }
 
   public getAddressMetadata(address: string): Promise<AddressMetadata> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: gql`
+          query accountMetadataByHash(address: String!) {
+            accountMetadataByHash(hash: $address) {
+              id
+              inTxCount
+              isContractCreator
+              isMiner
+              outTxCount
+              totalTxCount
+            }
+          }
+        `,
+        variables: {
+          address: address.replace('0x', '')
+        }
+      })
+      .then(res => res.data.accountMetadataByHash)
   }
 
   public getAddressAllTokensOwned(address: string): Promise<Token[]> {
@@ -55,7 +88,7 @@ export class EthvmApolloApi implements EthvmApi {
       .query({
         query: gql`
           query block($hash: String) {
-            block(hash: $hash) {
+            blockByHash(hash: $hash) {
               header {
                 number
                 hash
@@ -63,7 +96,7 @@ export class EthvmApolloApi implements EthvmApi {
                 nonce
                 sha3Uncles
                 logsBloom
-                # transactionsRoot
+                transactionsRoot
                 stateRoot
                 receiptsRoot
                 author
@@ -75,6 +108,35 @@ export class EthvmApolloApi implements EthvmApi {
                 size
               }
               totalDifficulty
+              transactions {
+                blockHash
+                blockNumber
+                creates
+                from
+                gas
+                gasPrice
+                hash
+                timestamp
+                to
+                transactionIndex
+                value
+                receipt {
+                  contractAddress
+                  gasUsed
+                  status
+                  traces {
+                    error
+                  }
+                }
+              }
+              uncles {
+                hash
+              }
+              rewards {
+                author
+                rewardType
+                value
+              }
             }
           }
         `,
@@ -82,7 +144,7 @@ export class EthvmApolloApi implements EthvmApi {
           hash: hash.replace('0x', '')
         }
       })
-      .then(res => new Block(res.data))
+      .then(res => new Block(res.data.blockByHash))
   }
 
   public getBlocks(format: string, limit: number, page: number, fromBlock: number): Promise<Block[] | SimpleBlock[]> {
@@ -90,15 +152,105 @@ export class EthvmApolloApi implements EthvmApi {
   }
 
   public getBlockByNumber(no: number): Promise<Block> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: gql`
+          query block($number: Int) {
+            blockByNumber(number: $number) {
+              header {
+                number
+                hash
+                parentHash
+                nonce
+                sha3Uncles
+                logsBloom
+                transactionsRoot
+                stateRoot
+                receiptsRoot
+                author
+                difficulty
+                extraData
+                gasLimit
+                gasUsed
+                timestamp
+                size
+              }
+              totalDifficulty
+              transactions {
+                blockHash
+                blockNumber
+                creates
+                from
+                gas
+                gasPrice
+                hash
+                timestamp
+                to
+                transactionIndex
+                value
+                receipt {
+                  contractAddress
+                  gasUsed
+                  status
+                  traces {
+                    error
+                  }
+                }
+              }
+              uncles {
+                hash
+              }
+              rewards {
+                author
+                rewardType
+                value
+              }
+            }
+          }
+        `,
+        variables: {
+          number: no
+        }
+      })
+      .then(res => new Block(res.data.blockByNumber))
   }
 
-  public getBlocksMinedOfAddress(address: string, limit: number, page: number): Promise<Block[]> {
-    throw new Error('Method not implemented.')
+  public getBlocksMinedOfAddress(address: string, limit: number, page: number): Promise<SimpleBlock[]> {
+    return this.apollo
+      .query({
+        query: gql`
+          query blocks($address: String, limit: $number, page: $number) {
+            minedBlocksByAddress(address: $address, limit: $limit, page: $page) {
+              header {
+                hash
+                number
+                author
+              }
+              uncles {
+                hash
+              }
+              rewards {
+                rewardType
+                value
+              }
+            }
+          }
+        `,
+        variables: {
+          address,
+          limit,
+          page
+        }
+      })
+      .then(res => res.data.minedBlocksByAddress.map(raw => new SimpleBlock(raw)))
   }
 
   public getTotalNumberOfBlocks(): Promise<number> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: gql`totalNumberOfBlocks`
+      })
+      .then(res => res.data.totalNumberOfBlocks as number)
   }
 
   // ------------------------------------------------------------------------------------
@@ -106,11 +258,64 @@ export class EthvmApolloApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
 
   public getBlockMetric(hash: string): Promise<BlockMetrics> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: gql`
+          query blockMetric($hash: String) {
+            blockMetricByHash(hash: $hash) {
+              avgGasLimit
+              avgGasPrice
+              avgTxFees
+              blockTime
+              difficulty
+              hash
+              number
+              numFailedTxs
+              numPendingTxs
+              numSuccessfulTxs
+              numUncles
+              timestamp
+              totalDifficulty
+              totalTxs
+            }
+          }
+        `,
+        variables: {
+          hash: hash.replace('0x', '')
+        }
+      })
+      .then(res => res.data.blockMetrics)
   }
 
   public getBlockMetrics(limit: number, page: number): Promise<BlockMetrics[]> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: gql`
+          query blockMetrics($limit: Int, $page: Int) {
+            blockMetrics(limit: $limit, page: $page) {
+              avgGasLimit
+              avgGasPrice
+              avgTxFees
+              blockTime
+              difficulty
+              hash
+              number
+              numFailedTxs
+              numPendingTxs
+              numSuccessfulTxs
+              numUncles
+              timestamp
+              totalDifficulty
+              totalTxs
+            }
+          }
+        `,
+        variables: {
+          limit,
+          page
+        }
+      })
+      .then(res => res.data.blockMetrics)
   }
 
   // ------------------------------------------------------------------------------------
@@ -174,23 +379,152 @@ export class EthvmApolloApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
 
   public getTx(hash: string): Promise<Tx> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: gql`
+          query tx(hash: String) {
+            tx(hash: $hash) {
+              blockHash
+              blockNumber
+              creates
+              from
+              gas
+              gasPrice
+              hash
+              input
+              nonce
+              r
+              s
+              timestamp
+              to
+              transactionIndex
+              v
+              value
+              receipt {
+                blockHash
+                blockNumber
+                contractAddress
+                cumulativeGasUsed
+                gasUsed
+                logsBloom
+                numInternalTxs
+                root
+                status
+                transactionHash
+                transactionIndex
+                logs {
+                  address
+                  data
+                  topics
+                }
+                traces {
+                  blockHash
+                  blockNumber
+                  error
+                  subtraces
+                  traceAddress
+                  transactionHash
+                  transactionPosition
+                  type
+                  action
+                  result {
+                    address
+                    code
+                    gasUsed
+                    output
+                  }
+                }
+              }
+            }
+          }
+        `,
+        variables: {
+          hash: hash.replace('0x', '')
+        }
+      })
+      .then(res => new Tx(res.data.tx))
   }
 
   public getTxs(format: string, limit: number, order: string, fromBlock: number): Promise<Tx[] | SimpleTx[]> {
     throw new Error('Method not implemented.')
   }
 
-  public getTxsOfBlock(hash: string): Promise<Tx[]> {
-    throw new Error('Method not implemented.')
-  }
-
   public getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<Tx[]> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: gql`
+          query txsForAddress(hash: String!, filter: String, limit: Int, page: Int) {
+            tx(hash: $hash, filter: $filter, limit: $limit, page: $page) {
+              blockHash
+              blockNumber
+              creates
+              from
+              gas
+              gasPrice
+              hash
+              input
+              nonce
+              r
+              s
+              timestamp
+              to
+              transactionIndex
+              v
+              value
+              receipt {
+                blockHash
+                blockNumber
+                contractAddress
+                cumulativeGasUsed
+                gasUsed
+                logsBloom
+                numInternalTxs
+                root
+                status
+                transactionHash
+                transactionIndex
+                logs {
+                  address
+                  data
+                  topics
+                }
+                traces {
+                  blockHash
+                  blockNumber
+                  error
+                  subtraces
+                  traceAddress
+                  transactionHash
+                  transactionPosition
+                  type
+                  action
+                  result {
+                    address
+                    code
+                    gasUsed
+                    output
+                  }
+                }
+              }
+            }
+          }
+        `,
+        variables: {
+          hash: hash ? hash.replace('0x', '') : '',
+          filter,
+          limit,
+          page
+        }
+      })
+      .then(res => res.data.txsForAddress.map(raw => new Tx(raw)))
   }
 
   public getTotalNumberOfTxs(): Promise<number> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: gql`totalNumberOfTransactions`
+      })
+      .then(res => res.data.totalNumberOfTransactions as number)
   }
 
   // ------------------------------------------------------------------------------------
@@ -262,10 +596,19 @@ export class EthvmApolloApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
 
   public getProcessingMetadata(id: string): Promise<ProcessingMetadata> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: gql`
+          query processingMetadataById($id: String!) {
+            processingMetadataById(id: $id) {
+              id
+            }
+          }
+        `,
+        variables: {
+          id
+        }
+      })
+      .then(res => res.data.processingMetadataById)
   }
-
-  // ------------------------------------------------------------------------------------
-  // Private Methods
-  // ------------------------------------------------------------------------------------
 }

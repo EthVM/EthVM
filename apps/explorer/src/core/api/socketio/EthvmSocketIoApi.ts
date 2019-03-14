@@ -63,8 +63,8 @@ export class EthvmSocketIoApi implements EthvmApi {
     return this.promisify(Events.getBlockByNumber, { number: no }).then(raw => (raw !== null ? new Block(raw) : null))
   }
 
-  public getBlocksMinedOfAddress(address: string, limit: number = 100, page: number = 0): Promise<Block[]> {
-    return this.promisify(Events.getBlocksMined, { address, limit, page }).then(raw => raw.map(rawBlock => new Block(rawBlock)))
+  public getBlocksMinedOfAddress(address: string, limit: number = 100, page: number = 0): Promise<SimpleBlock[]> {
+    return this.promisify(Events.getBlocksMined, { address, limit, page }).then(raw => raw.map(rawBlock => new SimpleBlock(rawBlock)))
   }
 
   public getTotalNumberOfBlocks(): Promise<number> {
@@ -151,10 +151,6 @@ export class EthvmSocketIoApi implements EthvmApi {
     return this.promisify(Events.getTxs, { format, limit, order, fromBlock }).then(raw =>
       raw.map(rawTx => (format !== 'simple' ? new Tx(rawTx) : new SimpleTx(rawTx)))
     )
-  }
-
-  public getTxsOfBlock(hash: string): Promise<Tx[]> {
-    return this.promisify(Events.getBlockTxs, { hash }).then(raw => raw.map(rawTx => new Tx(rawTx)))
   }
 
   public getTxsOfAddress(address: string, filter: string = 'all', limit: number = 100, page: number = 0): Promise<Tx[]> {

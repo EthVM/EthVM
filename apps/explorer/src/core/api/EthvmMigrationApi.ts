@@ -57,11 +57,11 @@ export class EthvmMigrationApi implements EthvmApi {
   }
 
   public getBlockByNumber(no: number): Promise<Block> {
-    return this.socketIoApi.getBlockByNumber(no)
+    return this.apolloApi.getBlockByNumber(no)
   }
 
-  public getBlocksMinedOfAddress(address: string, limit: number, page: number): Promise<Block[]> {
-    return this.socketIoApi.getBlocksMinedOfAddress(address, limit, page)
+  public getBlocksMinedOfAddress(address: string, limit: number, page: number): Promise<SimpleBlock[]> {
+    return this.apolloApi.getBlocksMinedOfAddress(address, limit, page)
   }
 
   public getTotalNumberOfBlocks(): Promise<number> {
@@ -146,10 +146,6 @@ export class EthvmMigrationApi implements EthvmApi {
 
   public getTxs(format: string, limit: number, order: string, fromBlock: number): Promise<Tx[] | SimpleTx[]> {
     return this.socketIoApi.getTxs(format, limit, order, fromBlock)
-  }
-
-  public getTxsOfBlock(hash: string): Promise<Tx[]> {
-    return this.socketIoApi.getTxsOfBlock(hash)
   }
 
   public getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<Tx[]> {

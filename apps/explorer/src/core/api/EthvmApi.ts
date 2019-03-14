@@ -25,7 +25,7 @@ export interface EthvmApi {
   getBlock(hash: string): Promise<Block | null>
   getBlocks(format: string, limit: number, page: number, fromBlock: number): Promise<Block[] | SimpleBlock[]>
   getBlockByNumber(no: number): Promise<Block | null>
-  getBlocksMinedOfAddress(address: string, limit: number, page: number): Promise<Block[]>
+  getBlocksMinedOfAddress(address: string, limit: number, page: number): Promise<SimpleBlock[]>
   getTotalNumberOfBlocks(): Promise<number>
 
   // Block Metrics
@@ -52,7 +52,6 @@ export interface EthvmApi {
   // Txs
   getTx(hash: string): Promise<Tx | null>
   getTxs(format: string, limit: number, order: string, fromBlock: number): Promise<Tx[] | SimpleTx[]>
-  getTxsOfBlock(hash: string): Promise<Tx[]>
   getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<Tx[]>
   getTotalNumberOfTxs(): Promise<number>
 
