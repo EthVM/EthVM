@@ -33,12 +33,12 @@ variable "connection_timeout" {
 
 variable "ec2_ami_manager" {
   description = "AMI for EC2 instance"
-  default     = "ami-0653e888ec96eab9b"
+  default     = "ami-0edb6536b94aa8642"
 }
 
 variable "ec2_ami_worker" {
   description = "AMI for EC2 instance"
-  default     = "ami-0653e888ec96eab9b"
+  default     = "ami-0edb6536b94aa8642"
 }
 
 variable "ec2_instance_type_manager" {
@@ -46,12 +46,32 @@ variable "ec2_instance_type_manager" {
   default     = "t2.micro"
 }
 
+variable "manager_zone" {
+  description = "zone for managers a,b,c"
+  default     = "a"
+}
+
 variable "ec2_instance_type_worker" {
   description = "Type for EC2 instance"
   default     = "t2.micro"
 }
 
+variable "worker_zone" {
+  description = "zone for workers a,b,c"
+  default     = "b"
+}
+
 variable "total_manager_instances" {
   description = "Number of Managers"
-  default     = "1"
+  default     = "3"
+}
+
+variable "total_worker_instances" {
+  description = "Number of Managers"
+  default     = "3"
+}
+
+variable "provision_user" {
+  description = "instance user account"
+  default     = "ubuntu"
 }

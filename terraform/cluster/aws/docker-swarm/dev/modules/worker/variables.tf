@@ -5,7 +5,6 @@ variable "instance_type" {}
 
 variable "subnet_id" {}
 variable "ssh_key_path" {}
-variable "connection_timeout" {}
 variable "security_group" {}
 
 variable "total_instances" {}
@@ -13,5 +12,5 @@ variable "total_instances" {}
 variable "name" {}
 
 variable "provision_user" {}
-
-variable "aws_eip" {}
+variable "manager_public_ip" {}
+variable "manager_private_ip" {}
