@@ -21,7 +21,7 @@
       </v-flex>
       <v-flex xs12 sm6>
         <v-card class="success white--text pl-2" flat>
-          <v-card-text class="pb-0">{{ $t('token.totalUSD') }}</v-card-text>
+          <v-card-text class="pb-0">{{ $t('usd.total') }}</v-card-text>
           <v-card-title class="headline text-truncate">${{ getTotalMonetaryValue }}</v-card-title>
         </v-card>
       </v-flex>
@@ -42,13 +42,13 @@
           <h5>{{ $t('token.symbol') }}</h5>
         </v-flex>
         <v-flex hidden-xs-only sm4 md3>
-          <h5>{{ $t('token.name') }}</h5>
+          <h5>{{ $tc('token.name',1) }}</h5>
         </v-flex>
         <v-flex xs6 sm3 md4>
-          <h5>{{ $t('token.amount') }}</h5>
+          <h5>{{ $t('common.amount') }}</h5>
         </v-flex>
         <v-flex hidden-xs-only sm3>
-          <h5>{{ $t('token.usdValue') }}</h5>
+          <h5>{{ $t('usd.value') }}</h5>
         </v-flex>
       </v-layout>
     </v-card>
@@ -80,7 +80,7 @@
     </div>
     <div v-if="!loading">
       <v-card v-if="totalTokens === 0" flat>
-        <v-card-text class="text-xs-center secondary--text">{{ $t('tokens.empty') }}</v-card-text>
+        <v-card-text class="text-xs-center secondary--text">{{ $t('token.empty') }}</v-card-text>
       </v-card>
       <div v-if="totalTokens > 0" v-for="(token, index) in tokensPage" :key="index">
         <table-address-tokens-row :token="token" :holder="holder" />

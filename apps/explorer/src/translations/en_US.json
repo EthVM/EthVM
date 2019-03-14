@@ -36,10 +36,10 @@
     "mined": "Mined Transactions",
     "detail": "Transaction Details",
     "last": "Last Transactions",
-    "tx-n": "Transaction #",
-    "tx-fees": "Tx Fee | Txs Fees",
+    "hash": "Tx # | Transaction #",
+    "fee": "Tx Fee | Txs Fees",
+    "ave-fees": "Avg Tx Fees (ETH)",
     "history": "Transactions History",
-    "ave-tx-fees": "Avg Tx Fees (ETH)",
     "total": "Total Txs",
     "success": "Successful Tx | Successful Txs",
     "failed": "Failed Tx | Failed Txs",
@@ -128,7 +128,7 @@
     "amount": "Amount",
     "quantity": "Quantity",
     "percentage": "Percentage",
-    "ethBalance": "Ether Balance",
+    "eth-balance": "Ether Balance",
     "balance": "Balance"
   },
 

@@ -299,7 +299,7 @@ export default class PageDetailsAddress extends Vue {
         name: 'error',
         enter: () => {
           // 1. Set global error to error
-          this.error = this.$i18n.t('message.invalidAddress').toString()
+          this.error = this.$i18n.t('message.invalid.addr').toString()
 
           // 2. Disable global loading
           this.loading = false
@@ -351,7 +351,7 @@ export default class PageDetailsAddress extends Vue {
         this.txsLoading = false
       },
       err => {
-        this.txsError = this.$i18n.t('message.invalidAddress').toString()
+        this.txsError = this.$i18n.t('message.invalid.addr').toString()
       }
     )
   }
@@ -363,7 +363,7 @@ export default class PageDetailsAddress extends Vue {
         this.minerBlocksLoading = false
       },
       err => {
-        this.minerBlocksError = this.$i18n.t('message.error').toString()
+        this.minerBlocksError = this.$i18n.t('message.no-data').toString()
       }
     )
   }
@@ -439,7 +439,7 @@ export default class PageDetailsAddress extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: `${this.$i18n.t('title.address').toString()}: ${this.addressRef}`,
+        text: `${this.$i18n.t('address.name').toString()}: ${this.addressRef}`,
         disabled: true
       }
     ]
@@ -449,17 +449,17 @@ export default class PageDetailsAddress extends Vue {
     const tabs: Tab[] = [
       {
         id: '0',
-        title: this.$i18n.t('tabs.txH'),
+        title: this.$i18n.t('tx.history'),
         isActive: true
       },
       {
         id: '1',
-        title: this.$i18n.t('tabs.tokens'),
+        title: this.$i18n.tc('token.name', 2),
         isActive: false
       },
       {
         id: '2',
-        title: this.$i18n.t('tabs.pending'),
+        title: this.$i18n.tc('tx.pending',2),
         isActive: false
       }
     ]
@@ -468,7 +468,7 @@ export default class PageDetailsAddress extends Vue {
       if (this.account.isMiner) {
         const newTab = {
           id: '3',
-          title: this.$i18n.t('tabs.miningH').toString(),
+          title: this.$i18n.t('miner.history').toString(),
           isActive: false
         }
         tabs.push(newTab)
@@ -477,7 +477,7 @@ export default class PageDetailsAddress extends Vue {
       if (this.account.isCreator) {
         const newTab = {
           id: '4',
-          title: this.$i18n.t('tabs.contracts').toString(),
+          title: this.$i18n.tc('contract.name', 2).toString(),
           isActive: false
         }
         tabs.push(newTab)
