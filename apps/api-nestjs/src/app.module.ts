@@ -11,6 +11,7 @@ import { ExchangeModule } from '@app/modules/exchanges/exchange.module'
 import { ProcessingMetadataModule } from '@app/modules/processing-metadata/processing-metadata.module'
 import { TokenTransferModule } from '@app/modules/token-transfers/token-transfer.module'
 import { TxModule } from '@app/modules/txs/tx.module'
+import { UncleModule } from '@app/modules/uncles/uncle.module'
 
 @Module({
   imports: [
@@ -25,7 +26,8 @@ import { TxModule } from '@app/modules/txs/tx.module'
     ExchangeModule,
     ProcessingMetadataModule,
     TokenTransferModule,
-    TxModule
+    TxModule,
+    UncleModule
   ]
 })
 export class AppModule {}

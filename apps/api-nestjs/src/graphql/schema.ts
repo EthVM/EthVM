@@ -202,6 +202,14 @@ export abstract class IQuery {
 
     abstract totalNumberOfTransactions(): number | Promise<number>;
 
+    abstract uncleByHash(hash: string): Uncle | Promise<Uncle>;
+
+    abstract uncles(limit?: number, page?: number, fromUncle?: number): Uncle[] | Promise<Uncle[]>;
+
+    abstract totalNumberOfUncles(): number | Promise<number>;
+
+    abstract latestUncleBlockNumber(): number | Promise<number>;
+
     abstract temp__(): boolean | Promise<boolean>;
 }
 
