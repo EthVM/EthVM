@@ -2,52 +2,88 @@ topics:
 
   - name: blocks
     replicationFactor: 1
-    partitions: 1
+    partitions: 12
     config:
-      retention.ms: -1
       cleanup.policy: compact
-      max.message.bytes: 52428800
 
   - name: uncles
     replicationFactor: 1
     partitions: 12
     config:
-      retention.ms: -1
       cleanup.policy: compact
 
   - name: transactions
     replicationFactor: 1
     partitions: 12
     config:
-      retention.ms: -1
+      cleanup.policy: compact
+
+  - name: receipts
+    replicationFactor: 1
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
+  - name: block-traces
+    replicationFactor: 1
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
+  - name: transaction-traces
+    replicationFactor: 1
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
+  - name: canonical-chain
+    replicationFactor: 1
+    partitions: 1
+    config:
+      cleanup.policy: compact
+
+  - name: canonical-transactions
+    replicationFactor: 1
+    partitions: 1
+    config:
+      cleanup.policy: compact
+
+  - name: canonical-transactions-concurrent
+    replicationFactor: 1
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
+  - name: transaction-ether-transfers
+    replicationFactor: 1
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
+  - name: canonical-transaction-ether-transfers
+    replicationFactor: 1
+    partitions: 12
+    config:
       cleanup.policy: compact
 
   - name: contract-metadata
     replicationFactor: 1
     partitions: 12
     config:
-      retention.ms: -1
       cleanup.policy: compact
 
   - name: contract-destructions
     replicationFactor: 1
     partitions: 12
     config:
-      retention.ms: -1
       cleanup.policy: compact
 
   - name: contract-creations
     replicationFactor: 1
     partitions: 12
     config:
-      retention.ms: -1
       cleanup.policy: compact
 
-  - name: token-transfers
-    replicationFactor: 1
-    partitions: 12
-    config:
-      retention.ms: -1
 
   - name: fungible-token-movements
     replicationFactor: 1
@@ -59,14 +95,12 @@ topics:
     replicationFactor: 1
     partitions: 12
     config:
-      retention.ms: -1
       cleanup.policy: compact
 
   - name: pending-transactions
     replicationFactor: 1
     partitions: 12
     config:
-      retention.ms: -1
       cleanup.policy: compact
 
   - name: address-tx-events
@@ -85,35 +119,30 @@ topics:
     replicationFactor: 1
     partitions: 12
     config:
-      retention.ms: -1
       cleanup.policy: compact
 
   - name: contract-creator-list
     replicationFactor: 1
     partitions: 12
     config:
-      retention.ms: -1
       cleanup.policy: compact
 
   - name: block-metrics-by-block
     replicationFactor: 1
     partitions: 12
     config:
-      retention.ms: -1
       cleanup.policy: compact
 
   - name: block-metrics-by-day
     replicationFactor: 1
     partitions: 12
     config:
-      retention.ms: -1
       cleanup.policy: compact
 
   - name: aggregate-block-metrics-by-day
     replicationFactor: 1
     partitions: 12
     config:
-      retention.ms: -1
       cleanup.policy: compact
 
   - name: eth-tokens-list
@@ -126,7 +155,6 @@ topics:
     replicationFactor: 1
     partitions: 1
     config:
-      retention.ms: -1
       cleanup.policy: compact
 
   - name: raw-exchange-rates
@@ -139,12 +167,10 @@ topics:
     replicationFactor: 1
     partitions: 1
     config:
-      retention.ms: -1
       cleanup.policy: compact
 
   - name: processing-metadata
     replicationFactor: 1
     partitions: 1
     config:
-      retention.ms: -1
       cleanup.policy: compact

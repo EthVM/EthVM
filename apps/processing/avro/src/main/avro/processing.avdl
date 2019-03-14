@@ -16,12 +16,17 @@ protocol Processing {
 
   }
 
+  record CanonicalApplyRecord {
+    boolean apply;
+  }
+
   record TokenTransferKeyRecord {
-    bytes hash;
+    bytes txHash;
+    array<int> traceAddress;
   }
 
   enum BalanceType {
-    TX_FEE, REWARD, ETHER, ERC20, ERC721
+    TX_FEE, BLOCK_REWARD, UNCLE_REWARD, ETHER, ERC20, ERC721
   }
 
   record TokenTransferRecord {
@@ -36,6 +41,10 @@ protocol Processing {
     union { null, bytes } amount = null;
     union { null, bytes } tokenId = null;
     union { null, long } timestamp = null;                        // block timestamp in seconds since epoch
+  }
+
+  record TokenTransferListRecord {
+    array<TokenTransferRecord> tokenTransfers = [];
   }
 
   record TokenBalanceKeyRecord {

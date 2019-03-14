@@ -8,11 +8,9 @@ import io.enkrypt.common.config.NetConfig
 import io.enkrypt.kafka.streams.config.AppConfig
 import io.enkrypt.kafka.streams.config.KafkaConfig
 import io.enkrypt.kafka.streams.di.Modules.kafkaStreams
-import io.enkrypt.kafka.streams.processors.BlockProcessor
-import io.enkrypt.kafka.streams.processors.EthTokensProcessor
-import io.enkrypt.kafka.streams.processors.ExchangeRatesProcessor
+import io.enkrypt.kafka.streams.processors.CanonicalProcessor
+import io.enkrypt.kafka.streams.processors.EtherBalanceProcessor
 import io.enkrypt.kafka.streams.processors.KafkaProcessor
-import io.enkrypt.kafka.streams.processors.StateProcessor
 import org.koin.dsl.module.module
 import org.koin.standalone.StandAloneContext.startKoin
 
@@ -85,10 +83,12 @@ class Cli : CliktCommand() {
     startKoin(listOf(configModule, kafkaStreams))
 
     listOf<KafkaProcessor>(
-      BlockProcessor(),
-      StateProcessor(),
-      EthTokensProcessor(),
-      ExchangeRatesProcessor()
+      CanonicalProcessor(),
+      EtherBalanceProcessor()
+//      BlockProcessor(),
+//      StateProcessor(),
+//      EthTokensProcessor(),
+//      ExchangeRatesProcessor()
     ).forEach {
       it.buildTopology()
       it.start(resetStreamsState == 1)

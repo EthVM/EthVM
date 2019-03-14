@@ -4,15 +4,28 @@ protocol Capture {
   import idl "common.avdl";
 
   record BlockKeyRecord {
-    bytes number;
-  }
-
-  record UncleKeyRecord {
-    bytes uncleHash;
+    bytes blockHash;
   }
 
   record TransactionKeyRecord {
     bytes txHash;
+    union { null, bytes } nonce = null;
+  }
+
+  record CanonicalKeyRecord {
+    bytes number;
+  }
+
+  record CompositeKeyRecord {
+    union { null, bytes } number = null;
+    union { null, bytes } blockHash = null;
+    union { null, bytes } txHash = null;
+    union { null, bytes } nonce = null;
+  }
+
+  record CanonicalRecord {
+    bytes blockHash;
+    array<bytes> txHashes;
   }
 
   record LogRecord {
@@ -68,9 +81,13 @@ protocol Capture {
     string type;
     bytes blockHash;
     bytes blockNumber;
-    bytes transactionHash;
-    int transactionPosition;
+    union { null, bytes } transactionHash;
+    union { null, int } transactionPosition;
 
+  }
+
+  record TraceListRecord {
+    array<TraceRecord> traces;
   }
 
   record TransactionReceiptRecord {
@@ -91,9 +108,6 @@ protocol Capture {
 
     union { null, bytes } root = null;              // Merkle root of the state trie after the transaction has been executed (optional after Byzantium hard fork EIP609)
     union { null, bytes } status = null;                                    // Quantity - 0x0 indicates transaction failure , 0x1 indicates transaction success. Set for blocks mined after Byzantium hard fork EIP609, null before.
-
-    int numInternalTxs;
-    array<TraceRecord> traces;
   }
 
   record TransactionRecord {

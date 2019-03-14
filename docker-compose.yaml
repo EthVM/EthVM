@@ -14,6 +14,8 @@ volumes:
   mongodb-volume:
   kafka-volume-1:
   zookeeper-volume:
+  control-center-volume:
+  control-center-config-volume:
 
   parity-volume:
     # Note:
@@ -21,10 +23,10 @@ volumes:
     # This allows to persist downloaded blockchain data.
     # More info: https://github.com/CWSpear/local-persist
     #
-    # driver: local-persist
-    # driver_opts:
-    #   name: "paritydb"
-    #   mountpoint: "${PARITY_VOLUME_MOUNTPOINT}"
+    driver: local-persist
+    driver_opts:
+       name: "paritydb"
+       mountpoint: "/media/brian/SanDisk\ Extreme/parity"
 
 services:
 
@@ -38,7 +40,7 @@ services:
       - 8545:8545
       - 8546:8546
       - 30303:30303
-    command: --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
+    command: --chain ropsten --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
     cpu_shares: 2048
 
   traefik:
@@ -171,6 +173,7 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_COMPRESSION_TYPE: zstd
       CONFLUENT_SUPPORT_METRICS_ENABLE: "true"
       KAFKA_JMX_PORT: 9586
     mem_limit: 4g
@@ -237,7 +240,7 @@ services:
       CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_LOG4J_ROOT_LOGLEVEL: "INFO"
-      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,io.enkrypt.kafka.connect=TRACE,org.web3j.protocol.websocket.WebSocketService=WARN"
+      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,io.enkrypt.kafka.connect=DEBUG,org.web3j.protocol.websocket.WebSocketService=WARN"
       CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/enkryptio
       KAFKA_JMX_PORT: 9588
     cpu_shares: 3000

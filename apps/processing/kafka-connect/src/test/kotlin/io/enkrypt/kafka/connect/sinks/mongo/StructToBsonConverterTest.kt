@@ -410,7 +410,6 @@ class StructToBsonConverterTest : BehaviorSpec() {
         .setGasUsed(123.toBigInteger().unsignedByteBuffer())
         .setCumulativeGasUsed(123.toBigInteger().unsignedByteBuffer())
         .setLogsBloom(data.hexBuffer())
-        .setTraces(mutableListOf())
         .build()
 
       val record = TransactionRecord.newBuilder()

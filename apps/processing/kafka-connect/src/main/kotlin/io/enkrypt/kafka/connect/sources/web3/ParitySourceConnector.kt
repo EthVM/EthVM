@@ -1,5 +1,8 @@
 package io.enkrypt.kafka.connect.sources.web3
 
+import io.enkrypt.kafka.connect.sources.web3.ParitySourceConnector.Config.ENTITIES_LIST_CONFIG
+import io.enkrypt.kafka.connect.sources.web3.ParitySourceConnector.Config.ENTITIES_LIST_DEFAULT
+import io.enkrypt.kafka.connect.sources.web3.ParitySourceConnector.Config.ENTITIES_LIST_DOC
 import io.enkrypt.kafka.connect.sources.web3.ParitySourceConnector.Config.SCHEMA_REGISTRY_URL_CONFIG
 import io.enkrypt.kafka.connect.sources.web3.ParitySourceConnector.Config.SCHEMA_REGISTRY_URL_DEFAULT
 import io.enkrypt.kafka.connect.sources.web3.ParitySourceConnector.Config.SCHEMA_REGISTRY_URL_DOC
@@ -33,8 +36,15 @@ class ParitySourceConnector : SourceConnector() {
   override fun taskClass(): Class<out Task> = ParitySourceTask::class.java
 
   override fun taskConfigs(maxTasks: Int): MutableList<MutableMap<String, String>> {
-    if (maxTasks != 1) throw IllegalStateException("Exactly 1 task must be configured")
-    return listOf(config).toMutableList()
+
+    val entities = Config.entitiesList(config)
+    val chunkSize = Math.ceil(entities.size / maxTasks * 1.0).toInt()
+
+    return entities
+      .chunked(chunkSize)
+      .map{ entitiesChunk -> Config.setEntitiesList(HashMap(config), entitiesChunk) }
+      .toMutableList()
+
   }
 
   override fun config(): ConfigDef = ConfigDef().apply {
@@ -43,6 +53,7 @@ class ParitySourceConnector : SourceConnector() {
     define(TOPIC_BLOCKS_CONFIG, ConfigDef.Type.STRING, TOPIC_BLOCKS_DEFAULT, ConfigDef.Importance.HIGH, TOPIC_BLOCKS_DOC)
     define(SCHEMA_REGISTRY_URL_CONFIG, ConfigDef.Type.STRING, SCHEMA_REGISTRY_URL_DEFAULT, ConfigDef.Importance.HIGH, SCHEMA_REGISTRY_URL_DOC)
     define(START_BLOCK_CONFIG, ConfigDef.Type.INT, START_BLOCK_DEFAULT, ConfigDef.Importance.LOW, START_BLOCK_DOC)
+    define(ENTITIES_LIST_CONFIG, ConfigDef.Type.LIST, ENTITIES_LIST_DEFAULT, ConfigDef.Importance.LOW, ENTITIES_LIST_DOC)
   }
 
   object Config {
@@ -63,6 +74,10 @@ class ParitySourceConnector : SourceConnector() {
     const val START_BLOCK_DEFAULT = 0
     const val START_BLOCK_DOC = "Specifies the starting block number from which to sync"
 
+    const val ENTITIES_LIST_CONFIG = "entities"
+    val ENTITIES_LIST_DEFAULT = listOf("blocksAndTransactions", "receipts", "traces").joinToString(",")
+    const val ENTITIES_LIST_DOC = "The list of entities to pull"
+
     fun name(props: MutableMap<String, String>) = props["name"]!!
 
     fun wsUrl(props: MutableMap<String, String>) = props.getOrDefault(WS_URL_CONFIG, WS_URL_DEFAULT)
@@ -71,7 +86,13 @@ class ParitySourceConnector : SourceConnector() {
 
     fun startBlockNumber(props: MutableMap<String, String>) = props.getOrDefault(START_BLOCK_CONFIG, START_BLOCK_DEFAULT.toString()).toBigInteger()
 
-    fun schemaRegistryUrl(props: MutableMap<String, String>) =
-      props.getOrDefault(SCHEMA_REGISTRY_URL_CONFIG, SCHEMA_REGISTRY_URL_DEFAULT)
+    fun entitiesList(props: MutableMap<String, String>) =
+      props.getOrDefault(ENTITIES_LIST_CONFIG, ENTITIES_LIST_DEFAULT).split(",")
+
+    fun setEntitiesList(props: MutableMap<String, String>, entities: List<String>): MutableMap<String, String> {
+      props[ENTITIES_LIST_CONFIG] = entities.joinToString(",")
+      return props
+    }
+
   }
 }

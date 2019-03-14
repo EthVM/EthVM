@@ -1,21 +1,20 @@
 package io.enkrypt.kafka.connect.sources.web3
 
-import io.confluent.connect.avro.AvroData
-import io.enkrypt.avro.capture.BlockKeyRecord
-import io.enkrypt.avro.capture.BlockRecord
-import io.enkrypt.common.extensions.unsignedBigInteger
+import io.enkrypt.kafka.connect.sources.web3.sources.ParityBlockAndTxSource
+import io.enkrypt.kafka.connect.sources.web3.sources.ParityEntitySource
+import io.enkrypt.kafka.connect.sources.web3.sources.ParityReceiptSource
+import io.enkrypt.kafka.connect.sources.web3.sources.ParityTracesSource
 import io.enkrypt.kafka.connect.utils.Versions
 import mu.KotlinLogging
-import org.apache.kafka.connect.data.Schema
 import org.apache.kafka.connect.errors.RetriableException
 import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTask
 import org.web3j.protocol.websocket.WebSocketService
 import java.io.IOException
+import java.lang.IllegalArgumentException
 import java.math.BigInteger
 import java.net.ConnectException
 import java.util.concurrent.ExecutionException
-import java.util.concurrent.TimeUnit
 
 class ParitySourceTask : SourceTask() {
 
@@ -24,21 +23,14 @@ class ParitySourceTask : SourceTask() {
   private lateinit var wsUrl: String
   private lateinit var blocksTopic: String
   private lateinit var startBlockNumber: BigInteger
-
-  private lateinit var avroData: AvroData
-
-  private lateinit var blockKeyConnectSchema: Schema
-  private lateinit var blockValueConnectSchema: Schema
+  private lateinit var entitiesList: List<String>
 
   private var connectDelayMs: Long? = null
 
   @Volatile
   private var parity: JsonRpc2_0ParityExtended? = null
 
-  @Volatile
-  private var blockSyncManager: ParityBlockSyncManager? = null
-
-  private lateinit var blockNumberOffset: BigInteger
+  private var entitySources = emptyList<ParityEntitySource>()
 
   override fun version(): String = Versions.CURRENT
 
@@ -46,11 +38,7 @@ class ParitySourceTask : SourceTask() {
 
     blocksTopic = ParitySourceConnector.Config.blocksTopic(props)
     startBlockNumber = ParitySourceConnector.Config.startBlockNumber(props)
-
-    avroData = AvroData(10)
-
-    blockKeyConnectSchema = avroData.toConnectSchema(BlockKeyRecord.`SCHEMA$`)
-    blockValueConnectSchema = avroData.toConnectSchema(BlockRecord.`SCHEMA$`)
+    entitiesList = ParitySourceConnector.Config.entitiesList(props)
 
     logger.info { "Start block number: $startBlockNumber" }
 
@@ -63,8 +51,8 @@ class ParitySourceTask : SourceTask() {
 
       if (parity != null) return
 
-      // stop any previous syncing
-      blockSyncManager?.stop()
+      // stop any previous sources
+      entitySources.forEach{ it.stop() }
 
       // reconnect backoff if necessary
 
@@ -82,10 +70,16 @@ class ParitySourceTask : SourceTask() {
 
       parity = JsonRpc2_0ParityExtended(wsService)
 
-      val blockNumberOffset = blockNumberOffset()
-      this.blockNumberOffset = blockNumberOffset
+      // create sources
 
-      blockSyncManager = ParityBlockSyncManager(parity!!, blockNumberOffset)
+      entitySources = entitiesList.map {
+        when(it) {
+          "blocksAndTransactions" -> ParityBlockAndTxSource(this.context, parity!!, "blocks", "transactions", "canonical-chain")
+          "receipts" -> ParityReceiptSource(this.context, parity!!, "receipts")
+          "traces" -> ParityTracesSource(this.context, parity!!, "block-traces", "transaction-traces")
+          else -> throw IllegalArgumentException("Unexpected entity: $it")
+        }
+      }
 
       // reset reconnect logic
       connectDelayMs = null
@@ -111,31 +105,10 @@ class ParitySourceTask : SourceTask() {
     throw RetriableException(ex)
   }
 
-  private fun blockNumberOffset(): BigInteger {
-
-    val sourcePartition = context
-      .offsetStorageReader()
-      .offset(mapOf("wsUrl" to wsUrl)) ?: return startBlockNumber
-
-    val number = sourcePartition["number"]
-
-    return when (number) {
-      null -> startBlockNumber
-      is Long -> {
-
-        // we deduct some blocks in case a fork happened whilst the connector was offline
-
-        val numberMinusForkProtection = number - 1024
-        if (numberMinusForkProtection < 0) BigInteger.ZERO else number.toBigInteger()
-      }
-      else -> throw IllegalStateException("Unexpected value returned: $number")
-    }
-  }
-
   override fun stop() {
     logger.debug { "Stopping" }
 
-    blockSyncManager?.stop()
+    entitySources.forEach{ it.stop() }
 
     parity?.shutdown()
     parity = null
@@ -152,32 +125,20 @@ class ParitySourceTask : SourceTask() {
       // ensure we are connected or re-connect if necessary
       ensureConnection()
 
-      val blockRecords = blockSyncManager!!.poll(5, TimeUnit.SECONDS)
-
-      val sourceRecords = blockRecords
-        .map { record ->
-
-          val key = avroData.toConnectData(
-            BlockKeyRecord.`SCHEMA$`,
-            BlockKeyRecord.newBuilder()
-              .setNumber(record.getHeader().getNumber())
-              .build()
-          ).value()
-
-          val source = mapOf("wsUrl" to wsUrl)
-          val offset = mapOf("number" to record.getHeader().getNumber().unsignedBigInteger()!!.longValueExact())
-
-          val value = avroData.toConnectData(BlockRecord.`SCHEMA$`, record).value()
-
-          SourceRecord(source, offset, blocksTopic, blockKeyConnectSchema, key, blockValueConnectSchema, value)
-        }
+      val sourceRecords = entitySources
+        .map{ source -> source.poll() }
+        .flatten()
 
       logger.debug { "Polled ${sourceRecords.size} records" }
 
+
+
       return sourceRecords.toMutableList()
+
     } catch (ex: Exception) {
 
-      blockSyncManager?.stop()
+      logger.error(ex){ "Exception detected" }
+
       parity?.shutdown()
       parity = null
 

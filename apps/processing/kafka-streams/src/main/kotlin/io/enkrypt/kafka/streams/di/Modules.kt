@@ -2,7 +2,6 @@ package io.enkrypt.kafka.streams.di
 
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
 import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient
-import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.processing.ContractCreateRecord
 import io.enkrypt.avro.processing.ContractDestroyRecord
@@ -31,8 +30,6 @@ object Modules {
         true -> MockSchemaRegistryClient().apply {
 
           val subjectsWithSchemas = listOf(
-            Pair(Topics.Blocks, BlockRecord.`SCHEMA$`),
-            Pair("${Topics.Blocks}-key", BlockKeyRecord.`SCHEMA$`),
 
             Pair(Topics.FungibleTokenMovements, TokenBalanceRecord.`SCHEMA$`),
             Pair("${Topics.FungibleTokenMovements}-key", TokenBalanceKeyRecord.`SCHEMA$`),

@@ -5,15 +5,19 @@ import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
 import io.enkrypt.avro.capture.BlockHeaderRecord
 import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
+import io.enkrypt.avro.capture.CanonicalKeyRecord
+import io.enkrypt.avro.capture.CanonicalRecord
+import io.enkrypt.avro.capture.CompositeKeyRecord
+import io.enkrypt.avro.capture.TraceListRecord
 import io.enkrypt.avro.capture.TransactionKeyRecord
 import io.enkrypt.avro.capture.TransactionRecord
-import io.enkrypt.avro.capture.UncleKeyRecord
 import io.enkrypt.avro.exchange.ExchangeRateRecord
 import io.enkrypt.avro.exchange.SymbolKeyRecord
 import io.enkrypt.avro.processing.AddressMetadataKeyRecord
 import io.enkrypt.avro.processing.AddressMetadataRecord
 import io.enkrypt.avro.processing.BlockChainEventsRecord
 import io.enkrypt.avro.processing.BlockMetricsRecord
+import io.enkrypt.avro.processing.CanonicalApplyRecord
 import io.enkrypt.avro.processing.ChainEventRecord
 import io.enkrypt.avro.processing.ContractCreateRecord
 import io.enkrypt.avro.processing.ContractDestroyRecord
@@ -25,6 +29,7 @@ import io.enkrypt.avro.processing.ReorgKeyRecord
 import io.enkrypt.avro.processing.TokenBalanceKeyRecord
 import io.enkrypt.avro.processing.TokenBalanceRecord
 import io.enkrypt.avro.processing.TokenTransferKeyRecord
+import io.enkrypt.avro.processing.TokenTransferListRecord
 import io.enkrypt.avro.processing.TokenTransferRecord
 import io.enkrypt.avro.tokens.EthTokenListsKeyRecord
 import io.enkrypt.kafka.streams.config.KafkaConfig
@@ -41,8 +46,32 @@ object Serdes : KoinComponent {
     "schema.registry.url" to kafkaConfig.schemaRegistryUrl
   )
 
+  fun CompositeKey() = SpecificAvroSerde<CompositeKeyRecord>(registryClient).apply {
+    configure(config, true)
+  }
+
+  fun CanonicalKey() = SpecificAvroSerde<CanonicalKeyRecord>(registryClient).apply {
+    configure(config, true)
+  }
+
   fun BlockKey() = SpecificAvroSerde<BlockKeyRecord>(registryClient).apply {
     configure(config, true)
+  }
+
+  fun TransactionKey() = SpecificAvroSerde<TransactionKeyRecord>(registryClient).apply {
+    configure(config, true)
+  }
+
+  fun Canonical() = SpecificAvroSerde<CanonicalRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun CanonicalApply() = SpecificAvroSerde<CanonicalApplyRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun TraceList() = SpecificAvroSerde<TraceListRecord>(registryClient).apply {
+    configure(config, false)
   }
 
   fun Block() = SpecificAvroSerde<BlockRecord>(registryClient).apply {
@@ -54,6 +83,10 @@ object Serdes : KoinComponent {
   }
 
   fun TokenTransfer() = SpecificAvroSerde<TokenTransferRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun TokenTransferList() = SpecificAvroSerde<TokenTransferListRecord>(registryClient).apply {
     configure(config, false)
   }
 
@@ -105,16 +138,8 @@ object Serdes : KoinComponent {
     configure(config, false)
   }
 
-  fun TransactionKey() = SpecificAvroSerde<TransactionKeyRecord>(registryClient).apply {
-    configure(config, true)
-  }
-
   fun Transaction() = SpecificAvroSerde<TransactionRecord>(registryClient).apply {
     configure(config, false)
-  }
-
-  fun UncleKey() = SpecificAvroSerde<UncleKeyRecord>(registryClient).apply {
-    configure(config, true)
   }
 
   fun BlockHeader() = SpecificAvroSerde<BlockHeaderRecord>(registryClient).apply {
