@@ -215,7 +215,7 @@ export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
 
   get text(): string {
     const mesg = [this.$i18n.t('message.tx.no-all'), this.$i18n.t('message.tx.no-in'), this.$i18n.t('message.tx.no-out')]
-    const penMesg = [this.$i18n.t('message.tx.no.pen'), this.$i18n.t('message.tx.no-pen-in'), this.$i18n.t('message.tx.no-pen-out')]
+    const penMesg = [this.$i18n.t('message.tx.no-pen'), this.$i18n.t('message.tx.no-pen-in'), this.$i18n.t('message.tx.no-pen-out')]
     if (!this.type) {
       return mesg[this.filter].toString()
     }
