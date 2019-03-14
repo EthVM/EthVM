@@ -194,10 +194,6 @@ export abstract class IQuery {
 
     abstract balanceByHash(hash: string): Balance | Promise<Balance>;
 
-    abstract blockMetricByHash(hash?: string): BlockMetric | Promise<BlockMetric>;
-
-    abstract blockMetrics(limit?: number, page?: number): BlockMetric[] | Promise<BlockMetric[]>;
-
     abstract blocks(limit?: number, page?: number): Block[] | Promise<Block[]>;
 
     abstract blockByHash(hash?: string): Block | Promise<Block>;
@@ -207,6 +203,10 @@ export abstract class IQuery {
     abstract minedBlocksByAddress(address?: string, limit?: number, page?: number): Block[] | Promise<Block[]>;
 
     abstract totalNumberOfBlocks(): number | Promise<number>;
+
+    abstract blockMetricByHash(hash?: string): BlockMetric | Promise<BlockMetric>;
+
+    abstract blockMetrics(limit?: number, page?: number): BlockMetric[] | Promise<BlockMetric[]>;
 
     abstract contractByHash(hash?: string): Contract | Promise<Contract>;
 
@@ -250,10 +250,6 @@ export abstract class IQuery {
 
     abstract averageHashRate(duration: Duration): Statistic[] | Promise<Statistic[]>;
 
-    abstract addressTokenTransfers(address: string, limit?: number, page?: number): TokenTransfer[] | Promise<TokenTransfer[]>;
-
-    abstract addressTokenTransfersByHolder(address: string, holder: string, filter?: string, limit?: number, page?: number): TokenTransfer[] | Promise<TokenTransfer[]>;
-
     abstract tx(hash: string): Transaction | Promise<Transaction>;
 
     abstract txs(limit?: number, order?: string, fromBlock?: number): Transaction[] | Promise<Transaction[]>;
@@ -263,6 +259,10 @@ export abstract class IQuery {
     abstract txsForAddress(hash: string, filter?: string, limit?: number, page?: number): Transaction[] | Promise<Transaction[]>;
 
     abstract totalNumberOfTransactions(): number | Promise<number>;
+
+    abstract addressTokenTransfers(address: string, limit?: number, page?: number): TokenTransfer[] | Promise<TokenTransfer[]>;
+
+    abstract addressTokenTransfersByHolder(address: string, holder: string, filter?: string, limit?: number, page?: number): TokenTransfer[] | Promise<TokenTransfer[]>;
 
     abstract uncleByHash(hash: string): Uncle | Promise<Uncle>;
 
