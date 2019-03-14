@@ -6,6 +6,14 @@ module.exports = {
       args[0].hash = true
       return args
     })
+
+    // GraphQL Loader
+    config.module
+      .rule('graphql')
+      .test(/\.graphql$/)
+      .use('graphql-tag/loader')
+      .loader('graphql-tag/loader')
+      .end()
   },
   configureWebpack: {
     resolve: {

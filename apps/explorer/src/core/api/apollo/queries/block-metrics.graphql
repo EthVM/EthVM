@@ -1,0 +1,37 @@
+query blockMetricByHash($hash: String) {
+  blockMetricByHash(hash: $hash) {
+    avgGasLimit
+    avgGasPrice
+    avgTxFees
+    blockTime
+    difficulty
+    hash
+    number
+    numFailedTxs
+    numPendingTxs
+    numSuccessfulTxs
+    numUncles
+    timestamp
+    totalDifficulty
+    totalTxs
+  }
+}
+
+query blockMetrics($limit: Int, $page: Int) {
+  blockMetrics(limit: $limit, page: $page) {
+    avgGasLimit
+    avgGasPrice
+    avgTxFees
+    blockTime
+    difficulty
+    hash
+    number
+    numFailedTxs
+    numPendingTxs
+    numSuccessfulTxs
+    numUncles
+    timestamp
+    totalDifficulty
+    totalTxs
+  }
+}

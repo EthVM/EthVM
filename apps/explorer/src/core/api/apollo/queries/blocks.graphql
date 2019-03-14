@@ -1,0 +1,125 @@
+query blockByHash($hash: String) {
+  blockByHash(hash: $hash) {
+    header {
+      number
+      hash
+      parentHash
+      nonce
+      sha3Uncles
+      logsBloom
+      transactionsRoot
+      stateRoot
+      receiptsRoot
+      author
+      difficulty
+      extraData
+      gasLimit
+      gasUsed
+      timestamp
+      size
+    }
+    totalDifficulty
+    transactions {
+      blockHash
+      blockNumber
+      creates
+      from
+      gas
+      gasPrice
+      hash
+      timestamp
+      to
+      transactionIndex
+      value
+      receipt {
+        contractAddress
+        gasUsed
+        status
+        traces {
+          error
+        }
+      }
+    }
+    uncles {
+      hash
+    }
+    rewards {
+      author
+      rewardType
+      value
+    }
+  }
+}
+query blockByNumber($number: Int) {
+  blockByNumber(number: $number) {
+    header {
+      number
+      hash
+      parentHash
+      nonce
+      sha3Uncles
+      logsBloom
+      transactionsRoot
+      stateRoot
+      receiptsRoot
+      author
+      difficulty
+      extraData
+      gasLimit
+      gasUsed
+      timestamp
+      size
+    }
+    totalDifficulty
+    transactions {
+      blockHash
+      blockNumber
+      creates
+      from
+      gas
+      gasPrice
+      hash
+      timestamp
+      to
+      transactionIndex
+      value
+      receipt {
+        contractAddress
+        gasUsed
+        status
+        traces {
+          error
+        }
+      }
+    }
+    uncles {
+      hash
+    }
+    rewards {
+      author
+      rewardType
+      value
+    }
+  }
+}
+
+query minedBlocksByAddress($address: String, $limit: Int, $page: Int) {
+  minedBlocksByAddress(address: $address, limit: $limit, page: $page) {
+    header {
+      hash
+      number
+      author
+    }
+    uncles {
+      hash
+    }
+    rewards {
+      rewardType
+      value
+    }
+  }
+}
+
+query totalNumberOfBlocks {
+  totalNumberOfBlocks
+}

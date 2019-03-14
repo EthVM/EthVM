@@ -96,7 +96,7 @@
 </template>
 
 <script lang="ts">
-import { Block, EthValue, Tx, PendingTx } from '@app/core/models'
+import { Block, EthValue, Tx, PendingTx, SimpleBlock } from '@app/core/models'
 import { Contract } from 'ethvm-common'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
@@ -325,7 +325,7 @@ export default class PageDetailsAddress extends Vue {
     return this.$api.getPendingTxsOfAddress(this.addressRef, filter, limit, page)
   }
 
-  fetchMinedBlocks(page = this.minedPage, limit = MAX_ITEMS): Promise<Block[]> {
+  fetchMinedBlocks(page = this.minedPage, limit = MAX_ITEMS): Promise<SimpleBlock[]> {
     return this.$api.getBlocksMinedOfAddress(this.addressRef, limit, page)
   }
 

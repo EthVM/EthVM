@@ -1,4 +1,9 @@
 import { EthvmApi } from '@app/core/api'
+import { accountMetadataByHash, addressBalanceByHash } from '@app/core/api/apollo/queries/addresses.graphql'
+import { blockMetricByHash, blockMetrics } from '@app/core/api/apollo/queries/block-metrics.graphql'
+import { blockByHash, blockByNumber, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
+import { tx, txsForAddress, totalNumberOfTransactions } from '@app/core/api/apollo/queries/txs.graphql'
+import { processingMetadataById } from '@app/core/api/apollo/queries/processing-metadata.graphql'
 import { Block, PendingTx, SimpleBlock, SimpleTx, Tx, Uncle } from '@app/core/models'
 import { ApolloClient } from 'apollo-boost'
 import {
@@ -25,15 +30,7 @@ export class EthvmApolloApi implements EthvmApi {
   public getAddressBalance(address: string): Promise<AddressBalance> {
     return this.apollo
       .query({
-        query: gql`
-          query balanceByHash(address: String!) {
-            balanceByHash(hash: $address) {
-              id
-              address
-              amount
-            }
-          }
-        `,
+        query: addressBalanceByHash,
         variables: {
           address: address.replace('0x', '')
         }
@@ -44,18 +41,7 @@ export class EthvmApolloApi implements EthvmApi {
   public getAddressMetadata(address: string): Promise<AddressMetadata> {
     return this.apollo
       .query({
-        query: gql`
-          query accountMetadataByHash(address: String!) {
-            accountMetadataByHash(hash: $address) {
-              id
-              inTxCount
-              isContractCreator
-              isMiner
-              outTxCount
-              totalTxCount
-            }
-          }
-        `,
+        query: accountMetadataByHash,
         variables: {
           address: address.replace('0x', '')
         }
@@ -86,60 +72,7 @@ export class EthvmApolloApi implements EthvmApi {
   public getBlock(hash: string): Promise<Block> {
     return this.apollo
       .query({
-        query: gql`
-          query block($hash: String) {
-            blockByHash(hash: $hash) {
-              header {
-                number
-                hash
-                parentHash
-                nonce
-                sha3Uncles
-                logsBloom
-                transactionsRoot
-                stateRoot
-                receiptsRoot
-                author
-                difficulty
-                extraData
-                gasLimit
-                gasUsed
-                timestamp
-                size
-              }
-              totalDifficulty
-              transactions {
-                blockHash
-                blockNumber
-                creates
-                from
-                gas
-                gasPrice
-                hash
-                timestamp
-                to
-                transactionIndex
-                value
-                receipt {
-                  contractAddress
-                  gasUsed
-                  status
-                  traces {
-                    error
-                  }
-                }
-              }
-              uncles {
-                hash
-              }
-              rewards {
-                author
-                rewardType
-                value
-              }
-            }
-          }
-        `,
+        query: blockByHash,
         variables: {
           hash: hash.replace('0x', '')
         }
@@ -154,60 +87,7 @@ export class EthvmApolloApi implements EthvmApi {
   public getBlockByNumber(no: number): Promise<Block> {
     return this.apollo
       .query({
-        query: gql`
-          query block($number: Int) {
-            blockByNumber(number: $number) {
-              header {
-                number
-                hash
-                parentHash
-                nonce
-                sha3Uncles
-                logsBloom
-                transactionsRoot
-                stateRoot
-                receiptsRoot
-                author
-                difficulty
-                extraData
-                gasLimit
-                gasUsed
-                timestamp
-                size
-              }
-              totalDifficulty
-              transactions {
-                blockHash
-                blockNumber
-                creates
-                from
-                gas
-                gasPrice
-                hash
-                timestamp
-                to
-                transactionIndex
-                value
-                receipt {
-                  contractAddress
-                  gasUsed
-                  status
-                  traces {
-                    error
-                  }
-                }
-              }
-              uncles {
-                hash
-              }
-              rewards {
-                author
-                rewardType
-                value
-              }
-            }
-          }
-        `,
+        query: blockByNumber,
         variables: {
           number: no
         }
@@ -218,24 +98,7 @@ export class EthvmApolloApi implements EthvmApi {
   public getBlocksMinedOfAddress(address: string, limit: number, page: number): Promise<SimpleBlock[]> {
     return this.apollo
       .query({
-        query: gql`
-          query blocks($address: String, limit: $number, page: $number) {
-            minedBlocksByAddress(address: $address, limit: $limit, page: $page) {
-              header {
-                hash
-                number
-                author
-              }
-              uncles {
-                hash
-              }
-              rewards {
-                rewardType
-                value
-              }
-            }
-          }
-        `,
+        query: minedBlocksByAddress,
         variables: {
           address,
           limit,
@@ -248,7 +111,7 @@ export class EthvmApolloApi implements EthvmApi {
   public getTotalNumberOfBlocks(): Promise<number> {
     return this.apollo
       .query({
-        query: gql`totalNumberOfBlocks`
+        query: totalNumberOfBlocks
       })
       .then(res => res.data.totalNumberOfBlocks as number)
   }
@@ -260,26 +123,7 @@ export class EthvmApolloApi implements EthvmApi {
   public getBlockMetric(hash: string): Promise<BlockMetrics> {
     return this.apollo
       .query({
-        query: gql`
-          query blockMetric($hash: String) {
-            blockMetricByHash(hash: $hash) {
-              avgGasLimit
-              avgGasPrice
-              avgTxFees
-              blockTime
-              difficulty
-              hash
-              number
-              numFailedTxs
-              numPendingTxs
-              numSuccessfulTxs
-              numUncles
-              timestamp
-              totalDifficulty
-              totalTxs
-            }
-          }
-        `,
+        query: blockMetricByHash,
         variables: {
           hash: hash.replace('0x', '')
         }
@@ -290,26 +134,7 @@ export class EthvmApolloApi implements EthvmApi {
   public getBlockMetrics(limit: number, page: number): Promise<BlockMetrics[]> {
     return this.apollo
       .query({
-        query: gql`
-          query blockMetrics($limit: Int, $page: Int) {
-            blockMetrics(limit: $limit, page: $page) {
-              avgGasLimit
-              avgGasPrice
-              avgTxFees
-              blockTime
-              difficulty
-              hash
-              number
-              numFailedTxs
-              numPendingTxs
-              numSuccessfulTxs
-              numUncles
-              timestamp
-              totalDifficulty
-              totalTxs
-            }
-          }
-        `,
+        query: blockMetrics,
         variables: {
           limit,
           page
@@ -381,63 +206,7 @@ export class EthvmApolloApi implements EthvmApi {
   public getTx(hash: string): Promise<Tx> {
     return this.apollo
       .query({
-        query: gql`
-          query tx(hash: String) {
-            tx(hash: $hash) {
-              blockHash
-              blockNumber
-              creates
-              from
-              gas
-              gasPrice
-              hash
-              input
-              nonce
-              r
-              s
-              timestamp
-              to
-              transactionIndex
-              v
-              value
-              receipt {
-                blockHash
-                blockNumber
-                contractAddress
-                cumulativeGasUsed
-                gasUsed
-                logsBloom
-                numInternalTxs
-                root
-                status
-                transactionHash
-                transactionIndex
-                logs {
-                  address
-                  data
-                  topics
-                }
-                traces {
-                  blockHash
-                  blockNumber
-                  error
-                  subtraces
-                  traceAddress
-                  transactionHash
-                  transactionPosition
-                  type
-                  action
-                  result {
-                    address
-                    code
-                    gasUsed
-                    output
-                  }
-                }
-              }
-            }
-          }
-        `,
+        query: tx,
         variables: {
           hash: hash.replace('0x', '')
         }
@@ -452,63 +221,7 @@ export class EthvmApolloApi implements EthvmApi {
   public getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<Tx[]> {
     return this.apollo
       .query({
-        query: gql`
-          query txsForAddress(hash: String!, filter: String, limit: Int, page: Int) {
-            tx(hash: $hash, filter: $filter, limit: $limit, page: $page) {
-              blockHash
-              blockNumber
-              creates
-              from
-              gas
-              gasPrice
-              hash
-              input
-              nonce
-              r
-              s
-              timestamp
-              to
-              transactionIndex
-              v
-              value
-              receipt {
-                blockHash
-                blockNumber
-                contractAddress
-                cumulativeGasUsed
-                gasUsed
-                logsBloom
-                numInternalTxs
-                root
-                status
-                transactionHash
-                transactionIndex
-                logs {
-                  address
-                  data
-                  topics
-                }
-                traces {
-                  blockHash
-                  blockNumber
-                  error
-                  subtraces
-                  traceAddress
-                  transactionHash
-                  transactionPosition
-                  type
-                  action
-                  result {
-                    address
-                    code
-                    gasUsed
-                    output
-                  }
-                }
-              }
-            }
-          }
-        `,
+        query: txsForAddress,
         variables: {
           hash: hash ? hash.replace('0x', '') : '',
           filter,
@@ -522,7 +235,7 @@ export class EthvmApolloApi implements EthvmApi {
   public getTotalNumberOfTxs(): Promise<number> {
     return this.apollo
       .query({
-        query: gql`totalNumberOfTransactions`
+        query: totalNumberOfTransactions
       })
       .then(res => res.data.totalNumberOfTransactions as number)
   }
@@ -598,13 +311,7 @@ export class EthvmApolloApi implements EthvmApi {
   public getProcessingMetadata(id: string): Promise<ProcessingMetadata> {
     return this.apollo
       .query({
-        query: gql`
-          query processingMetadataById($id: String!) {
-            processingMetadataById(id: $id) {
-              id
-            }
-          }
-        `,
+        query: processingMetadataById,
         variables: {
           id
         }

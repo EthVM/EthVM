@@ -1,0 +1,115 @@
+query tx($hash: String) {
+  tx(hash: $hash) {
+    blockHash
+    blockNumber
+    creates
+    from
+    gas
+    gasPrice
+    hash
+    input
+    nonce
+    r
+    s
+    timestamp
+    to
+    transactionIndex
+    v
+    value
+    receipt {
+      blockHash
+      blockNumber
+      contractAddress
+      cumulativeGasUsed
+      gasUsed
+      logsBloom
+      numInternalTxs
+      root
+      status
+      transactionHash
+      transactionIndex
+      logs {
+        address
+        data
+        topics
+      }
+      traces {
+        blockHash
+        blockNumber
+        error
+        subtraces
+        traceAddress
+        transactionHash
+        transactionPosition
+        type
+        action
+        result {
+          address
+          code
+          gasUsed
+          output
+        }
+      }
+    }
+  }
+}
+
+query txsForAddress($hash: String!, $filter: String, $limit: Int, $page: Int) {
+  txsForAddress(hash: $hash, filter: $filter, limit: $limit, page: $page) {
+    blockHash
+    blockNumber
+    creates
+    from
+    gas
+    gasPrice
+    hash
+    input
+    nonce
+    r
+    s
+    timestamp
+    to
+    transactionIndex
+    v
+    value
+    receipt {
+      blockHash
+      blockNumber
+      contractAddress
+      cumulativeGasUsed
+      gasUsed
+      logsBloom
+      numInternalTxs
+      root
+      status
+      transactionHash
+      transactionIndex
+      logs {
+        address
+        data
+        topics
+      }
+      traces {
+        blockHash
+        blockNumber
+        error
+        subtraces
+        traceAddress
+        transactionHash
+        transactionPosition
+        type
+        action
+        result {
+          address
+          code
+          gasUsed
+          output
+        }
+      }
+    }
+  }
+}
+
+query totalNumberOfTransactions {
+  totalNumberOfTransactions
+}
