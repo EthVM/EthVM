@@ -20,13 +20,13 @@
             </v-flex>
           </v-layout>
           <a href="/about">
-            <v-card-text class="pt-0 pb-3 black--text">{{ $t('title.about') }}</v-card-text>
+            <v-card-text class="pt-0 pb-3 black--text">{{ $t('about.name') }}</v-card-text>
           </a>
           <a href="/privacy_policy">
-            <v-card-text class="pt-0 pb-3 black--text">{{ $t('footer.privPolicy') }}</v-card-text>
+            <v-card-text class="pt-0 pb-3 black--text">{{ $t('pp.name') }}</v-card-text>
           </a>
           <a href="/knowledge_base">
-            <v-card-text class="pt-0 pb-3 black--text">{{ $t('title.kb') }}</v-card-text>
+            <v-card-text class="pt-0 pb-3 black--text">{{ $t('kb.name') }}</v-card-text>
           </a>
         </v-card>
       </v-flex>
@@ -55,7 +55,7 @@
             </v-btn>
             <v-layout reverse>
               <app-copy-to-clip :value-to-copy="ethAddr"></app-copy-to-clip>
-              <v-card-text class="pl-0 secondary--text">{{ $t('footer.copyEthAddress') }}</v-card-text>
+              <v-card-text class="pl-0 secondary--text">{{ $t('footer.copy-eth-addr') }}</v-card-text>
             </v-layout>
           </v-layout>
           <v-layout row wrap justify-start>
@@ -70,7 +70,7 @@
             </v-btn>
             <v-layout reverse>
               <app-copy-to-clip :value-to-copy="btcAddr"></app-copy-to-clip>
-              <v-card-text class="pl-0 secondary--text">{{ $t('footer.copyBtcAddress') }}</v-card-text>
+              <v-card-text class="pl-0 secondary--text">{{ $t('footer.copy-btc-addr') }}</v-card-text>
             </v-layout>
           </v-layout>
         </v-card>
