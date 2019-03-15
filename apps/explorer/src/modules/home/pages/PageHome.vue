@@ -100,7 +100,7 @@ export default class PageHome extends Vue {
         this.$store.commit(Events.NEW_TX, res)
       },
       err => {
-        this.errorTableTxs = this.$i18n.t('message.error').toString()
+        this.errorTableTxs = this.$i18n.t('message.no-data').toString()
       }
     )
   }
@@ -111,7 +111,7 @@ export default class PageHome extends Vue {
         this.$store.commit(Events.NEW_SIMPLE_BLOCK, res)
       },
       err => {
-        this.errorTableBlocks = this.$i18n.t('message.error').toString()
+        this.errorTableBlocks = this.$i18n.t('message.no-data').toString()
       }
     )
   }
