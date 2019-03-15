@@ -2,6 +2,10 @@ import { Args, Query, Resolver, Subscription } from '@nestjs/graphql'
 import { BlockService } from '@app/modules/blocks/block.service'
 import { PubSub } from 'graphql-subscriptions'
 import { BlockDto } from '@app/modules/blocks/block.dto'
+import { ParseHashPipe } from '@app/shared/validation/parse-hash.pipe'
+import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
+import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe'
+import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
 
 const pubSub = new PubSub()
 
@@ -10,13 +14,13 @@ export class BlockResolvers {
   constructor(private readonly blockService: BlockService) {}
 
   @Query()
-  async blocks(@Args('page') page: number, @Args('limit') limit: number) {
+  async blocks(@Args('page', ParsePagePipe) page: number, @Args('limit', ParseLimitPipe) limit: number) {
     const entities = await this.blockService.findBlocks(limit, page)
     return entities.map(e => new BlockDto(e))
   }
 
   @Query()
-  async blockByHash(@Args('hash') hash: string) {
+  async blockByHash(@Args('hash', ParseHashPipe) hash: string) {
     const entity = await this.blockService.findBlockByHash(hash)
     return entity ? new BlockDto(entity) : null
   }
@@ -28,7 +32,11 @@ export class BlockResolvers {
   }
 
   @Query()
-  async minedBlocksByAddress(@Args('address') address: string, @Args('limit') limit: number, @Args('page') page: number) {
+  async minedBlocksByAddress(
+    @Args('address', ParseAddressPipe) address: string,
+    @Args('limit', ParseLimitPipe) limit: number,
+    @Args('page', ParsePagePipe) page: number
+  ) {
     const entities = await this.blockService.findMinedBlocksByAddress(address, limit, page)
     return entities.map(e => new BlockDto(e))
   }

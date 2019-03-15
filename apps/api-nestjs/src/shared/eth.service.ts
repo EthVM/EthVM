@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common'
 
+const MAX_PAGE_SIZE = 100
+
 @Injectable()
 export class EthService {
   isValidAddress(address: string): boolean {
-    return /^0x[0-9a-fA-F]{40}$/.test(address)
+    return /^(0x)?([0-9a-fA-F]{40})$/.test(address)
   }
 
   isValidHash(hash: string): boolean {
@@ -22,4 +24,11 @@ export class EthService {
     return hash.startsWith('0x') ? hash.replace('0x', '') : hash
   }
 
+  isValidPageSize(page: number): boolean {
+    return page >= 0
+  }
+
+  isValidLimitSize(limit: number): boolean {
+    return limit >= 1 && limit <= MAX_PAGE_SIZE
+  }
 }

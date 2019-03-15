@@ -15,7 +15,6 @@ export enum Duration {
 
 @Injectable()
 export class DurationService {
-
   public durationToDates(duration: Duration): StartEndInterface {
     const to = new Date()
     // Always at the end of the day

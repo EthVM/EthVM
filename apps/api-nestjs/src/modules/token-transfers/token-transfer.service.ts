@@ -23,7 +23,7 @@ export class TokenTransferService {
   async findAddressTokenTransfersByHolder(
     address: string,
     holder: string,
-    filter?: string,
+    filter: string = 'all',
     take: number = 10,
     page: number = 0
   ): Promise<TokenTransferEntity[]> {

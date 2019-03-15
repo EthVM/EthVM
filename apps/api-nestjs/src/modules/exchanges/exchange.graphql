@@ -1,5 +1,5 @@
 type Query {
-  quote(token: String!, to: String!): Quote
+  quote(token: ExchangeFrom!, to: ExchangeTo!): Quote
   tokenExchangeRates(filter: TokenExchangeRateFilter!, limit: Int, page: Int): [TokenExchangeRate]!
   totalNumTokenExchangeRates: Int!
   tokenExchangeRateBySymbol(symbol: String!): TokenExchangeRate
@@ -11,6 +11,14 @@ type Quote {
   price: String
   last_update: Decimal
   vol_24h: String
+}
+
+enum ExchangeTo {
+  USD
+}
+
+enum ExchangeFrom {
+  ETH
 }
 
 type TokenExchangeRate {
