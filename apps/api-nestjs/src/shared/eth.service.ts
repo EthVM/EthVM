@@ -24,7 +24,11 @@ export class EthService {
     return hash.startsWith('0x') ? hash.replace('0x', '') : hash
   }
 
-  isValidPageSize(limit: number): boolean {
-    return limit <= MAX_PAGE_SIZE
+  isValidPageSize(page: number): boolean {
+    return page >= 0
+  }
+
+  isValidLimitSize(limit: number): boolean {
+    return limit >= 1 && limit <= MAX_PAGE_SIZE
   }
 }

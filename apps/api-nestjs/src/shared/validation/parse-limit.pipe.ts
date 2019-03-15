@@ -8,8 +8,8 @@ export class ParseLimitPipe implements PipeTransform<number, number> {
   transform(value: number, metadata: ArgumentMetadata): number {
     if (!value) return 10
 
-    if (!this.ethService.isValidPageSize(value)) {
-      throw new BadRequestException('Invalid limit. Exceeds max page size.')
+    if (!this.ethService.isValidLimitSize(value)) {
+      throw new BadRequestException('Invalid limit. Must be greater than 0 and less than 100.')
     }
 
     return value
