@@ -26,7 +26,8 @@
     "height": "Uncle Height #",
     "uncle-position": "Uncle Position",
     "position": "Position",
-    "reward": "Uncle Reward"
+    "reward": "Uncle Reward",
+    "included": "Included in Block #"
   },
 
   "tx": {
@@ -162,7 +163,8 @@
       "block": "This is not a valid block hash",
       "addr": "This is not a valid address hash",
       "token": "This is not a valid token address",
-      "contract": "This is not a valid contract address"
+      "contract": "This is not a valid contract address",
+      "uncle": "This is not a valid uncle hash"
     },
     "sync": {
       "main": "We are synchronizing with the Blockchain. Some features might not work correctly.",
