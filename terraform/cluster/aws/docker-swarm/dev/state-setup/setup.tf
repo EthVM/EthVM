@@ -1,11 +1,11 @@
 provider "aws" {
-  region                  = "us-west-2"
-  shared_credentials_file = "~/.aws/credentials"
-  profile                 = "ethvm-terraform"
+  region                  = "${var.region}"
+  shared_credentials_file = "${var.shared_credentials_file}"
+  profile                 = "${var.aws_profile}"
 }
 
 resource "aws_s3_bucket" "terraform-state-storage-s3" {
-  bucket = "ethvm-terraform-remote"
+  bucket = "${var.terraform_state_storage_s3}"
 
   versioning {
     enabled = true
@@ -21,7 +21,7 @@ resource "aws_s3_bucket" "terraform-state-storage-s3" {
 }
 
 resource "aws_dynamodb_table" "dynamodb-terraform-state-lock" {
-  name           = "terraform-state-lock-dynamo"
+  name           = "${var.dynamodb_terraform_state_lock}"
   hash_key       = "LockID"
   read_capacity  = 20
   write_capacity = 20
