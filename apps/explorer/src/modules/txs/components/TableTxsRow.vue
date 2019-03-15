@@ -39,7 +39,7 @@
               </p>
               <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
               <p class="text-truncate info--text font-weight-thin mb-0" v-if="!tx.getContractAddress().isEmpty()">
-                {{ $t('tx.contract') }}:
+                {{ $tc('contract.name',1) }}:
                 <router-link class="secondary--text font-mono font-italic font-weight-regular" :to="'/address/' + tx.getContractAddress().toString()">{{
                   tx.getContractAddress().toString()
                 }}</router-link>
@@ -66,7 +66,7 @@
       -->
       <v-flex d-flex xs12 sm2 md1 pr-0>
         <p v-if="$vuetify.breakpoint.xsOnly" :class="[tx.getStatus() ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">
-          {{ $t('tx.amount') }}: {{ getRoundNumber(tx.getValue().toEth()) }}
+          {{ $t('common.amount') }}: {{ getRoundNumber(tx.getValue().toEth()) }}
         </p>
         <p v-else :class="[tx.getStatus() ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">
           {{

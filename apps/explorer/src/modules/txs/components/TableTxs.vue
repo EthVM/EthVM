@@ -16,7 +16,7 @@
       </v-flex>
       <v-flex xs6 sm5 md6 lg7 xl8 v-if="pageType == 'home'">
         <v-layout justify-end>
-          <v-btn outline color="secondary" class="text-capitalize" to="/txs">{{ $t('bttn.viewAll') }}</v-btn>
+          <v-btn outline color="secondary" class="text-capitalize" to="/txs">{{ $t('btn.view-all') }}</v-btn>
         </v-layout>
       </v-flex>
       <v-flex v-else xs6 sm5 md6 lg7 xl8>
@@ -44,23 +44,23 @@
     <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px">
       <v-layout align-center justify-start row fill-height pr-3>
         <v-flex xs4 sm3 md1 pl-3>
-          <h5>{{ $t('tableHeader.blockN') }}</h5>
+          <h5>{{ $t('block.number') }}</h5>
         </v-flex>
         <v-flex xs6 sm6 md6>
-          <h5>{{ $t('tableHeader.txN') }}</h5>
+          <h5>{{ $tc('tx.hash', 1) }}</h5>
         </v-flex>
         <v-flex hidden-xs-only sm2 md1>
           <h5>{{ $t('common.eth') }}</h5>
         </v-flex>
         <v-flex hidden-sm-and-down md2>
-          <h5>{{ $t('tableHeader.age') }}</h5>
+          <h5>{{ $t('common.age') }}</h5>
         </v-flex>
         <v-flex hidden-sm-and-down md1>
-          <h5>{{ $t('tx.cost') }}</h5>
+          <h5>{{ $tc('tx.fee', 1) }}</h5>
         </v-flex>
 
         <v-flex hidden-xs-only sm1>
-          <h5>{{ $t('common.status') }}</h5>
+          <h5>{{ $t('tx.status') }}</h5>
         </v-flex>
       </v-layout>
     </v-card>
@@ -71,7 +71,7 @@
     -->
     <v-card flat v-if="isSyncing && pending">
       <v-layout row align-center justify-center fill-height>
-        <v-card-title class="text-xs-center pt-5 pb-5">{{ $t('message.syncPendingTxs') }}</v-card-title>
+        <v-card-title class="text-xs-center pt-5 pb-5">{{ $t('message.sync.no-pen-tx') }}</v-card-title>
       </v-layout>
     </v-card>
     <div v-else>
@@ -188,9 +188,9 @@ export default class TableTxs extends Vue {
 
   get getTitle(): string {
     const titles = {
-      tx: this.$i18n.t('title.lastTxs'),
-      pending: this.$i18n.t('title.pending'),
-      block: this.$i18n.t('title.blockTxs')
+      tx: this.$i18n.t('tx.last'),
+      pending: this.$i18n.tc('tx.pending', 2),
+      block: this.$i18n.t('block.txs')
     }
     return titles[this.pageType] || titles['tx']
   }
@@ -211,12 +211,12 @@ export default class TableTxs extends Vue {
     return [
       {
         color: 'txSuccess',
-        text: this.$i18n.t('footnote.success'),
+        text: this.$i18n.t('common.success'),
         icon: 'fa fa-circle'
       },
       {
         color: 'txFail',
-        text: this.$i18n.t('footnote.failed'),
+        text: this.$i18n.t('common.fail'),
         icon: 'fa fa-circle'
       }
     ]
