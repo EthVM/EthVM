@@ -21,6 +21,25 @@ export enum Duration {
     DAY = "DAY"
 }
 
+export enum ExchangeFrom {
+    ETH = "ETH"
+}
+
+export enum ExchangeTo {
+    USD = "USD"
+}
+
+export enum FilterEnum {
+    in = "in",
+    out = "out",
+    all = "all"
+}
+
+export enum Order {
+    asc = "asc",
+    desc = "desc"
+}
+
 export enum SearchType {
     Transaction = "Transaction",
     Address = "Address",
@@ -212,7 +231,7 @@ export abstract class IQuery {
 
     abstract contractsCreatedBy(creator?: string, limit?: number, page?: number): Contract[] | Promise<Contract[]>;
 
-    abstract quote(token: string, to: string): Quote | Promise<Quote>;
+    abstract quote(token: ExchangeFrom, to: ExchangeTo): Quote | Promise<Quote>;
 
     abstract tokenExchangeRates(filter: TokenExchangeRateFilter, limit?: number, page?: number): TokenExchangeRate[] | Promise<TokenExchangeRate[]>;
 
@@ -252,15 +271,15 @@ export abstract class IQuery {
 
     abstract addressTokenTransfers(address: string, limit?: number, page?: number): TokenTransfer[] | Promise<TokenTransfer[]>;
 
-    abstract addressTokenTransfersByHolder(address: string, holder: string, filter?: string, limit?: number, page?: number): TokenTransfer[] | Promise<TokenTransfer[]>;
+    abstract addressTokenTransfersByHolder(address: string, holder: string, filter?: FilterEnum, limit?: number, page?: number): TokenTransfer[] | Promise<TokenTransfer[]>;
 
     abstract tx(hash: string): Transaction | Promise<Transaction>;
 
-    abstract txs(limit?: number, order?: string, fromBlock?: number): Transaction[] | Promise<Transaction[]>;
+    abstract txs(limit?: number, order?: Order, fromBlock?: number): Transaction[] | Promise<Transaction[]>;
 
     abstract txsForBlock(hash: string): Transaction[] | Promise<Transaction[]>;
 
-    abstract txsForAddress(hash: string, filter?: string, limit?: number, page?: number): Transaction[] | Promise<Transaction[]>;
+    abstract txsForAddress(hash: string, filter?: FilterEnum, limit?: number, page?: number): Transaction[] | Promise<Transaction[]>;
 
     abstract totalNumberOfTransactions(): number | Promise<number>;
 

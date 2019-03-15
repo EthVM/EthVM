@@ -78,11 +78,11 @@ We welcome every kind of contribution, so, please see [CONTRIBUTING](.github/CON
 
 ## Stay in touch!
 
-We have created our `#EthVM - Devs` channel in on [our Slack](https://myetherwallet.slack.com/), feel free to join (our use this [invite link](https://join.slack.com/t/myetherwallet/shared_invite/enQtNTc2MjAxMzUxOTc0LWQwNzMzOWEzOGE0NzU2YjcwMDFhMjdlY2YwOWJhMWQ2YzNjZTU5MmFkMTZmYjllZTU1OWVmMmIxM2RkMTgwN2M))
+We have created our `#EthVM - Devs` channel in on [our Slack](https://myetherwallet.slack.com/), feel free to join (you can use this [invite link](https://join.slack.com/t/myetherwallet/shared_invite/enQtNTc2MjAxMzUxOTc0LWQwNzMzOWEzOGE0NzU2YjcwMDFhMjdlY2YwOWJhMWQ2YzNjZTU5MmFkMTZmYjllZTU1OWVmMmIxM2RkMTgwN2M)).
 
 ## License
 
-This project is licensed under the SSPL License (a small variation of the GNU Affero License v3) - see the [LICENSE.md](LICENSE.md) file for details ([or read it here online](https://www.mongodb.com/licensing/server-side-public-license)).
+This project is licensed under the SSPL License (a small variation of the GNU Affero License v3) - see the [LICENSE](LICENSE) file for details ([or read it here online](https://www.mongodb.com/licensing/server-side-public-license)).
 
 <div align="center">
   <img src="https://forthebadge.com/images/badges/built-with-love.svg" alt="built with love by MyEtherWallet team" />

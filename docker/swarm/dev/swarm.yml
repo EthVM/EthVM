@@ -7,6 +7,7 @@ networks:
 
   backend:
     driver: overlay
+    attachable: true
     external: false
 
 volumes:
