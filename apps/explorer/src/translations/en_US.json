@@ -25,7 +25,8 @@
     "detail": "Uncle Details",
     "height": "Uncle Height #",
     "uncle-position": "Uncle Position",
-    "position": "Position"
+    "position": "Position",
+    "reward": "Uncle Reward"
   },
 
   "tx": {
@@ -122,8 +123,8 @@
     "eth": "ETH",
     "gwei": "GWEI",
     "timestmp": "Timestamp",
-    "successful": "Successful",
-    "failed": "Failed",
+    "success": "Successful",
+    "fail": "Failed",
     "pending": "Pending",
     "amount": "Amount",
     "quantity": "Quantity",

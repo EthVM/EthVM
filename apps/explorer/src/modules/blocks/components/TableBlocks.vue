@@ -33,14 +33,14 @@
     </v-layout>
     <v-layout v-else row wrap align-center pb-1>
       <v-flex d-flex xs8 md7 order-xs1>
-        <v-card-title class="title font-weight-bold">{{ $t('title.lastBlock') }}</v-card-title>
+        <v-card-title class="title font-weight-bold">{{ $t('block.last') }}</v-card-title>
       </v-flex>
       <v-flex hidden-sm-and-down md4 order-md2>
         <v-layout justify-center> <app-footnotes :footnotes="footnotes" /> </v-layout>
       </v-flex>
       <v-flex d-flex xs4 md1 order-xs2 order-md3>
         <v-layout justify-end>
-          <v-btn outline color="secondary" class="text-capitalize" to="/blocks">{{ $t('bttn.viewAll') }}</v-btn>
+          <v-btn outline color="secondary" class="text-capitalize" to="/blocks">{{ $t('btn.view-all') }}</v-btn>
         </v-layout>
       </v-flex>
     </v-layout>
@@ -59,14 +59,14 @@
     <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px" style="margin-right: 1px">
       <v-layout align-center justify-start row fill-height pr-3>
         <v-flex xs6 sm2 md3 lg2>
-          <h5>{{ $t('tableHeader.blockN') }}</h5>
+          <h5>{{ $t('block.number') }}</h5>
         </v-flex>
         <v-spacer />
         <v-flex hidden-sm-and-down md2>
-          <h5>{{ $t('tableHeader.txs') }}</h5>
+          <h5>{{ $tc('tx.name', 2) }}</h5>
         </v-flex>
         <v-flex xs6 sm3 md2>
-          <h5>{{ $t('tableHeader.reward') }}</h5>
+          <h5>{{ $t('miner.reward-short') }}</h5>
         </v-flex>
       </v-layout>
     </v-card>
@@ -190,8 +190,8 @@ export default class TableBlocks extends Vue {
 
   get getTitle(): string {
     const titles = {
-      blocks: this.$i18n.t('title.blocks'),
-      address: this.$i18n.t('title.minedBlocks')
+      blocks: this.$i18n.tc('block.name', 2),
+      address: this.$i18n.t('block.mined')
     }
     return titles[this.pageType]
   }
@@ -200,12 +200,12 @@ export default class TableBlocks extends Vue {
     return [
       {
         color: 'txSuccess',
-        text: this.$i18n.t('footnote.success'),
+        text: this.$i18n.t('common.success'),
         icon: 'fa fa-circle'
       },
       {
         color: 'txFail',
-        text: this.$i18n.t('footnote.failed'),
+        text: this.$i18n.t('common.fail'),
         icon: 'fa fa-circle'
       }
     ]
