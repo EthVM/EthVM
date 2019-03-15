@@ -2,6 +2,7 @@ import { Args, Query, Resolver } from '@nestjs/graphql'
 import { UncleService } from '@app/modules/uncles/uncle.service'
 import { UncleDto } from '@app/modules/uncles/uncle.dto'
 import { ParseHashPipe } from '@app/shared/validation/parse-hash.pipe'
+import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe'
 
 @Resolver('Uncle')
 export class UncleResolvers {
@@ -14,7 +15,11 @@ export class UncleResolvers {
   }
 
   @Query()
-  async uncles(@Args('limit') limit?: number, @Args('page') page?: number, @Args('fromUncle') fromUncle?: number) {
+  async uncles(
+    @Args('limit', ParseLimitPipe) limit?: number,
+    @Args('page') page?: number,
+    @Args('fromUncle') fromUncle?: number
+  ) {
     const entities = await this.uncleService.findUncles(limit, page, fromUncle)
     return entities.map(e => new UncleDto(e))
   }

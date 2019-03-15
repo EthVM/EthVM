@@ -2,6 +2,7 @@ import { Args, Query, Resolver } from '@nestjs/graphql'
 import { TokenTransferService } from '@app/modules/token-transfers/token-transfer.service'
 import { TokenExchangeRateDto } from '@app/modules/exchanges/token-exchange-rate.dto'
 import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
+import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe'
 
 @Resolver('TokenTransfer')
 export class TokenTransferResolvers {
@@ -10,7 +11,7 @@ export class TokenTransferResolvers {
   @Query()
   async addressTokenTransfers(
     @Args('address', ParseAddressPipe) address: string,
-    @Args('limit') limit?: number,
+    @Args('limit', ParseLimitPipe) limit?: number,
     @Args('page') page?: number
   ) {
     const entities = await this.tokenTransferService.findAddressTokenTransfers(address, limit, page)
@@ -22,7 +23,7 @@ export class TokenTransferResolvers {
     @Args('address') address: string,
     @Args('holder') holder: string,
     @Args('filter') filter?: string,
-    @Args('limit') limit?: number,
+    @Args('limit', ParseLimitPipe) limit?: number,
     @Args('page') page?: number
   ) {
     const entities = await this.tokenTransferService.findAddressTokenTransfersByHolder(address, holder, filter, limit, page)
