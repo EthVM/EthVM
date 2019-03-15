@@ -1,0 +1,15 @@
+query contractByHash($hash: String) {
+  contractByHash(hash: $hash) {
+    address
+    metadata
+    type
+  }
+}
+
+query contractsCreatedBy($hash: String, $limit: Int, $page: Int) {
+  contractsCreatedBy(creator: $hash, limit: $limit, page: $page) {
+    address
+    metadata
+    type
+  }
+}

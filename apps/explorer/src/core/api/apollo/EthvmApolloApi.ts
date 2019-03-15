@@ -2,8 +2,9 @@ import { EthvmApi } from '@app/core/api'
 import { accountMetadataByHash, addressBalanceByHash } from '@app/core/api/apollo/queries/addresses.graphql'
 import { blockMetricByHash, blockMetrics } from '@app/core/api/apollo/queries/block-metrics.graphql'
 import { blockByHash, blockByNumber, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
-import { tx, txsForAddress, totalNumberOfTransactions } from '@app/core/api/apollo/queries/txs.graphql'
+import { contractByHash, contractsCreatedBy } from '@app/core/api/apollo/queries/contracts.graphql'
 import { processingMetadataById } from '@app/core/api/apollo/queries/processing-metadata.graphql'
+import { totalNumberOfTransactions, tx, txsForAddress } from '@app/core/api/apollo/queries/txs.graphql'
 import { Block, PendingTx, SimpleBlock, SimpleTx, Tx, Uncle } from '@app/core/models'
 import { ApolloClient } from 'apollo-boost'
 import {
@@ -18,7 +19,6 @@ import {
   TokenExchangeRate,
   TokenTransfer
 } from 'ethvm-common'
-import gql from 'graphql-tag'
 
 export class EthvmApolloApi implements EthvmApi {
   constructor(private readonly apollo: ApolloClient<{}>) {}
@@ -148,11 +148,27 @@ export class EthvmApolloApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
 
   public getContract(address: string): Promise<Contract> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: contractByHash,
+        variables: {
+          address
+        }
+      })
+      .then(res => res.data.contractByHash)
   }
 
   public getContractsCreatedBy(address: string, limit: number, page: number): Promise<Contract[]> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: contractsCreatedBy,
+        variables: {
+          creator: address.replace('0x', ''),
+          limit,
+          page
+        }
+      })
+      .then(res => res.data.contractsCreatedBy)
   }
 
   // ------------------------------------------------------------------------------------
