@@ -39,7 +39,7 @@
               </p>
               <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
               <p class="text-truncate info--text font-weight-thin mb-0" v-if="!tx.getContractAddress().isEmpty()">
-                {{ $tc('contract.name',1) }}:
+                {{ $tc('contract.name', 1) }}:
                 <router-link class="secondary--text font-mono font-italic font-weight-regular" :to="'/address/' + tx.getContractAddress().toString()">{{
                   tx.getContractAddress().toString()
                 }}</router-link>

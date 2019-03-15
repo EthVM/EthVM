@@ -9,9 +9,9 @@
               <v-card-title class="display-1 font-weight-bold pb-1">{{ $t('kb.title') }}</v-card-title>
             </v-flex>
             <v-flex xs12>
-              <v-layout v-for="(term, index)  in terms" row wrap justify-start pa-2 :key="index">
-                <v-card-title class="title pb-0">{{ $t(kb+term+'.term') }}</v-card-title>
-                <v-card-text class="pt-2">{{ $t(kb+term+'.def') }}</v-card-text>
+              <v-layout v-for="(term, index) in terms" row wrap justify-start pa-2 :key="index">
+                <v-card-title class="title pb-0">{{ $t(kb + term + '.term') }}</v-card-title>
+                <v-card-text class="pt-2">{{ $t(kb + term + '.def') }}</v-card-text>
               </v-layout>
             </v-flex>
           </v-layout>
@@ -38,7 +38,7 @@ export default class PageKnowledgeBase extends Vue {
   ===================================================================================
   */
 
-  kb='kb.terms.'
+  kb = 'kb.terms.'
 
   /*
   ===================================================================================

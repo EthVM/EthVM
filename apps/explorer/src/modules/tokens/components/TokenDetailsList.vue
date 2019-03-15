@@ -70,7 +70,7 @@ export default class TokenDetailsList extends Vue {
     if (this.isLoading) {
       details = [
         {
-          title: this.$i18n.tc('contract.name',1)
+          title: this.$i18n.tc('contract.name', 1)
         },
         {
           title: this.$i18n.t('token.owner')
@@ -103,7 +103,7 @@ export default class TokenDetailsList extends Vue {
     } else {
       details = [
         {
-          title: this.$i18n.tc('contract.name',1),
+          title: this.$i18n.tc('contract.name', 1),
           detail: new Hex(this.tokenDetails.address).toString(),
           link: this.tokenDetails ? `/address/${new Hex(this.tokenDetails.address).toString()}` : ''
         },

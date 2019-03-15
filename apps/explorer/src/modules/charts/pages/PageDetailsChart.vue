@@ -78,7 +78,7 @@ export default class PageDetailsChart extends Vue {
   }
 
   get crumbString(): string {
-    return 'charts.'+ this.chartId + '.title'
+    return 'charts.' + this.chartId + '.title'
   }
 }
 </script>

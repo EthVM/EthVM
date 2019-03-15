@@ -287,13 +287,13 @@ export default class PageDetailsTxs extends Vue {
       {
         text: 'tx.mined',
         disabled: false,
-        link: '/txs',
+        link: '/txs'
       },
       {
         text: 'tx.hash',
         disabled: true,
         plural: 1,
-        label:  `: ${this.txRef} `
+        label: `: ${this.txRef} `
       }
     ]
   }

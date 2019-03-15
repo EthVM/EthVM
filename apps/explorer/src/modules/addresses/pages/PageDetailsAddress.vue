@@ -460,7 +460,7 @@ export default class PageDetailsAddress extends Vue {
       },
       {
         id: '2',
-        title: this.$i18n.tc('tx.pending',2),
+        title: this.$i18n.tc('tx.pending', 2),
         isActive: false
       }
     ]

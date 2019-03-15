@@ -105,7 +105,7 @@ export default class AddressDetail extends Mixins(StringConcatMixin) {
   get title(): string {
     const titles = {
       address: this.$i18n.t('address.name'),
-      contract: this.$i18n.tc('contract.name',1)
+      contract: this.$i18n.tc('contract.name', 1)
     }
     return titles[this.account.type]
   }

@@ -230,7 +230,7 @@ export default class PageDetailsBlock extends Vue {
           title: this.$i18n.t('block.rcpt-root')
         },
         {
-          title: this.$i18n.tc('uncle.name',2) + ' ' + this.$i18n.t('common.sha')
+          title: this.$i18n.tc('uncle.name', 2) + ' ' + this.$i18n.t('common.sha')
         }
       ]
     } else {
@@ -263,7 +263,7 @@ export default class PageDetailsBlock extends Vue {
           title: this.$i18n.t('miner.reward'),
           detail: this.block.getMinerReward().toEth() + ' ' + this.$i18n.t('common.eth')
         },
-         {
+        {
           title: this.$i18n.t('common.timestmp'),
           detail: this.formatTime
         },
@@ -390,7 +390,7 @@ export default class PageDetailsBlock extends Vue {
       {
         text: 'block.number',
         disabled: true,
-        label:  ` ${this.$route.params.blockRef}`
+        label: ` ${this.$route.params.blockRef}`
       }
     ]
   }

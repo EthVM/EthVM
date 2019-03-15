@@ -42,7 +42,7 @@
           <h5>{{ $t('token.symbol') }}</h5>
         </v-flex>
         <v-flex hidden-xs-only sm4 md3>
-          <h5>{{ $tc('token.name',1) }}</h5>
+          <h5>{{ $tc('token.name', 1) }}</h5>
         </v-flex>
         <v-flex xs6 sm3 md4>
           <h5>{{ $t('common.amount') }}</h5>
