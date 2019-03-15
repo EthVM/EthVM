@@ -35,6 +35,11 @@ export enum FilterEnum {
     all = "all"
 }
 
+export enum Order {
+    asc = "asc",
+    desc = "desc"
+}
+
 export enum SearchType {
     Transaction = "Transaction",
     Address = "Address",
@@ -208,6 +213,10 @@ export abstract class IQuery {
 
     abstract balanceByHash(hash: string): Balance | Promise<Balance>;
 
+    abstract blockMetricByHash(hash?: string): BlockMetric | Promise<BlockMetric>;
+
+    abstract blockMetrics(limit?: number, page?: number): BlockMetric[] | Promise<BlockMetric[]>;
+
     abstract blocks(limit?: number, page?: number): Block[] | Promise<Block[]>;
 
     abstract blockByHash(hash?: string): Block | Promise<Block>;
@@ -217,10 +226,6 @@ export abstract class IQuery {
     abstract minedBlocksByAddress(address?: string, limit?: number, page?: number): Block[] | Promise<Block[]>;
 
     abstract totalNumberOfBlocks(): number | Promise<number>;
-
-    abstract blockMetricByHash(hash?: string): BlockMetric | Promise<BlockMetric>;
-
-    abstract blockMetrics(limit?: number, page?: number): BlockMetric[] | Promise<BlockMetric[]>;
 
     abstract contractByHash(hash?: string): Contract | Promise<Contract>;
 
@@ -270,7 +275,7 @@ export abstract class IQuery {
 
     abstract tx(hash: string): Transaction | Promise<Transaction>;
 
-    abstract txs(limit?: number, order?: string, fromBlock?: number): Transaction[] | Promise<Transaction[]>;
+    abstract txs(limit?: number, order?: Order, fromBlock?: number): Transaction[] | Promise<Transaction[]>;
 
     abstract txsForBlock(hash: string): Transaction[] | Promise<Transaction[]>;
 
