@@ -4,7 +4,19 @@ import { blockMetricByHash, blockMetrics } from '@app/core/api/apollo/queries/bl
 import { blockByHash, blockByNumber, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
 import { contractByHash, contractsCreatedBy } from '@app/core/api/apollo/queries/contracts.graphql'
 import { processingMetadataById } from '@app/core/api/apollo/queries/processing-metadata.graphql'
+import {
+  averageBlockTime,
+  averageDifficulty,
+  averageGasLimit,
+  averageGasPrice,
+  averageHashRate,
+  averageMinerReward,
+  averageTxFee,
+  totalFailedTxs,
+  totalSuccessfulTxs
+} from '@app/core/api/apollo/queries/statistics.graphql'
 import { totalNumberOfTransactions, tx, txsForAddress } from '@app/core/api/apollo/queries/txs.graphql'
+import { totalNumberOfUncles, uncleByHash, uncles } from '@app/core/api/apollo/queries/uncles.graphql'
 import { Block, PendingTx, SimpleBlock, SimpleTx, Tx, Uncle } from '@app/core/models'
 import { ApolloClient } from 'apollo-boost'
 import {
@@ -261,15 +273,35 @@ export class EthvmApolloApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
 
   public getUncle(hash: string): Promise<Uncle> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: uncleByHash,
+        variables: {
+          hash: hash.replace('0x', '')
+        }
+      })
+      .then(res => new Uncle(res.data.uncleByHash))
   }
 
   public getUncles(limit: number, page: number, fromUncle: number): Promise<Uncle[]> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: uncles,
+        variables: {
+          limit,
+          page,
+          fromUncle
+        }
+      })
+      .then(res => res.data.uncles.map(raw => new Uncle(raw)))
   }
 
   public getTotalNumberOfUncles(): Promise<number> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: totalNumberOfUncles
+      })
+      .then(res => res.data.totalNumberOfUncles as number)
   }
 
   // ------------------------------------------------------------------------------------
@@ -277,39 +309,102 @@ export class EthvmApolloApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
 
   public getAverageBlockTimeStats(duration: string): Promise<Statistic[]> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: averageBlockTime,
+        variables: {
+          duration
+        }
+      })
+      .then(res => res.data.averageBlockTime)
   }
 
   public getAverageDifficultyStats(duration: string): Promise<Statistic[]> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: averageDifficulty,
+        variables: {
+          duration
+        }
+      })
+      .then(res => res.data.averageDifficulty)
   }
 
   public getAverageGasLimitStats(duration: string): Promise<Statistic[]> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: averageGasLimit,
+        variables: {
+          duration
+        }
+      })
+      .then(res => res.data.averageGasLimit)
   }
 
   public getAverageGasPriceStats(duration: string): Promise<Statistic[]> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: averageGasPrice,
+        variables: {
+          duration
+        }
+      })
+      .then(res => res.data.averageGasPrice)
   }
 
   public getAverageHashRateStats(duration: string): Promise<Statistic[]> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: averageHashRate,
+        variables: {
+          duration
+        }
+      })
+      .then(res => res.data.averageHashRate)
   }
 
   public getAverageMinerRewardsStats(duration: string): Promise<Statistic[]> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: averageMinerReward,
+        variables: {
+          duration
+        }
+      })
+      .then(res => res.data.averageMinerReward)
   }
 
   public getAverageTxFeeStats(duration: string): Promise<Statistic[]> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: averageTxFee,
+        variables: {
+          duration
+        }
+      })
+      .then(res => res.data.averageTxFee)
   }
 
   public getFailedTxStats(duration: string): Promise<Statistic[]> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: totalFailedTxs,
+        variables: {
+          duration
+        }
+      })
+      .then(res => res.data.totalFailedTxs)
   }
 
   public getSuccessfulTxStats(duration: string): Promise<Statistic[]> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: totalSuccessfulTxs,
+        variables: {
+          duration
+        }
+      })
+      .then(res => res.data.totalSuccessfulTxs)
   }
 
   // ------------------------------------------------------------------------------------

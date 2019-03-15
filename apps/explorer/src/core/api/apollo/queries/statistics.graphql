@@ -1,0 +1,91 @@
+enum Duration {
+  ALL,
+  YEAR,
+  MONTH,
+  WEEK,
+  DAY
+}
+
+query totalTxs($duration: Duration) {
+  totalTxs(duration: $duration) {
+    date
+    value
+  }
+}
+
+query totalSuccessfulTxs($duration: Duration) {
+  totalSuccessfulTxs(duration: $duration) {
+    date
+    value
+  }
+}
+
+query averageDifficulty($duration: Duration) {
+  averageDifficulty(duration: $duration) {
+    date
+    value
+  }
+}
+
+query totalFailedTxs($duration: Duration) {
+  totalFailedTxs(duration: $duration) {
+    date
+    value
+  }
+}
+
+query totalGasPrice($duration: Duration) {
+  totalGasPrice(duration: $duration) {
+    date
+    value
+  }
+}
+
+query averageGasLimit($duration: Duration) {
+  averageGasLimit(duration: $duration) {
+    date
+    value
+  }
+}
+
+query averageGasPrice($duration: Duration) {
+  averageGasPrice(duration: $duration) {
+    date
+    value
+  }
+}
+
+query totalTxsFees($duration: Duration) {
+  totalTxsFees(duration: $duration) {
+    date
+    value
+  }
+}
+
+query averageTxFee($duration: Duration) {
+  averageTxFee(duration: $duration) {
+    date
+    value
+  }
+}
+
+query averageMinerReward($duration: Duration) {
+  averageMinerReward(duration: $duration) {
+    date
+    value
+  }
+}
+
+query averageBlockTime($duration: Duration) {
+  averageBlockTime(duration: $duration) {
+    date
+    value
+  }
+}
+
+query averageHashRate($duration: Duration) {
+  averageHashRate(duration: $duration) {
+    date
+    value
+  }
+}
