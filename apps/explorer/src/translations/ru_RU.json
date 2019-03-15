@@ -324,9 +324,12 @@
 
   "kb":{
     "name": "Knowledge Base",
-    "terms": "Blockchain Terms",
+    "title": "Blockchain Terms",
+    "terms": {
+
+
     "acc": {
-      "term": "Account",
+      "term": "RUAccount",
       "def": "Entry on the blockchain ledger that contains data about the state of that account. In the case of a currency system, it's the information about funds available."
     },
     "addr": {
@@ -457,6 +460,7 @@
       "term": "Validators",
       "def": "Nodes that make up a decentralized network and maintain consensus by validating new blocks broadcasted by miners. "
     }
+  }
   },
 
   "pp": {

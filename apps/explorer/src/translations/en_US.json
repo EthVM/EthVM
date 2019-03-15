@@ -39,7 +39,6 @@
     "last": "Last Transactions",
     "hash": "Tx # | Transaction #",
     "fee": "Tx Fee | Txs Fees",
-    "ave-fees": "Avg Tx Fees (ETH)",
     "history": "Transactions History",
     "total": "Total Txs",
     "success": "Successful Tx | Successful Txs",
@@ -329,7 +328,8 @@
 
   "kb":{
     "name": "Knowledge Base",
-    "terms": "Blockchain Terms",
+    "title": "Blockchain Terms",
+    "terms": {
     "acc": {
       "term": "Account",
       "def": "Entry on the blockchain ledger that contains data about the state of that account. In the case of a currency system, it's the information about funds available."
@@ -462,6 +462,7 @@
       "term": "Validators",
       "def": "Nodes that make up a decentralized network and maintain consensus by validating new blocks broadcasted by miners. "
     }
+  }
   },
 
   "pp": {

@@ -14,37 +14,37 @@
                 <v-flex xs12 sm6 md3>
                   <button href="https://github.com/EthVM">
                     <v-layout justify-start pl-3><v-icon class="primary--text pl-2 fab fa-github" large></v-icon></v-layout>
-                    <v-card-title class="title pb-1 ">{{ $t('social.git') }}</v-card-title>
-                    <v-card-text class="text-xs-left">{{ $t('about.git') }}</v-card-text>
+                    <v-card-title class="title pb-1 ">{{ $t('about.git.title') }}</v-card-title>
+                    <v-card-text class="text-xs-left">{{ $t('about.git.text') }}</v-card-text>
                   </button>
                 </v-flex>
                 <v-flex xs12 sm6 md3>
                   <button href="https://medium.com/@myetherwallet">
                     <v-layout justify-start pl-3><v-icon class="primary--text pl-2 fab fa-medium-m" large></v-icon></v-layout>
-                    <v-card-title class="title pb-1">{{ $t('social.medium') }}</v-card-title>
-                    <v-card-text class="text-xs-left">{{ $t('about.medium') }}</v-card-text>
+                    <v-card-title class="title pb-1">{{ $t('about.medium.title') }}</v-card-title>
+                    <v-card-text class="text-xs-left">{{ $t('about.medium.text') }}</v-card-text>
                   </button>
                 </v-flex>
                 <v-flex xs12 sm6 md3>
                   <button href="https://twitter.com/Eth_VM">
                     <v-layout justify-start pl-3><v-icon class="primary--text pl-2 fab fa-twitter" large></v-icon></v-layout>
-                    <v-card-title class="title pb-1">{{ $t('social.twitter') }}</v-card-title>
-                    <v-card-text class="text-xs-left">{{ $t('about.twitter') }}.</v-card-text>
+                    <v-card-title class="title pb-1">{{ $t('about.twitter.title') }}</v-card-title>
+                    <v-card-text class="text-xs-left">{{ $t('about.twitter.text') }}.</v-card-text>
                   </button>
                 </v-flex>
                 <v-flex xs12 sm6 md3>
                   <button href="https://www.reddit.com/r/ethvm">
                     <v-layout justify-start pl-3><v-icon class="primary--text pl-2 fab fa-reddit text-xs-left" large></v-icon></v-layout>
-                    <v-card-title class="title pb-1" href="https://www.reddit.com/r/ethvm">{{ $t('social.reddit') }}</v-card-title>
-                    <v-card-text class="text-xs-left">{{ $t('about.reddit') }}</v-card-text>
+                    <v-card-title class="title pb-1" href="https://www.reddit.com/r/ethvm">{{ $t('about.reddit.title') }}</v-card-title>
+                    <v-card-text class="text-xs-left">{{ $t('about.reddit.text') }}</v-card-text>
                   </button>
                 </v-flex>
               </v-layout>
             </v-flex>
             <v-flex xs12>
-              <v-card-title class="display-1 font-weight-bold">{{ $t('disclaimer.title') }}</v-card-title>
-              <v-card-text>{{ $t('disclaimer.text') }}</v-card-text>
-              <v-card-text>{{ $t('disclaimer.mit') }}</v-card-text>
+              <v-card-title class="display-1 font-weight-bold">{{ $t('about.disclaimer.name') }}</v-card-title>
+              <v-card-text>{{ $t('about.disclaimer.text') }}</v-card-text>
+              <v-card-text>{{ $t('about.disclaimer.mit') }}</v-card-text>
             </v-flex>
           </v-layout>
         </v-card>
@@ -73,7 +73,7 @@ export default class PageAbout extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: this.$i18n.t('title.about'),
+        text: 'about.name',
         disabled: true
       }
     ]
