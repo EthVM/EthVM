@@ -8,8 +8,8 @@
     <v-layout row wrap align-center pb-1>
       <v-flex xs12 sm4 md6>
         <v-layout row align-end justify-start>
-          <v-card-title class="title font-weight-bold">{{ $t('title.tokens') }}</v-card-title>
-          <v-card-title class="info--text">(Total: {{ totalTokens }} {{ $t('title.tokens') }})</v-card-title>
+          <v-card-title class="title font-weight-bold">{{ $tc('token.name', 2) }}</v-card-title>
+          <v-card-title class="info--text">(Total: {{ totalTokens }} {{ $tc('token.name', 2) }})</v-card-title>
         </v-layout>
       </v-flex>
       <v-spacer />
@@ -36,11 +36,11 @@
         <v-card v-if="!hasError" color="info" flat class="white--text pl-4 pr-1" height="40px">
           <v-layout align-center justify-start row fill-height pr-3>
             <v-flex hidden-xs-only sm4 pl-2>
-              <h5 class="pl-5">{{ $t('token.name') }}</h5>
+              <h5 class="pl-5">{{ $tc('token.name', 1) }}</h5>
             </v-flex>
             <v-flex hidden-xs-only sm2>
               <v-layout align-center justify-start row pl-1>
-                <h5 class="pr-2">{{ $t('token.price') }}</h5>
+                <h5 class="pr-2">{{ $tc('price.name', 1) }}</h5>
                 <v-flex>
                   <v-layout align-start justify-center column>
                     <v-btn flat icon @click="selectFilter(0)">
@@ -73,7 +73,7 @@
             </v-flex>
             <v-flex hidden-xs-only sm2>
               <v-layout align-center justify-start row pl-2>
-                <h5 class="pr-1">{{ $t('token.cap') }}</h5>
+                <h5 class="pr-1">{{ $t('token.market') }}</h5>
                 <v-flex>
                   <v-layout align-start justify-center column>
                     <v-btn flat icon @click="selectFilter(4)">

@@ -198,7 +198,7 @@ export default class PageDetailsToken extends Vue {
           resolve()
         })
         .catch(e => {
-          this.errorTokenDetailsList = this.$i18n.t('message.invalidToken').toString()
+          this.errorTokenDetailsList = this.$i18n.t('message.invalid.token').toString()
           resolve()
         })
     })
@@ -298,7 +298,7 @@ export default class PageDetailsToken extends Vue {
           this.holderTransfers = holderTransfers as any[]
         })
         .catch(e => {
-          this.errorHolderTransfers = this.$i18n.t('message.noTxHistory').toString()
+          this.errorHolderTransfers = this.$i18n.t('message.no-history').toString()
         })
     })
   }
@@ -329,7 +329,7 @@ export default class PageDetailsToken extends Vue {
         .getTokenExchangeRateByAddress(this.addressRef)
         .then(response => {
           if (response === null) {
-            reject(this.$i18n.t('message.invalidAddress').toString())
+            reject(this.$i18n.t('message.invalid.addr').toString())
           }
           resolve(response)
         })
@@ -474,7 +474,7 @@ export default class PageDetailsToken extends Vue {
   get crumbsBasic(): Crumb[] {
     return [
       {
-        text: this.$i18n.t('title.tokens'),
+        text: this.$i18n.tc('token.name',2),
         link: '/tokens',
         disabled: false
       },
@@ -494,7 +494,7 @@ export default class PageDetailsToken extends Vue {
   get crumbsHolder(): Crumb[] {
     return [
       {
-        text: this.$i18n.t('title.tokens').toString(),
+        text: this.$i18n.tc('token.name', 2),
         link: '/tokens',
         disabled: false
       },
