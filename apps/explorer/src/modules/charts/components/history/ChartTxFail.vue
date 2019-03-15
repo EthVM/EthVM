@@ -50,11 +50,11 @@ export default class ChartTxFail extends Mixins(ChartMixin) {
   */
 
   get title() {
-    return this.$i18n.t('charts.txFail').toString()
+    return this.$i18n.t('charts.tx-fail.title').toString()
   }
 
   get labelString(): string {
-    return this.$i18n.t('charts.tx-fail-history').toString()
+    return this.$i18n.t('charts.tx-fail.description').toString()
   }
 }
 </script>

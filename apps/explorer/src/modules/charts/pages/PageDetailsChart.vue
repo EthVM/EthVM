@@ -62,12 +62,12 @@ export default class PageDetailsChart extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: this.$i18n.t('title.charts'),
+        text: 'charts.name',
         disabled: false,
         link: '/charts'
       },
       {
-        text: this.$i18n.t('charts.' + this.chartId),
+        text: this.crumbString,
         disabled: true
       }
     ]
@@ -75,6 +75,10 @@ export default class PageDetailsChart extends Vue {
 
   get chartId(): string {
     return this.$route.params.chartRef
+  }
+
+  get crumbString(): string {
+    return 'charts.'+ this.chartId + '.title'
   }
 }
 </script>

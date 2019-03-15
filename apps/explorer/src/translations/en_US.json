@@ -188,7 +188,11 @@
     "live": "Live Data",
     "tx-summary": {
       "title": "Tx Summary",
-      "description": "Successful, failed, and pending transactions in the last 10 blocks."
+      "description": "Successful, failed, and pending transactions in the last 10 blocks.",
+      "label":{
+        "pen": "Pending Txs",
+        "success-fail": "Successful and Failed Txs"
+      }
     },
     "tx-costs": {
       "title": "Tx Fees and Gas Price",
@@ -215,35 +219,35 @@
       "description": "Average Gas Price"
     },
     "hash-rate": {
-      "name": "Hash Rate",
+      "title": "Hash Rate",
       "description": "Average Hash Rate"
     },
     "tx-fail": {
-      "name": "Failed Transactions",
+      "title": "Failed Transactions",
       "description": "Number of Failed Transactions"
     },
     "tx-fees": {
-      "name": "Transactions Fees",
+      "title": "Transactions Fees",
       "description": "Average Transactions Fees"
     },
     "tx-pending": {
-      "name": "Pending Transactions",
+      "title": "Pending Transactions",
       "description": "Average Number of pending transactions"
     },
     "tx-success": {
-      "name": "Successful Transactions",
+      "title": "Successful Transactions",
       "description": "Number of Successful Transactions"
     },
     "uncles-number": {
-      "name": "Uncles per Day",
+      "title": "Uncles per Day",
       "description": "Total Number of Uncles per Day"
     },
     "mining-rewards": {
-      "name": "Mining Rewards",
+      "title": "Mining Rewards",
       "description": "Average Mining Rewards"
     },
     "top-miners": {
-      "name": "Top Miners"
+      "title": "Top Miners"
     },
     "states": {
       "all": "All",
