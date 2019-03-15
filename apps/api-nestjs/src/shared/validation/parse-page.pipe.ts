@@ -2,11 +2,9 @@ import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform } from
 
 @Injectable()
 export class ParsePagePipe implements PipeTransform<number, number> {
-
-  constructor(){}
+  constructor() {}
 
   transform(value: number, metadata: ArgumentMetadata): number {
-
     if (!value) return 0
 
     if (value < 0) {
@@ -14,5 +12,4 @@ export class ParsePagePipe implements PipeTransform<number, number> {
     }
     return value
   }
-
 }

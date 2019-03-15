@@ -4,7 +4,6 @@ const MAX_PAGE_SIZE = 100
 
 @Injectable()
 export class EthService {
-
   isValidAddress(address: string): boolean {
     return /^(0x)?([0-9a-fA-F]{40})$/.test(address)
   }
@@ -25,8 +24,7 @@ export class EthService {
     return hash.startsWith('0x') ? hash.replace('0x', '') : hash
   }
 
-  isValidPageSize(limit): boolean {
+  isValidPageSize(limit: number): boolean {
     return limit <= MAX_PAGE_SIZE
   }
-
 }
