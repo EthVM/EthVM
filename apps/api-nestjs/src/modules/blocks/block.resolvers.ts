@@ -2,6 +2,7 @@ import { Args, Query, Resolver, Subscription } from '@nestjs/graphql'
 import { BlockService } from '@app/modules/blocks/block.service'
 import { PubSub } from 'graphql-subscriptions'
 import { BlockDto } from '@app/modules/blocks/block.dto'
+import { ParseHashPipe } from '@app/shared/validation/parse-hash.pipe'
 
 const pubSub = new PubSub()
 
@@ -16,7 +17,7 @@ export class BlockResolvers {
   }
 
   @Query()
-  async blockByHash(@Args('hash') hash: string) {
+  async blockByHash(@Args('hash', ParseHashPipe) hash: string) {
     const entity = await this.blockService.findBlockByHash(hash)
     return entity ? new BlockDto(entity) : null
   }

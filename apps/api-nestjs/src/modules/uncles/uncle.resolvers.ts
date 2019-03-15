@@ -1,13 +1,14 @@
 import { Args, Query, Resolver } from '@nestjs/graphql'
 import { UncleService } from '@app/modules/uncles/uncle.service'
 import { UncleDto } from '@app/modules/uncles/uncle.dto'
+import { ParseHashPipe } from '@app/shared/validation/parse-hash.pipe'
 
 @Resolver('Uncle')
 export class UncleResolvers {
   constructor(private readonly uncleService: UncleService) {}
 
   @Query()
-  async uncleByHash(@Args('hash') hash: string) {
+  async uncleByHash(@Args('hash', ParseHashPipe) hash: string) {
     const entity = await this.uncleService.findUncleByHash(hash)
     return entity ? new UncleDto(entity) : null
   }

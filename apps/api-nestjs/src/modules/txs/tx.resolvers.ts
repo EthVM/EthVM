@@ -1,13 +1,14 @@
 import { Args, Query, Resolver } from '@nestjs/graphql'
 import { TxService } from '@app/modules/txs/tx.service'
 import { TxDto } from '@app/modules/txs/tx.dto'
+import { ParseHashPipe } from '@app/shared/validation/parse-hash.pipe'
 
 @Resolver('Transaction')
 export class TxResolvers {
   constructor(private readonly txService: TxService) {}
 
   @Query()
-  async tx(@Args('hash') hash: string) {
+  async tx(@Args('hash', ParseHashPipe) hash: string) {
     const entity = await this.txService.findTx(hash)
     return entity ? new TxDto(entity) : null
   }
@@ -19,7 +20,7 @@ export class TxResolvers {
   }
 
   @Query()
-  async txsForBlock(@Args('hash') hash: string) {
+  async txsForBlock(@Args('hash', ParseHashPipe) hash: string) {
     const entities = await this.txService.findTxsForBlock(hash)
     return entities.map(e => new TxDto(e))
   }
