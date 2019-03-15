@@ -4,6 +4,7 @@ import { blockMetricByHash, blockMetrics } from '@app/core/api/apollo/queries/bl
 import { blockByHash, blockByNumber, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
 import { contractByHash, contractsCreatedBy } from '@app/core/api/apollo/queries/contracts.graphql'
 import { processingMetadataById } from '@app/core/api/apollo/queries/processing-metadata.graphql'
+import { search } from '@app/core/api/apollo/queries/search.graphql'
 import {
   averageBlockTime,
   averageDifficulty,
@@ -15,6 +16,7 @@ import {
   totalFailedTxs,
   totalSuccessfulTxs
 } from '@app/core/api/apollo/queries/statistics.graphql'
+import { addressTokenTransfers, addressTokenTransfersByHolder } from '@app/core/api/apollo/queries/token-transfers.graphql'
 import { totalNumberOfTransactions, tx, txsForAddress } from '@app/core/api/apollo/queries/txs.graphql'
 import { totalNumberOfUncles, uncleByHash, uncles } from '@app/core/api/apollo/queries/uncles.graphql'
 import { Block, PendingTx, SimpleBlock, SimpleTx, Tx, Uncle } from '@app/core/models'
@@ -44,7 +46,7 @@ export class EthvmApolloApi implements EthvmApi {
       .query({
         query: addressBalanceByHash,
         variables: {
-          address: address.replace('0x', '')
+          address
         }
       })
       .then(res => res.data.accountMetadataByHash)
@@ -55,7 +57,7 @@ export class EthvmApolloApi implements EthvmApi {
       .query({
         query: accountMetadataByHash,
         variables: {
-          address: address.replace('0x', '')
+          address
         }
       })
       .then(res => res.data.accountMetadataByHash)
@@ -70,11 +72,31 @@ export class EthvmApolloApi implements EthvmApi {
   }
 
   public getAddressTokenTransfers(address: string, limit: number, page: number): Promise<TokenTransfer[]> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: addressTokenTransfers,
+        variables: {
+          address,
+          limit,
+          page
+        }
+      })
+      .then(res => res.data.addressTokenTransfers)
   }
 
   public getAddressTokenTransfersByHolder(address: string, holder: string, filter: string, limit: number, page: number): Promise<TokenTransfer[]> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: addressTokenTransfersByHolder,
+        variables: {
+          address,
+          holder,
+          filter,
+          limit,
+          page
+        }
+      })
+      .then(res => res.data.addressTokenTransfersByHolder)
   }
 
   // ------------------------------------------------------------------------------------
@@ -86,7 +108,7 @@ export class EthvmApolloApi implements EthvmApi {
       .query({
         query: blockByHash,
         variables: {
-          hash: hash.replace('0x', '')
+          hash: hash
         }
       })
       .then(res => new Block(res.data.blockByHash))
@@ -96,12 +118,12 @@ export class EthvmApolloApi implements EthvmApi {
     throw new Error('Method not implemented.')
   }
 
-  public getBlockByNumber(no: number): Promise<Block> {
+  public getBlockByNumber(number: number): Promise<Block> {
     return this.apollo
       .query({
         query: blockByNumber,
         variables: {
-          number: no
+          number
         }
       })
       .then(res => new Block(res.data.blockByNumber))
@@ -137,7 +159,7 @@ export class EthvmApolloApi implements EthvmApi {
       .query({
         query: blockMetricByHash,
         variables: {
-          hash: hash.replace('0x', '')
+          hash
         }
       })
       .then(res => res.data.blockMetrics)
@@ -175,7 +197,7 @@ export class EthvmApolloApi implements EthvmApi {
       .query({
         query: contractsCreatedBy,
         variables: {
-          creator: address.replace('0x', ''),
+          creator: address,
           limit,
           page
         }
@@ -236,14 +258,23 @@ export class EthvmApolloApi implements EthvmApi {
       .query({
         query: tx,
         variables: {
-          hash: hash.replace('0x', '')
+          hash
         }
       })
       .then(res => new Tx(res.data.tx))
   }
 
   public getTxs(format: string, limit: number, order: string, fromBlock: number): Promise<Tx[] | SimpleTx[]> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: txs,
+        variables: {
+          limit,
+          order,
+          fromBlock
+        }
+      })
+      .then(res => res.data.txs.map(raw => new Tx(raw)))
   }
 
   public getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<Tx[]> {
@@ -251,7 +282,7 @@ export class EthvmApolloApi implements EthvmApi {
       .query({
         query: txsForAddress,
         variables: {
-          hash: hash ? hash.replace('0x', '') : '',
+          hash: hash ? hash : '',
           filter,
           limit,
           page
@@ -277,7 +308,7 @@ export class EthvmApolloApi implements EthvmApi {
       .query({
         query: uncleByHash,
         variables: {
-          hash: hash.replace('0x', '')
+          hash
         }
       })
       .then(res => new Uncle(res.data.uncleByHash))
@@ -412,7 +443,14 @@ export class EthvmApolloApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
 
   public search(hash: string): Promise<any> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: search,
+        variables: {
+          query: hash
+        }
+      })
+      .then(res => res.data.search)
   }
 
   // ------------------------------------------------------------------------------------

@@ -1,0 +1,23 @@
+query addressTokenTransfers($address: String!, $limit: Int, $page: Int) {
+  query addressTokenTransfers(address: $address, limit: $limit, page: $page) {
+    amount
+    contract
+    from
+    timestamp
+    to
+    tokenId
+    transferType
+  }
+}
+
+query addressTokenTransfersByHolder($address: String!, $holder: String!, $filter: FilterEnum, $limit: Int, $page: Int) {
+  query addressTokenTransfersByHolder(address: $address, holder: $holder, filter: $filter, limit: $limit, page: $page) {
+    amount
+    contract
+    from
+    timestamp
+    to
+    tokenId
+    transferType
+  }
+}

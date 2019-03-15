@@ -54,6 +54,29 @@ query tx($hash: String) {
   }
 }
 
+query txs($limit: Int, $page: Int) {
+  tx(limit: $limit) {
+    blockHash
+    blockNumber
+    from
+    gas
+    gasPrice
+    hash
+    input
+    timestamp
+    to
+    value
+    receipt {
+      contractAddress
+      gasUsed
+      status
+      traces {
+        error
+      }
+    }
+  }
+}
+
 query txsForAddress($hash: String!, $filter: String, $limit: Int, $page: Int) {
   txsForAddress(hash: $hash, filter: $filter, limit: $limit, page: $page) {
     blockHash
