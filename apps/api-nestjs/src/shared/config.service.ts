@@ -57,6 +57,18 @@ const schema = {
       default:
         'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true'
     }
+  },
+  ethplorer: {
+    url: {
+      doc: 'Ethplorer API URL',
+      env: 'ETHPLORER_API_URL',
+      default: 'http://api.ethplorer.io/'
+    },
+    apiKey: {
+      doc: 'Ethplorer API key',
+      env: 'ETHPLORER_API_KEY',
+      default: 'freekey'
+    }
   }
 }
 
@@ -70,6 +82,11 @@ export interface MongoDbConfig {
 
 export interface CoinGeckoConfig {
   url: string
+}
+
+export interface EthplorerConfig {
+  url: string
+  apiKey: string
 }
 
 @Injectable()
@@ -112,5 +129,9 @@ export class ConfigService {
 
   get coinGecko(): CoinGeckoConfig {
     return this.config.get('coinGecko')
+  }
+
+  get ethplorer(): EthplorerConfig {
+    return this.config.get('ethplorer')
   }
 }

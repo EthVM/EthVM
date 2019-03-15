@@ -30,4 +30,9 @@ export class TokenTransferResolvers {
     const entities = await this.tokenTransferService.findAddressTokenTransfersByHolder(address, holder, filter, limit, page)
     return entities.map(e => new TokenExchangeRateDto(e))
   }
+
+  @Query()
+  async tokenHistory(@Args('address') address: string) {
+    return this.tokenTransferService.fetchTokenHistory(address)
+  }
 }

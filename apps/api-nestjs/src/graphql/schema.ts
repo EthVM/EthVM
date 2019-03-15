@@ -163,6 +163,17 @@ export class ContractType {
     string?: ContractTypeEnum;
 }
 
+export class EthplorerTokenOperation {
+    timestamp?: number;
+    transactionHash?: string;
+    tokenInfo?: string;
+    type?: string;
+    address?: string;
+    from?: string;
+    to?: string;
+    value?: number;
+}
+
 export class Header {
     author?: string;
     difficulty?: string;
@@ -272,6 +283,8 @@ export abstract class IQuery {
     abstract addressTokenTransfers(address: string, limit?: number, page?: number): TokenTransfer[] | Promise<TokenTransfer[]>;
 
     abstract addressTokenTransfersByHolder(address: string, holder: string, filter?: FilterEnum, limit?: number, page?: number): TokenTransfer[] | Promise<TokenTransfer[]>;
+
+    abstract tokenHistory(address: string): EthplorerTokenOperation[] | Promise<EthplorerTokenOperation[]>;
 
     abstract tx(hash: string): Transaction | Promise<Transaction>;
 
