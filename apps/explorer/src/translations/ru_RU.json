@@ -18,7 +18,6 @@
     "state-root": "RU-State Root",
     "rcpt-root": "RU-Receipts Root"
   },
-
   "uncle": {
     "name": "RU-Uncle | RU_Uncles",
     "number": "RU-Uncle #",
@@ -29,7 +28,6 @@
     "reward": "RU-Uncle Reward",
     "included": "RU-Included in Block #"
   },
-
   "tx": {
     "name": "RU-Transaction | RU_Transactions",
     "name-short": "RU-Tx | RU_Txs",
@@ -54,7 +52,6 @@
     "func": "RU-Function",
     "method": "RU-Method ID"
   },
-
   "token": {
     "name": "RU-Token | RU_Tokens",
     "detail": "RU-Token Details",
@@ -76,16 +73,13 @@
     "website": "RU-Website",
     "support": "RU-Support"
   },
-
   "address": {
     "name": "RU-Address"
   },
-
   "contract": {
     "name": "RU-Contract | RU_Contracts",
     "creator": "RU-Contract Creator"
   },
-
   "gas": {
     "name": "RU-Gas",
     "limit": "RU-Gas Limit",
@@ -94,25 +88,21 @@
     "price": "RU-Gas Price",
     "ave-price": "RU-Avg Gas Price"
   },
-
   "miner": {
     "name": "RU-Miner",
     "reward": "RU-Miner Reward",
     "reward-short": "RU-Reward",
     "history": "RU-Mining History"
   },
-
   "diff": {
     "name": "RU-Difficulty",
     "total": "RU-Total Difficulty"
   },
-
   "price": {
     "name": "RU-Price | RU_Prices",
     "erc20": "RU-ERC20 Prices",
     "erc721": "RU-ERC721 Prices"
   },
-
   "common": {
     "hash": "RU-Hash",
     "height": "RU-Height",
@@ -132,17 +122,15 @@
     "eth-balance": "RU-Ether Balance",
     "balance": "RU-Balance"
   },
-
   "usd": {
     "name": "RU-USD",
     "total": "RU-Total USD Value",
     "value": "RU-USD Value"
   },
-
   "message": {
     "no-data": "RU-Oops something went wrong, no data from server :(",
     "err": "RU-Error",
-    "tx" : {
+    "tx": {
       "no-all": "RU-This address does not have any transaction history",
       "no-in": "RU-This address does not have incoming transactions",
       "no-out": "RU-This address does not have outgoing transactions",
@@ -190,14 +178,14 @@
     "tx-summary": {
       "title": "RU-Tx Summary",
       "description": "RU-Successful, failed, and pending transactions in the last 10 blocks.",
-      "label":{
+      "label": {
         "pen": "RU-Pending Txs",
         "success-fail": "RU-Successful and Failed Txs"
       }
     },
     "tx-costs": {
       "title": "RU-Tx Fees and Gas Price",
-      "description":  "Average transaction fees and average gas price in the last 10 blocks."
+      "description": "Average transaction fees and average gas price in the last 10 blocks."
     },
     "block-diff": {
       "title": "RU-Block Difficulty",
@@ -271,13 +259,11 @@
     "back-home": "RU-Go Back Home",
     "report": "RU-Report Issue"
   },
-
   "search": {
     "name": "RU-Search",
     "default": "RU-Search Block / Address / Tx",
     "address-tx": "RU-Tx Hash/Address"
   },
-
   "filter": {
     "name": "RU-Filter",
     "view": "RU-View",
@@ -287,7 +273,6 @@
     "high": "RU-High to Low",
     "low": "RU-Low to High"
   },
-
   "footer": {
     "discover": "RU-Discover",
     "donate": "RU-Donate",
@@ -298,23 +283,21 @@
     "copy-eth-addr": "RU-Copy ETH address",
     "copy-btc-addr": "RU-Copy BTC address"
   },
-
   "home": "RU-Home",
-
   "about": {
     "name": "RU-About Us",
     "title": "RU-What is EthVM?",
     "text": "RU-EthVM project is brought to you by kvhnuke,  founder of MyEtherWallet. EthVM is a free and open source interface for exploring and evaluting real time Ethereum blocks, transactions and more. This software is under MIT License.",
     "git": {
       "title": "RU-GitHub",
-      "text":  "If you want to contribute, make a request on GitHub."
+      "text": "If you want to contribute, make a request on GitHub."
     },
     "medium": {
       "title": "RU-Medium",
       "text": "RU-If you want to listen/share our awesome thoughts check our medium account."
     },
     "twitter": {
-      "title":"Twitter",
+      "title": "Twitter",
       "text": "RU-Talk to us on Twitter."
     },
     "reddit": {
@@ -327,149 +310,147 @@
       "mit": "RU-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
     }
   },
-
-  "kb":{
+  "kb": {
     "name": "RU-Knowledge Base",
     "title": "RU-Blockchain Terms",
     "terms": {
-    "acc": {
-      "term": "RU-Account",
-      "def": "RU-Entry on the blockchain ledger that contains data about the state of that account. In the case of a currency system, it's the information about funds available."
-    },
-    "addr": {
-      "term": "RU-Address",
-      "def": "RU-String of alphanumeric characters that represents a particular user's hashed public key. Addresses are used to send and receive transactions on the blockchain. The address points to an account."
-    },
-    "block": {
-      "term": "RU-Block",
-      "def": "RU-Package of data that holds a number of recent transactions and the previous block's (\"parent\" block) hash. Thus, every block points to a previous block, creating an immutable chain."
-    },
-    "blockchain": {
-      "term": "RU-Blockchain",
-      "def": "RU-Distributed ledger that records data in packages called blocks. The blocks are connected together using cryptographic technology, making them unchangeable after being added to the chain."
-    },
-    "casper": {
-      "term": "RU-Casper",
-      "def": "RU-Specific type of proof of stake consensus protocol based on security deposits placed by nodes to confirm blocks. Casper is the protocol that should go into effect when Ethereum blockchain transitions to proof of stake."
-    },
-      "consensus":  {
-      "term": "RU-Consensus",
-      "def": "RU-Agreement among the nodes of the decentralized network about the state of the network."
-    },
-    "dao": {
-      "term": "RU-DAO",
-      "def": "RU-Abbreviation for Decentralized Autonomous Organization – an organization that is run without direct human oversight, governed by a set of unalterable rules enforced through the blockchain."
-    },
-    "dapp": {
-      "term": "RU-dApp",
-      "def": "RU-Abbreviation for decentralized application. dApps are applications that are open-source, not controlled by any centralized entity, enabling direct interaction between users without a trusted third party."
-    },
-    "decentralization": {
-      "term": "RU-Decentralization",
-      "def": "RU-Redestribution of power and functions away from a central authority to eliminate third-party control and tampering."
-    },
-    "signature": {
-      "term": "RU-Digital signature",
-      "def": "RU-Algorithm which allows a user to produce a specific string of data using their private key. This string, along with the corresponding public key and the signed document, can be used to verify that the document was signed by the owner of the key and that it was not changed after signing."
-    },
-    "double-spend": {
-      "term": "RU-Double spend",
-      "def": "RU-Occurs when a user sends a transaction to purchase coins, and then creates another transaction to send the SAME coins to themselves. This requires creating two blocks at the same level, resulting in a deliberate blockchain fork. "
-    },
-    "encrypt": {
-      "term": "RU-Encryption",
-      "def": "RU-The process of turning plain text into ciphertext using a data \"key\". After encryption, ciphertext looks like a random sequnce of bits. The reverse process is decryption."
-    },
-    "ens": {
-      "term": "RU-ENS",
-      "def": "RU-Ethereum Name Service – registers plain text names that correspond to cryptographic wallet addresses, for greater security and ease of use."
-    },
-    "eth": {
-      "term": "RU-Ether",
-      "def": "RU-Cryptographic currency of the Ethereum blockchain, used to pay transaction fees (gas) on the network. The short code for Ether is ETH."
-    },
-    "ethreum": {
-      "term": "RU-Ethereum",
-      "def": "RU-Decentralized blockchain platform enabled with a software language for building applications and creating contracts. Ethereum is the network, Ether is the token."
-    },
-    "evm": {
-      "term": "RU-EVM",
-      "def": "RU-Ethereum Virtual Machine – the decentralized computing code at the core of the Ethereum platform. Each validating node has its own isolated implementation of EVM which allows it to achieve consensus."
-    },
-    "fork": {
-      "term": "RU-Fork",
-      "def": "RU-Accidental or deliberate creation of an alternative version of the blockchain by generating two blocks from the same parent block. This can result either in abandonment of one of the chains (through consensus) or both chains going forward operating independently."
-    },
-    "gas": {
-      "term": "RU-Gas",
-      "def": "RU-The fee for executing a transaction or contract on the Ethereum network, paid in ETH. For this reason, a user must have a small amount of ETH available in the account before sending any transactions."
-    },
-    "hash": {
-      "term": "RU-Hash",
-      "def": "RU-Function or algorithm by which a file is processed into a small piece of data that looks like random bytes. Importantly, the hash is unique but always the same for a specific document. However, changing even one character in the document will completely randomize the hash."
-    },
-    "messg": {
-      "term": "RU-Message",
-      "def": "RU-Data transfer mechanism used for communication between contracts."
-    },
-    "mining": {
-      "term": "RU-Mining",
-      "def": "RU-Computing process by which transactions are verified and new blocks are added to the blockchain. Verified blocks are rewarded with a certain amount of cryptocurrency and the block's transaction fees, which means that mining is also the way more cryptocurrency is \"created\"."
-    },
-    "nonce": {
-      "term": "RU-Nonce",
-      "def": "RU-Number Used Once – a string of data generated and used just once as unique identifier for a new block in the blockchain."
-    },
-    "ommer": {
-      "term": "RU-Ommer",
-      "def": "RU-Gender-neutral alternative to Uncle, used interchangeably in blockchain."
-    },
-    "oracle": {
-      "term": "RU-Oracles",
-      "def": "RU-Products that can bring real-world data onto the blockchain for execution of smart contracts that are dependent on outside conditions – such as game scores for sports betting."
-    },
-    "pri-key":{
-      "term": "RU-Private key",
-      "def": "RU-Alphanumeric string associated with an account and known only by the owner of the account. Cryptographically paired with public key for executing transactions."
-    },
-    "pos": {
-      "term": "RU-Proof of stake",
-      "def": "RU-Low-cost, low-energy alternative to proof of work. Validation of new blocks is allocated to users that hold the most stake (the highest amount of Ether) in the network. The Ethereum blockchain is expected to transition to a proof of stake algorithm Casper in the near future."
-    },
-    "pow": {
-      "term": "RU-Proof of work",
-      "def": "RU-Consensus algorithm that depends on using a high amount of computing power and energy for mining new blocks. A validator node must solve complex mathematical problems and present the result as proof of that work in order to qualify for block validation. This is the current consensus algorithm for Ethereum."
-    },
-    "pub-key": {
-      "term": "RU-Public key",
-      "def": "RU-Alphanumeric string derived from private key and used publicly to provide other users with an address for sending transactions. "
-    },
-    "contract": {
-      "term": "RU-Smart contract",
-      "def": "RU-Computer protocol that digitally enforces contracts such that they are automatically executed on the blockchain when contract conditions are met. These conditions can require input from oracles."
-    },
-    "state": {
-      "term": "RU-State",
-      "def": "RU-All balances and data on the blockchain at a particular point in time."
-    },
-    "txs": {
-      "term": "RU-Transaction",
-      "def": "RU-Any action taking place on the blockchain. Usually, sending currency or tokens to another address; other examples include entering and executing smart contracts, registering domain names, fulfilling trade orders."
-    },
-    "uncle": {
-      "term": "RU-Uncle",
-      "def": "RU-Because miners may not be fully synchronized at all times, some blocks will be mined that are not on the longest chain. These end up being \"sibling\" blocks to the \"parent\" block which continues the blockchain. On Ethereum, uncle (or ommer) blocks are still rewarded, but at a lower rate."
-    },
-    "valid": {
-      "term": "RU-Validators",
-      "def": "RU-Nodes that make up a decentralized network and maintain consensus by validating new blocks broadcasted by miners. "
+      "acc": {
+        "term": "RU-Account",
+        "def": "RU-Entry on the blockchain ledger that contains data about the state of that account. In the case of a currency system, it's the information about funds available."
+      },
+      "addr": {
+        "term": "RU-Address",
+        "def": "RU-String of alphanumeric characters that represents a particular user's hashed public key. Addresses are used to send and receive transactions on the blockchain. The address points to an account."
+      },
+      "block": {
+        "term": "RU-Block",
+        "def": "RU-Package of data that holds a number of recent transactions and the previous block's (\"parent\" block) hash. Thus, every block points to a previous block, creating an immutable chain."
+      },
+      "blockchain": {
+        "term": "RU-Blockchain",
+        "def": "RU-Distributed ledger that records data in packages called blocks. The blocks are connected together using cryptographic technology, making them unchangeable after being added to the chain."
+      },
+      "casper": {
+        "term": "RU-Casper",
+        "def": "RU-Specific type of proof of stake consensus protocol based on security deposits placed by nodes to confirm blocks. Casper is the protocol that should go into effect when Ethereum blockchain transitions to proof of stake."
+      },
+      "consensus": {
+        "term": "RU-Consensus",
+        "def": "RU-Agreement among the nodes of the decentralized network about the state of the network."
+      },
+      "dao": {
+        "term": "RU-DAO",
+        "def": "RU-Abbreviation for Decentralized Autonomous Organization – an organization that is run without direct human oversight, governed by a set of unalterable rules enforced through the blockchain."
+      },
+      "dapp": {
+        "term": "RU-dApp",
+        "def": "RU-Abbreviation for decentralized application. dApps are applications that are open-source, not controlled by any centralized entity, enabling direct interaction between users without a trusted third party."
+      },
+      "decentralization": {
+        "term": "RU-Decentralization",
+        "def": "RU-Redestribution of power and functions away from a central authority to eliminate third-party control and tampering."
+      },
+      "signature": {
+        "term": "RU-Digital signature",
+        "def": "RU-Algorithm which allows a user to produce a specific string of data using their private key. This string, along with the corresponding public key and the signed document, can be used to verify that the document was signed by the owner of the key and that it was not changed after signing."
+      },
+      "double-spend": {
+        "term": "RU-Double spend",
+        "def": "RU-Occurs when a user sends a transaction to purchase coins, and then creates another transaction to send the SAME coins to themselves. This requires creating two blocks at the same level, resulting in a deliberate blockchain fork. "
+      },
+      "encrypt": {
+        "term": "RU-Encryption",
+        "def": "RU-The process of turning plain text into ciphertext using a data \"key\". After encryption, ciphertext looks like a random sequnce of bits. The reverse process is decryption."
+      },
+      "ens": {
+        "term": "RU-ENS",
+        "def": "RU-Ethereum Name Service – registers plain text names that correspond to cryptographic wallet addresses, for greater security and ease of use."
+      },
+      "eth": {
+        "term": "RU-Ether",
+        "def": "RU-Cryptographic currency of the Ethereum blockchain, used to pay transaction fees (gas) on the network. The short code for Ether is ETH."
+      },
+      "ethreum": {
+        "term": "RU-Ethereum",
+        "def": "RU-Decentralized blockchain platform enabled with a software language for building applications and creating contracts. Ethereum is the network, Ether is the token."
+      },
+      "evm": {
+        "term": "RU-EVM",
+        "def": "RU-Ethereum Virtual Machine – the decentralized computing code at the core of the Ethereum platform. Each validating node has its own isolated implementation of EVM which allows it to achieve consensus."
+      },
+      "fork": {
+        "term": "RU-Fork",
+        "def": "RU-Accidental or deliberate creation of an alternative version of the blockchain by generating two blocks from the same parent block. This can result either in abandonment of one of the chains (through consensus) or both chains going forward operating independently."
+      },
+      "gas": {
+        "term": "RU-Gas",
+        "def": "RU-The fee for executing a transaction or contract on the Ethereum network, paid in ETH. For this reason, a user must have a small amount of ETH available in the account before sending any transactions."
+      },
+      "hash": {
+        "term": "RU-Hash",
+        "def": "RU-Function or algorithm by which a file is processed into a small piece of data that looks like random bytes. Importantly, the hash is unique but always the same for a specific document. However, changing even one character in the document will completely randomize the hash."
+      },
+      "messg": {
+        "term": "RU-Message",
+        "def": "RU-Data transfer mechanism used for communication between contracts."
+      },
+      "mining": {
+        "term": "RU-Mining",
+        "def": "RU-Computing process by which transactions are verified and new blocks are added to the blockchain. Verified blocks are rewarded with a certain amount of cryptocurrency and the block's transaction fees, which means that mining is also the way more cryptocurrency is \"created\"."
+      },
+      "nonce": {
+        "term": "RU-Nonce",
+        "def": "RU-Number Used Once – a string of data generated and used just once as unique identifier for a new block in the blockchain."
+      },
+      "ommer": {
+        "term": "RU-Ommer",
+        "def": "RU-Gender-neutral alternative to Uncle, used interchangeably in blockchain."
+      },
+      "oracle": {
+        "term": "RU-Oracles",
+        "def": "RU-Products that can bring real-world data onto the blockchain for execution of smart contracts that are dependent on outside conditions – such as game scores for sports betting."
+      },
+      "pri-key": {
+        "term": "RU-Private key",
+        "def": "RU-Alphanumeric string associated with an account and known only by the owner of the account. Cryptographically paired with public key for executing transactions."
+      },
+      "pos": {
+        "term": "RU-Proof of stake",
+        "def": "RU-Low-cost, low-energy alternative to proof of work. Validation of new blocks is allocated to users that hold the most stake (the highest amount of Ether) in the network. The Ethereum blockchain is expected to transition to a proof of stake algorithm Casper in the near future."
+      },
+      "pow": {
+        "term": "RU-Proof of work",
+        "def": "RU-Consensus algorithm that depends on using a high amount of computing power and energy for mining new blocks. A validator node must solve complex mathematical problems and present the result as proof of that work in order to qualify for block validation. This is the current consensus algorithm for Ethereum."
+      },
+      "pub-key": {
+        "term": "RU-Public key",
+        "def": "RU-Alphanumeric string derived from private key and used publicly to provide other users with an address for sending transactions. "
+      },
+      "contract": {
+        "term": "RU-Smart contract",
+        "def": "RU-Computer protocol that digitally enforces contracts such that they are automatically executed on the blockchain when contract conditions are met. These conditions can require input from oracles."
+      },
+      "state": {
+        "term": "RU-State",
+        "def": "RU-All balances and data on the blockchain at a particular point in time."
+      },
+      "txs": {
+        "term": "RU-Transaction",
+        "def": "RU-Any action taking place on the blockchain. Usually, sending currency or tokens to another address; other examples include entering and executing smart contracts, registering domain names, fulfilling trade orders."
+      },
+      "uncle": {
+        "term": "RU-Uncle",
+        "def": "RU-Because miners may not be fully synchronized at all times, some blocks will be mined that are not on the longest chain. These end up being \"sibling\" blocks to the \"parent\" block which continues the blockchain. On Ethereum, uncle (or ommer) blocks are still rewarded, but at a lower rate."
+      },
+      "valid": {
+        "term": "RU-Validators",
+        "def": "RU-Nodes that make up a decentralized network and maintain consensus by validating new blocks broadcasted by miners. "
+      }
     }
-  }
   },
-
   "pp": {
     "name": "RU-Privacy Policy",
-    "intro":{
+    "intro": {
       "title": "RU-Introduction",
       "p1": "RU_Welcome to EthVM, a free, open-source, tool for interacting with data on the blockchain. EthVM and MyEtherWallet, Inc. values privacy and we make a concerted effort to minimize and, to the extent possible, eliminate the exposure of personal data during the use of our interface. EthVM does not collect, hold, or store keys, account information, or passwords. We do not collect data passively, do not monetize the collection of data, and do not use your data for marketing or advertising.",
       "p2": "RU-To the extent we collect any personal information, this privacy policy (“Policy”) describes how EthVM collects, uses, and shares personal information of people who visit our website (the “Site”) or otherwise use our services (collectively, the “Services”).",
