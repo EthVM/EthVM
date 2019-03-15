@@ -1,6 +1,7 @@
 import { Args, Query, Resolver } from '@nestjs/graphql'
 import { ExchangeService } from '@app/modules/exchanges/exchange.service'
 import { TokenExchangeRateDto } from '@app/modules/exchanges/token-exchange-rate.dto'
+import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 
 @Resolver('TokenExchangeRate')
 export class TokenExchangeRateResolvers {
@@ -29,7 +30,7 @@ export class TokenExchangeRateResolvers {
   }
 
   @Query()
-  async tokenExchangeRateByAddress(@Args('address') address: string) {
+  async tokenExchangeRateByAddress(@Args('address', ParseAddressPipe) address: string) {
     const entity = await this.exchangeService.findTokenExchangeRateByAddress(address)
     return entity ? new TokenExchangeRateDto(entity) : null
   }

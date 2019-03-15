@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common'
 @Injectable()
 export class EthService {
   isValidAddress(address: string): boolean {
-    return /^0x[0-9a-fA-F]{40}$/.test(address)
+    return /^(0x)?([0-9a-fA-F]{40})$/.test(address)
   }
 
   isValidHash(hash: string): boolean {

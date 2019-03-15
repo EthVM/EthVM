@@ -2,6 +2,7 @@ import { Args, Query, Resolver } from '@nestjs/graphql'
 import { TxService } from '@app/modules/txs/tx.service'
 import { TxDto } from '@app/modules/txs/tx.dto'
 import { ParseHashPipe } from '@app/shared/validation/parse-hash.pipe'
+import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 
 @Resolver('Transaction')
 export class TxResolvers {
@@ -26,7 +27,7 @@ export class TxResolvers {
   }
 
   @Query()
-  async txsForAddress(@Args('hash') hash: string, @Args('filter') filter?: string, @Args('limit') limit?: number, @Args('page') page?: number) {
+  async txsForAddress(@Args('hash', ParseAddressPipe) hash: string, @Args('filter') filter?: string, @Args('limit') limit?: number, @Args('page') page?: number) {
     const entities = await this.txService.findTxsForAddress(hash, filter, limit, page)
     return entities.map(e => new TxDto(e))
   }
