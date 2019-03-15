@@ -96,7 +96,7 @@ export default class HolderDetailsList extends Vue {
       details = [
         {
           title: this.$i18n.t('token.holder'),
-          detail: this.$route.query.holder,
+          detail: this.$route.query.holder.toString(),
           link: `/address/${this.$route.query.holder}`
         },
         {

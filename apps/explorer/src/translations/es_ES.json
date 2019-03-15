@@ -1,0 +1,540 @@
+{
+  "block": {
+    "name": "ES-Block | ES_Blocks",
+    "number": "ES-Block #",
+    "mined": "ES-Mined Blocks",
+    "detail": "ES-Block Details",
+    "txs": "ES-Block Transactions",
+    "last": "ES-Last Blocks",
+    "block": "ES-Block Height #",
+    "p-hash": "ES-Parent Hash",
+    "total-reward": "ES-Total Block Reward",
+    "last-n": "ES-Last Block #",
+    "time": "ES-Since Last Block",
+    "hash-rate": "ES-Hash Rate",
+    "bytes": "ES-Bytes",
+    "logs": "ES-Logs",
+    "data": "ES-Extra Data",
+    "state-root": "ES-State Root",
+    "rcpt-root": "ES-Receipts Root"
+  },
+
+  "uncle": {
+    "name": "ES-Uncle | ES_Uncles",
+    "number": "ES-Uncle #",
+    "detail": "ES-Uncle Details",
+    "height": "ES-Uncle Height #",
+    "uncle-position": "ES-Uncle Position",
+    "position": "ES-Position",
+    "reward": "ES-Uncle Reward",
+    "included": "ES-Included in Block #"
+  },
+
+  "tx": {
+    "name": "ES-Transaction | ES_Transactions",
+    "name-short": "ES-Tx | ES_Txs",
+    "pending": "ES-Pending Transaction | ES_Pending Transactions",
+    "pending-short": "ES-Pending Tx | ES_Pending Txs",
+    "mined": "ES-Mined Transactions",
+    "detail": "ES-Transaction Details",
+    "last": "ES-Last Transactions",
+    "hash": "ES-Tx # | ES_Transaction #",
+    "fee": "ES-Tx Fee | ES_Txs Fees",
+    "history": "ES-Transactions History",
+    "total": "ES-Total Txs",
+    "success": "ES-Successful Tx | ES_Successful Txs",
+    "failed": "ES-Failed Tx | ES_Failed Txs",
+    "for-tx": "ES-For Tx",
+    "cost": "ES-Tx Cost",
+    "root": "ES-Transactions Root",
+    "from": "ES-From",
+    "to": "ES-To",
+    "status": "ES-Status",
+    "input": "ES-Input Data",
+    "func": "ES-Function",
+    "method": "ES-Method ID"
+  },
+
+  "token": {
+    "name": "ES-Token | ES_Tokens",
+    "detail": "ES-Token Details",
+    "empty": "ES-No tokens",
+    "decimals": "ES-Decimals",
+    "number": "ES-Total Tokens ",
+    "tokenName": "ES-Token Name",
+    "supply": "ES-Total Supply",
+    "holder": "ES-Holder",
+    "holder-total": "ES-Total Holders",
+    "symbol": "ES-Symbol",
+    "decimal": "ES-Decimals",
+    "owner": "ES-Owner",
+    "market": "ES-Market Cap",
+    "change": "ES-%Change (24H)",
+    "volume": "ES-Volume",
+    "transfers": "ES-Transfers",
+    "links": "ES-Links",
+    "website": "ES-Website",
+    "support": "ES-Support"
+  },
+
+  "address": {
+    "name": "ES-Address"
+  },
+
+  "contract": {
+    "name": "ES-Contract | ES_Contracts",
+    "creator": "ES-Contract Creator"
+  },
+
+  "gas": {
+    "name": "ES-Gas",
+    "limit": "ES-Gas Limit",
+    "used": "ES-Gas Used",
+    "fee": "ES-Gas Fee",
+    "price": "ES-Gas Price",
+    "ave-price": "ES-Avg Gas Price"
+  },
+
+  "miner": {
+    "name": "ES-Miner",
+    "reward": "ES-Miner Reward",
+    "reward-short": "ES-Reward",
+    "history": "ES-Mining History"
+  },
+
+  "diff": {
+    "name": "ES-Difficulty",
+    "total": "ES-Total Difficulty"
+  },
+
+  "price": {
+    "name": "ES-Price | ES_Prices",
+    "erc20": "ES-ERC20 Prices",
+    "erc721": "ES-ERC721 Prices"
+  },
+
+  "common": {
+    "hash": "ES-Hash",
+    "height": "ES-Height",
+    "size": "ES-Size",
+    "nonce": "ES-Nonce",
+    "sha": "ES-SHA3",
+    "age": "ES-Age",
+    "eth": "ES-ETH",
+    "gwei": "ES-GWEI",
+    "timestmp": "ES-Timestamp",
+    "success": "ES-Successful",
+    "fail": "ES-Failed",
+    "pending": "ES-Pending",
+    "amount": "ES-Amount",
+    "quantity": "ES-Quantity",
+    "percentage": "ES-Percentage",
+    "eth-balance": "ES-Ether Balance",
+    "balance": "ES-Balance"
+  },
+
+  "usd": {
+    "name": "ES-USD",
+    "total": "ES-Total USD Value",
+    "value": "ES-USD Value"
+  },
+
+  "message": {
+    "no-data": "ES-Oops something went wrong, no data from server :(",
+    "err": "ES-Error",
+    "tx" : {
+      "no-all": "ES-This address does not have any transaction history",
+      "no-in": "ES-This address does not have incoming transactions",
+      "no-out": "ES-This address does not have outgoing transactions",
+      "no-pen": "ES-This address does not have pending transactions",
+      "no-pen-in": "ES-This address does not have any pending incoming transactions",
+      "no-pen-out": "ES-This address does not have any pending outgoing transactions",
+      "no-history": "ES-There is no transaction history",
+      "no-in-block": "ES-This block does not have any transactions",
+      "not-exist": "ES-This transaction does not exist",
+      "no-pending": "ES-There are no pending transactions"
+    },
+    "no-tokens": "ES-Address does not hold any common tokens",
+    "load": "ES-Loading",
+    "load-block-tx": "ES-Loading block transactions",
+    "not-mined": "ES-This block has not been mined yet",
+    "invalid": {
+      "tx": "ES-This is not a valid transaction hash",
+      "block": "ES-This is not a valid block hash",
+      "addr": "ES-This is not a valid address hash",
+      "token": "ES-This is not a valid token address",
+      "contract": "ES-This is not a valid contract address",
+      "uncle": "ES-This is not a valid uncle hash"
+    },
+    "sync": {
+      "main": "ES-We are synchronizing with the Blockchain. Some features might not work correctly.",
+      "no-pen-tx": "ES-There are no pending transactions while synchronizing with the Blockchain."
+    },
+    "not-found": "ES-Oops! Page Not Found :(",
+    "welcome": {
+      "title": "ES-Welcome to EthVM!",
+      "text1": "ES-We're still in our Alpha stage, so some features may not work to their full potential. Reach out to us with any bugs you find at ",
+      "text2": "ES-, so we can continue to make EthVM even better!",
+      "btn": "ES-Onward!"
+    },
+    "ropsten-no-token": "ES-EthVM is still in testing, so we're currently showing data from the Ropsten ETH testnet. There are no tokens that have actual value on Ropsten testnet, but all mainnet Ethereum token balances will appear here once we go live.",
+    "report": "ES-Find any bugs or have suggestions?",
+    "update": {
+      "tx": "ES-new tx | ES_new txs",
+      "block": "ES-new block | ES_new blocks"
+    }
+  },
+  "charts": {
+    "name": "ES-Charts",
+    "live": "ES-Live Data",
+    "tx-summary": {
+      "title": "ES-Tx Summary",
+      "description": "ES-Successful, failed, and pending transactions in the last 10 blocks.",
+      "label":{
+        "pen": "ES-Pending Txs",
+        "success-fail": "ES-Successful and Failed Txs"
+      }
+    },
+    "tx-costs": {
+      "title": "ES-Tx Fees and Gas Price",
+      "description":  "Average transaction fees and average gas price in the last 10 blocks."
+    },
+    "block-diff": {
+      "title": "ES-Block Difficulty",
+      "description": "ES-Average Block Difficulty"
+    },
+    "block-size": {
+      "title": "ES-Block Size",
+      "description": "ES-Average Block Size"
+    },
+    "block-time": {
+      "title": "ES-Block Time",
+      "description": "ES-Average Block Time"
+    },
+    "gas-limit": {
+      "title": "ES-Gas Limit",
+      "description": "ES-Average Gas Limit"
+    },
+    "gas-price": {
+      "title": "ES-Gas Price",
+      "description": "ES-Average Gas Price"
+    },
+    "hash-rate": {
+      "title": "ES-Hash Rate",
+      "description": "ES-Average Hash Rate"
+    },
+    "tx-fail": {
+      "title": "ES-Failed Transactions",
+      "description": "ES-Number of Failed Transactions"
+    },
+    "tx-fees": {
+      "title": "ES-Transactions Fees",
+      "description": "ES-Average Transactions Fees"
+    },
+    "tx-pending": {
+      "title": "ES-Pending Transactions",
+      "description": "ES-Average Number of pending transactions"
+    },
+    "tx-success": {
+      "title": "ES-Successful Transactions",
+      "description": "ES-Number of Successful Transactions"
+    },
+    "uncles-number": {
+      "title": "ES-Uncles per Day",
+      "description": "ES-Total Number of Uncles per Day"
+    },
+    "mining-rewards": {
+      "title": "ES-Mining Rewards",
+      "description": "ES-Average Mining Rewards"
+    },
+    "top-miners": {
+      "title": "ES-Top Miners"
+    },
+    "states": {
+      "all": "ES-All",
+      "week": "ES-week | ES_1W",
+      "month": "ES-month | ES_1M",
+      "day": "ES-day | ES_1D",
+      "year": "ES-year | ES_1Y"
+    },
+    "captions": {
+      "all": "ES- in the Ethereum blockchain since the begining ",
+      "other": "ES- in the Ethereum blockchain in last "
+    }
+  },
+  "btn": {
+    "view-all": "ES-View All",
+    "more": "ES-More",
+    "less": "ES-Less",
+    "first": "ES-First",
+    "last": "ES-Last",
+    "back-home": "ES-Go Back Home",
+    "report": "ES-Report Issue"
+  },
+
+  "search": {
+    "name": "ES-Search",
+    "default": "ES-Search Block / Address / Tx",
+    "address-tx": "ES-Tx Hash/Address"
+  },
+
+  "filter": {
+    "name": "ES-Filter",
+    "view": "ES-View",
+    "all": "ES-All",
+    "out": "ES-Outgoing",
+    "in": "ES-Incoming",
+    "high": "ES-High to Low",
+    "low": "ES-Low to High"
+  },
+
+  "footer": {
+    "discover": "ES-Discover",
+    "donate": "ES-Donate",
+    "btc": "ES-BTC",
+    "ens": "ES-mewtopia.eth",
+    "copy": "ES-Copyright 2019 All rights reserved by ",
+    "mew": "ES-MyEtherWallet Inc",
+    "copy-eth-addr": "ES-Copy ETH address",
+    "copy-btc-addr": "ES-Copy BTC address"
+  },
+
+  "home": "ES-Home",
+
+  "about": {
+    "name": "ES-About Us",
+    "title": "ES-What is EthVM?",
+    "text": "ES-EthVM project is brought to you by kvhnuke,  founder of MyEtherWallet. EthVM is a free and open source interface for exploring and evaluting real time Ethereum blocks, transactions and more. This software is under MIT License.",
+    "git": {
+      "title": "ES-GitHub",
+      "text":  "If you want to contribute, make a request on GitHub."
+    },
+    "medium": {
+      "title": "ES-Medium",
+      "text": "ES-If you want to listen/share our awesome thoughts check our medium account."
+    },
+    "twitter": {
+      "title":"Twitter",
+      "text": "ES-Talk to us on Twitter."
+    },
+    "reddit": {
+      "title": "ES-Reddit",
+      "text": "ES-Visit our reddit thread."
+    },
+    "disclaimer": {
+      "name": "ES-Disclaimer",
+      "text": "ES-MIT License Copyright © 2017-2018 MyEtherWallet Inc Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.",
+      "mit": "ES-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+    }
+  },
+
+  "kb":{
+    "name": "ES-Knowledge Base",
+    "title": "ES-Blockchain Terms",
+    "terms": {
+    "acc": {
+      "term": "ES-Account",
+      "def": "ES-Entry on the blockchain ledger that contains data about the state of that account. In the case of a currency system, it's the information about funds available."
+    },
+    "addr": {
+      "term": "ES-Address",
+      "def": "ES-String of alphanumeric characters that represents a particular user's hashed public key. Addresses are used to send and receive transactions on the blockchain. The address points to an account."
+    },
+    "block": {
+      "term": "ES-Block",
+      "def": "ES-Package of data that holds a number of recent transactions and the previous block's (\"parent\" block) hash. Thus, every block points to a previous block, creating an immutable chain."
+    },
+    "blockchain": {
+      "term": "ES-Blockchain",
+      "def": "ES-Distributed ledger that records data in packages called blocks. The blocks are connected together using cryptographic technology, making them unchangeable after being added to the chain."
+    },
+    "casper": {
+      "term": "ES-Casper",
+      "def": "ES-Specific type of proof of stake consensus protocol based on security deposits placed by nodes to confirm blocks. Casper is the protocol that should go into effect when Ethereum blockchain transitions to proof of stake."
+    },
+      "consensus":  {
+      "term": "ES-Consensus",
+      "def": "ES-Agreement among the nodes of the decentralized network about the state of the network."
+    },
+    "dao": {
+      "term": "ES-DAO",
+      "def": "ES-Abbreviation for Decentralized Autonomous Organization – an organization that is run without direct human oversight, governed by a set of unalterable rules enforced through the blockchain."
+    },
+    "dapp": {
+      "term": "ES-dApp",
+      "def": "ES-Abbreviation for decentralized application. dApps are applications that are open-source, not controlled by any centralized entity, enabling direct interaction between users without a trusted third party."
+    },
+    "decentralization": {
+      "term": "ES-Decentralization",
+      "def": "ES-Redestribution of power and functions away from a central authority to eliminate third-party control and tampering."
+    },
+    "signature": {
+      "term": "ES-Digital signature",
+      "def": "ES-Algorithm which allows a user to produce a specific string of data using their private key. This string, along with the corresponding public key and the signed document, can be used to verify that the document was signed by the owner of the key and that it was not changed after signing."
+    },
+    "double-spend": {
+      "term": "ES-Double spend",
+      "def": "ES-Occurs when a user sends a transaction to purchase coins, and then creates another transaction to send the SAME coins to themselves. This requires creating two blocks at the same level, resulting in a deliberate blockchain fork. "
+    },
+    "encrypt": {
+      "term": "ES-Encryption",
+      "def": "ES-The process of turning plain text into ciphertext using a data \"key\". After encryption, ciphertext looks like a random sequnce of bits. The reverse process is decryption."
+    },
+    "ens": {
+      "term": "ES-ENS",
+      "def": "ES-Ethereum Name Service – registers plain text names that correspond to cryptographic wallet addresses, for greater security and ease of use."
+    },
+    "eth": {
+      "term": "ES-Ether",
+      "def": "ES-Cryptographic currency of the Ethereum blockchain, used to pay transaction fees (gas) on the network. The short code for Ether is ETH."
+    },
+    "ethreum": {
+      "term": "ES-Ethereum",
+      "def": "ES-Decentralized blockchain platform enabled with a software language for building applications and creating contracts. Ethereum is the network, Ether is the token."
+    },
+    "evm": {
+      "term": "ES-EVM",
+      "def": "ES-Ethereum Virtual Machine – the decentralized computing code at the core of the Ethereum platform. Each validating node has its own isolated implementation of EVM which allows it to achieve consensus."
+    },
+    "fork": {
+      "term": "ES-Fork",
+      "def": "ES-Accidental or deliberate creation of an alternative version of the blockchain by generating two blocks from the same parent block. This can result either in abandonment of one of the chains (through consensus) or both chains going forward operating independently."
+    },
+    "gas": {
+      "term": "ES-Gas",
+      "def": "ES-The fee for executing a transaction or contract on the Ethereum network, paid in ETH. For this reason, a user must have a small amount of ETH available in the account before sending any transactions."
+    },
+    "hash": {
+      "term": "ES-Hash",
+      "def": "ES-Function or algorithm by which a file is processed into a small piece of data that looks like random bytes. Importantly, the hash is unique but always the same for a specific document. However, changing even one character in the document will completely randomize the hash."
+    },
+    "messg": {
+      "term": "ES-Message",
+      "def": "ES-Data transfer mechanism used for communication between contracts."
+    },
+    "mining": {
+      "term": "ES-Mining",
+      "def": "ES-Computing process by which transactions are verified and new blocks are added to the blockchain. Verified blocks are rewarded with a certain amount of cryptocurrency and the block's transaction fees, which means that mining is also the way more cryptocurrency is \"created\"."
+    },
+    "nonce": {
+      "term": "ES-Nonce",
+      "def": "ES-Number Used Once – a string of data generated and used just once as unique identifier for a new block in the blockchain."
+    },
+    "ommer": {
+      "term": "ES-Ommer",
+      "def": "ES-Gender-neutral alternative to Uncle, used interchangeably in blockchain."
+    },
+    "oracle": {
+      "term": "ES-Oracles",
+      "def": "ES-Products that can bring real-world data onto the blockchain for execution of smart contracts that are dependent on outside conditions – such as game scores for sports betting."
+    },
+    "pri-key":{
+      "term": "ES-Private key",
+      "def": "ES-Alphanumeric string associated with an account and known only by the owner of the account. Cryptographically paired with public key for executing transactions."
+    },
+    "pos": {
+      "term": "ES-Proof of stake",
+      "def": "ES-Low-cost, low-energy alternative to proof of work. Validation of new blocks is allocated to users that hold the most stake (the highest amount of Ether) in the network. The Ethereum blockchain is expected to transition to a proof of stake algorithm Casper in the near future."
+    },
+    "pow": {
+      "term": "ES-Proof of work",
+      "def": "ES-Consensus algorithm that depends on using a high amount of computing power and energy for mining new blocks. A validator node must solve complex mathematical problems and present the result as proof of that work in order to qualify for block validation. This is the current consensus algorithm for Ethereum."
+    },
+    "pub-key": {
+      "term": "ES-Public key",
+      "def": "ES-Alphanumeric string derived from private key and used publicly to provide other users with an address for sending transactions. "
+    },
+    "contract": {
+      "term": "ES-Smart contract",
+      "def": "ES-Computer protocol that digitally enforces contracts such that they are automatically executed on the blockchain when contract conditions are met. These conditions can require input from oracles."
+    },
+    "state": {
+      "term": "ES-State",
+      "def": "ES-All balances and data on the blockchain at a particular point in time."
+    },
+    "txs": {
+      "term": "ES-Transaction",
+      "def": "ES-Any action taking place on the blockchain. Usually, sending currency or tokens to another address; other examples include entering and executing smart contracts, registering domain names, fulfilling trade orders."
+    },
+    "uncle": {
+      "term": "ES-Uncle",
+      "def": "ES-Because miners may not be fully synchronized at all times, some blocks will be mined that are not on the longest chain. These end up being \"sibling\" blocks to the \"parent\" block which continues the blockchain. On Ethereum, uncle (or ommer) blocks are still rewarded, but at a lower rate."
+    },
+    "valid": {
+      "term": "ES-Validators",
+      "def": "ES-Nodes that make up a decentralized network and maintain consensus by validating new blocks broadcasted by miners. "
+    }
+  }
+  },
+
+  "pp": {
+    "name": "ES-Privacy Policy",
+    "intro":{
+      "title": "ES-Introduction",
+      "p1": "ES_Welcome to EthVM, a free, open-source, tool for interacting with data on the blockchain. EthVM and MyEtherWallet, Inc. values privacy and we make a concerted effort to minimize and, to the extent possible, eliminate the exposure of personal data during the use of our interface. EthVM does not collect, hold, or store keys, account information, or passwords. We do not collect data passively, do not monetize the collection of data, and do not use your data for marketing or advertising.",
+      "p2": "ES-To the extent we collect any personal information, this privacy policy (“Policy”) describes how EthVM collects, uses, and shares personal information of people who visit our website (the “Site”) or otherwise use our services (collectively, the “Services”).",
+      "p3": "ES-This Policy applies to anyone who accesses the Services. Please read the Policy carefully to understand our practices regarding your information and how we will treat it. By visiting the Site, App, and/or using the Services, you acknowledge that the collection, use, and sharing of your information will take place as described in this Policy.",
+      "p4": "ES-So that we are clear about the terminology we are using, when we use the phrase “Personal Information” in this Privacy Policy, we mean information about an individual that (either by itself or when combined with information from other available sources) allows that individual to be identified, including, the individual’s name, telephone number, or e-mail address."
+    },
+    "block": {
+      "title": "ES-The Blockchain",
+      "p1": "ES-Due to the inherent transparency of many blockchains, including the Ethereum Blockchain, transactions that individuals broadcast via EthVM may be publicly accessible. This includes, but is not limited to, your public sending address, the public address of the receiver, the amount sent or received, and any other data a user has chosen to include in a given transaction. Information stored on a blockchain may be public, immutable, and difficult or even impossible to remove or delete. Transactions and addresses may reveal information about the user’s identity and information can potentially be correlated now or in the future by any party who chooses to do so, including law enforcement. Users are encouraged to review how privacy and transparency on the blockchain works."
+    },
+    "collect": {
+      "title": "ES-What We Collect",
+      "p1": "ES-We collect information about you as described below. We use this information to enhance your experience with our Services.",
+      "sub1": "ES-Information You Provide",
+      "p2": "ES-We may collect Personal Information you choose to provide to us. For example, when you contact us for support through the Services, you give us with your e-mail address and any other information that you choose to provide. Also, if you participate in a EthVM offer, give-away, or promotion (“Promotion”), you provide your name, e-mail address, and mailing address.",
+      "sub2": "ES-California Do Not Track Disclosures",
+      "p3": "ES-EthVM does not track users over time and across third party websites to provide targeted advertising and therefore does not respond to Do Not Track (DNT) signals."
+    },
+    "use": {
+      "title": "ES-Use Of Information",
+      "p1": "ES-We use the information that we have about you to provide support and certain Services to you.",
+      "p2": "ES-We may use the Personal Information we collect from and about you to (1) provide you with information or services that you request from us, including to respond to your comments, questions, and/or provide customer service; (2) monitor and analyze usage and trends and personalize and improve the Services and your experience using the Services; and (3) for any other purpose with your consent."
+    },
+    "sharing": {
+      "title": "ES-Sharing of Personal Information",
+      "p1": "ES-We will not disclose your Personal Information other than as described below, and we do not and will not sell your Personal Information to anyone.",
+      "p2": "ES-We may share the Personal Information we collect from and about you (1) to fulfill the purpose for which you provided it; (2) with your consent; (3) for legal, protection, and safety purposes; (4) to comply with any court order, law, or legal process, including to respond to any government or regulatory request; (5) to protect the rights of EthVM, our agents, customers, and others, including by enforcing our agreements, policies, and terms of service; and (6) with those who need it to do work for us (our Service Providers, as defined below).",
+      "sub1": "ES-Service providers",
+      "p3": "ES-We may contract with third parties to perform functions related to the Services (“Service Providers”). In general, Service Providers will have access to your Personal Information only to the extent needed to perform their business functions but may not use or share that personal information for purposes outside the scope of their functions related to the Services."
+    },
+    "links": {
+      "title": "ES-Links to Other Sites",
+      "p1": "ES-The Services contain links to other third-party websites or applications. Once you click on such a link and leave the Site or are redirected to a third-party website or application, you are no longer governed by this Policy. Any information you provide on those sites is subject to that third party’s privacy policy and we are not responsible for the privacy and security practices and policies of those third-party sites or applications."
+    },
+    "child": {
+      "title": "ES-Our Commitment Towards Children's Privacy",
+      "p1": "ES-We do not direct the Services to, nor do we knowingly collect any Personal Information from children under 13. Children under 13 are not eligible to use the Services. If we learn that someone using our Services is under 13 years of age, we will take steps to remove any Personal Information from our database and to prevent them from utilizing the Services."
+    },
+    "security": {
+      "title": "ES-Security of Your Personal Information & Rights",
+      "p1": "ES-We are committed to protecting the security of Personal Information. We have taken certain physical, administrative, and technical steps to help safeguard the information we collect from and about you. While we take steps to help ensure the integrity and security of our network and systems, we cannot guarantee our security measures.",
+      "p2": "ES-In certain circumstances, you will also have the following rights:",
+      "b1": "ES-1. Right to access: the right to request certain information about, access to and copies of any Personal Information about you that we are holding (please note that you are entitled to request one copy of the Personal Information that we hold about you at no cost, but for any further copies, we reserve the right to charge a reasonable fee based on administration costs);",
+      "b2": "ES-2. Right to rectification: the right to have your Personal Information rectified if it is inaccurate or incomplete;",
+      "b3": "ES-3. Right to erasure / “right to be forgotten”: where the processing of your information is based on your consent, the right to withdraw that consent and the right to request that we delete or erase your Personal Information from our systems (however, this will not apply if we are required to hold on to the information for compliance with any legal obligation, or if we require the information to establish or defend any legal claim);",
+      "b4": "ES-4. Right to restriction of use of your information: the right to stop us from using your Personal Information or limit the way in which we can use it;",
+      "b5": "ES-5. Right to data portability: the right to request that we return any information you have provided in a structured, commonly used, and machine-readable format, or that we send it directly to another company, where technically feasible; and",
+      "b6": "ES-6. Right to object: the right to object to our use of your Personal Information including where we use it for our legitimate interests.",
+      "p3": "ES-Requests in relation to the above rights should be sent to: ",
+      "sub1": "ES-Legal Basis for Processing",
+      "p4": "ES-The following legal bases apply to the ways in which we use and share an individual’s Personal Information:",
+      "b7": "ES-1. We rely on an individual’s consent to process Personal Information to provide support and/or carry out Promotions. This consent can be withdrawn at any time.",
+      "b8": "ES-2. We also process the information provided by an individual in our legitimate interests in ensuring our business is conducted legitimately and to a high standard."
+    },
+    "retention": {
+      "title": "ES-Retention",
+      "p1": "ES-We will retain the information you provide in order to process your request, provide support, and/or carry out and fulfill our Promotions. If you request support, we will retain your information for no longer than six (6) months. If you participate in a Promotion, we will retain your information until the Promotion is carried out and ninety (90) days after any prize, reward, or offer is fulfilled. Your Personal Information will then be deleted."
+    },
+    "contact": {
+      "title": "ES-Contact Information",
+      "p1": "ES-We welcome your comments or questions about this Policy. You may contact us at "
+    },
+    "changes": {
+      "title": "ES-Changes to Privacy Policy",
+      "p1": "ES-We may modify this Policy from time to time. If we make any changes, we will change the Last Updated date above. We also may provide additional notice, as applicable, depending on the type of change. If you object to any changes, you may stop using the Services. Your continued use of the Services after we publish or otherwise provide notice about our changes to the Policy means that you are consenting to the updated Policy."
+    }
+  }
+}

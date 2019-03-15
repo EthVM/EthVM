@@ -480,9 +480,10 @@ export default class PageDetailsToken extends Vue {
         plural: 2
       },
       {
-        text: this.isTokenDetailsLoading ? this.addressRef : this.tokenDetails.symbol.toUpperCase(),
+        text: 'token.name',
         disabled: true,
         plural: 1,
+        label: this.isTokenDetailsLoading ? `: ${this.addressRef}` : `: ${this.tokenDetails.symbol.toUpperCase()}`,
       }
     ]
   }

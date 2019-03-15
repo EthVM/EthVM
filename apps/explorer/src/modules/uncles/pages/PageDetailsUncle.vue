@@ -105,7 +105,7 @@ export default class PageDetailsUncle extends Vue {
    * @return {String}
    */
   get title(): string {
-    return this.$i18n.t('uncle.detail')
+    return this.$i18n.t('uncle.detail').toString()
   }
 
   /**
