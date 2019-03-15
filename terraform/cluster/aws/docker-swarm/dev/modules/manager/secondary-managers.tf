@@ -1,6 +1,5 @@
 data "external" "swarm_tokens" {
-  program    = ["bash", "${path.module}/scripts/get-swarm-join-tokens.sh"]
-  depends_on = ["aws_instance.manager"]
+  program = ["bash", "${path.module}/scripts/get-swarm-join-tokens.sh"]
 
   query = {
     host        = "${var.aws_eip}"
@@ -23,16 +22,18 @@ data "local_file" "install_docker" {
 }
 
 resource "aws_instance" "secondary-manager" {
-  ami               = "${var.ami}"
-  availability_zone = "${var.availability_zone}"
-  instance_type     = "${var.instance_type}"
-  security_groups   = ["${var.security_group}"]
-  key_name          = "${var.key_name}"
-  subnet_id         = "${var.subnet_id}"
-  source_dest_check = false
-  count             = "${var.total_instances -1}"
-  depends_on        = ["aws_instance.manager"]
-  user_data         = "${format("%s\n%s",data.local_file.install_docker.content, data.template_file.user_data.rendered)}"
+  depends_on                  = ["aws_instance.manager"]
+  ami                         = "${var.ami}"
+  availability_zone           = "${var.availability_zone}"
+  instance_type               = "${var.instance_type}"
+  vpc_security_group_ids      = ["${var.security_group}"]
+  key_name                    = "${var.key_name}"
+  subnet_id                   = "${var.subnet_id}"
+  source_dest_check           = false
+  count                       = "${var.total_instances -1}"
+  depends_on                  = ["aws_instance.manager"]
+  associate_public_ip_address = true
+  user_data                   = "${format("%s\n%s",data.local_file.install_docker.content, data.template_file.user_data.rendered)}"
 
   tags = {
     Name = "${format("%s-secondary-%02d", var.name, count.index + 1)}"

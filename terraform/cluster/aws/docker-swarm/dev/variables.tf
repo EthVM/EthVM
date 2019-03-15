@@ -43,7 +43,7 @@ variable "ec2_ami_worker" {
 
 variable "ec2_instance_type_manager" {
   description = "Type for EC2 instance"
-  default     = "t2.micro"
+  default     = "t2.medium"
 }
 
 variable "manager_zone" {
@@ -53,7 +53,7 @@ variable "manager_zone" {
 
 variable "ec2_instance_type_worker" {
   description = "Type for EC2 instance"
-  default     = "t2.micro"
+  default     = "t2.medium"
 }
 
 variable "worker_zone" {

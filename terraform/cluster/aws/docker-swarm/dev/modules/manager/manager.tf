@@ -2,17 +2,22 @@ resource "aws_instance" "manager" {
   ami                         = "${var.ami}"
   availability_zone           = "${var.availability_zone}"
   instance_type               = "${var.instance_type}"
-  security_groups             = ["${var.security_group}"]
+  vpc_security_group_ids      = ["${var.security_group}"]
   key_name                    = "${var.key_name}"
   subnet_id                   = "${var.subnet_id}"
-  associate_public_ip_address = true
   source_dest_check           = false
+  associate_public_ip_address = true
 
   connection {
     type        = "ssh"
     user        = "${var.provision_user}"
     private_key = "${file("${var.ssh_key_path}")}"
     timeout     = "${var.connection_timeout}"
+  }
+
+  provisioner "file" "key_file" {
+    source      = "${var.ssh_key_path}"
+    destination = "~/key.pem"
   }
 
   provisioner "file" {

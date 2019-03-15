@@ -13,17 +13,17 @@ resource "aws_security_group" "ingress-manager" {
   }
 
   ingress {
+    cidr_blocks = ["${aws_subnet.subnet-workers.cidr_block}", "${aws_subnet.subnet-managers.cidr_block}"]
     from_port   = 0
     to_port     = 65535
     protocol    = "tcp"
-    cidr_blocks = ["${aws_subnet.subnet-managers.cidr_block}"]
   }
 
   ingress {
-    from_port   = 0
-    to_port     = 65535
-    protocol    = "tcp"
-    cidr_blocks = ["${aws_subnet.subnet-workers.cidr_block}"]
+    from_port   = -1
+    to_port     = -1
+    protocol    = "icmp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
@@ -52,14 +52,14 @@ resource "aws_security_group" "ingress-worker" {
     from_port   = 0
     to_port     = 65535
     protocol    = "tcp"
-    cidr_blocks = ["${aws_subnet.subnet-managers.cidr_block}"]
+    cidr_blocks = ["${aws_subnet.subnet-managers.cidr_block}", "${aws_subnet.subnet-workers.cidr_block}"]
   }
 
   ingress {
-    from_port   = 0
-    to_port     = 65535
-    protocol    = "tcp"
-    cidr_blocks = ["${aws_subnet.subnet-workers.cidr_block}"]
+    from_port   = -1
+    to_port     = -1
+    protocol    = "icmp"
+    cidr_blocks = ["${aws_subnet.subnet-managers.cidr_block}"]
   }
 
   egress {

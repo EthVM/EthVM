@@ -14,3 +14,7 @@ variable "name" {}
 variable "provision_user" {}
 variable "manager_public_ip" {}
 variable "manager_private_ip" {}
+
+variable "swarm_tokens" {
+  type = "map"
+}
