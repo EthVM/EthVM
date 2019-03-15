@@ -3,6 +3,7 @@ import { ExchangeService } from '@app/modules/exchanges/exchange.service'
 import { TokenExchangeRateDto } from '@app/modules/exchanges/token-exchange-rate.dto'
 import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe'
+import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
 
 @Resolver('TokenExchangeRate')
 export class TokenExchangeRateResolvers {
@@ -17,7 +18,7 @@ export class TokenExchangeRateResolvers {
   async tokenExchangeRates(
     @Args('filter') filter: string,
     @Args('limit', ParseLimitPipe) limit: number,
-    @Args('page') page: number
+    @Args('page', ParsePagePipe) page: number
   ) {
     const entities = await this.exchangeService.findTokenExchangeRates(filter, limit, page)
     return entities.map(e => new TokenExchangeRateDto(e))

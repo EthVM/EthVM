@@ -4,6 +4,7 @@ import { TxDto } from '@app/modules/txs/tx.dto'
 import { ParseHashPipe } from '@app/shared/validation/parse-hash.pipe'
 import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe'
+import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
 
 @Resolver('Transaction')
 export class TxResolvers {
@@ -16,7 +17,11 @@ export class TxResolvers {
   }
 
   @Query()
-  async txs(@Args('limit') limit?: number, @Args('order') order?: string, @Args('fromBlock') fromBlock?: number) {
+  async txs(
+    @Args('limit', ParseLimitPipe) limit?: number,
+    @Args('order') order?: string,
+    @Args('fromBlock') fromBlock?: number
+  ) {
     const entities = await this.txService.findTxs(limit, order, fromBlock)
     return entities.map(e => new TxDto(e))
   }
@@ -32,7 +37,7 @@ export class TxResolvers {
     @Args('hash', ParseAddressPipe) hash: string,
     @Args('filter') filter?: string,
     @Args('limit', ParseLimitPipe) limit?: number,
-    @Args('page') page?: number
+    @Args('page', ParsePagePipe) page?: number
   ) {
     const entities = await this.txService.findTxsForAddress(hash, filter, limit, page)
     return entities.map(e => new TxDto(e))

@@ -3,6 +3,7 @@ import { ContractService } from '@app/modules/contracts/contract.service'
 import { ContractDto } from '@app/modules/contracts/contract.dto'
 import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe'
+import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
 
 @Resolver('Contract')
 export class ContractResolvers {
@@ -18,7 +19,7 @@ export class ContractResolvers {
   async contractsCreatedBy(
     @Args('creator', ParseAddressPipe) creator: string,
     @Args('limit', ParseLimitPipe) limit: number,
-    @Args('page') page: number
+    @Args('page', ParsePagePipe) page: number
   ) {
     const entities = await this.contractService.findContractsCreatedBy(creator, limit, page)
     return entities.map(e => new ContractDto(e))
