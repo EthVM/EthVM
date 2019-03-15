@@ -10,6 +10,7 @@ export class ParsePagePipe implements PipeTransform<number, number> {
     if (value < 0) {
       throw new BadRequestException('Invalid page. Must not be negative.')
     }
+
     return value
   }
 }

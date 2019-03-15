@@ -11,6 +11,7 @@ export class ParseLimitPipe implements PipeTransform<number, number> {
     if (!this.ethService.isValidPageSize(value)) {
       throw new BadRequestException('Invalid limit. Exceeds max page size.')
     }
+
     return value
   }
 }
