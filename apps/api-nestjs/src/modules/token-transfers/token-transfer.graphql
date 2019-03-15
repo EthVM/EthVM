@@ -1,6 +1,6 @@
 type Query {
   addressTokenTransfers(address: String!, limit: Int, page: Int): [TokenTransfer]
-  addressTokenTransfersByHolder(address: String!, holder: String!, filter: String, limit: Int, page: Int): [TokenTransfer]
+  addressTokenTransfersByHolder(address: String!, holder: String!, filter: FilterEnum, limit: Int, page: Int): [TokenTransfer]
 }
 
 type TokenTransfer {
