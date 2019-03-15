@@ -2,11 +2,13 @@ import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform } from
 import { EthService } from '@app/shared/eth.service'
 
 @Injectable()
-export class ParseLimitPipe implements PipeTransform<String, String> {
+export class ParseLimitPipe implements PipeTransform<number, number> {
 
   constructor(private readonly ethService: EthService){}
 
-  transform(value: string, metadata: ArgumentMetadata): String {
+  transform(value: number, metadata: ArgumentMetadata): number {
+
+    if (!value) return 10
 
     if (!this.ethService.isValidPageSize(value)) {
       throw new BadRequestException('Invalid limit. Exceeds max page size.')

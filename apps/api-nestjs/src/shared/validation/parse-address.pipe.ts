@@ -2,11 +2,11 @@ import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform } from
 import { EthService } from '@app/shared/eth.service'
 
 @Injectable()
-export class ParseAddressPipe implements PipeTransform<String, String> {
+export class ParseAddressPipe implements PipeTransform<string, string> {
 
   constructor(private readonly ethService: EthService){}
 
-  transform(value: string, metadata: ArgumentMetadata): String {
+  transform(value: string, metadata: ArgumentMetadata): string {
 
     if (!this.ethService.isValidAddress(value)) {
       throw new BadRequestException('Invalid address hash');
