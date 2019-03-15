@@ -474,14 +474,15 @@ export default class PageDetailsToken extends Vue {
   get crumbsBasic(): Crumb[] {
     return [
       {
-        text: this.$i18n.tc('token.name',2),
+        text: 'token.name',
         link: '/tokens',
-        disabled: false
+        disabled: false,
+        plural: 2
       },
       {
         text: this.isTokenDetailsLoading ? this.addressRef : this.tokenDetails.symbol.toUpperCase(),
-        link: `/token/${this.addressRef}`,
-        disabled: true
+        disabled: true,
+        plural: 1,
       }
     ]
   }
@@ -494,9 +495,10 @@ export default class PageDetailsToken extends Vue {
   get crumbsHolder(): Crumb[] {
     return [
       {
-        text: this.$i18n.tc('token.name', 2),
+        text: 'token.name',
         link: '/tokens',
-        disabled: false
+        disabled: false,
+        plural: 2
       },
       {
         text: this.isTokenDetailsLoading ? this.addressRef : this.tokenDetails.symbol.toUpperCase(),
@@ -504,9 +506,9 @@ export default class PageDetailsToken extends Vue {
         disabled: false
       },
       {
-        text: this.holderAddress,
-        link: '',
-        disabled: true
+        text: 'token.holder',
+        disabled: true,
+        label: `: ${this.holderAddress}`
       }
     ]
   }

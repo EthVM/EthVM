@@ -439,8 +439,9 @@ export default class PageDetailsAddress extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: `${this.$i18n.t('address.name').toString()}: ${this.addressRef}`,
-        disabled: true
+        text: 'address.name',
+        disabled: true,
+        label: `: ${this.addressRef}`
       }
     ]
   }

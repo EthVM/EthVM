@@ -4,9 +4,19 @@
       <v-card-title v-for="(item, i) in crumbs" :key="i" class="pl-0 pr-1 pb-0 text-truncate">
         <v-icon small v-if="item.icon" :class="[item.disabled ? 'black--text  pr-2' : 'info--text  pr-2']">{{ item.icon }}</v-icon>
         <p v-if="item.link" class="pa-0 ma-0 text-truncate">
-          <router-link :class="[item.disabled ? 'black--text' : 'info--text']" :to="item.link">{{ $t(item.text) }}</router-link>
+            <router-link v-if="!item.plural" :class="[item.disabled ? 'black--text' : 'info--text']" :to="item.link">{{ $t(item.text) }}</router-link>
+            <router-link v-else :class="[item.disabled ? 'black--text' : 'info--text']" :to="item.link">{{ $tc(item.text, item.plural) }}</router-link>
         </p>
-        <p v-else class="black--text pa-0 ma-0 text-truncate">{{ $t(item.text) }}</p>
+        <div v-else>
+          <div v-if="!item.label">
+            <p v-if="!item.plural" class="black--text pa-0 ma-0 text-truncate">{{ $t(item.text) }}</p>
+            <p v-else class="black--text pa-0 ma-0 text-truncate">{{ $tc(item.text, item.plural) }}</p>
+          </div>
+          <div v-else>
+          <p v-if="!item.plural" class="black--text pa-0 ma-0 text-truncate">{{ $t(item.text) }}{{ item.label }}</p>
+          <p v-else class="black--text pa-0 ma-0 text-truncate">{{ $tc(item.text, item.plural) }}{{ item.label }}</p>
+          </div>
+        </div>
         <p v-if="i < crumbs.length - 1" class="pl-1 pr-0 pt-0 mb-0 caption">/</p>
       </v-card-title>
     </v-layout>
@@ -53,6 +63,7 @@ export default class AppBreadCrumbs extends Vue {
 
   @Watch('newItems')
   onNewItemsChange() {
+    this.crumbs = []
     this.prepareBreadcrumbs()
   }
 
@@ -94,5 +105,6 @@ export default class AppBreadCrumbs extends Vue {
       link: '/'
     }
   }
+
 }
 </script>

@@ -382,13 +382,15 @@ export default class PageDetailsBlock extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: this.$i18n.tc('block.name',2),
+        text: 'block.name',
         disabled: false,
-        link: '/blocks'
+        link: '/blocks',
+        plural: 2
       },
       {
-        text: this.$i18n.t('block.number') + ' ' + this.$route.params.blockRef,
-        disabled: true
+        text: 'block.number',
+        disabled: true,
+        label:  ` ${this.$route.params.blockRef}`
       }
     ]
   }

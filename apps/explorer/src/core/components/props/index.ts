@@ -39,8 +39,10 @@ export interface Detail {
 }
 
 export interface Crumb {
-  text: string | TranslateResult
+  text: string
   disabled: boolean
   icon?: string
   link?: string
+  label?: string
+  plural?: number
 }

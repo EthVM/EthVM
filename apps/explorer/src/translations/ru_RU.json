@@ -1,536 +1,540 @@
 {
   "block": {
-    "name": "Block | Blocks",
-    "number": "Block #",
-    "mined": "Mined Blocks",
-    "detail": "Block Details",
-    "txs": "Block Transactions",
-    "last": "Last Blocks",
-    "block": "Block Height #",
-    "p-hash": "Parent Hash",
-    "total-reward": "Total Block Reward",
-    "last-n": "Last Block #",
-    "time": "Since Last Block",
-    "hash-rate": "Hash Rate",
-    "bytes": "Bytes",
-    "logs": "Logs",
-    "data": "Extra Data",
-    "state-root": "State Root",
-    "rcpt-root": "Receipts Root"
+    "name": "RU-Block | RU_Blocks",
+    "number": "RU-Block #",
+    "mined": "RU-Mined Blocks",
+    "detail": "RU-Block Details",
+    "txs": "RU-Block Transactions",
+    "last": "RU-Last Blocks",
+    "block": "RU-Block Height #",
+    "p-hash": "RU-Parent Hash",
+    "total-reward": "RU-Total Block Reward",
+    "last-n": "RU-Last Block #",
+    "time": "RU-Since Last Block",
+    "hash-rate": "RU-Hash Rate",
+    "bytes": "RU-Bytes",
+    "logs": "RU-Logs",
+    "data": "RU-Extra Data",
+    "state-root": "RU-State Root",
+    "rcpt-root": "RU-Receipts Root"
   },
 
   "uncle": {
-    "name": "Uncles | Uncles",
-    "number": "Uncle #",
-    "detail": "Uncle Details",
-    "height": "Uncle Height #",
-    "uncle-position": "Uncle Position",
-    "position": "Position"
+    "name": "RU-Uncle | RU_Uncles",
+    "number": "RU-Uncle #",
+    "detail": "RU-Uncle Details",
+    "height": "RU-Uncle Height #",
+    "uncle-position": "RU-Uncle Position",
+    "position": "RU-Position",
+    "reward": "RU-Uncle Reward",
+    "included": "RU-Included in Block #"
   },
 
   "tx": {
-    "name": "Transaction | Transactions",
-    "name-short": "Tx | Txs",
-    "pending": "Pending Transaction | Pending Transactions",
-    "pending-short": "Pending Tx | Pending Txs",
-    "mined": "Mined Transactions",
-    "detail": "Transaction Details",
-    "last": "Last Transactions",
-    "tx-n": "Transaction #",
-    "tx-fees": "Tx Fee | Txs Fees",
-    "history": "Transactions History",
-    "ave-tx-fees": "Avg Tx Fees (ETH)",
-    "total": "Total Txs",
-    "success": "Successful Tx | Successful Txs",
-    "failed": "Failed Tx| Successful Txs",
-    "for-tx": "For Tx",
-    "cost": "Tx Cost",
-    "root": "Transactions Root",
-    "from": "From",
-    "to": "To",
-    "status": "Status",
-    "input": "Input Data",
-    "func": "Function",
-    "method": "Method ID"
+    "name": "RU-Transaction | RU_Transactions",
+    "name-short": "RU-Tx | RU_Txs",
+    "pending": "RU-Pending Transaction | RU_Pending Transactions",
+    "pending-short": "RU-Pending Tx | RU_Pending Txs",
+    "mined": "RU-Mined Transactions",
+    "detail": "RU-Transaction Details",
+    "last": "RU-Last Transactions",
+    "hash": "RU-Tx # | RU_Transaction #",
+    "fee": "RU-Tx Fee | RU_Txs Fees",
+    "history": "RU-Transactions History",
+    "total": "RU-Total Txs",
+    "success": "RU-Successful Tx | RU_Successful Txs",
+    "failed": "RU-Failed Tx | RU_Failed Txs",
+    "for-tx": "RU-For Tx",
+    "cost": "RU-Tx Cost",
+    "root": "RU-Transactions Root",
+    "from": "RU-From",
+    "to": "RU-To",
+    "status": "RU-Status",
+    "input": "RU-Input Data",
+    "func": "RU-Function",
+    "method": "RU-Method ID"
   },
 
   "token": {
-    "name": "Token | Tokens",
-    "detail": "Token Details",
-    "empty": "No tokens",
-    "decimals": "Decimals",
-    "number": "Total Tokens ",
-    "tokenName": "Token Name",
-    "supply": "Total Supply",
-    "holder": "Holder",
-    "holder-total": "Total Holders",
-    "symbol": "Symbol",
-    "decimal": "Decimals",
-    "owner": "Owner",
-    "market": "Market Cap",
-    "change": "%Change (24H)",
-    "volume": "Volume",
-    "transfers": "Transfers",
-    "links": "Links",
-    "website": "Website",
-    "support": "Support"
+    "name": "RU-Token | RU_Tokens",
+    "detail": "RU-Token Details",
+    "empty": "RU-No tokens",
+    "decimals": "RU-Decimals",
+    "number": "RU-Total Tokens ",
+    "tokenName": "RU-Token Name",
+    "supply": "RU-Total Supply",
+    "holder": "RU-Holder",
+    "holder-total": "RU-Total Holders",
+    "symbol": "RU-Symbol",
+    "decimal": "RU-Decimals",
+    "owner": "RU-Owner",
+    "market": "RU-Market Cap",
+    "change": "RU-%Change (24H)",
+    "volume": "RU-Volume",
+    "transfers": "RU-Transfers",
+    "links": "RU-Links",
+    "website": "RU-Website",
+    "support": "RU-Support"
   },
 
   "address": {
-    "name": "Address"
+    "name": "RU-Address"
   },
 
   "contract": {
-    "name": "Contract | Contracts",
-    "creator": "Contract Creator"
+    "name": "RU-Contract | RU_Contracts",
+    "creator": "RU-Contract Creator"
   },
 
   "gas": {
-    "name": "Gas",
-    "limit": "Gas Limit",
-    "used": "Gas Used",
-    "fee": "Gas Fee",
-    "price": "Gas Price",
-    "ave-price": "Avg Gas Price"
+    "name": "RU-Gas",
+    "limit": "RU-Gas Limit",
+    "used": "RU-Gas Used",
+    "fee": "RU-Gas Fee",
+    "price": "RU-Gas Price",
+    "ave-price": "RU-Avg Gas Price"
   },
 
   "miner": {
-    "name": "Miner",
-    "reward": "Miner Reward",
-    "reward-short": "Reward",
-    "history": "Mining History"
+    "name": "RU-Miner",
+    "reward": "RU-Miner Reward",
+    "reward-short": "RU-Reward",
+    "history": "RU-Mining History"
   },
 
   "diff": {
-    "name": "Difficulty",
-    "total": "Total Difficulty"
+    "name": "RU-Difficulty",
+    "total": "RU-Total Difficulty"
   },
 
   "price": {
-    "name": "Price | Prices",
-    "erc20": "ERC20 Prices",
-    "erc721": "ERC721 Prices"
+    "name": "RU-Price | RU_Prices",
+    "erc20": "RU-ERC20 Prices",
+    "erc721": "RU-ERC721 Prices"
   },
 
   "common": {
-    "hash": "Hash",
-    "height": "Height",
-    "size": "Size",
-    "nonce": "Nonce",
-    "sha": "SHA3",
-    "age": "Age",
-    "eth": "ETH",
-    "gwei": "GWEI",
-    "timestmp": "Timestamp",
-    "successful": "Successful",
-    "failed": "Failed",
-    "pending": "Pending",
-    "amount": "Amount",
-    "quantity": "Quantity",
-    "percentage": "Percentage",
-    "ethBalance": "Ether Balance",
-    "balance": "Balance"
+    "hash": "RU-Hash",
+    "height": "RU-Height",
+    "size": "RU-Size",
+    "nonce": "RU-Nonce",
+    "sha": "RU-SHA3",
+    "age": "RU-Age",
+    "eth": "RU-ETH",
+    "gwei": "RU-GWEI",
+    "timestmp": "RU-Timestamp",
+    "success": "RU-Successful",
+    "fail": "RU-Failed",
+    "pending": "RU-Pending",
+    "amount": "RU-Amount",
+    "quantity": "RU-Quantity",
+    "percentage": "RU-Percentage",
+    "eth-balance": "RU-Ether Balance",
+    "balance": "RU-Balance"
   },
 
   "usd": {
-    "name": "USD",
-    "total": "Total USD Value",
-    "value": "USD Value"
+    "name": "RU-USD",
+    "total": "RU-Total USD Value",
+    "value": "RU-USD Value"
   },
 
   "message": {
-    "no-data": "Oops something went wrong, no data from server :(",
-    "err": "Error",
+    "no-data": "RU-Oops something went wrong, no data from server :(",
+    "err": "RU-Error",
     "tx" : {
-      "no-all": "This address does not have any transaction history",
-      "no-in": "This address does not have incoming transactions",
-      "no-out": "This address does not have outgoing transactions",
-      "no-pen": "This address does not have pending transactions",
-      "no-pen-in": "This address does not have any pending incoming transactions",
-      "no-pen-out": "This address does not have any pending outgoing transactions",
-      "no-history": "There is no transaction history",
-      "no-in-block": "This block does not have any transactions",
-      "not-exist": "This transaction does not exist",
-      "no-pending": "There are no pending transactions"
+      "no-all": "RU-This address does not have any transaction history",
+      "no-in": "RU-This address does not have incoming transactions",
+      "no-out": "RU-This address does not have outgoing transactions",
+      "no-pen": "RU-This address does not have pending transactions",
+      "no-pen-in": "RU-This address does not have any pending incoming transactions",
+      "no-pen-out": "RU-This address does not have any pending outgoing transactions",
+      "no-history": "RU-There is no transaction history",
+      "no-in-block": "RU-This block does not have any transactions",
+      "not-exist": "RU-This transaction does not exist",
+      "no-pending": "RU-There are no pending transactions"
     },
-    "no-tokens": "Address does not hold any common tokens",
-    "load": "Loading",
-    "load-block-tx": "Loading block transactions",
-    "not-mined": "This block has not been mined yet",
+    "no-tokens": "RU-Address does not hold any common tokens",
+    "load": "RU-Loading",
+    "load-block-tx": "RU-Loading block transactions",
+    "not-mined": "RU-This block has not been mined yet",
     "invalid": {
-      "tx": "This is not a valid transaction hash",
-      "block": "This is not a valid block hash",
-      "addr": "This is not a valid address hash",
-      "token": "This is not a valid token address",
-      "contract": "This is not a valid contract address"
+      "tx": "RU-This is not a valid transaction hash",
+      "block": "RU-This is not a valid block hash",
+      "addr": "RU-This is not a valid address hash",
+      "token": "RU-This is not a valid token address",
+      "contract": "RU-This is not a valid contract address",
+      "uncle": "RU-This is not a valid uncle hash"
     },
     "sync": {
-      "main": "We are synchronizing with the Blockchain. Some features might not work correctly.",
-      "no-pen-tx": "There are no pending transactions while synchronizing with the Blockchain."
+      "main": "RU-We are synchronizing with the Blockchain. Some features might not work correctly.",
+      "no-pen-tx": "RU-There are no pending transactions while synchronizing with the Blockchain."
     },
-    "not-found": "Oops! Page Not Found :(",
+    "not-found": "RU-Oops! Page Not Found :(",
     "welcome": {
-      "title": "Welcome to EthVM!",
-      "text1": "We're still in our Alpha stage, so some features may not work to their full potential. Reach out to us with any bugs you find at ",
-      "text2": ", so we can continue to make EthVM even better!"
+      "title": "RU-Welcome to EthVM!",
+      "text1": "RU-We're still in our Alpha stage, so some features may not work to their full potential. Reach out to us with any bugs you find at ",
+      "text2": "RU-, so we can continue to make EthVM even better!",
+      "btn": "RU-Onward!"
     },
-    "ropsten-no-token": "EthVM is still in testing, so we're currently showing data from the Ropsten ETH testnet. There are no tokens that have actual value on Ropsten testnet, but all mainnet Ethereum token balances will appear here once we go live.",
-    "report": "Find any bugs or have suggestions?",
+    "ropsten-no-token": "RU-EthVM is still in testing, so we're currently showing data from the Ropsten ETH testnet. There are no tokens that have actual value on Ropsten testnet, but all mainnet Ethereum token balances will appear here once we go live.",
+    "report": "RU-Find any bugs or have suggestions?",
     "update": {
-      "tx": "new tx | new txs",
-      "block": "new block | new blocks"
+      "tx": "RU-new tx | RU_new txs",
+      "block": "RU-new block | RU_new blocks"
     }
   },
   "charts": {
-    "name": "Charts",
-    "live": "Live Data",
+    "name": "RU-Charts",
+    "live": "RU-Live Data",
     "tx-summary": {
-      "title": "Tx Summary",
-      "description": "Successful, failed, and pending transactions in the last 10 blocks."
+      "title": "RU-Tx Summary",
+      "description": "RU-Successful, failed, and pending transactions in the last 10 blocks.",
+      "label":{
+        "pen": "RU-Pending Txs",
+        "success-fail": "RU-Successful and Failed Txs"
+      }
     },
     "tx-costs": {
-      "title": "Tx Fees and Gas Price",
+      "title": "RU-Tx Fees and Gas Price",
       "description":  "Average transaction fees and average gas price in the last 10 blocks."
     },
     "block-diff": {
-      "title": "Block Difficulty",
-      "description": "Average Block Difficulty"
+      "title": "RU-Block Difficulty",
+      "description": "RU-Average Block Difficulty"
     },
     "block-size": {
-      "title": "Block Size",
-      "description": "Average Block Size"
+      "title": "RU-Block Size",
+      "description": "RU-Average Block Size"
     },
     "block-time": {
-      "title": "Block Time",
-      "description": "Average Block Time"
+      "title": "RU-Block Time",
+      "description": "RU-Average Block Time"
     },
     "gas-limit": {
-      "title": "Gas Limit",
-      "description": "Average Gas Limit"
+      "title": "RU-Gas Limit",
+      "description": "RU-Average Gas Limit"
     },
     "gas-price": {
-      "title": "Gas Price",
-      "description": "Average Gas Price"
+      "title": "RU-Gas Price",
+      "description": "RU-Average Gas Price"
     },
     "hash-rate": {
-      "name": "Hash Rate",
-      "description": "Average Hash Rate"
+      "title": "RU-Hash Rate",
+      "description": "RU-Average Hash Rate"
     },
     "tx-fail": {
-      "name": "Failed Transactions",
-      "description": "Number of Failed Transactions"
+      "title": "RU-Failed Transactions",
+      "description": "RU-Number of Failed Transactions"
     },
     "tx-fees": {
-      "name": "Transactions Fees",
-      "description": "Average Transactions Fees"
+      "title": "RU-Transactions Fees",
+      "description": "RU-Average Transactions Fees"
     },
     "tx-pending": {
-      "name": "Pending Transactions",
-      "description": "Average Number of pending transactions"
+      "title": "RU-Pending Transactions",
+      "description": "RU-Average Number of pending transactions"
     },
     "tx-success": {
-      "name": "Successful Transactions",
-      "description": "Number of Successful Transactions"
+      "title": "RU-Successful Transactions",
+      "description": "RU-Number of Successful Transactions"
     },
     "uncles-number": {
-      "name": "Uncles per Day",
-      "description": "Total Number of Uncles per Day"
+      "title": "RU-Uncles per Day",
+      "description": "RU-Total Number of Uncles per Day"
     },
     "mining-rewards": {
-      "name": "Mining Rewards",
-      "description": "Average Mining Rewards"
+      "title": "RU-Mining Rewards",
+      "description": "RU-Average Mining Rewards"
     },
     "top-miners": {
-      "name": "Top Miners"
+      "title": "RU-Top Miners"
     },
     "states": {
-      "all": "All",
-      "week": "week | 1W",
-      "month": "month | 1M",
-      "day": "day | 1D",
-      "year": "year | 1Y"
+      "all": "RU-All",
+      "week": "RU-week | RU_1W",
+      "month": "RU-month | RU_1M",
+      "day": "RU-day | RU_1D",
+      "year": "RU-year | RU_1Y"
     },
     "captions": {
-      "all": " in the Ethereum blockchain since the begining ",
-      "other": " in the Ethereum blockchain in last "
+      "all": "RU- in the Ethereum blockchain since the begining ",
+      "other": "RU- in the Ethereum blockchain in last "
     }
   },
   "btn": {
-    "view-all": "View All",
-    "more": "More",
-    "onward": "Onward!",
-    "less": "Less",
-    "first": "First",
-    "last": "Last",
-    "back-home": "Go Back Home",
-    "report": "Report Issue"
+    "view-all": "RU-View All",
+    "more": "RU-More",
+    "less": "RU-Less",
+    "first": "RU-First",
+    "last": "RU-Last",
+    "back-home": "RU-Go Back Home",
+    "report": "RU-Report Issue"
   },
 
   "search": {
-    "name": "Search",
-    "default": "Search Block / Address / Tx",
-    "address-tx": "Tx Hash/Address"
+    "name": "RU-Search",
+    "default": "RU-Search Block / Address / Tx",
+    "address-tx": "RU-Tx Hash/Address"
   },
 
   "filter": {
-    "name": "Filter",
-    "view": "View",
-    "all": "All",
-    "out": "Outgoing",
-    "in": "Incoming",
-    "high": "High to Low",
-    "low": "Low to High"
+    "name": "RU-Filter",
+    "view": "RU-View",
+    "all": "RU-All",
+    "out": "RU-Outgoing",
+    "in": "RU-Incoming",
+    "high": "RU-High to Low",
+    "low": "RU-Low to High"
   },
 
   "footer": {
-    "discover": "Discover",
-    "donate": "Donate",
-    "btc": "BTC",
-    "ens": "mewtopia.eth",
-    "copy": "Copyright 2019 All rights reserved by ",
-    "mew": "MyEtherWallet Inc",
-    "copy-eth-addr": "Copy ETH address",
-    "copy-btc-addr": "Copy BTC address"
+    "discover": "RU-Discover",
+    "donate": "RU-Donate",
+    "btc": "RU-BTC",
+    "ens": "RU-mewtopia.eth",
+    "copy": "RU-Copyright 2019 All rights reserved by ",
+    "mew": "RU-MyEtherWallet Inc",
+    "copy-eth-addr": "RU-Copy ETH address",
+    "copy-btc-addr": "RU-Copy BTC address"
   },
 
-  "home": "Home",
+  "home": "RU-Home",
 
   "about": {
-    "name": "About Us",
-    "title": "What is EthVM?",
-    "text": "EthVM project is brought to you by kvhnuke,  founder of MyEtherWallet. EthVM is a free and open source interface for exploring and evaluting real time Ethereum blocks, transactions and more. This software is under MIT License.",
+    "name": "RU-About Us",
+    "title": "RU-What is EthVM?",
+    "text": "RU-EthVM project is brought to you by kvhnuke,  founder of MyEtherWallet. EthVM is a free and open source interface for exploring and evaluting real time Ethereum blocks, transactions and more. This software is under MIT License.",
     "git": {
-      "title": "GitHub",
+      "title": "RU-GitHub",
       "text":  "If you want to contribute, make a request on GitHub."
     },
     "medium": {
-      "title": "Medium",
-      "text": "If you want to listen/share our awesome thoughts check our medium account."
+      "title": "RU-Medium",
+      "text": "RU-If you want to listen/share our awesome thoughts check our medium account."
     },
     "twitter": {
       "title":"Twitter",
-      "text": "Talk to us on Twitter."
+      "text": "RU-Talk to us on Twitter."
     },
     "reddit": {
-      "title": "Reddit",
-      "text": "Visit our reddit thread."
+      "title": "RU-Reddit",
+      "text": "RU-Visit our reddit thread."
     },
     "disclaimer": {
-      "name": "Disclaimer",
-      "text": "MIT License Copyright © 2017-2018 MyEtherWallet Inc Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.",
-      "mit": "THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+      "name": "RU-Disclaimer",
+      "text": "RU-MIT License Copyright © 2017-2018 MyEtherWallet Inc Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.",
+      "mit": "RU-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
     }
   },
 
   "kb":{
-    "name": "Knowledge Base",
-    "title": "Blockchain Terms",
+    "name": "RU-Knowledge Base",
+    "title": "RU-Blockchain Terms",
     "terms": {
-
-
     "acc": {
-      "term": "RUAccount",
-      "def": "Entry on the blockchain ledger that contains data about the state of that account. In the case of a currency system, it's the information about funds available."
+      "term": "RU-Account",
+      "def": "RU-Entry on the blockchain ledger that contains data about the state of that account. In the case of a currency system, it's the information about funds available."
     },
     "addr": {
-      "term": "Address",
-      "def": "String of alphanumeric characters that represents a particular user's hashed public key. Addresses are used to send and receive transactions on the blockchain. The address points to an account."
+      "term": "RU-Address",
+      "def": "RU-String of alphanumeric characters that represents a particular user's hashed public key. Addresses are used to send and receive transactions on the blockchain. The address points to an account."
     },
     "block": {
-      "term": "Block",
-      "def": "Package of data that holds a number of recent transactions and the previous block's (\"parent\" block) hash. Thus, every block points to a previous block, creating an immutable chain."
+      "term": "RU-Block",
+      "def": "RU-Package of data that holds a number of recent transactions and the previous block's (\"parent\" block) hash. Thus, every block points to a previous block, creating an immutable chain."
     },
     "blockchain": {
-      "term": "Blockchain",
-      "def": "Distributed ledger that records data in packages called blocks. The blocks are connected together using cryptographic technology, making them unchangeable after being added to the chain."
+      "term": "RU-Blockchain",
+      "def": "RU-Distributed ledger that records data in packages called blocks. The blocks are connected together using cryptographic technology, making them unchangeable after being added to the chain."
     },
     "casper": {
-      "term": "Casper",
-      "def": "Specific type of proof of stake consensus protocol based on security deposits placed by nodes to confirm blocks. Casper is the protocol that should go into effect when Ethereum blockchain transitions to proof of stake."
+      "term": "RU-Casper",
+      "def": "RU-Specific type of proof of stake consensus protocol based on security deposits placed by nodes to confirm blocks. Casper is the protocol that should go into effect when Ethereum blockchain transitions to proof of stake."
     },
       "consensus":  {
-      "term": "Consensus",
-      "def": "Agreement among the nodes of the decentralized network about the state of the network."
+      "term": "RU-Consensus",
+      "def": "RU-Agreement among the nodes of the decentralized network about the state of the network."
     },
     "dao": {
-      "term": "DAO",
-      "def": "Abbreviation for Decentralized Autonomous Organization – an organization that is run without direct human oversight, governed by a set of unalterable rules enforced through the blockchain."
+      "term": "RU-DAO",
+      "def": "RU-Abbreviation for Decentralized Autonomous Organization – an organization that is run without direct human oversight, governed by a set of unalterable rules enforced through the blockchain."
     },
     "dapp": {
-      "term": "dApp",
-      "def": "Abbreviation for decentralized application. dApps are applications that are open-source, not controlled by any centralized entity, enabling direct interaction between users without a trusted third party."
+      "term": "RU-dApp",
+      "def": "RU-Abbreviation for decentralized application. dApps are applications that are open-source, not controlled by any centralized entity, enabling direct interaction between users without a trusted third party."
     },
     "decentralization": {
-      "term": "Decentralization",
-      "def": "Redestribution of power and functions away from a central authority to eliminate third-party control and tampering."
+      "term": "RU-Decentralization",
+      "def": "RU-Redestribution of power and functions away from a central authority to eliminate third-party control and tampering."
     },
     "signature": {
-      "term": "Digital signature",
-      "def": "Algorithm which allows a user to produce a specific string of data using their private key. This string, along with the corresponding public key and the signed document, can be used to verify that the document was signed by the owner of the key and that it was not changed after signing."
+      "term": "RU-Digital signature",
+      "def": "RU-Algorithm which allows a user to produce a specific string of data using their private key. This string, along with the corresponding public key and the signed document, can be used to verify that the document was signed by the owner of the key and that it was not changed after signing."
     },
     "double-spend": {
-      "term": "Double spend",
-      "def": "Occurs when a user sends a transaction to purchase coins, and then creates another transaction to send the SAME coins to themselves. This requires creating two blocks at the same level, resulting in a deliberate blockchain fork. "
+      "term": "RU-Double spend",
+      "def": "RU-Occurs when a user sends a transaction to purchase coins, and then creates another transaction to send the SAME coins to themselves. This requires creating two blocks at the same level, resulting in a deliberate blockchain fork. "
     },
     "encrypt": {
-      "term": "Encryption",
-      "def": "The process of turning plain text into ciphertext using a data \"key\". After encryption, ciphertext looks like a random sequnce of bits. The reverse process is decryption."
+      "term": "RU-Encryption",
+      "def": "RU-The process of turning plain text into ciphertext using a data \"key\". After encryption, ciphertext looks like a random sequnce of bits. The reverse process is decryption."
     },
     "ens": {
-      "term": "ENS",
-      "def": "Ethereum Name Service – registers plain text names that correspond to cryptographic wallet addresses, for greater security and ease of use."
+      "term": "RU-ENS",
+      "def": "RU-Ethereum Name Service – registers plain text names that correspond to cryptographic wallet addresses, for greater security and ease of use."
     },
     "eth": {
-      "term": "Ether",
-      "def": "Cryptographic currency of the Ethereum blockchain, used to pay transaction fees (gas) on the network. The short code for Ether is ETH."
+      "term": "RU-Ether",
+      "def": "RU-Cryptographic currency of the Ethereum blockchain, used to pay transaction fees (gas) on the network. The short code for Ether is ETH."
     },
     "ethreum": {
-      "term": "Ethereum",
-      "def": "Decentralized blockchain platform enabled with a software language for building applications and creating contracts. Ethereum is the network, Ether is the token."
+      "term": "RU-Ethereum",
+      "def": "RU-Decentralized blockchain platform enabled with a software language for building applications and creating contracts. Ethereum is the network, Ether is the token."
     },
     "evm": {
-      "term": "EVM",
-      "def": "Ethereum Virtual Machine – the decentralized computing code at the core of the Ethereum platform. Each validating node has its own isolated implementation of EVM which allows it to achieve consensus."
+      "term": "RU-EVM",
+      "def": "RU-Ethereum Virtual Machine – the decentralized computing code at the core of the Ethereum platform. Each validating node has its own isolated implementation of EVM which allows it to achieve consensus."
     },
     "fork": {
-      "term": "Fork",
-      "def": "Accidental or deliberate creation of an alternative version of the blockchain by generating two blocks from the same parent block. This can result either in abandonment of one of the chains (through consensus) or both chains going forward operating independently."
+      "term": "RU-Fork",
+      "def": "RU-Accidental or deliberate creation of an alternative version of the blockchain by generating two blocks from the same parent block. This can result either in abandonment of one of the chains (through consensus) or both chains going forward operating independently."
     },
     "gas": {
-      "term": "Gas",
-      "def": "The fee for executing a transaction or contract on the Ethereum network, paid in ETH. For this reason, a user must have a small amount of ETH available in the account before sending any transactions."
+      "term": "RU-Gas",
+      "def": "RU-The fee for executing a transaction or contract on the Ethereum network, paid in ETH. For this reason, a user must have a small amount of ETH available in the account before sending any transactions."
     },
     "hash": {
-      "term": "Hash",
-      "def": "Function or algorithm by which a file is processed into a small piece of data that looks like random bytes. Importantly, the hash is unique but always the same for a specific document. However, changing even one character in the document will completely randomize the hash."
+      "term": "RU-Hash",
+      "def": "RU-Function or algorithm by which a file is processed into a small piece of data that looks like random bytes. Importantly, the hash is unique but always the same for a specific document. However, changing even one character in the document will completely randomize the hash."
     },
     "messg": {
-      "term": "Message",
-      "def": "Data transfer mechanism used for communication between contracts."
+      "term": "RU-Message",
+      "def": "RU-Data transfer mechanism used for communication between contracts."
     },
     "mining": {
-      "term": "Mining",
-      "def": "Computing process by which transactions are verified and new blocks are added to the blockchain. Verified blocks are rewarded with a certain amount of cryptocurrency and the block's transaction fees, which means that mining is also the way more cryptocurrency is \"created\"."
+      "term": "RU-Mining",
+      "def": "RU-Computing process by which transactions are verified and new blocks are added to the blockchain. Verified blocks are rewarded with a certain amount of cryptocurrency and the block's transaction fees, which means that mining is also the way more cryptocurrency is \"created\"."
     },
     "nonce": {
-      "term": "Nonce",
-      "def": "Number Used Once – a string of data generated and used just once as unique identifier for a new block in the blockchain."
+      "term": "RU-Nonce",
+      "def": "RU-Number Used Once – a string of data generated and used just once as unique identifier for a new block in the blockchain."
     },
     "ommer": {
-      "term": "Ommer",
-      "def": "Gender-neutral alternative to Uncle, used interchangeably in blockchain."
+      "term": "RU-Ommer",
+      "def": "RU-Gender-neutral alternative to Uncle, used interchangeably in blockchain."
     },
     "oracle": {
-      "term": "Oracles",
-      "def": "Products that can bring real-world data onto the blockchain for execution of smart contracts that are dependent on outside conditions – such as game scores for sports betting."
+      "term": "RU-Oracles",
+      "def": "RU-Products that can bring real-world data onto the blockchain for execution of smart contracts that are dependent on outside conditions – such as game scores for sports betting."
     },
     "pri-key":{
-      "term": "Private key",
-      "def": "Alphanumeric string associated with an account and known only by the owner of the account. Cryptographically paired with public key for executing transactions."
+      "term": "RU-Private key",
+      "def": "RU-Alphanumeric string associated with an account and known only by the owner of the account. Cryptographically paired with public key for executing transactions."
     },
     "pos": {
-      "term": "Proof of stake",
-      "def": "Low-cost, low-energy alternative to proof of work. Validation of new blocks is allocated to users that hold the most stake (the highest amount of Ether) in the network. The Ethereum blockchain is expected to transition to a proof of stake algorithm Casper in the near future."
+      "term": "RU-Proof of stake",
+      "def": "RU-Low-cost, low-energy alternative to proof of work. Validation of new blocks is allocated to users that hold the most stake (the highest amount of Ether) in the network. The Ethereum blockchain is expected to transition to a proof of stake algorithm Casper in the near future."
     },
     "pow": {
-      "term": "Proof of work",
-      "def": "Consensus algorithm that depends on using a high amount of computing power and energy for mining new blocks. A validator node must solve complex mathematical problems and present the result as proof of that work in order to qualify for block validation. This is the current consensus algorithm for Ethereum."
+      "term": "RU-Proof of work",
+      "def": "RU-Consensus algorithm that depends on using a high amount of computing power and energy for mining new blocks. A validator node must solve complex mathematical problems and present the result as proof of that work in order to qualify for block validation. This is the current consensus algorithm for Ethereum."
     },
     "pub-key": {
-      "term": "Public key",
-      "def": "Alphanumeric string derived from private key and used publicly to provide other users with an address for sending transactions. "
+      "term": "RU-Public key",
+      "def": "RU-Alphanumeric string derived from private key and used publicly to provide other users with an address for sending transactions. "
     },
     "contract": {
-      "term": "Smart contract",
-      "def": "Computer protocol that digitally enforces contracts such that they are automatically executed on the blockchain when contract conditions are met. These conditions can require input from oracles."
+      "term": "RU-Smart contract",
+      "def": "RU-Computer protocol that digitally enforces contracts such that they are automatically executed on the blockchain when contract conditions are met. These conditions can require input from oracles."
     },
     "state": {
-      "term": "State",
-      "def": "All balances and data on the blockchain at a particular point in time."
+      "term": "RU-State",
+      "def": "RU-All balances and data on the blockchain at a particular point in time."
     },
     "txs": {
-      "term": "Transaction",
-      "def": "Any action taking place on the blockchain. Usually, sending currency or tokens to another address; other examples include entering and executing smart contracts, registering domain names, fulfilling trade orders."
+      "term": "RU-Transaction",
+      "def": "RU-Any action taking place on the blockchain. Usually, sending currency or tokens to another address; other examples include entering and executing smart contracts, registering domain names, fulfilling trade orders."
     },
     "uncle": {
-      "term": "Uncle",
-      "def": "Because miners may not be fully synchronized at all times, some blocks will be mined that are not on the longest chain. These end up being \"sibling\" blocks to the \"parent\" block which continues the blockchain. On Ethereum, uncle (or ommer) blocks are still rewarded, but at a lower rate."
+      "term": "RU-Uncle",
+      "def": "RU-Because miners may not be fully synchronized at all times, some blocks will be mined that are not on the longest chain. These end up being \"sibling\" blocks to the \"parent\" block which continues the blockchain. On Ethereum, uncle (or ommer) blocks are still rewarded, but at a lower rate."
     },
     "valid": {
-      "term": "Validators",
-      "def": "Nodes that make up a decentralized network and maintain consensus by validating new blocks broadcasted by miners. "
+      "term": "RU-Validators",
+      "def": "RU-Nodes that make up a decentralized network and maintain consensus by validating new blocks broadcasted by miners. "
     }
   }
   },
 
   "pp": {
-    "name": "Privacy Policy",
+    "name": "RU-Privacy Policy",
     "intro":{
-      "title": "Introduction",
-      "p1":"Welcome to EthVM, a free, open-source, tool for interacting with data on the blockchain. EthVM and MyEtherWallet, Inc. values privacy and we make a concerted effort to minimize and, to the extent possible, eliminate the exposure of personal data during the use of our interface. EthVM does not collect, hold, or store keys, account information, or passwords. We do not collect data passively, do not monetize the collection of data, and do not use your data for marketing or advertising.",
-      "p2": "To the extent we collect any personal information, this privacy policy (“Policy”) describes how EthVM collects, uses, and shares personal information of people who visit our website (the “Site”) or otherwise use our services (collectively, the “Services”).",
-      "p3": "This Policy applies to anyone who accesses the Services. Please read the Policy carefully to understand our practices regarding your information and how we will treat it. By visiting the Site, App, and/or using the Services, you acknowledge that the collection, use, and sharing of your information will take place as described in this Policy.",
-      "p4": "So that we are clear about the terminology we are using, when we use the phrase “Personal Information” in this Privacy Policy, we mean information about an individual that (either by itself or when combined with information from other available sources) allows that individual to be identified, including, the individual’s name, telephone number, or e-mail address."
+      "title": "RU-Introduction",
+      "p1": "RU_Welcome to EthVM, a free, open-source, tool for interacting with data on the blockchain. EthVM and MyEtherWallet, Inc. values privacy and we make a concerted effort to minimize and, to the extent possible, eliminate the exposure of personal data during the use of our interface. EthVM does not collect, hold, or store keys, account information, or passwords. We do not collect data passively, do not monetize the collection of data, and do not use your data for marketing or advertising.",
+      "p2": "RU-To the extent we collect any personal information, this privacy policy (“Policy”) describes how EthVM collects, uses, and shares personal information of people who visit our website (the “Site”) or otherwise use our services (collectively, the “Services”).",
+      "p3": "RU-This Policy applies to anyone who accesses the Services. Please read the Policy carefully to understand our practices regarding your information and how we will treat it. By visiting the Site, App, and/or using the Services, you acknowledge that the collection, use, and sharing of your information will take place as described in this Policy.",
+      "p4": "RU-So that we are clear about the terminology we are using, when we use the phrase “Personal Information” in this Privacy Policy, we mean information about an individual that (either by itself or when combined with information from other available sources) allows that individual to be identified, including, the individual’s name, telephone number, or e-mail address."
     },
     "block": {
-      "title": "The Blockchain",
-      "p1": "Due to the inherent transparency of many blockchains, including the Ethereum Blockchain, transactions that individuals broadcast via EthVM may be publicly accessible. This includes, but is not limited to, your public sending address, the public address of the receiver, the amount sent or received, and any other data a user has chosen to include in a given transaction. Information stored on a blockchain may be public, immutable, and difficult or even impossible to remove or delete. Transactions and addresses may reveal information about the user’s identity and information can potentially be correlated now or in the future by any party who chooses to do so, including law enforcement. Users are encouraged to review how privacy and transparency on the blockchain works."
+      "title": "RU-The Blockchain",
+      "p1": "RU-Due to the inherent transparency of many blockchains, including the Ethereum Blockchain, transactions that individuals broadcast via EthVM may be publicly accessible. This includes, but is not limited to, your public sending address, the public address of the receiver, the amount sent or received, and any other data a user has chosen to include in a given transaction. Information stored on a blockchain may be public, immutable, and difficult or even impossible to remove or delete. Transactions and addresses may reveal information about the user’s identity and information can potentially be correlated now or in the future by any party who chooses to do so, including law enforcement. Users are encouraged to review how privacy and transparency on the blockchain works."
     },
     "collect": {
-      "title": "What We Collect",
-      "p1": "We collect information about you as described below. We use this information to enhance your experience with our Services.",
-      "sub1": "Information You Provide",
-      "p2": "We may collect Personal Information you choose to provide to us. For example, when you contact us for support through the Services, you give us with your e-mail address and any other information that you choose to provide. Also, if you participate in a EthVM offer, give-away, or promotion (“Promotion”), you provide your name, e-mail address, and mailing address.",
-      "sub2": "California Do Not Track Disclosures",
-      "p3": "EthVM does not track users over time and across third party websites to provide targeted advertising and therefore does not respond to Do Not Track (DNT) signals."
+      "title": "RU-What We Collect",
+      "p1": "RU-We collect information about you as described below. We use this information to enhance your experience with our Services.",
+      "sub1": "RU-Information You Provide",
+      "p2": "RU-We may collect Personal Information you choose to provide to us. For example, when you contact us for support through the Services, you give us with your e-mail address and any other information that you choose to provide. Also, if you participate in a EthVM offer, give-away, or promotion (“Promotion”), you provide your name, e-mail address, and mailing address.",
+      "sub2": "RU-California Do Not Track Disclosures",
+      "p3": "RU-EthVM does not track users over time and across third party websites to provide targeted advertising and therefore does not respond to Do Not Track (DNT) signals."
     },
     "use": {
-      "title": "Use Of Information",
-      "p1": "We use the information that we have about you to provide support and certain Services to you.",
-      "p2": "We may use the Personal Information we collect from and about you to (1) provide you with information or services that you request from us, including to respond to your comments, questions, and/or provide customer service; (2) monitor and analyze usage and trends and personalize and improve the Services and your experience using the Services; and (3) for any other purpose with your consent."
+      "title": "RU-Use Of Information",
+      "p1": "RU-We use the information that we have about you to provide support and certain Services to you.",
+      "p2": "RU-We may use the Personal Information we collect from and about you to (1) provide you with information or services that you request from us, including to respond to your comments, questions, and/or provide customer service; (2) monitor and analyze usage and trends and personalize and improve the Services and your experience using the Services; and (3) for any other purpose with your consent."
     },
     "sharing": {
-      "title": "Sharing of Personal Information",
-      "p1": "We will not disclose your Personal Information other than as described below, and we do not and will not sell your Personal Information to anyone.",
-      "p2": "We may share the Personal Information we collect from and about you (1) to fulfill the purpose for which you provided it; (2) with your consent; (3) for legal, protection, and safety purposes; (4) to comply with any court order, law, or legal process, including to respond to any government or regulatory request; (5) to protect the rights of EthVM, our agents, customers, and others, including by enforcing our agreements, policies, and terms of service; and (6) with those who need it to do work for us (our Service Providers, as defined below).",
-      "sub1": "Service providers",
-      "p3": "We may contract with third parties to perform functions related to the Services (“Service Providers”). In general, Service Providers will have access to your Personal Information only to the extent needed to perform their business functions but may not use or share that personal information for purposes outside the scope of their functions related to the Services."
+      "title": "RU-Sharing of Personal Information",
+      "p1": "RU-We will not disclose your Personal Information other than as described below, and we do not and will not sell your Personal Information to anyone.",
+      "p2": "RU-We may share the Personal Information we collect from and about you (1) to fulfill the purpose for which you provided it; (2) with your consent; (3) for legal, protection, and safety purposes; (4) to comply with any court order, law, or legal process, including to respond to any government or regulatory request; (5) to protect the rights of EthVM, our agents, customers, and others, including by enforcing our agreements, policies, and terms of service; and (6) with those who need it to do work for us (our Service Providers, as defined below).",
+      "sub1": "RU-Service providers",
+      "p3": "RU-We may contract with third parties to perform functions related to the Services (“Service Providers”). In general, Service Providers will have access to your Personal Information only to the extent needed to perform their business functions but may not use or share that personal information for purposes outside the scope of their functions related to the Services."
     },
     "links": {
-      "title": "Links to Other Sites",
-      "p1": "The Services contain links to other third-party websites or applications. Once you click on such a link and leave the Site or are redirected to a third-party website or application, you are no longer governed by this Policy. Any information you provide on those sites is subject to that third party’s privacy policy and we are not responsible for the privacy and security practices and policies of those third-party sites or applications."
+      "title": "RU-Links to Other Sites",
+      "p1": "RU-The Services contain links to other third-party websites or applications. Once you click on such a link and leave the Site or are redirected to a third-party website or application, you are no longer governed by this Policy. Any information you provide on those sites is subject to that third party’s privacy policy and we are not responsible for the privacy and security practices and policies of those third-party sites or applications."
     },
     "child": {
-      "title": "Our Commitment Towards Children's Privacy",
-      "p1": "We do not direct the Services to, nor do we knowingly collect any Personal Information from children under 13. Children under 13 are not eligible to use the Services. If we learn that someone using our Services is under 13 years of age, we will take steps to remove any Personal Information from our database and to prevent them from utilizing the Services."
+      "title": "RU-Our Commitment Towards Children's Privacy",
+      "p1": "RU-We do not direct the Services to, nor do we knowingly collect any Personal Information from children under 13. Children under 13 are not eligible to use the Services. If we learn that someone using our Services is under 13 years of age, we will take steps to remove any Personal Information from our database and to prevent them from utilizing the Services."
     },
     "security": {
-      "title": "Security of Your Personal Information & Rights",
-      "p1": "We are committed to protecting the security of Personal Information. We have taken certain physical, administrative, and technical steps to help safeguard the information we collect from and about you. While we take steps to help ensure the integrity and security of our network and systems, we cannot guarantee our security measures.",
-      "p2": "In certain circumstances, you will also have the following rights:",
-      "b1": "1. Right to access: the right to request certain information about, access to and copies of any Personal Information about you that we are holding (please note that you are entitled to request one copy of the Personal Information that we hold about you at no cost, but for any further copies, we reserve the right to charge a reasonable fee based on administration costs);",
-      "b2": "2. Right to rectification: the right to have your Personal Information rectified if it is inaccurate or incomplete;",
-      "b3": "3. Right to erasure / “right to be forgotten”: where the processing of your information is based on your consent, the right to withdraw that consent and the right to request that we delete or erase your Personal Information from our systems (however, this will not apply if we are required to hold on to the information for compliance with any legal obligation, or if we require the information to establish or defend any legal claim);",
-      "b4": "4. Right to restriction of use of your information: the right to stop us from using your Personal Information or limit the way in which we can use it;",
-      "b5": "5. Right to data portability: the right to request that we return any information you have provided in a structured, commonly used, and machine-readable format, or that we send it directly to another company, where technically feasible; and",
-      "b6": "6. Right to object: the right to object to our use of your Personal Information including where we use it for our legitimate interests.",
-      "p3": "Requests in relation to the above rights should be sent to: ",
-      "sub1": "Legal Basis for Processing",
-      "p4": "The following legal bases apply to the ways in which we use and share an individual’s Personal Information:",
-      "b7": "1. We rely on an individual’s consent to process Personal Information to provide support and/or carry out Promotions. This consent can be withdrawn at any time.",
-      "b8": "2. We also process the information provided by an individual in our legitimate interests in ensuring our business is conducted legitimately and to a high standard."
+      "title": "RU-Security of Your Personal Information & Rights",
+      "p1": "RU-We are committed to protecting the security of Personal Information. We have taken certain physical, administrative, and technical steps to help safeguard the information we collect from and about you. While we take steps to help ensure the integrity and security of our network and systems, we cannot guarantee our security measures.",
+      "p2": "RU-In certain circumstances, you will also have the following rights:",
+      "b1": "RU-1. Right to access: the right to request certain information about, access to and copies of any Personal Information about you that we are holding (please note that you are entitled to request one copy of the Personal Information that we hold about you at no cost, but for any further copies, we reserve the right to charge a reasonable fee based on administration costs);",
+      "b2": "RU-2. Right to rectification: the right to have your Personal Information rectified if it is inaccurate or incomplete;",
+      "b3": "RU-3. Right to erasure / “right to be forgotten”: where the processing of your information is based on your consent, the right to withdraw that consent and the right to request that we delete or erase your Personal Information from our systems (however, this will not apply if we are required to hold on to the information for compliance with any legal obligation, or if we require the information to establish or defend any legal claim);",
+      "b4": "RU-4. Right to restriction of use of your information: the right to stop us from using your Personal Information or limit the way in which we can use it;",
+      "b5": "RU-5. Right to data portability: the right to request that we return any information you have provided in a structured, commonly used, and machine-readable format, or that we send it directly to another company, where technically feasible; and",
+      "b6": "RU-6. Right to object: the right to object to our use of your Personal Information including where we use it for our legitimate interests.",
+      "p3": "RU-Requests in relation to the above rights should be sent to: ",
+      "sub1": "RU-Legal Basis for Processing",
+      "p4": "RU-The following legal bases apply to the ways in which we use and share an individual’s Personal Information:",
+      "b7": "RU-1. We rely on an individual’s consent to process Personal Information to provide support and/or carry out Promotions. This consent can be withdrawn at any time.",
+      "b8": "RU-2. We also process the information provided by an individual in our legitimate interests in ensuring our business is conducted legitimately and to a high standard."
     },
     "retention": {
-      "title": "Retention",
-      "p1": "We will retain the information you provide in order to process your request, provide support, and/or carry out and fulfill our Promotions. If you request support, we will retain your information for no longer than six (6) months. If you participate in a Promotion, we will retain your information until the Promotion is carried out and ninety (90) days after any prize, reward, or offer is fulfilled. Your Personal Information will then be deleted."
+      "title": "RU-Retention",
+      "p1": "RU-We will retain the information you provide in order to process your request, provide support, and/or carry out and fulfill our Promotions. If you request support, we will retain your information for no longer than six (6) months. If you participate in a Promotion, we will retain your information until the Promotion is carried out and ninety (90) days after any prize, reward, or offer is fulfilled. Your Personal Information will then be deleted."
     },
     "contact": {
-      "title": "Contact Information",
-      "p1": "We welcome your comments or questions about this Policy. You may contact us at "
+      "title": "RU-Contact Information",
+      "p1": "RU-We welcome your comments or questions about this Policy. You may contact us at "
     },
     "changes": {
-      "title": "Changes to Privacy Policy",
-      "p1": "We may modify this Policy from time to time. If we make any changes, we will change the Last Updated date above. We also may provide additional notice, as applicable, depending on the type of change. If you object to any changes, you may stop using the Services. Your continued use of the Services after we publish or otherwise provide notice about our changes to the Policy means that you are consenting to the updated Policy."
+      "title": "RU-Changes to Privacy Policy",
+      "p1": "RU-We may modify this Policy from time to time. If we make any changes, we will change the Last Updated date above. We also may provide additional notice, as applicable, depending on the type of change. If you object to any changes, you may stop using the Services. Your continued use of the Services after we publish or otherwise provide notice about our changes to the Policy means that you are consenting to the updated Policy."
     }
   }
 }

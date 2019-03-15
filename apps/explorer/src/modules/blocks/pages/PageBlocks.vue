@@ -112,8 +112,9 @@ export default class PageBlocks extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: this.$tc('block.name', 2),
-        disabled: true
+        text: 'block.name',
+        disabled: true,
+        plural: 1
       }
     ]
   }

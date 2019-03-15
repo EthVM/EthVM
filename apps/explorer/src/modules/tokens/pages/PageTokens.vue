@@ -47,7 +47,7 @@ export default class PageTokens extends Vue {
     to true, to display user friendly message
   ===================================================================================
   */
-  isRopsten = true
+  isRopsten = false
   tokens: TokenExchange[] = []
   total = 0
   isLoading = true
@@ -117,8 +117,9 @@ export default class PageTokens extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: this.$i18n.tc('token.name', 2),
-        disabled: true
+        text: 'token.name',
+        disabled: true,
+        plural: 2
       }
     ]
   }

@@ -124,8 +124,9 @@ export default class PagePendingTxs extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: this.$i18n.tc('tx.pending', 2),
-        disabled: true
+        text: 'tx.pending',
+        disabled: true,
+        plural: 2
       }
     ]
   }
