@@ -54,6 +54,12 @@ export default class AppSearch extends Vue {
   ===================================================================================
   */
 
+  searchTypes = {
+    Address: 'address',
+    Block: 'block',
+    Uncle: 'uncle',
+    Tx: 'tx'
+  }
   searchInput = ''
   phText = 'default'
   isValid = true
@@ -79,35 +85,14 @@ export default class AppSearch extends Vue {
 
   search() {
     this.$api.search(this.searchInput).then(res => {
-      if (res.type != 3) {
+      const type = Object.keys(this.searchTypes).find(e => e === res.type)
+      if (type) {
+        this.$router.push({ path: `/${this.searchTypes[type]}/` + (this.searchInput.startsWith('0x') ? this.searchInput : `0x${this.searchInput}`) })
+        this.searchInput = ''
         this.isValid = true
+        return
       }
-      switch (res.type) {
-        case 0:
-          {
-            this.$router.push({
-              path: '/tx/' + this.searchInput
-            })
-          }
-          break
-        case 1:
-          {
-            this.$router.push({
-              path: '/address/' + this.searchInput
-            })
-          }
-          break
-        case 2:
-          {
-            this.$router.push({
-              path: '/block/' + this.searchInput
-            })
-          }
-          break
-        case 3: {
-          this.isValid = false
-        }
-      }
+      this.isValid = false
     })
   }
 

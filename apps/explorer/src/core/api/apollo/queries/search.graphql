@@ -1,8 +1,5 @@
 query search($query: String!) {
-  search(hash: $query) {
-    type,
-    address
-    block
-    tx
+  search(query: $query) {
+    type
   }
 }

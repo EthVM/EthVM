@@ -482,12 +482,12 @@ export class EthvmApolloApi implements EthvmApi {
   // Search
   // ------------------------------------------------------------------------------------
 
-  public search(hash: string): Promise<any> {
+  public search(query: string): Promise<any> {
     return this.apollo
       .query({
         query: search,
         variables: {
-          query: hash
+          query
         }
       })
       .then(res => res.data.search)

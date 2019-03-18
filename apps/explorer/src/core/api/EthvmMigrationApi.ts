@@ -217,7 +217,7 @@ export class EthvmMigrationApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
 
   public search(input: string): Promise<any> {
-    return this.socketIoApi.search(input)
+    return this.apolloApi.search(input)
   }
 
   // ------------------------------------------------------------------------------------
