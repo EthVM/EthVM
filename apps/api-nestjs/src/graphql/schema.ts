@@ -233,7 +233,7 @@ export class EthplorerTokenInfo {
 export class EthplorerTokenOperation {
     timestamp?: number;
     transactionHash?: string;
-    tokenInfo?: string;
+    tokenInfo?: EthplorerTokenInfo;
     type?: string;
     address?: string;
     from?: string;
@@ -356,6 +356,8 @@ export abstract class IQuery {
     abstract topTokenHolders(address: string): EthplorerTokenHolder[] | Promise<EthplorerTokenHolder[]>;
 
     abstract holderDetails(address: string, holderAddress: string): EthplorerAddressInfo | Promise<EthplorerAddressInfo>;
+
+    abstract holderTransfers(address: string, holderAddress: string): EthplorerTokenOperation[] | Promise<EthplorerTokenOperation[]>;
 
     abstract tx(hash: string): Transaction | Promise<Transaction>;
 

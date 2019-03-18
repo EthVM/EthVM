@@ -4,6 +4,7 @@ type Query {
   tokenHistory(address: String!): [EthplorerTokenOperation]
   topTokenHolders(address: String!): [EthplorerTokenHolder]
   holderDetails(address: String!, holderAddress: String!): EthplorerAddressInfo
+  holderTransfers(address: String!, holderAddress: String!): [EthplorerTokenOperation]
 }
 
 type TokenTransfer {
@@ -24,7 +25,7 @@ type TokenTransferKey {
 type EthplorerTokenOperation {
   timestamp: Int
   transactionHash: String
-  tokenInfo: String
+  tokenInfo: EthplorerTokenInfo
   type: String
   address: String
   from: String

@@ -130,6 +130,33 @@ export class TokenTransferService {
 
   }
 
+  async fetchAddressHistory(tokenAddress: string, holderAddress: string): Promise<EthplorerTokenOperationDto[]> {
+
+    tokenAddress = `0x${tokenAddress}`
+    holderAddress = `0x${holderAddress}`
+
+    const baseUrl = this.configService.ethplorer.url
+    const apiKey = this.configService.ethplorer.apiKey
+    const url = `${baseUrl}getAddressHistory/${holderAddress}?apiKey=${apiKey}&token=${tokenAddress}&type=transfer`
+
+    let res
+
+    try {
+      res = await axios.get(url)
+    } catch (err) {
+      this.handleEthplorerError(err)
+    }
+
+    if (res.status !== 200) {
+      throw new HttpException(res.statusText, res.status)
+    }
+
+    const {operations} = res.data
+
+    return operations.map(o => new EthplorerTokenOperationDto(o))
+
+  }
+
   private handleEthplorerError(err) {
     if (err.response.data && err.response.data.error) {
       throw new HttpException(err.response.data.error.message, err.response.status)

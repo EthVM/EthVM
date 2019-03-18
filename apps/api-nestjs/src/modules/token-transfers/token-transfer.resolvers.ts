@@ -48,4 +48,13 @@ export class TokenTransferResolvers {
   ) {
     return this.tokenTransferService.fetchAddressInfo(address, holderAddress)
   }
+
+  @Query()
+  async holderTransfers(
+    @Args('address', ParseAddressPipe) address: string,
+    @Args('holderAddress', ParseAddressPipe) holderAddress: string
+  ) {
+    return this.tokenTransferService.fetchAddressHistory(address, holderAddress)
+  }
+
 }
