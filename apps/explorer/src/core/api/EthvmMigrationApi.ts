@@ -177,39 +177,39 @@ export class EthvmMigrationApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
 
   public getAverageBlockTimeStats(duration: string): Promise<Statistic[]> {
-    return this.socketIoApi.getAverageBlockTimeStats(duration)
+    return this.apolloApi.getAverageBlockTimeStats(duration)
   }
 
   public getAverageDifficultyStats(duration: string): Promise<Statistic[]> {
-    return this.socketIoApi.getAverageDifficultyStats(duration)
+    return this.apolloApi.getAverageDifficultyStats(duration)
   }
 
   public getAverageGasLimitStats(duration: string): Promise<Statistic[]> {
-    return this.socketIoApi.getAverageGasLimitStats(duration)
+    return this.apolloApi.getAverageGasLimitStats(duration)
   }
 
   public getAverageGasPriceStats(duration: string): Promise<Statistic[]> {
-    return this.socketIoApi.getAverageGasPriceStats(duration)
+    return this.apolloApi.getAverageGasPriceStats(duration)
   }
 
   public getAverageHashRateStats(duration: string): Promise<Statistic[]> {
-    return this.socketIoApi.getAverageHashRateStats(duration)
+    return this.apolloApi.getAverageHashRateStats(duration)
   }
 
   public getAverageMinerRewardsStats(duration: string): Promise<Statistic[]> {
-    return this.socketIoApi.getAverageMinerRewardsStats(duration)
+    return this.apolloApi.getAverageMinerRewardsStats(duration)
   }
 
   public getAverageTxFeeStats(duration: string): Promise<Statistic[]> {
-    return this.socketIoApi.getAverageTxFeeStats(duration)
+    return this.apolloApi.getAverageTxFeeStats(duration)
   }
 
   public getFailedTxStats(duration: string): Promise<Statistic[]> {
-    return this.socketIoApi.getFailedTxStats(duration)
+    return this.apolloApi.getFailedTxStats(duration)
   }
 
   public getSuccessfulTxStats(duration: string): Promise<Statistic[]> {
-    return this.socketIoApi.getSuccessfulTxStats(duration)
+    return this.apolloApi.getSuccessfulTxStats(duration)
   }
 
   // ------------------------------------------------------------------------------------
