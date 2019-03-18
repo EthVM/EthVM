@@ -2,8 +2,9 @@ import { BadRequestException, HttpException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { TokenTransferEntity } from '@app/orm/entities/token-transfer.entity'
 import { MongoRepository } from 'typeorm'
-import { EthplorerTokenOperationDto } from '@app/modules/token-transfers/ethplorer-token-operation.dto'
 import { ConfigService } from '@app/shared/config.service'
+import { EthplorerTokenOperationDto } from '@app/modules/token-transfers/dto/ethplorer-token-operation.dto'
+import { EthplorerTokenHolderDto } from '@app/modules/token-transfers/dto/ethplorer-token-holder.dto'
 
 const axios = require('axios')
 
@@ -69,6 +70,40 @@ export class TokenTransferService {
     }
 
     return operations ? operations.map(o => new EthplorerTokenOperationDto(o)) : []
+
+  }
+
+  async fetchTokenHolders(address: string): Promise<EthplorerTokenHolderDto[]> {
+
+    address = `0x${address}`
+
+    const baseUrl = this.configService.ethplorer.url
+    const apiKey = this.configService.ethplorer.apiKey
+    const url = `${baseUrl}getTopTokenHolders/${address}?apiKey=${apiKey}`
+
+    try {
+      const res = await axios.get(url)
+
+      if (res.status !== 200) {
+        throw new HttpException(res.statusText, res.status)
+      }
+
+      const { holders, error } = res.data
+
+      if (error) {
+        throw new HttpException(error.message, error.code)
+      }
+
+      return holders ? holders.map(h => new EthplorerTokenHolderDto(h)) : []
+
+    }
+    catch (err) {
+
+      if (err.response.data && err.response.data.error) {
+        throw new HttpException(err.response.data.error.message, err.response.status)
+      }
+      throw err
+    }
 
   }
 

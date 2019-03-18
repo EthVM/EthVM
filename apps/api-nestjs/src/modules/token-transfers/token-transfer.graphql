@@ -2,6 +2,7 @@ type Query {
   addressTokenTransfers(address: String!, limit: Int, page: Int): [TokenTransfer]
   addressTokenTransfersByHolder(address: String!, holder: String!, filter: FilterEnum, limit: Int, page: Int): [TokenTransfer]
   tokenHistory(address: String!): [EthplorerTokenOperation]
+  topTokenHolders(address: String!): [EthplorerTokenHolder]
 }
 
 type TokenTransfer {
@@ -15,6 +16,10 @@ type TokenTransfer {
   transferType: BalanceType
 }
 
+type TokenTransferKey {
+  hash: String
+}
+
 type EthplorerTokenOperation {
   timestamp: Int
   transactionHash: String
@@ -26,6 +31,8 @@ type EthplorerTokenOperation {
   value: Float
 }
 
-type TokenTransferKey {
-  hash: String
+type EthplorerTokenHolder {
+  address: String
+  balance: Decimal
+  share: Decimal
 }

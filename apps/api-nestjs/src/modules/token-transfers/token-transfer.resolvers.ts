@@ -35,4 +35,9 @@ export class TokenTransferResolvers {
   async tokenHistory(@Args('address', ParseAddressPipe) address: string) {
     return this.tokenTransferService.fetchTokenHistory(address)
   }
+
+  @Query()
+  async topTokenHolders(@Args('address', ParseAddressPipe) address: string) {
+    return this.tokenTransferService.fetchTokenHolders(address)
+  }
 }
