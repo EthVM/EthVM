@@ -17,11 +17,7 @@ export class TxResolvers {
   }
 
   @Query()
-  async txs(
-    @Args('limit', ParseLimitPipe) limit?: number,
-    @Args('order') order?: string,
-    @Args('fromBlock') fromBlock?: number
-  ) {
+  async txs(@Args('limit', ParseLimitPipe) limit?: number, @Args('order') order?: string, @Args('fromBlock') fromBlock?: number) {
     const entities = await this.txService.findTxs(limit, order, fromBlock)
     return entities.map(e => new TxDto(e))
   }

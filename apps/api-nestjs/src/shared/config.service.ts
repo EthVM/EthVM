@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import convict from 'convict'
 import { join } from 'path'
 
+/* tslint:disable:max-line-length */
 const schema = {
   env: {
     doc: 'The application environment.',
@@ -102,8 +103,8 @@ export class ConfigService {
     const { env } = this
 
     if (env === 'development') {
-      console.log('Configuration')
-      console.log(config.toString())
+      Logger.log('Configuration')
+      Logger.log(config.toString())
     }
   }
 
