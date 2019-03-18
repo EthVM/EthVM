@@ -95,26 +95,26 @@
     "history": "История Майнера"
   },
   "diff": {
-    "name": "Уровень сложности",
+    "name": "Сложность",
     "total": "Общая сложность"
   },
   "price": {
-    "name": "RU-Price | RU_Prices",
-    "erc20": "RU-ERC20 Prices",
-    "erc721": "RU-ERC721 Prices"
+    "name": "Цена | Цены",
+    "erc20": "Цены ERC20",
+    "erc721": "Цены ERC721"
   },
   "common": {
-    "hash": "RU-Hash",
-    "height": "RU-Height",
-    "size": "RU-Size",
-    "nonce": "RU-Nonce",
-    "sha": "RU-SHA3",
-    "age": "RU-Age",
-    "eth": "RU-ETH",
-    "gwei": "RU-GWEI",
-    "timestmp": "RU-Timestamp",
-    "success": "RU-Successful",
-    "fail": "RU-Failed",
+    "hash": "Хэш",
+    "height": "Высота",
+    "size": "Размер",
+    "nonce": "Nonce-Число",
+    "sha": "SHA3 Блока",
+    "age": "Возвраст",
+    "eth": "ETH",
+    "gwei": "GWEI",
+    "timestmp": "Временная Метка",
+    "success": "Успешная",
+    "fail": "Неудачная",
     "pending": "RU-Pending",
     "amount": "RU-Amount",
     "quantity": "RU-Quantity",
