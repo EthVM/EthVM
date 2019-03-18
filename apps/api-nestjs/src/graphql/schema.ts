@@ -290,11 +290,11 @@ export class ProcessingMetadataKey {
 export abstract class IQuery {
     abstract accountMetadataByHash(hash: string): AccountMetadata | Promise<AccountMetadata>;
 
+    abstract balanceByHash(hash: string): Balance | Promise<Balance>;
+
     abstract blockMetricByHash(hash?: string): BlockMetric | Promise<BlockMetric>;
 
     abstract blockMetrics(limit?: number, page?: number): BlockMetric[] | Promise<BlockMetric[]>;
-
-    abstract balanceByHash(hash: string): Balance | Promise<Balance>;
 
     abstract blocks(limit?: number, page?: number): Block[] | Promise<Block[]>;
 
@@ -322,6 +322,8 @@ export abstract class IQuery {
 
     abstract processingMetadataById(id: string): ProcessingMetadata | Promise<ProcessingMetadata>;
 
+    abstract search(query: string): Search | Promise<Search>;
+
     abstract totalTxs(duration: Duration): Statistic[] | Promise<Statistic[]>;
 
     abstract totalSuccessfulTxs(duration: Duration): Statistic[] | Promise<Statistic[]>;
@@ -345,8 +347,6 @@ export abstract class IQuery {
     abstract averageBlockTime(duration: Duration): Statistic[] | Promise<Statistic[]>;
 
     abstract averageHashRate(duration: Duration): Statistic[] | Promise<Statistic[]>;
-
-    abstract search(query: string): Search | Promise<Search>;
 
     abstract addressTokenTransfers(address: string, limit?: number, page?: number): TokenTransfer[] | Promise<TokenTransfer[]>;
 
