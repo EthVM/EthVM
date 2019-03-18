@@ -176,7 +176,7 @@
     "name": "Графики",
     "live": "Данные в реальном времени",
     "tx-summary": {
-      "title": "RU-Tx Summary",
+      "title": "Сводка Тр-ции",
       "description": "RU-Successful, failed, and pending transactions in the last 10 blocks.",
       "label": {
         "pen": "RU-Pending Txs",
@@ -188,11 +188,11 @@
       "description": "Average transaction fees and average gas price in the last 10 blocks."
     },
     "block-diff": {
-      "title": "RU-Block Difficulty",
-      "description": "RU-Average Block Difficulty"
+      "title": "Сложность блока",
+      "description": "Средняя сложность блока"
     },
     "block-size": {
-      "title": "RU-Block Size",
+      "title": "Размер блока",
       "description": "RU-Average Block Size"
     },
     "block-time": {
