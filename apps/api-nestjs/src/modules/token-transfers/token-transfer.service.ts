@@ -50,8 +50,6 @@ export class TokenTransferService {
 
   async fetchTokenHistory(address: string): Promise<EthplorerTokenOperationDto[]> {
 
-    // TODO ensure ParseAddressPipe has been used!
-
     address = `0x${address}`
 
     const baseUrl = this.configService.ethplorer.url

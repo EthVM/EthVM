@@ -32,7 +32,7 @@ export class TokenTransferResolvers {
   }
 
   @Query()
-  async tokenHistory(@Args('address') address: string) {
+  async tokenHistory(@Args('address', ParseAddressPipe) address: string) {
     return this.tokenTransferService.fetchTokenHistory(address)
   }
 }
