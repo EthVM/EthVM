@@ -161,15 +161,15 @@ export class EthvmMigrationApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
 
   public getUncle(hash: string): Promise<Uncle> {
-    return this.socketIoApi.getUncle(hash)
+    return this.apolloApi.getUncle(hash)
   }
 
   public getUncles(limit: number, page: number, fromUncle: number): Promise<Uncle[]> {
-    return this.socketIoApi.getUncles(limit, page, fromUncle)
+    return this.apolloApi.getUncles(limit, page, fromUncle)
   }
 
   public getTotalNumberOfUncles(): Promise<number> {
-    return this.socketIoApi.getTotalNumberOfUncles()
+    return this.apolloApi.getTotalNumberOfUncles()
   }
 
   // ------------------------------------------------------------------------------------

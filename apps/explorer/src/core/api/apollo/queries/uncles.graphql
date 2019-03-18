@@ -1,4 +1,4 @@
-query uncleByHash($hash: String) {
+query uncleByHash($hash: String!) {
   uncleByHash(hash: $hash) {
     author
     blockNumber
