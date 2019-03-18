@@ -27,7 +27,6 @@ export class BlockService {
   }
 
   async findTotalNumberOfBlocks(): Promise<number> {
-    // TODO Confirm performing count() in place of estimatedDocumentCount() is ok
     return this.blockRepository.count()
   }
 }
