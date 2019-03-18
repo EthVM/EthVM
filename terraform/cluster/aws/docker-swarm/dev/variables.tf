@@ -75,3 +75,8 @@ variable "provision_user" {
   description = "instance user account"
   default     = "ubuntu"
 }
+
+variable "allowed_inbound_ssh" {
+  description = "list of IPs with inbound ssh access"
+  default     = ["0.0.0.0/0"]
+}
