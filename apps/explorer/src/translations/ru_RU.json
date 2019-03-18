@@ -166,15 +166,15 @@
       "btn": "Вперед!"
     },
     "ropsten-no-token": "EthVM все еще находится в тестировании, поэтому в настоящее время мы показываем данные из тест-нета Ropsten ETH. В тест-нете Ropsten нет токенов которые имеют ценность. Балансы всех ценных токенов появятся здесь, когда мы подключим Mainnet.",
-    "report": "RU-Find any bugs or have suggestions?",
+    "report": "Нашли какие-либо ошибки или есть предложения?",
     "update": {
-      "tx": "RU-new tx | RU_new txs",
-      "block": "RU-new block | RU_new blocks"
+      "tx": "Новая Тр-ция | Новые Тр-ции",
+      "block": "Новый блок | Новые блоки"
     }
   },
   "charts": {
-    "name": "RU-Charts",
-    "live": "RU-Live Data",
+    "name": "Графики",
+    "live": "Данные в реальном времени",
     "tx-summary": {
       "title": "RU-Tx Summary",
       "description": "RU-Successful, failed, and pending transactions in the last 10 blocks.",
