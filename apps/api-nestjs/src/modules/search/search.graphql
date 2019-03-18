@@ -1,18 +1,20 @@
 type Query {
-  search(hash: String!): Search
+  search(query: String!): Search
 }
 
 type Search {
   type: SearchType
   address: AddressBalance
   block: Block
+  uncle: Uncle
   tx: Transaction
 }
 
 enum SearchType {
-  Transaction,
   Address,
   Block,
+  Uncle,
+  Tx,
   None
 }
 

@@ -6,7 +6,7 @@ export class SearchResolvers {
   constructor(private readonly searchService: SearchService) {}
 
   @Query()
-  async search(@Args('hash') hash: string) {
-    return this.searchService.search(hash)
+  async search(@Args('query') query: string) {
+    return this.searchService.search(query)
   }
 }

@@ -1,4 +1,4 @@
-import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm'
+import { Column, Entity, ObjectIdColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 import { UncleEmbedded } from '@app/orm/embedded-entities/block/uncle.embedded'
 
@@ -10,7 +10,7 @@ export class UncleEntity extends UncleEmbedded {
   }
 
   @ObjectIdColumn({ name: '_id', type: 'string', readonly: true })
-  id: ObjectID
+  id: string
 
   @Column({ type: 'long', readonly: true })
   blockNumber: number
