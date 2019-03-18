@@ -9,6 +9,7 @@ import { MongoConnectionOptions } from 'typeorm/driver/mongodb/MongoConnectionOp
       useFactory: async (configService: ConfigService): Promise<MongoConnectionOptions> => ({
         type: 'mongodb',
         url: configService.mongoDb.url,
+        useNewUrlParser: true,
         synchronize: false,
         entities: ['src/**/**.entity{.ts,.js}'],
         loggerLevel: 'error'
