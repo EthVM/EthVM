@@ -12,7 +12,7 @@ export class SearchService {
     private readonly blockService: BlockService,
     private readonly balanceService: BalanceService,
     private readonly txService: TxService,
-    private readonly ethService: EthService
+    private readonly ethService: EthService,
   ) {}
 
   async search(hash: string): Promise<SearchDto | null> {

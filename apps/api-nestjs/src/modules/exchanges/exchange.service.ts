@@ -11,7 +11,7 @@ export class ExchangeService {
   constructor(
     private readonly configService: ConfigService,
     @InjectRepository(TokenExchangeRateEntity)
-    private readonly tokenExchangeRateRepository: MongoRepository<TokenExchangeRateEntity>
+    private readonly tokenExchangeRateRepository: MongoRepository<TokenExchangeRateEntity>,
   ) {}
 
   async findQuote(token: string, to: string): Promise<QuoteDto> {
@@ -29,7 +29,7 @@ export class ExchangeService {
       to,
       price: ethereum.usd,
       vol_24h: ethereum.usd_24h_vol,
-      last_update: ethereum.last_updated_at
+      last_update: ethereum.last_updated_at,
     })
   }
 

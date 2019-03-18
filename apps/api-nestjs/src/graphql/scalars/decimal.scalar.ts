@@ -10,14 +10,14 @@ export class DecimalScalar {
   serialize(value) {
     return processValue(value, {
       range: VALUE_RANGES.NON_NEGATIVE,
-      type: VALUE_TYPES.FLOAT
+      type: VALUE_TYPES.FLOAT,
     })
   }
 
   parseValue(value) {
     return processValue(value, {
       range: VALUE_RANGES.NON_NEGATIVE,
-      type: VALUE_TYPES.FLOAT
+      type: VALUE_TYPES.FLOAT,
     })
   }
 
@@ -28,7 +28,7 @@ export class DecimalScalar {
 
     return processValue(ast.value, {
       range: VALUE_RANGES.NON_NEGATIVE,
-      type: VALUE_TYPES.FLOAT
+      type: VALUE_TYPES.FLOAT,
     })
   }
 }
@@ -37,12 +37,12 @@ const VALUE_RANGES = {
   NEGATIVE: 'NEGATIVE',
   NON_NEGATIVE: 'NON_NEGATIVE',
   POSITIVE: 'POSITIVE',
-  NON_POSITIVE: 'NON_POSITIVE'
+  NON_POSITIVE: 'NON_POSITIVE',
 }
 
 const VALUE_TYPES = {
   INT: 'int',
-  FLOAT: 'float'
+  FLOAT: 'float',
 }
 
 function _validateFloat(value) {

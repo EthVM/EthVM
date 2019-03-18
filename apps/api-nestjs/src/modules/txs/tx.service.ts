@@ -7,7 +7,7 @@ import { MongoRepository } from 'typeorm'
 export class TxService {
   constructor(
     @InjectRepository(TransactionEntity)
-    private readonly transactionRepository: MongoRepository<TransactionEntity>
+    private readonly transactionRepository: MongoRepository<TransactionEntity>,
   ) {}
 
   async findTx(hash: string): Promise<TransactionEntity | null> {
@@ -21,7 +21,7 @@ export class TxService {
     return this.transactionRepository.find({
       where,
       order: { blockNumber: -1, index: -1, timestamp: -1 },
-      take
+      take,
     })
   }
 

@@ -35,7 +35,7 @@ export class BlockResolvers {
   async minedBlocksByAddress(
     @Args('address', ParseAddressPipe) address: string,
     @Args('limit', ParseLimitPipe) limit: number,
-    @Args('page', ParsePagePipe) page: number
+    @Args('page', ParsePagePipe) page: number,
   ) {
     const entities = await this.blockService.findMinedBlocksByAddress(address, limit, page)
     return entities.map(e => new BlockDto(e))
@@ -49,8 +49,8 @@ export class BlockResolvers {
   @Subscription()
   newBlock() {
     return {
-      //TODO publish newBlock from mongo
-      subscribe: () => pubSub.asyncIterator('newBlock')
+      // TODO publish newBlock from mongo
+      subscribe: () => pubSub.asyncIterator('newBlock'),
     }
   }
 }

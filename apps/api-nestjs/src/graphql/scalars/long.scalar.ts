@@ -25,7 +25,6 @@ function coerceInt(value) {
   return int;
 }
 
-
 @Scalar('Long')
 export class LongScalar {
   description = 'The `Int53` scalar type represents non-fractional signed whole numeric ' +

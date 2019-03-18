@@ -19,7 +19,7 @@ export class ContractResolvers {
   async contractsCreatedBy(
     @Args('creator', ParseAddressPipe) creator: string,
     @Args('limit', ParseLimitPipe) limit: number,
-    @Args('page', ParsePagePipe) page: number
+    @Args('page', ParsePagePipe) page: number,
   ) {
     const entities = await this.contractService.findContractsCreatedBy(creator, limit, page)
     return entities.map(e => new ContractDto(e))
