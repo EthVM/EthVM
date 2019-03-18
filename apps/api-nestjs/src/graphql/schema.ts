@@ -211,11 +211,11 @@ export class ProcessingMetadataKey {
 export abstract class IQuery {
     abstract accountMetadataByHash(hash: string): AccountMetadata | Promise<AccountMetadata>;
 
+    abstract balanceByHash(hash: string): Balance | Promise<Balance>;
+
     abstract blockMetricByHash(hash?: string): BlockMetric | Promise<BlockMetric>;
 
     abstract blockMetrics(limit?: number, page?: number): BlockMetric[] | Promise<BlockMetric[]>;
-
-    abstract balanceByHash(hash: string): Balance | Promise<Balance>;
 
     abstract blocks(limit?: number, page?: number): Block[] | Promise<Block[]>;
 
@@ -275,7 +275,7 @@ export abstract class IQuery {
 
     abstract tx(hash: string): Transaction | Promise<Transaction>;
 
-    abstract txs(limit?: number, order?: Order, fromBlock?: number): Transaction[] | Promise<Transaction[]>;
+    abstract txs(limit?: number, page?: number, fromBlock?: number): Transaction[] | Promise<Transaction[]>;
 
     abstract txsForBlock(hash: string): Transaction[] | Promise<Transaction[]>;
 
