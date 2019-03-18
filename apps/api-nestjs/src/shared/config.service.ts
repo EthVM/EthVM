@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import convict from 'convict'
 import { join } from 'path'
 
+/* tslint:disable:max-line-length */
 const schema = {
   env: {
     doc: 'The application environment.',
@@ -57,6 +58,18 @@ const schema = {
       default:
         'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true'
     }
+  },
+  ethplorer: {
+    url: {
+      doc: 'Ethplorer API URL',
+      env: 'ETHPLORER_API_URL',
+      default: 'http://api.ethplorer.io/'
+    },
+    apiKey: {
+      doc: 'Ethplorer API key',
+      env: 'ETHPLORER_API_KEY',
+      default: 'freekey'
+    }
   }
 }
 
@@ -72,6 +85,11 @@ export interface CoinGeckoConfig {
   url: string
 }
 
+export interface EthplorerConfig {
+  url: string
+  apiKey: string
+}
+
 @Injectable()
 export class ConfigService {
   public config: convict.Config<any>
@@ -85,8 +103,8 @@ export class ConfigService {
     const { env } = this
 
     if (env === 'development') {
-      console.log('Configuration')
-      console.log(config.toString())
+      Logger.log('Configuration')
+      Logger.log(config.toString())
     }
   }
 
@@ -112,5 +130,9 @@ export class ConfigService {
 
   get coinGecko(): CoinGeckoConfig {
     return this.config.get('coinGecko')
+  }
+
+  get ethplorer(): EthplorerConfig {
+    return this.config.get('ethplorer')
   }
 }

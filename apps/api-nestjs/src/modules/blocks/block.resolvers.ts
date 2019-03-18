@@ -49,7 +49,7 @@ export class BlockResolvers {
   @Subscription()
   newBlock() {
     return {
-      //TODO publish newBlock from mongo
+      // TODO publish newBlock from mongo
       subscribe: () => pubSub.asyncIterator('newBlock')
     }
   }

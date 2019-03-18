@@ -163,6 +163,84 @@ export class ContractType {
     string?: ContractTypeEnum;
 }
 
+export class EthplorerAddressInfo {
+    address?: string;
+    ETH?: EthplorerEthInfo;
+    contractInfo?: EthplorerContractInfo;
+    tokenInfo?: EthplorerTokenInfo;
+    tokens?: EthplorerAddressToken[];
+    countTxs?: number;
+}
+
+export class EthplorerAddressToken {
+    tokenInfo?: EthplorerTokenInfo;
+    balance?: Decimal;
+    totalIn?: Decimal;
+    totalOut?: Decimal;
+}
+
+export class EthplorerContractInfo {
+    creatorAddress?: string;
+    transactionHash?: string;
+    timestamp?: Long;
+}
+
+export class EthplorerEthInfo {
+    balance?: Decimal;
+    totalIn?: Decimal;
+    totalOut?: Decimal;
+}
+
+export class EthplorerPriceInfo {
+    rate?: Decimal;
+    currency?: string;
+    diff?: Decimal;
+    diff7d?: Decimal;
+    diff30d?: Decimal;
+    marketCapUsd?: Decimal;
+    availableSupply?: Decimal;
+    volume24h?: Decimal;
+    ts?: Long;
+}
+
+export class EthplorerTokenHolder {
+    address?: string;
+    balance?: Decimal;
+    share?: Decimal;
+}
+
+export class EthplorerTokenInfo {
+    address?: string;
+    totalSupply?: string;
+    name?: string;
+    symbol?: string;
+    decimals?: number;
+    price?: EthplorerPriceInfo;
+    owner?: string;
+    countOps?: number;
+    totalIn?: number;
+    totalOut?: number;
+    transfersCount?: number;
+    ethTransfersCount?: number;
+    holdersCount?: number;
+    issuancesCount?: number;
+    image?: string;
+    description?: string;
+    website?: string;
+    lastUpdated?: Long;
+}
+
+export class EthplorerTokenOperation {
+    timestamp?: number;
+    transactionHash?: string;
+    tokenInfo?: EthplorerTokenInfo;
+    type?: string;
+    address?: string;
+    from?: string;
+    to?: string;
+    value?: number;
+}
+
 export class Header {
     author?: string;
     difficulty?: string;
@@ -272,6 +350,14 @@ export abstract class IQuery {
     abstract addressTokenTransfers(address: string, limit?: number, page?: number): TokenTransfer[] | Promise<TokenTransfer[]>;
 
     abstract addressTokenTransfersByHolder(address: string, holder: string, filter?: FilterEnum, limit?: number, page?: number): TokenTransfer[] | Promise<TokenTransfer[]>;
+
+    abstract tokenHistory(address: string): EthplorerTokenOperation[] | Promise<EthplorerTokenOperation[]>;
+
+    abstract topTokenHolders(address: string): EthplorerTokenHolder[] | Promise<EthplorerTokenHolder[]>;
+
+    abstract holderDetails(address: string, holderAddress: string): EthplorerAddressInfo | Promise<EthplorerAddressInfo>;
+
+    abstract holderTransfers(address: string, holderAddress: string): EthplorerTokenOperation[] | Promise<EthplorerTokenOperation[]>;
 
     abstract tx(hash: string): Transaction | Promise<Transaction>;
 

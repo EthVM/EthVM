@@ -15,7 +15,7 @@
   "author": "EthVM",
   "license": "MIT",
   "scripts": {
-    "format": "prettier --write \"src/**/*.ts\"",
+    "format": "yarn lint:fix && yarn prettier",
     "start": "ts-node -r tsconfig-paths/register src/main.ts",
     "start:dev": "nodemon",
     "start:debug": "nodemon --config nodemon-debug.json",
@@ -23,12 +23,14 @@
     "start:prod": "node dist/main.js",
     "start:hmr": "node dist/server",
     "lint": "tslint -p tsconfig.json -c tslint.json",
+    "lint:fix": "tslint -c tslint.json --project . --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "typeorm": "./node_modules/.bin/typeorm",
-    "webpack": "webpack --config webpack.config.js"
+    "webpack": "webpack --config webpack.config.js",
+    "prettier": "prettier --write 'src/**/*.ts'"
   },
   "dependencies": {
     "@nestjs/common": "~5.7.3",

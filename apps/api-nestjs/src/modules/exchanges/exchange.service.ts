@@ -4,8 +4,7 @@ import { QuoteDto } from '@app/modules/exchanges/quote.dto'
 import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.entity'
 import { InjectRepository } from '@nestjs/typeorm'
 import { MongoRepository } from 'typeorm'
-
-const axios = require('axios')
+import axios from 'axios'
 
 @Injectable()
 export class ExchangeService {
