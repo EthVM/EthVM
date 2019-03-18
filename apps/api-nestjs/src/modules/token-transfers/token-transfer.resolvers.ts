@@ -42,19 +42,12 @@ export class TokenTransferResolvers {
   }
 
   @Query()
-  async holderDetails(
-    @Args('address', ParseAddressPipe) address: string,
-    @Args('holderAddress', ParseAddressPipe) holderAddress: string
-  ) {
+  async holderDetails(@Args('address', ParseAddressPipe) address: string, @Args('holderAddress', ParseAddressPipe) holderAddress: string) {
     return this.tokenTransferService.fetchAddressInfo(address, holderAddress)
   }
 
   @Query()
-  async holderTransfers(
-    @Args('address', ParseAddressPipe) address: string,
-    @Args('holderAddress', ParseAddressPipe) holderAddress: string
-  ) {
+  async holderTransfers(@Args('address', ParseAddressPipe) address: string, @Args('holderAddress', ParseAddressPipe) holderAddress: string) {
     return this.tokenTransferService.fetchAddressHistory(address, holderAddress)
   }
-
 }
