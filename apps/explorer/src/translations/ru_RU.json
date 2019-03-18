@@ -70,33 +70,33 @@
     "volume": "Объём",
     "transfers": "Переводы",
     "links": "Ссылки",
-    "website": "RU-Website",
-    "support": "RU-Support"
+    "website": "Сайт",
+    "support": "Поддержка"
   },
   "address": {
-    "name": "RU-Address"
+    "name": "Адрес"
   },
   "contract": {
-    "name": "RU-Contract | RU_Contracts",
-    "creator": "RU-Contract Creator"
+    "name": "Контракт | Контракты",
+    "creator": "Создатель Контракта"
   },
   "gas": {
-    "name": "RU-Gas",
-    "limit": "RU-Gas Limit",
-    "used": "RU-Gas Used",
-    "fee": "RU-Gas Fee",
-    "price": "RU-Gas Price",
-    "ave-price": "RU-Avg Gas Price"
+    "name": "Газ",
+    "limit": "Лимит Газа",
+    "used": "Использованный Газ",
+    "fee": "Плата за газ",
+    "price": "Цена Газа",
+    "ave-price": "Сред. Цена за Газ"
   },
   "miner": {
-    "name": "RU-Miner",
-    "reward": "RU-Miner Reward",
-    "reward-short": "RU-Reward",
-    "history": "RU-Mining History"
+    "name": "Майнер",
+    "reward": "Награда Майнера",
+    "reward-short": "Награда",
+    "history": "История Майнера"
   },
   "diff": {
-    "name": "RU-Difficulty",
-    "total": "RU-Total Difficulty"
+    "name": "Уровень сложности",
+    "total": "Общая сложность"
   },
   "price": {
     "name": "RU-Price | RU_Prices",
