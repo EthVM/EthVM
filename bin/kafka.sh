@@ -46,8 +46,9 @@ list_topics() {
 
 # TODO: reset_topics - reset registered Kafka topics (if any)
 reset_streams() {
-  docker-compose exec kafka-1 sh -c "kafka-streams-application-reset --zookeeper zookeeper:2181 --bootstrap-servers kafka-1:9091 --application-id canonical-processor --input-topics canonical-chain"
-  docker-compose exec kafka-1 sh -c "kafka-streams-application-reset --zookeeper zookeeper:2181 --bootstrap-servers kafka-1:9091 --application-id ether-balance-processor --input-topics block-traces,transaction-traces,canonical-transactions-concurrent"
+#  docker-compose exec kafka-1 sh -c "kafka-streams-application-reset --zookeeper zookeeper:2181 --bootstrap-servers kafka-1:9091 --application-id canonical-processor --input-topics canonical-chain"
+#  docker-compose exec kafka-1 sh -c "kafka-streams-application-reset --zookeeper zookeeper:2181 --bootstrap-servers kafka-1:9091 --application-id fungible-balance-processor --input-topics block-traces,transaction-traces,canonical-blocks-concurrent,canonical-transactions-concurrent"
+  docker-compose exec kafka-1 sh -c "kafka-streams-application-reset --zookeeper zookeeper:2181 --bootstrap-servers kafka-1:9091 --application-id logger-processor --input-topics ether-balance-deltas,ether-balances,transaction-fees,transaction-ether-balance-deltas,canonical-transactions-concurrent"
 }
 
 run() {

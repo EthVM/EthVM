@@ -1,44 +1,99 @@
 topics:
 
-  - name: blocks
+  - name: canonical-blocks
     replicationFactor: 1
     partitions: 12
     config:
       cleanup.policy: compact
 
-  - name: uncles
+  - name: canonical-uncles
     replicationFactor: 1
     partitions: 12
     config:
       cleanup.policy: compact
 
-  - name: transactions
+  - name: canonical-transactions
     replicationFactor: 1
     partitions: 12
     config:
       cleanup.policy: compact
 
-  - name: receipts
+  - name: canonical-receipts
     replicationFactor: 1
     partitions: 12
     config:
       cleanup.policy: compact
 
-  - name: block-traces
+  - name: canonical-traces
     replicationFactor: 1
     partitions: 12
     config:
       cleanup.policy: compact
 
-  - name: transaction-traces
+  - name: canonical-ether-balances
     replicationFactor: 1
     partitions: 12
     config:
       cleanup.policy: compact
+
+  - name: ether-balances
+    replicationFactor: 1
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
+  - name: canonical-gas-prices
+    replicationFactor: 1
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
+  - name: canonical-gas-used
+    replicationFactor: 1
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
+  - name: canonical-transaction-fees
+    replicationFactor: 1
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
+  - name: block-metrics
+    replicationFactor: 1
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
+  - name: transaction-block-metrics
+    replicationFactor: 1
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
+  - name: transaction-fee-block-metrics
+    replicationFactor: 1
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
 
   - name: canonical-chain
     replicationFactor: 1
     partitions: 1
+    config:
+      cleanup.policy: compact
+
+  - name: canonical-blocks
+    replicationFactor: 1
+    partitions: 1
+    config:
+      cleanup.policy: compact
+
+  - name: canonical-blocks-concurrent
+    replicationFactor: 1
+    partitions: 12
     config:
       cleanup.policy: compact
 
@@ -54,17 +109,48 @@ topics:
     config:
       cleanup.policy: compact
 
-  - name: transaction-ether-transfers
+  - name: block-ether-balance-deltas
     replicationFactor: 1
     partitions: 12
     config:
       cleanup.policy: compact
 
-  - name: canonical-transaction-ether-transfers
+  - name: transaction-ether-balance-deltas
     replicationFactor: 1
     partitions: 12
     config:
       cleanup.policy: compact
+
+  - name: transaction-gas-prices
+    replicationFactor: 1
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
+  - name: transaction-gas-used
+    replicationFactor: 1
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
+  - name: transaction-fees
+    replicationFactor: 1
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
+  - name: ether-balance-deltas
+    replicationFactor: 1
+    partitions: 12
+    config:
+      retention.ms: -1
+
+  - name: ether-balances
+    replicationFactor: 1
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
 
   - name: contract-metadata
     replicationFactor: 1
@@ -79,19 +165,6 @@ topics:
       cleanup.policy: compact
 
   - name: contract-creations
-    replicationFactor: 1
-    partitions: 12
-    config:
-      cleanup.policy: compact
-
-
-  - name: fungible-token-movements
-    replicationFactor: 1
-    partitions: 12
-    config:
-      retention.ms: -1
-
-  - name: balances
     replicationFactor: 1
     partitions: 12
     config:

@@ -29,7 +29,7 @@ dependencies {
   }
 
   // Kafka
-  implementation("org.apache.kafka:kafka-streams:2.1.0")
+  implementation("org.apache.kafka:kafka-streams:2.1.1")
   implementation("io.confluent:kafka-streams-avro-serde:5.1.0")
 
   // Utils

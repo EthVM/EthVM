@@ -4,9 +4,6 @@ import arrow.core.Option
 import io.enkrypt.avro.processing.BalanceType
 import io.enkrypt.avro.processing.TokenTransferRecord
 import io.enkrypt.common.extensions.byteArray
-import io.enkrypt.common.extensions.byteBuffer
-import io.enkrypt.common.extensions.fixed20
-import io.enkrypt.common.extensions.setTokenId
 import java.math.BigInteger
 import java.nio.ByteBuffer
 
@@ -30,9 +27,9 @@ object ERC721Abi : AbstractAbi(ERC721Abi::class.java.getResourceAsStream("/abi/e
         .map { values ->
           TokenTransferRecord.newBuilder()
             .setTransferType(BalanceType.ERC721)
-            .setFrom((values[0] as ByteArray).byteBuffer().fixed20())
-            .setTo((values[1] as ByteArray).byteBuffer().fixed20())
-            .setTokenId(values[2] as BigInteger)
+            .setFrom((values[0] as ByteArray).toString())
+            .setTo((values[1] as ByteArray).toString())
+            .setTokenId((values[2] as BigInteger).toString())
         }
     }
   }

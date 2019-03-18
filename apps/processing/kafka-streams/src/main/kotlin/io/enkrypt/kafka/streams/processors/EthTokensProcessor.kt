@@ -43,7 +43,7 @@ class EthTokensProcessor : AbstractKafkaProcessor() {
 
     // Send directly to contract-metadata topic to be processed in contracts
     ethTokensStream
-      .selectKey { k, _ -> ContractKeyRecord(k.getAddress().fixed20()) }
+      .selectKey { k, _ -> ContractKeyRecord(k.getAddress()) }
       .to(
         Topics.ContractMetadata,
         Produced.with(Serdes.ContractKey(), Serdes.ContractMetadata())

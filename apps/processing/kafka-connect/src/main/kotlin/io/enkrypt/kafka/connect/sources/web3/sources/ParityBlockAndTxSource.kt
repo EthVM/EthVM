@@ -4,11 +4,8 @@ import io.enkrypt.avro.capture.BlockHeaderRecord
 import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.CanonicalKeyRecord
 import io.enkrypt.avro.capture.CanonicalRecord
-import io.enkrypt.avro.capture.CompositeKeyRecord
-import io.enkrypt.avro.capture.TransactionKeyRecord
+import io.enkrypt.avro.capture.TransactionListRecord
 import io.enkrypt.avro.capture.TransactionRecord
-import io.enkrypt.common.extensions.hexBuffer32
-import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.enkrypt.kafka.connect.sources.web3.AvroToConnect
 import io.enkrypt.kafka.connect.sources.web3.JsonRpc2_0ParityExtended
 import io.enkrypt.kafka.connect.sources.web3.toBlockHeaderRecord
@@ -21,8 +18,7 @@ import org.web3j.protocol.core.methods.response.Transaction
 class ParityBlockAndTxSource(sourceContext: SourceTaskContext,
                              parity: JsonRpc2_0ParityExtended,
                              private val blocksTopic: String,
-                             private val txsBlockTopic: String,
-                             private val canonicalTopic: String) : ParityEntitySource(sourceContext, parity) {
+                             private val txsBlockTopic: String) : ParityEntitySource(sourceContext, parity) {
 
   override val partitionKey: Map<String, Any> = mapOf("model" to "blockAndTx")
 
@@ -46,7 +42,7 @@ class ParityBlockAndTxSource(sourceContext: SourceTaskContext,
 
             val blockKeyRecord = BlockKeyRecord
               .newBuilder()
-              .setBlockHash(block.hash.hexBuffer32())
+              .setBlockHash(block.hash)
               .build()
 
             val blockRecord = block
@@ -56,67 +52,44 @@ class ParityBlockAndTxSource(sourceContext: SourceTaskContext,
             val keySchemaAndValue = AvroToConnect.toConnectData(blockKeyRecord)
             val valueSchemaAndValue = AvroToConnect.toConnectData(blockRecord)
 
-            var sourceRecords = listOf(
+            val headerSourceRecord =
               SourceRecord(partitionKey, partitionOffset, blocksTopic,
                 keySchemaAndValue.schema(), keySchemaAndValue.value(),
                 valueSchemaAndValue.schema(), valueSchemaAndValue.value()
               )
-            )
-
-            // canonical chain
-
-            val canonicalKeyRecord = CanonicalKeyRecord
-              .newBuilder()
-              .setNumber(blockNumber.toBigInteger().unsignedByteBuffer())
-              .build()
-
-            val canonicalRecord = CanonicalRecord.newBuilder()
-              .setBlockHash(block.hash.hexBuffer32())
-              .setTxHashes(
-                block.transactions
-                  .map { it.get() as Transaction }
-                  .map { it.hash.hexBuffer32() }
-              )
-              .build()
-
-            val canonicalKeySchemaAndValue = AvroToConnect.toConnectData(canonicalKeyRecord)
-            val canonicalSchemaAndValue = AvroToConnect.toConnectData(canonicalRecord)
-
-            sourceRecords = sourceRecords +
-              SourceRecord(partitionKey, partitionOffset, canonicalTopic,
-                canonicalKeySchemaAndValue.schema(), canonicalKeySchemaAndValue.value(),
-                canonicalSchemaAndValue.schema(), canonicalSchemaAndValue.value()
-              )
 
             // transactions
 
-            sourceRecords +
-              block.transactions
-                .map { txResp -> txResp.get() as Transaction }
-                .map { tx ->
-                  tx.toTransactionRecord(
-                    TransactionRecord
-                      .newBuilder()
-                      .setTimestamp(block.timestamp.longValueExact())
-                  ).build()
-                }.map { txRecord ->
+            val canonicalKeyRecord = CanonicalKeyRecord
+              .newBuilder()
+              .setNumber(blockNumber.toBigInteger().toString())
+              .build()
 
-                  val txKeyRecord = TransactionKeyRecord
-                    .newBuilder()
-                    .setTxHash(txRecord.getHash())
-                    .build()
+            val canonicalKeySchemaAndValue = AvroToConnect.toConnectData(canonicalKeyRecord)
 
-                  val txKeySchemaAndValue = AvroToConnect.toConnectData(txKeyRecord)
-                  val txValueSchemaAndValue = AvroToConnect.toConnectData(txRecord)
+            val transactionListRecord = TransactionListRecord.newBuilder()
+              .setTransactions(
+                block.transactions
+                  .map { txResp -> txResp.get() as Transaction }
+                  .map { tx ->
+                    tx.toTransactionRecord(
+                      TransactionRecord
+                        .newBuilder()
+                        .setTimestamp(block.timestamp.longValueExact())
+                    ).build()
+                  }
+              ).build()
 
-                  // TODO make blocksTopic configurable
-                  SourceRecord(
-                    partitionKey, partitionOffset, txsBlockTopic,
-                    txKeySchemaAndValue.schema(), txKeySchemaAndValue.value(),
-                    txValueSchemaAndValue.schema(), txValueSchemaAndValue.value()
-                  )
-                }
+            val txListValueSchemaAndValue = AvroToConnect.toConnectData(transactionListRecord)
 
+            val txsSourceRecord =
+              SourceRecord(
+                partitionKey, partitionOffset, txsBlockTopic,
+                canonicalKeySchemaAndValue.schema(), canonicalKeySchemaAndValue.value(),
+                txListValueSchemaAndValue.schema(), txListValueSchemaAndValue.value()
+              )
+
+            listOf(headerSourceRecord, txsSourceRecord)
           }
 
         blockFuture

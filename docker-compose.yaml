@@ -14,8 +14,6 @@ volumes:
   mongodb-volume:
   kafka-volume-1:
   zookeeper-volume:
-  control-center-volume:
-  control-center-config-volume:
 
   parity-volume:
     # Note:
@@ -26,7 +24,8 @@ volumes:
     driver: local-persist
     driver_opts:
        name: "paritydb"
-       mountpoint: "/media/brian/SanDisk\ Extreme/parity"
+#       mountpoint: "/media/brian/SanDisk\ Extreme/parity"
+       mountpoint: "/var/lib/parity"
 
 services:
 
@@ -41,7 +40,6 @@ services:
       - 8546:8546
       - 30303:30303
     command: --chain ropsten --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
-    cpu_shares: 2048
 
   traefik:
     image: traefik:${TRAEFIK_VERSION}-alpine
@@ -174,7 +172,11 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       KAFKA_COMPRESSION_TYPE: zstd
-      CONFLUENT_SUPPORT_METRICS_ENABLE: "true"
+      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: kafka-1:9091
+      CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper:2181
+      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+      CONFLUENT_METRICS_ENABLE: 'true'
+      CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
       KAFKA_JMX_PORT: 9586
     mem_limit: 4g
 
@@ -240,11 +242,9 @@ services:
       CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_LOG4J_ROOT_LOGLEVEL: "INFO"
-      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,io.enkrypt.kafka.connect=DEBUG,org.web3j.protocol.websocket.WebSocketService=WARN"
+      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,io.enkrypt.kafka.connect=TRACE,org.web3j.protocol.websocket.WebSocketService=WARN"
       CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/enkryptio
       KAFKA_JMX_PORT: 9588
-    cpu_shares: 3000
-    mem_limit: 4g
 
   # ///////////////////////////////////////////////////////
   # Extra Tools (Useful for debugging and helping on Kafka)
@@ -289,6 +289,31 @@ services:
       - ksql-server
     tty: true
     entrypoint: /bin/bash
+
+  kafka-control-center:
+    image: confluentinc/cp-enterprise-control-center:latest
+    depends_on:
+      - kafka-1
+      - kafka-schema-registry
+      - kafka-connect
+      - zookeeper
+      - ksql-server
+    networks:
+      - back
+    ports:
+      - 9021:9021
+    environment:
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: 'kafka-1:9091'
+      CONTROL_CENTER_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      CONTROL_CENTER_CONNECT_CLUSTER: 'kafka-connect:8083'
+      CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://kafka-schema-registry:8081"
+      CONTROL_CENTER_KSQL_URL: "http://ksql-server:8088"
+      CONTROL_CENTER_KSQL_ADVERTISED_URL: "http://0.0.0.0:8088"
+      CONTROL_CENTER_REPLICATION_FACTOR: 1
+      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
+      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
+      CONFLUENT_METRICS_TOPIC_REPLICATION: 1
+      PORT: 9021
 
   lenses:
     image: landoop/lenses:2.1

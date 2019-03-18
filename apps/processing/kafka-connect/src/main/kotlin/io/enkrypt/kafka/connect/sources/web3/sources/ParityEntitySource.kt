@@ -11,9 +11,11 @@ abstract class ParityEntitySource (
   protected val parity: JsonRpc2_0ParityExtended
 ) {
 
-  private val logger = KotlinLogging.logger {}
+  protected val logger = KotlinLogging.logger {}
 
   abstract val partitionKey: Map<String, Any>
+
+  open protected val batchSize = 128
 
   private val chainTracker by lazy {
 
@@ -44,7 +46,7 @@ abstract class ParityEntitySource (
       throw error
     }
 
-    val range = chainTracker.nextRange(128)
+    val range = chainTracker.nextRange(batchSize)
 
     return when(range) {
       null -> emptyList()

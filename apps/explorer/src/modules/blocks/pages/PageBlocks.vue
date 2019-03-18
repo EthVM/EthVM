@@ -74,7 +74,7 @@ export default class PageBlocks extends Vue {
   }
 
   fetchBlocks(page: number): Promise<Block[] | SimpleBlock[]> {
-    return this.$api.getBlocks('simple', this.max, page, this.from)
+    return this.$api.getCanonicalBlocks('simple', this.max, page, this.from)
   }
 
   fetchTotalBlocks(): Promise<number> {

@@ -2,7 +2,7 @@
 protocol Tokens {
 
   record EthTokenListsKeyRecord {
-    bytes address;
+    string address;
   }
 
 }

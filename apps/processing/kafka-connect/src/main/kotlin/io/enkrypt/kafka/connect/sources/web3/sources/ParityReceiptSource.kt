@@ -1,6 +1,8 @@
 package io.enkrypt.kafka.connect.sources.web3.sources
 
+import io.enkrypt.avro.capture.CanonicalKeyRecord
 import io.enkrypt.avro.capture.TransactionKeyRecord
+import io.enkrypt.avro.capture.TransactionReceiptListRecord
 import io.enkrypt.avro.capture.TransactionReceiptRecord
 import io.enkrypt.common.extensions.hexBuffer32
 import io.enkrypt.kafka.connect.sources.web3.AvroToConnect
@@ -32,32 +34,31 @@ class ParityReceiptSource(sourceContext: SourceTaskContext,
         parity.parityGetBlockReceipts(blockParam).sendAsync()
           .thenApply { resp ->
 
-            (resp.receipts ?: emptyList())
-              .map { receipt ->
+            val receipts = resp.receipts ?: emptyList()
 
-                val receiptKeyRecord = TransactionKeyRecord
-                  .newBuilder()
-                  .setTxHash(receipt.transactionHash.hexBuffer32())
-                  .build()
+            val receiptKeyRecord = CanonicalKeyRecord
+              .newBuilder()
+              .setNumber(blockNumber.toString())
+              .build()
 
-                val receiptRecord = receipt.toTransactionReceiptRecord(TransactionReceiptRecord.newBuilder()).build()
+            val receiptRecord = TransactionReceiptListRecord
+              .newBuilder()
+              .setReceipts(receipts.map { it.toTransactionReceiptRecord(TransactionReceiptRecord.newBuilder()).build() })
+              .build()
 
-                val receiptKeySchemaAndValue = AvroToConnect.toConnectData(receiptKeyRecord)
-                val receiptValueSchemaAndValue = AvroToConnect.toConnectData(receiptRecord)
+            val receiptKeySchemaAndValue = AvroToConnect.toConnectData(receiptKeyRecord)
+            val receiptValueSchemaAndValue = AvroToConnect.toConnectData(receiptRecord)
 
-                SourceRecord(
-                  partitionKey, partitionOffset, receiptsTopic,
-                  receiptKeySchemaAndValue.schema(), receiptKeySchemaAndValue.value(),
-                  receiptValueSchemaAndValue.schema(), receiptValueSchemaAndValue.value()
-                )
-              }
-
+            SourceRecord(
+              partitionKey, partitionOffset, receiptsTopic,
+              receiptKeySchemaAndValue.schema(), receiptKeySchemaAndValue.value(),
+              receiptValueSchemaAndValue.schema(), receiptValueSchemaAndValue.value()
+            )
           }
 
       }.map { future ->
         // wait for everything to complete
         future.join()
-      }.flatten()
-
+      }
   }
 }

@@ -4,25 +4,34 @@ protocol Processing {
   import idl "common.avdl";
   import idl "capture.avdl";
 
-  record ReorgKeyRecord {
+  record TransactionGasPriceRecord {
+    string address;
+    string gasPrice;
+  }
 
-    union { null, bytes } blockHash = null;
-    union { null, bytes } txHash = null;
-    union { null, bytes } address = null;
+  record TransactionGasPriceListRecord {
+    array<TransactionGasPriceRecord> gasPrices;
+  }
 
-    union { null, bytes } blockNumber = null;
-    union { null, bytes } nonce = null;
-    union { null, string } name = null;
+  record TransactionGasUsedRecord {
+    string gasUsed;
+  }
 
+  record TransactionGasUsedListRecord {
+    array<TransactionGasUsedRecord> gasUsed;
+  }
+
+  record TransactionFeeRecord {
+    string address;
+    string transactionFee;
+  }
+
+  record TransactionFeeListRecord {
+    array<TransactionFeeRecord> transactionFees;
   }
 
   record CanonicalApplyRecord {
     boolean apply;
-  }
-
-  record TokenTransferKeyRecord {
-    bytes txHash;
-    array<int> traceAddress;
   }
 
   enum BalanceType {
@@ -33,13 +42,13 @@ protocol Processing {
 
     BalanceType transferType = "ETHER";
 
-    bytes from;
-    bytes to;
+    union { null, string } from = null;
+    string to;
 
-    union { null, bytes } contract = null;
+    union { null, string } contract = null;
 
-    union { null, bytes } amount = null;
-    union { null, bytes } tokenId = null;
+    union { null, string } amount = null;
+    union { null, string } tokenId = null;
     union { null, long } timestamp = null;                        // block timestamp in seconds since epoch
   }
 
@@ -47,56 +56,63 @@ protocol Processing {
     array<TokenTransferRecord> tokenTransfers = [];
   }
 
+  record TokenTransferKeyRecord {
+    BalanceType balanceType = "ETHER";
+    union { null, string } contract = null;
+    union { null, string } from = null;
+    bytes to;
+  }
+
   record TokenBalanceKeyRecord {
 
     BalanceType balanceType = "ETHER";
-    union { null, bytes } contract = null;
-    union { null, bytes } address = null;
-    union { null, bytes } tokenId = null;
+    union { null, string } contract = null;
+    union { null, string } address = null;
+    union { null, string } tokenId = null;
 
   }
 
   record TokenBalanceRecord {
 
-    union { null, bytes } amount = null;
-    union { null, bytes } address = null;
+    union { null, string } amount = null;
+    union { null, string } address = null;
 
   }
 
-  // contracts
+// contracts
 
   record ContractKeyRecord {
-    bytes address;
+    string address;
   }
 
   record ContractCreateRecord {
     io.enkrypt.avro.common.ContractType type;
-    bytes creator;
-    bytes address;
-    bytes data;
+    string creator;
+    string address;
+    string data;
   }
 
   record ContractDestroyRecord {
-    bytes address;
-    bytes refundAddress;
-    bytes balance;
+    string address;
+    string refundAddress;
+    string balance;
   }
 
   record DaoHfBalanceTransferRecord {
-    bytes from;
-    bytes to;
-    bytes amount;
+    string from;
+    string to;
+    string amount;
   }
 
   record PremineBalanceRecord {
-    bytes address;
-    bytes balance;
+    string address;
+    string balance;
   }
 
   record TxFeeRecord {
-    bytes from;
-    bytes amount;
-    bytes miner;
+    string from;
+    string amount;
+    string miner;
   }
 
   enum ChainEventType {
@@ -107,22 +123,6 @@ protocol Processing {
     CONTRACT_CREATE,
     CONTRACT_DESTROY,
     TX_FEE
-  }
-
-  record ChainEventRecord {
-
-    boolean reverse = false;
-    long timestamp;
-
-    ChainEventType `type`;
-
-    union { io.enkrypt.avro.capture.BlockRewardRecord, TxFeeRecord, PremineBalanceRecord, TokenTransferRecord, ContractCreateRecord, ContractDestroyRecord, DaoHfBalanceTransferRecord } value;
-
-    union { null, bytes } blockHash = null;
-    union { null, bytes } txHash = null;
-    union { null, int } txIndex = null;
-    union { null, array<int> } traceAddress = null;
-
   }
 
   record ContractLogoRecord {
@@ -169,31 +169,26 @@ protocol Processing {
 
   }
 
-  // block events
 
-  record BlockChainEventsRecord {
-    array<ChainEventRecord> events;
-  }
-
-  // metrics
+// metrics
 
   record BlockMetricsRecord {
-    bytes hash;
-    bytes number;
+    string hash;
     union { null, long } blockTime = null;
-    long timestamp;
-    int totalTxs = 0;
-    int numSuccessfulTxs = 0;
-    int numFailedTxs = 0;
-    int numPendingTxs = 0;
-    int numUncles = 0;
-    bytes difficulty;
-    bytes totalDifficulty;
-    bytes totalGasPrice;
-    bytes avgGasLimit;
-    bytes avgGasPrice;
-    bytes totalTxFees;
-    bytes avgTxFees;
+    union { null, long } timestamp = null;
+    union { null, int } totalTxs = null;
+    union { null, int } numSuccessfulTxs = null;
+    union { null, int } numFailedTxs = null;
+    union { null, int } numInternalTxs = null;
+    union { null, int } numPendingTxs = null;
+    union { null, int } numUncles = null;
+    union { null, string } difficulty = null;
+    union { null, string } totalDifficulty = null;
+    union { null, string } totalGasPrice = null;
+    union { null, string } avgGasLimit = null;
+    union { null, string } avgGasPrice = null;
+    union { null, string } totalTxFees = null;
+    union { null, string } avgTxFees = null;
   }
 
   record MetricKeyRecord {
@@ -211,7 +206,7 @@ protocol Processing {
 
   }
 
-  // Processing Metadata
+// Processing Metadata
 
   record ProcessingMetadataKeyRecord {
     string name;
@@ -227,7 +222,7 @@ protocol Processing {
     union { null, bytes } `bigInteger` = null;
   }
 
-  // address metadata
+// address metadata
 
   enum AddressMetadataType {
     OUT_TX_COUNT, IN_TX_COUNT, TOTAL_TX_COUNT, MINER, CONTRACT_CREATOR

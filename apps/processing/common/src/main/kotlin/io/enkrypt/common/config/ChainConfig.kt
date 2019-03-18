@@ -1,19 +1,14 @@
 package io.enkrypt.common.config
 
 import io.enkrypt.avro.capture.BlockRecord
-import io.enkrypt.avro.processing.ChainEventRecord
-import io.enkrypt.avro.processing.ChainEventType
-import io.enkrypt.avro.processing.DaoHfBalanceTransferRecord
 import io.enkrypt.common.extensions.ether
-import io.enkrypt.common.extensions.unsignedBigInteger
-import io.enkrypt.common.extensions.unsignedByteBuffer
 import java.math.BigInteger
 
 interface ChainConfig {
 
   val constants: ChainConstants
 
-  fun hardForkEvents(block: BlockRecord): List<ChainEventRecord> = emptyList()
+//  fun hardForkEtherDeltas(number: BigInteger): List<EtherBalanceDeltaRecord> = emptyList()
 
   /**
    * EIP161: https://github.com/ethereum/EIPs/issues/161
@@ -94,26 +89,28 @@ open class DaoHardForkConfig(override val constants: ChainConstants = ChainConst
   private val withdrawAccount = DaoHardFork.withdrawAccount
   private val daoBalances = DaoHardFork.balances
 
-  override fun hardForkEvents(block: BlockRecord): List<ChainEventRecord> =
-    if (block.getHeader().getNumber().unsignedBigInteger() != forkBlockNumber) {
-      emptyList()
-    } else {
-      daoBalances.map { (address, balance) ->
 
-        ChainEventRecord.newBuilder()
-          .setReverse(block.getReverse())
-          .setTimestamp(block.getHeader().getTimestamp())
-          .setBlockHash(block.getHeader().getHash())
-          .setType(ChainEventType.DAO_HF_BALANCE_TRANSFER)
-          .setValue(
-            DaoHfBalanceTransferRecord.newBuilder()
-              .setFrom(address)
-              .setTo(withdrawAccount)
-              .setAmount(balance.unsignedByteBuffer())
-              .build()
-          ).build()
-      }
-    }
+//  override fun hardForkEtherDeltas(number: BigInteger): List<EtherBalanceDeltaRecord> =
+//    if (number != forkBlockNumber) {
+//      emptyList()
+//    } else {
+//      daoBalances.map { (address, balance) ->
+//        listOf(
+//
+//          // deduct from address
+//          EtherBalanceDeltaRecord.newBuilder()
+//            .setAddress(address)
+//            .setAmount(balance.negate().toString())
+//            .build(),
+//
+//          // add to withdraw account
+//          EtherBalanceDeltaRecord.newBuilder()
+//            .setAddress(withdrawAccount)
+//            .setAmount(balance.toString())
+//            .build()
+//        )
+//      }.flatten()
+//    }
 }
 
 open class Eip150HardForkConfig(val parent: ChainConfig) : DaoHardForkConfig() {
@@ -210,7 +207,7 @@ class BaseNetConfig(genesis: Genesis, vararg configs: Pair<Long, ChainConfig>) :
   }
 
   override fun chainConfigForBlock(block: BlockRecord): ChainConfig =
-    chainConfigForBlock(block.getHeader().getNumber().unsignedBigInteger()!!)
+    chainConfigForBlock(block.getHeader().getNumber().toBigInteger())
 
   override fun chainConfigForBlock(number: BigInteger): ChainConfig {
     var idx = 0

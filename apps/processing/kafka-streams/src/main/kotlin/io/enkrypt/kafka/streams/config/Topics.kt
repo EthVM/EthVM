@@ -1,28 +1,54 @@
 package io.enkrypt.kafka.streams.config
 
+import io.enkrypt.kafka.streams.serdes.Serdes
+import org.apache.kafka.common.serialization.Serde
+import org.apache.kafka.streams.StreamsBuilder
+import org.apache.kafka.streams.kstream.Consumed
+import org.apache.kafka.streams.kstream.KStream
+import org.apache.kafka.streams.kstream.Produced
+
+data class KafkaTopic<K, V>(val name: String,
+                            val keySerde: Serde<K>,
+                            val valueSerde: Serde<V>) {
+
+  val consumer = Consumed.with(keySerde, valueSerde)
+  val producer = Produced.with(keySerde, valueSerde)
+
+  fun stream(builder: StreamsBuilder) = builder.stream(name, consumer)
+
+  fun sinkFor(vararg streams: KStream<K, V>) = streams.forEach { it.to(name, producer) }
+
+  fun table(builder: StreamsBuilder) = builder.table(name, consumer)
+
+  fun globalTable(builder: StreamsBuilder) = builder.globalTable(name, consumer)
+
+}
+
 object Topics {
 
-  const val Blocks = "blocks"
-  const val Transactions = "transactions"
-  const val Uncles = "uncles"
+  val CanonicalBlocks = KafkaTopic("canonical-blocks", Serdes.CanonicalKey(), Serdes.Block())
+  val CanonicalTransactions = KafkaTopic("canonical-transactions", Serdes.CanonicalKey(), Serdes.TransactionList())
+  val CanonicalReceipts = KafkaTopic("canonical-receipts", Serdes.CanonicalKey(), Serdes.ReceiptList())
+  val CanonicalTraces = KafkaTopic("canonical-traces", Serdes.CanonicalKey(), Serdes.TraceList())
 
-  const val BlockMetricsByBlock = "block-metrics-by-block"
+  val CanonicalEtherBalances = KafkaTopic("canonical-ether-balances", Serdes.CanonicalEtherBalanceKey(), Serdes.EtherBalance())
+  val EtherBalances = KafkaTopic("ether-balances", Serdes.EtherBalanceKey(), Serdes.EtherBalance())
+
+  val BlockMetrics = KafkaTopic("block-metrics", Serdes.CanonicalKey(), Serdes.BlockMetrics())
+  val TraceBlockMetrics = KafkaTopic("trace-block-metrics", Serdes.CanonicalKey(), Serdes.BlockMetrics())
+  val TransactionBlockMetrics = KafkaTopic("transaction-block-metrics", Serdes.CanonicalKey(), Serdes.BlockMetrics())
+  val TransactionFeeBlockMetrics = KafkaTopic("transaction-fee-block-metrics", Serdes.CanonicalKey(), Serdes.BlockMetrics())
+
+  val CanonicalGasPrices = KafkaTopic("canonical-gas-prices", Serdes.CanonicalKey(), Serdes.TransactionGasPriceList())
+  val CanonicalGasUsed = KafkaTopic("canonical-gas-used", Serdes.CanonicalKey(), Serdes.TransactionGasUsedList())
+  val CanonicalTransactionFees = KafkaTopic("canonical-transaction-fees", Serdes.CanonicalKey(), Serdes.TransactionFeeList())
+
   const val BlockMetricsByDay = "block-metrics-by-day"
-  const val AggregateBlocksMetricsByDay = "aggregate-block-metrics-by-day"
-
-  const val TokenTransfers = "token-transfers"
   const val FungibleTokenMovements = "fungible-token-movements"
-  const val Balances = "balances"
 
   const val ContractMetadata = "contract-metadata"
   const val ContractCreations = "contract-creations"
   const val ContractDestructions = "contract-destructions"
-
-  const val AddressTxEvents = "address-tx-events"
-  const val AddressTxCounts = "address-tx-counts"
-
-  const val MinerList = "miner-list"
-  const val ContractCreatorList = "contract-creator-list"
 
   const val EthTokensList = "eth-tokens-list"
   const val EthTokensListBySymbol = "eth-tokens-list-by-symbol"

@@ -258,7 +258,7 @@ export default class PageDetailsTxs extends Vue {
         },
         {
           title: this.$i18n.t('gas.price'),
-          detail: this.tx.getGasPrice().toGWei() + ' ' + this.$i18n.t('common.gwei')
+          detail: this.tx.getGasPrices().toGWei() + ' ' + this.$i18n.t('common.gwei')
         },
         {
           title: this.$i18n.t('tx.cost'),

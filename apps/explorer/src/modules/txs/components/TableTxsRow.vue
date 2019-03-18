@@ -153,7 +153,7 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
   */
 
   getTxFee(_tx): string {
-    return this.getRoundNumber(new EthValue(_tx.getGasPrice() * _tx.getGasUsed()).toEth())
+    return this.getRoundNumber(new EthValue(_tx.getGasPrices() * _tx.getGasUsed()).toEth())
   }
 }
 </script>

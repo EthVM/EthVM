@@ -11,7 +11,6 @@ import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTask
 import org.web3j.protocol.websocket.WebSocketService
 import java.io.IOException
-import java.lang.IllegalArgumentException
 import java.math.BigInteger
 import java.net.ConnectException
 import java.util.concurrent.ExecutionException
@@ -74,9 +73,9 @@ class ParitySourceTask : SourceTask() {
 
       entitySources = entitiesList.map {
         when(it) {
-          "blocksAndTransactions" -> ParityBlockAndTxSource(this.context, parity!!, "blocks", "transactions", "canonical-chain")
-          "receipts" -> ParityReceiptSource(this.context, parity!!, "receipts")
-          "traces" -> ParityTracesSource(this.context, parity!!, "block-traces", "transaction-traces")
+          "blocksAndTransactions" -> ParityBlockAndTxSource(this.context, parity!!, "canonical-blocks", "canonical-transactions")
+          "receipts" -> ParityReceiptSource(this.context, parity!!, "canonical-receipts")
+          "traces" -> ParityTracesSource(this.context, parity!!, "canonical-traces","canonical-ether-balances")
           else -> throw IllegalArgumentException("Unexpected entity: $it")
         }
       }
@@ -131,7 +130,10 @@ class ParitySourceTask : SourceTask() {
 
       logger.debug { "Polled ${sourceRecords.size} records" }
 
-
+      if(sourceRecords.isEmpty()) {
+        // sleep 1 second to avoid spinning
+        Thread.sleep(1000)
+      }
 
       return sourceRecords.toMutableList()
 
