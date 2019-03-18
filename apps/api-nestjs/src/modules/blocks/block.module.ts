@@ -7,6 +7,6 @@ import { BlockEntity } from '@app/orm/entities/block.entity'
 @Module({
   imports: [TypeOrmModule.forFeature([BlockEntity])],
   providers: [BlockService, BlockResolvers],
-  exports: [BlockService],
+  exports: [BlockService]
 })
 export class BlockModule {}

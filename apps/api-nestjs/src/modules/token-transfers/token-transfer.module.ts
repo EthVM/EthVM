@@ -6,6 +6,6 @@ import { TokenTransferResolvers } from '@app/modules/token-transfers/token-trans
 
 @Module({
   imports: [TypeOrmModule.forFeature([TokenTransferEntity])],
-  providers: [TokenTransferService, TokenTransferResolvers],
+  providers: [TokenTransferService, TokenTransferResolvers]
 })
 export class TokenTransferModule {}

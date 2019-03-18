@@ -15,7 +15,7 @@ enum EventType {
   AVG_TX_FEE = 'AvgTxFeePerBlock',
   AVG_MINER_REWARD = 'AvgMinerRewardPerBlock',
   AVG_BLOCK_TIME = 'AvgBlockTime',
-  AVG_HASH_RATE = 'AvgHashRate',
+  AVG_HASH_RATE = 'AvgHashRate'
 }
 
 @Injectable()

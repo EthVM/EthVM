@@ -6,6 +6,6 @@ import { UncleResolvers } from '@app/modules/uncles/uncle.resolvers'
 
 @Module({
   imports: [TypeOrmModule.forFeature([UncleEntity])],
-  providers: [UncleService, UncleResolvers],
+  providers: [UncleService, UncleResolvers]
 })
 export class UncleModule {}

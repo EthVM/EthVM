@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import convict from 'convict'
 import { join } from 'path'
 
@@ -8,69 +8,69 @@ const schema = {
     doc: 'The application environment.',
     format: ['production', 'development', 'staging', 'test'],
     default: 'development',
-    env: 'NODE_ENV',
+    env: 'NODE_ENV'
   },
   host: {
     doc: 'The IP address to bind.',
     format: 'ipaddress',
     default: '0.0.0.0',
-    env: 'IP_ADDRESS',
+    env: 'IP_ADDRESS'
   },
   port: {
     doc: 'The port to bind.',
     format: 'port',
     default: 3000,
-    env: 'PORT',
+    env: 'PORT'
   },
   logging: {
     level: {
       doc: 'Log level',
       env: 'LOG_LEVEL',
-      default: 'info',
-    },
+      default: 'info'
+    }
   },
   db: {
     url: {
       doc: 'Mongo url',
       env: 'MONGO_URL',
       default: 'mongodb',
-      sensitive: true,
-    },
+      sensitive: true
+    }
   },
   graphql: {
     playground: {
       doc: 'Whether to enable to disable the graphql playground',
       env: 'GRAPHQL_PLAYGROUND',
-      default: true,
-    },
+      default: true
+    }
   },
   mongodb: {
     url: {
       doc: 'MongoDB connection URL',
       env: 'MONGO_URL',
-      default: 'mongodb://mongodb:27017/ethvm_local',
-    },
+      default: 'mongodb://mongodb:27017/ethvm_local'
+    }
   },
   coinGecko: {
     url: {
       doc: 'CoinGecko API URL',
       env: 'COIN_GECKO_API_URL',
       default:
-        'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true',
-    },
+        'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true'
+    }
   },
   ethplorer: {
     url: {
       doc: 'Ethplorer API URL',
       env: 'ETHPLORER_API_URL',
-      default: 'http://api.ethplorer.io/',
+      default: 'http://api.ethplorer.io/'
     },
     apiKey: {
       doc: 'Ethplorer API key',
       env: 'ETHPLORER_API_KEY',
-      default: 'freekey',
-    },
-  },
+      default: 'freekey'
+    }
+  }
 }
 
 export interface GraphqlConfig {
@@ -103,8 +103,8 @@ export class ConfigService {
     const { env } = this
 
     if (env === 'development') {
-      console.log('Configuration')
-      console.log(config.toString())
+      Logger.log('Configuration')
+      Logger.log(config.toString())
     }
   }
 

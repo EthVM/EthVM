@@ -7,6 +7,6 @@ import { SearchResolvers } from '@app/modules/search/search.resolvers'
 
 @Module({
   imports: [BlockModule, TxModule, BalanceModule],
-  providers: [SearchService, SearchResolvers],
+  providers: [SearchService, SearchResolvers]
 })
 export class SearchModule {}

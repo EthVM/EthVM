@@ -10,6 +10,6 @@ import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
 @Global()
 @Module({
   providers: [ConfigService, DurationService, EthService, ParseHashPipe, ParseAddressPipe, ParseLimitPipe, ParsePagePipe],
-  exports: [ConfigService, DurationService, EthService, ParseHashPipe, ParseAddressPipe, ParseLimitPipe, ParsePagePipe],
+  exports: [ConfigService, DurationService, EthService, ParseHashPipe, ParseAddressPipe, ParseLimitPipe, ParsePagePipe]
 })
 export class SharedModule {}

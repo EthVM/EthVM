@@ -31,7 +31,7 @@ import { SearchModule } from '@app/modules/search/search.module'
     TxModule,
     UncleModule,
     StatisticModule,
-    SearchModule,
-  ],
+    SearchModule
+  ]
 })
 export class AppModule {}
