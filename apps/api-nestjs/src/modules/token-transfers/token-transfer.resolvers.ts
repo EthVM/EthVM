@@ -40,4 +40,12 @@ export class TokenTransferResolvers {
   async topTokenHolders(@Args('address', ParseAddressPipe) address: string) {
     return this.tokenTransferService.fetchTokenHolders(address)
   }
+
+  @Query()
+  async holderDetails(
+    @Args('address', ParseAddressPipe) address: string,
+    @Args('holderAddress', ParseAddressPipe) holderAddress: string
+  ) {
+    return this.tokenTransferService.fetchAddressInfo(address, holderAddress)
+  }
 }
