@@ -115,57 +115,57 @@
     "timestmp": "Временная Метка",
     "success": "Успешная",
     "fail": "Неудачная",
-    "pending": "RU-Pending",
-    "amount": "RU-Amount",
-    "quantity": "RU-Quantity",
-    "percentage": "RU-Percentage",
-    "eth-balance": "RU-Ether Balance",
-    "balance": "RU-Balance"
+    "pending": "Ожидающая",
+    "amount": "Количество",
+    "quantity": "Количество",
+    "percentage": "Процент",
+    "eth-balance": "Баланс Ether",
+    "balance": "Баланс"
   },
   "usd": {
-    "name": "RU-USD",
-    "total": "RU-Total USD Value",
-    "value": "RU-USD Value"
+    "name": "USD",
+    "total": "Общая стоимость в USD",
+    "value": "Стоимость USD"
   },
   "message": {
-    "no-data": "RU-Oops something went wrong, no data from server :(",
-    "err": "RU-Error",
+    "no-data": "Упс что-то пошло не так, нет данных от сервера :(",
+    "err": "Ошибка",
     "tx": {
-      "no-all": "RU-This address does not have any transaction history",
-      "no-in": "RU-This address does not have incoming transactions",
-      "no-out": "RU-This address does not have outgoing transactions",
-      "no-pen": "RU-This address does not have pending transactions",
-      "no-pen-in": "RU-This address does not have any pending incoming transactions",
-      "no-pen-out": "RU-This address does not have any pending outgoing transactions",
-      "no-history": "RU-There is no transaction history",
-      "no-in-block": "RU-This block does not have any transactions",
-      "not-exist": "RU-This transaction does not exist",
-      "no-pending": "RU-There are no pending transactions"
+      "no-all": "Этот адрес не имеет истории транзакций",
+      "no-in": "Этот адрес не имеет входящих транзакций",
+      "no-out": "Этот адрес не имеет исходящих транзакций",
+      "no-pen": "Этот адрес не имеет ожидающих транзакций",
+      "no-pen-in": "Этот адрес не имеет ожидающих входящих транзакций",
+      "no-pen-out": "Этот адрес не имеет ожидающих исходящих транзакций",
+      "no-history": "История транзакций не существует",
+      "no-in-block": "Этот блок не имеет транзакций",
+      "not-exist": "Эта транзакция не существует",
+      "no-pending": "Нет ожидающих транзакций"
     },
-    "no-tokens": "RU-Address does not hold any common tokens",
-    "load": "RU-Loading",
-    "load-block-tx": "RU-Loading block transactions",
-    "not-mined": "RU-This block has not been mined yet",
+    "no-tokens": "Адрес не имеет известных токенов",
+    "load": "Загружается",
+    "load-block-tx": "Загрузка транзакций блока",
+    "not-mined": "Этот блок еще не подтвержден",
     "invalid": {
-      "tx": "RU-This is not a valid transaction hash",
-      "block": "RU-This is not a valid block hash",
-      "addr": "RU-This is not a valid address hash",
-      "token": "RU-This is not a valid token address",
-      "contract": "RU-This is not a valid contract address",
-      "uncle": "RU-This is not a valid uncle hash"
+      "tx": "Это неверный хеш транзакции",
+      "block": "Это неверный хеш блока",
+      "addr": "Это неверный хэш адреса",
+      "token": "Это неверный адрес токена",
+      "contract": "Это неверный адрес контракта",
+      "uncle": "Это неверный хэш Uncle-Блока"
     },
     "sync": {
-      "main": "RU-We are synchronizing with the Blockchain. Some features might not work correctly.",
+      "main": "Мы синхронизируем с Блокчейном. Некоторые функции могут работать неправильно.",
       "no-pen-tx": "RU-There are no pending transactions while synchronizing with the Blockchain."
     },
-    "not-found": "RU-Oops! Page Not Found :(",
+    "not-found": "Упс! Страница не найдена :(",
     "welcome": {
-      "title": "RU-Welcome to EthVM!",
-      "text1": "RU-We're still in our Alpha stage, so some features may not work to their full potential. Reach out to us with any bugs you find at ",
-      "text2": "RU-, so we can continue to make EthVM even better!",
-      "btn": "RU-Onward!"
+      "title": "Добро пожаловать в EthVM!",
+      "text1": "Мы все еще находимся на Alpha этапе, поэтому некоторые функции могут не работать в полном объеме. Если вы найдете какие нибудь ошибки, свяжитесь с нами ",
+      "text2": ", так что мы сможем сделать EthVM еще лучше!",
+      "btn": "Вперед!"
     },
-    "ropsten-no-token": "RU-EthVM is still in testing, so we're currently showing data from the Ropsten ETH testnet. There are no tokens that have actual value on Ropsten testnet, but all mainnet Ethereum token balances will appear here once we go live.",
+    "ropsten-no-token": "EthVM все еще находится в тестировании, поэтому в настоящее время мы показываем данные из тест-нета Ropsten ETH. В тест-нете Ropsten нет токенов которые имеют ценность. Балансы всех ценных токенов появятся здесь, когда мы подключим Mainnet.",
     "report": "RU-Find any bugs or have suggestions?",
     "update": {
       "tx": "RU-new tx | RU_new txs",
