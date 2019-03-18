@@ -1,6 +1,6 @@
 type Query {
   tx(hash: String!): Transaction
-  txs(limit: Int, order: Order, fromBlock: Int): [Transaction]
+  txs(limit: Int, page: Int, fromBlock: Int): [Transaction]
   txsForBlock(hash: String!): [Transaction]
   txsForAddress(hash: String!, filter: FilterEnum, limit: Int, page: Int): [Transaction]
   totalNumberOfTransactions: Int

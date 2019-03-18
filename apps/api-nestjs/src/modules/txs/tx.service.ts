@@ -14,14 +14,15 @@ export class TxService {
     return this.transactionRepository.findOne({ where: { hash } })
   }
 
-  async findTxs(take: number = 10, order: string = 'desc', fromBlock: number = -1): Promise<TransactionEntity[]> {
-    const sort = order === 'desc' ? '$lte' : '$gte'
-    const where = fromBlock !== -1 ? { blockNumber: { [sort]: fromBlock } } : {}
+  async findTxs(take: number = 10, page: number = 0, fromBlock: number = -1): Promise<TransactionEntity[]> {
+    const skip = page * take
+    const where = fromBlock !== -1 ? { blockNumber: { $lte: fromBlock } } : {}
 
     return this.transactionRepository.find({
       where,
       order: { blockNumber: -1, index: -1, timestamp: -1 },
-      take
+      take,
+      skip
     })
   }
 
@@ -43,6 +44,7 @@ export class TxService {
         where = { $or: [{ from: hash }, { to: hash }] }
         break
     }
+    // this.transactionRepository.manager.queryRunner.databaseConnection.collection('transactions').find({ blockNumber: {[sort]: fromBlock} })
     return this.transactionRepository.find({ where, take, skip })
   }
 
