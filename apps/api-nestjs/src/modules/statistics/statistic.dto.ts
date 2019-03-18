@@ -8,6 +8,6 @@ export class StatisticDto extends AggregateBlockMetric {
     super()
     assignClean(this, data)
 
-    this.value = data.bigInteger | data.int | data.long | data.float | data.double
+    this.value = data.bigInteger || data.int || data.long || data.float || data.double
   }
 }
