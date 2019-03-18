@@ -53,7 +53,7 @@ export class EthvmMigrationApi implements EthvmApi {
   }
 
   public getBlocks(format: string, limit: number, page: number, fromBlock: number): Promise<Block[] | SimpleBlock[]> {
-    return this.socketIoApi.getBlocks(format, limit, page, fromBlock)
+    return this.apolloApi.getBlocks(format, limit, page, fromBlock)
   }
 
   public getBlockByNumber(no: number): Promise<Block> {
@@ -65,7 +65,7 @@ export class EthvmMigrationApi implements EthvmApi {
   }
 
   public getTotalNumberOfBlocks(): Promise<number> {
-    return this.socketIoApi.getTotalNumberOfBlocks()
+    return this.apolloApi.getTotalNumberOfBlocks()
   }
 
   // ------------------------------------------------------------------------------------
@@ -141,19 +141,19 @@ export class EthvmMigrationApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
 
   public getTx(hash: string): Promise<Tx> {
-    return this.socketIoApi.getTx(hash)
+    return this.apolloApi.getTx(hash)
   }
 
   public getTxs(format: string, limit: number, order: string, fromBlock: number): Promise<Tx[] | SimpleTx[]> {
-    return this.socketIoApi.getTxs(format, limit, order, fromBlock)
+    return this.apolloApi.getTxs(format, limit, order, fromBlock)
   }
 
   public getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<Tx[]> {
-    return this.socketIoApi.getTxsOfAddress(hash, filter, limit, page)
+    return this.apolloApi.getTxsOfAddress(hash, filter, limit, page)
   }
 
   public getTotalNumberOfTxs(): Promise<number> {
-    return this.socketIoApi.getTotalNumberOfTxs()
+    return this.apolloApi.getTotalNumberOfTxs()
   }
 
   // ------------------------------------------------------------------------------------
@@ -216,8 +216,8 @@ export class EthvmMigrationApi implements EthvmApi {
   // Search
   // ------------------------------------------------------------------------------------
 
-  public search(hash: string): Promise<any> {
-    return this.socketIoApi.search(hash)
+  public search(input: string): Promise<any> {
+    return this.socketIoApi.search(input)
   }
 
   // ------------------------------------------------------------------------------------

@@ -1,3 +1,36 @@
+query blocks($limit: Int, $page: Int) {
+  blocks(limit: $limit, page: $page) {
+    header {
+      hash
+      number
+      author
+      timestamp
+    }
+    transactions {
+      hash
+      gas
+      gasPrice
+      timestamp
+      receipt {
+        contractAddress
+        gasUsed
+        status
+        traces {
+          error
+        }
+      }
+    }
+    uncles {
+      hash
+    }
+    rewards {
+      author
+      rewardType
+      value
+    }
+  }
+}
+
 query blockByHash($hash: String) {
   blockByHash(hash: $hash) {
     header {

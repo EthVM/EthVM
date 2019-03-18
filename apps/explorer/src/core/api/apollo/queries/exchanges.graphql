@@ -1,0 +1,110 @@
+# -------------------------------------------------------------
+#   Types & Enums
+# -------------------------------------------------------------
+
+type Quote {
+  to: String
+  price: String
+  last_update: Decimal
+  vol_24h: String
+}
+
+enum ExchangeFrom {
+  ETH
+}
+
+enum ExchangeTo {
+  USD
+}
+
+enum TokenExchangeRateFilter {
+  price_high
+  price_low
+  volume_high
+  volume_low
+  market_cap_high
+  market_cap_low
+  market_cap_rank
+}
+
+# -------------------------------------------------------------
+#   Queries
+# -------------------------------------------------------------
+
+query quote($token: ExchangeFrom!, $to: ExchangeTo!) {
+  quote(token: $token, to: $to) {
+    to
+    price
+    last_update
+    vol_24h
+  }
+}
+
+query tokenExchangeRates($filter: TokenExchangeRateFilter!, $limit: Int, $page: Int) {
+  tokenExchangeRates(filter: $filter, limit: $limit, page: $page) {
+    id
+    address
+    circulatingSupply
+    currentPrice
+    high24h
+    image
+    lastUpdated
+    low24h
+    marketCap
+    marketCapChange24h
+    marketCapChangePercentage24h
+    marketCapRank
+    name
+    priceChange24h
+    priceChangePercentage24h
+    symbol
+    totalSupply
+    totalVolume
+  }
+}
+
+query tokenExchangeRateBySymbol($symbol: String!) {
+  tokenExchangeRateBySymbol(symbol: $symbol) {
+    id
+    address
+    circulatingSupply
+    currentPrice
+    high24h
+    image
+    lastUpdated
+    low24h
+    marketCap
+    marketCapChange24h
+    marketCapChangePercentage24h
+    marketCapRank
+    name
+    priceChange24h
+    priceChangePercentage24h
+    symbol
+    totalSupply
+    totalVolume
+  }
+}
+
+query tokenExchangeRateByAddress($address: String!) {
+  tokenExchangeRateByAddress(address: $address) {
+    id
+    address
+    circulatingSupply
+    currentPrice
+    high24h
+    image
+    lastUpdated
+    low24h
+    marketCap
+    marketCapChange24h
+    marketCapChangePercentage24h
+    marketCapRank
+    name
+    priceChange24h
+    priceChangePercentage24h
+    symbol
+    totalSupply
+    totalVolume
+  }
+}

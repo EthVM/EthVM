@@ -1,4 +1,8 @@
-query tx($hash: String) {
+enum FilterEnum {
+  in, out, all
+}
+
+query tx($hash: String!) {
   tx(hash: $hash) {
     blockHash
     blockNumber
@@ -42,7 +46,6 @@ query tx($hash: String) {
         transactionHash
         transactionPosition
         type
-        action
         result {
           address
           code
@@ -54,8 +57,8 @@ query tx($hash: String) {
   }
 }
 
-query txs($limit: Int, $page: Int) {
-  tx(limit: $limit) {
+query txs($limit: Int, $page: Int, $fromBlock: Int) {
+  txs(limit: $limit, page: $page, fromBlock: $fromBlock) {
     blockHash
     blockNumber
     from
@@ -77,7 +80,7 @@ query txs($limit: Int, $page: Int) {
   }
 }
 
-query txsForAddress($hash: String!, $filter: String, $limit: Int, $page: Int) {
+query txsForAddress($hash: String!, $filter: FilterEnum, $limit: Int, $page: Int) {
   txsForAddress(hash: $hash, filter: $filter, limit: $limit, page: $page) {
     blockHash
     blockNumber

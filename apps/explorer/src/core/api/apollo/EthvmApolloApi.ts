@@ -1,8 +1,9 @@
 import { EthvmApi } from '@app/core/api'
 import { accountMetadataByHash, addressBalanceByHash } from '@app/core/api/apollo/queries/addresses.graphql'
 import { blockMetricByHash, blockMetrics } from '@app/core/api/apollo/queries/block-metrics.graphql'
-import { blockByHash, blockByNumber, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
+import { blockByHash, blockByNumber, blocks, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
 import { contractByHash, contractsCreatedBy } from '@app/core/api/apollo/queries/contracts.graphql'
+import { quote, tokenExchangeRateByAddress, tokenExchangeRateBySymbol, tokenExchangeRates } from '@app/core/api/apollo/queries/exchanges.graphql'
 import { processingMetadataById } from '@app/core/api/apollo/queries/processing-metadata.graphql'
 import { search } from '@app/core/api/apollo/queries/search.graphql'
 import {
@@ -17,7 +18,7 @@ import {
   totalSuccessfulTxs
 } from '@app/core/api/apollo/queries/statistics.graphql'
 import { addressTokenTransfers, addressTokenTransfersByHolder } from '@app/core/api/apollo/queries/token-transfers.graphql'
-import { totalNumberOfTransactions, tx, txsForAddress } from '@app/core/api/apollo/queries/txs.graphql'
+import { totalNumberOfTransactions, tx, txs, txsForAddress } from '@app/core/api/apollo/queries/txs.graphql'
 import { totalNumberOfUncles, uncleByHash, uncles } from '@app/core/api/apollo/queries/uncles.graphql'
 import { Block, PendingTx, SimpleBlock, SimpleTx, Tx, Uncle } from '@app/core/models'
 import { ApolloClient } from 'apollo-boost'
@@ -108,14 +109,22 @@ export class EthvmApolloApi implements EthvmApi {
       .query({
         query: blockByHash,
         variables: {
-          hash: hash
+          hash
         }
       })
       .then(res => new Block(res.data.blockByHash))
   }
 
   public getBlocks(format: string, limit: number, page: number, fromBlock: number): Promise<Block[] | SimpleBlock[]> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: blocks,
+        variables: {
+          limit,
+          page
+        }
+      })
+      .then(res => res.data.blocks.map(raw => new Block(raw)))
   }
 
   public getBlockByNumber(number: number): Promise<Block> {
@@ -210,11 +219,28 @@ export class EthvmApolloApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
 
   public getExchangeRateQuote(symbol: string, to: string): Promise<Quote> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: quote,
+        variables: {
+          symbol,
+          to
+        }
+      })
+      .then(res => res.data.quote)
   }
 
   public getTokenExchangeRates(filter: string, limit: number, page: number): Promise<TokenExchangeRate[]> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: tokenExchangeRates,
+        variables: {
+          filter,
+          limit,
+          page
+        }
+      })
+      .then(res => res.data.tokenExchangeRates)
   }
 
   public getTotalNumberOfTokenExchangeRates(): Promise<number> {
@@ -222,11 +248,25 @@ export class EthvmApolloApi implements EthvmApi {
   }
 
   public getTokenExchangeRateBySymbol(symbol: string): Promise<TokenExchangeRate> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: tokenExchangeRateBySymbol,
+        variables: {
+          symbol
+        }
+      })
+      .then(res => res.data.tokenExchangeRateBySymbol)
   }
 
   public getTokenExchangeRateByAddress(address: string): Promise<TokenExchangeRate> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: tokenExchangeRateByAddress,
+        variables: {
+          address
+        }
+      })
+      .then(res => res.data.tokenExchangeRateByAddress)
   }
 
   // ------------------------------------------------------------------------------------
