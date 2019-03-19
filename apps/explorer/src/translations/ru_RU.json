@@ -116,7 +116,7 @@
     "success": "Успешная",
     "fail": "Неудачная",
     "pending": "Ожидающая",
-    "amount": "Количество",
+    "amount": "Сумма",
     "quantity": "Количество",
     "percentage": "Процент",
     "eth-balance": "Баланс Ether",
