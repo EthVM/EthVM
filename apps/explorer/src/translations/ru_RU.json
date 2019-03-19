@@ -217,42 +217,42 @@
     },
     "tx-fees": {
       "title": "Комиссии за транзакции",
-      "description": "RU-Average Transactions Fees"
+      "description": "Сред. комиссии за транзакции"
     },
     "tx-pending": {
-      "title": "RU-Pending Transactions",
-      "description": "RU-Average Number of pending transactions"
+      "title": "Ожидающие транзакции",
+      "description": "Среднее количество ожидающих транзакций"
     },
     "tx-success": {
-      "title": "RU-Successful Transactions",
-      "description": "RU-Number of Successful Transactions"
+      "title": "Успешные транзакции",
+      "description": "Количество успешных транзакций"
     },
     "uncles-number": {
-      "title": "RU-Uncles per Day",
-      "description": "RU-Total Number of Uncles per Day"
+      "title": "Количество Uncle-Блоков в день",
+      "description": "Общее количество Uncle-Блоков в день"
     },
     "mining-rewards": {
-      "title": "RU-Mining Rewards",
-      "description": "RU-Average Mining Rewards"
+      "title": "Награда Майнера",
+      "description": "Среднии Награды Майнеров"
     },
     "top-miners": {
-      "title": "RU-Top Miners"
+      "title": "Лучшие Майнеры"
     },
     "states": {
-      "all": "RU-All",
-      "week": "RU-week | RU_1W",
-      "month": "RU-month | RU_1M",
-      "day": "RU-day | RU_1D",
+      "all": "Все",
+      "week": "неделя | 1Н",
+      "month": "месяц | 1M",
+      "day": "день | 1Д",
       "year": "RU-year | RU_1Y"
     },
     "captions": {
-      "all": "RU- in the Ethereum blockchain since the begining ",
-      "other": "RU- in the Ethereum blockchain in last "
+      "all": " в блокчейне Ethereum с cамого начала ",
+      "other": " в блокчейне Ethereum в последний "
     }
   },
   "btn": {
-    "view-all": "RU-View All",
-    "more": "RU-More",
+    "view-all": "Смотреть все",
+    "more": "Больше",
     "less": "RU-Less",
     "first": "RU-First",
     "last": "RU-Last",
