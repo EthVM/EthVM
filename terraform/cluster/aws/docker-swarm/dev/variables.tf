@@ -63,12 +63,12 @@ variable "worker_zone" {
 
 variable "total_manager_instances" {
   description = "Number of Managers"
-  default     = "3"
+  default     = "1"
 }
 
 variable "total_worker_instances" {
   description = "Number of Managers"
-  default     = "3"
+  default     = "4"
 }
 
 variable "provision_user" {
@@ -79,4 +79,24 @@ variable "provision_user" {
 variable "allowed_inbound_ssh" {
   description = "list of IPs with inbound ssh access"
   default     = ["0.0.0.0/0"]
+}
+
+variable "swarmprom_admin_user" {
+  default = "admin"
+}
+
+variable "swarmprom_admin_password" {
+  default = "password"
+}
+
+variable "swarmprom_slack_token" {
+  default = "null"
+}
+
+variable "swarmprom_slack_channel" {
+  default = "null"
+}
+
+variable "swarmprom_slack_user" {
+  default = "null"
 }

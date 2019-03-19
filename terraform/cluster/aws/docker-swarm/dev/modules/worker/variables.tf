@@ -18,3 +18,23 @@ variable "manager_private_ip" {}
 variable "swarm_tokens" {
   type = "map"
 }
+
+variable "swarmprom_admin_user" {
+  default = "admin"
+}
+
+variable "swarmprom_admin_password" {
+  default = "password"
+}
+
+variable "swarmprom_slack_token" {
+  default = "null"
+}
+
+variable "swarmprom_slack_channel" {
+  default = "null"
+}
+
+variable "swarmprom_slack_user" {
+  default = "null"
+}

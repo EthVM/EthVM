@@ -11,10 +11,33 @@ resource "aws_security_group" "ingress-manager" {
   }
 
   ingress {
+    cidr_blocks = "${var.allowed_inbound_ssh}"
+
+    from_port = 9090  //prometheus, alertmanager, unsee
+    to_port   = 9094
+    protocol  = "tcp"
+  }
+
+  ingress {
+    cidr_blocks = "${var.allowed_inbound_ssh}"
+
+    from_port = 3000  //grafana
+    to_port   = 3000
+    protocol  = "tcp"
+  }
+
+  ingress {
     cidr_blocks = ["${aws_subnet.subnet-workers.cidr_block}", "${aws_subnet.subnet-managers.cidr_block}"]
     from_port   = 0
     to_port     = 65535
     protocol    = "tcp"
+  }
+
+  ingress {
+    cidr_blocks = ["${aws_subnet.subnet-workers.cidr_block}", "${aws_subnet.subnet-managers.cidr_block}"]
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "udp"
   }
 
   ingress {
@@ -47,6 +70,13 @@ resource "aws_security_group" "ingress-worker" {
     from_port   = 0
     to_port     = 65535
     protocol    = "tcp"
+    cidr_blocks = ["${aws_subnet.subnet-managers.cidr_block}", "${aws_subnet.subnet-workers.cidr_block}"]
+  }
+
+  ingress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "udp"
     cidr_blocks = ["${aws_subnet.subnet-managers.cidr_block}", "${aws_subnet.subnet-workers.cidr_block}"]
   }
 

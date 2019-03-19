@@ -1,3 +1,19 @@
 output "root_manager.ip" {
-  value = "${module.managers.root_manager.public_ip}"
+  value = "${aws_eip.manager-ip.public_ip}"
+}
+
+output "grafana" {
+  value = "http://${aws_eip.manager-ip.public_ip}:3000"
+}
+
+output "prometheus" {
+  value = "http://${aws_eip.manager-ip.public_ip}:9090"
+}
+
+output "alert-manager" {
+  value = "http://${aws_eip.manager-ip.public_ip}:9093"
+}
+
+output "unsee" {
+  value = "http://${aws_eip.manager-ip.public_ip}:9094"
 }
