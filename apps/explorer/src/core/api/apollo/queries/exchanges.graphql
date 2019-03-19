@@ -31,8 +31,8 @@ enum TokenExchangeRateFilter {
 #   Queries
 # -------------------------------------------------------------
 
-query quote($token: ExchangeFrom!, $to: ExchangeTo!) {
-  quote(token: $token, to: $to) {
+query quote($symbol: ExchangeFrom!, $to: ExchangeTo!) {
+  quote(symbol: $symbol, to: $to) {
     to
     price
     last_update

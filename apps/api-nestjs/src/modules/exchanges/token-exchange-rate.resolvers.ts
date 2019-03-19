@@ -10,8 +10,8 @@ export class TokenExchangeRateResolvers {
   constructor(private readonly exchangeService: ExchangeService) {}
 
   @Query()
-  async quote(@Args('token') token: string, @Args('to') to: string) {
-    return await this.exchangeService.findQuote(token, to)
+  async quote(@Args('symbol') symbol: string, @Args('to') to: string) {
+    return await this.exchangeService.findQuote(symbol, to)
   }
 
   @Query()

@@ -1,5 +1,5 @@
 type Query {
-  quote(token: ExchangeFrom!, to: ExchangeTo!): Quote
+  quote(symbol: ExchangeFrom!, to: ExchangeTo!): Quote
   tokenExchangeRates(filter: TokenExchangeRateFilter!, limit: Int, page: Int): [TokenExchangeRate]!
   totalNumTokenExchangeRates: Int!
   tokenExchangeRateBySymbol(symbol: String!): TokenExchangeRate

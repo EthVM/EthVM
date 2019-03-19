@@ -231,7 +231,8 @@ export class EthvmApolloApi implements EthvmApi {
         variables: {
           symbol,
           to
-        }
+        },
+        fetchPolicy: 'network-only'
       })
       .then(res => res.data.quote)
   }
