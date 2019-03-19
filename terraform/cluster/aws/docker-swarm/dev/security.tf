@@ -94,3 +94,27 @@ resource "aws_security_group" "ingress-worker" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+resource "aws_security_group" "efs" {
+  vpc_id = "${aws_vpc.docker-swarm-vpc.id}"
+
+  ingress {
+    from_port = 2049
+    to_port   = 2049
+    protocol  = "tcp"
+
+    cidr_blocks = ["${aws_subnet.subnet-managers.cidr_block}", "${aws_subnet.subnet-workers.cidr_block}"]
+  }
+
+  egress {
+    from_port = 2049
+    to_port   = 2049
+    protocol  = "tcp"
+
+    cidr_blocks = ["${aws_subnet.subnet-managers.cidr_block}", "${aws_subnet.subnet-workers.cidr_block}"]
+  }
+
+  tags {
+    Name = "allow_nfs-workers-managers"
+  }
+}

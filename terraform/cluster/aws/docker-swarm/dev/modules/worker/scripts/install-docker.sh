@@ -10,4 +10,3 @@ apt-get install docker-ce -y
 dockerDaemon='{"experimental": true, "metrics-addr": "0.0.0.0:9323"}'
 echo $dockerDaemon > /etc/docker/daemon.json
 systemctl start docker &&  systemctl enable docker
-systemctl restart docker

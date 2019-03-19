@@ -49,3 +49,11 @@ module "swarmprom" {
   ssh_key_path       = "${var.ssh_key_path}"
   connection_timeout = "${var.connection_timeout}"
 }
+
+module "efs" {
+  # depends_on        = ["aws_subnet.subnet-managers", "aws_subnet.subnet-workers"]
+  source            = "./modules/efs"
+  name              = "docker-swarm-volume"
+  subnet_ids        = ["${aws_subnet.subnet-managers.id}", "${aws_subnet.subnet-workers.id}"]
+  security_group_id = "${aws_security_group.efs.id}"
+}

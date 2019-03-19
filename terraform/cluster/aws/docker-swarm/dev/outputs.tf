@@ -17,3 +17,7 @@ output "alert-manager" {
 output "unsee" {
   value = "http://${aws_eip.manager-ip.public_ip}:9094"
 }
+
+output "EFS_mount" {
+  value = "${module.efs.mount_target_dns}"
+}
