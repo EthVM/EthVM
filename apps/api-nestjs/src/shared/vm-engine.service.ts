@@ -15,9 +15,9 @@ export interface VmContract {
   address: string
 }
 
+/* tslint:disable:radix */
 @Injectable()
 export class VmEngineService {
-
   private opts: VmEngineOptions
 
   constructor(private readonly configService: ConfigService) {
@@ -35,16 +35,16 @@ export class VmEngineService {
     const method = 'getAllBalance'
     const keys = [
       'address', // Address we are checking tokens for
-      'bool',    // decode name
-      'bool',    // decode website
-      'bool',    // decode email
-      'uint256'  // num of tokens to retrieve (0: all)
+      'bool', // decode name
+      'bool', // decode website
+      'bool', // decode email
+      'uint256' // num of tokens to retrieve (0: all)
     ]
     const values = [address, true, false, false, 0]
     const encoded = this.encodeCall(method, keys, values)
 
     const request = {
-      jsonrpc: "2.0",
+      jsonrpc: '2.0',
       id: 1,
       method: 'eth_call',
       params: [{ to: this.opts.tokensAddress.address, data: encoded }, 'latest']
@@ -53,13 +53,11 @@ export class VmEngineService {
     let res
 
     try {
-
       res = await axios(this.opts.rpcUrl, {
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         data: JSON.stringify(request)
       })
-
     } catch (err) {
       throw err
     }
@@ -67,7 +65,6 @@ export class VmEngineService {
     const decoded = this.decode(res.data.result)
     const tokens = decoded.filter(t => t.balance && t.balance !== '0')
     return tokens.map(t => new TokenDto(t))
-
   }
 
   public async fetchAddressAmountTokensOwned(address: string): Promise<number> {
@@ -147,5 +144,4 @@ export class VmEngineService {
 
     return tokens
   }
-
 }

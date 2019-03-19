@@ -61,5 +61,4 @@ export class TokenTransferResolvers {
   async addressAmountTokensOwned(@Args('address', ParseAddressPipe) address: string) {
     return this.vmEngine.fetchAddressAmountTokensOwned(address)
   }
-
 }

@@ -13,5 +13,4 @@ import { VmEngineService } from '@app/shared/vm-engine.service'
   providers: [ConfigService, DurationService, EthService, ParseHashPipe, ParseAddressPipe, ParseLimitPipe, ParsePagePipe, VmEngineService],
   exports: [ConfigService, DurationService, EthService, ParseHashPipe, ParseAddressPipe, ParseLimitPipe, ParsePagePipe, VmEngineService]
 })
-export class SharedModule {
-}
+export class SharedModule {}
