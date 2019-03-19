@@ -254,137 +254,137 @@
     "view-all": "Смотреть все",
     "more": "Больше",
     "less": "RU-Less",
-    "first": "RU-First",
-    "last": "RU-Last",
-    "back-home": "RU-Go Back Home",
-    "report": "RU-Report Issue"
+    "first": "Первая",
+    "last": "Последняя",
+    "back-home": "Назад Домой",
+    "report": "Сообщите о проблеме"
   },
   "search": {
-    "name": "RU-Search",
-    "default": "RU-Search Block / Address / Tx",
-    "address-tx": "RU-Tx Hash/Address"
+    "name": "Поиск",
+    "default": "Поиск Блок / Адрес / Тр-ция",
+    "address-tx": "Хэш Тр-ции/Адреса"
   },
   "filter": {
-    "name": "RU-Filter",
-    "view": "RU-View",
-    "all": "RU-All",
-    "out": "RU-Outgoing",
-    "in": "RU-Incoming",
-    "high": "RU-High to Low",
+    "name": "Фильтр",
+    "view": "Смотреть",
+    "all": "Bсе",
+    "out": "Исходящие",
+    "in": "Входящие",
+    "high": "От высокой к низкой",
     "low": "RU-Low to High"
   },
   "footer": {
-    "discover": "RU-Discover",
-    "donate": "RU-Donate",
-    "btc": "RU-BTC",
-    "ens": "RU-mewtopia.eth",
+    "discover": "Узнать",
+    "donate": "Пожертвования",
+    "btc": "BTC",
+    "ens": "mewtopia.eth",
     "copy": "RU-Copyright 2019 All rights reserved by ",
-    "mew": "RU-MyEtherWallet Inc",
-    "copy-eth-addr": "RU-Copy ETH address",
-    "copy-btc-addr": "RU-Copy BTC address"
+    "mew": "MyEtherWallet Inc",
+    "copy-eth-addr": "Копировать ETH адрес",
+    "copy-btc-addr": "Копировать BTC адрес"
   },
-  "home": "RU-Home",
+  "home": "Главная",
   "about": {
-    "name": "RU-About Us",
-    "title": "RU-What is EthVM?",
-    "text": "RU-EthVM project is brought to you by kvhnuke,  founder of MyEtherWallet. EthVM is a free and open source interface for exploring and evaluting real time Ethereum blocks, transactions and more. This software is under MIT License.",
+    "name": "О нас",
+    "title": "What is EthVM?",
+    "text": "EthVM project is brought to you by kvhnuke,  founder of MyEtherWallet. EthVM is a free and open source interface for exploring and evaluting real time Ethereum blocks, transactions and more. This software is under MIT License.",
     "git": {
-      "title": "RU-GitHub",
+      "title": "GitHub",
       "text": "If you want to contribute, make a request on GitHub."
     },
     "medium": {
-      "title": "RU-Medium",
-      "text": "RU-If you want to listen/share our awesome thoughts check our medium account."
+      "title": "Medium",
+      "text": "If you want to listen/share our awesome thoughts check our medium account."
     },
     "twitter": {
       "title": "Twitter",
-      "text": "RU-Talk to us on Twitter."
+      "text": "Talk to us on Twitter."
     },
     "reddit": {
-      "title": "RU-Reddit",
-      "text": "RU-Visit our reddit thread."
+      "title": "Reddit",
+      "text": "Visit our reddit thread."
     },
     "disclaimer": {
-      "name": "RU-Disclaimer",
-      "text": "RU-MIT License Copyright © 2017-2018 MyEtherWallet Inc Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.",
-      "mit": "RU-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+      "name": "Условия предоставления",
+      "text": "MIT License Copyright © 2017-2018 MyEtherWallet Inc Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.",
+      "mit": "THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
     }
   },
   "kb": {
-    "name": "RU-Knowledge Base",
-    "title": "RU-Blockchain Terms",
+    "name": "База знаний",
+    "title": "Blockchain Terms",
     "terms": {
       "acc": {
-        "term": "RU-Account",
-        "def": "RU-Entry on the blockchain ledger that contains data about the state of that account. In the case of a currency system, it's the information about funds available."
+        "term": "Account",
+        "def": "Entry on the blockchain ledger that contains data about the state of that account. In the case of a currency system, it's the information about funds available."
       },
       "addr": {
-        "term": "RU-Address",
-        "def": "RU-String of alphanumeric characters that represents a particular user's hashed public key. Addresses are used to send and receive transactions on the blockchain. The address points to an account."
+        "term": "Адрес",
+        "def": "String of alphanumeric characters that represents a particular user's hashed public key. Addresses are used to send and receive transactions on the blockchain. The address points to an account."
       },
       "block": {
-        "term": "RU-Block",
-        "def": "RU-Package of data that holds a number of recent transactions and the previous block's (\"parent\" block) hash. Thus, every block points to a previous block, creating an immutable chain."
+        "term": "Блок",
+        "def": "Package of data that holds a number of recent transactions and the previous block's (\"parent\" block) hash. Thus, every block points to a previous block, creating an immutable chain."
       },
       "blockchain": {
-        "term": "RU-Blockchain",
-        "def": "RU-Distributed ledger that records data in packages called blocks. The blocks are connected together using cryptographic technology, making them unchangeable after being added to the chain."
+        "term": "Блокчейн",
+        "def": "Distributed ledger that records data in packages called blocks. The blocks are connected together using cryptographic technology, making them unchangeable after being added to the chain."
       },
       "casper": {
-        "term": "RU-Casper",
-        "def": "RU-Specific type of proof of stake consensus protocol based on security deposits placed by nodes to confirm blocks. Casper is the protocol that should go into effect when Ethereum blockchain transitions to proof of stake."
+        "term": "Casper",
+        "def": "Specific type of proof of stake consensus protocol based on security deposits placed by nodes to confirm blocks. Casper is the protocol that should go into effect when Ethereum blockchain transitions to proof of stake."
       },
       "consensus": {
-        "term": "RU-Consensus",
-        "def": "RU-Agreement among the nodes of the decentralized network about the state of the network."
+        "term": "Консенсус",
+        "def": "Agreement among the nodes of the decentralized network about the state of the network."
       },
       "dao": {
-        "term": "RU-DAO",
-        "def": "RU-Abbreviation for Decentralized Autonomous Organization – an organization that is run without direct human oversight, governed by a set of unalterable rules enforced through the blockchain."
+        "term": "DAO",
+        "def": "Abbreviation for Decentralized Autonomous Organization – an organization that is run without direct human oversight, governed by a set of unalterable rules enforced through the blockchain."
       },
       "dapp": {
-        "term": "RU-dApp",
-        "def": "RU-Abbreviation for decentralized application. dApps are applications that are open-source, not controlled by any centralized entity, enabling direct interaction between users without a trusted third party."
+        "term": "dApp",
+        "def": "Abbreviation for decentralized application. dApps are applications that are open-source, not controlled by any centralized entity, enabling direct interaction between users without a trusted third party."
       },
       "decentralization": {
-        "term": "RU-Decentralization",
-        "def": "RU-Redestribution of power and functions away from a central authority to eliminate third-party control and tampering."
+        "term": "Децентрализация",
+        "def": "Redestribution of power and functions away from a central authority to eliminate third-party control and tampering."
       },
       "signature": {
-        "term": "RU-Digital signature",
-        "def": "RU-Algorithm which allows a user to produce a specific string of data using their private key. This string, along with the corresponding public key and the signed document, can be used to verify that the document was signed by the owner of the key and that it was not changed after signing."
+        "term": "Digital signature",
+        "def": "Algorithm which allows a user to produce a specific string of data using their private key. This string, along with the corresponding public key and the signed document, can be used to verify that the document was signed by the owner of the key and that it was not changed after signing."
       },
       "double-spend": {
-        "term": "RU-Double spend",
-        "def": "RU-Occurs when a user sends a transaction to purchase coins, and then creates another transaction to send the SAME coins to themselves. This requires creating two blocks at the same level, resulting in a deliberate blockchain fork. "
+        "term": "Double spend",
+        "def": "Occurs when a user sends a transaction to purchase coins, and then creates another transaction to send the SAME coins to themselves. This requires creating two blocks at the same level, resulting in a deliberate blockchain fork. "
       },
       "encrypt": {
-        "term": "RU-Encryption",
-        "def": "RU-The process of turning plain text into ciphertext using a data \"key\". After encryption, ciphertext looks like a random sequnce of bits. The reverse process is decryption."
+        "term": "Шифрование",
+        "def": "The process of turning plain text into ciphertext using a data \"key\". After encryption, ciphertext looks like a random sequnce of bits. The reverse process is decryption."
       },
       "ens": {
-        "term": "RU-ENS",
-        "def": "RU-Ethereum Name Service – registers plain text names that correspond to cryptographic wallet addresses, for greater security and ease of use."
+        "term": "ENS",
+        "def": "Ethereum Name Service – registers plain text names that correspond to cryptographic wallet addresses, for greater security and ease of use."
       },
       "eth": {
-        "term": "RU-Ether",
-        "def": "RU-Cryptographic currency of the Ethereum blockchain, used to pay transaction fees (gas) on the network. The short code for Ether is ETH."
+        "term": "Ether",
+        "def": "Cryptographic currency of the Ethereum blockchain, used to pay transaction fees (gas) on the network. The short code for Ether is ETH."
       },
       "ethreum": {
-        "term": "RU-Ethereum",
-        "def": "RU-Decentralized blockchain platform enabled with a software language for building applications and creating contracts. Ethereum is the network, Ether is the token."
+        "term": "Эфириум",
+        "def": "Decentralized blockchain platform enabled with a software language for building applications and creating contracts. Ethereum is the network, Ether is the token."
       },
       "evm": {
-        "term": "RU-EVM",
-        "def": "RU-Ethereum Virtual Machine – the decentralized computing code at the core of the Ethereum platform. Each validating node has its own isolated implementation of EVM which allows it to achieve consensus."
+        "term": "EVM",
+        "def": "Ethereum Virtual Machine – the decentralized computing code at the core of the Ethereum platform. Each validating node has its own isolated implementation of EVM which allows it to achieve consensus."
       },
       "fork": {
-        "term": "RU-Fork",
-        "def": "RU-Accidental or deliberate creation of an alternative version of the blockchain by generating two blocks from the same parent block. This can result either in abandonment of one of the chains (through consensus) or both chains going forward operating independently."
+        "term": "Форк",
+        "def": "Accidental or deliberate creation of an alternative version of the blockchain by generating two blocks from the same parent block. This can result either in abandonment of one of the chains (through consensus) or both chains going forward operating independently."
       },
       "gas": {
-        "term": "RU-Gas",
-        "def": "RU-The fee for executing a transaction or contract on the Ethereum network, paid in ETH. For this reason, a user must have a small amount of ETH available in the account before sending any transactions."
+        "term": "Газ",
+        "def": "The fee for executing a transaction or contract on the Ethereum network, paid in ETH. For this reason, a user must have a small amount of ETH available in the account before sending any transactions."
       },
       "hash": {
         "term": "RU-Hash",
