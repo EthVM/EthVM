@@ -332,109 +332,108 @@ class StructToBsonConverterTest : BehaviorSpec() {
       }
     }
 
-    given("a token balance record") {
+//    given("a token balance record") {
+//
+//      val address = "689c56aef474df92d44a1b70850f808488f9769c"
+//      val amount = 123814982.toBigInteger()
+//
+//      val record = TokenBalanceRecord.newBuilder()
+//        .setAddress(address.hexBuffer20())
+//        .setAmount(amount.unsignedByteBuffer())
+//        .build()
+//
+//      `when`("we convert it to bson") {
+//
+//        val avro = avroSerializer.serialize("balance", record)
+//        val struct = avroConverter.toConnectData("balance", avro).value()
+//        val bson = StructToBsonConverter.convert(struct, "balance")
+//
+//        then("the relevant fields should be converted to hex") {
+//          bson.getString("address").value shouldBe address
+//        }
+//
+//        then("the relevant fields should be converted to Decimal128") {
+//          bson.getDecimal128("amount").value shouldBe amount.toDecimal128()
+//        }
+//      }
+//    }
 
-      val address = "689c56aef474df92d44a1b70850f808488f9769c"
-      val amount = 123814982.toBigInteger()
+//    given("a token balance key record") {
+//
+//      val address = "689c56aef474df92d44a1b70850f808488f9769c"
+//      val contract = "123c56aef474df92d44a1b70850f808488f9233c"
+//      val tokenId = 12381298.toBigInteger()
+//
+//      val record = TokenBalanceKeyRecord.newBuilder()
+//        .setAddress(address.hexBuffer20())
+//        .setContract(contract.hexBuffer20())
+//        .setTokenId(tokenId.unsignedByteBuffer())
+//        .build()
+//
+//      `when`("we convert it to bson") {
+//
+//        val avro = avroSerializer.serialize("balance-key", record)
+//        val struct = avroConverter.toConnectData("balance-key", avro).value()
+//        val bson = StructToBsonConverter.convert(struct, "balanceId")
+//
+//        then("the relevant fields should be converted to hex") {
+//          bson.getString("address").value shouldBe address
+//          bson.getString("contract").value shouldBe contract
+//        }
+//
+//        then("the relevant fields should be converted to Decimal128") {
+//          bson.getDecimal128("tokenId").value shouldBe tokenId.toDecimal128()
+//        }
+//      }
+//    }
 
-      val record = TokenBalanceRecord.newBuilder()
-        .setAddress(address.hexBuffer20())
-        .setAmount(amount.unsignedByteBuffer())
-        .build()
-
-      `when`("we convert it to bson") {
-
-        val avro = avroSerializer.serialize("balance", record)
-        val struct = avroConverter.toConnectData("balance", avro).value()
-        val bson = StructToBsonConverter.convert(struct, "balance")
-
-        then("the relevant fields should be converted to hex") {
-          bson.getString("address").value shouldBe address
-        }
-
-        then("the relevant fields should be converted to Decimal128") {
-          bson.getDecimal128("amount").value shouldBe amount.toDecimal128()
-        }
-      }
-    }
-
-    given("a token balance key record") {
-
-      val address = "689c56aef474df92d44a1b70850f808488f9769c"
-      val contract = "123c56aef474df92d44a1b70850f808488f9233c"
-      val tokenId = 12381298.toBigInteger()
-
-      val record = TokenBalanceKeyRecord.newBuilder()
-        .setAddress(address.hexBuffer20())
-        .setContract(contract.hexBuffer20())
-        .setTokenId(tokenId.unsignedByteBuffer())
-        .build()
-
-      `when`("we convert it to bson") {
-
-        val avro = avroSerializer.serialize("balance-key", record)
-        val struct = avroConverter.toConnectData("balance-key", avro).value()
-        val bson = StructToBsonConverter.convert(struct, "balanceId")
-
-        then("the relevant fields should be converted to hex") {
-          bson.getString("address").value shouldBe address
-          bson.getString("contract").value shouldBe contract
-        }
-
-        then("the relevant fields should be converted to Decimal128") {
-          bson.getDecimal128("tokenId").value shouldBe tokenId.toDecimal128()
-        }
-      }
-    }
-
-    given("a tx record") {
-
-      val n = 123456789.toBigInteger()
-      val hash = "3a1fba5abd9d41457944e91ed097e039b7b12d3d7ba324a3f422db2277a48e28"
-      val address = "689c56aef474df92d44a1b70850f808488f9769c"
-      val data = "123c56aef474df92d44a1b70850f808488f9233c7c1ab412354b"
-      val topic = "123c56aef474df92d44a1b70850f808488f9233c123456bac"
-
-      val logs = mutableListOf<LogRecord>(
-        LogRecord.newBuilder()
-          .setAddress(address.hexBuffer20())
-          .setData(data.hexBuffer())
-          .setTopics(mutableListOf(topic.hexBuffer()))
-          .build()
-      )
-
-      val receipt = TransactionReceiptRecord.newBuilder()
-        .setBlockHash(hash.hexBuffer())
-        .setTransactionHash(hash.hexBuffer())
-        .setLogs(logs)
-        .setGasUsed(123.toBigInteger().unsignedByteBuffer())
-        .setCumulativeGasUsed(123.toBigInteger().unsignedByteBuffer())
-        .setLogsBloom(data.hexBuffer())
-        .build()
-
-      val record = TransactionRecord.newBuilder()
-        .setHash(hash.hexBuffer())
-        .setNonce(123.toBigInteger().unsignedByteBuffer())
-        .setFrom(address.hexBuffer20())
-        .setValue(123.toBigInteger().unsignedByteBuffer())
-        .setGasPrice(123.toBigInteger().unsignedByteBuffer())
-        .setGas(123.toBigInteger().unsignedByteBuffer())
-        .setV(1L)
-        .setR(123.toBigInteger().unsignedByteBuffer())
-        .setS(123.toBigInteger().unsignedByteBuffer())
-        .setReceipt(receipt)
-        .build()
-
-      `when`("we convert it to bson") {
-
-        val avro = avroSerializer.serialize("transactions", record)
-        val struct = avroConverter.toConnectData("transactions", avro).value()
-        val bson = StructToBsonConverter.convert(struct, "transaction")
-
-        then("the relevant fields should be converted to hex") {
-          bson["receipt"] shouldNotBe null
-        }
-      }
-    }
+//    given("a tx record") {
+//
+//      val hash = "3a1fba5abd9d41457944e91ed097e039b7b12d3d7ba324a3f422db2277a48e28"
+//      val address = "689c56aef474df92d44a1b70850f808488f9769c"
+//      val data = "123c56aef474df92d44a1b70850f808488f9233c7c1ab412354b"
+//      val topic = "123c56aef474df92d44a1b70850f808488f9233c123456bac"
+//
+//      val logs = mutableListOf<LogRecord>(
+//        LogRecord.newBuilder()
+//          .setAddress(address.hexBuffer20())
+//          .setData(data.hexBuffer())
+//          .setTopics(mutableListOf(topic.hexBuffer()))
+//          .build()
+//      )
+//
+//      val receipt = TransactionReceiptRecord.newBuilder()
+//        .setBlockHash(hash.hexBuffer())
+//        .setTransactionHash(hash.hexBuffer())
+//        .setLogs(logs)
+//        .setGasUsed(123.toBigInteger().unsignedByteBuffer())
+//        .setCumulativeGasUsed(123.toBigInteger().unsignedByteBuffer())
+//        .setLogsBloom(data.hexBuffer())
+//        .build()
+//
+//      val record = TransactionRecord.newBuilder()
+//        .setHash(hash.hexBuffer())
+//        .setNonce(123.toBigInteger().unsignedByteBuffer())
+//        .setFrom(address.hexBuffer20())
+//        .setValue(123.toBigInteger().unsignedByteBuffer())
+//        .setGasPrice(123.toBigInteger().unsignedByteBuffer())
+//        .setGas(123.toBigInteger().unsignedByteBuffer())
+//        .setV(1L)
+//        .setR(123.toBigInteger().unsignedByteBuffer())
+//        .setS(123.toBigInteger().unsignedByteBuffer())
+//        .setReceipt(receipt)
+//        .build()
+//
+//      `when`("we convert it to bson") {
+//
+//        val avro = avroSerializer.serialize("transactions", record)
+//        val struct = avroConverter.toConnectData("transactions", avro).value()
+//        val bson = StructToBsonConverter.convert(struct, "transaction")
+//
+//        then("the relevant fields should be converted to hex") {
+//          bson["receipt"] shouldNotBe null
+//        }
+//      }
+//    }
   }
 }

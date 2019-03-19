@@ -41,7 +41,6 @@ dependencies {
   implementation("io.arrow-kt:arrow-core:0.8.2")
 
   // Testing
-  testImplementation(project(":testing"))
   testImplementation("io.kotlintest:kotlintest-runner-junit5:${ext.get("kotlintest-version") as String}")
   testImplementation("io.mockk:mockk:${ext.get("mockk-version") as String}")
   testImplementation("org.apache.kafka:kafka-streams-test-utils:2.1.0")
