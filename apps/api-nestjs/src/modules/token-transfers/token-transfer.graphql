@@ -5,6 +5,18 @@ type Query {
   topTokenHolders(address: String!): [EthplorerTokenHolder]
   holderDetails(address: String!, holderAddress: String!): EthplorerAddressInfo
   holderTransfers(address: String!, holderAddress: String!): [EthplorerTokenOperation]
+  addressAllTokensOwned(address: String!): [Token]!
+  addressAmountTokensOwned(address: String!): Int!
+}
+
+type Token {
+  name: String
+  website: String
+  email: String
+  symbol: String
+  addr: String
+  decimals: Int
+  balance: String
 }
 
 type TokenTransfer {

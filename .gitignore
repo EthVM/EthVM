@@ -31,3 +31,4 @@ out/
 
 # Gradle
 .gradle
+env_*.sh
