@@ -6,8 +6,10 @@ import ru_RU from '@app/translations/ru_RU.json'
 import es_ES from '@app/translations/es_ES.json'
 
 const messages = {
-  en_US
+  en_US,
+  ru_RU
 }
+
 
 Vue.use(VueI18n)
 export default new VueI18n({
