@@ -12,6 +12,7 @@ import { TokenTransferModule } from '@app/modules/token-transfers/token-transfer
 import { TxModule } from '@app/modules/txs/tx.module'
 import { UncleModule } from '@app/modules/uncles/uncle.module'
 import { OrmModule } from '@app/orm/orm.module'
+import { LoggerModule } from '@app/shared/logger.service'
 import { SharedModule } from '@app/shared/shared.module'
 import { Module } from '@nestjs/common'
 
@@ -31,7 +32,8 @@ import { Module } from '@nestjs/common'
     TxModule,
     UncleModule,
     StatisticModule,
-    SearchModule
+    SearchModule,
+    LoggerModule
   ]
 })
 export class AppModule {}
