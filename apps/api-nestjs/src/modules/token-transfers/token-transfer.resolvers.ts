@@ -50,4 +50,15 @@ export class TokenTransferResolvers {
   async holderTransfers(@Args('address', ParseAddressPipe) address: string, @Args('holderAddress', ParseAddressPipe) holderAddress: string) {
     return this.tokenTransferService.fetchAddressHistory(address, holderAddress)
   }
+
+  @Query()
+  async addressAllTokensOwned(@Args('address', ParseAddressPipe) address: string) {
+
+  }
+
+  @Query()
+  async addressAmountTokensOwned(@Args('address', ParseAddressPipe) address: string) {
+
+  }
+
 }

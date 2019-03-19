@@ -359,6 +359,10 @@ export abstract class IQuery {
 
     abstract holderTransfers(address: string, holderAddress: string): EthplorerTokenOperation[] | Promise<EthplorerTokenOperation[]>;
 
+    abstract addressAllTokensOwned(address: string): Token[] | Promise<Token[]>;
+
+    abstract addressAmountTokensOwned(address: string): number | Promise<number>;
+
     abstract tx(hash: string): Transaction | Promise<Transaction>;
 
     abstract txs(limit?: number, order?: Order, fromBlock?: number): Transaction[] | Promise<Transaction[]>;
@@ -450,6 +454,17 @@ export abstract class ISubscription {
 export class Support {
     email?: string;
     url?: string;
+}
+
+export class Token {
+    name?: string;
+    website?: string;
+    email?: string;
+    symbol?: string;
+    addr?: string;
+    decimals?: Decimal;
+    balance?: string;
+    currentPrice?: Decimal;
 }
 
 export class TokenExchangeRate {

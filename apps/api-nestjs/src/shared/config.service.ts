@@ -70,6 +70,16 @@ const schema = {
       env: 'ETHPLORER_API_KEY',
       default: 'freekey'
     }
+  },
+  vmEngine: {
+    rpcUrl: {
+      env: 'VM_ENGINE_RPC_URL',
+      default: 'https://api.myetherwallet.com/eth'
+    },
+    tokensSmartContract: {
+      env: 'VM_ENGINE_TOKENS_SMART_CONTRACT_ADDRESS',
+      default: '0x2783c0A4Bfd3721961653a9e9939Fc63687bf07f'
+    }
   }
 }
 
@@ -88,6 +98,11 @@ export interface CoinGeckoConfig {
 export interface EthplorerConfig {
   url: string
   apiKey: string
+}
+
+export interface VmEngineConfig {
+  rpcUrl: string
+  tokensSmartContract: string
 }
 
 @Injectable()
@@ -134,5 +149,9 @@ export class ConfigService {
 
   get ethplorer(): EthplorerConfig {
     return this.config.get('ethplorer')
+  }
+
+  get vmEngine(): VmEngineConfig {
+    return this.config.get('vmEngine')
   }
 }
