@@ -1,7 +1,7 @@
 {
   "block": {
-    "name": "ES-Block | ES_Blocks",
-    "number": "ES-Block #",
+    "name": "Block | Blocks",
+    "number": "Block #",
     "mined": "ES-Mined Blocks",
     "detail": "ES-Block Details",
     "txs": "ES-Block Transactions",
