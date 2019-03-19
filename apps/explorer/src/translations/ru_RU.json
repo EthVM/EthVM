@@ -1,53 +1,53 @@
 {
   "block": {
     "name": "Блок | Блоки",
-    "number": "Блок #",
-    "mined": "RU-Mined Blocks",
-    "detail": "Детали блока",
+    "number": "Блок №",
+    "mined": "Подтвержденные Блоки",
+    "detail": "Детали Блока",
     "txs": "Tранзакции Блока",
-    "last": "Последние блоки",
-    "block": "Высота блока #",
-    "p-hash": "Родительский хэш",
-    "total-reward": "Общая награда за блок",
-    "last-n": "Последний блок #",
-    "time": "От последней записи",
-    "hash-rate": "Расход Hash",
-    "bytes": "RU-Bytes",
+    "last": "Последние Блоки",
+    "block": "Высота Блока",
+    "p-hash": "Родительский Хэш",
+    "total-reward": "Общая Награда за Блок",
+    "last-n": "№ Последнего Блока",
+    "time": "С Последнего Блока",
+    "hash-rate": "Хешрейт",
+    "bytes": "Байтов",
     "logs": "Логи",
-    "data": "Дополнительные данные",
-    "state-root": "Root состояния",
-    "rcpt-root": "Чеки root"
+    "data": "Доп. Дата",
+    "state-root": "Корень Состояний",
+    "rcpt-root": "Корень Отчётов"
   },
   "uncle": {
-    "name": "Блок-Uncle |  | Блоки-Uncles",
-    "number": "RU-Uncle #",
-    "detail": "Блоки Uncle Детали",
-    "height": "Uncle-Блок #",
-    "uncle-position": "RU-Uncle Position",
+    "name": "Uncle-Блок | Uncle- Блоки",
+    "number": "Uncle-Блок №",
+    "detail": "Детали Uncle-Блока",
+    "height": "Высота Uncle-Блока",
+    "uncle-position": "Позиция Uncle-Блока",
     "position": "Позиция",
-    "reward": "RU-Uncle Reward",
-    "included": "RU-Included in Block #"
+    "reward": "Награда Uncle-Блока",
+    "included": "Записан в Блок №"
   },
   "tx": {
-    "name": "RU-Transaction | RU_Transactions",
-    "name-short": "RU-Tx | RU_Txs",
+    "name": "Транзакция | Транзакции",
+    "name-short": "Тр-ция | Тр-ции",
     "pending": "Ожидающая Транзакция | Ожидающие Транзакции",
     "pending-short": "Ожидающая Тр-ция | Ожидающие Тр-ции",
-    "mined": "RU-Mined Transactions",
-    "detail": "RU-Transaction Details",
+    "mined": "Подтвержденные транзакции",
+    "detail": "Детали Транзакции",
     "last": "Последние Транзакции",
-    "hash": "RU-Tx # | RU_Transaction #",
+    "hash": "№ Тр-ции | № Транзакции",
     "fee": "Комиссия за Тр-цию | Комиссии за Тр-ции",
     "history": "История Транзакций",
     "total": "Всего Тр-ций",
     "success": "Успешная Тр-ция | Успешные Тр-ции",
     "failed": "Неудачная Тр-ция | Неудачные Тр-ции",
-    "for-tx": "RU-For Tx",
+    "for-tx": "Для Тр-ции",
     "cost": "Стоимость Тр-ции",
     "root": "Корень Транзакций",
     "from": "Отправитель",
     "to": "Получатель",
-    "status": "RU-Status",
+    "status": "Статус",
     "input": "Вводимые данные",
     "func": "Функция",
     "method": "ID Метода"
@@ -177,46 +177,46 @@
     "live": "Данные в реальном времени",
     "tx-summary": {
       "title": "Сводка Тр-ции",
-      "description": "RU-Successful, failed, and pending transactions in the last 10 blocks.",
+      "description": "Успешные, неудачные и ожидающие транзакции в последних 10 блоках.",
       "label": {
-        "pen": "RU-Pending Txs",
-        "success-fail": "RU-Successful and Failed Txs"
+        "pen": "Ожидающие Тр-ции",
+        "success-fail": "Успешные и Неудачные Тр-ции"
       }
     },
     "tx-costs": {
-      "title": "RU-Tx Fees and Gas Price",
+      "title": "Комиссии за Тр-ции и Цена за Газ",
       "description": "Average transaction fees and average gas price in the last 10 blocks."
     },
     "block-diff": {
-      "title": "Сложность блока",
-      "description": "Средняя сложность блока"
+      "title": "Сложность Блока",
+      "description": "Средняя Сложность Блока"
     },
     "block-size": {
-      "title": "Размер блока",
-      "description": "RU-Average Block Size"
+      "title": "Размер Блока",
+      "description": "Средний Размер Блока"
     },
     "block-time": {
-      "title": "RU-Block Time",
-      "description": "RU-Average Block Time"
+      "title": "Время генерации блока",
+      "description": "Среднее время блока"
     },
     "gas-limit": {
-      "title": "RU-Gas Limit",
-      "description": "RU-Average Gas Limit"
+      "title": "Лимит Газа",
+      "description": "Средний Лимит Газа"
     },
     "gas-price": {
-      "title": "RU-Gas Price",
-      "description": "RU-Average Gas Price"
+      "title": "Цена Газа",
+      "description": "Средняя Цена Газа"
     },
     "hash-rate": {
-      "title": "RU-Hash Rate",
-      "description": "RU-Average Hash Rate"
+      "title": "Хешрейт",
+      "description": "Средний Хешрейт"
     },
     "tx-fail": {
-      "title": "RU-Failed Transactions",
-      "description": "RU-Number of Failed Transactions"
+      "title": "Неудачные транзакции",
+      "description": "Количество неудачных сделок"
     },
     "tx-fees": {
-      "title": "RU-Transactions Fees",
+      "title": "Комиссии за транзакции",
       "description": "RU-Average Transactions Fees"
     },
     "tx-pending": {
