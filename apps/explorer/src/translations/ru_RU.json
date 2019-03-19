@@ -160,7 +160,7 @@
     },
     "not-found": "Упс! Страница не найдена :(",
     "welcome": {
-      "title": "Welcome to EthVM!",
+      "title": "Добро пожаловать в EthVM!",
       "text1": "Мы все еще находимся на Alpha этапе, поэтому некоторые функции могут не работать в полном объеме. Если вы найдете какие нибудь ошибки, свяжитесь с нами ",
       "text2": ", так что мы сможем сделать EthVM еще лучше!",
       "btn": "Вперед!"
@@ -185,7 +185,7 @@
     },
     "tx-costs": {
       "title": "Комиссии за Тр-ции и Цена за Газ",
-      "description": "Average transaction fees and average gas price in the last 10 blocks."
+      "description": "Средние комиссии за тр-ции и средняя цена газа за последние 10 блоков."
     },
     "block-diff": {
       "title": "Сложность Блока",
@@ -213,7 +213,7 @@
     },
     "tx-fail": {
       "title": "Неудачные транзакции",
-      "description": "Количество неудачных сделок"
+      "description": "Количество неудачных транзакции"
     },
     "tx-fees": {
       "title": "Комиссии за транзакции",
@@ -243,7 +243,7 @@
       "week": "неделя | 1Н",
       "month": "месяц | 1M",
       "day": "день | 1Д",
-      "year": "RU-year | RU_1Y"
+      "year": "год | 1Г"
     },
     "captions": {
       "all": " в блокчейне Ethereum с cамого начала ",
@@ -256,12 +256,12 @@
     "less": "Меньше",
     "first": "Первая",
     "last": "Последняя",
-    "back-home": "Назад Домой",
+    "back-home": "Назад на Главную",
     "report": "Сообщите о проблеме"
   },
   "search": {
     "name": "Поиск",
-    "default": "Поиск Блок / Адрес / Тр-ция",
+    "default": "Поиск: Блок / Адрес / Тр-ция",
     "address-tx": "Хэш Тр-ции/Адреса"
   },
   "filter": {
@@ -271,14 +271,14 @@
     "out": "Исходящие",
     "in": "Входящие",
     "high": "От высокой к низкой",
-    "low": "RU-Low to High"
+    "low": "От низкой к высокой"
   },
   "footer": {
     "discover": "Узнать",
     "donate": "Пожертвования",
     "btc": "BTC",
     "ens": "mewtopia.eth",
-    "copy": "RU-Copyright 2019 All rights reserved by ",
+    "copy": "Copyright 2019 Все права защищены ",
     "mew": "MyEtherWallet Inc",
     "copy-eth-addr": "Копировать ETH адрес",
     "copy-btc-addr": "Копировать BTC адрес"
@@ -315,7 +315,7 @@
     "title": "Blockchain Terms",
     "terms": {
       "acc": {
-        "term": "Account",
+        "term": "Aккаунт",
         "def": "Entry on the blockchain ledger that contains data about the state of that account. In the case of a currency system, it's the information about funds available."
       },
       "addr": {
@@ -371,7 +371,7 @@
         "def": "Cryptographic currency of the Ethereum blockchain, used to pay transaction fees (gas) on the network. The short code for Ether is ETH."
       },
       "ethreum": {
-        "term": "Эфириум",
+        "term": "Ethereum (Эфириум)",
         "def": "Decentralized blockchain platform enabled with a software language for building applications and creating contracts. Ethereum is the network, Ether is the token."
       },
       "evm": {
@@ -449,7 +449,7 @@
     }
   },
   "pp": {
-    "name": "Конфиденциальность",
+    "name": "Политика конфиденциальности",
     "intro": {
       "title": "Introduction",
       "p1": "Welcome to EthVM, a free, open-source, tool for interacting with data on the blockchain. EthVM and MyEtherWallet, Inc. values privacy and we make a concerted effort to minimize and, to the extent possible, eliminate the exposure of personal data during the use of our interface. EthVM does not collect, hold, or store keys, account information, or passwords. We do not collect data passively, do not monetize the collection of data, and do not use your data for marketing or advertising.",
