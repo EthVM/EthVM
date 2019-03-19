@@ -15,9 +15,8 @@ type Token {
   email: String
   symbol: String
   addr: String
-  decimals: Decimal
+  decimals: Int
   balance: String
-  currentPrice: Decimal
 }
 
 type TokenTransfer {

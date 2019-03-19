@@ -4,10 +4,11 @@ import { TokenExchangeRateDto } from '@app/modules/exchanges/token-exchange-rate
 import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe'
 import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
+import { VmEngineService } from '@app/shared/vm-engine.service'
 
 @Resolver('TokenTransfer')
 export class TokenTransferResolvers {
-  constructor(private readonly tokenTransferService: TokenTransferService) {}
+  constructor(private readonly tokenTransferService: TokenTransferService, private readonly vmEngine: VmEngineService) {}
 
   @Query()
   async addressTokenTransfers(
@@ -53,7 +54,7 @@ export class TokenTransferResolvers {
 
   @Query()
   async addressAllTokensOwned(@Args('address', ParseAddressPipe) address: string) {
-
+    return this.vmEngine.fetchAddressAllTokensOwned(address)
   }
 
   @Query()

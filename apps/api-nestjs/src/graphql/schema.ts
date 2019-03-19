@@ -462,9 +462,8 @@ export class Token {
     email?: string;
     symbol?: string;
     addr?: string;
-    decimals?: Decimal;
+    decimals?: number;
     balance?: string;
-    currentPrice?: Decimal;
 }
 
 export class TokenExchangeRate {

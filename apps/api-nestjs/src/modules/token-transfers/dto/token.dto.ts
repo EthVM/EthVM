@@ -1,7 +1,7 @@
-import { TokenTransfer } from '@app/graphql/schema'
+import { Token } from '@app/graphql/schema'
 import { assignClean } from '@app/shared/utils'
 
-export class TokenTransferDto extends TokenTransfer {
+export class TokenDto extends Token {
   constructor(data: any) {
     super()
     assignClean(this, data)
