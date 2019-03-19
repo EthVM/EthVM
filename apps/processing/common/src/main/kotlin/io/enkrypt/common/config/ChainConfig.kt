@@ -1,6 +1,7 @@
 package io.enkrypt.common.config
 
 import io.enkrypt.avro.capture.BlockRecord
+import io.enkrypt.avro.processing.EtherBalanceDeltaRecord
 import io.enkrypt.common.extensions.ether
 import java.math.BigInteger
 
@@ -8,7 +9,7 @@ interface ChainConfig {
 
   val constants: ChainConstants
 
-//  fun hardForkEtherDeltas(number: BigInteger): List<EtherBalanceDeltaRecord> = emptyList()
+  fun hardForkEtherDeltas(number: BigInteger): List<EtherBalanceDeltaRecord> = emptyList()
 
   /**
    * EIP161: https://github.com/ethereum/EIPs/issues/161
@@ -90,27 +91,27 @@ open class DaoHardForkConfig(override val constants: ChainConstants = ChainConst
   private val daoBalances = DaoHardFork.balances
 
 
-//  override fun hardForkEtherDeltas(number: BigInteger): List<EtherBalanceDeltaRecord> =
-//    if (number != forkBlockNumber) {
-//      emptyList()
-//    } else {
-//      daoBalances.map { (address, balance) ->
-//        listOf(
-//
-//          // deduct from address
-//          EtherBalanceDeltaRecord.newBuilder()
-//            .setAddress(address)
-//            .setAmount(balance.negate().toString())
-//            .build(),
-//
-//          // add to withdraw account
-//          EtherBalanceDeltaRecord.newBuilder()
-//            .setAddress(withdrawAccount)
-//            .setAmount(balance.toString())
-//            .build()
-//        )
-//      }.flatten()
-//    }
+  override fun hardForkEtherDeltas(number: BigInteger): List<EtherBalanceDeltaRecord> =
+    if (number != forkBlockNumber) {
+      emptyList()
+    } else {
+      daoBalances.map { (address, balance) ->
+        listOf(
+
+          // deduct from address
+          EtherBalanceDeltaRecord.newBuilder()
+            .setAddress(address)
+            .setAmount(balance.negate().toString())
+            .build(),
+
+          // add to withdraw account
+          EtherBalanceDeltaRecord.newBuilder()
+            .setAddress(withdrawAccount)
+            .setAmount(balance.toString())
+            .build()
+        )
+      }.flatten()
+    }
 }
 
 open class Eip150HardForkConfig(val parent: ChainConfig) : DaoHardForkConfig() {

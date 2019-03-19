@@ -3,24 +3,44 @@ package io.enkrypt.kafka.streams.serdes
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
 import io.enkrypt.avro.capture.BlockHeaderRecord
+import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
-import io.enkrypt.avro.capture.CanonicalEtherBalanceKeyRecord
 import io.enkrypt.avro.capture.CanonicalKeyRecord
-import io.enkrypt.avro.capture.EtherBalanceKeyRecord
-import io.enkrypt.avro.capture.EtherBalanceRecord
+import io.enkrypt.avro.capture.CanonicalRecord
+import io.enkrypt.avro.capture.CompositeKeyRecord
 import io.enkrypt.avro.capture.TraceListRecord
+import io.enkrypt.avro.capture.TransactionKeyRecord
 import io.enkrypt.avro.capture.TransactionListRecord
 import io.enkrypt.avro.capture.TransactionReceiptListRecord
 import io.enkrypt.avro.capture.TransactionReceiptRecord
 import io.enkrypt.avro.capture.TransactionRecord
 import io.enkrypt.avro.exchange.ExchangeRateRecord
 import io.enkrypt.avro.exchange.SymbolKeyRecord
+import io.enkrypt.avro.processing.AddressMetadataKeyRecord
+import io.enkrypt.avro.processing.AddressMetadataRecord
 import io.enkrypt.avro.processing.BlockMetricsRecord
+import io.enkrypt.avro.processing.CanonicalApplyRecord
+import io.enkrypt.avro.processing.ContractCreateRecord
+import io.enkrypt.avro.processing.ContractDestroyRecord
 import io.enkrypt.avro.processing.ContractKeyRecord
 import io.enkrypt.avro.processing.ContractMetadataRecord
+import io.enkrypt.avro.processing.EtherBalanceDeltaListRecord
+import io.enkrypt.avro.processing.EtherBalanceDeltaRecord
+import io.enkrypt.avro.processing.EtherBalanceKeyRecord
+import io.enkrypt.avro.processing.EtherBalanceRecord
+import io.enkrypt.avro.processing.MetricKeyRecord
+import io.enkrypt.avro.processing.MetricRecord
+import io.enkrypt.avro.processing.TokenBalanceKeyRecord
+import io.enkrypt.avro.processing.TokenBalanceRecord
+import io.enkrypt.avro.processing.TokenTransferKeyRecord
+import io.enkrypt.avro.processing.TokenTransferListRecord
+import io.enkrypt.avro.processing.TokenTransferRecord
 import io.enkrypt.avro.processing.TransactionFeeListRecord
+import io.enkrypt.avro.processing.TransactionFeeRecord
 import io.enkrypt.avro.processing.TransactionGasPriceListRecord
+import io.enkrypt.avro.processing.TransactionGasPriceRecord
 import io.enkrypt.avro.processing.TransactionGasUsedListRecord
+import io.enkrypt.avro.processing.TransactionGasUsedRecord
 import io.enkrypt.avro.tokens.EthTokenListsKeyRecord
 import io.enkrypt.kafka.streams.config.KafkaConfig
 import org.koin.standalone.KoinComponent
@@ -35,6 +55,22 @@ object Serdes : KoinComponent {
   private val config = mutableMapOf(
     "schema.registry.url" to kafkaConfig.schemaRegistryUrl
   )
+
+  fun EtherBalanceKey() = SpecificAvroSerde<EtherBalanceKeyRecord>(registryClient).apply {
+    configure(config, true)
+  }
+
+  fun EtherBalanceDelta() = SpecificAvroSerde<EtherBalanceDeltaRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun EtherBalance() = SpecificAvroSerde<EtherBalanceRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun CompositeKey() = SpecificAvroSerde<CompositeKeyRecord>(registryClient).apply {
+    configure(config, true)
+  }
 
   fun CanonicalKey() = SpecificAvroSerde<CanonicalKeyRecord>(registryClient).apply {
     configure(config, true)
@@ -69,15 +105,23 @@ object Serdes : KoinComponent {
     configure(config, false)
   }
 
-  fun CanonicalEtherBalanceKey() = SpecificAvroSerde<CanonicalEtherBalanceKeyRecord>(registryClient).apply {
+  fun EtherBalanceDeltaList() = SpecificAvroSerde<EtherBalanceDeltaListRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun TransactionGasPrice() = SpecificAvroSerde<TransactionGasPriceRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun TransactionGasUsed() = SpecificAvroSerde<TransactionGasUsedRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun TokenBalanceKey() = SpecificAvroSerde<TokenBalanceKeyRecord>(registryClient).apply {
     configure(config, true)
   }
 
-  fun EtherBalanceKey() = SpecificAvroSerde<EtherBalanceKeyRecord>(registryClient).apply {
-    configure(config, true)
-  }
-
-  fun EtherBalance() = SpecificAvroSerde<EtherBalanceRecord>(registryClient).apply {
+  fun TokenBalance() = SpecificAvroSerde<TokenBalanceRecord>(registryClient).apply {
     configure(config, false)
   }
 
@@ -85,12 +129,39 @@ object Serdes : KoinComponent {
     configure(config, false)
   }
 
+  fun MetricKey() = SpecificAvroSerde<MetricKeyRecord>(registryClient).apply {
+    configure(config, true)
+  }
+
+  fun Metric() = SpecificAvroSerde<MetricRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
   fun ContractKey() = SpecificAvroSerde<ContractKeyRecord>(registryClient).apply {
     configure(config, true)
   }
 
+  fun ContractCreate() = SpecificAvroSerde<ContractCreateRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun ContractDestroy() = SpecificAvroSerde<ContractDestroyRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun BlockHeader() = SpecificAvroSerde<BlockHeaderRecord>(registryClient).apply {
+    configure(config, false)
+  }
 
   fun ContractMetadata() = SpecificAvroSerde<ContractMetadataRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun AddressMetadataKey() = SpecificAvroSerde<AddressMetadataKeyRecord>(registryClient).apply {
+    configure(config, true)
+  }
+
+  fun AddressMetadata() = SpecificAvroSerde<AddressMetadataRecord>(registryClient).apply {
     configure(config, false)
   }
 

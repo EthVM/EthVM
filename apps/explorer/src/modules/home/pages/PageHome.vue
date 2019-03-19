@@ -121,7 +121,7 @@ export default class PageHome extends Vue {
   }
 
   fetchBlocks(): Promise<Block[] | SimpleBlock[]> {
-    return this.$api.getCanonicalBlocks('simple', MAX_ITEMS, 0, -1)
+    return this.$api.getBlocks('simple', MAX_ITEMS, 0, -1)
   }
 
   /*

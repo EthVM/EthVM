@@ -3,19 +3,6 @@ protocol Capture {
 
   import idl "common.avdl";
 
-  record CanonicalEtherBalanceKeyRecord {
-    string blockNumber;
-    string address;
-  }
-
-  record EtherBalanceKeyRecord {
-    string address;
-  }
-
-  record EtherBalanceRecord {
-    string balance;
-  }
-
   record BlockKeyRecord {
     string blockHash;
   }
@@ -176,7 +163,6 @@ protocol Capture {
     string transactionsRoot;               // the root of the transaction trie of the block
     string stateRoot;                      // the root of the final state trie of the block
     string receiptsRoot;                   // the root of the receipts trie of the block
-
 
     string @aliases(["miner"]) author;     // the address of the author of the block (the beneficiary to whom the mining rewards were given)
 

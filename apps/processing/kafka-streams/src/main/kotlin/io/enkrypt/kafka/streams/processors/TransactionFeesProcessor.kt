@@ -1,19 +1,16 @@
 package io.enkrypt.kafka.streams.processors
 
-import io.enkrypt.avro.processing.BlockMetricsRecord
 import io.enkrypt.avro.processing.TransactionFeeListRecord
 import io.enkrypt.avro.processing.TransactionFeeRecord
 import io.enkrypt.avro.processing.TransactionGasPriceListRecord
 import io.enkrypt.avro.processing.TransactionGasPriceRecord
 import io.enkrypt.avro.processing.TransactionGasUsedListRecord
 import io.enkrypt.avro.processing.TransactionGasUsedRecord
-import io.enkrypt.kafka.streams.config.Topics
 import io.enkrypt.kafka.streams.config.Topics.CanonicalGasPrices
 import io.enkrypt.kafka.streams.config.Topics.CanonicalGasUsed
 import io.enkrypt.kafka.streams.config.Topics.CanonicalReceipts
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTransactionFees
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTransactions
-import io.enkrypt.kafka.streams.config.Topics.TransactionFeeBlockMetrics
 import io.enkrypt.kafka.streams.serdes.Serdes
 import mu.KLogger
 import mu.KotlinLogging
@@ -21,7 +18,6 @@ import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Materialized
-import java.math.BigInteger
 import java.util.Properties
 
 class TransactionFeesProcessor : AbstractKafkaProcessor() {
@@ -46,38 +42,47 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
       CanonicalTransactions.stream(builder)
         .mapValues { transactionsList ->
 
-          TransactionGasPriceListRecord.newBuilder()
-            .setGasPrices(
-              transactionsList.getTransactions()
-                .map { tx ->
+          when(transactionsList) {
+            null -> null
+            else ->
+              TransactionGasPriceListRecord.newBuilder()
+                .setGasPrices(
+                  transactionsList.getTransactions()
+                    .map { tx ->
 
-                  TransactionGasPriceRecord.newBuilder()
-                    .setAddress(tx.getFrom())
-                    .setGasPrice(tx.getGasPrice())
-                    .build()
+                      TransactionGasPriceRecord.newBuilder()
+                        .setAddress(tx.getFrom())
+                        .setGasPrice(tx.getGasPrice())
+                        .build()
 
-                }
-            ).build()
+                    }
+                ).build()
+
+          }
 
         }
     )
-
 
     CanonicalGasUsed.sinkFor(
       CanonicalReceipts.stream(builder)
         .mapValues { receiptsList ->
 
-          TransactionGasUsedListRecord.newBuilder()
-            .setGasUsed(
-              receiptsList.getReceipts()
-                .map { receipt ->
+          when(receiptsList) {
+            null -> null
+            else ->
+              TransactionGasUsedListRecord.newBuilder()
+                .setGasUsed(
+                  receiptsList.getReceipts()
+                    .map { receipt ->
 
-                  TransactionGasUsedRecord.newBuilder()
-                    .setGasUsed(receipt.getGasUsed())
-                    .build()
+                      TransactionGasUsedRecord.newBuilder()
+                        .setGasUsed(receipt.getGasUsed())
+                        .build()
 
-                }
-            ).build()
+                    }
+                ).build()
+          }
+
         }
     )
 

@@ -30,13 +30,13 @@ topics:
     config:
       cleanup.policy: compact
 
-  - name: canonical-ether-balances
+  - name: canonical-traces-ether-deltas
     replicationFactor: 1
     partitions: 12
     config:
       cleanup.policy: compact
 
-  - name: ether-balances
+  - name: canonical-transaction-fees-ether-deltas
     replicationFactor: 1
     partitions: 12
     config:
@@ -55,85 +55,6 @@ topics:
       cleanup.policy: compact
 
   - name: canonical-transaction-fees
-    replicationFactor: 1
-    partitions: 12
-    config:
-      cleanup.policy: compact
-
-  - name: block-metrics
-    replicationFactor: 1
-    partitions: 12
-    config:
-      cleanup.policy: compact
-
-  - name: transaction-block-metrics
-    replicationFactor: 1
-    partitions: 12
-    config:
-      cleanup.policy: compact
-
-  - name: transaction-fee-block-metrics
-    replicationFactor: 1
-    partitions: 12
-    config:
-      cleanup.policy: compact
-
-
-  - name: canonical-chain
-    replicationFactor: 1
-    partitions: 1
-    config:
-      cleanup.policy: compact
-
-  - name: canonical-blocks
-    replicationFactor: 1
-    partitions: 1
-    config:
-      cleanup.policy: compact
-
-  - name: canonical-blocks-concurrent
-    replicationFactor: 1
-    partitions: 12
-    config:
-      cleanup.policy: compact
-
-  - name: canonical-transactions
-    replicationFactor: 1
-    partitions: 1
-    config:
-      cleanup.policy: compact
-
-  - name: canonical-transactions-concurrent
-    replicationFactor: 1
-    partitions: 12
-    config:
-      cleanup.policy: compact
-
-  - name: block-ether-balance-deltas
-    replicationFactor: 1
-    partitions: 12
-    config:
-      cleanup.policy: compact
-
-  - name: transaction-ether-balance-deltas
-    replicationFactor: 1
-    partitions: 12
-    config:
-      cleanup.policy: compact
-
-  - name: transaction-gas-prices
-    replicationFactor: 1
-    partitions: 12
-    config:
-      cleanup.policy: compact
-
-  - name: transaction-gas-used
-    replicationFactor: 1
-    partitions: 12
-    config:
-      cleanup.policy: compact
-
-  - name: transaction-fees
     replicationFactor: 1
     partitions: 12
     config:

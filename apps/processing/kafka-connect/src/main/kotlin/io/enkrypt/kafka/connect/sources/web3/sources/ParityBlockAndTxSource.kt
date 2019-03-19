@@ -40,9 +40,8 @@ class ParityBlockAndTxSource(sourceContext: SourceTaskContext,
 
             val block = resp.block
 
-            val blockKeyRecord = BlockKeyRecord
-              .newBuilder()
-              .setBlockHash(block.hash)
+            val blockKeyRecord = CanonicalKeyRecord.newBuilder()
+              .setNumber(blockNumber.toString())
               .build()
 
             val blockRecord = block

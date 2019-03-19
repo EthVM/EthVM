@@ -1,6 +1,7 @@
 package io.enkrypt.kafka.streams.processors
 
-import io.enkrypt.kafka.streams.config.Topics.CanonicalEtherBalances
+import io.enkrypt.kafka.streams.config.Topics
+import io.enkrypt.kafka.streams.config.Topics.EtherBalanceDeltas
 import io.enkrypt.kafka.streams.config.Topics.EtherBalances
 import mu.KotlinLogging
 import org.apache.kafka.clients.producer.ProducerConfig
@@ -29,8 +30,34 @@ class LoggerProcessor : AbstractKafkaProcessor() {
 
     val builder = StreamsBuilder().apply {}
 
-    EtherBalances.stream(builder)
-      .peek{ k, v -> logger.info{ "Balance update | address = ${k.getAddress()}, balance = ${v.getBalance()}"}}
+    val addresses = setOf<String>(
+//      "0x94628dc2fcf8c450562b75c59ede742586a5c179",
+    "0xd490af05bf82ef6c6ba034b22d18c39b5d52cc54"
+    )
+
+    val txs = setOf<String>(
+    )
+
+//    EtherBalanceDeltas.stream(builder)
+//      .filter { k, _ -> addresses.contains(k.getAddress()) }
+//      .peek{ k, v -> logger.info { "Key: ${k.getAddress()}, delta: $v"} }
+
+//    TransactionEtherBalanceDeltas.stream(builder)
+//      .filter { k, _ -> txs.contains(k.getTxHash()) }
+//      .peek{ k, v -> logger.info { "Tx: ${k.getTxHash()}, delta: $v"} }
+
+//    CanonicalTransactionsConcurrent.stream(builder)
+//      .filter { k, _ -> txs.contains(k.getTxHash()) }
+//      .peek{ k, v -> logger.info { "Tx: ${k.getTxHash()}, canonical: $v"} }
+
+//    TransactionFees.stream(builder)
+//      .filter { k, _ -> txs.contains(k.getTxHash()) }
+//      .peek{ k, v -> logger.info { "Key: ${k.getTxHash()}, fee: $v"} }
+
+//    EtherBalances.stream(builder)
+//      .filter { k, _ -> addresses.contains(k.getAddress()) }
+//      .peek{ k, v -> logger.info { "Key: ${k.getAddress()}, balance: $v, balance: ${v.getAmount().toBigInteger().toString(16)}"} }
+
     // Generate the topology
     return builder.build()
   }

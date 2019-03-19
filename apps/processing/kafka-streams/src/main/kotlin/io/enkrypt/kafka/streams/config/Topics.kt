@@ -1,10 +1,13 @@
 package io.enkrypt.kafka.streams.config
 
+import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.kafka.streams.serdes.Serdes
 import org.apache.kafka.common.serialization.Serde
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.kstream.Consumed
+import org.apache.kafka.streams.kstream.Grouped
 import org.apache.kafka.streams.kstream.KStream
+import org.apache.kafka.streams.kstream.Materialized
 import org.apache.kafka.streams.kstream.Produced
 
 data class KafkaTopic<K, V>(val name: String,
@@ -26,12 +29,15 @@ data class KafkaTopic<K, V>(val name: String,
 
 object Topics {
 
-  val CanonicalBlocks = KafkaTopic("canonical-blocks", Serdes.CanonicalKey(), Serdes.Block())
+  val CanonicalBlocks = KafkaTopic("canonical-blocks", Serdes.CanonicalKey(), Serdes.BlockHeader())
   val CanonicalTransactions = KafkaTopic("canonical-transactions", Serdes.CanonicalKey(), Serdes.TransactionList())
   val CanonicalReceipts = KafkaTopic("canonical-receipts", Serdes.CanonicalKey(), Serdes.ReceiptList())
   val CanonicalTraces = KafkaTopic("canonical-traces", Serdes.CanonicalKey(), Serdes.TraceList())
 
-  val CanonicalEtherBalances = KafkaTopic("canonical-ether-balances", Serdes.CanonicalEtherBalanceKey(), Serdes.EtherBalance())
+  val CanonicalTracesEtherDeltas = KafkaTopic("canonical-traces-ether-deltas", Serdes.CanonicalKey(), Serdes.EtherBalanceDeltaList())
+  val CanonicalTransactionFeesEtherDeltas = KafkaTopic("canonical-transaction-fees-ether-deltas", Serdes.CanonicalKey(), Serdes.EtherBalanceDeltaList())
+
+  val EtherBalanceDeltas = KafkaTopic("ether-balance-deltas", Serdes.EtherBalanceKey(), Serdes.EtherBalanceDelta())
   val EtherBalances = KafkaTopic("ether-balances", Serdes.EtherBalanceKey(), Serdes.EtherBalance())
 
   val BlockMetrics = KafkaTopic("block-metrics", Serdes.CanonicalKey(), Serdes.BlockMetrics())
@@ -44,6 +50,7 @@ object Topics {
   val CanonicalTransactionFees = KafkaTopic("canonical-transaction-fees", Serdes.CanonicalKey(), Serdes.TransactionFeeList())
 
   const val BlockMetricsByDay = "block-metrics-by-day"
+
   const val FungibleTokenMovements = "fungible-token-movements"
 
   const val ContractMetadata = "contract-metadata"

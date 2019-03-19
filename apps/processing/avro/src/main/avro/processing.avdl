@@ -4,6 +4,29 @@ protocol Processing {
   import idl "common.avdl";
   import idl "capture.avdl";
 
+
+  enum EtherBalanceDeltaType {
+    PREMINE_BALANCE, HARD_FORK, BLOCK_REWARD, UNCLE_REWARD, MINER_FEE, TX_FEE, TX, CONTRACT_DESTRUCTION
+  }
+
+  record EtherBalanceKeyRecord {
+    string address;
+  }
+
+  record EtherBalanceDeltaRecord {
+    EtherBalanceDeltaType type;
+    union { null, string } address = null;
+    string amount;
+  }
+
+  record EtherBalanceRecord {
+    string amount;
+  }
+
+  record EtherBalanceDeltaListRecord {
+    array<EtherBalanceDeltaRecord> deltas;
+  }
+
   record TransactionGasPriceRecord {
     string address;
     string gasPrice;
@@ -79,7 +102,7 @@ protocol Processing {
 
   }
 
-// contracts
+  // contracts
 
   record ContractKeyRecord {
     string address;
@@ -170,10 +193,10 @@ protocol Processing {
   }
 
 
-// metrics
+  // metrics
 
   record BlockMetricsRecord {
-    string hash;
+    union { null, string } hash = null;
     union { null, long } blockTime = null;
     union { null, long } timestamp = null;
     union { null, int } totalTxs = null;
@@ -206,7 +229,7 @@ protocol Processing {
 
   }
 
-// Processing Metadata
+  // Processing Metadata
 
   record ProcessingMetadataKeyRecord {
     string name;
@@ -222,7 +245,7 @@ protocol Processing {
     union { null, bytes } `bigInteger` = null;
   }
 
-// address metadata
+  // address metadata
 
   enum AddressMetadataType {
     OUT_TX_COUNT, IN_TX_COUNT, TOTAL_TX_COUNT, MINER, CONTRACT_CREATOR
