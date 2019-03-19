@@ -3,6 +3,10 @@ variable "subnet_ids" {
   default = []
 }
 
+variable "subnet_count" {
+  default = "2"
+}
+
 variable "encrypted" {
   default = false
 }
