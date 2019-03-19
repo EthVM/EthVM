@@ -47,7 +47,7 @@ export default class PageTokens extends Vue {
     to true, to display user friendly message
   ===================================================================================
   */
-  isRopsten = true
+  isRopsten = false
   tokens: TokenExchange[] = []
   total = 0
   isLoading = true

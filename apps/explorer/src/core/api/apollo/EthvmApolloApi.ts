@@ -3,7 +3,13 @@ import { accountMetadataByHash, addressBalanceByHash } from '@app/core/api/apoll
 import { blockMetricByHash, blockMetrics } from '@app/core/api/apollo/queries/block-metrics.graphql'
 import { blockByHash, blockByNumber, blocks, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
 import { contractByHash, contractsCreatedBy } from '@app/core/api/apollo/queries/contracts.graphql'
-import { quote, tokenExchangeRateByAddress, tokenExchangeRateBySymbol, tokenExchangeRates } from '@app/core/api/apollo/queries/exchanges.graphql'
+import {
+  quote,
+  tokenExchangeRateByAddress,
+  tokenExchangeRateBySymbol,
+  tokenExchangeRates,
+  totalNumTokenExchangeRates
+} from '@app/core/api/apollo/queries/exchanges.graphql'
 import { processingMetadataById } from '@app/core/api/apollo/queries/processing-metadata.graphql'
 import { search } from '@app/core/api/apollo/queries/search.graphql'
 import {
@@ -244,7 +250,11 @@ export class EthvmApolloApi implements EthvmApi {
   }
 
   public getTotalNumberOfTokenExchangeRates(): Promise<number> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: totalNumTokenExchangeRates
+      })
+      .then(res => res.data.totalNumTokenExchangeRates)
   }
 
   public getTokenExchangeRateBySymbol(symbol: string): Promise<TokenExchangeRate> {

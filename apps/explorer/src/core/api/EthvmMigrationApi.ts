@@ -13,6 +13,9 @@ import {
   TokenTransfer
 } from 'ethvm-common'
 
+// TODO:
+//    1) Map errors
+//    2) Migrate rest of the calls
 export class EthvmMigrationApi implements EthvmApi {
   constructor(private readonly apolloApi: EthvmApolloApi, private readonly socketIoApi: EthvmSocketIoApi) {}
 
@@ -105,19 +108,19 @@ export class EthvmMigrationApi implements EthvmApi {
   }
 
   public getTotalNumberOfTokenExchangeRates(): Promise<number> {
-    return this.socketIoApi.getTotalNumberOfTokenExchangeRates()
+    return this.apolloApi.getTotalNumberOfTokenExchangeRates()
   }
 
   public getTokenExchangeRateBySymbol(symbol: string): Promise<TokenExchangeRate> {
-    return this.socketIoApi.getTokenExchangeRateBySymbol(symbol)
+    return this.apolloApi.getTokenExchangeRateBySymbol(symbol)
   }
 
   public getTokenExchangeRateByAddress(address: string): Promise<TokenExchangeRate> {
-    return this.socketIoApi.getTokenExchangeRateByAddress(address)
+    return this.apolloApi.getTokenExchangeRateByAddress(address)
   }
 
   // ------------------------------------------------------------------------------------
-  // Pending Txs
+  // Pending Txs (NOTE: Not needed to port yet)
   // ------------------------------------------------------------------------------------
 
   public getPendingTxs(limit: number, page: number): Promise<PendingTx[]> {

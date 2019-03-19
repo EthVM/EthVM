@@ -63,6 +63,10 @@ query tokenExchangeRates($filter: TokenExchangeRateFilter!, $limit: Int, $page: 
   }
 }
 
+query totalNumTokenExchangeRates {
+  totalNumTokenExchangeRates
+}
+
 query tokenExchangeRateBySymbol($symbol: String!) {
   tokenExchangeRateBySymbol(symbol: $symbol) {
     id
