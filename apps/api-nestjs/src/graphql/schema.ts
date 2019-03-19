@@ -288,9 +288,9 @@ export class ProcessingMetadataKey {
 }
 
 export abstract class IQuery {
-    abstract balanceByHash(hash: string): Balance | Promise<Balance>;
-
     abstract accountMetadataByHash(hash: string): AccountMetadata | Promise<AccountMetadata>;
+
+    abstract balanceByHash(hash: string): Balance | Promise<Balance>;
 
     abstract blockMetricByHash(hash?: string): BlockMetric | Promise<BlockMetric>;
 
@@ -486,7 +486,7 @@ export class TokenExchangeRate {
     priceChange24h?: Decimal;
     priceChangePercentage24h?: Decimal;
     symbol?: string;
-    totalSupply?: number;
+    totalSupply?: Long;
     totalVolume?: Decimal;
 }
 

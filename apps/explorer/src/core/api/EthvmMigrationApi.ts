@@ -104,7 +104,7 @@ export class EthvmMigrationApi implements EthvmApi {
   }
 
   public getTokenExchangeRates(filter: string, limit: number, page: number): Promise<TokenExchangeRate[]> {
-    return this.socketIoApi.getTokenExchangeRates(filter, limit, page)
+    return this.apolloApi.getTokenExchangeRates(filter, limit, page)
   }
 
   public getTotalNumberOfTokenExchangeRates(): Promise<number> {
