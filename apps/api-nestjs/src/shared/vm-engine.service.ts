@@ -70,6 +70,11 @@ export class VmEngineService {
 
   }
 
+  public async fetchAddressAmountTokensOwned(address: string): Promise<number> {
+    const tokens = await this.fetchAddressAllTokensOwned(address)
+    return tokens.length
+  }
+
   private encodeCall(name: string, args: string[] = [], rawValues: any[] = []): string {
     const values = rawValues.map(value => value.toString())
     const methodId = abi.methodID(name, args).toString('hex')
