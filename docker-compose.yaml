@@ -49,7 +49,7 @@ services:
       - back
     ports:
       - 80:80
-      - 81:81
+      - 8080:8080
     environment:
       DEBUG: 'true'
       LETS_ENCRYPT_ENABLED:
@@ -69,7 +69,7 @@ services:
     labels:
       - 'traefik.enable=true'
       - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:${DOMAIN}'
+      - 'traefik.frontend.rule=Host:ethvm.${DOMAIN}'
       - 'traefik.backend=explorer'
       - 'traefik.port=8080'
     cpu_shares: 256
