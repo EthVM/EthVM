@@ -14,7 +14,6 @@ import io.enkrypt.avro.processing.TokenBalanceKeyRecord
 import io.enkrypt.avro.processing.TokenTransferRecord
 import io.enkrypt.avro.processing.TransactionFeeListRecord
 import io.enkrypt.avro.processing.TransactionFeeRecord
-import java.math.BigInteger
 
 fun TokenTransferRecord.isFungible() = !(this.getFrom() == null || this.getTo() == null || this.getAmount() == null || this.getTokenId() != null)
 
@@ -53,7 +52,6 @@ fun TraceListRecord.toEtherBalanceDeltas(): List<EtherBalanceDeltaRecord> =
       if (key.second == null) {
 
         deltas = deltas + traces.map { it.toEtherBalanceDeltas() }.flatten()
-
       } else {
 
         val rootTrace = traces.first { it.getTraceAddress().isEmpty() }
@@ -64,11 +62,9 @@ fun TraceListRecord.toEtherBalanceDeltas(): List<EtherBalanceDeltaRecord> =
             .map { trace -> trace.toEtherBalanceDeltas() }
             .flatten()
         }
-
       }
 
       deltas
-
     }.flatten()
     .filter { delta -> delta.getAmount() != null && !(delta.getAmount() == "" || delta.getAmount() == "0") }
 
@@ -161,8 +157,4 @@ fun TraceRecord.toEtherBalanceDeltas(): List<EtherBalanceDeltaRecord> {
   }
 }
 
-
-object AvroHelpers {
-
-
-}
+object AvroHelpers

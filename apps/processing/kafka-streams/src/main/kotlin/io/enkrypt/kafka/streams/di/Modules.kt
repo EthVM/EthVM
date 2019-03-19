@@ -2,7 +2,6 @@ package io.enkrypt.kafka.streams.di
 
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
 import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient
-import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.processing.ContractCreateRecord
 import io.enkrypt.avro.processing.ContractDestroyRecord
 import io.enkrypt.avro.processing.ContractKeyRecord

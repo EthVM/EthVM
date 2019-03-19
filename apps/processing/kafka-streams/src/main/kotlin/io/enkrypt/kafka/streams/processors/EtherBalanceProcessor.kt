@@ -1,25 +1,17 @@
 package io.enkrypt.kafka.streams.processors
 
-import io.enkrypt.avro.capture.TraceListRecord
-import io.enkrypt.avro.capture.TransactionKeyRecord
-import io.enkrypt.avro.processing.CanonicalApplyRecord
 import io.enkrypt.avro.processing.EtherBalanceDeltaListRecord
 import io.enkrypt.avro.processing.EtherBalanceDeltaRecord
 import io.enkrypt.avro.processing.EtherBalanceDeltaType
 import io.enkrypt.avro.processing.EtherBalanceKeyRecord
 import io.enkrypt.avro.processing.EtherBalanceRecord
-import io.enkrypt.avro.processing.TransactionFeeRecord
-import io.enkrypt.avro.processing.TransactionGasPriceRecord
-import io.enkrypt.avro.processing.TransactionGasUsedRecord
 import io.enkrypt.common.extensions.reverse
 import io.enkrypt.common.extensions.toEtherBalanceDeltas
 import io.enkrypt.kafka.streams.config.Topics.CanonicalBlocks
-import io.enkrypt.kafka.streams.config.Topics.CanonicalReceipts
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTraces
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTracesEtherDeltas
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTransactionFees
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTransactionFeesEtherDeltas
-import io.enkrypt.kafka.streams.config.Topics.CanonicalTransactions
 import io.enkrypt.kafka.streams.config.Topics.EtherBalanceDeltas
 import io.enkrypt.kafka.streams.config.Topics.EtherBalances
 import io.enkrypt.kafka.streams.serdes.Serdes
@@ -29,10 +21,7 @@ import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
-import org.apache.kafka.streams.kstream.Aggregator
 import org.apache.kafka.streams.kstream.Grouped
-import org.apache.kafka.streams.kstream.Initializer
-import org.apache.kafka.streams.kstream.KTable
 import org.apache.kafka.streams.kstream.Materialized
 import org.apache.kafka.streams.kstream.Suppressed
 import org.apache.kafka.streams.kstream.TransformerSupplier
@@ -89,7 +78,6 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
             .setAmount(
               (delta.getAmount().toBigInteger() + balance.getAmount().toBigInteger()).toString()
             ).build()
-
         },
         Materialized.with(Serdes.EtherBalanceKey(), Serdes.EtherBalance())
       ).suppress(Suppressed.untilTimeLimit(Duration.ofSeconds(30), Suppressed.BufferConfig.unbounded()))
@@ -99,7 +87,6 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
 
     EtherBalances.stream(builder)
       .peek { k, v -> logger.info { "Balance update | ${k.getAddress()} -> ${v.getAmount()}, ${v.getAmount().toBigInteger().toString(16)}" } }
-
   }
 
   /**
@@ -140,7 +127,6 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
                   .setAddress(address)
                   .setAmount(amount)
                   .build()
-
               }
 
           // block reward
@@ -162,9 +148,7 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
                 .build()
             )
           }
-
         }
-
       }
 
     //
@@ -193,11 +177,9 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
                 .build()
             )
           }
-
       }
 
     EtherBalanceDeltas.sinkFor(premineTransfers, hardForkTransfers)
-
   }
 
   /**
@@ -215,10 +197,8 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
             EtherBalanceDeltaListRecord.newBuilder()
               .setDeltas(tracesList.toEtherBalanceDeltas())
               .build()
-
           }
         }
-
       }
 
     CanonicalTracesEtherDeltas.sinkFor(etherBalanceDeltasForBlock)
@@ -234,7 +214,6 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
           EtherBalanceDeltaListRecord.newBuilder()
             .setDeltas(new.getDeltas() + new.reverse().getDeltas())
             .build()
-
         },
         { _, removed -> removed.reverse() },
         Materialized.with(KafkaSerdes.String(), Serdes.EtherBalanceDeltaList())
@@ -252,11 +231,9 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
                 .build()
             )
           }
-
       }
 
     EtherBalanceDeltas.sinkFor(etherBalanceDeltas)
-
   }
 
   private fun balanceDeltasForFees(builder: StreamsBuilder) {
@@ -271,7 +248,6 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
               .setDeltas(feeList.toEtherBalanceDeltas())
               .build()
           }
-
         }
     )
 
@@ -302,13 +278,10 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
                 .build()
             )
           }
-
       }
 
     EtherBalanceDeltas.sinkFor(etherBalanceDeltas)
-
   }
-
 
   override fun start(cleanUp: Boolean) {
     logger.info { "Starting ${this.javaClass.simpleName}..." }

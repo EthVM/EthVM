@@ -10,7 +10,6 @@ import io.enkrypt.kafka.streams.config.KafkaConfig
 import io.enkrypt.kafka.streams.di.Modules.kafkaStreams
 import io.enkrypt.kafka.streams.processors.EtherBalanceProcessor
 import io.enkrypt.kafka.streams.processors.KafkaProcessor
-import io.enkrypt.kafka.streams.processors.LoggerProcessor
 import io.enkrypt.kafka.streams.processors.TransactionFeesProcessor
 import org.koin.dsl.module.module
 import org.koin.standalone.StandAloneContext.startKoin
@@ -20,7 +19,7 @@ class Cli : CliktCommand() {
   // General - CLI
 
   private val transactionalId: String by option(
-    help = "A unique instance id for use in kafkaStreams transactions",
+    help = "A unique instance id for use in Kafka Streams transactions",
     envvar = "KAFKA_TRANSACTIONAL_ID"
   ).default(DEFAULT_TRANSACTIONAL_ID)
 
@@ -35,7 +34,7 @@ class Cli : CliktCommand() {
   ).default(DEFAULT_SCHEMA_REGISTRY_URL)
 
   private val startingOffset: String by option(
-    help = "From which offset is going to start Bolt processing events",
+    help = "From which offset is going to start Kafka to process events",
     envvar = "KAFKA_START_OFFSET"
   ).default(DEFAULT_AUTO_OFFSET)
 
@@ -51,8 +50,8 @@ class Cli : CliktCommand() {
 
   private val networkConfig: String by option(
     help = "The network config to use, one of: mainnet, ropsten",
-    envvar = "ENKRYPTIO_NET_CONFIG"
-  ).default("mainnet")
+    envvar = "ETHEREUM_NETWORK"
+  ).default(DEFAULT_ETH_NETWORK)
 
   // DI
 
@@ -85,8 +84,7 @@ class Cli : CliktCommand() {
 
     listOf<KafkaProcessor>(
       TransactionFeesProcessor(),
-      EtherBalanceProcessor(),
-      LoggerProcessor()
+      EtherBalanceProcessor()
 //      BlockProcessor(),
 //      StateProcessor(),
 //      EthTokensProcessor(),
@@ -99,11 +97,12 @@ class Cli : CliktCommand() {
 
   companion object Defaults {
 
-    const val DEFAULT_TRANSACTIONAL_ID = "bolt-1"
+    const val DEFAULT_TRANSACTIONAL_ID = "ethvm-kafka-streams-1"
     const val DEFAULT_BOOTSTRAP_SERVERS = "kafka-1:9091"
     const val DEFAULT_SCHEMA_REGISTRY_URL = "http://kafka-schema-registry:8081"
     const val DEFAULT_AUTO_OFFSET = "earliest"
     const val DEFAULT_STREAMS_RESET = 0
     const val DEFAULT_STREAMS_STATE_DIR = "/tmp/kafka-streams"
+    const val DEFAULT_ETH_NETWORK = "mainnet"
   }
 }

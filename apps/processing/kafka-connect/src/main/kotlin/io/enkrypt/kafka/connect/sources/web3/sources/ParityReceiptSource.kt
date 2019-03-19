@@ -1,10 +1,8 @@
 package io.enkrypt.kafka.connect.sources.web3.sources
 
 import io.enkrypt.avro.capture.CanonicalKeyRecord
-import io.enkrypt.avro.capture.TransactionKeyRecord
 import io.enkrypt.avro.capture.TransactionReceiptListRecord
 import io.enkrypt.avro.capture.TransactionReceiptRecord
-import io.enkrypt.common.extensions.hexBuffer32
 import io.enkrypt.kafka.connect.sources.web3.AvroToConnect
 import io.enkrypt.kafka.connect.sources.web3.JsonRpc2_0ParityExtended
 import io.enkrypt.kafka.connect.sources.web3.toTransactionReceiptRecord
@@ -12,9 +10,11 @@ import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTaskContext
 import org.web3j.protocol.core.DefaultBlockParameter
 
-class ParityReceiptSource(sourceContext: SourceTaskContext,
-                          parity: JsonRpc2_0ParityExtended,
-                          private val receiptsTopic: String) : ParityEntitySource(sourceContext, parity) {
+class ParityReceiptSource(
+  sourceContext: SourceTaskContext,
+  parity: JsonRpc2_0ParityExtended,
+  private val receiptsTopic: String
+) : ParityEntitySource(sourceContext, parity) {
 
   override val partitionKey: Map<String, Any> = mapOf("model" to "receipt")
 
@@ -55,7 +55,6 @@ class ParityReceiptSource(sourceContext: SourceTaskContext,
               receiptValueSchemaAndValue.schema(), receiptValueSchemaAndValue.value()
             )
           }
-
       }.map { future ->
         // wait for everything to complete
         future.join()

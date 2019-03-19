@@ -12,18 +12,12 @@ import io.enkrypt.avro.capture.TransactionReceiptRecord
 import io.enkrypt.avro.capture.TransactionRecord
 import io.enkrypt.common.extensions.compress
 import io.enkrypt.common.extensions.hexBuffer
-import io.enkrypt.common.extensions.hexBuffer20
-import io.enkrypt.common.extensions.hexBuffer256
-import io.enkrypt.common.extensions.hexBuffer32
-import io.enkrypt.common.extensions.hexBuffer8
-import io.enkrypt.common.extensions.unsignedByteBuffer
 import org.web3j.protocol.core.methods.response.EthBlock
 import org.web3j.protocol.core.methods.response.Log
 import org.web3j.protocol.core.methods.response.Transaction
 import org.web3j.protocol.core.methods.response.TransactionReceipt
 import org.web3j.protocol.parity.methods.response.Trace
 import org.web3j.utils.Numeric
-import java.math.BigInteger
 
 fun EthBlock.Block.toBlockHeaderRecord(builder: BlockHeaderRecord.Builder): BlockHeaderRecord.Builder =
   builder
@@ -162,8 +156,8 @@ fun Trace.toTraceRecord(builder: TraceRecord.Builder): TraceRecord.Builder {
     .setType(type)
     .setBlockHash(blockHash)
     .setBlockNumber(blockNumber.toString())
-    .setTransactionHash(if(transactionHash != null) transactionHash else null)
-    .setTransactionPosition(if(transactionPosition != null) transactionPosition.intValueExact() else null)
+    .setTransactionHash(if (transactionHash != null) transactionHash else null)
+    .setTransactionPosition(if (transactionPosition != null) transactionPosition.intValueExact() else null)
 }
 
 fun Trace.Result.toTraceResultRecord(builder: TraceResultRecord.Builder): TraceResultRecord.Builder =

@@ -17,7 +17,6 @@ class CanonicalChainTracker(
   val tail = AtomicLong(startFrom)
 
   // single write multiple readers so we can use volatile
-
   @Volatile
   var head: Long = parity.ethBlockNumber().send().blockNumber.longValueExact()
 
@@ -34,17 +33,15 @@ class CanonicalChainTracker(
       .buffer(1000, TimeUnit.MILLISECONDS, 128)
       .onBackpressureBuffer()
       .toObservable()
-      .filter{ it.isNotEmpty() }
+      .filter { it.isNotEmpty() }
       .subscribe(
         { heads ->
 
           this.head = heads.max()!!
           tryResetTail(heads.min()!!)
-
         },
         { ex -> this.exception = ex }
       )
-
   }
 
   fun stop() {
@@ -58,8 +55,7 @@ class CanonicalChainTracker(
 
     do {
       val currentTail = tail.get()
-    } while(value < currentTail && !tail.compareAndSet(currentTail, value))
-
+    } while (value < currentTail && !tail.compareAndSet(currentTail, value))
   }
 
   fun nextRange(maxSize: Int = 32): ClosedRange<Long>? {
@@ -67,11 +63,11 @@ class CanonicalChainTracker(
     val currentHead = this.head
     val currentTail = this.tail.get()
 
-    if(currentHead == currentTail) return null
+    if (currentHead == currentTail) return null
 
-    var range = currentTail.until(currentTail + maxSize + 1)  // range is not inclusive at the end
+    var range = currentTail.until(currentTail + maxSize + 1) // range is not inclusive at the end
 
-    if(range.endInclusive > currentHead) {
+    if (range.endInclusive > currentHead) {
       range = currentTail.until(currentHead + 1)
     }
 
@@ -79,5 +75,4 @@ class CanonicalChainTracker(
 
     return range
   }
-
 }

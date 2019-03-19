@@ -1,21 +1,20 @@
 package io.enkrypt.kafka.streams.config
 
-import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.kafka.streams.serdes.Serdes
 import org.apache.kafka.common.serialization.Serde
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.kstream.Consumed
-import org.apache.kafka.streams.kstream.Grouped
 import org.apache.kafka.streams.kstream.KStream
-import org.apache.kafka.streams.kstream.Materialized
 import org.apache.kafka.streams.kstream.Produced
 
-data class KafkaTopic<K, V>(val name: String,
-                            val keySerde: Serde<K>,
-                            val valueSerde: Serde<V>) {
+data class KafkaTopic<K, V>(
+  val name: String,
+  val keySerde: Serde<K>,
+  val valueSerde: Serde<V>
+) {
 
-  val consumer = Consumed.with(keySerde, valueSerde)
-  val producer = Produced.with(keySerde, valueSerde)
+  private val consumer: Consumed<K, V> = Consumed.with(keySerde, valueSerde)
+  private val producer: Produced<K, V> = Produced.with(keySerde, valueSerde)
 
   fun stream(builder: StreamsBuilder) = builder.stream(name, consumer)
 
@@ -24,7 +23,6 @@ data class KafkaTopic<K, V>(val name: String,
   fun table(builder: StreamsBuilder) = builder.table(name, consumer)
 
   fun globalTable(builder: StreamsBuilder) = builder.globalTable(name, consumer)
-
 }
 
 object Topics {

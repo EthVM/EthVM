@@ -42,7 +42,7 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
       CanonicalTransactions.stream(builder)
         .mapValues { transactionsList ->
 
-          when(transactionsList) {
+          when (transactionsList) {
             null -> null
             else ->
               TransactionGasPriceListRecord.newBuilder()
@@ -54,12 +54,9 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
                         .setAddress(tx.getFrom())
                         .setGasPrice(tx.getGasPrice())
                         .build()
-
                     }
                 ).build()
-
           }
-
         }
     )
 
@@ -67,7 +64,7 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
       CanonicalReceipts.stream(builder)
         .mapValues { receiptsList ->
 
-          when(receiptsList) {
+          when (receiptsList) {
             null -> null
             else ->
               TransactionGasUsedListRecord.newBuilder()
@@ -78,11 +75,9 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
                       TransactionGasUsedRecord.newBuilder()
                         .setGasUsed(receipt.getGasUsed())
                         .build()
-
                     }
                 ).build()
           }
-
         }
     )
 
@@ -112,9 +107,7 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
                       .setAddress(gasPrice.getAddress())
                       .setTransactionFee(fee)
                       .build()
-
                   }
-
             }
 
             feeListBuilder.build()

@@ -20,7 +20,7 @@ object AvroToConnect {
 
   val avroData = AvroData(100)
 
-  fun toConnectData(record: SpecificRecordBase): SchemaAndValue = when(record) {
+  fun toConnectData(record: SpecificRecordBase): SchemaAndValue = when (record) {
     is TransactionListRecord -> avroData.toConnectData(TransactionListRecord.`SCHEMA$`, record)
     is TransactionReceiptListRecord -> avroData.toConnectData(TransactionReceiptListRecord.`SCHEMA$`, record)
     is EtherBalanceRecord -> avroData.toConnectData(EtherBalanceRecord.`SCHEMA$`, record)
@@ -35,5 +35,4 @@ object AvroToConnect {
     is CanonicalRecord -> avroData.toConnectData(CanonicalRecord.`SCHEMA$`, record)
     else -> throw IllegalArgumentException()
   }
-
 }

@@ -90,7 +90,6 @@ open class DaoHardForkConfig(override val constants: ChainConstants = ChainConst
   private val withdrawAccount = DaoHardFork.withdrawAccount
   private val daoBalances = DaoHardFork.balances
 
-
   override fun hardForkEtherDeltas(number: BigInteger): List<EtherBalanceDeltaRecord> =
     if (number != forkBlockNumber) {
       emptyList()

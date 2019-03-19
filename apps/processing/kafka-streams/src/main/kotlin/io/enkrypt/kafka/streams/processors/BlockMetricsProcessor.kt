@@ -66,7 +66,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
             var internalTxs = 0
 
             traceList.getTraces()
-              .filter { it.getTransactionHash() != null }   // rewards have no tx hash, only a block hash
+              .filter { it.getTransactionHash() != null } // rewards have no tx hash, only a block hash
               .groupBy { it.getTransactionHash() }
               .forEach { (_, traces) ->
 
@@ -87,13 +87,11 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
                         }
 
                         total += 1
-
                       }
 
                       if (action.getValue() != null && action.getValue() != "0") {
                         internalTxs += 1
                       }
-
                     }
                     is TraceCreateActionRecord -> {
                       if (action.getValue() != null && action.getValue() != "0") {
@@ -108,7 +106,6 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
                     else -> {
                     }
                   }
-
                 }
               }
 
@@ -118,7 +115,6 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
               .setTotalTxs(total)
               .setNumInternalTxs(internalTxs)
               .build()
-
           }
       )
 
@@ -131,11 +127,10 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
           var totalGasPrice = BigInteger.ZERO
           var totalGasLimit = BigInteger.ZERO
 
-          transactions.forEach{ tx ->
+          transactions.forEach { tx ->
             totalGasLimit += tx.getGas().toBigInteger()
             totalGasPrice += tx.getGasPrice().toBigInteger()
           }
-
 
           val txCount = transactions.size.toBigInteger()
 
@@ -149,7 +144,6 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
             .build()
         }
     )
-
 
     Topics.TransactionFeeBlockMetrics.sinkFor(
       Topics.CanonicalTransactionFees.stream(builder)
@@ -167,7 +161,6 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
             .setTotalTxFees(totalTxFees.toString())
             .setAvgTxFees(avgTxFees.toString())
             .build()
-
         }
     )
 

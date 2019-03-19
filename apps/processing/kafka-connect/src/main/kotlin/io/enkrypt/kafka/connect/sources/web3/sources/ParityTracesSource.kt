@@ -1,25 +1,20 @@
 package io.enkrypt.kafka.connect.sources.web3.sources
 
 import io.enkrypt.avro.capture.CanonicalKeyRecord
-import io.enkrypt.avro.capture.TraceCallActionRecord
-import io.enkrypt.avro.capture.TraceCreateActionRecord
-import io.enkrypt.avro.capture.TraceDestroyActionRecord
 import io.enkrypt.avro.capture.TraceListRecord
 import io.enkrypt.avro.capture.TraceRecord
-import io.enkrypt.avro.capture.TraceRewardActionRecord
 import io.enkrypt.kafka.connect.sources.web3.AvroToConnect
 import io.enkrypt.kafka.connect.sources.web3.JsonRpc2_0ParityExtended
 import io.enkrypt.kafka.connect.sources.web3.toTraceRecord
 import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTaskContext
 import org.web3j.protocol.core.DefaultBlockParameter
-import org.web3j.protocol.parity.methods.response.Trace
-import java.util.concurrent.CompletableFuture
 
-
-class ParityTracesSource(sourceContext: SourceTaskContext,
-                         parity: JsonRpc2_0ParityExtended,
-                         private val tracesTopic: String) : ParityEntitySource(sourceContext, parity) {
+class ParityTracesSource(
+  sourceContext: SourceTaskContext,
+  parity: JsonRpc2_0ParityExtended,
+  private val tracesTopic: String
+) : ParityEntitySource(sourceContext, parity) {
 
   override val partitionKey: Map<String, Any> = mapOf("model" to "trace")
 
@@ -45,7 +40,7 @@ class ParityTracesSource(sourceContext: SourceTaskContext,
 
             val traceListRecord = TraceListRecord
               .newBuilder()
-              .setTraces(resp.traces.map{ it.toTraceRecord(TraceRecord.newBuilder()).build() })
+              .setTraces(resp.traces.map { it.toTraceRecord(TraceRecord.newBuilder()).build() })
               .build()
 
             val traceKeySchemaAndValue = AvroToConnect.toConnectData(traceKeyRecord)
@@ -57,12 +52,9 @@ class ParityTracesSource(sourceContext: SourceTaskContext,
               traceValueSchemaAndValue.schema(), traceValueSchemaAndValue.value()
             )
           }
-
       }.map { future ->
         // wait for everything to complete
         future.join()
       }
-
   }
-
 }

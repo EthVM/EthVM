@@ -1,7 +1,6 @@
 package io.enkrypt.common.extensions
 
 import org.apache.commons.codec.binary.Hex
-import java.math.BigInteger
 import java.nio.ByteBuffer
 
 fun String.hexBytes(): ByteArray =
@@ -19,7 +18,6 @@ fun String.hexBytes(): ByteArray =
 
     Hex.decodeHex(str)
   }
-
 
 fun String.hexBuffer() = this.hexBytes().byteBuffer()
 fun String.hexFixedBuffer(length: Int): ByteBuffer = this.hexBuffer().fixed(length)!!

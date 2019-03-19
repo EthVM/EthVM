@@ -58,7 +58,7 @@ class OncePerBlockTransformer(
 
     val currentRecord = canonicalStore.get(key)
 
-    return if(currentRecord == null) {
+    return if (currentRecord == null) {
       canonicalStore.put(key, "")
       KeyValue(key, value)
     } else null

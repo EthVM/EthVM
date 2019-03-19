@@ -51,7 +51,7 @@ class ParitySourceTask : SourceTask() {
       if (parity != null) return
 
       // stop any previous sources
-      entitySources.forEach{ it.stop() }
+      entitySources.forEach { it.stop() }
 
       // reconnect backoff if necessary
 
@@ -72,7 +72,7 @@ class ParitySourceTask : SourceTask() {
       // create sources
 
       entitySources = entitiesList.map {
-        when(it) {
+        when (it) {
           "blocksAndTransactions" -> ParityBlockAndTxSource(this.context, parity!!, "canonical-blocks", "canonical-transactions")
           "receipts" -> ParityReceiptSource(this.context, parity!!, "canonical-receipts")
           "traces" -> ParityTracesSource(this.context, parity!!, "canonical-traces")
@@ -92,7 +92,7 @@ class ParitySourceTask : SourceTask() {
     }
   }
 
-  private fun throwRetriable(ex: Exception) {
+  private fun throwRetriable(ex: Exception): RetriableException {
     var connectDelayMs = (this.connectDelayMs ?: 1000) * 2
 
     if (connectDelayMs > 30000) {
@@ -107,7 +107,7 @@ class ParitySourceTask : SourceTask() {
   override fun stop() {
     logger.debug { "Stopping" }
 
-    entitySources.forEach{ it.stop() }
+    entitySources.forEach { it.stop() }
 
     parity?.shutdown()
     parity = null
@@ -125,21 +125,20 @@ class ParitySourceTask : SourceTask() {
       ensureConnection()
 
       val sourceRecords = entitySources
-        .map{ source -> source.poll() }
+        .map { source -> source.poll() }
         .flatten()
 
       logger.debug { "Polled ${sourceRecords.size} records" }
 
-      if(sourceRecords.isEmpty()) {
+      if (sourceRecords.isEmpty()) {
         // sleep 1 second to avoid spinning
         Thread.sleep(1000)
       }
 
       return sourceRecords.toMutableList()
-
     } catch (ex: Exception) {
 
-      logger.error(ex){ "Exception detected" }
+      logger.error(ex) { "Exception detected" }
 
       parity?.shutdown()
       parity = null

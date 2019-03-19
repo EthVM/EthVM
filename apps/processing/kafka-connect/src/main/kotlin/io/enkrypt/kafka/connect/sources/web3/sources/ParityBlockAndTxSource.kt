@@ -1,9 +1,7 @@
 package io.enkrypt.kafka.connect.sources.web3.sources
 
 import io.enkrypt.avro.capture.BlockHeaderRecord
-import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.CanonicalKeyRecord
-import io.enkrypt.avro.capture.CanonicalRecord
 import io.enkrypt.avro.capture.TransactionListRecord
 import io.enkrypt.avro.capture.TransactionRecord
 import io.enkrypt.kafka.connect.sources.web3.AvroToConnect
@@ -15,10 +13,12 @@ import org.apache.kafka.connect.source.SourceTaskContext
 import org.web3j.protocol.core.DefaultBlockParameter
 import org.web3j.protocol.core.methods.response.Transaction
 
-class ParityBlockAndTxSource(sourceContext: SourceTaskContext,
-                             parity: JsonRpc2_0ParityExtended,
-                             private val blocksTopic: String,
-                             private val txsBlockTopic: String) : ParityEntitySource(sourceContext, parity) {
+class ParityBlockAndTxSource(
+  sourceContext: SourceTaskContext,
+  parity: JsonRpc2_0ParityExtended,
+  private val blocksTopic: String,
+  private val txsBlockTopic: String
+) : ParityEntitySource(sourceContext, parity) {
 
   override val partitionKey: Map<String, Any> = mapOf("model" to "blockAndTx")
 
@@ -92,11 +92,9 @@ class ParityBlockAndTxSource(sourceContext: SourceTaskContext,
           }
 
         blockFuture
-
       }.map { future ->
         // wait for everything to complete
         future.join()
       }.flatten()
-
   }
 }

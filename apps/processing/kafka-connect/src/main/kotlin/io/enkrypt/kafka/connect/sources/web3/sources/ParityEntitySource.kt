@@ -6,7 +6,7 @@ import mu.KotlinLogging
 import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTaskContext
 
-abstract class ParityEntitySource (
+abstract class ParityEntitySource(
   protected val sourceContext: SourceTaskContext,
   protected val parity: JsonRpc2_0ParityExtended
 ) {
@@ -15,7 +15,7 @@ abstract class ParityEntitySource (
 
   abstract val partitionKey: Map<String, Any>
 
-  open protected val batchSize = 128
+  protected open val batchSize = 128
 
   private val chainTracker by lazy {
 
@@ -27,7 +27,6 @@ abstract class ParityEntitySource (
     if (startBlockNumber < 0) startBlockNumber = 0L
 
     CanonicalChainTracker(parity, startBlockNumber)
-
   }
 
   @Volatile
@@ -48,13 +47,11 @@ abstract class ParityEntitySource (
 
     val range = chainTracker.nextRange(batchSize)
 
-    return when(range) {
+    return when (range) {
       null -> emptyList()
       else -> fetchRange(range)
     }
-
   }
 
   abstract fun fetchRange(range: ClosedRange<Long>): List<SourceRecord>
-
 }

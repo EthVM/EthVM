@@ -42,9 +42,8 @@ class ParitySourceConnector : SourceConnector() {
 
     return entities
       .chunked(chunkSize)
-      .map{ entitiesChunk -> Config.setEntitiesList(HashMap(config), entitiesChunk) }
+      .map { entitiesChunk -> Config.setEntitiesList(HashMap(config), entitiesChunk) }
       .toMutableList()
-
   }
 
   override fun config(): ConfigDef = ConfigDef().apply {
@@ -93,6 +92,5 @@ class ParitySourceConnector : SourceConnector() {
       props[ENTITIES_LIST_CONFIG] = entities.joinToString(",")
       return props
     }
-
   }
 }
