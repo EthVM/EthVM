@@ -58,12 +58,9 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
                       .setAddress(tx.getFrom())
                       .setGasPrice(tx.getGasPrice())
                       .build()
-
                   }
               ).build()
-
         }
-
       }.toTopic(CanonicalGasPrices)
 
     CanonicalReceipts.stream(builder)
@@ -79,11 +76,9 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
                     TransactionGasUsedRecord.newBuilder()
                       .setGasUsed(receipt.getGasUsed())
                       .build()
-
                   }
               ).build()
         }
-
       }.toTopic(CanonicalGasUsed)
 
     CanonicalGasPrices.table(builder)
@@ -106,7 +101,6 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
 
                   val fee = (gasPrice.getGasPrice().toBigInteger() * gasUsed.getGasUsed().toBigInteger()).toString()
 
-
                   TransactionFeeRecord.newBuilder()
                     .setBlockNumber(gasPrice.getBlockNumber())
                     .setBlockHash(gasPrice.getBlockHash())
@@ -115,9 +109,7 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
                     .setAddress(gasPrice.getAddress())
                     .setTransactionFee(fee)
                     .build()
-
                 }
-
           }
 
           feeListBuilder.build()

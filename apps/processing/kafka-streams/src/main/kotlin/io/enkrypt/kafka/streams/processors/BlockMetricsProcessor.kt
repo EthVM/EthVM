@@ -65,7 +65,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
         var internalTxs = 0
 
         traceList.getTraces()
-          .filter { it.getTransactionHash() != null }   // rewards have no tx hash, only a block hash
+          .filter { it.getTransactionHash() != null } // rewards have no tx hash, only a block hash
           .groupBy { it.getTransactionHash() }
           .forEach { (_, traces) ->
 
@@ -86,13 +86,11 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
                     }
 
                     total += 1
-
                   }
 
                   if (action.getValue() != null && action.getValue() != "0") {
                     internalTxs += 1
                   }
-
                 }
                 is TraceCreateActionRecord -> {
                   if (action.getValue() != null && action.getValue() != "0") {
@@ -107,7 +105,6 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
                 else -> {
                 }
               }
-
             }
           }
 
@@ -117,9 +114,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
           .setTotalTxs(total)
           .setNumInternalTxs(internalTxs)
           .build()
-
       }.toTopic(TraceBlockMetrics)
-
 
     CanonicalTransactions.stream(builder)
       .mapValues { transactionsList ->
@@ -134,7 +129,6 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
           totalGasPrice += tx.getGasPrice().toBigInteger()
         }
 
-
         val txCount = transactions.size.toBigInteger()
 
         val avgGasPrice = totalGasPrice / txCount
@@ -146,7 +140,6 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
           .setAvgGasLimit(avgGasLimit.toString())
           .build()
       }.toTopic(TransactionBlockMetrics)
-
 
     Topics.CanonicalTransactionFees.stream(builder)
       .mapValues { txFeeList ->
@@ -163,9 +156,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
           .setTotalTxFees(totalTxFees.toString())
           .setAvgTxFees(avgTxFees.toString())
           .build()
-
       }.toTopic(TransactionFeeBlockMetrics)
-
 
     return builder.build()
   }

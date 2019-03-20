@@ -1,8 +1,6 @@
 package io.enkrypt.kafka.streams.processors
 
 import io.enkrypt.avro.processing.BlockAuthorRecord
-import io.enkrypt.common.extensions.ether
-import io.enkrypt.kafka.streams.config.Topics
 import io.enkrypt.kafka.streams.config.Topics.CanonicalBlockAuthors
 import io.enkrypt.kafka.streams.config.Topics.CanonicalBlocks
 import io.enkrypt.kafka.streams.utils.toTopic
