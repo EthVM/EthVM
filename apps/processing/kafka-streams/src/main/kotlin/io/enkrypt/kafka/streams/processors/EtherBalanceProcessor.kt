@@ -80,7 +80,6 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
             .setAmount(
               (delta.getAmount().toBigInteger() + balance.getAmount().toBigInteger()).toString()
             ).build()
-
         },
         Materialized.with(Serdes.EtherBalanceKey(), Serdes.EtherBalance())
       )
@@ -89,7 +88,6 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
 
     EtherBalances.stream(builder)
       .peek { k, v -> logger.info { "Balance update | ${k.getAddress()} -> ${v.getAmount()}, ${v.getAmount().toBigInteger().toString(16)}" } }
-
   }
 
   /**
@@ -128,7 +126,6 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
                   .setAddress(address)
                   .setAmount(balance.toString())
                   .build()
-
               }
 
           // block reward
@@ -151,9 +148,7 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
                 .build()
             )
           }
-
         }
-
       }.toTopic(EtherBalanceDeltas)
 
     //
@@ -183,9 +178,7 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
                 .build()
             )
           }
-
       }.toTopic(EtherBalanceDeltas)
-
   }
 
   /**
@@ -203,10 +196,8 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
             EtherBalanceDeltaListRecord.newBuilder()
               .setDeltas(tracesList.toEtherBalanceDeltas())
               .build()
-
           }
         }
-
       }.toTopic(CanonicalTracesEtherDeltas)
 
     CanonicalTracesEtherDeltas.table(builder)
@@ -220,7 +211,6 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
           EtherBalanceDeltaListRecord.newBuilder()
             .setDeltas(emptyList())
             .build()
-
         },
         { _, removed -> removed.reverse() },
         Materialized.with(KafkaSerdes.String(), Serdes.EtherBalanceDeltaList())
@@ -238,15 +228,12 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
                 .build()
             )
           }
-
       }.toTopic(EtherBalanceDeltas)
-
   }
 
   private fun balanceDeltasForFees(builder: StreamsBuilder) {
 
     val txFeesTable = CanonicalTransactionFees.table(builder)
-
 
     txFeesTable
       .mapValues { _, feeList ->
@@ -254,7 +241,6 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
         EtherBalanceDeltaListRecord.newBuilder()
           .setDeltas(feeList.toEtherBalanceDeltas())
           .build()
-
       }
       .toStream()
       .toTopic(CanonicalTransactionFeesEtherDeltas)
@@ -286,7 +272,6 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
                 .build()
             )
           }
-
       }.toTopic(EtherBalanceDeltas)
 
     CanonicalBlockAuthors.table(builder)
@@ -305,7 +290,6 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
             .setAddress(left.getAuthor())
             .setAmount(totalTxFees.toString())
             .build()
-
         },
         Materialized.with(Serdes.CanonicalKey(), Serdes.EtherBalanceDelta())
       ).toStream()
@@ -322,13 +306,12 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
           EtherBalanceDeltaRecord.newBuilder(new)
             .setAmount("0")
             .build()
-
         },
         { _, removed -> removed.reverse() },
         Materialized.with(KafkaSerdes.String(), Serdes.EtherBalanceDelta())
       )
       .toStream()
-      .filter{ _, v -> v.getAmount() != "0" }
+      .filter { _, v -> v.getAmount() != "0" }
       .map { _, delta ->
 
         KeyValue(
@@ -339,11 +322,8 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
             .setAddress(null)
             .build()
         )
-
       }.toTopic(EtherBalanceDeltas)
-
   }
-
 
   override fun start(cleanUp: Boolean) {
     logger.info { "Starting ${this.javaClass.simpleName}..." }

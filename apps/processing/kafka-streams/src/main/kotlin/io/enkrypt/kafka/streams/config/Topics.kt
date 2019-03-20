@@ -7,9 +7,11 @@ import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.KStream
 import org.apache.kafka.streams.kstream.Produced
 
-data class KafkaTopic<K, V>(val name: String,
-                            val keySerde: Serde<K>,
-                            val valueSerde: Serde<V>) {
+data class KafkaTopic<K, V>(
+  val name: String,
+  val keySerde: Serde<K>,
+  val valueSerde: Serde<V>
+) {
 
   val consumer = Consumed.with(keySerde, valueSerde)
   val producer = Produced.with(keySerde, valueSerde)
@@ -21,7 +23,6 @@ data class KafkaTopic<K, V>(val name: String,
   fun table(builder: StreamsBuilder) = builder.table(name, consumer)
 
   fun globalTable(builder: StreamsBuilder) = builder.globalTable(name, consumer)
-
 }
 
 object Topics {

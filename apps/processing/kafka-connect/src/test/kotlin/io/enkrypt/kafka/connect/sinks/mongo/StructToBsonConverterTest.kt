@@ -5,9 +5,7 @@ import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient
 import io.confluent.kafka.serializers.KafkaAvroSerializer
 import io.enkrypt.avro.capture.BlockKeyRecord
 import io.enkrypt.avro.capture.BlockRecord
-import io.enkrypt.avro.capture.LogRecord
 import io.enkrypt.avro.capture.TransactionKeyRecord
-import io.enkrypt.avro.capture.TransactionReceiptRecord
 import io.enkrypt.avro.capture.TransactionRecord
 import io.enkrypt.avro.processing.ContractCreateRecord
 import io.enkrypt.avro.processing.ContractDestroyRecord
@@ -16,8 +14,6 @@ import io.enkrypt.avro.processing.MetricKeyRecord
 import io.enkrypt.avro.processing.MetricRecord
 import io.enkrypt.avro.processing.TokenBalanceKeyRecord
 import io.enkrypt.avro.processing.TokenBalanceRecord
-import io.enkrypt.common.extensions.hexBuffer
-import io.enkrypt.common.extensions.hexBuffer20
 import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
