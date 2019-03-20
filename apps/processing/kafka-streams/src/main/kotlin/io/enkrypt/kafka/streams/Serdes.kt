@@ -1,4 +1,4 @@
-package io.enkrypt.kafka.streams.serdes
+package io.enkrypt.kafka.streams
 
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
@@ -12,6 +12,7 @@ import io.enkrypt.avro.exchange.ExchangeRateRecord
 import io.enkrypt.avro.exchange.SymbolKeyRecord
 import io.enkrypt.avro.processing.AddressMetadataKeyRecord
 import io.enkrypt.avro.processing.AddressMetadataRecord
+import io.enkrypt.avro.processing.BlockAuthorRecord
 import io.enkrypt.avro.processing.BlockMetricsRecord
 import io.enkrypt.avro.processing.ContractCreateRecord
 import io.enkrypt.avro.processing.ContractDestroyRecord
@@ -90,6 +91,10 @@ object Serdes : KoinComponent {
   }
 
   fun TransactionFeeList() = SpecificAvroSerde<TransactionFeeListRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun BlockAuthor() = SpecificAvroSerde<BlockAuthorRecord>(registryClient).apply {
     configure(config, false)
   }
 

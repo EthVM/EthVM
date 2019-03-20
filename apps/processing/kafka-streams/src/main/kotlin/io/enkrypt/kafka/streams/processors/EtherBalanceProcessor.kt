@@ -7,14 +7,17 @@ import io.enkrypt.avro.processing.EtherBalanceKeyRecord
 import io.enkrypt.avro.processing.EtherBalanceRecord
 import io.enkrypt.common.extensions.reverse
 import io.enkrypt.common.extensions.toEtherBalanceDeltas
+import io.enkrypt.kafka.streams.Serdes
+import io.enkrypt.kafka.streams.config.Topics.CanonicalBlockAuthors
 import io.enkrypt.kafka.streams.config.Topics.CanonicalBlocks
+import io.enkrypt.kafka.streams.config.Topics.CanonicalMinerFeesEtherDeltas
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTraces
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTracesEtherDeltas
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTransactionFees
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTransactionFeesEtherDeltas
 import io.enkrypt.kafka.streams.config.Topics.EtherBalanceDeltas
 import io.enkrypt.kafka.streams.config.Topics.EtherBalances
-import io.enkrypt.kafka.streams.serdes.Serdes
+import io.enkrypt.kafka.streams.utils.toTopic
 import mu.KotlinLogging
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.streams.KeyValue
@@ -23,10 +26,8 @@ import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Grouped
 import org.apache.kafka.streams.kstream.Materialized
-import org.apache.kafka.streams.kstream.Suppressed
 import org.apache.kafka.streams.kstream.TransformerSupplier
 import java.math.BigInteger
-import java.time.Duration
 import java.util.Properties
 import org.apache.kafka.common.serialization.Serdes as KafkaSerdes
 
@@ -64,7 +65,7 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
 
   private fun aggregateBalances(builder: StreamsBuilder) {
 
-    val etherBalances = EtherBalanceDeltas.stream(builder)
+    EtherBalanceDeltas.stream(builder)
       .groupByKey(Grouped.with(Serdes.EtherBalanceKey(), Serdes.EtherBalanceDelta()))
       .aggregate(
         {
@@ -78,15 +79,16 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
             .setAmount(
               (delta.getAmount().toBigInteger() + balance.getAmount().toBigInteger()).toString()
             ).build()
+
         },
         Materialized.with(Serdes.EtherBalanceKey(), Serdes.EtherBalance())
-      ).suppress(Suppressed.untilTimeLimit(Duration.ofSeconds(30), Suppressed.BufferConfig.unbounded()))
+      )
       .toStream()
-
-    EtherBalances.sinkFor(etherBalances)
+      .toTopic(EtherBalances)
 
     EtherBalances.stream(builder)
       .peek { k, v -> logger.info { "Balance update | ${k.getAddress()} -> ${v.getAmount()}, ${v.getAmount().toBigInteger().toString(16)}" } }
+
   }
 
   /**
@@ -96,7 +98,7 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
 
     // add a transformer to guarantee we only emit once per block number so we don't re-introduce synthetic events in the event of a fork
 
-    val canonicalChain = CanonicalBlocks.stream(builder)
+    val canonicalBlocks = CanonicalBlocks.stream(builder)
       .transform(
         TransformerSupplier { OncePerBlockTransformer(appConfig.unitTesting) },
         *OncePerBlockTransformer.STORE_NAMES
@@ -104,7 +106,7 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
 
     // premine balances
 
-    val premineTransfers = canonicalChain
+    canonicalBlocks
       .flatMap { k, _ ->
 
         if (k.getNumber().toBigInteger() > BigInteger.ZERO)
@@ -124,15 +126,18 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
 
                 EtherBalanceDeltaRecord.newBuilder()
                   .setType(EtherBalanceDeltaType.PREMINE_BALANCE)
+                  .setBlockNumber("0")
                   .setAddress(address)
                   .setAmount(amount)
                   .build()
+
               }
 
           // block reward
 
           deltas = deltas + EtherBalanceDeltaRecord.newBuilder()
             .setType(EtherBalanceDeltaType.BLOCK_REWARD)
+            .setBlockNumber("0")
             .setAddress("0x0000000000000000000000000000000000000000")
             .setAmount(
               netConfig.chainConfigForBlock(BigInteger.ZERO).constants.blockReward.toString()
@@ -148,12 +153,14 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
                 .build()
             )
           }
+
         }
-      }
+
+      }.toTopic(EtherBalanceDeltas)
 
     //
 
-    val hardForkTransfers = canonicalChain
+    canonicalBlocks
       .flatMap { k, _ ->
 
         val blockNumber = k.getNumber().toBigInteger()
@@ -173,13 +180,14 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
                 .build(),
               EtherBalanceDeltaRecord.newBuilder(delta)
                 .setType(EtherBalanceDeltaType.HARD_FORK)
+                .setBlockNumber(k.getNumber())
                 .setAddress(null)
                 .build()
             )
           }
-      }
 
-    EtherBalanceDeltas.sinkFor(premineTransfers, hardForkTransfers)
+      }.toTopic(EtherBalanceDeltas)
+
   }
 
   /**
@@ -187,7 +195,7 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
    */
   private fun balanceDeltasForTraces(builder: StreamsBuilder) {
 
-    val etherBalanceDeltasForBlock = CanonicalTraces.stream(builder)
+    CanonicalTraces.stream(builder)
       .mapValues { _, tracesList ->
 
         when (tracesList) {
@@ -197,13 +205,13 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
             EtherBalanceDeltaListRecord.newBuilder()
               .setDeltas(tracesList.toEtherBalanceDeltas())
               .build()
+
           }
         }
-      }
 
-    CanonicalTracesEtherDeltas.sinkFor(etherBalanceDeltasForBlock)
+      }.toTopic(CanonicalTracesEtherDeltas)
 
-    val etherBalanceDeltas = CanonicalTracesEtherDeltas.table(builder)
+    CanonicalTracesEtherDeltas.table(builder)
       .groupBy(
         { k, v -> KeyValue(k.getNumber(), v) },
         Grouped.with(KafkaSerdes.String(), Serdes.EtherBalanceDeltaList())
@@ -212,8 +220,9 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
 
           // TODO check that old and new are equal
           EtherBalanceDeltaListRecord.newBuilder()
-            .setDeltas(new.getDeltas() + new.reverse().getDeltas())
+            .setDeltas(emptyList())
             .build()
+
         },
         { _, removed -> removed.reverse() },
         Materialized.with(KafkaSerdes.String(), Serdes.EtherBalanceDeltaList())
@@ -231,27 +240,28 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
                 .build()
             )
           }
-      }
 
-    EtherBalanceDeltas.sinkFor(etherBalanceDeltas)
+      }.toTopic(EtherBalanceDeltas)
+
   }
 
   private fun balanceDeltasForFees(builder: StreamsBuilder) {
 
-    CanonicalTransactionFeesEtherDeltas.sinkFor(
-      CanonicalTransactionFees.stream(builder)
-        .mapValues { _, feeList ->
+    val txFeesTable = CanonicalTransactionFees.table(builder)
 
-          when (feeList) {
-            null -> null
-            else -> EtherBalanceDeltaListRecord.newBuilder()
-              .setDeltas(feeList.toEtherBalanceDeltas())
-              .build()
-          }
-        }
-    )
 
-    val etherBalanceDeltas = CanonicalTransactionFeesEtherDeltas.table(builder)
+    txFeesTable
+      .mapValues { _, feeList ->
+
+        EtherBalanceDeltaListRecord.newBuilder()
+          .setDeltas(feeList.toEtherBalanceDeltas())
+          .build()
+
+      }
+      .toStream()
+      .toTopic(CanonicalTransactionFeesEtherDeltas)
+
+    CanonicalTransactionFeesEtherDeltas.table(builder)
       .groupBy(
         { k, v -> KeyValue(k.getNumber(), v) },
         Grouped.with(KafkaSerdes.String(), Serdes.EtherBalanceDeltaList())
@@ -259,7 +269,7 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
         { _, new ->
           // TODO check that old and new are equal
           EtherBalanceDeltaListRecord.newBuilder()
-            .setDeltas(new.getDeltas() + new.reverse().getDeltas())
+            .setDeltas(emptyList())
             .build()
         },
         { _, removed -> removed.reverse() },
@@ -278,10 +288,64 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
                 .build()
             )
           }
-      }
 
-    EtherBalanceDeltas.sinkFor(etherBalanceDeltas)
+      }.toTopic(EtherBalanceDeltas)
+
+    CanonicalBlockAuthors.table(builder)
+      .join(
+        txFeesTable,
+        { left, right ->
+
+          val totalTxFees = right.getTransactionFees()
+            .map { it.getTransactionFee().toBigInteger() }
+            .fold(BigInteger.ZERO) { memo, next -> memo + next }
+
+          EtherBalanceDeltaRecord.newBuilder()
+            .setType(EtherBalanceDeltaType.MINER_FEE)
+            .setBlockNumber(left.getBlockNumber())
+            .setBlockHash(left.getBlockHash())
+            .setAddress(left.getAuthor())
+            .setAmount(totalTxFees.toString())
+            .build()
+
+        },
+        Materialized.with(Serdes.CanonicalKey(), Serdes.EtherBalanceDelta())
+      ).toStream()
+      .toTopic(CanonicalMinerFeesEtherDeltas)
+
+    CanonicalMinerFeesEtherDeltas.table(builder)
+      .groupBy(
+        { k, v -> KeyValue(k.getNumber(), v) },
+        Grouped.with(KafkaSerdes.String(), Serdes.EtherBalanceDelta())
+      ).reduce(
+        { _, new ->
+
+          // TODO check old and new are the same
+          EtherBalanceDeltaRecord.newBuilder(new)
+            .setAmount("0")
+            .build()
+
+        },
+        { _, removed -> removed.reverse() },
+        Materialized.with(KafkaSerdes.String(), Serdes.EtherBalanceDelta())
+      )
+      .toStream()
+      .filter{ _, v -> v.getAmount() != "0" }
+      .map { _, delta ->
+
+        KeyValue(
+          EtherBalanceKeyRecord.newBuilder()
+            .setAddress(delta.getAddress())
+            .build(),
+          EtherBalanceDeltaRecord.newBuilder(delta)
+            .setAddress(null)
+            .build()
+        )
+
+      }.toTopic(EtherBalanceDeltas)
+
   }
+
 
   override fun start(cleanUp: Boolean) {
     logger.info { "Starting ${this.javaClass.simpleName}..." }

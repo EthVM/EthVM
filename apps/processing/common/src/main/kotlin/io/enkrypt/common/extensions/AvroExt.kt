@@ -31,6 +31,9 @@ fun TransactionFeeListRecord.toEtherBalanceDeltas(): List<EtherBalanceDeltaRecor
 fun TransactionFeeRecord.toEtherBalanceDelta(): EtherBalanceDeltaRecord =
   EtherBalanceDeltaRecord.newBuilder()
     .setType(EtherBalanceDeltaType.TX_FEE)
+    .setBlockHash(getBlockHash())
+    .setBlockNumber(getBlockNumber())
+    .setTransactionHash(getTransactionHash())
     .setAddress(getAddress())
     .setAmount(getTransactionFee().toBigInteger().negate().toString())
     .build()
@@ -101,6 +104,10 @@ fun TraceRecord.toEtherBalanceDeltas(): List<EtherBalanceDeltaRecord> {
       listOf(
         EtherBalanceDeltaRecord.newBuilder()
           .setType(type)
+          .setBlockHash(getBlockHash())
+          .setBlockNumber(getBlockNumber())
+          .setTransactionHash(getTransactionHash())
+          .setTraceAddress(getTraceAddress())
           .setAddress(action.getAuthor())
           .setAmount(action.getValue()) // need to make the value signed
           .build()
@@ -111,12 +118,20 @@ fun TraceRecord.toEtherBalanceDeltas(): List<EtherBalanceDeltaRecord> {
 
       EtherBalanceDeltaRecord.newBuilder()
         .setType(EtherBalanceDeltaType.TX)
+        .setBlockHash(getBlockHash())
+        .setBlockNumber(getBlockNumber())
+        .setTransactionHash(getTransactionHash())
+        .setTraceAddress(getTraceAddress())
         .setAddress(action.getFrom())
         .setAmount(action.getValue().toBigInteger().negate().toString())
         .build(),
 
       EtherBalanceDeltaRecord.newBuilder()
         .setType(EtherBalanceDeltaType.TX)
+        .setBlockHash(getBlockHash())
+        .setBlockNumber(getBlockNumber())
+        .setTransactionHash(getTransactionHash())
+        .setTraceAddress(getTraceAddress())
         .setAddress(action.getTo())
         .setAmount(action.getValue())
         .build()
@@ -127,12 +142,20 @@ fun TraceRecord.toEtherBalanceDeltas(): List<EtherBalanceDeltaRecord> {
 
       EtherBalanceDeltaRecord.newBuilder()
         .setType(EtherBalanceDeltaType.TX)
+        .setBlockHash(getBlockHash())
+        .setBlockNumber(getBlockNumber())
+        .setTransactionHash(getTransactionHash())
+        .setTraceAddress(getTraceAddress())
         .setAddress(action.getFrom())
         .setAmount(action.getValue().toBigInteger().negate().toString())
         .build(),
 
       EtherBalanceDeltaRecord.newBuilder()
         .setType(EtherBalanceDeltaType.TX)
+        .setBlockHash(getBlockHash())
+        .setBlockNumber(getBlockNumber())
+        .setTransactionHash(getTransactionHash())
+        .setTraceAddress(getTraceAddress())
         .setAddress(getResult().getAddress())
         .setAmount(action.getValue())
         .build()
@@ -142,12 +165,20 @@ fun TraceRecord.toEtherBalanceDeltas(): List<EtherBalanceDeltaRecord> {
 
       EtherBalanceDeltaRecord.newBuilder()
         .setType(EtherBalanceDeltaType.CONTRACT_DESTRUCTION)
+        .setBlockHash(getBlockHash())
+        .setBlockNumber(getBlockNumber())
+        .setTransactionHash(getTransactionHash())
+        .setTraceAddress(getTraceAddress())
         .setAddress(action.getAddress())
         .setAmount(action.getBalance().toBigInteger().negate().toString())
         .build(),
 
       EtherBalanceDeltaRecord.newBuilder()
         .setType(EtherBalanceDeltaType.CONTRACT_DESTRUCTION)
+        .setBlockHash(getBlockHash())
+        .setBlockNumber(getBlockNumber())
+        .setTransactionHash(getTransactionHash())
+        .setTraceAddress(getTraceAddress())
         .setAddress(action.getRefundAddress())
         .setAmount(action.getBalance())
         .build()

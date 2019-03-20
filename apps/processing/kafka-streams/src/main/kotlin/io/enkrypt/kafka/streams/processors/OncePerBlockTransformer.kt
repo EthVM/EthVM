@@ -2,7 +2,7 @@ package io.enkrypt.kafka.streams.processors
 
 import io.enkrypt.avro.capture.BlockHeaderRecord
 import io.enkrypt.avro.capture.CanonicalKeyRecord
-import io.enkrypt.kafka.streams.serdes.Serdes
+import io.enkrypt.kafka.streams.Serdes
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serde
 import org.apache.kafka.streams.KeyValue

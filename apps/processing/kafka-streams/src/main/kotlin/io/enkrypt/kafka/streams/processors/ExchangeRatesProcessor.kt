@@ -5,7 +5,7 @@ import io.enkrypt.avro.exchange.SymbolKeyRecord
 import io.enkrypt.avro.processing.ContractMetadataRecord
 import io.enkrypt.common.extensions.isValid
 import io.enkrypt.kafka.streams.config.Topics
-import io.enkrypt.kafka.streams.serdes.Serdes
+import io.enkrypt.kafka.streams.Serdes
 import mu.KLogger
 import mu.KotlinLogging
 import org.apache.kafka.streams.StreamsBuilder

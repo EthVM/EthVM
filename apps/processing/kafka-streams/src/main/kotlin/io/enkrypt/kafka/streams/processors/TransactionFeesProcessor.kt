@@ -11,7 +11,8 @@ import io.enkrypt.kafka.streams.config.Topics.CanonicalGasUsed
 import io.enkrypt.kafka.streams.config.Topics.CanonicalReceipts
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTransactionFees
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTransactions
-import io.enkrypt.kafka.streams.serdes.Serdes
+import io.enkrypt.kafka.streams.Serdes
+import io.enkrypt.kafka.streams.utils.toTopic
 import mu.KLogger
 import mu.KotlinLogging
 import org.apache.kafka.streams.StreamsBuilder
@@ -38,84 +39,92 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
     // Create stream builder
     val builder = StreamsBuilder()
 
-    CanonicalGasPrices.sinkFor(
-      CanonicalTransactions.stream(builder)
-        .mapValues { transactionsList ->
+    CanonicalTransactions.stream(builder)
+      .mapValues { transactionsList ->
 
-          when (transactionsList) {
-            null -> null
-            else ->
-              TransactionGasPriceListRecord.newBuilder()
-                .setGasPrices(
-                  transactionsList.getTransactions()
-                    .map { tx ->
+        when (transactionsList) {
+          null -> null
+          else ->
+            TransactionGasPriceListRecord.newBuilder()
+              .setGasPrices(
+                transactionsList.getTransactions()
+                  .map { tx ->
 
-                      TransactionGasPriceRecord.newBuilder()
-                        .setAddress(tx.getFrom())
-                        .setGasPrice(tx.getGasPrice())
-                        .build()
-                    }
-                ).build()
-          }
-        }
-    )
-
-    CanonicalGasUsed.sinkFor(
-      CanonicalReceipts.stream(builder)
-        .mapValues { receiptsList ->
-
-          when (receiptsList) {
-            null -> null
-            else ->
-              TransactionGasUsedListRecord.newBuilder()
-                .setGasUsed(
-                  receiptsList.getReceipts()
-                    .map { receipt ->
-
-                      TransactionGasUsedRecord.newBuilder()
-                        .setGasUsed(receipt.getGasUsed())
-                        .build()
-                    }
-                ).build()
-          }
-        }
-    )
-
-    CanonicalTransactionFees.sinkFor(
-
-      CanonicalGasPrices.table(builder)
-        .join(
-          CanonicalGasUsed.table(builder),
-          { left, right ->
-
-            val feeListBuilder = TransactionFeeListRecord.newBuilder()
-
-            val gasPrices = left.getGasPrices()
-            val gasUsage = right.getGasUsed()
-
-            if (gasPrices.size == gasUsage.size) {
-              // if sizes are not the same then it's likely a fork has happened and we are in the process of receiving updated lists or we have not received all data yet from parity
-
-              feeListBuilder.transactionFees =
-                gasPrices
-                  .zip(gasUsage)
-                  .map { (gasPrice, gasUsed) ->
-
-                    val fee = (gasPrice.getGasPrice().toBigInteger() * gasUsed.getGasUsed().toBigInteger()).toString()
-
-                    TransactionFeeRecord.newBuilder()
-                      .setAddress(gasPrice.getAddress())
-                      .setTransactionFee(fee)
+                    TransactionGasPriceRecord.newBuilder()
+                      .setBlockNumber(tx.getBlockNumber())
+                      .setBlockHash(tx.getBlockHash())
+                      .setTransactionHash(tx.getHash())
+                      .setTransactionPosition(tx.getTransactionIndex())
+                      .setAddress(tx.getFrom())
+                      .setGasPrice(tx.getGasPrice())
                       .build()
+
                   }
-            }
+              ).build()
 
-            feeListBuilder.build()
-          },
-          Materialized.with(Serdes.CanonicalKey(), Serdes.TransactionFeeList())
-        ).toStream()
+        }
 
-    )
+      }.toTopic(CanonicalGasPrices)
+
+    CanonicalReceipts.stream(builder)
+      .mapValues { receiptsList ->
+
+        when (receiptsList) {
+          null -> null
+          else ->
+            TransactionGasUsedListRecord.newBuilder()
+              .setGasUsed(
+                receiptsList.getReceipts()
+                  .map { receipt ->
+                    TransactionGasUsedRecord.newBuilder()
+                      .setGasUsed(receipt.getGasUsed())
+                      .build()
+
+                  }
+              ).build()
+        }
+
+      }.toTopic(CanonicalGasUsed)
+
+    CanonicalGasPrices.table(builder)
+      .join(
+        CanonicalGasUsed.table(builder),
+        { left, right ->
+
+          val feeListBuilder = TransactionFeeListRecord.newBuilder()
+
+          val gasPrices = left.getGasPrices()
+          val gasUsage = right.getGasUsed()
+
+          if (gasPrices.size == gasUsage.size) {
+            // if sizes are not the same then it's likely a fork has happened and we are in the process of receiving updated lists or we have not received all data yet from parity
+
+            feeListBuilder.transactionFees =
+              gasPrices
+                .zip(gasUsage)
+                .map { (gasPrice, gasUsed) ->
+
+                  val fee = (gasPrice.getGasPrice().toBigInteger() * gasUsed.getGasUsed().toBigInteger()).toString()
+
+
+                  TransactionFeeRecord.newBuilder()
+                    .setBlockNumber(gasPrice.getBlockNumber())
+                    .setBlockHash(gasPrice.getBlockHash())
+                    .setTransactionHash(gasPrice.getTransactionHash())
+                    .setTransactionPosition(gasPrice.getTransactionPosition())
+                    .setAddress(gasPrice.getAddress())
+                    .setTransactionFee(fee)
+                    .build()
+
+                }
+
+          }
+
+          feeListBuilder.build()
+        },
+        Materialized.with(Serdes.CanonicalKey(), Serdes.TransactionFeeList())
+      ).toStream()
+      .toTopic(CanonicalTransactionFees)
 
     return builder.build()
   }

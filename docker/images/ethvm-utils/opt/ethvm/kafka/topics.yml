@@ -30,17 +30,37 @@ topics:
     config:
       cleanup.policy: compact
 
+  - name: canonical-block-authors
+    replicationFactor: 1
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
+  - name: canonical-block-author-fee-ether-deltas
+    replicationFactor: 1
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
   - name: canonical-traces-ether-deltas
     replicationFactor: 1
     partitions: 12
     config:
       cleanup.policy: compact
 
+
   - name: canonical-transaction-fees-ether-deltas
     replicationFactor: 1
     partitions: 12
     config:
       cleanup.policy: compact
+
+  - name: canonical-miner-fees-ether-deltas
+    replicationFactor: 1
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
 
   - name: canonical-gas-prices
     replicationFactor: 1
@@ -72,6 +92,29 @@ topics:
     config:
       cleanup.policy: compact
 
+  - name: block-metrics
+    replicationFactor: 1
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
+  - name: trace-block-metrics
+    replicationFactor: 1
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
+  - name: transaction-block-metrics
+    replicationFactor: 1
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
+  - name: transaction-fee-block-metrics
+    replicationFactor: 1
+    partitions: 12
+    config:
+      cleanup.policy: compact
 
   - name: contract-metadata
     replicationFactor: 1

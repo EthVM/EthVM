@@ -15,7 +15,11 @@ protocol Processing {
 
   record EtherBalanceDeltaRecord {
     EtherBalanceDeltaType type;
+    string blockNumber;
     union { null, string } address = null;
+    union { null, string } blockHash = null;
+    union { null, string } transactionHash = null;
+    union { null, array<int> } traceAddress = null;
     string amount;
   }
 
@@ -27,7 +31,17 @@ protocol Processing {
     array<EtherBalanceDeltaRecord> deltas;
   }
 
+  record BlockAuthorRecord {
+    string author;
+    string blockNumber;
+    string blockHash;
+  }
+
   record TransactionGasPriceRecord {
+    string blockNumber;
+    string blockHash;
+    string transactionHash;
+    int transactionPosition;
     string address;
     string gasPrice;
   }
@@ -45,6 +59,10 @@ protocol Processing {
   }
 
   record TransactionFeeRecord {
+    string blockNumber;
+    string blockHash;
+    string transactionHash;
+    int transactionPosition;
     string address;
     string transactionFee;
   }

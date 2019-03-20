@@ -1,20 +1,18 @@
 package io.enkrypt.kafka.streams.config
 
-import io.enkrypt.kafka.streams.serdes.Serdes
+import io.enkrypt.kafka.streams.Serdes
 import org.apache.kafka.common.serialization.Serde
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.KStream
 import org.apache.kafka.streams.kstream.Produced
 
-data class KafkaTopic<K, V>(
-  val name: String,
-  val keySerde: Serde<K>,
-  val valueSerde: Serde<V>
-) {
+data class KafkaTopic<K, V>(val name: String,
+                            val keySerde: Serde<K>,
+                            val valueSerde: Serde<V>) {
 
-  private val consumer: Consumed<K, V> = Consumed.with(keySerde, valueSerde)
-  private val producer: Produced<K, V> = Produced.with(keySerde, valueSerde)
+  val consumer = Consumed.with(keySerde, valueSerde)
+  val producer = Produced.with(keySerde, valueSerde)
 
   fun stream(builder: StreamsBuilder) = builder.stream(name, consumer)
 
@@ -23,6 +21,7 @@ data class KafkaTopic<K, V>(
   fun table(builder: StreamsBuilder) = builder.table(name, consumer)
 
   fun globalTable(builder: StreamsBuilder) = builder.globalTable(name, consumer)
+
 }
 
 object Topics {
@@ -34,6 +33,7 @@ object Topics {
 
   val CanonicalTracesEtherDeltas = KafkaTopic("canonical-traces-ether-deltas", Serdes.CanonicalKey(), Serdes.EtherBalanceDeltaList())
   val CanonicalTransactionFeesEtherDeltas = KafkaTopic("canonical-transaction-fees-ether-deltas", Serdes.CanonicalKey(), Serdes.EtherBalanceDeltaList())
+  val CanonicalMinerFeesEtherDeltas = KafkaTopic("canonical-miner-fees-ether-deltas", Serdes.CanonicalKey(), Serdes.EtherBalanceDelta())
 
   val EtherBalanceDeltas = KafkaTopic("ether-balance-deltas", Serdes.EtherBalanceKey(), Serdes.EtherBalanceDelta())
   val EtherBalances = KafkaTopic("ether-balances", Serdes.EtherBalanceKey(), Serdes.EtherBalance())
@@ -46,6 +46,9 @@ object Topics {
   val CanonicalGasPrices = KafkaTopic("canonical-gas-prices", Serdes.CanonicalKey(), Serdes.TransactionGasPriceList())
   val CanonicalGasUsed = KafkaTopic("canonical-gas-used", Serdes.CanonicalKey(), Serdes.TransactionGasUsedList())
   val CanonicalTransactionFees = KafkaTopic("canonical-transaction-fees", Serdes.CanonicalKey(), Serdes.TransactionFeeList())
+
+  val CanonicalBlockAuthors = KafkaTopic("canonical-block-authors", Serdes.CanonicalKey(), Serdes.BlockAuthor())
+  val CanonicalBlockAuthorFeeEtherDeltas = KafkaTopic("canonical-block-author-fee-ether-deltas", Serdes.CanonicalKey(), Serdes.EtherBalanceDelta())
 
   const val BlockMetricsByDay = "block-metrics-by-day"
 
