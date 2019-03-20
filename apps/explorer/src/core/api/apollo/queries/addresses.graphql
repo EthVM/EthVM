@@ -1,6 +1,5 @@
 query addressBalanceByHash($address: String!) {
   balanceByHash(hash: $address) {
-    id
     address
     amount
   }

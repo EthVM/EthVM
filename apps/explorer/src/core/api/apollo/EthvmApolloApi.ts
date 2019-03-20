@@ -61,7 +61,8 @@ export class EthvmApolloApi implements EthvmApi {
         query: addressBalanceByHash,
         variables: {
           address
-        }
+        },
+        fetchPolicy: 'network-only'
       })
       .then(res => res.data.accountMetadataByHash)
   }

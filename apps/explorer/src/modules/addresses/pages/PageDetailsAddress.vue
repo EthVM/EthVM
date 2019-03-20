@@ -218,7 +218,7 @@ export default class PageDetailsAddress extends Vue {
             .then((res: any[]) => {
               const metadata = res[0] || {}
               this.account.isCreator = metadata.isContractCreator || false
-              this.account.isMiner = false // metadata.isMiner || false
+              this.account.isMiner = metadata.isMiner || false
               this.account.totalTxs = metadata.totalTxCount || 0
               this.account.fromTxCount = metadata.outTxCount || 0
               this.account.toTxCount = metadata.inTxCount || 0

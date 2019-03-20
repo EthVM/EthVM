@@ -24,7 +24,7 @@ export class EthvmMigrationApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
 
   public getAddressBalance(address: string): Promise<AddressBalance> {
-    return this.socketIoApi.getAddressBalance(address)
+    return this.apolloApi.getAddressBalance(address)
   }
 
   public getAddressMetadata(address: string): Promise<AddressMetadata> {
