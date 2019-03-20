@@ -40,7 +40,7 @@ export default class PageDetailsUncle extends Vue {
   */
 
   uncle = {} as Uncle
-  timestamp = ''
+  timestamp = new Date
   error = ''
 
   /*
@@ -90,7 +90,7 @@ export default class PageDetailsUncle extends Vue {
 
   setUncleInfo(uncle: Uncle) {
     this.uncle = uncle
-    this.timestamp = this.uncle.getTimestamp().toString()
+    this.timestamp = this.uncle.getTimestamp()
   }
 
   /*
@@ -184,7 +184,7 @@ export default class PageDetailsUncle extends Vue {
         },
         {
           title: this.$i18n.t('common.timestmp'),
-          detail: this.formatTime
+          detail: this.$i18n.d(this.timestamp, 'long',this.$i18n.locale.replace('_', '-'))
         },
         {
           title: this.$i18n.t('common.sha'),
@@ -202,10 +202,6 @@ export default class PageDetailsUncle extends Vue {
       ]
     }
     return details
-  }
-
-  get formatTime(): string {
-    return new Date(this.timestamp).toString()
   }
 
   /**
