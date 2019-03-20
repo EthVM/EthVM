@@ -142,7 +142,7 @@
       "not-exist": "Эта транзакция не существует",
       "no-pending": "Нет ожидающих транзакций"
     },
-    "no-tokens": "Address does not hold any supported tokens",
+    "no-tokens": "Адрес не имеет известных токенов",
     "load": "Загрузка",
     "load-block-tx": "Загрузка транзакций блока",
     "not-mined": "Этот блок еще не подтвержден",
