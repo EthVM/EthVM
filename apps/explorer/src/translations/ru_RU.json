@@ -287,14 +287,14 @@
   "about": {
     "name": "О нас",
     "title": "Что такое EthVM?",
-    "text": "EthVM project is brought to you by MyEtherWallet team. EthVM is a free and open source interface for exploring and evaluting real time Ethereum blocks, transactions and more. This software is under SSPL License.",
+    "text": "Проект EthVM вам представилa\nкоманда MyEtherWallet. EthVM - это бесплатный интерфейс с открытым исходным кодом для исследования и оценки в реальном времени блоков Ethereum, транзакций и т. д. Данное программное обеспечение имеет лицензию SSPL.",
     "git": {
       "title": "GitHub",
       "text": "Если вы хотите сделать свой вклад, сделайте заявку на GitHub."
     },
     "medium": {
       "title": "Medium",
-      "text": "Check out our Medium page for news, thoughts and awesome educational content."
+      "text": "Посетите нашу страницу на Medium для новостей, мыслей и отличного образовательного контента."
     },
     "twitter": {
       "title": "Twitter",
@@ -306,7 +306,7 @@
     },
     "disclaimer": {
       "name": "Условия предоставления",
-      "text": "SSPL License, Copyright © 2019 MyEtherWallet Inc.  For Terms & conditions visit our "
+      "text": "Лицензия - SSPL, авторские права @ MyEtherWallet Inc. Для ознакомления с правилами и условиями посетите "
     }
   },
   "kb": {
@@ -371,7 +371,7 @@
       },
       "ethreum": {
         "term": "Ethereum (Эфириум)",
-        "def": "Decentralized blockchain platform enabled with a software language for building applications and creating contracts. Ethereum is the network, Ether is the currency."
+        "def": "Децентрализованная блокчейн-платформа, приспособленная с помощью языка программирования для построения приложений и создания контрактов. Ethereum- это сеть, Ether- это валюта."
       },
       "evm": {
         "term": "EVM",
