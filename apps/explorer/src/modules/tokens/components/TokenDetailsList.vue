@@ -138,7 +138,9 @@ export default class TokenDetailsList extends Vue {
         },
         {
           title: this.$i18n.t('title.support'),
-          detail: `<a href="mailto:${this.contractDetails.metadata.support.email}" target="_BLANK">${this.contractDetails.metadata.support.email}</a>`
+          detail: this.contractDetails.metadata.support ?
+            `<a href="mailto:${this.contractDetails.metadata.support.email}" target="_BLANK">${this.contractDetails.metadata.support.email}</a>` :
+            'REQUIRED DATA'
         },
         {
           title: this.$i18n.t('title.links'),
