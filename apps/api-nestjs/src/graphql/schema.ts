@@ -288,9 +288,9 @@ export class ProcessingMetadataKey {
 }
 
 export abstract class IQuery {
-    abstract accountMetadataByHash(hash: string): AccountMetadata | Promise<AccountMetadata>;
-
     abstract balanceByHash(hash: string): Balance | Promise<Balance>;
+
+    abstract accountMetadataByHash(hash: string): AccountMetadata | Promise<AccountMetadata>;
 
     abstract blockMetricByHash(hash?: string): BlockMetric | Promise<BlockMetric>;
 
@@ -306,7 +306,7 @@ export abstract class IQuery {
 
     abstract totalNumberOfBlocks(): number | Promise<number>;
 
-    abstract contractByHash(hash?: string): Contract | Promise<Contract>;
+    abstract contractByHash(address: string): Contract | Promise<Contract>;
 
     abstract contractsCreatedBy(creator?: string, limit?: number, page?: number): Contract[] | Promise<Contract[]>;
 

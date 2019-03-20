@@ -1,5 +1,5 @@
 type Query {
-  contractByHash(hash: String): Contract
+  contractByHash(address: String!): Contract
   contractsCreatedBy(creator: String, limit: Int, page: Int): [Contract]
 }
 

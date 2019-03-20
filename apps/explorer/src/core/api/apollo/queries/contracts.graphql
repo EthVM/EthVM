@@ -1,15 +1,41 @@
-query contractByHash($hash: String) {
-  contractByHash(hash: $hash) {
+query contractByHash($address: String!) {
+  contractByHash(address: $address) {
     address
-    metadata
-    type
+    metadata {
+      decimals
+      website
+      support {
+        email
+      }
+      social {
+        blog
+        chat
+        facebook
+        forum
+        github
+        gitter
+        instagram
+        linkedin
+        reddit
+        slack
+        telegram
+        twitter
+        youtube
+      }
+    }
   }
 }
 
 query contractsCreatedBy($hash: String, $limit: Int, $page: Int) {
   contractsCreatedBy(creator: $hash, limit: $limit, page: $page) {
     address
-    metadata
-    type
+    metadata {
+      name
+      symbol
+      website
+    }
+    type {
+      string
+    }
   }
 }

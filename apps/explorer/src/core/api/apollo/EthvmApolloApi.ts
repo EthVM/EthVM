@@ -197,12 +197,14 @@ export class EthvmApolloApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
 
   public getContract(address: string): Promise<Contract> {
+    console.log('Address', address)
     return this.apollo
       .query({
         query: contractByHash,
         variables: {
           address
-        }
+        },
+        fetchPolicy: 'network-only'
       })
       .then(res => res.data.contractByHash)
   }
@@ -231,8 +233,7 @@ export class EthvmApolloApi implements EthvmApi {
         variables: {
           symbol,
           to
-        },
-        fetchPolicy: 'network-only'
+        }
       })
       .then(res => res.data.quote)
   }

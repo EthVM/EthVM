@@ -114,15 +114,15 @@ export default class TokenDetailsList extends Vue {
         },
         {
           title: this.$i18n.t('title.supply'),
-          detail: this.tokenDetails.total_supply
+          detail: this.tokenDetails.totalSupply
         },
         {
           title: this.$i18n.t('title.price'),
-          detail: `$${this.tokenDetails.current_price} (${this.tokenDetails.price_change_percentage_24h}%)`
+          detail: `$${this.tokenDetails.currentPrice} (${this.tokenDetails.priceChangePercentage24h}%)`
         },
         {
           title: this.$i18n.t('title.marketCap'),
-          detail: `$${this.tokenDetails.market_cap}`
+          detail: `$${this.tokenDetails.marketCap}`
         },
         {
           title: this.$i18n.t('token.totalHold'),
