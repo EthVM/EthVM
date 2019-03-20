@@ -49,8 +49,7 @@ import {
 } from 'ethvm-common'
 
 export class EthvmApolloApi implements EthvmApi {
-  constructor(private readonly apollo: ApolloClient<{}>) {
-  }
+  constructor(private readonly apollo: ApolloClient<{}>) {}
 
   // ------------------------------------------------------------------------------------
   // Address

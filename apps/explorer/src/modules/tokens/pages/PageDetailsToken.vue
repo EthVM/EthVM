@@ -414,7 +414,6 @@ export default class PageDetailsToken extends Vue {
    */
   fetchHolderDetails() {
     return new Promise((resolve, reject) => {
-
       this.$api
         .getHolderDetails(this.addressRef, this.holderAddress)
         .then(response => {
@@ -424,7 +423,6 @@ export default class PageDetailsToken extends Vue {
           resolve(response)
         })
         .catch(e => {
-
           reject(e)
         })
     })
@@ -452,7 +450,6 @@ export default class PageDetailsToken extends Vue {
           this.isHolderTransfersLoading = false
           reject(e)
         })
-
     })
   }
 
