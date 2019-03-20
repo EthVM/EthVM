@@ -119,6 +119,22 @@ export class EthvmMigrationApi implements EthvmApi {
     return this.apolloApi.getTokenExchangeRateByAddress(address)
   }
 
+  public getTokenHistory(address: string): Promise<any> {
+    return this.apolloApi.getTokenHistory(address)
+  }
+
+  public getTopTokenHolders(address: string): Promise<any> {
+    return this.apolloApi.getTopTokenHolders(address)
+  }
+
+  public getHolderDetails(address: string, holderAddress: string): Promise<any> {
+    return this.apolloApi.getHolderDetails(address, holderAddress)
+  }
+
+  public getHolderTransfers(address: string, holderAddress: string): Promise<any> {
+    return this.apolloApi.getHolderTransfers(address, holderAddress)
+  }
+
   // ------------------------------------------------------------------------------------
   // Pending Txs (NOTE: Not needed to port yet)
   // ------------------------------------------------------------------------------------

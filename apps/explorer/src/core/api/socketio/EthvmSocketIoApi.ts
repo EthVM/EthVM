@@ -119,6 +119,22 @@ export class EthvmSocketIoApi implements EthvmApi {
     return this.promisify(Events.getTokenExchangeRateByAddress, { address })
   }
 
+  public getTokenHistory(address: string): Promise<any> {
+    throw new Error('Method not implemented.')
+  }
+
+  public getTopTokenHolders(address: string): Promise<any> {
+    throw new Error('Method not implemented.')
+  }
+
+  public getHolderDetails(address: string, holderAddress: string): Promise<any> {
+    throw new Error('Method not implemented.')
+  }
+
+  public getHolderTransfers(address: string, holderAddress: string): Promise<any> {
+    throw new Error('Method not implemented.')
+  }
+
   // ------------------------------------------------------------------------------------
   // Pending Txs
   // ------------------------------------------------------------------------------------

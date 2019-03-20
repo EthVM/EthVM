@@ -23,7 +23,14 @@ import {
   totalFailedTxs,
   totalSuccessfulTxs
 } from '@app/core/api/apollo/queries/statistics.graphql'
-import { addressTokenTransfers, addressTokenTransfersByHolder } from '@app/core/api/apollo/queries/token-transfers.graphql'
+import {
+  addressTokenTransfers,
+  addressTokenTransfersByHolder,
+  tokenHistory,
+  topTokenHolders,
+  holderDetails,
+  holderTransfers
+} from '@app/core/api/apollo/queries/token-transfers.graphql'
 import { totalNumberOfTransactions, tx, txs, txsForAddress } from '@app/core/api/apollo/queries/txs.graphql'
 import { totalNumberOfUncles, uncleByHash, uncles } from '@app/core/api/apollo/queries/uncles.graphql'
 import { Block, PendingTx, SimpleBlock, SimpleTx, Tx, Uncle } from '@app/core/models'
@@ -42,7 +49,8 @@ import {
 } from 'ethvm-common'
 
 export class EthvmApolloApi implements EthvmApi {
-  constructor(private readonly apollo: ApolloClient<{}>) {}
+  constructor(private readonly apollo: ApolloClient<{}>) {
+  }
 
   // ------------------------------------------------------------------------------------
   // Address
@@ -197,7 +205,6 @@ export class EthvmApolloApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
 
   public getContract(address: string): Promise<Contract> {
-    console.log('Address', address)
     return this.apollo
       .query({
         query: contractByHash,
@@ -279,6 +286,52 @@ export class EthvmApolloApi implements EthvmApi {
         }
       })
       .then(res => res.data.tokenExchangeRateByAddress)
+  }
+
+  public getTokenHistory(address: string): Promise<any> {
+    return this.apollo
+      .query({
+        query: tokenHistory,
+        variables: {
+          address
+        }
+      })
+      .then(res => res.data.tokenHistory)
+  }
+
+  public getTopTokenHolders(address: string): Promise<any> {
+    return this.apollo
+      .query({
+        query: topTokenHolders,
+        variables: {
+          address
+        }
+      })
+      .then(res => res.data.topTokenHolders)
+  }
+
+  public getHolderDetails(address: string, holderAddress: string): Promise<any> {
+    return this.apollo
+      .query({
+        query: holderDetails,
+        variables: {
+          address,
+          holderAddress
+        }
+      })
+      .then(res => res.data.holderDetails)
+  }
+
+  public getHolderTransfers(address: string, holderAddress: string): Promise<any> {
+    return this.apollo
+      .query({
+        query: holderTransfers,
+        variables: {
+          address,
+          holderAddress
+        }
+      })
+      .then(res => res.data.holderTransfers)
   }
 
   // ------------------------------------------------------------------------------------

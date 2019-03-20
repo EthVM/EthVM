@@ -118,7 +118,7 @@ export default class HolderDetailsList extends Vue {
         },
         {
           title: this.$i18n.t('title.marketCap'),
-          detail: `$${this.tokenDetails.current_price}`
+          detail: `$${this.tokenDetails.currentPrice}`
         },
         {
           title: this.$i18n.t('title.decimals'),
@@ -130,7 +130,7 @@ export default class HolderDetailsList extends Vue {
   }
 
   get balanceUsd() {
-    return this.holderDetails.tokens ? this.tokenDetails.current_price * this.holderDetails.tokens[0].balance : 'N/A'
+    return this.holderDetails.tokens ? this.tokenDetails.currentPrice * this.holderDetails.tokens[0].balance : 'N/A'
   }
 }
 </script>

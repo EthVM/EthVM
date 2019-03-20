@@ -1,5 +1,5 @@
 query addressTokenTransfers($address: String!, $limit: Int, $page: Int) {
-  query addressTokenTransfers(address: $address, limit: $limit, page: $page) {
+  addressTokenTransfers(address: $address, limit: $limit, page: $page) {
     amount
     contract
     from
@@ -11,7 +11,7 @@ query addressTokenTransfers($address: String!, $limit: Int, $page: Int) {
 }
 
 query addressTokenTransfersByHolder($address: String!, $holder: String!, $filter: FilterEnum, $limit: Int, $page: Int) {
-  query addressTokenTransfersByHolder(address: $address, holder: $holder, filter: $filter, limit: $limit, page: $page) {
+  addressTokenTransfersByHolder(address: $address, holder: $holder, filter: $filter, limit: $limit, page: $page) {
     amount
     contract
     from
@@ -19,5 +19,43 @@ query addressTokenTransfersByHolder($address: String!, $holder: String!, $filter
     to
     tokenId
     transferType
+  }
+}
+
+query tokenHistory($address: String!) {
+  tokenHistory(address: $address) {
+    transactionHash
+    from
+    address
+    timestamp
+    value
+    to
+  }
+}
+
+query topTokenHolders($address: String!) {
+  topTokenHolders(address: $address) {
+    address
+    balance
+    share
+  }
+}
+
+query holderDetails($address: String! $holderAddress: String!) {
+  holderDetails(address: $address, holderAddress: $holderAddress) {
+    countTxs
+    tokens {
+      balance
+    }
+  }
+}
+
+query holderTransfers($address: String!, $holderAddress: String!) {
+  holderTransfers(address: $address, holderAddress: $holderAddress) {
+    transactionHash
+    from
+    to
+    timestamp
+    value
   }
 }
