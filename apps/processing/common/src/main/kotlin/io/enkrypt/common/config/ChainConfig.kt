@@ -171,27 +171,31 @@ interface NetConfig {
 
   companion object {
 
-    val mainnet = BaseNetConfig(
-      Genesis.Frontier,
-      0L to FrontierConfig(),
-      1_150_000L to HomesteadConfig(),
-      1_920_000L to DaoHardForkConfig(),
-      2_463_000L to Eip150HardForkConfig(DaoHardForkConfig()),
-      2_675_000L to Eip160HardForkConfig(DaoHardForkConfig()),
-      4_370_000L to ByzantiumConfig(DaoHardForkConfig()),
-      7_280_000L to PetersburgConfig(DaoHardForkConfig())
-    )
+    val mainnet by lazy {
+      BaseNetConfig(
+        Genesis.Frontier,
+        0L to FrontierConfig(),
+        1_150_000L to HomesteadConfig(),
+        1_920_000L to DaoHardForkConfig(),
+        2_463_000L to Eip150HardForkConfig(DaoHardForkConfig()),
+        2_675_000L to Eip160HardForkConfig(DaoHardForkConfig()),
+        4_370_000L to ByzantiumConfig(DaoHardForkConfig()),
+        7_280_000L to PetersburgConfig(DaoHardForkConfig())
+      )
+    }
 
-    val ropsten = BaseNetConfig(
-      Genesis.Ropsten,
-      0L to HomesteadConfig(),
-      10L to RopstenConfig(HomesteadConfig()),
-      1_700_000L to RopstenConfig(ByzantiumConfig(DaoHardForkConfig())),
-      4_230_000L to RopstenConfig(ConstantinopleConfig(DaoHardForkConfig())),
-      4_939_394L to RopstenConfig(PetersburgConfig(DaoHardForkConfig()))
-    )
-
+    val ropsten by lazy {
+      BaseNetConfig(
+        Genesis.Ropsten,
+        0L to HomesteadConfig(),
+        10L to RopstenConfig(HomesteadConfig()),
+        1_700_000L to RopstenConfig(ByzantiumConfig(DaoHardForkConfig())),
+        4_230_000L to RopstenConfig(ConstantinopleConfig(DaoHardForkConfig())),
+        4_939_394L to RopstenConfig(PetersburgConfig(DaoHardForkConfig()))
+      )
+    }
     // TODO add support for other networks
+
   }
 }
 

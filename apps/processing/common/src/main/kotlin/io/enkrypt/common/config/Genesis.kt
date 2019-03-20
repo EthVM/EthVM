@@ -13,4 +13,5 @@ enum class Genesis(val filename: String) {
   }
 }
 
-class GenesisFile(val alloc: Map<String, String>)
+data class PremineAccount(val balance: String)
+data class GenesisFile(val accounts: Map<String, PremineAccount>)

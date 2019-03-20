@@ -5,6 +5,7 @@ import io.enkrypt.avro.processing.EtherBalanceDeltaRecord
 import io.enkrypt.avro.processing.EtherBalanceDeltaType
 import io.enkrypt.avro.processing.EtherBalanceKeyRecord
 import io.enkrypt.avro.processing.EtherBalanceRecord
+import io.enkrypt.common.extensions.hexUBigInteger
 import io.enkrypt.common.extensions.reverse
 import io.enkrypt.common.extensions.toEtherBalanceDeltas
 import io.enkrypt.kafka.streams.Serdes
@@ -115,20 +116,17 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
 
           var deltas =
             netConfig.genesis
-              .alloc
+              .accounts
               .entries
-              .map { (address, balance) ->
+              .map { (address, premine) ->
 
-                val amount = when (balance) {
-                  "" -> "0"
-                  else -> balance
-                }
+                val balance = premine.balance.hexUBigInteger()!!
 
                 EtherBalanceDeltaRecord.newBuilder()
                   .setType(EtherBalanceDeltaType.PREMINE_BALANCE)
                   .setBlockNumber("0")
                   .setAddress(address)
-                  .setAmount(amount)
+                  .setAmount(balance.toString())
                   .build()
 
               }
