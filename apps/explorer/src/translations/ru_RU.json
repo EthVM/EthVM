@@ -287,7 +287,7 @@
   "about": {
     "name": "О нас",
     "title": "Что такое EthVM?",
-    "text": "EthVM project is brought to you by kvhnuke,  founder of MyEtherWallet. EthVM is a free and open source interface for exploring and evaluting real time Ethereum blocks, transactions and more. This software is under SSPL License.",
+    "text": "Проект EthVM вам представил kvhnuke, основатель MyEtherWallet. EthVM - это бесплатный интерфейс с открытым исходным кодом для исследования и оценки в реальном времени блоков Ethereum, транзакций и т. д. Данное программное обеспечение имеет лицензию SSPL.",
     "git": {
       "title": "GitHub",
       "text": "Если вы хотите сделать свой вклад, сделайте заявку на GitHub."
