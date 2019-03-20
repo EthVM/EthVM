@@ -3,6 +3,8 @@ package io.enkrypt.kafka.connect.sources.web3
 import io.enkrypt.common.extensions.hexUBigInteger
 import io.reactivex.disposables.Disposable
 import mu.KotlinLogging
+import org.web3j.protocol.websocket.WebSocketService
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicLong
 
@@ -14,34 +16,45 @@ class CanonicalChainTracker(
   private val logger = KotlinLogging.logger {}
 
   // multiple readers on tail so we use AtomicLong
-  val tail = AtomicLong(startFrom)
+  private val tail = AtomicLong(startFrom)
 
   // single write multiple readers so we can use volatile
   @Volatile
-  var head: Long = parity.ethBlockNumber().send().blockNumber.longValueExact()
+  private var head: Long = parity.ethBlockNumber().send().blockNumber.longValueExact()
 
-  var exception: Throwable? = null
+  private var exception: Throwable? = null
 
-  var subscription: Disposable
+  private var subscription: Disposable
 
   init {
 
-    subscription =
-      parity.newHeadsNotifications()
-      .map { it.params.result }
-      .map { it.number.hexUBigInteger()!!.longValueExact() }
-      .buffer(1000, TimeUnit.MILLISECONDS, 128)
-      .onBackpressureBuffer()
-      .toObservable()
-      .filter { it.isNotEmpty() }
-      .subscribe(
-        { heads ->
+    logger.debug { "Starting subscription to new heads!" }
 
-          this.head = heads.max()!!
-          tryResetTail(heads.min()!!)
-        },
-        { ex -> this.exception = ex }
-      )
+    subscription =
+      parity
+        .newHeadsNotifications()
+        .map { it.params.result }
+        .map { it.number.hexUBigInteger()!!.longValueExact() }
+        .buffer(1000, TimeUnit.MILLISECONDS, 128)
+        .onBackpressureBuffer()
+//        .toObservable()
+        .filter { it.isNotEmpty() }
+        .subscribe(
+          { heads ->
+
+            head = heads.max()!!
+            val min = heads.min()!!
+
+            logger.debug { "Current range - Min: $min - Head: $head" }
+
+            val reorgs: List<Long> = heads.groupingBy { it }.eachCount().filter { it.value > 1 }.map { it.key }
+
+            logger.debug { "Re-org detected! Affecting range: $reorgs" }
+
+            tryResetTail(min)
+          },
+          { ex -> exception = ex }
+        )
   }
 
   fun stop() {
@@ -60,19 +73,47 @@ class CanonicalChainTracker(
 
   fun nextRange(maxSize: Int = 32): ClosedRange<Long>? {
 
-    val currentHead = this.head
-    val currentTail = this.tail.get()
+    val currentHead = head
+    val currentTail = tail.get()
 
-    if (currentHead == currentTail) return null
+    logger.debug { "Requesting next range - Tail: $currentTail - Head: $currentHead" }
 
-    var range = currentTail.until(currentTail + maxSize + 1) // range is not inclusive at the end
-
-    if (range.endInclusive > currentHead) {
-      range = currentTail.until(currentHead + 1)
+    if (currentHead == currentTail) {
+      logger.debug { "Tail: $currentTail == Head: $currentHead. Skipping!" }
+      return null
     }
+
+    val range = currentTail.until(currentTail + maxSize + 1) // range is not inclusive at the end
+      .let {
+        if (it.endInclusive > currentHead) {
+          currentTail.until(currentHead + 1)
+        } else {
+          it
+        }
+      }
+
+    logger.debug { "Range: $range" }
 
     tail.compareAndSet(currentTail, range.endInclusive)
 
     return range
   }
+}
+
+fun main() {
+  val wsService = WebSocketService("ws://localhost:8546", false)
+  wsService.connect()
+
+  val tracker = CanonicalChainTracker(
+    JsonRpc2_0ParityExtended(wsService),
+    0
+  )
+
+  val executor = Executors.newSingleThreadScheduledExecutor()
+  executor.scheduleAtFixedRate(
+    { tracker.nextRange(32) },
+    0,
+    1,
+    TimeUnit.SECONDS
+  )
 }
