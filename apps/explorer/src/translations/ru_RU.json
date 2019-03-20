@@ -286,214 +286,214 @@
   "home": "Главная",
   "about": {
     "name": "О нас",
-    "title": "What is EthVM?",
-    "text": "EthVM project is brought to you by kvhnuke,  founder of MyEtherWallet. EthVM is a free and open source interface for exploring and evaluting real time Ethereum blocks, transactions and more. This software is under MIT License.",
+    "title": "Что такое EthVM?",
+    "text": "Проект EthVM вам представил kvhnuke, основатель MyEtherWallet. EthVM - это бесплатный интерфейс с открытым исходным кодом для исследования и оценки в реальном времени блоков Ethereum, транзакций и т.д. Данное программное обеспечение имеет лицензию MIT.",
     "git": {
       "title": "GitHub",
-      "text": "If you want to contribute, make a request on GitHub."
+      "text": "Если вы хотите сделать свой вклад, сделайте заявку на GitHub."
     },
     "medium": {
       "title": "Medium",
-      "text": "If you want to listen/share our awesome thoughts check our medium account."
+      "text": "Если вы хотите послушать/поучаствовать в наших потрясающих идеях, ознакомьтесь с нашим medium-аккаунтом."
     },
     "twitter": {
       "title": "Twitter",
-      "text": "Talk to us on Twitter."
+      "text": "Пообщайтесь с нами в Twitter."
     },
     "reddit": {
       "title": "Reddit",
-      "text": "Visit our reddit thread."
+      "text": "Посетите наш тред в reddit."
     },
     "disclaimer": {
       "name": "Условия предоставления",
-      "text": "MIT License Copyright © 2017-2018 MyEtherWallet Inc Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.",
-      "mit": "THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+      "text": "Авторские права по лицензии MIT © 2017-2018 Настоящим MyEtherWallet Inc разрешает любому лицу, получившему копию данного программного обеспечения и файлы с сопроводительной документацией ('Программное обеспечение'), бесплатно работать с Программным обеспечением без ограничений, включая, в частности, права на пользование, копирование, изменение, объединение, публикацию, распространение, сублицензирование и/или продажу копий Программного обеспечения, а также выдачу разрешения на совершение таких действий лицам, которым Программное обеспечение поставляется, при соблюдении следующих условий: Вышеуказанное уведомление об авторских правах и настоящая разрешающая оговорка должны быть включены во все копии или существенные части Программного обеспечения.",
+      "mit": "ПРОГРАММНОЕ ОБЕСПЕЧЕНИЕ ПРЕДОСТАВЛЯЕТСЯ 'КАК ЕСТЬ', БЕЗ КАКИХ-ЛИБО ГАРАНТИЙ, КАК ЯВНО ВЫРАЖЕННЫХ, ТАК И ПОДРАЗУМЕВАЕМЫХ, ВКЛЮЧАЯ, В ЧАСТНОСТИ, ГАРАНТИИ ГОДНОСТИ ДЛЯ ПРОДАЖИ, СООТВЕТСТВИЯ ОПРЕДЕЛЕННЫМ ЦЕЛЯМ И ОТСУТСТВИЯ НАРУШЕНИЯ ПРАВ ИНЫХ ПРАВООБЛАДАТЕЛЕЙ. НИ В КОЕМ СЛУЧАЕ АВТОРЫ ИЛИ ВЛАДЕЛЬЦЫ АВТОРСКИХ ПРАВ НЕ НЕСУТ ОТВЕТСТВЕННОСТИ ПО КАКОМУ-ЛИБО ТРЕБОВАНИЮ О ВОЗМЕЩЕНИИ УБЫТКОВ, ЛИБО ИНОЙ ОТВЕТСТВЕННОСТИ, БУДЬ ТО В СИЛУ ДОГОВОРА, ПРАВОНАРУШЕНИЯ ИЛИ НА ИНЫХ ОСНОВАНИЯХ, ВОЗНИКАЮЩУЮ В РЕЗУЛЬТАТЕ ИЛИ В СВЯЗИ С НАСТОЯЩИМ ПРОГРАММНЫМ ОБЕСПЕЧЕНИЕМ ИЛИ ЕГО ИСПОЛЬЗОВАНИЕМ, ЛИБО ИНЫМИ ДЕЙСТВИЯМИ С ПРОГРАММНЫМ ОБЕСПЕЧЕНИЕМ."
     }
   },
   "kb": {
     "name": "База знаний",
-    "title": "Blockchain Terms",
+    "title": "Условия блокчейн",
     "terms": {
       "acc": {
         "term": "Aккаунт",
-        "def": "Entry on the blockchain ledger that contains data about the state of that account. In the case of a currency system, it's the information about funds available."
+        "def": "Запись в реестр блокчейн, содержащая данные о состоянии этого счета. В случае валютной системы - это информация о наличии средств."
       },
       "addr": {
         "term": "Адрес",
-        "def": "String of alphanumeric characters that represents a particular user's hashed public key. Addresses are used to send and receive transactions on the blockchain. The address points to an account."
+        "def": "Строка буквенно-цифровых символов, представляющая хешированный открытый ключ определенного пользователя. Адреса используются для отправки и получения транзакций в блокчейн. Адрес указывает на счет."
       },
       "block": {
         "term": "Блок",
-        "def": "Package of data that holds a number of recent transactions and the previous block's (\"parent\" block) hash. Thus, every block points to a previous block, creating an immutable chain."
+        "def": "Пакет данных, содержащий некоторое количество недавних транзакций и хэш предыдущего блока (\"родительский\" блок). Таким образом, каждый блок указывает на предыдущий блок, создавая неизменяемую цепочку."
       },
       "blockchain": {
         "term": "Блокчейн",
-        "def": "Distributed ledger that records data in packages called blocks. The blocks are connected together using cryptographic technology, making them unchangeable after being added to the chain."
+        "def": "Распределенный реестр, регистрирующий данные в пакетах, которые называются блоками. Блоки соединяются вместе с использованием криптографической технологии, которая делает их неизменяемыми после добавления в цепочку."
       },
       "casper": {
         "term": "Casper",
-        "def": "Specific type of proof of stake consensus protocol based on security deposits placed by nodes to confirm blocks. Casper is the protocol that should go into effect when Ethereum blockchain transitions to proof of stake."
+        "def": "Определенный тип протокола консенсуса с доказательством доли владения на основе гарантийных депозитов, размещенных узлами для подтверждения блоков. Casper - это протокол, который должен вступать в силу при транзакциях блокчейна Эфириума для подтверждения доли владения."
       },
       "consensus": {
         "term": "Консенсус",
-        "def": "Agreement among the nodes of the decentralized network about the state of the network."
+        "def": "Соглашение между узлами децентрализованной сети о состоянии сети."
       },
       "dao": {
         "term": "DAO",
-        "def": "Abbreviation for Decentralized Autonomous Organization – an organization that is run without direct human oversight, governed by a set of unalterable rules enforced through the blockchain."
+        "def": "Аббревиатура термина Decentralized Autonomous Organization (Децентрализованная автономная организация) – организация, которая работает без непосредственного человеческого контроля, регулируется набором неизменяемых правил, реализуемых в принудительном порядке через блокчейн."
       },
       "dapp": {
         "term": "dApp",
-        "def": "Abbreviation for decentralized application. dApps are applications that are open-source, not controlled by any centralized entity, enabling direct interaction between users without a trusted third party."
+        "def": "Аббревиатура для децентрализованного приложения. dApps - это приложения с открытым исходным кодом, не контролируемые какой-либо централизованной организацией, обеспечивающие прямое взаимодействие между пользователями без пользующейся доверием третей стороны."
       },
       "decentralization": {
         "term": "Децентрализация",
-        "def": "Redestribution of power and functions away from a central authority to eliminate third-party control and tampering."
+        "def": "Перераспределение полномочий и функций от центрального органа для устранения контроля и вмешательства третьей стороны."
       },
       "signature": {
-        "term": "Digital signature",
-        "def": "Algorithm which allows a user to produce a specific string of data using their private key. This string, along with the corresponding public key and the signed document, can be used to verify that the document was signed by the owner of the key and that it was not changed after signing."
+        "term": "Цифровая подпись",
+        "def": "Алгоритм, позволяющий пользователю создавать определенную строку данных с использованием своего закрытого ключа. Эта строка, вместе с соответствующим открытым ключом и подписанным документом, может использоваться для подтверждения того, что документ был подписан владельцем ключа, и что он не был изменен после подписания."
       },
       "double-spend": {
-        "term": "Double spend",
-        "def": "Occurs when a user sends a transaction to purchase coins, and then creates another transaction to send the SAME coins to themselves. This requires creating two blocks at the same level, resulting in a deliberate blockchain fork. "
+        "term": "Двойная трата",
+        "def": "Происходит тогда, когда пользователь отправляет транзакцию на покупку монет, а затем создает другую транзакцию на отправку ТЕХ ЖЕ САМЫХ монет самому себе. Для этого необходимо создать два блока на одном уровне, что приводит к умышленному созданию вилки блокчейна."
       },
       "encrypt": {
         "term": "Шифрование",
-        "def": "The process of turning plain text into ciphertext using a data \"key\". After encryption, ciphertext looks like a random sequnce of bits. The reverse process is decryption."
+        "def": "Процесс превращения обычного текста в зашифрованный текст с помощью \"ключа\" данных. После шифрования текст выглядит как произвольная последовательность битов. Обратный процесс называется расшифровкой."
       },
       "ens": {
         "term": "ENS",
-        "def": "Ethereum Name Service – registers plain text names that correspond to cryptographic wallet addresses, for greater security and ease of use."
+        "def": "Служба имен Эфириума – регистрирует имена в виде обычного текста, которые соответствуют адресам криптокошельков для большей безопасности и удобства пользования."
       },
       "eth": {
-        "term": "Ether",
-        "def": "Cryptographic currency of the Ethereum blockchain, used to pay transaction fees (gas) on the network. The short code for Ether is ETH."
+        "term": "Эфир",
+        "def": "Криптографическая валюта блокчейна Эфириума, используемая для оплаты транзакционного сбора (газа) в сети. Сокращенный код Эфира - ETH."
       },
       "ethreum": {
         "term": "Ethereum (Эфириум)",
-        "def": "Decentralized blockchain platform enabled with a software language for building applications and creating contracts. Ethereum is the network, Ether is the token."
+        "def": "Децентрализованная блокчейн-платформа, приспособленная с помощью языка программирования для построения приложений и создания контрактов. Эфириум - это сеть, Эфир - это токен."
       },
       "evm": {
         "term": "EVM",
-        "def": "Ethereum Virtual Machine – the decentralized computing code at the core of the Ethereum platform. Each validating node has its own isolated implementation of EVM which allows it to achieve consensus."
+        "def": "Виртуальная машина Эфириума – децентрализованный компьютерный код, лежащий в основе платформы Эфириума. Каждый проверяющий узел имеет свою собственную изолированную реализацию ВМЭ, что позволяет достичь консенсуса."
       },
       "fork": {
         "term": "Форк",
-        "def": "Accidental or deliberate creation of an alternative version of the blockchain by generating two blocks from the same parent block. This can result either in abandonment of one of the chains (through consensus) or both chains going forward operating independently."
+        "def": "Случайное или преднамеренное создание альтернативной версии блокчейна путем генерирования двух блоков от одного и того же родительского блока. Это может привести либо к отказу от одной из цепочек (путем понсенсуса), либо к продолжению независимой работы обеих цепочек."
       },
       "gas": {
         "term": "Газ",
-        "def": "The fee for executing a transaction or contract on the Ethereum network, paid in ETH. For this reason, a user must have a small amount of ETH available in the account before sending any transactions."
+        "def": "Сбор за выполнение транзакции или контракта в сети Эфириума, оплачиваемый в ETH. Поэтому перед отправкой любой транзакции пользователь должен иметь на счету небольшое количество ETH."
       },
       "hash": {
         "term": "Хэш",
-        "def": "Function or algorithm by which a file is processed into a small piece of data that looks like random bytes. Importantly, the hash is unique but always the same for a specific document. However, changing even one character in the document will completely randomize the hash."
+        "def": "Функция или алгоритм, с помощью которого файл преобразуется в малое количество данных, которые выглядят как произвольные байты. Важно то, что хэш является уникальным, но всегда одним и тем же для конкретного документа. Однако изменение хотя бы одного символа в документе полностью перемешивает хэш."
       },
       "messg": {
         "term": "Message",
-        "def": "Data transfer mechanism used for communication between contracts."
+        "def": "Механизм передачи данных, используемый для обмена информацией между контрактами."
       },
       "mining": {
         "term": "Майнинг",
-        "def": "Computing process by which transactions are verified and new blocks are added to the blockchain. Verified blocks are rewarded with a certain amount of cryptocurrency and the block's transaction fees, which means that mining is also the way more cryptocurrency is \"created\"."
+        "def": "Вычислительный процесс, посредством которого проверяются транзакции и добавляются новые блоки в блокчейн. Проверенным блокам присваивается определенное количество криптовалюты и транзакционный сбор блока, что означает, что майнинг также является способом \"создания\" большего количества криптовалюты."
       },
       "nonce": {
         "term": "Nonce-Число",
-        "def": "Number Used Once – a string of data generated and used just once as unique identifier for a new block in the blockchain."
+        "def": "Число, используемое один раз – строка данных, генерируемая и используемая только один раз в качестве уникального идентификатора нового блока в блокчейне."
       },
       "ommer": {
         "term": "Ommer-Блок",
-        "def": "Gender-neutral alternative to Uncle, used interchangeably in blockchain."
+        "def": "Гендерно-нейтральная альтернатива для Uncle, используемая в качестве синонима в блокчейне."
       },
       "oracle": {
         "term": "Oracles",
-        "def": "Products that can bring real-world data onto the blockchain for execution of smart contracts that are dependent on outside conditions – such as game scores for sports betting."
+        "def": "Продукты, которые могут привязать реальные данные к блокчейну для выполнения смарт-контрактов, которые зависят от внешних условий – таких как количество набранных баллов в игре для ставок на спорт."
       },
       "pri-key": {
         "term": "Приватный ключ",
-        "def": "Alphanumeric string associated with an account and known only by the owner of the account. Cryptographically paired with public key for executing transactions."
+        "def": "Буквенно-цифровая строка, связанная со счетом и известная только владельцу счета. Криптографически спаренная с открытым ключом для выполнения транзакций."
       },
       "pos": {
         "term": "Доказательство доли (PoS)",
-        "def": "Low-cost, low-energy alternative to proof of work. Validation of new blocks is allocated to users that hold the most stake (the highest amount of Ether) in the network. The Ethereum blockchain is expected to transition to a proof of stake algorithm Casper in the near future."
+        "def": "Дешевая альтернатива с низким потреблением энергии для подтверждения работы. Проверка новых блоков назначается пользователям, которые владеют наибольшей долей (наибольшим количеством Эфира) в сети. В ближайшем будущем ожидается, что блокчейн Эфириума перейдет на \n алгоритм доказательства доли владения Casper."
       },
       "pow": {
         "term": "Доказательство Работы (PoW)",
-        "def": "Consensus algorithm that depends on using a high amount of computing power and energy for mining new blocks. A validator node must solve complex mathematical problems and present the result as proof of that work in order to qualify for block validation. This is the current consensus algorithm for Ethereum."
+        "def": "Алгоритм консенсуса, который зависит от использования большого количества вычислительных ресурсов и энергии для майнинга новых блоков. Узел валидатора должен решать сложные математические задачи и представлять результат в качестве подтверждения этой работы, чтобы удовлетворять требованиям проверки блока. Это текущий алгоритм консенсуса для Эфириума."
       },
       "pub-key": {
         "term": "Публичный ключ",
-        "def": "Alphanumeric string derived from private key and used publicly to provide other users with an address for sending transactions. "
+        "def": "Буквенно-цифровая строка,  основанная на закрытом ключе и используемая открыто для предоставления другим пользователям адреса для отправки транзакций."
       },
       "contract": {
         "term": "Смарт-контракт",
-        "def": "Computer protocol that digitally enforces contracts such that they are automatically executed on the blockchain when contract conditions are met. These conditions can require input from oracles."
+        "def": "Компьютерный протокол, который в цифровом виде приводит контракты в исполнение, при этом они выполняются автоматически в блокчейне, когда соблюдены условия контракта. Эти условия могут требовать ввода из oracles."
       },
       "state": {
         "term": "Состояние (State)",
-        "def": "All balances and data on the blockchain at a particular point in time."
+        "def": "Все балансы и данные в блокчейне в определенный момент времени."
       },
       "txs": {
         "term": "Транзакция",
-        "def": "Any action taking place on the blockchain. Usually, sending currency or tokens to another address; other examples include entering and executing smart contracts, registering domain names, fulfilling trade orders."
+        "def": "Любое действие, происходящее в блокчейне. Обычно отправка валюты или токенов на другой адрес; другие примеры включают заключение и выполнение смарт-контрактов, регистрацию доменных имен, выполнение торговых приказов."
       },
       "uncle": {
         "term": "Uncle-Блок",
-        "def": "Because miners may not be fully synchronized at all times, some blocks will be mined that are not on the longest chain. These end up being \"sibling\" blocks to the \"parent\" block which continues the blockchain. On Ethereum, uncle (or ommer) blocks are still rewarded, but at a lower rate."
+        "def": "Поскольку майнеры могут не всегда быть полностью синхронизированными, в результате майнинга некоторые блоки не включаются в самую длинную цепь. Они оказываются на одном уровне с \"родительским\" блоком, который продолжает блокчейн. В Эфириуме блоки uncle (или ommer) все еще вознаграждаются, но по меньшей ставке."
       },
       "valid": {
         "term": "Валидатор",
-        "def": "Nodes that make up a decentralized network and maintain consensus by validating new blocks broadcasted by miners. "
+        "def": "Узлы, составляющие децентрализованную сеть и поддерживающие консенсус путем проверки новых блоков, передаваемых майнерами."
       }
     }
   },
   "pp": {
     "name": "Политика конфиденциальности",
     "intro": {
-      "title": "Introduction",
-      "p1": "Welcome to EthVM, a free, open-source, tool for interacting with data on the blockchain. EthVM and MyEtherWallet, Inc. values privacy and we make a concerted effort to minimize and, to the extent possible, eliminate the exposure of personal data during the use of our interface. EthVM does not collect, hold, or store keys, account information, or passwords. We do not collect data passively, do not monetize the collection of data, and do not use your data for marketing or advertising.",
-      "p2": "To the extent we collect any personal information, this privacy policy (“Policy”) describes how EthVM collects, uses, and shares personal information of people who visit our website (the “Site”) or otherwise use our services (collectively, the “Services”).",
-      "p3": "This Policy applies to anyone who accesses the Services. Please read the Policy carefully to understand our practices regarding your information and how we will treat it. By visiting the Site, App, and/or using the Services, you acknowledge that the collection, use, and sharing of your information will take place as described in this Policy.",
-      "p4": "So that we are clear about the terminology we are using, when we use the phrase “Personal Information” in this Privacy Policy, we mean information about an individual that (either by itself or when combined with information from other available sources) allows that individual to be identified, including, the individual’s name, telephone number, or e-mail address."
+      "title": "Введение",
+      "p1": "Добро пожаловать в EthVM - бесплатный инструмент с открытым исходным кодом для взаимодействия с данными в блокчейне. В EthVM и MyEtherWallet, Inc. ценят конфиденциальность и мы прилагаем скоординированные усилия для минимизации и, по возможности, устранения риска несанкционированного доступа к персональным данным во время пользования нашим интерфейсом. EthVM не собирает и не хранит ключи, сведения об учетной записи или пароли. Мы не осуществляем пассивный сбор информации, не монетизируем сбор данных, а также не используем ваши данные в маркетинговых или рекламных целях.",
+      "p2": "В тех случаях, когда мы собираем какие-либо персональные данные, в настоящей политике конфиденциальности (“Политика”) описывается, как EthVM собирает, использует и передает персональные данные людей, которые посещают наш веб-сайт (“Сайт”) или иным образом использует наши услуги (вместе “Услуги”).",
+      "p3": "Настоящая Политика применяется ко всем, кто получает доступ к Услугам. Прочитайте Политику внимательно, чтобы понять наши правила в отношении ваших данных и то, как мы с ними обращаемся. Посещая наш Сайт, Приложение и/или пользуясь Услугами, вы признаете, что сбор, использование и передача ваших данных осуществляются в соответствии с настоящей Политикой.",
+      "p4": "Во избежание неясности в отношении используемой нами терминологии, когда мы используем фразу “Персональные данные\" в настоящей Политике конфиденциальности, мы имеем ввиду информацию о физическом лице, которая (либо сама по себе, либо в сочетании с информацией из других доступных источников) позволяет идентифицировать это физическое лицо, включая его имя, номер телефона или адрес электронной почты."
     },
     "block": {
-      "title": "The Blockchain",
-      "p1": "Due to the inherent transparency of many blockchains, including the Ethereum Blockchain, transactions that individuals broadcast via EthVM may be publicly accessible. This includes, but is not limited to, your public sending address, the public address of the receiver, the amount sent or received, and any other data a user has chosen to include in a given transaction. Information stored on a blockchain may be public, immutable, and difficult or even impossible to remove or delete. Transactions and addresses may reveal information about the user’s identity and information can potentially be correlated now or in the future by any party who chooses to do so, including law enforcement. Users are encouraged to review how privacy and transparency on the blockchain works."
+      "title": "Блокчейн",
+      "p1": "Благодаря присущей прозрачности многих блокчейнов, включая Блокчейн Эфириума, транзакции, передаваемые физическими лицами через EthVM, могут быть общедоступными. Сюда входит, в частности, ваш публичный адрес отправителя, публичный адрес получателя, отправляемая или получаемая сумма, а также любые другие данные, которые пользователь решил включить в данную транзакцию. Информация, хранящаяся в блокчейне, может быть публичной, неизменяемой и такой, которую трудно или даже невозможно удалить или стереть. Транзакции или адреса могут раскрывать информацию о личности пользователя, и информация потенциально может сопоставляться сейчас или в будущем любой стороной, которая решит это сделать, включая правоохранительные органы. Пользователям рекомендуется разобраться, как в блокчейне работает политика конфиденциальности и информационная открытость."
     },
     "collect": {
-      "title": "What We Collect",
-      "p1": "We collect information about you as described below. We use this information to enhance your experience with our Services.",
-      "sub1": "Information You Provide",
-      "p2": "We may collect Personal Information you choose to provide to us. For example, when you contact us for support through the Services, you give us with your e-mail address and any other information that you choose to provide. Also, if you participate in a EthVM offer, give-away, or promotion (“Promotion”), you provide your name, e-mail address, and mailing address.",
-      "sub2": "California Do Not Track Disclosures",
-      "p3": "EthVM does not track users over time and across third party websites to provide targeted advertising and therefore does not respond to Do Not Track (DNT) signals."
+      "title": "Что мы собираем",
+      "p1": "Мы собираем информацию о вас, как описано ниже. Мы используем эту информацию для  улучшения ваших возможностей в отношении наших Услуг.",
+      "sub1": "Предоставляемая вами информация",
+      "p2": "Мы можем собирать Персональные данные, которые вы решили нам предоставить. Например, когда вы обращаетесь к нам за поддержкой посредством Услуг, вы предоставляете нам ваш адрес электронной почты, а также какую-либо другую информацию по вашему усмотрению. Также, если вы участвуете в предложении EthVM, раздаче призов или рекламной акции (“Рекламная акция”), вы указываете ваше имя, адрес электронной почты и почтовый адрес.",
+      "sub2": "Калифорния не отслеживает раскрываемые данные",
+      "p3": "EthVM не отслеживает пользователей по прошествии определенного времени и через веб-сайты третьей стороны для предоставления целевой рекламы и поэтому не отвечает на сигналы DNT (Do not track - \"Не отслеживать\")."
     },
     "use": {
-      "title": "Use Of Information",
-      "p1": "We use the information that we have about you to provide support and certain Services to you.",
-      "p2": "We may use the Personal Information we collect from and about you to (1) provide you with information or services that you request from us, including to respond to your comments, questions, and/or provide customer service; (2) monitor and analyze usage and trends and personalize and improve the Services and your experience using the Services; and (3) for any other purpose with your consent."
+      "title": "Использование информации",
+      "p1": "Мы используем имеющуюся у нас информацию о вас для предоставления вам поддержки и определенных Услуг.",
+      "p2": "Мы можем использовать Персональные данные, которые мы собираем от вас и о вас, чтобы (1) предоставлять вам информацию или услуги, которые вы запрашиваете у нас, в том числе, чтобы отвечать на ваши комментарии, вопросы и/или осуществлять обслуживание клиентов; (2) отслеживать и анализировать пользование и тенденции, а также персонализировать и улучшать Услуги и ваши возможности при пользовании Услугами; а также (3) в любых других целях с вашего согласия."
     },
     "sharing": {
-      "title": "Sharing of Personal Information",
-      "p1": "We will not disclose your Personal Information other than as described below, and we do not and will not sell your Personal Information to anyone.",
-      "p2": "We may share the Personal Information we collect from and about you (1) to fulfill the purpose for which you provided it; (2) with your consent; (3) for legal, protection, and safety purposes; (4) to comply with any court order, law, or legal process, including to respond to any government or regulatory request; (5) to protect the rights of EthVM, our agents, customers, and others, including by enforcing our agreements, policies, and terms of service; and (6) with those who need it to do work for us (our Service Providers, as defined below).",
-      "sub1": "Service providers",
-      "p3": "We may contract with third parties to perform functions related to the Services (“Service Providers”). In general, Service Providers will have access to your Personal Information only to the extent needed to perform their business functions but may not use or share that personal information for purposes outside the scope of their functions related to the Services."
+      "title": "Передача Персональных данных",
+      "p1": "Мы раскрываем ваши Персональные данные только на условиях, описанных ниже, а также мы не продаем и не будем продавать ваши Персональные данные кому-либо.",
+      "p2": "Мы можем передавать Персональные данные, которые мы собираем от вас и о вас, (1) для реализации цели, для которой вы их предоставили; (2) с вашего согласия; (3) в целях выполнения требований закона, обеспечения защиты и безопасности; (4) для выполнения условий любого постановления суда, закона или судебного процесса, в том числе для ответа на любой правительственный или законный запрос; (5) для защиты прав EthVM, наших агентов, клиентов и других лиц, в том числе, путем принудительного исполнения наших соглашений, правил и условий обслуживания; а также (6) тем, кому они нужны для выполнения работы для нас (наши Поставщики услуг, определение которых приведено ниже).",
+      "sub1": "Поставщики услуг",
+      "p3": "Мы можем заключать договора с третьей стороной для выполнения функций, связанных с Услугами (“Поставщики услуг”). Обычно Поставщики услуг имеют доступ к вашим Персональным данным только в той мере, в какой это необходимо для выполнения их бизнес-функций, но они не могут использовать или передавать эти персональные данные для целей, которые не входят в круг их обязанностей, связанных с Услугами."
     },
     "links": {
-      "title": "Links to Other Sites",
-      "p1": "The Services contain links to other third-party websites or applications. Once you click on such a link and leave the Site or are redirected to a third-party website or application, you are no longer governed by this Policy. Any information you provide on those sites is subject to that third party’s privacy policy and we are not responsible for the privacy and security practices and policies of those third-party sites or applications."
+      "title": "Ссылки на другие Сайты",
+      "p1": "Услуги содержат ссылки на другие веб-сайты или приложения третьей стороны. Когда вы нажимаете на такую ссылку и покидаете Сайт или переадресуетесь на веб-сайт или приложение третьей стороны, настоящая Политика на вас больше не распространяется. На любую информацию, которую вы предоставляете на этих сайтах, распространяется политика конфиденциальности этой третьей стороны, и мы не несем ответственности за инструкции и правила по обеспечению конфиденциальности и безопасности этих сайтов и приложений третьей стороны."
     },
     "child": {
-      "title": "Our Commitment Towards Children's Privacy",
-      "p1": "We do not direct the Services to, nor do we knowingly collect any Personal Information from children under 13. Children under 13 are not eligible to use the Services. If we learn that someone using our Services is under 13 years of age, we will take steps to remove any Personal Information from our database and to prevent them from utilizing the Services."
+      "title": "Наши обязательства по детской конфиденциальности",
+      "p1": "Мы не адресуем наши Услуги детям до 13 лет и намеренно не собираем у таких детей какие-либо Персональные данные. Дети, не достигшие 13 лет, не имеют права пользоваться Услугами. Если мы узнаем, что кто-либо, пользующийся нашими Услугами, не достиг 13-летнего возраста, мы примем меры для удаления любых Персональных данных из нашей базы данных и не допущения, чтобы такие лица пользовались Услугами."
     },
     "security": {
-      "title": "Security of Your Personal Information & Rights",
-      "p1": "We are committed to protecting the security of Personal Information. We have taken certain physical, administrative, and technical steps to help safeguard the information we collect from and about you. While we take steps to help ensure the integrity and security of our network and systems, we cannot guarantee our security measures.",
-      "p2": "In certain circumstances, you will also have the following rights:",
-      "b1": "1. Right to access: the right to request certain information about, access to and copies of any Personal Information about you that we are holding (please note that you are entitled to request one copy of the Personal Information that we hold about you at no cost, but for any further copies, we reserve the right to charge a reasonable fee based on administration costs);",
+      "title": "Безопасность ваших Персональных данный и права",
+      "p1": "Мы обязуемся защищать безопасность Персональных данных. Мы приняли определенные физические, административные и технические меры, чтобы помочь защитить данные, которые мы собираем от вас и о вас. Несмотря на то, что мы принимаем меры, чтобы помочь обеспечить целостность и безопасность нашей сети и наших систем, мы не можем гарантировать наши меры безопасности.",
+      "p2": "При определенных обстоятельствах вы также имеете следующие права:",
+      "b1": "1. Право доступа: право запрашивать определенную информацию, получать доступ к любым хранящимся у нас Персональным данным о вас и их копии (обратите внимание, что вы имеете право бесплатно запрашивать одну копию хранящихся у нас Персональных данных о вас, но за любые дополнительные копии мы сохраняем за собой право взимать разумную плату с учетом административных расходов);",
       "b2": "2. Право на внесение поправок: право на внесение поправок в ваши Персональные данные, если они являются неточными или неполными;",
       "b3": "3. Право на стирание / “право быть забытым”: в случаях, когда обработка ваших данных основана на вашем согласии, право отозвать это согласие и право попросить, чтобы мы удалили или стерли ваши Персональные данные из наших систем (однако это условие не применяется, если от нас требуется сохранить эти данные для выполнения любого правового обязательства, либо если нам требуется эта информация для обоснования или оспаривания какого-либо искового требования);",
       "b4": "4. Право на ограничение использования ваших данных: право воспрепятствовать использованию нами ваших Персональных данных, либо ограничить способ, которым мы можем их использовать;",
