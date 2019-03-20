@@ -15,3 +15,15 @@ query accountMetadataByHash($address: String!) {
     totalTxCount
   }
 }
+
+query addressAllTokensOwned($address: String!) {
+  addressAllTokensOwned(address: $address) {
+    name
+    website
+    email
+    symbol
+    addr
+    decimals
+    balance
+  }
+}

@@ -28,11 +28,11 @@ export class EthvmMigrationApi implements EthvmApi {
   }
 
   public getAddressMetadata(address: string): Promise<AddressMetadata> {
-    return this.socketIoApi.getAddressMetadata(address)
+    return this.apolloApi.getAddressMetadata(address)
   }
 
   public getAddressAllTokensOwned(address: string): Promise<Token[]> {
-    return this.socketIoApi.getAddressAllTokensOwned(address)
+    return this.apolloApi.getAddressAllTokensOwned(address)
   }
 
   public getAddressAmountTokensOwned(address: string): Promise<number> {

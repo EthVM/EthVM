@@ -1,5 +1,5 @@
 import { EthvmApi } from '@app/core/api'
-import { accountMetadataByHash, addressBalanceByHash } from '@app/core/api/apollo/queries/addresses.graphql'
+import { accountMetadataByHash, addressBalanceByHash, addressAllTokensOwned } from '@app/core/api/apollo/queries/addresses.graphql'
 import { blockMetricByHash, blockMetrics } from '@app/core/api/apollo/queries/block-metrics.graphql'
 import { blockByHash, blockByNumber, blocks, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
 import { contractByHash, contractsCreatedBy } from '@app/core/api/apollo/queries/contracts.graphql'
@@ -78,7 +78,14 @@ export class EthvmApolloApi implements EthvmApi {
   }
 
   public getAddressAllTokensOwned(address: string): Promise<Token[]> {
-    throw new Error('Method not implemented.')
+    return this.apollo
+      .query({
+        query: addressAllTokensOwned,
+        variables: {
+          address
+        }
+      })
+      .then(res => res.data.addressAllTokensOwned)
   }
 
   public getAddressAmountTokensOwned(address: string): Promise<number> {
