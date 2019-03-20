@@ -4,6 +4,7 @@ import io.enkrypt.common.extensions.hexUBigInteger
 import io.reactivex.disposables.Disposable
 import mu.KotlinLogging
 import org.web3j.protocol.websocket.WebSocketService
+import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicLong
@@ -26,6 +27,8 @@ class CanonicalChainTracker(
 
   private var subscription: Disposable
 
+  private var reorgs : ArrayBlockingQueue<ClosedRange<Long>> = ArrayBlockingQueue(10)
+
   init {
 
     logger.debug { "Starting subscription to new heads!" }
@@ -37,21 +40,25 @@ class CanonicalChainTracker(
         .map { it.number.hexUBigInteger()!!.longValueExact() }
         .buffer(1000, TimeUnit.MILLISECONDS, 128)
         .onBackpressureBuffer()
-//        .toObservable()
         .filter { it.isNotEmpty() }
         .subscribe(
           { heads ->
 
             head = heads.max()!!
-            val min = heads.min()!!
+            val tail = heads.min()!!
 
-            logger.debug { "Current range - Min: $min - Head: $head" }
+            logger.debug { "New Heads notification! Current range - Tail: $tail - Head: $head" }
 
-            val reorgs: List<Long> = heads.groupingBy { it }.eachCount().filter { it.value > 1 }.map { it.key }
+            val reorg: List<Long> = heads.groupingBy { it }.eachCount().filter { it.value > 1 }.map { it.key }
+            if (reorg.isNotEmpty()) {
+              logger.debug { "Re-org detected! Affecting range: $reorg" }
+              val minReOrg = reorg.min()
+              val maxReOrg = reorg.max()
+              val range = LongRange(minReOrg!!, maxReOrg!!)
+              reorgs.add(range)
+            }
 
-            logger.debug { "Re-org detected! Affecting range: $reorgs" }
-
-            tryResetTail(min)
+            tryResetTail(tail)
           },
           { ex -> exception = ex }
         )
@@ -71,6 +78,7 @@ class CanonicalChainTracker(
     } while (value < currentTail && !tail.compareAndSet(currentTail, value))
   }
 
+  // 1) Return a Pair<ClosedRange, Optional<ClosedRange (Re-Org)>>
   fun nextRange(maxSize: Int = 32): ClosedRange<Long>? {
 
     val currentHead = head
@@ -78,7 +86,7 @@ class CanonicalChainTracker(
 
     logger.debug { "Requesting next range - Tail: $currentTail - Head: $currentHead" }
 
-    if (currentHead == currentTail) {
+    if (currentTail == currentHead) {
       logger.debug { "Tail: $currentTail == Head: $currentHead. Skipping!" }
       return null
     }
