@@ -261,7 +261,7 @@ services:
     volumes:
       - ./apps/verifier:/usr/src/app
       - ./apps/common:/usr/src/common
-    command: sh -c "yarn install && yarn start kafka"
+    command: sh -c "yarn install && yarn start ether-balances"
     environment:
       KAFKA_AVRO_LOG_LEVEL: debug
 
