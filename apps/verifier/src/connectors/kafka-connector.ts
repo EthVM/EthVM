@@ -1,10 +1,12 @@
 import { Config, KafkaConfig } from '@app/config'
-import { BlockRecord } from '@app/models/block-record'
 import AvroSchemaRegistry from 'avro-schema-registry'
 import { ConsumerStream, ConsumerStreamMessage, createReadStream } from 'node-rdkafka'
 import { Observable } from 'rxjs'
 import { streamToRx } from 'rxjs-stream'
 import { flatMap, map } from 'rxjs/operators'
+import { EtherBalance } from '@app/models/ether-balance'
+import { EtherBalanceKey } from '@app/models/ether-balance-key'
+import { Pair } from '@app/models/pair'
 
 export class KafkaConnector {
   private readonly config: KafkaConfig
@@ -15,7 +17,7 @@ export class KafkaConnector {
     this.registry = AvroSchemaRegistry(config.kafka.schemaRegistryUrl)
   }
 
-  consume(topic: string, groupId: string = 'ethvm-verifier-2'): Observable<BlockRecord> {
+  consume(topic: string, groupId: string = 'ethvm-verifier'): Observable<Pair<any, any>> {
     const { registry, config } = this
     const { bootstrapServers } = config
 
@@ -35,15 +37,24 @@ export class KafkaConnector {
       }
     )
 
+
     return streamToRx(stream).pipe(
       map(value => value as any),
       map(value => value as ConsumerStreamMessage),
-      flatMap(msg => registry.decode(msg.value)),
-      map(value => new BlockRecord(value))
+      flatMap(msg => {
+        const key = registry.decode(msg.key);
+        const value = registry.decode(msg.value);
+        return Promise.all([key, value])
+          .then(values => new Pair(values[0], values[1]))
+      }),
     )
   }
 
-  blocks$(): Observable<BlockRecord> {
-    return this.consume('blocks')
+  etherBalances$(): Observable<Pair<EtherBalanceKey, EtherBalance>> {
+    return this.consume('ether-balances')
+      .pipe(
+        map( pair => new Pair(new EtherBalanceKey(pair.first), new EtherBalance(pair.second)))
+      );
   }
+
 }
