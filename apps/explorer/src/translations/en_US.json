@@ -311,7 +311,7 @@
     },
     "medium": {
       "title": "Medium",
-      "text": "If you want to listen/share our awesome thoughts check our medium account."
+      "text": "Check out our Medium page for news, thoughts and awesome educational content."
     },
     "twitter": {
       "title":"Twitter",
@@ -389,7 +389,7 @@
     },
     "ethreum": {
       "term": "Ethereum",
-      "def": "Decentralized blockchain platform enabled with a software language for building applications and creating contracts. Ethereum is the network, Ether is the token."
+      "def": "Decentralized blockchain platform enabled with a software language for building applications and creating contracts. Ethereum is the network, Ether is the currency."
     },
     "evm": {
       "term": "EVM",
