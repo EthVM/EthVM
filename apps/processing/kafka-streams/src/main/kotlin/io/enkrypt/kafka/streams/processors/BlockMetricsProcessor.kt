@@ -131,8 +131,14 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
 
         val txCount = transactions.size.toBigInteger()
 
-        val avgGasPrice = totalGasPrice / txCount
-        val avgGasLimit = totalGasLimit / txCount
+        val (avgGasPrice, avgGasLimit) =
+          when (txCount) {
+            BigInteger.ZERO -> listOf(BigInteger.ZERO, BigInteger.ZERO)
+            else -> listOf(
+              totalGasPrice / txCount,
+              totalGasLimit / txCount
+            )
+          }
 
         BlockMetricsRecord.newBuilder()
           .setTotalGasPrice(totalGasPrice.toString())
@@ -150,12 +156,18 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
           memo + next.getTransactionFee().toBigInteger()
         }
 
-        val avgTxFees = totalTxFees / transactionFees.size.toBigInteger()
+        val count = transactionFees.size.toBigInteger()
+
+        val avgTxFees = when (count) {
+          BigInteger.ZERO -> BigInteger.ZERO
+          else -> totalTxFees / count
+        }
 
         BlockMetricsRecord.newBuilder()
           .setTotalTxFees(totalTxFees.toString())
           .setAvgTxFees(avgTxFees.toString())
           .build()
+
       }.toTopic(TransactionFeeBlockMetrics)
 
     return builder.build()
