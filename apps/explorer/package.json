@@ -16,7 +16,6 @@
   },
   "dependencies": {
     "apollo-boost": "^0.3.1",
-    "axios": "^0.18.0",
     "bignumber.js": "^8.1.1",
     "canvas-confetti": "^0.1.0",
     "chart.js": "^2.7.3",
@@ -33,7 +32,6 @@
     "visibilityjs": "^2.0.2",
     "vue": "^2.6.7",
     "vue-apollo": "^3.0.0-beta.28",
-    "vue-axios": "^2.1.4",
     "vue-class-component": "^7.0.1",
     "vue-i18n": "^8.8.2",
     "vue-paginate": "^3.6.0",

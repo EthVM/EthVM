@@ -6,12 +6,10 @@ import store from '@app/core/store'
 import App from '@app/modules/App.vue'
 import i18n from '@app/translations'
 import ApolloClient from 'apollo-boost'
-import axios from 'axios'
 import io from 'socket.io-client'
 import VTooltip from 'v-tooltip'
 import Vue from 'vue'
 import VueApollo from 'vue-apollo'
-import VueAxios from 'vue-axios'
 import VueTimeago from 'vue-timeago'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
@@ -105,12 +103,6 @@ Vue.use(Vuetify, {
     // background: String(colors.grey.darken3)
   }
 })
-
-// -------------------------------------------------------
-//    Axios
-//    See: https://www.npmjs.com/package/vue-axios
-// -------------------------------------------------------
-Vue.use(VueAxios, axios)
 
 /*
   ===================================================================================
