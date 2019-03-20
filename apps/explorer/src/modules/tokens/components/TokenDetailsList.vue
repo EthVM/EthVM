@@ -101,7 +101,8 @@ export default class TokenDetailsList extends Vue {
         }
       ]
     } else {
-      details = [
+
+      const detailsItems = [
         {
           title: this.$i18n.t('title.contract'),
           detail: new Hex(this.tokenDetails.address).toString(),
@@ -132,17 +133,24 @@ export default class TokenDetailsList extends Vue {
           title: this.$i18n.t('title.decimals'),
           detail: this.contractDetails.metadata.decimals
         },
-        {
+      ]
+
+      if (this.contractDetails.metadata.website) {
+        detailsItems.push({
           title: this.$i18n.t('title.website'),
           detail: `<a href="${this.contractDetails.metadata.website}" target="_BLANK">${this.contractDetails.metadata.website}</a>`
-        },
-        {
+        })
+      }
+
+      if (this.contractDetails.metadata.support) {
+        detailsItems.push({
           title: this.$i18n.t('title.support'),
-          detail: this.contractDetails.metadata.support
-            ? `<a href="mailto:${this.contractDetails.metadata.support.email}" target="_BLANK">${this.contractDetails.metadata.support.email}</a>`
-            : 'REQUIRED DATA'
-        },
-        {
+          detail: `<a href="mailto:${this.contractDetails.metadata.support.email}" target="_BLANK">${this.contractDetails.metadata.support.email}</a>`
+        })
+      }
+
+      if (this.contractDetails.metadata.social) {
+        detailsItems.push({
           title: this.$i18n.t('title.links'),
           detail: Object.entries(this.contractDetails.metadata.social)
             .map(obj => {
@@ -153,13 +161,15 @@ export default class TokenDetailsList extends Vue {
               }
               return `<a href="${url}" target="_BLANK"><i aria-hidden="true" class="v-icon secondary--text ${
                 icons[name]
-              } pr-2 material-icons theme--light"></i></a>`
+                } pr-2 material-icons theme--light"></i></a>`
             })
             .reduce((a, b) => {
               return `${a}${b}`
             })
-        }
-      ]
+        })
+      }
+
+      details = detailsItems
     }
     return details
   }
