@@ -3,7 +3,7 @@ type Query {
 }
 
 type ProcessingMetadata {
-  id: ProcessingMetadataKey
+  id: String
   boolean: Boolean
   bigInteger: String
   double: Decimal
@@ -12,8 +12,4 @@ type ProcessingMetadata {
   long: Int
   name: String
   string: String
-}
-
-type ProcessingMetadataKey {
-  name: String
 }

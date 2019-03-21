@@ -1,9 +1,5 @@
-import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm'
+import { Column, Entity, ObjectIdColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
-
-interface ProcessingMetadataKeyInterface {
-  name: string
-}
 
 @Entity('processing_metadata')
 export class ProcessingMetadataEntity {
@@ -12,7 +8,7 @@ export class ProcessingMetadataEntity {
   }
 
   @ObjectIdColumn({ name: '_id', readonly: true })
-  id: ProcessingMetadataKeyInterface
+  id: string
 
   @Column({ type: 'boolean', readonly: true })
   boolean: boolean

@@ -11,6 +11,6 @@ export class ProcessingMetadataService {
   ) {}
 
   async findProcessingMetaDataById(id: string): Promise<ProcessingMetadataEntity | null> {
-    return this.processingMetadataRepository.findOne({ where: { _id: id } })
+    return this.processingMetadataRepository.findOne({ where: { id: id } })
   }
 }

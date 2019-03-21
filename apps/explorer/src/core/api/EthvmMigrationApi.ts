@@ -244,6 +244,6 @@ export class EthvmMigrationApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
 
   public getProcessingMetadata(id: string): Promise<ProcessingMetadata> {
-    return this.socketIoApi.getProcessingMetadata(id)
+    return this.apolloApi.getProcessingMetadata(id)
   }
 }

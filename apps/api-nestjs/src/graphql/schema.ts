@@ -272,7 +272,7 @@ export class Logo {
 }
 
 export class ProcessingMetadata {
-    id?: ProcessingMetadataKey;
+    id?: string;
     boolean?: boolean;
     bigInteger?: string;
     double?: Decimal;
@@ -281,10 +281,6 @@ export class ProcessingMetadata {
     long?: number;
     name?: string;
     string?: string;
-}
-
-export class ProcessingMetadataKey {
-    name?: string;
 }
 
 export abstract class IQuery {
