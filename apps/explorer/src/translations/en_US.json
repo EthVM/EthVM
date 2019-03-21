@@ -182,7 +182,8 @@
     "update": {
       "tx": "new tx | new txs",
       "block": "new block | new blocks"
-    }
+    },
+    "sec": "sec"
   },
   "charts": {
     "name": "Charts",
