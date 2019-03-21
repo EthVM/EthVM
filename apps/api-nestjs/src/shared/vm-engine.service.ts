@@ -64,6 +64,7 @@ export class VmEngineService {
 
     const decoded = this.decode(res.data.result)
     const tokens = decoded.filter(t => t.balance && t.balance !== '0')
+
     return tokens.map(t => new TokenDto(t))
   }
 

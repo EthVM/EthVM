@@ -7,6 +7,6 @@ import { TokenExchangeRateResolvers } from '@app/modules/exchanges/token-exchang
 @Module({
   imports: [TypeOrmModule.forFeature([TokenExchangeRateEntity])],
   providers: [ExchangeService, TokenExchangeRateResolvers],
-  exports: []
+  exports: [ExchangeService]
 })
 export class ExchangeModule {}

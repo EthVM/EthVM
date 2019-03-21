@@ -36,7 +36,7 @@ export class EthvmMigrationApi implements EthvmApi {
   }
 
   public getAddressAmountTokensOwned(address: string): Promise<number> {
-    return this.socketIoApi.getAddressAmountTokensOwned(address)
+    return this.apolloApi.getAddressAmountTokensOwned(address)
   }
 
   public getAddressTokenTransfers(address: string, limit: number, page: number): Promise<TokenTransfer[]> {

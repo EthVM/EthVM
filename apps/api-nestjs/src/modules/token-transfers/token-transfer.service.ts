@@ -7,13 +7,18 @@ import { HttpException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import axios from 'axios'
 import { MongoRepository } from 'typeorm'
+import { VmEngineService } from '@app/shared/vm-engine.service'
+import { ExchangeService } from '@app/modules/exchanges/exchange.service'
+import { TokenDto } from '@app/modules/token-transfers/dto/token.dto'
 
 @Injectable()
 export class TokenTransferService {
   constructor(
     @InjectRepository(TokenTransferEntity)
     private readonly tokenTransferRepository: MongoRepository<TokenTransferEntity>,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly vmEngine: VmEngineService,
+    private readonly exchangeService: ExchangeService
   ) {}
 
   async findAddressTokenTransfers(address: string, take: number = 10, page: number = 0): Promise<TokenTransferEntity[]> {
@@ -153,4 +158,17 @@ export class TokenTransferService {
     }
     throw err
   }
+
+  async findAddressAllTokensOwned(address: string): Promise<TokenDto[]> {
+    const tokens = await this.vmEngine.fetchAddressAllTokensOwned(address)
+
+    for (let i = 0; i < tokens.length; i++) {
+      const rate = await this.exchangeService.findTokenExchangeRateByAddress(tokens[i].addr.replace('0x', ''))
+      tokens[i].currentPrice = rate ? rate.currentPrice : 0
+    }
+
+    return tokens
+
+  }
+
 }

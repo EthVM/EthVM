@@ -17,6 +17,7 @@ type Token {
   addr: String
   decimals: Int
   balance: String
+  currentPrice: Float
 }
 
 type TokenTransfer {

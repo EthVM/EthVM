@@ -54,7 +54,7 @@ export class TokenTransferResolvers {
 
   @Query()
   async addressAllTokensOwned(@Args('address', ParseAddressPipe) address: string) {
-    return this.vmEngine.fetchAddressAllTokensOwned(address)
+    return this.tokenTransferService.findAddressAllTokensOwned(address)
   }
 
   @Query()

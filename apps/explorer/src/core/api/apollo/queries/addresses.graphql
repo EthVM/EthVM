@@ -25,5 +25,10 @@ query addressAllTokensOwned($address: String!) {
     addr
     decimals
     balance
+    currentPrice
   }
+}
+
+query addressAmountTokensOwned($address: String!) {
+  addressAmountTokensOwned(address: $address)
 }
