@@ -53,7 +53,7 @@
 
         <!-- Column 2 -->
         <v-flex hidden-sm-and-down md2>
-          <p>{{ tx.timestamp }}</p>
+          <p>{{ $d(tx.timestamp, 'short', $i18n.locale.replace('_', '-')) }}</p>
         </v-flex>
         <!-- End Column 2 -->
 

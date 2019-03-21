@@ -43,7 +43,7 @@ export default class PageDetailsTxs extends Vue {
   error = ''
   listType = 'tx'
   transaction = {} as Tx
-  timestamp = ''
+  timestamp = new Date
 
   /*
   ===================================================================================
@@ -102,7 +102,7 @@ export default class PageDetailsTxs extends Vue {
    */
   setTxInfo(tx: Tx) {
     this.transaction = tx
-    this.timestamp = this.tx.getTimestamp().toString()
+    this.timestamp = this.tx.getTimestamp()
   }
 
   /*
@@ -216,7 +216,7 @@ export default class PageDetailsTxs extends Vue {
         },
         {
           title: this.$i18n.t('common.timestmp'),
-          detail: this.formatTime
+          detail: this.$i18n.d(this.timestamp, 'long',this.$i18n.locale.replace('_', '-'))
         },
         {
           title: this.$i18n.t('tx.from'),
@@ -265,15 +265,6 @@ export default class PageDetailsTxs extends Vue {
     }
 
     return details
-  }
-
-  /**
-   * Properly format a timestamp into string
-   *
-   * @return {String} - Timestamp string
-   */
-  get formatTime(): string {
-    return new Date(this.timestamp).toString()
   }
 
   /**

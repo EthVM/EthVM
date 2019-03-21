@@ -24,7 +24,7 @@
     <!-- End Table Header -->
 
     <!-- Start Rows -->
-    <v-card color="white" v-for="tx in transfersPage" class="transparent" flat :key="tx.transactionHash">
+    <v-card color="white" v-for="(tx, index) in transfersPage" class="transparent" flat :key="index">
       <v-layout align-center justify-start row fill-height pr-3>
         <!-- Column 1 -->
         <v-flex xs6 sm8 md5>
@@ -59,7 +59,7 @@
 
         <!-- Column 2 -->
         <v-flex hidden-sm-and-down md2>
-          <p>{{ tx.timestamp }}</p>
+          <p>{{ $d(tx.timestamp, 'short', $i18n.locale.replace('_', '-')) }}</p>
         </v-flex>
         <!-- End Column 2 -->
 

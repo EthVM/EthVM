@@ -1,6 +1,6 @@
 <template>
   <v-container grid-list-lg class="mb-0">
-    <app-bread-crumbs :new-items="crumbs" />
+    {{ $d(new Date(), 'short') }}
     <!--
     =====================================================================================
       DETAILS LIST
@@ -92,7 +92,7 @@ export default class PageDetailsBlock extends Vue {
   totalTxs = 0
   txsPage = 0
   uncles = []
-  timestamp = ''
+  timestamp = new Date
 
   /*
   ===================================================================================
@@ -153,7 +153,7 @@ export default class PageDetailsBlock extends Vue {
     this.blockInfo.next = this.block.getNumber() + 1
     this.blockInfo.prev = this.block.getNumber() === 0 ? 0 : this.block.getNumber() - 1
 
-    this.timestamp = block.getTimestamp().toString()
+    this.timestamp = block.getTimestamp()
     this.txs = this.block.getTxs()
     this.totalTxs = this.block.getTransactionCount()
     this.uncles = this.block.getUncles()
@@ -265,7 +265,7 @@ export default class PageDetailsBlock extends Vue {
         },
         {
           title: this.$i18n.t('common.timestmp'),
-          detail: this.formatTime
+          detail: this.$i18n.d(this.timestamp, 'long',this.$i18n.locale.replace('_', '-'))
         },
         {
           title: this.$i18n.t('uncle.reward'),
@@ -367,10 +367,6 @@ export default class PageDetailsBlock extends Vue {
     const start = this.txsPage * this.max
     const end = start + this.max
     return this.txs.slice(start, end)
-  }
-
-  get formatTime(): string {
-    return new Date(this.timestamp).toString()
   }
 
   /**

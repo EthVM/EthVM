@@ -96,7 +96,7 @@
       =====================================================================================
       -->
       <v-flex hidden-sm-and-down md2>
-        <p class="text-truncate black--text mb-0"><timeago :datetime="tx.getTimestamp()" :auto-update="60" /></p>
+        <app-time-ago :timestamp="tx.getTimestamp()" />
       </v-flex>
       <!--
       =====================================================================================
@@ -134,8 +134,14 @@
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Tx, SimpleTx, EthValue } from '@app/core/models'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
+import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 
-@Component
+
+@Component({
+  components:{
+    AppTimeAgo
+  }
+})
 export default class TableTxsRow extends Mixins(StringConcatMixin) {
   /*
   ===================================================================================
