@@ -63,7 +63,7 @@ export class EthvmApolloApi implements EthvmApi {
           address
         }
       })
-      .then(res => res.data.accountMetadataByHash)
+      .then(res => res.data.balanceByHash)
   }
 
   public getAddressMetadata(address: string): Promise<AddressMetadata> {

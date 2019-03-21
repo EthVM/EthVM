@@ -232,20 +232,25 @@ export default class PageDetailsAddress extends Vue {
 
               this.sm.transition('load-complementary-info')
             })
-            .catch(err => this.sm.transition('error'))
+            .catch(err => {
+              console.log('err', err)
+              this.sm.transition('error')
+            })
         }
       },
       {
         name: 'load-complementary-info',
         enter: () => {
           const addressTxs = this.fetchTxs()
-          const addressPendingTxs = this.fetchPendingTxs()
+          // TODO: Re-enable whenever pending tx calls available
+          // const addressPendingTxs = this.fetchPendingTxs()
           const minedBlocks = this.account.isMiner ? this.fetchMinedBlocks() : Promise.resolve([])
           // TODO: Re-enable whenever contract creator functionality is finished
           const contractsCreated = Promise.resolve([]) // this.account.isCreator ? this.fetchContractsCreated() : Promise.resolve([])
 
           // If one promise fails, we still continue processing every entry (and for those failed we receive undefined)
-          const promises = [addressTxs, addressPendingTxs, minedBlocks, contractsCreated].map(p => p.catch(() => undefined))
+          // const promises = [addressTxs, addressPendingTxs, minedBlocks, contractsCreated].map(p => p.catch(() => undefined))
+          const promises = [addressTxs, minedBlocks, contractsCreated].map(p => p.catch(() => undefined))
 
           Promise.all(promises)
             .then((res: any[]) => {
@@ -254,15 +259,15 @@ export default class PageDetailsAddress extends Vue {
               this.txsLoading = false
 
               // Pending Txs
-              this.account.pendingTxs = res[1] || []
-              this.pendingTxsLoading = false
+              // this.account.pendingTxs = res[1] || []
+              // this.pendingTxsLoading = false
 
               // Mined Blocks
-              this.account.minedBlocks = res[2] || []
+              this.account.minedBlocks = res[1] || [] // res[2] || []
               this.minerBlocksLoading = false
 
               // Contract Creator
-              this.account.contracts = res[3] || []
+              this.account.contracts = res[2] || [] // res[3] || []
 
               this.sm.transition('load-token-complementary-info')
             })
