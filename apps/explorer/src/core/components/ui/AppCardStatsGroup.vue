@@ -146,7 +146,7 @@ export default class AppInfoCardGroup extends Vue {
   }
 
   get latestBlockNumber(): string {
-    return !this.loading ? this.blockMetric.number : this.loadingMessage
+    return !this.loading ? this.blockMetric.number.toString() : this.loadingMessage
   }
 
   get latestHashRate(): string {

@@ -76,11 +76,11 @@ export class EthvmMigrationApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
 
   public getBlockMetric(hash: string): Promise<BlockMetrics> {
-    return this.socketIoApi.getBlockMetric(hash)
+    return this.apolloApi.getBlockMetric(hash)
   }
 
   public getBlockMetrics(limit: number, page: number): Promise<BlockMetrics[]> {
-    return this.socketIoApi.getBlockMetrics(limit, page)
+    return this.apolloApi.getBlockMetrics(limit, page)
   }
 
   // ------------------------------------------------------------------------------------

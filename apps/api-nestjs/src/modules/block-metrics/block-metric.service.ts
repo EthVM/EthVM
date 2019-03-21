@@ -16,6 +16,6 @@ export class BlockMetricService {
 
   async findBlockMetrics(take: number = 10, page: number = 0): Promise<BlockMetricEntity[]> {
     const skip = page * take
-    return this.blockMetricRepository.find({ take, skip })
+    return this.blockMetricRepository.find({ take, skip, order: { number: -1 } })
   }
 }
