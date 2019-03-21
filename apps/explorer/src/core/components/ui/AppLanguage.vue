@@ -19,8 +19,7 @@ export default class AppLanguage extends Vue {
   ===================================================================================
   */
 
-  items = [{ _id: 'en_US', name: 'English' }, { _id: 'ru_RU', name: 'Russian' }, { _id: 'es_ES', name: 'Espanol' }]
-
+  items = [{ _id: 'en_US', name: 'English' }, { _id: 'ru_RU', name: 'Russian' }]
   language = 'en_US'
 
   /*
@@ -30,10 +29,17 @@ export default class AppLanguage extends Vue {
   */
 
   created() {
-    if (storePack.get('language')) {
-      this.$i18n.locale = storePack.get('language')
-      this.language = storePack.get('language')
-    }
+    if (storePack.get('language') && this.isLang(storePack.get('language'))) {
+        console.log("exists")
+        this.$i18n.locale = storePack.get('language')
+        this.language = storePack.get('language')
+      }
+      else {
+                  console.log("false")
+
+
+      }
+
   }
   /*
   ===================================================================================
@@ -55,6 +61,13 @@ export default class AppLanguage extends Vue {
     this.$i18n.locale = this.language
     storePack.set('language', this.language)
     window.scrollTo(0, 0)
+  }
+
+  isLang(lang: string): boolean {
+    this.items.forEach(i => {
+      if (i._id === lang) return true
+    })
+    return false
   }
 }
 </script>
