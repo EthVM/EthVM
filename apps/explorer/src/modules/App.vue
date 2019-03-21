@@ -21,6 +21,8 @@ import storePack from 'store'
 
 import 'vuetify/dist/vuetify.min.css'
 
+import * as Sentry from '@sentry/browser';
+
 const MAX_ITEMS = 10
 
 @Component({
@@ -47,6 +49,11 @@ export default class App extends Vue {
       this.$store.commit(Events.NEW_BLOCK_METRIC, bms)
       this.$eventHub.$emit(Events.NEW_BLOCK_METRIC, bms)
     })
+  }
+
+  mounted() {
+    Sentry.captureException(new Error("Testing sentry dns"));
+    throw new Error("hello")
   }
 
   /*
