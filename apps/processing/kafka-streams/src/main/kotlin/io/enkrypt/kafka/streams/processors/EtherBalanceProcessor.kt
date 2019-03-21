@@ -86,8 +86,8 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
       .toStream()
       .toTopic(EtherBalances)
 
-    EtherBalances.stream(builder)
-      .peek { k, v -> logger.info { "Balance update | ${k.getAddress()} -> ${v.getAmount()}, ${v.getAmount().toBigInteger().toString(16)}" } }
+//    EtherBalances.stream(builder)
+//      .peek { k, v -> logger.info { "Balance update | ${k.getAddress()} -> ${v.getAmount()}, ${v.getAmount().toBigInteger().toString(16)}" } }
   }
 
   /**

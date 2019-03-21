@@ -2,6 +2,7 @@ package io.enkrypt.common.config
 
 import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.processing.EtherBalanceDeltaRecord
+import io.enkrypt.avro.processing.EtherBalanceDeltaType
 import io.enkrypt.common.extensions.ether
 import java.math.BigInteger
 
@@ -99,12 +100,16 @@ open class DaoHardForkConfig(override val constants: ChainConstants = ChainConst
 
           // deduct from address
           EtherBalanceDeltaRecord.newBuilder()
+            .setType(EtherBalanceDeltaType.HARD_FORK)
+            .setBlockNumber(number.toString())
             .setAddress(address)
             .setAmount(balance.negate().toString())
             .build(),
 
           // add to withdraw account
           EtherBalanceDeltaRecord.newBuilder()
+            .setType(EtherBalanceDeltaType.HARD_FORK)
+            .setBlockNumber(number.toString())
             .setAddress(withdrawAccount)
             .setAmount(balance.toString())
             .build()
