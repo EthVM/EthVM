@@ -4,29 +4,21 @@ query blocks($limit: Int, $page: Int) {
       hash
       number
       author
-      timestamp
     }
     transactions {
       hash
-      gas
-      gasPrice
-      timestamp
       receipt {
-        contractAddress
-        gasUsed
         status
         traces {
           error
         }
       }
     }
+    rewards {
+      value
+    }
     uncles {
       hash
-    }
-    rewards {
-      author
-      rewardType
-      value
     }
   }
 }
@@ -35,34 +27,29 @@ query blockByHash($hash: String) {
   blockByHash(hash: $hash) {
     header {
       number
-      hash
-      parentHash
-      nonce
-      sha3Uncles
-      logsBloom
-      transactionsRoot
-      stateRoot
-      receiptsRoot
+      timestamp
       author
+      parentHash
       difficulty
+      size
+      nonce
+      stateRoot
       extraData
       gasLimit
       gasUsed
-      timestamp
-      size
+      logsBloom
+      sha3Uncles
+      transactionsRoot
+      receiptsRoot
     }
     totalDifficulty
     transactions {
-      blockHash
-      blockNumber
-      creates
-      from
-      gas
-      gasPrice
       hash
+      blockNumber
+      from
+      gasPrice
       timestamp
       to
-      transactionIndex
       value
       receipt {
         contractAddress
@@ -73,13 +60,13 @@ query blockByHash($hash: String) {
         }
       }
     }
-    uncles {
-      hash
-    }
     rewards {
       author
       rewardType
       value
+    }
+    uncles {
+      hash
     }
   }
 }
@@ -87,34 +74,29 @@ query blockByNumber($number: Int) {
   blockByNumber(number: $number) {
     header {
       number
-      hash
-      parentHash
-      nonce
-      sha3Uncles
-      logsBloom
-      transactionsRoot
-      stateRoot
-      receiptsRoot
+      timestamp
       author
+      parentHash
       difficulty
+      size
+      nonce
+      stateRoot
       extraData
       gasLimit
       gasUsed
-      timestamp
-      size
+      logsBloom
+      sha3Uncles
+      transactionsRoot
+      receiptsRoot
     }
     totalDifficulty
     transactions {
-      blockHash
-      blockNumber
-      creates
-      from
-      gas
-      gasPrice
       hash
+      blockNumber
+      from
+      gasPrice
       timestamp
       to
-      transactionIndex
       value
       receipt {
         contractAddress
@@ -125,13 +107,13 @@ query blockByNumber($number: Int) {
         }
       }
     }
-    uncles {
-      hash
-    }
     rewards {
       author
       rewardType
       value
+    }
+    uncles {
+      hash
     }
   }
 }
