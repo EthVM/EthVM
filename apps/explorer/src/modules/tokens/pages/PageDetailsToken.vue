@@ -198,7 +198,7 @@ export default class PageDetailsToken extends Vue {
           resolve()
         })
         .catch(e => {
-          this.errorTokenDetailsList = this.$i18n.t('message.invalidToken').toString()
+          this.errorTokenDetailsList = this.$i18n.t('message.invalid.token').toString()
           resolve()
         })
     })
@@ -298,7 +298,7 @@ export default class PageDetailsToken extends Vue {
           this.holderTransfers = holderTransfers as any[]
         })
         .catch(e => {
-          this.errorHolderTransfers = this.$i18n.t('message.noTxHistory').toString()
+          this.errorHolderTransfers = this.$i18n.t('message.no-history').toString()
         })
     })
   }
@@ -329,7 +329,7 @@ export default class PageDetailsToken extends Vue {
         .getTokenExchangeRateByAddress(this.addressRef)
         .then(response => {
           if (response === null) {
-            reject(this.$i18n.t('message.invalidAddress').toString())
+            reject(this.$i18n.t('message.invalid.addr').toString())
           }
           resolve(response)
         })
@@ -477,14 +477,16 @@ export default class PageDetailsToken extends Vue {
   get crumbsBasic(): Crumb[] {
     return [
       {
-        text: this.$i18n.t('title.tokens'),
+        text: 'token.name',
         link: '/tokens',
-        disabled: false
+        disabled: false,
+        plural: 2
       },
       {
-        text: this.isTokenDetailsLoading ? this.addressRef : this.tokenDetails.symbol.toUpperCase(),
-        link: `/token/${this.addressRef}`,
-        disabled: true
+        text: 'token.name',
+        disabled: true,
+        plural: 1,
+        label: this.isTokenDetailsLoading ? `: ${this.addressRef}` : `: ${this.tokenDetails.symbol.toUpperCase()}`
       }
     ]
   }
@@ -497,9 +499,10 @@ export default class PageDetailsToken extends Vue {
   get crumbsHolder(): Crumb[] {
     return [
       {
-        text: this.$i18n.t('title.tokens').toString(),
+        text: 'token.name',
         link: '/tokens',
-        disabled: false
+        disabled: false,
+        plural: 2
       },
       {
         text: this.isTokenDetailsLoading ? this.addressRef : this.tokenDetails.symbol.toUpperCase(),
@@ -507,9 +510,9 @@ export default class PageDetailsToken extends Vue {
         disabled: false
       },
       {
-        text: this.holderAddress,
-        link: '',
-        disabled: true
+        text: 'token.holder',
+        disabled: true,
+        label: `: ${this.holderAddress}`
       }
     ]
   }

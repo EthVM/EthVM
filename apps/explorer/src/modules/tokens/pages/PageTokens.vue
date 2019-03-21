@@ -9,7 +9,7 @@
         <v-layout row>
           <v-spacer />
           <v-flex xs12 sm9 md7>
-            <v-card-text class="font-weight-thin font-italic text-xs-center">{{ $t('message.noTokensRopsten') }}</v-card-text>
+            <v-card-text class="font-weight-thin font-italic text-xs-center">{{ $t('message.ropsten-no-token') }}</v-card-text>
           </v-flex>
           <v-spacer />
         </v-layout>
@@ -97,7 +97,7 @@ export default class PageTokens extends Vue {
         this.isLoading = false
       },
       err => {
-        this.error = this.$i18n.t('message.error').toString()
+        this.error = this.$i18n.t('message.no-data').toString()
       }
     )
   }
@@ -117,8 +117,9 @@ export default class PageTokens extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: this.$i18n.t('title.tokens'),
-        disabled: true
+        text: 'token.name',
+        disabled: true,
+        plural: 2
       }
     ]
   }

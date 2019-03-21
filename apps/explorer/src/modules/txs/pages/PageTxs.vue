@@ -116,7 +116,7 @@ export default class PageTxs extends Vue {
           resolve(true)
         },
         err => {
-          this.error = this.$i18n.t('message.noTxHistory').toString()
+          this.error = this.$i18n.t('message.tx.no-history').toString()
           Promise.resolve(false)
           reject()
         }
@@ -133,7 +133,7 @@ export default class PageTxs extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: this.$i18n.t('title.mined'),
+        text: 'tx.mined',
         disabled: true
       }
     ]

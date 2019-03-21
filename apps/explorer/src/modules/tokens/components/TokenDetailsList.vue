@@ -70,41 +70,41 @@ export default class TokenDetailsList extends Vue {
     if (this.isLoading) {
       details = [
         {
-          title: this.$i18n.t('title.contract')
+          title: this.$i18n.tc('contract.name', 1)
         },
         {
           title: this.$i18n.t('token.owner')
         },
         {
-          title: this.$i18n.t('title.supply')
+          title: this.$i18n.t('token.supply')
         },
         {
-          title: this.$i18n.t('title.price')
+          title: this.$i18n.tc('price.name', 2)
         },
         {
-          title: this.$i18n.t('title.marketCap')
+          title: this.$i18n.t('token.market')
         },
         {
-          title: this.$i18n.t('token.totalHold')
+          title: this.$i18n.t('token.holder-total')
         },
         {
-          title: this.$i18n.t('title.decimals')
+          title: this.$i18n.t('token.decimals')
         },
         {
-          title: this.$i18n.t('title.website')
+          title: this.$i18n.t('token.website')
         },
         {
-          title: this.$i18n.t('title.support')
+          title: this.$i18n.t('token.support')
         },
         {
-          title: this.$i18n.t('title.links')
+          title: this.$i18n.t('token.links')
         }
       ]
     } else {
 
       const detailsItems = [
         {
-          title: this.$i18n.t('title.contract'),
+          title: this.$i18n.tc('contract.name', 1),
           detail: new Hex(this.tokenDetails.address).toString(),
           link: this.tokenDetails ? `/address/${new Hex(this.tokenDetails.address).toString()}` : ''
         },
@@ -114,44 +114,44 @@ export default class TokenDetailsList extends Vue {
           link: `/address/${this.tokenDetails.owner}`
         },
         {
-          title: this.$i18n.t('title.supply'),
+          title: this.$i18n.t('token.supply'),
           detail: this.tokenDetails.totalSupply
         },
         {
-          title: this.$i18n.t('title.price'),
+          title: this.$i18n.tc('price.name', 2),
           detail: `$${this.tokenDetails.currentPrice} (${this.tokenDetails.priceChangePercentage24h}%)`
         },
         {
-          title: this.$i18n.t('title.marketCap'),
+          title: this.$i18n.t('token.market'),
           detail: `$${this.tokenDetails.marketCap}`
         },
         {
-          title: this.$i18n.t('token.totalHold'),
+          title: this.$i18n.t('token.holder-total'),
           detail: this.tokenDetails.holdersCount ? `${this.tokenDetails.holdersCount}` : 'REQUIRED DATA'
         },
         {
-          title: this.$i18n.t('title.decimals'),
+          title: this.$i18n.t('token.decimals'),
           detail: this.contractDetails.metadata.decimals
         },
       ]
 
       if (this.contractDetails.metadata.website) {
         detailsItems.push({
-          title: this.$i18n.t('title.website'),
+          title: this.$i18n.t('token.website'),
           detail: `<a href="${this.contractDetails.metadata.website}" target="_BLANK">${this.contractDetails.metadata.website}</a>`
         })
       }
 
       if (this.contractDetails.metadata.support) {
         detailsItems.push({
-          title: this.$i18n.t('title.support'),
+          title: this.$i18n.t('token.support'),
           detail: `<a href="mailto:${this.contractDetails.metadata.support.email}" target="_BLANK">${this.contractDetails.metadata.support.email}</a>`
         })
       }
 
       if (this.contractDetails.metadata.social) {
         detailsItems.push({
-          title: this.$i18n.t('title.links'),
+          title: this.$i18n.t('token.links'),
           detail: Object.entries(this.contractDetails.metadata.social)
             .map(obj => {
               const name = obj[0]

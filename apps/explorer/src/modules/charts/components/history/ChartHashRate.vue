@@ -52,11 +52,11 @@ export default class ChartHashRate extends Mixins(ChartMixin) {
   */
 
   get title() {
-    return this.$i18n.t('charts.avgHashRate').toString()
+    return this.$i18n.t('charts.hash-rate.title').toString()
   }
 
   get labelString(): string {
-    return this.$i18n.t('charts.hash-rate-history').toString()
+    return this.$i18n.t('charts.hash-rate.description').toString()
   }
 }
 </script>

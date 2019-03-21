@@ -11,20 +11,20 @@
     <v-card color="info" flat class="white--text pl-3 pr-1 mt-2 mb-2" height="40px">
       <v-layout align-center justify-start row fill-height pr-3>
         <v-flex xs6 sm8 md5>
-          <h5>{{ $t('tableHeader.txN') }}</h5>
+          <h5>{{ $tc('tx.hash', 1) }}</h5>
         </v-flex>
         <v-flex hidden-sm-and-down md2>
-          <h5>{{ $t('tableHeader.age') }}</h5>
+          <h5>{{ $t('common.age') }}</h5>
         </v-flex>
         <v-flex hidden-sm-and-down md2>
-          <h5>{{ $t('tableHeader.quantity') }}</h5>
+          <h5>{{ $t('common.quantity') }}</h5>
         </v-flex>
       </v-layout>
     </v-card>
     <!-- End Table Header -->
 
     <!-- Start Rows -->
-    <v-card color="white" v-for="tx in transfersPage" class="transparent" flat :key="tx.transactionHash">
+    <v-card color="white" v-for="(tx, index) in transfersPage" class="transparent" flat :key="index">
       <v-layout align-center justify-start row fill-height pr-3>
         <!-- Column 1 -->
         <v-flex xs6 sm8 md5>
@@ -41,7 +41,7 @@
               </p>
               <v-icon class="fas fa-arrow-right primary--text pl-1 pr-2 pb-1" small></v-icon>
               <p class="text-truncate info--text font-weight-thin mb-0" v-if="tx.contract">
-                {{ $t('tx.contract') }}:
+                {{ $tc('contract.name', 1) }}:
                 <router-link class="secondary--text font-italic font-weight-regular" :to="'/address/' + tx.address">
                   {{ tx.address }}
                 </router-link>
@@ -59,7 +59,7 @@
 
         <!-- Column 2 -->
         <v-flex hidden-sm-and-down md2>
-          <p>{{ tx.timestamp }}</p>
+          <p>{{ $d(tx.timestamp, 'short', $i18n.locale.replace('_', '-')) }}</p>
         </v-flex>
         <!-- End Column 2 -->
 
