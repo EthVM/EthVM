@@ -50,3 +50,5 @@ fun BigInteger?.unsignedBytes(numBytes: Int): ByteArray? =
 fun BigInteger?.byteBuffer(): ByteBuffer = ByteBuffer.wrap((this ?: BigInteger.ZERO).toByteArray())
 
 fun BigInteger?.unsignedByteBuffer() = if (this != null) this.unsignedBytes().byteBuffer() else null
+
+fun BigInteger.toHex() = "0x${this.toString(16)}"

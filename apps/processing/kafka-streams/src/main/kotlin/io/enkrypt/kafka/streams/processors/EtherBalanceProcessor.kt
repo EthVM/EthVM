@@ -5,8 +5,14 @@ import io.enkrypt.avro.processing.EtherBalanceDeltaRecord
 import io.enkrypt.avro.processing.EtherBalanceDeltaType
 import io.enkrypt.avro.processing.EtherBalanceKeyRecord
 import io.enkrypt.avro.processing.EtherBalanceRecord
+import io.enkrypt.common.extensions.getAmountBI
+import io.enkrypt.common.extensions.getNumberBI
+import io.enkrypt.common.extensions.getTransactionFeeBI
+import io.enkrypt.common.extensions.hexToBI
 import io.enkrypt.common.extensions.hexUBigInteger
 import io.enkrypt.common.extensions.reverse
+import io.enkrypt.common.extensions.setAmountBI
+import io.enkrypt.common.extensions.setBlockNumberBI
 import io.enkrypt.common.extensions.toEtherBalanceDeltas
 import io.enkrypt.kafka.streams.Serdes
 import io.enkrypt.kafka.streams.config.Topics.CanonicalBlockAuthors
@@ -71,23 +77,22 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
       .aggregate(
         {
           EtherBalanceRecord.newBuilder()
-            .setAmount(BigInteger.ZERO.toString())
+            .setAmountBI(BigInteger.ZERO)
             .build()
         },
         { key, delta, balance ->
 
           EtherBalanceRecord.newBuilder()
-            .setAmount(
-              (delta.getAmount().toBigInteger() + balance.getAmount().toBigInteger()).toString()
-            ).build()
+            .setAmountBI(delta.getAmountBI() + balance.getAmountBI())
+            .build()
         },
         Materialized.with(Serdes.EtherBalanceKey(), Serdes.EtherBalance())
       )
       .toStream()
       .toTopic(EtherBalances)
 
-//    EtherBalances.stream(builder)
-//      .peek { k, v -> logger.info { "Balance update | ${k.getAddress()} -> ${v.getAmount()}, ${v.getAmount().toBigInteger().toString(16)}" } }
+    EtherBalances.stream(builder)
+      .peek { k, v -> logger.info { "Balance update | ${k.getAddress()} -> ${v.getAmount()}" } }
   }
 
   /**
@@ -108,7 +113,7 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
     canonicalBlocks
       .flatMap { k, _ ->
 
-        if (k.getNumber().toBigInteger() > BigInteger.ZERO)
+        if (k.getNumberBI() > BigInteger.ZERO)
           emptyList()
         else {
 
@@ -118,13 +123,13 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
               .entries
               .map { (address, premine) ->
 
-                val balance = premine.balance.hexUBigInteger()!!
+                val balance = premine.balance
 
                 EtherBalanceDeltaRecord.newBuilder()
                   .setType(EtherBalanceDeltaType.PREMINE_BALANCE)
-                  .setBlockNumber("0")
+                  .setBlockNumberBI(BigInteger.ZERO)
                   .setAddress(address)
-                  .setAmount(balance.toString())
+                  .setAmount(balance)
                   .build()
               }
 
@@ -132,10 +137,10 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
 
           deltas = deltas + EtherBalanceDeltaRecord.newBuilder()
             .setType(EtherBalanceDeltaType.BLOCK_REWARD)
-            .setBlockNumber("0")
+            .setBlockNumberBI(BigInteger.ZERO)
             .setAddress("0x0000000000000000000000000000000000000000")
-            .setAmount(
-              netConfig.chainConfigForBlock(BigInteger.ZERO).constants.blockReward.toString()
+            .setAmountBI(
+              netConfig.chainConfigForBlock(BigInteger.ZERO).constants.blockReward
             ).build()
 
           deltas.map { delta ->
@@ -156,16 +161,12 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
     canonicalBlocks
       .flatMap { k, _ ->
 
-        val blockNumber = k.getNumber().toBigInteger()
+        val blockNumber = k.getNumberBI()
 
         netConfig
           .chainConfigForBlock(blockNumber)
           .hardForkEtherDeltas(blockNumber)
           .map { delta ->
-
-            if (delta.getAmount().isEmpty()) {
-              logger.info { }
-            }
 
             KeyValue(
               EtherBalanceKeyRecord.newBuilder()
@@ -205,7 +206,7 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
         { k, v -> KeyValue(k.getNumber(), v) },
         Grouped.with(KafkaSerdes.String(), Serdes.EtherBalanceDeltaList())
       ).reduce(
-        { _, new ->
+        { _, _ ->
 
           // TODO check that old and new are equal
           EtherBalanceDeltaListRecord.newBuilder()
@@ -237,7 +238,6 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
 
     txFeesTable
       .mapValues { _, feeList ->
-
         EtherBalanceDeltaListRecord.newBuilder()
           .setDeltas(feeList.toEtherBalanceDeltas())
           .build()
@@ -250,7 +250,7 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
         { k, v -> KeyValue(k.getNumber(), v) },
         Grouped.with(KafkaSerdes.String(), Serdes.EtherBalanceDeltaList())
       ).reduce(
-        { _, new ->
+        { _, _ ->
           // TODO check that old and new are equal
           EtherBalanceDeltaListRecord.newBuilder()
             .setDeltas(emptyList())
@@ -280,7 +280,7 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
         { left, right ->
 
           val totalTxFees = right.getTransactionFees()
-            .map { it.getTransactionFee().toBigInteger() }
+            .map { it.getTransactionFeeBI() }
             .fold(BigInteger.ZERO) { memo, next -> memo + next }
 
           EtherBalanceDeltaRecord.newBuilder()
@@ -288,7 +288,7 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
             .setBlockNumber(left.getBlockNumber())
             .setBlockHash(left.getBlockHash())
             .setAddress(left.getAuthor())
-            .setAmount(totalTxFees.toString())
+            .setAmountBI(totalTxFees)
             .build()
         },
         Materialized.with(Serdes.CanonicalKey(), Serdes.EtherBalanceDelta())
@@ -301,10 +301,9 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
         Grouped.with(KafkaSerdes.String(), Serdes.EtherBalanceDelta())
       ).reduce(
         { _, new ->
-
           // TODO check old and new are the same
           EtherBalanceDeltaRecord.newBuilder(new)
-            .setAmount("0")
+            .setAmountBI(BigInteger.ZERO)
             .build()
         },
         { _, removed -> removed.reverse() },

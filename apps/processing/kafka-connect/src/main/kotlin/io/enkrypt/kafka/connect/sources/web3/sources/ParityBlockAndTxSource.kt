@@ -4,6 +4,7 @@ import io.enkrypt.avro.capture.BlockHeaderRecord
 import io.enkrypt.avro.capture.CanonicalKeyRecord
 import io.enkrypt.avro.capture.TransactionListRecord
 import io.enkrypt.avro.capture.TransactionRecord
+import io.enkrypt.common.extensions.setNumberBI
 import io.enkrypt.kafka.connect.sources.web3.AvroToConnect
 import io.enkrypt.kafka.connect.sources.web3.JsonRpc2_0ParityExtended
 import io.enkrypt.kafka.connect.sources.web3.toBlockHeaderRecord
@@ -31,7 +32,8 @@ class ParityBlockAndTxSource(
     return longRange
       .map { blockNumber ->
 
-        val blockParam = DefaultBlockParameter.valueOf(blockNumber.toBigInteger())
+        val blockNumberBI = blockNumber.toBigInteger()
+        val blockParam = DefaultBlockParameter.valueOf(blockNumberBI)
 
         val partitionOffset = mapOf("blockNumber" to blockNumber)
 
@@ -41,7 +43,7 @@ class ParityBlockAndTxSource(
             val block = resp.block
 
             val blockKeyRecord = CanonicalKeyRecord.newBuilder()
-              .setNumber(blockNumber.toString())
+              .setNumberBI(blockNumberBI)
               .build()
 
             val blockRecord = block
@@ -61,7 +63,7 @@ class ParityBlockAndTxSource(
 
             val canonicalKeyRecord = CanonicalKeyRecord
               .newBuilder()
-              .setNumber(blockNumber.toBigInteger().toString())
+              .setNumberBI(blockNumberBI)
               .build()
 
             val canonicalKeySchemaAndValue = AvroToConnect.toConnectData(canonicalKeyRecord)

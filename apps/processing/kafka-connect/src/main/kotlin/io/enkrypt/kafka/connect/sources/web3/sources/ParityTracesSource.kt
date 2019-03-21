@@ -3,6 +3,7 @@ package io.enkrypt.kafka.connect.sources.web3.sources
 import io.enkrypt.avro.capture.CanonicalKeyRecord
 import io.enkrypt.avro.capture.TraceListRecord
 import io.enkrypt.avro.capture.TraceRecord
+import io.enkrypt.common.extensions.setNumberBI
 import io.enkrypt.kafka.connect.sources.web3.AvroToConnect
 import io.enkrypt.kafka.connect.sources.web3.JsonRpc2_0ParityExtended
 import io.enkrypt.kafka.connect.sources.web3.toTraceRecord
@@ -27,7 +28,8 @@ class ParityTracesSource(
     return longRange
       .map { blockNumber ->
 
-        val blockParam = DefaultBlockParameter.valueOf(blockNumber.toBigInteger())
+        val blockNumberBI = blockNumber.toBigInteger()
+        val blockParam = DefaultBlockParameter.valueOf(blockNumberBI)
 
         val partitionOffset = mapOf("blockNumber" to blockNumber)
 
@@ -35,7 +37,7 @@ class ParityTracesSource(
           .thenApply { resp ->
 
             val traceKeyRecord = CanonicalKeyRecord.newBuilder()
-              .setNumber(blockNumber.toString())
+              .setNumberBI(blockNumberBI)
               .build()
 
             val traceListRecord = TraceListRecord

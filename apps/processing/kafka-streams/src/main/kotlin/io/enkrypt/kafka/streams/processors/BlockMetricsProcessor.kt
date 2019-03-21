@@ -4,6 +4,16 @@ import io.enkrypt.avro.capture.TraceCallActionRecord
 import io.enkrypt.avro.capture.TraceCreateActionRecord
 import io.enkrypt.avro.capture.TraceDestroyActionRecord
 import io.enkrypt.avro.processing.BlockMetricsRecord
+import io.enkrypt.common.extensions.getBalanceBI
+import io.enkrypt.common.extensions.getGasBI
+import io.enkrypt.common.extensions.getGasPriceBI
+import io.enkrypt.common.extensions.getTransactionFeeBI
+import io.enkrypt.common.extensions.getValueBI
+import io.enkrypt.common.extensions.setAvgGasLimitBI
+import io.enkrypt.common.extensions.setAvgGasPriceBI
+import io.enkrypt.common.extensions.setAvgTxFeesBI
+import io.enkrypt.common.extensions.setTotalGasPriceBI
+import io.enkrypt.common.extensions.setTotalTxFeesBI
 import io.enkrypt.kafka.streams.config.Topics
 import io.enkrypt.kafka.streams.config.Topics.BlockMetrics
 import io.enkrypt.kafka.streams.config.Topics.CanonicalBlocks
@@ -88,17 +98,17 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
                     total += 1
                   }
 
-                  if (action.getValue() != null && action.getValue() != "0") {
+                  if (action.getValueBI() > BigInteger.ZERO) {
                     internalTxs += 1
                   }
                 }
                 is TraceCreateActionRecord -> {
-                  if (action.getValue() != null && action.getValue() != "0") {
+                  if (action.getValueBI() > BigInteger.ZERO) {
                     internalTxs += 1
                   }
                 }
                 is TraceDestroyActionRecord -> {
-                  if (action.getBalance() != null && action.getBalance() != "0") {
+                  if (action.getBalanceBI() > BigInteger.ZERO) {
                     internalTxs += 1
                   }
                 }
@@ -114,6 +124,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
           .setTotalTxs(total)
           .setNumInternalTxs(internalTxs)
           .build()
+
       }.toTopic(TraceBlockMetrics)
 
     CanonicalTransactions.stream(builder)
@@ -125,8 +136,8 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
         var totalGasLimit = BigInteger.ZERO
 
         transactions.forEach { tx ->
-          totalGasLimit += tx.getGas().toBigInteger()
-          totalGasPrice += tx.getGasPrice().toBigInteger()
+          totalGasLimit += tx.getGasBI()
+          totalGasPrice += tx.getGasPriceBI()
         }
 
         val txCount = transactions.size.toBigInteger()
@@ -141,10 +152,11 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
           }
 
         BlockMetricsRecord.newBuilder()
-          .setTotalGasPrice(totalGasPrice.toString())
-          .setAvgGasPrice(avgGasPrice.toString())
-          .setAvgGasLimit(avgGasLimit.toString())
+          .setTotalGasPriceBI(totalGasPrice)
+          .setAvgGasPriceBI(avgGasPrice)
+          .setAvgGasLimitBI(avgGasLimit)
           .build()
+
       }.toTopic(TransactionBlockMetrics)
 
     Topics.CanonicalTransactionFees.stream(builder)
@@ -153,7 +165,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
         val transactionFees = txFeeList.getTransactionFees()
 
         val totalTxFees = transactionFees.fold(BigInteger.ZERO) { memo, next ->
-          memo + next.getTransactionFee().toBigInteger()
+          memo + next.getTransactionFeeBI()
         }
 
         val count = transactionFees.size.toBigInteger()
@@ -164,8 +176,8 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
         }
 
         BlockMetricsRecord.newBuilder()
-          .setTotalTxFees(totalTxFees.toString())
-          .setAvgTxFees(avgTxFees.toString())
+          .setTotalTxFeesBI(totalTxFees)
+          .setAvgTxFeesBI(avgTxFees)
           .build()
 
       }.toTopic(TransactionFeeBlockMetrics)

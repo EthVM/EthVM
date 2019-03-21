@@ -3,25 +3,8 @@ protocol Capture {
 
   import idl "common.avdl";
 
-  record BlockKeyRecord {
-    string blockHash;
-  }
-
-  record TransactionKeyRecord {
-    string txHash;
-    union { null, string } nonce = null;
-  }
-
   record CanonicalKeyRecord {
     string number;
-  }
-
-  record CompositeKeyRecord {
-    union { null, string } number = null;
-    union { null, string } blockHash = null;
-    union { null, string } txHash = null;
-    union { null, int } txIndex = null;
-    union { null, string } nonce = null;
   }
 
   record CanonicalRecord {
@@ -30,7 +13,6 @@ protocol Capture {
   }
 
   record LogRecord {
-
     string address;
     string data;
     array<string> topics = [];
@@ -48,7 +30,7 @@ protocol Capture {
     string from;
     union { null, string } to = null;
     string gas;
-    union { null, string } input = null;
+    union { null, bytes } input = null;
     string value;
   }
 
@@ -167,7 +149,7 @@ protocol Capture {
     string @aliases(["miner"]) author;     // the address of the author of the block (the beneficiary to whom the mining rewards were given)
 
     string difficulty;                                             // integer of the difficulty for this block
-    union { null, bytes } extraData = null;                       // the ‘extra data’ field of this block
+    union { null, string } extraData = null;                       // the ‘extra data’ field of this block
 
     string gasLimit;                                               // the maximum gas allowed in this block
     string gasUsed;                                                // the total used gas by all transactions in this block
@@ -175,7 +157,7 @@ protocol Capture {
     long timestamp;                                               // the unix timestamp for when the block was collated
     long size;
 
-    union { null, string } blockNumber = null;                     // block number this header relates to when an uncle
+    union { null, string } nephewNumber = null;                     // block number this header relates to when an uncle
     union { null, int } uncleIndex = null;                        // index in the uncles array of this header if it was included in the uncles list
     union { null, string } uncleReward = null;                     // block reward for inclusion of this uncle header
 
@@ -183,31 +165,6 @@ protocol Capture {
     string totalDifficulty;
     union { null, long } blockTime = null;
 
-  }
-
-  record BlockRewardRecord {
-    string rewardType;
-    string author;
-    string value;
-  }
-
-  record BlockRecord {
-
-    BlockHeaderRecord header;
-
-    string totalDifficulty;                                        // integer of the total difficulty of the chain until this block
-    array<TransactionRecord> transactions = [];                   // array of transaction objects
-
-    string sha3Uncles;                     // hash of uncles
-    array<string> uncleHashes;              // each uncle hash
-    array<BlockHeaderRecord> uncles = [];                         // array of uncle headers
-
-    array<BlockRewardRecord> rewards = [];
-
-    boolean reverse = false;                                      // whether this block summary should be applied or reversed from cumulative state
-    int numPendingTxs = 0;                                        // count as of time of processing
-
-    union { null, long } blockTime = null;                        //
   }
 
 }

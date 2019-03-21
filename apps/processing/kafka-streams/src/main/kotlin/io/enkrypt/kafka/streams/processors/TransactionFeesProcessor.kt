@@ -6,6 +6,9 @@ import io.enkrypt.avro.processing.TransactionGasPriceListRecord
 import io.enkrypt.avro.processing.TransactionGasPriceRecord
 import io.enkrypt.avro.processing.TransactionGasUsedListRecord
 import io.enkrypt.avro.processing.TransactionGasUsedRecord
+import io.enkrypt.common.extensions.getGasPriceBI
+import io.enkrypt.common.extensions.getGasUsedBI
+import io.enkrypt.common.extensions.setTransactionFeeBI
 import io.enkrypt.kafka.streams.config.Topics.CanonicalGasPrices
 import io.enkrypt.kafka.streams.config.Topics.CanonicalGasUsed
 import io.enkrypt.kafka.streams.config.Topics.CanonicalReceipts
@@ -86,20 +89,22 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
         CanonicalGasUsed.table(builder),
         { left, right ->
 
-          val feeListBuilder = TransactionFeeListRecord.newBuilder()
-
           val gasPrices = left.getGasPrices()
           val gasUsage = right.getGasUsed()
 
-          if (gasPrices.size == gasUsage.size) {
-            // if sizes are not the same then it's likely a fork has happened and we are in the process of receiving updated lists or we have not received all data yet from parity
+          // if the parity source publishes the required deletes first then any fork should mean this join is only triggered when both new values are available
+          require(gasPrices.size == gasUsage.size)
 
-            feeListBuilder.transactionFees =
+          TransactionFeeListRecord.newBuilder()
+            .setTransactionFees(
+
+              // prices and usages should be in the same transaction order so we just zip them
+
               gasPrices
                 .zip(gasUsage)
                 .map { (gasPrice, gasUsed) ->
 
-                  val fee = (gasPrice.getGasPrice().toBigInteger() * gasUsed.getGasUsed().toBigInteger()).toString()
+                  val fee = gasPrice.getGasPriceBI() * gasUsed.getGasUsedBI()
 
                   TransactionFeeRecord.newBuilder()
                     .setBlockNumber(gasPrice.getBlockNumber())
@@ -107,12 +112,11 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
                     .setTransactionHash(gasPrice.getTransactionHash())
                     .setTransactionPosition(gasPrice.getTransactionPosition())
                     .setAddress(gasPrice.getAddress())
-                    .setTransactionFee(fee)
+                    .setTransactionFeeBI(fee)
                     .build()
                 }
-          }
+            ).build()
 
-          feeListBuilder.build()
         },
         Materialized.with(Serdes.CanonicalKey(), Serdes.TransactionFeeList())
       ).toStream()

@@ -2,6 +2,8 @@ package io.enkrypt.kafka.streams.processors
 
 import io.enkrypt.avro.capture.BlockHeaderRecord
 import io.enkrypt.avro.capture.CanonicalKeyRecord
+import io.enkrypt.common.extensions.getNumberBI
+import io.enkrypt.common.extensions.toHex
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serde
 import org.apache.kafka.common.serialization.Serdes
@@ -56,14 +58,14 @@ class BlockTimeTransformer(
 
     blockTimesStore.put(key.getNumber(), timestamp)
 
-    val blockNumber = key.getNumber().toBigInteger()
+    val blockNumber = key.getNumberBI()
 
     // genesis value throws off calculation at the start
     if (blockNumber < 2.toBigInteger())
       return KeyValue(key, value)
 
     val prevBlockNumber = blockNumber - BigInteger.ONE
-    val prevTimestamp = blockTimesStore.get(prevBlockNumber.toString())
+    val prevTimestamp = blockTimesStore.get(prevBlockNumber.toHex())
 
     // TODO add cleanup of older state after a certain number of blocks
 
