@@ -19,8 +19,6 @@ query accountMetadataByHash($address: String!) {
 query addressAllTokensOwned($address: String!) {
   addressAllTokensOwned(address: $address) {
     name
-    website
-    email
     symbol
     addr
     decimals
