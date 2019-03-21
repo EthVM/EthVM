@@ -33,7 +33,7 @@ import { Module } from '@nestjs/common'
     UncleModule,
     StatisticModule,
     SearchModule,
-    LoggerModule
-  ]
+    LoggerModule,
+  ],
 })
 export class AppModule {}

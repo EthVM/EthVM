@@ -1,4 +1,4 @@
-import { EthvmApi, EthvmApolloApi, EthvmSocketIoApi } from '@app/core/api'
+import { EthvmApi, EthvmApolloApi } from '@app/core/api'
 import { Block, PendingTx, SimpleBlock, SimpleTx, Tx, Uncle } from '@app/core/models'
 import {
   AddressBalance,
@@ -17,7 +17,7 @@ import {
 //    1) Map errors
 //    2) Migrate rest of the calls
 export class EthvmMigrationApi implements EthvmApi {
-  constructor(private readonly apolloApi: EthvmApolloApi, private readonly socketIoApi: EthvmSocketIoApi) {}
+  constructor(private readonly apolloApi: EthvmApolloApi) {}
 
   // ------------------------------------------------------------------------------------
   // Address
@@ -40,11 +40,11 @@ export class EthvmMigrationApi implements EthvmApi {
   }
 
   public getAddressTokenTransfers(address: string, limit: number, page: number): Promise<TokenTransfer[]> {
-    return this.socketIoApi.getAddressTokenTransfers(address, limit, page)
+    return this.apolloApi.getAddressTokenTransfers(address, limit, page)
   }
 
   public getAddressTokenTransfersByHolder(address: string, holder: string, filter: string, limit: number, page: number): Promise<TokenTransfer[]> {
-    return this.socketIoApi.getAddressTokenTransfersByHolder(address, holder, filter, limit, page)
+    return this.apolloApi.getAddressTokenTransfersByHolder(address, holder, filter, limit, page)
   }
 
   // ------------------------------------------------------------------------------------

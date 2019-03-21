@@ -101,7 +101,6 @@ export default class TokenDetailsList extends Vue {
         }
       ]
     } else {
-
       const detailsItems = [
         {
           title: this.$i18n.tc('contract.name', 1),
@@ -132,7 +131,7 @@ export default class TokenDetailsList extends Vue {
         {
           title: this.$i18n.t('token.decimals'),
           detail: this.contractDetails.metadata.decimals
-        },
+        }
       ]
 
       if (this.contractDetails.metadata.website) {
@@ -161,7 +160,7 @@ export default class TokenDetailsList extends Vue {
               }
               return `<a href="${url}" target="_BLANK"><i aria-hidden="true" class="v-icon secondary--text ${
                 icons[name]
-                } pr-2 material-icons theme--light"></i></a>`
+              } pr-2 material-icons theme--light"></i></a>`
             })
             .reduce((a, b) => {
               return `${a}${b}`

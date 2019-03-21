@@ -6,6 +6,6 @@ import { ProcessingMetadataResolvers } from '@app/modules/processing-metadata/pr
 
 @Module({
   imports: [TypeOrmModule.forFeature([ProcessingMetadataEntity])],
-  providers: [ProcessingMetadataService, ProcessingMetadataResolvers]
+  providers: [ProcessingMetadataService, ProcessingMetadataResolvers],
 })
 export class ProcessingMetadataModule {}

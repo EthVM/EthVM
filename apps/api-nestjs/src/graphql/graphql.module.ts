@@ -23,18 +23,18 @@ import { LongScalar } from '@app/graphql/scalars/long.scalar'
           cors: true,
           definitions: {
             path: join(process.cwd(), 'src/graphql/schema.ts'),
-            outputAs: 'class'
+            outputAs: 'class',
           },
           context: ({ req, res }) => ({
             request: req,
-            response: res
+            response: res,
           }),
-          ...config
+          ...config,
         }
       },
-      inject: [ConfigService]
-    })
+      inject: [ConfigService],
+    }),
   ],
-  providers: [DateScalar, DecimalScalar, BufferScalar, StatisticValueScalar, LongScalar]
+  providers: [DateScalar, DecimalScalar, BufferScalar, StatisticValueScalar, LongScalar],
 })
 export class GraphQLModule {}

@@ -7,7 +7,7 @@ import { MongoRepository } from 'typeorm'
 export class BlockMetricService {
   constructor(
     @InjectRepository(BlockMetricEntity)
-    private readonly blockMetricRepository: MongoRepository<BlockMetricEntity>
+    private readonly blockMetricRepository: MongoRepository<BlockMetricEntity>,
   ) {}
 
   async findBlockMetricByHash(hash: string): Promise<BlockMetricEntity | null> {

@@ -4,7 +4,7 @@ import { assignClean } from '@app/shared/utils'
 export enum ContractType {
   GENERIC,
   ERC20,
-  ERC721
+  ERC721,
 }
 
 export class TypeEmbedded {

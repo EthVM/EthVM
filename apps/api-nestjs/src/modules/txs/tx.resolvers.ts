@@ -33,7 +33,7 @@ export class TxResolvers {
     @Args('hash', ParseAddressPipe) hash: string,
     @Args('filter') filter?: string,
     @Args('limit', ParseLimitPipe) limit?: number,
-    @Args('page', ParsePagePipe) page?: number
+    @Args('page', ParsePagePipe) page?: number,
   ) {
     const entities = await this.txService.findTxsForAddress(hash, filter, limit, page)
     return entities.map(e => new TxDto(e))
