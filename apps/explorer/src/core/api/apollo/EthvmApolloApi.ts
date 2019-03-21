@@ -234,7 +234,7 @@ export class EthvmApolloApi implements EthvmApi {
       .query({
         query: contractsCreatedBy,
         variables: {
-          creator: address,
+          hash: address,
           limit,
           page
         }
