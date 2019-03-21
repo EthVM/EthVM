@@ -22,7 +22,7 @@ export class UncleService {
       where: { number: { $lte: offset } },
       skip,
       take,
-      order: { blockNumber: -1, number: -1 },
+      order: { blockNumber: -1, number: -1 }
     })
   }
 

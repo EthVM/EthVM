@@ -4,7 +4,7 @@ import { GraphQLError } from 'graphql/error'
 
 const VALUE_TYPES = {
   INT: 'int',
-  FLOAT: 'float',
+  FLOAT: 'float'
 }
 
 @Scalar('Decimal')
