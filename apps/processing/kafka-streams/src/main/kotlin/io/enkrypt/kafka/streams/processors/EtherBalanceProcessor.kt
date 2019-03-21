@@ -8,8 +8,6 @@ import io.enkrypt.avro.processing.EtherBalanceRecord
 import io.enkrypt.common.extensions.getAmountBI
 import io.enkrypt.common.extensions.getNumberBI
 import io.enkrypt.common.extensions.getTransactionFeeBI
-import io.enkrypt.common.extensions.hexToBI
-import io.enkrypt.common.extensions.hexUBigInteger
 import io.enkrypt.common.extensions.reverse
 import io.enkrypt.common.extensions.setAmountBI
 import io.enkrypt.common.extensions.setBlockNumberBI
@@ -24,6 +22,7 @@ import io.enkrypt.kafka.streams.config.Topics.CanonicalTransactionFees
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTransactionFeesEtherDeltas
 import io.enkrypt.kafka.streams.config.Topics.EtherBalanceDeltas
 import io.enkrypt.kafka.streams.config.Topics.EtherBalances
+import io.enkrypt.kafka.streams.transformers.OncePerBlockTransformer
 import io.enkrypt.kafka.streams.utils.toTopic
 import mu.KotlinLogging
 import org.apache.kafka.clients.producer.ProducerConfig

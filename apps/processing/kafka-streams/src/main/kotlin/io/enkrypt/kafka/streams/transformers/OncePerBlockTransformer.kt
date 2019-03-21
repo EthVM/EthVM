@@ -1,4 +1,4 @@
-package io.enkrypt.kafka.streams.processors
+package io.enkrypt.kafka.streams.transformers
 
 import io.enkrypt.avro.capture.BlockHeaderRecord
 import io.enkrypt.avro.capture.CanonicalKeyRecord

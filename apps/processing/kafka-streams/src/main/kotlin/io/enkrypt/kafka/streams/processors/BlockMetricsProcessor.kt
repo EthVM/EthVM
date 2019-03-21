@@ -22,6 +22,7 @@ import io.enkrypt.kafka.streams.config.Topics.CanonicalTransactions
 import io.enkrypt.kafka.streams.config.Topics.TraceBlockMetrics
 import io.enkrypt.kafka.streams.config.Topics.TransactionBlockMetrics
 import io.enkrypt.kafka.streams.config.Topics.TransactionFeeBlockMetrics
+import io.enkrypt.kafka.streams.transformers.BlockTimeTransformer
 import io.enkrypt.kafka.streams.utils.toTopic
 import mu.KLogger
 import mu.KotlinLogging
