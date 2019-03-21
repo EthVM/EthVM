@@ -18,10 +18,7 @@ import TheFooter from '@app/core/components/layout/TheFooter.vue'
 import { Vue, Component } from 'vue-property-decorator'
 import { Events } from 'ethvm-common'
 import storePack from 'store'
-
 import 'vuetify/dist/vuetify.min.css'
-
-import * as Sentry from '@sentry/browser'
 
 const MAX_ITEMS = 10
 
@@ -49,11 +46,6 @@ export default class App extends Vue {
       this.$store.commit(Events.NEW_BLOCK_METRIC, bms)
       this.$eventHub.$emit(Events.NEW_BLOCK_METRIC, bms)
     })
-  }
-
-  mounted() {
-    Sentry.captureException(new Error('Testing sentry dns'))
-    throw new Error('hello')
   }
 
   /*
