@@ -51,11 +51,11 @@ export default class ChartBlockSize extends Mixins(ChartMixin) {
   */
 
   get title(): string {
-    return this.$i18n.t('charts.avgBlockSize').toString()
+    return this.$i18n.t('charts.block-size').toString()
   }
 
   get labelString(): string {
-    return this.$i18n.t('charts.block-size-history').toString()
+    return this.$i18n.t('charts.block-size').toString()
   }
 }
 </script>

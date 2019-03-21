@@ -64,8 +64,8 @@ export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
 
   get messages() {
     return {
-      tx: this.$i18n.t('message.updateTxs'),
-      blocks: this.$i18n.t('message.updateBlock')
+      tx: this.$i18n.t('message.update.txs'),
+      blocks: this.$i18n.t('message.update.block')
     }
   }
 

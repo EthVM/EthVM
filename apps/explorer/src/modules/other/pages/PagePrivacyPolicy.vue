@@ -6,7 +6,7 @@
         <v-card color="white" flat :class="{ 'pa-1': $vuetify.breakpoint.xsOnly, 'pa-3': $vuetify.breakpoint.smOnly, 'pa-5': $vuetify.breakpoint.mdAndUp }">
           <v-layout wrap grid-list-xs align-center column fill-height pa-2 pb-4>
             <v-flex xs12 align-self-center>
-              <v-card-title class="display-1 font-weight-bold pb-1">{{ $t('footer.privPolicy') }}</v-card-title>
+              <v-card-title class="display-1 font-weight-bold pb-1">{{ $t('pp.name') }}</v-card-title>
             </v-flex>
             <v-flex xs12 align-self-start>
               <v-card-title class="title font-weight-bold pb-1">{{ $t('pp.intro.title') }}</v-card-title>
@@ -110,7 +110,7 @@ export default class PagePrivacyPolicy extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: this.$i18n.t('footer.privPolicy'),
+        text: 'pp.name',
         disabled: true
       }
     ]

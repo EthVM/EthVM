@@ -1,6 +1,6 @@
 <template>
   <v-container grid-list-lg class="mb-0">
-    <app-bread-crumbs :new-items="crumbs" />
+    {{ $d(new Date(), 'short') }}
     <!--
     =====================================================================================
       DETAILS LIST
@@ -36,7 +36,7 @@
           @getTxsPage="setPageTxs"
         />
         <v-card v-if="txs.length === 0" flat color="white">
-          <v-card-text class="text-xs-center text-muted">{{ $t('message.noTxInBlock') }}</v-card-text>
+          <v-card-text class="text-xs-center text-muted">{{ $t('message.tx.no-in-block') }}</v-card-text>
         </v-card>
       </v-flex>
     </v-layout>
@@ -92,7 +92,7 @@ export default class PageDetailsBlock extends Vue {
   totalTxs = 0
   txsPage = 0
   uncles = []
-  timestamp = ''
+  timestamp = new Date()
 
   /*
   ===================================================================================
@@ -105,7 +105,7 @@ export default class PageDetailsBlock extends Vue {
 
     // 1. Check that current block ref is valid one
     if (!eth.isValidHash(ref) && !eth.isValidBlockNumber(ref)) {
-      this.error = this.$i18n.t('message.invalidHash').toString()
+      this.error = this.$i18n.t('message.invalid.block').toString()
       return
     }
 
@@ -137,13 +137,13 @@ export default class PageDetailsBlock extends Vue {
     promise
       .then(block => {
         if (block === null) {
-          this.error = `${this.$i18n.t('message.invalidBlock').toString()}: ${this.blockRef}`
+          this.error = `${this.$i18n.t('message.invalid.block').toString()}: ${this.blockRef}`
           return
         }
         this.setBlockInfo(block)
       })
       .catch(err => {
-        this.error = `${this.$i18n.t('message.invalidBlock').toString()}: ${this.blockRef}`
+        this.error = `${this.$i18n.t('message.invalid.block').toString()}: ${this.blockRef}`
       })
   }
 
@@ -153,7 +153,7 @@ export default class PageDetailsBlock extends Vue {
     this.blockInfo.next = this.block.getNumber() + 1
     this.blockInfo.prev = this.block.getNumber() === 0 ? 0 : this.block.getNumber() - 1
 
-    this.timestamp = block.getTimestamp().toString()
+    this.timestamp = block.getTimestamp()
     this.txs = this.block.getTxs()
     this.totalTxs = this.block.getTransactionCount()
     this.uncles = this.block.getUncles()
@@ -170,49 +170,49 @@ export default class PageDetailsBlock extends Vue {
     if (this.isLoading) {
       details = [
         {
-          title: this.$i18n.t('block.height')
+          title: this.$i18n.t('common.height')
         },
         {
           title: this.$i18n.t('common.hash')
         },
         {
-          title: this.$i18n.t('block.pHash')
+          title: this.$i18n.t('block.p-hash')
         },
         {
-          title: this.$i18n.t('block.miner')
+          title: this.$i18n.t('miner.name')
         },
         {
           title: this.$i18n.t('common.timestmp')
         },
         {
-          title: this.$i18n.t('block.reward')
+          title: this.$i18n.t('miner.reward')
         },
         {
-          title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward')
+          title: this.$i18n.t('uncle.reward')
         },
         {
-          title: this.$i18n.t('title.tx')
+          title: this.$i18n.tc('tx.name', 2)
         },
         {
-          title: this.$i18n.t('block.diff')
+          title: this.$i18n.t('diff.name')
         },
         {
-          title: this.$i18n.t('block.totalDiff')
+          title: this.$i18n.t('diff.total')
         },
         {
-          title: this.$i18n.t('block.size')
+          title: this.$i18n.t('common.size')
         },
         {
-          title: this.$i18n.t('block.nonce')
+          title: this.$i18n.t('common.nonce')
         },
         {
-          title: this.$i18n.t('block.root')
+          title: this.$i18n.t('block.state-root')
         },
         {
           title: this.$i18n.t('block.data')
         },
         {
-          title: this.$i18n.t('block.fees')
+          title: this.$i18n.tc('tx.fee', 2)
         },
         {
           title: this.$i18n.t('gas.limit')
@@ -224,19 +224,19 @@ export default class PageDetailsBlock extends Vue {
           title: this.$i18n.t('block.logs')
         },
         {
-          title: this.$i18n.t('block.txRoot')
+          title: this.$i18n.t('tx.root')
         },
         {
-          title: this.$i18n.t('block.recRoot')
+          title: this.$i18n.t('block.rcpt-root')
         },
         {
-          title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.sha')
+          title: this.$i18n.tc('uncle.name', 2) + ' ' + this.$i18n.t('common.sha')
         }
       ]
     } else {
       details = [
         {
-          title: this.$i18n.t('block.height'),
+          title: this.$i18n.t('common.height'),
           detail: this.block.getNumber()
         },
         {
@@ -246,54 +246,54 @@ export default class PageDetailsBlock extends Vue {
           mono: true
         },
         {
-          title: this.$i18n.t('block.pHash'),
+          title: this.$i18n.t('block.p-hash'),
           detail: this.block.getParentHash().toString(),
           link: '/block/' + this.block.getParentHash().toString(),
           copy: true,
           mono: true
         },
         {
-          title: this.$i18n.t('block.miner'),
+          title: this.$i18n.t('miner.name'),
           detail: this.block.getMiner().toString(),
           link: '/address/' + this.block.getMiner().toString(),
           copy: true,
           mono: true
         },
         {
-          title: this.$i18n.t('common.timestmp'),
-          detail: this.formatTime
-        },
-        {
-          title: this.$i18n.t('block.reward'),
+          title: this.$i18n.t('miner.reward'),
           detail: this.block.getMinerReward().toEth() + ' ' + this.$i18n.t('common.eth')
         },
         {
-          title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.uncReward'),
+          title: this.$i18n.t('common.timestmp'),
+          detail: this.$i18n.d(this.timestamp, 'long', this.$i18n.locale.replace('_', '-'))
+        },
+        {
+          title: this.$i18n.t('uncle.reward'),
           detail: this.block.getUncleReward().toEth() + ' ' + this.$i18n.t('common.eth')
         },
         {
-          title: this.$i18n.t('title.tx'),
+          title: this.$i18n.tc('tx.name', 2),
           detail: this.block.getTransactionCount()
         },
         {
-          title: this.$i18n.t('block.diff'),
+          title: this.$i18n.t('diff.name'),
           detail: this.block.getDifficulty().toNumber()
         },
         {
-          title: this.$i18n.t('block.totalDiff'),
+          title: this.$i18n.t('diff.total'),
           detail: this.block.getTotalDifficulty().toNumber()
         },
         {
-          title: this.$i18n.t('block.size'),
+          title: this.$i18n.t('common.size'),
           detail: this.block.getSize().toString() + ' ' + this.$i18n.t('block.bytes')
         },
         {
-          title: this.$i18n.t('block.nonce'),
+          title: this.$i18n.t('common.nonce'),
           detail: this.block.getNonce().toString(),
           mono: true
         },
         {
-          title: this.$i18n.t('block.root'),
+          title: this.$i18n.t('block.state-root'),
           detail: this.block.getStateRoot().toString(),
           mono: true
         },
@@ -303,7 +303,7 @@ export default class PageDetailsBlock extends Vue {
           mono: true
         },
         {
-          title: this.$i18n.t('block.fees'),
+          title: this.$i18n.tc('tx.fee', 2),
           detail: this.block.getTxFees().toEth() + ' ' + this.$i18n.t('common.eth')
         },
         {
@@ -320,17 +320,17 @@ export default class PageDetailsBlock extends Vue {
           mono: true
         },
         {
-          title: this.$i18n.t('block.txRoot'),
+          title: this.$i18n.t('tx.root'),
           detail: this.block.getTransactionsRoot().toString(),
           mono: true
         },
         {
-          title: this.$i18n.t('block.recRoot'),
+          title: this.$i18n.t('block.rcpt-root'),
           detail: this.block.getReceiptsRoot().toString(),
           mono: true
         },
         {
-          title: this.$i18n.t('block.uncle') + ' ' + this.$i18n.t('block.sha'),
+          title: this.$i18n.tc('uncle.name', 2) + ' ' + this.$i18n.t('common.sha'),
           detail: this.block.getSha3Uncles().toString(),
           mono: true
         }
@@ -369,10 +369,6 @@ export default class PageDetailsBlock extends Vue {
     return this.txs.slice(start, end)
   }
 
-  get formatTime(): string {
-    return new Date(this.timestamp).toString()
-  }
-
   /**
    * Returns breadcrumbs entry for this particular view.
    * Required for AppBreadCrumbs
@@ -382,13 +378,15 @@ export default class PageDetailsBlock extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: this.$i18n.t('title.blocks'),
+        text: 'block.name',
         disabled: false,
-        link: '/blocks'
+        link: '/blocks',
+        plural: 2
       },
       {
-        text: this.$i18n.t('title.blockN') + ' ' + this.$route.params.blockRef,
-        disabled: true
+        text: 'block.number',
+        disabled: true,
+        label: ` ${this.$route.params.blockRef}`
       }
     ]
   }

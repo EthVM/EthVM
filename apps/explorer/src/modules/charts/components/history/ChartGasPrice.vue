@@ -49,11 +49,11 @@ export default class ChartGasPrice extends Mixins(ChartMixin) {
   ===================================================================================
   */
   get title(): string {
-    return this.$i18n.t('charts.avgGasPrice ').toString()
+    return this.$i18n.t('charts.gas-price.title ').toString()
   }
 
   get labelString(): string {
-    return this.$i18n.t('charts.gas-price-history').toString()
+    return this.$i18n.t('charts.gas-price.description').toString()
   }
 }
 </script>

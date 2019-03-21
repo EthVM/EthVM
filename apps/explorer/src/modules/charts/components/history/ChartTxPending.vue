@@ -51,11 +51,11 @@ export default class ChartTxPending extends Mixins(ChartMixin) {
   */
 
   get title() {
-    return this.$i18n.t('charts.txPending').toString()
+    return this.$i18n.t('charts.tx-pending.title').toString()
   }
 
   get labelString(): string {
-    return this.$i18n.t('charts.tx-pending-history').toString()
+    return this.$i18n.t('charts.tx-pending.description').toString()
   }
 }
 </script>

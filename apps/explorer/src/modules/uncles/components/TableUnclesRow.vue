@@ -13,7 +13,7 @@
           <router-link class="primary--text font-weight-regular font-mono" :to="'/uncle/' + uncle.getHash()">{{ uncle.getHash() }}</router-link>
         </p>
         <p v-if="pageType != 'address'" class="text-truncate info--text mb-0 pt-2">
-          {{ $t('block.miner') }}:
+          {{ $tc('miner.name', 1) }}:
           <router-link :to="'/address/' + uncle.getMiner().toString()" class="secondary--text font-mono font-italic font-weight-regular">{{
             uncle.getMiner().toString()
           }}</router-link>

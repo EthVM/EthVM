@@ -50,11 +50,11 @@ export default class ChartTxFees extends Mixins(ChartMixin) {
   */
 
   get title() {
-    return this.$i18n.t('charts.txFees').toString()
+    return this.$i18n.t('charts.tx-fees.title').toString()
   }
 
   get labelString(): string {
-    return this.$i18n.t('charts.tx-fees-history').toString()
+    return this.$i18n.t('charts.tx-fees.description').toString()
   }
 }
 </script>

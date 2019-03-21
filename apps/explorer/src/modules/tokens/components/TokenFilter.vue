@@ -3,7 +3,7 @@
     <v-btn block outline large slot="activator" color="secondary" class="text-capitalize pl-1 pr-1" small @click.native.stop="dialog = true">
       <v-layout row justify-start align-center>
         <v-flex xs2>
-          <p class="body-2 mb-0 font-weight-regular">{{ $t('filter.f') }}:</p>
+          <p class="body-2 mb-0 font-weight-regular">{{ $t('filter.name') }}:</p>
         </v-flex>
         <v-spacer />
         <v-flex>
@@ -18,7 +18,7 @@
       <v-card>
         <v-layout row class="pl-3 pr-3 pt-3">
           <v-flex>
-            <v-card-title class="title font-weight-bold ">{{ $t('filter.f') }}</v-card-title>
+            <v-card-title class="title font-weight-bold ">{{ $t('filter.name') }}</v-card-title>
           </v-flex>
           <v-spacer />
           <v-flex xs1 mr-3>
@@ -66,23 +66,23 @@ export default class TokenFilter extends Vue {
     return [
       {
         _id: 0,
-        category: this.$i18n.t('token.price'),
-        filter: this.$i18n.t('filter.token.high')
+        category: this.$i18n.tc('price.name', 1),
+        filter: this.$i18n.t('filter.high')
       },
       {
         _id: 1,
-        category: this.$i18n.t('token.price'),
-        filter: this.$i18n.t('filter.token.low')
+        category: this.$i18n.tc('price.name', 1),
+        filter: this.$i18n.t('filter.low')
       },
       {
         _id: 4,
-        category: this.$i18n.t('token.cap'),
-        filter: this.$i18n.t('filter.token.high')
+        category: this.$i18n.t('token.market'),
+        filter: this.$i18n.t('filter.high')
       },
       {
         _id: 5,
-        category: this.$i18n.t('token.cap'),
-        filter: this.$i18n.t('filter.token.low')
+        category: this.$i18n.t('token.market'),
+        filter: this.$i18n.t('filter.low')
       }
     ]
   }

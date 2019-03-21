@@ -69,7 +69,7 @@
         <v-flex v-if="!mini">
           <v-layout align-center justify-end column fill-height pt-4 pb-5>
             <p class="white--text">{{ $t('message.report') }}</p>
-            <v-btn outline color="bttnReport" class="text-capitalize font-weight-regular" :href="'mailto:' + supportEmail">{{ $t('bttn.report') }}</v-btn>
+            <v-btn outline color="bttnReport" class="text-capitalize font-weight-regular" :href="'mailto:' + supportEmail">{{ $t('btn.report') }}</v-btn>
           </v-layout>
         </v-flex>
       </v-layout>
@@ -129,23 +129,23 @@ export default class TheNavigationDrawer extends Vue {
       {
         header: {
           icon: 'fa fa-home',
-          text: this.$i18n.t('title.home'),
+          text: this.$i18n.t('home'),
           routerLink: '/'
         }
       },
       {
         header: {
           icon: 'fa fa-cubes',
-          text: this.$i18n.t('title.blocks')
+          text: this.$i18n.tc('block.name', 2)
         },
         links: [
           {
-            text: this.$i18n.t('title.viewAll'),
+            text: this.$i18n.t('btn.view-all'),
             routerLink: '/blocks',
             name: 'blocks'
           },
           {
-            text: this.$i18n.t('title.uncles'),
+            text: this.$i18n.tc('uncle.name', 2),
             routerLink: '/uncles',
             name: 'uncles'
           }
@@ -153,17 +153,17 @@ export default class TheNavigationDrawer extends Vue {
       },
       {
         header: {
-          text: this.$i18n.t('title.tx'),
+          text: this.$i18n.tc('tx.name', 2),
           icon: 'fas fa-exchange-alt'
         },
         links: [
           {
-            text: this.$i18n.t('title.mined'),
+            text: this.$i18n.t('tx.mined'),
             routerLink: '/txs',
             name: 'transactions'
           }
           // {
-          //   text: this.$i18n.t('title.pending'),
+          //   text: this.$i18n.tc('tx.pending', 2),
           //   routerLink: '/pending-txs',
           //   name: 'pending'
           // }
@@ -171,7 +171,7 @@ export default class TheNavigationDrawer extends Vue {
       },
       {
         header: {
-          text: this.$i18n.t('title.tokens'),
+          text: this.$i18n.tc('token.name', 2),
           icon: 'fab fa-ethereum',
           routerLink: '/tokens'
         }
@@ -179,7 +179,7 @@ export default class TheNavigationDrawer extends Vue {
       {
         header: {
           icon: 'fas fa-chart-pie',
-          text: this.$i18n.t('title.charts'),
+          text: this.$i18n.t('charts.name'),
           routerLink: '/charts'
         }
       }

@@ -22,15 +22,15 @@
       <!-- Transactions-->
       <v-tab-item slot="tabs-item" value="tab-1">
         <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6> <chart-link :title="$t('charts.avgGasPrice')" :chart-id="ID.gasPrice" /> </v-flex>
-          <v-flex xs12 md6> <chart-link :title="$t('charts.avgGasLimit')" :chart-id="ID.gasLimit" /> </v-flex>
+          <v-flex xs12 md6> <chart-link :title="$t('charts.gas-price.title')" :chart-id="ID.gasPrice" /> </v-flex>
+          <v-flex xs12 md6> <chart-link :title="$t('charts.gas-limit.title')" :chart-id="ID.gasLimit" /> </v-flex>
         </v-layout>
         <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6> <chart-link :title="$t('charts.txSuccess')" :chart-id="ID.txSuccess" /> </v-flex>
-          <v-flex xs12 md6> <chart-link :title="$t('charts.txFail')" :chart-id="ID.txFail" /> </v-flex>
+          <v-flex xs12 md6> <chart-link :title="$t('charts.tx-success.title')" :chart-id="ID.txSuccess" /> </v-flex>
+          <v-flex xs12 md6> <chart-link :title="$t('charts.tx-fail.title')" :chart-id="ID.txFail" /> </v-flex>
         </v-layout>
         <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6> <chart-link :title="$t('charts.txFees')" :chart-id="ID.txFees" /> </v-flex>
+          <v-flex xs12 md6> <chart-link :title="$t('charts.tx-fees.title')" :chart-id="ID.txFees" /> </v-flex>
           <v-flex xs12 md6>
             <!-- Pending Txs -->
           </v-flex>
@@ -39,8 +39,8 @@
       <!-- Blocks -->
       <v-tab-item slot="tabs-item" value="tab-2">
         <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6> <chart-link :title="$t('charts.avgBlockTime')" :chart-id="ID.blockTime" /> </v-flex>
-          <v-flex xs12 md6> <chart-link :title="$t('charts.avgBlockDiff')" :chart-id="ID.difficulty" /> </v-flex>
+          <v-flex xs12 md6> <chart-link :title="$t('charts.block-time.title')" :chart-id="ID.blockTime" /> </v-flex>
+          <v-flex xs12 md6> <chart-link :title="$t('charts.block-diff.title')" :chart-id="ID.difficulty" /> </v-flex>
         </v-layout>
         <v-layout row wrap justify-center mb-4>
           <v-flex xs12 md6>
@@ -51,7 +51,7 @@
       <!-- Mining -->
       <v-tab-item slot="tabs-item" value="tab-3">
         <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6> <chart-link :title="$t('charts.avgHashRate')" :chart-id="ID.hashRate" /> </v-flex>
+          <v-flex xs12 md6> <chart-link :title="$t('charts.hash-rate.title')" :chart-id="ID.hashRate" /> </v-flex>
           <v-flex xs12 md6>
             <!--  -->
           </v-flex>
@@ -100,7 +100,7 @@ export default class PageCharts extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: this.$i18n.t('title.charts'),
+        text: 'charts.name',
         disabled: true
       }
     ]
@@ -110,22 +110,22 @@ export default class PageCharts extends Vue {
     return [
       {
         id: '0',
-        title: this.$i18n.t('tabs.live'),
+        title: this.$i18n.t('charts.live'),
         isActive: true
       },
       {
         id: '1',
-        title: this.$i18n.t('title.tx'),
+        title: this.$i18n.tc('tx.name', 2),
         isActive: false
       },
       {
         id: '2',
-        title: this.$i18n.t('title.blocks'),
+        title: this.$i18n.tc('block.name', 2),
         isActive: false
       },
       {
         id: '3',
-        title: this.$i18n.t('tabs.miningH'),
+        title: this.$i18n.t('miner.history'),
         isActive: false
       }
     ]
