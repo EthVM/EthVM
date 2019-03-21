@@ -43,7 +43,7 @@ export default class PageDetailsTxs extends Vue {
   error = ''
   listType = 'tx'
   transaction = {} as Tx
-  timestamp = new Date
+  timestamp = new Date()
 
   /*
   ===================================================================================
@@ -216,7 +216,7 @@ export default class PageDetailsTxs extends Vue {
         },
         {
           title: this.$i18n.t('common.timestmp'),
-          detail: this.$i18n.d(this.timestamp, 'long',this.$i18n.locale.replace('_', '-'))
+          detail: this.$i18n.d(this.timestamp, 'long', this.$i18n.locale.replace('_', '-'))
         },
         {
           title: this.$i18n.t('tx.from'),

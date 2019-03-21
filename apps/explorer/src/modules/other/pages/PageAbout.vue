@@ -10,7 +10,7 @@
               <v-card-text>{{ $t('about.text') }}</v-card-text>
             </v-flex>
             <v-flex xs12>
-              <v-layout row wrap align-center >
+              <v-layout row wrap align-center>
                 <v-flex xs12 sm6 md3>
                   <button href="https://github.com/EthVM">
                     <v-layout justify-start pl-3><v-icon class="primary--text pl-2 fab fa-github" large></v-icon></v-layout>
@@ -43,9 +43,9 @@
             </v-flex>
             <v-flex xs12>
               <v-card-title class="display-1 font-weight-bold">{{ $t('about.disclaimer.name') }}</v-card-title>
-              <v-card-text class="text-xs-left">{{ $t('about.disclaimer.text') }}<a href="https://github.com/EthVM/EthVM/blob/develop/LICENSE">
-            {{$t('about.git.title')}}.
-          </a></v-card-text>
+              <v-card-text class="text-xs-left"
+                >{{ $t('about.disclaimer.text') }}<a href="https://github.com/EthVM/EthVM/blob/develop/LICENSE"> {{ $t('about.git.title') }}. </a></v-card-text
+              >
             </v-flex>
           </v-layout>
         </v-card>

@@ -34,7 +34,7 @@ Vue.use(VueTimeago, {
   locale: 'en-US',
   locales: {
     'en-US': require('date-fns/locale/en'),
-    'ru': require('date-fns/locale/ru'),
+    ru: require('date-fns/locale/ru')
   }
 })
 

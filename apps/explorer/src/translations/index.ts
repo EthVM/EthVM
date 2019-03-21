@@ -12,24 +12,38 @@ const messages = {
 const dateTimeFormats = {
   'en-US': {
     short: {
-      year: 'numeric', month: 'short', day: 'numeric'
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
     },
     long: {
-      year: 'numeric', month: 'short', day: 'numeric',
-      weekday: 'short', hour: 'numeric', minute: 'numeric', hour12: true, timeZoneName: 'short'
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      weekday: 'short',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+      timeZoneName: 'short'
     }
   },
   'ru-RU': {
     short: {
-      day: 'numeric', month: 'short', year: 'numeric'
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
     },
     long: {
-      weekday: 'short', day: 'numeric', month: 'short', year: 'numeric',
-      hour: 'numeric', minute: 'numeric', timeZoneName: 'short'
+      weekday: 'short',
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      timeZoneName: 'short'
     }
   }
 }
-
 
 Vue.use(VueI18n)
 export default new VueI18n({

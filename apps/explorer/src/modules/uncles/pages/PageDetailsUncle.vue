@@ -40,7 +40,7 @@ export default class PageDetailsUncle extends Vue {
   */
 
   uncle = {} as Uncle
-  timestamp = new Date
+  timestamp = new Date()
   error = ''
 
   /*
@@ -184,7 +184,7 @@ export default class PageDetailsUncle extends Vue {
         },
         {
           title: this.$i18n.t('common.timestmp'),
-          detail: this.$i18n.d(this.timestamp, 'long',this.$i18n.locale.replace('_', '-'))
+          detail: this.$i18n.d(this.timestamp, 'long', this.$i18n.locale.replace('_', '-'))
         },
         {
           title: this.$i18n.t('common.sha'),

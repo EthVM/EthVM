@@ -2,7 +2,14 @@
   <v-layout row wrap justify-space-between mb-4>
     <v-flex xs12 sm6 md3> <app-info-card :title="$t('block.last-n')" :value="latestBlockNumber" color-type="primary" back-type="last-block" /> </v-flex>
     <v-flex xs12 sm6 md3>
-      <app-info-card v-if="type === 'generic'" :title="$t('block.time')" :value="secSinceLastBlock" color-type="success" back-type="time-since" :metrics="$t('message.sec')" />
+      <app-info-card
+        v-if="type === 'generic'"
+        :title="$t('block.time')"
+        :value="secSinceLastBlock"
+        color-type="success"
+        back-type="time-since"
+        :metrics="$t('message.sec')"
+      />
       <app-info-card v-else :title="$tc('tx.success', 2)" :value="latestBlockSuccessTxs" color-type="txSuccess" back-type="success-txs" />
     </v-flex>
     <v-flex xs12 sm6 md3>

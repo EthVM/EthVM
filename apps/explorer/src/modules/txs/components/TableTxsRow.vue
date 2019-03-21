@@ -136,9 +136,8 @@ import { Tx, SimpleTx, EthValue } from '@app/core/models'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 
-
 @Component({
-  components:{
+  components: {
     AppTimeAgo
   }
 })
