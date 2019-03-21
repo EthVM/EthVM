@@ -21,7 +21,7 @@ import storePack from 'store'
 
 import 'vuetify/dist/vuetify.min.css'
 
-import * as Sentry from '@sentry/browser';
+import * as Sentry from '@sentry/browser'
 
 const MAX_ITEMS = 10
 
@@ -52,8 +52,8 @@ export default class App extends Vue {
   }
 
   mounted() {
-    Sentry.captureException(new Error("Testing sentry dns"));
-    throw new Error("hello")
+    Sentry.captureException(new Error('Testing sentry dns'))
+    throw new Error('hello')
   }
 
   /*

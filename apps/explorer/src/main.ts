@@ -13,7 +13,7 @@ import VueAxios from 'vue-axios'
 import VueTimeago from 'vue-timeago'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
-import * as Sentry from '@sentry/browser';
+import * as Sentry from '@sentry/browser'
 
 /*
   ===================================================================================
@@ -70,9 +70,6 @@ Vue.use(Vuetify, {
 // See: https://www.npmjs.com/package/vue-axios //
 Vue.use(VueAxios, axios)
 
-
-
-
 /*
   ===================================================================================
     Vue: Application Kickstart
@@ -96,9 +93,8 @@ new Vue({
     Sentry
   ===================================================================================
 */
-console.log('main: ', store.getters.sentryToken,)
 Sentry.init({
   dsn: store.getters.sentryToken,
   integrations: [new Sentry.Integrations.Vue({ Vue })],
   maxBreadcrumbs: 0
-});
+})
