@@ -168,7 +168,7 @@ export class EthvmMigrationApi implements EthvmApi {
   }
 
   public getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<Tx[]> {
-    return this.socketIoApi.getTxsOfAddress(hash, filter, limit, page)
+    return this.apolloApi.getTxsOfAddress(hash, filter, limit, page)
   }
 
   public getTotalNumberOfTxs(): Promise<number> {

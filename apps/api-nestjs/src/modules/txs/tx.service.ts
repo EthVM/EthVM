@@ -31,6 +31,7 @@ export class TxService {
   }
 
   async findTxsForAddress(hash: string, filter?: string, take: number = 10, page: number = 0): Promise<TransactionEntity[]> {
+
     const skip = page * take
     let where
     switch (filter) {

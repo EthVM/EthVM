@@ -366,7 +366,7 @@ export abstract class IQuery {
 
     abstract txsForBlock(hash: string): Transaction[] | Promise<Transaction[]>;
 
-    abstract txsForAddress(hash: string, filter?: FilterEnum, limit?: number, page?: number): Transaction[] | Promise<Transaction[]>;
+    abstract txsForAddress(hash: string, filter: FilterEnum, limit?: number, page?: number): Transaction[] | Promise<Transaction[]>;
 
     abstract totalNumberOfTransactions(): number | Promise<number>;
 
