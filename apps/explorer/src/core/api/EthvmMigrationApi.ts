@@ -91,8 +91,8 @@ export class EthvmMigrationApi implements EthvmApi {
     return this.apolloApi.getContract(address)
   }
 
-  public getContractsCreatedBy(address: string): Promise<Contract[]> {
-    return this.socketIoApi.getContractsCreatedBy(address)
+  public getContractsCreatedBy(address: string, limit: number, page: number): Promise<Contract[]> {
+    return this.apolloApi.getContractsCreatedBy(address, limit, page)
   }
 
   // ------------------------------------------------------------------------------------

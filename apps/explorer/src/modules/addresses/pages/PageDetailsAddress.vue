@@ -232,10 +232,7 @@ export default class PageDetailsAddress extends Vue {
 
               this.sm.transition('load-complementary-info')
             })
-            .catch(err => {
-              console.log('err', err)
-              this.sm.transition('error')
-            })
+            .catch(err => this.sm.transition('error'))
         }
       },
       {
@@ -245,8 +242,7 @@ export default class PageDetailsAddress extends Vue {
           // TODO: Re-enable whenever pending tx calls available
           // const addressPendingTxs = this.fetchPendingTxs()
           const minedBlocks = this.account.isMiner ? this.fetchMinedBlocks() : Promise.resolve([])
-          // TODO: Re-enable whenever contract creator functionality is finished
-          const contractsCreated = Promise.resolve([]) // this.account.isCreator ? this.fetchContractsCreated() : Promise.resolve([])
+          const contractsCreated = this.account.isCreator ? this.fetchContractsCreated() : Promise.resolve([])
 
           // If one promise fails, we still continue processing every entry (and for those failed we receive undefined)
           // const promises = [addressTxs, addressPendingTxs, minedBlocks, contractsCreated].map(p => p.catch(() => undefined))

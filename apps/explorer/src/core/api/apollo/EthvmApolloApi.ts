@@ -222,7 +222,7 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => res.data.contractByHash)
   }
 
-  public getContractsCreatedBy(address: string, limit: number, page: number): Promise<Contract[]> {
+  public getContractsCreatedBy(address: string, limit?: number, page?: number): Promise<Contract[]> {
     return this.apollo
       .query({
         query: contractsCreatedBy,
