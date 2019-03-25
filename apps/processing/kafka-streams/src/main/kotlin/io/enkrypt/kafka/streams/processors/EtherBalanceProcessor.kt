@@ -31,9 +31,12 @@ import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Grouped
+import org.apache.kafka.streams.kstream.JoinWindows
+import org.apache.kafka.streams.kstream.Joined
 import org.apache.kafka.streams.kstream.Materialized
 import org.apache.kafka.streams.kstream.TransformerSupplier
 import java.math.BigInteger
+import java.time.Duration
 import java.util.Properties
 import org.apache.kafka.common.serialization.Serdes as KafkaSerdes
 
@@ -79,7 +82,7 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
             .setAmountBI(BigInteger.ZERO)
             .build()
         },
-        { key, delta, balance ->
+        { _, delta, balance ->
 
           EtherBalanceRecord.newBuilder()
             .setAmountBI(delta.getAmountBI() + balance.getAmountBI())
@@ -189,137 +192,241 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
     CanonicalTraces.stream(builder)
       .mapValues { _, tracesList ->
 
+        val blockHash = tracesList.getTraces().firstOrNull()?.getBlockHash()
+
         when (tracesList) {
           null -> null
           else -> {
 
             EtherBalanceDeltaListRecord.newBuilder()
+              .setBlockHash(blockHash)
               .setDeltas(tracesList.toEtherBalanceDeltas())
               .build()
+
           }
         }
       }.toTopic(CanonicalTracesEtherDeltas)
 
-    CanonicalTracesEtherDeltas.table(builder)
-      .groupBy(
-        { k, v -> KeyValue(k.getNumber(), v) },
-        Grouped.with(KafkaSerdes.String(), Serdes.EtherBalanceDeltaList())
-      ).reduce(
-        { _, _ ->
+    CanonicalTracesEtherDeltas.stream(builder)
+      .groupByKey(Grouped.with(Serdes.CanonicalKey(), Serdes.EtherBalanceDeltaList()))
+      .reduce(
+        { agg, next ->
 
-          // TODO check that old and new are equal
-          EtherBalanceDeltaListRecord.newBuilder()
-            .setDeltas(emptyList())
-            .build()
+          if (next.getBlockHash() == agg.getBlockHash()) {
+
+            // an update has been published for a previously seen block
+            // we assume no material change and therefore emit an event which will have no impact on the balances
+
+            EtherBalanceDeltaListRecord.newBuilder(agg)
+              .setApply(false)
+              .build()
+
+          } else {
+
+            // reverse previous deltas
+
+            EtherBalanceDeltaListRecord.newBuilder()
+              .setBlockHash(next.getBlockHash())
+              .setApply(true)
+              .setDeltas(next.getDeltas())
+              .setReversals(agg.getDeltas().map { it.reverse() })
+              .build()
+
+          }
+
         },
-        { _, removed -> removed.reverse() },
-        Materialized.with(KafkaSerdes.String(), Serdes.EtherBalanceDeltaList())
+        Materialized.with(Serdes.CanonicalKey(), Serdes.EtherBalanceDeltaList())
       ).toStream()
       .flatMap { _, v ->
 
-        v.getDeltas()
-          .map { delta ->
-            KeyValue(
-              EtherBalanceKeyRecord.newBuilder()
-                .setAddress(delta.getAddress())
-                .build(),
-              EtherBalanceDeltaRecord.newBuilder(delta)
-                .setAddress(null)
-                .build()
-            )
-          }
+        if (v.getApply()) {
+
+          (v.getDeltas() + v.getReversals())
+            .map { delta ->
+              KeyValue(
+                EtherBalanceKeyRecord.newBuilder()
+                  .setAddress(delta.getAddress())
+                  .build(),
+                EtherBalanceDeltaRecord.newBuilder(delta)
+                  .setAddress(null)
+                  .build()
+              )
+            }
+
+        } else {
+          emptyList()
+        }
+
       }.toTopic(EtherBalanceDeltas)
+
   }
 
   private fun balanceDeltasForFees(builder: StreamsBuilder) {
 
-    val txFeesTable = CanonicalTransactionFees.table(builder)
+    val txFeesStream = CanonicalTransactionFees.stream(builder)
 
-    txFeesTable
+    txFeesStream
       .mapValues { _, feeList ->
-        EtherBalanceDeltaListRecord.newBuilder()
-          .setDeltas(feeList.toEtherBalanceDeltas())
-          .build()
-      }
-      .toStream()
-      .toTopic(CanonicalTransactionFeesEtherDeltas)
 
-    CanonicalTransactionFeesEtherDeltas.table(builder)
-      .groupBy(
-        { k, v -> KeyValue(k.getNumber(), v) },
-        Grouped.with(KafkaSerdes.String(), Serdes.EtherBalanceDeltaList())
-      ).reduce(
-        { _, _ ->
-          // TODO check that old and new are equal
+        if (feeList != null) {
           EtherBalanceDeltaListRecord.newBuilder()
-            .setDeltas(emptyList())
+            .setBlockHash(feeList.getBlockHash())
+            .setDeltas(feeList.toEtherBalanceDeltas())
             .build()
+        } else {
+          // pass along the tombstone
+          null
+        }
+
+      }.toTopic(CanonicalTransactionFeesEtherDeltas)
+
+
+    CanonicalTransactionFeesEtherDeltas.stream(builder)
+      .groupByKey(Grouped.with(Serdes.CanonicalKey(), Serdes.EtherBalanceDeltaList()))
+      .reduce(
+        { agg, next ->
+
+          if (next.getBlockHash() == agg.getBlockHash()) {
+
+            // an update has been published for a previously seen block
+            // we assume no material change and therefore emit an event which will have no impact on the balances
+
+            EtherBalanceDeltaListRecord.newBuilder(agg)
+              .setApply(false)
+              .build()
+
+          } else {
+
+            // reverse previous deltas
+
+            EtherBalanceDeltaListRecord.newBuilder()
+              .setBlockHash(next.getBlockHash())
+              .setApply(true)
+              .setDeltas(next.getDeltas())
+              .setReversals(agg.getDeltas().map { it.reverse() })
+              .build()
+
+          }
+
         },
-        { _, removed -> removed.reverse() },
-        Materialized.with(KafkaSerdes.String(), Serdes.EtherBalanceDeltaList())
+        Materialized.with(Serdes.CanonicalKey(), Serdes.EtherBalanceDeltaList())
       ).toStream()
       .flatMap { _, v ->
 
-        v.getDeltas()
-          .map { delta ->
-            KeyValue(
-              EtherBalanceKeyRecord.newBuilder()
-                .setAddress(delta.getAddress())
-                .build(),
-              EtherBalanceDeltaRecord.newBuilder(delta)
-                .setAddress(null)
-                .build()
-            )
-          }
+        if (v.getApply()) {
+
+          (v.getDeltas() + v.getReversals())
+            .map { delta ->
+              KeyValue(
+                EtherBalanceKeyRecord.newBuilder()
+                  .setAddress(delta.getAddress())
+                  .build(),
+                EtherBalanceDeltaRecord.newBuilder(delta)
+                  .setAddress(null)
+                  .build()
+              )
+            }
+
+        } else {
+          emptyList()
+        }
+
       }.toTopic(EtherBalanceDeltas)
 
-    CanonicalBlockAuthors.table(builder)
+    CanonicalBlockAuthors.stream(builder)
       .join(
-        txFeesTable,
+        txFeesStream,
         { left, right ->
 
-          val totalTxFees = right.getTransactionFees()
-            .map { it.getTransactionFeeBI() }
-            .fold(BigInteger.ZERO) { memo, next -> memo + next }
+          if(left.getBlockHash() != right.getBlockHash()) {
 
-          EtherBalanceDeltaRecord.newBuilder()
-            .setType(EtherBalanceDeltaType.MINER_FEE)
-            .setBlockNumber(left.getBlockNumber())
-            .setBlockHash(left.getBlockHash())
-            .setAddress(left.getAuthor())
-            .setAmountBI(totalTxFees)
-            .build()
-        },
-        Materialized.with(Serdes.CanonicalKey(), Serdes.EtherBalanceDelta())
-      ).toStream()
-      .toTopic(CanonicalMinerFeesEtherDeltas)
+            // We're in the middle of an update/fork so we publish a tombstone
+            null
 
-    CanonicalMinerFeesEtherDeltas.table(builder)
-      .groupBy(
-        { k, v -> KeyValue(k.getNumber(), v) },
-        Grouped.with(KafkaSerdes.String(), Serdes.EtherBalanceDelta())
-      ).reduce(
-        { _, new ->
-          // TODO check old and new are the same
-          EtherBalanceDeltaRecord.newBuilder(new)
-            .setAmountBI(BigInteger.ZERO)
-            .build()
+          } else {
+
+            val totalTxFees = right.getTransactionFees()
+              .map { it.getTransactionFeeBI() }
+              .fold(BigInteger.ZERO) { memo, next -> memo + next }
+
+            EtherBalanceDeltaRecord.newBuilder()
+              .setType(EtherBalanceDeltaType.MINER_FEE)
+              .setBlockNumber(left.getBlockNumber())
+              .setBlockHash(left.getBlockHash())
+              .setAddress(left.getAuthor())
+              .setAmountBI(totalTxFees)
+              .build()
+
+          }
+
         },
-        { _, removed -> removed.reverse() },
-        Materialized.with(KafkaSerdes.String(), Serdes.EtherBalanceDelta())
+        JoinWindows.of(Duration.ofHours(2)),
+        Joined.with(Serdes.CanonicalKey(), Serdes.BlockAuthor(), Serdes.TransactionFeeList())
+      ).toTopic(CanonicalMinerFeesEtherDeltas)
+
+
+    CanonicalMinerFeesEtherDeltas.stream(builder)
+      .mapValues { v ->
+
+        if(v != null) {
+          EtherBalanceDeltaListRecord.newBuilder()
+            .setBlockHash(v.getBlockHash())
+            .setDeltas(listOf(v))
+            .build()
+        } else {
+          null
+        }
+
+      }
+      .groupByKey()
+      .reduce(
+        { agg, next ->
+
+          if (next!!.getBlockHash() == agg!!.getBlockHash()) {
+
+            // an update has been published for a previously seen block
+            // we assume no material change and therefore emit an event which will have no impact on the balances
+
+            EtherBalanceDeltaListRecord.newBuilder(agg)
+              .setApply(false)
+              .build()
+
+          } else {
+
+            // reverse previous deltas
+
+            EtherBalanceDeltaListRecord.newBuilder()
+              .setBlockHash(next.getBlockHash())
+              .setApply(true)
+              .setDeltas(next.getDeltas())
+              .setReversals(agg.getDeltas().map { it.reverse() })
+              .build()
+
+          }
+        },
+        Materialized.with(Serdes.CanonicalKey(), Serdes.EtherBalanceDeltaList())
       )
       .toStream()
-      .filter { _, v -> v.getAmount() != "0" }
-      .map { _, delta ->
+      .flatMap { _, v ->
 
-        KeyValue(
-          EtherBalanceKeyRecord.newBuilder()
-            .setAddress(delta.getAddress())
-            .build(),
-          EtherBalanceDeltaRecord.newBuilder(delta)
-            .setAddress(null)
-            .build()
-        )
+        if (v!!.getApply()) {
+
+          (v.getDeltas() + v.getReversals())
+            .map { delta ->
+              KeyValue(
+                EtherBalanceKeyRecord.newBuilder()
+                  .setAddress(delta.getAddress())
+                  .build(),
+                EtherBalanceDeltaRecord.newBuilder(delta)
+                  .setAddress(null)
+                  .build()
+              )
+            }
+
+        } else {
+          emptyList()
+        }
+
       }.toTopic(EtherBalanceDeltas)
   }
 

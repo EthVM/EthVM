@@ -28,7 +28,10 @@ protocol Processing {
   }
 
   record EtherBalanceDeltaListRecord {
-    array<EtherBalanceDeltaRecord> deltas;
+    boolean apply = true;
+    array<EtherBalanceDeltaRecord> deltas = [];
+    array<EtherBalanceDeltaRecord> reversals = [];
+    union{ null, string } blockHash = null;
   }
 
   record BlockAuthorRecord {
@@ -48,6 +51,7 @@ protocol Processing {
 
   record TransactionGasPriceListRecord {
     array<TransactionGasPriceRecord> gasPrices;
+    union { null, string } blockHash = null;
   }
 
   record TransactionGasUsedRecord {
@@ -56,6 +60,7 @@ protocol Processing {
 
   record TransactionGasUsedListRecord {
     array<TransactionGasUsedRecord> gasUsed;
+    union { null, string } blockHash = null;
   }
 
   record TransactionFeeRecord {
@@ -69,6 +74,7 @@ protocol Processing {
 
   record TransactionFeeListRecord {
     array<TransactionFeeRecord> transactionFees;
+    union { null, string } blockHash = null;
   }
 
   // contracts

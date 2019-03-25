@@ -197,7 +197,7 @@ fun TransactionFeeRecord.toEtherBalanceDelta(): EtherBalanceDeltaRecord =
     .setBlockNumber(getBlockNumber())
     .setTransactionHash(getTransactionHash())
     .setAddress(getAddress())
-    .setAmount(getTransactionFee().toBigInteger().negate().toString())
+    .setAmountBI(getTransactionFeeBI().negate())
     .build()
 
 fun TraceRecord.hasError(): Boolean {
@@ -232,11 +232,6 @@ fun TraceListRecord.toEtherBalanceDeltas(): List<EtherBalanceDeltaRecord> =
       deltas
     }.flatten()
     .filter { delta -> delta.getAmount() != null && !(delta.getAmount() == "" || delta.getAmount() == "0") }
-
-fun EtherBalanceDeltaListRecord.reverse() =
-  EtherBalanceDeltaListRecord.newBuilder()
-    .setDeltas(getDeltas().map { it.reverse() })
-    .build()
 
 fun EtherBalanceDeltaRecord.reverse() =
   EtherBalanceDeltaRecord.newBuilder(this)
@@ -285,7 +280,7 @@ fun TraceRecord.toEtherBalanceDeltas(): List<EtherBalanceDeltaRecord> {
         .setTransactionHash(getTransactionHash())
         .setTraceAddress(getTraceAddress())
         .setAddress(action.getFrom())
-        .setAmount(action.getValue().toBigInteger().negate().toString())
+        .setAmountBI(action.getValueBI().negate())
         .build(),
 
       EtherBalanceDeltaRecord.newBuilder()
@@ -309,7 +304,7 @@ fun TraceRecord.toEtherBalanceDeltas(): List<EtherBalanceDeltaRecord> {
         .setTransactionHash(getTransactionHash())
         .setTraceAddress(getTraceAddress())
         .setAddress(action.getFrom())
-        .setAmount(action.getValue().toBigInteger().negate().toString())
+        .setAmountBI(action.getValueBI().negate())
         .build(),
 
       EtherBalanceDeltaRecord.newBuilder()
@@ -332,7 +327,7 @@ fun TraceRecord.toEtherBalanceDeltas(): List<EtherBalanceDeltaRecord> {
         .setTransactionHash(getTransactionHash())
         .setTraceAddress(getTraceAddress())
         .setAddress(action.getAddress())
-        .setAmount(action.getBalance().toBigInteger().negate().toString())
+        .setAmountBI(action.getBalanceBI().negate())
         .build(),
 
       EtherBalanceDeltaRecord.newBuilder()
@@ -349,5 +344,3 @@ fun TraceRecord.toEtherBalanceDeltas(): List<EtherBalanceDeltaRecord> {
     else -> throw IllegalArgumentException("Unexpected action type: $action")
   }
 }
-
-object AvroHelpers

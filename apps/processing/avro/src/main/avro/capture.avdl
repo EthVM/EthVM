@@ -64,6 +64,7 @@ protocol Capture {
     string type;
     string blockHash;
     string blockNumber;
+
     union { null, string } transactionHash;
     union { null, int } transactionPosition;
 
@@ -119,12 +120,12 @@ protocol Capture {
     string r;                                                        // integer
     string s;                                                        // integer
 
+    long timestamp;
+
     union { null, string } creates = null;  // created contract hash
 
     union { null, long } chainId = null;                           // chain id of the transaction, if any
     union { null, bytes } raw = null;                               // raw rlp transaction data
-
-    union { null, long } timestamp = null;                        // block timestamp in seconds since epoch
 
     union { null, TransactionReceiptRecord } receipt = null;      // optional embedded receipt
   }

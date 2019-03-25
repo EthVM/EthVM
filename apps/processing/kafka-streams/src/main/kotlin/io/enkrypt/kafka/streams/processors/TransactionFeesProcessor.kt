@@ -21,7 +21,10 @@ import mu.KotlinLogging
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
+import org.apache.kafka.streams.kstream.JoinWindows
+import org.apache.kafka.streams.kstream.Joined
 import org.apache.kafka.streams.kstream.Materialized
+import java.time.Duration
 import java.util.Properties
 
 class TransactionFeesProcessor : AbstractKafkaProcessor() {
@@ -45,14 +48,16 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
     CanonicalTransactions.stream(builder)
       .mapValues { transactionsList ->
 
+        val blockHash = transactionsList.getTransactions().firstOrNull()?.getBlockHash()
+
         when (transactionsList) {
           null -> null
           else ->
             TransactionGasPriceListRecord.newBuilder()
+              .setBlockHash(blockHash)
               .setGasPrices(
                 transactionsList.getTransactions()
                   .map { tx ->
-
                     TransactionGasPriceRecord.newBuilder()
                       .setBlockNumber(tx.getBlockNumber())
                       .setBlockHash(tx.getBlockHash())
@@ -69,10 +74,13 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
     CanonicalReceipts.stream(builder)
       .mapValues { receiptsList ->
 
+        val blockHash = receiptsList.getReceipts().firstOrNull()?.getBlockHash()
+
         when (receiptsList) {
           null -> null
           else ->
             TransactionGasUsedListRecord.newBuilder()
+              .setBlockHash(blockHash)
               .setGasUsed(
                 receiptsList.getReceipts()
                   .map { receipt ->
@@ -84,43 +92,50 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
         }
       }.toTopic(CanonicalGasUsed)
 
-    CanonicalGasPrices.table(builder)
+    CanonicalGasPrices.stream(builder)
       .join(
-        CanonicalGasUsed.table(builder),
+        CanonicalGasUsed.stream(builder),
         { left, right ->
 
-          val gasPrices = left.getGasPrices()
-          val gasUsage = right.getGasUsed()
+          if(left.getBlockHash() != right.getBlockHash()) {
 
-          // if the parity source publishes the required deletes first then any fork should mean this join is only triggered when both new values are available
-          require(gasPrices.size == gasUsage.size)
+            // We're in the middle of an update/fork so we publish a tombstone
+            null
 
-          TransactionFeeListRecord.newBuilder()
-            .setTransactionFees(
+          } else {
 
-              // prices and usages should be in the same transaction order so we just zip them
+            val gasPrices = left.getGasPrices()
+            val gasUsage = right.getGasUsed()
 
-              gasPrices
-                .zip(gasUsage)
-                .map { (gasPrice, gasUsed) ->
+            TransactionFeeListRecord.newBuilder()
+              .setBlockHash(left.getBlockHash())
+              .setTransactionFees(
 
-                  val fee = gasPrice.getGasPriceBI() * gasUsed.getGasUsedBI()
+                // prices and usages should be in the same transaction order so we just zip them
 
-                  TransactionFeeRecord.newBuilder()
-                    .setBlockNumber(gasPrice.getBlockNumber())
-                    .setBlockHash(gasPrice.getBlockHash())
-                    .setTransactionHash(gasPrice.getTransactionHash())
-                    .setTransactionPosition(gasPrice.getTransactionPosition())
-                    .setAddress(gasPrice.getAddress())
-                    .setTransactionFeeBI(fee)
-                    .build()
-                }
-            ).build()
+                gasPrices
+                  .zip(gasUsage)
+                  .map { (gasPrice, gasUsed) ->
+
+                    val fee = gasPrice.getGasPriceBI() * gasUsed.getGasUsedBI()
+
+                    TransactionFeeRecord.newBuilder()
+                      .setBlockNumber(gasPrice.getBlockNumber())
+                      .setBlockHash(gasPrice.getBlockHash())
+                      .setTransactionHash(gasPrice.getTransactionHash())
+                      .setTransactionPosition(gasPrice.getTransactionPosition())
+                      .setAddress(gasPrice.getAddress())
+                      .setTransactionFeeBI(fee)
+                      .build()
+                  }
+              ).build()
+
+          }
 
         },
-        Materialized.with(Serdes.CanonicalKey(), Serdes.TransactionFeeList())
-      ).toStream()
-      .toTopic(CanonicalTransactionFees)
+        JoinWindows.of(Duration.ofHours(2)),
+        Joined.with(Serdes.CanonicalKey(), Serdes.TransactionGasPriceList(), Serdes.TransactionGasUsedList())
+      ).toTopic(CanonicalTransactionFees)
 
     return builder.build()
   }
