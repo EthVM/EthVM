@@ -2,21 +2,13 @@ query uncleByHash($hash: String!) {
   uncleByHash(hash: $hash) {
     author
     blockNumber
-    difficulty
-    extraData
     gasLimit
     gasUsed
     hash
-    logsBloom
-    nonce
     number
     parentHash
-    receiptsRoot
     sha3Uncles
-    size
-    stateRoot
     timestamp
-    transactionsRoot
     uncleIndex
     uncleReward
   }
@@ -26,21 +18,8 @@ query uncles($limit: Int, $page: Int, $fromUncle: Int) {
   uncles(limit: $limit, page: $page, fromUncle: $fromUncle) {
     author
     blockNumber
-    difficulty
-    extraData
-    gasLimit
-    gasUsed
     hash
-    logsBloom
-    nonce
     number
-    parentHash
-    receiptsRoot
-    sha3Uncles
-    size
-    stateRoot
-    timestamp
-    transactionsRoot
     uncleIndex
     uncleReward
   }
