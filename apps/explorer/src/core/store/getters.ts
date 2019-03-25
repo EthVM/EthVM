@@ -30,7 +30,4 @@ export default {
 
   // Syncing
   syncing: (state: State): boolean => state.syncing,
-
-  //Sentry
-  sentryToken: (state: State): string => state.sentryToken
 }

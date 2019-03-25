@@ -8,7 +8,6 @@ const MAX_BLOCKS_METRICS = parseInt(process.env.VUE_APP_MAX_BLOCK_IN_MEMORY)
 const MAX_TXS = parseInt(process.env.VUE_APP_MAX_TX_IN_MEMORY)
 const MAX_PENDING_TXS = parseInt(process.env.VUE_APP_MAX_PTX_IN_MEMORY)
 const MAX_UNCLES = parseInt(process.env.VUE_APP_MAX_UNCLE_IN_MEMORY)
-const SENTRY = process.env.VUE_APP_SENTRY_SECURITY_TOKEN
 
 export interface State {
   blocks: FIFO<Block>
@@ -18,7 +17,6 @@ export interface State {
   pendingTxs: FIFO<PendingTx>
   uncles: FIFO<Uncle>
   syncing: boolean
-  sentryToken: string
 }
 
 export const FIFOState: State = {
@@ -28,6 +26,5 @@ export const FIFOState: State = {
   txs: new FIFO<Tx>(MAX_TXS, processTxs),
   pendingTxs: new FIFO<PendingTx>(MAX_PENDING_TXS, processPendingTxs),
   uncles: new FIFO<Uncle>(MAX_UNCLES, processUncles),
-  syncing: false,
-  sentryToken: SENTRY ? SENTRY : ''
+  syncing: false
 }

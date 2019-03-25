@@ -5,6 +5,7 @@ import router from '@app/core/router'
 import store from '@app/core/store'
 import App from '@app/modules/App.vue'
 import i18n from '@app/translations'
+import * as Sentry from '@sentry/browser'
 import axios from 'axios'
 import io from 'socket.io-client'
 import VTooltip from 'v-tooltip'
@@ -13,7 +14,6 @@ import VueAxios from 'vue-axios'
 import VueTimeago from 'vue-timeago'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
-import * as Sentry from '@sentry/browser'
 
 /*
   ===================================================================================
@@ -93,8 +93,12 @@ new Vue({
     Sentry
   ===================================================================================
 */
-Sentry.init({
-  dsn: store.getters.sentryToken,
-  integrations: [new Sentry.Integrations.Vue({ Vue })],
-  maxBreadcrumbs: 0
-})
+
+const sentryToken = process.env.VUE_APP_SENTRY_SECURITY_TOKEN
+if (sentryToken) {
+  Sentry.init({
+    dsn: sentryToken,
+    integrations: [new Sentry.Integrations.Vue({ Vue })],
+    maxBreadcrumbs: 0
+  })
+}
