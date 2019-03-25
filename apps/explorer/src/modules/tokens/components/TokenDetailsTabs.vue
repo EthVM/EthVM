@@ -46,13 +46,13 @@ export default class TokenDetailsTabs extends Vue {
   ===================================================================================
   */
 
-  @Prop(String) addressRef: string
-  @Prop(Array) tokenTransfers: any
-  @Prop(Array) tokenHolders: any
-  @Prop(Boolean) isTokenTransfersLoading: boolean
-  @Prop(Boolean) isTokenHoldersLoading: boolean
-  @Prop(String) errorTokenTransfers: string
-  @Prop(String) errorTokenHolders: string
+  @Prop(String) addressRef!: string
+  @Prop(Array) tokenTransfers!: any
+  @Prop(Array) tokenHolders!: any
+  @Prop(Boolean) isTokenTransfersLoading!: boolean
+  @Prop(Boolean) isTokenHoldersLoading!: boolean
+  @Prop(String) errorTokenTransfers!: string
+  @Prop(String) errorTokenHolders!: string
 
   /*
   ===================================================================================

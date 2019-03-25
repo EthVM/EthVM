@@ -22,11 +22,11 @@ export default class TokenDetailsList extends Vue {
   ===================================================================================
   */
 
-  @Prop(String) addressRef: string // Token contract address
-  @Prop(Object) contractDetails: any
-  @Prop(Object) tokenDetails: any
-  @Prop(Boolean) isLoading: boolean
-  @Prop(String) error: string
+  @Prop(String) addressRef!: string // Token contract address
+  @Prop(Object) contractDetails!: any
+  @Prop(Object) tokenDetails!: any
+  @Prop(Boolean) isLoading!: boolean
+  @Prop(String) error!: string
 
   /*
   ===================================================================================

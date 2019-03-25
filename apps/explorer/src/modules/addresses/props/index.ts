@@ -26,7 +26,7 @@ export class AccountInfo {
   public isCreator: boolean = false
   public isMiner: boolean = false
 
-  public type: string
+  public type: string = ''
 
   constructor(public readonly address: string) {}
 }

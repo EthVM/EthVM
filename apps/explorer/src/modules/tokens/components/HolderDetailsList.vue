@@ -21,12 +21,12 @@ export default class HolderDetailsList extends Vue {
   ===================================================================================
   */
 
-  @Prop(String) addressRef: string // Token contract address
-  @Prop(Object) contractDetails: any
-  @Prop(Object) tokenDetails: any
-  @Prop(Object) holderDetails: any
-  @Prop(Boolean) isLoading: boolean
-  @Prop(String) error: string
+  @Prop(String) addressRef!: string // Token contract address
+  @Prop(Object) contractDetails!: any
+  @Prop(Object) tokenDetails!: any
+  @Prop(Object) holderDetails!: any
+  @Prop(Boolean) isLoading!: boolean
+  @Prop(String) error!: string
 
   /*
   ===================================================================================
