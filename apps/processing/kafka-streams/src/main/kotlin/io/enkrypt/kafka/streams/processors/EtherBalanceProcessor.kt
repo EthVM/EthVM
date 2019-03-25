@@ -217,6 +217,8 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
             // an update has been published for a previously seen block
             // we assume no material change and therefore emit an event which will have no impact on the balances
 
+            logger.warn { "Canonical traces ether deltas update received. Agg = $agg, next = $next" }
+
             EtherBalanceDeltaListRecord.newBuilder(agg)
               .setApply(false)
               .build()
@@ -290,6 +292,8 @@ class EtherBalanceProcessor : AbstractKafkaProcessor() {
 
             // an update has been published for a previously seen block
             // we assume no material change and therefore emit an event which will have no impact on the balances
+
+            logger.warn { "Canonical transaction fees ether deltas update received. Agg = $agg, next = $next" }
 
             EtherBalanceDeltaListRecord.newBuilder(agg)
               .setApply(false)

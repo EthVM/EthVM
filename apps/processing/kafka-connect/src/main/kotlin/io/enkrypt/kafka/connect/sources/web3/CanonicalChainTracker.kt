@@ -91,10 +91,10 @@ class CanonicalChainTracker(
       return null
     }
 
-    val range = currentTail.until(currentTail + maxSize + 1) // range is not inclusive at the end
+    val range = currentTail.until(currentTail + maxSize) // range is not inclusive at the end
       .let {
         if (it.endInclusive > currentHead) {
-          currentTail.until(currentHead + 1)
+          currentTail.until(currentHead)
         } else {
           it
         }
@@ -102,7 +102,7 @@ class CanonicalChainTracker(
 
     logger.debug { "Range: $range" }
 
-    tail.compareAndSet(currentTail, range.endInclusive)
+    tail.compareAndSet(currentTail, range.endInclusive + 1)
 
     return range
   }

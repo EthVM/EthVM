@@ -71,6 +71,8 @@ class ParitySourceTask : SourceTask() {
 
       // create sources
 
+      logger.info { "Entities list: $entitiesList" }
+
       entitySources = entitiesList.map {
         when (it) {
           "blocksAndTransactions" -> ParityBlockAndTxSource(this.context, parity!!, "canonical-blocks", "canonical-transactions")
