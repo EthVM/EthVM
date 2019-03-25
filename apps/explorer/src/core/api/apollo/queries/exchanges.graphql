@@ -44,21 +44,12 @@ query tokenExchangeRates($filter: TokenExchangeRateFilter!, $limit: Int, $page: 
   tokenExchangeRates(filter: $filter, limit: $limit, page: $page) {
     id
     address
-    circulatingSupply
     currentPrice
-    high24h
     image
-    lastUpdated
-    low24h
     marketCap
-    marketCapChange24h
-    marketCapChangePercentage24h
-    marketCapRank
     name
-    priceChange24h
     priceChangePercentage24h
     symbol
-    totalSupply
     totalVolume
   }
 }
@@ -94,21 +85,12 @@ query tokenExchangeRateByAddress($address: String!) {
   tokenExchangeRateByAddress(address: $address) {
     id
     address
-    circulatingSupply
     currentPrice
-    high24h
     image
-    lastUpdated
-    low24h
     marketCap
-    marketCapChange24h
-    marketCapChangePercentage24h
-    marketCapRank
     name
-    priceChange24h
     priceChangePercentage24h
     symbol
     totalSupply
-    totalVolume
   }
 }
