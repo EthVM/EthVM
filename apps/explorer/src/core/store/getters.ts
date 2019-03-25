@@ -29,5 +29,5 @@ export default {
   pendingTxs: (state: State): PendingTx[] => state.pendingTxs.items(),
 
   // Syncing
-  syncing: (state: State): boolean => state.syncing,
+  syncing: (state: State): boolean => state.syncing
 }
