@@ -83,7 +83,7 @@ export default class HolderTableTransfers extends Vue {
   ===================================================================================
   */
 
-  @Prop(Array) transfers: Array<any>
+  @Prop(Array) transfers!: Array<any>
 
   /*
   ===================================================================================

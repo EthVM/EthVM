@@ -148,9 +148,9 @@ export default class TokenTable extends Vue {
 
   @Prop({ type: Boolean, default: true }) loading!: boolean
   @Prop(Array) tokens!: TokenExchange[]
-  @Prop({ type: Number, default: 0 }) totalTokens: number
-  @Prop({ type: Number, default: 0 }) page: number
-  @Prop(String) error: string
+  @Prop({ type: Number, default: 0 }) totalTokens!: number
+  @Prop({ type: Number, default: 0 }) page!: number
+  @Prop(String) error!: string
 
   /*
   ===================================================================================
