@@ -6,53 +6,18 @@ query tx($hash: String!) {
   tx(hash: $hash) {
     blockHash
     blockNumber
-    creates
     from
     gas
     gasPrice
     hash
     input
     nonce
-    r
-    s
     timestamp
     to
-    transactionIndex
-    v
     value
     receipt {
-      blockHash
-      blockNumber
       contractAddress
-      cumulativeGasUsed
       gasUsed
-      logsBloom
-      numInternalTxs
-      root
-      status
-      transactionHash
-      transactionIndex
-      logs {
-        address
-        data
-        topics
-      }
-      traces {
-        blockHash
-        blockNumber
-        error
-        subtraces
-        traceAddress
-        transactionHash
-        transactionPosition
-        type
-        result {
-          address
-          code
-          gasUsed
-          output
-        }
-      }
     }
   }
 }
