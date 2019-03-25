@@ -23,7 +23,7 @@
             v-if="phText === 'addressTxSearch'"
             @keyup.enter="search"
             flat
-            :placeholder="$t('search.addressTx')"
+            :placeholder="$t('search.address-tx')"
             color="primary"
             solo
             clearable
@@ -36,8 +36,8 @@
       </v-card>
     </v-flex>
     <v-flex hidden-sm-and-down md4 style="max-width: 115px;">
-      <v-btn v-if="phText === 'default'" @click="search" depressed color="secondary" class="search-button text-capitalize ml-0">{{ $t('search.title') }}</v-btn>
-      <v-btn v-else @click="search" depressed outline class="search-button text-capitalize ml-0 primary--text lineGrey">{{ $t('search.title') }}</v-btn>
+      <v-btn v-if="phText === 'default'" @click="search" depressed color="secondary" class="search-button text-capitalize ml-0">{{ $t('search.name') }}</v-btn>
+      <v-btn v-else @click="search" depressed outline class="search-button text-capitalize ml-0 primary--text lineGrey">{{ $t('search.name') }}</v-btn>
     </v-flex>
   </v-layout>
 </template>

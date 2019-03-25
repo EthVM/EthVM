@@ -21,7 +21,7 @@
               </v-layout>
               <v-layout row align-center justify-start pl-2>
                 <p class="black--text mb-0 pr-1">${{ marketCap }}</p>
-                <p class="info--text mb-0 cap-text">({{ $t('token.cap') }})</p>
+                <p class="info--text mb-0 cap-text">({{ $t('token.market') }})</p>
               </v-layout>
             </v-flex>
             <v-flex xs2>

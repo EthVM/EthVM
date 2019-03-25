@@ -7,7 +7,7 @@
     -->
     <v-layout align-end justify-space-between row wrap fill-height pb-1>
       <v-flex xs12 sm6>
-        <v-card-title class="title font-weight-bold pb-1">{{ $t('title.uncles') }}</v-card-title>
+        <v-card-title class="title font-weight-bold pb-1">{{ $tc('uncle.name', 2) }}</v-card-title>
       </v-flex>
       <v-flex xs12 sm6 v-if="pages > 1">
         <v-layout justify-end class="pb-1 pr-2 pl-2">
@@ -30,20 +30,20 @@
     <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px" style="margin-right: 1px">
       <v-layout align-center justify-start row fill-height pr-3>
         <v-flex xs6 sm2 md2>
-          <h5>{{ $t('tableHeader.blockHeight') }}</h5>
+          <h5>{{ $t('block.block') }}</h5>
         </v-flex>
         <v-flex xs6 sm2 md2>
-          <h5>{{ $t('title.uncleNumber') }}</h5>
+          <h5>{{ $t('uncle.number') }}</h5>
         </v-flex>
         <v-flex sm5 md5 hidden-sm-and-down>
-          <h5>{{ $t('title.uncleDetail') }}</h5>
+          <h5>{{ $t('uncle.detail') }}</h5>
         </v-flex>
         <v-spacer />
         <v-flex hidden-sm-and-down md1>
-          <h5>{{ $t('title.position') }}</h5>
+          <h5>{{ $t('uncle.position') }}</h5>
         </v-flex>
         <v-flex xs6 sm3 md2>
-          <h5>{{ $t('tableHeader.reward') }}</h5>
+          <h5>{{ $t('miner.reward-short') }}</h5>
         </v-flex>
       </v-layout>
     </v-card>

@@ -49,11 +49,11 @@ export default class ChartUnclesNumber extends Mixins(ChartMixin) {
   ===================================================================================
   */
   get title(): string {
-    return this.$i18n.t('charts.totalUncles').toString()
+    return this.$i18n.t('charts.uncles-number.title').toString()
   }
 
   get labelString(): string {
-    return this.$i18n.t('charts.uncle-number-history').toString()
+    return this.$i18n.t('charts.uncle-number.description').toString()
   }
 }
 </script>

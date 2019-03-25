@@ -50,11 +50,11 @@ export default class ChartBlockDiff extends Mixins(ChartMixin) {
   */
 
   get title(): string {
-    return this.$i18n.t('charts.avgBlockDiff').toString()
+    return this.$i18n.t('charts.block-diff.title').toString()
   }
 
   get labelString(): string {
-    return this.$i18n.t('charts.block-difficulty-history').toString()
+    return this.$i18n.t('charts.block-diff.description').toString()
   }
 }
 </script>

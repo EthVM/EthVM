@@ -1,0 +1,47 @@
+type Query {
+  quote(token: ExchangeFrom!, to: ExchangeTo!): Quote
+  tokenExchangeRates(filter: TokenExchangeRateFilter!, limit: Int, page: Int): [TokenExchangeRate]!
+  totalNumTokenExchangeRates: Int!
+  tokenExchangeRateBySymbol(symbol: String!): TokenExchangeRate
+  tokenExchangeRateByAddress(address: String!): TokenExchangeRate
+}
+
+type Quote {
+  to: String
+  price: String
+  last_update: Decimal
+  vol_24h: String
+}
+
+enum ExchangeTo {
+  USD
+}
+
+enum ExchangeFrom {
+  ETH
+}
+
+type TokenExchangeRate {
+  id: String
+  address: String
+  circulatingSupply: String
+  currentPrice: Decimal
+  high24h: Decimal
+  image: String
+  lastUpdated: String
+  low24h: Decimal
+  marketCap: Decimal
+  marketCapChange24h: Decimal
+  marketCapChangePercentage24h: Decimal
+  marketCapRank: Int
+  name: String
+  priceChange24h: Decimal
+  priceChangePercentage24h: Decimal
+  symbol: String
+  totalSupply: Int
+  totalVolume: Decimal
+}
+
+enum TokenExchangeRateFilter {
+  price_high, price_low, volume_high, volume_low, market_cap_high, market_cap_low, market_cap_rank
+}

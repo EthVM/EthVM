@@ -16,6 +16,7 @@ defaultEntryPoints = ["https", "http"]
   [entryPoints.http]
   address = ":80"
   compress = true
+  {{if .Env.LETS_ENCRYPT_ENABLED }}
     [entryPoints.http.redirect]
     entrypoint = "https"
 
@@ -24,6 +25,7 @@ defaultEntryPoints = ["https", "http"]
   compress = true
 
     [entryPoints.https.tls]
+  {{end}}
 
 [retry]
 
@@ -37,6 +39,7 @@ watch = true
 exposedByDefault = false
 swarmMode = {{ .Env.SWARM_MODE }}
 
+{{if .Env.LETS_ENCRYPT_ENABLED }}
 ################################################################
 # Let's encrypt
 ################################################################
@@ -47,9 +50,13 @@ storage = "{{ .Env.ACME_STORAGE }}"
 onHostRule = true
 acmeLogging = true
 entryPoint = "https"
+{{if .Env.LETS_ENCRYPT_STAGING }}
+caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
+{{end}}
 
   [acme.httpChallenge]
   entryPoint = "http"
+{{end}}
 
 ################################################################
 # Traefik dashboard

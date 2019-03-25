@@ -11,13 +11,13 @@
     <v-card color="info" flat class="white--text pl-3 pr-1 mt-2 mb-2" height="40px">
       <v-layout align-center justify-start row fill-height pr-3>
         <v-flex xs6 sm8 md5>
-          <h5>{{ $t('tableHeader.txN') }}</h5>
+          <h5>{{ $tc('tx.hash', 1) }}</h5>
         </v-flex>
         <v-flex hidden-sm-and-down md2>
-          <h5>{{ $t('tableHeader.age') }}</h5>
+          <h5>{{ $t('common.age') }}</h5>
         </v-flex>
         <v-flex hidden-sm-and-down md2>
-          <h5>{{ $t('tableHeader.quantity') }}</h5>
+          <h5>{{ $t('common.quantity') }}</h5>
         </v-flex>
       </v-layout>
     </v-card>
@@ -53,7 +53,7 @@
 
         <!-- Column 2 -->
         <v-flex hidden-sm-and-down md2>
-          <p>{{ tx.timestamp }}</p>
+          <p>{{ $d(tx.timestamp, 'short', $i18n.locale.replace('_', '-')) }}</p>
         </v-flex>
         <!-- End Column 2 -->
 

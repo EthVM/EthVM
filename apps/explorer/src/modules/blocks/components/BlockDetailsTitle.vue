@@ -13,17 +13,17 @@
           <v-card-title class="title font-weight-bold">{{ title }}</v-card-title>
           <v-dialog v-if="hasUncles" v-model="dialog" max-width="700">
             <v-btn round outline slot="activator" color="primary" class="text-capitalize" small>
-              {{ $t('title.uncles') }}
+              {{ $tc('uncle.name', 2) }}
               <v-icon right>fa fa-angle-right</v-icon>
             </v-btn>
             <v-card>
-              <v-card-title class="title font-weight-bold">{{ $t('title.uncles') }}:</v-card-title>
+              <v-card-title class="title font-weight-bold">{{ $t('uncle.name', 2) }}:</v-card-title>
               <v-divider class="lineGrey"></v-divider>
               <v-list>
                 <v-list-tile v-for="(uncle, index) in uncles" :key="index">
                   <v-layout row justify-start align-center fill-height>
                     <v-card-title class="info--text pr-0 pl-0">{{ $t('common.hash') }}:</v-card-title>
-                    <v-card-text class="text-truncate">
+                    <v-card-text class="text-truncate font-mono">
                       <router-link :to="'/uncle/' + uncles[index]">{{ uncles[index] }}</router-link>
                     </v-card-text>
                   </v-layout>
@@ -66,7 +66,7 @@ export default class BlockDetailsTitle extends Vue {
   */
 
   get title(): string {
-    return this.$i18n.t('title.blockDetail').toString()
+    return this.$i18n.t('block.detail').toString()
   }
 
   get hasUncles(): boolean {

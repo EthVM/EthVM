@@ -48,7 +48,7 @@ up() {
 up_default() {
 
   echo -e "Building utility docker images...\n"
-  ${SCRIPT_DIR}/docker-build.sh build ethvm-utils mongodb-dev
+  ${SCRIPT_DIR}/docker-build.sh build ethvm-utils mongodb
 
   echo -e "Building containers..."
   docker-compose build
@@ -78,7 +78,7 @@ up_simple() {
   ${SCRIPT_DIR}/mongo.sh fetch
 
   echo -e "Building utility docker images...\n"
-  ${SCRIPT_DIR}/docker-build.sh build ethvm-utils mongodb-dev
+  ${SCRIPT_DIR}/docker-build.sh build ethvm-utils mongodb
 
   echo "Starting up containers: traefik, mongo, explorer and api"
   docker-compose up -d --build traefik mongodb explorer api api-nestjs

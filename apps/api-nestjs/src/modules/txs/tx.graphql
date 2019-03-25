@@ -1,0 +1,108 @@
+type Query {
+  tx(hash: String!): Transaction
+  txs(limit: Int, order: Order, fromBlock: Int): [Transaction]
+  txsForBlock(hash: String!): [Transaction]
+  txsForAddress(hash: String!, filter: FilterEnum, limit: Int, page: Int): [Transaction]
+  totalNumberOfTransactions: Int
+}
+
+type Transaction {
+  id: String
+  blockHash: String
+  blockNumber: Int
+  creates: String
+  from: String
+  gas: String
+  gasPrice: String
+  hash: String
+  input: String
+  nonce: String
+  r: String
+  s: String
+  timestamp: Int
+  to: String
+  transactionIndex: Int
+  v: Int
+  value: String
+  receipt: Receipt
+}
+
+type Receipt {
+  blockHash: String
+  blockNumber: Int
+  contractAddress: String
+  cumulativeGasUsed: String
+  gasUsed: String
+  logsBloom: String
+  numInternalTxs: Int
+  root: String
+  transactionHash: String
+  transactionIndex: String
+  logs: [Log]
+  traces: [Trace]
+}
+
+type Trace {
+  blockHash: String
+  blockNumber: Int
+  error: String
+  subtraces: Int
+  traceAddress: [Int]
+  transactionHash: String
+  transactionPosition: Int
+  type: String
+  action: Action
+  result: Result
+}
+
+type Log {
+  address: String
+  data: String
+  topics: [String]
+}
+
+type Action {
+  TraceCallActionRecord: TraceCallActionRecord
+  TraceCreateActionRecord: TraceCreateActionRecord
+  TraceDestroyActionRecord: TraceDestroyActionRecord
+  TraceRewardActionRecord: TraceRewardActionRecord
+}
+
+type Result {
+  address: String
+  code: String
+  gasUsed: String
+  output: String
+}
+
+type TraceCallActionRecord {
+  callType: String
+  from: String
+  gas: String
+  input: String
+  to: String
+  value: String
+}
+
+type TraceCreateActionRecord {
+  from: String
+  gas: String
+  init: String
+  value: String
+}
+
+type TraceDestroyActionRecord {
+  address: String
+  balance: String
+  refundAddress: String
+}
+
+type TraceRewardActionRecord {
+  author: String
+  value: String
+  rewardType: String
+}
+
+enum Order {
+  asc, desc
+}
