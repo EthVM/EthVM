@@ -8,8 +8,8 @@ export default {
 
   // Blocks
   blocks: (state: State): Block[] => state.blocks.items(),
-  blockByHash: (state: State) => (id: string): Block | null => state.blocks.items().find(block => block.getId() === id),
-  blockByNumber: (state: State) => (n: number): Block | null => state.blocks.items().find(block => block.getNumber() === n),
+  blockByHash: (state: State) => (id: string): Block | undefined => state.blocks.items().find(block => block.getId() === id),
+  blockByNumber: (state: State) => (n: number): Block | undefined => state.blocks.items().find(block => block.getNumber() === n),
 
   // Simple Blocks
   simpleBlocks: (state: State): SimpleBlock[] => state.simpleBlocks.items(),
@@ -19,11 +19,11 @@ export default {
 
   // Txs
   txs: (state: State): Tx[] => state.txs.items(),
-  txByHash: (state: State) => (id: string): Tx | null => state.txs.items().find(tx => tx.getId() === id),
+  txByHash: (state: State) => (id: string): Tx | undefined => state.txs.items().find(tx => tx.getId() === id),
 
   // Uncles
   uncles: (state: State): Uncle[] => state.uncles.items(),
-  uncleByHash: (state: State) => (id: string): Uncle | null => state.uncles.items().find(uncle => uncle.getId() === id),
+  uncleByHash: (state: State) => (id: string): Uncle | undefined => state.uncles.items().find(uncle => uncle.getId() === id),
 
   // PendingTxs
   pendingTxs: (state: State): PendingTx[] => state.pendingTxs.items(),

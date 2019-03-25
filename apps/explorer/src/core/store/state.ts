@@ -3,11 +3,11 @@ import { processBlockMetrics, processBlocks, processPendingTxs, processTxs, proc
 import { FIFO } from '@app/core/store/utils'
 import { BlockMetrics } from 'ethvm-common'
 
-const MAX_BLOCKS = parseInt(process.env.VUE_APP_MAX_BLOCK_IN_MEMORY)
-const MAX_BLOCKS_METRICS = parseInt(process.env.VUE_APP_MAX_BLOCK_IN_MEMORY)
-const MAX_TXS = parseInt(process.env.VUE_APP_MAX_TX_IN_MEMORY)
-const MAX_PENDING_TXS = parseInt(process.env.VUE_APP_MAX_PTX_IN_MEMORY)
-const MAX_UNCLES = parseInt(process.env.VUE_APP_MAX_UNCLE_IN_MEMORY)
+const MAX_BLOCKS: number = parseInt(process.env.VUE_APP_MAX_BLOCK_IN_MEMORY || '100')
+const MAX_BLOCKS_METRICS: number = parseInt(process.env.VUE_APP_MAX_BLOCK_IN_MEMORY || '100')
+const MAX_TXS: number = parseInt(process.env.VUE_APP_MAX_TX_IN_MEMORY || '100')
+const MAX_PENDING_TXS: number = parseInt(process.env.VUE_APP_MAX_PTX_IN_MEMORY || '100')
+const MAX_UNCLES: number = parseInt(process.env.VUE_APP_MAX_UNCLE_IN_MEMORY || '100')
 
 export interface State {
   blocks: FIFO<Block>
