@@ -1,4 +1,4 @@
-FROM traefik:1.7.3-alpine
+FROM traefik:1.7.9-alpine
 
 ENV DOCKERIZE_VERSION v0.6.1
 
@@ -6,6 +6,7 @@ ENV ACME_EMAIL admin@myetherwallet.com
 ENV ACME_STORAGE /var/lib/traefik/acme
 ENV DEBUG true
 ENV LOG_LEVEL DEBUG
+ENV LETS_ENCRYPT_ENABLED true
 ENV SWARM_MODE true
 
 # Install dockerize

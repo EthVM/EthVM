@@ -130,10 +130,10 @@ export class ChartMixin extends Vue {
 
   get cap(): string[] {
     return [
-      this.$i18n.t('charts.states.all').toString(),
-      this.$i18n.t('charts.states.week').toString(),
-      this.$i18n.t('charts.states.month').toString(),
-      this.$i18n.t('charts.states.year').toString()
+      this.$i18n.tc('charts.states.all', 1).toString(),
+      this.$i18n.tc('charts.states.week', 1).toString(),
+      this.$i18n.tc('charts.states.month', 1).toString(),
+      this.$i18n.tc('charts.states.year', 1).toString()
     ]
   }
 }

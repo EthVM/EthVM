@@ -112,8 +112,9 @@ export default class PageUncles extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: this.$i18n.t('title.uncles'),
-        disabled: true
+        text: 'uncle.name',
+        disabled: true,
+        plural: 2
       }
     ]
   }

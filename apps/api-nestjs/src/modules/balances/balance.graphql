@@ -1,0 +1,19 @@
+type Query {
+  balanceByHash(hash: String!): Balance
+}
+
+type Balance {
+  id: BalanceKey
+  address: String
+  amount: String
+  balanceType: BalanceType
+}
+
+type BalanceKey {
+  balanceType: BalanceType
+  address: String
+}
+
+enum BalanceType {
+  TX_FEE, REWARD, ETHER, ERC20, ERC721
+}

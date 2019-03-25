@@ -6,13 +6,14 @@ import { BufferScalar } from '@app/graphql/scalars/buffer.scalar'
 import { DecimalScalar } from '@app/graphql/scalars/decimal.scalar'
 import { join } from 'path'
 import { ConfigService } from '@app/shared/config.service'
+import { StatisticValueScalar } from '@app/graphql/scalars/statistic-value.scalar'
+import { LongScalar } from '@app/graphql/scalars/long.scalar'
 
 @Module({
   imports: [
     ApolloGraphQLModule.forRootAsync({
       useFactory: async (configService: ConfigService): Promise<any> => {
-
-        const config = configService.graphql;
+        const config = configService.graphql
 
         return {
           typePaths: ['./src/**/*.graphql'],
@@ -34,6 +35,6 @@ import { ConfigService } from '@app/shared/config.service'
       inject: [ConfigService]
     })
   ],
-  providers: [DateScalar, DecimalScalar, BufferScalar]
+  providers: [DateScalar, DecimalScalar, BufferScalar, StatisticValueScalar, LongScalar]
 })
 export class GraphQLModule {}

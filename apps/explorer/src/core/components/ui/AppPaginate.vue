@@ -2,7 +2,7 @@
   <v-card color="transparent" flat min-width="240" max-width="340">
     <v-container grid-list-xs pa-1>
       <v-layout row align-center justify-end fill-height>
-        <v-btn v-if="hasFirst" flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('first')" small>{{ $t('bttn.first') }}</v-btn>
+        <v-btn v-if="hasFirst" flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('first')" small>{{ $t('btn.first') }}</v-btn>
         <v-btn flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('prev')" small
           ><v-icon class="secondary--text" small>fas fa-angle-left</v-icon>
         </v-btn>
@@ -14,7 +14,7 @@
         <v-btn flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('next')" small
           ><v-icon class="secondary--text" small>fas fa-angle-right</v-icon>
         </v-btn>
-        <v-btn v-if="hasLast" flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('last')" small>{{ $t('bttn.last') }}</v-btn>
+        <v-btn v-if="hasLast" flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('last')" small>{{ $t('btn.last') }}</v-btn>
       </v-layout>
     </v-container>
   </v-card>

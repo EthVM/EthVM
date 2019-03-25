@@ -116,7 +116,7 @@ export default class PagePendingTxs extends Vue {
   ===================================================================================
   */
 
-  // No Need to ber reactive yet, needs update button on update
+  // No Need to be reactive yet, needs update button on update
   // get pendingTxs(): PendingTx[] {
   //   return this.$store.getters.pendingTxs
   // }
@@ -124,8 +124,9 @@ export default class PagePendingTxs extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: this.$i18n.t('title.pending'),
-        disabled: true
+        text: 'tx.pending',
+        disabled: true,
+        plural: 2
       }
     ]
   }

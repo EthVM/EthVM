@@ -1,7 +1,7 @@
 <template>
   <v-card color="sync" flat>
     <v-layout row align-center justify-center fill-height>
-      <v-card-title class="text-xs-center">{{ $t('message.sync') }}</v-card-title>
+      <v-card-title class="text-xs-center">{{ $t('message.sync.main') }}</v-card-title>
     </v-layout>
   </v-card>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <v-btn icon @click="copy"> <v-icon class="fa fa-copy secondary--text" /> </v-btn>
+  <v-btn icon @click="copy" class="ma-0"> <v-icon class="fa fa-copy secondary--text" /> </v-btn>
 </template>
 
 <script lang="ts">

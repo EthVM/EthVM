@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import convict from 'convict'
 import { join } from 'path'
 
+/* tslint:disable:max-line-length */
 const schema = {
   env: {
     doc: 'The application environment.',
@@ -40,19 +41,44 @@ const schema = {
     playground: {
       doc: 'Whether to enable to disable the graphql playground',
       env: 'GRAPHQL_PLAYGROUND',
-      default: false
+      default: true
     }
   },
   mongodb: {
-    host: {
-      doc: 'MongoDB host',
-      env: 'MONGO_HOST',
-      default: 'mongodb'
+    url: {
+      doc: 'MongoDB connection URL',
+      env: 'MONGO_URL',
+      default: 'mongodb://mongodb:27017/ethvm_local'
+    }
+  },
+  coinGecko: {
+    url: {
+      doc: 'CoinGecko API URL',
+      env: 'COIN_GECKO_API_URL',
+      default:
+        'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true'
+    }
+  },
+  ethplorer: {
+    url: {
+      doc: 'Ethplorer API URL',
+      env: 'ETHPLORER_API_URL',
+      default: 'http://api.ethplorer.io/'
     },
-    port: {
-      doc: 'MongoDB port',
-      env: 'MONGO_PORT',
-      default: 27017
+    apiKey: {
+      doc: 'Ethplorer API key',
+      env: 'ETHPLORER_API_KEY',
+      default: 'freekey'
+    }
+  },
+  vmEngine: {
+    rpcUrl: {
+      env: 'VM_ENGINE_RPC_URL',
+      default: 'https://api.myetherwallet.com/eth'
+    },
+    tokensSmartContract: {
+      env: 'VM_ENGINE_TOKENS_SMART_CONTRACT_ADDRESS',
+      default: '0x2783c0A4Bfd3721961653a9e9939Fc63687bf07f'
     }
   }
 }
@@ -62,8 +88,21 @@ export interface GraphqlConfig {
 }
 
 export interface MongoDbConfig {
-  host: string
-  port: number
+  url: string
+}
+
+export interface CoinGeckoConfig {
+  url: string
+}
+
+export interface EthplorerConfig {
+  url: string
+  apiKey: string
+}
+
+export interface VmEngineConfig {
+  rpcUrl: string
+  tokensSmartContract: string
 }
 
 @Injectable()
@@ -79,8 +118,8 @@ export class ConfigService {
     const { env } = this
 
     if (env === 'development') {
-      console.log('Configuration')
-      console.log(config.toString())
+      Logger.log('Configuration')
+      Logger.log(config.toString())
     }
   }
 
@@ -102,5 +141,17 @@ export class ConfigService {
 
   get mongoDb(): MongoDbConfig {
     return this.config.get('mongodb')
+  }
+
+  get coinGecko(): CoinGeckoConfig {
+    return this.config.get('coinGecko')
+  }
+
+  get ethplorer(): EthplorerConfig {
+    return this.config.get('ethplorer')
+  }
+
+  get vmEngine(): VmEngineConfig {
+    return this.config.get('vmEngine')
   }
 }

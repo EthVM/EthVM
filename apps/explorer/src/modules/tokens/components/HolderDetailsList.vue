@@ -74,42 +74,42 @@ export default class HolderDetailsList extends Vue {
           title: this.$i18n.t('token.holder')
         },
         {
-          title: this.$i18n.t('title.contract')
+          title: this.$i18n.tc('contract.name', 2)
         },
         {
-          title: this.$i18n.t('token.balance')
+          title: this.$i18n.t('common.balance')
         },
         {
-          title: `${this.$i18n.t('token.balance')} (USD)`
+          title: this.$i18n.t('usd.total')
         },
         {
           title: this.$i18n.t('token.transfers')
         },
         {
-          title: this.$i18n.t('title.marketCap')
+          title: this.$i18n.t('token.market')
         },
         {
-          title: this.$i18n.t('title.decimals')
+          title: this.$i18n.t('token.decimals')
         }
       ]
     } else {
       details = [
         {
           title: this.$i18n.t('token.holder'),
-          detail: this.$route.query.holder,
+          detail: this.$route.query.holder.toString(),
           link: `/address/${this.$route.query.holder}`
         },
         {
-          title: this.$i18n.t('title.contract'),
+          title: this.$i18n.tc('contract.name', 2),
           detail: this.tokenDetails.address,
           link: `/address/${this.tokenDetails.address}`
         },
         {
-          title: this.$i18n.t('token.balance'),
+          title: this.$i18n.t('common.balance'),
           detail: this.holderDetails.tokens ? this.holderDetails.tokens[0].balance : 'N/A'
         },
         {
-          title: `${this.$i18n.t('token.balance')} (USD)`,
+          title: this.$i18n.t('usd.total'),
           detail: this.balanceUsd
         },
         {
@@ -117,11 +117,11 @@ export default class HolderDetailsList extends Vue {
           detail: this.holderDetails.countTxs
         },
         {
-          title: this.$i18n.t('title.marketCap'),
+          title: this.$i18n.t('token.market'),
           detail: `$${this.tokenDetails.current_price}`
         },
         {
-          title: this.$i18n.t('title.decimals'),
+          title: this.$i18n.t('token.decimals'),
           detail: this.contractDetails.metadata.decimals
         }
       ]

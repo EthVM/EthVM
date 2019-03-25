@@ -6,12 +6,12 @@
         <v-card color="white" flat :class="{ 'pa-1': $vuetify.breakpoint.xsOnly, 'pa-3': $vuetify.breakpoint.smOnly, 'pa-5': $vuetify.breakpoint.mdAndUp }">
           <v-layout wrap grid-list-sm align-center column fill-height pa-2>
             <v-flex xs12 align-self-start>
-              <v-card-title class="display-1 font-weight-bold pb-1">{{ $t('title.terms') }}</v-card-title>
+              <v-card-title class="display-1 font-weight-bold pb-1">{{ $t('kb.title') }}</v-card-title>
             </v-flex>
             <v-flex xs12>
-              <v-layout v-for="term in terms" row wrap justify-start pa-2 :key="$t(term.term)">
-                <v-card-title class="title pb-0">{{ $t(term.term) }}</v-card-title>
-                <v-card-text class="pt-2">{{ $t(term.def) }}</v-card-text>
+              <v-layout v-for="(term, index) in terms" row wrap justify-start pa-2 :key="index">
+                <v-card-title class="title pb-0">{{ $t(kb + term + '.term') }}</v-card-title>
+                <v-card-text class="pt-2">{{ $t(kb + term + '.def') }}</v-card-text>
               </v-layout>
             </v-flex>
           </v-layout>
@@ -25,13 +25,21 @@
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import { Crumb } from '@app/core/components/props'
 import { Component, Vue } from 'vue-property-decorator'
-
+import KnowledgeBase from '@app/translations'
 @Component({
   components: {
     AppBreadCrumbs
   }
 })
 export default class PageKnowledgeBase extends Vue {
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
+
+  kb = 'kb.terms.'
+
   /*
   ===================================================================================
     Computed Values
@@ -41,14 +49,14 @@ export default class PageKnowledgeBase extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: this.$i18n.t('title.kb'),
+        text: 'kb.name',
         disabled: true
       }
     ]
   }
 
-  get terms() {
-    return this.$i18n.t('kb')
+  get terms(): string[] {
+    return Object.keys(this.$i18n.t('kb.terms'))
   }
 }
 </script>

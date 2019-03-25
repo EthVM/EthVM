@@ -53,11 +53,11 @@ export default class ChartBlockTime extends Mixins(ChartMixin) {
   */
 
   get title() {
-    return this.$i18n.t('charts.avgBlockTime').toString()
+    return this.$i18n.t('charts.block-time.title').toString()
   }
 
   get labelString(): string {
-    return this.$i18n.t('charts.block-time-history').toString()
+    return this.$i18n.t('charts.block-time.description').toString()
   }
 }
 </script>

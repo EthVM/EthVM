@@ -69,7 +69,7 @@ export default class ChartLiveTransactions extends Vue {
 
   fillChartData(bms: BlockMetrics[] | BlockMetrics = []) {
     bms = !Array.isArray(bms) ? [bms] : bms
-    const blockN = this.$i18n.t('title.blockN')
+    const blockN = this.$i18n.t('block.number')
     bms.forEach(bm => {
       this.data.labels.push(blockN + bm.number)
       this.data.sTxs.push(bm.numSuccessfulTxs)
@@ -104,13 +104,13 @@ export default class ChartLiveTransactions extends Vue {
           yAxisID: 'y-axis-2'
         },
         {
-          label: this.$i18n.t('footnote.success'),
+          label: this.$i18n.t('common.success'),
           backgroundColor: '#40ce9c',
           data: this.data.sTxs,
           yAxisID: 'y-axis-1'
         },
         {
-          label: this.$i18n.t('footnote.failed'),
+          label: this.$i18n.t('common.fail'),
           backgroundColor: '#fe136c',
           data: this.data.fTxs,
           yAxisID: 'y-axis-1'
@@ -123,34 +123,34 @@ export default class ChartLiveTransactions extends Vue {
     return [
       {
         color: 'txSuccess',
-        text: this.$i18n.t('footnote.success'),
+        text: this.$i18n.t('common.success'),
         icon: 'fa fa-circle'
       },
       {
         color: 'txFail',
-        text: this.$i18n.t('footnote.failed'),
+        text: this.$i18n.t('common.fail'),
         icon: 'fa fa-circle'
       },
       {
         color: 'txPen',
-        text: this.$i18n.t('footnote.pending'),
+        text: this.$i18n.t('common.pending'),
         icon: 'fa fa-circle'
       }
     ]
   }
 
   get newTitle() {
-    return this.$i18n.t('charts.txSummary')
+    return this.$i18n.t('charts.tx-summary.title')
   }
 
   get newDescription() {
-    return this.$i18n.t('charts.liveDescription')
+    return this.$i18n.t('charts.tx-summary.description')
   }
 
   get chartOptions() {
     return {
       title: {
-        text: this.$i18n.t('charts.title')
+        text: this.$i18n.t('charts.tx-summary.title')
       },
       responsive: true,
       scales: {
@@ -178,7 +178,7 @@ export default class ChartLiveTransactions extends Vue {
             },
             scaleLabel: {
               display: true,
-              labelString: this.$i18n.t('charts.sfTxsLabel')
+              labelString: this.$i18n.t('charts.tx-summary.label.success-fail')
             }
           },
           {
@@ -205,7 +205,7 @@ export default class ChartLiveTransactions extends Vue {
             },
             scaleLabel: {
               display: true,
-              labelString: this.$i18n.t('charts.penTxsLabel')
+              labelString: this.$t('charts.tx-summary.label.pen')
             }
           }
         ],

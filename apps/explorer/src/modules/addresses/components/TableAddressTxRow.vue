@@ -2,7 +2,7 @@
   <v-card color="white" flat class="pt-0 pb-2">
     <v-card flat v-if="isSyncing && type">
       <v-layout row align-center justify-center fill-height>
-        <v-card-title class="text-xs-center pt-5 pb-5">{{ $t('message.syncPendingTxs') }}</v-card-title>
+        <v-card-title class="text-xs-center pt-5 pb-5">{{ $t('message.sync.no-pen-tx') }}</v-card-title>
       </v-layout>
     </v-card>
     <v-card v-else flat id="scroll-target" class=" pt-0 pb-0">
@@ -41,25 +41,27 @@
               <v-flex d-flex xs7 sm6 pr-3>
                 <v-layout row wrap align-center pb-1>
                   <v-flex d-flex xs12 pb-2>
-                    <router-link class="primary--text text-truncate font-italic psmall" :to="'/tx/' + tx.getHash()">{{ tx.getHash() }}</router-link>
+                    <router-link class="primary--text text-truncate font-mono psmall" :to="'/tx/' + tx.getHash()">{{ tx.getHash() }}</router-link>
                   </v-flex>
-                  <v-flex hidden-xs-and-down sm12 pt-0>
+                  <v-flex hidden-xs-only sm12 pt-0>
                     <v-layout row pl-2>
                       <p v-if="!getType(tx)" class="text-truncate info--text mb-0">
                         {{ $t('tx.from') }}:
-                        <router-link :to="'/address/' + tx.getFrom().toString()" class="secondary--text font-italic font-weight-regular"
+                        <router-link :to="'/address/' + tx.getFrom().toString()" class="secondary--text font-mono font-italic font-weight-regular pr-1"
                           >{{ tx.getFrom().toString() }}
                         </router-link>
                       </p>
-                      <p class="text-truncate info--text font-weight-thin mb-0" v-if="getType(tx) && !tx.getContractAddress().isEmpty()">
-                        {{ $t('tx.contract') }}:
-                        <router-link class="secondary--text font-italic font-weight-regular" :to="'/address/' + tx.getContractAddress().toString()"
+                      <p class="text-truncate info--text mb-0" v-if="getType(tx) && !tx.getContractAddress().isEmpty()">
+                        {{ $t('contract.name') }}:
+                        <router-link
+                          class="secondary--text font-mono font-italic font-weight-regular pr-1"
+                          :to="'/address/' + tx.getContractAddress().toString()"
                           >{{ tx.getContractAddress().toString() }}
                         </router-link>
                       </p>
-                      <p class="text-truncate info--text font-weight-thin mb-0" v-if="getType(tx) && tx.getContractAddress().isEmpty()">
-                        <strong>{{ $t('tx.to') }}:</strong>
-                        <router-link class="secondary--text font-italic font-weight-regular" :to="'/address/' + tx.getTo().toString()"
+                      <p class="text-truncate info--text mb-0 mr-3" v-if="getType(tx) && tx.getContractAddress().isEmpty()">
+                        {{ $t('tx.to') }}:
+                        <router-link class="secondary--text font-mono font-italic font-weight-regular pr-1" :to="'/address/' + tx.getTo().toString()"
                           >{{ tx.getTo().toString() }}
                         </router-link>
                       </p>
@@ -123,7 +125,7 @@
               =====================================================================================
               -->
               <v-flex hidden-xs-only sm3 md2>
-                <p class="black--text text-truncate mb-0"><timeago :datetime="tx.getTimestamp()" :auto-update="60"></timeago></p>
+                <app-time-ago :timestamp="tx.getTimestamp()" />
               </v-flex>
               <!--
               =====================================================================================
@@ -166,8 +168,13 @@
 <script lang="ts">
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import { StringConcatMixin } from '@app/core/components/mixins'
+import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 
-@Component
+@Component({
+  components: {
+    AppTimeAgo
+  }
+})
 export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
   /*
   ===================================================================================
@@ -212,8 +219,8 @@ export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
   */
 
   get text(): string {
-    const mesg = [this.$i18n.t('message.txAll'), this.$i18n.t('message.txIn'), this.$i18n.t('message.txOut')]
-    const penMesg = [this.$i18n.t('message.txPen'), this.$i18n.t('message.txPenIn'), this.$i18n.t('message.txPenOut')]
+    const mesg = [this.$i18n.t('message.tx.no-all'), this.$i18n.t('message.tx.no-in'), this.$i18n.t('message.tx.no-out')]
+    const penMesg = [this.$i18n.t('message.tx.no-pen'), this.$i18n.t('message.tx.no-pen-in'), this.$i18n.t('message.tx.no-pen-out')]
     if (!this.type) {
       return mesg[this.filter].toString()
     }

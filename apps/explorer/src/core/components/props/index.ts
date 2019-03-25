@@ -34,11 +34,15 @@ export interface Detail {
   detail?: string | number
   link?: string
   copy?: boolean
+  txInput?: string[]
+  mono?: boolean
 }
 
 export interface Crumb {
-  text: string | TranslateResult
+  text: string
   disabled: boolean
   icon?: string
   link?: string
+  label?: string
+  plural?: number
 }
