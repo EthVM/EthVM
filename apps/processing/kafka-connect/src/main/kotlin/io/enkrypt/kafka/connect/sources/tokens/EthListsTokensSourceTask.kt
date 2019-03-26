@@ -1,7 +1,13 @@
 package io.enkrypt.kafka.connect.sources.tokens
 
 import com.beust.klaxon.Klaxon
+import io.enkrypt.avro.capture.ContractKeyRecord
+import io.enkrypt.avro.capture.ContractLogoRecord
+import io.enkrypt.avro.capture.ContractMetadataRecord
+import io.enkrypt.avro.capture.ContractSocialRecord
+import io.enkrypt.avro.capture.ContractSupportRecord
 import io.enkrypt.common.extensions.hexBytes
+import io.enkrypt.kafka.connect.utils.AvroToConnect
 import io.enkrypt.kafka.connect.utils.Versions
 import org.apache.kafka.connect.data.Schema
 import org.apache.kafka.connect.data.SchemaBuilder
@@ -47,24 +53,28 @@ class EthListsTokensSourceTask : SourceTask() {
     val inputStream = URL(url).openStream()
     val entries = klaxon.parseArray<ContractMetadata>(inputStream) ?: emptyList()
 
-    val records = entries.dropWhile { it.address.isEmpty() }.map { e ->
+    val records = entries
+      .dropWhile { it.address.isEmpty() }
+      .map { entry ->
 
+        val keySchemaAndValue = AvroToConnect.toConnectData(
+          ContractKeyRecord.newBuilder()
+            .setAddress(entry.address)
+            .build()
+        )
 
+        val valueSchemaAndValue = AvroToConnect.toConnectData(entry.toRecord())
 
-      val key = Struct(EthTokenKeySchema).apply {
-        put("address", e.address.hexBytes())
+        SourceRecord(
+          sourcePartition,
+          sourceOffset,
+          topic,
+          keySchemaAndValue.schema(),
+          keySchemaAndValue.value(),
+          valueSchemaAndValue.schema(),
+          valueSchemaAndValue.value()
+        )
       }
-
-      SourceRecord(
-        sourcePartition,
-        sourceOffset,
-        topic,
-        EthTokenKeySchema,
-        key,
-        ContractMetadataSchema,
-        e.toStruct()
-      )
-    }
 
     lastSyncAt = Instant.now()
 
@@ -73,80 +83,27 @@ class EthListsTokensSourceTask : SourceTask() {
 
   private fun shouldSync(): Boolean = ChronoUnit.SECONDS.between(lastSyncAt, Instant.now()) > syncIntervalSeconds
 
-  companion object {
-
-    val EthTokenKeySchema: Schema = SchemaBuilder.struct()
-      .name("io.enkrypt.avro.tokens.EthTokenListsKeyRecord")
-      .field("address", Schema.BYTES_SCHEMA)
-      .build()
-
-    val LogoSchema: Schema = SchemaBuilder.struct()
-      .name("io.enkrypt.avro.processing.ContractLogoRecord")
-      .optional()
-      .field("src", Schema.OPTIONAL_STRING_SCHEMA)
-      .field("width", Schema.OPTIONAL_STRING_SCHEMA)
-      .field("height", Schema.OPTIONAL_STRING_SCHEMA)
-      .field("ipfs_hash", Schema.OPTIONAL_STRING_SCHEMA)
-      .build()
-
-    val SupportSchema: Schema = SchemaBuilder.struct()
-      .name("io.enkrypt.avro.processing.ContractSupportRecord")
-      .optional()
-      .field("email", Schema.OPTIONAL_STRING_SCHEMA)
-      .field("url", Schema.OPTIONAL_STRING_SCHEMA)
-      .build()
-
-    val SocialSchema: Schema = SchemaBuilder.struct()
-      .name("io.enkrypt.avro.processing.ContractSocialRecord")
-      .optional()
-      .field("blog", Schema.OPTIONAL_STRING_SCHEMA)
-      .field("chat", Schema.OPTIONAL_STRING_SCHEMA)
-      .field("facebook", Schema.OPTIONAL_STRING_SCHEMA)
-      .field("forum", Schema.OPTIONAL_STRING_SCHEMA)
-      .field("github", Schema.OPTIONAL_STRING_SCHEMA)
-      .field("gitter", Schema.OPTIONAL_STRING_SCHEMA)
-      .field("instagram", Schema.OPTIONAL_STRING_SCHEMA)
-      .field("linkedin", Schema.OPTIONAL_STRING_SCHEMA)
-      .field("reddit", Schema.OPTIONAL_STRING_SCHEMA)
-      .field("slack", Schema.OPTIONAL_STRING_SCHEMA)
-      .field("telegram", Schema.OPTIONAL_STRING_SCHEMA)
-      .field("twitter", Schema.OPTIONAL_STRING_SCHEMA)
-      .field("youtube", Schema.OPTIONAL_STRING_SCHEMA)
-      .build()
-
-    val ContractMetadataSchema: Schema = SchemaBuilder.struct()
-      .name("io.enkrypt.avro.processing.ContractMetadataRecord")
-      .field("name", Schema.STRING_SCHEMA)
-      .field("symbol", Schema.STRING_SCHEMA)
-      .field("address", Schema.BYTES_SCHEMA)
-      .field("decimals", Schema.INT32_SCHEMA)
-      .field("ens_address", Schema.OPTIONAL_STRING_SCHEMA)
-      .field("type", Schema.OPTIONAL_STRING_SCHEMA)
-      .field("logo", LogoSchema)
-      .field("support", SupportSchema)
-      .field("social", SocialSchema)
-      .field("website", Schema.OPTIONAL_STRING_SCHEMA)
-  }
-
   data class ContractLogo(
     val src: String? = "",
     private val width: Int? = 0,
     private val height: Int? = 0
   ) {
 
-    fun toStruct(): Struct =
-      Struct(EthListsTokensSourceTask.LogoSchema).apply {
-        put("src", src)
-      }
+    fun toRecord(): ContractLogoRecord =
+      ContractLogoRecord.newBuilder()
+        .setSrc(src)
+        .build()
+
   }
 
   data class ContractSupport(val email: String?, val url: String?) {
 
-    fun toStruct(): Struct =
-      Struct(EthListsTokensSourceTask.SupportSchema).apply {
-        put("email", email)
-        put("url", url)
-      }
+    fun toRecord(): ContractSupportRecord =
+      ContractSupportRecord.newBuilder()
+        .setEmail(email)
+        .setUrl(url)
+        .build()
+
   }
 
   data class ContractSocial(
@@ -165,22 +122,23 @@ class EthListsTokensSourceTask : SourceTask() {
     val youtube: String?
   ) {
 
-    fun toStruct(): Struct =
-      Struct(EthListsTokensSourceTask.SocialSchema).apply {
-        put("blog", blog)
-        put("chat", chat)
-        put("facebook", facebook)
-        put("forum", forum)
-        put("github", github)
-        put("gitter", gitter)
-        put("instagram", instagram)
-        put("linkedin", linkedin)
-        put("reddit", reddit)
-        put("slack", slack)
-        put("telegram", telegram)
-        put("twitter", twitter)
-        put("youtube", youtube)
-      }
+    fun toRecord(): ContractSocialRecord =
+      ContractSocialRecord.newBuilder()
+        .setBlog(blog)
+        .setChat(chat)
+        .setFacebook(facebook)
+        .setForum(forum)
+        .setGithub(github)
+        .setGitter(gitter)
+        .setInstagram(instagram)
+        .setLinkedin(instagram)
+        .setReddit(reddit)
+        .setSlack(slack)
+        .setTelegram(telegram)
+        .setTwitter(twitter)
+        .setYoutube(youtube)
+        .build()
+
   }
 
   data class ContractMetadata(
@@ -196,18 +154,19 @@ class EthListsTokensSourceTask : SourceTask() {
     val social: ContractSocial?
   ) {
 
-    fun toStruct(): Struct =
-      Struct(EthListsTokensSourceTask.ContractMetadataSchema).apply {
-        put("name", name)
-        put("symbol", symbol)
-        put("address", address.hexBytes())
-        put("decimals", decimals)
-        put("ens_address", ens_address)
-        put("type", type)
-        put("logo", logo?.toStruct())
-        put("support", support?.toStruct())
-        put("social", social?.toStruct())
-        put("website", website)
-      }
+    fun toRecord(): ContractMetadataRecord =
+      ContractMetadataRecord.newBuilder()
+        .setName(name)
+        .setSymbol(symbol)
+        .setAddress(address)
+        .setDecimals(decimals)
+        .setEnsAddress(ens_address)
+        .setType(type)
+        .setLogo(logo?.toRecord())
+        .setSupport(support?.toRecord())
+        .setSocial(social?.toRecord())
+        .setWebsite(website)
+        .build()
+
   }
 }

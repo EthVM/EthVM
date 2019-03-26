@@ -62,7 +62,7 @@ class EthListsTokensSourceConnector : SourceConnector() {
 
     const val TOPIC_CONFIG = "topic"
     const val TOPIC_CONFIG_DOC = "Topic into which to publish"
-    const val TOPIC_CONFIG_DEFAULT = "eth-tokens-list"
+    const val TOPIC_CONFIG_DEFAULT = "contract-metadata"
 
     const val TOKENS_URL_CONFIG = "tokens.url"
     const val TOKENS_URL_DOC = "Url of json file from which to download info"
@@ -70,7 +70,7 @@ class EthListsTokensSourceConnector : SourceConnector() {
 
     const val SYNC_INTERVAL_CONFIG = "sync.interval"
     const val SYNC_INTERVAL_DOC = "How often to check for updates in seconds"
-    val SYNC_INTERVAL_DEFAULT = TimeUnit.HOURS.toSeconds(6L).toInt() // every 6 hours by default
+    val SYNC_INTERVAL_DEFAULT = TimeUnit.HOURS.toSeconds(24L).toInt() // every 24 hours by default
 
     fun topic(props: MutableMap<String, String>) = props[TOPIC_CONFIG] ?: TOPIC_CONFIG_DEFAULT
 

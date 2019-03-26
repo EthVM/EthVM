@@ -209,7 +209,7 @@ protocol Capture {
 
     string name;
     string symbol;
-    bytes address;
+    string address;
     int decimals;
 
     union { null, string } ens_address;
@@ -222,13 +222,14 @@ protocol Capture {
   }
 
   enum ContractLifecyleType {
-    CREATE, DESTROY, METADATA
+    CREATE, DESTROY
   }
 
   record ContractLifecycleRecord {
 
     string address;
     ContractLifecyleType type;
+
     boolean reverse = false;
 
     union { null, string } creator = null;
@@ -239,8 +240,6 @@ protocol Capture {
     union { null, string } refundAddress = null;
     union { null, string } refundBalance = null;
     union { null, TraceAddress } destroyedAt = null;
-
-    union { null, ContractMetadataRecord } metadata = null;
   }
 
   record ContractLifecycleListRecord {

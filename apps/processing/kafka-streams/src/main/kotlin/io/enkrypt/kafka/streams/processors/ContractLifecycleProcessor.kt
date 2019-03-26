@@ -103,6 +103,7 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
         { _, new, agg ->
 
           when (new.getType()) {
+
             ContractLifecyleType.CREATE -> {
 
               if (new.getReverse()) {
@@ -138,20 +139,6 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
                   .setRefundAddress(new.getRefundAddress())
                   .setRefundBalance(new.getRefundBalance())
                   .setDestroyedAt(new.getDestroyedAt())
-                  .build()
-              }
-
-            }
-
-            ContractLifecyleType.METADATA -> {
-
-              if (new.getReverse()) {
-                ContractRecord.newBuilder(agg)
-                  .setMetadata(null)
-                  .build()
-              } else {
-                ContractRecord.newBuilder(agg)
-                  .setMetadata(new.getMetadata())
                   .build()
               }
 

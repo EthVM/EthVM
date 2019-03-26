@@ -146,18 +146,6 @@ topics:
     config:
       cleanup.policy: compact
 
-  - name: contract-destructions
-    replicationFactor: 1
-    partitions: 12
-    config:
-      cleanup.policy: compact
-
-  - name: contract-creations
-    replicationFactor: 1
-    partitions: 12
-    config:
-      cleanup.policy: compact
-
   - name: pending-transactions
     replicationFactor: 1
     partitions: 12

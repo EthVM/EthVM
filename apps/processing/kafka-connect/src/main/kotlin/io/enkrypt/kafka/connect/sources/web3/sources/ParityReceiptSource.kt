@@ -4,7 +4,7 @@ import io.enkrypt.avro.capture.CanonicalKeyRecord
 import io.enkrypt.avro.capture.TransactionReceiptListRecord
 import io.enkrypt.avro.capture.TransactionReceiptRecord
 import io.enkrypt.common.extensions.setNumberBI
-import io.enkrypt.kafka.connect.sources.web3.AvroToConnect
+import io.enkrypt.kafka.connect.utils.AvroToConnect
 import io.enkrypt.kafka.connect.sources.web3.JsonRpc2_0ParityExtended
 import io.enkrypt.kafka.connect.sources.web3.toTransactionReceiptRecord
 import org.apache.kafka.connect.source.SourceRecord
