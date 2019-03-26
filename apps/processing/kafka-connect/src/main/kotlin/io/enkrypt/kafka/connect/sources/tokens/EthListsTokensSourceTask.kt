@@ -49,6 +49,8 @@ class EthListsTokensSourceTask : SourceTask() {
 
     val records = entries.dropWhile { it.address.isEmpty() }.map { e ->
 
+
+
       val key = Struct(EthTokenKeySchema).apply {
         put("address", e.address.hexBytes())
       }

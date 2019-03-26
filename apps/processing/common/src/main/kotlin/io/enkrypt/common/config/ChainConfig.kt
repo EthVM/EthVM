@@ -1,6 +1,5 @@
 package io.enkrypt.common.config
 
-import io.enkrypt.avro.capture.BlockRecord
 import io.enkrypt.avro.processing.EtherBalanceDeltaRecord
 import io.enkrypt.avro.processing.EtherBalanceDeltaType
 import io.enkrypt.common.extensions.ether
@@ -170,8 +169,6 @@ interface NetConfig {
 
   val genesis: GenesisFile
 
-  fun chainConfigForBlock(block: BlockRecord): ChainConfig
-
   fun chainConfigForBlock(number: BigInteger): ChainConfig
 
   companion object {
@@ -214,9 +211,6 @@ class BaseNetConfig(genesis: Genesis, vararg configs: Pair<Long, ChainConfig>) :
   init {
     // TODO enforce that block numbers are increasing
   }
-
-  override fun chainConfigForBlock(block: BlockRecord): ChainConfig =
-    chainConfigForBlock(block.getHeader().getNumber().toBigInteger())
 
   override fun chainConfigForBlock(number: BigInteger): ChainConfig {
     var idx = 0

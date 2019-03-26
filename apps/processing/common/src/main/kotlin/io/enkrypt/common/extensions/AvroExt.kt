@@ -2,6 +2,10 @@ package io.enkrypt.common.extensions
 
 import io.enkrypt.avro.capture.BlockHeaderRecord
 import io.enkrypt.avro.capture.CanonicalKeyRecord
+import io.enkrypt.avro.capture.ContractLifecycleRecord
+import io.enkrypt.avro.capture.ContractLifecyleType
+import io.enkrypt.avro.capture.ContractRecord
+import io.enkrypt.avro.capture.TraceAddress
 import io.enkrypt.avro.capture.TraceCallActionRecord
 import io.enkrypt.avro.capture.TraceCreateActionRecord
 import io.enkrypt.avro.capture.TraceDestroyActionRecord
@@ -237,6 +241,58 @@ fun EtherBalanceDeltaRecord.reverse() =
   EtherBalanceDeltaRecord.newBuilder(this)
     .setAmount(getAmount().toBigInteger().negate().toString())
     .build()
+
+fun TraceRecord.
+  toContractLifecycleRecord(): ContractLifecycleRecord? {
+
+  // error check first
+  val error = getError()
+  if (!(error == null || error.isEmpty())) {
+    return null
+  }
+
+  val action = getAction()
+
+  return when (action) {
+
+    is TraceCreateActionRecord ->
+
+      ContractLifecycleRecord.newBuilder()
+        .setAddress(getResult().getAddress())
+        .setType(ContractLifecyleType.CREATE)
+        .setCreator(action.getFrom())
+        .setInit(action.getInit())
+        .setCode(getResult().getCode())
+        .setCreatedAt(
+          TraceAddress.newBuilder()
+            .setBlockNumber(getBlockNumber())
+            .setBlockHash(getBlockHash())
+            .setTransactionHash(getTransactionHash())
+            .setTraceAddress(getTraceAddress())
+            .build()
+        ).build()
+
+    is TraceDestroyActionRecord ->
+
+      ContractLifecycleRecord.newBuilder()
+        .setAddress(action.getAddress())
+        .setType(ContractLifecyleType.DESTROY)
+        .setRefundAddress(action.getRefundAddress())
+        .setRefundBalance(action.getBalance())
+        .setDestroyedAt(
+          TraceAddress.newBuilder()
+            .setBlockNumber(getBlockNumber())
+            .setBlockHash(getBlockHash())
+            .setTransactionHash(getTransactionHash())
+            .setTraceAddress(getTraceAddress())
+            .build()
+        ).build()
+
+
+    else -> throw IllegalArgumentException("Unexpected action type: $action")
+  }
+
+}
 
 fun TraceRecord.toEtherBalanceDeltas(): List<EtherBalanceDeltaRecord> {
 

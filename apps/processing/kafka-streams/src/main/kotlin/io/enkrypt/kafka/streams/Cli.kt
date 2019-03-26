@@ -10,6 +10,7 @@ import io.enkrypt.kafka.streams.config.KafkaConfig
 import io.enkrypt.kafka.streams.di.Modules.kafkaStreams
 import io.enkrypt.kafka.streams.processors.BlockAuthorProcessor
 import io.enkrypt.kafka.streams.processors.BlockMetricsProcessor
+import io.enkrypt.kafka.streams.processors.ContractLifecycleProcessor
 import io.enkrypt.kafka.streams.processors.EtherBalanceProcessor
 import io.enkrypt.kafka.streams.processors.KafkaProcessor
 import io.enkrypt.kafka.streams.processors.TransactionFeesProcessor
@@ -88,7 +89,8 @@ class Cli : CliktCommand() {
       TransactionFeesProcessor(),
       EtherBalanceProcessor(),
       BlockAuthorProcessor(),
-      BlockMetricsProcessor()
+      BlockMetricsProcessor(),
+      ContractLifecycleProcessor()
 //      BlockProcessor(),
 //      StateProcessor(),
 //      EthTokensProcessor(),

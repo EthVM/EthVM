@@ -49,7 +49,11 @@ object Topics {
   val CanonicalTransactionFees = KafkaTopic("canonical-transaction-fees", Serdes.CanonicalKey(), Serdes.TransactionFeeList())
 
   val CanonicalBlockAuthors = KafkaTopic("canonical-block-authors", Serdes.CanonicalKey(), Serdes.BlockAuthor())
-  val CanonicalBlockAuthorFeeEtherDeltas = KafkaTopic("canonical-block-author-fee-ether-deltas", Serdes.CanonicalKey(), Serdes.EtherBalanceDelta())
+
+  val CanonicalContractTraces = KafkaTopic("canonical-contract-traces", Serdes.CanonicalKey(), Serdes.TraceList())
+  val CanonicalContractLifecycle = KafkaTopic("canonical-contract-lifecycle", Serdes.CanonicalKey(), Serdes.ContractLifecycleList())
+  val ContractLifecycleEvents = KafkaTopic("contract-lifecycle-events", Serdes.ContractKey(), Serdes.ContractLifecycle())
+  val Contracts = KafkaTopic("contracts", Serdes.ContractKey(), Serdes.Contract())
 
   const val BlockMetricsByDay = "block-metrics-by-day"
 

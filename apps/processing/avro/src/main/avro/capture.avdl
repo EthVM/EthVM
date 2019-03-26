@@ -168,4 +168,104 @@ protocol Capture {
 
   }
 
+  // contracts
+
+  record TraceAddress {
+    string blockNumber;
+    string blockHash;
+    string transactionHash;
+    array<int> traceAddress;
+  }
+
+  record ContractLogoRecord {
+    union { null, string } src;
+    union { null, string } width;
+    union { null, string } height;
+    union { null, string } ipfs_hash;
+  }
+
+  record ContractSupportRecord {
+    union { null, string } email;
+    union { null, string } url;
+  }
+
+  record ContractSocialRecord {
+    union { null, string } blog;
+    union { null, string } chat;
+    union { null, string } facebook;
+    union { null, string } forum;
+    union { null, string } github;
+    union { null, string } gitter;
+    union { null, string } instagram;
+    union { null, string } linkedin;
+    union { null, string } reddit;
+    union { null, string } slack;
+    union { null, string } telegram;
+    union { null, string } twitter;
+    union { null, string } youtube;
+  }
+
+  record ContractMetadataRecord {
+
+    string name;
+    string symbol;
+    bytes address;
+    int decimals;
+
+    union { null, string } ens_address;
+    union { null, string, io.enkrypt.avro.common.ContractType } type;
+    union { null, ContractLogoRecord } logo;
+    union { null, ContractSupportRecord } support;
+    union { null, ContractSocialRecord } social;
+    union { null, string } website;
+
+  }
+
+  enum ContractLifecyleType {
+    CREATE, DESTROY, METADATA
+  }
+
+  record ContractLifecycleRecord {
+
+    string address;
+    ContractLifecyleType type;
+    boolean reverse = false;
+
+    union { null, string } creator = null;
+    union { null, string } init = null;
+    union { null, string } code = null;
+    union { null, TraceAddress } createdAt = null;
+
+    union { null, string } refundAddress = null;
+    union { null, string } refundBalance = null;
+    union { null, TraceAddress } destroyedAt = null;
+
+    union { null, ContractMetadataRecord } metadata = null;
+  }
+
+  record ContractLifecycleListRecord {
+    string blockNumber;
+    boolean reverse = false;
+    array<ContractLifecycleRecord> lifecycleRecords = [];
+  }
+
+  record ContractRecord {
+
+    union{ null, string } address = null;
+    union { null, string } creator = null;
+    union { null, string } init = null;
+    union { null, string } code = null;
+    union { null, string } refundAddress = null;
+    union { null, string } refundBalance = null;
+    union { null, ContractMetadataRecord } metadata = null;
+
+    union { null, TraceAddress } createdAt = null;
+    union { null, TraceAddress } destroyedAt = null;
+
+  }
+
+  record ContractKeyRecord {
+    string address;
+  }
+
 }
