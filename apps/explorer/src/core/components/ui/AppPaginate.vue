@@ -128,7 +128,7 @@ export default class AppPaginate extends Vue {
     if(this.pageDisplayUpdateTimeout) {
       clearTimeout(this.pageDisplayUpdateTimeout)
     }
-    this.pageDisplayUpdateTimeout = setTimeout(() => {
+    this.pageDisplayUpdateTimeout = window.setTimeout(() => {
       this.setPage(desiredPage)
     }, 500)
 
