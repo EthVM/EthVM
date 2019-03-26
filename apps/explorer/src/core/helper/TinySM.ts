@@ -6,7 +6,7 @@ export interface State {
 
 export class TinySM {
   private states: State[]
-  private currentState: State = null
+  private currentState: State | null = null
 
   constructor(_states: State[]) {
     if (_states.length === 0) {

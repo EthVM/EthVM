@@ -5,7 +5,7 @@ export class Token {
   public readonly id: string
   private cache: any = {}
 
-  private price: number
+  private price?: number
   private holder?: string
 
   constructor(private readonly token: Token) {
@@ -57,7 +57,7 @@ export class Token {
     return this.cache.totalTransfers
   }
 
-  public getPrice(): number {
+  public getPrice(): number | undefined {
     return this.token.price
   }
 
@@ -65,7 +65,7 @@ export class Token {
     this.token.price = _price
   }
 
-  public getHolder(): string {
+  public getHolder(): string | undefined {
     return this.token.holder
   }
 

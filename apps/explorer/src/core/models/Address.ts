@@ -2,11 +2,10 @@ export class Address {
   public address: string
 
   constructor(_add: Buffer) {
-    if (_add) {
+    if (_add && Buffer.from(_add).toString('hex') !== '') {
       this.address = '0x' + Buffer.from(_add).toString('hex')
-      this.address = this.address === '0x' ? '0x0000000000000000000000000000000000000000' : this.address
     } else {
-      this.address = null
+      this.address = '0x0000000000000000000000000000000000000000'
     }
   }
 
