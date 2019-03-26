@@ -28,6 +28,3 @@ mount /dev/bcache0 /mnt/ethereum
 echo writeback > /sys/block/bcache0/bcache/cache_mode
 
 echo "/dev/bcache0 /mnt/ethereum  ext4    defaults,nofail" >> /etc/fstab
-
-echo '127.0.0.1 ethclient' | sudo tee -a /etc/hosts
-hostnamectl set-hostname "ethclient"

@@ -61,7 +61,7 @@ module "swarmprom" {
   ethstats_secret    = "${var.ethstats_secret}"
 }
 
-module "parity" {
+module "ethclient" {
   source            = "./modules/clients/parity"
   name              = "mainnet"
   ami               = "${var.ec2_ami_ethereum_client}"
