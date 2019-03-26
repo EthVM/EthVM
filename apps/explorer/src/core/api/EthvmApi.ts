@@ -23,7 +23,7 @@ export interface EthvmApi {
 
   // Blocks
   getBlock(hash: string): Promise<Block | null>
-  getBlocks(format: string, limit: number, page: number, fromBlock: number): Promise<Block[] | SimpleBlock[]>
+  getBlocks(limit: number, page: number, fromBlock: number): Promise<SimpleBlock[]>
   getBlockByNumber(no: number): Promise<Block | null>
   getBlocksMinedOfAddress(address: string, limit: number, page: number): Promise<SimpleBlock[]>
   getTotalNumberOfBlocks(): Promise<number>

@@ -55,8 +55,8 @@ export class EthvmMigrationApi implements EthvmApi {
     return this.apolloApi.getBlock(hash)
   }
 
-  public getBlocks(format: string, limit: number, page: number, fromBlock: number): Promise<Block[] | SimpleBlock[]> {
-    return this.apolloApi.getBlocks(format, limit, page, fromBlock)
+  public getBlocks(limit: number, page: number, fromBlock: number): Promise<SimpleBlock[]> {
+    return this.apolloApi.getBlocks(limit, page, fromBlock)
   }
 
   public getBlockByNumber(no: number): Promise<Block> {

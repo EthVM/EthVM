@@ -73,8 +73,8 @@ export default class PageBlocks extends Vue {
     window.scrollTo(0, 0)
   }
 
-  fetchBlocks(page: number): Promise<Block[] | SimpleBlock[]> {
-    return this.$api.getBlocks('simple', this.max, page, this.from)
+  fetchBlocks(page: number): Promise<SimpleBlock[]> {
+    return this.$api.getBlocks(this.max, page, this.from)
   }
 
   fetchTotalBlocks(): Promise<number> {

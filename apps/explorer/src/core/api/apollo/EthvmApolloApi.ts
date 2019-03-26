@@ -142,7 +142,7 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => new Block(res.data.blockByHash))
   }
 
-  public getBlocks(format: string, limit: number, page: number, fromBlock: number): Promise<Block[] | SimpleBlock[]> {
+  public getBlocks(limit: number, page: number, fromBlock: number): Promise<SimpleBlock[]> {
     return this.apollo
       .query({
         query: blocks,
