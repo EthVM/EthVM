@@ -382,7 +382,7 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => new Tx(res.data.tx))
   }
 
-  public getTxs(format: string, limit: number, order: string, fromBlock: number): Promise<Tx[] | SimpleTx[]> {
+  public getTxs(limit: number, order: string, fromBlock: number): Promise<SimpleTx[]> {
     return this.apollo
       .query({
         query: txs,

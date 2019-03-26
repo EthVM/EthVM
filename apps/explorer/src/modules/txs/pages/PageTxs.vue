@@ -83,7 +83,7 @@ export default class PageTxs extends Vue {
     window.scrollTo(0, 0)
   }
 
-  fetchTxs(newPage: number): Promise<Tx[] | SimpleTx[]> {
+  fetchTxs(newPage: number): Promise<SimpleTx[]> {
     if (!this.firstLoad) {
       const length = this.txs.length
       const first = length > 0 ? this.txs[0].getBlockNumber() : -1
@@ -99,7 +99,7 @@ export default class PageTxs extends Vue {
 
     this.page = newPage
 
-    return this.$api.getTxs('simple', this.maxItems, 'desc', this.from)
+    return this.$api.getTxs(this.maxItems, 'desc', this.from)
   }
 
   fetchTotalTxs(): Promise<number> {

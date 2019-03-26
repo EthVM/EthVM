@@ -163,8 +163,8 @@ export class EthvmMigrationApi implements EthvmApi {
     return this.apolloApi.getTx(hash)
   }
 
-  public getTxs(format: string, limit: number, order: string, fromBlock: number): Promise<Tx[] | SimpleTx[]> {
-    return this.apolloApi.getTxs(format, limit, order, fromBlock)
+  public getTxs(limit: number, order: string, fromBlock: number): Promise<SimpleTx[]> {
+    return this.apolloApi.getTxs(limit, order, fromBlock)
   }
 
   public getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<Tx[]> {
