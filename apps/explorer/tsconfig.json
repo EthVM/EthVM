@@ -15,7 +15,7 @@
     },
     "resolveJsonModule": false,
     "sourceMap": true,
-    "strict": false,
+    "strict": true,
     "target": "esnext",
     "types": ["jest", "node", "vuetify"]
   },
