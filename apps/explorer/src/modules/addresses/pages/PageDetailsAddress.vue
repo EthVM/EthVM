@@ -64,7 +64,7 @@
           :loading="minerBlocksLoading"
           :blocks="account.minedBlocks"
           :page-type="detailsType"
-          :total-blocks="minedTotal"
+          :total-blocks="account.totalMinedBlocks"
           :max-items="max"
           :page="minedPage"
           :simple-pagination="true"
@@ -167,7 +167,6 @@ export default class PageDetailsAddress extends Vue {
   minerBlocksLoading = true
   minerBlocksError = ''
   minedPage = 0
-  minedTotal = 20
 
   /* Contracts: */
   contractsLoading = true
@@ -257,6 +256,8 @@ export default class PageDetailsAddress extends Vue {
 
               // Mined Blocks
               this.account.minedBlocks = res[1] || [] // res[2] || []
+              //Get Total mined Blocks by address
+              //this.account.totalMinedBlocks =
               this.minerBlocksLoading = false
 
               // Contract Creator
