@@ -8,6 +8,7 @@ import { join } from 'path'
 import { ConfigService } from '@app/shared/config.service'
 import { StatisticValueScalar } from '@app/graphql/scalars/statistic-value.scalar'
 import { LongScalar } from '@app/graphql/scalars/long.scalar'
+import { PubSub } from 'graphql-subscriptions'
 
 @Module({
   imports: [
@@ -35,6 +36,12 @@ import { LongScalar } from '@app/graphql/scalars/long.scalar'
       inject: [ConfigService]
     })
   ],
-  providers: [DateScalar, DecimalScalar, BufferScalar, StatisticValueScalar, LongScalar]
+  providers: [
+    DateScalar, DecimalScalar, BufferScalar, StatisticValueScalar, LongScalar,
+    {
+      provide: 'PUB_SUB',
+      useValue: new PubSub()
+    }
+  ]
 })
 export class GraphQLModule {}

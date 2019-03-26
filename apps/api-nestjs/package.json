@@ -60,8 +60,8 @@
     "rxjs": "~6.4.0",
     "typeorm": "~0.2.14",
     "typescript": "~3.3.3333",
-    "winston": "^3.2.1",
-    "web3-utils": "^1.0.0-beta.48"
+    "web3-utils": "^1.0.0-beta.48",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "@nestjs/testing": "~5.7.3",

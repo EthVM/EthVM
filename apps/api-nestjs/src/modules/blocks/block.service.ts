@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { MongoRepository } from 'typeorm'
+import { getManager, getMongoManager, MongoRepository } from 'typeorm'
 import { BlockEntity } from '@app/orm/entities/block.entity'
+import { MongoQueryRunner } from 'typeorm/driver/mongodb/MongoQueryRunner'
 
 @Injectable()
 export class BlockService {
@@ -28,5 +29,14 @@ export class BlockService {
 
   async findTotalNumberOfBlocks(): Promise<number> {
     return this.blockRepository.count()
+  }
+
+  async subscribeToUpdates() {
+
+    const manager = getMongoManager();
+
+    manager.queryRunner.watch('blocks', [], { fullDocument: 'updateLookup' })
+
+
   }
 }
