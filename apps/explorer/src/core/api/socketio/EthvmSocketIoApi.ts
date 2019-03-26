@@ -53,9 +53,9 @@ export class EthvmSocketIoApi implements EthvmApi {
     return this.promisify(Events.getBlock, { hash }).then(raw => (raw !== null ? new Block(raw) : null))
   }
 
-  public getBlocks(format: string = 'simple', limit: number = 100, page: number = 0, fromBlock: number = -1): Promise<Block[] | SimpleBlock[]> {
-    return this.promisify(Events.getBlocks, { format, limit, page, fromBlock }).then(raw =>
-      raw.map(rawBlock => (format === 'full' ? new Block(rawBlock) : new SimpleBlock(rawBlock)))
+  public getBlocks(limit: number = 100, page: number = 0, fromBlock: number = -1): Promise<SimpleBlock[]> {
+    return this.promisify(Events.getBlocks, { limit, page, fromBlock }).then(raw =>
+      raw.map(rawBlock => (new SimpleBlock(rawBlock)))
     )
   }
 
@@ -163,9 +163,9 @@ export class EthvmSocketIoApi implements EthvmApi {
     return this.promisify(Events.getTx, { hash }).then(raw => (raw !== null ? new Tx(raw) : null))
   }
 
-  public getTxs(format: string, limit: number = 100, order: string = 'desc', fromBlock: number = -1): Promise<Tx[] | SimpleTx[]> {
-    return this.promisify(Events.getTxs, { format, limit, order, fromBlock }).then(raw =>
-      raw.map(rawTx => (format !== 'simple' ? new Tx(rawTx) : new SimpleTx(rawTx)))
+  public getTxs(limit: number = 100, order: string = 'desc', fromBlock: number = -1): Promise<SimpleTx[]> {
+    return this.promisify(Events.getTxs, {limit, order, fromBlock }).then(raw =>
+      raw.map(rawTx => ( new SimpleTx(rawTx)))
     )
   }
 
