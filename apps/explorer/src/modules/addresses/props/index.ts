@@ -1,10 +1,9 @@
-import { Block, PendingTx, SimpleTx, EthValue, SimpleBlock } from '@app/core/models'
+import {PendingTx, SimpleTx, EthValue, SimpleBlock } from '@app/core/models'
 
 export class AccountInfo {
   public balance: EthValue = new EthValue(0)
   public exchangeRate: any = { USD: 0 }
 
-  public blocks: Block[] = []
   public minedBlocks: SimpleBlock[] = []
   public totalMinedBlocks: number = 0
 

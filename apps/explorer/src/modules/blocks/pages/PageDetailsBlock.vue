@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { Block, Uncle, Tx } from '@app/core/models'
+import { Block, Uncle, SimpleTx } from '@app/core/models'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
@@ -88,7 +88,7 @@ export default class PageDetailsBlock extends Vue {
     mined: false
   }
 
-  txs = []
+  txs:  SimpleTx[] = []
   totalTxs = 0
   txsPage = 0
   uncles = []
@@ -363,7 +363,7 @@ export default class PageDetailsBlock extends Vue {
     return ''
   }
 
-  get txsFiltered(): Tx[] {
+  get txsFiltered(): SimpleTx[] {
     const start = this.txsPage * this.max
     const end = start + this.max
     return this.txs.slice(start, end)
