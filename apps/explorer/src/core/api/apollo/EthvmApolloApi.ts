@@ -395,7 +395,7 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => res.data.txs.map(raw => new Tx(raw)))
   }
 
-  public getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<Tx[]> {
+  public getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<SimpleTx[]> {
     return this.apollo
       .query({
         query: txsForAddress,
@@ -406,7 +406,7 @@ export class EthvmApolloApi implements EthvmApi {
           page
         }
       })
-      .then(res => res.data.txsForAddress.map(raw => new Tx(raw)))
+      .then(res => res.data.txsForAddress.map(raw => new SimpleTx(raw)))
   }
 
   public getTotalNumberOfTxs(): Promise<number> {

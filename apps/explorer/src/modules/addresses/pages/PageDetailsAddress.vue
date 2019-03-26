@@ -96,7 +96,7 @@
 </template>
 
 <script lang="ts">
-import { Block, EthValue, Tx, PendingTx, SimpleBlock } from '@app/core/models'
+import { Block, EthValue, SimpleTx, PendingTx, SimpleBlock } from '@app/core/models'
 import { Contract } from 'ethvm-common'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
@@ -315,7 +315,7 @@ export default class PageDetailsAddress extends Vue {
   ===================================================================================
   */
 
-  fetchTxs(page = this.txsPage, limit = MAX_ITEMS, filter = this.txsFilter): Promise<Tx[]> {
+  fetchTxs(page = this.txsPage, limit = MAX_ITEMS, filter = this.txsFilter): Promise<SimpleTx[]> {
     return this.$api.getTxsOfAddress(this.addressRef, filter, limit, page)
   }
 
