@@ -147,7 +147,7 @@ export default class PageDetailsAddress extends Vue {
   error = ''
   loading = true
   validHash = true
-  account: AccountInfo = null
+  account = new AccountInfo(this.addressRef)
 
   /*Transactions: */
   txsLoading = true
@@ -195,11 +195,7 @@ export default class PageDetailsAddress extends Vue {
             this.sm.transition('error')
             return
           }
-
-          // 2. Build AccountInfo model with current address
-          this.account = new AccountInfo(this.addressRef)
-
-          // 3. If everything goes well, we proceed to load basic information
+          // 2. If everything goes well, we proceed to load basic information
           this.sm.transition('load-basic-info')
         }
       },
@@ -435,6 +431,8 @@ export default class PageDetailsAddress extends Vue {
         return this.account.toTxCount
       case 'out':
         return this.account.fromTxCount
+      default:
+        return 0
     }
   }
 
