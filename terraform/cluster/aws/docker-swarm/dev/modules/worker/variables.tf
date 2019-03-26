@@ -38,3 +38,5 @@ variable "swarmprom_slack_channel" {
 variable "swarmprom_slack_user" {
   default = "null"
 }
+
+variable "efs_mount_target_dns" {}

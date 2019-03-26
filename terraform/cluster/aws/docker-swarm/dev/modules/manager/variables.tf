@@ -15,3 +15,5 @@ variable "name" {}
 variable "provision_user" {}
 
 variable "aws_eip" {}
+
+variable "efs_mount_target_dns" {}

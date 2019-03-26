@@ -2,11 +2,12 @@ data "template_file" "swarmprom-install" {
   template = "${file("${path.module}/scripts/install-swarmprom.sh")}"
 
   vars = {
-    admin_user     = "${var.admin_user}"
-    admin_password = "${var.admin_password}"
-    slack_token    = "${var.slack_token}"
-    slack_channel  = "${var.slack_channel}"
-    slack_user     = "${var.slack_user}"
+    admin_user      = "${var.admin_user}"
+    admin_password  = "${var.admin_password}"
+    slack_token     = "${var.slack_token}"
+    slack_channel   = "${var.slack_channel}"
+    slack_user      = "${var.slack_user}"
+    ethstats_secret = "${var.ethstats_secret}"
   }
 }
 

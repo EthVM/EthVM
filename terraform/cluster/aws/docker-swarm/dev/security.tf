@@ -27,6 +27,14 @@ resource "aws_security_group" "ingress-manager" {
   }
 
   ingress {
+    cidr_blocks = "${var.allowed_inbound_ssh}"
+
+    from_port = 3030  //ethstats
+    to_port   = 3030
+    protocol  = "tcp"
+  }
+
+  ingress {
     cidr_blocks = ["${aws_subnet.subnet-workers.cidr_block}", "${aws_subnet.subnet-managers.cidr_block}"]
     from_port   = 0
     to_port     = 65535

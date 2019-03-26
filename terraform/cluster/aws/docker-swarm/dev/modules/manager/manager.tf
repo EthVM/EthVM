@@ -1,3 +1,11 @@
+data "template_file" "efs_mount" {
+  template = "${file("${path.module}/scripts/setup-efs.sh")}"
+
+  vars = {
+    efs_mount_target_dns = "${var.efs_mount_target_dns}"
+  }
+}
+
 resource "aws_instance" "manager" {
   ami                         = "${var.ami}"
   availability_zone           = "${var.availability_zone}"
@@ -26,6 +34,11 @@ resource "aws_instance" "manager" {
   }
 
   provisioner "file" {
+    content     = "${data.template_file.efs_mount.rendered}"
+    destination = "/tmp/setup-efs.sh"
+  }
+
+  provisioner "file" {
     source      = "${path.module}/scripts/provision-first-manager.sh"
     destination = "/tmp/provision-first-manager.sh"
   }
@@ -34,7 +47,9 @@ resource "aws_instance" "manager" {
     inline = [
       "chmod +x /tmp/provision-first-manager.sh",
       "chmod +x /tmp/install-docker.sh",
+      "chmod +x /tmp/setup-efs.sh",
       "sudo /tmp/install-docker.sh",
+      "sudo /tmp/setup-efs.sh",
       "if [ ${count.index} -eq 0 ]; then /tmp/provision-first-manager.sh ${self.private_ip}; fi",
     ]
   }

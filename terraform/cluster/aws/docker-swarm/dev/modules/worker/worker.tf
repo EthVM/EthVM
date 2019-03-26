@@ -11,6 +11,14 @@ data "local_file" "install_docker" {
   filename = "${path.module}/scripts/install-docker.sh"
 }
 
+data "template_file" "efs_mount" {
+  template = "${file("${path.module}/scripts/setup-efs.sh")}"
+
+  vars = {
+    efs_mount_target_dns = "${var.efs_mount_target_dns}"
+  }
+}
+
 resource "aws_instance" "workers" {
   ami                    = "${var.ami}"
   availability_zone      = "${var.availability_zone}"
@@ -20,7 +28,7 @@ resource "aws_instance" "workers" {
   subnet_id              = "${var.subnet_id}"
   source_dest_check      = false
   count                  = "${var.total_instances}"
-  user_data              = "${format("%s\n%s",data.local_file.install_docker.content, data.template_file.user_data.rendered)}"
+  user_data              = "${format("%s\n%s\n%s",data.local_file.install_docker.content, data.template_file.user_data.rendered, data.template_file.efs_mount.rendered)}"
 
   tags = {
     Name = "${format("%s-%02d", var.name, count.index + 1)}"

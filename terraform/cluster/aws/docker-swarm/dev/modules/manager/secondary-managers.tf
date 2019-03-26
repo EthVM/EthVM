@@ -33,7 +33,7 @@ resource "aws_instance" "secondary-manager" {
   count                       = "${var.total_instances -1}"
   depends_on                  = ["aws_instance.manager"]
   associate_public_ip_address = true
-  user_data                   = "${format("%s\n%s",data.local_file.install_docker.content, data.template_file.user_data.rendered)}"
+  user_data                   = "${format("%s\n%s\n%s",data.local_file.install_docker.content, data.template_file.user_data.rendered, data.template_file.efs_mount.rendered)}"
 
   tags = {
     Name = "${format("%s-secondary-%02d", var.name, count.index + 1)}"

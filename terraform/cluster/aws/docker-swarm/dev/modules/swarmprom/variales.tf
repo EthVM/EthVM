@@ -23,3 +23,5 @@ variable "host" {}
 variable "provision_user" {}
 variable "ssh_key_path" {}
 variable "connection_timeout" {}
+
+variable "ethstats_secret" {}
