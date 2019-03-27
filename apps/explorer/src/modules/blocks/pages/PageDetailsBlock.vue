@@ -10,7 +10,7 @@
       <v-flex xs12>
         <app-details-list :details="blockDetails" :is-loading="isLoading" class="mb-4" :error="error" :max-items="8">
           <template v-slot:title>
-            <block-details-title :next-block="nextBlock" :prev-block="previousBlock" :uncles="uncles" />
+            <block-details-title :next-block="nextBlock" :prev-block="previousBlock" :uncles="blockInfo.uncles" />
             <v-divider class="lineGrey" />
           </template>
         </app-details-list>
@@ -22,20 +22,20 @@
     =====================================================================================
     -->
     <v-layout row wrap justify-start class="mb-4" v-if="!hasError">
-      <v-flex v-if="txs" xs12>
+      <v-flex v-if="blockInfo.txs" xs12>
         <table-txs
-          v-if="txs"
+          v-if="blockInfo.txs"
           :transactions="txsFiltered"
           :page="txsPage"
           :page-type="listType"
           :loading="isLoading"
           class="mt-3"
           :max-items="max"
-          :total-txs="totalTxs"
+          :total-txs="blockInfo.totalTxs"
           :error="''"
           @getTxsPage="setPageTxs"
         />
-        <v-card v-if="txs.length === 0" flat color="white">
+        <v-card v-if="blockInfo.txs.length === 0" flat color="white">
           <v-card-text class="text-xs-center text-muted">{{ $t('message.tx.no-in-block') }}</v-card-text>
         </v-card>
       </v-flex>
@@ -44,11 +44,12 @@
 </template>
 
 <script lang="ts">
-import { Block, Uncle, Tx } from '@app/core/models'
+import { Block, Uncle, SimpleTx } from '@app/core/models'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import BlockDetailsTitle from '@app/modules/blocks/components/BlockDetailsTitle.vue'
+import { BlockInfo } from '@app/modules/blocks/props'
 import { Detail, Crumb } from '@app/core/components/props'
 import { eth } from '@app/core/helper'
 import { Vue, Component, Prop } from 'vue-property-decorator'
@@ -80,19 +81,9 @@ export default class PageDetailsBlock extends Vue {
 
   error = ''
   listType = 'block'
-
   block = {} as Block
-  blockInfo = {
-    next: null,
-    prev: null,
-    mined: false
-  }
-
-  txs = []
-  totalTxs = 0
+  blockInfo = new BlockInfo(this.blockRef)
   txsPage = 0
-  uncles = []
-  timestamp = new Date()
 
   /*
   ===================================================================================
@@ -152,11 +143,10 @@ export default class PageDetailsBlock extends Vue {
     this.blockInfo.mined = true
     this.blockInfo.next = this.block.getNumber() + 1
     this.blockInfo.prev = this.block.getNumber() === 0 ? 0 : this.block.getNumber() - 1
-
-    this.timestamp = block.getTimestamp()
-    this.txs = this.block.getTxs()
-    this.totalTxs = this.block.getTransactionCount()
-    this.uncles = this.block.getUncles()
+    this.blockInfo.timestamp = block.getTimestamp()
+    this.blockInfo.txs = this.block.getTxs()
+    this.blockInfo.totalTxs = this.block.getTransactionCount()
+    this.blockInfo.uncles = this.block.getUncles()
   }
 
   /*
@@ -265,7 +255,7 @@ export default class PageDetailsBlock extends Vue {
         },
         {
           title: this.$i18n.t('common.timestmp'),
-          detail: this.$i18n.d(this.timestamp, 'long', this.$i18n.locale.replace('_', '-'))
+          detail: this.$i18n.d(this.blockInfo.timestamp, 'long', this.$i18n.locale.replace('_', '-'))
         },
         {
           title: this.$i18n.t('uncle.reward'),
@@ -340,7 +330,7 @@ export default class PageDetailsBlock extends Vue {
   }
 
   get nextBlock(): String {
-    if (this.blockInfo.mined) {
+    if (this.blockInfo.mined && this.blockInfo) {
       return '/block/' + this.blockInfo.next
     }
 
@@ -352,7 +342,7 @@ export default class PageDetailsBlock extends Vue {
   }
 
   get previousBlock(): String {
-    if (this.blockInfo.mined) {
+    if (this.blockInfo.mined && this.blockInfo.prev) {
       return '/block/' + this.blockInfo.prev
     }
 
@@ -363,10 +353,10 @@ export default class PageDetailsBlock extends Vue {
     return ''
   }
 
-  get txsFiltered(): Tx[] {
+  get txsFiltered(): SimpleTx[] {
     const start = this.txsPage * this.max
     const end = start + this.max
-    return this.txs.slice(start, end)
+    return this.blockInfo.txs.slice(start, end)
   }
 
   /**

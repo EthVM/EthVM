@@ -125,13 +125,12 @@ export default class AppPaginate extends Vue {
   set pageDisplay(pageDisplay: string) {
     const desiredPage = parseInt(pageDisplay, 10) - 1
     ;(desiredPage >= 0 && desiredPage <= this.lastPage) || !pageDisplay ? (this.isError = false) : (this.isError = true)
-    if(this.pageDisplayUpdateTimeout) {
+    if (this.pageDisplayUpdateTimeout) {
       clearTimeout(this.pageDisplayUpdateTimeout)
     }
     this.pageDisplayUpdateTimeout = window.setTimeout(() => {
       this.setPage(desiredPage)
     }, 500)
-
   }
 
   /*

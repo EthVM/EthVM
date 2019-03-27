@@ -48,7 +48,7 @@ export default class PageTxs extends Vue {
   totalTxs = 0
 
   pages: number[] = []
-  from: number = -1
+  from = -1
   page = 0
 
   isLoading = true
@@ -93,7 +93,8 @@ export default class PageTxs extends Vue {
         this.pages.push(first)
         this.from = last
       } else {
-        this.from = this.pages.pop()
+        const newFrom = this.pages.pop()
+        this.from = newFrom ? newFrom : -1
       }
     }
 

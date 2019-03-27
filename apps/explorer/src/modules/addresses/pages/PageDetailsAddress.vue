@@ -64,7 +64,7 @@
           :loading="minerBlocksLoading"
           :blocks="account.minedBlocks"
           :page-type="detailsType"
-          :total-blocks="minedTotal"
+          :total-blocks="account.totalMinedBlocks"
           :max-items="max"
           :page="minedPage"
           :simple-pagination="true"
@@ -96,7 +96,7 @@
 </template>
 
 <script lang="ts">
-import { Block, EthValue, Tx, PendingTx, SimpleBlock } from '@app/core/models'
+import { Block, EthValue, SimpleTx, PendingTx, SimpleBlock } from '@app/core/models'
 import { Contract } from 'ethvm-common'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
@@ -167,14 +167,13 @@ export default class PageDetailsAddress extends Vue {
   minerBlocksLoading = true
   minerBlocksError = ''
   minedPage = 0
-  minedTotal = 20
 
   /* Contracts: */
   contractsLoading = true
   contractsError = ''
 
-  // State Machine (not needed to be reactive, this is why we use undefined instead of null)
-  sm: TinySM = undefined
+  // State Machine
+  sm!:TinySM
 
   /*
   ===================================================================================
@@ -257,6 +256,8 @@ export default class PageDetailsAddress extends Vue {
 
               // Mined Blocks
               this.account.minedBlocks = res[1] || [] // res[2] || []
+              //Get Total mined Blocks by address
+              //this.account.totalMinedBlocks =
               this.minerBlocksLoading = false
 
               // Contract Creator
@@ -315,7 +316,7 @@ export default class PageDetailsAddress extends Vue {
   ===================================================================================
   */
 
-  fetchTxs(page = this.txsPage, limit = MAX_ITEMS, filter = this.txsFilter): Promise<Tx[]> {
+  fetchTxs(page = this.txsPage, limit = MAX_ITEMS, filter = this.txsFilter): Promise<SimpleTx[]> {
     return this.$api.getTxsOfAddress(this.addressRef, filter, limit, page)
   }
 

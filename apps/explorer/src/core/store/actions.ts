@@ -1,7 +1,7 @@
 import { Events, SocketRooms, SocketEvent } from 'ethvm-common'
 import { SimpleBlock, PendingTx } from '@app/core/models'
 
-const socket_NEW_SIMPLE_BLOCK = function({ commit }, raw: SocketEvent | SocketEvent[]) {
+const socket_NEW_SIMPLE_BLOCK = function(this: any, { commit }, raw: SocketEvent | SocketEvent[]) {
   const evs = !Array.isArray(raw) ? [raw] : raw
   evs.forEach(ev => {
     const sBlock = new SimpleBlock(ev.value)
@@ -16,7 +16,7 @@ const socket_NEW_SIMPLE_BLOCK = function({ commit }, raw: SocketEvent | SocketEv
   })
 }
 
-const socket_NEW_PENDING_TX = function({ commit }, raw: SocketEvent | SocketEvent[]) {
+const socket_NEW_PENDING_TX = function(this: any, { commit }, raw: SocketEvent | SocketEvent[]) {
   const evs = !Array.isArray(raw) ? [raw] : raw
   evs.forEach(ev => {
     commit(Events.NEW_PENDING_TX, ev.value)
@@ -24,7 +24,7 @@ const socket_NEW_PENDING_TX = function({ commit }, raw: SocketEvent | SocketEven
   })
 }
 
-const socket_NEW_BLOCK_METRIC = function({ commit }, raw: SocketEvent | SocketEvent[]) {
+const socket_NEW_BLOCK_METRIC = function(this: any, { commit }, raw: SocketEvent | SocketEvent[]) {
   const evs = !Array.isArray(raw) ? [raw] : raw
   evs.forEach(ev => {
     commit(Events.NEW_BLOCK_METRIC, ev.value)
@@ -33,7 +33,7 @@ const socket_NEW_BLOCK_METRIC = function({ commit }, raw: SocketEvent | SocketEv
 }
 
 // eslint-disable-next-line
-const socket_connect = function({}) {
+const socket_connect = function(this: any, {}) {
   this._vm.$socket.emit(Events.join, { rooms: SocketRooms.DefaultRooms })
 }
 

@@ -1,4 +1,4 @@
-import { ChartData } from '@app/modules/charts/props'
+import { ChartData, ChartPoints } from '@app/modules/charts/props'
 import { Component, Vue } from 'vue-property-decorator'
 
 @Component
@@ -11,7 +11,7 @@ export class ChartMixin extends Vue {
 
   chartTitle = ''
   chartLabel = ''
-  chartEvent = null
+  chartEvent = ''
   redraw = true
   timeFrame = 1
   chartOptions = {
@@ -57,7 +57,7 @@ export class ChartMixin extends Vue {
     }
   }
 
-  DATA = [
+  DATA: ChartPoints[] = [
     { state: 'ALL', points: [], labels: [] },
     { state: 'WEEK', points: [], labels: [] },
     { state: 'MONTH', points: [], labels: [] },
