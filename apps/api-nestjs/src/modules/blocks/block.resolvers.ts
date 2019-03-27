@@ -5,7 +5,7 @@ import { ParseHashPipe } from '@app/shared/validation/parse-hash.pipe'
 import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe'
 import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
-import { PubSub } from 'graphql-subscriptions'
+import { PubSub, withFilter } from 'graphql-subscriptions'
 import { Inject } from '@nestjs/common'
 
 @Resolver('Block')
@@ -48,12 +48,10 @@ export class BlockResolvers {
   @Subscription()
   newBlock() {
     // TODO use withFilter to filter by event type
-    // return {
-    //   subscribe: withFilter(() => pubSub.asyncIterator('blocks'), (payload, variables) => {
-    //     return payload.blocks.op === 'insert';
-    //   }),
-    // }
     return {
+      resolve: (payload) => {
+        return new BlockDto(payload.value)
+      },
       subscribe: () => this.pubSub.asyncIterator('blocks')
     }
   }

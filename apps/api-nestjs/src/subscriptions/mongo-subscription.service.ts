@@ -1,9 +1,10 @@
-import { ChangeStream, Cursor, getMongoManager, MongoRepository } from 'typeorm'
+import { ChangeStream, Cursor, getManager, getMongoManager, MongoRepository, ObjectID } from 'typeorm'
 import { Inject, Injectable } from '@nestjs/common'
 import { PubSub } from 'graphql-subscriptions'
 import { Logger } from 'winston'
 import { InjectRepository } from '@nestjs/typeorm'
 import { ProcessingMetadataEntity } from '@app/orm/entities/processing-metadata.entity'
+import { BlockEntity } from '@app/orm/entities/block.entity'
 
 export interface StreamingEvent {
   op: 'insert' | 'delete' | 'replace' | 'updated' | 'invalidate'
@@ -48,6 +49,9 @@ export class MongoSubscriptionService {
       this.disableEventsStreaming()
     } else {
       this.enableEventsStreaming()
+
+      // TODO remove this
+      // this.testSubscription()
     }
 
     logger.info('MongoStreamer - initialize() / Enabling Processing Metadata streamer')
@@ -73,6 +77,30 @@ export class MongoSubscriptionService {
     if (syncingStatus.boolean) return syncingStatus.boolean
     const value = syncingStatus.int || syncingStatus.long || syncingStatus.float || syncingStatus.double || syncingStatus.bigInteger
     return !!value
+  }
+
+  private async testSubscription() {
+
+    const asyncTimeout = async function (ms) {
+      return new Promise(resolve => setTimeout(resolve, ms))
+    }
+
+    const manager = getMongoManager()
+
+    for await (let i of [1, 2, 3, 4, 5]) {
+      this.logger.info('MongoStreamer - testSubscription() / Testing block subscription')
+      await asyncTimeout(10000)
+
+      const block = await manager.findOne(BlockEntity, {order: {id: 'DESC'}})
+      let prevId = +block.id
+      const newBlock = {...block}
+      newBlock.id = new ObjectID(prevId++)
+      newBlock.header.hash = Math.random().toString(36).substring(7);
+
+      const entity = manager.create(BlockEntity, newBlock)
+      await manager.save(entity)
+    }
+
   }
 
 }

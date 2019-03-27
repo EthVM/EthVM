@@ -7,7 +7,7 @@ type Query {
 }
 
 type Subscription {
-  newBlock: [Block]
+  newBlock: Block
 }
 
 type Block {
