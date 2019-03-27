@@ -20,7 +20,6 @@ fun String.hexBytes(): ByteArray =
     Hex.decodeHex(str)
   }
 
-
 fun String.hexBuffer() = this.hexBytes().byteBuffer()
 fun String.hexFixedBuffer(length: Int): ByteBuffer = this.hexBuffer().fixed(length)!!
 

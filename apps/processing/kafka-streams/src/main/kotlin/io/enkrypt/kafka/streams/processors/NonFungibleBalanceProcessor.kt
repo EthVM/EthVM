@@ -27,7 +27,6 @@ import org.apache.kafka.streams.kstream.Grouped
 import org.apache.kafka.streams.kstream.KStream
 import org.apache.kafka.streams.kstream.Materialized
 import java.util.Properties
-import org.apache.kafka.common.serialization.Serdes as KafkaSerdes
 
 class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
 
@@ -86,7 +85,7 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
            * reversal due to a fork
            */
 
-          if(
+          if (
             (balanceLocation.getBlockNumber() == null) ||
             (balanceLocation.getBlockNumberBI() <= deltaLocation.getBlockNumberBI()) ||
             (balanceLocation.getTransactionIndex() <= deltaLocation.getTransactionIndex()) ||
@@ -95,7 +94,6 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
             newBalance
           } else
             balance
-
         },
         Materialized.with(Serdes.NonFungibleBalanceKey(), Serdes.NonFungibleBalance())
       )
@@ -131,7 +129,6 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
                       .map { log -> ERC721Abi.matchEventHex(log.getTopics()).isDefined() }
                       .reduce { a, b -> a || b }
                 }
-
               }
 
             val deltas = receiptsWithErc721Logs
@@ -161,25 +158,19 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
                         .setContract(receipt.getTo())
                         .setTokenIdBI(transfer.tokenId)
                         .build()
-
                     }.orNull()
-
                   }.filterNotNull()
-
               }
 
             NonFungibleBalanceDeltaListRecord.newBuilder()
               .setBlockHash(blockHash)
               .setDeltas(deltas)
               .build()
-
           }
         }
-
       }.toTopic(CanonicalReceiptErc721Deltas)
 
     mapToNonFungibleBalanceDeltas(CanonicalReceiptErc721Deltas.stream(builder))
-
   }
 
   private fun mapToNonFungibleBalanceDeltas(stream: KStream<CanonicalKeyRecord, NonFungibleBalanceDeltaListRecord>) {
@@ -199,7 +190,6 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
             NonFungibleBalanceDeltaListRecord.newBuilder(agg)
               .setApply(false)
               .build()
-
           } else {
 
             // reverse previous deltas
@@ -209,9 +199,7 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
               .setDeltas(next.getDeltas())
               .setReversals(agg.getDeltas().map { it.reverse() })
               .build()
-
           }
-
         },
         Materialized.with(Serdes.CanonicalKey(), Serdes.NonFungibleBalanceDeltaList())
       ).toStream()
@@ -232,13 +220,10 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
                   .build()
               )
             }
-
         } else {
           emptyList()
         }
-
       }.toTopic(NonFungibleBalanceDeltas)
-
   }
 
   override fun start(cleanUp: Boolean) {

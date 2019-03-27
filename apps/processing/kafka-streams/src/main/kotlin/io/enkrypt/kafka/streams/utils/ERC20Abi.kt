@@ -8,9 +8,11 @@ import io.enkrypt.common.extensions.hexBytes
 import java.math.BigInteger
 import java.nio.ByteBuffer
 
-data class ERC20Transfer(val from: String,
-                         val to: String,
-                         val amount: BigInteger)
+data class ERC20Transfer(
+  val from: String,
+  val to: String,
+  val amount: BigInteger
+)
 
 object ERC20Abi : AbstractAbi(ERC20Abi::class.java.getResourceAsStream("/abi/erc20.json")) {
 

@@ -46,12 +46,12 @@ class ParityTracesSource(
             var allTraces = emptyList<TraceRecord>()
             var contractTraces = emptyList<TraceRecord>()
 
-            resp.traces.forEach{ trace ->
+            resp.traces.forEach { trace ->
 
               val record = trace.toTraceRecord(TraceRecord.newBuilder()).build()
               allTraces = allTraces + record
 
-              if(contractTypes.contains(trace.type)) {
+              if (contractTypes.contains(trace.type)) {
                 contractTraces = contractTraces + record
               }
             }
@@ -74,7 +74,7 @@ class ParityTracesSource(
 
             // publish a separate entry just for contract lifecycle
 
-            if(contractTraces.isNotEmpty()) {
+            if (contractTraces.isNotEmpty()) {
 
               val contractTraceListRecord = TraceListRecord
                 .newBuilder()
@@ -89,11 +89,9 @@ class ParityTracesSource(
                   traceKeySchemaAndValue.schema(), traceKeySchemaAndValue.value(),
                   contractTraceValueSchemaAndValue.schema(), contractTraceValueSchemaAndValue.value()
                 )
-
             }
 
             result
-
           }
       }.map { future ->
         // wait for everything to complete

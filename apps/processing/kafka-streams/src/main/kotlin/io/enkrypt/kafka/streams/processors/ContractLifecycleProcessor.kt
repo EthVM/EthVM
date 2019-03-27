@@ -53,7 +53,6 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
               .setLifecycleRecords(
                 v.getTraces().mapNotNull { it.toContractLifecycleRecord() }
               ).build()
-
           }
         }
       }.toTopic(CanonicalContractLifecycle)
@@ -93,7 +92,6 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
               record
             )
           }
-
       }.toTopic(ContractLifecycleEvents)
 
     ContractLifecycleEvents.stream(builder)
@@ -123,7 +121,6 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
                   .setCreatedAt(new.getCreatedAt())
                   .build()
               }
-
             }
 
             ContractLifecyleType.DESTROY -> {
@@ -141,9 +138,7 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
                   .setDestroyedAt(new.getDestroyedAt())
                   .build()
               }
-
             }
-
           }
         },
         Materialized.with(Serdes.ContractKey(), Serdes.Contract())
@@ -156,7 +151,6 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
         } else {
           v
         }
-
       }.toTopic(Contracts)
 
     return builder.build()

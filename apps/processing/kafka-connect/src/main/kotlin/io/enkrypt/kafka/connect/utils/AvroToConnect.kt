@@ -30,5 +30,4 @@ object AvroToConnect {
   )
 
   fun toConnectData(record: SpecificRecordBase): SchemaAndValue = avroData.toConnectData(mappings[record::class], record)
-
 }

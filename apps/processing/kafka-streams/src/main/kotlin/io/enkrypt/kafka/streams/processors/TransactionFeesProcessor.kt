@@ -23,7 +23,6 @@ import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.JoinWindows
 import org.apache.kafka.streams.kstream.Joined
-import org.apache.kafka.streams.kstream.Materialized
 import java.time.Duration
 import java.util.Properties
 
@@ -97,11 +96,10 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
         CanonicalGasUsed.stream(builder),
         { left, right ->
 
-          if(left.getBlockHash() != right.getBlockHash()) {
+          if (left.getBlockHash() != right.getBlockHash()) {
 
             // We're in the middle of an update/fork so we publish a tombstone
             null
-
           } else {
 
             val gasPrices = left.getGasPrices()
@@ -129,9 +127,7 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
                       .build()
                   }
               ).build()
-
           }
-
         },
         JoinWindows.of(Duration.ofHours(2)),
         Joined.with(Serdes.CanonicalKey(), Serdes.TransactionGasPriceList(), Serdes.TransactionGasUsedList())

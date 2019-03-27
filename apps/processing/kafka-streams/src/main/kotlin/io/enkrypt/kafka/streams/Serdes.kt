@@ -80,7 +80,6 @@ object Serdes : KoinComponent {
     configure(config, false)
   }
 
-
   fun CanonicalKey() = SpecificAvroSerde<CanonicalKeyRecord>(registryClient).apply {
     configure(config, true)
   }

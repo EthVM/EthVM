@@ -8,9 +8,11 @@ import io.enkrypt.common.extensions.hexBytes
 import java.math.BigInteger
 import java.nio.ByteBuffer
 
-data class ERC721Transfer(val from: String,
-                          val to: String,
-                          val tokenId: BigInteger)
+data class ERC721Transfer(
+  val from: String,
+  val to: String,
+  val tokenId: BigInteger
+)
 
 object ERC721Abi : AbstractAbi(ERC721Abi::class.java.getResourceAsStream("/abi/erc721.json")) {
 
@@ -23,7 +25,6 @@ object ERC721Abi : AbstractAbi(ERC721Abi::class.java.getResourceAsStream("/abi/e
 
   fun decodeTransferEventHex(data: String, topics: List<String>): Option<ERC721Transfer> =
     decodeTransferEvent(data.hexBytes(), topics.map { it.hexBuffer()!! })
-
 
   fun decodeTransferEvent(data: ByteArray, topics: List<ByteBuffer>): Option<ERC721Transfer> {
 

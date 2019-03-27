@@ -6,12 +6,8 @@ import io.enkrypt.avro.capture.ContractLogoRecord
 import io.enkrypt.avro.capture.ContractMetadataRecord
 import io.enkrypt.avro.capture.ContractSocialRecord
 import io.enkrypt.avro.capture.ContractSupportRecord
-import io.enkrypt.common.extensions.hexBytes
 import io.enkrypt.kafka.connect.utils.AvroToConnect
 import io.enkrypt.kafka.connect.utils.Versions
-import org.apache.kafka.connect.data.Schema
-import org.apache.kafka.connect.data.SchemaBuilder
-import org.apache.kafka.connect.data.Struct
 import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTask
 import java.net.URL
@@ -93,7 +89,6 @@ class EthListsTokensSourceTask : SourceTask() {
       ContractLogoRecord.newBuilder()
         .setSrc(src)
         .build()
-
   }
 
   data class ContractSupport(val email: String?, val url: String?) {
@@ -103,7 +98,6 @@ class EthListsTokensSourceTask : SourceTask() {
         .setEmail(email)
         .setUrl(url)
         .build()
-
   }
 
   data class ContractSocial(
@@ -138,7 +132,6 @@ class EthListsTokensSourceTask : SourceTask() {
         .setTwitter(twitter)
         .setYoutube(youtube)
         .build()
-
   }
 
   data class ContractMetadata(
@@ -167,6 +160,5 @@ class EthListsTokensSourceTask : SourceTask() {
         .setSocial(social?.toRecord())
         .setWebsite(website)
         .build()
-
   }
 }

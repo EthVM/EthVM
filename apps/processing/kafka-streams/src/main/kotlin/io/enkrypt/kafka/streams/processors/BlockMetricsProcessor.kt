@@ -14,7 +14,6 @@ import io.enkrypt.common.extensions.setAvgGasPriceBI
 import io.enkrypt.common.extensions.setAvgTxFeesBI
 import io.enkrypt.common.extensions.setTotalGasPriceBI
 import io.enkrypt.common.extensions.setTotalTxFeesBI
-import io.enkrypt.kafka.streams.config.Topics
 import io.enkrypt.kafka.streams.config.Topics.BlockMetrics
 import io.enkrypt.kafka.streams.config.Topics.CanonicalBlocks
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTraces
@@ -127,7 +126,6 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
           .setTotalTxs(total)
           .setNumInternalTxs(internalTxs)
           .build()
-
       }.toTopic(TraceBlockMetrics)
 
     CanonicalTransactions.stream(builder)
@@ -159,7 +157,6 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
           .setAvgGasPriceBI(avgGasPrice)
           .setAvgGasLimitBI(avgGasLimit)
           .build()
-
       }.toTopic(TransactionBlockMetrics)
 
     CanonicalTransactionFees.stream(builder)
@@ -182,7 +179,6 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
           .setTotalTxFeesBI(totalTxFees)
           .setAvgTxFeesBI(avgTxFees)
           .build()
-
       }.toTopic(TransactionFeeBlockMetrics)
 
     return builder.build()

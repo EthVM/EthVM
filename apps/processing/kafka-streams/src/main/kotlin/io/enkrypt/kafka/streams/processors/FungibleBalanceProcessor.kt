@@ -46,7 +46,6 @@ import org.apache.kafka.streams.kstream.TransformerSupplier
 import java.math.BigInteger
 import java.time.Duration
 import java.util.Properties
-import org.apache.kafka.common.serialization.Serdes as KafkaSerdes
 
 class FungibleBalanceProcessor : AbstractKafkaProcessor() {
 
@@ -219,13 +218,11 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
               .setBlockHash(blockHash)
               .setDeltas(tracesList.toFungibleBalanceDeltas())
               .build()
-
           }
         }
       }.toTopic(CanonicalTracesEtherDeltas)
 
     mapToFungibleBalanceDeltas(CanonicalTracesEtherDeltas.stream(builder))
-
   }
 
   private fun etherDeltasForFees(builder: StreamsBuilder) {
@@ -244,7 +241,6 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
           // pass along the tombstone
           null
         }
-
       }.toTopic(CanonicalTransactionFeesEtherDeltas)
 
     mapToFungibleBalanceDeltas(CanonicalTransactionFeesEtherDeltas.stream(builder))
@@ -258,7 +254,6 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
 
             // We're in the middle of an update/fork so we publish a tombstone
             null
-
           } else {
 
             val totalTxFees = right.getTransactionFees()
@@ -277,14 +272,11 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
               .setAddress(left.getAuthor())
               .setAmountBI(totalTxFees)
               .build()
-
           }
-
         },
         JoinWindows.of(Duration.ofHours(2)),
         Joined.with(Serdes.CanonicalKey(), Serdes.BlockAuthor(), Serdes.TransactionFeeList())
       ).toTopic(CanonicalMinerFeesEtherDeltas)
-
 
     CanonicalMinerFeesEtherDeltas.stream(builder)
       .mapValues { v ->
@@ -297,7 +289,6 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
         } else {
           null
         }
-
       }
       .groupByKey()
       .reduce(
@@ -311,7 +302,6 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
             FungibleBalanceDeltaListRecord.newBuilder(agg)
               .setApply(false)
               .build()
-
           } else {
 
             // reverse previous deltas
@@ -322,7 +312,6 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
               .setDeltas(next.getDeltas())
               .setReversals(agg.getDeltas().map { it.reverse() })
               .build()
-
           }
         },
         Materialized.with(Serdes.CanonicalKey(), Serdes.FungibleBalanceDeltaList())
@@ -343,11 +332,9 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
                   .build()
               )
             }
-
         } else {
           emptyList()
         }
-
       }.toTopic(FungibleBalanceDeltas)
   }
 
@@ -369,14 +356,13 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
 
                 val logs = receipt.getLogs()
 
-                when(logs.isEmpty()) {
+                when (logs.isEmpty()) {
                   true -> false
                   else ->
                     logs
                       .map { log -> ERC20Abi.matchEventHex(log.getTopics()).isDefined() }
                       .reduce { a, b -> a || b }
                 }
-
               }
 
             val deltas = receiptsWithErc20Logs
@@ -411,23 +397,18 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
                         .setAmountBI(transfer.amount)
                         .build()
                     )
-
                   }
-
               }
 
             FungibleBalanceDeltaListRecord.newBuilder()
               .setBlockHash(blockHash)
               .setDeltas(deltas)
               .build()
-
           }
         }
-
       }.toTopic(CanonicalReceiptErc20Deltas)
 
     mapToFungibleBalanceDeltas(CanonicalReceiptErc20Deltas.stream(builder))
-
   }
 
   private fun mapToFungibleBalanceDeltas(stream: KStream<CanonicalKeyRecord, FungibleBalanceDeltaListRecord>) {
@@ -447,7 +428,6 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
             FungibleBalanceDeltaListRecord.newBuilder(agg)
               .setApply(false)
               .build()
-
           } else {
 
             // reverse previous deltas
@@ -457,9 +437,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
               .setDeltas(next.getDeltas())
               .setReversals(agg.getDeltas().map { it.reverse() })
               .build()
-
           }
-
         },
         Materialized.with(Serdes.CanonicalKey(), Serdes.FungibleBalanceDeltaList())
       ).toStream()
@@ -480,13 +458,10 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
                   .build()
               )
             }
-
         } else {
           emptyList()
         }
-
       }.toTopic(FungibleBalanceDeltas)
-
   }
 
   override fun start(cleanUp: Boolean) {
