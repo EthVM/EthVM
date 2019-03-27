@@ -77,9 +77,8 @@ export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
     if (this.pageType === 'blocks') {
       return this.newBlocks > 1 ? 2 : 1
     }
-    else {
-      return this.newTxs > 1 ? 2 : 1
-    }
+
+    return this.newTxs > 1 ? 2 : 1
   }
 
   get newNumber(): string {

@@ -60,11 +60,10 @@ export default class AppLanguage extends Vue {
     let n
     this.items.forEach(i => {
       if (i._id === lang) {
-        n =  true
+        n = true
       }
     })
-    return n? n: false
-
+    return n ? n : false
   }
 }
 </script>
