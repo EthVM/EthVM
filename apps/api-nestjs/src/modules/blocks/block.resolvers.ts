@@ -50,7 +50,15 @@ export class BlockResolvers {
     // TODO use withFilter to filter by event type
     return {
       resolve: (payload) => {
-        return new BlockDto(payload.value)
+
+        // Publish 'txs' event if block has txs
+
+        const { value } = payload
+        if (value.txs && value.txs.length) {
+          this.pubSub.publish('txs', value.txs)
+        }
+
+        return new BlockDto(value)
       },
       subscribe: () => this.pubSub.asyncIterator('blocks')
     }

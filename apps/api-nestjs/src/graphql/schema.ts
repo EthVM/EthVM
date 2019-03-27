@@ -452,6 +452,8 @@ export abstract class ISubscription {
     abstract newBlock(): Block | Promise<Block>;
 
     abstract newProcessingMetadata(): ProcessingMetadata | Promise<ProcessingMetadata>;
+
+    abstract newTxs(): Transaction[] | Promise<Transaction[]>;
 }
 
 export class Support {

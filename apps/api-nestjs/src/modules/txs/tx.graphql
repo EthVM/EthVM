@@ -6,6 +6,10 @@ type Query {
   totalNumberOfTransactions: Int
 }
 
+type Subscription {
+  newTxs: [Transaction]
+}
+
 type Transaction {
   id: String
   blockHash: String

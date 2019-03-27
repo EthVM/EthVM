@@ -1,14 +1,16 @@
-import { Args, Query, Resolver } from '@nestjs/graphql'
+import { Args, Query, Resolver, Subscription } from '@nestjs/graphql'
 import { TxService } from '@app/modules/txs/tx.service'
 import { TxDto } from '@app/modules/txs/tx.dto'
 import { ParseHashPipe } from '@app/shared/validation/parse-hash.pipe'
 import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe'
 import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
+import { Inject } from '@nestjs/common'
+import { PubSub } from 'graphql-subscriptions'
 
 @Resolver('Transaction')
 export class TxResolvers {
-  constructor(private readonly txService: TxService) {}
+  constructor(private readonly txService: TxService, @Inject('PUB_SUB') private pubSub: PubSub) {}
 
   @Query()
   async tx(@Args('hash', ParseHashPipe) hash: string) {
@@ -43,4 +45,15 @@ export class TxResolvers {
   async totalNumberOfTransactions() {
     return await this.txService.countTransactions()
   }
+
+  @Subscription()
+  newTxs() {
+    return {
+      resolve: (payload) => {
+        return new TxDto(payload.value)
+      },
+      subscribe: () => this.pubSub.asyncIterator('txs')
+    }
+  }
+
 }
