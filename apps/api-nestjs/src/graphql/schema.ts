@@ -450,6 +450,8 @@ export abstract class ISubscription {
     abstract newBlockMetric(): BlockMetric | Promise<BlockMetric>;
 
     abstract newBlock(): Block | Promise<Block>;
+
+    abstract newProcessingMetadata(): ProcessingMetadata | Promise<ProcessingMetadata>;
 }
 
 export class Support {

@@ -2,6 +2,10 @@ type Query {
   processingMetadataById(id: String!): ProcessingMetadata
 }
 
+type Subscription {
+  newProcessingMetadata: ProcessingMetadata
+}
+
 type ProcessingMetadata {
   id: String
   boolean: Boolean

@@ -1,4 +1,4 @@
-import { ChangeStream, Cursor, getManager, getMongoManager, MongoRepository, ObjectID } from 'typeorm'
+import { ChangeStream, Cursor, getMongoManager, MongoRepository, ObjectID } from 'typeorm'
 import { Inject, Injectable } from '@nestjs/common'
 import { PubSub } from 'graphql-subscriptions'
 import { Logger } from 'winston'
@@ -28,13 +28,28 @@ export class MongoSubscriptionService {
 
     const { logger, pubSub } = this
 
-    // TODO Register internal processing metadata event (so we can turn on/off remaining events)
+    // Register internal processing metadata event (so we can turn on/off remaining events)
+    pubSub.subscribe('internalProcessingMetadata', (event: StreamingEvent) => {
+      logger.info(`MongoStreamer - CheckSyncingStatusFn() / Procesing new Processing Metadata internal event with key: ${event.key}`)
+
+      if (event.key === 'syncing') {
+        const status = event.value.boolean
+        if (status) {
+          this.disableEventsStreaming()
+        } else {
+          this.enableEventsStreaming()
+        }
+
+        // Re-publish event with triggerName for graphQL subscription
+        pubSub.publish('processingMetadata', event)
+      }
+    })
 
     // Create stream readers
     logger.info('MongoStreamer - initialize() / Generating stream readers')
     this.blocksReader = new ChangeStreamReader('blocks', pubSub, logger)
     this.blockMetricsReader = new ChangeStreamReader('blockMetrics', pubSub, logger)
-    this.processingMetadataReader = new ChangeStreamReader('processingMetadata', pubSub, logger)
+    this.processingMetadataReader = new ChangeStreamReader('internalProcessingMetadata', pubSub, logger)
 
     // Check initial syncing state
     logger.info('MongoStreamer - initialize() / Checking status of syncing')
@@ -51,7 +66,7 @@ export class MongoSubscriptionService {
       this.enableEventsStreaming()
 
       // TODO remove this
-      // this.testSubscription()
+      // this.testBlockSubscription()
     }
 
     logger.info('MongoStreamer - initialize() / Enabling Processing Metadata streamer')
@@ -79,7 +94,7 @@ export class MongoSubscriptionService {
     return !!value
   }
 
-  private async testSubscription() {
+  private async testBlockSubscription() {
 
     const asyncTimeout = async function (ms) {
       return new Promise(resolve => setTimeout(resolve, ms))
@@ -88,7 +103,7 @@ export class MongoSubscriptionService {
     const manager = getMongoManager()
 
     for await (let i of [1, 2, 3, 4, 5]) {
-      this.logger.info('MongoStreamer - testSubscription() / Testing block subscription')
+      this.logger.info('MongoStreamer - testBlockSubscription() / Testing block subscription')
       await asyncTimeout(10000)
 
       const block = await manager.findOne(BlockEntity, {order: {id: 'DESC'}})
