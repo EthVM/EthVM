@@ -28,10 +28,10 @@ export default class AppLanguage extends Vue {
   ===================================================================================
   */
 
-  created() {
-    if (storePack.get('language') && this.isLang(storePack.get('language'))) {
-      this.$i18n.locale = storePack.get('language')
-      this.language = storePack.get('language')
+  mounted() {
+    if (this.appLang && this.isLang(this.appLang)) {
+      this.$i18n.locale = this.appLang
+      this.language = this.appLang
     }
   }
   /*
@@ -57,12 +57,14 @@ export default class AppLanguage extends Vue {
   }
 
   isLang(lang: string): boolean {
+    let n
     this.items.forEach(i => {
       if (i._id === lang) {
-        return true
+        n =  true
       }
     })
-    return false
+    return n? n: false
+
   }
 }
 </script>
