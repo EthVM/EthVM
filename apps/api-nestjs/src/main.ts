@@ -5,7 +5,7 @@ import { ConfigService } from '@app/shared/config.service'
 import { Logger } from 'winston'
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { logger: false })
+  const app = await NestFactory.create(AppModule)
 
   app.useLogger(app.get<Logger>('winston'))
 

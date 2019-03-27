@@ -37,11 +37,7 @@ import { PubSub } from 'graphql-subscriptions'
     })
   ],
   providers: [
-    DateScalar, DecimalScalar, BufferScalar, StatisticValueScalar, LongScalar,
-    {
-      provide: 'PUB_SUB',
-      useValue: new PubSub()
-    }
+    DateScalar, DecimalScalar, BufferScalar, StatisticValueScalar, LongScalar
   ]
 })
 export class GraphQLModule {}

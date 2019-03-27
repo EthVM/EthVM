@@ -1,7 +1,9 @@
-import { ChangeStream, Cursor, getMongoManager } from 'typeorm'
-import { Inject } from '@nestjs/common'
+import { ChangeStream, Cursor, getConnection, getMongoManager, getRepository, MongoRepository, Repository } from 'typeorm'
+import { Inject, Injectable } from '@nestjs/common'
 import { PubSub } from 'graphql-subscriptions'
 import { Logger } from 'winston'
+import { BlockEntity } from '@app/orm/entities/block.entity'
+import { InjectRepository } from '@nestjs/typeorm'
 
 export interface StreamingEvent {
   op: 'insert' | 'delete' | 'replace' | 'updated' | 'invalidate'
@@ -9,21 +11,30 @@ export interface StreamingEvent {
   value: any
 }
 
-export class MongoSubscription {
+@Injectable()
+export class MongoSubscriptionService {
 
-  blocksWatcher;
-  blockMetricsWatcher;
+  blocksReader
+  blockMetricsReader
 
-  constructor(@Inject('PUB_SUB') private readonly pubSub: PubSub, @Inject('winston') private readonly logger: Logger) {}
+  constructor(@Inject('PUB_SUB') private readonly pubSub: PubSub,
+              @Inject('winston') private readonly logger: Logger,
+              @InjectRepository(BlockEntity) private readonly blockRepository: MongoRepository<BlockEntity>) {
+    this.initialize()
+  }
 
   public async initialize() {
 
-    const { logger, pubSub } = this;
+    const { logger, pubSub } = this
 
     // Create stream readers
     logger.info('MongoStreamer - initialize() / Generating stream readers')
-    this.blocksWatcher = new ChangeStreamReader('blocks', pubSub, logger)
-    this.blockMetricsWatcher = new ChangeStreamReader('blockMetrics', pubSub, logger)
+    this.blocksReader = new ChangeStreamReader('blocks', pubSub, logger)
+    this.blockMetricsReader = new ChangeStreamReader('blockMetrics', pubSub, logger)
+
+    // TODO only start if syncing has finished
+    this.blocksReader.start()
+    this.blockMetricsReader.start()
 
   }
 
@@ -37,7 +48,8 @@ class ChangeStreamReader {
 
   public start() {
     this.logger.info(`MongoChangeStreamReader - start() / Starting to listen change events on: ${this.collectionName}`)
-    const changeStream = (this.changeStream = getMongoManager().queryRunner.watch(this.collectionName, [], { fullDocument: 'updateLookup' }))
+    const manager = getMongoManager()
+    const changeStream = (this.changeStream = manager.queryRunner.watch(this.collectionName, [], { fullDocument: 'updateLookup' }))
     this.cursor = changeStream.stream()
     this.pull()
   }
@@ -65,7 +77,7 @@ class ChangeStreamReader {
             key: documentKey._id,
             value: fullDocument
           }
-          pubSub.publish(collectionName, event)
+          await pubSub.publish(collectionName, event)
         }
       }
     } catch (e) {

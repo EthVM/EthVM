@@ -15,6 +15,7 @@ import { OrmModule } from '@app/orm/orm.module'
 import { LoggerModule } from '@app/shared/logger.service'
 import { SharedModule } from '@app/shared/shared.module'
 import { Module } from '@nestjs/common'
+import { SubscriptionsModule } from '@app/subscriptions/subscriptions.module'
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { Module } from '@nestjs/common'
     UncleModule,
     StatisticModule,
     SearchModule,
+    SubscriptionsModule,
     LoggerModule
   ]
 })
