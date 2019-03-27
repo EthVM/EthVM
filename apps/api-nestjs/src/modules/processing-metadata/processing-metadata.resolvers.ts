@@ -19,7 +19,7 @@ export class ProcessingMetadataResolvers {
   newProcessingMetadata() {
     // TODO use withFilter to filter by event type
     return {
-      resolve: (payload) => {
+      resolve: payload => {
         return new BlockDto(payload.value)
       },
       subscribe: () => this.pubSub.asyncIterator('blocks')

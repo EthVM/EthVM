@@ -11,14 +11,7 @@ const pubSubProvider = {
 
 @Module({
   imports: [TypeOrmModule.forFeature([ProcessingMetadataEntity])],
-  providers: [
-    pubSubProvider,
-    MongoSubscriptionService
-  ],
-  exports: [
-    pubSubProvider
-  ]
+  providers: [pubSubProvider, MongoSubscriptionService],
+  exports: [pubSubProvider]
 })
-export class SubscriptionsModule {
-
-}
+export class SubscriptionsModule {}

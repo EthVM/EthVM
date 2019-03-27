@@ -49,11 +49,10 @@ export class TxResolvers {
   @Subscription()
   newTxs() {
     return {
-      resolve: (payload) => {
+      resolve: payload => {
         return new TxDto(payload.value)
       },
       subscribe: () => this.pubSub.asyncIterator('txs')
     }
   }
-
 }

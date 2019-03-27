@@ -36,8 +36,6 @@ import { PubSub } from 'graphql-subscriptions'
       inject: [ConfigService]
     })
   ],
-  providers: [
-    DateScalar, DecimalScalar, BufferScalar, StatisticValueScalar, LongScalar
-  ]
+  providers: [DateScalar, DecimalScalar, BufferScalar, StatisticValueScalar, LongScalar]
 })
 export class GraphQLModule {}

@@ -49,8 +49,7 @@ export class BlockResolvers {
   newBlock() {
     // TODO use withFilter to filter by event type
     return {
-      resolve: (payload) => {
-
+      resolve: payload => {
         // Publish 'txs' event if block has txs
 
         const { value } = payload

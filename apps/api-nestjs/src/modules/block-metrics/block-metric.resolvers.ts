@@ -27,7 +27,7 @@ export class BlockMetricResolvers {
   newBlockMetric() {
     // TODO use withFilter to filter by event type
     return {
-      resolve: (payload) => {
+      resolve: payload => {
         return new BlockMetricDto(payload.value)
       },
       subscribe: () => this.pubSub.asyncIterator('blockMetrics')

@@ -14,18 +14,19 @@ export interface StreamingEvent {
 
 @Injectable()
 export class MongoSubscriptionService {
-
   blocksReader
   blockMetricsReader
   processingMetadataReader
 
-  constructor(@Inject('PUB_SUB') private readonly pubSub: PubSub, @Inject('winston') private readonly logger: Logger,
-              @InjectRepository(ProcessingMetadataEntity) private readonly processingMetadataRepository: MongoRepository<ProcessingMetadataEntity>) {
+  constructor(
+    @Inject('PUB_SUB') private readonly pubSub: PubSub,
+    @Inject('winston') private readonly logger: Logger,
+    @InjectRepository(ProcessingMetadataEntity) private readonly processingMetadataRepository: MongoRepository<ProcessingMetadataEntity>
+  ) {
     this.initialize()
   }
 
   public async initialize() {
-
     const { logger, pubSub } = this
 
     // Register internal processing metadata event (so we can turn on/off remaining events)
@@ -53,7 +54,7 @@ export class MongoSubscriptionService {
 
     // Check initial syncing state
     logger.info('MongoStreamer - initialize() / Checking status of syncing')
-    const syncingStatus = await this.processingMetadataRepository.findOne({where: {_id: 'syncing'}})
+    const syncingStatus = await this.processingMetadataRepository.findOne({ where: { _id: 'syncing' } })
 
     const isSyncing = syncingStatus ? this.isSyncing(syncingStatus) : false // TODO set to true
 
@@ -73,7 +74,6 @@ export class MongoSubscriptionService {
     this.processingMetadataReader.start()
 
     return Promise.resolve(true)
-
   }
 
   private async enableEventsStreaming() {
@@ -95,29 +95,28 @@ export class MongoSubscriptionService {
   }
 
   private async testBlockSubscription() {
-
-    const asyncTimeout = async function (ms) {
+    const asyncTimeout = async ms => {
       return new Promise(resolve => setTimeout(resolve, ms))
     }
 
     const manager = getMongoManager()
 
-    for await (let i of [1, 2, 3, 4, 5]) {
+    for await (const i of [1, 2, 3, 4, 5]) {
       this.logger.info('MongoStreamer - testBlockSubscription() / Testing block subscription')
       await asyncTimeout(10000)
 
-      const block = await manager.findOne(BlockEntity, {order: {id: 'DESC'}})
+      const block = await manager.findOne(BlockEntity, { order: { id: 'DESC' } })
       let prevId = +block.id
-      const newBlock = {...block}
+      const newBlock = { ...block }
       newBlock.id = new ObjectID(prevId++)
-      newBlock.header.hash = Math.random().toString(36).substring(7);
+      newBlock.header.hash = Math.random()
+        .toString(36)
+        .substring(7)
 
       const entity = manager.create(BlockEntity, newBlock)
       await manager.save(entity)
     }
-
   }
-
 }
 
 class ChangeStreamReader {

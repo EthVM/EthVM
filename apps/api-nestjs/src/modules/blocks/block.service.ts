@@ -29,5 +29,4 @@ export class BlockService {
   async findTotalNumberOfBlocks(): Promise<number> {
     return this.blockRepository.count()
   }
-
 }
