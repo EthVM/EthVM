@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common'
 import { PubSub } from 'graphql-subscriptions'
 import { MongoSubscriptionService } from '@app/subscriptions/mongo-subscription.service'
-import { BlockEntity } from '@app/orm/entities/block.entity'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { BlockMetricEntity } from '@app/orm/entities/block-metric.entity'
+import { ProcessingMetadataEntity } from '@app/orm/entities/processing-metadata.entity'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([BlockEntity, BlockMetricEntity])],
+  imports: [TypeOrmModule.forFeature([ProcessingMetadataEntity])],
   providers: [
     {
       provide: 'PUB_SUB',
