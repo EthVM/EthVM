@@ -20,6 +20,13 @@ import { Footnote } from '@app/core/components/props'
 
 const MAX_ITEMS = 10
 
+class ChartData {
+  labels: string[] = []
+  sTxs: number[] = []
+  fTxs: number[] = []
+  pTxs: number[] = []
+}
+
 @Component({
   components: {
     Chart
@@ -33,12 +40,7 @@ export default class ChartLiveTransactions extends Vue {
   */
 
   redraw = true
-  data = {
-    labels: [],
-    sTxs: [],
-    fTxs: [],
-    pTxs: []
-  }
+  data = new ChartData()
 
   /*
   ===================================================================================
