@@ -5,4 +5,11 @@ protocol Common {
     GENERIC, ERC20, ERC721
   }
 
+  record TraceLocationRecord {
+    union { null, string } blockHash = null;
+    union { null, string } blockNumber = null;
+    union { null, string } transactionHash = null;
+    union { null, array<int> } traceAddress = null;
+  }
+
 }

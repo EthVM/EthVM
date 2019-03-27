@@ -79,6 +79,9 @@ protocol Capture {
     union { null, string } blockHash = null;         // hash of the block where this transaction was in
     union { null, string } blockNumber = null;                               // integer block number where this transaction was in
 
+    string from;
+    union { null, string } to = null;
+
     union { null, string } transactionHash = null;   // hash of the transaction this receipt is for
     union { null, int } transactionIndex = null;                            // integer of the transactions index position in the block
 
@@ -170,13 +173,6 @@ protocol Capture {
 
   // contracts
 
-  record TraceAddress {
-    string blockNumber;
-    string blockHash;
-    string transactionHash;
-    array<int> traceAddress;
-  }
-
   record ContractLogoRecord {
     union { null, string } src;
     union { null, string } width;
@@ -235,11 +231,11 @@ protocol Capture {
     union { null, string } creator = null;
     union { null, string } init = null;
     union { null, string } code = null;
-    union { null, TraceAddress } createdAt = null;
+    union { null, io.enkrypt.avro.common.TraceLocationRecord } createdAt = null;
 
     union { null, string } refundAddress = null;
     union { null, string } refundBalance = null;
-    union { null, TraceAddress } destroyedAt = null;
+    union { null, io.enkrypt.avro.common.TraceLocationRecord } destroyedAt = null;
   }
 
   record ContractLifecycleListRecord {
@@ -258,8 +254,8 @@ protocol Capture {
     union { null, string } refundBalance = null;
     union { null, ContractMetadataRecord } metadata = null;
 
-    union { null, TraceAddress } createdAt = null;
-    union { null, TraceAddress } destroyedAt = null;
+    union { null, io.enkrypt.avro.common.TraceLocationRecord } createdAt = null;
+    union { null, io.enkrypt.avro.common.TraceLocationRecord } destroyedAt = null;
 
   }
 

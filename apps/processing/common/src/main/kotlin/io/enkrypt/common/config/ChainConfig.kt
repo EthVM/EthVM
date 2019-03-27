@@ -1,15 +1,18 @@
 package io.enkrypt.common.config
 
-import io.enkrypt.avro.processing.EtherBalanceDeltaRecord
-import io.enkrypt.avro.processing.EtherBalanceDeltaType
+import io.enkrypt.avro.common.TraceLocationRecord
+import io.enkrypt.avro.processing.FungibleBalanceDeltaRecord
+import io.enkrypt.avro.processing.FungibleBalanceDeltaType
+import io.enkrypt.avro.processing.FungibleTokenType
 import io.enkrypt.common.extensions.ether
+import io.enkrypt.common.extensions.setBlockNumberBI
 import java.math.BigInteger
 
 interface ChainConfig {
 
   val constants: ChainConstants
 
-  fun hardForkEtherDeltas(number: BigInteger): List<EtherBalanceDeltaRecord> = emptyList()
+  fun hardForkFungibleDeltas(number: BigInteger): List<FungibleBalanceDeltaRecord> = emptyList()
 
   /**
    * EIP161: https://github.com/ethereum/EIPs/issues/161
@@ -90,7 +93,7 @@ open class DaoHardForkConfig(override val constants: ChainConstants = ChainConst
   private val withdrawAccount = DaoHardFork.withdrawAccount
   private val daoBalances = DaoHardFork.balances
 
-  override fun hardForkEtherDeltas(number: BigInteger): List<EtherBalanceDeltaRecord> =
+  override fun hardForkFungibleDeltas(number: BigInteger): List<FungibleBalanceDeltaRecord> =
     if (number != forkBlockNumber) {
       emptyList()
     } else {
@@ -98,17 +101,27 @@ open class DaoHardForkConfig(override val constants: ChainConstants = ChainConst
         listOf(
 
           // deduct from address
-          EtherBalanceDeltaRecord.newBuilder()
-            .setType(EtherBalanceDeltaType.HARD_FORK)
-            .setBlockNumber(number.toString())
+          FungibleBalanceDeltaRecord.newBuilder()
+            .setTokenType(FungibleTokenType.ETHER)
+            .setDeltaType(FungibleBalanceDeltaType.HARD_FORK)
+            .setTraceLocation(
+              TraceLocationRecord.newBuilder()
+                .setBlockNumberBI(number)
+                .build()
+            )
             .setAddress(address)
             .setAmount(balance.negate().toString())
             .build(),
 
           // add to withdraw account
-          EtherBalanceDeltaRecord.newBuilder()
-            .setType(EtherBalanceDeltaType.HARD_FORK)
-            .setBlockNumber(number.toString())
+          FungibleBalanceDeltaRecord.newBuilder()
+            .setTokenType(FungibleTokenType.ETHER)
+            .setDeltaType(FungibleBalanceDeltaType.HARD_FORK)
+            .setTraceLocation(
+              TraceLocationRecord.newBuilder()
+                .setBlockNumberBI(number)
+                .build()
+            )
             .setAddress(withdrawAccount)
             .setAmount(balance.toString())
             .build()

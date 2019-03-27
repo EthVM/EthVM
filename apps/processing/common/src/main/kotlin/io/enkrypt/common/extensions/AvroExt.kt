@@ -4,8 +4,6 @@ import io.enkrypt.avro.capture.BlockHeaderRecord
 import io.enkrypt.avro.capture.CanonicalKeyRecord
 import io.enkrypt.avro.capture.ContractLifecycleRecord
 import io.enkrypt.avro.capture.ContractLifecyleType
-import io.enkrypt.avro.capture.ContractRecord
-import io.enkrypt.avro.capture.TraceAddress
 import io.enkrypt.avro.capture.TraceCallActionRecord
 import io.enkrypt.avro.capture.TraceCreateActionRecord
 import io.enkrypt.avro.capture.TraceDestroyActionRecord
@@ -15,13 +13,14 @@ import io.enkrypt.avro.capture.TraceResultRecord
 import io.enkrypt.avro.capture.TraceRewardActionRecord
 import io.enkrypt.avro.capture.TransactionReceiptRecord
 import io.enkrypt.avro.capture.TransactionRecord
+import io.enkrypt.avro.common.TraceLocationRecord
 import io.enkrypt.avro.exchange.ExchangeRateRecord
 import io.enkrypt.avro.processing.BlockAuthorRecord
 import io.enkrypt.avro.processing.BlockMetricsRecord
-import io.enkrypt.avro.processing.EtherBalanceDeltaListRecord
-import io.enkrypt.avro.processing.EtherBalanceDeltaRecord
-import io.enkrypt.avro.processing.EtherBalanceDeltaType
-import io.enkrypt.avro.processing.EtherBalanceRecord
+import io.enkrypt.avro.processing.FungibleBalanceDeltaRecord
+import io.enkrypt.avro.processing.FungibleBalanceDeltaType
+import io.enkrypt.avro.processing.FungibleBalanceRecord
+import io.enkrypt.avro.processing.FungibleTokenType
 import io.enkrypt.avro.processing.TransactionFeeListRecord
 import io.enkrypt.avro.processing.TransactionFeeRecord
 import io.enkrypt.avro.processing.TransactionGasPriceRecord
@@ -122,17 +121,17 @@ fun BlockHeaderRecord.getTotalDifficultyBI() = getTotalDifficulty().hexToBI()
 
 fun BlockHeaderRecord.Builder.setTotalDifficultyBI(totalDifficulty: BigInteger) = setTotalDifficulty(totalDifficulty.toHex())
 
-fun EtherBalanceDeltaRecord.getBlockNumberBI() = getBlockNumber().hexToBI()
+fun TraceLocationRecord.Builder.setBlockNumberBI(blockNumber: BigInteger) = setBlockNumber(blockNumber.toHex())
 
-fun EtherBalanceDeltaRecord.Builder.setBlockNumberBI(blockNumber: BigInteger) = setBlockNumber(blockNumber.toHex())
+fun TraceLocationRecord.getBlockNumberBI() = getBlockNumber().hexToBI()
 
-fun EtherBalanceDeltaRecord.getAmountBI() = getAmount().hexToBI()
+fun FungibleBalanceDeltaRecord.getAmountBI() = getAmount().hexToBI()
 
-fun EtherBalanceDeltaRecord.Builder.setAmountBI(amount: BigInteger) = setAmount(amount.toHex())
+fun FungibleBalanceDeltaRecord.Builder.setAmountBI(amount: BigInteger) = setAmount(amount.toHex())
 
-fun EtherBalanceRecord.getAmountBI() = getAmount().hexToBI()
+fun FungibleBalanceRecord.getAmountBI() = getAmount().hexToBI()
 
-fun EtherBalanceRecord.Builder.setAmountBI(amount: BigInteger) = setAmount(amount.toHex())
+fun FungibleBalanceRecord.Builder.setAmountBI(amount: BigInteger) = setAmount(amount.toHex())
 
 fun BlockAuthorRecord.getBlockNumberBI() = getBlockNumber().hexToBI()
 
@@ -191,15 +190,20 @@ fun BlockMetricsRecord.Builder.setAvgTxFeesBI(avgTxFees: BigInteger) = setAvgTxF
 
 fun ExchangeRateRecord.isValid() = !(this.marketCap == -1.0 || this.marketCapRank == -1)
 
-fun TransactionFeeListRecord.toEtherBalanceDeltas(): List<EtherBalanceDeltaRecord> =
-  getTransactionFees().map { it.toEtherBalanceDelta() }
+fun TransactionFeeListRecord.toEtherBalanceDeltas(): List<FungibleBalanceDeltaRecord> =
+  getTransactionFees().map { it.toFungibleBalanceDelta() }
 
-fun TransactionFeeRecord.toEtherBalanceDelta(): EtherBalanceDeltaRecord =
-  EtherBalanceDeltaRecord.newBuilder()
-    .setType(EtherBalanceDeltaType.TX_FEE)
-    .setBlockHash(getBlockHash())
-    .setBlockNumber(getBlockNumber())
-    .setTransactionHash(getTransactionHash())
+fun TransactionFeeRecord.toFungibleBalanceDelta(): FungibleBalanceDeltaRecord =
+  FungibleBalanceDeltaRecord.newBuilder()
+    .setTokenType(FungibleTokenType.ETHER)
+    .setDeltaType(FungibleBalanceDeltaType.TX_FEE)
+    .setTraceLocation(
+      TraceLocationRecord.newBuilder()
+        .setBlockHash(getBlockHash())
+        .setBlockNumber(getBlockNumber())
+        .setTransactionHash(getTransactionHash())
+        .build()
+    )
     .setAddress(getAddress())
     .setAmountBI(getTransactionFeeBI().negate())
     .build()
@@ -209,18 +213,18 @@ fun TraceRecord.hasError(): Boolean {
   return error != null && error.isNotBlank()
 }
 
-fun TraceListRecord.toEtherBalanceDeltas(): List<EtherBalanceDeltaRecord> =
+fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> =
   getTraces()
     .asSequence()
     .groupBy { trace -> Pair(trace.getBlockHash(), trace.getTransactionHash()) }
     .toList()
     .map { (key, traces) ->
 
-      var deltas = emptyList<EtherBalanceDeltaRecord>()
+      var deltas = emptyList<FungibleBalanceDeltaRecord>()
 
       if (key.second == null) {
 
-        deltas = deltas + traces.map { it.toEtherBalanceDeltas() }.flatten()
+        deltas = deltas + traces.map { it.toFungibleBalanceDeltas() }.flatten()
       } else {
 
         val rootTrace = traces.first { it.getTraceAddress().isEmpty() }
@@ -228,7 +232,7 @@ fun TraceListRecord.toEtherBalanceDeltas(): List<EtherBalanceDeltaRecord> =
         deltas = deltas + when (rootTrace.hasError()) {
           true -> emptyList()
           false -> traces
-            .map { trace -> trace.toEtherBalanceDeltas() }
+            .map { trace -> trace.toFungibleBalanceDeltas() }
             .flatten()
         }
       }
@@ -237,8 +241,8 @@ fun TraceListRecord.toEtherBalanceDeltas(): List<EtherBalanceDeltaRecord> =
     }.flatten()
     .filter { delta -> delta.getAmount() != null && !(delta.getAmount() == "" || delta.getAmount() == "0") }
 
-fun EtherBalanceDeltaRecord.reverse() =
-  EtherBalanceDeltaRecord.newBuilder(this)
+fun FungibleBalanceDeltaRecord.reverse() =
+  FungibleBalanceDeltaRecord.newBuilder(this)
     .setAmount(getAmount().toBigInteger().negate().toString())
     .build()
 
@@ -264,7 +268,7 @@ fun TraceRecord.
         .setInit(action.getInit())
         .setCode(getResult().getCode())
         .setCreatedAt(
-          TraceAddress.newBuilder()
+          TraceLocationRecord.newBuilder()
             .setBlockNumber(getBlockNumber())
             .setBlockHash(getBlockHash())
             .setTransactionHash(getTransactionHash())
@@ -280,7 +284,7 @@ fun TraceRecord.
         .setRefundAddress(action.getRefundAddress())
         .setRefundBalance(action.getBalance())
         .setDestroyedAt(
-          TraceAddress.newBuilder()
+          TraceLocationRecord.newBuilder()
             .setBlockNumber(getBlockNumber())
             .setBlockHash(getBlockHash())
             .setTransactionHash(getTransactionHash())
@@ -294,7 +298,7 @@ fun TraceRecord.
 
 }
 
-fun TraceRecord.toEtherBalanceDeltas(): List<EtherBalanceDeltaRecord> {
+fun TraceRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> {
 
   // error check first
   val error = getError()
@@ -304,23 +308,28 @@ fun TraceRecord.toEtherBalanceDeltas(): List<EtherBalanceDeltaRecord> {
 
   val action = getAction()
 
+  val traceLocation = TraceLocationRecord.newBuilder()
+    .setBlockNumber(getBlockNumber())
+    .setBlockHash(getBlockHash())
+    .setTransactionHash(getTransactionHash())
+    .setTraceAddress(getTraceAddress())
+    .build()
+
   return when (action) {
 
     is TraceRewardActionRecord -> {
 
       val type = when (action.getRewardType()) {
-        "uncle" -> EtherBalanceDeltaType.UNCLE_REWARD
-        "block" -> EtherBalanceDeltaType.BLOCK_REWARD
+        "uncle" -> FungibleBalanceDeltaType.UNCLE_REWARD
+        "block" -> FungibleBalanceDeltaType.BLOCK_REWARD
         else -> throw IllegalArgumentException("Unexpected reward type: ${action.getRewardType()}")
       }
 
       listOf(
-        EtherBalanceDeltaRecord.newBuilder()
-          .setType(type)
-          .setBlockHash(getBlockHash())
-          .setBlockNumber(getBlockNumber())
-          .setTransactionHash(getTransactionHash())
-          .setTraceAddress(getTraceAddress())
+        FungibleBalanceDeltaRecord.newBuilder()
+          .setTokenType(FungibleTokenType.ETHER)
+          .setDeltaType(type)
+          .setTraceLocation(traceLocation)
           .setAddress(action.getAuthor())
           .setAmount(action.getValue()) // need to make the value signed
           .build()
@@ -329,22 +338,18 @@ fun TraceRecord.toEtherBalanceDeltas(): List<EtherBalanceDeltaRecord> {
 
     is TraceCallActionRecord -> listOf(
 
-      EtherBalanceDeltaRecord.newBuilder()
-        .setType(EtherBalanceDeltaType.TX)
-        .setBlockHash(getBlockHash())
-        .setBlockNumber(getBlockNumber())
-        .setTransactionHash(getTransactionHash())
-        .setTraceAddress(getTraceAddress())
+      FungibleBalanceDeltaRecord.newBuilder()
+        .setTokenType(FungibleTokenType.ETHER)
+        .setDeltaType(FungibleBalanceDeltaType.TX)
+        .setTraceLocation(traceLocation)
         .setAddress(action.getFrom())
         .setAmountBI(action.getValueBI().negate())
         .build(),
 
-      EtherBalanceDeltaRecord.newBuilder()
-        .setType(EtherBalanceDeltaType.TX)
-        .setBlockHash(getBlockHash())
-        .setBlockNumber(getBlockNumber())
-        .setTransactionHash(getTransactionHash())
-        .setTraceAddress(getTraceAddress())
+      FungibleBalanceDeltaRecord.newBuilder()
+        .setTokenType(FungibleTokenType.ETHER)
+        .setDeltaType(FungibleBalanceDeltaType.TX)
+        .setTraceLocation(traceLocation)
         .setAddress(action.getTo())
         .setAmount(action.getValue())
         .build()
@@ -353,22 +358,18 @@ fun TraceRecord.toEtherBalanceDeltas(): List<EtherBalanceDeltaRecord> {
 
     is TraceCreateActionRecord -> listOf(
 
-      EtherBalanceDeltaRecord.newBuilder()
-        .setType(EtherBalanceDeltaType.TX)
-        .setBlockHash(getBlockHash())
-        .setBlockNumber(getBlockNumber())
-        .setTransactionHash(getTransactionHash())
-        .setTraceAddress(getTraceAddress())
+      FungibleBalanceDeltaRecord.newBuilder()
+        .setTokenType(FungibleTokenType.ETHER)
+        .setDeltaType(FungibleBalanceDeltaType.TX)
+        .setTraceLocation(traceLocation)
         .setAddress(action.getFrom())
         .setAmountBI(action.getValueBI().negate())
         .build(),
 
-      EtherBalanceDeltaRecord.newBuilder()
-        .setType(EtherBalanceDeltaType.TX)
-        .setBlockHash(getBlockHash())
-        .setBlockNumber(getBlockNumber())
-        .setTransactionHash(getTransactionHash())
-        .setTraceAddress(getTraceAddress())
+      FungibleBalanceDeltaRecord.newBuilder()
+        .setTokenType(FungibleTokenType.ETHER)
+        .setDeltaType(FungibleBalanceDeltaType.TX)
+        .setTraceLocation(traceLocation)
         .setAddress(getResult().getAddress())
         .setAmount(action.getValue())
         .build()
@@ -376,22 +377,18 @@ fun TraceRecord.toEtherBalanceDeltas(): List<EtherBalanceDeltaRecord> {
 
     is TraceDestroyActionRecord -> listOf(
 
-      EtherBalanceDeltaRecord.newBuilder()
-        .setType(EtherBalanceDeltaType.CONTRACT_DESTRUCTION)
-        .setBlockHash(getBlockHash())
-        .setBlockNumber(getBlockNumber())
-        .setTransactionHash(getTransactionHash())
-        .setTraceAddress(getTraceAddress())
+      FungibleBalanceDeltaRecord.newBuilder()
+        .setTokenType(FungibleTokenType.ETHER)
+        .setDeltaType(FungibleBalanceDeltaType.CONTRACT_DESTRUCTION)
+        .setTraceLocation(traceLocation)
         .setAddress(action.getAddress())
         .setAmountBI(action.getBalanceBI().negate())
         .build(),
 
-      EtherBalanceDeltaRecord.newBuilder()
-        .setType(EtherBalanceDeltaType.CONTRACT_DESTRUCTION)
-        .setBlockHash(getBlockHash())
-        .setBlockNumber(getBlockNumber())
-        .setTransactionHash(getTransactionHash())
-        .setTraceAddress(getTraceAddress())
+      FungibleBalanceDeltaRecord.newBuilder()
+        .setTokenType(FungibleTokenType.ETHER)
+        .setDeltaType(FungibleBalanceDeltaType.CONTRACT_DESTRUCTION)
+        .setTraceLocation(traceLocation)
         .setAddress(action.getRefundAddress())
         .setAmount(action.getBalance())
         .build()

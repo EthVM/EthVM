@@ -18,10 +18,10 @@ import io.enkrypt.avro.processing.AddressMetadataKeyRecord
 import io.enkrypt.avro.processing.AddressMetadataRecord
 import io.enkrypt.avro.processing.BlockAuthorRecord
 import io.enkrypt.avro.processing.BlockMetricsRecord
-import io.enkrypt.avro.processing.EtherBalanceDeltaListRecord
-import io.enkrypt.avro.processing.EtherBalanceDeltaRecord
-import io.enkrypt.avro.processing.EtherBalanceKeyRecord
-import io.enkrypt.avro.processing.EtherBalanceRecord
+import io.enkrypt.avro.processing.FungibleBalanceDeltaListRecord
+import io.enkrypt.avro.processing.FungibleBalanceDeltaRecord
+import io.enkrypt.avro.processing.FungibleBalanceKeyRecord
+import io.enkrypt.avro.processing.FungibleBalanceRecord
 import io.enkrypt.avro.processing.MetricKeyRecord
 import io.enkrypt.avro.processing.MetricRecord
 import io.enkrypt.avro.processing.TransactionFeeListRecord
@@ -44,15 +44,15 @@ object Serdes : KoinComponent {
     "schema.registry.url" to kafkaConfig.schemaRegistryUrl
   )
 
-  fun EtherBalanceKey() = SpecificAvroSerde<EtherBalanceKeyRecord>(registryClient).apply {
+  fun FungibleBalanceKey() = SpecificAvroSerde<FungibleBalanceKeyRecord>(registryClient).apply {
     configure(config, true)
   }
 
-  fun EtherBalanceDelta() = SpecificAvroSerde<EtherBalanceDeltaRecord>(registryClient).apply {
+  fun FungibleBalanceDelta() = SpecificAvroSerde<FungibleBalanceDeltaRecord>(registryClient).apply {
     configure(config, false)
   }
 
-  fun EtherBalance() = SpecificAvroSerde<EtherBalanceRecord>(registryClient).apply {
+  fun FungibleBalance() = SpecificAvroSerde<FungibleBalanceRecord>(registryClient).apply {
     configure(config, false)
   }
 
@@ -112,7 +112,7 @@ object Serdes : KoinComponent {
     configure(config, false)
   }
 
-  fun EtherBalanceDeltaList() = SpecificAvroSerde<EtherBalanceDeltaListRecord>(registryClient).apply {
+  fun FungibleBalanceDeltaList() = SpecificAvroSerde<FungibleBalanceDeltaListRecord>(registryClient).apply {
     configure(config, false)
   }
 

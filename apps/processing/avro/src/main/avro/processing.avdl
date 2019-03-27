@@ -4,35 +4,50 @@ protocol Processing {
   import idl "common.avdl";
   import idl "capture.avdl";
 
-
-  enum EtherBalanceDeltaType {
-    PREMINE_BALANCE, HARD_FORK, BLOCK_REWARD, UNCLE_REWARD, MINER_FEE, TX_FEE, TX, CONTRACT_DESTRUCTION
-  }
-
-  record EtherBalanceKeyRecord {
+  record FungibleBalanceKeyRecord {
     string address;
+    union { null, string } contract = null;
   }
 
-  record EtherBalanceDeltaRecord {
-    EtherBalanceDeltaType type;
-    string blockNumber;
+  enum FungibleTokenType {
+    ETHER, ERC20
+  }
+
+  enum FungibleBalanceDeltaType {
+    PREMINE_BALANCE,
+    HARD_FORK,
+    BLOCK_REWARD,
+    UNCLE_REWARD,
+    MINER_FEE,
+    TX_FEE,
+    TX,
+    CONTRACT_DESTRUCTION,
+    TOKEN_TRANSFER
+  }
+
+  record FungibleBalanceDeltaRecord {
+
+    FungibleTokenType tokenType;
+    FungibleBalanceDeltaType deltaType;
+    io.enkrypt.avro.common.TraceLocationRecord traceLocation;
+    string amount;
+
     union { null, string } address = null;
-    union { null, string } blockHash = null;
-    union { null, string } transactionHash = null;
-    union { null, array<int> } traceAddress = null;
+    union { null, string } contractAddress = null;
+  }
+
+  record FungibleBalanceRecord {
     string amount;
   }
 
-  record EtherBalanceRecord {
-    string amount;
-  }
-
-  record EtherBalanceDeltaListRecord {
+  record FungibleBalanceDeltaListRecord {
     boolean apply = true;
-    array<EtherBalanceDeltaRecord> deltas = [];
-    array<EtherBalanceDeltaRecord> reversals = [];
-    union{ null, string } blockHash = null;
+    array<FungibleBalanceDeltaRecord> deltas = [];
+    array<FungibleBalanceDeltaRecord> reversals = [];
+    union { null, string } blockHash = null;
   }
+
+  //
 
   record BlockAuthorRecord {
     string author;

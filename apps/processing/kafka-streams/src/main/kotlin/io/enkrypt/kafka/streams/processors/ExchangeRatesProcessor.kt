@@ -3,6 +3,7 @@ package io.enkrypt.kafka.streams.processors
 import io.enkrypt.avro.capture.ContractMetadataRecord
 import io.enkrypt.avro.exchange.ExchangeRateRecord
 import io.enkrypt.avro.exchange.SymbolKeyRecord
+import io.enkrypt.common.extensions.hexBuffer
 import io.enkrypt.common.extensions.isValid
 import io.enkrypt.kafka.streams.Serdes
 import io.enkrypt.kafka.streams.config.Topics
@@ -50,7 +51,7 @@ class ExchangeRatesProcessor : AbstractKafkaProcessor() {
       .filter { _, v -> v.isValid() }
       .join(
         ethTokensStream,
-        { rate, token -> rate.apply { if (token.getAddress() != null) setAddress(token.getAddress()) } },
+        { rate, token -> rate.apply { if (token.getAddress() != null) setAddress(token.getAddress().hexBuffer()) } },
         Materialized.with(Serdes.SymbolKey(), Serdes.ExchangeRate())
       )
       .toStream()

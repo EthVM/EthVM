@@ -61,6 +61,11 @@ topics:
     config:
       cleanup.policy: compact
 
+  - name: canonical-receipt-erc20-deltas
+    replicationFactor: 1
+    partitions: 12
+    config:
+      cleanup.policy: compact
 
   - name: canonical-gas-prices
     replicationFactor: 1
@@ -80,13 +85,13 @@ topics:
     config:
       cleanup.policy: compact
 
-  - name: ether-balance-deltas
+  - name: fungible-balance-deltas
     replicationFactor: 1
     partitions: 12
     config:
       retention.ms: -1
 
-  - name: ether-balances
+  - name: fungible-balances
     replicationFactor: 1
     partitions: 12
     config:

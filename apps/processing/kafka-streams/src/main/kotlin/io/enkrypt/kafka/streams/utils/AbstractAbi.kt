@@ -2,6 +2,7 @@ package io.enkrypt.kafka.streams.utils
 
 import arrow.core.Option
 import io.enkrypt.common.extensions.byteBuffer
+import io.enkrypt.common.extensions.hexBuffer
 import org.apache.commons.compress.utils.IOUtils
 import org.ethereum.solidity.Abi
 import java.io.InputStream
@@ -52,8 +53,14 @@ abstract class AbstractAbi protected constructor(input: InputStream) {
     return Option.fromNullable(functionMap[key])
   }
 
+  fun matchEventHex(topics: List<String>): Option<Abi.Event> =
+    matchEvent(topics.map { it.hexBuffer()!! })
+
   fun matchEvent(topics: List<ByteBuffer>): Option<Abi.Event> =
     if (topics.isEmpty()) Option.empty() else matchEvent(topics[0])
+
+  fun matchEventHex(word: String): Option<Abi.Event> =
+    matchEvent(word.hexBuffer()!!)
 
   fun matchEvent(word: ByteBuffer): Option<Abi.Event> = Option.fromNullable(eventMap[word])
 }

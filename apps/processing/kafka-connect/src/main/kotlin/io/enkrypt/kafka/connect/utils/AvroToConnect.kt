@@ -10,7 +10,6 @@ import io.enkrypt.avro.capture.TransactionListRecord
 import io.enkrypt.avro.capture.TransactionReceiptListRecord
 import io.enkrypt.avro.capture.TransactionReceiptRecord
 import io.enkrypt.avro.capture.TransactionRecord
-import io.enkrypt.avro.processing.EtherBalanceRecord
 import org.apache.avro.specific.SpecificRecordBase
 import org.apache.kafka.connect.data.SchemaAndValue
 
@@ -22,7 +21,6 @@ object AvroToConnect {
     ContractMetadataRecord::class to ContractMetadataRecord.`SCHEMA$`,
     TransactionListRecord::class to TransactionListRecord.`SCHEMA$`,
     TransactionReceiptListRecord::class to TransactionReceiptListRecord.`SCHEMA$`,
-    EtherBalanceRecord::class to EtherBalanceRecord.`SCHEMA$`,
     CanonicalKeyRecord::class to CanonicalKeyRecord.`SCHEMA$`,
     BlockHeaderRecord::class to BlockHeaderRecord.`SCHEMA$`,
     TransactionRecord::class to TransactionRecord.`SCHEMA$`,

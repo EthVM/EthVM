@@ -84,6 +84,8 @@ fun TransactionReceipt.toTransactionReceiptRecord(builder: TransactionReceiptRec
     .setTransactionHash(transactionHash)
     .setTransactionIndex(transactionIndex.intValueExact())
     .setContractAddress(contractAddress)
+    .setFrom(from)
+    .setTo(to)
     .setCumulativeGasUsedBI(cumulativeGasUsed)
     .setGasUsedBI(gasUsed)
     .setLogs(logs.map { it.toLogRecord(LogRecord.newBuilder()).build() })
