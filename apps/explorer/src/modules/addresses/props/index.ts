@@ -4,6 +4,7 @@ export class AccountInfo {
   public balance: EthValue = new EthValue(0)
   public exchangeRate: any = { USD: 0 }
 
+  public isMiner: boolean = false
   public minedBlocks: SimpleBlock[] = []
   public totalMinedBlocks: number = 0
 
@@ -21,9 +22,7 @@ export class AccountInfo {
   public tokensOwned: number = 0
 
   public contracts: any[] = []
-
   public isCreator: boolean = false
-  public isMiner: boolean = false
 
   public type: string = ''
 

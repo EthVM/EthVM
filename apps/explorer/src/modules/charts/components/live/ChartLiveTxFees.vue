@@ -21,11 +21,13 @@ import { EthValue } from '@app/core/models'
 import { Footnote } from '@app/core/components/props'
 
 const MAX_ITEMS = 10
+
 class ChartData {
   labels: string[] = []
   avgFees: number[] = []
   avgPrice: number[] = []
 }
+
 @Component({
   components: {
     Chart

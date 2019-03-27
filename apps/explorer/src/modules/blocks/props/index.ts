@@ -9,5 +9,5 @@ export class BlockInfo {
   public uncles: Uncle[] = []
   public timestamp: Date = new Date()
 
-  constructor(public readonly hash: string) {}
+  constructor(public readonly block: string) {}
 }
