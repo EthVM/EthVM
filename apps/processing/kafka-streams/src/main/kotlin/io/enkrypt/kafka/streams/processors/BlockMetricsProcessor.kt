@@ -18,6 +18,7 @@ import io.enkrypt.kafka.streams.config.Topics
 import io.enkrypt.kafka.streams.config.Topics.BlockMetrics
 import io.enkrypt.kafka.streams.config.Topics.CanonicalBlocks
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTraces
+import io.enkrypt.kafka.streams.config.Topics.CanonicalTransactionFees
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTransactions
 import io.enkrypt.kafka.streams.config.Topics.TraceBlockMetrics
 import io.enkrypt.kafka.streams.config.Topics.TransactionBlockMetrics
@@ -64,6 +65,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
           .setNumUncles(header.getUncles().size)
           .setDifficulty(header.getDifficulty())
           .setTotalDifficulty(header.getTotalDifficulty())
+          .setTimestamp(header.getTimestamp())
           .build()
       }.toTopic(BlockMetrics)
 
@@ -160,7 +162,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
 
       }.toTopic(TransactionBlockMetrics)
 
-    Topics.CanonicalTransactionFees.stream(builder)
+    CanonicalTransactionFees.stream(builder)
       .mapValues { txFeeList ->
 
         val transactionFees = txFeeList.getTransactionFees()

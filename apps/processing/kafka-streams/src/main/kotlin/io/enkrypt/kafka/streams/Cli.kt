@@ -21,11 +21,6 @@ class Cli : CliktCommand() {
 
   // General - CLI
 
-  private val transactionalId: String by option(
-    help = "A unique instance id for use in kafkaStreams transactions",
-    envvar = "KAFKA_TRANSACTIONAL_ID"
-  ).default(DEFAULT_TRANSACTIONAL_ID)
-
   private val bootstrapServers: String by option(
     help = "A list of host/port pairs to use for establishing the initial connection to the Kafka cluster",
     envvar = "KAFKA_BOOTSTRAP_SERVERS"
@@ -64,7 +59,6 @@ class Cli : CliktCommand() {
       KafkaConfig(
         bootstrapServers,
         startingOffset,
-        transactionalId,
         schemaRegistryUrl,
         streamsStateDir
       )
@@ -103,7 +97,6 @@ class Cli : CliktCommand() {
 
   companion object Defaults {
 
-    const val DEFAULT_TRANSACTIONAL_ID = "bolt-1"
     const val DEFAULT_BOOTSTRAP_SERVERS = "kafka-1:9091"
     const val DEFAULT_SCHEMA_REGISTRY_URL = "http://kafka-schema-registry:8081"
     const val DEFAULT_AUTO_OFFSET = "earliest"
