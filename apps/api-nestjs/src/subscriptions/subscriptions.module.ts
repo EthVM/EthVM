@@ -4,14 +4,19 @@ import { MongoSubscriptionService } from '@app/subscriptions/mongo-subscription.
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { ProcessingMetadataEntity } from '@app/orm/entities/processing-metadata.entity'
 
+const pubSubProvider = {
+  provide: 'PUB_SUB',
+  useValue: new PubSub()
+}
+
 @Module({
   imports: [TypeOrmModule.forFeature([ProcessingMetadataEntity])],
   providers: [
-    {
-      provide: 'PUB_SUB',
-      useValue: new PubSub()
-    },
+    pubSubProvider,
     MongoSubscriptionService
+  ],
+  exports: [
+    pubSubProvider
   ]
 })
 export class SubscriptionsModule {

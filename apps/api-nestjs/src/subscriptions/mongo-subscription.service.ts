@@ -39,7 +39,7 @@ export class MongoSubscriptionService {
     logger.info('MongoStreamer - initialize() / Checking status of syncing')
     const syncingStatus = await this.processingMetadataRepository.findOne({where: {_id: 'syncing'}})
 
-    const isSyncing = syncingStatus ? this.isSyncing(syncingStatus) : true
+    const isSyncing = syncingStatus ? this.isSyncing(syncingStatus) : false // TODO set to true
 
     logger.info(`MongoStreamer - initialize() / Current syncing status is: ${isSyncing}`)
 

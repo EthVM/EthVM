@@ -3,6 +3,10 @@ type Query {
   blockMetrics(limit: Int, page: Int): [BlockMetric]!
 }
 
+type Subscription {
+  newBlockMetric: [BlockMetric]
+}
+
 type BlockMetric {
   id: Decimal
   avgGasLimit: String

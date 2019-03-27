@@ -22,6 +22,7 @@ import { SubscriptionsModule } from '@app/subscriptions/subscriptions.module'
     SharedModule,
     GraphQLModule,
     OrmModule,
+    SubscriptionsModule,
     BlockModule,
     BalanceModule,
     AccountMetadataModule,
@@ -34,7 +35,6 @@ import { SubscriptionsModule } from '@app/subscriptions/subscriptions.module'
     UncleModule,
     StatisticModule,
     SearchModule,
-    SubscriptionsModule,
     LoggerModule
   ]
 })

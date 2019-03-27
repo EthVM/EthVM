@@ -1,17 +1,16 @@
 import { Args, Query, Resolver, Subscription } from '@nestjs/graphql'
 import { BlockService } from '@app/modules/blocks/block.service'
-import { PubSub } from 'graphql-subscriptions'
 import { BlockDto } from '@app/modules/blocks/block.dto'
 import { ParseHashPipe } from '@app/shared/validation/parse-hash.pipe'
 import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe'
 import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
-
-const pubSub = new PubSub()
+import { PubSub } from 'graphql-subscriptions'
+import { Inject } from '@nestjs/common'
 
 @Resolver('Block')
 export class BlockResolvers {
-  constructor(private readonly blockService: BlockService) {}
+  constructor(private readonly blockService: BlockService, @Inject('PUB_SUB') private pubSub: PubSub) {}
 
   @Query()
   async blocks(@Args('page', ParsePagePipe) page: number, @Args('limit', ParseLimitPipe) limit: number) {
@@ -48,9 +47,14 @@ export class BlockResolvers {
 
   @Subscription()
   newBlock() {
+    // TODO use withFilter to filter by event type
+    // return {
+    //   subscribe: withFilter(() => pubSub.asyncIterator('blocks'), (payload, variables) => {
+    //     return payload.blocks.op === 'insert';
+    //   }),
+    // }
     return {
-      // TODO publish newBlock from mongo
-      subscribe: () => pubSub.asyncIterator('newBlock')
+      subscribe: () => this.pubSub.asyncIterator('blocks')
     }
   }
 }
