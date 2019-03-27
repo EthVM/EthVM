@@ -93,7 +93,7 @@ export default class PageDetailsTxs extends Vue {
    *
    * @return {Promise<Tx>}
    */
-  fetchTx(): Promise<Tx> {
+  fetchTx(): Promise<Tx | null > {
     return this.$api.getTx(this.txRef)
   }
 
