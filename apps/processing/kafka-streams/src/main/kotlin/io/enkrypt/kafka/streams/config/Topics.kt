@@ -39,9 +39,13 @@ object Topics {
   val CanonicalMinerFeesEtherDeltas = KafkaTopic("canonical-miner-fees-ether-deltas", Serdes.CanonicalKey(), Serdes.FungibleBalanceDelta())
 
   val CanonicalReceiptErc20Deltas = KafkaTopic("canonical-receipt-erc20-deltas", Serdes.CanonicalKey(), Serdes.FungibleBalanceDeltaList())
+  val CanonicalReceiptErc721Deltas = KafkaTopic("canonical-receipt-erc721-deltas", Serdes.CanonicalKey(), Serdes.NonFungibleBalanceDeltaList())
 
   val FungibleBalanceDeltas = KafkaTopic("fungible-balance-deltas", Serdes.FungibleBalanceKey(), Serdes.FungibleBalanceDelta())
   val FungibleBalances = KafkaTopic("fungible-balances", Serdes.FungibleBalanceKey(), Serdes.FungibleBalance())
+
+  val NonFungibleBalanceDeltas = KafkaTopic("non-fungible-balance-deltas", Serdes.NonFungibleBalanceKey(), Serdes.NonFungibleBalanceDelta())
+  val NonFungibleBalances = KafkaTopic("non-fungible-balances", Serdes.NonFungibleBalanceKey(), Serdes.NonFungibleBalance())
 
   val BlockMetrics = KafkaTopic("block-metrics", Serdes.CanonicalKey(), Serdes.BlockMetrics())
   val TraceBlockMetrics = KafkaTopic("trace-block-metrics", Serdes.CanonicalKey(), Serdes.BlockMetrics())

@@ -376,7 +376,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
                       .map { log -> ERC20Abi.matchEventHex(log.getTopics()).isDefined() }
                       .reduce { a, b -> a || b }
                 }
-                
+
               }
 
             val deltas = receiptsWithErc20Logs
@@ -454,7 +454,6 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
 
             FungibleBalanceDeltaListRecord.newBuilder()
               .setBlockHash(next.getBlockHash())
-              .setApply(true)
               .setDeltas(next.getDeltas())
               .setReversals(agg.getDeltas().map { it.reverse() })
               .build()

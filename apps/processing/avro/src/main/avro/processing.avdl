@@ -49,6 +49,42 @@ protocol Processing {
 
   //
 
+  record NonFungibleBalanceKeyRecord {
+    string contract;
+    string tokenId;
+  }
+
+  enum NonFungibleTokenType {
+    ERC721
+  }
+
+  record NonFungibleBalanceDeltaRecord {
+
+    NonFungibleTokenType tokenType = null;
+    io.enkrypt.avro.common.TraceLocationRecord traceLocation;
+
+    string from;
+    string to;
+
+    union { null, string } contract = null;
+    union { null, string } tokenId;
+
+  }
+
+  record NonFungibleBalanceRecord {
+    io.enkrypt.avro.common.TraceLocationRecord traceLocation;
+    string address;
+  }
+
+  record NonFungibleBalanceDeltaListRecord {
+    boolean apply = true;
+    array<NonFungibleBalanceDeltaRecord> deltas = [];
+    array<NonFungibleBalanceDeltaRecord> reversals = [];
+    union { null, string } blockHash = null;
+  }
+
+  //
+
   record BlockAuthorRecord {
     string author;
     string blockNumber;

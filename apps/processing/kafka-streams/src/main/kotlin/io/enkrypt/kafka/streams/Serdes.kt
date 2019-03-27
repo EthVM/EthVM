@@ -24,6 +24,10 @@ import io.enkrypt.avro.processing.FungibleBalanceKeyRecord
 import io.enkrypt.avro.processing.FungibleBalanceRecord
 import io.enkrypt.avro.processing.MetricKeyRecord
 import io.enkrypt.avro.processing.MetricRecord
+import io.enkrypt.avro.processing.NonFungibleBalanceDeltaListRecord
+import io.enkrypt.avro.processing.NonFungibleBalanceDeltaRecord
+import io.enkrypt.avro.processing.NonFungibleBalanceKeyRecord
+import io.enkrypt.avro.processing.NonFungibleBalanceRecord
 import io.enkrypt.avro.processing.TransactionFeeListRecord
 import io.enkrypt.avro.processing.TransactionGasPriceListRecord
 import io.enkrypt.avro.processing.TransactionGasPriceRecord
@@ -55,6 +59,27 @@ object Serdes : KoinComponent {
   fun FungibleBalance() = SpecificAvroSerde<FungibleBalanceRecord>(registryClient).apply {
     configure(config, false)
   }
+
+  fun FungibleBalanceDeltaList() = SpecificAvroSerde<FungibleBalanceDeltaListRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun NonFungibleBalanceKey() = SpecificAvroSerde<NonFungibleBalanceKeyRecord>(registryClient).apply {
+    configure(config, true)
+  }
+
+  fun NonFungibleBalanceDelta() = SpecificAvroSerde<NonFungibleBalanceDeltaRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun NonFungibleBalance() = SpecificAvroSerde<NonFungibleBalanceRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun NonFungibleBalanceDeltaList() = SpecificAvroSerde<NonFungibleBalanceDeltaListRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
 
   fun CanonicalKey() = SpecificAvroSerde<CanonicalKeyRecord>(registryClient).apply {
     configure(config, true)
@@ -109,10 +134,6 @@ object Serdes : KoinComponent {
   }
 
   fun ContractList() = SpecificAvroSerde<ContractRecord>(registryClient).apply {
-    configure(config, false)
-  }
-
-  fun FungibleBalanceDeltaList() = SpecificAvroSerde<FungibleBalanceDeltaListRecord>(registryClient).apply {
     configure(config, false)
   }
 

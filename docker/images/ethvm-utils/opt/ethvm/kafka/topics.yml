@@ -67,6 +67,12 @@ topics:
     config:
       cleanup.policy: compact
 
+  - name: canonical-receipt-erc721-deltas
+    replicationFactor: 1
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
   - name: canonical-gas-prices
     replicationFactor: 1
     partitions: 12
@@ -96,6 +102,19 @@ topics:
     partitions: 12
     config:
       cleanup.policy: compact
+
+  - name: non-fungible-balance-deltas
+    replicationFactor: 1
+    partitions: 12
+    config:
+      retention.ms: -1
+
+  - name: non-fungible-balances
+    replicationFactor: 1
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
 
   - name: block-metrics
     replicationFactor: 1
