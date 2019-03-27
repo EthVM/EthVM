@@ -67,7 +67,7 @@ function createCanvas(imageData, color, scale, bgcolor, spotcolor) {
   const width = Math.sqrt(imageData.length)
   c.width = c.height = width * scale
   const cc = c.getContext('2d')
-  if(cc) {
+  if (cc) {
     cc.fillStyle = bgcolor
     cc.fillRect(0, 0, c.width, c.height)
     cc.fillStyle = color

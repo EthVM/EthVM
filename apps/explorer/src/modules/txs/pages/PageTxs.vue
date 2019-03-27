@@ -94,7 +94,7 @@ export default class PageTxs extends Vue {
         this.from = last
       } else {
         const newFrom = this.pages.pop()
-        this.from = newFrom ?  newFrom : -1
+        this.from = newFrom ? newFrom : -1
       }
     }
 

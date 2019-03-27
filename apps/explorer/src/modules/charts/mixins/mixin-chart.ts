@@ -57,7 +57,7 @@ export class ChartMixin extends Vue {
     }
   }
 
-  DATA:  ChartPoints[] = [
+  DATA: ChartPoints[] = [
     { state: 'ALL', points: [], labels: [] },
     { state: 'WEEK', points: [], labels: [] },
     { state: 'MONTH', points: [], labels: [] },

@@ -1,4 +1,4 @@
-import {PendingTx, SimpleTx, EthValue, SimpleBlock } from '@app/core/models'
+import { PendingTx, SimpleTx, EthValue, SimpleBlock } from '@app/core/models'
 
 export class AccountInfo {
   public balance: EthValue = new EthValue(0)

@@ -330,8 +330,7 @@ export default class PageDetailsToken extends Vue {
         .then(response => {
           if (response === null) {
             reject(this.$i18n.t('message.invalid.addr').toString())
-          }
-          else {
+          } else {
             resolve(response)
           }
         })
