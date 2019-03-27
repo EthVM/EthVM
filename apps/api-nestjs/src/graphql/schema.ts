@@ -447,7 +447,7 @@ export class Statistic {
 }
 
 export abstract class ISubscription {
-    abstract newBlockMetric(): BlockMetric[] | Promise<BlockMetric[]>;
+    abstract newBlockMetric(): BlockMetric | Promise<BlockMetric>;
 
     abstract newBlock(): Block | Promise<Block>;
 }
