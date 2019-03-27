@@ -13,6 +13,7 @@ import io.enkrypt.kafka.streams.processors.BlockMetricsProcessor
 import io.enkrypt.kafka.streams.processors.ContractLifecycleProcessor
 import io.enkrypt.kafka.streams.processors.FungibleBalanceProcessor
 import io.enkrypt.kafka.streams.processors.KafkaProcessor
+import io.enkrypt.kafka.streams.processors.NonFungibleBalanceProcessor
 import io.enkrypt.kafka.streams.processors.TransactionFeesProcessor
 import org.koin.dsl.module.module
 import org.koin.standalone.StandAloneContext.startKoin
@@ -88,11 +89,10 @@ class Cli : CliktCommand() {
     listOf<KafkaProcessor>(
       TransactionFeesProcessor(),
       FungibleBalanceProcessor(),
+      NonFungibleBalanceProcessor(),
       BlockAuthorProcessor(),
       BlockMetricsProcessor(),
       ContractLifecycleProcessor()
-//      BlockProcessor(),
-//      StateProcessor(),
 //      EthTokensProcessor(),
 //      ExchangeRatesProcessor()
     ).forEach {

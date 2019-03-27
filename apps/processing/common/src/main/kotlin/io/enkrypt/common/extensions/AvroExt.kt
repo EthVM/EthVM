@@ -21,6 +21,7 @@ import io.enkrypt.avro.processing.FungibleBalanceDeltaRecord
 import io.enkrypt.avro.processing.FungibleBalanceDeltaType
 import io.enkrypt.avro.processing.FungibleBalanceRecord
 import io.enkrypt.avro.processing.FungibleTokenType
+import io.enkrypt.avro.processing.NonFungibleBalanceDeltaRecord
 import io.enkrypt.avro.processing.TransactionFeeListRecord
 import io.enkrypt.avro.processing.TransactionFeeRecord
 import io.enkrypt.avro.processing.TransactionGasPriceRecord
@@ -133,6 +134,10 @@ fun FungibleBalanceRecord.getAmountBI() = getAmount().hexToBI()
 
 fun FungibleBalanceRecord.Builder.setAmountBI(amount: BigInteger) = setAmount(amount.toHex())
 
+fun NonFungibleBalanceDeltaRecord.getTokenIdBI() = getTokenId().hexToBI()
+
+fun NonFungibleBalanceDeltaRecord.Builder.setTokenIdBI(tokenId: BigInteger) = setTokenId(tokenId.toHex())
+
 fun BlockAuthorRecord.getBlockNumberBI() = getBlockNumber().hexToBI()
 
 fun BlockAuthorRecord.Builder.setBlockNumberBI(blockNumber: BigInteger) = setBlockNumber(blockNumber.toHex())
@@ -244,6 +249,12 @@ fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> 
 fun FungibleBalanceDeltaRecord.reverse() =
   FungibleBalanceDeltaRecord.newBuilder(this)
     .setAmount(getAmount().toBigInteger().negate().toString())
+    .build()
+
+fun NonFungibleBalanceDeltaRecord.reverse() =
+  NonFungibleBalanceDeltaRecord.newBuilder(this)
+    .setFrom(getTo())
+    .setTo(getFrom())
     .build()
 
 fun TraceRecord.
