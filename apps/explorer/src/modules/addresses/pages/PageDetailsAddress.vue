@@ -172,8 +172,8 @@ export default class PageDetailsAddress extends Vue {
   contractsLoading = true
   contractsError = ''
 
-  // State Machine (not needed to be reactive, this is why we use undefined instead of null)
-  sm: TinySM = undefined
+  // State Machine
+  sm!:TinySM
 
   /*
   ===================================================================================

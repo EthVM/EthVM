@@ -61,7 +61,7 @@ import TokenDetailsTabs from '@app/modules/tokens/components/TokenDetailsTabs.vu
 import HolderDetailsList from '@app/modules/tokens/components/HolderDetailsList.vue'
 import HolderDetailsTabs from '@app/modules/tokens/components/HolderDetailsTabs.vue'
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
-import { Events } from 'ethvm-common'
+import { Contract, Events } from 'ethvm-common'
 import { Detail, Crumb } from '@app/core/components/props'
 import { Token, Tx } from '@app/core/models'
 
@@ -314,7 +314,7 @@ export default class PageDetailsToken extends Vue {
    *
    * @return {Object} - Contract details and metadata
    */
-  fetchContractDetails() {
+  fetchContractDetails(): Promise<any> {
     return this.$api.getContract(this.addressRef)
   }
 
@@ -339,24 +339,6 @@ export default class PageDetailsToken extends Vue {
         })
     })
   }
-
-  // /**
-  //  * Retrieve array of token transfers for a given token contract address.
-  //  *
-  //  * @return {Array} - Array of token transfers
-  //  */
-  // fetchTokenTransfers(page = 0, limit = MAX_ITEMS) {
-  //   return new Promise((resolve, reject) => {
-  //     this.$api
-  //       .getAddressTokenTransfers(this.addressRef, limit, page)
-  //       .then(result => {
-  //         resolve(result)
-  //       })
-  //       .catch(e => {
-  //         reject(e)
-  //       })
-  //   })
-  // }
 
   /**
    * Fetch latest [10] token transfers for a particular token contract

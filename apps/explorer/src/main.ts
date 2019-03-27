@@ -1,4 +1,4 @@
-import { EthvmSocketIoApi, EthvmApolloApi, EthvmMigrationApi } from '@app/core/api'
+import { EthvmApolloApi } from '@app/core/api'
 import { VueEthvmApi } from '@app/core/plugins'
 import VueSocketIO from '@app/core/plugins/socketio/'
 import router from '@app/core/router'
@@ -37,9 +37,10 @@ Vue.config.productionTip = false
 //    APIs: Legacy SocketIO + Apollo (GraphQL)
 // -------------------------------------------------------
 
-// Socket
+// Socket (To be deprecated soon)
 
-const socket = io(process.env.VUE_APP_API_ENDPOINT)
+const socket = io(process.env.VUE_APP_API_ENDPOINT || '')
+Vue.use(VueSocketIO, socket, store)
 
 // Apollo
 
@@ -50,13 +51,8 @@ const apolloProvider = new VueApollo({
   defaultClient: apolloClient
 })
 
-// Transition api
-const ethvmApolloApi = new EthvmApolloApi(apolloClient)
-const ethvmSocketIoApi = new EthvmSocketIoApi(socket)
-const api = new EthvmMigrationApi(ethvmApolloApi, ethvmSocketIoApi)
+const api = new EthvmApolloApi(apolloClient)
 
-// Install
-Vue.use(VueSocketIO, socket, store)
 Vue.use(VueApollo)
 Vue.use(VueEthvmApi, api)
 
