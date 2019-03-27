@@ -14,7 +14,7 @@ docker_usage() {
   echo "Utility that wraps docker / docker-compose commands to spin up a EthVM development environment."
   echo ""
   echo "Usage:"
-  echo "  ethvm docker [COMMAND] [ARGS...]"
+  echo "  docker-run [COMMAND] [ARGS...]"
   echo ""
   echo "Commands:"
   echo "  up           [simple|default]   Create and start docker containers."
@@ -46,21 +46,23 @@ up() {
 
 # up - spins up a clean dev environment (but it will not run eth client, neither kafka-streams in order to control the flow of data)
 up_default() {
-
   echo -e "Building utility docker images...\n"
-  ${SCRIPT_DIR}/docker-build.sh build ethvm-utils mongodb
+  ${SCRIPT_DIR}/docker-build.sh build ethvm-utils mongodb migrator
 
   echo -e "Building containers..."
   docker-compose build
 
-  echo -e "Starting up containers: traefik, api, explorer, mongodb, zookeeper kafka-1 kafka-schema-registry kafka-connect \n"
-  docker-compose up -d traefik api explorer mongodb zookeeper kafka-1 kafka-schema-registry kafka-connect
+  echo -e "Starting up containers: traefik, api, explorer, timescale, mongodb, zookeeper kafka-1 kafka-schema-registry kafka-connect \n"
+  docker-compose up -d traefik api explorer timescale mongodb zookeeper kafka-1 kafka-schema-registry kafka-connect
 
   echo -e "Initialising kafka...\n"
   ${SCRIPT_DIR}/ethvm-utils.sh kafka init
 
   echo -e "Initialising mongo...\n"
   ${SCRIPT_DIR}/ethvm-utils.sh mongo init
+
+  echo -e "Initialising timescale..\n"
+  ${SCRIPT_DIR}/migrator.sh migrate
 
   echo -e "Re-building avro models...\n"
   ${SCRIPT_DIR}/avro.sh build
@@ -78,10 +80,10 @@ up_simple() {
   ${SCRIPT_DIR}/mongo.sh fetch
 
   echo -e "Building utility docker images...\n"
-  ${SCRIPT_DIR}/docker-build.sh build ethvm-utils mongodb
+  ${SCRIPT_DIR}/docker-build.sh build ethvm-utils mongodb migrator
 
-  echo "Starting up containers: traefik, mongo, explorer and api"
-  docker-compose up -d --build traefik mongodb explorer api api-nestjs
+  echo "Starting up containers: traefik, mongo, timescale, explorer and api"
+  docker-compose up -d --build traefik mongodb timescale explorer api api-nestjs
 
   # Give time to breathe
   sleep 10
