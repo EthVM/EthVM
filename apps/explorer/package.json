@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "apollo-boost": "^0.3.1",
+    "@sentry/browser": "4.6.4",
     "bignumber.js": "^8.1.1",
     "canvas-confetti": "^0.1.0",
     "chart.js": "^2.7.3",

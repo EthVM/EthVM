@@ -64,13 +64,21 @@ export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
 
   get messages() {
     return {
-      tx: this.$i18n.t('message.update.txs'),
-      blocks: this.$i18n.t('message.update.block')
+      tx: this.$i18n.tc('message.update.tx', this.plural),
+      blocks: this.$i18n.tc('message.update.block', this.plural)
     }
   }
 
   get text(): string {
     return this.formatStr(this.newNumber) + ' ' + this.messages[this.pageType]
+  }
+
+  get plural(): number {
+    if (this.pageType === 'blocks') {
+      return this.newBlocks > 1 ? 2 : 1
+    }
+
+    return this.newTxs > 1 ? 2 : 1
   }
 
   get newNumber(): string {
