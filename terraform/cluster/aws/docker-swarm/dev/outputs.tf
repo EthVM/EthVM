@@ -22,6 +22,10 @@ output "ethstats_instance" {
   value = "http://${aws_eip.manager-ip.public_ip}:3030"
 }
 
+output "kafka_connect_ui" {
+  value = "http://${aws_eip.manager-ip.public_ip}:9022"
+}
+
 output "EFS_mount" {
   value = "${module.efs.mount_target_dns}"
 }

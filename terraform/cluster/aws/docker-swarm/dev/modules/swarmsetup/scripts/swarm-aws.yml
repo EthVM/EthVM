@@ -11,13 +11,6 @@ networks:
 
 volumes:
 
-  traefik-volume:
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: '/mnt/efs/traefik-volume'
-
   zookeeper-1-volume:
     driver: local
     driver_opts:
@@ -56,13 +49,6 @@ volumes:
       o: 'bind'
       device: '/mnt/efs/kafka-3-volume'
 
-  kafka-streams-volume:
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: '/mnt/efs/kafka-streams-volume'
-
   kafka-connect-volume:
     driver: local
     driver_opts:
@@ -76,6 +62,7 @@ volumes:
       type: 'none'
       o: 'bind'
       device: '/mnt/efs/control-center-volume'
+
   control-center-config-volume:
     driver: local
     driver_opts:
@@ -83,109 +70,8 @@ volumes:
       o: 'bind'
       device: '/mnt/efs/control-center-config-volume'
 
-  mongodb-volume:
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: '/mnt/efs/mongodb-volume'
 
 services:
-
-  # ///////////////////////////////////////////////////////
-  # Front Services
-  # ///////////////////////////////////////////////////////
-
-  traefik:
-    image: enkryptio/traefik:0.1.4
-    networks:
-      - proxy
-      - backend
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - traefik-volume:/var/lib/traefik
-    ports:
-      - 80
-      - 8080
-    environment:
-      DEBUG: 'true'
-      LOG_LEVEL: INFO
-      SWARM_MODE: 'true'
-    deploy:
-      placement:
-        constraints:
-          - node.role == manager
-      replicas: 0
-      restart_policy:
-        condition: on-failure
-
-  explorer:
-    image: enkryptio/explorer:0.1.0-development
-    networks:
-      - backend
-    deploy:
-      placement:
-        constraints:
-          - node.role == worker
-      replicas: 0
-      restart_policy:
-        condition: on-failure
-      labels:
-        - 'traefik.enable=true'
-        - "traefik.docker.network=proxy"
-        - 'traefik.default.protocol=http'
-        - 'traefik.frontend.rule=Host:dev.ethvm.com'
-        - 'traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:*||Access-Control-Allow-Credentials:true'
-        - 'traefik.frontend.passHostHeader=true'
-        - 'traefik.backend=explorer'
-        - 'traefik.port=80'
-
-  api:
-    image: enkryptio/api:0.1.0
-    depends_on:
-      - mongodb
-    networks:
-      - backend
-    environment:
-      ETHVM_MONGO_DB_URL: "mongodb://mongodb:27017/ethvm_dev?w=1&journal=true&maxIdleTimeMS=60000"
-      ETHVM_MONGO_DB_NAME: ethvm_dev
-    deploy:
-      placement:
-        constraints:
-          - node.role == worker
-      replicas: 0
-      restart_policy:
-        condition: on-failure
-      labels:
-        - "traefik.enable=true"
-        - "traefik.docker.network=proxy"
-        - "traefik.default.protocol=http"
-        - "traefik.frontend.rule=Host:api.dev.ethvm.com"
-        - "traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:https://dev.ethvm.com||Access-Control-Allow-Credentials:true"
-        - "traefik.frontend.passHostHeader=true"
-        - "traefik.backend=api"
-        - "traefik.port=3000"
-
-  # ///////////////////////////////////////////////////////
-  # Storage
-  # ///////////////////////////////////////////////////////
-
-  mongodb:
-    image: enkryptio/mongodb:4.0.5.2
-    volumes:
-      - mongodb-volume:/data/db
-    networks:
-      - backend
-    environment:
-      MONGO_WIRED_TIGER_CACHE_SIZE: 6
-    deploy:
-      placement:
-        constraints:
-          - node.role == worker
-          - node.labels.io.ethvm.nodeType == store
-      replicas: 0
-      restart_policy:
-        condition: on-failure
 
   # ///////////////////////////////////////////////////////
   # Processing
@@ -332,32 +218,6 @@ services:
       restart_policy:
         condition: on-failure
 
-  kafka-streams:
-    image: enkryptio/kafka-streams:0.3.0
-    depends_on:
-      - kafka
-      - zookeeper
-      - kafka-schema-registry
-    networks:
-      - backend
-    volumes:
-      - kafka-streams-volume:/var/lib/kafka-streams
-    environment:
-      KAFKA_BOOTSTRAP_SERVERS: kafka-1:9091,kafka-2:9091,kafka-3:9091
-      KAFKA_SCHEMA_REGISTRY_URL: http://kafka-schema-registry:8081
-      KAFKA_STREAMS_STATE_DIR: /var/lib/kafka-streams
-    deploy:
-      placement:
-        constraints:
-          - node.role == worker
-          - node.labels.io.ethvm.nodeType != processing-worker-1
-          - node.labels.io.ethvm.nodeType != processing-worker-2
-          - node.labels.io.ethvm.nodeType != processing-worker-3
-          - node.labels.io.ethvm.nodeType != store
-      replicas: 0
-      restart_policy:
-        condition: on-failure
-
   kafka-schema-registry:
     image: confluentinc/cp-schema-registry:5.1.2
     depends_on:
@@ -420,7 +280,8 @@ services:
   
   kafka-connect-ui:
     image: landoop/kafka-connect-ui:0.9.7
-    hostname: kafka-connect-ui
+    networks:
+      - backend
     ports:
       - "9022:8000"
     environment:

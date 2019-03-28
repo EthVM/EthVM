@@ -27,7 +27,7 @@ resource "null_resource" "setup-swarm" {
 
   provisioner "file" {
     source      = "${path.module}/scripts/swarm-aws.yml"
-    destination = "~/swarm-aws.yml"
+    destination = "/tmp/swarm-aws.yml"
   }
 
   provisioner "remote-exec" {
@@ -38,17 +38,19 @@ resource "null_resource" "setup-swarm" {
   }
 }
 
-resource "null_resource" "ethvm-install" {
-  connection {
-    type        = "ssh"
-    host        = "${var.host}"
-    user        = "${var.provision_user}"
-    private_key = "${file("${var.ssh_key_path}")}"
-    timeout     = "${var.connection_timeout}"
-  }
+# resource "null_resource" "ethvm-install" {
+#   connection {
+#     type        = "ssh"
+#     host        = "${var.host}"
+#     user        = "${var.provision_user}"
+#     private_key = "${file("${var.ssh_key_path}")}"
+#     timeout     = "${var.connection_timeout}"
+#   }
 
-  provisioner "file" {
-    source      = "${path.module}/scripts/swarm-aws.yml"
-    destination = "~/swarm-aws.yml"
-  }
-}
+
+#   provisioner "file" {
+#     source      = "${path.module}/scripts/swarm-aws.yml"
+#     destination = "~/swarm-aws.yml"
+#   }
+# }
+
