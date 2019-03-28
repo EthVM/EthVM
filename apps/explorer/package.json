@@ -21,6 +21,7 @@
     "apollo-link-http": "^1.5.14",
     "apollo-link-ws": "^1.0.17",
     "apollo-utilities": "^1.2.1",
+    "@sentry/browser": "4.6.4",
     "bignumber.js": "^8.1.1",
     "canvas-confetti": "^0.1.0",
     "chart.js": "^2.7.3",

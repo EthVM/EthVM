@@ -6,6 +6,7 @@ import store from '@app/core/store'
 import App from '@app/modules/App.vue'
 import i18n from '@app/translations'
 import ApolloClient from 'apollo-client'
+import * as Sentry from '@sentry/browser'
 import io from 'socket.io-client'
 import VTooltip from 'v-tooltip'
 import Vue from 'vue'
@@ -130,3 +131,18 @@ new Vue({
     App
   }
 })
+
+/*
+  ===================================================================================
+    Sentry
+  ===================================================================================
+*/
+
+const sentryToken = process.env.VUE_APP_SENTRY_SECURITY_TOKEN
+if (sentryToken) {
+  Sentry.init({
+    dsn: sentryToken,
+    integrations: [new Sentry.Integrations.Vue({ Vue })],
+    maxBreadcrumbs: 0
+  })
+}
