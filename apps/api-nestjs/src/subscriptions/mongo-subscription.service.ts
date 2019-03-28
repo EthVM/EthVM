@@ -1,10 +1,11 @@
-import { ChangeStream, Cursor, getMongoManager, MongoRepository, ObjectID } from 'typeorm'
+import { ChangeStream, Cursor, getMongoManager, MongoRepository } from 'typeorm'
 import { Inject, Injectable } from '@nestjs/common'
 import { PubSub } from 'graphql-subscriptions'
 import { Logger } from 'winston'
 import { InjectRepository } from '@nestjs/typeorm'
 import { ProcessingMetadataEntity } from '@app/orm/entities/processing-metadata.entity'
 import { BlockEntity } from '@app/orm/entities/block.entity'
+import { BlockMetricEntity } from '@app/orm/entities/block-metric.entity'
 
 export interface StreamingEvent {
   op: 'insert' | 'delete' | 'replace' | 'updated' | 'invalidate'
@@ -67,7 +68,8 @@ export class MongoSubscriptionService {
       this.enableEventsStreaming()
 
       // TODO remove this
-      // this.testBlockSubscription()
+      this.testBlockSubscription()
+      // this.testBlockMetricSubscription()
     }
 
     logger.info('MongoStreamer - initialize() / Enabling Processing Metadata streamer')
@@ -105,15 +107,37 @@ export class MongoSubscriptionService {
       this.logger.info('MongoStreamer - testBlockSubscription() / Testing block subscription')
       await asyncTimeout(10000)
 
-      const block = await manager.findOne(BlockEntity, { order: { id: 'DESC' } })
+      const block = await manager.findOne(BlockEntity)
       let prevId = +block.id
       const newBlock = { ...block }
-      newBlock.id = new ObjectID(prevId++)
+      newBlock.id = prevId++
       newBlock.header.hash = Math.random()
         .toString(36)
         .substring(7)
 
       const entity = manager.create(BlockEntity, newBlock)
+      await manager.save(entity)
+    }
+  }
+
+  private async testBlockMetricSubscription() {
+    const asyncTimeout = async ms => {
+      return new Promise(resolve => setTimeout(resolve, ms))
+    }
+
+    const manager = getMongoManager()
+
+    for await (const i of [1, 2, 3, 4, 5]) {
+      this.logger.info('MongoStreamer - testBlockMetricSubscription() / Testing block metric subscription')
+      await asyncTimeout(10000)
+
+      const blockMetric = await manager.findOne(BlockMetricEntity, {order: {number: 'DESC'}})
+      const newBlockMetric = { ...blockMetric }
+      const nextNumber = blockMetric.number + 1
+      delete newBlockMetric.id
+      newBlockMetric.number = nextNumber
+
+      const entity = manager.create(BlockMetricEntity, newBlockMetric)
       await manager.save(entity)
     }
   }
@@ -134,7 +158,7 @@ class ChangeStreamReader {
   }
 
   public async stop() {
-    this.logger.info(`MongoChangeStreamReader - start() / Stopping to listen change events on: ${this.collectionName}`)
+    this.logger.info(`MongoChangeStreamReader - stop() / Stopping to listen change events on: ${this.collectionName}`)
     if (this.changeStream) {
       await this.changeStream.close()
     }
@@ -144,7 +168,7 @@ class ChangeStreamReader {
     const { cursor, pubSub, collectionName } = this
 
     try {
-      this.logger.info('MongoChangeStreamReader - pull() / Waiting for event:', collectionName)
+      this.logger.info(`MongoChangeStreamReader - pull() / Waiting for event: ${collectionName}`)
 
       while (!cursor.isClosed()) {
         const next = await cursor.next()

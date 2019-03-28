@@ -1,5 +1,5 @@
 import { EthvmApi } from '@app/core/api'
-import { accountMetadataByHash, addressBalanceByHash, addressAllTokensOwned, addressAmountTokensOwned } from '@app/core/api/apollo/queries/addresses.graphql'
+import { accountMetadataByHash, addressAllTokensOwned, addressAmountTokensOwned, addressBalanceByHash } from '@app/core/api/apollo/queries/addresses.graphql'
 import { blockMetricByHash, blockMetrics } from '@app/core/api/apollo/queries/block-metrics.graphql'
 import { blockByHash, blockByNumber, blocks, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
 import { contractByHash, contractsCreatedBy } from '@app/core/api/apollo/queries/contracts.graphql'
@@ -26,10 +26,10 @@ import {
 import {
   addressTokenTransfers,
   addressTokenTransfersByHolder,
-  tokenHistory,
-  topTokenHolders,
   holderDetails,
-  holderTransfers
+  holderTransfers,
+  tokenHistory,
+  topTokenHolders
 } from '@app/core/api/apollo/queries/token-transfers.graphql'
 import { totalNumberOfTransactions, tx, txs, txsForAddress } from '@app/core/api/apollo/queries/txs.graphql'
 import { totalNumberOfUncles, uncleByHash, uncles } from '@app/core/api/apollo/queries/uncles.graphql'
@@ -47,6 +47,8 @@ import {
   TokenExchangeRate,
   TokenTransfer
 } from 'ethvm-common'
+import { Observable } from 'apollo-client/util/Observable'
+import { newSimpleBlocks, newBlockMetrics } from '@app/core/api/apollo/queries/subscriptions.graphql'
 
 export class EthvmApolloApi implements EthvmApi {
   constructor(private readonly apollo: ApolloClient<{}>) {}
@@ -585,4 +587,29 @@ export class EthvmApolloApi implements EthvmApi {
       })
       .then(res => res.data.processingMetadataById)
   }
+
+  // ------------------------------------------------------------------------------------
+  // Subscriptions
+  // ------------------------------------------------------------------------------------
+
+  public subscribe<T>(type: string): Observable<T> {
+
+    let query;
+    switch (type) {
+      case 'simpleBlocks':
+        query = newSimpleBlocks
+            break
+      case 'blockMetrics':
+        query = newBlockMetrics
+            break
+      default:
+        // TODO error
+    }
+
+    return this.apollo
+      .subscribe<T>({
+        query
+      })
+  }
+
 }

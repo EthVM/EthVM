@@ -8,7 +8,7 @@ export class BlockMetricEntity {
   }
 
   @ObjectIdColumn({ name: '_id', type: 'decimal', readonly: true })
-  id: ObjectID
+  id: number
 
   @Column({ type: 'string', readonly: true })
   avgGasLimit: string

@@ -11,6 +11,7 @@ import {
   TokenExchangeRate,
   TokenTransfer
 } from 'ethvm-common'
+import { Observable } from 'apollo-client/util/Observable'
 
 export interface EthvmApi {
   // Address
@@ -80,4 +81,7 @@ export interface EthvmApi {
 
   // Processing Metadata
   getProcessingMetadata(id: string): Promise<ProcessingMetadata | null>
+
+  // Subscriptions
+  subscribe<T>(query): Observable<T>
 }

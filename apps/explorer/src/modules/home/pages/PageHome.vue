@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { Events } from 'ethvm-common'
+import { Events , Block as RawBlock } from 'ethvm-common'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppCardStatsGroup from '@app/core/components/ui/AppCardStatsGroup.vue'
 import ChartLiveTx from '@app/modules/charts/components/live/ChartLiveTx.vue'
@@ -51,6 +51,12 @@ import { Block, Tx, SimpleBlock, SimpleTx } from '@app/core/models'
 import { Vue, Component } from 'vue-property-decorator'
 
 const MAX_ITEMS = 50
+
+export type NewBlockQuery = {
+  data: {
+    newBlock: any
+  }
+}
 
 @Component({
   components: {
@@ -81,6 +87,22 @@ export default class PageHome extends Vue {
 
   created() {
     this.loadData()
+    this.createSubscriptions()
+  }
+
+  createSubscriptions() {
+    const {$store} = this;
+
+    // Create newBlocks subscription
+    this.$api.subscribe<NewBlockQuery>('simpleBlocks').subscribe({
+      next(data) {
+        const newSimpleBlock = new SimpleBlock(data.data.newBlock)
+        $store.commit(Events.NEW_SIMPLE_BLOCK, newSimpleBlock)
+      },
+      error(error): void {
+        console.error(error)
+      }
+    })
   }
 
   /*

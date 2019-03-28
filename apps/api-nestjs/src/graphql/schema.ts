@@ -108,6 +108,7 @@ export class BalanceKey {
 }
 
 export class Block {
+    id?: Long;
     header?: Header;
     totalDifficulty?: string;
     transactions?: Transaction[];

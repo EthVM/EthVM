@@ -11,6 +11,7 @@ type Subscription {
 }
 
 type Block {
+  id: Long
   header: Header
   totalDifficulty: String
   transactions: [Transaction]
