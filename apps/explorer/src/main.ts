@@ -5,7 +5,7 @@ import router from '@app/core/router'
 import store from '@app/core/store'
 import App from '@app/modules/App.vue'
 import i18n from '@app/translations'
-import ApolloClient from 'apollo-boost'
+import ApolloClient from 'apollo-client'
 import io from 'socket.io-client'
 import VTooltip from 'v-tooltip'
 import Vue from 'vue'
@@ -13,6 +13,8 @@ import VueApollo from 'vue-apollo'
 import VueTimeago from 'vue-timeago'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
+import { WebSocketLink } from 'apollo-link-ws'
+import { InMemoryCache } from 'apollo-cache-inmemory'
 
 /*
   ===================================================================================
@@ -44,8 +46,17 @@ Vue.use(VueSocketIO, socket, store)
 
 // Apollo
 
+const wsLink = new WebSocketLink({
+  uri: process.env.VUE_APP_API_2_ENDPOINT || '',
+  options: {
+    reconnect: true
+  }
+})
+
 const apolloClient = new ApolloClient({
-  uri: process.env.VUE_APP_API_2_ENDPOINT
+  link: wsLink,
+  cache: new InMemoryCache(),
+  connectToDevTools: true,
 })
 const apolloProvider = new VueApollo({
   defaultClient: apolloClient

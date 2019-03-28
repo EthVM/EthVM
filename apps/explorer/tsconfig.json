@@ -6,7 +6,7 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "jsx": "preserve",
-    "lib": ["dom", "dom.iterable", "es2015", "scripthost", "es2017.object"],
+    "lib": ["dom", "dom.iterable", "es2015", "scripthost", "es2017.object", "esnext.asynciterable"],
     "module": "esnext",
     "moduleResolution": "node",
     "noImplicitAny": false,

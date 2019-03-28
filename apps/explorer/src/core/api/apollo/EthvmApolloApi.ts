@@ -34,7 +34,7 @@ import {
 import { totalNumberOfTransactions, tx, txs, txsForAddress } from '@app/core/api/apollo/queries/txs.graphql'
 import { totalNumberOfUncles, uncleByHash, uncles } from '@app/core/api/apollo/queries/uncles.graphql'
 import { Block, PendingTx, SimpleBlock, SimpleTx, Tx, Uncle } from '@app/core/models'
-import { ApolloClient } from 'apollo-boost'
+import { ApolloClient } from 'apollo-client'
 import {
   AddressBalance,
   AddressMetadata,

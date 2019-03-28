@@ -15,7 +15,10 @@
     "lint:fix": "vue-cli-service lint"
   },
   "dependencies": {
-    "apollo-boost": "^0.3.1",
+    "apollo-cache-inmemory": "^1.5.1",
+    "apollo-client": "^2.5.1",
+    "apollo-link": "^1.2.11",
+    "apollo-link-http": "^1.5.14",
     "apollo-link-ws": "^1.0.17",
     "apollo-utilities": "^1.2.1",
     "bignumber.js": "^8.1.1",
@@ -26,6 +29,7 @@
     "ethereumjs-units": "^0.2.0",
     "ethvm-common": "file:./../common",
     "graphql": "^14.1.1",
+    "graphql-tag": "^2.10.1",
     "lodash.debounce": "^4.0.8",
     "number-formatter": "^1.2.0",
     "socket.io-client": "^2.2.0",
