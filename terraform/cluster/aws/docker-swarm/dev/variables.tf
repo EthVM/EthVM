@@ -41,6 +41,11 @@ variable "ec2_ami_worker" {
   default     = "ami-0edb6536b94aa8642"
 }
 
+variable "ec2_ami_ethereum_client" {
+  description = "AMI for EC2 ethereum client"
+  default     = "ami-0edb6536b94aa8642"
+}
+
 variable "ec2_instance_type_manager" {
   description = "Type for EC2 instance"
   default     = "t2.medium"
@@ -74,4 +79,41 @@ variable "total_worker_instances" {
 variable "provision_user" {
   description = "instance user account"
   default     = "ubuntu"
+}
+
+variable "allowed_inbound_ssh" {
+  description = "list of IPs with inbound ssh access"
+  default     = ["0.0.0.0/0"]
+}
+
+variable "swarmprom_admin_user" {
+  default = "admin"
+}
+
+variable "swarmprom_admin_password" {
+  default = "password"
+}
+
+variable "ethstats_secret" {
+  default = "password"
+}
+
+variable "swarmprom_slack_token" {
+  default = "null"
+}
+
+variable "swarmprom_slack_channel" {
+  default = "null"
+}
+
+variable "swarmprom_slack_user" {
+  default = "null"
+}
+
+variable "eth_client_docker_image" {
+  default = "ethvm/eth-clients:parity-ropsten"
+}
+
+variable "eth_client_volume_size" {
+  default = 1000
 }

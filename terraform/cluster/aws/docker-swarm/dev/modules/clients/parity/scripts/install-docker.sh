@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 apt-get update -y
 DEBIAN_FRONTEND=noninteractive apt-get upgrade -yq
 apt-get install apt-transport-https software-properties-common ca-certificates -y
