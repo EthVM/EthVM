@@ -36,6 +36,12 @@
       "dockerfile": "${DOCKER_IMAGES_PATH}/traefik/Dockerfile",
       "context": "${DOCKER_IMAGES_PATH}/traefik/",
       "version": "${DOCKER_IMAGES_PATH}/traefik/version.properties"
+    },
+    {
+      "id": "migrator",
+      "dockerfile": "${APPS_PATH}/migrator/Dockerfile",
+      "context": "${APPS_PATH}/migrator/",
+      "version": "${APPS_PATH}/migrator/version.properties"
     }
   ]
 }

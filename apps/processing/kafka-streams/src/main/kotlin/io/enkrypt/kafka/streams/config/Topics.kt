@@ -4,7 +4,9 @@ import io.enkrypt.kafka.streams.Serdes
 import org.apache.kafka.common.serialization.Serde
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.kstream.Consumed
+import org.apache.kafka.streams.kstream.GlobalKTable
 import org.apache.kafka.streams.kstream.KStream
+import org.apache.kafka.streams.kstream.KTable
 import org.apache.kafka.streams.kstream.Produced
 
 data class KafkaTopic<K, V>(
@@ -16,13 +18,13 @@ data class KafkaTopic<K, V>(
   val consumer = Consumed.with(keySerde, valueSerde)
   val producer = Produced.with(keySerde, valueSerde)
 
-  fun stream(builder: StreamsBuilder) = builder.stream(name, consumer)
+  fun stream(builder: StreamsBuilder): KStream<K, V> = builder.stream(name, consumer)
 
   fun sinkFor(vararg streams: KStream<K, V>) = streams.forEach { it.to(name, producer) }
 
-  fun table(builder: StreamsBuilder) = builder.table(name, consumer)
+  fun table(builder: StreamsBuilder): KTable<K, V> = builder.table(name, consumer)
 
-  fun globalTable(builder: StreamsBuilder) = builder.globalTable(name, consumer)
+  fun globalTable(builder: StreamsBuilder): GlobalKTable<K, V> = builder.globalTable(name, consumer)
 }
 
 object Topics {

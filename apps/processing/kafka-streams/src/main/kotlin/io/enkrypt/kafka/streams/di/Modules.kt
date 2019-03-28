@@ -2,10 +2,8 @@ package io.enkrypt.kafka.streams.di
 
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
 import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient
-import io.enkrypt.avro.processing.MetricKeyRecord
-import io.enkrypt.avro.processing.MetricRecord
 import io.enkrypt.kafka.streams.config.AppConfig
-import io.enkrypt.kafka.streams.config.Topics
+import org.apache.avro.Schema
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
@@ -23,13 +21,8 @@ object Modules {
         false -> CachedSchemaRegistryClient(config.kafka.schemaRegistryUrl, 100)
         true -> MockSchemaRegistryClient().apply {
 
-          val subjectsWithSchemas = listOf(
-
-
-            Pair(Topics.BlockMetricsByDay, MetricRecord.`SCHEMA$`),
-            Pair("${Topics.BlockMetricsByDay}-key", MetricKeyRecord.`SCHEMA$`)
-
-            )
+          // TODO: After refactor, re-add this logic to properly tests processors
+          val subjectsWithSchemas: List<Pair<String, Schema>> = emptyList()
 
           subjectsWithSchemas.forEach { (subject, schema) -> register(subject, schema) }
         }

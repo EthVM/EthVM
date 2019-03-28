@@ -14,6 +14,7 @@ networks:
 volumes:
 
   mongodb-volume:
+  timescale-volume:
 
   kafka-volume-1:
 
@@ -28,11 +29,11 @@ volumes:
     # This allows to persist downloaded blockchain data.
     # More info: https://github.com/CWSpear/local-persist
     #
-    driver: local-persist
-    driver_opts:
-      name: "paritydb"
-      mountpoint: "/media/brian/SanDisk\ Extreme1/parity"
-#      mountpoint: "/var/lib/parity"
+    # driver: local-persist
+    # driver_opts:
+    #   name: "paritydb"
+    #   mountpoint: "/media/brian/SanDisk\ Extreme1/parity"
+    #   mountpoint: "/var/lib/parity"
 
 services:
 
@@ -122,6 +123,23 @@ services:
       GRAPHQL_PLAYGROUND: 'true'
 
   # ///////////////////////////////////////////////////////
+  # Etherum Client
+  # ///////////////////////////////////////////////////////
+
+  parity:
+    image: parity/parity:v2.3.3
+    networks:
+      - back
+    volumes:
+      - parity-volume:/home/parity/.local/share/io.parity.ethereum/
+    ports:
+      - 8545:8545
+      - 8546:8546
+      - 30303:30303
+    command: --chain ropsten --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
+    cpu_shares: 2048
+
+  # ///////////////////////////////////////////////////////
   # Storage
   # ///////////////////////////////////////////////////////
 
@@ -135,6 +153,21 @@ services:
       - back
     ports:
       - 27017:27017
+    cpu_shares: 4000
+
+  timescale:
+    image: timescale/timescaledb:${TIMESCALE_VERSION}
+    restart: unless-stopped
+    volumes:
+      - timescale-volume:/var/lib/postgresql/data
+    networks:
+      - back
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
+      POSTGRES_DB:
     cpu_shares: 4000
 
   # ///////////////////////////////////////////////////////
@@ -257,7 +290,7 @@ services:
       KAFKA_JMX_PORT: 9588
 
   # ///////////////////////////////////////////////////////
-  # Extra Tools (Useful for debugging and helping on Kafka)
+  # Extra Tools (Useful for debugging and helping in dev)
   # ///////////////////////////////////////////////////////
 
   lenses:
@@ -322,19 +355,13 @@ services:
       CONTROL_CENTER_CONFIG_DIR: /var/lib/control-center/config
       CONTROL_CENTER_REPLICATION_FACTOR: 1
 
-  # ///////////////////////////////////////////////////////
-  # Etherum Client
-  # ///////////////////////////////////////////////////////
-
-  parity:
-    image: parity/parity:v2.3.3
+  pgweb:
+    image: sosedoff/pgweb:0.11.2
+    restart: unless-stopped
+    depends_on:
+      - timescale
     networks:
       - back
-    volumes:
-      - parity-volume:/home/parity/.local/share/io.parity.ethereum/
     ports:
-      - 8545:8545
-      - 8546:8546
-      - 30303:30303
-    command: --chain ropsten --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
-    cpu_shares: 2048
+      - 8082:8082
+    command: "/usr/bin/pgweb --bind=0.0.0.0 --listen=8082 --url postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@timescale:5432/${POSTGRES_DB}?sslmode=disable"

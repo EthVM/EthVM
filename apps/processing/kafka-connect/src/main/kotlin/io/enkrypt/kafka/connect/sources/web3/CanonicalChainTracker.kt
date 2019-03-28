@@ -27,7 +27,7 @@ class CanonicalChainTracker(
 
   private var subscription: Disposable
 
-  private var reorgs : ArrayBlockingQueue<ClosedRange<Long>> = ArrayBlockingQueue(10)
+  private var reorgs: ArrayBlockingQueue<ClosedRange<Long>> = ArrayBlockingQueue(10)
 
   init {
 

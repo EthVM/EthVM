@@ -190,7 +190,6 @@ fun BlockMetricsRecord.getAvgTxFeesBI() = getAvgTxFees().hexToBI()
 
 fun BlockMetricsRecord.Builder.setAvgTxFeesBI(avgTxFees: BigInteger) = setAvgTxFees(avgTxFees.toHex())
 
-
 //
 
 fun ExchangeRateRecord.isValid() = !(this.marketCap == -1.0 || this.marketCapRank == -1)
@@ -257,8 +256,8 @@ fun NonFungibleBalanceDeltaRecord.reverse() =
     .setTo(getFrom())
     .build()
 
-fun TraceRecord.
-  toContractLifecycleRecord(): ContractLifecycleRecord? {
+fun TraceRecord
+  .toContractLifecycleRecord(): ContractLifecycleRecord? {
 
   // error check first
   val error = getError()
@@ -303,10 +302,8 @@ fun TraceRecord.
             .build()
         ).build()
 
-
     else -> throw IllegalArgumentException("Unexpected action type: $action")
   }
-
 }
 
 fun TraceRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> {

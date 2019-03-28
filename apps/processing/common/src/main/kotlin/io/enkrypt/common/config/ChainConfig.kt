@@ -210,7 +210,6 @@ interface NetConfig {
       )
     }
     // TODO add support for other networks
-
   }
 }
 
