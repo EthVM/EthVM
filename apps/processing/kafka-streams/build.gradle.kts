@@ -23,22 +23,18 @@ dependencies {
   implementation(project(":avro"))
 
   // Ethereumj
-  implementation(group = "io.enkrypt", name = "ethereumj-core", version = (ext.get("ethereumj-version") as String)) {
-    exclude(group = "io.enkrypt.ethvm", module = "avro-entities")
-    exclude(group = "org.ethereum", module = "rocksdbjni")
-  }
+  implementation("org.ethereum:ethereumj-core:${ext.get("ethereumj-version") as String}")
 
   // Kafka
   implementation("org.apache.kafka:kafka-streams:2.1.1")
   implementation("io.confluent:kafka-streams-avro-serde:5.1.0")
 
   // Utils
-  implementation("com.github.ajalt:clikt:1.6.0")
-  implementation("ch.qos.logback:logback-classic:1.2.3")
-  implementation("io.github.microutils:kotlin-logging:1.6.10")
-  implementation("joda-time:joda-time:2.10.1")
+  implementation("com.github.ajalt:clikt:1.7.0")
+  implementation("ch.qos.logback:logback-classic:${ext.get("logback-version") as String}")
+  implementation("io.github.microutils:kotlin-logging:${ext.get("kotlin-logging-version") as String}")
   implementation("org.koin:koin-core:1.0.2")
-  implementation("io.arrow-kt:arrow-core:0.8.2")
+  implementation("io.arrow-kt:arrow-core:${ext.get("arrow-core-version") as String}")
 
   // Testing
   testImplementation("io.kotlintest:kotlintest-runner-junit5:${ext.get("kotlintest-version") as String}")
