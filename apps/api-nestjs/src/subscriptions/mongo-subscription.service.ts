@@ -50,8 +50,8 @@ export class MongoSubscriptionService {
     // Create stream readers
     logger.info('MongoStreamer - initialize() / Generating stream readers')
     this.blocksReader = new ChangeStreamReader('blocks', pubSub, logger)
-    this.blockMetricsReader = new ChangeStreamReader('blockMetrics', pubSub, logger)
-    this.processingMetadataReader = new ChangeStreamReader('internalProcessingMetadata', pubSub, logger)
+    this.blockMetricsReader = new ChangeStreamReader('block_metrics', pubSub, logger)
+    this.processingMetadataReader = new ChangeStreamReader('processing_metadata', pubSub, logger, 'internalProcessingMetadata')
 
     // Check initial syncing state
     logger.info('MongoStreamer - initialize() / Checking status of syncing')
@@ -68,8 +68,8 @@ export class MongoSubscriptionService {
       this.enableEventsStreaming()
 
       // TODO remove this
-      this.testBlockSubscription()
-      // this.testBlockMetricSubscription()
+      // this.testBlockSubscription()
+      this.testBlockMetricSubscription()
     }
 
     logger.info('MongoStreamer - initialize() / Enabling Processing Metadata streamer')
@@ -147,7 +147,7 @@ class ChangeStreamReader {
   private changeStream: ChangeStream
   private cursor: Cursor<any>
 
-  constructor(private readonly collectionName: string, private readonly pubSub: PubSub, private readonly logger: Logger) {}
+  constructor(private readonly collectionName: string, private readonly pubSub: PubSub, private readonly logger: Logger, private readonly triggerName?: string) {}
 
   public start() {
     this.logger.info(`MongoChangeStreamReader - start() / Starting to listen change events on: ${this.collectionName}`)
@@ -165,7 +165,7 @@ class ChangeStreamReader {
   }
 
   private async pull() {
-    const { cursor, pubSub, collectionName } = this
+    const { cursor, pubSub, collectionName, triggerName } = this
 
     try {
       this.logger.info(`MongoChangeStreamReader - pull() / Waiting for event: ${collectionName}`)
@@ -180,9 +180,11 @@ class ChangeStreamReader {
             key: documentKey._id,
             value: fullDocument
           }
-          await pubSub.publish(collectionName, event)
+          const trigger = triggerName || collectionName
+          await pubSub.publish(trigger, event)
         }
       }
+
     } catch (e) {
       this.logger.error('MongoChangeStreamReader - pull() / Failed to pull', this.collectionName, ' with error:', e)
     }
