@@ -37,7 +37,7 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
     .apply {
       putAll(baseKafkaProps.toMap())
       put(StreamsConfig.APPLICATION_ID_CONFIG, id)
-      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 4)
+      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 2)
       put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 1000L)
       put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 2000000000)
     }

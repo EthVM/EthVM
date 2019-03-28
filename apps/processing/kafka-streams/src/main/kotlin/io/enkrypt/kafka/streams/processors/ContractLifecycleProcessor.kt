@@ -5,10 +5,13 @@ import io.enkrypt.avro.capture.ContractLifecycleListRecord
 import io.enkrypt.avro.capture.ContractLifecycleRecord
 import io.enkrypt.avro.capture.ContractLifecyleType
 import io.enkrypt.avro.capture.ContractRecord
+import io.enkrypt.avro.capture.TraceListRecord
+import io.enkrypt.avro.processing.FungibleBalanceDeltaListRecord
 import io.enkrypt.common.extensions.toContractLifecycleRecord
 import io.enkrypt.kafka.streams.Serdes
 import io.enkrypt.kafka.streams.config.Topics.CanonicalContractLifecycle
 import io.enkrypt.kafka.streams.config.Topics.CanonicalContractTraces
+import io.enkrypt.kafka.streams.config.Topics.CanonicalTraces
 import io.enkrypt.kafka.streams.config.Topics.ContractLifecycleEvents
 import io.enkrypt.kafka.streams.config.Topics.Contracts
 import io.enkrypt.kafka.streams.utils.toTopic
@@ -41,81 +44,114 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
     // Create stream builder
     val builder = StreamsBuilder().apply {}
 
-    CanonicalContractTraces.stream(builder)
+    val contractTypes = setOf("create", "suicide")
+
+    CanonicalTraces.stream(builder)
       .mapValues { k, v ->
+
         when (v) {
           null -> null
           else -> {
 
+            val blockHash = v.getTraces().firstOrNull()?.getBlockHash()
+
+            // we only want contract related traces
             ContractLifecycleListRecord.newBuilder()
-              .setBlockNumber(k.getNumber())
-              .setReverse(false)
-              .setLifecycleRecords(
-                v.getTraces().mapNotNull { it.toContractLifecycleRecord() }
+              .setBlockHash(blockHash)
+              .setDeltas(
+                v.getTraces()
+                  .filter { trace -> contractTypes.contains(trace.getType()) }
+                  .mapNotNull { it.toContractLifecycleRecord() }
               ).build()
 
           }
+
         }
+
       }.toTopic(CanonicalContractLifecycle)
 
-    CanonicalContractLifecycle.table(builder)
-      .groupBy(
-        { k, v -> KeyValue(k.getNumber(), v) },
-        Grouped.with(KafkaSerdes.String(), Serdes.ContractLifecycleList())
-      ).reduce(
-        { _, new ->
-          // We should only see an update that contains no change in info. Any real update should be preceeded with a tombstone first
-          // so we emit an empty update
-          ContractLifecycleListRecord.newBuilder(new)
-            .setLifecycleRecords(emptyList())
-            .build()
+    CanonicalContractLifecycle.stream(builder)
+      .groupByKey()
+      .reduce(
+        { agg, next ->
+
+          if (agg.getBlockHash() == next.getBlockHash()) {
+
+            // an update has been published for a previously seen block
+            // we assume no material change and therefore emit an event which will have no impact
+
+            logger.warn { "Update received. Agg = $agg, next = $next" }
+
+            ContractLifecycleListRecord.newBuilder(agg)
+              .setApply(false)
+              .build()
+
+          } else {
+
+            ContractLifecycleListRecord.newBuilder()
+              .setBlockHash(next.getBlockHash())
+              .setDeltas(next.getDeltas())
+              .setReversals(agg.getDeltas())
+              .build()
+
+          }
+
         },
-        { _, old ->
-          // a tombstone has been received, likely fork scenario. Need to undo
-          ContractLifecycleListRecord.newBuilder(old)
-            .setReverse(true)
-            .build()
-        },
-        Materialized.with(KafkaSerdes.String(), Serdes.ContractLifecycleList())
+        Materialized.with(Serdes.CanonicalKey(), Serdes.ContractLifecycleList())
       ).toStream()
       .flatMap { _, v ->
 
-        v.getLifecycleRecords()
-          .map { record ->
-            ContractLifecycleRecord.newBuilder(record)
-              .setReverse(v.getReverse())
-              .build()
-          }.map { record ->
+        val reversals = v.getReversals()
+          .map { event ->
+
             KeyValue(
               ContractKeyRecord.newBuilder()
-                .setAddress(record.getAddress())
+                .setAddress(event.getAddress())
                 .build(),
-              record
+              ContractLifecycleRecord.newBuilder(event)
+                .setReverse(true)
+                .build()
             )
+
           }
+
+        val deltas = v.getDeltas()
+          .map { event ->
+
+            KeyValue(
+              ContractKeyRecord.newBuilder()
+                .setAddress(event.getAddress())
+                .build(),
+              event
+            )
+
+          }
+
+        reversals + deltas
 
       }.toTopic(ContractLifecycleEvents)
 
     ContractLifecycleEvents.stream(builder)
       .groupByKey()
       .aggregate(
-        { ContractRecord.newBuilder().build() },
+        { null },
         { _, new, agg ->
 
-          when (new.getType()) {
+          val builder = when(agg) {
+            null -> ContractRecord.newBuilder()
+            else -> ContractRecord.newBuilder(agg)
+          }
+
+          when (new.getType()!!) {
 
             ContractLifecyleType.CREATE -> {
 
               if (new.getReverse()) {
-                ContractRecord.newBuilder(agg)
-                  .setAddress(null)
-                  .setCreator(null)
-                  .setInit(null)
-                  .setCode(null)
-                  .setCreatedAt(null)
-                  .build()
+
+                null
+
               } else {
-                ContractRecord.newBuilder(agg)
+                builder
                   .setAddress(new.getAddress())
                   .setCreator(new.getCreator())
                   .setInit(new.getInit())
@@ -129,13 +165,13 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
             ContractLifecyleType.DESTROY -> {
 
               if (new.getReverse()) {
-                ContractRecord.newBuilder(agg)
+                builder
                   .setRefundAddress(null)
                   .setRefundBalance(null)
                   .setDestroyedAt(null)
                   .build()
               } else {
-                ContractRecord.newBuilder(agg)
+                builder
                   .setRefundAddress(new.getRefundAddress())
                   .setRefundBalance(new.getRefundBalance())
                   .setDestroyedAt(new.getDestroyedAt())
@@ -148,16 +184,7 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
         },
         Materialized.with(Serdes.ContractKey(), Serdes.Contract())
       ).toStream()
-      .mapValues { v ->
-
-        if (v.getCreatedAt() == null) {
-          // send tombstone to remove the key altogether
-          null
-        } else {
-          v
-        }
-
-      }.toTopic(Contracts)
+      .toTopic(Contracts)
 
     return builder.build()
   }

@@ -140,33 +140,27 @@ topics:
     config:
       cleanup.policy: compact
 
-  - name: canonical-contract-traces
-    replicationFactor: 1
-    partitions: 1
-    config:
-      cleanup.policy: compact
-
   - name: canonical-contract-lifecycle
     replicationFactor: 1
-    partitions: 1
+    partitions: 12
     config:
       cleanup.policy: compact
 
   - name: contract-lifecycle-events
     replicationFactor: 1
-    partitions: 1
+    partitions: 12
     config:
       retention.ms: -1
 
   - name: contracts
     replicationFactor: 1
-    partitions: 1
+    partitions: 12
     config:
       cleanup.policy: compact
 
   - name: contract-metadata
     replicationFactor: 1
-    partitions: 1
+    partitions: 12
     config:
       cleanup.policy: compact
 

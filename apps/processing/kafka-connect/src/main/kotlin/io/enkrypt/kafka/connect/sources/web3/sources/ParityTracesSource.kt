@@ -14,8 +14,7 @@ import org.web3j.protocol.core.DefaultBlockParameter
 class ParityTracesSource(
   sourceContext: SourceTaskContext,
   parity: JsonRpc2_0ParityExtended,
-  private val tracesTopic: String,
-  private val contractTracesTopic: String
+  private val tracesTopic: String
 ) : ParityEntitySource(sourceContext, parity) {
 
   override val partitionKey: Map<String, Any> = mapOf("model" to "trace")
@@ -25,8 +24,6 @@ class ParityTracesSource(
     // force into long for iteration
 
     val longRange = LongRange(range.start, range.endInclusive)
-
-    val contractTypes = setOf("create", "suicide")
 
     return longRange
       .map { blockNumber ->
@@ -43,61 +40,29 @@ class ParityTracesSource(
               .setNumberBI(blockNumberBI)
               .build()
 
-            var allTraces = emptyList<TraceRecord>()
-            var contractTraces = emptyList<TraceRecord>()
-
-            resp.traces.forEach{ trace ->
-
-              val record = trace.toTraceRecord(TraceRecord.newBuilder()).build()
-              allTraces = allTraces + record
-
-              if(contractTypes.contains(trace.type)) {
-                contractTraces = contractTraces + record
-              }
+            val traceRecords = resp.traces.map { trace ->
+              trace.toTraceRecord(TraceRecord.newBuilder()).build()
             }
 
             val traceListRecord = TraceListRecord
               .newBuilder()
-              .setTraces(allTraces)
+              .setTraces(traceRecords)
               .build()
 
             val traceKeySchemaAndValue = AvroToConnect.toConnectData(traceKeyRecord)
             val traceValueSchemaAndValue = AvroToConnect.toConnectData(traceListRecord)
 
-            var result = listOf(
-              SourceRecord(
-                partitionKey, partitionOffset, tracesTopic,
-                traceKeySchemaAndValue.schema(), traceKeySchemaAndValue.value(),
-                traceValueSchemaAndValue.schema(), traceValueSchemaAndValue.value()
-              )
+
+            SourceRecord(
+              partitionKey, partitionOffset, tracesTopic,
+              traceKeySchemaAndValue.schema(), traceKeySchemaAndValue.value(),
+              traceValueSchemaAndValue.schema(), traceValueSchemaAndValue.value()
             )
-
-            // publish a separate entry just for contract lifecycle
-
-            if(contractTraces.isNotEmpty()) {
-
-              val contractTraceListRecord = TraceListRecord
-                .newBuilder()
-                .setTraces(contractTraces)
-                .build()
-
-              val contractTraceValueSchemaAndValue = AvroToConnect.toConnectData(contractTraceListRecord)
-
-              result = result +
-                SourceRecord(
-                  partitionKey, partitionOffset, contractTracesTopic,
-                  traceKeySchemaAndValue.schema(), traceKeySchemaAndValue.value(),
-                  contractTraceValueSchemaAndValue.schema(), contractTraceValueSchemaAndValue.value()
-                )
-
-            }
-
-            result
 
           }
       }.map { future ->
         // wait for everything to complete
         future.join()
-      }.flatten()
+      }
   }
 }
