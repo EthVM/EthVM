@@ -39,7 +39,7 @@ Vue.config.productionTip = false
 // -------------------------------------------------------
 
 const wsLink = new WebSocketLink({
-  uri: process.env.VUE_APP_API_2_ENDPOINT || '',
+  uri: process.env.VUE_APP_API_ENDPOINT || '',
   options: {
     reconnect: true
   }
