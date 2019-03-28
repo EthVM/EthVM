@@ -1,6 +1,6 @@
 <template>
   <v-container class="hash-container pa-2" @click="reroute">
-    <v-layout row :class="hashClass" align-center justify-start fill-height>
+    <v-layout block row :class="hashClass" align-center justify-start fill-height>
       <p>{{first}}</p>
       <p class="concat">{{middle}}</p>
       <p>{{last}}</p>

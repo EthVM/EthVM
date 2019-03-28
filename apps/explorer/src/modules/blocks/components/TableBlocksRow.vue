@@ -1,6 +1,11 @@
 <template>
   <div>
     <v-layout>
+      <!--
+      =====================================================================================
+        Mobile (XS)
+      =====================================================================================
+      -->
       <v-flex xs12 hidden-sm-and-up>
         <div class="table-row-mobile">
           <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-4 pl-4">
@@ -10,7 +15,7 @@
             <v-flex xs6 pr-44>
               <v-layout row justify-end>
                 <p>{{ successfulTxs() }} {{$tc('tx.name-short', sucessTransalate())}}</p>
-                <p v-if="failedTxs() > 1" class="txFail--text pl-1 ">({{ failedTxs() }} {{$tc('tx.failed', failedTranslate())}})</p>
+                <p v-if="failedTxs() > 0" class="txFail--text pl-1 ">({{ failedTxs() }} {{$tc('tx.failed', failedTranslate())}})</p>
               </v-layout>
             </v-flex>
             <v-flex xs2 pa-1>
@@ -34,50 +39,51 @@
             </v-flex>
               </v-layout>
         </div>
-            </v-flex>
-
-
+      </v-flex>
+      <!--
+      =====================================================================================
+        Tablet/ Desktop (SM - XL)
+      =====================================================================================
+      -->
       <v-flex hidden-xs-only sm12>
-    <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
-      <v-flex xs6 sm2 order-xs1>
-        <router-link class="black--text pb-1" :to="'/block/' + block.getHash()">{{ block.getNumber() }}</router-link>
-      </v-flex>
-      <v-flex xs12 sm7 md6 lass="pr-0" order-xs3 order-sm2>
-        <p class="text-truncate info--text psmall mb-0 pb-0">
-          {{ $t('common.hash') }}:
-          <router-link class="primary--text font-mono font-weight-regular" :to="'/block/' + block.getHash()">{{ block.getHash() }}</router-link>
-        </p>
-        <p v-if="pageType != 'address'" class="text-truncate info--text mb-0 pt-2">
-          {{ $t('miner.name') }}:
-          <router-link :to="'/address/' + block.getMiner().toString()" class="secondary--text font-italic font-mono font-weight-regular">{{
-            block.getMiner().toString()
-          }}</router-link>
-        </p>
-      </v-flex>
-      <v-flex hidden-sm-and-down md2 order-xs4 order-sm3>
-        <p class="txSuccess--text mb-0 psmall">{{ successfulTxs() }}</p>
-        <p class="txFail--text mb-0">{{ failedTxs() }}</p>
-      </v-flex>
-      <v-flex d-flex xs6 sm3 md2 order-xs2 order-md4>
-        <p class="black--text align-center mb-0">
-          {{getRoundNumber(block.getTotalReward().toEth()) }}
-        </p>
-      </v-flex>
-    </v-layout>
-    <v-layout row v-if="hasUncles(block)" pl-3 pr-2 pt-0 pb-1>
-      <v-flex d-flex hidden-xs-only sm2 pt-0 pr-0> <v-img v-if="hasUncles(block)" :src="require('@/assets/uncle.png')" height="30px" contain /> </v-flex>
-      <v-flex xs12 sm7 md6>
-        <v-card flat color="uncleGrey">
-          <v-card-title class="pt-1 font-weight-medium pb-2">{{ $tc('uncle.name', 2) }}:</v-card-title>
-          <v-card-text v-for="(uncle, index) in block.getUncles()" :key="index" class="text-truncate info--text pt-0 pb-2">
-            {{ $t('common.hash') }}:
-            <router-link :to="'/uncle/' + uncle.getHash()" class="font-mono">{{ uncle.getHash() }}</router-link>
-          </v-card-text>
-        </v-card>
-      </v-flex>
-      <v-flex hidden-xs-only sm3 md4 />
-    </v-layout>
-    <v-divider class="mb-2 mt-2" />
+        <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
+          <v-flex sm2>
+            <router-link class="black--text pb-1" :to="'/block/' + block.getHash()">{{ block.getNumber() }}</router-link>
+          </v-flex>
+          <v-flex sm6>
+            <v-layout row pb-2>
+              <p class="info--text psmall pr-2">{{ $t('common.hash') }}:</p>
+              <app-hash-concat :hash="block.getHash()" :link="'/block/' + block.getHash()"/>
+            </v-layout>
+            <v-layout row >
+              <p class="info--text pr-1">{{ $t('miner.name') }}:</p>
+              <app-hash-concat :hash="block.getMiner().toString()" :italic="true" :link="'/address/' + block.getMiner().toString()"/>
+            </v-layout>
+          </v-flex>
+          <v-spacer hidden-xl-only/>
+          <v-flex sm2>
+            <v-layout row wrap >
+              <p class="pr-1">{{ successfulTxs() }} {{$tc('tx.name-short', sucessTransalate())}}</p>
+              <p v-if="failedTxs() > 0" class="txFail--text">({{ failedTxs() }} {{$tc('tx.failed', failedTranslate())}})</p>
+            </v-layout>
+          </v-flex>
+          <v-flex sm1 xl2>
+            <p class="black--text align-center mb-0">{{getRoundNumber(block.getTotalReward().toEth()) }}</p>
+          </v-flex>
+        </v-layout>
+        <v-layout row v-if="hasUncles(block)" pl-3 pr-2 pt-0 pb-1>
+          <v-flex d-flex hidden-xs-only sm2 pt-0 pr-0> <v-img v-if="hasUncles(block)" :src="require('@/assets/uncle.png')" height="30px" contain /> </v-flex>
+          <v-flex xs12 sm7 md6>
+            <v-card flat color="uncleGrey">
+              <v-card-title class="pt-1 font-weight-medium pb-2">{{ $tc('uncle.name', 2) }}:</v-card-title>
+              <v-card-text v-for="(uncle, index) in block.getUncles()" :key="index" class="text-truncate info--text pt-0 pb-2">
+                {{ $t('common.hash') }}:
+                <router-link :to="'/uncle/' + uncle.getHash()" class="font-mono">{{ uncle.getHash() }}</router-link>
+              </v-card-text>
+            </v-card>
+          </v-flex>
+        </v-layout>
+        <v-divider class="mb-2 mt-2" />
       </v-flex>
     </v-layout>
   </div>
