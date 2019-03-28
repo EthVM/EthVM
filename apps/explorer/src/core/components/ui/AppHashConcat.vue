@@ -1,11 +1,11 @@
 <template>
-  <div class="hash-container">
-    <v-layout row :class="hashClass" justify-start fill-height>
+  <v-container class="hash-container pa-2" @click="reroute">
+    <v-layout row :class="hashClass" align-center justify-start fill-height>
       <p>{{first}}</p>
       <p class="concat">{{middle}}</p>
       <p>{{last}}</p>
     </v-layout>
-  </div>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -20,8 +20,9 @@ export default class AppHashConcat extends Vue {
   ===================================================================================
   */
 
-  @Prop(Boolean) hash!: string
-  @Prop(Boolean) italic: boolean = false
+  @Prop(String) hash!: string
+  @Prop({type: Boolean, default: false}) italic!: boolean
+  @Prop(String) link!: string
 
   /*
   ===================================================================================
@@ -31,19 +32,31 @@ export default class AppHashConcat extends Vue {
 
 
   get last():string {
-    let n = this.hash.length
+    const n = this.hash.length
     return this.hash.slice(n-4,n)
   }
   get first(): string {
     return this.hash.slice(0,6)
   }
   get middle():string {
-    let n = this.hash.length
+    const n = this.hash.length
     return this.hash.slice(6, n-4)
   }
 
   get hashClass(): string {
     return this.italic? 'font-italic secondary--text' : 'secondary--text'
+  }
+
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
+  reroute():void {
+    if(this.link) {
+      this.$router.push({ path: this.link})
+    }
   }
 }
 </script>

@@ -56,6 +56,8 @@
       TABLE HEADER
     =====================================================================================
     -->
+    <v-layout>
+      <v-flex hidden-xs-only sm12>
     <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px" style="margin-right: 1px">
       <v-layout align-center justify-start row fill-height pr-3>
         <v-flex xs6 sm2 md3 lg2>
@@ -70,17 +72,18 @@
         </v-flex>
       </v-layout>
     </v-card>
+      </v-flex>
+    </v-layout>
     <!--
     =====================================================================================
       TABLE BODY
     =====================================================================================
     -->
     <v-card v-if="!hasError" flat id="scroll-target" :style="getStyle" class="scroll-y pt-0 pb-0">
-      <v-layout column fill-height v-scroll:#scroll-target style="margin-right: 1px" class="mb-1">
+      <v-layout column fill-height v-scroll:#scroll-target class="mb-1">
         <v-flex xs12 v-if="!loading">
           <v-card v-for="block in blocks" class="transparent" flat :key="block.getHash()">
             <table-blocks-row :block="block" :page-type="pageType" />
-            <v-divider class="mb-2 mt-2" />
           </v-card>
           <v-layout v-if="pageType != 'home' && pages > 1" justify-end row class="pb-1 pr-2 pl-2">
             <app-paginate

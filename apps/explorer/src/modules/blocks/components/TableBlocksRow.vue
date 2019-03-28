@@ -1,5 +1,43 @@
 <template>
-  <v-container pa-0 ma-0>
+  <div>
+    <v-layout>
+      <v-flex xs12 hidden-sm-and-up>
+        <div class="table-row-mobile">
+          <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-4 pl-4">
+            <v-flex xs6 pa-1>
+              <router-link class="black--text font-weight-medium pb-1" :to="'/block/' + block.getHash()">{{$t('block.number')}} {{ block.getNumber() }}</router-link>
+            </v-flex>
+            <v-flex xs6 pr-44>
+              <v-layout row justify-end>
+                <p>{{ successfulTxs() }} {{$tc('tx.name-short', sucessTransalate())}}</p>
+                <p v-if="failedTxs() > 1" class="txFail--text pl-1 ">({{ failedTxs() }} {{$tc('tx.failed', failedTranslate())}})</p>
+              </v-layout>
+            </v-flex>
+            <v-flex xs2 pa-1>
+              <p class="info--text psmall"> {{ $t('common.hash') }}: </p>
+            </v-flex>
+            <v-flex xs10 pa-1>
+                <app-hash-concat :hash="block.getHash()" :link="'/block/' + block.getHash()"/>
+            </v-flex>
+            <v-flex xs2 pa-1>
+              <p class="info--text psmall pr-1">
+                {{ $t('miner.name') }}: </p>
+            </v-flex>
+            <v-flex xs10 pa-1>
+                <app-hash-concat :hash="block.getMiner().toString()" :italic="true" :link="'/address/' + block.getMiner().toString()"/>
+            </v-flex>
+            <v-flex xs2 pa-1>
+                <p class="info--text psmall"> {{ $t('miner.reward-short') }}: </p>
+            </v-flex>
+            <v-flex xs10 pa-1>
+                <p class="black--text align-center pl-2"> {{getRoundNumber(block.getTotalReward().toEth()) }} </p>
+            </v-flex>
+              </v-layout>
+        </div>
+            </v-flex>
+
+
+      <v-flex hidden-xs-only sm12>
     <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
       <v-flex xs6 sm2 order-xs1>
         <router-link class="black--text pb-1" :to="'/block/' + block.getHash()">{{ block.getNumber() }}</router-link>
@@ -21,14 +59,8 @@
         <p class="txFail--text mb-0">{{ failedTxs() }}</p>
       </v-flex>
       <v-flex d-flex xs6 sm3 md2 order-xs2 order-md4>
-        <p class="text-truncate black--text align-center mb-0">
-          <v-tooltip v-if="!isShortValue(block.getTotalReward().toEth())" bottom>
-            <template #activator="data">
-              <v-icon v-on="data.on" dark small>fa fa-question-circle info--text</v-icon>
-            </template>
-            <span>{{ block.getTotalReward().toEth() }}</span>
-          </v-tooltip>
-          {{ getShortValue(block.getTotalReward().toEth()) }}
+        <p class="black--text align-center mb-0">
+          {{getRoundNumber(block.getTotalReward().toEth()) }}
         </p>
       </v-flex>
     </v-layout>
@@ -45,15 +77,23 @@
       </v-flex>
       <v-flex hidden-xs-only sm3 md4 />
     </v-layout>
-  </v-container>
+    <v-divider class="mb-2 mt-2" />
+      </v-flex>
+    </v-layout>
+  </div>
 </template>
 
 <script lang="ts">
+import AppHashConcat from '@app/core/components/ui/AppHashConcat.vue'
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import { Block, SimpleBlock, Tx, SimpleTx } from '@app/core/models'
 
-@Component
+@Component({
+  components: {
+   AppHashConcat
+  }
+})
 export default class TableBlocksRow extends Mixins(StringConcatMixin) {
   /*
   ===================================================================================
@@ -74,14 +114,34 @@ export default class TableBlocksRow extends Mixins(StringConcatMixin) {
     return block.getUncles().length > 0
   }
 
-  successfulTxs() {
+  successfulTxs(): number {
     const txs: any[] = this.block.getTxs()
     return txs.filter((t: Tx | SimpleTx) => t.getStatus() === true).length
   }
 
-  failedTxs() {
+  failedTxs(): number {
     const failed = this.block.getTxs().length - this.successfulTxs()
     return failed < 0 ? 0 : failed
   }
+  sucessTransalate(): number {
+    return this.successfulTxs() > 1 ? 2 : 1
+  }
+
+  failedTranslate(): number {
+    return this.failedTxs() > 1 ? 2 : 1
+  }
 }
 </script>
+
+<style scoped lang="css">
+.table-row-mobile {
+  border: 1px solid #b4bfd2;
+}
+
+p {
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+}
+
+</style>
+
