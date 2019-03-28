@@ -1,5 +1,4 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import com.jfrog.bintray.gradle.BintrayExtension
 
 plugins {
   `java-library`
@@ -7,7 +6,6 @@ plugins {
   kotlin("jvm")
   id("com.github.johnrengelman.shadow") version "4.0.3"
   id("org.jlleitschuh.gradle.ktlint")
-  id("com.jfrog.bintray")
 }
 
 project.java.sourceSets["main"].java {
@@ -35,9 +33,9 @@ dependencies {
   implementation("org.web3j:parity:4.0.3")
 
   // Utils
-  implementation("io.arrow-kt:arrow-core:0.8.2")
-  implementation("ch.qos.logback:logback-classic:1.2.3")
-  implementation("io.github.microutils:kotlin-logging:1.6.22")
+  implementation("io.arrow-kt:arrow-core:${ext.get("arrow-core-version") as String}")
+  implementation("ch.qos.logback:logback-classic:${ext.get("logback-version") as String}")
+  implementation("io.github.microutils:kotlin-logging:${ext.get("kotlin-logging-version") as String}")
   implementation("com.beust:klaxon:5.0.1")
 
   // Tests
@@ -51,51 +49,7 @@ project.tasks.getting(Test::class) { useJUnitPlatform {} }
 val build: DefaultTask by tasks
 build.dependsOn(project.tasks["shadowJar"] as ShadowJar)
 
-tasks {
-  "copyJar"(Copy::class) {
-    dependsOn("shadowJar")
-    from("build/libs/") { include("**/*.jar") }
-    into("libs/")
-  }
-
-  "buildConnectJar" {
-    group = "build"
-    dependsOn("copyJar")
-  }
-}
-
 tasks.withType<ShadowJar> {
   baseName = project.name
   classifier = ""
-}
-
-publishing {
-
-  publications {
-
-    create<MavenPublication>("JCenter") {
-      artifactId = project.name
-      project.shadow.component(this)
-    }
-
-  }
-
-}
-
-bintray {
-  user = project.findProperty("bintrayUser")?.toString() ?: ""
-  key = project.findProperty("bintrayKey")?.toString() ?: ""
-
-  dryRun = false
-  publish = true
-
-  setPublications("JCenter")
-
-  pkg(delegateClosureOf<BintrayExtension.PackageConfig> {
-    userOrg = "enkryptio"
-    repo = "maven"
-    name = "io.enkrypt.ethvm.kafka-connect"
-    setLicenses("MIT")
-    vcsUrl = "https://github.com/enkryptio/ethvm.git"
-  })
 }
