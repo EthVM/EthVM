@@ -100,15 +100,8 @@ export default class PageDetailsBlock extends Vue {
       return
     }
 
-    // 2. Check that we have our block in the store
-    const block = eth.isValidHash(ref) ? this.$store.getters.blockByHash(ref) : this.$store.getters.blockByNumber(Number(ref))
-
-    // 3. Depending on previous state, we display directly or not
-    if (block) {
-      this.setBlockInfo(block)
-    } else {
-      this.fetchBlock()
-    }
+    // 2. Fetch block
+    this.fetchBlock()
 
     window.scrollTo(0, 0)
   }

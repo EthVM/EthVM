@@ -90,14 +90,14 @@ export class ChartMixin extends Vue {
   }
 
   setData(_state: number): void {
-    this.$socket.emit(this.chartEvent, { duration: this.DATA[_state].state }, (err, result) => {
-      if (!err && result) {
-        result.forEach(point => {
-          this.DATA[_state].points.push(point.value)
-          this.DATA[_state].labels.push(point.date)
-        })
-      }
-    })
+    // this.$socket.emit(this.chartEvent, { duration: this.DATA[_state].state }, (err, result) => {
+    //   if (!err && result) {
+    //     result.forEach(point => {
+    //       this.DATA[_state].points.push(point.value)
+    //       this.DATA[_state].labels.push(point.date)
+    //     })
+    //   }
+    // })
   }
 
   /*

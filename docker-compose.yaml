@@ -76,28 +76,6 @@ services:
 
   api:
     build:
-      context: ./apps/api
-      dockerfile: Dockerfile.dev
-    restart: unless-stopped
-    volumes:
-      - ./apps/api:/var/api
-      - ./apps/common:/var/common
-    depends_on:
-      - mongodb
-    networks:
-      - back
-    labels:
-      - "traefik.enable=true"
-      - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:api.ethvm.${DOMAIN}"
-      - "traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://ethvm.${DOMAIN}||Access-Control-Allow-Credentials:true"
-      - "traefik.frontend.passHostHeader=true"
-      - "traefik.backend=api"
-      - "traefik.port=3000"
-    cpu_shares: 512
-
-  api-nestjs:
-    build:
       context: ./apps/api-nestjs
       dockerfile: Dockerfile.dev
     restart: unless-stopped
@@ -111,7 +89,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:api-nestjs.ethvm.${DOMAIN}"
+      - "traefik.frontend.rule=Host:api.ethvm.${DOMAIN}"
       - "traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://ethvm.${DOMAIN}||Access-Control-Allow-Credentials:true"
       - "traefik.frontend.passHostHeader=true"
       - "traefik.backend=api-nestjs"

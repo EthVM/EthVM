@@ -15,13 +15,13 @@
     "lint:fix": "vue-cli-service lint"
   },
   "dependencies": {
+    "@sentry/browser": "4.6.4",
     "apollo-cache-inmemory": "^1.5.1",
     "apollo-client": "^2.5.1",
     "apollo-link": "^1.2.11",
     "apollo-link-http": "^1.5.14",
     "apollo-link-ws": "^1.0.17",
     "apollo-utilities": "^1.2.1",
-    "@sentry/browser": "4.6.4",
     "bignumber.js": "^8.1.1",
     "canvas-confetti": "^0.1.0",
     "chart.js": "^2.7.3",
@@ -33,7 +33,6 @@
     "graphql-tag": "^2.10.1",
     "lodash.debounce": "^4.0.8",
     "number-formatter": "^1.2.0",
-    "socket.io-client": "^2.2.0",
     "store": "^2.0.12",
     "subscriptions-transport-ws": "^0.9.16",
     "v-tooltip": "^2.0.0-rc.33",
@@ -52,8 +51,7 @@
     "vuex-class": "^0.3.1"
   },
   "devDependencies": {
-    "@types/socket.io": "^2.1.2",
-    "@types/socket.io-client": "^1.4.32",
+    "@types/node": "~11.10.5",
     "@vue/cli-plugin-babel": "^3.4.1",
     "@vue/cli-plugin-eslint": "^3.4.1",
     "@vue/cli-plugin-typescript": "^3.4.1",
