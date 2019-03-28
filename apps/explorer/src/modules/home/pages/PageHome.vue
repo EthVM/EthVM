@@ -58,6 +58,12 @@ export type NewBlockQuery = {
   }
 }
 
+export type NewBlockMetricQuery = {
+  data: {
+    newBlockMetric: any
+  }
+}
+
 @Component({
   components: {
     AppBreadCrumbs,
@@ -98,6 +104,16 @@ export default class PageHome extends Vue {
       next(data) {
         const newSimpleBlock = new SimpleBlock(data.data.newBlock)
         $store.commit(Events.NEW_SIMPLE_BLOCK, newSimpleBlock)
+      },
+      error(error): void {
+        console.error(error)
+      }
+    })
+
+    // Create newBlockMetrics subscription
+    this.$api.subscribe<NewBlockMetricQuery>('blockMetrics').subscribe({
+      next(data) {
+        $store.commit(Events.NEW_BLOCK_METRIC, data.data.newBlockMetric)
       },
       error(error): void {
         console.error(error)

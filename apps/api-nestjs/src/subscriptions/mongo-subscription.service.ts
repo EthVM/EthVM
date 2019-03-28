@@ -69,7 +69,8 @@ export class MongoSubscriptionService {
 
       // TODO remove this
       // this.testBlockSubscription()
-      this.testBlockMetricSubscription()
+      // this.testBlockMetricSubscription()
+
     }
 
     logger.info('MongoStreamer - initialize() / Enabling Processing Metadata streamer')
