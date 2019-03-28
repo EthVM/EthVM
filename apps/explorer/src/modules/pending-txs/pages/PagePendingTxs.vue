@@ -116,11 +116,6 @@ export default class PagePendingTxs extends Vue {
   ===================================================================================
   */
 
-  // No Need to be reactive yet, needs update button on update
-  // get pendingTxs(): PendingTx[] {
-  //   return this.$store.getters.pendingTxs
-  // }
-
   get crumbs(): Crumb[] {
     return [
       {

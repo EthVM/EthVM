@@ -58,15 +58,8 @@ export default class PageDetailsUncle extends Vue {
       return
     }
 
-    // 2. Check that we have our uncle in the store
-    const uncle = this.$store.getters.uncleByHash(ref)
-
-    // 3. Depending on previous state, we display directly or not
-    if (uncle) {
-      this.setUncleInfo(uncle)
-    } else {
-      this.fetchUncle()
-    }
+    // 2. Fetch uncle
+    this.fetchUncle()
   }
 
   /*

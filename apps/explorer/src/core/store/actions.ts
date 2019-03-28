@@ -16,14 +16,6 @@ const socket_NEW_SIMPLE_BLOCK = function(this: any, { commit }, raw: SocketEvent
   })
 }
 
-const socket_NEW_PENDING_TX = function(this: any, { commit }, raw: SocketEvent | SocketEvent[]) {
-  const evs = !Array.isArray(raw) ? [raw] : raw
-  evs.forEach(ev => {
-    commit(Events.NEW_PENDING_TX, ev.value)
-    this._vm.$eventHub.$emit(Events.NEW_PENDING_TX, new PendingTx(ev.value))
-  })
-}
-
 const socket_NEW_BLOCK_METRIC = function(this: any, { commit }, raw: SocketEvent | SocketEvent[]) {
   const evs = !Array.isArray(raw) ? [raw] : raw
   evs.forEach(ev => {
@@ -39,7 +31,6 @@ const socket_connect = function(this: any, {}) {
 
 export default {
   socket_NEW_SIMPLE_BLOCK,
-  socket_NEW_PENDING_TX,
   socket_NEW_BLOCK_METRIC,
   socket_connect
 }

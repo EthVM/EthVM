@@ -1,21 +1,19 @@
 import { EthvmApolloApi } from '@app/core/api'
 import { VueEthvmApi } from '@app/core/plugins'
-import VueSocketIO from '@app/core/plugins/socketio/'
 import router from '@app/core/router'
 import store from '@app/core/store'
 import App from '@app/modules/App.vue'
 import i18n from '@app/translations'
-import ApolloClient from 'apollo-client'
 import * as Sentry from '@sentry/browser'
-import io from 'socket.io-client'
+import { InMemoryCache } from 'apollo-cache-inmemory'
+import ApolloClient from 'apollo-client'
+import { WebSocketLink } from 'apollo-link-ws'
 import VTooltip from 'v-tooltip'
 import Vue from 'vue'
 import VueApollo from 'vue-apollo'
 import VueTimeago from 'vue-timeago'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
-import { WebSocketLink } from 'apollo-link-ws'
-import { InMemoryCache } from 'apollo-cache-inmemory'
 
 /*
   ===================================================================================
@@ -37,15 +35,8 @@ Vue.prototype.$eventHub = new Vue()
 Vue.config.productionTip = false
 
 // -------------------------------------------------------
-//    APIs: Legacy SocketIO + Apollo (GraphQL)
+//    APIs: Apollo (GraphQL)
 // -------------------------------------------------------
-
-// Socket (To be deprecated soon)
-
-const socket = io(process.env.VUE_APP_API_ENDPOINT || '')
-Vue.use(VueSocketIO, socket, store)
-
-// Apollo
 
 const wsLink = new WebSocketLink({
   uri: process.env.VUE_APP_API_2_ENDPOINT || '',
