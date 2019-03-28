@@ -35,6 +35,30 @@ resource "aws_security_group" "ingress-manager" {
   }
 
   ingress {
+    cidr_blocks = "${var.allowed_inbound_ssh}"
+
+    from_port = 9021  //kafka-control-center
+    to_port   = 9021
+    protocol  = "tcp"
+  }
+
+  ingress {
+    cidr_blocks = "${var.allowed_inbound_ssh}"
+
+    from_port = 9022  //kafka-control-center
+    to_port   = 9022
+    protocol  = "tcp"
+  }
+
+  ingress {
+    cidr_blocks = "${var.allowed_inbound_ssh}"
+
+    from_port = 8083  //kafka-control-center
+    to_port   = 8083
+    protocol  = "tcp"
+  }
+
+  ingress {
     cidr_blocks = ["${aws_subnet.subnet-workers.cidr_block}", "${aws_subnet.subnet-managers.cidr_block}"]
     from_port   = 0
     to_port     = 65535

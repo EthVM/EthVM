@@ -3,6 +3,7 @@
 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 
 apt install bcache-tools
+modprobe bcache
 
 mkfs.ext4 -F /dev/xvdh
 mkfs.ext4 -F /dev/nvme0n1

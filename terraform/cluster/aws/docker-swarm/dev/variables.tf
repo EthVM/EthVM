@@ -73,7 +73,7 @@ variable "total_manager_instances" {
 
 variable "total_worker_instances" {
   description = "Number of Managers"
-  default     = "4"
+  default     = "3"
 }
 
 variable "provision_user" {

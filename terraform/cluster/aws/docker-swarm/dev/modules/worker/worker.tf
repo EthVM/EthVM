@@ -1,9 +1,11 @@
 data "template_file" "user_data" {
   template = "${file("${path.module}/scripts/provision-worker.sh")}"
+  count    = "${var.total_instances}"
 
   vars = {
     root_manager_private_ip = "${var.manager_private_ip}"
     join_token              = "${lookup(var.swarm_tokens, "worker")}"
+    worker_id               = "${count.index + 1}"
   }
 }
 
@@ -28,7 +30,7 @@ resource "aws_instance" "workers" {
   subnet_id              = "${var.subnet_id}"
   source_dest_check      = false
   count                  = "${var.total_instances}"
-  user_data              = "${format("%s\n%s\n%s",data.local_file.install_docker.content, data.template_file.user_data.rendered, data.template_file.efs_mount.rendered)}"
+  user_data              = "${format("%s\n%s\n%s",data.local_file.install_docker.content, element(data.template_file.user_data.*.rendered, count.index), data.template_file.efs_mount.rendered)}"
 
   tags = {
     Name = "${format("%s-%02d", var.name, count.index + 1)}"

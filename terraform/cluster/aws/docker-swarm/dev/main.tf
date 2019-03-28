@@ -47,8 +47,8 @@ module "workers" {
   efs_mount_target_dns = "${module.efs.mount_target_dns}"
 }
 
-module "swarmprom" {
-  source             = "./modules/swarmprom"
+module "swarmsetup" {
+  source             = "./modules/swarmsetup"
   admin_user         = "${var.swarmprom_admin_user}"
   admin_password     = "${var.swarmprom_admin_password}"
   slack_token        = "${var.swarmprom_slack_token}"

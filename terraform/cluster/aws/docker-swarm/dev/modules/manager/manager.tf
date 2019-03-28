@@ -50,7 +50,7 @@ resource "aws_instance" "manager" {
       "chmod +x /tmp/setup-efs.sh",
       "sudo /tmp/install-docker.sh",
       "sudo /tmp/setup-efs.sh",
-      "if [ ${count.index} -eq 0 ]; then /tmp/provision-first-manager.sh ${self.private_ip}; fi",
+      "if [ ${count.index} -eq 0 ]; then sudo /tmp/provision-first-manager.sh ${self.private_ip}; fi",
     ]
   }
 
