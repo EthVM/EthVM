@@ -58,18 +58,11 @@ object Topics {
 
   val CanonicalBlockAuthors = KafkaTopic("canonical-block-authors", Serdes.CanonicalKey(), Serdes.BlockAuthor())
 
-  val CanonicalContractTraces = KafkaTopic("canonical-contract-traces", Serdes.CanonicalKey(), Serdes.TraceList())
   val CanonicalContractLifecycle = KafkaTopic("canonical-contract-lifecycle", Serdes.CanonicalKey(), Serdes.ContractLifecycleList())
   val ContractLifecycleEvents = KafkaTopic("contract-lifecycle-events", Serdes.ContractKey(), Serdes.ContractLifecycle())
   val Contracts = KafkaTopic("contracts", Serdes.ContractKey(), Serdes.Contract())
 
-  const val BlockMetricsByDay = "block-metrics-by-day"
-
-  const val FungibleTokenMovements = "fungible-token-movements"
-
   const val ContractMetadata = "contract-metadata"
-  const val ContractCreations = "contract-creations"
-  const val ContractDestructions = "contract-destructions"
 
   const val EthTokensList = "eth-tokens-list"
   const val EthTokensListBySymbol = "eth-tokens-list-by-symbol"

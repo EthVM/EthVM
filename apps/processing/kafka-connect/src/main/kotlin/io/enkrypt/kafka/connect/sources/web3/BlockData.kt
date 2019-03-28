@@ -91,7 +91,7 @@ fun TransactionReceipt.toTransactionReceiptRecord(builder: TransactionReceiptRec
     .setLogs(logs.map { it.toLogRecord(LogRecord.newBuilder()).build() })
     .setLogsBloom(logsBloom)
     .setRoot(root)
-    .setStatus(status?.hexBuffer())
+    .setStatus(status)
 
 fun Log.toLogRecord(builder: LogRecord.Builder): LogRecord.Builder =
   builder
