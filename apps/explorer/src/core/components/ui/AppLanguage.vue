@@ -57,13 +57,7 @@ export default class AppLanguage extends Vue {
   }
 
   isLang(lang: string): boolean {
-    let n
-    this.items.forEach(i => {
-      if (i._id === lang) {
-        n = true
-      }
-    })
-    return n ? n : false
+    return this.items.find(l => l._id === lang) !== undefined
   }
 }
 </script>
