@@ -33,7 +33,7 @@ class ChartData {
     Chart
   }
 })
-export default class ChartLiveTransactions extends Vue {
+export default class ChartLiveTxs extends Vue {
   /*
   ===================================================================================
     Initial Data

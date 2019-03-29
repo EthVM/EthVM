@@ -66,7 +66,7 @@ import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import ChartLink from '@app/modules/charts/components/ChartLink.vue'
 import AppCardStatsGroup from '@app/core/components/ui/AppCardStatsGroup.vue'
-import ChartLiveTx from '@app/modules/charts/components/live/ChartLiveTx.vue'
+import ChartLiveTxs from '@app/modules/charts/components/live/ChartLiveTxs.vue'
 import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees.vue'
 import { ChartTypes } from '@app/modules/charts/helpers'
 import { Vue, Component } from 'vue-property-decorator'
@@ -78,7 +78,7 @@ import { Tab, Crumb } from '@app/core/components/props'
     AppTabs,
     AppCardStatsGroup,
     ChartLink,
-    ChartLiveTx,
+    ChartLiveTxs,
     ChartLiveTxFees
   }
 })
