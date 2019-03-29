@@ -49,6 +49,7 @@ import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { Block, Tx, SimpleBlock, SimpleTx } from '@app/core/models'
 import { Vue, Component } from 'vue-property-decorator'
+import { Observable, Subscription } from 'apollo-client/util/Observable'
 
 const MAX_ITEMS = 50
 
@@ -91,6 +92,12 @@ export default class PageHome extends Vue {
   errorTableTxs = ''
   errorTableBlocks = ''
 
+  /* Subscriptions */
+  newSimpleBlockSubscription!: Subscription
+  newBlockMetricSubscription!: Subscription
+  newSimpleTxsSubscription!: Subscription
+
+
   /*
   ===================================================================================
     Lifecycle
@@ -100,6 +107,10 @@ export default class PageHome extends Vue {
   created() {
     this.loadData()
     this.createSubscriptions()
+  }
+
+  beforeDestroy() {
+    this.destroySubscriptions()
   }
 
   /*
@@ -139,7 +150,7 @@ export default class PageHome extends Vue {
     const { $store, $eventHub } = this
 
     // Create blocks subscription
-    this.$api.observable<NewBlockQuery>('simpleBlocks').subscribe({
+    this.newSimpleBlockSubscription = this.$api.observable<NewBlockQuery>('simpleBlocks').subscribe({
       next(data) {
         const newSimpleBlock = new SimpleBlock(data.data.newBlock)
         $store.commit(Events.NEW_SIMPLE_BLOCK, newSimpleBlock)
@@ -151,7 +162,7 @@ export default class PageHome extends Vue {
     })
 
     // Create block metrics subscription
-    this.$api.observable<NewBlockMetricQuery>('blockMetrics').subscribe({
+    this.newBlockMetricSubscription  = this.$api.observable<NewBlockMetricQuery>('blockMetrics').subscribe({
       next(data) {
         const {newBlockMetric} = data.data
         $store.commit(Events.NEW_BLOCK_METRIC, newBlockMetric)
@@ -163,7 +174,7 @@ export default class PageHome extends Vue {
     })
 
     // Create txs subscription
-    this.$api.observable<NewTxsQuery>('simpleTxs').subscribe({
+    this.newSimpleTxsSubscription = this.$api.observable<NewTxsQuery>('simpleTxs').subscribe({
       next(data) {
         const {newTxs} = data.data
         $store.commit(Events.NEW_TX, newTxs)
@@ -173,6 +184,12 @@ export default class PageHome extends Vue {
         // console.error(error)
       }
     })
+  }
+
+  destroySubscriptions() {
+    this.newSimpleBlockSubscription.unsubscribe()
+    this.newBlockMetricSubscription.unsubscribe()
+    this.newSimpleTxsSubscription.unsubscribe()
   }
 
   fetchTxs(): Promise<SimpleTx[]> {
