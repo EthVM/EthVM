@@ -13,7 +13,7 @@
     =====================================================================================
     -->
     <v-layout row wrap justify-center mb-4>
-      <v-flex xs12 md6> <chart-live-tx /> </v-flex>
+      <v-flex xs12 md6> <chart-live-txs /> </v-flex>
       <v-flex xs12 md6> <chart-live-tx-fees /> </v-flex>
     </v-layout>
     <!--
