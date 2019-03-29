@@ -75,12 +75,15 @@
     =====================================================================================
     -->
     <v-container v-if="!hasError" flat id="scroll-target" :style="getStyle" class="scroll-y pa-2">
-      <div d-flex v-scroll:#scroll-target class="mb-1">
-        <div v-if="!loading">
-          <v-card v-for="block in blocks" class="transparent" flat :key="block.getHash()">
+      <v-layout column v-scroll:#scroll-target class="mb-1">
+        <v-flex v-if="!loading">
+
+          <div v-for="block in blocks" :key="block.getHash()">
             <table-blocks-row :block="block" :page-type="pageType" />
-          </v-card>
-        </div>
+          </div>
+            </v-flex>
+
+
         <div xs12 v-if="loading">
           <div v-for="i in maxItems" :key="i">
             <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
@@ -100,7 +103,7 @@
             <v-divider class="mb-2 mt-2" />
           </div>
         </div>
-      </div>
+      </v-layout>
     </v-container>
           <v-layout v-if="pageType != 'home' && pages > 1" justify-end row class="pb-1 pr-2 pl-2">
             <app-paginate

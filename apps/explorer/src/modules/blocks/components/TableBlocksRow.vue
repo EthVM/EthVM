@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <v-layout>
+  <v-container pa-0>
+    <v-layout d-block>
       <!--
       =====================================================================================
         Mobile (XS)
@@ -46,9 +46,18 @@
       =====================================================================================
       -->
       <v-flex hidden-xs-only sm12>
+        <!--
+        =====================================================================================
+          Block Info
+        =====================================================================================
+        -->
         <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
           <v-flex sm2>
             <router-link class="black--text pb-1" :to="'/block/' + block.getHash()">{{ block.getNumber() }}</router-link>
+            <div v-if="hasUncles(block)" class="arrow" >
+                <div class="line">
+                </div>
+              </div>
           </v-flex>
           <v-flex sm6>
             <v-layout row pb-2>
@@ -71,22 +80,33 @@
             <p class="black--text align-center mb-0">{{getRoundNumber(block.getTotalReward().toEth()) }}</p>
           </v-flex>
         </v-layout>
-        <v-layout row v-if="hasUncles(block)" pl-3 pr-2 pt-0 pb-1>
-          <v-flex d-flex hidden-xs-only sm2 pt-0 pr-0> <v-img v-if="hasUncles(block)" :src="require('@/assets/uncle.png')" height="30px" contain /> </v-flex>
-          <v-flex xs12 sm7 md6>
-            <v-card flat color="uncleGrey">
-              <v-card-title class="pt-1 font-weight-medium pb-2">{{ $tc('uncle.name', 2) }}:</v-card-title>
-              <v-card-text v-for="(uncle, index) in block.getUncles()" :key="index" class="text-truncate info--text pt-0 pb-2">
-                {{ $t('common.hash') }}:
-                <router-link :to="'/uncle/' + uncle.getHash()" class="font-mono">{{ uncle.getHash() }}</router-link>
-              </v-card-text>
-            </v-card>
-          </v-flex>
-        </v-layout>
+        <!--
+        =====================================================================================
+          Uncles Info
+        =====================================================================================
+        -->
+        <v-flex sm12 v-if="hasUncles(block)" pt-3>
+          <v-layout row class="uncle">
+            <v-flex sm2>
+            </v-flex>
+            <v-flex sm6>
+              <div class="uncles">
+                <v-card flat color="transparent" >
+                  <v-card-title class="pt-1 font-weight-medium pb-2">{{ $tc('uncle.name', 2) }}:</v-card-title>
+                  <v-layout row pl-4  pr-4 pb-2 v-for="(uncle, index) in block.getUncles()" :key="index">
+                    <p class="info--text psmall pr-2">{{ $t('common.hash') }}:</p>
+                    <app-hash-concat :hash="uncle.getHash() " :link="'/uncle/' + uncle.getHash()"/>
+                  </v-layout>
+                </v-card>
+              </div>
+            </v-flex>
+            <v-spacer />
+          </v-layout>
+        </v-flex>
         <v-divider class="mb-2 mt-2" />
       </v-flex>
     </v-layout>
-  </div>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -148,6 +168,25 @@ p {
   margin-bottom: 0px;
   padding-bottom: 0px;
 }
+.arrow {
+    position: relative;
+}
+
+.line {
+    border-left: 1px solid #b4bfd2;
+    border-bottom: 1px solid #b4bfd2;
+    height: 50px;
+    width: 105%;
+    position: absolute;
+    margin-left: 2px;
+    margin-bottom: 10px;
+}
+
+.uncles {
+  border: 1px solid #b4bfd2;
+  padding-bottom: 5px;
+}
+
 
 </style>
 
