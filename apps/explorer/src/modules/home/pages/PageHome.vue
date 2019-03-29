@@ -69,7 +69,7 @@ export default class PageHome extends Vue {
   ===================================================================================
   */
 
-  tableStyle = 'max-height: 590px'
+  tableStyle = 'max-height: 450px'
   errorTableTxs = ''
   errorTableBlocks = ''
 
