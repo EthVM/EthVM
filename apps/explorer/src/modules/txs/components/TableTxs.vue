@@ -5,7 +5,7 @@
       TITLE
     =====================================================================================
     -->
-    <v-layout row wrap align-end >
+    <v-layout row wrap align-end>
       <v-flex xs7 md6 lg5 xl4 pr-0 pb-0>
         <v-layout align-end justify-start row fill-height>
           <v-card-title class="title font-weight-bold pl-2 ">{{ getTitle }}</v-card-title>
@@ -42,34 +42,34 @@
       TABLE HEADER
     =====================================================================================
     -->
-        <v-layout >
-      <v-flex hidden-sm-and-up pt-0 pb-0 pl-3 > <app-footnotes :footnotes="footnotes" pl-2 pr-2/> </v-flex>
+    <v-layout>
+      <v-flex hidden-sm-and-up pt-0 pb-0 pl-3> <app-footnotes :footnotes="footnotes" pl-2 pr-2 /> </v-flex>
       <v-flex hidden-xs-only sm12>
-    <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px">
-      <v-layout align-center justify-start row fill-height pr-3>
-        <v-flex xs4 sm3 md1 pl-3>
-          <h5>{{ $t('block.number') }}</h5>
-        </v-flex>
-        <v-flex xs6 sm6 md6>
-          <h5>{{ $tc('tx.hash', 1) }}</h5>
-        </v-flex>
-        <v-flex hidden-xs-only sm2 md1>
-          <h5>{{ $t('common.eth') }}</h5>
-        </v-flex>
-        <v-flex hidden-sm-and-down md2>
-          <h5>{{ $t('common.age') }}</h5>
-        </v-flex>
-        <v-flex hidden-sm-and-down md1>
-          <h5>{{ $tc('tx.fee', 1) }}</h5>
-        </v-flex>
+        <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px">
+          <v-layout align-center justify-start row fill-height pr-3>
+            <v-flex xs4 sm3 md1 pl-3>
+              <h5>{{ $t('block.number') }}</h5>
+            </v-flex>
+            <v-flex xs6 sm6 md6>
+              <h5>{{ $tc('tx.hash', 1) }}</h5>
+            </v-flex>
+            <v-flex hidden-xs-only sm2 md1>
+              <h5>{{ $t('common.eth') }}</h5>
+            </v-flex>
+            <v-flex hidden-sm-and-down md2>
+              <h5>{{ $t('common.age') }}</h5>
+            </v-flex>
+            <v-flex hidden-sm-and-down md1>
+              <h5>{{ $tc('tx.fee', 1) }}</h5>
+            </v-flex>
 
-        <v-flex hidden-xs-only sm1>
-          <h5>{{ $t('tx.status') }}</h5>
-        </v-flex>
-      </v-layout>
-    </v-card>
+            <v-flex hidden-xs-only sm1>
+              <h5>{{ $t('tx.status') }}</h5>
+            </v-flex>
+          </v-layout>
+        </v-card>
       </v-flex>
-        </v-layout>
+    </v-layout>
     <!--
     =====================================================================================
       TABLE BODY

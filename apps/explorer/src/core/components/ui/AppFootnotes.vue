@@ -3,8 +3,8 @@
     <v-layout row pa-1>
       <div v-for="i in footnotes" :key="i.text" class="pa-1">
         <v-layout row align-center justify-start>
-            <v-icon :class="classIcon" :color="getColor(i)">{{ i.icon }}</v-icon>
-            <v-card-text :class="classText">{{ i.text }}</v-card-text>
+          <v-icon :class="classIcon" :color="getColor(i)">{{ i.icon }}</v-icon>
+          <v-card-text :class="classText">{{ i.text }}</v-card-text>
         </v-layout>
       </div>
     </v-layout>
@@ -35,16 +35,15 @@ export default class AppFootnotes extends Vue {
     return note.color
   }
 
-  get classText():string {
-   return this.isMobile ? 'footnote-mobile-text pl-1' : 'pl-1 caption'
+  get classText(): string {
+    return this.isMobile ? 'footnote-mobile-text pl-1' : 'pl-1 caption'
   }
   get classIcon(): string {
-    return this.isMobile ?  'footnote-mobile-icon' : 'footnote-desktop-icon'
+    return this.isMobile ? 'footnote-mobile-icon' : 'footnote-desktop-icon'
   }
 
   get isMobile(): boolean {
     return this.$vuetify.breakpoint.name === 'xs'
-
   }
 }
 </script>
@@ -59,5 +58,4 @@ export default class AppFootnotes extends Vue {
 .footnote-desktop-icon {
   font-size: 12px
 }
-
 </style>

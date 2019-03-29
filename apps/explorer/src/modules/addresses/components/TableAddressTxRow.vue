@@ -12,65 +12,72 @@
             <v-card-text class="text-xs-center secondary--text">{{ text }}</v-card-text>
           </v-card>
           <v-card v-else v-for="tx in transactions" class="transparent pb-1" flat :key="tx.getHash()">
-
-
-              <v-container pa-0 ma-0>
-    <v-layout d-block>
-    <!--
+            <v-container pa-0 ma-0>
+              <v-layout d-block>
+                <!--
       =====================================================================================
         Mobile (XS)
       =====================================================================================
       -->
-      <v-flex xs12 hidden-sm-and-up>
-        <div :class="getStatusClass(tx)">
-          <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-4 pl-4">
-            <v-flex xs6 pa-1>
-              <p :class="getTxTypeClass(tx)">{{getTypeString(tx)}} </p>
-            </v-flex>
-            <v-flex xs6 pr-44>
-              <v-layout row justify-end>
-                <p :class="getTxTypeClass(tx)">{{ getSign(tx) }} {{ getRoundNumber(tx.getValue().toEth()) }} {{$t('common.eth')}}</p>
-              </v-layout>
-            </v-flex>
-            <v-flex xs2 pa-1>
-              <p class="info--text psmall">{{ $tc('tx.hash', 1) }}:</p>
-            </v-flex>
-            <v-flex xs10 pa-1>
-              <app-hash-concat :hash="tx.getHash()" :link="'/tx/' + tx.getHash()" />
-            </v-flex>
-            <v-flex xs3 pa-1>
-              <p class="info--text psmall ">{{ $tc('address.name', 1) }}:</p>
-            </v-flex>
-            <v-flex shrink pa-1>
-              <div class="tx-icon-type"><p>{{ getTxTypeIcon(tx)}}</p></div>
-            </v-flex>
-            <v-flex xs6 pa-1>
-                <app-hash-concat v-if="getType(tx) === 'self'" :hash="tx.getFrom().toString()" :italic="true" />
-                <div v-else>
-                  <div v-if="tx.getContractAddress().isEmpty()" >
-                    <app-hash-concat v-if="getType(tx) === 'in'" :hash="tx.getTo().toString()" :italic="true" :link="'/address/' + tx.getTo().toString()"/>
-                    <app-hash-concat v-else :hash="tx.getFrom().toString()" :italic="true" :link="'/address/' + tx.getFrom().toString()"/>
+                <v-flex xs12 hidden-sm-and-up>
+                  <div :class="getStatusClass(tx)">
+                    <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-4 pl-4">
+                      <v-flex xs6 pa-1>
+                        <p :class="getTxTypeClass(tx)">{{ getTypeString(tx) }}</p>
+                      </v-flex>
+                      <v-flex xs6 pr-44>
+                        <v-layout row justify-end>
+                          <p :class="getTxTypeClass(tx)">{{ getSign(tx) }} {{ getRoundNumber(tx.getValue().toEth()) }} {{ $t('common.eth') }}</p>
+                        </v-layout>
+                      </v-flex>
+                      <v-flex xs2 pa-1>
+                        <p class="info--text psmall">{{ $tc('tx.hash', 1) }}:</p>
+                      </v-flex>
+                      <v-flex xs10 pa-1>
+                        <app-hash-concat :hash="tx.getHash()" :link="'/tx/' + tx.getHash()" />
+                      </v-flex>
+                      <v-flex xs3 pa-1>
+                        <p class="info--text psmall ">{{ $tc('address.name', 1) }}:</p>
+                      </v-flex>
+                      <v-flex shrink pa-1>
+                        <div class="tx-icon-type">
+                          <p>{{ getTxTypeIcon(tx) }}</p>
+                        </div>
+                      </v-flex>
+                      <v-flex xs6 pa-1>
+                        <app-hash-concat v-if="getType(tx) === 'self'" :hash="tx.getFrom().toString()" :italic="true" />
+                        <div v-else>
+                          <div v-if="tx.getContractAddress().isEmpty()">
+                            <app-hash-concat
+                              v-if="getType(tx) === 'in'"
+                              :hash="tx.getTo().toString()"
+                              :italic="true"
+                              :link="'/address/' + tx.getTo().toString()"
+                            />
+                            <app-hash-concat v-else :hash="tx.getFrom().toString()" :italic="true" :link="'/address/' + tx.getFrom().toString()" />
+                          </div>
+                          <div v-else>
+                            <app-hash-concat
+                              :hash="tx.getContractAddress().toString()"
+                              :italic="true"
+                              :link="'/address/' + tx.getContractAddress().toString()"
+                            />
+                          </div>
+                        </div>
+                      </v-flex>
+                    </v-layout>
                   </div>
-                  <div v-else>
-                    <app-hash-concat  :hash="tx.getContractAddress().toString()" :italic="true" :link="'/address/' + tx.getContractAddress().toString()"/>
-                  </div>
-                </div>
-            </v-flex>
-          </v-layout>
-        </div>
-      </v-flex>
+                </v-flex>
 
-      <v-flex xs12 hidden-xs-only >
-      <!--
+                <v-flex xs12 hidden-xs-only>
+                  <!--
       =====================================================================================
         Tablet/ Desktop (SM - XL)
       =====================================================================================
       -->
 
-
-
-            <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
-              <!--
+                  <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
+                    <!--
               =====================================================================================
                   BLOCK NUMBER / HASH
 
@@ -81,10 +88,12 @@
                   LG: 1/12 (1)
               =====================================================================================
               -->
-              <v-flex hidden-sm-and-down md1 pr-1>
-                <router-link class="primary--text text-truncate font-italic psmall" :to="'/block/' + tx.getBlockHash()">{{ tx.getBlockNumber() }}</router-link>
-              </v-flex>
-              <!--
+                    <v-flex hidden-sm-and-down md1 pr-1>
+                      <router-link class="primary--text text-truncate font-italic psmall" :to="'/block/' + tx.getBlockHash()">{{
+                        tx.getBlockNumber()
+                      }}</router-link>
+                    </v-flex>
+                    <!--
               =====================================================================================
                 TRANSACTION # / HASH
 
@@ -95,38 +104,38 @@
                 LG: 7/12 (6)
               =====================================================================================
               -->
-              <v-flex d-flex xs7 sm6 pr-3>
-                <v-layout row wrap align-center pb-1>
-                  <v-flex d-flex xs12 pb-2>
-                    <router-link class="primary--text text-truncate font-mono psmall" :to="'/tx/' + tx.getHash()">{{ tx.getHash() }}</router-link>
-                  </v-flex>
-                  <v-flex hidden-xs-only sm12 pt-0>
-                    <v-layout row pl-2>
-                      <p v-if="!getType(tx)" class="text-truncate info--text mb-0">
-                        {{ $t('tx.from') }}:
-                        <router-link :to="'/address/' + tx.getFrom().toString()" class="secondary--text font-mono font-italic font-weight-regular pr-1"
-                          >{{ tx.getFrom().toString() }}
-                        </router-link>
-                      </p>
-                      <p class="text-truncate info--text mb-0" v-if="getType(tx) && !tx.getContractAddress().isEmpty()">
-                        {{ $t('contract.name') }}:
-                        <router-link
-                          class="secondary--text font-mono font-italic font-weight-regular pr-1"
-                          :to="'/address/' + tx.getContractAddress().toString()"
-                          >{{ tx.getContractAddress().toString() }}
-                        </router-link>
-                      </p>
-                      <p class="text-truncate info--text mb-0 mr-3" v-if="getType(tx) && tx.getContractAddress().isEmpty()">
-                        {{ $t('tx.to') }}:
-                        <router-link class="secondary--text font-mono font-italic font-weight-regular pr-1" :to="'/address/' + tx.getTo().toString()"
-                          >{{ tx.getTo().toString() }}
-                        </router-link>
-                      </p>
-                    </v-layout>
-                  </v-flex>
-                </v-layout>
-              </v-flex>
-              <!--
+                    <v-flex d-flex xs7 sm6 pr-3>
+                      <v-layout row wrap align-center pb-1>
+                        <v-flex d-flex xs12 pb-2>
+                          <router-link class="primary--text text-truncate font-mono psmall" :to="'/tx/' + tx.getHash()">{{ tx.getHash() }}</router-link>
+                        </v-flex>
+                        <v-flex hidden-xs-only sm12 pt-0>
+                          <v-layout row pl-2>
+                            <p v-if="!getType(tx)" class="text-truncate info--text mb-0">
+                              {{ $t('tx.from') }}:
+                              <router-link :to="'/address/' + tx.getFrom().toString()" class="secondary--text font-mono font-italic font-weight-regular pr-1"
+                                >{{ tx.getFrom().toString() }}
+                              </router-link>
+                            </p>
+                            <p class="text-truncate info--text mb-0" v-if="getType(tx) && !tx.getContractAddress().isEmpty()">
+                              {{ $t('contract.name') }}:
+                              <router-link
+                                class="secondary--text font-mono font-italic font-weight-regular pr-1"
+                                :to="'/address/' + tx.getContractAddress().toString()"
+                                >{{ tx.getContractAddress().toString() }}
+                              </router-link>
+                            </p>
+                            <p class="text-truncate info--text mb-0 mr-3" v-if="getType(tx) && tx.getContractAddress().isEmpty()">
+                              {{ $t('tx.to') }}:
+                              <router-link class="secondary--text font-mono font-italic font-weight-regular pr-1" :to="'/address/' + tx.getTo().toString()"
+                                >{{ tx.getTo().toString() }}
+                              </router-link>
+                            </p>
+                          </v-layout>
+                        </v-flex>
+                      </v-layout>
+                    </v-flex>
+                    <!--
               =====================================================================================
                 ETH VALUE
 
@@ -137,40 +146,40 @@
                 LG: 8/12 (1)
               =====================================================================================
               -->
-              <v-flex d-flex xs5 sm2 lg1 pl-0>
-                <v-layout
-                  align-center
-                  row
-                  pl-2
-                  v-if="
-                    !isShortValue(
-                      tx
-                        .getValue()
-                        .toEth()
-                        .toString()
-                    )
-                  "
-                >
-                  <p :class="[!getType(tx) ? 'success--text mb-0 text-truncate' : 'error--text mb-0 text-truncate']">
-                    {{ getSign(tx) }}{{ getShortValue(tx.getValue().toEth()) }}
-                  </p>
-                  <v-tooltip bottom>
-                    <template #activator="data">
-                      <v-icon v-on="data.on" small class="info--text text-xs-center ml-1">fa fa-question-circle</v-icon>
-                    </template>
-                    <span>{{
-                      formatStr(
-                        tx
-                          .getValue()
-                          .toEth()
-                          .toString()
-                      )
-                    }}</span>
-                  </v-tooltip>
-                </v-layout>
-                <p v-else :class="[!getType(tx) ? 'success--text mb-0 ' : 'error--text mb-0 ']">{{ getSign(tx) }}{{ tx.getValue().toEth() }}</p>
-              </v-flex>
-              <!--
+                    <v-flex d-flex xs5 sm2 lg1 pl-0>
+                      <v-layout
+                        align-center
+                        row
+                        pl-2
+                        v-if="
+                          !isShortValue(
+                            tx
+                              .getValue()
+                              .toEth()
+                              .toString()
+                          )
+                        "
+                      >
+                        <p :class="[!getType(tx) ? 'success--text mb-0 text-truncate' : 'error--text mb-0 text-truncate']">
+                          {{ getSign(tx) }}{{ getShortValue(tx.getValue().toEth()) }}
+                        </p>
+                        <v-tooltip bottom>
+                          <template #activator="data">
+                            <v-icon v-on="data.on" small class="info--text text-xs-center ml-1">fa fa-question-circle</v-icon>
+                          </template>
+                          <span>{{
+                            formatStr(
+                              tx
+                                .getValue()
+                                .toEth()
+                                .toString()
+                            )
+                          }}</span>
+                        </v-tooltip>
+                      </v-layout>
+                      <p v-else :class="[!getType(tx) ? 'success--text mb-0 ' : 'error--text mb-0 ']">{{ getSign(tx) }}{{ tx.getValue().toEth() }}</p>
+                    </v-flex>
+                    <!--
               =====================================================================================
                 Age
 
@@ -181,10 +190,10 @@
                 LG: 10/12 (2)
               =====================================================================================
               -->
-              <v-flex hidden-xs-only sm3 md2>
-                <app-time-ago :timestamp="tx.getTimestamp()" />
-              </v-flex>
-              <!--
+                    <v-flex hidden-xs-only sm3 md2>
+                      <app-time-ago :timestamp="tx.getTimestamp()" />
+                    </v-flex>
+                    <!--
               =====================================================================================
                 GWEI
 
@@ -195,10 +204,10 @@
                 LG: 11/12 (1)
               =====================================================================================
               -->
-              <v-flex hidden-md-and-down lg1>
-                <p class="text-truncate black--text mb-0">{{ getTxFee(tx) }}</p>
-              </v-flex>
-              <!--
+                    <v-flex hidden-md-and-down lg1>
+                      <p class="text-truncate black--text mb-0">{{ getTxFee(tx) }}</p>
+                    </v-flex>
+                    <!--
               =====================================================================================
                 STATUS
 
@@ -209,15 +218,15 @@
                 LG: 12/12 (1)
               =====================================================================================
               -->
-              <v-flex hidden-xs-only sm1>
-                <v-icon v-if="tx.getStatus()" small class="txSuccess--text">fa fa-check-circle {{ log(tx) }}</v-icon>
-                <v-icon v-else small class="txFail--text">fa fa-times-circle {{ log(tx) }}</v-icon>
-              </v-flex>
-            </v-layout>
-            <v-divider />
-      </v-flex>
-    </v-layout>
-              </v-container>
+                    <v-flex hidden-xs-only sm1>
+                      <v-icon v-if="tx.getStatus()" small class="txSuccess--text">fa fa-check-circle {{ log(tx) }}</v-icon>
+                      <v-icon v-else small class="txFail--text">fa fa-times-circle {{ log(tx) }}</v-icon>
+                    </v-flex>
+                  </v-layout>
+                  <v-divider />
+                </v-flex>
+              </v-layout>
+            </v-container>
           </v-card>
         </v-flex>
       </v-layout>
@@ -230,7 +239,7 @@ import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import { StringConcatMixin } from '@app/core/components/mixins'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import AppHashConcat from '@app/core/components/ui/AppHashConcat.vue'
-import { TranslateResult } from 'vue-i18n';
+import { TranslateResult } from 'vue-i18n'
 
 @Component({
   components: {
@@ -256,70 +265,78 @@ export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
   ===================================================================================
   */
 
- getTypeString(tx): TranslateResult{
-   const type =  this.getType(tx)
-   switch (type) {
-     case 'in':
-       return this.$i18n.t('filter.in')
-    case 'out':
-      return this.$i18n.t('filter.out')
-     default:
-       return this.$i18n.t('tx.self')
-   }
- }
+  getTypeString(tx): TranslateResult {
+    const type = this.getType(tx)
+    switch (type) {
+      case 'in':
+        return this.$i18n.t('filter.in')
+      case 'out':
+        return this.$i18n.t('filter.out')
+      default:
+        return this.$i18n.t('tx.self')
+    }
+  }
 
- getTxTypeClass(tx): string {
-   const type =  this.getType(tx)
-   switch (type) {
-     case 'in':
-       return 'tx-in'
-    case 'out':
-      return 'tx-out'
-     default:
-       return 'tx-self'
-   }
- }
+  getTxTypeClass(tx): string {
+    const type = this.getType(tx)
+    switch (type) {
+      case 'in':
+        return 'tx-in'
+      case 'out':
+        return 'tx-out'
+      default:
+        return 'tx-self'
+    }
+  }
 
- getTxTypeIcon(tx): TranslateResult{
-   const type =  this.getType(tx)
-   switch (type) {
-     case 'in':
-       return this.$i18n.t('tx.from')
-    case 'out':
-      return this.$i18n.t('tx.to')
-     default:
-       return  `${this.$i18n.t('tx.from')} | ${this.$i18n.t('tx.to')}`
-   }
- }
+  getTxTypeIcon(tx): TranslateResult {
+    const type = this.getType(tx)
+    switch (type) {
+      case 'in':
+        return this.$i18n.t('tx.from')
+      case 'out':
+        return this.$i18n.t('tx.to')
+      default:
+        return `${this.$i18n.t('tx.from')} | ${this.$i18n.t('tx.to')}`
+    }
+  }
 
   getType(tx): string {
-    if (tx.getTo().toString().toUpperCase() === tx.getFrom().toString().toUpperCase()) {
-     return 'self'
-   }
-   else {
-    return (
+    if (
+      tx
+        .getTo()
+        .toString()
+        .toUpperCase() ===
       tx
         .getFrom()
         .toString()
-        .toUpperCase() === this.account.toUpperCase()
-    ) ? 'out' : 'in'
-  }
+        .toUpperCase()
+    ) {
+      return 'self'
+    }
+
+    return tx
+      .getFrom()
+      .toString()
+      .toUpperCase() === this.account.toUpperCase()
+      ? 'out'
+      : 'in'
   }
 
   getSign(tx): string {
-      const type =  this.getTypeString(tx)
-   switch (type) {
-     case this.$i18n.t('tx.self'):
-       return ''
-    case this.$i18n.t('filter.in'):
-      return '+'
-     default:
-       return '-'
-   }
+    const type = this.getTypeString(tx)
+    switch (type) {
+      case this.$i18n.t('tx.self'):
+        return ''
+      case this.$i18n.t('filter.in'):
+        return '+'
+      default:
+        return '-'
+    }
   }
 
   getStatusClass(tx): string {
-    return tx.getStatus() ? 'tx-status-sucess table-row-mobile' :'tx-status-fail table-row-mobile'
+    return tx.getStatus() ? 'tx-status-sucess table-row-mobile' : 'tx-status-fail table-row-mobile'
   }
 
   log(tx) {}
@@ -349,7 +366,6 @@ export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
   }
 }
 </script>
-
 
 <style scoped lang="css">
 .table-row-mobile {
@@ -395,6 +411,4 @@ p {
 .address-row{
   display:inline-block;
 }
-
 </style>
-
