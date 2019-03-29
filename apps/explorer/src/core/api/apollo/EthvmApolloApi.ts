@@ -56,8 +56,7 @@ import { ApolloClient } from 'apollo-client'
 import { Observable } from 'apollo-client/util/Observable'
 
 export class EthvmApolloApi implements EthvmApi {
-  constructor(private readonly apollo: ApolloClient<{}>) {
-  }
+  constructor(private readonly apollo: ApolloClient<{}>) {}
 
   // ------------------------------------------------------------------------------------
   // Address
