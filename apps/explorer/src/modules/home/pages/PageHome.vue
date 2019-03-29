@@ -130,13 +130,14 @@ export default class PageHome extends Vue {
   }
 
   createSubscriptions() {
-    const { $store } = this
+    const { $store, $eventHub } = this
 
     // Create blocks subscription
     this.$api.observable<NewBlockQuery>('simpleBlocks').subscribe({
       next(data) {
         const newSimpleBlock = new SimpleBlock(data.data.newBlock)
         $store.commit(Events.NEW_SIMPLE_BLOCK, newSimpleBlock)
+        $eventHub.$emit(Events.NEW_SIMPLE_BLOCK, newSimpleBlock)
       },
       error(error): void {
         // console.error(error)
@@ -146,7 +147,9 @@ export default class PageHome extends Vue {
     // Create block metrics subscription
     this.$api.observable<NewBlockMetricQuery>('blockMetrics').subscribe({
       next(data) {
-        $store.commit(Events.NEW_BLOCK_METRIC, data.data.newBlockMetric)
+        const {newBlockMetric} = data.data
+        $store.commit(Events.NEW_BLOCK_METRIC, newBlockMetric)
+        $eventHub.$emit(Events.NEW_BLOCK_METRIC, newBlockMetric)
       },
       error(error): void {
         // console.error(error)
