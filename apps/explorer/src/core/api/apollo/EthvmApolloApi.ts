@@ -597,7 +597,7 @@ export class EthvmApolloApi implements EthvmApi {
   // Subscriptions
   // ------------------------------------------------------------------------------------
 
-  public subscribe<T>(type: string): Observable<T> {
+  public observable<T>(type: string): Observable<T> {
     let query
     switch (type) {
       case 'simpleBlocks':

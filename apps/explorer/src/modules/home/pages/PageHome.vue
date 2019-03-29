@@ -96,31 +96,6 @@ export default class PageHome extends Vue {
     this.createSubscriptions()
   }
 
-  createSubscriptions() {
-    const { $store } = this
-
-    // Create newBlocks subscription
-    this.$api.subscribe<NewBlockQuery>('simpleBlocks').subscribe({
-      next(data) {
-        const newSimpleBlock = new SimpleBlock(data.data.newBlock)
-        $store.commit(Events.NEW_SIMPLE_BLOCK, newSimpleBlock)
-      },
-      error(error): void {
-        // console.error(error)
-      }
-    })
-
-    // Create newBlockMetrics subscription
-    this.$api.subscribe<NewBlockMetricQuery>('blockMetrics').subscribe({
-      next(data) {
-        $store.commit(Events.NEW_BLOCK_METRIC, data.data.newBlockMetric)
-      },
-      error(error): void {
-        console.error(error)
-      }
-    })
-  }
-
   /*
   ===================================================================================
     Methods
@@ -128,8 +103,19 @@ export default class PageHome extends Vue {
   */
 
   loadData() {
-    this.loadTxs()
     this.loadBlocks()
+    this.loadTxs()
+  }
+
+  loadBlocks() {
+    this.fetchBlocks().then(
+      res => {
+        this.$store.commit(Events.NEW_SIMPLE_BLOCK, res)
+      },
+      err => {
+        this.errorTableBlocks = this.$i18n.t('message.no-data').toString()
+      }
+    )
   }
 
   loadTxs() {
@@ -143,15 +129,29 @@ export default class PageHome extends Vue {
     )
   }
 
-  loadBlocks() {
-    this.fetchBlocks().then(
-      res => {
-        this.$store.commit(Events.NEW_SIMPLE_BLOCK, res)
+  createSubscriptions() {
+    const { $store } = this
+
+    // Create blocks subscription
+    this.$api.observable<NewBlockQuery>('simpleBlocks').subscribe({
+      next(data) {
+        const newSimpleBlock = new SimpleBlock(data.data.newBlock)
+        $store.commit(Events.NEW_SIMPLE_BLOCK, newSimpleBlock)
       },
-      err => {
-        this.errorTableBlocks = this.$i18n.t('message.no-data').toString()
+      error(error): void {
+        // console.error(error)
       }
-    )
+    })
+
+    // Create block metrics subscription
+    this.$api.observable<NewBlockMetricQuery>('blockMetrics').subscribe({
+      next(data) {
+        $store.commit(Events.NEW_BLOCK_METRIC, data.data.newBlockMetric)
+      },
+      error(error): void {
+        // console.error(error)
+      }
+    })
   }
 
   fetchTxs(): Promise<SimpleTx[]> {

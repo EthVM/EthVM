@@ -88,5 +88,5 @@ export interface EthvmApi {
   getProcessingMetadata(id: string): Promise<ProcessingMetadata | null>
 
   // Subscriptions
-  subscribe<T>(query): Observable<T>
+  observable<T>(query): Observable<T>
 }
