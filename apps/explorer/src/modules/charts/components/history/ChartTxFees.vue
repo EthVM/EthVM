@@ -24,14 +24,6 @@ import { Component, Mixins } from 'vue-property-decorator'
 export default class ChartTxFees extends Mixins(ChartMixin) {
   /*
   ===================================================================================
-    Initial Data
-  ===================================================================================
-  */
-
-  newEvent = 'get-average-tx-fee-stats'
-
-  /*
-  ===================================================================================
     Lifecycle
   ===================================================================================
   */
@@ -39,7 +31,16 @@ export default class ChartTxFees extends Mixins(ChartMixin) {
   created() {
     this.setTitle(this.title)
     this.setLabel(this.labelString)
-    this.setEvent(this.newEvent)
+  }
+
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
+  fetchData(duration: string): Promise<any[]> {
+    return this.$api.getAverageTxFeeStats(duration)
   }
 
   /*
@@ -48,7 +49,7 @@ export default class ChartTxFees extends Mixins(ChartMixin) {
   ===================================================================================
   */
 
-  get title() {
+  get title(): string {
     return this.$i18n.t('charts.tx-fees.title').toString()
   }
 

@@ -16,7 +16,6 @@
 import { Events } from '@app/core/hub'
 import { BlockMetrics } from '@app/core/models'
 import Chart from '@app/modules/charts/components/Chart.vue'
-import ethUnits from 'ethereumjs-units'
 import { Vue, Component } from 'vue-property-decorator'
 import { EthValue } from '@app/core/models'
 import { Footnote } from '@app/core/components/props'

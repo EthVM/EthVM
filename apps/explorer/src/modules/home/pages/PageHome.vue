@@ -43,7 +43,7 @@
 import { Events } from '@app/core/hub'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppCardStatsGroup from '@app/core/components/ui/AppCardStatsGroup.vue'
-import ChartLiveTx from '@app/modules/charts/components/live/ChartLiveTx.vue'
+import ChartLiveTxs from '@app/modules/charts/components/live/ChartLiveTxs.vue'
 import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
@@ -70,7 +70,7 @@ export type NewBlockMetricQuery = {
     AppCardStatsGroup,
     TableBlocks,
     TableTxs,
-    ChartLiveTx,
+    ChartLiveTxs,
     ChartLiveTxFees
   }
 })

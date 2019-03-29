@@ -24,14 +24,6 @@ import { Component, Mixins } from 'vue-property-decorator'
 export default class ChartTxFail extends Mixins(ChartMixin) {
   /*
   ===================================================================================
-    Initial Data
-  ===================================================================================
-  */
-
-  newEvent = 'get-failed-tx-stats'
-
-  /*
-  ===================================================================================
     Lifecycle
   ===================================================================================
   */
@@ -39,7 +31,16 @@ export default class ChartTxFail extends Mixins(ChartMixin) {
   created() {
     this.setTitle(this.title)
     this.setLabel(this.labelString)
-    this.setEvent(this.newEvent)
+  }
+
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
+  fetchData(duration: string): Promise<any[]> {
+    return this.$api.getFailedTxStats(duration)
   }
 
   /*
