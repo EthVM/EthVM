@@ -33,7 +33,7 @@
         <v-card-title class="title font-weight-bold pl-0">{{ $t('block.last') }}</v-card-title>
       </v-flex>
       <v-spacer />
-      <v-flex xs4 md1 >
+      <v-flex xs4 md1>
         <v-layout justify-end>
           <v-btn outline color="secondary" class="text-capitalize" to="/blocks">{{ $t('btn.view-all') }}</v-btn>
         </v-layout>
@@ -77,12 +77,10 @@
     <v-container v-if="!hasError" flat id="scroll-target" :style="getStyle" class="scroll-y pa-2">
       <v-layout column v-scroll:#scroll-target class="mb-1">
         <v-flex v-if="!loading">
-
           <div v-for="block in blocks" :key="block.getHash()">
             <table-blocks-row :block="block" :page-type="pageType" />
           </div>
-            </v-flex>
-
+        </v-flex>
 
         <div xs12 v-if="loading">
           <div v-for="i in maxItems" :key="i">
@@ -105,16 +103,16 @@
         </div>
       </v-layout>
     </v-container>
-          <v-layout v-if="pageType != 'home' && pages > 1" justify-end row class="pb-1 pr-2 pl-2">
-            <app-paginate
-              :total="pages"
-              @newPage="setPage"
-              :current-page="page"
-              :has-input="!simplePagination"
-              :has-first="!simplePagination"
-              :has-last="!simplePagination"
-            />
-          </v-layout>
+    <v-layout v-if="pageType != 'home' && pages > 1" justify-end row class="pb-1 pr-2 pl-2">
+      <app-paginate
+        :total="pages"
+        @newPage="setPage"
+        :current-page="page"
+        :has-input="!simplePagination"
+        :has-first="!simplePagination"
+        :has-last="!simplePagination"
+      />
+    </v-layout>
   </v-card>
 </template>
 

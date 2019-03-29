@@ -1,16 +1,15 @@
 <template>
   <v-container class="hash-container pa-2" @click="reroute">
     <v-layout block row :class="hashClass" align-center justify-start fill-height>
-      <p>{{first}}</p>
-      <p class="concat">{{middle}}</p>
-      <p>{{last}}</p>
+      <p>{{ first }}</p>
+      <p class="concat">{{ middle }}</p>
+      <p>{{ last }}</p>
     </v-layout>
   </v-container>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-
 
 @Component
 export default class AppHashConcat extends Vue {
@@ -21,7 +20,7 @@ export default class AppHashConcat extends Vue {
   */
 
   @Prop(String) hash!: string
-  @Prop({type: Boolean, default: false}) italic!: boolean
+  @Prop({ type: Boolean, default: false }) italic!: boolean
   @Prop(String) link!: string
 
   /*
@@ -30,21 +29,20 @@ export default class AppHashConcat extends Vue {
   ===================================================================================
   */
 
-
-  get last():string {
+  get last(): string {
     const n = this.hash.length
-    return this.hash.slice(n-4,n)
+    return this.hash.slice(n - 4, n)
   }
   get first(): string {
-    return this.hash.slice(0,6)
+    return this.hash.slice(0, 6)
   }
-  get middle():string {
+  get middle(): string {
     const n = this.hash.length
-    return this.hash.slice(6, n-4)
+    return this.hash.slice(6, n - 4)
   }
 
   get hashClass(): string {
-    return this.italic? 'font-italic secondary--text' : 'secondary--text'
+    return this.italic ? 'font-italic secondary--text' : 'secondary--text'
   }
 
   /*
@@ -53,9 +51,9 @@ export default class AppHashConcat extends Vue {
   ===================================================================================
   */
 
-  reroute():void {
-    if(this.link) {
-      this.$router.push({ path: this.link})
+  reroute(): void {
+    if (this.link) {
+      this.$router.push({ path: this.link })
     }
   }
 }

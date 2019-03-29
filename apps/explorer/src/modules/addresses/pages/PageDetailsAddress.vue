@@ -173,7 +173,7 @@ export default class PageDetailsAddress extends Vue {
   contractsError = ''
 
   // State Machine
-  sm!:TinySM
+  sm!: TinySM
 
   /*
   ===================================================================================
