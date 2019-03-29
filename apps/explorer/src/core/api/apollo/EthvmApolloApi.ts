@@ -23,6 +23,7 @@ import {
   totalFailedTxs,
   totalSuccessfulTxs
 } from '@app/core/api/apollo/queries/statistics.graphql'
+import { newBlockMetrics, newSimpleBlocks } from '@app/core/api/apollo/queries/subscriptions.graphql'
 import {
   addressTokenTransfers,
   addressTokenTransfersByHolder,
@@ -33,22 +34,26 @@ import {
 } from '@app/core/api/apollo/queries/token-transfers.graphql'
 import { totalNumberOfTransactions, tx, txs, txsForAddress } from '@app/core/api/apollo/queries/txs.graphql'
 import { totalNumberOfUncles, uncleByHash, uncles } from '@app/core/api/apollo/queries/uncles.graphql'
-import { Block, PendingTx, SimpleBlock, SimpleTx, Tx, Uncle } from '@app/core/models'
-import { ApolloClient } from 'apollo-client'
 import {
   AddressBalance,
   AddressMetadata,
+  Block,
   BlockMetrics,
   Contract,
+  PendingTx,
   ProcessingMetadata,
   Quote,
+  SimpleBlock,
+  SimpleTx,
   Statistic,
   Token,
   TokenExchangeRate,
-  TokenTransfer
-} from 'ethvm-common'
+  TokenTransfer,
+  Tx,
+  Uncle
+} from '@app/core/models'
+import { ApolloClient } from 'apollo-client'
 import { Observable } from 'apollo-client/util/Observable'
-import { newSimpleBlocks, newBlockMetrics } from '@app/core/api/apollo/queries/subscriptions.graphql'
 
 export class EthvmApolloApi implements EthvmApi {
   constructor(private readonly apollo: ApolloClient<{}>) {}
@@ -593,23 +598,20 @@ export class EthvmApolloApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
 
   public subscribe<T>(type: string): Observable<T> {
-
-    let query;
+    let query
     switch (type) {
       case 'simpleBlocks':
         query = newSimpleBlocks
-            break
+        break
       case 'blockMetrics':
         query = newBlockMetrics
-            break
+        break
       default:
-        // TODO error
+      // TODO error
     }
 
-    return this.apollo
-      .subscribe<T>({
-        query
-      })
+    return this.apollo.subscribe<T>({
+      query
+    })
   }
-
 }

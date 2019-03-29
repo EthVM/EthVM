@@ -15,7 +15,6 @@
 import Chart from '@app/modules/charts/components/Chart.vue'
 import { ChartMixin } from '@app/modules/charts/mixins'
 import { Component, Mixins } from 'vue-property-decorator'
-import { Events } from 'ethvm-common'
 
 @Component({
   components: {
@@ -30,7 +29,7 @@ export default class ChartBlockSize extends Mixins(ChartMixin) {
   */
 
   /* Temp Event - Waiting for the event to be implemented, approximate release after 1.01 */
-  newEvent = Events.getAverageDifficultyStats
+  newEvent = 'get-average-difficulty-stats'
 
   /*
   ===================================================================================

@@ -1,11 +1,10 @@
 import { Hex, HexNumber } from '@app/core/models'
-import { TxReceipt as RawTxReceipt } from 'ethvm-common'
 
 export class TxReceipt {
   public readonly id: string
   private cache: any = {}
 
-  constructor(private readonly receipt: RawTxReceipt) {
+  constructor(private readonly receipt: any) {
     this.id = new Hex(this.receipt.transactionHash).toString()
   }
 

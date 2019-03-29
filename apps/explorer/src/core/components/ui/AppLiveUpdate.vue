@@ -9,7 +9,8 @@
 
 <script lang="ts">
 import { Vue, Component, Mixins, Prop } from 'vue-property-decorator'
-import { Events, BlockMetrics } from 'ethvm-common'
+import { Events } from '@app/core/hub'
+import { BlockMetrics } from '@app/core/models'
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { TranslateResult } from 'vue-i18n'
 

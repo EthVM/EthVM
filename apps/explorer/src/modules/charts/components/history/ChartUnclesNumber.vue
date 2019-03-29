@@ -15,7 +15,6 @@
 import Chart from '@app/modules/charts/components/Chart.vue'
 import { ChartMixin } from '@app/modules/charts/mixins'
 import { Component, Mixins } from 'vue-property-decorator'
-import { Events } from 'ethvm-common'
 
 @Component({
   components: {
@@ -30,7 +29,7 @@ export default class ChartUnclesNumber extends Mixins(ChartMixin) {
   */
 
   // This event is waiting for emplementations, right now this is a temp event to avoid errors
-  newEvent = Events.getSuccessfulTxStats
+  newEvent = 'get-successful-tx-stats'
 
   /*
   ===================================================================================

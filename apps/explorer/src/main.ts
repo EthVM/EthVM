@@ -7,7 +7,10 @@ import i18n from '@app/translations'
 import * as Sentry from '@sentry/browser'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import ApolloClient from 'apollo-client'
+import { split } from 'apollo-link'
+import { HttpLink } from 'apollo-link-http'
 import { WebSocketLink } from 'apollo-link-ws'
+import { getMainDefinition } from 'apollo-utilities'
 import VTooltip from 'v-tooltip'
 import Vue from 'vue'
 import VueApollo from 'vue-apollo'
@@ -38,18 +41,33 @@ Vue.config.productionTip = false
 //    APIs: Apollo (GraphQL)
 // -------------------------------------------------------
 
+const httpLink = new HttpLink({
+  uri: process.env.VUE_APP_API_ENDPOINT || ''
+})
+
 const wsLink = new WebSocketLink({
-  uri: process.env.VUE_APP_API_ENDPOINT || '',
+  uri: process.env.VUE_APP_API_SUBSCRIPTIONS_ENDPOINT || '',
   options: {
     reconnect: true
   }
 })
 
+const link = split(
+  // split based on operation type
+  ({ query }) => {
+    const { kind, operation } = getMainDefinition(query)
+    return kind === 'OperationDefinition' && operation === 'subscription'
+  },
+  wsLink,
+  httpLink
+)
+
 const apolloClient = new ApolloClient({
-  link: wsLink,
+  link: link,
   cache: new InMemoryCache(),
-  connectToDevTools: true,
+  connectToDevTools: process.env.NODE_ENV === 'development'
 })
+
 const apolloProvider = new VueApollo({
   defaultClient: apolloClient
 })

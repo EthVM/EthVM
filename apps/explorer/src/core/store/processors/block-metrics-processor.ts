@@ -1,4 +1,4 @@
-import { BlockMetrics } from 'ethvm-common'
+import { BlockMetrics } from '@app/core/models'
 
 const dedup = (blockMetric: BlockMetrics, pastBlockMetrics: BlockMetrics[]): BlockMetrics[] => {
   for (let i = 0; i < pastBlockMetrics.length; i++) {

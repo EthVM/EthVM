@@ -12,7 +12,8 @@
 </template>
 
 <script lang="ts">
-import { Events, BlockMetrics } from 'ethvm-common'
+import { Events } from '@app/core/hub'
+import { BlockMetrics } from '@app/core/models'
 import BN from 'bignumber.js'
 import Chart from '@app/modules/charts/components/Chart.vue'
 import { Vue, Component } from 'vue-property-decorator'

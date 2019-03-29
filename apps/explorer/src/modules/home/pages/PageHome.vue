@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { Events , Block as RawBlock } from 'ethvm-common'
+import { Events } from '@app/core/hub'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppCardStatsGroup from '@app/core/components/ui/AppCardStatsGroup.vue'
 import ChartLiveTx from '@app/modules/charts/components/live/ChartLiveTx.vue'
@@ -91,7 +91,7 @@ export default class PageHome extends Vue {
   }
 
   createSubscriptions() {
-    const {$store} = this;
+    const { $store } = this
 
     // Create newBlocks subscription
     this.$api.subscribe<NewBlockQuery>('simpleBlocks').subscribe({
@@ -100,7 +100,7 @@ export default class PageHome extends Vue {
         $store.commit(Events.NEW_SIMPLE_BLOCK, newSimpleBlock)
       },
       error(error): void {
-        console.error(error)
+        // console.error(error)
       }
     })
   }

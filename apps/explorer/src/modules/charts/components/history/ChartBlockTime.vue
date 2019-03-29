@@ -15,7 +15,6 @@
 import Chart from '@app/modules/charts/components/Chart.vue'
 import { ChartMixin } from '@app/modules/charts/mixins'
 import { Component, Mixins } from 'vue-property-decorator'
-import { Events } from 'ethvm-common'
 
 /* Time Variables: */
 
@@ -31,8 +30,7 @@ export default class ChartBlockTime extends Mixins(ChartMixin) {
   ===================================================================================
   */
 
-  //Temp Event String
-  newEvent = Events.getAverageBlockTimeStats
+  newEvent = 'get-average-block-time-stats'
 
   /*
   ===================================================================================

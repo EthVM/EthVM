@@ -15,7 +15,6 @@
 import Chart from '@app/modules/charts/components/Chart.vue'
 import { ChartMixin } from '@app/modules/charts/mixins'
 import { Component, Mixins } from 'vue-property-decorator'
-import { Events } from 'ethvm-common'
 
 /* Time Variables: */
 
@@ -31,7 +30,7 @@ export default class ChartHashRate extends Mixins(ChartMixin) {
   ===================================================================================
   */
 
-  newEvent = Events.getAverageHashRateStats
+  newEvent = 'get-average-hash-rate-stats'
 
   /*
   ===================================================================================

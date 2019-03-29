@@ -1,6 +1,5 @@
-import { Tx, SimpleBlock } from '@app/core/models'
+import { BlockMetrics, Tx, SimpleBlock } from '@app/core/models'
 import { State } from '@app/core/store/state'
-import { BlockMetrics } from 'ethvm-common'
 
 const NEW_SIMPLE_BLOCK = (state: State, raw: SimpleBlock | SimpleBlock[]) => {
   const blocks = (!Array.isArray(raw) ? [raw] : raw).reverse()

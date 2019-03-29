@@ -15,7 +15,6 @@
 import Chart from '@app/modules/charts/components/Chart.vue'
 import { ChartMixin } from '@app/modules/charts/mixins'
 import { Component, Mixins } from 'vue-property-decorator'
-import { Events } from 'ethvm-common'
 
 @Component({
   components: {
@@ -29,8 +28,7 @@ export default class ChartTxPending extends Mixins(ChartMixin) {
   ===================================================================================
   */
 
-  // Temp Event
-  newEvent = Events.getPendingTxs
+  newEvent = 'get-pending-txs'
 
   /*
   ===================================================================================

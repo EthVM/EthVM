@@ -32,8 +32,8 @@
 
 <script lang="ts">
 import AppInfoCard from '@app/core/components/ui/AppInfoCard.vue'
-import { Events, BlockMetrics } from 'ethvm-common'
-import { Block } from '@app/core/models'
+import { Events } from '@app/core/hub'
+import { Block, BlockMetrics } from '@app/core/models'
 import BN from 'bignumber.js'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 

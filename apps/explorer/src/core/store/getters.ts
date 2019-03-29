@@ -1,6 +1,5 @@
-import { Tx, SimpleBlock } from '@app/core/models'
+import { BlockMetrics, Tx, SimpleBlock } from '@app/core/models'
 import { State } from '@app/core/store/state'
-import { BlockMetrics } from 'ethvm-common'
 import { FIFO } from '@app/core/store/utils'
 
 export default {

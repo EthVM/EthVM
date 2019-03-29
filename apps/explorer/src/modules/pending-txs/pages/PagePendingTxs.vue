@@ -23,7 +23,6 @@ import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import { Vue, Component } from 'vue-property-decorator'
 import { Tx, PendingTx } from '@app/core/models'
-import { Events } from 'ethvm-common'
 import { Crumb } from '@app/core/components/props'
 
 const MAX_ITEMS = 50
@@ -79,7 +78,6 @@ export default class PagePendingTxs extends Vue {
     this.page = page
     this.fetchPendingTxs(page).then(
       res => {
-        this.commitPendingTx(res)
         this.isLoading = false
         this.pendingTxs = res as PendingTx[]
       },
@@ -95,19 +93,6 @@ export default class PagePendingTxs extends Vue {
 
   fetchTotalPendingTxs(): Promise<number> {
     return this.$api.getTotalNumberOfPendingTxs()
-  }
-
-  /**
-   * After fetching PendingTx[] from API, commit to vuex
-   * and emit event.
-   *
-   * @param  {PendingTx[]} pendingTx - Array of PendingTx[] obtained from API
-   */
-  commitPendingTx(pendingTx) {
-    this.$store.commit(Events.NEW_PENDING_TX, pendingTx)
-    if (pendingTx && pendingTx.length > 0) {
-      this.$eventHub.$emit(Events.NEW_PENDING_TX)
-    }
   }
 
   /*
