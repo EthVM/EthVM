@@ -64,6 +64,12 @@ export type NewBlockMetricQuery = {
   }
 }
 
+export type NewTxsQuery = {
+  data: {
+    newTxs: any[]
+  }
+}
+
 @Component({
   components: {
     AppBreadCrumbs,
@@ -150,6 +156,18 @@ export default class PageHome extends Vue {
         const {newBlockMetric} = data.data
         $store.commit(Events.NEW_BLOCK_METRIC, newBlockMetric)
         $eventHub.$emit(Events.NEW_BLOCK_METRIC, newBlockMetric)
+      },
+      error(error): void {
+        // console.error(error)
+      }
+    })
+
+    // Create txs subscription
+    this.$api.observable<NewTxsQuery>('simpleTxs').subscribe({
+      next(data) {
+        const {newTxs} = data.data
+        $store.commit(Events.NEW_TX, newTxs)
+        $eventHub.$emit(Events.NEW_TX, newTxs)
       },
       error(error): void {
         // console.error(error)

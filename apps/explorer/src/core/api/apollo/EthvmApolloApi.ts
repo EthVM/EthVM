@@ -23,7 +23,7 @@ import {
   totalFailedTxs,
   totalSuccessfulTxs
 } from '@app/core/api/apollo/queries/statistics.graphql'
-import { newBlockMetrics, newSimpleBlocks } from '@app/core/api/apollo/queries/subscriptions.graphql'
+import { newBlockMetrics, newSimpleBlocks, newSimpleTxs } from '@app/core/api/apollo/queries/subscriptions.graphql'
 import {
   addressTokenTransfers,
   addressTokenTransfersByHolder,
@@ -56,7 +56,8 @@ import { ApolloClient } from 'apollo-client'
 import { Observable } from 'apollo-client/util/Observable'
 
 export class EthvmApolloApi implements EthvmApi {
-  constructor(private readonly apollo: ApolloClient<{}>) {}
+  constructor(private readonly apollo: ApolloClient<{}>) {
+  }
 
   // ------------------------------------------------------------------------------------
   // Address
@@ -605,6 +606,9 @@ export class EthvmApolloApi implements EthvmApi {
         break
       case 'blockMetrics':
         query = newBlockMetrics
+        break
+      case 'simpleTxs':
+        query = newSimpleTxs
         break
       default:
       // TODO error

@@ -41,3 +41,26 @@ subscription newBlockMetrics {
     totalTxs
   }
 }
+
+subscription newSimpleTxs {
+  newTxs {
+    blockHash
+    blockNumber
+    from
+    gas
+    gasPrice
+    hash
+    input
+    timestamp
+    to
+    value
+    receipt {
+      contractAddress
+      gasUsed
+      status
+      traces {
+        error
+      }
+    }
+  }
+}
