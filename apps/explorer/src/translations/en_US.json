@@ -52,7 +52,8 @@
     "status": "Status",
     "input": "Input Data",
     "func": "Function",
-    "method": "Method ID"
+    "method": "Method ID",
+    "self": "Self Sent"
   },
 
   "token": {
