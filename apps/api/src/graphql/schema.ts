@@ -345,16 +345,6 @@ export abstract class IQuery {
 
     abstract averageHashRate(duration: Duration): Statistic[] | Promise<Statistic[]>;
 
-    abstract tx(hash: string): Transaction | Promise<Transaction>;
-
-    abstract txs(limit?: number, page?: number, fromBlock?: number): Transaction[] | Promise<Transaction[]>;
-
-    abstract txsForBlock(hash: string): Transaction[] | Promise<Transaction[]>;
-
-    abstract txsForAddress(hash: string, filter: FilterEnum, limit?: number, page?: number): Transaction[] | Promise<Transaction[]>;
-
-    abstract totalNumberOfTransactions(): number | Promise<number>;
-
     abstract addressTokenTransfers(address: string, limit?: number, page?: number): TokenTransfer[] | Promise<TokenTransfer[]>;
 
     abstract addressTokenTransfersByHolder(address: string, holder: string, filter?: FilterEnum, limit?: number, page?: number): TokenTransfer[] | Promise<TokenTransfer[]>;
@@ -370,6 +360,16 @@ export abstract class IQuery {
     abstract addressAllTokensOwned(address: string): Token[] | Promise<Token[]>;
 
     abstract addressAmountTokensOwned(address: string): number | Promise<number>;
+
+    abstract tx(hash: string): Transaction | Promise<Transaction>;
+
+    abstract txs(limit?: number, page?: number, fromBlock?: number): Transaction[] | Promise<Transaction[]>;
+
+    abstract txsForBlock(hash: string): Transaction[] | Promise<Transaction[]>;
+
+    abstract txsForAddress(hash: string, filter: FilterEnum, limit?: number, page?: number): Transaction[] | Promise<Transaction[]>;
+
+    abstract totalNumberOfTransactions(): number | Promise<number>;
 
     abstract uncleByHash(hash: string): Uncle | Promise<Uncle>;
 
