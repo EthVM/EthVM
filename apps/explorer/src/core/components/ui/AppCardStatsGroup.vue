@@ -32,8 +32,8 @@
 
 <script lang="ts">
 import AppInfoCard from '@app/core/components/ui/AppInfoCard.vue'
-import { Events, BlockMetrics } from 'ethvm-common'
-import { Block } from '@app/core/models'
+import { Events } from '@app/core/hub'
+import { Block, BlockMetrics } from '@app/core/models'
 import BN from 'bignumber.js'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 
@@ -58,9 +58,9 @@ export default class AppInfoCardGroup extends Vue {
   */
 
   loading: boolean = true
-  blockMetric: BlockMetrics = null
+  blockMetric: BlockMetrics | null = null
   seconds: number = 0
-  secondsInterval = null
+  secondsInterval: number | null = null
 
   /*
   ===================================================================================
@@ -87,7 +87,9 @@ export default class AppInfoCardGroup extends Vue {
   }
 
   beforeDestroy() {
-    clearInterval(this.secondsInterval)
+    if (this.secondsInterval) {
+      clearInterval(this.secondsInterval)
+    }
     this.$eventHub.$off([Events.NEW_BLOCK_METRIC])
   }
 
@@ -126,8 +128,10 @@ export default class AppInfoCardGroup extends Vue {
   }
 
   startCount(): void {
-    this.secondsInterval = setInterval(() => {
-      this.seconds = Math.ceil((new Date().getTime() - this.blockMetric.timestamp * 1000) / 1000)
+    this.secondsInterval = window.setInterval(() => {
+      if (this.blockMetric) {
+        this.seconds = Math.ceil((new Date().getTime() - this.blockMetric.timestamp * 1000) / 1000)
+      }
     }, 1000)
   }
 
@@ -146,7 +150,7 @@ export default class AppInfoCardGroup extends Vue {
   }
 
   get latestBlockNumber(): string {
-    return !this.loading ? this.blockMetric.number : this.loadingMessage
+    return !this.loading && this.blockMetric ? this.blockMetric.number.toString() : this.loadingMessage
   }
 
   get latestHashRate(): string {
@@ -154,7 +158,7 @@ export default class AppInfoCardGroup extends Vue {
   }
 
   get latestDifficulty(): string {
-    if (!this.loading) {
+    if (!this.loading && this.blockMetric) {
       const { difficulty } = this.blockMetric
       return new BN(difficulty)
         .dividedBy('1e12')
@@ -165,15 +169,15 @@ export default class AppInfoCardGroup extends Vue {
   }
 
   get latestBlockSuccessTxs(): string {
-    return !this.loading ? this.blockMetric.numSuccessfulTxs.toString() : this.loadingMessage
+    return !this.loading && this.blockMetric ? this.blockMetric.numSuccessfulTxs.toString() : this.loadingMessage
   }
 
   get latestBlockFailedTxs(): string {
-    return !this.loading ? this.blockMetric.numFailedTxs.toString() : this.loadingMessage
+    return !this.loading && this.blockMetric ? this.blockMetric.numFailedTxs.toString() : this.loadingMessage
   }
 
   get latestBlockPendingTxs(): string {
-    return !this.loading ? this.blockMetric.numPendingTxs.toString() : this.loadingMessage
+    return !this.loading && this.blockMetric ? this.blockMetric.numPendingTxs.toString() : this.loadingMessage
   }
 
   get secSinceLastBlock(): string {

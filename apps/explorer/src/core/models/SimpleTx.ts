@@ -1,11 +1,10 @@
 import { EthValue, Hex, HexNumber, TxReceipt } from '@app/core/models'
-import { Tx as RawTx } from 'ethvm-common'
 
 export class SimpleTx {
   public readonly id: string
   private cache: any = {}
 
-  constructor(private readonly tx: RawTx) {
+  constructor(private readonly tx: any) {
     this.id = new Hex(this.tx.hash).toString()
   }
 

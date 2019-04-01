@@ -11,3 +11,9 @@ export interface ChartData {
     }
   ]
 }
+
+export interface ChartPoints {
+  state: string
+  points: any[]
+  labels: any[]
+}

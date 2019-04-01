@@ -49,7 +49,7 @@ services:
       - back
     ports:
       - 80:80
-      - 81:81
+      - 8080:8080
     environment:
       DEBUG: 'true'
       LETS_ENCRYPT_ENABLED:
@@ -69,7 +69,7 @@ services:
     labels:
       - 'traefik.enable=true'
       - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:${DOMAIN}'
+      - 'traefik.frontend.rule=Host:ethvm.${DOMAIN}'
       - 'traefik.backend=explorer'
       - 'traefik.port=8080'
     cpu_shares: 256
@@ -87,35 +87,14 @@ services:
     networks:
       - back
     labels:
-      - "traefik.enable=true"
-      - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:api.ethvm.${DOMAIN}"
-      - "traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://ethvm.${DOMAIN}||Access-Control-Allow-Credentials:true"
-      - "traefik.frontend.passHostHeader=true"
-      - "traefik.backend=api"
-      - "traefik.port=3000"
-    cpu_shares: 512
-
-  api-nestjs:
-    build:
-      context: ./apps/api-nestjs
-      dockerfile: Dockerfile.dev
-    restart: unless-stopped
-    volumes:
-      - ./apps/api-nestjs:/var/api-nestjs
-      - ./apps/common:/var/common
-    depends_on:
-      - mongodb
-    networks:
-      - back
-    labels:
-      - "traefik.enable=true"
-      - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:api-nestjs.ethvm.${DOMAIN}"
-      - "traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://ethvm.${DOMAIN}||Access-Control-Allow-Credentials:true"
-      - "traefik.frontend.passHostHeader=true"
-      - "traefik.backend=api-nestjs"
-      - "traefik.port=3000"
+      - 'traefik.enable=true'
+      - 'traefik.default.protocol=http'
+      - 'traefik.frontend.rule=Host:api.ethvm.${DOMAIN}'
+      - 'traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://ethvm.${DOMAIN}||Access-Control-Allow-Credentials:true'
+      - 'traefik.frontend.passHostHeader=true'
+      - 'traefik.backend=api'
+      - 'traefik.port=3000'
+      - 'traefik.frontend.frontend.entryPoints=http,https,ws,wss'
     cpu_shares: 512
     environment:
       GRAPHQL_PLAYGROUND: 'true'

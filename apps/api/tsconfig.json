@@ -1,29 +1,29 @@
 {
   "compilerOptions": {
-    "allowJs": false,
-    "allowSyntheticDefaultImports": true,
-    "baseUrl": "src",
-    "inlineSourceMap": true,
-    "lib": ["es2018"],
     "module": "commonjs",
-    "moduleResolution": "node",
+    "declaration": true,
     "noImplicitAny": false,
-    "outDir": "dist",
-    "paths": {
-        "@app/*": ["*"]
-    },
     "removeComments": true,
-    "strict": true,
-    "strictPropertyInitialization": false,
+    "noLib": false,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "allowJs": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "target": "es6",
-    "typeRoots": [
-      "node_modules/@types",
-      "src/@types"
-    ]
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./src",
+    "paths": {
+      "@app/*": ["*"]
+    },
+    "strict": true
   },
-  "exclude": ["node_modules"],
   "include": [
-      ".",
-      "src/**/*"
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
   ]
 }

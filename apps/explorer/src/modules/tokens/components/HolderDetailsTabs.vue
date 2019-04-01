@@ -28,10 +28,10 @@ export default class HolderDetailsTabs extends Vue {
   ===================================================================================
   */
 
-  @Prop(String) addressRef: string
-  @Prop(Array) holderTransfers: any
-  @Prop(Boolean) isHolderTransfersLoading: boolean
-  @Prop(String) errorHolderTransfers: string
+  @Prop(String) addressRef!: string
+  @Prop(Array) holderTransfers!: any
+  @Prop(Boolean) isHolderTransfersLoading!: boolean
+  @Prop(String) errorHolderTransfers!: string
 
   /*
   ===================================================================================

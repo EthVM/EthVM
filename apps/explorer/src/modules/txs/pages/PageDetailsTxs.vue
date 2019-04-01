@@ -12,7 +12,6 @@
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
-import { Events } from 'ethvm-common'
 import { eth } from '@app/core/helper'
 import { Tx } from '@app/core/models'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
@@ -93,7 +92,7 @@ export default class PageDetailsTxs extends Vue {
    *
    * @return {Promise<Tx>}
    */
-  fetchTx(): Promise<Tx> {
+  fetchTx(): Promise<Tx | null> {
     return this.$api.getTx(this.txRef)
   }
 
