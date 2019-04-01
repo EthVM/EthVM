@@ -94,7 +94,7 @@ services:
       - 'traefik.frontend.passHostHeader=true'
       - 'traefik.backend=api'
       - 'traefik.port=3000'
-      - 'traefik.webservice.frontend.entryPoints=http,https,ws,wss'
+      - 'traefik.frontend.frontend.entryPoints=http,https,ws,wss'
     cpu_shares: 512
     environment:
       GRAPHQL_PLAYGROUND: 'true'
