@@ -61,10 +61,10 @@ We believe that it fits quite nicely within the needs that a Block Explorer typi
 
 For now, we are focused on bringing a Beta environment. It will have the following:
 
-- Migration to NestJS API to replace current SocketIO API
-- Migration from MongoDB to Postgres
-- Improvements over processing on Kafka (we want to process the chain as fast as possible and alongside with that, squash some known bugs)
-- Bring a Terraform provider to deploy properly the code on AWS
+- [x] Migration to NestJS API to replace current SocketIO API
+- [ ] Migration from MongoDB to Postgres
+- [ ] Improvements over processing on Kafka (we want to process the chain as fast as possible and alongside with that, squash some known bugs)
+- [ ] Bring a Terraform provider to deploy properly the code on AWS
 
 ## Getting Started
 
