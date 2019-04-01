@@ -307,6 +307,10 @@ export abstract class IQuery {
 
     abstract contractsCreatedBy(creator: string, limit?: number, page?: number): Contract[] | Promise<Contract[]>;
 
+    abstract processingMetadataById(id: string): ProcessingMetadata | Promise<ProcessingMetadata>;
+
+    abstract search(query: string): Search | Promise<Search>;
+
     abstract quote(symbol: ExchangeFrom, to: ExchangeTo): Quote | Promise<Quote>;
 
     abstract tokenExchangeRates(filter: TokenExchangeRateFilter, limit?: number, page?: number): TokenExchangeRate[] | Promise<TokenExchangeRate[]>;
@@ -316,10 +320,6 @@ export abstract class IQuery {
     abstract tokenExchangeRateBySymbol(symbol: string): TokenExchangeRate | Promise<TokenExchangeRate>;
 
     abstract tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
-
-    abstract processingMetadataById(id: string): ProcessingMetadata | Promise<ProcessingMetadata>;
-
-    abstract search(query: string): Search | Promise<Search>;
 
     abstract totalTxs(duration: Duration): Statistic[] | Promise<Statistic[]>;
 
