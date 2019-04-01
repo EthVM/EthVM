@@ -1,21 +1,17 @@
 <template>
   <v-card color="white" flat class="mb-3 pa-1">
-    <v-layout align-end row wrap mb-0>
-      <v-flex xs12>
+    <v-layout align-center row wrap mb-0>
+      <v-flex xs12 sm9>
         <v-card-title class="title font-weight-bold pb-1">{{ chartTitle }}</v-card-title>
         <v-card-text class="pt-0 pb-0 info--text caption">{{ chartDescription }}</v-card-text>
       </v-flex>
-      <v-flex xs12 v-if="!liveChart" pt-0>
-        <v-toolbar flat color="transparent" height="40">
-          <v-layout align-center justify-end>
-            <v-btn-toggle depressed v-model="toggleData" mandatory>
-              <v-btn flat :value="0" active-class="active-button white--text" small>{{ $tc('charts.states.all', 2) }}</v-btn>
-              <v-btn flat :value="1" active-class="active-button white--text" small>{{ $tc('charts.states.week', 2) }}</v-btn>
-              <v-btn flat :value="2" active-class="active-button white--text" small>{{ $tc('charts.states.month', 2) }}</v-btn>
-              <!--<v-btn flat :value="3" active-class="active-button white--text" small>1Y</v-btn> -->
-            </v-btn-toggle>
+      <v-flex xs12 sm3 v-if="!liveChart" >
+          <v-layout align-center justify-end pa-3>
+              <button flat :class="classAll" @click="toggleData=0" small>{{ $tc('charts.states.all', 2) }}</button>
+              <button flat :class="classWeek" @click="toggleData=1" small>{{ $tc('charts.states.week', 2) }}</button>
+              <button flat :class="classMonth" @click="toggleData=2" small>{{ $tc('charts.states.month', 2) }}</button>
+              <!-- <button flat :class="classMonth" small>1Y</button> -->
           </v-layout>
-        </v-toolbar>
       </v-flex>
     </v-layout>
     <v-divider></v-divider>
@@ -44,7 +40,9 @@ ChartJs.defaults.global.title = Object.assign(ChartJs.defaults.global.title, {
 
 ChartJs.defaults.global.tooltips = Object.assign(ChartJs.defaults.global.tooltips, {
   titleFontStyle: '400',
-  backgroundColor: '#686868'
+  backgroundColor: '#686868',
+  mode: 'index',
+  intersect: false
 })
 
 ChartJs.defaults.global.legend = Object.assign(ChartJs.defaults.global.legend, {
@@ -53,16 +51,16 @@ ChartJs.defaults.global.legend = Object.assign(ChartJs.defaults.global.legend, {
 
 ChartJs.defaults.global.layout = Object.assign(ChartJs.defaults.global.layout, {
   padding: {
-    left: 5,
-    right: 5,
     top: 20,
-    bottom: 20
+    bottom: 10
   }
 })
 
 ChartJs.defaults.global.elements.point = Object.assign(ChartJs.defaults.global.elements.point, {
   hoverRadius: 6,
-  borderWidth: 1
+  borderWidth: 1,
+  radius: 2
+
 })
 
 ChartJs.defaults.doughnut.animation = Object.assign(ChartJs.defaults.doughnut.animation, {
@@ -98,7 +96,7 @@ export default class AppChart extends Vue {
   ===================================================================================
   */
 
-  toggleData = 1
+  toggleData = 0
   updateChart = false
   chart: ChartJs | null = null
 
@@ -125,7 +123,22 @@ export default class AppChart extends Vue {
       this.chart.destroy()
     }
   }
+  /*
+  ===================================================================================
+    Computed
+  ===================================================================================
+  */
+  get classAll(): string {
+    return this.toggleData === 0 ? 'active-button' : 'button'
+  }
 
+  get classWeek(): string {
+    return this.toggleData === 1 ? 'active-button' : 'button'
+  }
+
+  get classMonth(): string {
+    return this.toggleData === 2 ? 'active-button' : 'button'
+  }
   /*
   ===================================================================================
     Watch Events
@@ -170,7 +183,17 @@ export default class AppChart extends Vue {
 
 <style scoped lang="css">
 .active-button{
-  background-color:#6270fc;
-  opacity: 1;
+  background-color:#3965e8;
+  color: white;
+  width: 32px;
+  margin: 10px;
+  border-radius:2px;
+  padding: 5px;
+}
+.button{
+  color: #8391a8;
+  width: 32px;
+  margin: 10px;
+  padding: 2px;
 }
 </style>

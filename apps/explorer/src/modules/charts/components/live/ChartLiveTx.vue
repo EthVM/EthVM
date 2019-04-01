@@ -215,7 +215,6 @@ export default class ChartLiveTransactions extends Vue {
           {
             stacked: false,
             display: false,
-            categoryPercentage: 0.7
           }
         ]
       }

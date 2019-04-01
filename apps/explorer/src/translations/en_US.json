@@ -226,7 +226,7 @@
       "description": "Average Hash Rate"
     },
     "tx-fail": {
-      "title": "Failed Transactions",
+      "title": "Failed Txs",
       "description": "Number of Failed Transactions"
     },
     "tx-fees": {
@@ -234,11 +234,11 @@
       "description": "Average Transactions Fees"
     },
     "tx-pending": {
-      "title": "Pending Transactions",
+      "title": "Pending Txs",
       "description": "Average Number of pending transactions"
     },
     "tx-success": {
-      "title": "Successful Transactions",
+      "title": "Successful Txs",
       "description": "Number of Successful Transactions"
     },
     "uncles-number": {
@@ -261,7 +261,8 @@
     },
     "captions": {
       "all": " in the Ethereum blockchain since the begining ",
-      "other": " in the Ethereum blockchain in last "
+      "other": " in the Ethereum blockchain in last ",
+      "description": " in the Ethereum blockchain"
     }
   },
   "btn": {
@@ -271,7 +272,8 @@
     "first": "First",
     "last": "Last",
     "back-home": "Go Back Home",
-    "report": "Report Issue"
+    "report": "Report Issue",
+    "details": "View Details"
   },
 
   "search": {

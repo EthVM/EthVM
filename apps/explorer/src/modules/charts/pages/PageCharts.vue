@@ -22,15 +22,11 @@
       <!-- Transactions-->
       <v-tab-item slot="tabs-item" value="tab-1">
         <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6> <chart-link :title="$t('charts.gas-price.title')" :chart-id="ID.gasPrice" /> </v-flex>
-          <v-flex xs12 md6> <chart-link :title="$t('charts.gas-limit.title')" :chart-id="ID.gasLimit" /> </v-flex>
-        </v-layout>
-        <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6> <chart-link :title="$t('charts.tx-success.title')" :chart-id="ID.txSuccess" /> </v-flex>
-          <v-flex xs12 md6> <chart-link :title="$t('charts.tx-fail.title')" :chart-id="ID.txFail" /> </v-flex>
-        </v-layout>
-        <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6> <chart-link :title="$t('charts.tx-fees.title')" :chart-id="ID.txFees" /> </v-flex>
+          <v-flex xs12 md6> <chart-link :title="$t('charts.gas-price.title')" :text="$t('charts.gas-price.description')" :chart-id="ID.gasPrice" /> </v-flex>
+          <v-flex xs12 md6> <chart-link :title="$t('charts.gas-limit.title')" :text="$t('charts.gas-limit.description')" :chart-id="ID.gasLimit" /> </v-flex>
+          <v-flex xs12 md6> <chart-link :title="$t('charts.tx-success.title')" :text="$t('charts.tx-success.description')" :chart-id="ID.txSuccess" /> </v-flex>
+          <v-flex xs12 md6> <chart-link :title="$t('charts.tx-fail.title')" :text="$t('charts.tx-fail.description')" :chart-id="ID.txFail" /> </v-flex>
+          <v-flex xs12 md6> <chart-link :title="$t('charts.tx-fees.title')" :text="$t('charts.tx-fees.description')" :chart-id="ID.txFees" /> </v-flex>
           <v-flex xs12 md6>
             <!-- Pending Txs -->
           </v-flex>
@@ -39,8 +35,8 @@
       <!-- Blocks -->
       <v-tab-item slot="tabs-item" value="tab-2">
         <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6> <chart-link :title="$t('charts.block-time.title')" :chart-id="ID.blockTime" /> </v-flex>
-          <v-flex xs12 md6> <chart-link :title="$t('charts.block-diff.title')" :chart-id="ID.difficulty" /> </v-flex>
+          <v-flex xs12 md6> <chart-link :title="$t('charts.block-time.title')" :text="$t('charts.block-time.description')" :chart-id="ID.blockTime" /> </v-flex>
+          <v-flex xs12 md6> <chart-link :title="$t('charts.block-diff.title')" :text="$t('charts.block-diff.description')" :chart-id="ID.difficulty" /> </v-flex>
         </v-layout>
         <v-layout row wrap justify-center mb-4>
           <v-flex xs12 md6>
@@ -51,7 +47,7 @@
       <!-- Mining -->
       <v-tab-item slot="tabs-item" value="tab-3">
         <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6> <chart-link :title="$t('charts.hash-rate.title')" :chart-id="ID.hashRate" /> </v-flex>
+          <v-flex xs12 md6> <chart-link :title="$t('charts.hash-rate.title')" :text="$t('charts.hash-rate.description')" :chart-id="ID.hashRate" /> </v-flex>
           <v-flex xs12 md6>
             <!--  -->
           </v-flex>

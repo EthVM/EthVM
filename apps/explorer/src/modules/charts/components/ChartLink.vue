@@ -1,15 +1,16 @@
 <template>
-  <v-card flat transparent>
-    <v-layout row>
-      <v-flex xs8 pb-0>
-        <v-card-title class="title font-weight-bold ">{{ title }}</v-card-title>
+  <v-container class="block-grey">
+    <v-layout row align-center>
+      <v-flex xs8 sm7 md8 pb-0 pr-0>
+        <v-card-title class="title font-weight-bold pl-0">{{ title }}</v-card-title>
+        <v-card-text class="info--text pt-0 pl-0 caption">{{text}} {{$t('charts.captions.description')}}</v-card-text>
+        <button  class="btn-details" :to="'/chart/' + chartId">{{ $t('btn.details') }}</button>
       </v-flex>
-      <v-flex xs4 pb-0 mr-2>
-        <v-btn flat color="secondary" class="text-capitalize" :to="'/chart/' + chartId">{{ $t('btn.more') }} <v-icon right>fas fa-angle-right</v-icon></v-btn>
+      <v-flex xs4 sm5 md4>
+         <v-img :src="require('@/assets/graph-icon.png')" contain height="100"></v-img>
       </v-flex>
     </v-layout>
-    <v-img :src="require('@/assets/chart.png')" contain class="ma-1"></v-img>
-  </v-card>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -25,5 +26,22 @@ export default class ChartLink extends Vue {
 
   @Prop({ type: String, required: true }) title!: string
   @Prop({ type: String, required: true }) chartId!: string
+  @Prop({ type: String, required: true }) text!: string
+
 }
 </script>
+
+
+<style scoped lang="css">
+.block-grey {
+  border: 1px solid #b4bfd2;
+}
+.btn-details {
+  border: 1px solid #6270fc;
+  color: #6270fc;
+  border-radius:2px;
+  padding: 10px 20px;
+}
+
+</style>
+
