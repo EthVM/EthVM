@@ -4,9 +4,11 @@
     <app-tabs :tabs="pageTabs">
       <!-- Live Data-->
       <v-tab-item slot="tabs-item" value="tab-0">
+        <v-layout row wrap justify-center :class="contentClass">
         <app-card-stats-group />
+        </v-layout>
         <!-- Charts -->
-        <v-layout row wrap justify-center mb-4>
+        <v-layout row wrap justify-center :class="contentClass">
           <v-flex xs12 md6> <chart-live-tx /> </v-flex>
           <v-flex xs12 md6> <chart-live-tx-fees /> </v-flex>
         </v-layout>
@@ -21,7 +23,7 @@
       </v-tab-item>
       <!-- Transactions-->
       <v-tab-item slot="tabs-item" value="tab-1">
-        <v-layout row wrap justify-center mb-4>
+        <v-layout row wrap justify-center :class="contentClass">
           <v-flex xs12 md6> <chart-link :title="$t('charts.gas-price.title')" :text="$t('charts.gas-price.description')" :chart-id="ID.gasPrice" /> </v-flex>
           <v-flex xs12 md6> <chart-link :title="$t('charts.gas-limit.title')" :text="$t('charts.gas-limit.description')" :chart-id="ID.gasLimit" /> </v-flex>
           <v-flex xs12 md6> <chart-link :title="$t('charts.tx-success.title')" :text="$t('charts.tx-success.description')" :chart-id="ID.txSuccess" /> </v-flex>
@@ -34,19 +36,17 @@
       </v-tab-item>
       <!-- Blocks -->
       <v-tab-item slot="tabs-item" value="tab-2">
-        <v-layout row wrap justify-center mb-4>
+        <v-layout row wrap justify-center :class="contentClass">
           <v-flex xs12 md6> <chart-link :title="$t('charts.block-time.title')" :text="$t('charts.block-time.description')" :chart-id="ID.blockTime" /> </v-flex>
           <v-flex xs12 md6> <chart-link :title="$t('charts.block-diff.title')" :text="$t('charts.block-diff.description')" :chart-id="ID.difficulty" /> </v-flex>
-        </v-layout>
-        <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6>
-            <!-- Average Block Size -->
-          </v-flex>
+          <!-- <v-flex xs12 md6>
+          Average Block Size
+          </v-flex> -->
         </v-layout>
       </v-tab-item>
       <!-- Mining -->
       <v-tab-item slot="tabs-item" value="tab-3">
-        <v-layout row wrap justify-center mb-4>
+        <v-layout row wrap justify-center :class="contentClass">
           <v-flex xs12 md6> <chart-link :title="$t('charts.hash-rate.title')" :text="$t('charts.hash-rate.description')" :chart-id="ID.hashRate" /> </v-flex>
           <v-flex xs12 md6>
             <!--  -->
@@ -125,6 +125,10 @@ export default class PageCharts extends Vue {
         isActive: false
       }
     ]
+  }
+
+  get contentClass(): String {
+    return this.$vuetify.breakpoint.name === 'xs' ? 'ma-1': 'ma-3'
   }
 }
 </script>
