@@ -76,10 +76,49 @@
     </v-navigation-drawer>
     <!--
     =====================================================================================
-      TOOLBAR (TOGGLE MENU & SEARCH INPUT)
+      TOOLBAR (TOGGLE MENU & SEARCH INPUT) - Mobile
     =====================================================================================
     -->
-    <v-toolbar color="white" app fixed clipped flat height="77px">
+
+    <v-toolbar v-if="$vuetify.breakpoint.name === 'xs'" color="primary" app scroll-off-screen :scroll-threshold="75" :extended="showSearch" clipped flat class="pb-2 pt-2 pr-2">
+      <v-layout align-center row fill-height>
+        <v-flex shrink>
+         <v-layout align-end justify-start row fill-height>
+            <v-img :src="require('@/assets/logo-white.png')" height="30px" width="70px"  contain ></v-img>
+            <v-img :src="require('@/assets/alpha.png')" height="16px" width="40px" contain ></v-img>
+          </v-layout>
+        </v-flex>
+        <v-spacer />
+        <v-flex xs2 v-if="!showSearch">
+          <v-btn icon @click="showSearch=true" >
+            <v-icon class="fa fa-search white--text" />
+          </v-btn>
+        </v-flex>
+        <v-flex xs1>
+          <v-btn icon @click.stop="setDrawer">
+            <v-icon class="fa fa-bars white--text" />
+        </v-btn>
+        </v-flex>
+      </v-layout>
+
+      <template v-if="showSearch" v-slot:extension >
+        <v-layout row justify-center align-center >
+            <v-flex xs11> <app-search /> </v-flex>
+            <v-flex xs1 >
+              <v-btn icon @click="showSearch=false" >
+                <v-icon class="fas fa-times white--text" />
+              </v-btn>
+            </v-flex>
+          </v-layout>
+      </template>
+
+    </v-toolbar>
+    <!--
+    =====================================================================================
+      TOOLBAR (TOGGLE MENU & SEARCH INPUT) - Desktop
+    =====================================================================================
+    -->
+    <v-toolbar v-else color="white" app fixed clipped flat height="77px">
       <v-layout align-center row fill-height>
         <v-flex xs1>
           <v-layout row>
@@ -117,6 +156,7 @@ export default class TheNavigationDrawer extends Vue {
   active = 0
   sublink = null
   mini: boolean = false
+  showSearch:boolean = false
 
   /*
   ===================================================================================
