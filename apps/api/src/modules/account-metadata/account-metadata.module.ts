@@ -7,6 +7,6 @@ import { AccountMetadataResolvers } from '@app/modules/account-metadata/account-
 @Module({
   imports: [TypeOrmModule.forFeature([AccountMetadataEntity])],
   providers: [AccountMetadataService, AccountMetadataResolvers],
-  exports: []
+  exports: [],
 })
 export class AccountMetadataModule {}

@@ -22,7 +22,7 @@ export class MongoSubscriptionService {
   constructor(
     @Inject('PUB_SUB') private readonly pubSub: PubSub,
     @Inject('winston') private readonly logger: Logger,
-    @InjectRepository(ProcessingMetadataEntity) private readonly processingMetadataRepository: MongoRepository<ProcessingMetadataEntity>
+    @InjectRepository(ProcessingMetadataEntity) private readonly processingMetadataRepository: MongoRepository<ProcessingMetadataEntity>,
   ) {
     this.initialize()
   }
@@ -70,7 +70,6 @@ export class MongoSubscriptionService {
       // TODO remove this
       // this.testBlockSubscription()
       // this.testBlockMetricSubscription()
-
     }
 
     logger.info('MongoStreamer - initialize() / Enabling Processing Metadata streamer')
@@ -132,7 +131,7 @@ export class MongoSubscriptionService {
       this.logger.info('MongoStreamer - testBlockMetricSubscription() / Testing block metric subscription')
       await asyncTimeout(10000)
 
-      const blockMetric = await manager.findOne(BlockMetricEntity, {order: {number: 'DESC'}})
+      const blockMetric = await manager.findOne(BlockMetricEntity, { order: { number: 'DESC' } })
       const newBlockMetric = { ...blockMetric }
       const nextNumber = blockMetric.number + 1
       delete newBlockMetric.id
@@ -148,7 +147,12 @@ class ChangeStreamReader {
   private changeStream: ChangeStream
   private cursor: Cursor<any>
 
-  constructor(private readonly collectionName: string, private readonly pubSub: PubSub, private readonly logger: Logger, private readonly triggerName?: string) {}
+  constructor(
+    private readonly collectionName: string,
+    private readonly pubSub: PubSub,
+    private readonly logger: Logger,
+    private readonly triggerName?: string,
+  ) {}
 
   public start() {
     this.logger.info(`MongoChangeStreamReader - start() / Starting to listen change events on: ${this.collectionName}`)
@@ -179,13 +183,12 @@ class ChangeStreamReader {
           const event: StreamingEvent = {
             op: operationType,
             key: documentKey._id,
-            value: fullDocument
+            value: fullDocument,
           }
           const trigger = triggerName || collectionName
           await pubSub.publish(trigger, event)
         }
       }
-
     } catch (e) {
       this.logger.error('MongoChangeStreamReader - pull() / Failed to pull', this.collectionName, ' with error:', e)
     }

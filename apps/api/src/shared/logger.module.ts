@@ -8,11 +8,11 @@ import winston from 'winston'
       level: 'info',
       format: winston.format.combine(
         winston.format.colorize(),
-        winston.format.simple()
+        winston.format.simple(),
       ),
       transports: [new winston.transports.Console()],
 
-    })
-  ]
+    }),
+  ],
 })
 export class LoggerModule {}

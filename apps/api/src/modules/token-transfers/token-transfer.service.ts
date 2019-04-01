@@ -18,7 +18,7 @@ export class TokenTransferService {
     private readonly tokenTransferRepository: MongoRepository<TokenTransferEntity>,
     private readonly configService: ConfigService,
     private readonly vmEngine: VmEngineService,
-    private readonly exchangeService: ExchangeService
+    private readonly exchangeService: ExchangeService,
   ) {}
 
   async findAddressTokenTransfers(address: string, take: number = 10, page: number = 0): Promise<TokenTransferEntity[]> {
@@ -27,7 +27,7 @@ export class TokenTransferService {
       where: { contract: address, transferType: { $not: { $eq: 'ETHER' } } },
       take,
       skip,
-      order: { timestamp: -1 }
+      order: { timestamp: -1 },
     })
   }
 
@@ -36,7 +36,7 @@ export class TokenTransferService {
     holder: string,
     filter: string = 'all',
     take: number = 10,
-    page: number = 0
+    page: number = 0,
   ): Promise<TokenTransferEntity[]> {
     const skip = take * page
     let where
