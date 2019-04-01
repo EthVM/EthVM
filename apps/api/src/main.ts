@@ -4,12 +4,9 @@ import { ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import ExpressRateLimit from 'express-rate-limit'
 import helmet from 'helmet'
-import { Logger } from 'winston'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
-
-  app.useLogger(app.get<Logger>('winston'))
 
   app.enableCors()
   app.useGlobalPipes(new ValidationPipe())
@@ -27,6 +24,7 @@ async function bootstrap() {
   const { host, port } = config
 
   await app.listen(port, host)
+
 }
 
 bootstrap()
