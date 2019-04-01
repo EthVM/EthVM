@@ -40,18 +40,18 @@
 </template>
 
 <script lang="ts">
-  import { Events } from '@app/core/hub'
-  import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-  import AppCardStatsGroup from '@app/core/components/ui/AppCardStatsGroup.vue'
-  import ChartLiveTxs from '@app/modules/charts/components/live/ChartLiveTxs.vue'
-  import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees.vue'
-  import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
-  import TableTxs from '@app/modules/txs/components/TableTxs.vue'
-  import { SimpleBlock, SimpleTx, Tx } from '@app/core/models'
-  import { Component, Vue } from 'vue-property-decorator'
-  import { Subscription } from 'apollo-client/util/Observable'
+import { Events } from '@app/core/hub'
+import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
+import AppCardStatsGroup from '@app/core/components/ui/AppCardStatsGroup.vue'
+import ChartLiveTxs from '@app/modules/charts/components/live/ChartLiveTxs.vue'
+import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees.vue'
+import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
+import TableTxs from '@app/modules/txs/components/TableTxs.vue'
+import { SimpleBlock, SimpleTx, Tx } from '@app/core/models'
+import { Component, Vue } from 'vue-property-decorator'
+import { Subscription } from 'apollo-client/util/Observable'
 
-  const MAX_ITEMS = 50
+const MAX_ITEMS = 50
 
 export type NewBlockQuery = {
   data: {
