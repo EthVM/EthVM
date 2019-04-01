@@ -81,6 +81,18 @@ const schema = {
       env: 'VM_ENGINE_TOKENS_SMART_CONTRACT_ADDRESS',
       default: '0x2783c0A4Bfd3721961653a9e9939Fc63687bf07f'
     }
+  },
+  expressRateLimit: {
+    windowMs: {
+      doc: 'Express Rate Limit window(ms)',
+      env: 'EXPRESS_RATE_LIMIT_WINDOW_MS',
+      default: 15 * 60 * 1000
+    },
+    max: {
+      doc: 'Express Rate Limit max requests per window(ms)',
+      env: 'EXPRESS_RATE_LIMIT_MAX',
+      default: 100
+    }
   }
 }
 
@@ -104,6 +116,11 @@ export interface EthplorerConfig {
 export interface VmEngineConfig {
   rpcUrl: string
   tokensSmartContract: string
+}
+
+export interface ExpressRateLimitConfig {
+  windowMs: number
+  max: number
 }
 
 @Injectable()
@@ -153,5 +170,9 @@ export class ConfigService {
 
   get vmEngine(): VmEngineConfig {
     return this.config.get('vmEngine')
+  }
+
+  get expressRateLimit(): ExpressRateLimitConfig {
+    return this.config.get('expressRateLimit')
   }
 }

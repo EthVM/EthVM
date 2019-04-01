@@ -5,6 +5,7 @@ import winston from 'winston'
 @Module({
   imports: [
     WinstonModule.forRoot({
+      level: 'info',
       format: winston.format.combine(
         // winston.format.colorize(),
         winston.format.simple()
