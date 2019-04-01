@@ -1,11 +1,11 @@
-import { ChangeStream, Cursor, getMongoManager, MongoRepository } from 'typeorm'
-import { Inject, Injectable } from '@nestjs/common'
-import { PubSub } from 'graphql-subscriptions'
-import { Logger } from 'winston'
-import { InjectRepository } from '@nestjs/typeorm'
-import { ProcessingMetadataEntity } from '@app/orm/entities/processing-metadata.entity'
-import { BlockEntity } from '@app/orm/entities/block.entity'
 import { BlockMetricEntity } from '@app/orm/entities/block-metric.entity'
+import { BlockEntity } from '@app/orm/entities/block.entity'
+import { ProcessingMetadataEntity } from '@app/orm/entities/processing-metadata.entity'
+import { Inject, Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { PubSub } from 'graphql-subscriptions'
+import { ChangeStream, Cursor, getMongoManager, MongoRepository } from 'typeorm'
+import { Logger } from 'winston'
 
 export interface StreamingEvent {
   op: 'insert' | 'delete' | 'replace' | 'updated' | 'invalidate'
@@ -15,14 +15,14 @@ export interface StreamingEvent {
 
 @Injectable()
 export class MongoSubscriptionService {
-  blocksReader
-  blockMetricsReader
-  processingMetadataReader
+  private blocksReader!: ChangeStreamReader
+  private blockMetricsReader!: ChangeStreamReader
+  private processingMetadataReader!: ChangeStreamReader
 
   constructor(
     @Inject('PUB_SUB') private readonly pubSub: PubSub,
     @Inject('winston') private readonly logger: Logger,
-    @InjectRepository(ProcessingMetadataEntity) private readonly processingMetadataRepository: MongoRepository<ProcessingMetadataEntity>,
+    @InjectRepository(ProcessingMetadataEntity) private readonly processingMetadataRepository: MongoRepository<ProcessingMetadataEntity>
   ) {
     this.initialize()
   }
@@ -151,7 +151,7 @@ class ChangeStreamReader {
     private readonly collectionName: string,
     private readonly pubSub: PubSub,
     private readonly logger: Logger,
-    private readonly triggerName?: string,
+    private readonly triggerName?: string
   ) {}
 
   public start() {
@@ -183,7 +183,7 @@ class ChangeStreamReader {
           const event: StreamingEvent = {
             op: operationType,
             key: documentKey._id,
-            value: fullDocument,
+            value: fullDocument
           }
           const trigger = triggerName || collectionName
           await pubSub.publish(trigger, event)
