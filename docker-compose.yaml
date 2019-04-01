@@ -76,11 +76,11 @@ services:
 
   api:
     build:
-      context: ./apps/api-nestjs
+      context: ./apps/api
       dockerfile: Dockerfile.dev
     restart: unless-stopped
     volumes:
-      - ./apps/api-nestjs:/var/api-nestjs
+      - ./apps/api:/var/api
       - ./apps/common:/var/common
     depends_on:
       - mongodb
@@ -92,7 +92,7 @@ services:
       - 'traefik.frontend.rule=Host:api.ethvm.${DOMAIN}'
       - 'traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://ethvm.${DOMAIN}||Access-Control-Allow-Credentials:true'
       - 'traefik.frontend.passHostHeader=true'
-      - 'traefik.backend=api-nestjs'
+      - 'traefik.backend=api'
       - 'traefik.port=3000'
       - 'traefik.webservice.frontend.entryPoints=http,https,ws,wss'
     cpu_shares: 512

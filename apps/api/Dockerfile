@@ -1,7 +1,4 @@
-FROM node:10.14.2-alpine
-
-# Add repositories
-RUN echo -e "http://uk.alpinelinux.org/alpine/v3.8/main\nhttp://uk.alpinelinux.org/alpine/v3.8/community" > /etc/apk/repositories
+FROM node:10.9.0-alpine
 
 # Install deps
 RUN apk --no-cache add \
@@ -20,20 +17,27 @@ RUN apk --no-cache add \
 
 RUN apk add --no-cache --virtual \
   .build-deps \
-  gcc zlib-dev \
+  gcc \
+  zlib-dev \
   libc-dev \
   bsd-compat-headers \
   py-setuptools \
   bash
 
 # Create workdir
-RUN mkdir -p /var/api-nestjs
-WORKDIR /var/api-nestjs
-USER node
+RUN mkdir -p /var/www
+WORKDIR /var/www
 
 # Copy
-COPY . .
+COPY api/ api/
+COPY common/ common/
+
+# Install
+RUN cd api && \
+  yarn install
+
+WORKDIR /var/www/api
 
 # Expose
 EXPOSE 3000
-CMD yarn install && yarn start:dev
+CMD yarn start
