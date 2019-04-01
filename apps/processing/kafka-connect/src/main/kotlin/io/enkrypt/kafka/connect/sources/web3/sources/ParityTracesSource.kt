@@ -52,7 +52,6 @@ class ParityTracesSource(
             val traceKeySchemaAndValue = AvroToConnect.toConnectData(traceKeyRecord)
             val traceValueSchemaAndValue = AvroToConnect.toConnectData(traceListRecord)
 
-
             SourceRecord(
               partitionKey, partitionOffset, tracesTopic,
               traceKeySchemaAndValue.schema(), traceKeySchemaAndValue.value(),

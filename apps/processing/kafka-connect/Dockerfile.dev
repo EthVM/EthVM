@@ -1,0 +1,4 @@
+FROM confluentinc/cp-kafka-connect:5.1.2
+
+RUN confluent-hub install confluentinc/kafka-connect-jdbc:5.1.2 --no-prompt \
+  && wget -P /usr/share/java https://jdbc.postgresql.org/download/postgresql-42.2.5.jar

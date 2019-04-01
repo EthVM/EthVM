@@ -5,12 +5,9 @@ import io.enkrypt.avro.capture.ContractLifecycleListRecord
 import io.enkrypt.avro.capture.ContractLifecycleRecord
 import io.enkrypt.avro.capture.ContractLifecyleType
 import io.enkrypt.avro.capture.ContractRecord
-import io.enkrypt.avro.capture.TraceListRecord
-import io.enkrypt.avro.processing.FungibleBalanceDeltaListRecord
 import io.enkrypt.common.extensions.toContractLifecycleRecord
 import io.enkrypt.kafka.streams.Serdes
 import io.enkrypt.kafka.streams.config.Topics.CanonicalContractLifecycle
-import io.enkrypt.kafka.streams.config.Topics.CanonicalContractTraces
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTraces
 import io.enkrypt.kafka.streams.config.Topics.ContractLifecycleEvents
 import io.enkrypt.kafka.streams.config.Topics.Contracts
@@ -21,7 +18,6 @@ import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
-import org.apache.kafka.streams.kstream.Grouped
 import org.apache.kafka.streams.kstream.Materialized
 import java.util.Properties
 import org.apache.kafka.common.serialization.Serdes as KafkaSerdes

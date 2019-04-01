@@ -1,7 +1,7 @@
 CREATE TABLE block_header
 (
 
-  number            BIGINT PRIMARY KEY,
+  number            NUMERIC(78) PRIMARY KEY,
   hash              CHAR(32)    NOT NULL UNIQUE,
   parent_hash       CHAR(32)    NOT NULL UNIQUE,
   nonce             NUMERIC(78) NULL,
@@ -14,8 +14,8 @@ CREATE TABLE block_header
   difficulty        NUMERIC(78) NOT NULL,
   total_difficulty  NUMERIC(78) NOT NULL,
   extra_data        TEXT        NULL,
-  gasLimit          NUMERIC(78) NOT NULL,
-  gasUsed           NUMERIC(78) NOT NULL,
+  gas_limit         NUMERIC(78) NOT NULL,
+  gas_used          NUMERIC(78) NOT NULL,
   timestamp         BIGINT      NOT NULL,
   size              BIGINT      NOT NULL
 
@@ -24,7 +24,7 @@ CREATE TABLE block_header
 CREATE TABLE uncle
 (
 
-  number            BIGINT PRIMARY KEY,
+  number            NUMERIC(78) PRIMARY KEY,
   nephew_number     BIGINT      NOT NULL REFERENCES block_header (number) ON DELETE CASCADE,
   hash              CHAR(32)    NOT NULL UNIQUE,
   parent_hash       CHAR(32)    NOT NULL UNIQUE,
@@ -147,12 +147,12 @@ CREATE TABLE block_metric
 (
   block_number       NUMERIC(78),
   timestamp          TIMESTAMP NULL,
-  hash               CHAR(32) NULL,
-  num_total_txs      INT      NULL,
-  num_successful_txs INT      NULL,
-  num_failed_txs     INT      NULL,
-  num_internal_txs   INT      NULL,
-  num_uncles         INT      NULL,
+  hash               CHAR(32)  NULL,
+  num_total_txs      INT       NULL,
+  num_successful_txs INT       NULL,
+  num_failed_txs     INT       NULL,
+  num_internal_txs   INT       NULL,
+  num_uncles         INT       NULL,
   difficulty         NUMERIC(78),
   total_difficulty   NUMERIC(78),
   total_gas_price    NUMERIC(78),

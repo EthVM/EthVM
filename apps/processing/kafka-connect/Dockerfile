@@ -19,7 +19,8 @@ RUN chmod +x /tmp/gradlew && \
 
 FROM confluentinc/cp-kafka-connect-base
 
-RUN mkdir -p /usr/share/enkryptio
+RUN mkdir -p /usr/share/enkryptio &&
+  wget -P /usr/share/enkryptio https://jdbc.postgresql.org/download/postgresql-42.2.5.jar
 
 COPY --from=builder /tmp/kafka-connect/libs/* /usr/share/enkryptio/
 
@@ -36,3 +37,5 @@ ENV CONNECT_KEY_CONVERTER=org.apache.kafka.connect.json.JsonConverter
 ENV CONNECT_VALUE_CONVERTER=org.apache.kafka.connect.json.JsonConverter
 ENV CONNECT_INTERNAL_KEY_CONVERTER=org.apache.kafka.connect.json.JsonConverter
 ENV CONNECT_INTERNAL_VALUE_CONVERTER=org.apache.kafka.connect.json.JsonConverter
+
+RUN confluent-hub install confluentinc/kafka-connect-jdbc:5.1.2

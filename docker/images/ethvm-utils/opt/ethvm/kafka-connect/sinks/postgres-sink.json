@@ -1,0 +1,19 @@
+{
+  "name": "postgres-sink",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+    "topics": "canonical_blocks,canonical_traces,canonical_receipts,canonical_transactions",
+    "auto.create": "true",
+    "auto.evolve": "true",
+    "insert.mode": "upsert",
+    "connection.url": "{{ .Env.POSTGRES_URL }}",
+    "connection.user": "{{ .Env.POSTGRES_USER }}",
+    "connection.password": "{{ .Env.POSTGRES_PASSWORD }}",
+    "transforms": "dropFields,toJson",
+    "transforms.dropFields.type": "org.apache.kafka.connect.transforms.ReplaceField$Value",
+    "transforms.dropFields.blacklist": "uncles",
+    "transforms.toJson.type": "io.enkrypt.kafka.connect.transforms.JsonField$Value",
+    "transforms.toJson.whitelist": "logs,action,result",
+    "pk.mode": "record_key"
+  }
+}

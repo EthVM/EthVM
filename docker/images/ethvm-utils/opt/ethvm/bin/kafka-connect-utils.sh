@@ -48,9 +48,9 @@ register_sources() {
 } >&2
 
 register_sinks() {
-  echo "===> Registering MongoDB sink ..."
+  echo "===> Registering Postgres sink ..."
   ensure_kafka_connect
-#  curl_register ${KAFKA_CONNECT_DIR}/sinks/mongo-sink.json
+  curl_register ${KAFKA_CONNECT_DIR}/sinks/postgres-sink.json
 } >&2
 
 init() {

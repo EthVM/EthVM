@@ -29,13 +29,15 @@ dependencies {
   // Mongo
   implementation("org.mongodb:mongodb-driver-sync:3.10.1")
 
-  // Postgres
-  implementation("com.github.davidmoten:rxjava2-jdbc:0.2.4")
+  // Postgres and JDBC
+  implementation("com.zaxxer:HikariCP:3.3.1")
+  implementation("org.postgresql:postgresql:42.2.5")
 
   // Web3
   implementation("org.web3j:parity:4.0.3")
 
   // Utils
+  implementation("com.datamountaineer:kafka-connect-common:1.1.5")
   implementation("io.arrow-kt:arrow-core:${ext.get("arrow-core-version") as String}")
   implementation("ch.qos.logback:logback-classic:${ext.get("logback-version") as String}")
   implementation("io.github.microutils:kotlin-logging:${ext.get("kotlin-logging-version") as String}")

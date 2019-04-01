@@ -13,3 +13,5 @@ ENV CONNECT_KEY_CONVERTER=org.apache.kafka.connect.json.JsonConverter
 ENV CONNECT_VALUE_CONVERTER=org.apache.kafka.connect.json.JsonConverter
 ENV CONNECT_INTERNAL_KEY_CONVERTER=org.apache.kafka.connect.json.JsonConverter
 ENV CONNECT_INTERNAL_VALUE_CONVERTER=org.apache.kafka.connect.json.JsonConverter
+
+RUN confluent-hub install confluentinc/kafka-connect-jdbc:5.1.2

@@ -51,7 +51,7 @@ class ExchangeRatesSourceConnector : SourceConnector() {
 
     const val TOPIC_CONFIG = "topic"
     const val TOPIC_CONFIG_DOC = "Topic into which to publish exchange rates"
-    const val TOPIC_CONFIG_DEFAULT = "raw-exchange-rates"
+    const val TOPIC_CONFIG_DEFAULT = "raw_exchange_rates"
 
     const val SYNC_INTERVAL_CONFIG = "sync.interval"
     const val SYNC_INTERVAL_DOC = "How often to check for updates in seconds"

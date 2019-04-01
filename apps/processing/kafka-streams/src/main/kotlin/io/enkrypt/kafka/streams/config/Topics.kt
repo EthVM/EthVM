@@ -29,44 +29,44 @@ data class KafkaTopic<K, V>(
 
 object Topics {
 
-  val CanonicalBlocks = KafkaTopic("canonical-blocks", Serdes.CanonicalKey(), Serdes.BlockHeader())
-  val CanonicalTransactions = KafkaTopic("canonical-transactions", Serdes.CanonicalKey(), Serdes.TransactionList())
-  val CanonicalReceipts = KafkaTopic("canonical-receipts", Serdes.CanonicalKey(), Serdes.ReceiptList())
-  val CanonicalTraces = KafkaTopic("canonical-traces", Serdes.CanonicalKey(), Serdes.TraceList())
+  val CanonicalBlocks = KafkaTopic("canonical_blocks", Serdes.CanonicalKey(), Serdes.BlockHeader())
+  val CanonicalTransactions = KafkaTopic("canonical_transactions", Serdes.CanonicalKey(), Serdes.TransactionList())
+  val CanonicalReceipts = KafkaTopic("canonical_receipts", Serdes.CanonicalKey(), Serdes.ReceiptList())
+  val CanonicalTraces = KafkaTopic("canonical_traces", Serdes.CanonicalKey(), Serdes.TraceList())
 
-  val CanonicalTracesEtherDeltas = KafkaTopic("canonical-traces-ether-deltas", Serdes.CanonicalKey(), Serdes.FungibleBalanceDeltaList())
-  val CanonicalTransactionFeesEtherDeltas = KafkaTopic("canonical-transaction-fees-ether-deltas", Serdes.CanonicalKey(), Serdes.FungibleBalanceDeltaList())
-  val CanonicalMinerFeesEtherDeltas = KafkaTopic("canonical-miner-fees-ether-deltas", Serdes.CanonicalKey(), Serdes.FungibleBalanceDelta())
+  val CanonicalTracesEtherDeltas = KafkaTopic("canonical_traces_ether_deltas", Serdes.CanonicalKey(), Serdes.FungibleBalanceDeltaList())
+  val CanonicalTransactionFeesEtherDeltas = KafkaTopic("canonical_transaction_fees_ether_deltas", Serdes.CanonicalKey(), Serdes.FungibleBalanceDeltaList())
+  val CanonicalMinerFeesEtherDeltas = KafkaTopic("canonical_miner_fees_ether_deltas", Serdes.CanonicalKey(), Serdes.FungibleBalanceDelta())
 
-  val CanonicalReceiptErc20Deltas = KafkaTopic("canonical-receipt-erc20-deltas", Serdes.CanonicalKey(), Serdes.FungibleBalanceDeltaList())
-  val CanonicalReceiptErc721Deltas = KafkaTopic("canonical-receipt-erc721-deltas", Serdes.CanonicalKey(), Serdes.NonFungibleBalanceDeltaList())
+  val CanonicalReceiptErc20Deltas = KafkaTopic("canonical_receipt_erc20_deltas", Serdes.CanonicalKey(), Serdes.FungibleBalanceDeltaList())
+  val CanonicalReceiptErc721Deltas = KafkaTopic("canonical_receipt_erc721_deltas", Serdes.CanonicalKey(), Serdes.NonFungibleBalanceDeltaList())
 
-  val FungibleBalanceDeltas = KafkaTopic("fungible-balance-deltas", Serdes.FungibleBalanceKey(), Serdes.FungibleBalanceDelta())
-  val FungibleBalances = KafkaTopic("fungible-balances", Serdes.FungibleBalanceKey(), Serdes.FungibleBalance())
+  val FungibleBalanceDeltas = KafkaTopic("fungible_balance_deltas", Serdes.FungibleBalanceKey(), Serdes.FungibleBalanceDelta())
+  val FungibleBalances = KafkaTopic("fungible_balances", Serdes.FungibleBalanceKey(), Serdes.FungibleBalance())
 
-  val NonFungibleBalanceDeltas = KafkaTopic("non-fungible-balance-deltas", Serdes.NonFungibleBalanceKey(), Serdes.NonFungibleBalanceDelta())
-  val NonFungibleBalances = KafkaTopic("non-fungible-balances", Serdes.NonFungibleBalanceKey(), Serdes.NonFungibleBalance())
+  val NonFungibleBalanceDeltas = KafkaTopic("non_fungible_balance_deltas", Serdes.NonFungibleBalanceKey(), Serdes.NonFungibleBalanceDelta())
+  val NonFungibleBalances = KafkaTopic("non_fungible_balances", Serdes.NonFungibleBalanceKey(), Serdes.NonFungibleBalance())
 
-  val BlockMetrics = KafkaTopic("block-metrics", Serdes.CanonicalKey(), Serdes.BlockMetrics())
-  val TraceBlockMetrics = KafkaTopic("trace-block-metrics", Serdes.CanonicalKey(), Serdes.BlockMetrics())
-  val TransactionBlockMetrics = KafkaTopic("transaction-block-metrics", Serdes.CanonicalKey(), Serdes.BlockMetrics())
-  val TransactionFeeBlockMetrics = KafkaTopic("transaction-fee-block-metrics", Serdes.CanonicalKey(), Serdes.BlockMetrics())
+  val BlockMetrics = KafkaTopic("block_metrics", Serdes.CanonicalKey(), Serdes.BlockMetrics())
+  val TraceBlockMetrics = KafkaTopic("trace_block_metrics", Serdes.CanonicalKey(), Serdes.BlockMetrics())
+  val TransactionBlockMetrics = KafkaTopic("transaction_block_metrics", Serdes.CanonicalKey(), Serdes.BlockMetrics())
+  val TransactionFeeBlockMetrics = KafkaTopic("transaction_fee_block_metrics", Serdes.CanonicalKey(), Serdes.BlockMetrics())
 
-  val CanonicalGasPrices = KafkaTopic("canonical-gas-prices", Serdes.CanonicalKey(), Serdes.TransactionGasPriceList())
-  val CanonicalGasUsed = KafkaTopic("canonical-gas-used", Serdes.CanonicalKey(), Serdes.TransactionGasUsedList())
-  val CanonicalTransactionFees = KafkaTopic("canonical-transaction-fees", Serdes.CanonicalKey(), Serdes.TransactionFeeList())
+  val CanonicalGasPrices = KafkaTopic("canonical_gas_prices", Serdes.CanonicalKey(), Serdes.TransactionGasPriceList())
+  val CanonicalGasUsed = KafkaTopic("canonical_gas_used", Serdes.CanonicalKey(), Serdes.TransactionGasUsedList())
+  val CanonicalTransactionFees = KafkaTopic("canonical_transaction_fees", Serdes.CanonicalKey(), Serdes.TransactionFeeList())
 
-  val CanonicalBlockAuthors = KafkaTopic("canonical-block-authors", Serdes.CanonicalKey(), Serdes.BlockAuthor())
+  val CanonicalBlockAuthors = KafkaTopic("canonical_block_authors", Serdes.CanonicalKey(), Serdes.BlockAuthor())
 
-  val CanonicalContractLifecycle = KafkaTopic("canonical-contract-lifecycle", Serdes.CanonicalKey(), Serdes.ContractLifecycleList())
-  val ContractLifecycleEvents = KafkaTopic("contract-lifecycle-events", Serdes.ContractKey(), Serdes.ContractLifecycle())
+  val CanonicalContractLifecycle = KafkaTopic("canonical_contract_lifecycle", Serdes.CanonicalKey(), Serdes.ContractLifecycleList())
+  val ContractLifecycleEvents = KafkaTopic("contract_lifecycle_events", Serdes.ContractKey(), Serdes.ContractLifecycle())
   val Contracts = KafkaTopic("contracts", Serdes.ContractKey(), Serdes.Contract())
 
-  const val ContractMetadata = "contract-metadata"
+  const val ContractMetadata = "contract_metadata"
 
-  const val EthTokensList = "eth-tokens-list"
-  const val EthTokensListBySymbol = "eth-tokens-list-by-symbol"
+  const val EthTokensList = "eth_tokens_list"
+  const val EthTokensListBySymbol = "eth_tokens_list_by_symbol"
 
-  const val RawExchangeRates = "raw-exchange-rates"
-  const val TokenExchangeRates = "token-exchange-rates"
+  const val RawExchangeRates = "raw_exchange_rates"
+  const val TokenExchangeRates = "token_exchange_rates"
 }
