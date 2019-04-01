@@ -7,14 +7,14 @@ export class TraceCreateActionRecordEmbedded {
   }
 
   @Column({ type: 'string', readonly: true })
-  from: string
+  from!: string
 
   @Column({ type: 'string', readonly: true })
-  gas: string
+  gas!: string
 
   @Column({ type: 'string', readonly: true })
-  init: string
+  init!: string
 
   @Column({ type: 'string', readonly: true })
-  value: string
+  value!: string
 }

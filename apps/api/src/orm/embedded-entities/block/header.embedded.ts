@@ -7,50 +7,50 @@ export class HeaderEmbedded {
   }
 
   @Column({ type: 'string', readonly: true })
-  author: string
+  author!: string
 
   @Column({ type: 'string', readonly: true })
-  difficulty: string
+  difficulty!: string
 
   @Column({ type: 'string', readonly: true })
-  extraData: string
+  extraData!: string
 
   @Column({ type: 'string', readonly: true })
-  gasLimit: string
+  gasLimit!: string
 
   @Column({ type: 'string', readonly: true })
-  gasUsed: string
+  gasUsed!: string
 
   @Column({ type: 'string', readonly: true })
-  hash: string
+  hash!: string
 
   @Column({ type: 'string', readonly: true })
-  logsBloom: string
+  logsBloom!: string
 
   @Column({ type: 'string', readonly: true })
-  nonce: string
+  nonce!: string
 
   @Column({ type: 'long', readonly: true })
-  number: number
+  number!: number
 
   @Column({ type: 'string', readonly: true })
-  parentHash: string
+  parentHash!: string
 
   @Column({ type: 'string', readonly: true })
-  receiptsRoot: string
+  receiptsRoot!: string
 
   @Column({ type: 'string', readonly: true })
-  sha3Uncles: string
+  sha3Uncles!: string
 
   @Column({ type: 'long', readonly: true })
-  size: number
+  size!: number
 
   @Column({ type: 'string', readonly: true })
-  stateRoot: string
+  stateRoot!: string
 
   @Column({ type: 'long', readonly: true })
-  timestamp: number
+  timestamp!: number
 
   @Column({ type: 'string', readonly: true })
-  transactionsRoot: string
+  transactionsRoot!: string
 }

@@ -10,5 +10,5 @@ export class TransactionEntity extends TxEmbedded {
   }
 
   @ObjectIdColumn({ name: '_id', type: 'string', readonly: true })
-  id: string
+  id!: string
 }

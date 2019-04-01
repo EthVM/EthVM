@@ -1,5 +1,3 @@
-import { BlockMetricEntity } from '@app/orm/entities/block-metric.entity'
-import { BlockEntity } from '@app/orm/entities/block.entity'
 import { ProcessingMetadataEntity } from '@app/orm/entities/processing-metadata.entity'
 import { Inject, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
@@ -67,7 +65,7 @@ export class MongoSubscriptionService {
     } else {
       this.enableEventsStreaming()
 
-      // TODO remove this
+      // Only for faking realtime events
       // this.testBlockSubscription()
       // this.testBlockMetricSubscription()
     }
@@ -96,56 +94,56 @@ export class MongoSubscriptionService {
     return !!value
   }
 
-  private async testBlockSubscription() {
-    const asyncTimeout = async ms => {
-      return new Promise(resolve => setTimeout(resolve, ms))
-    }
+  // private async testBlockSubscription() {
+  //   const asyncTimeout = async ms => {
+  //     return new Promise(resolve => setTimeout(resolve, ms))
+  //   }
 
-    const manager = getMongoManager()
+  //   const manager = getMongoManager()
 
-    for await (const i of [1, 2, 3, 4, 5]) {
-      this.logger.info('MongoStreamer - testBlockSubscription() / Testing block subscription')
-      await asyncTimeout(10000)
+  //   for await (const i of [1, 2, 3, 4, 5]) {
+  //     this.logger.info('MongoStreamer - testBlockSubscription() / Testing block subscription')
+  //     await asyncTimeout(10000)
 
-      const block = await manager.findOne(BlockEntity)
-      let prevId = +block.id
-      const newBlock = { ...block }
-      newBlock.id = prevId++
-      newBlock.header.hash = Math.random()
-        .toString(36)
-        .substring(7)
+  //     const block = await manager.findOne(BlockEntity)
+  //     let prevId = +block.id
+  //     const newBlock = { ...block }
+  //     newBlock.id = prevId++
+  //     newBlock.header.hash = Math.random()
+  //       .toString(36)
+  //       .substring(7)
 
-      const entity = manager.create(BlockEntity, newBlock)
-      await manager.save(entity)
-    }
-  }
+  //     const entity = manager.create(BlockEntity, newBlock)
+  //     await manager.save(entity)
+  //   }
+  // }
 
-  private async testBlockMetricSubscription() {
-    const asyncTimeout = async ms => {
-      return new Promise(resolve => setTimeout(resolve, ms))
-    }
+  // private async testBlockMetricSubscription() {
+  //   const asyncTimeout = async ms => {
+  //     return new Promise(resolve => setTimeout(resolve, ms))
+  //   }
 
-    const manager = getMongoManager()
+  //   const manager = getMongoManager()
 
-    for await (const i of [1, 2, 3, 4, 5]) {
-      this.logger.info('MongoStreamer - testBlockMetricSubscription() / Testing block metric subscription')
-      await asyncTimeout(10000)
+  //   for await (const i of [1, 2, 3, 4, 5]) {
+  //     this.logger.info('MongoStreamer - testBlockMetricSubscription() / Testing block metric subscription')
+  //     await asyncTimeout(10000)
 
-      const blockMetric = await manager.findOne(BlockMetricEntity, { order: { number: 'DESC' } })
-      const newBlockMetric = { ...blockMetric }
-      const nextNumber = blockMetric.number + 1
-      delete newBlockMetric.id
-      newBlockMetric.number = nextNumber
+  //     const blockMetric = await manager.findOne(BlockMetricEntity, { order: { number: 'DESC' } })
+  //     const newBlockMetric = { ...blockMetric }
+  //     const nextNumber = blockMetric.number + 1
+  //     delete newBlockMetric.id
+  //     newBlockMetric.number = nextNumber
 
-      const entity = manager.create(BlockMetricEntity, newBlockMetric)
-      await manager.save(entity)
-    }
-  }
+  //     const entity = manager.create(BlockMetricEntity, newBlockMetric)
+  //     await manager.save(entity)
+  //   }
+  // }
 }
 
 class ChangeStreamReader {
-  private changeStream: ChangeStream
-  private cursor: Cursor<any>
+  private changeStream!: ChangeStream
+  private cursor!: Cursor<any>
 
   constructor(
     private readonly collectionName: string,

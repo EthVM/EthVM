@@ -10,26 +10,26 @@ export class MetadataEmbedded {
   }
 
   @Column({ type: 'int', readonly: true })
-  decimals: number
+  decimals!: number
 
   @Column({ type: 'string', readonly: true })
-  ens_address: string
+  ens_address!: string
 
   @Column({ type: 'string', readonly: true })
-  name: string
+  name!: string
 
   @Column({ type: 'string', readonly: true })
-  symbol: string
+  symbol!: string
 
   @Column({ type: 'string', readonly: true })
-  website: string
+  website!: string
 
   @Column(type => LogoEmbedded)
-  logo: LogoEmbedded
+  logo!: LogoEmbedded
 
   @Column(type => SocialEmbedded)
-  social: SocialEmbedded
+  social!: SocialEmbedded
 
   @Column(type => SupportEmbedded)
-  support: SupportEmbedded
+  support!: SupportEmbedded
 }

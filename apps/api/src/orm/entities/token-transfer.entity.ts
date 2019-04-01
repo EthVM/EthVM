@@ -13,26 +13,26 @@ export class TokenTransferEntity {
   }
 
   @ObjectIdColumn({ name: '_id', readonly: true })
-  id: TokenTransferKeyInterface
+  id!: TokenTransferKeyInterface
 
   @Column({ type: 'string', readonly: true })
-  amount: string
+  amount!: string
 
   @Column({ type: 'string', readonly: true })
-  contract: string
+  contract!: string
 
   @Column({ type: 'string', readonly: true })
-  from: string
+  from!: string
 
   @Column({ type: 'long', readonly: true })
-  timestamp: number
+  timestamp!: number
 
   @Column({ type: 'string', readonly: true })
-  to: string
+  to!: string
 
   @Column({ type: 'string', readonly: true })
-  tokenId: string
+  tokenId!: string
 
   @Column({ type: 'enum', enum: BalanceType, default: BalanceType.ETHER, readonly: true })
-  transferType: BalanceType
+  transferType!: BalanceType
 }

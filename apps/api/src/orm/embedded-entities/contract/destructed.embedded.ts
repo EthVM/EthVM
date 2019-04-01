@@ -7,11 +7,11 @@ export class DestructedEmbedded {
   }
 
   @Column({ type: 'string', readonly: true })
-  address: string
+  address!: string
 
   @Column({ type: 'binary', readonly: true })
-  balance: Buffer
+  balance!: Buffer
 
   @Column({ type: 'binary', readonly: true })
-  refundAddress: Buffer
+  refundAddress!: Buffer
 }

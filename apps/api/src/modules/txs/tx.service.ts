@@ -10,7 +10,7 @@ export class TxService {
     private readonly transactionRepository: MongoRepository<TransactionEntity>,
   ) {}
 
-  async findTx(hash: string): Promise<TransactionEntity | null> {
+  async findTx(hash: string): Promise<TransactionEntity | undefined> {
     return this.transactionRepository.findOne({ where: { hash } })
   }
 
@@ -44,7 +44,6 @@ export class TxService {
         where = { $or: [{ from: hash }, { to: hash }] }
         break
     }
-    // this.transactionRepository.manager.queryRunner.databaseConnection.collection('transactions').find({ blockNumber: {[sort]: fromBlock} })
     return this.transactionRepository.find({ where, take, skip })
   }
 

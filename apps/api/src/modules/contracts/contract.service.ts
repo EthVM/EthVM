@@ -7,7 +7,7 @@ import { MongoRepository } from 'typeorm'
 export class ContractService {
   constructor(@InjectRepository(ContractEntity) private readonly contractRepository: MongoRepository<ContractEntity>) {}
 
-  async findContractByHash(hash: string): Promise<ContractEntity | null> {
+  async findContractByHash(hash: string): Promise<ContractEntity | undefined> {
     return this.contractRepository.findOne({ where: { _id: hash } })
   }
 

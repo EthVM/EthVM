@@ -7,14 +7,14 @@ export class ResultEmbedded {
   }
 
   @Column({ type: 'string', readonly: true })
-  address: string
+  address!: string
 
   @Column({ type: 'string', readonly: true })
-  code: string
+  code!: string
 
   @Column({ type: 'string', readonly: true })
-  gasUsed: string
+  gasUsed!: string
 
   @Column({ type: 'string', readonly: true })
-  output: string
+  output!: string
 }

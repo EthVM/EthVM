@@ -7,7 +7,7 @@ import { BalanceEntity } from '@app/orm/entities/balance.entity'
 export class BalanceService {
   constructor(@InjectRepository(BalanceEntity) private readonly balanceRepository: MongoRepository<BalanceEntity>) {}
 
-  async findBalanceByHash(hash: string): Promise<BalanceEntity | null> {
+  async findBalanceByHash(hash: string): Promise<BalanceEntity | undefined> {
     return this.balanceRepository.findOne({ where: { address: hash } })
   }
 }

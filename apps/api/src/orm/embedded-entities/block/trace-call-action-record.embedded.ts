@@ -7,20 +7,20 @@ export class TraceCallActionRecordEmbedded {
   }
 
   @Column({ type: 'string', readonly: true })
-  callType: string
+  callType!: string
 
   @Column({ type: 'string', readonly: true })
-  from: string
+  from!: string
 
   @Column({ type: 'string', readonly: true })
-  gas: string
+  gas!: string
 
   @Column({ type: 'string', readonly: true })
-  input: string
+  input!: string
 
   @Column({ type: 'string', readonly: true })
-  to: string
+  to!: string
 
   @Column({ type: 'string', readonly: true })
-  value: string
+  value!: string
 }

@@ -13,26 +13,26 @@ export class AggregateBlockMetricEntity {
   }
 
   @ObjectIdColumn({ name: '_id', readonly: true })
-  id: AggregateBlockMetricKeyInterface
+  id!: AggregateBlockMetricKeyInterface
 
   @Column({ type: 'string', readonly: true })
-  bigInteger: string
+  bigInteger!: string
 
   @Column({ type: 'long', readonly: true })
-  date: number
+  date!: number
 
   @Column({ type: 'double', readonly: true })
-  double: number
+  double!: number
 
   @Column({ type: 'double', readonly: true })
-  float: number
+  float!: number
 
   @Column({ type: 'int', readonly: true })
-  int: number
+  int!: number
 
   @Column({ type: 'long', readonly: true })
-  long: number
+  long!: number
 
   @Column({ type: 'string', readonly: true })
-  name: string
+  name!: string
 }

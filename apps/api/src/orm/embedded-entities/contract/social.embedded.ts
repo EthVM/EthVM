@@ -7,41 +7,41 @@ export class SocialEmbedded {
   }
 
   @Column({ type: 'string', readonly: true })
-  blog: string
+  blog!: string
 
   @Column({ type: 'string', readonly: true })
-  chat: string
+  chat!: string
 
   @Column({ type: 'string', readonly: true })
-  facebook: string
+  facebook!: string
 
   @Column({ type: 'string', readonly: true })
-  forum: string
+  forum!: string
 
   @Column({ type: 'string', readonly: true })
-  github: string
+  github!: string
 
   @Column({ type: 'string', readonly: true })
-  gitter: string
+  gitter!: string
 
   @Column({ type: 'string', readonly: true })
-  instagram: string
+  instagram!: string
 
   @Column({ type: 'string', readonly: true })
-  linkedin: string
+  linkedin!: string
 
   @Column({ type: 'string', readonly: true })
-  reddit: string
+  reddit!: string
 
   @Column({ type: 'string', readonly: true })
-  slack: string
+  slack!: string
 
   @Column({ type: 'string', readonly: true })
-  telegram: string
+  telegram!: string
 
   @Column({ type: 'string', readonly: true })
-  twitter: string
+  twitter!: string
 
   @Column({ type: 'string', readonly: true })
-  youtube: string
+  youtube!: string
 }

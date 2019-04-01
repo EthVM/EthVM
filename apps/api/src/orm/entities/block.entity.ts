@@ -1,4 +1,4 @@
-import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm'
+import { Column, Entity, ObjectIdColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 import { HeaderEmbedded } from '@app/orm/embedded-entities/block/header.embedded'
 import { RewardEmbedded } from '@app/orm/embedded-entities/block/reward.embedded'
@@ -12,20 +12,20 @@ export class BlockEntity {
   }
 
   @ObjectIdColumn({ name: '_id', type: 'int',  readonly: true })
-  id: number
+  id!: number
 
   @Column({ type: 'string', readonly: true })
-  totalDifficulty: string
+  totalDifficulty!: string
 
   @Column(type => HeaderEmbedded)
-  header: HeaderEmbedded
+  header!: HeaderEmbedded
 
   @Column(type => RewardEmbedded)
-  rewards: RewardEmbedded[]
+  rewards!: RewardEmbedded[]
 
   @Column(type => TxEmbedded)
-  transactions: TxEmbedded[]
+  transactions!: TxEmbedded[]
 
   @Column(type => UncleEmbedded)
-  uncles: UncleEmbedded[]
+  uncles!: UncleEmbedded[]
 }

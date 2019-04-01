@@ -68,11 +68,11 @@ export class ExchangeService {
     return this.tokenExchangeRateRepository.count()
   }
 
-  async findTokenExchangeRateBySymbol(symbol: string): Promise<TokenExchangeRateEntity | null> {
+  async findTokenExchangeRateBySymbol(symbol: string): Promise<TokenExchangeRateEntity | undefined> {
     return this.tokenExchangeRateRepository.findOne({ where: { _id: symbol } })
   }
 
-  async findTokenExchangeRateByAddress(address: string): Promise<TokenExchangeRateEntity | null> {
+  async findTokenExchangeRateByAddress(address: string): Promise<TokenExchangeRateEntity | undefined> {
     return this.tokenExchangeRateRepository.findOne({ where: { address } })
   }
 }

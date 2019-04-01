@@ -10,7 +10,7 @@ export class ProcessingMetadataService {
     private readonly processingMetadataRepository: MongoRepository<ProcessingMetadataEntity>,
   ) {}
 
-  async findProcessingMetaDataById(id: string): Promise<ProcessingMetadataEntity | null> {
+  async findProcessingMetaDataById(id: string): Promise<ProcessingMetadataEntity | undefined> {
     return this.processingMetadataRepository.findOne({ where: { id } })
   }
 }

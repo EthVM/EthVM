@@ -8,47 +8,47 @@ export class BlockMetricEntity {
   }
 
   @ObjectIdColumn({ name: '_id', type: 'decimal', readonly: true })
-  id: number
+  id!: number
 
   @Column({ type: 'string', readonly: true })
-  avgGasLimit: string
+  avgGasLimit!: string
 
   @Column({ type: 'string', readonly: true })
-  avgGasPrice: string
+  avgGasPrice!: string
 
   @Column({ type: 'string', readonly: true })
-  avgTxFees: string
+  avgTxFees!: string
 
   @Column({ type: 'string', readonly: true })
-  blockTime: string
+  blockTime!: string
 
   @Column({ type: 'string', readonly: true })
-  difficulty: string
+  difficulty!: string
 
   @Column({ type: 'string', readonly: true })
-  hash: string
+  hash!: string
 
   @Column({ type: 'long', readonly: true })
-  number: number
+  number!: number
 
   @Column({ type: 'int', readonly: true })
-  numFailedTxs: number
+  numFailedTxs!: number
 
   @Column({ type: 'int', readonly: true })
-  numPendingTxs: number
+  numPendingTxs!: number
 
   @Column({ type: 'int', readonly: true })
-  numSuccessfulTxs: number
+  numSuccessfulTxs!: number
 
   @Column({ type: 'int', readonly: true })
-  numUncles: number
+  numUncles!: number
 
   @Column({ type: 'long', readonly: true })
-  timestamp: number
+  timestamp!: number
 
   @Column({ type: 'string', readonly: true })
-  totalDifficulty: string
+  totalDifficulty!: string
 
   @Column({ type: 'int', readonly: true })
-  totalTxs: number
+  totalTxs!: number
 }

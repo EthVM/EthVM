@@ -7,11 +7,11 @@ export class TraceDestroyActionRecordEmbedded {
   }
 
   @Column({ type: 'string', readonly: true })
-  address: string
+  address!: string
 
   @Column({ type: 'string', readonly: true })
-  balance: string
+  balance!: string
 
   @Column({ type: 'string', readonly: true })
-  refundAddress: string
+  refundAddress!: string
 }

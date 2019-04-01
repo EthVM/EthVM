@@ -7,7 +7,7 @@ import { BlockEntity } from '@app/orm/entities/block.entity'
 export class BlockService {
   constructor(@InjectRepository(BlockEntity) private readonly blockRepository: MongoRepository<BlockEntity>) {}
 
-  async findBlockByHash(hash: string): Promise<BlockEntity | null> {
+  async findBlockByHash(hash: string): Promise<BlockEntity | undefined> {
     return this.blockRepository.findOne({ where: { 'header.hash': hash } })
   }
 
@@ -17,7 +17,7 @@ export class BlockService {
     return this.blockRepository.find({ take: limit, skip })
   }
 
-  async findBlockByNumber(number: number): Promise<BlockEntity | null> {
+  async findBlockByNumber(number: number): Promise<BlockEntity | undefined> {
     return this.blockRepository.findOne({ where: { 'header.number': number } })
   }
 

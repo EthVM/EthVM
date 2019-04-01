@@ -1,4 +1,4 @@
-import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm'
+import { Column, Entity, ObjectIdColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 
 export enum BalanceType {
@@ -21,14 +21,14 @@ export class BalanceEntity {
   }
 
   @ObjectIdColumn({ name: '_id', readonly: true })
-  id: BalanceKeyInterface
+  id!: BalanceKeyInterface
 
   @Column({ type: 'string', readonly: true })
-  address: string
+  address!: string
 
   @Column({ type: 'string', readonly: true })
-  amount: string
+  amount!: string
 
   @Column({ type: 'enum', enum: BalanceType, readonly: true })
-  balanceType: BalanceType
+  balanceType!: BalanceType
 }

@@ -8,20 +8,20 @@ export class AccountMetadataEntity {
   }
 
   @ObjectIdColumn({ name: '_id', type: 'string', readonly: true })
-  id: ObjectID
+  id!: ObjectID
 
   @Column({ type: 'long', readonly: true })
-  inTxCount: number
+  inTxCount!: number
 
   @Column({ type: 'boolean', readonly: true })
-  isContractCreator: boolean
+  isContractCreator!: boolean
 
   @Column({ type: 'boolean', readonly: true })
-  isMiner: boolean
+  isMiner!: boolean
 
   @Column({ type: 'long', readonly: true })
-  outTxCount: number
+  outTxCount!: number
 
   @Column({ type: 'long', readonly: true })
-  totalTxCount: number
+  totalTxCount!: number
 }

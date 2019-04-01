@@ -10,14 +10,14 @@ export class UncleEntity extends UncleEmbedded {
   }
 
   @ObjectIdColumn({ name: '_id', type: 'string', readonly: true })
-  id: string
+  id!: string
 
   @Column({ type: 'long', readonly: true })
-  blockNumber: number
+  blockNumber!: number
 
   @Column({ type: 'string', readonly: true })
-  receiptsRoot: string
+  receiptsRoot!: string
 
   @Column({ type: 'int', readonly: true })
-  uncleIndex: number
+  uncleIndex!: number
 }

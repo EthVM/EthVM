@@ -9,38 +9,38 @@ export class ReceiptEmbedded {
   }
 
   @Column({ type: 'string', readonly: true })
-  blockHash: string
+  blockHash!: string
 
   @Column({ type: 'long', readonly: true })
-  blockNumber: number
+  blockNumber!: number
 
   @Column({ type: 'string', readonly: true })
-  contractAddress: string
+  contractAddress!: string
 
   @Column({ type: 'string', readonly: true })
-  cumulativeGasUsed: string
+  cumulativeGasUsed!: string
 
   @Column({ type: 'string', readonly: true })
-  gasUsed: string
+  gasUsed!: string
 
   @Column({ type: 'string', readonly: true })
-  logsBloom: string
+  logsBloom!: string
 
   @Column({ type: 'int', readonly: true })
-  numInternalTxs: number
+  numInternalTxs!: number
 
   @Column({ type: 'string', readonly: true })
-  root: string
+  root!: string
 
   @Column({ type: 'string', readonly: true })
-  transactionHash: string
+  transactionHash!: string
 
   @Column({ type: 'string', readonly: true })
-  transactionIndex: string
+  transactionIndex!: string
 
   @Column(type => LogEmbedded)
-  logs: LogEmbedded[]
+  logs!: LogEmbedded[]
 
   @Column(type => TraceEmbedded)
-  traces: TraceEmbedded[]
+  traces!: TraceEmbedded[]
 }

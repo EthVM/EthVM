@@ -9,8 +9,8 @@ const VALUE_TYPES = {
 
 @Scalar('Decimal')
 export class DecimalScalar {
-  name: 'Decimal'
-  description: 'Floats that will have a value of 0 or more.'
+  name = 'Decimal'
+  description = 'Floats that will have a value of 0 or more.'
 
   public serialize(value) {
     return this.processValue(value, { type: VALUE_TYPES.FLOAT })

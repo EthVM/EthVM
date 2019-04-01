@@ -10,7 +10,7 @@ export class AccountMetadataService {
     private readonly accountMetadataRepository: MongoRepository<AccountMetadataEntity>,
   ) {}
 
-  async findAccountMetadataByHash(id: string): Promise<AccountMetadataEntity | null> {
+  async findAccountMetadataByHash(id: string): Promise<AccountMetadataEntity | undefined> {
     return this.accountMetadataRepository.findOne({ where: { _id: id } })
   }
 }

@@ -10,7 +10,7 @@ export class BlockMetricService {
     private readonly blockMetricRepository: MongoRepository<BlockMetricEntity>,
   ) {}
 
-  async findBlockMetricByHash(hash: string): Promise<BlockMetricEntity | null> {
+  async findBlockMetricByHash(hash: string): Promise<BlockMetricEntity | undefined> {
     return this.blockMetricRepository.findOne({ where: { hash } })
   }
 

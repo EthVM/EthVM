@@ -7,11 +7,11 @@ import { MongoRepository } from 'typeorm'
 export class UncleService {
   constructor(@InjectRepository(UncleEntity) private readonly uncleRepository: MongoRepository<UncleEntity>) {}
 
-  async findUncleByHash(hash: string): Promise<UncleEntity | null> {
+  async findUncleByHash(hash: string): Promise<UncleEntity | undefined> {
     return this.uncleRepository.findOne({ where: { hash } })
   }
 
-  async findUncles(take: number = 10, page?: number, fromUncle?: number): Promise<UncleEntity[]> {
+  async findUncles(take: number = 10, page: number = 0, fromUncle?: number): Promise<UncleEntity[]> {
     // Issues to solve:
     //   1) We need to store the count of uncles in processing
     //   2) With that we can proceed with the same process as we're doing with Blocks

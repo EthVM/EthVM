@@ -7,11 +7,11 @@ export class LogEmbedded {
   }
 
   @Column({ type: 'string', readonly: true })
-  address: string
+  address!: string
 
   @Column({ type: 'string', readonly: true })
-  data: string
+  data!: string
 
   @Column({ type: 'array', readonly: true })
-  topics: string[]
+  topics!: string[]
 }

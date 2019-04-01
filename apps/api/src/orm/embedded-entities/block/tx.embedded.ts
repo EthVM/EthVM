@@ -8,53 +8,53 @@ export class TxEmbedded {
   }
 
   @Column({ type: 'string', readonly: true })
-  blockHash: string
+  blockHash!: string
 
   @Column({ type: 'long', readonly: true })
-  blockNumber: number
+  blockNumber!: number
 
   @Column({ type: 'string', readonly: true })
-  creates: string
+  creates!: string
 
   @Column({ type: 'string', readonly: true })
-  from: string
+  from!: string
 
   @Column({ type: 'string', readonly: true })
-  gas: string
+  gas!: string
 
   @Column({ type: 'string', readonly: true })
-  gasPrice: string
+  gasPrice!: string
 
   @Column({ type: 'string', readonly: true })
-  hash: string
+  hash!: string
 
   @Column({ type: 'string', readonly: true })
-  input: string
+  input!: string
 
   @Column({ type: 'string', readonly: true })
-  nonce: string
+  nonce!: string
 
   @Column({ type: 'string', readonly: true })
-  r: string
+  r!: string
 
   @Column({ type: 'string', readonly: true })
-  s: string
+  s!: string
 
   @Column({ type: 'long', readonly: true })
-  timestamp: number
+  timestamp!: number
 
   @Column({ type: 'string', readonly: true })
-  to: string
+  to!: string
 
   @Column({ type: 'int', readonly: true })
-  transactionIndex: number
+  transactionIndex!: number
 
   @Column({ type: 'long', readonly: true })
-  v: number
+  v!: number
 
   @Column({ type: 'string', readonly: true })
-  value: string
+  value!: string
 
   @Column(type => ReceiptEmbedded)
-  receipt: ReceiptEmbedded
+  receipt!: ReceiptEmbedded
 }

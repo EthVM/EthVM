@@ -11,14 +11,14 @@ export class ActionEmbedded {
   }
 
   @Column(type => TraceCallActionRecordEmbedded)
-  TraceCallActionRecord: TraceCallActionRecordEmbedded
+  TraceCallActionRecord!: TraceCallActionRecordEmbedded
 
   @Column(type => TraceCreateActionRecordEmbedded)
-  TraceCreateActionRecord: TraceCreateActionRecordEmbedded
+  TraceCreateActionRecord!: TraceCreateActionRecordEmbedded
 
   @Column(type => TraceDestroyActionRecordEmbedded)
-  TraceDestroyActionRecord: TraceDestroyActionRecordEmbedded
+  TraceDestroyActionRecord!: TraceDestroyActionRecordEmbedded
 
   @Column(type => TraceRewardActionRecordEmbedded)
-  TraceRewardActionRecord: TraceRewardActionRecordEmbedded
+  TraceRewardActionRecord!: TraceRewardActionRecordEmbedded
 }

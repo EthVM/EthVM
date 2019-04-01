@@ -11,23 +11,23 @@ export class ContractEntity {
   }
 
   @ObjectIdColumn({ name: '_id', type: 'string', readonly: true })
-  id: ObjectID
+  id!: ObjectID
 
   @Column({ type: 'string', readonly: true })
-  address: string
+  address!: string
 
   @Column({ type: 'string', readonly: true })
-  creator: string
+  creator!: string
 
   @Column({ type: 'binary', readonly: true })
-  data: Buffer
+  data!: Buffer
 
   @Column(type => DestructedEmbedded)
-  destructed: DestructedEmbedded
+  destructed!: DestructedEmbedded
 
   @Column(type => MetadataEmbedded)
-  metadata: MetadataEmbedded
+  metadata!: MetadataEmbedded
 
   @Column(type => TypeEmbedded)
-  type: TypeEmbedded
+  type!: TypeEmbedded
 }

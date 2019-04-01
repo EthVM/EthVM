@@ -7,11 +7,11 @@ export class TraceRewardActionRecordEmbedded {
   }
 
   @Column({ type: 'string', readonly: true })
-  author: string
+  author!: string
 
   @Column({ type: 'string', readonly: true })
-  value: string
+  value!: string
 
   @Column({ type: 'string', readonly: true })
-  rewardType: string
+  rewardType!: string
 }

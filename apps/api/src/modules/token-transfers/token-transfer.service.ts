@@ -163,7 +163,7 @@ export class TokenTransferService {
     const tokens = await this.vmEngine.fetchAddressAllTokensOwned(address)
 
     for await (const token of tokens) {
-      const rate = await this.exchangeService.findTokenExchangeRateByAddress(token.addr.replace('0x', ''))
+      const rate = await this.exchangeService.findTokenExchangeRateByAddress(token.addr!!.replace('0x', ''))
       token.currentPrice = rate ? rate.currentPrice : 0
     }
 

@@ -9,33 +9,33 @@ export class TraceEmbedded {
   }
 
   @Column({ type: 'string', readonly: true })
-  blockHash: string
+  blockHash!: string
 
   @Column({ type: 'long', readonly: true })
-  blockNumber: number
+  blockNumber!: number
 
   @Column({ type: 'string', readonly: true })
-  error: string
+  error!: string
 
   @Column({ type: 'int', readonly: true })
-  subtraces: number
+  subtraces!: number
 
   @Column({ type: 'array', readonly: true })
-  traceAddress: number[]
+  traceAddress!: number[]
 
   @Column({ type: 'string', readonly: true })
-  transactionHash: string
+  transactionHash!: string
 
   @Column({ type: 'int', readonly: true })
-  transactionPosition: number
+  transactionPosition!: number
 
   @Column({ type: 'string', readonly: true })
-  type: string
+  type!: string
 
   // TODO fix error "Cannot read property 'TraceCallActionRecord' of undefined" when using TransactionRepository
   // @Column(type => ActionEmbedded)
   // action: ActionEmbedded
 
   @Column(type => ResultEmbedded)
-  result: ResultEmbedded
+  result!: ResultEmbedded
 }

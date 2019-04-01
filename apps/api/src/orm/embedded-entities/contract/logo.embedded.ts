@@ -7,5 +7,5 @@ export class LogoEmbedded {
   }
 
   @Column({ type: 'string', readonly: true })
-  src: string
+  src!: string
 }

@@ -13,5 +13,5 @@ export class TypeEmbedded {
   }
 
   @Column({ type: 'enum', enum: ContractType, readonly: true })
-  string: ContractType
+  string!: ContractType
 }

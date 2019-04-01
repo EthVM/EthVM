@@ -7,8 +7,8 @@ export class SupportEmbedded {
   }
 
   @Column({ type: 'string', readonly: true })
-  email: string
+  email!: string
 
   @Column({ type: 'string', readonly: true })
-  url: string
+  url!: string
 }
