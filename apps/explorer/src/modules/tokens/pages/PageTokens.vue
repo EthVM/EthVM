@@ -48,7 +48,7 @@ export default class PageTokens extends Vue {
     to true, to display user friendly message
   ===================================================================================
   */
-  isRopsten = false
+  isRopsten = ConfigHelper.isRopsten
   tokens: TokenExchange[] = []
   total = 0
   isLoading = true
@@ -63,7 +63,6 @@ export default class PageTokens extends Vue {
   */
 
   mounted() {
-    this.isRopsten = ConfigHelper.isRopsten
     if (!this.isRopsten) {
       this.fetchTotalTokens().then(res => (this.total = res), err => (this.total = 0))
       this.getTokens(0, 0)
