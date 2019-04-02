@@ -15,7 +15,6 @@
 import Chart from '@app/modules/charts/components/Chart.vue'
 import { ChartMixin } from '@app/modules/charts/mixins'
 import { Component, Mixins } from 'vue-property-decorator'
-import { Events } from 'ethvm-common'
 
 /* Time Variables: */
 
@@ -27,15 +26,6 @@ import { Events } from 'ethvm-common'
 export default class ChartBlockTime extends Mixins(ChartMixin) {
   /*
   ===================================================================================
-    Initial Data
-  ===================================================================================
-  */
-
-  //Temp Event String
-  newEvent = Events.getAverageBlockTimeStats
-
-  /*
-  ===================================================================================
     Lifecycle
   ===================================================================================
   */
@@ -43,7 +33,16 @@ export default class ChartBlockTime extends Mixins(ChartMixin) {
   created() {
     this.setTitle(this.title)
     this.setLabel(this.labelString)
-    this.setEvent(this.newEvent)
+  }
+
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
+  fetchData(duration: string): Promise<any[]> {
+    return this.$api.getAverageBlockTimeStats(duration)
   }
 
   /*

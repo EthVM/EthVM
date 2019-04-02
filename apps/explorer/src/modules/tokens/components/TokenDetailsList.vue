@@ -22,11 +22,11 @@ export default class TokenDetailsList extends Vue {
   ===================================================================================
   */
 
-  @Prop(String) addressRef: string // Token contract address
-  @Prop(Object) contractDetails: any
-  @Prop(Object) tokenDetails: any
-  @Prop(Boolean) isLoading: boolean
-  @Prop(String) error: string
+  @Prop(String) addressRef!: string // Token contract address
+  @Prop(Object) contractDetails!: any
+  @Prop(Object) tokenDetails!: any
+  @Prop(Boolean) isLoading!: boolean
+  @Prop(String) error!: string
 
   /*
   ===================================================================================
@@ -101,7 +101,7 @@ export default class TokenDetailsList extends Vue {
         }
       ]
     } else {
-      details = [
+      const detailsItems = [
         {
           title: this.$i18n.tc('contract.name', 1),
           detail: new Hex(this.tokenDetails.address).toString(),
@@ -114,15 +114,15 @@ export default class TokenDetailsList extends Vue {
         },
         {
           title: this.$i18n.t('token.supply'),
-          detail: this.tokenDetails.total_supply
+          detail: this.tokenDetails.totalSupply
         },
         {
           title: this.$i18n.tc('price.name', 2),
-          detail: `$${this.tokenDetails.current_price} (${this.tokenDetails.price_change_percentage_24h}%)`
+          detail: `$${this.tokenDetails.currentPrice} (${this.tokenDetails.priceChangePercentage24h}%)`
         },
         {
           title: this.$i18n.t('token.market'),
-          detail: `$${this.tokenDetails.market_cap}`
+          detail: `$${this.tokenDetails.marketCap}`
         },
         {
           title: this.$i18n.t('token.holder-total'),
@@ -131,16 +131,25 @@ export default class TokenDetailsList extends Vue {
         {
           title: this.$i18n.t('token.decimals'),
           detail: this.contractDetails.metadata.decimals
-        },
-        {
+        }
+      ]
+
+      if (this.contractDetails.metadata.website) {
+        detailsItems.push({
           title: this.$i18n.t('token.website'),
           detail: `<a href="${this.contractDetails.metadata.website}" target="_BLANK">${this.contractDetails.metadata.website}</a>`
-        },
-        {
+        })
+      }
+
+      if (this.contractDetails.metadata.support) {
+        detailsItems.push({
           title: this.$i18n.t('token.support'),
           detail: `<a href="mailto:${this.contractDetails.metadata.support.email}" target="_BLANK">${this.contractDetails.metadata.support.email}</a>`
-        },
-        {
+        })
+      }
+
+      if (this.contractDetails.metadata.social) {
+        detailsItems.push({
           title: this.$i18n.t('token.links'),
           detail: Object.entries(this.contractDetails.metadata.social)
             .map(obj => {
@@ -156,8 +165,10 @@ export default class TokenDetailsList extends Vue {
             .reduce((a, b) => {
               return `${a}${b}`
             })
-        }
-      ]
+        })
+      }
+
+      details = detailsItems
     }
     return details
   }

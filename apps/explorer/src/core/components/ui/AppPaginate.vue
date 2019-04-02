@@ -47,7 +47,7 @@ export default class AppPaginate extends Vue {
   validClass = 'center-input body-1 secondary--text'
   invalidClass = 'center-input body-1 error--text'
   isError = false
-  pageDisplayUpdateTimeout = null // Timeout object to update page with override of pageDisplay input model
+  pageDisplayUpdateTimeout: number | null = null // Timeout object to update page with override of pageDisplay input model
 
   /*
   ===================================================================================
@@ -125,8 +125,10 @@ export default class AppPaginate extends Vue {
   set pageDisplay(pageDisplay: string) {
     const desiredPage = parseInt(pageDisplay, 10) - 1
     ;(desiredPage >= 0 && desiredPage <= this.lastPage) || !pageDisplay ? (this.isError = false) : (this.isError = true)
-    clearTimeout(this.pageDisplayUpdateTimeout)
-    this.pageDisplayUpdateTimeout = setTimeout(() => {
+    if (this.pageDisplayUpdateTimeout) {
+      clearTimeout(this.pageDisplayUpdateTimeout)
+    }
+    this.pageDisplayUpdateTimeout = window.setTimeout(() => {
       this.setPage(desiredPage)
     }, 500)
   }

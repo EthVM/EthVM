@@ -1,0 +1,30 @@
+query uncleByHash($hash: String!) {
+  uncleByHash(hash: $hash) {
+    author
+    blockNumber
+    gasLimit
+    gasUsed
+    hash
+    number
+    parentHash
+    sha3Uncles
+    timestamp
+    uncleIndex
+    uncleReward
+  }
+}
+
+query uncles($limit: Int, $page: Int, $fromUncle: Int) {
+  uncles(limit: $limit, page: $page, fromUncle: $fromUncle) {
+    author
+    blockNumber
+    hash
+    number
+    uncleIndex
+    uncleReward
+  }
+}
+
+query totalNumberOfUncles {
+  totalNumberOfUncles
+}

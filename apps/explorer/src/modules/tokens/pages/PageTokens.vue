@@ -25,6 +25,7 @@ import TokenTable from '@app/modules/tokens/components/TokenTable.vue'
 import { Crumb } from '@app/core/components/props'
 import { TokenExchange } from '@app/modules/tokens/props'
 import { Component, Vue } from 'vue-property-decorator'
+import { ConfigHelper } from '@app/core/helper/config-helper'
 
 const MAX_ITEMS = 50
 
@@ -41,13 +42,7 @@ export default class PageTokens extends Vue {
   ===================================================================================
   */
 
-  /*
-  ===================================================================================
-    Since Alpha release is on Ropsten, there are no token prices. Set isRopsten value
-    to true, to display user friendly message
-  ===================================================================================
-  */
-  isRopsten = true
+  isRopsten = ConfigHelper.isRopsten
   tokens: TokenExchange[] = []
   total = 0
   isLoading = true

@@ -2,7 +2,7 @@
   <img src="https://raw.githubusercontent.com/enKryptIO/ethvm/master/.github/assets/logo.png" alt="ethvm-logo">
   <p>:zap: EthVM: An Open Source Proccessing Engine and Block Explorer for Ethereum, based on Apache Kafka :zap:</p>
   <p>Powered by <a href="https://www.typescriptlang.org/">TypeScript</a> / <a href="https://vuejs.org/">VueJS</a> / <a href="https://github.com/socketio/socket.io">Socket.io</a> / <a href="https://kafka.apache.org/">Apache Kafka</a> / <a href="https://github.com/paritytech/parity-ethereum">Parity</a> / <a href="https://github.com/mongodb/mongo">MongoDB</a> 
-  <p><a href="https://travis-ci.org/enKryptIO/ethvm.svg?branch=develop"><img src="https://travis-ci.org/enKryptIO/ethvm.svg?branch=develop"/></a></p>
+  <p><a href="https://travis-ci.org/EthVM/EthVM.svg?branch=develop""><img src="https://travis-ci.org/enKryptIO/ethvm.svg?branch=develop"/></a></p>
 </div>
 
 # EthVM: Open Source Processing Engine and Block Explorer for Ethereum
@@ -61,10 +61,10 @@ We believe that it fits quite nicely within the needs that a Block Explorer typi
 
 For now, we are focused on bringing a Beta environment. It will have the following:
 
-- Migration to NestJS API to replace current SocketIO API
-- Migration from MongoDB to Postgres
-- Improvements over processing on Kafka (we want to process the chain as fast as possible and alongside with that, squash some known bugs)
-- Bring a Terraform provider to deploy properly the code on AWS
+- [x] Migration to NestJS API to replace current SocketIO API
+- [ ] Migration from MongoDB to Postgres
+- [ ] Improvements over processing on Kafka (we want to process the chain as fast as possible and alongside with that, squash some known bugs)
+- [ ] Bring a Terraform provider to deploy properly the code on AWS
 
 ## Getting Started
 

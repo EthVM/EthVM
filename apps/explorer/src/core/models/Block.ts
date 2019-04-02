@@ -1,12 +1,11 @@
-import { EthValue, Hash, Hex, HexNumber, Tx, Uncle } from '@app/core/models'
+import { EthValue, Hash, Hex, HexNumber, SimpleTx, Uncle, Reward } from '@app/core/models'
 import BN from 'bignumber.js'
-import { Block as RawBlock, Reward } from 'ethvm-common'
 
 export class Block {
   private readonly id: string
   private cache: any = {}
 
-  constructor(private readonly block: RawBlock) {
+  constructor(private readonly block: any) {
     this.id = new Hex(this.block.header.hash).toString()
   }
 
@@ -124,10 +123,10 @@ export class Block {
     return this.cache.totalDifficulty
   }
 
-  public getTxs(): Tx[] {
+  public getTxs(): SimpleTx[] {
     if (!this.cache.txs) {
       const rawTxs = this.block.transactions || []
-      this.cache.txs = rawTxs.map(rawTx => new Tx(rawTx))
+      this.cache.txs = rawTxs.map(rawTx => new SimpleTx(rawTx))
     }
     return this.cache.txs
   }

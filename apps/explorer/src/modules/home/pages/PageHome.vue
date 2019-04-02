@@ -13,7 +13,7 @@
     =====================================================================================
     -->
     <v-layout row wrap justify-center mb-4>
-      <v-flex xs12 md6> <chart-live-tx /> </v-flex>
+      <v-flex xs12 md6> <chart-live-txs /> </v-flex>
       <v-flex xs12 md6> <chart-live-tx-fees /> </v-flex>
     </v-layout>
     <!--
@@ -40,17 +40,36 @@
 </template>
 
 <script lang="ts">
-import { Events } from 'ethvm-common'
+import { Events } from '@app/core/hub'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppCardStatsGroup from '@app/core/components/ui/AppCardStatsGroup.vue'
-import ChartLiveTx from '@app/modules/charts/components/live/ChartLiveTx.vue'
+import ChartLiveTxs from '@app/modules/charts/components/live/ChartLiveTxs.vue'
 import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
-import { Block, Tx, SimpleBlock, SimpleTx } from '@app/core/models'
-import { Vue, Component } from 'vue-property-decorator'
+import { SimpleBlock, SimpleTx, Tx } from '@app/core/models'
+import { Component, Vue } from 'vue-property-decorator'
+import { Subscription } from 'apollo-client/util/Observable'
 
 const MAX_ITEMS = 50
+
+export type NewBlockQuery = {
+  data: {
+    newBlock: any
+  }
+}
+
+export type NewBlockMetricQuery = {
+  data: {
+    newBlockMetric: any
+  }
+}
+
+export type NewTxsQuery = {
+  data: {
+    newTxs: any[]
+  }
+}
 
 @Component({
   components: {
@@ -58,7 +77,7 @@ const MAX_ITEMS = 50
     AppCardStatsGroup,
     TableBlocks,
     TableTxs,
-    ChartLiveTx,
+    ChartLiveTxs,
     ChartLiveTxFees
   }
 })
@@ -73,6 +92,11 @@ export default class PageHome extends Vue {
   errorTableTxs = ''
   errorTableBlocks = ''
 
+  /* Subscriptions */
+  newSimpleBlockSubscription!: Subscription
+  newBlockMetricSubscription!: Subscription
+  newSimpleTxsSubscription!: Subscription
+
   /*
   ===================================================================================
     Lifecycle
@@ -81,6 +105,11 @@ export default class PageHome extends Vue {
 
   created() {
     this.loadData()
+    this.createSubscriptions()
+  }
+
+  beforeDestroy() {
+    this.destroySubscriptions()
   }
 
   /*
@@ -90,19 +119,8 @@ export default class PageHome extends Vue {
   */
 
   loadData() {
-    this.loadTxs()
     this.loadBlocks()
-  }
-
-  loadTxs() {
-    this.fetchTxs().then(
-      res => {
-        this.$store.commit(Events.NEW_TX, res)
-      },
-      err => {
-        this.errorTableTxs = this.$i18n.t('message.no-data').toString()
-      }
-    )
+    this.loadTxs()
   }
 
   loadBlocks() {
@@ -116,12 +134,69 @@ export default class PageHome extends Vue {
     )
   }
 
-  fetchTxs(): Promise<Tx[] | SimpleTx[]> {
-    return this.$api.getTxs('simple', MAX_ITEMS, 'desc', -1)
+  loadTxs() {
+    this.fetchTxs().then(
+      res => {
+        this.$store.commit(Events.NEW_TX, res)
+      },
+      err => {
+        this.errorTableTxs = this.$i18n.t('message.no-data').toString()
+      }
+    )
   }
 
-  fetchBlocks(): Promise<Block[] | SimpleBlock[]> {
-    return this.$api.getBlocks('simple', MAX_ITEMS, 0, -1)
+  createSubscriptions() {
+    const { $store, $eventHub } = this
+
+    // Create blocks subscription
+    this.newSimpleBlockSubscription = this.$api.observable<NewBlockQuery>('simpleBlocks').subscribe({
+      next(data) {
+        const newSimpleBlock = new SimpleBlock(data.data.newBlock)
+        $store.commit(Events.NEW_SIMPLE_BLOCK, newSimpleBlock)
+        $eventHub.$emit(Events.NEW_SIMPLE_BLOCK, newSimpleBlock)
+      },
+      error(error): void {
+        // console.error(error)
+      }
+    })
+
+    // Create block metrics subscription
+    this.newBlockMetricSubscription = this.$api.observable<NewBlockMetricQuery>('blockMetrics').subscribe({
+      next(data) {
+        const { newBlockMetric } = data.data
+        $store.commit(Events.NEW_BLOCK_METRIC, newBlockMetric)
+        $eventHub.$emit(Events.NEW_BLOCK_METRIC, newBlockMetric)
+      },
+      error(error): void {
+        // console.error(error)
+      }
+    })
+
+    // Create txs subscription
+    this.newSimpleTxsSubscription = this.$api.observable<NewTxsQuery>('simpleTxs').subscribe({
+      next(data) {
+        const { newTxs } = data.data
+        $store.commit(Events.NEW_TX, newTxs)
+        $eventHub.$emit(Events.NEW_TX, newTxs)
+      },
+      error(error): void {
+        // console.error(error)
+      }
+    })
+  }
+
+  destroySubscriptions() {
+    this.newSimpleBlockSubscription.unsubscribe()
+    this.newBlockMetricSubscription.unsubscribe()
+    this.newSimpleTxsSubscription.unsubscribe()
+  }
+
+  fetchTxs(): Promise<SimpleTx[]> {
+    return this.$api.getTxs(MAX_ITEMS, 'desc', -1)
+  }
+
+  fetchBlocks(): Promise<SimpleBlock[]> {
+    return this.$api.getBlocks(MAX_ITEMS, 0, -1)
   }
 
   /*

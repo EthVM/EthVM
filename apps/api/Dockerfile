@@ -30,7 +30,6 @@ WORKDIR /var/www
 
 # Copy
 COPY api/ api/
-COPY common/ common/
 
 # Install
 RUN cd api && \
