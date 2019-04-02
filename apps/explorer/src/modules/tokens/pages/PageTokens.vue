@@ -25,7 +25,7 @@ import TokenTable from '@app/modules/tokens/components/TokenTable.vue'
 import { Crumb } from '@app/core/components/props'
 import { TokenExchange } from '@app/modules/tokens/props'
 import { Component, Vue } from 'vue-property-decorator'
-import { ConfigHelper } from "@app/core/helper/config-helper";
+import { ConfigHelper } from '@app/core/helper/config-helper'
 
 const MAX_ITEMS = 50
 
