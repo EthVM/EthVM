@@ -25,6 +25,7 @@ import TokenTable from '@app/modules/tokens/components/TokenTable.vue'
 import { Crumb } from '@app/core/components/props'
 import { TokenExchange } from '@app/modules/tokens/props'
 import { Component, Vue } from 'vue-property-decorator'
+import { ConfigHelper } from "@app/core/helper/config-helper";
 
 const MAX_ITEMS = 50
 
@@ -62,6 +63,7 @@ export default class PageTokens extends Vue {
   */
 
   mounted() {
+    this.isRopsten = ConfigHelper.isRopsten
     if (!this.isRopsten) {
       this.fetchTotalTokens().then(res => (this.total = res), err => (this.total = 0))
       this.getTokens(0, 0)

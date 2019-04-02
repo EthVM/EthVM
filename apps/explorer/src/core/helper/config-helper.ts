@@ -10,8 +10,8 @@ declare var process: {
 
 export class ConfigHelper {
 
-  public static get network(): string {
-    return process.env.VUE_APP_NETWORK
+  public static get isRopsten(): boolean {
+    return process.env.VUE_APP_NETWORK === 'ropsten'
   }
 
 }
