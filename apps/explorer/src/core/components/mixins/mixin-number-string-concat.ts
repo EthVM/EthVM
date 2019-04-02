@@ -32,9 +32,7 @@ export class StringConcatMixin extends Vue {
     if (newNumber > 1) {
       round = 2
     }
-    return new BN(newNumber)
-      .dp(round)
-      .toString()
+    return new BN(newNumber).dp(round).toString()
   }
 
   isShortValue(rawStr = ''): boolean {

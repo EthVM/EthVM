@@ -23,8 +23,10 @@
               per {{ token.symbol }})</span
             >
           </v-tooltip>
-          {{ getShortValue(getRoundNumberUnformatted(balance(token.balance, token.decimals) * token.currentPrice)) }} (@ ${{ getRoundNumber(token.currentPrice) }} per
-          {{ token.symbol }})
+          {{ getShortValue(getRoundNumberUnformatted(balance(token.balance, token.decimals) * token.currentPrice)) }} (@ ${{
+            getRoundNumber(token.currentPrice)
+          }}
+          per {{ token.symbol }})
         </p>
       </v-flex>
     </v-layout>
