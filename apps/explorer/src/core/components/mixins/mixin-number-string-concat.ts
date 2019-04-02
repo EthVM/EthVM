@@ -27,6 +27,16 @@ export class StringConcatMixin extends Vue {
       .toString()
   }
 
+  getRoundNumberUnformatted(newNumber): string {
+    let round = 7
+    if (newNumber > 1) {
+      round = 2
+    }
+    return new BN(newNumber)
+      .dp(round)
+      .toString()
+  }
+
   isShortValue(rawStr = ''): boolean {
     return rawStr.length < 10
   }
