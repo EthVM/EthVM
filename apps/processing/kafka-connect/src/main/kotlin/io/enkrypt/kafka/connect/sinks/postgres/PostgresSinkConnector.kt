@@ -2,9 +2,6 @@ package io.enkrypt.kafka.connect.sinks.postgres
 
 import io.enkrypt.kafka.connect.utils.Versions
 import org.apache.kafka.common.config.ConfigDef
-import org.apache.kafka.common.config.ConfigDef.Importance.HIGH
-import org.apache.kafka.common.config.ConfigDef.Type.STRING
-import org.apache.kafka.connect.connector.Task
 import org.apache.kafka.connect.sink.SinkConnector
 
 class PostgresSinkConnector : SinkConnector() {
@@ -20,18 +17,10 @@ class PostgresSinkConnector : SinkConnector() {
   }
 
   override fun stop() {
-
   }
 
   override fun taskClass() = PostgresSinkTask::class.java
 
   override fun taskConfigs(maxTasks: Int): MutableList<MutableMap<String, String>> {
-
   }
-
-
-
-
-
-
 }

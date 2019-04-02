@@ -6,11 +6,13 @@ import org.apache.kafka.common.config.ConfigDef.Importance.MEDIUM
 import org.apache.kafka.common.config.ConfigDef.Type.INT
 import org.apache.kafka.common.config.ConfigDef.Type.STRING
 
-enum class PostgresSinkConfig(val key: String,
-                              val type: ConfigDef.Type,
-                              val importance: ConfigDef.Importance,
-                              val doc: String,
-                              val default: String? = null) {
+enum class PostgresSinkConfig(
+  val key: String,
+  val type: ConfigDef.Type,
+  val importance: ConfigDef.Importance,
+  val doc: String,
+  val default: String? = null
+) {
 
   Url("postgres.url", STRING, HIGH, "Postgres JDBC style url"),
 
@@ -35,6 +37,5 @@ enum class PostgresSinkConfig(val key: String,
     val configDef = ConfigDef().apply {
       PostgresSinkConfig.values().forEach { it.define(this) }
     }
-
   }
 }

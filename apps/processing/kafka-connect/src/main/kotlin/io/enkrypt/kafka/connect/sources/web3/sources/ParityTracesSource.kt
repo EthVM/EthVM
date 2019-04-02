@@ -52,13 +52,11 @@ class ParityTracesSource(
             val traceKeySchemaAndValue = AvroToConnect.toConnectData(traceKeyRecord)
             val traceValueSchemaAndValue = AvroToConnect.toConnectData(traceListRecord)
 
-
             SourceRecord(
               partitionKey, partitionOffset, tracesTopic,
               traceKeySchemaAndValue.schema(), traceKeySchemaAndValue.value(),
               traceValueSchemaAndValue.schema(), traceValueSchemaAndValue.value()
             )
-
           }
       }.map { future ->
         // wait for everything to complete

@@ -5,12 +5,9 @@ import io.enkrypt.avro.capture.ContractLifecycleListRecord
 import io.enkrypt.avro.capture.ContractLifecycleRecord
 import io.enkrypt.avro.capture.ContractLifecyleType
 import io.enkrypt.avro.capture.ContractRecord
-import io.enkrypt.avro.capture.TraceListRecord
-import io.enkrypt.avro.processing.FungibleBalanceDeltaListRecord
 import io.enkrypt.common.extensions.toContractLifecycleRecord
 import io.enkrypt.kafka.streams.Serdes
 import io.enkrypt.kafka.streams.config.Topics.CanonicalContractLifecycle
-import io.enkrypt.kafka.streams.config.Topics.CanonicalContractTraces
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTraces
 import io.enkrypt.kafka.streams.config.Topics.ContractLifecycleEvents
 import io.enkrypt.kafka.streams.config.Topics.Contracts
@@ -21,10 +18,8 @@ import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
-import org.apache.kafka.streams.kstream.Grouped
 import org.apache.kafka.streams.kstream.Materialized
 import java.util.Properties
-import org.apache.kafka.common.serialization.Serdes as KafkaSerdes
 
 class ContractLifecycleProcessor : AbstractKafkaProcessor() {
 
@@ -63,11 +58,8 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
                   .filter { trace -> contractTypes.contains(trace.getType()) }
                   .mapNotNull { it.toContractLifecycleRecord() }
               ).build()
-
           }
-
         }
-
       }.toTopic(CanonicalContractLifecycle)
 
     CanonicalContractLifecycle.stream(builder)
@@ -85,7 +77,6 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
             ContractLifecycleListRecord.newBuilder(agg)
               .setApply(false)
               .build()
-
           } else {
 
             ContractLifecycleListRecord.newBuilder()
@@ -93,9 +84,7 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
               .setDeltas(next.getDeltas())
               .setReversals(agg.getDeltas())
               .build()
-
           }
-
         },
         Materialized.with(Serdes.CanonicalKey(), Serdes.ContractLifecycleList())
       ).toStream()
@@ -112,7 +101,6 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
                 .setReverse(true)
                 .build()
             )
-
           }
 
         val deltas = v.getDeltas()
@@ -124,11 +112,9 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
                 .build(),
               event
             )
-
           }
 
         reversals + deltas
-
       }.toTopic(ContractLifecycleEvents)
 
     ContractLifecycleEvents.stream(builder)
@@ -137,7 +123,7 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
         { null },
         { _, new, agg ->
 
-          val builder = when(agg) {
+          val builder = when (agg) {
             null -> ContractRecord.newBuilder()
             else -> ContractRecord.newBuilder(agg)
           }
@@ -149,7 +135,6 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
               if (new.getReverse()) {
 
                 null
-
               } else {
                 builder
                   .setAddress(new.getAddress())
@@ -159,7 +144,6 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
                   .setCreatedAt(new.getCreatedAt())
                   .build()
               }
-
             }
 
             ContractLifecyleType.DESTROY -> {
@@ -177,9 +161,7 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
                   .setDestroyedAt(new.getDestroyedAt())
                   .build()
               }
-
             }
-
           }
         },
         Materialized.with(Serdes.ContractKey(), Serdes.Contract())
