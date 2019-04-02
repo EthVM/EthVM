@@ -105,22 +105,22 @@ export default class PageCharts extends Vue {
   get pageTabs(): Tab[] {
     return [
       {
-        id: '0',
+        id: 0,
         title: this.$i18n.t('charts.live'),
         isActive: true
       },
       {
-        id: '1',
+        id: 1,
         title: this.$i18n.tc('tx.name', 2),
         isActive: false
       },
       {
-        id: '2',
+        id: 2,
         title: this.$i18n.tc('block.name', 2),
         isActive: false
       },
       {
-        id: '3',
+        id: 3,
         title: this.$i18n.t('miner.history'),
         isActive: false
       }

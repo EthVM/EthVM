@@ -450,17 +450,17 @@ export default class PageDetailsAddress extends Vue {
   get tabs(): Tab[] {
     const tabs: Tab[] = [
       {
-        id: '0',
+        id: 0,
         title: this.$i18n.t('tx.history'),
         isActive: true
       },
       {
-        id: '1',
+        id: 1,
         title: this.$i18n.tc('token.name', 2),
         isActive: false
       },
       {
-        id: '2',
+        id: 2,
         title: this.$i18n.tc('tx.pending', 2),
         isActive: false
       }
@@ -469,7 +469,7 @@ export default class PageDetailsAddress extends Vue {
     if (!this.loading && !this.error) {
       if (this.account.isMiner) {
         const newTab = {
-          id: '3',
+          id: 3,
           title: this.$i18n.t('miner.history').toString(),
           isActive: false
         }
@@ -478,7 +478,7 @@ export default class PageDetailsAddress extends Vue {
 
       if (this.account.isCreator) {
         const newTab = {
-          id: '4',
+          id: 4,
           title: this.$i18n.tc('contract.name', 2).toString(),
           isActive: false
         }

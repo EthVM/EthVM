@@ -24,7 +24,7 @@ export interface Footnote {
 }
 
 export interface Tab {
-  id: string
+  id: number
   title: TranslateResult
   isActive: boolean
 }

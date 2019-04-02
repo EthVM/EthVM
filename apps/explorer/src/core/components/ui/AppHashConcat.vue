@@ -34,11 +34,11 @@ export default class AppHashConcat extends Vue {
     return this.hash.slice(n - 4, n)
   }
   get first(): string {
-    return this.hash.slice(0, 6)
+    return this.hash.slice(0, 4)
   }
   get middle(): string {
     const n = this.hash.length
-    return this.hash.slice(6, n - 4)
+    return this.hash.slice(4, n - 4)
   }
 
   get hashClass(): string {

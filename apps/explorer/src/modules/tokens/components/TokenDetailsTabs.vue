@@ -86,12 +86,12 @@ export default class TokenDetailsTabs extends Vue {
   get tabs(): Tab[] {
     const tabs = [
       {
-        id: '0',
+        id: 0,
         title: 'Transfers',
         isActive: true
       },
       {
-        id: '1',
+        id: 1,
         title: 'Holders',
         isActive: false
       }
