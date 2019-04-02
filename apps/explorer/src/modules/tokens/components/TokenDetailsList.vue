@@ -101,18 +101,24 @@ export default class TokenDetailsList extends Vue {
         }
       ]
     } else {
-      const detailsItems = [
+
+      const detailsItems: Detail[] = [
         {
           title: this.$i18n.tc('contract.name', 1),
           detail: new Hex(this.tokenDetails.address).toString(),
           link: this.tokenDetails ? `/address/${new Hex(this.tokenDetails.address).toString()}` : ''
-        },
-        {
+        }
+      ]
+
+      if (this.tokenDetails.owner) {
+        detailsItems.push({
           title: this.$i18n.t('token.owner'),
-          detail: this.tokenDetails.owner ? this.tokenDetails.owner : 'REQUIRED DATA',
+          detail: this.tokenDetails.owner,
           link: `/address/${this.tokenDetails.owner}`
-        },
-        {
+        })
+      }
+
+      detailsItems.push( {
           title: this.$i18n.t('token.supply'),
           detail: this.tokenDetails.totalSupply
         },
@@ -131,8 +137,7 @@ export default class TokenDetailsList extends Vue {
         {
           title: this.$i18n.t('token.decimals'),
           detail: this.contractDetails.metadata.decimals
-        }
-      ]
+        })
 
       if (this.contractDetails.metadata.website) {
         detailsItems.push({
