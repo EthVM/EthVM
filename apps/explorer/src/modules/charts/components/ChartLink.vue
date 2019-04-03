@@ -4,7 +4,7 @@
       <v-flex xs8 sm7 md8 pb-0 pr-0>
         <v-card-title class="title font-weight-bold pl-0">{{ title }}</v-card-title>
         <v-card-text class="info--text pt-0 pl-0 caption">{{text}} {{$t('charts.captions.description')}}</v-card-text>
-        <button  class="btn-details" :to="'/chart/' + chartId">{{ $t('btn.details') }}</button>
+        <button  class="btn-details" @click="reroute('/chart/' + chartId)">{{ $t('btn.details') }}</button>
       </v-flex>
       <v-flex xs4 sm5 md4>
          <v-img :src="require('@/assets/graph-icon.png')" contain height="100"></v-img>
@@ -28,6 +28,15 @@ export default class ChartLink extends Vue {
   @Prop({ type: String, required: true }) chartId!: string
   @Prop({ type: String, required: true }) text!: string
 
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
+  reroute(newRoute: string): void {
+    this.$router.push({path: newRoute})
+  }
 }
 </script>
 
