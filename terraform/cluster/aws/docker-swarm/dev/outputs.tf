@@ -26,6 +26,10 @@ output "kafka_connect_ui" {
   value = "http://${aws_eip.manager-ip.public_ip}:9022"
 }
 
+output "kafka_control_center" {
+  value = "http://${aws_eip.manager-ip.public_ip}:9021"
+}
+
 output "EFS_mount" {
   value = "${module.efs.mount_target_dns}"
 }
