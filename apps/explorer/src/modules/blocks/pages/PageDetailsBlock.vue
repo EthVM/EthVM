@@ -376,7 +376,10 @@ export default class PageDetailsBlock extends Vue {
       {
         text: 'block.number',
         disabled: true,
-        label: ` ${this.$route.params.blockRef}`
+        label: {
+          name:` ${this.$route.params.blockRef}`,
+          hash: true
+        }
       }
     ]
   }

@@ -43,6 +43,9 @@ export interface Crumb {
   disabled: boolean
   icon?: string
   link?: string
-  label?: string
+  label?: {
+    name: string,
+    hash?: boolean
+  }
   plural?: number
 }

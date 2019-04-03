@@ -13,8 +13,8 @@
             <p v-else class="black--text pa-0 ma-0 text-truncate">{{ $tc(item.text, item.plural) }}</p>
           </div>
           <div v-else>
-            <p v-if="!item.plural" class="black--text pa-0 ma-0 text-truncate">{{ $t(item.text) }}{{ item.label }}</p>
-            <p v-else class="black--text pa-0 ma-0 text-truncate">{{ $tc(item.text, item.plural) }}{{ item.label }}</p>
+            <p v-if="!item.plural" class="black--text pa-0 ma-0 text-truncate">{{ $t(item.text) }}{{ item.label.name }}</p>
+            <p v-else class="black--text pa-0 ma-0 text-truncate">{{ $tc(item.text, item.plural) }}{{ item.label.name }}</p>
           </div>
         </div>
         <p v-if="i < crumbs.length - 1" class="pl-1 pr-0 pt-0 mb-0 caption">/</p>

@@ -442,7 +442,9 @@ export default class PageDetailsAddress extends Vue {
       {
         text: 'address.name',
         disabled: true,
-        label: `: ${this.addressRef}`,
+        label: {
+          name: `: ${this.addressRef}`
+        },
         plural: 1
       }
     ]
