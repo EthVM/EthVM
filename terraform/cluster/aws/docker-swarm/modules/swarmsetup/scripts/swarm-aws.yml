@@ -98,7 +98,7 @@ services:
       placement:
         constraints:
           - node.role == worker
-          - node.labels.io.ethvm.nodeType == processing-worker-1
+          - node.labels.com.ethvm.nodeType == processing-worker-1
       restart_policy:
         condition: on-failure
 
@@ -123,10 +123,10 @@ services:
       placement:
         constraints:
           - node.role == worker
-          - node.labels.io.ethvm.nodeType == processing-worker-2
+          - node.labels.com.ethvm.nodeType == processing-worker-2
       restart_policy:
         condition: on-failure
-  
+
   zookeeper-3:
     image: confluentinc/cp-zookeeper:5.1.2
     volumes:
@@ -148,7 +148,7 @@ services:
       placement:
         constraints:
           - node.role == worker
-          - node.labels.io.ethvm.nodeType == processing-worker-3
+          - node.labels.com.ethvm.nodeType == processing-worker-3
       restart_policy:
         condition: on-failure
 
@@ -174,7 +174,7 @@ services:
       placement:
         constraints:
           - node.role == worker
-          - node.labels.io.ethvm.nodeType == processing-worker-1
+          - node.labels.com.ethvm.nodeType == processing-worker-1
       restart_policy:
         condition: on-failure
 
@@ -200,7 +200,7 @@ services:
       placement:
         constraints:
           - node.role == worker
-          - node.labels.io.ethvm.nodeType == processing-worker-2
+          - node.labels.com.ethvm.nodeType == processing-worker-2
       restart_policy:
         condition: on-failure
 
@@ -226,7 +226,7 @@ services:
       placement:
         constraints:
           - node.role == worker
-          - node.labels.io.ethvm.nodeType == processing-worker-3
+          - node.labels.com.ethvm.nodeType == processing-worker-3
       restart_policy:
         condition: on-failure
 
@@ -293,7 +293,7 @@ services:
   # ///////////////////////////////////////////////////////
   # Cluster Monitoring
   # ///////////////////////////////////////////////////////
-  
+
   kafka-control-center:
     image: confluentinc/cp-enterprise-control-center:5.1.2
     networks:

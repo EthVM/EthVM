@@ -22,15 +22,11 @@ docker service create --name ethstats --env WS_SECRET=${ethstats_secret} --publi
 
 #ethvm
 chmod 777 /mnt/efs
-mkdir -p /mnt/efs/zookeeper-1-volume
-mkdir -p /mnt/efs/zookeeper-2-volume
-mkdir -p /mnt/efs/zookeeper-3-volume
-mkdir -p /mnt/efs/kafka-1-volume
-mkdir -p /mnt/efs/kafka-2-volume
-mkdir -p /mnt/efs/kafka-3-volume
-mkdir -p /mnt/efs/kafka-connect-volume
-mkdir -p /mnt/efs/control-center-volume
-mkdir -p /mnt/efs/control-center-config-volume
+
+local volumes=("zookeeper-1-volume" "zookeeper-2-volume" "zookeeper-3-volume" "kafka-1-volume" "kafka-2-volume" "kafka-3-volume" "kafka-connect-volume" "control-center-volume" "control-center-config-volume")
+for volume in "$volumes[@]"; do
+  mkdir -p /mnt/efs/${volume}
+done
 
 # mkdir -p /mnt/efs/kafka-streams-volume
 # mkdir -p /mnt/efs/traefik-volume
@@ -44,8 +40,8 @@ docker node update --role worker worker-1
 docker node update --role worker worker-2
 docker node update --role worker worker-3
 
-docker node update --label-add io.ethvm.nodeType=processing-worker-1 worker-1
-docker node update --label-add io.ethvm.nodeType=processing-worker-2 worker-2
-docker node update --label-add io.ethvm.nodeType=processing-worker-3 worker-3
+docker node update --label-add com.ethvm.nodeType=processing-worker-1 worker-1
+docker node update --label-add com.ethvm.nodeType=processing-worker-2 worker-2
+docker node update --label-add com.ethvm.nodeType=processing-worker-3 worker-3
 
 docker stack deploy --compose-file /tmp/swarm-aws.yml ethvm
