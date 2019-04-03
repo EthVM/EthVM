@@ -35,15 +35,18 @@ EthVM is an open-source Blockchain Explorer focused mainly on [Ethereum](https:/
 
 You can use EthVM as a tool to explore your custom private network or the existing public ones or as a ETL (Extract, Transform, Load) platform to perform different analysis on the data. 
 
-Our core infrastructure is based on very common and known programming languages and frameworks:
+Our core infrastructure is based on well known languages:
 
 - [TypeScript](https://www.typescriptlang.org/)
 - [Kotlin](https://kotlinlang.org/)
+
+And also is backed by popular frameworks:
+
 - [Apache Kafka](https://kafka.apache.org/) = [Kafka Connect](https://docs.confluent.io/current/connect/index.html) + [Kafka Streams](https://kafka.apache.org/documentation/streams/) + [Kafka Schema Registry](https://docs.confluent.io/current/schema-registry/docs/index.html)
 - [VueJs](https://vuejs.org/)
 - [NestJS](https://nestjs.com/)
 
-We have choosen the above technologies to allow a wider range of people contributing to the project regardless the programming level.
+We have choosen the above technologies to allow a wider range of people contributing to the project regardless of the programming level.
 
 ### Why Apache Kafka?
 
