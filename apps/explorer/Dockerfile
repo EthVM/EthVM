@@ -1,26 +1,22 @@
-FROM node:10.14.2-alpine AS build
+FROM node:10.15.3-alpine AS build
 
 ARG TARGET=development
 
-ENV WORKDIR /usr/src/app
+ENV WORKDIR /usr/src/app/explorer
 
 WORKDIR ${WORKDIR}
 
-COPY ./common ${WORKDIR}/common
-COPY ./explorer ${WORKDIR}/explorer
+COPY . ${WORKDIR}
 
-RUN apk add --no-cache bash make gcc musl-dev linux-headers git python g++ \
-    && cd ${WORKDIR}/common \
-    && yarn install \
-    && cd ${WORKDIR}/explorer \
+RUN apk add --no-cache bash git \
+    && cd ${WORKDIR} \
     && yarn install \
     && yarn build:${TARGET}
 
-#
 FROM nginx:1.15.8-alpine
 
 WORKDIR /var/www/html
 
 COPY --from=build /usr/src/app/explorer/dist .
-COPY ./explorer/nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY ${WORKDIR}/nginx/nginx.conf /etc/nginx/conf.d/default.conf
 

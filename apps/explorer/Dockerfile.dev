@@ -1,22 +1,15 @@
-FROM node:10.14.2-alpine
+FROM node:10.15.3-alpine
 
-# Add repositories
-RUN echo -e "http://uk.alpinelinux.org/alpine/v3.8/main\nhttp://uk.alpinelinux.org/alpine/v3.8/community" > /etc/apk/repositories
+ENV WORKDIR /var/explorer
 
-# Install deps
-RUN apk add --no-cache bash make gcc musl-dev linux-headers git python g++
+RUN apk add --no-cache bash git
 
-# Create workdir
-RUN mkdir -p /var/explorer
-WORKDIR /var/explorer
+WORKDIR ${WORKDIR}
+
 USER node
 
-# Copy
-COPY . .
+COPY . ${WORKDIR}
 
-# Remove cached node_modules
-RUN rm -rf /var/explorer/node_modules
-
-# Expose
 EXPOSE 8080
-CMD yarn install && yarn start:dev
+
+CMD yarn && yarn start:dev
