@@ -3,13 +3,13 @@
     {
       "id": "api",
       "dockerfile": "${APPS_PATH}/api/Dockerfile",
-      "context": "${APPS_PATH}/",
+      "context": "${APPS_PATH}/api",
       "version": "${APPS_PATH}/api/package.json"
     },
     {
       "id": "explorer",
       "dockerfile": "${APPS_PATH}/explorer/Dockerfile",
-      "context": "${APPS_PATH}/",
+      "context": "${APPS_PATH}/explorer",
       "version": "${APPS_PATH}/explorer/package.json",
       "targets": ["development", "staging", "production"]
     },

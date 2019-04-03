@@ -1,10 +1,10 @@
 {
   "name": "ethvm-api-new",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Backend API 2 for EthVM",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/enKryptIO/ethvm.git"
+    "url": "git+https://github.com/EthVM/ethvm.git"
   },
   "keywords": [
     "ethvm",
