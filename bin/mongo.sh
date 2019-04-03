@@ -36,7 +36,7 @@ read_version() {
 
 init() {
   local version=$(read_version)
-  docker run --rm --network ethvm_back -e MONGO_URL=mongodb://mongodb:27017/ethvm_local enkryptio/ethvm-utils:${version} mongo init
+  docker run --rm --network ethvm_back -e MONGO_URL=mongodb://mongodb:27017/ethvm_local ethvm/ethvm-utils:${version} mongo init
 }
 
 # create_dump - creates a MongoDB dump file

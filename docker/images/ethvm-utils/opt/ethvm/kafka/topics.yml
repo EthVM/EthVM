@@ -1,243 +1,243 @@
 topics:
 
   - name: canonical-blocks
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: canonical-uncles
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: canonical-transactions
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: canonical-receipts
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: canonical-traces
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: canonical-block-authors
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: canonical-block-author-fee-ether-deltas
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: canonical-traces-ether-deltas
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
 
   - name: canonical-transaction-fees-ether-deltas
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: canonical-miner-fees-ether-deltas
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: canonical-receipt-erc20-deltas
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: canonical-receipt-erc721-deltas
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: canonical-gas-prices
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: canonical-gas-used
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: canonical-transaction-fees
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: fungible-balance-deltas
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       retention.ms: -1
 
   - name: fungible-balances
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: non-fungible-balance-deltas
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       retention.ms: -1
 
   - name: non-fungible-balances
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
 
   - name: block-metrics
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: trace-block-metrics
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: transaction-block-metrics
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: transaction-fee-block-metrics
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: canonical-contract-lifecycle
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: contract-lifecycle-events
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       retention.ms: -1
 
   - name: contracts
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: contract-metadata
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: pending-transactions
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: address-tx-events
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       retention.ms: -1
 
   - name: address-tx-counts
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       retention.ms: -1
 
   - name: miner-list
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: contract-creator-list
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: block-metrics-by-block
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: block-metrics-by-day
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: aggregate-block-metrics-by-day
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
   - name: eth-tokens-list
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 1
     config:
       cleanup.policy: compact
 
   - name: eth-tokens-list-by-symbol
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 1
     config:
       cleanup.policy: compact
 
   - name: raw-exchange-rates
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 1
     config:
       cleanup.policy: compact
 
   - name: token-exchange-rates
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 1
     config:
       cleanup.policy: compact
 
   - name: processing-metadata
-    replicationFactor: 1
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 1
     config:
       cleanup.policy: compact

@@ -42,7 +42,7 @@ services:
   # ///////////////////////////////////////////////////////
 
   traefik:
-    image: enkryptio/traefik:0.1.3
+    image: ethvm/traefik:0.1.4
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -65,7 +65,6 @@ services:
     restart: unless-stopped
     volumes:
       - ./apps/explorer:/var/explorer
-      - ./apps/common:/var/common
     networks:
       - back
     labels:
@@ -79,11 +78,10 @@ services:
   api:
     build:
       context: ./apps/api
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     restart: unless-stopped
     volumes:
-      - ./apps/api:/var/api
-      - ./apps/common:/var/common
+      - ./apps/api:/var/www/api
     depends_on:
       - mongodb
     networks:
@@ -96,10 +94,11 @@ services:
       - 'traefik.frontend.passHostHeader=true'
       - 'traefik.backend=api'
       - 'traefik.port=3000'
-      - 'traefik.frontend.frontend.entryPoints=http,https,ws,wss'
+      - 'traefik.frontend.entryPoints=http,https,ws,wss'
     cpu_shares: 512
     environment:
       GRAPHQL_PLAYGROUND: 'true'
+    command: bash -c "yarn && yarn start:dev"
 
   # ///////////////////////////////////////////////////////
   # Etherum Client
@@ -123,7 +122,7 @@ services:
   # ///////////////////////////////////////////////////////
 
   mongodb:
-    image: enkryptio/mongodb:${MONGODB_VERSION}
+    image: ethvm/mongodb:4.0.5.2
     restart: unless-stopped
     volumes:
       - mongodb-volume:/data/db
@@ -244,7 +243,7 @@ services:
       - 8083:8083
       - 9588:9588
     volumes:
-      - ./out/kafka-connect/:/usr/share/enkryptio
+      - ./out/kafka-connect/:/usr/share/ethvm
     environment:
       CONNECT_BOOTSTRAP_SERVERS: kafka-1:9091
       CONNECT_REST_ADVERTISED_HOST_NAME: "kafka-connect"
@@ -264,8 +263,8 @@ services:
       CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_LOG4J_ROOT_LOGLEVEL: "INFO"
-      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,io.enkrypt.kafka.connect=DEBUG,org.web3j.protocol.websocket.WebSocketService=WARN"
-      CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/enkryptio
+      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,io.enkrypt.kafka.connect=TRACE,org.web3j.protocol.websocket.WebSocketService=WARN"
+      CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/ethvm
       KAFKA_JMX_PORT: 9588
 
   # ///////////////////////////////////////////////////////
