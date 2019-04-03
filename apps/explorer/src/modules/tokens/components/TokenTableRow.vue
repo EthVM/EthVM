@@ -21,7 +21,7 @@
               </v-layout>
               <v-layout row align-center justify-start pl-2>
                 <p class="black--text mb-0 pr-1">${{ marketCap }}</p>
-                <p class="info--text mb-0 cap-text">({{ $t('token.cap') }})</p>
+                <p class="info--text mb-0 cap-text">({{ $t('token.market') }})</p>
               </v-layout>
             </v-flex>
             <v-flex xs2>
@@ -79,7 +79,7 @@ export default class TokenTableRow extends Mixins(StringConcatMixin) {
   ===================================================================================
   */
 
-  @Prop(Object) token: TokenExchange
+  @Prop(Object) token: any
 
   /*
   ===================================================================================
@@ -87,19 +87,19 @@ export default class TokenTableRow extends Mixins(StringConcatMixin) {
   ===================================================================================
   */
   get price(): string {
-    return this.token.current_price ? this.getRoundNumber(this.token.current_price) : '0.00'
+    return this.token.currentPrice ? this.getRoundNumber(this.token.currentPrice) : '0.00'
   }
 
   get tokenPriceChange(): string {
-    return this.changeInPrice != 'null' ? this.changeInPrice + this.getPercent(this.token.price_change_percentage_24h) : '0'
+    return this.changeInPrice != 'null' ? this.changeInPrice + this.getPercent(this.token.priceChangePercentage24h) : '0'
   }
 
   get volume(): string {
-    return this.token.total_volume ? this.getInt(this.token.total_volume) : '0'
+    return this.token.totalVolume ? this.getInt(this.token.totalVolume) : '0'
   }
 
   get marketCap(): string {
-    return this.token.market_cap ? this.getInt(this.token.market_cap) : '0.00'
+    return this.token.marketCap ? this.getInt(this.token.marketCap) : '0.00'
   }
 
   get tokenChangeClass(): string {
@@ -117,10 +117,10 @@ export default class TokenTableRow extends Mixins(StringConcatMixin) {
   }
 
   get changeInPrice(): string {
-    if (!this.token.price_change_percentage_24h) {
+    if (!this.token.priceChangePercentage24h) {
       return 'null'
     }
-    return this.token.price_change_percentage_24h > 0 ? '+' : ''
+    return this.token.priceChangePercentage24h > 0 ? '+' : ''
   }
 
   get tokenLink(): string {

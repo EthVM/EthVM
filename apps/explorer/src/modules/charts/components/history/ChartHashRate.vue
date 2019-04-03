@@ -15,7 +15,6 @@
 import Chart from '@app/modules/charts/components/Chart.vue'
 import { ChartMixin } from '@app/modules/charts/mixins'
 import { Component, Mixins } from 'vue-property-decorator'
-import { Events } from 'ethvm-common'
 
 /* Time Variables: */
 
@@ -27,14 +26,6 @@ import { Events } from 'ethvm-common'
 export default class ChartHashRate extends Mixins(ChartMixin) {
   /*
   ===================================================================================
-    Initial Data
-  ===================================================================================
-  */
-
-  newEvent = Events.getAverageHashRateStats
-
-  /*
-  ===================================================================================
     Lifecycle
   ===================================================================================
   */
@@ -42,7 +33,16 @@ export default class ChartHashRate extends Mixins(ChartMixin) {
   created() {
     this.setTitle(this.title)
     this.setLabel(this.labelString)
-    this.setEvent(this.newEvent)
+  }
+
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
+  fetchData(duration: string): Promise<any[]> {
+    return this.$api.getAverageHashRateStats(duration)
   }
 
   /*
@@ -52,11 +52,11 @@ export default class ChartHashRate extends Mixins(ChartMixin) {
   */
 
   get title() {
-    return this.$i18n.t('charts.avgHashRate').toString()
+    return this.$i18n.t('charts.hash-rate.title').toString()
   }
 
   get labelString(): string {
-    return this.$i18n.t('charts.hash-rate-history').toString()
+    return this.$i18n.t('charts.hash-rate.description').toString()
   }
 }
 </script>

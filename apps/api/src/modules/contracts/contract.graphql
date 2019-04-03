@@ -1,0 +1,64 @@
+type Query {
+  contractByHash(address: String!): Contract
+  contractsCreatedBy(creator: String!, limit: Int, page: Int): [Contract]
+}
+
+type Contract {
+  id: String
+  address: String
+  creator: String
+  data: Buffer
+  destructed: ContractDestructed
+  metadata: ContractMetadata
+  type: ContractType
+}
+
+type ContractDestructed {
+  address: String
+  balance: Buffer
+  refundAddress: Buffer
+}
+
+type ContractMetadata {
+  decimals: Int
+  ens_address: String
+  name: String
+  symbol: String
+  website: String
+  logo: Logo
+  social: Social
+  support: Support
+}
+
+type ContractType {
+  string: ContractTypeEnum
+}
+
+enum ContractTypeEnum {
+  GENERIC, ERC20, ERC721
+}
+
+type Logo {
+  src: String
+}
+
+type Social {
+  blog: String
+  chat: String
+  facebook: String
+  forum: String
+  github: String
+  gitter: String
+  instagram: String
+  linkedin: String
+  reddit: String
+  slack: String
+  telegram: String
+  twitter: String
+  youtube: String
+}
+
+type Support {
+  email: String
+  url: String
+}

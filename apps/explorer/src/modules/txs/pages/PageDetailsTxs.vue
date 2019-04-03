@@ -12,7 +12,6 @@
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
-import { Events } from 'ethvm-common'
 import { eth } from '@app/core/helper'
 import { Tx } from '@app/core/models'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
@@ -43,7 +42,7 @@ export default class PageDetailsTxs extends Vue {
   error = ''
   listType = 'tx'
   transaction = {} as Tx
-  timestamp = ''
+  timestamp = new Date()
 
   /*
   ===================================================================================
@@ -56,7 +55,7 @@ export default class PageDetailsTxs extends Vue {
 
     // 1. Check that current tx ref is valid one
     if (!eth.isValidHash(ref)) {
-      this.error = this.$i18n.t('message.invalidHash').toString()
+      this.error = this.$i18n.t('message.invalid.tx').toString()
     } else {
       this.loadTx()
       window.scrollTo(0, 0)
@@ -77,13 +76,13 @@ export default class PageDetailsTxs extends Vue {
     this.fetchTx().then(
       res => {
         if (res === null) {
-          this.error = this.$i18n.t('message.noTx').toString()
+          this.error = this.$i18n.t('message.tx.not-exist').toString()
           return
         }
         this.setTxInfo(res)
       },
       err => {
-        this.error = this.$i18n.t('message.noTx').toString()
+        this.error = this.$i18n.t('message.tx.not-exist').toString()
       }
     )
   }
@@ -93,7 +92,7 @@ export default class PageDetailsTxs extends Vue {
    *
    * @return {Promise<Tx>}
    */
-  fetchTx(): Promise<Tx> {
+  fetchTx(): Promise<Tx | null> {
     return this.$api.getTx(this.txRef)
   }
 
@@ -102,7 +101,7 @@ export default class PageDetailsTxs extends Vue {
    */
   setTxInfo(tx: Tx) {
     this.transaction = tx
-    this.timestamp = this.tx.getTimestamp().toString()
+    this.timestamp = this.tx.getTimestamp()
   }
 
   /*
@@ -117,7 +116,7 @@ export default class PageDetailsTxs extends Vue {
    * @return {String} - Title for details list
    */
   get title(): string {
-    return this.$i18n.t('title.txDetail').toString()
+    return this.$i18n.t('tx.detail').toString()
   }
 
   /**
@@ -147,7 +146,7 @@ export default class PageDetailsTxs extends Vue {
     // If empty, format differently //
     if (!this.tx.getContractAddress().isEmpty()) {
       return {
-        title: this.$i18n.t('tx.to') + ' ' + this.$i18n.t('tx.contract').toString(),
+        title: this.$i18n.t('tx.to') + ' ' + this.$i18n.tc('contract.name', 1).toString(),
         detail: this.tx.getContractAddress().toString(),
         copy: true,
         link: '/address/' + this.tx.getContractAddress().toString(),
@@ -173,7 +172,7 @@ export default class PageDetailsTxs extends Vue {
     if (this.isLoading) {
       details = [
         {
-          title: this.$i18n.t('tableHeader.blockN')
+          title: this.$i18n.t('block.number')
         },
         {
           title: this.$i18n.t('common.hash')
@@ -185,7 +184,7 @@ export default class PageDetailsTxs extends Vue {
           title: this.$i18n.t('tx.from')
         },
         {
-          title: this.$i18n.t('tx.amount')
+          title: this.$i18n.t('common.amount')
         },
         this.toDetail,
         {
@@ -198,13 +197,13 @@ export default class PageDetailsTxs extends Vue {
           title: this.$i18n.t('gas.price')
         },
         {
-          title: this.$i18n.t('tx.cost')
+          title: this.$i18n.tc('tx.fee', 1)
         }
       ]
     } else {
       details = [
         {
-          title: this.$i18n.t('tableHeader.blockN'),
+          title: this.$i18n.t('block.number'),
           detail: this.tx.getBlockNumber(),
           link: '/block/' + this.tx.getBlockHash().toString()
         },
@@ -216,7 +215,7 @@ export default class PageDetailsTxs extends Vue {
         },
         {
           title: this.$i18n.t('common.timestmp'),
-          detail: this.formatTime
+          detail: this.$i18n.d(this.timestamp, 'long', this.$i18n.locale.replace('_', '-'))
         },
         {
           title: this.$i18n.t('tx.from'),
@@ -226,7 +225,7 @@ export default class PageDetailsTxs extends Vue {
           mono: true
         },
         {
-          title: this.$i18n.t('tx.amount'),
+          title: this.$i18n.t('common.amount'),
           detail:
             this.tx
               .getValue()
@@ -237,7 +236,7 @@ export default class PageDetailsTxs extends Vue {
         },
         this.toDetail,
         {
-          title: this.$i18n.t('tx.cost'),
+          title: this.$i18n.tc('tx.fee', 2),
           detail: this.tx.getTxCost().toEth() + ' ' + this.$i18n.t('common.eth')
         },
         {
@@ -253,7 +252,7 @@ export default class PageDetailsTxs extends Vue {
           detail: this.tx.getGasPrice().toGWei() + ' ' + this.$i18n.t('common.gwei')
         },
         {
-          title: this.$i18n.t('tx.nonce'),
+          title: this.$i18n.t('common.nonce'),
           detail: this.tx.getNonce()
         },
         {
@@ -268,15 +267,6 @@ export default class PageDetailsTxs extends Vue {
   }
 
   /**
-   * Properly format a timestamp into string
-   *
-   * @return {String} - Timestamp string
-   */
-  get formatTime(): string {
-    return new Date(this.timestamp).toString()
-  }
-
-  /**
    * Returns breadcrumbs entry for this particular view.
    * Required for AppBreadCrumbs
    *
@@ -285,13 +275,15 @@ export default class PageDetailsTxs extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: this.$i18n.t('title.tx'),
+        text: 'tx.mined',
         disabled: false,
         link: '/txs'
       },
       {
-        text: this.$i18n.t('common.tx') + ': ' + this.txRef,
-        disabled: true
+        text: 'tx.hash',
+        disabled: true,
+        plural: 1,
+        label: `: ${this.txRef} `
       }
     ]
   }

@@ -2,7 +2,7 @@
   <v-card color="white" flat class="pt-0 pb-2">
     <v-card flat v-if="isSyncing && type">
       <v-layout row align-center justify-center fill-height>
-        <v-card-title class="text-xs-center pt-5 pb-5">{{ $t('message.syncPendingTxs') }}</v-card-title>
+        <v-card-title class="text-xs-center pt-5 pb-5">{{ $t('message.sync.no-pen-tx') }}</v-card-title>
       </v-layout>
     </v-card>
     <v-card v-else flat id="scroll-target" class=" pt-0 pb-0">
@@ -52,7 +52,7 @@
                         </router-link>
                       </p>
                       <p class="text-truncate info--text mb-0" v-if="getType(tx) && !tx.getContractAddress().isEmpty()">
-                        {{ $t('tx.contract') }}:
+                        {{ $t('contract.name') }}:
                         <router-link
                           class="secondary--text font-mono font-italic font-weight-regular pr-1"
                           :to="'/address/' + tx.getContractAddress().toString()"
@@ -125,7 +125,7 @@
               =====================================================================================
               -->
               <v-flex hidden-xs-only sm3 md2>
-                <p class="black--text text-truncate mb-0"><timeago :datetime="tx.getTimestamp()" :auto-update="60"></timeago></p>
+                <app-time-ago :timestamp="tx.getTimestamp()" />
               </v-flex>
               <!--
               =====================================================================================
@@ -168,8 +168,13 @@
 <script lang="ts">
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import { StringConcatMixin } from '@app/core/components/mixins'
+import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 
-@Component
+@Component({
+  components: {
+    AppTimeAgo
+  }
+})
 export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
   /*
   ===================================================================================
@@ -214,8 +219,8 @@ export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
   */
 
   get text(): string {
-    const mesg = [this.$i18n.t('message.txAll'), this.$i18n.t('message.txIn'), this.$i18n.t('message.txOut')]
-    const penMesg = [this.$i18n.t('message.txPen'), this.$i18n.t('message.txPenIn'), this.$i18n.t('message.txPenOut')]
+    const mesg = [this.$i18n.t('message.tx.no-all'), this.$i18n.t('message.tx.no-in'), this.$i18n.t('message.tx.no-out')]
+    const penMesg = [this.$i18n.t('message.tx.no-pen'), this.$i18n.t('message.tx.no-pen-in'), this.$i18n.t('message.tx.no-pen-out')]
     if (!this.type) {
       return mesg[this.filter].toString()
     }

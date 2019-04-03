@@ -48,7 +48,7 @@ export default class PageTxs extends Vue {
   totalTxs = 0
 
   pages: number[] = []
-  from: number = -1
+  from = -1
   page = 0
 
   isLoading = true
@@ -83,7 +83,7 @@ export default class PageTxs extends Vue {
     window.scrollTo(0, 0)
   }
 
-  fetchTxs(newPage: number): Promise<Tx[] | SimpleTx[]> {
+  fetchTxs(newPage: number): Promise<SimpleTx[]> {
     if (!this.firstLoad) {
       const length = this.txs.length
       const first = length > 0 ? this.txs[0].getBlockNumber() : -1
@@ -93,13 +93,14 @@ export default class PageTxs extends Vue {
         this.pages.push(first)
         this.from = last
       } else {
-        this.from = this.pages.pop()
+        const newFrom = this.pages.pop()
+        this.from = newFrom ? newFrom : -1
       }
     }
 
     this.page = newPage
 
-    return this.$api.getTxs('simple', this.maxItems, 'desc', this.from)
+    return this.$api.getTxs(this.maxItems, 'desc', this.from)
   }
 
   fetchTotalTxs(): Promise<number> {
@@ -116,7 +117,7 @@ export default class PageTxs extends Vue {
           resolve(true)
         },
         err => {
-          this.error = this.$i18n.t('message.noTxHistory').toString()
+          this.error = this.$i18n.t('message.tx.no-history').toString()
           Promise.resolve(false)
           reject()
         }
@@ -133,7 +134,7 @@ export default class PageTxs extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: this.$i18n.t('title.mined'),
+        text: 'tx.mined',
         disabled: true
       }
     ]

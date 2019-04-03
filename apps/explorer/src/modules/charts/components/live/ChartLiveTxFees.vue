@@ -13,14 +13,20 @@
 </template>
 
 <script lang="ts">
-import { Events, BlockMetrics } from 'ethvm-common'
+import { Events } from '@app/core/hub'
+import { BlockMetrics } from '@app/core/models'
 import Chart from '@app/modules/charts/components/Chart.vue'
-import ethUnits from 'ethereumjs-units'
 import { Vue, Component } from 'vue-property-decorator'
 import { EthValue } from '@app/core/models'
 import { Footnote } from '@app/core/components/props'
 
 const MAX_ITEMS = 10
+
+class ChartData {
+  labels: string[] = []
+  avgFees: number[] = []
+  avgPrice: number[] = []
+}
 
 @Component({
   components: {
@@ -35,11 +41,7 @@ export default class ChartLiveTxFees extends Vue {
   */
 
   redraw = true
-  data = {
-    labels: [],
-    avgFees: [],
-    avgPrice: []
-  }
+  data = new ChartData()
 
   /*
   ===================================================================================
@@ -70,7 +72,7 @@ export default class ChartLiveTxFees extends Vue {
 
   fillChartData(bms: BlockMetrics[] | BlockMetrics = []) {
     bms = !Array.isArray(bms) ? [bms] : bms
-    const blockN = this.$i18n.t('title.blockN')
+    const blockN = this.$i18n.t('block.number')
     bms.forEach(bm => {
       this.data.labels.push(blockN + bm.number)
       this.data.avgFees.push(new EthValue(bm.avgTxFees).toEth())
@@ -94,7 +96,7 @@ export default class ChartLiveTxFees extends Vue {
       labels: this.data.labels,
       datasets: [
         {
-          label: this.$i18n.t('footnote.aveTxFees'),
+          label: this.$i18n.tc('tx.fee', 2),
           borderColor: '#40ce9c',
           backgroundColor: '#40ce9c',
           data: this.data.avgFees,
@@ -102,7 +104,7 @@ export default class ChartLiveTxFees extends Vue {
           fill: false
         },
         {
-          label: this.$i18n.t('footnote.aveGasPrice'),
+          label: this.$i18n.t('gas.price'),
           borderColor: '#eea66b',
           backgroundColor: '#eea56b',
           data: this.data.avgPrice,
@@ -116,7 +118,7 @@ export default class ChartLiveTxFees extends Vue {
   get chartOptions() {
     return {
       title: {
-        text: this.$i18n.t('charts.avgTitle'),
+        text: this.$i18n.t('charts.tx-costs.title'),
         lineHeight: 1
       },
       responsive: true,
@@ -145,7 +147,7 @@ export default class ChartLiveTxFees extends Vue {
             },
             scaleLabel: {
               display: true,
-              labelString: this.$i18n.t('charts.txFees')
+              labelString: this.$i18n.tc('tx.fee', 2)
             }
           },
           {
@@ -171,7 +173,7 @@ export default class ChartLiveTxFees extends Vue {
             },
             scaleLabel: {
               display: true,
-              labelString: this.$i18n.t('charts.avgGasPrice')
+              labelString: this.$i18n.t('gas.price')
             }
           }
         ],
@@ -186,23 +188,23 @@ export default class ChartLiveTxFees extends Vue {
   }
 
   get newTitle() {
-    return this.$i18n.t('charts.avgTxCost')
+    return this.$i18n.t('charts.tx-costs.title')
   }
 
   get newDescription() {
-    return this.$i18n.t('charts.avgDescription')
+    return this.$i18n.t('charts.tx-costs.description')
   }
 
   get footnote(): Footnote[] {
     return [
       {
         color: 'txSuccess',
-        text: this.$i18n.t('footnote.aveTxFees'),
+        text: this.$i18n.tc('tx.fee', 2) + ' (' + this.$t('common.eth') + ')',
         icon: 'fa fa-circle'
       },
       {
         color: 'txPen',
-        text: this.$i18n.t('footnote.aveGasPrice'),
+        text: this.$i18n.t('gas.price') + ' (' + this.$t('common.gwei') + ')',
         icon: 'fa fa-circle'
       }
     ]

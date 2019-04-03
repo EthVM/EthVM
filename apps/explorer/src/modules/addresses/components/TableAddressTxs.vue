@@ -48,22 +48,22 @@
       <v-card color="primary" flat class="white--text pl-3 pr-1" height="40px">
         <v-layout align-center justify-start row fill-height pr-3>
           <v-flex hidden-sm-and-down md1 pl-3>
-            <h5>{{ $t('tableHeader.blockN') }}</h5>
+            <h5>{{ $t('block.number') }}</h5>
           </v-flex>
           <v-flex xs7 sm6 md6>
-            <h5>{{ $t('tableHeader.txN') }}</h5>
+            <h5>{{ $tc('tx.hash', 1) }}</h5>
           </v-flex>
           <v-flex xs5 sm2 md2 lg1 pl-0>
             <h5>{{ $t('common.eth') }}</h5>
           </v-flex>
           <v-flex hidden-xs-only sm3 md2>
-            <h5>{{ $t('tableHeader.age') }}</h5>
+            <h5>{{ $t('common.age') }}</h5>
           </v-flex>
           <v-flex hidden-md-and-down lg1>
-            <h5>{{ $t('tx.cost') }}</h5>
+            <h5>{{ $tc('tx.fee', 1) }}</h5>
           </v-flex>
           <v-flex hidden-xs-only sm1>
-            <h5>{{ $t('common.status') }}</h5>
+            <h5>{{ $t('tx.status') }}</h5>
           </v-flex>
         </v-layout>
       </v-card>

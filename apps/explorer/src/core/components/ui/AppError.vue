@@ -24,8 +24,8 @@ export default class AppError extends Vue {
   ===================================================================================
   */
 
-  @Prop(Boolean) hasError: boolean
-  @Prop(String) message: string
+  @Prop(Boolean) hasError!: boolean
+  @Prop(String) message!: string
 
   /*
   ===================================================================================

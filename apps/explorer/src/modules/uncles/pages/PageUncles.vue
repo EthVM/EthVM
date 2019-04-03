@@ -19,7 +19,6 @@
 </template>
 
 <script lang="ts">
-import { Events } from 'ethvm-common'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import TableUncles from '@app/modules/uncles/components/TableUncles.vue'
 import { Vue, Component } from 'vue-property-decorator'
@@ -112,8 +111,9 @@ export default class PageUncles extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: this.$i18n.t('title.uncles'),
-        disabled: true
+        text: 'uncle.name',
+        disabled: true,
+        plural: 2
       }
     ]
   }

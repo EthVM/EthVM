@@ -18,8 +18,8 @@ export interface NavHeader {
 }
 
 export interface Footnote {
-  color?: string
-  text?: TranslateResult
+  color: string
+  text: TranslateResult
   icon?: string
 }
 
@@ -39,8 +39,10 @@ export interface Detail {
 }
 
 export interface Crumb {
-  text: string | TranslateResult
+  text: string
   disabled: boolean
   icon?: string
   link?: string
+  label?: string
+  plural?: number
 }

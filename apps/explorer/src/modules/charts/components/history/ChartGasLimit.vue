@@ -15,7 +15,6 @@
 import Chart from '@app/modules/charts/components/Chart.vue'
 import { ChartMixin } from '@app/modules/charts/mixins'
 import { Component, Mixins } from 'vue-property-decorator'
-import { Events } from 'ethvm-common'
 
 @Component({
   components: {
@@ -25,14 +24,6 @@ import { Events } from 'ethvm-common'
 export default class ChartGasLimit extends Mixins(ChartMixin) {
   /*
   ===================================================================================
-    Initial Data
-  ===================================================================================
-  */
-
-  newEvent = Events.getAverageGasLimitStats
-
-  /*
-  ===================================================================================
     Lifecycle
   ===================================================================================
   */
@@ -40,7 +31,16 @@ export default class ChartGasLimit extends Mixins(ChartMixin) {
   created() {
     this.setTitle(this.title)
     this.setLabel(this.labelString)
-    this.setEvent(this.newEvent)
+  }
+
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
+  fetchData(duration: string): Promise<any[]> {
+    return this.$api.getAverageGasLimitStats(duration)
   }
 
   /*
@@ -50,11 +50,11 @@ export default class ChartGasLimit extends Mixins(ChartMixin) {
   */
 
   get title() {
-    return this.$i18n.t('charts.avgGasLimit').toString()
+    return this.$i18n.t('charts.gas-limit.title').toString()
   }
 
   get labelString(): string {
-    return this.$i18n.t('charts.gas-limit-history').toString()
+    return this.$i18n.t('charts.gas-limit.description').toString()
   }
 }
 </script>

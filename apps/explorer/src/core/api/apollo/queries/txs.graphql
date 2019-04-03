@@ -1,0 +1,72 @@
+enum FilterEnum {
+  in, out, all
+}
+
+query tx($hash: String!) {
+  tx(hash: $hash) {
+    blockHash
+    blockNumber
+    from
+    gas
+    gasPrice
+    hash
+    input
+    nonce
+    timestamp
+    to
+    value
+    receipt {
+      contractAddress
+      gasUsed
+    }
+  }
+}
+
+query txs($limit: Int, $page: Int, $fromBlock: Int) {
+  txs(limit: $limit, page: $page, fromBlock: $fromBlock) {
+    blockHash
+    blockNumber
+    from
+    gas
+    gasPrice
+    hash
+    input
+    timestamp
+    to
+    value
+    receipt {
+      contractAddress
+      gasUsed
+      status
+      traces {
+        error
+      }
+    }
+  }
+}
+
+query txsForAddress($hash: String!, $filter: FilterEnum!, $limit: Int, $page: Int) {
+  txsForAddress(hash: $hash, filter: $filter, limit: $limit, page: $page) {
+    id
+    hash
+    blockHash
+    blockNumber
+    from
+    gasPrice
+    timestamp
+    to
+    value
+    receipt {
+      contractAddress
+      gasUsed
+      status
+      traces {
+        error
+      }
+    }
+  }
+}
+
+query totalNumberOfTransactions {
+  totalNumberOfTransactions
+}

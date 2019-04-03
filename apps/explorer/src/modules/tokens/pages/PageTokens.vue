@@ -9,7 +9,7 @@
         <v-layout row>
           <v-spacer />
           <v-flex xs12 sm9 md7>
-            <v-card-text class="font-weight-thin font-italic text-xs-center">{{ $t('message.noTokensRopsten') }}</v-card-text>
+            <v-card-text class="font-weight-thin font-italic text-xs-center">{{ $t('message.ropsten-no-token') }}</v-card-text>
           </v-flex>
           <v-spacer />
         </v-layout>
@@ -25,6 +25,7 @@ import TokenTable from '@app/modules/tokens/components/TokenTable.vue'
 import { Crumb } from '@app/core/components/props'
 import { TokenExchange } from '@app/modules/tokens/props'
 import { Component, Vue } from 'vue-property-decorator'
+import { ConfigHelper } from '@app/core/helper/config-helper'
 
 const MAX_ITEMS = 50
 
@@ -41,13 +42,7 @@ export default class PageTokens extends Vue {
   ===================================================================================
   */
 
-  /*
-  ===================================================================================
-    Since Alpha release is on Ropsten, there are no token prices. Set isRopsten value
-    to true, to display user friendly message
-  ===================================================================================
-  */
-  isRopsten = true
+  isRopsten = ConfigHelper.isRopsten
   tokens: TokenExchange[] = []
   total = 0
   isLoading = true
@@ -97,7 +92,7 @@ export default class PageTokens extends Vue {
         this.isLoading = false
       },
       err => {
-        this.error = this.$i18n.t('message.error').toString()
+        this.error = this.$i18n.t('message.no-data').toString()
       }
     )
   }
@@ -117,8 +112,9 @@ export default class PageTokens extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: this.$i18n.t('title.tokens'),
-        disabled: true
+        text: 'token.name',
+        disabled: true,
+        plural: 2
       }
     ]
   }

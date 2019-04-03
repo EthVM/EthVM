@@ -1,39 +1,39 @@
 <template>
   <v-layout row wrap justify-space-between mb-4>
-    <v-flex xs12 sm6 md3> <app-info-card :title="$t('smlBlock.last')" :value="latestBlockNumber" color-type="primary" back-type="last-block" /> </v-flex>
+    <v-flex xs12 sm6 md3> <app-info-card :title="$t('block.last-n')" :value="latestBlockNumber" color-type="primary" back-type="last-block" /> </v-flex>
     <v-flex xs12 sm6 md3>
       <app-info-card
         v-if="type === 'generic'"
-        :title="$t('smlBlock.time')"
+        :title="$t('block.time')"
         :value="secSinceLastBlock"
         color-type="success"
         back-type="time-since"
-        metrics="sec"
+        :metrics="$t('message.sec')"
       />
-      <app-info-card v-else :title="$t('smlBlock.success')" :value="latestBlockSuccessTxs" color-type="txSuccess" back-type="success-txs" />
+      <app-info-card v-else :title="$tc('tx.success', 2)" :value="latestBlockSuccessTxs" color-type="txSuccess" back-type="success-txs" />
     </v-flex>
     <v-flex xs12 sm6 md3>
       <app-info-card
         v-if="type === 'generic'"
-        :title="$t('smlBlock.hashR')"
+        :title="$t('block.hash-rate')"
         :value="latestHashRate"
         color-type="warning"
         back-type="hash-rate"
         metrics="Th/s"
       />
-      <app-info-card v-else :title="$t('smlBlock.failed')" :value="latestBlockFailedTxs" color-type="error" back-type="failed-txs" />
+      <app-info-card v-else :title="$tc('tx.failed', 2)" :value="latestBlockFailedTxs" color-type="error" back-type="failed-txs" />
     </v-flex>
     <v-flex xs12 sm6 md3>
-      <app-info-card v-if="type === 'generic'" :title="$t('smlBlock.diff')" :value="latestDifficulty" color-type="error" back-type="difficulty" metrics="Th" />
-      <app-info-card v-else :title="$t('smlBlock.pending')" :value="latestBlockPendingTxs" color-type="success" back-type="time-since" />
+      <app-info-card v-if="type === 'generic'" :title="$t('diff.name')" :value="latestDifficulty" color-type="error" back-type="difficulty" metrics="Th" />
+      <app-info-card v-else :title="$tc('tx.pending-short', 2)" :value="latestBlockPendingTxs" color-type="success" back-type="time-since" />
     </v-flex>
   </v-layout>
 </template>
 
 <script lang="ts">
 import AppInfoCard from '@app/core/components/ui/AppInfoCard.vue'
-import { Events, BlockMetrics } from 'ethvm-common'
-import { Block } from '@app/core/models'
+import { Events } from '@app/core/hub'
+import { Block, BlockMetrics } from '@app/core/models'
 import BN from 'bignumber.js'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 
@@ -58,9 +58,9 @@ export default class AppInfoCardGroup extends Vue {
   */
 
   loading: boolean = true
-  blockMetric: BlockMetrics = null
+  blockMetric: BlockMetrics | null = null
   seconds: number = 0
-  secondsInterval = null
+  secondsInterval: number | null = null
 
   /*
   ===================================================================================
@@ -87,7 +87,9 @@ export default class AppInfoCardGroup extends Vue {
   }
 
   beforeDestroy() {
-    clearInterval(this.secondsInterval)
+    if (this.secondsInterval) {
+      clearInterval(this.secondsInterval)
+    }
     this.$eventHub.$off([Events.NEW_BLOCK_METRIC])
   }
 
@@ -126,8 +128,10 @@ export default class AppInfoCardGroup extends Vue {
   }
 
   startCount(): void {
-    this.secondsInterval = setInterval(() => {
-      this.seconds = Math.ceil((new Date().getTime() - this.blockMetric.timestamp * 1000) / 1000)
+    this.secondsInterval = window.setInterval(() => {
+      if (this.blockMetric) {
+        this.seconds = Math.ceil((new Date().getTime() - this.blockMetric.timestamp * 1000) / 1000)
+      }
     }, 1000)
   }
 
@@ -146,7 +150,7 @@ export default class AppInfoCardGroup extends Vue {
   }
 
   get latestBlockNumber(): string {
-    return !this.loading ? this.blockMetric.number : this.loadingMessage
+    return !this.loading && this.blockMetric ? this.blockMetric.number.toString() : this.loadingMessage
   }
 
   get latestHashRate(): string {
@@ -154,7 +158,7 @@ export default class AppInfoCardGroup extends Vue {
   }
 
   get latestDifficulty(): string {
-    if (!this.loading) {
+    if (!this.loading && this.blockMetric) {
       const { difficulty } = this.blockMetric
       return new BN(difficulty)
         .dividedBy('1e12')
@@ -165,15 +169,15 @@ export default class AppInfoCardGroup extends Vue {
   }
 
   get latestBlockSuccessTxs(): string {
-    return !this.loading ? this.blockMetric.numSuccessfulTxs.toString() : this.loadingMessage
+    return !this.loading && this.blockMetric ? this.blockMetric.numSuccessfulTxs.toString() : this.loadingMessage
   }
 
   get latestBlockFailedTxs(): string {
-    return !this.loading ? this.blockMetric.numFailedTxs.toString() : this.loadingMessage
+    return !this.loading && this.blockMetric ? this.blockMetric.numFailedTxs.toString() : this.loadingMessage
   }
 
   get latestBlockPendingTxs(): string {
-    return !this.loading ? this.blockMetric.numPendingTxs.toString() : this.loadingMessage
+    return !this.loading && this.blockMetric ? this.blockMetric.numPendingTxs.toString() : this.loadingMessage
   }
 
   get secSinceLastBlock(): string {

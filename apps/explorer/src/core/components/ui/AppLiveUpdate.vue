@@ -9,7 +9,8 @@
 
 <script lang="ts">
 import { Vue, Component, Mixins, Prop } from 'vue-property-decorator'
-import { Events, BlockMetrics } from 'ethvm-common'
+import { Events } from '@app/core/hub'
+import { BlockMetrics } from '@app/core/models'
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { TranslateResult } from 'vue-i18n'
 
@@ -64,13 +65,21 @@ export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
 
   get messages() {
     return {
-      tx: this.$i18n.t('message.updateTxs'),
-      blocks: this.$i18n.t('message.updateBlock')
+      tx: this.$i18n.tc('message.update.tx', this.plural),
+      blocks: this.$i18n.tc('message.update.block', this.plural)
     }
   }
 
   get text(): string {
     return this.formatStr(this.newNumber) + ' ' + this.messages[this.pageType]
+  }
+
+  get plural(): number {
+    if (this.pageType === 'blocks') {
+      return this.newBlocks > 1 ? 2 : 1
+    }
+
+    return this.newTxs > 1 ? 2 : 1
   }
 
   get newNumber(): string {

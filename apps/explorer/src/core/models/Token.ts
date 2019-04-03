@@ -1,14 +1,13 @@
 import { Hex } from '@app/core/models'
-// import { Token as RawToken } from 'ethvm-common'
 
 export class Token {
   public readonly id: string
   private cache: any = {}
 
-  private price: number
+  private price?: number
   private holder?: string
 
-  constructor(private readonly token: Token) {
+  constructor(private readonly token: any) {
     this.id = '' //token.address
   }
 
@@ -17,47 +16,29 @@ export class Token {
   }
 
   public getSymbol(): string {
-    // if (!this.cache.symbol) {
-    //   this.cache.symbol = this.token.symbol
-    // }
     return this.cache.symbol
   }
 
   public getCreator(): string {
-    // if (!this.cache.creator) {
-    //   this.cache.symbol = '0x' + this.token.creator
-    // }
     return this.cache.creator
   }
 
   public getDecimals(): number {
-    // if (!this.cache.decimals) {
-    //   this.cache.decimals = this.token.decimals
-    // }
     return this.cache.decimals
   }
   public getTotalHolders(): number {
-    // if(!this.cache.totalHolders) {
-    //   this.cache.totalHolders = this.token.totalHolders
-    // }
     return this.cache.totalHodlers
   }
 
   public getTotalSupply(): number {
-    // if(!this.cache.totalSupply) {
-    //   this.cache.totalSupply = this.token.totalSupply
-    // }
     return this.cache.totalSupply
   }
 
   public getTotalTransfers(): number {
-    // if(!this.cache.totalTrasfers) {
-    //   this.cache.totalTransfers = this.token.totalTransfers
-    // }
     return this.cache.totalTransfers
   }
 
-  public getPrice(): number {
+  public getPrice(): number | undefined {
     return this.token.price
   }
 
@@ -65,7 +46,7 @@ export class Token {
     this.token.price = _price
   }
 
-  public getHolder(): string {
+  public getHolder(): string | undefined {
     return this.token.holder
   }
 

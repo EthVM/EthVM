@@ -23,7 +23,7 @@
             v-if="phText === 'addressTxSearch'"
             @keyup.enter="search"
             flat
-            :placeholder="$t('search.addressTx')"
+            :placeholder="$t('search.address-tx')"
             color="primary"
             solo
             clearable
@@ -36,14 +36,13 @@
       </v-card>
     </v-flex>
     <v-flex hidden-sm-and-down md4 style="max-width: 115px;">
-      <v-btn v-if="phText === 'default'" @click="search" depressed color="secondary" class="search-button text-capitalize ml-0">{{ $t('search.title') }}</v-btn>
-      <v-btn v-else @click="search" depressed outline class="search-button text-capitalize ml-0 primary--text lineGrey">{{ $t('search.title') }}</v-btn>
+      <v-btn v-if="phText === 'default'" @click="search" depressed color="secondary" class="search-button text-capitalize ml-0">{{ $t('search.name') }}</v-btn>
+      <v-btn v-else @click="search" depressed outline class="search-button text-capitalize ml-0 primary--text lineGrey">{{ $t('search.name') }}</v-btn>
     </v-flex>
   </v-layout>
 </template>
 
 <script lang="ts">
-import { Events } from 'ethvm-common'
 import { Component, Vue, Watch } from 'vue-property-decorator'
 
 @Component
@@ -54,6 +53,12 @@ export default class AppSearch extends Vue {
   ===================================================================================
   */
 
+  searchTypes = {
+    Address: 'address',
+    Block: 'block',
+    Uncle: 'uncle',
+    Tx: 'tx'
+  }
   searchInput = ''
   phText = 'default'
   isValid = true
@@ -79,35 +84,14 @@ export default class AppSearch extends Vue {
 
   search() {
     this.$api.search(this.searchInput).then(res => {
-      if (res.type != 3) {
+      const type = Object.keys(this.searchTypes).find(e => e === res.type)
+      if (type) {
+        this.$router.push({ path: `/${this.searchTypes[type]}/` + (this.searchInput.startsWith('0x') ? this.searchInput : `0x${this.searchInput}`) })
+        this.searchInput = ''
         this.isValid = true
+        return
       }
-      switch (res.type) {
-        case 0:
-          {
-            this.$router.push({
-              path: '/tx/' + this.searchInput
-            })
-          }
-          break
-        case 1:
-          {
-            this.$router.push({
-              path: '/address/' + this.searchInput
-            })
-          }
-          break
-        case 2:
-          {
-            this.$router.push({
-              path: '/block/' + this.searchInput
-            })
-          }
-          break
-        case 3: {
-          this.isValid = false
-        }
-      }
+      this.isValid = false
     })
   }
 

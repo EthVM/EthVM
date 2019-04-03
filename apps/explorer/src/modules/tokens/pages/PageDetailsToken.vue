@@ -61,9 +61,8 @@ import TokenDetailsTabs from '@app/modules/tokens/components/TokenDetailsTabs.vu
 import HolderDetailsList from '@app/modules/tokens/components/HolderDetailsList.vue'
 import HolderDetailsTabs from '@app/modules/tokens/components/HolderDetailsTabs.vue'
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
-import { Events } from 'ethvm-common'
 import { Detail, Crumb } from '@app/core/components/props'
-import { Token, Tx } from '@app/core/models'
+import { Contract, Token, Tx } from '@app/core/models'
 
 const MAX_ITEMS = 10
 
@@ -198,7 +197,7 @@ export default class PageDetailsToken extends Vue {
           resolve()
         })
         .catch(e => {
-          this.errorTokenDetailsList = this.$i18n.t('message.invalidToken').toString()
+          this.errorTokenDetailsList = this.$i18n.t('message.invalid.token').toString()
           resolve()
         })
     })
@@ -298,7 +297,7 @@ export default class PageDetailsToken extends Vue {
           this.holderTransfers = holderTransfers as any[]
         })
         .catch(e => {
-          this.errorHolderTransfers = this.$i18n.t('message.noTxHistory').toString()
+          this.errorHolderTransfers = this.$i18n.t('message.no-history').toString()
         })
     })
   }
@@ -314,7 +313,7 @@ export default class PageDetailsToken extends Vue {
    *
    * @return {Object} - Contract details and metadata
    */
-  fetchContractDetails() {
+  fetchContractDetails(): Promise<any> {
     return this.$api.getContract(this.addressRef)
   }
 
@@ -329,33 +328,16 @@ export default class PageDetailsToken extends Vue {
         .getTokenExchangeRateByAddress(this.addressRef)
         .then(response => {
           if (response === null) {
-            reject(this.$i18n.t('message.invalidAddress').toString())
+            reject(this.$i18n.t('message.invalid.addr').toString())
+          } else {
+            resolve(response)
           }
-          resolve(response)
         })
         .catch(e => {
           reject(e)
         })
     })
   }
-
-  // /**
-  //  * Retrieve array of token transfers for a given token contract address.
-  //  *
-  //  * @return {Array} - Array of token transfers
-  //  */
-  // fetchTokenTransfers(page = 0, limit = MAX_ITEMS) {
-  //   return new Promise((resolve, reject) => {
-  //     this.$api
-  //       .getAddressTokenTransfers(this.addressRef, limit, page)
-  //       .then(result => {
-  //         resolve(result)
-  //       })
-  //       .catch(e => {
-  //         reject(e)
-  //       })
-  //   })
-  // }
 
   /**
    * Fetch latest [10] token transfers for a particular token contract
@@ -365,18 +347,19 @@ export default class PageDetailsToken extends Vue {
   fetchTokenTransfers() {
     return new Promise((resolve, reject) => {
       this.isTokenTransfersLoading = true
-      this.$http
-        .get(`http://api.ethplorer.io/getTokenHistory/${this.addressRef}?apiKey=freekey&type=transfer&limit=10`)
+
+      this.$api
+        .getTokenHistory(this.addressRef)
         .then(response => {
           this.isTokenTransfersLoading = false
-          if (response.data.error) {
-            return reject(response.data.error.message)
+          if (response === null) {
+            reject(this.$i18n.t('message.invalidAddress').toString())
           }
-          resolve(response.data.operations)
+          resolve(response)
         })
-        .catch(err => {
+        .catch(e => {
           this.isTokenTransfersLoading = false
-          reject(err)
+          reject(e)
         })
     })
   }
@@ -389,18 +372,19 @@ export default class PageDetailsToken extends Vue {
   fetchTokenHolders() {
     return new Promise((resolve, reject) => {
       this.isTokenHoldersLoading = true
-      this.$http
-        .get(`http://api.ethplorer.io/getTopTokenHolders/${this.addressRef}?apiKey=freekey`)
+
+      this.$api
+        .getTopTokenHolders(this.addressRef)
         .then(response => {
           this.isTokenHoldersLoading = false
-          if (response.data.error) {
-            return reject(response.data.error.message)
+          if (response === null) {
+            reject(this.$i18n.t('message.invalidAddress').toString())
           }
-          resolve(response.data.holders)
+          resolve(response)
         })
-        .catch(err => {
+        .catch(e => {
           this.isTokenHoldersLoading = false
-          reject(err)
+          reject(e)
         })
     })
   }
@@ -412,16 +396,16 @@ export default class PageDetailsToken extends Vue {
    */
   fetchHolderDetails() {
     return new Promise((resolve, reject) => {
-      this.$http
-        .get(`http://api.ethplorer.io/getAddressInfo/${this.holderAddress}?apiKey=freekey&token=${this.addressRef}`)
+      this.$api
+        .getHolderDetails(this.addressRef, this.holderAddress)
         .then(response => {
-          if (response.data.error) {
-            return reject(response.data.error.message)
+          if (response === null) {
+            reject(this.$i18n.t('message.invalidAddress').toString())
           }
-          resolve(response.data)
+          resolve(response)
         })
-        .catch(err => {
-          reject(err)
+        .catch(e => {
+          reject(e)
         })
     })
   }
@@ -434,18 +418,19 @@ export default class PageDetailsToken extends Vue {
   fetchHolderTransfers() {
     return new Promise((resolve, reject) => {
       this.isHolderTransfersLoading = true
-      this.$http
-        .get(`http://api.ethplorer.io/getAddressHistory/${this.holderAddress}?apiKey=freekey&token=${this.addressRef}&type=transfer`)
+
+      this.$api
+        .getHolderTransfers(this.addressRef, this.holderAddress)
         .then(response => {
           this.isHolderTransfersLoading = false
-          if (response.data.error) {
-            return reject(response.data.error.message)
+          if (response === null) {
+            reject(this.$i18n.t('message.invalidAddress').toString())
           }
-          resolve(response.data.operations)
+          resolve(response)
         })
-        .catch(err => {
+        .catch(e => {
           this.isHolderTransfersLoading = false
-          reject(err)
+          reject(e)
         })
     })
   }
@@ -474,14 +459,16 @@ export default class PageDetailsToken extends Vue {
   get crumbsBasic(): Crumb[] {
     return [
       {
-        text: this.$i18n.t('title.tokens'),
+        text: 'token.name',
         link: '/tokens',
-        disabled: false
+        disabled: false,
+        plural: 2
       },
       {
-        text: this.isTokenDetailsLoading ? this.addressRef : this.tokenDetails.symbol.toUpperCase(),
-        link: `/token/${this.addressRef}`,
-        disabled: true
+        text: 'token.name',
+        disabled: true,
+        plural: 1,
+        label: this.isTokenDetailsLoading ? `: ${this.addressRef}` : `: ${this.tokenDetails.symbol.toUpperCase()}`
       }
     ]
   }
@@ -494,9 +481,10 @@ export default class PageDetailsToken extends Vue {
   get crumbsHolder(): Crumb[] {
     return [
       {
-        text: this.$i18n.t('title.tokens').toString(),
+        text: 'token.name',
         link: '/tokens',
-        disabled: false
+        disabled: false,
+        plural: 2
       },
       {
         text: this.isTokenDetailsLoading ? this.addressRef : this.tokenDetails.symbol.toUpperCase(),
@@ -504,9 +492,9 @@ export default class PageDetailsToken extends Vue {
         disabled: false
       },
       {
-        text: this.holderAddress,
-        link: '',
-        disabled: true
+        text: 'token.holder',
+        disabled: true,
+        label: `: ${this.holderAddress}`
       }
     ]
   }

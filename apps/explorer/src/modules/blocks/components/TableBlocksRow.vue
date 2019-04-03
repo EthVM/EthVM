@@ -10,7 +10,7 @@
           <router-link class="primary--text font-mono font-weight-regular" :to="'/block/' + block.getHash()">{{ block.getHash() }}</router-link>
         </p>
         <p v-if="pageType != 'address'" class="text-truncate info--text mb-0 pt-2">
-          {{ $t('block.miner') }}:
+          {{ $t('miner.name') }}:
           <router-link :to="'/address/' + block.getMiner().toString()" class="secondary--text font-italic font-mono font-weight-regular">{{
             block.getMiner().toString()
           }}</router-link>
@@ -36,7 +36,7 @@
       <v-flex d-flex hidden-xs-only sm2 pt-0 pr-0> <v-img v-if="hasUncles(block)" :src="require('@/assets/uncle.png')" height="30px" contain /> </v-flex>
       <v-flex xs12 sm7 md6>
         <v-card flat color="uncleGrey">
-          <v-card-title class="pt-1 font-weight-medium pb-2">{{ $t('title.uncles') }}:</v-card-title>
+          <v-card-title class="pt-1 font-weight-medium pb-2">{{ $tc('uncle.name', 2) }}:</v-card-title>
           <v-card-text v-for="(uncle, index) in block.getUncles()" :key="index" class="text-truncate info--text pt-0 pb-2">
             {{ $t('common.hash') }}:
             <router-link :to="'/uncle/' + uncle.getHash()" class="font-mono">{{ uncle.getHash() }}</router-link>

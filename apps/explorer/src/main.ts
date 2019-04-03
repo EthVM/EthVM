@@ -1,15 +1,19 @@
-import { EthvmSocketIoApi } from '@app/core/api'
+import { EthvmApolloApi } from '@app/core/api'
 import { VueEthvmApi } from '@app/core/plugins'
-import VueSocketIO from '@app/core/plugins/socketio/'
 import router from '@app/core/router'
 import store from '@app/core/store'
 import App from '@app/modules/App.vue'
 import i18n from '@app/translations'
-import axios from 'axios'
-import io from 'socket.io-client'
+import * as Sentry from '@sentry/browser'
+import { InMemoryCache } from 'apollo-cache-inmemory'
+import ApolloClient from 'apollo-client'
+import { split } from 'apollo-link'
+import { HttpLink } from 'apollo-link-http'
+import { WebSocketLink } from 'apollo-link-ws'
+import { getMainDefinition } from 'apollo-utilities'
 import VTooltip from 'v-tooltip'
 import Vue from 'vue'
-import VueAxios from 'vue-axios'
+import VueApollo from 'vue-apollo'
 import VueTimeago from 'vue-timeago'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
@@ -20,22 +24,75 @@ import 'vuetify/dist/vuetify.min.css'
   ===================================================================================
 */
 
+// -------------------------------------------------------
+//    VTooltip
+// -------------------------------------------------------
+
 Vue.use(VTooltip)
+
+// -------------------------------------------------------
+//    EventHub
+// -------------------------------------------------------
 
 Vue.prototype.$eventHub = new Vue()
 Vue.config.productionTip = false
 
-const socket = io(process.env.VUE_APP_API_ENDPOINT)
-Vue.use(VueSocketIO, socket, store)
-Vue.use(VueEthvmApi, new EthvmSocketIoApi(socket))
+// -------------------------------------------------------
+//    APIs: Apollo (GraphQL)
+// -------------------------------------------------------
+
+const httpLink = new HttpLink({
+  uri: process.env.VUE_APP_API_ENDPOINT || ''
+})
+
+const wsLink = new WebSocketLink({
+  uri: process.env.VUE_APP_API_SUBSCRIPTIONS_ENDPOINT || '',
+  options: {
+    reconnect: true
+  }
+})
+
+const link = split(
+  // split based on operation type
+  ({ query }) => {
+    const { kind, operation } = getMainDefinition(query)
+    return kind === 'OperationDefinition' && operation === 'subscription'
+  },
+  wsLink,
+  httpLink
+)
+
+const apolloClient = new ApolloClient({
+  link: link,
+  cache: new InMemoryCache(),
+  connectToDevTools: process.env.NODE_ENV === 'development'
+})
+
+const apolloProvider = new VueApollo({
+  defaultClient: apolloClient
+})
+
+const api = new EthvmApolloApi(apolloClient)
+
+Vue.use(VueApollo)
+Vue.use(VueEthvmApi, api)
+
+// -------------------------------------------------------
+//    TimeAgo
+// -------------------------------------------------------
 
 Vue.use(VueTimeago, {
   name: 'timeago',
   locale: 'en-US',
   locales: {
-    'en-US': require('date-fns/locale/en')
+    'en-US': require('date-fns/locale/en'),
+    ru: require('date-fns/locale/ru')
   }
 })
+
+// -------------------------------------------------------
+//    Vuetify
+// -------------------------------------------------------
 
 Vue.use(Vuetify, {
   theme: {
@@ -65,9 +122,6 @@ Vue.use(Vuetify, {
   }
 })
 
-// See: https://www.npmjs.com/package/vue-axios //
-Vue.use(VueAxios, axios)
-
 /*
   ===================================================================================
     Vue: Application Kickstart
@@ -79,9 +133,25 @@ new Vue({
   store,
   router,
   i18n,
+  apolloProvider,
   template: '<App/>',
   data: {},
   components: {
     App
   }
 })
+
+/*
+  ===================================================================================
+    Sentry
+  ===================================================================================
+*/
+
+const sentryToken = process.env.VUE_APP_SENTRY_SECURITY_TOKEN
+if (sentryToken) {
+  Sentry.init({
+    dsn: sentryToken,
+    integrations: [new Sentry.Integrations.Vue({ Vue })],
+    maxBreadcrumbs: 0
+  })
+}

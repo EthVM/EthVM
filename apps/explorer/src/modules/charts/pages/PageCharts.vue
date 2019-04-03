@@ -2,12 +2,16 @@
   <v-container grid-list-lg class="mb-0">
     <app-bread-crumbs :new-items="crumbs"></app-bread-crumbs>
     <app-tabs :tabs="pageTabs">
-      <!-- Live Data-->
+      <!--
+      =====================================================================================
+        LIVE CHARTS TAB
+      =====================================================================================
+      -->
       <v-tab-item slot="tabs-item" value="tab-0">
         <app-card-stats-group />
         <!-- Charts -->
         <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6> <chart-live-tx /> </v-flex>
+          <v-flex xs12 md6> <chart-live-txs /> </v-flex>
           <v-flex xs12 md6> <chart-live-tx-fees /> </v-flex>
         </v-layout>
         <v-layout row wrap justify-center mb-4>
@@ -19,28 +23,16 @@
           </v-flex>
         </v-layout>
       </v-tab-item>
-      <!-- Transactions-->
+
+      <!--
+      =====================================================================================
+        BLOCKS TAB
+      =====================================================================================
+      -->
       <v-tab-item slot="tabs-item" value="tab-1">
         <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6> <chart-link :title="$t('charts.avgGasPrice')" :chart-id="ID.gasPrice" /> </v-flex>
-          <v-flex xs12 md6> <chart-link :title="$t('charts.avgGasLimit')" :chart-id="ID.gasLimit" /> </v-flex>
-        </v-layout>
-        <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6> <chart-link :title="$t('charts.txSuccess')" :chart-id="ID.txSuccess" /> </v-flex>
-          <v-flex xs12 md6> <chart-link :title="$t('charts.txFail')" :chart-id="ID.txFail" /> </v-flex>
-        </v-layout>
-        <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6> <chart-link :title="$t('charts.txFees')" :chart-id="ID.txFees" /> </v-flex>
-          <v-flex xs12 md6>
-            <!-- Pending Txs -->
-          </v-flex>
-        </v-layout>
-      </v-tab-item>
-      <!-- Blocks -->
-      <v-tab-item slot="tabs-item" value="tab-2">
-        <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6> <chart-link :title="$t('charts.avgBlockTime')" :chart-id="ID.blockTime" /> </v-flex>
-          <v-flex xs12 md6> <chart-link :title="$t('charts.avgBlockDiff')" :chart-id="ID.difficulty" /> </v-flex>
+          <v-flex xs12 md6> <chart-link :title="$t('charts.block-time.title')" :chart-id="ChartType.blockTime" /> </v-flex>
+          <v-flex xs12 md6> <chart-link :title="$t('charts.block-diff.title')" :chart-id="ChartType.difficulty" /> </v-flex>
         </v-layout>
         <v-layout row wrap justify-center mb-4>
           <v-flex xs12 md6>
@@ -48,13 +40,38 @@
           </v-flex>
         </v-layout>
       </v-tab-item>
-      <!-- Mining -->
+
+      <!--
+      =====================================================================================
+        TRANSACTIONS TAB
+      =====================================================================================
+      -->
+      <v-tab-item slot="tabs-item" value="tab-2">
+        <v-layout row wrap justify-center mb-4>
+          <v-flex xs12 md6> <chart-link :title="$t('charts.gas-price.title')" :chart-id="ChartType.gasPrice" /> </v-flex>
+          <v-flex xs12 md6> <chart-link :title="$t('charts.gas-limit.title')" :chart-id="ChartType.gasLimit" /> </v-flex>
+        </v-layout>
+        <v-layout row wrap justify-center mb-4>
+          <v-flex xs12 md6> <chart-link :title="$t('charts.tx-success.title')" :chart-id="ChartType.txSuccess" /> </v-flex>
+          <v-flex xs12 md6> <chart-link :title="$t('charts.tx-fail.title')" :chart-id="ChartType.txFail" /> </v-flex>
+        </v-layout>
+        <v-layout row wrap justify-center mb-4>
+          <v-flex xs12 md6> <chart-link :title="$t('charts.tx-fees.title')" :chart-id="ChartType.txFees" /> </v-flex>
+          <v-flex xs12 md6>
+            <!-- Pending Txs -->
+          </v-flex>
+        </v-layout>
+      </v-tab-item>
+
+      <!--
+      =====================================================================================
+        MINING TAB
+      =====================================================================================
+      -->
       <v-tab-item slot="tabs-item" value="tab-3">
         <v-layout row wrap justify-center mb-4>
-          <v-flex xs12 md6> <chart-link :title="$t('charts.avgHashRate')" :chart-id="ID.hashRate" /> </v-flex>
-          <v-flex xs12 md6>
-            <!--  -->
-          </v-flex>
+          <v-flex xs12 md6> <chart-link :title="$t('charts.hash-rate.title')" :chart-id="ChartType.hashRate" /> </v-flex>
+          <v-flex xs12 md6></v-flex>
         </v-layout>
       </v-tab-item>
     </app-tabs>
@@ -66,7 +83,7 @@ import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import ChartLink from '@app/modules/charts/components/ChartLink.vue'
 import AppCardStatsGroup from '@app/core/components/ui/AppCardStatsGroup.vue'
-import ChartLiveTx from '@app/modules/charts/components/live/ChartLiveTx.vue'
+import ChartLiveTxs from '@app/modules/charts/components/live/ChartLiveTxs.vue'
 import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees.vue'
 import { ChartTypes } from '@app/modules/charts/helpers'
 import { Vue, Component } from 'vue-property-decorator'
@@ -78,7 +95,7 @@ import { Tab, Crumb } from '@app/core/components/props'
     AppTabs,
     AppCardStatsGroup,
     ChartLink,
-    ChartLiveTx,
+    ChartLiveTxs,
     ChartLiveTxFees
   }
 })
@@ -88,8 +105,7 @@ export default class PageCharts extends Vue {
     Initial Data
   ===================================================================================
   */
-
-  ID = ChartTypes
+  ChartType = ChartTypes
 
   /*
   ===================================================================================
@@ -100,7 +116,7 @@ export default class PageCharts extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: this.$i18n.t('title.charts'),
+        text: 'charts.name',
         disabled: true
       }
     ]
@@ -110,22 +126,22 @@ export default class PageCharts extends Vue {
     return [
       {
         id: '0',
-        title: this.$i18n.t('tabs.live'),
+        title: this.$i18n.t('charts.live'),
         isActive: true
       },
       {
         id: '1',
-        title: this.$i18n.t('title.tx'),
+        title: this.$i18n.tc('block.name', 2),
         isActive: false
       },
       {
         id: '2',
-        title: this.$i18n.t('title.blocks'),
+        title: this.$i18n.tc('tx.name', 2),
         isActive: false
       },
       {
         id: '3',
-        title: this.$i18n.t('tabs.miningH'),
+        title: this.$i18n.t('miner.history'),
         isActive: false
       }
     ]

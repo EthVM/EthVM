@@ -6,8 +6,8 @@
         <v-flex xs12 pb-0>
           <v-layout row align-center justify-start>
             <v-card-title class="title font-weight-bold">{{ title }}</v-card-title>
-            <v-chip v-if="account.type === 'address' && account.isMiner" color="txSuccess" text-color="white" small>{{ $t('block.miner') }}</v-chip>
-            <v-chip v-if="account.type === 'address' && account.isCreator" color="success" text-color="white" small>{{ $t('addrOverview.creator') }}</v-chip>
+            <v-chip v-if="account.type === 'address' && account.isMiner" color="txSuccess" text-color="white" small>{{ $t('miner.name') }}</v-chip>
+            <v-chip v-if="account.type === 'address' && account.isCreator" color="success" text-color="white" small>{{ $t('contract.creator') }}</v-chip>
           </v-layout>
         </v-flex>
         <v-flex xs12 pt-0>
@@ -36,7 +36,7 @@
       <!-- Ether Balance -->
       <v-flex xs12 md4>
         <v-card class="primary white--text pl-2" flat>
-          <v-card-text class="pb-0">{{ $t('addrOverview.balance') }}</v-card-text>
+          <v-card-text class="pb-0">{{ $t('common.eth-balance') }}</v-card-text>
           <!-- isShortValue -->
           <v-card-title v-if="!isShortValue(account.balance.toEth().toString())" class="headline text-truncate pr-1"
             >{{ getShortValue(account.balance.toEth()) }} {{ $t('common.eth') }}
@@ -55,7 +55,7 @@
       <!-- USD Value -->
       <v-flex xs12 md4>
         <v-card class="error white--text pl-2" flat>
-          <v-card-text class="pb-0">{{ $t('addrOverview.usd') }} (1{{ $t('common.eth') }} = ${{ getRoundNumber(account.exchangeRate.USD) }})</v-card-text>
+          <v-card-text class="pb-0">{{ $t('usd.value') }} (1{{ $t('common.eth') }} = ${{ getRoundNumber(account.exchangeRate.USD) }})</v-card-text>
           <v-card-title class="headline text-truncate">${{ getRoundNumber(account.balance.toEth() * account.exchangeRate.USD) }}</v-card-title>
         </v-card>
       </v-flex>
@@ -63,7 +63,7 @@
       <!-- Number of TX -->
       <v-flex xs12 md4>
         <v-card class="warning white--text pl-2" flat>
-          <v-card-text class="pb-0">{{ $t('addrOverview.txN') }}</v-card-text>
+          <v-card-text class="pb-0">{{ $t('tx.total') }}</v-card-text>
           <v-card-title class="headline text-truncate">{{ formatStr(account.totalTxs.toString()) }}</v-card-title>
         </v-card>
       </v-flex>
@@ -104,8 +104,8 @@ export default class AddressDetail extends Mixins(StringConcatMixin) {
 
   get title(): string {
     const titles = {
-      address: this.$i18n.t('title.address'),
-      contract: this.$i18n.t('title.contract')
+      address: this.$i18n.t('address.name'),
+      contract: this.$i18n.tc('contract.name', 1)
     }
     return titles[this.account.type]
   }

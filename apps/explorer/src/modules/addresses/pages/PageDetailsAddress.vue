@@ -64,7 +64,7 @@
           :loading="minerBlocksLoading"
           :blocks="account.minedBlocks"
           :page-type="detailsType"
-          :total-blocks="minedTotal"
+          :total-blocks="account.totalMinedBlocks"
           :max-items="max"
           :page="minedPage"
           :simple-pagination="true"
@@ -96,8 +96,7 @@
 </template>
 
 <script lang="ts">
-import { Block, EthValue, Tx, PendingTx } from '@app/core/models'
-import { Contract } from 'ethvm-common'
+import { Block, Contract, EthValue, SimpleTx, PendingTx, SimpleBlock } from '@app/core/models'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
@@ -147,7 +146,7 @@ export default class PageDetailsAddress extends Vue {
   error = ''
   loading = true
   validHash = true
-  account: AccountInfo = null
+  account = new AccountInfo(this.addressRef)
 
   /*Transactions: */
   txsLoading = true
@@ -167,14 +166,13 @@ export default class PageDetailsAddress extends Vue {
   minerBlocksLoading = true
   minerBlocksError = ''
   minedPage = 0
-  minedTotal = 20
 
   /* Contracts: */
   contractsLoading = true
   contractsError = ''
 
-  // State Machine (not needed to be reactive, this is why we use undefined instead of null)
-  sm: TinySM = undefined
+  // State Machine
+  sm!: TinySM
 
   /*
   ===================================================================================
@@ -195,11 +193,7 @@ export default class PageDetailsAddress extends Vue {
             this.sm.transition('error')
             return
           }
-
-          // 2. Build AccountInfo model with current address
-          this.account = new AccountInfo(this.addressRef)
-
-          // 3. If everything goes well, we proceed to load basic information
+          // 2. If everything goes well, we proceed to load basic information
           this.sm.transition('load-basic-info')
         }
       },
@@ -218,7 +212,7 @@ export default class PageDetailsAddress extends Vue {
             .then((res: any[]) => {
               const metadata = res[0] || {}
               this.account.isCreator = metadata.isContractCreator || false
-              this.account.isMiner = false // metadata.isMiner || false
+              this.account.isMiner = metadata.isMiner || false
               this.account.totalTxs = metadata.totalTxCount || 0
               this.account.fromTxCount = metadata.outTxCount || 0
               this.account.toTxCount = metadata.inTxCount || 0
@@ -239,13 +233,15 @@ export default class PageDetailsAddress extends Vue {
         name: 'load-complementary-info',
         enter: () => {
           const addressTxs = this.fetchTxs()
-          const addressPendingTxs = this.fetchPendingTxs()
+          // TODO: Re-enable whenever pending tx calls available
+          // const addressPendingTxs = this.fetchPendingTxs()
           const minedBlocks = this.account.isMiner ? this.fetchMinedBlocks() : Promise.resolve([])
           // TODO: Re-enable whenever contract creator functionality is finished
           const contractsCreated = Promise.resolve([]) // this.account.isCreator ? this.fetchContractsCreated() : Promise.resolve([])
 
           // If one promise fails, we still continue processing every entry (and for those failed we receive undefined)
-          const promises = [addressTxs, addressPendingTxs, minedBlocks, contractsCreated].map(p => p.catch(() => undefined))
+          // const promises = [addressTxs, addressPendingTxs, minedBlocks, contractsCreated].map(p => p.catch(() => undefined))
+          const promises = [addressTxs, minedBlocks, contractsCreated].map(p => p.catch(() => undefined))
 
           Promise.all(promises)
             .then((res: any[]) => {
@@ -254,15 +250,17 @@ export default class PageDetailsAddress extends Vue {
               this.txsLoading = false
 
               // Pending Txs
-              this.account.pendingTxs = res[1] || []
-              this.pendingTxsLoading = false
+              // this.account.pendingTxs = res[1] || []
+              // this.pendingTxsLoading = false
 
               // Mined Blocks
-              this.account.minedBlocks = res[2] || []
+              this.account.minedBlocks = res[1] || [] // res[2] || []
+              //Get Total mined Blocks by address
+              //this.account.totalMinedBlocks =
               this.minerBlocksLoading = false
 
               // Contract Creator
-              this.account.contracts = res[3] || []
+              this.account.contracts = res[2] || [] // res[3] || []
 
               this.sm.transition('load-token-complementary-info')
             })
@@ -299,7 +297,7 @@ export default class PageDetailsAddress extends Vue {
         name: 'error',
         enter: () => {
           // 1. Set global error to error
-          this.error = this.$i18n.t('message.invalidAddress').toString()
+          this.error = this.$i18n.t('message.invalid.addr').toString()
 
           // 2. Disable global loading
           this.loading = false
@@ -317,7 +315,7 @@ export default class PageDetailsAddress extends Vue {
   ===================================================================================
   */
 
-  fetchTxs(page = this.txsPage, limit = MAX_ITEMS, filter = this.txsFilter): Promise<Tx[]> {
+  fetchTxs(page = this.txsPage, limit = MAX_ITEMS, filter = this.txsFilter): Promise<SimpleTx[]> {
     return this.$api.getTxsOfAddress(this.addressRef, filter, limit, page)
   }
 
@@ -325,7 +323,7 @@ export default class PageDetailsAddress extends Vue {
     return this.$api.getPendingTxsOfAddress(this.addressRef, filter, limit, page)
   }
 
-  fetchMinedBlocks(page = this.minedPage, limit = MAX_ITEMS): Promise<Block[]> {
+  fetchMinedBlocks(page = this.minedPage, limit = MAX_ITEMS): Promise<SimpleBlock[]> {
     return this.$api.getBlocksMinedOfAddress(this.addressRef, limit, page)
   }
 
@@ -351,7 +349,7 @@ export default class PageDetailsAddress extends Vue {
         this.txsLoading = false
       },
       err => {
-        this.txsError = this.$i18n.t('message.invalidAddress').toString()
+        this.txsError = this.$i18n.t('message.invalid.addr').toString()
       }
     )
   }
@@ -363,7 +361,7 @@ export default class PageDetailsAddress extends Vue {
         this.minerBlocksLoading = false
       },
       err => {
-        this.minerBlocksError = this.$i18n.t('message.error').toString()
+        this.minerBlocksError = this.$i18n.t('message.no-data').toString()
       }
     )
   }
@@ -433,14 +431,17 @@ export default class PageDetailsAddress extends Vue {
         return this.account.toTxCount
       case 'out':
         return this.account.fromTxCount
+      default:
+        return 0
     }
   }
 
   get crumbs(): Crumb[] {
     return [
       {
-        text: `${this.$i18n.t('title.address').toString()}: ${this.addressRef}`,
-        disabled: true
+        text: 'address.name',
+        disabled: true,
+        label: `: ${this.addressRef}`
       }
     ]
   }
@@ -449,17 +450,17 @@ export default class PageDetailsAddress extends Vue {
     const tabs: Tab[] = [
       {
         id: '0',
-        title: this.$i18n.t('tabs.txH'),
+        title: this.$i18n.t('tx.history'),
         isActive: true
       },
       {
         id: '1',
-        title: this.$i18n.t('tabs.tokens'),
+        title: this.$i18n.tc('token.name', 2),
         isActive: false
       },
       {
         id: '2',
-        title: this.$i18n.t('tabs.pending'),
+        title: this.$i18n.tc('tx.pending', 2),
         isActive: false
       }
     ]
@@ -468,7 +469,7 @@ export default class PageDetailsAddress extends Vue {
       if (this.account.isMiner) {
         const newTab = {
           id: '3',
-          title: this.$i18n.t('tabs.miningH').toString(),
+          title: this.$i18n.t('miner.history').toString(),
           isActive: false
         }
         tabs.push(newTab)
@@ -477,7 +478,7 @@ export default class PageDetailsAddress extends Vue {
       if (this.account.isCreator) {
         const newTab = {
           id: '4',
-          title: this.$i18n.t('tabs.contracts').toString(),
+          title: this.$i18n.tc('contract.name', 2).toString(),
           isActive: false
         }
         tabs.push(newTab)

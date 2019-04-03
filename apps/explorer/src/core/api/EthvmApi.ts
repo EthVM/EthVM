@@ -1,16 +1,22 @@
-import { Block, PendingTx, SimpleBlock, SimpleTx, Tx, Uncle } from '@app/core/models'
 import {
   AddressBalance,
   AddressMetadata,
+  Block,
   BlockMetrics,
   Contract,
+  PendingTx,
   ProcessingMetadata,
   Quote,
+  SimpleBlock,
+  SimpleTx,
   Statistic,
   Token,
   TokenExchangeRate,
-  TokenTransfer
-} from 'ethvm-common'
+  TokenTransfer,
+  Tx,
+  Uncle
+} from '@app/core/models'
+import { Observable } from 'apollo-client/util/Observable'
 
 export interface EthvmApi {
   // Address
@@ -23,9 +29,9 @@ export interface EthvmApi {
 
   // Blocks
   getBlock(hash: string): Promise<Block | null>
-  getBlocks(format: string, limit: number, page: number, fromBlock: number): Promise<Block[] | SimpleBlock[]>
+  getBlocks(limit: number, page: number, fromBlock: number): Promise<SimpleBlock[]>
   getBlockByNumber(no: number): Promise<Block | null>
-  getBlocksMinedOfAddress(address: string, limit: number, page: number): Promise<Block[]>
+  getBlocksMinedOfAddress(address: string, limit: number, page: number): Promise<SimpleBlock[]>
   getTotalNumberOfBlocks(): Promise<number>
 
   // Block Metrics
@@ -42,6 +48,10 @@ export interface EthvmApi {
   getTotalNumberOfTokenExchangeRates(): Promise<number>
   getTokenExchangeRateBySymbol(symbol: string): Promise<TokenExchangeRate | null>
   getTokenExchangeRateByAddress(address: string): Promise<TokenExchangeRate | null>
+  getTokenHistory(address: string): Promise<any>
+  getTopTokenHolders(address: string): Promise<any>
+  getHolderDetails(address: string, holderAddress: string): Promise<any>
+  getHolderTransfers(address: string, holderAddress: string): Promise<any>
 
   // Pending Txs
   getPendingTxs(limit: number, page: number): Promise<PendingTx[]>
@@ -51,9 +61,8 @@ export interface EthvmApi {
 
   // Txs
   getTx(hash: string): Promise<Tx | null>
-  getTxs(format: string, limit: number, order: string, fromBlock: number): Promise<Tx[] | SimpleTx[]>
-  getTxsOfBlock(hash: string): Promise<Tx[]>
-  getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<Tx[]>
+  getTxs(limit: number, order: string, fromBlock: number): Promise<SimpleTx[]>
+  getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<SimpleTx[]>
   getTotalNumberOfTxs(): Promise<number>
 
   // Uncles
@@ -77,4 +86,7 @@ export interface EthvmApi {
 
   // Processing Metadata
   getProcessingMetadata(id: string): Promise<ProcessingMetadata | null>
+
+  // Subscriptions
+  observable<T>(query): Observable<T>
 }

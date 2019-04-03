@@ -1,326 +1,337 @@
 {
-  "title": {
-    "home": "Home",
-    "blocks": "Blocks",
-    "viewAll": "View All",
-    "uncles": "Uncles",
-    "uncleNumber": "Uncle Number",
-    "tx": "Transactions",
-    "pending": "Pending Transactions",
-    "mined": "Mined Transactions",
-    "tokens": "Tokens",
-    "tokenCntrc": "Contracts",
-    "tokenPrice20": "ERC20 Prices",
-    "tokenPrice721": "ERC721 Prices",
-    "charts": "Charts",
-    "about": "About Us",
-    "address": "Address",
-    "blockN": "Block #",
-    "blockDetail": "Block Details",
-    "uncleDetail": "Uncle Details",
-    "tokenDetail": "Token Details",
-    "txDetail": "Transaction Details",
-    "overview": "Overview",
-    "blockTxs": "Block Transactions",
-    "lastBlock": "Last Blocks",
-    "lastTxs": "Last Transactions",
-    "kb": "Knowledge Base",
+  "block": {
+    "name": "Block | Blocks",
+    "number": "Block #",
+    "mined": "Mined Blocks",
+    "detail": "Block Details",
+    "txs": "Block Transactions",
+    "last": "Last Blocks",
+    "block": "Block Height #",
+    "p-hash": "Parent Hash",
+    "total-reward": "Total Block Reward",
+    "last-n": "Last Block #",
+    "time": "Since Last Block",
+    "hash-rate": "Hash Rate",
+    "bytes": "Bytes",
+    "logs": "Logs",
+    "data": "Extra Data",
+    "state-root": "State Root",
+    "rcpt-root": "Receipts Root"
+  },
+
+  "uncle": {
+    "name": "Uncle | Uncles",
+    "number": "Uncle #",
+    "detail": "Uncle Details",
+    "height": "Uncle Height #",
+    "uncle-position": "Uncle Position",
     "position": "Position",
-    "minedBlocks": "Mined Blocks",
-    "contract": "Contract",
-    "links": "Links",
-    "price": "Price",
-    "marketCap": "Market Cap",
-    "decimals": "Decimals",
-    "website": "Website",
-    "support": "Support",
-    "supply": "Total Supply",
-    "terms": "Blockchain Terms"
+    "reward": "Uncle Reward",
+    "included": "Included in Block #"
   },
-  "common": {
-    "address": "Address",
-    "hash": "Hash",
-    "eth": "ETH",
+
+  "tx": {
+    "name": "Transaction | Transactions",
+    "name-short": "Tx | Txs",
+    "pending": "Pending Transaction | Pending Transactions",
+    "pending-short": "Pending Tx | Pending Txs",
+    "mined": "Mined Transactions",
+    "detail": "Transaction Details",
+    "last": "Last Transactions",
+    "hash": "Tx # | Transaction #",
+    "fee": "Tx Fee | Txs Fees",
+    "history": "Transactions History",
+    "total": "Total Txs",
+    "success": "Successful Tx | Successful Txs",
+    "failed": "Failed Tx | Failed Txs",
+    "for-tx": "For Tx",
+    "cost": "Tx Cost",
+    "root": "Transactions Root",
+    "from": "From",
+    "to": "To",
     "status": "Status",
-    "timestmp": "Timestamp",
-    "gwei": "GWEI",
-    "more": "More",
-    "tx": "Tx",
-    "uncle": "Uncle",
-    "successful": "Successful",
-    "failed": "Failed"
+    "input": "Input Data",
+    "func": "Function",
+    "method": "Method ID"
   },
-  "subTitle": {
-    "home": "Welcome to Ethereum Virtual Machine",
-    "blocks": "Blocks, most recent first",
-    "tx": "Transactions, most recent first",
-    "pending": "Transactions that haven't been mined on Ethereum network",
-    "charts": "Ethereum network charts and stats",
-    "about": "EthVM General Information",
-    "address": "Overview / transactions info",
-    "blockDetail": "Block overview / transactions info",
-    "tokenDetail": "Token overview / transfers history",
-    "txDetail": "Ethereum transaction overview"
+
+  "token": {
+    "name": "Token | Tokens",
+    "detail": "Token Details",
+    "empty": "No tokens",
+    "decimals": "Decimals",
+    "number": "Total Tokens ",
+    "tokenName": "Token Name",
+    "supply": "Total Supply",
+    "holder": "Holder",
+    "holder-total": "Total Holders",
+    "symbol": "Symbol",
+    "decimal": "Decimals",
+    "owner": "Owner",
+    "market": "Market Cap",
+    "change": "%Change (24H)",
+    "volume": "Volume",
+    "transfers": "Transfers",
+    "links": "Links",
+    "website": "Website",
+    "support": "Support"
   },
-  "search": {
-    "title": "Search",
-    "default": "Search Block / Address / Tx",
-    "addressTx": "Tx Hash/Address"
+
+  "address": {
+    "name": "Address"
   },
-  "tableHeader": {
-    "blockN": "Block #",
-    "txs": "Transactions",
-    "reward": "Reward",
-    "txN": "Transaction #",
-    "limit": "Limit",
-    "gas": "Gas",
-    "blockHeight": "Block Height #",
-    "uncleHeight": "Uncle Height #",
-    "token": "Token",
-    "price": "Price",
-    "marketCap": "Market Cap",
+
+  "contract": {
+    "name": "Contract | Contracts",
+    "creator": "Contract Creator"
+  },
+
+  "gas": {
+    "name": "Gas",
+    "limit": "Gas Limit",
+    "used": "Gas Used",
+    "fee": "Gas Fee",
+    "price": "Gas Price",
+    "ave-price": "Avg Gas Price"
+  },
+
+  "miner": {
+    "name": "Miner",
+    "reward": "Miner Reward",
+    "reward-short": "Reward",
+    "history": "Mining History"
+  },
+
+  "diff": {
+    "name": "Difficulty",
+    "total": "Total Difficulty"
+  },
+
+  "price": {
+    "name": "Price | Prices",
+    "erc20": "ERC20 Prices",
+    "erc721": "ERC721 Prices"
+  },
+
+  "common": {
+    "hash": "Hash",
+    "height": "Height",
+    "size": "Size",
+    "nonce": "Nonce",
+    "sha": "SHA3",
     "age": "Age",
+    "eth": "ETH",
+    "gwei": "GWEI",
+    "timestmp": "Timestamp",
+    "success": "Successful",
+    "fail": "Failed",
+    "pending": "Pending",
+    "amount": "Amount",
     "quantity": "Quantity",
     "percentage": "Percentage",
-    "unclePosition": "Uncle Position"
+    "eth-balance": "Ether Balance",
+    "balance": "Balance"
   },
-  "filter": {
-    "f": "Filter",
-    "view": "View",
-    "all": "All",
-    "out": "Outgoing",
-    "in": "Incoming",
-    "token": {
-      "high": "High to Low",
-      "low": "Low to High"
-    }
+
+  "usd": {
+    "name": "USD",
+    "total": "Total USD Value",
+    "value": "USD Value"
   },
+
   "message": {
-    "error": "Oops something went wrong, no data from server :(",
+    "no-data": "Oops something went wrong, no data from server :(",
     "err": "Error",
-    "txAll": "This address does not have any transaction history",
-    "txIn": "This address does not have incoming transactions",
-    "txOut": "This address does not have outgoing transactions",
-    "txPen": "This address does not have pending transactions",
-    "txPenIn": "This address does not have any pending incoming transactions",
-    "txPenOut": "This address does not have any pending outgoing transactions",
-    "noTokens": "Address does not hold any common tokens",
-    "noTxHistory": "There is no transaction history",
-    "noTxInBlock": "This block does not have any transactions",
-    "noPending": "There are no pending transactions",
+    "tx" : {
+      "no-all": "This address does not have any transaction history",
+      "no-in": "This address does not have incoming transactions",
+      "no-out": "This address does not have outgoing transactions",
+      "no-pen": "This address does not have pending transactions",
+      "no-pen-in": "This address does not have any pending incoming transactions",
+      "no-pen-out": "This address does not have any pending outgoing transactions",
+      "no-history": "There is no transaction history",
+      "no-in-block": "This block does not have any transactions",
+      "not-exist": "This transaction does not exist",
+      "no-pending": "There are no pending transactions"
+    },
+    "no-tokens": "Address does not hold any supported tokens",
     "load": "Loading",
-    "loadingBlockTx": "Loading block transactions",
-    "notMined": "This block has not been mined yet",
-    "noTx": "This transaction does not exist",
-    "notValid": "This is not a valid ",
-    "sync": "We are synchronizing with the Blockchain. Some features might not work correctly.",
-    "invalidAddress": "Invalid Address",
-    "syncPendingTxs": "There are no pending transactions while synchronizing with the Blockchain.",
-    "notFound": "Oops! Page Not Found :(",
+    "load-block-tx": "Loading block transactions",
+    "not-mined": "This block has not been mined yet",
+    "invalid": {
+      "tx": "This is not a valid transaction hash",
+      "block": "This is not a valid block hash",
+      "addr": "This is not a valid address hash",
+      "token": "This is not a valid token address",
+      "contract": "This is not a valid contract address",
+      "uncle": "This is not a valid uncle hash"
+    },
+    "sync": {
+      "main": "We are synchronizing with the Blockchain. Some features might not work correctly.",
+      "no-pen-tx": "There are no pending transactions while synchronizing with the Blockchain."
+    },
+    "not-found": "Oops! Page Not Found :(",
     "welcome": {
       "title": "Welcome to EthVM!",
       "text1": "We're still in our Alpha stage, so some features may not work to their full potential. Reach out to us with any bugs you find at ",
       "text2": ", so we can continue to make EthVM even better!",
       "btn": "Onward!"
     },
-    "noTokensRopsten": "EthVM is still in testing, so we're currently showing data from the Ropsten ETH testnet. There are no tokens that have actual value on Ropsten testnet, but all mainnet Ethereum token balances will appear here once we go live.",
-    "updateTxs": "new txs",
-    "updateBlock": "new blocks",
-    "report": "Find any bugs or have suggestions?"
-  },
-  "block": {
-    "height": "Height",
-    "miner": "Miner",
-    "reward": "Miner Reward",
-    "totalReward": "Total Block Reward",
-    "fees": "Tx Fees",
-    "pHash": "Parent Hash",
-    "size": "Size",
-    "diff": "Difficulty",
-    "totalDiff": "Total Difficulty",
-    "logs": "Logs",
-    "nonce": "Nonce",
-    "root": "State Root",
-    "data": "Extra Data",
-    "txRoot": "Transactions Root",
-    "recRoot": "Receipts Root",
-    "uncReward": "Reward",
-    "sha": "SHA3",
-    "uncle": "Uncle",
-    "bytes": "Bytes"
-  },
-  "addrOverview": {
-    "balance": "Ether Balance",
-    "usd": "USD Value",
-    "txN": "Number of Txs",
-    "mined": "Mined",
-    "creator": "Contract Creator",
-    "forTx": "For Tx",
-    "per": "per",
-    "uncles": "Uncles",
-    "and": "and"
-  },
-  "tx": {
-    "from": "From",
-    "to": "To",
-    "contract": "Contract",
-    "amount": "Amount",
-    "block": "Block #",
-    "cost": "Tx Cost",
-    "nonce": "Nonce",
-    "input": "Input Data",
-    "func": "Function",
-    "method": "Method ID"
-  },
-  "token": {
-    "holder": "Holder",
-    "balance": "Balance",
-    "supply": "Total Supply",
-    "totalHold": "Total Holders",
-    "symbol": "Symbol",
-    "transfers": "Transfers",
-    "value": "Value",
-    "decimal": "Decimals",
-    "number": "Total Tokens: ",
-    "totalUSD": "Total USD Value",
-    "name": "Token Name",
-    "usdValue": "USD Value",
-    "amount": "Amount",
-    "price": "Price",
-    "owner": "Owner",
-    "change": "%Change (24H)",
-    "volume": "Volume",
-    "cap": "Market Cap"
-  },
-  "gas": {
-    "limit": "Gas Limit",
-    "used": "Gas Used",
-    "price": "Gas Price",
-    "fee": "Gas Fee"
-  },
-  "smlBlock": {
-    "last": "Last Block #",
-    "time": "Since Last Block",
-    "hashR": "Hash Rate",
-    "diff": "Difficulty",
-    "success": "Successful Tx",
-    "failed": "Failed Tx",
-    "pending": "Pending Tx"
-  },
-  "tabs": {
-    "txH": "Transactions History",
-    "tokens": "Tokens",
-    "pending": "Pending Transactions",
-    "miningH": "Mining History",
-    "contracts": "Contracts",
-    "live": "Live Data"
-  },
-  "bttn": {
-    "more": "More",
-    "less": "Less",
-    "viewAll": "View All",
-    "first": "First",
-    "last": "Last",
-    "backHome": "Go Back Home",
-    "report": "Report Issue"
-  },
-  "type": {
-    "in": "In",
-    "out": "Out"
+    "ropsten-no-token": "EthVM is still in testing, so we're currently showing data from the Ropsten ETH testnet. There are no tokens that have actual value on Ropsten testnet, but all mainnet Ethereum token balances will appear here once we go live.",
+    "report": "Find any bugs or have suggestions?",
+    "update": {
+      "tx": "new tx | new txs",
+      "block": "new block | new blocks"
+    },
+    "sec": "sec"
   },
   "charts": {
-    "txSummary": "Tx Summary",
-    "avgTxCost": "Average Tx Costs",
-    "title": "Transactions (Last 10 blocks)",
-    "avgTitle": "Average Tx Fees",
-    "liveDescription": "Successful, failed, and pending transactions in the last 10 blocks",
-    "avgDescription": "Average transaction fees and average gas price in the last 10 blocks",
-    "sfTxsLabel": "Successful and Failed Tx ",
-    "penTxsLabel": "Pending Txs",
-    "avgGasPrice": "Gas Price",
-    "avgGasLimit": "Gas Limit",
-    "avgBlockDiff": "Block Difficulty",
-    "avgBlockSize": "Block Size",
-    "avgBlockTime": "Block Time",
-    "txFees": "Transactions Fees",
-    "txSuccess": "Successful Transactions",
-    "txFail": "Failed Transactions",
-    "txPending": "Pending Transactions",
-    "avgHashRate": "Hash Rate",
-    "totalUncles": "Uncles per Day",
-
-    "block-difficulty-history": "Average Block Difficulty",
-    "block-time-history": "Average Block Time",
-    "block-size-history": "Average Block Size",
-    "gas-limit-history": "Average Gas Limit",
-    "gas-price-history": "Average Gas Price",
-    "hash-rate-history": "Average Hash Rate",
-    "miner-rewards-history": "Average Mining Rewards",
-    "top-miners-history": "Top Miners",
-    "tx-fail-history": "Number of Failed Transactions",
-    "tx-success-history": "Number of Successful Transactions",
-    "tx-fees-history": "Tx Fees ETH",
-    "tx-pending-history": "Average Number of pending transactions",
-    "uncle-number-history": "Total Number of Uncles per Day",
+    "name": "Charts",
+    "live": "Live Data",
+    "tx-summary": {
+      "title": "Tx Summary",
+      "description": "Successful, failed, and pending transactions in the last 10 blocks.",
+      "label":{
+        "pen": "Pending Txs",
+        "success-fail": "Successful and Failed Txs"
+      }
+    },
+    "tx-costs": {
+      "title": "Tx Fees and Gas Price",
+      "description":  "Average transaction fees and average gas price in the last 10 blocks."
+    },
+    "block-diff": {
+      "title": "Block Difficulty",
+      "description": "Average Block Difficulty"
+    },
+    "block-size": {
+      "title": "Block Size",
+      "description": "Average Block Size"
+    },
+    "block-time": {
+      "title": "Block Time",
+      "description": "Average Block Time"
+    },
+    "gas-limit": {
+      "title": "Gas Limit",
+      "description": "Average Gas Limit"
+    },
+    "gas-price": {
+      "title": "Gas Price",
+      "description": "Average Gas Price"
+    },
+    "hash-rate": {
+      "title": "Hash Rate",
+      "description": "Average Hash Rate"
+    },
+    "tx-fail": {
+      "title": "Failed Transactions",
+      "description": "Number of Failed Transactions"
+    },
+    "tx-fees": {
+      "title": "Transactions Fees",
+      "description": "Average Transactions Fees"
+    },
+    "tx-pending": {
+      "title": "Pending Transactions",
+      "description": "Average Number of pending transactions"
+    },
+    "tx-success": {
+      "title": "Successful Transactions",
+      "description": "Number of Successful Transactions"
+    },
+    "uncles-number": {
+      "title": "Uncles per Day",
+      "description": "Total Number of Uncles per Day"
+    },
+    "mining-rewards": {
+      "title": "Mining Rewards",
+      "description": "Average Mining Rewards"
+    },
+    "top-miners": {
+      "title": "Top Miners"
+    },
     "states": {
       "all": "All",
-      "week": "week",
-      "month": "month",
-      "day": "day",
-      "year": "year"
-    },
-    "options": {
-      "d": "1D",
-      "w": "1W",
-      "m": "1M",
-      "all": "ALL"
+      "week": "week | 1W",
+      "month": "month | 1M",
+      "day": "day | 1D",
+      "year": "year | 1Y"
     },
     "captions": {
       "all": " in the Ethereum blockchain since the begining ",
       "other": " in the Ethereum blockchain in last "
     }
   },
+  "btn": {
+    "view-all": "View All",
+    "more": "More",
+    "less": "Less",
+    "first": "First",
+    "last": "Last",
+    "back-home": "Go Back Home",
+    "report": "Report Issue"
+  },
+
+  "search": {
+    "name": "Search",
+    "default": "Search Block / Address / Tx",
+    "address-tx": "Tx Hash/Address"
+  },
+
+  "filter": {
+    "name": "Filter",
+    "view": "View",
+    "all": "All",
+    "out": "Outgoing",
+    "in": "Incoming",
+    "high": "High to Low",
+    "low": "Low to High"
+  },
+
   "footer": {
     "discover": "Discover",
-    "privPolicy": "Privacy Policy",
     "donate": "Donate",
     "btc": "BTC",
     "ens": "mewtopia.eth",
     "copy": "Copyright 2019 All rights reserved by ",
-    "enkrypt": "enKrypt LLC",
-    "copyEthAddress": "Copy ETH address",
-    "copyBtcAddress": "Copy BTC address"
+    "mew": "MyEtherWallet Inc",
+    "copy-eth-addr": "Copy ETH address",
+    "copy-btc-addr": "Copy BTC address"
   },
-  "footnote": {
-    "success": "Successful",
-    "failed": "Failed",
-    "pending": "Pending",
-    "aveTxFees": "Avg Tx Fees (ETH)",
-    "aveGasPrice": "Avg Gas Price (GWEI)"
-  },
+
+  "home": "Home",
+
   "about": {
+    "name": "About Us",
     "title": "What is EthVM?",
-    "text": "EthVM project is brought to you by kvhnuke,  founder of MyEtherWallet and enKrypt. EthVM is a free and open source interface for exploring and evaluting real time Ethereum blocks, transactions and more. This software is under MIT License.",
-    "git": "If you want to contribute, make a request on GitHub.",
-    "medium": "If you want to listen/share our awesome thoughts check our medium account.",
-    "twitter": "Talk to us on Twitter.",
-    "reddit": "Visit our reddit thread."
+    "text": "EthVM project is brought to you by MyEtherWallet team. EthVM is a free and open source interface for exploring and evaluting real time Ethereum blocks, transactions and more. This software is under SSPL License.",
+    "git": {
+      "title": "GitHub",
+      "text":  "If you want to contribute, make a request on GitHub."
+    },
+    "medium": {
+      "title": "Medium",
+      "text": "Check out our Medium page for news, thoughts and awesome educational content."
+    },
+    "twitter": {
+      "title":"Twitter",
+      "text": "Talk to us on Twitter."
+    },
+    "reddit": {
+      "title": "Reddit",
+      "text": "Visit our reddit thread."
+    },
+    "disclaimer": {
+      "name": "Disclaimer",
+      "text": "SSPL License, Copyright © 2019 MyEtherWallet Inc.  For Terms & conditions visit our "
+    }
   },
-  "social": {
-    "git": "GitHub",
-    "medium": "Medium",
-    "twitter": "Twitter",
-    "reddit": "Reddit"
-  },
-  "disclaimer": {
-    "title": "Disclaimer",
-    "text": "MIT License Copyright © 2017-2018 enKrypt LLC Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.",
-    "mit": "THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
-  },
-  "tokens": {
-    "empty": "No tokens"
-  },
+
   "kb":{
+    "name": "Knowledge Base",
+    "title": "Blockchain Terms",
+    "terms": {
     "acc": {
       "term": "Account",
       "def": "Entry on the blockchain ledger that contains data about the state of that account. In the case of a currency system, it's the information about funds available."
@@ -361,7 +372,7 @@
       "term": "Digital signature",
       "def": "Algorithm which allows a user to produce a specific string of data using their private key. This string, along with the corresponding public key and the signed document, can be used to verify that the document was signed by the owner of the key and that it was not changed after signing."
     },
-    "doubleSpend": {
+    "double-spend": {
       "term": "Double spend",
       "def": "Occurs when a user sends a transaction to purchase coins, and then creates another transaction to send the SAME coins to themselves. This requires creating two blocks at the same level, resulting in a deliberate blockchain fork. "
     },
@@ -379,7 +390,7 @@
     },
     "ethreum": {
       "term": "Ethereum",
-      "def": "Decentralized blockchain platform enabled with a software language for building applications and creating contracts. Ethereum is the network, Ether is the token."
+      "def": "Decentralized blockchain platform enabled with a software language for building applications and creating contracts. Ethereum is the network, Ether is the currency."
     },
     "evm": {
       "term": "EVM",
@@ -417,7 +428,7 @@
       "term": "Oracles",
       "def": "Products that can bring real-world data onto the blockchain for execution of smart contracts that are dependent on outside conditions – such as game scores for sports betting."
     },
-    "privKey":{
+    "pri-key":{
       "term": "Private key",
       "def": "Alphanumeric string associated with an account and known only by the owner of the account. Cryptographically paired with public key for executing transactions."
     },
@@ -429,7 +440,7 @@
       "term": "Proof of work",
       "def": "Consensus algorithm that depends on using a high amount of computing power and energy for mining new blocks. A validator node must solve complex mathematical problems and present the result as proof of that work in order to qualify for block validation. This is the current consensus algorithm for Ethereum."
     },
-    "pubKey": {
+    "pub-key": {
       "term": "Public key",
       "def": "Alphanumeric string derived from private key and used publicly to provide other users with an address for sending transactions. "
     },
@@ -453,9 +464,11 @@
       "term": "Validators",
       "def": "Nodes that make up a decentralized network and maintain consensus by validating new blocks broadcasted by miners. "
     }
+  }
   },
 
   "pp": {
+    "name": "Privacy Policy",
     "intro":{
       "title": "Introduction",
       "p1":"Welcome to EthVM, a free, open-source, tool for interacting with data on the blockchain. EthVM and MyEtherWallet, Inc. values privacy and we make a concerted effort to minimize and, to the extent possible, eliminate the exposure of personal data during the use of our interface. EthVM does not collect, hold, or store keys, account information, or passwords. We do not collect data passively, do not monetize the collection of data, and do not use your data for marketing or advertising.",
