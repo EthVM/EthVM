@@ -22,12 +22,12 @@ output "ethstats_instance" {
   value = "http://${aws_eip.manager-ip.public_ip}:3030"
 }
 
-output "kafka_connect_ui" {
-  value = "http://${aws_eip.manager-ip.public_ip}:9022"
-}
-
 output "kafka_control_center" {
   value = "http://${aws_eip.manager-ip.public_ip}:9021"
+}
+
+output "kafka_lenses" {
+  value = "http://${aws_eip.manager-ip.public_ip}:9991"
 }
 
 output "EFS_mount" {
