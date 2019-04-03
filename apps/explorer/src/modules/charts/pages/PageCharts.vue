@@ -5,7 +5,9 @@
       <!-- Live Data-->
       <v-tab-item slot="tabs-item" value="tab-0">
         <v-layout row wrap justify-center :class="contentClass">
-        <app-card-stats-group />
+           <v-flex xs12 >
+            <app-card-stats-group />
+           </v-flex>
         </v-layout>
         <!-- Charts -->
         <v-layout row wrap justify-center :class="contentClass">
@@ -128,7 +130,7 @@ export default class PageCharts extends Vue {
   }
 
   get contentClass(): String {
-    return this.$vuetify.breakpoint.name === 'xs' ? 'ma-1': 'ma-3'
+    return this.$vuetify.breakpoint.name === 'xs' ? 'ma-0': 'ma-2'
   }
 }
 </script>
