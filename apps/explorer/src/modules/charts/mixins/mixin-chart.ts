@@ -16,6 +16,7 @@ export class ChartMixin extends Vue {
   timeFrame = 1
   chartOptions = {
     responsive: true,
+    maintainAspectRatio: this.getRatio,
     scales: {
       yAxes: [
         {
@@ -40,7 +41,7 @@ export class ChartMixin extends Vue {
             color: 'rgba(0, 0, 0, 0)'
           },
           scaleLabel: {
-            display: true,
+            display: false,
             labelString: this.chartLabel
           }
         }
@@ -106,6 +107,10 @@ export class ChartMixin extends Vue {
   ===================================================================================
   */
 
+  get getRatio(): boolean {
+    const brkPoint = this.$vuetify.breakpoint.name
+    return brkPoint === 'xs' ? false : true
+  }
   get chartData(): ChartData {
     return {
       labels: this.DATA[this.timeFrame].labels,

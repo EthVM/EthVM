@@ -1,7 +1,7 @@
 <template>
   <v-card color="white" flat class="mb-3 pa-1">
     <v-layout align-center row wrap mb-0>
-      <v-flex xs12 sm9>
+      <v-flex grow>
         <v-card-title class="title font-weight-bold pb-1">{{ chartTitle }}</v-card-title>
         <v-card-text class="pt-0 pb-0 info--text caption">{{ chartDescription }}</v-card-text>
       </v-flex>
@@ -17,7 +17,10 @@
     <v-divider></v-divider>
     <v-layout align-center justify-end row fill-height v-if="footnotes" pb-3 pt-2> <app-footnotes :footnotes="footnotes" /> </v-layout>
     <app-info-load v-show="data && data.datasets && data.datasets[0].data.length === 0" />
-    <div v-show="data && data.datasets && data.datasets[0].data.length !== 0"><canvas ref="chart" /></div>
+    <div v-show="data && data.datasets && data.datasets[0].data.length !== 0">
+      <canvas v-if="!liveChart" ref="chart" :class="chartClass" />
+      <canvas v-else ref="chart" />
+    </div>
   </v-card>
 </template>
 
@@ -52,7 +55,7 @@ ChartJs.defaults.global.legend = Object.assign(ChartJs.defaults.global.legend, {
 ChartJs.defaults.global.layout = Object.assign(ChartJs.defaults.global.layout, {
   padding: {
     top: 20,
-    bottom: 10
+    bottom: 10,
   }
 })
 
@@ -139,6 +142,16 @@ export default class AppChart extends Vue {
   get classMonth(): string {
     return this.toggleData === 2 ? 'active-button' : 'button'
   }
+
+  get chartClass(): string {
+    const brkPoint = this.$vuetify.breakpoint.name
+    switch (brkPoint) {
+      case 'xs':
+        return 'xs-chart'
+      default:
+        return ''
+    }
+  }
   /*
   ===================================================================================
     Watch Events
@@ -196,4 +209,9 @@ export default class AppChart extends Vue {
   margin: 10px;
   padding: 2px;
 }
+
+.xs-chart {
+  min-height: 280px
+}
+
 </style>
