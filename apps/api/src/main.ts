@@ -24,7 +24,6 @@ async function bootstrap() {
   const { host, port } = config
 
   await app.listen(port, host)
-
 }
 
 bootstrap()

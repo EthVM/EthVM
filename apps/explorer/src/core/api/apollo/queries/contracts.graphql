@@ -23,6 +23,9 @@ query contractByHash($address: String!) {
         youtube
       }
     }
+    type {
+      string
+    }
   }
 }
 
