@@ -21,12 +21,12 @@
         <div v-else>
           <div v-if="!isMono">
           <router-link v-if="detail.link" :to="detail.link">
-            <div class="text-truncate " v-html="detail.detail"></div>
+            <div class="text-truncate secondary--text" v-html="detail.detail"></div>
           </router-link>
           <div v-else class="text-muted text-truncate" v-html="detail.detail"></div>
           </div>
           <div v-else>
-            <app-hash-concat v-if="detail.link" :hash="detail.detail" :link="detail.detail" />
+            <app-hash-concat v-if="detail.link" :hash="detail.detail" :link="detail.link" />
             <app-hash-concat v-else :hash="detail.detail" :isBlue="false"/>
           </div>
         </div>
