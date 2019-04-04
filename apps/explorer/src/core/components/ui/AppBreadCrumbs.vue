@@ -7,11 +7,11 @@
           <router-link  :class="[item.disabled ? 'black--text' : 'info--text']" :to="item.link">{{ getText(item) }}</router-link>
         </p>
         <div v-else>
-          <p class="black--text">{{ getText(item) }}:</p>
+          <p class="black--text">{{ getText(item) }}</p>
         </div>
-        <div v-if="item.label" class="crumb-label">
-          <p v-if="!item.label.hash"> {{item.label.name}} </p>
-          <p v-else>{{getHash(item.label.name)}}</p>
+        <div v-if="item.label">
+          <p v-if="!item.label.hash">: {{item.label.name}} </p>
+          <p v-else>: {{getHash(item.label.name)}}</p>
         </div>
         <p v-if="i < crumbs.length - 1" class="pl-1 pr-0 caption">/</p>
       </v-card-title>
@@ -123,11 +123,6 @@ export default class AppBreadCrumbs extends Vue {
   min-width: fit-content;
   padding: 0px 0px;
   margin-right: 0.5em;
-}
-
-.crumb-label {
-  padding-left: 5px;
-  width: 35%;
 }
 
 p {
