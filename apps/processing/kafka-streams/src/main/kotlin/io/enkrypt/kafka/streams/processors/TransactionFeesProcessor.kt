@@ -115,7 +115,7 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
                   .zip(gasUsage)
                   .map { (gasPrice, gasUsed) ->
 
-                    val fee = gasPrice.getGasPriceBI() * gasUsed.getGasUsedBI()
+                    val fee = gasPrice.getGasPriceBI()!! * gasUsed.getGasUsedBI()!!
 
                     TransactionFeeRecord.newBuilder()
                       .setBlockNumber(gasPrice.getBlockNumber())

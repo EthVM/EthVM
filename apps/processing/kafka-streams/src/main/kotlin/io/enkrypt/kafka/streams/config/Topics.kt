@@ -36,7 +36,7 @@ object Topics {
 
   val Transaction = KafkaTopic("transaction", Serdes.TransactionKey(), Serdes.Transaction())
   val TransactionReceipt = KafkaTopic("transaction_receipt", Serdes.TransactionReceiptKey(), Serdes.TransactionReceipt())
-  val Traces = KafkaTopic("transaction_trace", Serdes.TraceKey(), Serdes.Trace())
+  val TransactionTrace = KafkaTopic("transaction_trace", Serdes.TraceKey(), Serdes.Trace())
 
   val CanonicalTracesEtherDeltas = KafkaTopic("canonical_traces_ether_deltas", Serdes.CanonicalKey(), Serdes.FungibleBalanceDeltaList())
   val CanonicalTransactionFeesEtherDeltas = KafkaTopic("canonical_transaction_fees_ether_deltas", Serdes.CanonicalKey(), Serdes.FungibleBalanceDeltaList())

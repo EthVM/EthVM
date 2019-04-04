@@ -29,39 +29,8 @@ fun ByteBuffer?.byteArray(): ByteArray? {
   return result
 }
 
-fun ByteBuffer?.bigInteger(): BigInteger? {
-  if (this == null) {
-    return null
-  }
-  val arr = ByteArray(remaining()).also { get(it) }
-  position(0)
-  return if (arr.isNotEmpty()) BigInteger(arr) else BigInteger.ZERO
-}
+fun ByteBuffer.bigInteger() = BigInteger(this.byteArray())
 
-fun ByteBuffer?.unsignedBigInteger(): BigInteger? {
-  if (this == null) {
-    return null
-  }
-  val arr = ByteArray(remaining()).also { get(it) }
-  position(0)
-  return if (arr.isNotEmpty()) arr.unsignedBigInteger() else BigInteger.ZERO
-}
-
-fun ByteBuffer?.bigDecimal(): BigDecimal? {
-  if (this == null) {
-    return null
-  }
-  return BigDecimal(bigInteger())
-}
-
-fun ByteBuffer?.hex(): String? {
-  if (this == null) {
-    return null
-  }
-  val arr = ByteArray(remaining()).also { get(it) }
-  position(0)
-  return arr.hex()
-}
 
 fun ByteBuffer?.compress(threshold: Int): ByteBuffer? {
   return if (this == null || this.capacity() < threshold) {

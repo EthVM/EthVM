@@ -56,9 +56,9 @@ class BlockTimeTransformer(
     val timestamp = value.getTimestamp()
     checkNotNull(timestamp) { "value cannot have a null timestamp" }
 
-    blockTimesStore.put(key.getNumberBI().toHex(), timestamp)
+    blockTimesStore.put(key.getNumberBI()!!.toHex(), timestamp)
 
-    val blockNumber = key.getNumberBI()
+    val blockNumber = key.getNumberBI()!!
 
     // genesis value throws off calculation at the start
     if (blockNumber < 2.toBigInteger())

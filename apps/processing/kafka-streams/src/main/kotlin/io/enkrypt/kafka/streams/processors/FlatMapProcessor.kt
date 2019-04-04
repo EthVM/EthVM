@@ -1,9 +1,11 @@
 package io.enkrypt.kafka.streams.processors
 
+import io.enkrypt.avro.processing.TraceKeyRecord
 import io.enkrypt.avro.processing.TransactionKeyRecord
 import io.enkrypt.avro.processing.TransactionReceiptKeyRecord
 import io.enkrypt.kafka.streams.config.Topics
 import io.enkrypt.kafka.streams.config.Topics.CanonicalReceipts
+import io.enkrypt.kafka.streams.config.Topics.CanonicalTraces
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTransactions
 import io.enkrypt.kafka.streams.utils.toTopic
 import mu.KLogger
@@ -56,17 +58,19 @@ class FlatMapProcessor : AbstractKafkaProcessor() {
       }
       .toTopic(Topics.TransactionReceipt)
 
-//    CanonicalTraces.stream(builder)
-//      .flatMapValues { _, v -> v.getTraces() }
-//      .map { _, v ->
-//        KeyValue(
-//          TransactionKeyRecord.newBuilder()
-//            .setHash(v.getTransactionHash())
-//            .build(),
-//          v
-//        )
-//      }
-//      .toTopic(Topics.Traces)
+    CanonicalTraces.stream(builder)
+      .flatMapValues { _, v -> v.getTraces() }
+      .map { _, v ->
+        KeyValue(
+          TraceKeyRecord.newBuilder()
+            .setBlockHash(v.getBlockHash())
+            .setTransactionHash(v.getTransactionHash())
+            .setTraceAddress(v.getTraceAddress())
+            .build(),
+          v
+        )
+      }
+      .toTopic(Topics.TransactionTrace)
 
     return builder.build()
   }

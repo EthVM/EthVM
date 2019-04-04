@@ -71,7 +71,12 @@ abstract class JsonField<R : ConnectRecord<R>> : Transformation<R> {
           true -> {
             val fieldValue = value.get(field)
             if (fieldValue != null) {
-              val json = jsonConverter.fromConnectData(field.schema(), value.get(field))
+
+              val json = jsonConverter.fromConnectData(
+                // need to use original field schema for extracting
+                value.schema().field(field.name()).schema(),
+                value.get(field)
+              )
               updatedValue.put(field, objectMapper.writeValueAsString(json))
             }
           }

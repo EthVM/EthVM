@@ -87,7 +87,7 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
 
           if (
             (balanceLocation.getBlockNumber() == null) ||
-            (balanceLocation.getBlockNumberBI() <= deltaLocation.getBlockNumberBI()) ||
+            (balanceLocation.getBlockNumberBI()!! <= deltaLocation.getBlockNumberBI()!!) ||
             (balanceLocation.getTransactionIndex() <= deltaLocation.getTransactionIndex()) ||
             (balanceLocation.getLogIndex() <= deltaLocation.getLogIndex())
           ) {

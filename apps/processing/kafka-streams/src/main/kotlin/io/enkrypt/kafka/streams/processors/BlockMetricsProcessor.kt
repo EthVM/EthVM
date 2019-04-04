@@ -7,6 +7,7 @@ import io.enkrypt.avro.processing.BlockMetricsRecord
 import io.enkrypt.common.extensions.getBalanceBI
 import io.enkrypt.common.extensions.getGasBI
 import io.enkrypt.common.extensions.getGasPriceBI
+import io.enkrypt.common.extensions.getTransactionFeeBI
 import io.enkrypt.common.extensions.getValueBI
 import io.enkrypt.common.extensions.setAvgGasLimitBI
 import io.enkrypt.common.extensions.setAvgGasPriceBI
@@ -99,17 +100,17 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
                     total += 1
                   }
 
-                  if (action.getValueBI() > BigInteger.ZERO) {
+                  if (action.getValueBI()!! > BigInteger.ZERO) {
                     internalTxs += 1
                   }
                 }
                 is TraceCreateActionRecord -> {
-                  if (action.getValueBI() > BigInteger.ZERO) {
+                  if (action.getValueBI()!! > BigInteger.ZERO) {
                     internalTxs += 1
                   }
                 }
                 is TraceDestroyActionRecord -> {
-                  if (action.getBalanceBI() > BigInteger.ZERO) {
+                  if (action.getBalanceBI()!! > BigInteger.ZERO) {
                     internalTxs += 1
                   }
                 }
@@ -136,8 +137,8 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
         var totalGasLimit = BigInteger.ZERO
 
         transactions.forEach { tx ->
-          totalGasLimit += tx.getGasBI()
-          totalGasPrice += tx.getGasPriceBI()
+          totalGasLimit += tx.getGasBI()!!
+          totalGasPrice += tx.getGasPriceBI()!!
         }
 
         val txCount = transactions.size.toBigInteger()
@@ -164,7 +165,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
         val transactionFees = txFeeList.getTransactionFees()
 
         val totalTxFees = transactionFees.fold(BigInteger.ZERO) { memo, next ->
-          memo + next.getTransactionFee().toBigIntegerExact()
+          memo + next.getTransactionFeeBI()!!
         }
 
         val count = transactionFees.size.toBigInteger()

@@ -14,4 +14,4 @@ docker run --rm \
   -e FLYWAY_USER=${FLYWAY_USER} \
   -e FLYWAY_PASSWORD=${FLYWAY_PASSWORD} \
   -e FLYWAY_CONNECT_RETRIES=5 \
-  enkryptio/migrator:${version} "$@"
+  ethvm/migrator:${version} "$@"

@@ -1,6 +1,6 @@
 package io.enkrypt.kafka.connect.sources.web3
 
-import io.enkrypt.common.extensions.hexUBigInteger
+import io.enkrypt.common.extensions.hexToBI
 import io.reactivex.disposables.Disposable
 import mu.KotlinLogging
 import org.web3j.protocol.websocket.WebSocketService
@@ -37,7 +37,7 @@ class CanonicalChainTracker(
       parity
         .newHeadsNotifications()
         .map { it.params.result }
-        .map { it.number.hexUBigInteger()!!.longValueExact() }
+        .map { it.number.hexToBI().longValueExact() }
         .buffer(1000, TimeUnit.MILLISECONDS, 128)
         .onBackpressureBuffer()
         .filter { it.isNotEmpty() }

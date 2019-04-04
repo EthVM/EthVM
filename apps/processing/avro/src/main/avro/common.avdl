@@ -7,7 +7,7 @@ protocol Common {
 
   record TraceLocationRecord {
     union { null, string } blockHash = null;
-    union { null, decimal(78,0) } blockNumber = null;
+    union { null, decimal(40,0) } blockNumber = null;
     union { null, string } transactionHash = null;
     union { null, int } transactionIndex = null;
     union { null, int } logIndex = null;

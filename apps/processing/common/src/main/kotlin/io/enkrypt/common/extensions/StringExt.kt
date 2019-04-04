@@ -29,8 +29,6 @@ fun String.hexBuffer20() = this.hexFixedBuffer(20)
 fun String.hexBuffer32() = this.hexFixedBuffer(32)
 fun String.hexBuffer256() = this.hexFixedBuffer(256)
 
-fun String.hexUBigInteger() = this.hexBuffer().unsignedBigInteger()
-
 fun String.hexToBI() =
   if (this.startsWith("0x")) {
     BigInteger(this.substring(2), 16)

@@ -2,7 +2,8 @@
   "name": "postgres-sink",
   "config": {
     "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
-    "topics": "canonical_block_header,transaction",
+    "tasks.max": 4,
+    "topics": "canonical_block_header,transaction,transaction_receipt,transaction_trace",
     "insert.mode": "upsert",
     "connection.url": "jdbc:postgresql://timescale:5432/ethvm_dev",
     "connection.user": "postgres",
@@ -11,9 +12,9 @@
     "transforms.snakeCaseKey.type": "io.enkrypt.kafka.connect.transforms.SnakeCase$Key",
     "transforms.snakeCaseValue.type": "io.enkrypt.kafka.connect.transforms.SnakeCase$Value",
     "transforms.dropFields.type": "org.apache.kafka.connect.transforms.ReplaceField$Value",
-    "transforms.dropFields.blacklist": "uncles",
+    "transforms.dropFields.blacklist": "uncles,blockTime",
     "transforms.toJson.type": "io.enkrypt.kafka.connect.transforms.JsonField$Value",
-    "transforms.toJson.whitelist": "logs,action,result",
+    "transforms.toJson.whitelist": "logs,action,result,trace_address",
     "pk.mode": "record_key"
   }
 }

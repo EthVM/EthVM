@@ -13,7 +13,13 @@ val test by tasks.getting(Test::class) { useJUnitPlatform {} }
 dependencies {
 
   compile("org.apache.avro:avro:1.8.2")
+  implementation("joda-time:joda-time:2.10.1")
 
+}
+
+avro {
+  fieldVisibility = "PUBLIC"
+  isEnableDecimalLogicalType = false
 }
 
 tasks {
@@ -29,6 +35,7 @@ tasks {
     source("src/main/avro", "build/generated-main-avro-avpr")
     include("**/*.avpr")
     setOutputDir(File("build/generated-main-avro-avsc"))
+
   }
 
   "sourcesJar"(Jar::class) {

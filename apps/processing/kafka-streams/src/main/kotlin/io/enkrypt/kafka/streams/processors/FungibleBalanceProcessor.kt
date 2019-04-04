@@ -10,6 +10,7 @@ import io.enkrypt.avro.processing.FungibleBalanceRecord
 import io.enkrypt.avro.processing.FungibleTokenType
 import io.enkrypt.common.extensions.getAmountBI
 import io.enkrypt.common.extensions.getNumberBI
+import io.enkrypt.common.extensions.getTransactionFeeBI
 import io.enkrypt.common.extensions.hexToBI
 import io.enkrypt.common.extensions.reverse
 import io.enkrypt.common.extensions.setAmountBI
@@ -93,7 +94,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
         { _, delta, balance ->
 
           FungibleBalanceRecord.newBuilder()
-            .setAmountBI(delta.getAmountBI() + balance.getAmountBI())
+            .setAmountBI(delta.getAmountBI() + balance.getAmountBI()!!)
             .build()
         },
         Materialized.with(Serdes.FungibleBalanceKey(), Serdes.FungibleBalance())
@@ -102,7 +103,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
       .toTopic(FungibleBalance)
 
     FungibleBalance.stream(builder)
-      .peek { k, v -> logger.info { "Balance update | ${k.getAddress()}, ${k.getContract()} -> ${v.getAmount()}" } }
+      .peek { k, v -> logger.info { "Balance update | ${k.getAddress()}, ${k.getContract()} -> ${v.getAmountBI()}" } }
   }
 
   /**
@@ -257,7 +258,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
           } else {
 
             val totalTxFees = right.getTransactionFees()
-              .map { it.getTransactionFee().toBigIntegerExact() }
+              .map { it.getTransactionFeeBI() }
               .fold(BigInteger.ZERO) { memo, next -> memo + next }
 
             FungibleBalanceDeltaRecord.newBuilder()

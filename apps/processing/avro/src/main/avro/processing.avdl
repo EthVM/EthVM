@@ -13,7 +13,8 @@ protocol Processing {
   }
 
   record TraceKeyRecord {
-    string transactionHash;
+    string blockHash;
+    union { null, string } transactionHash = null;
     array<int> traceAddress;
   }
 
@@ -43,14 +44,14 @@ protocol Processing {
     FungibleTokenType tokenType;
     FungibleBalanceDeltaType deltaType;
     io.enkrypt.avro.common.TraceLocationRecord traceLocation;
-    decimal(78,0) amount;
+    decimal(40,0) amount;
 
     union { null, string } address = null;
     union { null, string } contractAddress = null;
   }
 
   record FungibleBalanceRecord {
-    decimal(78,0) amount;
+    decimal(40,0) amount;
   }
 
   record FungibleBalanceDeltaListRecord {
@@ -64,7 +65,7 @@ protocol Processing {
 
   record NonFungibleBalanceKeyRecord {
     string contract;
-    decimal(78,0) tokenId;
+    decimal(40,0) tokenId;
   }
 
   enum NonFungibleTokenType {
@@ -80,7 +81,7 @@ protocol Processing {
     string to;
 
     union { null, string } contract = null;
-    union { null, decimal(78,0) } tokenId;
+    union { null, decimal(40,0) } tokenId;
 
   }
 
@@ -100,17 +101,17 @@ protocol Processing {
 
   record BlockAuthorRecord {
     string author;
-    decimal(78,0) blockNumber;
+    decimal(40,0) blockNumber;
     string blockHash;
   }
 
   record TransactionGasPriceRecord {
-    decimal(78,0) blockNumber;
+    decimal(40,0) blockNumber;
     string blockHash;
     string transactionHash;
     int transactionPosition;
     string address;
-    decimal(78,0) gasPrice;
+    decimal(40,0) gasPrice;
   }
 
   record TransactionGasPriceListRecord {
@@ -119,7 +120,7 @@ protocol Processing {
   }
 
   record TransactionGasUsedRecord {
-    decimal(78,0) gasUsed;
+    decimal(40,0) gasUsed;
   }
 
   record TransactionGasUsedListRecord {
@@ -128,12 +129,12 @@ protocol Processing {
   }
 
   record TransactionFeeRecord {
-    decimal(78,0) blockNumber;
+    decimal(40,0) blockNumber;
     string blockHash;
     string transactionHash;
     int transactionPosition;
     string address;
-    decimal(78,0) transactionFee;
+    decimal(40,0) transactionFee;
   }
 
   record TransactionFeeListRecord {
@@ -153,13 +154,13 @@ protocol Processing {
     union { null, int } numInternalTxs = null;
     union { null, int } numPendingTxs = null;
     union { null, int } numUncles = null;
-    union { null, decimal(78,0) } difficulty = null;
-    union { null, decimal(78,0) } totalDifficulty = null;
-    union { null, decimal(78,0) } totalGasPrice = null;
-    union { null, decimal(78,0) } avgGasLimit = null;
-    union { null, decimal(78,0) } avgGasPrice = null;
-    union { null, decimal(78,0) } totalTxFees = null;
-    union { null, decimal(78,0) } avgTxFees = null;
+    union { null, decimal(40,0) } difficulty = null;
+    union { null, decimal(40,0) } totalDifficulty = null;
+    union { null, decimal(40,0) } totalGasPrice = null;
+    union { null, decimal(40,0) } avgGasLimit = null;
+    union { null, decimal(40,0) } avgGasPrice = null;
+    union { null, decimal(40,0) } totalTxFees = null;
+    union { null, decimal(40,0) } avgTxFees = null;
   }
 
   record MetricKeyRecord {

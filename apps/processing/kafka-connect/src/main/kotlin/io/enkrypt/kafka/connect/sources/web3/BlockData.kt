@@ -20,22 +20,25 @@ import io.enkrypt.common.extensions.setGasBI
 import io.enkrypt.common.extensions.setGasLimitBI
 import io.enkrypt.common.extensions.setGasPriceBI
 import io.enkrypt.common.extensions.setGasUsedBI
+import io.enkrypt.common.extensions.setNonceBI
 import io.enkrypt.common.extensions.setNumberBI
 import io.enkrypt.common.extensions.setTotalDifficultyBI
 import io.enkrypt.common.extensions.setValueBI
+import org.apache.avro.Conversions
 import org.web3j.protocol.core.methods.response.EthBlock
 import org.web3j.protocol.core.methods.response.Log
 import org.web3j.protocol.core.methods.response.Transaction
 import org.web3j.protocol.core.methods.response.TransactionReceipt
 import org.web3j.protocol.parity.methods.response.Trace
 import org.web3j.utils.Numeric
+import java.math.BigDecimal
 
 fun EthBlock.Block.toBlockHeaderRecord(builder: BlockHeaderRecord.Builder): BlockHeaderRecord.Builder =
   builder
     .setNumberBI(number)
     .setHash(hash)
     .setParentHash(parentHash)
-    .setNonce(nonceRaw)
+    .setNonceBI(nonce)
     .setSha3Uncles(sha3Uncles)
     .setUncles(uncles)
     .setLogsBloom(logsBloom)
@@ -57,7 +60,7 @@ fun Transaction.toTransactionRecord(builder: TransactionRecord.Builder): Transac
     .setHash(hash)
     .setTransactionIndex(transactionIndex.intValueExact())
     .setBlockNumberBI(blockNumber)
-    .setNonce(nonce.toBigDecimal())
+    .setNonceBI(nonce)
     .setFrom(from)
     .setTo(to)
     .setValueBI(value)

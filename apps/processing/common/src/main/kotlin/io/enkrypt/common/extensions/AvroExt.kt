@@ -27,95 +27,105 @@ import io.enkrypt.avro.processing.TransactionFeeRecord
 import io.enkrypt.avro.processing.TransactionGasPriceRecord
 import io.enkrypt.avro.processing.TransactionGasUsedRecord
 import org.apache.avro.Conversions
+import org.apache.avro.LogicalType
 import org.apache.avro.LogicalTypes
+import org.apache.avro.Schema
+import org.apache.avro.specific.SpecificRecord
+import org.apache.avro.specific.SpecificRecordBase
+import org.apache.avro.specific.SpecificRecordBuilderBase
 import java.math.BigDecimal
 import java.math.BigInteger
+import java.nio.ByteBuffer
 
+fun CanonicalKeyRecord.getNumberBI() = getNumber().bigInteger()
 
-fun CanonicalKeyRecord.getNumberBI() = getNumber().toBigIntegerExact()
+fun CanonicalKeyRecord.Builder.setNumberBI(number: BigInteger) = setNumber(number.byteBuffer())
 
-fun CanonicalKeyRecord.Builder.setNumberBI(number: BigInteger) = setNumber(number.toBigDecimal())
+fun TraceCallActionRecord.getValueBI() = getValue().bigInteger()
 
-fun TraceCallActionRecord.getValueBI() = getValue().toBigIntegerExact()
+fun TraceCallActionRecord.Builder.setValueBI(value: BigInteger) = setValue(value.byteBuffer())
 
-fun TraceCallActionRecord.Builder.setValueBI(value: BigInteger) = setValue(value.toBigDecimal())
+fun TraceCallActionRecord.Builder.setGasBI(gas: BigInteger) = setGas(gas.byteBuffer())
 
-fun TraceCallActionRecord.Builder.setGasBI(gas: BigInteger) = setGas(gas.toBigDecimal())
+fun TraceCreateActionRecord.getValueBI() = getValue().bigInteger()
 
-fun TraceCreateActionRecord.getValueBI() = getValue().toBigIntegerExact()
+fun TraceCreateActionRecord.Builder.setValueBI(value: BigInteger) = setValue(value.byteBuffer())
 
-fun TraceCreateActionRecord.Builder.setValueBI(value: BigInteger) = setValue(value.toBigDecimal())
+fun TraceCreateActionRecord.Builder.setGasBI(gas: BigInteger) = setGas(gas.byteBuffer())
 
-fun TraceCreateActionRecord.Builder.setGasBI(gas: BigInteger) = setGas(gas.toBigDecimal())
+fun TraceDestroyActionRecord.getBalanceBI() = getBalance().bigInteger()
 
-fun TraceDestroyActionRecord.getBalanceBI() = getBalance().toBigIntegerExact()
+fun TraceDestroyActionRecord.Builder.setBalanceBI(balance: BigInteger) = setBalance(balance.byteBuffer())
 
-fun TraceDestroyActionRecord.Builder.setBalanceBI(balance: BigInteger) = setBalance(balance.toBigDecimal())
+fun TraceResultRecord.Builder.setGasUsedBI(gasUsed: BigInteger) = setGasUsed(gasUsed.byteBuffer())
 
-fun TraceResultRecord.Builder.setGasUsedBI(gasUsed: BigInteger) = setGasUsed(gasUsed.toBigDecimal())
+fun TraceRewardActionRecord.Builder.setValueBI(value: BigInteger) = setValue(value.byteBuffer())
 
-fun TraceRewardActionRecord.Builder.setValueBI(value: BigInteger) = setValue(value.toBigDecimal())
+fun TraceRecord.Builder.setBlockNumberBI(blockNumber: BigInteger) = setBlockNumber(blockNumber.byteBuffer())
 
-fun TraceRecord.Builder.setBlockNumberBI(blockNumber: BigInteger) = setBlockNumber(blockNumber.toBigDecimal())
+fun TransactionReceiptRecord.Builder.setBlockNumberBI(blockNumber: BigInteger) = setBlockNumber(blockNumber.byteBuffer())
 
-fun TransactionReceiptRecord.Builder.setBlockNumberBI(blockNumber: BigInteger) = setBlockNumber(blockNumber.toBigDecimal())
+fun TransactionReceiptRecord.Builder.setCumulativeGasUsedBI(cumulativeGasUsed: BigInteger) = setCumulativeGasUsed(cumulativeGasUsed.byteBuffer())
 
-fun TransactionReceiptRecord.Builder.setCumulativeGasUsedBI(cumulativeGasUsed: BigInteger) = setCumulativeGasUsed(cumulativeGasUsed.toBigDecimal())
+fun TransactionReceiptRecord.Builder.setGasUsedBI(gasUsed: BigInteger) = setGasUsed(gasUsed.byteBuffer())
 
-fun TransactionReceiptRecord.Builder.setGasUsedBI(gasUsed: BigInteger) = setGasUsed(gasUsed.toBigDecimal())
+fun TransactionRecord.Builder.setBlockNumberBI(blockNumber: BigInteger) = setBlockNumber(blockNumber.byteBuffer())
 
-fun TransactionRecord.Builder.setBlockNumberBI(blockNumber: BigInteger) = setBlockNumber(blockNumber.toBigDecimal())
+fun TransactionRecord.Builder.setNonceBI(nonce: BigInteger) = setNonce(nonce.byteBuffer())
 
-fun TransactionRecord.Builder.setValueBI(value: BigInteger) = setValue(value.toBigDecimal())
+fun TransactionRecord.Builder.setValueBI(value: BigInteger) = setValue(value.byteBuffer())
 
-fun TransactionRecord.getGasPriceBI() = getGasPrice().toBigIntegerExact()
+fun TransactionRecord.Builder.setGasPriceBI(gasPrice: BigInteger) = setGasPrice(gasPrice.byteBuffer())
 
-fun TransactionRecord.Builder.setGasPriceBI(gasPrice: BigInteger) = setGasPrice(gasPrice.toBigDecimal())
+fun TransactionRecord.Builder.setGasBI(gas: BigInteger) = setGas(gas.byteBuffer())
 
-fun TransactionRecord.getGasBI() = getGas().toBigIntegerExact()
+fun TransactionRecord.getGasPriceBI() = getGasPrice().bigInteger()
 
-fun TransactionRecord.Builder.setGasBI(gas: BigInteger) = setGas(gas.toBigDecimal())
+fun TransactionRecord.getGasBI() = getGas().bigInteger()
 
-fun BlockHeaderRecord.Builder.setNumberBI(number: BigInteger) = setNumber(number.toBigDecimal())
+fun BlockHeaderRecord.Builder.setNumberBI(number: BigInteger) = setNumber(number.byteBuffer())
 
-fun BlockHeaderRecord.Builder.setGasLimitBI(gasLimit: BigInteger) = setGasLimit(gasLimit.toBigDecimal())
+fun BlockHeaderRecord.Builder.setNonceBI(nonce: BigInteger) = setNonce(nonce.byteBuffer())
 
-fun BlockHeaderRecord.Builder.setGasUsedBI(gasUsed: BigInteger) = setGasUsed(gasUsed.toBigDecimal())
+fun BlockHeaderRecord.Builder.setGasLimitBI(gasLimit: BigInteger) = setGasLimit(gasLimit.byteBuffer())
 
-fun BlockHeaderRecord.Builder.setDifficultyBI(difficulty: BigInteger) = setDifficulty(difficulty.toBigDecimal())
+fun BlockHeaderRecord.Builder.setGasUsedBI(gasUsed: BigInteger) = setGasUsed(gasUsed.byteBuffer())
 
-fun BlockHeaderRecord.Builder.setTotalDifficultyBI(totalDifficulty: BigInteger) = setTotalDifficulty(totalDifficulty.toBigDecimal())
+fun BlockHeaderRecord.Builder.setDifficultyBI(difficulty: BigInteger) = setDifficulty(difficulty.byteBuffer())
 
-fun TraceLocationRecord.Builder.setBlockNumberBI(blockNumber: BigInteger) = setBlockNumber(blockNumber.toBigDecimal())
+fun BlockHeaderRecord.Builder.setTotalDifficultyBI(totalDifficulty: BigInteger) = setTotalDifficulty(totalDifficulty.byteBuffer())
 
-fun TraceLocationRecord.getBlockNumberBI() = getBlockNumber().toBigIntegerExact()
+fun TraceLocationRecord.Builder.setBlockNumberBI(blockNumber: BigInteger) = setBlockNumber(blockNumber.byteBuffer())
 
-fun FungibleBalanceDeltaRecord.getAmountBI() = getAmount().toBigIntegerExact()
+fun TraceLocationRecord.getBlockNumberBI() = getBlockNumber().bigInteger()
 
-fun FungibleBalanceDeltaRecord.Builder.setAmountBI(amount: BigInteger) = setAmount(amount.toBigDecimal())
+fun FungibleBalanceDeltaRecord.getAmountBI() = getAmount().bigInteger()
 
-fun FungibleBalanceRecord.getAmountBI() = getAmount().toBigIntegerExact()
+fun FungibleBalanceDeltaRecord.Builder.setAmountBI(amount: BigInteger) = setAmount(amount.byteBuffer())
 
-fun FungibleBalanceRecord.Builder.setAmountBI(amount: BigInteger) = setAmount(amount.toBigDecimal())
+fun FungibleBalanceRecord.getAmountBI() = getAmount().bigInteger()
 
-fun NonFungibleBalanceDeltaRecord.Builder.setTokenIdBI(tokenId: BigInteger) = setTokenId(tokenId.toBigDecimal())
+fun FungibleBalanceRecord.Builder.setAmountBI(amount: BigInteger) = setAmount(amount.byteBuffer())
 
-fun TransactionGasPriceRecord.getGasPriceBI() = getGasPrice().toBigIntegerExact()
+fun NonFungibleBalanceDeltaRecord.Builder.setTokenIdBI(tokenId: BigInteger) = setTokenId(tokenId.byteBuffer())
 
-fun TransactionGasUsedRecord.getGasUsedBI() = getGasUsed().toBigIntegerExact()
+fun TransactionGasPriceRecord.getGasPriceBI() = getGasPrice().bigInteger()
 
-fun TransactionFeeRecord.Builder.setTransactionFeeBI(blockNumber: BigInteger) = setTransactionFee(blockNumber.toBigDecimal())
+fun TransactionGasUsedRecord.getGasUsedBI() = getGasUsed().bigInteger()
 
+fun TransactionFeeRecord.getTransactionFeeBI() = getTransactionFee().bigInteger()
 
-fun BlockMetricsRecord.Builder.setTotalGasPriceBI(totalGasPrice: BigInteger) = setTotalGasPrice(totalGasPrice.toBigDecimal())
+fun TransactionFeeRecord.Builder.setTransactionFeeBI(transactionFee: BigInteger) = setTransactionFee(transactionFee.byteBuffer())
 
-fun BlockMetricsRecord.Builder.setAvgGasLimitBI(avgGasLimit: BigInteger) = setAvgGasLimit(avgGasLimit.toBigDecimal())
+fun BlockMetricsRecord.Builder.setTotalGasPriceBI(totalGasPrice: BigInteger) = setTotalGasPrice(totalGasPrice.byteBuffer())
 
-fun BlockMetricsRecord.Builder.setAvgGasPriceBI(avgGasPrice: BigInteger) = setAvgGasPrice(avgGasPrice.toBigDecimal())
+fun BlockMetricsRecord.Builder.setAvgGasLimitBI(avgGasLimit: BigInteger) = setAvgGasLimit(avgGasLimit.byteBuffer())
 
-fun BlockMetricsRecord.Builder.setTotalTxFeesBI(totalTxFees: BigInteger) = setTotalTxFees(totalTxFees.toBigDecimal())
+fun BlockMetricsRecord.Builder.setAvgGasPriceBI(avgGasPrice: BigInteger) = setAvgGasPrice(avgGasPrice.byteBuffer())
 
-fun BlockMetricsRecord.Builder.setAvgTxFeesBI(avgTxFees: BigInteger) = setAvgTxFees(avgTxFees.toBigDecimal())
+fun BlockMetricsRecord.Builder.setTotalTxFeesBI(totalTxFees: BigInteger) = setTotalTxFees(totalTxFees.byteBuffer())
+
+fun BlockMetricsRecord.Builder.setAvgTxFeesBI(avgTxFees: BigInteger) = setAvgTxFees(avgTxFees.byteBuffer())
 
 //
 
@@ -136,7 +146,7 @@ fun TransactionFeeRecord.toFungibleBalanceDelta(): FungibleBalanceDeltaRecord =
         .build()
     )
     .setAddress(getAddress())
-    .setAmountBI(getTransactionFee().toBigIntegerExact().negate())
+    .setAmountBI(getTransactionFeeBI().negate())
     .build()
 
 fun TraceRecord.hasError(): Boolean {
@@ -183,8 +193,7 @@ fun NonFungibleBalanceDeltaRecord.reverse() =
     .setTo(getFrom())
     .build()
 
-fun TraceRecord
-  .toContractLifecycleRecord(): ContractLifecycleRecord? {
+fun TraceRecord.toContractLifecycleRecord(): ContractLifecycleRecord? {
 
   // error check first
   val error = getError()
@@ -332,3 +341,4 @@ fun TraceRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> {
     else -> throw IllegalArgumentException("Unexpected action type: $action")
   }
 }
+
