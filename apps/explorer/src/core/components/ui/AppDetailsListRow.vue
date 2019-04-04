@@ -18,11 +18,17 @@
         <div v-if="isLoading">
           <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
         </div>
-        <div v-else :class="isMonoFont()">
+        <div v-else>
+          <div v-if="!isMono">
           <router-link v-if="detail.link" :to="detail.link">
             <div class="text-truncate " v-html="detail.detail"></div>
           </router-link>
           <div v-else class="text-muted text-truncate" v-html="detail.detail"></div>
+          </div>
+          <div v-else>
+            <app-hash-concat v-if="detail.link" :hash="detail.detail" :link="detail.detail" />
+            <app-hash-concat v-else :hash="detail.detail" :isBlue="false"/>
+          </div>
         </div>
       </v-flex>
       <v-flex xs1 pt-0 pb-0 pl-1 v-if="!detail.txInput">
@@ -48,10 +54,13 @@
 import { Detail } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
+import AppHashConcat from '@app/core/components/ui/AppHashConcat.vue'
+
 
 @Component({
   components: {
-    AppCopyToClip
+    AppCopyToClip,
+    AppHashConcat
   }
 })
 export default class AppDetailsListRow extends Vue {
@@ -66,12 +75,13 @@ export default class AppDetailsListRow extends Vue {
 
   /*
   ===================================================================================
-    Methods
+    Computed
   ===================================================================================
   */
 
-  isMonoFont(): string {
-    return this.detail.mono ? 'font-mono' : ''
+  get isMono(): boolean  {
+    console.log(this.detail)
+    return this.detail.mono ? true : false
   }
 }
 </script>

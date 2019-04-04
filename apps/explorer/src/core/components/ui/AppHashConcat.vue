@@ -1,5 +1,5 @@
 <template>
-  <div class="hash-container" @click="reroute">
+  <div :class="hashClass" @click="reroute">
     <p>{{ first }}</p>
     <p class="concat">{{ middle }}</p>
     <p>{{ last }}</p>
@@ -20,6 +20,7 @@ export default class AppHashConcat extends Vue {
   @Prop(String) hash!: string
   @Prop({ type: Boolean, default: false }) italic!: boolean
   @Prop(String) link!: string
+  @Prop({ type: Boolean, default: true}) isBlue!: boolean
 
   /*
   ===================================================================================
@@ -40,7 +41,10 @@ export default class AppHashConcat extends Vue {
   }
 
   get hashClass(): string {
-    return this.italic ? 'font-italic secondary--text' : 'secondary--text'
+    if (!this.isBlue) {
+      return this.italic ? 'hash-container font-italic black--text font-mono' : ' hash-container black--text font-mono'
+    }
+    return this.italic ? 'hash-container font-italic secondary--text font-mono' : ' hash-container secondary--text font-mono'
   }
 
   /*
@@ -73,4 +77,5 @@ export default class AppHashConcat extends Vue {
 p{
   margin-bottom: 0px;
 }
+
 </style>
