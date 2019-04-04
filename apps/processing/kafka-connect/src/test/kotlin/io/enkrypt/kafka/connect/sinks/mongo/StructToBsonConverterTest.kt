@@ -3,17 +3,8 @@ package io.enkrypt.kafka.connect.sinks.mongo
 import io.confluent.connect.avro.AvroConverter
 import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient
 import io.confluent.kafka.serializers.KafkaAvroSerializer
-import io.enkrypt.avro.capture.BlockKeyRecord
-import io.enkrypt.avro.capture.BlockRecord
-import io.enkrypt.avro.capture.TransactionKeyRecord
-import io.enkrypt.avro.capture.TransactionRecord
-import io.enkrypt.avro.processing.ContractCreateRecord
-import io.enkrypt.avro.processing.ContractDestroyRecord
-import io.enkrypt.avro.processing.ContractKeyRecord
-import io.enkrypt.avro.processing.MetricKeyRecord
+import io.enkrypt.avro.capture.ContractKeyRecord
 import io.enkrypt.avro.processing.MetricRecord
-import io.enkrypt.avro.processing.TokenBalanceKeyRecord
-import io.enkrypt.avro.processing.TokenBalanceRecord
 import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
@@ -35,27 +26,27 @@ class StructToBsonConverterTest : BehaviorSpec() {
 
   private val schemaRegistryClient = MockSchemaRegistryClient().apply {
 
-    val subjectsWithSchemas = listOf(
+//    val subjectsWithSchemas = listOf(
+//      Pair("blocks", BlockRecord.`SCHEMA$`),
+//      Pair("blocks-key", BlockKeyRecord.`SCHEMA$`),
+//
+//      Pair("block-statistics", MetricRecord.`SCHEMA$`),
+//      Pair("block-statistics-key", MetricKeyRecord.`SCHEMA$`),
+//
+//      Pair("balances", TokenBalanceKeyRecord.`SCHEMA$`),
+//      Pair("balances-key", TokenBalanceRecord.`SCHEMA$`),
+//
+//      Pair("contract-creations", ContractCreateRecord.`SCHEMA$`),
+//      Pair("contract-creations-key", ContractKeyRecord.`SCHEMA$`),
+//
+//      Pair("contract-destructions", ContractDestroyRecord.`SCHEMA$`),
+//      Pair("contract-destructions-key", ContractKeyRecord.`SCHEMA$`),
+//
+//      Pair("transactions-key", TransactionKeyRecord.`SCHEMA$`),
+//      Pair("transactions", TransactionRecord.`SCHEMA$`)
+//    )
 
-      Pair("blocks", BlockRecord.`SCHEMA$`),
-      Pair("blocks-key", BlockKeyRecord.`SCHEMA$`),
-
-      Pair("block-statistics", MetricRecord.`SCHEMA$`),
-      Pair("block-statistics-key", MetricKeyRecord.`SCHEMA$`),
-
-      Pair("balances", TokenBalanceKeyRecord.`SCHEMA$`),
-      Pair("balances-key", TokenBalanceRecord.`SCHEMA$`),
-
-      Pair("contract-creations", ContractCreateRecord.`SCHEMA$`),
-      Pair("contract-creations-key", ContractKeyRecord.`SCHEMA$`),
-
-      Pair("contract-destructions", ContractDestroyRecord.`SCHEMA$`),
-      Pair("contract-destructions-key", ContractKeyRecord.`SCHEMA$`),
-
-      Pair("transactions-key", TransactionKeyRecord.`SCHEMA$`),
-      Pair("transactions", TransactionRecord.`SCHEMA$`)
-    )
-
+    val subjectsWithSchemas = emptyList<Pair<String, org.apache.avro.Schema>>()
     subjectsWithSchemas.forEach { (subject, schema) -> register(subject, schema) }
   }
 

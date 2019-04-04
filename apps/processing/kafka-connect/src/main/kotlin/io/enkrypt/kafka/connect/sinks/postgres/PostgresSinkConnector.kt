@@ -22,5 +22,6 @@ class PostgresSinkConnector : SinkConnector() {
   override fun taskClass() = PostgresSinkTask::class.java
 
   override fun taskConfigs(maxTasks: Int): MutableList<MutableMap<String, String>> {
+    throw TODO()
   }
 }

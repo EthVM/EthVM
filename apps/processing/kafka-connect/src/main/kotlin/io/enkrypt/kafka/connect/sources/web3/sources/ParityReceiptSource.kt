@@ -19,7 +19,7 @@ class ParityReceiptSource(
 
   override val partitionKey: Map<String, Any> = mapOf("model" to "receipt")
 
-  override fun fetchRange(range: ClosedRange<Long>): List<SourceRecord> {
+  override fun fetchRange(range: LongRange): List<SourceRecord> {
 
     // force into long for iteration
 

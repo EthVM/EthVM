@@ -1,5 +1,7 @@
 package io.enkrypt.kafka.connect.sources.web3.sources
 
+import arrow.core.None
+import arrow.core.Option
 import io.enkrypt.kafka.connect.sources.web3.CanonicalChainTracker
 import io.enkrypt.kafka.connect.sources.web3.JsonRpc2_0ParityExtended
 import mu.KotlinLogging
@@ -45,13 +47,13 @@ abstract class ParityEntitySource(
       throw error
     }
 
-    val range = chainTracker.nextRange(batchSize)
+    val range = chainTracker.nextRange(batchSize).first
 
     return when (range) {
-      null -> emptyList()
-      else -> fetchRange(range)
+      is None -> emptyList()
+      else -> fetchRange(range.orNull()!!)
     }
   }
 
-  abstract fun fetchRange(range: ClosedRange<Long>): List<SourceRecord>
+  abstract fun fetchRange(range: LongRange): List<SourceRecord>
 }
