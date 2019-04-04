@@ -94,25 +94,22 @@ export class ChartMixin extends Vue {
   setData(_state: number): void {
     this.$socket.emit(this.chartEvent, { duration: this.DATA[_state].state }, (err, result) => {
       if (!err && result) {
-        if(this.chartTitle === this.$i18n.t('charts.gas-price.title ').toString()) {
+        if (this.chartTitle === this.$i18n.t('charts.gas-price.title ').toString()) {
           result.forEach(point => {
-            this.DATA[_state].points.push( new EthValue(point.value).toGWei())
+            this.DATA[_state].points.push(new EthValue(point.value).toGWei())
             this.DATA[_state].labels.push(point.date)
           })
-        }
-        else if (this.chartTitle === this.$i18n.t('charts.tx-fees.title').toString()) {
+        } else if (this.chartTitle === this.$i18n.t('charts.tx-fees.title').toString()) {
           result.forEach(point => {
-            this.DATA[_state].points.push( new EthValue(point.value).toEth())
+            this.DATA[_state].points.push(new EthValue(point.value).toEth())
             this.DATA[_state].labels.push(point.date)
           })
-        }
-        else {
+        } else {
           result.forEach(point => {
             this.DATA[_state].points.push(point.value)
             this.DATA[_state].labels.push(point.date)
           })
         }
-
       }
     })
   }

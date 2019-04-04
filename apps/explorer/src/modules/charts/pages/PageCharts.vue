@@ -5,9 +5,9 @@
       <!-- Live Data-->
       <v-tab-item slot="tabs-item" value="tab-0">
         <v-layout row wrap justify-center :class="contentClass">
-           <v-flex xs12 >
+          <v-flex xs12>
             <app-card-stats-group />
-           </v-flex>
+          </v-flex>
         </v-layout>
         <!-- Charts -->
         <v-layout row wrap justify-center :class="contentClass">
@@ -40,7 +40,9 @@
       <v-tab-item slot="tabs-item" value="tab-2">
         <v-layout row wrap justify-center :class="contentClass">
           <v-flex xs12 md6> <chart-link :title="$t('charts.block-time.title')" :text="$t('charts.block-time.description')" :chart-id="ID.blockTime" /> </v-flex>
-          <v-flex xs12 md6> <chart-link :title="$t('charts.block-diff.title')" :text="$t('charts.block-diff.description')" :chart-id="ID.difficulty" /> </v-flex>
+          <v-flex xs12 md6>
+            <chart-link :title="$t('charts.block-diff.title')" :text="$t('charts.block-diff.description')" :chart-id="ID.difficulty" />
+          </v-flex>
           <!-- <v-flex xs12 md6>
           Average Block Size
           </v-flex> -->
@@ -130,7 +132,7 @@ export default class PageCharts extends Vue {
   }
 
   get contentClass(): String {
-    return this.$vuetify.breakpoint.name === 'xs' ? 'ma-0': 'ma-2'
+    return this.$vuetify.breakpoint.name === 'xs' ? 'ma-0' : 'ma-2'
   }
 }
 </script>

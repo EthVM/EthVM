@@ -1,10 +1,8 @@
 <template>
   <div class="hash-container" @click="reroute">
-
-      <p>{{ first }}</p>
-      <p class="concat">{{ middle }}</p>
-      <p>{{ last }}</p>
-
+    <p>{{ first }}</p>
+    <p class="concat">{{ middle }}</p>
+    <p>{{ last }}</p>
   </div>
 </template>
 

@@ -44,7 +44,7 @@ export interface Crumb {
   icon?: string
   link?: string
   label?: {
-    name: string,
+    name: string
     hash?: boolean
   }
   plural?: number

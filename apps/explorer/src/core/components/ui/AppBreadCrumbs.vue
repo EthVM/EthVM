@@ -4,14 +4,14 @@
       <v-card-title v-for="(item, i) in crumbs" :key="i" class="crumb-container">
         <v-icon small v-if="item.icon" :class="[item.disabled ? 'black--text  pr-2' : 'info--text  pr-2']">{{ item.icon }}</v-icon>
         <p v-if="item.link">
-          <router-link  :class="[item.disabled ? 'black--text' : 'info--text']" :to="item.link">{{ getText(item) }}</router-link>
+          <router-link :class="[item.disabled ? 'black--text' : 'info--text']" :to="item.link">{{ getText(item) }}</router-link>
         </p>
         <div v-else>
           <p class="black--text">{{ getText(item) }}</p>
         </div>
         <div v-if="item.label">
-          <p v-if="!item.label.hash">: {{item.label.name}} </p>
-          <p v-else>: {{getHash(item.label.name)}}</p>
+          <p v-if="!item.label.hash">: {{ item.label.name }}</p>
+          <p v-else>: {{ getHash(item.label.name) }}</p>
         </div>
         <p v-if="i < crumbs.length - 1" class="pl-1 pr-0 caption">/</p>
       </v-card-title>
@@ -93,7 +93,7 @@ export default class AppBreadCrumbs extends Vue {
 
   getHash(hash: string): string {
     const n = hash.length
-    return  `${hash.slice(0, 4)}...${hash.slice(n - 4, n)}`
+    return `${hash.slice(0, 4)}...${hash.slice(n - 4, n)}`
   }
 
   /*
@@ -110,10 +110,8 @@ export default class AppBreadCrumbs extends Vue {
       link: '/'
     }
   }
-
 }
 </script>
-
 
 <style scoped lang="css">
 
@@ -130,4 +128,3 @@ p {
   padding-bottom: 0px;
 }
 </style>
-

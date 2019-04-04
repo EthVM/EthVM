@@ -96,7 +96,6 @@ export default class PageDetailsBlock extends Vue {
 
     // 1. Check that current block ref is valid one
     if (!eth.isValidHash(ref) && !eth.isValidBlockNumber(ref)) {
-      console.log("i fail")
       this.error = this.$i18n.t('message.invalid.block').toString()
       return
     }
@@ -367,44 +366,40 @@ export default class PageDetailsBlock extends Vue {
    * @return {Array} - Breadcrumb entry. See description.
    */
   get crumbs(): Crumb[] {
-    let crumbs: Crumb[] = [      {
+    const crumbs: Crumb[] = [
+      {
         text: 'block.name',
         disabled: false,
         link: '/blocks',
         plural: 2
-    }]
+      }
+    ]
     if (!eth.isValidHash(this.blockRef) && !eth.isValidBlockNumber(this.blockRef)) {
-     crumbs.push({
+      crumbs.push({
         text: 'block.number',
-        disabled: true,
+        disabled: true
       })
       return crumbs
-    }
-    else if (eth.isValidHash(this.blockRef)) {
-      console.log('valid hash')
+    } else if (eth.isValidHash(this.blockRef)) {
       crumbs.push({
         text: 'block.number',
         disabled: true,
         label: {
-          name:` ${this.$route.params.blockRef}`,
+          name: ` ${this.$route.params.blockRef}`,
           hash: true
         }
       })
-        return crumbs
-    }
-    else {
-            console.log('valid number')
-
-      crumbs.push({
-        text: 'block.number',
-        disabled: true,
-        label: {
-          name:` ${this.$route.params.blockRef}`,
-          hash: false
-        }
-      })
       return crumbs
     }
+    crumbs.push({
+      text: 'block.number',
+      disabled: true,
+      label: {
+        name: ` ${this.$route.params.blockRef}`,
+        hash: false
+      }
+    })
+    return crumbs
   }
 
   get max(): number {

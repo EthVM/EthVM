@@ -214,7 +214,7 @@ export default class ChartLiveTransactions extends Vue {
         xAxes: [
           {
             stacked: false,
-            display: false,
+            display: false
           }
         ]
       }

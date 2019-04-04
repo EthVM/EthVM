@@ -1,52 +1,53 @@
 <template>
   <v-card color="white" flat>
- <v-layout pa-2>
-   <!--
+    <v-layout pa-2>
+      <!--
     =====================================================================================
       Mobile
     =====================================================================================
     -->
       <v-flex hidden-sm-and-up>
         <div class="mobile-select-tab">
-        <v-select
-        v-model="activeTabId"
-        :items="tabs"
-        item-text="title"
-        item-value="id"
-        color="accent"
-        solo flat
-        @change="setTab"
-        height="32"
-        hide-details
-        class="primary--text"
-        ></v-select>
+          <v-select
+            v-model="activeTabId"
+            :items="tabs"
+            item-text="title"
+            item-value="id"
+            color="accent"
+            solo
+            flat
+            @change="setTab"
+            height="32"
+            hide-details
+            class="primary--text"
+          ></v-select>
         </div>
       </v-flex>
-    <!--
+      <!--
     =====================================================================================
       Desktop
     =====================================================================================
     -->
-    <v-flex hidden-xs-only>
-    <v-tabs
-      v-model="activeTab"
-      color="white"
-      show-arrows
-      :class="{ 'pl-0 pr-0': $vuetify.breakpoint.smAndDown, 'pl-3 pr-3 pt-2': $vuetify.breakpoint.mdAndUp }"
-    >
-      <v-tab
-        v-for="item in tabs"
-        class="info--text text-capitalize pb-2 tab-opacity"
-        active-class="primary--text "
-        :key="item.id"
-        :href="'#tab-' + item.id"
-        ripple
-        >{{ item.title }}</v-tab
-      >
-      <v-tabs-slider color="primary" class="mb-0" style="height: 4px;" />
-    </v-tabs>
-     </v-flex>
-     </v-layout>
+      <v-flex hidden-xs-only>
+        <v-tabs
+          v-model="activeTab"
+          color="white"
+          show-arrows
+          :class="{ 'pl-0 pr-0': $vuetify.breakpoint.smAndDown, 'pl-3 pr-3 pt-2': $vuetify.breakpoint.mdAndUp }"
+        >
+          <v-tab
+            v-for="item in tabs"
+            class="info--text text-capitalize pb-2 tab-opacity"
+            active-class="primary--text "
+            :key="item.id"
+            :href="'#tab-' + item.id"
+            ripple
+            >{{ item.title }}</v-tab
+          >
+          <v-tabs-slider color="primary" class="mb-0" style="height: 4px;" />
+        </v-tabs>
+      </v-flex>
+    </v-layout>
     <v-tabs-items v-model="activeTab" style="border-top: 1px solid #efefef">
       <v-container grid-list-xs :class="tabContainerClass"> <slot name="tabs-item"/></v-container>
     </v-tabs-items>
@@ -84,13 +85,12 @@ export default class AppTabs extends Vue {
   */
 
   setTab() {
-    this.tabs.forEach( tab => {
+    this.tabs.forEach(tab => {
       if (this.activeTabId === tab.id) {
-         tab.isActive = true
-         this.activeTab = `tab-${this.activeTabId}`
-      }
-      else {
-         tab.isActive = false
+        tab.isActive = true
+        this.activeTab = `tab-${this.activeTabId}`
+      } else {
+        tab.isActive = false
       }
     })
   }
@@ -101,13 +101,11 @@ export default class AppTabs extends Vue {
   ===================================================================================
   */
 
-   get tabContainerClass(): string {
-     return this.$vuetify.breakpoint.name === 'xs'? 'pa-0' : 'pa-2'
-   }
-
+  get tabContainerClass(): string {
+    return this.$vuetify.breakpoint.name === 'xs' ? 'pa-0' : 'pa-2'
+  }
 }
 </script>
-
 
 <style lang="css">
 .mobile-select-tab{

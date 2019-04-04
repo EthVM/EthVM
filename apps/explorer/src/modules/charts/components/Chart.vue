@@ -5,13 +5,13 @@
         <v-card-title class="title font-weight-bold pb-1">{{ chartTitle }}</v-card-title>
         <v-card-text class="pt-0 pb-0 info--text caption">{{ chartDescription }}</v-card-text>
       </v-flex>
-      <v-flex xs12 sm3 v-if="!liveChart" >
-          <v-layout align-center justify-end pa-3>
-              <button flat :class="classAll" @click="toggleData=0" small>{{ $tc('charts.states.all', 2) }}</button>
-              <button flat :class="classWeek" @click="toggleData=1" small>{{ $tc('charts.states.week', 2) }}</button>
-              <button flat :class="classMonth" @click="toggleData=2" small>{{ $tc('charts.states.month', 2) }}</button>
-              <!-- <button flat :class="classMonth" small>1Y</button> -->
-          </v-layout>
+      <v-flex xs12 sm3 v-if="!liveChart">
+        <v-layout align-center justify-end pa-3>
+          <button flat :class="classAll" @click="toggleData = 0" small>{{ $tc('charts.states.all', 2) }}</button>
+          <button flat :class="classWeek" @click="toggleData = 1" small>{{ $tc('charts.states.week', 2) }}</button>
+          <button flat :class="classMonth" @click="toggleData = 2" small>{{ $tc('charts.states.month', 2) }}</button>
+          <!-- <button flat :class="classMonth" small>1Y</button> -->
+        </v-layout>
       </v-flex>
     </v-layout>
     <v-divider></v-divider>
@@ -55,7 +55,7 @@ ChartJs.defaults.global.legend = Object.assign(ChartJs.defaults.global.legend, {
 ChartJs.defaults.global.layout = Object.assign(ChartJs.defaults.global.layout, {
   padding: {
     top: 20,
-    bottom: 10,
+    bottom: 10
   }
 })
 
@@ -63,7 +63,6 @@ ChartJs.defaults.global.elements.point = Object.assign(ChartJs.defaults.global.e
   hoverRadius: 6,
   borderWidth: 1,
   radius: 2
-
 })
 
 ChartJs.defaults.doughnut.animation = Object.assign(ChartJs.defaults.doughnut.animation, {
@@ -213,5 +212,4 @@ export default class AppChart extends Vue {
 .xs-chart {
   min-height: 280px
 }
-
 </style>

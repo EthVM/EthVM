@@ -498,7 +498,7 @@ export default class PageDetailsToken extends Vue {
         text: 'token.holder',
         disabled: true,
         label: {
-          name:`: ${this.holderAddress}`
+          name: `: ${this.holderAddress}`
         }
       }
     ]
