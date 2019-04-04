@@ -65,8 +65,8 @@ export default class TokenTableHolders extends Vue {
   ===================================================================================
   */
 
-  @Prop(Array) holders: Array<any>
-  @Prop(String) addressRef: string
+  @Prop(Array) holders!: Array<any>
+  @Prop(String) addressRef!: string
 
   /*
   ===================================================================================

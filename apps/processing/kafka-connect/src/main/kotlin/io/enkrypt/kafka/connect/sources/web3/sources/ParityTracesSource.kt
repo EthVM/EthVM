@@ -57,7 +57,6 @@ class ParityTracesSource(
               traceKeySchemaAndValue.schema(), traceKeySchemaAndValue.value(),
               traceValueSchemaAndValue.schema(), traceValueSchemaAndValue.value()
             )
-
           }
       }.map { future ->
         // wait for everything to complete

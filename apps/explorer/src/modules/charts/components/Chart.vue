@@ -100,7 +100,7 @@ export default class AppChart extends Vue {
 
   toggleData = 1
   updateChart = false
-  chart = null
+  chart: ChartJs | null = null
 
   /*
   ===================================================================================

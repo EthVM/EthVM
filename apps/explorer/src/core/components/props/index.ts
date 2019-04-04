@@ -18,8 +18,8 @@ export interface NavHeader {
 }
 
 export interface Footnote {
-  color?: string
-  text?: TranslateResult
+  color: string
+  text: TranslateResult
   icon?: string
 }
 

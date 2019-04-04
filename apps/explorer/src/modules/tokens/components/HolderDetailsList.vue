@@ -21,12 +21,12 @@ export default class HolderDetailsList extends Vue {
   ===================================================================================
   */
 
-  @Prop(String) addressRef: string // Token contract address
-  @Prop(Object) contractDetails: any
-  @Prop(Object) tokenDetails: any
-  @Prop(Object) holderDetails: any
-  @Prop(Boolean) isLoading: boolean
-  @Prop(String) error: string
+  @Prop(String) addressRef!: string // Token contract address
+  @Prop(Object) contractDetails!: any
+  @Prop(Object) tokenDetails!: any
+  @Prop(Object) holderDetails!: any
+  @Prop(Boolean) isLoading!: boolean
+  @Prop(String) error!: string
 
   /*
   ===================================================================================
@@ -118,7 +118,7 @@ export default class HolderDetailsList extends Vue {
         },
         {
           title: this.$i18n.t('token.market'),
-          detail: `$${this.tokenDetails.current_price}`
+          detail: `$${this.tokenDetails.currentPrice}`
         },
         {
           title: this.$i18n.t('token.decimals'),
@@ -130,7 +130,7 @@ export default class HolderDetailsList extends Vue {
   }
 
   get balanceUsd() {
-    return this.holderDetails.tokens ? this.tokenDetails.current_price * this.holderDetails.tokens[0].balance : 'N/A'
+    return this.holderDetails.tokens ? this.tokenDetails.currentPrice * this.holderDetails.tokens[0].balance : 'N/A'
   }
 }
 </script>

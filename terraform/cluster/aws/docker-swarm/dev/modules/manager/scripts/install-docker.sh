@@ -8,3 +8,6 @@ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubun
 apt-get update -y
 apt-get install docker-ce -y
 systemctl start docker &&  systemctl enable docker
+dockerDaemon='{"experimental": true, "metrics-addr": "0.0.0.0:9323"}'
+echo $dockerDaemon > /etc/docker/daemon.json
+systemctl restart docker

@@ -1,0 +1,142 @@
+query blocks($limit: Int, $page: Int) {
+  blocks(limit: $limit, page: $page) {
+    header {
+      hash
+      number
+      author
+    }
+    transactions {
+      hash
+      receipt {
+        status
+        traces {
+          error
+        }
+      }
+    }
+    rewards {
+      value
+    }
+    uncles {
+      hash
+    }
+  }
+}
+
+query blockByHash($hash: String) {
+  blockByHash(hash: $hash) {
+    header {
+      number
+      hash
+      timestamp
+      author
+      parentHash
+      difficulty
+      size
+      nonce
+      stateRoot
+      extraData
+      gasLimit
+      gasUsed
+      logsBloom
+      sha3Uncles
+      transactionsRoot
+      receiptsRoot
+    }
+    totalDifficulty
+    transactions {
+      hash
+      blockNumber
+      from
+      gasPrice
+      timestamp
+      to
+      value
+      receipt {
+        contractAddress
+        gasUsed
+        status
+        traces {
+          error
+        }
+      }
+    }
+    rewards {
+      author
+      rewardType
+      value
+    }
+    uncles {
+      hash
+    }
+  }
+}
+query blockByNumber($number: Int) {
+  blockByNumber(number: $number) {
+    header {
+      number
+      hash
+      timestamp
+      author
+      parentHash
+      difficulty
+      size
+      nonce
+      stateRoot
+      extraData
+      gasLimit
+      gasUsed
+      logsBloom
+      sha3Uncles
+      transactionsRoot
+      receiptsRoot
+    }
+    totalDifficulty
+    transactions {
+      hash
+      blockNumber
+      from
+      gasPrice
+      timestamp
+      to
+      value
+      receipt {
+        contractAddress
+        gasUsed
+        status
+        traces {
+          error
+        }
+      }
+    }
+    rewards {
+      author
+      rewardType
+      value
+    }
+    uncles {
+      hash
+    }
+  }
+}
+
+query minedBlocksByAddress($address: String, $limit: Int, $page: Int) {
+  minedBlocksByAddress(address: $address, limit: $limit, page: $page) {
+    header {
+      hash
+      number
+      author
+    }
+    uncles {
+      hash
+    }
+    rewards {
+      rewardType
+      value
+    }
+  }
+}
+
+query totalNumberOfBlocks {
+  totalNumberOfBlocks
+}

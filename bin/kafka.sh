@@ -36,7 +36,7 @@ create_topics() {
   docker run --rm --network ethvm_back \
     -e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 \
     -e KAFKA_BOOTSTRAP_SERVERS=kafka-1:9091 \
-    enkryptio/ethvm-utils:${version} ensure-topics
+    ethvm/ethvm-utils:${version} ensure-topics
 }
 
 # list_topics - lists registered Kafka topics

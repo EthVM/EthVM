@@ -1,43 +1,17 @@
-FROM node:10.9.0-alpine
+FROM node:10.15.3-alpine
 
-# Install deps
-RUN apk --no-cache add \
-  bash \
-  g++ \
-  ca-certificates \
-  lz4-dev \
-  musl-dev \
-  cyrus-sasl-dev \
-  openssl-dev \
-  make \
-  python \
-  gcc \
-  linux-headers \
-  git
+ENV WORKDIR /var/www/api
 
-RUN apk add --no-cache --virtual \
-  .build-deps \
-  gcc \
-  zlib-dev \
-  libc-dev \
-  bsd-compat-headers \
-  py-setuptools \
-  bash
+RUN apk --no-cache add bash ca-certificates git
 
-# Create workdir
-RUN mkdir -p /var/www
-WORKDIR /var/www
+RUN apk add --no-cache --virtual bash
 
-# Copy
-COPY api/ api/
-COPY common/ common/
+WORKDIR ${WORKDIR}
 
-# Install
-RUN cd api && \
-  yarn install
+COPY . ${WORKDIR}/
 
-WORKDIR /var/www/api
+RUN yarn install
 
-# Expose
 EXPOSE 3000
+
 CMD yarn start

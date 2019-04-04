@@ -113,10 +113,22 @@ export default class TheNavigationDrawer extends Vue {
   */
 
   supportEmail = 'support@ethvm.com'
-  drawer = null
+  drawer: boolean = false
   active = 0
   sublink = null
-  mini = null
+  mini: boolean = false
+
+  /*
+  ===================================================================================
+    LifeCycle
+  ===================================================================================
+  */
+
+  created() {
+    if (this.$vuetify.breakpoint.name === 'lg' || this.$vuetify.breakpoint.name === 'xl') {
+      this.drawer = true
+    }
+  }
 
   /*
   ===================================================================================

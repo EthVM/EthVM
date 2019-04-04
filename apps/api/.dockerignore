@@ -1,3 +1,4 @@
-dist/
-docker/
-node_modules/
+.git/
+
+*/*/node_modules
+node_modules

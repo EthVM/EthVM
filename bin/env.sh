@@ -7,7 +7,7 @@ set -o errexit
 # set -o verbose
 
 # Export common vars
-ORG="${ORG:-enkryptio}"
+ORG="${ORG:-ethvm}"
 
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 APPS_PATH="${ROOT_DIR}/apps"
