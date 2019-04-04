@@ -4,7 +4,6 @@ import io.enkrypt.kafka.connect.sources.web3.CanonicalChainTracker
 import io.kotlintest.specs.BehaviorSpec
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
-import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import org.web3j.protocol.core.Request
@@ -30,7 +29,6 @@ class CanonicalChainTrackerTest : BehaviorSpec() {
         then("we should return properly the next range") {
         }
       }
-
     }
   }
 }

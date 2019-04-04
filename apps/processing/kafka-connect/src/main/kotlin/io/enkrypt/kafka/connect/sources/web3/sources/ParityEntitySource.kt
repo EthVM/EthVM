@@ -1,7 +1,6 @@
 package io.enkrypt.kafka.connect.sources.web3.sources
 
 import arrow.core.None
-import arrow.core.Option
 import io.enkrypt.kafka.connect.sources.web3.CanonicalChainTracker
 import io.enkrypt.kafka.connect.sources.web3.JsonRpc2_0ParityExtended
 import mu.KotlinLogging
