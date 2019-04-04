@@ -103,81 +103,102 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
       ]
     } else {
 
-      const detailsItems: Detail[] = [
+      const {address, owner, totalSupply, circulatingSupply, currentPrice, marketCap, totalVolume, holdersCount} = this.tokenDetails
+
+      details = [
         {
           title: this.$i18n.tc('contract.name', 1),
-          detail: new Hex(this.tokenDetails.address).toString(),
-          link: this.tokenDetails ? `/address/${new Hex(this.tokenDetails.address).toString()}` : ''
+          detail: new Hex(address).toString(),
+          link: this.tokenDetails ? `/address/${new Hex(address).toString()}` : ''
         }
       ]
 
-      if (this.tokenDetails.owner) {
-        detailsItems.push({
+      if (owner) {
+        details.push({
           title: this.$i18n.t('token.owner'),
-          detail: this.tokenDetails.owner,
-          link: `/address/${this.tokenDetails.owner}`
+          detail: owner,
+          link: `/address/${owner}`
         })
       }
 
-      detailsItems.push( {
+      if (totalSupply) {
+        details.push({
           title: this.$i18n.t('token.supply'),
-          detail: this.formatStr(this.tokenDetails.totalSupply.toString())
-        },
-        {
+          detail: this.formatStr(totalSupply.toString())
+        })
+      }
+
+      if (circulatingSupply) {
+        details.push( {
           title: this.$i18n.t('token.circSupply').toString(),
-          detail: this.formatStr(this.tokenDetails.circulatingSupply.toString())
-        },
-        {
+          detail: this.formatStr(circulatingSupply.toString())
+        })
+      }
+
+      if (currentPrice) {
+        details.push( {
           title: this.$i18n.tc('price.name', 2),
-          detail: `$${this.tokenDetails.currentPrice}`,
+          detail: `$${currentPrice}`,
           priceChange: this.getPriceChange()
-        },
-        {
+        })
+      }
+
+      if (marketCap) {
+        details.push({
           title: this.$i18n.t('token.market'),
-          detail: `$${this.getRoundNumber(this.tokenDetails.marketCap)}`
-        },
-        {
-          title: this.$i18n.t('token.volume').toString(),
-          detail: `$${this.getInt(this.tokenDetails.totalVolume)}`
+          detail: `$${this.getRoundNumber(marketCap)}`
         })
+      }
 
-      if (this.tokenDetails.holdersCount) {
-        detailsItems.push( {
+      if (totalVolume) {
+        details.push(
+          {
+            title: this.$i18n.t('token.volume').toString(),
+            detail: `$${this.getInt(totalVolume)}`
+          })
+      }
+
+      if (holdersCount) {
+        details.push( {
           title: this.$i18n.t('token.holder-total'),
-          detail: this.tokenDetails.holdersCount
+          detail: holdersCount
         })
       }
 
-      detailsItems.push( {
-        title: this.$i18n.t('token.decimals'),
-        detail: this.contractDetails.metadata.decimals
-      })
+      const {metadata, type} = this.contractDetails
 
-      if (this.contractDetails.metadata.website) {
-        detailsItems.push({
-          title: this.$i18n.t('token.website'),
-          detail: `<a href="${this.contractDetails.metadata.website}" target="_BLANK">${this.contractDetails.metadata.website}</a>`
-        })
+      if (metadata) {
+        if (metadata.decimals) {
+          details.push( {
+            title: this.$i18n.t('token.decimals'),
+            detail: metadata.decimals
+          })
+        }
+        if (metadata.website) {
+          details.push({
+            title: this.$i18n.t('token.website'),
+            detail: `<a href="${metadata.website}" target="_BLANK">${metadata.website}</a>`
+          })
+        }
+        if (metadata.support) {
+          details.push({
+            title: this.$i18n.t('token.support'),
+            detail: `<a href="mailto:${metadata.support.email}" target="_BLANK">${metadata.support.email}</a>`
+          })
+        }
       }
 
-      if (this.contractDetails.metadata.support) {
-        detailsItems.push({
-          title: this.$i18n.t('token.support'),
-          detail: `<a href="mailto:${this.contractDetails.metadata.support.email}" target="_BLANK">${this.contractDetails.metadata.support.email}</a>`
-        })
-      }
-
-      if(this.contractDetails.type && this.contractDetails.type.string) {
-        detailsItems.push({
+      if(type && type.string) {
+        details.push({
           title: this.$i18n.t('token.type').toString(),
-          detail: this.contractDetails.type.string
+          detail: type.string
         })
       }
 
-      if (this.contractDetails.metadata.social) {
-        detailsItems.push({
+      if (metadata && metadata.social) {
+        details.push({
           title: this.$i18n.t('token.links'),
-          detail: Object.entries(this.contractDetails.metadata.social)
+          detail: Object.entries(metadata.social)
             .map(obj => {
               const name = obj[0]
               const url = obj[1]
@@ -193,8 +214,6 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
             })
         })
       }
-
-      details = detailsItems
     }
     return details
   }
