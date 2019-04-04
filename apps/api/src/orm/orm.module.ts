@@ -12,10 +12,10 @@ import { MongoConnectionOptions } from 'typeorm/driver/mongodb/MongoConnectionOp
         useNewUrlParser: true,
         synchronize: false,
         entities: ['src/**/**.entity{.ts,.js}'],
-        loggerLevel: 'error'
+        loggerLevel: 'error',
       }),
-      inject: [ConfigService]
-    })
-  ]
+      inject: [ConfigService],
+    }),
+  ],
 })
 export class OrmModule {}

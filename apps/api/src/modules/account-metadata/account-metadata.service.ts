@@ -7,7 +7,7 @@ import { AccountMetadataEntity } from '@app/orm/entities/account-metadata.entity
 export class AccountMetadataService {
   constructor(
     @InjectRepository(AccountMetadataEntity)
-    private readonly accountMetadataRepository: MongoRepository<AccountMetadataEntity>
+    private readonly accountMetadataRepository: MongoRepository<AccountMetadataEntity>,
   ) {}
 
   async findAccountMetadataByHash(id: string): Promise<AccountMetadataEntity | undefined> {

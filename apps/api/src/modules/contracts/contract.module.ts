@@ -7,6 +7,6 @@ import { ContractResolvers } from '@app/modules/contracts/contract.resolvers'
 @Module({
   imports: [TypeOrmModule.forFeature([ContractEntity])],
   providers: [ContractService, ContractResolvers],
-  exports: []
+  exports: [],
 })
 export class ContractModule {}

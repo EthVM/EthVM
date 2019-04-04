@@ -8,6 +8,6 @@ import { TokenTransferModule } from '@app/modules/token-transfers/token-transfer
 @Module({
   imports: [TypeOrmModule.forFeature([TokenExchangeRateEntity]), forwardRef(() => TokenTransferModule)],
   providers: [ExchangeService, TokenExchangeRateResolvers],
-  exports: [ExchangeService]
+  exports: [ExchangeService],
 })
 export class ExchangeModule {}

@@ -14,7 +14,7 @@ export class SearchService {
     private readonly balanceService: BalanceService,
     private readonly uncleService: UncleService,
     private readonly txService: TxService,
-    private readonly ethService: EthService
+    private readonly ethService: EthService,
   ) {}
 
   async search(query: string = ''): Promise<SearchDto | null> {

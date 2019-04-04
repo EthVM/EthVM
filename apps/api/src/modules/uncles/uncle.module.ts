@@ -7,6 +7,6 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 @Module({
   imports: [TypeOrmModule.forFeature([UncleEntity])],
   providers: [UncleService, UncleResolvers],
-  exports: [UncleService]
+  exports: [UncleService],
 })
 export class UncleModule {}
