@@ -40,9 +40,9 @@ ensure() {
     exit 1
   fi
 
-  if ! [ -x "$(command -v aws)" ]; then
-    >&2 echo "awscli is necessary to be installed to run this script!"
-    >&2 echo "For installation instructions, please visit: https://github.com/aws/aws-cli"
+  if ! [ -x "$(command -v curl)" ]; then
+    >&2 echo "curl is necessary to be installed to run this script!"
+    >&2 echo "For installation instructions, please visit: https://curl.haxx.se/"
     exit 1
   fi
 
