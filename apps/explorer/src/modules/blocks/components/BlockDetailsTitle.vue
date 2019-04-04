@@ -24,7 +24,7 @@
                   <v-layout row justify-start align-center fill-height>
                     <v-card-title class="info--text pr-0 pl-0">{{ $t('common.hash') }}:</v-card-title>
                     <v-card-text class="text-truncate font-mono">
-                      <router-link :to="'/uncle/' + uncles[index]">{{ uncles[index] }}</router-link>
+                      <router-link :to="'/uncle/' + uncle">{{ uncle }}</router-link>
                     </v-card-text>
                   </v-layout>
                 </v-list-tile>
@@ -56,8 +56,15 @@ export default class BlockDetailsTitle extends Vue {
 
   @Prop(String) nextBlock!: string
   @Prop(String) prevBlock!: string
-  @Prop(Boolean) mined!: boolean
   @Prop(Array) uncles!: string[]
+
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
+
+  dialog = true
 
   /*
   ===================================================================================
@@ -70,7 +77,7 @@ export default class BlockDetailsTitle extends Vue {
   }
 
   get hasUncles(): boolean {
-    return this.mined && this.uncles != null && this.uncles.length > 0
+    return !!this.uncles && this.uncles.length > 0
   }
 }
 </script>
