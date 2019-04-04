@@ -36,7 +36,7 @@ read_version() {
 
 init() {
   local version=$(read_version)
-  docker run --rm --network ethvm_back -e MONGO_URL=mongodb://mongodb:27017/ethvm_local enkryptio/ethvm-utils:${version} mongo init
+  docker run --rm --network ethvm_back -e MONGO_URL=mongodb://mongodb:27017/ethvm_local ethvm/ethvm-utils:${version} mongo init
 }
 
 # create_dump - creates a MongoDB dump file
@@ -56,8 +56,10 @@ bootstrap() {
 fetch() {
   echo "Checking current dataset..."
   mkdir -p ${ROOT_DIR}/datasets
-  [[ -f ${ROOT_DIR}/datasets/${DATASET} ]] && cd ${ROOT_DIR}/datasets/ && aws s3 cp s3://ethvm/datasets/${DATASET}.md5 - | md5sum --check -
-  [[ $? -ne 0 ]] && aws s3 cp s3://ethvm/datasets/${DATASET} ${ROOT_DIR}/datasets/${DATASET} || echo "You're using latest dataset version!"
+  set +o errexit
+  [[ -f ${ROOT_DIR}/datasets/${DATASET} ]] && (curl -o ${ROOT_DIR}/datasets/${DATASET}.md5 https://ethvm.s3.amazonaws.com/datasets/${DATASET}.md5 --silent 2>/dev/null && cd ${ROOT_DIR}/datasets/ && md5sum --check ${ROOT_DIR}/datasets/${DATASET}.md5 &>/dev/null)
+  [[ $? -ne 0 ]] && (echo "Downloading dataset..." && curl -o ${ROOT_DIR}/datasets/${DATASET} https://ethvm.s3.amazonaws.com/datasets/${DATASET} --progress-bar) || echo "You're using latest dataset version!"
+  set -o errexit
 }
 
 run() {

@@ -14,4 +14,4 @@ docker run --rm \
   -e KAFKA_SCHEMA_REGISTRY_URL=${KAFKA_SCHEMA_REGISTRY_URL} \
   -e KAFKA_CONNECT_URL=${KAFKA_CONNECT_URL} \
   -e MONGO_URL=${MONGO_URL} \
-  enkryptio/ethvm-utils:${version} "$@"
+  ethvm/ethvm-utils:${version} "$@"
