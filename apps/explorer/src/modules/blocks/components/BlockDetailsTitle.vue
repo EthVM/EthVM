@@ -12,10 +12,12 @@
         <v-layout row wrap align-center justify-start pl-0>
           <v-card-title class="title font-weight-bold">{{ title }}</v-card-title>
           <v-dialog v-if="hasUncles" v-model="dialog" max-width="700">
-            <v-btn round outline slot="activator" color="primary" class="text-capitalize" small>
-              {{ $tc('uncle.name', 2) }}
-              <v-icon right>fa fa-angle-right</v-icon>
-            </v-btn>
+            <template v-slot:activator="{ on }">
+              <v-btn round outline slot="activator" color="primary" class="text-capitalize"  v-on="on" small>
+                {{ $tc('uncle.name', 2) }}
+                <v-icon right>fa fa-angle-right</v-icon>
+              </v-btn>
+            </template>
             <v-card>
               <v-card-title class="title font-weight-bold">{{ $t('uncle.name', 2) }}:</v-card-title>
               <v-divider class="lineGrey"></v-divider>
@@ -24,7 +26,7 @@
                   <v-layout row justify-start align-center fill-height>
                     <v-card-title class="info--text pr-0 pl-0">{{ $t('common.hash') }}:</v-card-title>
                     <v-card-text class="text-truncate font-mono">
-                      <router-link :to="'/uncle/' + uncles[index]">{{ uncles[index] }}</router-link>
+                      <router-link :to="'/uncle/' + uncle">{{ uncle }}</router-link>
                     </v-card-text>
                   </v-layout>
                 </v-list-tile>
@@ -56,8 +58,15 @@ export default class BlockDetailsTitle extends Vue {
 
   @Prop(String) nextBlock!: string
   @Prop(String) prevBlock!: string
-  @Prop(Boolean) mined!: boolean
   @Prop(Array) uncles!: string[]
+
+  /*
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
+
+  dialog = false
 
   /*
   ===================================================================================
@@ -70,7 +79,7 @@ export default class BlockDetailsTitle extends Vue {
   }
 
   get hasUncles(): boolean {
-    return this.mined && this.uncles != null && this.uncles.length > 0
+    return !!this.uncles && this.uncles.length > 0
   }
 }
 </script>

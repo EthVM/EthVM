@@ -74,7 +74,9 @@
     "transfers": "Transfers",
     "links": "Links",
     "website": "Website",
-    "support": "Support"
+    "support": "Support",
+    "type" : "Type",
+    "circSupply": "Circulating Supply"
   },
 
   "address": {
