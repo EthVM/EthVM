@@ -22,9 +22,9 @@
           <router-link v-if="detail.link" :to="detail.link">
             <div class="text-truncate " v-html="detail.detail"></div>
           </router-link>
-          <v-layout v-else row align-center justify-start >
+          <v-layout v-else row align-center justify-start>
             <p class="text-muted text-truncate mb-0 pl-2 pr-1" v-html="detail.detail"></p>
-            <p v-if="hasPercentage" :class="priceChangeClass" >({{detail.priceChange}}%)</p>
+            <p v-if="hasPercentage" :class="priceChangeClass">({{ detail.priceChange }}%)</p>
           </v-layout>
         </div>
       </v-flex>
@@ -77,9 +77,8 @@ export default class AppDetailsListRow extends Vue {
     return !!this.detail.priceChange
   }
   get priceChangeClass(): string {
-    return (this.detail.priceChange && this.detail.priceChange.includes('+')) ? 'txSuccess--text mb-0' : 'txFail--text mb-0'
+    return this.detail.priceChange && this.detail.priceChange.includes('+') ? 'txSuccess--text mb-0' : 'txFail--text mb-0'
   }
-
 
   /*
   ===================================================================================

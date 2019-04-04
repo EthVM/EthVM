@@ -102,8 +102,7 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
         }
       ]
     } else {
-
-      const {address, owner, totalSupply, circulatingSupply, currentPrice, marketCap, totalVolume, holdersCount} = this.tokenDetails
+      const { address, owner, totalSupply, circulatingSupply, currentPrice, marketCap, totalVolume, holdersCount } = this.tokenDetails
 
       details = [
         {
@@ -129,14 +128,14 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
       }
 
       if (circulatingSupply) {
-        details.push( {
+        details.push({
           title: this.$i18n.t('token.circSupply').toString(),
           detail: this.formatStr(circulatingSupply.toString())
         })
       }
 
       if (currentPrice) {
-        details.push( {
+        details.push({
           title: this.$i18n.tc('price.name', 2),
           detail: `$${currentPrice}`,
           priceChange: this.getPriceChange()
@@ -151,25 +150,24 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
       }
 
       if (totalVolume) {
-        details.push(
-          {
-            title: this.$i18n.t('token.volume').toString(),
-            detail: `$${this.getInt(totalVolume)}`
-          })
+        details.push({
+          title: this.$i18n.t('token.volume').toString(),
+          detail: `$${this.getInt(totalVolume)}`
+        })
       }
 
       if (holdersCount) {
-        details.push( {
+        details.push({
           title: this.$i18n.t('token.holder-total'),
           detail: holdersCount
         })
       }
 
-      const {metadata, type} = this.contractDetails
+      const { metadata, type } = this.contractDetails
 
       if (metadata) {
         if (metadata.decimals) {
-          details.push( {
+          details.push({
             title: this.$i18n.t('token.decimals'),
             detail: metadata.decimals
           })
@@ -188,7 +186,7 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
         }
       }
 
-      if(type && type.string) {
+      if (type && type.string) {
         details.push({
           title: this.$i18n.t('token.type').toString(),
           detail: type.string
@@ -225,7 +223,9 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
   */
 
   getPriceChange(): string {
-    return this.tokenDetails.priceChangePercentage24h > 0 ? '+' + this.getPercent(this.tokenDetails.priceChangePercentage24h) : this.getPercent(this.tokenDetails.priceChangePercentage24h)
+    return this.tokenDetails.priceChangePercentage24h > 0
+      ? '+' + this.getPercent(this.tokenDetails.priceChangePercentage24h)
+      : this.getPercent(this.tokenDetails.priceChangePercentage24h)
   }
 }
 </script>
