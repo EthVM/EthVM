@@ -5,16 +5,17 @@
 </template>
 
 <script lang="ts">
-import { Detail } from '@app/core/components/props'
-import { Component, Vue, Prop } from 'vue-property-decorator'
-import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
+  import { Detail } from '@app/core/components/props'
+  import { Component, Mixins, Prop } from 'vue-property-decorator'
+  import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
+  import { StringConcatMixin } from '@app/core/components/mixins'
 
-@Component({
+  @Component({
   components: {
     AppDetailsList
   }
 })
-export default class HolderDetailsList extends Vue {
+export default class HolderDetailsList extends Mixins(StringConcatMixin) {
   /*
   ===================================================================================
     Props
@@ -106,7 +107,7 @@ export default class HolderDetailsList extends Vue {
         },
         {
           title: this.$i18n.t('common.balance'),
-          detail: this.holderDetails.tokens ? this.holderDetails.tokens[0].balance : 'N/A'
+          detail: this.holderDetails.tokens ? this.formatStr(this.holderDetails.tokens[0].balance) : 'N/A'
         },
         {
           title: this.$i18n.t('usd.total'),
@@ -114,11 +115,11 @@ export default class HolderDetailsList extends Vue {
         },
         {
           title: this.$i18n.t('token.transfers'),
-          detail: this.holderDetails.countTxs
+          detail: this.formatStr(this.holderDetails.countTxs)
         },
         {
           title: this.$i18n.t('token.market'),
-          detail: `$${this.tokenDetails.currentPrice}`
+          detail: `$${this.getRoundNumber(this.tokenDetails.currentPrice)}`
         },
         {
           title: this.$i18n.t('token.decimals'),
@@ -130,7 +131,7 @@ export default class HolderDetailsList extends Vue {
   }
 
   get balanceUsd() {
-    return this.holderDetails.tokens ? this.tokenDetails.currentPrice * this.holderDetails.tokens[0].balance : 'N/A'
+    return this.holderDetails.tokens ? this.getRoundNumber(this.tokenDetails.currentPrice * this.holderDetails.tokens[0].balance) : 'N/A'
   }
 }
 </script>
