@@ -1,24 +1,22 @@
 <template>
   <v-card flat color="transparent" class="mb-4">
-    <v-layout row wrap align-center justify-start class="pl-2 pr-2 mb-4">
-      <v-card-title v-for="(item, i) in crumbs" :key="i" class="pl-0 pr-1 pb-0 text-truncate">
+    <v-layout row  align-center justify-start pa-2>
+      <v-card-title v-for="(item, i) in crumbs" :key="i" class="crumb-container">
         <v-icon small v-if="item.icon" :class="[item.disabled ? 'black--text  pr-2' : 'info--text  pr-2']">{{ item.icon }}</v-icon>
-        <p v-if="item.link" class="pa-0 ma-0 text-truncate">
-          <router-link v-if="!item.plural" :class="[item.disabled ? 'black--text' : 'info--text']" :to="item.link">{{ $t(item.text) }}</router-link>
-          <router-link v-else :class="[item.disabled ? 'black--text' : 'info--text']" :to="item.link">{{ $tc(item.text, item.plural) }}</router-link>
+        <p v-if="item.link">
+          <router-link  :class="[item.disabled ? 'black--text' : 'info--text']" :to="item.link">{{ getText(item) }}</router-link>
         </p>
         <div v-else>
-          <div v-if="!item.label">
-            <p v-if="!item.plural" class="black--text pa-0 ma-0 text-truncate">{{ $t(item.text) }}</p>
-            <p v-else class="black--text pa-0 ma-0 text-truncate">{{ $tc(item.text, item.plural) }}</p>
-          </div>
-          <div v-else>
-            <p v-if="!item.plural" class="black--text pa-0 ma-0 text-truncate">{{ $t(item.text) }}{{ item.label.name }}</p>
-            <p v-else class="black--text pa-0 ma-0 text-truncate">{{ $tc(item.text, item.plural) }}{{ item.label.name }}</p>
-          </div>
+          <p class="black--text">{{ getText(item) }}:</p>
         </div>
-        <p v-if="i < crumbs.length - 1" class="pl-1 pr-0 pt-0 mb-0 caption">/</p>
+
+        <div v-if="item.label" class="crumb-label">
+          <app-hash-concat v-if="item.label.hash" :hash="item.label.name" />
+          <p v-else> {{item.label.name}} </p>
+        </div>
+        <p v-if="i < crumbs.length - 1" class="pl-1 pr-0 caption">/</p>
       </v-card-title>
+
     </v-layout>
   </v-card>
 </template>
@@ -26,8 +24,13 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { Crumb } from '@app/core/components/props'
+import AppHashConcat from '@app/core/components/ui/AppHashConcat.vue'
 
-@Component
+@Component({
+  components: {
+    AppHashConcat
+  }
+})
 export default class AppBreadCrumbs extends Vue {
   /*
   ===================================================================================
@@ -91,6 +94,10 @@ export default class AppBreadCrumbs extends Vue {
     }
   }
 
+  getText(item: Crumb) {
+    return item.plural ? this.$tc(item.text, item.plural) : this.$t(item.text)
+  }
+
   /*
   ===================================================================================
     Computed Values
@@ -107,3 +114,27 @@ export default class AppBreadCrumbs extends Vue {
   }
 }
 </script>
+
+
+<style scoped lang="css">
+
+
+
+.crumb-container{
+ min-width: fit-content;
+ max-width: 50px;
+ padding: 0px 0px;
+ margin-right: 0.5em;
+}
+
+.crumb-label {
+  padding-left: 5px;
+  width: 35%;
+}
+
+p {
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+}
+</style>
+

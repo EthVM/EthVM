@@ -285,7 +285,7 @@ export default class PageDetailsTxs extends Vue {
         disabled: true,
         plural: 1,
         label: {
-          name: `: ${this.txRef} `,
+          name: `${this.txRef} `,
           hash: true
         }
       }

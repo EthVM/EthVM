@@ -1,11 +1,11 @@
 <template>
-  <v-container class="hash-container pa-2" @click="reroute">
-    <v-layout block row :class="hashClass" align-center justify-start fill-height>
+  <div class="hash-container" @click="reroute">
+
       <p>{{ first }}</p>
       <p class="concat">{{ middle }}</p>
       <p>{{ last }}</p>
-    </v-layout>
-  </v-container>
+
+  </div>
 </template>
 
 <script lang="ts">
@@ -63,7 +63,10 @@ export default class AppHashConcat extends Vue {
 
 .hash-container {
   min-width: 80px;
+  display: flex;
+  flex-shrink: 2;
 }
+
 .concat{
   overflow: hidden;
   text-overflow: ellipsis;

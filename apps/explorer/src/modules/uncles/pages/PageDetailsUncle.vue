@@ -223,7 +223,7 @@ export default class PageDetailsUncle extends Vue {
         disabled: true,
         plural: 1,
         label: {
-          name: `: ${this.uncleRef}`,
+          name: `${this.uncleRef}`,
           hash: true
         }
       }
