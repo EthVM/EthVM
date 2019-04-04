@@ -24,7 +24,7 @@
     <!-- End Table Header -->
 
     <!-- Start Rows -->
-    <v-card color="white" v-for="tx in transfersPage" class="transparent" flat :key="tx.transactionHash">
+    <v-card color="white" v-for="(tx, index) in transfersPage" class="transparent" flat :key="index + '-' + tx.transactionHash">
       <v-layout align-center justify-start row fill-height pr-3>
         <!-- Column 1 -->
         <v-flex xs6 sm8 md5>
