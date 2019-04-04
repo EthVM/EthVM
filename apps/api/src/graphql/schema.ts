@@ -233,7 +233,7 @@ export class EthplorerTokenInfo {
 }
 
 export class EthplorerTokenOperation {
-    timestamp?: number;
+    timestamp?: Long;
     transactionHash?: string;
     tokenInfo?: EthplorerTokenInfo;
     type?: string;

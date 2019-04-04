@@ -76,7 +76,16 @@ export class TokenTransferService {
 
     const { operations } = res.data
 
-    return operations ? operations.map(o => new EthplorerTokenOperationDto(o)) : []
+    return operations ?
+      operations.map(o => new EthplorerTokenOperationDto(o))
+        .map(o => { // Convert timestamp from Ethplorer API
+        const {timestamp} = o
+        if (timestamp) {
+          o.timestamp = timestamp * 1000
+        }
+        return o
+      }) :
+      []
   }
 
   async fetchTokenHolders(address: string): Promise<EthplorerTokenHolderDto[]> {
