@@ -92,5 +92,7 @@ query tokenExchangeRateByAddress($address: String!) {
     priceChangePercentage24h
     symbol
     totalSupply
+    owner
+    holdersCount
   }
 }

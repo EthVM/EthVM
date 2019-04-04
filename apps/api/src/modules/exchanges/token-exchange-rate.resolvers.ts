@@ -4,10 +4,12 @@ import { TokenExchangeRateDto } from '@app/modules/exchanges/token-exchange-rate
 import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe'
 import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
+import { TokenTransferService } from '@app/modules/token-transfers/token-transfer.service'
 
 @Resolver('TokenExchangeRate')
 export class TokenExchangeRateResolvers {
-  constructor(private readonly exchangeService: ExchangeService) {}
+  constructor(private readonly exchangeService: ExchangeService,
+              private readonly tokenTransferService: TokenTransferService) {}
 
   @Query()
   async quote(@Args('symbol') symbol: string, @Args('to') to: string) {
@@ -34,6 +36,9 @@ export class TokenExchangeRateResolvers {
   @Query()
   async tokenExchangeRateByAddress(@Args('address', ParseAddressPipe) address: string) {
     const entity = await this.exchangeService.findTokenExchangeRateByAddress(address)
-    return entity ? new TokenExchangeRateDto(entity) : null
+    // Get missing info (owner, holdersCount) from Ethplorer API
+    const tokenInfo = await this.tokenTransferService.fetchTokenInfo(address)
+    const combined = {...entity, ...tokenInfo}
+    return combined ? new TokenExchangeRateDto(combined) : null
   }
 }

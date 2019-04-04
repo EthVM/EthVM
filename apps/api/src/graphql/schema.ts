@@ -490,8 +490,10 @@ export class TokenExchangeRate {
     priceChange24h?: Decimal;
     priceChangePercentage24h?: Decimal;
     symbol?: string;
-    totalSupply?: Long;
+    totalSupply?: string;
     totalVolume?: Decimal;
+    owner?: string;
+    holdersCount?: number;
 }
 
 export class TokenTransfer {

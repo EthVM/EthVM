@@ -112,3 +112,9 @@ type EthplorerAddressToken {
   totalIn: Decimal
   totalOut: Decimal
 }
+
+type EthplorerTokenInfo {
+  address: String
+  owner: String
+  holdersCount: Int
+}

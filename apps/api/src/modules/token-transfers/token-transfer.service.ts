@@ -10,6 +10,7 @@ import { MongoRepository } from 'typeorm'
 import { VmEngineService } from '@app/shared/vm-engine.service'
 import { ExchangeService } from '@app/modules/exchanges/exchange.service'
 import { TokenDto } from '@app/modules/token-transfers/dto/token.dto'
+import { EthplorerTokenInfoDto } from '@app/modules/token-transfers/dto/ethplorer-token-info.dto'
 
 @Injectable()
 export class TokenTransferService {
@@ -150,6 +151,29 @@ export class TokenTransferService {
     const { operations } = res.data
 
     return operations.map(o => new EthplorerTokenOperationDto(o))
+  }
+
+  async fetchTokenInfo(address: string): Promise<EthplorerTokenInfoDto | null> {
+    address = `0x${address}`
+
+    const baseUrl = this.configService.ethplorer.url
+    const apiKey = this.configService.ethplorer.apiKey
+    const url = `${baseUrl}getTokenInfo/${address}?apiKey=${apiKey}`
+
+    let res
+
+    try {
+      res = await axios.get(url)
+    } catch (err) {
+      this.handleEthplorerError(err)
+    }
+
+    if (res.status !== 200) {
+      throw new HttpException(res.statusText, res.status)
+    }
+
+    const {data} = res
+    return data ? new EthplorerTokenInfoDto(data) : null
   }
 
   private handleEthplorerError(err) {

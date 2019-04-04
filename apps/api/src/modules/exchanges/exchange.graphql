@@ -38,8 +38,10 @@ type TokenExchangeRate {
   priceChange24h: Decimal
   priceChangePercentage24h: Decimal
   symbol: String
-  totalSupply: Long
+  totalSupply: String
   totalVolume: Decimal
+  owner: String
+  holdersCount: Int
 }
 
 enum TokenExchangeRateFilter {
