@@ -1,6 +1,6 @@
 <template>
-  <v-card flat color="transparent" class="mb-4">
-    <v-layout row  align-center justify-start pa-2>
+  <v-card flat color="transparent" class="mt-2 mb-4">
+    <v-layout row wrap align-center justify-start pa-2>
       <v-card-title v-for="(item, i) in crumbs" :key="i" class="crumb-container">
         <v-icon small v-if="item.icon" :class="[item.disabled ? 'black--text  pr-2' : 'info--text  pr-2']">{{ item.icon }}</v-icon>
         <p v-if="item.link">
@@ -9,14 +9,12 @@
         <div v-else>
           <p class="black--text">{{ getText(item) }}:</p>
         </div>
-
         <div v-if="item.label" class="crumb-label">
-          <app-hash-concat v-if="item.label.hash" :hash="item.label.name" />
-          <p v-else> {{item.label.name}} </p>
+          <p v-if="!item.label.hash"> {{item.label.name}} </p>
+          <p v-else>{{getHash(item.label.name)}}</p>
         </div>
         <p v-if="i < crumbs.length - 1" class="pl-1 pr-0 caption">/</p>
       </v-card-title>
-
     </v-layout>
   </v-card>
 </template>
@@ -24,13 +22,8 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { Crumb } from '@app/core/components/props'
-import AppHashConcat from '@app/core/components/ui/AppHashConcat.vue'
 
-@Component({
-  components: {
-    AppHashConcat
-  }
-})
+@Component
 export default class AppBreadCrumbs extends Vue {
   /*
   ===================================================================================
@@ -98,6 +91,11 @@ export default class AppBreadCrumbs extends Vue {
     return item.plural ? this.$tc(item.text, item.plural) : this.$t(item.text)
   }
 
+  getHash(hash: string): string {
+    const n = hash.length
+    return  `${hash.slice(0, 4)}...${hash.slice(n - 4, n)}`
+  }
+
   /*
   ===================================================================================
     Computed Values
@@ -112,6 +110,7 @@ export default class AppBreadCrumbs extends Vue {
       link: '/'
     }
   }
+
 }
 </script>
 
@@ -121,10 +120,9 @@ export default class AppBreadCrumbs extends Vue {
 
 
 .crumb-container{
- min-width: fit-content;
- max-width: 50px;
- padding: 0px 0px;
- margin-right: 0.5em;
+  min-width: fit-content;
+  padding: 0px 0px;
+  margin-right: 0.5em;
 }
 
 .crumb-label {
