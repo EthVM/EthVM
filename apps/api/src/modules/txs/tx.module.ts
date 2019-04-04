@@ -8,6 +8,6 @@ import { SubscriptionsModule } from '@app/subscriptions/subscriptions.module'
 @Module({
   imports: [TypeOrmModule.forFeature([TransactionEntity]), SubscriptionsModule],
   providers: [TxService, TxResolvers],
-  exports: [TxService],
+  exports: [TxService]
 })
 export class TxModule {}

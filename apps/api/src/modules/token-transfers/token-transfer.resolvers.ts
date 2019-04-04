@@ -14,7 +14,7 @@ export class TokenTransferResolvers {
   async addressTokenTransfers(
     @Args('address', ParseAddressPipe) address: string,
     @Args('limit', ParseLimitPipe) limit?: number,
-    @Args('page', ParsePagePipe) page?: number,
+    @Args('page', ParsePagePipe) page?: number
   ) {
     const entities = await this.tokenTransferService.findAddressTokenTransfers(address, limit, page)
     return entities.map(e => new TokenExchangeRateDto(e))
@@ -26,7 +26,7 @@ export class TokenTransferResolvers {
     @Args('holder') holder: string,
     @Args('filter') filter?: string,
     @Args('limit', ParseLimitPipe) limit?: number,
-    @Args('page', ParsePagePipe) page?: number,
+    @Args('page', ParsePagePipe) page?: number
   ) {
     const entities = await this.tokenTransferService.findAddressTokenTransfersByHolder(address, holder, filter, limit, page)
     return entities.map(e => new TokenExchangeRateDto(e))

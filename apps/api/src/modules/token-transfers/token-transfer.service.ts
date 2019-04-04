@@ -19,7 +19,7 @@ export class TokenTransferService {
     private readonly tokenTransferRepository: MongoRepository<TokenTransferEntity>,
     private readonly configService: ConfigService,
     private readonly vmEngine: VmEngineService,
-    private readonly exchangeService: ExchangeService,
+    private readonly exchangeService: ExchangeService
   ) {}
 
   async findAddressTokenTransfers(address: string, take: number = 10, page: number = 0): Promise<TokenTransferEntity[]> {
@@ -28,7 +28,7 @@ export class TokenTransferService {
       where: { contract: address, transferType: { $not: { $eq: 'ETHER' } } },
       take,
       skip,
-      order: { timestamp: -1 },
+      order: { timestamp: -1 }
     })
   }
 
@@ -37,7 +37,7 @@ export class TokenTransferService {
     holder: string,
     filter: string = 'all',
     take: number = 10,
-    page: number = 0,
+    page: number = 0
   ): Promise<TokenTransferEntity[]> {
     const skip = take * page
     let where
@@ -76,16 +76,18 @@ export class TokenTransferService {
 
     const { operations } = res.data
 
-    return operations ?
-      operations.map(o => new EthplorerTokenOperationDto(o))
-        .map(o => { // Convert timestamp from Ethplorer API
-        const {timestamp} = o
-        if (timestamp) {
-          o.timestamp = timestamp * 1000
-        }
-        return o
-      }) :
-      []
+    return operations
+      ? operations
+          .map(o => new EthplorerTokenOperationDto(o))
+          .map(o => {
+            // Convert timestamp from Ethplorer API
+            const { timestamp } = o
+            if (timestamp) {
+              o.timestamp = timestamp * 1000
+            }
+            return o
+          })
+      : []
   }
 
   async fetchTokenHolders(address: string): Promise<EthplorerTokenHolderDto[]> {
@@ -159,16 +161,18 @@ export class TokenTransferService {
 
     const { operations } = res.data
 
-    return operations ?
-      operations.map(o => new EthplorerTokenOperationDto(o))
-        .map(o => { // Convert timestamp from Ethplorer API
-          const {timestamp} = o
-          if (timestamp) {
-            o.timestamp = timestamp * 1000
-          }
-          return o
-        }) :
-      []
+    return operations
+      ? operations
+          .map(o => new EthplorerTokenOperationDto(o))
+          .map(o => {
+            // Convert timestamp from Ethplorer API
+            const { timestamp } = o
+            if (timestamp) {
+              o.timestamp = timestamp * 1000
+            }
+            return o
+          })
+      : []
   }
 
   async fetchTokenInfo(address: string): Promise<EthplorerTokenInfoDto | null> {
@@ -190,7 +194,7 @@ export class TokenTransferService {
       throw new HttpException(res.statusText, res.status)
     }
 
-    const {data} = res
+    const { data } = res
     return data ? new EthplorerTokenInfoDto(data) : null
   }
 

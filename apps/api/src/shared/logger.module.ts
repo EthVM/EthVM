@@ -6,13 +6,9 @@ import winston from 'winston'
   imports: [
     WinstonModule.forRoot({
       level: 'info',
-      format: winston.format.combine(
-        winston.format.colorize(),
-        winston.format.simple(),
-      ),
-      transports: [new winston.transports.Console()],
-
-    }),
-  ],
+      format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
+      transports: [new winston.transports.Console()]
+    })
+  ]
 })
 export class LoggerModule {}

@@ -8,8 +8,7 @@ import { TokenTransferService } from '@app/modules/token-transfers/token-transfe
 
 @Resolver('TokenExchangeRate')
 export class TokenExchangeRateResolvers {
-  constructor(private readonly exchangeService: ExchangeService,
-              private readonly tokenTransferService: TokenTransferService) {}
+  constructor(private readonly exchangeService: ExchangeService, private readonly tokenTransferService: TokenTransferService) {}
 
   @Query()
   async quote(@Args('symbol') symbol: string, @Args('to') to: string) {
@@ -38,7 +37,7 @@ export class TokenExchangeRateResolvers {
     const entity = await this.exchangeService.findTokenExchangeRateByAddress(address)
     // Get missing info (owner, holdersCount) from Ethplorer API
     const tokenInfo = await this.tokenTransferService.fetchTokenInfo(address)
-    const combined = {...entity, ...tokenInfo}
+    const combined = { ...entity, ...tokenInfo }
     return combined ? new TokenExchangeRateDto(combined) : null
   }
 }

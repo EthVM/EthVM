@@ -22,7 +22,7 @@ export class ProcessingMetadataResolvers {
       resolve: payload => {
         return new BlockDto(payload.value)
       },
-      subscribe: () => this.pubSub.asyncIterator('blocks'),
+      subscribe: () => this.pubSub.asyncIterator('blocks')
     }
   }
 }

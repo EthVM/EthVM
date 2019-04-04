@@ -35,7 +35,7 @@ import { LoggerModule } from '@app/shared/logger.module'
     UncleModule,
     StatisticModule,
     SearchModule,
-    LoggerModule,
-  ],
+    LoggerModule
+  ]
 })
 export class AppModule {}

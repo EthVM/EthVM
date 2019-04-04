@@ -10,7 +10,7 @@ export enum Duration {
   YEAR = 'YEAR',
   MONTH = 'MONTH',
   WEEK = 'WEEK',
-  DAY = 'DAY',
+  DAY = 'DAY'
 }
 
 @Injectable()
@@ -47,7 +47,7 @@ export class DurationService {
 
     return {
       from,
-      to,
+      to
     }
   }
 }

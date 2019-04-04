@@ -30,7 +30,7 @@ export class BlockMetricResolvers {
       resolve: payload => {
         return new BlockMetricDto(payload.value)
       },
-      subscribe: () => this.pubSub.asyncIterator('block_metrics'),
+      subscribe: () => this.pubSub.asyncIterator('block_metrics')
     }
   }
 }
