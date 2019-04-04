@@ -33,7 +33,7 @@ dependencies {
   implementation("com.github.davidmoten:rxjava2-jdbc:0.2.4")
 
   // Web3
-  implementation("org.web3j:parity:4.0.3")
+  implementation("org.web3j:parity:4.2.0")
 
   // Utils
   implementation("io.arrow-kt:arrow-core:${ext.get("arrow-core-version") as String}")
