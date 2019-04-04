@@ -4,6 +4,19 @@ protocol Processing {
   import idl "common.avdl";
   import idl "capture.avdl";
 
+  record TransactionKeyRecord {
+    string hash;
+  }
+
+  record TransactionReceiptKeyRecord {
+    string transactionHash;
+  }
+
+  record TraceKeyRecord {
+    string transactionHash;
+    array<int> traceAddress;
+  }
+
   record FungibleBalanceKeyRecord {
     string address;
     union { null, string } contract = null;
@@ -30,14 +43,14 @@ protocol Processing {
     FungibleTokenType tokenType;
     FungibleBalanceDeltaType deltaType;
     io.enkrypt.avro.common.TraceLocationRecord traceLocation;
-    string amount;
+    decimal(78,0) amount;
 
     union { null, string } address = null;
     union { null, string } contractAddress = null;
   }
 
   record FungibleBalanceRecord {
-    string amount;
+    decimal(78,0) amount;
   }
 
   record FungibleBalanceDeltaListRecord {
@@ -47,11 +60,11 @@ protocol Processing {
     union { null, string } blockHash = null;
   }
 
-  //
+//
 
   record NonFungibleBalanceKeyRecord {
     string contract;
-    string tokenId;
+    decimal(78,0) tokenId;
   }
 
   enum NonFungibleTokenType {
@@ -67,7 +80,7 @@ protocol Processing {
     string to;
 
     union { null, string } contract = null;
-    union { null, string } tokenId;
+    union { null, decimal(78,0) } tokenId;
 
   }
 
@@ -83,21 +96,21 @@ protocol Processing {
     union { null, string } blockHash = null;
   }
 
-  //
+//
 
   record BlockAuthorRecord {
     string author;
-    string blockNumber;
+    decimal(78,0) blockNumber;
     string blockHash;
   }
 
   record TransactionGasPriceRecord {
-    string blockNumber;
+    decimal(78,0) blockNumber;
     string blockHash;
     string transactionHash;
     int transactionPosition;
     string address;
-    string gasPrice;
+    decimal(78,0) gasPrice;
   }
 
   record TransactionGasPriceListRecord {
@@ -106,7 +119,7 @@ protocol Processing {
   }
 
   record TransactionGasUsedRecord {
-    string gasUsed;
+    decimal(78,0) gasUsed;
   }
 
   record TransactionGasUsedListRecord {
@@ -115,12 +128,12 @@ protocol Processing {
   }
 
   record TransactionFeeRecord {
-    string blockNumber;
+    decimal(78,0) blockNumber;
     string blockHash;
     string transactionHash;
     int transactionPosition;
     string address;
-    string transactionFee;
+    decimal(78,0) transactionFee;
   }
 
   record TransactionFeeListRecord {
@@ -128,7 +141,7 @@ protocol Processing {
     union { null, string } blockHash = null;
   }
 
-  // metrics
+// metrics
 
   record BlockMetricsRecord {
     union { null, string } hash = null;
@@ -140,13 +153,13 @@ protocol Processing {
     union { null, int } numInternalTxs = null;
     union { null, int } numPendingTxs = null;
     union { null, int } numUncles = null;
-    union { null, string } difficulty = null;
-    union { null, string } totalDifficulty = null;
-    union { null, string } totalGasPrice = null;
-    union { null, string } avgGasLimit = null;
-    union { null, string } avgGasPrice = null;
-    union { null, string } totalTxFees = null;
-    union { null, string } avgTxFees = null;
+    union { null, decimal(78,0) } difficulty = null;
+    union { null, decimal(78,0) } totalDifficulty = null;
+    union { null, decimal(78,0) } totalGasPrice = null;
+    union { null, decimal(78,0) } avgGasLimit = null;
+    union { null, decimal(78,0) } avgGasPrice = null;
+    union { null, decimal(78,0) } totalTxFees = null;
+    union { null, decimal(78,0) } avgTxFees = null;
   }
 
   record MetricKeyRecord {
@@ -164,7 +177,7 @@ protocol Processing {
 
   }
 
-  // Processing Metadata
+// Processing Metadata
 
   record ProcessingMetadataKeyRecord {
     string name;
@@ -180,7 +193,7 @@ protocol Processing {
     union { null, bytes } `bigInteger` = null;
   }
 
-  // address metadata
+// address metadata
 
   enum AddressMetadataType {
     OUT_TX_COUNT, IN_TX_COUNT, TOTAL_TX_COUNT, MINER, CONTRACT_CREATOR

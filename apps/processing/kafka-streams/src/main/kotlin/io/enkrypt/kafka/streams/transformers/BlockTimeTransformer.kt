@@ -56,7 +56,7 @@ class BlockTimeTransformer(
     val timestamp = value.getTimestamp()
     checkNotNull(timestamp) { "value cannot have a null timestamp" }
 
-    blockTimesStore.put(key.getNumber(), timestamp)
+    blockTimesStore.put(key.getNumberBI().toHex(), timestamp)
 
     val blockNumber = key.getNumberBI()
 

@@ -10,24 +10,24 @@ import io.enkrypt.avro.processing.FungibleBalanceRecord
 import io.enkrypt.avro.processing.FungibleTokenType
 import io.enkrypt.common.extensions.getAmountBI
 import io.enkrypt.common.extensions.getNumberBI
-import io.enkrypt.common.extensions.getTransactionFeeBI
+import io.enkrypt.common.extensions.hexToBI
 import io.enkrypt.common.extensions.reverse
 import io.enkrypt.common.extensions.setAmountBI
 import io.enkrypt.common.extensions.setBlockNumberBI
 import io.enkrypt.common.extensions.toEtherBalanceDeltas
 import io.enkrypt.common.extensions.toFungibleBalanceDeltas
 import io.enkrypt.kafka.streams.Serdes
-import io.enkrypt.kafka.streams.config.Topics.CanonicalBlockAuthors
-import io.enkrypt.kafka.streams.config.Topics.CanonicalBlocks
-import io.enkrypt.kafka.streams.config.Topics.CanonicalReceiptErc20Deltas
+import io.enkrypt.kafka.streams.config.Topics.CanonicalBlockAuthor
+import io.enkrypt.kafka.streams.config.Topics.CanonicalBlockHeader
 import io.enkrypt.kafka.streams.config.Topics.CanonicalMinerFeesEtherDeltas
+import io.enkrypt.kafka.streams.config.Topics.CanonicalReceiptErc20Deltas
 import io.enkrypt.kafka.streams.config.Topics.CanonicalReceipts
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTraces
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTracesEtherDeltas
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTransactionFees
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTransactionFeesEtherDeltas
+import io.enkrypt.kafka.streams.config.Topics.FungibleBalance
 import io.enkrypt.kafka.streams.config.Topics.FungibleBalanceDeltas
-import io.enkrypt.kafka.streams.config.Topics.FungibleBalances
 import io.enkrypt.kafka.streams.transformers.OncePerBlockTransformer
 import io.enkrypt.kafka.streams.utils.ERC20Abi
 import io.enkrypt.kafka.streams.utils.toTopic
@@ -99,9 +99,9 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
         Materialized.with(Serdes.FungibleBalanceKey(), Serdes.FungibleBalance())
       )
       .toStream()
-      .toTopic(FungibleBalances)
+      .toTopic(FungibleBalance)
 
-    FungibleBalances.stream(builder)
+    FungibleBalance.stream(builder)
       .peek { k, v -> logger.info { "Balance update | ${k.getAddress()}, ${k.getContract()} -> ${v.getAmount()}" } }
   }
 
@@ -112,7 +112,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
 
     // add a transformer to guarantee we only emit once per block number so we don't re-introduce synthetic events in the event of a fork
 
-    val canonicalBlocks = CanonicalBlocks.stream(builder)
+    val canonicalBlocks = CanonicalBlockHeader.stream(builder)
       .transform(
         TransformerSupplier { OncePerBlockTransformer(appConfig.unitTesting) },
         *OncePerBlockTransformer.STORE_NAMES
@@ -144,7 +144,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
                       .build()
                   )
                   .setAddress(address)
-                  .setAmount(balance)
+                  .setAmountBI(balance.hexToBI())
                   .build()
               }
 
@@ -245,7 +245,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
 
     mapToFungibleBalanceDeltas(CanonicalTransactionFeesEtherDeltas.stream(builder))
 
-    CanonicalBlockAuthors.stream(builder)
+    CanonicalBlockAuthor.stream(builder)
       .join(
         txFeesStream,
         { left, right ->
@@ -257,7 +257,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
           } else {
 
             val totalTxFees = right.getTransactionFees()
-              .map { it.getTransactionFeeBI() }
+              .map { it.getTransactionFee().toBigIntegerExact() }
               .fold(BigInteger.ZERO) { memo, next -> memo + next }
 
             FungibleBalanceDeltaRecord.newBuilder()

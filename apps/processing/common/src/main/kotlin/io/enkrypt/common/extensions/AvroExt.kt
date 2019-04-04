@@ -26,169 +26,96 @@ import io.enkrypt.avro.processing.TransactionFeeListRecord
 import io.enkrypt.avro.processing.TransactionFeeRecord
 import io.enkrypt.avro.processing.TransactionGasPriceRecord
 import io.enkrypt.avro.processing.TransactionGasUsedRecord
+import org.apache.avro.Conversions
+import org.apache.avro.LogicalTypes
+import java.math.BigDecimal
 import java.math.BigInteger
 
-// BigInteger to hex helpers
 
-fun CanonicalKeyRecord.getNumberBI() = getNumber().hexToBI()
+fun CanonicalKeyRecord.getNumberBI() = getNumber().toBigIntegerExact()
 
-fun CanonicalKeyRecord.Builder.setNumberBI(number: BigInteger) = setNumber(number.toHex())
+fun CanonicalKeyRecord.Builder.setNumberBI(number: BigInteger) = setNumber(number.toBigDecimal())
 
-fun TraceCallActionRecord.getValueBI() = getValue().hexToBI()
+fun TraceCallActionRecord.getValueBI() = getValue().toBigIntegerExact()
 
-fun TraceCallActionRecord.Builder.setValueBI(value: BigInteger) = setValue(value.toHex())
+fun TraceCallActionRecord.Builder.setValueBI(value: BigInteger) = setValue(value.toBigDecimal())
 
-fun TraceCallActionRecord.getGasBI() = getGas().hexToBI()
+fun TraceCallActionRecord.Builder.setGasBI(gas: BigInteger) = setGas(gas.toBigDecimal())
 
-fun TraceCallActionRecord.Builder.setGasBI(gas: BigInteger) = setGas(gas.toHex())
+fun TraceCreateActionRecord.getValueBI() = getValue().toBigIntegerExact()
 
-fun TraceCreateActionRecord.getValueBI() = getValue().hexToBI()
+fun TraceCreateActionRecord.Builder.setValueBI(value: BigInteger) = setValue(value.toBigDecimal())
 
-fun TraceCreateActionRecord.Builder.setValueBI(value: BigInteger) = setValue(value.toHex())
+fun TraceCreateActionRecord.Builder.setGasBI(gas: BigInteger) = setGas(gas.toBigDecimal())
 
-fun TraceCreateActionRecord.getGasBI() = getGas().hexToBI()
+fun TraceDestroyActionRecord.getBalanceBI() = getBalance().toBigIntegerExact()
 
-fun TraceCreateActionRecord.Builder.setGasBI(gas: BigInteger) = setGas(gas.toHex())
+fun TraceDestroyActionRecord.Builder.setBalanceBI(balance: BigInteger) = setBalance(balance.toBigDecimal())
 
-fun TraceDestroyActionRecord.getBalanceBI() = getBalance().hexToBI()
+fun TraceResultRecord.Builder.setGasUsedBI(gasUsed: BigInteger) = setGasUsed(gasUsed.toBigDecimal())
 
-fun TraceDestroyActionRecord.Builder.setBalanceBI(balance: BigInteger) = setBalance(balance.toHex())
+fun TraceRewardActionRecord.Builder.setValueBI(value: BigInteger) = setValue(value.toBigDecimal())
 
-fun TraceResultRecord.getGasUsedBI() = getGasUsed().hexToBI()
+fun TraceRecord.Builder.setBlockNumberBI(blockNumber: BigInteger) = setBlockNumber(blockNumber.toBigDecimal())
 
-fun TraceResultRecord.Builder.setGasUsedBI(gasUsed: BigInteger) = setGasUsed(gasUsed.toHex())
+fun TransactionReceiptRecord.Builder.setBlockNumberBI(blockNumber: BigInteger) = setBlockNumber(blockNumber.toBigDecimal())
 
-fun TraceRewardActionRecord.getValueBI() = getValue().hexToBI()
+fun TransactionReceiptRecord.Builder.setCumulativeGasUsedBI(cumulativeGasUsed: BigInteger) = setCumulativeGasUsed(cumulativeGasUsed.toBigDecimal())
 
-fun TraceRewardActionRecord.Builder.setValueBI(value: BigInteger) = setValue(value.toHex())
+fun TransactionReceiptRecord.Builder.setGasUsedBI(gasUsed: BigInteger) = setGasUsed(gasUsed.toBigDecimal())
 
-fun TraceRecord.getBlockNumberBI() = getBlockNumber().hexToBI()
+fun TransactionRecord.Builder.setBlockNumberBI(blockNumber: BigInteger) = setBlockNumber(blockNumber.toBigDecimal())
 
-fun TraceRecord.Builder.setBlockNumberBI(blockNumber: BigInteger) = setBlockNumber(blockNumber.toHex())
+fun TransactionRecord.Builder.setValueBI(value: BigInteger) = setValue(value.toBigDecimal())
 
-fun TransactionReceiptRecord.getBlockNumberBI() = getBlockNumber().hexToBI()
+fun TransactionRecord.getGasPriceBI() = getGasPrice().toBigIntegerExact()
 
-fun TransactionReceiptRecord.Builder.setBlockNumberBI(blockNumber: BigInteger) = setBlockNumber(blockNumber.toHex())
+fun TransactionRecord.Builder.setGasPriceBI(gasPrice: BigInteger) = setGasPrice(gasPrice.toBigDecimal())
 
-fun TransactionReceiptRecord.getCumulativeGasUsedBI() = getCumulativeGasUsed().hexToBI()
+fun TransactionRecord.getGasBI() = getGas().toBigIntegerExact()
 
-fun TransactionReceiptRecord.Builder.setCumulativeGasUsedBI(cumulativeGasUsed: BigInteger) = setCumulativeGasUsed(cumulativeGasUsed.toHex())
+fun TransactionRecord.Builder.setGasBI(gas: BigInteger) = setGas(gas.toBigDecimal())
 
-fun TransactionReceiptRecord.getGasUsedBI() = getGasUsed().hexToBI()
+fun BlockHeaderRecord.Builder.setNumberBI(number: BigInteger) = setNumber(number.toBigDecimal())
 
-fun TransactionReceiptRecord.Builder.setGasUsedBI(gasUsed: BigInteger) = setGasUsed(gasUsed.toHex())
+fun BlockHeaderRecord.Builder.setGasLimitBI(gasLimit: BigInteger) = setGasLimit(gasLimit.toBigDecimal())
 
-fun TransactionRecord.getBlockNumberBI() = getBlockNumber().hexToBI()
+fun BlockHeaderRecord.Builder.setGasUsedBI(gasUsed: BigInteger) = setGasUsed(gasUsed.toBigDecimal())
 
-fun TransactionRecord.Builder.setBlockNumberBI(blockNumber: BigInteger) = setBlockNumber(blockNumber.toHex())
+fun BlockHeaderRecord.Builder.setDifficultyBI(difficulty: BigInteger) = setDifficulty(difficulty.toBigDecimal())
 
-fun TransactionRecord.getValueBI() = getValue().hexToBI()
+fun BlockHeaderRecord.Builder.setTotalDifficultyBI(totalDifficulty: BigInteger) = setTotalDifficulty(totalDifficulty.toBigDecimal())
 
-fun TransactionRecord.Builder.setValueBI(value: BigInteger) = setValue(value.toHex())
+fun TraceLocationRecord.Builder.setBlockNumberBI(blockNumber: BigInteger) = setBlockNumber(blockNumber.toBigDecimal())
 
-fun TransactionRecord.getGasPriceBI() = getGasPrice().hexToBI()
+fun TraceLocationRecord.getBlockNumberBI() = getBlockNumber().toBigIntegerExact()
 
-fun TransactionRecord.Builder.setGasPriceBI(gasPrice: BigInteger) = setGasPrice(gasPrice.toHex())
+fun FungibleBalanceDeltaRecord.getAmountBI() = getAmount().toBigIntegerExact()
 
-fun TransactionRecord.getGasBI() = getGas().hexToBI()
+fun FungibleBalanceDeltaRecord.Builder.setAmountBI(amount: BigInteger) = setAmount(amount.toBigDecimal())
 
-fun TransactionRecord.Builder.setGasBI(gas: BigInteger) = setGas(gas.toHex())
+fun FungibleBalanceRecord.getAmountBI() = getAmount().toBigIntegerExact()
 
-fun BlockHeaderRecord.getNumberBI() = getNumber().hexToBI()
+fun FungibleBalanceRecord.Builder.setAmountBI(amount: BigInteger) = setAmount(amount.toBigDecimal())
 
-fun BlockHeaderRecord.Builder.setNumberBI(number: BigInteger) = setNumber(number.toHex())
+fun NonFungibleBalanceDeltaRecord.Builder.setTokenIdBI(tokenId: BigInteger) = setTokenId(tokenId.toBigDecimal())
 
-fun BlockHeaderRecord.getGasLimitBI() = getGasLimit().hexToBI()
+fun TransactionGasPriceRecord.getGasPriceBI() = getGasPrice().toBigIntegerExact()
 
-fun BlockHeaderRecord.Builder.setGasLimitBI(gasLimit: BigInteger) = setGasLimit(gasLimit.toHex())
+fun TransactionGasUsedRecord.getGasUsedBI() = getGasUsed().toBigIntegerExact()
 
-fun BlockHeaderRecord.getGasUsedBI() = getGasUsed().hexToBI()
+fun TransactionFeeRecord.Builder.setTransactionFeeBI(blockNumber: BigInteger) = setTransactionFee(blockNumber.toBigDecimal())
 
-fun BlockHeaderRecord.Builder.setGasUsedBI(gasUsed: BigInteger) = setGasUsed(gasUsed.toHex())
 
-fun BlockHeaderRecord.getDifficultyBI() = getDifficulty().hexToBI()
+fun BlockMetricsRecord.Builder.setTotalGasPriceBI(totalGasPrice: BigInteger) = setTotalGasPrice(totalGasPrice.toBigDecimal())
 
-fun BlockHeaderRecord.Builder.setDifficultyBI(difficulty: BigInteger) = setDifficulty(difficulty.toHex())
+fun BlockMetricsRecord.Builder.setAvgGasLimitBI(avgGasLimit: BigInteger) = setAvgGasLimit(avgGasLimit.toBigDecimal())
 
-fun BlockHeaderRecord.getNephewNumberBI() = getNephewNumber().hexToBI()
+fun BlockMetricsRecord.Builder.setAvgGasPriceBI(avgGasPrice: BigInteger) = setAvgGasPrice(avgGasPrice.toBigDecimal())
 
-fun BlockHeaderRecord.Builder.setNephewNumberBI(newphewNumber: BigInteger) = setNephewNumber(newphewNumber.toHex())
+fun BlockMetricsRecord.Builder.setTotalTxFeesBI(totalTxFees: BigInteger) = setTotalTxFees(totalTxFees.toBigDecimal())
 
-fun BlockHeaderRecord.getUncleRewardBI() = getUncleReward().hexToBI()
-
-fun BlockHeaderRecord.Builder.setUncleRewardBI(uncleReward: BigInteger) = setUncleReward(uncleReward.toHex())
-
-fun BlockHeaderRecord.getTotalDifficultyBI() = getTotalDifficulty().hexToBI()
-
-fun BlockHeaderRecord.Builder.setTotalDifficultyBI(totalDifficulty: BigInteger) = setTotalDifficulty(totalDifficulty.toHex())
-
-fun TraceLocationRecord.Builder.setBlockNumberBI(blockNumber: BigInteger) = setBlockNumber(blockNumber.toHex())
-
-fun TraceLocationRecord.getBlockNumberBI() = getBlockNumber().hexToBI()
-
-fun FungibleBalanceDeltaRecord.getAmountBI() = getAmount().hexToBI()
-
-fun FungibleBalanceDeltaRecord.Builder.setAmountBI(amount: BigInteger) = setAmount(amount.toHex())
-
-fun FungibleBalanceRecord.getAmountBI() = getAmount().hexToBI()
-
-fun FungibleBalanceRecord.Builder.setAmountBI(amount: BigInteger) = setAmount(amount.toHex())
-
-fun NonFungibleBalanceDeltaRecord.getTokenIdBI() = getTokenId().hexToBI()
-
-fun NonFungibleBalanceDeltaRecord.Builder.setTokenIdBI(tokenId: BigInteger) = setTokenId(tokenId.toHex())
-
-fun BlockAuthorRecord.getBlockNumberBI() = getBlockNumber().hexToBI()
-
-fun BlockAuthorRecord.Builder.setBlockNumberBI(blockNumber: BigInteger) = setBlockNumber(blockNumber.toHex())
-
-fun TransactionGasPriceRecord.getBlockNumberBI() = getBlockNumber().hexToBI()
-
-fun TransactionGasPriceRecord.Builder.setBlockNumberBI(blockNumber: BigInteger) = setBlockNumber(blockNumber.toHex())
-
-fun TransactionGasPriceRecord.getGasPriceBI() = getGasPrice().hexToBI()
-
-fun TransactionGasPriceRecord.Builder.setGasPriceBI(gasPrice: BigInteger) = setGasPrice(gasPrice.toHex())
-
-fun TransactionGasUsedRecord.getGasUsedBI() = getGasUsed().hexToBI()
-
-fun TransactionGasUsedRecord.Builder.setGasUsedBI(gasUsed: BigInteger) = setGasUsed(gasUsed.toHex())
-
-fun TransactionFeeRecord.getBlockNumberBI() = getBlockNumber().hexToBI()
-
-fun TransactionFeeRecord.Builder.setBlockNumberBI(blockNumber: BigInteger) = setBlockNumber(blockNumber.toHex())
-
-fun TransactionFeeRecord.getTransactionFeeBI() = getTransactionFee().hexToBI()
-
-fun TransactionFeeRecord.Builder.setTransactionFeeBI(blockNumber: BigInteger) = setTransactionFee(blockNumber.toHex())
-
-fun BlockMetricsRecord.getDifficultyBI() = getDifficulty().hexToBI()
-
-fun BlockMetricsRecord.Builder.setDifficultyBI(difficulty: BigInteger) = setDifficulty(difficulty.toHex())
-
-fun BlockMetricsRecord.getTotalDifficultyBI() = getTotalDifficulty().hexToBI()
-
-fun BlockMetricsRecord.Builder.setTotalDifficultyBI(totalDifficulty: BigInteger) = setTotalDifficulty(totalDifficulty.toHex())
-
-fun BlockMetricsRecord.getTotalGasPriceBI() = getTotalGasPrice().hexToBI()
-
-fun BlockMetricsRecord.Builder.setTotalGasPriceBI(totalGasPrice: BigInteger) = setTotalGasPrice(totalGasPrice.toHex())
-
-fun BlockMetricsRecord.getAvgGasLimitBI() = getAvgGasLimit().hexToBI()
-
-fun BlockMetricsRecord.Builder.setAvgGasLimitBI(avgGasLimit: BigInteger) = setAvgGasLimit(avgGasLimit.toHex())
-
-fun BlockMetricsRecord.getAvgGasPriceBI() = getAvgGasPrice().hexToBI()
-
-fun BlockMetricsRecord.Builder.setAvgGasPriceBI(avgGasPrice: BigInteger) = setAvgGasPrice(avgGasPrice.toHex())
-
-fun BlockMetricsRecord.getTotalTxFeesBI() = getTotalTxFees().hexToBI()
-
-fun BlockMetricsRecord.Builder.setTotalTxFeesBI(totalTxFees: BigInteger) = setTotalTxFees(totalTxFees.toHex())
-
-fun BlockMetricsRecord.getAvgTxFeesBI() = getAvgTxFees().hexToBI()
-
-fun BlockMetricsRecord.Builder.setAvgTxFeesBI(avgTxFees: BigInteger) = setAvgTxFees(avgTxFees.toHex())
+fun BlockMetricsRecord.Builder.setAvgTxFeesBI(avgTxFees: BigInteger) = setAvgTxFees(avgTxFees.toBigDecimal())
 
 //
 
@@ -209,7 +136,7 @@ fun TransactionFeeRecord.toFungibleBalanceDelta(): FungibleBalanceDeltaRecord =
         .build()
     )
     .setAddress(getAddress())
-    .setAmountBI(getTransactionFeeBI().negate())
+    .setAmountBI(getTransactionFee().toBigIntegerExact().negate())
     .build()
 
 fun TraceRecord.hasError(): Boolean {
@@ -243,11 +170,11 @@ fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> 
 
       deltas
     }.flatten()
-    .filter { delta -> delta.getAmount() != null && !(delta.getAmount() == "" || delta.getAmount() == "0") }
+    .filter { delta -> delta.getAmount() != null && delta.getAmount() != BigDecimal.ZERO }
 
 fun FungibleBalanceDeltaRecord.reverse() =
   FungibleBalanceDeltaRecord.newBuilder(this)
-    .setAmount(getAmount().toBigInteger().negate().toString())
+    .setAmountBI(getAmountBI().negate())
     .build()
 
 fun NonFungibleBalanceDeltaRecord.reverse() =

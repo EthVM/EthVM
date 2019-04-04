@@ -7,7 +7,6 @@ import io.enkrypt.avro.processing.BlockMetricsRecord
 import io.enkrypt.common.extensions.getBalanceBI
 import io.enkrypt.common.extensions.getGasBI
 import io.enkrypt.common.extensions.getGasPriceBI
-import io.enkrypt.common.extensions.getTransactionFeeBI
 import io.enkrypt.common.extensions.getValueBI
 import io.enkrypt.common.extensions.setAvgGasLimitBI
 import io.enkrypt.common.extensions.setAvgGasPriceBI
@@ -15,7 +14,7 @@ import io.enkrypt.common.extensions.setAvgTxFeesBI
 import io.enkrypt.common.extensions.setTotalGasPriceBI
 import io.enkrypt.common.extensions.setTotalTxFeesBI
 import io.enkrypt.kafka.streams.config.Topics.BlockMetrics
-import io.enkrypt.kafka.streams.config.Topics.CanonicalBlocks
+import io.enkrypt.kafka.streams.config.Topics.CanonicalBlockHeader
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTraces
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTransactionFees
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTransactions
@@ -53,7 +52,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
       addStateStore(BlockTimeTransformer.blockTimesStore(appConfig.unitTesting))
     }
 
-    CanonicalBlocks.stream(builder)
+    CanonicalBlockHeader.stream(builder)
       .transform(
         TransformerSupplier { BlockTimeTransformer(appConfig.unitTesting) },
         *BlockTimeTransformer.STORE_NAMES
@@ -165,7 +164,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
         val transactionFees = txFeeList.getTransactionFees()
 
         val totalTxFees = transactionFees.fold(BigInteger.ZERO) { memo, next ->
-          memo + next.getTransactionFeeBI()
+          memo + next.getTransactionFee().toBigIntegerExact()
         }
 
         val count = transactionFees.size.toBigInteger()

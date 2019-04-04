@@ -22,22 +22,19 @@ dependencies {
   implementation(project(":avro"))
 
   // Kafka
-  compileOnly("org.apache.kafka:connect-api:2.1.0")
-  implementation("io.confluent:kafka-schema-registry-client:5.1.0")
-  implementation("io.confluent:kafka-connect-avro-converter:5.1.0")
+  compileOnly("org.apache.kafka:connect-api:2.2.0")
+  implementation("io.confluent:kafka-schema-registry-client:5.2.0")
+  implementation("io.confluent:kafka-connect-avro-converter:5.2.0")
 
   // Mongo
   implementation("org.mongodb:mongodb-driver-sync:3.10.1")
-
-  // Postgres and JDBC
-  implementation("com.zaxxer:HikariCP:3.3.1")
-  implementation("org.postgresql:postgresql:42.2.5")
 
   // Web3
   implementation("org.web3j:parity:4.0.3")
 
   // Utils
   implementation("com.datamountaineer:kafka-connect-common:1.1.5")
+  implementation("joda-time:joda-time:2.10.1")
   implementation("io.arrow-kt:arrow-core:${ext.get("arrow-core-version") as String}")
   implementation("ch.qos.logback:logback-classic:${ext.get("logback-version") as String}")
   implementation("io.github.microutils:kotlin-logging:${ext.get("kotlin-logging-version") as String}")
@@ -46,7 +43,7 @@ dependencies {
   // Tests
   testImplementation("io.kotlintest:kotlintest-runner-junit5:${ext.get("kotlintest-version") as String}")
   testImplementation("io.mockk:mockk:${ext.get("mockk-version") as String}")
-  testImplementation("org.apache.kafka:connect-api:2.1.0")
+  testImplementation("org.apache.kafka:connect-api:2.2.0")
 }
 
 project.tasks.getting(Test::class) { useJUnitPlatform {} }

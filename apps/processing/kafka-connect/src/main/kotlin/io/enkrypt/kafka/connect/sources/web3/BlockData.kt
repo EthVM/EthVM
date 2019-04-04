@@ -57,7 +57,7 @@ fun Transaction.toTransactionRecord(builder: TransactionRecord.Builder): Transac
     .setHash(hash)
     .setTransactionIndex(transactionIndex.intValueExact())
     .setBlockNumberBI(blockNumber)
-    .setNonce(nonce.toString())
+    .setNonce(nonce.toBigDecimal())
     .setFrom(from)
     .setTo(to)
     .setValueBI(value)

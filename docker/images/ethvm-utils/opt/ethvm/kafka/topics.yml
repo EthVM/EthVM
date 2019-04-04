@@ -1,6 +1,6 @@
 topics:
 
-  - name: canonical_blocks
+  - name: canonical_block_header
     replicationFactor: 1
     partitions: 12
     config:
@@ -30,7 +30,25 @@ topics:
     config:
       cleanup.policy: compact
 
-  - name: canonical_block_authors
+  - name: transaction
+    replicationFactor: 1
+    partitions: 12
+    config:
+      retention.ms: 21600000
+
+  - name: transaction_receipt
+    replicationFactor: 1
+    partitions: 12
+    config:
+      retention.ms: 21600000
+
+  - name: transaction_trace
+    replicationFactor: 1
+    partitions: 12
+    config:
+      retention.ms: 21600000
+
+  - name: canonical_block_author
     replicationFactor: 1
     partitions: 12
     config:
@@ -96,7 +114,7 @@ topics:
     config:
       retention.ms: -1
 
-  - name: fungible_balances
+  - name: fungible_balance
     replicationFactor: 1
     partitions: 12
     config:
@@ -108,7 +126,7 @@ topics:
     config:
       retention.ms: -1
 
-  - name: non_fungible_balances
+  - name: non_fungible_balance
     replicationFactor: 1
     partitions: 12
     config:
@@ -150,7 +168,7 @@ topics:
     config:
       retention.ms: -1
 
-  - name: contracts
+  - name: contract
     replicationFactor: 1
     partitions: 12
     config:

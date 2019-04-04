@@ -10,8 +10,11 @@ import io.enkrypt.avro.capture.ContractLifecycleRecord
 import io.enkrypt.avro.capture.ContractMetadataRecord
 import io.enkrypt.avro.capture.ContractRecord
 import io.enkrypt.avro.capture.TraceListRecord
+import io.enkrypt.avro.capture.TraceRecord
 import io.enkrypt.avro.capture.TransactionListRecord
 import io.enkrypt.avro.capture.TransactionReceiptListRecord
+import io.enkrypt.avro.capture.TransactionReceiptRecord
+import io.enkrypt.avro.capture.TransactionRecord
 import io.enkrypt.avro.exchange.ExchangeRateRecord
 import io.enkrypt.avro.exchange.SymbolKeyRecord
 import io.enkrypt.avro.processing.AddressMetadataKeyRecord
@@ -28,11 +31,14 @@ import io.enkrypt.avro.processing.NonFungibleBalanceDeltaListRecord
 import io.enkrypt.avro.processing.NonFungibleBalanceDeltaRecord
 import io.enkrypt.avro.processing.NonFungibleBalanceKeyRecord
 import io.enkrypt.avro.processing.NonFungibleBalanceRecord
+import io.enkrypt.avro.processing.TraceKeyRecord
 import io.enkrypt.avro.processing.TransactionFeeListRecord
 import io.enkrypt.avro.processing.TransactionGasPriceListRecord
 import io.enkrypt.avro.processing.TransactionGasPriceRecord
 import io.enkrypt.avro.processing.TransactionGasUsedListRecord
 import io.enkrypt.avro.processing.TransactionGasUsedRecord
+import io.enkrypt.avro.processing.TransactionKeyRecord
+import io.enkrypt.avro.processing.TransactionReceiptKeyRecord
 import io.enkrypt.avro.tokens.EthTokenListsKeyRecord
 import io.enkrypt.kafka.streams.config.KafkaConfig
 import org.koin.standalone.KoinComponent
@@ -84,6 +90,18 @@ object Serdes : KoinComponent {
     configure(config, true)
   }
 
+  fun TransactionKey() = SpecificAvroSerde<TransactionKeyRecord>(registryClient).apply {
+    configure(config, true)
+  }
+
+  fun TransactionReceiptKey() = SpecificAvroSerde<TransactionReceiptKeyRecord>(registryClient).apply {
+    configure(config, true)
+  }
+
+  fun TraceKey() = SpecificAvroSerde<TraceKeyRecord>(registryClient).apply {
+    configure(config, true)
+  }
+
   fun Block() = SpecificAvroSerde<BlockHeaderRecord>(registryClient).apply {
     configure(config, false)
   }
@@ -97,6 +115,18 @@ object Serdes : KoinComponent {
   }
 
   fun TraceList() = SpecificAvroSerde<TraceListRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun Transaction() = SpecificAvroSerde<TransactionRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun TransactionReceipt() = SpecificAvroSerde<TransactionReceiptRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun Trace() = SpecificAvroSerde<TraceRecord>(registryClient).apply {
     configure(config, false)
   }
 

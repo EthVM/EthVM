@@ -10,7 +10,7 @@ import io.enkrypt.kafka.streams.Serdes
 import io.enkrypt.kafka.streams.config.Topics.CanonicalContractLifecycle
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTraces
 import io.enkrypt.kafka.streams.config.Topics.ContractLifecycleEvents
-import io.enkrypt.kafka.streams.config.Topics.Contracts
+import io.enkrypt.kafka.streams.config.Topics.Contract
 import io.enkrypt.kafka.streams.utils.toTopic
 import mu.KLogger
 import mu.KotlinLogging
@@ -180,7 +180,7 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
         },
         Materialized.with(Serdes.ContractKey(), Serdes.Contract())
       ).toStream()
-      .toTopic(Contracts)
+      .toTopic(Contract)
 
     return builder.build()
   }

@@ -11,6 +11,7 @@ import io.enkrypt.kafka.streams.di.Modules.kafkaStreams
 import io.enkrypt.kafka.streams.processors.BlockAuthorProcessor
 import io.enkrypt.kafka.streams.processors.BlockMetricsProcessor
 import io.enkrypt.kafka.streams.processors.ContractLifecycleProcessor
+import io.enkrypt.kafka.streams.processors.FlatMapProcessor
 import io.enkrypt.kafka.streams.processors.FungibleBalanceProcessor
 import io.enkrypt.kafka.streams.processors.KafkaProcessor
 import io.enkrypt.kafka.streams.processors.NonFungibleBalanceProcessor
@@ -86,7 +87,8 @@ class Cli : CliktCommand() {
       NonFungibleBalanceProcessor(),
       BlockAuthorProcessor(),
       BlockMetricsProcessor(),
-      ContractLifecycleProcessor()
+      ContractLifecycleProcessor(),
+      FlatMapProcessor()
 //      EthTokensProcessor(),
 //      ExchangeRatesProcessor()
     ).forEach {

@@ -1,8 +1,8 @@
 package io.enkrypt.kafka.streams.processors
 
 import io.enkrypt.avro.processing.BlockAuthorRecord
-import io.enkrypt.kafka.streams.config.Topics.CanonicalBlockAuthors
-import io.enkrypt.kafka.streams.config.Topics.CanonicalBlocks
+import io.enkrypt.kafka.streams.config.Topics.CanonicalBlockAuthor
+import io.enkrypt.kafka.streams.config.Topics.CanonicalBlockHeader
 import io.enkrypt.kafka.streams.utils.toTopic
 import mu.KLogger
 import mu.KotlinLogging
@@ -29,7 +29,7 @@ class BlockAuthorProcessor : AbstractKafkaProcessor() {
     // Create stream builder
     val builder = StreamsBuilder().apply {}
 
-    CanonicalBlocks.stream(builder)
+    CanonicalBlockHeader.stream(builder)
       .mapValues { v ->
         when (v) {
           null -> null
@@ -39,7 +39,7 @@ class BlockAuthorProcessor : AbstractKafkaProcessor() {
             .setBlockHash(v.getHash())
             .build()
         }
-      }.toTopic(CanonicalBlockAuthors)
+      }.toTopic(CanonicalBlockAuthor)
 
     return builder.build()
   }

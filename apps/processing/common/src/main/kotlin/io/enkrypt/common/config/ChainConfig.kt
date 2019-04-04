@@ -5,6 +5,7 @@ import io.enkrypt.avro.processing.FungibleBalanceDeltaRecord
 import io.enkrypt.avro.processing.FungibleBalanceDeltaType
 import io.enkrypt.avro.processing.FungibleTokenType
 import io.enkrypt.common.extensions.ether
+import io.enkrypt.common.extensions.setAmountBI
 import io.enkrypt.common.extensions.setBlockNumberBI
 import java.math.BigInteger
 
@@ -110,7 +111,7 @@ open class DaoHardForkConfig(override val constants: ChainConstants = ChainConst
                 .build()
             )
             .setAddress(address)
-            .setAmount(balance.negate().toString())
+            .setAmountBI(balance.negate())
             .build(),
 
           // add to withdraw account
@@ -123,7 +124,7 @@ open class DaoHardForkConfig(override val constants: ChainConstants = ChainConst
                 .build()
             )
             .setAddress(withdrawAccount)
-            .setAmount(balance.toString())
+            .setAmountBI(balance)
             .build()
         )
       }.flatten()

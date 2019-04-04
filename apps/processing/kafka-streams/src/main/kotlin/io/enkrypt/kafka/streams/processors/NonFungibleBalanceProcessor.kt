@@ -14,7 +14,7 @@ import io.enkrypt.kafka.streams.Serdes
 import io.enkrypt.kafka.streams.config.Topics.CanonicalReceiptErc721Deltas
 import io.enkrypt.kafka.streams.config.Topics.CanonicalReceipts
 import io.enkrypt.kafka.streams.config.Topics.NonFungibleBalanceDeltas
-import io.enkrypt.kafka.streams.config.Topics.NonFungibleBalances
+import io.enkrypt.kafka.streams.config.Topics.NonFungibleBalance
 import io.enkrypt.kafka.streams.utils.ERC721Abi
 import io.enkrypt.kafka.streams.utils.toTopic
 import mu.KotlinLogging
@@ -98,9 +98,9 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
         Materialized.with(Serdes.NonFungibleBalanceKey(), Serdes.NonFungibleBalance())
       )
       .toStream()
-      .toTopic(NonFungibleBalances)
+      .toTopic(NonFungibleBalance)
 
-    NonFungibleBalances.stream(builder)
+    NonFungibleBalance.stream(builder)
       .peek { k, v -> logger.info { "Balance update | ${k.getContract()}, ${k.getTokenId()} -> ${v.getAddress()}" } }
   }
 

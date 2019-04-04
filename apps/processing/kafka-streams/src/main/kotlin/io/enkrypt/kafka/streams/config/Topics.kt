@@ -29,10 +29,14 @@ data class KafkaTopic<K, V>(
 
 object Topics {
 
-  val CanonicalBlocks = KafkaTopic("canonical_blocks", Serdes.CanonicalKey(), Serdes.BlockHeader())
+  val CanonicalBlockHeader = KafkaTopic("canonical_block_header", Serdes.CanonicalKey(), Serdes.BlockHeader())
   val CanonicalTransactions = KafkaTopic("canonical_transactions", Serdes.CanonicalKey(), Serdes.TransactionList())
   val CanonicalReceipts = KafkaTopic("canonical_receipts", Serdes.CanonicalKey(), Serdes.ReceiptList())
   val CanonicalTraces = KafkaTopic("canonical_traces", Serdes.CanonicalKey(), Serdes.TraceList())
+
+  val Transaction = KafkaTopic("transaction", Serdes.TransactionKey(), Serdes.Transaction())
+  val TransactionReceipt = KafkaTopic("transaction_receipt", Serdes.TransactionReceiptKey(), Serdes.TransactionReceipt())
+  val Traces = KafkaTopic("transaction_trace", Serdes.TraceKey(), Serdes.Trace())
 
   val CanonicalTracesEtherDeltas = KafkaTopic("canonical_traces_ether_deltas", Serdes.CanonicalKey(), Serdes.FungibleBalanceDeltaList())
   val CanonicalTransactionFeesEtherDeltas = KafkaTopic("canonical_transaction_fees_ether_deltas", Serdes.CanonicalKey(), Serdes.FungibleBalanceDeltaList())
@@ -42,10 +46,10 @@ object Topics {
   val CanonicalReceiptErc721Deltas = KafkaTopic("canonical_receipt_erc721_deltas", Serdes.CanonicalKey(), Serdes.NonFungibleBalanceDeltaList())
 
   val FungibleBalanceDeltas = KafkaTopic("fungible_balance_deltas", Serdes.FungibleBalanceKey(), Serdes.FungibleBalanceDelta())
-  val FungibleBalances = KafkaTopic("fungible_balances", Serdes.FungibleBalanceKey(), Serdes.FungibleBalance())
+  val FungibleBalance = KafkaTopic("fungible_balance", Serdes.FungibleBalanceKey(), Serdes.FungibleBalance())
 
   val NonFungibleBalanceDeltas = KafkaTopic("non_fungible_balance_deltas", Serdes.NonFungibleBalanceKey(), Serdes.NonFungibleBalanceDelta())
-  val NonFungibleBalances = KafkaTopic("non_fungible_balances", Serdes.NonFungibleBalanceKey(), Serdes.NonFungibleBalance())
+  val NonFungibleBalance = KafkaTopic("non_fungible_balance", Serdes.NonFungibleBalanceKey(), Serdes.NonFungibleBalance())
 
   val BlockMetrics = KafkaTopic("block_metrics", Serdes.CanonicalKey(), Serdes.BlockMetrics())
   val TraceBlockMetrics = KafkaTopic("trace_block_metrics", Serdes.CanonicalKey(), Serdes.BlockMetrics())
@@ -56,11 +60,11 @@ object Topics {
   val CanonicalGasUsed = KafkaTopic("canonical_gas_used", Serdes.CanonicalKey(), Serdes.TransactionGasUsedList())
   val CanonicalTransactionFees = KafkaTopic("canonical_transaction_fees", Serdes.CanonicalKey(), Serdes.TransactionFeeList())
 
-  val CanonicalBlockAuthors = KafkaTopic("canonical_block_authors", Serdes.CanonicalKey(), Serdes.BlockAuthor())
+  val CanonicalBlockAuthor = KafkaTopic("canonical_block_author", Serdes.CanonicalKey(), Serdes.BlockAuthor())
 
   val CanonicalContractLifecycle = KafkaTopic("canonical_contract_lifecycle", Serdes.CanonicalKey(), Serdes.ContractLifecycleList())
   val ContractLifecycleEvents = KafkaTopic("contract_lifecycle_events", Serdes.ContractKey(), Serdes.ContractLifecycle())
-  val Contracts = KafkaTopic("contracts", Serdes.ContractKey(), Serdes.Contract())
+  val Contract = KafkaTopic("contract", Serdes.ContractKey(), Serdes.Contract())
 
   const val ContractMetadata = "contract_metadata"
 
