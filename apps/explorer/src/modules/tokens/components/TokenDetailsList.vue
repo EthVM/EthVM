@@ -6,16 +6,17 @@
 
 <script lang="ts">
 import { Detail } from '@app/core/components/props'
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop, Mixins } from 'vue-property-decorator'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import { Hex } from '@app/core/models'
+import { StringConcatMixin } from '@app/core/components/mixins';
 
 @Component({
   components: {
     AppDetailsList
   }
 })
-export default class TokenDetailsList extends Vue {
+export default class TokenDetailsList extends Mixins(StringConcatMixin) {
   /*
   ===================================================================================
     Props
@@ -120,15 +121,16 @@ export default class TokenDetailsList extends Vue {
 
       detailsItems.push( {
           title: this.$i18n.t('token.supply'),
-          detail: this.tokenDetails.totalSupply
+          detail: this.formatStr(this.tokenDetails.totalSupply.toString())
         },
         {
           title: this.$i18n.tc('price.name', 2),
-          detail: `$${this.tokenDetails.currentPrice} (${this.tokenDetails.priceChangePercentage24h}%)`
+          detail: `$${this.tokenDetails.currentPrice}`,
+          priceChange: this.getPriceChange()
         },
         {
           title: this.$i18n.t('token.market'),
-          detail: `$${this.tokenDetails.marketCap}`
+          detail: `$${this.getRoundNumber(this.tokenDetails.marketCap)}`
         })
 
       if (this.tokenDetails.holdersCount) {
@@ -167,7 +169,7 @@ export default class TokenDetailsList extends Vue {
               if (url === null || url === '') {
                 return ''
               }
-              return `<a href="${url}" target="_BLANK"><i aria-hidden="true" class="v-icon secondary--text ${
+              return `<a href="${url}" target="_BLANK"><i aria-hidden="true" class="v-icon primary--text ${
                 icons[name]
               } pr-2 material-icons theme--light"></i></a>`
             })
@@ -180,6 +182,16 @@ export default class TokenDetailsList extends Vue {
       details = detailsItems
     }
     return details
+  }
+
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
+  getPriceChange(): string {
+    return this.tokenDetails.priceChangePercentage24h > 0 ? '+' + this.getPercent(this.tokenDetails.priceChangePercentage24h) : this.getPercent(this.tokenDetails.priceChangePercentage24h)
   }
 }
 </script>
