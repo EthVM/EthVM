@@ -12,10 +12,12 @@
         <v-layout row wrap align-center justify-start pl-0>
           <v-card-title class="title font-weight-bold">{{ title }}</v-card-title>
           <v-dialog v-if="hasUncles" v-model="dialog" max-width="700">
-            <v-btn round outline slot="activator" color="primary" class="text-capitalize" small>
-              {{ $tc('uncle.name', 2) }}
-              <v-icon right>fa fa-angle-right</v-icon>
-            </v-btn>
+            <template v-slot:activator="{ on }">
+              <v-btn round outline slot="activator" color="primary" class="text-capitalize"  v-on="on" small>
+                {{ $tc('uncle.name', 2) }}
+                <v-icon right>fa fa-angle-right</v-icon>
+              </v-btn>
+            </template>
             <v-card>
               <v-card-title class="title font-weight-bold">{{ $t('uncle.name', 2) }}:</v-card-title>
               <v-divider class="lineGrey"></v-divider>
@@ -64,7 +66,7 @@ export default class BlockDetailsTitle extends Vue {
   ===================================================================================
   */
 
-  dialog = true
+  dialog = false
 
   /*
   ===================================================================================
