@@ -376,12 +376,11 @@
     "@nestjs/common" "^5.0.0"
     "@nestjs/core" "^5.0.0"
 
-"@nestjs/testing@~5.7.3":
-  version "5.7.3"
-  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-5.7.3.tgz#e7f0a070d73a009347963dbc993ee92bd083bef5"
-  integrity sha512-rBc/pmvYhdESbKiBDWa+jL4fzcwzkgS61ls5f2eoOxQLyFmNGCQnFPG9J4xjZwYUwcYTH8SMEwjqAa5s65gehQ==
+"@nestjs/testing@^6.0.5":
+  version "6.0.5"
+  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-6.0.5.tgz#c5b8072181b6d23318818f463aca5b2ed0626232"
+  integrity sha512-LrPBckONn/ZalBC8GU5LxvgIS8DJNrdwZE4gMJz0ugodwl0c1IL3e2gIukBkUJtHYPtzN12nYevnaGYT/V1aDQ==
   dependencies:
-    deprecate "1.0.0"
     optional "0.1.4"
 
 "@nestjs/typeorm@~5.3.0":
