@@ -1,16 +1,17 @@
 package io.enkrypt.kafka.connect.sources.web3
 
 import io.enkrypt.common.extensions.hexToBI
+import arrow.core.Option
+import arrow.core.toOption
 import io.reactivex.disposables.Disposable
 import mu.KotlinLogging
-import org.web3j.protocol.websocket.WebSocketService
+import org.web3j.protocol.parity.Parity
 import java.util.concurrent.ArrayBlockingQueue
-import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicLong
 
 class CanonicalChainTracker(
-  parity: JsonRpc2_0ParityExtended,
+  parity: Parity,
   startFrom: Long
 ) {
 
@@ -27,7 +28,7 @@ class CanonicalChainTracker(
 
   private var subscription: Disposable
 
-  private var reorgs: ArrayBlockingQueue<ClosedRange<Long>> = ArrayBlockingQueue(10)
+  private var reOrgs: ArrayBlockingQueue<LongRange> = ArrayBlockingQueue(10)
 
   init {
 
@@ -47,15 +48,15 @@ class CanonicalChainTracker(
             head = heads.max()!!
             val tail = heads.min()!!
 
-            logger.debug { "New Heads notification! Current range - Tail: $tail - Head: $head" }
+            logger.debug { "New Heads notification! / Range - Tail: $tail - Head: $head" }
 
-            val reorg: List<Long> = heads.groupingBy { it }.eachCount().filter { it.value > 1 }.map { it.key }
-            if (reorg.isNotEmpty()) {
-              logger.debug { "Re-org detected! Affecting range: $reorg" }
-              val minReOrg = reorg.min()
-              val maxReOrg = reorg.max()
+            val reOrg: List<Long> = heads.groupingBy { it }.eachCount().filter { it.value > 1 }.map { it.key }
+            if (reOrg.isNotEmpty()) {
+              val minReOrg = reOrg.min()
+              val maxReOrg = reOrg.max()
               val range = LongRange(minReOrg!!, maxReOrg!!)
-              reorgs.add(range)
+              logger.debug { "Re-org detected! Affecting range: $range" }
+              reOrgs.add(range)
             }
 
             tryResetTail(tail)
@@ -78,50 +79,29 @@ class CanonicalChainTracker(
     } while (value < currentTail && !tail.compareAndSet(currentTail, value))
   }
 
-  // 1) Return a Pair<ClosedRange, Optional<ClosedRange (Re-Org)>>
-  fun nextRange(maxSize: Int = 32): ClosedRange<Long>? {
+  fun nextRange(maxSize: Int = 128): Pair<Option<LongRange>, List<LongRange>> {
 
     val currentHead = head
     val currentTail = tail.get()
-
-    logger.debug { "Requesting next range - Tail: $currentTail - Head: $currentHead" }
+    val reOrg = ArrayList<LongRange>().apply { if (reOrgs.isNotEmpty()) reOrgs.drainTo(this) }
 
     if (currentTail == currentHead) {
       logger.debug { "Tail: $currentTail == Head: $currentHead. Skipping!" }
-      return null
+      return Pair(Option.empty(), reOrg)
     }
 
     val range = currentTail.until(currentTail + maxSize) // range is not inclusive at the end
-      .let {
-        if (it.endInclusive > currentHead) {
-          currentTail.until(currentHead)
-        } else {
-          it
+      .let { range ->
+        when {
+          range.endInclusive > currentHead -> currentTail.until(currentHead)
+          else -> range
         }
       }
 
-    logger.debug { "Range: $range" }
+    logger.debug { "Next range: $range" }
 
     tail.compareAndSet(currentTail, range.endInclusive + 1)
 
-    return range
+    return Pair(range.toOption(), reOrg)
   }
-}
-
-fun main() {
-  val wsService = WebSocketService("ws://localhost:8546", false)
-  wsService.connect()
-
-  val tracker = CanonicalChainTracker(
-    JsonRpc2_0ParityExtended(wsService),
-    0
-  )
-
-  val executor = Executors.newSingleThreadScheduledExecutor()
-  executor.scheduleAtFixedRate(
-    { tracker.nextRange(32) },
-    0,
-    1,
-    TimeUnit.SECONDS
-  )
 }

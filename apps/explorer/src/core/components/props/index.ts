@@ -36,6 +36,7 @@ export interface Detail {
   copy?: boolean
   txInput?: string[]
   mono?: boolean
+  priceChange?: string
 }
 
 export interface Crumb {

@@ -30,7 +30,7 @@ dependencies {
   implementation("org.mongodb:mongodb-driver-sync:3.10.1")
 
   // Web3
-  implementation("org.web3j:parity:4.0.3")
+  implementation("org.web3j:parity:4.2.0")
 
   // Utils
   implementation("com.datamountaineer:kafka-connect-common:1.1.5")

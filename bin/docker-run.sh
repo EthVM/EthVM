@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# Give script sane defaults
-set +o nounset
-
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # import utils
@@ -94,28 +91,13 @@ up_simple() {
 }
 
 # down - stops all running docker containers, volumes, images and related stuff
-start() {
-  docker-compose start
-}
-
-# down - stops all running docker containers, volumes, images and related stuff
-stop() {
-  docker-compose stop
-}
-
-# down - stops all running docker containers, volumes, images and related stuff
 down() {
   docker-compose down -v --remove-orphans
 }
 
-# restart - restart docker services
-restart() {
-  docker-compose restart
-}
-
 # logs - outputs logs for containers
 logs() {
-  docker-compose logs "$1"
+  docker-compose logs -f "$1"
 }
 
 run() {
@@ -124,10 +106,7 @@ run() {
 
   case "${command}" in
     up)      up "${action}"       ;;
-    start)   start                ;;
-    stop)    stop                 ;;
     down)    down                 ;;
-    restart) restart              ;;
     logs)    logs "$2"            ;;
     help|*)  docker_usage; exit 0 ;;
   esac

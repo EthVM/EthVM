@@ -6,8 +6,9 @@
 
 <script lang="ts">
 import { Detail } from '@app/core/components/props'
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop, Mixins } from 'vue-property-decorator'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
+import { StringConcatMixin } from '@app/core/components/mixins'
 import { Hex } from '@app/core/models'
 
 @Component({
@@ -15,7 +16,7 @@ import { Hex } from '@app/core/models'
     AppDetailsList
   }
 })
-export default class TokenDetailsList extends Vue {
+export default class TokenDetailsList extends Mixins(StringConcatMixin) {
   /*
   ===================================================================================
     Props
@@ -101,64 +102,108 @@ export default class TokenDetailsList extends Vue {
         }
       ]
     } else {
-      const detailsItems = [
+      const { address, owner, totalSupply, circulatingSupply, currentPrice, marketCap, totalVolume, holdersCount } = this.tokenDetails
+
+      details = [
         {
           title: this.$i18n.tc('contract.name', 1),
-          detail: new Hex(this.tokenDetails.address).toString(),
-          link: this.tokenDetails ? `/address/${new Hex(this.tokenDetails.address).toString()}` : ''
-        },
-        {
-          title: this.$i18n.t('token.owner'),
-          detail: this.tokenDetails.owner ? this.tokenDetails.owner : 'REQUIRED DATA',
-          link: `/address/${this.tokenDetails.owner}`
-        },
-        {
-          title: this.$i18n.t('token.supply'),
-          detail: this.tokenDetails.totalSupply
-        },
-        {
-          title: this.$i18n.tc('price.name', 2),
-          detail: `$${this.tokenDetails.currentPrice} (${this.tokenDetails.priceChangePercentage24h}%)`
-        },
-        {
-          title: this.$i18n.t('token.market'),
-          detail: `$${this.tokenDetails.marketCap}`
-        },
-        {
-          title: this.$i18n.t('token.holder-total'),
-          detail: this.tokenDetails.holdersCount ? `${this.tokenDetails.holdersCount}` : 'REQUIRED DATA'
-        },
-        {
-          title: this.$i18n.t('token.decimals'),
-          detail: this.contractDetails.metadata.decimals
+          detail: new Hex(address).toString(),
+          link: this.tokenDetails ? `/address/${new Hex(address).toString()}` : ''
         }
       ]
 
-      if (this.contractDetails.metadata.website) {
-        detailsItems.push({
-          title: this.$i18n.t('token.website'),
-          detail: `<a href="${this.contractDetails.metadata.website}" target="_BLANK">${this.contractDetails.metadata.website}</a>`
+      if (owner) {
+        details.push({
+          title: this.$i18n.t('token.owner'),
+          detail: owner,
+          link: `/address/${owner}`
         })
       }
 
-      if (this.contractDetails.metadata.support) {
-        detailsItems.push({
-          title: this.$i18n.t('token.support'),
-          detail: `<a href="mailto:${this.contractDetails.metadata.support.email}" target="_BLANK">${this.contractDetails.metadata.support.email}</a>`
+      if (totalSupply) {
+        details.push({
+          title: this.$i18n.t('token.supply'),
+          detail: this.formatStr(totalSupply.toString())
         })
       }
 
-      if (this.contractDetails.metadata.social) {
-        detailsItems.push({
+      if (circulatingSupply) {
+        details.push({
+          title: this.$i18n.t('token.circSupply').toString(),
+          detail: this.formatStr(circulatingSupply.toString())
+        })
+      }
+
+      if (currentPrice) {
+        details.push({
+          title: this.$i18n.tc('price.name', 2),
+          detail: `$${currentPrice}`,
+          priceChange: this.getPriceChange()
+        })
+      }
+
+      if (marketCap) {
+        details.push({
+          title: this.$i18n.t('token.market'),
+          detail: `$${this.getRoundNumber(marketCap)}`
+        })
+      }
+
+      if (totalVolume) {
+        details.push({
+          title: this.$i18n.t('token.volume').toString(),
+          detail: `$${this.getInt(totalVolume)}`
+        })
+      }
+
+      if (holdersCount) {
+        details.push({
+          title: this.$i18n.t('token.holder-total'),
+          detail: holdersCount
+        })
+      }
+
+      const { metadata, type } = this.contractDetails
+
+      if (metadata) {
+        if (metadata.decimals) {
+          details.push({
+            title: this.$i18n.t('token.decimals'),
+            detail: metadata.decimals
+          })
+        }
+        if (metadata.website) {
+          details.push({
+            title: this.$i18n.t('token.website'),
+            detail: `<a href="${metadata.website}" target="_BLANK">${metadata.website}</a>`
+          })
+        }
+        if (metadata.support) {
+          details.push({
+            title: this.$i18n.t('token.support'),
+            detail: `<a href="mailto:${metadata.support.email}" target="_BLANK">${metadata.support.email}</a>`
+          })
+        }
+      }
+
+      if (type && type.string) {
+        details.push({
+          title: this.$i18n.t('token.type').toString(),
+          detail: type.string
+        })
+      }
+
+      if (metadata && metadata.social) {
+        details.push({
           title: this.$i18n.t('token.links'),
-          detail: Object.entries(this.contractDetails.metadata.social)
+          detail: Object.entries(metadata.social)
             .map(obj => {
               const name = obj[0]
               const url = obj[1]
               if (url === null || url === '') {
                 return ''
               }
-              return `<a href="${url}" target="_BLANK"><i aria-hidden="true" class="v-icon secondary--text ${
+              return `<a href="${url}" target="_BLANK"><i aria-hidden="true" class="v-icon primary--text ${
                 icons[name]
               } pr-2 material-icons theme--light"></i></a>`
             })
@@ -167,10 +212,20 @@ export default class TokenDetailsList extends Vue {
             })
         })
       }
-
-      details = detailsItems
     }
     return details
+  }
+
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
+  getPriceChange(): string {
+    return this.tokenDetails.priceChangePercentage24h > 0
+      ? '+' + this.getPercent(this.tokenDetails.priceChangePercentage24h)
+      : this.getPercent(this.tokenDetails.priceChangePercentage24h)
   }
 }
 </script>

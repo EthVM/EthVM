@@ -1,6 +1,7 @@
 package io.enkrypt.kafka.connect.sources.web3
 
-import io.enkrypt.kafka.connect.sources.web3.sources.ParityBlockAndTxSource
+import io.enkrypt.kafka.connect.sources.web3.ext.JsonRpc2_0ParityExtended
+import io.enkrypt.kafka.connect.sources.web3.sources.ParityBlocksSource
 import io.enkrypt.kafka.connect.sources.web3.sources.ParityEntitySource
 import io.enkrypt.kafka.connect.sources.web3.sources.ParityReceiptSource
 import io.enkrypt.kafka.connect.sources.web3.sources.ParityTracesSource
@@ -20,11 +21,10 @@ class ParitySourceTask : SourceTask() {
   private val logger = KotlinLogging.logger {}
 
   private lateinit var wsUrl: String
-  private lateinit var blocksTopic: String
   private lateinit var startBlockNumber: BigInteger
   private lateinit var entitiesList: List<String>
 
-  private var connectDelayMs: Long? = null
+  private var connectDelayMs: Long = -1
 
   @Volatile
   private var parity: JsonRpc2_0ParityExtended? = null
@@ -35,86 +35,22 @@ class ParitySourceTask : SourceTask() {
 
   override fun start(props: MutableMap<String, String>) {
 
-    blocksTopic = ParitySourceConnector.Config.blocksTopic(props)
     startBlockNumber = ParitySourceConnector.Config.startBlockNumber(props)
     entitiesList = ParitySourceConnector.Config.entitiesList(props)
-
-    logger.info { "Start block number: $startBlockNumber" }
-
     wsUrl = ParitySourceConnector.Config.wsUrl(props)
-  }
 
-  private fun ensureConnection() {
-
-    try {
-
-      if (parity != null) return
-
-      // stop any previous sources
-      entitySources.forEach { it.stop() }
-
-      // reconnect backoff if necessary
-
-      if (connectDelayMs != null) {
-        logger.debug { "Waiting $connectDelayMs ms before connecting" }
-        Thread.sleep(connectDelayMs!!)
-      }
-
-      // connect
-
-      logger.debug { "Connecting to $wsUrl" }
-
-      val wsService = WebSocketService(wsUrl, false)
-      wsService.connect()
-
-      parity = JsonRpc2_0ParityExtended(wsService)
-
-      // create sources
-
-      logger.info { "Entities list: $entitiesList" }
-
-      entitySources = entitiesList.map {
-        when (it) {
-          "blocksAndTransactions" -> ParityBlockAndTxSource(this.context, parity!!, "canonical_block_header", "canonical_transactions")
-          "receipts" -> ParityReceiptSource(this.context, parity!!, "canonical_receipts")
-          "traces" -> ParityTracesSource(this.context, parity!!, "canonical_traces")
-          else -> throw IllegalArgumentException("Unexpected entity: $it")
-        }
-      }
-
-      // reset reconnect logic
-      connectDelayMs = null
-    } catch (ex: Exception) {
-
-      when (ex) {
-        is IOException -> throwRetriable(ex)
-        is ConnectException -> throw RetriableException(ex)
-        else -> throw ex
-      }
-    }
-  }
-
-  private fun throwRetriable(ex: Exception): RetriableException {
-    var connectDelayMs = (this.connectDelayMs ?: 1000) * 2
-
-    if (connectDelayMs > 30000) {
-      connectDelayMs = 30000
-    }
-
-    this.connectDelayMs = connectDelayMs
-
-    throw RetriableException(ex)
+    logger.info { "Starting ParitySourceTask - Start Block #: $startBlockNumber / Entities: $entitiesList / WS Url: $wsUrl" }
   }
 
   override fun stop() {
-    logger.debug { "Stopping" }
+    logger.debug { "Stopping ParitySourceTask" }
 
     entitySources.forEach { it.stop() }
 
     parity?.shutdown()
     parity = null
 
-    logger.debug { "Stopped" }
+    logger.debug { "Stopped ParitySourceTask" }
   }
 
   override fun poll(): MutableList<SourceRecord> {
@@ -140,7 +76,7 @@ class ParitySourceTask : SourceTask() {
       return sourceRecords.toMutableList()
     } catch (ex: Exception) {
 
-      logger.error(ex) { "Exception detected" }
+      logger.error(ex) { "ParitySourceTask - Exception detected" }
 
       parity?.shutdown()
       parity = null
@@ -158,5 +94,71 @@ class ParitySourceTask : SourceTask() {
         else -> throw ex
       }
     }
+  }
+
+  private fun ensureConnection() {
+
+    try {
+
+      if (parity != null) {
+        return
+      }
+
+      // stop any previous sources
+
+      entitySources.forEach { it.stop() }
+
+      // reconnect backoff if necessary
+
+      if (connectDelayMs != -1L) {
+        logger.debug { "Waiting $connectDelayMs ms before connecting" }
+        Thread.sleep(connectDelayMs)
+      }
+
+      // connect
+
+      logger.debug { "Connecting to $wsUrl" }
+
+      val wsService = WebSocketService(wsUrl, false)
+      wsService.connect()
+
+      parity = JsonRpc2_0ParityExtended(wsService)
+
+      // create sources
+
+      logger.info { "Entities list: $entitiesList" }
+
+      entitySources = entitiesList.map {
+        when (it) {
+          "blocks" -> ParityBlocksSource(context, parity!!, "canonical-blocks", "canonical-transactions")
+          "receipts" -> ParityReceiptSource(context, parity!!, "canonical-receipts")
+          "traces" -> ParityTracesSource(context, parity!!, "canonical-traces")
+          else -> throw IllegalArgumentException("Unexpected entity: $it")
+        }
+      }
+
+      // reset reconnect logic
+      connectDelayMs = -1
+    } catch (ex: Exception) {
+
+      when (ex) {
+        is IOException -> throwRetriable(ex)
+        is ConnectException -> throw RetriableException(ex)
+        else -> throw ex
+      }
+    }
+  }
+
+  private fun throwRetriable(ex: Exception): RetriableException {
+    val delay =
+      when {
+        connectDelayMs == -1L -> 2000
+        connectDelayMs >= 30000 -> 30000
+        else -> connectDelayMs * 2
+      }
+
+    this.connectDelayMs = delay
+
+    throw RetriableException(ex)
   }
 }

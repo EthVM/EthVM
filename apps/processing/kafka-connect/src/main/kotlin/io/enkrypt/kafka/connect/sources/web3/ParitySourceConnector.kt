@@ -9,9 +9,6 @@ import io.enkrypt.kafka.connect.sources.web3.ParitySourceConnector.Config.SCHEMA
 import io.enkrypt.kafka.connect.sources.web3.ParitySourceConnector.Config.START_BLOCK_CONFIG
 import io.enkrypt.kafka.connect.sources.web3.ParitySourceConnector.Config.START_BLOCK_DEFAULT
 import io.enkrypt.kafka.connect.sources.web3.ParitySourceConnector.Config.START_BLOCK_DOC
-import io.enkrypt.kafka.connect.sources.web3.ParitySourceConnector.Config.TOPIC_BLOCKS_CONFIG
-import io.enkrypt.kafka.connect.sources.web3.ParitySourceConnector.Config.TOPIC_BLOCKS_DEFAULT
-import io.enkrypt.kafka.connect.sources.web3.ParitySourceConnector.Config.TOPIC_BLOCKS_DOC
 import io.enkrypt.kafka.connect.sources.web3.ParitySourceConnector.Config.WS_URL_CONFIG
 import io.enkrypt.kafka.connect.sources.web3.ParitySourceConnector.Config.WS_URL_DEFAULT
 import io.enkrypt.kafka.connect.sources.web3.ParitySourceConnector.Config.WS_URL_DOC
@@ -26,8 +23,8 @@ class ParitySourceConnector : SourceConnector() {
 
   override fun version() = Versions.CURRENT
 
-  override fun start(props: MutableMap<String, String>?) {
-    config = props!!
+  override fun start(props: MutableMap<String, String>) {
+    config = props
   }
 
   override fun stop() {
@@ -49,7 +46,6 @@ class ParitySourceConnector : SourceConnector() {
   override fun config(): ConfigDef = ConfigDef().apply {
 
     define(WS_URL_CONFIG, ConfigDef.Type.STRING, WS_URL_DEFAULT, ConfigDef.Importance.HIGH, WS_URL_DOC)
-    define(TOPIC_BLOCKS_CONFIG, ConfigDef.Type.STRING, TOPIC_BLOCKS_DEFAULT, ConfigDef.Importance.HIGH, TOPIC_BLOCKS_DOC)
     define(SCHEMA_REGISTRY_URL_CONFIG, ConfigDef.Type.STRING, SCHEMA_REGISTRY_URL_DEFAULT, ConfigDef.Importance.HIGH, SCHEMA_REGISTRY_URL_DOC)
     define(START_BLOCK_CONFIG, ConfigDef.Type.INT, START_BLOCK_DEFAULT, ConfigDef.Importance.LOW, START_BLOCK_DOC)
     define(ENTITIES_LIST_CONFIG, ConfigDef.Type.LIST, ENTITIES_LIST_DEFAULT, ConfigDef.Importance.LOW, ENTITIES_LIST_DOC)
@@ -61,10 +57,6 @@ class ParitySourceConnector : SourceConnector() {
     const val WS_URL_DEFAULT = "ws://parity:8546"
     const val WS_URL_DOC = "Websocket of the rpc node"
 
-    const val TOPIC_BLOCKS_CONFIG = "topic.blocks"
-    const val TOPIC_BLOCKS_DEFAULT = "blocks"
-    const val TOPIC_BLOCKS_DOC = "The topic into which blocks are published"
-
     const val SCHEMA_REGISTRY_URL_CONFIG = "schema.registry.url"
     const val SCHEMA_REGISTRY_URL_DEFAULT = "http://kafka-schema-registry:8081"
     const val SCHEMA_REGISTRY_URL_DOC = "The url of the of the kafka schema registry"
@@ -74,14 +66,10 @@ class ParitySourceConnector : SourceConnector() {
     const val START_BLOCK_DOC = "Specifies the starting block number from which to sync"
 
     const val ENTITIES_LIST_CONFIG = "entities"
-    val ENTITIES_LIST_DEFAULT = listOf("blocksAndTransactions", "receipts", "traces").joinToString(",")
+    val ENTITIES_LIST_DEFAULT = listOf("blocks", "receipts", "traces").joinToString(",")
     const val ENTITIES_LIST_DOC = "The list of entities to pull"
 
-    fun name(props: MutableMap<String, String>) = props["name"]!!
-
     fun wsUrl(props: MutableMap<String, String>) = props.getOrDefault(WS_URL_CONFIG, WS_URL_DEFAULT)
-
-    fun blocksTopic(props: MutableMap<String, String>) = props.getOrDefault(TOPIC_BLOCKS_CONFIG, TOPIC_BLOCKS_DEFAULT)
 
     fun startBlockNumber(props: MutableMap<String, String>) = props.getOrDefault(START_BLOCK_CONFIG, START_BLOCK_DEFAULT.toString()).toBigInteger()
 

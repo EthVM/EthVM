@@ -233,7 +233,7 @@ export class EthplorerTokenInfo {
 }
 
 export class EthplorerTokenOperation {
-    timestamp?: number;
+    timestamp?: Long;
     transactionHash?: string;
     tokenInfo?: EthplorerTokenInfo;
     type?: string;
@@ -292,16 +292,6 @@ export abstract class IQuery {
     abstract blockMetricByHash(hash?: string): BlockMetric | Promise<BlockMetric>;
 
     abstract blockMetrics(limit?: number, page?: number): BlockMetric[] | Promise<BlockMetric[]>;
-
-    abstract blocks(limit?: number, page?: number): Block[] | Promise<Block[]>;
-
-    abstract blockByHash(hash?: string): Block | Promise<Block>;
-
-    abstract blockByNumber(number?: number): Block | Promise<Block>;
-
-    abstract minedBlocksByAddress(address?: string, limit?: number, page?: number): Block[] | Promise<Block[]>;
-
-    abstract totalNumberOfBlocks(): number | Promise<number>;
 
     abstract contractByHash(address: string): Contract | Promise<Contract>;
 
@@ -379,6 +369,16 @@ export abstract class IQuery {
 
     abstract latestUncleBlockNumber(): number | Promise<number>;
 
+    abstract blocks(limit?: number, page?: number): Block[] | Promise<Block[]>;
+
+    abstract blockByHash(hash?: string): Block | Promise<Block>;
+
+    abstract blockByNumber(number?: number): Block | Promise<Block>;
+
+    abstract minedBlocksByAddress(address?: string, limit?: number, page?: number): Block[] | Promise<Block[]>;
+
+    abstract totalNumberOfBlocks(): number | Promise<number>;
+
     abstract temp__(): boolean | Promise<boolean>;
 }
 
@@ -450,11 +450,11 @@ export class Statistic {
 export abstract class ISubscription {
     abstract newBlockMetric(): BlockMetric | Promise<BlockMetric>;
 
-    abstract newBlock(): Block | Promise<Block>;
-
     abstract newProcessingMetadata(): ProcessingMetadata | Promise<ProcessingMetadata>;
 
     abstract newTxs(): Transaction[] | Promise<Transaction[]>;
+
+    abstract newBlock(): Block | Promise<Block>;
 }
 
 export class Support {
@@ -490,8 +490,10 @@ export class TokenExchangeRate {
     priceChange24h?: Decimal;
     priceChangePercentage24h?: Decimal;
     symbol?: string;
-    totalSupply?: Long;
+    totalSupply?: string;
     totalVolume?: Decimal;
+    owner?: string;
+    holdersCount?: number;
 }
 
 export class TokenTransfer {

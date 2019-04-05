@@ -1,17 +1,14 @@
 package io.enkrypt.kafka.connect.sources.web3.sources
 
 import io.enkrypt.kafka.connect.sources.web3.CanonicalChainTracker
-import io.enkrypt.kafka.connect.sources.web3.JsonRpc2_0ParityExtended
-import mu.KotlinLogging
+import io.enkrypt.kafka.connect.sources.web3.ext.JsonRpc2_0ParityExtended
 import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTaskContext
 
 abstract class ParityEntitySource(
-  protected val sourceContext: SourceTaskContext,
+  private val sourceContext: SourceTaskContext,
   protected val parity: JsonRpc2_0ParityExtended
 ) {
-
-  protected val logger = KotlinLogging.logger {}
 
   abstract val partitionKey: Map<String, Any>
 
@@ -23,7 +20,7 @@ abstract class ParityEntitySource(
       .offsetStorageReader()
       .offset(partitionKey) ?: emptyMap()
 
-    var startBlockNumber = sourcePartition.getOrDefault("blockNumber", 0L) as Long - 200L
+    var startBlockNumber = sourcePartition.getOrDefault("blockNumber", 0L) as Long - SAFE_REORG
     if (startBlockNumber < 0) startBlockNumber = 0L
 
     CanonicalChainTracker(parity, startBlockNumber)
@@ -45,13 +42,14 @@ abstract class ParityEntitySource(
       throw error
     }
 
-    val range = chainTracker.nextRange(batchSize)
+    val (range, reOrgs) = chainTracker.nextRange(batchSize)
 
-    return when (range) {
-      null -> emptyList()
-      else -> fetchRange(range)
-    }
+    return range.fold({ emptyList() }, { fetchRange(it) })
   }
 
-  abstract fun fetchRange(range: ClosedRange<Long>): List<SourceRecord>
+  abstract fun fetchRange(range: LongRange): List<SourceRecord>
+
+  companion object {
+    const val SAFE_REORG = 200L
+  }
 }
