@@ -14,7 +14,7 @@ import org.apache.kafka.connect.source.SourceTaskContext
 import org.web3j.protocol.core.DefaultBlockParameter
 import org.web3j.protocol.core.methods.response.Transaction
 
-class ParityBlockAndTxSource(
+class ParityBlocksSource(
   sourceContext: SourceTaskContext,
   parity: JsonRpc2_0ParityExtended,
   private val blocksTopic: String,

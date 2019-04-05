@@ -1,7 +1,7 @@
 package io.enkrypt.kafka.connect.sources.web3
 
 import io.enkrypt.kafka.connect.sources.web3.ext.JsonRpc2_0ParityExtended
-import io.enkrypt.kafka.connect.sources.web3.sources.ParityBlockAndTxSource
+import io.enkrypt.kafka.connect.sources.web3.sources.ParityBlocksSource
 import io.enkrypt.kafka.connect.sources.web3.sources.ParityEntitySource
 import io.enkrypt.kafka.connect.sources.web3.sources.ParityReceiptSource
 import io.enkrypt.kafka.connect.sources.web3.sources.ParityTracesSource
@@ -15,7 +15,6 @@ import java.io.IOException
 import java.math.BigInteger
 import java.net.ConnectException
 import java.util.concurrent.ExecutionException
-import java.util.concurrent.TimeUnit
 
 class ParitySourceTask : SourceTask() {
 
@@ -131,7 +130,7 @@ class ParitySourceTask : SourceTask() {
 
       entitySources = entitiesList.map {
         when (it) {
-          "blocksAndTransactions" -> ParityBlockAndTxSource(context, parity!!, "canonical-blocks", "canonical-transactions")
+          "blocks" -> ParityBlocksSource(context, parity!!, "canonical-blocks", "canonical-transactions")
           "receipts" -> ParityReceiptSource(context, parity!!, "canonical-receipts")
           "traces" -> ParityTracesSource(context, parity!!, "canonical-traces")
           else -> throw IllegalArgumentException("Unexpected entity: $it")

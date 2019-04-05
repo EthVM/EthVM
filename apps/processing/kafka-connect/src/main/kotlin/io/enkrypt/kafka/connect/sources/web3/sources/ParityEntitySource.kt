@@ -42,14 +42,9 @@ abstract class ParityEntitySource(
       throw error
     }
 
-    return chainTracker
-      .nextRange(batchSize)
-      .first
-      .fold({
-        emptyList()
-      }, {
-        fetchRange(it)
-      })
+    val (range, reOrgs) = chainTracker.nextRange(batchSize)
+
+    return range.fold({ emptyList() }, { fetchRange(it) })
   }
 
   abstract fun fetchRange(range: LongRange): List<SourceRecord>

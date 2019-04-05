@@ -84,7 +84,7 @@ import java.math.BigInteger
 import java.util.ArrayList
 import java.util.concurrent.CompletableFuture
 
-open class AbstractFakeParity : Parity {
+abstract class AbstractFakeParity : Parity {
 
   override fun parityNewAccountFromSecret(secret: String?, password: String?): Request<*, NewAccountIdentifier> {
     TODO("not implemented")
@@ -583,9 +583,9 @@ open class AbstractFakeParity : Parity {
   }
 }
 
-open class AbstractFakeWeb3JService : Web3jService {
+abstract class AbstractFakeWeb3JService : Web3jService {
   override fun <T : Response<*>?> sendAsync(request: Request<*, out Response<*>>?, responseType: Class<T>?): CompletableFuture<T> {
-    TODO("not needed")
+    TODO("not implemented")
   }
 
   override fun <T : Response<*>?> send(request: Request<*, out Response<*>>?, responseType: Class<T>?): T {
@@ -593,10 +593,10 @@ open class AbstractFakeWeb3JService : Web3jService {
   }
 
   override fun <T : Notification<*>?> subscribe(request: Request<*, out Response<*>>?, unsubscribeMethod: String?, responseType: Class<T>?): Flowable<T> {
-    TODO("not needed")
+    TODO("not implemented")
   }
 
   override fun close() {
-    TODO("not needed")
+    TODO("not implemented")
   }
 }

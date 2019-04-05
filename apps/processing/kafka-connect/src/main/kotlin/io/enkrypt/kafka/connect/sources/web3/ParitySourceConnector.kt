@@ -66,7 +66,7 @@ class ParitySourceConnector : SourceConnector() {
     const val START_BLOCK_DOC = "Specifies the starting block number from which to sync"
 
     const val ENTITIES_LIST_CONFIG = "entities"
-    val ENTITIES_LIST_DEFAULT = listOf("blocksAndTransactions", "receipts", "traces").joinToString(",")
+    val ENTITIES_LIST_DEFAULT = listOf("blocks", "receipts", "traces").joinToString(",")
     const val ENTITIES_LIST_DOC = "The list of entities to pull"
 
     fun wsUrl(props: MutableMap<String, String>) = props.getOrDefault(WS_URL_CONFIG, WS_URL_DEFAULT)
