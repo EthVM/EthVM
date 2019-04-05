@@ -50,7 +50,7 @@ class Cli : CliktCommand() {
 
   private val networkConfig: String by option(
     help = "The network config to use, one of: mainnet, ropsten",
-    envvar = "ENKRYPTIO_NET_CONFIG"
+    envvar = "ETH_NET_CONFIG"
   ).default("mainnet")
 
   // DI

@@ -1,5 +1,5 @@
 {
-  "name": "enkryptio-ethlists-source",
+  "name": "ethvm-ethlists-source",
   "config": {
     "connector.class": "com.ethvm.kafka.connect.sources.tokens.EthListsTokensSourceConnector",
     "tasks.max": 1,

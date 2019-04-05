@@ -1,5 +1,5 @@
 {
-  "name": "enkryptio-exchange-rates-source",
+  "name": "ethvm-exchange-rates-source",
   "config": {
     "connector.class": "com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector",
     "tasks.max": 1
