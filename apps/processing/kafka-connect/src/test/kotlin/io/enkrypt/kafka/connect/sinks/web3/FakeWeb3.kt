@@ -582,21 +582,3 @@ abstract class AbstractFakeParity : Parity {
     TODO("not implemented")
   }
 }
-
-abstract class AbstractFakeWeb3JService : Web3jService {
-  override fun <T : Response<*>?> sendAsync(request: Request<*, out Response<*>>?, responseType: Class<T>?): CompletableFuture<T> {
-    TODO("not implemented")
-  }
-
-  override fun <T : Response<*>?> send(request: Request<*, out Response<*>>?, responseType: Class<T>?): T {
-    TODO("not implemented")
-  }
-
-  override fun <T : Notification<*>?> subscribe(request: Request<*, out Response<*>>?, unsubscribeMethod: String?, responseType: Class<T>?): Flowable<T> {
-    TODO("not implemented")
-  }
-
-  override fun close() {
-    TODO("not implemented")
-  }
-}
