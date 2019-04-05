@@ -10,13 +10,13 @@
     "connection.user": "postgres",
     "connection.password": "1234",
     "transforms": "snakeCaseKey,snakeCaseValue,dropFields,toJsonKey,toJsonValue",
-    "transforms.snakeCaseKey.type": "io.enkrypt.kafka.connect.transforms.SnakeCase$Key",
-    "transforms.snakeCaseValue.type": "io.enkrypt.kafka.connect.transforms.SnakeCase$Value",
+    "transforms.snakeCaseKey.type": "com.ethvm.kafka.connect.transforms.SnakeCase$Key",
+    "transforms.snakeCaseValue.type": "com.ethvm.kafka.connect.transforms.SnakeCase$Value",
     "transforms.dropFields.type": "org.apache.kafka.connect.transforms.ReplaceField$Value",
     "transforms.dropFields.blacklist": "uncles",
-    "transforms.toJsonKey.type": "io.enkrypt.kafka.connect.transforms.JsonField$Key",
+    "transforms.toJsonKey.type": "com.ethvm.kafka.connect.transforms.JsonField$Key",
     "transforms.toJsonKey.whitelist": "logs,action,result,trace_address",
-    "transforms.toJsonValue.type": "io.enkrypt.kafka.connect.transforms.JsonField$Value",
+    "transforms.toJsonValue.type": "com.ethvm.kafka.connect.transforms.JsonField$Value",
     "transforms.toJsonValue.whitelist": "logs,action,result,trace_address,trace_location,trace_created_at,trace_destroyed_at,init,code",
     "pk.mode": "record_key"
   }

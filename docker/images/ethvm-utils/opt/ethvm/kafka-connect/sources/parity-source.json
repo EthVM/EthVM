@@ -1,7 +1,7 @@
 {
   "name": "enkryptio-parity-source",
   "config": {
-    "connector.class": "io.enkrypt.kafka.connect.sources.web3.ParitySourceConnector",
+    "connector.class": "com.ethvm.kafka.connect.sources.web3.ParitySourceConnector",
     "tasks.max": 3,
     "ws.url": "{{ .Env.PARITY_WS_URL }}",
     "schema.registry.url": "http://kafka-schema-registry:8081",
