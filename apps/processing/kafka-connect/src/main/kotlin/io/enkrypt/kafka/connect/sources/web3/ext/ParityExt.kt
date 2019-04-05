@@ -1,4 +1,4 @@
-package io.enkrypt.kafka.connect.sources.web3
+package io.enkrypt.kafka.connect.sources.web3.ext
 
 import org.web3j.protocol.Web3jService
 import org.web3j.protocol.core.DefaultBlockParameter

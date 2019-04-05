@@ -5,10 +5,10 @@ import io.enkrypt.avro.capture.CanonicalKeyRecord
 import io.enkrypt.avro.capture.TransactionListRecord
 import io.enkrypt.avro.capture.TransactionRecord
 import io.enkrypt.common.extensions.setNumberBI
+import io.enkrypt.kafka.connect.sources.web3.ext.JsonRpc2_0ParityExtended
+import io.enkrypt.kafka.connect.sources.web3.ext.toBlockHeaderRecord
+import io.enkrypt.kafka.connect.sources.web3.ext.toTransactionRecord
 import io.enkrypt.kafka.connect.utils.AvroToConnect
-import io.enkrypt.kafka.connect.sources.web3.JsonRpc2_0ParityExtended
-import io.enkrypt.kafka.connect.sources.web3.toBlockHeaderRecord
-import io.enkrypt.kafka.connect.sources.web3.toTransactionRecord
 import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTaskContext
 import org.web3j.protocol.core.DefaultBlockParameter
@@ -54,7 +54,8 @@ class ParityBlockAndTxSource(
             val valueSchemaAndValue = AvroToConnect.toConnectData(blockRecord)
 
             val headerSourceRecord =
-              SourceRecord(partitionKey, partitionOffset, blocksTopic,
+              SourceRecord(
+                partitionKey, partitionOffset, blocksTopic,
                 keySchemaAndValue.schema(), keySchemaAndValue.value(),
                 valueSchemaAndValue.schema(), valueSchemaAndValue.value()
               )

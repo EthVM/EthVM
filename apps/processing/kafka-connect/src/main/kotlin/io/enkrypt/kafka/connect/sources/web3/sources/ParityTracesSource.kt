@@ -5,8 +5,8 @@ import io.enkrypt.avro.capture.TraceListRecord
 import io.enkrypt.avro.capture.TraceRecord
 import io.enkrypt.common.extensions.setNumberBI
 import io.enkrypt.kafka.connect.utils.AvroToConnect
-import io.enkrypt.kafka.connect.sources.web3.JsonRpc2_0ParityExtended
-import io.enkrypt.kafka.connect.sources.web3.toTraceRecord
+import io.enkrypt.kafka.connect.sources.web3.ext.JsonRpc2_0ParityExtended
+import io.enkrypt.kafka.connect.sources.web3.ext.toTraceRecord
 import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTaskContext
 import org.web3j.protocol.core.DefaultBlockParameter

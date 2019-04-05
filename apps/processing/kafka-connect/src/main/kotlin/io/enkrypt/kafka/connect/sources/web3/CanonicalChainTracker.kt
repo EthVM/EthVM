@@ -48,14 +48,14 @@ class CanonicalChainTracker(
             head = heads.max()!!
             val tail = heads.min()!!
 
-            logger.debug { "New Heads notification! Current range - Tail: $tail - Head: $head" }
+            logger.debug { "New Heads notification! / Range - Tail: $tail - Head: $head" }
 
             val reOrg: List<Long> = heads.groupingBy { it }.eachCount().filter { it.value > 1 }.map { it.key }
             if (reOrg.isNotEmpty()) {
-              logger.debug { "Re-org detected! Affecting range: $reOrg" }
               val minReOrg = reOrg.min()
               val maxReOrg = reOrg.max()
               val range = LongRange(minReOrg!!, maxReOrg!!)
+              logger.debug { "Re-org detected! Affecting range: $range" }
               reOrgs.add(range)
             }
 
@@ -79,7 +79,7 @@ class CanonicalChainTracker(
     } while (value < currentTail && !tail.compareAndSet(currentTail, value))
   }
 
-  fun nextRange(maxSize: Int = 32): Pair<Option<LongRange>, List<LongRange>> {
+  fun nextRange(maxSize: Int = 128): Pair<Option<LongRange>, List<LongRange>> {
 
     val currentHead = head
     val currentTail = tail.get()

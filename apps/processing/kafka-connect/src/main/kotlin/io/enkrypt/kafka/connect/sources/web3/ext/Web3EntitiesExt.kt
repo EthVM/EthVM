@@ -1,4 +1,4 @@
-package io.enkrypt.kafka.connect.sources.web3
+package io.enkrypt.kafka.connect.sources.web3.ext
 
 import io.enkrypt.avro.capture.BlockHeaderRecord
 import io.enkrypt.avro.capture.LogRecord
