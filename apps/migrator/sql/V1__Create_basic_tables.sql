@@ -63,7 +63,7 @@ CREATE TABLE transaction_receipt
   contract_address    CHAR(66)  NULL,
   cumulative_gas_used NUMERIC   NOT NULL,
   gas_used            NUMERIC   NOT NULL,
-  logs                TEXT NOT NULL,
+  logs                TEXT      NOT NULL,
   logs_bloom          CHAR(514) NOT NULL,
   root                CHAR(66)  NULL,
   status              NUMERIC   NULL
@@ -71,40 +71,40 @@ CREATE TABLE transaction_receipt
 
 CREATE TABLE receipt_log
 (
-  transaction_hash CHAR(66)      NOT NULL,
-  log_index        INT           NOT NULL,
-  address          CHAR(66)      NOT NULL,
-  data             TEXT          NOT NULL,
-  topics           TEXT NOT NULL /* json encode array of strings */,
+  transaction_hash CHAR(66) NOT NULL,
+  log_index        INT      NOT NULL,
+  address          CHAR(66) NOT NULL,
+  data             TEXT     NOT NULL,
+  topics           TEXT     NOT NULL /* json encode array of strings */,
   PRIMARY KEY (transaction_hash, log_index)
 );
 
 CREATE TABLE transaction_trace
 (
-  transaction_hash  CHAR(66),
-  transaction_position INT           NOT NULL,
-  block_hash        CHAR(66)      NOT NULL,
-  block_number      NUMERIC       NOT NULL,
-  trace_address     TEXT NOT NULL,
-  subtraces         INT           NOT NULL,
-  type              VARCHAR(66)   NOT NULL,
-  error             VARCHAR(514)  NULL,
-  action            TEXT NOT NULL,
-  result            TEXT NULL,
-  PRIMARY KEY (transaction_hash, trace_address)
+  block_hash           CHAR(66)     NOT NULL,
+  transaction_hash     CHAR(66)     NULL,
+  trace_address        TEXT         NOT NULL,
+  transaction_position INT          NULL,
+  block_number         NUMERIC      NOT NULL,
+  subtraces            INT          NOT NULL,
+  type                 VARCHAR(66)  NOT NULL,
+  error                VARCHAR(514) NULL,
+  action               TEXT         NOT NULL,
+  result               TEXT         NULL,
+  UNIQUE (block_hash, transaction_hash, trace_address)
 );
 
 CREATE TABLE contract
 (
   address        CHAR(66) PRIMARY KEY,
-  creator        CHAR(66)      NULL,
-  init           TEXT          NULL,
-  code           TEXT          NULL,
-  refund_address CHAR(66)      NULL,
-  refund_balance NUMERIC       NULL,
-  metadata       TEXT NULL,
-  created_at     TEXT NULL,
-  destroyed_at   TEXT NULL
+  creator        CHAR(66) NULL,
+  init           TEXT     NULL,
+  code           TEXT     NULL,
+  refund_address CHAR(66) NULL,
+  refund_balance NUMERIC  NULL,
+  metadata       TEXT     NULL,
+  created_at     TEXT     NULL,
+  destroyed_at   TEXT     NULL
 );
 
 CREATE TABLE address
