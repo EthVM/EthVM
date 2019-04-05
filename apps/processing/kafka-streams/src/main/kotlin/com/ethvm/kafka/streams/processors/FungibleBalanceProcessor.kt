@@ -8,10 +8,15 @@ import com.ethvm.avro.processing.FungibleBalanceDeltaType
 import com.ethvm.avro.processing.FungibleBalanceKeyRecord
 import com.ethvm.avro.processing.FungibleBalanceRecord
 import com.ethvm.avro.processing.FungibleTokenType
+import com.ethvm.common.extensions.getAmountBI
+import com.ethvm.common.extensions.getNumberBI
+import com.ethvm.common.extensions.getTransactionFeeBI
 import com.ethvm.common.extensions.hexToBI
 import com.ethvm.common.extensions.reverse
 import com.ethvm.common.extensions.setAmountBI
 import com.ethvm.common.extensions.setBlockNumberBI
+import com.ethvm.common.extensions.toEtherBalanceDeltas
+import com.ethvm.common.extensions.toFungibleBalanceDeltas
 import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.config.Topics.CanonicalBlockAuthor
 import com.ethvm.kafka.streams.config.Topics.CanonicalBlockHeader
@@ -89,7 +94,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
         { _, delta, balance ->
 
           FungibleBalanceRecord.newBuilder()
-            .setAmountBI(delta.getAmountBI() + balance.getAmountBI()!!)
+            .setAmountBI(delta.getAmountBI() + balance.getAmountBI())
             .build()
         },
         Materialized.with(Serdes.FungibleBalanceKey(), Serdes.FungibleBalance())

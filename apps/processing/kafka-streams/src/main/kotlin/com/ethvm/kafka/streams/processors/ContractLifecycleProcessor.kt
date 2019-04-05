@@ -42,7 +42,7 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
     val contractTypes = setOf("create", "suicide")
 
     CanonicalTraces.stream(builder)
-      .mapValues { k, v ->
+      .mapValues { _, v ->
 
         when (v) {
           null -> null
@@ -123,7 +123,7 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
         { null },
         { _, new, agg ->
 
-          val builder = when (agg) {
+          val b = when (agg) {
             null -> ContractRecord.newBuilder()
             else -> ContractRecord.newBuilder(agg)
           }
@@ -136,7 +136,7 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
 
                 null
               } else {
-                builder
+                b
                   .setAddress(new.getAddress())
                   .setCreator(new.getCreator())
                   .setInit(new.getInit())
@@ -149,13 +149,13 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
             ContractLifecyleType.DESTROY -> {
 
               if (new.getReverse()) {
-                builder
+                b
                   .setRefundAddress(null)
                   .setRefundBalance(null)
                   .setTraceDestroyedAt(null)
                   .build()
               } else {
-                builder
+                b
                   .setRefundAddress(new.getRefundAddress())
                   .setRefundBalance(new.getRefundBalance())
                   .setTraceDestroyedAt(new.getDestroyedAt())
