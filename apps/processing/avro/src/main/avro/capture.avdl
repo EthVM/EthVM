@@ -247,10 +247,9 @@ protocol Capture {
     union { null, string } code = null;
     union { null, string } refundAddress = null;
     union { null, decimal(40,0) } refundBalance = null;
-    union { null, ContractMetadataRecord } metadata = null;
 
-    union { null, io.enkrypt.avro.common.TraceLocationRecord } createdAt = null;
-    union { null, io.enkrypt.avro.common.TraceLocationRecord } destroyedAt = null;
+    union { null, io.enkrypt.avro.common.TraceLocationRecord } traceCreatedAt = null;
+    union { null, io.enkrypt.avro.common.TraceLocationRecord } traceDestroyedAt = null;
 
   }
 

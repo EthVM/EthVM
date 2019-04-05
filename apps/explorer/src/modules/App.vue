@@ -42,7 +42,7 @@ export default class App extends Vue {
     this.$api.getProcessingMetadata('syncing').then(ev => this.$store.commit('NEW_SYNC', ev ? ev.value : true))
 
     // Preload some previous block metrics
-    this.$api.getBlockMetrics(MAX_ITEMS, 0).then(bms => {
+    this.$api.getBlockHeaderMetrics(MAX_ITEMS, 0).then(bms => {
       this.$store.commit(Events.NEW_BLOCK_METRIC, bms)
       this.$eventHub.$emit(Events.NEW_BLOCK_METRIC, bms)
     })

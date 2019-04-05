@@ -51,10 +51,11 @@ object Topics {
   val NonFungibleBalanceDeltas = KafkaTopic("non_fungible_balance_deltas", Serdes.NonFungibleBalanceKey(), Serdes.NonFungibleBalanceDelta())
   val NonFungibleBalance = KafkaTopic("non_fungible_balance", Serdes.NonFungibleBalanceKey(), Serdes.NonFungibleBalance())
 
-  val BlockMetrics = KafkaTopic("block_metrics", Serdes.CanonicalKey(), Serdes.BlockMetrics())
-  val TraceBlockMetrics = KafkaTopic("trace_block_metrics", Serdes.CanonicalKey(), Serdes.BlockMetrics())
-  val TransactionBlockMetrics = KafkaTopic("transaction_block_metrics", Serdes.CanonicalKey(), Serdes.BlockMetrics())
-  val TransactionFeeBlockMetrics = KafkaTopic("transaction_fee_block_metrics", Serdes.CanonicalKey(), Serdes.BlockMetrics())
+  val BlockTimestamp = KafkaTopic("block_timestamp", Serdes.CanonicalKey(), Serdes.BlockTimestamp())
+  val BlockHeaderMetrics = KafkaTopic("block_header_metrics", Serdes.CanonicalKey(), Serdes.BlockHeaderMetrics())
+  val BlockTransactionMetrics = KafkaTopic("block_transaction_metrics", Serdes.CanonicalKey(), Serdes.BlockTransactionMetrics())
+  val BlockTransactionTraceMetrics = KafkaTopic("block_transaction_trace_metrics", Serdes.CanonicalKey(), Serdes.BlockTransactionTraceMetrics())
+  val BlockTransactionFeeMetrics = KafkaTopic("block_transaction_fee_metrics", Serdes.CanonicalKey(), Serdes.BlockTransactionFeeMetrics())
 
   val CanonicalGasPrices = KafkaTopic("canonical_gas_prices", Serdes.CanonicalKey(), Serdes.TransactionGasPriceList())
   val CanonicalGasUsed = KafkaTopic("canonical_gas_used", Serdes.CanonicalKey(), Serdes.TransactionGasUsedList())

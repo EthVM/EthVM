@@ -141,7 +141,7 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
                   .setCreator(new.getCreator())
                   .setInit(new.getInit())
                   .setCode(new.getCode())
-                  .setCreatedAt(new.getCreatedAt())
+                  .setTraceCreatedAt(new.getCreatedAt())
                   .build()
               }
             }
@@ -152,13 +152,13 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
                 builder
                   .setRefundAddress(null)
                   .setRefundBalance(null)
-                  .setDestroyedAt(null)
+                  .setTraceDestroyedAt(null)
                   .build()
               } else {
                 builder
                   .setRefundAddress(new.getRefundAddress())
                   .setRefundBalance(new.getRefundBalance())
-                  .setDestroyedAt(new.getDestroyedAt())
+                  .setTraceDestroyedAt(new.getDestroyedAt())
                   .build()
               }
             }

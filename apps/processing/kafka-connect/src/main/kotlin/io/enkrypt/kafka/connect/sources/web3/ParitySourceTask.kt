@@ -130,9 +130,9 @@ class ParitySourceTask : SourceTask() {
 
       entitySources = entitiesList.map {
         when (it) {
-          "blocks" -> ParityBlocksSource(context, parity!!, "canonical-blocks", "canonical-transactions")
-          "receipts" -> ParityReceiptSource(context, parity!!, "canonical-receipts")
-          "traces" -> ParityTracesSource(context, parity!!, "canonical-traces")
+          "blocks" -> ParityBlocksSource(context, parity!!, "canonical_block_header", "canonical_transactions")
+          "receipts" -> ParityReceiptSource(context, parity!!, "canonical_receipts")
+          "traces" -> ParityTracesSource(context, parity!!, "canonical_traces")
           else -> throw IllegalArgumentException("Unexpected entity: $it")
         }
       }

@@ -144,23 +144,37 @@ protocol Processing {
 
 // metrics
 
-  record BlockMetricsRecord {
-    union { null, string } hash = null;
+  record BlockTimestampRecord {
+    long timestamp;
+  }
+
+  record BlockHeaderMetricsRecord {
     union { null, long } blockTime = null;
+    long timestamp;
+    int numUncles;
+    decimal(40,0) difficulty;
+    decimal(40,0) totalDifficulty;
+  }
+
+  record BlockTransactionTraceMetricsRecord {
+    int totalTxs;
+    int numSuccessfulTxs;
+    int numFailedTxs;
+    int numInternalTxs;
     union { null, long } timestamp = null;
-    union { null, int } totalTxs = null;
-    union { null, int } numSuccessfulTxs = null;
-    union { null, int } numFailedTxs = null;
-    union { null, int } numInternalTxs = null;
-    union { null, int } numPendingTxs = null;
-    union { null, int } numUncles = null;
-    union { null, decimal(40,0) } difficulty = null;
-    union { null, decimal(40,0) } totalDifficulty = null;
-    union { null, decimal(40,0) } totalGasPrice = null;
-    union { null, decimal(40,0) } avgGasLimit = null;
-    union { null, decimal(40,0) } avgGasPrice = null;
-    union { null, decimal(40,0) } totalTxFees = null;
-    union { null, decimal(40,0) } avgTxFees = null;
+  }
+
+  record BlockTransactionMetricsRecord {
+    decimal(40,0) totalGasPrice;
+    decimal(40,0) avgGasLimit;
+    decimal(40,0) avgGasPrice;
+    union { null, long } timestamp = null;
+  }
+
+  record BlockTransactionFeeMetricsRecord {
+    decimal(40,0) totalTxFees;
+    decimal(40,0) avgTxFees;
+    union { null, long } timestamp = null;
   }
 
   record MetricKeyRecord {

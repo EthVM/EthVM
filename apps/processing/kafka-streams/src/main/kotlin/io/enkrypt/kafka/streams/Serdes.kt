@@ -20,7 +20,11 @@ import io.enkrypt.avro.exchange.SymbolKeyRecord
 import io.enkrypt.avro.processing.AddressMetadataKeyRecord
 import io.enkrypt.avro.processing.AddressMetadataRecord
 import io.enkrypt.avro.processing.BlockAuthorRecord
-import io.enkrypt.avro.processing.BlockMetricsRecord
+import io.enkrypt.avro.processing.BlockHeaderMetricsRecord
+import io.enkrypt.avro.processing.BlockTimestampRecord
+import io.enkrypt.avro.processing.BlockTransactionFeeMetricsRecord
+import io.enkrypt.avro.processing.BlockTransactionMetricsRecord
+import io.enkrypt.avro.processing.BlockTransactionTraceMetricsRecord
 import io.enkrypt.avro.processing.FungibleBalanceDeltaListRecord
 import io.enkrypt.avro.processing.FungibleBalanceDeltaRecord
 import io.enkrypt.avro.processing.FungibleBalanceKeyRecord
@@ -174,7 +178,23 @@ object Serdes : KoinComponent {
     configure(config, false)
   }
 
-  fun BlockMetrics() = SpecificAvroSerde<BlockMetricsRecord>(registryClient).apply {
+  fun BlockTimestamp() = SpecificAvroSerde<BlockTimestampRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun BlockHeaderMetrics() = SpecificAvroSerde<BlockHeaderMetricsRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun BlockTransactionMetrics() = SpecificAvroSerde<BlockTransactionMetricsRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun BlockTransactionFeeMetrics() = SpecificAvroSerde<BlockTransactionFeeMetricsRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun BlockTransactionTraceMetrics() = SpecificAvroSerde<BlockTransactionTraceMetricsRecord>(registryClient).apply {
     configure(config, false)
   }
 

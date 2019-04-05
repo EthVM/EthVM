@@ -52,6 +52,14 @@ CREATE INDEX idx_transaction_block_hash ON transaction (block_hash);
 CREATE INDEX idx_transaction_from ON transaction ("from");
 CREATE INDEX idx_transaction_to ON transaction ("to");
 
+CREATE VIEW canonical_transaction AS
+SELECT t.*
+FROM transaction as t
+       RIGHT JOIN canonical_block_header as cb ON t.block_hash = cb.hash
+WHERE cb.number IS NOT NULL
+  AND t.hash IS NOT NULL
+ORDER BY cb.number DESC, t.transaction_index DESC;
+
 CREATE TABLE transaction_receipt
 (
   transaction_hash    CHAR(66) PRIMARY KEY,
@@ -69,15 +77,19 @@ CREATE TABLE transaction_receipt
   status              NUMERIC   NULL
 );
 
-CREATE TABLE receipt_log
-(
-  transaction_hash CHAR(66) NOT NULL,
-  log_index        INT      NOT NULL,
-  address          CHAR(66) NOT NULL,
-  data             TEXT     NOT NULL,
-  topics           TEXT     NOT NULL /* json encode array of strings */,
-  PRIMARY KEY (transaction_hash, log_index)
-);
+CREATE INDEX idx_transaction_receipt_block_hash ON transaction_receipt (block_hash);
+CREATE INDEX idx_transaction_receipt_from ON transaction_receipt ("from");
+CREATE INDEX idx_transaction_receipt_to ON transaction_receipt ("to");
+CREATE INDEX idx_transaction_receipt_from_to ON transaction_receipt ("from", "to");
+CREATE INDEX idx_transaction_receipt_contract_address ON transaction_receipt ("contract_address");
+
+CREATE VIEW canonical_transaction_receipt AS
+SELECT tr.*
+FROM transaction_receipt as tr
+       RIGHT JOIN canonical_block_header as cb ON tr.block_hash = cb.hash
+WHERE cb.number IS NOT NULL
+  AND tr.transaction_hash IS NOT NULL
+ORDER BY cb.number DESC, tr.transaction_index DESC;
 
 CREATE TABLE transaction_trace
 (
@@ -94,18 +106,30 @@ CREATE TABLE transaction_trace
   UNIQUE (block_hash, transaction_hash, trace_address)
 );
 
+CREATE INDEX idx_transaction_trace_block_hash ON transaction_trace (block_hash);
+CREATE INDEX idx_transaction_trace_transaction_hash ON transaction_trace (transaction_hash);
+
+CREATE VIEW canonical_transaction_trace AS
+SELECT tr.*
+FROM transaction_trace as tr
+       RIGHT JOIN canonical_block_header as cb ON tr.block_hash = cb.hash
+WHERE cb.number IS NOT NULL
+  AND tr.transaction_hash IS NOT NULL
+ORDER BY cb.number DESC, tr.transaction_position DESC;
+
 CREATE TABLE contract
 (
-  address        CHAR(66) PRIMARY KEY,
-  creator        CHAR(66) NULL,
-  init           TEXT     NULL,
-  code           TEXT     NULL,
-  refund_address CHAR(66) NULL,
-  refund_balance NUMERIC  NULL,
-  metadata       TEXT     NULL,
-  created_at     TEXT     NULL,
-  destroyed_at   TEXT     NULL
+  address            CHAR(66) PRIMARY KEY,
+  creator            CHAR(66) NULL,
+  init               TEXT     NULL,
+  code               TEXT     NULL,
+  refund_address     CHAR(66) NULL,
+  refund_balance     NUMERIC  NULL,
+  trace_created_at   TEXT     NULL,
+  trace_destroyed_at TEXT     NULL
 );
+
+CREATE INDEX idx_contract_creator ON contract (creator);
 
 CREATE TABLE address
 (
@@ -115,38 +139,68 @@ CREATE TABLE address
 
 CREATE TABLE fungible_balance
 (
-  address  CHAR(66) REFERENCES address (address),
+  address  CHAR(66),
   contract CHAR(66) NULL,
   amount   NUMERIC  NOT NULL,
-  PRIMARY KEY (address, contract)
+  UNIQUE (address, contract)
 );
+
+CREATE INDEX idx_fungible_balance_contract ON fungible_balance (contract);
 
 CREATE TABLE non_fungible_balance
 (
-  contract CHAR(66) NOT NULL,
-  token_id NUMERIC  NOT NULL,
-  address  CHAR(66) NOT NULL REFERENCES address (address),
+  contract       CHAR(66) NOT NULL,
+  token_id       NUMERIC  NOT NULL,
+  address        CHAR(66) NOT NULL,
+  trace_location TEXT     NOT NULL,
   PRIMARY KEY (contract, token_id)
 );
 
+CREATE INDEX idx_non_fungible_balance_address ON non_fungible_balance (address);
 
-CREATE TABLE block_metric
+/* metrics hyper tables */
+
+CREATE TABLE block_header_metrics
 (
-  block_number       NUMERIC,
-  timestamp          TIMESTAMP NULL,
-  hash               CHAR(66)  NULL,
-  num_total_txs      INT       NULL,
-  num_successful_txs INT       NULL,
-  num_failed_txs     INT       NULL,
-  num_internal_txs   INT       NULL,
-  num_uncles         INT       NULL,
-  difficulty         NUMERIC,
-  total_difficulty   NUMERIC,
-  total_gas_price    NUMERIC,
-  avg_gas_limit      NUMERIC,
-  avg_gas_price      NUMERIC,
-  total_tx_fees      NUMERIC,
-  avg_tx_fees        NUMERIC
+  number           NUMERIC,
+  timestamp        BIGINT,
+  block_time       BIGINT NULL,
+  num_uncles       INT,
+  difficulty       NUMERIC,
+  total_difficulty NUMERIC
 );
 
-SELECT create_hypertable('block_metric', 'timestamp');
+CREATE TABLE block_transaction_metrics
+(
+  number          NUMERIC,
+  timestamp       BIGINT,
+  total_gas_price NUMERIC,
+  avg_gas_limit   NUMERIC,
+  avg_gas_price   NUMERIC
+);
+
+CREATE TABLE block_transaction_trace_metrics
+(
+  number             NUMERIC,
+  timestamp          BIGINT,
+  total_txs          INT,
+  num_successful_txs INT,
+  num_failed_txs     INT,
+  num_internal_txs   INT
+);
+
+
+CREATE TABLE block_transaction_fee_metrics
+(
+  number        NUMERIC,
+  timestamp     BIGINT,
+  total_tx_fees NUMERIC,
+  avg_tx_fees   NUMERIC
+);
+
+/* 1 day chunks */
+
+SELECT create_hypertable('block_header_metrics', 'timestamp', chunk_time_interval => 86400);
+SELECT create_hypertable('block_transaction_metrics', 'timestamp', chunk_time_interval => 86400);
+SELECT create_hypertable('block_transaction_trace_metrics', 'timestamp', chunk_time_interval => 86400);
+SELECT create_hypertable('block_transaction_fee_metrics', 'timestamp', chunk_time_interval => 86400);

@@ -15,8 +15,8 @@ import io.enkrypt.avro.capture.TransactionReceiptRecord
 import io.enkrypt.avro.capture.TransactionRecord
 import io.enkrypt.avro.common.TraceLocationRecord
 import io.enkrypt.avro.exchange.ExchangeRateRecord
-import io.enkrypt.avro.processing.BlockAuthorRecord
-import io.enkrypt.avro.processing.BlockMetricsRecord
+import io.enkrypt.avro.processing.BlockTransactionFeeMetricsRecord
+import io.enkrypt.avro.processing.BlockTransactionMetricsRecord
 import io.enkrypt.avro.processing.FungibleBalanceDeltaRecord
 import io.enkrypt.avro.processing.FungibleBalanceDeltaType
 import io.enkrypt.avro.processing.FungibleBalanceRecord
@@ -26,16 +26,8 @@ import io.enkrypt.avro.processing.TransactionFeeListRecord
 import io.enkrypt.avro.processing.TransactionFeeRecord
 import io.enkrypt.avro.processing.TransactionGasPriceRecord
 import io.enkrypt.avro.processing.TransactionGasUsedRecord
-import org.apache.avro.Conversions
-import org.apache.avro.LogicalType
-import org.apache.avro.LogicalTypes
-import org.apache.avro.Schema
-import org.apache.avro.specific.SpecificRecord
-import org.apache.avro.specific.SpecificRecordBase
-import org.apache.avro.specific.SpecificRecordBuilderBase
 import java.math.BigDecimal
 import java.math.BigInteger
-import java.nio.ByteBuffer
 
 fun CanonicalKeyRecord.getNumberBI() = getNumber().bigInteger()
 
@@ -117,15 +109,15 @@ fun TransactionFeeRecord.getTransactionFeeBI() = getTransactionFee().bigInteger(
 
 fun TransactionFeeRecord.Builder.setTransactionFeeBI(transactionFee: BigInteger) = setTransactionFee(transactionFee.byteBuffer())
 
-fun BlockMetricsRecord.Builder.setTotalGasPriceBI(totalGasPrice: BigInteger) = setTotalGasPrice(totalGasPrice.byteBuffer())
+fun BlockTransactionMetricsRecord.Builder.setTotalGasPriceBI(totalGasPrice: BigInteger) = setTotalGasPrice(totalGasPrice.byteBuffer())
 
-fun BlockMetricsRecord.Builder.setAvgGasLimitBI(avgGasLimit: BigInteger) = setAvgGasLimit(avgGasLimit.byteBuffer())
+fun BlockTransactionMetricsRecord.Builder.setAvgGasLimitBI(avgGasLimit: BigInteger) = setAvgGasLimit(avgGasLimit.byteBuffer())
 
-fun BlockMetricsRecord.Builder.setAvgGasPriceBI(avgGasPrice: BigInteger) = setAvgGasPrice(avgGasPrice.byteBuffer())
+fun BlockTransactionMetricsRecord.Builder.setAvgGasPriceBI(avgGasPrice: BigInteger) = setAvgGasPrice(avgGasPrice.byteBuffer())
 
-fun BlockMetricsRecord.Builder.setTotalTxFeesBI(totalTxFees: BigInteger) = setTotalTxFees(totalTxFees.byteBuffer())
+fun BlockTransactionFeeMetricsRecord.Builder.setTotalTxFeesBI(totalTxFees: BigInteger) = setTotalTxFees(totalTxFees.byteBuffer())
 
-fun BlockMetricsRecord.Builder.setAvgTxFeesBI(avgTxFees: BigInteger) = setAvgTxFees(avgTxFees.byteBuffer())
+fun BlockTransactionFeeMetricsRecord.Builder.setAvgTxFeesBI(avgTxFees: BigInteger) = setAvgTxFees(avgTxFees.byteBuffer())
 
 //
 
