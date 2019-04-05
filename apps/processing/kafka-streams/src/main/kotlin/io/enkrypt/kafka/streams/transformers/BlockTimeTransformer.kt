@@ -1,7 +1,7 @@
 package io.enkrypt.kafka.streams.transformers
 
-import io.enkrypt.avro.capture.BlockHeaderRecord
-import io.enkrypt.avro.capture.CanonicalKeyRecord
+import com.ethvm.avro.capture.BlockHeaderRecord
+import com.ethvm.avro.capture.CanonicalKeyRecord
 import io.enkrypt.common.extensions.getNumberBI
 import io.enkrypt.common.extensions.toHex
 import mu.KotlinLogging

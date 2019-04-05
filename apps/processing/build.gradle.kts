@@ -11,7 +11,7 @@ plugins {
 
 allprojects {
 
-  group = "io.enkrypt.ethvm"
+  group = "com.ethvm"
 
   repositories {
     mavenLocal()

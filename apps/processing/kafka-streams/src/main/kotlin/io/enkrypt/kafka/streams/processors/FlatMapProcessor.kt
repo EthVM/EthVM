@@ -1,8 +1,8 @@
 package io.enkrypt.kafka.streams.processors
 
-import io.enkrypt.avro.processing.TraceKeyRecord
-import io.enkrypt.avro.processing.TransactionKeyRecord
-import io.enkrypt.avro.processing.TransactionReceiptKeyRecord
+import com.ethvm.avro.processing.TraceKeyRecord
+import com.ethvm.avro.processing.TransactionKeyRecord
+import com.ethvm.avro.processing.TransactionReceiptKeyRecord
 import io.enkrypt.kafka.streams.config.Topics
 import io.enkrypt.kafka.streams.config.Topics.CanonicalReceipts
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTraces

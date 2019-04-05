@@ -1,9 +1,9 @@
 package io.enkrypt.common.config
 
-import io.enkrypt.avro.common.TraceLocationRecord
-import io.enkrypt.avro.processing.FungibleBalanceDeltaRecord
-import io.enkrypt.avro.processing.FungibleBalanceDeltaType
-import io.enkrypt.avro.processing.FungibleTokenType
+import com.ethvm.avro.common.TraceLocationRecord
+import com.ethvm.avro.processing.FungibleBalanceDeltaRecord
+import com.ethvm.avro.processing.FungibleBalanceDeltaType
+import com.ethvm.avro.processing.FungibleTokenType
 import io.enkrypt.common.extensions.ether
 import io.enkrypt.common.extensions.setAmountBI
 import io.enkrypt.common.extensions.setBlockNumberBI

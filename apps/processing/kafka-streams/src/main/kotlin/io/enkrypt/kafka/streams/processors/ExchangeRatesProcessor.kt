@@ -1,8 +1,8 @@
 package io.enkrypt.kafka.streams.processors
 
-import io.enkrypt.avro.capture.ContractMetadataRecord
-import io.enkrypt.avro.exchange.ExchangeRateRecord
-import io.enkrypt.avro.exchange.SymbolKeyRecord
+import com.ethvm.avro.capture.ContractMetadataRecord
+import com.ethvm.avro.exchange.ExchangeRateRecord
+import com.ethvm.avro.exchange.SymbolKeyRecord
 import io.enkrypt.common.extensions.hexBuffer
 import io.enkrypt.common.extensions.isValid
 import io.enkrypt.kafka.streams.Serdes

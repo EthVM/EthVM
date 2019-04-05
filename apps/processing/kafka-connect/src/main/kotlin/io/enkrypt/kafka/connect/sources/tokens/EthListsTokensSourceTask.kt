@@ -1,11 +1,11 @@
 package io.enkrypt.kafka.connect.sources.tokens
 
 import com.beust.klaxon.Klaxon
-import io.enkrypt.avro.capture.ContractKeyRecord
-import io.enkrypt.avro.capture.ContractLogoRecord
-import io.enkrypt.avro.capture.ContractMetadataRecord
-import io.enkrypt.avro.capture.ContractSocialRecord
-import io.enkrypt.avro.capture.ContractSupportRecord
+import com.ethvm.avro.capture.ContractKeyRecord
+import com.ethvm.avro.capture.ContractLogoRecord
+import com.ethvm.avro.capture.ContractMetadataRecord
+import com.ethvm.avro.capture.ContractSocialRecord
+import com.ethvm.avro.capture.ContractSupportRecord
 import io.enkrypt.kafka.connect.utils.AvroToConnect
 import io.enkrypt.kafka.connect.utils.Versions
 import org.apache.kafka.connect.source.SourceRecord

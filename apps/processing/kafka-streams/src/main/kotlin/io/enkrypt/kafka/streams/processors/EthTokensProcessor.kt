@@ -1,9 +1,9 @@
 package io.enkrypt.kafka.streams.processors
 
-import io.enkrypt.avro.capture.ContractKeyRecord
-import io.enkrypt.avro.capture.ContractMetadataRecord
-import io.enkrypt.avro.exchange.SymbolKeyRecord
-import io.enkrypt.avro.tokens.EthTokenListsKeyRecord
+import com.ethvm.avro.capture.ContractKeyRecord
+import com.ethvm.avro.capture.ContractMetadataRecord
+import com.ethvm.avro.exchange.SymbolKeyRecord
+import com.ethvm.avro.tokens.EthTokenListsKeyRecord
 import io.enkrypt.kafka.streams.Serdes
 import io.enkrypt.kafka.streams.config.Topics
 import mu.KLogger

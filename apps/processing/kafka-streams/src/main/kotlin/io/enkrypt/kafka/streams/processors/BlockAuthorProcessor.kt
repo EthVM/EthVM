@@ -1,6 +1,6 @@
 package io.enkrypt.kafka.streams.processors
 
-import io.enkrypt.avro.processing.BlockAuthorRecord
+import com.ethvm.avro.processing.BlockAuthorRecord
 import io.enkrypt.kafka.streams.config.Topics.CanonicalBlockAuthor
 import io.enkrypt.kafka.streams.config.Topics.CanonicalBlockHeader
 import io.enkrypt.kafka.streams.utils.toTopic

@@ -1,13 +1,13 @@
 package io.enkrypt.kafka.streams.processors
 
-import io.enkrypt.avro.capture.CanonicalKeyRecord
-import io.enkrypt.avro.common.TraceLocationRecord
-import io.enkrypt.avro.processing.FungibleBalanceDeltaListRecord
-import io.enkrypt.avro.processing.FungibleBalanceDeltaRecord
-import io.enkrypt.avro.processing.FungibleBalanceDeltaType
-import io.enkrypt.avro.processing.FungibleBalanceKeyRecord
-import io.enkrypt.avro.processing.FungibleBalanceRecord
-import io.enkrypt.avro.processing.FungibleTokenType
+import com.ethvm.avro.capture.CanonicalKeyRecord
+import com.ethvm.avro.common.TraceLocationRecord
+import com.ethvm.avro.processing.FungibleBalanceDeltaListRecord
+import com.ethvm.avro.processing.FungibleBalanceDeltaRecord
+import com.ethvm.avro.processing.FungibleBalanceDeltaType
+import com.ethvm.avro.processing.FungibleBalanceKeyRecord
+import com.ethvm.avro.processing.FungibleBalanceRecord
+import com.ethvm.avro.processing.FungibleTokenType
 import io.enkrypt.common.extensions.getAmountBI
 import io.enkrypt.common.extensions.getNumberBI
 import io.enkrypt.common.extensions.getTransactionFeeBI

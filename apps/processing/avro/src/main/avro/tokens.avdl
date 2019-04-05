@@ -1,4 +1,4 @@
-@namespace("io.enkrypt.avro.tokens")
+@namespace("com.ethvm.avro.tokens")
 protocol Tokens {
 
   record EthTokenListsKeyRecord {

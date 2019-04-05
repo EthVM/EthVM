@@ -1,9 +1,9 @@
 package io.enkrypt.kafka.connect.sources.web3.sources
 
-import io.enkrypt.avro.capture.BlockHeaderRecord
-import io.enkrypt.avro.capture.CanonicalKeyRecord
-import io.enkrypt.avro.capture.TransactionListRecord
-import io.enkrypt.avro.capture.TransactionRecord
+import com.ethvm.avro.capture.BlockHeaderRecord
+import com.ethvm.avro.capture.CanonicalKeyRecord
+import com.ethvm.avro.capture.TransactionListRecord
+import com.ethvm.avro.capture.TransactionRecord
 import io.enkrypt.common.extensions.setNumberBI
 import io.enkrypt.kafka.connect.sources.web3.ext.JsonRpc2_0ParityExtended
 import io.enkrypt.kafka.connect.sources.web3.ext.toBlockHeaderRecord

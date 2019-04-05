@@ -1,13 +1,13 @@
 package io.enkrypt.kafka.streams.processors
 
-import io.enkrypt.avro.capture.TraceCallActionRecord
-import io.enkrypt.avro.capture.TraceCreateActionRecord
-import io.enkrypt.avro.capture.TraceDestroyActionRecord
-import io.enkrypt.avro.processing.BlockHeaderMetricsRecord
-import io.enkrypt.avro.processing.BlockTimestampRecord
-import io.enkrypt.avro.processing.BlockTransactionFeeMetricsRecord
-import io.enkrypt.avro.processing.BlockTransactionMetricsRecord
-import io.enkrypt.avro.processing.BlockTransactionTraceMetricsRecord
+import com.ethvm.avro.capture.TraceCallActionRecord
+import com.ethvm.avro.capture.TraceCreateActionRecord
+import com.ethvm.avro.capture.TraceDestroyActionRecord
+import com.ethvm.avro.processing.BlockHeaderMetricsRecord
+import com.ethvm.avro.processing.BlockTimestampRecord
+import com.ethvm.avro.processing.BlockTransactionFeeMetricsRecord
+import com.ethvm.avro.processing.BlockTransactionMetricsRecord
+import com.ethvm.avro.processing.BlockTransactionTraceMetricsRecord
 import io.enkrypt.common.extensions.getBalanceBI
 import io.enkrypt.common.extensions.getGasBI
 import io.enkrypt.common.extensions.getGasPriceBI

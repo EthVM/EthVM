@@ -1,15 +1,15 @@
 package io.enkrypt.kafka.connect.utils
 
 import io.confluent.connect.avro.AvroData
-import io.enkrypt.avro.capture.BlockHeaderRecord
-import io.enkrypt.avro.capture.CanonicalKeyRecord
-import io.enkrypt.avro.capture.CanonicalRecord
-import io.enkrypt.avro.capture.ContractMetadataRecord
-import io.enkrypt.avro.capture.TraceListRecord
-import io.enkrypt.avro.capture.TransactionListRecord
-import io.enkrypt.avro.capture.TransactionReceiptListRecord
-import io.enkrypt.avro.capture.TransactionReceiptRecord
-import io.enkrypt.avro.capture.TransactionRecord
+import com.ethvm.avro.capture.BlockHeaderRecord
+import com.ethvm.avro.capture.CanonicalKeyRecord
+import com.ethvm.avro.capture.CanonicalRecord
+import com.ethvm.avro.capture.ContractMetadataRecord
+import com.ethvm.avro.capture.TraceListRecord
+import com.ethvm.avro.capture.TransactionListRecord
+import com.ethvm.avro.capture.TransactionReceiptListRecord
+import com.ethvm.avro.capture.TransactionReceiptRecord
+import com.ethvm.avro.capture.TransactionRecord
 import mu.KotlinLogging
 import org.apache.avro.specific.SpecificRecordBase
 import org.apache.kafka.connect.data.SchemaAndValue

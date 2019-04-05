@@ -1,15 +1,15 @@
 package io.enkrypt.kafka.connect.sources.web3.ext
 
-import io.enkrypt.avro.capture.BlockHeaderRecord
-import io.enkrypt.avro.capture.LogRecord
-import io.enkrypt.avro.capture.TraceCallActionRecord
-import io.enkrypt.avro.capture.TraceCreateActionRecord
-import io.enkrypt.avro.capture.TraceDestroyActionRecord
-import io.enkrypt.avro.capture.TraceRecord
-import io.enkrypt.avro.capture.TraceResultRecord
-import io.enkrypt.avro.capture.TraceRewardActionRecord
-import io.enkrypt.avro.capture.TransactionReceiptRecord
-import io.enkrypt.avro.capture.TransactionRecord
+import com.ethvm.avro.capture.BlockHeaderRecord
+import com.ethvm.avro.capture.LogRecord
+import com.ethvm.avro.capture.TraceCallActionRecord
+import com.ethvm.avro.capture.TraceCreateActionRecord
+import com.ethvm.avro.capture.TraceDestroyActionRecord
+import com.ethvm.avro.capture.TraceRecord
+import com.ethvm.avro.capture.TraceResultRecord
+import com.ethvm.avro.capture.TraceRewardActionRecord
+import com.ethvm.avro.capture.TransactionReceiptRecord
+import com.ethvm.avro.capture.TransactionRecord
 import io.enkrypt.common.extensions.compress
 import io.enkrypt.common.extensions.hexBuffer
 import io.enkrypt.common.extensions.setBalanceBI

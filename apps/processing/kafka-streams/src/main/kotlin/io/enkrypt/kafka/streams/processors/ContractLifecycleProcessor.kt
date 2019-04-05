@@ -1,10 +1,10 @@
 package io.enkrypt.kafka.streams.processors
 
-import io.enkrypt.avro.capture.ContractKeyRecord
-import io.enkrypt.avro.capture.ContractLifecycleListRecord
-import io.enkrypt.avro.capture.ContractLifecycleRecord
-import io.enkrypt.avro.capture.ContractLifecyleType
-import io.enkrypt.avro.capture.ContractRecord
+import com.ethvm.avro.capture.ContractKeyRecord
+import com.ethvm.avro.capture.ContractLifecycleListRecord
+import com.ethvm.avro.capture.ContractLifecycleRecord
+import com.ethvm.avro.capture.ContractLifecyleType
+import com.ethvm.avro.capture.ContractRecord
 import io.enkrypt.common.extensions.toContractLifecycleRecord
 import io.enkrypt.kafka.streams.Serdes
 import io.enkrypt.kafka.streams.config.Topics.CanonicalContractLifecycle

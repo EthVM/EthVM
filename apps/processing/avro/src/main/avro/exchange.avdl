@@ -1,4 +1,4 @@
-@namespace("io.enkrypt.avro.exchange")
+@namespace("com.ethvm.avro.exchange")
 protocol Exchange {
 
   record SymbolKeyRecord {

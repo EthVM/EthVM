@@ -1,4 +1,4 @@
-@namespace("io.enkrypt.avro.processing")
+@namespace("com.ethvm.avro.processing")
 protocol Processing {
 
   import idl "common.avdl";
@@ -43,7 +43,7 @@ protocol Processing {
 
     FungibleTokenType tokenType;
     FungibleBalanceDeltaType deltaType;
-    io.enkrypt.avro.common.TraceLocationRecord traceLocation;
+    com.ethvm.avro.common.TraceLocationRecord traceLocation;
     decimal(40,0) amount;
 
     union { null, string } address = null;
@@ -75,7 +75,7 @@ protocol Processing {
   record NonFungibleBalanceDeltaRecord {
 
     NonFungibleTokenType tokenType = null;
-    io.enkrypt.avro.common.TraceLocationRecord traceLocation;
+    com.ethvm.avro.common.TraceLocationRecord traceLocation;
 
     string from;
     string to;
@@ -86,7 +86,7 @@ protocol Processing {
   }
 
   record NonFungibleBalanceRecord {
-    io.enkrypt.avro.common.TraceLocationRecord traceLocation;
+    com.ethvm.avro.common.TraceLocationRecord traceLocation;
     string address;
   }
 

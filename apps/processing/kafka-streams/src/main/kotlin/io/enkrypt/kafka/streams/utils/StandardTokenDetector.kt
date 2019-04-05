@@ -1,6 +1,6 @@
 package io.enkrypt.kafka.streams.utils
 
-import io.enkrypt.avro.common.ContractType
+import com.ethvm.avro.common.ContractType
 import io.enkrypt.common.extensions.byteArray
 import io.enkrypt.common.extensions.indexByteArrayOf
 import io.enkrypt.kafka.streams.utils.TokenContract.Companion.DECIMALS

@@ -1,4 +1,4 @@
-@namespace("io.enkrypt.avro.common")
+@namespace("com.ethvm.avro.common")
 protocol Common {
 
   enum ContractType {

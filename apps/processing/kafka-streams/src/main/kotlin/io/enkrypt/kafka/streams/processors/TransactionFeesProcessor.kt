@@ -1,11 +1,11 @@
 package io.enkrypt.kafka.streams.processors
 
-import io.enkrypt.avro.processing.TransactionFeeListRecord
-import io.enkrypt.avro.processing.TransactionFeeRecord
-import io.enkrypt.avro.processing.TransactionGasPriceListRecord
-import io.enkrypt.avro.processing.TransactionGasPriceRecord
-import io.enkrypt.avro.processing.TransactionGasUsedListRecord
-import io.enkrypt.avro.processing.TransactionGasUsedRecord
+import com.ethvm.avro.processing.TransactionFeeListRecord
+import com.ethvm.avro.processing.TransactionFeeRecord
+import com.ethvm.avro.processing.TransactionGasPriceListRecord
+import com.ethvm.avro.processing.TransactionGasPriceRecord
+import com.ethvm.avro.processing.TransactionGasUsedListRecord
+import com.ethvm.avro.processing.TransactionGasUsedRecord
 import io.enkrypt.common.extensions.getGasPriceBI
 import io.enkrypt.common.extensions.getGasUsedBI
 import io.enkrypt.common.extensions.setTransactionFeeBI
