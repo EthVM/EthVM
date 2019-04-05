@@ -1,38 +1,50 @@
 <template>
-  <v-card color="white" flat class="pt-3 pr-2 pl-2">
-    <v-layout row grid-list-lg align-center pb-1>
-      <blockies :address="account.address" pl-3 />
-      <v-layout wrap column fill-height pl-2>
-        <v-flex xs12 pb-0>
-          <v-layout row align-center justify-start>
-            <v-card-title class="title font-weight-bold">{{ title }}</v-card-title>
-            <v-chip v-if="account.type === 'address' && account.isMiner" color="txSuccess" text-color="white" small>{{ $t('miner.name') }}</v-chip>
-            <v-chip v-if="account.type === 'address' && account.isCreator" color="success" text-color="white" small>{{ $t('contract.creator') }}</v-chip>
-          </v-layout>
-        </v-flex>
-        <v-flex xs12 pt-0>
-          <v-layout row align-center justify-start>
-            <v-card-text class="text-truncate font-mono pt-0"
-              >{{ account.address }}
-              <app-copy-to-clip v-if="$vuetify.breakpoint.smAndUp" :value-to-copy="account.address" />
-            </v-card-text>
-          </v-layout>
-        </v-flex>
-      </v-layout>
-      <v-flex hidden-xs-only fill-height mr-3>
-        <v-layout justify-end> <address-qr :address="account.address" :large="true" /> </v-layout>
+  <v-card color="white" flat >
+    <v-layout grid-list-md align-start justify-start row fill-height :class="layoutPadding">
+      <v-flex shrink >
+        <v-layout align-start justify-center row fill-height pa-2>
+         <blockies :address="account.address" />
+        </v-layout>
       </v-flex>
+      <v-flex d-block >
+      <v-layout wrap column fill-height pa-1>
+        <v-flex xs12>
+          <v-layout row wrap align-center justify-space-between>
+            <v-card-title class="title font-weight-bold pl-1 pr-3 pb-2 ">{{ title }}</v-card-title>
+            <v-layout hidden-xs-only align-center justify-start row fill-height pt-2 >
+            <div v-if="account.type === 'address' && miner" class="chip miner-chip mr-2 ml-1">{{ $t('miner.name') }}</div>
+            <div v-if="account.type === 'address' && creator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
+          </v-layout>
+            <address-qr :address="account.address" :large="true" />
+          </v-layout>
+        </v-flex>
+        <v-flex xs12 >
+          <v-layout row align-center justify-start>
+            <app-copy-to-clip :value-to-copy="account.address" />
+            <p class="break-hash font-mono pt-0 pr-4 pl-1">{{ account.address }}</p>
+          </v-layout>
+        </v-flex>
+        <v-flex xs12 hidden-sm-and-up  v-if="hashChips">
+          <v-layout align-center justify-start row fill-height pt-2 >
+            <div v-if="account.type === 'address' && miner" class="chip miner-chip mr-2 ml-1">{{ $t('miner.name') }}</div>
+            <div v-if="account.type === 'address' && creator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
+          </v-layout>
+        </v-flex>
+
+      </v-layout>
+      </v-flex>
+      <!-- <v-flex hidden-xs-only fill-height mr-3>
+        <v-layout justify-end> <address-qr :address="account.address" :large="true" /> </v-layout>
+      </v-flex> -->
     </v-layout>
-    <v-layout hidden-sm-and-up align-center justify-space-around row fill-height>
-      <app-copy-to-clip :value-to-copy="account.address" />
-      <address-qr :address-qr="account.address" />
-    </v-layout>
+
+
     <!--
     =====================================================================================
       BLOCKS
     =====================================================================================
     -->
-    <v-layout row wrap justify-space-between mb-4>
+    <v-layout row wrap justify-space-between :class="layoutPadding">
       <!-- Ether Balance -->
       <v-flex xs12 md4>
         <v-card class="primary white--text pl-2" flat>
@@ -96,6 +108,9 @@ export default class AddressDetail extends Mixins(StringConcatMixin) {
 
   @Prop(Object) account!: AccountInfo
 
+  miner = true
+  creator = true
+
   /*
   ===================================================================================
     Computed Values
@@ -109,5 +124,48 @@ export default class AddressDetail extends Mixins(StringConcatMixin) {
     }
     return titles[this.account.type]
   }
+
+  get hashChips():boolean {
+    return (this.account.type === 'address' && (this.miner || this.creator))
+  }
+
+  get layoutPadding(): string{
+    const brkPoint = this.$vuetify.breakpoint.name
+
+    switch (brkPoint) {
+      case 'xs':
+        return 'pa-2'
+      default:
+        return 'pa-3'
+    }
+  }
 }
 </script>
+
+<style scoped lang="css">
+
+.break-hash{
+  word-break: break-all;
+}
+
+.chip {
+  height: 28px;
+  border-radius: 14px;
+  font-size: 85%;
+  color: white;
+  padding: 5px 10px;
+}
+
+.miner-chip{
+  background-color: #40ce9c;
+}
+
+.creator-chip {
+  background-color: #b3d4fc;
+}
+
+p {
+  margin-bottom: 0px;
+}
+</style>
+
