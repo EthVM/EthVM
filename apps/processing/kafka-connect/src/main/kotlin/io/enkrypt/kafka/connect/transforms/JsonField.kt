@@ -80,9 +80,7 @@ abstract class JsonField<R : ConnectRecord<R>> : Transformation<R> {
               updatedValue.put(field, objectMapper.writeValueAsString(json))
             }
           }
-
         }
-
       }
 
     return newRecord(record, updatedSchema, updatedValue)
@@ -120,7 +118,7 @@ abstract class JsonField<R : ConnectRecord<R>> : Transformation<R> {
           false -> builder.field(field.name(), field.schema())
           true -> {
 
-            logger.info { "Converting field: $field "}
+            logger.info { "Converting field: $field " }
 
             builder.field(
               field.name(),
@@ -161,6 +159,4 @@ abstract class JsonField<R : ConnectRecord<R>> : Transformation<R> {
     override fun newRecord(record: R, updatedSchema: Schema?, updatedValue: Any) =
       record.newRecord(record.topic(), record.kafkaPartition(), record.keySchema(), record.key(), updatedSchema, updatedValue, record.timestamp())
   }
-
 }
-

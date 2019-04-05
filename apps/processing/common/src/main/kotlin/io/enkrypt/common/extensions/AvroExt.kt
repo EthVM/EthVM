@@ -333,4 +333,3 @@ fun TraceRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> {
     else -> throw IllegalArgumentException("Unexpected action type: $action")
   }
 }
-

@@ -24,14 +24,12 @@ import io.enkrypt.common.extensions.setNonceBI
 import io.enkrypt.common.extensions.setNumberBI
 import io.enkrypt.common.extensions.setTotalDifficultyBI
 import io.enkrypt.common.extensions.setValueBI
-import org.apache.avro.Conversions
 import org.web3j.protocol.core.methods.response.EthBlock
 import org.web3j.protocol.core.methods.response.Log
 import org.web3j.protocol.core.methods.response.Transaction
 import org.web3j.protocol.core.methods.response.TransactionReceipt
 import org.web3j.protocol.parity.methods.response.Trace
 import org.web3j.utils.Numeric
-import java.math.BigDecimal
 
 fun EthBlock.Block.toBlockHeaderRecord(builder: BlockHeaderRecord.Builder): BlockHeaderRecord.Builder =
   builder

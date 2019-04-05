@@ -1,6 +1,5 @@
 package io.enkrypt.common.extensions
 
-import java.math.BigDecimal
 import java.math.BigInteger
 import java.nio.ByteBuffer
 
@@ -30,7 +29,6 @@ fun ByteBuffer?.byteArray(): ByteArray? {
 }
 
 fun ByteBuffer.bigInteger() = BigInteger(this.byteArray())
-
 
 fun ByteBuffer?.compress(threshold: Int): ByteBuffer? {
   return if (this == null || this.capacity() < threshold) {

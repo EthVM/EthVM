@@ -2,7 +2,6 @@ package io.enkrypt.kafka.connect.sinks.web3
 
 import io.reactivex.Flowable
 import org.web3j.crypto.WalletFile
-import org.web3j.protocol.Web3jService
 import org.web3j.protocol.admin.methods.response.BooleanResponse
 import org.web3j.protocol.admin.methods.response.NewAccountIdentifier
 import org.web3j.protocol.admin.methods.response.PersonalListAccounts
@@ -10,7 +9,6 @@ import org.web3j.protocol.admin.methods.response.PersonalSign
 import org.web3j.protocol.admin.methods.response.PersonalUnlockAccount
 import org.web3j.protocol.core.DefaultBlockParameter
 import org.web3j.protocol.core.Request
-import org.web3j.protocol.core.Response
 import org.web3j.protocol.core.methods.request.EthFilter
 import org.web3j.protocol.core.methods.request.ShhFilter
 import org.web3j.protocol.core.methods.request.ShhPost
@@ -79,10 +77,8 @@ import org.web3j.protocol.parity.methods.response.ParityTraceGet
 import org.web3j.protocol.parity.methods.response.ParityTracesResponse
 import org.web3j.protocol.websocket.events.LogNotification
 import org.web3j.protocol.websocket.events.NewHeadsNotification
-import org.web3j.protocol.websocket.events.Notification
 import java.math.BigInteger
 import java.util.ArrayList
-import java.util.concurrent.CompletableFuture
 
 abstract class AbstractFakeParity : Parity {
 

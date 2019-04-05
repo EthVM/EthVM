@@ -35,7 +35,6 @@ fun String.hexToBI() =
   } else
     BigInteger(this)
 
-
 fun String.camelToSnakeCase() =
   CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this)
 

@@ -3,13 +3,6 @@ package io.enkrypt.kafka.connect.sinks.mongo
 import io.confluent.connect.avro.AvroConverter
 import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient
 import io.confluent.kafka.serializers.KafkaAvroSerializer
-import io.enkrypt.avro.capture.BlockHeaderRecord
-import io.enkrypt.avro.capture.ContractKeyRecord
-import io.enkrypt.avro.capture.TransactionRecord
-import io.enkrypt.avro.processing.MetricKeyRecord
-import io.enkrypt.avro.processing.MetricRecord
-import io.enkrypt.avro.processing.TransactionKeyRecord
-import io.enkrypt.common.extensions.unsignedByteBuffer
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.kotlintest.specs.BehaviorSpec

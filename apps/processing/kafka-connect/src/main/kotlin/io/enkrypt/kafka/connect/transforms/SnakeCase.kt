@@ -1,8 +1,5 @@
 package io.enkrypt.kafka.connect.transforms
 
-import com.datamountaineer.streamreactor.connect.json.SimpleJsonConverter
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.google.common.base.CaseFormat
 import io.enkrypt.common.extensions.camelToSnakeCase
 import io.enkrypt.common.extensions.snakeToCamelCase
 import mu.KotlinLogging
@@ -116,6 +113,4 @@ abstract class SnakeCase<R : ConnectRecord<R>> : Transformation<R> {
     override fun newRecord(record: R, updatedSchema: Schema?, updatedValue: Any) =
       record.newRecord(record.topic(), record.kafkaPartition(), record.keySchema(), record.key(), updatedSchema, updatedValue, record.timestamp())
   }
-
 }
-

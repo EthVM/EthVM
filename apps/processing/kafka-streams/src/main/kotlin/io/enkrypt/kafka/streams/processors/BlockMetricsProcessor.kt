@@ -41,7 +41,6 @@ import org.apache.kafka.streams.kstream.TransformerSupplier
 import java.math.BigInteger
 import java.time.Duration
 import java.util.Properties
-import java.util.concurrent.TimeUnit
 
 class BlockMetricsProcessor : AbstractKafkaProcessor() {
 
