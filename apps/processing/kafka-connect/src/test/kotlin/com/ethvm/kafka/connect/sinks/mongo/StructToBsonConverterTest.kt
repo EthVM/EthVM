@@ -3,7 +3,6 @@ package com.ethvm.kafka.connect.sinks.mongo
 import io.confluent.connect.avro.AvroConverter
 import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient
 import io.confluent.kafka.serializers.KafkaAvroSerializer
-import io.enkrypt.kafka.connect.sinks.mongo.StructToBsonConverter
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.kotlintest.specs.BehaviorSpec
@@ -66,8 +65,8 @@ class StructToBsonConverterTest : BehaviorSpec() {
 
       `when`("we perform a conversion") {
 
-        val bsonDocument = StructToBsonConverter.convert(null)
-        val bsonDocument2 = StructToBsonConverter.convert(null, allowNulls = true)
+        val bsonDocument = com.ethvm.kafka.connect.sinks.mongo.StructToBsonConverter.convert(null)
+        val bsonDocument2 = com.ethvm.kafka.connect.sinks.mongo.StructToBsonConverter.convert(null, allowNulls = true)
 
         then("we obtain the value converted successfully") {
           bsonDocument shouldBe BsonDocument()
@@ -87,7 +86,7 @@ class StructToBsonConverterTest : BehaviorSpec() {
 
       `when`("we perform a conversion") {
 
-        val bsonDocument = StructToBsonConverter.convert(struct)
+        val bsonDocument = com.ethvm.kafka.connect.sinks.mongo.StructToBsonConverter.convert(struct)
 
         then("we obtain the value converted successfully") {
           bsonDocument shouldNotBe null
@@ -107,7 +106,7 @@ class StructToBsonConverterTest : BehaviorSpec() {
 
       `when`("we perform a conversion") {
 
-        val bsonDocument = StructToBsonConverter.convert(struct)
+        val bsonDocument = com.ethvm.kafka.connect.sinks.mongo.StructToBsonConverter.convert(struct)
 
         then("we obtain the value converted successfully") {
           bsonDocument shouldNotBe null
@@ -127,7 +126,7 @@ class StructToBsonConverterTest : BehaviorSpec() {
 
       `when`("we perform a conversion") {
 
-        val bsonDocument = StructToBsonConverter.convert(struct)
+        val bsonDocument = com.ethvm.kafka.connect.sinks.mongo.StructToBsonConverter.convert(struct)
 
         then("we obtain the value converted successfully") {
           bsonDocument shouldNotBe null
@@ -147,7 +146,7 @@ class StructToBsonConverterTest : BehaviorSpec() {
 
       `when`("we perform a conversion") {
 
-        val bsonDocument = StructToBsonConverter.convert(struct)
+        val bsonDocument = com.ethvm.kafka.connect.sinks.mongo.StructToBsonConverter.convert(struct)
 
         then("we obtain the value converted successfully") {
           bsonDocument shouldNotBe null
@@ -167,7 +166,7 @@ class StructToBsonConverterTest : BehaviorSpec() {
 
       `when`("we perform a conversion") {
 
-        val bsonDocument = StructToBsonConverter.convert(struct)
+        val bsonDocument = com.ethvm.kafka.connect.sinks.mongo.StructToBsonConverter.convert(struct)
 
         then("we obtain the value converted successfully") {
           bsonDocument shouldNotBe null
@@ -187,7 +186,7 @@ class StructToBsonConverterTest : BehaviorSpec() {
 
       `when`("we perform a conversion") {
 
-        val bsonDocument = StructToBsonConverter.convert(struct)
+        val bsonDocument = com.ethvm.kafka.connect.sinks.mongo.StructToBsonConverter.convert(struct)
 
         then("we obtain the value converted successfully") {
           bsonDocument shouldNotBe null
@@ -207,7 +206,7 @@ class StructToBsonConverterTest : BehaviorSpec() {
 
       `when`("we perform a conversion") {
 
-        val bsonDocument = StructToBsonConverter.convert(struct)
+        val bsonDocument = com.ethvm.kafka.connect.sinks.mongo.StructToBsonConverter.convert(struct)
 
         then("we obtain the value converted successfully") {
           bsonDocument shouldNotBe null
@@ -231,7 +230,7 @@ class StructToBsonConverterTest : BehaviorSpec() {
 
       `when`("we perform a conversion") {
 
-        val bsonDocument = StructToBsonConverter.convert(struct)
+        val bsonDocument = com.ethvm.kafka.connect.sinks.mongo.StructToBsonConverter.convert(struct)
 
         then("we obtain the value converted successfully") {
           bsonDocument shouldNotBe null
@@ -253,7 +252,7 @@ class StructToBsonConverterTest : BehaviorSpec() {
 
       `when`("we perform a conversion") {
 
-        val bsonDocument = StructToBsonConverter.convert(struct)
+        val bsonDocument = com.ethvm.kafka.connect.sinks.mongo.StructToBsonConverter.convert(struct)
 
         then("we obtain the value converted successfully") {
           bsonDocument shouldNotBe null
@@ -273,7 +272,7 @@ class StructToBsonConverterTest : BehaviorSpec() {
 
       `when`("we perform a conversion") {
 
-        val bsonDocument = StructToBsonConverter.convert(struct)
+        val bsonDocument = com.ethvm.kafka.connect.sinks.mongo.StructToBsonConverter.convert(struct)
 
         then("we obtain the value converted successfully") {
           bsonDocument shouldNotBe null

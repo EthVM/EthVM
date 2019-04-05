@@ -1,7 +1,5 @@
 package com.ethvm.kafka.connect.sinks.mongo
 
-import io.enkrypt.kafka.connect.sinks.mongo.MongoSinkConnector
-import io.enkrypt.kafka.connect.sinks.mongo.MongoSinkTask
 import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
@@ -14,7 +12,7 @@ class MongoSinkConnectorTest : BehaviorSpec() {
   init {
     given("a MongoSinkConnector instance") {
 
-      val sink = MongoSinkConnector()
+      val sink = com.ethvm.kafka.connect.sinks.mongo.MongoSinkConnector()
 
       `when`("we ask for its version number") {
 
@@ -30,7 +28,7 @@ class MongoSinkConnectorTest : BehaviorSpec() {
         val clazz = sink.taskClass()
 
         then("we obtain a MongoSinkTask class value") {
-          clazz shouldBe MongoSinkTask::class.java
+          clazz shouldBe com.ethvm.kafka.connect.sinks.mongo.MongoSinkTask::class.java
         }
       }
 
@@ -61,8 +59,8 @@ class MongoSinkConnectorTest : BehaviorSpec() {
 
         then("we obtain a default config object") {
           config shouldNotBe null
-          config.names() shouldContain MongoSinkConnector.Config.MONGO_URI_CONFIG
-          config.defaultValues().values shouldContain MongoSinkConnector.Config.MONGO_DEFAULT_URI_VALUE
+          config.names() shouldContain com.ethvm.kafka.connect.sinks.mongo.MongoSinkConnector.Config.MONGO_URI_CONFIG
+          config.defaultValues().values shouldContain com.ethvm.kafka.connect.sinks.mongo.MongoSinkConnector.Config.MONGO_DEFAULT_URI_VALUE
         }
       }
     }
@@ -71,18 +69,18 @@ class MongoSinkConnectorTest : BehaviorSpec() {
 
       `when`("we ask to return a mongo URI with an empty map") {
 
-        val mongoUri = MongoSinkConnector.Config.mongoUri(mutableMapOf())
+        val mongoUri = com.ethvm.kafka.connect.sinks.mongo.MongoSinkConnector.Config.mongoUri(mutableMapOf())
 
         then("we obtain a correct parsed MongoURI object with default value") {
           mongoUri shouldNotBe null
-          mongoUri shouldBe MongoSinkConnector.Config.MONGO_DEFAULT_URI_VALUE
+          mongoUri shouldBe com.ethvm.kafka.connect.sinks.mongo.MongoSinkConnector.Config.MONGO_DEFAULT_URI_VALUE
         }
       }
 
       `when`("we ask to return a mongo URI with a map containing an URI") {
 
-        val mongoUri = MongoSinkConnector.Config.mongoUri(
-          mutableMapOf(MongoSinkConnector.Config.MONGO_URI_CONFIG to "mongodb://localhost:27017/test")
+        val mongoUri = com.ethvm.kafka.connect.sinks.mongo.MongoSinkConnector.Config.mongoUri(
+          mutableMapOf(com.ethvm.kafka.connect.sinks.mongo.MongoSinkConnector.Config.MONGO_URI_CONFIG to "mongodb://localhost:27017/test")
         )
 
         then("we obtain a correct parsed MongoURI object with the passed URI") {
@@ -94,8 +92,8 @@ class MongoSinkConnectorTest : BehaviorSpec() {
       `when`("we ask to return a mongo URI with a map containing a bad URI") {
 
         val exception = shouldThrow<IllegalArgumentException> {
-          MongoSinkConnector.Config.mongoUri(
-            mutableMapOf(MongoSinkConnector.Config.MONGO_URI_CONFIG to "mongodb://localhost:27017/")
+          com.ethvm.kafka.connect.sinks.mongo.MongoSinkConnector.Config.mongoUri(
+            mutableMapOf(com.ethvm.kafka.connect.sinks.mongo.MongoSinkConnector.Config.MONGO_URI_CONFIG to "mongodb://localhost:27017/")
           )
         }
 

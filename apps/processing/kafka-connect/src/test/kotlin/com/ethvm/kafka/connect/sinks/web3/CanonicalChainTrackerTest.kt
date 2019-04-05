@@ -1,7 +1,6 @@
 package com.ethvm.kafka.connect.sinks.web3
 
 import com.ethvm.common.extensions.toHex
-import io.enkrypt.kafka.connect.sources.web3.CanonicalChainTracker
 import io.kotlintest.shouldNotBe
 import io.kotlintest.specs.BehaviorSpec
 import io.mockk.every
@@ -26,7 +25,7 @@ class CanonicalChainTrackerTest : BehaviorSpec() {
 
     given("a new canonical chain tracker") {
 
-      val tracker = CanonicalChainTracker(
+      val tracker = com.ethvm.kafka.connect.sources.web3.CanonicalChainTracker(
         FakeParity(),
         0
       )
