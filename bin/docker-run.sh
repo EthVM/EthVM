@@ -50,14 +50,11 @@ up_default() {
   echo -e "Building containers..."
   docker-compose build
 
-  echo -e "Starting up containers: traefik, api, explorer, timescale, mongodb, zookeeper kafka-1 kafka-schema-registry kafka-connect \n"
-  docker-compose up -d traefik api explorer timescale mongodb zookeeper kafka-1 kafka-schema-registry kafka-connect
+  echo -e "Starting up containers: traefik, api, explorer, timescale, zookeeper kafka-1 kafka-schema-registry kafka-connect \n"
+  docker-compose up -d traefik api explorer timescale zookeeper kafka-1 kafka-schema-registry kafka-connect
 
   echo -e "Initialising kafka...\n"
   ${SCRIPT_DIR}/ethvm-utils.sh kafka init
-
-  echo -e "Initialising mongo...\n"
-  ${SCRIPT_DIR}/ethvm-utils.sh mongo init
 
   echo -e "Initialising timescale..\n"
   ${SCRIPT_DIR}/migrator.sh migrate

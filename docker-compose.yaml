@@ -231,13 +231,12 @@ services:
 
   kafka-connect:
     build:
-      context: apps/processing/kafka-connect
+      context: apps/processing/connectors
       dockerfile: ./Dockerfile.dev
     restart: unless-stopped
     depends_on:
       - zookeeper
       - kafka-1
-      - mongodb
       - kafka-schema-registry
     networks:
       - back

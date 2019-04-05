@@ -9,8 +9,11 @@ pluginManagement {
 }
 
 include(
-  "avro",
-  "common",
-  "kafka-streams",
-  "kafka-connect"
+  ":avro",
+  ":common",
+  ":kafka-streams",
+  ":connectors:sinks:jdbc",
+  ":connectors:sources:exchanges",
+  ":connectors:sources:eth-tokens-list",
+  ":connectors:sources:web3"
 )
