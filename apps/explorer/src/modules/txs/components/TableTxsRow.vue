@@ -6,18 +6,12 @@
         Mobile (XS)
       =====================================================================================
       -->
-      <!--
-      =====================================================================================
-        Mobile (XS)
-      =====================================================================================
-      -->
       <v-flex xs12 hidden-sm-and-up>
         <div :class="txStatusClass">
-          <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-4 pl-4">
+          <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-3 pl-3">
             <v-flex xs6 pa-1>
               <router-link class="black--text font-weight-medium pb-1" :to="'/block/' + tx.getBlockHash()"
-                >{{ $t('block.number') }} {{ tx.getBlockNumber() }}</router-link
-              >
+                >{{ $t('block.number') }} {{ tx.getBlockNumber() }}</router-link>
             </v-flex>
             <v-flex xs6 pr-44>
               <v-layout row justify-end>
@@ -30,11 +24,9 @@
             <v-flex xs10 pa-1>
               <app-hash-concat :hash="tx.getHash()" :link="'/tx/' + tx.getHash()" />
             </v-flex>
-            <v-flex xs2 pa-1>
-              <p class="info--text psmall pr-1">{{ $tc('address.name', 2) }}:</p>
-            </v-flex>
-            <v-flex xs10 pa-1>
-              <v-layout row pl-4 ml-1 pr-2>
+            <v-flex xs12 pa-1>
+              <v-layout row pa-2>
+                <p class="info--text psmall pr-1">{{ $tc('address.name', 2) }}:</p>
                 <app-hash-concat :hash="tx.getFrom().toString()" :italic="true" :link="'/address/' + tx.getFrom().toString()" />
                 <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
                 <app-hash-concat
@@ -46,10 +38,10 @@
                 <app-hash-concat v-else :hash="tx.getTo().toString()" :italic="true" :link="'/address/' + tx.getTo().toString()" />
               </v-layout>
             </v-flex>
-            <v-flex xs2 pa-1>
+            <v-flex shrink pa-1>
               <p class="info--text psmall">{{ $t('common.eth') }}:</p>
             </v-flex>
-            <v-flex xs10 pa-1>
+            <v-flex shrink pa-1>
               <p class="black--text align-center">{{ getRoundNumber(tx.getValue().toEth()) }}</p>
             </v-flex>
           </v-layout>
@@ -63,67 +55,60 @@
       <v-flex hidden-xs-only sm12>
         <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
           <!--
-      =====================================================================================
-          BLOCK NUMBER / HASH
+          =====================================================================================
+            BLOCK NUMBER / HASH
 
-          Responsive Tally:
-          XS: 3/12 (3)
-          SM: 3/12 (3)
-          MD: 1/12 (1)
-      =====================================================================================
-      -->
-          <v-flex xs4 sm3 md1 pr-1>
+            Responsive Tally:
+            SM: 2/12 (2)
+            MD: 1/12 (1)
+          =====================================================================================
+          -->
+          <v-flex sm2 md1 pr-1>
             <router-link class="primary--text text-truncate font-italic psmall" :to="'/block/' + tx.getBlockHash()">{{ tx.getBlockNumber() }}</router-link>
           </v-flex>
           <!--
-      =====================================================================================
-        TRANSACTION # / HASH
+          =====================================================================================
+            TRANSACTION # / HASH
 
-        Responsive Tally:
-        XS: 10/12 (7)
-        SM: 9/12 (6)
-        MD: 7/12 (6)
-      =====================================================================================
-      -->
-          <v-flex d-flex xs8 sm6 md6 pr-3>
+            Responsive Tally:
+            SM: 9/12 (7)
+            MD: 7/12 (6)
+          =====================================================================================
+          -->
+          <v-flex d-flex sm7 md6 pr-3>
             <v-layout row wrap align-center pb-1>
-              <v-flex d-flex sm12 pb-2>
-                <router-link class="primary--text font-mono text-truncate psmall" :to="'/tx/' + tx.getHash()">{{ tx.getHash() }}</router-link>
+              <v-flex sm12 pa-2>
+                <v-layout row align-center justift-start pa-1>
+                  <v-flex shrink pa-1>
+                    <p class="info--text psmall">{{ $tc('tx.hash', 1) }}:</p>
+                  </v-flex>
+                  <v-flex sm10 lg11 pa-1 >
+                    <app-hash-concat :hash="tx.getHash()" :link="'/tx/' + tx.getHash()" />
+                  </v-flex>
+                </v-layout>
               </v-flex>
-              <v-flex sm12 pt-0>
-                <v-layout row pl-2>
-                  <p class="text-truncate info--text mb-0">
-                    {{ $t('tx.from') }}:
-                    <router-link :to="'/address/' + tx.getFrom().toString()" class="secondary--text font-mono font-italic font-weight-regular">{{
-                      tx.getFrom().toString()
-                    }}</router-link>
-                  </p>
+              <v-flex sm12 pa-2>
+                <v-layout row align-center justify-space-around fill-height pa-2>
+                  <p class="info--text mb-0 mr-1">{{ $t('tx.from') }}: </p>
+                  <app-hash-concat :hash="tx.getFrom().toString()" :link="'/address/' + tx.getFrom().toString()" :italic="true"/>
                   <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
-                  <p class="text-truncate info--text font-weight-thin mb-0" v-if="!tx.getContractAddress().isEmpty()">
-                    {{ $tc('contract.name', 1) }}:
-                    <router-link class="secondary--text font-mono font-italic font-weight-regular" :to="'/address/' + tx.getContractAddress().toString()">{{
-                      tx.getContractAddress().toString()
-                    }}</router-link>
-                  </p>
-                  <p class="text-truncate info--text font-weight-thin mb-0" v-else>
-                    <strong>{{ $t('tx.to') }}:</strong>
-                    <router-link class="secondary--text font-mono font-italic font-weight-regular" :to="'/address/' + tx.getTo().toString()">{{
-                      tx.getTo().toString()
-                    }}</router-link>
-                  </p>
+                  <p class="info--text mb-0 mr-1" v-if="!tx.getContractAddress().isEmpty()">{{ $tc('contract.name', 1) }}:</p>
+                  <p class="info--text mb-0 mr-1" v-else>{{ $t('tx.to') }}:</p>
+                  <app-hash-concat v-if="!tx.getContractAddress().isEmpty()" :hash="  tx.getContractAddress().toString()" :link="'/address/' + tx.getContractAddress().toString()" :italic="true"/>
+                  <app-hash-concat v-else :hash="tx.getTo().toString()" :link="'/address/' + tx.getTo().toString()" :italic="true"/>
                 </v-layout>
               </v-flex>
             </v-layout>
           </v-flex>
           <!--
-      =====================================================================================
-        ETH VALUE
+          =====================================================================================
+          ETH VALUE
 
-        Responsive Tally:
-        SM: 11/12 (2)
-        MD: 8/12 (1)
-      =====================================================================================
-      -->
+          Responsive Tally:
+          SM: 11/12 (2)
+          MD: 8/12 (1)
+          =====================================================================================
+          -->
           <v-flex d-flex sm2 md1 pr-0>
             <p v-if="$vuetify.breakpoint.xsOnly" :class="[tx.getStatus() ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">
               {{ $t('common.amount') }}: {{ getRoundNumber(tx.getValue().toEth()) }}
@@ -146,38 +131,38 @@
             </p>
           </v-flex>
           <!--
-      =====================================================================================
-        Age
+          =====================================================================================
+            Age
 
-        Responsive Tally:
-        SM: 11/12 (0)
-        MD: 11/12 (2)
-      =====================================================================================
-      -->
+            Responsive Tally:
+            SM: 11/12 (0)
+            MD: 11/12 (2)
+          =====================================================================================
+          -->
           <v-flex hidden-sm-and-down md2>
             <app-time-ago :timestamp="tx.getTimestamp()" />
           </v-flex>
           <!--
-      =====================================================================================
-        Tx Fee
+          =====================================================================================
+            Tx Fee
 
-        Responsive Tally:
-        SM: 11/12 (0)
-        MD: 9/12 (1)
-      =====================================================================================
-      -->
+            Responsive Tally:
+            SM: 11/12 (0)
+            MD: 9/12 (1)
+          =====================================================================================
+          -->
           <v-flex hidden-sm-and-down md1>
             <p class="black--text text-truncate mb-0">{{ getTxFee(tx) }}</p>
           </v-flex>
           <!--
-      =====================================================================================
-        STATUS
+          =====================================================================================
+          STATUS
 
-        Responsive Tally:
-        SM: 12/12 (1)
-        MD: 12/12 (1)
-      =====================================================================================
-      -->
+          Responsive Tally:
+          SM: 12/12 (1)
+          MD: 12/12 (1)
+          =====================================================================================
+          -->
           <v-flex v-if="!isPending" sm1>
             <v-icon v-if="tx.getStatus()" small class="txSuccess--text">fa fa-check-circle</v-icon>
             <v-icon v-else small class="txFail--text">fa fa-times-circle</v-icon>
