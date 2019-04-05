@@ -3,8 +3,8 @@ package io.enkrypt.kafka.streams.processors
 import com.ethvm.avro.capture.ContractMetadataRecord
 import com.ethvm.avro.exchange.ExchangeRateRecord
 import com.ethvm.avro.exchange.SymbolKeyRecord
-import io.enkrypt.common.extensions.hexBuffer
-import io.enkrypt.common.extensions.isValid
+import com.ethvm.common.extensions.hexBuffer
+import com.ethvm.common.extensions.isValid
 import io.enkrypt.kafka.streams.Serdes
 import io.enkrypt.kafka.streams.config.Topics
 import mu.KLogger

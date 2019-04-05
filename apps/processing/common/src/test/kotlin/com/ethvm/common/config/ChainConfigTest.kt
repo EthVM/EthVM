@@ -1,4 +1,4 @@
-package io.enkrypt.common.config
+package com.ethvm.common.config
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.BehaviorSpec

@@ -6,8 +6,8 @@ import com.mongodb.client.model.ReplaceOptions
 import com.mongodb.client.model.UpdateOneModel
 import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.WriteModel
-import io.enkrypt.common.extensions.hex
-import io.enkrypt.common.extensions.unsignedBigInteger
+import com.ethvm.common.extensions.hex
+import com.ethvm.common.extensions.unsignedBigInteger
 import org.apache.kafka.connect.data.Schema
 import org.apache.kafka.connect.data.Struct
 import org.apache.kafka.connect.sink.SinkRecord

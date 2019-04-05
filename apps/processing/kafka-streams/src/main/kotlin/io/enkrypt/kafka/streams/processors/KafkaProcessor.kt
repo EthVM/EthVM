@@ -1,6 +1,6 @@
 package io.enkrypt.kafka.streams.processors
 
-import io.enkrypt.common.config.NetConfig
+import com.ethvm.common.config.NetConfig
 import io.enkrypt.kafka.streams.config.AppConfig
 import mu.KLogger
 import org.apache.kafka.streams.KafkaStreams

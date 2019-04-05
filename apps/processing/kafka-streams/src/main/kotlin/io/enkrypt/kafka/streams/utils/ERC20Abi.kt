@@ -1,10 +1,10 @@
 package io.enkrypt.kafka.streams.utils
 
 import arrow.core.Option
-import io.enkrypt.common.extensions.byteArray
-import io.enkrypt.common.extensions.hex
-import io.enkrypt.common.extensions.hexBuffer
-import io.enkrypt.common.extensions.hexBytes
+import com.ethvm.common.extensions.byteArray
+import com.ethvm.common.extensions.hex
+import com.ethvm.common.extensions.hexBuffer
+import com.ethvm.common.extensions.hexBytes
 import java.math.BigInteger
 import java.nio.ByteBuffer
 

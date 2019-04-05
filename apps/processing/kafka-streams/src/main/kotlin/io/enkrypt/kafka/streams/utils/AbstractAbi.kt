@@ -1,8 +1,8 @@
 package io.enkrypt.kafka.streams.utils
 
 import arrow.core.Option
-import io.enkrypt.common.extensions.byteBuffer
-import io.enkrypt.common.extensions.hexBuffer
+import com.ethvm.common.extensions.byteBuffer
+import com.ethvm.common.extensions.hexBuffer
 import org.apache.commons.compress.utils.IOUtils
 import org.ethereum.solidity.Abi
 import java.io.InputStream

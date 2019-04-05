@@ -1,7 +1,7 @@
 package io.enkrypt.kafka.connect.transforms
 
-import io.enkrypt.common.extensions.camelToSnakeCase
-import io.enkrypt.common.extensions.snakeToCamelCase
+import com.ethvm.common.extensions.camelToSnakeCase
+import com.ethvm.common.extensions.snakeToCamelCase
 import mu.KotlinLogging
 import org.apache.kafka.common.cache.Cache
 import org.apache.kafka.common.cache.LRUCache

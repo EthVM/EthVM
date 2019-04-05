@@ -99,11 +99,11 @@ class CoinGeckoExchangeRateSourceTask : SourceTask() {
     val SLEEP: Long = TimeUnit.MINUTES.toMillis(1)
 
     val SymbolKeyMetadataSchema: SchemaBuilder = SchemaBuilder(Schema.Type.STRUCT)
-      .name("io.enkrypt.avro.exchange.SymbolKeyRecord")
+      .name("io.ethvm.avro.exchange.SymbolKeyRecord")
       .field("symbol", Schema.STRING_SCHEMA)
 
     val ExchangeRateMetadataSchema: SchemaBuilder = SchemaBuilder(Schema.Type.STRUCT)
-      .name("io.enkrypt.avro.exchange.ExchangeRateRecord")
+      .name("io.ethvm.avro.exchange.ExchangeRateRecord")
       .field("id", Schema.STRING_SCHEMA)
       .field("symbol", Schema.STRING_SCHEMA)
       .field("name", Schema.STRING_SCHEMA)

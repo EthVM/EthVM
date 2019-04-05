@@ -1,4 +1,4 @@
-package io.enkrypt.common.extensions
+package com.ethvm.common.extensions
 
 import com.ethvm.avro.capture.BlockHeaderRecord
 import com.ethvm.avro.capture.CanonicalKeyRecord

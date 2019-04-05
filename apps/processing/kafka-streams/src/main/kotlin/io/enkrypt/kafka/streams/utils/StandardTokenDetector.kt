@@ -1,8 +1,8 @@
 package io.enkrypt.kafka.streams.utils
 
 import com.ethvm.avro.common.ContractType
-import io.enkrypt.common.extensions.byteArray
-import io.enkrypt.common.extensions.indexByteArrayOf
+import com.ethvm.common.extensions.byteArray
+import com.ethvm.common.extensions.indexByteArrayOf
 import io.enkrypt.kafka.streams.utils.TokenContract.Companion.DECIMALS
 import io.enkrypt.kafka.streams.utils.TokenContract.Companion.NAME
 import io.enkrypt.kafka.streams.utils.TokenContract.Companion.SYMBOL

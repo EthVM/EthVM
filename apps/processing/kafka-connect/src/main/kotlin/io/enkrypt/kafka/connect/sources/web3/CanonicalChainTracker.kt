@@ -1,6 +1,6 @@
 package io.enkrypt.kafka.connect.sources.web3
 
-import io.enkrypt.common.extensions.hexToBI
+import com.ethvm.common.extensions.hexToBI
 import arrow.core.Option
 import arrow.core.toOption
 import io.reactivex.disposables.Disposable

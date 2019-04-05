@@ -1,4 +1,4 @@
-package io.enkrypt.common.config
+package com.ethvm.common.config
 
 import java.math.BigInteger
 

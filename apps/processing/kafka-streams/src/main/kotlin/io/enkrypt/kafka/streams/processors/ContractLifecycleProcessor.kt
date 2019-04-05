@@ -5,7 +5,7 @@ import com.ethvm.avro.capture.ContractLifecycleListRecord
 import com.ethvm.avro.capture.ContractLifecycleRecord
 import com.ethvm.avro.capture.ContractLifecyleType
 import com.ethvm.avro.capture.ContractRecord
-import io.enkrypt.common.extensions.toContractLifecycleRecord
+import com.ethvm.common.extensions.toContractLifecycleRecord
 import io.enkrypt.kafka.streams.Serdes
 import io.enkrypt.kafka.streams.config.Topics.CanonicalContractLifecycle
 import io.enkrypt.kafka.streams.config.Topics.CanonicalTraces

@@ -2,8 +2,8 @@ package io.enkrypt.kafka.streams.transformers
 
 import com.ethvm.avro.capture.BlockHeaderRecord
 import com.ethvm.avro.capture.CanonicalKeyRecord
-import io.enkrypt.common.extensions.getNumberBI
-import io.enkrypt.common.extensions.toHex
+import com.ethvm.common.extensions.getNumberBI
+import com.ethvm.common.extensions.toHex
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serde
 import org.apache.kafka.common.serialization.Serdes

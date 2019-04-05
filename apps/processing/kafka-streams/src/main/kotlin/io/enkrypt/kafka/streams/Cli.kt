@@ -4,7 +4,7 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
-import io.enkrypt.common.config.NetConfig
+import com.ethvm.common.config.NetConfig
 import io.enkrypt.kafka.streams.config.AppConfig
 import io.enkrypt.kafka.streams.config.KafkaConfig
 import io.enkrypt.kafka.streams.di.Modules.kafkaStreams

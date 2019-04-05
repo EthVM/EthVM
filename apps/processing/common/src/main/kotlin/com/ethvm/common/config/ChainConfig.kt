@@ -1,12 +1,12 @@
-package io.enkrypt.common.config
+package com.ethvm.common.config
 
 import com.ethvm.avro.common.TraceLocationRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaType
 import com.ethvm.avro.processing.FungibleTokenType
-import io.enkrypt.common.extensions.ether
-import io.enkrypt.common.extensions.setAmountBI
-import io.enkrypt.common.extensions.setBlockNumberBI
+import com.ethvm.common.extensions.ether
+import com.ethvm.common.extensions.setAmountBI
+import com.ethvm.common.extensions.setBlockNumberBI
 import java.math.BigInteger
 
 interface ChainConfig {
@@ -81,7 +81,8 @@ interface ChainConfig {
   fun eip1014(): Boolean = false
 }
 
-open class OlympicConfig(override val constants: ChainConstants = ChainConstants.olympic) : ChainConfig
+open class OlympicConfig(override val constants: ChainConstants = ChainConstants.olympic) :
+  ChainConfig
 
 open class FrontierConfig(override val constants: ChainConstants = ChainConstants.frontier) : OlympicConfig(constants)
 
@@ -214,7 +215,8 @@ interface NetConfig {
   }
 }
 
-class BaseNetConfig(genesis: Genesis, vararg configs: Pair<Long, ChainConfig>) : NetConfig {
+class BaseNetConfig(genesis: Genesis, vararg configs: Pair<Long, ChainConfig>) :
+  NetConfig {
 
   override val genesis: GenesisFile = genesis.load()
 

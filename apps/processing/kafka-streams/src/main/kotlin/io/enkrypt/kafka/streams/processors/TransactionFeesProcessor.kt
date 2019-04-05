@@ -6,9 +6,9 @@ import com.ethvm.avro.processing.TransactionGasPriceListRecord
 import com.ethvm.avro.processing.TransactionGasPriceRecord
 import com.ethvm.avro.processing.TransactionGasUsedListRecord
 import com.ethvm.avro.processing.TransactionGasUsedRecord
-import io.enkrypt.common.extensions.getGasPriceBI
-import io.enkrypt.common.extensions.getGasUsedBI
-import io.enkrypt.common.extensions.setTransactionFeeBI
+import com.ethvm.common.extensions.getGasPriceBI
+import com.ethvm.common.extensions.getGasUsedBI
+import com.ethvm.common.extensions.setTransactionFeeBI
 import io.enkrypt.kafka.streams.config.Topics.CanonicalGasPrices
 import io.enkrypt.kafka.streams.config.Topics.CanonicalGasUsed
 import io.enkrypt.kafka.streams.config.Topics.CanonicalReceipts

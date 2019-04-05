@@ -4,7 +4,7 @@ import com.ethvm.avro.capture.BlockHeaderRecord
 import com.ethvm.avro.capture.CanonicalKeyRecord
 import com.ethvm.avro.capture.TransactionListRecord
 import com.ethvm.avro.capture.TransactionRecord
-import io.enkrypt.common.extensions.setNumberBI
+import com.ethvm.common.extensions.setNumberBI
 import io.enkrypt.kafka.connect.sources.web3.ext.JsonRpc2_0ParityExtended
 import io.enkrypt.kafka.connect.sources.web3.ext.toBlockHeaderRecord
 import io.enkrypt.kafka.connect.sources.web3.ext.toTransactionRecord

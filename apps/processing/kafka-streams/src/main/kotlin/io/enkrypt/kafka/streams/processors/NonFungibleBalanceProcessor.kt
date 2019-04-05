@@ -7,9 +7,9 @@ import com.ethvm.avro.processing.NonFungibleBalanceDeltaRecord
 import com.ethvm.avro.processing.NonFungibleBalanceKeyRecord
 import com.ethvm.avro.processing.NonFungibleBalanceRecord
 import com.ethvm.avro.processing.NonFungibleTokenType
-import io.enkrypt.common.extensions.getBlockNumberBI
-import io.enkrypt.common.extensions.reverse
-import io.enkrypt.common.extensions.setTokenIdBI
+import com.ethvm.common.extensions.getBlockNumberBI
+import com.ethvm.common.extensions.reverse
+import com.ethvm.common.extensions.setTokenIdBI
 import io.enkrypt.kafka.streams.Serdes
 import io.enkrypt.kafka.streams.config.Topics.CanonicalReceiptErc721Deltas
 import io.enkrypt.kafka.streams.config.Topics.CanonicalReceipts

@@ -1,9 +1,9 @@
 package io.enkrypt.kafka.connect.sinks.mongo
 
 import arrow.core.Option
-import io.enkrypt.common.extensions.bigInteger
-import io.enkrypt.common.extensions.hex
-import io.enkrypt.common.extensions.unsignedBigInteger
+import com.ethvm.common.extensions.bigInteger
+import com.ethvm.common.extensions.hex
+import com.ethvm.common.extensions.unsignedBigInteger
 import io.enkrypt.kafka.connect.sinks.mongo.TypeMappings.ConversionType.BigInt
 import io.enkrypt.kafka.connect.sinks.mongo.TypeMappings.ConversionType.Hex
 import io.enkrypt.kafka.connect.sinks.mongo.TypeMappings.ConversionType.Ignore

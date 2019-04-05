@@ -1,7 +1,7 @@
-package io.enkrypt.common.config
+package com.ethvm.common.config
 
-import io.enkrypt.common.extensions.ether
-import io.enkrypt.common.extensions.finney
+import com.ethvm.common.extensions.ether
+import com.ethvm.common.extensions.finney
 import java.math.BigInteger
 
 data class ChainConstants(

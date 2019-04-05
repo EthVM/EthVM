@@ -1,4 +1,4 @@
-package io.enkrypt.common.extensions
+package com.ethvm.common.extensions
 
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream

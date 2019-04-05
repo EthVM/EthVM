@@ -1,6 +1,6 @@
 package io.enkrypt.kafka.connect.sinks.web3
 
-import io.enkrypt.common.extensions.toHex
+import com.ethvm.common.extensions.toHex
 import io.enkrypt.kafka.connect.sources.web3.CanonicalChainTracker
 import io.kotlintest.shouldNotBe
 import io.kotlintest.specs.BehaviorSpec
