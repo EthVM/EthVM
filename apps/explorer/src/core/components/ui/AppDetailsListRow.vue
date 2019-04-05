@@ -20,14 +20,14 @@
         </div>
         <div v-else>
           <div v-if="!isMono">
-          <router-link v-if="detail.link" :to="detail.link">
-            <div class="text-truncate secondary--text" v-html="detail.detail"></div>
-          </router-link>
-          <div v-else class="text-muted text-truncate" v-html="detail.detail"></div>
+            <router-link v-if="detail.link" :to="detail.link">
+              <div class="text-truncate secondary--text" v-html="detail.detail"></div>
+            </router-link>
+            <div v-else class="text-muted text-truncate" v-html="detail.detail"></div>
           </div>
           <div v-else>
             <app-hash-concat v-if="detail.link" :hash="detail.detail" :link="detail.link" />
-            <app-hash-concat v-else :hash="detail.detail" :isBlue="false"/>
+            <app-hash-concat v-else :hash="detail.detail" :is-blue="false" />
           </div>
         </div>
       </v-flex>
@@ -56,7 +56,6 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
 import AppHashConcat from '@app/core/components/ui/AppHashConcat.vue'
 
-
 @Component({
   components: {
     AppCopyToClip,
@@ -79,8 +78,7 @@ export default class AppDetailsListRow extends Vue {
   ===================================================================================
   */
 
-  get isMono(): boolean  {
-    console.log(this.detail)
+  get isMono(): boolean {
     return this.detail.mono ? true : false
   }
 }

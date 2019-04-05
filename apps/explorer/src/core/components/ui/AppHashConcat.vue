@@ -20,7 +20,7 @@ export default class AppHashConcat extends Vue {
   @Prop(String) hash!: string
   @Prop({ type: Boolean, default: false }) italic!: boolean
   @Prop(String) link!: string
-  @Prop({ type: Boolean, default: true}) isBlue!: boolean
+  @Prop({ type: Boolean, default: true }) isBlue!: boolean
 
   /*
   ===================================================================================
@@ -77,5 +77,4 @@ export default class AppHashConcat extends Vue {
 p{
   margin-bottom: 0px;
 }
-
 </style>

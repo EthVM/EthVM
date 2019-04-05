@@ -1,7 +1,8 @@
 <template>
   <v-dialog v-model="dialog" max-width="400">
-    <v-btn flat color="black" fab slot="activator" class="black--text ma-0" ><v-img :src="require('@/assets/icon-qr.png')" height="30px" max-width="30x" contain />
-</v-btn>
+    <v-btn flat color="black" fab slot="activator" class="black--text ma-0"
+      ><v-img :src="require('@/assets/icon-qr.png')" height="30px" max-width="30x" contain />
+    </v-btn>
     <v-card>
       <v-layout column align-center justify-center pa-2>
         <v-flex xs12> <vue-qr v-if="address" :text="serialize" :size="260" /> </v-flex>
@@ -59,6 +60,4 @@ export default class AddressQR extends Vue {
 .break-hash{
   word-break: break-all;
 }
-
 </style>
-

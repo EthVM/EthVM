@@ -1,43 +1,41 @@
 <template>
-  <v-card color="white" flat >
+  <v-card color="white" flat>
     <v-layout grid-list-md align-start justify-start row fill-height :class="layoutPadding">
-      <v-flex shrink >
+      <v-flex shrink>
         <v-layout align-start justify-center row fill-height pa-2>
-         <blockies :address="account.address" />
+          <blockies :address="account.address" />
         </v-layout>
       </v-flex>
-      <v-flex d-block >
-      <v-layout wrap column fill-height pa-1>
-        <v-flex xs12>
-          <v-layout row wrap align-center justify-space-between>
-            <v-card-title class="title font-weight-bold pl-1 pr-3 pb-2 ">{{ title }}</v-card-title>
-            <v-layout hidden-xs-only align-center justify-start row fill-height pt-2 >
-            <div v-if="account.type === 'address' && miner" class="chip miner-chip mr-2 ml-1">{{ $t('miner.name') }}</div>
-            <div v-if="account.type === 'address' && creator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
-          </v-layout>
-            <address-qr :address="account.address" :large="true" />
-          </v-layout>
-        </v-flex>
-        <v-flex xs12 >
-          <v-layout row align-center justify-start>
-            <app-copy-to-clip :value-to-copy="account.address" />
-            <p class="break-hash font-mono pt-0 pr-4 pl-1">{{ account.address }}</p>
-          </v-layout>
-        </v-flex>
-        <v-flex xs12 hidden-sm-and-up  v-if="hashChips">
-          <v-layout align-center justify-start row fill-height pt-2 >
-            <div v-if="account.type === 'address' && miner" class="chip miner-chip mr-2 ml-1">{{ $t('miner.name') }}</div>
-            <div v-if="account.type === 'address' && creator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
-          </v-layout>
-        </v-flex>
-
-      </v-layout>
+      <v-flex d-block>
+        <v-layout wrap column fill-height pa-1>
+          <v-flex xs12>
+            <v-layout row wrap align-center justify-space-between>
+              <v-card-title class="title font-weight-bold pl-1 pr-3 pb-2 ">{{ title }}</v-card-title>
+              <v-layout hidden-xs-only align-center justify-start row fill-height pt-2>
+                <div v-if="account.type === 'address' && miner" class="chip miner-chip mr-2 ml-1">{{ $t('miner.name') }}</div>
+                <div v-if="account.type === 'address' && creator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
+              </v-layout>
+              <address-qr :address="account.address" :large="true" />
+            </v-layout>
+          </v-flex>
+          <v-flex xs12>
+            <v-layout row align-center justify-start>
+              <app-copy-to-clip :value-to-copy="account.address" />
+              <p class="break-hash font-mono pt-0 pr-4 pl-1">{{ account.address }}</p>
+            </v-layout>
+          </v-flex>
+          <v-flex xs12 hidden-sm-and-up v-if="hashChips">
+            <v-layout align-center justify-start row fill-height pt-2>
+              <div v-if="account.type === 'address' && miner" class="chip miner-chip mr-2 ml-1">{{ $t('miner.name') }}</div>
+              <div v-if="account.type === 'address' && creator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
+            </v-layout>
+          </v-flex>
+        </v-layout>
       </v-flex>
       <!-- <v-flex hidden-xs-only fill-height mr-3>
         <v-layout justify-end> <address-qr :address="account.address" :large="true" /> </v-layout>
       </v-flex> -->
     </v-layout>
-
 
     <!--
     =====================================================================================
@@ -125,11 +123,11 @@ export default class AddressDetail extends Mixins(StringConcatMixin) {
     return titles[this.account.type]
   }
 
-  get hashChips():boolean {
-    return (this.account.type === 'address' && (this.miner || this.creator))
+  get hashChips(): boolean {
+    return this.account.type === 'address' && (this.miner || this.creator)
   }
 
-  get layoutPadding(): string{
+  get layoutPadding(): string {
     const brkPoint = this.$vuetify.breakpoint.name
 
     switch (brkPoint) {
@@ -168,4 +166,3 @@ p {
   margin-bottom: 0px;
 }
 </style>
-

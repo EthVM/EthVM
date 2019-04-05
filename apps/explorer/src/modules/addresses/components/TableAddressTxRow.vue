@@ -35,7 +35,7 @@
                           <v-flex shrink pa-1>
                             <p class="info--text psmall">{{ $tc('tx.hash', 1) }}:</p>
                           </v-flex>
-                          <v-flex xs9 pa-1 >
+                          <v-flex xs9 pa-1>
                             <app-hash-concat :hash="tx.getHash()" :link="'/tx/' + tx.getHash()" />
                           </v-flex>
                         </v-layout>
@@ -45,7 +45,7 @@
                       </v-flex>
                       <v-flex shrink pa-1>
                         <div class="tx-icon-type">
-                         {{ getTxTypeIcon(tx) }}
+                          {{ getTxTypeIcon(tx) }}
                         </div>
                       </v-flex>
                       <v-flex xs6 pa-2>
@@ -107,27 +107,27 @@
                     LG: 7/12 (6)
                     =====================================================================================
                     -->
-                    <v-flex d-flex sm6  pr-3>
+                    <v-flex d-flex sm6 pr-3>
                       <v-layout row wrap pa-1>
-                        <v-flex sm12 >
+                        <v-flex sm12>
                           <v-layout row>
                             <v-flex shrink pa-1>
                               <p class="info--text psmall">{{ $tc('tx.hash', 1) }}:</p>
                             </v-flex>
-                            <v-flex sm10 pa-1 >
+                            <v-flex sm10 pa-1>
                               <app-hash-concat :hash="tx.getHash()" :link="'/tx/' + tx.getHash()" />
                             </v-flex>
                           </v-layout>
                         </v-flex>
                         <v-flex sm12>
-                          <v-layout row  align-center justify-start>
+                          <v-layout row align-center justify-start>
                             <v-flex shrink pa-1>
                               <div class="tx-icon-type">
                                 <p>{{ getTxTypeIcon(tx) }}</p>
                               </div>
                             </v-flex>
                             <v-flex v-if="getType(tx) === 'self'" sm10>
-                              <app-hash-concat  :hash="tx.getFrom().toString()" :italic="true" />
+                              <app-hash-concat :hash="tx.getFrom().toString()" :italic="true" />
                             </v-flex>
                             <v-flex sm10 v-else>
                               <div v-if="tx.getContractAddress().isEmpty()">
@@ -143,7 +143,8 @@
                                 <app-hash-concat
                                   :hash="tx.getContractAddress().toString()"
                                   :italic="true"
-                                  :link="'/address/' + tx.getContractAddress().toString()"/>
+                                  :link="'/address/' + tx.getContractAddress().toString()"
+                                />
                               </div>
                             </v-flex>
                           </v-layout>

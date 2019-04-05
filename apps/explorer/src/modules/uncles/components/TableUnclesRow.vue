@@ -13,7 +13,7 @@
           <app-hash-concat :hash="uncle.getHash()" :link="'/uncle/' + uncle.getHash()" />
         </v-layout>
         <v-layout row pl-2 pt-2 pr-3 pb-2>
-          <p class="info--text psmall pr-2"> {{ $tc('miner.name', 1) }}:</p>
+          <p class="info--text psmall pr-2">{{ $tc('miner.name', 1) }}:</p>
           <app-hash-concat :hash="uncle.getMiner().toString()" :link="'/address/' + uncle.getMiner().toString()" />
         </v-layout>
       </v-flex>
@@ -40,7 +40,6 @@ import { StringConcatMixin } from '@app/core/components/mixins'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import { Uncle } from '@app/core/models'
 import AppHashConcat from '@app/core/components/ui/AppHashConcat.vue'
-
 
 @Component({
   components: {
