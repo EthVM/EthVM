@@ -28,7 +28,7 @@ allprojects {
 
   ext {
     set("ethereumj-version", "1.11.0-RELEASE")
-    set("kotlintest-version", "3.2.1")
+    set("kotlintest-version", "3.3.2")
     set("mockk-version", "1.9")
     set("arrow-core-version", "0.8.2")
     set("logback-version", "1.2.3")
