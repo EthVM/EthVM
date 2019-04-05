@@ -7,17 +7,15 @@
       <v-flex xs3 sm2 order-xs1>
         <router-link class="black--text pb-1" :to="'/uncle/' + uncle.getHash()">{{ uncle.getNumber() }}</router-link>
       </v-flex>
-      <v-flex xs12 sm5 md5 class="pr-0" order-xs3 order-sm2>
-        <p class="text-truncate info--text psmall mb-0 pb-0">
-          {{ $t('common.hash') }}:
-          <router-link class="primary--text font-weight-regular font-mono" :to="'/uncle/' + uncle.getHash()">{{ uncle.getHash() }}</router-link>
-        </p>
-        <p v-if="pageType != 'address'" class="text-truncate info--text mb-0 pt-2">
-          {{ $tc('miner.name', 1) }}:
-          <router-link :to="'/address/' + uncle.getMiner().toString()" class="secondary--text font-mono font-italic font-weight-regular">{{
-            uncle.getMiner().toString()
-          }}</router-link>
-        </p>
+      <v-flex xs12 sm5 md5 order-xs3 order-sm2>
+        <v-layout row pl-2 pt-2 pr-3 pb-0>
+          <p class="info--text psmall pr-2">{{ $t('common.hash') }}:</p>
+          <app-hash-concat :hash="uncle.getHash()" :link="'/uncle/' + uncle.getHash()" />
+        </v-layout>
+        <v-layout row pl-2 pt-2 pr-3 pb-2>
+          <p class="info--text psmall pr-2"> {{ $tc('miner.name', 1) }}:</p>
+          <app-hash-concat :hash="uncle.getMiner().toString()" :link="'/address/' + uncle.getMiner().toString()" />
+        </v-layout>
       </v-flex>
       <v-flex hidden-sm-and-down md1 order-xs4 order-sm3>
         <p class="txSuccess--text mb-0 psmall">{{ uncle.getPosition() }}</p>
@@ -41,8 +39,14 @@
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import { Uncle } from '@app/core/models'
+import AppHashConcat from '@app/core/components/ui/AppHashConcat.vue'
 
-@Component
+
+@Component({
+  components: {
+    AppHashConcat
+  }
+})
 export default class TableUnclesRow extends Mixins(StringConcatMixin) {
   /*
   ===================================================================================
@@ -54,3 +58,11 @@ export default class TableUnclesRow extends Mixins(StringConcatMixin) {
   @Prop({ type: String, default: 'home' }) pageType!: string
 }
 </script>
+
+<style scoped lang="css">
+
+p {
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+}
+</style>
