@@ -28,7 +28,6 @@ export class ChartMixin extends Vue {
             beginAtZero: true,
             callback: function(value) {
               const ranges = [{ divider: 1e9, suffix: 'B' }, { divider: 1e6, suffix: 'M' }, { divider: 1e3, suffix: 'k' }]
-
               function formatNumber(n) {
                 for (let i = 0; i < ranges.length; i++) {
                   if (n >= ranges[i].divider) {
@@ -109,10 +108,8 @@ export class ChartMixin extends Vue {
           res.forEach(point => {
             this.data[state].points.push(point.value)
             this.data[state].labels.push(point.date)
-            console.log(this.data[state].points)
           })
         }
-
       }
     })
   }

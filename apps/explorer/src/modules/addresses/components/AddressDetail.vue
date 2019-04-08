@@ -12,8 +12,8 @@
             <v-layout row wrap align-center justify-space-between>
               <v-card-title class="title font-weight-bold pl-1 pr-3 pb-2 ">{{ title }}</v-card-title>
               <v-layout hidden-xs-only align-center justify-start row fill-height pt-2>
-                <div v-if="account.type === 'address' && miner" class="chip miner-chip mr-2 ml-1">{{ $t('miner.name') }}</div>
-                <div v-if="account.type === 'address' && creator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
+                <div v-if="account.type === 'address' && account.isMiner" class="chip miner-chip mr-2 ml-1">{{ $t('miner.name') }}</div>
+                <div v-if="account.type === 'address' && account.isCreator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
               </v-layout>
               <address-qr :address="account.address" :large="true" />
             </v-layout>
@@ -24,10 +24,10 @@
               <p class="break-hash font-mono pt-0 pr-4 pl-1">{{ account.address }}</p>
             </v-layout>
           </v-flex>
-          <v-flex xs12 hidden-sm-and-up v-if="hashChips">
+          <v-flex xs12 hidden-sm-and-up v-if="hasChips">
             <v-layout align-center justify-start row fill-height pt-2>
-              <div v-if="account.type === 'address' && miner" class="chip miner-chip mr-2 ml-1">{{ $t('miner.name') }}</div>
-              <div v-if="account.type === 'address' && creator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
+              <div v-if="account.type === 'address' && account.isMiner" class="chip miner-chip mr-2 ml-1">{{ $t('miner.name') }}</div>
+              <div v-if="account.type === 'address' && account.isCreator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
             </v-layout>
           </v-flex>
         </v-layout>
@@ -106,9 +106,6 @@ export default class AddressDetail extends Mixins(StringConcatMixin) {
 
   @Prop(Object) account!: AccountInfo
 
-  miner = true
-  creator = true
-
   /*
   ===================================================================================
     Computed Values
@@ -123,8 +120,8 @@ export default class AddressDetail extends Mixins(StringConcatMixin) {
     return titles[this.account.type]
   }
 
-  get hashChips(): boolean {
-    return this.account.type === 'address' && (this.miner || this.creator)
+  get hasChips(): boolean {
+    return this.account.type === 'address' && (this.account.isMiner || this.account.isCreator)
   }
 
   get layoutPadding(): string {
