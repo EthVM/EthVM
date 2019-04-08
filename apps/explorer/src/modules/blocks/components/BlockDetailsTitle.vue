@@ -13,19 +13,19 @@
           <v-card-title class="title font-weight-bold pa-1">{{ title }}</v-card-title>
           <v-dialog v-if="hasUncles" v-model="dialog" max-width="700">
             <template v-slot:activator="{ on }">
-              <v-btn round outline slot="activator" color="primary" class="text-capitalize"  v-on="on" small>
-                {{$tc('uncle.name', unclesPlural) }}
+              <v-btn round outline slot="activator" color="primary" class="text-capitalize" v-on="on" small>
+                {{ $tc('uncle.name', unclesPlural) }}
                 <v-icon right>fa fa-angle-right</v-icon>
               </v-btn>
             </template>
             <v-card>
               <v-card-title class="title font-weight-bold">{{ $tc('uncle.name', unclesPlural) }}:</v-card-title>
-              <v-divider class="lineGrey"/>
+              <v-divider class="lineGrey" />
               <v-list>
                 <v-list-tile v-for="(uncle, index) in uncles" :key="index">
                   <v-layout row justify-start align-center fill-height>
-                    <v-card-title class="info--text p-0" >{{ $t('common.hash') }}:</v-card-title>
-                    <app-hash-concat :hash=" uncle" :link="'/uncle/' + uncle" />
+                    <v-card-title class="info--text p-0">{{ $t('common.hash') }}:</v-card-title>
+                    <app-hash-concat :hash="uncle" :link="'/uncle/' + uncle" />
                   </v-layout>
                 </v-list-tile>
               </v-list>
@@ -48,7 +48,7 @@ import AppHashConcat from '@app/core/components/ui/AppHashConcat.vue'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({
-  components:{
+  components: {
     AppHashConcat
   }
 })

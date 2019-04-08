@@ -89,7 +89,6 @@ export class ChartMixin extends Vue {
     }
   }
 
-
   setData(state: number): void {
     const duration = this.data[state].state.toUpperCase()
     this.fetchData(duration).then(res => {

@@ -35,9 +35,15 @@
       -->
       <v-tab-item slot="tabs-item" value="tab-1">
         <v-layout row wrap justify-center :class="contentClass">
-          <v-flex xs12 md6> <chart-link :title="$t('charts.gas-price.title')" :text="$t('charts.gas-price.description')" :chart-id="ChartType.gasPrice" /> </v-flex>
-          <v-flex xs12 md6> <chart-link :title="$t('charts.gas-limit.title')" :text="$t('charts.gas-limit.description')" :chart-id="ChartType.gasLimit" /> </v-flex>
-          <v-flex xs12 md6> <chart-link :title="$t('charts.tx-success.title')" :text="$t('charts.tx-success.description')" :chart-id="ChartType.txSuccess" /> </v-flex>
+          <v-flex xs12 md6>
+            <chart-link :title="$t('charts.gas-price.title')" :text="$t('charts.gas-price.description')" :chart-id="ChartType.gasPrice" />
+          </v-flex>
+          <v-flex xs12 md6>
+            <chart-link :title="$t('charts.gas-limit.title')" :text="$t('charts.gas-limit.description')" :chart-id="ChartType.gasLimit" />
+          </v-flex>
+          <v-flex xs12 md6>
+            <chart-link :title="$t('charts.tx-success.title')" :text="$t('charts.tx-success.description')" :chart-id="ChartType.txSuccess" />
+          </v-flex>
           <v-flex xs12 md6> <chart-link :title="$t('charts.tx-fail.title')" :text="$t('charts.tx-fail.description')" :chart-id="ChartType.txFail" /> </v-flex>
           <v-flex xs12 md6> <chart-link :title="$t('charts.tx-fees.title')" :text="$t('charts.tx-fees.description')" :chart-id="ChartType.txFees" /> </v-flex>
           <v-flex xs12 md6>
@@ -53,7 +59,9 @@
       -->
       <v-tab-item slot="tabs-item" value="tab-2">
         <v-layout row wrap justify-center :class="contentClass">
-          <v-flex xs12 md6> <chart-link :title="$t('charts.block-time.title')" :text="$t('charts.block-time.description')" :chart-id="ChartType.blockTime" /> </v-flex>
+          <v-flex xs12 md6>
+            <chart-link :title="$t('charts.block-time.title')" :text="$t('charts.block-time.description')" :chart-id="ChartType.blockTime" />
+          </v-flex>
           <v-flex xs12 md6>
             <chart-link :title="$t('charts.block-diff.title')" :text="$t('charts.block-diff.description')" :chart-id="ChartType.difficulty" />
           </v-flex>
@@ -70,7 +78,9 @@
       -->
       <v-tab-item slot="tabs-item" value="tab-3">
         <v-layout row wrap justify-center :class="contentClass">
-          <v-flex xs12 md6> <chart-link :title="$t('charts.hash-rate.title')" :text="$t('charts.hash-rate.description')" :chart-id="ChartType.hashRate" /> </v-flex>
+          <v-flex xs12 md6>
+            <chart-link :title="$t('charts.hash-rate.title')" :text="$t('charts.hash-rate.description')" :chart-id="ChartType.hashRate" />
+          </v-flex>
           <v-flex xs12 md6>
             <!--  -->
           </v-flex>
