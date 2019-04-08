@@ -75,6 +75,22 @@ export default class AppDetailsListRow extends Vue {
   /*
   ===================================================================================
     Computed
+<<<<<<< HEAD
+=======
+  ===================================================================================
+  */
+
+  get hasPercentage(): boolean {
+    return !!this.detail.priceChange
+  }
+  get priceChangeClass(): string {
+    return this.detail.priceChange && this.detail.priceChange.includes('+') ? 'txSuccess--text mb-0' : 'txFail--text mb-0'
+  }
+
+  /*
+  ===================================================================================
+    Methods
+>>>>>>> develop
   ===================================================================================
   */
 

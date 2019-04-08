@@ -43,7 +43,6 @@
 </template>
 
 <script lang="ts">
-import { Events } from 'ethvm-common'
 import { Component, Vue, Watch } from 'vue-property-decorator'
 
 @Component

@@ -1,12 +1,11 @@
-import { EthValue, Hex, SimpleTx, Uncle } from '@app/core/models'
+import { EthValue, Hex, Reward, SimpleTx, Uncle } from '@app/core/models'
 import BN from 'bignumber.js'
-import { Block as RawBlock, Reward } from 'ethvm-common'
 
 export class SimpleBlock {
   private readonly id: string
   private cache: any = {}
 
-  constructor(private readonly block: RawBlock) {
+  constructor(private readonly block: any) {
     this.id = new Hex(this.block.header.hash).toString()
   }
 

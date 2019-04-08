@@ -1,11 +1,10 @@
 import { EthValue, Hex } from '@app/core/models'
-import { PendingTx as RawPendingTx } from 'ethvm-common'
 
 export class PendingTx {
   public readonly id: string
   private cache: any = {}
 
-  constructor(private readonly pTx: RawPendingTx) {
+  constructor(private readonly pTx: any) {
     this.id = new Hex(this.pTx.hash).toString()
   }
 

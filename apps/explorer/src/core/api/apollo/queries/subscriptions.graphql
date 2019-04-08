@@ -1,0 +1,66 @@
+subscription newSimpleBlocks {
+  newBlock {
+    header {
+      hash
+      number
+      author
+    }
+    transactions {
+      hash
+      receipt {
+        status
+        traces {
+          error
+        }
+      }
+    }
+    rewards {
+      value
+    }
+    uncles {
+      hash
+    }
+  }
+}
+
+subscription newBlockMetrics {
+  newBlockMetric {
+    avgGasLimit
+    avgGasPrice
+    avgTxFees
+    blockTime
+    difficulty
+    hash
+    number
+    numFailedTxs
+    numPendingTxs
+    numSuccessfulTxs
+    numUncles
+    timestamp
+    totalDifficulty
+    totalTxs
+  }
+}
+
+subscription newSimpleTxs {
+  newTxs {
+    blockHash
+    blockNumber
+    from
+    gas
+    gasPrice
+    hash
+    input
+    timestamp
+    to
+    value
+    receipt {
+      contractAddress
+      gasUsed
+      status
+      traces {
+        error
+      }
+    }
+  }
+}

@@ -1,12 +1,11 @@
 import { EthValue, Hex, HexNumber } from '@app/core/models'
 import BN from 'bignumber.js'
-import { Uncle as RawUncle } from 'ethvm-common'
 
 export class Uncle {
   private readonly id: string
   private cache: any = {}
 
-  constructor(private readonly uncle: RawUncle) {
+  constructor(private readonly uncle: any) {
     this.id = new Hex(this.uncle.hash).toString()
   }
 

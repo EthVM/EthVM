@@ -1,10 +1,9 @@
 {
-  "watch": [
-    "src"
-  ],
+  "watch": ["src"],
   "ext": "ts",
   "ignore": [
-    "src/**/*.spec.ts"
+    "src/**/*.spec.ts",
+    "src/graphql/schema.ts"
   ],
-  "exec": "ts-node -r tsconfig-paths/register src/index.ts"
+  "exec": "ts-node -r tsconfig-paths/register src/main.ts"
 }

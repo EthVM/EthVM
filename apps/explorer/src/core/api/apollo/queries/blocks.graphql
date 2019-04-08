@@ -27,6 +27,7 @@ query blockByHash($hash: String) {
   blockByHash(hash: $hash) {
     header {
       number
+      hash
       timestamp
       author
       parentHash
@@ -74,6 +75,7 @@ query blockByNumber($number: Int) {
   blockByNumber(number: $number) {
     header {
       number
+      hash
       timestamp
       author
       parentHash

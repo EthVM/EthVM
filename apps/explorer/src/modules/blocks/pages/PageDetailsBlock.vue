@@ -10,7 +10,7 @@
       <v-flex xs12>
         <app-details-list :details="blockDetails" :is-loading="isLoading" class="mb-4" :error="error" :max-items="8">
           <template v-slot:title>
-            <block-details-title :next-block="nextBlock" :prev-block="previousBlock" :uncles="blockInfo.uncles" />
+            <block-details-title :next-block="nextBlock" :prev-block="previousBlock" :uncles="blockInfo.uncles.map(u => u.getHash())" />
             <v-divider class="lineGrey" />
           </template>
         </app-details-list>
@@ -100,15 +100,8 @@ export default class PageDetailsBlock extends Vue {
       return
     }
 
-    // 2. Check that we have our block in the store
-    const block = eth.isValidHash(ref) ? this.$store.getters.blockByHash(ref) : this.$store.getters.blockByNumber(Number(ref))
-
-    // 3. Depending on previous state, we display directly or not
-    if (block) {
-      this.setBlockInfo(block)
-    } else {
-      this.fetchBlock()
-    }
+    // 2. Fetch block
+    this.fetchBlock()
 
     window.scrollTo(0, 0)
   }

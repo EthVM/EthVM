@@ -12,7 +12,6 @@
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
-import { Events } from 'ethvm-common'
 import { eth } from '@app/core/helper'
 import { Uncle } from '@app/core/models'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
@@ -58,15 +57,8 @@ export default class PageDetailsUncle extends Vue {
       return
     }
 
-    // 2. Check that we have our uncle in the store
-    const uncle = this.$store.getters.uncleByHash(ref)
-
-    // 3. Depending on previous state, we display directly or not
-    if (uncle) {
-      this.setUncleInfo(uncle)
-    } else {
-      this.fetchUncle()
-    }
+    // 2. Fetch uncle
+    this.fetchUncle()
   }
 
   /*

@@ -61,9 +61,8 @@ import TokenDetailsTabs from '@app/modules/tokens/components/TokenDetailsTabs.vu
 import HolderDetailsList from '@app/modules/tokens/components/HolderDetailsList.vue'
 import HolderDetailsTabs from '@app/modules/tokens/components/HolderDetailsTabs.vue'
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
-import { Contract, Events } from 'ethvm-common'
 import { Detail, Crumb } from '@app/core/components/props'
-import { Token, Tx } from '@app/core/models'
+import { Contract, Token, Tx } from '@app/core/models'
 
 const MAX_ITEMS = 10
 
@@ -490,7 +489,8 @@ export default class PageDetailsToken extends Vue {
         plural: 2
       },
       {
-        text: this.isTokenDetailsLoading ? this.addressRef : this.tokenDetails.symbol.toUpperCase(),
+        text: '',
+        label: this.isTokenDetailsLoading ? this.addressRef : this.tokenDetails.symbol.toUpperCase(),
         link: `/token/${this.addressRef}`,
         disabled: false
       },

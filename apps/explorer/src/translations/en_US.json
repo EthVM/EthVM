@@ -75,7 +75,9 @@
     "transfers": "Transfers",
     "links": "Links",
     "website": "Website",
-    "support": "Support"
+    "support": "Support",
+    "type" : "Type",
+    "circSupply": "Circulating Supply"
   },
 
   "address": {
@@ -219,7 +221,7 @@
     },
     "gas-price": {
       "title": "Gas Price",
-      "description": "Average Gas Price"
+      "description": "Average Gas Price (GWEI)"
     },
     "hash-rate": {
       "title": "Hash Rate",

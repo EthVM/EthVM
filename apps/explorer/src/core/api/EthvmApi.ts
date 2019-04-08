@@ -1,16 +1,22 @@
-import { Block, PendingTx, SimpleBlock, SimpleTx, Tx, Uncle } from '@app/core/models'
 import {
   AddressBalance,
   AddressMetadata,
+  Block,
   BlockMetrics,
   Contract,
+  PendingTx,
   ProcessingMetadata,
   Quote,
+  SimpleBlock,
+  SimpleTx,
   Statistic,
   Token,
   TokenExchangeRate,
-  TokenTransfer
-} from 'ethvm-common'
+  TokenTransfer,
+  Tx,
+  Uncle
+} from '@app/core/models'
+import { Observable } from 'apollo-client/util/Observable'
 
 export interface EthvmApi {
   // Address
@@ -80,4 +86,7 @@ export interface EthvmApi {
 
   // Processing Metadata
   getProcessingMetadata(id: string): Promise<ProcessingMetadata | null>
+
+  // Subscriptions
+  observable<T>(query): Observable<T>
 }

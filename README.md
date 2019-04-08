@@ -1,8 +1,8 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/enKryptIO/ethvm/master/.github/assets/logo.png" alt="ethvm-logo">
+  <img src="https://raw.githubusercontent.com/EthVM/ethvm/master/.github/assets/logo.png" alt="ethvm-logo">
   <p>:zap: EthVM: An Open Source Proccessing Engine and Block Explorer for Ethereum, based on Apache Kafka :zap:</p>
-  <p>Powered by <a href="https://www.typescriptlang.org/">TypeScript</a> / <a href="https://vuejs.org/">VueJS</a> / <a href="https://github.com/socketio/socket.io">Socket.io</a> / <a href="https://kafka.apache.org/">Apache Kafka</a> / <a href="https://github.com/paritytech/parity-ethereum">Parity</a> / <a href="https://github.com/mongodb/mongo">MongoDB</a> 
-  <p><a href="https://travis-ci.org/enKryptIO/ethvm.svg?branch=develop"><img src="https://travis-ci.org/enKryptIO/ethvm.svg?branch=develop"/></a></p>
+  <p>Powered by <a href="https://www.typescriptlang.org/">TypeScript</a> / <a href="https://vuejs.org/">VueJS</a> / <a href="http://nestjs.com/">NestJS</a> / <a href="https://kafka.apache.org/">Apache Kafka</a> / <a href="https://github.com/paritytech/parity-ethereum">Parity</a> / <a href="https://github.com/mongodb/mongo">MongoDB</a> 
+  <p><a href="https://travis-ci.org/EthVM/EthVM.svg?branch=develop""><img src="https://travis-ci.org/EthVM/EthVM.svg?branch=develop"/></a></p>
 </div>
 
 # EthVM: Open Source Processing Engine and Block Explorer for Ethereum
@@ -35,15 +35,18 @@ EthVM is an open-source Blockchain Explorer focused mainly on [Ethereum](https:/
 
 You can use EthVM as a tool to explore your custom private network or the existing public ones or as a ETL (Extract, Transform, Load) platform to perform different analysis on the data. 
 
-Our core infrastructure is based on very common and known programming languages and frameworks:
+Our core infrastructure is based on well known languages:
 
 - [TypeScript](https://www.typescriptlang.org/)
 - [Kotlin](https://kotlinlang.org/)
+
+And also is backed by popular frameworks:
+
 - [Apache Kafka](https://kafka.apache.org/) = [Kafka Connect](https://docs.confluent.io/current/connect/index.html) + [Kafka Streams](https://kafka.apache.org/documentation/streams/) + [Kafka Schema Registry](https://docs.confluent.io/current/schema-registry/docs/index.html)
 - [VueJs](https://vuejs.org/)
 - [NestJS](https://nestjs.com/)
 
-We have choosen the above technologies to allow a wider range of people contributing to the project regardless the programming level.
+We have choosen the above technologies to allow a wider range of people contributing to the project regardless of the programming level.
 
 ### Why Apache Kafka?
 
@@ -61,10 +64,10 @@ We believe that it fits quite nicely within the needs that a Block Explorer typi
 
 For now, we are focused on bringing a Beta environment. It will have the following:
 
-- Migration to NestJS API to replace current SocketIO API
-- Migration from MongoDB to Postgres
-- Improvements over processing on Kafka (we want to process the chain as fast as possible and alongside with that, squash some known bugs)
-- Bring a Terraform provider to deploy properly the code on AWS
+- [x] Migration to NestJS API to replace current SocketIO API
+- [ ] Migration from MongoDB to Postgres
+- [ ] Improvements over processing on Kafka. We want to process the chain as fast as possible and alongside with that, squash some known bugs
+- [ ] Bring a Terraform provider to deploy properly the code on AWS
 
 ## Getting Started
 
