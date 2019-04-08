@@ -1,6 +1,5 @@
 package com.ethvm.kafka.streams.config
 
-import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.Serdes.BlockAuthor
 import com.ethvm.kafka.streams.Serdes.BlockHeader
 import com.ethvm.kafka.streams.Serdes.BlockHeaderMetrics

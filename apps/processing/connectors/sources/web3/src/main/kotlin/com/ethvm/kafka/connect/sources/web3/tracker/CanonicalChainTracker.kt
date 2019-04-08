@@ -1,8 +1,8 @@
-package com.ethvm.kafka.connect.sources.web3
+package com.ethvm.kafka.connect.sources.web3.tracker
 
-import com.ethvm.common.extensions.hexToBI
 import arrow.core.Option
 import arrow.core.toOption
+import com.ethvm.common.extensions.hexToBI
 import io.reactivex.disposables.Disposable
 import mu.KotlinLogging
 import org.web3j.protocol.parity.Parity
@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicLong
 
 class CanonicalChainTracker(
   parity: Parity,
-  startFrom: Long
+  startFrom: Long = 0L
 ) {
 
   private val logger = KotlinLogging.logger {}
@@ -31,6 +31,7 @@ class CanonicalChainTracker(
   private var reOrgs: ArrayBlockingQueue<LongRange> = ArrayBlockingQueue(10)
 
   init {
+    assert(startFrom >= 0L) { "StartFrom needs to be >= 0" }
 
     logger.debug { "Starting subscription to new heads!" }
 
@@ -39,7 +40,7 @@ class CanonicalChainTracker(
         .newHeadsNotifications()
         .map { it.params.result }
         .map { it.number.hexToBI().longValueExact() }
-        .buffer(1000, TimeUnit.MILLISECONDS, 128)
+        .buffer(1, TimeUnit.SECONDS, 128)
         .onBackpressureBuffer()
         .filter { it.isNotEmpty() }
         .subscribe(
@@ -48,15 +49,16 @@ class CanonicalChainTracker(
             head = heads.max()!!
             val tail = heads.min()!!
 
-            logger.debug { "New Heads notification! / Range - Tail: $tail - Head: $head" }
+            logger.debug { "New head notification! - Tail: $tail - Head: $head" }
 
             val reOrg: List<Long> = heads.groupingBy { it }.eachCount().filter { it.value > 1 }.map { it.key }
             if (reOrg.isNotEmpty()) {
               val minReOrg = reOrg.min()
               val maxReOrg = reOrg.max()
               val range = LongRange(minReOrg!!, maxReOrg!!)
-              logger.debug { "Re-org detected! Affecting range: $range" }
               reOrgs.add(range)
+
+              logger.debug { "Chain reorganization detected! Affecting range: $range" }
             }
 
             tryResetTail(tail)
@@ -80,6 +82,12 @@ class CanonicalChainTracker(
   }
 
   fun nextRange(maxSize: Int = 128): Pair<Option<LongRange>, List<LongRange>> {
+
+    // Throw exception if any
+    val ex = exception
+    if (ex != null) {
+      throw ex
+    }
 
     val currentHead = head
     val currentTail = tail.get()

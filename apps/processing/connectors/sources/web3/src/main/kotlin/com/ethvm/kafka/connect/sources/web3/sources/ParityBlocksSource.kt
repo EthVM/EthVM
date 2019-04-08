@@ -5,9 +5,10 @@ import com.ethvm.avro.capture.CanonicalKeyRecord
 import com.ethvm.avro.capture.TransactionListRecord
 import com.ethvm.avro.capture.TransactionRecord
 import com.ethvm.common.extensions.setNumberBI
-import com.ethvm.kafka.connect.sources.web3.AvroToConnect
+import com.ethvm.kafka.connect.sources.web3.ext.JsonRpc2_0ParityExtended
 import com.ethvm.kafka.connect.sources.web3.ext.toBlockHeaderRecord
 import com.ethvm.kafka.connect.sources.web3.ext.toTransactionRecord
+import com.ethvm.kafka.connect.sources.web3.utils.AvroToConnect
 import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTaskContext
 import org.web3j.protocol.core.DefaultBlockParameter
@@ -15,20 +16,16 @@ import org.web3j.protocol.core.methods.response.Transaction
 
 class ParityBlocksSource(
   sourceContext: SourceTaskContext,
-  parity: com.ethvm.kafka.connect.sources.web3.ext.JsonRpc2_0ParityExtended,
+  parity: JsonRpc2_0ParityExtended,
   private val blocksTopic: String,
   private val txsBlockTopic: String
-) : ParityEntitySource(sourceContext, parity) {
+) : AbstractParityEntitySource(sourceContext, parity) {
 
-  override val partitionKey: Map<String, Any> = mapOf("model" to "blockAndTx")
+  override val partitionKey: Map<String, Any> = mapOf("model" to "block")
 
   override fun fetchRange(range: LongRange): List<SourceRecord> {
 
-    // force into long for iteration
-
-    val longRange = LongRange(range.start, range.endInclusive)
-
-    return longRange
+    return range
       .map { blockNumber ->
 
         val blockNumberBI = blockNumber.toBigInteger()
@@ -54,9 +51,13 @@ class ParityBlocksSource(
 
             val headerSourceRecord =
               SourceRecord(
-                partitionKey, partitionOffset, blocksTopic,
-                keySchemaAndValue.schema(), keySchemaAndValue.value(),
-                valueSchemaAndValue.schema(), valueSchemaAndValue.value()
+                partitionKey,
+                partitionOffset,
+                blocksTopic,
+                keySchemaAndValue.schema(),
+                keySchemaAndValue.value(),
+                valueSchemaAndValue.schema(),
+                valueSchemaAndValue.value()
               )
 
             // transactions
@@ -85,9 +86,13 @@ class ParityBlocksSource(
 
             val txsSourceRecord =
               SourceRecord(
-                partitionKey, partitionOffset, txsBlockTopic,
-                canonicalKeySchemaAndValue.schema(), canonicalKeySchemaAndValue.value(),
-                txListValueSchemaAndValue.schema(), txListValueSchemaAndValue.value()
+                partitionKey,
+                partitionOffset,
+                txsBlockTopic,
+                canonicalKeySchemaAndValue.schema(),
+                canonicalKeySchemaAndValue.value(),
+                txListValueSchemaAndValue.schema(),
+                txListValueSchemaAndValue.value()
               )
 
             listOf(headerSourceRecord, txsSourceRecord)
@@ -98,5 +103,9 @@ class ParityBlocksSource(
         // wait for everything to complete
         future.join()
       }.flatten()
+  }
+
+  override fun tombstonesForRange(range: LongRange): List<SourceRecord> {
+    TODO("not implemented")
   }
 }

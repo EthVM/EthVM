@@ -1,8 +1,9 @@
 package com.ethvm.kafka.connect.sources.web3
 
+import com.ethvm.kafka.connect.sources.web3.ext.JsonRpc2_0ParityExtended
 import com.ethvm.kafka.connect.sources.web3.sources.ParityBlocksSource
-import com.ethvm.kafka.connect.sources.web3.sources.ParityEntitySource
-import com.ethvm.kafka.connect.sources.web3.sources.ParityReceiptSource
+import com.ethvm.kafka.connect.sources.web3.sources.AbstractParityEntitySource
+import com.ethvm.kafka.connect.sources.web3.sources.ParityReceiptsSource
 import com.ethvm.kafka.connect.sources.web3.sources.ParityTracesSource
 import mu.KotlinLogging
 import org.apache.kafka.connect.errors.RetriableException
@@ -25,17 +26,17 @@ class ParitySourceTask : SourceTask() {
   private var connectDelayMs: Long = -1
 
   @Volatile
-  private var parity: com.ethvm.kafka.connect.sources.web3.ext.JsonRpc2_0ParityExtended? = null
+  private var parity: JsonRpc2_0ParityExtended? = null
 
-  private var entitySources = emptyList<ParityEntitySource>()
+  private var entitySources = emptyList<AbstractParityEntitySource>()
 
   override fun version(): String = Versions.CURRENT
 
   override fun start(props: MutableMap<String, String>) {
 
-    startBlockNumber = com.ethvm.kafka.connect.sources.web3.ParitySourceConnector.Config.startBlockNumber(props)
-    entitiesList = com.ethvm.kafka.connect.sources.web3.ParitySourceConnector.Config.entitiesList(props)
-    wsUrl = com.ethvm.kafka.connect.sources.web3.ParitySourceConnector.Config.wsUrl(props)
+    startBlockNumber = ParitySourceConnector.Config.startBlockNumber(props)
+    entitiesList = ParitySourceConnector.Config.entitiesList(props)
+    wsUrl = ParitySourceConnector.Config.wsUrl(props)
 
     logger.info { "Starting ParitySourceTask - Start Block #: $startBlockNumber / Entities: $entitiesList / WS Url: $wsUrl" }
   }
@@ -109,7 +110,7 @@ class ParitySourceTask : SourceTask() {
       // reconnect backoff if necessary
 
       if (connectDelayMs != -1L) {
-        logger.debug { "Waiting $connectDelayMs ms before connecting" }
+        logger.debug { "Waiting $connectDelayMs ms before connecting again!" }
         Thread.sleep(connectDelayMs)
       }
 
@@ -120,7 +121,7 @@ class ParitySourceTask : SourceTask() {
       val wsService = WebSocketService(wsUrl, false)
       wsService.connect()
 
-      parity = com.ethvm.kafka.connect.sources.web3.ext.JsonRpc2_0ParityExtended(wsService)
+      parity = JsonRpc2_0ParityExtended(wsService)
 
       // create sources
 
@@ -129,7 +130,7 @@ class ParitySourceTask : SourceTask() {
       entitySources = entitiesList.map {
         when (it) {
           "blocks" -> ParityBlocksSource(context, parity!!, "canonical_block_header", "canonical_transactions")
-          "receipts" -> ParityReceiptSource(context, parity!!, "canonical_receipts")
+          "receipts" -> ParityReceiptsSource(context, parity!!, "canonical_receipts")
           "traces" -> ParityTracesSource(context, parity!!, "canonical_traces")
           else -> throw IllegalArgumentException("Unexpected entity: $it")
         }
@@ -150,7 +151,7 @@ class ParitySourceTask : SourceTask() {
   private fun throwRetriable(ex: Exception): RetriableException {
     val delay =
       when {
-        connectDelayMs == -1L -> 2000
+        connectDelayMs == -1L -> 1000
         connectDelayMs >= 30000 -> 30000
         else -> connectDelayMs * 2
       }

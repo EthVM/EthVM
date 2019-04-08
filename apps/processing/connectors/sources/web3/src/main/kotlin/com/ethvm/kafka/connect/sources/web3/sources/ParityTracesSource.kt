@@ -4,27 +4,24 @@ import com.ethvm.avro.capture.CanonicalKeyRecord
 import com.ethvm.avro.capture.TraceListRecord
 import com.ethvm.avro.capture.TraceRecord
 import com.ethvm.common.extensions.setNumberBI
-import com.ethvm.kafka.connect.sources.web3.AvroToConnect
+import com.ethvm.kafka.connect.sources.web3.ext.JsonRpc2_0ParityExtended
 import com.ethvm.kafka.connect.sources.web3.ext.toTraceRecord
+import com.ethvm.kafka.connect.sources.web3.utils.AvroToConnect
 import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTaskContext
 import org.web3j.protocol.core.DefaultBlockParameter
 
 class ParityTracesSource(
   sourceContext: SourceTaskContext,
-  parity: com.ethvm.kafka.connect.sources.web3.ext.JsonRpc2_0ParityExtended,
+  parity: JsonRpc2_0ParityExtended,
   private val tracesTopic: String
-) : ParityEntitySource(sourceContext, parity) {
+) : AbstractParityEntitySource(sourceContext, parity) {
 
   override val partitionKey: Map<String, Any> = mapOf("model" to "trace")
 
   override fun fetchRange(range: LongRange): List<SourceRecord> {
 
-    // force into long for iteration
-
-    val longRange = LongRange(range.start, range.endInclusive)
-
-    return longRange
+    return range
       .map { blockNumber ->
 
         val blockNumberBI = blockNumber.toBigInteger()
@@ -52,14 +49,22 @@ class ParityTracesSource(
             val traceValueSchemaAndValue = AvroToConnect.toConnectData(traceListRecord)
 
             SourceRecord(
-              partitionKey, partitionOffset, tracesTopic,
-              traceKeySchemaAndValue.schema(), traceKeySchemaAndValue.value(),
-              traceValueSchemaAndValue.schema(), traceValueSchemaAndValue.value()
+              partitionKey,
+              partitionOffset,
+              tracesTopic,
+              traceKeySchemaAndValue.schema(),
+              traceKeySchemaAndValue.value(),
+              traceValueSchemaAndValue.schema(),
+              traceValueSchemaAndValue.value()
             )
           }
       }.map { future ->
         // wait for everything to complete
         future.join()
       }
+  }
+
+  override fun tombstonesForRange(range: LongRange): List<SourceRecord> {
+    TODO("not implemented")
   }
 }

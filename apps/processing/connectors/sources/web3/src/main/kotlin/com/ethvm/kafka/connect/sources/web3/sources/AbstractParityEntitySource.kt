@@ -1,11 +1,13 @@
 package com.ethvm.kafka.connect.sources.web3.sources
 
+import com.ethvm.kafka.connect.sources.web3.ext.JsonRpc2_0ParityExtended
+import com.ethvm.kafka.connect.sources.web3.tracker.CanonicalChainTracker
 import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTaskContext
 
-abstract class ParityEntitySource(
+abstract class AbstractParityEntitySource(
   private val sourceContext: SourceTaskContext,
-  protected val parity: com.ethvm.kafka.connect.sources.web3.ext.JsonRpc2_0ParityExtended
+  protected val parity: JsonRpc2_0ParityExtended
 ) {
 
   abstract val partitionKey: Map<String, Any>
@@ -18,10 +20,10 @@ abstract class ParityEntitySource(
       .offsetStorageReader()
       .offset(partitionKey) ?: emptyMap()
 
-    var startBlockNumber = sourcePartition.getOrDefault("blockNumber", 0L) as Long - SAFE_REORG
+    var startBlockNumber = sourcePartition.getOrDefault("blockNumber", 0L) as Long - SAFE_REORG_LENGTH
     if (startBlockNumber < 0) startBlockNumber = 0L
 
-    com.ethvm.kafka.connect.sources.web3.CanonicalChainTracker(parity, startBlockNumber)
+    CanonicalChainTracker(parity, startBlockNumber)
   }
 
   @Volatile
@@ -47,7 +49,9 @@ abstract class ParityEntitySource(
 
   abstract fun fetchRange(range: LongRange): List<SourceRecord>
 
+  abstract fun tombstonesForRange(range: LongRange): List<SourceRecord>
+
   companion object {
-    const val SAFE_REORG = 200L
+    const val SAFE_REORG_LENGTH = 200L
   }
 }

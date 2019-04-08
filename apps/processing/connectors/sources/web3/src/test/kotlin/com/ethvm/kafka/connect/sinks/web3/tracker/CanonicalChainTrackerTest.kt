@@ -1,6 +1,10 @@
-package com.ethvm.kafka.connect.sinks.web3
+package com.ethvm.kafka.connect.sinks.web3.tracker
 
+import arrow.core.None
 import com.ethvm.common.extensions.toHex
+import com.ethvm.kafka.connect.sinks.web3.test.AbstractParity
+import com.ethvm.kafka.connect.sources.web3.tracker.CanonicalChainTracker
+import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.kotlintest.specs.BehaviorSpec
 import io.mockk.every
@@ -9,6 +13,7 @@ import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
+import mu.KotlinLogging
 import org.web3j.protocol.ObjectMapperFactory
 import org.web3j.protocol.Web3jService
 import org.web3j.protocol.core.Request
@@ -16,73 +21,79 @@ import org.web3j.protocol.core.Response
 import org.web3j.protocol.core.methods.response.EthBlockNumber
 import org.web3j.protocol.websocket.events.NewHeadsNotification
 import java.math.BigInteger
-import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
 class CanonicalChainTrackerTest : BehaviorSpec() {
 
   init {
 
-    given("a new canonical chain tracker") {
+    given("a canonical chain tracker") {
 
-      val tracker = com.ethvm.kafka.connect.sources.web3.CanonicalChainTracker(
-        FakeParity(),
-        0
+      val tracker = CanonicalChainTracker(
+        FakeParity()
       )
 
-      `when`("we poll for next ranges") {
+      `when`("we poll for the first range") {
 
-        val ranges = ArrayList<LongRange>()
-        latch(count = 10) {
-          val range = tracker.nextRange().first
-          range.fold({}, { ranges.add(it) })
-          countDown()
-        }
+        Thread.sleep(1200)
 
-        then("we should return properly the next range") {
-          ranges shouldNotBe emptyList<LongRange>()
+        val (range, reOrgs) = tracker.nextRange()
+        tracker.stop()
+
+        then("we should return properly the next range [0 - 9]") {
+          range shouldNotBe None
+          range.fold(
+            { throw IllegalStateException("Invalid state!") },
+            {
+              it.first shouldBe 0L
+              it.endInclusive shouldBe 8L
+            }
+          )
+          reOrgs shouldBe emptyList()
         }
       }
     }
   }
 }
 
-class FakeParity : AbstractFakeParity() {
+class FakeParity(private val newHeadsInterval: Long = FAKE_NEW_HEADS_INTERVAL_PERIOD) : AbstractParity() {
 
   private val mapper = ObjectMapperFactory.getObjectMapper()
   private val web3Service = mockk<Web3jService>()
 
   private var bn: BigInteger = 0.toBigInteger()
 
+  private val logger = KotlinLogging.logger {}
+
   init {
     // Give default behavior to web3jService
-    every { web3Service.send<Response<EthBlockNumber>>(any(), any()) } returns Response<EthBlockNumber>().apply {
-      result = EthBlockNumber().apply { result = bn.toHex() }
+    val response = Response<EthBlockNumber>().apply {
+      result = EthBlockNumber().apply { result = "0x0" }
     }
+
+    every { web3Service.send<Response<EthBlockNumber>>(any(), any()) } returns response
   }
 
   override fun newHeadsNotifications(): Flowable<NewHeadsNotification> {
     val subject = BehaviorSubject.create<NewHeadsNotification>()
 
-    val intervalSubscription = Flowable.interval(250, TimeUnit.MILLISECONDS)
-      .subscribeOn(Schedulers.single())
-      .subscribe {
-        val notification = newHead(bn)
-        bn = bn.inc()
-        subject.onNext(notification)
-      }
+    val subscription = newHeadsFlowable()
+      .subscribeOn(Schedulers.computation())
+      .subscribe { subject.onNext(it) }
 
     return subject
-      .doOnDispose { intervalSubscription.dispose() }
+      .doOnDispose { subscription.dispose() }
       .toFlowable(BackpressureStrategy.BUFFER)
   }
 
-  override fun ethBlockNumber(): Request<*, EthBlockNumber> = Request(
-    "eth_blockNumber",
-    emptyList<String>(),
-    web3Service,
-    EthBlockNumber::class.java
-  )
+  override fun ethBlockNumber(): Request<*, EthBlockNumber> =
+    Request("eth_blockNumber", emptyList<String>(), web3Service, EthBlockNumber::class.java)
+
+  private fun newHeadsFlowable(): Flowable<NewHeadsNotification> =
+    Flowable.interval(newHeadsInterval, TimeUnit.MILLISECONDS)
+      .doOnNext { logger.debug { "Emitting fake head notification: $it" } }
+      .map { newHead(bn) }
+      .doOnNext { bn = bn.inc() }
 
   private fun newHead(number: BigInteger): NewHeadsNotification {
     val raw = """
@@ -91,6 +102,7 @@ class FakeParity : AbstractFakeParity() {
         "method":"eth_subscription",
         "params": {
           "result": {
+            "number":"${number.toHex()}",
             "difficulty":"0x15d9223a23aa",
             "extraData":"0xd983010305844765746887676f312e342e328777696e646f7773",
             "gasLimit":"0x47e7c4",
@@ -98,7 +110,6 @@ class FakeParity : AbstractFakeParity() {
             "logsBloom":"0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
             "miner":"0xf8b483dba2c3b7176a3da549ad41a48bb3121069",
             "nonce":"0x084149998194cc5f",
-            "number":"${number.toHex()}",
             "parentHash":"0x7736fab79e05dc611604d22470dadad26f56fe494421b5b333de816ce1f25701",
             "receiptRoot":"0x2fab35823ad00c7bb388595cb46652fe7886e00660a01e867824d3dceb1c8d36",
             "sha3Uncles":"0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
@@ -113,18 +124,8 @@ class FakeParity : AbstractFakeParity() {
 
     return mapper.readValue<NewHeadsNotification>(raw, NewHeadsNotification::class.java)
   }
-}
 
-inline fun <R> latch(count: Int = 1, block: CountDownLatch.() -> R): R {
-  val latch = CountDownLatch(count)
-  val r = latch.block()
-  latch.await()
-  return r
-}
-
-inline fun <R> latch(count: Int = 1, timeoutSec: Long, block: CountDownLatch.() -> R): R {
-  val latch = CountDownLatch(count)
-  val r = latch.block()
-  latch.await(timeoutSec, TimeUnit.SECONDS)
-  return r
+  companion object {
+    const val FAKE_NEW_HEADS_INTERVAL_PERIOD = 100L
+  }
 }
