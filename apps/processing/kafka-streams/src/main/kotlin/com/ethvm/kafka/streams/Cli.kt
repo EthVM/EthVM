@@ -26,27 +26,27 @@ class Cli : CliktCommand() {
   private val bootstrapServers: String by option(
     help = "A list of host/port pairs to use for establishing the initial connection to the Kafka cluster",
     envvar = "KAFKA_BOOTSTRAP_SERVERS"
-  ).default(com.ethvm.kafka.streams.Cli.Defaults.DEFAULT_BOOTSTRAP_SERVERS)
+  ).default(com.ethvm.kafka.streams.Cli.DEFAULT_BOOTSTRAP_SERVERS)
 
   private val schemaRegistryUrl: String by option(
     help = "Kafka schema registry url",
     envvar = "KAFKA_SCHEMA_REGISTRY_URL"
-  ).default(com.ethvm.kafka.streams.Cli.Defaults.DEFAULT_SCHEMA_REGISTRY_URL)
+  ).default(com.ethvm.kafka.streams.Cli.DEFAULT_SCHEMA_REGISTRY_URL)
 
   private val startingOffset: String by option(
     help = "From which offset is going to start Bolt processing events",
     envvar = "KAFKA_START_OFFSET"
-  ).default(com.ethvm.kafka.streams.Cli.Defaults.DEFAULT_AUTO_OFFSET)
+  ).default(com.ethvm.kafka.streams.Cli.DEFAULT_AUTO_OFFSET)
 
   private val streamsStateDir: String by option(
     help = "Base dir for local kafka streams state",
     envvar = "KAFKA_STREAMS_STATE_DIR"
-  ).default(com.ethvm.kafka.streams.Cli.Defaults.DEFAULT_STREAMS_STATE_DIR)
+  ).default(com.ethvm.kafka.streams.Cli.DEFAULT_STREAMS_STATE_DIR)
 
   private val resetStreamsState: Int by option(
     help = "Whether or not to reset local persisted streams processing state",
     envvar = "KAFKA_STREAMS_RESET"
-  ).int().default(com.ethvm.kafka.streams.Cli.Defaults.DEFAULT_STREAMS_RESET)
+  ).int().default(com.ethvm.kafka.streams.Cli.DEFAULT_STREAMS_RESET)
 
   private val networkConfig: String by option(
     help = "The network config to use, one of: mainnet, ropsten",

@@ -37,7 +37,7 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
   override fun buildTopology(): Topology {
 
     // Create stream builder
-    val builder = StreamsBuilder().apply {}
+    val builder = StreamsBuilder()
 
     val contractTypes = setOf("create", "suicide")
 

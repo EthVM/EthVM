@@ -289,10 +289,6 @@ export abstract class IQuery {
 
     abstract balanceByHash(hash: string): Balance | Promise<Balance>;
 
-    abstract blockMetricByHash(hash?: string): BlockMetric | Promise<BlockMetric>;
-
-    abstract blockMetrics(limit?: number, page?: number): BlockMetric[] | Promise<BlockMetric[]>;
-
     abstract blocks(limit?: number, page?: number): Block[] | Promise<Block[]>;
 
     abstract blockByHash(hash?: string): Block | Promise<Block>;
@@ -302,6 +298,10 @@ export abstract class IQuery {
     abstract minedBlocksByAddress(address?: string, limit?: number, page?: number): Block[] | Promise<Block[]>;
 
     abstract totalNumberOfBlocks(): number | Promise<number>;
+
+    abstract blockMetricByHash(hash?: string): BlockMetric | Promise<BlockMetric>;
+
+    abstract blockMetrics(limit?: number, page?: number): BlockMetric[] | Promise<BlockMetric[]>;
 
     abstract contractByHash(address: string): Contract | Promise<Contract>;
 
@@ -448,9 +448,9 @@ export class Statistic {
 }
 
 export abstract class ISubscription {
-    abstract newBlockMetric(): BlockMetric | Promise<BlockMetric>;
-
     abstract newBlock(): Block | Promise<Block>;
+
+    abstract newBlockMetric(): BlockMetric | Promise<BlockMetric>;
 
     abstract newProcessingMetadata(): ProcessingMetadata | Promise<ProcessingMetadata>;
 
