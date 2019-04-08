@@ -126,6 +126,7 @@ fun ExchangeRateRecord.isValid() = !(this.marketCap == -1.0 || this.marketCapRan
 fun TransactionFeeListRecord.toEtherBalanceDeltas(): List<FungibleBalanceDeltaRecord> =
   getTransactionFees().map { it.toFungibleBalanceDelta() }
 
+
 fun TransactionFeeRecord.toFungibleBalanceDelta(): FungibleBalanceDeltaRecord =
   FungibleBalanceDeltaRecord.newBuilder()
     .setTokenType(FungibleTokenType.ETHER)
@@ -172,7 +173,7 @@ fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> 
 
       deltas
     }.flatten()
-    .filter { delta -> delta.getAmount() != null && delta.getAmountBI() != BigDecimal.ZERO }
+    .filter { delta -> delta.getAmount() != null && delta.getAmountBI() != BigInteger.ZERO }
 
 fun FungibleBalanceDeltaRecord.reverse() =
   FungibleBalanceDeltaRecord.newBuilder(this)

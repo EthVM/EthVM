@@ -44,6 +44,7 @@ import org.apache.kafka.streams.kstream.Joined
 import org.apache.kafka.streams.kstream.KStream
 import org.apache.kafka.streams.kstream.Materialized
 import org.apache.kafka.streams.kstream.TransformerSupplier
+import java.math.BigDecimal
 import java.math.BigInteger
 import java.time.Duration
 import java.util.Properties
@@ -173,7 +174,9 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
             )
           }
         }
-      }.toTopic(FungibleBalanceDeltas)
+      }
+      .filter{ _, v -> v.getAmount() != null && v.getAmountBI() != BigInteger.ZERO }
+      .toTopic(FungibleBalanceDeltas)
 
     //
 
@@ -194,7 +197,9 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
               delta
             )
           }
-      }.toTopic(FungibleBalanceDeltas)
+      }
+      .filter{ _, v -> v.getAmount() != null && v.getAmountBI() != BigInteger.ZERO }
+      .toTopic(FungibleBalanceDeltas)
   }
 
   /**
