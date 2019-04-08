@@ -1,4 +1,4 @@
-package com.ethvm.kafka.connect.sinks.web3
+package com.ethvm.kafka.connect.sinks.web3.test
 
 import io.reactivex.Flowable
 import org.web3j.crypto.WalletFile
@@ -80,7 +80,7 @@ import org.web3j.protocol.websocket.events.NewHeadsNotification
 import java.math.BigInteger
 import java.util.ArrayList
 
-abstract class AbstractFakeParity : Parity {
+abstract class AbstractParity : Parity {
 
   override fun parityNewAccountFromSecret(secret: String?, password: String?): Request<*, NewAccountIdentifier> {
     TODO("not implemented")

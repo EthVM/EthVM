@@ -11,21 +11,21 @@ import java.util.Arrays
 
 class JsonRpc2_0ParityExtended(web3jService: Web3jService) : JsonRpc2_0Parity(web3jService) {
 
-  fun parityGetBlockReceipts(defaultBlockParameter: DefaultBlockParameter): Request<*, com.ethvm.kafka.connect.sources.web3.ext.ParityBlockReceiptsResponse> {
+  fun parityGetBlockReceipts(defaultBlockParameter: DefaultBlockParameter): Request<*, ParityBlockReceiptsResponse> {
     return Request(
       "parity_getBlockReceipts",
       Arrays.asList(defaultBlockParameter.value),
       web3jService,
-      com.ethvm.kafka.connect.sources.web3.ext.ParityBlockReceiptsResponse::class.java
+      ParityBlockReceiptsResponse::class.java
     )
   }
 
-  fun parityGetPendingTransactions(): Request<*, com.ethvm.kafka.connect.sources.web3.ext.ParityPendingTransactionsResponse> {
+  fun parityGetPendingTransactions(): Request<*, ParityPendingTransactionsResponse> {
     return Request(
       "parity_pendingTransactions",
       emptyList<String>(),
       web3jService,
-      com.ethvm.kafka.connect.sources.web3.ext.ParityPendingTransactionsResponse::class.java
+      ParityPendingTransactionsResponse::class.java
     )
   }
 }

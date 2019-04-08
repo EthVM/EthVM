@@ -6,3 +6,6 @@ out/
 # Project
 build/
 .gradle
+
+# Tests
+.kotlintest/

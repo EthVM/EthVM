@@ -15,7 +15,7 @@ import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.Produced
 import java.util.Properties
 
-class EthTokensProcessor : AbstractKafkaProcessor() {
+class EthTokensListProcessor : AbstractKafkaProcessor() {
 
   override val id: String = "eth-tokens-processor"
 

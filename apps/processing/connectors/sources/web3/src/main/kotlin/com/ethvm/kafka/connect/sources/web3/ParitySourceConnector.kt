@@ -29,16 +29,16 @@ class ParitySourceConnector : SourceConnector() {
   override fun stop() {
   }
 
-  override fun taskClass(): Class<out Task> = com.ethvm.kafka.connect.sources.web3.ParitySourceTask::class.java
+  override fun taskClass(): Class<out Task> = ParitySourceTask::class.java
 
   override fun taskConfigs(maxTasks: Int): MutableList<MutableMap<String, String>> {
 
-    val entities = com.ethvm.kafka.connect.sources.web3.ParitySourceConnector.Config.entitiesList(config)
+    val entities = ParitySourceConnector.Config.entitiesList(config)
     val chunkSize = Math.ceil(entities.size / maxTasks * 1.0).toInt()
 
     return entities
       .chunked(chunkSize)
-      .map { entitiesChunk -> com.ethvm.kafka.connect.sources.web3.ParitySourceConnector.Config.setEntitiesList(HashMap(config), entitiesChunk) }
+      .map { entitiesChunk -> ParitySourceConnector.Config.setEntitiesList(HashMap(config), entitiesChunk) }
       .toMutableList()
   }
 
