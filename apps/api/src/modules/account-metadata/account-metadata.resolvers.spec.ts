@@ -30,8 +30,8 @@ const metadata = {
 
 const mockService = {
   async findAccountMetadataByHash(hash: string) {
-    const data = metadata[hash];
-    return data != null ? new AccountMetadataEntity(data) : null;
+    const data = metadata[hash]
+    return data != null ? new AccountMetadataEntity(data) : null
   }
 }
 
@@ -74,11 +74,11 @@ describe('AccountMetadataResolvers', () => {
 
       expect(metadataOne).not.toBeNull()
       expect(metadataOne).toBeInstanceOf(AccountMetadataDto)
-      expect(metadataOne).toHaveProperty('id', hashOne);
+      expect(metadataOne).toHaveProperty('id', hashOne)
 
       expect(metadataTwo).not.toBeNull()
       expect(metadataTwo).toBeInstanceOf(AccountMetadataDto)
-      expect(metadataTwo).toHaveProperty('id', hashTwo);
+      expect(metadataTwo).toHaveProperty('id', hashTwo)
 
       expect(metadataOne).not.toEqual(metadataTwo)
 
