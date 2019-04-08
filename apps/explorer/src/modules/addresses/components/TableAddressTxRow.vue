@@ -54,11 +54,11 @@
                           <div v-if="tx.getContractAddress().isEmpty()">
                             <app-hash-concat
                               v-if="getType(tx) === 'in'"
-                              :hash="tx.getTo().toString()"
+                              :hash="tx.getFrom().toString()"
                               :italic="true"
-                              :link="'/address/' + tx.getTo().toString()"
+                              :link="'/address/' + tx.getFrom().toString()"
                             />
-                            <app-hash-concat v-else :hash="tx.getFrom().toString()" :italic="true" :link="'/address/' + tx.getFrom().toString()" />
+                            <app-hash-concat v-else :hash="tx.getTo().toString()" :italic="true" :link="'/address/' + tx.getTo().toString()" />
                           </div>
                           <div v-else>
                             <app-hash-concat
@@ -133,11 +133,11 @@
                               <div v-if="tx.getContractAddress().isEmpty()">
                                 <app-hash-concat
                                   v-if="getType(tx) === 'in'"
-                                  :hash="tx.getTo().toString()"
+                                  :hash="tx.getFrom().toString()"
                                   :italic="true"
-                                  :link="'/address/' + tx.getTo().toString()"
+                                  :link="'/address/' + tx.getFrom().toString()"
                                 />
-                                <app-hash-concat v-else :hash="tx.getFrom().toString()" :italic="true" :link="'/address/' + tx.getFrom().toString()" />
+                                <app-hash-concat v-else :hash="tx.getTo().toString()" :italic="true" :link="'/address/' + tx.getTo().toString()" />
                               </div>
                               <div v-else>
                                 <app-hash-concat
