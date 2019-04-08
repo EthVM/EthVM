@@ -289,6 +289,10 @@ export abstract class IQuery {
 
     abstract balanceByHash(hash: string): Balance | Promise<Balance>;
 
+    abstract contractByHash(address: string): Contract | Promise<Contract>;
+
+    abstract contractsCreatedBy(creator: string, limit?: number, page?: number): Contract[] | Promise<Contract[]>;
+
     abstract blocks(limit?: number, page?: number): Block[] | Promise<Block[]>;
 
     abstract blockByHash(hash?: string): Block | Promise<Block>;
@@ -302,10 +306,6 @@ export abstract class IQuery {
     abstract blockMetricByHash(hash?: string): BlockMetric | Promise<BlockMetric>;
 
     abstract blockMetrics(limit?: number, page?: number): BlockMetric[] | Promise<BlockMetric[]>;
-
-    abstract contractByHash(address: string): Contract | Promise<Contract>;
-
-    abstract contractsCreatedBy(creator: string, limit?: number, page?: number): Contract[] | Promise<Contract[]>;
 
     abstract quote(symbol: ExchangeFrom, to: ExchangeTo): Quote | Promise<Quote>;
 
@@ -361,6 +361,14 @@ export abstract class IQuery {
 
     abstract addressAmountTokensOwned(address: string): number | Promise<number>;
 
+    abstract uncleByHash(hash: string): Uncle | Promise<Uncle>;
+
+    abstract uncles(limit?: number, page?: number, fromUncle?: number): Uncle[] | Promise<Uncle[]>;
+
+    abstract totalNumberOfUncles(): number | Promise<number>;
+
+    abstract latestUncleBlockNumber(): number | Promise<number>;
+
     abstract tx(hash: string): Transaction | Promise<Transaction>;
 
     abstract txs(limit?: number, page?: number, fromBlock?: number): Transaction[] | Promise<Transaction[]>;
@@ -370,14 +378,6 @@ export abstract class IQuery {
     abstract txsForAddress(hash: string, filter: FilterEnum, limit?: number, page?: number): Transaction[] | Promise<Transaction[]>;
 
     abstract totalNumberOfTransactions(): number | Promise<number>;
-
-    abstract uncleByHash(hash: string): Uncle | Promise<Uncle>;
-
-    abstract uncles(limit?: number, page?: number, fromUncle?: number): Uncle[] | Promise<Uncle[]>;
-
-    abstract totalNumberOfUncles(): number | Promise<number>;
-
-    abstract latestUncleBlockNumber(): number | Promise<number>;
 
     abstract temp__(): boolean | Promise<boolean>;
 }

@@ -169,9 +169,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
               FungibleBalanceKeyRecord.newBuilder()
                 .setAddress(delta.getAddress())
                 .build(),
-              FungibleBalanceDeltaRecord.newBuilder(delta)
-                .setAddress(null)
-                .build()
+              delta
             )
           }
         }
@@ -193,9 +191,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
               FungibleBalanceKeyRecord.newBuilder()
                 .setAddress(delta.getAddress())
                 .build(),
-              FungibleBalanceDeltaRecord.newBuilder(delta)
-                .setAddress(null)
-                .build()
+              delta
             )
           }
       }.toTopic(FungibleBalanceDeltas)
@@ -328,9 +324,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
                 FungibleBalanceKeyRecord.newBuilder()
                   .setAddress(delta.getAddress())
                   .build(),
-                FungibleBalanceDeltaRecord.newBuilder(delta)
-                  .setAddress(null)
-                  .build()
+                delta
               )
             }
         } else {
@@ -453,10 +447,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
                   .setAddress(delta.getAddress())
                   .setContract(delta.getContractAddress())
                   .build(),
-                FungibleBalanceDeltaRecord.newBuilder(delta)
-                  .setAddress(null)
-                  .setContractAddress(null)
-                  .build()
+                delta
               )
             }
         } else {
