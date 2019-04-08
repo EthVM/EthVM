@@ -4,7 +4,6 @@ import { BlockMetricService } from './block-metric.service'
 import { BlockMetricResolvers } from './block-metric.resolvers'
 import { BlockMetricEntity } from '../../orm/entities/block-metric.entity'
 import { BlockMetricDto } from './block-metric.dto'
-import { ParseHashPipe } from '../../shared/validation/parse-hash.pipe'
 import { PubSub } from 'graphql-subscriptions'
 
 const mockService = {
@@ -22,7 +21,6 @@ describe('BlockMetricResolvers', () => {
       providers: [
         BlockMetricResolvers,
         EthService,
-        ParseHashPipe,
         {
           provide: 'PUB_SUB',
           useValue: new PubSub(),

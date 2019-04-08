@@ -1,9 +1,7 @@
 import { Test } from '@nestjs/testing'
-import { ParseAddressPipe } from '../../shared/validation/parse-address.pipe'
 import { EthService } from '../../shared/eth.service'
 import { TxService } from './tx.service'
 import { TxResolvers } from './tx.resolvers'
-import { ParseHashPipe } from '../../shared/validation/parse-hash.pipe'
 import { TransactionEntity } from '../../orm/entities/transaction.entity'
 import { TxDto } from './tx.dto'
 import { PubSub } from 'graphql-subscriptions'
@@ -25,8 +23,6 @@ describe('TxResolvers', () => {
     const module = await Test.createTestingModule({
       providers: [
         TxResolvers,
-        ParseAddressPipe,
-        ParseHashPipe,
         EthService,
         {
           provide: TxService,

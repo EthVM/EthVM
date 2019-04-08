@@ -1,5 +1,4 @@
 import { Test } from '@nestjs/testing'
-import { ParseAddressPipe } from '../../shared/validation/parse-address.pipe'
 import { EthService } from '../../shared/eth.service'
 import { ExchangeService } from './exchange.service'
 import { TokenExchangeRateResolvers } from './token-exchange-rate.resolvers'
@@ -30,7 +29,6 @@ describe('TokenExchangeRateResolvers', () => {
     const module = await Test.createTestingModule({
       providers: [
         TokenExchangeRateResolvers,
-        ParseAddressPipe,
         EthService,
         {
           provide: ExchangeService,

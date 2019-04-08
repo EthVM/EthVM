@@ -2,7 +2,6 @@ import { AccountMetadataResolvers } from './account-metadata.resolvers'
 import { AccountMetadataService } from './account-metadata.service'
 import { Test } from '@nestjs/testing'
 import { AccountMetadataEntity } from '../../orm/entities/account-metadata.entity'
-import { ParseAddressPipe } from '../../shared/validation/parse-address.pipe'
 import { EthService } from '../../shared/eth.service'
 import { AccountMetadataDto } from './account-metadata.dto'
 
@@ -20,7 +19,6 @@ describe('AccountMetadataResolvers', () => {
       providers: [
         AccountMetadataResolvers,
         EthService,
-        ParseAddressPipe,
         {
           provide: AccountMetadataService,
           useValue: mockService

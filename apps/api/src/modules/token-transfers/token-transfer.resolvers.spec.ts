@@ -1,7 +1,6 @@
 import { Test } from '@nestjs/testing'
 import { TokenTransferService } from './token-transfer.service'
 import { TokenTransferResolvers } from './token-transfer.resolvers'
-import { ParseAddressPipe } from '../../shared/validation/parse-address.pipe'
 import { EthService } from '../../shared/eth.service'
 import { TokenTransferEntity } from '../../orm/entities/token-transfer.entity'
 import { TokenTransferDto } from './dto/token-transfer.dto'
@@ -35,7 +34,6 @@ describe('TokenTransferResolvers', () => {
     const module = await Test.createTestingModule({
       providers: [
         TokenTransferResolvers,
-        ParseAddressPipe,
         EthService,
         {
           provide: TokenTransferService,

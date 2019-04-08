@@ -1,6 +1,5 @@
 import { Test } from '@nestjs/testing'
 import { EthService } from '../../shared/eth.service'
-import { ParseHashPipe } from '../../shared/validation/parse-hash.pipe'
 import { PubSub } from 'graphql-subscriptions'
 import { BlockService } from './block.service'
 import { BlockResolvers } from './block.resolvers'
@@ -25,7 +24,6 @@ describe('BlockResolvers', () => {
       providers: [
         BlockResolvers,
         EthService,
-        ParseHashPipe,
         {
           provide: 'PUB_SUB',
           useValue: new PubSub(),

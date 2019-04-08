@@ -3,7 +3,6 @@ import { ContractService } from './contract.service'
 import { ContractResolvers } from './contract.resolvers'
 import { ContractEntity } from '../../orm/entities/contract.entity'
 import { ContractDto } from './contract.dto'
-import { ParseAddressPipe } from '../../shared/validation/parse-address.pipe'
 import { EthService } from '../../shared/eth.service'
 
 const mockService = {
@@ -20,7 +19,6 @@ describe('ContractResolvers', () => {
     const module = await Test.createTestingModule({
       providers: [
         ContractResolvers,
-        ParseAddressPipe,
         EthService,
         {
           provide: ContractService,

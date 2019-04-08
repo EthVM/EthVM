@@ -2,7 +2,6 @@ import { BalanceService } from './balance.service'
 import { BalanceResolvers } from './balance.resolvers'
 import { Test } from '@nestjs/testing'
 import { EthService } from '../../shared/eth.service'
-import { ParseAddressPipe } from '../../shared/validation/parse-address.pipe'
 import { BalanceEntity } from '../../orm/entities/balance.entity'
 import { BalanceDto } from './balance.dto'
 
@@ -20,7 +19,6 @@ describe('BalanceResolvers', () => {
       providers: [
         BalanceResolvers,
         EthService,
-        ParseAddressPipe,
         {
           provide: BalanceService,
           useValue: mockService
