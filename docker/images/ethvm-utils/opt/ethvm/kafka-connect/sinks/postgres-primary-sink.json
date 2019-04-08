@@ -1,10 +1,10 @@
 {
-  "name": "postgres-sink",
+  "name": "postgres-primary-sink",
   "config": {
     "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
-    "tasks.max": 4,
+    "tasks.max": 1,
     "max.poll.records": 1000,
-    "topics": "canonical_block_header,transaction,transaction_receipt,transaction_trace,contract,fungible_balance,non_fungible_balance,block_header_metrics,block_transaction_metrics,block_transaction_traces_metrics,block_transaction_fee_metrics",
+    "topics": "canonical_block_header,transaction,transaction_receipt,transaction_trace,contract,fungible_balance,non_fungible_balance",
     "insert.mode": "upsert",
     "connection.url": "jdbc:postgresql://timescale:5432/ethvm_dev",
     "connection.user": "postgres",

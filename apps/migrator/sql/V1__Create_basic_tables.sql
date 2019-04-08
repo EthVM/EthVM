@@ -139,13 +139,28 @@ CREATE TABLE address
 
 CREATE TABLE fungible_balance
 (
-  address  CHAR(66),
+  address  CHAR(66) NOT NULL,
   contract CHAR(66) NULL,
   amount   NUMERIC  NOT NULL,
   UNIQUE (address, contract)
 );
 
 CREATE INDEX idx_fungible_balance_contract ON fungible_balance (contract);
+
+CREATE TABLE fungible_balance_deltas
+(
+  address CHAR(66) NULL,
+  contract_address CHAR(66) NULL,
+  token_type VARCHAR(32) NOT NULL,
+  delta_type VARCHAR(32) NOT NULL,
+  trace_location TEXT NOT NULL,
+  amount NUMERIC NOT NULL
+);
+
+CREATE INDEX idx_fungible_balance_deltas_address ON fungible_balance_deltas(address) WHERE address IS NOT NULL;
+CREATE INDEX idx_fungible_balance_deltas_contract_address ON fungible_balance_deltas(contract_address);
+CREATE INDEX idx_fungible_balance_deltas_token_type ON fungible_balance_deltas(token_type);
+CREATE INDEX idx_fungible_balance_deltas_delta_type ON fungible_balance_deltas(delta_type);
 
 CREATE TABLE non_fungible_balance
 (
@@ -157,6 +172,18 @@ CREATE TABLE non_fungible_balance
 );
 
 CREATE INDEX idx_non_fungible_balance_address ON non_fungible_balance (address);
+CREATE INDEX idx_non_fungible_balance_contract ON non_fungible_balance (contract);
+CREATE INDEX idx_non_fungible_balance_contract_address ON non_fungible_balance (contract, address);
+
+CREATE TABLE non_fungible_balance_deltas
+(
+  contract CHAR(66) NOT NULL,
+  tokenId NUMERIC NOT NULL,
+  token_type VARCHAR(32) NOT NULL,
+  trace_location TEXT NOT NULL,
+  "from" CHAR(66) NOT NULL,
+  "to" CHAR(66) NOT NULL
+);
 
 /* metrics hyper tables */
 

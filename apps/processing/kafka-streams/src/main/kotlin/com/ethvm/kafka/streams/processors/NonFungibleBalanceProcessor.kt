@@ -214,10 +214,7 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
                   .setContract(delta.getContract())
                   .setTokenId(delta.getTokenId())
                   .build(),
-                NonFungibleBalanceDeltaRecord.newBuilder(delta)
-                  .setContract(null)
-                  .setTokenId(null)
-                  .build()
+                delta
               )
             }
         } else {
