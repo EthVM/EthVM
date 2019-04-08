@@ -172,7 +172,7 @@ fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> 
 
       deltas
     }.flatten()
-    .filter { delta -> delta.getAmount() != null && delta.getAmount() != BigDecimal.ZERO }
+    .filter { delta -> delta.getAmount() != null && delta.getAmountBI() != BigDecimal.ZERO }
 
 fun FungibleBalanceDeltaRecord.reverse() =
   FungibleBalanceDeltaRecord.newBuilder(this)
