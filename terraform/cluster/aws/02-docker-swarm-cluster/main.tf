@@ -60,17 +60,3 @@ module "ethclient" {
   client_image      = "${var.eth_client_docker_image}"
   volume_size       = "${var.eth_client_volume_size}"
 }
-
-module "swarmsetup" {
-  source             = "./modules/swarmsetup"
-  admin_user         = "${var.swarmprom_admin_user}"
-  admin_password     = "${var.swarmprom_admin_password}"
-  slack_token        = "${var.swarmprom_slack_token}"
-  slack_channel      = "${var.swarmprom_slack_channel}"
-  slack_user         = "${var.swarmprom_slack_user}"
-  host               = "${aws_eip.manager-ip.public_ip}"
-  provision_user     = "${var.provision_user}"
-  ssh_key_path       = "${var.ssh_key_path}"
-  connection_timeout = "${var.connection_timeout}"
-  ethstats_secret    = "${var.ethstats_secret}"
-}
