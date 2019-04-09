@@ -42,6 +42,8 @@
       BLOCKS
     =====================================================================================
     -->
+    <v-layout >
+      <v-flex hidden-xs-only>
     <v-layout row wrap justify-space-between :class="layoutPadding">
       <!-- Ether Balance -->
       <v-flex xs12 md4>
@@ -79,6 +81,44 @@
       </v-flex>
       <!-- End Number of Tx -->
     </v-layout>
+
+      </v-flex>
+      <v-flex hidden-sm-and-up pt-0>
+    <div class="xs-overflow">
+        <v-card  class="primary xs-div white--text " >
+          <v-card-text class="pb-0">{{ $t('common.eth-balance') }}</v-card-text>
+          <!-- isShortValue -->
+          <v-card-title v-if="!isShortValue(account.balance.toEth().toString())" class="headline text-truncate pr-1"
+            >{{ getShortValue(account.balance.toEth()) }} {{ $t('common.eth') }}
+            <v-tooltip bottom>
+              <template #activator="data">
+                <v-icon v-on="data.on" small class="white--text text-xs-center pl-1">fa fa-question-circle</v-icon>
+              </template>
+              <span>{{ formatStr(account.balance.toEth().toString()) }} {{ $t('common.eth') }}</span>
+            </v-tooltip>
+          </v-card-title>
+          <!-- !isShortValue -->
+          <v-card-title v-else class="headline text-truncate">{{ account.balance.toEth() }} {{ $t('common.eth') }}</v-card-title>
+        </v-card>
+
+        <v-card class="error white--text xs-div " flat>
+          <v-card-text class="pb-0">{{ $t('usd.value') }} (1{{ $t('common.eth') }} = ${{ getRoundNumber(account.exchangeRate.USD) }})</v-card-text>
+          <v-card-title class="headline text-truncate">${{ getRoundNumber(account.balance.toEth() * account.exchangeRate.USD) }}</v-card-title>
+        </v-card>
+
+        <v-card class="warning white--text xs-div" flat>
+          <v-card-text class="pb-0">{{ $t('tx.total') }}</v-card-text>
+          <v-card-title class="headline text-truncate">{{ formatStr(account.totalTxs.toString()) }}</v-card-title>
+        </v-card>
+
+    <div class="empty-xs">
+    </div>
+
+
+    </div>
+      </v-flex>
+    </v-layout>
+
   </v-card>
 </template>
 
@@ -161,5 +201,33 @@ export default class AddressDetail extends Mixins(StringConcatMixin) {
 
 p {
   margin-bottom: 0px;
+}
+
+
+.xs-overflow{
+  display: flex;
+  overflow-x: scroll;
+  margin: 8px;
+}
+
+.xs-div{
+  min-width: 75vw;
+  margin-right: 10px;
+}
+
+.empty-xs {
+  min-width: 10vw;
+}
+.xs-overflow:after {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 120px;
+  width: 10vh;
+  content: "";
+  background: linear-gradient(to left,
+     rgba(255,255,255, 1) 5%,
+     hsla(0, 0%, 100%, 0) 80%
+  );
 }
 </style>
