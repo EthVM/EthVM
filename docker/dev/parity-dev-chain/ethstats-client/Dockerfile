@@ -10,8 +10,8 @@ RUN apk add --update git nodejs nodejs-npm 	&& \
 
 RUN cd /root/ && \
     git clone --depth=1 https://github.com/cubedro/eth-net-intelligence-api.git && \
-    cd eth-net-intelligence-api 												&& \
-    npm install 																&& \
+    cd eth-net-intelligence-api && \
+    npm install && \
     npm install -g pm2
 
 #Delete installed packages
