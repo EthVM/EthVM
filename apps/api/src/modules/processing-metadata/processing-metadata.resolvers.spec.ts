@@ -6,11 +6,10 @@ import { ProcessingMetadataDto } from './processing-metadata.dto'
 import { PubSub } from 'graphql-subscriptions'
 
 const mockService = {
-  async findProcessingMetaDataById(id) {},
+  async findProcessingMetaDataById(id) {}
 }
 
 describe('ProcessingMetadataResolvers', () => {
-
   let processingMetadataService: ProcessingMetadataService
   let processingMetadataResolvers: ProcessingMetadataResolvers
 
@@ -24,9 +23,9 @@ describe('ProcessingMetadataResolvers', () => {
         },
         {
           provide: 'PUB_SUB',
-          useValue: new PubSub(),
+          useValue: new PubSub()
         }
-      ],
+      ]
     }).compile()
     processingMetadataService = module.get<ProcessingMetadataService>(ProcessingMetadataService)
     processingMetadataResolvers = module.get<ProcessingMetadataResolvers>(ProcessingMetadataResolvers)
@@ -37,11 +36,12 @@ describe('ProcessingMetadataResolvers', () => {
 
   describe('processingMetadataById', () => {
     it('should return an instance of ProcessingMetadataDto matching the id provided', async () => {
-
-      jest.spyOn(processingMetadataService, 'findProcessingMetaDataById')
-        .mockImplementation(() => new Promise(resolve => {
-          resolve(new ProcessingMetadataEntity(result))
-        }))
+      jest.spyOn(processingMetadataService, 'findProcessingMetaDataById').mockImplementation(
+        () =>
+          new Promise(resolve => {
+            resolve(new ProcessingMetadataEntity(result))
+          })
+      )
 
       expect(await processingMetadataResolvers.processingMetadataById(id)).toEqual(new ProcessingMetadataDto(result))
     })

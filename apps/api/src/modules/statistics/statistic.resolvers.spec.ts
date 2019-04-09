@@ -20,54 +20,54 @@ const timeThree = dateThree.getTime()
 const timeFour = dateFour.getTime()
 
 const aggregateBlockMetrics = [
-  {name: 'TotalTxs', int: 30, date: timeFour},
-  {name: 'TotalTxs', int: 20, date: timeThree},
-  {name: 'TotalTxs', int: 10, date: timeTwo},
-  {name: 'TotalTxs', int: 0, date: timeOne},
-  {name: 'TotalSuccessfulTxs', int: 27, date: timeFour},
-  {name: 'TotalSuccessfulTxs', int: 17, date: timeThree},
-  {name: 'TotalSuccessfulTxs', int: 9, date: timeTwo},
-  {name: 'TotalSuccessfulTxs', int: 0, date: timeOne},
-  {name: 'TotalFailedTxs', int: 3, date: timeFour},
-  {name: 'TotalFailedTxs', int: 3, date: timeThree},
-  {name: 'TotalFailedTxs', int: 1, date: timeTwo},
-  {name: 'TotalFailedTxs', int: 0, date: timeOne},
-  {name: 'AvgDifficulty', bigInteger: '1470838650662', date: timeOne},
-  {name: 'AvgDifficulty', bigInteger: '1586123528941', date: timeTwo},
-  {name: 'AvgDifficulty', bigInteger: '1709479787484', date: timeThree},
-  {name: 'AvgDifficulty', bigInteger: '1837695763267', date: timeFour},
-  {name: 'AvgTotalGasPricePerBlock', bigInteger: '38604871690', date: timeOne},
-  {name: 'AvgTotalGasPricePerBlock', bigInteger: '197717485675', date: timeTwo},
-  {name: 'AvgTotalGasPricePerBlock', bigInteger: '104392654600', date: timeThree},
-  {name: 'AvgTotalGasPricePerBlock', bigInteger: '72534532631', date: timeFour},
-  {name: 'AvgGasPricePerBlock', bigInteger: '38604871690', date: timeOne},
-  {name: 'AvgGasPricePerBlock', bigInteger: '197717485675', date: timeTwo},
-  {name: 'AvgGasPricePerBlock', bigInteger: '104392654600', date: timeThree},
-  {name: 'AvgGasPricePerBlock', bigInteger: '72534532631', date: timeFour},
-  {name: 'AvgGasLimitPerBlock', bigInteger: '14020', date: timeOne},
-  {name: 'AvgGasLimitPerBlock', bigInteger: '64014', date: timeTwo},
-  {name: 'AvgGasLimitPerBlock', bigInteger: '16201', date: timeThree},
-  {name: 'AvgGasLimitPerBlock', bigInteger: '21207', date: timeFour},
-  {name: 'AvgTotalTxsFeesPerBlock', bigInteger: '6062558728067045', date: timeOne},
-  {name: 'AvgTotalTxsFeesPerBlock', bigInteger: '8092591774988115', date: timeTwo},
-  {name: 'AvgTotalTxsFeesPerBlock', bigInteger: '1664608009475577', date: timeThree},
-  {name: 'AvgTotalTxsFeesPerBlock', bigInteger: '4462449126956854', date: timeFour},
-  {name: 'AvgTxFeePerBlock', bigInteger: '6062558728067045', date: timeOne},
-  {name: 'AvgTxFeePerBlock', bigInteger: '8092591774988115', date: timeTwo},
-  {name: 'AvgTxFeePerBlock', bigInteger: '1664608009475577', date: timeThree},
-  {name: 'AvgTxFeePerBlock', bigInteger: '4462449126956854', date: timeFour},
-  {name: 'AvgMinerRewardPerBlock', bigInteger: '6062558728067045', date: timeOne},
-  {name: 'AvgMinerRewardPerBlock', bigInteger: '8092591774988115', date: timeTwo},
-  {name: 'AvgMinerRewardPerBlock', bigInteger: '1664608009475577', date: timeThree},
-  {name: 'AvgMinerRewardPerBlock', bigInteger: '4462449126956854', date: timeFour},
-  {name: 'AvgBlockTime', long: 14, date: timeOne},
-  {name: 'AvgBlockTime', long: 16, date: timeTwo},
-  {name: 'AvgBlockTime', long: 20, date: timeThree},
-  {name: 'AvgBlockTime', long: 32, date: timeFour},
-  {name: 'AvgHashRate', double: 493307540000.39264, date: timeOne},
-  {name: 'AvgHashRate', double: 590664697697.9985, date: timeTwo},
-  {name: 'AvgHashRate', double: 609979945429.7275, date: timeThree},
-  {name: 'AvgHashRate', double: 679213798489.1677, date: timeFour},
+  { name: 'TotalTxs', int: 30, date: timeFour },
+  { name: 'TotalTxs', int: 20, date: timeThree },
+  { name: 'TotalTxs', int: 10, date: timeTwo },
+  { name: 'TotalTxs', int: 0, date: timeOne },
+  { name: 'TotalSuccessfulTxs', int: 27, date: timeFour },
+  { name: 'TotalSuccessfulTxs', int: 17, date: timeThree },
+  { name: 'TotalSuccessfulTxs', int: 9, date: timeTwo },
+  { name: 'TotalSuccessfulTxs', int: 0, date: timeOne },
+  { name: 'TotalFailedTxs', int: 3, date: timeFour },
+  { name: 'TotalFailedTxs', int: 3, date: timeThree },
+  { name: 'TotalFailedTxs', int: 1, date: timeTwo },
+  { name: 'TotalFailedTxs', int: 0, date: timeOne },
+  { name: 'AvgDifficulty', bigInteger: '1470838650662', date: timeOne },
+  { name: 'AvgDifficulty', bigInteger: '1586123528941', date: timeTwo },
+  { name: 'AvgDifficulty', bigInteger: '1709479787484', date: timeThree },
+  { name: 'AvgDifficulty', bigInteger: '1837695763267', date: timeFour },
+  { name: 'AvgTotalGasPricePerBlock', bigInteger: '38604871690', date: timeOne },
+  { name: 'AvgTotalGasPricePerBlock', bigInteger: '197717485675', date: timeTwo },
+  { name: 'AvgTotalGasPricePerBlock', bigInteger: '104392654600', date: timeThree },
+  { name: 'AvgTotalGasPricePerBlock', bigInteger: '72534532631', date: timeFour },
+  { name: 'AvgGasPricePerBlock', bigInteger: '38604871690', date: timeOne },
+  { name: 'AvgGasPricePerBlock', bigInteger: '197717485675', date: timeTwo },
+  { name: 'AvgGasPricePerBlock', bigInteger: '104392654600', date: timeThree },
+  { name: 'AvgGasPricePerBlock', bigInteger: '72534532631', date: timeFour },
+  { name: 'AvgGasLimitPerBlock', bigInteger: '14020', date: timeOne },
+  { name: 'AvgGasLimitPerBlock', bigInteger: '64014', date: timeTwo },
+  { name: 'AvgGasLimitPerBlock', bigInteger: '16201', date: timeThree },
+  { name: 'AvgGasLimitPerBlock', bigInteger: '21207', date: timeFour },
+  { name: 'AvgTotalTxsFeesPerBlock', bigInteger: '6062558728067045', date: timeOne },
+  { name: 'AvgTotalTxsFeesPerBlock', bigInteger: '8092591774988115', date: timeTwo },
+  { name: 'AvgTotalTxsFeesPerBlock', bigInteger: '1664608009475577', date: timeThree },
+  { name: 'AvgTotalTxsFeesPerBlock', bigInteger: '4462449126956854', date: timeFour },
+  { name: 'AvgTxFeePerBlock', bigInteger: '6062558728067045', date: timeOne },
+  { name: 'AvgTxFeePerBlock', bigInteger: '8092591774988115', date: timeTwo },
+  { name: 'AvgTxFeePerBlock', bigInteger: '1664608009475577', date: timeThree },
+  { name: 'AvgTxFeePerBlock', bigInteger: '4462449126956854', date: timeFour },
+  { name: 'AvgMinerRewardPerBlock', bigInteger: '6062558728067045', date: timeOne },
+  { name: 'AvgMinerRewardPerBlock', bigInteger: '8092591774988115', date: timeTwo },
+  { name: 'AvgMinerRewardPerBlock', bigInteger: '1664608009475577', date: timeThree },
+  { name: 'AvgMinerRewardPerBlock', bigInteger: '4462449126956854', date: timeFour },
+  { name: 'AvgBlockTime', long: 14, date: timeOne },
+  { name: 'AvgBlockTime', long: 16, date: timeTwo },
+  { name: 'AvgBlockTime', long: 20, date: timeThree },
+  { name: 'AvgBlockTime', long: 32, date: timeFour },
+  { name: 'AvgHashRate', double: 493307540000.39264, date: timeOne },
+  { name: 'AvgHashRate', double: 590664697697.9985, date: timeTwo },
+  { name: 'AvgHashRate', double: 609979945429.7275, date: timeThree },
+  { name: 'AvgHashRate', double: 679213798489.1677, date: timeFour }
 ]
 
 const mockService = {
@@ -121,19 +121,17 @@ const mockService = {
   },
   filterMetrics(name, start, end) {
     return aggregateBlockMetrics.filter(a => {
-      return (a.name === name && a.date >= start.getTime() && a.date <= end.getTime())
+      return a.name === name && a.date >= start.getTime() && a.date <= end.getTime()
     })
   }
 }
 
 describe('StatisticResolvers', () => {
-
   let statisticService: StatisticService
   let statisticResolvers: StatisticResolvers
   let durationService: DurationService
 
   beforeEach(async () => {
-
     // Test module
     const module = await Test.createTestingModule({
       providers: [
@@ -143,7 +141,7 @@ describe('StatisticResolvers', () => {
           useValue: mockService
         },
         DurationService
-      ],
+      ]
     }).compile()
 
     // Fetch dependencies
@@ -153,7 +151,6 @@ describe('StatisticResolvers', () => {
   })
 
   describe('totalTxs', () => {
-
     it('should return an array of StatisticDto instances with name "TotalTxs"', async () => {
       const totalTxs = await statisticResolvers.totalTxs(Duration.ALL)
 
@@ -166,7 +163,6 @@ describe('StatisticResolvers', () => {
     })
 
     it('should only return StatisticDto instances with dates within the given duration', async () => {
-
       const totalTxsWeek = await statisticResolvers.totalTxs(Duration.WEEK)
       expect(totalTxsWeek).toHaveLength(2)
 
@@ -175,19 +171,15 @@ describe('StatisticResolvers', () => {
 
       const totalTxsYear = await statisticResolvers.totalTxs(Duration.YEAR)
       expect(totalTxsYear).toHaveLength(4)
-
     })
 
     it('should return an empty array when there are no AggregateBlockMetrics with name "TotalTxs" with dates within the given duration', async () => {
-
       const totalTxsDay = await statisticResolvers.totalTxs(Duration.DAY)
       expect(totalTxsDay).toHaveLength(0)
-
     })
   })
 
   describe('totalSuccessfulTxs', () => {
-
     it('should return an array of StatisticDto instances with name "TotalSuccessfulTxs"', async () => {
       const totalSuccessfulTxs = await statisticResolvers.totalSuccessfulTxs(Duration.ALL)
 
@@ -200,7 +192,6 @@ describe('StatisticResolvers', () => {
     })
 
     it('should only return StatisticDto instances with dates within the given duration', async () => {
-
       const totalSuccessfulTxsWeek = await statisticResolvers.totalSuccessfulTxs(Duration.WEEK)
       expect(totalSuccessfulTxsWeek).toHaveLength(2)
 
@@ -209,16 +200,12 @@ describe('StatisticResolvers', () => {
 
       const totalSuccessfulTxsYear = await statisticResolvers.totalSuccessfulTxs(Duration.YEAR)
       expect(totalSuccessfulTxsYear).toHaveLength(4)
-
     })
 
     it('should return an empty array when there are no AggregateBlockMetrics with name "TotalSuccessfulTxs" with dates within the given duration', async () => {
-
       const totalSuccessfulTxsDay = await statisticResolvers.totalSuccessfulTxs(Duration.DAY)
       expect(totalSuccessfulTxsDay).toHaveLength(0)
-
     })
-
   })
 
   describe('averageDifficulty', () => {
@@ -234,7 +221,6 @@ describe('StatisticResolvers', () => {
     })
 
     it('should only return StatisticDto instances with dates within the given duration', async () => {
-
       const avgDifficultyWeek = await statisticResolvers.averageDifficulty(Duration.WEEK)
       expect(avgDifficultyWeek).toHaveLength(2)
 
@@ -243,14 +229,11 @@ describe('StatisticResolvers', () => {
 
       const avgDifficultyYear = await statisticResolvers.averageDifficulty(Duration.YEAR)
       expect(avgDifficultyYear).toHaveLength(4)
-
     })
 
     it('should return an empty array when there are no AggregateBlockMetrics with name "AvgDifficulty" with dates within the given duration', async () => {
-
       const avgDifficultyDay = await statisticResolvers.averageDifficulty(Duration.DAY)
       expect(avgDifficultyDay).toHaveLength(0)
-
     })
   })
 
@@ -267,7 +250,6 @@ describe('StatisticResolvers', () => {
     })
 
     it('should only return StatisticDto instances with dates within the given duration', async () => {
-
       const totalFailedTxsWeek = await statisticResolvers.totalFailedTxs(Duration.WEEK)
       expect(totalFailedTxsWeek).toHaveLength(2)
 
@@ -276,14 +258,11 @@ describe('StatisticResolvers', () => {
 
       const totalFailedTxsYear = await statisticResolvers.totalFailedTxs(Duration.YEAR)
       expect(totalFailedTxsYear).toHaveLength(4)
-
     })
 
     it('should return an empty array when there are no AggregateBlockMetrics with name "TotalFailedTxs" with dates within the given duration', async () => {
-
       const totalFailedTxsDay = await statisticResolvers.totalFailedTxs(Duration.DAY)
       expect(totalFailedTxsDay).toHaveLength(0)
-
     })
   })
 
@@ -300,7 +279,6 @@ describe('StatisticResolvers', () => {
     })
 
     it('should only return StatisticDto instances with dates within the given duration', async () => {
-
       const totalGasPriceWeek = await statisticResolvers.totalGasPrice(Duration.WEEK)
       expect(totalGasPriceWeek).toHaveLength(2)
 
@@ -309,19 +287,15 @@ describe('StatisticResolvers', () => {
 
       const totalGasPriceYear = await statisticResolvers.totalGasPrice(Duration.YEAR)
       expect(totalGasPriceYear).toHaveLength(4)
-
     })
 
     it('should return an empty array when there are no AggregateBlockMetrics with name "AvgTotalGasPricePerBlock" with dates within the given duration', async () => {
-
       const totalGasPriceDay = await statisticResolvers.totalGasPrice(Duration.DAY)
       expect(totalGasPriceDay).toHaveLength(0)
-
     })
   })
 
   describe('averageGasLimit', () => {
-
     it('should return an array of StatisticDto instances with name "AvgGasLimitPerBlock"', async () => {
       const averageGasLimit = await statisticResolvers.averageGasLimit(Duration.ALL)
 
@@ -334,7 +308,6 @@ describe('StatisticResolvers', () => {
     })
 
     it('should only return StatisticDto instances with dates within the given duration', async () => {
-
       const averageGasLimitWeek = await statisticResolvers.averageGasLimit(Duration.WEEK)
       expect(averageGasLimitWeek).toHaveLength(2)
 
@@ -343,19 +316,15 @@ describe('StatisticResolvers', () => {
 
       const averageGasLimitYear = await statisticResolvers.averageGasLimit(Duration.YEAR)
       expect(averageGasLimitYear).toHaveLength(4)
-
     })
 
     it('should return an empty array when there are no AggregateBlockMetrics with name "AvgGasLimitPerBlock" with dates within the given duration', async () => {
-
       const averageGasLimitDay = await statisticResolvers.averageGasLimit(Duration.DAY)
       expect(averageGasLimitDay).toHaveLength(0)
-
     })
   })
 
   describe('averageGasPrice', () => {
-
     it('should return an array of StatisticDto instances with name "AvgGasPricePerBlock"', async () => {
       const averageGasPrice = await statisticResolvers.averageGasPrice(Duration.ALL)
 
@@ -368,7 +337,6 @@ describe('StatisticResolvers', () => {
     })
 
     it('should only return StatisticDto instances with dates within the given duration', async () => {
-
       const averageGasPriceWeek = await statisticResolvers.averageGasPrice(Duration.WEEK)
       expect(averageGasPriceWeek).toHaveLength(2)
 
@@ -377,19 +345,15 @@ describe('StatisticResolvers', () => {
 
       const averageGasPriceYear = await statisticResolvers.averageGasPrice(Duration.YEAR)
       expect(averageGasPriceYear).toHaveLength(4)
-
     })
 
     it('should return an empty array when there are no AggregateBlockMetrics with name "AvgGasPricePerBlock" with dates within the given duration', async () => {
-
       const averageGasPriceDay = await statisticResolvers.averageGasPrice(Duration.DAY)
       expect(averageGasPriceDay).toHaveLength(0)
-
     })
   })
 
   describe('totalTxsFees', () => {
-
     it('should return an array of StatisticDto instances with name "AvgTotalTxsFeesPerBlock"', async () => {
       const totalTxsFees = await statisticResolvers.totalTxsFees(Duration.ALL)
 
@@ -402,7 +366,6 @@ describe('StatisticResolvers', () => {
     })
 
     it('should only return StatisticDto instances with dates within the given duration', async () => {
-
       const totalTxsFeesWeek = await statisticResolvers.totalTxsFees(Duration.WEEK)
       expect(totalTxsFeesWeek).toHaveLength(2)
 
@@ -411,19 +374,15 @@ describe('StatisticResolvers', () => {
 
       const totalTxsFeesYear = await statisticResolvers.totalTxsFees(Duration.YEAR)
       expect(totalTxsFeesYear).toHaveLength(4)
-
     })
 
     it('should return an empty array when there are no AggregateBlockMetrics with name "AvgTotalTxsFeesPerBlock" with dates within the given duration', async () => {
-
       const totalTxsFeesDay = await statisticResolvers.totalTxsFees(Duration.DAY)
       expect(totalTxsFeesDay).toHaveLength(0)
-
     })
   })
 
   describe('averageTxFee', () => {
-
     it('should return an array of StatisticDto instances with name "AvgTxFeePerBlock"', async () => {
       const averageTxFee = await statisticResolvers.averageTxFee(Duration.ALL)
 
@@ -436,7 +395,6 @@ describe('StatisticResolvers', () => {
     })
 
     it('should only return StatisticDto instances with dates within the given duration', async () => {
-
       const averageTxFeeWeek = await statisticResolvers.averageTxFee(Duration.WEEK)
       expect(averageTxFeeWeek).toHaveLength(2)
 
@@ -445,19 +403,15 @@ describe('StatisticResolvers', () => {
 
       const averageTxFeeYear = await statisticResolvers.averageTxFee(Duration.YEAR)
       expect(averageTxFeeYear).toHaveLength(4)
-
     })
 
     it('should return an empty array when there are no AggregateBlockMetrics with name "AvgTxFeePerBlock" with dates within the given duration', async () => {
-
       const averageTxFeeDay = await statisticResolvers.averageTxFee(Duration.DAY)
       expect(averageTxFeeDay).toHaveLength(0)
-
     })
   })
 
   describe('averageMinerReward', () => {
-
     it('should return an array of StatisticDto instances with name "AvgMinerRewardPerBlock"', async () => {
       const averageMinerReward = await statisticResolvers.averageMinerReward(Duration.ALL)
 
@@ -470,7 +424,6 @@ describe('StatisticResolvers', () => {
     })
 
     it('should only return StatisticDto instances with dates within the given duration', async () => {
-
       const averageMinerRewardWeek = await statisticResolvers.averageMinerReward(Duration.WEEK)
       expect(averageMinerRewardWeek).toHaveLength(2)
 
@@ -479,19 +432,15 @@ describe('StatisticResolvers', () => {
 
       const averageMinerRewardYear = await statisticResolvers.averageMinerReward(Duration.YEAR)
       expect(averageMinerRewardYear).toHaveLength(4)
-
     })
 
     it('should return an empty array when there are no AggregateBlockMetrics with name "AvgMinerRewardPerBlock" with dates within the given duration', async () => {
-
       const averageMinerRewardDay = await statisticResolvers.averageMinerReward(Duration.DAY)
       expect(averageMinerRewardDay).toHaveLength(0)
-
     })
   })
 
   describe('averageBlockTime', () => {
-
     it('should return an array of StatisticDto instances with name "AvgBlockTime"', async () => {
       const averageBlockTime = await statisticResolvers.averageBlockTime(Duration.ALL)
 
@@ -504,7 +453,6 @@ describe('StatisticResolvers', () => {
     })
 
     it('should only return StatisticDto instances with dates within the given duration', async () => {
-
       const averageBlockTimeWeek = await statisticResolvers.averageBlockTime(Duration.WEEK)
       expect(averageBlockTimeWeek).toHaveLength(2)
 
@@ -513,18 +461,15 @@ describe('StatisticResolvers', () => {
 
       const averageBlockTimeYear = await statisticResolvers.averageBlockTime(Duration.YEAR)
       expect(averageBlockTimeYear).toHaveLength(4)
-
     })
 
     it('should return an empty array when there are no AggregateBlockMetrics with name "AvgBlockTime" with dates within the given duration', async () => {
-
       const averageBlockTimeDay = await statisticResolvers.averageBlockTime(Duration.DAY)
       expect(averageBlockTimeDay).toHaveLength(0)
     })
   })
 
   describe('averageHashRate', () => {
-
     it('should return an array of StatisticDto instances with name "AvgHashRate"', async () => {
       const averageHashRate = await statisticResolvers.averageHashRate(Duration.ALL)
 
@@ -537,7 +482,6 @@ describe('StatisticResolvers', () => {
     })
 
     it('should only return StatisticDto instances with dates within the given duration', async () => {
-
       const averageHashRateWeek = await statisticResolvers.averageHashRate(Duration.WEEK)
       expect(averageHashRateWeek).toHaveLength(2)
 
@@ -546,14 +490,11 @@ describe('StatisticResolvers', () => {
 
       const averageHashRateYear = await statisticResolvers.averageHashRate(Duration.YEAR)
       expect(averageHashRateYear).toHaveLength(4)
-
     })
 
     it('should return an empty array when there are no AggregateBlockMetrics with name "AvgHashRate" with dates within the given duration', async () => {
-
       const averageHashRateDay = await statisticResolvers.averageHashRate(Duration.DAY)
       expect(averageHashRateDay).toHaveLength(0)
     })
   })
-
 })

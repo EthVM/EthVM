@@ -24,8 +24,8 @@ export class VmEngineService {
     this.opts = {
       rpcUrl: configService.vmEngine.rpcUrl,
       tokensAddress: {
-        address: configService.vmEngine.tokensSmartContract,
-      },
+        address: configService.vmEngine.tokensSmartContract
+      }
     }
   }
 
@@ -38,7 +38,7 @@ export class VmEngineService {
       'bool', // decode name
       'bool', // decode website
       'bool', // decode email
-      'uint256', // num of tokens to retrieve (0: all)
+      'uint256' // num of tokens to retrieve (0: all)
     ]
     const values = [address, true, false, false, 0]
     const encoded = this.encodeCall(method, keys, values)
@@ -47,7 +47,7 @@ export class VmEngineService {
       jsonrpc: '2.0',
       id: 1,
       method: 'eth_call',
-      params: [{ to: this.opts.tokensAddress.address, data: encoded }, 'latest'],
+      params: [{ to: this.opts.tokensAddress.address, data: encoded }, 'latest']
     }
 
     let res
@@ -56,7 +56,7 @@ export class VmEngineService {
       res = await axios(this.opts.rpcUrl, {
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
-        data: JSON.stringify(request),
+        data: JSON.stringify(request)
       })
     } catch (err) {
       throw err

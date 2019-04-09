@@ -136,12 +136,10 @@ const mockService = {
 }
 
 describe('BlockResolvers', () => {
-
   let blockService: BlockService
   let blockResolvers: BlockResolvers
 
   beforeEach(async () => {
-
     // test module
     const module = await Test.createTestingModule({
       providers: [
@@ -149,13 +147,13 @@ describe('BlockResolvers', () => {
         EthService,
         {
           provide: 'PUB_SUB',
-          useValue: new PubSub(),
+          useValue: new PubSub()
         },
         {
           provide: BlockService,
           useValue: mockService
         }
-      ],
+      ]
     }).compile()
 
     // fetch dependencies
@@ -175,13 +173,11 @@ describe('BlockResolvers', () => {
   }
 
   describe('blockByHash', () => {
-
     it('should return null if block does not exist for a given hash', async () => {
       expect(await blockResolvers.blockByHash(hashEleven)).toEqual(null)
     })
 
     it('should return an instance of BlockDto matching the address hash provided', async () => {
-
       const blockOne = await blockResolvers.blockByHash(hashOne)
       const blockTwo = await blockResolvers.blockByHash(hashTwo)
 
@@ -189,17 +185,16 @@ describe('BlockResolvers', () => {
 
       expect(blockOne).not.toBeNull()
       expect(blockOne).toBeInstanceOf(BlockDto)
-      expect(blockOne).toHaveProperty('header', {hash: hashOne, author: authorOne, number: 1})
+      expect(blockOne).toHaveProperty('header', { hash: hashOne, author: authorOne, number: 1 })
 
       expect(blockTwo).not.toBeNull()
       expect(blockTwo).toBeInstanceOf(BlockDto)
-      expect(blockTwo).toHaveProperty('header', {hash: hashTwo, author: authorOne, number: 2})
+      expect(blockTwo).toHaveProperty('header', { hash: hashTwo, author: authorOne, number: 2 })
 
       expect(blockOne).not.toEqual(blockTwo)
     })
 
     it('should convert a BlockEntity to a BlockDto', async () => {
-
       const blockOne = await blockResolvers.blockByHash(hashOne)
 
       expect(blockOne).toEqual(
@@ -212,14 +207,11 @@ describe('BlockResolvers', () => {
           }
         })
       )
-
     })
   })
 
   describe('blocks', () => {
-
     it('should return an array of BlockDto instances, respecting given limit and page parameters', async () => {
-
       const blocksOne = await blockResolvers.blocks(5, 0)
       expect(blocksOne).toHaveLength(5)
       expect(blocksOne[0]).toHaveProperty('id', 1)
@@ -233,38 +225,32 @@ describe('BlockResolvers', () => {
       // Check an empty array is returned if no items available for requested page
       const blocksThree = await blockResolvers.blocks(10, 1)
       expect(blocksThree).toHaveLength(0)
-
     })
 
     it('should convert an array of BlockEntity instances to an array of BlockDto instances', async () => {
-
       const blocks = await blockResolvers.blocks()
       const expected = [
-        new BlockDto({id: 1, header: {hash: hashOne, author: authorOne, number: 1}}),
-        new BlockDto({id: 2, header: {hash: hashTwo, author: authorOne, number: 2}}),
-        new BlockDto({id: 3, header: {hash: hashThree, author: authorTwo, number: 3}}),
-        new BlockDto({id: 4, header: {hash: hashFour, author: authorOne, number: 4}}),
-        new BlockDto({id: 5, header: {hash: hashFive, author: authorOne, number: 5}}),
-        new BlockDto({id: 6, header: {hash: hashSix, author: authorTwo, number: 6}}),
-        new BlockDto({id: 7, header: {hash: hashSeven, author: authorOne, number: 7}}),
-        new BlockDto({id: 8, header: {hash: hashEight, author: authorOne, number: 8}}),
-        new BlockDto({id: 9, header: {hash: hashNine, author: authorTwo, number: 9}}),
-        new BlockDto({id: 10, header: {hash: hashTen, author: authorOne, number: 10}}),
+        new BlockDto({ id: 1, header: { hash: hashOne, author: authorOne, number: 1 } }),
+        new BlockDto({ id: 2, header: { hash: hashTwo, author: authorOne, number: 2 } }),
+        new BlockDto({ id: 3, header: { hash: hashThree, author: authorTwo, number: 3 } }),
+        new BlockDto({ id: 4, header: { hash: hashFour, author: authorOne, number: 4 } }),
+        new BlockDto({ id: 5, header: { hash: hashFive, author: authorOne, number: 5 } }),
+        new BlockDto({ id: 6, header: { hash: hashSix, author: authorTwo, number: 6 } }),
+        new BlockDto({ id: 7, header: { hash: hashSeven, author: authorOne, number: 7 } }),
+        new BlockDto({ id: 8, header: { hash: hashEight, author: authorOne, number: 8 } }),
+        new BlockDto({ id: 9, header: { hash: hashNine, author: authorTwo, number: 9 } }),
+        new BlockDto({ id: 10, header: { hash: hashTen, author: authorOne, number: 10 } })
       ]
       expect(blocks).toEqual(expect.arrayContaining(expected))
-
     })
-
   })
 
   describe('blockByNumber', () => {
-
     it('should return null if block does not exist for a given number', async () => {
       expect(await blockResolvers.blockByNumber(11)).toEqual(null)
     })
 
     it('should return an instance of BlockDto matching the block number provided', async () => {
-
       const blockOne = await blockResolvers.blockByNumber(1)
       const blockTwo = await blockResolvers.blockByNumber(2)
 
@@ -272,17 +258,16 @@ describe('BlockResolvers', () => {
 
       expect(blockOne).not.toBeNull()
       expect(blockOne).toBeInstanceOf(BlockDto)
-      expect(blockOne).toHaveProperty('header', {hash: hashOne, author: authorOne, number: 1})
+      expect(blockOne).toHaveProperty('header', { hash: hashOne, author: authorOne, number: 1 })
 
       expect(blockTwo).not.toBeNull()
       expect(blockTwo).toBeInstanceOf(BlockDto)
-      expect(blockTwo).toHaveProperty('header', {hash: hashTwo, author: authorOne, number: 2})
+      expect(blockTwo).toHaveProperty('header', { hash: hashTwo, author: authorOne, number: 2 })
 
       expect(blockOne).not.toEqual(blockTwo)
     })
 
     it('should convert a BlockEntity to a BlockDto', async () => {
-
       const blockOne = await blockResolvers.blockByNumber(1)
 
       expect(blockOne).toEqual(
@@ -295,29 +280,24 @@ describe('BlockResolvers', () => {
           }
         })
       )
-
     })
   })
 
   describe('minedBlocksByAddress', () => {
-
     it('should return an array of BlockDto instances matching the address provided', async () => {
-
       const blocksMinedByAuthorOne = await blockResolvers.minedBlocksByAddress(authorOne)
       const blocksMinedByAuthorTwo = await blockResolvers.minedBlocksByAddress(authorTwo)
 
       expect(blocksMinedByAuthorOne).toHaveLength(7)
-      expect(blocksMinedByAuthorOne[0]).toHaveProperty('header', {hash: hashOne, author: authorOne, number: 1})
+      expect(blocksMinedByAuthorOne[0]).toHaveProperty('header', { hash: hashOne, author: authorOne, number: 1 })
 
       expect(blocksMinedByAuthorTwo).toHaveLength(3)
-      expect(blocksMinedByAuthorTwo[0]).toHaveProperty('header', {hash: hashThree, author: authorTwo, number: 3})
+      expect(blocksMinedByAuthorTwo[0]).toHaveProperty('header', { hash: hashThree, author: authorTwo, number: 3 })
 
       expect(blocksMinedByAuthorOne).not.toEqual(blocksMinedByAuthorTwo)
-
     })
 
     it('should respect given limit and page parameters', async () => {
-
       const blocksOne = await blockResolvers.minedBlocksByAddress(authorOne, 5, 0)
       expect(blocksOne).toHaveLength(5)
       expect(blocksOne[0]).toHaveProperty('id', 1)
@@ -331,23 +311,20 @@ describe('BlockResolvers', () => {
       // Check an empty array is returned if no items available for requested page
       const blocksThree = await blockResolvers.minedBlocksByAddress(authorThree, 10, 1)
       expect(blocksThree).toHaveLength(0)
-
     })
 
     it('should convert an array of BlockEntity instances to an array of BlockDto instances', async () => {
-
       const blocks = await blockResolvers.minedBlocksByAddress(authorOne)
       const expected = [
-        new BlockDto({id: 1, header: {hash: hashOne, author: authorOne, number: 1}}),
-        new BlockDto({id: 2, header: {hash: hashTwo, author: authorOne, number: 2}}),
-        new BlockDto({id: 4, header: {hash: hashFour, author: authorOne, number: 4}}),
-        new BlockDto({id: 5, header: {hash: hashFive, author: authorOne, number: 5}}),
-        new BlockDto({id: 7, header: {hash: hashSeven, author: authorOne, number: 7}}),
-        new BlockDto({id: 8, header: {hash: hashEight, author: authorOne, number: 8}}),
-        new BlockDto({id: 10, header: {hash: hashTen, author: authorOne, number: 10}})
+        new BlockDto({ id: 1, header: { hash: hashOne, author: authorOne, number: 1 } }),
+        new BlockDto({ id: 2, header: { hash: hashTwo, author: authorOne, number: 2 } }),
+        new BlockDto({ id: 4, header: { hash: hashFour, author: authorOne, number: 4 } }),
+        new BlockDto({ id: 5, header: { hash: hashFive, author: authorOne, number: 5 } }),
+        new BlockDto({ id: 7, header: { hash: hashSeven, author: authorOne, number: 7 } }),
+        new BlockDto({ id: 8, header: { hash: hashEight, author: authorOne, number: 8 } }),
+        new BlockDto({ id: 10, header: { hash: hashTen, author: authorOne, number: 10 } })
       ]
       expect(blocks).toEqual(expect.arrayContaining(expected))
-
     })
   })
 
@@ -356,5 +333,4 @@ describe('BlockResolvers', () => {
       expect(await blockResolvers.totalNumberOfBlocks()).toBe(10)
     })
   })
-
 })

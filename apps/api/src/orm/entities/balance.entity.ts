@@ -6,7 +6,7 @@ export enum BalanceType {
   REWARD,
   ETHER,
   ERC20,
-  ERC721,
+  ERC721
 }
 
 interface BalanceKeyInterface {

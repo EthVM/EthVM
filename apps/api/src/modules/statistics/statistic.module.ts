@@ -6,6 +6,6 @@ import { AggregateBlockMetricEntity } from '@app/orm/entities/aggregate-block-me
 
 @Module({
   imports: [TypeOrmModule.forFeature([AggregateBlockMetricEntity])],
-  providers: [StatisticService, StatisticResolvers],
+  providers: [StatisticService, StatisticResolvers]
 })
 export class StatisticModule {}

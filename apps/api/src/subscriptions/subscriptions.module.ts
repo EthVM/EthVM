@@ -6,12 +6,12 @@ import { ProcessingMetadataEntity } from '@app/orm/entities/processing-metadata.
 
 const pubSubProvider = {
   provide: 'PUB_SUB',
-  useValue: new PubSub(),
+  useValue: new PubSub()
 }
 
 @Module({
   imports: [TypeOrmModule.forFeature([ProcessingMetadataEntity])],
   providers: [pubSubProvider, MongoSubscriptionService],
-  exports: [pubSubProvider],
+  exports: [pubSubProvider]
 })
 export class SubscriptionsModule {}

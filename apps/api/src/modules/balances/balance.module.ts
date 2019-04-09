@@ -7,6 +7,6 @@ import { BalanceResolvers } from '@app/modules/balances/balance.resolvers'
 @Module({
   imports: [TypeOrmModule.forFeature([BalanceEntity])],
   providers: [BalanceService, BalanceResolvers],
-  exports: [BalanceService],
+  exports: [BalanceService]
 })
 export class BalanceModule {}

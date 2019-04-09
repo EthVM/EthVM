@@ -75,12 +75,10 @@ const mockService = {
 }
 
 describe('BlockMetricResolvers', () => {
-
   let blockMetricService: BlockMetricService
   let blockMetricResolvers: BlockMetricResolvers
 
   beforeEach(async () => {
-
     // test module
     const module = await Test.createTestingModule({
       providers: [
@@ -88,13 +86,13 @@ describe('BlockMetricResolvers', () => {
         EthService,
         {
           provide: 'PUB_SUB',
-          useValue: new PubSub(),
+          useValue: new PubSub()
         },
         {
           provide: BlockMetricService,
           useValue: mockService
         }
-      ],
+      ]
     }).compile()
 
     // fetch dependencies
@@ -103,13 +101,11 @@ describe('BlockMetricResolvers', () => {
   })
 
   describe('blockMetricByHash', () => {
-
     it('should return null if BlockMetricEntity does not exist for a given hash', async () => {
       expect(await blockMetricResolvers.blockMetricByHash(hashEleven)).toEqual(null)
     })
 
     it('should return an instance of BlockMetricDto matching the hash provided', async () => {
-
       const blockMetricOne = await blockMetricResolvers.blockMetricByHash(hashOne)
       const blockMetricTwo = await blockMetricResolvers.blockMetricByHash(hashTwo)
 
@@ -126,9 +122,7 @@ describe('BlockMetricResolvers', () => {
       expect(blockMetricOne).not.toEqual(blockMetricTwo)
     })
 
-
     it('should convert a BlockMetricEntity to a BlockMetricDto', async () => {
-
       const blockMetricOne = await blockMetricResolvers.blockMetricByHash(hashOne)
 
       expect(blockMetricOne).toEqual(
@@ -137,14 +131,11 @@ describe('BlockMetricResolvers', () => {
           hash: hashOne
         })
       )
-
     })
   })
 
   describe('blockMetrics', () => {
-
     it('should return an array of BlockMetricDto instances, respecting given limit and page parameters', async () => {
-
       const blockMetricsOne = await blockMetricResolvers.blockMetrics(5, 0)
       expect(blockMetricsOne).toHaveLength(5)
       expect(blockMetricsOne[0]).toHaveProperty('id', 1)
@@ -158,30 +149,23 @@ describe('BlockMetricResolvers', () => {
       // Check an empty array is returned if no items available for requested page
       const blockMetricsThree = await blockMetricResolvers.blockMetrics(10, 1)
       expect(blockMetricsThree).toHaveLength(0)
-
     })
 
     it('should convert an array of BlockMetricEntity instances to an array of BlockMetricDto instances', async () => {
-
       const blockMetrics = await blockMetricResolvers.blockMetrics()
       const expected = [
-        new BlockMetricDto({id: 1, hash: hashOne}),
-        new BlockMetricDto({id: 2, hash: hashTwo}),
-        new BlockMetricDto({id: 3, hash: hashThree}),
-        new BlockMetricDto({id: 4, hash: hashFour}),
-        new BlockMetricDto({id: 5, hash: hashFive}),
-        new BlockMetricDto({id: 6, hash: hashSix}),
-        new BlockMetricDto({id: 7, hash: hashSeven}),
-        new BlockMetricDto({id: 8, hash: hashEight}),
-        new BlockMetricDto({id: 9, hash: hashNine}),
-        new BlockMetricDto({id: 10, hash: hashTen}),
+        new BlockMetricDto({ id: 1, hash: hashOne }),
+        new BlockMetricDto({ id: 2, hash: hashTwo }),
+        new BlockMetricDto({ id: 3, hash: hashThree }),
+        new BlockMetricDto({ id: 4, hash: hashFour }),
+        new BlockMetricDto({ id: 5, hash: hashFive }),
+        new BlockMetricDto({ id: 6, hash: hashSix }),
+        new BlockMetricDto({ id: 7, hash: hashSeven }),
+        new BlockMetricDto({ id: 8, hash: hashEight }),
+        new BlockMetricDto({ id: 9, hash: hashNine }),
+        new BlockMetricDto({ id: 10, hash: hashTen })
       ]
       expect(blockMetrics).toEqual(expect.arrayContaining(expected))
-
     })
-
-
-
   })
-
 })

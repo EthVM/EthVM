@@ -65,12 +65,10 @@ const mockService = {
 }
 
 describe('ContractResolvers', () => {
-
   let contractService: ContractService
   let contractResolvers: ContractResolvers
 
   beforeEach(async () => {
-
     // test module
     const module = await Test.createTestingModule({
       providers: [
@@ -80,7 +78,7 @@ describe('ContractResolvers', () => {
           provide: ContractService,
           useValue: mockService
         }
-      ],
+      ]
     }).compile()
 
     // fetch dependencies
@@ -89,13 +87,11 @@ describe('ContractResolvers', () => {
   })
 
   describe('contractByHash', () => {
-
     it('should return null if contract does not exist for a given hash', async () => {
       expect(await contractResolvers.contractByHash(hashSeven)).toEqual(null)
     })
 
     it('should return an instance of ContractDto matching the address hash provided', async () => {
-
       const contractOne = await contractResolvers.contractByHash(hashOne)
       const contractTwo = await contractResolvers.contractByHash(hashTwo)
 
@@ -113,7 +109,6 @@ describe('ContractResolvers', () => {
     })
 
     it('should convert a ContractEntity to a ContractDto', async () => {
-
       const contractOne = await contractResolvers.contractByHash(hashOne)
 
       expect(contractOne).toEqual(
@@ -123,15 +118,11 @@ describe('ContractResolvers', () => {
           creator: creatorOne
         })
       )
-
     })
-
   })
 
   describe('contractsCreatedBy', () => {
-
     it('should return an array of ContractDto instances created by the address provided', async () => {
-
       const contractsCreatedByCreatorOne = await contractResolvers.contractsCreatedBy(creatorOne)
       const contractsCreatedByCreatorTwo = await contractResolvers.contractsCreatedBy(creatorTwo)
 
@@ -142,11 +133,9 @@ describe('ContractResolvers', () => {
       expect(contractsCreatedByCreatorTwo[0]).toHaveProperty('id', hashTwo)
 
       expect(contractsCreatedByCreatorOne).not.toEqual(contractsCreatedByCreatorTwo)
-
     })
 
     it('should respect given limit and page parameters', async () => {
-
       const contractsOne = await contractResolvers.contractsCreatedBy(creatorOne, 2, 0)
       expect(contractsOne).toHaveLength(2)
       expect(contractsOne[0]).toHaveProperty('id', hashOne)
@@ -160,21 +149,17 @@ describe('ContractResolvers', () => {
       // Check an empty array is returned if no items available for requested page
       const contractsThree = await contractResolvers.contractsCreatedBy(creatorThree, 10, 1)
       expect(contractsThree).toHaveLength(0)
-
     })
 
     it('should convert an array of ContractEntity instances to an array of ContractDto instances', async () => {
-
       const contracts = await contractResolvers.contractsCreatedBy(creatorOne)
       const expected = [
-        new ContractDto({id: hashOne, address: hashOne, creator: creatorOne}),
-        new ContractDto({id: hashThree, address: hashThree, creator: creatorOne}),
-        new ContractDto({id: hashFive, address: hashFive, creator: creatorOne}),
-        new ContractDto({id: hashSix, address: hashSix, creator: creatorOne})
+        new ContractDto({ id: hashOne, address: hashOne, creator: creatorOne }),
+        new ContractDto({ id: hashThree, address: hashThree, creator: creatorOne }),
+        new ContractDto({ id: hashFive, address: hashFive, creator: creatorOne }),
+        new ContractDto({ id: hashSix, address: hashSix, creator: creatorOne })
       ]
       expect(contracts).toEqual(expect.arrayContaining(expected))
-
     })
-
   })
 })

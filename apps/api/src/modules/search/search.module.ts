@@ -8,6 +8,6 @@ import { Module } from '@nestjs/common'
 
 @Module({
   imports: [BlockModule, TxModule, BalanceModule, UncleModule],
-  providers: [SearchService, SearchResolvers],
+  providers: [SearchService, SearchResolvers]
 })
 export class SearchModule {}

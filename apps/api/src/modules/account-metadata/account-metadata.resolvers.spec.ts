@@ -36,12 +36,10 @@ const mockService = {
 }
 
 describe('AccountMetadataResolvers', () => {
-
   let accountMetadataService: AccountMetadataService
   let accountMetadataResolvers: AccountMetadataResolvers
 
   beforeEach(async () => {
-
     // test module
     const module = await Test.createTestingModule({
       providers: [
@@ -51,7 +49,7 @@ describe('AccountMetadataResolvers', () => {
           provide: AccountMetadataService,
           useValue: mockService
         }
-      ],
+      ]
     }).compile()
 
     // fetch dependencies
@@ -60,13 +58,11 @@ describe('AccountMetadataResolvers', () => {
   })
 
   describe('accountMetadataByHash', () => {
-
     it('should return null if metadata does not exist for a given hash', async () => {
       expect(await accountMetadataResolvers.accountMetadataByHash(hashThree)).toEqual(null)
     })
 
     it('should return an instance of AccountMetadataDto matching the address hash provided', async () => {
-
       const metadataOne = await accountMetadataResolvers.accountMetadataByHash(hashOne)
       const metadataTwo = await accountMetadataResolvers.accountMetadataByHash(hashTwo)
 
@@ -81,11 +77,9 @@ describe('AccountMetadataResolvers', () => {
       expect(metadataTwo).toHaveProperty('id', hashTwo)
 
       expect(metadataOne).not.toEqual(metadataTwo)
-
     })
 
     it('should convert an AccountMetadataEntity to an AccountMetadataDto', async () => {
-
       const metadataOne = await accountMetadataResolvers.accountMetadataByHash(hashOne)
 
       expect(metadataOne).toEqual(
@@ -98,9 +92,6 @@ describe('AccountMetadataResolvers', () => {
           totalTxCount: 1
         })
       )
-
     })
-
   })
-
 })

@@ -7,6 +7,6 @@ import { SubscriptionsModule } from '@app/subscriptions/subscriptions.module'
 
 @Module({
   imports: [TypeOrmModule.forFeature([ProcessingMetadataEntity]), SubscriptionsModule],
-  providers: [ProcessingMetadataService, ProcessingMetadataResolvers],
+  providers: [ProcessingMetadataService, ProcessingMetadataResolvers]
 })
 export class ProcessingMetadataModule {}

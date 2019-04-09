@@ -38,12 +38,10 @@ const mockService = {
 }
 
 describe('BalanceResolvers', () => {
-
   let balanceService: BalanceService
   let balanceResolvers: BalanceResolvers
 
   beforeEach(async () => {
-
     // test module
     const module = await Test.createTestingModule({
       providers: [
@@ -53,7 +51,7 @@ describe('BalanceResolvers', () => {
           provide: BalanceService,
           useValue: mockService
         }
-      ],
+      ]
     }).compile()
 
     // fetch dependencies
@@ -62,13 +60,11 @@ describe('BalanceResolvers', () => {
   })
 
   describe('balanceByHash', () => {
-
     it('should return null if balance does not exist for a given hash', async () => {
       expect(await balanceResolvers.balanceByHash(hashThree)).toEqual(null)
     })
 
     it('should return an instance of BalanceDto matching the address hash provided', async () => {
-
       const balanceOne = await balanceResolvers.balanceByHash(hashOne)
       const balanceTwo = await balanceResolvers.balanceByHash(hashTwo)
 
@@ -76,18 +72,16 @@ describe('BalanceResolvers', () => {
 
       expect(balanceOne).not.toBeNull()
       expect(balanceOne).toBeInstanceOf(BalanceDto)
-      expect(balanceOne).toHaveProperty('id', {balanceType: 'ETHER', address: hashOne})
+      expect(balanceOne).toHaveProperty('id', { balanceType: 'ETHER', address: hashOne })
 
       expect(balanceTwo).not.toBeNull()
       expect(balanceTwo).toBeInstanceOf(BalanceDto)
-      expect(balanceTwo).toHaveProperty('id', {balanceType: 'ETHER', address: hashTwo})
+      expect(balanceTwo).toHaveProperty('id', { balanceType: 'ETHER', address: hashTwo })
 
       expect(balanceOne).not.toEqual(balanceTwo)
     })
 
-
     it('should convert a BalanceEntity to a BalanceDto', async () => {
-
       const balanceOne = await balanceResolvers.balanceByHash(hashOne)
 
       expect(balanceOne).toEqual(
@@ -101,7 +95,6 @@ describe('BalanceResolvers', () => {
           balanceType: 'ETHER'
         })
       )
-
     })
   })
 })

@@ -71,8 +71,7 @@ const uncles = {
 
 const mockService = {
   async search(query) {
-
-    const s= new SearchDto({type: SearchType.None})
+    const s = new SearchDto({ type: SearchType.None })
 
     const balance = balances[query]
     if (balance) {
@@ -103,17 +102,14 @@ const mockService = {
     }
 
     return s
-
-  },
+  }
 }
 
 describe('SearchResolvers', () => {
-
   let searchService: SearchService
   let searchResolvers: SearchResolvers
 
   beforeEach(async () => {
-
     // test module
     const module = await Test.createTestingModule({
       providers: [
@@ -122,7 +118,7 @@ describe('SearchResolvers', () => {
           provide: SearchService,
           useValue: mockService
         }
-      ],
+      ]
     }).compile()
 
     // fetch dependencies
@@ -131,9 +127,7 @@ describe('SearchResolvers', () => {
   })
 
   describe('search', () => {
-
     it('should return an instance of SearchDto with balance field set when query is an address, where the balance address matches the query', async () => {
-
       const balanceOne = await searchResolvers.search(balanceHashOne)
       const balanceTwo = await searchResolvers.search(balanceHashTwo)
 
@@ -142,19 +136,17 @@ describe('SearchResolvers', () => {
       expect(balanceOne).not.toBeNull()
       expect(balanceOne).toBeInstanceOf(SearchDto)
       expect(balanceOne).toHaveProperty('type', SearchType.Address)
-      expect(balanceOne).toHaveProperty('address', {id: {balanceType: 'ETHER', address: balanceHashOne}})
+      expect(balanceOne).toHaveProperty('address', { id: { balanceType: 'ETHER', address: balanceHashOne } })
 
       expect(balanceTwo).not.toBeNull()
       expect(balanceTwo).toBeInstanceOf(SearchDto)
       expect(balanceOne).toHaveProperty('type', SearchType.Address)
-      expect(balanceTwo).toHaveProperty('address', {id: {balanceType: 'ETHER', address: balanceHashTwo}})
+      expect(balanceTwo).toHaveProperty('address', { id: { balanceType: 'ETHER', address: balanceHashTwo } })
 
       expect(balanceOne).not.toEqual(balanceTwo)
-
     })
 
     it('should return an instance of SearchDto with block field set when query is a block hash, where the block hash matches the query', async () => {
-
       const blockOne = await searchResolvers.search(blockHashOne)
       const blockTwo = await searchResolvers.search(blockHashTwo)
 
@@ -163,19 +155,17 @@ describe('SearchResolvers', () => {
       expect(blockOne).not.toBeNull()
       expect(blockOne).toBeInstanceOf(SearchDto)
       expect(blockOne).toHaveProperty('type', SearchType.Block)
-      expect(blockOne).toHaveProperty('block', {id: 1, header: {hash: blockHashOne}})
+      expect(blockOne).toHaveProperty('block', { id: 1, header: { hash: blockHashOne } })
 
       expect(blockTwo).not.toBeNull()
       expect(blockTwo).toBeInstanceOf(SearchDto)
       expect(blockOne).toHaveProperty('type', SearchType.Block)
-      expect(blockTwo).toHaveProperty('block', {id: 2, header: {hash: blockHashTwo}})
+      expect(blockTwo).toHaveProperty('block', { id: 2, header: { hash: blockHashTwo } })
 
       expect(blockOne).not.toEqual(blockTwo)
-
     })
 
     it('should return an instance of SearchDto with tx field set when query is a tx hash, where the tx hash matches the query', async () => {
-
       const txOne = await searchResolvers.search(txHashOne)
       const txTwo = await searchResolvers.search(txHashTwo)
 
@@ -184,19 +174,17 @@ describe('SearchResolvers', () => {
       expect(txOne).not.toBeNull()
       expect(txOne).toBeInstanceOf(SearchDto)
       expect(txOne).toHaveProperty('type', SearchType.Tx)
-      expect(txOne).toHaveProperty('tx', {id: txHashOne})
+      expect(txOne).toHaveProperty('tx', { id: txHashOne })
 
       expect(txTwo).not.toBeNull()
       expect(txTwo).toBeInstanceOf(SearchDto)
       expect(txOne).toHaveProperty('type', SearchType.Tx)
-      expect(txTwo).toHaveProperty('tx', {id: txHashTwo})
+      expect(txTwo).toHaveProperty('tx', { id: txHashTwo })
 
       expect(txOne).not.toEqual(txTwo)
-
     })
 
     it('should return an instance of SearchDto with uncle field set when query is an uncle hash, where the uncle hash matches the query', async () => {
-
       const uncleOne = await searchResolvers.search(uncleHashOne)
       const uncleTwo = await searchResolvers.search(uncleHashTwo)
 
@@ -205,19 +193,17 @@ describe('SearchResolvers', () => {
       expect(uncleOne).not.toBeNull()
       expect(uncleOne).toBeInstanceOf(SearchDto)
       expect(uncleOne).toHaveProperty('type', SearchType.Uncle)
-      expect(uncleOne).toHaveProperty('uncle', {id: uncleHashOne})
+      expect(uncleOne).toHaveProperty('uncle', { id: uncleHashOne })
 
       expect(uncleTwo).not.toBeNull()
       expect(uncleTwo).toBeInstanceOf(SearchDto)
       expect(uncleOne).toHaveProperty('type', SearchType.Uncle)
-      expect(uncleTwo).toHaveProperty('uncle', {id: uncleHashTwo})
+      expect(uncleTwo).toHaveProperty('uncle', { id: uncleHashTwo })
 
       expect(uncleOne).not.toEqual(uncleTwo)
-
     })
 
     it('should return a SearchDto entity with type None and address/block/tx/uncle fields not set when query does not match the hash of any of these types', async () => {
-
       const balanceThree = await searchResolvers.search(balanceHashThree)
       const blockThree = await searchResolvers.search(blockHashThree)
       const txThree = await searchResolvers.search(txHashThree)
@@ -242,9 +228,6 @@ describe('SearchResolvers', () => {
       expect(uncleThree).toBeInstanceOf(SearchDto)
       expect(uncleThree).toHaveProperty('type', SearchType.None)
       expect(uncleThree).not.toHaveProperty('uncle')
-
     })
-
-
   })
 })

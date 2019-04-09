@@ -11,10 +11,10 @@ import { EthplorerAddressInfoDto } from '../token-transfers/dto/ethplorer-addres
 const usd = 'USD'
 const eur = 'EUR'
 const coinGeckoQuotes = {
-  'USD': {
+  USD: {
     to: usd
   },
-  'EUR': {
+  EUR: {
     to: eur
   }
 }
@@ -34,7 +34,7 @@ const addressFive = '0000000000000000000000000000000000000005'
 const addressSix = '0000000000000000000000000000000000000006'
 
 const tokenExchangeRates = {
-  'ABT': {
+  ABT: {
     id: symbolOne,
     address: addressOne,
     currentPrice: 1,
@@ -95,32 +95,31 @@ const mockExchangeService = {
 
     switch (filter) {
       case 'price_high':
-        sorted = exchangeRates.sort((a,b) => b.currentPrice - a.currentPrice)
+        sorted = exchangeRates.sort((a, b) => b.currentPrice - a.currentPrice)
         break
       case 'price_low':
-        sorted = exchangeRates.sort((a,b) => a.currentPrice - b.currentPrice)
+        sorted = exchangeRates.sort((a, b) => a.currentPrice - b.currentPrice)
         break
       case 'volume_high':
-        sorted = exchangeRates.sort((a,b) => b.totalVolume - a.totalVolume)
+        sorted = exchangeRates.sort((a, b) => b.totalVolume - a.totalVolume)
         break
       case 'volume_low':
-        sorted = exchangeRates.sort((a,b) => a.totalVolume - b.totalVolume)
+        sorted = exchangeRates.sort((a, b) => a.totalVolume - b.totalVolume)
         break
       case 'market_cap_high':
-        sorted = exchangeRates.sort((a,b) => b.marketCap - a.marketCap)
+        sorted = exchangeRates.sort((a, b) => b.marketCap - a.marketCap)
         break
       case 'market_cap_low':
-        sorted = exchangeRates.sort((a,b) => a.marketCap - b.marketCap)
+        sorted = exchangeRates.sort((a, b) => a.marketCap - b.marketCap)
         break
       case 'market_cap_rank':
       default:
-        sorted = exchangeRates.sort((a,b) => a.marketCapRank - b.marketCapRank)
+        sorted = exchangeRates.sort((a, b) => a.marketCapRank - b.marketCapRank)
         break
     }
 
     const items = sorted.slice(start, end)
     return items.map(i => new TokenExchangeRateEntity(i))
-
   },
   async countTokenExchangeRates() {
     return Object.keys(tokenExchangeRates).length
@@ -142,13 +141,11 @@ const mockTokenTransferService = {
 }
 
 describe('TokenExchangeRateResolvers', () => {
-
   let exchangeService: ExchangeService
   let tokenTransferService: TokenTransferService
   let tokenExchangeRateResolvers: TokenExchangeRateResolvers
 
   beforeEach(async () => {
-
     // test module
     const module = await Test.createTestingModule({
       providers: [
@@ -162,7 +159,7 @@ describe('TokenExchangeRateResolvers', () => {
           provide: TokenTransferService,
           useValue: mockTokenTransferService
         }
-      ],
+      ]
     }).compile()
 
     // fetch dependencies
@@ -172,13 +169,11 @@ describe('TokenExchangeRateResolvers', () => {
   })
 
   describe('quote', () => {
-
     it('should return null if quote does not exist for a given "to"', async () => {
       expect(await tokenExchangeRateResolvers.quote('ETH', 'GBP')).toEqual(null)
     })
 
     it('should return an instance of QuoteDto matching the "to" provided', async () => {
-
       const quoteOne = await tokenExchangeRateResolvers.quote('ETH', usd)
       const quoteTwo = await tokenExchangeRateResolvers.quote('ETH', eur)
 
@@ -197,9 +192,7 @@ describe('TokenExchangeRateResolvers', () => {
   })
 
   describe('tokenExchangeRates', () => {
-
     it('should return an array of TokenExchangeRateDto instances, respecting given limit and page parameters', async () => {
-
       const exchangeRatesOne = await tokenExchangeRateResolvers.tokenExchangeRates('price_low', 2, 0)
       expect(exchangeRatesOne).toHaveLength(2)
       expect(exchangeRatesOne[0]).toHaveProperty('id', symbolOne)
@@ -207,31 +200,27 @@ describe('TokenExchangeRateResolvers', () => {
 
       const exchangeRatesTwo = await tokenExchangeRateResolvers.tokenExchangeRates('price_low', 2, 1)
       expect(exchangeRatesTwo).toHaveLength(2)
-      expect(exchangeRatesTwo[0]).toHaveProperty('id',symbolThree)
+      expect(exchangeRatesTwo[0]).toHaveProperty('id', symbolThree)
       expect(exchangeRatesTwo[1]).toHaveProperty('id', symbolFour)
 
       // Check an empty array is returned if no items available for requested page
-      const exchangeRatesThree = await tokenExchangeRateResolvers.tokenExchangeRates('price_low',10, 1)
+      const exchangeRatesThree = await tokenExchangeRateResolvers.tokenExchangeRates('price_low', 10, 1)
       expect(exchangeRatesThree).toHaveLength(0)
-
     })
 
     it('should convert an array of TokenExchangeRateEntity instances to an array of TokenExchangeRateDto instances', async () => {
-
       const tokenExchangeRates = await tokenExchangeRateResolvers.tokenExchangeRates('price_low')
       const expected = [
-        new TokenExchangeRateDto({id: symbolOne, address: addressOne, currentPrice: 1, totalVolume: 2, marketCap: 3, marketCapRank: 4}),
-        new TokenExchangeRateDto({id: symbolTwo, address: addressTwo, currentPrice: 2, totalVolume: 3, marketCap: 4, marketCapRank: 5}),
-        new TokenExchangeRateDto({id: symbolThree, address: addressThree, currentPrice: 3, totalVolume: 4, marketCap: 5, marketCapRank: 1}),
-        new TokenExchangeRateDto({id: symbolFour, address: addressFour, currentPrice: 4, totalVolume: 5, marketCap: 1, marketCapRank: 2}),
-        new TokenExchangeRateDto({id: symbolFive, address: addressFive, currentPrice: 5, totalVolume: 1, marketCap: 2, marketCapRank: 3})
+        new TokenExchangeRateDto({ id: symbolOne, address: addressOne, currentPrice: 1, totalVolume: 2, marketCap: 3, marketCapRank: 4 }),
+        new TokenExchangeRateDto({ id: symbolTwo, address: addressTwo, currentPrice: 2, totalVolume: 3, marketCap: 4, marketCapRank: 5 }),
+        new TokenExchangeRateDto({ id: symbolThree, address: addressThree, currentPrice: 3, totalVolume: 4, marketCap: 5, marketCapRank: 1 }),
+        new TokenExchangeRateDto({ id: symbolFour, address: addressFour, currentPrice: 4, totalVolume: 5, marketCap: 1, marketCapRank: 2 }),
+        new TokenExchangeRateDto({ id: symbolFive, address: addressFive, currentPrice: 5, totalVolume: 1, marketCap: 2, marketCapRank: 3 })
       ]
       expect(tokenExchangeRates).toEqual(expect.arrayContaining(expected))
-
     })
 
     it('should return an array of TokenExchangeRateDto sorted according to the given filter', async () => {
-
       const exchangeRatesPriceLow = await tokenExchangeRateResolvers.tokenExchangeRates('price_low')
       expect(exchangeRatesPriceLow[0]).toHaveProperty('currentPrice', 1)
       expect(exchangeRatesPriceLow[4]).toHaveProperty('currentPrice', 5)
@@ -259,7 +248,6 @@ describe('TokenExchangeRateResolvers', () => {
       const exchangeRatesMarketCapRank = await tokenExchangeRateResolvers.tokenExchangeRates('market_cap_rank')
       expect(exchangeRatesMarketCapRank[0]).toHaveProperty('marketCapRank', 1)
       expect(exchangeRatesMarketCapRank[4]).toHaveProperty('marketCapRank', 5)
-
     })
   })
 
@@ -275,7 +263,6 @@ describe('TokenExchangeRateResolvers', () => {
     })
 
     it('should return an instance of TokenExchangeRateDto matching the symbol provided', async () => {
-
       const exchangeRateOne = await tokenExchangeRateResolvers.tokenExchangeRateBySymbol(symbolOne)
       const exchangeRateTwo = await tokenExchangeRateResolvers.tokenExchangeRateBySymbol(symbolTwo)
 
@@ -293,7 +280,6 @@ describe('TokenExchangeRateResolvers', () => {
     })
 
     it('should convert a TokenExchangeRateEntity to a TokenExchangeRateDto', async () => {
-
       const exchangeRate = await tokenExchangeRateResolvers.tokenExchangeRateBySymbol(symbolOne)
 
       expect(exchangeRate).toEqual(
@@ -306,18 +292,15 @@ describe('TokenExchangeRateResolvers', () => {
           marketCapRank: 4
         })
       )
-
     })
   })
 
   describe('tokenExchangeRateByAddress', () => {
-
     it('should return null if token exchange rate does not exist for a given address', async () => {
       expect(await tokenExchangeRateResolvers.tokenExchangeRateByAddress(addressSix)).toEqual(null)
     })
 
     it('should return an instance of TokenExchangeRateDto matching the address provided', async () => {
-
       const exchangeRateOne = await tokenExchangeRateResolvers.tokenExchangeRateByAddress(addressOne)
       const exchangeRateTwo = await tokenExchangeRateResolvers.tokenExchangeRateByAddress(addressTwo)
 
@@ -335,7 +318,6 @@ describe('TokenExchangeRateResolvers', () => {
     })
 
     it('should convert a TokenExchangeRateEntity to a TokenExchangeRateDto', async () => {
-
       const exchangeRate = await tokenExchangeRateResolvers.tokenExchangeRateByAddress(addressOne)
 
       expect(exchangeRate).toEqual(
@@ -351,9 +333,6 @@ describe('TokenExchangeRateResolvers', () => {
           totalOut: 0
         })
       )
-
     })
-
   })
-
 })
