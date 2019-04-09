@@ -11,7 +11,7 @@
     <v-card color="info" flat class="white--text pl-3 pr-1 mt-2 mb-2" height="40px">
       <v-layout align-center justify-start row fill-height pr-3>
         <v-flex xs6 sm8 md5>
-          <h5>{{ $t('address.name') }}</h5>
+          <h5>{{ $tc('address.name', 1) }}</h5>
         </v-flex>
         <v-flex hidden-sm-and-down md2>
           <h5>{{ $t('common.quantity') }}</h5>

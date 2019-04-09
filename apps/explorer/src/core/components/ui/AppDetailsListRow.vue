@@ -18,14 +18,17 @@
         <div v-if="isLoading">
           <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
         </div>
-        <div v-else :class="isMonoFont()">
-          <router-link v-if="detail.link" :to="detail.link">
-            <div class="text-truncate " v-html="detail.detail"></div>
-          </router-link>
-          <v-layout v-else row align-center justify-start>
-            <p class="text-muted text-truncate mb-0 pl-2 pr-1" v-html="detail.detail"></p>
-            <p v-if="hasPercentage" :class="priceChangeClass">({{ detail.priceChange }}%)</p>
-          </v-layout>
+        <div v-else>
+          <div v-if="!isMono">
+            <router-link v-if="detail.link" :to="detail.link">
+              <div class="text-truncate secondary--text" v-html="detail.detail"></div>
+            </router-link>
+            <div v-else class="text-muted text-truncate" v-html="detail.detail"></div>
+          </div>
+          <div v-else>
+            <app-hash-concat v-if="detail.link" :hash="detail.detail" :link="detail.link" />
+            <app-hash-concat v-else :hash="detail.detail" :is-blue="false" />
+          </div>
         </div>
       </v-flex>
       <v-flex xs1 pt-0 pb-0 pl-1 v-if="!detail.txInput">
@@ -51,10 +54,12 @@
 import { Detail } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
+import AppHashConcat from '@app/core/components/ui/AppHashConcat.vue'
 
 @Component({
   components: {
-    AppCopyToClip
+    AppCopyToClip,
+    AppHashConcat
   }
 })
 export default class AppDetailsListRow extends Vue {
@@ -70,6 +75,8 @@ export default class AppDetailsListRow extends Vue {
   /*
   ===================================================================================
     Computed
+<<<<<<< HEAD
+=======
   ===================================================================================
   */
 
@@ -83,11 +90,12 @@ export default class AppDetailsListRow extends Vue {
   /*
   ===================================================================================
     Methods
+>>>>>>> develop
   ===================================================================================
   */
 
-  isMonoFont(): string {
-    return this.detail.mono ? 'font-mono' : ''
+  get isMono(): boolean {
+    return this.detail.mono ? true : false
   }
 }
 </script>

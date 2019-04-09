@@ -1,5 +1,6 @@
 import { ChartData, ChartPoints } from '@app/modules/charts/props'
 import { Component, Vue } from 'vue-property-decorator'
+import { EthValue } from '@app/core/models'
 
 @Component
 export class ChartMixin extends Vue {
@@ -17,6 +18,7 @@ export class ChartMixin extends Vue {
 
   chartOptions = {
     responsive: true,
+    maintainAspectRatio: this.getRatio,
     scales: {
       yAxes: [
         {
@@ -26,7 +28,6 @@ export class ChartMixin extends Vue {
             beginAtZero: true,
             callback: function(value) {
               const ranges = [{ divider: 1e9, suffix: 'B' }, { divider: 1e6, suffix: 'M' }, { divider: 1e3, suffix: 'k' }]
-
               function formatNumber(n) {
                 for (let i = 0; i < ranges.length; i++) {
                   if (n >= ranges[i].divider) {
@@ -43,7 +44,7 @@ export class ChartMixin extends Vue {
             color: 'rgba(0, 0, 0, 0)'
           },
           scaleLabel: {
-            display: true,
+            display: false,
             labelString: this.chartLabel
           }
         }
@@ -92,10 +93,22 @@ export class ChartMixin extends Vue {
     const duration = this.data[state].state.toUpperCase()
     this.fetchData(duration).then(res => {
       if (res) {
-        res.forEach(point => {
-          this.data[state].points.push(point.value)
-          this.data[state].labels.push(point.date)
-        })
+        if (this.chartTitle === this.$i18n.t('charts.gas-price.title ').toString()) {
+          res.forEach(point => {
+            this.data[state].points.push(new EthValue(point.value).toGWei())
+            this.data[state].labels.push(point.date)
+          })
+        } else if (this.chartTitle === this.$i18n.t('charts.tx-fees.title').toString()) {
+          res.forEach(point => {
+            this.data[state].points.push(new EthValue(point.value).toEth())
+            this.data[state].labels.push(point.date)
+          })
+        } else {
+          res.forEach(point => {
+            this.data[state].points.push(point.value)
+            this.data[state].labels.push(point.date)
+          })
+        }
       }
     })
   }
@@ -111,6 +124,10 @@ export class ChartMixin extends Vue {
   ===================================================================================
   */
 
+  get getRatio(): boolean {
+    const brkPoint = this.$vuetify.breakpoint.name
+    return brkPoint === 'xs' ? false : true
+  }
   get chartData(): ChartData {
     return {
       labels: this.data[this.timeFrame].labels,

@@ -1,5 +1,5 @@
 <template>
-  <v-btn icon @click="copy" class="ma-0"> <v-icon class="fa fa-copy secondary--text" /> </v-btn>
+  <v-btn icon small @click="copy" class="ma-0 "> <v-img :src="require('@/assets/icon-copy.png')" height="26px" max-width="26x" contain/></v-btn>
 </template>
 
 <script lang="ts">
