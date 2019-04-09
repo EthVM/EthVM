@@ -42,83 +42,78 @@
       BLOCKS
     =====================================================================================
     -->
-    <v-layout >
+    <v-layout>
       <v-flex hidden-xs-only>
-    <v-layout row wrap justify-space-between :class="layoutPadding">
-      <!-- Ether Balance -->
-      <v-flex xs12 md4>
-        <v-card class="primary white--text pl-2" flat>
-          <v-card-text class="pb-0">{{ $t('common.eth-balance') }}</v-card-text>
-          <!-- isShortValue -->
-          <v-card-title v-if="!isShortValue(account.balance.toEth().toString())" class="headline text-truncate pr-1"
-            >{{ getShortValue(account.balance.toEth()) }} {{ $t('common.eth') }}
-            <v-tooltip bottom>
-              <template #activator="data">
-                <v-icon v-on="data.on" small class="white--text text-xs-center pl-1">fa fa-question-circle</v-icon>
-              </template>
-              <span>{{ formatStr(account.balance.toEth().toString()) }} {{ $t('common.eth') }}</span>
-            </v-tooltip>
-          </v-card-title>
-          <!-- !isShortValue -->
-          <v-card-title v-else class="headline text-truncate">{{ account.balance.toEth() }} {{ $t('common.eth') }}</v-card-title>
-        </v-card>
-      </v-flex>
-      <!-- End Ether Balance -->
-      <!-- USD Value -->
-      <v-flex xs12 md4>
-        <v-card class="error white--text pl-2" flat>
-          <v-card-text class="pb-0">{{ $t('usd.value') }} (1{{ $t('common.eth') }} = ${{ getRoundNumber(account.exchangeRate.USD) }})</v-card-text>
-          <v-card-title class="headline text-truncate">${{ getRoundNumber(account.balance.toEth() * account.exchangeRate.USD) }}</v-card-title>
-        </v-card>
-      </v-flex>
-      <!-- End USD Value -->
-      <!-- Number of TX -->
-      <v-flex xs12 md4>
-        <v-card class="warning white--text pl-2" flat>
-          <v-card-text class="pb-0">{{ $t('tx.total') }}</v-card-text>
-          <v-card-title class="headline text-truncate">{{ formatStr(account.totalTxs.toString()) }}</v-card-title>
-        </v-card>
-      </v-flex>
-      <!-- End Number of Tx -->
-    </v-layout>
-
+        <v-layout row wrap justify-space-between :class="layoutPadding">
+          <!-- Ether Balance -->
+          <v-flex xs12 md4>
+            <v-card class="primary white--text pl-2" flat>
+              <v-card-text class="pb-0">{{ $t('common.eth-balance') }}</v-card-text>
+              <!-- isShortValue -->
+              <v-card-title v-if="!isShortValue(account.balance.toEth().toString())" class="headline text-truncate pr-1"
+                >{{ getShortValue(account.balance.toEth()) }} {{ $t('common.eth') }}
+                <v-tooltip bottom>
+                  <template #activator="data">
+                    <v-icon v-on="data.on" small class="white--text text-xs-center pl-1">fa fa-question-circle</v-icon>
+                  </template>
+                  <span>{{ formatStr(account.balance.toEth().toString()) }} {{ $t('common.eth') }}</span>
+                </v-tooltip>
+              </v-card-title>
+              <!-- !isShortValue -->
+              <v-card-title v-else class="headline text-truncate">{{ account.balance.toEth() }} {{ $t('common.eth') }}</v-card-title>
+            </v-card>
+          </v-flex>
+          <!-- End Ether Balance -->
+          <!-- USD Value -->
+          <v-flex xs12 md4>
+            <v-card class="error white--text pl-2" flat>
+              <v-card-text class="pb-0">{{ $t('usd.value') }} (1{{ $t('common.eth') }} = ${{ getRoundNumber(account.exchangeRate.USD) }})</v-card-text>
+              <v-card-title class="headline text-truncate">${{ getRoundNumber(account.balance.toEth() * account.exchangeRate.USD) }}</v-card-title>
+            </v-card>
+          </v-flex>
+          <!-- End USD Value -->
+          <!-- Number of TX -->
+          <v-flex xs12 md4>
+            <v-card class="warning white--text pl-2" flat>
+              <v-card-text class="pb-0">{{ $t('tx.total') }}</v-card-text>
+              <v-card-title class="headline text-truncate">{{ formatStr(account.totalTxs.toString()) }}</v-card-title>
+            </v-card>
+          </v-flex>
+          <!-- End Number of Tx -->
+        </v-layout>
       </v-flex>
       <v-flex hidden-sm-and-up pt-0>
-    <div class="xs-overflow">
-        <v-card  class="primary xs-div white--text " >
-          <v-card-text class="pb-0">{{ $t('common.eth-balance') }}</v-card-text>
-          <!-- isShortValue -->
-          <v-card-title v-if="!isShortValue(account.balance.toEth().toString())" class="headline text-truncate pr-1"
-            >{{ getShortValue(account.balance.toEth()) }} {{ $t('common.eth') }}
-            <v-tooltip bottom>
-              <template #activator="data">
-                <v-icon v-on="data.on" small class="white--text text-xs-center pl-1">fa fa-question-circle</v-icon>
-              </template>
-              <span>{{ formatStr(account.balance.toEth().toString()) }} {{ $t('common.eth') }}</span>
-            </v-tooltip>
-          </v-card-title>
-          <!-- !isShortValue -->
-          <v-card-title v-else class="headline text-truncate">{{ account.balance.toEth() }} {{ $t('common.eth') }}</v-card-title>
-        </v-card>
+        <div class="xs-overflow">
+          <v-card class="primary xs-div white--text ">
+            <v-card-text class="pb-0">{{ $t('common.eth-balance') }}</v-card-text>
+            <!-- isShortValue -->
+            <v-card-title v-if="!isShortValue(account.balance.toEth().toString())" class="headline text-truncate pr-1"
+              >{{ getShortValue(account.balance.toEth()) }} {{ $t('common.eth') }}
+              <v-tooltip bottom>
+                <template #activator="data">
+                  <v-icon v-on="data.on" small class="white--text text-xs-center pl-1">fa fa-question-circle</v-icon>
+                </template>
+                <span>{{ formatStr(account.balance.toEth().toString()) }} {{ $t('common.eth') }}</span>
+              </v-tooltip>
+            </v-card-title>
+            <!-- !isShortValue -->
+            <v-card-title v-else class="headline text-truncate">{{ account.balance.toEth() }} {{ $t('common.eth') }}</v-card-title>
+          </v-card>
 
-        <v-card class="error white--text xs-div " flat>
-          <v-card-text class="pb-0">{{ $t('usd.value') }} (1{{ $t('common.eth') }} = ${{ getRoundNumber(account.exchangeRate.USD) }})</v-card-text>
-          <v-card-title class="headline text-truncate">${{ getRoundNumber(account.balance.toEth() * account.exchangeRate.USD) }}</v-card-title>
-        </v-card>
+          <v-card class="error white--text xs-div " flat>
+            <v-card-text class="pb-0">{{ $t('usd.value') }} (1{{ $t('common.eth') }} = ${{ getRoundNumber(account.exchangeRate.USD) }})</v-card-text>
+            <v-card-title class="headline text-truncate">${{ getRoundNumber(account.balance.toEth() * account.exchangeRate.USD) }}</v-card-title>
+          </v-card>
 
-        <v-card class="warning white--text xs-div" flat>
-          <v-card-text class="pb-0">{{ $t('tx.total') }}</v-card-text>
-          <v-card-title class="headline text-truncate">{{ formatStr(account.totalTxs.toString()) }}</v-card-title>
-        </v-card>
+          <v-card class="warning white--text xs-div" flat>
+            <v-card-text class="pb-0">{{ $t('tx.total') }}</v-card-text>
+            <v-card-title class="headline text-truncate">{{ formatStr(account.totalTxs.toString()) }}</v-card-title>
+          </v-card>
 
-    <div class="empty-xs">
-    </div>
-
-
-    </div>
+          <div class="empty-xs"></div>
+        </div>
       </v-flex>
     </v-layout>
-
   </v-card>
 </template>
 
