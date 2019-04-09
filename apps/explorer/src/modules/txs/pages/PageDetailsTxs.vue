@@ -146,10 +146,10 @@ export default class PageDetailsTxs extends Vue {
     // If empty, format differently //
     if (!this.tx.getContractAddress().isEmpty()) {
       return {
-        title: this.$i18n.t('tx.to') + ' ' + this.$i18n.tc('contract.name', 1).toString(),
+        title: `${this.$i18n.t('tx.to')} ${this.$i18n.tc('contract.name', 1).toString()}`,
         detail: this.tx.getContractAddress().toString(),
         copy: true,
-        link: '/address/' + this.tx.getContractAddress().toString(),
+        link: `/address/${this.tx.getContractAddress().toString()}`,
         mono: true
       }
     }
@@ -158,7 +158,7 @@ export default class PageDetailsTxs extends Vue {
       title: this.$i18n.t('tx.to').toString(),
       detail: this.tx.getTo().toString(),
       copy: true,
-      link: '/address/' + this.tx.getTo().toString(),
+      link: `/address/'${this.tx.getTo().toString()}`,
       mono: true
     }
   }
@@ -205,7 +205,7 @@ export default class PageDetailsTxs extends Vue {
         {
           title: this.$i18n.t('block.number'),
           detail: this.tx.getBlockNumber(),
-          link: '/block/' + this.tx.getBlockHash().toString()
+          link: `/block/${this.tx.getBlockHash().toString()}`
         },
         {
           title: this.$i18n.t('common.hash'),
@@ -221,23 +221,21 @@ export default class PageDetailsTxs extends Vue {
           title: this.$i18n.t('tx.from'),
           detail: this.tx.getFrom().toString(),
           copy: true,
-          link: '/address/' + this.tx.getFrom().toString(),
+          link: `/address/${this.tx.getFrom().toString()}`,
           mono: true
         },
         {
           title: this.$i18n.t('common.amount'),
           detail:
-            this.tx
+            `${this.tx
               .getValue()
               .toEthFormated()
-              .toString() +
-            ' ' +
-            this.$i18n.t('common.eth')
+              .toString()} ${this.$i18n.t('common.eth')}`
         },
         this.toDetail,
         {
           title: this.$i18n.tc('tx.fee', 2),
-          detail: this.tx.getTxCost().toEth() + ' ' + this.$i18n.t('common.eth')
+          detail: `${this.tx.getTxCost().toEth()} ${this.$i18n.t('common.eth')}`
         },
         {
           title: this.$i18n.t('gas.limit'),
@@ -249,7 +247,7 @@ export default class PageDetailsTxs extends Vue {
         },
         {
           title: this.$i18n.t('gas.price'),
-          detail: this.tx.getGasPrice().toGWei() + ' ' + this.$i18n.t('common.gwei')
+          detail: `${this.tx.getGasPrice().toGWei()} ${this.$i18n.t('common.gwei')}`
         },
         {
           title: this.$i18n.t('common.nonce'),
@@ -303,7 +301,7 @@ export default class PageDetailsTxs extends Vue {
   get txDataInput(): string[] {
     let input = ['0x']
     if (this.tx.getInput()) {
-      const sig = '0x' + this.tx.getInput().substr(0, 8)
+      const sig = `0x ${this.tx.getInput().substr(0, 8)}`
       const index = Signatures.results.findIndex(i => i.hex_signature === sig)
       input = [`${this.$i18n.t('tx.method')}: ${sig}`]
       if (index != -1) {
