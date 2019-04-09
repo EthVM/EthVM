@@ -86,7 +86,7 @@ export default class BlockDetailsTitle extends Vue {
   }
 
   get unclesPlural(): number {
-    return !this.uncles && this.uncles.length > 1 ? 2 : 1
+    return this.hasUncles && this.uncles.length > 1 ? 2 : 1
   }
 }
 </script>
