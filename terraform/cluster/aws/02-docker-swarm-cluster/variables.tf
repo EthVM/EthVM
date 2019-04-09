@@ -86,28 +86,8 @@ variable "allowed_inbound_ssh" {
   default     = ["0.0.0.0/0"]
 }
 
-variable "swarmprom_admin_user" {
-  default = "admin"
-}
-
-variable "swarmprom_admin_password" {
-  default = "password"
-}
-
 variable "ethstats_secret" {
   default = "password"
-}
-
-variable "swarmprom_slack_token" {
-  default = "null"
-}
-
-variable "swarmprom_slack_channel" {
-  default = "null"
-}
-
-variable "swarmprom_slack_user" {
-  default = "null"
 }
 
 variable "eth_client_docker_image" {

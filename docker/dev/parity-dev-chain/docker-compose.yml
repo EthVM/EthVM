@@ -1,0 +1,33 @@
+version: '3.6'
+    
+services:
+  parity:
+    image: parity/parity:stable
+    volumes:
+      - ./parity:/home/parity/
+      - ./files:/home/configs/
+    ports:
+      - 30303:30303
+      - 8545:8545
+      - 8546:8546
+    command: --config /home/configs/config.toml
+    user: root
+  
+  ethstats-server:
+    image: myetherwallet/docker-geth-lb:ethstats-instance
+    ports:
+      - 3000:3000
+    environment:
+      - WS_SECRET=${WS_SECRET}
+
+  ethstats-client:
+    build:
+      context: ./ethstats-client/
+      dockerfile: Dockerfile
+    ports:
+      - 40303:40303
+      - 40303:40303/udp
+    environment:
+      - WS_SECRET=${WS_SECRET}
+      - WS_SERVER=ws://ethstats-server:3000
+      - RPC_HOST=parity
