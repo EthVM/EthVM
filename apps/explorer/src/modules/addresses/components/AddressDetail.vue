@@ -223,7 +223,7 @@ p {
   bottom: 0;
   right: 0;
   height: 120px;
-  width: 10vh;
+  width: 12vw;
   content: "";
   background: linear-gradient(to left,
      rgba(255,255,255, 1) 5%,
