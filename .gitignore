@@ -26,9 +26,13 @@ package-lock.json
 # Project
 dist/
 tmp/
-datasets/
 out/
 
 # Gradle
 .gradle
 env_*.sh
+
+# VS Code
+.vscode
+*.code-workspace
+

@@ -3,11 +3,11 @@ package com.ethvm.kafka.streams.processors
 import com.ethvm.avro.capture.TraceCallActionRecord
 import com.ethvm.avro.capture.TraceCreateActionRecord
 import com.ethvm.avro.capture.TraceDestroyActionRecord
-import com.ethvm.avro.processing.BlockHeaderMetricsRecord
+import com.ethvm.avro.processing.BlockMetricsHeaderRecord
+import com.ethvm.avro.processing.BlockMetricsTransactionFeeRecord
+import com.ethvm.avro.processing.BlockMetricsTransactionRecord
+import com.ethvm.avro.processing.BlockMetricsTransactionTraceRecord
 import com.ethvm.avro.processing.BlockTimestampRecord
-import com.ethvm.avro.processing.BlockTransactionFeeMetricsRecord
-import com.ethvm.avro.processing.BlockTransactionMetricsRecord
-import com.ethvm.avro.processing.BlockTransactionTraceMetricsRecord
 import com.ethvm.common.extensions.getBalanceBI
 import com.ethvm.common.extensions.getGasBI
 import com.ethvm.common.extensions.getGasPriceBI
@@ -19,11 +19,11 @@ import com.ethvm.common.extensions.setAvgTxFeesBI
 import com.ethvm.common.extensions.setTotalGasPriceBI
 import com.ethvm.common.extensions.setTotalTxFeesBI
 import com.ethvm.kafka.streams.Serdes
-import com.ethvm.kafka.streams.config.Topics.BlockHeaderMetrics
+import com.ethvm.kafka.streams.config.Topics.BlockMetricsHeader
+import com.ethvm.kafka.streams.config.Topics.BlockMetricsTransaction
+import com.ethvm.kafka.streams.config.Topics.BlockMetricsTransactionFee
+import com.ethvm.kafka.streams.config.Topics.BlockMetricsTransactionTrace
 import com.ethvm.kafka.streams.config.Topics.BlockTimestamp
-import com.ethvm.kafka.streams.config.Topics.BlockTransactionFeeMetrics
-import com.ethvm.kafka.streams.config.Topics.BlockTransactionMetrics
-import com.ethvm.kafka.streams.config.Topics.BlockTransactionTraceMetrics
 import com.ethvm.kafka.streams.config.Topics.CanonicalBlockHeader
 import com.ethvm.kafka.streams.config.Topics.CanonicalTraces
 import com.ethvm.kafka.streams.config.Topics.CanonicalTransactionFees
@@ -78,162 +78,191 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
       *BlockTimeTransformer.STORE_NAMES
     )
       .mapValues { header ->
-        BlockHeaderMetricsRecord.newBuilder()
+        BlockMetricsHeaderRecord.newBuilder()
+          .setBlockNumber(header.getNumber())
+          .setBlockHash(header.getHash())
           .setBlockTime(header.getBlockTime())
           .setNumUncles(header.getUncles().size)
           .setDifficulty(header.getDifficulty())
           .setTotalDifficulty(header.getTotalDifficulty())
           .setTimestamp(header.getTimestamp())
           .build()
-      }.toTopic(BlockHeaderMetrics)
+      }.toTopic(BlockMetricsHeader)
 
     val blockTimestamp = BlockTimestamp.stream(builder)
 
     CanonicalTraces.stream(builder)
-      .mapValues { traceList ->
+      .mapValues { k, traceList ->
 
         var successful = 0
         var failed = 0
         var total = 0
         var internalTxs = 0
 
-        traceList.getTraces()
-          .filter { it.getTransactionHash() != null } // rewards have no tx hash, only a block hash
-          .groupBy { it.getTransactionHash() }
-          .forEach { (_, traces) ->
+        val traces = traceList.getTraces()
 
-            traces.forEach { trace ->
+        if(traces.isEmpty()) {
+          null
+        } else {
+          traces
+            .filter { it.getTransactionHash() != null } // rewards have no tx hash, only a block hash
+            .groupBy { it.getTransactionHash() }
+            .forEach { (_, traces) ->
 
-              val action = trace.getAction()
+              traces.forEach { trace ->
 
-              when (action) {
-                is TraceCallActionRecord -> {
+                val action = trace.getAction()
 
-                  if (trace.getTraceAddress().isEmpty()) {
+                when (action) {
+                  is TraceCallActionRecord -> {
 
-                    // high level parent call is used to determine tx success
-                    when (trace.getError()) {
-                      null -> successful += 1
-                      "" -> successful += 1
-                      else -> failed += 1
+                    if (trace.getTraceAddress().isEmpty()) {
+
+                      // high level parent call is used to determine tx success
+                      when (trace.getError()) {
+                        null -> successful += 1
+                        "" -> successful += 1
+                        else -> failed += 1
+                      }
+
+                      total += 1
                     }
 
-                    total += 1
+                    if (action.getValueBI() > BigInteger.ZERO) {
+                      internalTxs += 1
+                    }
                   }
-
-                  if (action.getValueBI() > BigInteger.ZERO) {
-                    internalTxs += 1
+                  is TraceCreateActionRecord -> {
+                    if (action.getValueBI() > BigInteger.ZERO) {
+                      internalTxs += 1
+                    }
                   }
-                }
-                is TraceCreateActionRecord -> {
-                  if (action.getValueBI() > BigInteger.ZERO) {
-                    internalTxs += 1
+                  is TraceDestroyActionRecord -> {
+                    if (action.getBalanceBI() > BigInteger.ZERO) {
+                      internalTxs += 1
+                    }
                   }
-                }
-                is TraceDestroyActionRecord -> {
-                  if (action.getBalanceBI() > BigInteger.ZERO) {
-                    internalTxs += 1
+                  else -> {
                   }
-                }
-                else -> {
                 }
               }
             }
-          }
 
-        BlockTransactionTraceMetricsRecord.newBuilder()
-          .setNumSuccessfulTxs(successful)
-          .setNumFailedTxs(failed)
-          .setTotalTxs(total)
-          .setNumInternalTxs(internalTxs)
-          .build()
+          val blockHash = traces.first().blockHash
+
+          BlockMetricsTransactionTraceRecord.newBuilder()
+            .setBlockNumber(k.getNumber())
+            .setBlockHash(blockHash)
+            .setNumSuccessfulTxs(successful)
+            .setNumFailedTxs(failed)
+            .setTotalTxs(total)
+            .setNumInternalTxs(internalTxs)
+            .build()
+        }
+
       }
+      .filterNot { _, v -> v == null }
       .join(
         blockTimestamp,
         { left, right ->
-          BlockTransactionTraceMetricsRecord.newBuilder(left)
+          BlockMetricsTransactionTraceRecord.newBuilder(left)
             .setTimestamp(right.getTimestamp())
             .build()
         },
         JoinWindows.of(Duration.ofHours(2)),
-        Joined.with(Serdes.CanonicalKey(), Serdes.BlockTransactionTraceMetrics(), Serdes.BlockTimestamp())
+        Joined.with(Serdes.CanonicalKey(), Serdes.BlockMetricsTransactionTrace(), Serdes.BlockTimestamp())
       )
-      .toTopic(BlockTransactionTraceMetrics)
+      .toTopic(BlockMetricsTransactionTrace)
 
     CanonicalTransactions.stream(builder)
-      .mapValues { transactionsList ->
+      .mapValues { k, transactionsList ->
 
         val transactions = transactionsList.getTransactions()
 
-        var totalGasPrice = BigInteger.ZERO
-        var totalGasLimit = BigInteger.ZERO
+        if(transactions.isEmpty()) {
+          null
+        } else {
 
-        transactions.forEach { tx ->
-          totalGasLimit += tx.getGasBI()
-          totalGasPrice += tx.getGasPriceBI()
-        }
+          var totalGasPrice = BigInteger.ZERO
+          var totalGasLimit = BigInteger.ZERO
 
-        val txCount = transactions.size.toBigInteger()
-
-        val (avgGasPrice, avgGasLimit) =
-          when (txCount) {
-            BigInteger.ZERO -> listOf(BigInteger.ZERO, BigInteger.ZERO)
-            else -> listOf(
-              totalGasPrice / txCount,
-              totalGasLimit / txCount
-            )
+          transactions.forEach { tx ->
+            totalGasLimit += tx.getGasBI()
+            totalGasPrice += tx.getGasPriceBI()
           }
 
-        BlockTransactionMetricsRecord.newBuilder()
-          .setTotalGasPriceBI(totalGasPrice)
-          .setAvgGasPriceBI(avgGasPrice)
-          .setAvgGasLimitBI(avgGasLimit)
-          .build()
+          val txCount = transactions.size.toBigInteger()
+
+          val (avgGasPrice, avgGasLimit) = listOf(
+            totalGasPrice / txCount,
+            totalGasLimit / txCount
+          )
+
+          val blockHash = transactionsList.getTransactions().first().blockHash
+
+          BlockMetricsTransactionRecord.newBuilder()
+            .setBlockNumber(k.getNumber())
+            .setBlockHash(blockHash)
+            .setTotalGasPriceBI(totalGasPrice)
+            .setAvgGasPriceBI(avgGasPrice)
+            .setAvgGasLimitBI(avgGasLimit)
+            .build()
+
+        }
+
+
       }
       .join(
         blockTimestamp,
         { left, right ->
-          BlockTransactionMetricsRecord.newBuilder(left)
+          BlockMetricsTransactionRecord.newBuilder(left)
             .setTimestamp(right.getTimestamp())
             .build()
         },
         JoinWindows.of(Duration.ofHours(2)),
-        Joined.with(Serdes.CanonicalKey(), Serdes.BlockTransactionMetrics(), Serdes.BlockTimestamp())
+        Joined.with(Serdes.CanonicalKey(), Serdes.BlockMetricsTransaction(), Serdes.BlockTimestamp())
       )
-      .toTopic(BlockTransactionMetrics)
+      .toTopic(BlockMetricsTransaction)
 
     CanonicalTransactionFees.stream(builder)
-      .mapValues { txFeeList ->
+      .mapValues { k, txFeeList ->
 
         val transactionFees = txFeeList.getTransactionFees()
-
-        val totalTxFees = transactionFees.fold(BigInteger.ZERO) { memo, next ->
-          memo + next.getTransactionFeeBI()
-        }
-
         val count = transactionFees.size.toBigInteger()
 
-        val avgTxFees = when (count) {
-          BigInteger.ZERO -> BigInteger.ZERO
-          else -> totalTxFees / count
+        if(count == BigInteger.ZERO) {
+          null
+        } else {
+
+          val totalTxFees = transactionFees.fold(BigInteger.ZERO) { memo, next ->
+            memo + next.getTransactionFeeBI()
+          }
+
+          val avgTxFees = totalTxFees / count
+
+          val blockHash = txFeeList.getBlockHash()
+
+          BlockMetricsTransactionFeeRecord.newBuilder()
+            .setBlockNumber(k.getNumber())
+            .setBlockHash(blockHash)
+            .setTotalTxFeesBI(totalTxFees)
+            .setAvgTxFeesBI(avgTxFees)
+            .build()
         }
 
-        BlockTransactionFeeMetricsRecord.newBuilder()
-          .setTotalTxFeesBI(totalTxFees)
-          .setAvgTxFeesBI(avgTxFees)
-          .build()
       }
+      .filterNot { _, v -> v == null }
       .join(
         blockTimestamp,
         { left, right ->
-          BlockTransactionFeeMetricsRecord.newBuilder(left)
+          BlockMetricsTransactionFeeRecord.newBuilder(left)
             .setTimestamp(right.getTimestamp())
             .build()
         },
         JoinWindows.of(Duration.ofHours(2)),
-        Joined.with(Serdes.CanonicalKey(), Serdes.BlockTransactionFeeMetrics(), Serdes.BlockTimestamp())
+        Joined.with(Serdes.CanonicalKey(), Serdes.BlockMetricsTransactionFee(), Serdes.BlockTimestamp())
       )
-      .toTopic(BlockTransactionFeeMetrics)
+      .toTopic(BlockMetricsTransactionFee)
 
     return builder.build()
   }

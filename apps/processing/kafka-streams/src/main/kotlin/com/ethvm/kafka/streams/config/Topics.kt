@@ -2,11 +2,11 @@ package com.ethvm.kafka.streams.config
 
 import com.ethvm.kafka.streams.Serdes.BlockAuthor
 import com.ethvm.kafka.streams.Serdes.BlockHeader
-import com.ethvm.kafka.streams.Serdes.BlockHeaderMetrics
+import com.ethvm.kafka.streams.Serdes.BlockMetricsHeader
 import com.ethvm.kafka.streams.Serdes.BlockTimestamp
-import com.ethvm.kafka.streams.Serdes.BlockTransactionFeeMetrics
-import com.ethvm.kafka.streams.Serdes.BlockTransactionMetrics
-import com.ethvm.kafka.streams.Serdes.BlockTransactionTraceMetrics
+import com.ethvm.kafka.streams.Serdes.BlockMetricsTransactionFee
+import com.ethvm.kafka.streams.Serdes.BlockMetricsTransaction
+import com.ethvm.kafka.streams.Serdes.BlockMetricsTransactionTrace
 import com.ethvm.kafka.streams.Serdes.CanonicalKey
 import com.ethvm.kafka.streams.Serdes.Contract
 import com.ethvm.kafka.streams.Serdes.ContractKey
@@ -83,10 +83,11 @@ object Topics {
   val NonFungibleBalance = KafkaTopic("non_fungible_balance", NonFungibleBalanceKey(), NonFungibleBalance())
 
   val BlockTimestamp = KafkaTopic("block_timestamp", CanonicalKey(), BlockTimestamp())
-  val BlockHeaderMetrics = KafkaTopic("block_header_metrics", CanonicalKey(), BlockHeaderMetrics())
-  val BlockTransactionMetrics = KafkaTopic("block_transaction_metrics", CanonicalKey(), BlockTransactionMetrics())
-  val BlockTransactionTraceMetrics = KafkaTopic("block_transaction_trace_metrics", CanonicalKey(), BlockTransactionTraceMetrics())
-  val BlockTransactionFeeMetrics = KafkaTopic("block_transaction_fee_metrics", CanonicalKey(), BlockTransactionFeeMetrics())
+
+  val BlockMetricsHeader = KafkaTopic("block_metrics_header", CanonicalKey(), BlockMetricsHeader())
+  val BlockMetricsTransaction = KafkaTopic("block_metrics_transaction", CanonicalKey(), BlockMetricsTransaction())
+  val BlockMetricsTransactionTrace = KafkaTopic("block_metrics_transaction_trace", CanonicalKey(), BlockMetricsTransactionTrace())
+  val BlockMetricsTransactionFee = KafkaTopic("block_metrics_transaction_fee", CanonicalKey(), BlockMetricsTransactionFee())
 
   val CanonicalGasPrices = KafkaTopic("canonical_gas_prices", CanonicalKey(), TransactionGasPriceList())
   val CanonicalGasUsed = KafkaTopic("canonical_gas_used", CanonicalKey(), TransactionGasUsedList())

@@ -1,3 +1,0 @@
-[submodule "apps/kafka-connect-jdbc"]
-	path = apps/kafka-connect-jdbc
-	url = git@github.com:EthVM/kafka-connect-jdbc.git

@@ -50,8 +50,8 @@ up_default() {
   echo -e "Building containers..."
   docker-compose build
 
-  echo -e "Starting up containers: traefik, api, explorer, timescale, zookeeper kafka-1 kafka-schema-registry kafka-connect \n"
-  docker-compose up -d traefik api explorer timescale zookeeper kafka-1 kafka-schema-registry kafka-connect
+  echo -e "Starting up containers: traefik, api, explorer, timescale, zookeeper kafka-1 kafka-schema-registry kafka-connect pgweb \n"
+  docker-compose up -d traefik api explorer timescale zookeeper kafka-1 kafka-schema-registry kafka-connect pgweb
 
   echo -e "Initialising kafka...\n"
   ${SCRIPT_DIR}/ethvm-utils.sh kafka init
@@ -71,21 +71,17 @@ up_default() {
 
 # up - spins up a dev environment with a fixed dataset ready to be used on frontend
 up_simple() {
-  echo -e "Checking if there's a new available dataset to download..."
-  ${SCRIPT_DIR}/mongo.sh fetch
 
   echo -e "Building utility docker images...\n"
   ${SCRIPT_DIR}/docker-build.sh build ethvm-utils migrator
 
-  echo "Starting up containers: traefik, mongo, timescale, explorer and api"
-  docker-compose up -d --build traefik mongodb timescale explorer api
+  echo "Starting up containers: traefik, mongo, timescale, explorer, api and pgweb"
+  docker-compose up -d --build traefik mongodb timescale explorer api pgweb
 
   # Give time to breathe
   sleep 10
 
-  echo "Importing bootstraped db to mongo..."
-  ${SCRIPT_DIR}/mongo.sh init
-  ${SCRIPT_DIR}/mongo.sh bootstrap
+  gunzip < ${ROOT_DIR}/datasets/ethvm_dev.sql.gz | docker-compose exec -T timescale psql --username "${POSTGRES_USER}" ethvm_dev
 }
 
 # down - stops all running docker containers, volumes, images and related stuff
@@ -95,7 +91,7 @@ down() {
 
 # logs - outputs logs for containers
 logs() {
-  docker-compose logs -f "$1"
+  docker-compose logs -f -t "$1"
 }
 
 run() {

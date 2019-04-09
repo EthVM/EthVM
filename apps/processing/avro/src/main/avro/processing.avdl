@@ -148,7 +148,9 @@ protocol Processing {
     long timestamp;
   }
 
-  record BlockHeaderMetricsRecord {
+  record BlockMetricsHeaderRecord {
+    decimal(40,0) blockNumber;
+    string blockHash;
     union { null, long } blockTime = null;
     long timestamp;
     int numUncles;
@@ -156,7 +158,9 @@ protocol Processing {
     decimal(40,0) totalDifficulty;
   }
 
-  record BlockTransactionTraceMetricsRecord {
+  record BlockMetricsTransactionTraceRecord {
+    decimal(40,0) blockNumber;
+    string blockHash;
     int totalTxs;
     int numSuccessfulTxs;
     int numFailedTxs;
@@ -164,14 +168,18 @@ protocol Processing {
     union { null, long } timestamp = null;
   }
 
-  record BlockTransactionMetricsRecord {
+  record BlockMetricsTransactionRecord {
+    decimal(40,0) blockNumber;
+    string blockHash;
     decimal(40,0) totalGasPrice;
     decimal(40,0) avgGasLimit;
     decimal(40,0) avgGasPrice;
     union { null, long } timestamp = null;
   }
 
-  record BlockTransactionFeeMetricsRecord {
+  record BlockMetricsTransactionFeeRecord {
+    decimal(40,0) blockNumber;
+    string blockHash;
     decimal(40,0) totalTxFees;
     decimal(40,0) avgTxFees;
     union { null, long } timestamp = null;

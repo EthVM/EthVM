@@ -138,25 +138,25 @@ topics:
     config:
       cleanup.policy: compact
 
-  - name: block_header_metrics
+  - name: block_metrics_header
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
-  - name: block_transaction_metrics
+  - name: block_metrics_transaction
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
-  - name: block_transaction_trace_metrics
+  - name: block_metrics_transaction_trace
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
-  - name: block_transaction_fee_metrics
+  - name: block_metrics_transaction_fee
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:

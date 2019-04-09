@@ -1,5 +1,5 @@
 {
-  "name": "postgres-primary-sink",
+  "name": "postgres-keyed-sink",
   "config": {
     "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
     "tasks.max": 1,
