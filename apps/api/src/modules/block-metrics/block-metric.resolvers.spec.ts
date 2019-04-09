@@ -69,7 +69,8 @@ const mockService = {
   async findBlockMetrics(limit: number = 10, page: number = 0) {
     const start = page * limit
     const end = start + limit
-    return Object.values(blockMetrics).slice(start, end)
+    const items = Object.values(blockMetrics).slice(start, end)
+    return items.map(i => new BlockMetricEntity(i))
   }
 }
 
