@@ -26,7 +26,6 @@ import com.ethvm.avro.processing.TransactionFeeListRecord
 import com.ethvm.avro.processing.TransactionFeeRecord
 import com.ethvm.avro.processing.TransactionGasPriceRecord
 import com.ethvm.avro.processing.TransactionGasUsedRecord
-import java.math.BigDecimal
 import java.math.BigInteger
 
 fun CanonicalKeyRecord.getNumberBI() = getNumber().bigInteger()
@@ -125,7 +124,6 @@ fun ExchangeRateRecord.isValid() = !(this.marketCap == -1.0 || this.marketCapRan
 
 fun TransactionFeeListRecord.toEtherBalanceDeltas(): List<FungibleBalanceDeltaRecord> =
   getTransactionFees().map { it.toFungibleBalanceDelta() }
-
 
 fun TransactionFeeRecord.toFungibleBalanceDelta(): FungibleBalanceDeltaRecord =
   FungibleBalanceDeltaRecord.newBuilder()
