@@ -15,8 +15,8 @@ import com.ethvm.avro.capture.TransactionReceiptRecord
 import com.ethvm.avro.capture.TransactionRecord
 import com.ethvm.avro.common.TraceLocationRecord
 import com.ethvm.avro.exchange.ExchangeRateRecord
-import com.ethvm.avro.processing.BlockTransactionFeeMetricsRecord
-import com.ethvm.avro.processing.BlockTransactionMetricsRecord
+import com.ethvm.avro.processing.BlockMetricsTransactionFeeRecord
+import com.ethvm.avro.processing.BlockMetricsTransactionRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaType
 import com.ethvm.avro.processing.FungibleBalanceRecord
@@ -108,15 +108,15 @@ fun TransactionFeeRecord.getTransactionFeeBI() = getTransactionFee().bigInteger(
 
 fun TransactionFeeRecord.Builder.setTransactionFeeBI(transactionFee: BigInteger) = setTransactionFee(transactionFee.byteBuffer())
 
-fun BlockTransactionMetricsRecord.Builder.setTotalGasPriceBI(totalGasPrice: BigInteger) = setTotalGasPrice(totalGasPrice.byteBuffer())
+fun BlockMetricsTransactionRecord.Builder.setTotalGasPriceBI(totalGasPrice: BigInteger) = setTotalGasPrice(totalGasPrice.byteBuffer())
 
-fun BlockTransactionMetricsRecord.Builder.setAvgGasLimitBI(avgGasLimit: BigInteger) = setAvgGasLimit(avgGasLimit.byteBuffer())
+fun BlockMetricsTransactionRecord.Builder.setAvgGasLimitBI(avgGasLimit: BigInteger) = setAvgGasLimit(avgGasLimit.byteBuffer())
 
-fun BlockTransactionMetricsRecord.Builder.setAvgGasPriceBI(avgGasPrice: BigInteger) = setAvgGasPrice(avgGasPrice.byteBuffer())
+fun BlockMetricsTransactionRecord.Builder.setAvgGasPriceBI(avgGasPrice: BigInteger) = setAvgGasPrice(avgGasPrice.byteBuffer())
 
-fun BlockTransactionFeeMetricsRecord.Builder.setTotalTxFeesBI(totalTxFees: BigInteger) = setTotalTxFees(totalTxFees.byteBuffer())
+fun BlockMetricsTransactionFeeRecord.Builder.setTotalTxFeesBI(totalTxFees: BigInteger) = setTotalTxFees(totalTxFees.byteBuffer())
 
-fun BlockTransactionFeeMetricsRecord.Builder.setAvgTxFeesBI(avgTxFees: BigInteger) = setAvgTxFees(avgTxFees.byteBuffer())
+fun BlockMetricsTransactionFeeRecord.Builder.setAvgTxFeesBI(avgTxFees: BigInteger) = setAvgTxFees(avgTxFees.byteBuffer())
 
 //
 

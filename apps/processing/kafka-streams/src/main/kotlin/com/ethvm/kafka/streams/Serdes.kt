@@ -1,7 +1,5 @@
 package com.ethvm.kafka.streams
 
-import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
-import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
 import com.ethvm.avro.capture.BlockHeaderRecord
 import com.ethvm.avro.capture.CanonicalKeyRecord
 import com.ethvm.avro.capture.ContractKeyRecord
@@ -20,11 +18,11 @@ import com.ethvm.avro.exchange.SymbolKeyRecord
 import com.ethvm.avro.processing.AddressMetadataKeyRecord
 import com.ethvm.avro.processing.AddressMetadataRecord
 import com.ethvm.avro.processing.BlockAuthorRecord
-import com.ethvm.avro.processing.BlockHeaderMetricsRecord
+import com.ethvm.avro.processing.BlockMetricsHeaderRecord
+import com.ethvm.avro.processing.BlockMetricsTransactionFeeRecord
+import com.ethvm.avro.processing.BlockMetricsTransactionRecord
+import com.ethvm.avro.processing.BlockMetricsTransactionTraceRecord
 import com.ethvm.avro.processing.BlockTimestampRecord
-import com.ethvm.avro.processing.BlockTransactionFeeMetricsRecord
-import com.ethvm.avro.processing.BlockTransactionMetricsRecord
-import com.ethvm.avro.processing.BlockTransactionTraceMetricsRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaListRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaRecord
 import com.ethvm.avro.processing.FungibleBalanceKeyRecord
@@ -45,6 +43,8 @@ import com.ethvm.avro.processing.TransactionKeyRecord
 import com.ethvm.avro.processing.TransactionReceiptKeyRecord
 import com.ethvm.avro.tokens.EthTokenListsKeyRecord
 import com.ethvm.kafka.streams.config.KafkaConfig
+import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
+import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
@@ -182,19 +182,19 @@ object Serdes : KoinComponent {
     configure(config, false)
   }
 
-  fun BlockHeaderMetrics() = SpecificAvroSerde<BlockHeaderMetricsRecord>(registryClient).apply {
+  fun BlockMetricsHeader() = SpecificAvroSerde<BlockMetricsHeaderRecord>(registryClient).apply {
     configure(config, false)
   }
 
-  fun BlockTransactionMetrics() = SpecificAvroSerde<BlockTransactionMetricsRecord>(registryClient).apply {
+  fun BlockMetricsTransaction() = SpecificAvroSerde<BlockMetricsTransactionRecord>(registryClient).apply {
     configure(config, false)
   }
 
-  fun BlockTransactionFeeMetrics() = SpecificAvroSerde<BlockTransactionFeeMetricsRecord>(registryClient).apply {
+  fun BlockMetricsTransactionFee() = SpecificAvroSerde<BlockMetricsTransactionFeeRecord>(registryClient).apply {
     configure(config, false)
   }
 
-  fun BlockTransactionTraceMetrics() = SpecificAvroSerde<BlockTransactionTraceMetricsRecord>(registryClient).apply {
+  fun BlockMetricsTransactionTrace() = SpecificAvroSerde<BlockMetricsTransactionTraceRecord>(registryClient).apply {
     configure(config, false)
   }
 

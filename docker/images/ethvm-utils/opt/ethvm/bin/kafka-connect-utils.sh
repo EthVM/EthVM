@@ -50,8 +50,8 @@ register_sources() {
 register_sinks() {
   echo "===> Registering sinks ..."
   ensure_kafka_connect
-  curl_register ${KAFKA_CONNECT_DIR}/sinks/postgres-primary-sink.json
-  curl_register ${KAFKA_CONNECT_DIR}/sinks/postgres-deltas-sink.json
+  curl_register ${KAFKA_CONNECT_DIR}/sinks/postgres-keyed-sink.json
+  curl_register ${KAFKA_CONNECT_DIR}/sinks/postgres-non-keyed-sink.json
 } >&2
 
 init() {
