@@ -101,7 +101,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
 
         val traces = traceList.getTraces()
 
-        if(traces.isEmpty()) {
+        if (traces.isEmpty()) {
           null
         } else {
           traces
@@ -159,7 +159,6 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
             .setNumInternalTxs(internalTxs)
             .build()
         }
-
       }
       .filterNot { _, v -> v == null }
       .join(
@@ -179,7 +178,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
 
         val transactions = transactionsList.getTransactions()
 
-        if(transactions.isEmpty()) {
+        if (transactions.isEmpty()) {
           null
         } else {
 
@@ -207,10 +206,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
             .setAvgGasPriceBI(avgGasPrice)
             .setAvgGasLimitBI(avgGasLimit)
             .build()
-
         }
-
-
       }
       .join(
         blockTimestamp,
@@ -230,7 +226,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
         val transactionFees = txFeeList.getTransactionFees()
         val count = transactionFees.size.toBigInteger()
 
-        if(count == BigInteger.ZERO) {
+        if (count == BigInteger.ZERO) {
           null
         } else {
 
@@ -249,7 +245,6 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
             .setAvgTxFeesBI(avgTxFees)
             .build()
         }
-
       }
       .filterNot { _, v -> v == null }
       .join(
