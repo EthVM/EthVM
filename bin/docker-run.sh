@@ -5,6 +5,9 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # import utils
 source ${SCRIPT_DIR}/env.sh
 
+# Define variables
+DATASET="ethvm_dev.sql.gz"
+
 # docker_usage - prints docker subcommand usage
 docker_usage() {
   echo ""
@@ -65,7 +68,7 @@ up_default() {
   echo -e "Re-building kafka connect connector...\n"
   ${SCRIPT_DIR}/kafka-connect.sh build-connector
 
-  echo "Registering sinks and sources into kafka connect..."
+  echo "Registering sinks and sources into kafka connect...\n"
   ${SCRIPT_DIR}/ethvm-utils.sh kafka-connect init
 }
 
@@ -75,13 +78,21 @@ up_simple() {
   echo -e "Building utility docker images...\n"
   ${SCRIPT_DIR}/docker-build.sh build ethvm-utils migrator
 
-  echo "Starting up containers: traefik, mongo, timescale, explorer, api and pgweb"
-  docker-compose up -d --build traefik mongodb timescale explorer api pgweb
+  echo "Starting up containers: traefik, timescale, explorer, api and pgweb \n"
+  docker-compose up -d --build traefik timescale explorer api pgweb
 
   # Give time to breathe
   sleep 10
 
-  gunzip < ${ROOT_DIR}/datasets/ethvm_dev.sql.gz | docker-compose exec -T timescale psql --username "${POSTGRES_USER}" ethvm_dev
+  echo "Checking current dataset...\n"
+  mkdir -p ${ROOT_DIR}/datasets
+  set +o errexit
+  [[ -f ${ROOT_DIR}/datasets/${DATASET} ]] && (curl -o ${ROOT_DIR}/datasets/${DATASET}.md5 https://ethvm.s3.amazonaws.com/datasets/${DATASET}.md5 --silent 2>/dev/null && cd ${ROOT_DIR}/datasets/ && md5sum --check ${ROOT_DIR}/datasets/${DATASET}.md5 &>/dev/null)
+  [[ $? -ne 0 ]] && (echo "Downloading dataset... \n" && curl -o ${ROOT_DIR}/datasets/${DATASET} https://ethvm.s3.amazonaws.com/datasets/${DATASET} --progress-bar) || echo "You're using latest dataset version! \n"
+  set -o errexit
+
+  echo "Importing dataset to TimeScale \n"
+  gunzip < ${ROOT_DIR}/datasets/${DATASET} | docker-compose exec -T timescale psql --username "${POSTGRES_USER}" "${POSTGRES_DB}"
 }
 
 # down - stops all running docker containers, volumes, images and related stuff
