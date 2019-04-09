@@ -43,30 +43,36 @@
       </v-flex>
     </v-layout>
     <!-- Tx Table Content -->
+
     <v-card color="white" flat class="pt-0 pb-2">
       <!-- Table Header -->
-      <v-card color="primary" flat class="white--text pl-3 pr-1" height="40px">
-        <v-layout align-center justify-start row fill-height pr-3>
-          <v-flex hidden-sm-and-down md1 pl-3>
-            <h5>{{ $t('block.number') }}</h5>
-          </v-flex>
-          <v-flex xs7 sm6 md6>
-            <h5>{{ $tc('tx.hash', 1) }}</h5>
-          </v-flex>
-          <v-flex xs5 sm2 md2 lg1 pl-0>
-            <h5>{{ $t('common.eth') }}</h5>
-          </v-flex>
-          <v-flex hidden-xs-only sm3 md2>
-            <h5>{{ $t('common.age') }}</h5>
-          </v-flex>
-          <v-flex hidden-md-and-down lg1>
-            <h5>{{ $tc('tx.fee', 1) }}</h5>
-          </v-flex>
-          <v-flex hidden-xs-only sm1>
-            <h5>{{ $t('tx.status') }}</h5>
-          </v-flex>
-        </v-layout>
-      </v-card>
+      <v-layout>
+        <v-flex hidden-sm-and-up pt-0 pb-0 pl-3> <app-footnotes :footnotes="footnoteMobile" pl-2 pr-2 /> </v-flex>
+        <v-flex hidden-xs-only sm12>
+          <v-card color="primary" flat class="white--text pl-3 pr-1" height="40px">
+            <v-layout align-center justify-start row fill-height pr-3>
+              <v-flex hidden-sm-and-down md1 pl-3>
+                <h5>{{ $t('block.number') }}</h5>
+              </v-flex>
+              <v-flex xs7 sm6 md6>
+                <h5>{{ $tc('tx.hash', 1) }}</h5>
+              </v-flex>
+              <v-flex xs5 sm2 md2 lg1 pl-0>
+                <h5>{{ $t('common.eth') }}</h5>
+              </v-flex>
+              <v-flex hidden-xs-only sm3 md2>
+                <h5>{{ $t('common.age') }}</h5>
+              </v-flex>
+              <v-flex hidden-md-and-down lg1>
+                <h5>{{ $tc('tx.fee', 1) }}</h5>
+              </v-flex>
+              <v-flex hidden-xs-only sm1>
+                <h5>{{ $t('tx.status') }}</h5>
+              </v-flex>
+            </v-layout>
+          </v-card>
+        </v-flex>
+      </v-layout>
       <table-address-tx-row v-if="!loading" :transactions="txs" :account="address" :filter="selected" :type="isPending" />
       <v-card v-if="loading" color="white" flat class="pt-0 pb-2">
         <v-flex xs12>
@@ -207,6 +213,20 @@ export default class TableAddressTxs extends Vue {
       {
         color: 'error',
         text: this.$i18n.t('filter.out'),
+        icon: 'fa fa-circle'
+      }
+    ]
+  }
+  get footnoteMobile(): Footnote[] {
+    return [
+      {
+        color: 'txSuccess',
+        text: this.$i18n.t('common.success'),
+        icon: 'fa fa-circle'
+      },
+      {
+        color: 'txFail',
+        text: this.$i18n.t('common.fail'),
         icon: 'fa fa-circle'
       }
     ]

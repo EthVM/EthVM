@@ -1,6 +1,6 @@
 <template>
   <v-container grid-list-lg class="mb-0">
-    {{ $d(new Date(), 'short') }}
+    <app-bread-crumbs :new-items="crumbs" />
     <!--
     =====================================================================================
       DETAILS LIST
@@ -359,19 +359,40 @@ export default class PageDetailsBlock extends Vue {
    * @return {Array} - Breadcrumb entry. See description.
    */
   get crumbs(): Crumb[] {
-    return [
+    const crumbs: Crumb[] = [
       {
         text: 'block.name',
         disabled: false,
         link: '/blocks',
         plural: 2
-      },
-      {
-        text: 'block.number',
-        disabled: true,
-        label: ` ${this.$route.params.blockRef}`
       }
     ]
+    if (!eth.isValidHash(this.blockRef) && !eth.isValidBlockNumber(this.blockRef)) {
+      crumbs.push({
+        text: 'block.number',
+        disabled: true
+      })
+      return crumbs
+    } else if (eth.isValidHash(this.blockRef)) {
+      crumbs.push({
+        text: 'block.number',
+        disabled: true,
+        label: {
+          name: ` ${this.$route.params.blockRef}`,
+          hash: true
+        }
+      })
+      return crumbs
+    }
+    crumbs.push({
+      text: 'block.number',
+      disabled: true,
+      label: {
+        name: ` ${this.$route.params.blockRef}`,
+        hash: false
+      }
+    })
+    return crumbs
   }
 
   get max(): number {

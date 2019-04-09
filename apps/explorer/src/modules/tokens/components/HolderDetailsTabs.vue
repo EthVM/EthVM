@@ -56,7 +56,7 @@ export default class HolderDetailsTabs extends Vue {
   get tabs(): Tab[] {
     const tabs = [
       {
-        id: '0',
+        id: 0,
         title: 'Transfers',
         isActive: true
       }

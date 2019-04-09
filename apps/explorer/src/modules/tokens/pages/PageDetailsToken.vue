@@ -468,7 +468,9 @@ export default class PageDetailsToken extends Vue {
         text: 'token.name',
         disabled: true,
         plural: 1,
-        label: this.isTokenDetailsLoading ? `: ${this.addressRef}` : `: ${this.tokenDetails.symbol.toUpperCase()}`
+        label: {
+          name: this.isTokenDetailsLoading ? `: ${this.addressRef}` : `: ${this.tokenDetails.symbol.toUpperCase()}`
+        }
       }
     ]
   }
@@ -495,7 +497,9 @@ export default class PageDetailsToken extends Vue {
       {
         text: 'token.holder',
         disabled: true,
-        label: `: ${this.holderAddress}`
+        label: {
+          name: `: ${this.holderAddress}`
+        }
       }
     ]
   }

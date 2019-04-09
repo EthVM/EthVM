@@ -15,12 +15,13 @@
       <v-card-title class="title font-weight-bold pl-4">
         <div style="width: 300px; height: 20px; background: #e6e6e6; border-radius: 2px;"></div>
       </v-card-title>
+      <v-divider class="lineGrey mt-1 mb-1" />
     </div>
     <div v-else>
       <slot name="title">
-        <div v-if="!hasError">
+        <div v-if="!hasError" class="pa-1">
           <v-card-title class="title font-weight-bold pl-4" v-html="title"></v-card-title>
-          <v-divider class="lineGrey" />
+          <v-divider class="lineGrey mt-1 mb-1" />
         </div>
       </slot>
     </div>
