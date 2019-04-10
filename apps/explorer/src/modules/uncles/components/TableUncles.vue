@@ -6,10 +6,10 @@
     =====================================================================================
     -->
     <v-layout align-end justify-space-between row wrap fill-height pb-1>
-      <v-flex xs12 sm6>
+      <v-flex xs6 >
         <v-card-title class="title font-weight-bold pb-1">{{ $tc('uncle.name', 2) }}</v-card-title>
       </v-flex>
-      <v-flex xs12 sm6 v-if="pages > 1">
+      <v-flex xs6 v-if="pages > 1">
         <v-layout justify-end class="pb-1 pr-2 pl-2">
           <app-paginate :total="pages" @newPage="setPage" :current-page="page" :has-input="false" :has-first="false" :has-last="false" />
         </v-layout>
@@ -27,7 +27,9 @@
       TABLE HEADER
     =====================================================================================
     -->
-    <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px" style="margin-right: 1px">
+        <v-layout>
+      <v-flex hidden-xs-only sm12>
+    <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px">
       <v-layout align-center justify-start row fill-height pr-3>
         <v-flex xs6 sm2 md2>
           <h5>{{ $t('block.block') }}</h5>
@@ -47,17 +49,17 @@
         </v-flex>
       </v-layout>
     </v-card>
+      </v-flex>
+        </v-layout>
     <!--
     =====================================================================================
       TABLE BODY
     =====================================================================================
     -->
-    <v-card flat id="scroll-target" :style="style" class="scroll-y pt-0 pb-0">
-      <v-layout column fill-height v-scroll:#scroll-target style="margin-right: 1px" class="mb-1">
+      <v-layout column fill-height class="mb-1">
         <v-flex xs12 v-if="!loading">
           <v-card v-for="uncle in uncles" class="transparent" flat :key="uncle.getHash()">
             <table-uncles-row :uncle="uncle" :page-type="pageType" />
-            <v-divider class="mb-2 mt-2" />
           </v-card>
         </v-flex>
         <v-flex xs12 v-if="loading">
@@ -88,7 +90,7 @@
           </v-layout>
         </v-flex>
       </v-layout>
-    </v-card>
+
   </v-card>
 </template>
 
