@@ -1,12 +1,12 @@
 <template>
   <v-dialog v-if="greet" v-model="dialog" width="500">
     <v-card>
-      <canvas id="animate"></canvas>
+      <canvas v-if="animate" id="animate"></canvas>
       <v-card-title class="headline" primary-title>
         {{ $t('message.welcome.title') }}
       </v-card-title>
       <v-card-text>
-        {{ $t('message.welcome.text1') }} <a :href="'mailto:' + supportEmail">{{ supportEmail }}</a> {{ $t('message.welcome.text2') }}
+        {{ $t('message.welcome.text1') }} <a :href="`mailto:${supportEmail}`">{{ supportEmail }}</a> {{ $t('message.welcome.text2') }}
       </v-card-text>
       <v-card-actions>
         <v-layout align-center justify-center row fill-height>
@@ -42,6 +42,7 @@ export default class AppGreeting extends Vue {
 
   dialog = true
   supportEmail = 'support@ethvm.com'
+  animate = true
 
   /*
   ===================================================================================
@@ -50,10 +51,13 @@ export default class AppGreeting extends Vue {
   */
 
   mounted() {
-    if (this.greet) {
+    if (this.greet && this.animate) {
       setTimeout(() => {
         this.createAnimation()
       }, 500)
+      setTimeout(() => {
+       this.animate = false
+      }, 5000)
     }
   }
 
