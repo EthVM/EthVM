@@ -28,11 +28,10 @@ volumes:
     # This allows to persist downloaded blockchain data.
     # More info: https://github.com/CWSpear/local-persist
     #
-    driver: local-persist
-    driver_opts:
-      name: "paritydb"
-      mountpoint: "/media/brian/SanDisk\ Extreme1/parity"
-#      mountpoint: "/var/lib/parity"
+    # driver: local-persist
+    # driver_opts:
+    #   name: "paritydb"
+    #   mountpoint: "/var/lib/parity"
 
 services:
 
