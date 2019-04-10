@@ -56,7 +56,7 @@ export default class AppGreeting extends Vue {
         this.createAnimation()
       }, 500)
       setTimeout(() => {
-       this.animate = false
+        this.animate = false
       }, 5000)
     }
   }

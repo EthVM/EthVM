@@ -238,7 +238,7 @@ export default class PageDetailsBlock extends Vue {
         {
           title: this.$i18n.t('miner.name'),
           detail: this.block.getMiner().toString(),
-          link:  `/address/${this.block.getMiner().toString()}`,
+          link: `/address/${this.block.getMiner().toString()}`,
           copy: true,
           mono: true
         },
@@ -336,7 +336,7 @@ export default class PageDetailsBlock extends Vue {
 
   get previousBlock(): String {
     if (this.blockInfo.mined && this.blockInfo.prev) {
-      return  `/block/${this.blockInfo.prev}`
+      return `/block/${this.blockInfo.prev}`
     }
 
     if (!this.$route.params.blockRef.includes('0x')) {
