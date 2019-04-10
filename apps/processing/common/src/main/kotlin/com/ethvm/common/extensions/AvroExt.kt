@@ -273,7 +273,7 @@ fun TraceRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> {
 
     is TraceCallActionRecord -> {
 
-      if(action.callType == "delegatecall") {
+      if (action.callType == "delegatecall") {
         emptyList()
       } else {
         listOf(
@@ -296,7 +296,6 @@ fun TraceRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> {
 
         )
       }
-
     }
 
     is TraceCreateActionRecord -> listOf(

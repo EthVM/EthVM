@@ -23,9 +23,8 @@ class ParityBlocksSource(
 
   override val partitionKey: Map<String, Any> = mapOf("model" to "block")
 
-  override fun fetchRange(range: LongRange): List<SourceRecord> {
-
-    return range
+  override fun fetchRange(range: LongRange): List<SourceRecord> =
+    range
       .map { blockNumber ->
 
         val blockNumberBI = blockNumber.toBigInteger()
@@ -62,8 +61,7 @@ class ParityBlocksSource(
 
             // transactions
 
-            val canonicalKeyRecord = CanonicalKeyRecord
-              .newBuilder()
+            val canonicalKeyRecord = CanonicalKeyRecord.newBuilder()
               .setNumberBI(blockNumberBI)
               .build()
 
@@ -102,10 +100,53 @@ class ParityBlocksSource(
       }.map { future ->
         // wait for everything to complete
         future.join()
-      }.flatten()
-  }
+      }
+      .flatten()
 
-  override fun tombstonesForRange(range: LongRange): List<SourceRecord> {
-    TODO("not implemented")
-  }
+  override fun tombstonesForRange(range: LongRange): List<SourceRecord> =
+    range
+      .map { blockNumber ->
+
+        val blockNumberBI = blockNumber.toBigInteger()
+        val partitionOffset = mapOf("blockNumber" to blockNumber)
+
+        val blockKeyRecord = CanonicalKeyRecord.newBuilder()
+          .setNumberBI(blockNumberBI)
+          .build()
+
+        val keySchemaAndValue = AvroToConnect.toConnectData(blockKeyRecord)
+
+        val headerSourceRecord =
+          SourceRecord(
+            partitionKey,
+            partitionOffset,
+            blocksTopic,
+            keySchemaAndValue.schema(),
+            keySchemaAndValue.value(),
+            AvroToConnect.toConnectSchema(BlockHeaderRecord.`SCHEMA$`),
+            null
+          )
+
+        // transactions
+
+        val canonicalKeyRecord = CanonicalKeyRecord.newBuilder()
+          .setNumberBI(blockNumberBI)
+          .build()
+
+        val canonicalKeySchemaAndValue = AvroToConnect.toConnectData(canonicalKeyRecord)
+
+        val txsSourceRecord =
+          SourceRecord(
+            partitionKey,
+            partitionOffset,
+            txsBlockTopic,
+            canonicalKeySchemaAndValue.schema(),
+            canonicalKeySchemaAndValue.value(),
+            AvroToConnect.toConnectSchema(TransactionListRecord.`SCHEMA$`),
+            null
+          )
+
+        listOf(headerSourceRecord, txsSourceRecord)
+      }
+      .flatten()
 }

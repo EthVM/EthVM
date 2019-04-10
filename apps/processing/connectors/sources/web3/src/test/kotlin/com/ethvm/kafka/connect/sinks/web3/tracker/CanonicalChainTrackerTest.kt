@@ -23,7 +23,6 @@ import org.reactivestreams.Subscription
 import org.web3j.protocol.ObjectMapperFactory
 import org.web3j.protocol.Web3jService
 import org.web3j.protocol.core.Request
-import org.web3j.protocol.core.Response
 import org.web3j.protocol.core.methods.response.EthBlockNumber
 import org.web3j.protocol.websocket.events.NewHeadsNotification
 import java.math.BigInteger
@@ -37,7 +36,8 @@ class CanonicalChainTrackerTest : BehaviorSpec() {
 
     given("a canonical chain tracker") {
 
-      val tracker = CanonicalChainTracker(FakeParity(FakeParity.INTERVAL_PERIOD_OF_100))
+      val parity = FakeParity(FakeParity.INTERVAL_PERIOD_OF_100)
+      val tracker = CanonicalChainTracker(parity)
 
       `when`("we ask for the first range") {
 
@@ -63,7 +63,11 @@ class CanonicalChainTrackerTest : BehaviorSpec() {
   }
 }
 
-class FakeParity(private val newHeadsInterval: Long = INTERVAL_PERIOD_OF_100) : AbstractParity() {
+class FakeParity(
+  private val newHeadsInterval: Long = INTERVAL_PERIOD_OF_100,
+  private val bufferHeads: Int = 8,
+  private val reOrgOf: Int = 0
+) : AbstractParity() {
 
   private val mapper = ObjectMapperFactory.getObjectMapper()
   private val web3Service = mockk<Web3jService>()
@@ -72,11 +76,11 @@ class FakeParity(private val newHeadsInterval: Long = INTERVAL_PERIOD_OF_100) : 
 
   init {
     // Give default behavior to web3jService
-    val response = Response<EthBlockNumber>().apply {
-      result = EthBlockNumber().apply { result = "0x0" }
+    val response = EthBlockNumber().apply {
+      result = "0x${10.toString(16)}"
     }
 
-    every { web3Service.send<Response<EthBlockNumber>>(any(), any()) } returns response
+    every { web3Service.send<EthBlockNumber>(any(), any()) } returns response
   }
 
   override fun newHeadsNotifications(): Flowable<NewHeadsNotification> {
@@ -85,7 +89,7 @@ class FakeParity(private val newHeadsInterval: Long = INTERVAL_PERIOD_OF_100) : 
     val headsSub = Flowable.interval(newHeadsInterval, TimeUnit.MILLISECONDS)
       .subscribeOn(Schedulers.single())
       .map { newHead(it.toBigInteger()) }
-      .compose(FakeReOrgTransformer<NewHeadsNotification>())
+      .compose(FakeReOrgTransformer<NewHeadsNotification>(bufferHeads, reOrgOf))
       .subscribe { s.onNext(it) }
 
     return s
@@ -135,7 +139,7 @@ class FakeParity(private val newHeadsInterval: Long = INTERVAL_PERIOD_OF_100) : 
 
 private class FakeReOrgTransformer<T>(
   private val each: Int = 8,
-  private val take: Int = 2
+  private val take: Int = 0
 ) : FlowableTransformer<T, List<T>> {
 
   override fun apply(upstream: Flowable<T>): Publisher<List<T>> = Publisher { s -> upstream.subscribe(ReOrgSubscriber(s)) }
@@ -170,13 +174,15 @@ private class FakeReOrgTransformer<T>(
 
       synchronized(subscriber) {
         if (buffer.get().size == each) {
-          logger.debug { "Reorg triggered!" }
+          if (take > 0) {
+            logger.debug { "Re-org triggered!" }
+          }
 
           val heads = ArrayList(buffer.get())
           reset()
 
-          val reorg = heads.subList(heads.size - take, heads.size)
-          heads.addAll(reorg)
+          val reOrg = heads.subList(heads.size - take, heads.size)
+          heads.addAll(reOrg)
 
           subscriber.onNext(heads)
         }
