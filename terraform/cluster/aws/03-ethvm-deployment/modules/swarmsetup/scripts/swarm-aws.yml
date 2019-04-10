@@ -1,0 +1,353 @@
+version: '3.6'
+
+networks:
+  
+  backend:
+    driver: overlay
+    external: false
+
+volumes:
+
+  zookeeper-1-volume:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/mnt/efs/zookeeper-1-volume'
+  zookeeper-2-volume:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/mnt/efs/zookeeper-2-volume'
+  zookeeper-3-volume:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/mnt/efs/zookeeper-3-volume'
+
+  kafka-1-volume:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/mnt/efs/kafka-1-volume'
+  kafka-2-volume:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/mnt/efs/kafka-2-volume'
+  kafka-3-volume:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/mnt/efs/kafka-3-volume'
+
+  kafka-connect-volume:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/mnt/efs/kafka-connect-volume'
+
+  control-center-volume:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/mnt/efs/control-center-volume'
+
+  control-center-config-volume:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/mnt/efs/control-center-config-volume'
+
+
+services:
+
+  # ///////////////////////////////////////////////////////
+  # Processing
+  # ///////////////////////////////////////////////////////
+
+  zookeeper-1:
+    image: confluentinc/cp-zookeeper:5.1.2
+    volumes:
+      - zookeeper-1-volume:/var/lib/zookeeper
+    networks:
+      - backend
+    ports:
+      - 22181:22181
+      - 29585:29585
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 22181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_SERVERS: 0.0.0.0:22888:23888;zookeeper-2:32888:33888;zookeeper-3:42888:43888
+      JMX_PORT: 29585
+    deploy:
+      placement:
+        constraints:
+          - node.role == worker
+          - node.labels.com.ethvm.nodeType == processing-worker-1
+      restart_policy:
+        condition: on-failure
+
+  zookeeper-2:
+    image: confluentinc/cp-zookeeper:5.1.2
+    volumes:
+      - zookeeper-2-volume:/var/lib/zookeeper
+    networks:
+      - backend
+    ports:
+      - 32181:32181
+      - 39585:39585
+    environment:
+      ZOOKEEPER_SERVER_ID: 2
+      ZOOKEEPER_CLIENT_PORT: 32181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_SERVERS: zookeeper-1:22888:23888;0.0.0.0:32888:33888;zookeeper-3:42888:43888
+      JMX_PORT: 39585
+    deploy:
+      placement:
+        constraints:
+          - node.role == worker
+          - node.labels.com.ethvm.nodeType == processing-worker-2
+      restart_policy:
+        condition: on-failure
+
+  zookeeper-3:
+    image: confluentinc/cp-zookeeper:5.1.2
+    volumes:
+      - zookeeper-3-volume:/var/lib/zookeeper
+    networks:
+      - backend
+    ports:
+      - 42181:22181
+      - 49585:49585
+    environment:
+      ZOOKEEPER_SERVER_ID: 3
+      ZOOKEEPER_CLIENT_PORT: 42181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_SERVERS: zookeeper-1:22888:23888;zookeeper-2:32888:33888;0.0.0.0:42888:43888
+      JMX_PORT: 49585
+    deploy:
+      placement:
+        constraints:
+          - node.role == worker
+          - node.labels.com.ethvm.nodeType == processing-worker-3
+      restart_policy:
+        condition: on-failure
+
+  kafka-1:
+    image: confluentinc/cp-kafka:5.1.2
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+    networks:
+      - backend
+    ports:
+      - 19092:19092
+      - 19586:19586
+    volumes:
+      - kafka-1-volume:/var/lib/kafka
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:22181,zookeeper-2:32181,zookeeper-3:42181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:19092
+      JMX_PORT: 19586
+    deploy:
+      placement:
+        constraints:
+          - node.role == worker
+          - node.labels.com.ethvm.nodeType == processing-worker-1
+      restart_policy:
+        condition: on-failure
+
+  kafka-2:
+    image: confluentinc/cp-kafka:5.1.2
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+    networks:
+      - backend
+    ports:
+      - 29092:29092
+      - 29586:29586
+    volumes:
+      - kafka-2-volume:/var/lib/kafka
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:22181,zookeeper-2:32181,zookeeper-3:42181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:29092
+      JMX_PORT: 29586
+    deploy:
+      placement:
+        constraints:
+          - node.role == worker
+          - node.labels.com.ethvm.nodeType == processing-worker-2
+      restart_policy:
+        condition: on-failure
+
+  kafka-3:
+    image: confluentinc/cp-kafka:5.1.2
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+    networks:
+      - backend
+    ports:
+      - 39092:39092
+      - 39586:39586
+    volumes:
+      - kafka-3-volume:/var/lib/kafka
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:22181,zookeeper-2:32181,zookeeper-3:42181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:39092
+      JMX_PORT: 39586
+    deploy:
+      placement:
+        constraints:
+          - node.role == worker
+          - node.labels.com.ethvm.nodeType == processing-worker-3
+      restart_policy:
+        condition: on-failure
+
+  kafka-schema-registry:
+    image: confluentinc/cp-schema-registry:5.1.2
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+      - kafka-1
+      - kafka-2
+      - kafka-3
+    networks:
+      - backend
+    ports:
+      - "8081:8081"
+      - "9587:9587"
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://kafka-1:19092,PLAINTEXT://kafka-2:29092,PLAINTEXT://kafka-3:39092
+      SCHEMA_REGISTRY_HOST_NAME: kafka-schema-registry
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+      JMX_PORT: 9587
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+  kafka-connect:
+    image: confluentinc/cp-kafka-connect:5.1.2
+    depends_on:
+      - kafka-schema-registry
+    networks:
+      - backend
+    ports:
+      - "8083:8083"
+      - "9588:9588"
+    volumes:
+      - kafka-connect-volume:/var/lib/kafka
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: kafka-1:19092,kafka-2:29092,kafka-3:39092
+      CONNECT_REST_ADVERTISED_HOST_NAME: "kafka-connect"
+      CONNECT_REST_PORT: 8083
+      CONNECT_GROUP_ID: "ethvm-kafka-connect"
+      CONNECT_STATUS_STORAGE_TOPIC: "ethvm-storage-topic"
+      CONNECT_CONFIG_STORAGE_TOPIC: "ethvm-storage-config"
+      CONNECT_OFFSET_STORAGE_TOPIC: "ethvm-storage-offsets"
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_OFFSET_COMMIT_INTERVAL_MS: 1000
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: http://kafka-schema-registry:8081
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://kafka-schema-registry:8081
+      CONNECT_KEY_CONVERTER: "io.confluent.connect.avro.AvroConverter"
+      CONNECT_VALUE_CONVERTER: "io.confluent.connect.avro.AvroConverter"
+      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_LOG4J_ROOT_LOGLEVEL: "INFO"
+      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,io.enkrypt.kafka.connect=INFO,org.web3j.protocol.websocket.WebSocketService=WARN"
+      CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/enkryptio
+      JMX_PORT: 9588
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+  # ///////////////////////////////////////////////////////
+  # Cluster Monitoring
+  # ///////////////////////////////////////////////////////
+
+  kafka-control-center:
+    image: confluentinc/cp-enterprise-control-center:5.1.2
+    networks:
+      - backend
+    ports:
+      - 9021:9021
+    depends_on:
+      - kafka-connect
+    volumes:
+      - control-center-volume:/var/lib/control-center/data
+      - control-center-config-volume:/var/lib/control-center/config
+    environment:
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: kafka-1:19092,kafka-2:29092,kafka-3:39092
+      CONTROL_CENTER_ZOOKEEPER_CONNECT: zookeeper-1:22181,zookeeper-2:32181,zookeeper-3:42181
+      CONTROL_CENTER_CONNECT_CLUSTER: http://kafka-connect:8083
+      CONTROL_CENTER_DATA_DIR: /var/lib/control-center/data
+      CONTROL_CENTER_CONFIG_DIR: /var/lib/control-center/config
+      CONTROL_CENTER_REPLICATION_FACTOR: 1
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+  lenses:
+    image: landoop/lenses:2.1
+    networks:
+      - backend
+    ports:
+      - 9991:9991
+    environment:
+      LICENSE_URL: "https://dl.lenses.stream/d/?id=25d23465-6f77-4158-a729-97a93b622956" #this is a test license
+      LENSES_PORT: 9991
+      LENSES_KAFKA_BROKERS: PLAINTEXT://kafka-1:19092,PLAINTEXT://kafka-2:29092,PLAINTEXT://kafka-3:39092
+      LENSES_ZOOKEEPER_HOSTS: |
+        [ { url:"zookeeper-1:22181", jmx:"zookeeper-1:29585" },
+          { url:"zookeeper-2:32181", jmx:"zookeeper-2:39585" },
+          { url:"zookeeper-3:42181", jmx:"zookeeper-3:49585" }
+        ]
+      LENSES_SCHEMA_REGISTRY_URLS: |
+        [ { url:"http://kafka-schema-registry:8081", jmx:"kafka-schema-registry:9587" } ]
+      LENSES_CONNECT_CLUSTERS: |
+        [
+          {
+            name:"ethvm",
+            urls: [ {url:"http://kafka-connect:8083", jmx:"kafka-connect:9588"} ],
+            statuses:"ethvm-storage-topic",
+            configs:"ethvm-storage-config",
+            offsets:"ethvm-storage-offsets"
+          }
+        ]
+      LENSES_SECURITY_MODE: BASIC
+      LENSES_SECURITY_GROUPS: |
+        [
+          { "name": "adminGroup", "roles": ["Admin"] },
+          { "name": "readGroup",  "roles": ["Read"] }
+        ]
+      LENSES_SECURITY_USERS: |
+        [
+          { "username": "admin", "password": "admin", "displayname": "Lenses Admin", "groups": ["adminGroup"] },
+          { "username": "read", "password": "read", "displayname": "Read Only", "groups": ["readGroup"] }
+        ]

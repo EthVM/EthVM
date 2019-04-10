@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-set -o errexit \
-    -o nounset
+set -o errexit
+set -o nounset
 
 if [ "${TRACE:-}" == "true" ]; then
-  set -o verbose \
-      -o xtrace
+  set -o verbose
+  set -o xtrace
 fi
 
 export SCRIPT_DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"

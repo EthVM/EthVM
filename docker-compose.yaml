@@ -13,7 +13,6 @@ networks:
 
 volumes:
 
-  mongodb-volume:
   timescale-volume:
 
   kafka-volume-1:
@@ -83,7 +82,7 @@ services:
     volumes:
       - ./apps/api:/var/www/api
     depends_on:
-      - mongodb
+      - timescale
     networks:
       - back
     labels:
@@ -120,18 +119,6 @@ services:
   # ///////////////////////////////////////////////////////
   # Storage
   # ///////////////////////////////////////////////////////
-
-  mongodb:
-    image: ethvm/mongodb:4.0.5.2
-    restart: unless-stopped
-    volumes:
-      - mongodb-volume:/data/db
-      - ./datasets:/datasets
-    networks:
-      - back
-    ports:
-      - 27017:27017
-    cpu_shares: 4000
 
   timescale:
     image: timescale/timescaledb:${TIMESCALE_VERSION}

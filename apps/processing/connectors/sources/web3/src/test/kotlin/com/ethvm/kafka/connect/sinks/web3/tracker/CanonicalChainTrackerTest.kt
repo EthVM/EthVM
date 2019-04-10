@@ -1,6 +1,7 @@
 package com.ethvm.kafka.connect.sinks.web3.tracker
 
 import arrow.core.None
+import com.ethvm.common.extensions.hexToBI
 import com.ethvm.common.extensions.toHex
 import com.ethvm.kafka.connect.sinks.web3.test.AbstractParity
 import com.ethvm.kafka.connect.sources.web3.tracker.CanonicalChainTracker
@@ -11,9 +12,14 @@ import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
+import io.reactivex.FlowableTransformer
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 import mu.KotlinLogging
+import org.reactivestreams.Publisher
+import org.reactivestreams.Subscriber
+import org.reactivestreams.Subscription
 import org.web3j.protocol.ObjectMapperFactory
 import org.web3j.protocol.Web3jService
 import org.web3j.protocol.core.Request
@@ -22,6 +28,8 @@ import org.web3j.protocol.core.methods.response.EthBlockNumber
 import org.web3j.protocol.websocket.events.NewHeadsNotification
 import java.math.BigInteger
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicReference
 
 class CanonicalChainTrackerTest : BehaviorSpec() {
 
@@ -29,18 +37,17 @@ class CanonicalChainTrackerTest : BehaviorSpec() {
 
     given("a canonical chain tracker") {
 
-      val tracker = CanonicalChainTracker(
-        FakeParity()
-      )
+      val tracker = CanonicalChainTracker(FakeParity(FakeParity.INTERVAL_PERIOD_OF_100))
 
-      `when`("we poll for the first range") {
+      `when`("we ask for the first range") {
 
-        Thread.sleep(1200)
+        @Suppress("BlockingMethodInNonBlockingContext")
+        Thread.sleep(1200) // Enough to produce a batch of 12 Heads approx
 
         val (range, reOrgs) = tracker.nextRange()
         tracker.stop()
 
-        then("we should return properly the next range [0 - 9]") {
+        then("it should return properly the range [0 - 9]") {
           range shouldNotBe None
           range.fold(
             { throw IllegalStateException("Invalid state!") },
@@ -56,12 +63,10 @@ class CanonicalChainTrackerTest : BehaviorSpec() {
   }
 }
 
-class FakeParity(private val newHeadsInterval: Long = FAKE_NEW_HEADS_INTERVAL_PERIOD) : AbstractParity() {
+class FakeParity(private val newHeadsInterval: Long = INTERVAL_PERIOD_OF_100) : AbstractParity() {
 
   private val mapper = ObjectMapperFactory.getObjectMapper()
   private val web3Service = mockk<Web3jService>()
-
-  private var bn: BigInteger = 0.toBigInteger()
 
   private val logger = KotlinLogging.logger {}
 
@@ -75,25 +80,23 @@ class FakeParity(private val newHeadsInterval: Long = FAKE_NEW_HEADS_INTERVAL_PE
   }
 
   override fun newHeadsNotifications(): Flowable<NewHeadsNotification> {
-    val subject = BehaviorSubject.create<NewHeadsNotification>()
+    val s: Subject<List<NewHeadsNotification>> = PublishSubject.create()
 
-    val subscription = newHeadsFlowable()
-      .subscribeOn(Schedulers.computation())
-      .subscribe { subject.onNext(it) }
+    val headsSub = Flowable.interval(newHeadsInterval, TimeUnit.MILLISECONDS)
+      .subscribeOn(Schedulers.single())
+      .map { newHead(it.toBigInteger()) }
+      .compose(FakeReOrgTransformer<NewHeadsNotification>())
+      .subscribe { s.onNext(it) }
 
-    return subject
-      .doOnDispose { subscription.dispose() }
+    return s
+      .doOnDispose { headsSub.dispose() }
+      .flatMapIterable { it }
+      .doOnNext { logger.debug { "New head notification: ${it.params.result.number.hexToBI()}" } }
       .toFlowable(BackpressureStrategy.BUFFER)
   }
 
   override fun ethBlockNumber(): Request<*, EthBlockNumber> =
     Request("eth_blockNumber", emptyList<String>(), web3Service, EthBlockNumber::class.java)
-
-  private fun newHeadsFlowable(): Flowable<NewHeadsNotification> =
-    Flowable.interval(newHeadsInterval, TimeUnit.MILLISECONDS)
-      .doOnNext { logger.debug { "Emitting fake head notification: $it" } }
-      .map { newHead(bn) }
-      .doOnNext { bn = bn.inc() }
 
   private fun newHead(number: BigInteger): NewHeadsNotification {
     val raw = """
@@ -126,6 +129,74 @@ class FakeParity(private val newHeadsInterval: Long = FAKE_NEW_HEADS_INTERVAL_PE
   }
 
   companion object {
-    const val FAKE_NEW_HEADS_INTERVAL_PERIOD = 100L
+    const val INTERVAL_PERIOD_OF_100 = 100L
+  }
+}
+
+private class FakeReOrgTransformer<T>(
+  private val each: Int = 8,
+  private val take: Int = 2
+) : FlowableTransformer<T, List<T>> {
+
+  override fun apply(upstream: Flowable<T>): Publisher<List<T>> = Publisher { s -> upstream.subscribe(ReOrgSubscriber(s)) }
+
+  internal inner class ReOrgSubscriber<T>(
+    private val subscriber: Subscriber<in List<T>>
+  ) : Subscriber<T> {
+
+    private val wip = AtomicInteger(0)
+
+    @Volatile
+    private var subscription: Subscription? = null
+
+    private val buffer = AtomicReference<MutableList<T>>()
+
+    private val logger = KotlinLogging.logger {}
+
+    override fun onSubscribe(s: Subscription) {
+      subscription = s
+      reset()
+      s.request(each.toLong())
+      wip.addAndGet(each)
+    }
+
+    override fun onNext(t: T) {
+      if (wip.decrementAndGet() == 0) {
+        subscription!!.request(each.toLong())
+        wip.addAndGet(each)
+      }
+
+      buffer.get().add(t)
+
+      synchronized(subscriber) {
+        if (buffer.get().size == each) {
+          logger.debug { "Reorg triggered!" }
+
+          val heads = ArrayList(buffer.get())
+          reset()
+
+          val reorg = heads.subList(heads.size - take, heads.size)
+          heads.addAll(reorg)
+
+          subscriber.onNext(heads)
+        }
+      }
+    }
+
+    override fun onError(t: Throwable) {
+      synchronized(subscriber) {
+        subscriber.onError(t)
+      }
+    }
+
+    override fun onComplete() {
+      synchronized(subscriber) {
+        subscriber.onComplete()
+      }
+    }
+
+    private fun reset() {
+      buffer.set(ArrayList())
+    }
   }
 }

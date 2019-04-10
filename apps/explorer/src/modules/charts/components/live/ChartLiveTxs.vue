@@ -214,8 +214,7 @@ export default class ChartLiveTxs extends Vue {
         xAxes: [
           {
             stacked: false,
-            display: false,
-            categoryPercentage: 0.7
+            display: false
           }
         ]
       }
