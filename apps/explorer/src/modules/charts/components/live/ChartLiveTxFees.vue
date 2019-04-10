@@ -199,12 +199,12 @@ export default class ChartLiveTxFees extends Vue {
     return [
       {
         color: 'txSuccess',
-        text: this.$i18n.tc('tx.fee', 2) + ' (' + this.$t('common.eth') + ')',
+        text: `${this.$i18n.tc('tx.fee', 2)} (${this.$t('common.eth')})`,
         icon: 'fa fa-circle'
       },
       {
         color: 'txPen',
-        text: this.$i18n.t('gas.price') + ' (' + this.$t('common.gwei') + ')',
+        text: `${this.$i18n.t('gas.price')} (${this.$t('common.gwei')})`,
         icon: 'fa fa-circle'
       }
     ]

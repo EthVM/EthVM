@@ -2,19 +2,19 @@
   <v-container pa-0 ma-0>
     <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
       <v-flex xs3 sm2 order-xs1>
-        <router-link class="black--text pb-1" :to="'/block/' + uncle.getBlockHeight()">{{ uncle.getBlockHeight() }}</router-link>
+        <router-link class="black--text pb-1" :to="`/block/${uncle.getBlockHeight()}`">{{ uncle.getBlockHeight() }}</router-link>
       </v-flex>
       <v-flex xs3 sm2 order-xs1>
-        <router-link class="black--text pb-1" :to="'/uncle/' + uncle.getHash()">{{ uncle.getNumber() }}</router-link>
+        <router-link class="black--text pb-1" :to="`/uncle/${uncle.getHash()}`">{{ uncle.getNumber() }}</router-link>
       </v-flex>
       <v-flex xs12 sm5 md5 order-xs3 order-sm2>
         <v-layout row pl-2 pt-2 pr-3 pb-0>
           <p class="info--text psmall pr-2">{{ $t('common.hash') }}:</p>
-          <app-hash-concat :hash="uncle.getHash()" :link="'/uncle/' + uncle.getHash()" />
+          <app-hash-concat :hash="uncle.getHash()" :link="`/uncle/${uncle.getHash()}`" />
         </v-layout>
         <v-layout row pl-2 pt-2 pr-3 pb-2>
           <p class="info--text psmall pr-2">{{ $tc('miner.name', 1) }}:</p>
-          <app-hash-concat :hash="uncle.getMiner().toString()" :link="'/address/' + uncle.getMiner().toString()" />
+          <app-hash-concat :hash="uncle.getMiner().toString()" :link="`/address/${uncle.getMiner().toString()}`" />
         </v-layout>
       </v-flex>
       <v-flex hidden-sm-and-down md1 order-xs4 order-sm3>

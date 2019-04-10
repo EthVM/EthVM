@@ -154,7 +154,7 @@ export default class PageDetailsUncle extends Vue {
         {
           title: this.$i18n.t('uncle.included'),
           detail: this.uncle.getBlockHeight(),
-          link: '/block/' + this.uncle.getBlockHeight()
+          link: `/block/${this.uncle.getBlockHeight()}`
         },
         {
           title: this.$i18n.t('common.hash'),
@@ -170,7 +170,7 @@ export default class PageDetailsUncle extends Vue {
         {
           title: this.$i18n.tc('miner.name', 1),
           detail: this.uncle.getMiner().toString(),
-          link: '/address/' + this.uncle.getMiner().toString(),
+          link: `/address/${this.uncle.getMiner().toString()}`,
           copy: true,
           mono: true
         },

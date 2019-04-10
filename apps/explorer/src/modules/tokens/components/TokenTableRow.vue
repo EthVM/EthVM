@@ -91,7 +91,7 @@ export default class TokenTableRow extends Mixins(StringConcatMixin) {
   }
 
   get tokenPriceChange(): string {
-    return this.changeInPrice != 'null' ? this.changeInPrice + this.getPercent(this.token.priceChangePercentage24h) : '0'
+    return this.changeInPrice != 'null' ? `${this.changeInPrice}${this.getPercent(this.token.priceChangePercentage24h)}` : '0'
   }
 
   get volume(): string {

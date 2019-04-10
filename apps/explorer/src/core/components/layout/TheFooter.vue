@@ -49,7 +49,7 @@
             </v-flex>
           </v-layout>
           <v-layout row wrap justify-start>
-            <v-btn outline color="secondary" class="text-lowercase font-weight-regular donation-btn" :to="'/address/' + ethAddr">
+            <v-btn outline color="secondary" class="text-lowercase font-weight-regular donation-btn" :to="`/address/${ethAddr}`">
               <v-icon class="secondary--text fab fa-ethereum pr-2" />
               {{ $t('common.eth') }} - {{ $t('footer.ens') }}
             </v-btn>
