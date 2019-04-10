@@ -11,6 +11,6 @@ import { Global, Module } from '@nestjs/common'
 @Global()
 @Module({
   providers: [ConfigService, DurationService, EthService, ParseHashPipe, ParseAddressPipe, ParseLimitPipe, ParsePagePipe, VmEngineService],
-  exports: [ConfigService, DurationService, EthService, ParseHashPipe, ParseAddressPipe, ParseLimitPipe, ParsePagePipe, VmEngineService]
+  exports: [ConfigService, DurationService, EthService, ParseHashPipe, ParseAddressPipe, ParseLimitPipe, ParsePagePipe, VmEngineService],
 })
 export class SharedModule {}

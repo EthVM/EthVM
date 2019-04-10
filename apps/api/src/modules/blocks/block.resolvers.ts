@@ -34,7 +34,7 @@ export class BlockResolvers {
   async minedBlocksByAddress(
     @Args('address', ParseAddressPipe) address: string,
     @Args('limit', ParseLimitPipe) limit?: number,
-    @Args('page', ParsePagePipe) page?: number
+    @Args('page', ParsePagePipe) page?: number,
   ) {
     const entities = await this.blockService.findMinedBlocksByAddress(address, limit, page)
     return entities.map(e => new BlockDto(e))
@@ -59,7 +59,7 @@ export class BlockResolvers {
 
         return new BlockDto(value)
       },
-      subscribe: () => this.pubSub.asyncIterator('blocks')
+      subscribe: () => this.pubSub.asyncIterator('blocks'),
     }
   }
 }

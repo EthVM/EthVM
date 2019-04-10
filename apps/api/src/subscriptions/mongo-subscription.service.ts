@@ -20,7 +20,7 @@ export class MongoSubscriptionService {
   constructor(
     @Inject('PUB_SUB') private readonly pubSub: PubSub,
     @Inject('winston') private readonly logger: Logger,
-    @InjectRepository(ProcessingMetadataEntity) private readonly processingMetadataRepository: MongoRepository<ProcessingMetadataEntity>
+    @InjectRepository(ProcessingMetadataEntity) private readonly processingMetadataRepository: MongoRepository<ProcessingMetadataEntity>,
   ) {
     this.initialize()
   }
@@ -149,7 +149,7 @@ class ChangeStreamReader {
     private readonly collectionName: string,
     private readonly pubSub: PubSub,
     private readonly logger: Logger,
-    private readonly triggerName?: string
+    private readonly triggerName?: string,
   ) {}
 
   public start() {
@@ -181,7 +181,7 @@ class ChangeStreamReader {
           const event: StreamingEvent = {
             op: operationType,
             key: documentKey._id,
-            value: fullDocument
+            value: fullDocument,
           }
           const trigger = triggerName || collectionName
           await pubSub.publish(trigger, event)

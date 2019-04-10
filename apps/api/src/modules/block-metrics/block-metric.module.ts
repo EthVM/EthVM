@@ -8,6 +8,6 @@ import { SubscriptionsModule } from '@app/subscriptions/subscriptions.module'
 @Module({
   imports: [TypeOrmModule.forFeature([BlockMetricEntity]), SubscriptionsModule],
   providers: [BlockMetricService, BlockMetricResolvers],
-  exports: []
+  exports: [],
 })
 export class BlockMetricModule {}
