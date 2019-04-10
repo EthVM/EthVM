@@ -8,7 +8,7 @@ export class AccountMetadataResolvers {
   constructor(private readonly accountMetadataService: AccountMetadataService) {}
 
   @Query()
-  async accountMetadataByHash(@Args('hash', ParseAddressPipe) hash: string) {
+  async accountMetadataByHash(@Args('hash', ParseAddressPipe) hash: string): Promise<AccountMetadataDto | null> {
     const entity = await this.accountMetadataService.findAccountMetadataByHash(hash)
     return entity ? new AccountMetadataDto(entity) : null
   }

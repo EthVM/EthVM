@@ -12,13 +12,13 @@ export class BlockMetricResolvers {
   constructor(private readonly blockMetricService: BlockMetricService, @Inject('PUB_SUB') private pubSub: PubSub) {}
 
   @Query()
-  async blockMetricByHash(@Args('hash', ParseHashPipe) hash: string) {
+  async blockMetricByHash(@Args('hash', ParseHashPipe) hash: string): Promise<BlockMetricDto | null> {
     const entity = await this.blockMetricService.findBlockMetricByHash(hash)
     return entity ? new BlockMetricDto(entity) : null
   }
 
   @Query()
-  async blockMetrics(@Args('limit', ParseLimitPipe) limit: number, @Args('page', ParsePagePipe) page: number) {
+  async blockMetrics(@Args('limit', ParseLimitPipe) limit?: number, @Args('page', ParsePagePipe) page?: number): Promise<BlockMetricDto[]> {
     const entities = await this.blockMetricService.findBlockMetrics(limit, page)
     return entities.map(e => new BlockMetricDto(e))
   }

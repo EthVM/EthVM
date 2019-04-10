@@ -67,7 +67,7 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@nestjs/testing": "~5.7.3",
+    "@nestjs/testing": "^6.0.5",
     "@types/express": "~4.16.1",
     "@types/jest": "~24.0.9",
     "@types/node": "~11.10.5",

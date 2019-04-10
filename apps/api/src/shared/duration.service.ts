@@ -22,20 +22,20 @@ export class DurationService {
 
     let from: Date
     switch (duration) {
-      case 'ALL':
+      case Duration.ALL:
         from = new Date(1970, 0, 1) // Far away date, we support different networks
         break
-      case 'YEAR':
+      case Duration.YEAR:
         from = new Date(to.getFullYear(), 0, 1)
         break
-      case 'MONTH':
+      case Duration.MONTH:
         from = new Date(to.getFullYear(), to.getMonth())
         break
-      case 'WEEK':
+      case Duration.WEEK:
         from = new Date()
         from.setDate(to.getDate() - 7)
         break
-      case 'DAY':
+      case Duration.DAY:
         from = new Date()
         break
       default:
