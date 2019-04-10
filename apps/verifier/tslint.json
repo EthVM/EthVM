@@ -5,7 +5,7 @@
   ],
   "rulesDirectory": ["tslint-consistent-codestyle"],
   "rules": {
-    "no-console": [true, "log"],
+    "no-console": [false, "log"],
     "no-duplicate-imports": true,
     "no-duplicate-variable": true,
     "no-var-keyword": true,
@@ -18,7 +18,7 @@
     "no-unnecessary-else": ["error", {
       "allowElseIf": true
     }],
-    "no-submodule-imports": [true, "@app", "web3-provider-engine", "merkle-patricia-tree","jayson"],
+    "no-submodule-imports": [true,"@app","rxjs","typeorm","web3-provider-engine", "merkle-patricia-tree","jayson"],
     "radix": false,
     "no-unused-expression": false,
     "max-classes-per-file": false,

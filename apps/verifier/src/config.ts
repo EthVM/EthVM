@@ -1,4 +1,6 @@
 import convict from 'convict'
+import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions'
+import { EtherBalanceView } from './db/entities/ether-balance.view'
 
 const schema = {
   kafka: {
@@ -13,12 +15,40 @@ const schema = {
       env: 'KAFKA_REGISTRY_URL'
     }
   },
-
-  mongo: {
-    url: {
-      doc: 'Mongo connection uri',
-      default: 'mongodb://mongodb:27017/ethvm_local?w=1&journal=true&maxIdleTimeMS=60000',
-      env: 'MONGO_URI'
+  postgres: {
+    host: {
+      doc: 'Host to connect to',
+      default: 'timescale',
+      env: 'POSTGRES_HOST'
+    },
+    port: {
+      doc: 'Port to connect to',
+      format: 'port',
+      default: 5432,
+      env: 'POSTGRES_PORT'
+    },
+    username: {
+      doc: 'Username to connect with',
+      default: 'postgres',
+      env: 'POSTGRES_USER'
+    },
+    password: {
+      doc: 'Password to connect with',
+      default: '1234',
+      sensitive: true,
+      env: 'POSTGRES_PASSWORD'
+    },
+    database: {
+      doc: 'Database to connect to',
+      default: 'ethvm_dev',
+      env: 'POSTGRES_DATABASE'
+    }
+  },
+  web3: {
+    wsUrl: {
+      doc: 'Websocket url',
+      default: 'ws://localhost:8546',
+      env: 'WEB3_WS_URL'
     }
   }
 }
@@ -28,8 +58,8 @@ export interface KafkaConfig {
   schemaRegistryUrl: string
 }
 
-export interface MongoConfig {
-  url: string
+export interface Web3Config {
+  wsUrl: string
 }
 
 export class Config {
@@ -39,7 +69,7 @@ export class Config {
     this.config = convict(schema)
   }
 
-  load(overrides: any) {
+  public load(overrides: any) {
     const { config } = this
     config.load(overrides)
     config.validate({ allowed: 'strict' })
@@ -49,7 +79,17 @@ export class Config {
     return this.config.get('kafka')
   }
 
-  get mongo(): MongoConfig {
-    return this.config.get('mongo')
+  get postgres(): PostgresConnectionOptions {
+    const postgres = this.config.get('postgres') as PostgresConnectionOptions
+    return {
+      ...postgres,
+      type: 'postgres',
+      entities: [EtherBalanceView],
+      synchronize: false
+    }
+  }
+
+  get web3(): Web3Config {
+    return this.config.get('web3')
   }
 }

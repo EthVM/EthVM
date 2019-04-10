@@ -19,9 +19,8 @@ class ParityTracesSource(
 
   override val partitionKey: Map<String, Any> = mapOf("model" to "trace")
 
-  override fun fetchRange(range: LongRange): List<SourceRecord> {
-
-    return range
+  override fun fetchRange(range: LongRange): List<SourceRecord> =
+    range
       .map { blockNumber ->
 
         val blockNumberBI = blockNumber.toBigInteger()
@@ -62,9 +61,27 @@ class ParityTracesSource(
         // wait for everything to complete
         future.join()
       }
-  }
 
-  override fun tombstonesForRange(range: LongRange): List<SourceRecord> {
-    TODO("not implemented")
-  }
+  override fun tombstonesForRange(range: LongRange): List<SourceRecord> =
+    range
+      .map { blockNumber ->
+        val blockNumberBI = blockNumber.toBigInteger()
+        val partitionOffset = mapOf("blockNumber" to blockNumber)
+
+        val traceKeyRecord = CanonicalKeyRecord.newBuilder()
+          .setNumberBI(blockNumberBI)
+          .build()
+
+        val traceKeySchemaAndValue = AvroToConnect.toConnectData(traceKeyRecord)
+
+        SourceRecord(
+          partitionKey,
+          partitionOffset,
+          tracesTopic,
+          traceKeySchemaAndValue.schema(),
+          traceKeySchemaAndValue.value(),
+          AvroToConnect.toConnectSchema(TraceListRecord.`SCHEMA$`),
+          null
+        )
+      }
 }

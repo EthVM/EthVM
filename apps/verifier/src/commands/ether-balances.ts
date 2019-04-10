@@ -1,32 +1,54 @@
 import { Config } from '@app/config'
-import { KafkaConnector } from '@app/connectors/kafka-connector'
-import { bufferTime, filter } from 'rxjs/operators'
+import { ConnectionFactory } from '@app/db'
+import { EtherBalanceView } from '@app/db/entities/ether-balance.view'
+import { Connection } from 'typeorm'
+import Web3 from 'web3'
+import { WebsocketProvider } from 'web3-providers'
 
 export async function EtherBalances(config: Config) {
-  const connector = new KafkaConnector(config)
+  const web3 = new Web3(new WebsocketProvider(config.web3.wsUrl))
+  const connection = await ConnectionFactory(config)
 
-  let expectedNumber = 0
+  let offset = 0
+  const limit = 200
+  let [balances, count] = [[], 0]
 
-  connector
-    .etherBalances$()
-    .pipe(
-      bufferTime(100),
-      filter(blocks => !!blocks.length)
-    )
-    .subscribe(
-      balances => {
+  let success = 0
+  let failed = 0
 
-        balances.forEach(pair => {
+  do {
+    ;[balances, count] = await fetchBalances(connection, offset, limit)
 
-          const { address } = pair.first;
-          const { amount } = pair.second;
+    const comparisons = balances.map(async actual => {
+      const { address, amount } = actual
+      const expected = await web3.eth.getBalance(actual.address)
 
-          console.log(address, amount);
+      if (expected === amount) {
+        success += 1
+      } else {
+        failed += 1
+        console.error('Balance mismatch', address, expected, amount)
+      }
 
-        });
+      return expected
+    })
 
-      },
-      err => console.error('Error', err),
-      () => console.log('Finished')
-    )
+    await Promise.all(comparisons)
+
+    offset += limit
+
+    console.log(`Success = ${success}, failed = ${failed}`)
+  } while (offset < count)
+
+  process.exit(0)
+}
+
+async function fetchBalances(connection: Connection, offset: number = 0, limit: number = 20): Promise<[EtherBalanceView[], number]> {
+  return connection
+    .getRepository(EtherBalanceView)
+    .createQueryBuilder('balance')
+    .orderBy('amount', 'DESC')
+    .skip(offset)
+    .take(limit)
+    .getManyAndCount()
 }

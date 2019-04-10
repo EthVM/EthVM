@@ -5,8 +5,8 @@ import com.ethvm.avro.capture.TransactionReceiptListRecord
 import com.ethvm.avro.capture.TransactionReceiptRecord
 import com.ethvm.common.extensions.setNumberBI
 import com.ethvm.kafka.connect.sources.web3.ext.JsonRpc2_0ParityExtended
-import com.ethvm.kafka.connect.sources.web3.utils.AvroToConnect
 import com.ethvm.kafka.connect.sources.web3.ext.toTransactionReceiptRecord
+import com.ethvm.kafka.connect.sources.web3.utils.AvroToConnect
 import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTaskContext
 import org.web3j.protocol.core.DefaultBlockParameter
@@ -19,9 +19,8 @@ class ParityReceiptsSource(
 
   override val partitionKey: Map<String, Any> = mapOf("model" to "receipt")
 
-  override fun fetchRange(range: LongRange): List<SourceRecord> {
-
-    return range
+  override fun fetchRange(range: LongRange): List<SourceRecord> =
+    range
       .map { blockNumber ->
 
         val blockNumberBI = blockNumber.toBigInteger()
@@ -61,9 +60,29 @@ class ParityReceiptsSource(
         // wait for everything to complete
         future.join()
       }
-  }
 
-  override fun tombstonesForRange(range: LongRange): List<SourceRecord> {
-    TODO("not implemented")
-  }
+  override fun tombstonesForRange(range: LongRange): List<SourceRecord> =
+    range
+      .map { blockNumber ->
+
+        val blockNumberBI = blockNumber.toBigInteger()
+        val partitionOffset = mapOf("blockNumber" to blockNumber)
+
+        val receiptKeyRecord = CanonicalKeyRecord
+          .newBuilder()
+          .setNumberBI(blockNumberBI)
+          .build()
+
+        val receiptKeySchemaAndValue = AvroToConnect.toConnectData(receiptKeyRecord)
+
+        SourceRecord(
+          partitionKey,
+          partitionOffset,
+          receiptsTopic,
+          receiptKeySchemaAndValue.schema(),
+          receiptKeySchemaAndValue.value(),
+          AvroToConnect.toConnectSchema(TransactionReceiptListRecord.`SCHEMA$`),
+          null
+        )
+      }
 }

@@ -44,6 +44,7 @@ abstract class AbstractParityEntitySource(
 
     val (range, reOrgs) = chainTracker.nextRange(batchSize)
 
+    // Returns tomstones + range
     return range.fold({ emptyList() }, { fetchRange(it) })
   }
 
