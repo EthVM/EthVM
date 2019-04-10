@@ -32,24 +32,16 @@ const schema = {
   },
   db: {
     url: {
-      doc: 'Mongo url',
-      env: 'MONGO_URL',
-      default: 'mongodb',
-      sensitive: true,
-    },
+      doc: 'Timescale connection URL',
+      env: 'TIMESCALE_URL',
+      default: 'postgres://postgres:1234@timescale/ethvm_dev',
+    }
   },
   graphql: {
     playground: {
       doc: 'Whether to enable to disable the graphql playground',
       env: 'GRAPHQL_PLAYGROUND',
       default: true,
-    },
-  },
-  mongodb: {
-    url: {
-      doc: 'MongoDB connection URL',
-      env: 'MONGO_URL',
-      default: 'mongodb://mongodb:27017/ethvm_local',
     },
   },
   coinGecko: {
@@ -100,10 +92,6 @@ export interface GraphqlConfig {
   playground: boolean
 }
 
-export interface MongoDbConfig {
-  url: string
-}
-
 export interface CoinGeckoConfig {
   url: string
 }
@@ -121,6 +109,10 @@ export interface VmEngineConfig {
 export interface ExpressRateLimitConfig {
   windowMs: number
   max: number
+}
+
+export interface DbConfig {
+  url: string
 }
 
 @Injectable()
@@ -156,8 +148,8 @@ export class ConfigService {
     return this.config.get('graphql')
   }
 
-  get mongoDb(): MongoDbConfig {
-    return this.config.get('mongodb')
+  get db(): DbConfig {
+    return this.config.get('db')
   }
 
   get coinGecko(): CoinGeckoConfig {
