@@ -35,16 +35,16 @@ const hashNine = '0x000000000000000000000000000000000000000000000000000000000000
 const hashTen = '0x00000000000000000000000000000000000000000000000000000000000000010'
 
 const tokenTransfers = [
-  {id: {hash: hashOne}, contract: addressOne, from: holderOne, to: holderTwo},
-  {id: {hash: hashTwo}, contract: addressOne, from: holderOne, to: holderTwo},
-  {id: {hash: hashThree}, contract: addressTwo, from: holderOne, to: holderTwo},
-  {id: {hash: hashFour}, contract: addressOne, from: holderOne, to: holderTwo},
-  {id: {hash: hashFive}, contract: addressTwo, from: holderOne, to: holderTwo},
-  {id: {hash: hashSix}, contract: addressOne, from: holderThree, to: holderFour},
-  {id: {hash: hashSeven}, contract: addressTwo, from: holderThree, to: holderFour},
-  {id: {hash: hashEight}, contract: addressOne, from: holderThree, to: holderFour},
-  {id: {hash: hashNine}, contract: addressTwo, from: holderThree, to: holderFour},
-  {id: {hash: hashTen}, contract: addressOne, from: holderThree, to: holderFour}
+  { id: { hash: hashOne }, contract: addressOne, from: holderOne, to: holderTwo },
+  { id: { hash: hashTwo }, contract: addressOne, from: holderOne, to: holderTwo },
+  { id: { hash: hashThree }, contract: addressTwo, from: holderOne, to: holderTwo },
+  { id: { hash: hashFour }, contract: addressOne, from: holderOne, to: holderTwo },
+  { id: { hash: hashFive }, contract: addressTwo, from: holderOne, to: holderTwo },
+  { id: { hash: hashSix }, contract: addressOne, from: holderThree, to: holderFour },
+  { id: { hash: hashSeven }, contract: addressTwo, from: holderThree, to: holderFour },
+  { id: { hash: hashEight }, contract: addressOne, from: holderThree, to: holderFour },
+  { id: { hash: hashNine }, contract: addressTwo, from: holderThree, to: holderFour },
+  { id: { hash: hashTen }, contract: addressOne, from: holderThree, to: holderFour }
 ]
 
 const tokenHashOne = '0000000000000000000000000000000000000001'
@@ -53,20 +53,14 @@ const transactionHashTwo = '0x00000000000000000000000000000000000000000000000000
 const transactionHashThree = '0x0000000000000000000000000000000000000000000000000000000000000003'
 
 const ethplorerTokenOperations = [
-  {transactionHash: transactionHashOne, tokenInfo: {address: addressOne, owner: holderOne}},
-  {transactionHash: transactionHashTwo, tokenInfo: {address: addressTwo, owner: holderOne}},
-  {transactionHash: transactionHashThree, tokenInfo: {address: addressOne, owner: holderTwo}}
+  { transactionHash: transactionHashOne, tokenInfo: { address: addressOne, owner: holderOne } },
+  { transactionHash: transactionHashTwo, tokenInfo: { address: addressTwo, owner: holderOne } },
+  { transactionHash: transactionHashThree, tokenInfo: { address: addressOne, owner: holderTwo } }
 ]
 
-const ethplorerTokenHolders = [
-  {address: addressOne},
-  {address: addressTwo},
-  {address: addressOne}
-]
+const ethplorerTokenHolders = [{ address: addressOne }, { address: addressTwo }, { address: addressOne }]
 
-const ethplorerHolderInfo = [
-  {address: addressOne, holder: holderOne}
-]
+const ethplorerHolderInfo = [{ address: addressOne, holder: holderOne }]
 
 const mockService = {
   async findAddressTokenTransfers(address, take = 10, page = 0) {
@@ -89,7 +83,7 @@ const mockService = {
         transfersByHolder = transfersForAddress.filter(t => t.to === holder)
         break
       default:
-        transfersByHolder = transfersForAddress.filter(t => (t.from === holder || t.to === holder))
+        transfersByHolder = transfersForAddress.filter(t => t.from === holder || t.to === holder)
     }
     const items = transfersByHolder.slice(start, end)
     return items.map(i => new TokenTransferEntity(i))
@@ -110,13 +104,11 @@ const mockService = {
     const items = ethplorerTokenOperations.filter(e => e.tokenInfo.address === address && e.tokenInfo.owner === holderAddress)
     return items.map(i => new EthplorerTokenOperationDto(i))
   },
-  async findAddressAllTokensOwned(address) {
-  }
+  async findAddressAllTokensOwned(address) {}
 }
 
 const mockVmEngine = {
-  async fetchAddressAmountTokensOwned(address) {
-  }
+  async fetchAddressAmountTokensOwned(address) {}
 }
 
 describe('TokenTransferResolvers', () => {
@@ -145,19 +137,18 @@ describe('TokenTransferResolvers', () => {
   })
 
   describe('addressTokenTransfers', () => {
-
     it('should return an array of TokenTransferDto instances with contract matching the address provided', async () => {
       const transfersByAddressOne = await tokenTransferResolvers.addressTokenTransfers(addressOne)
       const transfersByAddressTwo = await tokenTransferResolvers.addressTokenTransfers(addressTwo)
 
       expect(transfersByAddressOne).toHaveLength(6)
       expect(transfersByAddressOne[0]).toBeInstanceOf(TokenTransferDto)
-      expect(transfersByAddressOne[0]).toHaveProperty('id', {hash: hashOne})
+      expect(transfersByAddressOne[0]).toHaveProperty('id', { hash: hashOne })
       expect(transfersByAddressOne[0]).toHaveProperty('contract', addressOne)
 
       expect(transfersByAddressTwo).toHaveLength(4)
       expect(transfersByAddressTwo[0]).toBeInstanceOf(TokenTransferDto)
-      expect(transfersByAddressTwo[0]).toHaveProperty('id', {hash: hashThree})
+      expect(transfersByAddressTwo[0]).toHaveProperty('id', { hash: hashThree })
       expect(transfersByAddressTwo[0]).toHaveProperty('contract', addressTwo)
 
       expect(transfersByAddressOne).not.toEqual(transfersByAddressTwo)
@@ -166,13 +157,13 @@ describe('TokenTransferResolvers', () => {
     it('should respect given limit and page parameters', async () => {
       const transfersOne = await tokenTransferResolvers.addressTokenTransfers(addressOne, 2, 0)
       expect(transfersOne).toHaveLength(2)
-      expect(transfersOne[0]).toHaveProperty('id', {hash: hashOne})
-      expect(transfersOne[1]).toHaveProperty('id', {hash: hashTwo})
+      expect(transfersOne[0]).toHaveProperty('id', { hash: hashOne })
+      expect(transfersOne[1]).toHaveProperty('id', { hash: hashTwo })
 
       const transfersTwo = await tokenTransferResolvers.addressTokenTransfers(addressOne, 2, 1)
       expect(transfersTwo).toHaveLength(2)
-      expect(transfersTwo[0]).toHaveProperty('id', {hash: hashFour})
-      expect(transfersTwo[1]).toHaveProperty('id', {hash: hashSix})
+      expect(transfersTwo[0]).toHaveProperty('id', { hash: hashFour })
+      expect(transfersTwo[1]).toHaveProperty('id', { hash: hashSix })
 
       // Check an empty array is returned if no items available for requested page
       const transfersThree = await tokenTransferResolvers.addressTokenTransfers(addressThree, 10, 1)
@@ -182,30 +173,29 @@ describe('TokenTransferResolvers', () => {
     it('should convert an array of TokenTransferEntity instances to an array of TokenTransferDto instances', async () => {
       const tokenTransfers = await tokenTransferResolvers.addressTokenTransfers(addressOne)
       const expected = [
-        new TokenTransferDto({id: {hash: hashOne}, contract: addressOne, from: holderOne, to: holderTwo}),
-        new TokenTransferDto({id: {hash: hashTwo}, contract: addressOne, from: holderOne, to: holderTwo}),
-        new TokenTransferDto({id: {hash: hashFour}, contract: addressOne, from: holderOne, to: holderTwo},),
-        new TokenTransferDto({id: {hash: hashSix}, contract: addressOne, from: holderThree, to: holderFour},)
+        new TokenTransferDto({ id: { hash: hashOne }, contract: addressOne, from: holderOne, to: holderTwo }),
+        new TokenTransferDto({ id: { hash: hashTwo }, contract: addressOne, from: holderOne, to: holderTwo }),
+        new TokenTransferDto({ id: { hash: hashFour }, contract: addressOne, from: holderOne, to: holderTwo }),
+        new TokenTransferDto({ id: { hash: hashSix }, contract: addressOne, from: holderThree, to: holderFour })
       ]
       expect(tokenTransfers).toEqual(expect.arrayContaining(expected))
     })
   })
 
   describe('addressTokenTransfersByHolder', () => {
-
     it('should return an array of TokenTransferDto instances with contract matching the address and holder provided', async () => {
       const transfersByAddressOne = await tokenTransferResolvers.addressTokenTransfersByHolder(addressOne, holderOne)
       const transfersByAddressTwo = await tokenTransferResolvers.addressTokenTransfersByHolder(addressTwo, holderTwo)
 
       expect(transfersByAddressOne).toHaveLength(3)
       expect(transfersByAddressOne[0]).toBeInstanceOf(TokenTransferDto)
-      expect(transfersByAddressOne[0]).toHaveProperty('id', {hash: hashOne})
+      expect(transfersByAddressOne[0]).toHaveProperty('id', { hash: hashOne })
       expect(transfersByAddressOne[0]).toHaveProperty('contract', addressOne)
       expect(transfersByAddressOne[0]).toHaveProperty('from', holderOne)
 
       expect(transfersByAddressTwo).toHaveLength(2)
       expect(transfersByAddressTwo[0]).toBeInstanceOf(TokenTransferDto)
-      expect(transfersByAddressTwo[0]).toHaveProperty('id', {hash: hashThree})
+      expect(transfersByAddressTwo[0]).toHaveProperty('id', { hash: hashThree })
       expect(transfersByAddressTwo[0]).toHaveProperty('contract', addressTwo)
       expect(transfersByAddressTwo[0]).toHaveProperty('to', holderTwo)
 
@@ -215,12 +205,12 @@ describe('TokenTransferResolvers', () => {
     it('should respect given limit and page parameters', async () => {
       const transfersOne = await tokenTransferResolvers.addressTokenTransfersByHolder(addressOne, holderOne, 'all', 2, 0)
       expect(transfersOne).toHaveLength(2)
-      expect(transfersOne[0]).toHaveProperty('id', {hash: hashOne})
-      expect(transfersOne[1]).toHaveProperty('id', {hash: hashTwo})
+      expect(transfersOne[0]).toHaveProperty('id', { hash: hashOne })
+      expect(transfersOne[1]).toHaveProperty('id', { hash: hashTwo })
 
       const transfersTwo = await tokenTransferResolvers.addressTokenTransfersByHolder(addressOne, holderOne, 'all', 2, 1)
       expect(transfersTwo).toHaveLength(1)
-      expect(transfersTwo[0]).toHaveProperty('id', {hash: hashFour})
+      expect(transfersTwo[0]).toHaveProperty('id', { hash: hashFour })
 
       // Check an empty array is returned if no items available for requested page
       const transfersThree = await tokenTransferResolvers.addressTokenTransfersByHolder(addressThree, holderThree, 'all', 10, 1)
@@ -230,15 +220,14 @@ describe('TokenTransferResolvers', () => {
     it('should convert an array of TokenTransferEntity instances to an array of TokenTransferDto instances', async () => {
       const tokenTransfers = await tokenTransferResolvers.addressTokenTransfersByHolder(addressOne, holderOne)
       const expected = [
-        new TokenTransferDto({id: {hash: hashOne}, contract: addressOne, from: holderOne, to: holderTwo}),
-        new TokenTransferDto({id: {hash: hashTwo}, contract: addressOne, from: holderOne, to: holderTwo}),
-        new TokenTransferDto({id: {hash: hashFour}, contract: addressOne, from: holderOne, to: holderTwo}),
+        new TokenTransferDto({ id: { hash: hashOne }, contract: addressOne, from: holderOne, to: holderTwo }),
+        new TokenTransferDto({ id: { hash: hashTwo }, contract: addressOne, from: holderOne, to: holderTwo }),
+        new TokenTransferDto({ id: { hash: hashFour }, contract: addressOne, from: holderOne, to: holderTwo })
       ]
       expect(tokenTransfers).toEqual(expect.arrayContaining(expected))
     })
 
     it('should only return TokenTransferDto instances matching the filter provided', async () => {
-
       const transfersIn = await tokenTransferResolvers.addressTokenTransfersByHolder(addressOne, holderThree, 'in')
       const transfersOut = await tokenTransferResolvers.addressTokenTransfersByHolder(addressOne, holderThree, 'out')
 
@@ -253,25 +242,23 @@ describe('TokenTransferResolvers', () => {
       const tokenOperationsTwo = await tokenTransferResolvers.tokenHistory(addressTwo)
 
       expect(tokenOperationsOne).toHaveLength(2)
-      expect(tokenOperationsOne[0]).toHaveProperty('tokenInfo', {address: addressOne, owner: holderOne})
+      expect(tokenOperationsOne[0]).toHaveProperty('tokenInfo', { address: addressOne, owner: holderOne })
       expect(tokenOperationsOne[0]).toBeInstanceOf(EthplorerTokenOperationDto)
 
       expect(tokenOperationsTwo).toHaveLength(1)
-      expect(tokenOperationsTwo[0]).toHaveProperty('tokenInfo', {address: addressTwo, owner: holderOne})
+      expect(tokenOperationsTwo[0]).toHaveProperty('tokenInfo', { address: addressTwo, owner: holderOne })
       expect(tokenOperationsOne[0]).toBeInstanceOf(EthplorerTokenOperationDto)
 
       expect(tokenOperationsOne).not.toEqual(tokenOperationsTwo)
     })
 
     it('should return an empty array if there are no EthplorerTokenOperations matching the address provided', async () => {
-
       const tokenOperations = await tokenTransferResolvers.tokenHistory(addressThree)
       expect(tokenOperations).toHaveLength(0)
     })
   })
 
   describe('topTokenHolders', () => {
-
     it('should return an array of EthplorerTokenHolderDto instances matching the address provided', async () => {
       const tokenHoldersOne = await tokenTransferResolvers.topTokenHolders(addressOne)
       const tokenHoldersTwo = await tokenTransferResolvers.topTokenHolders(addressTwo)
@@ -288,16 +275,13 @@ describe('TokenTransferResolvers', () => {
     })
 
     it('should return an empty array if there are no EthplorerTokenHolders matching the address provided', async () => {
-
       const tokenHolders = await tokenTransferResolvers.topTokenHolders(addressThree)
       expect(tokenHolders).toHaveLength(0)
     })
   })
 
   describe('holderDetails', () => {
-
     it('should return an instance of EthplorerAddressInfoDto matching the token address hash and holder address hash provided', async () => {
-
       const holderInfo = await tokenTransferResolvers.holderDetails(addressOne, holderOne)
 
       expect(holderInfo).toBeInstanceOf(EthplorerAddressInfoDto)
@@ -305,7 +289,6 @@ describe('TokenTransferResolvers', () => {
     })
 
     it('should return null if no matching instances are found', async () => {
-
       const holderInfo = await tokenTransferResolvers.holderDetails(addressTwo, holderTwo)
 
       expect(holderInfo).toBe(null)
@@ -314,26 +297,22 @@ describe('TokenTransferResolvers', () => {
 
   describe('holderTransfers', () => {
     it('should return an array of EthplorerTokenOperationDto instances matching the token address hash and holder address hash provided', async () => {
-
       const tokenOperationsOne = await tokenTransferResolvers.holderTransfers(addressOne, holderOne)
 
       expect(tokenOperationsOne).toHaveLength(1)
-      expect(tokenOperationsOne[0]).toHaveProperty('tokenInfo', {address: addressOne, owner: holderOne})
+      expect(tokenOperationsOne[0]).toHaveProperty('tokenInfo', { address: addressOne, owner: holderOne })
       expect(tokenOperationsOne[0]).toBeInstanceOf(EthplorerTokenOperationDto)
-
     })
 
     it('should return an empty array if no matching instances are found', async () => {
-
       const tokenOperations = await tokenTransferResolvers.holderTransfers(addressThree, holderThree)
       expect(tokenOperations).toHaveLength(0)
     })
   })
 
   describe('addressAllTokensOwned', () => {
-
     it('should return an array of TokenDto instances matching the token address hash provided', async () => {
-      const result = {name: 'Test', symbol: 'TST'}
+      const result = { name: 'Test', symbol: 'TST' }
 
       jest.spyOn(tokenTransferService, 'findAddressAllTokensOwned').mockImplementation(
         () =>
