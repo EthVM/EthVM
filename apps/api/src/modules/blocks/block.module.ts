@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { BlockService } from '@app/modules/blocks/block.service'
 import { BlockResolvers } from '@app/modules/blocks/block.resolvers'
-import { BlockEntity } from '@app/orm/entities/block.entity'
+import { BlockEntity } from 'block-header.entity.ts'
 import { SubscriptionsModule } from '@app/subscriptions/subscriptions.module'
 
 @Module({
