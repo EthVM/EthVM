@@ -146,8 +146,8 @@ export class ChartMixin extends Vue {
 
   get description(): string {
     return this.timeFrame === 0
-      ? this.chartLabel + this.$i18n.t('charts.captions.all')
-      : this.chartLabel + this.$i18n.t('charts.captions.other') + this.cap[this.timeFrame]
+      ? `${this.chartLabel} ${this.$i18n.t('charts.captions.all')}`
+      : `${this.chartLabel} ${this.$i18n.t('charts.captions.other')} ${this.cap[this.timeFrame]}`
   }
 
   get cap(): string[] {

@@ -71,7 +71,7 @@ export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
   }
 
   get text(): string {
-    return this.formatStr(this.newNumber) + ' ' + this.messages[this.pageType]
+    return `${this.formatStr(this.newNumber)} ${this.messages[this.pageType]}`
   }
 
   get plural(): number {
