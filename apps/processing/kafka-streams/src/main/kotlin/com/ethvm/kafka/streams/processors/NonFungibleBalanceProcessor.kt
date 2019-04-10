@@ -101,7 +101,7 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
       .toTopic(NonFungibleBalance)
 
     NonFungibleBalance.stream(builder)
-      .peek { k, v -> logger.info { "Balance update | ${k.getContract()}, ${k.getTokenId()} -> ${v.getAddress()}" } }
+      .peek { k, v -> logger.debug { "Balance update | ${k.getContract()}, ${k.getTokenId()} -> ${v.getAddress()}" } }
   }
 
   private fun erc721DeltasForReceipts(builder: StreamsBuilder) {

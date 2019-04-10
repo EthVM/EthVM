@@ -32,8 +32,8 @@ volumes:
     driver: local-persist
     driver_opts:
       name: "paritydb"
-#      mountpoint: "/media/brian/SanDisk\ Extreme1/parity"
-      mountpoint: "/var/lib/parity"
+      mountpoint: "/media/brian/SanDisk\ Extreme1/parity"
+#      mountpoint: "/var/lib/parity"
 
 services:
 

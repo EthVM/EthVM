@@ -103,7 +103,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
       .toTopic(FungibleBalance)
 
     FungibleBalance.stream(builder)
-      .peek { k, v -> logger.info { "Balance update | ${k.getAddress()}, ${k.getContract()} -> ${v.getAmountBI()}" } }
+      .peek { k, v -> logger.debug { "Balance update | ${k.getAddress()}, ${k.getContract()} -> ${v.getAmountBI()}" } }
   }
 
   /**

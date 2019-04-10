@@ -233,7 +233,7 @@ CREATE INDEX idx_non_fungible_balance_contract_address ON non_fungible_balance (
 CREATE TABLE non_fungible_balance_deltas
 (
   contract       CHAR(66)    NOT NULL,
-  tokenId        NUMERIC     NOT NULL,
+  token_id        NUMERIC     NOT NULL,
   token_type     VARCHAR(32) NOT NULL,
   trace_location TEXT        NOT NULL,
   "from"         CHAR(66)    NOT NULL,
