@@ -271,25 +271,33 @@ fun TraceRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> {
       )
     }
 
-    is TraceCallActionRecord -> listOf(
+    is TraceCallActionRecord -> {
 
-      FungibleBalanceDeltaRecord.newBuilder()
-        .setTokenType(FungibleTokenType.ETHER)
-        .setDeltaType(FungibleBalanceDeltaType.TX)
-        .setTraceLocation(traceLocation)
-        .setAddress(action.getFrom())
-        .setAmountBI(action.getValueBI().negate())
-        .build(),
+      if(action.callType == "delegatecall") {
+        emptyList()
+      } else {
+        listOf(
 
-      FungibleBalanceDeltaRecord.newBuilder()
-        .setTokenType(FungibleTokenType.ETHER)
-        .setDeltaType(FungibleBalanceDeltaType.TX)
-        .setTraceLocation(traceLocation)
-        .setAddress(action.getTo())
-        .setAmount(action.getValue())
-        .build()
+          FungibleBalanceDeltaRecord.newBuilder()
+            .setTokenType(FungibleTokenType.ETHER)
+            .setDeltaType(FungibleBalanceDeltaType.TX)
+            .setTraceLocation(traceLocation)
+            .setAddress(action.getFrom())
+            .setAmountBI(action.getValueBI().negate())
+            .build(),
 
-    )
+          FungibleBalanceDeltaRecord.newBuilder()
+            .setTokenType(FungibleTokenType.ETHER)
+            .setDeltaType(FungibleBalanceDeltaType.TX)
+            .setTraceLocation(traceLocation)
+            .setAddress(action.getTo())
+            .setAmount(action.getValue())
+            .build()
+
+        )
+      }
+
+    }
 
     is TraceCreateActionRecord -> listOf(
 

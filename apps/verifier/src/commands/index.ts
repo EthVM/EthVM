@@ -1,1 +1,1 @@
-export * from '@app/commands/balances'
+export * from '@app/commands/ether-balances'

@@ -1,7 +1,6 @@
-
+import { EtherBalances } from '@app/commands/ether-balances'
 import { Config } from '@app/config'
 import program from 'commander'
-import { EtherBalances } from '@app/commands/ether-balances'
 
 const config = new Config()
 

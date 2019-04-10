@@ -20,7 +20,7 @@ protocol Processing {
 
   record FungibleBalanceKeyRecord {
     string address;
-    union { null, string } contract = null;
+    string contract = "";
   }
 
   enum FungibleTokenType {
@@ -46,8 +46,8 @@ protocol Processing {
     com.ethvm.avro.common.TraceLocationRecord traceLocation;
     decimal(40,0) amount;
 
-    union { null, string } address = null;
-    union { null, string } contractAddress = null;
+    string address;
+    string contractAddress = "";
   }
 
   record FungibleBalanceRecord {

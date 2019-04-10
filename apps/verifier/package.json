@@ -2,6 +2,7 @@
   "name": "ethvm-verifier",
   "version": "0.1.0",
   "scripts": {
+    "tsc": "tsc",
     "start": "ts-node -r tsconfig-paths/register src/index.ts"
   },
   "dependencies": {
@@ -10,14 +11,17 @@
     "bignumber.js": "~8.0.2",
     "commander": "^2.19.0",
     "convict": "~4.4.1",
-    "ethvm-common": "file:./../common",
     "long": "^4.0.0",
-    "mongodb": "~3.1.13",
     "node-biginteger": "^0.0.10",
     "node-rdkafka": "~2.5.1",
     "ora": "^3.1.0",
+    "pg": "^7.9.0",
+    "reflect-metadata": "^0.1.13",
     "rxjs": "~6.4.0",
-    "rxjs-stream": "~3.0.1"
+    "rxjs-stream": "~3.0.1",
+    "typeorm": "^0.2.16",
+    "web3": "^1.0.0-beta.52",
+    "web3-utils": "^1.0.0-beta.52"
   },
   "devDependencies": {
     "@types/commander": "^2.12.2",
@@ -26,13 +30,14 @@
     "@types/mongodb": "~3.1.19",
     "@types/node": "~10.12.26",
     "@types/ora": "^3.0.0",
+    "@types/web3": "^1.0.18",
     "nodemon": "~1.18.10",
     "prettier": "~1.16.4",
-    "ts-node": "~8.0.2",
+    "ts-node": "~8.0.3",
     "tsconfig-paths": "~3.8.0",
     "tslint": "~5.12.1",
     "tslint-config-prettier": "~1.18.0",
     "tslint-consistent-codestyle": "~1.15.0",
-    "typescript": "~3.3.3"
+    "typescript": "~3.4.1"
   }
 }
