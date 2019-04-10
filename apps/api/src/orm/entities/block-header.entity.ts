@@ -1,5 +1,6 @@
-import { Entity, PrimaryColumn, Column } from 'typeorm'
+import { Entity, PrimaryColumn, Column, OneToMany, JoinColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
+import { TransactionEntity } from '@app/orm/entities/transaction.entity'
 
 @Entity('canonical_block_header')
 export class BlockHeaderEntity {
@@ -54,12 +55,19 @@ export class BlockHeaderEntity {
   gasUsed!: number
 
   @Column({type: 'bigint', readonly: true})
-  timestamp!: number
+  timestamp!: string
 
   @Column({type: 'bigint', readonly: true})
-  size!: number
+  size!: string
 
   @Column({type: 'bigint', readonly: true})
-  blockTime?: number
+  blockTime?: string
+
+  @OneToMany(type => TransactionEntity, tx => tx.blockHeader)
+  @JoinColumn({
+    name: 'hash',
+    referencedColumnName: 'blockHash'
+  })
+  txs?: TransactionEntity[]
 
 }
