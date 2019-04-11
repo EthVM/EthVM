@@ -11,6 +11,7 @@ import com.ethvm.avro.capture.TransactionReceiptRecord
 import com.ethvm.avro.capture.TransactionRecord
 import io.confluent.connect.avro.AvroData
 import mu.KotlinLogging
+import org.apache.avro.Schema
 import org.apache.avro.specific.SpecificRecordBase
 import org.apache.kafka.connect.data.SchemaAndValue
 
@@ -38,4 +39,6 @@ object AvroToConnect {
   )
 
   fun toConnectData(record: SpecificRecordBase): SchemaAndValue = avroData.toConnectData(mappings[record::class], record)
+
+  fun toConnectSchema(schema: Schema) = avroData.toConnectSchema(schema)
 }

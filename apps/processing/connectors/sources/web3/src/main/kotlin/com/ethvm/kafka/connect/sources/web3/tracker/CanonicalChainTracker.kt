@@ -40,7 +40,7 @@ class CanonicalChainTracker(
         .newHeadsNotifications()
         .map { it.params.result }
         .map { it.number.hexToBI().longValueExact() }
-        .buffer(1, TimeUnit.SECONDS, 128)
+        .buffer(1, TimeUnit.SECONDS, 256)
         .onBackpressureBuffer()
         .filter { it.isNotEmpty() }
         .subscribe(
