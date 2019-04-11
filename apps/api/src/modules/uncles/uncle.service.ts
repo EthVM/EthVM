@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { UncleEntity } from '@app/orm/entities/uncle.entity'
+import { UncleEntity } from '@app/orm/entities-mongo/uncle.entity'
 import { MongoRepository } from 'typeorm'
 
 @Injectable()

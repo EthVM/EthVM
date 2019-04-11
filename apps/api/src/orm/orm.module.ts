@@ -10,7 +10,8 @@ import { ConnectionOptions } from 'typeorm'
         type: 'postgres',
         url: configService.db.url,
         synchronize: false,
-        entities: ['src/**/**.entity{.ts,.js}'],
+        // TODO reset to all src/**/**.entity
+        entities: ['src/orm/entities/**.entity{.ts,.js}'],
         logger: 'debug',
       }),
       inject: [ConfigService],

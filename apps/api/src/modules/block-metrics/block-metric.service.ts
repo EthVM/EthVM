@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { BlockMetricEntity } from '@app/orm/entities/block-metric.entity'
+import { BlockMetricEntity } from '@app/orm/entities-mongo/block-metric.entity'
 import { MongoRepository } from 'typeorm'
 
 @Injectable()

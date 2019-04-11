@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { MongoRepository } from 'typeorm'
-import { AggregateBlockMetricEntity } from '@app/orm/entities/aggregate-block-metric.entity'
+import { AggregateBlockMetricEntity } from '@app/orm/entities-mongo/aggregate-block-metric.entity'
 
 enum EventType {
   TOTAL_TXS = 'TotalTxs',

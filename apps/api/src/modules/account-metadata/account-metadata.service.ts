@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { MongoRepository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
-import { AccountMetadataEntity } from '@app/orm/entities/account-metadata.entity'
+import { AccountMetadataEntity } from '@app/orm/entities-mongo/account-metadata.entity'
 
 @Injectable()
 export class AccountMetadataService {

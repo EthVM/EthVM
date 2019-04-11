@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { MongoRepository } from 'typeorm'
-import { BalanceEntity } from '@app/orm/entities/balance.entity'
+import { BalanceEntity } from '@app/orm/entities-mongo/balance.entity'
 
 @Injectable()
 export class BalanceService {

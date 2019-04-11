@@ -1,4 +1,4 @@
-import { ProcessingMetadataEntity } from '@app/orm/entities/processing-metadata.entity'
+import { ProcessingMetadataEntity } from '@app/orm/entities-mongo/processing-metadata.entity'
 import { Inject, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { PubSub } from 'graphql-subscriptions'
@@ -20,7 +20,7 @@ export class MongoSubscriptionService {
   constructor(
     @Inject('PUB_SUB') private readonly pubSub: PubSub,
     @Inject('winston') private readonly logger: Logger,
-    @InjectRepository(ProcessingMetadataEntity) private readonly processingMetadataRepository: MongoRepository<ProcessingMetadataEntity>,
+    // @InjectRepository(ProcessingMetadataEntity) private readonly processingMetadataRepository: MongoRepository<ProcessingMetadataEntity>,
   ) {
     this.initialize()
   }
@@ -53,9 +53,10 @@ export class MongoSubscriptionService {
 
     // Check initial syncing state
     logger.info('MongoStreamer - initialize() / Checking status of syncing')
-    const syncingStatus = await this.processingMetadataRepository.findOne({ where: { _id: 'syncing' } })
+    // TODO fix/update this logic
+    // const syncingStatus = await this.processingMetadataRepository.findOne({ where: { _id: 'syncing' } })
 
-    const isSyncing = syncingStatus ? this.isSyncing(syncingStatus) : false // TODO set to true
+    const isSyncing = true // syncingStatus ? this.isSyncing(syncingStatus) : false // TODO set to true
 
     logger.info(`MongoStreamer - initialize() / Current syncing status is: ${isSyncing}`)
 

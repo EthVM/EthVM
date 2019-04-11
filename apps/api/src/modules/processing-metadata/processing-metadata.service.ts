@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { ProcessingMetadataEntity } from '@app/orm/entities/processing-metadata.entity'
+import { ProcessingMetadataEntity } from '@app/orm/entities-mongo/processing-metadata.entity'
 import { MongoRepository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
 

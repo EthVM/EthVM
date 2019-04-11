@@ -1,7 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common'
 import { ConfigService } from '@app/shared/config.service'
 import { QuoteDto } from '@app/modules/exchanges/quote.dto'
-import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.entity'
+import { TokenExchangeRateEntity } from '@app/orm/entities-mongo/token-exchange-rate.entity'
 import { InjectRepository } from '@nestjs/typeorm'
 import { MongoRepository } from 'typeorm'
 import axios from 'axios'

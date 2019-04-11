@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { BlockMetricEntity } from '@app/orm/entities/block-metric.entity'
+import { BlockMetricEntity } from '@app/orm/entities-mongo/block-metric.entity'
 import { BlockMetricService } from '@app/modules/block-metrics/block-metric.service'
 import { BlockMetricResolvers } from '@app/modules/block-metrics/block-metric.resolvers'
 import { SubscriptionsModule } from '@app/subscriptions/subscriptions.module'

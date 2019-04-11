@@ -1,7 +1,7 @@
 import { EthplorerAddressInfoDto } from '@app/modules/token-transfers/dto/ethplorer-address-info.dto'
 import { EthplorerTokenHolderDto } from '@app/modules/token-transfers/dto/ethplorer-token-holder.dto'
 import { EthplorerTokenOperationDto } from '@app/modules/token-transfers/dto/ethplorer-token-operation.dto'
-import { TokenTransferEntity } from '@app/orm/entities/token-transfer.entity'
+import { TokenTransferEntity } from '@app/orm/entities-mongo/token-transfer.entity'
 import { ConfigService } from '@app/shared/config.service'
 import { HttpException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'

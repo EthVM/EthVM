@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { TransactionEntity } from '@app/orm/entities/transaction.entity'
+import { TransactionEntity } from '@app/orm/entities-mongo/transaction.entity'
 import { MongoRepository } from 'typeorm'
 
 @Injectable()

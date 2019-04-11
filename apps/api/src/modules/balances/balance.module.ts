@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { BalanceEntity } from '@app/orm/entities/balance.entity'
 import { BalanceService } from '@app/modules/balances/balance.service'
 import { BalanceResolvers } from '@app/modules/balances/balance.resolvers'
+import { BalanceEntity } from '@app/orm/entities-mongo/balance.entity'
 
 @Module({
   imports: [TypeOrmModule.forFeature([BalanceEntity])],

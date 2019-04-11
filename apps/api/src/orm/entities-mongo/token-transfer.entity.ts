@@ -1,6 +1,6 @@
 import { Column, Entity, ObjectIdColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
-import { BalanceType } from '@app/orm/entities/balance.entity'
+import { BalanceType } from '@app/orm/entities-mongo/balance.entity'
 
 interface TokenTransferKeyInterface {
   hash: string

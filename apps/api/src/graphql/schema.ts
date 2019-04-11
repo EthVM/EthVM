@@ -1,3 +1,9 @@
+
+/** ------------------------------------------------------
+ * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+ * -------------------------------------------------------
+ */
+
 /* tslint:disable */
 export enum BalanceType {
     TX_FEE = "TX_FEE",
@@ -108,12 +114,29 @@ export class BalanceKey {
 }
 
 export class Block {
-    id?: Long;
-    header?: Header;
-    totalDifficulty?: string;
+    header?: BlockHeader;
     transactions?: Transaction[];
-    uncles?: Uncle[];
-    rewards?: Reward[];
+}
+
+export class BlockHeader {
+    number?: number;
+    hash?: string;
+    parentHash?: string;
+    nonce?: string;
+    sha3Uncles?: string;
+    logsBloom?: string;
+    transactionsRoot?: string;
+    stateRoot?: string;
+    receiptsRoot?: string;
+    author?: string;
+    difficulty?: string;
+    totalDifficulty?: number;
+    extraData?: string;
+    gasLimit?: string;
+    gasUsed?: string;
+    timestamp?: number;
+    size?: number;
+    blockTime?: string;
 }
 
 export class BlockMetric {
@@ -243,25 +266,6 @@ export class EthplorerTokenOperation {
     value?: number;
 }
 
-export class Header {
-    author?: string;
-    difficulty?: string;
-    extraData?: string;
-    gasLimit?: string;
-    gasUsed?: string;
-    hash?: string;
-    logsBloom?: string;
-    nonce?: string;
-    number?: number;
-    parentHash?: string;
-    receiptsRoot?: string;
-    sha3Uncles?: string;
-    size?: number;
-    stateRoot?: string;
-    timestamp?: number;
-    transactionsRoot?: string;
-}
-
 export class Log {
     address?: string;
     data?: string;
@@ -303,6 +307,10 @@ export abstract class IQuery {
 
     abstract totalNumberOfBlocks(): number | Promise<number>;
 
+    abstract contractByHash(address: string): Contract | Promise<Contract>;
+
+    abstract contractsCreatedBy(creator: string, limit?: number, page?: number): Contract[] | Promise<Contract[]>;
+
     abstract quote(symbol: ExchangeFrom, to: ExchangeTo): Quote | Promise<Quote>;
 
     abstract tokenExchangeRates(filter: TokenExchangeRateFilter, limit?: number, page?: number): TokenExchangeRate[] | Promise<TokenExchangeRate[]>;
@@ -312,10 +320,6 @@ export abstract class IQuery {
     abstract tokenExchangeRateBySymbol(symbol: string): TokenExchangeRate | Promise<TokenExchangeRate>;
 
     abstract tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
-
-    abstract contractByHash(address: string): Contract | Promise<Contract>;
-
-    abstract contractsCreatedBy(creator: string, limit?: number, page?: number): Contract[] | Promise<Contract[]>;
 
     abstract processingMetadataById(id: string): ProcessingMetadata | Promise<ProcessingMetadata>;
 
@@ -410,12 +414,6 @@ export class Result {
     code?: string;
     gasUsed?: string;
     output?: string;
-}
-
-export class Reward {
-    author?: string;
-    rewardType?: string;
-    value?: string;
 }
 
 export class Search {
@@ -600,5 +598,3 @@ export type Buffer = any;
 export type Date = any;
 export type Decimal = any;
 export type JSON = any;
-export type Long = any;
-export type StatisticValue = any;
