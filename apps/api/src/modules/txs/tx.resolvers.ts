@@ -10,7 +10,9 @@ import { PubSub } from 'graphql-subscriptions'
 
 @Resolver('Transaction')
 export class TxResolvers {
-  constructor(private readonly txService: TxService, @Inject('PUB_SUB') private pubSub: PubSub) {}
+  constructor(private readonly txService: TxService,
+              // @Inject('PUB_SUB') private pubSub: PubSub
+  ) {}
 
   @Query()
   async tx(@Args('hash', ParseHashPipe) hash: string) {
@@ -21,12 +23,6 @@ export class TxResolvers {
   @Query()
   async txs(@Args('limit', ParseLimitPipe) limit?: number, @Args('page') page?: number, @Args('fromBlock') fromBlock?: number) {
     const entities = await this.txService.findTxs(limit, page, fromBlock)
-    return entities.map(e => new TxDto(e))
-  }
-
-  @Query()
-  async txsForBlock(@Args('hash', ParseHashPipe) hash: string) {
-    const entities = await this.txService.findTxsForBlock(hash)
     return entities.map(e => new TxDto(e))
   }
 
@@ -46,13 +42,13 @@ export class TxResolvers {
     return await this.txService.countTransactions()
   }
 
-  @Subscription()
-  newTxs() {
-    return {
-      resolve: payload => {
-        return new TxDto(payload.value)
-      },
-      subscribe: () => this.pubSub.asyncIterator('txs'),
-    }
-  }
+  // @Subscription()
+  // newTxs() {
+  //   return {
+  //     resolve: payload => {
+  //       return new TxDto(payload.value)
+  //     },
+  //     subscribe: () => this.pubSub.asyncIterator('txs'),
+  //   }
+  // }
 }

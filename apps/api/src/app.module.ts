@@ -31,7 +31,7 @@ import { LoggerModule } from '@app/shared/logger.module'
     // ExchangeModule,
     // ProcessingMetadataModule,
     // TokenTransferModule,
-    // TxModule,
+    TxModule,
     // UncleModule,
     // StatisticModule,
     // SearchModule,

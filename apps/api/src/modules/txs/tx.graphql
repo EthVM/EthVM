@@ -1,7 +1,6 @@
 type Query {
   tx(hash: String!): Transaction
   txs(limit: Int, page: Int, fromBlock: Int): [Transaction]
-  txsForBlock(hash: String!): [Transaction]
   txsForAddress(hash: String!, filter: FilterEnum!, limit: Int, page: Int): [Transaction]
   totalNumberOfTransactions: Int
 }
@@ -11,101 +10,54 @@ type Subscription {
 }
 
 type Transaction {
-  id: String
+  hash: String
+  nonce: String
   blockHash: String
   blockNumber: Int
-  creates: String
+  transactionIndex: Int
   from: String
+  to: String
+  value: String
   gas: String
   gasPrice: String
-  hash: String
   input: String
-  nonce: String
+  v: Long
   r: String
   s: String
-  timestamp: Int
-  to: String
-  transactionIndex: Int
-  v: Int
-  value: String
+  timestamp: Long
+  creates: String
+  chainId: Long
   receipt: Receipt
   traces: [Trace]
 }
 
 type Receipt {
+  transactionHash: String
+  transactionIndex: String
   blockHash: String
   blockNumber: Int
+  from: String
+  to: String
   contractAddress: String
   cumulativeGasUsed: String
   gasUsed: String
+  logs: String
   logsBloom: String
-  numInternalTxs: Int
   root: String
   status: String
-  transactionHash: String
-  transactionIndex: String
-  logs: [Log]
 }
 
 type Trace {
   blockHash: String
-  blockNumber: Int
-  error: String
-  subtraces: Int
-  traceAddress: [Int]
   transactionHash: String
+  traceAddress: String
   transactionPosition: Int
+  blockNumber: Int
+  subtraces: Int
+  error: String
   type: String
-  action: Action
-  result: Result
-}
-
-type Log {
-  address: String
-  data: String
-  topics: [String]
-}
-
-type Action {
-  TraceCallActionRecord: TraceCallActionRecord
-  TraceCreateActionRecord: TraceCreateActionRecord
-  TraceDestroyActionRecord: TraceDestroyActionRecord
-  TraceRewardActionRecord: TraceRewardActionRecord
-}
-
-type Result {
-  address: String
-  code: String
-  gasUsed: String
-  output: String
-}
-
-type TraceCallActionRecord {
-  callType: String
-  from: String
-  gas: String
-  input: String
-  to: String
-  value: String
-}
-
-type TraceCreateActionRecord {
-  from: String
-  gas: String
-  init: String
-  value: String
-}
-
-type TraceDestroyActionRecord {
-  address: String
-  balance: String
-  refundAddress: String
-}
-
-type TraceRewardActionRecord {
-  author: String
-  value: String
-  rewardType: String
+  action: String
+  result: String
 }
 
 enum Order {

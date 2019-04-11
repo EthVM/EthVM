@@ -12,13 +12,13 @@ export class TransactionEntity {
   }
 
   @PrimaryColumn({type: 'character', length: 66, readonly: true})
-  hash?: string
+  hash!: string
 
   @Column({type: 'numeric', readonly: true})
   nonce?: number
 
   @Column({type: 'character', length: 66, readonly: true})
-  blockHash?: string
+  blockHash!: string
 
   @Column({type: 'numeric', readonly: true})
   blockNumber?: number
@@ -45,7 +45,7 @@ export class TransactionEntity {
   input?: Buffer  // TODO check typing is correct
 
   @Column({type: 'bigint', readonly: true})
-  v?: string
+  v?: number
 
   @Column({type: 'character', length: 78, readonly: true})
   r?: string
@@ -54,13 +54,13 @@ export class TransactionEntity {
   s?: string
 
   @Column({type: 'bigint', readonly: true})
-  timestamp?: string
+  timestamp?: number
 
   @Column({type: 'character', length: 66, readonly: true})
   creates?: string
 
   @Column({type: 'bigint', readonly: true})
-  chainId?: string
+  chainId?: number
 
   @ManyToOne(type => BlockHeaderEntity, block => block.txs)
   @JoinColumn({

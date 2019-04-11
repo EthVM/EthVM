@@ -1,33 +1,33 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { TransactionEntity } from '@app/orm/entities-mongo/transaction.entity'
-import { MongoRepository } from 'typeorm'
+import { FindManyOptions, In, LessThanOrEqual, Repository } from 'typeorm'
+import { TransactionTraceEntity } from '@app/orm/entities/transaction-trace.entity'
+import { TransactionEntity } from '@app/orm/entities/transaction.entity'
 
 @Injectable()
 export class TxService {
   constructor(
-    @InjectRepository(TransactionEntity)
-    private readonly transactionRepository: MongoRepository<TransactionEntity>,
+    @InjectRepository(TransactionEntity) private readonly transactionRepository: Repository<TransactionEntity>,
+    @InjectRepository(TransactionTraceEntity) private readonly transactionTraceRepository: Repository<TransactionTraceEntity>
   ) {}
 
   async findTx(hash: string): Promise<TransactionEntity | undefined> {
-    return this.transactionRepository.findOne({ where: { hash } })
+    return this.transactionRepository.findOne({ where: { hash }, relations: ['receipt'] })
   }
 
   async findTxs(take: number = 10, page: number = 0, fromBlock: number = -1): Promise<TransactionEntity[]> {
     const skip = page * take
-    const where = fromBlock !== -1 ? { blockNumber: { $lte: fromBlock } } : {}
-
-    return this.transactionRepository.find({
+    const where = fromBlock !== -1 ? { blockNumber: LessThanOrEqual(fromBlock) } : {}
+    const findOptions: FindManyOptions = {
       where,
-      order: { blockNumber: -1, index: -1, timestamp: -1 },
+      order: { blockNumber: 'DESC', transactionIndex: 'DESC', timestamp: 'DESC' },
       take,
       skip,
-    })
-  }
+    }
+    const txs = await this.transactionRepository.find(findOptions)
+    if (!txs.length) return []
 
-  async findTxsForBlock(hash: string): Promise<TransactionEntity[]> {
-    return this.transactionRepository.find({ where: { blockHash: hash } })
+    return this.findAndMapTraces(txs)
   }
 
   async findTxsForAddress(hash: string, filter?: string, take: number = 10, page: number = 0): Promise<TransactionEntity[]> {
@@ -41,10 +41,30 @@ export class TxService {
         where = { from: hash }
         break
       default:
-        where = { $or: [{ from: hash }, { to: hash }] }
+        where = [{ from: hash }, { to: hash }]
         break
     }
-    return this.transactionRepository.find({ where, take, skip })
+    const txs = await this.transactionRepository.find({ where, take, skip })
+    if (!txs.length) return []
+    return this.findAndMapTraces(txs)
+  }
+
+  private async findAndMapTraces(txs: TransactionEntity[]): Promise<TransactionEntity[]> {
+
+    const traces = await this.transactionTraceRepository.find({ where: { transactionHash: In(txs.map(tx => tx.hash)) }})
+
+    const txsByHash = txs.reduce((memo, next) => {
+      next.traces = []
+      memo[next.hash] = next
+      return memo
+    }, {})
+
+    traces.forEach(trace => {
+      txsByHash[trace.transactionHash].traces.push(trace)
+    })
+
+    return txs
+
   }
 
   async countTransactions(): Promise<number> {

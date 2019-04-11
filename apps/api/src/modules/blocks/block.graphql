@@ -31,7 +31,7 @@ type BlockHeader {
   extraData: String
   gasLimit: String
   gasUsed: String
-  timestamp: Int
-  size: Int
-  blockTime: String
+  timestamp: Long
+  size: Long
+  blockTime: Long
 }

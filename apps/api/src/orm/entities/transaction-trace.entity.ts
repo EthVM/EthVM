@@ -14,7 +14,7 @@ export class TransactionTraceEntity {
   blockHash?: string
 
   @PrimaryColumn({type: 'character', length: 66, readonly: true})
-  transactionHash?: string
+  transactionHash!: string
 
   @PrimaryColumn({type: 'text', readonly: true})
   traceAddress?: string

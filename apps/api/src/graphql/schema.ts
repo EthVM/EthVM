@@ -73,13 +73,6 @@ export class AccountMetadata {
     totalTxCount?: number;
 }
 
-export class Action {
-    TraceCallActionRecord?: TraceCallActionRecord;
-    TraceCreateActionRecord?: TraceCreateActionRecord;
-    TraceDestroyActionRecord?: TraceDestroyActionRecord;
-    TraceRewardActionRecord?: TraceRewardActionRecord;
-}
-
 export class AddressBalance {
     address?: string;
     balance?: Decimal;
@@ -134,9 +127,9 @@ export class BlockHeader {
     extraData?: string;
     gasLimit?: string;
     gasUsed?: string;
-    timestamp?: number;
-    size?: number;
-    blockTime?: string;
+    timestamp?: Long;
+    size?: Long;
+    blockTime?: Long;
 }
 
 export class BlockMetric {
@@ -266,12 +259,6 @@ export class EthplorerTokenOperation {
     value?: number;
 }
 
-export class Log {
-    address?: string;
-    data?: string;
-    topics?: string[];
-}
-
 export class Logo {
     src?: string;
 }
@@ -369,8 +356,6 @@ export abstract class IQuery {
 
     abstract txs(limit?: number, page?: number, fromBlock?: number): Transaction[] | Promise<Transaction[]>;
 
-    abstract txsForBlock(hash: string): Transaction[] | Promise<Transaction[]>;
-
     abstract txsForAddress(hash: string, filter: FilterEnum, limit?: number, page?: number): Transaction[] | Promise<Transaction[]>;
 
     abstract totalNumberOfTransactions(): number | Promise<number>;
@@ -394,25 +379,19 @@ export class Quote {
 }
 
 export class Receipt {
+    transactionHash?: string;
+    transactionIndex?: string;
     blockHash?: string;
     blockNumber?: number;
+    from?: string;
+    to?: string;
     contractAddress?: string;
     cumulativeGasUsed?: string;
     gasUsed?: string;
+    logs?: string;
     logsBloom?: string;
-    numInternalTxs?: number;
     root?: string;
     status?: string;
-    transactionHash?: string;
-    transactionIndex?: string;
-    logs?: Log[];
-}
-
-export class Result {
-    address?: string;
-    code?: string;
-    gasUsed?: string;
-    output?: string;
 }
 
 export class Search {
@@ -510,63 +489,35 @@ export class TokenTransferKey {
 
 export class Trace {
     blockHash?: string;
-    blockNumber?: number;
-    error?: string;
-    subtraces?: number;
-    traceAddress?: number[];
     transactionHash?: string;
+    traceAddress?: string;
     transactionPosition?: number;
+    blockNumber?: number;
+    subtraces?: number;
+    error?: string;
     type?: string;
-    action?: Action;
-    result?: Result;
-}
-
-export class TraceCallActionRecord {
-    callType?: string;
-    from?: string;
-    gas?: string;
-    input?: string;
-    to?: string;
-    value?: string;
-}
-
-export class TraceCreateActionRecord {
-    from?: string;
-    gas?: string;
-    init?: string;
-    value?: string;
-}
-
-export class TraceDestroyActionRecord {
-    address?: string;
-    balance?: string;
-    refundAddress?: string;
-}
-
-export class TraceRewardActionRecord {
-    author?: string;
-    value?: string;
-    rewardType?: string;
+    action?: string;
+    result?: string;
 }
 
 export class Transaction {
-    id?: string;
+    hash?: string;
+    nonce?: string;
     blockHash?: string;
     blockNumber?: number;
-    creates?: string;
+    transactionIndex?: number;
     from?: string;
+    to?: string;
+    value?: string;
     gas?: string;
     gasPrice?: string;
-    hash?: string;
     input?: string;
-    nonce?: string;
+    v?: Long;
     r?: string;
     s?: string;
-    timestamp?: number;
-    to?: string;
-    transactionIndex?: number;
-    v?: number;
-    value?: string;
+    timestamp?: Long;
+    creates?: string;
+    chainId?: Long;
     receipt?: Receipt;
     traces?: Trace[];
 }

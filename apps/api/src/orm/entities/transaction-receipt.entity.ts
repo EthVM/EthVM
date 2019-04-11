@@ -37,7 +37,7 @@ export class TransactionReceiptEntity {
   gasUsed?: number
 
   @Column({type: 'text', readonly: true})
-  logs?: string
+  logs?: string // TODO Convert to json?
 
   @Column({type: 'character', length: 514, readonly: true})
   logsBloom?: string
