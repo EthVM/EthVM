@@ -13,6 +13,8 @@ import com.ethvm.avro.capture.TransactionListRecord
 import com.ethvm.avro.capture.TransactionReceiptListRecord
 import com.ethvm.avro.capture.TransactionReceiptRecord
 import com.ethvm.avro.capture.TransactionRecord
+import com.ethvm.avro.capture.UncleListRecord
+import com.ethvm.avro.capture.UncleRecord
 import com.ethvm.avro.exchange.ExchangeRateRecord
 import com.ethvm.avro.exchange.SymbolKeyRecord
 import com.ethvm.avro.processing.AddressMetadataKeyRecord
@@ -41,6 +43,7 @@ import com.ethvm.avro.processing.TransactionGasUsedListRecord
 import com.ethvm.avro.processing.TransactionGasUsedRecord
 import com.ethvm.avro.processing.TransactionKeyRecord
 import com.ethvm.avro.processing.TransactionReceiptKeyRecord
+import com.ethvm.avro.processing.UncleKeyRecord
 import com.ethvm.avro.tokens.EthTokenListsKeyRecord
 import com.ethvm.kafka.streams.config.KafkaConfig
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
@@ -104,10 +107,6 @@ object Serdes : KoinComponent {
 
   fun TraceKey() = SpecificAvroSerde<TraceKeyRecord>(registryClient).apply {
     configure(config, true)
-  }
-
-  fun Block() = SpecificAvroSerde<BlockHeaderRecord>(registryClient).apply {
-    configure(config, false)
   }
 
   fun TransactionList() = SpecificAvroSerde<TransactionListRecord>(registryClient).apply {
@@ -232,5 +231,17 @@ object Serdes : KoinComponent {
 
   fun EthTokenListsKey() = SpecificAvroSerde<EthTokenListsKeyRecord>(registryClient).apply {
     configure(config, true)
+  }
+
+  fun UncleList() = SpecificAvroSerde<UncleListRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun UncleKey() = SpecificAvroSerde<UncleKeyRecord>(registryClient).apply {
+    configure(config, true)
+  }
+
+  fun Uncle() = SpecificAvroSerde<UncleRecord>(registryClient).apply {
+    configure(config, false)
   }
 }

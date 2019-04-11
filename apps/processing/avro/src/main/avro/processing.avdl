@@ -4,6 +4,10 @@ protocol Processing {
   import idl "common.avdl";
   import idl "capture.avdl";
 
+  record UncleKeyRecord {
+    string hash;
+  }
+
   record TransactionKeyRecord {
     string hash;
   }

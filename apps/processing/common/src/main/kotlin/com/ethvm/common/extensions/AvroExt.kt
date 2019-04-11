@@ -13,6 +13,7 @@ import com.ethvm.avro.capture.TraceResultRecord
 import com.ethvm.avro.capture.TraceRewardActionRecord
 import com.ethvm.avro.capture.TransactionReceiptRecord
 import com.ethvm.avro.capture.TransactionRecord
+import com.ethvm.avro.capture.UncleRecord
 import com.ethvm.avro.common.TraceLocationRecord
 import com.ethvm.avro.exchange.ExchangeRateRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionFeeRecord
@@ -85,6 +86,20 @@ fun BlockHeaderRecord.Builder.setGasUsedBI(gasUsed: BigInteger) = setGasUsed(gas
 fun BlockHeaderRecord.Builder.setDifficultyBI(difficulty: BigInteger) = setDifficulty(difficulty.byteBuffer())
 
 fun BlockHeaderRecord.Builder.setTotalDifficultyBI(totalDifficulty: BigInteger) = setTotalDifficulty(totalDifficulty.byteBuffer())
+
+fun UncleRecord.Builder.setNumberBI(number: BigInteger) = setNumber(number.byteBuffer())
+
+fun UncleRecord.Builder.setHeightBI(number: BigInteger) = setHeight(number.byteBuffer())
+
+fun UncleRecord.Builder.setNonceBI(nonce: BigInteger) = setNonce(nonce.byteBuffer())
+
+fun UncleRecord.Builder.setGasLimitBI(gasLimit: BigInteger) = setGasLimit(gasLimit.byteBuffer())
+
+fun UncleRecord.Builder.setGasUsedBI(gasUsed: BigInteger) = setGasUsed(gasUsed.byteBuffer())
+
+fun UncleRecord.Builder.setDifficultyBI(difficulty: BigInteger) = setDifficulty(difficulty.byteBuffer())
+
+fun UncleRecord.Builder.setTotalDifficultyBI(totalDifficulty: BigInteger) = setTotalDifficulty(totalDifficulty.byteBuffer())
 
 fun TraceLocationRecord.Builder.setBlockNumberBI(blockNumber: BigInteger) = setBlockNumber(blockNumber.byteBuffer())
 

@@ -10,6 +10,7 @@ import com.ethvm.avro.capture.TraceResultRecord
 import com.ethvm.avro.capture.TraceRewardActionRecord
 import com.ethvm.avro.capture.TransactionReceiptRecord
 import com.ethvm.avro.capture.TransactionRecord
+import com.ethvm.avro.capture.UncleRecord
 import com.ethvm.common.extensions.compress
 import com.ethvm.common.extensions.hexBuffer
 import com.ethvm.common.extensions.setBalanceBI
@@ -20,6 +21,7 @@ import com.ethvm.common.extensions.setGasBI
 import com.ethvm.common.extensions.setGasLimitBI
 import com.ethvm.common.extensions.setGasPriceBI
 import com.ethvm.common.extensions.setGasUsedBI
+import com.ethvm.common.extensions.setHeightBI
 import com.ethvm.common.extensions.setNonceBI
 import com.ethvm.common.extensions.setNumberBI
 import com.ethvm.common.extensions.setTotalDifficultyBI
@@ -30,6 +32,7 @@ import org.web3j.protocol.core.methods.response.Transaction
 import org.web3j.protocol.core.methods.response.TransactionReceipt
 import org.web3j.protocol.parity.methods.response.Trace
 import org.web3j.utils.Numeric
+import java.math.BigInteger
 
 fun EthBlock.Block.toBlockHeaderRecord(builder: BlockHeaderRecord.Builder): BlockHeaderRecord.Builder =
   builder
@@ -39,6 +42,27 @@ fun EthBlock.Block.toBlockHeaderRecord(builder: BlockHeaderRecord.Builder): Bloc
     .setNonceBI(nonce)
     .setSha3Uncles(sha3Uncles)
     .setUncles(uncles)
+    .setLogsBloom(logsBloom)
+    .setTransactionsRoot(transactionsRoot)
+    .setStateRoot(stateRoot)
+    .setReceiptsRoot(receiptsRoot)
+    .setAuthor(author)
+    .setDifficultyBI(difficulty)
+    .setTotalDifficultyBI(totalDifficulty)
+    .setExtraData(extraData)
+    .setGasLimitBI(gasLimit)
+    .setGasUsedBI(gasUsed)
+    .setTimestamp(timestamp.longValueExact())
+    .setSize(Numeric.decodeQuantity(sizeRaw ?: "0x0").longValueExact())
+
+fun EthBlock.Block.toUncleRecord(blockNumber: BigInteger, builder: UncleRecord.Builder): UncleRecord.Builder =
+  builder
+    .setNumberBI(number)
+    .setHeightBI(blockNumber)
+    .setHash(hash)
+    .setParentHash(parentHash)
+    .setNonceBI(nonce)
+    .setSha3Uncles(sha3Uncles)
     .setLogsBloom(logsBloom)
     .setTransactionsRoot(transactionsRoot)
     .setStateRoot(stateRoot)
