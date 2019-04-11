@@ -31,17 +31,17 @@ CREATE INDEX idx_block_header_author ON canonical_block_header (author);
 
 /* A view to help with address metadata */
 CREATE VIEW canonical_block_author AS
-SELECT cb.author AS address,
-       COUNT(
-         *)      AS count
+SELECT
+  cb.author AS address,
+  COUNT(*) AS count
 FROM canonical_block_header AS cb
 GROUP BY cb.author
 ORDER BY count DESC;
 
 /* All transactions including possible transactions from old forks */
-CREATE TABLE TRANSACTION
+CREATE TABLE "transaction"
 (
-  HASH              CHAR(66) PRIMARY KEY,
+  hash              CHAR(66) PRIMARY KEY,
   nonce             NUMERIC  NOT NULL,
   block_hash        CHAR(66) NOT NULL,
   block_number      NUMERIC  NOT NULL,
@@ -62,17 +62,14 @@ CREATE TABLE TRANSACTION
 );
 
 CREATE INDEX idx_transaction_hash ON TRANSACTION (HASH);
-
 CREATE INDEX idx_transaction_block_hash ON TRANSACTION (block_hash);
-
 CREATE INDEX idx_transaction_from ON TRANSACTION ("from");
-
 CREATE INDEX idx_transaction_to ON TRANSACTION ("to");
 
 /* This view helps to filter out non-canonical transactions based on the latest state of the canonical block header table */
 CREATE VIEW canonical_transaction AS
 SELECT t.*
-FROM TRANSACTION AS t
+FROM "transaction" AS t
        RIGHT JOIN canonical_block_header AS cb ON t.block_hash = cb.hash
 WHERE cb.number IS NOT NULL
   AND t.hash IS NOT NULL
@@ -197,18 +194,21 @@ CREATE TABLE fungible_balance_deltas
 CREATE VIEW account AS
 SELECT fb.address,
        fb.amount AS balance,
+       (SELECT COUNT(*) FROM canonical_transaction AS ct WHERE ct.from = fb.address OR ct.to = fb.address) AS total_tx_count,
+       (SELECT COUNT(*) FROM canonical_transaction AS ct WHERE ct.to = fb.address) AS in_tx_count,
+       (SELECT COUNT(*) FROM canonical_transaction AS ct WHERE ct.from = fb.address) AS out_tx_count,
        CASE
          WHEN a.count > 0 THEN
            TRUE
          ELSE
            FALSE
-         END     AS is_miner,
+         END AS is_miner,
        CASE
          WHEN cc.count > 0 THEN
            TRUE
          ELSE
            FALSE
-         END     AS contract_creator
+         END AS is_contract_creator
 FROM fungible_balance AS fb
        LEFT JOIN canonical_block_author AS a ON fb.address = a.address
        LEFT JOIN contract_creator AS cc ON fb.address = cc.address

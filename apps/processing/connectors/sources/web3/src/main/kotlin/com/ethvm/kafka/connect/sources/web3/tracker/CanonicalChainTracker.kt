@@ -46,7 +46,11 @@ class CanonicalChainTracker(
         .subscribe(
           { heads ->
 
-            head = heads.max()!!
+            val newHead = heads.max()!!
+            if(newHead > head) {
+              head = newHead
+            }
+
             val tail = heads.min()!!
 
             logger.debug { "New head notification! - Tail: $tail - Head: $head" }
@@ -93,7 +97,7 @@ class CanonicalChainTracker(
     val currentTail = tail.get()
     val reOrg = ArrayList<LongRange>().apply { if (reOrgs.isNotEmpty()) reOrgs.drainTo(this) }
 
-    if (currentTail == currentHead) {
+    if (currentTail == currentHead + 1) {
       logger.debug { "Tail: $currentTail == Head: $currentHead. Skipping!" }
       return Pair(Option.empty(), reOrg)
     }
