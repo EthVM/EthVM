@@ -154,14 +154,15 @@ fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> 
 
       var deltas = emptyList<FungibleBalanceDeltaRecord>()
 
-      if (key.second == null) {
-
-        deltas = deltas + traces.map { it.toFungibleBalanceDeltas() }.flatten()
+      deltas = if (key.second == null) {
+        // dealing with block and uncle rewards
+        deltas + traces.map { it.toFungibleBalanceDeltas() }.flatten()
       } else {
 
-        val rootTrace = traces.first { it.getTraceAddress().isEmpty() }
+        // all other traces
+        val root = traces.first { it.traceAddress.isEmpty() }
 
-        deltas = deltas + when (rootTrace.hasError()) {
+        deltas + when (root.hasError()) {
           true -> emptyList()
           false -> traces
             .map { trace -> trace.toFungibleBalanceDeltas() }

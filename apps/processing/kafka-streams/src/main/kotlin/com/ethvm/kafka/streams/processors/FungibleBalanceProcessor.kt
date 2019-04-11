@@ -21,6 +21,8 @@ import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.config.Topics.CanonicalBlockAuthor
 import com.ethvm.kafka.streams.config.Topics.CanonicalBlockHeader
 import com.ethvm.kafka.streams.config.Topics.CanonicalMinerFeesEtherDeltas
+import com.ethvm.kafka.streams.config.Topics.CanonicalReceiptErc20Deltas
+import com.ethvm.kafka.streams.config.Topics.CanonicalReceipts
 import com.ethvm.kafka.streams.config.Topics.CanonicalTraces
 import com.ethvm.kafka.streams.config.Topics.CanonicalTracesEtherDeltas
 import com.ethvm.kafka.streams.config.Topics.CanonicalTransactionFees
@@ -28,6 +30,7 @@ import com.ethvm.kafka.streams.config.Topics.CanonicalTransactionFeesEtherDeltas
 import com.ethvm.kafka.streams.config.Topics.FungibleBalance
 import com.ethvm.kafka.streams.config.Topics.FungibleBalanceDeltas
 import com.ethvm.kafka.streams.transformers.OncePerBlockTransformer
+import com.ethvm.kafka.streams.utils.ERC20Abi
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KotlinLogging
 import org.apache.kafka.clients.producer.ProducerConfig
@@ -96,7 +99,6 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
         },
         Materialized.with(Serdes.FungibleBalanceKey(), Serdes.FungibleBalance())
       )
-//      .suppress(Suppressed.untilTimeLimit(Duration.ofSeconds(1), Suppressed.BufferConfig.maxRecords(10000)))
       .toStream()
       .toTopic(FungibleBalance)
 
@@ -146,21 +148,6 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
                   .setAmountBI(balance.hexToBI())
                   .build()
               }
-
-          // block reward
-
-          deltas = deltas + FungibleBalanceDeltaRecord.newBuilder()
-            .setTokenType(FungibleTokenType.ETHER)
-            .setDeltaType(FungibleBalanceDeltaType.BLOCK_REWARD)
-            .setTraceLocation(
-              TraceLocationRecord.newBuilder()
-                .setBlockNumberBI(BigInteger.ZERO)
-                .build()
-            )
-            .setAddress("0x0000000000000000000000000000000000000000")
-            .setAmountBI(
-              netConfig.chainConfigForBlock(BigInteger.ZERO).constants.blockReward
-            ).build()
 
           deltas.map { delta ->
             KeyValue(
