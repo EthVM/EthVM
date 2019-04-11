@@ -1,6 +1,7 @@
-import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 import { TransactionEntity } from '@app/orm/entities/transaction.entity'
+import { PrimaryColumn } from 'typeorm/decorator/columns/PrimaryColumn'
 
 @Entity('canonical_transaction_trace')
 export class TransactionTraceEntity {
@@ -9,13 +10,13 @@ export class TransactionTraceEntity {
     assignClean(this, data);
   }
 
-  @Column({type: 'character', length: 66, readonly: true})
+  @PrimaryColumn({type: 'character', length: 66, readonly: true})
   blockHash?: string
 
-  @Column({type: 'character', length: 66, readonly: true})
+  @PrimaryColumn({type: 'character', length: 66, readonly: true})
   transactionHash?: string
 
-  @Column({type: 'text', readonly: true})
+  @PrimaryColumn({type: 'text', readonly: true})
   traceAddress?: string
 
   @Column({type: 'integer', readonly: true})

@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne, JoinColumnOptions, JoinColumn, OneToMany } from 'typeorm'
+import { Entity, Column, ManyToOne, JoinColumnOptions, JoinColumn, OneToMany, OneToOne, PrimaryColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 import { BlockHeaderEntity } from '@app/orm/entities/block-header.entity'
 import { TransactionReceiptEntity } from '@app/orm/entities/transaction-receipt.entity'
@@ -11,7 +11,7 @@ export class TransactionEntity {
     assignClean(this, data);
   }
 
-  @Column({type: 'character', length: 66, readonly: true})
+  @PrimaryColumn({type: 'character', length: 66, readonly: true})
   hash?: string
 
   @Column({type: 'numeric', readonly: true})
@@ -69,12 +69,12 @@ export class TransactionEntity {
   })
   blockHeader!: BlockHeaderEntity
 
-  @OneToMany(type => TransactionReceiptEntity, receipt => receipt.tx)
+  @OneToOne(type => TransactionReceiptEntity, receipt => receipt.tx)
   @JoinColumn({
     name: 'hash',
     referencedColumnName: 'transactionHash'
   })
-  receipts?: TransactionReceiptEntity[]
+  receipt?: TransactionReceiptEntity
 
   @OneToMany(type => TransactionTraceEntity, trace => trace.tx)
   @JoinColumn({

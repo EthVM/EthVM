@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 import { TransactionEntity } from '@app/orm/entities/transaction.entity'
 
@@ -9,7 +9,7 @@ export class TransactionReceiptEntity {
     assignClean(this, data);
   }
 
-  @Column({type: 'character', length: 66, readonly: true})
+  @PrimaryColumn({type: 'character', length: 66, readonly: true})
   transactionHash?: string
 
   @Column({type: 'integer', readonly: true})
@@ -48,7 +48,7 @@ export class TransactionReceiptEntity {
   @Column({type: 'numeric', readonly: true})
   status?: number
 
-  @ManyToOne(type => TransactionEntity, tx => tx.receipts)
+  @OneToOne(type => TransactionEntity, tx => tx.receipt)
   @JoinColumn({
     name: 'transactionHash',
     referencedColumnName: 'hash'
