@@ -155,7 +155,8 @@ export class EthvmApolloApi implements EthvmApi {
         query: blocks,
         variables: {
           limit,
-          page
+          page,
+          fromBlock
         }
       })
       .then(res => res.data.blocks.map(raw => new Block(raw)))

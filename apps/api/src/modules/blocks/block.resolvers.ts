@@ -5,16 +5,18 @@ import { ParseHashPipe } from '@app/shared/validation/parse-hash.pipe'
 import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe'
 import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
-import { PubSub, withFilter } from 'graphql-subscriptions'
+import { PubSub } from 'graphql-subscriptions'
 import { Inject } from '@nestjs/common'
 
 @Resolver('Block')
 export class BlockResolvers {
-  constructor(private readonly blockService: BlockService, @Inject('PUB_SUB') private pubSub: PubSub) {}
+  constructor(private readonly blockService: BlockService,
+              // @Inject('PUB_SUB') private pubSub: PubSub
+  ) {}
 
   @Query()
-  async blocks(@Args('page', ParsePagePipe) page: number, @Args('limit', ParseLimitPipe) limit: number) {
-    const entities = await this.blockService.findBlocks(limit, page)
+  async blocks(@Args('page', ParsePagePipe) page: number, @Args('limit', ParseLimitPipe) limit: number, @Args('fromBlock') fromBlock?: number) {
+    const entities = await this.blockService.findBlocks(limit, page, fromBlock)
     return entities.map(e => new BlockDto(e))
   }
 
@@ -45,21 +47,21 @@ export class BlockResolvers {
     return await this.blockService.findTotalNumberOfBlocks()
   }
 
-  @Subscription()
-  newBlock() {
-    // TODO use withFilter to filter by event type
-    return {
-      resolve: payload => {
-        // Publish 'txs' event if block has txs
-
-        const { value } = payload
-        if (value.txs && value.txs.length) {
-          this.pubSub.publish('txs', value.txs)
-        }
-
-        return new BlockDto(value)
-      },
-      subscribe: () => this.pubSub.asyncIterator('blocks'),
-    }
-  }
+  // @Subscription()
+  // newBlock() {
+  //   // TODO use withFilter to filter by event type
+  //   return {
+  //     resolve: payload => {
+  //       // Publish 'txs' event if block has txs
+  //
+  //       const { value } = payload
+  //       if (value.txs && value.txs.length) {
+  //         this.pubSub.publish('txs', value.txs)
+  //       }
+  //
+  //       return new BlockDto(value)
+  //     },
+  //     subscribe: () => this.pubSub.asyncIterator('blocks'),
+  //   }
+  // }
 }

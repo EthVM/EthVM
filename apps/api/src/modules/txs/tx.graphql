@@ -29,6 +29,7 @@ type Transaction {
   v: Int
   value: String
   receipt: Receipt
+  traces: [Trace]
 }
 
 type Receipt {
@@ -44,7 +45,6 @@ type Receipt {
   transactionHash: String
   transactionIndex: String
   logs: [Log]
-  traces: [Trace]
 }
 
 type Trace {

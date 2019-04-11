@@ -1,5 +1,5 @@
-query blocks($limit: Int, $page: Int) {
-  blocks(limit: $limit, page: $page) {
+query blocks($limit: Int, $page: Int, $fromBlock: Long) {
+  blocks(limit: $limit, page: $page, fromBlock: $fromBlock) {
     header {
       hash
       number
@@ -42,8 +42,8 @@ query blockByHash($hash: String) {
       sha3Uncles
       transactionsRoot
       receiptsRoot
+      totalDifficulty
     }
-    totalDifficulty
     transactions {
       hash
       blockNumber
@@ -56,9 +56,9 @@ query blockByHash($hash: String) {
         contractAddress
         gasUsed
         status
-        traces {
-          error
-        }
+      }
+      traces {
+        error
       }
     }
     rewards {
@@ -90,8 +90,8 @@ query blockByNumber($number: Int) {
       sha3Uncles
       transactionsRoot
       receiptsRoot
+      totalDifficulty
     }
-    totalDifficulty
     transactions {
       hash
       blockNumber
@@ -104,9 +104,9 @@ query blockByNumber($number: Int) {
         contractAddress
         gasUsed
         status
-        traces {
-          error
-        }
+      }
+      traces {
+        error
       }
     }
     rewards {

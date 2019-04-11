@@ -1,5 +1,5 @@
 type Query {
-  blocks(limit: Int, page: Int): [Block]
+  blocks(limit: Int, page: Int, fromBlock: Long): [Block]
   blockByHash(hash: String): Block
   blockByNumber(number: Int): Block
   minedBlocksByAddress(address: String, limit: Int, page: Int): [Block]
@@ -16,7 +16,7 @@ type Block {
 }
 
 type BlockHeader {
-  number: Int
+  number: Long
   hash: String
   parentHash: String
   nonce: String

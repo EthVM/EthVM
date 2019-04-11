@@ -119,7 +119,7 @@ export class Block {
 }
 
 export class BlockHeader {
-    number?: number;
+    number?: Long;
     hash?: string;
     parentHash?: string;
     nonce?: string;
@@ -297,7 +297,7 @@ export abstract class IQuery {
 
     abstract blockMetrics(limit?: number, page?: number): BlockMetric[] | Promise<BlockMetric[]>;
 
-    abstract blocks(limit?: number, page?: number): Block[] | Promise<Block[]>;
+    abstract blocks(limit?: number, page?: number, fromBlock?: Long): Block[] | Promise<Block[]>;
 
     abstract blockByHash(hash?: string): Block | Promise<Block>;
 
@@ -406,7 +406,6 @@ export class Receipt {
     transactionHash?: string;
     transactionIndex?: string;
     logs?: Log[];
-    traces?: Trace[];
 }
 
 export class Result {
@@ -569,6 +568,7 @@ export class Transaction {
     v?: number;
     value?: string;
     receipt?: Receipt;
+    traces?: Trace[];
 }
 
 export class Uncle {
@@ -598,3 +598,5 @@ export type Buffer = any;
 export type Date = any;
 export type Decimal = any;
 export type JSON = any;
+export type Long = any;
+export type StatisticValue = any;

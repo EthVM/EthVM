@@ -4,8 +4,7 @@ import { TxDto } from '@app/modules/txs/tx.dto'
 import { BlockHeaderDto } from '@app/modules/blocks/block-header.dto'
 
 export class BlockDto extends Block {
-  // TODO set data to BlockHeaderEntity
-  constructor(data: any) {
+  constructor(data: BlockHeaderEntity) {
     super()
 
     this.transactions = data.txs ? data.txs.map(tx => new TxDto(tx)) : []
