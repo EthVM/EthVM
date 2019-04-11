@@ -11,7 +11,7 @@ type Subscription {
 
 type Transaction {
   hash: String
-  nonce: String
+  nonce: Long
   blockHash: String
   blockNumber: Int
   transactionIndex: Int

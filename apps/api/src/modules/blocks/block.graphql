@@ -19,18 +19,18 @@ type BlockHeader {
   number: Long
   hash: String
   parentHash: String
-  nonce: String
+  nonce: Long
   sha3Uncles: String
   logsBloom: String
   transactionsRoot: String
   stateRoot: String
   receiptsRoot: String
   author: String
-  difficulty: String
+  difficulty: Long
   totalDifficulty: Float
   extraData: String
-  gasLimit: String
-  gasUsed: String
+  gasLimit: Long
+  gasUsed: Long
   timestamp: Long
   size: Long
   blockTime: Long

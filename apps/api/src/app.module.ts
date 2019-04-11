@@ -21,7 +21,7 @@ import { LoggerModule } from '@app/shared/logger.module'
     SharedModule,
     GraphQLModule,
     OrmModule,
-    //SubscriptionsModule,
+    // SubscriptionsModule,
     BlockModule,
     // BalanceModule,
     // AccountMetadataModule,
@@ -32,7 +32,7 @@ import { LoggerModule } from '@app/shared/logger.module'
     TxModule,
     // UncleModule,
     // StatisticModule,
-    // SearchModule,
+    SearchModule,
     LoggerModule,
   ],
 })
