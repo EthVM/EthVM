@@ -10,8 +10,8 @@ export class ContractResolvers {
   constructor(private readonly contractService: ContractService) {}
 
   @Query()
-  async contractByHash(@Args('address', ParseAddressPipe) address: string) {
-    const entity = await this.contractService.findContractByHash(address)
+  async contractByAddress(@Args('address', ParseAddressPipe) address: string) {
+    const entity = await this.contractService.findContractByAddress(address)
     return entity ? new ContractDto(entity) : null
   }
 

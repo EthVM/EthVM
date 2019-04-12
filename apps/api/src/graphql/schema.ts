@@ -13,12 +13,6 @@ export enum BalanceType {
     ERC721 = "ERC721"
 }
 
-export enum ContractTypeEnum {
-    GENERIC = "GENERIC",
-    ERC20 = "ERC20",
-    ERC721 = "ERC721"
-}
-
 export enum Duration {
     ALL = "ALL",
     YEAR = "YEAR",
@@ -122,34 +116,14 @@ export class BlockHeader {
 }
 
 export class Contract {
-    id?: string;
     address?: string;
     creator?: string;
-    data?: Buffer;
-    destructed?: ContractDestructed;
-    metadata?: ContractMetadata;
-    type?: ContractType;
-}
-
-export class ContractDestructed {
-    address?: string;
-    balance?: Buffer;
-    refundAddress?: Buffer;
-}
-
-export class ContractMetadata {
-    decimals?: number;
-    ens_address?: string;
-    name?: string;
-    symbol?: string;
-    website?: string;
-    logo?: Logo;
-    social?: Social;
-    support?: Support;
-}
-
-export class ContractType {
-    string?: ContractTypeEnum;
+    init?: string;
+    code?: string;
+    refundAddress?: string;
+    refundBalance?: number;
+    traceCreatedAt?: string;
+    traceDestroyedAt?: string;
 }
 
 export class EthplorerAddressInfo {
@@ -230,10 +204,6 @@ export class EthplorerTokenOperation {
     value?: number;
 }
 
-export class Logo {
-    src?: string;
-}
-
 export class ProcessingMetadata {
     id?: string;
     boolean?: boolean;
@@ -259,7 +229,7 @@ export abstract class IQuery {
 
     abstract totalNumberOfBlocks(): number | Promise<number>;
 
-    abstract contractByHash(address: string): Contract | Promise<Contract>;
+    abstract contractByAddress(address: string): Contract | Promise<Contract>;
 
     abstract contractsCreatedBy(creator: string, limit?: number, page?: number): Contract[] | Promise<Contract[]>;
 
@@ -367,22 +337,6 @@ export class Search {
     tx?: Transaction;
 }
 
-export class Social {
-    blog?: string;
-    chat?: string;
-    facebook?: string;
-    forum?: string;
-    github?: string;
-    gitter?: string;
-    instagram?: string;
-    linkedin?: string;
-    reddit?: string;
-    slack?: string;
-    telegram?: string;
-    twitter?: string;
-    youtube?: string;
-}
-
 export class Statistic {
     date?: Long;
     value?: StatisticValue;
@@ -394,11 +348,6 @@ export abstract class ISubscription {
     abstract newProcessingMetadata(): ProcessingMetadata | Promise<ProcessingMetadata>;
 
     abstract newTxs(): Transaction[] | Promise<Transaction[]>;
-}
-
-export class Support {
-    email?: string;
-    url?: string;
 }
 
 export class Token {

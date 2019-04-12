@@ -1,5 +1,5 @@
-query contractByHash($address: String!) {
-  contractByHash(address: $address) {
+query contractByAddress($address: String!) {
+  contractByAddress(address: $address) {
     address
     metadata {
       decimals

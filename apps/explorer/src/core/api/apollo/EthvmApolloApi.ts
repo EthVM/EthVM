@@ -2,7 +2,7 @@ import { EthvmApi } from '@app/core/api'
 import { accountMetadataByHash, addressAllTokensOwned, addressAmountTokensOwned, addressBalanceByHash } from '@app/core/api/apollo/queries/addresses.graphql'
 import { blockMetricByHash, blockMetrics } from '@app/core/api/apollo/queries/block-metrics.graphql'
 import { blockByHash, blockByNumber, blocks, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
-import { contractByHash, contractsCreatedBy } from '@app/core/api/apollo/queries/contracts.graphql'
+import { contractByAddress, contractsCreatedBy } from '@app/core/api/apollo/queries/contracts.graphql'
 import {
   quote,
   tokenExchangeRateByAddress,
@@ -228,13 +228,13 @@ export class EthvmApolloApi implements EthvmApi {
   public getContract(address: string): Promise<Contract> {
     return this.apollo
       .query({
-        query: contractByHash,
+        query: contractByAddress,
         variables: {
           address
         },
         fetchPolicy: 'network-only'
       })
-      .then(res => res.data.contractByHash)
+      .then(res => res.data.contractByAddress)
   }
 
   public getContractsCreatedBy(address: string, limit?: number, page?: number): Promise<Contract[]> {

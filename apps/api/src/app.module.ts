@@ -7,6 +7,7 @@ import { SharedModule } from '@app/shared/shared.module'
 import { Module } from '@nestjs/common'
 import { LoggerModule } from '@app/shared/logger.module'
 import { AccountModule } from '@app/modules/accounts/account.module'
+import { ContractModule } from '@app/modules/contracts/contract.module'
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { AccountModule } from '@app/modules/accounts/account.module'
     // SubscriptionsModule,
     BlockModule,
     AccountModule,
-    // ContractModule,
+    ContractModule,
     // ExchangeModule,
     // ProcessingMetadataModule,
     // TokenTransferModule,
