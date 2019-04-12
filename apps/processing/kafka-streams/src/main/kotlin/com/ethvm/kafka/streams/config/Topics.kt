@@ -3,10 +3,10 @@ package com.ethvm.kafka.streams.config
 import com.ethvm.kafka.streams.Serdes.BlockAuthor
 import com.ethvm.kafka.streams.Serdes.BlockHeader
 import com.ethvm.kafka.streams.Serdes.BlockMetricsHeader
-import com.ethvm.kafka.streams.Serdes.BlockTimestamp
-import com.ethvm.kafka.streams.Serdes.BlockMetricsTransactionFee
 import com.ethvm.kafka.streams.Serdes.BlockMetricsTransaction
+import com.ethvm.kafka.streams.Serdes.BlockMetricsTransactionFee
 import com.ethvm.kafka.streams.Serdes.BlockMetricsTransactionTrace
+import com.ethvm.kafka.streams.Serdes.BlockTimestamp
 import com.ethvm.kafka.streams.Serdes.CanonicalKey
 import com.ethvm.kafka.streams.Serdes.Contract
 import com.ethvm.kafka.streams.Serdes.ContractKey
@@ -32,6 +32,9 @@ import com.ethvm.kafka.streams.Serdes.TransactionKey
 import com.ethvm.kafka.streams.Serdes.TransactionList
 import com.ethvm.kafka.streams.Serdes.TransactionReceipt
 import com.ethvm.kafka.streams.Serdes.TransactionReceiptKey
+import com.ethvm.kafka.streams.Serdes.Uncle
+import com.ethvm.kafka.streams.Serdes.UncleKey
+import com.ethvm.kafka.streams.Serdes.UncleList
 import org.apache.kafka.common.serialization.Serde
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.kstream.Consumed
@@ -64,10 +67,12 @@ object Topics {
   val CanonicalTransactions = KafkaTopic("canonical_transactions", CanonicalKey(), TransactionList())
   val CanonicalReceipts = KafkaTopic("canonical_receipts", CanonicalKey(), ReceiptList())
   val CanonicalTraces = KafkaTopic("canonical_traces", CanonicalKey(), TraceList())
+  val CanonicalUncles = KafkaTopic("canonical_uncles", CanonicalKey(), UncleList())
 
   val Transaction = KafkaTopic("transaction", TransactionKey(), Transaction())
   val TransactionReceipt = KafkaTopic("transaction_receipt", TransactionReceiptKey(), TransactionReceipt())
   val TransactionTrace = KafkaTopic("transaction_trace", TraceKey(), Trace())
+  val Uncle = KafkaTopic("uncle", UncleKey(), Uncle())
 
   val CanonicalTracesEtherDeltas = KafkaTopic("canonical_traces_ether_deltas", CanonicalKey(), FungibleBalanceDeltaList())
   val CanonicalTransactionFeesEtherDeltas = KafkaTopic("canonical_transaction_fees_ether_deltas", CanonicalKey(), FungibleBalanceDeltaList())
