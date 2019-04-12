@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicLong
 
 class CanonicalChainTracker(
   parity: Parity,
-  startFrom: Long = 0L
+  startFrom: Long = -1L
 ) {
 
   private val logger = KotlinLogging.logger {}
@@ -31,6 +31,9 @@ class CanonicalChainTracker(
   private var reOrgs: ArrayBlockingQueue<LongRange> = ArrayBlockingQueue(10)
 
   init {
+
+    logger.info { "### Head = $head" }
+
     assert(startFrom >= 0L) { "StartFrom needs to be >= 0" }
 
     logger.debug { "Starting subscription to new heads!" }
@@ -82,7 +85,7 @@ class CanonicalChainTracker(
 
     do {
       val currentTail = tail.get()
-    } while (value < currentTail && !tail.compareAndSet(currentTail, value))
+    } while (value < currentTail && !tail.compareAndSet(currentTail, value - 1))
   }
 
   fun nextRange(maxSize: Int = 128): Pair<Option<LongRange>, List<LongRange>> {
@@ -97,22 +100,22 @@ class CanonicalChainTracker(
     val currentTail = tail.get()
     val reOrg = ArrayList<LongRange>().apply { if (reOrgs.isNotEmpty()) reOrgs.drainTo(this) }
 
-    if (currentTail == currentHead + 1) {
+    if (currentTail == currentHead) {
       logger.debug { "Tail: $currentTail == Head: $currentHead. Skipping!" }
       return Pair(Option.empty(), reOrg)
     }
 
-    val range = currentTail.until(currentTail + maxSize) // range is not inclusive at the end
+    val range = (currentTail + 1).until(currentTail + maxSize + 1) // range is not inclusive at the end
       .let { range ->
         when {
-          range.endInclusive > currentHead -> currentTail.until(currentHead)
+          range.endInclusive > currentHead -> (currentTail + 1).until(currentHead + 1)
           else -> range
         }
       }
 
     logger.debug { "Next range: $range" }
 
-    tail.compareAndSet(currentTail, range.endInclusive + 1)
+    tail.compareAndSet(currentTail, range.endInclusive)
 
     return Pair(range.toOption(), reOrg)
   }
