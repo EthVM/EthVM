@@ -9,21 +9,6 @@ import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
 import org.apache.commons.codec.binary.Hex as ApacheHex
 
-fun ByteArray?.fixed(size: Int): ByteArray? {
-  return if (this == null) {
-    this
-  } else {
-    require(this.size == size) { "Must be of size $size" }
-    this
-  }
-}
-
-fun ByteArray?.fixed1(): ByteArray? = if (this == null) null else this.fixed(1)
-fun ByteArray?.fixed8(): ByteArray? = if (this == null) null else this.fixed(8)
-fun ByteArray?.data20(): ByteArray? = if (this == null) null else this.fixed(20)
-fun ByteArray?.data32(): ByteArray? = if (this == null) null else this.fixed(32)
-fun ByteArray?.data256(): ByteArray? = if (this == null) null else this.fixed(256)
-
 fun ByteArray?.hex(): String? = if (this != null) ApacheHex.encodeHexString(this) else this
 
 fun ByteArray?.bigInteger(): BigInteger? = BigInteger(this)

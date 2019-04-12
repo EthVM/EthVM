@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-  val ktlintVersion = "7.0.0"
+  val ktlintVersion = "7.3.0"
 
   base
   kotlin("jvm") version "1.3.10" apply false
@@ -33,6 +33,9 @@ allprojects {
     set("arrow-core-version", "0.8.2")
     set("logback-version", "1.2.3")
     set("kotlin-logging-version", "1.6.25")
+    set("kafka-connect-api-version", "2.1.0")
+    set("kafka-schema-registry-client-version", "5.1.0")
+    set("kafka-connect-avro-converter-version", "5.1.0")
   }
 
 }
