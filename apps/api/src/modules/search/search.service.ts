@@ -4,8 +4,8 @@ import { SearchDto } from '@app/modules/search/search.dto'
 import { TxService } from '@app/modules/txs/tx.service'
 import { EthService } from '@app/shared/eth.service'
 import { Injectable } from '@nestjs/common'
-import { TxDto } from '@app/modules/txs/tx.dto'
-import { BlockDto } from '@app/modules/blocks/block.dto'
+import { TxDto } from '@app/modules/txs/dto/tx.dto'
+import { BlockDto } from '@app/modules/blocks/dto/block.dto'
 
 @Injectable()
 export class SearchService {

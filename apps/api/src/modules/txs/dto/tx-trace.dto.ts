@@ -1,7 +1,7 @@
-import { Transaction } from '@app/graphql/schema'
+import { Trace } from '@app/graphql/schema'
 import { assignClean } from '@app/shared/utils'
 
-export class TxDto extends Transaction {
+export class TxTraceDto extends Trace {
   constructor(data: any) {
     super()
     assignClean(this, data)

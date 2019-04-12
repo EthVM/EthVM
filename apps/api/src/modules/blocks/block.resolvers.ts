@@ -1,12 +1,10 @@
-import { Args, Query, Resolver, Subscription } from '@nestjs/graphql'
+import { Args, Query, Resolver } from '@nestjs/graphql'
 import { BlockService } from '@app/modules/blocks/block.service'
-import { BlockDto } from '@app/modules/blocks/block.dto'
 import { ParseHashPipe } from '@app/shared/validation/parse-hash.pipe'
 import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe'
 import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
-import { PubSub } from 'graphql-subscriptions'
-import { Inject } from '@nestjs/common'
+import { BlockDto } from '@app/modules/blocks/dto/block.dto'
 
 @Resolver('Block')
 export class BlockResolvers {

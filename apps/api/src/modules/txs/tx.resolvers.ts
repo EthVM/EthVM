@@ -1,12 +1,10 @@
-import { Args, Query, Resolver, Subscription } from '@nestjs/graphql'
+import { Args, Query, Resolver } from '@nestjs/graphql'
 import { TxService } from '@app/modules/txs/tx.service'
-import { TxDto } from '@app/modules/txs/tx.dto'
 import { ParseHashPipe } from '@app/shared/validation/parse-hash.pipe'
 import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe'
 import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
-import { Inject } from '@nestjs/common'
-import { PubSub } from 'graphql-subscriptions'
+import { TxDto } from '@app/modules/txs/dto/tx.dto'
 
 @Resolver('Transaction')
 export class TxResolvers {
