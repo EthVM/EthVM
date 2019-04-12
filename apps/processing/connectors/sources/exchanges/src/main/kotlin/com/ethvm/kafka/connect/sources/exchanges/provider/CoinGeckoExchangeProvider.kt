@@ -84,7 +84,6 @@ class CoinGeckoExchangeProvider(
             value.schema(),
             value.value()
           )
-
         }
 
       page = page.inc()

@@ -111,7 +111,7 @@ class ParityBlocksSource(
 
                 val uncleCount = uncleResp.uncleCount.toLong()
 
-                logger.info { "Uncles | block = $blockNumber, count = $uncleCount"}
+                logger.info { "Uncles | block = $blockNumber, count = $uncleCount" }
 
                 return@thenApply if (uncleCount > 0) {
                   0.until(uncleCount)
@@ -149,9 +149,7 @@ class ParityBlocksSource(
                 } else {
                   emptyList()
                 }
-
               }.thenApply { listOf(headerSourceRecord, txsSourceRecord) + it }
-
           }
 
         blockFuture

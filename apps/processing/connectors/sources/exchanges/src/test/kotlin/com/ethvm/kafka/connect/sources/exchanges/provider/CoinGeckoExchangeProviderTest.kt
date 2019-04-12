@@ -38,9 +38,7 @@ class CoinGeckoExchangeProviderTest : BehaviorSpec() {
           records shouldNotBe null
           records.size shouldBe 254
         }
-
       }
-
     }
   }
 }

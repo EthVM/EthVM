@@ -21,8 +21,6 @@ import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.config.Topics.CanonicalBlockAuthor
 import com.ethvm.kafka.streams.config.Topics.CanonicalBlockHeader
 import com.ethvm.kafka.streams.config.Topics.CanonicalMinerFeesEtherDeltas
-import com.ethvm.kafka.streams.config.Topics.CanonicalReceiptErc20Deltas
-import com.ethvm.kafka.streams.config.Topics.CanonicalReceipts
 import com.ethvm.kafka.streams.config.Topics.CanonicalTraces
 import com.ethvm.kafka.streams.config.Topics.CanonicalTracesEtherDeltas
 import com.ethvm.kafka.streams.config.Topics.CanonicalTransactionFees
@@ -30,7 +28,6 @@ import com.ethvm.kafka.streams.config.Topics.CanonicalTransactionFeesEtherDeltas
 import com.ethvm.kafka.streams.config.Topics.FungibleBalance
 import com.ethvm.kafka.streams.config.Topics.FungibleBalanceDeltas
 import com.ethvm.kafka.streams.transformers.OncePerBlockTransformer
-import com.ethvm.kafka.streams.utils.ERC20Abi
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KotlinLogging
 import org.apache.kafka.clients.producer.ProducerConfig

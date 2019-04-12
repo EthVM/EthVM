@@ -47,7 +47,7 @@ class CanonicalChainTracker(
           { heads ->
 
             val newHead = heads.max()!!
-            if(newHead > head) {
+            if (newHead > head) {
               head = newHead
             }
 
