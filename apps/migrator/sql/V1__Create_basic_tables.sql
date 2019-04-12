@@ -205,7 +205,7 @@ CREATE VIEW account AS
   FROM fungible_balance AS fb
          LEFT JOIN canonical_block_author AS a ON fb.address = a.address
          LEFT JOIN contract_creator AS cc ON fb.address = cc.address
-  WHERE fb.contract IS NULL
+  WHERE fb.contract = ''
   ORDER BY balance DESC;
 
 CREATE INDEX idx_fungible_balance_deltas_address ON fungible_balance_deltas (address) WHERE address IS NOT NULL;
