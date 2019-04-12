@@ -39,6 +39,7 @@ dependencies {
   testImplementation("io.kotlintest:kotlintest-runner-junit5:${ext.get("kotlintest-version") as String}")
   testImplementation("io.mockk:mockk:${ext.get("mockk-version") as String}")
   testImplementation("org.apache.kafka:connect-api:${ext.get("kafka-connect-api-version") as String}")
+  testImplementation("com.github.mirrajabi:okhttp-json-mock:3.0")
 }
 
 project.tasks.getting(Test::class) { useJUnitPlatform {} }

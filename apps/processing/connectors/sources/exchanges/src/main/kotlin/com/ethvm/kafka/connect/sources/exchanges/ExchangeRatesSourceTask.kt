@@ -53,7 +53,7 @@ class ExchangeRatesSourceTask : SourceTask() {
       return when (ex) {
 
         // return an empty list as we can try another poll
-        is RetriableException -> mutableListOf()
+        is RetriableException -> emptyList()
 
         // otherwise re-throw
         else -> throw ex

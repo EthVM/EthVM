@@ -2,8 +2,9 @@ package com.ethvm.kafka.connect.sources.exchanges.provider
 
 import com.beust.klaxon.Klaxon
 import com.beust.klaxon.PropertyStrategy
-import com.ethvm.avro.exchange.ExchangeRateRecord
 import com.ethvm.avro.exchange.SymbolKeyRecord
+import com.ethvm.avro.exchange.TokenExchangeRateRecord
+import com.ethvm.kafka.connect.sources.exchanges.ExchangeRateSourceConnector
 import com.ethvm.kafka.connect.sources.exchanges.model.ExchangeRate
 import com.ethvm.kafka.connect.sources.exchanges.utils.AvroToConnect
 import mu.KotlinLogging
@@ -15,11 +16,14 @@ import java.io.BufferedReader
 import kotlin.reflect.KProperty
 
 class CoinGeckoExchangeProvider(
-  private val topic: String,
-  private val currency: String = "usd",
+  options: Map<String, Any>,
   private val okHttpClient: OkHttpClient = CoinGeckoExchangeProvider.okHttpClient,
   private val klaxon: Klaxon = CoinGeckoExchangeProvider.klaxon
 ) : ExchangeProvider {
+
+  private val topic: String = options["topic"]?.toString() ?: ExchangeRateSourceConnector.Config.TOPIC_CONFIG_DEFAULT
+  private val currency: String = options["currency"]?.toString() ?: "usd"
+  private val perPage: Int = options["per_page"] as Int? ?: 250
 
   private val logger = KotlinLogging.logger {}
 
@@ -31,7 +35,7 @@ class CoinGeckoExchangeProvider(
     val records = mutableListOf<SourceRecord>()
     var page = 1
     do {
-      val url = COINGECKO_API_URL(currency, page)
+      val url = COINGECKO_API_URL(currency, perPage, page)
 
       logger.debug { "Fetching from: $url" }
 
@@ -51,7 +55,7 @@ class CoinGeckoExchangeProvider(
       val body = response.body()
       val reader = BufferedReader(body?.charStream())
 
-      logger.debug { "Parsing result for page $page into rates" }
+      logger.debug { "Parsing into rates" }
 
       val rates = klaxon.parseArray<ExchangeRate>(reader) ?: emptyList()
 
@@ -65,7 +69,7 @@ class CoinGeckoExchangeProvider(
             .build()
 
           val valueRecord = rate
-            .toExchangeRateRecord(ExchangeRateRecord.newBuilder())
+            .toExchangeRateRecord(TokenExchangeRateRecord.newBuilder())
             .build()
 
           val key = AvroToConnect.toConnectData(keyRecord)
@@ -84,28 +88,15 @@ class CoinGeckoExchangeProvider(
         }
 
       page = page.inc()
-    } while (rates.isNotEmpty())
+    } while (rates.size == perPage)
 
     return records
-
-//      val rates2 = mutableListOf<ExchangeRate>()
-//
-//      // Filter by symbol (NOTE: There are repeating symbols, we need to ensure we have an unique id to properly filter)
-//      // Temporary solution: Remove repeating symbols
-//      val filteredRates = rates2
-//        .filterNot { rate ->
-//          rates2
-//            .groupBy { it.symbol }
-//            .filterValues { it.size > 1 }
-//            .flatMap { it.value }
-//            .contains(rate)
-//        }
   }
 
   companion object {
 
     @Suppress("FunctionName")
-    fun COINGECKO_API_URL(currency: String = "usd", page: Int = 1): HttpUrl =
+    fun COINGECKO_API_URL(currency: String = "usd", per_page: Int = 250, page: Int = 1): HttpUrl =
       HttpUrl.Builder()
         .scheme("https")
         .host("api.coingecko.com")
@@ -116,7 +107,7 @@ class CoinGeckoExchangeProvider(
         .addQueryParameter("vs_currency", currency)
         .addQueryParameter("order", "market_cap_desc")
         .addQueryParameter("sparkline", "false")
-        .addQueryParameter("per_page", "250")
+        .addQueryParameter("per_page", per_page.toString())
         .addQueryParameter("page", page.toString())
         .build()
 

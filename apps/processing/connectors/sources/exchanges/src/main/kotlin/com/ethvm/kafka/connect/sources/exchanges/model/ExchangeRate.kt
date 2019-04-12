@@ -1,12 +1,13 @@
 package com.ethvm.kafka.connect.sources.exchanges.model
 
-import com.ethvm.avro.exchange.ExchangeRateRecord
+import com.ethvm.avro.exchange.TokenExchangeRateRecord
 
 data class ExchangeRate(
   val id: String? = "",
   val symbol: String? = "",
   val name: String? = "",
   val image: String? = "",
+  val address: String? = "",
   val current_price: Double? = -1.0,
   val market_cap: Double? = -1.0,
   val market_cap_rank: Int? = -1,
@@ -30,12 +31,13 @@ data class ExchangeRate(
       total_volume != -1.0 &&
       current_price != -1.0
 
-  fun toExchangeRateRecord(builder: ExchangeRateRecord.Builder): ExchangeRateRecord.Builder =
+  fun toExchangeRateRecord(builder: TokenExchangeRateRecord.Builder): TokenExchangeRateRecord.Builder =
     builder
       .setId(id)
       .setSymbol(symbol)
       .setName(name)
       .setImage(image)
+      .setAddress(address)
       .setCurrentPrice(current_price)
       .setMarketCap(market_cap)
       .setMarketCapRank(market_cap_rank)
