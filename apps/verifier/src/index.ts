@@ -6,8 +6,11 @@ const config = new Config()
 
 program.version('0.0.1').description('A utility for verifying the consistency and correctness of data within EthVM')
 
-program.command('ether-balances').action(async () => {
-  await EtherBalances(config)
-})
+program
+  .command('ether-balances')
+  .option('-b, --block [block]', 'Block number to use when requesting ether balances from web3')
+  .action(async (cmd) => {
+    await EtherBalances(config, cmd.block)
+  })
 
 program.parse(process.argv)
