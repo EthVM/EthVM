@@ -56,9 +56,8 @@ export class BlockService {
   }
 
   async findMinedBlocksByAddress(address: string, limit: number = 10, page: number = 0): Promise<BlockHeaderEntity[]> {
-    // TODO check order by
     const skip = page * limit
-    return this.blockHeaderRepository.find({ where: { author: address }, take: limit, skip })
+    return this.blockHeaderRepository.find({ where: { author: address }, take: limit, skip, order: { number: 'DESC' } })
   }
 
   async findTotalNumberOfBlocks(): Promise<number> {
