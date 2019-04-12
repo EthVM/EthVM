@@ -45,7 +45,7 @@ export class TransactionEntity {
   input?: Buffer
 
   @Column({type: 'bigint', readonly: true})
-  v?: number
+  v?: string
 
   @Column({type: 'character', length: 78, readonly: true})
   r?: string
@@ -54,13 +54,13 @@ export class TransactionEntity {
   s?: string
 
   @Column({type: 'bigint', readonly: true})
-  timestamp?: number
+  timestamp?: string
 
   @Column({type: 'character', length: 66, readonly: true})
   creates?: string
 
   @Column({type: 'bigint', readonly: true})
-  chainId?: number
+  chainId?: string
 
   @ManyToOne(type => BlockHeaderEntity, block => block.txs)
   @JoinColumn({

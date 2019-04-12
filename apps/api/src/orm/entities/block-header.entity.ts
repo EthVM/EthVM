@@ -55,13 +55,13 @@ export class BlockHeaderEntity {
   gasUsed!: number
 
   @Column({type: 'bigint', readonly: true})
-  timestamp!: number
+  timestamp!: string
 
   @Column({type: 'bigint', readonly: true})
-  size!: number
+  size!: string
 
   @Column({type: 'bigint', readonly: true})
-  blockTime?: number
+  blockTime?: string
 
   @OneToMany(type => TransactionEntity, tx => tx.blockHeader)
   @JoinColumn({

@@ -116,9 +116,9 @@ export class BlockHeader {
     extraData?: string;
     gasLimit?: Long;
     gasUsed?: Long;
-    timestamp?: Long;
-    size?: Long;
-    blockTime?: Long;
+    timestamp?: string;
+    size?: string;
+    blockTime?: string;
 }
 
 export class Contract {
@@ -475,12 +475,12 @@ export class Transaction {
     gas?: string;
     gasPrice?: string;
     input?: Buffer;
-    v?: Long;
+    v?: string;
     r?: string;
     s?: string;
-    timestamp?: Long;
+    timestamp?: string;
     creates?: string;
-    chainId?: Long;
+    chainId?: string;
     receipt?: Receipt;
     traces?: Trace[];
 }

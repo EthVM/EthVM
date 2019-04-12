@@ -21,12 +21,12 @@ type Transaction {
   gas: String
   gasPrice: String
   input: Buffer
-  v: Long
+  v: String
   r: String
   s: String
-  timestamp: Long
+  timestamp: String
   creates: String
-  chainId: Long
+  chainId: String
   receipt: Receipt
   traces: [Trace]
 }
