@@ -34,7 +34,7 @@ class FlatMapProcessor : AbstractKafkaProcessor() {
   override fun buildTopology(): Topology {
 
     // Create stream builder
-    val builder = StreamsBuilder().apply {}
+    val builder = StreamsBuilder()
 
     CanonicalTransactions.stream(builder)
       .flatMapValues { _, v -> v.getTransactions() }
