@@ -8,7 +8,7 @@ export class AccountEntity {
     assignClean(this, data);
   }
 
-  @PrimaryColumn({type: 'character', readonly: true})
+  @PrimaryColumn({type: 'character', length: 42, readonly: true})
   address!: string
 
   @Column({type: 'numeric', readonly: true})
