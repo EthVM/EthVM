@@ -11,31 +11,31 @@ export class TransactionTraceEntity {
   }
 
   @PrimaryColumn({type: 'character', length: 66, readonly: true})
-  blockHash?: string
+  blockHash!: string
 
   @PrimaryColumn({type: 'character', length: 66, readonly: true})
   transactionHash!: string
 
   @PrimaryColumn({type: 'text', readonly: true})
-  traceAddress?: string
+  traceAddress!: string
 
   @Column({type: 'integer', readonly: true})
   transactionPosition?: number
 
   @Column({type: 'numeric', readonly: true})
-  blockNumber?: number
+  blockNumber!: number
 
   @Column({type: 'integer', readonly: true})
-  subtraces?: number
+  subtraces!: number
 
   @Column({type: 'character varying', length: 66, readonly: true})
-  type?: string
+  type!: string
 
   @Column({type: 'character varying', length: 514, readonly: true})
   error?: string
 
   @Column({type: 'text', readonly: true})
-  action?: string
+  action!: string
 
   @Column({type: 'text', readonly: true})
   result?: string

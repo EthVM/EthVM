@@ -15,46 +15,46 @@ export class TransactionEntity {
   hash!: string
 
   @Column({type: 'numeric', readonly: true})
-  nonce?: number
+  nonce!: number
 
   @Column({type: 'character', length: 66, readonly: true})
   blockHash!: string
 
   @Column({type: 'numeric', readonly: true})
-  blockNumber?: number
+  blockNumber!: number
 
   @Column({type: 'integer', readonly: true})
-  transactionIndex?: number
+  transactionIndex!: number
 
   @Column({type: 'character', length: 66, readonly: true})
-  from?: string
+  from!: string
 
   @Column({type: 'character', length: 66, readonly: true})
   to?: string
 
   @Column({type: 'numeric', readonly: true})
-  value?: number
+  value!: number
 
   @Column({type: 'numeric', readonly: true})
-  gasPrice?: number
+  gasPrice!: number
 
   @Column({type: 'numeric', readonly: true})
-  gas?: number
+  gas!: number
 
   @Column({type: 'bytea', readonly: true})
   input?: Buffer
 
   @Column({type: 'bigint', readonly: true})
-  v?: string
+  v!: string
 
   @Column({type: 'character', length: 78, readonly: true})
-  r?: string
+  r!: string
 
   @Column({type: 'character', length: 78, readonly: true})
-  s?: string
+  s!: string
 
   @Column({type: 'bigint', readonly: true})
-  timestamp?: string
+  timestamp!: string
 
   @Column({type: 'character', length: 66, readonly: true})
   creates?: string

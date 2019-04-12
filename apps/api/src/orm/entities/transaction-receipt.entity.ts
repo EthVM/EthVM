@@ -10,19 +10,19 @@ export class TransactionReceiptEntity {
   }
 
   @PrimaryColumn({type: 'character', length: 66, readonly: true})
-  transactionHash?: string
+  transactionHash!: string
 
   @Column({type: 'integer', readonly: true})
-  transactionIndex?: number
+  transactionIndex!: number
 
   @Column({type: 'character', length: 66, readonly: true})
-  blockHash?: string
+  blockHash!: string
 
   @Column({type: 'numeric', readonly: true})
-  blockNumber?: number
+  blockNumber!: number
 
   @Column({type: 'character', length: 66, readonly: true})
-  from?: string
+  from!: string
 
   @Column({type: 'character', length: 66, readonly: true})
   to?: string
@@ -31,16 +31,16 @@ export class TransactionReceiptEntity {
   contractAddress?: string
 
   @Column({type: 'numeric', readonly: true})
-  cumulativeGasUsed?: number
+  cumulativeGasUsed!: number
 
   @Column({type: 'numeric', readonly: true})
-  gasUsed?: number
+  gasUsed!: number
 
   @Column({type: 'text', readonly: true})
-  logs?: string
+  logs!: string
 
   @Column({type: 'character', length: 514, readonly: true})
-  logsBloom?: string
+  logsBloom!: string
 
   @Column({type: 'character', length: 66, readonly: true})
   root?: string
