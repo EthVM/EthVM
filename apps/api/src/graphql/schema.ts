@@ -64,13 +64,14 @@ export enum TokenExchangeRateFilter {
     market_cap_rank = "market_cap_rank"
 }
 
-export class AccountMetadata {
-    id?: string;
-    inTxCount?: number;
-    isContractCreator?: boolean;
+export class Account {
+    address?: string;
+    balance?: number;
+    totalTxCount?: string;
+    inTxCount?: string;
+    outTxCount?: string;
     isMiner?: boolean;
-    outTxCount?: number;
-    totalTxCount?: number;
+    isContractCreator?: boolean;
 }
 
 export class AddressBalance {
@@ -92,18 +93,6 @@ export class AggregateBlockMetric {
 export class AggregateBlockMetricKey {
     date?: Long;
     name?: string;
-}
-
-export class Balance {
-    id?: BalanceKey;
-    address?: string;
-    amount?: string;
-    balanceType?: BalanceType;
-}
-
-export class BalanceKey {
-    balanceType?: BalanceType;
-    address?: string;
 }
 
 export class Block {
@@ -258,9 +247,7 @@ export class ProcessingMetadata {
 }
 
 export abstract class IQuery {
-    abstract accountMetadataByHash(hash: string): AccountMetadata | Promise<AccountMetadata>;
-
-    abstract balanceByHash(hash: string): Balance | Promise<Balance>;
+    abstract accountByAddress(address: string): Account | Promise<Account>;
 
     abstract blocks(limit?: number, page?: number, fromBlock?: Long): Block[] | Promise<Block[]>;
 

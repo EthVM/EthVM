@@ -31,6 +31,10 @@ type TokenTransfer {
   transferType: BalanceType
 }
 
+enum BalanceType {
+  TX_FEE, REWARD, ETHER, ERC20, ERC721
+}
+
 type TokenTransferKey {
   hash: String
 }

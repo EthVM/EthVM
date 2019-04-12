@@ -1,0 +1,11 @@
+query accountByAddress($address: String!) {
+  accountByAddress(address: $address) {
+    address
+    balance
+    totalTxCount
+    inTxCount
+    outTxCount
+    isMiner
+    isContractCreator
+  }
+}

@@ -5358,7 +5358,7 @@ neo-async@^2.5.0:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.0.tgz#b9d15e4d71c6762908654b5183ed38b753340835"
   integrity sha512-MFh0d/Wa7vkKO3Y3LlacqAEeHK0mckVqzDieUKTT+KGxi+zIpeVsFxymkIiRpbpDziHc290Xr9A1O4Om7otoRA==
 
-nest-winston@^1.0.2:
+nest-winston@~1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/nest-winston/-/nest-winston-1.0.2.tgz#7b0478c62235ea428159fba8889e52f00460f9a8"
   integrity sha512-6fYdq1ehoK3YD7eGWXr5DJtcHHhkA5ki52acUJgiL8diTSR49n9tX9RwyeehXOLP8mH3UeiibtYUYwMDZxWHpA==
