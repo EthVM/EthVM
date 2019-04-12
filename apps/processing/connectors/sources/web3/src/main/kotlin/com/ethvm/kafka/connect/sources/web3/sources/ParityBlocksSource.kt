@@ -4,22 +4,31 @@ import com.ethvm.avro.capture.BlockHeaderRecord
 import com.ethvm.avro.capture.CanonicalKeyRecord
 import com.ethvm.avro.capture.TransactionListRecord
 import com.ethvm.avro.capture.TransactionRecord
+import com.ethvm.avro.capture.UncleListRecord
+import com.ethvm.avro.capture.UncleRecord
 import com.ethvm.common.extensions.setNumberBI
 import com.ethvm.kafka.connect.sources.web3.ext.JsonRpc2_0ParityExtended
 import com.ethvm.kafka.connect.sources.web3.ext.toBlockHeaderRecord
 import com.ethvm.kafka.connect.sources.web3.ext.toTransactionRecord
+import com.ethvm.kafka.connect.sources.web3.ext.toUncleRecord
 import com.ethvm.kafka.connect.sources.web3.utils.AvroToConnect
+import mu.KotlinLogging
 import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTaskContext
 import org.web3j.protocol.core.DefaultBlockParameter
+import org.web3j.protocol.core.methods.response.EthBlock
 import org.web3j.protocol.core.methods.response.Transaction
+import java.util.stream.Collectors
 
 class ParityBlocksSource(
   sourceContext: SourceTaskContext,
   parity: JsonRpc2_0ParityExtended,
   private val blocksTopic: String,
-  private val txsBlockTopic: String
+  private val txsBlockTopic: String,
+  private val unclesTopic: String
 ) : AbstractParityEntitySource(sourceContext, parity) {
+
+  private val logger = KotlinLogging.logger {}
 
   override val partitionKey: Map<String, Any> = mapOf("model" to "block")
 
@@ -33,7 +42,7 @@ class ParityBlocksSource(
         val partitionOffset = mapOf("blockNumber" to blockNumber)
 
         val blockFuture = parity.ethGetBlockByNumber(blockParam, true).sendAsync()
-          .thenApply { resp ->
+          .thenCompose { resp ->
 
             val block = resp.block
 
@@ -93,7 +102,56 @@ class ParityBlocksSource(
                 txListValueSchemaAndValue.value()
               )
 
-            listOf(headerSourceRecord, txsSourceRecord)
+            // uncles
+
+            return@thenCompose parity
+              .ethGetUncleCountByBlockNumber(blockParam)
+              .sendAsync()
+              .thenApply { uncleResp ->
+
+                val uncleCount = uncleResp.uncleCount.toLong()
+
+                logger.info { "Uncles | block = $blockNumber, count = $uncleCount"}
+
+                return@thenApply if (uncleCount > 0) {
+                  0.until(uncleCount)
+                    .map { pos ->
+
+                      parity
+                        .ethGetUncleByBlockNumberAndIndex(blockParam, pos.toBigInteger())
+                        .sendAsync()
+                    }
+                    .stream()
+                    .map { it.join() }
+                    .collect(Collectors.toList())
+                    .let { uncles: MutableList<EthBlock> ->
+
+                      val uncleListRecord = UncleListRecord.newBuilder()
+                        .setUncles(uncles.map { u -> u.block.toUncleRecord(block.hash, blockNumberBI, UncleRecord.newBuilder()).build() })
+                        .build()
+
+                      val uncleKeySchemaAndValue = AvroToConnect.toConnectData(blockKeyRecord)
+                      val uncleValueSchemaAndValue = AvroToConnect.toConnectData(uncleListRecord)
+
+                      val unclesSourceRecord =
+                        SourceRecord(
+                          partitionKey,
+                          partitionOffset,
+                          unclesTopic,
+                          uncleKeySchemaAndValue.schema(),
+                          uncleKeySchemaAndValue.value(),
+                          uncleValueSchemaAndValue.schema(),
+                          uncleValueSchemaAndValue.value()
+                        )
+
+                      listOf(unclesSourceRecord)
+                    }
+                } else {
+                  emptyList()
+                }
+
+              }.thenApply { listOf(headerSourceRecord, txsSourceRecord) + it }
+
           }
 
         blockFuture

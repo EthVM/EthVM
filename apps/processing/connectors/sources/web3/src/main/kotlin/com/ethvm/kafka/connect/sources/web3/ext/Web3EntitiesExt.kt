@@ -55,8 +55,9 @@ fun EthBlock.Block.toBlockHeaderRecord(builder: BlockHeaderRecord.Builder): Bloc
     .setTimestamp(timestamp.longValueExact())
     .setSize(Numeric.decodeQuantity(sizeRaw ?: "0x0").longValueExact())
 
-fun EthBlock.Block.toUncleRecord(blockNumber: BigInteger, builder: UncleRecord.Builder): UncleRecord.Builder =
+fun EthBlock.Block.toUncleRecord(nephewHash: String, blockNumber: BigInteger, builder: UncleRecord.Builder): UncleRecord.Builder =
   builder
+    .setNephewHash(nephewHash)
     .setNumberBI(number)
     .setHeightBI(blockNumber)
     .setHash(hash)
