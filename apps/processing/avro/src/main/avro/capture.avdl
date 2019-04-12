@@ -167,6 +167,7 @@ protocol Capture {
 
     decimal(40,0) number;                                // the uncle number
     decimal(40,0) height;                                // the block height number where it appeared
+    string nephewHash;
 
     string hash;
     string parentHash;

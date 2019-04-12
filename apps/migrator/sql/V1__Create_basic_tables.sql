@@ -36,6 +36,41 @@ CREATE VIEW canonical_block_author AS
   GROUP BY cb.author
   ORDER BY count DESC;
 
+CREATE TABLE uncle
+(
+  hash              CHAR(66) PRIMARY KEY,
+  nephew_hash       CHAR(66) NOT NULL,
+  number            NUMERIC NOT NULL,
+  height            NUMERIC NOT NULL,
+  parent_hash       CHAR(66)  NOT NULL UNIQUE,
+  nonce             NUMERIC   NULL,
+  sha3_uncles       CHAR(66)  NOT NULL,
+  logs_bloom        CHAR(514) NOT NULL,
+  transactions_root CHAR(66)  NOT NULL,
+  state_root        CHAR(66)  NOT NULL,
+  receipts_root     CHAR(66)  NOT NULL,
+  author            CHAR(42)  NOT NULL,
+  difficulty        NUMERIC   NOT NULL,
+  total_difficulty  NUMERIC   NOT NULL,
+  extra_data        TEXT      NULL,
+  gas_limit         NUMERIC   NOT NULL,
+  gas_used          NUMERIC   NOT NULL,
+  timestamp         BIGINT    NOT NULL,
+  size              BIGINT    NOT NULL
+);
+
+CREATE INDEX idx_uncle_nephew_hash ON uncle(nephew_hash);
+CREATE INDEX idx_uncle_number ON uncle(number);
+CREATE INDEX idx_uncle_height ON uncle(height);
+
+CREATE VIEW canonical_uncle AS
+  SELECT u.*
+  FROM uncle AS u
+         RIGHT JOIN canonical_block_header AS cb ON u.nephew_hash = cb.hash
+  WHERE cb.number IS NOT NULL
+    AND u.hash IS NOT NULL
+  ORDER BY cb.number DESC;
+
 /* All transactions including possible transactions from old forks */
 CREATE TABLE "transaction"
 (
@@ -205,7 +240,7 @@ CREATE VIEW account AS
   FROM fungible_balance AS fb
          LEFT JOIN canonical_block_author AS a ON fb.address = a.address
          LEFT JOIN contract_creator AS cc ON fb.address = cc.address
-  WHERE fb.contract IS NULL
+  WHERE fb.contract = ''
   ORDER BY balance DESC;
 
 CREATE INDEX idx_fungible_balance_deltas_address ON fungible_balance_deltas (address) WHERE address IS NOT NULL;
