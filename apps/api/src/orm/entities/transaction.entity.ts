@@ -42,7 +42,7 @@ export class TransactionEntity {
   gas?: number
 
   @Column({type: 'bytea', readonly: true})
-  input?: Buffer  // TODO check typing is correct
+  input?: Buffer
 
   @Column({type: 'bigint', readonly: true})
   v?: number

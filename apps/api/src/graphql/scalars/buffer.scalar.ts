@@ -5,11 +5,11 @@ export class BufferScalar {
   description = 'Buffer custom scalar type'
 
   parseValue(value) {
-    return value // value from the client
+    return value.Buffer // value from the client
   }
 
   serialize(value) {
-    return value.Buffer // value sent to the client
+    return Buffer.from(value) // value sent to the client
   }
 
   parseLiteral(ast) {

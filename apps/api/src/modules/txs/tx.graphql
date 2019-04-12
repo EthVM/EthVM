@@ -20,7 +20,7 @@ type Transaction {
   value: String
   gas: String
   gasPrice: String
-  input: String
+  input: Buffer
   v: Long
   r: String
   s: String

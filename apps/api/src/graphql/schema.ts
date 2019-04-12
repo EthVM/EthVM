@@ -474,7 +474,7 @@ export class Transaction {
     value?: string;
     gas?: string;
     gasPrice?: string;
-    input?: string;
+    input?: Buffer;
     v?: Long;
     r?: string;
     s?: string;
