@@ -10,7 +10,7 @@ export class BlockService {
   constructor(
     @InjectRepository(BlockHeaderEntity) private readonly blockHeaderRepository: Repository<BlockHeaderEntity>,
     @InjectRepository(TransactionEntity) private readonly transactionRepository: Repository<TransactionEntity>,
-    @InjectRepository(TransactionTraceEntity) private readonly transactionTraceRepository: Repository<TransactionTraceEntity>
+    @InjectRepository(TransactionTraceEntity) private readonly transactionTraceRepository: Repository<TransactionTraceEntity>,
   ) {}
 
   async findBlockByHash(hash: string): Promise<BlockHeaderEntity | undefined> {
@@ -30,7 +30,7 @@ export class BlockService {
   async findBlockByNumber(number: number): Promise<BlockHeaderEntity | undefined> {
 
     const header = await this.blockHeaderRepository.findOne({ where: { number }})
-    if(!header) return undefined
+    if (!header) return undefined
 
     header.txs = await this.findTxsByBlockHash(header.hash)
     return header

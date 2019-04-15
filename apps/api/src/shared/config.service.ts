@@ -35,7 +35,7 @@ const schema = {
       doc: 'Timescale connection URL',
       env: 'TIMESCALE_URL',
       default: 'postgres://postgres:1234@timescale/ethvm_dev',
-    }
+    },
   },
   graphql: {
     playground: {

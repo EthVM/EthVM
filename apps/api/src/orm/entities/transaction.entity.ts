@@ -65,21 +65,21 @@ export class TransactionEntity {
   @ManyToOne(type => BlockHeaderEntity, block => block.txs)
   @JoinColumn({
     name: 'blockHash',
-    referencedColumnName: 'hash'
+    referencedColumnName: 'hash',
   })
   blockHeader!: BlockHeaderEntity
 
   @OneToOne(type => TransactionReceiptEntity, receipt => receipt.tx)
   @JoinColumn({
     name: 'hash',
-    referencedColumnName: 'transactionHash'
+    referencedColumnName: 'transactionHash',
   })
   receipt?: TransactionReceiptEntity
 
   @OneToMany(type => TransactionTraceEntity, trace => trace.tx)
   @JoinColumn({
     name: 'hash',
-    referencedColumnName: 'transactionHash'
+    referencedColumnName: 'transactionHash',
   })
   traces?: TransactionTraceEntity[]
 

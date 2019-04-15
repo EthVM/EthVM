@@ -8,7 +8,7 @@ import { TransactionEntity } from '@app/orm/entities/transaction.entity'
 export class TxService {
   constructor(
     @InjectRepository(TransactionEntity) private readonly transactionRepository: Repository<TransactionEntity>,
-    @InjectRepository(TransactionTraceEntity) private readonly transactionTraceRepository: Repository<TransactionTraceEntity>
+    @InjectRepository(TransactionTraceEntity) private readonly transactionTraceRepository: Repository<TransactionTraceEntity>,
   ) {}
 
   async findTx(hash: string): Promise<TransactionEntity | undefined> {

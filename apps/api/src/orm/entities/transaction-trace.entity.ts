@@ -43,7 +43,7 @@ export class TransactionTraceEntity {
   @ManyToOne(type => TransactionEntity, tx => tx.traces)
   @JoinColumn({
     name: 'transactionHash',
-    referencedColumnName: 'hash'
+    referencedColumnName: 'hash',
   })
   tx!: TransactionEntity
 

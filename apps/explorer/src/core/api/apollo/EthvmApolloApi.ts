@@ -1,5 +1,11 @@
 import { EthvmApi } from '@app/core/api'
-import { accountMetadataByHash, addressAllTokensOwned, addressAmountTokensOwned, addressBalanceByHash, accountByAddress } from '@app/core/api/apollo/queries/addresses.graphql'
+import {
+  accountMetadataByHash,
+  addressAllTokensOwned,
+  addressAmountTokensOwned,
+  addressBalanceByHash,
+  accountByAddress
+} from '@app/core/api/apollo/queries/addresses.graphql'
 import { blockMetricByHash, blockMetrics } from '@app/core/api/apollo/queries/block-metrics.graphql'
 import { blockByHash, blockByNumber, blocks, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
 import { contractByAddress, contractsCreatedBy } from '@app/core/api/apollo/queries/contracts.graphql'
@@ -64,12 +70,13 @@ export class EthvmApolloApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
 
   public getAccount(address: string): Promise<Account | null> {
-    return this.apollo.query({
-      query: accountByAddress,
-      variables: {
-        address
-      }
-    })
+    return this.apollo
+      .query({
+        query: accountByAddress,
+        variables: {
+          address
+        }
+      })
       .then(res => res.data.accountByAddress)
   }
 

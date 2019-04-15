@@ -66,7 +66,7 @@ export class BlockHeaderEntity {
   @OneToMany(type => TransactionEntity, tx => tx.blockHeader)
   @JoinColumn({
     name: 'hash',
-    referencedColumnName: 'blockHash'
+    referencedColumnName: 'blockHash',
   })
   txs?: TransactionEntity[]
 
