@@ -167,7 +167,7 @@ enum class TokenContractMatchResult {
   NONE_MATCH
 }
 
-class FnSignature(fn: String) {
+class FnSignature(val fn: String) {
 
   init {
     assert(fn.isNotEmpty()) { "Not valid fn name. Must not be null or empty." }

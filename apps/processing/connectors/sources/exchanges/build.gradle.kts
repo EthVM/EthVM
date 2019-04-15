@@ -22,11 +22,12 @@ dependencies {
   implementation(project(":avro"))
 
   // Kafka
-  compileOnly("org.apache.kafka:connect-api:2.1.0")
-  implementation("io.confluent:kafka-schema-registry-client:5.1.0")
-  implementation("io.confluent:kafka-connect-avro-converter:5.1.0")
+  compileOnly("org.apache.kafka:connect-api:${ext.get("kafka-connect-api-version") as String}")
+  implementation("io.confluent:kafka-schema-registry-client:${ext.get("kafka-schema-registry-client-version") as String}")
+  implementation("io.confluent:kafka-connect-avro-converter:${ext.get("kafka-connect-avro-converter-version") as String}")
 
-  // JSON
+  // Networking
+  implementation("com.squareup.okhttp3:okhttp:3.14.1")
   implementation("com.beust:klaxon:5.0.1")
 
   // Utils
@@ -37,7 +38,8 @@ dependencies {
   // Tests
   testImplementation("io.kotlintest:kotlintest-runner-junit5:${ext.get("kotlintest-version") as String}")
   testImplementation("io.mockk:mockk:${ext.get("mockk-version") as String}")
-  testImplementation("org.apache.kafka:connect-api:2.1.0")
+  testImplementation("org.apache.kafka:connect-api:${ext.get("kafka-connect-api-version") as String}")
+  testImplementation("com.github.mirrajabi:okhttp-json-mock:3.0")
 }
 
 project.tasks.getting(Test::class) { useJUnitPlatform {} }

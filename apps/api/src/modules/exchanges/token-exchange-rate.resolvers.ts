@@ -16,7 +16,7 @@ export class TokenExchangeRateResolvers {
   }
 
   @Query()
-  async tokenExchangeRates(@Args('filter') filter: string, @Args('limit', ParseLimitPipe) limit: number, @Args('page', ParsePagePipe) page: number) {
+  async tokenExchangeRates(@Args('filter') filter: string, @Args('limit', ParseLimitPipe) limit?: number, @Args('page', ParsePagePipe) page?: number) {
     const entities = await this.exchangeService.findTokenExchangeRates(filter, limit, page)
     return entities.map(e => new TokenExchangeRateDto(e))
   }
@@ -35,9 +35,10 @@ export class TokenExchangeRateResolvers {
   @Query()
   async tokenExchangeRateByAddress(@Args('address', ParseAddressPipe) address: string) {
     const entity = await this.exchangeService.findTokenExchangeRateByAddress(address)
+    if (!entity) return null
     // Get missing info (owner, holdersCount) from Ethplorer API
     const tokenInfo = await this.tokenTransferService.fetchTokenInfo(address)
     const combined = { ...entity, ...tokenInfo }
-    return combined ? new TokenExchangeRateDto(combined) : null
+    return tokenInfo ? new TokenExchangeRateDto(combined) : null
   }
 }

@@ -33,8 +33,8 @@ export class BlockResolvers {
   @Query()
   async minedBlocksByAddress(
     @Args('address', ParseAddressPipe) address: string,
-    @Args('limit', ParseLimitPipe) limit: number,
-    @Args('page', ParsePagePipe) page: number,
+    @Args('limit', ParseLimitPipe) limit?: number,
+    @Args('page', ParsePagePipe) page?: number,
   ) {
     const entities = await this.blockService.findMinedBlocksByAddress(address, limit, page)
     return entities.map(e => new BlockDto(e))

@@ -40,7 +40,7 @@
             class="info--text text-capitalize pb-2 tab-opacity"
             active-class="primary--text "
             :key="item.id"
-            :href="'#tab-' + item.id"
+            :href="`#tab-${item.id}`"
             ripple
             >{{ item.title }}</v-tab
           >

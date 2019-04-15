@@ -24,25 +24,25 @@
     <!-- End Table Header -->
 
     <!-- Start Rows -->
-    <v-card color="white" v-for="(tx, index) in transfersPage" class="transparent" flat :key="index + '-' + tx.transactionHash">
+    <v-card color="white" v-for="(tx, index) in transfersPage" class="transparent" flat :key="`${index}-${tx.transactionHash}`">
       <v-layout align-center justify-start row fill-height pr-3>
         <!-- Column 1 -->
         <v-flex xs6 sm8 md5>
           <v-flex d-flex xs12 pb-2>
-            <router-link class="primary--text text-truncate font-italic psmall" :to="'/tx/' + tx.transactionHash">{{ tx.transactionHash }}</router-link>
+            <router-link class="primary--text text-truncate font-italic psmall" :to="`/tx/${tx.transactionHash}`">{{ tx.transactionHash }}</router-link>
           </v-flex>
           <v-flex xs12 pt-0>
             <v-layout row pl-2>
               <p class="text-truncate info--text mb-0">
                 {{ $t('tx.from') }}:
-                <router-link :to="'/address/' + tx.from" class="secondary--text font-italic font-weight-regular">
+                <router-link :to="`/address/${tx.from}`" class="secondary--text font-italic font-weight-regular">
                   {{ tx.from }}
                 </router-link>
               </p>
               <v-icon class="fas fa-arrow-right primary--text pl-1 pr-2 pb-1" small></v-icon>
               <p class="text-truncate info--text font-weight-thin mb-0">
                 <strong>{{ $t('tx.to') }}:</strong>
-                <router-link class="secondary--text font-italic font-weight-regular" :to="'/address/' + tx.to">
+                <router-link class="secondary--text font-italic font-weight-regular" :to="`/address/${tx.to}`">
                   {{ tx.to }}
                 </router-link>
               </p>

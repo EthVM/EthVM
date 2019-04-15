@@ -10,7 +10,7 @@
         <div class="table-row-mobile">
           <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-4 pl-4">
             <v-flex xs6 pa-1>
-              <router-link class="black--text font-weight-medium pb-1" :to="'/block/' + block.getHash()"
+              <router-link class="black--text font-weight-medium pb-1" :to="`/block/${block.getHash()}`"
                 >{{ $t('block.number') }} {{ block.getNumber() }}</router-link
               >
             </v-flex>
@@ -24,13 +24,13 @@
               <p class="info--text psmall">{{ $t('common.hash') }}:</p>
             </v-flex>
             <v-flex xs10 pa-1>
-              <app-hash-concat :hash="block.getHash()" :link="'/block/' + block.getHash()" />
+              <app-hash-concat :hash="block.getHash()" :link="`/block/${block.getHash()}`" />
             </v-flex>
             <v-flex xs2 pa-1>
               <p class="info--text psmall pr-1">{{ $t('miner.name') }}:</p>
             </v-flex>
             <v-flex xs10 pa-1>
-              <app-hash-concat :hash="block.getMiner().toString()" :italic="true" :link="'/address/' + block.getMiner().toString()" />
+              <app-hash-concat :hash="block.getMiner().toString()" :italic="true" :link="`/address/${block.getMiner().toString()}`" />
             </v-flex>
             <v-flex xs2 pa-1>
               <p class="info--text psmall">{{ $t('miner.reward-short') }}:</p>
@@ -54,7 +54,7 @@
         -->
         <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
           <v-flex sm2>
-            <router-link class="black--text pb-1" :to="'/block/' + block.getHash()">{{ block.getNumber() }}</router-link>
+            <router-link class="black--text pb-1" :to="`/block/${block.getHash()}`">{{ block.getNumber() }}</router-link>
             <div v-if="hasUncles(block)" class="arrow">
               <div class="line"></div>
             </div>
@@ -62,11 +62,11 @@
           <v-flex sm6>
             <v-layout row pb-2>
               <p class="info--text psmall pr-2">{{ $t('common.hash') }}:</p>
-              <app-hash-concat :hash="block.getHash()" :link="'/block/' + block.getHash()" />
+              <app-hash-concat :hash="block.getHash()" :link="`/block/${block.getHash()}`" />
             </v-layout>
             <v-layout row>
               <p class="info--text pr-1">{{ $t('miner.name') }}:</p>
-              <app-hash-concat :hash="block.getMiner().toString()" :italic="true" :link="'/address/' + block.getMiner().toString()" />
+              <app-hash-concat :hash="block.getMiner().toString()" :italic="true" :link="`/address/${block.getMiner().toString()}`" />
             </v-layout>
           </v-flex>
           <v-spacer hidden-xl-only />
@@ -94,7 +94,7 @@
                   <v-card-title class="pt-1 font-weight-medium pb-2">{{ $tc('uncle.name', 2) }}:</v-card-title>
                   <v-layout row pl-4 pr-4 pb-2 v-for="(uncle, index) in block.getUncles()" :key="index">
                     <p class="info--text psmall pr-2">{{ $t('common.hash') }}:</p>
-                    <app-hash-concat :hash="uncle.getHash()" :link="'/uncle/' + uncle.getHash()" />
+                    <app-hash-concat :hash="uncle.getHash()" :link="`/uncle/${uncle.getHash()}`" />
                   </v-layout>
                 </v-card>
               </div>

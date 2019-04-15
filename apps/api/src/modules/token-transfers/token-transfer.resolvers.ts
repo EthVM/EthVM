@@ -1,10 +1,10 @@
 import { Args, Query, Resolver } from '@nestjs/graphql'
 import { TokenTransferService } from '@app/modules/token-transfers/token-transfer.service'
-import { TokenExchangeRateDto } from '@app/modules/exchanges/token-exchange-rate.dto'
 import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe'
 import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
 import { VmEngineService } from '@app/shared/vm-engine.service'
+import { TokenTransferDto } from '@app/modules/token-transfers/dto/token-transfer.dto'
 
 @Resolver('TokenTransfer')
 export class TokenTransferResolvers {
@@ -17,7 +17,7 @@ export class TokenTransferResolvers {
     @Args('page', ParsePagePipe) page?: number,
   ) {
     const entities = await this.tokenTransferService.findAddressTokenTransfers(address, limit, page)
-    return entities.map(e => new TokenExchangeRateDto(e))
+    return entities.map(e => new TokenTransferDto(e))
   }
 
   @Query()
@@ -29,7 +29,7 @@ export class TokenTransferResolvers {
     @Args('page', ParsePagePipe) page?: number,
   ) {
     const entities = await this.tokenTransferService.findAddressTokenTransfersByHolder(address, holder, filter, limit, page)
-    return entities.map(e => new TokenExchangeRateDto(e))
+    return entities.map(e => new TokenTransferDto(e))
   }
 
   @Query()
