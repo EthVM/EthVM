@@ -1,0 +1,29 @@
+{
+  "name": "ethvm-utils",
+  "version": "0.1.0",
+  "scripts": {
+    "tsc": "tsc",
+    "start": "ts-node -r tsconfig-paths/register src/index.ts"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "commander": "^2.20.0",
+    "convict": "~4.4.1",
+    "ora": "^3.4.0",
+    "retry-axios": "^0.5.0"
+  },
+  "devDependencies": {
+    "@types/commander": "^2.12.2",
+    "@types/convict": "~4.2.1",
+    "@types/node": "~10.12.26",
+    "@types/ora": "^3.2.0",
+    "nodemon": "~1.18.11",
+    "prettier": "~1.17.0",
+    "ts-node": "~8.1.0",
+    "tsconfig-paths": "~3.8.0",
+    "tslint": "~5.15.0",
+    "tslint-config-prettier": "~1.18.0",
+    "tslint-consistent-codestyle": "~1.15.1",
+    "typescript": "~3.4.3"
+  }
+}
