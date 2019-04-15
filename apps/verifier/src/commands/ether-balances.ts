@@ -24,7 +24,7 @@ export async function EtherBalances(config: Config, blockNumber: number = undefi
 
 
   do {
-    ;[balances, count] = await fetchBalances(connection, offset, limit)
+    [balances, count] = await fetchBalances(connection, offset, limit)
 
     const comparisons = balances.map(async actual => {
       const { address, amount } = actual

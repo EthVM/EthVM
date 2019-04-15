@@ -212,6 +212,7 @@ WHERE contract = '';
 
 CREATE VIEW erc20_balance AS
   SELECT
+         fb.contract,
          fb.address,
          fb.amount
   FROM fungible_balance AS fb

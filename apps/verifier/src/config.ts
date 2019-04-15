@@ -1,6 +1,7 @@
 import convict from 'convict'
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions'
 import { EtherBalanceView } from './db/entities/ether-balance.view'
+import { Erc20BalanceView } from '@app/db/entities/erc20-balance.view'
 
 const schema = {
   kafka: {
@@ -84,7 +85,7 @@ export class Config {
     return {
       ...postgres,
       type: 'postgres',
-      entities: [EtherBalanceView],
+      entities: [EtherBalanceView, Erc20BalanceView],
       synchronize: false
     }
   }

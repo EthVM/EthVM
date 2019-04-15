@@ -20,8 +20,8 @@
     "rxjs": "~6.4.0",
     "rxjs-stream": "~3.0.1",
     "typeorm": "^0.2.16",
-    "web3": "^1.0.0-beta.52",
-    "web3-utils": "^1.0.0-beta.52"
+    "web3": "~1.0.0-beta.52",
+    "web3-utils": "~1.0.0-beta.52"
   },
   "devDependencies": {
     "@types/commander": "^2.12.2",
