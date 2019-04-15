@@ -6,24 +6,24 @@ type Query {
 }
 
 type Uncle {
-  id: String
-  author: String
-  blockNumber: Int
-  difficulty: String
-  extraData: String
-  gasLimit: String
-  gasUsed: String
   hash: String
-  logsBloom: String
-  nonce: String
-  number: Int
+  nephewNumber: Long
+  nephewHash: String
+  number: Long
+  height: Long
   parentHash: String
-  receiptsRoot: String
+  nonce: String
   sha3Uncles: String
-  size: Int
-  stateRoot: String
-  timestamp: Int
+  logsBloom: String
   transactionsRoot: String
-  uncleIndex: Int
-  uncleReward: String
+  stateRoot: String
+  receiptsRoot: String
+  author: String
+  difficulty: Long
+  totalDifficulty: Long
+  extraData: String
+  gasLimit: Long
+  gasUsed: Long
+  timestamp: String
+  size: String
 }

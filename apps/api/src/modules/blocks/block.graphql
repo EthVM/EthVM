@@ -13,6 +13,7 @@ type Subscription {
 type Block {
   header: BlockHeader
   transactions: [Transaction]
+  uncles: [Uncle]
 }
 
 type BlockHeader {

@@ -8,6 +8,7 @@ import { Module } from '@nestjs/common'
 import { LoggerModule } from '@app/shared/logger.module'
 import { AccountModule } from '@app/modules/accounts/account.module'
 import { ContractModule } from '@app/modules/contracts/contract.module'
+import { UncleModule } from '@app/modules/uncles/uncle.module'
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { ContractModule } from '@app/modules/contracts/contract.module'
     // ProcessingMetadataModule,
     // TokenTransferModule,
     TxModule,
-    // UncleModule,
+    UncleModule,
     // StatisticModule,
     SearchModule,
     LoggerModule,

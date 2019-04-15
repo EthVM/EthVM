@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { UncleEntity } from '@app/orm/entities-mongo/uncle.entity'
-import { MongoRepository } from 'typeorm'
+import { FindManyOptions, LessThanOrEqual, Repository } from 'typeorm'
+import { UncleEntity } from '@app/orm/entities/uncle.entity'
 
 @Injectable()
 export class UncleService {
-  constructor(@InjectRepository(UncleEntity) private readonly uncleRepository: MongoRepository<UncleEntity>) {}
+  constructor(@InjectRepository(UncleEntity) private readonly uncleRepository: Repository<UncleEntity>) {}
 
   async findUncleByHash(hash: string): Promise<UncleEntity | undefined> {
     return this.uncleRepository.findOne({ where: { hash } })
@@ -18,12 +18,13 @@ export class UncleService {
     // For now we are resorting to the well known skip, limit calls (but it will cause issues if you go very far)
     const offset = fromUncle && fromUncle !== -1 ? fromUncle : await this.findLatestUncleBlockNumber()
     const skip = page * take
-    return this.uncleRepository.find({
-      where: { number: { $lte: offset } },
-      skip,
+    const findOptions: FindManyOptions = {
+      where: { number: LessThanOrEqual(offset) },
+      order: { nephewNumber: 'DESC', number: 'DESC' },
       take,
-      order: { blockNumber: -1, number: -1 },
-    })
+      skip
+    }
+    return this.uncleRepository.find(findOptions)
   }
 
   async countUncles(): Promise<number> {
@@ -31,7 +32,8 @@ export class UncleService {
   }
 
   async findLatestUncleBlockNumber(): Promise<number> {
-    const latest = await this.uncleRepository.find({ order: { blockNumber: -1, number: -1 }, take: 1 })
-    return latest && latest.length ? latest[0].blockNumber : 0
+    const findOptions: FindManyOptions = { order: { nephewNumber: 'DESC', number: 'DESC' }, take: 1 }
+    const latest = await this.uncleRepository.find(findOptions)
+    return latest && latest.length ? latest[0].height : 0
   }
 }

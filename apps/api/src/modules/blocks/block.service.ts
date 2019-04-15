@@ -4,6 +4,7 @@ import { LessThanOrEqual, Repository } from 'typeorm'
 import { BlockHeaderEntity } from '@app/orm/entities/block-header.entity'
 import { TransactionEntity } from '@app/orm/entities/transaction.entity'
 import { TransactionTraceEntity } from '@app/orm/entities/transaction-trace.entity'
+import { UncleEntity } from '@app/orm/entities/uncle.entity'
 
 @Injectable()
 export class BlockService {
@@ -14,7 +15,7 @@ export class BlockService {
   ) {}
 
   async findBlockByHash(hash: string): Promise<BlockHeaderEntity | undefined> {
-    const blockHeader = await this.blockHeaderRepository.findOne({ where: { hash }})
+    const blockHeader = await this.blockHeaderRepository.findOne({ where: { hash }, relations: ['uncles'] })
     if (!blockHeader) return undefined
 
     blockHeader.txs = await this.findTxsByBlockHash(hash)
@@ -24,12 +25,12 @@ export class BlockService {
   async findBlocks(limit: number = 10, page: number = 0, fromBlock: number = -1): Promise<BlockHeaderEntity[]> {
     const where = fromBlock !== -1 ? {  number: LessThanOrEqual(fromBlock)  } : {}
     const skip = page * limit
-    return this.blockHeaderRepository.find({ where, take: limit, skip, order: {number: 'DESC'}, relations: ['txs'] })
+    return this.blockHeaderRepository.find({ where, take: limit, skip, order: {number: 'DESC'}, relations: ['txs', 'uncles'] })
   }
 
   async findBlockByNumber(number: number): Promise<BlockHeaderEntity | undefined> {
 
-    const header = await this.blockHeaderRepository.findOne({ where: { number }})
+    const header = await this.blockHeaderRepository.findOne({ where: { number }, relations: ['uncles'] })
     if (!header) return undefined
 
     header.txs = await this.findTxsByBlockHash(header.hash)
@@ -57,7 +58,7 @@ export class BlockService {
 
   async findMinedBlocksByAddress(address: string, limit: number = 10, page: number = 0): Promise<BlockHeaderEntity[]> {
     const skip = page * limit
-    return this.blockHeaderRepository.find({ where: { author: address }, take: limit, skip, order: { number: 'DESC' } })
+    return this.blockHeaderRepository.find({ where: { author: address }, take: limit, skip, order: { number: 'DESC' }, relations: ['uncles'] })
   }
 
   async findTotalNumberOfBlocks(): Promise<number> {

@@ -1,22 +1,31 @@
-import { Entity, PrimaryColumn, Column, OneToMany, JoinColumn } from 'typeorm'
+import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
-import { TransactionEntity } from '@app/orm/entities/transaction.entity'
-import { UncleEntity } from '@app/orm/entities/uncle.entity'
+import { Column } from 'typeorm/decorator/columns/Column'
+import { BlockHeaderEntity } from '@app/orm/entities/block-header.entity'
 
-@Entity('canonical_block_header')
-export class BlockHeaderEntity {
+@Entity('canonical_uncle')
+export class UncleEntity {
 
   constructor(data: any) {
-    assignClean(this, data);
+    assignClean(this, data)
   }
 
-  @PrimaryColumn({type: 'numeric', readonly: true})
-  number!: number
-
-  @Column({type: 'character', length: 66, unique: true, readonly: true})
+  @PrimaryColumn({type: 'character', length: 66, readonly: true})
   hash!: string
 
-  @Column({type: 'character', length: 66, unique: true})
+  @Column({type: 'numeric', readonly: true})
+  nephewNumber!: number
+
+  @Column({type: 'character', length: 66, readonly: true})
+  nephewHash!: string
+
+  @Column({type: 'numeric', readonly: true})
+  number!: number
+
+  @Column({type: 'numeric', readonly: true})
+  height!: number
+
+  @Column({type: 'character', length: 66, readonly: true})
   parentHash!: string
 
   @Column({type: 'numeric', readonly: true})
@@ -37,7 +46,7 @@ export class BlockHeaderEntity {
   @Column({type: 'character', length: 66, readonly: true})
   receiptsRoot!: string
 
-  @Column({type: 'character', length: 66, readonly: true})
+  @Column({type: 'character', length: 42, readonly: true})
   author!: string
 
   @Column({type: 'numeric', readonly: true})
@@ -61,21 +70,11 @@ export class BlockHeaderEntity {
   @Column({type: 'bigint', readonly: true})
   size!: string
 
-  @Column({type: 'bigint', readonly: true})
-  blockTime?: string
-
-  @OneToMany(type => TransactionEntity, tx => tx.blockHeader)
+  @ManyToOne(type => BlockHeaderEntity, block => block.uncles)
   @JoinColumn({
-    name: 'hash',
-    referencedColumnName: 'blockHash',
+    name: 'nephewHash',
+    referencedColumnName: 'hash',
   })
-  txs?: TransactionEntity[]
-
-  @OneToMany(type => UncleEntity, uncle => uncle.blockHeader)
-  @JoinColumn({
-    name: 'hash',
-    referencedColumnName: 'nephewHash',
-  })
-  uncles?: UncleEntity[]
+  blockHeader!: BlockHeaderEntity
 
 }

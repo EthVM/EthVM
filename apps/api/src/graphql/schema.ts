@@ -92,6 +92,7 @@ export class AggregateBlockMetricKey {
 export class Block {
     header?: BlockHeader;
     transactions?: Transaction[];
+    uncles?: Uncle[];
 }
 
 export class BlockHeader {
@@ -435,26 +436,26 @@ export class Transaction {
 }
 
 export class Uncle {
-    id?: string;
-    author?: string;
-    blockNumber?: number;
-    difficulty?: string;
-    extraData?: string;
-    gasLimit?: string;
-    gasUsed?: string;
     hash?: string;
-    logsBloom?: string;
-    nonce?: string;
-    number?: number;
+    nephewNumber?: Long;
+    nephewHash?: string;
+    number?: Long;
+    height?: Long;
     parentHash?: string;
-    receiptsRoot?: string;
+    nonce?: string;
     sha3Uncles?: string;
-    size?: number;
-    stateRoot?: string;
-    timestamp?: number;
+    logsBloom?: string;
     transactionsRoot?: string;
-    uncleIndex?: number;
-    uncleReward?: string;
+    stateRoot?: string;
+    receiptsRoot?: string;
+    author?: string;
+    difficulty?: Long;
+    totalDifficulty?: Long;
+    extraData?: string;
+    gasLimit?: Long;
+    gasUsed?: Long;
+    timestamp?: string;
+    size?: string;
 }
 
 export type Buffer = any;
