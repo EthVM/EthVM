@@ -107,6 +107,7 @@ fun TraceRecord.toContractLifecycleRecord(): ContractLifecycleRecord? {
         .setCreator(action.getFrom())
         .setInit(action.getInit())
         .setCode(getResult().getCode())
+
         .setCreatedAt(
           TraceLocationRecord.newBuilder()
             .setBlockNumber(getBlockNumber())

@@ -5,12 +5,14 @@ import com.ethvm.avro.capture.ContractLifecycleListRecord
 import com.ethvm.avro.capture.ContractLifecycleRecord
 import com.ethvm.avro.capture.ContractLifecyleType
 import com.ethvm.avro.capture.ContractRecord
+import com.ethvm.common.extensions.hexBuffer
 import com.ethvm.common.extensions.toContractLifecycleRecord
 import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.config.Topics.CanonicalContractLifecycle
 import com.ethvm.kafka.streams.config.Topics.CanonicalTraces
 import com.ethvm.kafka.streams.config.Topics.ContractLifecycleEvents
 import com.ethvm.kafka.streams.config.Topics.Contract
+import com.ethvm.kafka.streams.utils.StandardTokenDetector
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KLogger
 import mu.KotlinLogging
@@ -57,6 +59,18 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
                 v.getTraces()
                   .filter { trace -> contractTypes.contains(trace.getType()) }
                   .mapNotNull { it.toContractLifecycleRecord() }
+                  .map { record ->
+                    when (record.type) {
+
+                      ContractLifecyleType.DESTROY -> record
+
+                      ContractLifecyleType.CREATE ->
+                        // identify the contract type
+                        ContractLifecycleRecord.newBuilder(record)
+                          .setContractType(StandardTokenDetector.detect(record.code.hexBuffer()!!).first)
+                          .build()
+                    }
+                  }
               ).build()
           }
         }

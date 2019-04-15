@@ -1,4 +1,3 @@
-
 /* Canonical blocks table which is updated on fork */
 CREATE TABLE canonical_block_header
 (
@@ -29,20 +28,19 @@ CREATE INDEX idx_block_header_author ON canonical_block_header (author);
 
 /* A view to help with address metadata */
 CREATE VIEW canonical_block_author AS
-  SELECT
-    cb.author AS address,
-    COUNT(*) AS count
-  FROM canonical_block_header AS cb
-  GROUP BY cb.author
-  ORDER BY count DESC;
+SELECT cb.author AS address,
+       COUNT(*)  AS count
+FROM canonical_block_header AS cb
+GROUP BY cb.author
+ORDER BY count DESC;
 
 CREATE TABLE uncle
 (
   hash              CHAR(66) PRIMARY KEY,
-  nephew_hash       CHAR(66) NOT NULL,
-  number            NUMERIC NOT NULL,
-  height            NUMERIC NOT NULL,
-  parent_hash       CHAR(66)  NOT NULL UNIQUE,
+  nephew_hash       CHAR(66)  NOT NULL,
+  number            NUMERIC   NOT NULL,
+  height            NUMERIC   NOT NULL,
+  parent_hash       CHAR(66)  NOT NULL,
   nonce             NUMERIC   NULL,
   sha3_uncles       CHAR(66)  NOT NULL,
   logs_bloom        CHAR(514) NOT NULL,
@@ -59,17 +57,19 @@ CREATE TABLE uncle
   size              BIGINT    NOT NULL
 );
 
-CREATE INDEX idx_uncle_nephew_hash ON uncle(nephew_hash);
-CREATE INDEX idx_uncle_number ON uncle(number);
-CREATE INDEX idx_uncle_height ON uncle(height);
+CREATE INDEX idx_uncle_nephew_hash ON uncle (nephew_hash);
+CREATE INDEX idx_uncle_number ON uncle (number);
+CREATE INDEX idx_uncle_height ON uncle (height);
 
 CREATE VIEW canonical_uncle AS
-  SELECT u.*
-  FROM uncle AS u
-         RIGHT JOIN canonical_block_header AS cb ON u.nephew_hash = cb.hash
-  WHERE cb.number IS NOT NULL
-    AND u.hash IS NOT NULL
-  ORDER BY cb.number DESC;
+SELECT
+      cb.number as nephew_number,
+      u.*
+FROM uncle AS u
+       RIGHT JOIN canonical_block_header AS cb ON u.nephew_hash = cb.hash
+WHERE cb.number IS NOT NULL
+  AND u.hash IS NOT NULL
+ORDER BY cb.number DESC;
 
 /* All transactions including possible transactions from old forks */
 CREATE TABLE "transaction"
@@ -101,13 +101,13 @@ CREATE INDEX idx_transaction_to ON TRANSACTION ("to");
 
 /* This view helps to filter out non-canonical transactions based on the latest state of the canonical block header table */
 CREATE VIEW canonical_transaction AS
-  SELECT t.*
-  FROM "transaction" AS t
-         RIGHT JOIN canonical_block_header AS cb ON t.block_hash = cb.hash
-  WHERE cb.number IS NOT NULL
-    AND t.hash IS NOT NULL
-  ORDER BY cb.number DESC,
-           t.transaction_index DESC;
+SELECT t.*
+FROM "transaction" AS t
+       RIGHT JOIN canonical_block_header AS cb ON t.block_hash = cb.hash
+WHERE cb.number IS NOT NULL
+  AND t.hash IS NOT NULL
+ORDER BY cb.number DESC,
+         t.transaction_index DESC;
 
 /* All receipts including possible receipts from old forks */
 CREATE TABLE transaction_receipt
@@ -135,13 +135,13 @@ CREATE INDEX idx_transaction_receipt_contract_address ON transaction_receipt ("c
 
 /* This view helps to filter out non canonical receipts based on the latest state of the canonical block header table */
 CREATE VIEW canonical_transaction_receipt AS
-  SELECT tr.*
-  FROM transaction_receipt AS tr
-         RIGHT JOIN canonical_block_header AS cb ON tr.block_hash = cb.hash
-  WHERE cb.number IS NOT NULL
-    AND tr.transaction_hash IS NOT NULL
-  ORDER BY cb.number DESC,
-           tr.transaction_index DESC;
+SELECT tr.*
+FROM transaction_receipt AS tr
+       RIGHT JOIN canonical_block_header AS cb ON tr.block_hash = cb.hash
+WHERE cb.number IS NOT NULL
+  AND tr.transaction_hash IS NOT NULL
+ORDER BY cb.number DESC,
+         tr.transaction_index DESC;
 
 /* All traces including possible traces from old forks */
 CREATE TABLE transaction_trace
@@ -164,34 +164,35 @@ CREATE INDEX idx_transaction_trace_transaction_hash ON transaction_trace (transa
 
 /* This view helps to filter out non canonical traces based on the latest state of the canonical block header table */
 CREATE VIEW canonical_transaction_trace AS
-  SELECT tr.*
-  FROM transaction_trace AS tr
-         RIGHT JOIN canonical_block_header AS cb ON tr.block_hash = cb.hash
-  WHERE cb.number IS NOT NULL
-    AND tr.transaction_hash IS NOT NULL
-  ORDER BY cb.number DESC,
-           tr.transaction_position DESC;
+SELECT tr.*
+FROM transaction_trace AS tr
+       RIGHT JOIN canonical_block_header AS cb ON tr.block_hash = cb.hash
+WHERE cb.number IS NOT NULL
+  AND tr.transaction_hash IS NOT NULL
+ORDER BY cb.number DESC,
+         tr.transaction_position DESC;
 
 CREATE TABLE contract
 (
   address            CHAR(42) PRIMARY KEY,
-  creator            CHAR(42) NULL,
-  init               TEXT     NULL,
-  code               TEXT     NULL,
-  refund_address     CHAR(66) NULL,
-  refund_balance     NUMERIC  NULL,
-  trace_created_at   TEXT     NULL,
-  trace_destroyed_at TEXT     NULL
+  creator            CHAR(42)    NULL,
+  init               TEXT        NULL,
+  code               TEXT        NULL,
+  contract_type      VARCHAR(32) NULL,
+  refund_address     CHAR(66)    NULL,
+  refund_balance     NUMERIC     NULL,
+  trace_created_at   TEXT        NULL,
+  trace_destroyed_at TEXT        NULL
 );
 
 CREATE INDEX idx_contract_creator ON contract (creator);
 
 CREATE VIEW contract_creator AS
-  SELECT c.creator AS address,
-         COUNT(*)  AS count
-  FROM contract AS c
-  GROUP BY c.creator
-  ORDER BY count DESC;
+SELECT c.creator AS address,
+       COUNT(*)  AS count
+FROM contract AS c
+GROUP BY c.creator
+ORDER BY count DESC;
 
 CREATE TABLE fungible_balance
 (
@@ -204,10 +205,19 @@ CREATE TABLE fungible_balance
 CREATE INDEX idx_fungible_balance_contract ON fungible_balance (contract);
 
 CREATE VIEW ether_balance AS
-  SELECT fb.address,
+SELECT fb.address,
+       fb.amount
+FROM fungible_balance AS fb
+WHERE contract = '';
+
+CREATE VIEW erc20_balance AS
+  SELECT
+         fb.address,
          fb.amount
   FROM fungible_balance AS fb
-  WHERE contract = '';
+  WHERE
+        contract IS NOT NULL AND
+        contract != '';
 
 CREATE TABLE fungible_balance_deltas
 (
@@ -220,28 +230,35 @@ CREATE TABLE fungible_balance_deltas
 );
 
 CREATE VIEW account AS
-  SELECT fb.address,
-       fb.amount AS balance,
-       (SELECT COUNT(*) FROM canonical_transaction AS ct WHERE ct.from = fb.address OR ct.to = fb.address) AS total_tx_count,
-       (SELECT COUNT(*) FROM canonical_transaction AS ct WHERE ct.to = fb.address) AS in_tx_count,
-       (SELECT COUNT(*) FROM canonical_transaction AS ct WHERE ct.from = fb.address) AS out_tx_count,
+SELECT fb.address,
+       fb.amount                                                                                           AS balance,
+       (SELECT COUNT(*)
+        FROM canonical_transaction AS ct
+        WHERE ct.from = fb.address
+           OR ct.to = fb.address)                                                                          AS total_tx_count,
+       (SELECT COUNT(*)
+        FROM canonical_transaction AS ct
+        WHERE ct.to = fb.address)                                                                          AS in_tx_count,
+       (SELECT COUNT(*)
+        FROM canonical_transaction AS ct
+        WHERE ct.from = fb.address)                                                                        AS out_tx_count,
        CASE
          WHEN a.count > 0 THEN
            TRUE
          ELSE
            FALSE
-         END AS is_miner,
+         END                                                                                               AS is_miner,
        CASE
          WHEN cc.count > 0 THEN
            TRUE
          ELSE
            FALSE
-         END AS is_contract_creator
-  FROM fungible_balance AS fb
-         LEFT JOIN canonical_block_author AS a ON fb.address = a.address
-         LEFT JOIN contract_creator AS cc ON fb.address = cc.address
-  WHERE fb.contract = ''
-  ORDER BY balance DESC;
+         END                                                                                               AS is_contract_creator
+FROM fungible_balance AS fb
+       LEFT JOIN canonical_block_author AS a ON fb.address = a.address
+       LEFT JOIN contract_creator AS cc ON fb.address = cc.address
+WHERE fb.contract = ''
+ORDER BY balance DESC;
 
 CREATE INDEX idx_fungible_balance_deltas_address ON fungible_balance_deltas (address) WHERE address IS NOT NULL;
 CREATE INDEX idx_fungible_balance_deltas_contract_address ON fungible_balance_deltas (contract_address);
@@ -260,6 +277,11 @@ CREATE TABLE non_fungible_balance
 CREATE INDEX idx_non_fungible_balance_address ON non_fungible_balance (address);
 CREATE INDEX idx_non_fungible_balance_contract ON non_fungible_balance (contract);
 CREATE INDEX idx_non_fungible_balance_contract_address ON non_fungible_balance (contract, address);
+
+CREATE VIEW erc721_balance AS
+SELECT
+  *
+FROM non_fungible_balance;
 
 CREATE TABLE non_fungible_balance_deltas
 (
@@ -336,19 +358,18 @@ SELECT create_hypertable('block_metrics_transaction_fee',
 
 /* useful views */
 CREATE VIEW canonical_block_metrics_header_daily AS
-  SELECT
-         time_bucket(86400,bmh.timestamp)  AS daily,
-         COUNT(*)              AS count,
-         MAX(bmh.difficulty) AS max_difficulty,
-         AVG(bmh.difficulty) AS avg_difficulty,
-         MIN(bmh.difficulty) AS min_difficulty,
-         SUM(bmh.difficulty) AS sum_difficulty
-  FROM block_metrics_header AS bmh
-         RIGHT JOIN canonical_block_header cbh ON bmh.block_hash = cbh.hash
-  WHERE cbh.number IS NOT NULL
-    AND bmh.timestamp IS NOT NULL
-  GROUP BY daily
-  ORDER BY daily DESC;
+SELECT time_bucket(86400, bmh.timestamp) AS daily,
+       COUNT(*)                          AS count,
+       MAX(bmh.difficulty)               AS max_difficulty,
+       AVG(bmh.difficulty)               AS avg_difficulty,
+       MIN(bmh.difficulty)               AS min_difficulty,
+       SUM(bmh.difficulty)               AS sum_difficulty
+FROM block_metrics_header AS bmh
+       RIGHT JOIN canonical_block_header cbh ON bmh.block_hash = cbh.hash
+WHERE cbh.number IS NOT NULL
+  AND bmh.timestamp IS NOT NULL
+GROUP BY daily
+ORDER BY daily DESC;
 
 CREATE VIEW canonical_block_metrics_header_hourly AS
 SELECT time_bucket(
