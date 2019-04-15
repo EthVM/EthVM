@@ -50,7 +50,8 @@
     "status": "Статус",
     "input": "Вводимые данные",
     "func": "Функция",
-    "method": "ID Метода"
+    "method": "ID Метода",
+    "self": "Self Tx"
   },
   "token": {
     "name": "Токен | Токены",

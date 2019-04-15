@@ -224,7 +224,7 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
 
   getPriceChange(): string {
     return this.tokenDetails.priceChangePercentage24h > 0
-      ? '+' + this.getPercent(this.tokenDetails.priceChangePercentage24h)
+      ? `+${this.getPercent(this.tokenDetails.priceChangePercentage24h)}`
       : this.getPercent(this.tokenDetails.priceChangePercentage24h)
   }
 }

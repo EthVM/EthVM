@@ -10,7 +10,7 @@
         <div :class="txStatusClass">
           <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-3 pl-3">
             <v-flex xs6 pa-1>
-              <router-link class="black--text font-weight-medium pb-1" :to="'/block/' + tx.getBlockHash()"
+              <router-link class="black--text font-weight-medium pb-1" :to="`/block/${tx.getBlockHash()}`"
                 >{{ $t('block.number') }} {{ tx.getBlockNumber() }}</router-link
               >
             </v-flex>
@@ -23,20 +23,20 @@
               <p class="info--text psmall">{{ $tc('tx.hash', 1) }}:</p>
             </v-flex>
             <v-flex xs10 pa-1>
-              <app-hash-concat :hash="tx.getHash()" :link="'/tx/' + tx.getHash()" />
+              <app-hash-concat :hash="tx.getHash()" :link="`/tx/${tx.getHash()}`" />
             </v-flex>
             <v-flex xs12 pa-1>
               <v-layout row pa-2>
                 <p class="info--text psmall pr-1">{{ $tc('address.name', 2) }}:</p>
-                <app-hash-concat :hash="tx.getFrom().toString()" :italic="true" :link="'/address/' + tx.getFrom().toString()" />
+                <app-hash-concat :hash="tx.getFrom().toString()" :italic="true" :link="`/address/${tx.getFrom().toString()}`" />
                 <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
                 <app-hash-concat
                   v-if="!tx.getContractAddress().isEmpty()"
                   :hash="tx.getContractAddress().toString()"
                   :italic="true"
-                  :link="'/address/' + tx.getContractAddress().toString()"
+                  :link="`/address/${tx.getContractAddress().toString()}`"
                 />
-                <app-hash-concat v-else :hash="tx.getTo().toString()" :italic="true" :link="'/address/' + tx.getTo().toString()" />
+                <app-hash-concat v-else :hash="tx.getTo().toString()" :italic="true" :link="`/address/${tx.getTo().toString()}`" />
               </v-layout>
             </v-flex>
             <v-flex shrink pa-1>
@@ -65,7 +65,7 @@
           =====================================================================================
           -->
           <v-flex sm2 md1 pr-1>
-            <router-link class="primary--text text-truncate font-italic psmall" :to="'/block/' + tx.getBlockHash()">{{ tx.getBlockNumber() }}</router-link>
+            <router-link class="primary--text text-truncate font-italic psmall" :to="`/block/${tx.getBlockHash()}`">{{ tx.getBlockNumber() }}</router-link>
           </v-flex>
           <!--
           =====================================================================================
@@ -84,24 +84,24 @@
                     <p class="info--text psmall">{{ $tc('tx.hash', 1) }}:</p>
                   </v-flex>
                   <v-flex sm10 lg11 pa-1>
-                    <app-hash-concat :hash="tx.getHash()" :link="'/tx/' + tx.getHash()" />
+                    <app-hash-concat :hash="tx.getHash()" :link="`/tx/${tx.getHash()}`" />
                   </v-flex>
                 </v-layout>
               </v-flex>
               <v-flex sm12 pa-2>
                 <v-layout row align-center justify-space-around fill-height pa-2>
                   <p class="info--text mb-0 mr-1">{{ $t('tx.from') }}:</p>
-                  <app-hash-concat :hash="tx.getFrom().toString()" :link="'/address/' + tx.getFrom().toString()" :italic="true" />
+                  <app-hash-concat :hash="tx.getFrom().toString()" :link="`/address/${tx.getFrom().toString()}`" :italic="true" />
                   <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
                   <p class="info--text mb-0 mr-1" v-if="!tx.getContractAddress().isEmpty()">{{ $tc('contract.name', 1) }}:</p>
                   <p class="info--text mb-0 mr-1" v-else>{{ $t('tx.to') }}:</p>
                   <app-hash-concat
                     v-if="!tx.getContractAddress().isEmpty()"
                     :hash="tx.getContractAddress().toString()"
-                    :link="'/address/' + tx.getContractAddress().toString()"
+                    :link="`/address/${tx.getContractAddress().toString()}`"
                     :italic="true"
                   />
-                  <app-hash-concat v-else :hash="tx.getTo().toString()" :link="'/address/' + tx.getTo().toString()" :italic="true" />
+                  <app-hash-concat v-else :hash="tx.getTo().toString()" :link="`/address/${tx.getTo().toString()}`" :italic="true" />
                 </v-layout>
               </v-flex>
             </v-layout>

@@ -58,7 +58,7 @@
               <v-card-text class="pb-0 pl-5">{{ $t('pp.security.b5') }}</v-card-text>
               <v-card-text class="pb-0 pl-5">{{ $t('pp.security.b6') }}</v-card-text>
               <v-card-text class="pb-0"
-                >{{ $t('pp.security.p3') }}<a :href="'mailto:' + email">{{ email }}</a></v-card-text
+                >{{ $t('pp.security.p3') }}<a :href="`mailto:${email}`">{{ email }}</a></v-card-text
               >
               <v-card-title class="subheading font-italic pb-0">{{ $t('pp.security.sub1') }}</v-card-title>
               <v-card-text class="pb-0">{{ $t('pp.security.p4') }}</v-card-text>
@@ -68,7 +68,7 @@
             <v-flex xs12 align-self-start>
               <v-card-title class="title font-weight-bold pb-1">{{ $t('pp.contact.title') }}</v-card-title>
               <v-card-text class="pb-0"
-                >{{ $t('pp.contact.p1') }} <a :href="'mailto:' + email">{{ email }}</a></v-card-text
+                >{{ $t('pp.contact.p1') }} <a :href="`mailto:${email}`">{{ email }}</a></v-card-text
               >
             </v-flex>
             <v-flex xs12 align-self-start>

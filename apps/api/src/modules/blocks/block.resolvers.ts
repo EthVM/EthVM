@@ -13,7 +13,7 @@ export class BlockResolvers {
   constructor(private readonly blockService: BlockService, @Inject('PUB_SUB') private pubSub: PubSub) {}
 
   @Query()
-  async blocks(@Args('page', ParsePagePipe) page: number, @Args('limit', ParseLimitPipe) limit: number) {
+  async blocks(@Args('page', ParsePagePipe) page?: number, @Args('limit', ParseLimitPipe) limit?: number) {
     const entities = await this.blockService.findBlocks(limit, page)
     return entities.map(e => new BlockDto(e))
   }
@@ -33,8 +33,8 @@ export class BlockResolvers {
   @Query()
   async minedBlocksByAddress(
     @Args('address', ParseAddressPipe) address: string,
-    @Args('limit', ParseLimitPipe) limit: number,
-    @Args('page', ParsePagePipe) page: number,
+    @Args('limit', ParseLimitPipe) limit?: number,
+    @Args('page', ParsePagePipe) page?: number,
   ) {
     const entities = await this.blockService.findMinedBlocksByAddress(address, limit, page)
     return entities.map(e => new BlockDto(e))

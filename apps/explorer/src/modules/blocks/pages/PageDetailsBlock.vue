@@ -213,7 +213,7 @@ export default class PageDetailsBlock extends Vue {
           title: this.$i18n.t('block.rcpt-root')
         },
         {
-          title: this.$i18n.tc('uncle.name', 2) + ' ' + this.$i18n.t('common.sha')
+          title: `${this.$i18n.tc('uncle.name', 2)} ${this.$i18n.t('common.sha')}`
         }
       ]
     } else {
@@ -231,20 +231,20 @@ export default class PageDetailsBlock extends Vue {
         {
           title: this.$i18n.t('block.p-hash'),
           detail: this.block.getParentHash().toString(),
-          link: '/block/' + this.block.getParentHash().toString(),
+          link: `/block/${this.block.getParentHash().toString()}`,
           copy: true,
           mono: true
         },
         {
           title: this.$i18n.t('miner.name'),
           detail: this.block.getMiner().toString(),
-          link: '/address/' + this.block.getMiner().toString(),
+          link: `/address/${this.block.getMiner().toString()}`,
           copy: true,
           mono: true
         },
         {
           title: this.$i18n.t('miner.reward'),
-          detail: this.block.getMinerReward().toEth() + ' ' + this.$i18n.t('common.eth')
+          detail: `${this.block.getMinerReward().toEth()} ${this.$i18n.t('common.eth')}`
         },
         {
           title: this.$i18n.t('common.timestmp'),
@@ -252,7 +252,7 @@ export default class PageDetailsBlock extends Vue {
         },
         {
           title: this.$i18n.t('uncle.reward'),
-          detail: this.block.getUncleReward().toEth() + ' ' + this.$i18n.t('common.eth')
+          detail: `${this.block.getUncleReward().toEth()} ${this.$i18n.t('common.eth')}`
         },
         {
           title: this.$i18n.tc('tx.name', 2),
@@ -268,7 +268,7 @@ export default class PageDetailsBlock extends Vue {
         },
         {
           title: this.$i18n.t('common.size'),
-          detail: this.block.getSize().toString() + ' ' + this.$i18n.t('block.bytes')
+          detail: `${this.block.getSize().toString()} ${this.$i18n.t('block.bytes')}`
         },
         {
           title: this.$i18n.t('common.nonce'),
@@ -287,7 +287,7 @@ export default class PageDetailsBlock extends Vue {
         },
         {
           title: this.$i18n.tc('tx.fee', 2),
-          detail: this.block.getTxFees().toEth() + ' ' + this.$i18n.t('common.eth')
+          detail: `${this.block.getTxFees().toEth()} ${this.$i18n.t('common.eth')}`
         },
         {
           title: this.$i18n.t('gas.limit'),
@@ -313,7 +313,7 @@ export default class PageDetailsBlock extends Vue {
           mono: true
         },
         {
-          title: this.$i18n.tc('uncle.name', 2) + ' ' + this.$i18n.t('common.sha'),
+          title: `${this.$i18n.tc('uncle.name', 2)} ${this.$i18n.t('common.sha')}`,
           detail: this.block.getSha3Uncles().toString(),
           mono: true
         }
@@ -324,24 +324,24 @@ export default class PageDetailsBlock extends Vue {
 
   get nextBlock(): String {
     if (this.blockInfo.mined && this.blockInfo) {
-      return '/block/' + this.blockInfo.next
+      return `/block/${this.blockInfo.next}`
     }
 
     if (!this.$route.params.blockRef.includes('0x')) {
       const next = Number(this.$route.params.blockRef) + 1
-      return '/block/' + next
+      return `/block/${next}`
     }
     return ''
   }
 
   get previousBlock(): String {
     if (this.blockInfo.mined && this.blockInfo.prev) {
-      return '/block/' + this.blockInfo.prev
+      return `/block/${this.blockInfo.prev}`
     }
 
     if (!this.$route.params.blockRef.includes('0x')) {
       const prev = Number(this.$route.params.blockRef) - 1
-      return '/block/' + prev
+      return `/block/${prev}`
     }
     return ''
   }
