@@ -155,6 +155,7 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
                   .setCreator(new.getCreator())
                   .setInit(new.getInit())
                   .setCode(new.getCode())
+                  .setContractType(new.getContractType())
                   .setTraceCreatedAt(new.getCreatedAt())
                   .build()
               }

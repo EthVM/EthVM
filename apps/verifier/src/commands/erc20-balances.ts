@@ -11,13 +11,17 @@ import BN = require('bn.js')
 const erc20Abi: AbiItem[] = [
   // balanceOf
   {
-    'constant': true,
-    'inputs': [{ 'name': '_owner', 'type': 'address' }],
-    'name': 'balanceOf',
-    'outputs': [{ 'name': 'balance', 'type': 'uint256' }],
-    'type': 'function',
-    'payable': false,
-    'stateMutability': 'view'
+    type: 'function',
+    stateMutability: 'view',
+    payable: false,
+    outputs: [
+      { name: 'balance', type: 'uint256' }
+    ],
+    name: 'balanceOf',
+    inputs: [
+      { name: 'tokenOwner', type: 'address' }
+    ],
+    constant: true
   },
   // decimals
   {
@@ -46,7 +50,7 @@ export async function Erc20Balances(config: Config, blockNumber: number = undefi
 
   let matched = 0
   const differences = []
-  const errors = [];
+  const errors = []
 
   do {
     [balances, count] = await fetchBalances(connection, offset, limit)
@@ -60,10 +64,10 @@ export async function Erc20Balances(config: Config, blockNumber: number = undefi
       try {
 
         const balance = await contract.methods
-              .balanceOf(address)
-              .call({ from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe' }) as BN
+          .balanceOf(address)
+          .call({ from: '0x0000000000000000000000000000000000000000' }) as BN
 
-        const expected = balance ? balance.toString() : undefined;
+        const expected = balance ? balance.toString() : undefined
 
         if (expected === amount) {
           matched += 1

@@ -186,6 +186,7 @@ CREATE TABLE contract
 );
 
 CREATE INDEX idx_contract_creator ON contract (creator);
+CREATE INDEX idx_contract_contract_type ON contract (contract_type);
 
 CREATE VIEW contract_creator AS
 SELECT c.creator AS address,
@@ -216,9 +217,11 @@ CREATE VIEW erc20_balance AS
          fb.address,
          fb.amount
   FROM fungible_balance AS fb
+  LEFT JOIN contract as c on fb.contract = c.address
   WHERE
-        contract IS NOT NULL AND
-        contract != '';
+        fb.contract IS NOT NULL AND
+        fb.contract != '' AND
+        c.contract_type = 'ERC20';
 
 CREATE TABLE fungible_balance_deltas
 (

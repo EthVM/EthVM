@@ -279,6 +279,7 @@ protocol Capture {
     union { null, string } creator = null;
     union { null, string } init = null;
     union { null, string } code = null;
+    union { null, com.ethvm.avro.common.ContractType } contractType = null;
     union { null, string } refundAddress = null;
     union { null, decimal(40,0) } refundBalance = null;
 

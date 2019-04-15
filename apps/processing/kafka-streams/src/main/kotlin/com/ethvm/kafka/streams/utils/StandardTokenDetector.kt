@@ -2,6 +2,7 @@ package com.ethvm.kafka.streams.utils
 
 import com.ethvm.avro.common.ContractType
 import com.ethvm.common.extensions.byteArray
+import com.ethvm.common.extensions.hex
 import com.ethvm.common.extensions.indexByteArrayOf
 import com.ethvm.kafka.streams.utils.TokenContract.Companion.DECIMALS
 import com.ethvm.kafka.streams.utils.TokenContract.Companion.NAME
@@ -96,6 +97,14 @@ class ERC20TokenContract : TokenContract {
     SYMBOL to FnSignature("symbol()"),
     DECIMALS to FnSignature("decimals()")
   )
+
+  init {
+    mandatorySignatures.forEach{ sig -> System.out.println("Sig, fn = ${sig.fn}, hash = ${sig.signature.hex()}")}
+  }
+}
+
+fun main() {
+  ERC20TokenContract()
 }
 
 /**
@@ -167,7 +176,7 @@ enum class TokenContractMatchResult {
   NONE_MATCH
 }
 
-class FnSignature(fn: String) {
+class FnSignature(val fn: String) {
 
   init {
     assert(fn.isNotEmpty()) { "Not valid fn name. Must not be null or empty." }
