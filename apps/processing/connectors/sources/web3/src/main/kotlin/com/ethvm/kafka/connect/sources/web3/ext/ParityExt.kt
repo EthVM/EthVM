@@ -43,7 +43,6 @@ class JsonRpc2_0ParityExtended(web3jService: Web3jService) : JsonRpc2_0Parity(we
       EthvmUncleResponse::class.java
     )
   }
-
 }
 
 class EthvmUncleResponse : Response<EthBlock>() {

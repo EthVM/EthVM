@@ -121,11 +121,9 @@ class ParityBlocksSource(
 
                   CompletableFuture.allOf(*uncleFutures.toTypedArray())
                     .thenApply { uncleFutures.map { uncleFuture -> uncleFuture.join() } }
-
                 } else {
                   CompletableFuture.completedFuture(emptyList())
                 }
-
               }
 
             val thenApply = unclesFuture.thenApply { uncles ->
@@ -146,7 +144,6 @@ class ParityBlocksSource(
                 uncleValueSchemaAndValue.schema(),
                 uncleValueSchemaAndValue.value()
               )
-
             }
             return@thenCompose thenApply.thenApply { unclesRecord -> listOf(headerSourceRecord, txsSourceRecord, unclesRecord) }
           }

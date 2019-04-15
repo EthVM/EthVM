@@ -12,7 +12,6 @@ import com.ethvm.avro.capture.TransactionRecord
 import com.ethvm.avro.capture.UncleListRecord
 import com.ethvm.avro.capture.UncleRecord
 import io.confluent.connect.avro.AvroData
-import mu.KotlinLogging
 import org.apache.avro.Schema
 import org.apache.avro.specific.SpecificRecordBase
 import org.apache.kafka.connect.data.SchemaAndValue
