@@ -19,9 +19,6 @@ volumes:
 
   zookeeper-volume:
 
-  control-center-volume:
-  control-center-config-volume:
-
   parity-volume:
     # Note:
     # If you're on Linux, use local-persist instead of a regular docker volume
