@@ -9,6 +9,7 @@ import com.ethvm.avro.capture.TransactionListRecord
 import com.ethvm.avro.capture.TransactionReceiptListRecord
 import com.ethvm.avro.capture.TransactionReceiptRecord
 import com.ethvm.avro.capture.TransactionRecord
+import com.ethvm.avro.capture.UncleListRecord
 import com.ethvm.avro.capture.UncleRecord
 import io.confluent.connect.avro.AvroData
 import mu.KotlinLogging
@@ -18,14 +19,7 @@ import org.apache.kafka.connect.data.SchemaAndValue
 
 object AvroToConnect {
 
-  private val logger = KotlinLogging.logger {}
-
   private val avroData = AvroData(100)
-
-  init {
-    val schema = avroData.toConnectSchema(CanonicalKeyRecord.`SCHEMA$`)
-    logger.info { "######### Canonical schema: ${schema.field("number")}" }
-  }
 
   private val mappings = mapOf(
     BlockHeaderRecord::class to BlockHeaderRecord.`SCHEMA$`,
@@ -37,6 +31,7 @@ object AvroToConnect {
     TransactionReceiptListRecord::class to TransactionReceiptListRecord.`SCHEMA$`,
     TransactionRecord::class to TransactionRecord.`SCHEMA$`,
     TransactionReceiptRecord::class to TransactionReceiptRecord.`SCHEMA$`,
+    UncleListRecord::class to UncleListRecord.`SCHEMA$`,
     UncleRecord::class to UncleRecord.`SCHEMA$`
   )
 

@@ -16,9 +16,8 @@ import mu.KotlinLogging
 import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTaskContext
 import org.web3j.protocol.core.DefaultBlockParameter
-import org.web3j.protocol.core.methods.response.EthBlock
 import org.web3j.protocol.core.methods.response.Transaction
-import java.util.stream.Collectors
+import java.util.concurrent.CompletableFuture
 
 class ParityBlocksSource(
   sourceContext: SourceTaskContext,
@@ -104,52 +103,52 @@ class ParityBlocksSource(
 
             // uncles
 
-            return@thenCompose parity
+            val unclesFuture = parity
               .ethGetUncleCountByBlockNumber(blockParam)
               .sendAsync()
-              .thenApply { uncleResp ->
+              .thenCompose { uncleResp ->
 
                 val uncleCount = uncleResp.uncleCount.toLong()
 
-                logger.info { "Uncles | block = $blockNumber, count = $uncleCount" }
+                return@thenCompose if (uncleCount > 0) {
 
-                return@thenApply if (uncleCount > 0) {
-                  0.until(uncleCount)
+                  val uncleFutures = 0.until(uncleCount)
                     .map { pos ->
-
                       parity
-                        .ethGetUncleByBlockNumberAndIndex(blockParam, pos.toBigInteger())
+                        .ethGetUncleByBlockHashAndIndex(block.hash, pos.toBigInteger())
                         .sendAsync()
                     }
-                    .stream()
-                    .map { it.join() }
-                    .collect(Collectors.toList())
-                    .let { uncles: MutableList<EthBlock> ->
 
-                      val uncleListRecord = UncleListRecord.newBuilder()
-                        .setUncles(uncles.map { u -> u.block.toUncleRecord(block.hash, blockNumberBI, UncleRecord.newBuilder()).build() })
-                        .build()
+                  CompletableFuture.allOf(*uncleFutures.toTypedArray())
+                    .thenApply { uncleFutures.map { uncleFuture -> uncleFuture.join() } }
 
-                      val uncleKeySchemaAndValue = AvroToConnect.toConnectData(blockKeyRecord)
-                      val uncleValueSchemaAndValue = AvroToConnect.toConnectData(uncleListRecord)
-
-                      val unclesSourceRecord =
-                        SourceRecord(
-                          partitionKey,
-                          partitionOffset,
-                          unclesTopic,
-                          uncleKeySchemaAndValue.schema(),
-                          uncleKeySchemaAndValue.value(),
-                          uncleValueSchemaAndValue.schema(),
-                          uncleValueSchemaAndValue.value()
-                        )
-
-                      listOf(unclesSourceRecord)
-                    }
                 } else {
-                  emptyList()
+                  CompletableFuture.completedFuture(emptyList())
                 }
-              }.thenApply { listOf(headerSourceRecord, txsSourceRecord) + it }
+
+              }
+
+            val thenApply = unclesFuture.thenApply { uncles ->
+
+              val uncleListRecord = UncleListRecord.newBuilder()
+                .setUncles(uncles.map { u -> u.block.toUncleRecord(block.hash, blockNumberBI, UncleRecord.newBuilder()).build() })
+                .build()
+
+              val uncleKeySchemaAndValue = AvroToConnect.toConnectData(blockKeyRecord)
+              val uncleValueSchemaAndValue = AvroToConnect.toConnectData(uncleListRecord)
+
+              return@thenApply SourceRecord(
+                partitionKey,
+                partitionOffset,
+                unclesTopic,
+                uncleKeySchemaAndValue.schema(),
+                uncleKeySchemaAndValue.value(),
+                uncleValueSchemaAndValue.schema(),
+                uncleValueSchemaAndValue.value()
+              )
+
+            }
+            return@thenCompose thenApply.thenApply { unclesRecord -> listOf(headerSourceRecord, txsSourceRecord, unclesRecord) }
           }
 
         blockFuture
