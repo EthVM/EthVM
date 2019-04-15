@@ -22,7 +22,7 @@ export class UncleService {
       where: { number: LessThanOrEqual(offset) },
       order: { nephewNumber: 'DESC', number: 'DESC' },
       take,
-      skip
+      skip,
     }
     return this.uncleRepository.find(findOptions)
   }

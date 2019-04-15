@@ -12,7 +12,6 @@ export enum BalanceType {
   ERC721,
 }
 
-
 @Entity('token_transfers')
 export class TokenTransferEntity {
   constructor(data: any) {
