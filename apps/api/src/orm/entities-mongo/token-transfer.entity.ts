@@ -1,10 +1,17 @@
 import { Column, Entity, ObjectIdColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
-import { BalanceType } from '@app/orm/entities-mongo/balance.entity'
 
 interface TokenTransferKeyInterface {
   hash: string
 }
+export enum BalanceType {
+  TX_FEE,
+  REWARD,
+  ETHER,
+  ERC20,
+  ERC721,
+}
+
 
 @Entity('token_transfers')
 export class TokenTransferEntity {
