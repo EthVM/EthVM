@@ -1,5 +1,5 @@
 import { EthvmApi } from '@app/core/api'
-import { accountMetadataByHash, addressAllTokensOwned, addressAmountTokensOwned, addressBalanceByHash } from '@app/core/api/apollo/queries/addresses.graphql'
+import { accountMetadataByHash, addressAllTokensOwned, addressAmountTokensOwned, addressBalanceByHash, accountByAddress } from '@app/core/api/apollo/queries/addresses.graphql'
 import { blockMetricByHash, blockMetrics } from '@app/core/api/apollo/queries/block-metrics.graphql'
 import { blockByHash, blockByNumber, blocks, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
 import { contractByAddress, contractsCreatedBy } from '@app/core/api/apollo/queries/contracts.graphql'
@@ -35,6 +35,7 @@ import {
 import { totalNumberOfTransactions, tx, txs, txsForAddress } from '@app/core/api/apollo/queries/txs.graphql'
 import { totalNumberOfUncles, uncleByHash, uncles } from '@app/core/api/apollo/queries/uncles.graphql'
 import {
+  Account,
   AddressBalance,
   AddressMetadata,
   Block,
@@ -61,6 +62,16 @@ export class EthvmApolloApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
   // Address
   // ------------------------------------------------------------------------------------
+
+  public getAccount(address: string): Promise<Account | null> {
+    return this.apollo.query({
+      query: accountByAddress,
+      variables: {
+        address
+      }
+    })
+      .then(res => res.data.accountByAddress)
+  }
 
   public getAddressBalance(address: string): Promise<AddressBalance> {
     return this.apollo
