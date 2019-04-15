@@ -10,10 +10,10 @@
     "connection.url": "jdbc:postgresql://timescale:5432/ethvm_dev",
     "connection.user": "postgres",
     "connection.password": "1234",
-    "transforms": "snakeCaseKey,snakeCaseValue,toJsonValue",
+    "transforms": "snakeCaseKey,snakeCaseValue,flattenValue",
+    "transforms.flattenValue.type": "com.ethvm.kafka.connect.sources.jdbc.Flatten$Value",
+    "transforms.flattenValue.delimiter": "_",
     "transforms.snakeCaseKey.type": "com.ethvm.kafka.connect.sources.jdbc.SnakeCase$Key",
-    "transforms.snakeCaseValue.type": "com.ethvm.kafka.connect.sources.jdbc.SnakeCase$Value",
-    "transforms.toJsonValue.type": "com.ethvm.kafka.connect.sources.jdbc.JsonField$Value",
-    "transforms.toJsonValue.whitelist": "trace_location"
+    "transforms.snakeCaseValue.type": "com.ethvm.kafka.connect.sources.jdbc.SnakeCase$Value"
   }
 }
