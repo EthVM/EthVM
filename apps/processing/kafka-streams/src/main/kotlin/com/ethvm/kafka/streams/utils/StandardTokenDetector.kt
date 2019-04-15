@@ -98,13 +98,6 @@ class ERC20TokenContract : TokenContract {
     DECIMALS to FnSignature("decimals()")
   )
 
-  init {
-    mandatorySignatures.forEach{ sig -> System.out.println("Sig, fn = ${sig.fn}, hash = ${sig.signature.hex()}")}
-  }
-}
-
-fun main() {
-  ERC20TokenContract()
 }
 
 /**
