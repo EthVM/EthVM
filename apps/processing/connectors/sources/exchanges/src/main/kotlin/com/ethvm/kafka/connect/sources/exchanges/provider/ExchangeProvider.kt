@@ -1,5 +1,6 @@
 package com.ethvm.kafka.connect.sources.exchanges.provider
 
+import arrow.core.Option
 import org.apache.kafka.connect.source.SourceRecord
 
 interface ExchangeProvider {
@@ -12,11 +13,11 @@ enum class ExchangeProviders {
   COIN_GECKO;
 
   companion object {
-    fun of(name: String): ExchangeProviders? {
+    fun of(name: String): Option<ExchangeProviders> {
       if (name == "CoinGecko") {
-        return COIN_GECKO
+        return Option.just(COIN_GECKO)
       }
-      return null
+      return Option.empty()
     }
   }
 }

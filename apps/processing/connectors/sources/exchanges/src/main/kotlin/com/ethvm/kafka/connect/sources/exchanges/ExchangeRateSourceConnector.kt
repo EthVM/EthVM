@@ -1,5 +1,6 @@
 package com.ethvm.kafka.connect.sources.exchanges
 
+import arrow.core.Some
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import com.ethvm.kafka.connect.sources.exchanges.ExchangeRateSourceConnector.Config.EXCHANGE_PROVIDER_CONFIG
@@ -17,6 +18,7 @@ import com.ethvm.kafka.connect.sources.exchanges.ExchangeRateSourceConnector.Con
 import com.ethvm.kafka.connect.sources.exchanges.provider.CoinGeckoExchangeProvider
 import com.ethvm.kafka.connect.sources.exchanges.provider.ExchangeProvider
 import com.ethvm.kafka.connect.sources.exchanges.provider.ExchangeProviders
+import com.ethvm.kafka.connect.sources.exchanges.provider.TokenEntry
 import com.ethvm.kafka.connect.sources.exchanges.utils.Versions
 import org.apache.kafka.common.config.ConfigDef
 import org.apache.kafka.common.config.ConfigDef.Importance
@@ -69,13 +71,7 @@ class ExchangeRateSourceConnector : SourceConnector() {
 
     const val EXCHANGE_PROVIDER_OPTIONS_CONFIG = "exchange.provider.options"
     const val EXCHANGE_PROVIDER_OPTIONS_DOC = "Options that will be passed to the Exchange rates provider"
-    val EXCHANGE_PROVIDER_OPTIONS_DEFAULT = """
-      {
-        "currency": "usd",
-        "per_page": 250,
-        "tokens_url": "https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/tokens/eth/tokens-eth.min.json"
-      }
-    """.trimIndent()
+    const val EXCHANGE_PROVIDER_OPTIONS_DEFAULT = ""
 
     private fun topic(props: MutableMap<String, String>): String {
       val value = props[TOPIC_CONFIG] ?: TOPIC_CONFIG_DEFAULT
@@ -93,22 +89,22 @@ class ExchangeRateSourceConnector : SourceConnector() {
       val value = props[EXCHANGE_PROVIDER_CONFIG] ?: EXCHANGE_PROVIDER_DEFAULT
       val opts = props[EXCHANGE_PROVIDER_OPTIONS_CONFIG] ?: EXCHANGE_PROVIDER_OPTIONS_DEFAULT
 
-      val provider = ExchangeProviders.of(value)
-      assert(provider == null) { "Invalid provider name" }
+      when (val provider = ExchangeProviders.of(value)) {
+        is Some -> {
+          return when (provider.t) {
+            ExchangeProviders.COIN_GECKO -> {
+              val options = mutableMapOf<String, Any>("topic" to topic(props))
 
-      val cls = Parser::class.java
-      val jsonObjectOpts = cls.getResourceAsStream(opts)?.let { inputStream ->
-        Parser.default().parse(inputStream)
-      } as JsonObject
+              val jsonOpts = javaClass.getResourceAsStream(opts)?.let { stream -> Parser.default().parse(stream) } as JsonObject
+              jsonOpts.map.forEach { (k, v) -> options[k] = v!! }
 
-      val options: MutableMap<String, Any> = mutableMapOf(
-        "topic" to topic(props)
-      )
+              val tokenIds = CoinGeckoExchangeProvider.klaxon.parse<List<TokenEntry>>(javaClass.getResourceAsStream("/coingecko-eth.json"))
+              options["tokens_ids"] = tokenIds!!
 
-      jsonObjectOpts.map.forEach { k, v -> options[k] = v!! }
-
-      return when (provider) {
-        ExchangeProviders.COIN_GECKO -> CoinGeckoExchangeProvider(options)
+              CoinGeckoExchangeProvider(options)
+            }
+          }
+        }
         else -> throw IllegalArgumentException("Invalid provider name")
       }
     }

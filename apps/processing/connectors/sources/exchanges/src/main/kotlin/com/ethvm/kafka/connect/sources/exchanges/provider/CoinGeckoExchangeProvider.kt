@@ -2,10 +2,9 @@ package com.ethvm.kafka.connect.sources.exchanges.provider
 
 import com.beust.klaxon.Klaxon
 import com.beust.klaxon.PropertyStrategy
-import com.ethvm.avro.exchange.SymbolKeyRecord
+import com.ethvm.avro.exchange.TokenExchangeRateKeyRecord
 import com.ethvm.avro.exchange.TokenExchangeRateRecord
 import com.ethvm.kafka.connect.sources.exchanges.ExchangeRateSourceConnector
-import com.ethvm.kafka.connect.sources.exchanges.model.ExchangeRate
 import com.ethvm.kafka.connect.sources.exchanges.utils.AvroToConnect
 import mu.KotlinLogging
 import okhttp3.HttpUrl
@@ -21,9 +20,10 @@ class CoinGeckoExchangeProvider(
   private val klaxon: Klaxon = CoinGeckoExchangeProvider.klaxon
 ) : ExchangeProvider {
 
-  private val topic: String = options["topic"]?.toString() ?: ExchangeRateSourceConnector.Config.TOPIC_CONFIG_DEFAULT
-  private val currency: String = options["currency"]?.toString() ?: "usd"
-  private val perPage: Int = options["per_page"] as Int? ?: 250
+  private val topic: String = options.getOrDefault("topic", ExchangeRateSourceConnector.Config.TOPIC_CONFIG_DEFAULT) as String
+  private val tokenIds: List<TokenEntry> = options.getOrDefault("tokens_ids", emptyList<TokenEntry>()) as List<TokenEntry>
+  private val currency: String = options.getOrDefault("currency", "usd") as String
+  private val perPage: Int = options.getOrDefault("per_page", 250) as Int
 
   private val logger = KotlinLogging.logger {}
 
@@ -32,70 +32,69 @@ class CoinGeckoExchangeProvider(
     val sourcePartition = mapOf("id" to "coingecko")
     val sourceOffset = emptyMap<String, Any>()
 
-    val records = mutableListOf<SourceRecord>()
-    var page = 1
-    do {
-      val url = COINGECKO_API_URL(currency, perPage, page)
+    return tokenIds
+      .chunked(perPage)
+      .map { chunk ->
 
-      logger.debug { "Fetching from: $url" }
+        val tokens = chunk.map { it.id }
+        val url = COINGECKO_API_URL(tokens, currency, perPage, 1)
 
-      val request = Request.Builder()
-        .url(url)
-        .build()
+        logger.debug { "Fetching from: $url" }
 
-      val response = okHttpClient
-        .newCall(request)
-        .execute()
+        val request = Request.Builder()
+          .url(url)
+          .build()
 
-      if (!response.isSuccessful) {
-        logger.error { "Unsuccessful response - Error Code: ${response.code()}" }
-        // TODO: Check exception type an analyze properly if we should retry or not
-      }
+        val response = okHttpClient
+          .newCall(request)
+          .execute()
 
-      val body = response.body()
-      val reader = BufferedReader(body?.charStream())
-
-      logger.debug { "Parsing into rates" }
-
-      val rates = klaxon.parseArray<ExchangeRate>(reader) ?: emptyList()
-
-      // Filter
-      rates
-        .filter { it.isValid() }
-        .mapTo(records) { rate ->
-
-          val keyRecord = SymbolKeyRecord.newBuilder()
-            .setSymbol(rate.symbol!!.trim().toUpperCase())
-            .build()
-
-          val valueRecord = rate
-            .toExchangeRateRecord(TokenExchangeRateRecord.newBuilder())
-            .build()
-
-          val key = AvroToConnect.toConnectData(keyRecord)
-          val value = AvroToConnect.toConnectData(valueRecord)
-
-          SourceRecord(
-            sourcePartition,
-            sourceOffset,
-            topic,
-            key.schema(),
-            key.value(),
-            value.schema(),
-            value.value()
-          )
+        if (!response.isSuccessful) {
+          logger.error { "Unsuccessful response - Error Code: ${response.code()}" }
+          // TODO: Check exception type an analyze properly if we should retry or not
         }
 
-      page = page.inc()
-    } while (rates.size == perPage)
+        val body = response.body()
+        val reader = BufferedReader(body?.charStream())
 
-    return records
+        logger.debug { "Parsing into rates" }
+
+        val rates = klaxon.parseArray<CoinGeckoExchangeRate>(reader) ?: emptyList()
+        rates
+          .filter { it.isValid() }
+          .map { rate ->
+
+            val address = chunk.first { rate.id == it.id }.address
+
+            val keyRecord = TokenExchangeRateKeyRecord.newBuilder()
+              .setAddress(address)
+              .build()
+
+            val valueRecord = rate
+              .toExchangeRateRecord(TokenExchangeRateRecord.newBuilder(), address)
+              .build()
+
+            val key = AvroToConnect.toConnectData(keyRecord)
+            val value = AvroToConnect.toConnectData(valueRecord)
+
+            SourceRecord(
+              sourcePartition,
+              sourceOffset,
+              topic,
+              key.schema(),
+              key.value(),
+              value.schema(),
+              value.value()
+            )
+          }
+      }
+      .flatten()
   }
 
   companion object {
 
     @Suppress("FunctionName")
-    fun COINGECKO_API_URL(currency: String = "usd", per_page: Int = 250, page: Int = 1): HttpUrl =
+    fun COINGECKO_API_URL(ids: List<String> = emptyList(), currency: String = "usd", per_page: Int = 250, page: Int = 1): HttpUrl =
       HttpUrl.Builder()
         .scheme("https")
         .host("api.coingecko.com")
@@ -103,6 +102,7 @@ class CoinGeckoExchangeProvider(
         .addPathSegment("v3")
         .addPathSegment("coins")
         .addPathSegment("markets")
+        .addQueryParameter("tokenIds", ids.joinToString(separator = ","))
         .addQueryParameter("vs_currency", currency)
         .addQueryParameter("order", "market_cap_desc")
         .addQueryParameter("sparkline", "false")
@@ -125,4 +125,58 @@ class CoinGeckoExchangeProvider(
         override fun accept(property: KProperty<*>): Boolean = property.name !in ignored
       })
   }
+}
+
+data class TokenEntry(
+  val id: String,
+  val address: String
+)
+
+data class CoinGeckoExchangeRate(
+  val id: String? = "",
+  val symbol: String? = "",
+  val name: String? = "",
+  val image: String? = "",
+  val current_price: Double? = -1.0,
+  val market_cap: Double? = -1.0,
+  val market_cap_rank: Int? = -1,
+  val total_volume: Double? = -1.0,
+  val high_24h: Double? = -1.0,
+  val low_24h: Double? = -1.0,
+  val price_change_24h: Double? = -1.0,
+  val price_change_percentage_24h: Double? = -1.0,
+  val market_cap_change_24h: Double? = -1.0,
+  val market_cap_change_percentage_24h: Double? = -1.0,
+  val circulating_supply: String? = "",
+  val total_supply: Long? = -1,
+  val last_updated: String? = ""
+) {
+
+  fun isValid() =
+    symbol != "" &&
+      total_supply != -1L &&
+      market_cap != -1.0 &&
+      price_change_percentage_24h != -1.0 &&
+      total_volume != -1.0 &&
+      current_price != -1.0
+
+  fun toExchangeRateRecord(builder: TokenExchangeRateRecord.Builder, address: String): TokenExchangeRateRecord.Builder =
+    builder
+      .setSymbol(symbol)
+      .setName(name)
+      .setImage(image)
+      .setAddress(address)
+      .setCurrentPrice(current_price)
+      .setMarketCap(market_cap)
+      .setMarketCapRank(market_cap_rank)
+      .setTotalVolume(total_volume)
+      .setHigh24h(high_24h)
+      .setLow24h(low_24h)
+      .setPriceChange24h(price_change_24h)
+      .setPriceChangePercentage24h(price_change_percentage_24h)
+      .setMarketCapChange24h(market_cap_change_24h)
+      .setMarketCapChangePercentage24h(market_cap_change_percentage_24h)
+      .setCirculatingSupply(circulating_supply)
+      .setTotalSupply(total_supply)
+      .setLastUpdated(last_updated)
 }

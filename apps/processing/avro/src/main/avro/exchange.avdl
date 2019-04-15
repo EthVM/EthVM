@@ -1,12 +1,11 @@
 @namespace("com.ethvm.avro.exchange")
 protocol Exchange {
 
-  record SymbolKeyRecord {
-    string symbol;
+  record TokenExchangeRateKeyRecord {
+    string address;
   }
 
   record TokenExchangeRateRecord {
-    string id;
     union { null, string } symbol;
     union { null, string } name;
     union { null, string } image;
