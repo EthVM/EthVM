@@ -198,6 +198,12 @@ topics:
     config:
       cleanup.policy: compact
 
+  - name: erc721_metadata
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
   - name: pending_transactions
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12

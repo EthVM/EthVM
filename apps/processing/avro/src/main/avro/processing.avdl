@@ -244,5 +244,10 @@ protocol Processing {
     union { null, decimal(80, 0) } totalSupply = null;
   }
 
+  record Erc721MetadataRecord {
+    union { null, string } name = null;
+    union { null, string } symbol = null;
+  }
+
 }
 

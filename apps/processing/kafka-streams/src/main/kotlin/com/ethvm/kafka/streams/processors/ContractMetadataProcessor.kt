@@ -2,9 +2,11 @@ package com.ethvm.kafka.streams.processors
 
 import com.ethvm.avro.common.ContractType
 import com.ethvm.avro.processing.Erc20MetadataRecord
+import com.ethvm.avro.processing.Erc721MetadataRecord
 import com.ethvm.common.extensions.byteBuffer
 import com.ethvm.kafka.streams.config.Topics.Contract
 import com.ethvm.kafka.streams.config.Topics.Erc20Metadata
+import com.ethvm.kafka.streams.config.Topics.Erc721Metadata
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KLogger
 import mu.KotlinLogging
@@ -26,9 +28,9 @@ import java.util.Properties
 import java.util.concurrent.CompletableFuture
 import org.web3j.abi.datatypes.Function as AbiFunction
 
-class Erc20MetadataProcessor : AbstractKafkaProcessor() {
+class ContractMetadataProcessor : AbstractKafkaProcessor() {
 
-  override val id: String = "erc20-metadata-processor"
+  override val id: String = "contract-metadata-processor"
 
   private val ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
 
@@ -48,7 +50,10 @@ class Erc20MetadataProcessor : AbstractKafkaProcessor() {
     // Create stream builder
     val builder = StreamsBuilder()
 
-    Contract.stream(builder)
+    val contractStream = Contract.stream(builder)
+
+    // erc20
+    contractStream
       // we only want creations
       .filter { _, v -> v.contractType == ContractType.ERC20 && v.traceDestroyedAt == null }
       .mapValues { k, _ ->
@@ -66,6 +71,22 @@ class Erc20MetadataProcessor : AbstractKafkaProcessor() {
           .build()
 
       }.toTopic(Erc20Metadata)
+
+    // erc721
+    contractStream
+      // we only want creations
+      .filter { _, v -> v.contractType == ContractType.ERC721 && v.traceDestroyedAt == null }
+      .mapValues { k, _ ->
+
+        val name = fetchName(k.address)
+        val symbol = fetchSymbol(k.address)
+
+        Erc721MetadataRecord.newBuilder()
+          .setName(name.join())
+          .setSymbol(symbol.join())
+          .build()
+
+      }.toTopic(Erc721Metadata)
 
     return builder.build()
   }

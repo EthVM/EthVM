@@ -240,13 +240,13 @@ CREATE TABLE fungible_balance
 
 CREATE INDEX idx_fungible_balance_contract ON fungible_balance (contract);
 
-CREATE VIEW ether_balance AS
+CREATE VIEW canonical_ether_balance AS
 SELECT fb.address,
        fb.amount
 FROM fungible_balance AS fb
 WHERE contract = '';
 
-CREATE VIEW erc20_balance AS
+CREATE VIEW canonical_erc20_balance AS
 SELECT fb.contract,
        fb.address,
        fb.amount
@@ -271,7 +271,7 @@ CREATE TABLE fungible_balance_deltas
   amount                           NUMERIC     NOT NULL
 );
 
-CREATE VIEW account AS
+CREATE VIEW canonical_account AS
 SELECT fb.address,
        fb.amount                    AS balance,
        (SELECT COUNT(*)
@@ -325,7 +325,7 @@ CREATE INDEX idx_non_fungible_balance_address ON non_fungible_balance (address);
 CREATE INDEX idx_non_fungible_balance_contract ON non_fungible_balance (contract);
 CREATE INDEX idx_non_fungible_balance_contract_address ON non_fungible_balance (contract, address);
 
-CREATE VIEW erc721_balance AS
+CREATE VIEW canonical_erc721_balance AS
 SELECT *
 FROM non_fungible_balance;
 
@@ -350,6 +350,28 @@ CREATE TABLE erc20_metadata
 
 CREATE INDEX idx_erc20_metadata_name ON erc20_metadata (name);
 CREATE INDEX idx_erc20_metadata_symbol ON erc20_metadata (symbol);
+
+CREATE TABLE erc721_metadata
+(
+  "address"      CHAR(42) PRIMARY KEY,
+  "name"         VARCHAR(64) NULL,
+  "symbol"       VARCHAR(64) NULL
+);
+
+CREATE INDEX idx_erc721_metadata_name ON erc721_metadata (name);
+CREATE INDEX idx_erc721_metadata_symbol ON erc721_metadata (symbol);
+
+CREATE VIEW block_reward AS
+SELECT
+  fbd.trace_location_block_hash as hash,
+  fbd.delta_type as delta_type,
+  fbd.amount as amount
+FROM fungible_balance_deltas AS fbd
+WHERE
+    delta_type IN ('BLOCK_REWARD', 'UNCLE_REWARD') AND
+    amount > 0
+ORDER BY trace_location_block_number DESC;
+
 
 /* metrics hyper tables */
 CREATE TABLE block_metrics_header

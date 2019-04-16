@@ -13,7 +13,7 @@ import com.ethvm.kafka.streams.di.Modules.web3
 import com.ethvm.kafka.streams.processors.BlockAuthorProcessor
 import com.ethvm.kafka.streams.processors.BlockMetricsProcessor
 import com.ethvm.kafka.streams.processors.ContractLifecycleProcessor
-import com.ethvm.kafka.streams.processors.Erc20MetadataProcessor
+import com.ethvm.kafka.streams.processors.ContractMetadataProcessor
 import com.ethvm.kafka.streams.processors.FlatMapProcessor
 import com.ethvm.kafka.streams.processors.FungibleBalanceProcessor
 import com.ethvm.kafka.streams.processors.KafkaProcessor
@@ -105,7 +105,7 @@ class Cli : CliktCommand() {
       BlockMetricsProcessor(),
       ContractLifecycleProcessor(),
       FlatMapProcessor(),
-      Erc20MetadataProcessor()
+      ContractMetadataProcessor()
 //      EthTokensProcessor(),
 //      ExchangeRatesProcessor()
     ).forEach {
