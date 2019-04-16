@@ -23,7 +23,7 @@ class EthListsTokensSourceConnector : SourceConnector() {
   override fun stop() {
   }
 
-  override fun taskClass(): Class<out Task> = com.ethvm.kafka.connect.sources.tokens.EthListsTokensSourceTask::class.java
+  override fun taskClass(): Class<out Task> = EthListsTokensSourceTask::class.java
 
   override fun taskConfigs(maxTasks: Int): MutableList<MutableMap<String, String>> {
     if (maxTasks != 1) throw IllegalStateException("Exactly 1 task must be configured")
@@ -32,29 +32,9 @@ class EthListsTokensSourceConnector : SourceConnector() {
 
   override fun config(): ConfigDef = ConfigDef().apply {
 
-    define(
-      Config.TOPIC_CONFIG,
-      STRING,
-      TOPIC_CONFIG_DEFAULT,
-      HIGH,
-      Config.TOPIC_CONFIG_DOC
-    )
-
-    define(
-      Config.TOKENS_URL_CONFIG,
-      STRING,
-      TOKENS_DEFAULT_URL,
-      HIGH,
-      com.ethvm.kafka.connect.sources.tokens.EthListsTokensSourceConnector.Config.TOKENS_URL_DOC
-    )
-
-    define(
-      Config.SYNC_INTERVAL_CONFIG,
-      ConfigDef.Type.INT,
-      SYNC_INTERVAL_DEFAULT,
-      HIGH,
-      Config.SYNC_INTERVAL_DOC
-    )
+    define(Config.TOPIC_CONFIG, STRING, TOPIC_CONFIG_DEFAULT, HIGH, Config.TOPIC_CONFIG_DOC)
+    define(Config.TOKENS_URL_CONFIG, STRING, TOKENS_DEFAULT_URL, HIGH, Config.TOKENS_URL_DOC)
+    define(Config.SYNC_INTERVAL_CONFIG, ConfigDef.Type.INT, SYNC_INTERVAL_DEFAULT, HIGH, Config.SYNC_INTERVAL_DOC)
   }
 
   object Config {
