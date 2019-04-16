@@ -46,8 +46,9 @@ export class TokenResolvers {
   }
 
   @Query()
-  async holderDetails(@Args('address', ParseAddressPipe) address: string, @Args('holderAddress', ParseAddressPipe) holderAddress: string) {
-    return this.tokenService.fetchAddressInfo(address, holderAddress)
+  async tokenHolder(@Args('address', ParseAddressPipe) address: string, @Args('holderAddress', ParseAddressPipe) holderAddress: string): Promise<TokenHolderDto | null> {
+    const entity = await this.tokenService.findTokenHolder(address, holderAddress)
+    return entity ? new TokenHolderDto(entity) : null
   }
 
   @Query()

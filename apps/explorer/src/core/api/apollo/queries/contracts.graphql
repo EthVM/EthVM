@@ -1,31 +1,31 @@
 query contractByAddress($address: String!) {
   contractByAddress(address: $address) {
     address
-    metadata {
-      decimals
-      website
-      support {
-        email
-      }
-      social {
-        blog
-        chat
-        facebook
-        forum
-        github
-        gitter
-        instagram
-        linkedin
-        reddit
-        slack
-        telegram
-        twitter
-        youtube
-      }
-    }
-    type {
-      string
-    }
+#    metadata {
+#      decimals
+#      website
+#      support {
+#        email
+#      }
+#      social {
+#        blog
+#        chat
+#        facebook
+#        forum
+#        github
+#        gitter
+#        instagram
+#        linkedin
+#        reddit
+#        slack
+#        telegram
+#        twitter
+#        youtube
+#      }
+#    }
+#    type {
+#      string
+#    }
   }
 }
 

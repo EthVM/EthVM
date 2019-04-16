@@ -41,11 +41,9 @@ query tokenHolders($address: String!, $limit: Int, $page: Int) {
 }
 
 query holderDetails($address: String! $holderAddress: String!) {
-  holderDetails(address: $address, holderAddress: $holderAddress) {
-    countTxs
-    tokens {
-      balance
-    }
+  tokenHolder(address: $address, holderAddress: $holderAddress) {
+    address
+    balance
   }
 }
 

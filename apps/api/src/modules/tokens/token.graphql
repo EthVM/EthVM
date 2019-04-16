@@ -3,7 +3,7 @@ type Query {
   addressTokenTransfersByHolder(address: String!, holder: String!, filter: FilterEnum, limit: Int, page: Int): [TokenTransfer]
   tokenHistory(address: String!): [EthplorerTokenOperation]
   tokenHolders(address: String!, limit: Int, page: Int): [TokenHolder]
-  holderDetails(address: String!, holderAddress: String!): EthplorerAddressInfo
+  tokenHolder(address: String!, holderAddress: String!): TokenHolder
   holderTransfers(address: String!, holderAddress: String!): [EthplorerTokenOperation]
   addressAllTokensOwned(address: String!): [Token]!
   addressAmountTokensOwned(address: String!): Int!
@@ -55,27 +55,6 @@ type EthplorerTokenOperation {
   value: Float
 }
 
-type EthplorerAddressInfo {
-  address: String
-  ETH: EthplorerEthInfo
-  contractInfo: EthplorerContractInfo
-  tokenInfo: EthplorerTokenInfo
-  tokens: [EthplorerAddressToken]
-  countTxs: Int
-}
-
-type EthplorerEthInfo {
-  balance: Decimal
-  totalIn: Decimal
-  totalOut: Decimal
-}
-
-type EthplorerContractInfo {
-  creatorAddress: String
-  transactionHash: String
-  timestamp: Long
-}
-
 type EthplorerTokenInfo {
   address: String
   totalSupply: String
@@ -107,13 +86,6 @@ type EthplorerPriceInfo {
   availableSupply: Decimal
   volume24h: Decimal
   ts: Long
-}
-
-type EthplorerAddressToken {
-  tokenInfo: EthplorerTokenInfo
-  balance: Decimal
-  totalIn: Decimal
-  totalOut: Decimal
 }
 
 type EthplorerTokenInfo {

@@ -127,34 +127,6 @@ export class Contract {
     traceDestroyedAt?: string;
 }
 
-export class EthplorerAddressInfo {
-    address?: string;
-    ETH?: EthplorerEthInfo;
-    contractInfo?: EthplorerContractInfo;
-    tokenInfo?: EthplorerTokenInfo;
-    tokens?: EthplorerAddressToken[];
-    countTxs?: number;
-}
-
-export class EthplorerAddressToken {
-    tokenInfo?: EthplorerTokenInfo;
-    balance?: Decimal;
-    totalIn?: Decimal;
-    totalOut?: Decimal;
-}
-
-export class EthplorerContractInfo {
-    creatorAddress?: string;
-    transactionHash?: string;
-    timestamp?: Long;
-}
-
-export class EthplorerEthInfo {
-    balance?: Decimal;
-    totalIn?: Decimal;
-    totalOut?: Decimal;
-}
-
 export class EthplorerPriceInfo {
     rate?: Decimal;
     currency?: string;
@@ -274,7 +246,7 @@ export abstract class IQuery {
 
     abstract tokenHolders(address: string, limit?: number, page?: number): TokenHolder[] | Promise<TokenHolder[]>;
 
-    abstract holderDetails(address: string, holderAddress: string): EthplorerAddressInfo | Promise<EthplorerAddressInfo>;
+    abstract tokenHolder(address: string, holderAddress: string): TokenHolder | Promise<TokenHolder>;
 
     abstract holderTransfers(address: string, holderAddress: string): EthplorerTokenOperation[] | Promise<EthplorerTokenOperation[]>;
 

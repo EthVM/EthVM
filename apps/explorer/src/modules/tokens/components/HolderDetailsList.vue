@@ -110,15 +110,11 @@ export default class HolderDetailsList extends Mixins(StringConcatMixin) {
         },
         {
           title: this.$i18n.t('common.balance').toString(),
-          detail: this.holderDetails.tokens ? `${this.balance} (${this.tokenDetails.symbol.toUpperCase()})` : 'N/A'
+          detail: this.holderDetails.balance ? `${this.balance} (${this.tokenDetails.symbol.toUpperCase()})` : 'N/A'
         },
         {
           title: this.$i18n.t('usd.total'),
           detail: this.balanceUsd
-        },
-        {
-          title: this.$i18n.t('token.transfers'),
-          detail: this.formatStr(this.holderDetails.countTxs)
         },
         {
           title: this.$i18n.t('token.market').toString(),
@@ -135,14 +131,14 @@ export default class HolderDetailsList extends Mixins(StringConcatMixin) {
   }
 
   get balanceUsd(): string {
-    const n = new BN(this.holderDetails.tokens[0].balance)
+    const n = new BN(this.holderDetails.balance)
       .div(new BN(10).pow(this.contractDetails.metadata.decimals))
       .multipliedBy(this.tokenDetails.currentPrice)
-    return this.holderDetails.tokens ? `$${this.getRoundNumber(n)}` : 'N/A'
+    return this.holderDetails.balance ? `$${this.getRoundNumber(n)}` : 'N/A'
   }
 
   get balance(): string {
-    const n = new BN(this.holderDetails.tokens[0].balance)
+    const n = new BN(this.holderDetails.balance)
     return this.getRoundNumber(n.div(new BN(10).pow(this.contractDetails.metadata.decimals)))
   }
 

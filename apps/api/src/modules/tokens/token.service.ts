@@ -1,4 +1,3 @@
-import { EthplorerAddressInfoDto } from '@app/modules/tokens/dto/ethplorer-address-info.dto'
 import { EthplorerTokenOperationDto } from '@app/modules/tokens/dto/ethplorer-token-operation.dto'
 import { TokenTransferEntity } from '@app/orm/entities-mongo/token-transfer.entity'
 import { ConfigService } from '@app/shared/config.service'
@@ -109,29 +108,11 @@ export class TokenService {
     return await this.erc721BalanceRepository.find(findOptions)
   }
 
-  async fetchAddressInfo(tokenAddress: string, holderAddress: string): Promise<EthplorerAddressInfoDto | null> {
-    tokenAddress = `0x${tokenAddress}`
-    holderAddress = `0x${holderAddress}`
-
-    const baseUrl = this.configService.ethplorer.url
-    const apiKey = this.configService.ethplorer.apiKey
-    const url = `${baseUrl}getAddressInfo/${holderAddress}?apiKey=${apiKey}&token=${tokenAddress}`
-
-    let res
-
-    try {
-      res = await axios.get(url)
-    } catch (err) {
-      this.handleEthplorerError(err)
-    }
-
-    if (res.status !== 200) {
-      throw new HttpException(res.statusText, res.status)
-    }
-
-    const { data } = res
-
-    return data ? new EthplorerAddressInfoDto(data) : null
+  async findTokenHolder(tokenAddress: string, holderAddress: string): Promise<Erc20BalanceEntity | Erc721BalanceEntity | undefined> {
+    const where = { contract: tokenAddress, address: holderAddress }
+    const erc20Balance = await this.erc20BalanceRepository.findOne({ where })
+    if (erc20Balance) return erc20Balance
+    return this.erc721BalanceRepository.findOne({ where })
   }
 
   async fetchAddressHistory(tokenAddress: string, holderAddress: string): Promise<EthplorerTokenOperationDto[]> {
