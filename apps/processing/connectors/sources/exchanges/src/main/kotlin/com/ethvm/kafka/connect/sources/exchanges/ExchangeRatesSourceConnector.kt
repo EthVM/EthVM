@@ -101,7 +101,7 @@ class ExchangeRatesSourceConnector : SourceConnector() {
               }
 
               javaClass.getResourceAsStream("coingecko-eth.json")?.let { stream ->
-                CoinGeckoExchangeProvider.klaxon.parse<List<TokenEntry>>(stream)?.let { options["tokens_ids"] = it }
+                CoinGeckoExchangeProvider.klaxon.parse<List<TokenIdEntry>>(stream)?.let { options["tokens_ids"] = it }
               }
 
               CoinGeckoExchangeProvider(options)
