@@ -11,7 +11,6 @@ import org.apache.kafka.streams.StreamsConfig
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.websocket.WebSocketService
 import java.util.Properties
@@ -28,7 +27,6 @@ object Modules {
       wsService.connect()
       Web3j.build(wsService)
     }
-
   }
 
   val kafkaStreams = module {

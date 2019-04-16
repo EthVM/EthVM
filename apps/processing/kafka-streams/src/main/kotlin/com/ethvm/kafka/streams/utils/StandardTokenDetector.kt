@@ -96,7 +96,6 @@ class ERC20TokenContract : TokenContract {
     SYMBOL to FnSignature("symbol()"),
     DECIMALS to FnSignature("decimals()")
   )
-
 }
 
 /**

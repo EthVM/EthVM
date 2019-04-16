@@ -82,7 +82,6 @@ class EthListsTokensSourceTask : SourceTask() {
       else -> ChronoUnit.SECONDS.between(lastSyncAt, Instant.now()) > syncIntervalSeconds
     }
 
-
   data class ContractLogo(
     val src: String? = "",
     private val width: Int? = 0,
@@ -158,7 +157,7 @@ class EthListsTokensSourceTask : SourceTask() {
         .setAddress(address)
         .setDecimals(decimals)
         .setEnsAddress(ens_address)
-        .setType(if(type != null) ContractType.valueOf(type) else null)
+        .setType(if (type != null) ContractType.valueOf(type) else null)
         .setLogo(logo?.toRecord())
         .setSupport(support?.toRecord())
         .setSocial(social?.toRecord())
