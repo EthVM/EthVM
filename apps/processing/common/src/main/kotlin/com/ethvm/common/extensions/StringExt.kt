@@ -3,7 +3,6 @@ package com.ethvm.common.extensions
 import com.google.common.base.CaseFormat
 import org.apache.commons.codec.binary.Hex
 import java.math.BigInteger
-import java.nio.ByteBuffer
 
 fun String.hexBytes(): ByteArray =
   run {
@@ -22,12 +21,6 @@ fun String.hexBytes(): ByteArray =
   }
 
 fun String.hexBuffer() = this.hexBytes().byteBuffer()
-fun String.hexFixedBuffer(length: Int): ByteBuffer = this.hexBuffer().fixed(length)!!
-
-fun String.hexBuffer8() = this.hexFixedBuffer(8)
-fun String.hexBuffer20() = this.hexFixedBuffer(20)
-fun String.hexBuffer32() = this.hexFixedBuffer(32)
-fun String.hexBuffer256() = this.hexFixedBuffer(256)
 
 fun String.hexToBI() =
   if (this.startsWith("0x")) {
@@ -35,8 +28,8 @@ fun String.hexToBI() =
   } else
     BigInteger(this)
 
-fun String.camelToSnakeCase() =
+fun String.camelToSnakeCase(): String =
   CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this)
 
-fun String.snakeToCamelCase() =
+fun String.snakeToCamelCase(): String =
   CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, this)

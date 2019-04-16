@@ -3,21 +3,6 @@ package com.ethvm.common.extensions
 import java.math.BigInteger
 import java.nio.ByteBuffer
 
-fun ByteBuffer?.fixed(capacity: Int): ByteBuffer? {
-  return if (this == null) {
-    this
-  } else {
-    require(this.capacity() == capacity) { "Must have capacity $capacity" }
-    return this
-  }
-}
-
-fun ByteBuffer?.fixed1(): ByteBuffer? = if (this == null) null else this.fixed(1)
-fun ByteBuffer?.fixed8(): ByteBuffer? = if (this == null) null else this.fixed(8)
-fun ByteBuffer?.fixed20(): ByteBuffer? = if (this == null) null else this.fixed(20)
-fun ByteBuffer?.fixed32(): ByteBuffer? = if (this == null) null else this.fixed(32)
-fun ByteBuffer?.fixed256(): ByteBuffer? = if (this == null) null else this.fixed(256)
-
 fun ByteBuffer?.byteArray(): ByteArray? {
   if (this == null) {
     return null

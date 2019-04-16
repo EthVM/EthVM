@@ -36,7 +36,7 @@ export class StringConcatMixin extends Vue {
 
   getShortValue(rawStr): string {
     const _value = this.getRoundNumber(rawStr)
-    return this.isShortValue(_value) ? _value : _value.slice(0, 10) + '...'
+    return this.isShortValue(_value) ? _value : `${_value.slice(0, 10)}...`
   }
 
   formatStr(rawStr): string {

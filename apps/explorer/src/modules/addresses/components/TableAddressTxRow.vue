@@ -36,7 +36,7 @@
                             <p class="info--text psmall">{{ $tc('tx.hash', 1) }}:</p>
                           </v-flex>
                           <v-flex xs9 pa-1>
-                            <app-hash-concat :hash="tx.getHash()" :link="'/tx/' + tx.getHash()" />
+                            <app-hash-concat :hash="tx.getHash()" :link="`/tx/${tx.getHash()}`" />
                           </v-flex>
                         </v-layout>
                       </v-flex>
@@ -56,15 +56,15 @@
                               v-if="getType(tx) === 'in'"
                               :hash="tx.getFrom().toString()"
                               :italic="true"
-                              :link="'/address/' + tx.getFrom().toString()"
+                              :link="`/address/${tx.getFrom().toString()}`"
                             />
-                            <app-hash-concat v-else :hash="tx.getTo().toString()" :italic="true" :link="'/address/' + tx.getTo().toString()" />
+                            <app-hash-concat v-else :hash="tx.getTo().toString()" :italic="true" :link="`/address/${tx.getTo().toString()}`" />
                           </div>
                           <div v-else>
                             <app-hash-concat
                               :hash="tx.getContractAddress().toString()"
                               :italic="true"
-                              :link="'/address/' + tx.getContractAddress().toString()"
+                              :link="`/address/${tx.getContractAddress().toString()}`"
                             />
                           </div>
                         </div>
@@ -92,7 +92,7 @@
                     =====================================================================================
                     -->
                     <v-flex hidden-sm-and-down md1 pr-1>
-                      <router-link class="primary--text text-truncate font-italic psmall" :to="'/block/' + tx.getBlockHash()">{{
+                      <router-link class="primary--text text-truncate font-italic psmall" :to="`/block/${tx.getBlockHash()}`">{{
                         tx.getBlockNumber()
                       }}</router-link>
                     </v-flex>
@@ -115,7 +115,7 @@
                               <p class="info--text psmall">{{ $tc('tx.hash', 1) }}:</p>
                             </v-flex>
                             <v-flex sm10 pa-1>
-                              <app-hash-concat :hash="tx.getHash()" :link="'/tx/' + tx.getHash()" />
+                              <app-hash-concat :hash="tx.getHash()" :link="`/tx/${tx.getHash()}`" />
                             </v-flex>
                           </v-layout>
                         </v-flex>
@@ -135,15 +135,15 @@
                                   v-if="getType(tx) === 'in'"
                                   :hash="tx.getFrom().toString()"
                                   :italic="true"
-                                  :link="'/address/' + tx.getFrom().toString()"
+                                  :link="`/address/${tx.getFrom().toString()}`"
                                 />
-                                <app-hash-concat v-else :hash="tx.getTo().toString()" :italic="true" :link="'/address/' + tx.getTo().toString()" />
+                                <app-hash-concat v-else :hash="tx.getTo().toString()" :italic="true" :link="`/address/${tx.getTo().toString()}`" />
                               </div>
                               <div v-else>
                                 <app-hash-concat
                                   :hash="tx.getContractAddress().toString()"
                                   :italic="true"
-                                  :link="'/address/' + tx.getContractAddress().toString()"
+                                  :link="`/address/${tx.getContractAddress().toString()}`"
                                 />
                               </div>
                             </v-flex>

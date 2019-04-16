@@ -1,0 +1,2978 @@
+[
+  {
+    "id": "hurify",
+    "address": "0xcdb7ecfd3403eef3882c65b761ef9b5054890a47"
+  },
+  {
+    "id": "iqeon",
+    "address": "0x0db8d8b76bc361bacbb72e2c491e06085a97ab31"
+  },
+  {
+    "id": "1sg",
+    "address": "0x0f72714b35a366285df85886a2ee174601292a17"
+  },
+  {
+    "id": "oxbitcoin",
+    "address": "0xB6eD7644C69416d67B522e20bC294A9a9B405B31"
+  },
+  {
+    "id": "first-blood",
+    "address": "0xAf30D2a7E90d7DC361c8C4585e9BB7D2F6f15bc7"
+  },
+  {
+    "id": "parkgene",
+    "address": "0x6dd4e4aad29a40edd6a409b9c1625186c9855b4d"
+  },
+  {
+    "id": "1world",
+    "address": "0xfdbc1adc26f0f8f8606a5d63b7d3a3cd21c22b23"
+  },
+  {
+    "id": "accelerator-network",
+    "address": "0x13f1b7fdfbe1fc66676d56483e21b1ecb40b58e2"
+  },
+  {
+    "id": "arcblock",
+    "address": "0xb98d4c97425d9908e66e53a6fdf673acca0be986"
+  },
+  {
+    "id": "the-abyss",
+    "address": "0x0e8d6b471e332f140e7d9dbb99e5e3822f728da6"
+  },
+  {
+    "id": "adelphoi",
+    "address": "0x660e71483785f66133548b10f6926dc332b06e61"
+  },
+  {
+    "id": "adbank",
+    "address": "0x2baac9330cf9ac479d819195794d79ad0c7616e3"
+  },
+  {
+    "id": "tokenstars-ace",
+    "address": "0x06147110022b768ba8f99a8f385df11a151a9cc8"
+  },
+  {
+    "id": "adhive",
+    "address": "0xE69a353b3152Dd7b706ff7dD40fe1d18b7802d31"
+  },
+  {
+    "id": "adtoken",
+    "address": "0xD0D6D6C5Fe4a677D343cC433536BB717bAe167dD"
+  },
+  {
+    "id": "adex",
+    "address": "0x4470BB87d77b963A013DB939BE332f927f2b992e"
+  },
+  {
+    "id": "singularitynet",
+    "address": "0x8eB24319393716668D768dCEC29356ae9CfFe285"
+  },
+  {
+    "id": "aeternity",
+    "address": "0x5ca9a71b1d01849c0a95490cc00559717fcf0d1d"
+  },
+  {
+    "id": "airtoken",
+    "address": "0x27dce1ec4d3f72c3e457cc50354f1f975ddef488"
+  },
+  {
+    "id": "aidcoin",
+    "address": "0x37e8789bb9996cac9156cd5f5fd32599e6b91289"
+  },
+  {
+    "id": "aigang",
+    "address": "0x1063ce524265d5a3A624f4914acd573dD89ce988"
+  },
+  {
+    "id": "ailink-token",
+    "address": "0x4289c043a12392f1027307fb58272d8ebd853912"
+  },
+  {
+    "id": "alis",
+    "address": "0xEA610B1153477720748DC13ED378003941d84fAB"
+  },
+  {
+    "id": "amon",
+    "address": "0x737f98ac8ca59f2c68ad658e3c3d8c8963e40a4c"
+  },
+  {
+    "id": "alax",
+    "address": "0x49b127Bc33ce7E1586EC28CEC6a65b112596C822"
+  },
+  {
+    "id": "coinfirm-amlt",
+    "address": "0xca0e7269600d353f70b14ad118a49575455c0f2f"
+  },
+  {
+    "id": "amber",
+    "address": "0x4dc3643dbc642b72c158e7f3d2ff232df61cb6ce"
+  },
+  {
+    "id": "amo",
+    "address": "0x38c87aa89b2b8cd9b95b736e1fa7b612ea972169"
+  },
+  {
+    "id": "apis",
+    "address": "0x4c0fbe1bb46612915e7967d2c3213cd4d87257ad"
+  },
+  {
+    "id": "aurora",
+    "address": "0x9ab165d795019b6d8b3e971dda91071421305e5a"
+  },
+  {
+    "id": "aragon",
+    "address": "0x960b236A07cf122663c4303350609A66A7B288C0"
+  },
+  {
+    "id": "arbitragect",
+    "address": "0x1245ef80f4d9e02ed9425375e8f649b9221b31d8"
+  },
+  {
+    "id": "appcoins",
+    "address": "0x1a7a8bd9106f2b8d977e08582dc7d24c723ab0db"
+  },
+  {
+    "id": "arbitraging",
+    "address": "0xafbec4d65bc7b116d85107fd05d912491029bf46"
+  },
+  {
+    "id": "maecenas",
+    "address": "0xfec0cF7fE078a500abf15F1284958F22049c2C7e"
+  },
+  {
+    "id": "aeron",
+    "address": "0xBA5F11b16B155792Cf3B2E6880E8706859A8AEB6"
+  },
+  {
+    "id": "astro",
+    "address": "0x7b22938ca841aa392c93dbb7f4c42178e3d65e88"
+  },
+  {
+    "id": "block-array",
+    "address": "0xa5f8fc0921880cb7342368bd128eb8050442b1a1"
+  },
+  {
+    "id": "airswap",
+    "address": "0x27054b13b1B798B345b591a4d22e6562d47eA75a"
+  },
+  {
+    "id": "authorship",
+    "address": "0x2dAEE1AA61D60A252DC80564499A69802853583A"
+  },
+  {
+    "id": "atonomi",
+    "address": "0x97AEB5066E1A590e868b511457BEb6FE99d329F5"
+  },
+  {
+    "id": "atmchain",
+    "address": "0x9B11EFcAAA1890f6eE52C6bB7CF8153aC5d74139"
+  },
+  {
+    "id": "atlant",
+    "address": "0x78B7FADA55A64dD895D8c8c35779DD8b67fA8a05"
+  },
+  {
+    "id": "cube",
+    "address": "0x622dFfCc4e83C64ba959530A5a5580687a57581b"
+  },
+  {
+    "id": "auctus",
+    "address": "0xc12d099be31567add4e4e4d0d45691c3f58f5663"
+  },
+  {
+    "id": "aurora-dao",
+    "address": "0xcdcfc0f66c522fd086a1b725ea3c0eeb9f9e8814"
+  },
+  {
+    "id": "aventus",
+    "address": "0x0d88ed6e74bbfd96b831231638b66c05571e824f"
+  },
+  {
+    "id": "b2b",
+    "address": "0x5d51fcced3114a8bb5e90cdd0f9d682bcbcc5393"
+  },
+  {
+    "id": "axpire",
+    "address": "0xC39E626A04C5971D770e319760D7926502975e47"
+  },
+  {
+    "id": "basic-attention-token",
+    "address": "0x0D8775F648430679A709E98d2b0Cb6250d2887EF"
+  },
+  {
+    "id": "bitasean",
+    "address": "0x2a05d22db079bc40c2f77a1d1ff703a56e631cc1"
+  },
+  {
+    "id": "banca",
+    "address": "0x998b3b82bc9dba173990be7afb772788b5acb8bd"
+  },
+  {
+    "id": "banyan-network",
+    "address": "0x35a69642857083ba2f30bfab735dacc7f0bac969"
+  },
+  {
+    "id": "tradove",
+    "address": "0xe7D3e4413E29ae35B0893140F4500965c74365e5"
+  },
+  {
+    "id": "babb",
+    "address": "0x9a0242b7a33dacbe40edb927834f96eb39f8fbcb"
+  },
+  {
+    "id": "bankcoincash",
+    "address": "0xb5BB48567BfD0bFE9e4B08EF8b7f91556CC2a112"
+  },
+  {
+    "id": "block-chain-com",
+    "address": "0x2ecb13a8c458c379c4d9a7259e202de03c8f3d19"
+  },
+  {
+    "id": "bigbom-eco",
+    "address": "0x84f7c44b6fed1080f647e354d552595be2cc602f"
+  },
+  {
+    "id": "blockmason-credit-protocol",
+    "address": "0x1c4481750daa5Ff521A2a7490d9981eD46465Dbd"
+  },
+  {
+    "id": "blockcdn",
+    "address": "0x1e797Ce986C3CFF4472F7D38d5C4aba55DfEFE40"
+  },
+  {
+    "id": "bcv",
+    "address": "0x1014613e2b3cbc4d575054d4982e580d9b99d7b1"
+  },
+  {
+    "id": "bitdegree",
+    "address": "0x1961B3331969eD52770751fC718ef530838b6dEE"
+  },
+  {
+    "id": "bee-token",
+    "address": "0x4D8fc1453a0F359e99c9675954e656D80d996FbF"
+  },
+  {
+    "id": "rentberry",
+    "address": "0x6aeb95f06cda84ca345c2de0f3b7f96923a44f4c"
+  },
+  {
+    "id": "dao-casino",
+    "address": "0x8aA33A7899FCC8eA5fBe6A608A109c3893A1B8b2"
+  },
+  {
+    "id": "bethereum",
+    "address": "0x14C926F2290044B647e1Bf2072e67B495eff1905"
+  },
+  {
+    "id": "betterbetting",
+    "address": "0x763186eb8d4856d536ed4478302971214febc6a9"
+  },
+  {
+    "id": "bezop",
+    "address": "0x3839d8ba312751aa0248fed6a8bacb84308e20ed"
+  },
+  {
+    "id": "bhpc",
+    "address": "0xee74110fb5a1007b06282e0de5d73a61bf41d9cd"
+  },
+  {
+    "id": "bitcar",
+    "address": "0x08b4c866aE9D1bE56a06e0C302054B4FFe067b43"
+  },
+  {
+    "id": "bibox-token",
+    "address": "0xb3104b4b9da82025e8b9f8fb28b3553ce2f67069"
+  },
+  {
+    "id": "bankcoin-cash",
+    "address": "0xc88Be04c809856B75E3DfE19eB4dCf0a3B15317a"
+  },
+  {
+    "id": "bolenum",
+    "address": "0xca29db4221c111888a7e80b12eac8a266da3ee0d"
+  },
+  {
+    "id": "bankex",
+    "address": "0x45245bc59219eeaaf6cd3f382e078a461ff9de7b"
+  },
+  {
+    "id": "bloom",
+    "address": "0x107c4504cd79C5d2696Ea0030a8dD4e92601B82e"
+  },
+  {
+    "id": "blue",
+    "address": "0x539efe69bcdd21a83efd9122571a64cc25e0282b"
+  },
+  {
+    "id": "bmchain-token",
+    "address": "0xf028adee51533b1b47beaa890feb54a457f51e89"
+  },
+  {
+    "id": "blackmoon-crypto",
+    "address": "0xdf6ef343350780bf8c3410bf062e0c015b1dd671"
+  },
+  {
+    "id": "binancecoin",
+    "address": "0xb8c77482e45f1f44de1745f52c74426c631bdd52"
+  },
+  {
+    "id": "bitmart-token",
+    "address": "0x986EE2B944c42D017F52Af21c4c69B84DBeA35d8"
+  },
+  {
+    "id": "bluzelle",
+    "address": "0x5732046A883704404F284Ce41FfADd5b007FD668"
+  },
+  {
+    "id": "bionic",
+    "address": "0xef51c9377feb29856e61625caf9390bd0b67ea18"
+  },
+  {
+    "id": "broker-neko-network",
+    "address": "0xda80b20038bdf968c7307bb5907a469482cf6251"
+  },
+  {
+    "id": "bancor",
+    "address": "0x1F573D6Fb3F13d689FF844B4cE37794d79a7FF1C"
+  },
+  {
+    "id": "bonpay",
+    "address": "0xCc34366E3842cA1BD36c1f324d15257960fCC801"
+  },
+  {
+    "id": "bobs_repair",
+    "address": "0xDF347911910b6c9A4286bA8E2EE5ea4a39eB2134"
+  },
+  {
+    "id": "bounty0x",
+    "address": "0xd2d6158683aee4cc838067727209a0aaf4359de3"
+  },
+  {
+    "id": "box-token",
+    "address": "0xe1A178B681BD05964d3e3Ed33AE731577d9d96dD"
+  },
+  {
+    "id": "boutspro",
+    "address": "0x139d9397274bb9e2c29a9aa8aa0b5874d30d62e3"
+  },
+  {
+    "id": "blockport",
+    "address": "0x327682779bAB2BF4d1337e8974ab9dE8275A7Ca8"
+  },
+  {
+    "id": "boxx",
+    "address": "0x780116d91e5592e58a3b3c76a351571b39abcec6"
+  },
+  {
+    "id": "contentbox",
+    "address": "0x63f584fa56e60e4d0fe8802b27c7e6e3b33e007f"
+  },
+  {
+    "id": "brother",
+    "address": "0x9E77D5a1251b6F7D456722A6eaC6D2d5980bd891"
+  },
+  {
+    "id": "bread",
+    "address": "0x558ec3152e2eb2174905cd19aea4e34a23de9ad6"
+  },
+  {
+    "id": "btc-lite",
+    "address": "0x5acD19b9c91e596b1f062f18e3D02da7eD8D1e50"
+  },
+  {
+    "id": "bitcoin-red",
+    "address": "0x6aac8cb9861e42bf8259f5abdc6ae3ae89909e11"
+  },
+  {
+    "id": "bitcoin-one",
+    "address": "0x87f5e8c3425218837f3cb67db941af0c01323e56"
+  },
+  {
+    "id": "bitcointoken",
+    "address": "0xdb8646f5b487b5dd979fac618350e85018f557d4"
+  },
+  {
+    "id": "bitether",
+    "address": "0x499a6b77bc25c26bcf8265e2102b1b3dd1617024"
+  },
+  {
+    "id": "bottos",
+    "address": "0x36905fc93280f52362a1cbab151f25dc46742fb5"
+  },
+  {
+    "id": "blocktrade",
+    "address": "0xFA456Cf55250A839088b27EE32A424d7DAcB54Ff"
+  },
+  {
+    "id": "biotron",
+    "address": "0x03c780cd554598592b97b7256ddaad759945b125"
+  },
+  {
+    "id": "btu-protocol",
+    "address": "0xb683D83a532e2Cb7DFa5275eED3698436371cc9f"
+  },
+  {
+    "id": "blue-whale",
+    "address": "0xbd168cbf9d3a375b38dc51a202b5e8a4e52069ed"
+  },
+  {
+    "id": "bit-z-token",
+    "address": "0x4375e7ad8a01b8ec3ed041399f62d9cd120e0063"
+  },
+  {
+    "id": "crypto20",
+    "address": "0x26E75307Fc0C021472fEb8F727839531F112f317"
+  },
+  {
+    "id": "carboneum",
+    "address": "0xd42debE4eDc92Bd5a3FBb4243e1ecCf6d63A4A5d"
+  },
+  {
+    "id": "canyacoin",
+    "address": "0x1d462414fe14cf489c7A21CaC78509f4bF8CD7c0"
+  },
+  {
+    "id": "change",
+    "address": "0x7d4b8Cce0591C9044a22ee543533b72E976E36C3"
+  },
+  {
+    "id": "cappasity",
+    "address": "0x04f2e7221fdb1b52a68169b25793e51478ff0329"
+  },
+  {
+    "id": "carblock",
+    "address": "0x4d9e23a3842fe7eb7682b9725cf6c507c424a41b"
+  },
+  {
+    "id": "cardstack",
+    "address": "0x954b890704693af242613edef1b603825afcd708"
+  },
+  {
+    "id": "blockcat",
+    "address": "0x56ba2Ee7890461f463F7be02aAC3099f6d5811A8"
+  },
+  {
+    "id": "cashaa",
+    "address": "0xe8780B48bdb05F928697A5e8155f672ED91462F7"
+  },
+  {
+    "id": "bitclave",
+    "address": "0x1234567461d3f8db7496581774bd869c83d51c93"
+  },
+  {
+    "id": "cashbet-coin",
+    "address": "0x26db5439f651caf491a87d48799da81f191bdb6b"
+  },
+  {
+    "id": "commerceblock-token",
+    "address": "0x076C97e1c869072eE22f8c91978C99B4bcB02591"
+  },
+  {
+    "id": "ccore",
+    "address": "0x679badc551626e01b23ceecefbc9b877ea18fc46"
+  },
+  {
+    "id": "clipper-coin-capital",
+    "address": "0x378903a03fb2c3ac76bb52773e3ce11340377a32"
+  },
+  {
+    "id": "commodity-ad-network",
+    "address": "0x6fFF3806Bbac52A20e0d79BC538d527f6a22c96b"
+  },
+  {
+    "id": "crystal-clear",
+    "address": "0x336f646f87d9f6bc6ed42dd46e8b3fd9dbd15c22"
+  },
+  {
+    "id": "blox",
+    "address": "0x177d39AC676ED1C67A2b268AD7F1E58826E5B0af"
+  },
+  {
+    "id": "cryptfillcoin",
+    "address": "0x5dff89a2caa4d76bc286f74d67bd718eb834da61"
+  },
+  {
+    "id": "centrality",
+    "address": "0x1122b6a0e00dce0563082b6e2953f3a943855c1f"
+  },
+  {
+    "id": "ceek",
+    "address": "0xb056c38f6b7dc4064367403e26424cd2c60655e1"
+  },
+  {
+    "id": "cofound-it",
+    "address": "0x12FEF5e57bF45873Cd9B62E9DBd7BFb99e32D73e"
+  },
+  {
+    "id": "coinpoker",
+    "address": "0xf3db7560e820834658b590c96234c333cd3d5e5e"
+  },
+  {
+    "id": "chainium",
+    "address": "0x1460a58096d80a50a2f1f956dda497611fa4f165"
+  },
+  {
+    "id": "swissborg",
+    "address": "0xba9d4199fab4f26efe3551d490e3821486f135ba"
+  },
+  {
+    "id": "cloudbric",
+    "address": "0xb1c1cb8c7c1992dba24e628bf7d38e71dad46aeb"
+  },
+  {
+    "id": "connectjob",
+    "address": "0x3abdff32f76b42e7635bdb7e425f0231a5f3ab17"
+  },
+  {
+    "id": "coinlancer",
+    "address": "0xe81d72d14b1516e68ac3190a46c93302cc8ed60f"
+  },
+  {
+    "id": "crowd-machine",
+    "address": "0x47bc01597798dcd7506dcca36ac4302fc93a8cfb"
+  },
+  {
+    "id": "colu",
+    "address": "0x4162178B78D6985480A308B2190EE5517460406D"
+  },
+  {
+    "id": "cnn",
+    "address": "0x8713d26637cf49e1b6b4a7ce57106aabc9325343"
+  },
+  {
+    "id": "cindicator",
+    "address": "0xd4c435f5b09f855c3317c8524cb1f586e42795fa"
+  },
+  {
+    "id": "cybermiles",
+    "address": "0xf85fEea2FdD81d51177F6b8F35F0e6734Ce45F5F"
+  },
+  {
+    "id": "coinfi",
+    "address": "0x3136eF851592aCf49CA4C825131E364170FA32b3"
+  },
+  {
+    "id": "cobinhood",
+    "address": "0xb2f7eb1f2c37645be61d73953035360e768d81e6"
+  },
+  {
+    "id": "covesting",
+    "address": "0xE2FB6529EF566a080e6d23dE0bd351311087D567"
+  },
+  {
+    "id": "cosmo-coin",
+    "address": "0xc4bcd64cb216d49fd3c643a32762f34626b45a1a"
+  },
+  {
+    "id": "coss",
+    "address": "0x9e96604445ec19ffed9a5e8dd7b50a29c899a10c"
+  },
+  {
+    "id": "cryptopay",
+    "address": "0x0Ebb614204E47c09B6C3FeB9AAeCad8EE060E23E"
+  },
+  {
+    "id": "cryptaur",
+    "address": "0x88d50b466be55222019d71f9e8fae17f5f45fca1"
+  },
+  {
+    "id": "cpchain",
+    "address": "0xfAE4Ee59CDd86e3Be9e8b90b53AA866327D7c090"
+  },
+  {
+    "id": "cruisebit",
+    "address": "0x2cf618c19041d9db330d8222b860a624021f30fb"
+  },
+  {
+    "id": "creditbit",
+    "address": "0xAef38fBFBF932D1AeF3B808Bc8fBd8Cd8E1f8BC5"
+  },
+  {
+    "id": "crycash",
+    "address": "0xf41e5fbc2f6aac200dd8619e121ce1f05d150077"
+  },
+  {
+    "id": "copytrack",
+    "address": "0xf44745fbd41f6a1ba151df190db0564c5fcc4410"
+  },
+  {
+    "id": "verify",
+    "address": "0x672a1AD4f667FB18A333Af13667aa0Af1F5b5bDD"
+  },
+  {
+    "id": "crypterium",
+    "address": "0x80a7e048f37a50500351c204cb407766fa3bae7f"
+  },
+  {
+    "id": "credo",
+    "address": "0x4e0603e2a27a30480e5e3a4fe548e29ef12f64be"
+  },
+  {
+    "id": "cryptosolartech",
+    "address": "0xbb49a51ee5a66ca3a8cbe529379ba44ba67e6771"
+  },
+  {
+    "id": "bitdice",
+    "address": "0x29d75277ac7f0335b2165d0895e8725cbf658d73"
+  },
+  {
+    "id": "credits",
+    "address": "0x46b9ad944d1059450da1163511069c718f699d31"
+  },
+  {
+    "id": "cartaxi",
+    "address": "0x662aBcAd0b7f345AB7FfB1b1fbb9Df7894f18e66"
+  },
+  {
+    "id": "carvertical",
+    "address": "0xdA6cb58A0D0C01610a29c5A65c303e13e885887C"
+  },
+  {
+    "id": "civic",
+    "address": "0x41e5560054824ea6b0732e656e3ad64e20e94e45"
+  },
+  {
+    "id": "cyberfm",
+    "address": "0x3f06B5D78406cD97bdf10f5C420B241D32759c80"
+  },
+  {
+    "id": "cybermusic",
+    "address": "0x78c292d1445e6b9558bf42e8bc369271ded062ea"
+  },
+  {
+    "id": "cybervein",
+    "address": "0xbe428c3867f05dea2a89fc76a102b544eac7f772"
+  },
+  {
+    "id": "cargox",
+    "address": "0xb6EE9668771a79be7967ee29a63D4184F8097143"
+  },
+  {
+    "id": "dacsee",
+    "address": "0xa31108e5bab5494560db34c95492658af239357c"
+  },
+  {
+    "id": "canonchain",
+    "address": "0x0223fc70574214f65813fe336d870ac47e147fae"
+  },
+  {
+    "id": "dadi",
+    "address": "0xfb2f26f266fb2805a387230f2aa0a331b4d96fba"
+  },
+  {
+    "id": "dai",
+    "address": "0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359"
+  },
+  {
+    "id": "daneel",
+    "address": "0x9B70740e708a083C6fF38Df52297020f5DfAa5EE"
+  },
+  {
+    "id": "datum",
+    "address": "0x81c9151de0c8bafcd325a57e3db5a5df1cebf79c"
+  },
+  {
+    "id": "dalecoin",
+    "address": "0x07d9e49ea402194bf48a8276dafb16e4ed633317"
+  },
+  {
+    "id": "streamr-datacoin",
+    "address": "0x0cf0ee63788a0849fe5297f3407f701e122cc023"
+  },
+  {
+    "id": "daxt",
+    "address": "0x61725f3db4004afe014745b21dab1e1677cc328b"
+  },
+  {
+    "id": "dav",
+    "address": "0xd82Df0ABD3f51425Eb15ef7580fDA55727875f14"
+  },
+  {
+    "id": "daex",
+    "address": "0x0b4bdc478791897274652dc15ef5c135cae61e60"
+  },
+  {
+    "id": "datx",
+    "address": "0xabbbb6447b68ffd6141da77c18c7b5876ed6c5ab"
+  },
+  {
+    "id": "decentbet",
+    "address": "0x9b68bfae21df5a510931a262cecf63f41338f264"
+  },
+  {
+    "id": "dentacoin",
+    "address": "0x08d32b0da63e2C3bcF8019c9c5d849d7a9d791e6"
+  },
+  {
+    "id": "distributed-credit-chain",
+    "address": "0xffa93aacf49297d51e211817452839052fdfb961"
+  },
+  {
+    "id": "debitum-network",
+    "address": "0x151202C9c18e495656f372281F493EB7698961D5"
+  },
+  {
+    "id": "deltachain",
+    "address": "0xde1e0ae6101b46520cf66fdc0b1059c5cc3d106c"
+  },
+  {
+    "id": "dent",
+    "address": "0x3597bfd533a99c9aa083587b074434e61eb0a258"
+  },
+  {
+    "id": "digixdao",
+    "address": "0xE0B7927c4aF23765Cb51314A0E0521A9645F0E2A"
+  },
+  {
+    "id": "digipulse",
+    "address": "0xf6cFe53d6FEbaEEA051f400ff5fc14F0cBBDacA1"
+  },
+  {
+    "id": "digitex-futures-exchange",
+    "address": "0x1c83501478f1320977047008496dacbd60bb15ef"
+  },
+  {
+    "id": "digix-gold",
+    "address": "0x4f3afec4e5a3f2a6a1a411def7d7dfe50ee057bf"
+  },
+  {
+    "id": "dragonglass",
+    "address": "0x6aEDbF8dFF31437220dF351950Ba2a3362168d1b"
+  },
+  {
+    "id": "etheroll",
+    "address": "0x2e071D2966Aa7D8dECB1005885bA1977D6038A65"
+  },
+  {
+    "id": "agrello",
+    "address": "0x07e3c70653548b04f0a75970c1f81b4cbbfb606f"
+  },
+  {
+    "id": "dmarket",
+    "address": "0x2ccbFF3A042c68716Ed2a2Cb0c544A9f1d1935E1"
+  },
+  {
+    "id": "etherisc",
+    "address": "0xc719d010B63E5bbF2C0551872CD5316ED26AcD83"
+  },
+  {
+    "id": "inmediate",
+    "address": "0xf14922001a2fb8541a433905437ae954419c2439"
+  },
+  {
+    "id": "encrypgen",
+    "address": "0x82b0e50478eeafde392d45d1259ed1071b6fda81"
+  },
+  {
+    "id": "district0x",
+    "address": "0x0abdace70d3790235af448c88547603b945604ea"
+  },
+  {
+    "id": "dock",
+    "address": "0xe5dada80aa6477e85d09747f2842f7993d0df71c"
+  },
+  {
+    "id": "dowcoin",
+    "address": "0x76974c7b79dc8a6a109fd71fd7ceb9e40eff5382"
+  },
+  {
+    "id": "dorado",
+    "address": "0x906b3f8b7845840188eab53c3f5ad348a787752f"
+  },
+  {
+    "id": "dreamteam",
+    "address": "0x82f4ded9cec9b5750fbff5c2185aee35afc16587"
+  },
+  {
+    "id": "da-power-play",
+    "address": "0x01b3Ec4aAe1B8729529BEB4965F27d008788B0EB"
+  },
+  {
+    "id": "dovu",
+    "address": "0xac3211a5025414af2866ff09c23fc18bc97e79b1"
+  },
+  {
+    "id": "dropil",
+    "address": "0x4672bad527107471cb5067a887f4656d585a8a31"
+  },
+  {
+    "id": "dragonchain",
+    "address": "0x419c4db4b9e25d6db2ad9691ccb832c8d9fda05e"
+  },
+  {
+    "id": "drp-utility",
+    "address": "0xe30e02f049957e2a5907589e06ba646fb2c321ba"
+  },
+  {
+    "id": "disciplina-project-by-teachmeplease",
+    "address": "0x03e3f0c25965f13DbbC58246738C183E27b26a56"
+  },
+  {
+    "id": "domraider",
+    "address": "0x9af4f26941677c706cfecf6d3379ff01bb85d5ab"
+  },
+  {
+    "id": "dether",
+    "address": "0x5adc961D6AC3f7062D2eA45FEFB8D8167d44b190"
+  },
+  {
+    "id": "databroker-dao",
+    "address": "0x765f0c16d1ddc279295c1a7c24b0883f62d33f75"
+  },
+  {
+    "id": "datarius-cryptobank",
+    "address": "0xc20464e0c373486d2b3335576e83a218b1618a5e"
+  },
+  {
+    "id": "dynamic-trading-rights",
+    "address": "0xd234bf2410a0009df9c3c63b610c09738f18ccd7"
+  },
+  {
+    "id": "eaglecoin",
+    "address": "0x994f0dffdbae0bbf09b652d6f11a493fd33f42b9"
+  },
+  {
+    "id": "datawallet",
+    "address": "0x8db54ca569d3019a2ba126d03c37c44b5ef81ef6"
+  },
+  {
+    "id": "ebitcoin-cash",
+    "address": "0xafc39788c51f0c1ff7b55317f3e70299e521fff6"
+  },
+  {
+    "id": "earth-token",
+    "address": "0x900b4449236a7bb26b286601dd14d2bde7a6ac6c"
+  },
+  {
+    "id": "ebitcoin",
+    "address": "0xeb7c20027172e5d143fb030d50f91cece2d1485d"
+  },
+  {
+    "id": "ebcoin",
+    "address": "0x31f3d9d1bece0c033ff78fa6da60a6048f3e13c5"
+  },
+  {
+    "id": "omnitude",
+    "address": "0x171d750d42d661b62c277a6b486adb82348c3eca"
+  },
+  {
+    "id": "edgeless",
+    "address": "0x08711D3B02C8758F2FB3ab4e80228418a7F8e39c"
+  },
+  {
+    "id": "engagement-token",
+    "address": "0x5dbac24e98e2a4f43adc0dc82af403fca063ce2c"
+  },
+  {
+    "id": "eidoo",
+    "address": "0xced4e93198734ddaff8492d525bd258d49eb388e"
+  },
+  {
+    "id": "endor",
+    "address": "0xc528c28FEC0A90C083328BC45f587eE215760A0F"
+  },
+  {
+    "id": "electrify-asia",
+    "address": "0xd49ff13661451313ca1553fd6954bd1d9b6e02b9"
+  },
+  {
+    "id": "egretia",
+    "address": "0x8e1b448EC7aDFc7Fa35FC2e885678bD323176E34"
+  },
+  {
+    "id": "echolink",
+    "address": "0xa6a840e50bcaa50da017b91a0d86b8b2d41156ee"
+  },
+  {
+    "id": "educare",
+    "address": "0xbab165df9455aa0f2aed1f2565520b91ddadb4c8"
+  },
+  {
+    "id": "block-collider",
+    "address": "0x28b94f58b11ac945341329dbf2e5ef7f8bd44225"
+  },
+  {
+    "id": "elysian",
+    "address": "0xa95592DCFfA3C080B4B40E459c5f5692F67DB7F8"
+  },
+  {
+    "id": "elixir",
+    "address": "0xc8C6A31A4A806d3710A7B38b7B296D2fABCCDBA8"
+  },
+  {
+    "id": "eltcoin",
+    "address": "0x44197a4c44d6a059297caf6be4f7e172bd56caaf"
+  },
+  {
+    "id": "aelf",
+    "address": "0xbf2179859fc6d5bee9bf9158632dc51678a4100e"
+  },
+  {
+    "id": "easymine",
+    "address": "0x9501BFc48897DCEEadf73113EF635d2fF7ee4B97"
+  },
+  {
+    "id": "etheremontoken",
+    "address": "0x95daaab98046846bf4b2853e23cba236fa394a31"
+  },
+  {
+    "id": "hut34-entropy",
+    "address": "0x5BC7e5f0Ab8b2E10D2D0a3F21739FCe62459aeF3"
+  },
+  {
+    "id": "enigma",
+    "address": "0xf0ee6b27b759c9893ce4f094b49ad28fd15a23e4"
+  },
+  {
+    "id": "eosdac",
+    "address": "0x7e9e431a0b8c4d532c745b1043c7fa29a48d4fba"
+  },
+  {
+    "id": "enjincoin",
+    "address": "0xF629cBd94d3791C9250152BD8dfBDF380E2a3B9c"
+  },
+  {
+    "id": "emphy",
+    "address": "0x50ee674689d75c0f88e8f83cfe8c4b69e8fd590d"
+  },
+  {
+    "id": "equal",
+    "address": "0x47dd62d4d075dead71d0e00299fc56a2d747bebb"
+  },
+  {
+    "id": "eroscoin",
+    "address": "0x74ceda77281b339142a36817fa5f9e29412bab85"
+  },
+  {
+    "id": "ethereum-gold",
+    "address": "0x28c8d01ff633ea9cd8fc6a451d7457889e698de6"
+  },
+  {
+    "id": "ethersportz",
+    "address": "0xe8a1df958be379045e2b46a31a98b93a2ecdfded"
+  },
+  {
+    "id": "ethbits",
+    "address": "0x1b9743f556d65e757c4c650b4555baf354cb8bd3"
+  },
+  {
+    "id": "energi-token",
+    "address": "0x3c4a3ffd813a107febd57b2f01bc344264d90fde"
+  },
+  {
+    "id": "ethos",
+    "address": "0x5Af2Be193a6ABCa9c8817001F45744777Db30756"
+  },
+  {
+    "id": "stasis-eurs",
+    "address": "0xdb25f211ab05b1c97d595516f45794528a807ad8"
+  },
+  {
+    "id": "devery",
+    "address": "0x923108a439C4e8C2315c4f6521E5cE95B44e9B4c"
+  },
+  {
+    "id": "eventchain",
+    "address": "0xb62d18dea74045e822352ce4b3ee77319dc5ff2f"
+  },
+  {
+    "id": "envion",
+    "address": "0xd780Ae2Bf04cD96E577D3D014762f831d97129d0"
+  },
+  {
+    "id": "evencoin",
+    "address": "0x68909e586eeac8f47315e84b4c9788dd54ef65bb"
+  },
+  {
+    "id": "everex",
+    "address": "0xf3db5fa2c66b7af3eb0c0b782510816cbe4813b8"
+  },
+  {
+    "id": "exmr-monero",
+    "address": "0xc98e0639c6d2ec037a615341c369666b110e80e5"
+  },
+  {
+    "id": "face",
+    "address": "0x1ccaa0f2a7210d76e1fdec740d5f323e2e1b1672"
+  },
+  {
+    "id": "exrnchain",
+    "address": "0xe469c4473af82217b30cf17b10bcdb6c8c796e75"
+  },
+  {
+    "id": "experty",
+    "address": "0x5c743a35E903F6c584514ec617ACEe0611Cf44f3"
+  },
+  {
+    "id": "fanx",
+    "address": "0x7dcb3b2356c822d3577d4d060d0d5d78c860488c"
+  },
+  {
+    "id": "friendz",
+    "address": "0x23352036e911a22cfc692b5e2e196692658aded9"
+  },
+  {
+    "id": "fidelium",
+    "address": "0x52fb36c83ad33c1824912fc81071ca5eeb8ab390"
+  },
+  {
+    "id": "fingerprint",
+    "address": "0xd9a8cfe21c232d485065cb62a96866799d4645f7"
+  },
+  {
+    "id": "flixxo",
+    "address": "0xf04a8ac553FceDB5BA99A64799155826C136b0Be"
+  },
+  {
+    "id": "fluzfluz",
+    "address": "0x954b5de09a55e59755acbda29e1eb74a45d30175"
+  },
+  {
+    "id": "gameflip",
+    "address": "0x3a1Bda28AdB5B0a812a7CF10A1950c920F79BcD3"
+  },
+  {
+    "id": "fire-lotto",
+    "address": "0x049399a6b048d52971f7d122ae21a1532722285f"
+  },
+  {
+    "id": "fnkos",
+    "address": "0x0707681f344deb24184037fc0228856f2137b02e"
+  },
+  {
+    "id": "fundrequest",
+    "address": "0x4df47b4969b2911c966506e3592c41389493953b"
+  },
+  {
+    "id": "formosa-financial",
+    "address": "0xb4d0fdfc8497aef97d3c2892ae682ee06064a2bc"
+  },
+  {
+    "id": "fintab",
+    "address": "0xbd4b60a138b3fce3584ea01f50c0908c18f9677a"
+  },
+  {
+    "id": "gastroadvisor",
+    "address": "0x5bB1632fA0023e1AA76a1AE92B4635C8DBa49Fa2"
+  },
+  {
+    "id": "farad",
+    "address": "0x0ABeFb7611Cb3A01EA3FaD85f33C3C934F8e2cF4"
+  },
+  {
+    "id": "fortuna",
+    "address": "0x4270bb238f6dd8b1c3ca01f96ca65b2647c06d3c"
+  },
+  {
+    "id": "foam-protocol",
+    "address": "0x4946fcea7c692606e8908002e55a582af44ac121"
+  },
+  {
+    "id": "foodcoin",
+    "address": "0x2a093BcF0C98Ef744Bb6F69D74f2F85605324290"
+  },
+  {
+    "id": "fabric-token",
+    "address": "0x78a73B6CBc5D183CE56e786f6e905CaDEC63547B"
+  },
+  {
+    "id": "fitrova",
+    "address": "0x48df4e0296f908ceab0428a5182d19b31fc037d6"
+  },
+  {
+    "id": "freyrchain",
+    "address": "0x17e67d1cb4e349b9ca4bc3e17c7df2a397a7bb64"
+  },
+  {
+    "id": "fsn",
+    "address": "0xd0352a019e9ab9d757776f532377aaebd36fd541"
+  },
+  {
+    "id": "farmatrust",
+    "address": "0x2AEC18c5500f21359CE1BEA5Dc1777344dF4C0Dc"
+  },
+  {
+    "id": "fanstime",
+    "address": "0x943ed852dadb5c3938ecdc6883718df8142de4c8"
+  },
+  {
+    "id": "fintrux",
+    "address": "0xd559f20296ff4895da39b5bd9add54b442596a61"
+  },
+  {
+    "id": "funfair",
+    "address": "0x419D0d8BdD9aF5e606Ae2232ed285Aff190E711b"
+  },
+  {
+    "id": "flexacoin",
+    "address": "0x4a57e687b9126435a9b19e4a802113e266adebde"
+  },
+  {
+    "id": "etherparty",
+    "address": "0xEA38eAa3C86c8F9B751533Ba2E562deb9acDED40"
+  },
+  {
+    "id": "futurax",
+    "address": "0x41875c2332b0877cdfaa699b641402b7d4642c32"
+  },
+  {
+    "id": "gambit",
+    "address": "0xf67451dc8421f0e0afeb52faa8101034ed081ed9"
+  },
+  {
+    "id": "flypme",
+    "address": "0x8f0921f30555624143d427b340b1156914882c10"
+  },
+  {
+    "id": "fund-yourself-now",
+    "address": "0x88FCFBc22C6d3dBaa25aF478C578978339BDe77a"
+  },
+  {
+    "id": "fuzex",
+    "address": "0x1829aa045e21e0d59580024a951db48096e01782"
+  },
+  {
+    "id": "gatcoin",
+    "address": "0x687174f8c49ceb7729d925c3a961507ea4ac7b28"
+  },
+  {
+    "id": "gems-2",
+    "address": "0xc7bba5b765581efb2cdd2679db5bea9ee79b201f"
+  },
+  {
+    "id": "gladius-token",
+    "address": "0x71d01db8d6a2fbea7f8d434599c237980c234e4c"
+  },
+  {
+    "id": "gimli",
+    "address": "0xaE4f56F072c34C0a65B3ae3E4DB797D831439D93"
+  },
+  {
+    "id": "daostack",
+    "address": "0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf"
+  },
+  {
+    "id": "get-token",
+    "address": "0x8a854288a5976036a725879164ca3e91d30c6a1b"
+  },
+  {
+    "id": "golem",
+    "address": "0xa74476443119A942dE498590Fe1f2454d7D4aC0d"
+  },
+  {
+    "id": "mercury-protocol",
+    "address": "0xb3Bd49E28f8F832b8d1E246106991e546c323502"
+  },
+  {
+    "id": "genaro-network",
+    "address": "0x6ec8a24cabdc339a06a172f8223ea557055adaa5"
+  },
+  {
+    "id": "gnosis",
+    "address": "0x6810e776880C02933D47DB1b9fc05908e5386b96"
+  },
+  {
+    "id": "groocoin",
+    "address": "0xC17195bde49D70CefCF8A9F2ee1759FFC27BF0B1"
+  },
+  {
+    "id": "greenmed",
+    "address": "0xb444208cb0516c150178fcf9a52604bc04a1acea"
+  },
+  {
+    "id": "grid",
+    "address": "0x12b19d3e2ccc14da04fae33e63652ce469b3f2fd"
+  },
+  {
+    "id": "gonetwork",
+    "address": "0x423b5f62b328d0d6d44870f4eee316befa0b2df5"
+  },
+  {
+    "id": "game",
+    "address": "0xB70835D7822eBB9426B56543E391846C107bd32C"
+  },
+  {
+    "id": "gsenetwork",
+    "address": "0xe530441f4f73bDB6DC2fA5aF7c3fC5fD551Ec838"
+  },
+  {
+    "id": "global-social-chain",
+    "address": "0x228ba514309ffdf03a81a205a6d040e429d6e80c"
+  },
+  {
+    "id": "matchpool",
+    "address": "0xf7B098298f7C69Fc14610bf71d5e02c60792894C"
+  },
+  {
+    "id": "peerguess",
+    "address": "0xbdcfbf5c4d91abc0bc9709c7286d00063c0e6f22"
+  },
+  {
+    "id": "gifto",
+    "address": "0xc5bbae50781be1669306b9e001eff57a2957b09d"
+  },
+  {
+    "id": "genesis-vision",
+    "address": "0x103c3A209da59d3E7C4A89307e66521e081CFDF0"
+  },
+  {
+    "id": "gizer",
+    "address": "0xE638dc39b6aDBEE8526b5C22380b4b45dAf46d8e"
+  },
+  {
+    "id": "shaka",
+    "address": "0x93a7174dafd31d13400cd9fa01f4e5b5baa00d39"
+  },
+  {
+    "id": "showhand",
+    "address": "0x48c1b2f3efa85fbafb2ab951bf4ba860a08cdbb7"
+  },
+  {
+    "id": "helbiz",
+    "address": "0xe34e1944e776f39b9252790a0527ebda647ae668"
+  },
+  {
+    "id": "heartbout",
+    "address": "0xe2492f8d2a2618d8709ca99b1d8d75713bd84089"
+  },
+  {
+    "id": "hubii-network",
+    "address": "0xdd6c68bb32462e01705011a4e2ad1a60740f217f"
+  },
+  {
+    "id": "hellogold",
+    "address": "0xba2184520A1cC49a6159c57e61E1844E085615B6"
+  },
+  {
+    "id": "hero-node",
+    "address": "0x491c9a23db85623eed455a8efdd6aba9b911c5df"
+  },
+  {
+    "id": "hacken",
+    "address": "0x9e6b2b11542f2bc52f3029077ace37e8fd838d7f"
+  },
+  {
+    "id": "health-mutual-society",
+    "address": "0xAa0bb10CEc1fa372eb3Abc17C933FC6ba863DD9E"
+  },
+  {
+    "id": "honest-mining",
+    "address": "0x9c9fe3bd60b22a9735908b9589011e78f2025c11"
+  },
+  {
+    "id": "humaniq",
+    "address": "0xcbCC0F036ED4788F63FC0fEE32873d6A7487b908"
+  },
+  {
+    "id": "decision-token",
+    "address": "0x554C20B7c486beeE439277b4540A434566dC4C02"
+  },
+  {
+    "id": "hydro-protocol",
+    "address": "0x9af839687f6c94542ac5ece2e317daae355493a1"
+  },
+  {
+    "id": "ethorse",
+    "address": "0x5B0751713b2527d7f002c0c4e2a37e1219610A6B"
+  },
+  {
+    "id": "high-performance-blockchain",
+    "address": "0x38c6a68304cdefb9bec48bbfaaba5c5b47818bb2"
+  },
+  {
+    "id": "holotoken",
+    "address": "0x6c6ee5e31d828de241282b9606c8e98ea48526e2"
+  },
+  {
+    "id": "hive",
+    "address": "0xC0Eb85285d83217CD7c891702bcbC0FC401E2D9D"
+  },
+  {
+    "id": "huobi-token",
+    "address": "0x6f259637dcd74c767781e37bc6133cd6a68aa161"
+  },
+  {
+    "id": "hydro",
+    "address": "0xebbdf302c940c6bfd49c6b165f457fdb324649bc"
+  },
+  {
+    "id": "iconomi",
+    "address": "0x888666CA69E0f178DED6D75b5726Cee99A87D698"
+  },
+  {
+    "id": "icos",
+    "address": "0x014B50466590340D41307Cc54DCee990c8D58aa8"
+  },
+  {
+    "id": "idex-membership",
+    "address": "0xcc13fc627effd6e35d2d2706ea3c4d7396c610ea"
+  },
+  {
+    "id": "investfeed",
+    "address": "0x7654915a1b82d6d2d0afc37c52af556ea8983c7e"
+  },
+  {
+    "id": "indahash",
+    "address": "0x5136c98a80811c3f46bdda8b5c4555cfd9f812f0"
+  },
+  {
+    "id": "iht-real-estate-protocol",
+    "address": "0xeda8b016efa8b1161208cf041cd86972eee0f31e"
+  },
+  {
+    "id": "igtoken",
+    "address": "0x8a88f04e0c905054d2f33b26bb3a46d7091a039a"
+  },
+  {
+    "id": "moneytoken",
+    "address": "0x13119E34E140097a507B07a5564bDe1bC375D9e6"
+  },
+  {
+    "id": "iungo",
+    "address": "0x24ddff6d8b8a42d835af3b440de91f3386554aa4"
+  },
+  {
+    "id": "indorse",
+    "address": "0xf8e386EDa857484f5a12e4B5DAa9984E06E73705"
+  },
+  {
+    "id": "invacio",
+    "address": "0xece83617db208ad255ad4f45daf81e25137535bb"
+  },
+  {
+    "id": "internxt",
+    "address": "0xa8006c4ca56f24d6836727d106349320db7fef82"
+  },
+  {
+    "id": "insights-network",
+    "address": "0xc72fe8e3dd5bef0f9f31f259399f301272ef2a2d"
+  },
+  {
+    "id": "ins-ecosystem",
+    "address": "0x5b2e4a700dfbc560061e957edec8f6eeeb74a320"
+  },
+  {
+    "id": "internet-node-token",
+    "address": "0x0b76544f6c413a555f309bf76260d1e02377c02a"
+  },
+  {
+    "id": "ip-sharing-exchange",
+    "address": "0x001f0aa5da15585e5b2305dbab2bac425ea71007"
+  },
+  {
+    "id": "iotex",
+    "address": "0x6fb3e0a217407efff7ca062d46c26e5d60a14d69"
+  },
+  {
+    "id": "iostoken",
+    "address": "0xFA1a856Cfa3409CFa145Fa4e20Eb270dF3EB21ab"
+  },
+  {
+    "id": "insurepal",
+    "address": "0x64CdF819d3E75Ac8eC217B3496d7cE167Be42e80"
+  },
+  {
+    "id": "intelligent-trading-tech",
+    "address": "0x0aeF06DcCCC531e581f0440059E6FfCC206039EE"
+  },
+  {
+    "id": "ivy",
+    "address": "0xA4eA687A2A7F29cF2dc66B39c68e4411C0D00C49"
+  },
+  {
+    "id": "insurex",
+    "address": "0xfca47962d45adfdfd1ab2d972315db4ce7ccf094"
+  },
+  {
+    "id": "iot-chain",
+    "address": "0x5e6b6d9abad9093fdc861ea1600eba1b355cd940"
+  },
+  {
+    "id": "jboxcoin",
+    "address": "0x884e3902C4d5cFA86de4aCE7A96AA91EbC25C0Ff"
+  },
+  {
+    "id": "jetcoin",
+    "address": "0x8727c112c712c4a03371ac87a74dd6ab104af768"
+  },
+  {
+    "id": "jet8",
+    "address": "0x0d262e5dc4a06a0f1c90ce79c7a60c09dfc884e4"
+  },
+  {
+    "id": "jibrel",
+    "address": "0xa5Fd1A791C4dfcaacC963D4F73c6Ae5824149eA7"
+  },
+  {
+    "id": "kan",
+    "address": "0x1410434b0346f5be678d0fb554e5c7ab620f8f4a"
+  },
+  {
+    "id": "jury-online-token",
+    "address": "0xdb455c71c1bc2de4e80ca451184041ef32054001"
+  },
+  {
+    "id": "joyso",
+    "address": "0xDDe12a12A6f67156e0DA672be05c374e1B0a3e57"
+  },
+  {
+    "id": "key",
+    "address": "0x4cd988afbad37289baaf53c13e98e2bd46aaea8c"
+  },
+  {
+    "id": "kickico",
+    "address": "0x27695E09149AdC738A978e9A678F99E4c39e9eb9"
+  },
+  {
+    "id": "selfkey",
+    "address": "0x4CC19356f2D37338b9802aa8E8fc58B0373296E7"
+  },
+  {
+    "id": "kanadecoin",
+    "address": "0x8e5610ab5e39d26828167640ea29823fe1dd5843"
+  },
+  {
+    "id": "kind-ads-token",
+    "address": "0x4618519de4c304f3444ffa7f812dddc2971cc688"
+  },
+  {
+    "id": "kin",
+    "address": "0x818Fc6C2Ec5986bc6E2CBf00939d90556aB12ce5"
+  },
+  {
+    "id": "kyber-network",
+    "address": "0xdd974D5C2e2928deA5F71b9825b8b646686BD200"
+  },
+  {
+    "id": "kora-network",
+    "address": "0xff5c25d2f40b47c4a37f989de933e26562ef0ac0"
+  },
+  {
+    "id": "kryll",
+    "address": "0x464ebe77c293e473b48cfe96ddcf88fcf7bfdac0"
+  },
+  {
+    "id": "4new",
+    "address": "0x241ba672574a78a3a604cdd0a94429a73a84a324"
+  },
+  {
+    "id": "kuende",
+    "address": "0xdf1338FbAfe7aF1789151627B886781ba556eF9a"
+  },
+  {
+    "id": "latoken",
+    "address": "0xE50365f5D679CB98a1dd62D6F6e58e59321BcdDf"
+  },
+  {
+    "id": "latiumx",
+    "address": "0x2f85e502a988af76f7ee6d83b7db8d6c0a823bf9"
+  },
+  {
+    "id": "libra-credit",
+    "address": "0xfe5f141bf94fe84bc28ded0ab966c16b17490657"
+  },
+  {
+    "id": "lala-world",
+    "address": "0xfD107B473AB90e8Fbd89872144a3DC92C40Fa8C9"
+  },
+  {
+    "id": "lendconnect",
+    "address": "0x05c7065d644096a4e4c3fe24af86e36de021074b"
+  },
+  {
+    "id": "localcoinswap",
+    "address": "0xaa19961b6b858d9f18a115f25aa1d98abc1fdba8"
+  },
+  {
+    "id": "leadcoin",
+    "address": "0x5102791ca02fc3595398400bfe0e33d7b6c82267"
+  },
+  {
+    "id": "leverj",
+    "address": "0x0f4ca92660efad97a9a70cb0fe969c755439772c"
+  },
+  {
+    "id": "ethlend",
+    "address": "0x80fB784B7eD66730e8b1DBd9820aFD29931aab03"
+  },
+  {
+    "id": "education-ecosystem",
+    "address": "0x5b26C5D0772E5bbaC8b3182AE9a13f9BB2D03765"
+  },
+  {
+    "id": "legolas-exchange",
+    "address": "0x123ab195dd38b1b40510d467a6a359b201af056f"
+  },
+  {
+    "id": "life",
+    "address": "0xff18dbc487b4c2e3222d115952babfda8ba52f5f"
+  },
+  {
+    "id": "winding-tree",
+    "address": "0xEB9951021698B42e4399f9cBb6267Aa35F82D59D"
+  },
+  {
+    "id": "likecoin",
+    "address": "0x02f61fd266da6e8b102d4121f5ce7b992640cf98"
+  },
+  {
+    "id": "chainlink",
+    "address": "0x514910771af9ca656af840dff83e8264ecf986ca"
+  },
+  {
+    "id": "live-stars",
+    "address": "0x24A77c1F17C547105E14813e517be06b0040aa76"
+  },
+  {
+    "id": "blocklancer",
+    "address": "0x63e634330A20150DbB61B15648bC73855d6CCF07"
+  },
+  {
+    "id": "linkey",
+    "address": "0x49bd2da75b1f7af1e4dfd6b1125fecde59dbec58"
+  },
+  {
+    "id": "locus-chain",
+    "address": "0xC64500DD7B0f1794807e67802F8Abbf5F8Ffb054"
+  },
+  {
+    "id": "linker-coin",
+    "address": "0x6beb418fc6e1958204ac8baddcf109b8e9694966"
+  },
+  {
+    "id": "locicoin",
+    "address": "0x9c23d67aea7b95d80942e3836bcdf7e708a747c2"
+  },
+  {
+    "id": "lockchain",
+    "address": "0x5e3346444010135322268a4630d2ed5f8d09446c"
+  },
+  {
+    "id": "lendingblock",
+    "address": "0x0947b0e6D821378805c9598291385CE7c791A6B2"
+  },
+  {
+    "id": "play2live",
+    "address": "0x5dbe296f97b23c4a6aa6183d73e574d02ba5c719"
+  },
+  {
+    "id": "loom-network",
+    "address": "0xa4e8c3ec456107ea67d3075bf9e3df3a75823db0"
+  },
+  {
+    "id": "loopring",
+    "address": "0xEF68e7C694F40c8202821eDF525dE3782458639f"
+  },
+  {
+    "id": "lunyr",
+    "address": "0xfa05A73FfE78ef8f1a739473e462c54bae6567D9"
+  },
+  {
+    "id": "lympo",
+    "address": "0xc690f7c7fcffa6a82b79fab7508c466fefdfc8c5"
+  },
+  {
+    "id": "mad-network",
+    "address": "0x5b09a0371c1da44a8e24d36bf5deb1141a84d875"
+  },
+  {
+    "id": "matrix-ai-network",
+    "address": "0xe25bCec5D3801cE3a794079BF94adF1B8cCD802D"
+  },
+  {
+    "id": "midas-protocol",
+    "address": "0x23ccc43365d9dd3882eab88f43d515208f832430"
+  },
+  {
+    "id": "decentraland",
+    "address": "0x0F5D2fB29fb7d3CFeE444a200298f468908cC942"
+  },
+  {
+    "id": "musiconomi",
+    "address": "0x138A8752093F4f9a79AaeDF48d4B9248fab93c9C"
+  },
+  {
+    "id": "mcap",
+    "address": "0x93E682107d1E9defB0b5ee701C71707a4B2E46Bc"
+  },
+  {
+    "id": "monaco",
+    "address": "0xB63B606Ac810a52cCa15e44bB630fd42D8d1d83d"
+  },
+  {
+    "id": "measurable-data-token",
+    "address": "0x814e0908b12a99fecf5bc101bb5d0b8b5cdf7d26"
+  },
+  {
+    "id": "mesg",
+    "address": "0x420167d87d35c3a249b32ef6225872fbd9ab85d2"
+  },
+  {
+    "id": "moeda-loyalty-points",
+    "address": "0x51DB5Ad35C671a87207d88fC11d593AC0C8415bd"
+  },
+  {
+    "id": "mediblocx",
+    "address": "0xfd1e80508f243e64ce234ea88a5fd2827c71d4b7"
+  },
+  {
+    "id": "medishares",
+    "address": "0x66186008C1050627F979d464eABb258860563dbE"
+  },
+  {
+    "id": "blockmesh-2",
+    "address": "0xf03045a4c8077e38f3b8e2ed33b8aee69edf869f"
+  },
+  {
+    "id": "metronome",
+    "address": "0xa3d58c4e56fedcae3a7c43a725aee9a71f0ece4e"
+  },
+  {
+    "id": "metamorph",
+    "address": "0xfef3884b603c33ef8ed4183346e093a173c94da6"
+  },
+  {
+    "id": "mainframe",
+    "address": "0xDF2C7238198Ad8B389666574f2d8bc411A4b7428"
+  },
+  {
+    "id": "mindexcoin",
+    "address": "0x3a1237d38d0fb94513f85d61679cad7f38507242"
+  },
+  {
+    "id": "mobilego",
+    "address": "0x40395044ac3c0c57051906da938b54bd6557f212"
+  },
+  {
+    "id": "syncfab",
+    "address": "0x6710c63432a2de02954fc0f851db07146a6c0312"
+  },
+  {
+    "id": "mychatcoin",
+    "address": "0xad8dd4c725de1d31b9e8f8d146089e9dc6882093"
+  },
+  {
+    "id": "morpheus-labs",
+    "address": "0x4a527d8fc13c5203ab24ba0944f4cb14658d1db6"
+  },
+  {
+    "id": "maker",
+    "address": "0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2"
+  },
+  {
+    "id": "goldmint",
+    "address": "0x83cee9e086a77e492ee0bb93c2b0437ad6fdeccc"
+  },
+  {
+    "id": "melon",
+    "address": "0xBEB9eF514a379B997e0798FDcC901Ee474B6D9A1"
+  },
+  {
+    "id": "olympus-labs",
+    "address": "0x263c618480dbe35c300d8d5ecda19bbb986acaed"
+  },
+  {
+    "id": "mossland",
+    "address": "0x865ec58b06bf6305b886793aa20a2da31d034e68"
+  },
+  {
+    "id": "modum",
+    "address": "0x957c30aB0426e0C93CD8241E2c60392d08c6aC8e"
+  },
+  {
+    "id": "twinkle",
+    "address": "0xfbd0d1c77b501796a35d86cf91d65d9778eee695"
+  },
+  {
+    "id": "marcelo",
+    "address": "0x82125AFe01819Dff1535D0D6276d57045291B6c0"
+  },
+  {
+    "id": "money-rebel",
+    "address": "0x21f0F0fD3141Ee9E11B3d7f13a1028CD515f459c"
+  },
+  {
+    "id": "mark-space",
+    "address": "0xf453b5b9d4e0b5c62ffb256bb2378cc2bc8e8a89"
+  },
+  {
+    "id": "mtc-mesh-network",
+    "address": "0xdfdc0d82d96f8fd40ca0cfb4a288955becec2088"
+  },
+  {
+    "id": "mothership",
+    "address": "0x68AA3F232dA9bdC2343465545794ef3eEa5209BD"
+  },
+  {
+    "id": "metal",
+    "address": "0xF433089366899D83a9f26A773D59ec7eCF30355e"
+  },
+  {
+    "id": "monetha",
+    "address": "0xaF4DcE16Da2877f8c9e00544c93B62Ac40631F16"
+  },
+  {
+    "id": "matryx",
+    "address": "0x0AF44e2784637218dD1D32A322D44e603A8f0c6A"
+  },
+  {
+    "id": "medicalchain",
+    "address": "0x41dbecc1cdc5517c6f76f6a6e836adbee2754de3"
+  },
+  {
+    "id": "modultrade",
+    "address": "0x1e49fF77c355A3e38D6651ce8404AF0E48c5395f"
+  },
+  {
+    "id": "mass-vehicle-ledger",
+    "address": "0xa849eaae994fb86afa73382e9bd88c2b6b18dc71"
+  },
+  {
+    "id": "muxe",
+    "address": "0x515669d308f887fd83a471c7764f5d084886d34d"
+  },
+  {
+    "id": "restart-energy",
+    "address": "0x6425c6be902d692ae2db752b3c268afadb099d3b"
+  },
+  {
+    "id": "merculet",
+    "address": "0x8a77e40936bbc27e80e9a3f526368c967869c86d"
+  },
+  {
+    "id": "naviaddress",
+    "address": "0x588047365df5ba589f923604aac23d673555c623"
+  },
+  {
+    "id": "mysterium",
+    "address": "0xa645264C5603E96c3b0B078cdab68733794B0A71"
+  },
+  {
+    "id": "nanjcoin",
+    "address": "0xffe02ee4c69edf1b340fcad64fbd6b37a7b9e265"
+  },
+  {
+    "id": "nebula-ai",
+    "address": "0x17f8aFB63DfcDcC90ebE6e84F060Cc306A98257D"
+  },
+  {
+    "id": "neurochain",
+    "address": "0x5d48f293baed247a2d0189058ba37aa238bd4725"
+  },
+  {
+    "id": "nucleus-vision",
+    "address": "0x809826cceab68c387726af962713b64cb5cb3cca"
+  },
+  {
+    "id": "needscoin",
+    "address": "0x9344b383b1D59b5ce3468B234DAB43C7190ba735"
+  },
+  {
+    "id": "niobium-coin",
+    "address": "0x9f195617fa8fbad9540c5d113a99a0a0172aaedc"
+  },
+  {
+    "id": "polyswarm",
+    "address": "0x9e46a38f5daabe8683e10793b06749eef7d733d1"
+  },
+  {
+    "id": "ndex",
+    "address": "0x1966d718A565566e8E202792658D7b5Ff4ECe469"
+  },
+  {
+    "id": "nectar-token",
+    "address": "0xcc80c051057b774cd75067dc48f8987c4eb97a5e"
+  },
+  {
+    "id": "neverdie",
+    "address": "0xa54ddc7b3cce7fc8b1e3fa0256d0db80d2c10970"
+  },
+  {
+    "id": "nimiq",
+    "address": "0xcfb98637bcae43C13323EAa1731cED2B716962fD"
+  },
+  {
+    "id": "naga",
+    "address": "0x72dd4b6bd852a3aa172be4d6c5a6dbec588cf131"
+  },
+  {
+    "id": "neumark",
+    "address": "0xa823e6722006afe99e91c30ff5295052fe6b8e32"
+  },
+  {
+    "id": "nexo",
+    "address": "0xb62132e35a6c13ee1ee0f84dc5d40bad8d815206"
+  },
+  {
+    "id": "autonio",
+    "address": "0x5554e04e76533e1d14c52f05beef6c9d329e1e30"
+  },
+  {
+    "id": "noah-coin",
+    "address": "0x58a4884182d9e835597f405e5f258290e46ae7c2"
+  },
+  {
+    "id": "numeraire",
+    "address": "0x1776e1F26f98b1A5dF9cD347953a26dd3Cb46671"
+  },
+  {
+    "id": "no-bs-crypto",
+    "address": "0xf4faea455575354d2699bc209b0a65ca99f69982"
+  },
+  {
+    "id": "nitro",
+    "address": "0xec46f8207d766012454c408de210bcbc2243e71c"
+  },
+  {
+    "id": "napoleon-x",
+    "address": "0x28b5e12cce51f15594b0b91d5b5adaa70f684a02"
+  },
+  {
+    "id": "nper",
+    "address": "0x4ce6b362bc77a24966dda9078f9cef81b3b886a7"
+  },
+  {
+    "id": "pundi-x",
+    "address": "0xa15c7ebe1f07caf6bff097d8a589fb8ac49ae5b3"
+  },
+  {
+    "id": "fujinto",
+    "address": "0x8a99ed8a1b204903ee46e733f2c1286f6d20b177"
+  },
+  {
+    "id": "neurotoken",
+    "address": "0x69beab403438253f13b6e92db91f7fb849258263"
+  },
+  {
+    "id": "netkoin",
+    "address": "0x5d4d57cd06fa7fe99e26fdc481b468f77f05073c"
+  },
+  {
+    "id": "nuls",
+    "address": "0xb91318f35bdb262e9423bc7c7c2a3a93dd93c92c"
+  },
+  {
+    "id": "nexium",
+    "address": "0x45e42D659D9f9466cD5DF622506033145a9b89Bc"
+  },
+  {
+    "id": "original-crypto-coin",
+    "address": "0x0235fe624e044a05eed7a43e16e3083bc8a4287a"
+  },
+  {
+    "id": "odem",
+    "address": "0xbf52f2ab39e26e0951d2a02b49b7702abe30406a"
+  },
+  {
+    "id": "odyssey",
+    "address": "0x4092678e4e78230f46a1534c0fbc8fa39780892b"
+  },
+  {
+    "id": "openanx",
+    "address": "0x701C244b988a513c945973dEFA05de933b23Fe1D"
+  },
+  {
+    "id": "one-ledger",
+    "address": "0x64A60493D888728Cf42616e034a0dfEAe38EFCF0"
+  },
+  {
+    "id": "olive",
+    "address": "0x9d9223436ddd466fc247e9dbbd20207e640fef58"
+  },
+  {
+    "id": "omisego",
+    "address": "0xd26114cd6EE289AccF82350c8d8487fedB8A0C07"
+  },
+  {
+    "id": "menlo-one",
+    "address": "0x4d807509aece24c0fa5a102b6a3b059ec6e14392"
+  },
+  {
+    "id": "on-live",
+    "address": "0x6863be0e7cf7ce860a574760e9020d519a8bdc47"
+  },
+  {
+    "id": "ong-social",
+    "address": "0xd341d1680eeee3255b8c4c75bcce7eb57f144dae"
+  },
+  {
+    "id": "project-shivom",
+    "address": "0xb5dbc6d3cf380079df3b27135664b6bcf45d1869"
+  },
+  {
+    "id": "ono",
+    "address": "0xB31C219959E06f9aFBeB36b388a4BaD13E802725"
+  },
+  {
+    "id": "open-platform",
+    "address": "0x69c4BB240cF05D51eeab6985Bab35527d04a8C64"
+  },
+  {
+    "id": "opus",
+    "address": "0x4355fC160f74328f9b383dF2EC589bB3dFd82Ba0"
+  },
+  {
+    "id": "origami-network",
+    "address": "0xd2fa8f92ea72abb35dbd6deca57173d22db2ba49"
+  },
+  {
+    "id": "ormeuscoin",
+    "address": "0xc96DF921009B790dfFcA412375251ed1A2b75c60"
+  },
+  {
+    "id": "origin-sport",
+    "address": "0xeb9a4b185816c354db92db09cc3b50be60b901b6"
+  },
+  {
+    "id": "open-trading-network",
+    "address": "0x881ef48211982d01e2cb7092c915e647cd40d85c"
+  },
+  {
+    "id": "owndata",
+    "address": "0x170b275ced089fffaebfe927f445a350ed9160dc"
+  },
+  {
+    "id": "simple-token",
+    "address": "0x2C4e8f2D746113d0696cE89B35F0d8bF88E0AEcA"
+  },
+  {
+    "id": "pchain",
+    "address": "0xb9bb08ab7e9fa0a1356bd4a39ec0ca267e03b0b3"
+  },
+  {
+    "id": "pareto-network",
+    "address": "0xea5f88e54d982cbb0c441cde4e79bc305e5b43bc"
+  },
+  {
+    "id": "wisepass",
+    "address": "0x77761e63c05aee6648fdaeaa9b94248351af9bcd"
+  },
+  {
+    "id": "patron",
+    "address": "0xF3b3Cad094B89392fcE5faFD40bC03b80F2Bc624"
+  },
+  {
+    "id": "policypal",
+    "address": "0xfeDAE5642668f8636A11987Ff386bfd215F942EE"
+  },
+  {
+    "id": "paxos-standard",
+    "address": "0x8e870d67f660d95d5be530380d0ec0bd388289e1"
+  },
+  {
+    "id": "tenx",
+    "address": "0xB97048628DB6B661D4C2aA833e95Dbe1A905B280"
+  },
+  {
+    "id": "publica",
+    "address": "0x55648de19836338549130b1af587f16bea46f66b"
+  },
+  {
+    "id": "popchain",
+    "address": "0xe3f4b4a5d91e5cb9435b947f090a319737036312"
+  },
+  {
+    "id": "peculium",
+    "address": "0x3618516F45CD3c913F81F9987AF41077932Bc40d"
+  },
+  {
+    "id": "phi-token",
+    "address": "0x13c2fab6354d3790d8ece4f0f1a3280b4a25ad96"
+  },
+  {
+    "id": "piplcoin",
+    "address": "0xE64509F0bf07ce2d29A7eF19A8A9bc065477C1B4"
+  },
+  {
+    "id": "playkey",
+    "address": "0x2604fa406be957e542beb89e6754fcde6815e83f"
+  },
+  {
+    "id": "pkg-token",
+    "address": "0x02f2d4a04e6e01ace88bd2cd632875543b2ef577"
+  },
+  {
+    "id": "lampix",
+    "address": "0x8eFFd494eB698cc399AF6231fCcd39E08fd20B15"
+  },
+  {
+    "id": "pluton",
+    "address": "0xD8912C10681D8B21Fd3742244f44658dBA12264E"
+  },
+  {
+    "id": "pillar",
+    "address": "0xe3818504c1B32bF1557b16C238B2E01Fd3149C17"
+  },
+  {
+    "id": "pumapay",
+    "address": "0x846c66cf71c43f80403b51fe3906b3599d63336f"
+  },
+  {
+    "id": "herocoin",
+    "address": "0xE477292f1B3268687A29376116B0ED27A9c76170"
+  },
+  {
+    "id": "polybius",
+    "address": "0x0AfFa06e7Fbe5bC9a764C979aA66E8256A631f02"
+  },
+  {
+    "id": "poet",
+    "address": "0x0e0989b1f9b8a38983c2ba8053269ca62ec9b195"
+  },
+  {
+    "id": "paymon",
+    "address": "0x81b4d08645da11374a03749ab170836e4e539767"
+  },
+  {
+    "id": "kleros",
+    "address": "0x93ed3fbe21207ec2e8f2d3c3de6e058cb73bc04d"
+  },
+  {
+    "id": "postoken",
+    "address": "0xee609fe292128cad03b786dbb9bc2634ccdbe7fc"
+  },
+  {
+    "id": "clearpoll",
+    "address": "0x705EE96c1c160842C92c1aeCfCFfccc9C412e3D9"
+  },
+  {
+    "id": "power-ledger",
+    "address": "0x595832f8fc6bf59c85c527fec3740a1b7a361269"
+  },
+  {
+    "id": "polymath-network",
+    "address": "0x9992eC3cF6A55b00978cdDF2b27BC6882d88D1eC"
+  },
+  {
+    "id": "paypie",
+    "address": "0xc42209accc14029c1012fb5680d95fbd6036e2a0"
+  },
+  {
+    "id": "paragon",
+    "address": "0x7728dfef5abd468669eb7f9b48a7f70a501ed29d"
+  },
+  {
+    "id": "presearch",
+    "address": "0x88a3e4f35d64aad41a6d4030ac9afe4356cb84fa"
+  },
+  {
+    "id": "privatix",
+    "address": "0x3adfc4999f77d04c8341bac5f3a76f58dff5b37a"
+  },
+  {
+    "id": "populous",
+    "address": "0xd4fa1460F537bb9085d22C7bcCB5DD450Ef28e3a"
+  },
+  {
+    "id": "oyster-pearl",
+    "address": "0x1844b21593262668b7248d0f57a220caaba46ab9"
+  },
+  {
+    "id": "prochain",
+    "address": "0x9041fe5b3fdea0f5e4afdc17e75180738d877a01"
+  },
+  {
+    "id": "propy",
+    "address": "0x226bb599a12C826476e3A771454697EA52E9E220"
+  },
+  {
+    "id": "patientory",
+    "address": "0x8Ae4BF2C33a8e667de34B54938B0ccD03Eb8CC06"
+  },
+  {
+    "id": "foresting",
+    "address": "0x4946583c5b86e01ccd30c71a05617d06e3e73060"
+  },
+  {
+    "id": "proton-token",
+    "address": "0x4689a4e169eb39cc9078c0940e21ff1aa8a39b9c"
+  },
+  {
+    "id": "playgame",
+    "address": "0x47e67BA66b0699500f18A53F94E2b9dB3D47437e"
+  },
+  {
+    "id": "pylon-network",
+    "address": "0x7703c35cffdc5cda8d27aa3df2f9ba6964544b6e"
+  },
+  {
+    "id": "qash",
+    "address": "0x618e75ac90b12c6049ba3b27f5d5f8651b0037f6"
+  },
+  {
+    "id": "quantum",
+    "address": "0x671AbBe5CE652491985342e85428EB1b07bC6c64"
+  },
+  {
+    "id": "qiibee",
+    "address": "0x2467aa6b5a2351416fd4c3def8462d841feeecec"
+  },
+  {
+    "id": "quant-network",
+    "address": "0x4a220E6096B25EADb88358cb44068A3248254675"
+  },
+  {
+    "id": "quark-chain",
+    "address": "0xea26c4ac16d4a5a106820bc8aee85fd0b7b2b664"
+  },
+  {
+    "id": "quantstamp",
+    "address": "0x99ea4dB9EE77ACD40B119BD1dC4E33e1C070b80d"
+  },
+  {
+    "id": "qunqun",
+    "address": "0x264dc2dedcdcbb897561a57cba5085ca416fb7b4"
+  },
+  {
+    "id": "qvolta",
+    "address": "0x1183f92a5624d68e85ffb9170f16bf0443b4c242"
+  },
+  {
+    "id": "dprating",
+    "address": "0xe8663a64a96169ff4d95b4299e7ae9a76b905b31"
+  },
+  {
+    "id": "revain",
+    "address": "0x48f775efbe4f5ece6e0df2f7b5932df56823b990"
+  },
+  {
+    "id": "ripio-credit-network",
+    "address": "0xf970b8e36e23f7fc3fd752eea86f8be8d83375a6"
+  },
+  {
+    "id": "rublix",
+    "address": "0xfc2c4d8f95002c14ed0a7aa65102cac9e5953b5e"
+  },
+  {
+    "id": "realchain",
+    "address": "0x13f25cd52b21650caa8225c9942337d914c9b030"
+  },
+  {
+    "id": "raiden-network",
+    "address": "0x255aa6df07540cb5d3d297f0d0d4d84cb52bc8e6"
+  },
+  {
+    "id": "rebellious",
+    "address": "0x5f53f7a8075614b699baad0bc2c899f4bad8fbbf"
+  },
+  {
+    "id": "real",
+    "address": "0x9214ec02cb71cba0ada6896b8da260736a67ab10"
+  },
+  {
+    "id": "reftoken",
+    "address": "0x89303500a7abfb178b274fd89f2469c264951e1f"
+  },
+  {
+    "id": "red",
+    "address": "0x76960dccd5a1fe799f7c29be9f19ceb4627aeb2f"
+  },
+  {
+    "id": "remiit",
+    "address": "0x13cb85823f78cff38f0b0e90d3e975b8cb3aad64"
+  },
+  {
+    "id": "republic-protocol",
+    "address": "0x408e41876cCCDC0F92210600ef50372656052a38"
+  },
+  {
+    "id": "augur",
+    "address": "0x1985365e9f78359a9B6AD760e32412f4a445E862"
+  },
+  {
+    "id": "request-network",
+    "address": "0x8f8221aFbB33998d8584A2B05749bA73c37a938a"
+  },
+  {
+    "id": "remme",
+    "address": "0x83984d6142934bb535793a82adb0a46ef0f66b6d"
+  },
+  {
+    "id": "rusgas",
+    "address": "0x4c383bdcae52a6e1cb810c76c70d6f31a249ec9b"
+  },
+  {
+    "id": "refereum",
+    "address": "0xd0929d411954c47438dc1d871dd6081f5c5e149c"
+  },
+  {
+    "id": "rex",
+    "address": "0xf05a9382A4C3F29E2784502754293D88b835109C"
+  },
+  {
+    "id": "rchain",
+    "address": "0x168296bb09e24a88805cb9c33356536b980d3fc5"
+  },
+  {
+    "id": "riptide-coin",
+    "address": "0xdd007278b667f6bef52fd0a4c23604aa1f96039a"
+  },
+  {
+    "id": "rock-token",
+    "address": "0x106aa49295b525fcf959aa75ec3f7dcbf5352f1c"
+  },
+  {
+    "id": "etheriya",
+    "address": "0x0b1724cc9fda0186911ef6a75949e9c0d3f0f2f3"
+  },
+  {
+    "id": "roulettetoken",
+    "address": "0xcCeD5B8288086BE8c38E23567e684C3740be4D48"
+  },
+  {
+    "id": "iexec-rlc",
+    "address": "0x607F4C5BB672230e8672085532f7e901544a7375"
+  },
+  {
+    "id": "rightmesh",
+    "address": "0x8d5682941ce456900b12d47ac06a88b47c764ce1"
+  },
+  {
+    "id": "relex",
+    "address": "0x4a42d2c580f83dce404acad18dab26db11a1750e"
+  },
+  {
+    "id": "oneroot-network",
+    "address": "0xff603f43946a3a28df5e6a73172555d8c8b02386"
+  },
+  {
+    "id": "ice-rock-mining",
+    "address": "0xC16b542ff490e01fcc0DC58a60e1EFdc3e357cA6"
+  },
+  {
+    "id": "rasputin",
+    "address": "0x1bcbc54166f6ba149934870b60506199b6c9db6d"
+  },
+  {
+    "id": "bitrent",
+    "address": "0x1fe70be734e473e5721ea57c8b5b01e6caa52686"
+  },
+  {
+    "id": "round",
+    "address": "0x4993CB95c7443bdC06155c5f5688Be9D8f6999a5"
+  },
+  {
+    "id": "rocket-pool",
+    "address": "0xb4efd85c19999d84251304bda99e90b92300bd93"
+  },
+  {
+    "id": "ab-chain",
+    "address": "0xec491c1088eae992b7a214efb0a266ad0927a72a"
+  },
+  {
+    "id": "rotharium",
+    "address": "0x3fd8f39a962efda04956981c31ab89fab5fb8bc8"
+  },
+  {
+    "id": "rivetz",
+    "address": "0x3d1ba9be9f66b8ee101911bc36d3fb562eac2244"
+  },
+  {
+    "id": "ruff",
+    "address": "0xf278c1ca969095ffddded020290cf8b5c424ace2"
+  },
+  {
+    "id": "smart-application-chain",
+    "address": "0xabC1280A0187a2020cC675437aed400185F86Db6"
+  },
+  {
+    "id": "salt",
+    "address": "0x4156D3342D5c385a87D264F90653733592000581"
+  },
+  {
+    "id": "seele",
+    "address": "0xb1eef147028e9f480dbc5ccaa3277d417d1b85f0"
+  },
+  {
+    "id": "scroll-token",
+    "address": "0x24dcc881e7dd730546834452f21872d5cb4b5293"
+  },
+  {
+    "id": "santiment-network-token",
+    "address": "0x7C5A0CE9267ED19B22F8cae653F198e3E8daf098"
+  },
+  {
+    "id": "sense",
+    "address": "0x6745fAB6801e376cD24F03572B9C9B0D4EdDDCcf"
+  },
+  {
+    "id": "sentinel-chain",
+    "address": "0xa13f0743951b4f6e3e3aa039f682e17279f52bc3"
+  },
+  {
+    "id": "sentinel-group",
+    "address": "0xa44e5137293e855b1b7bc7e2c6f8cd796ffcb037"
+  },
+  {
+    "id": "sugar-exchange",
+    "address": "0xcb5a05bef3257613e984c17dbcf039952b6d883f"
+  },
+  {
+    "id": "sgpay",
+    "address": "0x33c623a2baafeb8d15dfaf3ce44095efec83d72c"
+  },
+  {
+    "id": "signals",
+    "address": "0xb2135ab9695a7678dd590b1a996cb0f37bcb0718"
+  },
+  {
+    "id": "oyster-shell",
+    "address": "0x8542325b72c6d9fc0ad2ca965a78435413a915a0"
+  },
+  {
+    "id": "shipchain",
+    "address": "0xe25b0bba01dc5630312b6a21927e578061a13f55"
+  },
+  {
+    "id": "sharpe-capital",
+    "address": "0xef2463099360a085f1f10b076ed72ef625497a06"
+  },
+  {
+    "id": "smart-investment-fund-token",
+    "address": "0x8a187d5285d316bcbc9adafc08b51d70a0d8e000"
+  },
+  {
+    "id": "super-keep-token",
+    "address": "0x13DB74B3cf512F65C4b91683940B4f3955E05085"
+  },
+  {
+    "id": "signal-token",
+    "address": "0x6888a16eA9792c15A4DCF2f6C623D055c8eDe792"
+  },
+  {
+    "id": "sakura-bloom",
+    "address": "0x4af328c52921706dcb739f25786210499169afe6"
+  },
+  {
+    "id": "skraps",
+    "address": "0xfdFE8b7aB6CF1bD1E3d14538Ef40686296C42052"
+  },
+  {
+    "id": "skincoin",
+    "address": "0x2bDC0D42996017fCe214b21607a515DA41A9E0C5"
+  },
+  {
+    "id": "skrumble-network",
+    "address": "0xd99b8a7fa48e25cce83b81812220a3e03bf64e5f"
+  },
+  {
+    "id": "smartbillions",
+    "address": "0x6F6DEb5db0C4994A8283A01D6CFeEB27Fc3bBe9C"
+  },
+  {
+    "id": "snowball",
+    "address": "0x198a87b3114143913d4229fb0f6d4bcb44aa8aff"
+  },
+  {
+    "id": "singulardtv",
+    "address": "0xaeC2E87E0A235266D9C5ADc9DEb4b2E29b54D009"
+  },
+  {
+    "id": "suncontract",
+    "address": "0xF4134146AF2d511Dd5EA8cDB1C4AC88C57D60404"
+  },
+  {
+    "id": "sandcoin",
+    "address": "0xf333b2Ace992ac2bBD8798bF57Bc65a06184afBa"
+  },
+  {
+    "id": "snipcoin",
+    "address": "0x44F588aEeB8C44471439D1270B3603c66a9262F1"
+  },
+  {
+    "id": "snovio",
+    "address": "0xbdc5bac39dbe132b1e030e898ae3830017d7d969"
+  },
+  {
+    "id": "sonm",
+    "address": "0x983F6d60db79ea8cA4eB9968C6aFf8cfA04B3c63"
+  },
+  {
+    "id": "silent-notary",
+    "address": "0x2859021ee7f2cb10162e67f33af2d22764b31aff"
+  },
+  {
+    "id": "status",
+    "address": "0x744d70FDBE2Ba4CF95131626614a1763DF805B9E"
+  },
+  {
+    "id": "soarcoin",
+    "address": "0xD65960FAcb8E4a2dFcb2C2212cb2e44a02e2a57E"
+  },
+  {
+    "id": "soniq",
+    "address": "0x1c62aca2b7605db3606eacda7bc67a1857ddb8ff"
+  },
+  {
+    "id": "sola",
+    "address": "0x1f54638b7737193ffd86c19ec51907a7c41755d8"
+  },
+  {
+    "id": "all-sports",
+    "address": "0x2d0e95bd4795d7ace0da3c0ff7b706a5970eb9d3"
+  },
+  {
+    "id": "havven",
+    "address": "0xC011A72400E58ecD99Ee497CF89E3775d4bd732F"
+  },
+  {
+    "id": "cryptosoul",
+    "address": "0xBb1f24C0c1554b9990222f036b0AaD6Ee4CAec29"
+  },
+  {
+    "id": "sparta-startups",
+    "address": "0x24aef3bf1a47561500f9430d74ed4097c47f51f2"
+  },
+  {
+    "id": "spankchain",
+    "address": "0x42d6622dece394b54999fbd73d108123806f6a18"
+  },
+  {
+    "id": "spindle",
+    "address": "0x1dea979ae76f26071870f824088da78979eb91c8"
+  },
+  {
+    "id": "sapien",
+    "address": "0x20F7A3DdF244dc9299975b4Da1C39F8D5D75f05A"
+  },
+  {
+    "id": "sportyco",
+    "address": "0x85089389C14Bd9c77FC2b8F0c3d1dC3363Bf06Ef"
+  },
+  {
+    "id": "sophiatx",
+    "address": "0x3833dda0aeb6947b98ce454d89366cba8cc55528"
+  },
+  {
+    "id": "sp8de",
+    "address": "0x05aaaa829afa407d83315cded1d45eb16025910c"
+  },
+  {
+    "id": "smartshare",
+    "address": "0x624d520bab2e4ad83935fa503fb130614374e850"
+  },
+  {
+    "id": "sharder-protocol",
+    "address": "0xbbFF862d906E348E9946Bfb2132ecB157Da3D4b4"
+  },
+  {
+    "id": "sirin-labs-token",
+    "address": "0x68d57c9a1C35f63E2c83eE8e49A64e9d70528D25"
+  },
+  {
+    "id": "stacs-token",
+    "address": "0x286708f069225905194673755F12359e6afF6FE1"
+  },
+  {
+    "id": "starbase",
+    "address": "0xF70a642bD387F94380fFb90451C2c81d4Eb82CBc"
+  },
+  {
+    "id": "stk",
+    "address": "0xaE73B38d1c9A8b274127ec30160a4927C4d71824"
+  },
+  {
+    "id": "storj",
+    "address": "0xB64ef51C888972c908CFacf59B47C1AfBC0Ab8aC"
+  },
+  {
+    "id": "storiqa",
+    "address": "0x5c3a228510d246b78a3765c20221cbf3082b44a4"
+  },
+  {
+    "id": "storm",
+    "address": "0xD0a4b8946Cb52f0661273bfbC6fD0E0C75Fc6433"
+  },
+  {
+    "id": "starcredits",
+    "address": "0x46492473755e8dF960F8034877F61732D718CE96"
+  },
+  {
+    "id": "bitjob",
+    "address": "0x0371a82e4a9d0a4312f3ee2ac9c6958512891372"
+  },
+  {
+    "id": "stox",
+    "address": "0x006BeA43Baa3f7A6f765F14f10A1a1b08334EF45"
+  },
+  {
+    "id": "swftcoin",
+    "address": "0x0bb217e40f8a5cb79adf04e1aab60e5abd0dfc1e"
+  },
+  {
+    "id": "suretly",
+    "address": "0xe120c1ecbfdfea7f0a8f0ee30063491e8c26fedf"
+  },
+  {
+    "id": "nusd",
+    "address": "0x57Ab1E02fEE23774580C119740129eAC7081e9D3"
+  },
+  {
+    "id": "swarm",
+    "address": "0x9e88613418cf03dca54d6a2cf6ad934a78c7a17a"
+  },
+  {
+    "id": "swarm-city",
+    "address": "0xB9e7F8568e08d5659f5D29C4997173d84CdF2607"
+  },
+  {
+    "id": "spectre-utility-token",
+    "address": "0x2c82c73d5b34aa015989462b2948cd616a37641f"
+  },
+  {
+    "id": "taas",
+    "address": "0xE7775A6e9Bcf904eb39DA2b68c5efb4F9360e08C"
+  },
+  {
+    "id": "spectre-dividend-token",
+    "address": "0x12b306fa98f4cbb8d4457fdff3a0a0a56f07ccdf"
+  },
+  {
+    "id": "lamden",
+    "address": "0xc27a2f05fa577a83ba0fdb4c38443c0718356501"
+  },
+  {
+    "id": "taklimakan-network",
+    "address": "0x2C36204a0712A2a50E54A62F7c4F01867e78cB53"
+  },
+  {
+    "id": "talao",
+    "address": "0x1d4ccc31dab6ea20f461d329a0562c1c58412515"
+  },
+  {
+    "id": "trustedhealth",
+    "address": "0x2a1dbabe65c595B0022e75208C34014139d5d357"
+  },
+  {
+    "id": "tercet-network",
+    "address": "0x28d7f432d24ba6020d1cbd4f28bedc5a82f24320"
+  },
+  {
+    "id": "tokenbox",
+    "address": "0x3a92bd396aef82af98ebc0aa9030d25a23b11c6b"
+  },
+  {
+    "id": "thorecash",
+    "address": "0x9972a0f24194447e73a7e8b6cd26a52e02ddfad5"
+  },
+  {
+    "id": "telcoin",
+    "address": "0x85e076361cc813a908ff672f9bad1541474402b2"
+  },
+  {
+    "id": "te-food",
+    "address": "0xe5f166c0d8872b68790061317bb6cca04582c912"
+  },
+  {
+    "id": "tokenstars-team",
+    "address": "0x1c79ab32c66acaa1e9e81952b8aaa581b43e54e7"
+  },
+  {
+    "id": "tokenomy",
+    "address": "0xdd16ec0f66e54d453e6756713e533355989040e4"
+  },
+  {
+    "id": "thar-token",
+    "address": "0x96c30d5499ef6ea96a9c221bc18bc39d29c97f27"
+  },
+  {
+    "id": "theta-token",
+    "address": "0x3883f5e181fccaf8410fa61e12b59bad963fb645"
+  },
+  {
+    "id": "trueflip",
+    "address": "0xa7f976C360ebBeD4465c2855684D1AAE5271eFa9"
+  },
+  {
+    "id": "thrive",
+    "address": "0x4f27053f32eda8af84956437bc00e5ffa7003287"
+  },
+  {
+    "id": "thingschain",
+    "address": "0x72430a612adc007c50e3b6946dbb1bb0fd3101d1"
+  },
+  {
+    "id": "topinvestmentcoin",
+    "address": "0x7F4B2A690605A7cbb66F7AA6885EbD906a5e2E9E"
+  },
+  {
+    "id": "tigereum",
+    "address": "0xeee2d00eb7deb8dd6924187f5aa3496b7d06e62a"
+  },
+  {
+    "id": "ties-network",
+    "address": "0x999967e2ec8a74b7c8e9db19e039d920b31d39d0"
+  },
+  {
+    "id": "tokia",
+    "address": "0xdae1baf249964bc4b6ac98c3122f0e3e785fd279"
+  },
+  {
+    "id": "telex-ai",
+    "address": "0xb3616550abc8af79c7a5902def9efa3bc9a95200"
+  },
+  {
+    "id": "blocktix",
+    "address": "0xEa1f346faF023F974Eb5adaf088BbCdf02d761F4"
+  },
+  {
+    "id": "tokencard",
+    "address": "0xaAAf91D9b90dF800Df4F55c205fd6989c977E73a"
+  },
+  {
+    "id": "tokok",
+    "address": "0x9a49f02e128a8e989b443a8f94843c0918bf45e7"
+  },
+  {
+    "id": "transcodium",
+    "address": "0xb0280743b44bf7db4b6be482b2ba7b75e5da096c"
+  },
+  {
+    "id": "traxia",
+    "address": "0x3209f98bebf0149b769ce26d71f7aea8e435efea"
+  },
+  {
+    "id": "tierion",
+    "address": "0x08f5a9235b08173b7569f83645d2c7fb55e8ccd8"
+  },
+  {
+    "id": "trakinvest",
+    "address": "0x12759512d326303b45f1cec8f7b6fd96f387778e"
+  },
+  {
+    "id": "origintrail",
+    "address": "0xaa7a9ca87d3694b5755f213b5d04094b8d0f0a6f"
+  },
+  {
+    "id": "tracto",
+    "address": "0x30ceCB5461A449A90081F5a5F55db4e048397BAB"
+  },
+  {
+    "id": "wetrust",
+    "address": "0xcb94be6f13a1182e4a4b6140cb7bf2025d28e41b"
+  },
+  {
+    "id": "tv-two",
+    "address": "0xa838be6e4b760e6061d4732d6b9f11bf578f9a76"
+  },
+  {
+    "id": "true-usd",
+    "address": "0x0000000000085d4780B73119b644AE5ecd22b376"
+  },
+  {
+    "id": "ucash",
+    "address": "0x92e52a1a235d9a103d970901066ce910aacefd37"
+  },
+  {
+    "id": "upfiring",
+    "address": "0xea097a2b1db00627b2fa17460ad260c016016977"
+  },
+  {
+    "id": "uchain",
+    "address": "0xaaf37055188feee4869de63464937e683d61b2a1"
+  },
+  {
+    "id": "unibright",
+    "address": "0x8400d94a5cb0fa0d041a3788e395285d61c9ee5e"
+  },
+  {
+    "id": "uptoken",
+    "address": "0x6ba460ab75cd2c56343b3517ffeba60748654d26"
+  },
+  {
+    "id": "sentinel-protocol",
+    "address": "0xc86d054809623432210c107af2e3f619dcfbf652"
+  },
+  {
+    "id": "unikoin-gold",
+    "address": "0x24692791bc444c5cd0b81e3cbcaba4b04acd1f3b"
+  },
+  {
+    "id": "usd-coin",
+    "address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+  },
+  {
+    "id": "uquid-coin",
+    "address": "0xd01db73e047855efb414e6202098c4be4cd2423b"
+  },
+  {
+    "id": "stableusd",
+    "address": "0xA4Bdb11dc0a2bEC88d24A3aa1E6Bb17201112eBe"
+  },
+  {
+    "id": "u-network",
+    "address": "0x3543638eD4a9006E4840B105944271Bcea15605D"
+  },
+  {
+    "id": "united-traders-token",
+    "address": "0x16f812be7fff02caf662b85d5d58a5da6572d4df"
+  },
+  {
+    "id": "universa",
+    "address": "0x9e3319636e2126e3c0bc9e3134AEC5e1508A46c7"
+  },
+  {
+    "id": "utrust",
+    "address": "0x70a72833d6bf7f508c8224ce59ea1ef3d0ea3a38"
+  },
+  {
+    "id": "bitcoin-card",
+    "address": "0x9a9bB9b4b11BF8eccff84B58a6CCCCD4058A7f0D"
+  },
+  {
+    "id": "blockv",
+    "address": "0x340d2bde5eb28c1eed91b2f790723e3b160613b7"
+  },
+  {
+    "id": "veritaseum",
+    "address": "0x8f3470A7388c05eE4e7AF3d01D8C722b0FF52374"
+  },
+  {
+    "id": "viberate",
+    "address": "0x2C974B2d0BA1716E644c1FC59982a89DDD2fF724"
+  },
+  {
+    "id": "viewly",
+    "address": "0xF03f8D65BaFA598611C3495124093c56e8F638f0"
+  },
+  {
+    "id": "v-id-blockchain",
+    "address": "0x445f51299ef3307dbd75036dd896565f5b4bf7a5"
+  },
+  {
+    "id": "vibe",
+    "address": "0xe8ff5c9c75deb346acac493c463c8950be03dfba"
+  },
+  {
+    "id": "vikkytoken",
+    "address": "0xd2946be786f35c3cc402c29b323647abda799071"
+  },
+  {
+    "id": "valid",
+    "address": "0x922ac473a3cc241fd3a0049ed14536452d58d73c"
+  },
+  {
+    "id": "vice-industry-token",
+    "address": "0x23b75Bc7AaF28e2d6628C3f424B3882F8f072a3c"
+  },
+  {
+    "id": "viuly",
+    "address": "0x519475b31653e46d20cd09f9fdcf3b12bdacb4f5"
+  },
+  {
+    "id": "vite",
+    "address": "0x1b793e49237758dbd8b752afc9eb4b329d5da016"
+  },
+  {
+    "id": "voise",
+    "address": "0x83eEA00D838f92dEC4D1475697B9f4D3537b56E3"
+  },
+  {
+    "id": "verisafe",
+    "address": "0xba3a79d758f19efe588247388754b8e4d6edda81"
+  },
+  {
+    "id": "vezt",
+    "address": "0x9720b467a710382A232a32F540bDCed7d662a10B"
+  },
+  {
+    "id": "vslice",
+    "address": "0x5c543e7AE0A1104f78406C340E9C64FD9fCE5170"
+  },
+  {
+    "id": "wab-network",
+    "address": "0x4bbbc57af270138ef2ff2c50dbfad684e9e0e604"
+  },
+  {
+    "id": "wabi",
+    "address": "0x286BDA1413a2Df81731D4930ce2F862a35A609fE"
+  },
+  {
+    "id": "wrapped-bitcoin",
+    "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599"
+  },
+  {
+    "id": "wax",
+    "address": "0x39Bb259F66E1C59d5ABEF88375979b4D20D98022"
+  },
+  {
+    "id": "webcoin",
+    "address": "0x840fe75abfadc0f2d54037829571b2782e919ce4"
+  },
+  {
+    "id": "wild-crypto",
+    "address": "0xD3C00772B24D997A812249ca637a921e81357701"
+  },
+  {
+    "id": "wibson",
+    "address": "0x3F17Dd476faF0a4855572F0B6ed5115D9bBA22AD"
+  },
+  {
+    "id": "mywish",
+    "address": "0x1b22c32cd936cb97c28c5690a0695a82abf688e6"
+  },
+  {
+    "id": "wings",
+    "address": "0x667088b212ce3d06a1b553a7221E1fD19000d9aF"
+  },
+  {
+    "id": "aworker",
+    "address": "0xa686514faf7d54289266f483d1e4852c99e13ec7"
+  },
+  {
+    "id": "wepower",
+    "address": "0x4CF488387F035FF08c371515562CBa712f9015d4"
+  },
+  {
+    "id": "worldcore",
+    "address": "0x72adadb447784dd7ab1f472467750fc485e4cb2d"
+  },
+  {
+    "id": "wolk",
+    "address": "0xF6B55acBBC49f4524Aa48D19281A9A77c54DE10f"
+  },
+  {
+    "id": "wysker",
+    "address": "0xd8950fDeaa10304B7A7Fd03a2FC66BC39f3c711a"
+  },
+  {
+    "id": "waltonchain",
+    "address": "0xb7cb1c96db6b22b0d3d9536e0108d062bd488f74"
+  },
+  {
+    "id": "giga-watt-token",
+    "address": "0x84119cb33e8f590d75c2d6ea4e6b0741a7494eda"
+  },
+  {
+    "id": "blitzpredict",
+    "address": "0x28dee01d53fed0edf5f6e310bf8ef9311513ae40"
+  },
+  {
+    "id": "billionaire-token",
+    "address": "0x49aec0752e68d0282db544c677f6ba407ba17ed7"
+  },
+  {
+    "id": "x8-project",
+    "address": "0x910Dfc18D6EA3D6a7124A6F8B5458F281060fa4c"
+  },
+  {
+    "id": "xaurum",
+    "address": "0x4DF812F6064def1e5e029f1ca858777CC98D2D81"
+  },
+  {
+    "id": "clearcoin",
+    "address": "0x1e26b3d07e57f453cae30f7ddd2f945f5bf3ef33"
+  },
+  {
+    "id": "eternal-token",
+    "address": "0x054c64741dbafdc19784505494029823d89c3b13"
+  },
+  {
+    "id": "going-gems",
+    "address": "0xf6b6aa0ef0f5edc2c1c5d925477f97eaf66303e7"
+  },
+  {
+    "id": "sphre-air",
+    "address": "0xB110eC7B1dcb8FAB8dEDbf28f53Bc63eA5BEdd84"
+  },
+  {
+    "id": "xenon",
+    "address": "0xab95e915c123fded5bdfb6325e35ef5515f1ea69"
+  },
+  {
+    "id": "ink-protocol",
+    "address": "0xBC86727E770de68B1060C91f6BB6945c73e10388"
+  },
+  {
+    "id": "xmax",
+    "address": "0x0f8c45b896784a1e408526b9300519ef8660209c"
+  },
+  {
+    "id": "rialto",
+    "address": "0xB24754bE79281553dc1adC160ddF5Cd9b74361a4"
+  },
+  {
+    "id": "xov",
+    "address": "0x153ed9cc1b792979d2bde0bbf45cc2a7e436a5f9"
+  },
+  {
+    "id": "pangea",
+    "address": "0xBB1fA4FdEB3459733bF67EbC6f893003fA976a82"
+  },
+  {
+    "id": "yggdrash",
+    "address": "0xca2796f9f61dc7b238aab043971e49c6164df375"
+  },
+  {
+    "id": "yee",
+    "address": "0x922105fad8153f516bcfb829f56dc097a0e1d705"
+  },
+  {
+    "id": "xyo-network",
+    "address": "0x55296f69f40ea6d20e478533c15a6b08b654e758"
+  },
+  {
+    "id": "zap",
+    "address": "0x6781a0f84c7e9e846dcb84a9a5bd49333067b104"
+  },
+  {
+    "id": "0chain",
+    "address": "0xb9EF770B6A5e12E45983C5D80545258aA38F3B78"
+  },
+  {
+    "id": "crowdholding",
+    "address": "0xd9a12cde03a86e800496469858de8581d3a5353d"
+  },
+  {
+    "id": "yoyow",
+    "address": "0xcbeaec699431857fdb4d37addbbdc20e132d4903"
+  },
+  {
+    "id": "zebi",
+    "address": "0x2008e3057bd734e10ad13c9eae45ff132abc1722"
+  },
+  {
+    "id": "zip",
+    "address": "0xa9d2927d3a04309e008b6af6e2e282ae2952e7fd"
+  },
+  {
+    "id": "zilliqa",
+    "address": "0x05f4a42e251f2d52b8ed15E9FEdAacFcEF1FAD27"
+  },
+  {
+    "id": "zinc",
+    "address": "0x4aac461c86abfa71e9d00d9a2cde8d74e4e1aeea"
+  },
+  {
+    "id": "zuescrowdfunding",
+    "address": "0xe7e4279b80d319ede2889855135a22021baf0907"
+  },
+  {
+    "id": "zmine",
+    "address": "0x554ffc77f4251a9fb3c0e3590a6a205f8d4e067d"
+  },
+  {
+    "id": "zper",
+    "address": "0xb5b8f5616fe42d5ceca3e87f3fddbdd8f496d760"
+  },
+  {
+    "id": "zippie",
+    "address": "0xedd7c94fd7b4971b916d15067bc454b9e1bad980"
+  },
+  {
+    "id": "zilla",
+    "address": "0xfd8971d5e8e1740ce2d0a84095fca4de729d0c16"
+  },
+  {
+    "id": "zeusshield",
+    "address": "0x7A41e0517a5ecA4FdbC7FbebA4D4c47B9fF6DC63"
+  },
+  {
+    "id": "0x",
+    "address": "0xE41d2489571d322189246DaFA5ebDe1F4699F498"
+  },
+  {
+    "id": "0xcert",
+    "address": "0x83e2be8d114f9661221384b3a50d24b96a5653f5"
+  }
+]

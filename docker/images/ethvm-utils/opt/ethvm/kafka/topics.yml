@@ -30,6 +30,12 @@ topics:
     config:
       cleanup.policy: compact
 
+  - name: uncle
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
+    partitions: 12
+    config:
+      retention.ms: 21600000
+
   - name: transaction
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12

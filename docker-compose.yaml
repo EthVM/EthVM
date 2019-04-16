@@ -1,4 +1,4 @@
-version: '2.4'
+version: '3.7'
 
 networks:
 
@@ -19,19 +19,16 @@ volumes:
 
   zookeeper-volume:
 
-  control-center-volume:
-  control-center-config-volume:
-
   parity-volume:
     # Note:
     # If you're on Linux, use local-persist instead of a regular docker volume
     # This allows to persist downloaded blockchain data.
     # More info: https://github.com/CWSpear/local-persist
     #
-    # driver: local-persist
-    # driver_opts:
-    #   name: "paritydb"
-    #   mountpoint: "/var/lib/parity"
+    driver: local-persist
+    driver_opts:
+      name: "paritydb"
+      mountpoint: "/var/lib/parity"
 
 services:
 
@@ -54,7 +51,6 @@ services:
       DEBUG: 'true'
       LETS_ENCRYPT_ENABLED:
       SWARM_MODE: 'false'
-    cpu_shares: 256
 
   explorer:
     build:
@@ -71,7 +67,6 @@ services:
       - 'traefik.frontend.rule=Host:ethvm.${DOMAIN}'
       - 'traefik.backend=explorer'
       - 'traefik.port=8080'
-    cpu_shares: 256
 
   api:
     build:
@@ -93,7 +88,6 @@ services:
       - 'traefik.backend=api'
       - 'traefik.port=3000'
       - 'traefik.frontend.entryPoints=http,https,ws,wss'
-    cpu_shares: 512
     environment:
       GRAPHQL_PLAYGROUND: 'true'
     command: bash -c "yarn && yarn start:dev"
@@ -113,7 +107,6 @@ services:
       - 8546:8546
       - 30303:30303
     command: --chain ropsten --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
-    cpu_shares: 2048
 
   # ///////////////////////////////////////////////////////
   # Storage
@@ -132,7 +125,6 @@ services:
       POSTGRES_USER:
       POSTGRES_PASSWORD:
       POSTGRES_DB:
-    cpu_shares: 4000
 
   # ///////////////////////////////////////////////////////
   # Processing
@@ -153,7 +145,6 @@ services:
       ZOOKEEPER_SERVERS: "server.1=zookeeper:2888:3888"
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_JMX_PORT: 9585
-    mem_limit: 512m
 
   kafka-1:
     image: confluentinc/cp-kafka:${CP_VERSION}
@@ -185,7 +176,6 @@ services:
       CONFLUENT_METRICS_ENABLE: 'true'
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
       KAFKA_JMX_PORT: 9586
-    mem_limit: 4g
 
   kafka-schema-registry:
     image: confluentinc/cp-schema-registry:${CP_VERSION}
@@ -212,8 +202,6 @@ services:
       SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: "INFO"
       SCHEMA_REGISTRY_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR"
       SCHEMA_REGISTRY_JMX_PORT: 9587
-    mem_limit: 512m
-    cpu_shares: 512
 
   kafka-connect:
     build:
@@ -250,7 +238,7 @@ services:
       CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_LOG4J_ROOT_LOGLEVEL: "WARN"
-      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,com.ethvm.kafka.connect=TRACE,org.web3j.protocol.websocket.WebSocketService=WARN"
+      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,com.ethvm.kafka.connect=DEBUG,org.web3j.protocol.websocket.WebSocketService=WARN"
       CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/ethvm
       KAFKA_JMX_PORT: 9588
 
@@ -301,24 +289,6 @@ services:
       - "traefik.frontend.passHostHeader=true"
       - "traefik.backend=lenses"
       - "traefik.port=9991"
-    cpu_shares: 512
-
-#  kafka-control-center:
-#    image: confluentinc/cp-enterprise-control-center:5.1.2
-#    networks:
-#      - back
-#    ports:
-#      - 9021:9021
-#    volumes:
-#      - control-center-volume:/var/lib/control-center/data
-#      - control-center-config-volume:/var/lib/control-center/config
-#    environment:
-#      CONTROL_CENTER_BOOTSTRAP_SERVERS: kafka-1:9091
-#      CONTROL_CENTER_ZOOKEEPER_CONNECT: zookeeper-1:2181
-#      CONTROL_CENTER_CONNECT_CLUSTER: http://kafka-connect:8083
-#      CONTROL_CENTER_DATA_DIR: /var/lib/control-center/data
-#      CONTROL_CENTER_CONFIG_DIR: /var/lib/control-center/config
-#      CONTROL_CENTER_REPLICATION_FACTOR: 1
 
   pgweb:
     image: sosedoff/pgweb:0.11.2

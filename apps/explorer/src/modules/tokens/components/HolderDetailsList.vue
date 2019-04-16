@@ -104,7 +104,7 @@ export default class HolderDetailsList extends Mixins(StringConcatMixin) {
         },
         {
           title: this.$i18n.tc('contract.name', 2),
-          detail: '0x' + this.tokenDetails.address,
+          detail: `0x${this.tokenDetails.address}`,
           link: `/address/0x${this.tokenDetails.address}`,
           copy: true
         },
@@ -134,11 +134,11 @@ export default class HolderDetailsList extends Mixins(StringConcatMixin) {
     return details
   }
 
-  get balanceUsd() {
+  get balanceUsd(): string {
     const n = new BN(this.holderDetails.tokens[0].balance)
       .div(new BN(10).pow(this.contractDetails.metadata.decimals))
       .multipliedBy(this.tokenDetails.currentPrice)
-    return this.holderDetails.tokens ? '$' + this.getRoundNumber(n) : 'N/A'
+    return this.holderDetails.tokens ? `$${this.getRoundNumber(n)}` : 'N/A'
   }
 
   get balance(): string {
@@ -149,7 +149,7 @@ export default class HolderDetailsList extends Mixins(StringConcatMixin) {
   //Methods:
   getPriceChange(): string {
     return this.tokenDetails.priceChangePercentage24h > 0
-      ? '+' + this.getPercent(this.tokenDetails.priceChangePercentage24h)
+      ? `+${this.getPercent(this.tokenDetails.priceChangePercentage24h)}`
       : this.getPercent(this.tokenDetails.priceChangePercentage24h)
   }
 }
